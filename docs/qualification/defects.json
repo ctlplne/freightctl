@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "defects": [
+    {
+      "id": "D001",
+      "severity": "blocker",
+      "state": "open",
+      "observed_on": "2026-10-28",
+      "candidate": null,
+      "journey": "J01",
+      "reproduction": "go run ./cmd/freightctl --help",
+      "first_failure": "go: cannot find main module, but found .git/config",
+      "cause": "Only bootstrap documents exist; application and development path are absent.",
+      "regression_evidence": [],
+      "candidate_note": "Observed before application implementation in the archived pre-recreation history; original failure retained."
+    },
+    {
+      "id": "D002",
+      "severity": "blocker",
+      "state": "open",
+      "observed_on": "2026-10-28",
+      "candidate": null,
+      "candidate_note": "Retained pre-recreation implementation; source hashes are in the ignored recovery manifest.",
+      "journey": "J01",
+      "reproduction": "sh scripts/go.sh test ./...",
+      "first_failure": "TestDurableExactRevision and TestRejectIncompleteAndEscape: storage root must have mode 0700",
+      "cause": "Test fixture uses an existing temporary directory without creating a private custody subdirectory. Diagnose and fix before claiming a pass.",
+      "regression_evidence": []
+    }
+  ]
+}

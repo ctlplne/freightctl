@@ -1,0 +1,3178 @@
+{
+  "schema_version": 1,
+  "baseline_version": "2026-10-28.1",
+  "starting_commit": null,
+  "scope": "Initial finite documented baseline plus freightctl acceptance conditions. Exact licensed edition, protocol profile and native comparisons stay open. GOAL.md remains the complete contract; this inventory cannot narrow it.",
+  "states": [
+    "planned",
+    "implementing",
+    "implemented but unverified",
+    "verified locally",
+    "externally qualified",
+    "blocked",
+    "owner-approved exclusion"
+  ],
+  "rows": [
+    {
+      "id": "P-SFTP-RECEIVE",
+      "customer_job": "receive files with SFTP",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "All licensed options",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/detailed-features",
+        "source_id": "GA-F",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "SFTP transfers",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Receive known bytes; independently compare digest; reject wrong identity; interrupt then recover without exposing partial bytes. Qualify commands, algorithms and limits separately.",
+      "surfaces": [
+        "protocol",
+        "API",
+        "CLI"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        6
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "OpenSSH sftp",
+        "independent SFTP peer"
+      ],
+      "acceptance_journey": "J01",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "P-SFTP-SEND",
+      "customer_job": "send files with SFTP",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "All licensed options",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/detailed-features",
+        "source_id": "GA-F",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "SFTP transfers",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Send known bytes; independently compare digest; reject wrong identity; interrupt then recover without exposing partial bytes. Qualify commands, algorithms and limits separately.",
+      "surfaces": [
+        "protocol",
+        "API",
+        "CLI"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        6
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "OpenSSH sftp",
+        "independent SFTP peer"
+      ],
+      "acceptance_journey": "J01",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "P-FTPS-EXPLICIT-RECEIVE",
+      "customer_job": "receive files with FTPS-explicit",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "All licensed options",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/detailed-features",
+        "source_id": "GA-F",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "FTPS transfers",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Receive known bytes; independently compare digest; reject wrong identity; interrupt then recover without exposing partial bytes. Qualify commands, algorithms and limits separately.",
+      "surfaces": [
+        "protocol",
+        "API",
+        "CLI"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        6
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "curl and lftp",
+        "independent FTPS-explicit peer"
+      ],
+      "acceptance_journey": "J01",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "P-FTPS-EXPLICIT-SEND",
+      "customer_job": "send files with FTPS-explicit",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "All licensed options",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/detailed-features",
+        "source_id": "GA-F",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "FTPS transfers",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Send known bytes; independently compare digest; reject wrong identity; interrupt then recover without exposing partial bytes. Qualify commands, algorithms and limits separately.",
+      "surfaces": [
+        "protocol",
+        "API",
+        "CLI"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        6
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "curl and lftp",
+        "independent FTPS-explicit peer"
+      ],
+      "acceptance_journey": "J01",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "P-FTPS-IMPLICIT-RECEIVE",
+      "customer_job": "receive files with FTPS-implicit",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "All licensed options",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/detailed-features",
+        "source_id": "GA-F",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "FTPS transfers",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Receive known bytes; independently compare digest; reject wrong identity; interrupt then recover without exposing partial bytes. Qualify commands, algorithms and limits separately.",
+      "surfaces": [
+        "protocol",
+        "API",
+        "CLI"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        6
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "curl and lftp",
+        "independent FTPS-implicit peer"
+      ],
+      "acceptance_journey": "J01",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "P-FTPS-IMPLICIT-SEND",
+      "customer_job": "send files with FTPS-implicit",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "All licensed options",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/detailed-features",
+        "source_id": "GA-F",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "FTPS transfers",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Send known bytes; independently compare digest; reject wrong identity; interrupt then recover without exposing partial bytes. Qualify commands, algorithms and limits separately.",
+      "surfaces": [
+        "protocol",
+        "API",
+        "CLI"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        6
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "curl and lftp",
+        "independent FTPS-implicit peer"
+      ],
+      "acceptance_journey": "J01",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "P-SFTP-MUTATE",
+      "customer_job": "sftp mutate",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "All licensed options",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/detailed-features",
+        "source_id": "GA-F",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Folder permissions",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Exercise listing, overwrite, append, rename and delete; deny traversal, unauthorized folders and symlink races.",
+      "surfaces": [
+        "protocol",
+        "API",
+        "CLI"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        6
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J02",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "P-SCP-LEGACY",
+      "customer_job": "scp legacy",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "All licensed options",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/detailed-features",
+        "source_id": "GA-F",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "SCP",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Qualify legacy scp -O wire behavior separately from modern SFTP-based scp.",
+      "surfaces": [
+        "protocol",
+        "API",
+        "CLI"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        6
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J02",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "P-FTP",
+      "customer_job": "ftp",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "All licensed options",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/detailed-features",
+        "source_id": "GA-F",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Standard FTP",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Require explicit compatibility policy and visible transport warning; restrict networks and credentials.",
+      "surfaces": [
+        "protocol",
+        "API",
+        "CLI"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        6
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J02",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "P-HTTPS-RECEIVE",
+      "customer_job": "https receive",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "All licensed options",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/detailed-features",
+        "source_id": "GA-F",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "HTTPS",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Stream upload with bounded memory, durable acceptance, exact length/digest and tenant/partner checks.",
+      "surfaces": [
+        "protocol",
+        "API",
+        "CLI"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        6
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J02",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "P-HTTPS-SEND",
+      "customer_job": "https send",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "All licensed options",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/detailed-features",
+        "source_id": "GA-F",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "HTTPS",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Download only authorized verified revision; support declared range behavior and independently check bytes.",
+      "surfaces": [
+        "protocol",
+        "API",
+        "CLI"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        6
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J02",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "P-HTTP-RESUME",
+      "customer_job": "http resume",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "All licensed options",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/detailed-features",
+        "source_id": "GA-F",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "HTTPS",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Resume interrupted upload; refuse wrong identity, changed bytes, reused offset and expired session.",
+      "surfaces": [
+        "protocol",
+        "API",
+        "CLI"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        6
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J02",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "P-AS2-SEND",
+      "customer_job": "as2 send",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "All licensed options",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/detailed-features",
+        "source_id": "GA-F",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "AS2",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Send signed encrypted RFC 4130 message; correlate MIC and original message with sync and async MDNs.",
+      "surfaces": [
+        "protocol",
+        "API",
+        "CLI"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        6
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J02",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "P-AS2-RECEIVE",
+      "customer_job": "as2 receive",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "All licensed options",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/detailed-features",
+        "source_id": "GA-F",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "AS2",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Receive signature/encryption, reject bad MIC and duplicates, issue correlated positive or negative MDN.",
+      "surfaces": [
+        "protocol",
+        "API",
+        "CLI"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        6
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J02",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "P-AS2-ROLLOVER",
+      "customer_job": "as2 rollover",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "All licensed options",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/detailed-features",
+        "source_id": "GA-F",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "AS2",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Rotate certificates during retries and late MDNs; reject forged receipts and define ambiguous delivery.",
+      "surfaces": [
+        "protocol",
+        "API",
+        "CLI"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        6
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J02",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "P-AS3-SEND",
+      "customer_job": "as3 send",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "All licensed options",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/detailed-features",
+        "source_id": "GA-F",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "AS3",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Specify AS3 profile and independent FTP peer; sign/encrypt, correlate receipts and recover interrupted sends.",
+      "surfaces": [
+        "protocol",
+        "API",
+        "CLI"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        6
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J02",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "P-AS3-RECEIVE",
+      "customer_job": "as3 receive",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "All licensed options",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/detailed-features",
+        "source_id": "GA-F",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "AS3",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Specify profile; receive, verify and deduplicate with exact revision receipt binding.",
+      "surfaces": [
+        "protocol",
+        "API",
+        "CLI"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        6
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J02",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "P-AS4-SEND",
+      "customer_job": "as4 send",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "All licensed options",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/detailed-features",
+        "source_id": "GA-F",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "AS4",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Select ebMS3/AS4 profile and peer; implement security, acknowledgments and bounded retry.",
+      "surfaces": [
+        "protocol",
+        "API",
+        "CLI"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        6
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J02",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "P-AS4-RECEIVE",
+      "customer_job": "as4 receive",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "All licensed options",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/detailed-features",
+        "source_id": "GA-F",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "AS4",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Select profile; verify message security, reject replay and produce correlated receipts.",
+      "surfaces": [
+        "protocol",
+        "API",
+        "CLI"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        6
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J02",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "P-PESIT-SEND",
+      "customer_job": "pesit send",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "All licensed options",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/detailed-features",
+        "source_id": "GA-F",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "PeSIT client",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Obtain permitted profile/specification and native peer; prove restart, integrity and receipt semantics.",
+      "surfaces": [
+        "protocol",
+        "API",
+        "CLI"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        6
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J02",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "P-PESIT-RECEIVE",
+      "customer_job": "pesit receive",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "All licensed options",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/detailed-features",
+        "source_id": "GA-F",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "PeSIT server",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Obtain permitted profile/specification and native peer; prove receive, restart and negative outcomes.",
+      "surfaces": [
+        "protocol",
+        "API",
+        "CLI"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        6
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J02",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "P-MQ",
+      "customer_job": "mq",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "All licensed options",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/detailed-features",
+        "source_id": "GA-F",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "MQ/JMS",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Pin queue adapter and acknowledgment contract; transactional intent, duplicate and ambiguous effect tests.",
+      "surfaces": [
+        "protocol",
+        "API",
+        "CLI"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        6
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J02",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "P-MAIL",
+      "customer_job": "mail",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "All licensed options",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/detailed-features",
+        "source_id": "GA-F",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "SMTP/POP3/IMAP",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Pin secure mail profiles; distinguish server acceptance, retrieval and business acknowledgment.",
+      "surfaces": [
+        "protocol",
+        "API",
+        "CLI"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        6
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J02",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "C-LOCAL",
+      "customer_job": "local",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "All licensed options",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/detailed-features",
+        "source_id": "GA-F",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Local filesystem",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Confine paths to tenant/partner capabilities; test mount, links, rename, disk-full and durability.",
+      "surfaces": [
+        "protocol",
+        "API",
+        "CLI"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        6
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J02",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "C-NETWORK",
+      "customer_job": "network",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "All licensed options",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/detailed-features",
+        "source_id": "GA-F",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Mounted storage",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Document NFS and mounted-storage persistence; test outage, stale handles and recovery.",
+      "surfaces": [
+        "protocol",
+        "API",
+        "CLI"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        6
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J02",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "C-SMB",
+      "customer_job": "smb",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "All licensed options",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/detailed-features",
+        "source_id": "GA-F",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "SMB",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Use current supported SMB profile; authenticate to independent file server; qualify names, ACLs and outage.",
+      "surfaces": [
+        "protocol",
+        "API",
+        "CLI"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        6
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J02",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "C-WEBDAV",
+      "customer_job": "webdav",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "All licensed options",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/detailed-features",
+        "source_id": "GA-F",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "WebDAV",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Qualify declared DAV operations, authorization and atomicity against stock client and server.",
+      "surfaces": [
+        "protocol",
+        "API",
+        "CLI"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        6
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J02",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "K-PGP-ENCRYPT",
+      "customer_job": "pgp encrypt",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "All licensed options",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/detailed-features",
+        "source_id": "GA-F",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "OpenPGP encryption",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Encrypt exact verified revision for approved recipient; GnuPG decrypts independently.",
+      "surfaces": [
+        "protocol",
+        "API",
+        "CLI"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        6
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J02",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "K-PGP-VERIFY",
+      "customer_job": "pgp verify",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "All licensed options",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/detailed-features",
+        "source_id": "GA-F",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "OpenPGP signatures",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Independently sign and verify exact bytes; reject altered payload and revoked signer.",
+      "surfaces": [
+        "protocol",
+        "API",
+        "CLI"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        6
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J02",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "I-LDAP",
+      "customer_job": "ldap",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "All licensed options",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/detailed-features",
+        "source_id": "GA-F",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "LDAP / AD",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Authenticate against real directory; prove delegated roles, expiry and revocation.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        11
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J10",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "I-SAML",
+      "customer_job": "saml",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "All licensed options",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/detailed-features",
+        "source_id": "GA-F",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "SAML",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Pin IdP profile; reject wrong audience and replay; distinguish browser from protocol authority.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        11
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J10",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "I-RADIUS",
+      "customer_job": "radius",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "All licensed options",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/detailed-features",
+        "source_id": "GA-F",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "RADIUS",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Qualify required RADIUS/MFA flow with real permitted service.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        11
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J10",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "I-LOCAL-MFA",
+      "customer_job": "local mfa",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "All licensed options",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/detailed-features",
+        "source_id": "GA-F",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Local accounts and MFA",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Enroll local admin without vendor; test password, TOTP, session revocation and recovery.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        11
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J10",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "A-TENANT",
+      "customer_job": "tenant",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "All licensed options",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/detailed-features",
+        "source_id": "GA-F",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Domains",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Deny cross-tenant and cross-partner names, bytes, search and audit across every implemented surface.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        11
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J10",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "A-ROLE",
+      "customer_job": "role",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "All licensed options",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/detailed-features",
+        "source_id": "GA-F",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Separation of duties",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Enforce role and partner delegation consistently; recheck revoked authority before effects.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        11
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J10",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "W-DEFINITION",
+      "customer_job": "definition",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "Paid modules named per row",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/licensed-modules",
+        "source_id": "GA-M",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Advanced Workflows",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "One immutable typed definition; validate, diff, test, approve and promote; revision changes invalidate approvals.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        8
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J08",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "W-DATA",
+      "customer_job": "data",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "Paid modules named per row",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/licensed-modules",
+        "source_id": "GA-M",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Advanced Workflows",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Bound database tasks and deterministic transformations; preserve decimals, encodings and leading zeros.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        8
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J02",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "H-PORTAL",
+      "customer_job": "portal",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "Paid modules named per row",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/licensed-modules",
+        "source_id": "GA-M",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Secure Folders",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Keyboard-accessible upload/download, folders and history; tenant/partner constraints and interruption recovery.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        9
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J04",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "H-SHARE",
+      "customer_job": "share",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "Paid modules named per row",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/licensed-modules",
+        "source_id": "GA-M",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Secure Mail",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Expiring links with access verification, download limits and recall; distinguish delivery and retrieval.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        9
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J04",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "H-OUTLOOK",
+      "customer_job": "outlook",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "Paid modules named per row",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/licensed-modules",
+        "source_id": "GA-M",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Secure Mail Outlook",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Package attachments via controlled HTTPS links; test permitted native mail client.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        9
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J04",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "H-FORMS",
+      "customer_job": "forms",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "Paid modules named per row",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/licensed-modules",
+        "source_id": "GA-M",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Secure Forms",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Validated fields and upload limits create an approved workflow run; reject malicious form content.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        9
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J04",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "E-AGENT",
+      "customer_job": "agent",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "Paid modules named per row",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/licensed-modules",
+        "source_id": "GA-M",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "MFT Agents",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Enroll scoped remote agent; signed updates, revocation, bounded jobs and live identity rotation.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        8
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J11",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "C-SHAREPOINT",
+      "customer_job": "sharepoint",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "Paid modules named per row",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/licensed-modules",
+        "source_id": "GA-M",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Cloud Connectors",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Use real SharePoint account; scope identity, pagination, throttling and byte integrity.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        8
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J03",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "H-SYNC",
+      "customer_job": "sync",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "Paid modules named per row",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/licensed-modules",
+        "source_id": "GA-M",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "GoDrive",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Synchronize permitted folders with revision conflict handling and traceable sharing; no office-suite expansion.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        9
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J04",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "P-ACCELERATION",
+      "customer_job": "acceleration",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "Paid modules named per row",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/licensed-modules",
+        "source_id": "GA-M",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Fast File Transfer",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Original permitted accelerated transport; qualify fair congestion behavior on high latency/loss links.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        8
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J11",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "O-REPORTS",
+      "customer_job": "reports",
+      "competitor": {
+        "product": "GoAnywhere MFT",
+        "edition": "Paid modules named per row",
+        "version": "not stated",
+        "official_url": "https://www.goanywhere.com/products/goanywhere-mft/licensed-modules",
+        "source_id": "GA-M",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Advanced Reporting",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Reproducible authorized activity reports computed from events; export and independently verify totals.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        8
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J12",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "H-TEMP",
+      "customer_job": "temp",
+      "competitor": {
+        "product": "MOVEit Transfer",
+        "edition": "Paid Transfer with Ad Hoc",
+        "version": "2026",
+        "official_url": "https://docs.progress.com/bundle/moveit-transfer-web-admin-help/page/MOVEit-Transfer-Documentation-2026.html",
+        "source_id": "MT",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Temporary users",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Invite, expire, recover and revoke users; authorized regular user delegates only permitted folders.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        16
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J05",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized MOVEit Transfer installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "H-GUEST",
+      "customer_job": "guest",
+      "competitor": {
+        "product": "MOVEit Transfer",
+        "edition": "Paid Transfer with Ad Hoc",
+        "version": "2026",
+        "official_url": "https://docs.progress.com/bundle/moveit-transfer-web-admin-help/page/MOVEit-Transfer-Documentation-2026.html",
+        "source_id": "MT",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Ad Hoc Transfer",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Unregistered recipient gets one approved package; cannot browse mailboxes or other packages.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        16
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J04",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized MOVEit Transfer installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "O-REST",
+      "customer_job": "rest",
+      "competitor": {
+        "product": "MOVEit Transfer",
+        "edition": "Paid Transfer with Ad Hoc",
+        "version": "2026",
+        "official_url": "https://docs.progress.com/bundle/moveit-transfer-web-admin-help/page/MOVEit-Transfer-Documentation-2026.html",
+        "source_id": "MT",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "RESTful API",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Document actual OpenAPI; same authorization, policy and idempotency as all product interfaces.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        16
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J01",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized MOVEit Transfer installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "P-AS1-SEND",
+      "customer_job": "as1 send",
+      "competitor": {
+        "product": "MOVEit Automation",
+        "edition": "Paid Automation; tier requires installation confirmation",
+        "version": "2026/05",
+        "official_url": "https://www.progress.com/docs/default-source/data-sheets/ds-moveit-automation-datasheet.pdf",
+        "source_id": "MA",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "AS1",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Specify S/MIME/SMTP profile; independent peer validates security, duplicate handling and receipts.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        8
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J02",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized MOVEit Automation installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "P-AS1-RECEIVE",
+      "customer_job": "as1 receive",
+      "competitor": {
+        "product": "MOVEit Automation",
+        "edition": "Paid Automation; tier requires installation confirmation",
+        "version": "2026/05",
+        "official_url": "https://www.progress.com/docs/default-source/data-sheets/ds-moveit-automation-datasheet.pdf",
+        "source_id": "MA",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "AS1",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Receive signed/encrypted mail; verify sender and exact revision; correlated receipt and replay tests.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        8
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J02",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized MOVEit Automation installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "C-S3",
+      "customer_job": "s3",
+      "competitor": {
+        "product": "MOVEit Automation",
+        "edition": "Paid Automation; tier requires installation confirmation",
+        "version": "2026/05",
+        "official_url": "https://www.progress.com/docs/default-source/data-sheets/ds-moveit-automation-datasheet.pdf",
+        "source_id": "MA",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Amazon S3",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Qualify real AWS identity, checksum, multipart, pagination, limits and recovery; emulator separately.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        8
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J03",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized MOVEit Automation installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "C-AZURE",
+      "customer_job": "azure",
+      "competitor": {
+        "product": "MOVEit Automation",
+        "edition": "Paid Automation; tier requires installation confirmation",
+        "version": "2026/05",
+        "official_url": "https://www.progress.com/docs/default-source/data-sheets/ds-moveit-automation-datasheet.pdf",
+        "source_id": "MA",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Azure Blob",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Qualify real account with least authority, versions, checksums, throttling and retries.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        8
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J03",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized MOVEit Automation installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "C-GCS",
+      "customer_job": "gcs",
+      "competitor": {
+        "product": "MOVEit Automation",
+        "edition": "Paid Automation; tier requires installation confirmation",
+        "version": "2026/05",
+        "official_url": "https://www.progress.com/docs/default-source/data-sheets/ds-moveit-automation-datasheet.pdf",
+        "source_id": "MA",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Google Cloud Storage",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Qualify real account, generation preconditions, pagination, integrity and retry semantics.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        8
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J03",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized MOVEit Automation installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "C-ONEDRIVE",
+      "customer_job": "onedrive",
+      "competitor": {
+        "product": "MOVEit Automation",
+        "edition": "Paid Automation; tier requires installation confirmation",
+        "version": "2026/05",
+        "official_url": "https://www.progress.com/docs/default-source/data-sheets/ds-moveit-automation-datasheet.pdf",
+        "source_id": "MA",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Microsoft OneDrive",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Qualify real identity, resumable bytes, pagination, throttling and permissions.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        8
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J03",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized MOVEit Automation installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "W-SCHEDULE",
+      "customer_job": "schedule",
+      "competitor": {
+        "product": "MOVEit Automation",
+        "edition": "Paid Automation; tier requires installation confirmation",
+        "version": "2026/05",
+        "official_url": "https://www.progress.com/docs/default-source/data-sheets/ds-moveit-automation-datasheet.pdf",
+        "source_id": "MA",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Scheduled/event/on-demand",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Test time zones, DST, calendars, deadlines, missed-run catch-up, concurrency and event-loop prevention.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        8
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J03",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized MOVEit Automation installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "W-CONDITIONAL",
+      "customer_job": "conditional",
+      "competitor": {
+        "product": "MOVEit Automation",
+        "edition": "Paid Automation; tier requires installation confirmation",
+        "version": "2026/05",
+        "official_url": "https://www.progress.com/docs/default-source/data-sheets/ds-moveit-automation-datasheet.pdf",
+        "source_id": "MA",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Conditional logic",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Bound branches, batches and loops; exact approved definition and deterministic effects.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        8
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J03",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized MOVEit Automation installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "W-SCRIPTS",
+      "customer_job": "scripts",
+      "competitor": {
+        "product": "MOVEit Automation",
+        "edition": "Paid Automation; tier requires installation confirmation",
+        "version": "2026/05",
+        "official_url": "https://www.progress.com/docs/default-source/data-sheets/ds-moveit-automation-datasheet.pdf",
+        "source_id": "MA",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Custom scripting",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Isolate approved processes with explicit network/filesystem/resource rights; imports cannot execute scripts.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        8
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J07",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized MOVEit Automation installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "W-SYNC",
+      "customer_job": "sync",
+      "competitor": {
+        "product": "MOVEit Automation",
+        "edition": "Paid Automation; tier requires installation confirmation",
+        "version": "2026/05",
+        "official_url": "https://www.progress.com/docs/default-source/data-sheets/ds-moveit-automation-datasheet.pdf",
+        "source_id": "MA",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "File synchronization",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Detect stable input using explicit completeness contract; reconcile conflicts without deleting unapproved data.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        8
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J03",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized MOVEit Automation installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "S-SCAN",
+      "customer_job": "scan",
+      "competitor": {
+        "product": "MOVEit Automation",
+        "edition": "Paid Automation; tier requires installation confirmation",
+        "version": "2026/05",
+        "official_url": "https://www.progress.com/docs/default-source/data-sheets/ds-moveit-automation-datasheet.pdf",
+        "source_id": "MA",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Anti-virus integration",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Bind result to immutable revision and scanner versions; scanner outage blocks publication.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        8
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J02",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized MOVEit Automation installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "O-AUDIT",
+      "customer_job": "audit",
+      "competitor": {
+        "product": "MOVEit Automation",
+        "edition": "Paid Automation; tier requires installation confirmation",
+        "version": "2026/05",
+        "official_url": "https://www.progress.com/docs/default-source/data-sheets/ds-moveit-automation-datasheet.pdf",
+        "source_id": "MA",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Tamper-evident logging",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Append-only journal, integrity export and independent verification; state superuser boundary.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        8
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J12",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized MOVEit Automation installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "I-OIDC",
+      "customer_job": "oidc",
+      "competitor": {
+        "product": "MOVEit Automation",
+        "edition": "Paid Automation; tier requires installation confirmation",
+        "version": "2026/05",
+        "official_url": "https://www.progress.com/docs/default-source/data-sheets/ds-moveit-automation-datasheet.pdf",
+        "source_id": "MA",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "OIDC SSO",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Real IdP login with issuer/audience/state checks; revocation and role delegation tests.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        8
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J10",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized MOVEit Automation installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "R-FAILOVER",
+      "customer_job": "failover",
+      "competitor": {
+        "product": "MOVEit Automation",
+        "edition": "Paid Automation; tier requires installation confirmation",
+        "version": "2026/05",
+        "official_url": "https://www.progress.com/docs/default-source/data-sheets/ds-moveit-automation-datasheet.pdf",
+        "source_id": "MA",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Automated failover",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Multi-host worker and database failure; acknowledged bytes retained under declared failure model.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        8
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J11",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized MOVEit Automation installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "P-OFTP2-SEND",
+      "customer_job": "oftp2 send",
+      "competitor": {
+        "product": "JSCAPE by Redwood",
+        "edition": "Paid MFT Server; Gateway and Monitor separately",
+        "version": "2026.3.1.560 advertised; not installed",
+        "official_url": "https://www.jscape.com/products/managed-file-transfer-software",
+        "source_id": "JS",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "OFTP2",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Select RFC 5024 profile; sign/encrypt, restart, EERP/NERP and independent peer qualification.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        17
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J02",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized JSCAPE by Redwood installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "P-OFTP2-RECEIVE",
+      "customer_job": "oftp2 receive",
+      "competitor": {
+        "product": "JSCAPE by Redwood",
+        "edition": "Paid MFT Server; Gateway and Monitor separately",
+        "version": "2026.3.1.560 advertised; not installed",
+        "official_url": "https://www.jscape.com/products/managed-file-transfer-software",
+        "source_id": "JS",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "OFTP2",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Receive and verify selected profile; correlate positive/negative receipts and reject replay.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        17
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J02",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized JSCAPE by Redwood installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "E-GATEWAY",
+      "customer_job": "gateway",
+      "competitor": {
+        "product": "JSCAPE by Redwood",
+        "edition": "Paid MFT Server; Gateway and Monitor separately",
+        "version": "2026.3.1.560 advertised; not installed",
+        "official_url": "https://www.jscape.com/products/managed-file-transfer-software",
+        "source_id": "JS",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "DMZ proxy",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Separate bounded forwarding process; configured destinations only; no payload/primary-secret persistence.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        17
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J11",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized JSCAPE by Redwood installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "R-ACTIVE",
+      "customer_job": "active",
+      "competitor": {
+        "product": "JSCAPE by Redwood",
+        "edition": "Paid MFT Server; Gateway and Monitor separately",
+        "version": "2026.3.1.560 advertised; not installed",
+        "official_url": "https://www.jscape.com/products/managed-file-transfer-software",
+        "source_id": "JS",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Active-active servers",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Kill active worker under load; fencing rejects stale completion and avoids unsafe duplicate effects.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        17
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J11",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized JSCAPE by Redwood installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "T-FORMATS",
+      "customer_job": "formats",
+      "competitor": {
+        "product": "JSCAPE by Redwood",
+        "edition": "Paid MFT Server; Gateway and Monitor separately",
+        "version": "2026.3.1.560 advertised; not installed",
+        "official_url": "https://www.jscape.com/products/managed-file-transfer-software",
+        "source_id": "JS",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "JSON/XML/CSV/database ETL",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Bound parsers, validate schema, preserve field meaning; independent fixture outputs; reject XML entities.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        17
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J02",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized JSCAPE by Redwood installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "O-MONITOR",
+      "customer_job": "monitor",
+      "competitor": {
+        "product": "JSCAPE by Redwood",
+        "edition": "Paid MFT Server; Gateway and Monitor separately",
+        "version": "2026.3.1.560 advertised; not installed",
+        "official_url": "https://www.jscape.com/products/managed-file-transfer-software",
+        "source_id": "JS",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Transfer monitoring",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Detect missing arrivals, dependency failures and expiring identities; notifications have bounded retries.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        17
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J06",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized JSCAPE by Redwood installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "S-RETENTION",
+      "customer_job": "retention",
+      "competitor": {
+        "product": "Cerberus FTP Server",
+        "edition": "Enterprise and Enterprise Plus",
+        "version": "not stated",
+        "official_url": "https://www.cerberusftp.com/pricing/",
+        "source_id": "CE",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Enterprise retention",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Apply versioned retention and legal holds; audit deletion, replica and backup boundaries.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        21
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J12",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized Cerberus FTP Server installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "O-HISTORY",
+      "customer_job": "history",
+      "competitor": {
+        "product": "Cerberus FTP Server",
+        "edition": "Enterprise and Enterprise Plus",
+        "version": "not stated",
+        "official_url": "https://www.cerberusftp.com/pricing/",
+        "source_id": "CE",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Enterprise reporting",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Search authorized user/file/admin actions with stable IDs and bounded pagination.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        21
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J06",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized Cerberus FTP Server installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "O-NETWORK",
+      "customer_job": "network",
+      "competitor": {
+        "product": "Cerberus FTP Server",
+        "edition": "Enterprise and Enterprise Plus",
+        "version": "not stated",
+        "official_url": "https://www.cerberusftp.com/pricing/",
+        "source_id": "CE",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Enterprise Plus network monitoring",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Test explicit scoped hosts; no arbitrary proxy or scan authority; actionable failures.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        21
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J06",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized Cerberus FTP Server installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "O-ROGUE",
+      "customer_job": "rogue",
+      "competitor": {
+        "product": "Cerberus FTP Server",
+        "edition": "Enterprise and Enterprise Plus",
+        "version": "not stated",
+        "official_url": "https://www.cerberusftp.com/pricing/",
+        "source_id": "CE",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Enterprise Plus rogue detection",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Define permitted endpoint telemetry and rule; evaluate known/unexpected transfer fixture without host intrusion.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        21
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J06",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized Cerberus FTP Server installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "O-LOAD",
+      "customer_job": "load",
+      "competitor": {
+        "product": "Cerberus FTP Server",
+        "edition": "Enterprise and Enterprise Plus",
+        "version": "not stated",
+        "official_url": "https://www.cerberusftp.com/pricing/",
+        "source_id": "CE",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Enterprise Plus load testing",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Publish repeatable bounded workload, admission, throughput and failure measurements.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        21
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J11",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized Cerberus FTP Server installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "N-WINDOWS",
+      "customer_job": "windows",
+      "competitor": {
+        "product": "Cerberus FTP Server",
+        "edition": "Enterprise and Enterprise Plus",
+        "version": "not stated",
+        "official_url": "https://www.cerberusftp.com/pricing/",
+        "source_id": "CE",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Native Windows",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Run server and required agents on native Windows amd64; document file/ACL semantics.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        21
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J01",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized Cerberus FTP Server installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "C-S3-COMPAT",
+      "customer_job": "s3 compat",
+      "competitor": {
+        "product": "SFTPGo",
+        "edition": "Open Source and Enterprise; as named per row",
+        "version": "not stated",
+        "official_url": "https://docs.sftpgo.com/enterprise/",
+        "source_id": "SG",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Open Source S3-compatible",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Qualify independent S3 service, multipart recovery and permission prefixes.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        7
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J03",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized SFTPGo installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "C-REMOTE-SFTP",
+      "customer_job": "remote sftp",
+      "competitor": {
+        "product": "SFTPGo",
+        "edition": "Open Source and Enterprise; as named per row",
+        "version": "not stated",
+        "official_url": "https://docs.sftpgo.com/enterprise/",
+        "source_id": "SG",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Open Source remote SFTP",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Scoped remote storage; verify host identity and exact bytes under retry and outage.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        7
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J03",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized SFTPGo installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "C-REMOTE-FTP",
+      "customer_job": "remote ftp",
+      "competitor": {
+        "product": "SFTPGo",
+        "edition": "Open Source and Enterprise; as named per row",
+        "version": "not stated",
+        "official_url": "https://docs.sftpgo.com/enterprise/",
+        "source_id": "SG",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Enterprise FTP backend",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Pin secure FTP storage profile; independently test byte and rename guarantees.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        7
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J03",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized SFTPGo installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "S-ICAP",
+      "customer_job": "icap",
+      "competitor": {
+        "product": "SFTPGo",
+        "edition": "Open Source and Enterprise; as named per row",
+        "version": "not stated",
+        "official_url": "https://docs.sftpgo.com/enterprise/",
+        "source_id": "SG",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Enterprise ICAP",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Real scanner integration; infected, malformed and unavailable results cannot be clean.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        7
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J02",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized SFTPGo installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "S-APPROVAL",
+      "customer_job": "approval",
+      "competitor": {
+        "product": "SFTPGo",
+        "edition": "Open Source and Enterprise; as named per row",
+        "version": "not stated",
+        "official_url": "https://docs.sftpgo.com/enterprise/",
+        "source_id": "SG",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Enterprise pre-publication",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Quarantine immutable bytes; only current authorized approval of exact revision releases file.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        7
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J02",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized SFTPGo installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "H-TUS",
+      "customer_job": "tus",
+      "competitor": {
+        "product": "SFTPGo",
+        "edition": "Open Source and Enterprise; as named per row",
+        "version": "not stated",
+        "official_url": "https://docs.sftpgo.com/enterprise/",
+        "source_id": "SG",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Enterprise TUS",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Pin resumable HTTP profile and stock client; offset, expiry, replay and revocation tests.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        7
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J04",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized SFTPGo installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "B-IBM-PARTNER",
+      "customer_job": "partner onboarding",
+      "competitor": {
+        "product": "IBM Sterling File Gateway",
+        "edition": "Commercial File Gateway with Partner Engagement Manager integration",
+        "version": "not stated",
+        "official_url": "https://www.ibm.com/products/file-gateway",
+        "source_id": "IBM",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "Partner Engagement Manager integration",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Inventory contacts, identity rotation, delegated onboarding and production activation; measure the same permitted partner job.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        9
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J05",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized IBM Sterling File Gateway installation and exact edition/version for observed comparison"
+      ]
+    },
+    {
+      "id": "B-AXWAY-EXCHANGE",
+      "customer_job": "governed partner exchange",
+      "competitor": {
+        "product": "Axway SecureTransport",
+        "edition": "Commercial SecureTransport; edition to confirm",
+        "version": "not stated",
+        "official_url": "https://www.axway.com/en/products/managed-file-transfer/securetransport",
+        "source_id": "AX",
+        "observation_date": "2026-10-28",
+        "documented_behavior": "MFT gateway exchange",
+        "hands_on_evidence": []
+      },
+      "freightctl_behavior": "Pin SecureTransport edition and scenario before comparison; approved routing, transfer timeline, failure and recovery to independent recipient.",
+      "surfaces": [
+        "API",
+        "CLI",
+        "browser"
+      ],
+      "implementation_owner": "core",
+      "goal_sections": [
+        18
+      ],
+      "dependencies": [
+        "product implementation",
+        "real PostgreSQL",
+        "durable storage"
+      ],
+      "native_clients_or_peers": [
+        "independent operator or receiver"
+      ],
+      "acceptance_journey": "J06",
+      "state": "planned",
+      "evidence": [],
+      "qualification_blockers": [
+        "Authorized Axway SecureTransport installation and exact edition/version for observed comparison"
+      ]
+    }
+  ],
+  "starting_state": "Owner-requested repository recreation; implementation retained. See STATUS.md; previous history is retained only in the ignored recovery copy."
+}

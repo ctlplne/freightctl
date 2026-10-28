@@ -1,0 +1,29 @@
+# Local credentials and runtime state
+.private/
+.env
+.env.*
+!.env.example
+.cache/
+.local/
+tmp/
+data/
+backups/
+models/
+payloads/
+evidence/raw/
+
+# Build and dependency output
+bin/
+dist/
+coverage/
+node_modules/
+*.test
+*.prof
+coverage.out
+
+# Editor and operating system files
+.DS_Store
+.idea/
+*.swp
+
+# Qualification manifests and redacted evidence should remain tracked.

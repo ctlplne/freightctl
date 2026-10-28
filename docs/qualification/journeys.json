@@ -1,0 +1,209 @@
+{
+  "schema_version": 1,
+  "journeys": [
+    {
+      "id": "J01",
+      "name": "Clean install and first exchange",
+      "state": "planned",
+      "goal_reference": "GOAL.md section 5 item 1",
+      "candidate": null,
+      "artifact_digests": {},
+      "environment": null,
+      "steps": [],
+      "assistance": null,
+      "duration_seconds": null,
+      "evidence": [],
+      "failures": [],
+      "limits": [
+        "Not run; no application at bootstrap"
+      ]
+    },
+    {
+      "id": "J02",
+      "name": "Authenticated validated encrypted business file",
+      "state": "planned",
+      "goal_reference": "GOAL.md section 5 item 2",
+      "candidate": null,
+      "artifact_digests": {},
+      "environment": null,
+      "steps": [],
+      "assistance": null,
+      "duration_seconds": null,
+      "evidence": [],
+      "failures": [],
+      "limits": [
+        "Not run; no application at bootstrap"
+      ]
+    },
+    {
+      "id": "J03",
+      "name": "Scheduled collection and downstream outcome",
+      "state": "planned",
+      "goal_reference": "GOAL.md section 5 item 3",
+      "candidate": null,
+      "artifact_digests": {},
+      "environment": null,
+      "steps": [],
+      "assistance": null,
+      "duration_seconds": null,
+      "evidence": [],
+      "failures": [],
+      "limits": [
+        "Not run; no application at bootstrap"
+      ]
+    },
+    {
+      "id": "J04",
+      "name": "Interrupted browser upload and governed sharing",
+      "state": "planned",
+      "goal_reference": "GOAL.md section 5 item 4",
+      "candidate": null,
+      "artifact_digests": {},
+      "environment": null,
+      "steps": [],
+      "assistance": null,
+      "duration_seconds": null,
+      "evidence": [],
+      "failures": [],
+      "limits": [
+        "Not run; no application at bootstrap"
+      ]
+    },
+    {
+      "id": "J05",
+      "name": "Partner onboarding and key rotation",
+      "state": "planned",
+      "goal_reference": "GOAL.md section 5 item 5",
+      "candidate": null,
+      "artifact_digests": {},
+      "environment": null,
+      "steps": [],
+      "assistance": null,
+      "duration_seconds": null,
+      "evidence": [],
+      "failures": [],
+      "limits": [
+        "Not run; no application at bootstrap"
+      ]
+    },
+    {
+      "id": "J06",
+      "name": "Diagnose and recover real operational failures",
+      "state": "planned",
+      "goal_reference": "GOAL.md section 5 item 6",
+      "candidate": null,
+      "artifact_digests": {},
+      "environment": null,
+      "steps": [],
+      "assistance": null,
+      "duration_seconds": null,
+      "evidence": [],
+      "failures": [],
+      "limits": [
+        "Not run; no application at bootstrap"
+      ]
+    },
+    {
+      "id": "J07",
+      "name": "Import compare cut over and roll back",
+      "state": "planned",
+      "goal_reference": "GOAL.md section 5 item 7",
+      "candidate": null,
+      "artifact_digests": {},
+      "environment": null,
+      "steps": [],
+      "assistance": null,
+      "duration_seconds": null,
+      "evidence": [],
+      "failures": [],
+      "limits": [
+        "Not run; no application at bootstrap"
+      ]
+    },
+    {
+      "id": "J08",
+      "name": "Requirements to tested approved workflow; AI disabled replay",
+      "state": "planned",
+      "goal_reference": "GOAL.md section 5 item 8",
+      "candidate": null,
+      "artifact_digests": {},
+      "environment": null,
+      "steps": [],
+      "assistance": null,
+      "duration_seconds": null,
+      "evidence": [],
+      "failures": [],
+      "limits": [
+        "Not run; no application at bootstrap"
+      ]
+    },
+    {
+      "id": "J09",
+      "name": "Evidence-backed AI diagnosis and governed recovery",
+      "state": "planned",
+      "goal_reference": "GOAL.md section 5 item 9",
+      "candidate": null,
+      "artifact_digests": {},
+      "environment": null,
+      "steps": [],
+      "assistance": null,
+      "duration_seconds": null,
+      "evidence": [],
+      "failures": [],
+      "limits": [
+        "Not run; no application at bootstrap"
+      ]
+    },
+    {
+      "id": "J10",
+      "name": "Isolation through every surface",
+      "state": "planned",
+      "goal_reference": "GOAL.md section 5 item 10",
+      "candidate": null,
+      "artifact_digests": {},
+      "environment": null,
+      "steps": [],
+      "assistance": null,
+      "duration_seconds": null,
+      "evidence": [],
+      "failures": [],
+      "limits": [
+        "Not run; no application at bootstrap"
+      ]
+    },
+    {
+      "id": "J11",
+      "name": "Multi-worker failure restore upgrade and endurance",
+      "state": "planned",
+      "goal_reference": "GOAL.md section 5 item 11",
+      "candidate": null,
+      "artifact_digests": {},
+      "environment": null,
+      "steps": [],
+      "assistance": null,
+      "duration_seconds": null,
+      "evidence": [],
+      "failures": [],
+      "limits": [
+        "Not run; no application at bootstrap"
+      ]
+    },
+    {
+      "id": "J12",
+      "name": "Export and recover with ordinary tools",
+      "state": "planned",
+      "goal_reference": "GOAL.md section 5 item 12",
+      "candidate": null,
+      "artifact_digests": {},
+      "environment": null,
+      "steps": [],
+      "assistance": null,
+      "duration_seconds": null,
+      "evidence": [],
+      "failures": [],
+      "limits": [
+        "Not run; no application at bootstrap"
+      ]
+    }
+  ]
+}

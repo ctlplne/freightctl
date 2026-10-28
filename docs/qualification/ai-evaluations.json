@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "state": "planned",
+  "profiles": [],
+  "datasets": [],
+  "results": [],
+  "requirements": {
+    "workflow_and_migration_cases": 100,
+    "diagnostic_incidents": 50,
+    "adversarial_cases": 100,
+    "qualified_private_profiles": 2,
+    "workflow_success_minimum": 0.9,
+    "diagnosis_success_minimum": 0.9,
+    "forbidden_actions_allowed": 0
+  },
+  "limits": [
+    "No model, harness or AI capability exists. Model answers never qualify execution."
+  ]
+}

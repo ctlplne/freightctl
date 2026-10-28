@@ -1,0 +1,214 @@
+{
+  "schema_version": 1,
+  "goal_state": "active",
+  "items": [
+    {
+      "id": "R001",
+      "priority_stage": 0,
+      "description": "Pin remaining exact competitor editions, gateway documentation, protocol profiles and native client versions",
+      "goal_sections": [
+        3,
+        6
+      ],
+      "state": "planned",
+      "evidence": []
+    },
+    {
+      "id": "R002",
+      "priority_stage": 1,
+      "description": "Durable PostgreSQL journal, enforced tenant/partner boundaries and idempotent revision custody",
+      "goal_sections": [
+        10,
+        11,
+        12
+      ],
+      "state": "planned",
+      "evidence": []
+    },
+    {
+      "id": "R003",
+      "priority_stage": 1,
+      "description": "First secure HTTPS and SFTP exchange, authentication and independent receipt",
+      "goal_sections": [
+        5,
+        6,
+        16
+      ],
+      "state": "planned",
+      "evidence": []
+    },
+    {
+      "id": "R004",
+      "priority_stage": 1,
+      "description": "Bounded processing, durable external intents, fencing and ambiguous outcome recovery",
+      "goal_sections": [
+        8,
+        10
+      ],
+      "state": "planned",
+      "evidence": []
+    },
+    {
+      "id": "R005",
+      "priority_stage": 1,
+      "description": "Typed workflow and first private-model proposal/diagnosis with AI-disabled replay",
+      "goal_sections": [
+        13,
+        14
+      ],
+      "state": "planned",
+      "evidence": []
+    },
+    {
+      "id": "R006",
+      "priority_stage": 2,
+      "description": "Partner onboarding, accessible portal, invitations, browser resume, sharing, forms and secure mail",
+      "goal_sections": [
+        9,
+        16
+      ],
+      "state": "planned",
+      "evidence": []
+    },
+    {
+      "id": "R007",
+      "priority_stage": 2,
+      "description": "Schedules/calendars, connectors, migration importers, comparison, cutover and exit",
+      "goal_sections": [
+        7,
+        8,
+        15
+      ],
+      "state": "planned",
+      "evidence": []
+    },
+    {
+      "id": "R008",
+      "priority_stage": 3,
+      "description": "Remaining protocol roles, cryptography, receipts, scans, transformations and approvals",
+      "goal_sections": [
+        6,
+        11,
+        12
+      ],
+      "state": "planned",
+      "evidence": []
+    },
+    {
+      "id": "R009",
+      "priority_stage": 3,
+      "description": "Identity providers, granular delegation, lifecycle, governance and studio integration",
+      "goal_sections": [
+        4,
+        11
+      ],
+      "state": "planned",
+      "evidence": []
+    },
+    {
+      "id": "R010",
+      "priority_stage": 4,
+      "description": "Two private model profiles and held-out quality/adversarial evaluation thresholds",
+      "goal_sections": [
+        13,
+        14
+      ],
+      "state": "planned",
+      "evidence": []
+    },
+    {
+      "id": "R011",
+      "priority_stage": 4,
+      "description": "Gateway, agent, native Linux/Windows, multi-host HA, backup/restore and upgrade",
+      "goal_sections": [
+        7,
+        17,
+        21
+      ],
+      "state": "planned",
+      "evidence": []
+    },
+    {
+      "id": "R012",
+      "priority_stage": 4,
+      "description": "Performance reference estate, 100 GiB resume, 1 TiB stream and 72-hour endurance",
+      "goal_sections": [
+        19
+      ],
+      "state": "planned",
+      "evidence": []
+    },
+    {
+      "id": "R013",
+      "priority_stage": 4,
+      "description": "Signed reproducible builds, SBOM, offline bundle, deployment and security/runbooks",
+      "goal_sections": [
+        20,
+        21
+      ],
+      "state": "planned",
+      "evidence": []
+    },
+    {
+      "id": "R014",
+      "priority_stage": 5,
+      "description": "Permitted incumbent runs and independent operator evidence; measured competitive claims",
+      "goal_sections": [
+        24,
+        25
+      ],
+      "state": "planned",
+      "evidence": []
+    },
+    {
+      "id": "R015",
+      "priority_stage": 5,
+      "description": "Owner-approved exact BUSL grant and licensing text before any distribution",
+      "goal_sections": [
+        2
+      ],
+      "state": "planned",
+      "evidence": []
+    }
+  ],
+  "external_dependencies": [
+    {
+      "id": "X01",
+      "requirement": "Authorized paid incumbent installations, export fixtures and exact editions",
+      "affects": [
+        "R001",
+        "R007",
+        "R014"
+      ]
+    },
+    {
+      "id": "X02",
+      "requirement": "Real cloud accounts and proprietary/native protocol peers/specifications",
+      "affects": [
+        "R007",
+        "R008"
+      ]
+    },
+    {
+      "id": "X03",
+      "requirement": "Native Windows/Linux machines, multiple hosts, reference storage/network and private-model hardware",
+      "affects": [
+        "R010",
+        "R011",
+        "R012"
+      ]
+    },
+    {
+      "id": "X04",
+      "requirement": "Owner-approved license grant and distribution authority",
+      "affects": [
+        "R015"
+      ]
+    }
+  ],
+  "readiness": {
+    "assisted_design_partner": "not qualified",
+    "ordinary_operator": "not qualified",
+    "enterprise_release": "not qualified"
+  }
+}

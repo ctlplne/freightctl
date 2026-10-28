@@ -1,0 +1,21 @@
+# 0001: durable exchange foundation
+
+Accepted for local implementation, 2026-10-28. Retained through the owner-requested repository recreation; no runtime qualification is inferred from this design.
+
+Use Go 1.26.10, PostgreSQL 16.15 and local filesystem custody for the first development slice. Go 1.26 is within the [supported two-release window](https://go.dev/doc/devel/release); the host's 1.26.3 is older than the selected patch. PostgreSQL 16 is [supported](https://www.postgresql.org/support/versioning/). Pin actual module versions and image digests. A container running Linux on this Mac is a local integration environment; it does not qualify native production platforms.
+
+PostgreSQL owns durable control state. A journal event is the receipt in our ledger; a read model is the index built beside that receipt so an operator can find it quickly. Event, index update, idempotency result and any external-effect intent must commit together. Runtime connections use a separate non-owner role, without superuser or BYPASSRLS. Every domain primary/foreign key includes tenant identity. SQL policies enforce tenant and partner scope in addition to service authorization. A pooled connection must never keep another request's scope: set scope locally within each transaction.
+
+Do not grant runtime UPDATE/DELETE/TRUNCATE on the journal. No direct read-model mutation outside a journaled service transaction. Database owners and host administrators remain a trust boundary; append-only SQL permissions do not stop a superuser. Tamper-evident journal chaining and independently verified exports remain required work.
+
+Bytes and SQL cannot share a transaction. Stage each file under an unpredictable revision identity inside a private storage root. Stream through a bounded buffer, verify declared length and digest, sync the file, then sync its directory before recording acceptance. Record the immutable identity, byte length and digest in SQL. SQL failure can leave an orphan, never an acknowledged file without its bytes. Retain orphans for explicit reconciliation; do not delete an uncertain revision. Downloads must authorize metadata before opening the object, verify integrity, and never expose staged or quarantined bytes. Scan-required policies must block publication until the exact revision passes. Digest validation alone is not a malware scan.
+
+An idempotency key names one intended request. The same key and meaning returns the same result; changed meaning fails. Concurrency needs a database lock or unique constraint, not an in-process map. Successful acceptance means our declared local persistence boundary completed. It says nothing about a remote payroll system. External delivery will require transactional intents, leases/fences, remote receipts and an explicit ambiguous state before unsafe retries.
+
+The first API will be deliberately small: provision an isolated tenant/partner service identity, upload an immutable revision, retrieve authorized bytes and inspect events. HTTPS uses stock curl with certificate validation. Operator UI, SFTP, scanning, workflow execution, delivery and AI follow through the same service layer. Their absence remains open in the ledgers. No mandatory capability is removed by this dependency order.
+
+Direct randomness, digest, TLS configuration and secret handling belong under `internal/crypto`. Go HTTP and PostgreSQL protocol libraries have their own cryptographic internals; these are documented library boundaries, not permission for application packages to import primitives. Secrets use bounded byte buffers with explicit clearing and best-effort OS protection. Library parsing can create strings: describe that limit; do not claim impossible process-wide zeroization. No secret values in evidence, ordinary logs or models.
+
+Core imports no `ee/` packages. No commercial portal or entitlement dependency is introduced. Offline packaging, signed artifacts and the full React/TypeScript operator interface remain mandatory later gates.
+
+Rejected: SQLite development mode, Redis coordination, filesystem paths supplied by clients, a shared unrelated database, success based on mocks, and treating a localhost copy as independent enterprise qualification.

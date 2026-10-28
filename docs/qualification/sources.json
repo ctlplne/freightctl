@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "baseline_version": "2026-10-28.1",
+  "observed_on": "2026-10-28",
+  "method": "Official public documents read; no incumbent installation or observed interoperability. Marketing omissions and unspecified versions remain open. Refresh before any comparison claim.",
+  "sources": [
+    {
+      "id": "GA-F",
+      "title": "GoAnywhere detailed features",
+      "product": "GoAnywhere MFT",
+      "edition": "All licensed options",
+      "version": "not stated",
+      "url": "https://www.goanywhere.com/products/goanywhere-mft/detailed-features",
+      "observed_on": "2026-10-28",
+      "observation_kind": "documented capability only",
+      "installation_observed": false
+    },
+    {
+      "id": "GA-M",
+      "title": "GoAnywhere licensed modules",
+      "product": "GoAnywhere MFT",
+      "edition": "Paid modules named per row",
+      "version": "not stated",
+      "url": "https://www.goanywhere.com/products/goanywhere-mft/licensed-modules",
+      "observed_on": "2026-10-28",
+      "observation_kind": "documented capability only",
+      "installation_observed": false
+    },
+    {
+      "id": "MT",
+      "title": "MOVEit Transfer administrator guide",
+      "product": "MOVEit Transfer",
+      "edition": "Paid Transfer with Ad Hoc",
+      "version": "2026",
+      "url": "https://docs.progress.com/bundle/moveit-transfer-web-admin-help/page/MOVEit-Transfer-Documentation-2026.html",
+      "observed_on": "2026-10-28",
+      "observation_kind": "documented capability only",
+      "installation_observed": false
+    },
+    {
+      "id": "MA",
+      "title": "MOVEit Automation data sheet",
+      "product": "MOVEit Automation",
+      "edition": "Paid Automation; tier requires installation confirmation",
+      "version": "2026/05",
+      "url": "https://www.progress.com/docs/default-source/data-sheets/ds-moveit-automation-datasheet.pdf",
+      "observed_on": "2026-10-28",
+      "observation_kind": "documented capability only",
+      "installation_observed": false
+    },
+    {
+      "id": "JS",
+      "title": "JSCAPE product capabilities",
+      "product": "JSCAPE by Redwood",
+      "edition": "Paid MFT Server; Gateway and Monitor separately",
+      "version": "2026.3.1.560 advertised; not installed",
+      "url": "https://www.jscape.com/products/managed-file-transfer-software",
+      "observed_on": "2026-10-28",
+      "observation_kind": "documented capability only",
+      "installation_observed": false
+    },
+    {
+      "id": "CE",
+      "title": "Cerberus paid edition comparison",
+      "product": "Cerberus FTP Server",
+      "edition": "Enterprise and Enterprise Plus",
+      "version": "not stated",
+      "url": "https://www.cerberusftp.com/pricing/",
+      "observed_on": "2026-10-28",
+      "observation_kind": "documented capability only",
+      "installation_observed": false
+    },
+    {
+      "id": "SG",
+      "title": "SFTPGo edition boundaries",
+      "product": "SFTPGo",
+      "edition": "Open Source and Enterprise; as named per row",
+      "version": "not stated",
+      "url": "https://docs.sftpgo.com/enterprise/",
+      "observed_on": "2026-10-28",
+      "observation_kind": "documented capability only",
+      "installation_observed": false
+    },
+    {
+      "id": "IBM",
+      "title": "Sterling File Gateway overview",
+      "product": "IBM Sterling File Gateway",
+      "edition": "Commercial File Gateway with Partner Engagement Manager integration",
+      "version": "not stated",
+      "url": "https://www.ibm.com/products/file-gateway",
+      "observed_on": "2026-10-28",
+      "observation_kind": "documented capability only",
+      "installation_observed": false
+    },
+    {
+      "id": "AX",
+      "title": "SecureTransport overview",
+      "product": "Axway SecureTransport",
+      "edition": "Commercial SecureTransport; edition to confirm",
+      "version": "not stated",
+      "url": "https://www.axway.com/en/products/managed-file-transfer/securetransport",
+      "observed_on": "2026-10-28",
+      "observation_kind": "documented capability only",
+      "installation_observed": false
+    }
+  ]
+}
