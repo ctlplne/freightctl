@@ -109,24 +109,47 @@ func TestVersionOneUpgradePreservesReplayAndChecksums(t *testing.T) {
 		t.Fatal(err)
 	}
 	tenant, partner := secure.NewID(), secure.NewID()
-	if err = Provision(ctx, adminPath, tenant, partner, tokenPath); err != nil {
-		t.Fatal(err)
-	}
 	token, err := secure.ReadSecret(tokenPath, 64)
 	if err != nil {
 		t.Fatal(err)
 	}
 	scope := Scope{Tenant: tenant, Partner: partner, TokenHash: secure.Digest(token.Bytes)}
 	token.Close()
+	// Seed through the original v1 SQL contract, not the current runtime API.
+	actor := secure.NewID()
+	seed, err := admin.Begin(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer seed.Rollback(ctx)
+	if _, err = seed.Exec(ctx, `INSERT INTO tenants VALUES($1)`, tenant); err != nil {
+		t.Fatal(err)
+	}
+	if _, err = seed.Exec(ctx, `INSERT INTO partners VALUES($1,$2)`, tenant, partner); err != nil {
+		t.Fatal(err)
+	}
+	if _, err = seed.Exec(ctx, `INSERT INTO credentials(tenant_id,partner_id,actor_id,token_hash) VALUES($1,$2,$3,$4)`, tenant, partner, actor, scope.TokenHash); err != nil {
+		t.Fatal(err)
+	}
+	if _, err = seed.Exec(ctx, `INSERT INTO events(tenant_id,partner_id,event_id,actor_id,kind,resource_id,payload) VALUES($1,$2,$3,$4,'ServiceIdentityEnrolled',$4,'{}')`, tenant, partner, secure.NewID(), actor); err != nil {
+		t.Fatal(err)
+	}
+	if err = seed.Commit(ctx); err != nil {
+		t.Fatal(err)
+	}
 	pool, err := connect(ctx, runtimePath)
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer pool.Close()
-	tx, err := (&Store{Pool: pool}).Begin(ctx, scope)
+	legacy, err := pool.Begin(ctx)
 	if err != nil {
 		t.Fatal(err)
 	}
+	if _, err = legacy.Exec(ctx, `SELECT set_config('freightctl.tenant_id',$1,true),set_config('freightctl.partner_id',$2,true)`, tenant, partner); err != nil {
+		t.Fatal(err)
+	}
+	tx := &Transaction{Tx: legacy, Scope: scope, Actor: actor, Permissions: DefaultPermissions, Root: "/", AuthorityRevision: 1}
 	defer tx.Tx.Rollback(ctx)
 	file := File{ID: secure.NewID(), Size: 3, SHA256: secure.Digest([]byte("old")), Policy: "integrity-only-v1"}
 	file.EventID, err = tx.Append(ctx, "FileAccepted", file.ID, map[string]any{"size_bytes": file.Size, "sha256": file.SHA256, "policy": file.Policy})

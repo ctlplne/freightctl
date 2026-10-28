@@ -30,6 +30,12 @@ func (s *Store) SnapshotEvents(ctx context.Context, scope Scope, maxEvents, maxB
 		return nil, err
 	}
 	defer t.Tx.Rollback(ctx)
+	if err = t.Require("audit_read"); err != nil {
+		return nil, err
+	}
+	if t.Root != "/" {
+		return nil, ErrForbidden
+	}
 	snapshot := &AuditSnapshot{Format: secure.AuditFormat, ID: secure.NewID(), Tenant: scope.Tenant, Partner: scope.Partner, Events: make([]Event, 0), Boundary: "Signature detects changes after export. It does not prove the database was unmodified before this snapshot or that the receiver consumed it."}
 	if err = t.Tx.QueryRow(ctx, `SELECT transaction_timestamp()`).Scan(&snapshot.At); err != nil {
 		return nil, err

@@ -9,6 +9,7 @@ import socket
 import subprocess
 import time
 import uuid
+from urllib.parse import urlencode
 
 os.umask(0o077)
 root = Path(__file__).resolve().parents[1]
@@ -213,6 +214,62 @@ try:
         foreign_snapshot = json.loads(base64.b64decode(json.loads(artifact.read_text())["payload_base64"]))
         assert foreign_snapshot["tenant_id"] == tid and foreign_snapshot["partner_id"] == pid
         assert all(e["resource_id"] not in accepted_ids for e in foreign_snapshot["events"])
+    # Virtual folders, file IDs and account mounts use one shared authorization layer.
+    identity = json.loads(curl("namespace-owner-identity", api + "/identity", 200).read_text())
+    cli_identity = json.loads(cli("identity", "--tenant", tenant, "--partner", partner, "--token-file", str(private / "identity-0.token")))
+    assert cli_identity == identity and identity["ssh_username"].endswith(identity["actor_id"])
+    def path_url(route, path, **query):
+        return api + "/namespace/" + route + "?" + urlencode({"path": path, **query})
+    def path_command(label, value, expected=200, actor=0, key=None):
+        body = raw / (label + ".command.json")
+        body.write_text(json.dumps(value) + "\n")
+        return curl(label, api + "/namespace/commands", expected, identity=actor, extra=["--header", "Content-Type: application/json", "--header", "Idempotency-Key: " + (key or label), "--data-binary", "@" + str(body)])
+    path_command("namespace-create-inbox", {"operation": "mkdir", "path": "/inbox", "mode": 0o770})
+    path_command("namespace-create-private", {"operation": "mkdir", "path": "/private"})
+    namespace_upload = ["--request", "PUT", "--header", "Idempotency-Key: virtual-upload", "--header", f"X-File-Size: {len(data)}", "--header", "X-Content-SHA256: " + digest, "--data-binary", "@" + str(payload)]
+    virtual_file = json.loads(curl("namespace-upload-unicode", path_url("file", "/inbox/cafe\u0301.csv"), 201, extra=namespace_upload).read_text())["file"]
+    virtual_replay = json.loads(curl("namespace-canonical-retry", path_url("file", "/inbox/café.csv"), 200, extra=namespace_upload).read_text())
+    assert virtual_replay["replayed"] and virtual_replay["file"] == virtual_file
+    assert curl("namespace-download", path_url("file", "/inbox/café.csv"), 200).read_bytes() == data
+    assert curl("namespace-range", path_url("file", "/inbox/café.csv"), 206, extra=["--range", "7-63"]).read_bytes() == data[7:64]
+    current = json.loads(curl("namespace-stat", path_url("stat", "/inbox/café.csv"), 200).read_text())
+    for name in ("a", "b"):
+        path_command("namespace-directory-" + name, {"operation": "mkdir", "path": "/inbox/" + name})
+    page = json.loads(curl("namespace-page-one", path_url("entries", "/inbox", limit=2), 200).read_text())
+    assert len(page["entries"]) == 2 and page["next"]
+    last_page = json.loads(curl("namespace-page-two", path_url("entries", "/inbox", limit=2, after=page["next"]), 200).read_text())
+    assert len(last_page["entries"]) == 1 and not last_page.get("next")
+    assert {e["path"] for e in page["entries"] + last_page["entries"]} == {"/inbox/a", "/inbox/b", "/inbox/café.csv"}
+    curl("namespace-traversal-denied", path_url("stat", "/../private"), 400)
+    curl("namespace-foreign-page-cursor-denied", path_url("entries", "/inbox", after="/private/x"), 400)
+    curl("namespace-unbounded-page-denied", path_url("entries", "/inbox", limit=1001), 413)
+    path_command("namespace-stale-revision-denied", {"operation": "rename", "path": current["path"], "target": "/inbox/renamed.csv", "expected_revision": current["revision"] + 1}, expected=409)
+    mounted_token = private / "mounted.token"
+    cli("token", "--token-file", str(mounted_token))
+    cli("enroll", "--tenant", tenant, "--partner", partner, "--token-file", str(mounted_token), "--permissions", "read,list,inspect,audit_read", "--namespace-root", "/inbox")
+    mounted_headers = private / "mounted.headers"
+    mounted_headers.write_bytes(b"Authorization: Bearer " + mounted_token.read_bytes() + b"\n")
+    headers.append(mounted_headers)
+    mounted_index = len(headers) - 1
+    mounted = json.loads(curl("namespace-mounted-root", path_url("entries", "/"), 200, identity=mounted_index).read_text())
+    assert {e["path"] for e in mounted["entries"]} == {"/a", "/b", "/café.csv"}
+    assert curl("namespace-mounted-download", path_url("file", "/café.csv"), 200, identity=mounted_index).read_bytes() == data
+    curl("namespace-mount-hidden-id-denied", file_url, 404, identity=mounted_index)
+    curl("namespace-mount-hidden-path-denied", path_url("stat", "/private"), 404, identity=mounted_index)
+    path_command("namespace-readonly-mutation-denied", {"operation": "mkdir", "path": "/bad"}, expected=403, actor=mounted_index)
+    for suffix in ("/events", "/custody/reconcile", "/audit/export"):
+        curl("namespace-mounted-global-" + suffix.rsplit("/", 1)[-1] + "-denied", api + suffix, 403, identity=mounted_index)
+    path_command("namespace-revoke-file-mode", {"operation": "setstat", "path": current["path"], "expected_revision": current["revision"], "mode": 0})
+    curl("namespace-live-mode-download-denied", path_url("file", "/café.csv"), 403, identity=mounted_index)
+    curl("namespace-live-mode-id-denied", api + "/files/" + virtual_file["id"], 404, identity=mounted_index)
+    path_command("namespace-tree-rename", {"operation": "rename", "path": "/inbox", "target": "/archive", "expected_revision": 1})
+    curl("namespace-renamed-mount-not-found", path_url("entries", "/"), 404, identity=mounted_index)
+    assert curl("namespace-owner-after-tree-rename", path_url("file", "/archive/café.csv"), 200).read_bytes() == data
+    cli_request = raw / "namespace-cli.command.json"
+    cli_request.write_text(json.dumps({"operation": "mkdir", "path": "/cli-created"}) + "\n")
+    cli_result = json.loads(cli("namespace", "--tenant", tenant, "--partner", partner, "--token-file", str(private / "identity-0.token"), "--request-file", str(cli_request), "--idempotency-key", "cli-create"))
+    assert cli_result["entry"]["path"] == "/cli-created"
+    assert json.loads(curl("namespace-cli-api-same-result", path_url("stat", "/cli-created"), 200).read_text())["id"] == cli_result["entry"]["id"]
     state = "passed"
     failure = None
 except Exception as error:

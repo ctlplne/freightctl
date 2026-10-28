@@ -137,6 +137,22 @@
       "regression_evidence": [
         "docs/qualification/evidence/F003-signed-audit.json"
       ]
+    },
+    {
+      "id": "D010",
+      "severity": "namespace admission defect",
+      "state": "fixed locally",
+      "observed_on": "2026-10-28",
+      "candidate": "b48fe6bd0720b99b6489a051945bebaf5ee74527",
+      "candidate_note": "New uncommitted namespace source based on this commit; first failing source hashes retained in F004.",
+      "journey": "J10",
+      "reproduction": "sh scripts/go.sh test ./internal/vpath -run TestMountAndVirtualPathCombinedLengthBound -v",
+      "first_failure": "combined path exceeded the 1024-byte storage contract: 1026",
+      "cause": "The mount root and virtual filename were bounded independently; their combined path was not validated.",
+      "resolution": "Validate the combined canonical path before namespace lookups and byte staging; add a regression and strengthen canonical-path fuzz invariants.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F004-virtual-namespace.json"
+      ]
     }
   ]
 }

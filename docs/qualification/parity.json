@@ -46,11 +46,14 @@
         "independent SFTP peer"
       ],
       "acceptance_journey": "J01",
-      "state": "planned",
-      "evidence": [],
+      "state": "implementing",
+      "evidence": [
+        "docs/qualification/evidence/F004-virtual-namespace.json"
+      ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
-      ]
+      ],
+      "current_limit": "F004 verifies namespace/capability foundations through CLI/HTTPS. SSH transport uses a synthetic subsystem; no SFTP file exchange or complete customer journey is qualified. Other required row behavior remains open."
     },
     {
       "id": "P-SFTP-SEND",
@@ -279,11 +282,14 @@
         "independent operator or receiver"
       ],
       "acceptance_journey": "J02",
-      "state": "planned",
-      "evidence": [],
+      "state": "implementing",
+      "evidence": [
+        "docs/qualification/evidence/F004-virtual-namespace.json"
+      ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
-      ]
+      ],
+      "current_limit": "F004 verifies namespace/capability foundations through CLI/HTTPS. SSH transport uses a synthetic subsystem; no SFTP file exchange or complete customer journey is qualified. Other required row behavior remains open."
     },
     {
       "id": "P-SCP-LEGACY",
@@ -395,11 +401,13 @@
       "acceptance_journey": "J02",
       "state": "implementing",
       "evidence": [
-        "docs/qualification/evidence/F001-custody-foundation.json"
+        "docs/qualification/evidence/F001-custody-foundation.json",
+        "docs/qualification/evidence/F004-virtual-namespace.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
-      ]
+      ],
+      "current_limit": "F004 verifies namespace/capability foundations through CLI/HTTPS. SSH transport uses a synthetic subsystem; no SFTP file exchange or complete customer journey is qualified. Other required row behavior remains open."
     },
     {
       "id": "P-HTTPS-SEND",
@@ -435,11 +443,13 @@
       "acceptance_journey": "J02",
       "state": "implementing",
       "evidence": [
-        "docs/qualification/evidence/F001-custody-foundation.json"
+        "docs/qualification/evidence/F001-custody-foundation.json",
+        "docs/qualification/evidence/F004-virtual-namespace.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
-      ]
+      ],
+      "current_limit": "F004 verifies namespace/capability foundations through CLI/HTTPS. SSH transport uses a synthetic subsystem; no SFTP file exchange or complete customer journey is qualified. Other required row behavior remains open."
     },
     {
       "id": "P-HTTP-RESUME",
@@ -931,11 +941,13 @@
       "acceptance_journey": "J02",
       "state": "implementing",
       "evidence": [
-        "docs/qualification/evidence/F001-custody-foundation.json"
+        "docs/qualification/evidence/F001-custody-foundation.json",
+        "docs/qualification/evidence/F004-virtual-namespace.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
-      ]
+      ],
+      "current_limit": "F004 verifies namespace/capability foundations through CLI/HTTPS. SSH transport uses a synthetic subsystem; no SFTP file exchange or complete customer journey is qualified. Other required row behavior remains open."
     },
     {
       "id": "C-NETWORK",
@@ -1313,11 +1325,13 @@
       "acceptance_journey": "J10",
       "state": "implementing",
       "evidence": [
-        "docs/qualification/evidence/F001-custody-foundation.json"
+        "docs/qualification/evidence/F001-custody-foundation.json",
+        "docs/qualification/evidence/F004-virtual-namespace.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
-      ]
+      ],
+      "current_limit": "F004 verifies namespace/capability foundations through CLI/HTTPS. SSH transport uses a synthetic subsystem; no SFTP file exchange or complete customer journey is qualified. Other required row behavior remains open."
     },
     {
       "id": "A-ROLE",
@@ -1351,11 +1365,14 @@
         "independent operator or receiver"
       ],
       "acceptance_journey": "J10",
-      "state": "planned",
-      "evidence": [],
+      "state": "implementing",
+      "evidence": [
+        "docs/qualification/evidence/F004-virtual-namespace.json"
+      ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
-      ]
+      ],
+      "current_limit": "F004 verifies namespace/capability foundations through CLI/HTTPS. SSH transport uses a synthetic subsystem; no SFTP file exchange or complete customer journey is qualified. Other required row behavior remains open."
     },
     {
       "id": "W-DEFINITION",

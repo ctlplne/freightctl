@@ -26,10 +26,11 @@
       "evidence": [
         "docs/qualification/evidence/F001-custody-foundation.json",
         "docs/qualification/evidence/F002-reconciliation.json",
-        "docs/qualification/evidence/F003-signed-audit.json"
+        "docs/qualification/evidence/F003-signed-audit.json",
+        "docs/qualification/evidence/F004-virtual-namespace.json"
       ],
       "remaining_details": [
-        "Signed bounded snapshots and per-transaction policy locking pass locally. Finish protected retention, journal rebuild/chaining, larger exports, approved custody recovery, remaining crash boundaries, identity lifecycle and scalable reservations."
+        "F004 adds journaled virtual namespace/history, actor receipts and mounted-root/capability checks. Finish scalable reservations, approved recovery, protected retention, journal rebuild/chaining, larger exports and remaining crash boundaries."
       ]
     },
     {
@@ -43,10 +44,11 @@
       ],
       "state": "implementing",
       "evidence": [
-        "docs/qualification/evidence/F001-custody-foundation.json"
+        "docs/qualification/evidence/F001-custody-foundation.json",
+        "docs/qualification/evidence/F004-virtual-namespace.json"
       ],
       "remaining_details": [
-        "Add SFTP, resume, browser/admin onboarding and independent recipient receipts; HTTPS service-account exercise is narrower than J01."
+        "Shared path/permission service and SSH transport boundary are tested. Implement registered-key lifecycle, bounded SFTP packet/handle adapter, atomic writer close and disconnect/crash recovery; qualify with stock OpenSSH. Resume, browser/admin onboarding and recipient business receipts remain open."
       ]
     },
     {
@@ -114,8 +116,13 @@
         4,
         11
       ],
-      "state": "planned",
-      "evidence": []
+      "state": "implementing",
+      "evidence": [
+        "docs/qualification/evidence/F004-virtual-namespace.json"
+      ],
+      "remaining_details": [
+        "Basic service-account grants, mount policy and revision invalidation exist. Delegated administration, human identities, provider integration, MFA, approvals, lifecycle UI and comprehensive governance remain open."
+      ]
     },
     {
       "id": "R010",

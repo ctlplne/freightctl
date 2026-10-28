@@ -61,11 +61,17 @@ func (s *Service) Export(ctx context.Context, scope store.Scope) (*secure.Signed
 		return nil, err
 	}
 	defer t.Tx.Rollback(ctx)
+	if err = t.Require("audit_read"); err != nil {
+		return nil, err
+	}
 	_, err = t.Append(ctx, "AuditSnapshotPrepared", snapshot.ID, map[string]any{"event_count": snapshot.EventCount, "snapshot_at": snapshot.At, "payload_sha256": secure.Digest(payload.Bytes()), "key_sha256_der": envelope.KeyFingerprint})
 	if err != nil {
 		return nil, err
 	}
 	if err = t.Reauthorize(ctx); err != nil {
+		return nil, err
+	}
+	if err = t.Require("audit_read"); err != nil {
 		return nil, err
 	}
 	if err = t.Tx.Commit(ctx); err != nil {

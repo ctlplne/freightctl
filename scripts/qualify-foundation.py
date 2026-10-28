@@ -1,0 +1,43 @@
+#!/usr/bin/env python3
+"""Retain native foundation checks and exact input hashes; no readiness inferred."""
+from pathlib import Path
+from datetime import datetime, timezone
+import hashlib
+import json
+import os
+import subprocess
+import time
+import uuid
+os.umask(0o077)
+root=Path(__file__).resolve().parents[1]
+os.chdir(root)
+raw=root/'evidence/raw'/('foundation-'+uuid.uuid4().hex)
+raw.mkdir(parents=True,mode=0o700)
+commands=[
+('records',['python3','scripts/check-records.py']),
+('module-integrity',['sh','scripts/go.sh','mod','verify']),
+('vet',['sh','scripts/go.sh','vet','./...']),
+('unit-race',['sh','scripts/go.sh','test','-race','./...']),
+('postgres-integration-race',['sh','scripts/integration.sh','-race','-v']),
+('virtual-path-fuzz',['sh','scripts/go.sh','test','./internal/vpath','-fuzz=FuzzCanonicalPath','-fuzztime=5s','-parallel=2']),
+('custody-name-fuzz',['sh','scripts/go.sh','test','./internal/custody','-fuzz=FuzzCustodyName','-fuzztime=5s','-parallel=2']),
+('stock-curl-https',['python3','scripts/qualify-https.py']),
+]
+results=[]
+for name,command in commands:
+    start=time.monotonic()
+    log=raw/(name+'.log')
+    with log.open('wb') as output:
+        result=subprocess.run(command,stdout=output,stderr=subprocess.STDOUT)
+    results.append({'name':name,'command':command,'exit_code':result.returncode,'duration_seconds':round(time.monotonic()-start,3),'native_output':str(log.relative_to(root)),'native_output_sha256':hashlib.sha256(log.read_bytes()).hexdigest()})
+    print(name+': '+('passed' if result.returncode==0 else 'FAILED'),flush=True)
+    if result.returncode:
+        print(log.read_text()[-4000:],flush=True)
+        break
+paths=subprocess.check_output(['git','ls-files','--cached','--others','--exclude-standard','-z']).decode().split('\0')
+sources={p:hashlib.sha256((root/p).read_bytes()).hexdigest() for p in sorted(set(paths)) if p and ((root/p).suffix in ('.go','.sql','.sh','.py') or p in ('go.mod','go.sum'))}
+manifest={'schema_version':1,'started_from':subprocess.check_output(['git','rev-parse','HEAD']).decode().strip(),'source_sha256':sources,'observed_at':datetime.now(timezone.utc).isoformat(),'results':results,'state':'passed' if len(results)==len(commands) and all(x['exit_code']==0 for x in results) else 'failed'}
+(raw/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
+(root/'.private/foundation-current').write_text(str(raw)+'\n')
+print(str(raw/'manifest.json'),flush=True)
+if manifest['state']!='passed':raise SystemExit(1)

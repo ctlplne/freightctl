@@ -124,7 +124,9 @@
         "sha256": "99f22fbd3e936aa4d38569ada1bfcccbca47e46f6c3e08aa47f6531128e9b983"
       }
     ],
-    "binary_sha256": "ca3260d814af99ab3c8e6cb40f5bcac558a7bc1df0d9922408d5734e90399baa"
+    "binary_sha256": "ca3260d814af99ab3c8e6cb40f5bcac558a7bc1df0d9922408d5734e90399baa",
+    "committed_source": "b48fe6bd0720b99b6489a051945bebaf5ee74527",
+    "committed_source_note": "Every recorded source hash matches the committed blob; verification performed without rewriting history."
   },
   "checks": [
     {

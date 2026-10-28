@@ -11,6 +11,7 @@ import (
 	"time"
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
+	"github.com/ctlplne/freightctl/internal/vpath"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -24,20 +25,36 @@ var eventBinding string
 //go:embed 003_event_bounds.sql
 var eventBounds string
 
-var migrations = []string{schema, eventBinding, eventBounds}
+//go:embed 004_namespace.sql
+var namespaceSchema string
+
+var migrations = []string{schema, eventBinding, eventBounds, namespaceSchema}
+var domainTables = []string{"tenants", "partners", "credentials", "events", "files", "idempotency", "namespace_entries", "namespace_revisions", "namespace_commands", "ssh_keys"}
 
 var ErrUnauthorized = errors.New("unauthorized")
 var ErrNotFound = errors.New("not found")
 var ErrConflict = errors.New("idempotency key has different meaning")
 var ErrLimit = errors.New("operation exceeds configured evidence bounds")
 var ErrIsolation = errors.New("required database isolation is not active")
+var ErrForbidden = errors.New("permission denied")
+var ErrExists = errors.New("virtual path already exists")
+var ErrState = errors.New("operation does not match the current resource state")
+var ErrRevision = errors.New("resource revision changed")
+
+var DefaultPermissions = []string{"read", "write", "list", "manage_paths", "inspect", "audit_read", "admin"}
 
 var uuidPattern = regexp.MustCompile(`^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$`)
 
 func ValidID(id string) bool { return uuidPattern.MatchString(id) }
 
-// Scope comes from a verified credential; the transaction authenticates its requested scope first.
-type Scope struct{ Tenant, Partner, TokenHash string }
+// Scope carries selectors, not authority. Only trusted transport middleware may
+// supply an SSH proof after the protocol library verifies its signature.
+type Scope struct {
+	Tenant, Partner, TokenHash string
+	Actor, SSHKeyFingerprint   string
+	AuthorityRevision          int64
+	SessionID                  string
+}
 type Store struct{ Pool *pgxpool.Pool }
 type File struct {
 	ID      string `json:"id"`
@@ -55,9 +72,13 @@ type Event struct {
 	At         time.Time       `json:"happened_at"`
 }
 type Transaction struct {
-	Tx    pgx.Tx
-	Scope Scope
-	Actor string
+	Tx                pgx.Tx
+	Scope             Scope
+	Actor             string
+	Permissions       []string
+	Root              string
+	AuthorityRevision int64
+	PendingFiles      map[string]bool
 }
 
 // Connection strings are read from bounded protected references. pgx requires a string copy.
@@ -101,8 +122,8 @@ func Open(ctx context.Context, path string) (*Store, error) {
 		return nil, errors.New("runtime database role must be non-owner without elevated privileges or memberships")
 	}
 	var protected int
-	err = p.QueryRow(ctx, `SELECT count(*) FROM pg_class WHERE relnamespace='public'::regnamespace AND relname=ANY($1) AND relrowsecurity AND relforcerowsecurity`, []string{"tenants", "partners", "credentials", "events", "files", "idempotency"}).Scan(&protected)
-	if err != nil || protected != 6 {
+	err = p.QueryRow(ctx, `SELECT count(*) FROM pg_class WHERE relnamespace='public'::regnamespace AND relname=ANY($1) AND relrowsecurity AND relforcerowsecurity`, domainTables).Scan(&protected)
+	if err != nil || protected != len(domainTables) {
 		p.Close()
 		return nil, errors.New("runtime requires forced row security on every domain table")
 	}
@@ -197,8 +218,29 @@ func Migrate(ctx context.Context, adminPath, passwordPath string) error {
 }
 
 func Provision(ctx context.Context, adminPath, tenant, partner, tokenPath string) error {
+	return ProvisionPolicy(ctx, adminPath, tenant, partner, tokenPath, DefaultPermissions, "/")
+}
+
+func ProvisionPolicy(ctx context.Context, adminPath, tenant, partner, tokenPath string, permissions []string, root string) error {
 	if !ValidID(tenant) || !ValidID(partner) {
 		return errors.New("invalid tenant or partner UUID")
+	}
+	canonical, err := vpath.Canonical(root)
+	if err != nil || canonical != root {
+		return vpath.ErrPath
+	}
+	seen := make(map[string]bool)
+	for _, permission := range permissions {
+		valid := false
+		for _, allowed := range DefaultPermissions {
+			if permission == allowed {
+				valid = true
+			}
+		}
+		if !valid || seen[permission] {
+			return ErrForbidden
+		}
+		seen[permission] = true
 	}
 	secret, err := secure.ReadSecret(tokenPath, 64)
 	if err != nil {
@@ -229,10 +271,14 @@ func Provision(ctx context.Context, adminPath, tenant, partner, tokenPath string
 	if _, err = tx.Exec(ctx, `INSERT INTO partners VALUES($1,$2) ON CONFLICT DO NOTHING`, tenant, partner); err != nil {
 		return err
 	}
-	if _, err = tx.Exec(ctx, `INSERT INTO credentials(tenant_id,partner_id,actor_id,token_hash) VALUES($1,$2,$3,$4)`, tenant, partner, actor, secure.Digest(secret.Bytes)); err != nil {
+	if _, err = tx.Exec(ctx, `INSERT INTO credentials(tenant_id,partner_id,actor_id,token_hash,permissions,namespace_root) VALUES($1,$2,$3,$4,$5,$6)`, tenant, partner, actor, secure.Digest(secret.Bytes), permissions, root); err != nil {
 		return errors.New("cannot enroll duplicate or invalid identity")
 	}
-	if _, err = tx.Exec(ctx, `INSERT INTO events(tenant_id,partner_id,event_id,actor_id,kind,resource_id,payload) VALUES($1,$2,$3,$4,'ServiceIdentityEnrolled',$4,'{}')`, tenant, partner, secure.NewID(), actor); err != nil {
+	payload, err := json.Marshal(map[string]any{"permissions": permissions, "namespace_root": root, "authority_revision": 1})
+	if err != nil {
+		return err
+	}
+	if _, err = tx.Exec(ctx, `INSERT INTO events(tenant_id,partner_id,event_id,actor_id,kind,resource_id,payload) VALUES($1,$2,$3,$4,'ServiceIdentityEnrolled',$4,$5)`, tenant, partner, secure.NewID(), actor, payload); err != nil {
 		return err
 	}
 	return tx.Commit(ctx)
@@ -258,32 +304,31 @@ func (s *Store) begin(ctx context.Context, scope Scope, options pgx.TxOptions) (
 	}()
 	// Hold relation locks before inspecting policies. ALTER TABLE cannot disable a
 	// checked policy between this check and the operation's reads or writes.
-	_, err = tx.Exec(ctx, `LOCK TABLE public.tenants,public.partners,public.credentials,public.events,public.files,public.idempotency IN ACCESS SHARE MODE`)
+	_, err = tx.Exec(ctx, `LOCK TABLE public.tenants,public.partners,public.credentials,public.events,public.files,public.idempotency,public.namespace_entries,public.namespace_revisions,public.namespace_commands,public.ssh_keys IN ACCESS SHARE MODE`)
 	if err != nil {
 		return nil, err
 	}
 	var protected int
-	err = tx.QueryRow(ctx, `SELECT count(*) FROM pg_class WHERE relnamespace='public'::regnamespace AND relname=ANY($1) AND relrowsecurity AND relforcerowsecurity AND relowner<>(SELECT oid FROM pg_roles WHERE rolname=current_user)`, []string{"tenants", "partners", "credentials", "events", "files", "idempotency"}).Scan(&protected)
+	err = tx.QueryRow(ctx, `SELECT count(*) FROM pg_class WHERE relnamespace='public'::regnamespace AND relname=ANY($1) AND relrowsecurity AND relforcerowsecurity AND relowner<>(SELECT oid FROM pg_roles WHERE rolname=current_user)`, domainTables).Scan(&protected)
 	if err != nil {
 		return nil, err
 	}
-	if protected != 6 {
+	if protected != len(domainTables) {
 		return nil, ErrIsolation
 	}
 	_, err = tx.Exec(ctx, `SELECT set_config('freightctl.tenant_id',$1,true),set_config('freightctl.partner_id',$2,true)`, scope.Tenant, scope.Partner)
 	if err != nil {
 		return nil, err
 	}
-	var actor string
-	err = tx.QueryRow(ctx, `SELECT actor_id::text FROM credentials WHERE token_hash=$1 AND revoked_at IS NULL`, scope.TokenHash).Scan(&actor)
-	if errors.Is(err, pgx.ErrNoRows) {
-		return nil, ErrUnauthorized
+	t := &Transaction{Tx: tx, Scope: scope}
+	if err = t.authenticate(ctx); err != nil {
+		return nil, err
 	}
-	if err != nil {
+	if _, err = tx.Exec(ctx, `SELECT set_config('freightctl.actor_id',$1,true)`, t.Actor); err != nil {
 		return nil, err
 	}
 	ok = true
-	return &Transaction{Tx: tx, Scope: scope, Actor: actor}, nil
+	return t, nil
 }
 func (t *Transaction) Replay(ctx context.Context, key, meaning string) (*File, error) {
 	// Database ownership serializes concurrent uploads, including different service processes.
@@ -291,7 +336,7 @@ func (t *Transaction) Replay(ctx context.Context, key, meaning string) (*File, e
 		return nil, err
 	}
 	var prior, id string
-	err := t.Tx.QueryRow(ctx, `SELECT request_hash,file_id::text FROM idempotency WHERE request_key=$1`, key).Scan(&prior, &id)
+	err := t.Tx.QueryRow(ctx, `SELECT request_hash,file_id::text FROM idempotency WHERE request_key=$1 AND actor_id=$2`, key, t.Actor).Scan(&prior, &id)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, nil
 	}
@@ -327,6 +372,9 @@ func (t *Transaction) Accept(ctx context.Context, key, meaning string, f *File) 
 	if err := t.Reauthorize(ctx); err != nil {
 		return err
 	}
+	if err := t.Require("write"); err != nil {
+		return err
+	}
 	id, err := t.Append(ctx, "FileAccepted", f.ID, map[string]any{"schema_version": 2, "size_bytes": f.Size, "sha256": f.SHA256, "policy": f.Policy, "request_key": key, "request_hash": meaning})
 	if err != nil {
 		return err
@@ -336,17 +384,66 @@ func (t *Transaction) Accept(ctx context.Context, key, meaning string, f *File) 
 	if err != nil {
 		return err
 	}
-	_, err = t.Tx.Exec(ctx, `INSERT INTO idempotency VALUES($1,$2,$3,$4,$5)`, t.Scope.Tenant, t.Scope.Partner, key, meaning, f.ID)
+	_, err = t.Tx.Exec(ctx, `INSERT INTO idempotency(tenant_id,partner_id,request_key,request_hash,file_id,actor_id) VALUES($1,$2,$3,$4,$5,$6)`, t.Scope.Tenant, t.Scope.Partner, key, meaning, f.ID, t.Actor)
+	if err == nil {
+		if t.PendingFiles == nil {
+			t.PendingFiles = make(map[string]bool)
+		}
+		t.PendingFiles[f.ID] = true
+	}
 	return err
 }
 func (t *Transaction) Reauthorize(ctx context.Context) error {
-	var allowed bool
-	err := t.Tx.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM credentials WHERE actor_id=$1 AND token_hash=$2 AND revoked_at IS NULL)`, t.Actor, t.Scope.TokenHash).Scan(&allowed)
+	actor, revision := t.Actor, t.AuthorityRevision
+	if err := t.authenticate(ctx); err != nil {
+		return err
+	}
+	if actor != t.Actor || revision != t.AuthorityRevision {
+		return ErrUnauthorized
+	}
+	return nil
+}
+
+func (t *Transaction) authenticate(ctx context.Context) error {
+	var row pgx.Row
+	if t.Scope.TokenHash != "" {
+		if t.Scope.Actor != "" || t.Scope.SSHKeyFingerprint != "" {
+			return ErrUnauthorized
+		}
+		row = t.Tx.QueryRow(ctx, `SELECT actor_id::text,permissions,namespace_root,authority_revision FROM credentials WHERE token_hash=$1 AND tenant_id=$2 AND partner_id=$3 AND revoked_at IS NULL`, t.Scope.TokenHash, t.Scope.Tenant, t.Scope.Partner)
+	} else {
+		if !ValidID(t.Scope.Actor) || t.Scope.SSHKeyFingerprint == "" {
+			return ErrUnauthorized
+		}
+		row = t.Tx.QueryRow(ctx, `SELECT c.actor_id::text,c.permissions,c.namespace_root,c.authority_revision FROM credentials c JOIN ssh_keys k USING(tenant_id,partner_id,actor_id) WHERE c.actor_id=$1 AND k.fingerprint=$2 AND c.tenant_id=$3 AND c.partner_id=$4 AND c.revoked_at IS NULL AND k.revoked_at IS NULL`, t.Scope.Actor, t.Scope.SSHKeyFingerprint, t.Scope.Tenant, t.Scope.Partner)
+	}
+	err := row.Scan(&t.Actor, &t.Permissions, &t.Root, &t.AuthorityRevision)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return ErrUnauthorized
+	}
 	if err != nil {
 		return err
 	}
-	if !allowed {
+	root, err := vpath.Canonical(t.Root)
+	if err != nil || root != t.Root {
+		return ErrIsolation
+	}
+	if t.Scope.AuthorityRevision > 0 && t.Scope.AuthorityRevision != t.AuthorityRevision {
 		return ErrUnauthorized
+	}
+	return nil
+}
+func (t *Transaction) Has(permission string) bool {
+	for _, p := range t.Permissions {
+		if p == permission {
+			return true
+		}
+	}
+	return false
+}
+func (t *Transaction) Require(permission string) error {
+	if !t.Has(permission) {
+		return ErrForbidden
 	}
 	return nil
 }
@@ -356,6 +453,12 @@ func (s *Store) Events(ctx context.Context, scope Scope) ([]Event, error) {
 		return nil, err
 	}
 	defer t.Tx.Rollback(ctx)
+	if err = t.Require("audit_read"); err != nil {
+		return nil, err
+	}
+	if t.Root != "/" {
+		return nil, ErrForbidden
+	}
 	rows, err := t.Tx.Query(ctx, `SELECT event_id::text,actor_id::text,kind,resource_id::text,payload,happened_at FROM events ORDER BY happened_at DESC,event_id DESC LIMIT 100`)
 	if err != nil {
 		return nil, err

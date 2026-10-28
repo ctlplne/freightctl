@@ -6,11 +6,13 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"io"
 	"net"
 	"net/http"
 	"os"
 	"os/signal"
 	"path/filepath"
+	"strings"
 	"syscall"
 	"time"
 
@@ -29,7 +31,7 @@ func main() {
 }
 func run(args []string) error {
 	if len(args) == 0 || args[0] == "--help" || args[0] == "help" {
-		fmt.Println("freightctl: init | token | enroll | dev-cert | serve | reconcile | audit-keygen | audit-export\nRead docs/development.md. This is an unqualified local custody foundation.")
+		fmt.Println("freightctl: init | token | enroll | identity | namespace | dev-cert | serve | reconcile | audit-keygen | audit-export\nRead docs/development.md. This is an unqualified local custody foundation.")
 		return nil
 	}
 	f := flag.NewFlagSet(args[0], flag.ContinueOnError)
@@ -51,6 +53,11 @@ func run(args []string) error {
 	auditMaxEvents := f.Int("audit-max-events", 10000, "maximum events per evidence snapshot")
 	auditMaxBytes := f.Int("audit-max-bytes", 8<<20, "maximum serialized evidence bytes before base64 encoding")
 	output := f.String("output", ".private/audit-export.json", "new protected artifact output path")
+	permissions := f.String("permissions", strings.Join(store.DefaultPermissions, ","), "comma-separated scoped account permissions")
+	namespaceRoot := f.String("namespace-root", "/", "canonical directory mounted as this identity's virtual root")
+	namespaceMax := f.Int("namespace-max-entries", 10000, "active virtual entries allowed per partner")
+	requestFile := f.String("request-file", "", "bounded JSON namespace command reference")
+	idempotencyKey := f.String("idempotency-key", "", "stable namespace operation key")
 	if err := f.Parse(args[1:]); err != nil {
 		return err
 	}
@@ -64,7 +71,66 @@ func run(args []string) error {
 	case "token":
 		return secure.WriteToken(*token)
 	case "enroll":
-		return store.Provision(ctx, *admin, *tenant, *partner, *token)
+		selected := []string{}
+		if *permissions != "" {
+			selected = strings.Split(*permissions, ",")
+		}
+		return store.ProvisionPolicy(ctx, *admin, *tenant, *partner, *token, selected, *namespaceRoot)
+	case "identity", "namespace":
+		if args[0] == "namespace" && *namespaceMax < 1 {
+			return errors.New("namespace entry budget must be positive")
+		}
+		secret, err := secure.ReadSecret(*token, 64)
+		if err != nil {
+			return err
+		}
+		scope := store.Scope{Tenant: *tenant, Partner: *partner, TokenHash: secure.Digest(secret.Bytes)}
+		secret.Close()
+		db, err := store.Open(ctx, *dsn)
+		if err != nil {
+			return err
+		}
+		defer db.Pool.Close()
+		if args[0] == "identity" {
+			info, err := db.Identity(ctx, scope)
+			if err != nil {
+				return err
+			}
+			return json.NewEncoder(os.Stdout).Encode(info)
+		}
+		input, err := os.Open(*requestFile)
+		if err != nil {
+			return errors.New("cannot open command reference")
+		}
+		defer input.Close()
+		st, err := input.Stat()
+		if err != nil || !st.Mode().IsRegular() || st.Size() > 16<<10 {
+			return errors.New("command must be a bounded regular JSON file")
+		}
+		decoder := json.NewDecoder(io.LimitReader(input, 16<<10))
+		decoder.DisallowUnknownFields()
+		var command store.PathCommand
+		if err = decoder.Decode(&command); err != nil {
+			return errors.New("invalid namespace command JSON")
+		}
+		var extra any
+		if err = decoder.Decode(&extra); err != io.EOF {
+			return errors.New("namespace command contains trailing data")
+		}
+		service := &custody.Service{DB: db, NamespaceMaxEntries: *namespaceMax}
+		if command.Operation == "publish" {
+			disk, err := custody.OpenExisting(*storage)
+			if err != nil {
+				return err
+			}
+			defer disk.Close()
+			service.Disk = disk
+		}
+		result, err := service.PathCommand(ctx, scope, *idempotencyKey, command)
+		if err != nil {
+			return err
+		}
+		return json.NewEncoder(os.Stdout).Encode(result)
 	case "dev-cert":
 		return secure.DevCertificate(*cert, *key)
 	case "audit-keygen":
@@ -117,6 +183,9 @@ func run(args []string) error {
 		}
 		return json.NewEncoder(os.Stdout).Encode(report)
 	case "serve":
+		if *namespaceMax < 1 {
+			return errors.New("namespace entry budget must be positive")
+		}
 		host, _, err := net.SplitHostPort(*listen)
 		if err != nil {
 			return errors.New("invalid listen address")
@@ -144,7 +213,7 @@ func run(args []string) error {
 		}
 		secret.Close()
 		audits := &audit.Service{DB: db, KeyFile: *auditKey, MaxEvents: *auditMaxEvents, MaxBytes: *auditMaxBytes}
-		server := &http.Server{Addr: *listen, Handler: api.New(&custody.Service{DB: db, Disk: disk, MaxFile: *maxFile, MaxStored: *maxStored, ReconcileMaxBytes: *reconcileBytes}, audits), TLSConfig: secure.TLSConfig(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 90 * time.Second, WriteTimeout: 90 * time.Second, IdleTimeout: 30 * time.Second, MaxHeaderBytes: 16 * 1024}
+		server := &http.Server{Addr: *listen, Handler: api.New(&custody.Service{DB: db, Disk: disk, MaxFile: *maxFile, MaxStored: *maxStored, ReconcileMaxBytes: *reconcileBytes, NamespaceMaxEntries: *namespaceMax}, audits), TLSConfig: secure.TLSConfig(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 90 * time.Second, WriteTimeout: 90 * time.Second, IdleTimeout: 30 * time.Second, MaxHeaderBytes: 16 * 1024}
 		stop, cancel := signal.NotifyContext(ctx, os.Interrupt, syscall.SIGTERM)
 		defer cancel()
 		go func() {

@@ -31,9 +31,9 @@ Token and certificate commands refuse to overwrite existing files. Enrollment cu
 
 An upload uses `POST /v1/tenants/{tenant}/partners/{partner}/files`, a scoped bearer token, `Idempotency-Key`, `X-File-Size`, and a lowercase hex `X-Content-SHA256`. The request contains bytes directly. The same key, length, digest and policy returns the original accepted file; changed meaning returns 409. The response means bytes and directory were synced and metadata committed on this local persistence profile. It does not mean malware scanned, independently signed, delivered to a partner, or imported by a business system.
 
-`GET .../files/{id}` verifies the exact stored revision before streaming and supports HTTP ranges. `GET .../events` returns the most recent 100 scoped events. A download-authorized event records permission to begin retrieval; it does not prove the recipient consumed the complete file. Event pagination and independently verifiable audit export remain open.
+`GET .../files/{id}` verifies the exact stored revision before streaming and supports HTTP ranges. `GET .../events` returns the most recent 100 scoped events. A download-authorized event records permission to begin retrieval; it does not prove the recipient consumed the complete file. Event pagination and whole-estate export remain open; the bounded signed export below is implemented.
 
-Default file admission is 64 MiB, configured with `--max-file-bytes` up to the current engineering limit of 1 GiB. `--max-stored-bytes` defaults to 1 GiB across the single storage root, including retained orphans. Initial admission serializes staging using PostgreSQL and caps root entries at 10,000 to bound directory accounting. These are operational development limits, not edition limits or performance claims; scalable reservations, configurable entry quotas and tenant fairness remain open. Incomplete staging is removed on ordinary errors. A crash or uncertain SQL commit may retain bytes. They count against capacity and cannot be downloaded without accepted metadata; a safe reconciliation tool is still required.
+Default file admission is 64 MiB, configured with `--max-file-bytes` up to the current engineering limit of 1 GiB. `--max-stored-bytes` defaults to 1 GiB across the single storage root, including retained orphans. Initial admission serializes staging using PostgreSQL and caps root entries at 10,000 to bound directory accounting. These are operational development limits, not edition limits or performance claims; scalable reservations, configurable entry quotas and tenant fairness remain open. Incomplete staging is removed on ordinary errors. A crash or uncertain SQL commit may retain bytes. They count against capacity and cannot be downloaded without accepted metadata; the read-only reconciliation tool below observes them without adopting or deleting them.
 
 The custody root must be private (0700) before opening an existing directory. The service refuses broad permissions instead of silently changing them. Stored revisions are sealed 0400 and use generated identities, not client filesystem paths. A host administrator can still change storage; local integrity checks detect changed bytes but cannot protect against a malicious host controlling the service.
 
@@ -72,3 +72,45 @@ Default export budgets are 10,000 events and 8 MiB before base64 encoding. Admin
 The signature detects changes after signing. It does not prove a database superuser did not alter history before the snapshot, stop a compromised host from using its local key, or protect an artifact somebody deletes. Independent retention and stronger key custody are separate open gates. Secret-file reads use bounded buffers with best-effort memory locking and clearing; parsed library objects and process-dump protections still have platform limits to qualify.
 
 Migration 3 bounds journal kind and payload sizes in SQL, while the application applies a tighter append budget. Every scoped operation locks the domain relations and checks their forced row policies before authentication. A concurrent policy change waits for that transaction; a disabled policy causes the running store to fail closed. These checks protect the tested application boundary. PostgreSQL superusers and host administrators remain trusted deployment authorities.
+
+## Virtual folders and scoped accounts
+
+Client folder names are records in PostgreSQL. A name such as `/inbox/payroll.csv` points to an immutable custody file ID; it is never passed to the host filesystem. Create a different file revision to replace contents. Renaming a folder changes the index and appends events while leaving those bytes intact. Removal creates a tombstone; accepted bytes and publication history remain retained. Approved recovery and retention policies are still required.
+
+Enrollment supports `--permissions read,list` and `--namespace-root /inbox`. This mounts the existing partner folder `/inbox` as the account's `/`. Existing identities and the enrollment command's default retain all seven grants; explicitly select the minimum permissions for a restricted account. The development bootstrap is still an administrator operation. Identity creation/rotation through a delegated operator UI remains open.
+
+| Permission | Effect |
+| --- | --- |
+| `read` | Read an authorized immutable file revision. |
+| `write` | Create folders and publish new contents at an authorized path. |
+| `list` | Inspect names and metadata under the mounted root. |
+| `manage_paths` | Rename, remove, or change supported mode/time attributes. |
+| `inspect` | Run custody reconciliation; the current global report also requires root `/`. |
+| `audit_read` | Read scoped events and signed snapshots; these global views also require root `/`. |
+| `admin` | Bypass owner/group mode bits within the mounted namespace. Other operation grants and the mount still apply. |
+
+Virtual modes use owner bits for the creating actor and group bits for other authorized actors in the same partner. They do not create host users or POSIX groups. Tenant/partner SQL policies still isolate a mode-0777 file. Setstat requires owner or admin authority; replacement requires write authority, parent search/write bits and the expected path revision. Current authority is checked again before commit. A changed account policy increments its authority revision, invalidating an in-flight operation that used the old policy.
+
+`GET .../identity` and the `identity` CLI command return current grants, authority revision and the future SSH username. They return a digest of the mount policy rather than exposing a hidden parent prefix. No SSH key enrollment or public SFTP serving command is available in this checkpoint.
+
+Namespace HTTPS routes use the same bearer token and tenant/partner URL prefix as custody:
+
+| Route | Contract |
+| --- | --- |
+| `POST .../namespace/commands` | Strict JSON command, `Idempotency-Key`; mkdir, publish, rename, remove, rmdir, setstat. |
+| `GET .../namespace/stat?path=...` | Inspect one virtual entry and its current revision. |
+| `GET .../namespace/entries?path=...&limit=100&after=...` | Keyset page of immediate children; maximum 1,000 per page. |
+| `PUT .../namespace/file?path=...` | Same size/digest/key upload contract; `If-Match-Revision` required to replace an existing file. |
+| `GET .../namespace/file?path=...` | Verified immutable contents, with HTTP ranges. |
+
+URL-encode query values. Paths are case-sensitive NFC Unicode, absolute within the mounted root, at most 1,024 bytes after combining mount and name, and at most 255 bytes per component. Traversal components, repeated/trailing separators, controls, backslashes, drive syntax, trailing dots/spaces and Windows device names are rejected. Names do not become host paths on any platform. This naming policy does not establish native Windows qualification.
+
+A command JSON file can be submitted through `namespace --request-file .private/command.json --idempotency-key stable-operation-id` with tenant, partner and token references. For example, `{"operation":"mkdir","path":"/inbox","mode":504}` creates a mode-0770 folder. Mutations of existing entries require `expected_revision` from stat. Rename replacement additionally requires `replace` and the target's `target_revision`. A retry returns the original actor-scoped receipt; changed meaning returns 409. Independent file and folder operations may use different keys. Unicode and timestamp normalization happen before retry hashing.
+
+The active-entry default is 10,000 per partner (`--namespace-max-entries`); one subtree move is bounded to 1,000 entries, command JSON to 16 KiB and path-command duration to ten seconds. No sparse writes, links, mounts onto host directories, arbitrary ownership assignment, recursive unbounded mutation or automatic deletion is offered. Larger estates and configurable reservations remain open.
+
+Direct `GET .../files/{id}` follows the same mount and current mode checks. For non-admin identities an archived revision is readable only through a live permitted namespace entry; unlisted IDs cannot escape the mount. Root admins can inspect retained custody. A root non-admin can access its own never-published raw upload; publishing it brings it under the namespace rules. Mounted identities cannot create raw unbound uploads. Global event/export/reconciliation views fail rather than leaking names outside a mount.
+
+Migration 4 adds namespace projections/history/command receipts, actor-scoped upload keys, account policy revisions and the future SSH public-key registry. Checksummed migrations 1–3 remain unchanged. The SSH helper restricts channels to a single authenticated SFTP subsystem, bounds connections/time, and rejects shell/exec/forwarding. Its current test uses a synthetic subsystem; a real SFTP filesystem adapter, transfer-close semantics and stock OpenSSH qualification remain mandatory next work.
+
+`python3 scripts/qualify-foundation.py` retains native module, vet, unit/race, PostgreSQL/race, bounded name/path fuzzing, stock-curl and independent OpenSSL outputs with exact source hashes. This is a repeatable foundation check, not a release or complete-journey qualification.

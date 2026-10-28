@@ -14,6 +14,7 @@ import (
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/custody"
 	"github.com/ctlplne/freightctl/internal/store"
+	"github.com/ctlplne/freightctl/internal/vpath"
 )
 
 type Server struct {
@@ -35,6 +36,12 @@ func New(service *custody.Service, audits *audit.Service) http.Handler {
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/events", s.events)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/custody/reconcile", s.reconcile)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/audit/export", s.exportAudit)
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/identity", s.identity)
+	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/namespace/commands", s.pathCommand)
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/namespace/stat", s.statPath)
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/namespace/entries", s.listPath)
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/namespace/file", s.downloadPath)
+	m.HandleFunc("PUT /v1/tenants/{tenant}/partners/{partner}/namespace/file", s.uploadPath)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("X-Content-Type-Options", "nosniff")
 		w.Header().Set("Cache-Control", "no-store")
@@ -114,6 +121,16 @@ func fail(w http.ResponseWriter, code int, message string) {
 }
 func failure(w http.ResponseWriter, err error) {
 	switch {
+	case errors.Is(err, vpath.ErrPath):
+		fail(w, 400, "invalid_virtual_path")
+	case errors.Is(err, store.ErrForbidden):
+		fail(w, 403, "permission_denied")
+	case errors.Is(err, store.ErrRevision):
+		fail(w, 409, "revision_conflict")
+	case errors.Is(err, store.ErrExists):
+		fail(w, 409, "path_exists")
+	case errors.Is(err, store.ErrState):
+		fail(w, 409, "operation_state_conflict")
 	case errors.Is(err, store.ErrLimit):
 		fail(w, 413, "evidence_bound_exceeded")
 	case errors.Is(err, store.ErrIsolation):

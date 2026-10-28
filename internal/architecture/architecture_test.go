@@ -40,6 +40,9 @@ func TestCoreImportBoundaries(t *testing.T) {
 				if strings.HasPrefix(name, "github.com/ctlplne/freightctl/ee/") || strings.Contains(strings.ToLower(name), "sqlite") || strings.Contains(strings.ToLower(name), "redis") {
 					t.Errorf("%s imports forbidden core dependency: %s", rel, name)
 				}
+				if strings.HasPrefix(name, "golang.org/x/crypto/openpgp") {
+					t.Errorf("%s imports unmaintained OpenPGP (GO-2026-5932): %s", rel, name)
+				}
 			}
 			return nil
 		})

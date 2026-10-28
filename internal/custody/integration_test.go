@@ -117,8 +117,8 @@ func TestRuntimeRoleAndScope(t *testing.T) {
 		t.Fatal("owner/superuser runtime accepted")
 	}
 	var n int
-	err := f.admin.QueryRow(f.ctx, `SELECT count(*) FROM pg_class WHERE relnamespace='public'::regnamespace AND relname=ANY($1) AND relrowsecurity AND relforcerowsecurity AND relowner<>(SELECT oid FROM pg_roles WHERE rolname='freightctl_runtime')`, []string{"tenants", "partners", "credentials", "events", "files", "idempotency"}).Scan(&n)
-	if err != nil || n != 6 {
+	err := f.admin.QueryRow(f.ctx, `SELECT count(*) FROM pg_class WHERE relnamespace='public'::regnamespace AND relname=ANY($1) AND relrowsecurity AND relforcerowsecurity AND relowner<>(SELECT oid FROM pg_roles WHERE rolname='freightctl_runtime')`, []string{"tenants", "partners", "credentials", "events", "files", "idempotency", "namespace_entries", "namespace_revisions", "namespace_commands", "ssh_keys"}).Scan(&n)
+	if err != nil || n != 10 {
 		t.Fatal("forced non-owner policies", n, err)
 	}
 	file := accept(t, f, "scope-check", []byte("synthetic isolated bytes"))
@@ -331,7 +331,7 @@ func TestProjectionRequiresExactJournalEvent(t *testing.T) {
 	}{
 		{"wrong-event-kind", `INSERT INTO files VALUES($1,$2,$3,1,$4,'integrity-only-v1',$5)`, []any{f.a.Tenant, f.a.Partner, secure.NewID(), secure.Digest([]byte("x")), enrollment}},
 		{"wrong-revision", `INSERT INTO files VALUES($1,$2,$3,$4,$5,$6,$7)`, []any{f.a.Tenant, f.a.Partner, secure.NewID(), file.Size, file.SHA256, file.Policy, file.EventID}},
-		{"forged-key", `INSERT INTO idempotency VALUES($1,$2,'forged-key',$3,$4)`, []any{f.a.Tenant, f.a.Partner, store.Meaning(file.Size, file.SHA256), file.ID}},
+		{"forged-key", `INSERT INTO idempotency(tenant_id,partner_id,request_key,request_hash,file_id,actor_id) SELECT $1,$2,'forged-key',$3,$4,actor_id FROM credentials WHERE token_hash=$5`, []any{f.a.Tenant, f.a.Partner, store.Meaning(file.Size, file.SHA256), file.ID, f.a.TokenHash}},
 	} {
 		t.Run(test.name, func(t *testing.T) {
 			tx, err := f.db.Begin(f.ctx, f.a)

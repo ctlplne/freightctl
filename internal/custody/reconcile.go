@@ -86,6 +86,12 @@ func (s *Service) Reconcile(ctx context.Context, scope store.Scope) (*Reconcilia
 		return nil, err
 	}
 	defer t.Tx.Rollback(ctx)
+	if err = t.Require("inspect"); err != nil {
+		return nil, err
+	}
+	if t.Root != "/" {
+		return nil, store.ErrForbidden
+	}
 	if _, err = t.Tx.Exec(ctx, `SELECT pg_advisory_xact_lock(721815034)`); err != nil {
 		return nil, err
 	}
