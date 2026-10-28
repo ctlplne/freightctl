@@ -153,6 +153,70 @@
       "regression_evidence": [
         "docs/qualification/evidence/F004-virtual-namespace.json"
       ]
+    },
+    {
+      "id": "D011",
+      "severity": "missing protocol capability",
+      "state": "fixed locally",
+      "observed_on": "2026-10-28",
+      "candidate": "e64076095d9158af1dbe50b8d1770de119be5313",
+      "candidate_note": "Exact initial dirty-source/native artifact references are retained in F005.",
+      "journey": "J01",
+      "reproduction": "python3 scripts/qualify-sftp.py",
+      "first_failure": "freightctl: unknown command; use --help",
+      "cause": "Committed namespace foundation had no SFTP command.",
+      "resolution": "Added registered-key CLI lifecycle, shared-service SFTP adapter and stock-client exchange.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F005-sftp-exchange.json"
+      ]
+    },
+    {
+      "id": "D012",
+      "severity": "native client interoperability",
+      "state": "fixed locally",
+      "observed_on": "2026-10-28",
+      "candidate": "e64076095d9158af1dbe50b8d1770de119be5313",
+      "candidate_note": "Exact initial dirty-source/native artifact references are retained in F005.",
+      "journey": "J01",
+      "reproduction": "python3 scripts/qualify-sftp.py",
+      "first_failure": "Modern scp returned exit 1 despite correct downloaded bytes; SSH debug Exit status -1.",
+      "cause": "SFTP cleanup closed the SSH channel before transport exit status; connection teardown also preceded normal channel completion.",
+      "resolution": "Keep final status and normal channel close in the SSH transport; original stock scp upload/download now exit zero.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F005-sftp-exchange.json"
+      ]
+    },
+    {
+      "id": "D013",
+      "severity": "live authority/resource lifecycle",
+      "state": "fixed locally",
+      "observed_on": "2026-10-28",
+      "candidate": "e64076095d9158af1dbe50b8d1770de119be5313",
+      "candidate_note": "Exact initial dirty-source/native artifact references are retained in F005.",
+      "journey": "J10",
+      "reproduction": "python3 scripts/qualify-sftp.py",
+      "first_failure": "Rate-limited upload did not exit within the original eight-second bound after revoking its SSH key.",
+      "cause": "Writes were denied, but an open session could remain while the client sent buffered packets.",
+      "resolution": "Close the transfer session on invalid current authority; cleanup aborts the uncommitted revision and the original bound passes.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F005-sftp-exchange.json"
+      ]
+    },
+    {
+      "id": "D014",
+      "severity": "qualification harness defect",
+      "state": "fixed locally",
+      "observed_on": "2026-10-28",
+      "candidate": "e64076095d9158af1dbe50b8d1770de119be5313",
+      "candidate_note": "Exact initial dirty-source/native artifact references are retained in F005.",
+      "journey": "J10",
+      "reproduction": "python3 scripts/qualify-sftp.py",
+      "first_failure": "Handle-budget test expected clean EOF after abandoning eight open directory handles.",
+      "cause": "The protocol library correctly classified abandoned open handles as unexpected EOF.",
+      "resolution": "Read and validate all nine open replies, explicitly close every accepted handle, require eight successful close replies and clean exit; budget assertions unchanged.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F005-sftp-exchange.json"
+      ]
     }
   ]
 }

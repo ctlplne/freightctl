@@ -173,7 +173,9 @@
       }
     ],
     "binary_sha256": "63446456ab75f5f8f2b443ffe21b1cab47f36331c0a068f03901fbd587ba8b7e",
-    "source_note": "Exact dirty source hashes identify this candidate; no history rewriting."
+    "source_note": "Exact dirty source hashes identify this candidate; no history rewriting.",
+    "committed_source": "e64076095d9158af1dbe50b8d1770de119be5313",
+    "committed_source_note": "All 41 recorded source hashes match these committed blobs; no history rewriting."
   },
   "environment": {
     "os": "Darwin",

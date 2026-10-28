@@ -36,6 +36,24 @@ type SSHOptions struct {
 type SSHAuthorizer func(context.Context, string, SSHPublic) (SSHPrincipal, error)
 type SSHSubsystem func(context.Context, SSHPrincipal, io.ReadWriteCloser) error
 
+func ValidateSSHPublic(public SSHPublic) (SSHPublic, error) {
+	if len(public.Wire) < 16 || len(public.Wire) > 16384 {
+		return SSHPublic{}, errors.New("invalid SSH public wire length")
+	}
+	key, err := ssh.ParsePublicKey(public.Wire)
+	if err != nil {
+		return SSHPublic{}, errors.New("invalid SSH public wire")
+	}
+	if err = publicPolicy(key); err != nil {
+		return SSHPublic{}, err
+	}
+	fingerprint := ssh.FingerprintSHA256(key)
+	if public.Fingerprint != fingerprint {
+		return SSHPublic{}, errors.New("SSH public fingerprint differs")
+	}
+	return SSHPublic{Wire: key.Marshal(), Fingerprint: fingerprint}, nil
+}
+
 func publicPolicy(key ssh.PublicKey) error {
 	switch key.Type() {
 	case ssh.KeyAlgoED25519:
@@ -258,7 +276,6 @@ func ServeSFTP(ctx context.Context, listener net.Listener, options SSHOptions, a
 				go func() {
 					defer children.Done()
 					defer channel.Close()
-					defer secure.Close()
 					for request := range channelRequests {
 						var selected struct{ Name string }
 						if request.Type != "subsystem" || len(request.Payload) > 128 || ssh.Unmarshal(request.Payload, &selected) != nil || selected.Name != "sftp" {
@@ -271,7 +288,13 @@ func ServeSFTP(ctx context.Context, listener net.Listener, options SSHOptions, a
 								_ = extra.Reply(false, nil)
 							}
 						}()
-						_ = subsystem(sessionCtx, principal, channel)
+						err := subsystem(sessionCtx, principal, channel)
+						status := uint32(0)
+						if err != nil && !errors.Is(err, io.EOF) {
+							status = 1
+						}
+						_, _ = channel.SendRequest("exit-status", false, ssh.Marshal(struct{ Status uint32 }{status}))
+						_ = channel.CloseWrite()
 						return
 					}
 				}()

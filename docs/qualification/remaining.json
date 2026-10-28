@@ -27,7 +27,8 @@
         "docs/qualification/evidence/F001-custody-foundation.json",
         "docs/qualification/evidence/F002-reconciliation.json",
         "docs/qualification/evidence/F003-signed-audit.json",
-        "docs/qualification/evidence/F004-virtual-namespace.json"
+        "docs/qualification/evidence/F004-virtual-namespace.json",
+        "docs/qualification/evidence/F005-sftp-exchange.json"
       ],
       "remaining_details": [
         "F004 adds journaled virtual namespace/history, actor receipts and mounted-root/capability checks. Finish scalable reservations, approved recovery, protected retention, journal rebuild/chaining, larger exports and remaining crash boundaries."
@@ -45,10 +46,11 @@
       "state": "implementing",
       "evidence": [
         "docs/qualification/evidence/F001-custody-foundation.json",
-        "docs/qualification/evidence/F004-virtual-namespace.json"
+        "docs/qualification/evidence/F004-virtual-namespace.json",
+        "docs/qualification/evidence/F005-sftp-exchange.json"
       ],
       "remaining_details": [
-        "Shared path/permission service and SSH transport boundary are tested. Implement registered-key lifecycle, bounded SFTP packet/handle adapter, atomic writer close and disconnect/crash recovery; qualify with stock OpenSSH. Resume, browser/admin onboarding and recipient business receipts remain open."
+        "Stock OpenSSH server receive/download, modern scp, cross-protocol namespace, revocation, disconnect and staging-crash retry pass in F005. Finish interrupted-session resume, outbound SFTP adapter, enterprise peers/profiles, remaining sync/commit ambiguity, first-admin/browser onboarding and independent recipient business receipts. No full customer journey is qualified."
       ]
     },
     {
@@ -118,10 +120,11 @@
       ],
       "state": "implementing",
       "evidence": [
-        "docs/qualification/evidence/F004-virtual-namespace.json"
+        "docs/qualification/evidence/F004-virtual-namespace.json",
+        "docs/qualification/evidence/F005-sftp-exchange.json"
       ],
       "remaining_details": [
-        "Basic service-account grants, mount policy and revision invalidation exist. Delegated administration, human identities, provider integration, MFA, approvals, lifecycle UI and comprehensive governance remain open."
+        "Basic grants/mount/revision rules and local registered-public-key enrollment/revocation work, including active transfer denial. Delegated administration, human identities/providers/MFA, complete session/denial auditing, lifecycle UI and broader governance remain open."
       ]
     },
     {

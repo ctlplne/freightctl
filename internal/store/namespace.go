@@ -50,7 +50,7 @@ func (t *Transaction) Entry(ctx context.Context, actual string) (*PathEntry, err
 		return nil, ErrNotFound
 	}
 	if actual == "/" {
-		return &PathEntry{Path: "/", Parent: "/", Kind: "dir", Owner: t.Actor, Mode: 0770, Revision: 1}, nil
+		return &PathEntry{Path: "/", Parent: "/", Kind: "dir", Owner: t.Actor, Mode: 0770, Revision: 1, Modified: time.Unix(0, 0).UTC()}, nil
 	}
 	return scanEntry(t.Tx.QueryRow(ctx, "SELECT "+entryColumns+entryJoin+` WHERE n.path=$1 AND NOT n.deleted`, actual))
 }

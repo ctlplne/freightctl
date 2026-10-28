@@ -20,6 +20,7 @@ import (
 	"github.com/ctlplne/freightctl/internal/audit"
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/custody"
+	"github.com/ctlplne/freightctl/internal/sftpd"
 	"github.com/ctlplne/freightctl/internal/store"
 )
 
@@ -31,7 +32,7 @@ func main() {
 }
 func run(args []string) error {
 	if len(args) == 0 || args[0] == "--help" || args[0] == "help" {
-		fmt.Println("freightctl: init | token | enroll | identity | namespace | dev-cert | serve | reconcile | audit-keygen | audit-export\nRead docs/development.md. This is an unqualified local custody foundation.")
+		fmt.Println("freightctl: init | token | enroll | identity | namespace | dev-cert | serve | reconcile | audit-keygen | audit-export | ssh-host-keygen | ssh-key-enroll | ssh-key-revoke | serve-sftp\nRead docs/development.md. This is an unqualified local custody foundation.")
 		return nil
 	}
 	f := flag.NewFlagSet(args[0], flag.ContinueOnError)
@@ -43,7 +44,11 @@ func run(args []string) error {
 	partner := f.String("partner", "", "partner UUID")
 	cert := f.String("cert", ".private/localhost.crt", "TLS certificate path")
 	key := f.String("key", ".private/localhost.key", "TLS key reference")
-	listen := f.String("listen", "127.0.0.1:28446", "HTTPS loopback address")
+	defaultListen := "127.0.0.1:28446"
+	if args[0] == "serve-sftp" {
+		defaultListen = "127.0.0.1:28447"
+	}
+	listen := f.String("listen", defaultListen, "numeric loopback address")
 	storage := f.String("storage", ".private/custody", "private custody directory")
 	maxFile := f.Int64("max-file-bytes", 64<<20, "maximum upload bytes")
 	maxStored := f.Int64("max-stored-bytes", 1<<30, "total custody quota, including retained orphans")
@@ -58,6 +63,13 @@ func run(args []string) error {
 	namespaceMax := f.Int("namespace-max-entries", 10000, "active virtual entries allowed per partner")
 	requestFile := f.String("request-file", "", "bounded JSON namespace command reference")
 	idempotencyKey := f.String("idempotency-key", "", "stable namespace operation key")
+	sshHost := f.String("ssh-host-key-file", ".private/ssh-host.key", "protected Ed25519 SSH host identity reference")
+	sshPublic := f.String("ssh-public-file", "", "public SSH key reference; host-keygen defaults to host reference plus .pub")
+	sshKeyID := f.String("ssh-key-id", "", "registered key UUID to revoke")
+	sshConnections := f.Int("ssh-max-connections", 16, "maximum concurrent SSH connections")
+	sshWriters := f.Int("ssh-max-writers", 2, "maximum open SFTP writers in the initial serialized profile")
+	sshSession := f.Duration("ssh-session-limit", 5*time.Minute, "absolute SSH connection lifetime")
+	sshIdle := f.Duration("ssh-idle-limit", 30*time.Second, "maximum SSH inactivity")
 	if err := f.Parse(args[1:]); err != nil {
 		return err
 	}
@@ -139,6 +151,37 @@ func run(args []string) error {
 			path = ".private/audit-signing.key"
 		}
 		return secure.GenerateAuditIdentity(path, *auditPublic)
+	case "ssh-host-keygen":
+		public := *sshPublic
+		if public == "" {
+			public = *sshHost + ".pub"
+		}
+		return secure.GenerateSSHHostIdentity(*sshHost, public)
+	case "ssh-key-enroll", "ssh-key-revoke":
+		operation, cancel := context.WithTimeout(ctx, 10*time.Second)
+		defer cancel()
+		var public secure.SSHPublic
+		var err error
+		revoke := ""
+		if args[0] == "ssh-key-enroll" {
+			if *sshPublic == "" {
+				return errors.New("SSH enrollment requires an explicit public key reference")
+			}
+			public, err = secure.ReadSSHPublic(*sshPublic)
+			if err != nil {
+				return err
+			}
+		} else {
+			revoke = *sshKeyID
+			if !store.ValidID(revoke) {
+				return errors.New("SSH revocation requires a key UUID")
+			}
+		}
+		result, err := store.ManageSSHKey(operation, *admin, *token, *tenant, *partner, public, revoke)
+		if err != nil {
+			return err
+		}
+		return json.NewEncoder(os.Stdout).Encode(result)
 	case "audit-export":
 		if _, err := os.Lstat(*output); !os.IsNotExist(err) {
 			return errors.New("artifact output must be a new file")
@@ -182,6 +225,44 @@ func run(args []string) error {
 			return err
 		}
 		return json.NewEncoder(os.Stdout).Encode(report)
+	case "serve-sftp":
+		host, _, err := net.SplitHostPort(*listen)
+		if err != nil {
+			return errors.New("invalid listen address")
+		}
+		ip := net.ParseIP(host)
+		if ip == nil || !ip.IsLoopback() {
+			return errors.New("development SFTP profile requires numeric loopback")
+		}
+		if *maxFile < 1 || *maxFile > 1<<30 || *maxStored < *maxFile || *namespaceMax < 1 {
+			return errors.New("invalid file, storage or namespace budget")
+		}
+		if *sshSession <= 0 || *sshSession > time.Hour || *sshIdle <= 0 || *sshIdle > *sshSession {
+			return errors.New("SSH time budgets must be positive, idle within session, session at most one hour")
+		}
+		db, err := store.Open(ctx, *dsn)
+		if err != nil {
+			return err
+		}
+		defer db.Pool.Close()
+		disk, err := custody.Open(*storage)
+		if err != nil {
+			return err
+		}
+		defer disk.Close()
+		service, err := sftpd.New(&custody.Service{DB: db, Disk: disk, MaxFile: *maxFile, MaxStored: *maxStored, NamespaceMaxEntries: *namespaceMax}, *sshWriters)
+		if err != nil {
+			return err
+		}
+		listener, err := net.Listen("tcp", *listen)
+		if err != nil {
+			return errors.New("cannot open SFTP listener")
+		}
+		defer listener.Close()
+		stop, cancel := signal.NotifyContext(ctx, os.Interrupt, syscall.SIGTERM)
+		defer cancel()
+		fmt.Println("freightctl SFTP custody listening on", *listen, "(integrity-only; not production qualified)")
+		return secure.ServeSFTP(stop, listener, secure.SSHOptions{HostKeyFile: *sshHost, MaxConnections: *sshConnections, SessionLimit: *sshSession, IdleLimit: *sshIdle}, db.AllowSSHKey, service.Session)
 	case "serve":
 		if *namespaceMax < 1 {
 			return errors.New("namespace entry budget must be positive")

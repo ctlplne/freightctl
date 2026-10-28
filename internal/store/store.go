@@ -375,7 +375,7 @@ func (t *Transaction) Accept(ctx context.Context, key, meaning string, f *File) 
 	if err := t.Require("write"); err != nil {
 		return err
 	}
-	id, err := t.Append(ctx, "FileAccepted", f.ID, map[string]any{"schema_version": 2, "size_bytes": f.Size, "sha256": f.SHA256, "policy": f.Policy, "request_key": key, "request_hash": meaning})
+	id, err := t.Append(ctx, "FileAccepted", f.ID, map[string]any{"schema_version": 2, "size_bytes": f.Size, "sha256": f.SHA256, "policy": f.Policy, "request_key": key, "request_hash": meaning, "protocol_session_id": t.Scope.SessionID})
 	if err != nil {
 		return err
 	}

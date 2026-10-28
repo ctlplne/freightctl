@@ -91,7 +91,7 @@ Enrollment supports `--permissions read,list` and `--namespace-root /inbox`. Thi
 
 Virtual modes use owner bits for the creating actor and group bits for other authorized actors in the same partner. They do not create host users or POSIX groups. Tenant/partner SQL policies still isolate a mode-0777 file. Setstat requires owner or admin authority; replacement requires write authority, parent search/write bits and the expected path revision. Current authority is checked again before commit. A changed account policy increments its authority revision, invalidating an in-flight operation that used the old policy.
 
-`GET .../identity` and the `identity` CLI command return current grants, authority revision and the future SSH username. They return a digest of the mount policy rather than exposing a hidden parent prefix. No SSH key enrollment or public SFTP serving command is available in this checkpoint.
+`GET .../identity` and the `identity` CLI command return current grants, authority revision and the future SSH username. They return a digest of the mount policy rather than exposing a hidden parent prefix. The current SSH key lifecycle and loopback SFTP commands are described in [the SFTP profile](protocols/sftp.md).
 
 Namespace HTTPS routes use the same bearer token and tenant/partner URL prefix as custody:
 
@@ -111,6 +111,6 @@ The active-entry default is 10,000 per partner (`--namespace-max-entries`); one 
 
 Direct `GET .../files/{id}` follows the same mount and current mode checks. For non-admin identities an archived revision is readable only through a live permitted namespace entry; unlisted IDs cannot escape the mount. Root admins can inspect retained custody. A root non-admin can access its own never-published raw upload; publishing it brings it under the namespace rules. Mounted identities cannot create raw unbound uploads. Global event/export/reconciliation views fail rather than leaking names outside a mount.
 
-Migration 4 adds namespace projections/history/command receipts, actor-scoped upload keys, account policy revisions and the future SSH public-key registry. Checksummed migrations 1–3 remain unchanged. The SSH helper restricts channels to a single authenticated SFTP subsystem, bounds connections/time, and rejects shell/exec/forwarding. Its current test uses a synthetic subsystem; a real SFTP filesystem adapter, transfer-close semantics and stock OpenSSH qualification remain mandatory next work.
+Migration 4 adds namespace projections/history/command receipts, actor-scoped upload keys, account policy revisions and the future SSH public-key registry. Checksummed migrations 1–3 remain unchanged. The SFTP adapter uses these same namespace rules. Its loopback server, transfer-close behavior and stock OpenSSH exercise are documented in [the SFTP profile](protocols/sftp.md); outbound adapters, enterprise peers and interrupted-session resume remain open.
 
-`python3 scripts/qualify-foundation.py` retains native module, vet, unit/race, PostgreSQL/race, bounded name/path fuzzing, stock-curl and independent OpenSSL outputs with exact source hashes. This is a repeatable foundation check, not a release or complete-journey qualification.
+`python3 scripts/qualify-foundation.py` retains native module, vet, unit/race, PostgreSQL/race, bounded name/path fuzzing, stock-curl, OpenSSH SFTP/scp and independent OpenSSL outputs with exact source hashes. This is a repeatable foundation check, not a release or complete-journey qualification.

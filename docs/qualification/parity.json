@@ -48,12 +48,13 @@
       "acceptance_journey": "J01",
       "state": "implementing",
       "evidence": [
-        "docs/qualification/evidence/F004-virtual-namespace.json"
+        "docs/qualification/evidence/F004-virtual-namespace.json",
+        "docs/qualification/evidence/F005-sftp-exchange.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
       ],
-      "current_limit": "F004 verifies namespace/capability foundations through CLI/HTTPS. SSH transport uses a synthetic subsystem; no SFTP file exchange or complete customer journey is qualified. Other required row behavior remains open."
+      "current_limit": "F005 verifies a bounded local SFTP server and shared HTTPS namespace using stock OpenSSH. Full row acceptance, enterprise peers, interrupted-session resume, remaining protocol profiles and product journeys remain open."
     },
     {
       "id": "P-SFTP-SEND",
@@ -284,12 +285,13 @@
       "acceptance_journey": "J02",
       "state": "implementing",
       "evidence": [
-        "docs/qualification/evidence/F004-virtual-namespace.json"
+        "docs/qualification/evidence/F004-virtual-namespace.json",
+        "docs/qualification/evidence/F005-sftp-exchange.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
       ],
-      "current_limit": "F004 verifies namespace/capability foundations through CLI/HTTPS. SSH transport uses a synthetic subsystem; no SFTP file exchange or complete customer journey is qualified. Other required row behavior remains open."
+      "current_limit": "F005 verifies a bounded local SFTP server and shared HTTPS namespace using stock OpenSSH. Full row acceptance, enterprise peers, interrupted-session resume, remaining protocol profiles and product journeys remain open."
     },
     {
       "id": "P-SCP-LEGACY",
@@ -402,12 +404,13 @@
       "state": "implementing",
       "evidence": [
         "docs/qualification/evidence/F001-custody-foundation.json",
-        "docs/qualification/evidence/F004-virtual-namespace.json"
+        "docs/qualification/evidence/F004-virtual-namespace.json",
+        "docs/qualification/evidence/F005-sftp-exchange.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
       ],
-      "current_limit": "F004 verifies namespace/capability foundations through CLI/HTTPS. SSH transport uses a synthetic subsystem; no SFTP file exchange or complete customer journey is qualified. Other required row behavior remains open."
+      "current_limit": "F005 verifies a bounded local SFTP server and shared HTTPS namespace using stock OpenSSH. Full row acceptance, enterprise peers, interrupted-session resume, remaining protocol profiles and product journeys remain open."
     },
     {
       "id": "P-HTTPS-SEND",
@@ -444,12 +447,13 @@
       "state": "implementing",
       "evidence": [
         "docs/qualification/evidence/F001-custody-foundation.json",
-        "docs/qualification/evidence/F004-virtual-namespace.json"
+        "docs/qualification/evidence/F004-virtual-namespace.json",
+        "docs/qualification/evidence/F005-sftp-exchange.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
       ],
-      "current_limit": "F004 verifies namespace/capability foundations through CLI/HTTPS. SSH transport uses a synthetic subsystem; no SFTP file exchange or complete customer journey is qualified. Other required row behavior remains open."
+      "current_limit": "F005 verifies a bounded local SFTP server and shared HTTPS namespace using stock OpenSSH. Full row acceptance, enterprise peers, interrupted-session resume, remaining protocol profiles and product journeys remain open."
     },
     {
       "id": "P-HTTP-RESUME",
@@ -942,12 +946,13 @@
       "state": "implementing",
       "evidence": [
         "docs/qualification/evidence/F001-custody-foundation.json",
-        "docs/qualification/evidence/F004-virtual-namespace.json"
+        "docs/qualification/evidence/F004-virtual-namespace.json",
+        "docs/qualification/evidence/F005-sftp-exchange.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
       ],
-      "current_limit": "F004 verifies namespace/capability foundations through CLI/HTTPS. SSH transport uses a synthetic subsystem; no SFTP file exchange or complete customer journey is qualified. Other required row behavior remains open."
+      "current_limit": "F005 verifies a bounded local SFTP server and shared HTTPS namespace using stock OpenSSH. Full row acceptance, enterprise peers, interrupted-session resume, remaining protocol profiles and product journeys remain open."
     },
     {
       "id": "C-NETWORK",
@@ -1326,12 +1331,13 @@
       "state": "implementing",
       "evidence": [
         "docs/qualification/evidence/F001-custody-foundation.json",
-        "docs/qualification/evidence/F004-virtual-namespace.json"
+        "docs/qualification/evidence/F004-virtual-namespace.json",
+        "docs/qualification/evidence/F005-sftp-exchange.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
       ],
-      "current_limit": "F004 verifies namespace/capability foundations through CLI/HTTPS. SSH transport uses a synthetic subsystem; no SFTP file exchange or complete customer journey is qualified. Other required row behavior remains open."
+      "current_limit": "F005 verifies a bounded local SFTP server and shared HTTPS namespace using stock OpenSSH. Full row acceptance, enterprise peers, interrupted-session resume, remaining protocol profiles and product journeys remain open."
     },
     {
       "id": "A-ROLE",
@@ -1367,12 +1373,13 @@
       "acceptance_journey": "J10",
       "state": "implementing",
       "evidence": [
-        "docs/qualification/evidence/F004-virtual-namespace.json"
+        "docs/qualification/evidence/F004-virtual-namespace.json",
+        "docs/qualification/evidence/F005-sftp-exchange.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
       ],
-      "current_limit": "F004 verifies namespace/capability foundations through CLI/HTTPS. SSH transport uses a synthetic subsystem; no SFTP file exchange or complete customer journey is qualified. Other required row behavior remains open."
+      "current_limit": "F005 verifies a bounded local SFTP server and shared HTTPS namespace using stock OpenSSH. Full row acceptance, enterprise peers, interrupted-session resume, remaining protocol profiles and product journeys remain open."
     },
     {
       "id": "W-DEFINITION",

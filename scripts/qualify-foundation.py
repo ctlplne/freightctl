@@ -20,8 +20,10 @@ commands=[
 ('unit-race',['sh','scripts/go.sh','test','-race','./...']),
 ('postgres-integration-race',['sh','scripts/integration.sh','-race','-v']),
 ('virtual-path-fuzz',['sh','scripts/go.sh','test','./internal/vpath','-fuzz=FuzzCanonicalPath','-fuzztime=5s','-parallel=2']),
+('sftp-packet-fuzz',['sh','scripts/go.sh','test','./internal/sftpd','-fuzz=FuzzInspectPacket','-fuzztime=5s','-parallel=2']),
 ('custody-name-fuzz',['sh','scripts/go.sh','test','./internal/custody','-fuzz=FuzzCustodyName','-fuzztime=5s','-parallel=2']),
 ('stock-curl-https',['python3','scripts/qualify-https.py']),
+('stock-openssh-sftp',['python3','scripts/qualify-sftp.py']),
 ]
 results=[]
 for name,command in commands:

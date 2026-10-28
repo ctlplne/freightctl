@@ -1,0 +1,785 @@
+{
+  "schema_version": 1,
+  "id": "F005",
+  "kind": "bounded SFTP server, key lifecycle and native OpenSSH cross-protocol custody exercise",
+  "state": "verified locally",
+  "full_journeys_qualified": [],
+  "candidate": {
+    "starting_commit": "e64076095d9158af1dbe50b8d1770de119be5313",
+    "source_files": [
+      {
+        "path": "cmd/freightctl/main.go",
+        "sha256": "43bd91fca208cba622baa5222cec1917ca98b8b38541d7798e08185a2bb92e1f"
+      },
+      {
+        "path": "go.mod",
+        "sha256": "2b8e72bb19c95ae51e63a7c45a7c2c4ba0f147acdfde6f3eda1dff9520cca150"
+      },
+      {
+        "path": "go.sum",
+        "sha256": "e36a23c226b1844da16837e68a4d47f865d6eef00b3bf447cb33b52a31c89164"
+      },
+      {
+        "path": "internal/api/api.go",
+        "sha256": "61427d1d22fed9f801c426f643345fe5b5c53bce48f70cce8d779b02e14b668e"
+      },
+      {
+        "path": "internal/api/namespace.go",
+        "sha256": "82d863f396fec14d6394a7f4011e434c593f2217dc66231b96cdf8782b6b3c0e"
+      },
+      {
+        "path": "internal/architecture/architecture_test.go",
+        "sha256": "a8f4bb6540105bef76899e147dc0bb670bf2d411a0cdcf767ec38a79573657a5"
+      },
+      {
+        "path": "internal/audit/audit.go",
+        "sha256": "41bcf8bb940ec14e76657b3163be89ea2701a09fce7ee14a20f62452c516db46"
+      },
+      {
+        "path": "internal/audit/integration_test.go",
+        "sha256": "8c69a1a5d040a391b2579f58d3b070865e89f1c3b4f66199143d87e9793e7248"
+      },
+      {
+        "path": "internal/crypto/audit.go",
+        "sha256": "eefe6f66ab4c283ea96e51fc35a7cb4f8edff713dd16d56041d74bf1acdc338e"
+      },
+      {
+        "path": "internal/crypto/audit_test.go",
+        "sha256": "0837cc879e08a3b47d6b7ab4f393579af17ebd891f430e2cc45e264d60c02b4e"
+      },
+      {
+        "path": "internal/crypto/crypto.go",
+        "sha256": "edb1f8534ce0f048038aa5946489caba5ae303a38024e173c8a0d09478d093a0"
+      },
+      {
+        "path": "internal/crypto/protect_other.go",
+        "sha256": "c52dc1b00ac860719e3dd9dd9118109014d01e0b7f87327646bba63e7dd173a2"
+      },
+      {
+        "path": "internal/crypto/protect_unix.go",
+        "sha256": "f7184f82ff63e331fd5170a0ea27a0f5e867f06bbb9d1f901ae57f75a8b86e52"
+      },
+      {
+        "path": "internal/crypto/ssh.go",
+        "sha256": "c405042bf732cfffa8510e6d763f5c86c585994009a99d897d8a6efc2bb4d018"
+      },
+      {
+        "path": "internal/crypto/ssh_test.go",
+        "sha256": "46f6cb3e53d9c3fca6b38f23b9a263852dcb94d1b49177c976f3f923b415db14"
+      },
+      {
+        "path": "internal/custody/custody.go",
+        "sha256": "5c03d9f38ef224008ea8763e6c09a42cd60454040e7184a4964c89cdd1a5ff8f"
+      },
+      {
+        "path": "internal/custody/custody_test.go",
+        "sha256": "113e904d42d60b889e1139b01232c15feba38b56d87982bc56bfdf2cd4f54f1c"
+      },
+      {
+        "path": "internal/custody/integration_test.go",
+        "sha256": "999e552b4a5b8aee19a076d006929a168bd42a49102896f8b0ef88847b03d42e"
+      },
+      {
+        "path": "internal/custody/namespace.go",
+        "sha256": "cc9835442c7166f42dfdf3ad2eb7d4cf6ce51cd1d0e54310c7482956b72c1c6e"
+      },
+      {
+        "path": "internal/custody/namespace_integration_test.go",
+        "sha256": "c75bf9153443f2a90bc7fbe955bb6931f29d77ce9f8455128c302679c92edd8f"
+      },
+      {
+        "path": "internal/custody/reconcile.go",
+        "sha256": "0f3a4635ce70e98e019657b15f62f334f147eb3eefd669acee6f3fc2a5681eb4"
+      },
+      {
+        "path": "internal/custody/service.go",
+        "sha256": "41c7f485164109f6ef189bf69cee8d54b57412f5b9dc607e24dd039713b80e69"
+      },
+      {
+        "path": "internal/custody/writer.go",
+        "sha256": "692d794b74bd4287d23764aa0439975d08412a4ed654703af9eb6e3454204e62"
+      },
+      {
+        "path": "internal/custody/writer_integration_test.go",
+        "sha256": "75e9c26f96eb1459d53509b061fe1c85fbb8489c329b1f1e7192d2d6329bd496"
+      },
+      {
+        "path": "internal/sftpd/frames.go",
+        "sha256": "c370342331b85bc5e9b5bb549bcbd55279d17b131f367618600c02edf5d899d3"
+      },
+      {
+        "path": "internal/sftpd/frames_test.go",
+        "sha256": "909594927fda166cc0609de3e913d097488819ae601fc8c5227d059c91420f40"
+      },
+      {
+        "path": "internal/sftpd/server.go",
+        "sha256": "b442ee948ff513cc861646e7c63c3424a227fc61dd0f521604feaf6ac44389da"
+      },
+      {
+        "path": "internal/store/002_event_binding.sql",
+        "sha256": "9bdb83d3a31f608af24b568e91889e2e6f462caf8658b746a0c55be97e58dfb0"
+      },
+      {
+        "path": "internal/store/003_event_bounds.sql",
+        "sha256": "5e09fc8540294e24ea9114e71e4d58311bdfb7b80ae1a5d3162c8d3bc0a4a4e7"
+      },
+      {
+        "path": "internal/store/004_namespace.sql",
+        "sha256": "fd60652d7ebee14e7a39104d656599e5b8f9684eef293e3bb76951a2b5a895dc"
+      },
+      {
+        "path": "internal/store/identity.go",
+        "sha256": "9a7db0cc22a831c917dae9c59c88efe4980b453aad8eb050059ee680a5b90d19"
+      },
+      {
+        "path": "internal/store/migration_integration_test.go",
+        "sha256": "c418724a3755548d44d0ae677c948f2ab48f40948d09f66c3356da029f99687b"
+      },
+      {
+        "path": "internal/store/namespace.go",
+        "sha256": "b9e25c7684e69a5c0bb3d734a00ed5d5899476c24e61d2a8507c2a2185955c79"
+      },
+      {
+        "path": "internal/store/namespace_integration_test.go",
+        "sha256": "b989b680cb0c5196632d5807e20963fd558f5a4a8bbacf062f2e99c7d0e7e9e7"
+      },
+      {
+        "path": "internal/store/schema.sql",
+        "sha256": "26c4a6bd9e354b5b6f63052368f6d1e687de007f6f74b96910bce0ef3a5460d9"
+      },
+      {
+        "path": "internal/store/snapshot.go",
+        "sha256": "684681b9aeaed7021a140b196746f880dfec04a1bb966497c879468a9367b9a1"
+      },
+      {
+        "path": "internal/store/ssh.go",
+        "sha256": "8c2ec2c9890b0ecca3faf84def360cecf07d1082e3d7481f2f63c35a9c6a2a2c"
+      },
+      {
+        "path": "internal/store/store.go",
+        "sha256": "7c0bd13ad5e63b53cc26b4dc7452c22dc8c4d1137792dbeb289534ec07d4cb93"
+      },
+      {
+        "path": "internal/vpath/path.go",
+        "sha256": "a387a20738c260229a4515ed90fd95c7d81be51872a14b9f7bee30d592a6a353"
+      },
+      {
+        "path": "internal/vpath/path_test.go",
+        "sha256": "2a5489626f3ffb265249adbe4f4ed7698767c6a580dc976eb585d0a45d9cebd3"
+      },
+      {
+        "path": "scripts/check-records.py",
+        "sha256": "35df8df21212a1136486d5a9f3335b67b19cdb24f2e053c90d21d4768ced1f1b"
+      },
+      {
+        "path": "scripts/dev-db.py",
+        "sha256": "05643d67e1a64d7e5f91c19108f5bfa3415571c8394721c5d7cc89862d51c12a"
+      },
+      {
+        "path": "scripts/go.sh",
+        "sha256": "aec6d7e09592b3954a89dc69839c6791e72a73dbafe2ca04b3b274276a23f5a8"
+      },
+      {
+        "path": "scripts/integration.sh",
+        "sha256": "a1f1d34ff041d7287d04aab634ad336bf7af7896f58241181081853a981d3464"
+      },
+      {
+        "path": "scripts/qualify-foundation.py",
+        "sha256": "8b38d9ea4636eacaa2c950341ae0b86824c3f6a8a37d4fb93fe4eca36b01c3ed"
+      },
+      {
+        "path": "scripts/qualify-https.py",
+        "sha256": "a6d22901fa36628b1ac740554e8121e9fbc1ccfeadc321658388a9d1ea025d91"
+      },
+      {
+        "path": "scripts/qualify-sftp.py",
+        "sha256": "80120ca01e5912c1e6cae4cc7778328163299b7bce20d6ca1e9946f3033c0ff7"
+      },
+      {
+        "path": "scripts/verify-audit.py",
+        "sha256": "99f22fbd3e936aa4d38569ada1bfcccbca47e46f6c3e08aa47f6531128e9b983"
+      }
+    ],
+    "binary_sha256": "fca6cd333cc5611fd6be290883eb8ede07ab3a3298128b79ef172c9a1f4f7437",
+    "source_note": "Exact dirty-source hashes identify this candidate. CLI/API/SFTP native binaries have the same digest; no history rewriting."
+  },
+  "environment": {
+    "os": "Darwin",
+    "arch": "arm64",
+    "go": "go version go1.26.10 darwin/arm64",
+    "ssh": "OpenSSH_10.5p1, LibreSSL 3.3.6",
+    "postgres_image": "postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+    "database": "Retained task-owned freightctl-postgres-v1, loopback 25432, non-owner runtime and ten forced row-policy relations.",
+    "dependencies": [
+      "github.com/pkg/sftp v1.13.12 (BSD-2-Clause)",
+      "github.com/kr/fs v0.1.0 (BSD-3-Clause)",
+      "golang.org/x/crypto v0.58.0 (BSD-3-Clause)"
+    ],
+    "assistance": "Agent-operated synthetic local service-account exchange; no independent operator, enterprise peer or adoption claim."
+  },
+  "checks": [
+    {
+      "name": "records",
+      "command": [
+        "python3",
+        "scripts/check-records.py"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 0.035,
+      "native_output": "evidence/raw/foundation-620f030abb6c492088aa2618bf5f3040/records.log",
+      "native_output_sha256": "457fa0e73258b6d5d3f99f5ddc34510e9b644d7056ff0218f5108e232d264422"
+    },
+    {
+      "name": "module-integrity",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "mod",
+        "verify"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 0.291,
+      "native_output": "evidence/raw/foundation-620f030abb6c492088aa2618bf5f3040/module-integrity.log",
+      "native_output_sha256": "b4537ed75f533f993f371954de47e42a793b8e5b0587577de7e27fb3e50696bd"
+    },
+    {
+      "name": "vet",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "vet",
+        "./..."
+      ],
+      "exit_code": 0,
+      "duration_seconds": 0.61,
+      "native_output": "evidence/raw/foundation-620f030abb6c492088aa2618bf5f3040/vet.log",
+      "native_output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "unit-race",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "test",
+        "-race",
+        "./..."
+      ],
+      "exit_code": 0,
+      "duration_seconds": 3.855,
+      "native_output": "evidence/raw/foundation-620f030abb6c492088aa2618bf5f3040/unit-race.log",
+      "native_output_sha256": "4679ab14f35c4da39b07594418689668ae4e65f8ee32d02ce6f45d76ec8c1f6c"
+    },
+    {
+      "name": "postgres-integration-race",
+      "command": [
+        "sh",
+        "scripts/integration.sh",
+        "-race",
+        "-v"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 9.452,
+      "native_output": "evidence/raw/foundation-620f030abb6c492088aa2618bf5f3040/postgres-integration-race.log",
+      "native_output_sha256": "535f4919d488a3ebc781066680375af0aa604d43341586ec673c37edd41e2fea"
+    },
+    {
+      "name": "virtual-path-fuzz",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "test",
+        "./internal/vpath",
+        "-fuzz=FuzzCanonicalPath",
+        "-fuzztime=5s",
+        "-parallel=2"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 6.663,
+      "native_output": "evidence/raw/foundation-620f030abb6c492088aa2618bf5f3040/virtual-path-fuzz.log",
+      "native_output_sha256": "79ac898d92c3eb8d2a227a84b88aa423574380cf03677aafabf0d9ea8608a741"
+    },
+    {
+      "name": "sftp-packet-fuzz",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "test",
+        "./internal/sftpd",
+        "-fuzz=FuzzInspectPacket",
+        "-fuzztime=5s",
+        "-parallel=2"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 6.853,
+      "native_output": "evidence/raw/foundation-620f030abb6c492088aa2618bf5f3040/sftp-packet-fuzz.log",
+      "native_output_sha256": "e8733d56ec79e5f5ac3904148326aec57cdefe8f1cb348031771552a85a62ac7"
+    },
+    {
+      "name": "custody-name-fuzz",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "test",
+        "./internal/custody",
+        "-fuzz=FuzzCustodyName",
+        "-fuzztime=5s",
+        "-parallel=2"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 5.941,
+      "native_output": "evidence/raw/foundation-620f030abb6c492088aa2618bf5f3040/custody-name-fuzz.log",
+      "native_output_sha256": "735ff95d987b530ba7b809fd62adf832bcd5d525ba5cf20d15e3259937b6e828"
+    },
+    {
+      "name": "stock-curl-https",
+      "command": [
+        "python3",
+        "scripts/qualify-https.py"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 5.063,
+      "native_output": "evidence/raw/foundation-620f030abb6c492088aa2618bf5f3040/stock-curl-https.log",
+      "native_output_sha256": "746f7f040a2dc00e408649f3bb0a3d6962a4eb204b8cff583889cb0a3a66c64a"
+    },
+    {
+      "name": "stock-openssh-sftp",
+      "command": [
+        "python3",
+        "scripts/qualify-sftp.py"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 6.714,
+      "native_output": "evidence/raw/foundation-620f030abb6c492088aa2618bf5f3040/stock-openssh-sftp.log",
+      "native_output_sha256": "412e1f2b5ba09b6e99a4759fe90c90362bd8512a934e61cbfa2f99450606a0aa"
+    }
+  ],
+  "native_manifest": {
+    "path": "evidence/raw/foundation-620f030abb6c492088aa2618bf5f3040/manifest.json",
+    "sha256": "cbe4a49cedf31878fa3045a7f8bd83875c8160d9d1e133dcce28bdbc0a79af76"
+  },
+  "sftp": {
+    "manifest": {
+      "path": "evidence/raw/sftp-7f969d7fdc0e444296e84fad1cfb220d/manifest.json",
+      "sha256": "e0ffd35a7dabc54ff8529ec9d96a01f9a429182af1b78ee0e507d826bad974e1"
+    },
+    "steps": [
+      {
+        "name": "stock-put-get",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "332dbc2c8bffff4eb13e2e1d8793cbd52db15fcccadf0421f249db8f867ab7e1",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "https-sees-sftp-file",
+        "http_status": 200,
+        "output_sha256": "e92f17b26c6a24d8aff76bd5cf1f4cdecc1f01c13c10b78c357b769c07759a68"
+      },
+      {
+        "name": "https-downloads-sftp-revision",
+        "http_status": 200,
+        "output_sha256": "2fea5ee3b2ff09e05e50c86092b326fd52b740a3e72d219cce4f6dc5a4d72026"
+      },
+      {
+        "name": "stock-overwrite",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "fa6d91a2639b39b1cd551235b84913dbd552c7468acd1ec293aa85e26c415dde",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "immutable-overwrite-stat",
+        "http_status": 200,
+        "output_sha256": "f527aa7b33935f10f5043fb56839ad6e7947e37f16795c9d659e13bbf6a4f25e"
+      },
+      {
+        "name": "retained-original-revision",
+        "http_status": 200,
+        "output_sha256": "2fea5ee3b2ff09e05e50c86092b326fd52b740a3e72d219cce4f6dc5a4d72026"
+      },
+      {
+        "name": "committed-prefix-reput",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "a802cba0d27f4c461f00aba775760e30acfb9b8953df7e8167db425e043c1e53",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "stock-modes-and-rename",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "d4c4bd2d8433fdf23680ad6073068db58f0f5f73802ad565521a34fc4227f01e",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "mounted-reader-get",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "49b9a3a09e833dac4c2553cd705e01fa3ffa5ae8d061e7f8bd04f2636fa4b86d",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "mounted-reader-write-denied",
+        "exit_code": 1,
+        "expected_success": false,
+        "stdout_sha256": "786467fba49fa38737291e5b0f67a78c9e254996faaacf75cf024e8705c0b106",
+        "stderr_sha256": "414314f727d7c998da7272e3f183c37f18d36917a73ae4be8f104ca672078152"
+      },
+      {
+        "name": "mounted-traversal-denied",
+        "exit_code": 255,
+        "expected_success": false,
+        "stdout_sha256": "6a6e02e0ec02ac926afcfb17eb9e8b68922088ff4ad2124f1b7558a75c0d42c2",
+        "stderr_sha256": "cbf0d9216c0afc767db72caf96ab12609637c63ee9abf18e1858f307d21e722a"
+      },
+      {
+        "name": "owner-unbound-raw-upload",
+        "http_status": 201,
+        "output_sha256": "f7f1796b35c75b55d61dca42e6dd0c409777f9ca99f13022ebf392d5b0b63a1e"
+      },
+      {
+        "name": "mounted-raw-id-outside-root-denied",
+        "http_status": 404,
+        "output_sha256": "fef916c279def93f790d739d8525fc7ffd697a4a492029472c5752bda04a4faf"
+      },
+      {
+        "name": "foreign-partner-path-denied",
+        "exit_code": 1,
+        "expected_success": false,
+        "stdout_sha256": "711797f4ef181c0204c7ef7bfd382e60cc142606d55c35f0f36f6568e87f94db",
+        "stderr_sha256": "40b0b8f546b69434724e50e9f30ace793f6bcd6b67faa35f52afb8a2815f6bc7"
+      },
+      {
+        "name": "foreign-tenant-path-denied",
+        "exit_code": 1,
+        "expected_success": false,
+        "stdout_sha256": "711797f4ef181c0204c7ef7bfd382e60cc142606d55c35f0f36f6568e87f94db",
+        "stderr_sha256": "40b0b8f546b69434724e50e9f30ace793f6bcd6b67faa35f52afb8a2815f6bc7"
+      },
+      {
+        "name": "wrong-private-key-denied",
+        "exit_code": 255,
+        "expected_success": false,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "47e5488550e40b3c5e45410c57497b05ccc9e2ccdc43faa95b48664c58c03442"
+      },
+      {
+        "name": "changed-host-identity-denied",
+        "exit_code": 255,
+        "expected_success": false,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "38b4827139a126c7e07c9303339b5b016a58f70c218f3bbf4f14302d6d5175e5"
+      },
+      {
+        "name": "symlink-denied",
+        "exit_code": 1,
+        "expected_success": false,
+        "stdout_sha256": "908e3e47dc1b89c386cc14fdb7f0b0462a6c3a5461efff07aa0397324249df6a",
+        "stderr_sha256": "10117c65d6318027f5d3e6ef334cdfb8dbfdabb7760edce9c68ace2d6dfb96cd"
+      },
+      {
+        "name": "stock-modern-scp-download",
+        "exit_code": 0,
+        "receiver_sha256": "f9451d795ed3dc8180d23c974febe2f37562ec824813485d578c72f312fa07e5",
+        "expected_sha256": "f9451d795ed3dc8180d23c974febe2f37562ec824813485d578c72f312fa07e5"
+      },
+      {
+        "name": "stock-modern-scp-upload",
+        "exit_code": 0
+      },
+      {
+        "name": "https-verifies-modern-scp-upload",
+        "http_status": 200,
+        "output_sha256": "f9451d795ed3dc8180d23c974febe2f37562ec824813485d578c72f312fa07e5"
+      },
+      {
+        "name": "shell-exec-denied",
+        "exit_code": 255
+      },
+      {
+        "name": "forwarding-denied",
+        "exit_code": 255
+      },
+      {
+        "name": "legacy-scp-exec-denied",
+        "exit_code": 1
+      },
+      {
+        "name": "oversized-frame-denied",
+        "exit_code": 1,
+        "response_types": [
+          2
+        ]
+      },
+      {
+        "name": "open-handle-budget",
+        "exit_code": 0,
+        "response_types": [
+          2,
+          102,
+          102,
+          102,
+          102,
+          102,
+          102,
+          102,
+          102,
+          101,
+          101,
+          101,
+          101,
+          101,
+          101,
+          101,
+          101,
+          101
+        ],
+        "closed_handles": 8
+      },
+      {
+        "name": "https-publish-for-sftp",
+        "http_status": 201,
+        "output_sha256": "4bd295ac8bc6f3a9d363d68b905e3cdd69c2d25346998f5227d1a5995b9bc327"
+      },
+      {
+        "name": "sftp-retrieves-https-file",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "6aad37002c33e32aa7d4f63d3c849791352e557f0268caa4d28980ad85ab07bb",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "active-upload-unpublished",
+        "http_status": 404,
+        "output_sha256": "fef916c279def93f790d739d8525fc7ffd697a4a492029472c5752bda04a4faf"
+      },
+      {
+        "name": "disconnected-upload-unpublished",
+        "http_status": 404,
+        "output_sha256": "fef916c279def93f790d739d8525fc7ffd697a4a492029472c5752bda04a4faf"
+      },
+      {
+        "name": "ordinary disconnect removes unsealed partial without publication",
+        "passed": true
+      },
+      {
+        "name": "grant-partner-dropbox-mode",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "e4e7e05ee6e5e32ad0c0f42a889525e26564390233e0b7b9947d264504cedb09",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "revoked-active-upload-unpublished",
+        "http_status": 404,
+        "output_sha256": "fef916c279def93f790d739d8525fc7ffd697a4a492029472c5752bda04a4faf"
+      },
+      {
+        "name": "live SSH key revocation aborts uncommitted upload",
+        "passed": true
+      },
+      {
+        "name": "crashed-upload-unpublished",
+        "http_status": 404,
+        "output_sha256": "fef916c279def93f790d739d8525fc7ffd697a4a492029472c5752bda04a4faf"
+      },
+      {
+        "name": "crash-reconciliation",
+        "http_status": 200,
+        "output_sha256": "a05a410c76b1e6154bd43d2a020c84f8781a9fe4618deebacfc0eefabf43d819"
+      },
+      {
+        "name": "retry-after-server-crash",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "cc333347173fa4b2298c98bd428d5e9f71ee1211ed7c73cc63daa60a583cc6b3",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "crash-retry-new-revision",
+        "http_status": 200,
+        "output_sha256": "681a7aaf388a104312a6664168cddc9ac5f1bf649593382f783fe676b61aa9fe"
+      },
+      {
+        "name": "revoked-key-login-denied",
+        "exit_code": 255,
+        "expected_success": false,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "1236f3a745c4c61378913c62e1d5e755bf0b5389e60fec38059aef42a603b845"
+      },
+      {
+        "name": "revoked key cannot be resurrected by enrollment retry",
+        "exit_code": 1
+      }
+    ],
+    "elapsed_seconds": 6.648
+  },
+  "https_regression": {
+    "manifest": {
+      "path": "evidence/raw/https-558be93b6aec409b81b516e8941a95cc/manifest.json",
+      "sha256": "3294152a9604aae19b0d43771c7a14197d14e60afd66844bf503055e584567bd"
+    },
+    "steps": 66,
+    "binary_sha256": "fca6cd333cc5611fd6be290883eb8ede07ab3a3298128b79ef172c9a1f4f7437"
+  },
+  "independent_ssh_probe": {
+    "native_output": {
+      "path": "evidence/raw/sftp-7f969d7fdc0e444296e84fad1cfb220d/scp-debug.stderr",
+      "sha256": "c9e7fa72633967847f5ef928b6cf529f2f6e2bf212a5301226c26d7eee8522af"
+    },
+    "negotiated": [
+      "debug1: kex: algorithm: mlkem768x25519-sha256",
+      "debug1: kex: host key algorithm: ssh-ed25519",
+      "debug1: kex: server->client cipher: chacha20-poly1305@openssh.com MAC: <implicit> compression: none",
+      "debug1: kex: client->server cipher: chacha20-poly1305@openssh.com MAC: <implicit> compression: none",
+      "debug1: Exit status 0"
+    ],
+    "result": "Stock modern scp exit status zero with strict fixture host trust and explicit identity; user SSH configuration excluded."
+  },
+  "first_failures": [
+    {
+      "meaning": "No SFTP command in the committed namespace foundation.",
+      "manifest": {
+        "path": "evidence/raw/sftp-first-failure-423761c3bf824606967b1a26b62a7840/manifest.json",
+        "sha256": "08c253596a2266971f89296bc586128bfbcbad25925d6ef432e191aa9710984b"
+      },
+      "starting_commit": "e64076095d9158af1dbe50b8d1770de119be5313",
+      "binary_sha256": "63446456ab75f5f8f2b443ffe21b1cab47f36331c0a068f03901fbd587ba8b7e",
+      "failure": 1
+    },
+    {
+      "meaning": "Modern scp received correct bytes but failed because normal channel cleanup prevented SSH exit status.",
+      "manifest": {
+        "path": "evidence/raw/sftp-bbc9ac7c11b14fa1a11585db9f81dbeb/manifest.json",
+        "sha256": "41fd666a25a0ae5761b9f717c4ff0c68ee66048d3caaad3f6e0f914d8ca92bb4"
+      },
+      "starting_commit": "e64076095d9158af1dbe50b8d1770de119be5313",
+      "binary_sha256": "a654fedbb3a0ab9b1f3b4f19b46d18cd2cf0fb7b397a754936de708f06f4a016",
+      "failure": ""
+    },
+    {
+      "meaning": "The initial native active-revocation test exceeded its unchanged eight-second bound because a buffered client held the failed transfer open.",
+      "manifest": {
+        "path": "evidence/raw/sftp-3ea31c31014c4b098c09b2308f76f2e4/manifest.json",
+        "sha256": "e4c1bc9841c7ab0a3893fbaf55301c030b84a870ec85b489da940b22597bbccb"
+      },
+      "starting_commit": "e64076095d9158af1dbe50b8d1770de119be5313",
+      "binary_sha256": "85d2eeb41d9185d7ca9f6e35d11284938b91b418711c22a6c156f098a981b038",
+      "failure": "Traceback (most recent call last):\n  File \"/Users/shankar/Desktop/ctlplne-freightctl/scripts/qualify-sftp.py\", line 210, in <module>\n    client.wait(timeout=8);assert client.returncode!=0;client=None\n    ~~~~~~~~~~~^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py\", line 1279, in wait\n    return self._wait(timeout=timeout)\n           ~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py\", line 2076, in _wait\n    raise TimeoutExpired(self.args, timeout)\nsubprocess.TimeoutExpired: Command '['sftp', '-l', '256', '-b', '/Users/shankar/Desktop/ctlplne-freightctl/.private/sftp-3ea31c31014c4b098c09b2308f76f2e4/active-key-revocation.batch', '-P', '56308', '-F', '/dev/null', '-oBatchMode=yes', '-oStrictHostKeyChecking=yes', '-oUserKnownHostsFile=/Users/shankar/Desktop/ctlplne-freightctl/.private/sftp-3ea31c31014c4b098c09b2308f76f2e4/known_hosts', '-oIdentitiesOnly=yes', '-oIdentityAgent=none', '-oConnectTimeout=5', '-i', '/Users/shankar/Desktop/ctlplne-freightctl/.private/sftp-3ea31c31014c4b098c09b2308f76f2e4/revocable-writer.key', 'c1c53639-09cf-49ac-99d5-c47b865c4e01.4d989d05-b406-4ea5-9882-70d25b758205.ad0b8ff2-e2f6-4c71-aebf-dad30e6ff98c@127.0.0.1']' timed out after 8 seconds\n"
+    },
+    {
+      "meaning": "Qualification harness initially abandoned eight open directory handles and incorrectly expected clean EOF. Wire responses already proved eight accepted handles and the ninth denied. It now explicitly closes all eight, requires eight successful close replies and keeps the clean-exit assertion. Product limits were unchanged.",
+      "manifest": {
+        "path": "evidence/raw/sftp-e6200643523e4f6098d4549bfaaba21e/manifest.json",
+        "sha256": "f105dc0ce9530427b1e1de471dd04324af6a27b518ba92c77ee18686e0b19246"
+      }
+    }
+  ],
+  "mechanisms": [
+    "SSH verifies registered private-key possession before the subsystem receives a typed tenant/partner/actor principal. Every operation rechecks the active key and frozen authority revision.",
+    "Key enrollment/revocation commits exact immutable public-key events with the registry transition; revoked keys cannot be re-enrolled by retry. Local administrative references remain required.",
+    "Receive into a separate generated revision. Track at most 1024 merged byte ranges; missing packets and disconnected unclosed handles cannot publish. Seal/sync before atomic file/path/journal/receipt commit.",
+    "Retain old immutable revisions on overwrite; preserve uncertain sealed bytes and crash orphans for read-only reconciliation.",
+    "Read through the exact verified descriptor and recheck current mount/mode/key/account permission for each bounded read.",
+    "Validate frame length before allocation, preserve raw-path validation before library cleaning, process one packet per response, cap packets, handles, writers and session time.",
+    "Reject shell, forwarding, links, ownership/extension attributes and unsupported protocol semantics explicitly.",
+    "The SSH transport owns normal channel status/closure. The SFTP library may abort a failing channel, but normal cleanup preserves the final exit-status exchange.",
+    "Invalid current authority closes active transfer sessions promptly; the original rate-limited eight-second revocation test passes without extending its budget."
+  ],
+  "security": {
+    "govulncheck": {
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "run",
+        "golang.org/x/vuln/cmd/govulncheck@v1.9.0",
+        "-json",
+        "./..."
+      ],
+      "exit_code": 0,
+      "config": {
+        "protocol_version": "v1.0.0",
+        "scanner_name": "govulncheck",
+        "scanner_version": "v1.9.0",
+        "db": "https://vuln.go.dev",
+        "db_last_modified": "2026-10-27T21:16:18Z",
+        "go_version": "go1.26.10",
+        "scan_level": "symbol",
+        "scan_mode": "source"
+      },
+      "native_report": {
+        "path": ".private/sftp-scans/govulncheck-final.json",
+        "sha256": "df8dc3d5fbc2fb5df0785d34964183d82ca80c1d0b1b9804dd3b43923a61dac5"
+      },
+      "dependency_inventory": {
+        "path": ".private/sftp-scans/native-dependencies.txt",
+        "sha256": "bfc34645159d6f3c3a64947f45765214d7d6906600d37670f6803b35c5ca4722"
+      },
+      "finding_count": 1,
+      "imported_affected_package_count": 0,
+      "assessments": [
+        {
+          "advisory": "GO-2026-5932",
+          "trace": [
+            {
+              "module": "golang.org/x/crypto",
+              "version": "v0.58.0"
+            }
+          ],
+          "affected_packages": [
+            "golang.org/x/crypto/openpgp",
+            "golang.org/x/crypto/openpgp/armor",
+            "golang.org/x/crypto/openpgp/clearsign",
+            "golang.org/x/crypto/openpgp/elgamal",
+            "golang.org/x/crypto/openpgp/errors",
+            "golang.org/x/crypto/openpgp/packet",
+            "golang.org/x/crypto/openpgp/s2k"
+          ],
+          "imported_affected_packages": [],
+          "assessment": "Affected unmaintained OpenPGP packages are absent from this native build. The module-level advisory remains recorded; no scanner rule is suppressed.",
+          "official_advisory": "https://pkg.go.dev/vuln/GO-2026-5932"
+        }
+      ]
+    },
+    "gitleaks_manifest_reference": ".private/sftp-scans/gitleaks-manifest.json",
+    "secret_scan_scope": "Final nonignored source/evidence snapshot and all reachable local history; original reports retained. No private fixtures, caches or raw evidence in the source snapshot.",
+    "gitleaks": {
+      "tool": "gitleaks 8.30.1",
+      "image": "ghcr.io/gitleaks/gitleaks@sha256:c00b6bd0aeb3071cbcb79009cb16a60dd9e0a7c60e2be9ab65d25e6bc8abbb7f",
+      "source_file_count": 70,
+      "coverage_reference": ".private/sftp-scans/source-input-manifest.json",
+      "precommit_history_head": "e64076095d9158af1dbe50b8d1770de119be5313",
+      "precommit_history_commit_count": 6,
+      "results": [
+        {
+          "kind": "source",
+          "exit_code": 0,
+          "report_reference": ".private/sftp-scans/gitleaks/source.json",
+          "report_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+          "findings": 0
+        },
+        {
+          "kind": "history",
+          "exit_code": 0,
+          "report_reference": ".private/sftp-scans/gitleaks/history.json",
+          "report_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+          "findings": 0
+        }
+      ],
+      "limits": "Safe nonignored source snapshot and precommit reachable history. Private fixtures/caches/raw evidence excluded. Postcommit history scan retained at the separate manifest reference."
+    }
+  },
+  "limits": [
+    "Assisted synthetic exchange on one Mac and one local PostgreSQL container.",
+    "Server receive/download role only; no outbound SFTP connection adapter or independent enterprise peer.",
+    "Reput resumes a committed prefix; interrupted-upload session resume remains open.",
+    "One frame at a time, 256 KiB inbound frames, 100000 packets/session, eight handles/session, configured writers/time/file/storage budgets. No throughput claim.",
+    "Integrity-only: no malware scan, payload signature or business acknowledgment.",
+    "Legacy SCP, sparse expansion, read/write handles, ownership changes, fsync/hardlink/statvfs extensions are unsupported.",
+    "All full product journeys and release/native platform gates remain open.",
+    "Full SFTP baseline remains implementing: enterprise-client profiles, outbound connection adapter, interrupted-session resume, all append/client combinations and remaining crash/commit boundaries are open.",
+    "ProtocolSessionStarted and file/path/key events are durable. Complete denied-login/session-end lifecycle auditing, stronger key custody/rotation and protected retention remain open.",
+    "Serialized global staging/namespace locks and conservative maximum-revision admission are an initial profile. Scalable reservations, configurable larger budgets and tenant fairness remain required.",
+    "Native source vulnerability scan has one module-level advisory in unimported OpenPGP packages; other native/shipped configurations and actual release images remain unqualified."
+  ]
+}
