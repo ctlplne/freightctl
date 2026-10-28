@@ -18,6 +18,11 @@ import (
 //go:embed schema.sql
 var schema string
 
+//go:embed 002_event_binding.sql
+var eventBinding string
+
+var migrations = []string{schema, eventBinding}
+
 var ErrUnauthorized = errors.New("unauthorized")
 var ErrNotFound = errors.New("not found")
 var ErrConflict = errors.New("idempotency key has different meaning")
@@ -64,6 +69,7 @@ func connect(ctx context.Context, path string) (*pgxpool.Pool, error) {
 	cfg.MinConns = 0
 	cfg.ConnConfig.ConnectTimeout = 5 * time.Second
 	cfg.ConnConfig.RuntimeParams["application_name"] = "freightctl"
+	cfg.ConnConfig.RuntimeParams["row_security"] = "on"
 	cfg.ConnConfig.RuntimeParams["statement_timeout"] = "10000"
 	cfg.ConnConfig.RuntimeParams["idle_in_transaction_session_timeout"] = "120000"
 	p, err := pgxpool.NewWithConfig(ctx, cfg)
@@ -87,11 +93,34 @@ func Open(ctx context.Context, path string) (*Store, error) {
 		p.Close()
 		return nil, errors.New("runtime database role must be non-owner without elevated privileges or memberships")
 	}
-	var version int
-	err = p.QueryRow(ctx, `SELECT version FROM freightctl_schema WHERE version=1`).Scan(&version)
+	var protected int
+	err = p.QueryRow(ctx, `SELECT count(*) FROM pg_class WHERE relnamespace='public'::regnamespace AND relname=ANY($1) AND relrowsecurity AND relforcerowsecurity`, []string{"tenants", "partners", "credentials", "events", "files", "idempotency"}).Scan(&protected)
+	if err != nil || protected != 6 {
+		p.Close()
+		return nil, errors.New("runtime requires forced row security on every domain table")
+	}
+	rows, err := p.Query(ctx, `SELECT version,digest FROM freightctl_schema ORDER BY version`)
 	if err != nil {
 		p.Close()
 		return nil, errors.New("database schema not initialized")
+	}
+	matched := 0
+	for rows.Next() {
+		var version int
+		var digest string
+		if err = rows.Scan(&version, &digest); err != nil {
+			break
+		}
+		if version != matched+1 || version > len(migrations) || digest != secure.Digest([]byte(migrations[version-1])) {
+			err = errors.New("database migration identity differs")
+			break
+		}
+		matched++
+	}
+	rows.Close()
+	if err != nil || rows.Err() != nil || matched != len(migrations) {
+		p.Close()
+		return nil, errors.New("database schema version or digest differs; run the matching administrative migrations")
 	}
 	return &Store{Pool: p}, nil
 }
@@ -133,20 +162,29 @@ func Migrate(ctx context.Context, adminPath, passwordPath string) error {
 	if _, err = tx.Exec(ctx, `REVOKE CREATE ON SCHEMA public FROM PUBLIC; CREATE TABLE IF NOT EXISTS freightctl_schema(version integer PRIMARY KEY, digest text NOT NULL); GRANT SELECT ON freightctl_schema TO freightctl_runtime`); err != nil {
 		return err
 	}
-	var digest string
-	err = tx.QueryRow(ctx, `SELECT digest FROM freightctl_schema WHERE version=1`).Scan(&digest)
-	switch {
-	case errors.Is(err, pgx.ErrNoRows):
-		if _, err = tx.Exec(ctx, schema); err != nil {
-			return err
-		}
-		if _, err = tx.Exec(ctx, `INSERT INTO freightctl_schema VALUES(1,$1)`, secure.Digest([]byte(schema))); err != nil {
-			return err
-		}
-	case err != nil:
+	var latest int
+	if err = tx.QueryRow(ctx, `SELECT coalesce(max(version),0) FROM freightctl_schema`).Scan(&latest); err != nil {
 		return err
-	case digest != secure.Digest([]byte(schema)):
-		return errors.New("existing migration digest differs; do not rewrite applied migrations")
+	}
+	if latest > len(migrations) {
+		return errors.New("database uses a newer schema; use a matching binary")
+	}
+	for index, migration := range migrations {
+		var digest string
+		err = tx.QueryRow(ctx, `SELECT digest FROM freightctl_schema WHERE version=$1`, index+1).Scan(&digest)
+		switch {
+		case errors.Is(err, pgx.ErrNoRows):
+			if _, err = tx.Exec(ctx, migration); err != nil {
+				return err
+			}
+			if _, err = tx.Exec(ctx, `INSERT INTO freightctl_schema VALUES($1,$2)`, index+1, secure.Digest([]byte(migration))); err != nil {
+				return err
+			}
+		case err != nil:
+			return err
+		case digest != secure.Digest([]byte(migration)):
+			return errors.New("existing migration digest differs; do not rewrite applied migrations")
+		}
 	}
 	return tx.Commit(ctx)
 }
@@ -261,7 +299,7 @@ func (t *Transaction) Accept(ctx context.Context, key, meaning string, f *File) 
 	if err := t.Reauthorize(ctx); err != nil {
 		return err
 	}
-	id, err := t.Append(ctx, "FileAccepted", f.ID, map[string]any{"size_bytes": f.Size, "sha256": f.SHA256, "policy": f.Policy})
+	id, err := t.Append(ctx, "FileAccepted", f.ID, map[string]any{"schema_version": 2, "size_bytes": f.Size, "sha256": f.SHA256, "policy": f.Policy, "request_key": key, "request_hash": meaning})
 	if err != nil {
 		return err
 	}

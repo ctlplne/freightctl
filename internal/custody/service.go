@@ -36,6 +36,9 @@ func (s *Service) Accept(ctx context.Context, scope store.Scope, key string, siz
 		return nil, false, err
 	}
 	if prior != nil {
+		if err = t.Reauthorize(ctx); err != nil {
+			return nil, false, err
+		}
 		return prior, true, t.Tx.Commit(ctx)
 	}
 	// Initial single-storage profile serializes capacity checks and staging across processes.

@@ -393,8 +393,10 @@
         "independent operator or receiver"
       ],
       "acceptance_journey": "J02",
-      "state": "planned",
-      "evidence": [],
+      "state": "implementing",
+      "evidence": [
+        "docs/qualification/evidence/F001-custody-foundation.json"
+      ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
       ]
@@ -431,8 +433,10 @@
         "independent operator or receiver"
       ],
       "acceptance_journey": "J02",
-      "state": "planned",
-      "evidence": [],
+      "state": "implementing",
+      "evidence": [
+        "docs/qualification/evidence/F001-custody-foundation.json"
+      ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
       ]
@@ -925,8 +929,10 @@
         "independent operator or receiver"
       ],
       "acceptance_journey": "J02",
-      "state": "planned",
-      "evidence": [],
+      "state": "implementing",
+      "evidence": [
+        "docs/qualification/evidence/F001-custody-foundation.json"
+      ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
       ]
@@ -1305,8 +1311,10 @@
         "independent operator or receiver"
       ],
       "acceptance_journey": "J10",
-      "state": "planned",
-      "evidence": [],
+      "state": "implementing",
+      "evidence": [
+        "docs/qualification/evidence/F001-custody-foundation.json"
+      ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
       ]

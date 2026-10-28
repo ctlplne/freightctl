@@ -4,20 +4,23 @@
     {
       "id": "D001",
       "severity": "blocker",
-      "state": "open",
+      "state": "fixed locally",
       "observed_on": "2026-10-28",
       "candidate": null,
       "journey": "J01",
       "reproduction": "go run ./cmd/freightctl --help",
       "first_failure": "go: cannot find main module, but found .git/config",
       "cause": "Only bootstrap documents exist; application and development path are absent.",
-      "regression_evidence": [],
-      "candidate_note": "Observed before application implementation in the archived pre-recreation history; original failure retained."
+      "regression_evidence": [
+        "docs/qualification/evidence/F001-custody-foundation.json"
+      ],
+      "candidate_note": "Observed before application implementation in the archived pre-recreation history; original failure retained.",
+      "resolution": "Published task-local Go path and CLI exist."
     },
     {
       "id": "D002",
       "severity": "blocker",
-      "state": "open",
+      "state": "fixed locally",
       "observed_on": "2026-10-28",
       "candidate": null,
       "candidate_note": "Retained pre-recreation implementation; source hashes are in the ignored recovery manifest.",
@@ -25,7 +28,70 @@
       "reproduction": "sh scripts/go.sh test ./...",
       "first_failure": "TestDurableExactRevision and TestRejectIncompleteAndEscape: storage root must have mode 0700",
       "cause": "Test fixture uses an existing temporary directory without creating a private custody subdirectory. Diagnose and fix before claiming a pass.",
-      "regression_evidence": []
+      "regression_evidence": [
+        "docs/qualification/evidence/F001-custody-foundation.json"
+      ],
+      "resolution": "Create a mode-0700 custody child in fixtures; separately assert broad existing directories stay rejected."
+    },
+    {
+      "id": "D003",
+      "severity": "security blocker",
+      "state": "fixed locally",
+      "observed_on": "2026-10-28",
+      "candidate": "94522e3debd39f8531bee7af38d34682353770db",
+      "candidate_note": "Observed on the dirty implementation identified by F001 source manifests; repaired source identity is recorded there.",
+      "journey": "J10",
+      "reproduction": "TestProjectionRequiresExactJournalEvent",
+      "first_failure": "Wrong event kind, wrong revision and forged idempotency key were accepted by runtime SQL.",
+      "cause": "SQL foreign keys did not bind projections to exact event semantics.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F001-custody-foundation.json"
+      ]
+    },
+    {
+      "id": "D004",
+      "severity": "security blocker",
+      "state": "fixed locally",
+      "observed_on": "2026-10-28",
+      "candidate": "94522e3debd39f8531bee7af38d34682353770db",
+      "candidate_note": "Observed on the dirty implementation identified by F001 source manifests; repaired source identity is recorded there.",
+      "journey": "J10",
+      "reproduction": "TestStartupRejectsDisabledRLS",
+      "first_failure": "Runtime startup succeeded with files row security disabled.",
+      "cause": "Startup checked the role and schema marker but not actual forced row security.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F001-custody-foundation.json"
+      ]
+    },
+    {
+      "id": "D005",
+      "severity": "security blocker",
+      "state": "fixed locally",
+      "observed_on": "2026-10-28",
+      "candidate": "94522e3debd39f8531bee7af38d34682353770db",
+      "candidate_note": "Observed on the dirty implementation identified by F001 source manifests; repaired source identity is recorded there.",
+      "journey": "J10",
+      "reproduction": "TestReplayRechecksRevocationAfterLock",
+      "first_failure": "A replay waiting on a database lock returned metadata after credential revocation.",
+      "cause": "Replay authenticated before waiting but omitted a current-authority check after the lock.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F001-custody-foundation.json"
+      ]
+    },
+    {
+      "id": "D006",
+      "severity": "security blocker",
+      "state": "fixed locally",
+      "observed_on": "2026-10-28",
+      "candidate": "94522e3debd39f8531bee7af38d34682353770db",
+      "candidate_note": "Observed on the dirty implementation identified by F001 source manifests; repaired source identity is recorded there.",
+      "journey": "J01",
+      "reproduction": "govulncheck v1.9.0 source scan",
+      "first_failure": "govulncheck reported reachable GO-2026-5970 and GO-2026-6629 through the database authentication dependency.",
+      "cause": "pgx selected vulnerable golang.org/x/text v0.29.0 in the initial dependency graph.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F001-custody-foundation.json"
+      ]
     }
   ]
 }

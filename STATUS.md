@@ -1,27 +1,27 @@
 # freightctl status
 
 - Updated: 2026-10-28
-- Phase: Stage 1 implementation retained; repository recreation complete
+- Phase: Stage 1, locally tested custody foundation; full product goal active
 - Workspace: /Users/shankar/Desktop/ctlplne-freightctl
-- Required Git identity: `imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>`
+- Commit identity: `imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>` for author and committer
 - Branch: local main; no push authorized
 
-## Repository recreation
+## Current evidence
 
-The owner requested a clean repository after incorrect commit attribution and an unauthorized local history rewrite. A verified, ignored recovery copy retains the previous source and complete Git metadata. All 14 implementation files match their pre-recreation hashes. Credentials, caches, PostgreSQL data and the task-owned local environment remain intact.
+F001 in `docs/qualification/evidence/` identifies the exact source hashes, native binary digest, environment, commands and limits. Real PostgreSQL 16.15 tests cover forced tenant/partner row policies, runtime grants, concurrent idempotency, transactional rollback, orphan visibility/quotas, corrupt bytes, revocation during staging and blocked replay, clean migrations and v1 upgrade. Stock curl verifies a synthetic HTTPS upload/download, ranges, retries, isolation and retrieval after process restart. Unit/race, vet, architecture import checks and bounded name fuzzing pass.
 
-The owner manually deleted the old GitHub repository (ID `1437612772`) after CLI deletion lacked permission and automatic approval review rejected the browser fallback. The private `ctlplne/freightctl` repository was recreated with new ID `1437631520` at `2026-10-28T21:06:33Z`. Its default branch is main and it has no published refs. Local history starts at new root commit `e1eab1a`, authored and committed by the verified owner identity. No previous commits are ancestors of that root. Nothing from the new local history has been pushed.
+The original fixture failure is repaired without relaxing private-directory permissions. Regression tests found and repaired projection/event binding, disabled-RLS startup and stale replay authority. Govulncheck found two reachable text-library vulnerabilities; upgrading to x/text v0.41.0 produces zero findings on the native source configuration. Native logs and secrets stay ignored; safe manifests record scanner coverage and limits.
 
-## Implementation and evidence
+This proves a narrow service-account custody exercise. It does not qualify a complete customer journey, malware scanning, signatures, downstream business receipt, SFTP, browser onboarding, upload resume, AI, HA, performance, offline installation or a release. All 83 baseline rows and 12 complete journeys remain open.
 
-The retained implementation contains a Go CLI, PostgreSQL schema and scoped store, filesystem custody, an HTTPS API, local database setup and initial custody tests. It is incomplete and unqualified. The initial baseline records 83 planned parity rows and all 12 customer journeys. No full journey, protocol interoperability, SQL isolation, migration, AI, resilience, performance or release qualification has passed.
+## Repository and readiness
 
-The first unit run failed because the custody tests supplied storage roots without the required mode 0700. Preserve this failure and repair the fixture without weakening the storage permission check. Real PostgreSQL integration tests and stock-client HTTPS evidence are still required before custody claims can be qualified.
-
-## Readiness and next action
+The owner-requested recreation is complete. New local history starts at `e1eab1a`. The recreated private GitHub repository has ID `1437631520`, default branch main and no published refs at last verification. Implementation, credentials and task-owned PostgreSQL data were preserved. Nothing from this chat has been pushed.
 
 - Assisted design-partner deployment: Not qualified.
 - Ordinary operator adoption: Not qualified.
 - Enterprise or release qualification: Not qualified.
 
-Continue from the retained implementation. Repair the failing fixtures, exercise PostgreSQL permissions/idempotency/rollback and real HTTPS exchange, update evidence and make focused local commits with the verified owner identity. All mandatory work in GOAL.md and `docs/qualification/remaining.json` remains active.
+## Next work
+
+Finish safe custody reconciliation, independently verifiable audit export and crash-boundary recovery; add real SFTP exchange and first-admin/partner onboarding. Continue through typed workflow execution and bounded private AI. See `remaining.json` for the full mandatory work and concrete external dependencies. No unavailable installation, platform, account, model or reference hardware is counted as a pass.

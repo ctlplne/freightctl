@@ -4,7 +4,7 @@
     {
       "id": "J01",
       "name": "Clean install and first exchange",
-      "state": "planned",
+      "state": "implementing",
       "goal_reference": "GOAL.md section 5 item 1",
       "candidate": null,
       "artifact_digests": {},
@@ -12,10 +12,12 @@
       "steps": [],
       "assistance": null,
       "duration_seconds": null,
-      "evidence": [],
+      "evidence": [
+        "docs/qualification/evidence/F001-custody-foundation.json"
+      ],
       "failures": [],
       "limits": [
-        "Not run; no application at bootstrap"
+        "Only a narrower custody foundation experiment passed; full journey remains open."
       ]
     },
     {
@@ -157,7 +159,7 @@
     {
       "id": "J10",
       "name": "Isolation through every surface",
-      "state": "planned",
+      "state": "implementing",
       "goal_reference": "GOAL.md section 5 item 10",
       "candidate": null,
       "artifact_digests": {},
@@ -165,16 +167,18 @@
       "steps": [],
       "assistance": null,
       "duration_seconds": null,
-      "evidence": [],
+      "evidence": [
+        "docs/qualification/evidence/F001-custody-foundation.json"
+      ],
       "failures": [],
       "limits": [
-        "Not run; no application at bootstrap"
+        "Only a narrower custody foundation experiment passed; full journey remains open."
       ]
     },
     {
       "id": "J11",
       "name": "Multi-worker failure restore upgrade and endurance",
-      "state": "planned",
+      "state": "implementing",
       "goal_reference": "GOAL.md section 5 item 11",
       "candidate": null,
       "artifact_digests": {},
@@ -182,10 +186,12 @@
       "steps": [],
       "assistance": null,
       "duration_seconds": null,
-      "evidence": [],
+      "evidence": [
+        "docs/qualification/evidence/F001-custody-foundation.json"
+      ],
       "failures": [],
       "limits": [
-        "Not run; no application at bootstrap"
+        "Only a narrower custody foundation experiment passed; full journey remains open."
       ]
     },
     {

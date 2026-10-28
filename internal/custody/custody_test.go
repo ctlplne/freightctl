@@ -13,7 +13,7 @@ import (
 )
 
 func TestDurableExactRevision(t *testing.T) {
-	root := t.TempDir()
+	root := filepath.Join(t.TempDir(), "custody")
 	d, err := Open(root)
 	if err != nil {
 		t.Fatal(err)
@@ -59,7 +59,7 @@ type brokenReader struct{}
 
 func (brokenReader) Read([]byte) (int, error) { return 0, errors.New("source disconnected") }
 func TestRejectIncompleteAndEscape(t *testing.T) {
-	root := t.TempDir()
+	root := filepath.Join(t.TempDir(), "custody")
 	d, err := Open(root)
 	if err != nil {
 		t.Fatal(err)
@@ -95,6 +95,20 @@ func TestRejectIncompleteAndEscape(t *testing.T) {
 	if f, err := d.Verified(name, 7, secure.Digest([]byte("outside"))); err == nil {
 		f.Close()
 		t.Fatal("download escaped through symlink")
+	}
+}
+func TestPrivateRootRequired(t *testing.T) {
+	root := t.TempDir()
+	if err := os.Chmod(root, 0755); err != nil {
+		t.Fatal(err)
+	}
+	if d, err := Open(root); err == nil {
+		d.Close()
+		t.Fatal("insecure existing root accepted")
+	}
+	st, err := os.Stat(root)
+	if err != nil || st.Mode().Perm() != 0755 {
+		t.Fatal("existing permissions were silently changed", err)
 	}
 }
 func FuzzCustodyName(f *testing.F) {
