@@ -37,4 +37,16 @@ Default file admission is 64 MiB, configured with `--max-file-bytes` up to the c
 
 The custody root must be private (0700) before opening an existing directory. The service refuses broad permissions instead of silently changing them. Stored revisions are sealed 0400 and use generated identities, not client filesystem paths. A host administrator can still change storage; local integrity checks detect changed bytes but cannot protect against a malicious host controlling the service.
 
+Inspect custody after an interruption through the same scoped service:
+
+```sh
+sh scripts/go.sh run ./cmd/freightctl reconcile --tenant 11111111-1111-4111-8111-111111111111 --partner 22222222-2222-4222-8222-222222222222 --token-file .private/partner.token
+```
+
+`GET .../custody/reconcile` produces the same read-only report over HTTPS. It distinguishes verified revisions, missing bytes, changed bytes, unsafe entries and bytes without an accepted SQL record. Unknown names are represented by a digest instead of echoed into diagnostics. A report never deletes or adopts data. An unreferenced object may be partial, fully staged, or the result of an uncertain commit; an operator must not treat it as a ready-to-send file.
+
+Reconciliation authenticates before inventory, waits on the same staging lock, and rechecks authority before returning. An active staging operation therefore cannot be mistaken for an orphan. The operation has a ten-second deadline, a 10,000-entry inventory bound, a 200-entry response bound with explicit truncation, and a configured hash budget (`--reconcile-max-bytes`, default 64 MiB, bounded by custody quota). Failed integrity checks consume the attempt budget too. `not_checked_budget` means unknown, never healthy. Counts cover the bounded inventory even when detailed entries are truncated. `consistent` describes this scoped snapshot only; it is not transfer readiness or an HA/storage durability guarantee. The current global staging lock can delay uploads while a reconciliation runs; scalable reservations and separate operational capacity remain open.
+
+The stock-curl harness also kills its own server during a rate-limited upload, observes an actual partial staging object, restarts, checks that reconciliation reports it, confirms download still returns 404, and retries the request into a new accepted revision. It preserves the old unreferenced object and its quota cost. Crashes after syncing but before committing SQL, ambiguous commit outcomes, automatic cleanup and approved recovery are separate open gates.
+
 `python3 scripts/check-records.py` validates qualification bookkeeping. No test is silently skipped when integration credentials are absent. A passing foundation exercise does not close any of GOAL.md's complete journeys.

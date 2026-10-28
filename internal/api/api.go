@@ -30,6 +30,7 @@ func New(service *custody.Service) http.Handler {
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/files", s.upload)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/files/{file}", s.download)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/events", s.events)
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/custody/reconcile", s.reconcile)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("X-Content-Type-Options", "nosniff")
 		w.Header().Set("Cache-Control", "no-store")
@@ -46,6 +47,19 @@ func New(service *custody.Service) http.Handler {
 		}
 		m.ServeHTTP(w, r)
 	})
+}
+func (s *Server) reconcile(w http.ResponseWriter, r *http.Request) {
+	identity, err := scope(r)
+	if err != nil {
+		failure(w, err)
+		return
+	}
+	report, err := s.Service.Reconcile(r.Context(), identity)
+	if err != nil {
+		failure(w, err)
+		return
+	}
+	respond(w, 200, report)
 }
 func scope(r *http.Request) (store.Scope, error) {
 	h := r.Header.Get("Authorization")

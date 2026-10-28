@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"flag"
 	"fmt"
@@ -26,7 +27,7 @@ func main() {
 }
 func run(args []string) error {
 	if len(args) == 0 || args[0] == "--help" || args[0] == "help" {
-		fmt.Println("freightctl: init | token | enroll | dev-cert | serve\nRead docs/development.md. This is an unqualified local custody foundation.")
+		fmt.Println("freightctl: init | token | enroll | dev-cert | serve | reconcile\nRead docs/development.md. This is an unqualified local custody foundation.")
 		return nil
 	}
 	f := flag.NewFlagSet(args[0], flag.ContinueOnError)
@@ -42,6 +43,7 @@ func run(args []string) error {
 	storage := f.String("storage", ".private/custody", "private custody directory")
 	maxFile := f.Int64("max-file-bytes", 64<<20, "maximum upload bytes")
 	maxStored := f.Int64("max-stored-bytes", 1<<30, "total custody quota, including retained orphans")
+	reconcileBytes := f.Int64("reconcile-max-bytes", 64<<20, "maximum bytes hashed per read-only reconciliation")
 	if err := f.Parse(args[1:]); err != nil {
 		return err
 	}
@@ -58,6 +60,29 @@ func run(args []string) error {
 		return store.Provision(ctx, *admin, *tenant, *partner, *token)
 	case "dev-cert":
 		return secure.DevCertificate(*cert, *key)
+	case "reconcile":
+		secret, err := secure.ReadSecret(*token, 64)
+		if err != nil {
+			return err
+		}
+		scope := store.Scope{Tenant: *tenant, Partner: *partner, TokenHash: secure.Digest(secret.Bytes)}
+		secret.Close()
+		db, err := store.Open(ctx, *dsn)
+		if err != nil {
+			return err
+		}
+		defer db.Pool.Close()
+		disk, err := custody.OpenExisting(*storage)
+		if err != nil {
+			return err
+		}
+		defer disk.Close()
+		service := &custody.Service{DB: db, Disk: disk, MaxFile: *maxFile, MaxStored: *maxStored, ReconcileMaxBytes: *reconcileBytes}
+		report, err := service.Reconcile(ctx, scope)
+		if err != nil {
+			return err
+		}
+		return json.NewEncoder(os.Stdout).Encode(report)
 	case "serve":
 		host, _, err := net.SplitHostPort(*listen)
 		if err != nil {
@@ -85,7 +110,7 @@ func run(args []string) error {
 			return err
 		}
 		secret.Close()
-		server := &http.Server{Addr: *listen, Handler: api.New(&custody.Service{DB: db, Disk: disk, MaxFile: *maxFile, MaxStored: *maxStored}), TLSConfig: secure.TLSConfig(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 90 * time.Second, WriteTimeout: 90 * time.Second, IdleTimeout: 30 * time.Second, MaxHeaderBytes: 16 * 1024}
+		server := &http.Server{Addr: *listen, Handler: api.New(&custody.Service{DB: db, Disk: disk, MaxFile: *maxFile, MaxStored: *maxStored, ReconcileMaxBytes: *reconcileBytes}), TLSConfig: secure.TLSConfig(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 90 * time.Second, WriteTimeout: 90 * time.Second, IdleTimeout: 30 * time.Second, MaxHeaderBytes: 16 * 1024}
 		stop, cancel := signal.NotifyContext(ctx, os.Interrupt, syscall.SIGTERM)
 		defer cancel()
 		go func() {

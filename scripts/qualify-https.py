@@ -22,6 +22,7 @@ started = time.monotonic()
 steps = []
 server = None
 log = None
+upload_client = None
 
 def command(args, **kwargs):
     result = subprocess.run(args, capture_output=True, **kwargs)
@@ -121,12 +122,59 @@ try:
     stop()
     start()
     assert curl("download-after-process-restart", file_url, 200).read_bytes() == data
+    reconciliation = json.loads(curl("healthy-reconciliation", api + "/custody/reconcile", 200).read_text())
+    assert reconciliation["consistent"] and reconciliation["counts"] == {"verified": 1}
+    cli_report = json.loads(cli("reconcile", "--tenant", tenant, "--partner", partner, "--token-file", str(private / "identity-0.token"), "--storage", str(storage)))
+    assert cli_report["consistent"] and cli_report["counts"] == reconciliation["counts"]
+    steps.append({"name": "CLI reconciliation uses the same scoped service", "consistent": True})
+    curl("unauthorized-reconciliation", api + "/custody/reconcile", 401, identity=None)
+    # Observe actual partial bytes, then kill the exact server process before it can clean up.
+    crash_upload = [value.replace("Idempotency-Key: qualification-upload", "Idempotency-Key: crash-upload") for value in upload]
+    crash_output = raw / "crash-upload.out"
+    upload_client = subprocess.Popen(["curl", "--silent", "--show-error", "--cacert", str(cert), "--max-time", "15", "--limit-rate", "32k", "--header", "@" + str(headers[0]), "--output", str(crash_output), "--write-out", "%{http_code}", *crash_upload, api + "/files"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    deadline = time.monotonic() + 5
+    partial = None
+    while time.monotonic() < deadline:
+        candidates = [p for p in storage.iterdir() if not p.name.endswith("_" + accepted["id"]) and p.is_file() and p.stat().st_size > 0]
+        if candidates:
+            partial = candidates[0]
+            break
+        if upload_client.poll() is not None:
+            raise RuntimeError("interrupted upload ended before partial staging was observed")
+        time.sleep(0.02)
+    if partial is None:
+        raise RuntimeError("no in-progress staging object observed")
+    server.kill()
+    server.wait(timeout=5)
+    server = None
+    log.close()
+    log = None
+    assert 0 < partial.stat().st_size < len(data)
+    output, error_output = upload_client.communicate(timeout=5)
+    assert upload_client.returncode != 0 and output.decode().strip() != "201"
+    steps.append({"name": "kill server during stock-curl upload", "curl_exit_code": upload_client.returncode, "final_http_status": output.decode().strip(), "retained_staging_bytes": partial.stat().st_size})
+    (raw / "crash-upload.stderr").write_bytes(error_output)
+    upload_client = None
+    start()
+    report = json.loads(curl("reconcile-after-upload-crash", api + "/custody/reconcile", 200).read_text())
+    assert not report["consistent"] and report["counts"] == {"verified": 1, "unreferenced_bytes": 1}
+    curl("partial-file-remains-unpublished", api + "/files/" + partial.name.rsplit("_", 1)[1], 404)
+    retried = json.loads(curl("retry-after-upload-crash", api + "/files", 201, extra=crash_upload).read_text())["file"]
+    assert retried["id"] != accepted["id"] and retried["id"] != partial.name.rsplit("_", 1)[1]
+    assert curl("download-retried-upload", api + "/files/" + retried["id"], 200).read_bytes() == data
+    report = json.loads(curl("retained-orphan-after-retry", api + "/custody/reconcile", 200).read_text())
+    assert not report["consistent"] and report["counts"] == {"verified": 2, "unreferenced_bytes": 1}
+    assert partial.exists()
     state = "passed"
     failure = None
 except Exception as error:
     state = "failed"
     failure = str(error)
 finally:
+    if upload_client is not None:
+        if upload_client.poll() is None:
+            upload_client.kill()
+        upload_client.communicate(timeout=5)
     stop()
 
 source_paths = command(["git", "ls-files", "--cached", "--others", "--exclude-standard", "-z"]).decode().split("\0")
@@ -145,7 +193,7 @@ manifest = {
     "failure": failure,
     "raw_evidence_reference": str(raw.relative_to(root)),
     "private_fixture_reference": str(private.relative_to(root)),
-    "limits": ["Single Mac and local PostgreSQL container", "Integrity-only policy; no antivirus, signatures or recipient business receipt", "No browser onboarding, resumable upload or SFTP qualification", "No HA, offline bundle, throughput or large-file acceptance claim"],
+    "limits": ["Single Mac and local PostgreSQL container", "Integrity-only policy; no antivirus, signatures or recipient business receipt", "Crash injected during staging; sync-to-SQL-commit and ambiguous-commit crash boundaries remain unqualified", "Reconciliation is read-only, bounded and scope-specific; no orphan adoption or deletion is offered", "No browser onboarding, resumable upload or SFTP qualification", "No HA, offline bundle, throughput or large-file acceptance claim"],
 }
 (raw / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
 print(json.dumps({"id": run_id, "state": state, "manifest": str(raw / "manifest.json"), "failure": failure}, indent=2))

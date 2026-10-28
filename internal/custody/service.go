@@ -19,6 +19,7 @@ type Service struct {
 	DB                 *store.Store
 	Disk               *Disk
 	MaxFile, MaxStored int64
+	ReconcileMaxBytes  int64
 }
 
 func (s *Service) Accept(ctx context.Context, scope store.Scope, key string, size int64, digest string, body io.Reader) (*store.File, bool, error) {
@@ -71,7 +72,7 @@ func (s *Service) Download(ctx context.Context, scope store.Scope, id string) (*
 	if err != nil {
 		return nil, nil, err
 	}
-	data, err := s.Disk.Verified(Name(scope.Tenant, scope.Partner, f.ID), f.Size, f.SHA256)
+	data, err := s.Disk.VerifiedContext(ctx, Name(scope.Tenant, scope.Partner, f.ID), f.Size, f.SHA256)
 	if err != nil {
 		return nil, nil, err
 	}

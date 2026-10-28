@@ -24,10 +24,11 @@
       ],
       "state": "implementing",
       "evidence": [
-        "docs/qualification/evidence/F001-custody-foundation.json"
+        "docs/qualification/evidence/F001-custody-foundation.json",
+        "docs/qualification/evidence/F002-reconciliation.json"
       ],
       "remaining_details": [
-        "Finish identity/permission lifecycle, journal rebuild/export, orphan reconciliation and crash-boundary recovery; custody checks are narrower than this work group."
+        "Read-only scoped reconciliation and a staging-crash retry pass locally. Finish approved recovery, journal rebuild/export, sync/commit crash boundaries, identity lifecycle, and scalable reservations."
       ]
     },
     {

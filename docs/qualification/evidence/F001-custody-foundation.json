@@ -92,7 +92,9 @@
         "path": "scripts/qualify-https.py",
         "sha256": "2eac61d2ec9e1b701cf53db565f0770d69a337b0fe394a039a997d008e8d064c"
       }
-    ]
+    ],
+    "committed_source": "1d4722ada595a2b4bcae16c060efa935c62ca7c1",
+    "binding": "All tested source hashes verified against these committed Git blobs; documentation-only changes are outside the runtime source identity."
   },
   "environment": {
     "os": "Darwin",

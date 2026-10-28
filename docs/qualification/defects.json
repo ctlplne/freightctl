@@ -92,6 +92,21 @@
       "regression_evidence": [
         "docs/qualification/evidence/F001-custody-foundation.json"
       ]
+    },
+    {
+      "id": "D007",
+      "severity": "operator recovery gap",
+      "state": "fixed locally",
+      "observed_on": "2026-10-28",
+      "candidate": "1d4722ada595a2b4bcae16c060efa935c62ca7c1",
+      "journey": "J06",
+      "reproduction": "sh scripts/go.sh run ./cmd/freightctl reconcile",
+      "first_failure": "freightctl: unknown command; use --help\nexit status 1",
+      "cause": "No supported scoped custody reconciliation command or API existed.",
+      "resolution": "Added a bounded read-only observation path shared by CLI and HTTPS; unsafe recovery actions remain unavailable.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F002-reconciliation.json"
+      ]
     }
   ]
 }

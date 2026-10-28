@@ -403,3 +403,140 @@ func TestReplayRechecksRevocationAfterLock(t *testing.T) {
 		t.Fatal("revoked identity received a waited replay result", err)
 	}
 }
+
+func TestReconciliationIsScopedAndReadOnly(t *testing.T) {
+	f := setup(t)
+	good := accept(t, f, "reconcile-good", []byte("unchanged bytes"))
+	bad := accept(t, f, "reconcile-bad", []byte("changed later"))
+	missing := accept(t, f, "reconcile-missing", []byte("removed later"))
+	path := func(id string) string { return filepath.Join(f.root, custody.Name(f.a.Tenant, f.a.Partner, id)) }
+	if err := os.Chmod(path(bad.ID), 0600); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(path(bad.ID), bytes.Repeat([]byte("x"), int(bad.Size)), 0600); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Remove(path(missing.ID)); err != nil {
+		t.Fatal(err)
+	}
+	orphan := secure.NewID()
+	if err := f.service.Disk.Stage(custody.Name(f.a.Tenant, f.a.Partner, orphan), bytes.NewReader([]byte("orphan")), 6, secure.Digest([]byte("orphan"))); err != nil {
+		t.Fatal(err)
+	}
+	foreign := secure.NewID()
+	if err := f.service.Disk.Stage(custody.Name(f.b.Tenant, f.b.Partner, foreign), bytes.NewReader([]byte("foreign")), 7, secure.Digest([]byte("foreign"))); err != nil {
+		t.Fatal(err)
+	}
+	link := secure.NewID()
+	if err := os.Symlink(path(good.ID), path(link)); err != nil {
+		t.Fatal(err)
+	}
+	unsafe := filepath.Join(f.root, f.a.Tenant+"_"+f.a.Partner+"_unexpected-name")
+	if err := os.WriteFile(unsafe, []byte("unknown"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	before, err := os.ReadDir(f.root)
+	if err != nil {
+		t.Fatal(err)
+	}
+	eventsBefore := count(t, f, "events")
+	report, err := f.service.Reconcile(f.ctx, f.a)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if report.Consistent || report.Counts["verified"] != 1 || report.Counts["integrity_mismatch"] != 1 || report.Counts["missing_bytes"] != 1 || report.Counts["unreferenced_bytes"] != 1 || report.Counts["unsafe_entry"] != 2 {
+		t.Fatalf("wrong reconciliation: %+v", report)
+	}
+	if report.HashedBytes != good.Size+bad.Size || report.VerifiedBytes != good.Size {
+		t.Fatal("hash accounting includes unverified success", report)
+	}
+	for _, entry := range report.Entries {
+		if entry.Reference == foreign || entry.Reference == filepath.Base(unsafe) {
+			t.Fatal("foreign or unsafe name disclosed")
+		}
+	}
+	after, err := os.ReadDir(f.root)
+	if err != nil || len(before) != len(after) {
+		t.Fatal("reconciliation changed directory", err)
+	}
+	for i := range before {
+		if before[i].Name() != after[i].Name() {
+			t.Fatal("entry renamed or deleted")
+		}
+	}
+	if count(t, f, "events") != eventsBefore || count(t, f, "files") != 3 {
+		t.Fatal("observation mutated SQL")
+	}
+	other, err := f.service.Reconcile(f.ctx, f.b)
+	if err != nil || other.Counts["unreferenced_bytes"] != 1 || len(other.Entries) != 1 || other.Entries[0].Reference != foreign {
+		t.Fatal("partner boundary", other, err)
+	}
+	wrong := f.a
+	wrong.TokenHash = secure.Digest([]byte("wrong"))
+	if _, err = f.service.Reconcile(f.ctx, wrong); !errors.Is(err, store.ErrUnauthorized) {
+		t.Fatal("unauthorized reconciliation", err)
+	}
+}
+
+func TestReconciliationBudgetsAndTruncation(t *testing.T) {
+	f := setup(t)
+	for i := 0; i < 2; i++ {
+		file := accept(t, f, secure.NewID(), []byte("12345678"))
+		path := filepath.Join(f.root, custody.Name(f.a.Tenant, f.a.Partner, file.ID))
+		if err := os.Chmod(path, 0600); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(path, []byte("87654321"), 0600); err != nil {
+			t.Fatal(err)
+		}
+	}
+	f.service.ReconcileMaxBytes = 8
+	report, err := f.service.Reconcile(f.ctx, f.a)
+	if err != nil || report.HashedBytes != 8 || report.VerifiedBytes != 0 || report.Counts["integrity_mismatch"] != 1 || report.Counts["not_checked_budget"] != 1 || report.Consistent {
+		t.Fatal("failed hashes escaped the byte budget", report, err)
+	}
+	for i := 0; i < 201; i++ {
+		if err := f.service.Disk.Stage(custody.Name(f.a.Tenant, f.a.Partner, secure.NewID()), bytes.NewReader(nil), 0, secure.Digest(nil)); err != nil {
+			t.Fatal(err)
+		}
+	}
+	report, err = f.service.Reconcile(f.ctx, f.a)
+	if err != nil || !report.Truncated || len(report.Entries) != 200 || report.Counts["unreferenced_bytes"] != 201 {
+		t.Fatal("report bound lost entries or claimed completeness", report, err)
+	}
+}
+
+type waitingReader struct {
+	body             *bytes.Reader
+	entered, release chan struct{}
+	once             sync.Once
+}
+
+func (r *waitingReader) Read(p []byte) (int, error) {
+	r.once.Do(func() { close(r.entered); <-r.release })
+	return r.body.Read(p)
+}
+func TestReconciliationWaitsForStagingAndHonorsCancellation(t *testing.T) {
+	f := setup(t)
+	r := &waitingReader{body: bytes.NewReader([]byte("active")), entered: make(chan struct{}), release: make(chan struct{})}
+	result := make(chan error, 1)
+	go func() {
+		_, _, err := f.service.Accept(f.ctx, f.a, "active-staging", 6, secure.Digest([]byte("active")), r)
+		result <- err
+	}()
+	<-r.entered
+	ctx, cancel := context.WithTimeout(f.ctx, 100*time.Millisecond)
+	_, err := f.service.Reconcile(ctx, f.a)
+	cancel()
+	close(r.release)
+	if !errors.Is(err, context.DeadlineExceeded) {
+		t.Fatal("reconciliation read live staging or ignored deadline", err)
+	}
+	if err = <-result; err != nil {
+		t.Fatal(err)
+	}
+	report, err := f.service.Reconcile(f.ctx, f.a)
+	if err != nil || !report.Consistent || report.Counts["verified"] != 1 {
+		t.Fatal("completed staging was not reconciled", report, err)
+	}
+}

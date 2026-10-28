@@ -2,6 +2,7 @@
 package custody
 
 import (
+	"context"
 	"encoding/hex"
 	"errors"
 	"io"
@@ -20,6 +21,10 @@ func Open(path string) (*Disk, error) {
 	if err := os.MkdirAll(path, 0700); err != nil {
 		return nil, err
 	}
+	return OpenExisting(path)
+}
+
+func OpenExisting(path string) (*Disk, error) {
 	r, err := os.OpenRoot(path)
 	if err != nil {
 		return nil, err
@@ -152,7 +157,23 @@ func (d *Disk) Stage(name string, src io.Reader, size int64, digest string) (err
 	return nil
 }
 func (d *Disk) Verified(name string, size int64, digest string) (*os.File, error) {
-	if !validName(name) {
+	return d.VerifiedContext(context.Background(), name, size, digest)
+}
+
+type contextReader struct {
+	ctx    context.Context
+	reader io.Reader
+}
+
+func (r contextReader) Read(p []byte) (int, error) {
+	if err := r.ctx.Err(); err != nil {
+		return 0, err
+	}
+	return r.reader.Read(p)
+}
+
+func (d *Disk) VerifiedContext(ctx context.Context, name string, size int64, digest string) (*os.File, error) {
+	if !validName(name) || size < 0 || size == int64(^uint64(0)>>1) {
 		return nil, errors.New("invalid custody identity")
 	}
 	f, err := d.root.Open(name)
@@ -173,10 +194,11 @@ func (d *Disk) Verified(name string, size int64, digest string) (*os.File, error
 		return nil, ErrIntegrity
 	}
 	h := secure.NewDigest()
-	if _, err = io.CopyBuffer(h, f, make([]byte, 32*1024)); err != nil {
+	n, err := io.CopyBuffer(h, contextReader{ctx: ctx, reader: io.LimitReader(f, size+1)}, make([]byte, 32*1024))
+	if err != nil {
 		return nil, err
 	}
-	if hex.EncodeToString(h.Sum(nil)) != digest {
+	if n != size || hex.EncodeToString(h.Sum(nil)) != digest {
 		return nil, ErrIntegrity
 	}
 	if _, err = f.Seek(0, io.SeekStart); err != nil {

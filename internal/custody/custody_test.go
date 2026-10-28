@@ -111,6 +111,16 @@ func TestPrivateRootRequired(t *testing.T) {
 		t.Fatal("existing permissions were silently changed", err)
 	}
 }
+func TestObservationDoesNotCreateRoot(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "missing")
+	if d, err := OpenExisting(path); err == nil {
+		d.Close()
+		t.Fatal("missing root accepted")
+	}
+	if _, err := os.Stat(path); !os.IsNotExist(err) {
+		t.Fatal("read-only open created a directory", err)
+	}
+}
 func FuzzCustodyName(f *testing.F) {
 	f.Add("../../etc/passwd")
 	f.Add(Name(secure.NewID(), secure.NewID(), secure.NewID()))

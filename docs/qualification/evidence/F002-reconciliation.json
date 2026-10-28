@@ -1,0 +1,480 @@
+{
+  "schema_version": 1,
+  "id": "F002",
+  "kind": "read-only custody reconciliation and interrupted-upload recovery experiment",
+  "state": "verified locally",
+  "full_journeys_qualified": [],
+  "candidate": {
+    "starting_commit": "1d4722ada595a2b4bcae16c060efa935c62ca7c1",
+    "source_files": [
+      {
+        "path": "cmd/freightctl/main.go",
+        "sha256": "9301b804d5051d1463bfbfaba1454216dd80ca321284fa753ea6c72d0043ea1a"
+      },
+      {
+        "path": "go.mod",
+        "sha256": "bb3cafecaadc67648edcdfd042aea655ac3e3b6e2b8d5320178384f8257c0bf6"
+      },
+      {
+        "path": "go.sum",
+        "sha256": "d078b635c8bcaa23bf6a5e674459d414feb5a707a98cd527495fa01847d57173"
+      },
+      {
+        "path": "internal/api/api.go",
+        "sha256": "13826f617ee3f4367b55591bdfcb2668b1406506dd1aaf125b91bc4b244be048"
+      },
+      {
+        "path": "internal/architecture/architecture_test.go",
+        "sha256": "88a1b207abca225f3df628d3816a060c0609d6e65dc993f0aaadd6d949f40840"
+      },
+      {
+        "path": "internal/crypto/crypto.go",
+        "sha256": "edb1f8534ce0f048038aa5946489caba5ae303a38024e173c8a0d09478d093a0"
+      },
+      {
+        "path": "internal/crypto/protect_other.go",
+        "sha256": "c52dc1b00ac860719e3dd9dd9118109014d01e0b7f87327646bba63e7dd173a2"
+      },
+      {
+        "path": "internal/crypto/protect_unix.go",
+        "sha256": "f7184f82ff63e331fd5170a0ea27a0f5e867f06bbb9d1f901ae57f75a8b86e52"
+      },
+      {
+        "path": "internal/custody/custody.go",
+        "sha256": "5c03d9f38ef224008ea8763e6c09a42cd60454040e7184a4964c89cdd1a5ff8f"
+      },
+      {
+        "path": "internal/custody/custody_test.go",
+        "sha256": "113e904d42d60b889e1139b01232c15feba38b56d87982bc56bfdf2cd4f54f1c"
+      },
+      {
+        "path": "internal/custody/integration_test.go",
+        "sha256": "2fcef9de8810d9cf1a2c4cf480ffb81dd88f4d8e8c49518649a489b54c648115"
+      },
+      {
+        "path": "internal/custody/reconcile.go",
+        "sha256": "1a7f0b19cc099cef341ba89bce36cefab0f8b6ae0033e334cc34e8bff2cbe866"
+      },
+      {
+        "path": "internal/custody/service.go",
+        "sha256": "5a02505bf10c2180741fce96b9e9bc4a550ff9a0e9b15865a753e068e125aabd"
+      },
+      {
+        "path": "internal/store/002_event_binding.sql",
+        "sha256": "9bdb83d3a31f608af24b568e91889e2e6f462caf8658b746a0c55be97e58dfb0"
+      },
+      {
+        "path": "internal/store/migration_integration_test.go",
+        "sha256": "40b991da50855d09a2931efbc7f2e51475b052aeab71dbabed0d0861d53a821c"
+      },
+      {
+        "path": "internal/store/schema.sql",
+        "sha256": "26c4a6bd9e354b5b6f63052368f6d1e687de007f6f74b96910bce0ef3a5460d9"
+      },
+      {
+        "path": "internal/store/store.go",
+        "sha256": "74e45539e4eb849bf39edb4e294999131a8ec08cf2fe6e7bc059482800ce2802"
+      },
+      {
+        "path": "scripts/check-records.py",
+        "sha256": "35df8df21212a1136486d5a9f3335b67b19cdb24f2e053c90d21d4768ced1f1b"
+      },
+      {
+        "path": "scripts/dev-db.py",
+        "sha256": "05643d67e1a64d7e5f91c19108f5bfa3415571c8394721c5d7cc89862d51c12a"
+      },
+      {
+        "path": "scripts/go.sh",
+        "sha256": "aec6d7e09592b3954a89dc69839c6791e72a73dbafe2ca04b3b274276a23f5a8"
+      },
+      {
+        "path": "scripts/integration.sh",
+        "sha256": "a1f1d34ff041d7287d04aab634ad336bf7af7896f58241181081853a981d3464"
+      },
+      {
+        "path": "scripts/qualify-https.py",
+        "sha256": "e16da71f454b30ee4a40acba67cd606596c94aae39ea2b6db0de02c1e006e748"
+      }
+    ],
+    "binary_sha256": "ba401f8bc187d47f5da2007357957e60e36190f4f0ff2b2e7e1261c73887f406"
+  },
+  "checks": [
+    {
+      "name": "records",
+      "command": [
+        "python3",
+        "scripts/check-records.py"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 0.048,
+      "native_output": "evidence/raw/foundation-f4d04a67e7fb42c1ad95e915260f569c/records.log",
+      "native_output_sha256": "457fa0e73258b6d5d3f99f5ddc34510e9b644d7056ff0218f5108e232d264422"
+    },
+    {
+      "name": "module-integrity",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "mod",
+        "verify"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 0.551,
+      "native_output": "evidence/raw/foundation-f4d04a67e7fb42c1ad95e915260f569c/module-integrity.log",
+      "native_output_sha256": "b4537ed75f533f993f371954de47e42a793b8e5b0587577de7e27fb3e50696bd"
+    },
+    {
+      "name": "vet",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "vet",
+        "./..."
+      ],
+      "exit_code": 0,
+      "duration_seconds": 0.842,
+      "native_output": "evidence/raw/foundation-f4d04a67e7fb42c1ad95e915260f569c/vet.log",
+      "native_output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "unit-race",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "test",
+        "-race",
+        "./..."
+      ],
+      "exit_code": 0,
+      "duration_seconds": 2.654,
+      "native_output": "evidence/raw/foundation-f4d04a67e7fb42c1ad95e915260f569c/unit-race.log",
+      "native_output_sha256": "c6bd7a40b78bd9229a9cc42144e2ee8ccc843c6985f91a95cce08d680c9d3716"
+    },
+    {
+      "name": "postgres-integration-race",
+      "command": [
+        "sh",
+        "scripts/integration.sh",
+        "-race",
+        "-v"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 8.353,
+      "native_output": "evidence/raw/foundation-f4d04a67e7fb42c1ad95e915260f569c/postgres-integration-race.log",
+      "native_output_sha256": "e36e813a49a17a6093371019411040295755a7ae6e2b2d32d035d2833bc639d2"
+    },
+    {
+      "name": "custody-name-fuzz",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "test",
+        "./internal/custody",
+        "-fuzz=FuzzCustodyName",
+        "-fuzztime=5s",
+        "-parallel=2"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 6.805,
+      "native_output": "evidence/raw/foundation-f4d04a67e7fb42c1ad95e915260f569c/custody-name-fuzz.log",
+      "native_output_sha256": "9495487403d4bbe2a11e98160223f930ace78575f27c1dfbab6b812f342eacb6"
+    },
+    {
+      "name": "stock-curl-https",
+      "command": [
+        "python3",
+        "scripts/qualify-https.py"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 3.828,
+      "native_output": "evidence/raw/foundation-f4d04a67e7fb42c1ad95e915260f569c/stock-curl-https.log",
+      "native_output_sha256": "ee69fd1959c75b3e8bb05d887effbe548a7960362069bdf324c80cb992d8621a"
+    }
+  ],
+  "https": {
+    "schema_version": 1,
+    "id": "https-50cfcfe81a724128a6e4d769eb03497f",
+    "state": "passed",
+    "starting_commit": "1d4722ada595a2b4bcae16c060efa935c62ca7c1",
+    "binary_sha256": "ba401f8bc187d47f5da2007357957e60e36190f4f0ff2b2e7e1261c73887f406",
+    "environment": {
+      "os": "Darwin",
+      "architecture": "arm64",
+      "go": "go version go1.26.10 darwin/arm64",
+      "curl": "curl 8.7.1 (x86_64-apple-darwin26.0) libcurl/8.7.1 (SecureTransport) LibreSSL/3.3.6 zlib/1.2.12 nghttp2/1.69.0",
+      "postgres": "task-owned freightctl-postgres-v1; version recorded separately"
+    },
+    "elapsed_seconds": 3.77,
+    "assistance": "Agent-operated synthetic service-account exchange; no independent human adoption claim",
+    "steps": [
+      {
+        "name": "upload",
+        "http_status": 201,
+        "output_sha256": "b57ade282af390aa1f022c4b30b5529fb5c0000bd2a0db6daea45b5689994d91"
+      },
+      {
+        "name": "replay",
+        "http_status": 200,
+        "output_sha256": "9a7b37fab8f2b86442430f62b42456c0ebbd5f69bfdfcabcbfc1de2761c6d1b2"
+      },
+      {
+        "name": "changed-idempotency",
+        "http_status": 409,
+        "output_sha256": "68e8ea07515eb62cebbfc8aefadbf034aa144af9629a643ae973526b386b9321"
+      },
+      {
+        "name": "download",
+        "http_status": 200,
+        "output_sha256": "2fea5ee3b2ff09e05e50c86092b326fd52b740a3e72d219cce4f6dc5a4d72026"
+      },
+      {
+        "name": "range",
+        "http_status": 206,
+        "output_sha256": "968c7072c53f9bd9c57a0cbbc66dc3809b0256c7a01bd1d219c613ee8445a99e"
+      },
+      {
+        "name": "no-credential",
+        "http_status": 401,
+        "output_sha256": "3341bff062d83e3afeb943f83bbb079f5b45cc050e796ec282dde50b5906cb31"
+      },
+      {
+        "name": "wrong-credential-scope",
+        "http_status": 401,
+        "output_sha256": "3341bff062d83e3afeb943f83bbb079f5b45cc050e796ec282dde50b5906cb31"
+      },
+      {
+        "name": "foreign-file-1",
+        "http_status": 404,
+        "output_sha256": "fef916c279def93f790d739d8525fc7ffd697a4a492029472c5752bda04a4faf"
+      },
+      {
+        "name": "foreign-events-1",
+        "http_status": 200,
+        "output_sha256": "946d0e47deb5a9c086a937894a48e278190646a958d35efcc97b212f9471d68b"
+      },
+      {
+        "name": "foreign-file-2",
+        "http_status": 404,
+        "output_sha256": "fef916c279def93f790d739d8525fc7ffd697a4a492029472c5752bda04a4faf"
+      },
+      {
+        "name": "foreign-events-2",
+        "http_status": 200,
+        "output_sha256": "ea1a0ac83146addd53089ac46fadd9699ed98fb30432539f4abee354e57cc376"
+      },
+      {
+        "name": "bad-digest",
+        "http_status": 422,
+        "output_sha256": "17909a4300b0f26f55fc9eba9d619784883c0a87a76956345f5697fe5cb27ff6"
+      },
+      {
+        "name": "events",
+        "http_status": 200,
+        "output_sha256": "3520300df66b285c47b0a44abfef60b59d422de9c693b8c9827e22fb2610185a"
+      },
+      {
+        "name": "download-after-process-restart",
+        "http_status": 200,
+        "output_sha256": "2fea5ee3b2ff09e05e50c86092b326fd52b740a3e72d219cce4f6dc5a4d72026"
+      },
+      {
+        "name": "healthy-reconciliation",
+        "http_status": 200,
+        "output_sha256": "68533dd00b8948695556d94e0ef483674b4b35749606c8452f04d84ea6da79b2"
+      },
+      {
+        "name": "CLI reconciliation uses the same scoped service",
+        "consistent": true
+      },
+      {
+        "name": "unauthorized-reconciliation",
+        "http_status": 401,
+        "output_sha256": "3341bff062d83e3afeb943f83bbb079f5b45cc050e796ec282dde50b5906cb31"
+      },
+      {
+        "name": "kill server during stock-curl upload",
+        "curl_exit_code": 16,
+        "final_http_status": "000",
+        "retained_staging_bytes": 32768
+      },
+      {
+        "name": "reconcile-after-upload-crash",
+        "http_status": 200,
+        "output_sha256": "7a8be7da48c1f4e9f0d827958e8f1673ed3a8386fb54f9f751837bfb5e3c4511"
+      },
+      {
+        "name": "partial-file-remains-unpublished",
+        "http_status": 404,
+        "output_sha256": "fef916c279def93f790d739d8525fc7ffd697a4a492029472c5752bda04a4faf"
+      },
+      {
+        "name": "retry-after-upload-crash",
+        "http_status": 201,
+        "output_sha256": "6e0c563f7c4b7065c9a9d01b9a54e890248f9d21ebfa886f6b31e559d38eac90"
+      },
+      {
+        "name": "download-retried-upload",
+        "http_status": 200,
+        "output_sha256": "2fea5ee3b2ff09e05e50c86092b326fd52b740a3e72d219cce4f6dc5a4d72026"
+      },
+      {
+        "name": "retained-orphan-after-retry",
+        "http_status": 200,
+        "output_sha256": "0e5ea416c0687675e66331722db6e2715a4d48af07ff8a5c59d5f3522a06e59c"
+      }
+    ],
+    "failure": null,
+    "raw_evidence_reference": "evidence/raw/https-50cfcfe81a724128a6e4d769eb03497f",
+    "private_fixture_reference": ".private/https-50cfcfe81a724128a6e4d769eb03497f",
+    "limits": [
+      "Single Mac and local PostgreSQL container",
+      "Integrity-only policy; no antivirus, signatures or recipient business receipt",
+      "Crash injected during staging; sync-to-SQL-commit and ambiguous-commit crash boundaries remain unqualified",
+      "Reconciliation is read-only, bounded and scope-specific; no orphan adoption or deletion is offered",
+      "No browser onboarding, resumable upload or SFTP qualification",
+      "No HA, offline bundle, throughput or large-file acceptance claim"
+    ],
+    "source_files": [
+      {
+        "path": "cmd/freightctl/main.go",
+        "sha256": "9301b804d5051d1463bfbfaba1454216dd80ca321284fa753ea6c72d0043ea1a"
+      },
+      {
+        "path": "go.mod",
+        "sha256": "bb3cafecaadc67648edcdfd042aea655ac3e3b6e2b8d5320178384f8257c0bf6"
+      },
+      {
+        "path": "go.sum",
+        "sha256": "d078b635c8bcaa23bf6a5e674459d414feb5a707a98cd527495fa01847d57173"
+      },
+      {
+        "path": "internal/api/api.go",
+        "sha256": "13826f617ee3f4367b55591bdfcb2668b1406506dd1aaf125b91bc4b244be048"
+      },
+      {
+        "path": "internal/architecture/architecture_test.go",
+        "sha256": "88a1b207abca225f3df628d3816a060c0609d6e65dc993f0aaadd6d949f40840"
+      },
+      {
+        "path": "internal/crypto/crypto.go",
+        "sha256": "edb1f8534ce0f048038aa5946489caba5ae303a38024e173c8a0d09478d093a0"
+      },
+      {
+        "path": "internal/crypto/protect_other.go",
+        "sha256": "c52dc1b00ac860719e3dd9dd9118109014d01e0b7f87327646bba63e7dd173a2"
+      },
+      {
+        "path": "internal/crypto/protect_unix.go",
+        "sha256": "f7184f82ff63e331fd5170a0ea27a0f5e867f06bbb9d1f901ae57f75a8b86e52"
+      },
+      {
+        "path": "internal/custody/custody.go",
+        "sha256": "5c03d9f38ef224008ea8763e6c09a42cd60454040e7184a4964c89cdd1a5ff8f"
+      },
+      {
+        "path": "internal/custody/custody_test.go",
+        "sha256": "113e904d42d60b889e1139b01232c15feba38b56d87982bc56bfdf2cd4f54f1c"
+      },
+      {
+        "path": "internal/custody/integration_test.go",
+        "sha256": "2fcef9de8810d9cf1a2c4cf480ffb81dd88f4d8e8c49518649a489b54c648115"
+      },
+      {
+        "path": "internal/custody/reconcile.go",
+        "sha256": "1a7f0b19cc099cef341ba89bce36cefab0f8b6ae0033e334cc34e8bff2cbe866"
+      },
+      {
+        "path": "internal/custody/service.go",
+        "sha256": "5a02505bf10c2180741fce96b9e9bc4a550ff9a0e9b15865a753e068e125aabd"
+      },
+      {
+        "path": "internal/store/002_event_binding.sql",
+        "sha256": "9bdb83d3a31f608af24b568e91889e2e6f462caf8658b746a0c55be97e58dfb0"
+      },
+      {
+        "path": "internal/store/migration_integration_test.go",
+        "sha256": "40b991da50855d09a2931efbc7f2e51475b052aeab71dbabed0d0861d53a821c"
+      },
+      {
+        "path": "internal/store/schema.sql",
+        "sha256": "26c4a6bd9e354b5b6f63052368f6d1e687de007f6f74b96910bce0ef3a5460d9"
+      },
+      {
+        "path": "internal/store/store.go",
+        "sha256": "74e45539e4eb849bf39edb4e294999131a8ec08cf2fe6e7bc059482800ce2802"
+      },
+      {
+        "path": "scripts/check-records.py",
+        "sha256": "35df8df21212a1136486d5a9f3335b67b19cdb24f2e053c90d21d4768ced1f1b"
+      },
+      {
+        "path": "scripts/dev-db.py",
+        "sha256": "05643d67e1a64d7e5f91c19108f5bfa3415571c8394721c5d7cc89862d51c12a"
+      },
+      {
+        "path": "scripts/go.sh",
+        "sha256": "aec6d7e09592b3954a89dc69839c6791e72a73dbafe2ca04b3b274276a23f5a8"
+      },
+      {
+        "path": "scripts/integration.sh",
+        "sha256": "a1f1d34ff041d7287d04aab634ad336bf7af7896f58241181081853a981d3464"
+      },
+      {
+        "path": "scripts/qualify-https.py",
+        "sha256": "e16da71f454b30ee4a40acba67cd606596c94aae39ea2b6db0de02c1e006e748"
+      }
+    ]
+  },
+  "safety_properties": [
+    "Scope is authenticated before directory inventory and rechecked before response.",
+    "The staging lock excludes active uploads; cancellation releases observation without domain changes.",
+    "Missing, corrupt, unsafe and unreferenced objects are reported; none are deleted or adopted.",
+    "Hash attempts include failed integrity checks in the byte budget; unexamined bytes are explicitly unknown.",
+    "Response details stop at 200 entries; counts and truncation remain visible."
+  ],
+  "security": {
+    "govulncheck": {
+      "config": {
+        "protocol_version": "v1.0.0",
+        "scanner_name": "govulncheck",
+        "scanner_version": "v1.9.0",
+        "db": "https://vuln.go.dev",
+        "db_last_modified": "2026-10-27T21:16:18Z",
+        "go_version": "go1.26.10",
+        "scan_level": "symbol",
+        "scan_mode": "source"
+      },
+      "finding_count": 0,
+      "native_reference": ".private/foundation-scans/govulncheck-reconciliation.json",
+      "native_sha256": "10ec91885d2785f1625ef5e63e1dd5a937fbfeeb13f2dcea50907d355aa0a501"
+    },
+    "gitleaks_final_scan_pending": false,
+    "gitleaks": {
+      "version": "8.30.1",
+      "image": "ghcr.io/gitleaks/gitleaks@sha256:c00b6bd0aeb3071cbcb79009cb16a60dd9e0a7c60e2be9ab65d25e6bc8abbb7f",
+      "source_findings": 0,
+      "history_findings": 0,
+      "history_commits": 3,
+      "input_manifest_sha256": "0010573c00e918dd74158062145090812e2a66396a78be2a671455e8a3c164b6",
+      "native_references": [
+        ".private/reconciliation-scans/gitleaks-source.json",
+        ".private/reconciliation-scans/gitleaks-history.json"
+      ]
+    }
+  },
+  "first_failure": {
+    "command": "sh scripts/go.sh run ./cmd/freightctl reconcile",
+    "output": "freightctl: unknown command; use --help\nexit status 1"
+  },
+  "limits": [
+    "Single Mac and local PostgreSQL container",
+    "Integrity-only policy; no antivirus, signatures or recipient business receipt",
+    "Crash injected during staging; sync-to-SQL-commit and ambiguous-commit crash boundaries remain unqualified",
+    "Reconciliation is read-only, bounded and scope-specific; no orphan adoption or deletion is offered",
+    "No browser onboarding, resumable upload or SFTP qualification",
+    "No HA, offline bundle, throughput or large-file acceptance claim",
+    "The inventory is bounded to 10,000 entries and 10 seconds; no scalable multi-host reconciliation claim.",
+    "The global staging lock can delay uploads; independent operational pools and scalable reservations remain open.",
+    "No automatic adoption, deletion, legal-hold handling, or approved destructive recovery is implemented."
+  ]
+}

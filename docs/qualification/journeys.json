@@ -13,11 +13,12 @@
       "assistance": null,
       "duration_seconds": null,
       "evidence": [
-        "docs/qualification/evidence/F001-custody-foundation.json"
+        "docs/qualification/evidence/F001-custody-foundation.json",
+        "docs/qualification/evidence/F002-reconciliation.json"
       ],
       "failures": [],
       "limits": [
-        "Only a narrower custody foundation experiment passed; full journey remains open."
+        "Only narrower local custody and staging-crash experiments passed; complete journey remains open."
       ]
     },
     {
@@ -91,7 +92,7 @@
     {
       "id": "J06",
       "name": "Diagnose and recover real operational failures",
-      "state": "planned",
+      "state": "implementing",
       "goal_reference": "GOAL.md section 5 item 6",
       "candidate": null,
       "artifact_digests": {},
@@ -99,10 +100,12 @@
       "steps": [],
       "assistance": null,
       "duration_seconds": null,
-      "evidence": [],
+      "evidence": [
+        "docs/qualification/evidence/F002-reconciliation.json"
+      ],
       "failures": [],
       "limits": [
-        "Not run; no application at bootstrap"
+        "Only narrower local custody and staging-crash experiments passed; complete journey remains open."
       ]
     },
     {
@@ -168,11 +171,12 @@
       "assistance": null,
       "duration_seconds": null,
       "evidence": [
-        "docs/qualification/evidence/F001-custody-foundation.json"
+        "docs/qualification/evidence/F001-custody-foundation.json",
+        "docs/qualification/evidence/F002-reconciliation.json"
       ],
       "failures": [],
       "limits": [
-        "Only a narrower custody foundation experiment passed; full journey remains open."
+        "Only narrower local custody and staging-crash experiments passed; complete journey remains open."
       ]
     },
     {
@@ -187,11 +191,12 @@
       "assistance": null,
       "duration_seconds": null,
       "evidence": [
-        "docs/qualification/evidence/F001-custody-foundation.json"
+        "docs/qualification/evidence/F001-custody-foundation.json",
+        "docs/qualification/evidence/F002-reconciliation.json"
       ],
       "failures": [],
       "limits": [
-        "Only a narrower custody foundation experiment passed; full journey remains open."
+        "Only narrower local custody and staging-crash experiments passed; complete journey remains open."
       ]
     },
     {
