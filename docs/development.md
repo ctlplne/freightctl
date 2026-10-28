@@ -50,3 +50,25 @@ Reconciliation authenticates before inventory, waits on the same staging lock, a
 The stock-curl harness also kills its own server during a rate-limited upload, observes an actual partial staging object, restarts, checks that reconciliation reports it, confirms download still returns 404, and retries the request into a new accepted revision. It preserves the old unreferenced object and its quota cost. Crashes after syncing but before committing SQL, ambiguous commit outcomes, automatic cleanup and approved recovery are separate open gates.
 
 `python3 scripts/check-records.py` validates qualification bookkeeping. No test is silently skipped when integration credentials are absent. A passing foundation exercise does not close any of GOAL.md's complete journeys.
+
+## Signed audit snapshots
+
+Create a dedicated audit identity explicitly; this does not upload a key or publish a verification key:
+
+```sh
+sh scripts/go.sh run ./cmd/freightctl audit-keygen --audit-key-file .private/audit-signing.key --audit-public-file .private/audit-signing.pub
+sh scripts/go.sh run ./cmd/freightctl audit-export --tenant 11111111-1111-4111-8111-111111111111 --partner 22222222-2222-4222-8222-222222222222 --token-file .private/partner.token --audit-key-file .private/audit-signing.key --output .private/audit-export.json
+python3 scripts/verify-audit.py --export .private/audit-export.json --trusted-key .private/audit-signing.pub --tenant 11111111-1111-4111-8111-111111111111 --partner 22222222-2222-4222-8222-222222222222
+```
+
+Start the server with `--audit-key-file .private/audit-signing.key` to enable `GET .../audit/export`. Without a configured identity the export fails; ordinary journaled custody does not depend on this optional export-signing configuration. Direct cryptographic operations stay in `internal/crypto`. The format uses Ed25519, PKCS8 private-key references and a SHA-256 fingerprint of the public SubjectPublicKeyInfo DER. This is an algorithm and format choice, not a FIPS or external key-custody certification.
+
+The signed payload is base64 encoded so JSON presentation cannot change its exact bytes. It records tenant, partner, snapshot identity and database transaction time, deterministic event count, actors, resources and original event data from one repeatable-read view. The current journal is metadata; it does not contain file contents or credential values. The verifier requires an independently trusted public key and the expected tenant/partner. An embedded key is only a hint: trusting a key supplied by an unknown artifact would let an attacker sign a replacement with their own identity.
+
+Export rechecks live authority after capturing the snapshot and before returning it. It commits `AuditSnapshotPrepared`, bound to the exact payload digest, event count and signing identity, before releasing the artifact. A failed journal write or revoked credential returns no artifact. Preparation does not prove receipt, retrieval or business acceptance. The CLI stages and syncs a complete mode-0400 artifact, then uses an atomic hard link to publish a new output without overwriting. Unsupported filesystems fail explicitly. Key generation also refuses existing paths; an error can leave a newly created private identity that must be preserved and inspected, rather than silently replaced.
+
+Default export budgets are 10,000 events and 8 MiB before base64 encoding. Administrator flags `--audit-max-events` and `--audit-max-bytes` can select up to 100,000 events and 16 MiB within this implementation's bounded in-memory profile. Reaching a budget fails the export; it never presents a truncated snapshot as complete. API signing has one admission slot and a ten-second deadline. Larger asynchronous/segmented exports, long-term protected retention, key rotation, external key services, native platform custody and whole-estate portability remain required work.
+
+The signature detects changes after signing. It does not prove a database superuser did not alter history before the snapshot, stop a compromised host from using its local key, or protect an artifact somebody deletes. Independent retention and stronger key custody are separate open gates. Secret-file reads use bounded buffers with best-effort memory locking and clearing; parsed library objects and process-dump protections still have platform limits to qualify.
+
+Migration 3 bounds journal kind and payload sizes in SQL, while the application applies a tighter append budget. Every scoped operation locks the domain relations and checks their forced row policies before authentication. A concurrent policy change waits for that transaction; a disabled policy causes the running store to fail closed. These checks protect the tested application boundary. PostgreSQL superusers and host administrators remain trusted deployment authorities.

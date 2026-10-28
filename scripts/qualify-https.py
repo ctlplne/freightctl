@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Exercise a real freightctl process using stock curl, without logging credentials."""
 import hashlib
+import base64
 import json
 import os
 from pathlib import Path
@@ -53,6 +54,8 @@ try:
     cli("init")
     cert, key = private / "localhost.crt", private / "localhost.key"
     cli("dev-cert", "--cert", str(cert), "--key", str(key))
+    audit_key, audit_public = private / "audit.key", private / "audit.pub"
+    cli("audit-keygen", "--audit-key-file", str(audit_key), "--audit-public-file", str(audit_public))
     tenant, partner = str(uuid.uuid4()), str(uuid.uuid4())
     other_tenant, other_partner = str(uuid.uuid4()), str(uuid.uuid4())
     identities = [(tenant, partner), (tenant, other_partner), (other_tenant, partner)]
@@ -73,7 +76,7 @@ try:
     def start():
         global server, log
         log = (raw / "server.log").open("ab")
-        server = subprocess.Popen([str(binary), "serve", "--listen", f"127.0.0.1:{port}", "--storage", str(storage), "--cert", str(cert), "--key", str(key)], stdout=log, stderr=log)
+        server = subprocess.Popen([str(binary), "serve", "--listen", f"127.0.0.1:{port}", "--storage", str(storage), "--cert", str(cert), "--key", str(key), "--audit-key-file", str(audit_key)], stdout=log, stderr=log)
         for attempt in range(100):
             if server.poll() is not None:
                 raise RuntimeError("server exited; inspect retained server.log")
@@ -165,6 +168,51 @@ try:
     report = json.loads(curl("retained-orphan-after-retry", api + "/custody/reconcile", 200).read_text())
     assert not report["consistent"] and report["counts"] == {"verified": 2, "unreferenced_bytes": 1}
     assert partial.exists()
+    exported = curl("signed-audit-export", api + "/audit/export", 200)
+    verify_args = ["python3", "scripts/verify-audit.py", "--export", str(exported), "--trusted-key", str(audit_public), "--tenant", tenant, "--partner", partner]
+    verification = json.loads(command(verify_args))
+    assert verification["verified"]
+    (raw / "audit-openssl-verification.json").write_text(json.dumps(verification, indent=2) + "\n")
+    steps.append({"name": "stock OpenSSL verifies scoped audit snapshot", "event_count": verification["event_count"], "openssl": verification["openssl"]})
+    original_envelope = json.loads(exported.read_text())
+    snapshot = json.loads(base64.b64decode(original_envelope["payload_base64"]))
+    accepted_ids = {e["resource_id"] for e in snapshot["events"] if e["kind"] == "FileAccepted"}
+    assert accepted_ids == {accepted["id"], retried["id"]}
+    def reject_export(label, envelope, expected_scope=None, trusted_key=None):
+        path = raw / (label + ".json")
+        path.write_text(json.dumps(envelope) + "\n")
+        tid, pid = expected_scope or (tenant, partner)
+        result = subprocess.run(["python3", "scripts/verify-audit.py", "--export", str(path), "--trusted-key", str(trusted_key or audit_public), "--tenant", tid, "--partner", pid], capture_output=True)
+        assert result.returncode != 0 and json.loads(result.stdout)["verified"] is False
+        steps.append({"name": label, "verification_rejected": True})
+    changed = dict(original_envelope)
+    changed["payload_base64"] = base64.b64encode(base64.b64decode(changed["payload_base64"]) + b" ").decode()
+    reject_export("reject-modified-audit-payload", changed)
+    changed = dict(original_envelope)
+    signature = bytearray(base64.b64decode(changed["signature_base64"]))
+    signature[0] ^= 1
+    changed["signature_base64"] = base64.b64encode(signature).decode()
+    reject_export("reject-forged-audit-signature", changed)
+    other_key, other_public = private / "other-audit.key", private / "other-audit.pub"
+    cli("audit-keygen", "--audit-key-file", str(other_key), "--audit-public-file", str(other_public))
+    reject_export("reject-untrusted-signing-key", original_envelope, trusted_key=other_public)
+    reject_export("reject-wrong-expected-audit-scope", original_envelope, expected_scope=identities[1])
+    changed = dict(original_envelope)
+    changed["public_key_pem"] = other_public.read_text()
+    reject_export("reject-substituted-embedded-key", changed)
+    cli_export = private / "cli-audit-export.json"
+    cli("audit-export", "--tenant", tenant, "--partner", partner, "--token-file", str(private / "identity-0.token"), "--audit-key-file", str(audit_key), "--output", str(cli_export))
+    assert json.loads(command(["python3", "scripts/verify-audit.py", "--export", str(cli_export), "--trusted-key", str(audit_public), "--tenant", tenant, "--partner", partner]))["verified"]
+    steps.append({"name": "CLI audit artifact independently verified", "mode": oct(cli_export.stat().st_mode & 0o777)})
+    assert cli_export.stat().st_mode & 0o777 == 0o400
+    curl("unauthorized-audit-export", api + "/audit/export", 401, identity=None)
+    curl("wrong-scope-credential-audit-export", api + "/audit/export", 401, identity=1)
+    for index, (tid, pid) in enumerate(identities[1:], 1):
+        other = base + f"/v1/tenants/{tid}/partners/{pid}"
+        artifact = curl(f"foreign-scope-audit-export-{index}", other + "/audit/export", 200, identity=index)
+        foreign_snapshot = json.loads(base64.b64decode(json.loads(artifact.read_text())["payload_base64"]))
+        assert foreign_snapshot["tenant_id"] == tid and foreign_snapshot["partner_id"] == pid
+        assert all(e["resource_id"] not in accepted_ids for e in foreign_snapshot["events"])
     state = "passed"
     failure = None
 except Exception as error:
@@ -193,7 +241,7 @@ manifest = {
     "failure": failure,
     "raw_evidence_reference": str(raw.relative_to(root)),
     "private_fixture_reference": str(private.relative_to(root)),
-    "limits": ["Single Mac and local PostgreSQL container", "Integrity-only policy; no antivirus, signatures or recipient business receipt", "Crash injected during staging; sync-to-SQL-commit and ambiguous-commit crash boundaries remain unqualified", "Reconciliation is read-only, bounded and scope-specific; no orphan adoption or deletion is offered", "No browser onboarding, resumable upload or SFTP qualification", "No HA, offline bundle, throughput or large-file acceptance claim"],
+    "limits": ["Single Mac and local PostgreSQL container", "File custody uses integrity-only policy; no antivirus, file-content signature or recipient business receipt", "Audit signature authenticates a bounded snapshot after export; prior database tampering, protected retention and key-service custody are separate gates", "Crash injected during staging; sync-to-SQL-commit and ambiguous-commit crash boundaries remain unqualified", "Reconciliation is read-only, bounded and scope-specific; no orphan adoption or deletion is offered", "No browser onboarding, resumable upload or SFTP qualification", "No HA, offline bundle, throughput or large-file acceptance claim"],
 }
 (raw / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
 print(json.dumps({"id": run_id, "state": state, "manifest": str(raw / "manifest.json"), "failure": failure}, indent=2))

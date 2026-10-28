@@ -107,6 +107,36 @@
       "regression_evidence": [
         "docs/qualification/evidence/F002-reconciliation.json"
       ]
+    },
+    {
+      "id": "D008",
+      "severity": "security blocker",
+      "state": "fixed locally",
+      "observed_on": "2026-10-28",
+      "candidate": "7f0bce35aaecbfb250c715f6ff6beb3a75f6538f",
+      "journey": "J10",
+      "reproduction": "sh scripts/integration.sh -run TestExistingRuntimeRejectsIsolationChange -v",
+      "first_failure": "existing runtime accepted disabled event isolation <nil>",
+      "cause": "RLS configuration was checked only at runtime startup; an existing store kept operating after administrator policy changes.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F003-signed-audit.json"
+      ],
+      "resolution": "Lock all domain relations and verify forced row policies before scoped authentication; hold locks through the operation."
+    },
+    {
+      "id": "D009",
+      "severity": "operator evidence gap",
+      "state": "fixed locally",
+      "observed_on": "2026-10-28",
+      "candidate": "7f0bce35aaecbfb250c715f6ff6beb3a75f6538f",
+      "journey": "J12",
+      "reproduction": ".cache/freightctl audit-export (retained F002 binary)",
+      "first_failure": "freightctl: unknown command; use --help",
+      "cause": "No independently verifiable signed audit export was implemented.",
+      "resolution": "Added bounded CLI/HTTPS signed snapshots and independent OpenSSL verification. Whole-estate export and retention remain open.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F003-signed-audit.json"
+      ]
     }
   ]
 }

@@ -76,7 +76,7 @@ func TestCleanDatabaseMigrationsAndUnknownVersion(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer admin.Close()
-	if _, err = admin.Exec(ctx, `INSERT INTO freightctl_schema VALUES(3,'unsupported')`); err != nil {
+	if _, err = admin.Exec(ctx, `INSERT INTO freightctl_schema VALUES($1,'unsupported')`, len(migrations)+1); err != nil {
 		t.Fatal(err)
 	}
 	if err = Migrate(ctx, adminPath, passwordPath); err == nil {

@@ -96,7 +96,9 @@
         "sha256": "e16da71f454b30ee4a40acba67cd606596c94aae39ea2b6db0de02c1e006e748"
       }
     ],
-    "binary_sha256": "ba401f8bc187d47f5da2007357957e60e36190f4f0ff2b2e7e1261c73887f406"
+    "binary_sha256": "ba401f8bc187d47f5da2007357957e60e36190f4f0ff2b2e7e1261c73887f406",
+    "committed_source": "7f0bce35aaecbfb250c715f6ff6beb3a75f6538f",
+    "binding": "All tested source hashes verified against the committed Git blobs."
   },
   "checks": [
     {

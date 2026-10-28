@@ -1,0 +1,604 @@
+{
+  "schema_version": 1,
+  "id": "F003",
+  "kind": "scoped signed audit snapshot and live row-policy protection experiment",
+  "state": "verified locally",
+  "full_journeys_qualified": [],
+  "candidate": {
+    "starting_commit": "7f0bce35aaecbfb250c715f6ff6beb3a75f6538f",
+    "source_files": [
+      {
+        "path": "cmd/freightctl/main.go",
+        "sha256": "1617332bcc0447b0b2ef39e6bfe3a7d26190f662a063d4bb0a8307889179182d"
+      },
+      {
+        "path": "go.mod",
+        "sha256": "bb3cafecaadc67648edcdfd042aea655ac3e3b6e2b8d5320178384f8257c0bf6"
+      },
+      {
+        "path": "go.sum",
+        "sha256": "d078b635c8bcaa23bf6a5e674459d414feb5a707a98cd527495fa01847d57173"
+      },
+      {
+        "path": "internal/api/api.go",
+        "sha256": "1b35cd1dbc3a4cb290ec60073ea75ed5c164156322560fba6c25d58468a3237b"
+      },
+      {
+        "path": "internal/architecture/architecture_test.go",
+        "sha256": "88a1b207abca225f3df628d3816a060c0609d6e65dc993f0aaadd6d949f40840"
+      },
+      {
+        "path": "internal/audit/audit.go",
+        "sha256": "fbaaba7a6039adb61897b79bef4b405df21cb6ca07caadd68f8b1bd3142100f0"
+      },
+      {
+        "path": "internal/audit/integration_test.go",
+        "sha256": "8c69a1a5d040a391b2579f58d3b070865e89f1c3b4f66199143d87e9793e7248"
+      },
+      {
+        "path": "internal/crypto/audit.go",
+        "sha256": "eefe6f66ab4c283ea96e51fc35a7cb4f8edff713dd16d56041d74bf1acdc338e"
+      },
+      {
+        "path": "internal/crypto/audit_test.go",
+        "sha256": "0837cc879e08a3b47d6b7ab4f393579af17ebd891f430e2cc45e264d60c02b4e"
+      },
+      {
+        "path": "internal/crypto/crypto.go",
+        "sha256": "edb1f8534ce0f048038aa5946489caba5ae303a38024e173c8a0d09478d093a0"
+      },
+      {
+        "path": "internal/crypto/protect_other.go",
+        "sha256": "c52dc1b00ac860719e3dd9dd9118109014d01e0b7f87327646bba63e7dd173a2"
+      },
+      {
+        "path": "internal/crypto/protect_unix.go",
+        "sha256": "f7184f82ff63e331fd5170a0ea27a0f5e867f06bbb9d1f901ae57f75a8b86e52"
+      },
+      {
+        "path": "internal/custody/custody.go",
+        "sha256": "5c03d9f38ef224008ea8763e6c09a42cd60454040e7184a4964c89cdd1a5ff8f"
+      },
+      {
+        "path": "internal/custody/custody_test.go",
+        "sha256": "113e904d42d60b889e1139b01232c15feba38b56d87982bc56bfdf2cd4f54f1c"
+      },
+      {
+        "path": "internal/custody/integration_test.go",
+        "sha256": "d59da8e07edc8423bc65bd7b810ed35168dcd74c7c9f96dd94e36ccc61cf0579"
+      },
+      {
+        "path": "internal/custody/reconcile.go",
+        "sha256": "1a7f0b19cc099cef341ba89bce36cefab0f8b6ae0033e334cc34e8bff2cbe866"
+      },
+      {
+        "path": "internal/custody/service.go",
+        "sha256": "5a02505bf10c2180741fce96b9e9bc4a550ff9a0e9b15865a753e068e125aabd"
+      },
+      {
+        "path": "internal/store/002_event_binding.sql",
+        "sha256": "9bdb83d3a31f608af24b568e91889e2e6f462caf8658b746a0c55be97e58dfb0"
+      },
+      {
+        "path": "internal/store/003_event_bounds.sql",
+        "sha256": "5e09fc8540294e24ea9114e71e4d58311bdfb7b80ae1a5d3162c8d3bc0a4a4e7"
+      },
+      {
+        "path": "internal/store/migration_integration_test.go",
+        "sha256": "0263587518a110ee1bd7ef14b74a2c20b2d5934375c746ce92f95a26cb4ba0e7"
+      },
+      {
+        "path": "internal/store/schema.sql",
+        "sha256": "26c4a6bd9e354b5b6f63052368f6d1e687de007f6f74b96910bce0ef3a5460d9"
+      },
+      {
+        "path": "internal/store/snapshot.go",
+        "sha256": "686af81c99a6144f3a5cf62d1ba6be46fe9388e792b695c8be62e4607c7ab981"
+      },
+      {
+        "path": "internal/store/store.go",
+        "sha256": "72dc6bdd528a079dbed28bc62a37401f6254b24be457e9c849d687541b244d81"
+      },
+      {
+        "path": "scripts/check-records.py",
+        "sha256": "35df8df21212a1136486d5a9f3335b67b19cdb24f2e053c90d21d4768ced1f1b"
+      },
+      {
+        "path": "scripts/dev-db.py",
+        "sha256": "05643d67e1a64d7e5f91c19108f5bfa3415571c8394721c5d7cc89862d51c12a"
+      },
+      {
+        "path": "scripts/go.sh",
+        "sha256": "aec6d7e09592b3954a89dc69839c6791e72a73dbafe2ca04b3b274276a23f5a8"
+      },
+      {
+        "path": "scripts/integration.sh",
+        "sha256": "a1f1d34ff041d7287d04aab634ad336bf7af7896f58241181081853a981d3464"
+      },
+      {
+        "path": "scripts/qualify-https.py",
+        "sha256": "0e0e2a31b3fed1ad26382028843fa25a7b9e3709144abd8f73bf1101aa0c3b33"
+      },
+      {
+        "path": "scripts/verify-audit.py",
+        "sha256": "99f22fbd3e936aa4d38569ada1bfcccbca47e46f6c3e08aa47f6531128e9b983"
+      }
+    ],
+    "binary_sha256": "ca3260d814af99ab3c8e6cb40f5bcac558a7bc1df0d9922408d5734e90399baa"
+  },
+  "checks": [
+    {
+      "name": "records",
+      "command": [
+        "python3",
+        "scripts/check-records.py"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 0.064,
+      "native_output": "evidence/raw/foundation-7cb7acca2f734adb874f9df88fa58d75/records.log",
+      "native_output_sha256": "457fa0e73258b6d5d3f99f5ddc34510e9b644d7056ff0218f5108e232d264422"
+    },
+    {
+      "name": "module-integrity",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "mod",
+        "verify"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 0.381,
+      "native_output": "evidence/raw/foundation-7cb7acca2f734adb874f9df88fa58d75/module-integrity.log",
+      "native_output_sha256": "b4537ed75f533f993f371954de47e42a793b8e5b0587577de7e27fb3e50696bd"
+    },
+    {
+      "name": "vet",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "vet",
+        "./..."
+      ],
+      "exit_code": 0,
+      "duration_seconds": 0.674,
+      "native_output": "evidence/raw/foundation-7cb7acca2f734adb874f9df88fa58d75/vet.log",
+      "native_output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "unit-race",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "test",
+        "-race",
+        "./..."
+      ],
+      "exit_code": 0,
+      "duration_seconds": 2.273,
+      "native_output": "evidence/raw/foundation-7cb7acca2f734adb874f9df88fa58d75/unit-race.log",
+      "native_output_sha256": "a72c529931334f1a25c48dc8e55f7118303594a39b8941461baf3f3e7cd85bdf"
+    },
+    {
+      "name": "postgres-integration-race",
+      "command": [
+        "sh",
+        "scripts/integration.sh",
+        "-race",
+        "-v"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 12.022,
+      "native_output": "evidence/raw/foundation-7cb7acca2f734adb874f9df88fa58d75/postgres-integration-race.log",
+      "native_output_sha256": "c0dc30f1cbee0e2ababbb7944c29ce0f3cefea4da76746a423b240d5c07c8fcd"
+    },
+    {
+      "name": "custody-name-fuzz",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "test",
+        "./internal/custody",
+        "-fuzz=FuzzCustodyName",
+        "-fuzztime=5s",
+        "-parallel=2"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 7.054,
+      "native_output": "evidence/raw/foundation-7cb7acca2f734adb874f9df88fa58d75/custody-name-fuzz.log",
+      "native_output_sha256": "2441d37c7cc58a17872a79f4034feb6684ac192d99402a75324750f741410eea"
+    },
+    {
+      "name": "stock-curl-https",
+      "command": [
+        "python3",
+        "scripts/qualify-https.py"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 4.625,
+      "native_output": "evidence/raw/foundation-7cb7acca2f734adb874f9df88fa58d75/stock-curl-https.log",
+      "native_output_sha256": "9d6868e2cea5539858b284db8a43f0c0717de4136383e71b760775e88b1b6012"
+    }
+  ],
+  "https": {
+    "schema_version": 1,
+    "id": "https-ddd50c93a8b04f79a930beebc60a9eb3",
+    "state": "passed",
+    "starting_commit": "7f0bce35aaecbfb250c715f6ff6beb3a75f6538f",
+    "binary_sha256": "ca3260d814af99ab3c8e6cb40f5bcac558a7bc1df0d9922408d5734e90399baa",
+    "environment": {
+      "os": "Darwin",
+      "architecture": "arm64",
+      "go": "go version go1.26.10 darwin/arm64",
+      "curl": "curl 8.7.1 (x86_64-apple-darwin26.0) libcurl/8.7.1 (SecureTransport) LibreSSL/3.3.6 zlib/1.2.12 nghttp2/1.69.0",
+      "postgres": "task-owned freightctl-postgres-v1; version recorded separately"
+    },
+    "elapsed_seconds": 4.52,
+    "assistance": "Agent-operated synthetic service-account exchange; no independent human adoption claim",
+    "steps": [
+      {
+        "name": "upload",
+        "http_status": 201,
+        "output_sha256": "394f585118e1ca9ad6bd2243dbbe0b8be6b9990b4a1d368d3d5dc3332199250a"
+      },
+      {
+        "name": "replay",
+        "http_status": 200,
+        "output_sha256": "d00c19e4b90a9959320e8f216b1e5edac908d795cd30482a8d3b169bb7ee49e2"
+      },
+      {
+        "name": "changed-idempotency",
+        "http_status": 409,
+        "output_sha256": "68e8ea07515eb62cebbfc8aefadbf034aa144af9629a643ae973526b386b9321"
+      },
+      {
+        "name": "download",
+        "http_status": 200,
+        "output_sha256": "2fea5ee3b2ff09e05e50c86092b326fd52b740a3e72d219cce4f6dc5a4d72026"
+      },
+      {
+        "name": "range",
+        "http_status": 206,
+        "output_sha256": "968c7072c53f9bd9c57a0cbbc66dc3809b0256c7a01bd1d219c613ee8445a99e"
+      },
+      {
+        "name": "no-credential",
+        "http_status": 401,
+        "output_sha256": "3341bff062d83e3afeb943f83bbb079f5b45cc050e796ec282dde50b5906cb31"
+      },
+      {
+        "name": "wrong-credential-scope",
+        "http_status": 401,
+        "output_sha256": "3341bff062d83e3afeb943f83bbb079f5b45cc050e796ec282dde50b5906cb31"
+      },
+      {
+        "name": "foreign-file-1",
+        "http_status": 404,
+        "output_sha256": "fef916c279def93f790d739d8525fc7ffd697a4a492029472c5752bda04a4faf"
+      },
+      {
+        "name": "foreign-events-1",
+        "http_status": 200,
+        "output_sha256": "68ab1a7ae4c96a55ff382006cf2857bcfa2c3838b07ab6c369648ca4e50e1e33"
+      },
+      {
+        "name": "foreign-file-2",
+        "http_status": 404,
+        "output_sha256": "fef916c279def93f790d739d8525fc7ffd697a4a492029472c5752bda04a4faf"
+      },
+      {
+        "name": "foreign-events-2",
+        "http_status": 200,
+        "output_sha256": "8186206a53400dd89524e92194808515ae15f02f186dc33bd2165d0652a29982"
+      },
+      {
+        "name": "bad-digest",
+        "http_status": 422,
+        "output_sha256": "17909a4300b0f26f55fc9eba9d619784883c0a87a76956345f5697fe5cb27ff6"
+      },
+      {
+        "name": "events",
+        "http_status": 200,
+        "output_sha256": "1f2510a7695f1e00d6a12302be0f00b418b65aec7beb2f2bab1eab6035aa7a89"
+      },
+      {
+        "name": "download-after-process-restart",
+        "http_status": 200,
+        "output_sha256": "2fea5ee3b2ff09e05e50c86092b326fd52b740a3e72d219cce4f6dc5a4d72026"
+      },
+      {
+        "name": "healthy-reconciliation",
+        "http_status": 200,
+        "output_sha256": "fab4bdf20d25a6b501f22e9f419096483b47d50d71b0023c044588f19e8fe696"
+      },
+      {
+        "name": "CLI reconciliation uses the same scoped service",
+        "consistent": true
+      },
+      {
+        "name": "unauthorized-reconciliation",
+        "http_status": 401,
+        "output_sha256": "3341bff062d83e3afeb943f83bbb079f5b45cc050e796ec282dde50b5906cb31"
+      },
+      {
+        "name": "kill server during stock-curl upload",
+        "curl_exit_code": 16,
+        "final_http_status": "000",
+        "retained_staging_bytes": 32768
+      },
+      {
+        "name": "reconcile-after-upload-crash",
+        "http_status": 200,
+        "output_sha256": "df4b690298ecc2abc11512d13e9e0bb0961b836263e64b08ce890d3b25d22689"
+      },
+      {
+        "name": "partial-file-remains-unpublished",
+        "http_status": 404,
+        "output_sha256": "fef916c279def93f790d739d8525fc7ffd697a4a492029472c5752bda04a4faf"
+      },
+      {
+        "name": "retry-after-upload-crash",
+        "http_status": 201,
+        "output_sha256": "af5b10ab483257b602c2354bc4b025fa9728fa291d97145455270756949b7a75"
+      },
+      {
+        "name": "download-retried-upload",
+        "http_status": 200,
+        "output_sha256": "2fea5ee3b2ff09e05e50c86092b326fd52b740a3e72d219cce4f6dc5a4d72026"
+      },
+      {
+        "name": "retained-orphan-after-retry",
+        "http_status": 200,
+        "output_sha256": "f547f4d6801b7924f8074c06468964fc48fec22be77a942fff8c9e8a88a02d23"
+      },
+      {
+        "name": "signed-audit-export",
+        "http_status": 200,
+        "output_sha256": "1de7a0b9043411315787020aba8fb953314acee108a29c4e44b7e14e7f0f4087"
+      },
+      {
+        "name": "stock OpenSSL verifies scoped audit snapshot",
+        "event_count": 7,
+        "openssl": "OpenSSL 4.0.3 29 Sep 2026 (Library: OpenSSL 4.0.3 29 Sep 2026)"
+      },
+      {
+        "name": "reject-modified-audit-payload",
+        "verification_rejected": true
+      },
+      {
+        "name": "reject-forged-audit-signature",
+        "verification_rejected": true
+      },
+      {
+        "name": "reject-untrusted-signing-key",
+        "verification_rejected": true
+      },
+      {
+        "name": "reject-wrong-expected-audit-scope",
+        "verification_rejected": true
+      },
+      {
+        "name": "reject-substituted-embedded-key",
+        "verification_rejected": true
+      },
+      {
+        "name": "CLI audit artifact independently verified",
+        "mode": "0o400"
+      },
+      {
+        "name": "unauthorized-audit-export",
+        "http_status": 401,
+        "output_sha256": "3341bff062d83e3afeb943f83bbb079f5b45cc050e796ec282dde50b5906cb31"
+      },
+      {
+        "name": "wrong-scope-credential-audit-export",
+        "http_status": 401,
+        "output_sha256": "3341bff062d83e3afeb943f83bbb079f5b45cc050e796ec282dde50b5906cb31"
+      },
+      {
+        "name": "foreign-scope-audit-export-1",
+        "http_status": 200,
+        "output_sha256": "926b6bd0e32d3ad65d66cc2ade2144629f67dfe8f80ef534a63f2369fe8a7b38"
+      },
+      {
+        "name": "foreign-scope-audit-export-2",
+        "http_status": 200,
+        "output_sha256": "09c33f4916b7fd6feb0395974ebd0fc337ea7bc9e63469d47126b76e61e441f2"
+      }
+    ],
+    "failure": null,
+    "raw_evidence_reference": "evidence/raw/https-ddd50c93a8b04f79a930beebc60a9eb3",
+    "private_fixture_reference": ".private/https-ddd50c93a8b04f79a930beebc60a9eb3",
+    "limits": [
+      "Single Mac and local PostgreSQL container",
+      "File custody uses integrity-only policy; no antivirus, file-content signature or recipient business receipt",
+      "Audit signature authenticates a bounded snapshot after export; prior database tampering, protected retention and key-service custody are separate gates",
+      "Crash injected during staging; sync-to-SQL-commit and ambiguous-commit crash boundaries remain unqualified",
+      "Reconciliation is read-only, bounded and scope-specific; no orphan adoption or deletion is offered",
+      "No browser onboarding, resumable upload or SFTP qualification",
+      "No HA, offline bundle, throughput or large-file acceptance claim"
+    ],
+    "source_files": [
+      {
+        "path": "cmd/freightctl/main.go",
+        "sha256": "1617332bcc0447b0b2ef39e6bfe3a7d26190f662a063d4bb0a8307889179182d"
+      },
+      {
+        "path": "go.mod",
+        "sha256": "bb3cafecaadc67648edcdfd042aea655ac3e3b6e2b8d5320178384f8257c0bf6"
+      },
+      {
+        "path": "go.sum",
+        "sha256": "d078b635c8bcaa23bf6a5e674459d414feb5a707a98cd527495fa01847d57173"
+      },
+      {
+        "path": "internal/api/api.go",
+        "sha256": "1b35cd1dbc3a4cb290ec60073ea75ed5c164156322560fba6c25d58468a3237b"
+      },
+      {
+        "path": "internal/architecture/architecture_test.go",
+        "sha256": "88a1b207abca225f3df628d3816a060c0609d6e65dc993f0aaadd6d949f40840"
+      },
+      {
+        "path": "internal/audit/audit.go",
+        "sha256": "fbaaba7a6039adb61897b79bef4b405df21cb6ca07caadd68f8b1bd3142100f0"
+      },
+      {
+        "path": "internal/audit/integration_test.go",
+        "sha256": "8c69a1a5d040a391b2579f58d3b070865e89f1c3b4f66199143d87e9793e7248"
+      },
+      {
+        "path": "internal/crypto/audit.go",
+        "sha256": "eefe6f66ab4c283ea96e51fc35a7cb4f8edff713dd16d56041d74bf1acdc338e"
+      },
+      {
+        "path": "internal/crypto/audit_test.go",
+        "sha256": "0837cc879e08a3b47d6b7ab4f393579af17ebd891f430e2cc45e264d60c02b4e"
+      },
+      {
+        "path": "internal/crypto/crypto.go",
+        "sha256": "edb1f8534ce0f048038aa5946489caba5ae303a38024e173c8a0d09478d093a0"
+      },
+      {
+        "path": "internal/crypto/protect_other.go",
+        "sha256": "c52dc1b00ac860719e3dd9dd9118109014d01e0b7f87327646bba63e7dd173a2"
+      },
+      {
+        "path": "internal/crypto/protect_unix.go",
+        "sha256": "f7184f82ff63e331fd5170a0ea27a0f5e867f06bbb9d1f901ae57f75a8b86e52"
+      },
+      {
+        "path": "internal/custody/custody.go",
+        "sha256": "5c03d9f38ef224008ea8763e6c09a42cd60454040e7184a4964c89cdd1a5ff8f"
+      },
+      {
+        "path": "internal/custody/custody_test.go",
+        "sha256": "113e904d42d60b889e1139b01232c15feba38b56d87982bc56bfdf2cd4f54f1c"
+      },
+      {
+        "path": "internal/custody/integration_test.go",
+        "sha256": "d59da8e07edc8423bc65bd7b810ed35168dcd74c7c9f96dd94e36ccc61cf0579"
+      },
+      {
+        "path": "internal/custody/reconcile.go",
+        "sha256": "1a7f0b19cc099cef341ba89bce36cefab0f8b6ae0033e334cc34e8bff2cbe866"
+      },
+      {
+        "path": "internal/custody/service.go",
+        "sha256": "5a02505bf10c2180741fce96b9e9bc4a550ff9a0e9b15865a753e068e125aabd"
+      },
+      {
+        "path": "internal/store/002_event_binding.sql",
+        "sha256": "9bdb83d3a31f608af24b568e91889e2e6f462caf8658b746a0c55be97e58dfb0"
+      },
+      {
+        "path": "internal/store/003_event_bounds.sql",
+        "sha256": "5e09fc8540294e24ea9114e71e4d58311bdfb7b80ae1a5d3162c8d3bc0a4a4e7"
+      },
+      {
+        "path": "internal/store/migration_integration_test.go",
+        "sha256": "0263587518a110ee1bd7ef14b74a2c20b2d5934375c746ce92f95a26cb4ba0e7"
+      },
+      {
+        "path": "internal/store/schema.sql",
+        "sha256": "26c4a6bd9e354b5b6f63052368f6d1e687de007f6f74b96910bce0ef3a5460d9"
+      },
+      {
+        "path": "internal/store/snapshot.go",
+        "sha256": "686af81c99a6144f3a5cf62d1ba6be46fe9388e792b695c8be62e4607c7ab981"
+      },
+      {
+        "path": "internal/store/store.go",
+        "sha256": "72dc6bdd528a079dbed28bc62a37401f6254b24be457e9c849d687541b244d81"
+      },
+      {
+        "path": "scripts/check-records.py",
+        "sha256": "35df8df21212a1136486d5a9f3335b67b19cdb24f2e053c90d21d4768ced1f1b"
+      },
+      {
+        "path": "scripts/dev-db.py",
+        "sha256": "05643d67e1a64d7e5f91c19108f5bfa3415571c8394721c5d7cc89862d51c12a"
+      },
+      {
+        "path": "scripts/go.sh",
+        "sha256": "aec6d7e09592b3954a89dc69839c6791e72a73dbafe2ca04b3b274276a23f5a8"
+      },
+      {
+        "path": "scripts/integration.sh",
+        "sha256": "a1f1d34ff041d7287d04aab634ad336bf7af7896f58241181081853a981d3464"
+      },
+      {
+        "path": "scripts/qualify-https.py",
+        "sha256": "0e0e2a31b3fed1ad26382028843fa25a7b9e3709144abd8f73bf1101aa0c3b33"
+      },
+      {
+        "path": "scripts/verify-audit.py",
+        "sha256": "99f22fbd3e936aa4d38569ada1bfcccbca47e46f6c3e08aa47f6531128e9b983"
+      }
+    ]
+  },
+  "independent_verification": {
+    "tool": "stock OpenSSL through scripts/verify-audit.py",
+    "trusted_identity": "Separately generated local public-key file; embedded artifact key is checked against that trust anchor.",
+    "positive_cases": [
+      "HTTPS export",
+      "CLI export"
+    ],
+    "rejected_cases": [
+      "modified payload",
+      "forged signature",
+      "different trusted key",
+      "wrong expected tenant or partner",
+      "substituted embedded key"
+    ]
+  },
+  "database_evidence": [
+    "One repeatable-read event snapshot with actors, references and exact count.",
+    "Current authority rechecked outside the snapshot before artifact disclosure.",
+    "Preparation event binds payload digest, count, snapshot and signing identity; denied journal persistence withholds output.",
+    "SQL bounds reject oversized event kinds and payloads.",
+    "An existing runtime rejects disabled row security; an active scoped transaction prevents concurrent policy DDL until completion."
+  ],
+  "security": {
+    "govulncheck": {
+      "config": {
+        "protocol_version": "v1.0.0",
+        "scanner_name": "govulncheck",
+        "scanner_version": "v1.9.0",
+        "db": "https://vuln.go.dev",
+        "db_last_modified": "2026-10-27T21:16:18Z",
+        "go_version": "go1.26.10",
+        "scan_level": "symbol",
+        "scan_mode": "source"
+      },
+      "finding_count": 0,
+      "native_reference": ".private/audit-scans/govulncheck.json",
+      "native_sha256": "1bd176922da64a179639df0500d9e7826cc860819e0a17fc84657170f207940f"
+    },
+    "gitleaks_final_scan_pending": false,
+    "gitleaks": {
+      "version": "8.30.1",
+      "image": "ghcr.io/gitleaks/gitleaks@sha256:c00b6bd0aeb3071cbcb79009cb16a60dd9e0a7c60e2be9ab65d25e6bc8abbb7f",
+      "source_findings": 0,
+      "history_findings": 0,
+      "history_commits": 4,
+      "input_manifest_sha256": "a0a1689f6a637d6481470d77eef04a769d2b8e34a3e12c32a6818e6848bbd199",
+      "native_references": [
+        ".private/audit-scans/gitleaks-source.json",
+        ".private/audit-scans/gitleaks-history.json"
+      ]
+    }
+  },
+  "limits": [
+    "Single Mac and local PostgreSQL container",
+    "File custody uses integrity-only policy; no antivirus, file-content signature or recipient business receipt",
+    "Audit signature authenticates a bounded snapshot after export; prior database tampering, protected retention and key-service custody are separate gates",
+    "Crash injected during staging; sync-to-SQL-commit and ambiguous-commit crash boundaries remain unqualified",
+    "Reconciliation is read-only, bounded and scope-specific; no orphan adoption or deletion is offered",
+    "No browser onboarding, resumable upload or SFTP qualification",
+    "No HA, offline bundle, throughput or large-file acceptance claim",
+    "Signed bounded snapshot is not a chained journal or proof against prior database-superuser tampering.",
+    "Segmented full-estate exports, protected retention, key rotation, isolated signing service/HSM, process dump controls and native custody profiles remain open.",
+    "Private-key handling has documented Go/library and platform limitations; no FIPS or external certification claim.",
+    "Legacy migration checkpoints retain original file actor references; distinct maintenance-actor provenance remains required before production audit qualification."
+  ]
+}

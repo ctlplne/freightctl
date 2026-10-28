@@ -2339,8 +2339,10 @@
         "independent operator or receiver"
       ],
       "acceptance_journey": "J12",
-      "state": "planned",
-      "evidence": [],
+      "state": "implementing",
+      "evidence": [
+        "docs/qualification/evidence/F003-signed-audit.json"
+      ],
       "qualification_blockers": [
         "Authorized MOVEit Automation installation and exact edition/version for observed comparison"
       ]

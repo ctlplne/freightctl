@@ -10,10 +10,12 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"syscall"
 	"time"
 
 	"github.com/ctlplne/freightctl/internal/api"
+	"github.com/ctlplne/freightctl/internal/audit"
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/custody"
 	"github.com/ctlplne/freightctl/internal/store"
@@ -27,7 +29,7 @@ func main() {
 }
 func run(args []string) error {
 	if len(args) == 0 || args[0] == "--help" || args[0] == "help" {
-		fmt.Println("freightctl: init | token | enroll | dev-cert | serve | reconcile\nRead docs/development.md. This is an unqualified local custody foundation.")
+		fmt.Println("freightctl: init | token | enroll | dev-cert | serve | reconcile | audit-keygen | audit-export\nRead docs/development.md. This is an unqualified local custody foundation.")
 		return nil
 	}
 	f := flag.NewFlagSet(args[0], flag.ContinueOnError)
@@ -44,6 +46,11 @@ func run(args []string) error {
 	maxFile := f.Int64("max-file-bytes", 64<<20, "maximum upload bytes")
 	maxStored := f.Int64("max-stored-bytes", 1<<30, "total custody quota, including retained orphans")
 	reconcileBytes := f.Int64("reconcile-max-bytes", 64<<20, "maximum bytes hashed per read-only reconciliation")
+	auditKey := f.String("audit-key-file", "", "protected Ed25519 audit signing identity reference")
+	auditPublic := f.String("audit-public-file", ".private/audit-signing.pub", "public audit verification identity output")
+	auditMaxEvents := f.Int("audit-max-events", 10000, "maximum events per evidence snapshot")
+	auditMaxBytes := f.Int("audit-max-bytes", 8<<20, "maximum serialized evidence bytes before base64 encoding")
+	output := f.String("output", ".private/audit-export.json", "new protected artifact output path")
 	if err := f.Parse(args[1:]); err != nil {
 		return err
 	}
@@ -60,6 +67,32 @@ func run(args []string) error {
 		return store.Provision(ctx, *admin, *tenant, *partner, *token)
 	case "dev-cert":
 		return secure.DevCertificate(*cert, *key)
+	case "audit-keygen":
+		path := *auditKey
+		if path == "" {
+			path = ".private/audit-signing.key"
+		}
+		return secure.GenerateAuditIdentity(path, *auditPublic)
+	case "audit-export":
+		if _, err := os.Lstat(*output); !os.IsNotExist(err) {
+			return errors.New("artifact output must be a new file")
+		}
+		secret, err := secure.ReadSecret(*token, 64)
+		if err != nil {
+			return err
+		}
+		scope := store.Scope{Tenant: *tenant, Partner: *partner, TokenHash: secure.Digest(secret.Bytes)}
+		secret.Close()
+		db, err := store.Open(ctx, *dsn)
+		if err != nil {
+			return err
+		}
+		defer db.Pool.Close()
+		envelope, err := (&audit.Service{DB: db, KeyFile: *auditKey, MaxEvents: *auditMaxEvents, MaxBytes: *auditMaxBytes}).Export(ctx, scope)
+		if err != nil {
+			return err
+		}
+		return writeArtifact(*output, envelope)
 	case "reconcile":
 		secret, err := secure.ReadSecret(*token, 64)
 		if err != nil {
@@ -110,7 +143,8 @@ func run(args []string) error {
 			return err
 		}
 		secret.Close()
-		server := &http.Server{Addr: *listen, Handler: api.New(&custody.Service{DB: db, Disk: disk, MaxFile: *maxFile, MaxStored: *maxStored, ReconcileMaxBytes: *reconcileBytes}), TLSConfig: secure.TLSConfig(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 90 * time.Second, WriteTimeout: 90 * time.Second, IdleTimeout: 30 * time.Second, MaxHeaderBytes: 16 * 1024}
+		audits := &audit.Service{DB: db, KeyFile: *auditKey, MaxEvents: *auditMaxEvents, MaxBytes: *auditMaxBytes}
+		server := &http.Server{Addr: *listen, Handler: api.New(&custody.Service{DB: db, Disk: disk, MaxFile: *maxFile, MaxStored: *maxStored, ReconcileMaxBytes: *reconcileBytes}, audits), TLSConfig: secure.TLSConfig(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 90 * time.Second, WriteTimeout: 90 * time.Second, IdleTimeout: 30 * time.Second, MaxHeaderBytes: 16 * 1024}
 		stop, cancel := signal.NotifyContext(ctx, os.Interrupt, syscall.SIGTERM)
 		defer cancel()
 		go func() {
@@ -128,4 +162,38 @@ func run(args []string) error {
 	default:
 		return errors.New("unknown command; use --help")
 	}
+}
+
+func writeArtifact(path string, value any) error {
+	directory := filepath.Dir(path)
+	f, err := os.CreateTemp(directory, ".freightctl-artifact-*")
+	if err != nil {
+		return errors.New("cannot stage artifact in output directory")
+	}
+	defer os.Remove(f.Name())
+	defer f.Close()
+	if err = json.NewEncoder(f).Encode(value); err != nil {
+		return err
+	}
+	if err = f.Chmod(0400); err != nil {
+		return err
+	}
+	if err = f.Sync(); err != nil {
+		return err
+	}
+	if err = f.Close(); err != nil {
+		return err
+	}
+	if err = os.Link(f.Name(), path); err != nil {
+		return errors.New("cannot publish new artifact without overwriting; verify output path and filesystem hard-link support")
+	}
+	if err = os.Remove(f.Name()); err != nil {
+		return err
+	}
+	d, err := os.Open(directory)
+	if err != nil {
+		return err
+	}
+	defer d.Close()
+	return d.Sync()
 }

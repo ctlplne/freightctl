@@ -540,3 +540,65 @@ func TestReconciliationWaitsForStagingAndHonorsCancellation(t *testing.T) {
 		t.Fatal("completed staging was not reconciled", report, err)
 	}
 }
+
+func TestExistingRuntimeRejectsIsolationChange(t *testing.T) {
+	f := setup(t)
+	if _, err := f.admin.Exec(f.ctx, `ALTER TABLE events DISABLE ROW LEVEL SECURITY`); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() {
+		if _, err := f.admin.Exec(context.Background(), `ALTER TABLE events ENABLE ROW LEVEL SECURITY`); err != nil {
+			t.Error(err)
+		}
+	})
+	if _, err := f.db.Events(f.ctx, f.a); !errors.Is(err, store.ErrIsolation) {
+		t.Fatal("existing runtime accepted disabled event isolation", err)
+	}
+}
+
+func TestPolicyChangeWaitsForScopedOperation(t *testing.T) {
+	f := setup(t)
+	operation, err := f.db.Begin(f.ctx, f.a)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer operation.Tx.Rollback(f.ctx)
+	change, err := f.admin.Begin(f.ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer change.Rollback(f.ctx)
+	if _, err = change.Exec(f.ctx, `SET LOCAL lock_timeout='100ms'`); err != nil {
+		t.Fatal(err)
+	}
+	_, err = change.Exec(f.ctx, `ALTER TABLE events DISABLE ROW LEVEL SECURITY`)
+	sqlState(t, err, "55P03")
+}
+
+func TestJournalPayloadBoundsInServiceAndDatabase(t *testing.T) {
+	f := setup(t)
+	tx, err := f.db.Begin(f.ctx, f.a)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err = tx.Append(f.ctx, "EvidenceObserved", secure.NewID(), map[string]string{"synthetic": string(bytes.Repeat([]byte("x"), 33<<10))}); !errors.Is(err, store.ErrLimit) {
+		t.Fatal("application journal bound ignored", err)
+	}
+	_ = tx.Tx.Rollback(f.ctx)
+	for _, kind := range []string{"payload", "kind"} {
+		tx, err = f.db.Begin(f.ctx, f.a)
+		if err != nil {
+			t.Fatal(err)
+		}
+		query := `INSERT INTO events(tenant_id,partner_id,event_id,actor_id,kind,resource_id,payload) VALUES($1,$2,$3,$4,'EvidenceObserved',$3,to_jsonb(repeat('x',70000)))`
+		if kind == "kind" {
+			query = `INSERT INTO events(tenant_id,partner_id,event_id,actor_id,kind,resource_id,payload) VALUES($1,$2,$3,$4,repeat('x',129),$3,'{}')`
+		}
+		_, err = tx.Tx.Exec(f.ctx, query, f.a.Tenant, f.a.Partner, secure.NewID(), tx.Actor)
+		sqlState(t, err, "23514")
+		_ = tx.Tx.Rollback(f.ctx)
+	}
+	if count(t, f, "events") != 1 {
+		t.Fatal("oversized event persisted")
+	}
+}

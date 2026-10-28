@@ -172,11 +172,12 @@
       "duration_seconds": null,
       "evidence": [
         "docs/qualification/evidence/F001-custody-foundation.json",
-        "docs/qualification/evidence/F002-reconciliation.json"
+        "docs/qualification/evidence/F002-reconciliation.json",
+        "docs/qualification/evidence/F003-signed-audit.json"
       ],
       "failures": [],
       "limits": [
-        "Only narrower local custody and staging-crash experiments passed; complete journey remains open."
+        "Only narrow scoped custody/audit experiments passed; the complete journey remains open."
       ]
     },
     {
@@ -202,7 +203,7 @@
     {
       "id": "J12",
       "name": "Export and recover with ordinary tools",
-      "state": "planned",
+      "state": "implementing",
       "goal_reference": "GOAL.md section 5 item 12",
       "candidate": null,
       "artifact_digests": {},
@@ -210,10 +211,12 @@
       "steps": [],
       "assistance": null,
       "duration_seconds": null,
-      "evidence": [],
+      "evidence": [
+        "docs/qualification/evidence/F003-signed-audit.json"
+      ],
       "failures": [],
       "limits": [
-        "Not run; no application at bootstrap"
+        "Only narrow scoped custody/audit experiments passed; the complete journey remains open."
       ]
     }
   ]

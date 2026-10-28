@@ -21,11 +21,16 @@ var schema string
 //go:embed 002_event_binding.sql
 var eventBinding string
 
-var migrations = []string{schema, eventBinding}
+//go:embed 003_event_bounds.sql
+var eventBounds string
+
+var migrations = []string{schema, eventBinding, eventBounds}
 
 var ErrUnauthorized = errors.New("unauthorized")
 var ErrNotFound = errors.New("not found")
 var ErrConflict = errors.New("idempotency key has different meaning")
+var ErrLimit = errors.New("operation exceeds configured evidence bounds")
+var ErrIsolation = errors.New("required database isolation is not active")
 
 var uuidPattern = regexp.MustCompile(`^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$`)
 
@@ -43,6 +48,7 @@ type File struct {
 }
 type Event struct {
 	ID         string          `json:"id"`
+	ActorID    string          `json:"actor_id"`
 	Kind       string          `json:"kind"`
 	ResourceID string          `json:"resource_id"`
 	Payload    json.RawMessage `json:"payload"`
@@ -70,6 +76,7 @@ func connect(ctx context.Context, path string) (*pgxpool.Pool, error) {
 	cfg.ConnConfig.ConnectTimeout = 5 * time.Second
 	cfg.ConnConfig.RuntimeParams["application_name"] = "freightctl"
 	cfg.ConnConfig.RuntimeParams["row_security"] = "on"
+	cfg.ConnConfig.RuntimeParams["search_path"] = "public"
 	cfg.ConnConfig.RuntimeParams["statement_timeout"] = "10000"
 	cfg.ConnConfig.RuntimeParams["idle_in_transaction_session_timeout"] = "120000"
 	p, err := pgxpool.NewWithConfig(ctx, cfg)
@@ -232,10 +239,14 @@ func Provision(ctx context.Context, adminPath, tenant, partner, tokenPath string
 }
 
 func (s *Store) Begin(ctx context.Context, scope Scope) (*Transaction, error) {
+	return s.begin(ctx, scope, pgx.TxOptions{})
+}
+
+func (s *Store) begin(ctx context.Context, scope Scope, options pgx.TxOptions) (*Transaction, error) {
 	if !ValidID(scope.Tenant) || !ValidID(scope.Partner) {
 		return nil, ErrUnauthorized
 	}
-	tx, err := s.Pool.Begin(ctx)
+	tx, err := s.Pool.BeginTx(ctx, options)
 	if err != nil {
 		return nil, err
 	}
@@ -245,6 +256,20 @@ func (s *Store) Begin(ctx context.Context, scope Scope) (*Transaction, error) {
 			_ = tx.Rollback(ctx)
 		}
 	}()
+	// Hold relation locks before inspecting policies. ALTER TABLE cannot disable a
+	// checked policy between this check and the operation's reads or writes.
+	_, err = tx.Exec(ctx, `LOCK TABLE public.tenants,public.partners,public.credentials,public.events,public.files,public.idempotency IN ACCESS SHARE MODE`)
+	if err != nil {
+		return nil, err
+	}
+	var protected int
+	err = tx.QueryRow(ctx, `SELECT count(*) FROM pg_class WHERE relnamespace='public'::regnamespace AND relname=ANY($1) AND relrowsecurity AND relforcerowsecurity AND relowner<>(SELECT oid FROM pg_roles WHERE rolname=current_user)`, []string{"tenants", "partners", "credentials", "events", "files", "idempotency"}).Scan(&protected)
+	if err != nil {
+		return nil, err
+	}
+	if protected != 6 {
+		return nil, ErrIsolation
+	}
 	_, err = tx.Exec(ctx, `SELECT set_config('freightctl.tenant_id',$1,true),set_config('freightctl.partner_id',$2,true)`, scope.Tenant, scope.Partner)
 	if err != nil {
 		return nil, err
@@ -291,6 +316,9 @@ func (t *Transaction) Append(ctx context.Context, kind, resource string, payload
 	if err != nil {
 		return "", err
 	}
+	if len(b) > 32<<10 || len(kind) < 1 || len(kind) > 128 {
+		return "", ErrLimit
+	}
 	id := secure.NewID()
 	_, err = t.Tx.Exec(ctx, `INSERT INTO events(tenant_id,partner_id,event_id,actor_id,kind,resource_id,payload) VALUES($1,$2,$3,$4,$5,$6,$7)`, t.Scope.Tenant, t.Scope.Partner, id, t.Actor, kind, resource, b)
 	return id, err
@@ -328,14 +356,14 @@ func (s *Store) Events(ctx context.Context, scope Scope) ([]Event, error) {
 		return nil, err
 	}
 	defer t.Tx.Rollback(ctx)
-	rows, err := t.Tx.Query(ctx, `SELECT event_id::text,kind,resource_id::text,payload,happened_at FROM events ORDER BY happened_at DESC,event_id DESC LIMIT 100`)
+	rows, err := t.Tx.Query(ctx, `SELECT event_id::text,actor_id::text,kind,resource_id::text,payload,happened_at FROM events ORDER BY happened_at DESC,event_id DESC LIMIT 100`)
 	if err != nil {
 		return nil, err
 	}
 	result := make([]Event, 0)
 	for rows.Next() {
 		var e Event
-		if err = rows.Scan(&e.ID, &e.Kind, &e.ResourceID, &e.Payload, &e.At); err != nil {
+		if err = rows.Scan(&e.ID, &e.ActorID, &e.Kind, &e.ResourceID, &e.Payload, &e.At); err != nil {
 			rows.Close()
 			return nil, err
 		}

@@ -10,18 +10,21 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ctlplne/freightctl/internal/audit"
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/custody"
 	"github.com/ctlplne/freightctl/internal/store"
 )
 
 type Server struct {
-	Service *custody.Service
-	slots   chan struct{}
+	Service    *custody.Service
+	slots      chan struct{}
+	Audit      *audit.Service
+	auditSlots chan struct{}
 }
 
-func New(service *custody.Service) http.Handler {
-	s := &Server{Service: service, slots: make(chan struct{}, 8)}
+func New(service *custody.Service, audits *audit.Service) http.Handler {
+	s := &Server{Service: service, Audit: audits, slots: make(chan struct{}, 8), auditSlots: make(chan struct{}, 1)}
 	m := http.NewServeMux()
 	m.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
@@ -31,6 +34,7 @@ func New(service *custody.Service) http.Handler {
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/files/{file}", s.download)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/events", s.events)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/custody/reconcile", s.reconcile)
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/audit/export", s.exportAudit)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("X-Content-Type-Options", "nosniff")
 		w.Header().Set("Cache-Control", "no-store")
@@ -47,6 +51,31 @@ func New(service *custody.Service) http.Handler {
 		}
 		m.ServeHTTP(w, r)
 	})
+}
+func (s *Server) exportAudit(w http.ResponseWriter, r *http.Request) {
+	identity, err := scope(r)
+	if err != nil {
+		failure(w, err)
+		return
+	}
+	select {
+	case s.auditSlots <- struct{}{}:
+		defer func() { <-s.auditSlots }()
+	default:
+		fail(w, 503, "audit_capacity_busy")
+		return
+	}
+	if s.Audit == nil {
+		failure(w, audit.ErrUnconfigured)
+		return
+	}
+	envelope, err := s.Audit.Export(r.Context(), identity)
+	if err != nil {
+		failure(w, err)
+		return
+	}
+	w.Header().Set("Content-Disposition", `attachment; filename="audit-snapshot.json"`)
+	respond(w, 200, envelope)
 }
 func (s *Server) reconcile(w http.ResponseWriter, r *http.Request) {
 	identity, err := scope(r)
@@ -85,6 +114,12 @@ func fail(w http.ResponseWriter, code int, message string) {
 }
 func failure(w http.ResponseWriter, err error) {
 	switch {
+	case errors.Is(err, store.ErrLimit):
+		fail(w, 413, "evidence_bound_exceeded")
+	case errors.Is(err, store.ErrIsolation):
+		fail(w, 503, "database_isolation_unavailable")
+	case errors.Is(err, audit.ErrUnconfigured):
+		fail(w, 503, "audit_signing_unconfigured")
 	case errors.Is(err, store.ErrUnauthorized):
 		fail(w, 401, "unauthorized")
 	case errors.Is(err, store.ErrNotFound):
