@@ -1345,12 +1345,13 @@
         "docs/qualification/evidence/F001-custody-foundation.json",
         "docs/qualification/evidence/F004-virtual-namespace.json",
         "docs/qualification/evidence/F005-sftp-exchange.json",
-        "docs/qualification/evidence/F006-upload-checkpoints.json"
+        "docs/qualification/evidence/F006-upload-checkpoints.json",
+        "docs/qualification/evidence/F009-assistance-controls.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
       ],
-      "current_limit": "F006 verifies explicit private tickets and bounded local restart resume using CLI/HTTPS/stock SFTP. Browser UX, larger/native/enterprise/client profiles and full row/customer acceptance remain open."
+      "current_limit": "F009 extends actor/tenant/partner boundaries to assistance profiles/jobs/receipts and current disclosure authority. Complete delegation, human lifecycle, all product surfaces and full acceptance remain open."
     },
     {
       "id": "A-ROLE",
@@ -1388,12 +1389,13 @@
       "evidence": [
         "docs/qualification/evidence/F004-virtual-namespace.json",
         "docs/qualification/evidence/F005-sftp-exchange.json",
-        "docs/qualification/evidence/F006-upload-checkpoints.json"
+        "docs/qualification/evidence/F006-upload-checkpoints.json",
+        "docs/qualification/evidence/F009-assistance-controls.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
       ],
-      "current_limit": "F006 verifies explicit private tickets and bounded local restart resume using CLI/HTTPS/stock SFTP. Browser UX, larger/native/enterprise/client profiles and full row/customer acceptance remain open."
+      "current_limit": "F009 extends actor/tenant/partner boundaries to assistance profiles/jobs/receipts and current disclosure authority. Complete delegation, human lifecycle, all product surfaces and full acceptance remain open."
     },
     {
       "id": "W-DEFINITION",
@@ -1427,11 +1429,15 @@
         "independent operator or receiver"
       ],
       "acceptance_journey": "J08",
-      "state": "planned",
-      "evidence": [],
+      "state": "implementing",
+      "evidence": [
+        "docs/qualification/evidence/F009-assistance-controls.json",
+        "docs/qualification/evidence/F008-versioned-workflows.json"
+      ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
-      ]
+      ],
+      "current_limit": "F008/F009 add shared immutable ordered SFTP definitions, validation/diff/approval/execution and no-inference draft-only proposal adoption. Broader tasks, UI, real AI, full journey and permitted incumbent observation remain open."
     },
     {
       "id": "W-DATA",

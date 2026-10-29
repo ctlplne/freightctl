@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "state": "planned",
+  "state": "implementing",
   "profiles": [],
   "datasets": [],
   "results": [],
@@ -14,8 +14,11 @@
     "forbidden_actions_allowed": 0
   },
   "limits": [
-    "No model inference or AI evaluation harness is implemented. F008 supplies typed execution and deterministic native assertions, not measured AI planning or diagnosis results.",
+    "F009 implements an endpoint adapter and deterministic no-inference governance/transport checks. No real model was run; no AI quality evaluation harness, held-out result or model profile is qualified.",
     "Both qualified private profiles, the required held-out/adversarial datasets and their acceptance thresholds remain mandatory. Model output cannot qualify execution.",
     "Owner resource policy keeps local inference off. No runtime start, model load, warmup or local inference evaluation is authorized. The ended 20.58 GiB exploratory probe does not qualify a profile; real evaluation needs an authorized endpoint and resource allowance."
+  ],
+  "contract_evidence": [
+    "docs/qualification/evidence/F009-assistance-controls.json"
   ]
 }

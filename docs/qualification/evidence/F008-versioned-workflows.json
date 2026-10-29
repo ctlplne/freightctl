@@ -322,7 +322,11 @@
       }
     ],
     "native_binary_sha256": "5186c0f852dba1be9355e5bad8ca8fed72f50b62cc9d51dfbf49d6244ae67a77",
-    "source_binding": "All 78 source hashes agree with final source and the native journey. The fourteen-check foundation records identical source hashes before and after all checks; no runtime source changed during qualification."
+    "source_binding": "All 78 source hashes agree with final source and the native journey. The fourteen-check foundation records identical source hashes before and after all checks; no runtime source changed during qualification.",
+    "committed_source": {
+      "commit": "4956fee2ca1460d0212980135e52230a5d81726b",
+      "verification": "All 78 recorded source hashes match Git blobs in this local commit. This binds the earlier tested source without rewriting its original candidate or native evidence."
+    }
   },
   "environment": {
     "os": "macOS 27.2 build 26B5086k",

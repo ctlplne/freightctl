@@ -40,8 +40,11 @@ var deliverySchema string
 //go:embed 008_workflows.sql
 var workflowSchema string
 
-var migrations = []string{schema, eventBinding, eventBounds, namespaceSchema, uploadSchema, uploadStorageSchema, deliverySchema, workflowSchema}
-var domainTables = []string{"tenants", "partners", "credentials", "events", "files", "idempotency", "namespace_entries", "namespace_revisions", "namespace_commands", "ssh_keys", "upload_sessions", "upload_chunks", "upload_receipts", "delivery_intents", "delivery_receipts", "connection_revisions", "workflow_revisions", "workflow_runs", "workflow_steps", "workflow_receipts"}
+//go:embed 009_assistance.sql
+var assistanceSchema string
+
+var migrations = []string{schema, eventBinding, eventBounds, namespaceSchema, uploadSchema, uploadStorageSchema, deliverySchema, workflowSchema, assistanceSchema}
+var domainTables = []string{"tenants", "partners", "credentials", "events", "files", "idempotency", "namespace_entries", "namespace_revisions", "namespace_commands", "ssh_keys", "upload_sessions", "upload_chunks", "upload_receipts", "delivery_intents", "delivery_receipts", "connection_revisions", "workflow_revisions", "workflow_runs", "workflow_steps", "workflow_receipts", "ai_profiles", "ai_jobs", "ai_receipts"}
 
 var ErrUnauthorized = errors.New("unauthorized")
 var ErrNotFound = errors.New("not found")
@@ -53,7 +56,7 @@ var ErrExists = errors.New("virtual path already exists")
 var ErrState = errors.New("operation does not match the current resource state")
 var ErrRevision = errors.New("resource revision changed")
 
-var DefaultPermissions = []string{"read", "write", "list", "manage_paths", "inspect", "audit_read", "admin", "connections_manage", "deliver", "workflow_manage", "workflow_approve", "workflow_execute"}
+var DefaultPermissions = []string{"read", "write", "list", "manage_paths", "inspect", "audit_read", "admin", "connections_manage", "deliver", "workflow_manage", "workflow_approve", "workflow_execute", "ai_manage", "ai_use", "ai_disclose"}
 
 var uuidPattern = regexp.MustCompile(`^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$`)
 

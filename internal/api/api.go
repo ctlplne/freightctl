@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ctlplne/freightctl/internal/assistance"
 	"github.com/ctlplne/freightctl/internal/audit"
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/custody"
@@ -22,10 +23,13 @@ type Server struct {
 	slots      chan struct{}
 	Audit      *audit.Service
 	auditSlots chan struct{}
+	Assistance *assistance.Service
 }
 
-func New(service *custody.Service, audits *audit.Service) http.Handler {
+func New(service *custody.Service, audits *audit.Service, enableAssistance ...bool) http.Handler {
 	s := &Server{Service: service, Audit: audits, slots: make(chan struct{}, 8), auditSlots: make(chan struct{}, 1)}
+	enabled := len(enableAssistance) == 1 && enableAssistance[0]
+	s.Assistance = &assistance.Service{DB: service.DB, Enabled: enabled}
 	m := http.NewServeMux()
 	m.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
@@ -37,6 +41,17 @@ func New(service *custody.Service, audits *audit.Service) http.Handler {
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/custody/reconcile", s.reconcile)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/audit/export", s.exportAudit)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/identity", s.identity)
+	for _, pattern := range []string{
+		"GET /v1/tenants/{tenant}/partners/{partner}/ai/profiles/{profile}/{version}",
+		"POST /v1/tenants/{tenant}/partners/{partner}/ai/jobs",
+		"GET /v1/tenants/{tenant}/partners/{partner}/ai/jobs/{job}",
+		"POST /v1/tenants/{tenant}/partners/{partner}/ai/jobs/{job}/approve",
+		"POST /v1/tenants/{tenant}/partners/{partner}/ai/jobs/{job}/generate",
+		"POST /v1/tenants/{tenant}/partners/{partner}/ai/jobs/{job}/adopt",
+		"GET /v1/tenants/{tenant}/partners/{partner}/ai/jobs/{job}/evidence/{event}",
+	} {
+		m.HandleFunc(pattern, s.assistance)
+	}
 	for _, pattern := range []string{
 		"POST /v1/tenants/{tenant}/partners/{partner}/workflows/validate",
 		"POST /v1/tenants/{tenant}/partners/{partner}/workflows/drafts",

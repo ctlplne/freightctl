@@ -141,17 +141,18 @@
       "assistance": null,
       "duration_seconds": null,
       "evidence": [
-        "docs/qualification/evidence/F008-versioned-workflows.json"
+        "docs/qualification/evidence/F008-versioned-workflows.json",
+        "docs/qualification/evidence/F009-assistance-controls.json"
       ],
       "failures": [],
       "limits": [
-        "Not run; no application at bootstrap"
+        "F008/F009 provide typed workflow services and a no-inference proposal contract with draft-only adoption and real SFTP execution after ordinary approval. Real-model requirements/clarification/testing, UI and the full journey remain open under X05."
       ]
     },
     {
       "id": "J09",
       "name": "Evidence-backed AI diagnosis and governed recovery",
-      "state": "planned",
+      "state": "implementing",
       "goal_reference": "GOAL.md section 5 item 9",
       "candidate": null,
       "artifact_digests": {},
@@ -159,10 +160,12 @@
       "steps": [],
       "assistance": null,
       "duration_seconds": null,
-      "evidence": [],
+      "evidence": [
+        "docs/qualification/evidence/F009-assistance-controls.json"
+      ],
       "failures": [],
       "limits": [
-        "Not run; no application at bootstrap"
+        "F009 checks evidence-bound diagnostic selection, citation resolution and forged output refusal using a synthetic responder. Actual model diagnosis, governed recovery execution and full independent outcome verification remain open."
       ]
     },
     {
@@ -181,11 +184,12 @@
         "docs/qualification/evidence/F002-reconciliation.json",
         "docs/qualification/evidence/F003-signed-audit.json",
         "docs/qualification/evidence/F007-outbound-intents.json",
-        "docs/qualification/evidence/F008-versioned-workflows.json"
+        "docs/qualification/evidence/F008-versioned-workflows.json",
+        "docs/qualification/evidence/F009-assistance-controls.json"
       ],
       "failures": [],
       "limits": [
-        "Only narrow scoped custody/audit experiments passed; the complete journey remains open."
+        "F009 adds current-actor scoped assistance contexts, three forced-RLS tables, disclosure grants and revoked/stale denial. Complete isolation across all required product surfaces remains open."
       ]
     },
     {

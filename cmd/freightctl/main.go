@@ -32,7 +32,7 @@ func main() {
 }
 func run(args []string) error {
 	if len(args) == 0 || args[0] == "--help" || args[0] == "help" {
-		fmt.Println("freightctl: init | token | enroll | identity | namespace | dev-cert | serve | reconcile | audit-keygen | audit-export | ssh-host-keygen | ssh-key-enroll | ssh-key-revoke | serve-sftp | upload-create | upload-status | upload-append | upload-complete | upload-abort | delivery-create | delivery-status | delivery-approve | delivery-cancel | delivery-work | delivery-reconcile\nConnections: connection-register | connection-status | connection-revoke\nWorkflows: workflow-validate | workflow-draft | workflow-status | workflow-diff | workflow-approve | workflow-revoke | workflow-run | workflow-run-status | workflow-work | workflow-cancel\nRead docs/development.md. This is an unqualified local custody foundation.")
+		fmt.Println("freightctl: init | token | enroll | identity | namespace | dev-cert | serve | reconcile | audit-keygen | audit-export | ssh-host-keygen | ssh-key-enroll | ssh-key-revoke | serve-sftp | upload-create | upload-status | upload-append | upload-complete | upload-abort | delivery-create | delivery-status | delivery-approve | delivery-cancel | delivery-work | delivery-reconcile\nConnections: connection-register | connection-status | connection-revoke\nWorkflows: workflow-validate | workflow-draft | workflow-status | workflow-diff | workflow-approve | workflow-revoke | workflow-run | workflow-run-status | workflow-work | workflow-cancel\nAssistance: ai-profile-register | ai-profile-status | ai-profile-revoke | ai-propose | ai-diagnose | ai-status | ai-approve | ai-generate | ai-adopt\nRead docs/development.md. This is an unqualified local custody foundation.")
 		return nil
 	}
 	f := flag.NewFlagSet(args[0], flag.ContinueOnError)
@@ -75,6 +75,10 @@ func run(args []string) error {
 	resourceVersion := f.Int("version", 1, "exact workflow or connection version")
 	againstVersion := f.Int("against-version", 0, "previous workflow version to compare")
 	runID := f.String("run-id", "", "durable workflow run UUID")
+	aiProfileID := f.String("ai-profile-id", "", "explicit administrator-registered AI profile UUID")
+	aiJobID := f.String("ai-job-id", "", "scoped assistance context/job UUID")
+	contextHash := f.String("context-hash", "", "exact reviewed disclosure context SHA-256")
+	aiEnabled := f.Bool("ai-enabled", false, "opt in to requests to explicitly registered inference endpoints; disabled by default")
 	sshHost := f.String("ssh-host-key-file", ".private/ssh-host.key", "protected Ed25519 SSH host identity reference")
 	sshPublic := f.String("ssh-public-file", "", "public SSH key reference; host-keygen defaults to host reference plus .pub")
 	sshKeyID := f.String("ssh-key-id", "", "registered key UUID to revoke")
@@ -95,6 +99,8 @@ func run(args []string) error {
 	}
 	ctx := context.Background()
 	switch args[0] {
+	case "ai-profile-register", "ai-profile-status", "ai-profile-revoke", "ai-propose", "ai-diagnose", "ai-status", "ai-approve", "ai-generate", "ai-adopt":
+		return runAssistance(ctx, args[0], *dsn, *token, *tenant, *partner, *requestFile, *idempotencyKey, *aiProfileID, *aiJobID, *contextHash, *deliveryHash, *resourceVersion, *deliveryRevision, *aiEnabled)
 	case "connection-register", "connection-status", "connection-revoke", "workflow-validate", "workflow-draft", "workflow-status", "workflow-approve", "workflow-revoke", "workflow-run", "workflow-run-status", "workflow-work", "workflow-diff", "workflow-cancel":
 		return runWorkflow(ctx, args[0], *dsn, *token, *tenant, *partner, *storage, *requestFile, *idempotencyKey, *workflowID, *connectionID, *runID, *deliveryHash, *resourceVersion, *againstVersion, *deliveryRevision, *maxFile)
 	case "delivery-create", "delivery-status", "delivery-approve", "delivery-cancel", "delivery-work", "delivery-reconcile":
@@ -401,7 +407,7 @@ func run(args []string) error {
 		}
 		secret.Close()
 		audits := &audit.Service{DB: db, KeyFile: *auditKey, MaxEvents: *auditMaxEvents, MaxBytes: *auditMaxBytes}
-		server := &http.Server{Addr: *listen, Handler: api.New(&custody.Service{DB: db, Disk: disk, MaxFile: *maxFile, MaxStored: *maxStored, ReconcileMaxBytes: *reconcileBytes, NamespaceMaxEntries: *namespaceMax, UploadCheckpointBytes: *checkpointBytes}, audits), TLSConfig: secure.TLSConfig(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 90 * time.Second, WriteTimeout: 90 * time.Second, IdleTimeout: 30 * time.Second, MaxHeaderBytes: 16 * 1024}
+		server := &http.Server{Addr: *listen, Handler: api.New(&custody.Service{DB: db, Disk: disk, MaxFile: *maxFile, MaxStored: *maxStored, ReconcileMaxBytes: *reconcileBytes, NamespaceMaxEntries: *namespaceMax, UploadCheckpointBytes: *checkpointBytes}, audits, *aiEnabled), TLSConfig: secure.TLSConfig(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 90 * time.Second, WriteTimeout: 90 * time.Second, IdleTimeout: 30 * time.Second, MaxHeaderBytes: 16 * 1024}
 		stop, cancel := signal.NotifyContext(ctx, os.Interrupt, syscall.SIGTERM)
 		defer cancel()
 		go func() {

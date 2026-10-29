@@ -254,16 +254,43 @@ func (s *Service) Draft(ctx context.Context, scope store.Scope, key string, r Dr
 	if _, err = connections(ctx, t, d); err != nil {
 		return nil, err
 	}
-	data, hash, err := digest(d)
-	if err != nil {
-		return nil, err
-	}
 	_, meaning, _ := digest(struct {
 		Kind    string
 		Request DraftRequest
 	}{"draft_workflow", r})
 	if prior, err := replay(t, ctx, key, meaning); err != nil || prior != nil {
 		return prior, err
+	}
+	c, err := StageDraft(ctx, t, r)
+	if err != nil {
+		return nil, err
+	}
+	return result(t, ctx, key, meaning, c.ID, c)
+}
+
+// StageDraft participates in its caller's transaction. Model adoption receives
+// only draft creation, with exactly the same normalization and permission gates.
+// It never approves a definition, creates a run or executes an external effect.
+func StageDraft(ctx context.Context, t *store.Transaction, r DraftRequest) (*store.Configuration, error) {
+	if t.Root != "/" {
+		return nil, store.ErrForbidden
+	}
+	if err := t.Require("workflow_manage"); err != nil {
+		return nil, err
+	}
+	if r.ExpectedVersion < 0 || (r.ID != "" && (!store.ValidID(r.ID) || r.ExpectedVersion < 1)) || (r.ID == "" && r.ExpectedVersion != 0) {
+		return nil, ErrInput
+	}
+	d, err := Normalize(r.Definition)
+	if err != nil {
+		return nil, err
+	}
+	if _, err = connections(ctx, t, d); err != nil {
+		return nil, err
+	}
+	data, hash, err := digest(d)
+	if err != nil {
+		return nil, err
 	}
 	id := r.ID
 	if id == "" {
@@ -280,7 +307,7 @@ func (s *Service) Draft(ctx context.Context, scope store.Scope, key string, r Dr
 	if err = t.SaveConfiguration(ctx, false, c, 0); err != nil {
 		return nil, err
 	}
-	return result(t, ctx, key, meaning, id, c)
+	return c, nil
 }
 func (s *Service) Configuration(ctx context.Context, scope store.Scope, id string, version int) (*store.Configuration, error) {
 	t, err := s.begin(ctx, scope)

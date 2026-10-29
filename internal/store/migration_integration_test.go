@@ -184,7 +184,7 @@ func TestVersionOneUpgradePreservesReplayAndChecksums(t *testing.T) {
 		t.Fatal(err)
 	}
 	for _, grant := range identity.Permissions {
-		if grant == "deliver" || grant == "connections_manage" || strings.HasPrefix(grant, "workflow_") {
+		if grant == "deliver" || grant == "connections_manage" || strings.HasPrefix(grant, "workflow_") || strings.HasPrefix(grant, "ai_") {
 			t.Fatal("upgrade silently granted outbound authority")
 		}
 	}

@@ -4,7 +4,7 @@ This is a local development profile. It sends one accepted immutable file to a s
 
 ## Draft, review and approval
 
-Use a root-mounted service identity with `read`, `deliver`, `connections_manage` and `admin`. Migration 7 adds the two outbound grants. Newly provisioned development administrators receive all twelve grants; existing identities keep their exact previous grants. `admin` alone does not grant delivery. This initial operator path uses local CLI files. HTTP clients cannot submit private-key file references.
+Use a root-mounted service identity with `read`, `deliver`, `connections_manage` and `admin`. Migration 7 adds the two outbound grants. Newly provisioned development administrators receive all fifteen grants; existing identities keep their exact previous grants. `admin` alone does not grant delivery. This initial operator path uses local CLI files. HTTP clients cannot submit private-key file references.
 
 Create a bounded JSON request such as:
 

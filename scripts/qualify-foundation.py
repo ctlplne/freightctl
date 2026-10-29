@@ -20,18 +20,20 @@ starting_sources=source_hashes()
 commands=[
 ('records',['python3','scripts/check-records.py']),
 ('module-integrity',['sh','scripts/go.sh','mod','verify']),
-('vet',['sh','scripts/go.sh','vet','./...']),
-('unit-race',['sh','scripts/go.sh','test','-race','./...']),
-('postgres-integration-race',['sh','scripts/integration.sh','-race','-v']),
+('vet',['sh','scripts/go.sh','vet','-p','1','./...']),
+('unit-race',['sh','scripts/go.sh','test','-p','1','-race','./...']),
+('postgres-integration-race',['sh','scripts/integration.sh','-p','1','-race','-v']),
 ('virtual-path-fuzz',['sh','scripts/go.sh','test','./internal/vpath','-fuzz=FuzzCanonicalPath','-fuzztime=5s','-parallel=2']),
 ('sftp-packet-fuzz',['sh','scripts/go.sh','test','./internal/sftpd','-fuzz=FuzzInspectPacket','-fuzztime=5s','-parallel=2']),
 ('custody-name-fuzz',['sh','scripts/go.sh','test','./internal/custody','-fuzz=FuzzCustodyName','-fuzztime=5s','-parallel=2']),
 ('typed-workflow-fuzz',['sh','scripts/go.sh','test','./internal/workflow','-fuzz=FuzzTypedWorkflow','-fuzztime=5s','-parallel=2']),
+('untrusted-model-output-fuzz',['sh','scripts/go.sh','test','./internal/assistance','-fuzz=FuzzUntrustedModelOutput','-fuzztime=5s','-parallel=1']),
 ('stock-curl-https',['python3','scripts/qualify-https.py']),
 ('stock-openssh-sftp',['python3','scripts/qualify-sftp.py']),
 ('durable-upload-resume',['python3','scripts/qualify-uploads.py']),
 ('durable-outbound-delivery',['python3','scripts/qualify-deliveries.py']),
 ('versioned-workflow-execution',['python3','scripts/qualify-workflows.py']),
+('assistance-control-contract-no-inference',['python3','scripts/qualify-assistance.py']),
 ]
 results=[]
 for name,command in commands:

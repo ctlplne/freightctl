@@ -72,7 +72,7 @@ Call `workflow-work --run-id ID --idempotency-key DISPATCH_KEY` or `POST .../wor
 
 The dispatcher and direct delivery worker enforce the same runtime bindings. Every earlier step must have a persisted successful integrity receipt. The workflow must remain approved, every referenced connection version active, source access current and the frozen actor authority/storage identity unchanged. Workers repeat these checks at lease, stream and publication boundaries. Unknown task kinds cannot fall through to a shell or another executor.
 
-Run creation and execution need `workflow_execute`, `read` and `deliver`; they do not acquire those permissions from a definition or model response. Draft editing needs `workflow_manage`, and approval/revocation needs `workflow_approve`. This initial ownership model also requires root `/` and keeps all five new domain relations actor-private as well as tenant/partner scoped. Migration 8 does not add grants to existing accounts. New development bootstrap administrators default to twelve grants; delegated human lifecycle remains open.
+Run creation and execution need `workflow_execute`, `read` and `deliver`; they do not acquire those permissions from a definition or model response. Draft editing needs `workflow_manage`, and approval/revocation needs `workflow_approve`. This initial ownership model also requires root `/` and keeps all five new domain relations actor-private as well as tenant/partner scoped. Migration 8 does not add grants to existing accounts. New development bootstrap administrators default to fifteen grants; delegated human lifecycle remains open.
 
 ## Status and recovery
 
@@ -90,7 +90,7 @@ An uncertain first delivery blocks the second step. Use the existing read-only `
 
 `workflow-cancel --run-id ID --definition-hash WORKFLOW_HASH --expected-revision RUN_REV --idempotency-key CANCEL_KEY` cancels queued work and its remaining queued/retry intents atomically. It rejects live staging, publishing or ambiguous steps; stopping an active external action and resolving its outcome needs further work. Cancellation never erases a successful remote effect or uncertain receipt.
 
-No model is called by this executor. Existing typed execution has no inference dependency. This establishes ordinary execution of the current task type; it does not qualify model planning, diagnosis, outage behavior of a future model integration, or either required private model profile.
+[Assistance controls](assistance.md) can prepare a proposed draft without granting workflow approval. The endpoint client is disabled by default, and local model loads remain disallowed on this shared machine. No model is called by this executor. Existing typed execution has no inference dependency. This establishes ordinary execution of the current task type; it does not qualify model planning, diagnosis, outage behavior of a future model integration, or either required private model profile.
 
 ## HTTPS routes and evidence
 

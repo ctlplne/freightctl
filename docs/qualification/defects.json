@@ -357,6 +357,37 @@
       "regression_evidence": [
         "docs/qualification/evidence/F008-versioned-workflows.json"
       ]
+    },
+    {
+      "id": "D024",
+      "severity": "missing required capability",
+      "state": "fixed locally",
+      "observed_on": "2026-10-28",
+      "candidate": "4956fee2ca1460d0212980135e52230a5d81726b",
+      "journey": "J08",
+      "reproduction": "sh scripts/go.sh run ./cmd/freightctl ai-propose; no-inference native control contract in F009",
+      "first_failure": "freightctl: unknown command; use --help (exit 1)",
+      "cause": "There was no shared assistance context, disclosure, endpoint or draft-adoption control path.",
+      "resolution": "Add the disabled-by-default control path, strict output validation and draft-only adoption through ordinary workflow services. Synthetic protocol tests exercise the contract; real model quality and the complete journey remain open.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F009-assistance-controls.json"
+      ]
+    },
+    {
+      "id": "D025",
+      "severity": "incorrect client error status",
+      "state": "fixed locally",
+      "observed_on": "2026-10-28",
+      "candidate": "75cb4f4204a201ce5d5d6d6631e72d289c615d62",
+      "candidate_note": "Exact pre-fix dirty source and failure log retained in the F009 first-failure reference.",
+      "journey": "J08",
+      "reproduction": "sh scripts/go.sh test -p 1 ./internal/api -run TestMalformedAssistanceInputReportsClientError -count=1 -v; native malformed/duplicate/oversized curl requests",
+      "first_failure": "malformed input returned HTTP 503, want 400",
+      "cause": "Assistance used the shared strict workflow decoder but did not map its ErrInput to a client error.",
+      "resolution": "Map the shared decoder error to HTTP 400 without relaxing parsing or body limits. Original unit regression and native requests pass before any endpoint contact.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F009-assistance-controls.json"
+      ]
     }
   ]
 }

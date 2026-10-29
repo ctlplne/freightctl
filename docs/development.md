@@ -77,7 +77,7 @@ Migration 3 bounds journal kind and payload sizes in SQL, while the application 
 
 Client folder names are records in PostgreSQL. A name such as `/inbox/payroll.csv` points to an immutable custody file ID; it is never passed to the host filesystem. Create a different file revision to replace contents. Renaming a folder changes the index and appends events while leaving those bytes intact. Removal creates a tombstone; accepted bytes and publication history remain retained. Approved recovery and retention policies are still required.
 
-Enrollment supports `--permissions read,list` and `--namespace-root /inbox`. This mounts the existing partner folder `/inbox` as the account's `/`. Existing identities retain their previous grants. New development administrators receive the twelve grants listed below; explicitly select the minimum permissions for a restricted account. The development bootstrap is still an administrator operation. Identity creation/rotation through a delegated operator UI remains open.
+Enrollment supports `--permissions read,list` and `--namespace-root /inbox`. This mounts the existing partner folder `/inbox` as the account's `/`. Existing identities retain their previous grants. New development administrators receive the fifteen grants listed below; explicitly select the minimum permissions for a restricted account. The development bootstrap is still an administrator operation. Identity creation/rotation through a delegated operator UI remains open.
 
 | Permission | Effect |
 | --- | --- |
@@ -93,6 +93,9 @@ Enrollment supports `--permissions read,list` and `--namespace-root /inbox`. Thi
 | `workflow_manage` | Create and compare typed draft workflow versions using this actor's registered connection references. |
 | `workflow_approve` | Approve or revoke an exact workflow definition and state revision. |
 | `workflow_execute` | Create/dispatch/cancel authorized frozen runs; read and deliver grants remain separate. |
+| `ai_manage` | Register/revoke exact administrator-selected assistance profiles; admin grant also required. |
+| `ai_use` | Prepare/read authorized assistance contexts and request bounded generation when enabled. |
+| `ai_disclose` | Approve the exact context hash/state for disclosure; does not approve workflows. |
 
 Virtual modes use owner bits for the creating actor and group bits for other authorized actors in the same partner. They do not create host users or POSIX groups. Tenant/partner SQL policies still isolate a mode-0777 file. Setstat requires owner or admin authority; replacement requires write authority, parent search/write bits and the expected path revision. Current authority is checked again before commit. A changed account policy increments its authority revision, invalidating an in-flight operation that used the old policy.
 
@@ -131,3 +134,7 @@ Migration 4 adds namespace projections/history/command receipts, actor-scoped up
 ## Versioned workflow execution
 
 [Workflows and connections](workflows.md) document shared CLI/HTTPS typed validation, offline preview, draft/diff/approval, immutable registered connection versions, atomic run/intent creation, ordered dispatch and cancellation. Migration 8 adds five actor-private journal-backed relations and explicit workflow grants; existing account grants remain unchanged. Replays keep their selected step even after restart. The current executor has no model dependency; private AI, broader tasks, scheduling and full journeys remain open.
+
+## Assistance without local inference
+
+[Assistance controls](assistance.md) describe explicit context preparation/review, disclosure approval, a default-disabled bounded endpoint client, evidence validation and draft-only adoption. Migration 9 adds three actor-private journal-backed tables and three explicit grants; existing accounts keep their grants. Model runtime starts/loads/warmups/evaluations remain disallowed on this shared machine. The native contract responder is a tiny JSON fixture, not inference or an AI profile qualification.
