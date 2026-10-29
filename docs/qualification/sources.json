@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "baseline_version": "2026-10-28.1",
+  "baseline_version": "2026-10-29.1",
   "observed_on": "2026-10-28",
   "method": "Official public documents read; no incumbent installation or observed interoperability. Marketing omissions and unspecified versions remain open. Refresh before any comparison claim.",
   "sources": [
@@ -102,6 +102,62 @@
       "observed_on": "2026-10-28",
       "observation_kind": "documented capability only",
       "installation_observed": false
+    },
+    {
+      "id": "RFC3335",
+      "title": "AS1 protocol specification",
+      "product": "Protocol specification",
+      "edition": "Not an incumbent edition",
+      "version": "RFC 3335, September 2002",
+      "url": "https://www.rfc-editor.org/rfc/rfc3335.html",
+      "observed_on": "2026-10-29",
+      "observation_kind": "Specification only; no runtime or vendor interoperability",
+      "installation_observed": false
+    },
+    {
+      "id": "RFC4130",
+      "title": "AS2 protocol specification",
+      "product": "Protocol specification",
+      "edition": "Not an incumbent edition",
+      "version": "RFC 4130, July 2005",
+      "url": "https://www.rfc-editor.org/rfc/rfc4130.html",
+      "observed_on": "2026-10-29",
+      "observation_kind": "Specification only; no runtime or vendor interoperability",
+      "installation_observed": false
+    },
+    {
+      "id": "RFC4823",
+      "title": "AS3 protocol specification",
+      "product": "Protocol specification",
+      "edition": "Not an incumbent edition",
+      "version": "RFC 4823, April 2007; Informational",
+      "url": "https://www.rfc-editor.org/rfc/rfc4823.html",
+      "observed_on": "2026-10-29",
+      "observation_kind": "Specification only; no runtime or vendor interoperability",
+      "installation_observed": false
+    },
+    {
+      "id": "RFC5024",
+      "title": "OFTP2 protocol specification",
+      "product": "Protocol specification",
+      "edition": "Not an incumbent edition",
+      "version": "RFC 5024, November 2007; Informational",
+      "url": "https://www.rfc-editor.org/rfc/rfc5024.html",
+      "observed_on": "2026-10-29",
+      "observation_kind": "Specification only; no runtime or vendor interoperability",
+      "installation_observed": false
+    },
+    {
+      "id": "AS4-1.0",
+      "title": "AS4 protocol specification",
+      "product": "Protocol specification",
+      "edition": "Not an incumbent edition",
+      "version": "OASIS Standard version 1.0, 23 January 2013",
+      "url": "https://docs.oasis-open.org/ebxml-msg/ebms/v3.0/profiles/AS4-profile/v1.0/os/AS4-profile-v1.0-os.html",
+      "observed_on": "2026-10-29",
+      "observation_kind": "Specification only; no runtime or vendor interoperability",
+      "installation_observed": false
     }
-  ]
+  ],
+  "protocol_reviewed_on": "2026-10-29"
 }

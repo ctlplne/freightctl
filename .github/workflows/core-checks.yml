@@ -38,6 +38,8 @@ jobs:
           git ls-files -z '*.go' | xargs -0 gofmt -l > "$RUNNER_TEMP/freightctl-gofmt"
           cat "$RUNNER_TEMP/freightctl-gofmt"
           test ! -s "$RUNNER_TEMP/freightctl-gofmt"
+      - name: Qualification record refusal contracts
+        run: python3 scripts/test-records.py
       - name: Exact frontend dependencies and browser
         run: |
           npm --prefix web --cache "$GITHUB_WORKSPACE/.cache/freightctl-npm" ci --ignore-scripts --no-fund

@@ -1,0 +1,704 @@
+{
+  "schema_version": 1,
+  "baseline_version": "2026-10-29.1",
+  "reviewed_on": "2026-10-29",
+  "scope": "Acceptance contracts for the existing 13 AS1/AS2/AS3/AS4/OFTP2/PeSIT baseline rows. No runtime support, conformance, vendor comparison or whole journey is qualified.",
+  "normative_scope": "All applicable named-profile requirements remain mandatory. Listed cases are minimum acceptance cases, not a replacement for the full specification or GOAL.md.",
+  "cases": {
+    "C-SCOPE": {
+      "description": "Use two tenants and two partners; refuse unauthorized identities, file/path/receipt lookup, recovery and agent-tool access through every implemented surface.",
+      "source": "GOAL.md",
+      "state": "planned"
+    },
+    "C-DURABLE": {
+      "description": "Crash before and after acknowledged persistence. Reconcile bytes, immutable revision, event, intent and receipt; refuse partial, quarantined or unverified publication.",
+      "source": "GOAL.md",
+      "state": "planned"
+    },
+    "C-RETRY": {
+      "description": "Race identical operation identities, lose committed responses and restart. Preserve the original result without repeating business effects; refuse changed meaning.",
+      "source": "GOAL.md",
+      "state": "planned"
+    },
+    "C-AUTHORITY": {
+      "description": "Change credentials, destination/trust, approval and policy after review and while queued; recheck current authority and retain ambiguous outcomes.",
+      "source": "GOAL.md",
+      "state": "planned"
+    },
+    "C-BOUNDS": {
+      "description": "Fix and measure byte/header/part/depth, memory/temp-storage, admission, deadline, queue and retry limits before parsing adversarial or expanded input.",
+      "source": "GOAL.md",
+      "state": "planned"
+    },
+    "C-RECEIPT": {
+      "description": "Verify the strongest promised receipt against exact message/file/peer identities. A transport acknowledgment alone cannot establish downstream business acceptance.",
+      "source": "GOAL.md",
+      "state": "planned"
+    },
+    "C-PEER": {
+      "description": "Pin an independently implemented sender/receiver build and configuration; retain actual received bytes, checksums, native output, failures and reproducible steps.",
+      "source": "GOAL.md",
+      "state": "planned"
+    },
+    "C-SURFACES": {
+      "description": "Exercise the shared typed workflow and permissions through browser/API/CLI; replay ordinary transfer and recovery with AI disabled.",
+      "source": "GOAL.md",
+      "state": "planned"
+    },
+    "AS1-SECURITY": {
+      "description": "Verify signed/encrypted mail and the selected MIME/security combination with independent peer bytes; malformed or substituted content must not publish.",
+      "source": "GOAL.md plus named specification; freightctl minimum acceptance case",
+      "state": "planned"
+    },
+    "AS1-MDN": {
+      "description": "Correlate signed positive/negative receipts; test relay acceptance followed by missing, forged, delayed or duplicate receipts.",
+      "source": "GOAL.md plus named specification; freightctl minimum acceptance case",
+      "state": "planned"
+    },
+    "AS1-ROTATION": {
+      "description": "Rotate trust/credentials with queued mail and late receipts; preserve original receipt identity and visible uncertainty.",
+      "source": "GOAL.md plus named specification; freightctl minimum acceptance case",
+      "state": "planned"
+    },
+    "AS2-MDN": {
+      "description": "Verify signed/encrypted messages and sync/async signed MDNs against original identity, MIC and signer.",
+      "source": "GOAL.md plus named specification; freightctl minimum acceptance case",
+      "state": "planned"
+    },
+    "AS2-RETRY": {
+      "description": "Lose a committed reply; repeat identical content, Date and Message-ID. Recover its receipt; refuse changed-content ID reuse.",
+      "source": "GOAL.md plus named specification; freightctl minimum acceptance case",
+      "state": "planned"
+    },
+    "AS2-NEGATIVE": {
+      "description": "Refuse malformed messages, wrong bindings, negative MDNs and missing/late callbacks.",
+      "source": "GOAL.md plus named specification; freightctl minimum acceptance case",
+      "state": "planned"
+    },
+    "AS2-ROLLOVER": {
+      "description": "Test reviewed certificate rollover during retries/late callbacks, preserving original message/receipt identity.",
+      "source": "GOAL.md plus named specification; freightctl minimum acceptance case",
+      "state": "planned"
+    },
+    "AS3-MDN": {
+      "description": "Verify CMS/MIME and signed MDNs over the selected FTP carrier; correlate the exact original message and digest.",
+      "source": "GOAL.md plus named specification; freightctl minimum acceptance case",
+      "state": "planned"
+    },
+    "AS3-INTERRUPT": {
+      "description": "Interrupt file upload and receipt retrieval; stage complete bytes, recover the exact transfer and refuse changed-content ID reuse.",
+      "source": "GOAL.md plus named specification; freightctl minimum acceptance case",
+      "state": "planned"
+    },
+    "AS3-CARRIER": {
+      "description": "Test the selected FTP security, data channels and completion/rename contract independently; an ordinary FTP client alone cannot establish AS3 semantics.",
+      "source": "GOAL.md plus named specification; freightctl minimum acceptance case",
+      "state": "planned"
+    },
+    "AS4-ROLES": {
+      "description": "Test Push/Pull in all initiating/responding roles and enforce channel authority.",
+      "source": "GOAL.md plus named specification; freightctl minimum acceptance case",
+      "state": "planned"
+    },
+    "AS4-RECEIPTS": {
+      "description": "Test response/callback and bundled receipt handling against original signed message parts.",
+      "source": "GOAL.md plus named specification; freightctl minimum acceptance case",
+      "state": "planned"
+    },
+    "AS4-SECURITY": {
+      "description": "Refuse wrapping, changed attachments, forged receipts and unauthorized Pull before publication.",
+      "source": "GOAL.md plus named specification; freightctl minimum acceptance case",
+      "state": "planned"
+    },
+    "AS4-RECOVERY": {
+      "description": "Detect missing receipts; recover identical retries after reply loss and restart without changing signed digests.",
+      "source": "GOAL.md plus named specification; freightctl minimum acceptance case",
+      "state": "planned"
+    },
+    "OFTP2-SECURITY": {
+      "description": "Verify selected session authentication and signed/encrypted file profile with an independent peer; refuse invalid identities and modified bytes.",
+      "source": "GOAL.md plus named specification; freightctl minimum acceptance case",
+      "state": "planned"
+    },
+    "OFTP2-RESTART": {
+      "description": "Negotiate restart, interrupt transmission and resume exact immutable bytes; qualify record/offset semantics and reject changed source or unauthorized continuation.",
+      "source": "GOAL.md plus named specification; freightctl minimum acceptance case",
+      "state": "planned"
+    },
+    "OFTP2-RESPONSE": {
+      "description": "Correlate EERP/NERP to the exact file and origin/destination; validate required signed response. RTR alone cannot mark end-to-end delivery.",
+      "source": "GOAL.md plus named specification; freightctl minimum acceptance case",
+      "state": "planned"
+    },
+    "PESIT-CONTRACT": {
+      "description": "Select the exact permitted specification/version, security/receipt/restart profile and independent client/server before claiming support.",
+      "source": "GOAL.md plus named specification; freightctl minimum acceptance case",
+      "state": "planned"
+    },
+    "PESIT-EXCHANGE": {
+      "description": "After selection, independently verify send/receive, interruption/restart, integrity, duplicate identity and positive/negative response semantics.",
+      "source": "GOAL.md plus named specification; freightctl minimum acceptance case",
+      "state": "planned"
+    }
+  },
+  "profiles": [
+    {
+      "id": "PP-AS1",
+      "protocol": "AS1",
+      "specification": {
+        "selection": "pinned",
+        "source_ids": [
+          "RFC3335"
+        ],
+        "target": "SMTP with MIME security and signed disposition receipts; the exact CMS/OpenPGP profile remains to be selected."
+      },
+      "required_roles": [
+        "smtp-sender",
+        "smtp-receiver",
+        "mdn-sender",
+        "mdn-receiver"
+      ],
+      "parity_rows": {
+        "P-AS1-SEND": {
+          "required_cases": [
+            "C-SCOPE",
+            "C-DURABLE",
+            "C-RETRY",
+            "C-AUTHORITY",
+            "C-BOUNDS",
+            "C-RECEIPT",
+            "C-PEER",
+            "C-SURFACES",
+            "AS1-SECURITY",
+            "AS1-MDN",
+            "AS1-ROTATION"
+          ],
+          "required_roles": [
+            "smtp-sender",
+            "mdn-receiver"
+          ]
+        },
+        "P-AS1-RECEIVE": {
+          "required_cases": [
+            "C-SCOPE",
+            "C-DURABLE",
+            "C-RETRY",
+            "C-AUTHORITY",
+            "C-BOUNDS",
+            "C-RECEIPT",
+            "C-PEER",
+            "C-SURFACES",
+            "AS1-SECURITY",
+            "AS1-MDN",
+            "AS1-ROTATION"
+          ],
+          "required_roles": [
+            "smtp-receiver",
+            "mdn-sender"
+          ]
+        }
+      },
+      "prerequisites": [
+        {
+          "id": "security",
+          "state": "open",
+          "requirement": "Pin permitted algorithms, trust/rollover, exact cryptographic library boundary and private-operation custody; historical algorithms are not automatically enabled.",
+          "evidence": []
+        },
+        {
+          "id": "bounds",
+          "state": "open",
+          "requirement": "Pin numeric parser, stream, decompression, concurrency, memory/temp-storage, timeout and retry budgets for the actual deployment profile.",
+          "evidence": []
+        },
+        {
+          "id": "peer",
+          "state": "open",
+          "requirement": "Pin independent sender/receiver versions, artifact digests, lawful fixtures and exact interoperating configuration.",
+          "evidence": []
+        },
+        {
+          "id": "conformance",
+          "state": "open",
+          "requirement": "Resolve applicable normative dependency versions and map every applicable requirement to a test before any conformance claim.",
+          "evidence": []
+        }
+      ],
+      "remaining_profile_details": [
+        "Select mail relay, mailbox collection and security-mode interoperability; do not treat SMTP relay acceptance as recipient processing."
+      ],
+      "qualification": {}
+    },
+    {
+      "id": "PP-AS2",
+      "protocol": "AS2",
+      "specification": {
+        "selection": "pinned",
+        "source_ids": [
+          "RFC4130"
+        ],
+        "target": "HTTP MIME/CMS with synchronous and asynchronous signed MDNs."
+      },
+      "required_roles": [
+        "http-sender",
+        "http-receiver",
+        "sync-mdn",
+        "async-mdn"
+      ],
+      "parity_rows": {
+        "P-AS2-SEND": {
+          "required_cases": [
+            "C-SCOPE",
+            "C-DURABLE",
+            "C-RETRY",
+            "C-AUTHORITY",
+            "C-BOUNDS",
+            "C-RECEIPT",
+            "C-PEER",
+            "C-SURFACES",
+            "AS2-MDN",
+            "AS2-RETRY",
+            "AS2-NEGATIVE"
+          ],
+          "required_roles": [
+            "http-sender",
+            "sync-mdn",
+            "async-mdn"
+          ]
+        },
+        "P-AS2-RECEIVE": {
+          "required_cases": [
+            "C-SCOPE",
+            "C-DURABLE",
+            "C-RETRY",
+            "C-AUTHORITY",
+            "C-BOUNDS",
+            "C-RECEIPT",
+            "C-PEER",
+            "C-SURFACES",
+            "AS2-MDN",
+            "AS2-RETRY",
+            "AS2-NEGATIVE"
+          ],
+          "required_roles": [
+            "http-receiver",
+            "sync-mdn",
+            "async-mdn"
+          ]
+        },
+        "P-AS2-ROLLOVER": {
+          "required_cases": [
+            "C-SCOPE",
+            "C-DURABLE",
+            "C-RETRY",
+            "C-AUTHORITY",
+            "C-BOUNDS",
+            "C-RECEIPT",
+            "C-PEER",
+            "C-SURFACES",
+            "AS2-ROLLOVER",
+            "AS2-RETRY",
+            "AS2-NEGATIVE"
+          ],
+          "required_roles": [
+            "http-sender",
+            "http-receiver",
+            "async-mdn"
+          ]
+        }
+      },
+      "prerequisites": [
+        {
+          "id": "security",
+          "state": "open",
+          "requirement": "Pin permitted algorithms, trust/rollover, exact cryptographic library boundary and private-operation custody; historical algorithms are not automatically enabled.",
+          "evidence": []
+        },
+        {
+          "id": "bounds",
+          "state": "open",
+          "requirement": "Pin numeric parser, stream, decompression, concurrency, memory/temp-storage, timeout and retry budgets for the actual deployment profile.",
+          "evidence": []
+        },
+        {
+          "id": "peer",
+          "state": "open",
+          "requirement": "Pin independent sender/receiver versions, artifact digests, lawful fixtures and exact interoperating configuration.",
+          "evidence": []
+        },
+        {
+          "id": "conformance",
+          "state": "open",
+          "requirement": "Resolve applicable normative dependency versions and map every applicable requirement to a test before any conformance claim.",
+          "evidence": []
+        }
+      ],
+      "remaining_profile_details": [
+        "Pin CMS/HTTP/TLS algorithms, identifiers, callback authority and canonicalization/MIC rules."
+      ],
+      "qualification": {}
+    },
+    {
+      "id": "PP-AS3",
+      "protocol": "AS3",
+      "specification": {
+        "selection": "pinned",
+        "source_ids": [
+          "RFC4823"
+        ],
+        "target": "MIME/CMS messages and signed MDNs over FTP; the carrier security profile remains to be selected."
+      },
+      "required_roles": [
+        "ftp-message-sender",
+        "ftp-message-receiver",
+        "mdn-sender",
+        "mdn-receiver"
+      ],
+      "parity_rows": {
+        "P-AS3-SEND": {
+          "required_cases": [
+            "C-SCOPE",
+            "C-DURABLE",
+            "C-RETRY",
+            "C-AUTHORITY",
+            "C-BOUNDS",
+            "C-RECEIPT",
+            "C-PEER",
+            "C-SURFACES",
+            "AS3-MDN",
+            "AS3-INTERRUPT",
+            "AS3-CARRIER"
+          ],
+          "required_roles": [
+            "ftp-message-sender",
+            "mdn-receiver"
+          ]
+        },
+        "P-AS3-RECEIVE": {
+          "required_cases": [
+            "C-SCOPE",
+            "C-DURABLE",
+            "C-RETRY",
+            "C-AUTHORITY",
+            "C-BOUNDS",
+            "C-RECEIPT",
+            "C-PEER",
+            "C-SURFACES",
+            "AS3-MDN",
+            "AS3-INTERRUPT",
+            "AS3-CARRIER"
+          ],
+          "required_roles": [
+            "ftp-message-receiver",
+            "mdn-sender"
+          ]
+        }
+      },
+      "prerequisites": [
+        {
+          "id": "security",
+          "state": "open",
+          "requirement": "Pin permitted algorithms, trust/rollover, exact cryptographic library boundary and private-operation custody; historical algorithms are not automatically enabled.",
+          "evidence": []
+        },
+        {
+          "id": "bounds",
+          "state": "open",
+          "requirement": "Pin numeric parser, stream, decompression, concurrency, memory/temp-storage, timeout and retry budgets for the actual deployment profile.",
+          "evidence": []
+        },
+        {
+          "id": "peer",
+          "state": "open",
+          "requirement": "Pin independent sender/receiver versions, artifact digests, lawful fixtures and exact interoperating configuration.",
+          "evidence": []
+        },
+        {
+          "id": "conformance",
+          "state": "open",
+          "requirement": "Resolve applicable normative dependency versions and map every applicable requirement to a test before any conformance claim.",
+          "evidence": []
+        }
+      ],
+      "remaining_profile_details": [
+        "Pin FTP client/server push/pull mapping and secure transport before implementation; current SFTP evidence does not qualify this FTP carrier."
+      ],
+      "qualification": {}
+    },
+    {
+      "id": "PP-AS4",
+      "protocol": "AS4",
+      "specification": {
+        "selection": "pinned",
+        "source_ids": [
+          "AS4-1.0"
+        ],
+        "target": "AS4 ebHandler version 1.0. Identifier: http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/cprofiles/200809/as4ebhandler."
+      },
+      "required_roles": [
+        "push-initiator",
+        "push-responder",
+        "pull-initiator",
+        "pull-responder",
+        "receipt-response",
+        "receipt-callback",
+        "receive-bundled-receipt",
+        "pull-channel-authorization"
+      ],
+      "parity_rows": {
+        "P-AS4-SEND": {
+          "required_cases": [
+            "C-SCOPE",
+            "C-DURABLE",
+            "C-RETRY",
+            "C-AUTHORITY",
+            "C-BOUNDS",
+            "C-RECEIPT",
+            "C-PEER",
+            "C-SURFACES",
+            "AS4-ROLES",
+            "AS4-RECEIPTS",
+            "AS4-SECURITY",
+            "AS4-RECOVERY"
+          ],
+          "required_roles": [
+            "push-initiator",
+            "pull-responder",
+            "receipt-response",
+            "receipt-callback",
+            "receive-bundled-receipt",
+            "pull-channel-authorization"
+          ]
+        },
+        "P-AS4-RECEIVE": {
+          "required_cases": [
+            "C-SCOPE",
+            "C-DURABLE",
+            "C-RETRY",
+            "C-AUTHORITY",
+            "C-BOUNDS",
+            "C-RECEIPT",
+            "C-PEER",
+            "C-SURFACES",
+            "AS4-ROLES",
+            "AS4-RECEIPTS",
+            "AS4-SECURITY",
+            "AS4-RECOVERY"
+          ],
+          "required_roles": [
+            "push-responder",
+            "pull-initiator",
+            "receipt-response",
+            "receipt-callback",
+            "pull-channel-authorization"
+          ]
+        }
+      },
+      "prerequisites": [
+        {
+          "id": "security",
+          "state": "open",
+          "requirement": "Pin permitted algorithms, trust/rollover, exact cryptographic library boundary and private-operation custody; historical algorithms are not automatically enabled.",
+          "evidence": []
+        },
+        {
+          "id": "bounds",
+          "state": "open",
+          "requirement": "Pin numeric parser, stream, decompression, concurrency, memory/temp-storage, timeout and retry budgets for the actual deployment profile.",
+          "evidence": []
+        },
+        {
+          "id": "peer",
+          "state": "open",
+          "requirement": "Pin independent sender/receiver versions, artifact digests, lawful fixtures and exact interoperating configuration.",
+          "evidence": []
+        },
+        {
+          "id": "conformance",
+          "state": "open",
+          "requirement": "Resolve applicable normative dependency versions and map every applicable requirement to a test before any conformance claim.",
+          "evidence": []
+        }
+      ],
+      "remaining_profile_details": [
+        "All applicable normative clauses remain required. Pin P-Modes, security and peer versions; map the complete dependency closure before claiming conformance.",
+        "Additional baseline-required vendor/business profiles stay open."
+      ],
+      "qualification": {}
+    },
+    {
+      "id": "PP-OFTP2",
+      "protocol": "OFTP2",
+      "specification": {
+        "selection": "pinned",
+        "source_ids": [
+          "RFC5024"
+        ],
+        "target": "OFTP version 2, initial TCP/IP secure-session and file-security target with negotiated restart and EERP/NERP."
+      },
+      "required_roles": [
+        "initiator",
+        "responder",
+        "file-sender",
+        "file-receiver",
+        "eerp",
+        "nerp"
+      ],
+      "parity_rows": {
+        "P-OFTP2-SEND": {
+          "required_cases": [
+            "C-SCOPE",
+            "C-DURABLE",
+            "C-RETRY",
+            "C-AUTHORITY",
+            "C-BOUNDS",
+            "C-RECEIPT",
+            "C-PEER",
+            "C-SURFACES",
+            "OFTP2-SECURITY",
+            "OFTP2-RESTART",
+            "OFTP2-RESPONSE"
+          ],
+          "required_roles": [
+            "initiator",
+            "responder",
+            "file-sender",
+            "eerp",
+            "nerp"
+          ]
+        },
+        "P-OFTP2-RECEIVE": {
+          "required_cases": [
+            "C-SCOPE",
+            "C-DURABLE",
+            "C-RETRY",
+            "C-AUTHORITY",
+            "C-BOUNDS",
+            "C-RECEIPT",
+            "C-PEER",
+            "C-SURFACES",
+            "OFTP2-SECURITY",
+            "OFTP2-RESTART",
+            "OFTP2-RESPONSE"
+          ],
+          "required_roles": [
+            "initiator",
+            "responder",
+            "file-receiver",
+            "eerp",
+            "nerp"
+          ]
+        }
+      },
+      "prerequisites": [
+        {
+          "id": "security",
+          "state": "open",
+          "requirement": "Pin permitted algorithms, trust/rollover, exact cryptographic library boundary and private-operation custody; historical algorithms are not automatically enabled.",
+          "evidence": []
+        },
+        {
+          "id": "bounds",
+          "state": "open",
+          "requirement": "Pin numeric parser, stream, decompression, concurrency, memory/temp-storage, timeout and retry budgets for the actual deployment profile.",
+          "evidence": []
+        },
+        {
+          "id": "peer",
+          "state": "open",
+          "requirement": "Pin independent sender/receiver versions, artifact digests, lawful fixtures and exact interoperating configuration.",
+          "evidence": []
+        },
+        {
+          "id": "conformance",
+          "state": "open",
+          "requirement": "Resolve applicable normative dependency versions and map every applicable requirement to a test before any conformance claim.",
+          "evidence": []
+        }
+      ],
+      "remaining_profile_details": [
+        "Pin virtual-file records, security algorithms, restart and certificate profile with a real peer. Native legacy network/VAN requirements remain open wherever the baseline or GOAL requires them."
+      ],
+      "qualification": {}
+    },
+    {
+      "id": "PP-PESIT",
+      "protocol": "PESIT",
+      "specification": {
+        "selection": "open",
+        "source_ids": [],
+        "target": "Exact permitted PeSIT specification/version and interoperability profile remain unselected."
+      },
+      "required_roles": [
+        "client",
+        "server"
+      ],
+      "parity_rows": {
+        "P-PESIT-SEND": {
+          "required_cases": [
+            "C-SCOPE",
+            "C-DURABLE",
+            "C-RETRY",
+            "C-AUTHORITY",
+            "C-BOUNDS",
+            "C-RECEIPT",
+            "C-PEER",
+            "C-SURFACES",
+            "PESIT-CONTRACT",
+            "PESIT-EXCHANGE"
+          ],
+          "required_roles": [
+            "client"
+          ]
+        },
+        "P-PESIT-RECEIVE": {
+          "required_cases": [
+            "C-SCOPE",
+            "C-DURABLE",
+            "C-RETRY",
+            "C-AUTHORITY",
+            "C-BOUNDS",
+            "C-RECEIPT",
+            "C-PEER",
+            "C-SURFACES",
+            "PESIT-CONTRACT",
+            "PESIT-EXCHANGE"
+          ],
+          "required_roles": [
+            "server"
+          ]
+        }
+      },
+      "prerequisites": [
+        {
+          "id": "security",
+          "state": "open",
+          "requirement": "Pin permitted algorithms, trust/rollover, exact cryptographic library boundary and private-operation custody; historical algorithms are not automatically enabled.",
+          "evidence": []
+        },
+        {
+          "id": "bounds",
+          "state": "open",
+          "requirement": "Pin numeric parser, stream, decompression, concurrency, memory/temp-storage, timeout and retry budgets for the actual deployment profile.",
+          "evidence": []
+        },
+        {
+          "id": "peer",
+          "state": "open",
+          "requirement": "Pin independent sender/receiver versions, artifact digests, lawful fixtures and exact interoperating configuration.",
+          "evidence": []
+        },
+        {
+          "id": "conformance",
+          "state": "open",
+          "requirement": "Resolve applicable normative dependency versions and map every applicable requirement to a test before any conformance claim.",
+          "evidence": []
+        }
+      ],
+      "remaining_profile_details": [
+        "No missing specification or unavailable peer excludes the committed send/receive rows. Resolve the actual permitted profile and exact peer; do not infer that a public specification is unavailable."
+      ],
+      "qualification": {}
+    }
+  ]
+}

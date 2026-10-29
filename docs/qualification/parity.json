@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "baseline_version": "2026-10-28.1",
+  "baseline_version": "2026-10-29.1",
   "starting_commit": null,
   "scope": "Initial finite documented baseline plus freightctl acceptance conditions. Exact licensed edition, protocol profile and native comparisons stay open. GOAL.md remains the complete contract; this inventory cannot narrow it.",
   "states": [
@@ -547,7 +547,8 @@
       "evidence": [],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
-      ]
+      ],
+      "protocol_profile": "PP-AS2"
     },
     {
       "id": "P-AS2-RECEIVE",
@@ -562,7 +563,7 @@
         "documented_behavior": "AS2",
         "hands_on_evidence": []
       },
-      "freightctl_behavior": "Receive signature/encryption, reject bad MIC and duplicates, issue correlated positive or negative MDN.",
+      "freightctl_behavior": "Receive and verify signature/encryption; recover the original MDN for identical retries, refuse changed-content Message-ID reuse, and issue correlated positive/negative MDNs.",
       "surfaces": [
         "protocol",
         "API",
@@ -585,7 +586,8 @@
       "evidence": [],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
-      ]
+      ],
+      "protocol_profile": "PP-AS2"
     },
     {
       "id": "P-AS2-ROLLOVER",
@@ -623,7 +625,8 @@
       "evidence": [],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
-      ]
+      ],
+      "protocol_profile": "PP-AS2"
     },
     {
       "id": "P-AS3-SEND",
@@ -661,7 +664,8 @@
       "evidence": [],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
-      ]
+      ],
+      "protocol_profile": "PP-AS3"
     },
     {
       "id": "P-AS3-RECEIVE",
@@ -699,7 +703,8 @@
       "evidence": [],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
-      ]
+      ],
+      "protocol_profile": "PP-AS3"
     },
     {
       "id": "P-AS4-SEND",
@@ -714,7 +719,7 @@
         "documented_behavior": "AS4",
         "hands_on_evidence": []
       },
-      "freightctl_behavior": "Select ebMS3/AS4 profile and peer; implement security, acknowledgments and bounded retry.",
+      "freightctl_behavior": "AS4 ebHandler sending through Push initiation/Pull response, correlated signed receipts, reception awareness and bounded retry.",
       "surfaces": [
         "protocol",
         "API",
@@ -737,7 +742,8 @@
       "evidence": [],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
-      ]
+      ],
+      "protocol_profile": "PP-AS4"
     },
     {
       "id": "P-AS4-RECEIVE",
@@ -752,7 +758,7 @@
         "documented_behavior": "AS4",
         "hands_on_evidence": []
       },
-      "freightctl_behavior": "Select profile; verify message security, reject replay and produce correlated receipts.",
+      "freightctl_behavior": "AS4 ebHandler receiving through Push response/Pull initiation, current channel authority, exact retry recovery and correlated receipts.",
       "surfaces": [
         "protocol",
         "API",
@@ -775,7 +781,8 @@
       "evidence": [],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
-      ]
+      ],
+      "protocol_profile": "PP-AS4"
     },
     {
       "id": "P-PESIT-SEND",
@@ -813,7 +820,8 @@
       "evidence": [],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
-      ]
+      ],
+      "protocol_profile": "PP-PESIT"
     },
     {
       "id": "P-PESIT-RECEIVE",
@@ -851,7 +859,8 @@
       "evidence": [],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
-      ]
+      ],
+      "protocol_profile": "PP-PESIT"
     },
     {
       "id": "P-MQ",
@@ -2005,7 +2014,8 @@
       "evidence": [],
       "qualification_blockers": [
         "Authorized MOVEit Automation installation and exact edition/version for observed comparison"
-      ]
+      ],
+      "protocol_profile": "PP-AS1"
     },
     {
       "id": "P-AS1-RECEIVE",
@@ -2043,7 +2053,8 @@
       "evidence": [],
       "qualification_blockers": [
         "Authorized MOVEit Automation installation and exact edition/version for observed comparison"
-      ]
+      ],
+      "protocol_profile": "PP-AS1"
     },
     {
       "id": "C-S3",
@@ -2542,7 +2553,8 @@
       "evidence": [],
       "qualification_blockers": [
         "Authorized JSCAPE by Redwood installation and exact edition/version for observed comparison"
-      ]
+      ],
+      "protocol_profile": "PP-OFTP2"
     },
     {
       "id": "P-OFTP2-RECEIVE",
@@ -2580,7 +2592,8 @@
       "evidence": [],
       "qualification_blockers": [
         "Authorized JSCAPE by Redwood installation and exact edition/version for observed comparison"
-      ]
+      ],
+      "protocol_profile": "PP-OFTP2"
     },
     {
       "id": "E-GATEWAY",
@@ -3283,5 +3296,14 @@
       ]
     }
   ],
-  "starting_state": "Owner-requested repository recreation; implementation retained. See STATUS.md; previous history is retained only in the ignored recovery copy."
+  "starting_state": "Owner-requested repository recreation; implementation retained. See STATUS.md; previous history is retained only in the ignored recovery copy.",
+  "revisions": [
+    {
+      "version": "2026-10-29.1",
+      "previous_version": "2026-10-28.1",
+      "observed_on": "2026-10-29",
+      "change": "Pin protocol specification/profile contracts for 13 existing rows; clarify exact AS2 retry recovery and required AS4 ebHandler roles. All 83 row IDs, states and incumbent observations are preserved.",
+      "scope_changed": false
+    }
+  ]
 }

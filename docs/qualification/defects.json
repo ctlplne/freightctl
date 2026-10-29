@@ -809,6 +809,21 @@
       "regression_evidence": [
         "docs/qualification/evidence/F020-tenant-partner-enrollment.json"
       ]
+    },
+    {
+      "id": "D053",
+      "severity": "qualification bookkeeping gap",
+      "state": "fixed locally",
+      "observed_on": "2026-10-29",
+      "candidate": "7db4caf177778272fcaa5c56d8830525fd420260",
+      "journey": "J02",
+      "reproduction": "The old record checker accepts an existing AS4 row carrying an unresolved named protocol profile. Existing AS2 duplicate wording and unnamed AS4 conformance roles also leave acceptance ambiguous.",
+      "first_failure": "The retained checker exits zero and prints valid references for PP-NOT-PINNED. This is a metadata rejection gap, not a runtime protocol result.",
+      "cause": "No structured protocol-profile register, role/case mappings or profile readiness/evidence checks existed.",
+      "resolution": "Version the existing baseline without removing rows; pin specification/profile contracts, exact AS2 receipt retry and AS4 Push/Pull requirements; enforce profile/case/role/prerequisite/evidence joins and add 15 lightweight refusal tests. All protocol rows remain planned and runtime qualification remains required.",
+      "regression_evidence": [
+        "docs/qualification/evidence/Q001-protocol-contracts.json"
+      ]
     }
   ]
 }
