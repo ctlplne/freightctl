@@ -1368,10 +1368,12 @@
         "docs/qualification/evidence/F005-sftp-exchange.json",
         "docs/qualification/evidence/F006-upload-checkpoints.json",
         "docs/qualification/evidence/F009-assistance-controls.json",
-        "docs/qualification/evidence/F010-held-intake.json"
+        "docs/qualification/evidence/F010-held-intake.json",
+        "docs/qualification/evidence/F020-tenant-partner-enrollment.json"
       ],
       "qualification_blockers": [
-        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison",
+        "F020 adds assisted explicit tenant directory authority and ordinary partner/admin enrollment with native transfer, exact receipt recovery and scope/refusal evidence. Full contacts/checklists, invitations/providers, delegation, environment/lifecycle/activation and independent qualification remain open."
       ],
       "current_limit": "F010 adds configured held intake across HTTPS/SFTP/resume, exact CSV contracts, current hash/revision-bound release and actor/tenant/partner gates. No antivirus/signature/encryption, other-format/processing breadth, delegated UI, full journey, native/enterprise peer or production qualification is implied."
     },
@@ -1539,11 +1541,13 @@
       "evidence": [
         "docs/qualification/evidence/F014-browser-exchange.json",
         "docs/qualification/evidence/F018-browser-worker-recovery.json",
-        "docs/qualification/evidence/F019-first-run-enrollment.json"
+        "docs/qualification/evidence/F019-first-run-enrollment.json",
+        "docs/qualification/evidence/F020-tenant-partner-enrollment.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison",
-        "F019 adds assisted one-time first tenant/partner/admin setup and a browser workspace reference. Full partner lifecycle, invitations/providers/delegation, production activation and independent onboarding remain open."
+        "F019 adds assisted one-time first tenant/partner/admin setup and a browser workspace reference. Full partner lifecycle, invitations/providers/delegation, production activation and independent onboarding remain open.",
+        "F020 adds assisted explicit tenant directory authority and ordinary partner/admin enrollment with native transfer, exact receipt recovery and scope/refusal evidence. Full contacts/checklists, invitations/providers, delegation, environment/lifecycle/activation and independent qualification remain open."
       ],
       "current_limit": "F014 adds an embedded typed enrolled-account browser workspace, short-lived exact-account sessions, durable single-file pause/reload/restart/resume, current held checks, separate exact report/revision release and native streaming download. Assisted macOS Chromium, real PostgreSQL/storage, selected accessibility and independent stock-curl byte checks pass. Complete clean-install/partner onboarding, SSO/MFA, invitations/shares/forms/mail, delegated review, batches, full browser/platform/adoption and production remain open. Genuine scanner and fresh independent signature qualification remain open; full journeys are unqualified. F018 adds assisted real worker death and conditional browser/API/CLI recovery after the unchanged lease expires, stable lost-response replay, separate release and native/stock-curl byte verification. Native signed/scanner recovery, governed re-scan/rebind and independent operation remain open."
     },
@@ -3229,13 +3233,15 @@
       "evidence": [
         "docs/qualification/evidence/F016-account-lifecycle.json",
         "docs/qualification/evidence/F017-signed-browser-recovery.json",
-        "docs/qualification/evidence/F019-first-run-enrollment.json"
+        "docs/qualification/evidence/F019-first-run-enrollment.json",
+        "docs/qualification/evidence/F020-tenant-partner-enrollment.json"
       ],
       "qualification_blockers": [
         "Authorized IBM Sterling File Gateway installation and exact edition/version for observed comparison",
         "F016 covers assisted scoped account lifecycle only. First-admin/partner setup, invitations/providers, self-service SSH key overlap, delegated trust review and independent onboarding remain open.",
         "F017 adds assisted signed browser review and completed-operation receipt recovery; complete partner setup, invitations/providers, delegation and independent onboarding remain open.",
-        "F019 adds assisted one-time first tenant/partner/admin setup and a browser workspace reference. Full partner lifecycle, invitations/providers/delegation, production activation and independent onboarding remain open."
+        "F019 adds assisted one-time first tenant/partner/admin setup and a browser workspace reference. Full partner lifecycle, invitations/providers/delegation, production activation and independent onboarding remain open.",
+        "F020 adds assisted explicit tenant directory authority and ordinary partner/admin enrollment with native transfer, exact receipt recovery and scope/refusal evidence. Full contacts/checklists, invitations/providers, delegation, environment/lifecycle/activation and independent qualification remain open."
       ]
     },
     {

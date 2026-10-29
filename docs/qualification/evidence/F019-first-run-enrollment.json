@@ -765,7 +765,9 @@
         "sha256": "2c073e165197d5ad85b6d87070b0833a362be6f295623ff1f863bea5b38b4eeb"
       }
     ],
-    "native_setup_binary_sha256": "6343529181307b0e19d3141005ce4ccf175949e1287fcbe974a9b7103a05176d"
+    "native_setup_binary_sha256": "6343529181307b0e19d3141005ce4ccf175949e1287fcbe974a9b7103a05176d",
+    "committed_source": "f5f9767debb2e460adeed851256d47c10807a325",
+    "committed_source_git_blob_matches": 188
   },
   "environment": {
     "platform": "native macOS 27.2 build 26B5086k arm64",

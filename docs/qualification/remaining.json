@@ -41,7 +41,8 @@
         "docs/qualification/evidence/F014-browser-exchange.json",
         "docs/qualification/evidence/F016-account-lifecycle.json",
         "docs/qualification/evidence/F018-browser-worker-recovery.json",
-        "docs/qualification/evidence/F019-first-run-enrollment.json"
+        "docs/qualification/evidence/F019-first-run-enrollment.json",
+        "docs/qualification/evidence/F020-tenant-partner-enrollment.json"
       ],
       "remaining_details": [
         "F006 adds immutable checkpoints, exact receipts and persistent storage/parent/authority binding. Finish approved cleanup/recovery/rebinding, scalable reservations/fairness, protected retention, journal chaining/rebuild, larger exports and remaining crash/commit boundaries.",
@@ -55,7 +56,8 @@
         "D043 retains an intermittent custody fuzz context deadline from the first F016 aggregate. The original unchanged gate passes in the final full run; timing cause and endurance diagnosis remain open.",
         "F018 adds conditional recovery receipts/events through the existing atomic bounded worker claim. Original lease/fencing/attempt limits and all 35 forced-RLS relations remain unchanged. Reconstruction, retention, protected cleanup, governed re-scan/rebind and restore remain open.",
         "D049 retains the first F019 aggregate scanner/cancellation timing failures. Original committed baseline and unchanged candidate pass later focused original assertions; timing cause remains unassigned. Do not relax scanner, expiry, cancellation, durability or isolation gates.",
-        "F019 adds protected one-time first tenant/partner/admin setup with exact receipt replay, migration 17 and 36 forced-RLS relations, plus browser ID import and an assisted real first exchange/restart. It does not complete general partner lifecycle, invitations/providers/delegation, emergency access, disconnected packaging, production/native platforms or independent operator adoption."
+        "F019 adds protected one-time first tenant/partner/admin setup with exact receipt replay, migration 17 and 36 forced-RLS relations, plus browser ID import and an assisted real first exchange/restart. It does not complete general partner lifecycle, invitations/providers/delegation, emergency access, disconnected packaging, production/native platforms or independent operator adoption.",
+        "F020 adds explicitly authorized credential-bound tenant directory authority, ordinary browser/API/CLI partner/admin enrollment, exact reviewed revisions/receipt replay, atomic source/target events and migration 18 with 39 forced-RLS relations. No existing/new account inherits tenant authority. Full contacts/checklists, invitations/providers/delegation, environment promotion/suspension, queued-work lifecycle and independent onboarding remain open."
       ]
     },
     {
@@ -79,7 +81,8 @@
         "docs/qualification/evidence/F016-account-lifecycle.json",
         "docs/qualification/evidence/F017-signed-browser-recovery.json",
         "docs/qualification/evidence/F018-browser-worker-recovery.json",
-        "docs/qualification/evidence/F019-first-run-enrollment.json"
+        "docs/qualification/evidence/F019-first-run-enrollment.json",
+        "docs/qualification/evidence/F020-tenant-partner-enrollment.json"
       ],
       "remaining_details": [
         "F005/F006 verify bounded inbound and durable ticket resume. F007 adds a local-only approved outbound SFTP profile against a stock receiver. Finish ordinary-operator onboarding, API/browser parity, production network policy, broader protocols/clients/enterprise peers, larger files and independent business receipts. No complete journey is qualified.",
@@ -87,7 +90,8 @@
         "F016 adds ordinary scoped account management through browser/API/CLI, plus stock curl acceptance/refusal after credential rotation/revocation. Assisted local account lifecycle does not close clean installation, partner setup, SSH-expiry interoperability, broad native clients, independent operator adoption or business receipts.",
         "F017 adds a current signed-browser exchange: durable pause/reload/restart/resume, independently generated signature attachment, exact review, explicit release and native/stock-curl downloads independently verified by GnuPG. Same-host assistance is not clean installation, full onboarding, production network/platform or downstream business receipt qualification.",
         "F018 adds actual check-worker death, unchanged lease expiry, browser/API/CLI conditional recovery, separate release and exact native/stock-curl retrieval. This CSV-only assisted exercise does not close complete secure exchange, signed/scanner recovery, independent operators or business receipt scope.",
-        "F019 adds protected one-time first tenant/partner/admin setup with exact receipt replay, migration 17 and 36 forced-RLS relations, plus browser ID import and an assisted real first exchange/restart. It does not complete general partner lifecycle, invitations/providers/delegation, emergency access, disconnected packaging, production/native platforms or independent operator adoption."
+        "F019 adds protected one-time first tenant/partner/admin setup with exact receipt replay, migration 17 and 36 forced-RLS relations, plus browser ID import and an assisted real first exchange/restart. It does not complete general partner lifecycle, invitations/providers/delegation, emergency access, disconnected packaging, production/native platforms or independent operator adoption.",
+        "F020 adds explicitly authorized credential-bound tenant directory authority, ordinary browser/API/CLI partner/admin enrollment, exact reviewed revisions/receipt replay, atomic source/target events and migration 18 with 39 forced-RLS relations. No existing/new account inherits tenant authority. Full contacts/checklists, invitations/providers/delegation, environment promotion/suspension, queued-work lifecycle and independent onboarding remain open."
       ]
     },
     {
@@ -154,14 +158,16 @@
         "docs/qualification/evidence/F016-account-lifecycle.json",
         "docs/qualification/evidence/F017-signed-browser-recovery.json",
         "docs/qualification/evidence/F018-browser-worker-recovery.json",
-        "docs/qualification/evidence/F019-first-run-enrollment.json"
+        "docs/qualification/evidence/F019-first-run-enrollment.json",
+        "docs/qualification/evidence/F020-tenant-partner-enrollment.json"
       ],
       "remaining_details": [
         "F014 implements a typed embedded browser workspace, short-lived session/CSRF/logout controls, private ticket discovery, durable single-file pause/reload/restart/resume, held checks, separate release and native streaming download. Assisted Chromium, selected accessibility scans and byte comparison pass. First-admin/partner onboarding, invitations, SSO/MFA/recovery, delegated administration, batches, sharing/forms/mail, complete accessibility and independent adoption remain open.",
         "F016 adds an Accounts workspace with review bound to the target revision, browser-generated credential download before proof-only enrollment, policy updates, rotation, expiry/revocation and paginated status. First-admin/partner creation, invitations, SSO/MFA/recovery, delegated administration, batch/sharing/forms/mail and complete accessibility/adoption remain open.",
         "F017 adds bounded typed signer evidence in the check/release UI, preserved frozen release review and stable check/release operation identities after lost committed responses. Native wrong-signer/changed-data/malformed/oversize and signer-revocation paths pass. Full browser/accessibility coverage, first-admin/partner setup, invitations/providers, sharing/forms/batches and independent adoption remain open.",
         "F018 adds server-observed reservation status, explicit expired-check review, stable lost-response recovery, actor isolation and bounded attempt feedback. First-admin/partner/provider onboarding, sharing/batches/forms, complete accessibility and independent adoption remain open.",
-        "F019 adds protected one-time first tenant/partner/admin setup with exact receipt replay, migration 17 and 36 forced-RLS relations, plus browser ID import and an assisted real first exchange/restart. It does not complete general partner lifecycle, invitations/providers/delegation, emergency access, disconnected packaging, production/native platforms or independent operator adoption."
+        "F019 adds protected one-time first tenant/partner/admin setup with exact receipt replay, migration 17 and 36 forced-RLS relations, plus browser ID import and an assisted real first exchange/restart. It does not complete general partner lifecycle, invitations/providers/delegation, emergency access, disconnected packaging, production/native platforms or independent operator adoption.",
+        "F020 adds explicitly authorized credential-bound tenant directory authority, ordinary browser/API/CLI partner/admin enrollment, exact reviewed revisions/receipt replay, atomic source/target events and migration 18 with 39 forced-RLS relations. No existing/new account inherits tenant authority. Full contacts/checklists, invitations/providers/delegation, environment promotion/suspension, queued-work lifecycle and independent onboarding remain open."
       ]
     },
     {
@@ -228,7 +234,8 @@
         "docs/qualification/evidence/F014-browser-exchange.json",
         "docs/qualification/evidence/F016-account-lifecycle.json",
         "docs/qualification/evidence/F017-signed-browser-recovery.json",
-        "docs/qualification/evidence/F019-first-run-enrollment.json"
+        "docs/qualification/evidence/F019-first-run-enrollment.json",
+        "docs/qualification/evidence/F020-tenant-partner-enrollment.json"
       ],
       "remaining_details": [
         "Current account/key/mount and destination/parent checks gate transfer mutations. Complete delegated lifecycle, policy reapproval/rebinding, human identity/MFA/providers, complete denial/session auditing, approval UI and governance remain open.",
@@ -240,7 +247,8 @@
         "F014 binds short-lived browser sessions to the exact parent credential, current mount/authority and absolute expiry, with tenant/partner/actor isolation and durable logout receipts. Session creation/receipt failures roll back atomically; logout/key replay cannot revive authority or revoke a different session. Human enrollment, SSO/MFA/providers, delegated approvals and full lifecycle governance remain open.",
         "F016 implements root-scoped admin+accounts_manage authority, grant-subset/target protections, optimistic account revisions, atomic exact receipts and security-change session invalidation. Label-only changes preserve file authority; expiry affects ordinary authentication and bounds browser lifetime. Bootstrap is still administrative; providers, key self-service/overlap, delegated approvals, governed rebind, reconstruction and full lifecycle qualification remain open.",
         "F017 exposes full verified primary/signing fingerprints, registered key version/hash, signature hash/format and recorded verification window. Runtime trust/expiry/access rechecks still decide release/retrieval. Native revocation denies cached browser retrieval; delegated trust administration, private custody, self-service key overlap and complete provider/lifecycle governance remain open.",
-        "F019 adds protected one-time first tenant/partner/admin setup with exact receipt replay, migration 17 and 36 forced-RLS relations, plus browser ID import and an assisted real first exchange/restart. It does not complete general partner lifecycle, invitations/providers/delegation, emergency access, disconnected packaging, production/native platforms or independent operator adoption."
+        "F019 adds protected one-time first tenant/partner/admin setup with exact receipt replay, migration 17 and 36 forced-RLS relations, plus browser ID import and an assisted real first exchange/restart. It does not complete general partner lifecycle, invitations/providers/delegation, emergency access, disconnected packaging, production/native platforms or independent operator adoption.",
+        "F020 adds explicitly authorized credential-bound tenant directory authority, ordinary browser/API/CLI partner/admin enrollment, exact reviewed revisions/receipt replay, atomic source/target events and migration 18 with 39 forced-RLS relations. No existing/new account inherits tenant authority. Full contacts/checklists, invitations/providers/delegation, environment promotion/suspension, queued-work lifecycle and independent onboarding remain open."
       ]
     },
     {

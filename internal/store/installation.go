@@ -21,17 +21,18 @@ var ErrInitialized = errors.New("installation already contains identities; use o
 // SetupRequest is a frozen local administrator decision, not an HTTP command.
 // The serving role cannot create tenants, partners or installation receipts.
 type SetupRequest struct {
-	SchemaVersion int      `json:"schema_version"`
-	RequestKey    string   `json:"request_key"`
-	Tenant        string   `json:"tenant_id"`
-	Partner       string   `json:"partner_id"`
-	Admin         string   `json:"admin_id"`
-	TenantLabel   string   `json:"tenant_label"`
-	PartnerLabel  string   `json:"partner_label"`
-	AdminLabel    string   `json:"admin_label"`
-	Credential    string   `json:"credential_sha256"`
-	Storage       string   `json:"storage_id"`
-	Permissions   []string `json:"permissions"`
+	SchemaVersion        int      `json:"schema_version"`
+	RequestKey           string   `json:"request_key"`
+	Tenant               string   `json:"tenant_id"`
+	Partner              string   `json:"partner_id"`
+	Admin                string   `json:"admin_id"`
+	TenantLabel          string   `json:"tenant_label"`
+	PartnerLabel         string   `json:"partner_label"`
+	AdminLabel           string   `json:"admin_label"`
+	Credential           string   `json:"credential_sha256"`
+	Storage              string   `json:"storage_id"`
+	Permissions          []string `json:"permissions"`
+	TenantAdministration bool     `json:"tenant_administration,omitempty"`
 }
 type SetupResult struct {
 	SchemaVersion int       `json:"schema_version"`
@@ -158,6 +159,11 @@ func InitializeInstallation(ctx context.Context, adminPath string, request Setup
 	}
 	if _, err = tx.Exec(ctx, `INSERT INTO credentials(tenant_id,partner_id,actor_id,token_hash,permissions,namespace_root,account_label) VALUES($1,$2,$3,$4,$5,'/',$6)`, c.Tenant, c.Partner, c.Admin, c.Credential, c.Permissions, c.AdminLabel); err != nil {
 		return nil, err
+	}
+	if c.TenantAdministration {
+		if _, err = changeTenantAdministrator(ctx, tx, c.Tenant, c.Partner, c.RequestKey, TenantAdminCommand{Operation: "grant", Actor: c.Admin, ExpectedAuthority: 1}); err != nil {
+			return nil, err
+		}
 	}
 	r := &SetupResult{SchemaVersion: 1, Tenant: c.Tenant, Partner: c.Partner, Actor: c.Admin, TenantLabel: c.TenantLabel, PartnerLabel: c.PartnerLabel, AdminLabel: c.AdminLabel, Storage: c.Storage, Event: secure.NewID()}
 	if err = tx.QueryRow(ctx, `SELECT clock_timestamp()`).Scan(&r.InitializedAt); err != nil {

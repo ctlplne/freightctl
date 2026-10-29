@@ -17,6 +17,8 @@ sh scripts/go.sh run ./cmd/freightctl setup-plan \
 
 `setup-plan` writes `.private/setup.json`, creates or reads `.private/first-admin.token`, and opens `.private/custody`. It chooses the tenant, partner, administrator and operation IDs for you. It records the selected names, administrator grants, credential fingerprint and persistent storage identity. The credential value stays in its protected file. Inspect the plan locally before applying it. These labels describe the initial enrollment; general tenant/partner contact and lifecycle administration remain required work.
 
+Explicitly add `--tenant-administration` when this first account should also enroll partners through the tenant directory. The protected plan records that separate authority decision. Without the flag, it receives ordinary partner administration. Existing accounts/plans are not upgraded implicitly. See [partner enrollment and authority lifecycle](partner-enrollment.md).
+
 The plan refuses to overwrite an existing plan. An existing credential is read without replacement, so a partial preparation does not silently rotate it. If preparation fails, preserve and inspect its exact credential/storage references. Both output and credential parents must already be private directories. Existing storage must have mode 0700; secret references must have mode 0600 or stricter. Choose other locations with explicit `--output`, `--token-file` and `--storage` options.
 
 Apply the reviewed plan:

@@ -1,4 +1,5 @@
 export interface Identity {
+  tenant_administration: boolean;
   tenant_id: string;
   partner_id: string;
   actor_id: string;
@@ -6,6 +7,95 @@ export interface Identity {
   authority_revision: number;
   root_policy_digest: string;
   ssh_username: string;
+}
+
+export interface PartnerCommand {
+  expected_authority_revision: number;
+  expected_tenant_revision: number;
+  partner_id: string;
+  admin_id: string;
+  label: string;
+  admin_label: string;
+  credential_sha256: string;
+  permissions: string[];
+}
+export interface Partner {
+  id: string;
+  label: string;
+  admin_id?: string;
+  admin_label?: string;
+  namespace_root: string;
+  permissions: string[];
+  event_id?: string;
+  registered_at: string | null;
+}
+export function asPartner(value: unknown): Partner {
+  const o = object(value),
+    permissions = array(o, "permissions", 21).map((v) => {
+      if (typeof v !== "string" || v.length > 64)
+        throw new ApiError("invalid_server_response", 502);
+      return v;
+    });
+  const when = o.registered_at === null ? null : text(o, "registered_at", 64);
+  if (when !== null && !Number.isFinite(Date.parse(when)))
+    throw new ApiError("invalid_server_response", 502);
+  const root = text(o, "namespace_root", 1);
+  if (root !== "/") throw new ApiError("invalid_server_response", 502);
+  return {
+    id: id(o, "id"),
+    label: text(o, "label", 128),
+    namespace_root: root,
+    permissions,
+    registered_at: when,
+    ...(o.admin_id !== undefined
+      ? {
+          admin_id: id(o, "admin_id"),
+          admin_label: text(o, "admin_label", 128),
+        }
+      : {}),
+    ...(o.event_id !== undefined ? { event_id: id(o, "event_id") } : {}),
+  };
+}
+export function asPartnerPage(value: unknown): {
+  partners: Partner[];
+  authority_revision: number;
+  tenant_administration_revision: number;
+  next?: string;
+} {
+  const o = object(value);
+  return {
+    partners: array(o, "partners", 100).map(asPartner),
+    authority_revision: number(
+      o,
+      "authority_revision",
+      Number.MAX_SAFE_INTEGER,
+    ),
+    tenant_administration_revision: number(
+      o,
+      "tenant_administration_revision",
+      Number.MAX_SAFE_INTEGER,
+    ),
+    ...(o.next !== undefined ? { next: id(o, "next") } : {}),
+  };
+}
+export function asPartnerResult(
+  value: unknown,
+  command: PartnerCommand,
+): Partner {
+  const o = object(value),
+    p = asPartner(o.partner);
+  bool(o, "replayed");
+  if (
+    p.id !== command.partner_id ||
+    p.admin_id !== command.admin_id ||
+    p.label !== command.label ||
+    p.admin_label !== command.admin_label ||
+    !p.event_id ||
+    !p.registered_at ||
+    JSON.stringify(p.permissions) !== JSON.stringify(command.permissions)
+  )
+    throw new ApiError("invalid_server_response", 502);
+  return p;
 }
 export interface Session {
   identity: Identity;
@@ -201,6 +291,10 @@ export function asSession(value: unknown): Session {
     throw new ApiError("invalid_server_response", 502);
   return {
     identity: {
+      tenant_administration:
+        who.tenant_administration === undefined
+          ? false
+          : bool(who, "tenant_administration"),
       tenant_id: id(who, "tenant_id"),
       partner_id: id(who, "partner_id"),
       actor_id: id(who, "actor_id"),

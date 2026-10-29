@@ -32,7 +32,7 @@ func main() {
 }
 func run(args []string) error {
 	if len(args) == 0 || args[0] == "--help" || args[0] == "help" {
-		fmt.Println("freightctl: init | setup-plan | setup | token | enroll | identity | namespace | dev-cert | serve | reconcile | audit-keygen | audit-export | ssh-host-keygen | ssh-key-enroll | ssh-key-revoke | serve-sftp | upload-create | upload-list | upload-status | upload-append | upload-complete | upload-abort | delivery-create | delivery-status | delivery-approve | delivery-cancel | delivery-work | delivery-reconcile\nAccounts: account-create | account-update | account-rotate | account-revoke | account-list | account-status\nConnections: connection-register | connection-status | connection-revoke\nWorkflows: workflow-validate | workflow-draft | workflow-status | workflow-diff | workflow-approve | workflow-revoke | workflow-run | workflow-run-status | workflow-work | workflow-cancel\nAssistance: ai-profile-register | ai-profile-status | ai-profile-revoke | ai-propose | ai-diagnose | ai-status | ai-approve | ai-generate | ai-adopt\nIntake: intake-policy-register | intake-policy-status | intake-policy-revoke | check-list | check-status | check-run | check-recover | check-release\nScanners: scanner-register | scanner-status | scanner-revoke\nOpenPGP: pgp-key-register | pgp-key-status | pgp-key-revoke | check-signature\nRead docs/development.md. This is an unqualified local custody foundation.")
+		fmt.Println("freightctl: init | setup-plan | setup | token | enroll | identity | namespace | dev-cert | serve | reconcile | audit-keygen | audit-export | ssh-host-keygen | ssh-key-enroll | ssh-key-revoke | serve-sftp | upload-create | upload-list | upload-status | upload-append | upload-complete | upload-abort | delivery-create | delivery-status | delivery-approve | delivery-cancel | delivery-work | delivery-reconcile\nPartners: partner-create | partner-list | tenant-admin-grant | tenant-admin-revoke | tenant-admin-status\nAccounts: account-create | account-update | account-rotate | account-revoke | account-list | account-status\nConnections: connection-register | connection-status | connection-revoke\nWorkflows: workflow-validate | workflow-draft | workflow-status | workflow-diff | workflow-approve | workflow-revoke | workflow-run | workflow-run-status | workflow-work | workflow-cancel\nAssistance: ai-profile-register | ai-profile-status | ai-profile-revoke | ai-propose | ai-diagnose | ai-status | ai-approve | ai-generate | ai-adopt\nIntake: intake-policy-register | intake-policy-status | intake-policy-revoke | check-list | check-status | check-run | check-recover | check-release\nScanners: scanner-register | scanner-status | scanner-revoke\nOpenPGP: pgp-key-register | pgp-key-status | pgp-key-revoke | check-signature\nRead docs/development.md. This is an unqualified local custody foundation.")
 		return nil
 	}
 	f := flag.NewFlagSet(args[0], flag.ContinueOnError)
@@ -67,6 +67,7 @@ func run(args []string) error {
 	output := f.String("output", defaultOutput, "new protected artifact output path")
 	tenantLabel := f.String("tenant-label", "", "first tenant display label for setup-plan")
 	partnerLabel := f.String("partner-label", "", "first partner display label for setup-plan")
+	tenantAdministration := f.Bool("tenant-administration", false, "explicitly grant the first administrator tenant directory authority in setup-plan")
 	adminLabel := f.String("admin-label", "", "first administrator display label for setup-plan")
 	permissions := f.String("permissions", strings.Join(store.DefaultPermissions, ","), "comma-separated scoped account permissions")
 	namespaceRoot := f.String("namespace-root", "/", "canonical directory mounted as this identity's virtual root")
@@ -94,6 +95,8 @@ func run(args []string) error {
 	accountID := f.String("account-id", "", "exact account UUID for status")
 	accountAfter := f.String("account-after", "", "last account UUID from the previous page")
 	accountLimit := f.Int("account-limit", 50, "account summaries per page, at most 100")
+	partnerAfter := f.String("partner-after", "", "last tenant directory partner UUID")
+	partnerLimit := f.Int("partner-limit", 50, "tenant directory entries per page, at most 100")
 	newAccountToken := f.String("new-token-file", "", "protected credential reference for account creation or rotation; only its digest enters SQL")
 	scannerID := f.String("scanner-id", "", "exact registered local scanner family UUID")
 	pgpPublicFile := f.String("pgp-public-file", "", "protected public-key input reference; private packets are refused")
@@ -128,8 +131,10 @@ func run(args []string) error {
 		return errors.New("browser session lifetime must be 1 to 600 seconds")
 	}
 	switch args[0] {
+	case "partner-create", "partner-list", "tenant-admin-grant", "tenant-admin-revoke", "tenant-admin-status":
+		return runPartners(ctx, args[0], *admin, *dsn, *token, *tenant, *partner, *requestFile, *idempotencyKey, *partnerAfter, *newAccountToken, *accountID, *partnerLimit)
 	case "setup-plan":
-		if err := prepareSetup(*output, *token, *storage, *tenantLabel, *partnerLabel, *adminLabel); err != nil {
+		if err := prepareSetup(*output, *token, *storage, *tenantLabel, *partnerLabel, *adminLabel, *tenantAdministration); err != nil {
 			return err
 		}
 		return json.NewEncoder(os.Stdout).Encode(map[string]string{"plan_file": *output, "credential_file": *token, "next_action": "Review the saved plan, then run setup --request-file with that plan and the matching deployment-admin reference. Preserve both files for exact retry."})

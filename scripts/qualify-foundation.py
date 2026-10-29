@@ -36,6 +36,7 @@ commands=[
 ('openpgp-admission-fuzz',['sh','scripts/go.sh','test','./internal/crypto','-fuzz=FuzzPGPAdmission','-fuzztime=5s','-parallel=1']),
 ('untrusted-model-output-fuzz',['sh','scripts/go.sh','test','./internal/assistance','-fuzz=FuzzUntrustedModelOutput','-fuzztime=5s','-parallel=1']),
 ('first-run-enrollment',['python3','scripts/qualify-setup.py']),
+('tenant-partner-enrollment',['python3','scripts/qualify-partners.py']),
 ('stock-curl-https',['python3','scripts/qualify-https.py']),
 ('stock-openssh-sftp',['python3','scripts/qualify-sftp.py']),
 ('durable-upload-resume',['python3','scripts/qualify-uploads.py']),

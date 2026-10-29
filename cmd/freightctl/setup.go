@@ -53,7 +53,7 @@ func setupToken(path string, create bool) (*secure.Secret, error) {
 	return s, nil
 }
 
-func prepareSetup(output, tokenPath, storagePath, tenantLabel, partnerLabel, adminLabel string) error {
+func prepareSetup(output, tokenPath, storagePath, tenantLabel, partnerLabel, adminLabel string, tenantAdministration ...bool) error {
 	var err error
 	output, err = filepath.Abs(output)
 	if err != nil {
@@ -77,6 +77,7 @@ func prepareSetup(output, tokenPath, storagePath, tenantLabel, partnerLabel, adm
 	}
 	// Validate human input before creating any credential or storage identity.
 	request := store.SetupRequest{SchemaVersion: 1, RequestKey: secure.NewID(), Tenant: secure.NewID(), Partner: secure.NewID(), Admin: secure.NewID(), TenantLabel: tenantLabel, PartnerLabel: partnerLabel, AdminLabel: adminLabel, Credential: secure.Digest(nil), Storage: secure.NewID(), Permissions: slices.Clone(store.DefaultPermissions)}
+	request.TenantAdministration = len(tenantAdministration) == 1 && tenantAdministration[0]
 	if _, err = store.NormalizeSetup(request); err != nil {
 		return err
 	}

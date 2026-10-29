@@ -717,6 +717,20 @@ footer {
   gap: 8px;
   margin: 16px 0;
 }
+.partner-directory {
+  padding: 24px;
+}
+.partner-directory > .actions {
+  margin: 16px 0 24px;
+}
+.partner-directory .signature-box {
+  padding: 16px;
+  margin: 16px 0;
+}
+.partner-directory .account-grants > p {
+  grid-column: 1 / -1;
+  margin: 0 0 8px;
+}
 .account-grants label,
 .account-confirm {
   display: flex;

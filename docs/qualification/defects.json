@@ -761,6 +761,54 @@
       "regression_evidence": [
         "docs/qualification/evidence/F019-first-run-enrollment.json"
       ]
+    },
+    {
+      "id": "D052",
+      "severity": "PostgreSQL qualification availability/deadline failure",
+      "state": "open",
+      "observed_on": "2026-10-29",
+      "candidate": "F020 frozen candidate, 196 executable source entries",
+      "journey": "J11",
+      "reproduction": "First F020 aggregate: encrypted-publication setup reaches a 65-second deadline, then later integration cases encounter unavailable database/statement timeouts.",
+      "first_failure": "Original PostgreSQL gate failed after 1126.58 seconds with unchanged source. Transient protocol/control availability changed without a freightctl restart.",
+      "cause": "Unassigned. Later direct SQL responds and the exact encrypted test passes unchanged; this does not establish the original cause.",
+      "resolution": "Preserve all native output/source and bounded probes. After the owner manually restarted Docker Desktop, this chat verified/restored only its exact retained PostgreSQL container/volume with unchanged limits. All 16 originally failed cases and the full 32-gate aggregate pass on unchanged source/deadlines. This does not establish the original cause. No assertion, deadline, durability or isolation check is relaxed.",
+      "regression_evidence": [
+        ".private/partners-availability-failure.json",
+        ".private/partners-postrestart-restoration.json",
+        ".private/partners-postrestart-replay.json",
+        "docs/qualification/evidence/F020-tenant-partner-enrollment.json"
+      ]
+    },
+    {
+      "id": "D050",
+      "severity": "ordinary tenant directory and partner enrollment unavailable",
+      "state": "fixed locally",
+      "observed_on": "2026-10-29",
+      "candidate": "f5f9767debb2e460adeed851256d47c10807a325",
+      "journey": "J05",
+      "reproduction": "Attempt partner-list on the existing product; ordinary tenant directory/enrollment is unavailable.",
+      "first_failure": "Unknown product command. Early real PostgreSQL implementation additionally refused FOR SHARE on SELECT-only authority tables and UPSERT authority transitions.",
+      "cause": "No separate tenant capability, reviewed cross-scope enrollment or operator surface existed. PostgreSQL row-lock privileges and BEFORE INSERT behavior needed explicit handling.",
+      "resolution": "Add explicit current credential-bound tenant authority, typed audited maintenance and ordinary registration, a narrow non-owner projection writer, exact reviews/receipts, frozen browser recovery and native new-partner exchange. Preserve runtime SELECT-only credentials/authority and original grants.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F020-tenant-partner-enrollment.json"
+      ]
+    },
+    {
+      "id": "D051",
+      "severity": "confirmed enrollment still displayed a connection failure",
+      "state": "fixed locally",
+      "observed_on": "2026-10-29",
+      "candidate": "F020 native candidate on 196 source entries",
+      "journey": "J05",
+      "reproduction": "Drop the first committed enrollment response, retry the frozen review, then inspect the confirmed tenant directory.",
+      "first_failure": "The original receipt succeeds but its earlier global connection-error banner remains; a native assertion captures this contradiction.",
+      "cause": "Child enrollment success did not clear the parent uncertainty state.",
+      "resolution": "Clear parent uncertainty only after validating the exact receipt, reset names for the next enrollment and retain the native assertion and original failure/source. Improve directory/grant spacing.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F020-tenant-partner-enrollment.json"
+      ]
     }
   ]
 }

@@ -59,6 +59,8 @@ func NewWithBrowserLifetime(service *custody.Service, audits *audit.Service, ena
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/accounts", s.accounts)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/accounts/{account}", s.accounts)
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/accounts/commands", s.accounts)
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/partner-directory", s.partners)
+	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/partner-directory", s.partners)
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/browser-session", s.createBrowserSession)
 	m.HandleFunc("GET /v1/browser/session", s.currentBrowserSession)
 	m.HandleFunc("POST /v1/browser/logout", s.logoutBrowser)
@@ -223,6 +225,10 @@ func requestFailure(w http.ResponseWriter, r *http.Request, err error) {
 
 func errorStatus(err error) (int, string) {
 	switch {
+	case errors.Is(err, store.ErrPartnerInput):
+		return 400, "invalid_partner_command"
+	case errors.Is(err, store.ErrPartnerExists):
+		return 409, "partner_exists"
 	case errors.Is(err, store.ErrAccountInput):
 		return 400, "invalid_account_command"
 	case errors.Is(err, vpath.ErrPath):

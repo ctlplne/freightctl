@@ -41,10 +41,6 @@ func (t *Transaction) currentBrowserSession(ctx context.Context) error {
 	return err
 }
 
-func transactionIdentity(t *Transaction) *Identity {
-	return &Identity{Tenant: t.Scope.Tenant, Partner: t.Scope.Partner, Actor: t.Actor, Permissions: t.Permissions, AuthorityRevision: t.AuthorityRevision, RootPolicyDigest: secure.Digest([]byte(t.Root)), SSHUsername: t.Scope.Tenant + "." + t.Scope.Partner + "." + t.Actor}
-}
-
 func (s *Store) CreateBrowserSession(ctx context.Context, scope Scope, key, hash string, lifetime time.Duration) (*BrowserSession, *Identity, time.Time, error) {
 	if lifetime < time.Second || lifetime > 10*time.Minute || lifetime%time.Second != 0 || !ValidBrowserOperationKey(key) || !browserSecretHash.MatchString(hash) || scope.TokenHash == "" || scope.BrowserSessionID != "" || scope.BrowserSessionHash != "" {
 		return nil, nil, time.Time{}, ErrUnauthorized
@@ -70,7 +66,11 @@ func (s *Store) CreateBrowserSession(ctx context.Context, scope Scope, key, hash
 			return nil, nil, now, ErrConflict
 		}
 		b.Replayed = true
-		return b, transactionIdentity(t), now, t.Tx.Commit(ctx)
+		who, err := transactionIdentity(ctx, t)
+		if err != nil {
+			return nil, nil, now, err
+		}
+		return b, who, now, t.Tx.Commit(ctx)
 	}
 	if !errors.Is(err, pgx.ErrNoRows) {
 		return nil, nil, now, err
@@ -96,7 +96,11 @@ func (s *Store) CreateBrowserSession(ctx context.Context, scope Scope, key, hash
 	if err = t.Reauthorize(ctx); err != nil {
 		return nil, nil, now, err
 	}
-	return b, transactionIdentity(t), now, t.Tx.Commit(ctx)
+	who, err := transactionIdentity(ctx, t)
+	if err != nil {
+		return nil, nil, now, err
+	}
+	return b, who, now, t.Tx.Commit(ctx)
 }
 
 // BrowserScope only resolves an opaque credential into ordinary scoped proof.

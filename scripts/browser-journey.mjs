@@ -109,8 +109,9 @@ try {
     assert.equal(url.origin, c.url);
     assert.equal(request.method(), "POST");
     assert.ok(
-      url.pathname.startsWith(prefix() + "/checks/") &&
-        /\/(?:run|release|recover)$/.test(url.pathname),
+      (url.pathname.startsWith(prefix() + "/checks/") &&
+        /\/(?:run|release|recover)$/.test(url.pathname)) ||
+        url.pathname === prefix() + "/partner-directory",
     );
     const headers = c.private + "/" + label + ".headers",
       body = c.private + "/" + label + ".request",
@@ -180,7 +181,474 @@ try {
     return row;
   }
   await page.goto(c.url);
-  if (stage === "setup") {
+  if (stage === "partners") {
+    const binary = c.binary,
+      flags = [
+        "--dsn-file",
+        c.runtime,
+        "--tenant",
+        c.tenant,
+        "--partner",
+        c.partner,
+        "--token-file",
+        c.identities[0].token,
+      ];
+    const cli = (args) =>
+      JSON.parse(
+        execFileSync(binary, args, { encoding: "utf8", timeout: 30000 }),
+      );
+    const sourceActor = cli(["identity", ...flags]).actor_id;
+    const peerToken = c.private + "/peer.token";
+    execFileSync(binary, ["token", "--token-file", peerToken]);
+    const peerID = crypto.randomUUID(),
+      peerRequest = c.private + "/peer-account.json";
+    const sourceIdentity = cli(["identity", ...flags]);
+    await writeFile(
+      peerRequest,
+      JSON.stringify({
+        operation: "create",
+        account_id: peerID,
+        expected_revision: 0,
+        policy: {
+          label: "Partner-scoped manager",
+          namespace_root: "/",
+          expires_at: null,
+          permissions: sourceIdentity.permissions,
+        },
+      }),
+    );
+    cli([
+      "account-create",
+      ...flags,
+      "--request-file",
+      peerRequest,
+      "--new-token-file",
+      peerToken,
+      "--idempotency-key",
+      "peer-account",
+    ]);
+    c.identities.push({
+      tenant: c.tenant,
+      partner: c.partner,
+      token: peerToken,
+    });
+    await signIn(1);
+    assert.equal(
+      await page.getByRole("button", { name: "Partners", exact: true }).count(),
+      0,
+    );
+    const denied = await page.evaluate(
+      async (url) =>
+        (
+          await fetch(url + "/partner-directory", {
+            credentials: "same-origin",
+          })
+        ).status,
+      prefix(),
+    );
+    assert.equal(denied, 403);
+    record("ordinary-partner-manager-cannot-discover-tenant-directory");
+    await page.getByRole("button", { name: "Sign out", exact: true }).click();
+    await signIn();
+    await page.getByRole("button", { name: "Partners", exact: true }).click();
+    await page
+      .getByRole("heading", { name: "Partners", exact: true })
+      .waitFor();
+    await page
+      .getByLabel("Partner name", { exact: true })
+      .fill("Payroll partner");
+    await page
+      .getByLabel("First administrator name", { exact: true })
+      .fill("Payroll administrator");
+    await page
+      .getByRole("button", { name: "Review partner enrollment", exact: true })
+      .click();
+    const review = page.getByRole("dialog", {
+      name: "Review partner enrollment",
+      exact: true,
+    });
+    await review.waitFor();
+    assert.equal(
+      await review.evaluate((d) => d.contains(document.activeElement)),
+      true,
+    );
+    await audit("partner-enrollment-review");
+    await page.screenshot({
+      path: c.raw + "/partner-review.png",
+      fullPage: true,
+    });
+    const pendingDownload = page.waitForEvent("download");
+    await review
+      .getByRole("button", { name: "Download partner credential", exact: true })
+      .click();
+    const credentialDownload = await pendingDownload;
+    assert.equal(await credentialDownload.failure(), null);
+    const newToken = c.private + "/new-partner.token";
+    await credentialDownload.saveAs(newToken);
+    await review
+      .getByRole("checkbox", {
+        name: "I saved the partner credential in a protected location",
+        exact: true,
+      })
+      .check();
+    const requests = [];
+    let committed;
+    await page.route("**/partner-directory", async (route) => {
+      if (route.request().method() !== "POST") {
+        await route.continue();
+        return;
+      }
+      const request = route.request();
+      requests.push({
+        key: request.headers()["idempotency-key"],
+        command: JSON.parse(request.postData()),
+      });
+      const r = await trustedMutation(
+        route,
+        "partner-enroll-" + requests.length,
+      );
+      assert.equal(r.status, 200);
+      const body = JSON.parse(r.body);
+      if (requests.length === 1) {
+        assert.equal(body.replayed, false);
+        committed = body.partner;
+        await route.abort("failed");
+      } else {
+        assert.equal(body.replayed, true);
+        assert.equal(body.partner.event_id, committed.event_id);
+        await route.fulfill({
+          status: r.status,
+          contentType: "application/json",
+          body: r.body,
+        });
+      }
+    });
+    await review
+      .getByRole("button", { name: "Enroll reviewed partner", exact: true })
+      .click();
+    await review
+      .getByRole("alert")
+      .filter({ hasText: "Enrollment was not confirmed" })
+      .waitFor();
+    await review
+      .getByRole("button", { name: "Retry reviewed enrollment", exact: true })
+      .click();
+    await page
+      .getByRole("heading", { name: "Partner enrolled", exact: true })
+      .waitFor();
+    await page.unroute("**/partner-directory");
+    assert.equal(requests.length, 2);
+    assert.deepEqual(requests[0], requests[1]);
+    assert.equal(
+      createHash("sha256")
+        .update(await readFile(newToken))
+        .digest("hex"),
+      requests[0].command.credential_sha256,
+    );
+    await writeFile(
+      c.private + "/enrollment-receipt.json",
+      JSON.stringify({ requests, replayed: true, partner: committed }, null, 2),
+    );
+    const workspaceDownload = page.waitForEvent("download");
+    await page
+      .getByRole("button", { name: "Download partner workspace", exact: true })
+      .click();
+    const workspace = await workspaceDownload;
+    const workspacePath = c.private + "/new-partner-workspace.json";
+    await workspace.saveAs(workspacePath);
+    const metadata = JSON.parse(await readFile(workspacePath, "utf8"));
+    assert.equal(metadata.tenant_id, c.tenant);
+    assert.equal(metadata.partner_id, committed.id);
+    assert.equal(
+      await page
+        .getByRole("alert")
+        .filter({ hasText: "The connection was interrupted" })
+        .count(),
+      0,
+      "confirmed enrollment must clear its earlier connection error",
+    );
+    await audit("tenant-directory");
+    const refusals = await page.evaluate(
+      async ({ url, base }) => {
+        const session = await (
+          await fetch("/v1/browser/session", { credentials: "same-origin" })
+        ).json();
+        const command = {
+          ...base,
+          partner_id: crypto.randomUUID(),
+          admin_id: crypto.randomUUID(),
+        };
+        async function send(key, body, csrf) {
+          return (
+            await fetch(url, {
+              method: "POST",
+              credentials: "same-origin",
+              headers: {
+                "Content-Type": "application/json",
+                "Idempotency-Key": key,
+                ...(csrf ? { "X-CSRF-Token": session.csrf_token } : {}),
+              },
+              body: JSON.stringify(body),
+            })
+          ).status;
+        }
+        return [
+          await send("partner-no-csrf", command, false),
+          await send(
+            "partner-unknown-field",
+            { ...command, tenant_administration: true },
+            true,
+          ),
+          await send(
+            "partner-stale-review",
+            { ...command, expected_tenant_revision: 999 },
+            true,
+          ),
+        ];
+      },
+      { url: prefix() + "/partner-directory", base: requests[0].command },
+    );
+    assert.deepEqual(refusals, [403, 400, 409]);
+    record(
+      "partner-api-refuses-missing-csrf-unknown-fields-and-stale-authority",
+    );
+    await page.screenshot({
+      path: c.raw + "/partner-directory.png",
+      fullPage: true,
+    });
+    record(
+      "reviewed-tenant-enrollment-replays-one-cross-scope-receipt-after-response-loss",
+    );
+    await page.getByRole("button", { name: "Sign out", exact: true }).click();
+    await page
+      .getByRole("heading", { name: "Connect to your workspace", exact: true })
+      .waitFor();
+    await page
+      .getByLabel("Workspace reference file (optional)", { exact: true })
+      .setInputFiles(workspacePath);
+    await page
+      .getByText(
+        "Workspace IDs loaded. Choose the account credential file to connect.",
+        { exact: true },
+      )
+      .waitFor();
+    await page
+      .getByLabel("Account credential file", { exact: true })
+      .setInputFiles(newToken);
+    await page.getByRole("button", { name: "Connect", exact: true }).click();
+    await page.getByRole("heading", { name: "Files", exact: true }).waitFor();
+    assert.equal(
+      await page.getByRole("button", { name: "Partners", exact: true }).count(),
+      0,
+    );
+    assert.equal(
+      await page.evaluate(
+        async (url) =>
+          (
+            await fetch(url + "/partner-directory", {
+              credentials: "same-origin",
+            })
+          ).status,
+        `/v1/tenants/${c.tenant}/partners/${committed.id}`,
+      ),
+      403,
+    );
+    await page
+      .getByRole("button", { name: "Upload file", exact: true })
+      .click();
+    await page
+      .getByLabel("File to send", { exact: true })
+      .setInputFiles(c.payload);
+    await page
+      .getByLabel("Destination path", { exact: true })
+      .fill("/partner.csv");
+    await page
+      .getByRole("button", { name: "Start upload", exact: true })
+      .click();
+    await page.getByText("Upload accepted", { exact: true }).waitFor();
+    await page.getByRole("button", { name: "Files", exact: true }).click();
+    const row = page.getByRole("row").filter({ hasText: "partner.csv" });
+    await row.waitFor();
+    const received = page.waitForEvent("download");
+    await row
+      .getByRole("link", { name: "Download partner.csv", exact: true })
+      .click();
+    const bytes = await received;
+    await bytes.saveAs(c.private + "/browser-received.csv");
+    assert.equal(
+      await digestFile(c.private + "/browser-received.csv"),
+      await digestFile(c.payload),
+    );
+    await audit("new-partner-files");
+    await page.screenshot({
+      path: c.raw + "/partner-published.png",
+      fullPage: true,
+    });
+    record("new-partner-signin-transfer-and-download-without-tenant-authority");
+    await page.getByRole("button", { name: "Sign out", exact: true }).click();
+    await signIn();
+    await page.getByRole("button", { name: "Partners", exact: true }).click();
+    await page
+      .getByLabel("Partner name", { exact: true })
+      .fill("Stale reviewed partner");
+    await page
+      .getByLabel("First administrator name", { exact: true })
+      .fill("Uncommitted administrator");
+    await page
+      .getByRole("button", { name: "Review partner enrollment", exact: true })
+      .click();
+    await review.waitFor();
+    const unused = page.waitForEvent("download");
+    await review
+      .getByRole("button", { name: "Download partner credential", exact: true })
+      .click();
+    await (await unused).saveAs(c.private + "/unused-reviewed.token");
+    await review
+      .getByRole("checkbox", {
+        name: "I saved the partner credential in a protected location",
+        exact: true,
+      })
+      .check();
+    async function maintenance(operation, expectedRevision, authority, key) {
+      const file = c.private + "/" + key + ".json";
+      await writeFile(
+        file,
+        JSON.stringify({
+          operation,
+          actor_id: sourceActor,
+          expected_revision: expectedRevision,
+          expected_authority_revision: authority,
+        }),
+      );
+      return cli([
+        "tenant-admin-" + operation,
+        "--admin-dsn-file",
+        c.admin,
+        "--tenant",
+        c.tenant,
+        "--partner",
+        c.partner,
+        "--request-file",
+        file,
+        "--idempotency-key",
+        key,
+      ]);
+    }
+    await maintenance("revoke", 1, 1, "revoke-tenant");
+    assert.equal(
+      await page.evaluate(
+        async (url) =>
+          (
+            await fetch(url + "/partner-directory", {
+              credentials: "same-origin",
+            })
+          ).status,
+        prefix(),
+      ),
+      403,
+    );
+    await maintenance("grant", 2, 1, "renew-tenant");
+    await review
+      .getByRole("button", { name: "Enroll reviewed partner", exact: true })
+      .click();
+    await review
+      .getByRole("alert")
+      .filter({ hasText: "The server refused this enrollment" })
+      .waitFor();
+    assert.equal(
+      await review
+        .getByRole("button", { name: "Retry reviewed enrollment", exact: true })
+        .isDisabled(),
+      true,
+    );
+    await review.getByRole("button", { name: "Cancel", exact: true }).click();
+    record("renewed-tenant-grant-refuses-old-reviewed-new-enrollment");
+    const rotated = c.private + "/rotated-manager.token";
+    execFileSync(binary, ["token", "--token-file", rotated]);
+    const rotate = c.private + "/rotate-manager.json";
+    await writeFile(
+      rotate,
+      JSON.stringify({
+        operation: "rotate",
+        account_id: sourceActor,
+        expected_revision: 1,
+      }),
+    );
+    cli([
+      "account-rotate",
+      "--dsn-file",
+      c.runtime,
+      "--tenant",
+      c.tenant,
+      "--partner",
+      c.partner,
+      "--token-file",
+      peerToken,
+      "--request-file",
+      rotate,
+      "--new-token-file",
+      rotated,
+      "--idempotency-key",
+      "rotate-manager",
+    ]);
+    const rotatedFlags = [...flags];
+    rotatedFlags[rotatedFlags.indexOf(c.identities[0].token)] = rotated;
+    assert.equal(
+      cli(["identity", ...rotatedFlags]).tenant_administration,
+      false,
+    );
+    const renewal = await maintenance(
+      "grant",
+      3,
+      2,
+      "authorize-rotated-manager",
+    );
+    assert.equal(renewal.membership.revision, 4);
+    const status = cli([
+      "tenant-admin-status",
+      "--admin-dsn-file",
+      c.admin,
+      "--tenant",
+      c.tenant,
+      "--partner",
+      c.partner,
+      "--account-id",
+      sourceActor,
+    ]);
+    assert.equal(status.revision, 4);
+    assert.equal(status.authority_revision, 2);
+    const replayFile = c.private + "/cross-interface-enrollment.json";
+    await writeFile(replayFile, JSON.stringify(requests[0].command));
+    const replay = cli([
+      "partner-create",
+      ...rotatedFlags,
+      "--request-file",
+      replayFile,
+      "--idempotency-key",
+      requests[0].key,
+    ]);
+    assert.equal(replay.replayed, true);
+    assert.equal(replay.partner.event_id, committed.event_id);
+    await writeFile(
+      c.private + "/partner-enrolled.json",
+      JSON.stringify(
+        {
+          partner_id: committed.id,
+          admin_id: committed.admin_id,
+          event_id: committed.event_id,
+          receipt_key: requests[0].key,
+          source_actor_id: sourceActor,
+          source_authority_revision: 2,
+          source_tenant_grant_revision: 4,
+        },
+        null,
+        2,
+      ),
+    );
+    record(
+      "rotated-manager-needs-explicit-reauthorization-and-cli-replays-original-receipt",
+    );
+  } else if (stage === "setup") {
     await audit("setup-login");
     await page
       .getByLabel("Workspace reference file (optional)", { exact: true })

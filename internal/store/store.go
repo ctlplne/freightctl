@@ -67,8 +67,11 @@ var accountSchema string
 //go:embed 017_installation.sql
 var installationSchema string
 
-var migrations = []string{schema, eventBinding, eventBounds, namespaceSchema, uploadSchema, uploadStorageSchema, deliverySchema, workflowSchema, assistanceSchema, intakeSchema, pgpSchema, encryptionSchema, scannerSchema, browserSessionSchema, browserCommandSchema, accountSchema, installationSchema}
-var domainTables = []string{"tenants", "partners", "credentials", "events", "files", "idempotency", "namespace_entries", "namespace_revisions", "namespace_commands", "ssh_keys", "upload_sessions", "upload_chunks", "upload_receipts", "delivery_intents", "delivery_receipts", "connection_revisions", "workflow_revisions", "workflow_runs", "workflow_steps", "workflow_receipts", "ai_profiles", "ai_jobs", "ai_receipts", "intake_policies", "file_checks", "check_receipts", "file_releases", "pgp_keys", "file_signatures", "delivery_ciphertexts", "scanner_profiles", "browser_sessions", "browser_commands", "account_revisions", "account_commands", "installation_enrollments"}
+//go:embed 018_partners.sql
+var partnerSchema string
+
+var migrations = []string{schema, eventBinding, eventBounds, namespaceSchema, uploadSchema, uploadStorageSchema, deliverySchema, workflowSchema, assistanceSchema, intakeSchema, pgpSchema, encryptionSchema, scannerSchema, browserSessionSchema, browserCommandSchema, accountSchema, installationSchema, partnerSchema}
+var domainTables = []string{"tenants", "partners", "credentials", "events", "files", "idempotency", "namespace_entries", "namespace_revisions", "namespace_commands", "ssh_keys", "upload_sessions", "upload_chunks", "upload_receipts", "delivery_intents", "delivery_receipts", "connection_revisions", "workflow_revisions", "workflow_runs", "workflow_steps", "workflow_receipts", "ai_profiles", "ai_jobs", "ai_receipts", "intake_policies", "file_checks", "check_receipts", "file_releases", "pgp_keys", "file_signatures", "delivery_ciphertexts", "scanner_profiles", "browser_sessions", "browser_commands", "account_revisions", "account_commands", "installation_enrollments", "tenant_administrators", "tenant_admin_commands", "partner_registrations"}
 
 var ErrUnauthorized = errors.New("unauthorized")
 var ErrNotFound = errors.New("not found")
@@ -192,7 +195,7 @@ func Open(ctx context.Context, path string) (*Store, error) {
 		return nil, errors.New("database schema version or digest differs; run the matching administrative migrations")
 	}
 	var writerSafe bool
-	if err = p.QueryRow(ctx, `SELECT freightctl_account_writer_safe()`).Scan(&writerSafe); err != nil || !writerSafe {
+	if err = p.QueryRow(ctx, `SELECT freightctl_account_writer_safe() AND freightctl_partner_writer_safe()`).Scan(&writerSafe); err != nil || !writerSafe {
 		p.Close()
 		return nil, ErrIsolation
 	}
@@ -401,7 +404,7 @@ func (s *Store) scopedTransaction(ctx context.Context, scope Scope, options pgx.
 		return nil, err
 	}
 	var writerSafe bool
-	if err = tx.QueryRow(ctx, `SELECT freightctl_account_writer_safe()`).Scan(&writerSafe); err != nil || !writerSafe {
+	if err = tx.QueryRow(ctx, `SELECT freightctl_account_writer_safe() AND freightctl_partner_writer_safe()`).Scan(&writerSafe); err != nil || !writerSafe {
 		return nil, ErrIsolation
 	}
 	if protected != len(domainTables) {

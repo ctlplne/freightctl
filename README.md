@@ -8,6 +8,8 @@ Start with [GOAL.md](GOAL.md), [AGENTS.md](AGENTS.md), and [STATUS.md](STATUS.md
 
 For the implemented local first tenant, partner and administrator path, see [first-run enrollment](docs/first-run.md). It includes protected setup plans, exact retry and browser sign-in; production installation and complete journeys remain unqualified.
 
+For explicit tenant directory authority and ordinary browser/API/CLI enrollment of another partner, see [partner enrollment](docs/partner-enrollment.md). Complete partner onboarding and production activation remain required work.
+
 - Organization: [ctlplne](https://github.com/ctlplne)
 - Repository: [ctlplne/freightctl](https://github.com/ctlplne/freightctl)
 - Local workflow: commits on main; pushes and publication remain owner-controlled.

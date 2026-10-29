@@ -12,10 +12,58 @@ const bundle = await build({
   format: "esm",
   target: "es2022",
 });
-const { asCheckView, asWorkspaceReference } = await import(
-  "data:text/javascript;base64," +
-    Buffer.from(bundle.outputFiles[0].contents).toString("base64")
-);
+const { asCheckView, asWorkspaceReference, asPartnerResult, asPartnerPage } =
+  await import(
+    "data:text/javascript;base64," +
+      Buffer.from(bundle.outputFiles[0].contents).toString("base64")
+  );
+test("partner receipts bind the reviewed administrator, name, grants and exact target", () => {
+  const id = "11111111-1111-4111-8111-111111111111",
+    admin = "22222222-2222-4222-8222-222222222222",
+    event = "33333333-3333-4333-8333-333333333333";
+  const c = {
+    partner_id: id,
+    admin_id: admin,
+    label: "Payroll",
+    admin_label: "Administrator",
+    credential_sha256: "a".repeat(64),
+    permissions: ["accounts_manage", "admin"],
+    expected_authority_revision: 1,
+    expected_tenant_revision: 1,
+  };
+  const p = {
+    id,
+    admin_id: admin,
+    label: c.label,
+    admin_label: c.admin_label,
+    namespace_root: "/",
+    permissions: c.permissions,
+    event_id: event,
+    registered_at: "2026-10-29T12:00:00Z",
+  };
+  assert.equal(asPartnerResult({ partner: p, replayed: true }, c).id, id);
+  for (const change of [
+    { id: admin },
+    { admin_id: id },
+    { label: "Other" },
+    { permissions: ["admin"] },
+    { event_id: undefined },
+    { registered_at: null },
+    { namespace_root: "/other" },
+  ])
+    assert.throws(() =>
+      asPartnerResult({ partner: { ...p, ...change }, replayed: false }, c),
+    );
+  assert.equal(
+    asPartnerPage({
+      partners: [p],
+      authority_revision: 1,
+      tenant_administration_revision: 1,
+    }).partners.length,
+    1,
+  );
+  assert.throws(() => asPartnerPage({ partners: [p] }));
+});
 test("workspace references copy only IDs and cannot change origin or authority", () => {
   const tenant = "11111111-1111-4111-8111-111111111111",
     partner = "22222222-2222-4222-8222-222222222222";

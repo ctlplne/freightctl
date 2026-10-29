@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { createRoot } from "react-dom/client";
 import { Api } from "./api";
 import { Accounts } from "./accounts";
+import { Partners } from "./partners";
 import { CheckEvidence } from "./check-evidence";
 import { CheckRecovery } from "./check-recovery";
 import { WorkspaceReference } from "./workspace-reference";
@@ -33,6 +34,10 @@ const name = (path: string) => path.split("/").at(-1) || "/";
 const aborted = (error: unknown) =>
   error instanceof DOMException && error.name === "AbortError";
 const messages: Record<string, string> = {
+  invalid_partner_command:
+    "Review the partner name, first administrator, credential fingerprint and permitted grants. The first administrator needs admin and accounts_manage.",
+  partner_exists:
+    "That partner ID is already enrolled. Refresh the tenant directory and inspect its original enrollment.",
   invalid_account_command:
     "Review the account label, permissions, existing virtual root and future expiry timestamp. Create or rotate with a new credential fingerprint; other actions must not include one.",
   unauthorized:
@@ -44,7 +49,7 @@ const messages: Record<string, string> = {
   storage_quota_reached:
     "The server’s storage quota is full. Saved progress remains; an administrator must restore capacity.",
   revision_conflict:
-    "The destination or its access settings changed. Refresh and review the current revision before continuing.",
+    "The item you reviewed or its access settings changed. Refresh and review its current revision before continuing.",
   path_exists:
     "A file already exists at that destination. Choose a new path; this upload will not replace it.",
   operation_state_conflict:
@@ -104,9 +109,9 @@ function App() {
   const [error, setError] = useState(""),
     [notice, setNotice] = useState(""),
     [signingIn, setSigningIn] = useState(false);
-  const [tab, setTab] = useState<"files" | "uploads" | "checks" | "accounts">(
-      "files",
-    ),
+  const [tab, setTab] = useState<
+      "files" | "uploads" | "checks" | "accounts" | "partners"
+    >("files"),
     [refresh, setRefresh] = useState(0);
   const [folder, setFolder] = useState("/"),
     [files, setFiles] = useState<EntryPage>({ entries: [] }),
@@ -606,6 +611,14 @@ function App() {
                 Accounts
               </button>
             )}
+            {session.identity.tenant_administration && (
+              <button
+                aria-current={tab === "partners" ? "page" : undefined}
+                onClick={() => setTab("partners")}
+              >
+                Partners
+              </button>
+            )}
           </nav>
           <div className="session-note">
             <p className="eyebrow">BROWSER SESSION</p>
@@ -706,24 +719,32 @@ function App() {
           <>
             <div className="heading">
               <div>
-                <p className="eyebrow">PARTNER WORKSPACE</p>
+                <p className="eyebrow">
+                  {tab === "partners"
+                    ? "TENANT DIRECTORY"
+                    : "PARTNER WORKSPACE"}
+                </p>
                 <h1>
                   {tab === "files"
                     ? "Files"
                     : tab === "uploads"
                       ? "Uploads"
-                      : tab === "accounts"
-                        ? "Accounts"
-                        : "Intake checks"}
+                      : tab === "partners"
+                        ? "Partners"
+                        : tab === "accounts"
+                          ? "Accounts"
+                          : "Intake checks"}
                 </h1>
                 <p>
                   {tab === "files"
                     ? "Published paths. Retrieval checks your current access and intake policy."
                     : tab === "uploads"
                       ? "Send one exact file. Continue from the last server-confirmed checkpoint."
-                      : tab === "accounts"
-                        ? "Review scoped access, credential rotation, expiry and revocation."
-                        : "Held files need their required checks and a separate release decision."}
+                      : tab === "partners"
+                        ? "Enroll partners under explicit tenant authority; review each administrator credential and grants."
+                        : tab === "accounts"
+                          ? "Review scoped access, credential rotation, expiry and revocation."
+                          : "Held files need their required checks and a separate release decision."}
                 </p>
               </div>
               <button
@@ -736,6 +757,20 @@ function App() {
                 Refresh
               </button>
             </div>
+            {tab === "partners" && session.identity.tenant_administration && (
+              <Partners
+                api={api}
+                session={session}
+                refresh={refresh}
+                onError={reportError}
+                onConfirmed={() => {
+                  setError("");
+                  setNotice(
+                    "Partner enrolled. Use the saved credential and workspace IDs to sign in as its administrator.",
+                  );
+                }}
+              />
+            )}
             {tab === "accounts" && (
               <Accounts
                 api={api}
