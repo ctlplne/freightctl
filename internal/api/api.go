@@ -87,6 +87,12 @@ func NewWithBrowserLifetime(service *custody.Service, audits *audit.Service, ena
 		"POST /v1/tenants/{tenant}/partners/{partner}/checks/{file}/run",
 		"POST /v1/tenants/{tenant}/partners/{partner}/checks/{file}/recover",
 		"POST /v1/tenants/{tenant}/partners/{partner}/checks/{file}/release",
+		"POST /v1/tenants/{tenant}/partners/{partner}/checks/{file}/recheck-preview",
+		"POST /v1/tenants/{tenant}/partners/{partner}/checks/{file}/rechecks",
+		"GET /v1/tenants/{tenant}/partners/{partner}/checks/{file}/rechecks",
+		"GET /v1/tenants/{tenant}/partners/{partner}/rechecks/{recheck}",
+		"POST /v1/tenants/{tenant}/partners/{partner}/rechecks/{recheck}/decide",
+		"POST /v1/tenants/{tenant}/partners/{partner}/rechecks/{recheck}/copy",
 	} {
 		m.HandleFunc(pattern, s.checks)
 	}

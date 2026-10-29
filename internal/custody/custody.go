@@ -137,6 +137,9 @@ func validName(name string) bool {
 	return true
 }
 func (d *Disk) Stage(name string, src io.Reader, size int64, digest string) (err error) {
+	return d.stage(name, src, size, digest, false)
+}
+func (d *Disk) stage(name string, src io.Reader, size int64, digest string, retainInterrupted bool) (err error) {
 	if !validName(name) || size < 0 || size == int64(^uint64(0)>>1) {
 		return errors.New("invalid custody identity or length")
 	}
@@ -147,7 +150,7 @@ func (d *Disk) Stage(name string, src io.Reader, size int64, digest string) (err
 	finished := false
 	defer func() {
 		_ = f.Close()
-		if !finished {
+		if !finished && !retainInterrupted {
 			_ = d.root.Remove(name)
 			_ = d.sync()
 		}

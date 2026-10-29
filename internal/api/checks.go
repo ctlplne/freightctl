@@ -102,6 +102,48 @@ func (s *Server) checks(w http.ResponseWriter, r *http.Request) {
 		if err = workflowInput(w, r, &request); err == nil {
 			result, err = s.Checks.Revoke(r.Context(), scope, key, request)
 		}
+	case "POST /v1/tenants/{tenant}/partners/{partner}/checks/{file}/recheck-preview":
+		var request checks.RecheckOptions
+		if err = workflowInput(w, r, &request); err == nil {
+			result, err = s.Checks.PreviewRecheck(r.Context(), scope, r.PathValue("file"), request)
+		}
+	case "POST /v1/tenants/{tenant}/partners/{partner}/checks/{file}/rechecks":
+		var request struct {
+			Plan checks.RecheckPlan `json:"plan"`
+		}
+		if err = workflowInput(w, r, &request); err == nil {
+			if request.Plan.Source.File.ID != r.PathValue("file") {
+				err = checks.ErrInput
+			} else {
+				result, err = s.Checks.ProposeRecheck(r.Context(), scope, key, request.Plan)
+			}
+		}
+	case "GET /v1/tenants/{tenant}/partners/{partner}/checks/{file}/rechecks":
+		limit := 50
+		if value := r.URL.Query().Get("limit"); value != "" {
+			limit, err = strconv.Atoi(value)
+		}
+		if err == nil {
+			result, err = s.Checks.ListRechecks(r.Context(), scope, r.PathValue("file"), r.URL.Query().Get("after"), limit)
+		} else {
+			err = checks.ErrInput
+		}
+	case "GET /v1/tenants/{tenant}/partners/{partner}/rechecks/{recheck}":
+		result, err = s.Checks.GetRecheck(r.Context(), scope, r.PathValue("recheck"))
+	case "POST /v1/tenants/{tenant}/partners/{partner}/rechecks/{recheck}/decide":
+		var request checks.PolicyRecheckDecision
+		if err = workflowInput(w, r, &request); err == nil {
+			result, err = s.Checks.DecideRecheck(r.Context(), scope, r.PathValue("recheck"), key, request)
+		}
+	case "POST /v1/tenants/{tenant}/partners/{partner}/rechecks/{recheck}/copy":
+		r.Body = http.MaxBytesReader(w, r.Body, 1)
+		var data []byte
+		data, err = io.ReadAll(r.Body)
+		if err != nil || len(data) != 0 {
+			err = checks.ErrInput
+		} else {
+			result, err = s.Checks.CopyRecheck(r.Context(), scope, r.PathValue("recheck"), key)
+		}
 	case "GET /v1/tenants/{tenant}/partners/{partner}/checks/{file}":
 		result, err = s.Checks.Get(r.Context(), scope, r.PathValue("file"))
 	case "POST /v1/tenants/{tenant}/partners/{partner}/checks/{file}/recover":

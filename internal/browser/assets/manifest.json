@@ -27,7 +27,7 @@
     },
     {
       "path": "web/src/app.tsx",
-      "sha256": "a87bfa74d3ccd23039f6b4633832b90477decdc2f42a6ea4ad4645a3fc5464e8"
+      "sha256": "4d27935b860eb5065de3735d26148cc1d7c3707b2e7e7fc8f0581aaecddf0116"
     },
     {
       "path": "web/src/assets.d.ts",
@@ -70,8 +70,20 @@
       "sha256": "2e1926d12c123ef0549351a89f2c83dbf1c873efacef817622517bd14de7dc3a"
     },
     {
+      "path": "web/src/rechecks-api.ts",
+      "sha256": "0c96dde2d79f1c56bb4d3ac5c48520436dc8bfec77e61da3d9f85d57b8834183"
+    },
+    {
+      "path": "web/src/rechecks-types.ts",
+      "sha256": "c259d73eef95b87f796eae0a7dee505ed67cb773a994ea018298bbf91c4fe4a0"
+    },
+    {
+      "path": "web/src/rechecks.tsx",
+      "sha256": "3be69f113e14b66719d4fd12406742265276f88b6c1c448b2956934463b3385d"
+    },
+    {
       "path": "web/src/style.css",
-      "sha256": "22b639b1757d8c84e33dd11b12afe176ef4c7020889978468ae75ac108dc98db"
+      "sha256": "82e382ab398f401889f45c310bc7ad174b32ae5df52764978bc04cedbc7276b9"
     },
     {
       "path": "web/src/types.ts",
@@ -89,17 +101,17 @@
   "outputs": [
     {
       "name": "app.css",
-      "sha256": "2b0c569bedcfea82cd3ba03cb669530ec27a0519e0a65cf7b14527911cec7445",
-      "size": 10232
+      "sha256": "9430eda8a2790fef88ef692aeeb5db394b3d773789d3dc2d28f52c6efd86c743",
+      "size": 10556
     },
     {
       "name": "app.js",
-      "sha256": "c456a24902850d7788a938cd6072c5790b9d7b078353f6042664ee07445d8f2b",
-      "size": 331463
+      "sha256": "7fa7ec64308e28e6dcf0d164f361b486f1151547e3704b22dd8aa2088b9b5132",
+      "size": 355316
     },
     {
       "name": "app.js.LEGAL.txt",
-      "sha256": "7dff61d0cd5b7cff2403db6cf5c586b1218c9e663784caeda7fd06916c997d46",
+      "sha256": "43d875c971fa40b19793ff6d2922199c7e8ecf8ea19770a6b99f6fbc7c90c067",
       "size": 1528
     },
     {

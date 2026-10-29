@@ -1,0 +1,66 @@
+{
+  "previous_policy": {
+    "reference": {
+      "id": "00000005-1111-4111-8111-111111111111",
+      "version": 1,
+      "hash": "e37dee04ac8b0c76eaf371247c440fa5bceb79717c9e802a6e95e211c46cbbe9"
+    },
+    "state": "retired",
+    "definition": {
+      "schema_version": 1,
+      "kind": "csv",
+      "columns": [
+        {
+          "name": "account",
+          "type": "text",
+          "required": true,
+          "max_bytes": 4096
+        }
+      ],
+      "max_bytes": 1048576,
+      "max_rows": 10,
+      "max_record_bytes": 65536,
+      "timeout_seconds": 30,
+      "signature": {
+        "key": {
+          "id": "00000008-1111-4111-8111-111111111111",
+          "version": 1,
+          "hash": "8888888888888888888888888888888888888888888888888888888888888888"
+        },
+        "max_age_seconds": 3600
+      }
+    }
+  },
+  "current_policy": {
+    "reference": {
+      "id": "00000005-1111-4111-8111-111111111111",
+      "version": 2,
+      "hash": "64fa5634685b7017aa9fe8e2f95b4720bd3c950187a8c5fe9f577089f8155099"
+    },
+    "state": "active",
+    "definition": {
+      "schema_version": 1,
+      "kind": "csv",
+      "columns": [
+        {
+          "name": "account",
+          "type": "text",
+          "required": true,
+          "max_bytes": 4096
+        }
+      ],
+      "max_bytes": 1048576,
+      "max_rows": 9,
+      "max_record_bytes": 65536,
+      "timeout_seconds": 30,
+      "signature": {
+        "key": {
+          "id": "00000008-1111-4111-8111-111111111111",
+          "version": 1,
+          "hash": "8888888888888888888888888888888888888888888888888888888888888888"
+        },
+        "max_age_seconds": 3600
+      }
+    }
+  }
+}

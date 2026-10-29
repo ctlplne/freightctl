@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "plan": {
+    "source": {
+      "file": {
+        "id": "00000001-1111-4111-8111-111111111111",
+        "size_bytes": 42,
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "policy": "intake-csv-v1:e37dee04ac8b0c76eaf371247c440fa5bceb79717c9e802a6e95e211c46cbbe9",
+        "accepted_event_id": "00000002-1111-4111-8111-111111111111"
+      },
+      "check": {
+        "policy_id": "00000005-1111-4111-8111-111111111111",
+        "policy_version": 1,
+        "policy_hash": "e37dee04ac8b0c76eaf371247c440fa5bceb79717c9e802a6e95e211c46cbbe9",
+        "state": "failed",
+        "revision": 3,
+        "attempts": 1,
+        "code": "worker_lost",
+        "worker_id": "00000006-1111-4111-8111-111111111111",
+        "lease_until": "2026-10-28T12:00:00Z",
+        "report_hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "binding": {
+          "file": {
+            "id": "00000001-1111-4111-8111-111111111111",
+            "size_bytes": 42,
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "policy": "intake-csv-v1:e37dee04ac8b0c76eaf371247c440fa5bceb79717c9e802a6e95e211c46cbbe9",
+            "accepted_event_id": "00000002-1111-4111-8111-111111111111"
+          },
+          "storage_id": "00000003-1111-4111-8111-111111111111",
+          "namespace_root": "/",
+          "authority_revision": 2,
+          "parent_id": "00000004-1111-4111-8111-111111111111",
+          "parent_revision": 1,
+          "target": {
+            "operation": "publish",
+            "path": "/été.csv",
+            "file_id": "00000001-1111-4111-8111-111111111111",
+            "expected_revision": 1,
+            "replace": true,
+            "mode": 0
+          }
+        }
+      },
+      "signature": {
+        "file_id": "00000001-1111-4111-8111-111111111111",
+        "object_id": "00000009-1111-4111-8111-111111111111",
+        "storage_id": "00000003-1111-4111-8111-111111111111",
+        "size_bytes": 123,
+        "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "data_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "policy_hash": "e37dee04ac8b0c76eaf371247c440fa5bceb79717c9e802a6e95e211c46cbbe9",
+        "key": {
+          "id": "00000008-1111-4111-8111-111111111111",
+          "version": 1,
+          "hash": "8888888888888888888888888888888888888888888888888888888888888888"
+        },
+        "attached_event_id": "00000010-1111-4111-8111-111111111111"
+      }
+    },
+    "policy": {
+      "id": "00000005-1111-4111-8111-111111111111",
+      "version": 2,
+      "hash": "64fa5634685b7017aa9fe8e2f95b4720bd3c950187a8c5fe9f577089f8155099"
+    },
+    "namespace_root": "/",
+    "authority_revision": 2,
+    "storage_id": "00000003-1111-4111-8111-111111111111",
+    "target": {
+      "command": {
+        "operation": "publish",
+        "path": "/été.csv",
+        "expected_revision": 1,
+        "replace": true,
+        "mode": 0
+      },
+      "parent_id": "00000004-1111-4111-8111-111111111111",
+      "parent_revision": 1,
+      "entry_id": "00000007-1111-4111-8111-111111111111",
+      "entry_revision": 1
+    },
+    "signature_mode": "reuse_exact",
+    "reason": "Revoir été <scans> & contrôles"
+  },
+  "staging_slots": [
+    {
+      "file_id": "00000011-1111-4111-8111-111111111111",
+      "signature_object_id": "00000021-1111-4111-8111-111111111111"
+    },
+    {
+      "file_id": "00000012-1111-4111-8111-111111111111",
+      "signature_object_id": "00000022-1111-4111-8111-111111111111"
+    },
+    {
+      "file_id": "00000013-1111-4111-8111-111111111111",
+      "signature_object_id": "00000023-1111-4111-8111-111111111111"
+    }
+  ]
+}

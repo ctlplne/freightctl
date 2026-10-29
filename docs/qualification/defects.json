@@ -899,6 +899,81 @@
       "regression_evidence": [
         "docs/qualification/evidence/F023-real-scanner.json"
       ]
+    },
+    {
+      "id": "D059",
+      "severity": "ordinary governed re-check/rebind surface absent",
+      "state": "fixed locally",
+      "observed_on": "2026-10-29",
+      "candidate": "eda03f4cd96f06559617583a7f0e6b770ae17de0 plus retained exact candidate source hashes",
+      "journey": "J02",
+      "reproduction": "ordinary governed re-check/rebind surface absent",
+      "first_failure": "Original source/output and relevant binary retained under F025 first_failures.",
+      "cause": "No immutable proposal/approval/copy lineage or ordinary browser/API/CLI surface.",
+      "resolution": "Add reviewed held checked revisions without rewriting old files, checks or jobs; preserve all complete-journey gaps.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F025-file-rechecks.json"
+      ]
+    },
+    {
+      "id": "D060",
+      "severity": "new re-check first response and recovered receipt differ in serialized byte order",
+      "state": "fixed locally",
+      "observed_on": "2026-10-29",
+      "candidate": "eda03f4cd96f06559617583a7f0e6b770ae17de0 plus retained exact candidate source hashes",
+      "journey": "J02",
+      "reproduction": "new re-check first response and recovered receipt differ in serialized byte order",
+      "first_failure": "Original source/output and relevant binary retained under F025 first_failures.",
+      "cause": "First response returned Go JSON ordering while replay read PostgreSQL JSONB ordering.",
+      "resolution": "Return the stored JSONB receipt even on first completion; keep exact-byte equality and no-slot historical recovery coverage.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F025-file-rechecks.json"
+      ]
+    },
+    {
+      "id": "D061",
+      "severity": "re-check preview accepts a changed protected storage marker",
+      "state": "fixed locally",
+      "observed_on": "2026-10-29",
+      "candidate": "eda03f4cd96f06559617583a7f0e6b770ae17de0 plus retained exact candidate source hashes",
+      "journey": "J02",
+      "reproduction": "re-check preview accepts a changed protected storage marker",
+      "first_failure": "Original source/output and relevant binary retained under F025 first_failures.",
+      "cause": "Plan used cached Disk.Identity without re-reading the protected marker.",
+      "resolution": "Re-read the marker in plan/current checks and before/between bounded copied reads; refuse drift before accepted metadata.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F025-file-rechecks.json"
+      ]
+    },
+    {
+      "id": "D062",
+      "severity": "selected re-check history fails to receive focus after reload",
+      "state": "fixed locally",
+      "observed_on": "2026-10-29",
+      "candidate": "eda03f4cd96f06559617583a7f0e6b770ae17de0 plus retained exact candidate source hashes",
+      "journey": "J02",
+      "reproduction": "selected re-check history fails to receive focus after reload",
+      "first_failure": "Original source/output and relevant binary retained under F025 first_failures.",
+      "cause": "A zero-delay timer could run before React committed the selected heading.",
+      "resolution": "Use a committed layout effect; retain the exact-focus assertion and original15-second failure.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F025-file-rechecks.json"
+      ]
+    },
+    {
+      "id": "D063",
+      "severity": "re-check policy review controls fail selected accessibility gates",
+      "state": "fixed locally",
+      "observed_on": "2026-10-29",
+      "candidate": "eda03f4cd96f06559617583a7f0e6b770ae17de0 plus retained exact candidate source hashes",
+      "journey": "J02",
+      "reproduction": "re-check policy review controls fail selected accessibility gates",
+      "first_failure": "Original source/output and relevant binary retained under F025 first_failures.",
+      "cause": "Disclosure targets are too small; bounded policy scroll content lacks keyboard focus.",
+      "resolution": "Provide spaced minimum targets and focusable wrapping bounded panels; rerun the original WCAG axe states without suppressions.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F025-file-rechecks.json"
+      ]
     }
   ]
 }

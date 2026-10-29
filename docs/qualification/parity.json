@@ -1141,7 +1141,7 @@
       "implementation_notes": [
         "F012 adds normal approved typed recipient-encrypted SFTP delivery, exact ciphertext persistence/reuse, revocation, real process death and receipt ambiguity. Independent GnuPG decrypts exact source and verifies its detached signature. SEIPDv2/OCB and v6 have unit/library coverage only. Application private operations, broader peers/profiles, incumbent comparison, malware scanning and complete J02 remain open."
       ],
-      "current_limit": " F015 reruns current independent Curve25519/RSA3072 AES256/MDC decryption and signature verification using a fresh bounded native macOS GnuPG peer. Full algorithm/platform/business journey and production qualification remain open."
+      "current_limit": "F015 reruns current independent Curve25519/RSA3072 AES256/MDC decryption and signature verification using a fresh bounded native macOS GnuPG peer. Full algorithm/platform/business journey and production qualification remain open."
     },
     {
       "id": "K-PGP-VERIFY",
@@ -1179,14 +1179,16 @@
       "state": "implementing",
       "evidence": [
         "docs/qualification/evidence/F011-openpgp-intake.json",
-        "docs/qualification/evidence/F024-signed-scanned-exchange.json"
+        "docs/qualification/evidence/F024-signed-scanned-exchange.json",
+        "docs/qualification/evidence/F025-file-rechecks.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
       ],
       "implementation_notes": [
         "F011 verifies the selected detached binary-signature intake profile, exact bytes, fingerprint/time binding and revocation. Private signing, broader algorithms/peers, delegated review, native production platforms, incumbent comparison and complete J02 remain open."
-      ]
+      ],
+      "current_limit": "F025 adds root actor-owned reviewed checked revisions with unchanged original reports/jobs, exact current policy/authority/storage/selectors, explicit signature reuse/new attachment, held copy and separate fresh checks/release. Actual partial-copy and observed post-sync/pre-commit worker death recover exact approved slots. Genuine scanner refresh/re-scan, delegated exceptions, retention/orphan disposition, queued-work rebind and full journey/production qualification remain open."
     },
     {
       "id": "I-LDAP",
@@ -2398,12 +2400,14 @@
       "evidence": [
         "docs/qualification/evidence/F013-scanner-controls.json",
         "docs/qualification/evidence/F023-real-scanner.json",
-        "docs/qualification/evidence/F024-signed-scanned-exchange.json"
+        "docs/qualification/evidence/F024-signed-scanned-exchange.json",
+        "docs/qualification/evidence/F025-file-rechecks.json"
       ],
       "qualification_blockers": [
         "Authorized MOVEit Automation installation and exact edition/version for observed comparison",
         "X06: owner authorized4GiB/oneCPU; F023 proves selected genuine official-database cases under a kernel cap. Independent detection corpus, ICAP/DLP, feed update/re-enrollment/re-scan, native deployment platforms and full operational qualification remain open."
-      ]
+      ],
+      "current_limit": "F025 adds root actor-owned reviewed checked revisions with unchanged original reports/jobs, exact current policy/authority/storage/selectors, explicit signature reuse/new attachment, held copy and separate fresh checks/release. Actual partial-copy and observed post-sync/pre-commit worker death recover exact approved slots. Genuine scanner refresh/re-scan, delegated exceptions, retention/orphan disposition, queued-work rebind and full journey/production qualification remain open."
     },
     {
       "id": "O-AUDIT",
@@ -2439,11 +2443,13 @@
       "acceptance_journey": "J12",
       "state": "implementing",
       "evidence": [
-        "docs/qualification/evidence/F003-signed-audit.json"
+        "docs/qualification/evidence/F003-signed-audit.json",
+        "docs/qualification/evidence/F025-file-rechecks.json"
       ],
       "qualification_blockers": [
         "Authorized MOVEit Automation installation and exact edition/version for observed comparison"
-      ]
+      ],
+      "current_limit": "F025 adds root actor-owned reviewed checked revisions with unchanged original reports/jobs, exact current policy/authority/storage/selectors, explicit signature reuse/new attachment, held copy and separate fresh checks/release. Actual partial-copy and observed post-sync/pre-commit worker death recover exact approved slots. Genuine scanner refresh/re-scan, delegated exceptions, retention/orphan disposition, queued-work rebind and full journey/production qualification remain open."
     },
     {
       "id": "I-OIDC",

@@ -1,3 +1,4 @@
+import { FileRechecks } from "./rechecks";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { createRoot } from "react-dom/client";
 import { Api } from "./api";
@@ -1185,6 +1186,26 @@ function App() {
             )}
             {tab === "checks" && (
               <>
+                {[
+                  "admin",
+                  "read",
+                  "write",
+                  "intake_manage",
+                  "check_run",
+                  "check_release",
+                ].every(allowed) && (
+                  <FileRechecks
+                    key={session.session.id + (view?.check.file_id ?? "lookup")}
+                    api={api}
+                    sourceId={view?.check.file_id ?? ""}
+                    path={view?.check.path ?? ""}
+                    onError={reportError}
+                    onCopied={(id) => {
+                      void inspect(id);
+                      setRefresh((v) => v + 1);
+                    }}
+                  />
+                )}
                 <section className="panel">
                   <div className="panel-heading">
                     <h2>Held revisions and results</h2>

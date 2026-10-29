@@ -232,11 +232,14 @@ LogLevel VERBOSE
  post('release-recovered-exact-revision','/checks/'+delayed['id']+'/release',release_decision(newer),key='release-recovered')
  steps.append({'name':'actual-paused-worker-fencing','old_exit_code':old_worker.returncode,'replacement_attempt':2,'lease_budget_seconds':70,'wait_seconds':round(time.monotonic()-before,3)})
  # Rotation affects controlled revisions and cannot make an old result current.
+ queued_recheck_run=post('queue-original-before-policy-rotation','/workflow-runs',{'workflow':ref(workflow),'file_id':held['id']},key='queued-original-recheck')['resource']
  policy_request['expected_version']=1;policy_request['definition']['max_rows']=950000
  policy=post('rotate-exact-intake-policy','/intake-policy',policy_request,key='rotate')['resource']
  get('old-released-policy-now-stale','/files/'+held['id'],expected=409)
  sftp_batch('stock-sftp-stale-policy-denied',f'get /from-sftp.csv {retrieved}',False)
  assert not get('historical-check-view','/checks/'+held['id'])['current']
+ from rechecks_journey import qualify_rechecks
+ qualify_rechecks(locals())
  # Existing integrity-only revisions keep their original explicit scope; policy
  # registration controls new acceptance, not a retroactive malware verdict.
  legacy=command(['curl','--silent','--show-error','--fail','--cacert',str(cert),'--header','@'+str(header),f'https://127.0.0.1:{http_port}/v1/tenants/{tenant}/partners/{partner}/files/'+accepted['id']]);assert legacy==data
@@ -253,8 +256,8 @@ finally:
   if child.poll() is None:child.kill();child.wait(timeout=5)
  for name in list(servers):stop(name)
 paths=subprocess.check_output(['git','ls-files','--cached','--others','--exclude-standard','-z']).decode().split('\0')
-sources=[{'path':p,'sha256':hashlib.sha256((root/p).read_bytes()).hexdigest()} for p in sorted(set(paths)) if p and ((root/p).suffix in ('.go','.sql','.sh','.py') or p in ('go.mod','go.sum'))]
-manifest={'schema_version':1,'state':state,'observed_at':datetime.now(timezone.utc).isoformat(),'starting_commit':subprocess.check_output(['git','rev-parse','HEAD']).decode().strip(),'source_files':sources,'binary_sha256':hashlib.sha256(binary.read_bytes()).hexdigest(),'duration_seconds':round(time.monotonic()-started,3),'payload_size_bytes':len(data),'payload_sha256':digest,'steps':steps,'failure':failure,'receiver':'Native stock OpenSSH 10.5p1, separate daemon and filesystem on the same macOS host','inference_performed':False,'local_model_processes_started':0,'malware_scanning_performed':False,'limits':['Bounded UTF-8 comma-separated CSV contract only; this is not antivirus, signature verification or a complete business-file workflow.','New acceptance uses configured policy; historical integrity-only revisions retain their original scope. No retroactive check verdict.','Explicit actor-owned checking/release. Delegated reviewers, automatic workers, policy rebind, re-scan and retention/cleanup remain open.','Local development storage and loopback SFTP with required sync/hardlink extensions. Transport integrity is not downstream business acceptance.','Assisted same-host fixture, not independent adoption, native Linux/Windows, HA, performance/endurance or full journey qualification.']}
+sources=[{'path':p,'sha256':hashlib.sha256((root/p).read_bytes()).hexdigest()} for p in sorted(set(paths)) if p and ((root/p).suffix in ('.go','.sql','.sh','.py','.js','.mjs','.ts','.tsx','.css','.html') or p in ('go.mod','go.sum'))]
+manifest={'schema_version':1,'state':state,'observed_at':datetime.now(timezone.utc).isoformat(),'starting_commit':subprocess.check_output(['git','rev-parse','HEAD']).decode().strip(),'source_files':sources,'binary_sha256':hashlib.sha256(binary.read_bytes()).hexdigest(),'duration_seconds':round(time.monotonic()-started,3),'payload_size_bytes':len(data),'payload_sha256':digest,'steps':steps,'failure':failure,'receiver':'Native stock OpenSSH 10.5p1, separate daemon and filesystem on the same macOS host','inference_performed':False,'local_model_processes_started':0,'malware_scanning_performed':False,'limits':['Bounded UTF-8 comma-separated CSV contract only; this is not antivirus, signature verification or a complete business-file workflow.','New acceptance uses configured policy; historical integrity-only revisions retain their original scope. No retroactive check verdict.','F025 adds actor-owned reviewed re-check revisions, actual copy-worker death/recovery and browser response-loss review. Genuine scanner re-enrollment/re-scan, delegated reviewers, automatic workers, retention/cleanup and full lifecycle remain open.','Local development storage and loopback SFTP with required sync/hardlink extensions. Transport integrity is not downstream business acceptance.','Assisted same-host fixture, not independent adoption, native Linux/Windows, HA, performance/endurance or full journey qualification.']}
 (raw/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n');(root/'.private/intake-current').write_text(str(raw)+'\n')
 print(str(raw/'manifest.json'),flush=True)
 if failure:print(failure,flush=True)

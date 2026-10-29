@@ -47,7 +47,8 @@
         "docs/qualification/evidence/F018-browser-worker-recovery.json",
         "docs/qualification/evidence/F019-first-run-enrollment.json",
         "docs/qualification/evidence/F020-tenant-partner-enrollment.json",
-        "docs/qualification/evidence/F021-onboarding-drafts.json"
+        "docs/qualification/evidence/F021-onboarding-drafts.json",
+        "docs/qualification/evidence/F025-file-rechecks.json"
       ],
       "remaining_details": [
         "F006 adds immutable checkpoints, exact receipts and persistent storage/parent/authority binding. Finish approved cleanup/recovery/rebinding, scalable reservations/fairness, protected retention, journal chaining/rebuild, larger exports and remaining crash/commit boundaries.",
@@ -63,7 +64,8 @@
         "D049 retains the first F019 aggregate scanner/cancellation timing failures. Original committed baseline and unchanged candidate pass later focused original assertions; timing cause remains unassigned. Do not relax scanner, expiry, cancellation, durability or isolation gates.",
         "F019 adds protected one-time first tenant/partner/admin setup with exact receipt replay, migration 17 and 36 forced-RLS relations, plus browser ID import and an assisted real first exchange/restart. It does not complete general partner lifecycle, invitations/providers/delegation, emergency access, disconnected packaging, production/native platforms or independent operator adoption.",
         "F020 adds explicitly authorized credential-bound tenant directory authority, ordinary browser/API/CLI partner/admin enrollment, exact reviewed revisions/receipt replay, atomic source/target events and migration 18 with 39 forced-RLS relations. No existing/new account inherits tenant authority. Full contacts/checklists, invitations/providers/delegation, environment promotion/suspension, queued-work lifecycle and independent onboarding remain open.",
-        "F021 adds partner-scoped immutable contact/exchange-requirement drafts through browser/API/CLI, exact current authority/version review, actor-private response-loss receipts, redacted ordinary audit payloads and migration 19 with 41 forced-RLS relations. Drafts are not tested, approved or active. Full protocol/test-exchange evidence, approval/production activation, invitations/providers/delegation and queued-work key lifecycle remain required."
+        "F021 adds partner-scoped immutable contact/exchange-requirement drafts through browser/API/CLI, exact current authority/version review, actor-private response-loss receipts, redacted ordinary audit payloads and migration 19 with 41 forced-RLS relations. Drafts are not tested, approved or active. Full protocol/test-exchange evidence, approval/production activation, invitations/providers/delegation and queued-work key lifecycle remain required.",
+        "F025 adds root actor-owned reviewed checked revisions with unchanged original reports/jobs, exact current policy/authority/storage/selectors, explicit signature reuse/new attachment, held copy and separate fresh checks/release. Actual partial-copy and observed post-sync/pre-commit worker death recover exact approved slots. Genuine scanner refresh/re-scan, delegated exceptions, retention/orphan disposition, queued-work rebind and full journey/production qualification remain open."
       ]
     },
     {
@@ -120,7 +122,8 @@
         "docs/qualification/evidence/F015-native-crypto-regression.json",
         "docs/qualification/evidence/F022-onboarding-connectivity.json",
         "docs/qualification/evidence/F023-real-scanner.json",
-        "docs/qualification/evidence/F024-signed-scanned-exchange.json"
+        "docs/qualification/evidence/F024-signed-scanned-exchange.json",
+        "docs/qualification/evidence/F025-file-rechecks.json"
       ],
       "remaining_details": [
         "F007/F008 verify bounded leased/fenced SFTP intents and typed ordered workflow runs with registered connection versions, conservative ambiguity, same-step dispatch replay across restart, and queued cancellation. Finish unattended/fair scheduling, broader processing/conditions/loops/batches, active cancellation/rebinding, overlapping key rotations, receiver business contracts, remote quotas/retention/cleanup and distributed failures.",
@@ -133,7 +136,8 @@
         "F015 restores fresh independent native GnuPG verification and a complete 27/27 implemented-core run on unchanged source. Parent-death, sandbox, runtime-pin and resource refusal gates pass. Historical Docker/aged-fixture failures remain recorded; default Docker startup on this host is unresolved. No model or scanner engine started. CI is wired and structure-linted but GitHub execution and native Linux qualification remain unverified. Complete product requirements stay open.",
         "F022 adds exact-bound read-only outbound SFTP onboarding probes, durable intent before contact, current plan/connection/authority checks, private paginated history and original-key recovery. Actual worker death retains the20-second lease; recovery makes no new contact. Migration20 has42 forced-RLS relations. Connectivity still needs separate file exchange evidence, approval/activation and queued-work key lifecycle; other protocols and full J05 remain open.",
         "F023 executes genuine ClamAV1.5.4 with official daily28168/main63/bytecode339 databases in an actual Linux/amd64 container emulated on arm64 macOS. One shared kernel cgroup bounds scanner/application/stock curl at4GiB memory with swap disabled and one CPU. Harmless EICAR/direct/nested ZIP, count/depth/expanded-size/encrypted archive refusals, real scanner pause/timeout, separate exact release/retrieval and configuration/revocation checks pass. D058 fixes changed local scanner configuration remaining readable after release, including new and already-open readers. This is assisted local profile evidence; independent detection corpus, ICAP/DLP, feed lifecycle, native production platforms, governed re-scan/rebind and complete journeys remain open.",
-        "F024 adds a selected combined authenticated/signed/genuine-ClamAV/CSV/release/recipient-encrypted SFTP exchange, retaining every F023 assertion. A receiver outage and actual task-runtime restart recover the exact ciphertext. Stock SFTP retrieves it; independent GnuPG confirms plaintext/signature; stock OpenSSL verifies a scoped63-event signed audit joining source, report, release and delivery. Wrong signatures are rejected before a paused scanner; a validly signed EICAR marker remains rejected. This is assisted local emulated-Linux evidence on retained installation. Clean disconnected full journey, ordinary operators, general corpus/peer/platform/receipt coverage and full product scope remain open."
+        "F024 adds a selected combined authenticated/signed/genuine-ClamAV/CSV/release/recipient-encrypted SFTP exchange, retaining every F023 assertion. A receiver outage and actual task-runtime restart recover the exact ciphertext. Stock SFTP retrieves it; independent GnuPG confirms plaintext/signature; stock OpenSSL verifies a scoped63-event signed audit joining source, report, release and delivery. Wrong signatures are rejected before a paused scanner; a validly signed EICAR marker remains rejected. This is assisted local emulated-Linux evidence on retained installation. Clean disconnected full journey, ordinary operators, general corpus/peer/platform/receipt coverage and full product scope remain open.",
+        "F025 adds root actor-owned reviewed checked revisions with unchanged original reports/jobs, exact current policy/authority/storage/selectors, explicit signature reuse/new attachment, held copy and separate fresh checks/release. Actual partial-copy and observed post-sync/pre-commit worker death recover exact approved slots. Genuine scanner refresh/re-scan, delegated exceptions, retention/orphan disposition, queued-work rebind and full journey/production qualification remain open."
       ]
     },
     {
@@ -218,7 +222,8 @@
         "docs/qualification/evidence/F015-native-crypto-regression.json",
         "docs/qualification/evidence/Q001-protocol-contracts.json",
         "docs/qualification/evidence/F023-real-scanner.json",
-        "docs/qualification/evidence/F024-signed-scanned-exchange.json"
+        "docs/qualification/evidence/F024-signed-scanned-exchange.json",
+        "docs/qualification/evidence/F025-file-rechecks.json"
       ],
       "remaining_details": [
         "F010 verifies durable held intake for configured new revisions, exact CSV contracts, separate hash/revision-bound release and ordinary delivery of released bytes. Antivirus/ICAP/DLP, cryptographic signatures/encryption, other formats/transforms, re-scan/exception governance, retrospective policy and the complete business-file journey remain mandatory.",
@@ -231,7 +236,8 @@
         "Q001 provides protocol specification/profile contracts and minimum acceptance cases; all 13 AS1/AS2/AS3/AS4/OFTP2/PeSIT rows remain planned. No actual protocol exchange, conformance or independent peer result is claimed. Resolve all named prerequisites and normative coverage before qualification.",
         "F023 executes genuine ClamAV1.5.4 with official daily28168/main63/bytecode339 databases in an actual Linux/amd64 container emulated on arm64 macOS. One shared kernel cgroup bounds scanner/application/stock curl at4GiB memory with swap disabled and one CPU. Harmless EICAR/direct/nested ZIP, count/depth/expanded-size/encrypted archive refusals, real scanner pause/timeout, separate exact release/retrieval and configuration/revocation checks pass. D058 fixes changed local scanner configuration remaining readable after release, including new and already-open readers. This is assisted local profile evidence; independent detection corpus, ICAP/DLP, feed lifecycle, native production platforms, governed re-scan/rebind and complete journeys remain open.",
         "F023 uses explicit configured-socket readiness/version checks; the stock image healthcheck targets its default socket and reports unhealthy. Production scanner packaging must probe the configured protected socket, then qualify feed update/re-enrollment/re-scan and supported restart/upgrade behavior within the same resource limits.",
-        "F024 adds a selected combined authenticated/signed/genuine-ClamAV/CSV/release/recipient-encrypted SFTP exchange, retaining every F023 assertion. A receiver outage and actual task-runtime restart recover the exact ciphertext. Stock SFTP retrieves it; independent GnuPG confirms plaintext/signature; stock OpenSSL verifies a scoped63-event signed audit joining source, report, release and delivery. Wrong signatures are rejected before a paused scanner; a validly signed EICAR marker remains rejected. This is assisted local emulated-Linux evidence on retained installation. Clean disconnected full journey, ordinary operators, general corpus/peer/platform/receipt coverage and full product scope remain open."
+        "F024 adds a selected combined authenticated/signed/genuine-ClamAV/CSV/release/recipient-encrypted SFTP exchange, retaining every F023 assertion. A receiver outage and actual task-runtime restart recover the exact ciphertext. Stock SFTP retrieves it; independent GnuPG confirms plaintext/signature; stock OpenSSL verifies a scoped63-event signed audit joining source, report, release and delivery. Wrong signatures are rejected before a paused scanner; a validly signed EICAR marker remains rejected. This is assisted local emulated-Linux evidence on retained installation. Clean disconnected full journey, ordinary operators, general corpus/peer/platform/receipt coverage and full product scope remain open.",
+        "F025 adds root actor-owned reviewed checked revisions with unchanged original reports/jobs, exact current policy/authority/storage/selectors, explicit signature reuse/new attachment, held copy and separate fresh checks/release. Actual partial-copy and observed post-sync/pre-commit worker death recover exact approved slots. Genuine scanner refresh/re-scan, delegated exceptions, retention/orphan disposition, queued-work rebind and full journey/production qualification remain open."
       ]
     },
     {
@@ -260,7 +266,8 @@
         "docs/qualification/evidence/F019-first-run-enrollment.json",
         "docs/qualification/evidence/F020-tenant-partner-enrollment.json",
         "docs/qualification/evidence/F021-onboarding-drafts.json",
-        "docs/qualification/evidence/F022-onboarding-connectivity.json"
+        "docs/qualification/evidence/F022-onboarding-connectivity.json",
+        "docs/qualification/evidence/F025-file-rechecks.json"
       ],
       "remaining_details": [
         "Current account/key/mount and destination/parent checks gate transfer mutations. Complete delegated lifecycle, policy reapproval/rebinding, human identity/MFA/providers, complete denial/session auditing, approval UI and governance remain open.",
@@ -275,7 +282,8 @@
         "F019 adds protected one-time first tenant/partner/admin setup with exact receipt replay, migration 17 and 36 forced-RLS relations, plus browser ID import and an assisted real first exchange/restart. It does not complete general partner lifecycle, invitations/providers/delegation, emergency access, disconnected packaging, production/native platforms or independent operator adoption.",
         "F020 adds explicitly authorized credential-bound tenant directory authority, ordinary browser/API/CLI partner/admin enrollment, exact reviewed revisions/receipt replay, atomic source/target events and migration 18 with 39 forced-RLS relations. No existing/new account inherits tenant authority. Full contacts/checklists, invitations/providers/delegation, environment promotion/suspension, queued-work lifecycle and independent onboarding remain open.",
         "F021 adds partner-scoped immutable contact/exchange-requirement drafts through browser/API/CLI, exact current authority/version review, actor-private response-loss receipts, redacted ordinary audit payloads and migration 19 with 41 forced-RLS relations. Drafts are not tested, approved or active. Full protocol/test-exchange evidence, approval/production activation, invitations/providers/delegation and queued-work key lifecycle remain required.",
-        "F022 adds exact-bound read-only outbound SFTP onboarding probes, durable intent before contact, current plan/connection/authority checks, private paginated history and original-key recovery. Actual worker death retains the20-second lease; recovery makes no new contact. Migration20 has42 forced-RLS relations. Connectivity still needs separate file exchange evidence, approval/activation and queued-work key lifecycle; other protocols and full J05 remain open."
+        "F022 adds exact-bound read-only outbound SFTP onboarding probes, durable intent before contact, current plan/connection/authority checks, private paginated history and original-key recovery. Actual worker death retains the20-second lease; recovery makes no new contact. Migration20 has42 forced-RLS relations. Connectivity still needs separate file exchange evidence, approval/activation and queued-work key lifecycle; other protocols and full J05 remain open.",
+        "F025 adds root actor-owned reviewed checked revisions with unchanged original reports/jobs, exact current policy/authority/storage/selectors, explicit signature reuse/new attachment, held copy and separate fresh checks/release. Actual partial-copy and observed post-sync/pre-commit worker death recover exact approved slots. Genuine scanner refresh/re-scan, delegated exceptions, retention/orphan disposition, queued-work rebind and full journey/production qualification remain open."
       ]
     },
     {
