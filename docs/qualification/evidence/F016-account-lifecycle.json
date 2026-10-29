@@ -711,7 +711,13 @@
       }
     ],
     "native_browser_binary_sha256": "54f27ae16e9970cad6edfa2b44616610b1212b5f7e7da6ddd9a32d09beb5c443",
-    "native_cli_binary_sha256": "54f27ae16e9970cad6edfa2b44616610b1212b5f7e7da6ddd9a32d09beb5c443"
+    "native_cli_binary_sha256": "54f27ae16e9970cad6edfa2b44616610b1212b5f7e7da6ddd9a32d09beb5c443",
+    "committed_source": "da10d0618e34e7b53d52c0bfaea629ea1c2b18dc",
+    "committed_source_verification": {
+      "method": "SHA-256 of every candidate source Git blob at the exact commit",
+      "entries_checked": 174,
+      "all_matched": true
+    }
   },
   "environment": {
     "platform": "native macOS arm64 27.2 build 26B5086k",

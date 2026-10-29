@@ -63,7 +63,27 @@ export interface CheckPage {
   checks: CheckSummary[];
   next?: string;
 }
+export interface SignatureEvidence {
+  primary: string;
+  signer: string;
+  signatureSHA256: string;
+  keyID: string;
+  keyVersion: number;
+  keyHash: string;
+  createdAt: string;
+  verifiedAt: string;
+  validUntil: string | null;
+  hashAlgorithm: string;
+  signatureVersion: number;
+}
 export interface CheckView {
+  signatureProof: SignatureEvidence | null;
+  validation: {
+    engine: string;
+    code: string;
+    rows: number;
+    bytes: number;
+  } | null;
   current: boolean;
   signatureAttached: boolean;
   requirements: { signature: boolean; scanner: boolean } | null;
@@ -270,9 +290,135 @@ export function asCheckView(value: unknown): CheckView {
   if (reportHash !== "" && !/^[0-9a-f]{64}$/.test(reportHash))
     throw new ApiError("invalid_server_response", 502);
   const req = o.requirements === undefined ? null : object(o.requirements);
+  const rawReport = c.report === null ? null : object(c.report);
+  // PostgreSQL stores {} before a check has produced its first report.
+  const report =
+    rawReport && reportHash === "" && Object.keys(rawReport).length === 0
+      ? null
+      : rawReport;
+  const attached =
+    o.signature === undefined || o.signature === null
+      ? null
+      : object(o.signature);
+  const fileID = id(c, "file_id"),
+    sourceSHA = hash(file, "sha256"),
+    policySHA = hash(c, "policy_hash");
+  let signatureProof: SignatureEvidence | null = null;
+  let validation: CheckView["validation"] = null;
+  const invalid = () => {
+    throw new ApiError("invalid_server_response", 502);
+  };
+  const reference = (v: unknown) => {
+    const k = object(v);
+    const version = number(k, "version", Number.MAX_SAFE_INTEGER);
+    if (version < 1) invalid();
+    return { id: id(k, "id"), version, hash: hash(k, "hash") };
+  };
+  const sameReference = (
+    a: ReturnType<typeof reference>,
+    b: ReturnType<typeof reference>,
+  ) => a.id === b.id && a.version === b.version && a.hash === b.hash;
+  if (
+    attached &&
+    (id(attached, "file_id") !== fileID ||
+      hash(attached, "data_sha256") !== sourceSHA ||
+      hash(attached, "policy_hash") !== policySHA)
+  )
+    invalid();
+  if (report) {
+    if (
+      id(report, "file_id") !== fileID ||
+      hash(report, "sha256") !== sourceSHA ||
+      hash(report, "policy_hash") !== policySHA
+    )
+      invalid();
+    validation = {
+      engine: text(report, "engine", 64),
+      code: text(report, "code", 128),
+      rows: number(report, "rows", Number.MAX_SAFE_INTEGER),
+      bytes: number(report, "bytes_read", 1 << 30),
+    };
+    if (report.signature !== undefined && report.signature !== null) {
+      if (!attached) invalid();
+      const proof = object(report.signature),
+        verified = object(proof.verification),
+        key = reference(proof.key);
+      const fingerprint = (field: string) => {
+        const value = text(verified, field, 64);
+        if (!/^(?:[0-9a-f]{40}|[0-9a-f]{64})$/.test(value)) invalid();
+        return value;
+      };
+      const timestamp = (field: string) => {
+        const value = text(verified, field, 64);
+        if (!Number.isFinite(Date.parse(value))) invalid();
+        return value;
+      };
+      const instant = (value: string): bigint => {
+        const match =
+          /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})(?:\.(\d{1,9}))?Z$/.exec(
+            value,
+          );
+        const seconds = match?.[1];
+        if (!seconds) return invalid();
+        const base = Date.parse(seconds + "Z");
+        if (
+          !Number.isFinite(base) ||
+          new Date(base).toISOString().slice(0, 19) !== seconds
+        )
+          return invalid();
+        return (
+          BigInt(base) * 1000000n + BigInt((match?.[2] ?? "").padEnd(9, "0"))
+        );
+      };
+      const created = timestamp("created_at"),
+        at = timestamp("verified_at");
+      const until =
+        verified.valid_until === undefined ? null : timestamp("valid_until");
+      const digest = hash(proof, "sha256"),
+        algorithm = text(verified, "hash_algorithm", 16),
+        version = number(verified, "signature_version", 6);
+      if (
+        !attached ||
+        id(proof, "object_id") !== id(attached, "object_id") ||
+        digest !== hash(attached, "sha256") ||
+        digest !== hash(verified, "signature_sha256") ||
+        !sameReference(key, reference(attached.key)) ||
+        ![4, 6].includes(version) ||
+        !["SHA-256", "SHA-384", "SHA-512", "SHA3-256", "SHA3-512"].includes(
+          algorithm,
+        ) ||
+        instant(created) > instant(at) ||
+        (until !== null && instant(until) <= instant(at))
+      )
+        invalid();
+      signatureProof = {
+        primary: fingerprint("primary_fingerprint"),
+        signer: fingerprint("signer_fingerprint"),
+        signatureSHA256: digest,
+        keyID: key.id,
+        keyVersion: key.version,
+        keyHash: key.hash,
+        createdAt: created,
+        verifiedAt: at,
+        validUntil: until,
+        hashAlgorithm: algorithm,
+        signatureVersion: version,
+      };
+    }
+  }
+  const state = text(c, "state", 32);
+  if (
+    ["passed", "released"].includes(state) &&
+    (report === null ||
+      reportHash === "" ||
+      (req && bool(req, "signature_required") && signatureProof === null))
+  )
+    invalid();
   return {
+    signatureProof,
+    validation,
     current: bool(o, "current"),
-    signatureAttached: o.signature !== undefined && o.signature !== null,
+    signatureAttached: attached !== null,
     requirements: req
       ? {
           signature: bool(req, "signature_required"),
@@ -280,16 +426,16 @@ export function asCheckView(value: unknown): CheckView {
         }
       : null,
     check: {
-      file_id: id(c, "file_id"),
-      state: text(c, "state", 32),
+      file_id: fileID,
+      state,
       revision: number(c, "revision", Number.MAX_SAFE_INTEGER),
       attempts: number(c, "attempts", 3),
       code: text(c, "code", 128),
-      policy_hash: hash(c, "policy_hash"),
+      policy_hash: policySHA,
       report_hash: reportHash,
-      source_sha256: hash(file, "sha256"),
+      source_sha256: sourceSHA,
       path: target === null ? "" : text(target, "path"),
-      report: c.report === null ? null : object(c.report),
+      report,
     },
   };
 }

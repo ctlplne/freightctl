@@ -295,7 +295,34 @@ export class Api {
       asCheckView,
     );
   }
-  async runCheck(id: string, key: string): Promise<CheckView> {
+  private checkCommandKey(
+    operation: "run" | "release",
+    view: CheckView,
+  ): string {
+    if (!this.session) throw new ApiError("unauthorized", 401);
+    const who = this.session.identity,
+      c = view.check;
+    // This is an operation identity, not a credential or authorization grant.
+    // The same observed revision keeps the same identity after response loss;
+    // a newly reviewed revision produces a different command identity.
+    const meaning = new TextEncoder().encode(
+      JSON.stringify([
+        operation,
+        who.tenant_id,
+        who.partner_id,
+        who.actor_id,
+        c.file_id,
+        c.revision,
+        c.source_sha256,
+        c.policy_hash,
+        c.report_hash,
+      ]),
+    );
+    return `browser-check-${operation}-${digestBytes(meaning)}`;
+  }
+  async runCheck(view: CheckView): Promise<CheckView> {
+    const id = view.check.file_id,
+      key = this.checkCommandKey("run", view);
     await this.request(
       `${this.prefix}/checks/${id}/run`,
       { method: "POST", headers: { "Idempotency-Key": key } },
@@ -304,7 +331,8 @@ export class Api {
     );
     return this.check(id);
   }
-  async release(view: CheckView, key: string): Promise<CheckView> {
+  async release(view: CheckView): Promise<CheckView> {
+    const key = this.checkCommandKey("release", view);
     const c = view.check;
     await this.request(
       `${this.prefix}/checks/${c.file_id}/release`,
@@ -343,6 +371,10 @@ export class Api {
         object,
       );
       return this.check(c.file_id);
+    } catch (error) {
+      if (error instanceof ApiError && error.status === 400)
+        throw new ApiError("invalid_signature_file", 400);
+      throw error;
     } finally {
       data.fill(0);
     }

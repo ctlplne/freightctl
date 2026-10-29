@@ -100,6 +100,67 @@ try {
     );
     record(name + "-axe", { passes: results.passes });
   }
+  // Faulted responses still come from the real service over verified TLS.
+  // Playwright route.fetch uses a separate trust store from Chromium's SPKI
+  // pin. Stock curl receives only this fixture CA and protected header refs.
+  async function trustedMutation(route, label) {
+    const request = route.request(),
+      url = new URL(request.url());
+    assert.equal(url.origin, c.url);
+    assert.equal(request.method(), "POST");
+    assert.ok(
+      url.pathname.startsWith(prefix() + "/checks/") &&
+        /\/(?:run|release)$/.test(url.pathname),
+    );
+    const headers = c.private + "/" + label + ".headers",
+      body = c.private + "/" + label + ".request",
+      output = c.private + "/" + label + ".response";
+    const filtered = Object.entries(request.headers()).filter(
+      ([key]) =>
+        !["host", "connection", "content-length", "transfer-encoding"].includes(
+          key,
+        ),
+    );
+    await writeFile(
+      headers,
+      filtered.map(([key, value]) => key + ": " + value).join("\n") + "\n",
+    );
+    const bytes = request.postDataBuffer() ?? Buffer.alloc(0);
+    assert.ok(bytes.length <= 32768);
+    await writeFile(body, bytes);
+    const status = Number(
+      execFileSync(
+        "curl",
+        [
+          "--silent",
+          "--show-error",
+          "--proto",
+          "=https",
+          "--cacert",
+          c.certificate,
+          "--max-time",
+          "85",
+          "--max-filesize",
+          "262144",
+          "--header",
+          "@" + headers,
+          "--request",
+          "POST",
+          "--data-binary",
+          "@" + body,
+          "--output",
+          output,
+          "--write-out",
+          "%{http_code}",
+          url.href,
+        ],
+        { encoding: "utf8", timeout: 90000, maxBuffer: 4096 },
+      ),
+    );
+    const response = await readFile(output);
+    assert.ok(response.length <= 262144);
+    return { status, body: response.toString("utf8") };
+  }
   async function status(id) {
     return page.evaluate(
       async ({ url, id }) => {
@@ -281,6 +342,10 @@ try {
       "durable-held-pending-checks-and-release",
     );
     record("resume-uses-confirmed-prefix-and-completes-held");
+    await writeFile(
+      c.private + "/checkpoint-completed.json",
+      JSON.stringify(completed, null, 2) + "\n",
+    );
     const heldStatus = await page.evaluate(
       async ({ url, id }) => {
         const r = await fetch(url + "/files/" + id, {
@@ -295,9 +360,105 @@ try {
     await page
       .getByRole("button", { name: "Inspect intake check", exact: true })
       .click();
+    if (c.signatures) {
+      assert.equal(
+        await page
+          .getByRole("button", { name: "Run required checks", exact: true })
+          .isDisabled(),
+        true,
+      );
+      const held = await page.evaluate(
+        async ({ url, id }) => (await fetch(url + "/checks/" + id)).json(),
+        { url: prefix(), id: completed.file_id },
+      );
+      assert.equal(held.check.attempts, 0);
+      await page
+        .getByLabel("Public signature file", { exact: true })
+        .setInputFiles(c.signatures.good);
+      await page
+        .getByRole("button", { name: "Attach signature", exact: true })
+        .click();
+      await page
+        .getByText(
+          "Signature attached. Its validity is determined by the required check.",
+          { exact: true },
+        )
+        .waitFor();
+      record(
+        "browser-attaches-independent-armored-signature-before-running-checks",
+      );
+    }
+    let lostRun, retriedRun;
+    if (c.signatures) {
+      let lost, retry;
+      lostRun = new Promise((resolve) => {
+        lost = resolve;
+      });
+      retriedRun = new Promise((resolve) => {
+        retry = resolve;
+      });
+      const keys = [];
+      await page.route("**/checks/*/run", async (route) => {
+        keys.push(route.request().headers()["idempotency-key"]);
+        try {
+          const response = await trustedMutation(
+            route,
+            "check-loss-" + keys.length,
+          );
+          if (keys.length === 1) {
+            await route.abort("failed");
+            lost({ status: response.status });
+          } else {
+            await route.fulfill({
+              status: response.status,
+              contentType: "application/json",
+              body: response.body,
+            });
+            retry({
+              status: response.status,
+              keys: [...keys],
+              replayed: JSON.parse(response.body).replayed,
+            });
+          }
+        } catch {
+          await route.abort("failed").catch(() => {});
+          lost({ status: 0 });
+          retry({ status: 0, keys: [...keys] });
+        }
+      });
+    }
     await page
       .getByRole("button", { name: "Run required checks", exact: true })
       .click();
+    if (c.signatures) {
+      const committed = await lostRun;
+      assert.equal(
+        committed.status,
+        200,
+        "fault injection must first reach a committed check over verified TLS",
+      );
+      await page
+        .getByRole("button", { name: "Run required checks", exact: true })
+        .click();
+      const retried = await retriedRun;
+      await writeFile(
+        c.raw + "/run-response-loss.json",
+        JSON.stringify(retried, null, 2) + "\n",
+      );
+      assert.equal(
+        retried.status,
+        200,
+        "retry after committed check must recover its original receipt",
+      );
+      assert.equal(
+        retried.keys[1],
+        retried.keys[0],
+        "an unconfirmed check must keep its idempotency key",
+      );
+      assert.equal(retried.replayed, true);
+      await page.unroute("**/checks/*/run");
+      record("lost-check-response-replays-original-command-with-one-attempt");
+    }
     await page
       .getByText(
         "Validation passed. These bytes remain held until you approve release.",
@@ -305,11 +466,81 @@ try {
       )
       .waitFor();
     record("browser-runs-current-csv-policy");
+    if (c.signatures) {
+      await page
+        .getByText("Verified primary signer", { exact: true })
+        .waitFor();
+      await page.getByText(c.signatures.primary, { exact: true }).waitFor();
+      await page.getByText(c.signatures.subkey, { exact: true }).waitFor();
+      record(
+        "passing-browser-report-shows-exact-independent-signer-and-subkey",
+      );
+    }
+
     await audit("passing-check");
     await page
       .getByRole("button", { name: "Review release", exact: true })
       .click();
     await page.getByRole("dialog").waitFor();
+    let lostRelease, retriedRelease;
+    if (c.signatures) {
+      const review = page.getByRole("dialog");
+      await review.getByText(c.signatures.primary, { exact: true }).waitFor();
+      await review.getByText(c.signatures.subkey, { exact: true }).waitFor();
+      assert.equal(
+        await page.evaluate(() => document.activeElement?.id),
+        "release-title",
+      );
+      const before = await page.evaluate(
+        async ({ url, id }) => {
+          const view = await (await fetch(url + "/checks/" + id)).json();
+          const bytes = await fetch(url + "/files/" + id);
+          return {
+            attempts: view.check.attempts,
+            state: view.check.state,
+            download: bytes.status,
+          };
+        },
+        { url: prefix(), id: completed.file_id },
+      );
+      assert.deepEqual(before, { attempts: 1, state: "passed", download: 409 });
+      let lost, retry;
+      lostRelease = new Promise((resolve) => {
+        lost = resolve;
+      });
+      retriedRelease = new Promise((resolve) => {
+        retry = resolve;
+      });
+      const keys = [];
+      await page.route("**/checks/*/release", async (route) => {
+        keys.push(route.request().headers()["idempotency-key"]);
+        try {
+          const response = await trustedMutation(
+            route,
+            "release-loss-" + keys.length,
+          );
+          if (keys.length === 1) {
+            await route.abort("failed");
+            lost({ status: response.status });
+          } else {
+            await route.fulfill({
+              status: response.status,
+              contentType: "application/json",
+              body: response.body,
+            });
+            retry({
+              status: response.status,
+              keys: [...keys],
+              replayed: JSON.parse(response.body).replayed,
+            });
+          }
+        } catch {
+          await route.abort("failed").catch(() => {});
+          lost({ status: 0 });
+          retry({ status: 0, keys: [...keys] });
+        }
+      });
+    }
     await audit("release-dialog");
     await page.screenshot({
       path: c.raw + "/release-review.png",
@@ -318,6 +549,30 @@ try {
     await page
       .getByRole("button", { name: "Release file", exact: true })
       .click();
+    if (c.signatures) {
+      const committed = await lostRelease;
+      assert.equal(committed.status, 200);
+      const review = page.getByRole("dialog");
+      await review
+        .getByRole("alert")
+        .filter({ hasText: "Release was not confirmed" })
+        .waitFor();
+      await review
+        .getByRole("button", { name: "Retry reviewed release", exact: true })
+        .click();
+      const replay = await retriedRelease;
+      await writeFile(
+        c.raw + "/release-response-loss.json",
+        JSON.stringify(replay, null, 2) + "\n",
+      );
+      assert.equal(replay.status, 200);
+      assert.equal(replay.keys[1], replay.keys[0]);
+      assert.equal(replay.replayed, true);
+      await page.unroute("**/checks/*/release");
+      record(
+        "lost-release-response-keeps-reviewed-command-and-recovers-original-receipt",
+      );
+    }
     await page
       .getByText(
         "Released under this intake policy. Current access and policy checks still apply.",
@@ -389,6 +644,215 @@ try {
       0,
     );
     record("other-tenant-has-no-file-name-disclosure");
+    await page.getByRole("button", { name: "Sign out", exact: true }).click();
+  } else if (stage === "signed-refusals") {
+    assert.ok(c.signatures);
+    await signIn();
+    async function uploadCase(filename, source) {
+      await page.getByRole("button", { name: "Files", exact: true }).click();
+      await page
+        .getByRole("button", { name: "Upload file", exact: true })
+        .click();
+      await page
+        .getByLabel("File to send", { exact: true })
+        .setInputFiles(source);
+      await page
+        .getByLabel("Destination path", { exact: true })
+        .fill("/" + filename);
+      await page
+        .getByRole("button", { name: "Start upload", exact: true })
+        .click();
+      await page
+        .getByText("Upload accepted", { exact: true })
+        .waitFor({ timeout: 45000 });
+      await page
+        .getByRole("button", { name: "Inspect intake check", exact: true })
+        .click();
+      await page.getByLabel("Public signature file", { exact: true }).waitFor();
+    }
+    for (const [label, source, signature] of [
+      ["wrong-signer.csv", c.payload, c.signatures.wrongSigner],
+      ["changed-content.csv", c.wrongPayload, c.signatures.good],
+    ]) {
+      await uploadCase(label, source);
+      await page
+        .getByLabel("Public signature file", { exact: true })
+        .setInputFiles(signature);
+      await page
+        .getByRole("button", { name: "Attach signature", exact: true })
+        .click();
+      await page
+        .getByText(
+          "Signature attached. Its validity is determined by the required check.",
+          { exact: true },
+        )
+        .waitFor();
+      await page
+        .getByRole("button", { name: "Run required checks", exact: true })
+        .click();
+      await page
+        .getByText(
+          "The signature does not verify under the selected signer policy. The file remains held.",
+          { exact: true },
+        )
+        .waitFor();
+      assert.equal(
+        await page
+          .getByRole("button", { name: "Review release", exact: true })
+          .isDisabled(),
+        true,
+      );
+      assert.equal(
+        await page
+          .getByText("Verified primary signer", { exact: true })
+          .count(),
+        0,
+      );
+      const rejected = await page.evaluate(
+        async ({ url, label }) => {
+          const checks = await (await fetch(url + "/checks")).json();
+          const check = checks.checks.find((c) => c.path === "/" + label);
+          const result = await fetch(url + "/files/" + check.file_id);
+          return { code: check.code, status: result.status };
+        },
+        { url: prefix(), label },
+      );
+      assert.deepEqual(rejected, { code: "signature_invalid", status: 409 });
+      record("browser-" + label + "-cannot-release-or-download");
+    }
+    await uploadCase("signature-input.csv", c.payload);
+    for (const file of [
+      {
+        name: "oversized.sig",
+        buffer: Buffer.alloc(32769),
+        mimeType: "application/octet-stream",
+      },
+      {
+        name: "malformed.sig",
+        buffer: Buffer.from("synthetic malformed signature"),
+        mimeType: "application/octet-stream",
+      },
+    ]) {
+      await page
+        .getByLabel("Public signature file", { exact: true })
+        .setInputFiles(file);
+      await page
+        .getByRole("button", { name: "Attach signature", exact: true })
+        .click();
+      await page
+        .getByRole("alert")
+        .filter({ hasText: "Choose one detached OpenPGP signature" })
+        .waitFor();
+      assert.equal(
+        await page
+          .getByRole("button", { name: "Run required checks", exact: true })
+          .isDisabled(),
+        true,
+      );
+      record("browser-" + file.name + "-refused-before-check");
+    }
+    await page
+      .getByLabel("Public signature file", { exact: true })
+      .setInputFiles(c.signatures.good);
+    await page
+      .getByRole("button", { name: "Attach signature", exact: true })
+      .click();
+    await page
+      .getByRole("button", { name: "Run required checks", exact: true })
+      .click();
+    await page
+      .getByText(
+        "Validation passed. These bytes remain held until you approve release.",
+        { exact: true },
+      )
+      .waitFor();
+    await page.getByText("1 of 3", { exact: true }).waitFor();
+    record(
+      "invalid-signature-inputs-preserve-check-budget-and-good-file-can-be-checked",
+    );
+    await audit("signature-refusals");
+    await page.screenshot({
+      path: c.raw + "/signature-refusals.png",
+      fullPage: true,
+    });
+    await page.getByRole("button", { name: "Sign out", exact: true }).click();
+  } else if (stage === "signed-revoked") {
+    assert.ok(c.signatures);
+    await signIn();
+    const binary = path.join(c.root, ".cache/freightctl-browser"),
+      key = c.signatures.key;
+    const revoked = JSON.parse(
+      execFileSync(
+        binary,
+        [
+          "pgp-key-revoke",
+          "--tenant",
+          c.tenant,
+          "--partner",
+          c.partner,
+          "--token-file",
+          c.identities[0].token,
+          "--pgp-key-id",
+          key.id,
+          "--version",
+          String(key.version),
+          "--definition-hash",
+          key.hash,
+          "--expected-revision",
+          String(c.signatures.keyRevision),
+          "--idempotency-key",
+          "signed-browser-revoke",
+        ],
+        { encoding: "utf8", timeout: 20000 },
+      ),
+    );
+    assert.equal(revoked.resource.state, "revoked");
+    await page
+      .getByRole("button", { name: "Intake checks", exact: true })
+      .click();
+    const row = page.getByRole("row").filter({ hasText: "/business.csv" });
+    await row
+      .getByRole("button", { name: "Inspect check", exact: true })
+      .click();
+    await page
+      .getByText(
+        "Access or policy changed. An administrator must review this revision before further action.",
+        { exact: true },
+      )
+      .waitFor();
+    assert.equal(
+      await page
+        .getByRole("button", { name: "Review release", exact: true })
+        .isDisabled(),
+      true,
+    );
+    await page.getByRole("button", { name: "Files", exact: true }).click();
+    const file = page.getByRole("row").filter({ hasText: "business.csv" });
+    await file.waitFor();
+    const downloads = [];
+    page.on("download", (d) => downloads.push(d));
+    const blocked = page.waitForResponse(
+      (r) => r.url().includes("/namespace/file?") && r.status() === 409,
+    );
+    await file
+      .getByRole("link", { name: "Download business.csv", exact: true })
+      .click();
+    await blocked;
+    await page
+      .getByRole("heading", { name: "Download unavailable", exact: true })
+      .waitFor();
+    assert.equal(downloads.length, 0);
+    record(
+      "revoked-signer-disables-release-and-native-browser-retrieval-returns-readable-refusal",
+    );
+    await page.screenshot({
+      path: c.raw + "/revoked-download.png",
+      fullPage: true,
+    });
+    await page
+      .getByRole("link", { name: "Return to your workspace", exact: true })
+      .click();
+    await page.getByRole("heading", { name: "Files", exact: true }).waitFor();
     await page.getByRole("button", { name: "Sign out", exact: true }).click();
   } else if (stage === "accounts") {
     await signIn();

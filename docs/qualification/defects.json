@@ -669,6 +669,53 @@
       "regression_evidence": [
         "docs/qualification/evidence/F016-account-lifecycle.json"
       ]
+    },
+    {
+      "id": "D044",
+      "severity": "incomplete human release review",
+      "state": "fixed locally",
+      "observed_on": "2026-10-29",
+      "candidate": "da10d0618e34e7b53d52c0bfaea629ea1c2b18dc",
+      "journey": "J11",
+      "reproduction": "Native signed-browser upload, pause/restart/resume, armored signature attachment and passing check; inspect check and release review.",
+      "first_failure": "The check passed but the browser could not show the verified primary signer/signing-key fingerprints.",
+      "cause": "The browser retained a generic report object and rendered only source/policy/report digests.",
+      "resolution": "Decode a bounded typed proof joined to the exact file/policy/attachment/key; show complete fingerprints, selected key revision, signature digest/format and verification window in the check and frozen release review. Retain server revalidation as authority.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F017-signed-browser-recovery.json"
+      ]
+    },
+    {
+      "id": "D045",
+      "severity": "new report decoder rejected legitimate pending state",
+      "state": "fixed locally",
+      "observed_on": "2026-10-29",
+      "candidate": "da10d0618e34e7b53d52c0bfaea629ea1c2b18dc",
+      "candidate_note": "F017 retains exact first failed decoder source and the real held-check response.",
+      "journey": "J11",
+      "reproduction": "Inspect the completed held browser upload before attaching its first signature.",
+      "first_failure": "The new decoder returned invalid_server_response and the required-check controls were absent.",
+      "cause": "PostgreSQL represents a pre-check report as an empty object with an empty report digest; the decoder assumed every non-null report was complete.",
+      "resolution": "Normalize only empty pre-check objects with empty digests into no report. Completed signed states still require a complete exact proof and report digest. Contract coverage includes the actual empty-object representation.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F017-signed-browser-recovery.json"
+      ]
+    },
+    {
+      "id": "D046",
+      "severity": "browser action identity changed after lost committed response",
+      "state": "fixed locally",
+      "observed_on": "2026-10-29",
+      "candidate": "da10d0618e34e7b53d52c0bfaea629ea1c2b18dc",
+      "candidate_note": "F017 retains first native HTTP 409, both distinct original operation keys, exact source snapshot and corrected real receipt recovery.",
+      "journey": "J11",
+      "reproduction": "Commit a signed check over fixture-CA-verified stock curl, drop its response at the browser boundary, then retry from the unchanged view.",
+      "first_failure": "The retry used a different idempotency key and returned HTTP 409 instead of recovering the committed original receipt.",
+      "cause": "The browser generated fresh random operation keys for every check/release click and discarded release review on an unconfirmed response.",
+      "resolution": "Derive operation identity from authenticated scope and exact reviewed revision/source/policy/report fields. Keep frozen release review and explicit receipt retry after an unconfirmed result; definitive refusals require cancel/refresh/new review. Native injection proves original replay receipts and one check attempt.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F017-signed-browser-recovery.json"
+      ]
     }
   ]
 }

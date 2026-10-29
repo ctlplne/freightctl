@@ -71,12 +71,14 @@
         "docs/qualification/evidence/F007-outbound-intents.json",
         "docs/qualification/evidence/F008-versioned-workflows.json",
         "docs/qualification/evidence/F014-browser-exchange.json",
-        "docs/qualification/evidence/F016-account-lifecycle.json"
+        "docs/qualification/evidence/F016-account-lifecycle.json",
+        "docs/qualification/evidence/F017-signed-browser-recovery.json"
       ],
       "remaining_details": [
         "F005/F006 verify bounded inbound and durable ticket resume. F007 adds a local-only approved outbound SFTP profile against a stock receiver. Finish ordinary-operator onboarding, API/browser parity, production network policy, broader protocols/clients/enterprise peers, larger files and independent business receipts. No complete journey is qualified.",
         "F014 adds enrolled-account browser exchange, durable pause/reload/process restart/resume and native/stock-curl exact-byte retrieval. Clean first-admin/partner onboarding, independent operators, production peers and full business receipt remain open.",
-        "F016 adds ordinary scoped account management through browser/API/CLI, plus stock curl acceptance/refusal after credential rotation/revocation. Assisted local account lifecycle does not close clean installation, partner setup, SSH-expiry interoperability, broad native clients, independent operator adoption or business receipts."
+        "F016 adds ordinary scoped account management through browser/API/CLI, plus stock curl acceptance/refusal after credential rotation/revocation. Assisted local account lifecycle does not close clean installation, partner setup, SSH-expiry interoperability, broad native clients, independent operator adoption or business receipts.",
+        "F017 adds a current signed-browser exchange: durable pause/reload/restart/resume, independently generated signature attachment, exact review, explicit release and native/stock-curl downloads independently verified by GnuPG. Same-host assistance is not clean installation, full onboarding, production network/platform or downstream business receipt qualification."
       ]
     },
     {
@@ -140,11 +142,13 @@
       "evidence": [
         "docs/qualification/evidence/F006-upload-checkpoints.json",
         "docs/qualification/evidence/F014-browser-exchange.json",
-        "docs/qualification/evidence/F016-account-lifecycle.json"
+        "docs/qualification/evidence/F016-account-lifecycle.json",
+        "docs/qualification/evidence/F017-signed-browser-recovery.json"
       ],
       "remaining_details": [
         "F014 implements a typed embedded browser workspace, short-lived session/CSRF/logout controls, private ticket discovery, durable single-file pause/reload/restart/resume, held checks, separate release and native streaming download. Assisted Chromium, selected accessibility scans and byte comparison pass. First-admin/partner onboarding, invitations, SSO/MFA/recovery, delegated administration, batches, sharing/forms/mail, complete accessibility and independent adoption remain open.",
-        "F016 adds an Accounts workspace with review bound to the target revision, browser-generated credential download before proof-only enrollment, policy updates, rotation, expiry/revocation and paginated status. First-admin/partner creation, invitations, SSO/MFA/recovery, delegated administration, batch/sharing/forms/mail and complete accessibility/adoption remain open."
+        "F016 adds an Accounts workspace with review bound to the target revision, browser-generated credential download before proof-only enrollment, policy updates, rotation, expiry/revocation and paginated status. First-admin/partner creation, invitations, SSO/MFA/recovery, delegated administration, batch/sharing/forms/mail and complete accessibility/adoption remain open.",
+        "F017 adds bounded typed signer evidence in the check/release UI, preserved frozen release review and stable check/release operation identities after lost committed responses. Native wrong-signer/changed-data/malformed/oversize and signer-revocation paths pass. Full browser/accessibility coverage, first-admin/partner setup, invitations/providers, sharing/forms/batches and independent adoption remain open."
       ]
     },
     {
@@ -209,7 +213,8 @@
         "docs/qualification/evidence/F012-encrypted-delivery.json",
         "docs/qualification/evidence/F013-scanner-controls.json",
         "docs/qualification/evidence/F014-browser-exchange.json",
-        "docs/qualification/evidence/F016-account-lifecycle.json"
+        "docs/qualification/evidence/F016-account-lifecycle.json",
+        "docs/qualification/evidence/F017-signed-browser-recovery.json"
       ],
       "remaining_details": [
         "Current account/key/mount and destination/parent checks gate transfer mutations. Complete delegated lifecycle, policy reapproval/rebinding, human identity/MFA/providers, complete denial/session auditing, approval UI and governance remain open.",
@@ -219,7 +224,8 @@
         "F012 adds purpose-separated public recipient versions, explicit subkey/profile/destination approval and current revocation across whole runs. Delegation, human UI/trust onboarding, providers, automated overlap/rebind and complete governance remain open.",
         "F013 adds explicit scanner_manage without upgrading existing credentials, sanitized shared metadata, local-only host-reference enrollment and exact revocation. Delegated human review, onboarding, UI/providers and full lifecycle governance remain open.",
         "F014 binds short-lived browser sessions to the exact parent credential, current mount/authority and absolute expiry, with tenant/partner/actor isolation and durable logout receipts. Session creation/receipt failures roll back atomically; logout/key replay cannot revive authority or revoke a different session. Human enrollment, SSO/MFA/providers, delegated approvals and full lifecycle governance remain open.",
-        "F016 implements root-scoped admin+accounts_manage authority, grant-subset/target protections, optimistic account revisions, atomic exact receipts and security-change session invalidation. Label-only changes preserve file authority; expiry affects ordinary authentication and bounds browser lifetime. Bootstrap is still administrative; providers, key self-service/overlap, delegated approvals, governed rebind, reconstruction and full lifecycle qualification remain open."
+        "F016 implements root-scoped admin+accounts_manage authority, grant-subset/target protections, optimistic account revisions, atomic exact receipts and security-change session invalidation. Label-only changes preserve file authority; expiry affects ordinary authentication and bounds browser lifetime. Bootstrap is still administrative; providers, key self-service/overlap, delegated approvals, governed rebind, reconstruction and full lifecycle qualification remain open.",
+        "F017 exposes full verified primary/signing fingerprints, registered key version/hash, signature hash/format and recorded verification window. Runtime trust/expiry/access rechecks still decide release/retrieval. Native revocation denies cached browser retrieval; delegated trust administration, private custody, self-service key overlap and complete provider/lifecycle governance remain open."
       ]
     },
     {

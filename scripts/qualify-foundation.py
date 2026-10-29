@@ -20,6 +20,7 @@ starting_sources=source_hashes()
 env=dict(os.environ,GOMAXPROCS='1',NODE_OPTIONS='--max-old-space-size=192')
 commands=[
 ('records',['python3','scripts/check-records.py']),
+('frontend-evidence-contract',['npm','--prefix','web','test']),
 ('frontend-typecheck',['npm','--prefix','web','run','typecheck']),
 ('browser-artifact-integrity',['npm','--prefix','web','run','check-built']),
 ('module-integrity',['sh','scripts/go.sh','mod','verify']),
@@ -43,6 +44,7 @@ commands=[
 ('held-intake-and-csv-checks',['python3','scripts/qualify-intake.py']),
 ('scanner-outage-controls-no-engine',['python3','scripts/qualify-scanner-unavailable.py']),
 ('native-browser-exchange',['python3','scripts/qualify-browser.py']),
+('native-signed-browser-exchange',['python3','scripts/qualify-browser.py','--signed']),
 ('signed-intake-openpgp',['python3','scripts/qualify-pgp.py']),
 ('recipient-encrypted-delivery',['python3','scripts/qualify-encryption.py']),
 ]

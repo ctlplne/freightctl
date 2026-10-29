@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { createRoot } from "react-dom/client";
 import { Api } from "./api";
 import { Accounts } from "./accounts";
+import { CheckEvidence } from "./check-evidence";
 import { digestBytes, digestFile, operationKey } from "./crypto";
 import {
   ApiError,
@@ -60,7 +61,7 @@ const messages: Record<string, string> = {
   scanner_blocked:
     "The scanner could not clear this file. Review its limits or encrypted-content policy.",
   invalid_signature_file:
-    "Choose a detached public signature no larger than 32 KiB.",
+    "Choose one detached OpenPGP signature (.sig or .asc), no larger than 32 KiB, created for this complete file.",
   signature_invalid:
     "The signature does not verify under the selected signer policy. The file remains held.",
   invalid_csv:
@@ -113,6 +114,8 @@ function App() {
   const [checks, setChecks] = useState<CheckPage>({ checks: [] }),
     [checkAfter, setCheckAfter] = useState(""),
     [view, setView] = useState<CheckView | null>(null);
+  const [releaseError, setReleaseError] = useState(""),
+    [releaseBlocked, setReleaseBlocked] = useState(false);
   const [approval, setApproval] = useState<CheckView | null>(null),
     [acting, setActing] = useState(false),
     [signingOut, setSigningOut] = useState(false),
@@ -133,6 +136,7 @@ function App() {
     } | null>(null);
   const alert = useRef<HTMLDivElement>(null),
     dialog = useRef<HTMLDialogElement>(null),
+    releaseTitle = useRef<HTMLHeadingElement>(null),
     credentialInput = useRef<HTMLInputElement>(null),
     fileInput = useRef<HTMLInputElement>(null);
   const allowed = (grant: string) =>
@@ -155,6 +159,8 @@ function App() {
     setChecks({ checks: [] });
     setView(null);
     setApproval(null);
+    setReleaseError("");
+    setReleaseBlocked(false);
     setFolder("/");
     setFileAfter("");
     setUploadAfter("");
@@ -191,8 +197,10 @@ function App() {
     if (error) alert.current?.focus();
   }, [error]);
   useEffect(() => {
-    if (approval && dialog.current && !dialog.current.open)
+    if (approval && dialog.current && !dialog.current.open) {
       dialog.current.showModal();
+      releaseTitle.current?.focus();
+    }
   }, [approval]);
   useEffect(() => {
     if (!session) return;
@@ -459,7 +467,7 @@ function App() {
     setActing(true);
     setError("");
     try {
-      const updated = await api.runCheck(view.check.file_id, operationKey());
+      const updated = await api.runCheck(view);
       if (generation === epoch.current) {
         setView(updated);
         setRefresh((v) => v + 1);
@@ -476,8 +484,9 @@ function App() {
     const frozen = approval;
     setActing(true);
     setError("");
+    setReleaseError("");
     try {
-      const updated = await api.release(frozen, operationKey());
+      const updated = await api.release(frozen);
       if (generation !== epoch.current) return;
       setView(updated);
       setApproval(null);
@@ -487,8 +496,15 @@ function App() {
       );
       setRefresh((v) => v + 1);
     } catch (e) {
-      setApproval(null);
-      dialog.current?.close();
+      if (generation !== epoch.current) return;
+      const definitive =
+        e instanceof ApiError && e.status >= 400 && e.status < 500;
+      setReleaseBlocked(definitive);
+      setReleaseError(
+        definitive
+          ? "The server refused this reviewed change. Cancel, refresh the current state and review again."
+          : "Release was not confirmed. Retry this same reviewed command to recover its saved receipt, or cancel and refresh current state.",
+      );
       reportError(e);
     } finally {
       setActing(false);
@@ -1188,6 +1204,7 @@ function App() {
                       <dt>Attempts</dt>
                       <dd>{view.check.attempts} of 3</dd>
                     </dl>
+                    <CheckEvidence view={view} />
                     {view.requirements?.signature && (
                       <div className="signature-box">
                         <h3>Detached signature</h3>
@@ -1260,7 +1277,11 @@ function App() {
                               !view.current ||
                               view.check.state !== "passed"
                             }
-                            onClick={() => setApproval(view)}
+                            onClick={() => {
+                              setReleaseError("");
+                              setReleaseBlocked(false);
+                              setApproval(view);
+                            }}
                           >
                             Review release
                           </button>
@@ -1280,9 +1301,14 @@ function App() {
       <dialog
         ref={dialog}
         aria-labelledby="release-title"
-        onCancel={() => setApproval(null)}
+        onCancel={(e) => {
+          if (acting) e.preventDefault();
+          else setApproval(null);
+        }}
       >
-        <h2 id="release-title">Release this exact revision?</h2>
+        <h2 id="release-title" ref={releaseTitle} tabIndex={-1}>
+          Release this exact revision?
+        </h2>
         {approval && (
           <>
             <p>
@@ -1310,13 +1336,15 @@ function App() {
               <dt>Expected check revision</dt>
               <dd>{approval.check.revision}</dd>
             </dl>
+            <CheckEvidence view={approval} />
+            {releaseError && <p role="alert">{releaseError}</p>}
             <div className="actions">
               <button
                 className="primary"
                 onClick={() => void release()}
-                disabled={acting}
+                disabled={acting || releaseBlocked}
               >
-                Release file
+                {releaseError ? "Retry reviewed release" : "Release file"}
               </button>
               <button
                 className="secondary"

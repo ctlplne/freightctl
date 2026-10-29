@@ -3224,11 +3224,13 @@
       "acceptance_journey": "J05",
       "state": "implementing",
       "evidence": [
-        "docs/qualification/evidence/F016-account-lifecycle.json"
+        "docs/qualification/evidence/F016-account-lifecycle.json",
+        "docs/qualification/evidence/F017-signed-browser-recovery.json"
       ],
       "qualification_blockers": [
         "Authorized IBM Sterling File Gateway installation and exact edition/version for observed comparison",
-        "F016 covers assisted scoped account lifecycle only. First-admin/partner setup, invitations/providers, self-service SSH key overlap, delegated trust review and independent onboarding remain open."
+        "F016 covers assisted scoped account lifecycle only. First-admin/partner setup, invitations/providers, self-service SSH key overlap, delegated trust review and independent onboarding remain open.",
+        "F017 adds assisted signed browser review and completed-operation receipt recovery; complete partner setup, invitations/providers, delegation and independent onboarding remain open."
       ]
     },
     {
