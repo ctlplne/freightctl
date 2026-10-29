@@ -24,13 +24,15 @@ var ErrPGPInput = errors.New("unsupported or malformed bounded OpenPGP public ke
 var ErrPGPVerification = errors.New("OpenPGP signature, signer, time or exact source verification failed")
 
 type PGPPublicKey struct {
-	Schema      int        `json:"schema_version"`
-	Packets     []byte     `json:"public_packets"`
-	Fingerprint string     `json:"fingerprint"`
-	Algorithm   string     `json:"algorithm"`
-	Version     int        `json:"key_version"`
-	Created     time.Time  `json:"created_at"`
-	ValidUntil  *time.Time `json:"valid_until,omitempty"`
+	Schema      int           `json:"schema_version"`
+	Packets     []byte        `json:"public_packets"`
+	Fingerprint string        `json:"fingerprint"`
+	Algorithm   string        `json:"algorithm"`
+	Version     int           `json:"key_version"`
+	Created     time.Time     `json:"created_at"`
+	ValidUntil  *time.Time    `json:"valid_until,omitempty"`
+	Purpose     string        `json:"purpose,omitempty"`
+	Recipient   *PGPRecipient `json:"recipient,omitempty"`
 }
 type PGPVerification struct {
 	Backend            string     `json:"backend"`
@@ -253,6 +255,9 @@ func readPGPEntity(data []byte, now time.Time) (*openpgp.Entity, *time.Time, err
 	return e, until, nil
 }
 func ParsePGPPublicKey(ctx context.Context, wire []byte, expected string, now time.Time) (*PGPPublicKey, error) {
+	return parsePGPPublicKey(ctx, wire, expected, now, false)
+}
+func parsePGPPublicKey(ctx context.Context, wire []byte, expected string, now time.Time, recipient bool) (*PGPPublicKey, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, err
 	}
@@ -275,14 +280,24 @@ func ParsePGPPublicKey(ctx context.Context, wire []byte, expected string, now ti
 	if hex.EncodeToString(e.PrimaryKey.Fingerprint) != expected {
 		return nil, ErrPGPVerification
 	}
-	if _, ok := e.SigningKey(now, pgpConfig(now)); !ok {
+	var encryption *PGPRecipient
+	if recipient {
+		encryption, until, err = pgpRecipient(e, now, until)
+		if err != nil {
+			return nil, err
+		}
+	} else if _, ok := e.SigningKey(now, pgpConfig(now)); !ok {
 		return nil, ErrPGPVerification
 	}
 	if err = ctx.Err(); err != nil {
 		return nil, err
 	}
 	algorithm, _ := pgpAlgorithm(e.PrimaryKey)
-	return &PGPPublicKey{Schema: 1, Packets: bytes.Clone(data), Fingerprint: expected, Algorithm: algorithm, Version: e.PrimaryKey.Version, Created: e.PrimaryKey.CreationTime.UTC(), ValidUntil: until}, nil
+	key := &PGPPublicKey{Schema: 1, Packets: bytes.Clone(data), Fingerprint: expected, Algorithm: algorithm, Version: e.PrimaryKey.Version, Created: e.PrimaryKey.CreationTime.UTC(), ValidUntil: until, Recipient: encryption}
+	if recipient {
+		key.Purpose = "encrypt"
+	}
+	return key, nil
 }
 func InspectPGPSignature(wire []byte) error {
 	data, err := pgpBinary(wire, "PGP SIGNATURE")
@@ -329,7 +344,7 @@ func (r *pgpSource) Read(p []byte) (int, error) {
 // VerifyPGPDetached accepts only one detached binary-document signature. The
 // caller supplies the approved primary fingerprint and exact accepted bytes.
 func VerifyPGPDetached(ctx context.Context, key PGPPublicKey, wire []byte, source io.Reader, size int64, digest string, now time.Time, maxAge uint32) (*PGPVerification, error) {
-	if size < 0 || size > 1<<30 || now.IsZero() || InspectPGPSignature(wire) != nil {
+	if key.Purpose != "" || size < 0 || size > 1<<30 || now.IsZero() || InspectPGPSignature(wire) != nil {
 		return nil, ErrPGPInput
 	}
 	e, until, err := readPGPEntity(key.Packets, now)

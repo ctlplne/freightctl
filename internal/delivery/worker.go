@@ -127,7 +127,11 @@ func verifyRemote(ctx context.Context, client *sftp.Client, name string, spec *D
 	return f.Close()
 }
 func receipt(d *store.Delivery, spec *Definition, reconciled bool) json.RawMessage {
-	result, _ := json.Marshal(map[string]any{"code": "remote_file_integrity_observed", "path": finalPath(d, spec), "size_bytes": spec.Source.Size, "sha256": spec.Source.SHA256, "host_fingerprint": spec.Destination.Host.Fingerprint, "file_fsync_acknowledged": !reconciled, "reconciled": reconciled, "business_acceptance": "unknown", "directory_power_loss_durability": "not established"})
+	value := map[string]any{"code": "remote_file_integrity_observed", "path": finalPath(d, spec), "size_bytes": spec.Source.Size, "sha256": spec.Source.SHA256, "host_fingerprint": spec.Destination.Host.Fingerprint, "file_fsync_acknowledged": !reconciled, "reconciled": reconciled, "business_acceptance": "unknown", "directory_power_loss_durability": "not established"}
+	if a := spec.Transfer; a != nil {
+		value["encryption"] = map[string]any{"key": a.Policy.Key, "profile": a.Policy.Profile, "primary_fingerprint": a.Proof.PrimaryFingerprint, "encryption_fingerprint": a.Proof.EncryptionFingerprint, "ciphertext_object_id": a.ObjectID, "source_file_id": a.SourceID, "source_sha256": a.SourceSHA256, "cipher": a.Proof.Cipher, "compression": a.Proof.Compression}
+	}
+	result, _ := json.Marshal(value)
 	return result
 }
 
@@ -136,11 +140,26 @@ func receipt(d *store.Delivery, spec *Definition, reconciled bool) json.RawMessa
 func (s *Service) Work(ctx context.Context, scope store.Scope, id string) (*store.Delivery, error) {
 	ctx, cancel := context.WithTimeout(ctx, 90*time.Second)
 	defer cancel()
-	slotCheck, release, err := s.Custody.DB.DeliveryWorkerSlot(ctx)
+	admission, _, planned, err := s.begin(ctx, scope, id, false)
 	if err != nil {
 		return nil, err
 	}
-	defer release()
+	if err = admission.Tx.Commit(ctx); err != nil {
+		return nil, err
+	}
+	slot := s.Custody.DB.DeliveryWorkerSlot
+	if planned.Encryption != nil {
+		slot = s.Custody.DB.EncryptionWorkerSlot
+	}
+	slotCheck, release, err := slot(ctx)
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		if release != nil {
+			release()
+		}
+	}()
 	owner := secure.NewID()
 	d, spec, err := s.Claim(ctx, scope, id, owner)
 	if err != nil {
@@ -184,9 +203,24 @@ func (s *Service) Work(ctx context.Context, scope store.Scope, id string) (*stor
 	if spec.Source.Size > s.Custody.MaxFile {
 		return s.transition(ctx, scope, id, owner, fence, "blocked", observation("file_budget_exceeded"))
 	}
-	_, source, err := s.Custody.Download(ctx, scope, d.FileID)
-	if err != nil {
-		return s.transition(ctx, scope, id, owner, fence, "blocked", observation("source_not_verified"))
+	var source *os.File
+	if spec.Encryption != nil {
+		spec, source, err = s.prepareCiphertext(ctx, scope, d, spec, check)
+		if err != nil {
+			return stageFailure("encryption_preparation_unavailable")
+		}
+		release()
+		release = nil
+		slotCheck, release, err = s.Custody.DB.DeliveryWorkerSlot(ctx)
+		if err != nil {
+			source.Close()
+			return stageFailure("delivery_capacity_unavailable")
+		}
+	} else {
+		_, source, err = s.Custody.Download(ctx, scope, d.FileID)
+		if err != nil {
+			return s.transition(ctx, scope, id, owner, fence, "blocked", observation("source_not_verified"))
+		}
 	}
 	defer source.Close()
 	client, stream, err := connect(ctx, spec)
@@ -287,6 +321,16 @@ func (s *Service) Reconcile(ctx context.Context, scope store.Scope, id string) (
 	}
 	if err = s.storage(spec); err != nil {
 		return nil, err
+	}
+	if spec.Encryption != nil {
+		artifact, err := t.DeliveryCiphertext(ctx, id)
+		if err != nil {
+			return nil, err
+		}
+		spec, err = encryptedDefinition(spec, artifact)
+		if err != nil {
+			return nil, err
+		}
 	}
 	now, err := t.DatabaseTime(ctx)
 	if err != nil {

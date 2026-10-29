@@ -114,9 +114,9 @@ func run(args []string) error {
 	case "ai-profile-register", "ai-profile-status", "ai-profile-revoke", "ai-propose", "ai-diagnose", "ai-status", "ai-approve", "ai-generate", "ai-adopt":
 		return runAssistance(ctx, args[0], *dsn, *token, *tenant, *partner, *requestFile, *idempotencyKey, *aiProfileID, *aiJobID, *contextHash, *deliveryHash, *resourceVersion, *deliveryRevision, *aiEnabled)
 	case "connection-register", "connection-status", "connection-revoke", "workflow-validate", "workflow-draft", "workflow-status", "workflow-approve", "workflow-revoke", "workflow-run", "workflow-run-status", "workflow-work", "workflow-diff", "workflow-cancel":
-		return runWorkflow(ctx, args[0], *dsn, *token, *tenant, *partner, *storage, *requestFile, *idempotencyKey, *workflowID, *connectionID, *runID, *deliveryHash, *resourceVersion, *againstVersion, *deliveryRevision, *maxFile)
+		return runWorkflow(ctx, args[0], *dsn, *token, *tenant, *partner, *storage, *requestFile, *idempotencyKey, *workflowID, *connectionID, *runID, *deliveryHash, *resourceVersion, *againstVersion, *deliveryRevision, *maxFile, *maxStored)
 	case "delivery-create", "delivery-status", "delivery-approve", "delivery-cancel", "delivery-work", "delivery-reconcile":
-		return runDelivery(ctx, args[0], *dsn, *token, *tenant, *partner, *storage, *requestFile, *idempotencyKey, *deliveryID, *deliveryHash, *deliveryRevision, *maxFile)
+		return runDelivery(ctx, args[0], *dsn, *token, *tenant, *partner, *storage, *requestFile, *idempotencyKey, *deliveryID, *deliveryHash, *deliveryRevision, *maxFile, *maxStored)
 	case "init":
 		return store.Migrate(ctx, *admin, *password)
 	case "token":

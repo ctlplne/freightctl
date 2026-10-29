@@ -14,7 +14,7 @@ import (
 	"github.com/ctlplne/freightctl/internal/store"
 )
 
-func runDelivery(ctx context.Context, command, dsn, token, tenant, partner, storage, input, key, id, hash string, revision, maxFile int64) error {
+func runDelivery(ctx context.Context, command, dsn, token, tenant, partner, storage, input, key, id, hash string, revision, maxFile, maxStored int64) error {
 	if maxFile < 1 || maxFile > 1<<30 {
 		return errors.New("invalid delivery file budget")
 	}
@@ -29,7 +29,7 @@ func runDelivery(ctx context.Context, command, dsn, token, tenant, partner, stor
 		return err
 	}
 	defer db.Pool.Close()
-	custodyService := &custody.Service{DB: db, MaxFile: maxFile}
+	custodyService := &custody.Service{DB: db, MaxFile: maxFile, MaxStored: maxStored}
 	if command == "delivery-create" || command == "delivery-work" || command == "delivery-reconcile" {
 		disk, err := custody.OpenExisting(storage)
 		if err != nil {

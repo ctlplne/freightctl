@@ -3,6 +3,7 @@ package workflow
 import (
 	"context"
 	"encoding/json"
+	"reflect"
 
 	"github.com/ctlplne/freightctl/internal/store"
 )
@@ -62,7 +63,7 @@ func (s *Service) Diff(ctx context.Context, scope store.Scope, id string, from, 
 	for _, step := range d.After.Steps {
 		if prior, ok := old[step.ID]; !ok {
 			d.Added = append(d.Added, step.ID)
-		} else if prior != step {
+		} else if !reflect.DeepEqual(prior, step) {
 			d.Changed = append(d.Changed, step.ID)
 		}
 	}

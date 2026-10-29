@@ -13,7 +13,7 @@ import (
 	"github.com/ctlplne/freightctl/internal/workflow"
 )
 
-func runWorkflow(ctx context.Context, command, dsn, token, tenant, partner, storage, input, key, workflowID, connectionID, runID, hash string, version, againstVersion int, revision, maxFile int64) error {
+func runWorkflow(ctx context.Context, command, dsn, token, tenant, partner, storage, input, key, workflowID, connectionID, runID, hash string, version, againstVersion int, revision, maxFile, maxStored int64) error {
 	if maxFile < 1 || maxFile > 1<<30 {
 		return errors.New("invalid workflow file budget")
 	}
@@ -28,7 +28,7 @@ func runWorkflow(ctx context.Context, command, dsn, token, tenant, partner, stor
 		return err
 	}
 	defer db.Pool.Close()
-	custodyService := &custody.Service{DB: db, MaxFile: maxFile}
+	custodyService := &custody.Service{DB: db, MaxFile: maxFile, MaxStored: maxStored}
 	if command == "workflow-run" || command == "workflow-work" {
 		disk, err := custody.OpenExisting(storage)
 		if err != nil {

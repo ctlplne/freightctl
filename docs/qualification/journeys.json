@@ -36,12 +36,14 @@
       "duration_seconds": null,
       "evidence": [
         "docs/qualification/evidence/F010-held-intake.json",
-        "docs/qualification/evidence/F011-openpgp-intake.json"
+        "docs/qualification/evidence/F011-openpgp-intake.json",
+        "docs/qualification/evidence/F012-encrypted-delivery.json"
       ],
       "failures": [],
       "limits": [
         "F010 proves bounded held CSV intake and separate release; its source/evidence retains its original pre-signature scope.",
-        "F011 adds independent GnuPG detached signature verification of exact held CSV bytes, separate release, stock receiver retrieval, independent signature re-verification and signer revocation/explicit policy rotation. Malware scanning, recipient encryption, wider processing, business acknowledgment and the complete journey remain open."
+        "F011 adds independent GnuPG detached signature verification of exact held CSV bytes, separate release, stock receiver retrieval, independent signature re-verification and signer revocation/explicit policy rotation. Malware scanning, recipient encryption, wider processing, business acknowledgment and the complete journey remain open.",
+        "F012 adds public recipient enrollment, exact source/recipient/profile/destination approval, durable ciphertext reuse and independent GnuPG decryption/signature verification of stock SFTP receiver bytes. Application decryption/private signing, malware scanning, broader processing/peers, business acceptance and the complete journey remain open."
       ]
     },
     {
@@ -111,13 +113,15 @@
         "docs/qualification/evidence/F007-outbound-intents.json",
         "docs/qualification/evidence/F008-versioned-workflows.json",
         "docs/qualification/evidence/F010-held-intake.json",
-        "docs/qualification/evidence/F011-openpgp-intake.json"
+        "docs/qualification/evidence/F011-openpgp-intake.json",
+        "docs/qualification/evidence/F012-encrypted-delivery.json"
       ],
       "failures": [],
       "limits": [
         "Only narrower local custody and staging-crash experiments passed; complete journey remains open.",
         "F010 adds visible schema rejection, wrong-storage/changed-byte/stale-policy refusal and a real delayed-worker recovery boundary. Complete diagnoses/recovery for every required dependency and governed rebind remain open.",
-        "F011 adds missing/invalid/aged/revoked signer diagnoses, retained signature reconciliation, receipt-failure rollback and explicit new-policy intake. General recovery/rebind, re-scan and dependency failures remain open."
+        "F011 adds missing/invalid/aged/revoked signer diagnoses, retained signature reconciliation, receipt-failure rollback and explicit new-policy intake. General recovery/rebind, re-scan and dependency failures remain open.",
+        "F012 exercises an actual worker kill after ciphertext sync/before acceptance, orphan observation, original-lease recovery, remote success with a failed local receipt, same-ciphertext read-only reconciliation and CLI quota failure/replay. Remaining dependency failures, governed repair/rebind and complete diagnosis/recovery remain open."
       ]
     },
     {
@@ -195,13 +199,15 @@
         "docs/qualification/evidence/F008-versioned-workflows.json",
         "docs/qualification/evidence/F009-assistance-controls.json",
         "docs/qualification/evidence/F010-held-intake.json",
-        "docs/qualification/evidence/F011-openpgp-intake.json"
+        "docs/qualification/evidence/F011-openpgp-intake.json",
+        "docs/qualification/evidence/F012-encrypted-delivery.json"
       ],
       "failures": [],
       "limits": [
         "F009 adds current-actor scoped assistance contexts, three forced-RLS tables, disclosure grants and revoked/stale denial. Complete isolation across all required product surfaces remains open.",
         "F010 extends tenant/partner/actor checks to intake records and current file-release gates; private bindings and normal shared-path reads are tested. Every remaining product surface and full isolation qualification remain open.",
-        "F011 extends forced tenant/partner row security and actor-owned checks to key/signature controls, including raw artifact/other-actor denial and current signer gates. Full isolation across every required product surface remains open."
+        "F011 extends forced tenant/partner row security and actor-owned checks to key/signature controls, including raw artifact/other-actor denial and current signer gates. Full isolation across every required product surface remains open.",
+        "F012 adds actor-bound ciphertext storage, tenant-aware source/key/delivery references, forced RLS, approved recipient binding and raw-artifact denial. Full isolation through all remaining product surfaces remains open."
       ]
     },
     {
@@ -220,12 +226,14 @@
         "docs/qualification/evidence/F002-reconciliation.json",
         "docs/qualification/evidence/F007-outbound-intents.json",
         "docs/qualification/evidence/F008-versioned-workflows.json",
-        "docs/qualification/evidence/F010-held-intake.json"
+        "docs/qualification/evidence/F010-held-intake.json",
+        "docs/qualification/evidence/F012-encrypted-delivery.json"
       ],
       "failures": [],
       "limits": [
         "Only narrower local custody and staging-crash experiments passed; complete journey remains open.",
-        "F010 pauses a real worker, waits for its unchanged database lease, verifies replacement and refuses the resumed stale owner. Native platforms, multi-host failover, restore/upgrade and endurance remain open."
+        "F010 pauses a real worker, waits for its unchanged database lease, verifies replacement and refuses the resumed stale owner. Native platforms, multi-host failover, restore/upgrade and endurance remain open.",
+        "F012 kills a real encryption worker at the staged SQL boundary, waits for the actual delivery lease and recovers without publishing orphan bytes. It retains ambiguity after remote success/local receipt failure and reuses exact ciphertext. Backup/restore, distributed storage, delayed encryption workers, remaining failure boundaries, native production platforms and multi-host qualification remain open."
       ]
     },
     {

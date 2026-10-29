@@ -229,6 +229,11 @@ func connections(ctx context.Context, t *store.Transaction, d Definition) ([]Con
 		if c.State != "active" {
 			return nil, store.ErrState
 		}
+		if step.Encryption != nil {
+			if _, err = t.EncryptionKey(ctx, *step.Encryption); err != nil {
+				return nil, err
+			}
+		}
 		v, err := viewConnection(c)
 		if err != nil {
 			return nil, err
@@ -376,12 +381,15 @@ func (s *Service) Decide(ctx context.Context, scope store.Scope, id string, vers
 }
 
 type Effect struct {
-	StepID           string    `json:"step_id"`
-	Connection       Reference `json:"connection"`
-	Address          string    `json:"address"`
-	Directory        string    `json:"directory"`
-	FinalNamePattern string    `json:"final_name_pattern"`
-	HostFingerprint  string    `json:"host_fingerprint"`
+	StepID                string                  `json:"step_id"`
+	Connection            Reference               `json:"connection"`
+	Address               string                  `json:"address"`
+	Directory             string                  `json:"directory"`
+	FinalNamePattern      string                  `json:"final_name_pattern"`
+	HostFingerprint       string                  `json:"host_fingerprint"`
+	Encryption            *store.EncryptionPolicy `json:"encryption,omitempty"`
+	RecipientFingerprint  string                  `json:"recipient_fingerprint,omitempty"`
+	EncryptionFingerprint string                  `json:"encryption_fingerprint,omitempty"`
 }
 type Preview struct {
 	Definition       Definition  `json:"definition"`
@@ -431,7 +439,16 @@ func (s *Service) Validate(ctx context.Context, scope store.Scope, r PreviewRequ
 	}
 	for i, v := range views {
 		step := d.Steps[i]
-		preview.Effects = append(preview.Effects, Effect{StepID: step.ID, Connection: step.Connection, Address: v.Address, Directory: v.Directory, FinalNamePattern: "<delivery UUID>-" + step.Filename, HostFingerprint: v.HostFingerprint})
+		effect := Effect{StepID: step.ID, Connection: step.Connection, Address: v.Address, Directory: v.Directory, FinalNamePattern: "<delivery UUID>-" + step.Filename, HostFingerprint: v.HostFingerprint, Encryption: step.Encryption}
+		if step.Encryption != nil {
+			key, err := t.EncryptionKey(ctx, *step.Encryption)
+			if err != nil {
+				return nil, err
+			}
+			effect.RecipientFingerprint = key.Fingerprint
+			effect.EncryptionFingerprint = key.Recipient.Fingerprint
+		}
+		preview.Effects = append(preview.Effects, effect)
 	}
 	if err = t.Reauthorize(ctx); err != nil {
 		return nil, err

@@ -95,5 +95,6 @@ func FuzzPGPAdmission(f *testing.F) {
 		_ = pgpFraming(data, false)
 		_ = InspectPGPSignature(data)
 		_, _ = ParsePGPPublicKey(context.Background(), data, strings.Repeat("0", 40), time.Unix(1793220619, 0))
+		_, _ = ParsePGPRecipient(context.Background(), data, strings.Repeat("0", 40), time.Unix(1793220619, 0))
 	})
 }

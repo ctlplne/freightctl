@@ -30,10 +30,11 @@ type Reference struct {
 	Hash    string `json:"hash"`
 }
 type Step struct {
-	ID         string    `json:"id"`
-	Kind       string    `json:"kind"`
-	Connection Reference `json:"connection"`
-	Filename   string    `json:"filename"`
+	ID         string                  `json:"id"`
+	Kind       string                  `json:"kind"`
+	Connection Reference               `json:"connection"`
+	Filename   string                  `json:"filename"`
+	Encryption *store.EncryptionPolicy `json:"encryption,omitempty"`
 }
 type Definition struct {
 	Schema int    `json:"schema_version"`
@@ -62,12 +63,13 @@ type Result struct {
 	Replayed bool            `json:"replayed"`
 }
 type RunStepView struct {
-	ID          string          `json:"id"`
-	Ordinal     int             `json:"ordinal"`
-	DeliveryID  string          `json:"delivery_id"`
-	State       string          `json:"state"`
-	Attempts    int             `json:"attempts"`
-	Observation json.RawMessage `json:"observation"`
+	ID          string                    `json:"id"`
+	Ordinal     int                       `json:"ordinal"`
+	DeliveryID  string                    `json:"delivery_id"`
+	State       string                    `json:"state"`
+	Attempts    int                       `json:"attempts"`
+	Observation json.RawMessage           `json:"observation"`
+	Ciphertext  *store.DeliveryCiphertext `json:"ciphertext,omitempty"`
 }
 type RunView struct {
 	Run            *store.WorkflowRun `json:"run"`
@@ -165,6 +167,9 @@ func Normalize(d Definition) (Definition, error) {
 			return d, fmt.Errorf("%w: unsupported or incomplete step", ErrInput)
 		}
 		seen[s.ID] = true
+		if s.Encryption != nil && (!store.ValidID(s.Encryption.Key.ID) || s.Encryption.Key.Version < 1 || !hashPattern.MatchString(s.Encryption.Key.Hash) || (s.Encryption.Profile != "seipd-v1-aes256" && s.Encryption.Profile != "seipd-v2-aes256-ocb")) {
+			return d, fmt.Errorf("%w: incomplete recipient encryption policy", ErrInput)
+		}
 	}
 	return d, nil
 }

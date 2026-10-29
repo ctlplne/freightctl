@@ -20,22 +20,25 @@ type PGPKeyRequest struct {
 	ExpectedVersion int    `json:"expected_version"`
 	Fingerprint     string `json:"fingerprint"`
 	PublicKey       []byte `json:"public_key"`
+	Purpose         string `json:"purpose,omitempty"`
 }
 type PGPKeyView struct {
-	ID          string     `json:"id"`
-	Version     int        `json:"version"`
-	Hash        string     `json:"definition_hash"`
-	State       string     `json:"state"`
-	Revision    int64      `json:"revision"`
-	Fingerprint string     `json:"fingerprint"`
-	Algorithm   string     `json:"algorithm"`
-	KeyVersion  int        `json:"key_version"`
-	Created     time.Time  `json:"created_at"`
-	ValidUntil  *time.Time `json:"valid_until,omitempty"`
+	ID          string               `json:"id"`
+	Version     int                  `json:"version"`
+	Hash        string               `json:"definition_hash"`
+	State       string               `json:"state"`
+	Revision    int64                `json:"revision"`
+	Fingerprint string               `json:"fingerprint"`
+	Algorithm   string               `json:"algorithm"`
+	KeyVersion  int                  `json:"key_version"`
+	Created     time.Time            `json:"created_at"`
+	ValidUntil  *time.Time           `json:"valid_until,omitempty"`
+	Purpose     string               `json:"purpose,omitempty"`
+	Recipient   *secure.PGPRecipient `json:"recipient,omitempty"`
 }
 
 func keyView(row *store.PGPKey, definition *secure.PGPPublicKey) *PGPKeyView {
-	return &PGPKeyView{ID: row.ID, Version: row.Version, Hash: row.Hash, State: row.State, Revision: row.Revision, Fingerprint: definition.Fingerprint, Algorithm: definition.Algorithm, KeyVersion: definition.Version, Created: definition.Created, ValidUntil: row.ValidUntil}
+	return &PGPKeyView{ID: row.ID, Version: row.Version, Hash: row.Hash, State: row.State, Revision: row.Revision, Fingerprint: definition.Fingerprint, Algorithm: definition.Algorithm, KeyVersion: definition.Version, Created: definition.Created, ValidUntil: row.ValidUntil, Purpose: definition.Purpose, Recipient: definition.Recipient}
 }
 func decodeKey(row *store.PGPKey) (*secure.PGPPublicKey, error) {
 	var definition secure.PGPPublicKey
@@ -66,7 +69,13 @@ func (s *Service) RegisterPGPKey(ctx context.Context, scope store.Scope, key str
 	if err != nil {
 		return nil, err
 	}
-	definition, err := secure.ParsePGPPublicKey(ctx, r.PublicKey, r.Fingerprint, now)
+	parse := secure.ParsePGPPublicKey
+	if r.Purpose == "encrypt" {
+		parse = secure.ParsePGPRecipient
+	} else if r.Purpose != "" {
+		return nil, ErrInput
+	}
+	definition, err := parse(ctx, r.PublicKey, r.Fingerprint, now)
 	if err != nil {
 		return nil, ErrInput
 	}
@@ -182,6 +191,9 @@ func keyCurrent(ctx context.Context, t *store.Transaction, p *SignaturePolicy) (
 	definition, err := decodeKey(row)
 	if err != nil {
 		return nil, now, err
+	}
+	if definition.Purpose != "" || definition.Recipient != nil {
+		return nil, now, store.ErrState
 	}
 	checked, err := secure.ParsePGPPublicKey(ctx, definition.Packets, definition.Fingerprint, now)
 	if err != nil || checked.Algorithm != definition.Algorithm || checked.Version != definition.Version || !checked.Created.Equal(definition.Created) {

@@ -38,6 +38,7 @@ commands=[
 ('assistance-control-contract-no-inference',['python3','scripts/qualify-assistance.py']),
 ('held-intake-and-csv-checks',['python3','scripts/qualify-intake.py']),
 ('signed-intake-openpgp',['python3','scripts/qualify-pgp.py']),
+('recipient-encrypted-delivery',['python3','scripts/qualify-encryption.py']),
 ]
 results=[]
 for name,command in commands:

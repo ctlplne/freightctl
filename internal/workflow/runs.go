@@ -3,6 +3,7 @@ package workflow
 import (
 	"context"
 	"encoding/json"
+	"errors"
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/custody"
@@ -107,7 +108,7 @@ func (s *Service) Run(ctx context.Context, scope store.Scope, key string, r RunR
 			return nil, store.ErrState
 		}
 		binding := &store.ExecutionBinding{WorkflowID: run.WorkflowID, WorkflowVersion: run.WorkflowVersion, WorkflowHash: run.WorkflowHash, RunID: run.ID, StepID: step.ID, ConnectionID: c.ID, ConnectionVersion: c.Version, ConnectionHash: c.Hash}
-		spec := delivery.Definition{Schema: 1, Source: *source, Destination: conn.Destination, Directory: conn.Directory, Filename: step.Filename, StorageID: storageID, Root: t.Root, Authority: t.AuthorityRevision, Binding: binding}
+		spec := delivery.Definition{Schema: 1, Source: *source, Destination: conn.Destination, Directory: conn.Directory, Filename: step.Filename, StorageID: storageID, Root: t.Root, Authority: t.AuthorityRevision, Binding: binding, Encryption: step.Encryption}
 		data, hash, err := digest(spec)
 		if err != nil {
 			return nil, err
@@ -148,7 +149,12 @@ func snapshot(ctx context.Context, t *store.Transaction, r *store.WorkflowRun) (
 		if err != nil {
 			return nil, "", "", err
 		}
-		view.Steps = append(view.Steps, RunStepView{ID: step.ID, Ordinal: step.Ordinal, DeliveryID: d.ID, State: d.State, Attempts: d.Attempts, Observation: d.Observation})
+		item := RunStepView{ID: step.ID, Ordinal: step.Ordinal, DeliveryID: d.ID, State: d.State, Attempts: d.Attempts, Observation: d.Observation}
+		item.Ciphertext, err = t.DeliveryCiphertext(ctx, d.ID)
+		if err != nil && !errors.Is(err, store.ErrNotFound) {
+			return nil, "", "", err
+		}
+		view.Steps = append(view.Steps, item)
 		switch d.State {
 		case "succeeded":
 			succeeded++
@@ -198,6 +204,21 @@ func snapshot(ctx context.Context, t *store.Transaction, r *store.WorkflowRun) (
 			if c.State != "active" {
 				state = "attention"
 				reason = "connection_revoked"
+			}
+		}
+		var definition Definition
+		if json.Unmarshal(wf.Definition, &definition) != nil {
+			return nil, "", "", store.ErrState
+		}
+		for _, step := range definition.Steps {
+			if step.Encryption != nil {
+				if _, err = t.EncryptionKey(ctx, *step.Encryption); err != nil {
+					if err != store.ErrState && err != store.ErrNotFound {
+						return nil, "", "", err
+					}
+					state = "attention"
+					reason = "encryption_recipient_unavailable"
+				}
 			}
 		}
 	}

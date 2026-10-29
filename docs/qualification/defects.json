@@ -418,6 +418,36 @@
       "regression_evidence": [
         "docs/qualification/evidence/F011-openpgp-intake.json"
       ]
+    },
+    {
+      "id": "D028",
+      "severity": "missing required capability",
+      "state": "fixed locally",
+      "observed_on": "2026-10-29",
+      "candidate": "86c5c2cad2575f46b366eed955ebe54e03903305",
+      "journey": "J02",
+      "reproduction": "Native workflow-validate with a real registered connection and explicit encryption policy; replay through scripts/qualify-encryption.py.",
+      "first_failure": "freightctl: invalid typed workflow request (exit 1)",
+      "cause": "Typed SFTP steps had no approved recipient policy, ciphertext intent/proof or encryption worker.",
+      "resolution": "Enroll explicit public encryption recipients/subkeys, bind source/recipient/profile/destination through normal approval, commit immutable bounded ciphertext under the live fence before connection, reuse it across retry/restart and reconcile ambiguous encrypted receipts. Independent GnuPG decrypts and verifies exact stock-receiver output. Private operations inside freightctl, malware scanning and complete journey remain open.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F012-encrypted-delivery.json"
+      ]
+    },
+    {
+      "id": "D029",
+      "severity": "operational integration failure",
+      "state": "fixed locally",
+      "observed_on": "2026-10-29",
+      "candidate": "uncommitted F012 after its first passing 97-step native journey",
+      "journey": "J02",
+      "reproduction": "Ordinary native delivery-work of an approved encrypted workflow intent, with the receiver stopped.",
+      "first_failure": "Durable retry observation encryption_preparation_unavailable; no ciphertext accepted.",
+      "cause": "The ordinary CLI delivery worker did not propagate the configured retained-byte quota, leaving MaxStored zero and rejecting generated ciphertext capacity. The workflow and HTTPS worker paths passed the quota.",
+      "resolution": "Pass the actual quota into both CLI worker constructors. Replaying the exact original intent accepts durable ciphertext while the stopped receiver still yields retry. The final native journey includes a successful ordinary CLI encrypted worker and visible exact ciphertext receipt.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F012-encrypted-delivery.json"
+      ]
     }
   ]
 }

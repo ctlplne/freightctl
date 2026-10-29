@@ -101,7 +101,7 @@ func (s *Service) Reconcile(ctx context.Context, scope store.Scope) (*Reconcilia
 	if err = s.Disk.CheckIdentity(); err != nil {
 		return nil, err
 	}
-	rows, err := t.Tx.Query(ctx, `SELECT file_id::text,size_bytes,sha256,'file' FROM files UNION ALL SELECT object_id::text,size_bytes,sha256,'checkpoint' FROM upload_chunks UNION ALL SELECT object_id::text,size_bytes,sha256,'signature' FROM file_signatures ORDER BY 1 LIMIT 10001`)
+	rows, err := t.Tx.Query(ctx, `SELECT file_id::text,size_bytes,sha256,'file' FROM files UNION ALL SELECT object_id::text,size_bytes,sha256,'checkpoint' FROM upload_chunks UNION ALL SELECT object_id::text,size_bytes,sha256,'signature' FROM file_signatures UNION ALL SELECT object_id::text,size_bytes,sha256,'ciphertext' FROM delivery_ciphertexts ORDER BY 1 LIMIT 10001`)
 	if err != nil {
 		return nil, err
 	}
@@ -145,7 +145,7 @@ func (s *Service) Reconcile(ctx context.Context, scope store.Scope) (*Reconcilia
 	report := &Reconciliation{Consistent: true, Counts: make(map[string]int), Entries: make([]ReconciliationEntry, 0), VerificationLimit: limit, Mutations: "none; observation only"}
 	add := func(reference, state string, size int64) {
 		report.Counts[state]++
-		if state != "verified" && state != "verified_checkpoint" && state != "verified_signature" {
+		if state != "verified" && state != "verified_checkpoint" && state != "verified_signature" && state != "verified_ciphertext" {
 			report.Consistent = false
 		}
 		if len(report.Entries) < 200 {
@@ -166,6 +166,9 @@ func (s *Service) Reconcile(ctx context.Context, scope store.Scope) (*Reconcilia
 		}
 		if classes[object.reference] == "signature" {
 			verified, corrupt, missingState = "verified_signature", "signature_integrity_mismatch", "missing_signature_bytes"
+		}
+		if classes[object.reference] == "ciphertext" {
+			verified, corrupt, missingState = "verified_ciphertext", "ciphertext_integrity_mismatch", "missing_ciphertext_bytes"
 		}
 		delete(files, object.reference)
 		if !object.safe {
@@ -210,6 +213,9 @@ func (s *Service) Reconcile(ctx context.Context, scope store.Scope) (*Reconcilia
 		}
 		if classes[id] == "signature" {
 			state = "missing_signature_bytes"
+		}
+		if classes[id] == "ciphertext" {
+			state = "missing_ciphertext_bytes"
 		}
 		add(id, state, files[id].Size)
 	}

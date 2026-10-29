@@ -1112,13 +1112,19 @@
         "durable storage"
       ],
       "native_clients_or_peers": [
-        "independent operator or receiver"
+        "GnuPG 2.4.9-r1 v4 Curve25519 and RSA3072 encryption subkeys, AES256 SEIPDv1/MDC",
+        "Stock OpenSSH_10.5p1 receiver and sftp client on native macOS arm64"
       ],
       "acceptance_journey": "J02",
-      "state": "planned",
-      "evidence": [],
+      "state": "implementing",
+      "evidence": [
+        "docs/qualification/evidence/F012-encrypted-delivery.json"
+      ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+      ],
+      "implementation_notes": [
+        "F012 adds normal approved typed recipient-encrypted SFTP delivery, exact ciphertext persistence/reuse, revocation, real process death and receipt ambiguity. Independent GnuPG decrypts exact source and verifies its detached signature. SEIPDv2/OCB and v6 have unit/library coverage only. Application private operations, broader peers/profiles, incumbent comparison, malware scanning and complete J02 remain open."
       ]
     },
     {

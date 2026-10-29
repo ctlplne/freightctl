@@ -462,7 +462,9 @@
       }
     ],
     "binary_sha256": "a6191fdaba494d7b9c46d8f400c0e8d9cc8346078b247a501a28ea90031589d0",
-    "sources_unchanged_during_run": true
+    "sources_unchanged_during_run": true,
+    "committed_source": "86c5c2cad2575f46b366eed955ebe54e03903305",
+    "committed_source_verification": "All 112 source file SHA-256 values match the Git blobs of this local commit; original raw evidence is preserved."
   },
   "environment": {
     "os": "macOS 27.2 build 26B5086k",
