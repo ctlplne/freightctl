@@ -32,7 +32,7 @@ func main() {
 }
 func run(args []string) error {
 	if len(args) == 0 || args[0] == "--help" || args[0] == "help" {
-		fmt.Println("freightctl: init | setup-plan | setup | token | enroll | identity | namespace | dev-cert | serve | reconcile | audit-keygen | audit-export | ssh-host-keygen | ssh-key-enroll | ssh-key-revoke | serve-sftp | upload-create | upload-list | upload-status | upload-append | upload-complete | upload-abort | delivery-create | delivery-status | delivery-approve | delivery-cancel | delivery-work | delivery-reconcile\nPartners: partner-create | partner-list | tenant-admin-grant | tenant-admin-revoke | tenant-admin-status\nAccounts: account-create | account-update | account-rotate | account-revoke | account-list | account-status\nConnections: connection-register | connection-status | connection-revoke\nWorkflows: workflow-validate | workflow-draft | workflow-status | workflow-diff | workflow-approve | workflow-revoke | workflow-run | workflow-run-status | workflow-work | workflow-cancel\nAssistance: ai-profile-register | ai-profile-status | ai-profile-revoke | ai-propose | ai-diagnose | ai-status | ai-approve | ai-generate | ai-adopt\nIntake: intake-policy-register | intake-policy-status | intake-policy-revoke | check-list | check-status | check-run | check-recover | check-release\nScanners: scanner-register | scanner-status | scanner-revoke\nOpenPGP: pgp-key-register | pgp-key-status | pgp-key-revoke | check-signature\nRead docs/development.md. This is an unqualified local custody foundation.")
+		fmt.Println("freightctl: init | setup-plan | setup | token | enroll | identity | namespace | dev-cert | serve | reconcile | audit-keygen | audit-export | ssh-host-keygen | ssh-key-enroll | ssh-key-revoke | serve-sftp | upload-create | upload-list | upload-status | upload-append | upload-complete | upload-abort | delivery-create | delivery-status | delivery-approve | delivery-cancel | delivery-work | delivery-reconcile\nPartners: partner-create | partner-list | tenant-admin-grant | tenant-admin-revoke | tenant-admin-status\nOnboarding plans: partner-onboarding-save | partner-onboarding-list | partner-onboarding-status\nAccounts: account-create | account-update | account-rotate | account-revoke | account-list | account-status\nConnections: connection-register | connection-status | connection-revoke\nWorkflows: workflow-validate | workflow-draft | workflow-status | workflow-diff | workflow-approve | workflow-revoke | workflow-run | workflow-run-status | workflow-work | workflow-cancel\nAssistance: ai-profile-register | ai-profile-status | ai-profile-revoke | ai-propose | ai-diagnose | ai-status | ai-approve | ai-generate | ai-adopt\nIntake: intake-policy-register | intake-policy-status | intake-policy-revoke | check-list | check-status | check-run | check-recover | check-release\nScanners: scanner-register | scanner-status | scanner-revoke\nOpenPGP: pgp-key-register | pgp-key-status | pgp-key-revoke | check-signature\nRead docs/development.md. This is an unqualified local custody foundation.")
 		return nil
 	}
 	f := flag.NewFlagSet(args[0], flag.ContinueOnError)
@@ -97,6 +97,10 @@ func run(args []string) error {
 	accountLimit := f.Int("account-limit", 50, "account summaries per page, at most 100")
 	partnerAfter := f.String("partner-after", "", "last tenant directory partner UUID")
 	partnerLimit := f.Int("partner-limit", 50, "tenant directory entries per page, at most 100")
+	onboardingID := f.String("onboarding-id", "", "partner onboarding plan UUID")
+	onboardingVersion := f.Int("onboarding-version", 0, "exact onboarding plan version; zero reads the latest")
+	onboardingAfter := f.String("onboarding-after", "", "last onboarding plan UUID")
+	onboardingLimit := f.Int("onboarding-limit", 50, "onboarding plan summaries per page, at most 100")
 	newAccountToken := f.String("new-token-file", "", "protected credential reference for account creation or rotation; only its digest enters SQL")
 	scannerID := f.String("scanner-id", "", "exact registered local scanner family UUID")
 	pgpPublicFile := f.String("pgp-public-file", "", "protected public-key input reference; private packets are refused")
@@ -131,6 +135,8 @@ func run(args []string) error {
 		return errors.New("browser session lifetime must be 1 to 600 seconds")
 	}
 	switch args[0] {
+	case "partner-onboarding-save", "partner-onboarding-list", "partner-onboarding-status":
+		return runOnboarding(ctx, args[0], *dsn, *token, *tenant, *partner, *requestFile, *idempotencyKey, *onboardingID, *onboardingAfter, *onboardingVersion, *onboardingLimit)
 	case "partner-create", "partner-list", "tenant-admin-grant", "tenant-admin-revoke", "tenant-admin-status":
 		return runPartners(ctx, args[0], *admin, *dsn, *token, *tenant, *partner, *requestFile, *idempotencyKey, *partnerAfter, *newAccountToken, *accountID, *partnerLimit)
 	case "setup-plan":

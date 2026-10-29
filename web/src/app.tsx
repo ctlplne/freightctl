@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { Api } from "./api";
 import { Accounts } from "./accounts";
 import { Partners } from "./partners";
+import { Onboarding } from "./onboarding";
 import { CheckEvidence } from "./check-evidence";
 import { CheckRecovery } from "./check-recovery";
 import { WorkspaceReference } from "./workspace-reference";
@@ -34,6 +35,8 @@ const name = (path: string) => path.split("/").at(-1) || "/";
 const aborted = (error: unknown) =>
   error instanceof DOMException && error.name === "AbortError";
 const messages: Record<string, string> = {
+  invalid_onboarding_command:
+    "Review the draft name, responsible contacts and exchange requirements. Each requirement must name a contact in this draft; keep credentials out of notes.",
   invalid_partner_command:
     "Review the partner name, first administrator, credential fingerprint and permitted grants. The first administrator needs admin and accounts_manage.",
   partner_exists:
@@ -110,7 +113,7 @@ function App() {
     [notice, setNotice] = useState(""),
     [signingIn, setSigningIn] = useState(false);
   const [tab, setTab] = useState<
-      "files" | "uploads" | "checks" | "accounts" | "partners"
+      "files" | "uploads" | "checks" | "accounts" | "partners" | "onboarding"
     >("files"),
     [refresh, setRefresh] = useState(0);
   const [folder, setFolder] = useState("/"),
@@ -611,6 +614,14 @@ function App() {
                 Accounts
               </button>
             )}
+            {allowed("admin") && allowed("accounts_manage") && (
+              <button
+                aria-current={tab === "onboarding" ? "page" : undefined}
+                onClick={() => setTab("onboarding")}
+              >
+                Onboarding
+              </button>
+            )}
             {session.identity.tenant_administration && (
               <button
                 aria-current={tab === "partners" ? "page" : undefined}
@@ -731,9 +742,11 @@ function App() {
                       ? "Uploads"
                       : tab === "partners"
                         ? "Partners"
-                        : tab === "accounts"
-                          ? "Accounts"
-                          : "Intake checks"}
+                        : tab === "onboarding"
+                          ? "Onboarding plans"
+                          : tab === "accounts"
+                            ? "Accounts"
+                            : "Intake checks"}
                 </h1>
                 <p>
                   {tab === "files"
@@ -742,9 +755,11 @@ function App() {
                       ? "Send one exact file. Continue from the last server-confirmed checkpoint."
                       : tab === "partners"
                         ? "Enroll partners under explicit tenant authority; review each administrator credential and grants."
-                        : tab === "accounts"
-                          ? "Review scoped access, credential rotation, expiry and revocation."
-                          : "Held files need their required checks and a separate release decision."}
+                        : tab === "onboarding"
+                          ? "Record responsible contacts and exact exchange requirements as versioned drafts."
+                          : tab === "accounts"
+                            ? "Review scoped access, credential rotation, expiry and revocation."
+                            : "Held files need their required checks and a separate release decision."}
                 </p>
               </div>
               <button
@@ -771,6 +786,22 @@ function App() {
                 }}
               />
             )}
+            {tab === "onboarding" &&
+              allowed("admin") &&
+              allowed("accounts_manage") && (
+                <Onboarding
+                  api={api}
+                  session={session}
+                  refresh={refresh}
+                  onError={reportError}
+                  onConfirmed={() => {
+                    setError("");
+                    setNotice(
+                      "Onboarding draft saved. Tests, approval and activation remain required.",
+                    );
+                  }}
+                />
+              )}
             {tab === "accounts" && (
               <Accounts
                 api={api}

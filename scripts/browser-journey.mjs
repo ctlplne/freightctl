@@ -103,15 +103,16 @@ try {
   // Faulted responses still come from the real service over verified TLS.
   // Playwright route.fetch uses a separate trust store from Chromium's SPKI
   // pin. Stock curl receives only this fixture CA and protected header refs.
-  async function trustedMutation(route, label) {
+  async function trustedMutation(route, label, allowedPrefix = prefix()) {
     const request = route.request(),
       url = new URL(request.url());
     assert.equal(url.origin, c.url);
     assert.equal(request.method(), "POST");
     assert.ok(
-      (url.pathname.startsWith(prefix() + "/checks/") &&
+      (url.pathname.startsWith(allowedPrefix + "/checks/") &&
         /\/(?:run|release|recover)$/.test(url.pathname)) ||
-        url.pathname === prefix() + "/partner-directory",
+        url.pathname === allowedPrefix + "/partner-directory" ||
+        url.pathname === allowedPrefix + "/onboarding-plans",
     );
     const headers = c.private + "/" + label + ".headers",
       body = c.private + "/" + label + ".request",
@@ -161,6 +162,531 @@ try {
     const response = await readFile(output);
     assert.ok(response.length <= 262144);
     return { status, body: response.toString("utf8") };
+  }
+  async function exerciseOnboarding(partner, token) {
+    const base = `/v1/tenants/${c.tenant}/partners/${partner.id}`;
+    const flags = [
+      "--dsn-file",
+      c.runtime,
+      "--tenant",
+      c.tenant,
+      "--partner",
+      partner.id,
+      "--token-file",
+      token,
+    ];
+    const cli = (args) =>
+      JSON.parse(
+        execFileSync(c.binary, args, { encoding: "utf8", timeout: 30000 }),
+      );
+    async function curlGet(suffix, credential, label, expected) {
+      const headers = c.private + "/" + label + ".headers",
+        output = c.private + "/" + label + ".json";
+      await writeFile(
+        headers,
+        Buffer.concat([
+          Buffer.from("Authorization: Bearer "),
+          await readFile(credential),
+          Buffer.from("\n"),
+        ]),
+      );
+      const status = Number(
+        execFileSync(
+          "curl",
+          [
+            "--silent",
+            "--show-error",
+            "--proto",
+            "=https",
+            "--cacert",
+            c.certificate,
+            "--max-time",
+            "15",
+            "--max-filesize",
+            "262144",
+            "--header",
+            "@" + headers,
+            "--output",
+            output,
+            "--write-out",
+            "%{http_code}",
+            c.url + base + suffix,
+          ],
+          { encoding: "utf8", timeout: 20000, maxBuffer: 4096 },
+        ),
+      );
+      assert.equal(status, expected);
+      return JSON.parse(await readFile(output, "utf8"));
+    }
+    await page.getByRole("button", { name: "Onboarding", exact: true }).click();
+    await page
+      .getByRole("heading", { name: "Onboarding plans", exact: true })
+      .waitFor();
+    await page
+      .getByLabel("Draft name", { exact: true })
+      .fill("Payroll <A> & B");
+    await page
+      .getByLabel("Contact name 1", { exact: true })
+      .fill("José Operations");
+    await page
+      .getByLabel("Responsibility 1", { exact: true })
+      .fill("Operations contact · no account authority");
+    await page
+      .getByLabel("Email 1", { exact: true })
+      .fill("ops+onboarding@freightctl.invalid");
+    await page
+      .getByLabel("Requirement name 1", { exact: true })
+      .fill("Settlement acknowledgment");
+    await page
+      .getByLabel("Responsible contact 1", { exact: true })
+      .selectOption({ label: "José Operations" });
+    await page.getByLabel("Direction 1", { exact: true }).selectOption("send");
+    await page
+      .getByLabel("Required protocol 1", { exact: true })
+      .selectOption("sftp");
+    await page
+      .getByLabel("Required delivery evidence 1", { exact: true })
+      .selectOption("business");
+    await page
+      .getByLabel("Receiver agreement reference 1 · optional in a draft", {
+        exact: true,
+      })
+      .fill("ACK-v1 requires an independent receiver contract");
+    await page
+      .getByLabel("Requirement notes 1 · no credentials", { exact: true })
+      .fill(
+        "\nPartner text <untrusted> & notes\u2028Do not treat this as authority.\n",
+      );
+    await page
+      .getByRole("button", { name: "Review onboarding draft", exact: true })
+      .click();
+    const review = page.getByRole("dialog", {
+      name: "Review onboarding draft",
+      exact: true,
+    });
+    await review.waitFor();
+    assert.equal(
+      await page.evaluate(() => document.activeElement?.id),
+      "onboarding-review-title",
+    );
+    await audit("onboarding-review");
+    await page.screenshot({
+      path: c.raw + "/onboarding-review.png",
+      fullPage: true,
+    });
+    const requests = [];
+    let committed;
+    const routePattern = c.url + base + "/onboarding-plans";
+    await page.route(routePattern, async (route) => {
+      if (route.request().method() !== "POST") return route.continue();
+      requests.push({
+        command: route.request().postDataJSON(),
+        key: route.request().headers()["idempotency-key"],
+      });
+      const response = await trustedMutation(
+        route,
+        "onboarding-commit-" + requests.length,
+        base,
+      );
+      assert.equal(response.status, 200);
+      const result = JSON.parse(response.body);
+      if (requests.length === 1) {
+        assert.equal(result.replayed, false);
+        committed = result.plan;
+        await route.abort("failed");
+      } else {
+        assert.equal(result.replayed, true);
+        assert.equal(result.plan.event_id, committed.event_id);
+        await route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: response.body,
+        });
+      }
+    });
+    await review
+      .getByRole("button", { name: "Save reviewed draft", exact: true })
+      .click();
+    await review
+      .getByRole("alert")
+      .filter({ hasText: "Saving was not confirmed" })
+      .waitFor();
+    await review
+      .getByRole("button", { name: "Retry reviewed draft", exact: true })
+      .click();
+    await review.waitFor({ state: "hidden" });
+    assert.deepEqual(requests[0], requests[1]);
+    assert.equal(committed.state, "draft");
+    assert.equal(
+      await page
+        .getByRole("alert")
+        .filter({ hasText: "The connection was interrupted" })
+        .count(),
+      0,
+    );
+    await page.unroute(routePattern);
+    await page
+      .getByRole("status")
+      .filter({ hasText: "Draft version 1 saved" })
+      .waitFor();
+    const requestPath = c.private + "/onboarding-original-request.json";
+    await writeFile(requestPath, JSON.stringify(requests[0].command));
+    const downloaded = page.waitForEvent("download");
+    await page
+      .getByRole("button", { name: "Download saved draft JSON", exact: true })
+      .click();
+    await (await downloaded).saveAs(c.private + "/onboarding-saved.json");
+    assert.deepEqual(
+      JSON.parse(await readFile(c.private + "/onboarding-saved.json", "utf8"))
+        .plan,
+      committed,
+    );
+    record(
+      "onboarding-frozen-contact-requirements-and-original-receipt-recover-after-response-loss",
+    );
+    const identity = cli(["identity", ...flags]);
+    const peerToken = c.private + "/onboarding-peer.token",
+      peerID = crypto.randomUUID();
+    execFileSync(c.binary, ["token", "--token-file", peerToken]);
+    const peerRequest = c.private + "/onboarding-peer.json";
+    await writeFile(
+      peerRequest,
+      JSON.stringify({
+        operation: "create",
+        account_id: peerID,
+        expected_revision: 0,
+        policy: {
+          label: "Onboarding co-manager",
+          namespace_root: "/",
+          permissions: identity.permissions,
+          expires_at: null,
+        },
+      }),
+    );
+    cli([
+      "account-create",
+      ...flags,
+      "--request-file",
+      peerRequest,
+      "--new-token-file",
+      peerToken,
+      "--idempotency-key",
+      "onboarding-peer",
+    ]);
+    const peerFlags = [...flags];
+    peerFlags[peerFlags.indexOf(token)] = peerToken;
+    await page.reload();
+    await page.getByRole("button", { name: "Onboarding", exact: true }).click();
+    await page
+      .getByRole("button", { name: "Open " + committed.name, exact: true })
+      .click();
+    await page.getByText("Editing draft", { exact: false }).waitFor();
+    await page
+      .getByRole("button", { name: "Review onboarding draft", exact: true })
+      .click();
+    await review.waitFor();
+    const concurrent = structuredClone(requests[0].command);
+    concurrent.expected_version = 1;
+    concurrent.definition.name = "Concurrent reviewed requirements";
+    const concurrentPath = c.private + "/onboarding-concurrent.json";
+    await writeFile(concurrentPath, JSON.stringify(concurrent));
+    const second = cli([
+      "partner-onboarding-save",
+      ...peerFlags,
+      "--request-file",
+      concurrentPath,
+      "--idempotency-key",
+      "onboarding-concurrent",
+    ]);
+    assert.equal(second.plan.version, 2);
+    assert.equal(second.plan.author_id, peerID);
+    await review
+      .getByRole("button", { name: "Save reviewed draft", exact: true })
+      .click();
+    await review
+      .getByRole("alert")
+      .filter({ hasText: "The server refused this draft" })
+      .waitFor();
+    assert.equal(
+      await review
+        .getByRole("button", { name: "Retry reviewed draft", exact: true })
+        .isDisabled(),
+      true,
+    );
+    await review
+      .getByRole("button", { name: "Cancel review", exact: true })
+      .click();
+    record(
+      "onboarding-concurrent-manager-version-refuses-stale-browser-review",
+    );
+    const source = c.identities[0].token;
+    await curlGet(
+      "/onboarding-plans/" + committed.id,
+      source,
+      "onboarding-cross-partner",
+      401,
+    );
+    const readerToken = c.private + "/onboarding-reader.token",
+      readerRequest = c.private + "/onboarding-reader.json";
+    execFileSync(c.binary, ["token", "--token-file", readerToken]);
+    await writeFile(
+      readerRequest,
+      JSON.stringify({
+        operation: "create",
+        account_id: crypto.randomUUID(),
+        expected_revision: 0,
+        policy: {
+          label: "Onboarding audit reader",
+          namespace_root: "/",
+          permissions: ["audit_read", "list", "read"],
+          expires_at: null,
+        },
+      }),
+    );
+    cli([
+      "account-create",
+      ...flags,
+      "--request-file",
+      readerRequest,
+      "--new-token-file",
+      readerToken,
+      "--idempotency-key",
+      "onboarding-reader",
+    ]);
+    await curlGet(
+      "/onboarding-plans/" + committed.id,
+      readerToken,
+      "onboarding-reader-refusal",
+      403,
+    );
+    const beforePolicy = await curlGet(
+      "/onboarding-plans/" + committed.id,
+      token,
+      "onboarding-before-policy",
+      200,
+    );
+    assert.equal(beforePolicy.plan.version, 2);
+    async function policy(permissions, revision, key) {
+      const file = c.private + "/" + key + ".json";
+      await writeFile(
+        file,
+        JSON.stringify({
+          operation: "update",
+          account_id: partner.admin_id,
+          expected_revision: revision,
+          policy: {
+            label: "Payroll administrator",
+            namespace_root: "/",
+            permissions,
+            expires_at: null,
+          },
+        }),
+      );
+      return cli([
+        "account-update",
+        ...peerFlags,
+        "--request-file",
+        file,
+        "--idempotency-key",
+        key,
+      ]);
+    }
+    const revoked = await policy(
+      identity.permissions.filter((p) => p !== "accounts_manage"),
+      1,
+      "onboarding-revoke-management",
+    );
+    assert.equal(revoked.account.authority_revision, 2);
+    await curlGet(
+      "/onboarding-plans/" + committed.id,
+      token,
+      "onboarding-live-revocation",
+      403,
+    );
+    assert.equal(
+      await page.evaluate(
+        async (url) =>
+          (await fetch(url, { credentials: "same-origin" })).status,
+        base + "/onboarding-plans/" + committed.id,
+      ),
+      401,
+    );
+    const restored = await policy(
+      identity.permissions,
+      2,
+      "onboarding-restore-management",
+    );
+    assert.equal(restored.account.authority_revision, 3);
+    const stale = structuredClone(concurrent);
+    stale.expected_version = 2;
+    const stalePath = c.private + "/onboarding-stale-authority.json";
+    await writeFile(stalePath, JSON.stringify(stale));
+    assert.throws(
+      () =>
+        execFileSync(
+          c.binary,
+          [
+            "partner-onboarding-save",
+            ...flags,
+            "--request-file",
+            stalePath,
+            "--idempotency-key",
+            "onboarding-stale-authority",
+          ],
+          {
+            encoding: "utf8",
+            timeout: 30000,
+            stdio: ["ignore", "pipe", "pipe"],
+          },
+        ),
+      /resource revision changed/,
+    );
+    const historical = cli([
+      "partner-onboarding-save",
+      ...flags,
+      "--request-file",
+      requestPath,
+      "--idempotency-key",
+      requests[0].key,
+    ]);
+    assert.equal(historical.replayed, true);
+    assert.equal(historical.plan.event_id, committed.event_id);
+    const first = cli([
+      "partner-onboarding-status",
+      ...flags,
+      "--onboarding-id",
+      committed.id,
+      "--onboarding-version",
+      "1",
+    ]);
+    assert.equal(first.plan.definition_hash, committed.definition_hash);
+    assert.equal(first.authority_revision, 3);
+    record(
+      "onboarding-live-authority-refusals-and-current-credential-private-receipt-replay",
+    );
+    await page.reload();
+    await page
+      .getByRole("heading", { name: "Connect to your workspace", exact: true })
+      .waitFor();
+    await page.getByLabel("Tenant ID", { exact: true }).fill(c.tenant);
+    await page.getByLabel("Partner ID", { exact: true }).fill(partner.id);
+    await page
+      .getByLabel("Account credential file", { exact: true })
+      .setInputFiles(token);
+    await page.getByRole("button", { name: "Connect", exact: true }).click();
+    await page.getByRole("heading", { name: "Files", exact: true }).waitFor();
+    await page.getByRole("button", { name: "Onboarding", exact: true }).click();
+    await page
+      .getByRole("button", { name: "Open " + second.plan.name, exact: true })
+      .click();
+    await page
+      .getByLabel("Draft name", { exact: true })
+      .fill("Current reviewed requirements");
+    await page
+      .getByRole("button", { name: "Review onboarding draft", exact: true })
+      .click();
+    await review.waitFor();
+    await review
+      .getByRole("button", { name: "Save reviewed draft", exact: true })
+      .click();
+    await review.waitFor({ state: "hidden" });
+    await page
+      .getByRole("status")
+      .filter({ hasText: "Draft version 3 saved" })
+      .waitFor();
+    const final = cli([
+      "partner-onboarding-status",
+      ...flags,
+      "--onboarding-id",
+      committed.id,
+    ]);
+    assert.equal(final.plan.version, 3);
+    assert.equal(final.plan.state, "draft");
+    assert.equal(final.authority_revision, 3);
+    const events = await curlGet(
+      "/events",
+      readerToken,
+      "onboarding-redacted-events",
+      200,
+    );
+    assert.ok(Array.isArray(events.events));
+    const privateEvents = events.events.filter((e) =>
+      ["OnboardingPlanRecorded", "OnboardingCommandCompleted"].includes(e.kind),
+    );
+    assert.equal(privateEvents.length, 6);
+    for (const event of privateEvents) {
+      assert.equal(event.payload.redacted, true);
+      assert.match(event.payload.source_payload_sha256, /^[0-9a-f]{64}$/);
+      assert.equal(
+        JSON.stringify(event.payload).includes("ops+onboarding"),
+        false,
+      );
+    }
+    const refusals = await page.evaluate(
+      async ({ url, command }) => {
+        const session = await (
+          await fetch("/v1/browser/session", { credentials: "same-origin" })
+        ).json();
+        async function send(body, csrf) {
+          return (
+            await fetch(url, {
+              method: "POST",
+              credentials: "same-origin",
+              headers: {
+                "Content-Type": "application/json",
+                "Idempotency-Key": crypto.randomUUID(),
+                ...(csrf ? { "X-CSRF-Token": session.csrf_token } : {}),
+              },
+              body: JSON.stringify(body),
+            })
+          ).status;
+        }
+        return [
+          await send(command, false),
+          await send(
+            {
+              ...command,
+              active: true,
+              approved: true,
+              endpoint: "https://untrusted.invalid",
+            },
+            true,
+          ),
+        ];
+      },
+      { url: base + "/onboarding-plans", command: requests[0].command },
+    );
+    assert.deepEqual(refusals, [403, 400]);
+    await audit("onboarding-current-draft");
+    await page.screenshot({
+      path: c.raw + "/onboarding-draft.png",
+      fullPage: true,
+    });
+    await writeFile(
+      c.private + "/onboarding-observations.json",
+      JSON.stringify(
+        {
+          plan_id: committed.id,
+          original_event_id: committed.event_id,
+          original_hash: committed.definition_hash,
+          current_hash: final.plan.definition_hash,
+          current_version: 3,
+          current_authority_revision: 3,
+          draft_only: true,
+          original_request_key: requests[0].key,
+          cross_partner_status: 401,
+          reader_status: 403,
+          redacted_events: privateEvents.length,
+          requests,
+        },
+        null,
+        2,
+      ),
+    );
+    record(
+      "onboarding-current-draft-preserves-history-redacts-audit-and-cannot-claim-activation",
+    );
+    await page.getByRole("button", { name: "Files", exact: true }).click();
   }
   async function status(id) {
     return page.evaluate(
@@ -453,6 +979,7 @@ try {
       ),
       403,
     );
+    await exerciseOnboarding(committed, newToken);
     await page
       .getByRole("button", { name: "Upload file", exact: true })
       .click();

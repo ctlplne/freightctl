@@ -53,6 +53,9 @@ func NewWithBrowserLifetime(service *custody.Service, audits *audit.Service, ena
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/files", s.upload)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/files/{file}", s.download)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/events", s.events)
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/onboarding-plans", s.onboarding)
+	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/onboarding-plans", s.onboarding)
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/onboarding-plans/{plan}", s.onboarding)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/custody/reconcile", s.reconcile)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/audit/export", s.exportAudit)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/identity", s.identity)
@@ -225,6 +228,8 @@ func requestFailure(w http.ResponseWriter, r *http.Request, err error) {
 
 func errorStatus(err error) (int, string) {
 	switch {
+	case errors.Is(err, store.ErrOnboardingInput):
+		return 400, "invalid_onboarding_command"
 	case errors.Is(err, store.ErrPartnerInput):
 		return 400, "invalid_partner_command"
 	case errors.Is(err, store.ErrPartnerExists):

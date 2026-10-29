@@ -824,6 +824,21 @@
       "regression_evidence": [
         "docs/qualification/evidence/Q001-protocol-contracts.json"
       ]
+    },
+    {
+      "id": "D054",
+      "severity": "no ordinary scoped contact and exchange-requirement draft surface",
+      "state": "fixed locally",
+      "observed_on": "2026-10-29",
+      "candidate": "221cfd334b7e126966b40ad9a677dcce60704fd3",
+      "journey": "J05",
+      "reproduction": "Attempt partner-onboarding-status after ordinary partner enrollment; the product has no command or scoped draft surface to retain contacts and requirements.",
+      "first_failure": "Unknown operator command, retained with original binary/source manifest. The broader onboarding test/approval/activation absence remains open under J05.",
+      "cause": "Partner/account enrollment existed, but there was no bounded data-only contact/requirements definition, immutable version/receipt or ordinary operator surface.",
+      "resolution": "Add scoped immutable draft versions, strict typed validation, current account-management and reviewed-version guards, exact private receipts, redacted audit payloads and ordinary browser/API/CLI controls. Record draft state honestly; do not claim full onboarding completion.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F021-onboarding-drafts.json"
+      ]
     }
   ]
 }

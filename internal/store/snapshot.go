@@ -56,7 +56,7 @@ func (s *Store) SnapshotEvents(ctx context.Context, scope Scope, maxEvents, maxB
 			rows.Close()
 			return nil, ErrLimit
 		}
-		snapshot.Events = append(snapshot.Events, e)
+		snapshot.Events = append(snapshot.Events, redactOnboardingEvent(e))
 	}
 	rows.Close()
 	if err = rows.Err(); err != nil {

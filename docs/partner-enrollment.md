@@ -2,7 +2,7 @@
 
 The tenant directory enrolls a partner and its first administrator through the browser, REST API or CLI. Tenant directory authority is a separate approval bound to one current credential revision. An ordinary partner administrator has its reviewed account/file grants inside that partner. Existing accounts receive no tenant authority during migration.
 
-This is enrollment, not the complete partner onboarding/production-activation workflow. Contacts, requirements, onboarding checklists, invitations/providers, delegated trust review, environment promotion, suspension and full operator adoption remain required work. New partner accounts can use their enabled protocol grants and configured intake policies immediately; review those grants deliberately.
+After enrollment, [onboarding drafts](partner-onboarding.md) record responsible contacts and exchange requirements inside that partner. Complete onboarding still requires tested checklists, invitations/providers, delegated trust review, environment promotion, suspension and full operator adoption. New partner accounts can use their enabled protocol grants and configured intake policies immediately; review those grants deliberately.
 
 ## Authorize the tenant operator
 

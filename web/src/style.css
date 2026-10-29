@@ -743,3 +743,48 @@ footer {
   min-height: 20px;
   margin: 0;
 }
+
+.onboarding-plan {
+  padding: 24px;
+}
+.onboarding-plan form {
+  display: grid;
+  gap: 12px;
+  margin-top: 24px;
+}
+.onboarding-plan fieldset {
+  padding: 18px;
+  display: grid;
+  gap: 10px;
+  border: 1px solid #b9c6cc;
+}
+.onboarding-plan legend {
+  padding: 0 6px;
+  font-weight: 700;
+}
+.onboarding-plan textarea {
+  min-height: 90px;
+  padding: 10px;
+  font: inherit;
+  border: 1px solid #b9c6cc;
+  border-radius: 6px;
+  resize: vertical;
+}
+.onboarding-plan select {
+  min-height: 42px;
+  padding: 8px;
+  font: inherit;
+  border: 1px solid #b9c6cc;
+  border-radius: 6px;
+  background: white;
+}
+.requirement-notes {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.onboarding-plan textarea:focus-visible,
+.onboarding-plan select:focus-visible {
+  outline: 3px solid #348eac;
+  outline-offset: 3px;
+}

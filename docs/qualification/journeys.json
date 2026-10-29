@@ -115,13 +115,15 @@
       "evidence": [
         "docs/qualification/evidence/F016-account-lifecycle.json",
         "docs/qualification/evidence/F019-first-run-enrollment.json",
-        "docs/qualification/evidence/F020-tenant-partner-enrollment.json"
+        "docs/qualification/evidence/F020-tenant-partner-enrollment.json",
+        "docs/qualification/evidence/F021-onboarding-drafts.json"
       ],
       "failures": [],
       "limits": [
         "F016 adds assisted local scoped account creation, policy/credential lifecycle and expiry through normal services, with browser review and stock curl/CLI checks. It does not close first-admin/partner setup, invitations/providers, independent operators, complete delegated lifecycle, broad protocol/platform or enterprise journey requirements.",
         "F019 proves assisted empty-database first tenant/partner/admin enrollment, atomic rollback/exact receipt replay/runtime refusal, existing-install preservation and browser/stock-curl integrity-only exchange after restart. Full onboarding, independent operators, disconnected installation, general lifecycle and the complete journey remain open.",
-        "F020 proves assisted explicit tenant authority and reviewed ordinary partner/admin enrollment with current grant/credential checks, atomic rollback, cross-scope isolation, response-loss receipt recovery and native/stock-curl new-partner transfer after restart. Full onboarding/activation, independent operators, environment/lifecycle, platform/restore and complete journey requirements stay open."
+        "F020 proves assisted explicit tenant authority and reviewed ordinary partner/admin enrollment with current grant/credential checks, atomic rollback, cross-scope isolation, response-loss receipt recovery and native/stock-curl new-partner transfer after restart. Full onboarding/activation, independent operators, environment/lifecycle, platform/restore and complete journey requirements stay open.",
+        "F021 adds partner-scoped immutable contact/exchange-requirement drafts through browser/API/CLI, exact current authority/version review, actor-private response-loss receipts, redacted ordinary audit payloads and migration 19 with 41 forced-RLS relations. Drafts are not tested, approved or active. Full protocol/test-exchange evidence, approval/production activation, invitations/providers/delegation and queued-work key lifecycle remain required."
       ]
     },
     {
@@ -241,7 +243,8 @@
         "docs/qualification/evidence/F017-signed-browser-recovery.json",
         "docs/qualification/evidence/F018-browser-worker-recovery.json",
         "docs/qualification/evidence/F019-first-run-enrollment.json",
-        "docs/qualification/evidence/F020-tenant-partner-enrollment.json"
+        "docs/qualification/evidence/F020-tenant-partner-enrollment.json",
+        "docs/qualification/evidence/F021-onboarding-drafts.json"
       ],
       "failures": [],
       "limits": [
@@ -256,7 +259,8 @@
         "F017 qualifies assisted same-host signed-browser exchange and exact receipt recovery after completed check/release response loss, plus independent downloaded-byte signature verification and live revocation refusal. Complete business acknowledgment, genuine malware/private operations, independent operators and all remaining full-journey requirements stay open.",
         "F018 proves an assisted CSV check-worker SIGKILL and real unchanged lease, conditionally reviewed browser recovery, idempotent cross-interface receipt replay and separately approved exact retrieval. Multi-host restore, signed/scanner recovery, governed rebind and complete journey scope stay open.",
         "F019 proves assisted empty-database first tenant/partner/admin enrollment, atomic rollback/exact receipt replay/runtime refusal, existing-install preservation and browser/stock-curl integrity-only exchange after restart. Full onboarding, independent operators, disconnected installation, general lifecycle and the complete journey remain open.",
-        "F020 proves assisted explicit tenant authority and reviewed ordinary partner/admin enrollment with current grant/credential checks, atomic rollback, cross-scope isolation, response-loss receipt recovery and native/stock-curl new-partner transfer after restart. Full onboarding/activation, independent operators, environment/lifecycle, platform/restore and complete journey requirements stay open."
+        "F020 proves assisted explicit tenant authority and reviewed ordinary partner/admin enrollment with current grant/credential checks, atomic rollback, cross-scope isolation, response-loss receipt recovery and native/stock-curl new-partner transfer after restart. Full onboarding/activation, independent operators, environment/lifecycle, platform/restore and complete journey requirements stay open.",
+        "F021 adds partner-scoped immutable contact/exchange-requirement drafts through browser/API/CLI, exact current authority/version review, actor-private response-loss receipts, redacted ordinary audit payloads and migration 19 with 41 forced-RLS relations. Drafts are not tested, approved or active. Full protocol/test-exchange evidence, approval/production activation, invitations/providers/delegation and queued-work key lifecycle remain required."
       ]
     },
     {

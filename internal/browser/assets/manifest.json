@@ -27,7 +27,7 @@
     },
     {
       "path": "web/src/app.tsx",
-      "sha256": "8b427aa9d7437ba4119dd09d7ed9d18de2dcc32ddf4edfd69b8c3f1ed0111968"
+      "sha256": "703a76d8ad2716aa5a3dc3324036899b11a51d47297f5e0e15a0df9da7f48dc1"
     },
     {
       "path": "web/src/assets.d.ts",
@@ -50,12 +50,20 @@
       "sha256": "4abd70f2ca33a99ca55fb5cf5ad544faec68e96d98fc56444c80ffb2a373fe50"
     },
     {
+      "path": "web/src/onboarding-types.ts",
+      "sha256": "821e6c6f42cea01e62e5bd4398751d1394fa14a25f221ec12a6becdb470771a5"
+    },
+    {
+      "path": "web/src/onboarding.tsx",
+      "sha256": "42ffd8bd4bdbf1115c330eee8a9795ba5eb756103ede0b6c30f7883062d9c8c4"
+    },
+    {
       "path": "web/src/partners.tsx",
       "sha256": "2e1926d12c123ef0549351a89f2c83dbf1c873efacef817622517bd14de7dc3a"
     },
     {
       "path": "web/src/style.css",
-      "sha256": "d4c3ac9d1bcf366ecd50ffef6066f3a6d7b300db9fffd87bcf758c0e7a1b48a9"
+      "sha256": "e2b090c6a7eaead9c8306d5f7b68d1dbc6406a0cba5f5df923c21710ee9f8935"
     },
     {
       "path": "web/src/types.ts",
@@ -73,13 +81,13 @@
   "outputs": [
     {
       "name": "app.css",
-      "sha256": "36664381931e4d7cf82fbe312b13516a43be008f9dbb76107acbba40124ca3b8",
-      "size": 9484
+      "sha256": "e9fe2a85bd42777d8f1cef173fba500d6796cc6be26b174a12831967d41833d3",
+      "size": 10151
     },
     {
       "name": "app.js",
-      "sha256": "c6d4cd788938976e26a93e2a592da14c662cb73dc86f4ef0c9b99e8606efaf75",
-      "size": 297328
+      "sha256": "07dd76b512ffb6750d5b834b50645e80a8e747a9085df0d2ca671c8275591a3d",
+      "size": 314504
     },
     {
       "name": "app.js.LEGAL.txt",
