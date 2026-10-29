@@ -16,6 +16,8 @@ For recorded read-only SFTP tests of an exact saved requirement and registered r
 
 For required scans, exact release and the selected real ClamAV runtime evidence, see [local scanning](docs/scanners.md). The scanner stays unloaded between explicit qualification runs; local inference remains off.
 
+For the selected combined signed-file, genuine scanner, separate release and recipient-encrypted exchange with independent receiver/audit verification, see [signed/scanned exchange](docs/signed-scanned-exchange.md). Full customer journeys remain open.
+
 - Organization: [ctlplne](https://github.com/ctlplne)
 - Repository: [ctlplne/freightctl](https://github.com/ctlplne/freightctl)
 - Local workflow: commits on main; pushes and publication remain owner-controlled.

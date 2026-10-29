@@ -1132,7 +1132,8 @@
       "state": "implementing",
       "evidence": [
         "docs/qualification/evidence/F012-encrypted-delivery.json",
-        "docs/qualification/evidence/F015-native-crypto-regression.json"
+        "docs/qualification/evidence/F015-native-crypto-regression.json",
+        "docs/qualification/evidence/F024-signed-scanned-exchange.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
@@ -1177,7 +1178,8 @@
       "acceptance_journey": "J02",
       "state": "implementing",
       "evidence": [
-        "docs/qualification/evidence/F011-openpgp-intake.json"
+        "docs/qualification/evidence/F011-openpgp-intake.json",
+        "docs/qualification/evidence/F024-signed-scanned-exchange.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
@@ -2395,7 +2397,8 @@
       "state": "implementing",
       "evidence": [
         "docs/qualification/evidence/F013-scanner-controls.json",
-        "docs/qualification/evidence/F023-real-scanner.json"
+        "docs/qualification/evidence/F023-real-scanner.json",
+        "docs/qualification/evidence/F024-signed-scanned-exchange.json"
       ],
       "qualification_blockers": [
         "Authorized MOVEit Automation installation and exact edition/version for observed comparison",

@@ -25,7 +25,11 @@ root = Path(__file__).resolve().parents[1]
 os.chdir(root)
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--runtime-reference', required=True)
+parser.add_argument('--combined-peer-reference')
+parser.add_argument('--combined-marker-reference')
 args = parser.parse_args()
+if bool(args.combined_peer_reference) != bool(args.combined_marker_reference):
+    raise SystemExit('Select both exact combined public-fixture manifests')
 reference = (root / args.runtime_reference).resolve()
 if not reference.is_relative_to(root / '.private') or reference.name != 'state.json':
     raise SystemExit('Select an exact protected runtime state reference')
@@ -45,9 +49,12 @@ steps = []
 server = None
 server_log = None
 owned = False
+database_loaded = False
 paused = False
 failure = None
 cleanup_failures = []
+combined_exec_clients = []
+combined_result = None
 state = 'failed'
 
 
@@ -101,7 +108,7 @@ def call(label, operation, *extra, success=True):
     return json.loads(data) if success else None
 
 
-def http(label, route, method='GET', body=None, expected=200, key=None, identity=0):
+def http(label, route, method='GET', body=None, expected=200, key=None, identity=0, headers=()):
     output = '/freightctl/http-' + label
     argv = ['/usr/bin/env', 'LD_LIBRARY_PATH=/freightctl/curl-root/usr/lib:/freightctl/curl-root/lib',
             '/freightctl/curl-root/lib/ld-musl-x86_64.so.1', '/freightctl/curl-root/usr/bin/curl',
@@ -118,6 +125,7 @@ def http(label, route, method='GET', body=None, expected=200, key=None, identity
             argv += ['--header', 'X-File-Size: ' + str(len(data)), '--header', 'X-Content-SHA256: ' + digest(data)]
         else:
             argv += ['--header', 'Content-Type: application/json']
+    argv += list(headers)
     code = int(execute(label + '-curl', [*argv, bases[identity] + route]).decode())
     data = execute(label + '-response', ['cat', output])
     steps.append({'name': label, 'http_status': code, 'expected_status': expected, 'body_sha256': digest(data)})
@@ -192,6 +200,7 @@ try:
     execute('runtime-tools', ['/bin/sh', '-ec', 'uname -a; sha256sum /usr/sbin/clamd /freightctl/freightctl /freightctl/clamd.conf /var/lib/clamav/*.cvd; stat -c "%u:%g:%a" /freightctl/run /freightctl/run/s /freightctl/clamd.conf /var/lib/clamav /tmp/freightctl'])
     version = execute('observed-engine-version', ['clamdscan', '--config-file=/freightctl/clamd.conf', '--version']).decode().strip()
     assert version.startswith('ClamAV 1.5.4/28168/')
+    database_loaded = True
     now = datetime.now(timezone.utc)
     definition = {'schema_version': 1, 'kind': 'clamd-instream-v1', 'socket_reference': '/freightctl/run/s',
                   'configuration_reference': '/freightctl/clamd.conf', 'configuration_sha256': runtime['configuration_sha256'],
@@ -279,6 +288,9 @@ try:
     assert http('restored-current-proof-byte-check', '/files/' + clean['id']) == clean_bytes
     http('revoke-profile', '/scanners/' + profile['id'] + '/1/revoke', 'POST', {'definition_hash': profile['definition_hash'], 'expected_revision': profile['revision']}, key='revoke')
     http('revoked-proof-denies-bytes', '/files/' + clean['id'], expected=409)
+    if args.combined_peer_reference:
+        from signed_scanner_journey import qualify
+        combined_result = qualify(globals(), args.combined_peer_reference, args.combined_marker_reference)
     state = 'passed'
 except Exception:
     failure = traceback.format_exc()
@@ -307,18 +319,20 @@ finally:
             cleanup_failures.append('Application exec client failed to finish after runtime stop')
             server.terminate()
             cleanup(lambda: server.wait(timeout=5))
+    for client in combined_exec_clients:
+        cleanup(lambda client=client: client.wait(timeout=15))
     if server_log:
         server_log.close()
     if cleanup_failures:
         state = 'failed'
 ending_sources = sources()
 manifest = {'schema_version': 1, 'state': state, 'failure': failure, 'observed_at': datetime.now(timezone.utc).isoformat(),
-            'cleanup_failures': cleanup_failures,
+            'cleanup_failures': cleanup_failures, 'combined_signed_exchange': combined_result,
             'starting_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD']).decode().strip(),
             'source_files': ending_sources, 'sources_unchanged_during_run': starting_sources == ending_sources,
             'runtime_reference': {'reference': str(reference.relative_to(root)), 'sha256': digest(reference.read_bytes())},
             'duration_seconds': round(time.monotonic() - started, 3), 'steps': steps,
-            'scanner_engine_started': owned, 'standard_signature_database_loaded': owned,
+            'scanner_engine_started': owned, 'standard_signature_database_loaded': database_loaded,
             'local_model_processes_started': 0, 'inference_performed': False,
             'limits': ['Actual Linux/amd64 execution emulated on arm64 macOS; cross-build alone proves nothing. No native production platform qualified.',
                        'Only harmless standard marker and bounded synthetic archive/CSV cases; no general malware detection corpus, ICAP/DLP or full J02 qualification.',
