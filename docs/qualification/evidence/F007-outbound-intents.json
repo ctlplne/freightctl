@@ -1,0 +1,915 @@
+{
+  "schema_version": 1,
+  "id": "F007",
+  "kind": "explicit approved outbound SFTP intents, database leases/fences and conservative uncertain-publication recovery",
+  "state": "verified locally",
+  "full_journeys_qualified": false,
+  "candidate": {
+    "starting_commit": "62ace8cefedd7c6b85e43aa3ddeea2d1e6a7206b",
+    "source_files": [
+      {
+        "path": "cmd/freightctl/delivery.go",
+        "sha256": "985b08b67bcd54b56c0ce92c42e01602cb379cc5360b101bc73c293e397eae41"
+      },
+      {
+        "path": "cmd/freightctl/main.go",
+        "sha256": "f385e095b57ec8802a61118e50e1ad2f2530d9bdb8c4860f37ed3b8c109343b4"
+      },
+      {
+        "path": "go.mod",
+        "sha256": "2b8e72bb19c95ae51e63a7c45a7c2c4ba0f147acdfde6f3eda1dff9520cca150"
+      },
+      {
+        "path": "go.sum",
+        "sha256": "e36a23c226b1844da16837e68a4d47f865d6eef00b3bf447cb33b52a31c89164"
+      },
+      {
+        "path": "internal/api/api.go",
+        "sha256": "b2aebaeb8fbe907045b85674a230489be860e524cff66102e20f48f1c0191812"
+      },
+      {
+        "path": "internal/api/namespace.go",
+        "sha256": "82d863f396fec14d6394a7f4011e434c593f2217dc66231b96cdf8782b6b3c0e"
+      },
+      {
+        "path": "internal/api/uploads.go",
+        "sha256": "fda7f39264ed8775e4a02b4d06db0c3f1df5201adc7c3ca9835d20b68361f494"
+      },
+      {
+        "path": "internal/architecture/architecture_test.go",
+        "sha256": "a8f4bb6540105bef76899e147dc0bb670bf2d411a0cdcf767ec38a79573657a5"
+      },
+      {
+        "path": "internal/audit/audit.go",
+        "sha256": "41bcf8bb940ec14e76657b3163be89ea2701a09fce7ee14a20f62452c516db46"
+      },
+      {
+        "path": "internal/audit/integration_test.go",
+        "sha256": "8c69a1a5d040a391b2579f58d3b070865e89f1c3b4f66199143d87e9793e7248"
+      },
+      {
+        "path": "internal/crypto/audit.go",
+        "sha256": "eefe6f66ab4c283ea96e51fc35a7cb4f8edff713dd16d56041d74bf1acdc338e"
+      },
+      {
+        "path": "internal/crypto/audit_test.go",
+        "sha256": "0837cc879e08a3b47d6b7ab4f393579af17ebd891f430e2cc45e264d60c02b4e"
+      },
+      {
+        "path": "internal/crypto/crypto.go",
+        "sha256": "edb1f8534ce0f048038aa5946489caba5ae303a38024e173c8a0d09478d093a0"
+      },
+      {
+        "path": "internal/crypto/protect_other.go",
+        "sha256": "c52dc1b00ac860719e3dd9dd9118109014d01e0b7f87327646bba63e7dd173a2"
+      },
+      {
+        "path": "internal/crypto/protect_unix.go",
+        "sha256": "f7184f82ff63e331fd5170a0ea27a0f5e867f06bbb9d1f901ae57f75a8b86e52"
+      },
+      {
+        "path": "internal/crypto/ssh.go",
+        "sha256": "c405042bf732cfffa8510e6d763f5c86c585994009a99d897d8a6efc2bb4d018"
+      },
+      {
+        "path": "internal/crypto/ssh_client.go",
+        "sha256": "24492ebd7d18f889c5f2e28b8e238d4546e34b92490ef7e1e7ff3082011e263b"
+      },
+      {
+        "path": "internal/crypto/ssh_test.go",
+        "sha256": "46f6cb3e53d9c3fca6b38f23b9a263852dcb94d1b49177c976f3f923b415db14"
+      },
+      {
+        "path": "internal/custody/custody.go",
+        "sha256": "20fc4428aad2e825d8ee70288469e75a9ded6667972c1d257633173119a26b0b"
+      },
+      {
+        "path": "internal/custody/custody_test.go",
+        "sha256": "2c4f169f40b859ca9f263deec1f03a46529c6784e24e8133018e1620df828ee7"
+      },
+      {
+        "path": "internal/custody/identity.go",
+        "sha256": "11db37dba13d5435f85f8243f353f29f8e333e304aba2a67b65ab70c30f1765c"
+      },
+      {
+        "path": "internal/custody/integration_test.go",
+        "sha256": "8c09d3b1044e360aae11287ce3d0b7861f0693544b28d15fbc6393a2e89871b1"
+      },
+      {
+        "path": "internal/custody/namespace.go",
+        "sha256": "47db75f92c468ba51b363333a0cdac25b177f5b0c65237d2cb4009df0f0f3d8b"
+      },
+      {
+        "path": "internal/custody/namespace_integration_test.go",
+        "sha256": "c75bf9153443f2a90bc7fbe955bb6931f29d77ce9f8455128c302679c92edd8f"
+      },
+      {
+        "path": "internal/custody/reconcile.go",
+        "sha256": "6eea38522e4c103a8014ce3f76455410dac5a2e04bf823ea11c7f008f2e0613f"
+      },
+      {
+        "path": "internal/custody/service.go",
+        "sha256": "e63f828318799277eb516dc09eedb75a618bcb80f2d67da59bc4ae3f955dd651"
+      },
+      {
+        "path": "internal/custody/upload_writer.go",
+        "sha256": "18a3991d78b617795ecce110f0ee7bf35af18f05250b3ba2c27fd49895231756"
+      },
+      {
+        "path": "internal/custody/uploads.go",
+        "sha256": "c10bcc0a2ef280206f1dd908723e04ce088096b874f6383cab7b68bbf74c5101"
+      },
+      {
+        "path": "internal/custody/uploads_integration_test.go",
+        "sha256": "6331c842e23e5bc16a0614c39cd5ddbbb65751973c25915fe18361ba774504a4"
+      },
+      {
+        "path": "internal/custody/writer.go",
+        "sha256": "d352bc7aa55e09192807926e4e406aefb935d1d32177d6d80f6af03be6d9ae45"
+      },
+      {
+        "path": "internal/custody/writer_integration_test.go",
+        "sha256": "7ca33e33931473e5d27f38f632a83b7232295f8fe0dfc6e2d417eafa6ffe71a0"
+      },
+      {
+        "path": "internal/delivery/service.go",
+        "sha256": "4f32b7dccb70ae206b7060fc7180288c12f99dd7ab271b6b411c126895926bd4"
+      },
+      {
+        "path": "internal/delivery/worker.go",
+        "sha256": "09826ef11f9e4d215578a7e297f840a8aea277a825ba66f0dd26241ecc2a8c03"
+      },
+      {
+        "path": "internal/delivery/worker_test.go",
+        "sha256": "69dd436a95f3e5a0832784ec26c9e4539a448f00758bb3dcd8118dedcdf9819f"
+      },
+      {
+        "path": "internal/sftpd/frames.go",
+        "sha256": "c370342331b85bc5e9b5bb549bcbd55279d17b131f367618600c02edf5d899d3"
+      },
+      {
+        "path": "internal/sftpd/frames_test.go",
+        "sha256": "909594927fda166cc0609de3e913d097488819ae601fc8c5227d059c91420f40"
+      },
+      {
+        "path": "internal/sftpd/server.go",
+        "sha256": "4d9060050c42845847f9dee416b9991d52473838b80cc33fe188b29428697a51"
+      },
+      {
+        "path": "internal/store/002_event_binding.sql",
+        "sha256": "9bdb83d3a31f608af24b568e91889e2e6f462caf8658b746a0c55be97e58dfb0"
+      },
+      {
+        "path": "internal/store/003_event_bounds.sql",
+        "sha256": "5e09fc8540294e24ea9114e71e4d58311bdfb7b80ae1a5d3162c8d3bc0a4a4e7"
+      },
+      {
+        "path": "internal/store/004_namespace.sql",
+        "sha256": "fd60652d7ebee14e7a39104d656599e5b8f9684eef293e3bb76951a2b5a895dc"
+      },
+      {
+        "path": "internal/store/005_uploads.sql",
+        "sha256": "a88a0394afd4192f40486670ce2b5c833b8a8ff38334251eba77e1e933b044df"
+      },
+      {
+        "path": "internal/store/006_upload_storage.sql",
+        "sha256": "b2e7b4ee6eac36a5d87734f3937d6a8b33533e27be3e904b660eb340d0393136"
+      },
+      {
+        "path": "internal/store/007_deliveries.sql",
+        "sha256": "a0661176825594a6af9d49cafb30e4409ae253edd53ba69fd88d06e25632e040"
+      },
+      {
+        "path": "internal/store/deliveries.go",
+        "sha256": "b2e88412d6122417d753fa4f1750617ad31b3efdf4cf8350c4d2a0507a335d8f"
+      },
+      {
+        "path": "internal/store/deliveries_integration_test.go",
+        "sha256": "bf2f045dedcda7e5f75c27e2a4a359f55a66891e089db20aae5eabded15aec21"
+      },
+      {
+        "path": "internal/store/identity.go",
+        "sha256": "9a7db0cc22a831c917dae9c59c88efe4980b453aad8eb050059ee680a5b90d19"
+      },
+      {
+        "path": "internal/store/migration_integration_test.go",
+        "sha256": "ef61691b82b452a210b2b3480f3e0772f3784754d6acb29df8720dbf50295109"
+      },
+      {
+        "path": "internal/store/namespace.go",
+        "sha256": "f5e94c1498d648d9643f58ec88e7b9fef3810d8ab44775b269dec82b8f704581"
+      },
+      {
+        "path": "internal/store/namespace_integration_test.go",
+        "sha256": "b989b680cb0c5196632d5807e20963fd558f5a4a8bbacf062f2e99c7d0e7e9e7"
+      },
+      {
+        "path": "internal/store/schema.sql",
+        "sha256": "26c4a6bd9e354b5b6f63052368f6d1e687de007f6f74b96910bce0ef3a5460d9"
+      },
+      {
+        "path": "internal/store/snapshot.go",
+        "sha256": "684681b9aeaed7021a140b196746f880dfec04a1bb966497c879468a9367b9a1"
+      },
+      {
+        "path": "internal/store/ssh.go",
+        "sha256": "8c2ec2c9890b0ecca3faf84def360cecf07d1082e3d7481f2f63c35a9c6a2a2c"
+      },
+      {
+        "path": "internal/store/store.go",
+        "sha256": "938e89dce352cce3e72c0afc138c48dde9d80e697bceb1c55e6c1ea31759af0e"
+      },
+      {
+        "path": "internal/store/uploads.go",
+        "sha256": "135c70f735604631bb5d4de555dc5e3ac4eb06f08dd2e99b002b0aed3a0448e6"
+      },
+      {
+        "path": "internal/store/uploads_integration_test.go",
+        "sha256": "76bd7a2434fa44aecb394d64d5a035ccaf3a723dbcfad18f6c77b443f6aef84d"
+      },
+      {
+        "path": "internal/vpath/path.go",
+        "sha256": "2a57a1a9f61390f3712f909e62336f7daba394d499591d20ddc95c15a66d57a5"
+      },
+      {
+        "path": "internal/vpath/path_test.go",
+        "sha256": "2a5489626f3ffb265249adbe4f4ed7698767c6a580dc976eb585d0a45d9cebd3"
+      },
+      {
+        "path": "scripts/check-records.py",
+        "sha256": "35df8df21212a1136486d5a9f3335b67b19cdb24f2e053c90d21d4768ced1f1b"
+      },
+      {
+        "path": "scripts/dev-db.py",
+        "sha256": "05643d67e1a64d7e5f91c19108f5bfa3415571c8394721c5d7cc89862d51c12a"
+      },
+      {
+        "path": "scripts/go.sh",
+        "sha256": "aec6d7e09592b3954a89dc69839c6791e72a73dbafe2ca04b3b274276a23f5a8"
+      },
+      {
+        "path": "scripts/integration.sh",
+        "sha256": "a1f1d34ff041d7287d04aab634ad336bf7af7896f58241181081853a981d3464"
+      },
+      {
+        "path": "scripts/qualify-deliveries.py",
+        "sha256": "fb7a5228d32efefd94f1897a43a4e2f18bbd3344ba8ecd50e3d37a9aba92d626"
+      },
+      {
+        "path": "scripts/qualify-foundation.py",
+        "sha256": "811bd00f0bdf49f71716f5ae7656e000ce3aef622d7646321e4d93cd97ea358b"
+      },
+      {
+        "path": "scripts/qualify-https.py",
+        "sha256": "21936efd7cb89e0a3fe6bb95a3b786f630d75bba68ac0575faf76214228842af"
+      },
+      {
+        "path": "scripts/qualify-sftp.py",
+        "sha256": "3dc203afb7e5f8bb76210be6c3e45259a781803ba1140f3db971ea9b822c1027"
+      },
+      {
+        "path": "scripts/qualify-uploads.py",
+        "sha256": "b81401642f8a3c2634fb024d691dd6f11b5ed9ef7bbfef077d838837d41e9e15"
+      },
+      {
+        "path": "scripts/verify-audit.py",
+        "sha256": "99f22fbd3e936aa4d38569ada1bfcccbca47e46f6c3e08aa47f6531128e9b983"
+      }
+    ],
+    "native_binary_sha256": "40e2809988bcd54477595f8e1395e996d4cc86f7d39bfeafdf1d873393bb10c5",
+    "source_binding": "All 67 source hashes agree between the 12-check foundation manifest, the native delivery manifest and final working source. Documentation-only evidence updates follow those checks."
+  },
+  "environment": {
+    "os": "macOS 27.2 build 26B5086k",
+    "native_platform": "darwin/arm64",
+    "go": "go1.26.10",
+    "postgresql": "16.15 in retained task-owned Docker fixture, numeric loopback; runtime non-owner without BYPASSRLS",
+    "receiver": "stock OpenSSH_10.5p1 /usr/sbin/sshd, separate loopback daemon and inbox on the same machine",
+    "independent_client": "stock OpenSSH sftp with pinned host trust and explicit client key; stock curl trusted TLS source acceptance",
+    "assistance": "Agent-created isolated synthetic fixtures; no independent human adoption",
+    "payload_size_bytes": 2097152
+  },
+  "checks": [
+    {
+      "name": "records",
+      "command": [
+        "python3",
+        "scripts/check-records.py"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 0.034,
+      "native_output": "evidence/raw/foundation-0a4b76e0f6c244bb8464cb9240691813/records.log",
+      "native_output_sha256": "457fa0e73258b6d5d3f99f5ddc34510e9b644d7056ff0218f5108e232d264422"
+    },
+    {
+      "name": "module-integrity",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "mod",
+        "verify"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 0.366,
+      "native_output": "evidence/raw/foundation-0a4b76e0f6c244bb8464cb9240691813/module-integrity.log",
+      "native_output_sha256": "b4537ed75f533f993f371954de47e42a793b8e5b0587577de7e27fb3e50696bd"
+    },
+    {
+      "name": "vet",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "vet",
+        "./..."
+      ],
+      "exit_code": 0,
+      "duration_seconds": 0.514,
+      "native_output": "evidence/raw/foundation-0a4b76e0f6c244bb8464cb9240691813/vet.log",
+      "native_output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "unit-race",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "test",
+        "-race",
+        "./..."
+      ],
+      "exit_code": 0,
+      "duration_seconds": 1.995,
+      "native_output": "evidence/raw/foundation-0a4b76e0f6c244bb8464cb9240691813/unit-race.log",
+      "native_output_sha256": "b31e674bac952b9e0c42a1588cfbc2b138ab0ee909f5bc762ad2ad611b29c4d5"
+    },
+    {
+      "name": "postgres-integration-race",
+      "command": [
+        "sh",
+        "scripts/integration.sh",
+        "-race",
+        "-v"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 11.569,
+      "native_output": "evidence/raw/foundation-0a4b76e0f6c244bb8464cb9240691813/postgres-integration-race.log",
+      "native_output_sha256": "586d8dd29aa1ed35ae0b1de6e6259b17b5b78667b50683ecfa419fa65db15c2b"
+    },
+    {
+      "name": "virtual-path-fuzz",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "test",
+        "./internal/vpath",
+        "-fuzz=FuzzCanonicalPath",
+        "-fuzztime=5s",
+        "-parallel=2"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 6.682,
+      "native_output": "evidence/raw/foundation-0a4b76e0f6c244bb8464cb9240691813/virtual-path-fuzz.log",
+      "native_output_sha256": "7eaad762d339240d9e71a3f2ec58268125220e142d5d182dc6602e5fbd756580"
+    },
+    {
+      "name": "sftp-packet-fuzz",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "test",
+        "./internal/sftpd",
+        "-fuzz=FuzzInspectPacket",
+        "-fuzztime=5s",
+        "-parallel=2"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 6.967,
+      "native_output": "evidence/raw/foundation-0a4b76e0f6c244bb8464cb9240691813/sftp-packet-fuzz.log",
+      "native_output_sha256": "42b6a0e660266dcfbfb12fce46df7d387a595d3ea727df867f17086abc2400f9"
+    },
+    {
+      "name": "custody-name-fuzz",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "test",
+        "./internal/custody",
+        "-fuzz=FuzzCustodyName",
+        "-fuzztime=5s",
+        "-parallel=2"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 6.376,
+      "native_output": "evidence/raw/foundation-0a4b76e0f6c244bb8464cb9240691813/custody-name-fuzz.log",
+      "native_output_sha256": "1edec7901d6f73f97abc6bc155c282e14841454ba2e22f7a590cfab26731882e"
+    },
+    {
+      "name": "stock-curl-https",
+      "command": [
+        "python3",
+        "scripts/qualify-https.py"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 5.246,
+      "native_output": "evidence/raw/foundation-0a4b76e0f6c244bb8464cb9240691813/stock-curl-https.log",
+      "native_output_sha256": "82c1796d35cdf8041ef0971ed9ca26aedab7c1475c797eeacae1eaa440c86627"
+    },
+    {
+      "name": "stock-openssh-sftp",
+      "command": [
+        "python3",
+        "scripts/qualify-sftp.py"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 6.785,
+      "native_output": "evidence/raw/foundation-0a4b76e0f6c244bb8464cb9240691813/stock-openssh-sftp.log",
+      "native_output_sha256": "f45bdb14dc411a993cb92e837cf9e647d8720d69dc1581727d9af7d62d6fcd0b"
+    },
+    {
+      "name": "durable-upload-resume",
+      "command": [
+        "python3",
+        "scripts/qualify-uploads.py"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 4.321,
+      "native_output": "evidence/raw/foundation-0a4b76e0f6c244bb8464cb9240691813/durable-upload-resume.log",
+      "native_output_sha256": "05260e9b4bf4c9ac61650e397ae6ace66c9d4d869d714cf0b83faa6b1286d1bc"
+    },
+    {
+      "name": "durable-outbound-delivery",
+      "command": [
+        "python3",
+        "scripts/qualify-deliveries.py"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 66.414,
+      "native_output": "evidence/raw/foundation-0a4b76e0f6c244bb8464cb9240691813/durable-outbound-delivery.log",
+      "native_output_sha256": "77d1553fb7c3c0bffa447ffa7fcbf43afa717c5c3194f27a6fd25624d19c109b"
+    }
+  ],
+  "foundation_manifest": {
+    "path": "evidence/raw/foundation-0a4b76e0f6c244bb8464cb9240691813/manifest.json",
+    "sha256": "5ddbe27b43c6601552c92816f85838b85db0c164a378ff6919260cc40977ac0a"
+  },
+  "native_manifest": {
+    "path": "evidence/raw/deliveries-6e2e475efbc4458bb424aacf464c1de0/manifest.json",
+    "sha256": "320e65c895aeaec85c5576a087b22c5bcef0ae3fbe9746cf0fdca4cd414f0c99"
+  },
+  "native_delivery": {
+    "state": "passed",
+    "duration_seconds": 66.354,
+    "steps": [
+      {
+        "name": "stock-curl-durable-source",
+        "size_bytes": 2097152,
+        "sha256": "79acefce3edeb0ffdad0cb8ac19f709ac16987ec46b5278f605e531a58f0e1e9"
+      },
+      {
+        "name": "delivery",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "0098512ee525123752dd60c3538259f058c84edce2bf04ef0a6f424fbd07aa50",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "create-replay",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "a05d396baf22ecbd30643f0f5b979dbc38e8ec102bc7f977e0416f0810d84cd1",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "other-actor-denied",
+        "exit_code": 1,
+        "expected_success": false,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "3fd8d3b5c57a902e2075b2d70d92c45728bffeb139c01fbf2f586d4177416313"
+      },
+      {
+        "name": "legacy-grants-denied",
+        "exit_code": 1,
+        "expected_success": false,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "a1f2f627505208665045399d407c5243a39ee7ec9f5ba4d8682b0af016dd1b36"
+      },
+      {
+        "name": "unapproved-worker-denied",
+        "exit_code": 1,
+        "expected_success": false,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "40d32d5ff6c75f6e1f176d357f429cc8f54c1228a68a3944f022aad6b2c39b7a"
+      },
+      {
+        "name": "wrong-approval-denied",
+        "exit_code": 1,
+        "expected_success": false,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "ded238ac1174db504f13b4b3172425844b22956a6563d24a9b957528c505b3f6"
+      },
+      {
+        "name": "approve",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "338aeabd9742810587a89d27b2804e1bd0e7cc199f02af9342d6475e48436e3f",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "approve",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "6b448052dfa03dc98e3923bc80fc1ee32828209dda93f234f5a262a6aa59379f",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "two-processes-one-intent",
+        "exit_codes": [
+          1,
+          0
+        ]
+      },
+      {
+        "name": "delivery-status",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "9af47547166f737a715c83b58a2fcb8d0c2cfb6438ee7db1b548cd17b97153f9",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "stock-openssh-independent-retrieval",
+        "sha256": "79acefce3edeb0ffdad0cb8ac19f709ac16987ec46b5278f605e531a58f0e1e9"
+      },
+      {
+        "name": "repeat-worker-no-resend",
+        "exit_code": 1,
+        "expected_success": false,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "40d32d5ff6c75f6e1f176d357f429cc8f54c1228a68a3944f022aad6b2c39b7a"
+      },
+      {
+        "name": "changed-key-meaning-denied",
+        "exit_code": 1,
+        "expected_success": false,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "b8fd3822028efdb0c166fcb61394ddef6fbd668822d61cc3df70e590e7120491"
+      },
+      {
+        "name": "changed-host",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "217e1ef2d233ee48994f5fd1f25804a0d9c78e102a76b76746012114ce296733",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "approve-changed-host",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "9df680669761ac8937c5cee0ba34b8d88a3d859219f508f2a0e15a3ccd086269",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "changed-host-no-bytes",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "07360f1636501a12db8961b9212ec5928648e003b26783b9dde018343fd7dc57",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "collision",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "5da2ffa89286da299f8abf8fd83340e30ab7d70e7010701143101e8cea985554",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "approve-collision",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "84c29107d84e25a14e77eb71c53ce939f970e01e6ed13a4c5d99bb1464f793cf",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "collision-no-overwrite",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "2a780e8699a1d31f8ac2bb89c582b925184d69d4eaa11bbdb0a4938d0554a920",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "unsafe-directory",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "26f2f75d4b5b5ff42004d9c61f1d8f7165b9614b229da46e192880722879b6bb",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "approve-unsafe-directory",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "168c250e2d98738660f23ca2999c61d9be2d538423f3c9338ef6e8c59b98ad87",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "symlink-directory-denied",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "0970481bd902bff3f717140a7bf8c55b32d2c18cbf0fb97e9e2e5e7faf689479",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "traversal-denied",
+        "exit_code": 1,
+        "expected_success": false,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "8e7a182761218a3dfb1a792bb35e5b5a0c22c5ebc14c096e34c6e40b37c022f5"
+      },
+      {
+        "name": "wrong-store",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "7033503ff5ac4273f2f063da446264354ad1aa7c819cb32377ac3072823375dc",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "approve-wrong-store",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "df4243fffd569947d511eba181c0f5a95df6946859a7aac78187fbd6a8f18351",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "storage-identity-denied",
+        "exit_code": 1,
+        "expected_success": false,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "60b6045642a86c017721f00490bc73853869950743f449ca7a94e36ab1b8f57a"
+      },
+      {
+        "name": "wrong-store-still-queued",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "42ef3e9bc7fa504c7dd5799bf0f3b16945d030a72079e5ba4e445c546cb6e02d",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "stage-crash",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "c4c871511381e100913c4bead54564849e1591cff10d8f8b697efed9e78a28d9",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "approve-stage-crash",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "9d70f39c3bc3888097410ec3d8d8c1560a18e4afc1c229fbe85390473a44206e",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "after-stage-process-kill",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "88cbc2c7d085bf0760460a504069e75371372e258c86e1634c9d0138132180d0",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "actual-process-kill-unpublished",
+        "exit_code": -9,
+        "fence": 1
+      },
+      {
+        "name": "recover-expired-stage",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "1259db7606cc3449f77a99bc628a084798b918d1725820d5267c29898d661ba5",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "old-stage-retained-new-fence-published",
+        "fence": 2
+      },
+      {
+        "name": "commit-uncertain",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "e771f04585fe39ca6ca2d9ec49e7883240355f638da4f940bb291d0ad8da3649",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "approve-uncertain",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "678f9918a5e9ae5380786b8b9c811727f1140740e5de186c1df71144363a518a",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "remote-published-local-commit-fails",
+        "exit_code": 1,
+        "expected_success": false,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "29676174a183f08964e82c41a61dc1db78e1c72543884ee60709085e908fadd5"
+      },
+      {
+        "name": "recorded-publishing-after-failure",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "a8f6f528ad08a46099ed1cb5b46e6ee05cb050a705267d332860cef1d194ff39",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "live-publishing-cannot-resend",
+        "exit_code": 1,
+        "expected_success": false,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "40d32d5ff6c75f6e1f176d357f429cc8f54c1228a68a3944f022aad6b2c39b7a"
+      },
+      {
+        "name": "expired-publication-is-ambiguous",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "e239ece15ced01280baaea1ff37761b63a39273dfde0267cbc8e641a7288b5c5",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "missing-receipt-stays-ambiguous",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "e239ece15ced01280baaea1ff37761b63a39273dfde0267cbc8e641a7288b5c5",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "read-only-exact-receipt-recovery",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "3e14a4f022eff448be0de974125b39756fb397ab0b40c06529470337b47b9a96",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "corrupt-source",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "80b2bde69c72e967392175d28623b9ecef06c4ec81e398cfcc222a963e302ab6",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "approve-corrupt-source",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "bbbc363bbd3ded7a6efd0dd10a452dd99fc879eee574f23e720760f3e623fe9b",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "corrupt-source-not-dispatched",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "75d762ee6a5bebcfe711b3036c084fdb24bacb553be2a78b2ff1a66b17e48fdc",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "authority-revoked",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "cdc30932fd03eb72d16a101175dbcf871333baba85f44d62019ee44f3f1f12f8",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "approve-revoked",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "d9c6fec8156d4984120afdae232443e62db52f53248c6b010c0e95b9b377819f",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "revoked-worker-denied",
+        "exit_code": 1,
+        "expected_success": false,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "a1f2f627505208665045399d407c5243a39ee7ec9f5ba4d8682b0af016dd1b36"
+      },
+      {
+        "name": "approve-revoked",
+        "exit_code": 1,
+        "expected_success": false,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "a1f2f627505208665045399d407c5243a39ee7ec9f5ba4d8682b0af016dd1b36"
+      }
+    ]
+  },
+  "first_failure": {
+    "defect": "D020",
+    "reference": {
+      "path": ".private/delivery-first-failure/manifest.json",
+      "sha256": "bdea36aa02aea24824eb11e21f1bac0d604ce0df6f0e10fc149771e784d8d14f"
+    },
+    "result": "delivery-create absent on starting commit; command contract and actual receiver journey now exercised"
+  },
+  "mechanisms": [
+    "Immutable typed draft fixes source revision/acceptance event/policy, storage UUID, actor authority/mount, explicit destination and key reference/fingerprint. Draft creation makes no remote contact.",
+    "Approval/cancellation bind exact definition hash, intent ID and state revision. Intent/events/actor-private idempotency receipts commit together.",
+    "Every new domain relation has forced tenant/partner and restrictive actor row policies. Runtime transactions check all 15 relations live.",
+    "Database-wide retained session locks bound this initial profile to two streams. Real independent pools exercise capacity. A worker executes one specified intent, with no unbounded queue scan.",
+    "Database-clock leases renew every five seconds, expire after 30 seconds, and issue a strictly growing attempt fence; expired staging can claim a distinct generated temporary file.",
+    "Sequential 32 KiB streaming checks current source authority, lease and storage identity. The client bounds receiver-controlled frames before library allocation.",
+    "Remote fsync, close and exact read-back precede committing publishing. Atomic no-overwrite OpenSSH hardlink publication precedes final read-back and persisted observed receipt.",
+    "Lost publication acknowledgment/worker/local receipt commit produces ambiguity; no automatic retransmission is allowed. Missing or consumed remote files remain ambiguous.",
+    "Read-only exact final-file observation can record recovered integrity evidence, without claiming file-sync acknowledgment or business processing. Failed reconciliation observation is journaled.",
+    "Stock native journey verifies competing processes, actual pre-publication worker kill, real expiry/new fence, source corruption, host mismatch, path/symlink/storage/collision/actor/grant/revocation denial."
+  ],
+  "migration_notes": {
+    "new_version": 7,
+    "unchanged_applied_versions": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "new_relations": [
+      "delivery_intents",
+      "delivery_receipts"
+    ],
+    "new_grants": [
+      "connections_manage",
+      "deliver"
+    ],
+    "existing_identity_grants": "Preserved exactly; real v1-upgrade regression verifies no implicit outbound grants. New development administrators default to nine grants.",
+    "qualification": "Clean database migration, repeated migration, v1 upgrade, event tamper, direct stale fence and ambiguous-retry denial pass against real PostgreSQL."
+  },
+  "security": {
+    "govulncheck": {
+      "exit_code": 0,
+      "duration_seconds": 9.975,
+      "config": {
+        "protocol_version": "v1.0.0",
+        "scanner_name": "govulncheck",
+        "scanner_version": "v1.9.0",
+        "db": "https://vuln.go.dev",
+        "db_last_modified": "2026-10-27T21:16:18Z",
+        "go_version": "go1.26.10",
+        "scan_level": "symbol",
+        "scan_mode": "source"
+      },
+      "findings": [
+        {
+          "osv": "GO-2026-5932",
+          "trace": [
+            {
+              "module": "golang.org/x/crypto",
+              "version": "v0.58.0"
+            }
+          ]
+        }
+      ],
+      "affected_packages": [
+        "golang.org/x/crypto/openpgp",
+        "golang.org/x/crypto/openpgp/armor",
+        "golang.org/x/crypto/openpgp/clearsign",
+        "golang.org/x/crypto/openpgp/elgamal",
+        "golang.org/x/crypto/openpgp/errors",
+        "golang.org/x/crypto/openpgp/packet",
+        "golang.org/x/crypto/openpgp/s2k"
+      ],
+      "imported_affected_packages": [],
+      "reachable_symbol_findings": [],
+      "assessment_note": "Select OSV records only for the actual finding IDs; scanner emits other historical advisory records that are not findings for these versions.",
+      "native_report": {
+        "path": ".private/deliveries-scans/govulncheck.json",
+        "sha256": "699dfa7dc330730c92676ab5d96994cc1165d34eed39a4f7828c8dd9ce5cd6dd"
+      },
+      "dependency_inventory": {
+        "path": ".private/deliveries-scans/native-dependencies.txt",
+        "sha256": "52467c0dafd2f26cf82bb6264cfba80d2dc776a3cde02b82b2603a97b3b8de34"
+      },
+      "assessment_reference": {
+        "path": ".private/deliveries-scans/govulncheck-manifest.json",
+        "sha256": "203b74b3eedf5de20136bdf77f8028defdba644caba9a25a311137f2c17827cc"
+      },
+      "conclusion": "One retained module advisory GO-2026-5932 for unmaintained OpenPGP; no affected package imported and no reachable symbol finding in this native build. This is not a zero-advisory or all-platform release claim."
+    },
+    "gitleaks": {
+      "tool": "8.30.1",
+      "image": "ghcr.io/gitleaks/gitleaks@sha256:c00b6bd0aeb3071cbcb79009cb16a60dd9e0a7c60e2be9ab65d25e6bc8abbb7f",
+      "manifest_reference": ".private/deliveries-scans/gitleaks-manifest.json",
+      "source_inventory_reference": ".private/deliveries-scans/source-input-manifest.json",
+      "required_result": "Source snapshot and reachable Git history must both exit zero with empty reports before commit; post-commit history is verified again.",
+      "scope": "git ls-files --cached --others --exclude-standard, regular source files; ignored credentials, models, database and raw evidence are excluded.",
+      "observed_source_findings": 0,
+      "observed_history_findings": 0,
+      "native_result_note": "Both pinned scans passed with empty reports. The final snapshot and post-commit history verification are retained at the manifest reference."
+    }
+  },
+  "limits": [
+    "loopback development profile",
+    "synthetic 2 MiB payload",
+    "OpenSSH fsync and atomic hardlink extensions required",
+    "file integrity observation is not downstream business acceptance",
+    "same-host operator-assisted experiment; no independent adoption or enterprise qualification",
+    "Local CLI development path only; no HTTP/private-key-reference submission or browser approval UI.",
+    "Root-mounted owner only; delegated lifecycle, current-authority rebinding, active cancellation and reusable connection revision/rotation remain open.",
+    "Requires cooperative receiver supporting OpenSSH fsync and hardlink extensions; no generic-SFTP, atomic directory-power-loss durability or exactly-once business promise.",
+    "Remote temporary files and closed intents retained; remote quotas and approved cleanup are not implemented.",
+    "Two streams per database, 128 open intents per actor, 8 attempts, 64-second maximum stage retry delay; fair/configurable unattended scheduling remains open.",
+    "32 KiB data pieces, 256 KiB maximum receiver packet; 90-second worker/20-second reconciliation/15-second inactivity bounds. 2 MiB native fixture does not establish large-file throughput or long duration.",
+    "No full customer journey, typed workflow/private model, external partner/enterprise peer, native Linux/Windows, multi-host HA or release is qualified."
+  ]
+}

@@ -297,6 +297,21 @@
       "regression_evidence": [
         "docs/qualification/evidence/F006-upload-checkpoints.json"
       ]
+    },
+    {
+      "id": "D020",
+      "severity": "missing required capability",
+      "state": "fixed locally",
+      "observed_on": "2026-10-28",
+      "candidate": "62ace8cefedd7c6b85e43aa3ddeea2d1e6a7206b",
+      "journey": "J06",
+      "reproduction": "sh scripts/go.sh run ./cmd/freightctl delivery-create",
+      "first_failure": "freightctl: unknown command; use --help (exit 1)",
+      "cause": "The accepted custody foundation had no outbound delivery intent, worker lease or uncertain-publication recovery path.",
+      "resolution": "Add explicit typed draft/approval, actor-private transactional intent and receipts, bounded leased/fenced SFTP delivery, and read-only reconciliation. Original command now enters the documented local request contract; native original outcome and failure paths pass. Broader workflow and sender qualification remains open.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F007-outbound-intents.json"
+      ]
     }
   ]
 }

@@ -34,8 +34,11 @@ var uploadSchema string
 //go:embed 006_upload_storage.sql
 var uploadStorageSchema string
 
-var migrations = []string{schema, eventBinding, eventBounds, namespaceSchema, uploadSchema, uploadStorageSchema}
-var domainTables = []string{"tenants", "partners", "credentials", "events", "files", "idempotency", "namespace_entries", "namespace_revisions", "namespace_commands", "ssh_keys", "upload_sessions", "upload_chunks", "upload_receipts"}
+//go:embed 007_deliveries.sql
+var deliverySchema string
+
+var migrations = []string{schema, eventBinding, eventBounds, namespaceSchema, uploadSchema, uploadStorageSchema, deliverySchema}
+var domainTables = []string{"tenants", "partners", "credentials", "events", "files", "idempotency", "namespace_entries", "namespace_revisions", "namespace_commands", "ssh_keys", "upload_sessions", "upload_chunks", "upload_receipts", "delivery_intents", "delivery_receipts"}
 
 var ErrUnauthorized = errors.New("unauthorized")
 var ErrNotFound = errors.New("not found")
@@ -47,7 +50,7 @@ var ErrExists = errors.New("virtual path already exists")
 var ErrState = errors.New("operation does not match the current resource state")
 var ErrRevision = errors.New("resource revision changed")
 
-var DefaultPermissions = []string{"read", "write", "list", "manage_paths", "inspect", "audit_read", "admin"}
+var DefaultPermissions = []string{"read", "write", "list", "manage_paths", "inspect", "audit_read", "admin", "connections_manage", "deliver"}
 
 var uuidPattern = regexp.MustCompile(`^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$`)
 

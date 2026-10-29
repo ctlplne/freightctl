@@ -32,7 +32,7 @@ func main() {
 }
 func run(args []string) error {
 	if len(args) == 0 || args[0] == "--help" || args[0] == "help" {
-		fmt.Println("freightctl: init | token | enroll | identity | namespace | dev-cert | serve | reconcile | audit-keygen | audit-export | ssh-host-keygen | ssh-key-enroll | ssh-key-revoke | serve-sftp | upload-create | upload-status | upload-append | upload-complete | upload-abort\nRead docs/development.md. This is an unqualified local custody foundation.")
+		fmt.Println("freightctl: init | token | enroll | identity | namespace | dev-cert | serve | reconcile | audit-keygen | audit-export | ssh-host-keygen | ssh-key-enroll | ssh-key-revoke | serve-sftp | upload-create | upload-status | upload-append | upload-complete | upload-abort | delivery-create | delivery-status | delivery-approve | delivery-cancel | delivery-work | delivery-reconcile\nRead docs/development.md. This is an unqualified local custody foundation.")
 		return nil
 	}
 	f := flag.NewFlagSet(args[0], flag.ContinueOnError)
@@ -67,6 +67,9 @@ func run(args []string) error {
 	uploadOffset := f.Int64("upload-offset", 0, "expected committed upload offset")
 	chunkFile := f.String("chunk-file", "", "bounded chunk input file reference")
 	checkpointBytes := f.Int("upload-checkpoint-bytes", 1<<20, "resumable SFTP checkpoint size, 64 KiB to 8 MiB")
+	deliveryID := f.String("delivery-id", "", "durable outbound delivery UUID")
+	deliveryHash := f.String("definition-hash", "", "exact reviewed delivery definition digest")
+	deliveryRevision := f.Int64("expected-revision", 0, "exact reviewed delivery state revision")
 	sshHost := f.String("ssh-host-key-file", ".private/ssh-host.key", "protected Ed25519 SSH host identity reference")
 	sshPublic := f.String("ssh-public-file", "", "public SSH key reference; host-keygen defaults to host reference plus .pub")
 	sshKeyID := f.String("ssh-key-id", "", "registered key UUID to revoke")
@@ -87,6 +90,8 @@ func run(args []string) error {
 	}
 	ctx := context.Background()
 	switch args[0] {
+	case "delivery-create", "delivery-status", "delivery-approve", "delivery-cancel", "delivery-work", "delivery-reconcile":
+		return runDelivery(ctx, args[0], *dsn, *token, *tenant, *partner, *storage, *requestFile, *idempotencyKey, *deliveryID, *deliveryHash, *deliveryRevision, *maxFile)
 	case "init":
 		return store.Migrate(ctx, *admin, *password)
 	case "token":

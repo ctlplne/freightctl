@@ -241,7 +241,11 @@
       }
     ],
     "binary_sha256": "f58aba1014bb2cbcd6bd173bbf77ea68075a6f91c2fda4c8f7189ed61372295f",
-    "source_note": "Exact dirty-source hashes identify the candidate. All three native journey binaries have the same digest; no history rewriting."
+    "source_note": "Exact dirty-source hashes identify the candidate. All three native journey binaries have the same digest; no history rewriting.",
+    "committed_source": {
+      "commit": "62ace8cefedd7c6b85e43aa3ddeea2d1e6a7206b",
+      "binding": "All 58 tested source hashes match these committed Git blobs; later documentation-only changes do not change the tested runtime source."
+    }
   },
   "environment": {
     "os": "Darwin",

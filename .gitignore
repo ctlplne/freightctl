@@ -20,6 +20,8 @@ node_modules/
 *.test
 *.prof
 coverage.out
+__pycache__/
+*.pyc
 
 # Editor and operating system files
 .DS_Store

@@ -25,6 +25,7 @@ commands=[
 ('stock-curl-https',['python3','scripts/qualify-https.py']),
 ('stock-openssh-sftp',['python3','scripts/qualify-sftp.py']),
 ('durable-upload-resume',['python3','scripts/qualify-uploads.py']),
+('durable-outbound-delivery',['python3','scripts/qualify-deliveries.py']),
 ]
 results=[]
 for name,command in commands:

@@ -90,11 +90,14 @@
         "independent SFTP peer"
       ],
       "acceptance_journey": "J01",
-      "state": "planned",
-      "evidence": [],
+      "state": "implementing",
+      "evidence": [
+        "docs/qualification/evidence/F007-outbound-intents.json"
+      ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
-      ]
+      ],
+      "current_limit": "F007 tests a local CLI approved sender against stock OpenSSH with fsync/hardlink extensions, exact observed integrity, leases/fences and ambiguity recovery. General connections, workflow/API/browser parity, production networks, broader peers, larger files and receiver business receipts remain open."
     },
     {
       "id": "P-FTPS-EXPLICIT-RECEIVE",

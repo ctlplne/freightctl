@@ -179,6 +179,15 @@ func TestVersionOneUpgradePreservesReplayAndChecksums(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer db.Pool.Close()
+	identity, err := db.Identity(ctx, scope)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, grant := range identity.Permissions {
+		if grant == "deliver" || grant == "connections_manage" {
+			t.Fatal("upgrade silently granted outbound authority")
+		}
+	}
 	tx, err = db.Begin(ctx, scope)
 	if err != nil {
 		t.Fatal(err)

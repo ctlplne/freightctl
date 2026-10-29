@@ -77,7 +77,7 @@ Migration 3 bounds journal kind and payload sizes in SQL, while the application 
 
 Client folder names are records in PostgreSQL. A name such as `/inbox/payroll.csv` points to an immutable custody file ID; it is never passed to the host filesystem. Create a different file revision to replace contents. Renaming a folder changes the index and appends events while leaving those bytes intact. Removal creates a tombstone; accepted bytes and publication history remain retained. Approved recovery and retention policies are still required.
 
-Enrollment supports `--permissions read,list` and `--namespace-root /inbox`. This mounts the existing partner folder `/inbox` as the account's `/`. Existing identities and the enrollment command's default retain all seven grants; explicitly select the minimum permissions for a restricted account. The development bootstrap is still an administrator operation. Identity creation/rotation through a delegated operator UI remains open.
+Enrollment supports `--permissions read,list` and `--namespace-root /inbox`. This mounts the existing partner folder `/inbox` as the account's `/`. Existing identities retain their previous grants. New development administrators receive the nine grants listed below; explicitly select the minimum permissions for a restricted account. The development bootstrap is still an administrator operation. Identity creation/rotation through a delegated operator UI remains open.
 
 | Permission | Effect |
 | --- | --- |
@@ -88,6 +88,8 @@ Enrollment supports `--permissions read,list` and `--namespace-root /inbox`. Thi
 | `inspect` | Run custody reconciliation; the current global report also requires root `/`. |
 | `audit_read` | Read scoped events and signed snapshots; these global views also require root `/`. |
 | `admin` | Bypass owner/group mode bits within the mounted namespace. Other operation grants and the mount still apply. |
+| `connections_manage` | Review and approve the initial local outbound connection definition, together with admin authority. |
+| `deliver` | Inspect and execute this actor's approved outbound intent, together with source read authority. |
 
 Virtual modes use owner bits for the creating actor and group bits for other authorized actors in the same partner. They do not create host users or POSIX groups. Tenant/partner SQL policies still isolate a mode-0777 file. Setstat requires owner or admin authority; replacement requires write authority, parent search/write bits and the expected path revision. Current authority is checked again before commit. A changed account policy increments its authority revision, invalidating an in-flight operation that used the old policy.
 
@@ -111,10 +113,14 @@ The active-entry default is 10,000 per partner (`--namespace-max-entries`); one 
 
 Direct `GET .../files/{id}` follows the same mount and current mode checks. For non-admin identities an archived revision is readable only through a live permitted namespace entry; unlisted IDs cannot escape the mount. Root admins can inspect retained custody. A root non-admin can access its own never-published raw upload; publishing it brings it under the namespace rules. Mounted identities cannot create raw unbound uploads. Global event/export/reconciliation views fail rather than leaking names outside a mount.
 
-Migration 4 adds namespace projections/history/command receipts, actor-scoped upload keys, account policy revisions and the future SSH public-key registry. Checksummed migrations 1–3 remain unchanged. The SFTP adapter uses these same namespace rules. Its loopback server, transfer-close behavior and stock OpenSSH exercise are documented in [the SFTP profile](protocols/sftp.md); outbound adapters, enterprise peers and interrupted-session resume remain open.
+Migration 4 adds namespace projections/history/command receipts, actor-scoped upload keys, account policy revisions and the future SSH public-key registry. Checksummed migrations 1–3 remain unchanged. The SFTP adapter uses these same namespace rules. Its loopback server, transfer-close behavior and stock OpenSSH exercise are documented in [the SFTP profile](protocols/sftp.md); the first outbound intent profile is described separately below. Broader adapters, enterprise peers and ordinary-operator resume qualification remain open.
 
 `python3 scripts/qualify-foundation.py` retains native module, vet, unit/race, PostgreSQL/race, bounded name/path fuzzing, stock-curl, OpenSSH SFTP/scp and independent OpenSSL outputs with exact source hashes. This is a repeatable foundation check, not a release or complete-journey qualification.
 
 ## Durable upload tickets
 
 [Resumable upload tickets](protocols/resumable-uploads.md) describe the shared HTTPS/CLI/SFTP flow, exact progress receipts, storage binding, completion and limits. Migrations 5–6 add immutable checkpoints, actor-private command receipts and a persistent storage reference. The namespace reserves `.freightctl` for protocol controls. Existing source, credentials and accepted bytes remain retained; no orphan is adopted automatically.
+
+## Outbound delivery and uncertain receipts
+
+[Approved outbound SFTP intents](protocols/outbound-sftp.md) describe local draft/approval commands, pinned receiver trust, immutable source binding, database leases/fences, no-overwrite publication and read-only reconciliation. Migration 7 adds two actor-private domain relations and outbound grants without granting them to existing accounts. The native delivery exercise is included in the foundation runner. Typed workflows, API/browser approval and full product qualification remain open.
