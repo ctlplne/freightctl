@@ -27,7 +27,7 @@ func runChecks(ctx context.Context, command, dsn, token, tenant, partner, storag
 	}
 	defer db.Pool.Close()
 	custodyService := &custody.Service{DB: db, NamespaceMaxEntries: maxEntries}
-	if command == "check-status" || command == "check-run" || command == "check-release" {
+	if command == "check-status" || command == "check-run" || command == "check-recover" || command == "check-release" {
 		disk, err := custody.OpenExisting(storage)
 		if err != nil {
 			return err
@@ -74,6 +74,12 @@ func runChecks(ctx context.Context, command, dsn, token, tenant, partner, storag
 		result, err = service.Get(ctx, scope, fileID)
 	case "check-run":
 		result, err = service.Run(ctx, scope, fileID, key)
+	case "check-recover":
+		var decision checks.RecoveryDecision
+		if err = decode(&decision); err != nil {
+			return err
+		}
+		result, err = service.Recover(ctx, scope, fileID, key, decision)
 	case "check-release":
 		var decision checks.ReleaseDecision
 		if err = decode(&decision); err != nil {

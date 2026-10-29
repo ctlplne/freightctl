@@ -76,7 +76,26 @@ export interface SignatureEvidence {
   hashAlgorithm: string;
   signatureVersion: number;
 }
+export interface RecoveryDecision {
+  expected_revision: number;
+  expected_worker_id: string;
+  expected_lease_until: string;
+  sha256: string;
+  policy_hash: string;
+}
+export interface CheckRecovery {
+  observedAt: string;
+  eligible: boolean;
+  code:
+    | "ready"
+    | "lease_active"
+    | "attempt_budget_exhausted"
+    | "authority_or_policy_changed"
+    | "permission_denied";
+  decision: RecoveryDecision;
+}
 export interface CheckView {
+  recovery: CheckRecovery | null;
   signatureProof: SignatureEvidence | null;
   validation: {
     engine: string;
@@ -280,6 +299,35 @@ export function asCheckPage(value: unknown): CheckPage {
   if (o.next !== undefined) page.next = id(o, "next");
   return page;
 }
+// Compare server timestamp instants at PostgreSQL precision across UTC offsets.
+// The browser clock never grants permission to replace a worker reservation.
+function timestampInstant(value: string): bigint {
+  const match =
+    /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})(?:\.(\d{1,9}))?(Z|[+-]\d{2}:\d{2})$/.exec(
+      value,
+    );
+  if (!match?.[1] || !match[3])
+    throw new ApiError("invalid_server_response", 502);
+  const base = Date.parse(match[1] + "Z"),
+    zone = match[3];
+  if (
+    !Number.isFinite(base) ||
+    new Date(base).toISOString().slice(0, 19) !== match[1]
+  )
+    throw new ApiError("invalid_server_response", 502);
+  let offset = 0;
+  if (zone !== "Z") {
+    const hours = Number(zone.slice(1, 3)),
+      minutes = Number(zone.slice(4, 6));
+    if (hours > 23 || minutes > 59)
+      throw new ApiError("invalid_server_response", 502);
+    offset = (hours * 60 + minutes) * (zone[0] === "-" ? -1 : 1);
+  }
+  return (
+    BigInt(base - offset * 60000) * 1000000n +
+    BigInt((match[2] ?? "").padEnd(9, "0"))
+  );
+}
 export function asCheckView(value: unknown): CheckView {
   const o = object(value),
     c = object(o.check),
@@ -414,7 +462,60 @@ export function asCheckView(value: unknown): CheckView {
       (req && bool(req, "signature_required") && signatureProof === null))
   )
     invalid();
+  let recovery: CheckRecovery | null = null;
+  if (o.recovery !== undefined && o.recovery !== null) {
+    const r = object(o.recovery),
+      d = object(r.decision);
+    const observed = text(r, "observed_at", 64),
+      until = text(d, "expected_lease_until", 64),
+      rawUntil = text(c, "lease_until", 64);
+    const observedInstant = timestampInstant(observed),
+      untilInstant = timestampInstant(until);
+    const decision: RecoveryDecision = {
+      expected_revision: number(
+        d,
+        "expected_revision",
+        Number.MAX_SAFE_INTEGER,
+      ),
+      expected_worker_id: id(d, "expected_worker_id"),
+      expected_lease_until: until,
+      sha256: hash(d, "sha256"),
+      policy_hash: hash(d, "policy_hash"),
+    };
+    const code = text(r, "code", 64),
+      eligible = bool(r, "eligible");
+    if (
+      ![
+        "ready",
+        "lease_active",
+        "attempt_budget_exhausted",
+        "authority_or_policy_changed",
+        "permission_denied",
+      ].includes(code) ||
+      state !== "running" ||
+      decision.expected_revision !==
+        number(c, "revision", Number.MAX_SAFE_INTEGER) ||
+      decision.expected_worker_id !== id(c, "worker_id") ||
+      decision.sha256 !== sourceSHA ||
+      decision.policy_hash !== policySHA ||
+      untilInstant !== timestampInstant(rawUntil) ||
+      eligible !== (code === "ready") ||
+      (eligible &&
+        (!bool(o, "current") ||
+          number(c, "attempts", 3) >= 3 ||
+          untilInstant > observedInstant)) ||
+      (code === "lease_active" && untilInstant <= observedInstant)
+    )
+      invalid();
+    recovery = {
+      observedAt: observed,
+      eligible,
+      code: code as CheckRecovery["code"],
+      decision,
+    };
+  }
   return {
+    recovery,
     signatureProof,
     validation,
     current: bool(o, "current"),

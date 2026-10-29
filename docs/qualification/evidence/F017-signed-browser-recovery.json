@@ -718,7 +718,13 @@
         "sha256": "2c073e165197d5ad85b6d87070b0833a362be6f295623ff1f863bea5b38b4eeb"
       }
     ],
-    "native_browser_binary_sha256": "184d5736e959f716a2cb8ab95169891689ff81a415effedcfd227d3cb2c29ef6"
+    "native_browser_binary_sha256": "184d5736e959f716a2cb8ab95169891689ff81a415effedcfd227d3cb2c29ef6",
+    "committed_source": "7e606de86782e912cc671b39b2440ed399d3e935",
+    "committed_source_verification": {
+      "method": "SHA-256 of every candidate source Git blob at the exact commit",
+      "entries_checked": 176,
+      "all_matched": true
+    }
   },
   "environment": {
     "platform": "macOS 27.2 build 26B5086k arm64",

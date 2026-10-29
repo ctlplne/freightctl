@@ -716,6 +716,21 @@
       "regression_evidence": [
         "docs/qualification/evidence/F017-signed-browser-recovery.json"
       ]
+    },
+    {
+      "id": "D047",
+      "severity": "ordinary browser recovery unavailable after check-worker death",
+      "state": "fixed locally",
+      "observed_on": "2026-10-29",
+      "candidate": "7e606de86782e912cc671b39b2440ed399d3e935",
+      "journey": "J11",
+      "reproduction": "Observe and SIGKILL the exact task-owned worker after its first committed claim; wait out the unchanged 70-second lease and inspect the browser check.",
+      "first_failure": "Worker exited -9, original lease remained unchanged and expired, but the browser had no Recover expired check control; the native locator timed out.",
+      "cause": "The backend allowed ordinary expired-lease replacement, but the status/UI lacked a server-time recovery description and a conditionally reviewed recovery action.",
+      "resolution": "Add scoped RecoveryDecision shared by API/CLI/UI, exact reservation comparisons under claim lock, server-derived eligibility, frozen review/idempotent receipt retry and ordinary bounded revalidation. Preserve the original lease, worker fencing, attempt budget, publication gate and isolation.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F018-browser-worker-recovery.json"
+      ]
     }
   ]
 }

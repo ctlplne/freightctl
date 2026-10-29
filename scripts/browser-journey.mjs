@@ -40,7 +40,7 @@ try {
   context = await browser.newContext({
     acceptDownloads: true,
     viewport: { width: 1320, height: 950 },
-    ...(stage === "resume"
+    ...(stage === "resume" || stage === "recovery-after"
       ? { storageState: c.private + "/browser-state.json" }
       : {}),
   });
@@ -110,7 +110,7 @@ try {
     assert.equal(request.method(), "POST");
     assert.ok(
       url.pathname.startsWith(prefix() + "/checks/") &&
-        /\/(?:run|release)$/.test(url.pathname),
+        /\/(?:run|release|recover)$/.test(url.pathname),
     );
     const headers = c.private + "/" + label + ".headers",
       body = c.private + "/" + label + ".request",
@@ -854,6 +854,233 @@ try {
       .click();
     await page.getByRole("heading", { name: "Files", exact: true }).waitFor();
     await page.getByRole("button", { name: "Sign out", exact: true }).click();
+  } else if (stage === "recovery-wait" || stage === "recovery-after") {
+    if (stage === "recovery-wait") await signIn();
+    else
+      await page.getByRole("heading", { name: "Files", exact: true }).waitFor();
+    await page
+      .getByRole("button", { name: "Intake checks", exact: true })
+      .click();
+    await page
+      .getByRole("row")
+      .filter({ hasText: "/recovery.csv" })
+      .getByRole("button", { name: "Inspect check", exact: true })
+      .click();
+    await page
+      .getByRole("heading", { name: "Check worker reservation", exact: true })
+      .waitFor();
+    const read = () =>
+      page.evaluate(
+        async ({ url, id }) => (await fetch(url + "/checks/" + id)).json(),
+        { url: prefix(), id: c.fileID },
+      );
+    const post = (body, key) =>
+      page.evaluate(
+        async ({ url, id, body, key }) => {
+          const session = await (await fetch("/v1/browser/session")).json();
+          const response = await fetch(url + "/checks/" + id + "/recover", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRF-Token": session.csrf_token,
+              "Idempotency-Key": key,
+            },
+            body: JSON.stringify(body),
+          });
+          return response.status;
+        },
+        { url: prefix(), id: c.fileID, body, key },
+      );
+    if (stage === "recovery-wait") {
+      const initial = await read();
+      assert.equal(initial.recovery.code, "lease_active");
+      assert.equal(initial.recovery.eligible, false);
+      assert.equal(
+        await page
+          .getByRole("button", { name: "Run required checks", exact: true })
+          .isDisabled(),
+        true,
+      );
+      assert.equal(
+        await page
+          .getByRole("button", { name: "Recover expired check", exact: true })
+          .isDisabled(),
+        true,
+      );
+      assert.equal(
+        await post(initial.recovery.decision, "native-too-early"),
+        409,
+      );
+      assert.equal((await read()).check.attempts, 1);
+      await context.storageState({ path: c.private + "/browser-state.json" });
+      record(
+        "dead-worker-live-lease-refuses-ui-and-api-replacement-without-spending-attempt",
+      );
+    } else {
+      const ready = await read();
+      assert.equal(ready.recovery.eligible, true);
+      assert.equal(ready.check.attempts, 1);
+      assert.equal(ready.check.worker_id, c.originalWorker);
+      const d = ready.recovery.decision;
+      await writeFile(
+        c.private + "/recovery-decision.json",
+        JSON.stringify(d, null, 2) + "\n",
+      );
+      for (const [name, body] of [
+        ["revision", { ...d, expected_revision: d.expected_revision + 1 }],
+        ["worker", { ...d, expected_worker_id: crypto.randomUUID() }],
+        ["source", { ...d, sha256: "0".repeat(64) }],
+        ["policy", { ...d, policy_hash: "0".repeat(64) }],
+        [
+          "lease",
+          {
+            ...d,
+            expected_lease_until: new Date(
+              Date.parse(d.expected_lease_until) - 1000,
+            ).toISOString(),
+          },
+        ],
+      ])
+        assert.equal(await post(body, "native-wrong-" + name), 409);
+      assert.equal(
+        await post({ ...d, ignore_lease: true }, "native-unknown-field"),
+        400,
+      );
+      assert.equal((await read()).check.attempts, 1);
+      record(
+        "recovery-refuses-changed-selectors-and-unknown-fields-without-changing-budget",
+      );
+      await page
+        .getByRole("button", { name: "Recover expired check", exact: true })
+        .click();
+      const review = page.getByRole("dialog");
+      await review
+        .getByRole("heading", { name: "Recover this check?", exact: true })
+        .waitFor();
+      assert.equal(
+        await page.evaluate(() => document.activeElement?.id),
+        "recovery-title",
+      );
+      await review.getByText(d.expected_worker_id, { exact: true }).waitFor();
+      await review.getByText(c.sourceSHA256, { exact: true }).waitFor();
+      await audit("recovery-review");
+      await page.screenshot({
+        path: c.raw + "/recovery-review.png",
+        fullPage: true,
+      });
+      let lost, retry;
+      const dropped = new Promise((resolve) => {
+          lost = resolve;
+        }),
+        replayed = new Promise((resolve) => {
+          retry = resolve;
+        }),
+        keys = [];
+      await page.route("**/checks/*/recover", async (route) => {
+        keys.push(route.request().headers()["idempotency-key"]);
+        try {
+          const response = await trustedMutation(
+            route,
+            "recovery-loss-" + keys.length,
+          );
+          if (keys.length === 1) {
+            await route.abort("failed");
+            lost(response.status);
+          } else {
+            await route.fulfill({
+              status: response.status,
+              contentType: "application/json",
+              body: response.body,
+            });
+            retry({
+              status: response.status,
+              replayed: JSON.parse(response.body).replayed,
+              keys: [...keys],
+            });
+          }
+        } catch {
+          await route.abort("failed").catch(() => {});
+          lost(0);
+          retry({ status: 0, keys: [...keys] });
+        }
+      });
+      await review
+        .getByRole("button", { name: "Start replacement check", exact: true })
+        .click();
+      assert.equal(await dropped, 200);
+      await review
+        .getByRole("alert")
+        .filter({ hasText: "Recovery was not confirmed" })
+        .waitFor();
+      await review
+        .getByRole("button", { name: "Retry reviewed recovery", exact: true })
+        .click();
+      const replay = await replayed;
+      assert.equal(replay.status, 200);
+      assert.equal(replay.replayed, true);
+      assert.equal(replay.keys[1], replay.keys[0]);
+      await writeFile(
+        c.raw + "/recovery-response-loss.json",
+        JSON.stringify(replay, null, 2) + "\n",
+      );
+      await page.unroute("**/checks/*/recover");
+      await page
+        .getByText(
+          "Validation passed. These bytes remain held until you approve release.",
+          { exact: true },
+        )
+        .waitFor();
+      const completed = await read();
+      assert.equal(completed.check.attempts, 2);
+      assert.equal(completed.check.report.rows, 900000);
+      assert.equal(completed.check.report.sha256, c.sourceSHA256);
+      await writeFile(
+        c.raw + "/recovered-check.json",
+        JSON.stringify(completed, null, 2) + "\n",
+      );
+      record(
+        "browser-replacement-attempt-two-checks-original-bytes-and-replays-one-receipt",
+      );
+      const held = await page.evaluate(
+        async ({ url, id }) => (await fetch(url + "/files/" + id)).status,
+        { url: prefix(), id: c.fileID },
+      );
+      assert.equal(held, 409);
+      await page
+        .getByRole("button", { name: "Review release", exact: true })
+        .click();
+      await page
+        .getByRole("dialog")
+        .getByRole("button", { name: "Release file", exact: true })
+        .click();
+      await page
+        .getByText(
+          "Released under this intake policy. Current access and policy checks still apply.",
+          { exact: true },
+        )
+        .waitFor();
+      await page.getByRole("button", { name: "Files", exact: true }).click();
+      const row = page.getByRole("row").filter({ hasText: "recovery.csv" });
+      const downloaded = page.waitForEvent("download");
+      await row
+        .getByRole("link", { name: "Download recovery.csv", exact: true })
+        .click();
+      const file = await downloaded;
+      assert.equal(await file.failure(), null);
+      await file.saveAs(c.private + "/browser-recovered.csv");
+      assert.equal(
+        await digestFile(c.private + "/browser-recovered.csv"),
+        c.sourceSHA256,
+      );
+      record(
+        "recovered-file-needs-separate-release-and-native-download-matches-exact-source",
+      );
+      await page.getByRole("button", { name: "Sign out", exact: true }).click();
+      await signIn(1);
+      assert.equal(await post(d, "other-actor"), 404);
+      record("other-partner-actor-cannot-recover-private-check");
+      await page.getByRole("button", { name: "Sign out", exact: true }).click();
+    }
   } else if (stage === "accounts") {
     await signIn();
     await page.getByRole("button", { name: "Accounts", exact: true }).click();

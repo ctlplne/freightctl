@@ -23,11 +23,11 @@
     },
     {
       "path": "web/src/api.ts",
-      "sha256": "2d0638d55827f4f7db48b6c8ef5409df272bb898afd4d8702c80068909239c7d"
+      "sha256": "0a8f84556abdb0295507c5e8a937b52d29937d4275bafe9099270f1cd4c8cca2"
     },
     {
       "path": "web/src/app.tsx",
-      "sha256": "15183272d9e8e7d05d6cb0db951a6c443b2a149bcca93d2a4759f6cc890457e7"
+      "sha256": "7dd0d4118802fd0eb516b892560e6d1a895ef975b85b972124efafdf1cd3307d"
     },
     {
       "path": "web/src/assets.d.ts",
@@ -36,6 +36,10 @@
     {
       "path": "web/src/check-evidence.tsx",
       "sha256": "29fb79be1a6f445d6f863a79156b5e4bd8cf31e91c544ab3091a689058f1a5fe"
+    },
+    {
+      "path": "web/src/check-recovery.tsx",
+      "sha256": "117ca33108669d166a889f57d3a22c7c36265dc92eb6c7637f335910dcd0ff11"
     },
     {
       "path": "web/src/crypto.ts",
@@ -51,7 +55,7 @@
     },
     {
       "path": "web/src/types.ts",
-      "sha256": "7aa08c52ac7cfa18f46c1939b19c0d79aebfa14dad9645c3620228244762093c"
+      "sha256": "c4b3d2005ddd211efae8ea732a25f2b8458640e67414bee539a20e118ea34213"
     },
     {
       "path": "web/tsconfig.json",
@@ -66,8 +70,8 @@
     },
     {
       "name": "app.js",
-      "sha256": "76509e6bbe22f4d3636d63d4aaef19daa4bd5d161a842ab759db5c4b0bae067f",
-      "size": 278858
+      "sha256": "1be008b97499bb037b6d5e671b00f73f35a366289e35332558cc0e58f8267206",
+      "size": 285648
     },
     {
       "name": "app.js.LEGAL.txt",

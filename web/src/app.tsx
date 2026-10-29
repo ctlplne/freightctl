@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { Api } from "./api";
 import { Accounts } from "./accounts";
 import { CheckEvidence } from "./check-evidence";
+import { CheckRecovery } from "./check-recovery";
 import { digestBytes, digestFile, operationKey } from "./crypto";
 import {
   ApiError,
@@ -1205,6 +1206,16 @@ function App() {
                       <dd>{view.check.attempts} of 3</dd>
                     </dl>
                     <CheckEvidence view={view} />
+                    <CheckRecovery
+                      key={session.identity.actor_id + view.check.file_id}
+                      view={view}
+                      api={api}
+                      onError={reportError}
+                      onUpdated={(updated) => {
+                        setView(updated);
+                        setRefresh((v) => v + 1);
+                      }}
+                    />
                     {view.requirements?.signature && (
                       <div className="signature-box">
                         <h3>Detached signature</h3>

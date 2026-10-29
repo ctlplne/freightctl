@@ -14,6 +14,7 @@ import {
   type Upload,
   type UploadResult,
   type CheckView,
+  type RecoveryDecision,
 } from "./types";
 
 export class Api {
@@ -330,6 +331,41 @@ export class Api {
       90000,
     );
     return this.check(id);
+  }
+  async recoverCheck(
+    view: CheckView,
+    decision: RecoveryDecision,
+  ): Promise<CheckView> {
+    if (!this.session) throw new ApiError("unauthorized", 401);
+    const who = this.session.identity;
+    const key =
+      "browser-check-recover-" +
+      digestBytes(
+        new TextEncoder().encode(
+          JSON.stringify([
+            who.tenant_id,
+            who.partner_id,
+            who.actor_id,
+            view.check.file_id,
+            decision.expected_revision,
+            decision.expected_worker_id,
+            decision.expected_lease_until,
+            decision.sha256,
+            decision.policy_hash,
+          ]),
+        ),
+      );
+    await this.request(
+      `${this.prefix}/checks/${view.check.file_id}/recover`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Idempotency-Key": key },
+        body: JSON.stringify(decision),
+      },
+      object,
+      90000,
+    );
+    return this.check(view.check.file_id);
   }
   async release(view: CheckView): Promise<CheckView> {
     const key = this.checkCommandKey("release", view);

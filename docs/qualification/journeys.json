@@ -19,14 +19,16 @@
         "docs/qualification/evidence/F008-versioned-workflows.json",
         "docs/qualification/evidence/F014-browser-exchange.json",
         "docs/qualification/evidence/F016-account-lifecycle.json",
-        "docs/qualification/evidence/F017-signed-browser-recovery.json"
+        "docs/qualification/evidence/F017-signed-browser-recovery.json",
+        "docs/qualification/evidence/F018-browser-worker-recovery.json"
       ],
       "failures": [],
       "limits": [
         "Only narrower local custody and staging-crash experiments passed; complete journey remains open.",
         "F014 proves a narrow assisted enrolled-account Chromium exchange with real PostgreSQL/disk: durable pause/reload/restart/resume, held CSV checks, separate exact release, native/stock-curl exact download and private actor/tenant/session gates. Complete onboarding, independent operator/business receipt, real scanning/fresh independent crypto and all remaining journey requirements stay open.",
         "F016 adds assisted local scoped account creation, policy/credential lifecycle and expiry through normal services, with browser review and stock curl/CLI checks. It does not close first-admin/partner setup, invitations/providers, independent operators, complete delegated lifecycle, broad protocol/platform or enterprise journey requirements.",
-        "F017 qualifies assisted same-host signed-browser exchange and exact receipt recovery after completed check/release response loss, plus independent downloaded-byte signature verification and live revocation refusal. Complete business acknowledgment, genuine malware/private operations, independent operators and all remaining full-journey requirements stay open."
+        "F017 qualifies assisted same-host signed-browser exchange and exact receipt recovery after completed check/release response loss, plus independent downloaded-byte signature verification and live revocation refusal. Complete business acknowledgment, genuine malware/private operations, independent operators and all remaining full-journey requirements stay open.",
+        "F018 proves an assisted CSV check-worker SIGKILL and real unchanged lease, conditionally reviewed browser recovery, idempotent cross-interface receipt replay and separately approved exact retrieval. Multi-host restore, signed/scanner recovery, governed rebind and complete journey scope stay open."
       ]
     },
     {
@@ -228,7 +230,8 @@
         "docs/qualification/evidence/F014-browser-exchange.json",
         "docs/qualification/evidence/F015-native-crypto-regression.json",
         "docs/qualification/evidence/F016-account-lifecycle.json",
-        "docs/qualification/evidence/F017-signed-browser-recovery.json"
+        "docs/qualification/evidence/F017-signed-browser-recovery.json",
+        "docs/qualification/evidence/F018-browser-worker-recovery.json"
       ],
       "failures": [],
       "limits": [
@@ -240,7 +243,8 @@
         "F014 proves a narrow assisted enrolled-account Chromium exchange with real PostgreSQL/disk: durable pause/reload/restart/resume, held CSV checks, separate exact release, native/stock-curl exact download and private actor/tenant/session gates. Complete onboarding, independent operator/business receipt, real scanning/fresh independent crypto and all remaining journey requirements stay open.",
         "F015 restores a full current implemented-core regression with fresh native GnuPG, exact signed/encrypted stock-receiver bytes and current isolation/resource controls. It does not qualify the complete journey, actual scanning, independent business acknowledgment, multi-host/native platforms or adoption.",
         "F016 adds assisted local scoped account creation, policy/credential lifecycle and expiry through normal services, with browser review and stock curl/CLI checks. It does not close first-admin/partner setup, invitations/providers, independent operators, complete delegated lifecycle, broad protocol/platform or enterprise journey requirements.",
-        "F017 qualifies assisted same-host signed-browser exchange and exact receipt recovery after completed check/release response loss, plus independent downloaded-byte signature verification and live revocation refusal. Complete business acknowledgment, genuine malware/private operations, independent operators and all remaining full-journey requirements stay open."
+        "F017 qualifies assisted same-host signed-browser exchange and exact receipt recovery after completed check/release response loss, plus independent downloaded-byte signature verification and live revocation refusal. Complete business acknowledgment, genuine malware/private operations, independent operators and all remaining full-journey requirements stay open.",
+        "F018 proves an assisted CSV check-worker SIGKILL and real unchanged lease, conditionally reviewed browser recovery, idempotent cross-interface receipt replay and separately approved exact retrieval. Multi-host restore, signed/scanner recovery, governed rebind and complete journey scope stay open."
       ]
     },
     {
@@ -262,7 +266,8 @@
         "docs/qualification/evidence/F010-held-intake.json",
         "docs/qualification/evidence/F012-encrypted-delivery.json",
         "docs/qualification/evidence/F015-native-crypto-regression.json",
-        "docs/qualification/evidence/F017-signed-browser-recovery.json"
+        "docs/qualification/evidence/F017-signed-browser-recovery.json",
+        "docs/qualification/evidence/F018-browser-worker-recovery.json"
       ],
       "failures": [],
       "limits": [
@@ -270,7 +275,8 @@
         "F010 pauses a real worker, waits for its unchanged database lease, verifies replacement and refuses the resumed stale owner. Native platforms, multi-host failover, restore/upgrade and endurance remain open.",
         "F012 kills a real encryption worker at the staged SQL boundary, waits for the actual delivery lease and recovers without publishing orphan bytes. It retains ambiguity after remote success/local receipt failure and reuses exact ciphertext. Backup/restore, distributed storage, delayed encryption workers, remaining failure boundaries, native production platforms and multi-host qualification remain open.",
         "F015 restores a full current implemented-core regression with fresh native GnuPG, exact signed/encrypted stock-receiver bytes and current isolation/resource controls. It does not qualify the complete journey, actual scanning, independent business acknowledgment, multi-host/native platforms or adoption.",
-        "F017 qualifies assisted same-host signed-browser exchange and exact receipt recovery after completed check/release response loss, plus independent downloaded-byte signature verification and live revocation refusal. Complete business acknowledgment, genuine malware/private operations, independent operators and all remaining full-journey requirements stay open."
+        "F017 qualifies assisted same-host signed-browser exchange and exact receipt recovery after completed check/release response loss, plus independent downloaded-byte signature verification and live revocation refusal. Complete business acknowledgment, genuine malware/private operations, independent operators and all remaining full-journey requirements stay open.",
+        "F018 proves an assisted CSV check-worker SIGKILL and real unchanged lease, conditionally reviewed browser recovery, idempotent cross-interface receipt replay and separately approved exact retrieval. Multi-host restore, signed/scanner recovery, governed rebind and complete journey scope stay open."
       ]
     },
     {

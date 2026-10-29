@@ -39,7 +39,8 @@
         "docs/qualification/evidence/F012-encrypted-delivery.json",
         "docs/qualification/evidence/F013-scanner-controls.json",
         "docs/qualification/evidence/F014-browser-exchange.json",
-        "docs/qualification/evidence/F016-account-lifecycle.json"
+        "docs/qualification/evidence/F016-account-lifecycle.json",
+        "docs/qualification/evidence/F018-browser-worker-recovery.json"
       ],
       "remaining_details": [
         "F006 adds immutable checkpoints, exact receipts and persistent storage/parent/authority binding. Finish approved cleanup/recovery/rebinding, scalable reservations/fairness, protected retention, journal chaining/rebuild, larger exports and remaining crash/commit boundaries.",
@@ -50,7 +51,8 @@
         "F013 adds immutable tenant/partner scanner profiles, exact event/expiry guards and approved scan proof in the release gate; 31 domain relations require forced RLS. Reconstruction, retention, cleanup and remaining crash/storage gates stay open.",
         "F014 adds append-only migrations 14\u201315: sessions and immutable logout receipts. All 33 domain relations require forced non-owner RLS; existing grants and migrations 1\u201313 are unchanged. Journal reconstruction, retention and recovery remain open.",
         "F016 adds append-only migration 16: immutable account revisions/command receipts and a narrow non-owner credential projection writer. All 35 domain relations require forced RLS. Exact event/result/receipt checks and rollback are covered locally; reconstruction, retention and recovery remain open.",
-        "D043 retains an intermittent custody fuzz context deadline from the first F016 aggregate. The original unchanged gate passes in the final full run; timing cause and endurance diagnosis remain open."
+        "D043 retains an intermittent custody fuzz context deadline from the first F016 aggregate. The original unchanged gate passes in the final full run; timing cause and endurance diagnosis remain open.",
+        "F018 adds conditional recovery receipts/events through the existing atomic bounded worker claim. Original lease/fencing/attempt limits and all 35 forced-RLS relations remain unchanged. Reconstruction, retention, protected cleanup, governed re-scan/rebind and restore remain open."
       ]
     },
     {
@@ -72,13 +74,15 @@
         "docs/qualification/evidence/F008-versioned-workflows.json",
         "docs/qualification/evidence/F014-browser-exchange.json",
         "docs/qualification/evidence/F016-account-lifecycle.json",
-        "docs/qualification/evidence/F017-signed-browser-recovery.json"
+        "docs/qualification/evidence/F017-signed-browser-recovery.json",
+        "docs/qualification/evidence/F018-browser-worker-recovery.json"
       ],
       "remaining_details": [
         "F005/F006 verify bounded inbound and durable ticket resume. F007 adds a local-only approved outbound SFTP profile against a stock receiver. Finish ordinary-operator onboarding, API/browser parity, production network policy, broader protocols/clients/enterprise peers, larger files and independent business receipts. No complete journey is qualified.",
         "F014 adds enrolled-account browser exchange, durable pause/reload/process restart/resume and native/stock-curl exact-byte retrieval. Clean first-admin/partner onboarding, independent operators, production peers and full business receipt remain open.",
         "F016 adds ordinary scoped account management through browser/API/CLI, plus stock curl acceptance/refusal after credential rotation/revocation. Assisted local account lifecycle does not close clean installation, partner setup, SSH-expiry interoperability, broad native clients, independent operator adoption or business receipts.",
-        "F017 adds a current signed-browser exchange: durable pause/reload/restart/resume, independently generated signature attachment, exact review, explicit release and native/stock-curl downloads independently verified by GnuPG. Same-host assistance is not clean installation, full onboarding, production network/platform or downstream business receipt qualification."
+        "F017 adds a current signed-browser exchange: durable pause/reload/restart/resume, independently generated signature attachment, exact review, explicit release and native/stock-curl downloads independently verified by GnuPG. Same-host assistance is not clean installation, full onboarding, production network/platform or downstream business receipt qualification.",
+        "F018 adds actual check-worker death, unchanged lease expiry, browser/API/CLI conditional recovery, separate release and exact native/stock-curl retrieval. This CSV-only assisted exercise does not close complete secure exchange, signed/scanner recovery, independent operators or business receipt scope."
       ]
     },
     {
@@ -143,12 +147,14 @@
         "docs/qualification/evidence/F006-upload-checkpoints.json",
         "docs/qualification/evidence/F014-browser-exchange.json",
         "docs/qualification/evidence/F016-account-lifecycle.json",
-        "docs/qualification/evidence/F017-signed-browser-recovery.json"
+        "docs/qualification/evidence/F017-signed-browser-recovery.json",
+        "docs/qualification/evidence/F018-browser-worker-recovery.json"
       ],
       "remaining_details": [
         "F014 implements a typed embedded browser workspace, short-lived session/CSRF/logout controls, private ticket discovery, durable single-file pause/reload/restart/resume, held checks, separate release and native streaming download. Assisted Chromium, selected accessibility scans and byte comparison pass. First-admin/partner onboarding, invitations, SSO/MFA/recovery, delegated administration, batches, sharing/forms/mail, complete accessibility and independent adoption remain open.",
         "F016 adds an Accounts workspace with review bound to the target revision, browser-generated credential download before proof-only enrollment, policy updates, rotation, expiry/revocation and paginated status. First-admin/partner creation, invitations, SSO/MFA/recovery, delegated administration, batch/sharing/forms/mail and complete accessibility/adoption remain open.",
-        "F017 adds bounded typed signer evidence in the check/release UI, preserved frozen release review and stable check/release operation identities after lost committed responses. Native wrong-signer/changed-data/malformed/oversize and signer-revocation paths pass. Full browser/accessibility coverage, first-admin/partner setup, invitations/providers, sharing/forms/batches and independent adoption remain open."
+        "F017 adds bounded typed signer evidence in the check/release UI, preserved frozen release review and stable check/release operation identities after lost committed responses. Native wrong-signer/changed-data/malformed/oversize and signer-revocation paths pass. Full browser/accessibility coverage, first-admin/partner setup, invitations/providers, sharing/forms/batches and independent adoption remain open.",
+        "F018 adds server-observed reservation status, explicit expired-check review, stable lost-response recovery, actor isolation and bounded attempt feedback. First-admin/partner/provider onboarding, sharing/batches/forms, complete accessibility and independent adoption remain open."
       ]
     },
     {

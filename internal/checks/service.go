@@ -19,6 +19,7 @@ type Result struct {
 	Replayed bool            `json:"replayed"`
 }
 type View struct {
+	Recovery     *RecoveryView        `json:"recovery,omitempty"`
 	Check        *store.FileCheck     `json:"check"`
 	Current      bool                 `json:"current"`
 	Signature    *store.FileSignature `json:"signature,omitempty"`
@@ -322,9 +323,20 @@ func (s *Service) Get(ctx context.Context, scope store.Scope, id string) (*View,
 		}
 		requirements = &Requirements{Signature: definition.Signature != nil, Scanner: definition.Scanner != nil}
 	}
-	return &View{Check: c, Current: currentErr == nil, Signature: signature, Requirements: requirements}, t.Tx.Commit(ctx)
+	now, err := t.DatabaseTime(ctx)
+	if err != nil {
+		return nil, err
+	}
+	recovery, err := recoveryView(c, now, currentErr == nil, t.Has("read") && t.Has("check_run"))
+	if err != nil {
+		return nil, err
+	}
+	return &View{Check: c, Current: currentErr == nil, Signature: signature, Requirements: requirements, Recovery: recovery}, t.Tx.Commit(ctx)
 }
 func (s *Service) start(ctx context.Context, scope store.Scope, id, key string) (*store.FileCheck, *store.CheckBinding, Policy, *Attempt, bool, error) {
+	return s.startConditional(ctx, scope, id, key, nil)
+}
+func (s *Service) startConditional(ctx context.Context, scope store.Scope, id, key string, recovery *RecoveryDecision) (*store.FileCheck, *store.CheckBinding, Policy, *Attempt, bool, error) {
 	var policy Policy
 	t, err := s.begin(ctx, scope, "read", "check_run")
 	if err != nil {
@@ -332,6 +344,12 @@ func (s *Service) start(ctx context.Context, scope store.Scope, id, key string) 
 	}
 	defer t.Tx.Rollback(ctx)
 	_, meaning, _ := canonical(struct{ Kind, ID string }{"check_attempt", id})
+	if recovery != nil {
+		_, meaning, _ = canonical(struct {
+			Kind, ID string
+			Decision RecoveryDecision
+		}{"recover_check", id, *recovery})
+	}
 	data, err := t.CheckReplay(ctx, key, meaning)
 	if err != nil {
 		return nil, nil, policy, nil, false, err
@@ -371,7 +389,13 @@ func (s *Service) start(ctx context.Context, scope store.Scope, id, key string) 
 	if err != nil {
 		return nil, nil, policy, nil, false, err
 	}
+	if recovery != nil && (c.Revision != recovery.Revision || c.WorkerID != recovery.WorkerID || c.LeaseUntil == nil || !c.LeaseUntil.Equal(recovery.LeaseUntil) || b.File.SHA256 != recovery.SHA256 || c.PolicyHash != recovery.PolicyHash) {
+		return nil, nil, policy, nil, false, store.ErrRevision
+	}
 	expired := c.State == "running" && c.LeaseUntil != nil && !c.LeaseUntil.After(now)
+	if recovery != nil && !expired {
+		return nil, nil, policy, nil, false, store.ErrState
+	}
 	if c.State != "held" && c.State != "failed" && !expired {
 		return nil, nil, policy, nil, false, store.ErrState
 	}
@@ -423,6 +447,9 @@ func (s *Service) check(ctx context.Context, scope store.Scope, a *Attempt) erro
 // Run's durable response selects an attempt, not a clean verdict. Get reports
 // its current state. Replaying a key returns that same attempt without parsing.
 func (s *Service) Run(ctx context.Context, scope store.Scope, id, key string) (*Result, error) {
+	return s.run(ctx, scope, id, key, nil)
+}
+func (s *Service) run(ctx context.Context, scope store.Scope, id, key string, recovery *RecoveryDecision) (*Result, error) {
 	if !keyPattern.MatchString(key) || !store.ValidID(id) {
 		return nil, ErrInput
 	}
@@ -448,7 +475,7 @@ func (s *Service) Run(ctx context.Context, scope store.Scope, id, key string) (*
 	if err = slotCheck(); err != nil {
 		return nil, err
 	}
-	c, b, policy, a, replayed, err := s.start(ctx, scope, id, key)
+	c, b, policy, a, replayed, err := s.startConditional(ctx, scope, id, key, recovery)
 	if err != nil {
 		return nil, err
 	}

@@ -45,6 +45,7 @@ commands=[
 ('scanner-outage-controls-no-engine',['python3','scripts/qualify-scanner-unavailable.py']),
 ('native-browser-exchange',['python3','scripts/qualify-browser.py']),
 ('native-signed-browser-exchange',['python3','scripts/qualify-browser.py','--signed']),
+('native-browser-worker-recovery',['python3','scripts/qualify-browser-recovery.py']),
 ('signed-intake-openpgp',['python3','scripts/qualify-pgp.py']),
 ('recipient-encrypted-delivery',['python3','scripts/qualify-encryption.py']),
 ]

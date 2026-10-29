@@ -104,6 +104,11 @@ func (s *Server) checks(w http.ResponseWriter, r *http.Request) {
 		}
 	case "GET /v1/tenants/{tenant}/partners/{partner}/checks/{file}":
 		result, err = s.Checks.Get(r.Context(), scope, r.PathValue("file"))
+	case "POST /v1/tenants/{tenant}/partners/{partner}/checks/{file}/recover":
+		var decision checks.RecoveryDecision
+		if err = workflowInput(w, r, &decision); err == nil {
+			result, err = s.Checks.Recover(r.Context(), scope, r.PathValue("file"), key, decision)
+		}
 	case "POST /v1/tenants/{tenant}/partners/{partner}/checks/{file}/run":
 		r.Body = http.MaxBytesReader(w, r.Body, 1)
 		data, readErr := io.ReadAll(r.Body)

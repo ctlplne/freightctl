@@ -176,3 +176,67 @@ test("supported v6 and SHA3 report labels retain full 64-character fingerprints"
   p.signer_fingerprint = "0".repeat(64);
   assert.equal(asCheckView(v).signatureProof.primary.length, 64);
 });
+
+function recovering() {
+  const v = view();
+  v.check.state = "running";
+  v.check.revision = 2;
+  v.check.attempts = 1;
+  v.check.report = {};
+  v.check.report_hash = "";
+  delete v.signature;
+  v.check.worker_id = objectID;
+  v.check.lease_until = "2026-10-29T08:00:00.123456-04:00";
+  v.recovery = {
+    observed_at: "2026-10-29T12:00:00.123456Z",
+    eligible: true,
+    code: "ready",
+    decision: {
+      expected_revision: 2,
+      expected_worker_id: objectID,
+      expected_lease_until: "2026-10-29T12:00:00.123456Z",
+      sha256: source,
+      policy_hash: policy,
+    },
+  };
+  return v;
+}
+test("recovery binds the exact reservation and uses server time across UTC offsets", () => {
+  const v = asCheckView(recovering());
+  assert.equal(v.recovery.eligible, true);
+  assert.equal(v.recovery.decision.expected_worker_id, objectID);
+});
+test("recovery rejects mismatched worker/revision/source/policy/lease and forged eligibility", () => {
+  const mutations = [
+    (v) => v.recovery.decision.expected_revision++,
+    (v) => (v.recovery.decision.expected_worker_id = keyID),
+    (v) => (v.recovery.decision.sha256 = policy),
+    (v) => (v.recovery.decision.policy_hash = source),
+    (v) =>
+      (v.recovery.decision.expected_lease_until =
+        "2026-10-29T12:00:00.123457Z"),
+    (v) => (v.recovery.observed_at = "2026-10-29T12:00:00.123455Z"),
+    (v) => (v.check.attempts = 3),
+    (v) => (v.current = false),
+    (v) => (v.recovery.code = "lease_active"),
+    (v) => (v.recovery.code = "unknown"),
+    (v) => (v.check.state = "passed"),
+  ];
+  for (const mutate of mutations) {
+    const v = recovering();
+    mutate(v);
+    refuse(v);
+  }
+});
+test("active and exhausted leases remain non-executable without consulting the browser clock", () => {
+  const live = recovering();
+  live.recovery.observed_at = "2026-10-29T11:59:59Z";
+  live.recovery.eligible = false;
+  live.recovery.code = "lease_active";
+  assert.equal(asCheckView(live).recovery.eligible, false);
+  const exhausted = recovering();
+  exhausted.check.attempts = 3;
+  exhausted.recovery.eligible = false;
+  exhausted.recovery.code = "attempt_budget_exhausted";
+  assert.equal(asCheckView(exhausted).recovery.eligible, false);
+});
