@@ -1,5 +1,7 @@
 # Local custody development
 
+For the one-time first tenant, partner and administrator commands, start with [first-run enrollment](first-run.md). The low-level enrollment commands below remain available to explicit deployment administrators for development and maintenance.
+
 This is an assisted development profile, not a production installer. It needs Docker, Python 3, stock curl and Go; `scripts/go.sh` selects Go 1.26.10 and keeps downloads/build caches in ignored `.cache/`. Initial dependency acquisition needs internet access. It does not claim a disconnected installation bundle.
 
 Run at the repository root on local main:
@@ -27,7 +29,7 @@ sh scripts/go.sh run ./cmd/freightctl dev-cert
 sh scripts/go.sh run ./cmd/freightctl serve
 ```
 
-Token and certificate commands refuse to overwrite existing files. Bootstrap enrollment requires an explicit administrator command; a repeated bootstrap enrollment is rejected. The scoped account lifecycle below provides idempotent ordinary account commands. The full first-admin/partner UI remains required work.
+Token and certificate commands refuse to overwrite existing files. Legacy bootstrap enrollment requires an explicit administrator command; a repeated enrollment is rejected. The one-time `setup-plan`/`setup` path provides exact first-run replay and a browser workspace reference. The scoped account lifecycle below provides idempotent ordinary account commands. General partner lifecycle, invitations/providers and delegated onboarding remain required work.
 
 An upload uses `POST /v1/tenants/{tenant}/partners/{partner}/files`, a scoped bearer token, `Idempotency-Key`, `X-File-Size`, and a lowercase hex `X-Content-SHA256`. The request contains bytes directly. The same key, length, digest and policy returns the original accepted file; changed meaning returns 409. The response means bytes and directory were synced and metadata committed on this local persistence profile. It does not mean malware scanned, independently signed, delivered to a partner, or imported by a business system.
 

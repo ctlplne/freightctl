@@ -180,7 +180,99 @@ try {
     return row;
   }
   await page.goto(c.url);
-  if (stage === "pause") {
+  if (stage === "setup") {
+    await audit("setup-login");
+    await page
+      .getByLabel("Workspace reference file (optional)", { exact: true })
+      .setInputFiles(c.badWorkspace);
+    await page
+      .getByRole("alert")
+      .filter({ hasText: "Choose the workspace JSON saved by setup" })
+      .waitFor();
+    assert.equal(
+      await page.getByLabel("Tenant ID", { exact: true }).inputValue(),
+      "",
+    );
+    await page
+      .getByLabel("Workspace reference file (optional)", { exact: true })
+      .setInputFiles(c.untrustedWorkspace);
+    await page
+      .getByText(
+        "Workspace IDs loaded. Choose the account credential file to connect.",
+        { exact: true },
+      )
+      .waitFor();
+    assert.equal(new URL(page.url()).origin, c.url);
+    assert.equal(
+      await page
+        .getByLabel("Account credential file", { exact: true })
+        .inputValue(),
+      "",
+    );
+    record(
+      "workspace-file-refuses-invalid-ids-and-cannot-select-origin-or-credential",
+    );
+    await page
+      .getByLabel("Workspace reference file (optional)", { exact: true })
+      .setInputFiles(c.workspace);
+    await page
+      .getByText(
+        "Workspace IDs loaded. Choose the account credential file to connect.",
+        { exact: true },
+      )
+      .waitFor();
+    assert.equal(
+      await page.getByLabel("Tenant ID", { exact: true }).inputValue(),
+      c.tenant,
+    );
+    assert.equal(
+      await page.getByLabel("Partner ID", { exact: true }).inputValue(),
+      c.partner,
+    );
+    await page.screenshot({ path: c.raw + "/setup-login.png", fullPage: true });
+    await page
+      .getByLabel("Account credential file", { exact: true })
+      .setInputFiles(c.identities[0].token);
+    await page.getByRole("button", { name: "Connect", exact: true }).click();
+    await page.getByRole("heading", { name: "Files", exact: true }).waitFor();
+    record("saved-setup-reference-and-first-admin-authenticate");
+    await page
+      .getByRole("button", { name: "Upload file", exact: true })
+      .click();
+    await page
+      .getByLabel("File to send", { exact: true })
+      .setInputFiles(c.payload);
+    await page
+      .getByLabel("Destination path", { exact: true })
+      .fill("/setup.csv");
+    await page
+      .getByRole("button", { name: "Start upload", exact: true })
+      .click();
+    await page
+      .getByText("Upload accepted", { exact: true })
+      .waitFor({ timeout: 45000 });
+    record("fresh-first-admin-browser-durable-upload");
+    await page.getByRole("button", { name: "Files", exact: true }).click();
+    const published = page.getByRole("row").filter({ hasText: "setup.csv" });
+    await published.waitFor();
+    const pending = page.waitForEvent("download");
+    await published
+      .getByRole("link", { name: "Download setup.csv", exact: true })
+      .click();
+    const download = await pending;
+    assert.equal(await download.failure(), null);
+    await download.saveAs(c.private + "/browser-received.csv");
+    assert.equal(
+      await digestFile(c.private + "/browser-received.csv"),
+      await digestFile(c.payload),
+    );
+    await audit("setup-published-files");
+    await page.screenshot({
+      path: c.raw + "/setup-published-files.png",
+      fullPage: true,
+    });
+    record("fresh-first-admin-native-download-exact-bytes");
+  } else if (stage === "pause") {
     await audit("login");
     await page.screenshot({ path: c.raw + "/login.png", fullPage: true });
     await signIn();

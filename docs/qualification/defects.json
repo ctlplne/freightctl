@@ -731,6 +731,36 @@
       "regression_evidence": [
         "docs/qualification/evidence/F018-browser-worker-recovery.json"
       ]
+    },
+    {
+      "id": "D049",
+      "severity": "intermittent scanner-contract and cancellation timing qualification failure",
+      "state": "open",
+      "observed_on": "2026-10-29",
+      "candidate": "e3ba084b7945b9e88f5828fe7dbf0f18e6f76d33 plus frozen first-run candidate",
+      "journey": "J06",
+      "reproduction": "First F019 full aggregate on 188 unchanged sources with original scanner/cancellation limits and 192 MiB soft Go heap target.",
+      "first_failure": "Blocked/detected scanner contracts returned scanner_unavailable instead of the expected rejected verdict; a two-second scanner profile and staging-cancellation timing check also failed. No non-clean bytes were released.",
+      "cause": "Unassigned. The PostgreSQL gate took 616.603s versus 273.018s previously; an observed durable-sync wait is a possible contributor, not a proven cause. Both the original committed schema and unchanged candidate pass the affected original tests in later serial replays.",
+      "resolution": "Open: preserve failure, baseline comparison and current replay; diagnose operating-load timing without relaxing deadlines, assertions, durability, isolation or resource bounds.",
+      "regression_evidence": [
+        ".private/setup-timing-failure.json"
+      ]
+    },
+    {
+      "id": "D048",
+      "severity": "ordinary first-run enrollment unavailable",
+      "state": "fixed locally",
+      "observed_on": "2026-10-29",
+      "candidate": "e3ba084b7945b9e88f5828fe7dbf0f18e6f76d33",
+      "journey": "J01",
+      "reproduction": "Attempt product-driven first enrollment on the existing binary with setup-plan.",
+      "first_failure": "The command is unknown; the existing bootstrap requires manually selected IDs and separate privileged enrollment steps.",
+      "cause": "No one-time frozen first-run plan, exact installation receipt or browser workspace reference existed.",
+      "resolution": "Add protected setup-plan and transactional setup, preserve exact original receipt and all existing identities, refuse runtime/changed/second setup, and import only bounded workspace IDs in the browser.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F019-first-run-enrollment.json"
+      ]
     }
   ]
 }

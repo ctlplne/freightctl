@@ -4,6 +4,7 @@ import { Api } from "./api";
 import { Accounts } from "./accounts";
 import { CheckEvidence } from "./check-evidence";
 import { CheckRecovery } from "./check-recovery";
+import { WorkspaceReference } from "./workspace-reference";
 import { digestBytes, digestFile, operationKey } from "./crypto";
 import {
   ApiError,
@@ -644,6 +645,13 @@ function App() {
               action.
             </p>
             <form onSubmit={(e) => void login(e)}>
+              <WorkspaceReference
+                disabled={signingIn}
+                onSelected={(tenant, partner) => {
+                  setTenant(tenant);
+                  setPartner(partner);
+                }}
+              />
               <label htmlFor="tenant">Tenant ID</label>
               <input
                 id="tenant"

@@ -12,10 +12,32 @@ const bundle = await build({
   format: "esm",
   target: "es2022",
 });
-const { asCheckView } = await import(
+const { asCheckView, asWorkspaceReference } = await import(
   "data:text/javascript;base64," +
     Buffer.from(bundle.outputFiles[0].contents).toString("base64")
 );
+test("workspace references copy only IDs and cannot change origin or authority", () => {
+  const tenant = "11111111-1111-4111-8111-111111111111",
+    partner = "22222222-2222-4222-8222-222222222222";
+  const v = asWorkspaceReference({
+    schema_version: 1,
+    tenant_id: tenant,
+    partner_id: partner,
+    endpoint: "https://untrusted.invalid",
+    permissions: ["admin"],
+    credential_file: "/private/secret",
+    command: "run anything",
+  });
+  assert.deepEqual(v, { tenant_id: tenant, partner_id: partner });
+  for (const value of [
+    null,
+    [],
+    {},
+    { schema_version: 2, tenant_id: tenant, partner_id: partner },
+    { schema_version: 1, tenant_id: tenant, partner_id: "other" },
+  ])
+    assert.throws(() => asWorkspaceReference(value));
+});
 const id = "11111111-1111-4111-8111-111111111111",
   objectID = "22222222-2222-4222-8222-222222222222",
   keyID = "33333333-3333-4333-8333-333333333333";

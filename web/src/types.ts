@@ -169,6 +169,17 @@ function bool(o: Record<string, unknown>, key: string): boolean {
 export function uuid(value: string): boolean {
   return /^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$/.test(value);
 }
+// A local workspace reference supplies selectors only. Never copy endpoints,
+// credentials, permissions or commands from it into the authenticated client.
+export function asWorkspaceReference(value: unknown): {
+  tenant_id: string;
+  partner_id: string;
+} {
+  const o = object(value);
+  if (o.schema_version !== 1)
+    throw new ApiError("invalid_workspace_reference", 400);
+  return { tenant_id: id(o, "tenant_id"), partner_id: id(o, "partner_id") };
+}
 function id(o: Record<string, unknown>, key: string): string {
   const value = text(o, key, 36);
   if (!uuid(value)) throw new ApiError("invalid_server_response", 502);

@@ -32,14 +32,21 @@ func main() {
 }
 func run(args []string) error {
 	if len(args) == 0 || args[0] == "--help" || args[0] == "help" {
-		fmt.Println("freightctl: init | token | enroll | identity | namespace | dev-cert | serve | reconcile | audit-keygen | audit-export | ssh-host-keygen | ssh-key-enroll | ssh-key-revoke | serve-sftp | upload-create | upload-list | upload-status | upload-append | upload-complete | upload-abort | delivery-create | delivery-status | delivery-approve | delivery-cancel | delivery-work | delivery-reconcile\nAccounts: account-create | account-update | account-rotate | account-revoke | account-list | account-status\nConnections: connection-register | connection-status | connection-revoke\nWorkflows: workflow-validate | workflow-draft | workflow-status | workflow-diff | workflow-approve | workflow-revoke | workflow-run | workflow-run-status | workflow-work | workflow-cancel\nAssistance: ai-profile-register | ai-profile-status | ai-profile-revoke | ai-propose | ai-diagnose | ai-status | ai-approve | ai-generate | ai-adopt\nIntake: intake-policy-register | intake-policy-status | intake-policy-revoke | check-list | check-status | check-run | check-recover | check-release\nScanners: scanner-register | scanner-status | scanner-revoke\nOpenPGP: pgp-key-register | pgp-key-status | pgp-key-revoke | check-signature\nRead docs/development.md. This is an unqualified local custody foundation.")
+		fmt.Println("freightctl: init | setup-plan | setup | token | enroll | identity | namespace | dev-cert | serve | reconcile | audit-keygen | audit-export | ssh-host-keygen | ssh-key-enroll | ssh-key-revoke | serve-sftp | upload-create | upload-list | upload-status | upload-append | upload-complete | upload-abort | delivery-create | delivery-status | delivery-approve | delivery-cancel | delivery-work | delivery-reconcile\nAccounts: account-create | account-update | account-rotate | account-revoke | account-list | account-status\nConnections: connection-register | connection-status | connection-revoke\nWorkflows: workflow-validate | workflow-draft | workflow-status | workflow-diff | workflow-approve | workflow-revoke | workflow-run | workflow-run-status | workflow-work | workflow-cancel\nAssistance: ai-profile-register | ai-profile-status | ai-profile-revoke | ai-propose | ai-diagnose | ai-status | ai-approve | ai-generate | ai-adopt\nIntake: intake-policy-register | intake-policy-status | intake-policy-revoke | check-list | check-status | check-run | check-recover | check-release\nScanners: scanner-register | scanner-status | scanner-revoke\nOpenPGP: pgp-key-register | pgp-key-status | pgp-key-revoke | check-signature\nRead docs/development.md. This is an unqualified local custody foundation.")
 		return nil
 	}
 	f := flag.NewFlagSet(args[0], flag.ContinueOnError)
+	defaultToken, defaultOutput, defaultRequest := ".private/partner.token", ".private/audit-export.json", ""
+	if args[0] == "setup-plan" {
+		defaultToken, defaultOutput = ".private/first-admin.token", ".private/setup.json"
+	}
+	if args[0] == "setup" {
+		defaultRequest = ".private/setup.json"
+	}
 	admin := f.String("admin-dsn-file", ".private/pg-admin.dsn", "protected admin database reference")
 	dsn := f.String("dsn-file", ".private/pg-runtime.dsn", "protected runtime database reference")
 	password := f.String("runtime-password-file", ".private/pg-runtime-password", "protected runtime role password reference")
-	token := f.String("token-file", ".private/partner.token", "protected token reference")
+	token := f.String("token-file", defaultToken, "protected token reference")
 	tenant := f.String("tenant", "", "tenant UUID")
 	partner := f.String("partner", "", "partner UUID")
 	cert := f.String("cert", ".private/localhost.crt", "TLS certificate path")
@@ -57,11 +64,14 @@ func run(args []string) error {
 	auditPublic := f.String("audit-public-file", ".private/audit-signing.pub", "public audit verification identity output")
 	auditMaxEvents := f.Int("audit-max-events", 10000, "maximum events per evidence snapshot")
 	auditMaxBytes := f.Int("audit-max-bytes", 8<<20, "maximum serialized evidence bytes before base64 encoding")
-	output := f.String("output", ".private/audit-export.json", "new protected artifact output path")
+	output := f.String("output", defaultOutput, "new protected artifact output path")
+	tenantLabel := f.String("tenant-label", "", "first tenant display label for setup-plan")
+	partnerLabel := f.String("partner-label", "", "first partner display label for setup-plan")
+	adminLabel := f.String("admin-label", "", "first administrator display label for setup-plan")
 	permissions := f.String("permissions", strings.Join(store.DefaultPermissions, ","), "comma-separated scoped account permissions")
 	namespaceRoot := f.String("namespace-root", "/", "canonical directory mounted as this identity's virtual root")
 	namespaceMax := f.Int("namespace-max-entries", 10000, "active virtual entries allowed per partner")
-	requestFile := f.String("request-file", "", "bounded JSON namespace command reference")
+	requestFile := f.String("request-file", defaultRequest, "bounded JSON command or first-run plan reference")
 	idempotencyKey := f.String("idempotency-key", "", "stable namespace operation key")
 	uploadID := f.String("upload-id", "", "durable upload session UUID")
 	uploadAfter := f.String("upload-after", "", "last upload UUID returned by the previous page")
@@ -118,6 +128,17 @@ func run(args []string) error {
 		return errors.New("browser session lifetime must be 1 to 600 seconds")
 	}
 	switch args[0] {
+	case "setup-plan":
+		if err := prepareSetup(*output, *token, *storage, *tenantLabel, *partnerLabel, *adminLabel); err != nil {
+			return err
+		}
+		return json.NewEncoder(os.Stdout).Encode(map[string]string{"plan_file": *output, "credential_file": *token, "next_action": "Review the saved plan, then run setup --request-file with that plan and the matching deployment-admin reference. Preserve both files for exact retry."})
+	case "setup":
+		result, err := applySetup(ctx, *admin, *requestFile)
+		if err != nil {
+			return err
+		}
+		return json.NewEncoder(os.Stdout).Encode(result)
 	case "account-create", "account-update", "account-rotate", "account-revoke", "account-list", "account-status":
 		return runAccounts(ctx, args[0], *dsn, *token, *tenant, *partner, *requestFile, *idempotencyKey, *accountID, *accountAfter, *newAccountToken, *accountLimit)
 	case "scanner-register", "scanner-status", "scanner-revoke":
