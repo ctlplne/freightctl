@@ -32,7 +32,7 @@ func main() {
 }
 func run(args []string) error {
 	if len(args) == 0 || args[0] == "--help" || args[0] == "help" {
-		fmt.Println("freightctl: init | token | enroll | identity | namespace | dev-cert | serve | reconcile | audit-keygen | audit-export | ssh-host-keygen | ssh-key-enroll | ssh-key-revoke | serve-sftp | upload-create | upload-status | upload-append | upload-complete | upload-abort | delivery-create | delivery-status | delivery-approve | delivery-cancel | delivery-work | delivery-reconcile\nRead docs/development.md. This is an unqualified local custody foundation.")
+		fmt.Println("freightctl: init | token | enroll | identity | namespace | dev-cert | serve | reconcile | audit-keygen | audit-export | ssh-host-keygen | ssh-key-enroll | ssh-key-revoke | serve-sftp | upload-create | upload-status | upload-append | upload-complete | upload-abort | delivery-create | delivery-status | delivery-approve | delivery-cancel | delivery-work | delivery-reconcile\nConnections: connection-register | connection-status | connection-revoke\nWorkflows: workflow-validate | workflow-draft | workflow-status | workflow-diff | workflow-approve | workflow-revoke | workflow-run | workflow-run-status | workflow-work | workflow-cancel\nRead docs/development.md. This is an unqualified local custody foundation.")
 		return nil
 	}
 	f := flag.NewFlagSet(args[0], flag.ContinueOnError)
@@ -70,6 +70,11 @@ func run(args []string) error {
 	deliveryID := f.String("delivery-id", "", "durable outbound delivery UUID")
 	deliveryHash := f.String("definition-hash", "", "exact reviewed delivery definition digest")
 	deliveryRevision := f.Int64("expected-revision", 0, "exact reviewed delivery state revision")
+	workflowID := f.String("workflow-id", "", "immutable workflow family UUID")
+	connectionID := f.String("connection-id", "", "registered connection family UUID")
+	resourceVersion := f.Int("version", 1, "exact workflow or connection version")
+	againstVersion := f.Int("against-version", 0, "previous workflow version to compare")
+	runID := f.String("run-id", "", "durable workflow run UUID")
 	sshHost := f.String("ssh-host-key-file", ".private/ssh-host.key", "protected Ed25519 SSH host identity reference")
 	sshPublic := f.String("ssh-public-file", "", "public SSH key reference; host-keygen defaults to host reference plus .pub")
 	sshKeyID := f.String("ssh-key-id", "", "registered key UUID to revoke")
@@ -90,6 +95,8 @@ func run(args []string) error {
 	}
 	ctx := context.Background()
 	switch args[0] {
+	case "connection-register", "connection-status", "connection-revoke", "workflow-validate", "workflow-draft", "workflow-status", "workflow-approve", "workflow-revoke", "workflow-run", "workflow-run-status", "workflow-work", "workflow-diff", "workflow-cancel":
+		return runWorkflow(ctx, args[0], *dsn, *token, *tenant, *partner, *storage, *requestFile, *idempotencyKey, *workflowID, *connectionID, *runID, *deliveryHash, *resourceVersion, *againstVersion, *deliveryRevision, *maxFile)
 	case "delivery-create", "delivery-status", "delivery-approve", "delivery-cancel", "delivery-work", "delivery-reconcile":
 		return runDelivery(ctx, args[0], *dsn, *token, *tenant, *partner, *storage, *requestFile, *idempotencyKey, *deliveryID, *deliveryHash, *deliveryRevision, *maxFile)
 	case "init":

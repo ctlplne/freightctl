@@ -277,7 +277,11 @@
       }
     ],
     "native_binary_sha256": "40e2809988bcd54477595f8e1395e996d4cc86f7d39bfeafdf1d873393bb10c5",
-    "source_binding": "All 67 source hashes agree between the 12-check foundation manifest, the native delivery manifest and final working source. Documentation-only evidence updates follow those checks."
+    "source_binding": "All 67 source hashes agree between the 12-check foundation manifest, the native delivery manifest and final working source. Documentation-only evidence updates follow those checks.",
+    "committed_source": {
+      "commit": "1214edf31f65a4598ac21c288e8f9d8fd724d2ff",
+      "binding": "All 67 tested source hashes match these committed Git blobs. Later documentation-only changes do not change that tested runtime source."
+    }
   },
   "environment": {
     "os": "macOS 27.2 build 26B5086k",

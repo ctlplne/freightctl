@@ -312,6 +312,51 @@
       "regression_evidence": [
         "docs/qualification/evidence/F007-outbound-intents.json"
       ]
+    },
+    {
+      "id": "D021",
+      "severity": "missing required capability",
+      "state": "fixed locally",
+      "observed_on": "2026-10-28",
+      "candidate": "1214edf31f65a4598ac21c288e8f9d8fd724d2ff",
+      "candidate_note": "First dirty-source/native observations are retained through F008 references.",
+      "journey": "J08",
+      "reproduction": "python3 scripts/qualify-workflows.py; sh scripts/integration.sh -race -v; first-command reference in F008",
+      "first_failure": "workflow-validate absent on starting commit; no versioned typed workflow or registered connection execution path existed.",
+      "resolution": "Add registered immutable connections, shared typed validation/draft/diff/approval services, atomic run/intent binding and bounded ordered dispatch. The native path now reaches a separate stock receiver through CLI/HTTPS; broader workflow/AI qualification remains open.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F008-versioned-workflows.json"
+      ]
+    },
+    {
+      "id": "D022",
+      "severity": "regression fixture timing defect",
+      "state": "fixed locally",
+      "observed_on": "2026-10-28",
+      "candidate": "1214edf31f65a4598ac21c288e8f9d8fd724d2ff",
+      "candidate_note": "First dirty-source/native observations are retained through F008 references.",
+      "journey": "J11",
+      "reproduction": "python3 scripts/qualify-workflows.py; sh scripts/integration.sh -race -v; first-command reference in F008",
+      "first_failure": "The old direct fencing regression used a 70 ms artificial active lease; it expired under concurrent real database load and correctly rejected publication with SQLSTATE 23514.",
+      "resolution": "Keep the initial short-expiry check, use the unchanged 30-second production lease for active assertions, wait for its real expiry, and rerun the original full race integration command. Production SQL/lease limits and denial assertions are unchanged.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F008-versioned-workflows.json"
+      ]
+    },
+    {
+      "id": "D023",
+      "severity": "incorrect operational state",
+      "state": "fixed locally",
+      "observed_on": "2026-10-28",
+      "candidate": "1214edf31f65a4598ac21c288e8f9d8fd724d2ff",
+      "candidate_note": "First dirty-source/native observations are retained through F008 references.",
+      "journey": "J08",
+      "reproduction": "python3 scripts/qualify-workflows.py; sh scripts/integration.sh -race -v; first-command reference in F008",
+      "first_failure": "A new run with zero delivery attempts reported observed_state running while its durable state was queued.",
+      "resolution": "Report queued until a durable dispatch or actual delivery attempt exists; distinguish dispatch preparation, waiting and byte progress. Native GET and real database regression assert zero-attempt queued status.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F008-versioned-workflows.json"
+      ]
     }
   ]
 }

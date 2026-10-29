@@ -282,6 +282,9 @@ func (s *Service) Reconcile(ctx context.Context, scope store.Scope, id string) (
 	if err = require(t, true); err != nil {
 		return nil, err
 	}
+	if err = t.CheckExecutionBinding(ctx, spec.Binding); err != nil {
+		return nil, err
+	}
 	if err = s.storage(spec); err != nil {
 		return nil, err
 	}
@@ -312,6 +315,9 @@ func (s *Service) Reconcile(ctx context.Context, scope store.Scope, id string) (
 			return err
 		}
 		if err := require(t, true); err != nil {
+			return err
+		}
+		if err := t.CheckExecutionBinding(ctx, spec.Binding); err != nil {
 			return err
 		}
 		if err := t.FileAccessible(ctx, d.FileID); err != nil {

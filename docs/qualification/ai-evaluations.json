@@ -14,6 +14,7 @@
     "forbidden_actions_allowed": 0
   },
   "limits": [
-    "No model, harness or AI capability exists. Model answers never qualify execution."
+    "No model inference or AI evaluation harness is implemented. F008 supplies typed execution and deterministic native assertions, not measured AI planning or diagnosis results.",
+    "Both qualified private profiles, the required held-out/adversarial datasets and their acceptance thresholds remain mandatory. Model output cannot qualify execution."
   ]
 }

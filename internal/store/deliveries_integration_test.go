@@ -69,6 +69,7 @@ func TestDeliveryMigrationEventsIsolationAndFencing(t *testing.T) {
 	if err = admin.QueryRow(ctx, `SELECT count(*) FROM pg_class WHERE relnamespace='public'::regnamespace AND relname IN ('delivery_intents','delivery_receipts') AND relrowsecurity AND relforcerowsecurity`).Scan(&count); err != nil || count != 2 {
 		t.Fatal("delivery RLS", count, err)
 	}
+	leaseDuration := 70 * time.Millisecond
 	mutate := func(next string, lease bool) {
 		t.Helper()
 		tx, err := db.Begin(ctx, scope)
@@ -88,7 +89,7 @@ func TestDeliveryMigrationEventsIsolationAndFencing(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			until := now.Add(70 * time.Millisecond)
+			until := now.Add(leaseDuration)
 			got.LeaseUntil = &until
 			got.LeaseOwner = secure.NewID()
 			got.Fence++
@@ -109,6 +110,9 @@ func TestDeliveryMigrationEventsIsolationAndFencing(t *testing.T) {
 	mutate("staging", true)
 	staleFence, staleOwner := d.Fence, d.LeaseOwner
 	time.Sleep(90 * time.Millisecond)
+	// The first lease only exercises expiry. Active assertions use the actual
+	// production window so database load cannot turn them into expired attempts.
+	leaseDuration = 30 * time.Second
 	mutate("staging", true)
 	if d.Fence <= staleFence || d.LeaseOwner == staleOwner {
 		t.Fatal("claim did not replace fence/owner")
@@ -141,7 +145,7 @@ func TestDeliveryMigrationEventsIsolationAndFencing(t *testing.T) {
 	}
 	tx.Tx.Rollback(ctx)
 	mutate("publishing", false)
-	time.Sleep(90 * time.Millisecond)
+	time.Sleep(31 * time.Second)
 	mutate("ambiguous", false)
 	tx, err = db.Begin(ctx, scope)
 	if err != nil {

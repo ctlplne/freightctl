@@ -1,10 +1,10 @@
 # Approved outbound SFTP intents
 
-This is a local development profile. It sends one accepted immutable file to a separately running SFTP receiver and records the evidence it can actually observe. It has no workflow scheduler, browser approval screen, general connection registry or receiver business acknowledgment yet. Full product and protocol parity remain open.
+This is a local development profile. It sends one accepted immutable file to a separately running SFTP receiver and records the evidence it can actually observe. It has no workflow scheduler, browser approval screen or receiver business acknowledgment yet. [Versioned workflows](../workflows.md) add registered connection references and ordered approved runs. Full product and protocol parity remain open.
 
 ## Draft, review and approval
 
-Use a root-mounted service identity with `read`, `deliver`, `connections_manage` and `admin`. Migration 7 adds the two outbound grants. Newly provisioned development administrators receive all nine grants; existing identities keep their exact previous grants. `admin` alone does not grant delivery. This initial operator path uses local CLI files. HTTP clients cannot submit private-key file references.
+Use a root-mounted service identity with `read`, `deliver`, `connections_manage` and `admin`. Migration 7 adds the two outbound grants. Newly provisioned development administrators receive all twelve grants; existing identities keep their exact previous grants. `admin` alone does not grant delivery. This initial operator path uses local CLI files. HTTP clients cannot submit private-key file references.
 
 Create a bounded JSON request such as:
 
@@ -66,4 +66,4 @@ The initial engineering profile permits two outbound streams per database across
 
 `python3 scripts/qualify-deliveries.py` runs real PostgreSQL, stock curl, two worker processes, a separate stock OpenSSH daemon and an independent stock SFTP retrieval. It tests draft/approval and actor denial, changed host trust, traversal/symlink denial, destination collision, storage mismatch, corrupt source, authority revocation, an actual worker kill before publication, expired-stage recovery, and failure of the final local database update after the receiver has the exact file. Real expiry precedes recovery. The injected fault triggers select only the fixture's generated tenant/intent, add failure rather than relax checks, and are removed in `finally`. Keys and raw output stay ignored. The evidence uses synthetic 2 MiB files on the same macOS machine; no external partner or independent human operator is qualified.
 
-Remaining work includes versioned reusable connections and rotation/revocation, typed multi-step workflows, API/browser parity, active cancellation and approved rebinding, unattended queue scheduling, receiver receipt contracts, remote staging retention/cleanup and quotas, production network policy, broader peers/platforms, stronger key custody, large files and multi-host qualification.
+The first [versioned workflow path](../workflows.md) supplies connection revisions/revocation and ordered SFTP steps through CLI/HTTPS. Remaining work includes live rotation/rebinding, broader workflow tasks, browser parity, active cancellation and approved rebinding, unattended queue scheduling, receiver receipt contracts, remote staging retention/cleanup and quotas, production network policy, broader peers/platforms, stronger key custody, large files and multi-host qualification.

@@ -92,12 +92,13 @@
       "acceptance_journey": "J01",
       "state": "implementing",
       "evidence": [
-        "docs/qualification/evidence/F007-outbound-intents.json"
+        "docs/qualification/evidence/F007-outbound-intents.json",
+        "docs/qualification/evidence/F008-versioned-workflows.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
       ],
-      "current_limit": "F007 tests a local CLI approved sender against stock OpenSSH with fsync/hardlink extensions, exact observed integrity, leases/fences and ambiguity recovery. General connections, workflow/API/browser parity, production networks, broader peers, larger files and receiver business receipts remain open."
+      "current_limit": "F007/F008 verify bounded local approved SFTP sending and versioned ordered runs through shared CLI/HTTPS, exact observed integrity, leases/fences, revocation and ambiguity recovery. Browser UI, production network profile, broader protocols/peers, larger files and business receipts remain open."
     },
     {
       "id": "P-FTPS-EXPLICIT-RECEIVE",
@@ -3100,11 +3101,14 @@
         "independent operator or receiver"
       ],
       "acceptance_journey": "J02",
-      "state": "planned",
-      "evidence": [],
+      "state": "implementing",
+      "evidence": [
+        "docs/qualification/evidence/F008-versioned-workflows.json"
+      ],
       "qualification_blockers": [
         "Authorized SFTPGo installation and exact edition/version for observed comparison"
-      ]
+      ],
+      "current_limit": "F008 verifies exact workflow hash/version/state decisions, current approval authority, actor-private revision records and connection/workflow revocation through CLI/HTTPS/direct workers. Broader processing approvals, human governance/UI, providers/delegation and complete journey qualification remain open."
     },
     {
       "id": "H-TUS",

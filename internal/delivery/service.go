@@ -33,14 +33,15 @@ type Request struct {
 	KeyPublicFile  string `json:"key_public_file"`
 }
 type Definition struct {
-	Schema      int                   `json:"schema_version"`
-	Source      store.File            `json:"source"`
-	Destination secure.SSHDestination `json:"destination"`
-	Directory   string                `json:"directory"`
-	Filename    string                `json:"filename"`
-	StorageID   string                `json:"storage_id"`
-	Root        string                `json:"namespace_root"`
-	Authority   int64                 `json:"authority_revision"`
+	Schema      int                     `json:"schema_version"`
+	Source      store.File              `json:"source"`
+	Destination secure.SSHDestination   `json:"destination"`
+	Directory   string                  `json:"directory"`
+	Filename    string                  `json:"filename"`
+	StorageID   string                  `json:"storage_id"`
+	Root        string                  `json:"namespace_root"`
+	Authority   int64                   `json:"authority_revision"`
+	Binding     *store.ExecutionBinding `json:"workflow_binding,omitempty"`
 }
 type Result struct {
 	Delivery *store.Delivery `json:"delivery"`
@@ -128,16 +129,8 @@ func (s *Service) Create(ctx context.Context, scope store.Scope, key string, r R
 	if prior != nil {
 		return &Result{prior, true}, t.Tx.Commit(ctx)
 	}
-	// Serialize per actor admission, including creations under different request keys.
-	if _, err = t.Tx.Exec(ctx, `SELECT pg_advisory_xact_lock(hashtextextended($1,0))`, scope.Tenant+":"+scope.Partner+":"+t.Actor+":delivery-admission"); err != nil {
+	if err = t.DeliveryAdmission(ctx, 1); err != nil {
 		return nil, err
-	}
-	var count int
-	if err = t.Tx.QueryRow(ctx, `SELECT count(*) FROM delivery_intents WHERE actor_id=$1 AND state NOT IN ('succeeded','blocked','cancelled')`, t.Actor).Scan(&count); err != nil {
-		return nil, err
-	}
-	if count >= 128 {
-		return nil, store.ErrLimit
 	}
 	now, err := t.DatabaseTime(ctx)
 	if err != nil {
@@ -290,6 +283,9 @@ func (s *Service) Claim(ctx context.Context, scope store.Scope, id, owner string
 		return nil, nil, err
 	}
 	defer t.Tx.Rollback(ctx)
+	if err = t.CheckExecutionBinding(ctx, spec.Binding); err != nil {
+		return nil, nil, err
+	}
 	if err = s.storage(spec); err != nil {
 		return nil, nil, err
 	}
@@ -340,6 +336,9 @@ func (s *Service) transition(ctx context.Context, scope store.Scope, id, owner s
 		return nil, err
 	}
 	defer t.Tx.Rollback(ctx)
+	if err = t.CheckExecutionBinding(ctx, spec.Binding); err != nil {
+		return nil, err
+	}
 	if err = s.storage(spec); err != nil {
 		return nil, err
 	}
@@ -391,6 +390,9 @@ func (s *Service) checkLease(ctx context.Context, scope store.Scope, id, owner s
 		return err
 	}
 	defer t.Tx.Rollback(ctx)
+	if err = t.CheckExecutionBinding(ctx, spec.Binding); err != nil {
+		return err
+	}
 	now, err := t.DatabaseTime(ctx)
 	if err != nil {
 		return err

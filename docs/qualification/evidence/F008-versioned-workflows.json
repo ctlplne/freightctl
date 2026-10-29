@@ -1,0 +1,1113 @@
+{
+  "schema_version": 1,
+  "id": "F008",
+  "kind": "actor-private versioned connection/workflow definitions, offline preview, explicit approval and atomic ordered delivery runs",
+  "state": "verified locally",
+  "full_journeys_qualified": false,
+  "ai_qualified": false,
+  "candidate": {
+    "starting_commit": "1214edf31f65a4598ac21c288e8f9d8fd724d2ff",
+    "source_files": [
+      {
+        "path": "cmd/freightctl/delivery.go",
+        "sha256": "985b08b67bcd54b56c0ce92c42e01602cb379cc5360b101bc73c293e397eae41"
+      },
+      {
+        "path": "cmd/freightctl/main.go",
+        "sha256": "0a5e10b9793389315d5426993f461fbbe100b2f5432b3fd45cea2f548f594448"
+      },
+      {
+        "path": "cmd/freightctl/workflow.go",
+        "sha256": "037d23e9ded7af664e6cbc88c7662bc3a95977fb4cdbf4f3a97c23be96ce63ee"
+      },
+      {
+        "path": "go.mod",
+        "sha256": "2b8e72bb19c95ae51e63a7c45a7c2c4ba0f147acdfde6f3eda1dff9520cca150"
+      },
+      {
+        "path": "go.sum",
+        "sha256": "e36a23c226b1844da16837e68a4d47f865d6eef00b3bf447cb33b52a31c89164"
+      },
+      {
+        "path": "internal/api/api.go",
+        "sha256": "006af7dade57e9d8451af921bd5ec948c688491b18eb5f8b1175f4d55b688576"
+      },
+      {
+        "path": "internal/api/namespace.go",
+        "sha256": "82d863f396fec14d6394a7f4011e434c593f2217dc66231b96cdf8782b6b3c0e"
+      },
+      {
+        "path": "internal/api/uploads.go",
+        "sha256": "fda7f39264ed8775e4a02b4d06db0c3f1df5201adc7c3ca9835d20b68361f494"
+      },
+      {
+        "path": "internal/api/workflows.go",
+        "sha256": "45567cdff0f57cb4cfeff9a965542ca2ba7c02d61fd1d45796a08571efb7795e"
+      },
+      {
+        "path": "internal/architecture/architecture_test.go",
+        "sha256": "a8f4bb6540105bef76899e147dc0bb670bf2d411a0cdcf767ec38a79573657a5"
+      },
+      {
+        "path": "internal/audit/audit.go",
+        "sha256": "41bcf8bb940ec14e76657b3163be89ea2701a09fce7ee14a20f62452c516db46"
+      },
+      {
+        "path": "internal/audit/integration_test.go",
+        "sha256": "8c69a1a5d040a391b2579f58d3b070865e89f1c3b4f66199143d87e9793e7248"
+      },
+      {
+        "path": "internal/crypto/audit.go",
+        "sha256": "eefe6f66ab4c283ea96e51fc35a7cb4f8edff713dd16d56041d74bf1acdc338e"
+      },
+      {
+        "path": "internal/crypto/audit_test.go",
+        "sha256": "0837cc879e08a3b47d6b7ab4f393579af17ebd891f430e2cc45e264d60c02b4e"
+      },
+      {
+        "path": "internal/crypto/crypto.go",
+        "sha256": "edb1f8534ce0f048038aa5946489caba5ae303a38024e173c8a0d09478d093a0"
+      },
+      {
+        "path": "internal/crypto/protect_other.go",
+        "sha256": "c52dc1b00ac860719e3dd9dd9118109014d01e0b7f87327646bba63e7dd173a2"
+      },
+      {
+        "path": "internal/crypto/protect_unix.go",
+        "sha256": "f7184f82ff63e331fd5170a0ea27a0f5e867f06bbb9d1f901ae57f75a8b86e52"
+      },
+      {
+        "path": "internal/crypto/ssh.go",
+        "sha256": "c405042bf732cfffa8510e6d763f5c86c585994009a99d897d8a6efc2bb4d018"
+      },
+      {
+        "path": "internal/crypto/ssh_client.go",
+        "sha256": "24492ebd7d18f889c5f2e28b8e238d4546e34b92490ef7e1e7ff3082011e263b"
+      },
+      {
+        "path": "internal/crypto/ssh_test.go",
+        "sha256": "46f6cb3e53d9c3fca6b38f23b9a263852dcb94d1b49177c976f3f923b415db14"
+      },
+      {
+        "path": "internal/custody/custody.go",
+        "sha256": "20fc4428aad2e825d8ee70288469e75a9ded6667972c1d257633173119a26b0b"
+      },
+      {
+        "path": "internal/custody/custody_test.go",
+        "sha256": "2c4f169f40b859ca9f263deec1f03a46529c6784e24e8133018e1620df828ee7"
+      },
+      {
+        "path": "internal/custody/identity.go",
+        "sha256": "11db37dba13d5435f85f8243f353f29f8e333e304aba2a67b65ab70c30f1765c"
+      },
+      {
+        "path": "internal/custody/integration_test.go",
+        "sha256": "8c09d3b1044e360aae11287ce3d0b7861f0693544b28d15fbc6393a2e89871b1"
+      },
+      {
+        "path": "internal/custody/namespace.go",
+        "sha256": "47db75f92c468ba51b363333a0cdac25b177f5b0c65237d2cb4009df0f0f3d8b"
+      },
+      {
+        "path": "internal/custody/namespace_integration_test.go",
+        "sha256": "c75bf9153443f2a90bc7fbe955bb6931f29d77ce9f8455128c302679c92edd8f"
+      },
+      {
+        "path": "internal/custody/reconcile.go",
+        "sha256": "6eea38522e4c103a8014ce3f76455410dac5a2e04bf823ea11c7f008f2e0613f"
+      },
+      {
+        "path": "internal/custody/service.go",
+        "sha256": "e63f828318799277eb516dc09eedb75a618bcb80f2d67da59bc4ae3f955dd651"
+      },
+      {
+        "path": "internal/custody/upload_writer.go",
+        "sha256": "18a3991d78b617795ecce110f0ee7bf35af18f05250b3ba2c27fd49895231756"
+      },
+      {
+        "path": "internal/custody/uploads.go",
+        "sha256": "c10bcc0a2ef280206f1dd908723e04ce088096b874f6383cab7b68bbf74c5101"
+      },
+      {
+        "path": "internal/custody/uploads_integration_test.go",
+        "sha256": "6331c842e23e5bc16a0614c39cd5ddbbb65751973c25915fe18361ba774504a4"
+      },
+      {
+        "path": "internal/custody/writer.go",
+        "sha256": "d352bc7aa55e09192807926e4e406aefb935d1d32177d6d80f6af03be6d9ae45"
+      },
+      {
+        "path": "internal/custody/writer_integration_test.go",
+        "sha256": "7ca33e33931473e5d27f38f632a83b7232295f8fe0dfc6e2d417eafa6ffe71a0"
+      },
+      {
+        "path": "internal/delivery/service.go",
+        "sha256": "de49ef90c04bd1f5cbe1c576d8b016cb22c3da3906d873cdf93bb7d4da67d9e1"
+      },
+      {
+        "path": "internal/delivery/worker.go",
+        "sha256": "4e180eb7dff48cca0639b2c036627d0cd009a940daba197afa75c8e939887062"
+      },
+      {
+        "path": "internal/delivery/worker_test.go",
+        "sha256": "69dd436a95f3e5a0832784ec26c9e4539a448f00758bb3dcd8118dedcdf9819f"
+      },
+      {
+        "path": "internal/sftpd/frames.go",
+        "sha256": "c370342331b85bc5e9b5bb549bcbd55279d17b131f367618600c02edf5d899d3"
+      },
+      {
+        "path": "internal/sftpd/frames_test.go",
+        "sha256": "909594927fda166cc0609de3e913d097488819ae601fc8c5227d059c91420f40"
+      },
+      {
+        "path": "internal/sftpd/server.go",
+        "sha256": "4d9060050c42845847f9dee416b9991d52473838b80cc33fe188b29428697a51"
+      },
+      {
+        "path": "internal/store/002_event_binding.sql",
+        "sha256": "9bdb83d3a31f608af24b568e91889e2e6f462caf8658b746a0c55be97e58dfb0"
+      },
+      {
+        "path": "internal/store/003_event_bounds.sql",
+        "sha256": "5e09fc8540294e24ea9114e71e4d58311bdfb7b80ae1a5d3162c8d3bc0a4a4e7"
+      },
+      {
+        "path": "internal/store/004_namespace.sql",
+        "sha256": "fd60652d7ebee14e7a39104d656599e5b8f9684eef293e3bb76951a2b5a895dc"
+      },
+      {
+        "path": "internal/store/005_uploads.sql",
+        "sha256": "a88a0394afd4192f40486670ce2b5c833b8a8ff38334251eba77e1e933b044df"
+      },
+      {
+        "path": "internal/store/006_upload_storage.sql",
+        "sha256": "b2e7b4ee6eac36a5d87734f3937d6a8b33533e27be3e904b660eb340d0393136"
+      },
+      {
+        "path": "internal/store/007_deliveries.sql",
+        "sha256": "a0661176825594a6af9d49cafb30e4409ae253edd53ba69fd88d06e25632e040"
+      },
+      {
+        "path": "internal/store/008_workflows.sql",
+        "sha256": "c629edabd19d732adaf4eddb5fa63dfcfc1241154f8307cffb14c9830df030a9"
+      },
+      {
+        "path": "internal/store/deliveries.go",
+        "sha256": "b2e88412d6122417d753fa4f1750617ad31b3efdf4cf8350c4d2a0507a335d8f"
+      },
+      {
+        "path": "internal/store/deliveries_integration_test.go",
+        "sha256": "278b98cc191189b0fcdd4309e3a4dfcfb1a984ef8ba366153d2ca393e616384d"
+      },
+      {
+        "path": "internal/store/identity.go",
+        "sha256": "9a7db0cc22a831c917dae9c59c88efe4980b453aad8eb050059ee680a5b90d19"
+      },
+      {
+        "path": "internal/store/migration_integration_test.go",
+        "sha256": "c30ea5b9959e995178fb2b6bcf2a527f092b34c48636d174f79b1f0e1bc88397"
+      },
+      {
+        "path": "internal/store/namespace.go",
+        "sha256": "f5e94c1498d648d9643f58ec88e7b9fef3810d8ab44775b269dec82b8f704581"
+      },
+      {
+        "path": "internal/store/namespace_integration_test.go",
+        "sha256": "b989b680cb0c5196632d5807e20963fd558f5a4a8bbacf062f2e99c7d0e7e9e7"
+      },
+      {
+        "path": "internal/store/schema.sql",
+        "sha256": "26c4a6bd9e354b5b6f63052368f6d1e687de007f6f74b96910bce0ef3a5460d9"
+      },
+      {
+        "path": "internal/store/snapshot.go",
+        "sha256": "684681b9aeaed7021a140b196746f880dfec04a1bb966497c879468a9367b9a1"
+      },
+      {
+        "path": "internal/store/ssh.go",
+        "sha256": "8c2ec2c9890b0ecca3faf84def360cecf07d1082e3d7481f2f63c35a9c6a2a2c"
+      },
+      {
+        "path": "internal/store/store.go",
+        "sha256": "138ccba28c77f9c284d61c15fae145596892018a51e6fe2b969a981f78cf0fec"
+      },
+      {
+        "path": "internal/store/uploads.go",
+        "sha256": "135c70f735604631bb5d4de555dc5e3ac4eb06f08dd2e99b002b0aed3a0448e6"
+      },
+      {
+        "path": "internal/store/uploads_integration_test.go",
+        "sha256": "76bd7a2434fa44aecb394d64d5a035ccaf3a723dbcfad18f6c77b443f6aef84d"
+      },
+      {
+        "path": "internal/store/workflows.go",
+        "sha256": "fcf64ce2caf81b5220c2c502dd66d67b4f04463d5d77093487d1140677e678b6"
+      },
+      {
+        "path": "internal/vpath/path.go",
+        "sha256": "2a57a1a9f61390f3712f909e62336f7daba394d499591d20ddc95c15a66d57a5"
+      },
+      {
+        "path": "internal/vpath/path_test.go",
+        "sha256": "2a5489626f3ffb265249adbe4f4ed7698767c6a580dc976eb585d0a45d9cebd3"
+      },
+      {
+        "path": "internal/workflow/configuration.go",
+        "sha256": "72c9198fb8c245673db6aa38885cde3c30ec126a0a2068572c12c1097e19e174"
+      },
+      {
+        "path": "internal/workflow/integration_test.go",
+        "sha256": "e47ad08ab3fda712a2d8acd128441d3824c01a20850b7e1f177e2612eef36614"
+      },
+      {
+        "path": "internal/workflow/review.go",
+        "sha256": "83b773abc52a519dfc091de51cf18b81f3a2b1b00976ff43786cb1cf8af6be2b"
+      },
+      {
+        "path": "internal/workflow/runs.go",
+        "sha256": "e1ada8b6699d3fa76dc8577c10dd73f2a2e0e06d84dc81f243462fbe9dd36b07"
+      },
+      {
+        "path": "internal/workflow/types.go",
+        "sha256": "f8324bcffc329e111a7ebb0f44bb6a77b6e0d6babc03bb4ddb4ac8175c306719"
+      },
+      {
+        "path": "internal/workflow/types_test.go",
+        "sha256": "0120a1e850e598b54f5d0d229819e97d2ea828aae686098b986140c765b5030a"
+      },
+      {
+        "path": "scripts/check-records.py",
+        "sha256": "35df8df21212a1136486d5a9f3335b67b19cdb24f2e053c90d21d4768ced1f1b"
+      },
+      {
+        "path": "scripts/dev-db.py",
+        "sha256": "05643d67e1a64d7e5f91c19108f5bfa3415571c8394721c5d7cc89862d51c12a"
+      },
+      {
+        "path": "scripts/go.sh",
+        "sha256": "aec6d7e09592b3954a89dc69839c6791e72a73dbafe2ca04b3b274276a23f5a8"
+      },
+      {
+        "path": "scripts/integration.sh",
+        "sha256": "a1f1d34ff041d7287d04aab634ad336bf7af7896f58241181081853a981d3464"
+      },
+      {
+        "path": "scripts/qualify-deliveries.py",
+        "sha256": "fb7a5228d32efefd94f1897a43a4e2f18bbd3344ba8ecd50e3d37a9aba92d626"
+      },
+      {
+        "path": "scripts/qualify-foundation.py",
+        "sha256": "ec4802db75c772a6d4d4aa55632523d57c2a93fc6913d69f5d67fbb43d3f1922"
+      },
+      {
+        "path": "scripts/qualify-https.py",
+        "sha256": "21936efd7cb89e0a3fe6bb95a3b786f630d75bba68ac0575faf76214228842af"
+      },
+      {
+        "path": "scripts/qualify-sftp.py",
+        "sha256": "3dc203afb7e5f8bb76210be6c3e45259a781803ba1140f3db971ea9b822c1027"
+      },
+      {
+        "path": "scripts/qualify-uploads.py",
+        "sha256": "b81401642f8a3c2634fb024d691dd6f11b5ed9ef7bbfef077d838837d41e9e15"
+      },
+      {
+        "path": "scripts/qualify-workflows.py",
+        "sha256": "d0d9dc1a10e2a07a8f463083b5597c63a2204b7d5fdb72b1912a0a83327c6be8"
+      },
+      {
+        "path": "scripts/verify-audit.py",
+        "sha256": "99f22fbd3e936aa4d38569ada1bfcccbca47e46f6c3e08aa47f6531128e9b983"
+      }
+    ],
+    "native_binary_sha256": "5186c0f852dba1be9355e5bad8ca8fed72f50b62cc9d51dfbf49d6244ae67a77",
+    "source_binding": "All 78 source hashes agree with final source and the native journey. The fourteen-check foundation records identical source hashes before and after all checks; no runtime source changed during qualification."
+  },
+  "environment": {
+    "os": "macOS 27.2 build 26B5086k",
+    "native_platform": "darwin/arm64",
+    "go": "go1.26.10",
+    "postgresql": "16.15 retained task-owned Docker fixture, numeric loopback, non-owner runtime role without BYPASSRLS; disposable real databases for schema/transaction invariants",
+    "receiver": "Separate stock OpenSSH_10.5p1 daemon, separate fixture directories on same native machine",
+    "clients": [
+      "stock curl with fixture TLS trust",
+      "stock OpenSSH sftp with pinned host and explicit key",
+      "native freightctl CLI sharing the HTTPS services"
+    ],
+    "payload_size_bytes": 2097152,
+    "assistance": "Agent-created synthetic fixture and automated steps; no independent operator adoption",
+    "model": "No inference implementation, configured endpoint or model dependency; ordinary workflow execution is exercised, not AI outage qualification."
+  },
+  "checks": [
+    {
+      "name": "records",
+      "command": [
+        "python3",
+        "scripts/check-records.py"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 0.033,
+      "native_output": "evidence/raw/foundation-b4eba66c692640fabeece6589548944a/records.log",
+      "native_output_sha256": "457fa0e73258b6d5d3f99f5ddc34510e9b644d7056ff0218f5108e232d264422"
+    },
+    {
+      "name": "module-integrity",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "mod",
+        "verify"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 0.283,
+      "native_output": "evidence/raw/foundation-b4eba66c692640fabeece6589548944a/module-integrity.log",
+      "native_output_sha256": "b4537ed75f533f993f371954de47e42a793b8e5b0587577de7e27fb3e50696bd"
+    },
+    {
+      "name": "vet",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "vet",
+        "./..."
+      ],
+      "exit_code": 0,
+      "duration_seconds": 0.193,
+      "native_output": "evidence/raw/foundation-b4eba66c692640fabeece6589548944a/vet.log",
+      "native_output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "unit-race",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "test",
+        "-race",
+        "./..."
+      ],
+      "exit_code": 0,
+      "duration_seconds": 2.956,
+      "native_output": "evidence/raw/foundation-b4eba66c692640fabeece6589548944a/unit-race.log",
+      "native_output_sha256": "c5132ab52461f0a23f80dc5d9840a48d862192bc4a27e4a96097ed0342bd8928"
+    },
+    {
+      "name": "postgres-integration-race",
+      "command": [
+        "sh",
+        "scripts/integration.sh",
+        "-race",
+        "-v"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 37.851,
+      "native_output": "evidence/raw/foundation-b4eba66c692640fabeece6589548944a/postgres-integration-race.log",
+      "native_output_sha256": "3bec977e0658e58382b6b937f0f86db0041ab0aba0198f0c7c6c471dba7c5844"
+    },
+    {
+      "name": "virtual-path-fuzz",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "test",
+        "./internal/vpath",
+        "-fuzz=FuzzCanonicalPath",
+        "-fuzztime=5s",
+        "-parallel=2"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 6.625,
+      "native_output": "evidence/raw/foundation-b4eba66c692640fabeece6589548944a/virtual-path-fuzz.log",
+      "native_output_sha256": "80071faf9872f5e9cf1d0a44f2fd3d6f4adb80615015537ab13964b32232f453"
+    },
+    {
+      "name": "sftp-packet-fuzz",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "test",
+        "./internal/sftpd",
+        "-fuzz=FuzzInspectPacket",
+        "-fuzztime=5s",
+        "-parallel=2"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 6.81,
+      "native_output": "evidence/raw/foundation-b4eba66c692640fabeece6589548944a/sftp-packet-fuzz.log",
+      "native_output_sha256": "e12c6608c826d3da63eb133f4bdf9d0b3a11dbfa70645359627ee4d945311117"
+    },
+    {
+      "name": "custody-name-fuzz",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "test",
+        "./internal/custody",
+        "-fuzz=FuzzCustodyName",
+        "-fuzztime=5s",
+        "-parallel=2"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 6.224,
+      "native_output": "evidence/raw/foundation-b4eba66c692640fabeece6589548944a/custody-name-fuzz.log",
+      "native_output_sha256": "7488ea7a1d36f2713ff4c362b3d8c1fa5308c6e49c50fbf0b22d0968b47c1ce0"
+    },
+    {
+      "name": "typed-workflow-fuzz",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "test",
+        "./internal/workflow",
+        "-fuzz=FuzzTypedWorkflow",
+        "-fuzztime=5s",
+        "-parallel=2"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 7.035,
+      "native_output": "evidence/raw/foundation-b4eba66c692640fabeece6589548944a/typed-workflow-fuzz.log",
+      "native_output_sha256": "0664b67015f1b7a0bb3c6489fad62743ae6021465fbc2fab595fb5ec8bb26639"
+    },
+    {
+      "name": "stock-curl-https",
+      "command": [
+        "python3",
+        "scripts/qualify-https.py"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 5.711,
+      "native_output": "evidence/raw/foundation-b4eba66c692640fabeece6589548944a/stock-curl-https.log",
+      "native_output_sha256": "416fa80ed6487d645ee4b65bcd65d672c2b829823b012a1f477a80529c0a1647"
+    },
+    {
+      "name": "stock-openssh-sftp",
+      "command": [
+        "python3",
+        "scripts/qualify-sftp.py"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 6.851,
+      "native_output": "evidence/raw/foundation-b4eba66c692640fabeece6589548944a/stock-openssh-sftp.log",
+      "native_output_sha256": "cc0a5e6b682505ecd356a707f680e5bf50c72702e35bb4b5c7d8a91d078328c1"
+    },
+    {
+      "name": "durable-upload-resume",
+      "command": [
+        "python3",
+        "scripts/qualify-uploads.py"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 8.719,
+      "native_output": "evidence/raw/foundation-b4eba66c692640fabeece6589548944a/durable-upload-resume.log",
+      "native_output_sha256": "efbb673030b1b13547134cd13347384cbebb55d8121cd6c6bbad786159b4de86"
+    },
+    {
+      "name": "durable-outbound-delivery",
+      "command": [
+        "python3",
+        "scripts/qualify-deliveries.py"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 66.941,
+      "native_output": "evidence/raw/foundation-b4eba66c692640fabeece6589548944a/durable-outbound-delivery.log",
+      "native_output_sha256": "b096b368bcfed56d6e0ae40302c43a279e577103eb436c0e71c3332e3f557ae8"
+    },
+    {
+      "name": "versioned-workflow-execution",
+      "command": [
+        "python3",
+        "scripts/qualify-workflows.py"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 39.142,
+      "native_output": "evidence/raw/foundation-b4eba66c692640fabeece6589548944a/versioned-workflow-execution.log",
+      "native_output_sha256": "868c3947d3a0009baea4c9c0549433dbeea310ccaab2dc586988530146e3438d"
+    }
+  ],
+  "foundation_manifest": {
+    "path": "evidence/raw/foundation-b4eba66c692640fabeece6589548944a/manifest.json",
+    "sha256": "8dc12c8ea862342d87691a9c4346583ff6e7acb40be968200d306dc8c892c497"
+  },
+  "native_manifest": {
+    "path": "evidence/raw/workflows-70dd5af793b5417da204ca1945c32a27/manifest.json",
+    "sha256": "fe8c763bf152a4b7a561536c7882f96fc76bc351ae9d3733defd441bc16340f8"
+  },
+  "native_workflow": {
+    "state": "passed",
+    "duration_seconds": 39.077,
+    "steps": [
+      {
+        "name": "stock-curl-durable-source",
+        "size_bytes": 2097152,
+        "sha256": "79acefce3edeb0ffdad0cb8ac19f709ac16987ec46b5278f605e531a58f0e1e9"
+      },
+      {
+        "name": "register-connection",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "2481378eda006e88a525f43bc00bb9713b4f80210201fbec7c7d2cd6d56a3daf",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "register-replay",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "0659c11313b7869ec6f6faeb6bc85063cfefc379b1359740cb4ad7261526c286",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "connection-redacted",
+        "http_status": 200,
+        "output_sha256": "280610b722cde1c9df692a2628d283ed4f52533a6022c6a295340bf83432ae81"
+      },
+      {
+        "name": "offline-recipient-preview",
+        "http_status": 200,
+        "output_sha256": "d5bc888e13ad2fb9dd4d5b6f868f0285d733fa957ff470a306b2c3db1e02f0db"
+      },
+      {
+        "name": "cli-shared-preview",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "d5bc888e13ad2fb9dd4d5b6f868f0285d733fa957ff470a306b2c3db1e02f0db",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "unsupported-task-denied",
+        "http_status": 400,
+        "output_sha256": "9d8a081ce279d44c8db1f638512f71f8a56b185ee3848efe6c05fc421f942bab"
+      },
+      {
+        "name": "model-key-reference-denied",
+        "http_status": 400,
+        "output_sha256": "9d8a081ce279d44c8db1f638512f71f8a56b185ee3848efe6c05fc421f942bab"
+      },
+      {
+        "name": "duplicate-recipient-fields-denied",
+        "http_status": 400,
+        "output_sha256": "9d8a081ce279d44c8db1f638512f71f8a56b185ee3848efe6c05fc421f942bab"
+      },
+      {
+        "name": "oversized-definition-denied",
+        "http_status": 400,
+        "output_sha256": "9d8a081ce279d44c8db1f638512f71f8a56b185ee3848efe6c05fc421f942bab"
+      },
+      {
+        "name": "create-draft",
+        "http_status": 200,
+        "output_sha256": "f9c2c59f6ade9177754612ee733640a81b2a0cdf88b07c19f48deb544f2d5187"
+      },
+      {
+        "name": "draft-replay",
+        "http_status": 200,
+        "output_sha256": "6152150ba37da29a7c7e0ff94e4df7b81c8d7fa65e14f4922170e978dade59da"
+      },
+      {
+        "name": "unapproved-run-denied",
+        "http_status": 409,
+        "output_sha256": "f1f3565cbd2be3624f516aae5f63c6b92054394c4d7cdc0b15b77a93cc2e8944"
+      },
+      {
+        "name": "wrong-approval-hash-denied",
+        "http_status": 409,
+        "output_sha256": "6fc066192828d024e45a6c7738de9dba7c00a6085246a435bc6bdc280c79a2c1"
+      },
+      {
+        "name": "approve-workflow",
+        "http_status": 200,
+        "output_sha256": "cdab643ec3b8db1eabee40b0546a4a5e09a695f8e94c22abe32eed9ddce33d92"
+      },
+      {
+        "name": "approve-replay",
+        "http_status": 200,
+        "output_sha256": "048f94caa5d1a4eb2226b6f71c143b926ca2f906a02e3542baf97456fdd5cd47"
+      },
+      {
+        "name": "start-run",
+        "http_status": 200,
+        "output_sha256": "6c310f2f79dd812da821c445433fcc4c4e360d71c6dbdb7bec5e35ce80c86bac"
+      },
+      {
+        "name": "run-idempotent-replay",
+        "http_status": 200,
+        "output_sha256": "82c69ad557343c875d4443e28cbe99a2a24a162d5941fbc4dbd45679db31ebd3"
+      },
+      {
+        "name": "queued-run-status",
+        "http_status": 200,
+        "output_sha256": "e8012276c91a8be2b1a248f43bdfc26e16b5347f25b41543654fc8ef46612627"
+      },
+      {
+        "name": "other-actor-workflow-denied",
+        "http_status": 404,
+        "output_sha256": "fef916c279def93f790d739d8525fc7ffd697a4a492029472c5752bda04a4faf"
+      },
+      {
+        "name": "other-actor-run-denied",
+        "http_status": 404,
+        "output_sha256": "fef916c279def93f790d739d8525fc7ffd697a4a492029472c5752bda04a4faf"
+      },
+      {
+        "name": "other-actor-connection-reference-denied",
+        "http_status": 404,
+        "output_sha256": "fef916c279def93f790d739d8525fc7ffd697a4a492029472c5752bda04a4faf"
+      },
+      {
+        "name": "other-partner-workflow-denied",
+        "http_status": 404,
+        "output_sha256": "fef916c279def93f790d739d8525fc7ffd697a4a492029472c5752bda04a4faf"
+      },
+      {
+        "name": "other-partner-run-denied",
+        "http_status": 404,
+        "output_sha256": "fef916c279def93f790d739d8525fc7ffd697a4a492029472c5752bda04a4faf"
+      },
+      {
+        "name": "other-tenant-workflow-denied",
+        "http_status": 404,
+        "output_sha256": "fef916c279def93f790d739d8525fc7ffd697a4a492029472c5752bda04a4faf"
+      },
+      {
+        "name": "other-tenant-run-denied",
+        "http_status": 404,
+        "output_sha256": "fef916c279def93f790d739d8525fc7ffd697a4a492029472c5752bda04a4faf"
+      },
+      {
+        "name": "direct-later-step-denied",
+        "exit_code": 1,
+        "expected_success": false,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "40d32d5ff6c75f6e1f176d357f429cc8f54c1228a68a3944f022aad6b2c39b7a"
+      },
+      {
+        "name": "register-connection-v2",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "754674761a474f4b898bd83672f11575af293a4b34cbcd2d7172838d15222433",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "new-workflow-version",
+        "http_status": 200,
+        "output_sha256": "cc929a364e503c7564c444e864c874c007cf123070a96dab8ba5148f7afb753f"
+      },
+      {
+        "name": "review-version-diff",
+        "http_status": 200,
+        "output_sha256": "1c3c070c5d58cf6becb3773482b12c7fe7a9f39b995993820e24cf6fec843ac3"
+      },
+      {
+        "name": "changed-draft-request-key-denied",
+        "http_status": 409,
+        "output_sha256": "68e8ea07515eb62cebbfc8aefadbf034aa144af9629a643ae973526b386b9321"
+      },
+      {
+        "name": "execute-first-step",
+        "http_status": 200,
+        "output_sha256": "46132489da38fb2245070a978ffdbab4aeffde61e7b105066b7d1b32b5e816d2"
+      },
+      {
+        "name": "repeat-dispatch-cannot-advance",
+        "http_status": 200,
+        "output_sha256": "0acc5b632bb677e831f8b0c0fcc648e8d0ddff0268db346023fc196d526a3fac"
+      },
+      {
+        "name": "restart-same-dispatch",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "0acc5b632bb677e831f8b0c0fcc648e8d0ddff0268db346023fc196d526a3fac",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "execute-second-step",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "2678eff00a1018ea5b447254e3417d53a711c8340230917f04b81610667035c4",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "stock-sftp-independent-workflow-receipt",
+        "sha256": "79acefce3edeb0ffdad0cb8ac19f709ac16987ec46b5278f605e531a58f0e1e9"
+      },
+      {
+        "name": "approve-new-version",
+        "http_status": 200,
+        "output_sha256": "65ae70bde20b4c0aef554bf6264c6ef5a92f521bf175f6dceb96d3cf55573521"
+      },
+      {
+        "name": "run-new-version",
+        "http_status": 200,
+        "output_sha256": "46b80a49980b80bfae17611d9d04e72be183bdd2c1af95aee0e1005e1ef9d630"
+      },
+      {
+        "name": "revoke-connection-version",
+        "http_status": 200,
+        "output_sha256": "778520c49b5b3da7d6900c231f25ee31b183fc5a94760b9d1d8650409ef17729"
+      },
+      {
+        "name": "revoked-connection-stops-run",
+        "http_status": 409,
+        "output_sha256": "f1f3565cbd2be3624f516aae5f63c6b92054394c4d7cdc0b15b77a93cc2e8944"
+      },
+      {
+        "name": "revoked-connection-visible",
+        "http_status": 200,
+        "output_sha256": "2df4095c42810531e16151ec14da4bfe143511022d398618f3dcb1e721aa116f"
+      },
+      {
+        "name": "revoked-connection-direct-worker-denied",
+        "exit_code": 1,
+        "expected_success": false,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "40d32d5ff6c75f6e1f176d357f429cc8f54c1228a68a3944f022aad6b2c39b7a"
+      },
+      {
+        "name": "old-approved-version-still-explicit",
+        "http_status": 200,
+        "output_sha256": "a94e7a3d700215ead5ebe37569ac3f2f0d76a0f74faa27089da8df3425d18231"
+      },
+      {
+        "name": "revoke-workflow-version",
+        "http_status": 200,
+        "output_sha256": "6a58124704e77d103281f9022d41e41bd596e6c86c5c5b6f0f6f8b6abf2d11ef"
+      },
+      {
+        "name": "revoked-workflow-stops-run",
+        "http_status": 409,
+        "output_sha256": "f1f3565cbd2be3624f516aae5f63c6b92054394c4d7cdc0b15b77a93cc2e8944"
+      },
+      {
+        "name": "revoked-workflow-visible",
+        "http_status": 200,
+        "output_sha256": "93ff77c38eaa44245e6bc205a9a253b661781459394d761293e18b17063a1fcb"
+      },
+      {
+        "name": "revoked-workflow-direct-worker-denied",
+        "exit_code": 1,
+        "expected_success": false,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "40d32d5ff6c75f6e1f176d357f429cc8f54c1228a68a3944f022aad6b2c39b7a"
+      },
+      {
+        "name": "recovery-draft",
+        "http_status": 200,
+        "output_sha256": "ab026c1169f71a1a656f3aa7f88108be575dcb4cbf2e30e30785490fbed08125"
+      },
+      {
+        "name": "approve-recovery-version",
+        "http_status": 200,
+        "output_sha256": "ba7527578861034febf1b009005a5f22ea9907aaf553075fe151ea46c79e8120"
+      },
+      {
+        "name": "uncertain-run",
+        "http_status": 200,
+        "output_sha256": "b350c88fe177b098ed7209d95e158b709c40b6a494acdb3e416b35942c37e55c"
+      },
+      {
+        "name": "uncertain-run-intents",
+        "http_status": 200,
+        "output_sha256": "88f57e11831947b753bf804ec23ac3b250d3b7410b2843e0b967b9c540d383ec"
+      },
+      {
+        "name": "workflow-remote-success-local-failure",
+        "http_status": 503,
+        "output_sha256": "0a9e0af4c7d1ee79f3c906f6d97505e8c37ee2423b24d0767e485de2f8a87bbc"
+      },
+      {
+        "name": "ambiguous-predecessor-direct-skip-denied",
+        "exit_code": 1,
+        "expected_success": false,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "40d32d5ff6c75f6e1f176d357f429cc8f54c1228a68a3944f022aad6b2c39b7a"
+      },
+      {
+        "name": "same-dispatch-recovers-as-ambiguous",
+        "http_status": 200,
+        "output_sha256": "b8e00c1f3a927ada7c66f338fdc9d9b5dfc69dc2fb17311870288278e31aff95"
+      },
+      {
+        "name": "read-only-workflow-receipt-recovery",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "9860d1ee875609cfa1faeac2b965f72f74c911bcf888a97577d69d93f6f22efd",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "recovered-dispatch-still-does-not-advance",
+        "http_status": 200,
+        "output_sha256": "a152628853e69b765687cb77367df60d3dabdaddfe549c5e5a89226a0e75018d"
+      },
+      {
+        "name": "delivery-complete-run-projection-fails",
+        "http_status": 503,
+        "output_sha256": "0a9e0af4c7d1ee79f3c906f6d97505e8c37ee2423b24d0767e485de2f8a87bbc"
+      },
+      {
+        "name": "exact-receipts-survive-projection-failure",
+        "http_status": 200,
+        "output_sha256": "b5012df2e3ef7bd07327048310eebbace2b298b103fd2a543c6cbfcb15cf54a3"
+      },
+      {
+        "name": "completed-run-cannot-be-relabelled-cancelled",
+        "http_status": 409,
+        "output_sha256": "f1f3565cbd2be3624f516aae5f63c6b92054394c4d7cdc0b15b77a93cc2e8944"
+      },
+      {
+        "name": "fresh-dispatch-after-recovery",
+        "http_status": 200,
+        "output_sha256": "2e8d43ac1aae4730c3360cb738a3a8e2b7776097cf9bac08e873f8aa0c6aa95b"
+      },
+      {
+        "name": "cancel-queued-run",
+        "http_status": 200,
+        "output_sha256": "6cb77330ff644cadba0382252a8a213b2e3432389123c25f28a2b5a8ea4b34f5"
+      },
+      {
+        "name": "cancel-run-decision",
+        "http_status": 200,
+        "output_sha256": "cf2bfbb859bc7e011b27fd73b4ddc8c69b628348e9db03882604c6f2c98e853a"
+      },
+      {
+        "name": "cancel-idempotent-replay",
+        "http_status": 200,
+        "output_sha256": "d16784a11d04e85b061c2ebde4b715357817b9ca7db986bb162ba603717d2c93"
+      },
+      {
+        "name": "cancelled-run-does-not-execute",
+        "http_status": 409,
+        "output_sha256": "f1f3565cbd2be3624f516aae5f63c6b92054394c4d7cdc0b15b77a93cc2e8944"
+      },
+      {
+        "name": "cancelled-direct-worker-denied",
+        "exit_code": 1,
+        "expected_success": false,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "40d32d5ff6c75f6e1f176d357f429cc8f54c1228a68a3944f022aad6b2c39b7a"
+      },
+      {
+        "name": "editor-register-before-restriction",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "d5763ede13aedf06131379a667719f9d92617c5936a063c7dc4bdb7a172f2d82",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "editor-can-draft",
+        "http_status": 200,
+        "output_sha256": "d6c9f876342d14515d34e211e8abc3c154a73b6cbe20b32a1f411b432a1976ce"
+      },
+      {
+        "name": "editor-cannot-approve",
+        "http_status": 403,
+        "output_sha256": "051312f2746eb2e0c2c3ff38969ea28825fc938195aef775a488f8c9a06e55dd"
+      },
+      {
+        "name": "editor-cannot-execute",
+        "http_status": 403,
+        "output_sha256": "051312f2746eb2e0c2c3ff38969ea28825fc938195aef775a488f8c9a06e55dd"
+      },
+      {
+        "name": "register-connection-v3",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "0d6583be573c33fa496b58cc997d084c2229525028a3b4562c4ac2b1064fd844",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "mixed-connections-draft",
+        "http_status": 200,
+        "output_sha256": "95174bbdcc7ca0fa5fd7668bcf5a6c81004862efdb747362fd749dfc88f80af7"
+      },
+      {
+        "name": "approve-mixed-connections",
+        "http_status": 200,
+        "output_sha256": "79b8465d91bf5794ff083eb91b772724673e314dfdc122fed221c9c414c63115"
+      },
+      {
+        "name": "mixed-connection-run",
+        "http_status": 200,
+        "output_sha256": "f74f1716853868c15f2046045e7dda4dd872f6b14640c018a075135c4c84a245"
+      },
+      {
+        "name": "mixed-first-completes",
+        "http_status": 200,
+        "output_sha256": "49bff56c7896453ee93fef80ff5dc7dcf2b38e72b6e6adfaaec84dae7abc5a5a"
+      },
+      {
+        "name": "revoke-already-used-connection",
+        "http_status": 200,
+        "output_sha256": "01d4d09603316e13b8c49372394e853d521ae3e29de5b85e35ad972607f44418"
+      },
+      {
+        "name": "whole-plan-revocation-direct-step-denied",
+        "exit_code": 1,
+        "expected_success": false,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "40d32d5ff6c75f6e1f176d357f429cc8f54c1228a68a3944f022aad6b2c39b7a"
+      },
+      {
+        "name": "whole-plan-revocation-workflow-denied",
+        "http_status": 409,
+        "output_sha256": "f1f3565cbd2be3624f516aae5f63c6b92054394c4d7cdc0b15b77a93cc2e8944"
+      },
+      {
+        "name": "historic-success-survives-connection-revocation",
+        "http_status": 200,
+        "output_sha256": "e0ab5a3f6638ce22a1fc20298b64a6e6bd10cce6dd696c539be5b81278e1077a"
+      }
+    ]
+  },
+  "first_failures": [
+    {
+      "defect": "D021",
+      "reference": {
+        "path": ".private/workflow-first-failure/manifest.json",
+        "sha256": "56c13d10e3f470154b53f010fa1df6e53148d0ed378c9a838fb533c7814c3d92"
+      },
+      "result": "workflow-validate unknown on starting commit; actual typed workflow/receiver path now exercised."
+    },
+    {
+      "defect": "D022",
+      "reference": {
+        "path": ".private/workflow-fencing-fixture-first-failure/manifest.json",
+        "sha256": "12415853aac96b545824ea5c9d2fe14290d88a09a9a4a4ede23420317666e388"
+      },
+      "result": "70 ms artificial active fixture lease expired under concurrent database load; runtime correctly denied it. The regression now uses the unchanged production 30-second lease for active checks and waits for real expiry."
+    },
+    {
+      "defect": "D023",
+      "reference": {
+        "path": ".private/workflow-queued-state-first-failure/manifest.json",
+        "sha256": "266e36afce9995ef792b45eed74abe9b356665fca4fc3719d2da7deb93aeb002"
+      },
+      "result": "Zero-attempt run claimed running. Current native/database assertions require queued until dispatch/attempt."
+    }
+  ],
+  "fixture_observation": {
+    "reference": {
+      "path": ".private/workflow-first-replay-observation/manifest.json",
+      "sha256": "10a8b8c153bf125773c16ccbfffc866125fd38b70f1b4bece0d063f44f767e51"
+    },
+    "scope": "A draft test initially compared raw JSON bytes across JSONB key reordering; full typed run fields/identities are now compared. This is not a product retransmission finding."
+  },
+  "mechanisms": [
+    "Connection registration is a local management operation with explicit protected key references and pinned public identities. Its reusable immutable versions are actor private; public HTTP review omits private references/wire bytes.",
+    "One strict normalized definition through CLI/HTTPS. Input bounds, duplicate/case-alias and unknown-field rejection, supported task validation, registered connection hash/version checks; no script or unsupported-task fallback.",
+    "Read-only preview makes no remote contact or domain mutation; native validation succeeds with selected receiver stopped. Diff exposes both immutable definitions and changed step identities.",
+    "Draft versions are immutable and require explicit approval of exact definition hash/state revision under current actor authority. New drafts/connection versions cannot alter queued runs.",
+    "Run/events/all delivery intents/all step mappings/idempotency receipt commit in one real PostgreSQL transaction. A last-step binding failure rolls the whole run back.",
+    "Twenty domain relations have live-checked forced row security; all five new relations also enforce actor restriction. Composite foreign keys and exact event guards bind state and references.",
+    "Deferred SQL constraints require every workflow step and exact source/acceptance/storage/authority/connection/destination binding. Changed definitions and false run success are rejected in real database tests.",
+    "Dispatch decisions persist one selected delivery ID before external work. A repeated request key keeps that same step after receipt, server restart or lost final projection. It cannot advance the next step.",
+    "Workflow and direct delivery workers check approval, the entire run connection set, current authority/source/storage and every preceding successful receipt at runtime boundaries. Revocation applies consistently through both entry points.",
+    "The existing bounded SFTP lease/fence, staged sync/read-back, no-overwrite publication and conservative ambiguity path is reused. Uncertain predecessor blocks later delivery until read-only exact receipt recovery.",
+    "Persisted run state and deterministic observed state are separate. Committed receipts survive failed run projection; retry repairs that projection without sending again. Completed observed work cannot be relabelled cancelled merely because its projection lagged.",
+    "Queued cancellation fixes exact run revision/hash and atomically cancels eligible remaining intents; live/uncertain effects are refused rather than claimed undone.",
+    "Production lease duration, source isolation, assertions and processing time budgets were not relaxed. Native role/actor/tenant/partner denial, frozen versions, revocation, restart and receipt/projection failure cases all pass."
+  ],
+  "migration_notes": {
+    "new_version": 8,
+    "unchanged_applied_versions": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "new_relations": [
+      "connection_revisions",
+      "workflow_revisions",
+      "workflow_runs",
+      "workflow_steps",
+      "workflow_receipts"
+    ],
+    "new_grants": [
+      "workflow_manage",
+      "workflow_approve",
+      "workflow_execute"
+    ],
+    "existing_grants": "Unchanged. Native restricted editor cannot approve/execute; v1-upgrade regression rejects implicit outbound/workflow grants. New development bootstrap owner defaults to twelve grants.",
+    "migration_8_sha256": "c629edabd19d732adaf4eddb5fa63dfcfc1241154f8307cffb14c9830df030a9",
+    "qualification": "Clean and repeated migrations, v1 upgrade, current real RLS, private actor reads, exact event/projection rejection and all-intent rollback pass."
+  },
+  "security": {
+    "govulncheck": {
+      "exit_code": 0,
+      "duration_seconds": 8.044,
+      "config": {
+        "protocol_version": "v1.0.0",
+        "scanner_name": "govulncheck",
+        "scanner_version": "v1.9.0",
+        "db": "https://vuln.go.dev",
+        "db_last_modified": "2026-10-27T21:16:18Z",
+        "go_version": "go1.26.10",
+        "scan_level": "symbol",
+        "scan_mode": "source"
+      },
+      "findings": [
+        {
+          "osv": "GO-2026-5932",
+          "trace": [
+            {
+              "module": "golang.org/x/crypto",
+              "version": "v0.58.0"
+            }
+          ]
+        }
+      ],
+      "affected_packages": [
+        "golang.org/x/crypto/openpgp",
+        "golang.org/x/crypto/openpgp/armor",
+        "golang.org/x/crypto/openpgp/clearsign",
+        "golang.org/x/crypto/openpgp/elgamal",
+        "golang.org/x/crypto/openpgp/errors",
+        "golang.org/x/crypto/openpgp/packet",
+        "golang.org/x/crypto/openpgp/s2k"
+      ],
+      "imported_affected_packages": [],
+      "reachable_symbol_findings": [],
+      "native_report": {
+        "path": ".private/workflows-scans/govulncheck.json",
+        "sha256": "d20d1de2cc10c075e7de03c7276ccca1cf74474e67d00703bba9f07a61a77448"
+      },
+      "dependency_inventory": {
+        "path": ".private/workflows-scans/native-dependencies.txt",
+        "sha256": "593d784a9c1eb26cd92b0c1654543143435e47b023fb184372640cd1e78b7201"
+      },
+      "assessment_reference": {
+        "path": ".private/workflows-scans/govulncheck-manifest.json",
+        "sha256": "c2b07aa96bd85e67630214758b8d91280df1cec38bb8290c6d49ffe99d38437f"
+      },
+      "conclusion": "Retain GO-2026-5932 module advisory for unmaintained OpenPGP. No affected package is imported and no reachable symbol finding in this native build. No zero-advisory/all-platform release claim."
+    },
+    "gitleaks": {
+      "tool": "8.30.1",
+      "image": "ghcr.io/gitleaks/gitleaks@sha256:c00b6bd0aeb3071cbcb79009cb16a60dd9e0a7c60e2be9ab65d25e6bc8abbb7f",
+      "manifest_reference": ".private/workflows-scans/gitleaks-manifest.json",
+      "source_inventory_reference": ".private/workflows-scans/source-input-manifest.json",
+      "required_result": "Final source snapshot and reachable history must both exit zero with empty findings before commit; post-commit history is checked again.",
+      "scope": "Only regular tracked/unignored source files and reachable Git history; protected credentials, models, runtime payloads and raw evidence are excluded.",
+      "observed_source_findings": 0,
+      "observed_history_findings": 0,
+      "native_result_note": "Both pinned scans completed with empty reports. Final source inventory and post-commit history verification are retained at the manifest reference."
+    }
+  },
+  "limits": [
+    "loopback development profile",
+    "synthetic 2 MiB payload",
+    "OpenSSH fsync and atomic hardlink extensions required",
+    "file integrity observation is not downstream business acceptance",
+    "same-host operator-assisted experiment; no independent adoption or enterprise qualification",
+    "ordered sftp.deliver steps only; schedules, branching, visual UI and processing remain open",
+    "ordinary execution has no model dependency; no AI capability is qualified",
+    "Only ordered 1-16 sftp.deliver steps using one immutable source file. Other tasks, schedules/calendars/triggers, branches/loops/variables/batches, processing/sandboxing and migration remain required.",
+    "Owner actor/root ownership model and protected file references. Delegation, providers/human identity lifecycle, complete session/denial auditing, overlap rotation and approved rebind remain open.",
+    "CLI/HTTPS typed services exist; visual editor, human approval/partner portal and browser qualification remain open.",
+    "Two bounded delivery streams/database, 128 open intents/actor, 8 attempts/intent and current source-size/time budgets from F007. Configurable fair unattended queues, production network policy, remote quotas/retention/cleanup and large files remain open.",
+    "Queued cancellation only. Live staging/publishing/ambiguity must be resolved; revoked connections/workflows require a separately authorized recovery/rebinding design.",
+    "Successful workflow means all observed transport file-integrity receipts, not receiver business import, directory power-loss durability or exactly-once business effects.",
+    "No real model proposal/diagnosis, AI evaluation datasets/results, two qualified private profiles, licensed incumbent comparison, native Linux/Windows, multi-host, release or full customer journey is qualified."
+  ]
+}

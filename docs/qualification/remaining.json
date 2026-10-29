@@ -30,7 +30,8 @@
         "docs/qualification/evidence/F004-virtual-namespace.json",
         "docs/qualification/evidence/F005-sftp-exchange.json",
         "docs/qualification/evidence/F006-upload-checkpoints.json",
-        "docs/qualification/evidence/F007-outbound-intents.json"
+        "docs/qualification/evidence/F007-outbound-intents.json",
+        "docs/qualification/evidence/F008-versioned-workflows.json"
       ],
       "remaining_details": [
         "F006 adds immutable checkpoints, exact receipts and persistent storage/parent/authority binding. Finish approved cleanup/recovery/rebinding, scalable reservations/fairness, protected retention, journal chaining/rebuild, larger exports and remaining crash/commit boundaries."
@@ -51,7 +52,8 @@
         "docs/qualification/evidence/F004-virtual-namespace.json",
         "docs/qualification/evidence/F005-sftp-exchange.json",
         "docs/qualification/evidence/F006-upload-checkpoints.json",
-        "docs/qualification/evidence/F007-outbound-intents.json"
+        "docs/qualification/evidence/F007-outbound-intents.json",
+        "docs/qualification/evidence/F008-versioned-workflows.json"
       ],
       "remaining_details": [
         "F005/F006 verify bounded inbound and durable ticket resume. F007 adds a local-only approved outbound SFTP profile against a stock receiver. Finish ordinary-operator onboarding, API/browser parity, production network policy, broader protocols/clients/enterprise peers, larger files and independent business receipts. No complete journey is qualified."
@@ -67,10 +69,11 @@
       ],
       "state": "implementing",
       "evidence": [
-        "docs/qualification/evidence/F007-outbound-intents.json"
+        "docs/qualification/evidence/F007-outbound-intents.json",
+        "docs/qualification/evidence/F008-versioned-workflows.json"
       ],
       "remaining_details": [
-        "F007 verifies explicit approved local SFTP intents, database-wide worker bounds, leases/fences, retained staging, conservative publication ambiguity and read-only receipt recovery. Finish unattended/fair queues, typed multi-step workflow execution, processing, versioned reusable connections and rotation, active cancellation/rebinding, receiver business contracts, remote quotas/retention/cleanup and distributed failure qualification."
+        "F007/F008 verify bounded leased/fenced SFTP intents and typed ordered workflow runs with registered connection versions, conservative ambiguity, same-step dispatch replay across restart, and queued cancellation. Finish unattended/fair scheduling, broader processing/conditions/loops/batches, active cancellation/rebinding, overlapping key rotations, receiver business contracts, remote quotas/retention/cleanup and distributed failures."
       ]
     },
     {
@@ -81,8 +84,13 @@
         13,
         14
       ],
-      "state": "planned",
-      "evidence": []
+      "state": "implementing",
+      "evidence": [
+        "docs/qualification/evidence/F008-versioned-workflows.json"
+      ],
+      "remaining_details": [
+        "F008 supplies shared CLI/HTTPS typed workflow drafts, offline validation/preview, version diff, explicit approval/revocation and atomic ordered SFTP runs without any inference dependency. First real private-model proposal/diagnosis, model-disabled replay after that integration, other task types, visual UI, adversarial/disclosure evaluations and two qualified profiles remain mandatory."
+      ]
     },
     {
       "id": "R006",
@@ -137,7 +145,8 @@
         "docs/qualification/evidence/F004-virtual-namespace.json",
         "docs/qualification/evidence/F005-sftp-exchange.json",
         "docs/qualification/evidence/F006-upload-checkpoints.json",
-        "docs/qualification/evidence/F007-outbound-intents.json"
+        "docs/qualification/evidence/F007-outbound-intents.json",
+        "docs/qualification/evidence/F008-versioned-workflows.json"
       ],
       "remaining_details": [
         "Current account/key/mount and destination/parent checks gate transfer mutations. Complete delegated lifecycle, policy reapproval/rebinding, human identity/MFA/providers, complete denial/session auditing, approval UI and governance remain open."

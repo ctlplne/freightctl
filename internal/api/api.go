@@ -37,6 +37,22 @@ func New(service *custody.Service, audits *audit.Service) http.Handler {
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/custody/reconcile", s.reconcile)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/audit/export", s.exportAudit)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/identity", s.identity)
+	for _, pattern := range []string{
+		"POST /v1/tenants/{tenant}/partners/{partner}/workflows/validate",
+		"POST /v1/tenants/{tenant}/partners/{partner}/workflows/drafts",
+		"GET /v1/tenants/{tenant}/partners/{partner}/workflows/{workflow}/{version}",
+		"POST /v1/tenants/{tenant}/partners/{partner}/workflows/{workflow}/{version}/approve",
+		"POST /v1/tenants/{tenant}/partners/{partner}/workflows/{workflow}/{version}/revoke",
+		"GET /v1/tenants/{tenant}/partners/{partner}/workflows/{workflow}/{version}/diff",
+		"GET /v1/tenants/{tenant}/partners/{partner}/connections/{connection}/{version}",
+		"POST /v1/tenants/{tenant}/partners/{partner}/connections/{connection}/{version}/revoke",
+		"POST /v1/tenants/{tenant}/partners/{partner}/workflow-runs",
+		"GET /v1/tenants/{tenant}/partners/{partner}/workflow-runs/{run}",
+		"POST /v1/tenants/{tenant}/partners/{partner}/workflow-runs/{run}/work",
+		"POST /v1/tenants/{tenant}/partners/{partner}/workflow-runs/{run}/cancel",
+	} {
+		m.HandleFunc(pattern, s.workflow)
+	}
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/namespace/commands", s.pathCommand)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/namespace/stat", s.statPath)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/namespace/entries", s.listPath)

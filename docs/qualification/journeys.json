@@ -15,7 +15,8 @@
       "evidence": [
         "docs/qualification/evidence/F001-custody-foundation.json",
         "docs/qualification/evidence/F002-reconciliation.json",
-        "docs/qualification/evidence/F007-outbound-intents.json"
+        "docs/qualification/evidence/F007-outbound-intents.json",
+        "docs/qualification/evidence/F008-versioned-workflows.json"
       ],
       "failures": [],
       "limits": [
@@ -103,7 +104,8 @@
       "duration_seconds": null,
       "evidence": [
         "docs/qualification/evidence/F002-reconciliation.json",
-        "docs/qualification/evidence/F007-outbound-intents.json"
+        "docs/qualification/evidence/F007-outbound-intents.json",
+        "docs/qualification/evidence/F008-versioned-workflows.json"
       ],
       "failures": [],
       "limits": [
@@ -130,7 +132,7 @@
     {
       "id": "J08",
       "name": "Requirements to tested approved workflow; AI disabled replay",
-      "state": "planned",
+      "state": "implementing",
       "goal_reference": "GOAL.md section 5 item 8",
       "candidate": null,
       "artifact_digests": {},
@@ -138,7 +140,9 @@
       "steps": [],
       "assistance": null,
       "duration_seconds": null,
-      "evidence": [],
+      "evidence": [
+        "docs/qualification/evidence/F008-versioned-workflows.json"
+      ],
       "failures": [],
       "limits": [
         "Not run; no application at bootstrap"
@@ -176,7 +180,8 @@
         "docs/qualification/evidence/F001-custody-foundation.json",
         "docs/qualification/evidence/F002-reconciliation.json",
         "docs/qualification/evidence/F003-signed-audit.json",
-        "docs/qualification/evidence/F007-outbound-intents.json"
+        "docs/qualification/evidence/F007-outbound-intents.json",
+        "docs/qualification/evidence/F008-versioned-workflows.json"
       ],
       "failures": [],
       "limits": [
@@ -197,7 +202,8 @@
       "evidence": [
         "docs/qualification/evidence/F001-custody-foundation.json",
         "docs/qualification/evidence/F002-reconciliation.json",
-        "docs/qualification/evidence/F007-outbound-intents.json"
+        "docs/qualification/evidence/F007-outbound-intents.json",
+        "docs/qualification/evidence/F008-versioned-workflows.json"
       ],
       "failures": [],
       "limits": [

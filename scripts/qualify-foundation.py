@@ -13,6 +13,10 @@ root=Path(__file__).resolve().parents[1]
 os.chdir(root)
 raw=root/'evidence/raw'/('foundation-'+uuid.uuid4().hex)
 raw.mkdir(parents=True,mode=0o700)
+def source_hashes():
+    paths=subprocess.check_output(['git','ls-files','--cached','--others','--exclude-standard','-z']).decode().split('\0')
+    return {p:hashlib.sha256((root/p).read_bytes()).hexdigest() for p in sorted(set(paths)) if p and ((root/p).suffix in ('.go','.sql','.sh','.py') or p in ('go.mod','go.sum'))}
+starting_sources=source_hashes()
 commands=[
 ('records',['python3','scripts/check-records.py']),
 ('module-integrity',['sh','scripts/go.sh','mod','verify']),
@@ -22,10 +26,12 @@ commands=[
 ('virtual-path-fuzz',['sh','scripts/go.sh','test','./internal/vpath','-fuzz=FuzzCanonicalPath','-fuzztime=5s','-parallel=2']),
 ('sftp-packet-fuzz',['sh','scripts/go.sh','test','./internal/sftpd','-fuzz=FuzzInspectPacket','-fuzztime=5s','-parallel=2']),
 ('custody-name-fuzz',['sh','scripts/go.sh','test','./internal/custody','-fuzz=FuzzCustodyName','-fuzztime=5s','-parallel=2']),
+('typed-workflow-fuzz',['sh','scripts/go.sh','test','./internal/workflow','-fuzz=FuzzTypedWorkflow','-fuzztime=5s','-parallel=2']),
 ('stock-curl-https',['python3','scripts/qualify-https.py']),
 ('stock-openssh-sftp',['python3','scripts/qualify-sftp.py']),
 ('durable-upload-resume',['python3','scripts/qualify-uploads.py']),
 ('durable-outbound-delivery',['python3','scripts/qualify-deliveries.py']),
+('versioned-workflow-execution',['python3','scripts/qualify-workflows.py']),
 ]
 results=[]
 for name,command in commands:
@@ -38,9 +44,9 @@ for name,command in commands:
     if result.returncode:
         print(log.read_text()[-4000:],flush=True)
         break
-paths=subprocess.check_output(['git','ls-files','--cached','--others','--exclude-standard','-z']).decode().split('\0')
-sources={p:hashlib.sha256((root/p).read_bytes()).hexdigest() for p in sorted(set(paths)) if p and ((root/p).suffix in ('.go','.sql','.sh','.py') or p in ('go.mod','go.sum'))}
-manifest={'schema_version':1,'started_from':subprocess.check_output(['git','rev-parse','HEAD']).decode().strip(),'source_sha256':sources,'observed_at':datetime.now(timezone.utc).isoformat(),'results':results,'state':'passed' if len(results)==len(commands) and all(x['exit_code']==0 for x in results) else 'failed'}
+sources=source_hashes()
+changed_sources=sorted(p for p in set(starting_sources)|set(sources) if starting_sources.get(p)!=sources.get(p))
+manifest={'schema_version':1,'started_from':subprocess.check_output(['git','rev-parse','HEAD']).decode().strip(),'source_sha256':sources,'sources_unchanged_during_run':not changed_sources,'changed_source_paths':changed_sources,'observed_at':datetime.now(timezone.utc).isoformat(),'results':results,'state':'passed' if len(results)==len(commands) and all(x['exit_code']==0 for x in results) and not changed_sources else 'failed'}
 (raw/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
 (root/'.private/foundation-current').write_text(str(raw)+'\n')
 print(str(raw/'manifest.json'),flush=True)
