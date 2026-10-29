@@ -2394,11 +2394,12 @@
       "acceptance_journey": "J02",
       "state": "implementing",
       "evidence": [
-        "docs/qualification/evidence/F013-scanner-controls.json"
+        "docs/qualification/evidence/F013-scanner-controls.json",
+        "docs/qualification/evidence/F023-real-scanner.json"
       ],
       "qualification_blockers": [
         "Authorized MOVEit Automation installation and exact edition/version for observed comparison",
-        "X06: genuine engine with standard signature database, independent detection corpus and resource/sandbox qualification remain open. F013 proves integration/outage controls only; database stays unloaded pending owner resource/endpoint choice."
+        "X06: owner authorized4GiB/oneCPU; F023 proves selected genuine official-database cases under a kernel cap. Independent detection corpus, ICAP/DLP, feed update/re-enrollment/re-scan, native deployment platforms and full operational qualification remain open."
       ]
     },
     {

@@ -101,3 +101,29 @@ func releaseScannerFields(report json.RawMessage) (ScannerReference, *time.Time,
 	}
 	return r.Scanner.Profile, &r.Scanner.ValidUntil, nil
 }
+
+// releasedScannerConfigurationCurrent extends the database's durable proof
+// checks with the protected local configuration check that SQL cannot perform.
+// Every new and bounded open-reader read goes through FileAvailable. A daemon
+// outage does not invalidate a fresh proof: this never contacts its socket.
+func (t *Transaction) releasedScannerConfigurationCurrent(ctx context.Context, id string) error {
+	var ref ScannerReference
+	err := t.Tx.QueryRow(ctx, `SELECT coalesce(scanner_id::text,''),coalesce(scanner_version,0),coalesce(scanner_hash,'') FROM file_releases WHERE file_id=$1`, id).Scan(&ref.ID, &ref.Version, &ref.Hash)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return nil
+	}
+	if err != nil {
+		return err
+	}
+	if ref.ID == "" {
+		return nil
+	}
+	profile, _, err := t.CurrentScanner(ctx, ref)
+	if err != nil {
+		return err
+	}
+	if scanner.ConfigurationCurrent(ctx, *profile) != nil {
+		return ErrState
+	}
+	return nil
+}

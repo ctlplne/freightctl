@@ -185,7 +185,7 @@ func (t *Transaction) FileAvailable(ctx context.Context, id string) error {
 	if !available {
 		return ErrState
 	}
-	return nil
+	return t.releasedScannerConfigurationCurrent(ctx, id)
 }
 func (t *Transaction) CheckBindingCurrent(ctx context.Context, c *FileCheck, storageID string) (*CheckBinding, error) {
 	var b CheckBinding

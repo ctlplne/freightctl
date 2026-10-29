@@ -383,3 +383,64 @@ func TestChangedScannerConfigurationCannotApproveRelease(t *testing.T) {
 		t.Fatal("changed scan context exposed bytes", err)
 	}
 }
+
+func TestReleasedScannerConfigurationIsRecheckedForNewAndOpenReaders(t *testing.T) {
+	for _, change := range []string{"content", "permissions", "missing"} {
+		t.Run(change, func(t *testing.T) {
+			f, s, _, file, definition := scanFixture(t, "clean", time.Hour)
+			if _, err := s.Run(f.ctx, f.scope, file.ID, "scan"); err != nil {
+				t.Fatal(err)
+			}
+			if _, err := s.Release(f.ctx, f.scope, file.ID, "release", releaseDecision(getCheck(t, s, f, file.ID))); err != nil {
+				t.Fatal(err)
+			}
+			_, reader, err := s.Custody.OpenPathReader(f.ctx, f.scope, "/scanned.csv")
+			if err != nil {
+				t.Fatal(err)
+			}
+			defer reader.Close()
+			if n, err := reader.ReadAt(make([]byte, 1), 0); err != nil || n != 1 {
+				t.Fatal("valid proof unreadable", n, err)
+			}
+			original, err := os.ReadFile(definition.Configuration)
+			if err != nil {
+				t.Fatal(err)
+			}
+			switch change {
+			case "content":
+				err = os.WriteFile(definition.Configuration, append(append([]byte{}, original...), []byte("# changed after release\n")...), 0600)
+			case "permissions":
+				err = os.Chmod(definition.Configuration, 0644)
+			case "missing":
+				err = os.Remove(definition.Configuration)
+			}
+			if err != nil {
+				t.Fatal(err)
+			}
+			if n, err := reader.ReadAt(make([]byte, 1), 1); !errors.Is(err, store.ErrState) || n != 0 {
+				t.Fatal("open reader accepted changed scanner configuration", n, err)
+			}
+			if _, data, err := s.Custody.Download(f.ctx, f.scope, file.ID); !errors.Is(err, store.ErrState) {
+				if data != nil {
+					_ = data.Close()
+				}
+				t.Fatal("new ID read accepted changed scanner configuration", err)
+			}
+			if _, data, err := s.Custody.DownloadPath(f.ctx, f.scope, "/scanned.csv"); !errors.Is(err, store.ErrState) {
+				if data != nil {
+					_ = data.Close()
+				}
+				t.Fatal("new path read accepted changed scanner configuration", err)
+			}
+			if err := os.WriteFile(definition.Configuration, original, 0600); err != nil {
+				t.Fatal(err)
+			}
+			if err := os.Chmod(definition.Configuration, 0600); err != nil {
+				t.Fatal(err)
+			}
+			if n, err := reader.ReadAt(make([]byte, 1), 1); err != nil || n != 1 {
+				t.Fatal("restored exact proof unreadable", n, err)
+			}
+		})
+	}
+}

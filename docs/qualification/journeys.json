@@ -52,7 +52,8 @@
         "docs/qualification/evidence/F012-encrypted-delivery.json",
         "docs/qualification/evidence/F013-scanner-controls.json",
         "docs/qualification/evidence/F014-browser-exchange.json",
-        "docs/qualification/evidence/F015-native-crypto-regression.json"
+        "docs/qualification/evidence/F015-native-crypto-regression.json",
+        "docs/qualification/evidence/F023-real-scanner.json"
       ],
       "failures": [],
       "limits": [
@@ -61,7 +62,8 @@
         "F012 adds public recipient enrollment, exact source/recipient/profile/destination approval, durable ciphertext reuse and independent GnuPG decryption/signature verification of stock SFTP receiver bytes. Application decryption/private signing, malware scanning, broader processing/peers, business acceptance and the complete journey remain open.",
         "F013 adds required exact-revision scanner policy/proof and outage controls. The real absent-socket journey and synthetic adversarial protocol/SQL tests do not qualify malware detection; a genuine standard-database engine, corpus and resource gate remain open (X06). Full journey remains open.",
         "F014 proves a narrow assisted enrolled-account Chromium exchange with real PostgreSQL/disk: durable pause/reload/restart/resume, held CSV checks, separate exact release, native/stock-curl exact download and private actor/tenant/session gates. Complete onboarding, independent operator/business receipt, real scanning/fresh independent crypto and all remaining journey requirements stay open.",
-        "F015 restores a full current implemented-core regression with fresh native GnuPG, exact signed/encrypted stock-receiver bytes and current isolation/resource controls. It does not qualify the complete journey, actual scanning, independent business acknowledgment, multi-host/native platforms or adoption."
+        "F015 restores a full current implemented-core regression with fresh native GnuPG, exact signed/encrypted stock-receiver bytes and current isolation/resource controls. It does not qualify the complete journey, actual scanning, independent business acknowledgment, multi-host/native platforms or adoption.",
+        "F023 executes genuine ClamAV1.5.4 with official daily28168/main63/bytecode339 databases in an actual Linux/amd64 container emulated on arm64 macOS. One shared kernel cgroup bounds scanner/application/stock curl at4GiB memory with swap disabled and one CPU. Harmless EICAR/direct/nested ZIP, count/depth/expanded-size/encrypted archive refusals, real scanner pause/timeout, separate exact release/retrieval and configuration/revocation checks pass. D058 fixes changed local scanner configuration remaining readable after release, including new and already-open readers. This is assisted local profile evidence; independent detection corpus, ICAP/DLP, feed lifecycle, native production platforms, governed re-scan/rebind and complete journeys remain open."
       ]
     },
     {
@@ -148,7 +150,8 @@
         "docs/qualification/evidence/F012-encrypted-delivery.json",
         "docs/qualification/evidence/F013-scanner-controls.json",
         "docs/qualification/evidence/F014-browser-exchange.json",
-        "docs/qualification/evidence/F015-native-crypto-regression.json"
+        "docs/qualification/evidence/F015-native-crypto-regression.json",
+        "docs/qualification/evidence/F023-real-scanner.json"
       ],
       "failures": [],
       "limits": [
@@ -158,7 +161,8 @@
         "F012 exercises an actual worker kill after ciphertext sync/before acceptance, orphan observation, original-lease recovery, remote success with a failed local receipt, same-ciphertext read-only reconciliation and CLI quota failure/replay. Remaining dependency failures, governed repair/rebind and complete diagnosis/recovery remain open.",
         "F013 observes scanner outage through ordinary CLI/HTTPS, retains failed/held state across restart and refuses release; malformed replies, config changes, stale proof and expiry have control regressions. Real engine outages/corpus, governed re-scan/rebind and complete recovery remain open.",
         "F014 proves a narrow assisted enrolled-account Chromium exchange with real PostgreSQL/disk: durable pause/reload/restart/resume, held CSV checks, separate exact release, native/stock-curl exact download and private actor/tenant/session gates. Complete onboarding, independent operator/business receipt, real scanning/fresh independent crypto and all remaining journey requirements stay open.",
-        "F015 restores a full current implemented-core regression with fresh native GnuPG, exact signed/encrypted stock-receiver bytes and current isolation/resource controls. It does not qualify the complete journey, actual scanning, independent business acknowledgment, multi-host/native platforms or adoption."
+        "F015 restores a full current implemented-core regression with fresh native GnuPG, exact signed/encrypted stock-receiver bytes and current isolation/resource controls. It does not qualify the complete journey, actual scanning, independent business acknowledgment, multi-host/native platforms or adoption.",
+        "F023 executes genuine ClamAV1.5.4 with official daily28168/main63/bytecode339 databases in an actual Linux/amd64 container emulated on arm64 macOS. One shared kernel cgroup bounds scanner/application/stock curl at4GiB memory with swap disabled and one CPU. Harmless EICAR/direct/nested ZIP, count/depth/expanded-size/encrypted archive refusals, real scanner pause/timeout, separate exact release/retrieval and configuration/revocation checks pass. D058 fixes changed local scanner configuration remaining readable after release, including new and already-open readers. This is assisted local profile evidence; independent detection corpus, ICAP/DLP, feed lifecycle, native production platforms, governed re-scan/rebind and complete journeys remain open."
       ]
     },
     {
@@ -247,7 +251,8 @@
         "docs/qualification/evidence/F019-first-run-enrollment.json",
         "docs/qualification/evidence/F020-tenant-partner-enrollment.json",
         "docs/qualification/evidence/F021-onboarding-drafts.json",
-        "docs/qualification/evidence/F022-onboarding-connectivity.json"
+        "docs/qualification/evidence/F022-onboarding-connectivity.json",
+        "docs/qualification/evidence/F023-real-scanner.json"
       ],
       "failures": [],
       "limits": [
@@ -264,7 +269,8 @@
         "F019 proves assisted empty-database first tenant/partner/admin enrollment, atomic rollback/exact receipt replay/runtime refusal, existing-install preservation and browser/stock-curl integrity-only exchange after restart. Full onboarding, independent operators, disconnected installation, general lifecycle and the complete journey remain open.",
         "F020 proves assisted explicit tenant authority and reviewed ordinary partner/admin enrollment with current grant/credential checks, atomic rollback, cross-scope isolation, response-loss receipt recovery and native/stock-curl new-partner transfer after restart. Full onboarding/activation, independent operators, environment/lifecycle, platform/restore and complete journey requirements stay open.",
         "F021 adds partner-scoped immutable contact/exchange-requirement drafts through browser/API/CLI, exact current authority/version review, actor-private response-loss receipts, redacted ordinary audit payloads and migration 19 with 41 forced-RLS relations. Drafts are not tested, approved or active. Full protocol/test-exchange evidence, approval/production activation, invitations/providers/delegation and queued-work key lifecycle remain required.",
-        "F022 adds exact-bound read-only outbound SFTP onboarding probes, durable intent before contact, current plan/connection/authority checks, private paginated history and original-key recovery. Actual worker death retains the20-second lease; recovery makes no new contact. Migration20 has42 forced-RLS relations. Connectivity still needs separate file exchange evidence, approval/activation and queued-work key lifecycle; other protocols and full J05 remain open."
+        "F022 adds exact-bound read-only outbound SFTP onboarding probes, durable intent before contact, current plan/connection/authority checks, private paginated history and original-key recovery. Actual worker death retains the20-second lease; recovery makes no new contact. Migration20 has42 forced-RLS relations. Connectivity still needs separate file exchange evidence, approval/activation and queued-work key lifecycle; other protocols and full J05 remain open.",
+        "F023 executes genuine ClamAV1.5.4 with official daily28168/main63/bytecode339 databases in an actual Linux/amd64 container emulated on arm64 macOS. One shared kernel cgroup bounds scanner/application/stock curl at4GiB memory with swap disabled and one CPU. Harmless EICAR/direct/nested ZIP, count/depth/expanded-size/encrypted archive refusals, real scanner pause/timeout, separate exact release/retrieval and configuration/revocation checks pass. D058 fixes changed local scanner configuration remaining readable after release, including new and already-open readers. This is assisted local profile evidence; independent detection corpus, ICAP/DLP, feed lifecycle, native production platforms, governed re-scan/rebind and complete journeys remain open."
       ]
     },
     {

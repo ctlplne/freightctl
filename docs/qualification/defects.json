@@ -884,6 +884,21 @@
       "regression_evidence": [
         "docs/qualification/evidence/F022-onboarding-connectivity.json"
       ]
+    },
+    {
+      "id": "D058",
+      "severity": "released scan-controlled bytes remain readable after protected scanner configuration changes",
+      "state": "fixed locally",
+      "observed_on": "2026-10-29",
+      "candidate": "a85c9d034ae51f6c72b9345411420f3731b3ad81 plus retained exact candidate source hashes",
+      "journey": "J02",
+      "reproduction": "Real ClamAV scan, separate exact release, append to the pinned configuration, then retrieve the released file. Also change contents, permissions or remove configuration while a revision reader remains open.",
+      "first_failure": "Real stock curl returnedHTTP200 bytes instead of409 after configuration drift. Three real PostgreSQL cases returned one byte to an already-open reader.",
+      "cause": "The durable SQL availability check revalidated release/profile/expiry but could not inspect the local configuration file. Release checked that file; subsequent new and bounded open-reader reads did not.",
+      "resolution": "After the existing SQL gate, load the exact release scanner reference under runtime RLS, verify the current immutable profile and the protected local configuration hash. ReturnErrState before bytes for drift, loose permissions or missing configuration. Do not contact the scanner for a still-fresh completed proof.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F023-real-scanner.json"
+      ]
     }
   ]
 }

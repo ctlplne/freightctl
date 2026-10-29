@@ -14,6 +14,8 @@ For versioned partner contacts and exchange requirements with reviewed saves and
 
 For recorded read-only SFTP tests of an exact saved requirement and registered receiver, see [onboarding connectivity](docs/onboarding-connectivity.md). Connectivity evidence remains separate from a file exchange and production approval.
 
+For required scans, exact release and the selected real ClamAV runtime evidence, see [local scanning](docs/scanners.md). The scanner stays unloaded between explicit qualification runs; local inference remains off.
+
 - Organization: [ctlplne](https://github.com/ctlplne)
 - Repository: [ctlplne/freightctl](https://github.com/ctlplne/freightctl)
 - Local workflow: commits on main; pushes and publication remain owner-controlled.
