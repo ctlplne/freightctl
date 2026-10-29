@@ -11,7 +11,8 @@
         6
       ],
       "state": "planned",
-      "evidence": []
+      "evidence": [],
+      "remaining_details": []
     },
     {
       "id": "R002",
@@ -89,7 +90,8 @@
         "docs/qualification/evidence/F011-openpgp-intake.json",
         "docs/qualification/evidence/F012-encrypted-delivery.json",
         "docs/qualification/evidence/F013-scanner-controls.json",
-        "docs/qualification/evidence/F014-browser-exchange.json"
+        "docs/qualification/evidence/F014-browser-exchange.json",
+        "docs/qualification/evidence/F015-native-crypto-regression.json"
       ],
       "remaining_details": [
         "F007/F008 verify bounded leased/fenced SFTP intents and typed ordered workflow runs with registered connection versions, conservative ambiguity, same-step dispatch replay across restart, and queued cancellation. Finish unattended/fair scheduling, broader processing/conditions/loops/batches, active cancellation/rebinding, overlapping key rotations, receiver business contracts, remote quotas/retention/cleanup and distributed failures.",
@@ -97,8 +99,9 @@
         "F011 runs streaming exact detached signature verification inside existing two-slot/three-attempt/fenced check bounds, with independent GnuPG evidence. Broader crypto/processing tasks, cancellation/rebind, fairness, unattended operation and production resource/failure gates remain open.",
         "F012 adds two separate encryption slots before transfer admission, bounded streaming generation under the custody quota lock, frozen ciphertext retry/restart, current recipient checks and real receipt ambiguity recovery. Fair/unattended scheduling, general processing tasks, active cancellation/rebind, distributed failures and production resource gates remain open.",
         "F013 adds two separate cross-process PostgreSQL scan slots, bounded exact-byte Unix streaming, deadline and authority/fence checks. Genuine engine/database resource, archive, sandbox and operational detection gates remain open under X06; no engine or standard database was loaded.",
-        "Current F013 aggregate regression is red: the independent synthetic signature fixture aged past the unchanged one-hour policy, and a fresh bounded Docker/GnuPG peer timed out Created/PID zero. All eight scanner PostgreSQL tests pass. Restore a fresh independent fixture and rerun full consumer/native crypto gates; retain original F011/F012 scope and avoid shared Docker restart or global cleanup.",
-        "F014 runs ordinary required checks and separate exact report/revision release from the browser. Fresh independent signature/crypto gates remain red; a named-volume Docker peer also stalls Created/PID zero, falsifying a bind-mount-only cause. No shared Docker restart or policy relaxation."
+        "F013 recorded aged-signature failures and a bounded Docker/GnuPG startup timeout at Created/PID zero. F015 now passes fresh consumer and independent crypto gates through the explicit native macOS peer. The default Docker startup profile on this host remains unresolved; historical F011\u2013F014 evidence keeps its original source scope. No shared Docker restart or policy relaxation is authorized.",
+        "F014 runs ordinary required checks and separate exact report/revision release from the browser. Fresh independent signature/crypto gates remain red; a named-volume Docker peer also stalls Created/PID zero, falsifying a bind-mount-only cause. No shared Docker restart or policy relaxation.",
+        "F015 restores fresh independent native GnuPG verification and a complete 27/27 implemented-core run on unchanged source. Parent-death, sandbox, runtime-pin and resource refusal gates pass. Historical Docker/aged-fixture failures remain recorded; default Docker startup on this host is unresolved. No model or scanner engine started. CI is wired and structure-linted but GitHub execution and native Linux qualification remain unverified. Complete product requirements stay open."
       ]
     },
     {
@@ -147,7 +150,8 @@
         15
       ],
       "state": "planned",
-      "evidence": []
+      "evidence": [],
+      "remaining_details": []
     },
     {
       "id": "R008",
@@ -164,15 +168,17 @@
         "docs/qualification/evidence/F011-openpgp-intake.json",
         "docs/qualification/evidence/F012-encrypted-delivery.json",
         "docs/qualification/evidence/F013-scanner-controls.json",
-        "docs/qualification/evidence/F014-browser-exchange.json"
+        "docs/qualification/evidence/F014-browser-exchange.json",
+        "docs/qualification/evidence/F015-native-crypto-regression.json"
       ],
       "remaining_details": [
         "F010 verifies durable held intake for configured new revisions, exact CSV contracts, separate hash/revision-bound release and ordinary delivery of released bytes. Antivirus/ICAP/DLP, cryptographic signatures/encryption, other formats/transforms, re-scan/exception governance, retrospective policy and the complete business-file journey remain mandatory.",
         "F011 adds bounded OpenPGP detached binary-signature verification using explicit full-fingerprint public signer versions, exact source/sidecar/report binding and current revocation/expiry gates. Encryption/decryption/private signing, antivirus/ICAP/DLP, broader protocols/algorithms/peers, re-scan/exception governance, retrospective policy and full business receipt remain mandatory.",
         "F012 implements approved recipient encryption with independent GnuPG Curve25519/RSA3072 AES256 SEIPDv1/MDC decryption and signature verification. Application decryption/private signing, independent SEIPDv2/OCB/v6 and wider peers, antivirus/ICAP/DLP, other transforms/protocols, governed re-scan/rebind and complete business receipt remain mandatory.",
         "F013 implements local scanner enrollment, required-scan policy selection, expiring exact source/engine/database/config proof, outage rejection and current release/read guards. Synthetic protocol verdicts do not qualify malware detection. Standard-database/independent corpus, ICAP/DLP, re-scan/rebind, application decryption/private signing and the complete business receipt remain mandatory.",
-        "Current F013 aggregate regression is red: the independent synthetic signature fixture aged past the unchanged one-hour policy, and a fresh bounded Docker/GnuPG peer timed out Created/PID zero. All eight scanner PostgreSQL tests pass. Restore a fresh independent fixture and rerun full consumer/native crypto gates; retain original F011/F012 scope and avoid shared Docker restart or global cleanup.",
-        "F014 exposes current held checks, bounded public signature attachment and separate exact release through ordinary services. Positive browser journey uses a CSV-only policy; fresh independent signature regression and genuine scanner qualification remain open. Application private operations, ICAP/DLP, re-scan/rebind and complete business receipt remain mandatory."
+        "F013 recorded aged-signature failures and a bounded Docker/GnuPG startup timeout at Created/PID zero. F015 now passes fresh consumer and independent crypto gates through the explicit native macOS peer. The default Docker startup profile on this host remains unresolved; historical F011\u2013F014 evidence keeps its original source scope. No shared Docker restart or policy relaxation is authorized.",
+        "F014 exposes current held checks, bounded public signature attachment and separate exact release through ordinary services. Positive browser journey uses a CSV-only policy; fresh independent signature regression and genuine scanner qualification remain open. Application private operations, ICAP/DLP, re-scan/rebind and complete business receipt remain mandatory.",
+        "F015 restores fresh independent native GnuPG verification and a complete 27/27 implemented-core run on unchanged source. Parent-death, sandbox, runtime-pin and resource refusal gates pass. Historical Docker/aged-fixture failures remain recorded; default Docker startup on this host is unresolved. No model or scanner engine started. CI is wired and structure-linted but GitHub execution and native Linux qualification remain unverified. Complete product requirements stay open."
       ]
     },
     {
@@ -231,7 +237,12 @@
         21
       ],
       "state": "planned",
-      "evidence": []
+      "evidence": [
+        "docs/qualification/evidence/F015-native-crypto-regression.json"
+      ],
+      "remaining_details": [
+        "F015 restores fresh independent native GnuPG verification and a complete 27/27 implemented-core run on unchanged source. Parent-death, sandbox, runtime-pin and resource refusal gates pass. Historical Docker/aged-fixture failures remain recorded; default Docker startup on this host is unresolved. No model or scanner engine started. CI is wired and structure-linted but GitHub execution and native Linux qualification remain unverified. Complete product requirements stay open."
+      ]
     },
     {
       "id": "R012",
@@ -241,7 +252,8 @@
         19
       ],
       "state": "planned",
-      "evidence": []
+      "evidence": [],
+      "remaining_details": []
     },
     {
       "id": "R013",
@@ -251,8 +263,13 @@
         20,
         21
       ],
-      "state": "planned",
-      "evidence": []
+      "state": "implementing",
+      "evidence": [
+        "docs/qualification/evidence/F015-native-crypto-regression.json"
+      ],
+      "remaining_details": [
+        "F015 restores fresh independent native GnuPG verification and a complete 27/27 implemented-core run on unchanged source. Parent-death, sandbox, runtime-pin and resource refusal gates pass. Historical Docker/aged-fixture failures remain recorded; default Docker startup on this host is unresolved. No model or scanner engine started. CI is wired and structure-linted but GitHub execution and native Linux qualification remain unverified. Complete product requirements stay open."
+      ]
     },
     {
       "id": "R014",
@@ -263,7 +280,8 @@
         25
       ],
       "state": "planned",
-      "evidence": []
+      "evidence": [],
+      "remaining_details": []
     },
     {
       "id": "R015",
@@ -273,7 +291,8 @@
         2
       ],
       "state": "planned",
-      "evidence": []
+      "evidence": [],
+      "remaining_details": []
     }
   ],
   "external_dependencies": [

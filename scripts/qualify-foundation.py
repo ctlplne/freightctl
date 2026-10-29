@@ -15,8 +15,9 @@ raw=root/'evidence/raw'/('foundation-'+uuid.uuid4().hex)
 raw.mkdir(parents=True,mode=0o700)
 def source_hashes():
     paths=subprocess.check_output(['git','ls-files','--cached','--others','--exclude-standard','-z']).decode().split('\0')
-    return {p:hashlib.sha256((root/p).read_bytes()).hexdigest() for p in sorted(set(paths)) if p and ((root/p).suffix in ('.go','.sql','.sh','.py','.ts','.tsx','.js','.mjs','.css','.html') or p in ('go.mod','go.sum','web/package.json','web/package-lock.json','web/tsconfig.json','web/THIRD_PARTY_NOTICES.txt','internal/browser/assets/manifest.json'))}
+    return {p:hashlib.sha256((root/p).read_bytes()).hexdigest() for p in sorted(set(paths)) if p and ((root/p).suffix in ('.go','.sql','.sh','.py','.ts','.tsx','.js','.mjs','.css','.html','.yml','.yaml') or p in ('go.mod','go.sum','web/package.json','web/package-lock.json','web/tsconfig.json','web/THIRD_PARTY_NOTICES.txt','internal/browser/assets/manifest.json'))}
 starting_sources=source_hashes()
+env=dict(os.environ,GOMAXPROCS='1',NODE_OPTIONS='--max-old-space-size=192')
 commands=[
 ('records',['python3','scripts/check-records.py']),
 ('frontend-typecheck',['npm','--prefix','web','run','typecheck']),
@@ -45,12 +46,14 @@ commands=[
 ('signed-intake-openpgp',['python3','scripts/qualify-pgp.py']),
 ('recipient-encrypted-delivery',['python3','scripts/qualify-encryption.py']),
 ]
+if env.get('FREIGHTCTL_GNUPG_NATIVE_CONFIG'):
+    commands.insert(1,('native-gnupg-peer-constraints',['python3','scripts/qualify-pgp-native.py']))
 results=[]
 for name,command in commands:
     start=time.monotonic()
     log=raw/(name+'.log')
     with log.open('wb') as output:
-        result=subprocess.run(command,stdout=output,stderr=subprocess.STDOUT)
+        result=subprocess.run(command,stdout=output,stderr=subprocess.STDOUT,env=env)
     results.append({'name':name,'command':command,'exit_code':result.returncode,'duration_seconds':round(time.monotonic()-start,3),'native_output':str(log.relative_to(root)),'native_output_sha256':hashlib.sha256(log.read_bytes()).hexdigest()})
     print(name+': '+('passed' if result.returncode==0 else 'FAILED'),flush=True)
     if result.returncode:

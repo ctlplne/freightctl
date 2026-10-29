@@ -22,6 +22,10 @@ func TestGnuPGIndependentlyDecryptsExactRecipientEnvelope(t *testing.T) {
 	var fixture struct {
 		Fingerprints map[string]string `json:"fingerprints"`
 		Image        string            `json:"peer_image"`
+		Backend      string            `json:"peer_backend"`
+		Acquisition  struct {
+			SHA256 string `json:"sha256"`
+		} `json:"native_acquisition_manifest"`
 	}
 	load := func(name string) []byte {
 		t.Helper()
@@ -52,6 +56,17 @@ func TestGnuPGIndependentlyDecryptsExactRecipientEnvelope(t *testing.T) {
 		}
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		command := exec.CommandContext(ctx, "docker", "run", "--rm", "--network=none", "--read-only", "--cap-drop=ALL", "--security-opt=no-new-privileges", "--memory=128m", "--cpus=1", "--pids-limit=32", "--tmpfs", "/tmp:rw,noexec,nosuid,size=32m", "-v", dir+":/fixture:ro", "-v", work+":/result", fixture.Image, "/bin/sh", "-ec", "mkdir -m 700 /tmp/recipient; : > /tmp/recipient/common.conf; gpg --homedir /tmp/recipient --batch --import /fixture/"+name+"-private.gpg; gpg --homedir /tmp/recipient --batch --status-fd 2 --output /result/plain.csv --decrypt /result/cipher.pgp")
+		if fixture.Backend == "native-macos" {
+			config := os.Getenv("FREIGHTCTL_GNUPG_NATIVE_CONFIG")
+			if config == "" {
+				t.Fatal("native fixture requires its explicit protected runtime manifest")
+			}
+			metadata, err := os.ReadFile(config)
+			if err != nil || Digest(metadata) != fixture.Acquisition.SHA256 {
+				t.Fatal("native peer acquisition differs from the fixture")
+			}
+			command = exec.CommandContext(ctx, "python3", "../../scripts/pgp-native-peer.py", "--config", config, "--metrics", filepath.Join(work, "native-peer-metrics.json"), "decrypt", "--key", filepath.Join(dir, name+"-private.gpg"), "--cipher", filepath.Join(work, "cipher.pgp"), "--output", filepath.Join(work, "plain.csv"))
+		}
 		output, err := command.CombinedOutput()
 		cancel()
 		if err != nil {

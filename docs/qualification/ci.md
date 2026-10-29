@@ -1,0 +1,11 @@
+# Core CI contract
+
+`.github/workflows/core-checks.yml` runs the implemented core checks on pushes to main and pull requests. It pins checkout/setup action commit IDs, Go, Node, the JavaScript lock, vulnerability/secret tools and the offline GnuPG image inputs. Its GitHub permission is read-only contents access; checkout does not persist credentials. It contains no push, release, artifact upload, image publication, external deployment or model start.
+
+The job checks formatting, exact frontend dependencies, JavaScript audit, Go vulnerability reachability and secrets in committed source plus full history. Source scanning uses a `git archive` snapshot so test credentials and caches cannot become scan input or published artifacts. It creates the normal task-owned PostgreSQL fixture and GnuPG peer, then executes `scripts/qualify-foundation.py`: module/vet/unit/race, real PostgreSQL integration/migrations, bounded fuzzing, stock HTTPS/SFTP/receiver journeys, upload recovery, workflows, no-inference assistance controls, held checks, scanner outage, native browser and independent signed/encrypted delivery.
+
+Tool acquisition needs connectivity. GnuPG fixture execution has networking disabled. The browser keeps its normal sandbox; no certificate, protocol, isolation, signature-age, assertion or application budget is relaxed for CI. No actual scanner database or model is loaded by these commands.
+
+The checked-in workflow is not evidence that GitHub ran it. Local actionlint checks its structure, and local command execution qualifies only the recorded host/profile. GitHub's Linux runner, package availability, SSH daemon/account requirements, browser sandbox, native Linux behavior and all job outcomes remain unverified until an owner-authorized push and an actual run. A missing prerequisite fails the job rather than becoming a skipped or successful test. Native macOS GnuPG is a separate explicitly selected local profile; CI uses the original Docker peer.
+
+This is implemented core regression wiring. Release/image security scanning, reproducible builds, SBOM/signing, disconnected packaging, wider native platforms, HA, performance/endurance, independent adoption and complete product journeys remain required. Future Enterprise attachments need their own builds plus the same core-only contract.

@@ -1122,14 +1122,16 @@
       "acceptance_journey": "J02",
       "state": "implementing",
       "evidence": [
-        "docs/qualification/evidence/F012-encrypted-delivery.json"
+        "docs/qualification/evidence/F012-encrypted-delivery.json",
+        "docs/qualification/evidence/F015-native-crypto-regression.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
       ],
       "implementation_notes": [
         "F012 adds normal approved typed recipient-encrypted SFTP delivery, exact ciphertext persistence/reuse, revocation, real process death and receipt ambiguity. Independent GnuPG decrypts exact source and verifies its detached signature. SEIPDv2/OCB and v6 have unit/library coverage only. Application private operations, broader peers/profiles, incumbent comparison, malware scanning and complete J02 remain open."
-      ]
+      ],
+      "current_limit": " F015 reruns current independent Curve25519/RSA3072 AES256/MDC decryption and signature verification using a fresh bounded native macOS GnuPG peer. Full algorithm/platform/business journey and production qualification remain open."
     },
     {
       "id": "K-PGP-VERIFY",

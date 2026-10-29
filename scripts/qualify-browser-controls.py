@@ -11,7 +11,7 @@ env=dict(os.environ,GOMAXPROCS='1',NODE_OPTIONS='--max-old-space-size=192')
 def sources():
  paths=subprocess.check_output(['git','ls-files','--cached','--others','--exclude-standard','-z']).decode().split('\0')
  special={'go.mod','go.sum','web/package.json','web/package-lock.json','web/tsconfig.json','web/THIRD_PARTY_NOTICES.txt','internal/browser/assets/manifest.json'}
- return[{'path':p,'sha256':hashlib.sha256((root/p).read_bytes()).hexdigest()}for p in sorted(set(paths))if p and((root/p).suffix in('.go','.sql','.py','.sh','.ts','.tsx','.js','.mjs','.css','.html')or p in special)]
+ return[{'path':p,'sha256':hashlib.sha256((root/p).read_bytes()).hexdigest()}for p in sorted(set(paths))if p and((root/p).suffix in('.go','.sql','.py','.sh','.ts','.tsx','.js','.mjs','.css','.html','.yml','.yaml')or p in special)]
 initial=sources();results=[]
 commands=[('records',['python3','scripts/check-records.py']),('frontend-typecheck',['npm','--prefix','web','run','typecheck']),('exact-browser-artifacts',['npm','--prefix','web','run','check-built']),('dependency-audit',['npm','--prefix','web','--cache','.cache/freightctl-npm','--registry','https://registry.npmjs.org','audit','--json']),('foundation-controls-with-visible-prerequisite-failures',['python3','scripts/qualify-scanner-controls.py','--pgp-fixture-reference',args.pgp_fixture_reference]),('native-browser-exchange',['python3','scripts/qualify-browser.py'])]
 for name,command in commands:

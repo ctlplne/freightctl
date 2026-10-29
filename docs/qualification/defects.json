@@ -558,6 +558,70 @@
       "regression_evidence": [
         "docs/qualification/evidence/F014-browser-exchange.json"
       ]
+    },
+    {
+      "id": "D037",
+      "severity": "native qualification startup defect",
+      "state": "fixed locally",
+      "observed_on": "2026-10-29",
+      "candidate": "ea95754b02bc4a7bb252d02ffce5616db780c9c5",
+      "candidate_note": "Native outputs and exact parent-death source hashes retained in F015; final aggregate binds unchanged complete source.",
+      "journey": "J11",
+      "reproduction": "scripts/qualify-pgp-native.py and full serial scripts/qualify-foundation.py with explicit native config",
+      "first_failure": "Native default-deny sandbox aborted before Python startup; a relative configuration path then required ambient cwd access.",
+      "cause": "Native loader needs a literal root-directory read; config/input paths needed canonicalization before entering the sandbox.",
+      "resolution": "Permit only the root directory itself, canonicalize exact paths outside the sandbox, and retain private-file/data-volume/network refusal probes.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F015-native-crypto-regression.json"
+      ]
+    },
+    {
+      "id": "D038",
+      "severity": "native qualification output contract defect",
+      "state": "fixed locally",
+      "observed_on": "2026-10-29",
+      "candidate": "ea95754b02bc4a7bb252d02ffce5616db780c9c5",
+      "candidate_note": "Native outputs and exact parent-death source hashes retained in F015; final aggregate binds unchanged complete source.",
+      "journey": "J11",
+      "reproduction": "scripts/qualify-pgp-native.py and full serial scripts/qualify-foundation.py with explicit native config",
+      "first_failure": "Independent GnuPG decrypt reported GOODMDC but failed creating plain.csv.part; existing exact-byte test failed.",
+      "cause": "GnuPG 2.5 uses adjacent plaintext staging; the adapter allowed only the chosen final filename.",
+      "resolution": "Keep GnuPG output inside private scratch and allow only its exact authenticated-result stage. Preserve original exact-byte/AES256/MDC and negative-recipient/corruption assertions.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F015-native-crypto-regression.json"
+      ]
+    },
+    {
+      "id": "D039",
+      "severity": "native qualification process lifecycle defect",
+      "state": "fixed locally",
+      "observed_on": "2026-10-29",
+      "candidate": "ea95754b02bc4a7bb252d02ffce5616db780c9c5",
+      "candidate_note": "Native outputs and exact parent-death source hashes retained in F015; final aggregate binds unchanged complete source.",
+      "journey": "J11",
+      "reproduction": "scripts/qualify-pgp-native.py and full serial scripts/qualify-foundation.py with explicit native config",
+      "first_failure": "An idle worker survived abrupt controller death. Initial worker guard stopped itself while the actual daemon remained live at 0.5 and 1.0 seconds.",
+      "cause": "Controller watchdog dies with its caller; GnuPG may fork despite no-detach, and default-deny sandbox lacked authority to signal its own daemon.",
+      "resolution": "Guard parent liveness inside the dedicated worker, grant signals only to its own sandbox, obtain the actual server PID, require no process-group members within the unchanged half-second bound and verify outside-process signal refusal.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F015-native-crypto-regression.json"
+      ]
+    },
+    {
+      "id": "D040",
+      "severity": "native receiver authentication output defect",
+      "state": "fixed locally",
+      "observed_on": "2026-10-29",
+      "candidate": "ea95754b02bc4a7bb252d02ffce5616db780c9c5",
+      "candidate_note": "Native outputs and exact parent-death source hashes retained in F015; final aggregate binds unchanged complete source.",
+      "journey": "J11",
+      "reproduction": "scripts/qualify-pgp-native.py and full serial scripts/qualify-foundation.py with explicit native config",
+      "first_failure": "Stock GnuPG reported BADMDC and the new native adapter returned failure, but its normal plaintext result filename existed.",
+      "cause": "The adapter passed the final receiver output directly to GnuPG and trusted failure status without quarantining bytes it could still write.",
+      "resolution": "Decrypt only inside private scratch; require successful authenticated status, then copy bounded chunks to an exclusive result stage and link without overwrite. Preserve BADMDC/NO_SECKEY assertions and require no result or stage after failure.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F015-native-crypto-regression.json"
+      ]
     }
   ]
 }

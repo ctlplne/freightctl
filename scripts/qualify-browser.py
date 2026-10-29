@@ -11,7 +11,7 @@ binary=root/'.cache/freightctl-browser'
 def sources():
  paths=subprocess.check_output(['git','ls-files','--cached','--others','--exclude-standard','-z']).decode().split('\0')
  special={'go.mod','go.sum','web/package.json','web/package-lock.json','web/tsconfig.json','web/THIRD_PARTY_NOTICES.txt','internal/browser/assets/manifest.json'}
- return [{'path':p,'sha256':hashlib.sha256((root/p).read_bytes()).hexdigest()}for p in sorted(set(paths))if p and ((root/p).suffix in('.go','.sql','.sh','.py','.ts','.tsx','.js','.mjs','.css','.html')or p in special)]
+ return [{'path':p,'sha256':hashlib.sha256((root/p).read_bytes()).hexdigest()}for p in sorted(set(paths))if p and ((root/p).suffix in('.go','.sql','.sh','.py','.ts','.tsx','.js','.mjs','.css','.html','.yml','.yaml')or p in special)]
 initial=sources()
 def command(label,args,timeout=120):
  start=time.monotonic();p=raw/(label+'.log')
