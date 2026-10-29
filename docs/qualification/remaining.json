@@ -89,7 +89,8 @@
         "docs/qualification/evidence/F008-versioned-workflows.json"
       ],
       "remaining_details": [
-        "F008 supplies shared CLI/HTTPS typed workflow drafts, offline validation/preview, version diff, explicit approval/revocation and atomic ordered SFTP runs without any inference dependency. First real private-model proposal/diagnosis, model-disabled replay after that integration, other task types, visual UI, adversarial/disclosure evaluations and two qualified profiles remain mandatory."
+        "F008 supplies shared CLI/HTTPS typed workflow drafts, offline validation/preview, version diff, explicit approval/revocation and atomic ordered SFTP runs without any inference dependency. First real private-model proposal/diagnosis, model-disabled replay after that integration, other task types, visual UI, adversarial/disclosure evaluations and two qualified profiles remain mandatory.",
+        "Owner resource constraint: local inference is off on this shared machine. Do not start/load/warm local models or run local model evaluations. Continue non-inference implementation; actual AI workflow/profile qualification needs an owner-authorized endpoint and explicit resource allowance. The exploratory 20.58 GiB probe is not a qualified profile."
       ]
     },
     {
@@ -161,7 +162,10 @@
         14
       ],
       "state": "planned",
-      "evidence": []
+      "evidence": [],
+      "remaining_details": [
+        "Owner resource constraint: local inference is off on this shared machine. Do not start/load/warm local models or run local model evaluations. Continue non-inference implementation; actual AI workflow/profile qualification needs an owner-authorized endpoint and explicit resource allowance. The exploratory 20.58 GiB probe is not a qualified profile."
+      ]
     },
     {
       "id": "R011",
@@ -250,6 +254,14 @@
       "requirement": "Owner-approved license grant and distribution authority",
       "affects": [
         "R015"
+      ]
+    },
+    {
+      "id": "X05",
+      "requirement": "Owner-authorized inference endpoint and explicit resource allowance; local model loads/evaluations are currently disallowed because other agents share limited RAM.",
+      "affects": [
+        "R005",
+        "R010"
       ]
     }
   ],

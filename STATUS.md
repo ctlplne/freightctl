@@ -5,6 +5,7 @@
 - Workspace: /Users/shankar/Desktop/ctlplne-freightctl
 - Commit identity: `imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>` for author and committer
 - Branch: local main; no new push authorized
+- Resource policy: local inference off by owner instruction; no model runtime starts, loads, warmups or local inference evaluations. Continue work without consuming model RAM.
 
 ## Current evidence
 
@@ -35,5 +36,7 @@ The owner-requested recreation is complete. New local history starts at `e1eab1a
 - Enterprise or release qualification: Not qualified.
 
 ## Next work
+
+An exploratory isolated model probe used a peak of 20.58 GiB and ended before the owner's resource correction. Its runtime and runner are confirmed stopped. It does not qualify an AI workflow, model profile or resource-compliant evaluation. Preserve the original model store and retained evidence. Real inference work now needs an owner-authorized endpoint and explicit resource allowance; cached weights and physical RAM are not authorization.
 
 Finish approved custody recovery, protected audit retention and larger exports, and remaining crash boundaries; finish browser/ordinary-operator resume and onboarding, the broader outbound profile and client qualification. Continue through broader typed workflow tasks, fair scheduling and the first bounded private-model proposal/diagnosis against these real records. See `remaining.json` for the full mandatory work and concrete external dependencies. No unavailable installation, platform, account, model or reference hardware is counted as a pass.
