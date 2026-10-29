@@ -19,9 +19,15 @@ type Result struct {
 	Replayed bool            `json:"replayed"`
 }
 type View struct {
-	Check     *store.FileCheck     `json:"check"`
-	Current   bool                 `json:"current"`
-	Signature *store.FileSignature `json:"signature,omitempty"`
+	Check        *store.FileCheck     `json:"check"`
+	Current      bool                 `json:"current"`
+	Signature    *store.FileSignature `json:"signature,omitempty"`
+	Requirements *Requirements        `json:"requirements,omitempty"`
+}
+
+type Requirements struct {
+	Signature bool `json:"signature_required"`
+	Scanner   bool `json:"scanner_required"`
 }
 
 type Summary struct {
@@ -300,7 +306,7 @@ func (s *Service) Get(ctx context.Context, scope store.Scope, id string) (*View,
 	if err != nil {
 		return nil, err
 	}
-	_, _, currentErr := s.current(ctx, t, c)
+	_, policy, currentErr := s.current(ctx, t, c)
 	if currentErr != nil && !errors.Is(currentErr, store.ErrRevision) && !errors.Is(currentErr, store.ErrState) {
 		return nil, currentErr
 	}
@@ -308,7 +314,15 @@ func (s *Service) Get(ctx context.Context, scope store.Scope, id string) (*View,
 	if err != nil && !errors.Is(err, store.ErrNotFound) {
 		return nil, err
 	}
-	return &View{Check: c, Current: currentErr == nil, Signature: signature}, t.Tx.Commit(ctx)
+	var requirements *Requirements
+	if currentErr == nil {
+		definition, err := decodePolicy(policy)
+		if err != nil {
+			return nil, err
+		}
+		requirements = &Requirements{Signature: definition.Signature != nil, Scanner: definition.Scanner != nil}
+	}
+	return &View{Check: c, Current: currentErr == nil, Signature: signature, Requirements: requirements}, t.Tx.Commit(ctx)
 }
 func (s *Service) start(ctx context.Context, scope store.Scope, id, key string) (*store.FileCheck, *store.CheckBinding, Policy, *Attempt, bool, error) {
 	var policy Policy

@@ -12,6 +12,7 @@ import (
 
 	"github.com/ctlplne/freightctl/internal/assistance"
 	"github.com/ctlplne/freightctl/internal/audit"
+	"github.com/ctlplne/freightctl/internal/browser"
 	"github.com/ctlplne/freightctl/internal/checks"
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/custody"
@@ -20,20 +21,31 @@ import (
 )
 
 type Server struct {
-	Service    *custody.Service
-	slots      chan struct{}
-	Audit      *audit.Service
-	auditSlots chan struct{}
-	Assistance *assistance.Service
-	Checks     *checks.Service
+	Service                *custody.Service
+	slots                  chan struct{}
+	Audit                  *audit.Service
+	auditSlots             chan struct{}
+	Assistance             *assistance.Service
+	Checks                 *checks.Service
+	BrowserSessionLifetime time.Duration
 }
 
 func New(service *custody.Service, audits *audit.Service, enableAssistance ...bool) http.Handler {
-	s := &Server{Service: service, Audit: audits, slots: make(chan struct{}, 8), auditSlots: make(chan struct{}, 1)}
 	enabled := len(enableAssistance) == 1 && enableAssistance[0]
+	return NewWithBrowserLifetime(service, audits, enabled, 10*time.Minute)
+}
+
+// The lifetime is trusted deployment configuration, never a login body field.
+func NewWithBrowserLifetime(service *custody.Service, audits *audit.Service, enabled bool, lifetime time.Duration) http.Handler {
+	if lifetime < time.Second || lifetime > 10*time.Minute || lifetime%time.Second != 0 {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { fail(w, 503, "browser_session_configuration_invalid") })
+	}
+	s := &Server{Service: service, Audit: audits, slots: make(chan struct{}, 8), auditSlots: make(chan struct{}, 1), BrowserSessionLifetime: lifetime}
 	s.Assistance = &assistance.Service{DB: service.DB, Enabled: enabled}
 	s.Checks = &checks.Service{Custody: service}
 	m := http.NewServeMux()
+	m.HandleFunc("GET /{$}", browser.Serve)
+	m.HandleFunc("GET /assets/", browser.Serve)
 	m.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		io.WriteString(w, `{"status":"process-running","transfer_readiness":"not-qualified"}`)
@@ -44,6 +56,9 @@ func New(service *custody.Service, audits *audit.Service, enableAssistance ...bo
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/custody/reconcile", s.reconcile)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/audit/export", s.exportAudit)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/identity", s.identity)
+	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/browser-session", s.createBrowserSession)
+	m.HandleFunc("GET /v1/browser/session", s.currentBrowserSession)
+	m.HandleFunc("POST /v1/browser/logout", s.logoutBrowser)
 	for _, pattern := range []string{
 		"GET /v1/tenants/{tenant}/partners/{partner}/intake-policy",
 		"POST /v1/tenants/{tenant}/partners/{partner}/intake-policy",
@@ -95,6 +110,7 @@ func New(service *custody.Service, audits *audit.Service, enableAssistance ...bo
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/namespace/file", s.downloadPath)
 	m.HandleFunc("PUT /v1/tenants/{tenant}/partners/{partner}/namespace/file", s.uploadPath)
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/uploads", s.createUpload)
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/uploads", s.listUploads)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/uploads/{upload}", s.uploadStatus)
 	m.HandleFunc("PATCH /v1/tenants/{tenant}/partners/{partner}/uploads/{upload}", s.appendUpload)
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/uploads/{upload}/complete", s.completeUpload)
@@ -102,6 +118,7 @@ func New(service *custody.Service, audits *audit.Service, enableAssistance ...bo
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("X-Content-Type-Options", "nosniff")
 		w.Header().Set("Cache-Control", "no-store")
+		w.Header().Set("Referrer-Policy", "no-referrer")
 		if r.TLS == nil {
 			fail(w, http.StatusBadRequest, "tls_required")
 			return
@@ -113,7 +130,10 @@ func New(service *custody.Service, audits *audit.Service, enableAssistance ...bo
 			fail(w, http.StatusServiceUnavailable, "capacity_busy")
 			return
 		}
-		m.ServeHTTP(w, r)
+		request, ok := s.authenticateBrowser(w, r)
+		if ok {
+			m.ServeHTTP(w, request)
+		}
 	})
 }
 func (s *Server) exportAudit(w http.ResponseWriter, r *http.Request) {
@@ -156,6 +176,11 @@ func (s *Server) reconcile(w http.ResponseWriter, r *http.Request) {
 }
 func scope(r *http.Request) (store.Scope, error) {
 	h := r.Header.Get("Authorization")
+	if h == "" {
+		if proof, ok := r.Context().Value(browserContextKey{}).(browserProof); ok {
+			return proof.Scope, nil
+		}
+	}
 	if len(h) != 71 || !strings.HasPrefix(h, "Bearer ") {
 		return store.Scope{}, store.ErrUnauthorized
 	}
@@ -177,39 +202,55 @@ func fail(w http.ResponseWriter, code int, message string) {
 	respond(w, code, map[string]string{"error": message})
 }
 func failure(w http.ResponseWriter, err error) {
+	code, message := errorStatus(err)
+	fail(w, code, message)
+}
+
+// Native browser download navigation receives a readable refusal page. API
+// callers retain the exact JSON status contract and no error becomes a file.
+func requestFailure(w http.ResponseWriter, r *http.Request, err error) {
+	if r.Method == http.MethodGet && strings.Contains(r.Header.Get("Accept"), "text/html") && (strings.HasSuffix(r.URL.Path, "/namespace/file") || strings.Contains(r.URL.Path, "/files/")) {
+		code, message := errorStatus(err)
+		browser.DownloadError(w, code, message)
+		return
+	}
+	failure(w, err)
+}
+
+func errorStatus(err error) (int, string) {
 	switch {
 	case errors.Is(err, vpath.ErrPath):
-		fail(w, 400, "invalid_virtual_path")
+		return 400, "invalid_virtual_path"
 	case errors.Is(err, store.ErrForbidden):
-		fail(w, 403, "permission_denied")
+		return 403, "permission_denied"
 	case errors.Is(err, store.ErrRevision):
-		fail(w, 409, "revision_conflict")
+		return 409, "revision_conflict"
 	case errors.Is(err, store.ErrExists):
-		fail(w, 409, "path_exists")
+		return 409, "path_exists"
 	case errors.Is(err, store.ErrState):
-		fail(w, 409, "operation_state_conflict")
+		return 409, "operation_state_conflict"
 	case errors.Is(err, store.ErrLimit):
-		fail(w, 413, "evidence_bound_exceeded")
+		return 413, "evidence_bound_exceeded"
 	case errors.Is(err, store.ErrIsolation):
-		fail(w, 503, "database_isolation_unavailable")
+		return 503, "database_isolation_unavailable"
 	case errors.Is(err, audit.ErrUnconfigured):
-		fail(w, 503, "audit_signing_unconfigured")
+		return 503, "audit_signing_unconfigured"
 	case errors.Is(err, store.ErrUnauthorized):
-		fail(w, 401, "unauthorized")
+		return 401, "unauthorized"
 	case errors.Is(err, store.ErrNotFound):
-		fail(w, 404, "not_found")
+		return 404, "not_found"
 	case errors.Is(err, store.ErrConflict):
-		fail(w, 409, "idempotency_conflict")
+		return 409, "idempotency_conflict"
 	case errors.Is(err, custody.ErrStorageIdentity):
-		fail(w, 409, "storage_identity_mismatch")
+		return 409, "storage_identity_mismatch"
 	case errors.Is(err, custody.ErrInput):
-		fail(w, 400, "invalid_upload_contract")
+		return 400, "invalid_upload_contract"
 	case errors.Is(err, custody.ErrIntegrity):
-		fail(w, 422, "integrity_mismatch")
+		return 422, "integrity_mismatch"
 	case errors.Is(err, custody.ErrCapacity):
-		fail(w, 507, "storage_quota_reached")
+		return 507, "storage_quota_reached"
 	default:
-		fail(w, 503, "operation_unavailable")
+		return 503, "operation_unavailable"
 	}
 }
 func (s *Server) upload(w http.ResponseWriter, r *http.Request) {
@@ -242,12 +283,12 @@ func (s *Server) upload(w http.ResponseWriter, r *http.Request) {
 func (s *Server) download(w http.ResponseWriter, r *http.Request) {
 	identity, err := scope(r)
 	if err != nil {
-		failure(w, err)
+		requestFailure(w, r, err)
 		return
 	}
 	f, data, err := s.Service.OpenFileReader(r.Context(), identity, r.PathValue("file"))
 	if err != nil {
-		failure(w, err)
+		requestFailure(w, r, err)
 		return
 	}
 	defer data.Close()

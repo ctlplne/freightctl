@@ -36,7 +36,8 @@
         "docs/qualification/evidence/F010-held-intake.json",
         "docs/qualification/evidence/F011-openpgp-intake.json",
         "docs/qualification/evidence/F012-encrypted-delivery.json",
-        "docs/qualification/evidence/F013-scanner-controls.json"
+        "docs/qualification/evidence/F013-scanner-controls.json",
+        "docs/qualification/evidence/F014-browser-exchange.json"
       ],
       "remaining_details": [
         "F006 adds immutable checkpoints, exact receipts and persistent storage/parent/authority binding. Finish approved cleanup/recovery/rebinding, scalable reservations/fairness, protected retention, journal chaining/rebuild, larger exports and remaining crash/commit boundaries.",
@@ -44,7 +45,8 @@
         "F010 adds exact policy/check/release/receipt event projections, four forced-RLS relations, deferred acceptance binding, SQL publication guards and atomic release rollback. Protected retention, cleanup, journal reconstruction and remaining crash/storage boundaries remain open.",
         "F011 adds immutable public signer definitions and durable detached signature references, exact event/receipt binding, forced row security, rollback and orphan reconciliation. Protected retention, journal reconstruction, cleanup and wider failure/storage gates remain open.",
         "F012 adds immutable ciphertext events/projections, forced row security, exact source/recipient/fence/approval guards and live publication proof. Real process death leaves observable sealed orphans without acceptance. Cleanup, protected retention, reconstruction and remaining crash/storage gates remain open.",
-        "F013 adds immutable tenant/partner scanner profiles, exact event/expiry guards and approved scan proof in the release gate; 31 domain relations require forced RLS. Reconstruction, retention, cleanup and remaining crash/storage gates stay open."
+        "F013 adds immutable tenant/partner scanner profiles, exact event/expiry guards and approved scan proof in the release gate; 31 domain relations require forced RLS. Reconstruction, retention, cleanup and remaining crash/storage gates stay open.",
+        "F014 adds append-only migrations 14\u201315: sessions and immutable logout receipts. All 33 domain relations require forced non-owner RLS; existing grants and migrations 1\u201313 are unchanged. Journal reconstruction, retention and recovery remain open."
       ]
     },
     {
@@ -63,10 +65,12 @@
         "docs/qualification/evidence/F005-sftp-exchange.json",
         "docs/qualification/evidence/F006-upload-checkpoints.json",
         "docs/qualification/evidence/F007-outbound-intents.json",
-        "docs/qualification/evidence/F008-versioned-workflows.json"
+        "docs/qualification/evidence/F008-versioned-workflows.json",
+        "docs/qualification/evidence/F014-browser-exchange.json"
       ],
       "remaining_details": [
-        "F005/F006 verify bounded inbound and durable ticket resume. F007 adds a local-only approved outbound SFTP profile against a stock receiver. Finish ordinary-operator onboarding, API/browser parity, production network policy, broader protocols/clients/enterprise peers, larger files and independent business receipts. No complete journey is qualified."
+        "F005/F006 verify bounded inbound and durable ticket resume. F007 adds a local-only approved outbound SFTP profile against a stock receiver. Finish ordinary-operator onboarding, API/browser parity, production network policy, broader protocols/clients/enterprise peers, larger files and independent business receipts. No complete journey is qualified.",
+        "F014 adds enrolled-account browser exchange, durable pause/reload/process restart/resume and native/stock-curl exact-byte retrieval. Clean first-admin/partner onboarding, independent operators, production peers and full business receipt remain open."
       ]
     },
     {
@@ -84,7 +88,8 @@
         "docs/qualification/evidence/F010-held-intake.json",
         "docs/qualification/evidence/F011-openpgp-intake.json",
         "docs/qualification/evidence/F012-encrypted-delivery.json",
-        "docs/qualification/evidence/F013-scanner-controls.json"
+        "docs/qualification/evidence/F013-scanner-controls.json",
+        "docs/qualification/evidence/F014-browser-exchange.json"
       ],
       "remaining_details": [
         "F007/F008 verify bounded leased/fenced SFTP intents and typed ordered workflow runs with registered connection versions, conservative ambiguity, same-step dispatch replay across restart, and queued cancellation. Finish unattended/fair scheduling, broader processing/conditions/loops/batches, active cancellation/rebinding, overlapping key rotations, receiver business contracts, remote quotas/retention/cleanup and distributed failures.",
@@ -92,7 +97,8 @@
         "F011 runs streaming exact detached signature verification inside existing two-slot/three-attempt/fenced check bounds, with independent GnuPG evidence. Broader crypto/processing tasks, cancellation/rebind, fairness, unattended operation and production resource/failure gates remain open.",
         "F012 adds two separate encryption slots before transfer admission, bounded streaming generation under the custody quota lock, frozen ciphertext retry/restart, current recipient checks and real receipt ambiguity recovery. Fair/unattended scheduling, general processing tasks, active cancellation/rebind, distributed failures and production resource gates remain open.",
         "F013 adds two separate cross-process PostgreSQL scan slots, bounded exact-byte Unix streaming, deadline and authority/fence checks. Genuine engine/database resource, archive, sandbox and operational detection gates remain open under X06; no engine or standard database was loaded.",
-        "Current F013 aggregate regression is red: the independent synthetic signature fixture aged past the unchanged one-hour policy, and a fresh bounded Docker/GnuPG peer timed out Created/PID zero. All eight scanner PostgreSQL tests pass. Restore a fresh independent fixture and rerun full consumer/native crypto gates; retain original F011/F012 scope and avoid shared Docker restart or global cleanup."
+        "Current F013 aggregate regression is red: the independent synthetic signature fixture aged past the unchanged one-hour policy, and a fresh bounded Docker/GnuPG peer timed out Created/PID zero. All eight scanner PostgreSQL tests pass. Restore a fresh independent fixture and rerun full consumer/native crypto gates; retain original F011/F012 scope and avoid shared Docker restart or global cleanup.",
+        "F014 runs ordinary required checks and separate exact report/revision release from the browser. Fresh independent signature/crypto gates remain red; a named-volume Docker peer also stalls Created/PID zero, falsifying a bind-mount-only cause. No shared Docker restart or policy relaxation."
       ]
     },
     {
@@ -124,10 +130,11 @@
       ],
       "state": "implementing",
       "evidence": [
-        "docs/qualification/evidence/F006-upload-checkpoints.json"
+        "docs/qualification/evidence/F006-upload-checkpoints.json",
+        "docs/qualification/evidence/F014-browser-exchange.json"
       ],
       "remaining_details": [
-        "Shared resumable-upload backend exists through API/CLI/SFTP tickets. Human portal, browser/session UX, invitations, accounts, pause/progress, batch operations, sharing, forms/mail and adoption remain open."
+        "F014 implements a typed embedded browser workspace, short-lived session/CSRF/logout controls, private ticket discovery, durable single-file pause/reload/restart/resume, held checks, separate release and native streaming download. Assisted Chromium, selected accessibility scans and byte comparison pass. First-admin/partner onboarding, invitations, SSO/MFA/recovery, delegated administration, batches, sharing/forms/mail, complete accessibility and independent adoption remain open."
       ]
     },
     {
@@ -156,14 +163,16 @@
         "docs/qualification/evidence/F010-held-intake.json",
         "docs/qualification/evidence/F011-openpgp-intake.json",
         "docs/qualification/evidence/F012-encrypted-delivery.json",
-        "docs/qualification/evidence/F013-scanner-controls.json"
+        "docs/qualification/evidence/F013-scanner-controls.json",
+        "docs/qualification/evidence/F014-browser-exchange.json"
       ],
       "remaining_details": [
         "F010 verifies durable held intake for configured new revisions, exact CSV contracts, separate hash/revision-bound release and ordinary delivery of released bytes. Antivirus/ICAP/DLP, cryptographic signatures/encryption, other formats/transforms, re-scan/exception governance, retrospective policy and the complete business-file journey remain mandatory.",
         "F011 adds bounded OpenPGP detached binary-signature verification using explicit full-fingerprint public signer versions, exact source/sidecar/report binding and current revocation/expiry gates. Encryption/decryption/private signing, antivirus/ICAP/DLP, broader protocols/algorithms/peers, re-scan/exception governance, retrospective policy and full business receipt remain mandatory.",
         "F012 implements approved recipient encryption with independent GnuPG Curve25519/RSA3072 AES256 SEIPDv1/MDC decryption and signature verification. Application decryption/private signing, independent SEIPDv2/OCB/v6 and wider peers, antivirus/ICAP/DLP, other transforms/protocols, governed re-scan/rebind and complete business receipt remain mandatory.",
         "F013 implements local scanner enrollment, required-scan policy selection, expiring exact source/engine/database/config proof, outage rejection and current release/read guards. Synthetic protocol verdicts do not qualify malware detection. Standard-database/independent corpus, ICAP/DLP, re-scan/rebind, application decryption/private signing and the complete business receipt remain mandatory.",
-        "Current F013 aggregate regression is red: the independent synthetic signature fixture aged past the unchanged one-hour policy, and a fresh bounded Docker/GnuPG peer timed out Created/PID zero. All eight scanner PostgreSQL tests pass. Restore a fresh independent fixture and rerun full consumer/native crypto gates; retain original F011/F012 scope and avoid shared Docker restart or global cleanup."
+        "Current F013 aggregate regression is red: the independent synthetic signature fixture aged past the unchanged one-hour policy, and a fresh bounded Docker/GnuPG peer timed out Created/PID zero. All eight scanner PostgreSQL tests pass. Restore a fresh independent fixture and rerun full consumer/native crypto gates; retain original F011/F012 scope and avoid shared Docker restart or global cleanup.",
+        "F014 exposes current held checks, bounded public signature attachment and separate exact release through ordinary services. Positive browser journey uses a CSV-only policy; fresh independent signature regression and genuine scanner qualification remain open. Application private operations, ICAP/DLP, re-scan/rebind and complete business receipt remain mandatory."
       ]
     },
     {
@@ -185,7 +194,8 @@
         "docs/qualification/evidence/F010-held-intake.json",
         "docs/qualification/evidence/F011-openpgp-intake.json",
         "docs/qualification/evidence/F012-encrypted-delivery.json",
-        "docs/qualification/evidence/F013-scanner-controls.json"
+        "docs/qualification/evidence/F013-scanner-controls.json",
+        "docs/qualification/evidence/F014-browser-exchange.json"
       ],
       "remaining_details": [
         "Current account/key/mount and destination/parent checks gate transfer mutations. Complete delegated lifecycle, policy reapproval/rebinding, human identity/MFA/providers, complete denial/session auditing, approval UI and governance remain open.",
@@ -193,7 +203,8 @@
         "F010 adds explicit intake_manage/check_run/check_release grants, actor-private check records and current release authority. Separate delegated reviewers, upload-only sender lifecycle, human approval UI and complete governance remain open.",
         "F011 adds explicit pgp_manage without upgrading existing grants, partner-scoped immutable public key versions and actor-private signature artifacts/checks. Human key ownership/trust onboarding, delegated review, automated rotation/rebind, providers, UI and complete governance remain open.",
         "F012 adds purpose-separated public recipient versions, explicit subkey/profile/destination approval and current revocation across whole runs. Delegation, human UI/trust onboarding, providers, automated overlap/rebind and complete governance remain open.",
-        "F013 adds explicit scanner_manage without upgrading existing credentials, sanitized shared metadata, local-only host-reference enrollment and exact revocation. Delegated human review, onboarding, UI/providers and full lifecycle governance remain open."
+        "F013 adds explicit scanner_manage without upgrading existing credentials, sanitized shared metadata, local-only host-reference enrollment and exact revocation. Delegated human review, onboarding, UI/providers and full lifecycle governance remain open.",
+        "F014 binds short-lived browser sessions to the exact parent credential, current mount/authority and absolute expiry, with tenant/partner/actor isolation and durable logout receipts. Session creation/receipt failures roll back atomically; logout/key replay cannot revive authority or revoke a different session. Human enrollment, SSO/MFA/providers, delegated approvals and full lifecycle governance remain open."
       ]
     },
     {

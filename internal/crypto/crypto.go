@@ -45,6 +45,14 @@ type Secret struct {
 	Locked bool
 }
 
+// ProtectBytes takes ownership of a bounded caller buffer. HTTP and TLS
+// libraries still make string copies; Close clears the buffer we control.
+func ProtectBytes(b []byte) *Secret {
+	s := &Secret{Bytes: b}
+	s.Locked = protect(b)
+	return s
+}
+
 func ReadSecret(path string, max int64) (*Secret, error) {
 	lst, err := os.Lstat(path)
 	if err != nil || !lst.Mode().IsRegular() {

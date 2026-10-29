@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "sources": [
+    {
+      "path": "web/THIRD_PARTY_NOTICES.txt",
+      "sha256": "7b8dbb7902f9599266b14bc028d008315faca4468b9611012aec2929f984a7ea"
+    },
+    {
+      "path": "web/build.mjs",
+      "sha256": "e2ede17495f4260cb9863d5284298884fffef997b43963a5af3008674e0eff72"
+    },
+    {
+      "path": "web/package-lock.json",
+      "sha256": "c5d1c8c5281e6eee5635cb4512126e2043fb2af6dd9852d1aa4e9525cd166ef6"
+    },
+    {
+      "path": "web/package.json",
+      "sha256": "72178171f7d6d8dc05910f7625c4d7f48f40dc621be45bd8209b57f6424a28a5"
+    },
+    {
+      "path": "web/src/api.ts",
+      "sha256": "3fc869779edff00d8f0ebd4f61f274303680fbda04ef9a1a15f33e2ff37a527d"
+    },
+    {
+      "path": "web/src/app.tsx",
+      "sha256": "3996292f493262f8f663a3337b67b32eccb5113f4fb48f97cbfbc1b20f1739f1"
+    },
+    {
+      "path": "web/src/assets.d.ts",
+      "sha256": "35d26ea66c86da9701e4f4b467913481ffeae910761cea34c775c5dacb7f8eaa"
+    },
+    {
+      "path": "web/src/crypto.ts",
+      "sha256": "c6bcc736ade69c270e1222be5a92455763c3c3fd412636d1e21fec3d5f6e42d7"
+    },
+    {
+      "path": "web/src/hash-worker.ts",
+      "sha256": "4abd70f2ca33a99ca55fb5cf5ad544faec68e96d98fc56444c80ffb2a373fe50"
+    },
+    {
+      "path": "web/src/style.css",
+      "sha256": "9c6ce38f5199a2292959c7945da7d8c8144401d7d04b1a5a0a7c639ac976eb07"
+    },
+    {
+      "path": "web/src/types.ts",
+      "sha256": "dc2aba8b3718849e303777e7f216ae77e4bba747f5a0fef1f6d1725976a5aa6f"
+    },
+    {
+      "path": "web/tsconfig.json",
+      "sha256": "2c073e165197d5ad85b6d87070b0833a362be6f295623ff1f863bea5b38b4eeb"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "app.css",
+      "sha256": "eda38949f8543d7f3b6f46f03be7aa2eccd7985c24167006f6f9d51e5ce20beb",
+      "size": 9005
+    },
+    {
+      "name": "app.js",
+      "sha256": "fe39ae214a6dba295dd49c6fe12deb13bf3039a0824418fe2f9be496efb36355",
+      "size": 264462
+    },
+    {
+      "name": "app.js.LEGAL.txt",
+      "sha256": "7dff61d0cd5b7cff2403db6cf5c586b1218c9e663784caeda7fd06916c997d46",
+      "size": 1528
+    },
+    {
+      "name": "hash-worker.js",
+      "sha256": "81d6b6c3e5cf381545c25cddf243d7421f2d261d077d0f23f557c8ad5a0a834c",
+      "size": 6165
+    },
+    {
+      "name": "index.html",
+      "sha256": "3a39ae4798e5d8949bd5bf853ccfbe1750180ead52e0b5d60c1cf0daf1292d68",
+      "size": 507
+    },
+    {
+      "name": "third-party-notices.txt",
+      "sha256": "7b8dbb7902f9599266b14bc028d008315faca4468b9611012aec2929f984a7ea",
+      "size": 4567
+    }
+  ],
+  "bundled_packages": [
+    "node_modules/@noble/hashes/_md.js",
+    "node_modules/@noble/hashes/_u64.js",
+    "node_modules/@noble/hashes/sha2.js",
+    "node_modules/@noble/hashes/utils.js",
+    "node_modules/react-dom/cjs/react-dom-client.production.js",
+    "node_modules/react-dom/cjs/react-dom.production.js",
+    "node_modules/react-dom/client.js",
+    "node_modules/react-dom/index.js",
+    "node_modules/react/cjs/react-jsx-runtime.production.js",
+    "node_modules/react/cjs/react.production.js",
+    "node_modules/react/index.js",
+    "node_modules/react/jsx-runtime.js",
+    "node_modules/scheduler/cjs/scheduler.production.js",
+    "node_modules/scheduler/index.js"
+  ]
+}

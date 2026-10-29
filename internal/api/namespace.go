@@ -3,7 +3,9 @@ package api
 import (
 	"encoding/json"
 	"io"
+	"mime"
 	"net/http"
+	"path"
 	"strconv"
 	"time"
 
@@ -87,17 +89,17 @@ func (s *Server) listPath(w http.ResponseWriter, r *http.Request) {
 func (s *Server) downloadPath(w http.ResponseWriter, r *http.Request) {
 	identity, err := scope(r)
 	if err != nil {
-		failure(w, err)
+		requestFailure(w, r, err)
 		return
 	}
 	file, data, err := s.Service.OpenPathReader(r.Context(), identity, r.URL.Query().Get("path"))
 	if err != nil {
-		failure(w, err)
+		requestFailure(w, r, err)
 		return
 	}
 	defer data.Close()
 	w.Header().Set("Content-Type", "application/octet-stream")
-	w.Header().Set("Content-Disposition", `attachment; filename="`+file.ID+`"`)
+	w.Header().Set("Content-Disposition", mime.FormatMediaType("attachment", map[string]string{"filename": path.Base(r.URL.Query().Get("path"))}))
 	w.Header().Set("X-Content-SHA256", file.SHA256)
 	w.Header().Set("X-File-Revision-ID", file.ID)
 	http.ServeContent(w, r, file.ID, time.Time{}, io.NewSectionReader(data, 0, file.Size))

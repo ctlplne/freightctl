@@ -37,12 +37,59 @@ type UploadView struct {
 	Modified       time.Time `json:"modified_at"`
 	EventID        string    `json:"changed_event_id"`
 	FileID         string    `json:"file_id,omitempty"`
+	Acceptance     string    `json:"acceptance,omitempty"`
 }
 type UploadResult struct {
 	Upload     UploadView  `json:"upload"`
 	File       *store.File `json:"file,omitempty"`
 	Replayed   bool        `json:"replayed"`
 	Acceptance string      `json:"acceptance,omitempty"`
+}
+
+type UploadPage struct {
+	Uploads               []UploadView `json:"uploads"`
+	Next                  string       `json:"next,omitempty"`
+	BlockedByAccessChange bool         `json:"blocked_by_access_change"`
+}
+
+func (s *Service) ListUploads(ctx context.Context, scope store.Scope, after string, limit int) (*UploadPage, error) {
+	if (after != "" && !store.ValidID(after)) || limit < 1 || limit > 100 {
+		return nil, ErrInput
+	}
+	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
+	t, err := s.DB.Begin(ctx, scope)
+	if err != nil {
+		return nil, err
+	}
+	defer t.Tx.Rollback(ctx)
+	ids, blocked, err := t.OwnedUploadIDs(ctx, after, limit+1)
+	if err != nil {
+		return nil, err
+	}
+	page := &UploadPage{Uploads: make([]UploadView, 0, min(limit, len(ids))), BlockedByAccessChange: blocked}
+	if len(ids) > limit {
+		page.Next = ids[limit-1]
+		ids = ids[:limit]
+	}
+	for _, id := range ids {
+		u, err := t.Upload(ctx, id)
+		if err != nil {
+			return nil, err
+		}
+		if err = s.checkUploadStorage(u); err != nil {
+			return nil, err
+		}
+		view, err := uploadViewWithAcceptance(ctx, t, u)
+		if err != nil {
+			return nil, err
+		}
+		page.Uploads = append(page.Uploads, view)
+	}
+	if err = t.Reauthorize(ctx); err != nil {
+		return nil, err
+	}
+	return page, t.Tx.Commit(ctx)
 }
 
 type uploadTarget struct {
@@ -113,6 +160,21 @@ func uploadView(u *store.UploadSession) (UploadView, error) {
 	}
 	return UploadView{ID: u.ID, Path: target.Path, SFTPPath: "/.freightctl/uploads/" + u.ID, ExpectedSize: u.ExpectedSize, ExpectedSHA256: u.ExpectedSHA, Offset: u.Offset, Chunks: u.Chunks, State: u.State, Revision: u.Revision, Modified: u.Modified, EventID: u.EventID, FileID: u.FileID}, nil
 }
+
+func uploadViewWithAcceptance(ctx context.Context, t *store.Transaction, u *store.UploadSession) (UploadView, error) {
+	view, err := uploadView(u)
+	if err != nil {
+		return view, err
+	}
+	if u.FileID != "" {
+		file, err := t.File(ctx, u.FileID)
+		if err != nil {
+			return view, err
+		}
+		view.Acceptance = Acceptance(file)
+	}
+	return view, nil
+}
 func finishUpload(ctx context.Context, t *store.Transaction, key, meaning string, u *store.UploadSession, file *store.File) (*UploadResult, error) {
 	view, err := uploadView(u)
 	if err != nil {
@@ -121,6 +183,7 @@ func finishUpload(ctx context.Context, t *store.Transaction, key, meaning string
 	result := &UploadResult{Upload: view, File: file}
 	if file != nil {
 		result.Acceptance = Acceptance(file)
+		result.Upload.Acceptance = result.Acceptance
 	}
 	if err = t.SaveUploadReceipt(ctx, key, meaning, u.ID, result); err != nil {
 		return nil, err
@@ -240,7 +303,7 @@ func (s *Service) UploadStatus(ctx context.Context, scope store.Scope, id string
 	if err = s.checkUploadStorage(u); err != nil {
 		return nil, err
 	}
-	view, err := uploadView(u)
+	view, err := uploadViewWithAcceptance(ctx, t, u)
 	if err != nil {
 		return nil, err
 	}

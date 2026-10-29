@@ -547,7 +547,12 @@
       }
     ],
     "binary_sha256": "751a06670511df851c9ea39dda8592c0b446853e0ae1827b609ed4148047d97f",
-    "sources_unchanged_during_run": true
+    "sources_unchanged_during_run": true,
+    "committed_source": {
+      "commit": "e20bc77fe969a2edf3b6ee56960fac3527c3b9c3",
+      "source_files_verified_against_git_blobs": 133,
+      "verification": "All recorded SHA-256 values match the committed blob bytes. Original aggregate failures and source scope remain unchanged."
+    }
   },
   "environment": {
     "os": "macOS 27.2 build 26B5086k",

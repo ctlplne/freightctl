@@ -77,7 +77,7 @@ Migration 3 bounds journal kind and payload sizes in SQL, while the application 
 
 Client folder names are records in PostgreSQL. A name such as `/inbox/payroll.csv` points to an immutable custody file ID; it is never passed to the host filesystem. Create a different file revision to replace contents. Renaming a folder changes the index and appends events while leaving those bytes intact. Removal creates a tombstone; accepted bytes and publication history remain retained. Approved recovery and retention policies are still required.
 
-Enrollment supports `--permissions read,list` and `--namespace-root /inbox`. This mounts the existing partner folder `/inbox` as the account's `/`. Existing identities retain their previous grants. New development administrators receive the nineteen grants listed below; explicitly select the minimum permissions for a restricted account. The development bootstrap is still an administrator operation. Identity creation/rotation through a delegated operator UI remains open.
+Enrollment supports `--permissions read,list` and `--namespace-root /inbox`. This mounts the existing partner folder `/inbox` as the account's `/`. Existing identities retain their previous grants. New development administrators receive the twenty grants listed below; explicitly select the minimum permissions for a restricted account. The development bootstrap is still an administrator operation. Identity creation/rotation through a delegated operator UI remains open.
 
 | Permission | Effect |
 | --- | --- |
@@ -88,6 +88,7 @@ Enrollment supports `--permissions read,list` and `--namespace-root /inbox`. Thi
 | `inspect` | Run custody reconciliation; the current global report also requires root `/`. |
 | `audit_read` | Read scoped events and signed snapshots; these global views also require root `/`. |
 | `admin` | Bypass owner/group mode bits within the mounted namespace. Other operation grants and the mount still apply. |
+| `scanner_manage` | Enroll/revoke exact local scanner profiles; admin and root mount also required. |
 | `pgp_manage` | Register/revoke exact partner public signer versions; admin and root mount also required. |
 | `connections_manage` | Review and approve the initial local outbound connection definition, together with admin authority. |
 | `deliver` | Inspect and execute this actor's approved outbound intent, together with source read authority. |
@@ -154,3 +155,14 @@ Migration 4 adds namespace projections/history/command receipts, actor-scoped up
 ## Recipient-encrypted delivery
 
 [Encrypted delivery](encrypted-delivery.md) extends the normal approved typed SFTP step with an exact enrolled recipient and explicit format. Migration 12 adds an immutable ciphertext relation and deferred source/recipient/fence/publication guards. All thirty domain relations require forced row security; the nineteen grants are unchanged. Generation has separate two-slot admission, then releases its slot before transfer. Accepted ciphertext is reused after restart and retry. The independent GnuPG peer owns only synthetic private recipient fixtures; the application receives public keys. Decryption/private signing inside freightctl, malware scanning and complete journeys remain open.
+
+
+## Browser workspace and short-lived sessions
+
+[Browser exchange](browser.md) describes the embedded React/TypeScript workspace, enrolled-account sign-in, durable pause/reload/resume, checks, exact separate release and native streaming downloads. Node is needed only to build or test the client; the runtime serves reviewed embedded assets without a CDN.
+
+Migrations 14–15 add short-lived browser sessions and immutable logout receipts. All thirty-three domain relations require forced row security. Default development administrators still receive twenty grants; existing account grants remain unchanged. Session cookies identify the exact enrolled account and parent credential revision, expire absolutely after at most ten minutes, and cannot create further sessions. Cookie mutations require same-origin requests and a separate CSRF proof. SQL stores only credential hashes. Explicit bearer requests retain their own identity.
+
+`upload-list --upload-limit 50 --upload-after UUID` and `GET .../uploads?limit=50&after=UUID` discover the same actor-owned tickets used by the browser. Omit the cursor for the first page; use the returned cursor for the next page. The current mount and authority revision filter every page. A changed-access flag reveals only that older open work requires review, never an old hidden path. This is a read operation and does not need an idempotency key.
+
+`python3 scripts/qualify-browser.py` exercises actual Chromium over TLS with real PostgreSQL/storage and independent stock-curl byte comparison. `python3 scripts/qualify-browser-controls.py --pgp-fixture-reference PATH` also runs the current serial foundation controls and preserves required failures. Neither command starts a model or scanner engine. The current independent signature regression remains red until a fresh bounded GnuPG peer can start; no age policy is relaxed to make it pass. Full native crypto, real malware detection, independent adoption, complete onboarding and production/release gates remain open.

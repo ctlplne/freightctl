@@ -99,6 +99,42 @@ func TestDurableUploadCheckpointResumeAndPrivatePublication(t *testing.T) {
 		t.Fatal("abort removed accepted revision", err)
 	}
 }
+
+func TestOwnedUploadDiscoveryIsBoundedPrivateAndCursorStable(t *testing.T) {
+	f := setup(t)
+	for _, name := range []string{"first", "second", "third"} {
+		if _, err := f.service.CreateUpload(f.ctx, f.a, "list-"+name, custody.CreateUpload{Path: "/" + name, Size: 1, SHA256: secure.Digest([]byte("x"))}); err != nil {
+			t.Fatal(err)
+		}
+	}
+	first, err := f.service.ListUploads(f.ctx, f.a, "", 2)
+	if err != nil || len(first.Uploads) != 2 || first.Next == "" {
+		t.Fatal("first page", err)
+	}
+	last, err := f.service.ListUploads(f.ctx, f.a, first.Next, 2)
+	if err != nil || len(last.Uploads) != 1 || last.Next != "" {
+		t.Fatal("last page", err)
+	}
+	for _, u := range first.Uploads {
+		if u.ID == last.Uploads[0].ID {
+			t.Fatal("cursor duplicated upload")
+		}
+	}
+	for _, scope := range []store.Scope{f.b, f.c} {
+		page, err := f.service.ListUploads(f.ctx, scope, "", 2)
+		if err != nil || len(page.Uploads) != 0 || page.BlockedByAccessChange {
+			t.Fatal("foreign discovery disclosed upload metadata", err)
+		}
+	}
+	for _, limit := range []int{0, 101} {
+		if _, err := f.service.ListUploads(f.ctx, f.a, "", limit); !errors.Is(err, custody.ErrInput) {
+			t.Fatal("unbounded page", err)
+		}
+	}
+	if _, err := f.service.ListUploads(f.ctx, f.a, "invalid", 2); !errors.Is(err, custody.ErrInput) {
+		t.Fatal("invalid cursor", err)
+	}
+}
 func TestUploadMismatchConcurrencyAndAbort(t *testing.T) {
 	f := setup(t)
 	data := bytes.Repeat([]byte("a"), 64<<10)

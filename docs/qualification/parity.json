@@ -393,7 +393,8 @@
       "surfaces": [
         "protocol",
         "API",
-        "CLI"
+        "CLI",
+        "browser"
       ],
       "implementation_owner": "core",
       "goal_sections": [
@@ -414,12 +415,13 @@
         "docs/qualification/evidence/F004-virtual-namespace.json",
         "docs/qualification/evidence/F005-sftp-exchange.json",
         "docs/qualification/evidence/F006-upload-checkpoints.json",
-        "docs/qualification/evidence/F010-held-intake.json"
+        "docs/qualification/evidence/F010-held-intake.json",
+        "docs/qualification/evidence/F014-browser-exchange.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
       ],
-      "current_limit": "F010 adds configured held intake across HTTPS/SFTP/resume, exact CSV contracts, current hash/revision-bound release and actor/tenant/partner gates. No antivirus/signature/encryption, other-format/processing breadth, delegated UI, full journey, native/enterprise peer or production qualification is implied."
+      "current_limit": "F014 adds an embedded typed enrolled-account browser workspace, short-lived exact-account sessions, durable single-file pause/reload/restart/resume, current held checks, separate exact report/revision release and native streaming download. Assisted macOS Chromium, real PostgreSQL/storage, selected accessibility and independent stock-curl byte checks pass. Complete clean-install/partner onboarding, SSO/MFA, invitations/shares/forms/mail, delegated review, batches, full browser/platform/adoption and production remain open. Genuine scanner and fresh independent signature qualification remain open; full journeys are unqualified."
     },
     {
       "id": "P-HTTPS-SEND",
@@ -482,7 +484,8 @@
       "surfaces": [
         "protocol",
         "API",
-        "CLI"
+        "CLI",
+        "browser"
       ],
       "implementation_owner": "core",
       "goal_sections": [
@@ -500,12 +503,13 @@
       "state": "implementing",
       "evidence": [
         "docs/qualification/evidence/F006-upload-checkpoints.json",
-        "docs/qualification/evidence/F010-held-intake.json"
+        "docs/qualification/evidence/F010-held-intake.json",
+        "docs/qualification/evidence/F014-browser-exchange.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
       ],
-      "current_limit": "F010 adds configured held intake across HTTPS/SFTP/resume, exact CSV contracts, current hash/revision-bound release and actor/tenant/partner gates. No antivirus/signature/encryption, other-format/processing breadth, delegated UI, full journey, native/enterprise peer or production qualification is implied."
+      "current_limit": "F014 adds an embedded typed enrolled-account browser workspace, short-lived exact-account sessions, durable single-file pause/reload/restart/resume, current held checks, separate exact report/revision release and native streaming download. Assisted macOS Chromium, real PostgreSQL/storage, selected accessibility and independent stock-curl byte checks pass. Complete clean-install/partner onboarding, SSO/MFA, invitations/shares/forms/mail, delegated review, batches, full browser/platform/adoption and production remain open. Genuine scanner and fresh independent signature qualification remain open; full journeys are unqualified."
     },
     {
       "id": "P-AS2-SEND",
@@ -1529,11 +1533,14 @@
         "independent operator or receiver"
       ],
       "acceptance_journey": "J04",
-      "state": "planned",
-      "evidence": [],
+      "state": "implementing",
+      "evidence": [
+        "docs/qualification/evidence/F014-browser-exchange.json"
+      ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
-      ]
+      ],
+      "current_limit": "F014 adds an embedded typed enrolled-account browser workspace, short-lived exact-account sessions, durable single-file pause/reload/restart/resume, current held checks, separate exact report/revision release and native streaming download. Assisted macOS Chromium, real PostgreSQL/storage, selected accessibility and independent stock-curl byte checks pass. Complete clean-install/partner onboarding, SSO/MFA, invitations/shares/forms/mail, delegated review, batches, full browser/platform/adoption and production remain open. Genuine scanner and fresh independent signature qualification remain open; full journeys are unqualified."
     },
     {
       "id": "H-SHARE",

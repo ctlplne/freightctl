@@ -32,7 +32,7 @@ func main() {
 }
 func run(args []string) error {
 	if len(args) == 0 || args[0] == "--help" || args[0] == "help" {
-		fmt.Println("freightctl: init | token | enroll | identity | namespace | dev-cert | serve | reconcile | audit-keygen | audit-export | ssh-host-keygen | ssh-key-enroll | ssh-key-revoke | serve-sftp | upload-create | upload-status | upload-append | upload-complete | upload-abort | delivery-create | delivery-status | delivery-approve | delivery-cancel | delivery-work | delivery-reconcile\nConnections: connection-register | connection-status | connection-revoke\nWorkflows: workflow-validate | workflow-draft | workflow-status | workflow-diff | workflow-approve | workflow-revoke | workflow-run | workflow-run-status | workflow-work | workflow-cancel\nAssistance: ai-profile-register | ai-profile-status | ai-profile-revoke | ai-propose | ai-diagnose | ai-status | ai-approve | ai-generate | ai-adopt\nIntake: intake-policy-register | intake-policy-status | intake-policy-revoke | check-list | check-status | check-run | check-release\nScanners: scanner-register | scanner-status | scanner-revoke\nOpenPGP: pgp-key-register | pgp-key-status | pgp-key-revoke | check-signature\nRead docs/development.md. This is an unqualified local custody foundation.")
+		fmt.Println("freightctl: init | token | enroll | identity | namespace | dev-cert | serve | reconcile | audit-keygen | audit-export | ssh-host-keygen | ssh-key-enroll | ssh-key-revoke | serve-sftp | upload-create | upload-list | upload-status | upload-append | upload-complete | upload-abort | delivery-create | delivery-status | delivery-approve | delivery-cancel | delivery-work | delivery-reconcile\nConnections: connection-register | connection-status | connection-revoke\nWorkflows: workflow-validate | workflow-draft | workflow-status | workflow-diff | workflow-approve | workflow-revoke | workflow-run | workflow-run-status | workflow-work | workflow-cancel\nAssistance: ai-profile-register | ai-profile-status | ai-profile-revoke | ai-propose | ai-diagnose | ai-status | ai-approve | ai-generate | ai-adopt\nIntake: intake-policy-register | intake-policy-status | intake-policy-revoke | check-list | check-status | check-run | check-release\nScanners: scanner-register | scanner-status | scanner-revoke\nOpenPGP: pgp-key-register | pgp-key-status | pgp-key-revoke | check-signature\nRead docs/development.md. This is an unqualified local custody foundation.")
 		return nil
 	}
 	f := flag.NewFlagSet(args[0], flag.ContinueOnError)
@@ -64,6 +64,8 @@ func run(args []string) error {
 	requestFile := f.String("request-file", "", "bounded JSON namespace command reference")
 	idempotencyKey := f.String("idempotency-key", "", "stable namespace operation key")
 	uploadID := f.String("upload-id", "", "durable upload session UUID")
+	uploadAfter := f.String("upload-after", "", "last upload UUID returned by the previous page")
+	uploadLimit := f.Int("upload-limit", 50, "owned uploads per page, at most 100")
 	uploadOffset := f.Int64("upload-offset", 0, "expected committed upload offset")
 	chunkFile := f.String("chunk-file", "", "bounded chunk input file reference")
 	checkpointBytes := f.Int("upload-checkpoint-bytes", 1<<20, "resumable SFTP checkpoint size, 64 KiB to 8 MiB")
@@ -88,6 +90,7 @@ func run(args []string) error {
 	aiJobID := f.String("ai-job-id", "", "scoped assistance context/job UUID")
 	contextHash := f.String("context-hash", "", "exact reviewed disclosure context SHA-256")
 	aiEnabled := f.Bool("ai-enabled", false, "opt in to requests to explicitly registered inference endpoints; disabled by default")
+	browserSessionSeconds := f.Int("browser-session-seconds", 600, "browser session lifetime in seconds, 1 to 600; new login required after expiry")
 	sshHost := f.String("ssh-host-key-file", ".private/ssh-host.key", "protected Ed25519 SSH host identity reference")
 	sshPublic := f.String("ssh-public-file", "", "public SSH key reference; host-keygen defaults to host reference plus .pub")
 	sshKeyID := f.String("ssh-key-id", "", "registered key UUID to revoke")
@@ -107,6 +110,9 @@ func run(args []string) error {
 		}
 	}
 	ctx := context.Background()
+	if args[0] == "serve" && (*browserSessionSeconds < 1 || *browserSessionSeconds > 600) {
+		return errors.New("browser session lifetime must be 1 to 600 seconds")
+	}
 	switch args[0] {
 	case "scanner-register", "scanner-status", "scanner-revoke":
 		return runScanner(ctx, args[0], *dsn, *token, *tenant, *partner, *requestFile, *idempotencyKey, *scannerID, *deliveryHash, *resourceVersion, *deliveryRevision)
@@ -130,7 +136,7 @@ func run(args []string) error {
 			selected = strings.Split(*permissions, ",")
 		}
 		return store.ProvisionPolicy(ctx, *admin, *tenant, *partner, *token, selected, *namespaceRoot)
-	case "upload-create", "upload-status", "upload-append", "upload-complete", "upload-abort":
+	case "upload-create", "upload-list", "upload-status", "upload-append", "upload-complete", "upload-abort":
 		secret, err := secure.ReadSecret(*token, 64)
 		if err != nil {
 			return err
@@ -159,6 +165,13 @@ func run(args []string) error {
 		}
 		if args[0] == "upload-status" {
 			result, err := service.UploadStatus(ctx, scope, *uploadID)
+			if err != nil {
+				return err
+			}
+			return json.NewEncoder(os.Stdout).Encode(result)
+		}
+		if args[0] == "upload-list" {
+			result, err := service.ListUploads(ctx, scope, *uploadAfter, *uploadLimit)
 			if err != nil {
 				return err
 			}
@@ -422,7 +435,7 @@ func run(args []string) error {
 		}
 		secret.Close()
 		audits := &audit.Service{DB: db, KeyFile: *auditKey, MaxEvents: *auditMaxEvents, MaxBytes: *auditMaxBytes}
-		server := &http.Server{Addr: *listen, Handler: api.New(&custody.Service{DB: db, Disk: disk, MaxFile: *maxFile, MaxStored: *maxStored, ReconcileMaxBytes: *reconcileBytes, NamespaceMaxEntries: *namespaceMax, UploadCheckpointBytes: *checkpointBytes}, audits, *aiEnabled), TLSConfig: secure.TLSConfig(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 90 * time.Second, WriteTimeout: 90 * time.Second, IdleTimeout: 30 * time.Second, MaxHeaderBytes: 16 * 1024}
+		server := &http.Server{Addr: *listen, Handler: api.NewWithBrowserLifetime(&custody.Service{DB: db, Disk: disk, MaxFile: *maxFile, MaxStored: *maxStored, ReconcileMaxBytes: *reconcileBytes, NamespaceMaxEntries: *namespaceMax, UploadCheckpointBytes: *checkpointBytes}, audits, *aiEnabled, time.Duration(*browserSessionSeconds)*time.Second), TLSConfig: secure.TLSConfig(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 90 * time.Second, WriteTimeout: 90 * time.Second, IdleTimeout: 30 * time.Second, MaxHeaderBytes: 16 * 1024}
 		stop, cancel := signal.NotifyContext(ctx, os.Interrupt, syscall.SIGTERM)
 		defer cancel()
 		go func() {
@@ -431,7 +444,7 @@ func run(args []string) error {
 			defer done()
 			_ = server.Shutdown(shutdown)
 		}()
-		fmt.Println("freightctl HTTPS custody listening on", *listen, "(integrity-only; not production qualified)")
+		fmt.Println("freightctl HTTPS custody listening on", *listen, "(selected intake policy controls acceptance; development profile)")
 		err = server.ListenAndServeTLS(*cert, *key)
 		if errors.Is(err, http.ErrServerClosed) {
 			return nil

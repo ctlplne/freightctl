@@ -55,8 +55,14 @@ var encryptionSchema string
 //go:embed 013_scanners.sql
 var scannerSchema string
 
-var migrations = []string{schema, eventBinding, eventBounds, namespaceSchema, uploadSchema, uploadStorageSchema, deliverySchema, workflowSchema, assistanceSchema, intakeSchema, pgpSchema, encryptionSchema, scannerSchema}
-var domainTables = []string{"tenants", "partners", "credentials", "events", "files", "idempotency", "namespace_entries", "namespace_revisions", "namespace_commands", "ssh_keys", "upload_sessions", "upload_chunks", "upload_receipts", "delivery_intents", "delivery_receipts", "connection_revisions", "workflow_revisions", "workflow_runs", "workflow_steps", "workflow_receipts", "ai_profiles", "ai_jobs", "ai_receipts", "intake_policies", "file_checks", "check_receipts", "file_releases", "pgp_keys", "file_signatures", "delivery_ciphertexts", "scanner_profiles"}
+//go:embed 014_browser_sessions.sql
+var browserSessionSchema string
+
+//go:embed 015_browser_commands.sql
+var browserCommandSchema string
+
+var migrations = []string{schema, eventBinding, eventBounds, namespaceSchema, uploadSchema, uploadStorageSchema, deliverySchema, workflowSchema, assistanceSchema, intakeSchema, pgpSchema, encryptionSchema, scannerSchema, browserSessionSchema, browserCommandSchema}
+var domainTables = []string{"tenants", "partners", "credentials", "events", "files", "idempotency", "namespace_entries", "namespace_revisions", "namespace_commands", "ssh_keys", "upload_sessions", "upload_chunks", "upload_receipts", "delivery_intents", "delivery_receipts", "connection_revisions", "workflow_revisions", "workflow_runs", "workflow_steps", "workflow_receipts", "ai_profiles", "ai_jobs", "ai_receipts", "intake_policies", "file_checks", "check_receipts", "file_releases", "pgp_keys", "file_signatures", "delivery_ciphertexts", "scanner_profiles", "browser_sessions", "browser_commands"}
 
 var ErrUnauthorized = errors.New("unauthorized")
 var ErrNotFound = errors.New("not found")
@@ -77,10 +83,11 @@ func ValidID(id string) bool { return uuidPattern.MatchString(id) }
 // Scope carries selectors, not authority. Only trusted transport middleware may
 // supply an SSH proof after the protocol library verifies its signature.
 type Scope struct {
-	Tenant, Partner, TokenHash string
-	Actor, SSHKeyFingerprint   string
-	AuthorityRevision          int64
-	SessionID                  string
+	Tenant, Partner, TokenHash           string
+	Actor, SSHKeyFingerprint             string
+	AuthorityRevision                    int64
+	SessionID                            string
+	BrowserSessionID, BrowserSessionHash string
 }
 type Store struct{ Pool *pgxpool.Pool }
 type File struct {
@@ -316,6 +323,31 @@ func (s *Store) Begin(ctx context.Context, scope Scope) (*Transaction, error) {
 }
 
 func (s *Store) begin(ctx context.Context, scope Scope, options pgx.TxOptions) (*Transaction, error) {
+	tx, err := s.scopedTransaction(ctx, scope, options)
+	if err != nil {
+		return nil, err
+	}
+	ok := false
+	defer func() {
+		if !ok {
+			_ = tx.Rollback(ctx)
+		}
+	}()
+	t := &Transaction{Tx: tx, Scope: scope}
+	if err = t.authenticate(ctx); err != nil {
+		return nil, err
+	}
+	if _, err = tx.Exec(ctx, `SELECT set_config('freightctl.actor_id',$1,true)`, t.Actor); err != nil {
+		return nil, err
+	}
+	ok = true
+	return t, nil
+}
+
+// scopedTransaction is shared by ordinary authentication and the opaque browser
+// credential lookup. Every domain relation stays locked while its forced RLS
+// policy is inspected; no lookup can silently use an owner or bypass role.
+func (s *Store) scopedTransaction(ctx context.Context, scope Scope, options pgx.TxOptions) (pgx.Tx, error) {
 	if !ValidID(scope.Tenant) || !ValidID(scope.Partner) {
 		return nil, ErrUnauthorized
 	}
@@ -331,7 +363,11 @@ func (s *Store) begin(ctx context.Context, scope Scope, options pgx.TxOptions) (
 	}()
 	// Hold relation locks before inspecting policies. ALTER TABLE cannot disable a
 	// checked policy between this check and the operation's reads or writes.
-	_, err = tx.Exec(ctx, `LOCK TABLE public.tenants,public.partners,public.credentials,public.events,public.files,public.idempotency,public.namespace_entries,public.namespace_revisions,public.namespace_commands,public.ssh_keys,public.upload_sessions,public.upload_chunks,public.upload_receipts IN ACCESS SHARE MODE`)
+	names := make([]string, len(domainTables))
+	for i, name := range domainTables {
+		names[i] = pgx.Identifier{"public", name}.Sanitize()
+	}
+	_, err = tx.Exec(ctx, `LOCK TABLE `+strings.Join(names, ",")+` IN ACCESS SHARE MODE`)
 	if err != nil {
 		return nil, err
 	}
@@ -343,19 +379,12 @@ func (s *Store) begin(ctx context.Context, scope Scope, options pgx.TxOptions) (
 	if protected != len(domainTables) {
 		return nil, ErrIsolation
 	}
-	_, err = tx.Exec(ctx, `SELECT set_config('freightctl.tenant_id',$1,true),set_config('freightctl.partner_id',$2,true)`, scope.Tenant, scope.Partner)
+	_, err = tx.Exec(ctx, `SELECT set_config('freightctl.tenant_id',$1,true),set_config('freightctl.partner_id',$2,true),set_config('freightctl.actor_id','',true),set_config('freightctl.browser_session_hash',$3,true)`, scope.Tenant, scope.Partner, scope.BrowserSessionHash)
 	if err != nil {
 		return nil, err
 	}
-	t := &Transaction{Tx: tx, Scope: scope}
-	if err = t.authenticate(ctx); err != nil {
-		return nil, err
-	}
-	if _, err = tx.Exec(ctx, `SELECT set_config('freightctl.actor_id',$1,true)`, t.Actor); err != nil {
-		return nil, err
-	}
 	ok = true
-	return t, nil
+	return tx, nil
 }
 func (t *Transaction) Replay(ctx context.Context, key, meaning string) (*File, error) {
 	// Database ownership serializes concurrent uploads, including different service processes.
@@ -466,6 +495,17 @@ func (t *Transaction) authenticate(ctx context.Context) error {
 	}
 	if t.Scope.AuthorityRevision > 0 && t.Scope.AuthorityRevision != t.AuthorityRevision {
 		return ErrUnauthorized
+	}
+	if t.Scope.BrowserSessionID != "" || t.Scope.BrowserSessionHash != "" {
+		// The parent credential was authenticated above. Row locking obeys
+		// UPDATE policies too, so establish this verified actor before locking
+		// its browser-session row; the opaque lookup itself remains read-only.
+		if _, err := t.Tx.Exec(ctx, `SELECT set_config('freightctl.actor_id',$1,true)`, t.Actor); err != nil {
+			return err
+		}
+		if err := t.currentBrowserSession(ctx); err != nil {
+			return err
+		}
 	}
 	return nil
 }

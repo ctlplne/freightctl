@@ -15,10 +15,12 @@ raw=root/'evidence/raw'/('foundation-'+uuid.uuid4().hex)
 raw.mkdir(parents=True,mode=0o700)
 def source_hashes():
     paths=subprocess.check_output(['git','ls-files','--cached','--others','--exclude-standard','-z']).decode().split('\0')
-    return {p:hashlib.sha256((root/p).read_bytes()).hexdigest() for p in sorted(set(paths)) if p and ((root/p).suffix in ('.go','.sql','.sh','.py') or p in ('go.mod','go.sum'))}
+    return {p:hashlib.sha256((root/p).read_bytes()).hexdigest() for p in sorted(set(paths)) if p and ((root/p).suffix in ('.go','.sql','.sh','.py','.ts','.tsx','.js','.mjs','.css','.html') or p in ('go.mod','go.sum','web/package.json','web/package-lock.json','web/tsconfig.json','web/THIRD_PARTY_NOTICES.txt','internal/browser/assets/manifest.json'))}
 starting_sources=source_hashes()
 commands=[
 ('records',['python3','scripts/check-records.py']),
+('frontend-typecheck',['npm','--prefix','web','run','typecheck']),
+('browser-artifact-integrity',['npm','--prefix','web','run','check-built']),
 ('module-integrity',['sh','scripts/go.sh','mod','verify']),
 ('vet',['sh','scripts/go.sh','vet','-p','1','./...']),
 ('unit-race',['sh','scripts/go.sh','test','-p','1','-race','./...']),
@@ -39,6 +41,7 @@ commands=[
 ('assistance-control-contract-no-inference',['python3','scripts/qualify-assistance.py']),
 ('held-intake-and-csv-checks',['python3','scripts/qualify-intake.py']),
 ('scanner-outage-controls-no-engine',['python3','scripts/qualify-scanner-unavailable.py']),
+('native-browser-exchange',['python3','scripts/qualify-browser.py']),
 ('signed-intake-openpgp',['python3','scripts/qualify-pgp.py']),
 ('recipient-encrypted-delivery',['python3','scripts/qualify-encryption.py']),
 ]

@@ -16,11 +16,13 @@
         "docs/qualification/evidence/F001-custody-foundation.json",
         "docs/qualification/evidence/F002-reconciliation.json",
         "docs/qualification/evidence/F007-outbound-intents.json",
-        "docs/qualification/evidence/F008-versioned-workflows.json"
+        "docs/qualification/evidence/F008-versioned-workflows.json",
+        "docs/qualification/evidence/F014-browser-exchange.json"
       ],
       "failures": [],
       "limits": [
-        "Only narrower local custody and staging-crash experiments passed; complete journey remains open."
+        "Only narrower local custody and staging-crash experiments passed; complete journey remains open.",
+        "F014 proves a narrow assisted enrolled-account Chromium exchange with real PostgreSQL/disk: durable pause/reload/restart/resume, held CSV checks, separate exact release, native/stock-curl exact download and private actor/tenant/session gates. Complete onboarding, independent operator/business receipt, real scanning/fresh independent crypto and all remaining journey requirements stay open."
       ]
     },
     {
@@ -38,14 +40,16 @@
         "docs/qualification/evidence/F010-held-intake.json",
         "docs/qualification/evidence/F011-openpgp-intake.json",
         "docs/qualification/evidence/F012-encrypted-delivery.json",
-        "docs/qualification/evidence/F013-scanner-controls.json"
+        "docs/qualification/evidence/F013-scanner-controls.json",
+        "docs/qualification/evidence/F014-browser-exchange.json"
       ],
       "failures": [],
       "limits": [
         "F010 proves bounded held CSV intake and separate release; its source/evidence retains its original pre-signature scope.",
         "F011 adds independent GnuPG detached signature verification of exact held CSV bytes, separate release, stock receiver retrieval, independent signature re-verification and signer revocation/explicit policy rotation. Malware scanning, recipient encryption, wider processing, business acknowledgment and the complete journey remain open.",
         "F012 adds public recipient enrollment, exact source/recipient/profile/destination approval, durable ciphertext reuse and independent GnuPG decryption/signature verification of stock SFTP receiver bytes. Application decryption/private signing, malware scanning, broader processing/peers, business acceptance and the complete journey remain open.",
-        "F013 adds required exact-revision scanner policy/proof and outage controls. The real absent-socket journey and synthetic adversarial protocol/SQL tests do not qualify malware detection; a genuine standard-database engine, corpus and resource gate remain open (X06). Full journey remains open."
+        "F013 adds required exact-revision scanner policy/proof and outage controls. The real absent-socket journey and synthetic adversarial protocol/SQL tests do not qualify malware detection; a genuine standard-database engine, corpus and resource gate remain open (X06). Full journey remains open.",
+        "F014 proves a narrow assisted enrolled-account Chromium exchange with real PostgreSQL/disk: durable pause/reload/restart/resume, held CSV checks, separate exact release, native/stock-curl exact download and private actor/tenant/session gates. Complete onboarding, independent operator/business receipt, real scanning/fresh independent crypto and all remaining journey requirements stay open."
       ]
     },
     {
@@ -68,7 +72,7 @@
     {
       "id": "J04",
       "name": "Interrupted browser upload and governed sharing",
-      "state": "planned",
+      "state": "implementing",
       "goal_reference": "GOAL.md section 5 item 4",
       "candidate": null,
       "artifact_digests": {},
@@ -76,10 +80,13 @@
       "steps": [],
       "assistance": null,
       "duration_seconds": null,
-      "evidence": [],
+      "evidence": [
+        "docs/qualification/evidence/F014-browser-exchange.json"
+      ],
       "failures": [],
       "limits": [
-        "Not run; no application at bootstrap"
+        "Not run; no application at bootstrap",
+        "F014 proves a narrow assisted enrolled-account Chromium exchange with real PostgreSQL/disk: durable pause/reload/restart/resume, held CSV checks, separate exact release, native/stock-curl exact download and private actor/tenant/session gates. Complete onboarding, independent operator/business receipt, real scanning/fresh independent crypto and all remaining journey requirements stay open."
       ]
     },
     {
@@ -117,7 +124,8 @@
         "docs/qualification/evidence/F010-held-intake.json",
         "docs/qualification/evidence/F011-openpgp-intake.json",
         "docs/qualification/evidence/F012-encrypted-delivery.json",
-        "docs/qualification/evidence/F013-scanner-controls.json"
+        "docs/qualification/evidence/F013-scanner-controls.json",
+        "docs/qualification/evidence/F014-browser-exchange.json"
       ],
       "failures": [],
       "limits": [
@@ -125,7 +133,8 @@
         "F010 adds visible schema rejection, wrong-storage/changed-byte/stale-policy refusal and a real delayed-worker recovery boundary. Complete diagnoses/recovery for every required dependency and governed rebind remain open.",
         "F011 adds missing/invalid/aged/revoked signer diagnoses, retained signature reconciliation, receipt-failure rollback and explicit new-policy intake. General recovery/rebind, re-scan and dependency failures remain open.",
         "F012 exercises an actual worker kill after ciphertext sync/before acceptance, orphan observation, original-lease recovery, remote success with a failed local receipt, same-ciphertext read-only reconciliation and CLI quota failure/replay. Remaining dependency failures, governed repair/rebind and complete diagnosis/recovery remain open.",
-        "F013 observes scanner outage through ordinary CLI/HTTPS, retains failed/held state across restart and refuses release; malformed replies, config changes, stale proof and expiry have control regressions. Real engine outages/corpus, governed re-scan/rebind and complete recovery remain open."
+        "F013 observes scanner outage through ordinary CLI/HTTPS, retains failed/held state across restart and refuses release; malformed replies, config changes, stale proof and expiry have control regressions. Real engine outages/corpus, governed re-scan/rebind and complete recovery remain open.",
+        "F014 proves a narrow assisted enrolled-account Chromium exchange with real PostgreSQL/disk: durable pause/reload/restart/resume, held CSV checks, separate exact release, native/stock-curl exact download and private actor/tenant/session gates. Complete onboarding, independent operator/business receipt, real scanning/fresh independent crypto and all remaining journey requirements stay open."
       ]
     },
     {
@@ -205,7 +214,8 @@
         "docs/qualification/evidence/F010-held-intake.json",
         "docs/qualification/evidence/F011-openpgp-intake.json",
         "docs/qualification/evidence/F012-encrypted-delivery.json",
-        "docs/qualification/evidence/F013-scanner-controls.json"
+        "docs/qualification/evidence/F013-scanner-controls.json",
+        "docs/qualification/evidence/F014-browser-exchange.json"
       ],
       "failures": [],
       "limits": [
@@ -213,7 +223,8 @@
         "F010 extends tenant/partner/actor checks to intake records and current file-release gates; private bindings and normal shared-path reads are tested. Every remaining product surface and full isolation qualification remain open.",
         "F011 extends forced tenant/partner row security and actor-owned checks to key/signature controls, including raw artifact/other-actor denial and current signer gates. Full isolation across every required product surface remains open.",
         "F012 adds actor-bound ciphertext storage, tenant-aware source/key/delivery references, forced RLS, approved recipient binding and raw-artifact denial. Full isolation through all remaining product surfaces remains open.",
-        "F013 adds forced-RLS scanner profiles, cross-tenant/partner and private-check denial, no HTTP host-path enrollment and sanitized metadata. Full isolation across every required product surface remains open."
+        "F013 adds forced-RLS scanner profiles, cross-tenant/partner and private-check denial, no HTTP host-path enrollment and sanitized metadata. Full isolation across every required product surface remains open.",
+        "F014 proves a narrow assisted enrolled-account Chromium exchange with real PostgreSQL/disk: durable pause/reload/restart/resume, held CSV checks, separate exact release, native/stock-curl exact download and private actor/tenant/session gates. Complete onboarding, independent operator/business receipt, real scanning/fresh independent crypto and all remaining journey requirements stay open."
       ]
     },
     {

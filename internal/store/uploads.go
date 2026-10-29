@@ -30,6 +30,42 @@ type UploadChunk struct {
 	ObjectID, SHA256, EventID string
 }
 
+func (t *Transaction) OwnedUploadIDs(ctx context.Context, after string, limit int) ([]string, bool, error) {
+	if (after != "" && !ValidID(after)) || limit < 1 || limit > 101 {
+		return nil, false, ErrNotFound
+	}
+	if err := t.Require("write"); err != nil {
+		return nil, false, err
+	}
+	rows, err := t.Tx.Query(ctx, `SELECT upload_id::text FROM upload_sessions WHERE actor_id=$1 AND authority_revision=$2 AND namespace_root=$3 AND ($4::uuid IS NULL OR upload_id>$4::uuid) ORDER BY upload_id LIMIT $5`, t.Actor, t.AuthorityRevision, t.Root, nullableID(after), limit)
+	if err != nil {
+		return nil, false, err
+	}
+	ids := make([]string, 0, limit)
+	for rows.Next() {
+		var id string
+		if err = rows.Scan(&id); err != nil {
+			rows.Close()
+			return nil, false, err
+		}
+		ids = append(ids, id)
+	}
+	rows.Close()
+	if err = rows.Err(); err != nil {
+		return nil, false, err
+	}
+	var blocked bool
+	err = t.Tx.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM upload_sessions WHERE actor_id=$1 AND state='open' AND (authority_revision<>$2 OR namespace_root<>$3))`, t.Actor, t.AuthorityRevision, t.Root).Scan(&blocked)
+	return ids, blocked, err
+}
+
+func nullableID(id string) any {
+	if id == "" {
+		return nil
+	}
+	return id
+}
+
 func (t *Transaction) UploadLock(ctx context.Context, id string) error {
 	if !ValidID(id) {
 		return ErrNotFound

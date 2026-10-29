@@ -9,6 +9,28 @@ import (
 	"github.com/ctlplne/freightctl/internal/custody"
 )
 
+func (s *Server) listUploads(w http.ResponseWriter, r *http.Request) {
+	identity, err := scope(r)
+	if err != nil {
+		failure(w, err)
+		return
+	}
+	limit := 50
+	if value := r.URL.Query().Get("limit"); value != "" {
+		limit, err = strconv.Atoi(value)
+		if err != nil {
+			fail(w, 400, "invalid_page_limit")
+			return
+		}
+	}
+	result, err := s.Service.ListUploads(r.Context(), identity, r.URL.Query().Get("after"), limit)
+	if err != nil {
+		failure(w, err)
+		return
+	}
+	respond(w, 200, result)
+}
+
 func (s *Server) createUpload(w http.ResponseWriter, r *http.Request) {
 	identity, err := scope(r)
 	if err != nil {

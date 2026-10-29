@@ -478,6 +478,86 @@
       "regression_evidence": [
         "docs/qualification/evidence/F013-scanner-controls.json"
       ]
+    },
+    {
+      "id": "D032",
+      "severity": "missing required capability",
+      "state": "fixed locally",
+      "observed_on": "2026-10-29",
+      "candidate": "e20bc77fe969a2edf3b6ee56960fac3527c3b9c3",
+      "candidate_note": "Exact uncommitted source and first native failure references retained in F014.",
+      "journey": "J04",
+      "reproduction": "scripts/qualify-browser.py and real PostgreSQL/race tests named in F014",
+      "first_failure": "Native explicit-trust HTTPS GET / on e20bc77 returned HTTP 404.",
+      "cause": "No embedded partner browser workspace existed.",
+      "resolution": "Embed the reviewed typed workspace and reuse ordinary custody, checks and release services. Actual native Chromium journey passes; full onboarding remains open.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F014-browser-exchange.json"
+      ]
+    },
+    {
+      "id": "D033",
+      "severity": "authorization bootstrap defect",
+      "state": "fixed locally",
+      "observed_on": "2026-10-29",
+      "candidate": "e20bc77fe969a2edf3b6ee56960fac3527c3b9c3",
+      "candidate_note": "Exact uncommitted source and first native failure references retained in F014.",
+      "journey": "J10",
+      "reproduction": "scripts/qualify-browser.py and real PostgreSQL/race tests named in F014",
+      "first_failure": "Opaque session lookup attempted a credential row lock requiring UPDATE; next regression denied its own session lock before verified actor context.",
+      "cause": "A row lock required authority deliberately absent from the runtime; actor-private update RLS also applies to session row locks.",
+      "resolution": "Keep credential grants unchanged, make opaque lookup read-only, establish verified parent actor and then lock/recheck only its own session. Original real PostgreSQL/race cases pass.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F014-browser-exchange.json"
+      ]
+    },
+    {
+      "id": "D034",
+      "severity": "idempotency authority defect",
+      "state": "fixed locally",
+      "observed_on": "2026-10-29",
+      "candidate": "e20bc77fe969a2edf3b6ee56960fac3527c3b9c3",
+      "candidate_note": "Exact uncommitted source and first native failure references retained in F014.",
+      "journey": "J10",
+      "reproduction": "scripts/qualify-browser.py and real PostgreSQL/race tests named in F014",
+      "first_failure": "Logout using an earlier session command key against a second session returned 204; expected 409.",
+      "cause": "The syntactically accepted key had no durable operation-meaning receipt.",
+      "resolution": "Append migration 15 and commit session revocation/events/exact command meaning atomically. Cross-session key reuse fails, same-key replay remains safe and receipt failure rolls revocation back.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F014-browser-exchange.json"
+      ]
+    },
+    {
+      "id": "D035",
+      "severity": "browser interruption defect",
+      "state": "fixed locally",
+      "observed_on": "2026-10-29",
+      "candidate": "e20bc77fe969a2edf3b6ee56960fac3527c3b9c3",
+      "candidate_note": "Exact uncommitted source and first native failure references retained in F014.",
+      "journey": "J04",
+      "reproduction": "scripts/qualify-browser.py and real PostgreSQL/race tests named in F014",
+      "first_failure": "Pause during the held second checkpoint did not expose resume; upload unexpectedly completed.",
+      "cause": "Cancellation rendered the reused button as submit before the original click default action settled. Offset observation showed a repeated next-chunk request.",
+      "resolution": "Prevent the Pause click default and use distinct pause/submit DOM keys. Original native durable-pause, reload, restart and exact-source resume assertions pass.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F014-browser-exchange.json"
+      ]
+    },
+    {
+      "id": "D036",
+      "severity": "browser account navigation defect",
+      "state": "fixed locally",
+      "observed_on": "2026-10-29",
+      "candidate": "e20bc77fe969a2edf3b6ee56960fac3527c3b9c3",
+      "candidate_note": "Exact uncommitted source and first native failure references retained in F014.",
+      "journey": "J10",
+      "reproduction": "scripts/qualify-browser.py and real PostgreSQL/race tests named in F014",
+      "first_failure": "A new account sign-in retained the previous Intake checks tab; the expected Files workspace did not appear.",
+      "cause": "Account reset cleared private work but omitted resetting navigation state. No prior-account payload was observed.",
+      "resolution": "Reset navigation to Files with the account epoch, clear stale notices/work and close review state. Original account/tenant/expiry native journey passes.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F014-browser-exchange.json"
+      ]
     }
   ]
 }
