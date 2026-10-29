@@ -379,7 +379,11 @@
       }
     ],
     "binary_sha256": "fd2cc135d72380f0918fd16a9fb105326b0943ff21ee53188a4749d6d68d895a",
-    "sources_unchanged_during_run": true
+    "sources_unchanged_during_run": true,
+    "committed_source": {
+      "commit": "38df16847b73f85b3a18115d377cbd365c5e5ce6",
+      "verification": "All 92 recorded source hashes match the Git blobs in this local commit. Original candidate, native manifests and no-inference limitations are unchanged."
+    }
   },
   "environment": {
     "os": "macOS 27.2 build 26B5086k",

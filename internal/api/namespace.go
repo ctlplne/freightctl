@@ -90,7 +90,7 @@ func (s *Server) downloadPath(w http.ResponseWriter, r *http.Request) {
 		failure(w, err)
 		return
 	}
-	file, data, err := s.Service.DownloadPath(r.Context(), identity, r.URL.Query().Get("path"))
+	file, data, err := s.Service.OpenPathReader(r.Context(), identity, r.URL.Query().Get("path"))
 	if err != nil {
 		failure(w, err)
 		return
@@ -100,7 +100,7 @@ func (s *Server) downloadPath(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Disposition", `attachment; filename="`+file.ID+`"`)
 	w.Header().Set("X-Content-SHA256", file.SHA256)
 	w.Header().Set("X-File-Revision-ID", file.ID)
-	http.ServeContent(w, r, file.ID, time.Time{}, data)
+	http.ServeContent(w, r, file.ID, time.Time{}, io.NewSectionReader(data, 0, file.Size))
 }
 func (s *Server) uploadPath(w http.ResponseWriter, r *http.Request) {
 	identity, err := scope(r)
@@ -136,5 +136,5 @@ func (s *Server) uploadPath(w http.ResponseWriter, r *http.Request) {
 	if replay {
 		status = 200
 	}
-	respond(w, status, map[string]any{"file": file, "replayed": replay, "acceptance": "durable-local-integrity-only"})
+	respond(w, status, map[string]any{"file": file, "replayed": replay, "acceptance": custody.Acceptance(file)})
 }

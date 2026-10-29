@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"regexp"
+	"strings"
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/store"
@@ -15,6 +16,15 @@ import (
 var digestPattern = regexp.MustCompile(`^[0-9a-f]{64}$`)
 var keyPattern = regexp.MustCompile(`^[A-Za-z0-9._:-]{1,128}$`)
 var ErrInput = errors.New("invalid upload length, digest or idempotency key")
+
+// Acceptance describes what the original upload committed, not a later check
+// verdict. A replay retains this meaning even after the file is released.
+func Acceptance(file *store.File) string {
+	if strings.HasPrefix(file.Policy, "intake-csv-v1:") {
+		return "durable-held-pending-checks-and-release"
+	}
+	return "durable-local-integrity-only"
+}
 
 type Service struct {
 	DB                    *store.Store
@@ -66,7 +76,7 @@ func (s *Service) accept(ctx context.Context, scope store.Scope, key string, siz
 		if err = t.Require("write"); err != nil {
 			return nil, false, err
 		}
-		if err = t.FileAccessibleMode(ctx, prior.ID, 2); err != nil {
+		if err = t.FileReceiptAccessible(ctx, prior.ID); err != nil {
 			return nil, false, err
 		}
 		return prior, true, t.Tx.Commit(ctx)
@@ -91,6 +101,9 @@ func (s *Service) accept(ctx context.Context, scope store.Scope, key string, siz
 		return nil, false, err
 	}
 	f := &store.File{ID: secure.NewID(), Size: size, SHA256: digest, Policy: "integrity-only-v1"}
+	if err = t.ConfigureIntakeFile(ctx, f); err != nil {
+		return nil, false, err
+	}
 	if err = s.Disk.Stage(Name(scope.Tenant, scope.Partner, f.ID), body, size, digest); err != nil {
 		return nil, false, err
 	}
@@ -98,7 +111,16 @@ func (s *Service) accept(ctx context.Context, scope store.Scope, key string, siz
 	if err = t.Accept(ctx, key, meaning, f); err != nil {
 		return nil, false, err
 	}
+	var command *store.PathCommand
 	if target != nil {
+		value := targetCommand(target, f.ID)
+		command = &value
+	}
+	held, err := t.BindIntake(ctx, f, s.Disk.Identity(), command)
+	if err != nil {
+		return nil, false, err
+	}
+	if target != nil && !held {
 		if _, err = t.ApplyPathCommand(ctx, key, targetCommand(target, f.ID), s.NamespaceMaxEntries); err != nil {
 			return nil, false, err
 		}

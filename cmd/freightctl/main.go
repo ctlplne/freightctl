@@ -32,7 +32,7 @@ func main() {
 }
 func run(args []string) error {
 	if len(args) == 0 || args[0] == "--help" || args[0] == "help" {
-		fmt.Println("freightctl: init | token | enroll | identity | namespace | dev-cert | serve | reconcile | audit-keygen | audit-export | ssh-host-keygen | ssh-key-enroll | ssh-key-revoke | serve-sftp | upload-create | upload-status | upload-append | upload-complete | upload-abort | delivery-create | delivery-status | delivery-approve | delivery-cancel | delivery-work | delivery-reconcile\nConnections: connection-register | connection-status | connection-revoke\nWorkflows: workflow-validate | workflow-draft | workflow-status | workflow-diff | workflow-approve | workflow-revoke | workflow-run | workflow-run-status | workflow-work | workflow-cancel\nAssistance: ai-profile-register | ai-profile-status | ai-profile-revoke | ai-propose | ai-diagnose | ai-status | ai-approve | ai-generate | ai-adopt\nRead docs/development.md. This is an unqualified local custody foundation.")
+		fmt.Println("freightctl: init | token | enroll | identity | namespace | dev-cert | serve | reconcile | audit-keygen | audit-export | ssh-host-keygen | ssh-key-enroll | ssh-key-revoke | serve-sftp | upload-create | upload-status | upload-append | upload-complete | upload-abort | delivery-create | delivery-status | delivery-approve | delivery-cancel | delivery-work | delivery-reconcile\nConnections: connection-register | connection-status | connection-revoke\nWorkflows: workflow-validate | workflow-draft | workflow-status | workflow-diff | workflow-approve | workflow-revoke | workflow-run | workflow-run-status | workflow-work | workflow-cancel\nAssistance: ai-profile-register | ai-profile-status | ai-profile-revoke | ai-propose | ai-diagnose | ai-status | ai-approve | ai-generate | ai-adopt\nIntake: intake-policy-register | intake-policy-status | intake-policy-revoke | check-list | check-status | check-run | check-release\nRead docs/development.md. This is an unqualified local custody foundation.")
 		return nil
 	}
 	f := flag.NewFlagSet(args[0], flag.ContinueOnError)
@@ -75,6 +75,9 @@ func run(args []string) error {
 	resourceVersion := f.Int("version", 1, "exact workflow or connection version")
 	againstVersion := f.Int("against-version", 0, "previous workflow version to compare")
 	runID := f.String("run-id", "", "durable workflow run UUID")
+	checkFileID := f.String("file-id", "", "exact immutable file UUID for intake checks or release")
+	checkAfter := f.String("check-after", "", "last check file UUID returned by the previous page")
+	checkLimit := f.Int("check-limit", 50, "private intake check summaries per page, at most 100")
 	aiProfileID := f.String("ai-profile-id", "", "explicit administrator-registered AI profile UUID")
 	aiJobID := f.String("ai-job-id", "", "scoped assistance context/job UUID")
 	contextHash := f.String("context-hash", "", "exact reviewed disclosure context SHA-256")
@@ -99,6 +102,8 @@ func run(args []string) error {
 	}
 	ctx := context.Background()
 	switch args[0] {
+	case "intake-policy-register", "intake-policy-status", "intake-policy-revoke", "check-list", "check-status", "check-run", "check-release":
+		return runChecks(ctx, args[0], *dsn, *token, *tenant, *partner, *storage, *requestFile, *idempotencyKey, *checkFileID, *checkAfter, *checkLimit, *namespaceMax)
 	case "ai-profile-register", "ai-profile-status", "ai-profile-revoke", "ai-propose", "ai-diagnose", "ai-status", "ai-approve", "ai-generate", "ai-adopt":
 		return runAssistance(ctx, args[0], *dsn, *token, *tenant, *partner, *requestFile, *idempotencyKey, *aiProfileID, *aiJobID, *contextHash, *deliveryHash, *resourceVersion, *deliveryRevision, *aiEnabled)
 	case "connection-register", "connection-status", "connection-revoke", "workflow-validate", "workflow-draft", "workflow-status", "workflow-approve", "workflow-revoke", "workflow-run", "workflow-run-status", "workflow-work", "workflow-diff", "workflow-cancel":

@@ -77,7 +77,7 @@ Migration 3 bounds journal kind and payload sizes in SQL, while the application 
 
 Client folder names are records in PostgreSQL. A name such as `/inbox/payroll.csv` points to an immutable custody file ID; it is never passed to the host filesystem. Create a different file revision to replace contents. Renaming a folder changes the index and appends events while leaving those bytes intact. Removal creates a tombstone; accepted bytes and publication history remain retained. Approved recovery and retention policies are still required.
 
-Enrollment supports `--permissions read,list` and `--namespace-root /inbox`. This mounts the existing partner folder `/inbox` as the account's `/`. Existing identities retain their previous grants. New development administrators receive the fifteen grants listed below; explicitly select the minimum permissions for a restricted account. The development bootstrap is still an administrator operation. Identity creation/rotation through a delegated operator UI remains open.
+Enrollment supports `--permissions read,list` and `--namespace-root /inbox`. This mounts the existing partner folder `/inbox` as the account's `/`. Existing identities retain their previous grants. New development administrators receive the eighteen grants listed below; explicitly select the minimum permissions for a restricted account. The development bootstrap is still an administrator operation. Identity creation/rotation through a delegated operator UI remains open.
 
 | Permission | Effect |
 | --- | --- |
@@ -96,6 +96,9 @@ Enrollment supports `--permissions read,list` and `--namespace-root /inbox`. Thi
 | `ai_manage` | Register/revoke exact administrator-selected assistance profiles; admin grant also required. |
 | `ai_use` | Prepare/read authorized assistance contexts and request bounded generation when enabled. |
 | `ai_disclose` | Approve the exact context hash/state for disclosure; does not approve workflows. |
+| `intake_manage` | Register/revoke the partner intake policy; root admin authority also required. |
+| `check_run` | Validate this actor’s held immutable revision under the current bound policy; read also required. |
+| `check_release` | Approve exact passing bytes/policy/report for publication; read/write also required. |
 
 Virtual modes use owner bits for the creating actor and group bits for other authorized actors in the same partner. They do not create host users or POSIX groups. Tenant/partner SQL policies still isolate a mode-0777 file. Setstat requires owner or admin authority; replacement requires write authority, parent search/write bits and the expected path revision. Current authority is checked again before commit. A changed account policy increments its authority revision, invalidating an in-flight operation that used the old policy.
 
@@ -138,3 +141,7 @@ Migration 4 adds namespace projections/history/command receipts, actor-scoped up
 ## Assistance without local inference
 
 [Assistance controls](assistance.md) describe explicit context preparation/review, disclosure approval, a default-disabled bounded endpoint client, evidence validation and draft-only adoption. Migration 9 adds three actor-private journal-backed tables and three explicit grants; existing accounts keep their grants. Model runtime starts/loads/warmups/evaluations remain disallowed on this shared machine. The native contract responder is a tiny JSON fixture, not inference or an AI profile qualification.
+
+## Held intake and exact CSV contracts
+
+[Intake checks](intake.md) document durable held acceptance, bounded actor-private discovery, exact CSV validation and a separate release approval. Migration 10 adds four journal-backed relations and three explicit grants; old account grants stay unchanged. New accepted revisions under a configured policy cannot be downloaded, published or dispatched before release. Existing integrity-only revisions retain their original scope. Stock-client and delayed-worker evidence is separate from malware, business-receipt and complete-journey qualification.

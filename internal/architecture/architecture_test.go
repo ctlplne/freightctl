@@ -34,6 +34,9 @@ func TestCoreImportBoundaries(t *testing.T) {
 				if err != nil {
 					return err
 				}
+				if strings.HasPrefix(rel, "internal/checks/") && !strings.HasSuffix(rel, "_test.go") && (name == "os/exec" || name == "net" || strings.HasPrefix(name, "net/")) {
+					t.Errorf("%s may not execute processes or contact a network while parsing payloads", rel)
+				}
 				if strings.HasPrefix(rel, "internal/assistance/") && !strings.HasSuffix(rel, "_test.go") && name == "os/exec" {
 					t.Errorf("%s may not launch model runtimes or shell tools", rel)
 				}

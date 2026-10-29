@@ -13,7 +13,7 @@ Use the existing `/v1/tenants/{tenant}/partners/{partner}` prefix and bearer-tok
 | `POST .../uploads` | Create a ticket from strict bounded JSON and an Idempotency-Key. |
 | `GET .../uploads/{id}` | Read current owned state and committed_offset. |
 | `PATCH .../uploads/{id}` | Append one chunk with Upload-Offset, X-File-Size, X-Content-SHA256 and Idempotency-Key. |
-| `POST .../uploads/{id}/complete` | Verify and publish; empty body and Idempotency-Key required. |
+| `POST .../uploads/{id}/complete` | Assemble and durably accept; configured intake policy holds publication. Empty body and Idempotency-Key required. |
 | `POST .../uploads/{id}/abort` | Stop an open ticket; no accepted-file deletion or automatic byte cleanup. |
 
 Creation JSON uses `path`, `expected_size`, `expected_sha256` and optional `expected_revision`, `mode`, `modified_at`. Replacing an existing file requires its exact current revision. The server also pins the parent identity/revision. Unknown fields and trailing commands are rejected. Normal paths cannot use the reserved `.freightctl` component.
@@ -34,7 +34,7 @@ reput local-file /.freightctl/uploads/<upload-id>
 
 For a new zero-offset ticket, ordinary `put` also works. After interruption, `reput` obtains the stored checkpoint offset and sends the suffix. SFTP WRITE replies can cover an in-memory tail; only the recorded offset claims checkpoint durability. The default checkpoint is 1 MiB, configured with `--upload-checkpoint-bytes` between 64 KiB and 8 MiB. Disconnect drops an uncommitted tail while preserving sealed, committed pieces. Normal SFTP filenames keep their previous behavior; resume is opt-in through a ticket.
 
-A successful CLOSE verifies and publishes the whole file. If all bytes were checkpointed but completion did not commit, use `upload-complete`, the HTTPS completion action, or this bound-destination SFTP completion command:
+A successful CLOSE verifies and durably accepts the whole file. Under a configured [intake policy](../intake.md), completion creates a held revision; validation and separate release approval precede publication. The response’s acceptance field distinguishes that from the integrity-only profile. If all bytes were checkpointed but completion did not commit, use `upload-complete`, the HTTPS completion action, or this bound-destination SFTP completion command:
 
 ```text
 rename /.freightctl/uploads/<upload-id> /the-ticket-destination

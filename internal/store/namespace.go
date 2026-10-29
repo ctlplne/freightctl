@@ -481,6 +481,16 @@ func (t *Transaction) FileAccessible(ctx context.Context, id string) error {
 }
 
 func (t *Transaction) FileAccessibleMode(ctx context.Context, id string, mask uint32) error {
+	if err := t.fileAccessibleMode(ctx, id, mask); err != nil {
+		return err
+	}
+	if mask&4 != 0 {
+		return t.FileAvailable(ctx, id)
+	}
+	return nil
+}
+
+func (t *Transaction) fileAccessibleMode(ctx context.Context, id string, mask uint32) error {
 	if t.Has("admin") && t.Root == "/" {
 		return nil
 	}

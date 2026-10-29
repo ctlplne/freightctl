@@ -26,7 +26,7 @@
     {
       "id": "J02",
       "name": "Authenticated validated encrypted business file",
-      "state": "planned",
+      "state": "implementing",
       "goal_reference": "GOAL.md section 5 item 2",
       "candidate": null,
       "artifact_digests": {},
@@ -34,10 +34,12 @@
       "steps": [],
       "assistance": null,
       "duration_seconds": null,
-      "evidence": [],
+      "evidence": [
+        "docs/qualification/evidence/F010-held-intake.json"
+      ],
       "failures": [],
       "limits": [
-        "Not run; no application at bootstrap"
+        "F010 proves configured held intake, exact bounded CSV checking, separate release and transport-integrity delivery of synthetic bytes. Sender signature verification, malware scanning, recipient encryption, business acknowledgment and the complete outcome remain open."
       ]
     },
     {
@@ -105,11 +107,13 @@
       "evidence": [
         "docs/qualification/evidence/F002-reconciliation.json",
         "docs/qualification/evidence/F007-outbound-intents.json",
-        "docs/qualification/evidence/F008-versioned-workflows.json"
+        "docs/qualification/evidence/F008-versioned-workflows.json",
+        "docs/qualification/evidence/F010-held-intake.json"
       ],
       "failures": [],
       "limits": [
-        "Only narrower local custody and staging-crash experiments passed; complete journey remains open."
+        "Only narrower local custody and staging-crash experiments passed; complete journey remains open.",
+        "F010 adds visible schema rejection, wrong-storage/changed-byte/stale-policy refusal and a real delayed-worker recovery boundary. Complete diagnoses/recovery for every required dependency and governed rebind remain open."
       ]
     },
     {
@@ -185,11 +189,13 @@
         "docs/qualification/evidence/F003-signed-audit.json",
         "docs/qualification/evidence/F007-outbound-intents.json",
         "docs/qualification/evidence/F008-versioned-workflows.json",
-        "docs/qualification/evidence/F009-assistance-controls.json"
+        "docs/qualification/evidence/F009-assistance-controls.json",
+        "docs/qualification/evidence/F010-held-intake.json"
       ],
       "failures": [],
       "limits": [
-        "F009 adds current-actor scoped assistance contexts, three forced-RLS tables, disclosure grants and revoked/stale denial. Complete isolation across all required product surfaces remains open."
+        "F009 adds current-actor scoped assistance contexts, three forced-RLS tables, disclosure grants and revoked/stale denial. Complete isolation across all required product surfaces remains open.",
+        "F010 extends tenant/partner/actor checks to intake records and current file-release gates; private bindings and normal shared-path reads are tested. Every remaining product surface and full isolation qualification remain open."
       ]
     },
     {
@@ -207,11 +213,13 @@
         "docs/qualification/evidence/F001-custody-foundation.json",
         "docs/qualification/evidence/F002-reconciliation.json",
         "docs/qualification/evidence/F007-outbound-intents.json",
-        "docs/qualification/evidence/F008-versioned-workflows.json"
+        "docs/qualification/evidence/F008-versioned-workflows.json",
+        "docs/qualification/evidence/F010-held-intake.json"
       ],
       "failures": [],
       "limits": [
-        "Only narrower local custody and staging-crash experiments passed; complete journey remains open."
+        "Only narrower local custody and staging-crash experiments passed; complete journey remains open.",
+        "F010 pauses a real worker, waits for its unchanged database lease, verifies replacement and refuses the resumed stale owner. Native platforms, multi-host failover, restore/upgrade and endurance remain open."
       ]
     },
     {

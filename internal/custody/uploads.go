@@ -39,9 +39,10 @@ type UploadView struct {
 	FileID         string    `json:"file_id,omitempty"`
 }
 type UploadResult struct {
-	Upload   UploadView  `json:"upload"`
-	File     *store.File `json:"file,omitempty"`
-	Replayed bool        `json:"replayed"`
+	Upload     UploadView  `json:"upload"`
+	File       *store.File `json:"file,omitempty"`
+	Replayed   bool        `json:"replayed"`
+	Acceptance string      `json:"acceptance,omitempty"`
 }
 
 type uploadTarget struct {
@@ -118,6 +119,9 @@ func finishUpload(ctx context.Context, t *store.Transaction, key, meaning string
 		return nil, err
 	}
 	result := &UploadResult{Upload: view, File: file}
+	if file != nil {
+		result.Acceptance = Acceptance(file)
+	}
 	if err = t.SaveUploadReceipt(ctx, key, meaning, u.ID, result); err != nil {
 		return nil, err
 	}
@@ -439,6 +443,9 @@ func (s *Service) CompleteUpload(ctx context.Context, scope store.Scope, id, key
 		return nil, err
 	}
 	file := &store.File{ID: secure.NewID(), Size: u.ExpectedSize, SHA256: u.ExpectedSHA, Policy: "integrity-only-v1"}
+	if err = t.ConfigureIntakeFile(ctx, file); err != nil {
+		return nil, err
+	}
 	source := &uploadReader{ctx: ctx, disk: s.Disk, scope: scope, chunks: chunks}
 	defer source.Close()
 	err = s.Disk.Stage(Name(scope.Tenant, scope.Partner, file.ID), source, file.Size, file.SHA256)
@@ -471,8 +478,15 @@ func (s *Service) CompleteUpload(ctx context.Context, scope store.Scope, id, key
 	if err = t.AcceptUpload(ctx, acceptedKey, pathMeaning(file.Size, file.SHA256, actual, &target), file, id, u.StorageID); err != nil {
 		return nil, err
 	}
-	if _, err = t.ApplyPathCommand(ctx, acceptedKey, targetCommand(&target, file.ID), s.NamespaceMaxEntries); err != nil {
+	command := targetCommand(&target, file.ID)
+	held, err := t.BindIntake(ctx, file, s.Disk.Identity(), &command)
+	if err != nil {
 		return nil, err
+	}
+	if !held {
+		if _, err = t.ApplyPathCommand(ctx, acceptedKey, command, s.NamespaceMaxEntries); err != nil {
+			return nil, err
+		}
 	}
 	next := *u
 	next.State = "completed"

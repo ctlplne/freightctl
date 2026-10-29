@@ -50,12 +50,13 @@
       "evidence": [
         "docs/qualification/evidence/F004-virtual-namespace.json",
         "docs/qualification/evidence/F005-sftp-exchange.json",
-        "docs/qualification/evidence/F006-upload-checkpoints.json"
+        "docs/qualification/evidence/F006-upload-checkpoints.json",
+        "docs/qualification/evidence/F010-held-intake.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
       ],
-      "current_limit": "F006 verifies explicit private tickets and bounded local restart resume using CLI/HTTPS/stock SFTP. Browser UX, larger/native/enterprise/client profiles and full row/customer acceptance remain open."
+      "current_limit": "F010 adds configured held intake across HTTPS/SFTP/resume, exact CSV contracts, current hash/revision-bound release and actor/tenant/partner gates. No antivirus/signature/encryption, other-format/processing breadth, delegated UI, full journey, native/enterprise peer or production qualification is implied."
     },
     {
       "id": "P-SFTP-SEND",
@@ -412,12 +413,13 @@
         "docs/qualification/evidence/F001-custody-foundation.json",
         "docs/qualification/evidence/F004-virtual-namespace.json",
         "docs/qualification/evidence/F005-sftp-exchange.json",
-        "docs/qualification/evidence/F006-upload-checkpoints.json"
+        "docs/qualification/evidence/F006-upload-checkpoints.json",
+        "docs/qualification/evidence/F010-held-intake.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
       ],
-      "current_limit": "F006 verifies explicit private tickets and bounded local restart resume using CLI/HTTPS/stock SFTP. Browser UX, larger/native/enterprise/client profiles and full row/customer acceptance remain open."
+      "current_limit": "F010 adds configured held intake across HTTPS/SFTP/resume, exact CSV contracts, current hash/revision-bound release and actor/tenant/partner gates. No antivirus/signature/encryption, other-format/processing breadth, delegated UI, full journey, native/enterprise peer or production qualification is implied."
     },
     {
       "id": "P-HTTPS-SEND",
@@ -497,12 +499,13 @@
       "acceptance_journey": "J02",
       "state": "implementing",
       "evidence": [
-        "docs/qualification/evidence/F006-upload-checkpoints.json"
+        "docs/qualification/evidence/F006-upload-checkpoints.json",
+        "docs/qualification/evidence/F010-held-intake.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
       ],
-      "current_limit": "F006 verifies explicit private tickets and bounded local restart resume using CLI/HTTPS/stock SFTP. Browser UX, larger/native/enterprise/client profiles and full row/customer acceptance remain open."
+      "current_limit": "F010 adds configured held intake across HTTPS/SFTP/resume, exact CSV contracts, current hash/revision-bound release and actor/tenant/partner gates. No antivirus/signature/encryption, other-format/processing breadth, delegated UI, full journey, native/enterprise peer or production qualification is implied."
     },
     {
       "id": "P-AS2-SEND",
@@ -1346,12 +1349,13 @@
         "docs/qualification/evidence/F004-virtual-namespace.json",
         "docs/qualification/evidence/F005-sftp-exchange.json",
         "docs/qualification/evidence/F006-upload-checkpoints.json",
-        "docs/qualification/evidence/F009-assistance-controls.json"
+        "docs/qualification/evidence/F009-assistance-controls.json",
+        "docs/qualification/evidence/F010-held-intake.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
       ],
-      "current_limit": "F009 extends actor/tenant/partner boundaries to assistance profiles/jobs/receipts and current disclosure authority. Complete delegation, human lifecycle, all product surfaces and full acceptance remain open."
+      "current_limit": "F010 adds configured held intake across HTTPS/SFTP/resume, exact CSV contracts, current hash/revision-bound release and actor/tenant/partner gates. No antivirus/signature/encryption, other-format/processing breadth, delegated UI, full journey, native/enterprise peer or production qualification is implied."
     },
     {
       "id": "A-ROLE",
@@ -1390,12 +1394,13 @@
         "docs/qualification/evidence/F004-virtual-namespace.json",
         "docs/qualification/evidence/F005-sftp-exchange.json",
         "docs/qualification/evidence/F006-upload-checkpoints.json",
-        "docs/qualification/evidence/F009-assistance-controls.json"
+        "docs/qualification/evidence/F009-assistance-controls.json",
+        "docs/qualification/evidence/F010-held-intake.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
       ],
-      "current_limit": "F009 extends actor/tenant/partner boundaries to assistance profiles/jobs/receipts and current disclosure authority. Complete delegation, human lifecycle, all product surfaces and full acceptance remain open."
+      "current_limit": "F010 adds configured held intake across HTTPS/SFTP/resume, exact CSV contracts, current hash/revision-bound release and actor/tenant/partner gates. No antivirus/signature/encryption, other-format/processing breadth, delegated UI, full journey, native/enterprise peer or production qualification is implied."
     },
     {
       "id": "W-DEFINITION",
@@ -1471,11 +1476,14 @@
         "independent operator or receiver"
       ],
       "acceptance_journey": "J02",
-      "state": "planned",
-      "evidence": [],
+      "state": "implementing",
+      "evidence": [
+        "docs/qualification/evidence/F010-held-intake.json"
+      ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
-      ]
+      ],
+      "current_limit": "F010 adds configured held intake across HTTPS/SFTP/resume, exact CSV contracts, current hash/revision-bound release and actor/tenant/partner gates. No antivirus/signature/encryption, other-format/processing breadth, delegated UI, full journey, native/enterprise peer or production qualification is implied."
     },
     {
       "id": "H-PORTAL",
@@ -2651,11 +2659,14 @@
         "independent operator or receiver"
       ],
       "acceptance_journey": "J02",
-      "state": "planned",
-      "evidence": [],
+      "state": "implementing",
+      "evidence": [
+        "docs/qualification/evidence/F010-held-intake.json"
+      ],
       "qualification_blockers": [
         "Authorized JSCAPE by Redwood installation and exact edition/version for observed comparison"
-      ]
+      ],
+      "current_limit": "F010 adds configured held intake across HTTPS/SFTP/resume, exact CSV contracts, current hash/revision-bound release and actor/tenant/partner gates. No antivirus/signature/encryption, other-format/processing breadth, delegated UI, full journey, native/enterprise peer or production qualification is implied."
     },
     {
       "id": "O-MONITOR",
@@ -3109,12 +3120,13 @@
       "acceptance_journey": "J02",
       "state": "implementing",
       "evidence": [
-        "docs/qualification/evidence/F008-versioned-workflows.json"
+        "docs/qualification/evidence/F008-versioned-workflows.json",
+        "docs/qualification/evidence/F010-held-intake.json"
       ],
       "qualification_blockers": [
         "Authorized SFTPGo installation and exact edition/version for observed comparison"
       ],
-      "current_limit": "F008 verifies exact workflow hash/version/state decisions, current approval authority, actor-private revision records and connection/workflow revocation through CLI/HTTPS/direct workers. Broader processing approvals, human governance/UI, providers/delegation and complete journey qualification remain open."
+      "current_limit": "F010 adds configured held intake across HTTPS/SFTP/resume, exact CSV contracts, current hash/revision-bound release and actor/tenant/partner gates. No antivirus/signature/encryption, other-format/processing breadth, delegated UI, full journey, native/enterprise peer or production qualification is implied."
     },
     {
       "id": "H-TUS",

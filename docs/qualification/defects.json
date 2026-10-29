@@ -388,6 +388,21 @@
       "regression_evidence": [
         "docs/qualification/evidence/F009-assistance-controls.json"
       ]
+    },
+    {
+      "id": "D026",
+      "severity": "missing required capability",
+      "state": "fixed locally",
+      "observed_on": "2026-10-28",
+      "candidate": "38df16847b73f85b3a18115d377cbd365c5e5ce6",
+      "journey": "J02",
+      "reproduction": "sh scripts/go.sh run -p 1 ./cmd/freightctl intake-policy-register; native held-intake journey in F010",
+      "first_failure": "freightctl: unknown command; use --help (exit 1)",
+      "cause": "Only integrity-only acceptance existed; there was no durable intake hold, CSV check or separate release gate.",
+      "resolution": "Add immutable configured intake policies, held check/receipt bindings across all three ingress paths, bounded deterministic CSV workers, current release gates and exact atomic release approval. Stock clients and a separate receiver verify the original narrow outcome; malware/cryptographic processing and the full journey remain open.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F010-held-intake.json"
+      ]
     }
   ]
 }

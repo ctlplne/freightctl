@@ -1,0 +1,1245 @@
+{
+  "schema_version": 1,
+  "id": "F010",
+  "kind": "Durable held intake, exact CSV checks and explicit release",
+  "state": "verified locally",
+  "full_journeys_qualified": false,
+  "ai_qualified": false,
+  "inference_performed": false,
+  "malware_scanning_qualified": false,
+  "candidate": {
+    "starting_commit": "38df16847b73f85b3a18115d377cbd365c5e5ce6",
+    "source_files": [
+      {
+        "path": "cmd/freightctl/assistance.go",
+        "sha256": "03b589fc505d084957c1918999018cc5ac76d267932223366a22fd567f4dd972"
+      },
+      {
+        "path": "cmd/freightctl/checks.go",
+        "sha256": "68ac23350043e087469255cff28689f492d4244a6e09ae2d6937a0bea13bb21f"
+      },
+      {
+        "path": "cmd/freightctl/delivery.go",
+        "sha256": "985b08b67bcd54b56c0ce92c42e01602cb379cc5360b101bc73c293e397eae41"
+      },
+      {
+        "path": "cmd/freightctl/main.go",
+        "sha256": "5b4b27ed482dfad4bc74bb871123fb1a69c8375d14a37a6d4cef9b8465416a1a"
+      },
+      {
+        "path": "cmd/freightctl/workflow.go",
+        "sha256": "037d23e9ded7af664e6cbc88c7662bc3a95977fb4cdbf4f3a97c23be96ce63ee"
+      },
+      {
+        "path": "go.mod",
+        "sha256": "2b8e72bb19c95ae51e63a7c45a7c2c4ba0f147acdfde6f3eda1dff9520cca150"
+      },
+      {
+        "path": "go.sum",
+        "sha256": "e36a23c226b1844da16837e68a4d47f865d6eef00b3bf447cb33b52a31c89164"
+      },
+      {
+        "path": "internal/api/api.go",
+        "sha256": "f562c55f02ed3b071abfd32a65acfd4543a83eafe73b8d187e4d6089b5f78217"
+      },
+      {
+        "path": "internal/api/assistance.go",
+        "sha256": "3d313e22828e0fdf4181e40eb00416c3b5e3cae41896d666dbf0053abcb293bd"
+      },
+      {
+        "path": "internal/api/assistance_test.go",
+        "sha256": "4c8482130354e6a49b98bef5676879892ef54592a5e70e91dd2c90853315542f"
+      },
+      {
+        "path": "internal/api/checks.go",
+        "sha256": "69ed0ced2cec9cda18ac8146baa54c6e11c3e32c6c73707081a3d861e6384bf0"
+      },
+      {
+        "path": "internal/api/namespace.go",
+        "sha256": "5ac12c3751bc40f08cd9a455b7e5761b3c937bb1421745b195e15245667d9b02"
+      },
+      {
+        "path": "internal/api/uploads.go",
+        "sha256": "fda7f39264ed8775e4a02b4d06db0c3f1df5201adc7c3ca9835d20b68361f494"
+      },
+      {
+        "path": "internal/api/workflows.go",
+        "sha256": "45567cdff0f57cb4cfeff9a965542ca2ba7c02d61fd1d45796a08571efb7795e"
+      },
+      {
+        "path": "internal/architecture/architecture_test.go",
+        "sha256": "f3709eb99c5c3f8eb294cef6627b6983cbe2a4097043f500e2935e9beaee91d4"
+      },
+      {
+        "path": "internal/assistance/backend.go",
+        "sha256": "e41de6454f178762d0adc9746218a0c7977e4743ec5173e9ca30868db1a55a0e"
+      },
+      {
+        "path": "internal/assistance/backend_test.go",
+        "sha256": "05af5792234eed4969f8c0e3aae92c55fe16c88ee72185da6c6b7e9111f8e0a5"
+      },
+      {
+        "path": "internal/assistance/context.go",
+        "sha256": "d158f624d77b715f3a79057a78a7a7f67ee7ca6c51125748e2a4fd442884bee2"
+      },
+      {
+        "path": "internal/assistance/fixture_integration_test.go",
+        "sha256": "d7a05a5c5f33a27dc9743adbb4e3f8af38ae7657483fec140f9a51d65ddcc305"
+      },
+      {
+        "path": "internal/assistance/integration_test.go",
+        "sha256": "36a9553a1e06ca9a8ba98478aefab11c3911595456dacf5ddd093ef4e281f2c2"
+      },
+      {
+        "path": "internal/assistance/service.go",
+        "sha256": "507fdd6bc7d3517d9974af076a0bff03516b032c94df9d0d68fd0ff6b97bdec1"
+      },
+      {
+        "path": "internal/assistance/types.go",
+        "sha256": "49b2effdeafe572fa61d4a2a7f4516a69d072822a59c03fdea80c2e2ccb7b78e"
+      },
+      {
+        "path": "internal/assistance/validation_test.go",
+        "sha256": "f9b45728039f8accb9371c2a9a18f878dd294f6e5dac687ef119ca215c0c7411"
+      },
+      {
+        "path": "internal/audit/audit.go",
+        "sha256": "41bcf8bb940ec14e76657b3163be89ea2701a09fce7ee14a20f62452c516db46"
+      },
+      {
+        "path": "internal/audit/integration_test.go",
+        "sha256": "8c69a1a5d040a391b2579f58d3b070865e89f1c3b4f66199143d87e9793e7248"
+      },
+      {
+        "path": "internal/checks/csv.go",
+        "sha256": "15cf90974cf03c6fffe07fab94fa0dd9821b7e9f167167af651ba12b50a69611"
+      },
+      {
+        "path": "internal/checks/csv_test.go",
+        "sha256": "481a753dc3206a02f6b6884e4e18eda7a44888cb224cf8e38206849ea53f4103"
+      },
+      {
+        "path": "internal/checks/fixture_integration_test.go",
+        "sha256": "b1fda28d7054c2439edd1a060cbbd8387aeaa1783755ec5cd74aa08e31d7e0e7"
+      },
+      {
+        "path": "internal/checks/integration_test.go",
+        "sha256": "cbc58cf8f7256d8fd033127e38c71063c4dbae5ae083f324e283abd2e4c9cd05"
+      },
+      {
+        "path": "internal/checks/service.go",
+        "sha256": "de73631630c3fda956663c6ec7257b795dfd7bc119731a945834b2b29788fc14"
+      },
+      {
+        "path": "internal/crypto/audit.go",
+        "sha256": "eefe6f66ab4c283ea96e51fc35a7cb4f8edff713dd16d56041d74bf1acdc338e"
+      },
+      {
+        "path": "internal/crypto/audit_test.go",
+        "sha256": "0837cc879e08a3b47d6b7ab4f393579af17ebd891f430e2cc45e264d60c02b4e"
+      },
+      {
+        "path": "internal/crypto/crypto.go",
+        "sha256": "edb1f8534ce0f048038aa5946489caba5ae303a38024e173c8a0d09478d093a0"
+      },
+      {
+        "path": "internal/crypto/protect_other.go",
+        "sha256": "c52dc1b00ac860719e3dd9dd9118109014d01e0b7f87327646bba63e7dd173a2"
+      },
+      {
+        "path": "internal/crypto/protect_unix.go",
+        "sha256": "f7184f82ff63e331fd5170a0ea27a0f5e867f06bbb9d1f901ae57f75a8b86e52"
+      },
+      {
+        "path": "internal/crypto/ssh.go",
+        "sha256": "c405042bf732cfffa8510e6d763f5c86c585994009a99d897d8a6efc2bb4d018"
+      },
+      {
+        "path": "internal/crypto/ssh_client.go",
+        "sha256": "24492ebd7d18f889c5f2e28b8e238d4546e34b92490ef7e1e7ff3082011e263b"
+      },
+      {
+        "path": "internal/crypto/ssh_test.go",
+        "sha256": "46f6cb3e53d9c3fca6b38f23b9a263852dcb94d1b49177c976f3f923b415db14"
+      },
+      {
+        "path": "internal/custody/custody.go",
+        "sha256": "20fc4428aad2e825d8ee70288469e75a9ded6667972c1d257633173119a26b0b"
+      },
+      {
+        "path": "internal/custody/custody_test.go",
+        "sha256": "2c4f169f40b859ca9f263deec1f03a46529c6784e24e8133018e1620df828ee7"
+      },
+      {
+        "path": "internal/custody/identity.go",
+        "sha256": "11db37dba13d5435f85f8243f353f29f8e333e304aba2a67b65ab70c30f1765c"
+      },
+      {
+        "path": "internal/custody/integration_test.go",
+        "sha256": "8c09d3b1044e360aae11287ce3d0b7861f0693544b28d15fbc6393a2e89871b1"
+      },
+      {
+        "path": "internal/custody/namespace.go",
+        "sha256": "47db75f92c468ba51b363333a0cdac25b177f5b0c65237d2cb4009df0f0f3d8b"
+      },
+      {
+        "path": "internal/custody/namespace_integration_test.go",
+        "sha256": "c75bf9153443f2a90bc7fbe955bb6931f29d77ce9f8455128c302679c92edd8f"
+      },
+      {
+        "path": "internal/custody/reconcile.go",
+        "sha256": "6eea38522e4c103a8014ce3f76455410dac5a2e04bf823ea11c7f008f2e0613f"
+      },
+      {
+        "path": "internal/custody/service.go",
+        "sha256": "97d79badb2fa1f4f56e458e9fd69553c7b49305769a3f5e2480c547b4616b9f3"
+      },
+      {
+        "path": "internal/custody/upload_writer.go",
+        "sha256": "18a3991d78b617795ecce110f0ee7bf35af18f05250b3ba2c27fd49895231756"
+      },
+      {
+        "path": "internal/custody/uploads.go",
+        "sha256": "fd0b55322cb9f2cb0b5fefefc02b4a235275e9e5f732ce889043c5628595a414"
+      },
+      {
+        "path": "internal/custody/uploads_integration_test.go",
+        "sha256": "6331c842e23e5bc16a0614c39cd5ddbbb65751973c25915fe18361ba774504a4"
+      },
+      {
+        "path": "internal/custody/writer.go",
+        "sha256": "1a7caa198250db9b9de1ad81e0259b966b5111534946cdb5f85b5ca882c714f4"
+      },
+      {
+        "path": "internal/custody/writer_integration_test.go",
+        "sha256": "7ca33e33931473e5d27f38f632a83b7232295f8fe0dfc6e2d417eafa6ffe71a0"
+      },
+      {
+        "path": "internal/delivery/service.go",
+        "sha256": "de49ef90c04bd1f5cbe1c576d8b016cb22c3da3906d873cdf93bb7d4da67d9e1"
+      },
+      {
+        "path": "internal/delivery/worker.go",
+        "sha256": "4e180eb7dff48cca0639b2c036627d0cd009a940daba197afa75c8e939887062"
+      },
+      {
+        "path": "internal/delivery/worker_test.go",
+        "sha256": "69dd436a95f3e5a0832784ec26c9e4539a448f00758bb3dcd8118dedcdf9819f"
+      },
+      {
+        "path": "internal/sftpd/frames.go",
+        "sha256": "c370342331b85bc5e9b5bb549bcbd55279d17b131f367618600c02edf5d899d3"
+      },
+      {
+        "path": "internal/sftpd/frames_test.go",
+        "sha256": "909594927fda166cc0609de3e913d097488819ae601fc8c5227d059c91420f40"
+      },
+      {
+        "path": "internal/sftpd/server.go",
+        "sha256": "4d9060050c42845847f9dee416b9991d52473838b80cc33fe188b29428697a51"
+      },
+      {
+        "path": "internal/store/002_event_binding.sql",
+        "sha256": "9bdb83d3a31f608af24b568e91889e2e6f462caf8658b746a0c55be97e58dfb0"
+      },
+      {
+        "path": "internal/store/003_event_bounds.sql",
+        "sha256": "5e09fc8540294e24ea9114e71e4d58311bdfb7b80ae1a5d3162c8d3bc0a4a4e7"
+      },
+      {
+        "path": "internal/store/004_namespace.sql",
+        "sha256": "fd60652d7ebee14e7a39104d656599e5b8f9684eef293e3bb76951a2b5a895dc"
+      },
+      {
+        "path": "internal/store/005_uploads.sql",
+        "sha256": "a88a0394afd4192f40486670ce2b5c833b8a8ff38334251eba77e1e933b044df"
+      },
+      {
+        "path": "internal/store/006_upload_storage.sql",
+        "sha256": "b2e7b4ee6eac36a5d87734f3937d6a8b33533e27be3e904b660eb340d0393136"
+      },
+      {
+        "path": "internal/store/007_deliveries.sql",
+        "sha256": "a0661176825594a6af9d49cafb30e4409ae253edd53ba69fd88d06e25632e040"
+      },
+      {
+        "path": "internal/store/008_workflows.sql",
+        "sha256": "c629edabd19d732adaf4eddb5fa63dfcfc1241154f8307cffb14c9830df030a9"
+      },
+      {
+        "path": "internal/store/009_assistance.sql",
+        "sha256": "14f57ccbae509f412a818701c0554aeaf54588474c7089b7b1105d38ab647dd5"
+      },
+      {
+        "path": "internal/store/010_intake.sql",
+        "sha256": "585c17ed2e05379b58e6fbc44ac985d223fe58a2626a28cc9b9bf1a8c98002f1"
+      },
+      {
+        "path": "internal/store/assistance.go",
+        "sha256": "80f6bebf57d232a33616062abbc12c6aac166874cdda3d009e5e3b5d867e0f1d"
+      },
+      {
+        "path": "internal/store/deliveries.go",
+        "sha256": "b2e88412d6122417d753fa4f1750617ad31b3efdf4cf8350c4d2a0507a335d8f"
+      },
+      {
+        "path": "internal/store/deliveries_integration_test.go",
+        "sha256": "278b98cc191189b0fcdd4309e3a4dfcfb1a984ef8ba366153d2ca393e616384d"
+      },
+      {
+        "path": "internal/store/identity.go",
+        "sha256": "9a7db0cc22a831c917dae9c59c88efe4980b453aad8eb050059ee680a5b90d19"
+      },
+      {
+        "path": "internal/store/intake.go",
+        "sha256": "3546f61d5f48f86b42d8fd686fee9b8c868e54774b716774b8d715e9969f2ae8"
+      },
+      {
+        "path": "internal/store/migration_integration_test.go",
+        "sha256": "f1c98a33e66db62ed8c05365ba4740f5a3f8f4329b37cb652d451bf53e55fd02"
+      },
+      {
+        "path": "internal/store/namespace.go",
+        "sha256": "ce4fb563937ca2369f185972f362158efb35a921986191fb515b00a6f376d8c7"
+      },
+      {
+        "path": "internal/store/namespace_integration_test.go",
+        "sha256": "b989b680cb0c5196632d5807e20963fd558f5a4a8bbacf062f2e99c7d0e7e9e7"
+      },
+      {
+        "path": "internal/store/schema.sql",
+        "sha256": "26c4a6bd9e354b5b6f63052368f6d1e687de007f6f74b96910bce0ef3a5460d9"
+      },
+      {
+        "path": "internal/store/snapshot.go",
+        "sha256": "684681b9aeaed7021a140b196746f880dfec04a1bb966497c879468a9367b9a1"
+      },
+      {
+        "path": "internal/store/ssh.go",
+        "sha256": "8c2ec2c9890b0ecca3faf84def360cecf07d1082e3d7481f2f63c35a9c6a2a2c"
+      },
+      {
+        "path": "internal/store/store.go",
+        "sha256": "d04a7e5044348a5e33185e5ff2ecfbaf41f5e09655579a8a85e9c6c8a22b438d"
+      },
+      {
+        "path": "internal/store/uploads.go",
+        "sha256": "135c70f735604631bb5d4de555dc5e3ac4eb06f08dd2e99b002b0aed3a0448e6"
+      },
+      {
+        "path": "internal/store/uploads_integration_test.go",
+        "sha256": "76bd7a2434fa44aecb394d64d5a035ccaf3a723dbcfad18f6c77b443f6aef84d"
+      },
+      {
+        "path": "internal/store/workflows.go",
+        "sha256": "fcf64ce2caf81b5220c2c502dd66d67b4f04463d5d77093487d1140677e678b6"
+      },
+      {
+        "path": "internal/vpath/path.go",
+        "sha256": "2a57a1a9f61390f3712f909e62336f7daba394d499591d20ddc95c15a66d57a5"
+      },
+      {
+        "path": "internal/vpath/path_test.go",
+        "sha256": "2a5489626f3ffb265249adbe4f4ed7698767c6a580dc976eb585d0a45d9cebd3"
+      },
+      {
+        "path": "internal/workflow/configuration.go",
+        "sha256": "ef3416a42dadced90fe63444dfad79f1bb5e2192733d4a1ebb1c9bcffd50e232"
+      },
+      {
+        "path": "internal/workflow/integration_test.go",
+        "sha256": "e47ad08ab3fda712a2d8acd128441d3824c01a20850b7e1f177e2612eef36614"
+      },
+      {
+        "path": "internal/workflow/review.go",
+        "sha256": "83b773abc52a519dfc091de51cf18b81f3a2b1b00976ff43786cb1cf8af6be2b"
+      },
+      {
+        "path": "internal/workflow/runs.go",
+        "sha256": "e1ada8b6699d3fa76dc8577c10dd73f2a2e0e06d84dc81f243462fbe9dd36b07"
+      },
+      {
+        "path": "internal/workflow/types.go",
+        "sha256": "f8324bcffc329e111a7ebb0f44bb6a77b6e0d6babc03bb4ddb4ac8175c306719"
+      },
+      {
+        "path": "internal/workflow/types_test.go",
+        "sha256": "0120a1e850e598b54f5d0d229819e97d2ea828aae686098b986140c765b5030a"
+      },
+      {
+        "path": "scripts/check-records.py",
+        "sha256": "35df8df21212a1136486d5a9f3335b67b19cdb24f2e053c90d21d4768ced1f1b"
+      },
+      {
+        "path": "scripts/dev-db.py",
+        "sha256": "05643d67e1a64d7e5f91c19108f5bfa3415571c8394721c5d7cc89862d51c12a"
+      },
+      {
+        "path": "scripts/go.sh",
+        "sha256": "aec6d7e09592b3954a89dc69839c6791e72a73dbafe2ca04b3b274276a23f5a8"
+      },
+      {
+        "path": "scripts/integration.sh",
+        "sha256": "a1f1d34ff041d7287d04aab634ad336bf7af7896f58241181081853a981d3464"
+      },
+      {
+        "path": "scripts/qualify-assistance.py",
+        "sha256": "2a407a8c671b88ac5f020ec700fbc4f0875ff1f69dd2e6b1207d9b0dbf6eae93"
+      },
+      {
+        "path": "scripts/qualify-deliveries.py",
+        "sha256": "fb7a5228d32efefd94f1897a43a4e2f18bbd3344ba8ecd50e3d37a9aba92d626"
+      },
+      {
+        "path": "scripts/qualify-foundation.py",
+        "sha256": "58c09294ce254facd957bfbd4ae7140e8c21411c9007dba9a92a772748fbe800"
+      },
+      {
+        "path": "scripts/qualify-https.py",
+        "sha256": "21936efd7cb89e0a3fe6bb95a3b786f630d75bba68ac0575faf76214228842af"
+      },
+      {
+        "path": "scripts/qualify-intake.py",
+        "sha256": "e3d4bf1a450270efb667457a4829a20e2ba3c02dd7e2aed233aa660aea84f6a3"
+      },
+      {
+        "path": "scripts/qualify-sftp.py",
+        "sha256": "3dc203afb7e5f8bb76210be6c3e45259a781803ba1140f3db971ea9b822c1027"
+      },
+      {
+        "path": "scripts/qualify-uploads.py",
+        "sha256": "b81401642f8a3c2634fb024d691dd6f11b5ed9ef7bbfef077d838837d41e9e15"
+      },
+      {
+        "path": "scripts/qualify-workflows.py",
+        "sha256": "d0d9dc1a10e2a07a8f463083b5597c63a2204b7d5fdb72b1912a0a83327c6be8"
+      },
+      {
+        "path": "scripts/verify-audit.py",
+        "sha256": "99f22fbd3e936aa4d38569ada1bfcccbca47e46f6c3e08aa47f6531128e9b983"
+      }
+    ],
+    "binary_sha256": "cabb14c07353da8d26ea84c05ff7aa190cad7923648913c83b9183b0bb03668a",
+    "sources_unchanged_during_run": true
+  },
+  "environment": {
+    "os": "macOS 27.2 build 26B5086k",
+    "native_platform": "darwin/arm64",
+    "go": "go1.26.10",
+    "postgresql": "16.15 retained task-owned Docker fixture, numeric loopback, non-owner runtime role without BYPASSRLS; disposable real databases for schema/transaction invariants",
+    "receiver": "Separate stock OpenSSH_10.5p1 daemon, separate fixture directories on same native machine",
+    "clients": [
+      "stock curl with fixture TLS trust",
+      "stock OpenSSH sftp with pinned host and explicit key",
+      "native freightctl CLI sharing the HTTPS services"
+    ],
+    "payload_size_bytes": 1769491,
+    "assistance": "Agent-created synthetic fixture and automated steps; no independent operator adoption",
+    "model": "No inference; local model starts, loads, warmups and evaluations remain disallowed.",
+    "processing": "Built-in freightctl-csv-v1; native delayed-owner case validates 900,000 synthetic records. No antivirus or cryptographic-file operation is exercised."
+  },
+  "checks": [
+    {
+      "name": "records",
+      "command": [
+        "python3",
+        "scripts/check-records.py"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 0.049,
+      "native_output": "evidence/raw/foundation-515ef1c8207a487c9de329d09212ada5/records.log",
+      "native_output_sha256": "457fa0e73258b6d5d3f99f5ddc34510e9b644d7056ff0218f5108e232d264422"
+    },
+    {
+      "name": "module-integrity",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "mod",
+        "verify"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 0.426,
+      "native_output": "evidence/raw/foundation-515ef1c8207a487c9de329d09212ada5/module-integrity.log",
+      "native_output_sha256": "b4537ed75f533f993f371954de47e42a793b8e5b0587577de7e27fb3e50696bd"
+    },
+    {
+      "name": "vet",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "vet",
+        "-p",
+        "1",
+        "./..."
+      ],
+      "exit_code": 0,
+      "duration_seconds": 2.749,
+      "native_output": "evidence/raw/foundation-515ef1c8207a487c9de329d09212ada5/vet.log",
+      "native_output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "unit-race",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "test",
+        "-p",
+        "1",
+        "-race",
+        "./..."
+      ],
+      "exit_code": 0,
+      "duration_seconds": 1.555,
+      "native_output": "evidence/raw/foundation-515ef1c8207a487c9de329d09212ada5/unit-race.log",
+      "native_output_sha256": "7cd5b3dcd69a8795953d28d44eb42bf8932c459b9cee4b7bc2249d1fec5d88e3"
+    },
+    {
+      "name": "postgres-integration-race",
+      "command": [
+        "sh",
+        "scripts/integration.sh",
+        "-p",
+        "1",
+        "-race",
+        "-v"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 78.86,
+      "native_output": "evidence/raw/foundation-515ef1c8207a487c9de329d09212ada5/postgres-integration-race.log",
+      "native_output_sha256": "0246ab7d610519ab3d231194e2dfecf1681c1a610bba5106ea8b35031d35db08"
+    },
+    {
+      "name": "virtual-path-fuzz",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "test",
+        "./internal/vpath",
+        "-fuzz=FuzzCanonicalPath",
+        "-fuzztime=5s",
+        "-parallel=2"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 6.948,
+      "native_output": "evidence/raw/foundation-515ef1c8207a487c9de329d09212ada5/virtual-path-fuzz.log",
+      "native_output_sha256": "c7cc2e2e515de9012b43b8dcc62d39ae4c58785aa0c1b79b361ae08d71fbddee"
+    },
+    {
+      "name": "sftp-packet-fuzz",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "test",
+        "./internal/sftpd",
+        "-fuzz=FuzzInspectPacket",
+        "-fuzztime=5s",
+        "-parallel=2"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 7.036,
+      "native_output": "evidence/raw/foundation-515ef1c8207a487c9de329d09212ada5/sftp-packet-fuzz.log",
+      "native_output_sha256": "422036b46d970bfb2ebc08fb824565bebdcbf6fbbe8cc086bab5ed74d2ff45d1"
+    },
+    {
+      "name": "custody-name-fuzz",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "test",
+        "./internal/custody",
+        "-fuzz=FuzzCustodyName",
+        "-fuzztime=5s",
+        "-parallel=2"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 6.182,
+      "native_output": "evidence/raw/foundation-515ef1c8207a487c9de329d09212ada5/custody-name-fuzz.log",
+      "native_output_sha256": "edee21a3f9337323edb2f6ec903f1974403e45a18a77cd876ec3c237ba32f5ea"
+    },
+    {
+      "name": "typed-workflow-fuzz",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "test",
+        "./internal/workflow",
+        "-fuzz=FuzzTypedWorkflow",
+        "-fuzztime=5s",
+        "-parallel=2"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 7.135,
+      "native_output": "evidence/raw/foundation-515ef1c8207a487c9de329d09212ada5/typed-workflow-fuzz.log",
+      "native_output_sha256": "876793e2ffd833f622a223de05d95ecb220b21ec1ee8b0c276e9a101ea6b4076"
+    },
+    {
+      "name": "csv-contract-fuzz",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "test",
+        "./internal/checks",
+        "-fuzz=FuzzCSVContract",
+        "-fuzztime=5s",
+        "-parallel=1"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 5.9,
+      "native_output": "evidence/raw/foundation-515ef1c8207a487c9de329d09212ada5/csv-contract-fuzz.log",
+      "native_output_sha256": "e8b4ae1e0c74298e724a98579f91143d0927a1e67c353b3dd5a72aad524a687b"
+    },
+    {
+      "name": "untrusted-model-output-fuzz",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "test",
+        "./internal/assistance",
+        "-fuzz=FuzzUntrustedModelOutput",
+        "-fuzztime=5s",
+        "-parallel=1"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 7.297,
+      "native_output": "evidence/raw/foundation-515ef1c8207a487c9de329d09212ada5/untrusted-model-output-fuzz.log",
+      "native_output_sha256": "de3aaaa79c832cebe042680a9e8f14a04aff1516fae76f5f86825b3e01003a7b"
+    },
+    {
+      "name": "stock-curl-https",
+      "command": [
+        "python3",
+        "scripts/qualify-https.py"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 5.402,
+      "native_output": "evidence/raw/foundation-515ef1c8207a487c9de329d09212ada5/stock-curl-https.log",
+      "native_output_sha256": "ba3bb9cba32d508a385c516728dd2fff0fdf97fb89142c927dabada274cbc9c2"
+    },
+    {
+      "name": "stock-openssh-sftp",
+      "command": [
+        "python3",
+        "scripts/qualify-sftp.py"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 7.474,
+      "native_output": "evidence/raw/foundation-515ef1c8207a487c9de329d09212ada5/stock-openssh-sftp.log",
+      "native_output_sha256": "fa0e60dc3888b597b038e4a292c956f018028ab109e43ecf2eb7ec4f8449683f"
+    },
+    {
+      "name": "durable-upload-resume",
+      "command": [
+        "python3",
+        "scripts/qualify-uploads.py"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 4.79,
+      "native_output": "evidence/raw/foundation-515ef1c8207a487c9de329d09212ada5/durable-upload-resume.log",
+      "native_output_sha256": "a6ec03ff71a294afbb1c8f6f7f6dbb2820e3da12ab37193e1daa5b12613ac0c7"
+    },
+    {
+      "name": "durable-outbound-delivery",
+      "command": [
+        "python3",
+        "scripts/qualify-deliveries.py"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 66.444,
+      "native_output": "evidence/raw/foundation-515ef1c8207a487c9de329d09212ada5/durable-outbound-delivery.log",
+      "native_output_sha256": "2b94b87579b1e6f0590042cd367fbfddbb0cbaeca003a9f1b1b660fca851064a"
+    },
+    {
+      "name": "versioned-workflow-execution",
+      "command": [
+        "python3",
+        "scripts/qualify-workflows.py"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 40.798,
+      "native_output": "evidence/raw/foundation-515ef1c8207a487c9de329d09212ada5/versioned-workflow-execution.log",
+      "native_output_sha256": "8278bf75aec84399a20605e0aefc5834cf8213db7c818b8ee8fcf47ae69b01a5"
+    },
+    {
+      "name": "assistance-control-contract-no-inference",
+      "command": [
+        "python3",
+        "scripts/qualify-assistance.py"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 4.56,
+      "native_output": "evidence/raw/foundation-515ef1c8207a487c9de329d09212ada5/assistance-control-contract-no-inference.log",
+      "native_output_sha256": "3ccb84aa638a858788018a12509aadccc27109cef1c18dd9c70b3ca513c078a0"
+    },
+    {
+      "name": "held-intake-and-csv-checks",
+      "command": [
+        "python3",
+        "scripts/qualify-intake.py"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 76.745,
+      "native_output": "evidence/raw/foundation-515ef1c8207a487c9de329d09212ada5/held-intake-and-csv-checks.log",
+      "native_output_sha256": "3e2c9bb412504965426e4d5817d97a824c44d3c84d1f52ef030a474939c23ecd"
+    }
+  ],
+  "foundation_manifest": {
+    "path": "evidence/raw/foundation-515ef1c8207a487c9de329d09212ada5/manifest.json",
+    "sha256": "1ad024b4f2c1df7849edaaaf6557dadeba1da18b8437f5e3b60ca58c0d3b03af"
+  },
+  "native_manifest": {
+    "path": "evidence/raw/intake-602e797f75f441d69cfad202078312ed/manifest.json",
+    "sha256": "6441b7a6abfe47b58e6ce9edc398c389cfab5d438d619b141592cfa36cb49d9c"
+  },
+  "native_intake": {
+    "duration_seconds": 76.645,
+    "steps": [
+      {
+        "name": "stock-curl-durable-source",
+        "size_bytes": 1769491,
+        "sha256": "84693c50dbb53e5e777a0d957822f39df4cb61dd28a1c9feb509d127ecfd5e58"
+      },
+      {
+        "name": "original-intake-policy-command",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "305afd3c1ba02518e6531e56c0f1a6d3b01b883fe1edf8e8de54680fd88e4bc6",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "policy-idempotent-replay",
+        "http_status": 200,
+        "output_sha256": "c23d8b45fbcfe79b2d6d2e22e5d22d35905c2e630f6ac7303e60304f42aa7c41"
+      },
+      {
+        "name": "unknown-executable-policy-field-refused",
+        "http_status": 400,
+        "output_sha256": "e1bf0470ce65155911d304c1da52bdb2b52bd14a54471f980c89b22bea1d86ba"
+      },
+      {
+        "name": "old-grants-cannot-administer-policy",
+        "http_status": 403,
+        "output_sha256": "051312f2746eb2e0c2c3ff38969ea28825fc938195aef775a488f8c9a06e55dd"
+      },
+      {
+        "name": "https-intake-held",
+        "http_status": 201,
+        "output_sha256": "837ff8aa7e71eda75c8b1173fa074c4a32dd4dca4fed61c146d8e8edbc43f562"
+      },
+      {
+        "name": "held-raw-id-denied",
+        "http_status": 409,
+        "output_sha256": "f1f3565cbd2be3624f516aae5f63c6b92054394c4d7cdc0b15b77a93cc2e8944"
+      },
+      {
+        "name": "held-path-not-published",
+        "http_status": 404,
+        "output_sha256": "fef916c279def93f790d739d8525fc7ffd697a4a492029472c5752bda04a4faf"
+      },
+      {
+        "name": "ordinary-publish-cannot-bypass-hold",
+        "http_status": 409,
+        "output_sha256": "f1f3565cbd2be3624f516aae5f63c6b92054394c4d7cdc0b15b77a93cc2e8944"
+      },
+      {
+        "name": "other-actor-check-denied",
+        "http_status": 404,
+        "output_sha256": "fef916c279def93f790d739d8525fc7ffd697a4a492029472c5752bda04a4faf"
+      },
+      {
+        "name": "old-grants-cannot-run-checks",
+        "http_status": 403,
+        "output_sha256": "051312f2746eb2e0c2c3ff38969ea28825fc938195aef775a488f8c9a06e55dd"
+      },
+      {
+        "name": "enroll-sftp-sender",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "6d87123e3024131ec98996b2f1b874f863421a305b786d0fcc83d877d582ab25",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "sftp-sender-identity",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "f5a624e8d918c938621042cb2b08a91fa898cb6cc9daf031ab0e7a8b9244ca7a",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "stock-sftp-durable-held-upload",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "95c79ed986643f96e710cfc6a27461bf4aa3980161902d957e8eabf121d219a7",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "stock-sftp-held-read-denied",
+        "exit_code": 1,
+        "expected_success": false,
+        "stdout_sha256": "7ef348f650c0a9e41239316d29cb459aeb33a9e3fc737433c9e3aac8410c0200",
+        "stderr_sha256": "68bf1fb8b7d958d49842ead48403c5e1432a4559ac283e50df988fadbd418b4a"
+      },
+      {
+        "name": "private-cli-intake-list",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "1719101d18eb409eca678525cfe2f1d10102a5a8035cfa88a01f984c1ae28b29",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "create-resumable-intake",
+        "http_status": 201,
+        "output_sha256": "2ffdc1999e63096a0524fe433ddd3c2e725feed8d1bb503c0782c254231b6808"
+      },
+      {
+        "name": "checkpoint-0",
+        "http_status": 200,
+        "output_sha256": "f346006bffd703885fca5221b0882a22fee3669cc4744d53203c9519521f9438"
+      },
+      {
+        "name": "checkpoint-1048576",
+        "http_status": 200,
+        "output_sha256": "837e837efa3306ee7cdfc31f77d957940f191b7a9e3824e00c7539f8934e34cb"
+      },
+      {
+        "name": "complete-resume-into-hold",
+        "http_status": 200,
+        "output_sha256": "f525ebccc82fb43ad12ec483ad8d19a9df67c3938885388cd6c75eaae25865fc"
+      },
+      {
+        "name": "held-after-restart-0",
+        "http_status": 200,
+        "output_sha256": "9a2e4b824069322f1d09b2e12628f618eda01c8864f0ecc34ef08d73f337b180"
+      },
+      {
+        "name": "held-after-restart-1",
+        "http_status": 200,
+        "output_sha256": "c5a1c948cb796a0095e37a3e682ceb236799e993293683d0d08899a05976bcd6"
+      },
+      {
+        "name": "held-after-restart-2",
+        "http_status": 200,
+        "output_sha256": "41606d10616a17e233efb249f3b26b61e1ddd54d813207631dc7519230ed3b85"
+      },
+      {
+        "name": "register-ordinary-receiver",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "80b255be4e23fe89a5edb66d45d9ba17ea2a13202b4e7a264463627579bb4ac6",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "ordinary-typed-draft",
+        "http_status": 200,
+        "output_sha256": "42912fa6688cdf4be36f874134a6faf8407517c97913bd0ce0d58d6dbfa50203"
+      },
+      {
+        "name": "ordinary-workflow-approval",
+        "http_status": 200,
+        "output_sha256": "4696d5a26a99f48e92c2d6bb9f922974ebbe38212c1ed7763bb02fab976e6928"
+      },
+      {
+        "name": "held-workflow-dispatch-denied",
+        "http_status": 409,
+        "output_sha256": "f1f3565cbd2be3624f516aae5f63c6b92054394c4d7cdc0b15b77a93cc2e8944"
+      },
+      {
+        "name": "cli-bounded-check-0",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "dee0101be424482d6f5ea05f0b64086b33073b286ee27fc1dde6e904aa204652",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "check-attempt-replay-0",
+        "http_status": 200,
+        "output_sha256": "a1cc1fba36fb38aa4fc6c40d3b80ae75fa7bb3e9de5c7a441e69af5f83350fa2"
+      },
+      {
+        "name": "checked-still-held-0",
+        "http_status": 200,
+        "output_sha256": "00f305fbfcd1f1d35a3bb3c59d9cd2f6476a6ee4e3419efdb3553e0bd9aaa9f5"
+      },
+      {
+        "name": "passing-result-needs-release-0",
+        "http_status": 409,
+        "output_sha256": "f1f3565cbd2be3624f516aae5f63c6b92054394c4d7cdc0b15b77a93cc2e8944"
+      },
+      {
+        "name": "wrong-byte-approval-denied-0",
+        "http_status": 409,
+        "output_sha256": "6fc066192828d024e45a6c7738de9dba7c00a6085246a435bc6bdc280c79a2c1"
+      },
+      {
+        "name": "cli-exact-release-0",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "518f77effcb7e4ebae08d0dd4d9d90fd4acf12e3d3b43c282e6124a6f45e49ad",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "release-replay-0",
+        "http_status": 200,
+        "output_sha256": "dafeb41b83ecc1dfec72d25066bebecbecbef30572b2d992aacf3a37975320e3"
+      },
+      {
+        "name": "cli-bounded-check-1",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "03cbb83cb7bf153deaacaba7951565dce0b18802e97024bd92e3c11473d88221",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "check-attempt-replay-1",
+        "http_status": 200,
+        "output_sha256": "a5492da42801051b7cdd581097dab2d3d1e0ef2b2b3c73a3c8213fd73b5c9c13"
+      },
+      {
+        "name": "checked-still-held-1",
+        "http_status": 200,
+        "output_sha256": "bc0f9f501a6156058bc0e4b07841b132800855f94df997705e0054c939c26f89"
+      },
+      {
+        "name": "passing-result-needs-release-1",
+        "http_status": 409,
+        "output_sha256": "f1f3565cbd2be3624f516aae5f63c6b92054394c4d7cdc0b15b77a93cc2e8944"
+      },
+      {
+        "name": "wrong-byte-approval-denied-1",
+        "http_status": 409,
+        "output_sha256": "6fc066192828d024e45a6c7738de9dba7c00a6085246a435bc6bdc280c79a2c1"
+      },
+      {
+        "name": "cli-exact-release-1",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "bab90465f0c0d1c5fb1dc6773b0d8cad51456402684eb5af12ffbbaff1bb9d32",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "release-replay-1",
+        "http_status": 200,
+        "output_sha256": "bd8c9d57f48e6fee51e762b42e3aa3b6b099a1a6746f272f44868cca20e56da6"
+      },
+      {
+        "name": "cli-bounded-check-2",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "23613c481cb8cdf59bb61814fc97627d5e065de034417c6d067097e92c646528",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "check-attempt-replay-2",
+        "http_status": 200,
+        "output_sha256": "47596ebe512c265ad170f20c9fd3ef3e9a4646f1689e81fcdd44a20515d07d9d"
+      },
+      {
+        "name": "checked-still-held-2",
+        "http_status": 200,
+        "output_sha256": "fbb50d5499bfbc84ae1b3addd51dc1c184a1ec34178b8fe00440ec283f1a15d8"
+      },
+      {
+        "name": "passing-result-needs-release-2",
+        "http_status": 409,
+        "output_sha256": "f1f3565cbd2be3624f516aae5f63c6b92054394c4d7cdc0b15b77a93cc2e8944"
+      },
+      {
+        "name": "wrong-byte-approval-denied-2",
+        "http_status": 409,
+        "output_sha256": "6fc066192828d024e45a6c7738de9dba7c00a6085246a435bc6bdc280c79a2c1"
+      },
+      {
+        "name": "cli-exact-release-2",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "dc0e6a06b515f408df536ee4d7f2a71d6f264349f951b07a959969e0a3379060",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "release-replay-2",
+        "http_status": 200,
+        "output_sha256": "b50f4eb2be2ef8e823255db6a7431fac625b0814c98d07d47d2bfc784c46006d"
+      },
+      {
+        "name": "stock-sftp-approved-exact-retrieval",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "7ef348f650c0a9e41239316d29cb459aeb33a9e3fc737433c9e3aac8410c0200",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "ordinary-run-of-checked-bytes",
+        "http_status": 200,
+        "output_sha256": "d08c4f9007e28273990fa925ad71df987eb3e12d9bb9a4cc52e2cb6f63c0b6f0"
+      },
+      {
+        "name": "ordinary-delivery-of-checked-revision",
+        "http_status": 200,
+        "output_sha256": "7c52f50c6905fa2d4a3db4f0b42013de3dc3ebd0009d285f98cf33811ace3509"
+      },
+      {
+        "name": "independent-stock-receiver-exact-bytes",
+        "size_bytes": 1769491,
+        "sha256": "84693c50dbb53e5e777a0d957822f39df4cb61dd28a1c9feb509d127ecfd5e58"
+      },
+      {
+        "name": "invalid-content-held",
+        "http_status": 201,
+        "output_sha256": "c47d3a2efb56a24da0a04a282c3ab159ee7d50201f5787594ca6fce3895937bf"
+      },
+      {
+        "name": "invalid-content-checked",
+        "http_status": 200,
+        "output_sha256": "5bb578abfd97a7db6668a08021c615e50084f9986b53eddfb4fb2448cf732aad"
+      },
+      {
+        "name": "invalid-content-remains-rejected",
+        "http_status": 200,
+        "output_sha256": "8808117e8c236613029338d3b5378f3621dde2874ac7c08d13fcd5b0bd11e047"
+      },
+      {
+        "name": "rejected-bytes-cannot-release",
+        "http_status": 409,
+        "output_sha256": "f1f3565cbd2be3624f516aae5f63c6b92054394c4d7cdc0b15b77a93cc2e8944"
+      },
+      {
+        "name": "rejected-raw-id-denied",
+        "http_status": 409,
+        "output_sha256": "f1f3565cbd2be3624f516aae5f63c6b92054394c4d7cdc0b15b77a93cc2e8944"
+      },
+      {
+        "name": "delayed-worker-source",
+        "http_status": 201,
+        "output_sha256": "9543637e42a531c9aeae7e49c6a854a0c571a79524f68b9551691bfb60fa00b0"
+      },
+      {
+        "name": "paused-worker-retains-durable-lease",
+        "http_status": 200,
+        "output_sha256": "f0fe29b16fe1cbe376e33a253be228e7deb231baaba692fa1eb8616f3fa92119"
+      },
+      {
+        "name": "live-lease-refuses-competing-worker",
+        "http_status": 409,
+        "output_sha256": "f1f3565cbd2be3624f516aae5f63c6b92054394c4d7cdc0b15b77a93cc2e8944"
+      },
+      {
+        "name": "expired-worker-replacement",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "86bef6f0ca5e71bc6593dd54135725bd99760dc45919239806a91567e4632b93",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "stale-worker-cannot-overwrite-result",
+        "http_status": 200,
+        "output_sha256": "398741b419e6e486dfce539d0817ecac47e47afc6265a6730c06ea0eaf603c1b"
+      },
+      {
+        "name": "original-attempt-replay-never-reexecutes",
+        "http_status": 200,
+        "output_sha256": "27a503c5478eeb62aedc8e85f849b075c34014349c6a0c39aacd1ff720803aba"
+      },
+      {
+        "name": "release-recovered-exact-revision",
+        "http_status": 200,
+        "output_sha256": "07f86721faa55f41d859fe551b8939eaadd61162c6e349bfad9f8eb9dfaded41"
+      },
+      {
+        "name": "actual-paused-worker-fencing",
+        "old_exit_code": 1,
+        "replacement_attempt": 2,
+        "lease_budget_seconds": 70,
+        "wait_seconds": 71.263
+      },
+      {
+        "name": "rotate-exact-intake-policy",
+        "http_status": 200,
+        "output_sha256": "fe39741c8eff0ac036aac0c25eb19b925a899be984c554216ea9ba7ae242d265"
+      },
+      {
+        "name": "old-released-policy-now-stale",
+        "http_status": 409,
+        "output_sha256": "f1f3565cbd2be3624f516aae5f63c6b92054394c4d7cdc0b15b77a93cc2e8944"
+      },
+      {
+        "name": "stock-sftp-stale-policy-denied",
+        "exit_code": 1,
+        "expected_success": false,
+        "stdout_sha256": "7ef348f650c0a9e41239316d29cb459aeb33a9e3fc737433c9e3aac8410c0200",
+        "stderr_sha256": "a119d5efe6b87ec22d6b86f8639f8e211f94cec7d1fddbc8466a54ff0c2b7faf"
+      },
+      {
+        "name": "historical-check-view",
+        "http_status": 200,
+        "output_sha256": "5a5b75903c2703e21ded8c90eb4137a5f3befc20a0abafd3ce01faf3f1c47c3f"
+      },
+      {
+        "name": "historical-integrity-only-scope-preserved",
+        "sha256": "84693c50dbb53e5e777a0d957822f39df4cb61dd28a1c9feb509d127ecfd5e58"
+      },
+      {
+        "name": "revoke-intake-policy",
+        "http_status": 200,
+        "output_sha256": "7dedc9250b6a68fe1683ff47d0097e039b77b21326da0a762b5d2b3bd39a1c0a"
+      },
+      {
+        "name": "revocation-never-falls-back-to-unchecked-intake",
+        "http_status": 409,
+        "output_sha256": "f1f3565cbd2be3624f516aae5f63c6b92054394c4d7cdc0b15b77a93cc2e8944"
+      }
+    ],
+    "payload_sha256": "84693c50dbb53e5e777a0d957822f39df4cb61dd28a1c9feb509d127ecfd5e58",
+    "inference_performed": false,
+    "local_model_processes_started": 0,
+    "malware_scanning_performed": false
+  },
+  "first_failures": [
+    {
+      "defect": "D026",
+      "reference": {
+        "path": ".private/intake-first-failure/manifest.json",
+        "sha256": "060417e88ec83804e0b47b87b20cd3268dd74e6eba1492fba4e63073c5038aa1"
+      },
+      "result": "intake-policy-register was unknown on the starting commit. The original command now registers the exact typed contract; all three real ingress paths remain held until checking and explicit release, followed by independent stock SFTP receipt verification."
+    }
+  ],
+  "fixture_observation": {
+    "reference": {
+      "path": ".private/intake-fixture-first-failure/manifest.json",
+      "sha256": "d0a91d7086e982a0a49970a5834b50c916f578d548f11d793e18d392088309aa"
+    },
+    "native_log": {
+      "path": ".private/intake-fixture-first-failure/native.log",
+      "sha256": "6143d89200e9dc682a960bd271a44528c688786c07ed0a9bca9ed8e0b2327a5b"
+    },
+    "finding": "The first release-replay assertion compared raw JSON bytes across JSONB key reordering. Full structured semantic equality now checks every field; no publication, isolation or resource assertion was relaxed."
+  },
+  "mechanisms": [
+    "Newly accepted revisions use the active administrator-selected partner intake policy. Missing/revoked/stale policy cannot silently weaken a configured intake. Existing integrity-only revisions and original replay receipts retain their explicit historical scope.",
+    "Filesystem sync precedes one PostgreSQL acceptance/check/idempotency transaction. Held target paths remain absent, and raw IDs, ordinary publication and workflow/direct delivery refuse held bytes even for administrators.",
+    "Ordinary HTTPS intake, native SFTP revision writes and resumable completion bind exact immutable file length/digest, policy version/hash, storage UUID, actor/mount authority, target and parent revision. All three survive restart while held.",
+    "Four journal-backed domain relations with forced tenant/partner policies; checks and command receipts also enforce actor restriction. Live runtime checks cover all twenty-seven domain relations. Existing credentials gain no implicit check/intake grants.",
+    "Deferred SQL constraints require new controlled acceptance and its exact bound check in one transaction and reject a new integrity-only acceptance after policy configuration. SQL guards also refuse publication/dispatch of held or stale controlled bytes.",
+    "A pure bounded UTF-8 CSV engine validates exact ordered headers, record/field counts, required values, lengths, text/integer/decimal/date contracts and full-file length/SHA-256. It neither changes bytes nor uses floating-point money conversion. Reports retain codes, positions and counters without offending cell values.",
+    "Reader/record/field/row/time budgets stop unbounded parser growth, including newline-free and quoted multiline attacks. Two independent PostgreSQL slots separate parsing from transfer and inference; no waiting parse queue grows.",
+    "A durable worker identity, attempt and 70-second database lease precede parsing. Stable-key replay returns that same attempt without running it again; fresh keys can retry eligible failed/expired attempts, up to three total.",
+    "The native test pauses one actual worker after its attempt commits, waits for the unchanged database lease, completes under a second worker, resumes the old process and verifies refusal without overwriting the newer passing result. Original-key replay stays attached to attempt one.",
+    "A passing report still grants no file access. Release needs exact file/policy/report hashes and state revision plus current read/write/release authority, current target/policy/storage and re-verification of actual bytes.",
+    "Release, minimal shared release proof, optional namespace publication and command receipt commit atomically. Real receipt failure rolls everything back. Another authorized partner reader can read the released path without reading private check bindings.",
+    "HTTP ranges and SFTP read the verified descriptor with current authority/release checks before bounded reads. Policy rotation/revocation blocks future controlled reads/dispatch; bytes already received cannot be recalled.",
+    "After explicit workflow approval, the ordinary engine sends the exact released revision to a separate stock OpenSSH receiver; an independent stock SFTP client retrieves and hashes those bytes. This proves transport integrity, not downstream business acceptance."
+  ],
+  "migration_notes": {
+    "new_version": 10,
+    "migration_10_sha256": "585c17ed2e05379b58e6fbc44ac985d223fe58a2626a28cc9b9bf1a8c98002f1",
+    "unchanged_applied_versions": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "new_relations": [
+      "intake_policies",
+      "file_checks",
+      "file_releases",
+      "check_receipts"
+    ],
+    "new_grants": [
+      "intake_manage",
+      "check_run",
+      "check_release"
+    ],
+    "existing_grants": "Unchanged. The v1-upgrade regression rejects implicit intake/check grants; new development bootstrap administrators get eighteen grants."
+  },
+  "security": {
+    "govulncheck": {
+      "exit_code": 0,
+      "duration_seconds": 14.743,
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "run",
+        "-p",
+        "1",
+        "golang.org/x/vuln/cmd/govulncheck@v1.9.0",
+        "-json",
+        "./..."
+      ],
+      "config": {
+        "protocol_version": "v1.0.0",
+        "scanner_name": "govulncheck",
+        "scanner_version": "v1.9.0",
+        "db": "https://vuln.go.dev",
+        "db_last_modified": "2026-10-27T21:16:18Z",
+        "go_version": "go1.26.10",
+        "scan_level": "symbol",
+        "scan_mode": "source"
+      },
+      "findings": [
+        {
+          "osv": "GO-2026-5932",
+          "trace": [
+            {
+              "module": "golang.org/x/crypto",
+              "version": "v0.58.0"
+            }
+          ]
+        }
+      ],
+      "affected_packages": [
+        "golang.org/x/crypto/openpgp",
+        "golang.org/x/crypto/openpgp/armor",
+        "golang.org/x/crypto/openpgp/clearsign",
+        "golang.org/x/crypto/openpgp/elgamal",
+        "golang.org/x/crypto/openpgp/errors",
+        "golang.org/x/crypto/openpgp/packet",
+        "golang.org/x/crypto/openpgp/s2k"
+      ],
+      "imported_affected_packages": [],
+      "reachable_symbol_findings": [],
+      "native_report": {
+        "path": ".private/intake-scans/govulncheck.json",
+        "sha256": "1f8167fc202334ceaa92951ece611a7cd16ebaec547b0497b0ad5b95c1b1f284"
+      },
+      "dependency_inventory": {
+        "path": ".private/intake-scans/native-dependencies.txt",
+        "sha256": "467722f17acb704f3e445b30dfc52e94851b9085dfb38a8f96f9dfe05a158070"
+      },
+      "assessment_reference": {
+        "path": ".private/intake-scans/govulncheck-manifest.json",
+        "sha256": "373a70fe64d4d736d9bd97769b1df4acc36c233820045d2ccb5c778cd7d2cb69"
+      },
+      "conclusion": "GO-2026-5932 remains a module advisory for unimported OpenPGP packages. No affected package is imported and no reachable symbol is reported in this native build; no zero-advisory or all-platform release claim."
+    },
+    "gitleaks": {
+      "tool": "8.30.1",
+      "image": "ghcr.io/gitleaks/gitleaks@sha256:c00b6bd0aeb3071cbcb79009cb16a60dd9e0a7c60e2be9ab65d25e6bc8abbb7f",
+      "manifest_reference": ".private/intake-scans/gitleaks-manifest.json",
+      "source_inventory_reference": ".private/intake-scans/source-input-manifest.json",
+      "required_result": "Final source and reachable history must both pass with empty reports; reachable history is scanned again after the local commit.",
+      "scope": "Only regular tracked/unignored source and reachable Git history. Credentials, model weights, raw evidence and runtime payloads are excluded.",
+      "observed_source_findings": 0,
+      "observed_history_findings": 0,
+      "native_result_note": "Pinned source and reachable-history scans pass with empty reports. Final source inventory and post-commit history verification are retained at the manifest reference."
+    }
+  },
+  "limits": [
+    "Bounded UTF-8 comma-separated CSV contract only; this is not antivirus, signature verification or a complete business-file workflow.",
+    "New acceptance uses configured policy; historical integrity-only revisions retain their original scope. No retroactive check verdict.",
+    "Explicit actor-owned checking/release. Delegated reviewers, automatic workers, policy rebind, re-scan and retention/cleanup remain open.",
+    "Local development storage and loopback SFTP with required sync/hardlink extensions. Transport integrity is not downstream business acceptance.",
+    "Assisted same-host fixture, not independent adoption, native Linux/Windows, HA, performance/endurance or full journey qualification.",
+    "CSV checking is not antivirus, ICAP/DLP, signature validation, encryption or a complete secure business-file workflow. Required engines, protocols, receipts and typed processing tasks remain open.",
+    "No retrospective check verdict or estate-wide policy claim. Legacy integrity-only files remain in their recorded scope. Controlled revisions under a retired/revoked policy require a future governed rebind/re-scan design; no force-clean/release bypass exists.",
+    "Actor-owned checking/release and one local custody root. Upload-only senders, separate delegated reviewers, human approval UI, auto workers, fair/configurable queues and protected retention/cleanup remain required.",
+    "The source metadata current flag is not a fresh disk hash. Actual bytes are verified for check/release/download; storage administrators and host root remain outside the local protection boundary. Cancellation is observed between filesystem reads, not a guarantee against a kernel call that never returns.",
+    "Bounded reader tests and native correctness cases do not establish the reference performance/memory target, large-file gates or endurance qualification.",
+    "All required AI profiles, held-out results and inference qualification remain open under X05. No model was started, loaded, warmed or evaluated.",
+    "No complete customer journey, permitted incumbent observation, native Linux/Windows, multi-host production, independent adoption, offline release bundle or enterprise/release qualification."
+  ]
+}

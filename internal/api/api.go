@@ -12,6 +12,7 @@ import (
 
 	"github.com/ctlplne/freightctl/internal/assistance"
 	"github.com/ctlplne/freightctl/internal/audit"
+	"github.com/ctlplne/freightctl/internal/checks"
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/custody"
 	"github.com/ctlplne/freightctl/internal/store"
@@ -24,12 +25,14 @@ type Server struct {
 	Audit      *audit.Service
 	auditSlots chan struct{}
 	Assistance *assistance.Service
+	Checks     *checks.Service
 }
 
 func New(service *custody.Service, audits *audit.Service, enableAssistance ...bool) http.Handler {
 	s := &Server{Service: service, Audit: audits, slots: make(chan struct{}, 8), auditSlots: make(chan struct{}, 1)}
 	enabled := len(enableAssistance) == 1 && enableAssistance[0]
 	s.Assistance = &assistance.Service{DB: service.DB, Enabled: enabled}
+	s.Checks = &checks.Service{Custody: service}
 	m := http.NewServeMux()
 	m.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
@@ -41,6 +44,17 @@ func New(service *custody.Service, audits *audit.Service, enableAssistance ...bo
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/custody/reconcile", s.reconcile)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/audit/export", s.exportAudit)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/identity", s.identity)
+	for _, pattern := range []string{
+		"GET /v1/tenants/{tenant}/partners/{partner}/intake-policy",
+		"POST /v1/tenants/{tenant}/partners/{partner}/intake-policy",
+		"POST /v1/tenants/{tenant}/partners/{partner}/intake-policy/revoke",
+		"GET /v1/tenants/{tenant}/partners/{partner}/checks/{file}",
+		"GET /v1/tenants/{tenant}/partners/{partner}/checks",
+		"POST /v1/tenants/{tenant}/partners/{partner}/checks/{file}/run",
+		"POST /v1/tenants/{tenant}/partners/{partner}/checks/{file}/release",
+	} {
+		m.HandleFunc(pattern, s.checks)
+	}
 	for _, pattern := range []string{
 		"GET /v1/tenants/{tenant}/partners/{partner}/ai/profiles/{profile}/{version}",
 		"POST /v1/tenants/{tenant}/partners/{partner}/ai/jobs",
@@ -216,7 +230,7 @@ func (s *Server) upload(w http.ResponseWriter, r *http.Request) {
 	if replay {
 		status = http.StatusOK
 	}
-	respond(w, status, map[string]any{"file": f, "replayed": replay, "acceptance": "durable-local-integrity-only"})
+	respond(w, status, map[string]any{"file": f, "replayed": replay, "acceptance": custody.Acceptance(f)})
 }
 func (s *Server) download(w http.ResponseWriter, r *http.Request) {
 	identity, err := scope(r)
@@ -224,7 +238,7 @@ func (s *Server) download(w http.ResponseWriter, r *http.Request) {
 		failure(w, err)
 		return
 	}
-	f, data, err := s.Service.Download(r.Context(), identity, r.PathValue("file"))
+	f, data, err := s.Service.OpenFileReader(r.Context(), identity, r.PathValue("file"))
 	if err != nil {
 		failure(w, err)
 		return
@@ -233,8 +247,9 @@ func (s *Server) download(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/octet-stream")
 	w.Header().Set("Content-Disposition", `attachment; filename="`+f.ID+`"`)
 	w.Header().Set("X-Content-SHA256", f.SHA256)
-	// ServeContent implements ranges using the same verified descriptor.
-	http.ServeContent(w, r, f.ID, time.Time{}, data)
+	// Ranges use the same verified descriptor, with current authority and intake
+	// release checks before each bounded read, including during a long response.
+	http.ServeContent(w, r, f.ID, time.Time{}, io.NewSectionReader(data, 0, f.Size))
 }
 func (s *Server) events(w http.ResponseWriter, r *http.Request) {
 	identity, err := scope(r)

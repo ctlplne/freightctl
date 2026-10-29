@@ -64,11 +64,11 @@ The model context contains only the reviewed text, supported operation descripti
 
 `ai-diagnose` prepares context for one authorized `run_id`, with the profile reference and `kind: diagnose` on HTTP. It derives bounded facts from real run, workflow, connection and delivery records. Event IDs are mapped to aliases such as `e1` in the prompt. The stored bindings retain the actual immutable event references. It does not forward whole journal payloads or general logs.
 
-Preparation requires `ai_use` plus the ordinary resource grants: workflow management for proposals, or workflow access and source read authority for diagnosis. It persists the selected profile, current mount/authority revision, exact resource snapshots, redacted context and original idempotency receipt atomically. All three new tables have forced tenant/partner and restrictive actor row policies. Runtime transactions check all twenty-three domain relations live.
+Preparation requires `ai_use` plus the ordinary resource grants: workflow management for proposals, or workflow access and source read authority for diagnosis. It persists the selected profile, current mount/authority revision, exact resource snapshots, redacted context and original idempotency receipt atomically. All three new tables have forced tenant/partner and restrictive actor row policies. Runtime transactions check all twenty-seven domain relations live.
 
 Inspect `ai-status --ai-job-id ID`. Review the context, profile version/hash, bindings and state. Approve with `ai-approve --ai-job-id ID --context-hash HASH --expected-revision REV --idempotency-key APPROVAL_KEY`. This needs `ai_disclose` as well as `ai_use`. Approval binds exact bytes and state; request text cannot approve itself. Profile, actor authority and current resource snapshots are checked again. The operation approves disclosure only, not a workflow or delivery.
 
-Migration 9 adds `ai_manage`, `ai_use` and `ai_disclose`. Existing accounts keep their prior grants; newly bootstrapped development administrators receive all fifteen grants. The initial ownership model is root-mounted and actor-private. Delegated human lifecycle and separation of duties need further work.
+Migration 9 adds `ai_manage`, `ai_use` and `ai_disclose`. Existing accounts keep their prior grants; newly bootstrapped development administrators receive all eighteen grants. The initial ownership model is root-mounted and actor-private. Delegated human lifecycle and separation of duties need further work.
 
 ## Generate and validate
 

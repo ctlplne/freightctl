@@ -121,7 +121,13 @@ func (s *Service) OpenRevisionWriter(ctx context.Context, scope store.Scope, vir
 			_ = s.Disk.sync()
 		}
 	}()
+	if err = t.ConfigureIntakeFile(admission, &w.file); err != nil {
+		return nil, err
+	}
 	if old != nil && !options.Truncate {
+		if err = t.FileAvailable(admission, old.FileID); err != nil {
+			return nil, err
+		}
 		previous, err := t.File(admission, old.FileID)
 		if err != nil {
 			return nil, err
@@ -360,8 +366,15 @@ func (w *RevisionWriter) Close() error {
 	if err = w.tx.Accept(w.ctx, w.key, meaning, &w.file); err != nil {
 		return w.fail(err)
 	}
-	if _, err = w.tx.ApplyPathCommand(w.ctx, w.key, targetCommand(&w.target, w.file.ID), w.service.NamespaceMaxEntries); err != nil {
+	command := targetCommand(&w.target, w.file.ID)
+	held, err := w.tx.BindIntake(w.ctx, &w.file, w.service.Disk.Identity(), &command)
+	if err != nil {
 		return w.fail(err)
+	}
+	if !held {
+		if _, err = w.tx.ApplyPathCommand(w.ctx, w.key, command, w.service.NamespaceMaxEntries); err != nil {
+			return w.fail(err)
+		}
 	}
 	if err = w.tx.Reauthorize(w.ctx); err != nil {
 		return w.fail(err)
@@ -385,11 +398,24 @@ type RevisionReader struct {
 }
 
 func (s *Service) OpenRevisionReader(ctx context.Context, scope store.Scope, virtual string) (*RevisionReader, error) {
+	_, reader, err := s.OpenPathReader(ctx, scope, virtual)
+	return reader, err
+}
+
+func (s *Service) OpenFileReader(ctx context.Context, scope store.Scope, id string) (*store.File, *RevisionReader, error) {
+	file, data, err := s.Download(ctx, scope, id)
+	if err != nil {
+		return nil, nil, err
+	}
+	return file, &RevisionReader{service: s, ctx: ctx, scope: scope, file: file, data: data}, nil
+}
+
+func (s *Service) OpenPathReader(ctx context.Context, scope store.Scope, virtual string) (*store.File, *RevisionReader, error) {
 	file, data, err := s.DownloadPath(ctx, scope, virtual)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	return &RevisionReader{service: s, ctx: ctx, scope: scope, file: file, data: data}, nil
+	return file, &RevisionReader{service: s, ctx: ctx, scope: scope, file: file, data: data}, nil
 }
 func (r *RevisionReader) ReadAt(p []byte, offset int64) (int, error) {
 	r.mu.Lock()
