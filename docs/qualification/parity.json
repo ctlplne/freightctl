@@ -2365,10 +2365,13 @@
         "independent operator or receiver"
       ],
       "acceptance_journey": "J02",
-      "state": "planned",
-      "evidence": [],
+      "state": "implementing",
+      "evidence": [
+        "docs/qualification/evidence/F013-scanner-controls.json"
+      ],
       "qualification_blockers": [
-        "Authorized MOVEit Automation installation and exact edition/version for observed comparison"
+        "Authorized MOVEit Automation installation and exact edition/version for observed comparison",
+        "X06: genuine engine with standard signature database, independent detection corpus and resource/sandbox qualification remain open. F013 proves integration/outage controls only; database stays unloaded pending owner resource/endpoint choice."
       ]
     },
     {

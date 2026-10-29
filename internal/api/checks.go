@@ -20,6 +20,20 @@ func (s *Server) checks(w http.ResponseWriter, r *http.Request) {
 	key := r.Header.Get("Idempotency-Key")
 	var result any
 	switch r.Pattern {
+	case "GET /v1/tenants/{tenant}/partners/{partner}/scanners/{scanner}/{version}", "POST /v1/tenants/{tenant}/partners/{partner}/scanners/{scanner}/{version}/revoke":
+		version, parseErr := strconv.Atoi(r.PathValue("version"))
+		if parseErr != nil || version < 1 {
+			err = checks.ErrInput
+			break
+		}
+		if r.Method == http.MethodGet {
+			result, err = s.Checks.Scanner(r.Context(), scope, r.PathValue("scanner"), version)
+		} else {
+			var decision workflow.Decision
+			if err = workflowInput(w, r, &decision); err == nil {
+				result, err = s.Checks.RevokeScanner(r.Context(), scope, r.PathValue("scanner"), version, key, decision)
+			}
+		}
 	case "POST /v1/tenants/{tenant}/partners/{partner}/pgp-keys":
 		var request checks.PGPKeyRequest
 		if err = workflowInput(w, r, &request); err == nil {

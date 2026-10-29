@@ -75,9 +75,9 @@ Check bindings and reports are actor private. A released path can be read by ano
 
 ## Persistence and bounds
 
-Migration 10 adds `intake_policies`, `file_checks`, `file_releases` and `check_receipts`, with forced tenant/partner row security; checks and command receipts also enforce actor restriction. Migration 11 adds two signature/key relations and migration 12 adds one ciphertext relation; all thirty domain relations are checked live. Exact event guards bind policy/check transitions and release proofs. Deferred SQL checks require a new controlled acceptance and its bound check in the same transaction, and reject new unchecked acceptance after policy configuration. SQL publication/delivery guards also refuse held bytes.
+Migration 10 adds `intake_policies`, `file_checks`, `file_releases` and `check_receipts`, with forced tenant/partner row security; checks and command receipts also enforce actor restriction. Migration 11 adds two signature/key relations, migration 12 one ciphertext relation, and migration 13 one scanner profile relation; all thirty-one domain relations are checked live. Exact event guards bind policy/check transitions and release proofs. Deferred SQL checks require a new controlled acceptance and its bound check in the same transaction, and reject new unchecked acceptance after policy configuration. SQL publication/delivery guards also refuse held bytes. An optional required [scanner profile](scanners.md) runs before CSV parsing and adds expiring proof to release; real malware detection remains unqualified.
 
-The grants `intake_manage`, `check_run` and `check_release` are explicit. Existing accounts keep their old grants. Newly bootstrapped development administrators receive nineteen grants, including the separate `pgp_manage` grant. The current workflow is actor owned; an upload-only sender and a separate delegated reviewer need further identity/lifecycle work.
+The grants `intake_manage`, `check_run` and `check_release` are explicit. Existing accounts keep their old grants. Newly bootstrapped development administrators receive twenty grants, including separate `pgp_manage` and `scanner_manage` grants. The current workflow is actor owned; an upload-only sender and a separate delegated reviewer need further identity/lifecycle work.
 
 | Bound | Current behavior |
 | --- | --- |

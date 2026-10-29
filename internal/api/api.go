@@ -50,6 +50,8 @@ func New(service *custody.Service, audits *audit.Service, enableAssistance ...bo
 		"POST /v1/tenants/{tenant}/partners/{partner}/intake-policy/revoke",
 		"GET /v1/tenants/{tenant}/partners/{partner}/checks/{file}",
 		"GET /v1/tenants/{tenant}/partners/{partner}/checks",
+		"GET /v1/tenants/{tenant}/partners/{partner}/scanners/{scanner}/{version}",
+		"POST /v1/tenants/{tenant}/partners/{partner}/scanners/{scanner}/{version}/revoke",
 		"POST /v1/tenants/{tenant}/partners/{partner}/pgp-keys",
 		"GET /v1/tenants/{tenant}/partners/{partner}/pgp-keys/{key}/{version}",
 		"POST /v1/tenants/{tenant}/partners/{partner}/pgp-keys/{key}/{version}/revoke",

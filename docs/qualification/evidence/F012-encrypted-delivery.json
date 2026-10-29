@@ -514,7 +514,12 @@
       "first_redacted_source_alerts": ".private/encryption-scans/native-first-alerts/source.json",
       "scanner_configuration": "Unchanged default rules; no allowlist, baseline, suppression or assertion relaxation."
     },
-    "application_sources_unchanged_since_run": true
+    "application_sources_unchanged_since_run": true,
+    "committed_source": {
+      "commit": "c02a52fc7a44e8225c5d9124c8f58275013aa775",
+      "source_files_verified": 122,
+      "method": "SHA-256 comparison of every candidate source entry against the Git blob at this commit; original postqualification metadata note retained."
+    }
   },
   "environment": {
     "os": "macOS 27.2 build 26B5086k",

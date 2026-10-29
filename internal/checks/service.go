@@ -9,6 +9,7 @@ import (
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/custody"
+	"github.com/ctlplne/freightctl/internal/scanner"
 	"github.com/ctlplne/freightctl/internal/store"
 )
 
@@ -194,6 +195,11 @@ func (s *Service) Register(ctx context.Context, scope store.Scope, key string, r
 			return nil, err
 		}
 	}
+	if definition.Scanner != nil {
+		if _, _, err = t.CurrentScanner(ctx, *definition.Scanner); err != nil {
+			return nil, err
+		}
+	}
 	if p != nil && p.State == "active" {
 		previous := p.Revision
 		p.Revision++
@@ -271,6 +277,11 @@ func (s *Service) current(ctx context.Context, t *store.Transaction, c *store.Fi
 	}
 	if definition.Signature != nil {
 		if _, _, err = keyCurrent(ctx, t, definition.Signature); err != nil {
+			return nil, nil, err
+		}
+	}
+	if definition.Scanner != nil {
+		if _, _, err = t.CurrentScanner(ctx, *definition.Scanner); err != nil {
 			return nil, nil, err
 		}
 	}
@@ -455,17 +466,34 @@ func (s *Service) Run(ctx context.Context, scope store.Scope, id, key string) (*
 			}
 		}
 	}()
-	data, parseErr := s.Custody.Disk.VerifiedContext(ctx, custody.Name(scope.Tenant, scope.Partner, id), b.File.Size, b.File.SHA256)
-	var report Report
-	if parseErr == nil {
-		report, parseErr = Validate(ctx, policy, b.File, c.PolicyHash, data)
-		_ = data.Close()
-	}
-	if parseErr == nil && report.Code == "valid_csv" && policy.Signature != nil {
+	var parseErr error
+	var scanFailed bool
+	report := Report{Engine: Engine, FileID: id, SHA256: b.File.SHA256, PolicyHash: c.PolicyHash, Bytes: b.File.Size, Code: "valid_csv"}
+	if policy.Signature != nil {
 		report.Signature, parseErr = s.verifySignature(ctx, scope, c, b, policy, "check_run")
 		if errors.Is(parseErr, secure.ErrPGPInput) || errors.Is(parseErr, secure.ErrPGPVerification) {
 			report.Code = "signature_invalid"
 			parseErr = nil
+		}
+	}
+	if parseErr == nil && report.Code == "valid_csv" && policy.Scanner != nil {
+		report.Scanner, parseErr = s.scan(ctx, scope, c, b, *policy.Scanner, a)
+		scanFailed = parseErr != nil
+		if parseErr == nil && report.Scanner.Result.Verdict != "clean" {
+			report.Code = "scanner_" + report.Scanner.Result.Verdict
+		}
+	}
+	if parseErr == nil && report.Code == "valid_csv" {
+		data, err := s.Custody.Disk.VerifiedContext(ctx, custody.Name(scope.Tenant, scope.Partner, id), b.File.Size, b.File.SHA256)
+		if err != nil {
+			parseErr = err
+		} else {
+			parsed, err := Validate(ctx, policy, b.File, c.PolicyHash, data)
+			_ = data.Close()
+			parsed.Signature = report.Signature
+			parsed.Scanner = report.Scanner
+			report = parsed
+			parseErr = err
 		}
 	}
 	close(stop)
@@ -501,6 +529,9 @@ func (s *Service) Run(ctx context.Context, scope store.Scope, id, key string) (*
 	} else if parseErr != nil {
 		current.State = "failed"
 		current.Code = "source_or_parser_unavailable"
+		if scanFailed {
+			current.Code = "scanner_unavailable"
+		}
 	} else {
 		encoded, hash, err := canonical(report)
 		if err != nil {
@@ -511,6 +542,9 @@ func (s *Service) Run(ctx context.Context, scope store.Scope, id, key string) (*
 		if report.Signature != nil && report.Signature.Verification.ValidUntil != nil && !now.Before(*report.Signature.Verification.ValidUntil) {
 			current.State = "failed"
 			current.Code = "signature_expired"
+		} else if report.Scanner != nil && !now.Before(report.Scanner.ValidUntil) {
+			current.State = "failed"
+			current.Code = "scan_expired"
 		} else if report.Code == "valid_csv" {
 			current.State = "passed"
 			current.ReportHash = hash
@@ -588,6 +622,19 @@ func (s *Service) Release(ctx context.Context, scope store.Scope, id, key string
 		_, approvedHash, _ := canonical(approved.Signature)
 		if actualHash != approvedHash {
 			return nil, store.ErrRevision
+		}
+	}
+	if policy.Scanner != nil {
+		var approved Report
+		if json.Unmarshal(c.Report, &approved) != nil || approved.Scanner == nil || approved.Scanner.Result == nil || approved.Scanner.Result.Verdict != "clean" || approved.Scanner.Profile != *policy.Scanner {
+			return nil, store.ErrState
+		}
+		profile, now, err := t.CurrentScanner(ctx, *policy.Scanner)
+		if err != nil {
+			return nil, err
+		}
+		if !now.Before(approved.Scanner.ValidUntil) || scanner.ConfigurationCurrent(ctx, *profile) != nil {
+			return nil, store.ErrState
 		}
 	}
 	previous := c.Revision

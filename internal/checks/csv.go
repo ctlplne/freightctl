@@ -1,5 +1,6 @@
 // Package checks validates held immutable revisions. It never interprets file
-// contents as instructions and has no model, shell or network capability.
+// contents as instructions. Pure CSV parsing has no model, shell or network
+// capability; scanner I/O lives behind the separate bounded scanner adapter.
 package checks
 
 import (
@@ -37,14 +38,15 @@ type Column struct {
 	Scale     int    `json:"scale,omitempty"`
 }
 type Policy struct {
-	Schema         int              `json:"schema_version"`
-	Kind           string           `json:"kind"`
-	Columns        []Column         `json:"columns"`
-	MaxBytes       int64            `json:"max_bytes"`
-	MaxRows        int64            `json:"max_rows"`
-	MaxRecordBytes int              `json:"max_record_bytes"`
-	TimeoutSeconds int              `json:"timeout_seconds"`
-	Signature      *SignaturePolicy `json:"signature,omitempty"`
+	Schema         int                     `json:"schema_version"`
+	Kind           string                  `json:"kind"`
+	Columns        []Column                `json:"columns"`
+	MaxBytes       int64                   `json:"max_bytes"`
+	MaxRows        int64                   `json:"max_rows"`
+	MaxRecordBytes int                     `json:"max_record_bytes"`
+	TimeoutSeconds int                     `json:"timeout_seconds"`
+	Signature      *SignaturePolicy        `json:"signature,omitempty"`
+	Scanner        *store.ScannerReference `json:"scanner,omitempty"`
 }
 type SignaturePolicy struct {
 	Key           store.PGPReference `json:"key"`
@@ -71,9 +73,13 @@ type Report struct {
 	Row        int64           `json:"row,omitempty"`
 	Column     int             `json:"column,omitempty"`
 	Signature  *SignatureProof `json:"signature,omitempty"`
+	Scanner    *ScanProof      `json:"scanner,omitempty"`
 }
 
 func Normalize(p Policy) (Policy, error) {
+	if p.Scanner != nil && (!store.ValidID(p.Scanner.ID) || p.Scanner.Version < 1 || !hashPattern.MatchString(p.Scanner.Hash)) {
+		return p, ErrInput
+	}
 	if p.Signature != nil && (!store.ValidID(p.Signature.Key.ID) || p.Signature.Key.Version < 1 || !hashPattern.MatchString(p.Signature.Key.Hash)) {
 		return p, ErrInput
 	}

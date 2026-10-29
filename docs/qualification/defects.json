@@ -448,6 +448,36 @@
       "regression_evidence": [
         "docs/qualification/evidence/F012-encrypted-delivery.json"
       ]
+    },
+    {
+      "id": "D030",
+      "severity": "missing required capability",
+      "state": "fixed locally",
+      "observed_on": "2026-10-29",
+      "candidate": "c02a52fc7a44e8225c5d9124c8f58275013aa775",
+      "journey": "J02",
+      "reproduction": ".cache/freightctl scanner-register",
+      "first_failure": "freightctl: unknown command; use --help (exit 1)",
+      "cause": "No registered scanner profile, INSTREAM adapter or scan-bound intake/release proof existed.",
+      "resolution": "Implement local protected profile enrollment, bounded exact-byte protocol handling and fail-closed policy/publication guards. CLI/HTTPS outage and real PostgreSQL controls pass. Operational malware detection remains unqualified; this closes the integration absence only.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F013-scanner-controls.json"
+      ]
+    },
+    {
+      "id": "D031",
+      "severity": "operational integration failure",
+      "state": "fixed locally",
+      "observed_on": "2026-10-29",
+      "candidate": "uncommitted F013 scanner integration",
+      "journey": "J02",
+      "reproduction": "Native real PostgreSQL TestScannerExpiryRoundTrips with expiry nanoseconds ending 123456789; ordinary CLI registration and GET roundtrip.",
+      "first_failure": "scanner profile requires its exact event and expiry (SQLSTATE 23514); subsequent CLI/GET exact equality failed for UTC versus local-offset encoding.",
+      "cause": "Canonical JSON retained nanoseconds while PostgreSQL stores microseconds; sanitized view then retained host-local offset.",
+      "resolution": "Canonicalize expiry to UTC microseconds before hashing/journaling, and normalize sanitized response to UTC. Exact SQL assertion and wire-equality assertion remain unchanged. Original precision and native outage journeys rerun.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F013-scanner-controls.json"
+      ]
     }
   ]
 }

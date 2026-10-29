@@ -32,7 +32,7 @@ func main() {
 }
 func run(args []string) error {
 	if len(args) == 0 || args[0] == "--help" || args[0] == "help" {
-		fmt.Println("freightctl: init | token | enroll | identity | namespace | dev-cert | serve | reconcile | audit-keygen | audit-export | ssh-host-keygen | ssh-key-enroll | ssh-key-revoke | serve-sftp | upload-create | upload-status | upload-append | upload-complete | upload-abort | delivery-create | delivery-status | delivery-approve | delivery-cancel | delivery-work | delivery-reconcile\nConnections: connection-register | connection-status | connection-revoke\nWorkflows: workflow-validate | workflow-draft | workflow-status | workflow-diff | workflow-approve | workflow-revoke | workflow-run | workflow-run-status | workflow-work | workflow-cancel\nAssistance: ai-profile-register | ai-profile-status | ai-profile-revoke | ai-propose | ai-diagnose | ai-status | ai-approve | ai-generate | ai-adopt\nIntake: intake-policy-register | intake-policy-status | intake-policy-revoke | check-list | check-status | check-run | check-release\nOpenPGP: pgp-key-register | pgp-key-status | pgp-key-revoke | check-signature\nRead docs/development.md. This is an unqualified local custody foundation.")
+		fmt.Println("freightctl: init | token | enroll | identity | namespace | dev-cert | serve | reconcile | audit-keygen | audit-export | ssh-host-keygen | ssh-key-enroll | ssh-key-revoke | serve-sftp | upload-create | upload-status | upload-append | upload-complete | upload-abort | delivery-create | delivery-status | delivery-approve | delivery-cancel | delivery-work | delivery-reconcile\nConnections: connection-register | connection-status | connection-revoke\nWorkflows: workflow-validate | workflow-draft | workflow-status | workflow-diff | workflow-approve | workflow-revoke | workflow-run | workflow-run-status | workflow-work | workflow-cancel\nAssistance: ai-profile-register | ai-profile-status | ai-profile-revoke | ai-propose | ai-diagnose | ai-status | ai-approve | ai-generate | ai-adopt\nIntake: intake-policy-register | intake-policy-status | intake-policy-revoke | check-list | check-status | check-run | check-release\nScanners: scanner-register | scanner-status | scanner-revoke\nOpenPGP: pgp-key-register | pgp-key-status | pgp-key-revoke | check-signature\nRead docs/development.md. This is an unqualified local custody foundation.")
 		return nil
 	}
 	f := flag.NewFlagSet(args[0], flag.ContinueOnError)
@@ -79,6 +79,7 @@ func run(args []string) error {
 	checkAfter := f.String("check-after", "", "last check file UUID returned by the previous page")
 	checkLimit := f.Int("check-limit", 50, "private intake check summaries per page, at most 100")
 	pgpKeyID := f.String("pgp-key-id", "", "exact registered OpenPGP key family UUID")
+	scannerID := f.String("scanner-id", "", "exact registered local scanner family UUID")
 	pgpPublicFile := f.String("pgp-public-file", "", "protected public-key input reference; private packets are refused")
 	signatureFile := f.String("signature-file", "", "protected detached binary-signature input reference")
 	dataSHA := f.String("data-sha256", "", "exact accepted data SHA-256 bound by the signature attachment")
@@ -107,6 +108,8 @@ func run(args []string) error {
 	}
 	ctx := context.Background()
 	switch args[0] {
+	case "scanner-register", "scanner-status", "scanner-revoke":
+		return runScanner(ctx, args[0], *dsn, *token, *tenant, *partner, *requestFile, *idempotencyKey, *scannerID, *deliveryHash, *resourceVersion, *deliveryRevision)
 	case "pgp-key-register", "pgp-key-status", "pgp-key-revoke", "check-signature":
 		return runPGP(ctx, args[0], pgpOptions{DSN: *dsn, Token: *token, Tenant: *tenant, Partner: *partner, Storage: *storage, Input: *requestFile, Key: *idempotencyKey, KeyID: *pgpKeyID, FileID: *checkFileID, PublicFile: *pgpPublicFile, SignatureFile: *signatureFile, DataSHA: *dataSHA, PolicyHash: *policyHash, DefinitionHash: *deliveryHash, Version: *resourceVersion, Revision: *deliveryRevision, MaxStored: *maxStored})
 	case "intake-policy-register", "intake-policy-status", "intake-policy-revoke", "check-list", "check-status", "check-run", "check-release":

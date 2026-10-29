@@ -28,6 +28,7 @@ commands=[
 ('custody-name-fuzz',['sh','scripts/go.sh','test','./internal/custody','-fuzz=FuzzCustodyName','-fuzztime=5s','-parallel=2']),
 ('typed-workflow-fuzz',['sh','scripts/go.sh','test','./internal/workflow','-fuzz=FuzzTypedWorkflow','-fuzztime=5s','-parallel=2']),
 ('csv-contract-fuzz',['sh','scripts/go.sh','test','./internal/checks','-fuzz=FuzzCSVContract','-fuzztime=5s','-parallel=1']),
+('scanner-record-fuzz',['sh','scripts/go.sh','test','./internal/scanner','-fuzz=FuzzClamdRecordAndVersion','-fuzztime=5s','-parallel=1']),
 ('openpgp-admission-fuzz',['sh','scripts/go.sh','test','./internal/crypto','-fuzz=FuzzPGPAdmission','-fuzztime=5s','-parallel=1']),
 ('untrusted-model-output-fuzz',['sh','scripts/go.sh','test','./internal/assistance','-fuzz=FuzzUntrustedModelOutput','-fuzztime=5s','-parallel=1']),
 ('stock-curl-https',['python3','scripts/qualify-https.py']),
@@ -37,6 +38,7 @@ commands=[
 ('versioned-workflow-execution',['python3','scripts/qualify-workflows.py']),
 ('assistance-control-contract-no-inference',['python3','scripts/qualify-assistance.py']),
 ('held-intake-and-csv-checks',['python3','scripts/qualify-intake.py']),
+('scanner-outage-controls-no-engine',['python3','scripts/qualify-scanner-unavailable.py']),
 ('signed-intake-openpgp',['python3','scripts/qualify-pgp.py']),
 ('recipient-encrypted-delivery',['python3','scripts/qualify-encryption.py']),
 ]
