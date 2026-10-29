@@ -37,31 +37,46 @@ type Column struct {
 	Scale     int    `json:"scale,omitempty"`
 }
 type Policy struct {
-	Schema         int      `json:"schema_version"`
-	Kind           string   `json:"kind"`
-	Columns        []Column `json:"columns"`
-	MaxBytes       int64    `json:"max_bytes"`
-	MaxRows        int64    `json:"max_rows"`
-	MaxRecordBytes int      `json:"max_record_bytes"`
-	TimeoutSeconds int      `json:"timeout_seconds"`
+	Schema         int              `json:"schema_version"`
+	Kind           string           `json:"kind"`
+	Columns        []Column         `json:"columns"`
+	MaxBytes       int64            `json:"max_bytes"`
+	MaxRows        int64            `json:"max_rows"`
+	MaxRecordBytes int              `json:"max_record_bytes"`
+	TimeoutSeconds int              `json:"timeout_seconds"`
+	Signature      *SignaturePolicy `json:"signature,omitempty"`
+}
+type SignaturePolicy struct {
+	Key           store.PGPReference `json:"key"`
+	MaxAgeSeconds uint32             `json:"max_age_seconds,omitempty"`
+}
+type SignatureProof struct {
+	Key          store.PGPReference      `json:"key"`
+	ObjectID     string                  `json:"object_id"`
+	SHA256       string                  `json:"sha256"`
+	Verification *secure.PGPVerification `json:"verification"`
 }
 type PolicyRequest struct {
 	ExpectedVersion int    `json:"expected_version"`
 	Definition      Policy `json:"definition"`
 }
 type Report struct {
-	Engine     string `json:"engine"`
-	FileID     string `json:"file_id"`
-	SHA256     string `json:"sha256"`
-	PolicyHash string `json:"policy_hash"`
-	Code       string `json:"code"`
-	Rows       int64  `json:"rows"`
-	Bytes      int64  `json:"bytes_read"`
-	Row        int64  `json:"row,omitempty"`
-	Column     int    `json:"column,omitempty"`
+	Engine     string          `json:"engine"`
+	FileID     string          `json:"file_id"`
+	SHA256     string          `json:"sha256"`
+	PolicyHash string          `json:"policy_hash"`
+	Code       string          `json:"code"`
+	Rows       int64           `json:"rows"`
+	Bytes      int64           `json:"bytes_read"`
+	Row        int64           `json:"row,omitempty"`
+	Column     int             `json:"column,omitempty"`
+	Signature  *SignatureProof `json:"signature,omitempty"`
 }
 
 func Normalize(p Policy) (Policy, error) {
+	if p.Signature != nil && (!store.ValidID(p.Signature.Key.ID) || p.Signature.Key.Version < 1 || !hashPattern.MatchString(p.Signature.Key.Hash)) {
+		return p, ErrInput
+	}
 	if p.Schema != 1 || p.Kind != "csv" || len(p.Columns) < 1 || len(p.Columns) > 128 {
 		return p, ErrInput
 	}

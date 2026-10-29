@@ -4,7 +4,7 @@ An intake policy applies to **newly accepted revisions** for one tenant and part
 
 Durable acceptance means the bytes were saved. It does not mean they passed a business contract, were published or reached a receiver. HTTP upload responses distinguish `durable-held-pending-checks-and-release` from the historical `durable-local-integrity-only` profile. Resumable upload `completed` means assembly finished; its file can still be held. An SFTP CLOSE can acknowledge durable held intake while the destination remains unavailable. Operators find that upload with the private check list.
 
-The first check engine validates a CSV contract. It is **not malware scanning, signature verification or business acceptance**. Those controls, their workflow tasks and the complete payroll/settlement journey remain required. No model, scanner daemon, shell or network request runs inside this parser.
+The first check engine validates a CSV contract. An optional [OpenPGP policy](openpgp.md) additionally requires a detached signature by an explicitly enrolled signer before a pass. Malware scanning, encryption, wider processing tasks and the complete payroll/settlement journey remain required. No model, scanner daemon, shell or network request runs inside the parser or signature verifier.
 
 ```mermaid
 stateDiagram-v2
@@ -75,9 +75,9 @@ Check bindings and reports are actor private. A released path can be read by ano
 
 ## Persistence and bounds
 
-Migration 10 adds `intake_policies`, `file_checks`, `file_releases` and `check_receipts`, with forced tenant/partner row security; checks and command receipts also enforce actor restriction. All twenty-seven domain relations are checked live. Exact event guards bind policy/check transitions and release proofs. Deferred SQL checks require a new controlled acceptance and its bound check in the same transaction, and reject new unchecked acceptance after policy configuration. SQL publication/delivery guards also refuse held bytes.
+Migration 10 adds `intake_policies`, `file_checks`, `file_releases` and `check_receipts`, with forced tenant/partner row security; checks and command receipts also enforce actor restriction. Migration 11 adds two signature/key relations; all twenty-nine domain relations are checked live. Exact event guards bind policy/check transitions and release proofs. Deferred SQL checks require a new controlled acceptance and its bound check in the same transaction, and reject new unchecked acceptance after policy configuration. SQL publication/delivery guards also refuse held bytes.
 
-The grants `intake_manage`, `check_run` and `check_release` are explicit. Existing accounts keep their old grants. Newly bootstrapped development administrators receive eighteen grants. The current workflow is actor owned; an upload-only sender and a separate delegated reviewer need further identity/lifecycle work.
+The grants `intake_manage`, `check_run` and `check_release` are explicit. Existing accounts keep their old grants. Newly bootstrapped development administrators receive nineteen grants, including the separate `pgp_manage` grant. The current workflow is actor owned; an upload-only sender and a separate delegated reviewer need further identity/lifecycle work.
 
 | Bound | Current behavior |
 | --- | --- |

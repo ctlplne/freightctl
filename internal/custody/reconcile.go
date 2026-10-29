@@ -101,16 +101,16 @@ func (s *Service) Reconcile(ctx context.Context, scope store.Scope) (*Reconcilia
 	if err = s.Disk.CheckIdentity(); err != nil {
 		return nil, err
 	}
-	rows, err := t.Tx.Query(ctx, `SELECT file_id::text,size_bytes,sha256,false FROM files UNION ALL SELECT object_id::text,size_bytes,sha256,true FROM upload_chunks ORDER BY 1 LIMIT 10001`)
+	rows, err := t.Tx.Query(ctx, `SELECT file_id::text,size_bytes,sha256,'file' FROM files UNION ALL SELECT object_id::text,size_bytes,sha256,'checkpoint' FROM upload_chunks UNION ALL SELECT object_id::text,size_bytes,sha256,'signature' FROM file_signatures ORDER BY 1 LIMIT 10001`)
 	if err != nil {
 		return nil, err
 	}
 	files := make(map[string]store.File)
-	checkpoints := make(map[string]bool)
+	classes := make(map[string]string)
 	for rows.Next() {
 		var f store.File
-		var checkpoint bool
-		if err = rows.Scan(&f.ID, &f.Size, &f.SHA256, &checkpoint); err != nil {
+		var class string
+		if err = rows.Scan(&f.ID, &f.Size, &f.SHA256, &class); err != nil {
 			rows.Close()
 			return nil, err
 		}
@@ -119,7 +119,7 @@ func (s *Service) Reconcile(ctx context.Context, scope store.Scope) (*Reconcilia
 			return nil, store.ErrState
 		}
 		files[f.ID] = f
-		checkpoints[f.ID] = checkpoint
+		classes[f.ID] = class
 	}
 	rows.Close()
 	if err = rows.Err(); err != nil {
@@ -145,7 +145,7 @@ func (s *Service) Reconcile(ctx context.Context, scope store.Scope) (*Reconcilia
 	report := &Reconciliation{Consistent: true, Counts: make(map[string]int), Entries: make([]ReconciliationEntry, 0), VerificationLimit: limit, Mutations: "none; observation only"}
 	add := func(reference, state string, size int64) {
 		report.Counts[state]++
-		if state != "verified" && state != "verified_checkpoint" {
+		if state != "verified" && state != "verified_checkpoint" && state != "verified_signature" {
 			report.Consistent = false
 		}
 		if len(report.Entries) < 200 {
@@ -161,8 +161,11 @@ func (s *Service) Reconcile(ctx context.Context, scope store.Scope) (*Reconcilia
 		}
 		f, known := files[object.reference]
 		verified, corrupt, missingState := "verified", "integrity_mismatch", "missing_bytes"
-		if checkpoints[object.reference] {
+		if classes[object.reference] == "checkpoint" {
 			verified, corrupt, missingState = "verified_checkpoint", "checkpoint_integrity_mismatch", "missing_checkpoint_bytes"
+		}
+		if classes[object.reference] == "signature" {
+			verified, corrupt, missingState = "verified_signature", "signature_integrity_mismatch", "missing_signature_bytes"
 		}
 		delete(files, object.reference)
 		if !object.safe {
@@ -202,8 +205,11 @@ func (s *Service) Reconcile(ctx context.Context, scope store.Scope) (*Reconcilia
 	sort.Strings(missing)
 	for _, id := range missing {
 		state := "missing_bytes"
-		if checkpoints[id] {
+		if classes[id] == "checkpoint" {
 			state = "missing_checkpoint_bytes"
+		}
+		if classes[id] == "signature" {
+			state = "missing_signature_bytes"
 		}
 		add(id, state, files[id].Size)
 	}

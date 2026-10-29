@@ -403,6 +403,21 @@
       "regression_evidence": [
         "docs/qualification/evidence/F010-held-intake.json"
       ]
+    },
+    {
+      "id": "D027",
+      "severity": "missing required capability",
+      "state": "fixed locally",
+      "observed_on": "2026-10-29",
+      "candidate": "68868ea89e3258caf035f318069099b4a9f41b21",
+      "journey": "J02",
+      "reproduction": "sh scripts/go.sh run -p 1 ./cmd/freightctl pgp-key-register; replay enrollment, held signed intake and independently verified receiver journey with scripts/qualify-pgp.py",
+      "first_failure": "freightctl: unknown command; use --help (exit 1)",
+      "cause": "Held CSV intake had no enrolled cryptographic signer, immutable detached signature artifact or signature-bound release gate.",
+      "resolution": "Add bounded public-only OpenPGP verification under internal/crypto, explicit fingerprint/key versions, actor-owned durable signature attachments, exact CSV plus signature proofs, separate re-verifying release approval and current revocation/expiry availability. Independent GnuPG v4 Ed25519 subkey/RSA and stock SFTP exercise the original narrow outcome. Encryption, malware scanning and complete journey remain open.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F011-openpgp-intake.json"
+      ]
     }
   ]
 }

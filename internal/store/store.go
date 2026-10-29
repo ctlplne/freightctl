@@ -46,8 +46,11 @@ var assistanceSchema string
 //go:embed 010_intake.sql
 var intakeSchema string
 
-var migrations = []string{schema, eventBinding, eventBounds, namespaceSchema, uploadSchema, uploadStorageSchema, deliverySchema, workflowSchema, assistanceSchema, intakeSchema}
-var domainTables = []string{"tenants", "partners", "credentials", "events", "files", "idempotency", "namespace_entries", "namespace_revisions", "namespace_commands", "ssh_keys", "upload_sessions", "upload_chunks", "upload_receipts", "delivery_intents", "delivery_receipts", "connection_revisions", "workflow_revisions", "workflow_runs", "workflow_steps", "workflow_receipts", "ai_profiles", "ai_jobs", "ai_receipts", "intake_policies", "file_checks", "check_receipts", "file_releases"}
+//go:embed 011_pgp.sql
+var pgpSchema string
+
+var migrations = []string{schema, eventBinding, eventBounds, namespaceSchema, uploadSchema, uploadStorageSchema, deliverySchema, workflowSchema, assistanceSchema, intakeSchema, pgpSchema}
+var domainTables = []string{"tenants", "partners", "credentials", "events", "files", "idempotency", "namespace_entries", "namespace_revisions", "namespace_commands", "ssh_keys", "upload_sessions", "upload_chunks", "upload_receipts", "delivery_intents", "delivery_receipts", "connection_revisions", "workflow_revisions", "workflow_runs", "workflow_steps", "workflow_receipts", "ai_profiles", "ai_jobs", "ai_receipts", "intake_policies", "file_checks", "check_receipts", "file_releases", "pgp_keys", "file_signatures"}
 
 var ErrUnauthorized = errors.New("unauthorized")
 var ErrNotFound = errors.New("not found")
@@ -59,7 +62,7 @@ var ErrExists = errors.New("virtual path already exists")
 var ErrState = errors.New("operation does not match the current resource state")
 var ErrRevision = errors.New("resource revision changed")
 
-var DefaultPermissions = []string{"read", "write", "list", "manage_paths", "inspect", "audit_read", "admin", "connections_manage", "deliver", "workflow_manage", "workflow_approve", "workflow_execute", "ai_manage", "ai_use", "ai_disclose", "intake_manage", "check_run", "check_release"}
+var DefaultPermissions = []string{"read", "write", "list", "manage_paths", "inspect", "audit_read", "admin", "connections_manage", "deliver", "workflow_manage", "workflow_approve", "workflow_execute", "ai_manage", "ai_use", "ai_disclose", "intake_manage", "check_run", "check_release", "pgp_manage"}
 
 var uuidPattern = regexp.MustCompile(`^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$`)
 

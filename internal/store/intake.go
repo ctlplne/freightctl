@@ -161,7 +161,11 @@ func (t *Transaction) SaveFileCheck(ctx context.Context, c *FileCheck, previous 
 		return ErrRevision
 	}
 	if c.State == "released" {
-		_, err = t.Tx.Exec(ctx, `INSERT INTO file_releases VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9)`, t.Scope.Tenant, t.Scope.Partner, c.FileID, t.Actor, c.PolicyID, c.PolicyVersion, c.PolicyHash, c.ReportHash, event)
+		key, signatureHash, until, parseErr := releaseSignatureFields(c.Report)
+		if parseErr != nil {
+			return parseErr
+		}
+		_, err = t.Tx.Exec(ctx, `INSERT INTO file_releases(tenant_id,partner_id,file_id,actor_id,policy_id,policy_version,policy_hash,report_hash,released_event_id,pgp_key_id,pgp_key_version,pgp_key_hash,signature_sha256,signature_expires_at) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,nullif($10,'')::uuid,nullif($11,0),nullif($12,''),nullif($13,''),$14)`, t.Scope.Tenant, t.Scope.Partner, c.FileID, t.Actor, c.PolicyID, c.PolicyVersion, c.PolicyHash, c.ReportHash, event, key.ID, key.Version, key.Hash, signatureHash, until)
 	}
 	return err
 }

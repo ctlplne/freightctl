@@ -40,7 +40,7 @@ func TestCoreImportBoundaries(t *testing.T) {
 				if strings.HasPrefix(rel, "internal/assistance/") && !strings.HasSuffix(rel, "_test.go") && name == "os/exec" {
 					t.Errorf("%s may not launch model runtimes or shell tools", rel)
 				}
-				if (name == "crypto" || strings.HasPrefix(name, "crypto/") || strings.HasPrefix(name, "golang.org/x/crypto")) && !strings.HasPrefix(rel, "internal/crypto/") {
+				if (name == "crypto" || strings.HasPrefix(name, "crypto/") || strings.HasPrefix(name, "golang.org/x/crypto") || strings.HasPrefix(name, "github.com/ProtonMail/go-crypto") || strings.HasPrefix(name, "github.com/cloudflare/circl")) && !strings.HasPrefix(rel, "internal/crypto/") {
 					t.Errorf("%s imports cryptography outside custody boundary: %s", rel, name)
 				}
 				if strings.HasPrefix(name, "github.com/ctlplne/freightctl/ee/") || strings.Contains(strings.ToLower(name), "sqlite") || strings.Contains(strings.ToLower(name), "redis") {

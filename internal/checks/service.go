@@ -18,8 +18,9 @@ type Result struct {
 	Replayed bool            `json:"replayed"`
 }
 type View struct {
-	Check   *store.FileCheck `json:"check"`
-	Current bool             `json:"current"`
+	Check     *store.FileCheck     `json:"check"`
+	Current   bool                 `json:"current"`
+	Signature *store.FileSignature `json:"signature,omitempty"`
 }
 
 type Summary struct {
@@ -188,6 +189,11 @@ func (s *Service) Register(ctx context.Context, scope store.Scope, key string, r
 	if version != r.ExpectedVersion {
 		return nil, store.ErrRevision
 	}
+	if definition.Signature != nil {
+		if _, _, err = keyCurrent(ctx, t, definition.Signature); err != nil {
+			return nil, err
+		}
+	}
 	if p != nil && p.State == "active" {
 		previous := p.Revision
 		p.Revision++
@@ -256,7 +262,19 @@ func (s *Service) current(ctx context.Context, t *store.Transaction, c *store.Fi
 		return nil, nil, err
 	}
 	p, err := t.IntakePolicy(ctx, false)
-	return b, p, err
+	if err != nil {
+		return nil, nil, err
+	}
+	definition, err := decodePolicy(p)
+	if err != nil {
+		return nil, nil, err
+	}
+	if definition.Signature != nil {
+		if _, _, err = keyCurrent(ctx, t, definition.Signature); err != nil {
+			return nil, nil, err
+		}
+	}
+	return b, p, nil
 }
 func (s *Service) Get(ctx context.Context, scope store.Scope, id string) (*View, error) {
 	t, err := s.begin(ctx, scope)
@@ -275,7 +293,11 @@ func (s *Service) Get(ctx context.Context, scope store.Scope, id string) (*View,
 	if currentErr != nil && !errors.Is(currentErr, store.ErrRevision) && !errors.Is(currentErr, store.ErrState) {
 		return nil, currentErr
 	}
-	return &View{Check: c, Current: currentErr == nil}, t.Tx.Commit(ctx)
+	signature, err := t.FileSignature(ctx, id)
+	if err != nil && !errors.Is(err, store.ErrNotFound) {
+		return nil, err
+	}
+	return &View{Check: c, Current: currentErr == nil, Signature: signature}, t.Tx.Commit(ctx)
 }
 func (s *Service) start(ctx context.Context, scope store.Scope, id, key string) (*store.FileCheck, *store.CheckBinding, Policy, *Attempt, bool, error) {
 	var policy Policy
@@ -300,6 +322,18 @@ func (s *Service) start(ctx context.Context, scope store.Scope, id, key string) 
 	policy, err = decodePolicy(p)
 	if err != nil {
 		return nil, nil, policy, nil, false, err
+	}
+	if policy.Signature != nil {
+		signature, err := t.FileSignature(ctx, id)
+		if errors.Is(err, store.ErrNotFound) {
+			return nil, nil, policy, nil, false, store.ErrState
+		}
+		if err != nil {
+			return nil, nil, policy, nil, false, err
+		}
+		if signature.Key != policy.Signature.Key || signature.DataSHA256 != b.File.SHA256 || signature.PolicyHash != c.PolicyHash || signature.StorageID != b.StorageID {
+			return nil, nil, policy, nil, false, store.ErrState
+		}
 	}
 	if data != nil {
 		var a Attempt
@@ -427,6 +461,13 @@ func (s *Service) Run(ctx context.Context, scope store.Scope, id, key string) (*
 		report, parseErr = Validate(ctx, policy, b.File, c.PolicyHash, data)
 		_ = data.Close()
 	}
+	if parseErr == nil && report.Code == "valid_csv" && policy.Signature != nil {
+		report.Signature, parseErr = s.verifySignature(ctx, scope, c, b, policy, "check_run")
+		if errors.Is(parseErr, secure.ErrPGPInput) || errors.Is(parseErr, secure.ErrPGPVerification) {
+			report.Code = "signature_invalid"
+			parseErr = nil
+		}
+	}
 	close(stop)
 	<-done
 	recordCtx, recordCancel := context.WithTimeout(context.Background(), 5*time.Second)
@@ -467,7 +508,10 @@ func (s *Service) Run(ctx context.Context, scope store.Scope, id, key string) (*
 		}
 		current.Report = encoded
 		current.Code = report.Code
-		if report.Code == "valid_csv" {
+		if report.Signature != nil && report.Signature.Verification.ValidUntil != nil && !now.Before(*report.Signature.Verification.ValidUntil) {
+			current.State = "failed"
+			current.Code = "signature_expired"
+		} else if report.Code == "valid_csv" {
 			current.State = "passed"
 			current.ReportHash = hash
 		} else {
@@ -508,7 +552,7 @@ func (s *Service) Release(ctx context.Context, scope store.Scope, id, key string
 	if err != nil {
 		return nil, err
 	}
-	b, _, err := s.current(ctx, t, c)
+	b, p, err := s.current(ctx, t, c)
 	if err != nil {
 		return nil, err
 	}
@@ -526,6 +570,26 @@ func (s *Service) Release(ctx context.Context, scope store.Scope, id, key string
 		return nil, err
 	}
 	_ = verified.Close()
+	policy, err := decodePolicy(p)
+	if err != nil {
+		return nil, err
+	}
+	if policy.Signature != nil {
+		proof, err := s.verifySignature(ctx, scope, c, b, policy, "check_release")
+		if err != nil {
+			return nil, err
+		}
+		var approved Report
+		if json.Unmarshal(c.Report, &approved) != nil || approved.Signature == nil || approved.Signature.Verification == nil {
+			return nil, store.ErrState
+		}
+		proof.Verification.VerifiedAt = approved.Signature.Verification.VerifiedAt
+		_, actualHash, _ := canonical(proof)
+		_, approvedHash, _ := canonical(approved.Signature)
+		if actualHash != approvedHash {
+			return nil, store.ErrRevision
+		}
+	}
 	previous := c.Revision
 	c.Revision++
 	c.State = "released"

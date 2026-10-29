@@ -5,6 +5,7 @@ go 1.26.0
 toolchain go1.26.10
 
 require (
+	github.com/ProtonMail/go-crypto v1.5.2
 	github.com/jackc/pgx/v5 v5.11.0
 	github.com/pkg/sftp v1.13.12
 	golang.org/x/crypto v0.58.0
@@ -13,6 +14,7 @@ require (
 )
 
 require (
+	github.com/cloudflare/circl v1.6.3 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 // indirect
 	github.com/jackc/puddle/v2 v2.2.2 // indirect

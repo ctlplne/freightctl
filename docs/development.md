@@ -77,7 +77,7 @@ Migration 3 bounds journal kind and payload sizes in SQL, while the application 
 
 Client folder names are records in PostgreSQL. A name such as `/inbox/payroll.csv` points to an immutable custody file ID; it is never passed to the host filesystem. Create a different file revision to replace contents. Renaming a folder changes the index and appends events while leaving those bytes intact. Removal creates a tombstone; accepted bytes and publication history remain retained. Approved recovery and retention policies are still required.
 
-Enrollment supports `--permissions read,list` and `--namespace-root /inbox`. This mounts the existing partner folder `/inbox` as the account's `/`. Existing identities retain their previous grants. New development administrators receive the eighteen grants listed below; explicitly select the minimum permissions for a restricted account. The development bootstrap is still an administrator operation. Identity creation/rotation through a delegated operator UI remains open.
+Enrollment supports `--permissions read,list` and `--namespace-root /inbox`. This mounts the existing partner folder `/inbox` as the account's `/`. Existing identities retain their previous grants. New development administrators receive the nineteen grants listed below; explicitly select the minimum permissions for a restricted account. The development bootstrap is still an administrator operation. Identity creation/rotation through a delegated operator UI remains open.
 
 | Permission | Effect |
 | --- | --- |
@@ -88,6 +88,7 @@ Enrollment supports `--permissions read,list` and `--namespace-root /inbox`. Thi
 | `inspect` | Run custody reconciliation; the current global report also requires root `/`. |
 | `audit_read` | Read scoped events and signed snapshots; these global views also require root `/`. |
 | `admin` | Bypass owner/group mode bits within the mounted namespace. Other operation grants and the mount still apply. |
+| `pgp_manage` | Register/revoke exact partner public signer versions; admin and root mount also required. |
 | `connections_manage` | Review and approve the initial local outbound connection definition, together with admin authority. |
 | `deliver` | Inspect and execute this actor's approved outbound intent, together with source read authority. |
 | `workflow_manage` | Create and compare typed draft workflow versions using this actor's registered connection references. |
@@ -145,3 +146,7 @@ Migration 4 adds namespace projections/history/command receipts, actor-scoped up
 ## Held intake and exact CSV contracts
 
 [Intake checks](intake.md) document durable held acceptance, bounded actor-private discovery, exact CSV validation and a separate release approval. Migration 10 adds four journal-backed relations and three explicit grants; old account grants stay unchanged. New accepted revisions under a configured policy cannot be downloaded, published or dispatched before release. Existing integrity-only revisions retain their original scope. Stock-client and delayed-worker evidence is separate from malware, business-receipt and complete-journey qualification.
+
+## Detached OpenPGP verification
+
+[The OpenPGP profile](openpgp.md) documents explicit public signer enrollment, actor-bound signature artifacts, exact verification/release and current revocation/expiry gates. Migration 11 adds two forced-RLS journal-backed relations and the explicit `pgp_manage` grant. The in-process backend is pinned behind `internal/crypto`; GnuPG is used only for independent synthetic peer qualification. Full integration/foundation checks require the locally built, labeled `freightctl-pgp-peer:2.4.9-r1` image described in that profile. Fixture execution has no network and is capped at 128 MiB/one CPU. No model runtime is started. Encryption, malware scanning and full customer journeys remain open.

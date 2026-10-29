@@ -33,12 +33,14 @@
         "docs/qualification/evidence/F007-outbound-intents.json",
         "docs/qualification/evidence/F008-versioned-workflows.json",
         "docs/qualification/evidence/F009-assistance-controls.json",
-        "docs/qualification/evidence/F010-held-intake.json"
+        "docs/qualification/evidence/F010-held-intake.json",
+        "docs/qualification/evidence/F011-openpgp-intake.json"
       ],
       "remaining_details": [
         "F006 adds immutable checkpoints, exact receipts and persistent storage/parent/authority binding. Finish approved cleanup/recovery/rebinding, scalable reservations/fairness, protected retention, journal chaining/rebuild, larger exports and remaining crash/commit boundaries.",
         "F009 adds actor-private immutable assistance profiles/jobs/receipts with exact event guards, current authority checks and atomic adoption provenance. Protected retention, history reconstruction, scalable quotas and remaining crash boundaries remain open.",
-        "F010 adds exact policy/check/release/receipt event projections, four forced-RLS relations, deferred acceptance binding, SQL publication guards and atomic release rollback. Protected retention, cleanup, journal reconstruction and remaining crash/storage boundaries remain open."
+        "F010 adds exact policy/check/release/receipt event projections, four forced-RLS relations, deferred acceptance binding, SQL publication guards and atomic release rollback. Protected retention, cleanup, journal reconstruction and remaining crash/storage boundaries remain open.",
+        "F011 adds immutable public signer definitions and durable detached signature references, exact event/receipt binding, forced row security, rollback and orphan reconciliation. Protected retention, journal reconstruction, cleanup and wider failure/storage gates remain open."
       ]
     },
     {
@@ -75,11 +77,13 @@
       "evidence": [
         "docs/qualification/evidence/F007-outbound-intents.json",
         "docs/qualification/evidence/F008-versioned-workflows.json",
-        "docs/qualification/evidence/F010-held-intake.json"
+        "docs/qualification/evidence/F010-held-intake.json",
+        "docs/qualification/evidence/F011-openpgp-intake.json"
       ],
       "remaining_details": [
         "F007/F008 verify bounded leased/fenced SFTP intents and typed ordered workflow runs with registered connection versions, conservative ambiguity, same-step dispatch replay across restart, and queued cancellation. Finish unattended/fair scheduling, broader processing/conditions/loops/batches, active cancellation/rebinding, overlapping key rotations, receiver business contracts, remote quotas/retention/cleanup and distributed failures.",
-        "F010 adds bounded CSV processing with two separate PostgreSQL slots, three attempts, a 70-second worker lease and native delayed-owner fencing. Broader typed processing, fair/unattended queues, cancellation/rebind and production/distributed failure gates remain open."
+        "F010 adds bounded CSV processing with two separate PostgreSQL slots, three attempts, a 70-second worker lease and native delayed-owner fencing. Broader typed processing, fair/unattended queues, cancellation/rebind and production/distributed failure gates remain open.",
+        "F011 runs streaming exact detached signature verification inside existing two-slot/three-attempt/fenced check bounds, with independent GnuPG evidence. Broader crypto/processing tasks, cancellation/rebind, fairness, unattended operation and production resource/failure gates remain open."
       ]
     },
     {
@@ -140,10 +144,12 @@
       ],
       "state": "implementing",
       "evidence": [
-        "docs/qualification/evidence/F010-held-intake.json"
+        "docs/qualification/evidence/F010-held-intake.json",
+        "docs/qualification/evidence/F011-openpgp-intake.json"
       ],
       "remaining_details": [
-        "F010 verifies durable held intake for configured new revisions, exact CSV contracts, separate hash/revision-bound release and ordinary delivery of released bytes. Antivirus/ICAP/DLP, cryptographic signatures/encryption, other formats/transforms, re-scan/exception governance, retrospective policy and the complete business-file journey remain mandatory."
+        "F010 verifies durable held intake for configured new revisions, exact CSV contracts, separate hash/revision-bound release and ordinary delivery of released bytes. Antivirus/ICAP/DLP, cryptographic signatures/encryption, other formats/transforms, re-scan/exception governance, retrospective policy and the complete business-file journey remain mandatory.",
+        "F011 adds bounded OpenPGP detached binary-signature verification using explicit full-fingerprint public signer versions, exact source/sidecar/report binding and current revocation/expiry gates. Encryption/decryption/private signing, antivirus/ICAP/DLP, broader protocols/algorithms/peers, re-scan/exception governance, retrospective policy and full business receipt remain mandatory."
       ]
     },
     {
@@ -162,12 +168,14 @@
         "docs/qualification/evidence/F007-outbound-intents.json",
         "docs/qualification/evidence/F008-versioned-workflows.json",
         "docs/qualification/evidence/F009-assistance-controls.json",
-        "docs/qualification/evidence/F010-held-intake.json"
+        "docs/qualification/evidence/F010-held-intake.json",
+        "docs/qualification/evidence/F011-openpgp-intake.json"
       ],
       "remaining_details": [
         "Current account/key/mount and destination/parent checks gate transfer mutations. Complete delegated lifecycle, policy reapproval/rebinding, human identity/MFA/providers, complete denial/session auditing, approval UI and governance remain open.",
         "F009 separates ai_manage, ai_use and ai_disclose, actor-private forced row security and exact disclosure/proposal revisions. No implicit grant upgrade. Complete delegated lifecycle, providers, human approval UI, retention and content/disclosure governance remain open.",
-        "F010 adds explicit intake_manage/check_run/check_release grants, actor-private check records and current release authority. Separate delegated reviewers, upload-only sender lifecycle, human approval UI and complete governance remain open."
+        "F010 adds explicit intake_manage/check_run/check_release grants, actor-private check records and current release authority. Separate delegated reviewers, upload-only sender lifecycle, human approval UI and complete governance remain open.",
+        "F011 adds explicit pgp_manage without upgrading existing grants, partner-scoped immutable public key versions and actor-private signature artifacts/checks. Human key ownership/trust onboarding, delegated review, automated rotation/rebind, providers, UI and complete governance remain open."
       ]
     },
     {
