@@ -13,6 +13,17 @@ import (
 
 var ErrPath = errors.New("invalid virtual path")
 
+// ControlPath identifies the protocol-control namespace; it is not a user
+// folder and cannot be published or mounted through namespace commands.
+func ControlPath(value string) bool {
+	for _, part := range strings.Split(value, "/") {
+		if part == ".freightctl" {
+			return true
+		}
+	}
+	return false
+}
+
 func Canonical(value string) (string, error) {
 	if !utf8.ValidString(value) || len(value) == 0 || len(value) > 1024 || value[0] != '/' {
 		return "", ErrPath

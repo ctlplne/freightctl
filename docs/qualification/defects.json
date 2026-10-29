@@ -217,6 +217,86 @@
       "regression_evidence": [
         "docs/qualification/evidence/F005-sftp-exchange.json"
       ]
+    },
+    {
+      "id": "D015",
+      "severity": "missing durable recovery capability",
+      "state": "fixed locally",
+      "observed_on": "2026-10-28",
+      "candidate": "dda2ee38114ec05ed7663c9bb3a9c0fa49dbd2f1",
+      "candidate_note": "First native artifacts or exact initial dirty-source references are retained in F006.",
+      "journey": "J04",
+      "reproduction": "python3 scripts/qualify-uploads.py; real PostgreSQL/storage tests named in F006",
+      "first_failure": "freightctl: unknown command; use --help",
+      "cause": "Committed SFTP foundation had no durable upload-ticket API/CLI or restartable checkpoints.",
+      "resolution": "Added private upload tickets, immutable checkpoint objects and shared CLI/HTTPS/SFTP resume/completion.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F006-upload-checkpoints.json"
+      ]
+    },
+    {
+      "id": "D016",
+      "severity": "storage binding defect",
+      "state": "fixed locally",
+      "observed_on": "2026-10-28",
+      "candidate": "dda2ee38114ec05ed7663c9bb3a9c0fa49dbd2f1",
+      "candidate_note": "First native artifacts or exact initial dirty-source references are retained in F006.",
+      "journey": "J11",
+      "reproduction": "python3 scripts/qualify-uploads.py; real PostgreSQL/storage tests named in F006",
+      "first_failure": "checkpoint accepted into a different storage root",
+      "cause": "The upload referenced object IDs without binding the actual configured store.",
+      "resolution": "Persist a synced store UUID, bind it immutably in migration 6 and reject status/writes on another root; frozen migration 5 remains unchanged.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F006-upload-checkpoints.json"
+      ]
+    },
+    {
+      "id": "D017",
+      "severity": "native client interoperability",
+      "state": "fixed locally",
+      "observed_on": "2026-10-28",
+      "candidate": "dda2ee38114ec05ed7663c9bb3a9c0fa49dbd2f1",
+      "candidate_note": "First native artifacts or exact initial dirty-source references are retained in F006.",
+      "journey": "J04",
+      "reproduction": "python3 scripts/qualify-uploads.py; real PostgreSQL/storage tests named in F006",
+      "first_failure": "SFTP reput destination open failed",
+      "cause": "The ticket writer rejected APPEND, which stock OpenSSH reput sends.",
+      "resolution": "Support bounded append at the logical end while retaining immutable-prefix, expected-length and full-hash checks.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F006-upload-checkpoints.json"
+      ]
+    },
+    {
+      "id": "D018",
+      "severity": "complete-prefix recovery gap",
+      "state": "fixed locally",
+      "observed_on": "2026-10-28",
+      "candidate": "dda2ee38114ec05ed7663c9bb3a9c0fa49dbd2f1",
+      "candidate_note": "First native artifacts or exact initial dirty-source references are retained in F006.",
+      "journey": "J06",
+      "reproduction": "python3 scripts/qualify-uploads.py; real PostgreSQL/storage tests named in F006",
+      "first_failure": "resume: destination file same size or larger",
+      "cause": "The client refuses reput before opening a fully checkpointed file, so CLOSE cannot complete it.",
+      "resolution": "Provide explicit API/CLI completion and bound-destination SFTP completion rename; retarget and duplicate publication are denied.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F006-upload-checkpoints.json"
+      ]
+    },
+    {
+      "id": "D019",
+      "severity": "authorization defect",
+      "state": "fixed locally",
+      "observed_on": "2026-10-28",
+      "candidate": "dda2ee38114ec05ed7663c9bb3a9c0fa49dbd2f1",
+      "candidate_note": "First native artifacts or exact initial dirty-source references are retained in F006.",
+      "journey": "J10",
+      "reproduction": "python3 scripts/qualify-uploads.py; real PostgreSQL/storage tests named in F006",
+      "first_failure": "new checkpoint ignored revoked folder permission <nil>",
+      "cause": "Account/owner checks ran per checkpoint, while current destination-folder checks were deferred to publication.",
+      "resolution": "Pin the parent identity/revision and recheck current destination authority before more protocol bytes/checkpoints and at completion; original revocation case passes.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F006-upload-checkpoints.json"
+      ]
     }
   ]
 }

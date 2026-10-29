@@ -114,3 +114,7 @@ Direct `GET .../files/{id}` follows the same mount and current mode checks. For 
 Migration 4 adds namespace projections/history/command receipts, actor-scoped upload keys, account policy revisions and the future SSH public-key registry. Checksummed migrations 1–3 remain unchanged. The SFTP adapter uses these same namespace rules. Its loopback server, transfer-close behavior and stock OpenSSH exercise are documented in [the SFTP profile](protocols/sftp.md); outbound adapters, enterprise peers and interrupted-session resume remain open.
 
 `python3 scripts/qualify-foundation.py` retains native module, vet, unit/race, PostgreSQL/race, bounded name/path fuzzing, stock-curl, OpenSSH SFTP/scp and independent OpenSSL outputs with exact source hashes. This is a repeatable foundation check, not a release or complete-journey qualification.
+
+## Durable upload tickets
+
+[Resumable upload tickets](protocols/resumable-uploads.md) describe the shared HTTPS/CLI/SFTP flow, exact progress receipts, storage binding, completion and limits. Migrations 5–6 add immutable checkpoints, actor-private command receipts and a persistent storage reference. The namespace reserves `.freightctl` for protocol controls. Existing source, credentials and accepted bytes remain retained; no orphan is adopted automatically.

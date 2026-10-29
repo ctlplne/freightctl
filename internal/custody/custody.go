@@ -15,16 +15,20 @@ import (
 var ErrIntegrity = errors.New("file length or SHA-256 does not match")
 var ErrCapacity = errors.New("custody quota reached; reconcile retained bytes or increase configured capacity")
 
-type Disk struct{ root *os.Root }
+type Disk struct {
+	root     *os.Root
+	identity string
+}
 
 func Open(path string) (*Disk, error) {
 	if err := os.MkdirAll(path, 0700); err != nil {
 		return nil, err
 	}
-	return OpenExisting(path)
+	return openDisk(path, true)
 }
 
-func OpenExisting(path string) (*Disk, error) {
+func OpenExisting(path string) (*Disk, error) { return openDisk(path, false) }
+func openDisk(path string, initialize bool) (*Disk, error) {
 	r, err := os.OpenRoot(path)
 	if err != nil {
 		return nil, err
@@ -40,12 +44,25 @@ func OpenExisting(path string) (*Disk, error) {
 		r.Close()
 		return nil, errors.New("storage root must have mode 0700")
 	}
-	return &Disk{root: r}, nil
+	var id string
+	if initialize {
+		id, err = initializeIdentity(r)
+	} else {
+		id, err = readIdentity(r)
+	}
+	if err != nil {
+		r.Close()
+		return nil, err
+	}
+	return &Disk{root: r, identity: id}, nil
 }
 func (d *Disk) Close() error { return d.root.Close() }
 
 // Caller holds the database custody lock. Retained orphans count against capacity.
 func (d *Disk) Capacity(incoming, maximum int64) error {
+	if err := d.CheckIdentity(); err != nil {
+		return err
+	}
 	f, err := d.root.Open(".")
 	if err != nil {
 		return err
@@ -62,6 +79,9 @@ func (d *Disk) Capacity(incoming, maximum int64) error {
 			return err
 		}
 		for _, e := range entries {
+			if e.Name() == StorageIdentityName {
+				continue
+			}
 			count++
 			if count >= 10000 {
 				return ErrCapacity

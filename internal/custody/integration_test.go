@@ -117,8 +117,8 @@ func TestRuntimeRoleAndScope(t *testing.T) {
 		t.Fatal("owner/superuser runtime accepted")
 	}
 	var n int
-	err := f.admin.QueryRow(f.ctx, `SELECT count(*) FROM pg_class WHERE relnamespace='public'::regnamespace AND relname=ANY($1) AND relrowsecurity AND relforcerowsecurity AND relowner<>(SELECT oid FROM pg_roles WHERE rolname='freightctl_runtime')`, []string{"tenants", "partners", "credentials", "events", "files", "idempotency", "namespace_entries", "namespace_revisions", "namespace_commands", "ssh_keys"}).Scan(&n)
-	if err != nil || n != 10 {
+	err := f.admin.QueryRow(f.ctx, `SELECT count(*) FROM pg_class WHERE relnamespace='public'::regnamespace AND relname=ANY($1) AND relrowsecurity AND relforcerowsecurity AND relowner<>(SELECT oid FROM pg_roles WHERE rolname='freightctl_runtime')`, []string{"tenants", "partners", "credentials", "events", "files", "idempotency", "namespace_entries", "namespace_revisions", "namespace_commands", "ssh_keys", "upload_sessions", "upload_chunks", "upload_receipts"}).Scan(&n)
+	if err != nil || n != 13 {
 		t.Fatal("forced non-owner policies", n, err)
 	}
 	file := accept(t, f, "scope-check", []byte("synthetic isolated bytes"))
@@ -241,9 +241,9 @@ func TestFailedAcceptanceRollsBackAndCountsOrphans(t *testing.T) {
 	if count(t, f, "files") != 0 || count(t, f, "idempotency") != 0 || count(t, f, "events") != 1 {
 		t.Fatal("failed validation changed SQL state")
 	}
-	entries, err := os.ReadDir(f.root)
-	if err != nil || len(entries) != 0 {
-		t.Fatal("partial bytes remained", err)
+	entries := payloadEntries(t, f.root)
+	if len(entries) != 0 {
+		t.Fatal("partial bytes remained", len(entries))
 	}
 	tx, err := f.db.Begin(f.ctx, f.a)
 	if err != nil {

@@ -74,9 +74,9 @@ func TestRevisionWriterCloseGapsAndDisconnect(t *testing.T) {
 	if _, err = f.service.StatPath(f.ctx, f.a, "/gap"); !errors.Is(err, store.ErrNotFound) {
 		t.Fatal(err)
 	}
-	files, err := os.ReadDir(f.root)
-	if err != nil || len(files) != 1 {
-		t.Fatal("ordinary failures left unsealed staging", len(files), err)
+	files := payloadEntries(t, f.root)
+	if len(files) != 1 {
+		t.Fatal("ordinary failures left unsealed staging", len(files))
 	}
 }
 func TestSSHKeyLifecycleRevokesOpenReadersAndWriters(t *testing.T) {

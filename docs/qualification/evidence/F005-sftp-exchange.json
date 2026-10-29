@@ -201,7 +201,9 @@
       }
     ],
     "binary_sha256": "fca6cd333cc5611fd6be290883eb8ede07ab3a3298128b79ef172c9a1f4f7437",
-    "source_note": "Exact dirty-source hashes identify this candidate. CLI/API/SFTP native binaries have the same digest; no history rewriting."
+    "source_note": "Exact dirty-source hashes identify this candidate. CLI/API/SFTP native binaries have the same digest; no history rewriting.",
+    "committed_source": "dda2ee38114ec05ed7663c9bb3a9c0fa49dbd2f1",
+    "committed_source_note": "All 48 recorded source hashes match these committed blobs; no history rewriting."
   },
   "environment": {
     "os": "Darwin",

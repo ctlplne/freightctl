@@ -28,7 +28,7 @@ The initial host key is Ed25519. User keys allow Ed25519, P-256 and RSA 3072–8
 | Put, get, ranges | Staged immutable writes; exact stored digest verification before downloads, then current authorization on each bounded read. |
 | Create/truncate/overwrite | A separate generated custody object; existing contents are retained under their old immutable ID. |
 | Nontruncating write, append | Copy a verified old revision, then apply bounded writes to a new revision. Serialized frames preserve append order. |
-| `reput` | Verified for a previously committed prefix. It does not resume an abandoned uncommitted upload. |
+| `reput` | Verified for a previously committed prefix. Use an explicit [upload ticket](resumable-uploads.md) to resume an interrupted, unaccepted transfer. |
 | List/stat/lstat/realpath | Logical names/modes/times only, confined to the mounted virtual root; bounded pages and current authority checks. |
 | Mkdir, rename, remove, rmdir | Same journaled namespace commands and revision checks as HTTPS; removal retains accepted bytes/history. |
 | POSIX rename extension | Explicit replacement binds the current target revision. This is the only advertised extension. |
@@ -68,3 +68,5 @@ These are explicit engineering budgets. Larger-file, scalable reservation, tenan
 A modern scp regression exposed early SSH channel closure: the file arrived but the client received no exit status and failed. The transport now owns final status and normal channel close. A live-revocation regression exposed a failed upload lingering while its client drained buffered packets; invalid current authority now closes the transfer session promptly. Both original journeys are rerun without extending their time budgets.
 
 The final native probe negotiated `mlkem768x25519-sha256`, an Ed25519 host key and `chacha20-poly1305@openssh.com`, with no compression and a clean SSH exit status. This observes one stock-client/profile combination, not every permitted algorithm or enterprise client. Complete denied-login/session-end audit retention, host-key rotation and delegated key administration remain required work. The pinned SFTP library is BSD-2-Clause and kr/fs is BSD-3-Clause; a complete distributable attribution bundle remains a release gate.
+
+Resumable tickets add a reserved private control path. Their stat size is the committed checkpoint offset, while get is denied; completed bytes appear only at the approved ordinary destination. Bound-target control rename explicitly completes an already checkpointed ticket. See the [ticket contract](resumable-uploads.md) for resume and completion semantics.

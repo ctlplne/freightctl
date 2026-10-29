@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 	"testing"
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
@@ -129,4 +130,100 @@ func FuzzCustodyName(f *testing.F) {
 			t.Fatal("unsafe accepted name")
 		}
 	})
+}
+
+func TestStableStorageIdentityAndCorruption(t *testing.T) {
+	root := filepath.Join(t.TempDir(), "custody")
+	d, err := Open(root)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer d.Close()
+	again, err := OpenExisting(root)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer again.Close()
+	if d.Identity() == "" || d.Identity() != again.Identity() {
+		t.Fatal("storage identity changed across reopen")
+	}
+	other, err := Open(filepath.Join(t.TempDir(), "other"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer other.Close()
+	if other.Identity() == d.Identity() {
+		t.Fatal("different stores share identity")
+	}
+	marker := filepath.Join(root, StorageIdentityName)
+	if err = os.Chmod(marker, 0600); err != nil {
+		t.Fatal(err)
+	}
+	if err = os.WriteFile(marker, []byte("invalid"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	if err = os.Chmod(marker, 0400); err != nil {
+		t.Fatal(err)
+	}
+	if !errors.Is(d.CheckIdentity(), ErrStorageIdentity) {
+		t.Fatal("changed storage identity accepted")
+	}
+	if opened, err := Open(root); err == nil {
+		opened.Close()
+		t.Fatal("invalid identity silently replaced")
+	}
+	got, err := os.ReadFile(marker)
+	if err != nil || string(got) != "invalid" {
+		t.Fatal("corrupt identity overwritten", err)
+	}
+}
+
+func TestObservationDoesNotInventStorageIdentity(t *testing.T) {
+	root := t.TempDir()
+	if disk, err := OpenExisting(root); err == nil {
+		disk.Close()
+		t.Fatal("read-only open initialized storage")
+	}
+	entries, err := os.ReadDir(root)
+	if err != nil || len(entries) != 0 {
+		t.Fatal("read-only open changed directory", err)
+	}
+}
+
+func TestConcurrentStorageInitializationPublishesOneIdentity(t *testing.T) {
+	root := filepath.Join(t.TempDir(), "custody")
+	ids := make(chan string, 8)
+	errs := make(chan error, 8)
+	var wg sync.WaitGroup
+	for i := 0; i < 8; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			disk, err := Open(root)
+			if err != nil {
+				errs <- err
+				return
+			}
+			ids <- disk.Identity()
+			disk.Close()
+		}()
+	}
+	wg.Wait()
+	close(ids)
+	close(errs)
+	for err := range errs {
+		t.Fatal(err)
+	}
+	id := ""
+	for next := range ids {
+		if id == "" {
+			id = next
+		} else if next != id {
+			t.Fatal("racing storage identities")
+		}
+	}
+	entries, err := os.ReadDir(root)
+	if err != nil || len(entries) != 1 || entries[0].Name() != StorageIdentityName {
+		t.Fatal("initialization left staging metadata", err)
+	}
 }

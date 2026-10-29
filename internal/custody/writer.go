@@ -43,7 +43,7 @@ type RevisionWriter struct {
 
 func (s *Service) OpenRevisionWriter(ctx context.Context, scope store.Scope, virtual string, options WriteOptions) (*RevisionWriter, error) {
 	canonical, err := vpath.Canonical(virtual)
-	if err != nil || canonical == "/" {
+	if err != nil || canonical == "/" || vpath.ControlPath(canonical) {
 		return nil, vpath.ErrPath
 	}
 	if options.Mode != nil && *options.Mode > 0777 || options.Exclusive && !options.Create || options.Append && options.Truncate || s.MaxFile < 1 {

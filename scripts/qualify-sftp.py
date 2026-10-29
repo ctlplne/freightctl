@@ -191,7 +191,7 @@ try:
   client=subprocess.Popen(['sftp','-l','256','-b',str(batch_file),'-P',str(ssh_port),*ssh_options(identity['key']),identity['username']+'@127.0.0.1'],stdout=output,stderr=output,start_new_session=True)
   deadline=time.monotonic()+8
   while time.monotonic()<deadline:
-   candidates=[p for p in storage.iterdir() if p not in before and p.is_file() and 0<p.stat().st_size<len(data)]
+   candidates=[p for p in storage.iterdir() if p not in before and p.name.startswith(tenant+"_"+partner+"_") and p.is_file() and 0<p.stat().st_size<len(data)]
    if candidates:output.close();return candidates[0]
    if client.poll() is not None:output.close();raise RuntimeError(label+': upload ended before staging was observed')
    time.sleep(.02)

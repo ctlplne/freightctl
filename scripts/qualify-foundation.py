@@ -24,6 +24,7 @@ commands=[
 ('custody-name-fuzz',['sh','scripts/go.sh','test','./internal/custody','-fuzz=FuzzCustodyName','-fuzztime=5s','-parallel=2']),
 ('stock-curl-https',['python3','scripts/qualify-https.py']),
 ('stock-openssh-sftp',['python3','scripts/qualify-sftp.py']),
+('durable-upload-resume',['python3','scripts/qualify-uploads.py']),
 ]
 results=[]
 for name,command in commands:

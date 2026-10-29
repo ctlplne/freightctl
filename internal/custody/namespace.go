@@ -207,7 +207,7 @@ func (s *Service) openAuthorized(ctx context.Context, t *store.Transaction, id s
 }
 func (s *Service) AcceptAt(ctx context.Context, scope store.Scope, key string, size int64, digest string, body io.Reader, target UploadTarget) (*store.File, bool, error) {
 	canonical, err := vpath.Canonical(target.Path)
-	if err != nil || canonical == "/" {
+	if err != nil || canonical == "/" || vpath.ControlPath(canonical) {
 		return nil, false, vpath.ErrPath
 	}
 	target.Path = canonical

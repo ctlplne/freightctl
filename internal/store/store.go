@@ -28,8 +28,14 @@ var eventBounds string
 //go:embed 004_namespace.sql
 var namespaceSchema string
 
-var migrations = []string{schema, eventBinding, eventBounds, namespaceSchema}
-var domainTables = []string{"tenants", "partners", "credentials", "events", "files", "idempotency", "namespace_entries", "namespace_revisions", "namespace_commands", "ssh_keys"}
+//go:embed 005_uploads.sql
+var uploadSchema string
+
+//go:embed 006_upload_storage.sql
+var uploadStorageSchema string
+
+var migrations = []string{schema, eventBinding, eventBounds, namespaceSchema, uploadSchema, uploadStorageSchema}
+var domainTables = []string{"tenants", "partners", "credentials", "events", "files", "idempotency", "namespace_entries", "namespace_revisions", "namespace_commands", "ssh_keys", "upload_sessions", "upload_chunks", "upload_receipts"}
 
 var ErrUnauthorized = errors.New("unauthorized")
 var ErrNotFound = errors.New("not found")
@@ -226,7 +232,7 @@ func ProvisionPolicy(ctx context.Context, adminPath, tenant, partner, tokenPath 
 		return errors.New("invalid tenant or partner UUID")
 	}
 	canonical, err := vpath.Canonical(root)
-	if err != nil || canonical != root {
+	if err != nil || canonical != root || vpath.ControlPath(root) {
 		return vpath.ErrPath
 	}
 	seen := make(map[string]bool)
@@ -304,7 +310,7 @@ func (s *Store) begin(ctx context.Context, scope Scope, options pgx.TxOptions) (
 	}()
 	// Hold relation locks before inspecting policies. ALTER TABLE cannot disable a
 	// checked policy between this check and the operation's reads or writes.
-	_, err = tx.Exec(ctx, `LOCK TABLE public.tenants,public.partners,public.credentials,public.events,public.files,public.idempotency,public.namespace_entries,public.namespace_revisions,public.namespace_commands,public.ssh_keys IN ACCESS SHARE MODE`)
+	_, err = tx.Exec(ctx, `LOCK TABLE public.tenants,public.partners,public.credentials,public.events,public.files,public.idempotency,public.namespace_entries,public.namespace_revisions,public.namespace_commands,public.ssh_keys,public.upload_sessions,public.upload_chunks,public.upload_receipts IN ACCESS SHARE MODE`)
 	if err != nil {
 		return nil, err
 	}
@@ -369,13 +375,22 @@ func (t *Transaction) Append(ctx context.Context, kind, resource string, payload
 	return id, err
 }
 func (t *Transaction) Accept(ctx context.Context, key, meaning string, f *File) error {
+	return t.accept(ctx, key, meaning, f, "", "")
+}
+func (t *Transaction) AcceptUpload(ctx context.Context, key, meaning string, f *File, uploadID, storageID string) error {
+	if !ValidID(uploadID) || !ValidID(storageID) {
+		return ErrState
+	}
+	return t.accept(ctx, key, meaning, f, uploadID, storageID)
+}
+func (t *Transaction) accept(ctx context.Context, key, meaning string, f *File, uploadID, storageID string) error {
 	if err := t.Reauthorize(ctx); err != nil {
 		return err
 	}
 	if err := t.Require("write"); err != nil {
 		return err
 	}
-	id, err := t.Append(ctx, "FileAccepted", f.ID, map[string]any{"schema_version": 2, "size_bytes": f.Size, "sha256": f.SHA256, "policy": f.Policy, "request_key": key, "request_hash": meaning, "protocol_session_id": t.Scope.SessionID})
+	id, err := t.Append(ctx, "FileAccepted", f.ID, map[string]any{"schema_version": 2, "size_bytes": f.Size, "sha256": f.SHA256, "policy": f.Policy, "request_key": key, "request_hash": meaning, "protocol_session_id": t.Scope.SessionID, "upload_session_id": uploadID, "storage_id": storageID})
 	if err != nil {
 		return err
 	}
@@ -425,7 +440,7 @@ func (t *Transaction) authenticate(ctx context.Context) error {
 		return err
 	}
 	root, err := vpath.Canonical(t.Root)
-	if err != nil || root != t.Root {
+	if err != nil || root != t.Root || vpath.ControlPath(root) {
 		return ErrIsolation
 	}
 	if t.Scope.AuthorityRevision > 0 && t.Scope.AuthorityRevision != t.AuthorityRevision {

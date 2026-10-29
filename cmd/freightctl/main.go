@@ -32,7 +32,7 @@ func main() {
 }
 func run(args []string) error {
 	if len(args) == 0 || args[0] == "--help" || args[0] == "help" {
-		fmt.Println("freightctl: init | token | enroll | identity | namespace | dev-cert | serve | reconcile | audit-keygen | audit-export | ssh-host-keygen | ssh-key-enroll | ssh-key-revoke | serve-sftp\nRead docs/development.md. This is an unqualified local custody foundation.")
+		fmt.Println("freightctl: init | token | enroll | identity | namespace | dev-cert | serve | reconcile | audit-keygen | audit-export | ssh-host-keygen | ssh-key-enroll | ssh-key-revoke | serve-sftp | upload-create | upload-status | upload-append | upload-complete | upload-abort\nRead docs/development.md. This is an unqualified local custody foundation.")
 		return nil
 	}
 	f := flag.NewFlagSet(args[0], flag.ContinueOnError)
@@ -63,6 +63,10 @@ func run(args []string) error {
 	namespaceMax := f.Int("namespace-max-entries", 10000, "active virtual entries allowed per partner")
 	requestFile := f.String("request-file", "", "bounded JSON namespace command reference")
 	idempotencyKey := f.String("idempotency-key", "", "stable namespace operation key")
+	uploadID := f.String("upload-id", "", "durable upload session UUID")
+	uploadOffset := f.Int64("upload-offset", 0, "expected committed upload offset")
+	chunkFile := f.String("chunk-file", "", "bounded chunk input file reference")
+	checkpointBytes := f.Int("upload-checkpoint-bytes", 1<<20, "resumable SFTP checkpoint size, 64 KiB to 8 MiB")
 	sshHost := f.String("ssh-host-key-file", ".private/ssh-host.key", "protected Ed25519 SSH host identity reference")
 	sshPublic := f.String("ssh-public-file", "", "public SSH key reference; host-keygen defaults to host reference plus .pub")
 	sshKeyID := f.String("ssh-key-id", "", "registered key UUID to revoke")
@@ -76,6 +80,11 @@ func run(args []string) error {
 	if f.NArg() != 0 {
 		return errors.New("unexpected positional arguments")
 	}
+	if args[0] == "serve" || args[0] == "serve-sftp" || strings.HasPrefix(args[0], "upload-") {
+		if *checkpointBytes < int(custody.MinUploadChunk) || *checkpointBytes > int(custody.MaxUploadChunk) || *maxFile < 1 || *maxFile > 1<<30 || *maxStored < *maxFile || *namespaceMax < 1 {
+			return errors.New("invalid upload checkpoint, file, storage or namespace budget")
+		}
+	}
 	ctx := context.Background()
 	switch args[0] {
 	case "init":
@@ -88,6 +97,92 @@ func run(args []string) error {
 			selected = strings.Split(*permissions, ",")
 		}
 		return store.ProvisionPolicy(ctx, *admin, *tenant, *partner, *token, selected, *namespaceRoot)
+	case "upload-create", "upload-status", "upload-append", "upload-complete", "upload-abort":
+		secret, err := secure.ReadSecret(*token, 64)
+		if err != nil {
+			return err
+		}
+		scope := store.Scope{Tenant: *tenant, Partner: *partner, TokenHash: secure.Digest(secret.Bytes)}
+		secret.Close()
+		db, err := store.Open(ctx, *dsn)
+		if err != nil {
+			return err
+		}
+		defer db.Pool.Close()
+		service := &custody.Service{DB: db, MaxFile: *maxFile, MaxStored: *maxStored, NamespaceMaxEntries: *namespaceMax, UploadCheckpointBytes: *checkpointBytes}
+
+		if args[0] != "upload-abort" {
+			var disk *custody.Disk
+			if args[0] == "upload-create" {
+				disk, err = custody.Open(*storage)
+			} else {
+				disk, err = custody.OpenExisting(*storage)
+			}
+			if err != nil {
+				return err
+			}
+			defer disk.Close()
+			service.Disk = disk
+		}
+		if args[0] == "upload-status" {
+			result, err := service.UploadStatus(ctx, scope, *uploadID)
+			if err != nil {
+				return err
+			}
+			return json.NewEncoder(os.Stdout).Encode(result)
+		}
+
+		var result *custody.UploadResult
+		switch args[0] {
+		case "upload-create":
+			input, err := os.Open(*requestFile)
+			if err != nil {
+				return errors.New("cannot open upload request reference")
+			}
+			defer input.Close()
+			st, err := input.Stat()
+			if err != nil || !st.Mode().IsRegular() || st.Size() > 16<<10 {
+				return errors.New("upload request must be bounded regular JSON")
+			}
+			decoder := json.NewDecoder(io.LimitReader(input, 16<<10))
+			decoder.DisallowUnknownFields()
+			var request custody.CreateUpload
+			if err = decoder.Decode(&request); err != nil {
+				return errors.New("invalid upload request JSON")
+			}
+			var extra any
+			if err = decoder.Decode(&extra); err != io.EOF {
+				return errors.New("upload request has trailing data")
+			}
+			result, err = service.CreateUpload(ctx, scope, *idempotencyKey, request)
+		case "upload-append":
+			input, openErr := os.Open(*chunkFile)
+			if openErr != nil {
+				return errors.New("cannot open chunk reference")
+			}
+			defer input.Close()
+			st, statErr := input.Stat()
+			if statErr != nil || !st.Mode().IsRegular() || st.Size() < 1 || st.Size() > custody.MaxUploadChunk {
+				return errors.New("chunk must be a regular file of 1 byte to 8 MiB")
+			}
+			h := secure.NewDigest()
+			n, copyErr := io.CopyBuffer(h, io.LimitReader(input, custody.MaxUploadChunk+1), make([]byte, 32<<10))
+			if copyErr != nil || n != st.Size() {
+				return custody.ErrIntegrity
+			}
+			if _, err = input.Seek(0, io.SeekStart); err != nil {
+				return err
+			}
+			result, err = service.AppendUpload(ctx, scope, *uploadID, *idempotencyKey, *uploadOffset, n, fmt.Sprintf("%x", h.Sum(nil)), input)
+		case "upload-complete":
+			result, err = service.CompleteUpload(ctx, scope, *uploadID, *idempotencyKey)
+		case "upload-abort":
+			result, err = service.AbortUpload(ctx, scope, *uploadID, *idempotencyKey)
+		}
+		if err != nil {
+			return err
+		}
+		return json.NewEncoder(os.Stdout).Encode(result)
 	case "identity", "namespace":
 		if args[0] == "namespace" && *namespaceMax < 1 {
 			return errors.New("namespace entry budget must be positive")
@@ -129,7 +224,7 @@ func run(args []string) error {
 		if err = decoder.Decode(&extra); err != io.EOF {
 			return errors.New("namespace command contains trailing data")
 		}
-		service := &custody.Service{DB: db, NamespaceMaxEntries: *namespaceMax}
+		service := &custody.Service{DB: db, NamespaceMaxEntries: *namespaceMax, UploadCheckpointBytes: *checkpointBytes}
 		if command.Operation == "publish" {
 			disk, err := custody.OpenExisting(*storage)
 			if err != nil {
@@ -250,7 +345,7 @@ func run(args []string) error {
 			return err
 		}
 		defer disk.Close()
-		service, err := sftpd.New(&custody.Service{DB: db, Disk: disk, MaxFile: *maxFile, MaxStored: *maxStored, NamespaceMaxEntries: *namespaceMax}, *sshWriters)
+		service, err := sftpd.New(&custody.Service{DB: db, Disk: disk, MaxFile: *maxFile, MaxStored: *maxStored, NamespaceMaxEntries: *namespaceMax, UploadCheckpointBytes: *checkpointBytes}, *sshWriters)
 		if err != nil {
 			return err
 		}
@@ -294,7 +389,7 @@ func run(args []string) error {
 		}
 		secret.Close()
 		audits := &audit.Service{DB: db, KeyFile: *auditKey, MaxEvents: *auditMaxEvents, MaxBytes: *auditMaxBytes}
-		server := &http.Server{Addr: *listen, Handler: api.New(&custody.Service{DB: db, Disk: disk, MaxFile: *maxFile, MaxStored: *maxStored, ReconcileMaxBytes: *reconcileBytes, NamespaceMaxEntries: *namespaceMax}, audits), TLSConfig: secure.TLSConfig(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 90 * time.Second, WriteTimeout: 90 * time.Second, IdleTimeout: 30 * time.Second, MaxHeaderBytes: 16 * 1024}
+		server := &http.Server{Addr: *listen, Handler: api.New(&custody.Service{DB: db, Disk: disk, MaxFile: *maxFile, MaxStored: *maxStored, ReconcileMaxBytes: *reconcileBytes, NamespaceMaxEntries: *namespaceMax, UploadCheckpointBytes: *checkpointBytes}, audits), TLSConfig: secure.TLSConfig(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 90 * time.Second, WriteTimeout: 90 * time.Second, IdleTimeout: 30 * time.Second, MaxHeaderBytes: 16 * 1024}
 		stop, cancel := signal.NotifyContext(ctx, os.Interrupt, syscall.SIGTERM)
 		defer cancel()
 		go func() {

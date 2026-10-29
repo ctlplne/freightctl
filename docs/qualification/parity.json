@@ -49,12 +49,13 @@
       "state": "implementing",
       "evidence": [
         "docs/qualification/evidence/F004-virtual-namespace.json",
-        "docs/qualification/evidence/F005-sftp-exchange.json"
+        "docs/qualification/evidence/F005-sftp-exchange.json",
+        "docs/qualification/evidence/F006-upload-checkpoints.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
       ],
-      "current_limit": "F005 verifies a bounded local SFTP server and shared HTTPS namespace using stock OpenSSH. Full row acceptance, enterprise peers, interrupted-session resume, remaining protocol profiles and product journeys remain open."
+      "current_limit": "F006 verifies explicit private tickets and bounded local restart resume using CLI/HTTPS/stock SFTP. Browser UX, larger/native/enterprise/client profiles and full row/customer acceptance remain open."
     },
     {
       "id": "P-SFTP-SEND",
@@ -286,12 +287,13 @@
       "state": "implementing",
       "evidence": [
         "docs/qualification/evidence/F004-virtual-namespace.json",
-        "docs/qualification/evidence/F005-sftp-exchange.json"
+        "docs/qualification/evidence/F005-sftp-exchange.json",
+        "docs/qualification/evidence/F006-upload-checkpoints.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
       ],
-      "current_limit": "F005 verifies a bounded local SFTP server and shared HTTPS namespace using stock OpenSSH. Full row acceptance, enterprise peers, interrupted-session resume, remaining protocol profiles and product journeys remain open."
+      "current_limit": "F006 verifies explicit private tickets and bounded local restart resume using CLI/HTTPS/stock SFTP. Browser UX, larger/native/enterprise/client profiles and full row/customer acceptance remain open."
     },
     {
       "id": "P-SCP-LEGACY",
@@ -405,12 +407,13 @@
       "evidence": [
         "docs/qualification/evidence/F001-custody-foundation.json",
         "docs/qualification/evidence/F004-virtual-namespace.json",
-        "docs/qualification/evidence/F005-sftp-exchange.json"
+        "docs/qualification/evidence/F005-sftp-exchange.json",
+        "docs/qualification/evidence/F006-upload-checkpoints.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
       ],
-      "current_limit": "F005 verifies a bounded local SFTP server and shared HTTPS namespace using stock OpenSSH. Full row acceptance, enterprise peers, interrupted-session resume, remaining protocol profiles and product journeys remain open."
+      "current_limit": "F006 verifies explicit private tickets and bounded local restart resume using CLI/HTTPS/stock SFTP. Browser UX, larger/native/enterprise/client profiles and full row/customer acceptance remain open."
     },
     {
       "id": "P-HTTPS-SEND",
@@ -448,12 +451,13 @@
       "evidence": [
         "docs/qualification/evidence/F001-custody-foundation.json",
         "docs/qualification/evidence/F004-virtual-namespace.json",
-        "docs/qualification/evidence/F005-sftp-exchange.json"
+        "docs/qualification/evidence/F005-sftp-exchange.json",
+        "docs/qualification/evidence/F006-upload-checkpoints.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
       ],
-      "current_limit": "F005 verifies a bounded local SFTP server and shared HTTPS namespace using stock OpenSSH. Full row acceptance, enterprise peers, interrupted-session resume, remaining protocol profiles and product journeys remain open."
+      "current_limit": "F006 verifies explicit private tickets and bounded local restart resume using CLI/HTTPS/stock SFTP. Browser UX, larger/native/enterprise/client profiles and full row/customer acceptance remain open."
     },
     {
       "id": "P-HTTP-RESUME",
@@ -487,11 +491,14 @@
         "independent operator or receiver"
       ],
       "acceptance_journey": "J02",
-      "state": "planned",
-      "evidence": [],
+      "state": "implementing",
+      "evidence": [
+        "docs/qualification/evidence/F006-upload-checkpoints.json"
+      ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
-      ]
+      ],
+      "current_limit": "F006 verifies explicit private tickets and bounded local restart resume using CLI/HTTPS/stock SFTP. Browser UX, larger/native/enterprise/client profiles and full row/customer acceptance remain open."
     },
     {
       "id": "P-AS2-SEND",
@@ -947,12 +954,13 @@
       "evidence": [
         "docs/qualification/evidence/F001-custody-foundation.json",
         "docs/qualification/evidence/F004-virtual-namespace.json",
-        "docs/qualification/evidence/F005-sftp-exchange.json"
+        "docs/qualification/evidence/F005-sftp-exchange.json",
+        "docs/qualification/evidence/F006-upload-checkpoints.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
       ],
-      "current_limit": "F005 verifies a bounded local SFTP server and shared HTTPS namespace using stock OpenSSH. Full row acceptance, enterprise peers, interrupted-session resume, remaining protocol profiles and product journeys remain open."
+      "current_limit": "F006 verifies explicit private tickets and bounded local restart resume using CLI/HTTPS/stock SFTP. Browser UX, larger/native/enterprise/client profiles and full row/customer acceptance remain open."
     },
     {
       "id": "C-NETWORK",
@@ -1332,12 +1340,13 @@
       "evidence": [
         "docs/qualification/evidence/F001-custody-foundation.json",
         "docs/qualification/evidence/F004-virtual-namespace.json",
-        "docs/qualification/evidence/F005-sftp-exchange.json"
+        "docs/qualification/evidence/F005-sftp-exchange.json",
+        "docs/qualification/evidence/F006-upload-checkpoints.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
       ],
-      "current_limit": "F005 verifies a bounded local SFTP server and shared HTTPS namespace using stock OpenSSH. Full row acceptance, enterprise peers, interrupted-session resume, remaining protocol profiles and product journeys remain open."
+      "current_limit": "F006 verifies explicit private tickets and bounded local restart resume using CLI/HTTPS/stock SFTP. Browser UX, larger/native/enterprise/client profiles and full row/customer acceptance remain open."
     },
     {
       "id": "A-ROLE",
@@ -1374,12 +1383,13 @@
       "state": "implementing",
       "evidence": [
         "docs/qualification/evidence/F004-virtual-namespace.json",
-        "docs/qualification/evidence/F005-sftp-exchange.json"
+        "docs/qualification/evidence/F005-sftp-exchange.json",
+        "docs/qualification/evidence/F006-upload-checkpoints.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
       ],
-      "current_limit": "F005 verifies a bounded local SFTP server and shared HTTPS namespace using stock OpenSSH. Full row acceptance, enterprise peers, interrupted-session resume, remaining protocol profiles and product journeys remain open."
+      "current_limit": "F006 verifies explicit private tickets and bounded local restart resume using CLI/HTTPS/stock SFTP. Browser UX, larger/native/enterprise/client profiles and full row/customer acceptance remain open."
     },
     {
       "id": "W-DEFINITION",

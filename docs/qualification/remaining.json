@@ -28,10 +28,11 @@
         "docs/qualification/evidence/F002-reconciliation.json",
         "docs/qualification/evidence/F003-signed-audit.json",
         "docs/qualification/evidence/F004-virtual-namespace.json",
-        "docs/qualification/evidence/F005-sftp-exchange.json"
+        "docs/qualification/evidence/F005-sftp-exchange.json",
+        "docs/qualification/evidence/F006-upload-checkpoints.json"
       ],
       "remaining_details": [
-        "F004 adds journaled virtual namespace/history, actor receipts and mounted-root/capability checks. Finish scalable reservations, approved recovery, protected retention, journal rebuild/chaining, larger exports and remaining crash boundaries."
+        "F006 adds immutable checkpoints, exact receipts and persistent storage/parent/authority binding. Finish approved cleanup/recovery/rebinding, scalable reservations/fairness, protected retention, journal chaining/rebuild, larger exports and remaining crash/commit boundaries."
       ]
     },
     {
@@ -47,10 +48,11 @@
       "evidence": [
         "docs/qualification/evidence/F001-custody-foundation.json",
         "docs/qualification/evidence/F004-virtual-namespace.json",
-        "docs/qualification/evidence/F005-sftp-exchange.json"
+        "docs/qualification/evidence/F005-sftp-exchange.json",
+        "docs/qualification/evidence/F006-upload-checkpoints.json"
       ],
       "remaining_details": [
-        "Stock OpenSSH server receive/download, modern scp, cross-protocol namespace, revocation, disconnect and staging-crash retry pass in F005. Finish interrupted-session resume, outbound SFTP adapter, enterprise peers/profiles, remaining sync/commit ambiguity, first-admin/browser onboarding and independent recipient business receipts. No full customer journey is qualified."
+        "F005 verifies bounded stock SFTP exchange; F006 verifies explicit-ticket API/CLI/SFTP restart resume and complete-prefix recovery. Finish ordinary-operator onboarding, broader protocol/client profiles, outbound SFTP, enterprise peers and independent recipient business receipts. No full journey is qualified."
       ]
     },
     {
@@ -83,8 +85,13 @@
         9,
         16
       ],
-      "state": "planned",
-      "evidence": []
+      "state": "implementing",
+      "evidence": [
+        "docs/qualification/evidence/F006-upload-checkpoints.json"
+      ],
+      "remaining_details": [
+        "Shared resumable-upload backend exists through API/CLI/SFTP tickets. Human portal, browser/session UX, invitations, accounts, pause/progress, batch operations, sharing, forms/mail and adoption remain open."
+      ]
     },
     {
       "id": "R007",
@@ -121,10 +128,11 @@
       "state": "implementing",
       "evidence": [
         "docs/qualification/evidence/F004-virtual-namespace.json",
-        "docs/qualification/evidence/F005-sftp-exchange.json"
+        "docs/qualification/evidence/F005-sftp-exchange.json",
+        "docs/qualification/evidence/F006-upload-checkpoints.json"
       ],
       "remaining_details": [
-        "Basic grants/mount/revision rules and local registered-public-key enrollment/revocation work, including active transfer denial. Delegated administration, human identities/providers/MFA, complete session/denial auditing, lifecycle UI and broader governance remain open."
+        "Current account/key/mount and destination/parent checks gate transfer mutations. Complete delegated lifecycle, policy reapproval/rebinding, human identity/MFA/providers, complete denial/session auditing, approval UI and governance remain open."
       ]
     },
     {

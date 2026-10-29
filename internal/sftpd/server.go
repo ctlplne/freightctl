@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"path"
+	"strings"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -14,6 +15,7 @@ import (
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/custody"
 	"github.com/ctlplne/freightctl/internal/store"
+	"github.com/ctlplne/freightctl/internal/vpath"
 	"github.com/pkg/sftp"
 )
 
@@ -28,6 +30,9 @@ var extensionsError error
 func New(service *custody.Service, maxWriters int) (*Service, error) {
 	if maxWriters < 1 || maxWriters > 4 {
 		return nil, errors.New("SFTP writer budget must be 1 to 4 within the initial database pool profile")
+	}
+	if service.UploadCheckpointBytes != 0 && (service.UploadCheckpointBytes < int(custody.MinUploadChunk) || service.UploadCheckpointBytes > int(custody.MaxUploadChunk)) {
+		return nil, custody.ErrInput
 	}
 	// Set once before any session starts: never advertise unsupported hardlink/statvfs.
 	extensionsOnce.Do(func() { extensionsError = sftp.SetSFTPExtensions("posix-rename@openssh.com") })
@@ -96,7 +101,7 @@ func (h *handler) slot() error {
 }
 func (h *handler) release() { <-h.handles }
 func (h *handler) transferError(err error) error {
-	if errors.Is(err, store.ErrUnauthorized) {
+	if errors.Is(err, store.ErrUnauthorized) || errors.Is(err, store.ErrForbidden) || errors.Is(err, custody.ErrStorageIdentity) {
 		_ = h.frames.Close()
 	}
 	return protocolError(err)
@@ -124,6 +129,9 @@ func (h *handler) pending(p string) *writer {
 	return h.open[canonical]
 }
 func (h *handler) Fileread(r *sftp.Request) (io.ReaderAt, error) {
+	if vpath.ControlPath(r.Filepath) {
+		return nil, sftp.ErrSSHFxPermissionDenied
+	}
 	if r.Flags & ^uint32(1) != 0 {
 		return nil, sftp.ErrSSHFxOpUnsupported
 	}
@@ -161,19 +169,26 @@ func (r *readHandle) Close() error {
 	return protocolError(err)
 }
 
+type revisionWriter interface {
+	io.WriterAt
+	io.Closer
+	TransferError(error)
+	Stat() (*store.PathEntry, error)
+	SetAttributes(*int64, *uint32, *time.Time) error
+}
 type writer struct {
-	*custody.RevisionWriter
+	revisionWriter
 	once    sync.Once
 	cleanup func()
 	failure func(error) error
 }
 
 func (w *writer) WriteAt(p []byte, offset int64) (int, error) {
-	n, err := w.RevisionWriter.WriteAt(p, offset)
+	n, err := w.revisionWriter.WriteAt(p, offset)
 	return n, w.failure(err)
 }
 func (w *writer) Close() error {
-	err := w.RevisionWriter.Close()
+	err := w.revisionWriter.Close()
 	w.once.Do(w.cleanup)
 	return protocolError(err)
 }
@@ -200,14 +215,25 @@ func (h *handler) Filewrite(r *sftp.Request) (io.WriterAt, error) {
 		h.release()
 		return nil, sftp.ErrSSHFxOpUnsupported
 	}
-	revision, err := h.service.Custody.OpenRevisionWriter(h.ctx, h.scope, r.Filepath, custody.WriteOptions{Create: flags.Creat, Truncate: flags.Trunc, Exclusive: flags.Excl, Append: flags.Append, Mode: attrs.mode, Modified: attrs.modified})
+	var revision revisionWriter
+	var err error
+	options := custody.WriteOptions{Create: flags.Creat, Truncate: flags.Trunc, Exclusive: flags.Excl, Append: flags.Append, Mode: attrs.mode, Modified: attrs.modified}
+	if id, control := uploadTicket(r.Filepath); control {
+		if id == "" {
+			err = store.ErrNotFound
+		} else {
+			revision, err = h.service.Custody.OpenUploadWriter(h.ctx, h.scope, id, options)
+		}
+	} else {
+		revision, err = h.service.Custody.OpenRevisionWriter(h.ctx, h.scope, r.Filepath, options)
+	}
 	if err != nil {
 		<-h.service.writers
 		h.release()
 		return nil, protocolError(err)
 	}
 	canonical, _ := virtualPath(r.Filepath)
-	w := &writer{RevisionWriter: revision, failure: h.transferError}
+	w := &writer{revisionWriter: revision, failure: h.transferError}
 	w.cleanup = func() { h.mu.Lock(); delete(h.open, canonical); h.mu.Unlock(); <-h.service.writers; h.release() }
 	h.mu.Lock()
 	h.open[canonical] = w
@@ -218,6 +244,11 @@ func (h *handler) RealPath(raw string) (string, error) {
 	p, err := virtualPath(raw)
 	if err != nil {
 		return "", sftp.ErrSSHFxPermissionDenied
+	}
+	if _, control := uploadTicket(p); control {
+		if _, err := h.controlStat(p); err != nil {
+			return "", protocolError(err)
+		}
 	}
 	// Even canonical-name queries recheck the key/account session revision.
 	t, err := h.service.Custody.DB.Begin(h.ctx, h.scope)
@@ -239,6 +270,23 @@ func (h *handler) command(r *sftp.Request, replace bool) error {
 			return sftp.ErrSSHFxFailure
 		}
 		return protocolError(pending.SetAttributes(attrs.size, attrs.mode, attrs.modified))
+	}
+	if id, control := uploadTicket(r.Filepath); control && id != "" && (r.Method == "Rename" || r.Method == "PosixRename") {
+		u, err := h.service.Custody.UploadStatus(h.ctx, h.scope, id)
+		if err != nil {
+			return protocolError(err)
+		}
+		target, err := virtualPath(r.Target)
+		if err != nil || target != u.Path {
+			return sftp.ErrSSHFxPermissionDenied
+		}
+		// This control-path rename finalizes the already approved target; it
+		// cannot retarget an upload or expose any intermediate chunk.
+		_, err = h.service.Custody.CompleteUpload(h.ctx, h.scope, id, "sftp-complete-"+id)
+		return protocolError(err)
+	}
+	if vpath.ControlPath(r.Filepath) || vpath.ControlPath(r.Target) {
+		return sftp.ErrSSHFxOpUnsupported
 	}
 	c := store.PathCommand{Path: r.Filepath, Target: r.Target, Mode: attrs.mode, Modified: attrs.modified}
 	switch r.Method {
@@ -288,6 +336,8 @@ func (h *handler) Filelist(r *sftp.Request) (sftp.ListerAt, error) {
 		var err error
 		if pending := h.pending(r.Filepath); pending != nil {
 			entry, err = pending.Stat()
+		} else if _, control := uploadTicket(r.Filepath); control {
+			entry, err = h.controlStat(r.Filepath)
 		} else {
 			entry, err = h.service.Custody.StatPath(h.ctx, h.scope, r.Filepath)
 		}
@@ -296,6 +346,9 @@ func (h *handler) Filelist(r *sftp.Request) (sftp.ListerAt, error) {
 		}
 		return singleEntry{entryInfo{*entry}}, nil
 	case "List":
+		if vpath.ControlPath(r.Filepath) {
+			return nil, sftp.ErrSSHFxOpUnsupported
+		}
 		if err := h.slot(); err != nil {
 			return nil, err
 		}
@@ -393,4 +446,54 @@ func (d *directory) ListAt(out []os.FileInfo, offset int64) (int, error) {
 		d.offset++
 	}
 	return n, nil
+}
+
+func uploadTicket(value string) (string, bool) {
+	canonical, err := virtualPath(value)
+	if err != nil {
+		return "", false
+	}
+	if canonical == "/.freightctl" || canonical == "/.freightctl/uploads" {
+		return "", true
+	}
+	const prefix = "/.freightctl/uploads/"
+	if strings.HasPrefix(canonical, prefix) {
+		id := strings.TrimPrefix(canonical, prefix)
+		if store.ValidID(id) {
+			return id, true
+		}
+		return "", true
+	}
+	if vpath.ControlPath(canonical) {
+		return "", true
+	}
+	return "", false
+}
+func (h *handler) controlStat(value string) (*store.PathEntry, error) {
+	id, control := uploadTicket(value)
+	if !control {
+		return nil, store.ErrNotFound
+	}
+	if id == "" {
+		if value != "/.freightctl" && value != "/.freightctl/uploads" {
+			return nil, store.ErrNotFound
+		}
+		t, err := h.service.Custody.DB.Begin(h.ctx, h.scope)
+		if err != nil {
+			return nil, err
+		}
+		defer t.Tx.Rollback(h.ctx)
+		if err = t.Require("write"); err != nil {
+			return nil, err
+		}
+		if err = t.Tx.Commit(h.ctx); err != nil {
+			return nil, err
+		}
+		return &store.PathEntry{Path: value, Kind: "dir", Mode: 0700, Modified: time.Unix(0, 0).UTC()}, nil
+	}
+	u, err := h.service.Custody.UploadStatus(h.ctx, h.scope, id)
+	if err != nil {
+		return nil, err
+	}
+	return &store.PathEntry{ID: u.ID, Path: u.SFTPPath, Kind: "file", Mode: 0600, Size: u.Offset, Modified: u.Modified, Revision: u.Revision}, nil
 }

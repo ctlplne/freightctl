@@ -42,6 +42,11 @@ func New(service *custody.Service, audits *audit.Service) http.Handler {
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/namespace/entries", s.listPath)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/namespace/file", s.downloadPath)
 	m.HandleFunc("PUT /v1/tenants/{tenant}/partners/{partner}/namespace/file", s.uploadPath)
+	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/uploads", s.createUpload)
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/uploads/{upload}", s.uploadStatus)
+	m.HandleFunc("PATCH /v1/tenants/{tenant}/partners/{partner}/uploads/{upload}", s.appendUpload)
+	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/uploads/{upload}/complete", s.completeUpload)
+	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/uploads/{upload}/abort", s.abortUpload)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("X-Content-Type-Options", "nosniff")
 		w.Header().Set("Cache-Control", "no-store")
@@ -143,6 +148,8 @@ func failure(w http.ResponseWriter, err error) {
 		fail(w, 404, "not_found")
 	case errors.Is(err, store.ErrConflict):
 		fail(w, 409, "idempotency_conflict")
+	case errors.Is(err, custody.ErrStorageIdentity):
+		fail(w, 409, "storage_identity_mismatch")
 	case errors.Is(err, custody.ErrInput):
 		fail(w, 400, "invalid_upload_contract")
 	case errors.Is(err, custody.ErrIntegrity):

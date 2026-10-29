@@ -176,6 +176,9 @@ func (t *Transaction) ApplyPathCommand(ctx context.Context, key string, command 
 		return nil, err
 	}
 	command.Path = virtual
+	if vpath.ControlPath(virtual) || vpath.ControlPath(command.Target) {
+		return nil, ErrForbidden
+	}
 	if virtual == "/" {
 		return nil, ErrForbidden
 	}

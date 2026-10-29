@@ -1,0 +1,839 @@
+{
+  "schema_version": 1,
+  "id": "F006",
+  "kind": "durable private upload checkpoints, storage/authority binding and stock-client process-restart resume",
+  "state": "verified locally",
+  "full_journeys_qualified": [],
+  "candidate": {
+    "starting_commit": "dda2ee38114ec05ed7663c9bb3a9c0fa49dbd2f1",
+    "source_files": [
+      {
+        "path": "cmd/freightctl/main.go",
+        "sha256": "e244c93b2d777f9648b0a9a91a72fb277662e1f3e2f21a5205825a21ed1cfab4"
+      },
+      {
+        "path": "go.mod",
+        "sha256": "2b8e72bb19c95ae51e63a7c45a7c2c4ba0f147acdfde6f3eda1dff9520cca150"
+      },
+      {
+        "path": "go.sum",
+        "sha256": "e36a23c226b1844da16837e68a4d47f865d6eef00b3bf447cb33b52a31c89164"
+      },
+      {
+        "path": "internal/api/api.go",
+        "sha256": "b2aebaeb8fbe907045b85674a230489be860e524cff66102e20f48f1c0191812"
+      },
+      {
+        "path": "internal/api/namespace.go",
+        "sha256": "82d863f396fec14d6394a7f4011e434c593f2217dc66231b96cdf8782b6b3c0e"
+      },
+      {
+        "path": "internal/api/uploads.go",
+        "sha256": "fda7f39264ed8775e4a02b4d06db0c3f1df5201adc7c3ca9835d20b68361f494"
+      },
+      {
+        "path": "internal/architecture/architecture_test.go",
+        "sha256": "a8f4bb6540105bef76899e147dc0bb670bf2d411a0cdcf767ec38a79573657a5"
+      },
+      {
+        "path": "internal/audit/audit.go",
+        "sha256": "41bcf8bb940ec14e76657b3163be89ea2701a09fce7ee14a20f62452c516db46"
+      },
+      {
+        "path": "internal/audit/integration_test.go",
+        "sha256": "8c69a1a5d040a391b2579f58d3b070865e89f1c3b4f66199143d87e9793e7248"
+      },
+      {
+        "path": "internal/crypto/audit.go",
+        "sha256": "eefe6f66ab4c283ea96e51fc35a7cb4f8edff713dd16d56041d74bf1acdc338e"
+      },
+      {
+        "path": "internal/crypto/audit_test.go",
+        "sha256": "0837cc879e08a3b47d6b7ab4f393579af17ebd891f430e2cc45e264d60c02b4e"
+      },
+      {
+        "path": "internal/crypto/crypto.go",
+        "sha256": "edb1f8534ce0f048038aa5946489caba5ae303a38024e173c8a0d09478d093a0"
+      },
+      {
+        "path": "internal/crypto/protect_other.go",
+        "sha256": "c52dc1b00ac860719e3dd9dd9118109014d01e0b7f87327646bba63e7dd173a2"
+      },
+      {
+        "path": "internal/crypto/protect_unix.go",
+        "sha256": "f7184f82ff63e331fd5170a0ea27a0f5e867f06bbb9d1f901ae57f75a8b86e52"
+      },
+      {
+        "path": "internal/crypto/ssh.go",
+        "sha256": "c405042bf732cfffa8510e6d763f5c86c585994009a99d897d8a6efc2bb4d018"
+      },
+      {
+        "path": "internal/crypto/ssh_test.go",
+        "sha256": "46f6cb3e53d9c3fca6b38f23b9a263852dcb94d1b49177c976f3f923b415db14"
+      },
+      {
+        "path": "internal/custody/custody.go",
+        "sha256": "20fc4428aad2e825d8ee70288469e75a9ded6667972c1d257633173119a26b0b"
+      },
+      {
+        "path": "internal/custody/custody_test.go",
+        "sha256": "2c4f169f40b859ca9f263deec1f03a46529c6784e24e8133018e1620df828ee7"
+      },
+      {
+        "path": "internal/custody/identity.go",
+        "sha256": "11db37dba13d5435f85f8243f353f29f8e333e304aba2a67b65ab70c30f1765c"
+      },
+      {
+        "path": "internal/custody/integration_test.go",
+        "sha256": "8c09d3b1044e360aae11287ce3d0b7861f0693544b28d15fbc6393a2e89871b1"
+      },
+      {
+        "path": "internal/custody/namespace.go",
+        "sha256": "47db75f92c468ba51b363333a0cdac25b177f5b0c65237d2cb4009df0f0f3d8b"
+      },
+      {
+        "path": "internal/custody/namespace_integration_test.go",
+        "sha256": "c75bf9153443f2a90bc7fbe955bb6931f29d77ce9f8455128c302679c92edd8f"
+      },
+      {
+        "path": "internal/custody/reconcile.go",
+        "sha256": "6eea38522e4c103a8014ce3f76455410dac5a2e04bf823ea11c7f008f2e0613f"
+      },
+      {
+        "path": "internal/custody/service.go",
+        "sha256": "e63f828318799277eb516dc09eedb75a618bcb80f2d67da59bc4ae3f955dd651"
+      },
+      {
+        "path": "internal/custody/upload_writer.go",
+        "sha256": "18a3991d78b617795ecce110f0ee7bf35af18f05250b3ba2c27fd49895231756"
+      },
+      {
+        "path": "internal/custody/uploads.go",
+        "sha256": "c10bcc0a2ef280206f1dd908723e04ce088096b874f6383cab7b68bbf74c5101"
+      },
+      {
+        "path": "internal/custody/uploads_integration_test.go",
+        "sha256": "6331c842e23e5bc16a0614c39cd5ddbbb65751973c25915fe18361ba774504a4"
+      },
+      {
+        "path": "internal/custody/writer.go",
+        "sha256": "d352bc7aa55e09192807926e4e406aefb935d1d32177d6d80f6af03be6d9ae45"
+      },
+      {
+        "path": "internal/custody/writer_integration_test.go",
+        "sha256": "7ca33e33931473e5d27f38f632a83b7232295f8fe0dfc6e2d417eafa6ffe71a0"
+      },
+      {
+        "path": "internal/sftpd/frames.go",
+        "sha256": "c370342331b85bc5e9b5bb549bcbd55279d17b131f367618600c02edf5d899d3"
+      },
+      {
+        "path": "internal/sftpd/frames_test.go",
+        "sha256": "909594927fda166cc0609de3e913d097488819ae601fc8c5227d059c91420f40"
+      },
+      {
+        "path": "internal/sftpd/server.go",
+        "sha256": "4d9060050c42845847f9dee416b9991d52473838b80cc33fe188b29428697a51"
+      },
+      {
+        "path": "internal/store/002_event_binding.sql",
+        "sha256": "9bdb83d3a31f608af24b568e91889e2e6f462caf8658b746a0c55be97e58dfb0"
+      },
+      {
+        "path": "internal/store/003_event_bounds.sql",
+        "sha256": "5e09fc8540294e24ea9114e71e4d58311bdfb7b80ae1a5d3162c8d3bc0a4a4e7"
+      },
+      {
+        "path": "internal/store/004_namespace.sql",
+        "sha256": "fd60652d7ebee14e7a39104d656599e5b8f9684eef293e3bb76951a2b5a895dc"
+      },
+      {
+        "path": "internal/store/005_uploads.sql",
+        "sha256": "a88a0394afd4192f40486670ce2b5c833b8a8ff38334251eba77e1e933b044df"
+      },
+      {
+        "path": "internal/store/006_upload_storage.sql",
+        "sha256": "b2e7b4ee6eac36a5d87734f3937d6a8b33533e27be3e904b660eb340d0393136"
+      },
+      {
+        "path": "internal/store/identity.go",
+        "sha256": "9a7db0cc22a831c917dae9c59c88efe4980b453aad8eb050059ee680a5b90d19"
+      },
+      {
+        "path": "internal/store/migration_integration_test.go",
+        "sha256": "c418724a3755548d44d0ae677c948f2ab48f40948d09f66c3356da029f99687b"
+      },
+      {
+        "path": "internal/store/namespace.go",
+        "sha256": "f5e94c1498d648d9643f58ec88e7b9fef3810d8ab44775b269dec82b8f704581"
+      },
+      {
+        "path": "internal/store/namespace_integration_test.go",
+        "sha256": "b989b680cb0c5196632d5807e20963fd558f5a4a8bbacf062f2e99c7d0e7e9e7"
+      },
+      {
+        "path": "internal/store/schema.sql",
+        "sha256": "26c4a6bd9e354b5b6f63052368f6d1e687de007f6f74b96910bce0ef3a5460d9"
+      },
+      {
+        "path": "internal/store/snapshot.go",
+        "sha256": "684681b9aeaed7021a140b196746f880dfec04a1bb966497c879468a9367b9a1"
+      },
+      {
+        "path": "internal/store/ssh.go",
+        "sha256": "8c2ec2c9890b0ecca3faf84def360cecf07d1082e3d7481f2f63c35a9c6a2a2c"
+      },
+      {
+        "path": "internal/store/store.go",
+        "sha256": "4a66b0d877af1611e909fd57f24f899fc494397ebcd4ed11908e8295c8c6dd53"
+      },
+      {
+        "path": "internal/store/uploads.go",
+        "sha256": "135c70f735604631bb5d4de555dc5e3ac4eb06f08dd2e99b002b0aed3a0448e6"
+      },
+      {
+        "path": "internal/store/uploads_integration_test.go",
+        "sha256": "76bd7a2434fa44aecb394d64d5a035ccaf3a723dbcfad18f6c77b443f6aef84d"
+      },
+      {
+        "path": "internal/vpath/path.go",
+        "sha256": "2a57a1a9f61390f3712f909e62336f7daba394d499591d20ddc95c15a66d57a5"
+      },
+      {
+        "path": "internal/vpath/path_test.go",
+        "sha256": "2a5489626f3ffb265249adbe4f4ed7698767c6a580dc976eb585d0a45d9cebd3"
+      },
+      {
+        "path": "scripts/check-records.py",
+        "sha256": "35df8df21212a1136486d5a9f3335b67b19cdb24f2e053c90d21d4768ced1f1b"
+      },
+      {
+        "path": "scripts/dev-db.py",
+        "sha256": "05643d67e1a64d7e5f91c19108f5bfa3415571c8394721c5d7cc89862d51c12a"
+      },
+      {
+        "path": "scripts/go.sh",
+        "sha256": "aec6d7e09592b3954a89dc69839c6791e72a73dbafe2ca04b3b274276a23f5a8"
+      },
+      {
+        "path": "scripts/integration.sh",
+        "sha256": "a1f1d34ff041d7287d04aab634ad336bf7af7896f58241181081853a981d3464"
+      },
+      {
+        "path": "scripts/qualify-foundation.py",
+        "sha256": "afd4b82087aa0f70c2b7fefbc3f11c6e6f8d8392519dcc0dadae3c020a4b6a59"
+      },
+      {
+        "path": "scripts/qualify-https.py",
+        "sha256": "21936efd7cb89e0a3fe6bb95a3b786f630d75bba68ac0575faf76214228842af"
+      },
+      {
+        "path": "scripts/qualify-sftp.py",
+        "sha256": "3dc203afb7e5f8bb76210be6c3e45259a781803ba1140f3db971ea9b822c1027"
+      },
+      {
+        "path": "scripts/qualify-uploads.py",
+        "sha256": "b81401642f8a3c2634fb024d691dd6f11b5ed9ef7bbfef077d838837d41e9e15"
+      },
+      {
+        "path": "scripts/verify-audit.py",
+        "sha256": "99f22fbd3e936aa4d38569ada1bfcccbca47e46f6c3e08aa47f6531128e9b983"
+      }
+    ],
+    "binary_sha256": "f58aba1014bb2cbcd6bd173bbf77ea68075a6f91c2fda4c8f7189ed61372295f",
+    "source_note": "Exact dirty-source hashes identify the candidate. All three native journey binaries have the same digest; no history rewriting."
+  },
+  "environment": {
+    "os": "Darwin",
+    "arch": "arm64",
+    "go": "go version go1.26.10 darwin/arm64",
+    "ssh": "OpenSSH_10.5p1, LibreSSL 3.3.6",
+    "checkpoint_bytes": 65536,
+    "postgres_image": "postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+    "database": "Retained task-owned freightctl-postgres-v1, loopback port 25432; runtime non-owner with thirteen forced row-policy relations.",
+    "assistance": "Agent-operated synthetic service-account journeys, not independent human adoption or enterprise interoperability."
+  },
+  "checks": [
+    {
+      "name": "records",
+      "command": [
+        "python3",
+        "scripts/check-records.py"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 0.033,
+      "native_output": "evidence/raw/foundation-e53237a6ec52460bb6120504777da77b/records.log",
+      "native_output_sha256": "457fa0e73258b6d5d3f99f5ddc34510e9b644d7056ff0218f5108e232d264422"
+    },
+    {
+      "name": "module-integrity",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "mod",
+        "verify"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 0.269,
+      "native_output": "evidence/raw/foundation-e53237a6ec52460bb6120504777da77b/module-integrity.log",
+      "native_output_sha256": "b4537ed75f533f993f371954de47e42a793b8e5b0587577de7e27fb3e50696bd"
+    },
+    {
+      "name": "vet",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "vet",
+        "./..."
+      ],
+      "exit_code": 0,
+      "duration_seconds": 0.399,
+      "native_output": "evidence/raw/foundation-e53237a6ec52460bb6120504777da77b/vet.log",
+      "native_output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "unit-race",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "test",
+        "-race",
+        "./..."
+      ],
+      "exit_code": 0,
+      "duration_seconds": 2.7,
+      "native_output": "evidence/raw/foundation-e53237a6ec52460bb6120504777da77b/unit-race.log",
+      "native_output_sha256": "3b381ac36c649fd37780b28466759562ccabef2611c0dd5099b794649ece0588"
+    },
+    {
+      "name": "postgres-integration-race",
+      "command": [
+        "sh",
+        "scripts/integration.sh",
+        "-race",
+        "-v"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 10.631,
+      "native_output": "evidence/raw/foundation-e53237a6ec52460bb6120504777da77b/postgres-integration-race.log",
+      "native_output_sha256": "041026e9bd9c41e297003e5b1561d5485cd6f1bfd699c86fd643b08706c7763b"
+    },
+    {
+      "name": "virtual-path-fuzz",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "test",
+        "./internal/vpath",
+        "-fuzz=FuzzCanonicalPath",
+        "-fuzztime=5s",
+        "-parallel=2"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 6.81,
+      "native_output": "evidence/raw/foundation-e53237a6ec52460bb6120504777da77b/virtual-path-fuzz.log",
+      "native_output_sha256": "72c6e5d35445a5ceb8f376d6ff3ed0265a35fd47e877fe2f8f1d9fb4cc51ae19"
+    },
+    {
+      "name": "sftp-packet-fuzz",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "test",
+        "./internal/sftpd",
+        "-fuzz=FuzzInspectPacket",
+        "-fuzztime=5s",
+        "-parallel=2"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 6.407,
+      "native_output": "evidence/raw/foundation-e53237a6ec52460bb6120504777da77b/sftp-packet-fuzz.log",
+      "native_output_sha256": "5ce2adc599d867063e664951d8cd3fce4b1e7f718769d01079dd80b642cb7e6f"
+    },
+    {
+      "name": "custody-name-fuzz",
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "test",
+        "./internal/custody",
+        "-fuzz=FuzzCustodyName",
+        "-fuzztime=5s",
+        "-parallel=2"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 6.227,
+      "native_output": "evidence/raw/foundation-e53237a6ec52460bb6120504777da77b/custody-name-fuzz.log",
+      "native_output_sha256": "685af6d384349633488a617ccf4579bf531230bc96075d3790488fdd37000160"
+    },
+    {
+      "name": "stock-curl-https",
+      "command": [
+        "python3",
+        "scripts/qualify-https.py"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 5.492,
+      "native_output": "evidence/raw/foundation-e53237a6ec52460bb6120504777da77b/stock-curl-https.log",
+      "native_output_sha256": "720ec32c3c621d62b33f272ea92980b609b979db6e96d47a6ecfc80d535d8a69"
+    },
+    {
+      "name": "stock-openssh-sftp",
+      "command": [
+        "python3",
+        "scripts/qualify-sftp.py"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 6.836,
+      "native_output": "evidence/raw/foundation-e53237a6ec52460bb6120504777da77b/stock-openssh-sftp.log",
+      "native_output_sha256": "88585593cb2825a93efb90a4213cec82804c57b922877ad5f448230628ac3466"
+    },
+    {
+      "name": "durable-upload-resume",
+      "command": [
+        "python3",
+        "scripts/qualify-uploads.py"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 4.03,
+      "native_output": "evidence/raw/foundation-e53237a6ec52460bb6120504777da77b/durable-upload-resume.log",
+      "native_output_sha256": "935f95b8637bdd1b34cdd411c89992e4b38dfa74cc774dec8d7ea1b99c1e9d8c"
+    }
+  ],
+  "native_manifest": {
+    "path": "evidence/raw/foundation-e53237a6ec52460bb6120504777da77b/manifest.json",
+    "sha256": "8a8c5ca70f1604c29aa746db832b9bc193c6c7d125a2fe790b589aa6ba874058"
+  },
+  "uploads": {
+    "manifest": {
+      "path": "evidence/raw/uploads-f551d2dd83014b829a3a5aff581d5b3d/manifest.json",
+      "sha256": "6dae1f04cdb8740cdd3f0136804770e1974271e8c02086dc2ed64d1df06b9254"
+    },
+    "steps": [
+      {
+        "name": "create-resume",
+        "http_status": 201,
+        "output_sha256": "269c88835eb8e166284a3d285323a8735d2a6e6eb57e4e2b9627cc98eadb23c7"
+      },
+      {
+        "name": "create-idempotent-retry",
+        "http_status": 200,
+        "output_sha256": "0b01e646dc3b8de6026282bc0ab07cf6d6c40c99173b6f25ccad05c10f776711"
+      },
+      {
+        "name": "first-checkpoint",
+        "http_status": 200,
+        "output_sha256": "51840298ff8789274d4c2b802e5c7d93ac7e5770870e96d5c2f1667239c0601b"
+      },
+      {
+        "name": "repeat-checkpoint",
+        "http_status": 200,
+        "output_sha256": "7d4270cea234796505e7a4bd302d071cca63bde127e51a97ca9375133077e390"
+      },
+      {
+        "name": "stale-offset-denied",
+        "http_status": 409,
+        "output_sha256": "6fc066192828d024e45a6c7738de9dba7c00a6085246a435bc6bdc280c79a2c1"
+      },
+      {
+        "name": "wrong-chunk-digest-denied",
+        "http_status": 422,
+        "output_sha256": "17909a4300b0f26f55fc9eba9d619784883c0a87a76956345f5697fe5cb27ff6"
+      },
+      {
+        "name": "other-actor-status-denied",
+        "http_status": 404,
+        "output_sha256": "fef916c279def93f790d739d8525fc7ffd697a4a492029472c5752bda04a4faf"
+      },
+      {
+        "name": "premature-complete-denied",
+        "http_status": 409,
+        "output_sha256": "6fc066192828d024e45a6c7738de9dba7c00a6085246a435bc6bdc280c79a2c1"
+      },
+      {
+        "name": "destination-unpublished",
+        "http_status": 404,
+        "output_sha256": "fef916c279def93f790d739d8525fc7ffd697a4a492029472c5752bda04a4faf"
+      },
+      {
+        "name": "raw-checkpoint-download-denied",
+        "http_status": 404,
+        "output_sha256": "fef916c279def93f790d739d8525fc7ffd697a4a492029472c5752bda04a4faf"
+      },
+      {
+        "name": "ticket-download-denied",
+        "exit_code": 1,
+        "expected_success": false,
+        "stdout_sha256": "d075c428ecef8d1d3f94ee541c452230797bcf82061683def313972e6dab9980",
+        "stderr_sha256": "e302e84a5a3aeeb5cb357b1eb7cf75debcbcbb52eefd6b78bb016da4b2aa21a0"
+      },
+      {
+        "name": "other-actor-resume-denied",
+        "exit_code": 1,
+        "expected_success": false,
+        "stdout_sha256": "f6776939a0557d6fca071f69e4a9ae8019cf3c1f4b440784ef5cead7cf6b67c2",
+        "stderr_sha256": "94d5a60ab7123da6aa89bb0025a87d967b460dceb5946b5dffb1ea3358d7879f"
+      },
+      {
+        "name": "wrong-store-status-denied",
+        "http_status": 409,
+        "output_sha256": "78df1f5643b9effc2f68ac386783f5b933b2a7170e831fb84822f4014b26e1f9"
+      },
+      {
+        "name": "wrong-store-checkpoint-denied",
+        "http_status": 409,
+        "output_sha256": "78df1f5643b9effc2f68ac386783f5b933b2a7170e831fb84822f4014b26e1f9"
+      },
+      {
+        "name": "observe-14",
+        "http_status": 200,
+        "output_sha256": "6ea890cad72dadea107862e352a204c199927c1496ad42fdd86c6844de3deff3"
+      },
+      {
+        "name": "observe-15",
+        "http_status": 200,
+        "output_sha256": "6ea890cad72dadea107862e352a204c199927c1496ad42fdd86c6844de3deff3"
+      },
+      {
+        "name": "observe-16",
+        "http_status": 200,
+        "output_sha256": "6ea890cad72dadea107862e352a204c199927c1496ad42fdd86c6844de3deff3"
+      },
+      {
+        "name": "observe-17",
+        "http_status": 200,
+        "output_sha256": "6ea890cad72dadea107862e352a204c199927c1496ad42fdd86c6844de3deff3"
+      },
+      {
+        "name": "observe-18",
+        "http_status": 200,
+        "output_sha256": "6ea890cad72dadea107862e352a204c199927c1496ad42fdd86c6844de3deff3"
+      },
+      {
+        "name": "observe-19",
+        "http_status": 200,
+        "output_sha256": "6ea890cad72dadea107862e352a204c199927c1496ad42fdd86c6844de3deff3"
+      },
+      {
+        "name": "observe-20",
+        "http_status": 200,
+        "output_sha256": "6ea890cad72dadea107862e352a204c199927c1496ad42fdd86c6844de3deff3"
+      },
+      {
+        "name": "observe-21",
+        "http_status": 200,
+        "output_sha256": "9753cd3abdaa221fa9c7b2ba84abf1adfe0a69924f31c518e580831012be942e"
+      },
+      {
+        "name": "still-unpublished-before-crash",
+        "http_status": 404,
+        "output_sha256": "fef916c279def93f790d739d8525fc7ffd697a4a492029472c5752bda04a4faf"
+      },
+      {
+        "name": "head-after-process-kill",
+        "http_status": 200,
+        "output_sha256": "9753cd3abdaa221fa9c7b2ba84abf1adfe0a69924f31c518e580831012be942e"
+      },
+      {
+        "name": "head-after-restart",
+        "http_status": 200,
+        "output_sha256": "9753cd3abdaa221fa9c7b2ba84abf1adfe0a69924f31c518e580831012be942e"
+      },
+      {
+        "name": "checkpoint-reconciliation",
+        "http_status": 200,
+        "output_sha256": "99f2c81039a782ffa6d8d9deec102f699f59a3fd0de3d44fcec0b01fc8c75374"
+      },
+      {
+        "name": "stock-reput-after-restart",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "f6776939a0557d6fca071f69e4a9ae8019cf3c1f4b440784ef5cead7cf6b67c2",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "completed-status",
+        "http_status": 200,
+        "output_sha256": "4f4dea0674e9bc0b1a0848bff8e39430a2100fda59cbde62ee5b2dfcd50fc0f0"
+      },
+      {
+        "name": "download-complete-file",
+        "http_status": 200,
+        "output_sha256": "e26a7765f75f6e4e3cbe3405e08833c7b5fb2d9f09710bb47395892e07c02070"
+      },
+      {
+        "name": "complete-idempotent-result",
+        "http_status": 200,
+        "output_sha256": "a85ee512ba67e2b919556c560768a7395f7800084e7a6b705674bd53b46eedbd"
+      },
+      {
+        "name": "complete-replay",
+        "http_status": 200,
+        "output_sha256": "c8dd485f7df93218fbe80124ed58552ffe9ce21341acb264e07a600dbce66219"
+      },
+      {
+        "name": "full-before-close",
+        "http_status": 201,
+        "output_sha256": "8bbfacd23edf3533fea567d815614df827fa7f0b1e3b3ec255c49a35c0df1d2f"
+      },
+      {
+        "name": "full-prefix",
+        "http_status": 200,
+        "output_sha256": "5e9dbf39d402ab57cb21097290b0f4dff07b83f7491f45deb261f7e5bd128207"
+      },
+      {
+        "name": "same-size-reput-refused-by-client",
+        "exit_code": 1,
+        "expected_success": false,
+        "stdout_sha256": "ef736fc6865add43c771175ccaa17022242a0970d4a57b59e1c85ff0dab887fc",
+        "stderr_sha256": "590deaec3cd16ec20745764c48b869eea4c89ba649c9830cc961d65c03d469ff"
+      },
+      {
+        "name": "ticket-retarget-denied",
+        "exit_code": 1,
+        "expected_success": false,
+        "stdout_sha256": "67a32782f20242a9a8f9817df5f4e9b68d46b889fdb681f68eba19828e7d801e",
+        "stderr_sha256": "8524251e130db455b61a550c92b7e40366c55dce715070fc83bb2a7710f0487d"
+      },
+      {
+        "name": "finalize-full-prefix",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "4cd56d08a7d4432bb9910a6382c2982bf22e996df55f227ae81d2e973b4ebd3d",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "finalize-replay",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "4cd56d08a7d4432bb9910a6382c2982bf22e996df55f227ae81d2e973b4ebd3d",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "full-prefix-completion",
+        "http_status": 200,
+        "output_sha256": "1491556bc28bdaba7fdfcb75b650cc5d9a491c4be722d6ed736611d51858c24c"
+      },
+      {
+        "name": "full-prefix-bytes",
+        "http_status": 200,
+        "output_sha256": "c619f909418ee9d3d08b12cca74f93185db56bf59411819d090a8096d0de72ae"
+      },
+      {
+        "name": "stock-put-cli-ticket",
+        "exit_code": 0,
+        "expected_success": true,
+        "stdout_sha256": "28de7367cbb0397e8327dc13d25bea98af44775c5f220d2b55a023920d577f15",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "cli-ticket-bytes",
+        "http_status": 200,
+        "output_sha256": "c619f909418ee9d3d08b12cca74f93185db56bf59411819d090a8096d0de72ae"
+      },
+      {
+        "name": "abort-ticket",
+        "http_status": 201,
+        "output_sha256": "d9c2f8fa87b155a1719a71ed0e19e60a48296b65f7812d078e6f8b6d9f45c35c"
+      },
+      {
+        "name": "abort-action",
+        "http_status": 200,
+        "output_sha256": "662f862b16bd84c007208f4402a8e5d49a5e3b4510d207527cf6142cca11ca6f"
+      },
+      {
+        "name": "append-after-abort-denied",
+        "http_status": 409,
+        "output_sha256": "f1f3565cbd2be3624f516aae5f63c6b92054394c4d7cdc0b15b77a93cc2e8944"
+      }
+    ],
+    "elapsed_seconds": 3.967
+  },
+  "prior_journey_regressions": [
+    {
+      "name": "stock-curl-https",
+      "manifest": {
+        "path": "evidence/raw/https-29cb8f801f914757ae20878c9838b084/manifest.json",
+        "sha256": "e98e71303074c6c287efdb2f64b295ae21b90e8d036800132cb18b55ae797503"
+      },
+      "steps": 66
+    },
+    {
+      "name": "stock-openssh-sftp",
+      "manifest": {
+        "path": "evidence/raw/sftp-13720a1550964376af90259c6b1a04f0/manifest.json",
+        "sha256": "e67251ae02976b946f813c38389efefab60a1748a638c6ae93459d7565bea82e"
+      },
+      "steps": 40
+    }
+  ],
+  "first_failures": [
+    {
+      "description": "No upload-ticket command in the committed SFTP foundation.",
+      "manifest": {
+        "path": "evidence/raw/upload-first-failure-0711e1ed5ba648ffa87d709e167a58bd/manifest.json",
+        "sha256": "d221a44cac92cd6479b0191a4057b2a697c282427c2d5d0ad3852e7dabc89680"
+      },
+      "candidate": "dda2ee38114ec05ed7663c9bb3a9c0fa49dbd2f1",
+      "binary_sha256": "fca6cd333cc5611fd6be290883eb8ede07ab3a3298128b79ef172c9a1f4f7437",
+      "failure": 1
+    },
+    {
+      "description": "Stock reput could not open the resumable ticket because APPEND was rejected.",
+      "manifest": {
+        "path": "evidence/raw/uploads-f1ab276b6e124d4cb9599798a1ee2813/manifest.json",
+        "sha256": "8c680f205951e0e1a2c1318f76049a17874ac69bad9da7ddc63287f52cd463f7"
+      },
+      "candidate": "dda2ee38114ec05ed7663c9bb3a9c0fa49dbd2f1",
+      "binary_sha256": "fd608300ce83755d5f0c5b1b5dc2584091c03b8f1e14118b12d686f7dbfabaab",
+      "failure": "Traceback (most recent call last):\n  File \"/Users/shankar/Desktop/ctlplne-freightctl/scripts/qualify-uploads.py\", line 97, in <module>\n    if client.poll() is not None:raise RuntimeError('SFTP ended before its next durable checkpoint')\n                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nRuntimeError: SFTP ended before its next durable checkpoint\n"
+    },
+    {
+      "description": "OpenSSH refuses reput when the complete prefix is already the same size; explicit bound-target completion is required.",
+      "manifest": {
+        "path": "evidence/raw/uploads-3eda3e8983be4580ae453195d1ac6e4b/manifest.json",
+        "sha256": "03126846b1d3509ebefb2737fccb9b759f75d72887d3532c4374273c54ccadf1"
+      },
+      "candidate": "dda2ee38114ec05ed7663c9bb3a9c0fa49dbd2f1",
+      "binary_sha256": "0d3483d2c05e0c7d0915d1a3b41e109bfe6ba76865af7f1585a42b5ad59146f2",
+      "failure": "Traceback (most recent call last):\n  File \"/Users/shankar/Desktop/ctlplne-freightctl/scripts/qualify-uploads.py\", line 117, in <module>\n    batch('reput-complete-prefix',f'reput {small_file} {full[\"sftp_path\"]}')\n    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/shankar/Desktop/ctlplne-freightctl/scripts/qualify-uploads.py\", line 71, in batch\n    if (result.returncode==0)!=success:raise RuntimeError(label+': unexpected SFTP result '+str(result.returncode)+': '+result.stderr.decode(errors='replace')[:1000])\n                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nRuntimeError: reput-complete-prefix: unexpected SFTP result 1: resume \"/Users/shankar/Desktop/ctlplne-freightctl/.private/uploads-3eda3e8983be4580ae453195d1ac6e4b/small.bin\": destination file same size or larger\r\n\n"
+    },
+    {
+      "description": "Checkpoint incorrectly accepted into another real store sharing the database.",
+      "manifest": {
+        "path": "evidence/raw/upload-storage-first-failure/manifest.json",
+        "sha256": "4f602882ea52b452f7ba02e55310f9a737699cad6477c240109d3362caa1c3fd"
+      },
+      "native_output": {
+        "path": "evidence/raw/upload-storage-first-failure/test.log",
+        "sha256": "58e53ef93809728a35b72557dc1b0689e050cb1ab19ff1840f10da73d18970d9"
+      }
+    },
+    {
+      "description": "Checkpoint accepted after destination-folder write permission was revoked.",
+      "manifest": {
+        "path": "evidence/raw/upload-folder-first-failure/manifest.json",
+        "sha256": "eb74c31656786fdd6fc601f52e2cece03a64ae8650bff34c39607835bf5306eb"
+      },
+      "native_output": {
+        "path": "evidence/raw/upload-folder-first-failure/test.log",
+        "sha256": "d7191a6f71cb2b171323cd6dddb681965443c487eb754f01800309ba4acc9833"
+      }
+    }
+  ],
+  "mechanisms": [
+    "Actor-private tickets fix expected size/hash, mount authority revision, destination, parent identity/revision and persistent store UUID. Request JSON cannot supply these authority/storage snapshots.",
+    "New chunks are immutable generated objects, length/digest checked, sealed and synced before checkpoint event/reference/offset/receipt commit. SQL enforces contiguous extension and defers commit until the chunk row exists.",
+    "All thirteen domain relations are checked/locked per scoped transaction. Owned tickets/receipts are actor-private; a full-root inspector can account for chunk metadata without downloading unaccepted bytes.",
+    "Transactions and immutable object IDs fence synchronous checkpoint requests; lost transactions may leave separate orphans but cannot move the offset or mutate a recorded chunk. Background-worker lease qualification remains separate.",
+    "Concurrent same-offset requests have one winner. Exact retries return original receipts; wrong offsets, changed meanings, invalid body hashes and foreign actors are denied.",
+    "Storage marker initialization publishes a synced UUID atomically. Separate roots reject ticket continuation. Missing/corrupt IDs are preserved and rejected; read-only opening never initializes a store.",
+    "Each new write rechecks current destination permission and pinned parent revision. Completion also rechecks target revision; destination replacement, folder revocation and changed bytes cannot publish.",
+    "Completion verifies each recorded chunk, assembles with bounded buffers/descriptors and checks the entire expected hash before syncing and atomically committing file acceptance, namespace publication, completed session and receipt.",
+    "SFTP ticket stat exposes only durable progress; get is denied. Uncommitted in-memory tails are dropped. Successful close or explicit completion verifies/publishes; control rename can only finalize the bound destination."
+  ],
+  "migration_notes": [
+    "Migration 5 adds tickets/checkpoints/receipts and reserves the live control namespace while preserving deleted namespace history.",
+    "Migration 5 was already applied when the wrong-storage-root failure was reproduced. Its checksum stayed frozen; migration 6 adds immutable storage binding.",
+    "Previously experimental unbound tickets remain unbound. No store is inferred, no orphan adopted and no history rewritten. Reviewed recovery/rebinding remains open."
+  ],
+  "security": {
+    "govulncheck": {
+      "command": [
+        "sh",
+        "scripts/go.sh",
+        "run",
+        "golang.org/x/vuln/cmd/govulncheck@v1.9.0",
+        "-json",
+        "./..."
+      ],
+      "config": {
+        "protocol_version": "v1.0.0",
+        "scanner_name": "govulncheck",
+        "scanner_version": "v1.9.0",
+        "db": "https://vuln.go.dev",
+        "db_last_modified": "2026-10-27T21:16:18Z",
+        "go_version": "go1.26.10",
+        "scan_level": "symbol",
+        "scan_mode": "source"
+      },
+      "exit_code": 0,
+      "native_report": {
+        "path": ".private/uploads-scans/govulncheck.json",
+        "sha256": "72fbad1b176188d880c09da3db035187e7f3eceda1aeb60a14a52e1313e3096b"
+      },
+      "dependency_inventory": {
+        "path": ".private/uploads-scans/native-dependencies.txt",
+        "sha256": "bfc34645159d6f3c3a64947f45765214d7d6906600d37670f6803b35c5ca4722"
+      },
+      "finding_count": 1,
+      "imported_affected_package_count": 0,
+      "assessments": [
+        {
+          "advisory": "GO-2026-5932",
+          "trace": [
+            {
+              "module": "golang.org/x/crypto",
+              "version": "v0.58.0"
+            }
+          ],
+          "affected_packages": [
+            "golang.org/x/crypto/openpgp",
+            "golang.org/x/crypto/openpgp/armor",
+            "golang.org/x/crypto/openpgp/clearsign",
+            "golang.org/x/crypto/openpgp/elgamal",
+            "golang.org/x/crypto/openpgp/errors",
+            "golang.org/x/crypto/openpgp/packet",
+            "golang.org/x/crypto/openpgp/s2k"
+          ],
+          "imported_affected_packages": [],
+          "assessment": "The module is present; affected unmaintained OpenPGP packages are absent from this native build. Original advisory retained; no scanner suppression.",
+          "official_advisory": "https://pkg.go.dev/vuln/GO-2026-5932"
+        }
+      ]
+    },
+    "gitleaks_manifest_reference": ".private/uploads-scans/gitleaks-manifest.json",
+    "secret_scan_scope": "Final nonignored source/evidence snapshot and reachable local history; private fixtures, caches and raw evidence excluded.",
+    "gitleaks": {
+      "tool": "gitleaks 8.30.1",
+      "image": "ghcr.io/gitleaks/gitleaks@sha256:c00b6bd0aeb3071cbcb79009cb16a60dd9e0a7c60e2be9ab65d25e6bc8abbb7f",
+      "source_file_count": 83,
+      "coverage_reference": ".private/uploads-scans/source-input-manifest.json",
+      "precommit_history_head": "dda2ee38114ec05ed7663c9bb3a9c0fa49dbd2f1",
+      "precommit_history_commit_count": 7,
+      "results": [
+        {
+          "kind": "source",
+          "exit_code": 0,
+          "report_reference": ".private/uploads-scans/gitleaks/source.json",
+          "report_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+          "findings": 0
+        },
+        {
+          "kind": "history",
+          "exit_code": 0,
+          "report_reference": ".private/uploads-scans/gitleaks/history.json",
+          "report_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+          "findings": 0
+        }
+      ],
+      "limits": "Safe nonignored snapshot and precommit reachable history; private fixtures/caches/raw evidence excluded. Postcommit history verification is retained at the separate manifest reference."
+    }
+  },
+  "limits": [
+    "Assisted synthetic exchange on one Mac, one storage root and retained local PostgreSQL.",
+    "1 GiB engineering file ceiling, 4096 chunks/upload and 128 open tickets/actor; large-file and endurance gates remain open.",
+    "Checkpoints are immutable chunks; completion needs additional space to assemble a full new revision. Retention/approved cleanup remains open.",
+    "Only explicit upload-ticket SFTP paths resume. Ordinary SFTP filenames retain the previous unclosed-upload behavior.",
+    "No malware scan, file signature, downstream business receipt, independent operator or enterprise peer qualification.",
+    "No database power-loss, multi-host failover, distributed backend or complete product journey qualification.",
+    "The native file is 2 MiB with 64 KiB checkpoints; 100 GiB/1 TiB, throughput, memory, endurance and native-platform gates remain open.",
+    "Storage is one configured local root per profile. A store UUID does not qualify distributed storage, multi-backend routing or copying a marker into unrelated directories.",
+    "Chunks remain charged after completion/rejection/abort; assembly needs full-file headroom. Approved cleanup, retention, compaction, reservations and fairness remain open.",
+    "Expected full-file length/hash must be known before ticket creation. General browser pause/resume, invitations, upload UX, unknown-length session profiles and migration tooling remain open.",
+    "Policy/parent changes freeze old intents. Audited recovery/rebinding, complete identity/session-denial auditing and governance remain open.",
+    "Only integrity policy is exercised; no malware scan, content signature, business receipt, independent operator or enterprise-peer claim.",
+    "A process was killed after durable checkpoints; database/disk power-loss and all sync/commit ambiguity boundaries remain separate gates.",
+    "All 83 baseline rows and 12 complete customer journeys remain open; assisted deployment, ordinary adoption and enterprise release are unqualified."
+  ]
+}

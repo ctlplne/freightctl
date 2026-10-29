@@ -17,11 +17,12 @@ var keyPattern = regexp.MustCompile(`^[A-Za-z0-9._:-]{1,128}$`)
 var ErrInput = errors.New("invalid upload length, digest or idempotency key")
 
 type Service struct {
-	DB                  *store.Store
-	Disk                *Disk
-	MaxFile, MaxStored  int64
-	ReconcileMaxBytes   int64
-	NamespaceMaxEntries int
+	DB                    *store.Store
+	Disk                  *Disk
+	MaxFile, MaxStored    int64
+	ReconcileMaxBytes     int64
+	UploadCheckpointBytes int
+	NamespaceMaxEntries   int
 }
 
 func (s *Service) Accept(ctx context.Context, scope store.Scope, key string, size int64, digest string, body io.Reader) (*store.File, bool, error) {

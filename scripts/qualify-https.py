@@ -139,7 +139,7 @@ try:
     deadline = time.monotonic() + 5
     partial = None
     while time.monotonic() < deadline:
-        candidates = [p for p in storage.iterdir() if not p.name.endswith("_" + accepted["id"]) and p.is_file() and p.stat().st_size > 0]
+        candidates = [p for p in storage.iterdir() if p.name.startswith(tenant+"_"+partner+"_") and not p.name.endswith("_" + accepted["id"]) and p.is_file() and p.stat().st_size > 0]
         if candidates:
             partial = candidates[0]
             break

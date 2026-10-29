@@ -98,18 +98,28 @@ func (s *Service) Reconcile(ctx context.Context, scope store.Scope) (*Reconcilia
 	if err = t.Reauthorize(ctx); err != nil {
 		return nil, err
 	}
-	rows, err := t.Tx.Query(ctx, `SELECT file_id::text,size_bytes,sha256 FROM files ORDER BY file_id LIMIT 10001`)
+	if err = s.Disk.CheckIdentity(); err != nil {
+		return nil, err
+	}
+	rows, err := t.Tx.Query(ctx, `SELECT file_id::text,size_bytes,sha256,false FROM files UNION ALL SELECT object_id::text,size_bytes,sha256,true FROM upload_chunks ORDER BY 1 LIMIT 10001`)
 	if err != nil {
 		return nil, err
 	}
 	files := make(map[string]store.File)
+	checkpoints := make(map[string]bool)
 	for rows.Next() {
 		var f store.File
-		if err = rows.Scan(&f.ID, &f.Size, &f.SHA256); err != nil {
+		var checkpoint bool
+		if err = rows.Scan(&f.ID, &f.Size, &f.SHA256, &checkpoint); err != nil {
 			rows.Close()
 			return nil, err
 		}
+		if _, duplicate := files[f.ID]; duplicate {
+			rows.Close()
+			return nil, store.ErrState
+		}
 		files[f.ID] = f
+		checkpoints[f.ID] = checkpoint
 	}
 	rows.Close()
 	if err = rows.Err(); err != nil {
@@ -135,7 +145,7 @@ func (s *Service) Reconcile(ctx context.Context, scope store.Scope) (*Reconcilia
 	report := &Reconciliation{Consistent: true, Counts: make(map[string]int), Entries: make([]ReconciliationEntry, 0), VerificationLimit: limit, Mutations: "none; observation only"}
 	add := func(reference, state string, size int64) {
 		report.Counts[state]++
-		if state != "verified" {
+		if state != "verified" && state != "verified_checkpoint" {
 			report.Consistent = false
 		}
 		if len(report.Entries) < 200 {
@@ -150,6 +160,10 @@ func (s *Service) Reconcile(ctx context.Context, scope store.Scope) (*Reconcilia
 			return nil, err
 		}
 		f, known := files[object.reference]
+		verified, corrupt, missingState := "verified", "integrity_mismatch", "missing_bytes"
+		if checkpoints[object.reference] {
+			verified, corrupt, missingState = "verified_checkpoint", "checkpoint_integrity_mismatch", "missing_checkpoint_bytes"
+		}
 		delete(files, object.reference)
 		if !object.safe {
 			add(object.reference, "unsafe_entry", object.size)
@@ -160,7 +174,7 @@ func (s *Service) Reconcile(ctx context.Context, scope store.Scope) (*Reconcilia
 			continue
 		}
 		if object.size != f.Size {
-			add(object.reference, "integrity_mismatch", object.size)
+			add(object.reference, corrupt, object.size)
 			continue
 		}
 		if f.Size > limit-report.HashedBytes {
@@ -172,11 +186,11 @@ func (s *Service) Reconcile(ctx context.Context, scope store.Scope) (*Reconcilia
 		if verifyErr == nil {
 			stream.Close()
 			report.VerifiedBytes += f.Size
-			add(f.ID, "verified", f.Size)
+			add(f.ID, verified, f.Size)
 		} else if errors.Is(verifyErr, ErrIntegrity) {
-			add(f.ID, "integrity_mismatch", f.Size)
+			add(f.ID, corrupt, f.Size)
 		} else if os.IsNotExist(verifyErr) {
-			add(f.ID, "missing_bytes", f.Size)
+			add(f.ID, missingState, f.Size)
 		} else {
 			return nil, verifyErr
 		}
@@ -187,7 +201,11 @@ func (s *Service) Reconcile(ctx context.Context, scope store.Scope) (*Reconcilia
 	}
 	sort.Strings(missing)
 	for _, id := range missing {
-		add(id, "missing_bytes", files[id].Size)
+		state := "missing_bytes"
+		if checkpoints[id] {
+			state = "missing_checkpoint_bytes"
+		}
+		add(id, state, files[id].Size)
 	}
 	if err = t.Reauthorize(ctx); err != nil {
 		return nil, err
