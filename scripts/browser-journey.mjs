@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { readFile, writeFile } from "node:fs/promises";
 import { createReadStream } from "node:fs";
 import { X509Certificate, createHash } from "node:crypto";
@@ -388,6 +389,174 @@ try {
       0,
     );
     record("other-tenant-has-no-file-name-disclosure");
+    await page.getByRole("button", { name: "Sign out", exact: true }).click();
+  } else if (stage === "accounts") {
+    await signIn();
+    await page.getByRole("button", { name: "Accounts", exact: true }).click();
+    await page
+      .getByLabel("Account label", { exact: true })
+      .fill("Native partner reader");
+    await page
+      .getByRole("button", { name: "Review new account", exact: true })
+      .click();
+    const review = page.getByRole("dialog");
+    const apply = review.getByRole("button", {
+      name: "Apply reviewed change",
+      exact: true,
+    });
+    assert.equal(await apply.isDisabled(), true);
+    await audit("account-create-review");
+    async function saveCredential(filename) {
+      const download = page.waitForEvent("download");
+      await review
+        .getByRole("button", { name: "Download new credential", exact: true })
+        .click();
+      await (await download).saveAs(filename);
+      assert.equal((await readFile(filename)).length, 64);
+      await review
+        .getByLabel("I saved the credential file securely.", { exact: true })
+        .check();
+    }
+    const first = c.private + "/managed-first.token",
+      second = c.private + "/managed-second.token";
+    await saveCredential(first);
+    const firstProof = createHash("sha256")
+      .update(await readFile(first))
+      .digest("hex");
+    let accountRequest;
+    page.on("request", (r) => {
+      if (r.url().endsWith("/accounts/commands"))
+        accountRequest = r.postDataJSON();
+    });
+    await apply.click();
+    await review.waitFor({ state: "hidden" });
+    assert.equal(accountRequest.credential_sha256, firstProof);
+    assert.equal(
+      JSON.stringify(accountRequest).includes(
+        (await readFile(first)).toString(),
+      ),
+      false,
+    );
+    const id = accountRequest.account_id;
+    await page.getByRole("row").filter({ hasText: id }).waitFor();
+    record(
+      "browser-reviewed-account-create-saves-credential-before-proof-only-enrollment",
+    );
+    await audit("accounts-created");
+    await page.screenshot({ path: c.raw + "/accounts.png", fullPage: true });
+    const binary = path.join(c.root, ".cache/freightctl-browser");
+    const flags = [
+      "--tenant",
+      c.tenant,
+      "--partner",
+      c.partner,
+      "--token-file",
+      c.identities[0].token,
+    ];
+    const current = JSON.parse(
+      execFileSync(binary, ["account-status", ...flags, "--account-id", id], {
+        encoding: "utf8",
+      }),
+    );
+    assert.equal(current.revision, 1);
+    assert.deepEqual(current.permissions, ["list", "read"]);
+    async function curlIdentity(token, label, expected) {
+      const header = c.private + "/" + label + ".headers";
+      await writeFile(
+        header,
+        Buffer.concat([
+          Buffer.from("Authorization: Bearer "),
+          await readFile(token),
+          Buffer.from("\n"),
+        ]),
+      );
+      const code = execFileSync(
+        "curl",
+        [
+          "--silent",
+          "--show-error",
+          "--cacert",
+          c.certificate,
+          "--header",
+          "@" + header,
+          "--output",
+          c.private + "/" + label + ".json",
+          "--write-out",
+          "%{http_code}",
+          c.url + prefix() + "/identity",
+        ],
+        { encoding: "utf8" },
+      );
+      assert.equal(code, String(expected));
+    }
+    await curlIdentity(first, "before-rotation", 200);
+    await page
+      .getByRole("button", { name: "Review credential rotation", exact: true })
+      .click();
+    await saveCredential(second);
+    await apply.click();
+    await review.waitFor({ state: "hidden" });
+    await curlIdentity(first, "old-after-rotation", 401);
+    await curlIdentity(second, "new-after-rotation", 200);
+    record("browser-rotation-denies-old-stock-curl-credential-and-accepts-new");
+    const revoke = c.private + "/managed-revoke.json";
+    await writeFile(
+      revoke,
+      JSON.stringify({
+        operation: "revoke",
+        account_id: id,
+        expected_revision: 2,
+      }),
+    );
+    const revoked = JSON.parse(
+      execFileSync(
+        binary,
+        [
+          "account-revoke",
+          ...flags,
+          "--request-file",
+          revoke,
+          "--idempotency-key",
+          "native-revoke",
+        ],
+        { encoding: "utf8" },
+      ),
+    );
+    assert.equal(revoked.account.state, "revoked");
+    const replay = JSON.parse(
+      execFileSync(
+        binary,
+        [
+          "account-revoke",
+          ...flags,
+          "--request-file",
+          revoke,
+          "--idempotency-key",
+          "native-revoke",
+        ],
+        { encoding: "utf8" },
+      ),
+    );
+    assert.equal(replay.replayed, true);
+    assert.equal(
+      replay.account.changed_event_id,
+      revoked.account.changed_event_id,
+    );
+    await curlIdentity(second, "after-revocation", 401);
+    await page.getByRole("button", { name: "Refresh", exact: true }).click();
+    await page
+      .getByRole("row")
+      .filter({ hasText: id })
+      .filter({ hasText: "revoked" })
+      .waitFor();
+    record(
+      "ordinary-cli-revocation-replays-original-receipt-and-browser-refreshes-current-state",
+    );
+    const local = await page.evaluate(() => ({
+      local: Object.keys(localStorage),
+      session: Object.keys(sessionStorage),
+    }));
+    assert.deepEqual(local, { local: [], session: [] });
     await page.getByRole("button", { name: "Sign out", exact: true }).click();
   } else if (stage === "expiry") {
     await signIn();

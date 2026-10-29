@@ -38,7 +38,8 @@
         "docs/qualification/evidence/F011-openpgp-intake.json",
         "docs/qualification/evidence/F012-encrypted-delivery.json",
         "docs/qualification/evidence/F013-scanner-controls.json",
-        "docs/qualification/evidence/F014-browser-exchange.json"
+        "docs/qualification/evidence/F014-browser-exchange.json",
+        "docs/qualification/evidence/F016-account-lifecycle.json"
       ],
       "remaining_details": [
         "F006 adds immutable checkpoints, exact receipts and persistent storage/parent/authority binding. Finish approved cleanup/recovery/rebinding, scalable reservations/fairness, protected retention, journal chaining/rebuild, larger exports and remaining crash/commit boundaries.",
@@ -47,7 +48,9 @@
         "F011 adds immutable public signer definitions and durable detached signature references, exact event/receipt binding, forced row security, rollback and orphan reconciliation. Protected retention, journal reconstruction, cleanup and wider failure/storage gates remain open.",
         "F012 adds immutable ciphertext events/projections, forced row security, exact source/recipient/fence/approval guards and live publication proof. Real process death leaves observable sealed orphans without acceptance. Cleanup, protected retention, reconstruction and remaining crash/storage gates remain open.",
         "F013 adds immutable tenant/partner scanner profiles, exact event/expiry guards and approved scan proof in the release gate; 31 domain relations require forced RLS. Reconstruction, retention, cleanup and remaining crash/storage gates stay open.",
-        "F014 adds append-only migrations 14\u201315: sessions and immutable logout receipts. All 33 domain relations require forced non-owner RLS; existing grants and migrations 1\u201313 are unchanged. Journal reconstruction, retention and recovery remain open."
+        "F014 adds append-only migrations 14\u201315: sessions and immutable logout receipts. All 33 domain relations require forced non-owner RLS; existing grants and migrations 1\u201313 are unchanged. Journal reconstruction, retention and recovery remain open.",
+        "F016 adds append-only migration 16: immutable account revisions/command receipts and a narrow non-owner credential projection writer. All 35 domain relations require forced RLS. Exact event/result/receipt checks and rollback are covered locally; reconstruction, retention and recovery remain open.",
+        "D043 retains an intermittent custody fuzz context deadline from the first F016 aggregate. The original unchanged gate passes in the final full run; timing cause and endurance diagnosis remain open."
       ]
     },
     {
@@ -67,11 +70,13 @@
         "docs/qualification/evidence/F006-upload-checkpoints.json",
         "docs/qualification/evidence/F007-outbound-intents.json",
         "docs/qualification/evidence/F008-versioned-workflows.json",
-        "docs/qualification/evidence/F014-browser-exchange.json"
+        "docs/qualification/evidence/F014-browser-exchange.json",
+        "docs/qualification/evidence/F016-account-lifecycle.json"
       ],
       "remaining_details": [
         "F005/F006 verify bounded inbound and durable ticket resume. F007 adds a local-only approved outbound SFTP profile against a stock receiver. Finish ordinary-operator onboarding, API/browser parity, production network policy, broader protocols/clients/enterprise peers, larger files and independent business receipts. No complete journey is qualified.",
-        "F014 adds enrolled-account browser exchange, durable pause/reload/process restart/resume and native/stock-curl exact-byte retrieval. Clean first-admin/partner onboarding, independent operators, production peers and full business receipt remain open."
+        "F014 adds enrolled-account browser exchange, durable pause/reload/process restart/resume and native/stock-curl exact-byte retrieval. Clean first-admin/partner onboarding, independent operators, production peers and full business receipt remain open.",
+        "F016 adds ordinary scoped account management through browser/API/CLI, plus stock curl acceptance/refusal after credential rotation/revocation. Assisted local account lifecycle does not close clean installation, partner setup, SSH-expiry interoperability, broad native clients, independent operator adoption or business receipts."
       ]
     },
     {
@@ -134,10 +139,12 @@
       "state": "implementing",
       "evidence": [
         "docs/qualification/evidence/F006-upload-checkpoints.json",
-        "docs/qualification/evidence/F014-browser-exchange.json"
+        "docs/qualification/evidence/F014-browser-exchange.json",
+        "docs/qualification/evidence/F016-account-lifecycle.json"
       ],
       "remaining_details": [
-        "F014 implements a typed embedded browser workspace, short-lived session/CSRF/logout controls, private ticket discovery, durable single-file pause/reload/restart/resume, held checks, separate release and native streaming download. Assisted Chromium, selected accessibility scans and byte comparison pass. First-admin/partner onboarding, invitations, SSO/MFA/recovery, delegated administration, batches, sharing/forms/mail, complete accessibility and independent adoption remain open."
+        "F014 implements a typed embedded browser workspace, short-lived session/CSRF/logout controls, private ticket discovery, durable single-file pause/reload/restart/resume, held checks, separate release and native streaming download. Assisted Chromium, selected accessibility scans and byte comparison pass. First-admin/partner onboarding, invitations, SSO/MFA/recovery, delegated administration, batches, sharing/forms/mail, complete accessibility and independent adoption remain open.",
+        "F016 adds an Accounts workspace with review bound to the target revision, browser-generated credential download before proof-only enrollment, policy updates, rotation, expiry/revocation and paginated status. First-admin/partner creation, invitations, SSO/MFA/recovery, delegated administration, batch/sharing/forms/mail and complete accessibility/adoption remain open."
       ]
     },
     {
@@ -201,7 +208,8 @@
         "docs/qualification/evidence/F011-openpgp-intake.json",
         "docs/qualification/evidence/F012-encrypted-delivery.json",
         "docs/qualification/evidence/F013-scanner-controls.json",
-        "docs/qualification/evidence/F014-browser-exchange.json"
+        "docs/qualification/evidence/F014-browser-exchange.json",
+        "docs/qualification/evidence/F016-account-lifecycle.json"
       ],
       "remaining_details": [
         "Current account/key/mount and destination/parent checks gate transfer mutations. Complete delegated lifecycle, policy reapproval/rebinding, human identity/MFA/providers, complete denial/session auditing, approval UI and governance remain open.",
@@ -210,7 +218,8 @@
         "F011 adds explicit pgp_manage without upgrading existing grants, partner-scoped immutable public key versions and actor-private signature artifacts/checks. Human key ownership/trust onboarding, delegated review, automated rotation/rebind, providers, UI and complete governance remain open.",
         "F012 adds purpose-separated public recipient versions, explicit subkey/profile/destination approval and current revocation across whole runs. Delegation, human UI/trust onboarding, providers, automated overlap/rebind and complete governance remain open.",
         "F013 adds explicit scanner_manage without upgrading existing credentials, sanitized shared metadata, local-only host-reference enrollment and exact revocation. Delegated human review, onboarding, UI/providers and full lifecycle governance remain open.",
-        "F014 binds short-lived browser sessions to the exact parent credential, current mount/authority and absolute expiry, with tenant/partner/actor isolation and durable logout receipts. Session creation/receipt failures roll back atomically; logout/key replay cannot revive authority or revoke a different session. Human enrollment, SSO/MFA/providers, delegated approvals and full lifecycle governance remain open."
+        "F014 binds short-lived browser sessions to the exact parent credential, current mount/authority and absolute expiry, with tenant/partner/actor isolation and durable logout receipts. Session creation/receipt failures roll back atomically; logout/key replay cannot revive authority or revoke a different session. Human enrollment, SSO/MFA/providers, delegated approvals and full lifecycle governance remain open.",
+        "F016 implements root-scoped admin+accounts_manage authority, grant-subset/target protections, optimistic account revisions, atomic exact receipts and security-change session invalidation. Label-only changes preserve file authority; expiry affects ordinary authentication and bounds browser lifetime. Bootstrap is still administrative; providers, key self-service/overlap, delegated approvals, governed rebind, reconstruction and full lifecycle qualification remain open."
       ]
     },
     {

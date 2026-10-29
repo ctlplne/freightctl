@@ -87,3 +87,19 @@ export function digestFile(
     worker.postMessage(file);
   });
 }
+
+// Generate before enrollment so response loss cannot strand a credential.
+// The returned buffer is cleared by the UI; browser/Blob copies are managed by
+// the platform and cannot be promised to disappear immediately.
+export function newAccountCredential(): {
+  bytes: Uint8Array;
+  fingerprint: string;
+} {
+  const entropy = crypto.getRandomValues(new Uint8Array(32));
+  try {
+    const bytes = new TextEncoder().encode(bytesToHex(entropy));
+    return { bytes, fingerprint: digestBytes(bytes) };
+  } finally {
+    entropy.fill(0);
+  }
+}

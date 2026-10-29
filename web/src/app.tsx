@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { createRoot } from "react-dom/client";
 import { Api } from "./api";
+import { Accounts } from "./accounts";
 import { digestBytes, digestFile, operationKey } from "./crypto";
 import {
   ApiError,
@@ -29,6 +30,8 @@ const name = (path: string) => path.split("/").at(-1) || "/";
 const aborted = (error: unknown) =>
   error instanceof DOMException && error.name === "AbortError";
 const messages: Record<string, string> = {
+  invalid_account_command:
+    "Review the account label, permissions, existing virtual root and future expiry timestamp. Create or rotate with a new credential fingerprint; other actions must not include one.",
   unauthorized:
     "Your session or access has expired. Sign in again to continue from the server’s saved position.",
   invalid_credential_file:
@@ -98,7 +101,9 @@ function App() {
   const [error, setError] = useState(""),
     [notice, setNotice] = useState(""),
     [signingIn, setSigningIn] = useState(false);
-  const [tab, setTab] = useState<"files" | "uploads" | "checks">("files"),
+  const [tab, setTab] = useState<"files" | "uploads" | "checks" | "accounts">(
+      "files",
+    ),
     [refresh, setRefresh] = useState(0);
   const [folder, setFolder] = useState("/"),
     [files, setFiles] = useState<EntryPage>({ entries: [] }),
@@ -575,6 +580,14 @@ function App() {
             >
               Intake checks
             </button>
+            {allowed("admin") && allowed("accounts_manage") && (
+              <button
+                aria-current={tab === "accounts" ? "page" : undefined}
+                onClick={() => setTab("accounts")}
+              >
+                Accounts
+              </button>
+            )}
           </nav>
           <div className="session-note">
             <p className="eyebrow">BROWSER SESSION</p>
@@ -674,14 +687,18 @@ function App() {
                     ? "Files"
                     : tab === "uploads"
                       ? "Uploads"
-                      : "Intake checks"}
+                      : tab === "accounts"
+                        ? "Accounts"
+                        : "Intake checks"}
                 </h1>
                 <p>
                   {tab === "files"
                     ? "Published paths. Retrieval checks your current access and intake policy."
                     : tab === "uploads"
                       ? "Send one exact file. Continue from the last server-confirmed checkpoint."
-                      : "Held files need their required checks and a separate release decision."}
+                      : tab === "accounts"
+                        ? "Review scoped access, credential rotation, expiry and revocation."
+                        : "Held files need their required checks and a separate release decision."}
                 </p>
               </div>
               <button
@@ -694,6 +711,14 @@ function App() {
                 Refresh
               </button>
             </div>
+            {tab === "accounts" && (
+              <Accounts
+                api={api}
+                session={session}
+                refresh={refresh}
+                onError={reportError}
+              />
+            )}
             {tab === "files" && (
               <section className="panel">
                 <div className="panel-heading">

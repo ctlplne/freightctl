@@ -687,6 +687,12 @@
       "native-browser-exchange": "a9c23de71dc2f71d08a166cef0897d7b46e1f7842aa81774572115648de58db8",
       "signed-intake-openpgp": "a9c23de71dc2f71d08a166cef0897d7b46e1f7842aa81774572115648de58db8",
       "recipient-encrypted-delivery": "a9c23de71dc2f71d08a166cef0897d7b46e1f7842aa81774572115648de58db8"
+    },
+    "committed_source": "aa4e71e2f9c97e06f637aece28987d764b827b9d",
+    "committed_source_verification": {
+      "method": "SHA-256 of every candidate source Git blob at the exact commit",
+      "entries_checked": 167,
+      "all_matched": true
     }
   },
   "environment": {

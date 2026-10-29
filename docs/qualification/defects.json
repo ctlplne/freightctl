@@ -622,6 +622,53 @@
       "regression_evidence": [
         "docs/qualification/evidence/F015-native-crypto-regression.json"
       ]
+    },
+    {
+      "id": "D041",
+      "severity": "missing ordinary account lifecycle",
+      "state": "fixed locally",
+      "observed_on": "2026-10-29",
+      "candidate": "aa4e71e2f9c97e06f637aece28987d764b827b9d",
+      "journey": "J05",
+      "reproduction": ".cache/freightctl account-create",
+      "first_failure": "freightctl: unknown command; use --help",
+      "cause": "Account enrollment existed only through the protected administrator DSN; ordinary scoped account creation/rotation/revocation were unavailable.",
+      "resolution": "Add one typed scoped account service shared by browser/API/CLI, exact optimistic revisions and atomic immutable events/projections/receipts; preserve administrative first bootstrap as an open separate workflow.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F016-account-lifecycle.json"
+      ]
+    },
+    {
+      "id": "D042",
+      "severity": "concurrent account authority lock deadlock",
+      "state": "fixed locally",
+      "observed_on": "2026-10-29",
+      "candidate": "aa4e71e2f9c97e06f637aece28987d764b827b9d",
+      "candidate_note": "F016 retains exact first-reproduction source hashes and native output; corrected aggregate binds the final source.",
+      "journey": "J05",
+      "reproduction": "TestAccountConcurrentManagersSerializeBeforeSessionLocks: two browser managers rotate each other while a PostgreSQL gate holds both commands at the partner lock.",
+      "first_failure": "ERROR: deadlock detected (SQLSTATE 40P01)",
+      "cause": "Both commands acquired their own browser-session shared locks before waiting for partner account serialization; the winner needed the waiting manager session for atomic invalidation.",
+      "resolution": "Acquire partner account serialization before authentication/credential/browser locks. The original two-manager reproduction now requires one committed change and one current-authority refusal, with no database deadlock.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F016-account-lifecycle.json"
+      ]
+    },
+    {
+      "id": "D043",
+      "severity": "intermittent qualification fuzz deadline",
+      "state": "open - timing cause unassigned",
+      "observed_on": "2026-10-29",
+      "candidate": "aa4e71e2f9c97e06f637aece28987d764b827b9d",
+      "candidate_note": "First unchanged-source aggregate and exact native output retained in F016.",
+      "journey": "J10",
+      "reproduction": "sh scripts/go.sh test ./internal/custody -fuzz=FuzzCustodyName -fuzztime=5s -parallel=2",
+      "first_failure": "FuzzCustodyName stopped at 5.08 seconds with context deadline exceeded after 205205 executions.",
+      "cause": "Unassigned; no failing input or production defect was established by the deadline output.",
+      "resolution": "Retain the first aggregate and rerun the original command with unchanged assertions/budgets. A successful rerun establishes only its observed result; intermittent timing diagnosis and endurance remain open.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F016-account-lifecycle.json"
+      ]
     }
   ]
 }

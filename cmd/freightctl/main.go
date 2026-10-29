@@ -32,7 +32,7 @@ func main() {
 }
 func run(args []string) error {
 	if len(args) == 0 || args[0] == "--help" || args[0] == "help" {
-		fmt.Println("freightctl: init | token | enroll | identity | namespace | dev-cert | serve | reconcile | audit-keygen | audit-export | ssh-host-keygen | ssh-key-enroll | ssh-key-revoke | serve-sftp | upload-create | upload-list | upload-status | upload-append | upload-complete | upload-abort | delivery-create | delivery-status | delivery-approve | delivery-cancel | delivery-work | delivery-reconcile\nConnections: connection-register | connection-status | connection-revoke\nWorkflows: workflow-validate | workflow-draft | workflow-status | workflow-diff | workflow-approve | workflow-revoke | workflow-run | workflow-run-status | workflow-work | workflow-cancel\nAssistance: ai-profile-register | ai-profile-status | ai-profile-revoke | ai-propose | ai-diagnose | ai-status | ai-approve | ai-generate | ai-adopt\nIntake: intake-policy-register | intake-policy-status | intake-policy-revoke | check-list | check-status | check-run | check-release\nScanners: scanner-register | scanner-status | scanner-revoke\nOpenPGP: pgp-key-register | pgp-key-status | pgp-key-revoke | check-signature\nRead docs/development.md. This is an unqualified local custody foundation.")
+		fmt.Println("freightctl: init | token | enroll | identity | namespace | dev-cert | serve | reconcile | audit-keygen | audit-export | ssh-host-keygen | ssh-key-enroll | ssh-key-revoke | serve-sftp | upload-create | upload-list | upload-status | upload-append | upload-complete | upload-abort | delivery-create | delivery-status | delivery-approve | delivery-cancel | delivery-work | delivery-reconcile\nAccounts: account-create | account-update | account-rotate | account-revoke | account-list | account-status\nConnections: connection-register | connection-status | connection-revoke\nWorkflows: workflow-validate | workflow-draft | workflow-status | workflow-diff | workflow-approve | workflow-revoke | workflow-run | workflow-run-status | workflow-work | workflow-cancel\nAssistance: ai-profile-register | ai-profile-status | ai-profile-revoke | ai-propose | ai-diagnose | ai-status | ai-approve | ai-generate | ai-adopt\nIntake: intake-policy-register | intake-policy-status | intake-policy-revoke | check-list | check-status | check-run | check-release\nScanners: scanner-register | scanner-status | scanner-revoke\nOpenPGP: pgp-key-register | pgp-key-status | pgp-key-revoke | check-signature\nRead docs/development.md. This is an unqualified local custody foundation.")
 		return nil
 	}
 	f := flag.NewFlagSet(args[0], flag.ContinueOnError)
@@ -81,6 +81,10 @@ func run(args []string) error {
 	checkAfter := f.String("check-after", "", "last check file UUID returned by the previous page")
 	checkLimit := f.Int("check-limit", 50, "private intake check summaries per page, at most 100")
 	pgpKeyID := f.String("pgp-key-id", "", "exact registered OpenPGP key family UUID")
+	accountID := f.String("account-id", "", "exact account UUID for status")
+	accountAfter := f.String("account-after", "", "last account UUID from the previous page")
+	accountLimit := f.Int("account-limit", 50, "account summaries per page, at most 100")
+	newAccountToken := f.String("new-token-file", "", "protected credential reference for account creation or rotation; only its digest enters SQL")
 	scannerID := f.String("scanner-id", "", "exact registered local scanner family UUID")
 	pgpPublicFile := f.String("pgp-public-file", "", "protected public-key input reference; private packets are refused")
 	signatureFile := f.String("signature-file", "", "protected detached binary-signature input reference")
@@ -114,6 +118,8 @@ func run(args []string) error {
 		return errors.New("browser session lifetime must be 1 to 600 seconds")
 	}
 	switch args[0] {
+	case "account-create", "account-update", "account-rotate", "account-revoke", "account-list", "account-status":
+		return runAccounts(ctx, args[0], *dsn, *token, *tenant, *partner, *requestFile, *idempotencyKey, *accountID, *accountAfter, *newAccountToken, *accountLimit)
 	case "scanner-register", "scanner-status", "scanner-revoke":
 		return runScanner(ctx, args[0], *dsn, *token, *tenant, *partner, *requestFile, *idempotencyKey, *scannerID, *deliveryHash, *resourceVersion, *deliveryRevision)
 	case "pgp-key-register", "pgp-key-status", "pgp-key-revoke", "check-signature":

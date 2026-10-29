@@ -293,3 +293,71 @@ export function asCheckView(value: unknown): CheckView {
     },
   };
 }
+
+export interface Account {
+  id: string;
+  label: string;
+  permissions: string[];
+  namespace_root: string;
+  expires_at: string | null;
+  revision: number;
+  authority_revision: number;
+  state: string;
+  changed_event_id: string | null;
+  observed_at: string;
+}
+export interface AccountCommand {
+  operation: "create" | "update" | "rotate" | "revoke";
+  account_id: string;
+  expected_revision: number;
+  credential_sha256?: string;
+  policy?: Pick<
+    Account,
+    "label" | "permissions" | "namespace_root" | "expires_at"
+  >;
+}
+export function asAccount(value: unknown): Account {
+  const o = object(value);
+  const state = text(o, "state", 16);
+  const expiry = o.expires_at;
+  const event = o.changed_event_id;
+  const observed = text(o, "observed_at", 64);
+  if (
+    !["active", "expired", "revoked"].includes(state) ||
+    !Number.isFinite(Date.parse(observed)) ||
+    (expiry !== null &&
+      (typeof expiry !== "string" || !Number.isFinite(Date.parse(expiry)))) ||
+    (event !== null && (typeof event !== "string" || !uuid(event)))
+  )
+    throw new ApiError("invalid_server_response", 502);
+  return {
+    id: id(o, "id"),
+    label: text(o, "label", 128),
+    permissions: array(o, "permissions", 21).map((v) => {
+      if (typeof v !== "string" || v.length > 64)
+        throw new ApiError("invalid_server_response", 502);
+      return v;
+    }),
+    namespace_root: text(o, "namespace_root", 4096),
+    expires_at: expiry as string | null,
+    revision: number(o, "revision", Number.MAX_SAFE_INTEGER),
+    authority_revision: number(
+      o,
+      "authority_revision",
+      Number.MAX_SAFE_INTEGER,
+    ),
+    state,
+    changed_event_id: event as string | null,
+    observed_at: observed,
+  };
+}
+export function asAccountPage(value: unknown): {
+  accounts: Account[];
+  next?: string;
+} {
+  const o = object(value);
+  return {
+    accounts: array(o, "accounts", 100).map(asAccount),
+    ...(o.next === undefined ? {} : { next: id(o, "next") }),
+  };
+}

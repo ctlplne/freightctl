@@ -27,7 +27,7 @@ sh scripts/go.sh run ./cmd/freightctl dev-cert
 sh scripts/go.sh run ./cmd/freightctl serve
 ```
 
-Token and certificate commands refuse to overwrite existing files. Enrollment currently requires an explicit administrator command; a repeated enrollment is rejected. Idempotent enrollment and the full first-admin/partner UI remain required work.
+Token and certificate commands refuse to overwrite existing files. Bootstrap enrollment requires an explicit administrator command; a repeated bootstrap enrollment is rejected. The scoped account lifecycle below provides idempotent ordinary account commands. The full first-admin/partner UI remains required work.
 
 An upload uses `POST /v1/tenants/{tenant}/partners/{partner}/files`, a scoped bearer token, `Idempotency-Key`, `X-File-Size`, and a lowercase hex `X-Content-SHA256`. The request contains bytes directly. The same key, length, digest and policy returns the original accepted file; changed meaning returns 409. The response means bytes and directory were synced and metadata committed on this local persistence profile. It does not mean malware scanned, independently signed, delivered to a partner, or imported by a business system.
 
@@ -170,3 +170,49 @@ Migrations 14–15 add short-lived browser sessions and immutable logout receipt
 ## Full regression and CI
 
 The [CI contract](qualification/ci.md) documents the actual checked-in workflow and its limits. Local `scripts/qualify-foundation.py` runs the implemented core gates serially with one Go thread and a bounded Node heap. A failure remains a failure and stops the aggregate. The optional [native macOS GnuPG profile](openpgp.md#explicit-native-macos-qualification-peer) restores fresh independent crypto fixtures when a new Docker peer cannot start; it is selected explicitly, measures its child memory separately, and changes no application signature-age policy. Neither a local pass nor workflow syntax lint proves GitHub ran or qualifies a native Linux deployment.
+
+## Scoped account lifecycle
+
+The Accounts screen and runtime API can now create another account in the current tenant/partner, revise its label/access/expiry, rotate its bearer credential or permanently revoke it. Management requires both `admin` and `accounts_manage`, a virtual root of `/`, and a different target actor. A manager cannot grant permissions it lacks or rotate/revoke an account with greater permissions. Existing credentials are not silently upgraded: migration 16 adds `accounts_manage` only to the default for newly bootstrapped administrators. First administrator enrollment still requires the protected administrative DSN; tenant/partner creation, invitations, SSO/MFA and delegated administration remain open.
+
+A browser generates 32 random bytes and encodes them as a 64-character credential. Before applying creation or rotation, save the downloaded file and confirm that it is stored securely. Only the SHA-256 of those 64 ASCII bytes is sent in the account command. The UI clears its working buffer when the review closes; JavaScript strings, Blob/download copies and browser-managed memory do not have a guaranteed immediate zeroization contract. Keep the downloaded file protected and deliver it to its intended owner through your chosen protected channel. The product does not send invitations or credentials to anyone.
+
+The same ordinary service is available locally, without the administrative DSN. Generate a new protected credential with `token`, then use a JSON command reference:
+
+```sh
+sh scripts/go.sh run ./cmd/freightctl token --token-file .private/new-partner.token
+sh scripts/go.sh run ./cmd/freightctl account-create \
+  --tenant 11111111-1111-4111-8111-111111111111 \
+  --partner 22222222-2222-4222-8222-222222222222 \
+  --token-file .private/manager.token \
+  --new-token-file .private/new-partner.token \
+  --request-file .private/create-account.json --idempotency-key enroll-partner-001
+```
+
+The request file contains a new client-selected account UUID, not a local OS username:
+
+```json
+{
+  "operation": "create",
+  "account_id": "33333333-3333-4333-8333-333333333333",
+  "expected_revision": 0,
+  "policy": {
+    "label": "Partner reader",
+    "permissions": ["list", "read"],
+    "namespace_root": "/",
+    "expires_at": null
+  }
+}
+```
+
+`account-update`, `account-rotate` and `account-revoke` take the same bounded `--request-file` with the matching `operation`, exact `account_id` and current `expected_revision`. Update includes the complete `policy`; rotate includes only the new fingerprint (or `--new-token-file`); revoke includes neither policy nor fingerprint. Create and rotate can accept `credential_sha256` directly instead of a credential reference. API clients must generate strong credentials themselves; a fingerprint cannot prove how much randomness the caller used. Unknown/duplicate JSON fields, irrelevant operation fields, duplicate/unknown grants, noncanonical roots and invalid labels are rejected. Create/update expiry must be a future timestamp or null. Non-root mounts must name an existing partner directory.
+
+Use `account-status --account-id UUID` or `account-list --account-limit 50 --account-after UUID`, with the usual runtime DSN and manager credential references. Listing returns at most 100 entries and an optional next cursor. Current state has an `observed_at` timestamp and distinguishes `active`, `expired` and `revoked`. Bootstrap accounts can have a null account-change event until their first ordinary management command.
+
+HTTPS exposes `POST .../accounts/commands`, `GET .../accounts/{account}` and `GET .../accounts?limit=50&after=UUID` under `/v1/tenants/{tenant}/partners/{partner}`. The POST body is the same typed command; the stable `Idempotency-Key` binds its normalized meaning. Browser cookies require the ordinary same-origin CSRF proof. A retry returns the original immutable receipt with `replayed:true`, including the original observed state; refresh GET to see later changes. Reusing a key for different meaning or submitting a stale revision refuses the command. A lost response does not justify generating a replacement credential or retry key: retry the reviewed command first.
+
+Every command atomically appends `AccountChanged`, inserts an immutable account revision, updates the credential projection and inserts its exact receipt. Missing/false projections, results or receipts abort the transaction. The normal database runtime retains SELECT-only access to credentials. The projection trigger is owned by an isolated `NOLOGIN`, non-owner, non-BYPASSRLS role with no memberships, schema-creation rights or general runtime execution grant; it operates under forced tenant/partner RLS with a fixed search path. Startup and scoped requests check that role/function boundary. PostgreSQL's [function security rules](https://www.postgresql.org/docs/16/sql-createfunction.html) and [row-security behavior](https://www.postgresql.org/docs/16/ddl-rowsecurity.html) explain why that narrower role still obeys row policies.
+
+Account revision increases for each update. Authority revision increases only when access, root, credential, revocation or expiry changes; relabeling preserves authority. A security change revokes all admitted unexpired browser sessions in the same transaction, with exact linked manager events. The unchanged eight-session-per-account bound limits that work. Ordinary credential and SSH authentication also checks expiry; new browser sessions cannot outlive the account. Credential rotation preserves registered SSH public keys; revocation/expiry deny those account authentications. Previously bound uploads/workflows are not silently rebound to changed access; governed rebind/recovery remains required. Revocation is terminal, and rotating an expired account does not extend its expiry.
+
+This development profile caps ordinary account admission at 10,000 rows per partner, including revoked accounts, to bound management work. Configurable scalable admission, protected retention/history reconstruction, first-admin/partner onboarding, invitations/providers, delegated review and complete ordinary operator adoption remain open. The native browser exercise covers assisted create/rotation, CLI status/revocation and stock curl credential acceptance/refusal; it does not qualify every identity provider, SSH expiry journey, native platform or production deployment.

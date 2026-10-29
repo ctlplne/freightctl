@@ -83,6 +83,9 @@ func (s *Store) CreateBrowserSession(ctx context.Context, scope Scope, key, hash
 		return nil, nil, now, ErrLimit
 	}
 	b = &BrowserSession{ID: secure.NewID(), SecretHash: hash, CredentialHash: scope.TokenHash, RequestKey: key, Root: t.Root, Authority: t.AuthorityRevision, LifetimeSeconds: int(lifetime / time.Second), ExpiresAt: now.UTC().Add(lifetime), State: "active", Revision: 1}
+	if t.ExpiresAt != nil && b.ExpiresAt.After(*t.ExpiresAt) {
+		b.ExpiresAt = *t.ExpiresAt
+	}
 	event, err := t.Append(ctx, "BrowserSessionChanged", b.ID, b)
 	if err != nil {
 		return nil, nil, now, err
@@ -112,7 +115,7 @@ func (s *Store) BrowserScope(ctx context.Context, tenant, partner, hash string) 
 	}
 	defer tx.Rollback(ctx)
 	b := &BrowserSession{}
-	err = tx.QueryRow(ctx, `SELECT b.session_id::text,b.secret_hash,b.credential_hash,b.request_key,b.namespace_root,b.authority_revision,b.lifetime_seconds,b.expires_at,b.state,b.revision,c.token_hash FROM browser_sessions b JOIN credentials c USING(tenant_id,partner_id,actor_id) WHERE b.secret_hash=$1 AND b.state='active' AND b.expires_at>clock_timestamp() AND c.revoked_at IS NULL AND c.token_hash=b.credential_hash AND (c.namespace_root,c.authority_revision)=(b.namespace_root,b.authority_revision)`, hash).Scan(&b.ID, &b.SecretHash, &b.CredentialHash, &b.RequestKey, &b.Root, &b.Authority, &b.LifetimeSeconds, &b.ExpiresAt, &b.State, &b.Revision, &scope.TokenHash)
+	err = tx.QueryRow(ctx, `SELECT b.session_id::text,b.secret_hash,b.credential_hash,b.request_key,b.namespace_root,b.authority_revision,b.lifetime_seconds,b.expires_at,b.state,b.revision,c.token_hash FROM browser_sessions b JOIN credentials c USING(tenant_id,partner_id,actor_id) WHERE b.secret_hash=$1 AND b.state='active' AND b.expires_at>clock_timestamp() AND c.revoked_at IS NULL AND (c.expires_at IS NULL OR c.expires_at>clock_timestamp()) AND c.token_hash=b.credential_hash AND (c.namespace_root,c.authority_revision)=(b.namespace_root,b.authority_revision)`, hash).Scan(&b.ID, &b.SecretHash, &b.CredentialHash, &b.RequestKey, &b.Root, &b.Authority, &b.LifetimeSeconds, &b.ExpiresAt, &b.State, &b.Revision, &scope.TokenHash)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return Scope{}, nil, ErrUnauthorized
 	}
@@ -186,6 +189,9 @@ func (s *Store) RevokeBrowserSession(ctx context.Context, scope Scope, key strin
 	if b.State == "active" {
 		b.State = "revoked"
 		b.Revision++
+		if t.ExpiresAt != nil && b.ExpiresAt.After(*t.ExpiresAt) {
+			b.ExpiresAt = *t.ExpiresAt
+		}
 		event, err := t.Append(ctx, "BrowserSessionChanged", b.ID, b)
 		if err != nil {
 			return err

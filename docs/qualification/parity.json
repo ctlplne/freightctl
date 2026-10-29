@@ -3222,10 +3222,13 @@
         "independent operator or receiver"
       ],
       "acceptance_journey": "J05",
-      "state": "planned",
-      "evidence": [],
+      "state": "implementing",
+      "evidence": [
+        "docs/qualification/evidence/F016-account-lifecycle.json"
+      ],
       "qualification_blockers": [
-        "Authorized IBM Sterling File Gateway installation and exact edition/version for observed comparison"
+        "Authorized IBM Sterling File Gateway installation and exact edition/version for observed comparison",
+        "F016 covers assisted scoped account lifecycle only. First-admin/partner setup, invitations/providers, self-service SSH key overlap, delegated trust review and independent onboarding remain open."
       ]
     },
     {

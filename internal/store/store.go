@@ -61,8 +61,11 @@ var browserSessionSchema string
 //go:embed 015_browser_commands.sql
 var browserCommandSchema string
 
-var migrations = []string{schema, eventBinding, eventBounds, namespaceSchema, uploadSchema, uploadStorageSchema, deliverySchema, workflowSchema, assistanceSchema, intakeSchema, pgpSchema, encryptionSchema, scannerSchema, browserSessionSchema, browserCommandSchema}
-var domainTables = []string{"tenants", "partners", "credentials", "events", "files", "idempotency", "namespace_entries", "namespace_revisions", "namespace_commands", "ssh_keys", "upload_sessions", "upload_chunks", "upload_receipts", "delivery_intents", "delivery_receipts", "connection_revisions", "workflow_revisions", "workflow_runs", "workflow_steps", "workflow_receipts", "ai_profiles", "ai_jobs", "ai_receipts", "intake_policies", "file_checks", "check_receipts", "file_releases", "pgp_keys", "file_signatures", "delivery_ciphertexts", "scanner_profiles", "browser_sessions", "browser_commands"}
+//go:embed 016_accounts.sql
+var accountSchema string
+
+var migrations = []string{schema, eventBinding, eventBounds, namespaceSchema, uploadSchema, uploadStorageSchema, deliverySchema, workflowSchema, assistanceSchema, intakeSchema, pgpSchema, encryptionSchema, scannerSchema, browserSessionSchema, browserCommandSchema, accountSchema}
+var domainTables = []string{"tenants", "partners", "credentials", "events", "files", "idempotency", "namespace_entries", "namespace_revisions", "namespace_commands", "ssh_keys", "upload_sessions", "upload_chunks", "upload_receipts", "delivery_intents", "delivery_receipts", "connection_revisions", "workflow_revisions", "workflow_runs", "workflow_steps", "workflow_receipts", "ai_profiles", "ai_jobs", "ai_receipts", "intake_policies", "file_checks", "check_receipts", "file_releases", "pgp_keys", "file_signatures", "delivery_ciphertexts", "scanner_profiles", "browser_sessions", "browser_commands", "account_revisions", "account_commands"}
 
 var ErrUnauthorized = errors.New("unauthorized")
 var ErrNotFound = errors.New("not found")
@@ -74,7 +77,7 @@ var ErrExists = errors.New("virtual path already exists")
 var ErrState = errors.New("operation does not match the current resource state")
 var ErrRevision = errors.New("resource revision changed")
 
-var DefaultPermissions = []string{"read", "write", "list", "manage_paths", "inspect", "audit_read", "admin", "connections_manage", "deliver", "workflow_manage", "workflow_approve", "workflow_execute", "ai_manage", "ai_use", "ai_disclose", "intake_manage", "check_run", "check_release", "pgp_manage", "scanner_manage"}
+var DefaultPermissions = []string{"read", "write", "list", "manage_paths", "inspect", "audit_read", "admin", "connections_manage", "deliver", "workflow_manage", "workflow_approve", "workflow_execute", "ai_manage", "ai_use", "ai_disclose", "intake_manage", "check_run", "check_release", "pgp_manage", "scanner_manage", "accounts_manage"}
 
 var uuidPattern = regexp.MustCompile(`^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$`)
 
@@ -112,6 +115,7 @@ type Transaction struct {
 	Permissions       []string
 	Root              string
 	AuthorityRevision int64
+	ExpiresAt         *time.Time
 	PendingFiles      map[string]bool
 }
 
@@ -183,6 +187,11 @@ func Open(ctx context.Context, path string) (*Store, error) {
 	if err != nil || rows.Err() != nil || matched != len(migrations) {
 		p.Close()
 		return nil, errors.New("database schema version or digest differs; run the matching administrative migrations")
+	}
+	var writerSafe bool
+	if err = p.QueryRow(ctx, `SELECT freightctl_account_writer_safe()`).Scan(&writerSafe); err != nil || !writerSafe {
+		p.Close()
+		return nil, ErrIsolation
 	}
 	return &Store{Pool: p}, nil
 }
@@ -323,6 +332,10 @@ func (s *Store) Begin(ctx context.Context, scope Scope) (*Transaction, error) {
 }
 
 func (s *Store) begin(ctx context.Context, scope Scope, options pgx.TxOptions) (*Transaction, error) {
+	return s.beginAuthenticated(ctx, scope, options, false)
+}
+
+func (s *Store) beginAuthenticated(ctx context.Context, scope Scope, options pgx.TxOptions, accountLock bool) (*Transaction, error) {
 	tx, err := s.scopedTransaction(ctx, scope, options)
 	if err != nil {
 		return nil, err
@@ -333,6 +346,14 @@ func (s *Store) begin(ctx context.Context, scope Scope, options pgx.TxOptions) (
 			_ = tx.Rollback(ctx)
 		}
 	}()
+	// Management serialization must precede browser-session/credential locks.
+	// Otherwise two managers can each hold a session needed by the other's
+	// invalidation while waiting on the partner's account command lock.
+	if accountLock {
+		if _, err = tx.Exec(ctx, `SELECT pg_advisory_xact_lock(hashtextextended($1,0))`, scope.Tenant+":"+scope.Partner+":accounts"); err != nil {
+			return nil, err
+		}
+	}
 	t := &Transaction{Tx: tx, Scope: scope}
 	if err = t.authenticate(ctx); err != nil {
 		return nil, err
@@ -375,6 +396,10 @@ func (s *Store) scopedTransaction(ctx context.Context, scope Scope, options pgx.
 	err = tx.QueryRow(ctx, `SELECT count(*) FROM pg_class WHERE relnamespace='public'::regnamespace AND relname=ANY($1) AND relrowsecurity AND relforcerowsecurity AND relowner<>(SELECT oid FROM pg_roles WHERE rolname=current_user)`, domainTables).Scan(&protected)
 	if err != nil {
 		return nil, err
+	}
+	var writerSafe bool
+	if err = tx.QueryRow(ctx, `SELECT freightctl_account_writer_safe()`).Scan(&writerSafe); err != nil || !writerSafe {
+		return nil, ErrIsolation
 	}
 	if protected != len(domainTables) {
 		return nil, ErrIsolation
@@ -475,14 +500,14 @@ func (t *Transaction) authenticate(ctx context.Context) error {
 		if t.Scope.Actor != "" || t.Scope.SSHKeyFingerprint != "" {
 			return ErrUnauthorized
 		}
-		row = t.Tx.QueryRow(ctx, `SELECT actor_id::text,permissions,namespace_root,authority_revision FROM credentials WHERE token_hash=$1 AND tenant_id=$2 AND partner_id=$3 AND revoked_at IS NULL`, t.Scope.TokenHash, t.Scope.Tenant, t.Scope.Partner)
+		row = t.Tx.QueryRow(ctx, `SELECT actor_id::text,permissions,namespace_root,authority_revision,expires_at FROM credentials WHERE token_hash=$1 AND tenant_id=$2 AND partner_id=$3 AND revoked_at IS NULL AND (expires_at IS NULL OR expires_at>clock_timestamp())`, t.Scope.TokenHash, t.Scope.Tenant, t.Scope.Partner)
 	} else {
 		if !ValidID(t.Scope.Actor) || t.Scope.SSHKeyFingerprint == "" {
 			return ErrUnauthorized
 		}
-		row = t.Tx.QueryRow(ctx, `SELECT c.actor_id::text,c.permissions,c.namespace_root,c.authority_revision FROM credentials c JOIN ssh_keys k USING(tenant_id,partner_id,actor_id) WHERE c.actor_id=$1 AND k.fingerprint=$2 AND c.tenant_id=$3 AND c.partner_id=$4 AND c.revoked_at IS NULL AND k.revoked_at IS NULL`, t.Scope.Actor, t.Scope.SSHKeyFingerprint, t.Scope.Tenant, t.Scope.Partner)
+		row = t.Tx.QueryRow(ctx, `SELECT c.actor_id::text,c.permissions,c.namespace_root,c.authority_revision,c.expires_at FROM credentials c JOIN ssh_keys k USING(tenant_id,partner_id,actor_id) WHERE c.actor_id=$1 AND k.fingerprint=$2 AND c.tenant_id=$3 AND c.partner_id=$4 AND c.revoked_at IS NULL AND (c.expires_at IS NULL OR c.expires_at>clock_timestamp()) AND k.revoked_at IS NULL`, t.Scope.Actor, t.Scope.SSHKeyFingerprint, t.Scope.Tenant, t.Scope.Partner)
 	}
-	err := row.Scan(&t.Actor, &t.Permissions, &t.Root, &t.AuthorityRevision)
+	err := row.Scan(&t.Actor, &t.Permissions, &t.Root, &t.AuthorityRevision, &t.ExpiresAt)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return ErrUnauthorized
 	}

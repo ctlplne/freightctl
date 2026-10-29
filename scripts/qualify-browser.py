@@ -58,7 +58,7 @@ try:
  from urllib.parse import urlencode
  command('independent-stock-curl-receiver',['curl','--silent','--show-error','--fail','--cacert',str(private/'cert.pem'),'--header','@'+str(header),'--output',str(private/'curl-received.csv'),url+f'/v1/tenants/{tenant}/partners/{partner}/namespace/file?'+urlencode({'path':'/business.csv'})])
  assert hashlib.sha256((private/'curl-received.csv').read_bytes()).hexdigest()==hashlib.sha256(payload).hexdigest()
- stop();start(3);command('native-session-expiry',[node,'scripts/browser-journey.mjs',str(private/'config.json'),'expiry']);state='passed'
+ command('native-account-lifecycle',[node,'scripts/browser-journey.mjs',str(private/'config.json'),'accounts']);stop();start(3);command('native-session-expiry',[node,'scripts/browser-journey.mjs',str(private/'config.json'),'expiry']);state='passed'
 except Exception as e:
  import traceback
  failure=traceback.format_exc()

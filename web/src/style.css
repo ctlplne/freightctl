@@ -711,3 +711,21 @@ footer {
     margin-right: 16px;
   }
 }
+.account-grants {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 8px;
+  margin: 16px 0;
+}
+.account-grants label,
+.account-confirm {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.account-grants input,
+.account-confirm input {
+  width: 20px;
+  min-height: 20px;
+  margin: 0;
+}
