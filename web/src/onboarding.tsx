@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Api } from "./api";
 import { operationKey } from "./crypto";
+import { OnboardingProbes } from "./onboarding-probes";
 import { ApiError, type Session } from "./types";
 import {
   asOnboardingDefinition,
@@ -56,7 +57,7 @@ export function Onboarding({
   session: Session;
   refresh: number;
   onError: (error: unknown) => void;
-  onConfirmed: () => void;
+  onConfirmed: (message?: string) => void;
 }) {
   const [page, setPage] = useState<ReturnType<typeof asOnboardingPage>>({
     plans: [],
@@ -587,6 +588,22 @@ export function Onboarding({
           Review onboarding draft
         </button>
       </form>
+      {selected &&
+        session.identity.permissions.includes("connections_manage") && (
+          <OnboardingProbes
+            key={selected.id + ":" + selected.version}
+            api={api}
+            session={session}
+            plan={selected}
+            authority={authority}
+            onError={onError}
+            onConfirmed={() =>
+              onConfirmed(
+                "Connectivity probe outcome recorded. A file exchange, approval and activation remain required.",
+              )
+            }
+          />
+        )}
       <dialog
         ref={dialog}
         aria-labelledby="onboarding-review-title"

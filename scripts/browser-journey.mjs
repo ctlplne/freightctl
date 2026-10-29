@@ -112,7 +112,10 @@ try {
       (url.pathname.startsWith(allowedPrefix + "/checks/") &&
         /\/(?:run|release|recover)$/.test(url.pathname)) ||
         url.pathname === allowedPrefix + "/partner-directory" ||
-        url.pathname === allowedPrefix + "/onboarding-plans",
+        url.pathname === allowedPrefix + "/onboarding-plans" ||
+        url.pathname === allowedPrefix + "/onboarding-probes" ||
+        (url.pathname.startsWith(allowedPrefix + "/onboarding-probes/") &&
+          /\/onboarding-probes\/[0-9a-f-]{36}\/work$/.test(url.pathname)),
     );
     const headers = c.private + "/" + label + ".headers",
       body = c.private + "/" + label + ".request",
@@ -707,7 +710,241 @@ try {
     return row;
   }
   await page.goto(c.url);
-  if (stage === "partners") {
+  if (stage === "probes") {
+    await signIn();
+    await page.getByRole("button", { name: "Onboarding", exact: true }).click();
+    await page
+      .getByRole("button", { name: "Open " + c.probe_plan.name, exact: true })
+      .click();
+    await page
+      .getByRole("heading", { name: "Connectivity tests", exact: true })
+      .waitFor();
+    await page
+      .getByLabel("Saved exchange requirement", { exact: true })
+      .selectOption(c.probe_plan.definition.requirements[0].id);
+    await page
+      .getByLabel("Registered connection UUID", { exact: true })
+      .fill(c.probe_connection.id);
+    await page
+      .getByLabel("Registered connection version", { exact: true })
+      .fill(String(c.probe_connection.version));
+    await page
+      .getByRole("button", { name: "Read registered connection", exact: true })
+      .click();
+    await page.getByText("Registered receiver:", { exact: false }).waitFor();
+    await page
+      .getByRole("button", { name: "Review connectivity test", exact: true })
+      .click();
+    const dialog = page.getByRole("dialog", {
+      name: "Review connectivity probe",
+    });
+    await dialog.waitFor();
+    assert.equal(
+      await page.evaluate(() => document.activeElement?.id),
+      "onboarding-probe-review-title",
+    );
+    assert.ok(
+      (await dialog.innerText()).includes(c.probe_connection.host_fingerprint),
+    );
+    assert.ok(
+      (await dialog.innerText()).includes(c.probe_connection.definition_hash),
+    );
+    await audit("probe-review");
+    await page.screenshot({
+      path: c.raw + "/probe-review.png",
+      fullPage: true,
+    });
+    const starts = [],
+      works = [];
+    await page.route(c.url + prefix() + "/onboarding-probes", async (route) => {
+      const request = route.request();
+      if (request.method() !== "POST") {
+        await route.continue();
+        return;
+      }
+      starts.push({
+        body: request.postDataJSON(),
+        key: request.headers()["idempotency-key"],
+      });
+      const result = await trustedMutation(
+        route,
+        "probe-browser-start-" + starts.length,
+      );
+      if (starts.length === 1) {
+        await route.abort("failed");
+        return;
+      }
+      assert.equal(result.status, 200);
+      assert.equal(JSON.parse(result.body).replayed, true);
+      await route.fulfill({
+        status: result.status,
+        contentType: "application/json",
+        body: result.body,
+      });
+    });
+    await page.route(
+      c.url + prefix() + "/onboarding-probes/*/work",
+      async (route) => {
+        const request = route.request();
+        if (request.headers()["idempotency-key"] === "missing-probe-csrf") {
+          await route.continue();
+          return;
+        }
+        works.push({
+          url: request.url(),
+          body: request.postDataJSON(),
+          key: request.headers()["idempotency-key"],
+        });
+        const result = await trustedMutation(
+          route,
+          "probe-browser-work-" + works.length,
+        );
+        assert.equal(result.status, 200);
+        assert.equal(JSON.parse(result.body).probe.state, "succeeded");
+        if (works.length === 1) {
+          await route.abort("failed");
+          return;
+        }
+        await route.fulfill({
+          status: result.status,
+          contentType: "application/json",
+          body: result.body,
+        });
+      },
+    );
+    await page
+      .getByRole("button", {
+        name: "Run reviewed connectivity test",
+        exact: true,
+      })
+      .click();
+    await dialog
+      .getByText("The probe result is not confirmed.", { exact: false })
+      .waitFor();
+    await page
+      .getByRole("button", {
+        name: "Run reviewed connectivity test",
+        exact: true,
+      })
+      .click();
+    await page
+      .getByRole("button", { name: "Recover same recorded probe", exact: true })
+      .waitFor();
+    await dialog
+      .getByText("The probe result is not confirmed.", { exact: false })
+      .waitFor();
+    await page
+      .getByRole("button", { name: "Recover same recorded probe", exact: true })
+      .click();
+    await page
+      .getByRole("heading", {
+        name: "Read-only connectivity: succeeded",
+        exact: true,
+      })
+      .waitFor();
+    assert.deepEqual(starts[1], starts[0]);
+    assert.deepEqual(works[1], works[0]);
+    assert.equal(
+      await page
+        .getByText("The probe result is not confirmed.", { exact: false })
+        .count(),
+      0,
+    );
+    const committed = JSON.parse(
+      await readFile(c.private + "/probe-browser-work-1.response", "utf8"),
+    );
+    assert.equal(committed.evidence_strength, "connectivity_only");
+    assert.equal(committed.file_exchange_performed, false);
+    assert.equal(committed.production_active, false);
+    assert.ok(
+      (await page.locator("body").innerText()).includes(
+        "Connectivity probe outcome recorded.",
+      ),
+    );
+    record(
+      "native-probe-recovers-committed-start-and-work-responses-with-original-keys",
+    );
+    await page.reload();
+    await page.getByRole("heading", { name: "Files", exact: true }).waitFor();
+    await page.getByRole("button", { name: "Onboarding", exact: true }).click();
+    await page
+      .getByRole("button", { name: "Open " + c.probe_plan.name, exact: true })
+      .click();
+    await page
+      .getByRole("button", {
+        name: "Inspect probe " + committed.probe.id.slice(0, 8),
+        exact: true,
+      })
+      .click();
+    await page
+      .getByRole("heading", {
+        name: "Read-only connectivity: succeeded",
+        exact: true,
+      })
+      .waitFor();
+    await page
+      .getByRole("button", {
+        name: "Review recorded probe recovery",
+        exact: true,
+      })
+      .click();
+    await page
+      .getByRole("button", { name: "Recover same recorded probe", exact: true })
+      .click();
+    await page
+      .getByRole("heading", {
+        name: "Read-only connectivity: succeeded",
+        exact: true,
+      })
+      .waitFor();
+    assert.deepEqual(works[2], works[0]);
+    const csrf = await page.evaluate(
+      async ({ url, hash }) => {
+        const r = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Idempotency-Key": "missing-probe-csrf",
+          },
+          body: JSON.stringify({ definition_hash: hash }),
+        });
+        return r.status;
+      },
+      {
+        url: prefix() + "/onboarding-probes/" + committed.probe.id + "/work",
+        hash: committed.probe.definition_hash,
+      },
+    );
+    assert.equal(csrf, 403);
+    await audit("probe-result");
+    await page.screenshot({
+      path: c.raw + "/probe-result.png",
+      fullPage: true,
+    });
+    await writeFile(
+      c.private + "/probe-browser-observations.json",
+      JSON.stringify(
+        {
+          probe_id: committed.probe.id,
+          state: committed.probe.state,
+          definition_hash: committed.probe.definition_hash,
+          author_id: committed.probe.author_id,
+          start_requests: starts.length,
+          work_requests: works.length,
+          starts,
+          works,
+          file_exchange_performed: false,
+          production_active: false,
+          missing_csrf_status: csrf,
+        },
+        null,
+        2,
+      ) + "\n",
+    );
+    record(
+      "native-probe-history-recovers-original-result-after-reload-without-claiming-exchange-or-activation",
+    );
+  } else if (stage === "partners") {
     const binary = c.binary,
       flags = [
         "--dsn-file",

@@ -140,6 +140,8 @@ LogLevel VERBOSE
  connection=invoke('register-connection','connection-register','--request-file',cp,'--idempotency-key','register-connection')['resource']
  assert invoke('register-replay','connection-register','--request-file',cp,'--idempotency-key','register-connection')['replayed']
  visible=get('connection-redacted','/connections/'+connection['id']+'/1');assert visible==connection and 'key_reference' not in json.dumps(visible) and 'Wire' not in json.dumps(visible)
+ from onboarding_probe_journey import exercise as exercise_onboarding_probes
+ exercise_onboarding_probes(globals())
  definition={'schema_version':1,'name':'settlement delivery','steps':[{'id':'first','kind':'sftp.deliver','connection':ref(connection),'filename':'first.csv'},{'id':'second','kind':'sftp.deliver','connection':ref(connection),'filename':'second.csv'}]}
  preview_request={'definition':definition,'file_id':accepted['id']}
  events_before=sql(f"SELECT count(*) FROM events WHERE tenant_id='{tenant}'")

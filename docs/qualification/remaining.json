@@ -117,7 +117,8 @@
         "docs/qualification/evidence/F012-encrypted-delivery.json",
         "docs/qualification/evidence/F013-scanner-controls.json",
         "docs/qualification/evidence/F014-browser-exchange.json",
-        "docs/qualification/evidence/F015-native-crypto-regression.json"
+        "docs/qualification/evidence/F015-native-crypto-regression.json",
+        "docs/qualification/evidence/F022-onboarding-connectivity.json"
       ],
       "remaining_details": [
         "F007/F008 verify bounded leased/fenced SFTP intents and typed ordered workflow runs with registered connection versions, conservative ambiguity, same-step dispatch replay across restart, and queued cancellation. Finish unattended/fair scheduling, broader processing/conditions/loops/batches, active cancellation/rebinding, overlapping key rotations, receiver business contracts, remote quotas/retention/cleanup and distributed failures.",
@@ -127,7 +128,8 @@
         "F013 adds two separate cross-process PostgreSQL scan slots, bounded exact-byte Unix streaming, deadline and authority/fence checks. Genuine engine/database resource, archive, sandbox and operational detection gates remain open under X06; no engine or standard database was loaded.",
         "F013 recorded aged-signature failures and a bounded Docker/GnuPG startup timeout at Created/PID zero. F015 now passes fresh consumer and independent crypto gates through the explicit native macOS peer. The default Docker startup profile on this host remains unresolved; historical F011\u2013F014 evidence keeps its original source scope. No shared Docker restart or policy relaxation is authorized.",
         "F014 runs ordinary required checks and separate exact report/revision release from the browser. Fresh independent signature/crypto gates remain red; a named-volume Docker peer also stalls Created/PID zero, falsifying a bind-mount-only cause. No shared Docker restart or policy relaxation.",
-        "F015 restores fresh independent native GnuPG verification and a complete 27/27 implemented-core run on unchanged source. Parent-death, sandbox, runtime-pin and resource refusal gates pass. Historical Docker/aged-fixture failures remain recorded; default Docker startup on this host is unresolved. No model or scanner engine started. CI is wired and structure-linted but GitHub execution and native Linux qualification remain unverified. Complete product requirements stay open."
+        "F015 restores fresh independent native GnuPG verification and a complete 27/27 implemented-core run on unchanged source. Parent-death, sandbox, runtime-pin and resource refusal gates pass. Historical Docker/aged-fixture failures remain recorded; default Docker startup on this host is unresolved. No model or scanner engine started. CI is wired and structure-linted but GitHub execution and native Linux qualification remain unverified. Complete product requirements stay open.",
+        "F022 adds exact-bound read-only outbound SFTP onboarding probes, durable intent before contact, current plan/connection/authority checks, private paginated history and original-key recovery. Actual worker death retains the20-second lease; recovery makes no new contact. Migration20 has42 forced-RLS relations. Connectivity still needs separate file exchange evidence, approval/activation and queued-work key lifecycle; other protocols and full J05 remain open."
       ]
     },
     {
@@ -166,7 +168,8 @@
         "docs/qualification/evidence/F018-browser-worker-recovery.json",
         "docs/qualification/evidence/F019-first-run-enrollment.json",
         "docs/qualification/evidence/F020-tenant-partner-enrollment.json",
-        "docs/qualification/evidence/F021-onboarding-drafts.json"
+        "docs/qualification/evidence/F021-onboarding-drafts.json",
+        "docs/qualification/evidence/F022-onboarding-connectivity.json"
       ],
       "remaining_details": [
         "F014 implements a typed embedded browser workspace, short-lived session/CSRF/logout controls, private ticket discovery, durable single-file pause/reload/restart/resume, held checks, separate release and native streaming download. Assisted Chromium, selected accessibility scans and byte comparison pass. First-admin/partner onboarding, invitations, SSO/MFA/recovery, delegated administration, batches, sharing/forms/mail, complete accessibility and independent adoption remain open.",
@@ -175,7 +178,8 @@
         "F018 adds server-observed reservation status, explicit expired-check review, stable lost-response recovery, actor isolation and bounded attempt feedback. First-admin/partner/provider onboarding, sharing/batches/forms, complete accessibility and independent adoption remain open.",
         "F019 adds protected one-time first tenant/partner/admin setup with exact receipt replay, migration 17 and 36 forced-RLS relations, plus browser ID import and an assisted real first exchange/restart. It does not complete general partner lifecycle, invitations/providers/delegation, emergency access, disconnected packaging, production/native platforms or independent operator adoption.",
         "F020 adds explicitly authorized credential-bound tenant directory authority, ordinary browser/API/CLI partner/admin enrollment, exact reviewed revisions/receipt replay, atomic source/target events and migration 18 with 39 forced-RLS relations. No existing/new account inherits tenant authority. Full contacts/checklists, invitations/providers/delegation, environment promotion/suspension, queued-work lifecycle and independent onboarding remain open.",
-        "F021 adds partner-scoped immutable contact/exchange-requirement drafts through browser/API/CLI, exact current authority/version review, actor-private response-loss receipts, redacted ordinary audit payloads and migration 19 with 41 forced-RLS relations. Drafts are not tested, approved or active. Full protocol/test-exchange evidence, approval/production activation, invitations/providers/delegation and queued-work key lifecycle remain required."
+        "F021 adds partner-scoped immutable contact/exchange-requirement drafts through browser/API/CLI, exact current authority/version review, actor-private response-loss receipts, redacted ordinary audit payloads and migration 19 with 41 forced-RLS relations. Drafts are not tested, approved or active. Full protocol/test-exchange evidence, approval/production activation, invitations/providers/delegation and queued-work key lifecycle remain required.",
+        "F022 adds exact-bound read-only outbound SFTP onboarding probes, durable intent before contact, current plan/connection/authority checks, private paginated history and original-key recovery. Actual worker death retains the20-second lease; recovery makes no new contact. Migration20 has42 forced-RLS relations. Connectivity still needs separate file exchange evidence, approval/activation and queued-work key lifecycle; other protocols and full J05 remain open."
       ]
     },
     {
@@ -246,7 +250,8 @@
         "docs/qualification/evidence/F017-signed-browser-recovery.json",
         "docs/qualification/evidence/F019-first-run-enrollment.json",
         "docs/qualification/evidence/F020-tenant-partner-enrollment.json",
-        "docs/qualification/evidence/F021-onboarding-drafts.json"
+        "docs/qualification/evidence/F021-onboarding-drafts.json",
+        "docs/qualification/evidence/F022-onboarding-connectivity.json"
       ],
       "remaining_details": [
         "Current account/key/mount and destination/parent checks gate transfer mutations. Complete delegated lifecycle, policy reapproval/rebinding, human identity/MFA/providers, complete denial/session auditing, approval UI and governance remain open.",
@@ -260,7 +265,8 @@
         "F017 exposes full verified primary/signing fingerprints, registered key version/hash, signature hash/format and recorded verification window. Runtime trust/expiry/access rechecks still decide release/retrieval. Native revocation denies cached browser retrieval; delegated trust administration, private custody, self-service key overlap and complete provider/lifecycle governance remain open.",
         "F019 adds protected one-time first tenant/partner/admin setup with exact receipt replay, migration 17 and 36 forced-RLS relations, plus browser ID import and an assisted real first exchange/restart. It does not complete general partner lifecycle, invitations/providers/delegation, emergency access, disconnected packaging, production/native platforms or independent operator adoption.",
         "F020 adds explicitly authorized credential-bound tenant directory authority, ordinary browser/API/CLI partner/admin enrollment, exact reviewed revisions/receipt replay, atomic source/target events and migration 18 with 39 forced-RLS relations. No existing/new account inherits tenant authority. Full contacts/checklists, invitations/providers/delegation, environment promotion/suspension, queued-work lifecycle and independent onboarding remain open.",
-        "F021 adds partner-scoped immutable contact/exchange-requirement drafts through browser/API/CLI, exact current authority/version review, actor-private response-loss receipts, redacted ordinary audit payloads and migration 19 with 41 forced-RLS relations. Drafts are not tested, approved or active. Full protocol/test-exchange evidence, approval/production activation, invitations/providers/delegation and queued-work key lifecycle remain required."
+        "F021 adds partner-scoped immutable contact/exchange-requirement drafts through browser/API/CLI, exact current authority/version review, actor-private response-loss receipts, redacted ordinary audit payloads and migration 19 with 41 forced-RLS relations. Drafts are not tested, approved or active. Full protocol/test-exchange evidence, approval/production activation, invitations/providers/delegation and queued-work key lifecycle remain required.",
+        "F022 adds exact-bound read-only outbound SFTP onboarding probes, durable intent before contact, current plan/connection/authority checks, private paginated history and original-key recovery. Actual worker death retains the20-second lease; recovery makes no new contact. Migration20 has42 forced-RLS relations. Connectivity still needs separate file exchange evidence, approval/activation and queued-work key lifecycle; other protocols and full J05 remain open."
       ]
     },
     {
@@ -391,11 +397,17 @@
     },
     {
       "id": "X06",
-      "requirement": "Explicit owner resource allowance for a genuine standard-database ClamAV qualification, or an appropriate existing scanner endpoint. Standard database stays unloaded on this shared machine. A resource choice question is pending; no answer is inferred from time or a preselected option. ICAP requires its own adapter/qualification.",
+      "requirement": "Owner authorized genuine malware-scanner qualification on 2026-10-29 with at most 4 GiB RAM and one CPU, including the standard signature database. Implement a separate task-owned hard-bounded resource and qualify actual detection, archives, outage/resource behavior and operations. This grants no inference or shared Docker lifecycle authority. ICAP still requires its own adapter/qualification.",
       "affects": [
         "R004",
         "R008"
-      ]
+      ],
+      "owner_resource_authorization": {
+        "on": "2026-10-29",
+        "max_memory_bytes": 4294967296,
+        "max_cpus": 1,
+        "owner_answer": "Allow up to 4 GiB RAM and one CPU"
+      }
     }
   ],
   "readiness": {

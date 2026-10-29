@@ -94,4 +94,6 @@ Migration 19 adds two immutable forced-RLS relations. Ordinary service reads rec
 
 The protected journal retains the original contact/requirements payload. Ordinary event feeds and signed audit snapshots replace these two event payload types with a redaction marker and SHA-256 of the original payload. That marker lets an auditor correlate a retained source without receiving its contact text. It does not reconstruct the source. Database administrators remain inside the documented trust boundary; retention, erasure and independent protected archival remain required work.
 
+Saved outbound SFTP requirements can use [recorded connectivity tests](onboarding-connectivity.md) against an exact registered connection revision. A read-only connectivity result still needs separate file exchange evidence, approval and activation.
+
 The native partner exercise covers draft review, exact lost-response recovery, concurrent edit refusal, authority revocation/restoration, historical reads, audit redaction, draft export and server restart, followed by the existing native/stock-curl file exchange. It uses synthetic data on one host with assisted prerequisites. It does not qualify full onboarding, independent adoption, business acknowledgments, complete accessibility or production activation. No model is loaded.

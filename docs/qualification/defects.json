@@ -839,6 +839,51 @@
       "regression_evidence": [
         "docs/qualification/evidence/F021-onboarding-drafts.json"
       ]
+    },
+    {
+      "id": "D055",
+      "severity": "ordinary onboarding protocol-test mechanism absent",
+      "state": "fixed locally",
+      "observed_on": "2026-10-29",
+      "candidate": "63f7d2e121e0d4381335913bbcdaecd3deaeca99 plus retained candidate hashes",
+      "journey": "J05",
+      "reproduction": "Attempt partner-onboarding-probe-start after recording a saved requirement.",
+      "first_failure": "Unknown command, retained original source/binary.",
+      "cause": "No durable connectivity intent, exact requirement/connection/authority binding or ordinary testing surface existed.",
+      "resolution": "Add a recorded read-only outbound SFTP profile across browser/API/CLI with private history and explicit evidence strength. Full exchange/approval/activation remains required.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F022-onboarding-connectivity.json"
+      ]
+    },
+    {
+      "id": "D056",
+      "severity": "completed probe receipt recovery unnecessarily requires network capacity",
+      "state": "fixed locally",
+      "observed_on": "2026-10-29",
+      "candidate": "63f7d2e121e0d4381335913bbcdaecd3deaeca99 plus retained candidate hashes",
+      "journey": "J05",
+      "reproduction": "Hold both independent probe slots and recover a completed original work key.",
+      "first_failure": "ErrLimit refuses retrieval despite no new network contact being needed.",
+      "cause": "Work admission unconditionally acquires a probe slot before reading recorded/live/expired state.",
+      "resolution": "Require a slot only for queued work that can start contact; keep two-slot bounds and exact recovery/saturation coverage.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F022-onboarding-connectivity.json"
+      ]
+    },
+    {
+      "id": "D057",
+      "severity": "probe completion receipt changes serialized timestamp on replay",
+      "state": "fixed locally",
+      "observed_on": "2026-10-29",
+      "candidate": "63f7d2e121e0d4381335913bbcdaecd3deaeca99 plus retained candidate hashes",
+      "journey": "J05",
+      "reproduction": "Complete a native probe and compare its first result with original-key recovery.",
+      "first_failure": "completed_at changes from UTC text to local-offset text for the same instant.",
+      "cause": "Fresh DatabaseTime is UTC, while PostgreSQL read timestamps use the local location.",
+      "resolution": "Normalize all probe timestamps to UTC on read. Preserve exact JSON/native receipt assertions and original failure/source snapshots.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F022-onboarding-connectivity.json"
+      ]
     }
   ]
 }

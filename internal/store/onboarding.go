@@ -198,12 +198,40 @@ func (s *Store) Onboarding(ctx context.Context, scope Scope, id string, version 
 		return nil, err
 	}
 	defer t.Tx.Rollback(ctx)
+	p, err := t.OnboardingPlan(ctx, id, version)
+	if err != nil {
+		return nil, err
+	}
+	if err = t.Reauthorize(ctx); err != nil {
+		return nil, err
+	}
+	return &OnboardingView{Plan: *p, Authority: t.AuthorityRevision}, t.Tx.Commit(ctx)
+}
+
+// BeginOnboardingManagement preserves the account/session lock order while
+// composing a recorded onboarding decision with other scoped services.
+func (s *Store) BeginOnboardingManagement(ctx context.Context, scope Scope) (*Transaction, error) {
+	t, err := s.beginAuthenticated(ctx, scope, pgx.TxOptions{}, true)
+	if err != nil {
+		return nil, err
+	}
 	if err = t.requireAccountManager(); err != nil {
+		t.Tx.Rollback(ctx)
+		return nil, err
+	}
+	return t, nil
+}
+
+func (t *Transaction) OnboardingPlan(ctx context.Context, id string, version int) (*OnboardingPlan, error) {
+	if !ValidID(id) || version < 0 || version > 2147483647 {
+		return nil, ErrOnboardingInput
+	}
+	if err := t.requireAccountManager(); err != nil {
 		return nil, err
 	}
 	var p OnboardingPlan
 	var definition []byte
-	err = t.Tx.QueryRow(ctx, `SELECT plan_id::text,version,definition_hash,definition,actor_id::text,event_id::text,created_at FROM onboarding_plans WHERE tenant_id=$1 AND partner_id=$2 AND plan_id=$3 AND ($4=0 OR version=$4) ORDER BY version DESC LIMIT 1`, scope.Tenant, scope.Partner, id, version).Scan(&p.ID, &p.Version, &p.Hash, &definition, &p.Author, &p.Event, &p.CreatedAt)
+	err := t.Tx.QueryRow(ctx, `SELECT plan_id::text,version,definition_hash,definition,actor_id::text,event_id::text,created_at FROM onboarding_plans WHERE tenant_id=$1 AND partner_id=$2 AND plan_id=$3 AND ($4=0 OR version=$4) ORDER BY version DESC LIMIT 1`, t.Scope.Tenant, t.Scope.Partner, id, version).Scan(&p.ID, &p.Version, &p.Hash, &definition, &p.Author, &p.Event, &p.CreatedAt)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, ErrNotFound
 	} else if err != nil {
@@ -221,10 +249,7 @@ func (s *Store) Onboarding(ctx context.Context, scope Scope, id string, version 
 		return nil, ErrIsolation
 	}
 	p.Name, p.State = p.Definition.Name, "draft"
-	if err = t.Reauthorize(ctx); err != nil {
-		return nil, err
-	}
-	return &OnboardingView{Plan: p, Authority: t.AuthorityRevision}, t.Tx.Commit(ctx)
+	return &p, nil
 }
 
 func (s *Store) OnboardingPlans(ctx context.Context, scope Scope, after string, limit int) (*OnboardingPage, error) {

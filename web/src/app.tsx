@@ -794,10 +794,11 @@ function App() {
                   session={session}
                   refresh={refresh}
                   onError={reportError}
-                  onConfirmed={() => {
+                  onConfirmed={(message) => {
                     setError("");
                     setNotice(
-                      "Onboarding draft saved. Tests, approval and activation remain required.",
+                      message ??
+                        "Onboarding draft saved. Tests, approval and activation remain required.",
                     );
                   }}
                 />

@@ -12,6 +12,8 @@ For explicit tenant directory authority and ordinary browser/API/CLI enrollment 
 
 For versioned partner contacts and exchange requirements with reviewed saves and private retry receipts, see [onboarding drafts](docs/partner-onboarding.md). Saved requirements remain drafts until the required testing, approval and activation mechanisms are implemented and qualified.
 
+For recorded read-only SFTP tests of an exact saved requirement and registered receiver, see [onboarding connectivity](docs/onboarding-connectivity.md). Connectivity evidence remains separate from a file exchange and production approval.
+
 - Organization: [ctlplne](https://github.com/ctlplne)
 - Repository: [ctlplne/freightctl](https://github.com/ctlplne/freightctl)
 - Local workflow: commits on main; pushes and publication remain owner-controlled.

@@ -783,6 +783,12 @@ footer {
   overflow-wrap: anywhere;
 }
 
+.onboarding-probes {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #b9c6cc;
+}
+
 .onboarding-plan textarea:focus-visible,
 .onboarding-plan select:focus-visible {
   outline: 3px solid #348eac;
