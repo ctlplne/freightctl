@@ -3261,7 +3261,8 @@
         "docs/qualification/evidence/F017-signed-browser-recovery.json",
         "docs/qualification/evidence/F019-first-run-enrollment.json",
         "docs/qualification/evidence/F020-tenant-partner-enrollment.json",
-        "docs/qualification/evidence/F027-onboarding-exchange-review.json"
+        "docs/qualification/evidence/F027-onboarding-exchange-review.json",
+        "docs/qualification/evidence/F028-onboarding-review-runtime.json"
       ],
       "qualification_blockers": [
         "Authorized IBM Sterling File Gateway installation and exact edition/version for observed comparison",
@@ -3270,7 +3271,7 @@
         "F019 adds assisted one-time first tenant/partner/admin setup and a browser workspace reference. Full partner lifecycle, invitations/providers/delegation, production activation and independent onboarding remain open.",
         "F020 adds assisted explicit tenant directory authority and ordinary partner/admin enrollment with native transfer, exact receipt recovery and scope/refusal evidence. Full contacts/checklists, invitations/providers, delegation, environment/lifecycle/activation and independent qualification remain open."
       ],
-      "current_limit": "F027 adds a read-only comparison of saved outbound SFTP requirements with actor-private probes and exact workflow/delivery/source/ciphertext evidence. Unit/race and browser contracts pass; real PostgreSQL tests compile only. Approval, production activation, independent receiver/browser/runtime qualification, queued-work key lifecycle and IBM interoperability remain open. No full-row qualification."
+      "current_limit": "F027 adds a read-only comparison of saved outbound SFTP requirements with actor-private probes and exact workflow/delivery/source/ciphertext evidence. Unit/race and browser contracts pass; real PostgreSQL tests compile only. Approval, production activation, independent receiver/browser/runtime qualification, queued-work key lifecycle and IBM interoperability remain open. No full-row qualification. F028 passes the two real PostgreSQL/race review cases and a 57-step browser/API/CLI journey with independent stock SFTP/plaintext and GnuPG authenticated-decryption checks. Current-source snapshots and selected focus/WCAG/error-response/reload/refusal cases pass; a fresh current-binding positive control isolates connection revocation. Full onboarding approval/activation, pre-contact test intents, key lifecycle, independent adoption, complete J05 and F026 deferred full replay remain open. No model/scanner load."
     },
     {
       "id": "B-AXWAY-EXCHANGE",
