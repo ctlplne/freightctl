@@ -1180,7 +1180,8 @@
       "evidence": [
         "docs/qualification/evidence/F011-openpgp-intake.json",
         "docs/qualification/evidence/F024-signed-scanned-exchange.json",
-        "docs/qualification/evidence/F025-file-rechecks.json"
+        "docs/qualification/evidence/F025-file-rechecks.json",
+        "docs/qualification/evidence/F026-governed-real-rescans.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
@@ -1188,7 +1189,7 @@
       "implementation_notes": [
         "F011 verifies the selected detached binary-signature intake profile, exact bytes, fingerprint/time binding and revocation. Private signing, broader algorithms/peers, delegated review, native production platforms, incumbent comparison and complete J02 remain open."
       ],
-      "current_limit": "F025 adds root actor-owned reviewed checked revisions with unchanged original reports/jobs, exact current policy/authority/storage/selectors, explicit signature reuse/new attachment, held copy and separate fresh checks/release. Actual partial-copy and observed post-sync/pre-commit worker death recover exact approved slots. Genuine scanner refresh/re-scan, delegated exceptions, retention/orphan disposition, queued-work rebind and full journey/production qualification remain open."
+      "current_limit": "F025 adds root actor-owned reviewed checked revisions with unchanged original reports/jobs, exact current policy/authority/storage/selectors, explicit signature reuse/new attachment, held copy and separate fresh checks/release. Actual partial-copy and observed post-sync/pre-commit worker death recover exact approved slots. Genuine scanner refresh/re-scan, delegated exceptions, retention/orphan disposition, queued-work rebind and full journey/production qualification remain open. F026 records passing selected genuine profile re-enrollment/re-scan, completed-stage evidence during outages, independently verified encrypted delivery and a 125-event signed lineage audit. The final current-source aggregate is pending at the owner's request; the prior aggregate passed 28 gates before a browser assertion failed, and the repaired standalone native replay passes. No full-row/journey qualification; feed lifecycle, corpus/ICAP/DLP, delegated exceptions, queued-work rebind, retention/platform/adoption remain open."
     },
     {
       "id": "I-LDAP",
@@ -2401,13 +2402,14 @@
         "docs/qualification/evidence/F013-scanner-controls.json",
         "docs/qualification/evidence/F023-real-scanner.json",
         "docs/qualification/evidence/F024-signed-scanned-exchange.json",
-        "docs/qualification/evidence/F025-file-rechecks.json"
+        "docs/qualification/evidence/F025-file-rechecks.json",
+        "docs/qualification/evidence/F026-governed-real-rescans.json"
       ],
       "qualification_blockers": [
         "Authorized MOVEit Automation installation and exact edition/version for observed comparison",
         "X06: owner authorized4GiB/oneCPU; F023 proves selected genuine official-database cases under a kernel cap. Independent detection corpus, ICAP/DLP, feed update/re-enrollment/re-scan, native deployment platforms and full operational qualification remain open."
       ],
-      "current_limit": "F025 adds root actor-owned reviewed checked revisions with unchanged original reports/jobs, exact current policy/authority/storage/selectors, explicit signature reuse/new attachment, held copy and separate fresh checks/release. Actual partial-copy and observed post-sync/pre-commit worker death recover exact approved slots. Genuine scanner refresh/re-scan, delegated exceptions, retention/orphan disposition, queued-work rebind and full journey/production qualification remain open."
+      "current_limit": "F025 adds root actor-owned reviewed checked revisions with unchanged original reports/jobs, exact current policy/authority/storage/selectors, explicit signature reuse/new attachment, held copy and separate fresh checks/release. Actual partial-copy and observed post-sync/pre-commit worker death recover exact approved slots. Genuine scanner refresh/re-scan, delegated exceptions, retention/orphan disposition, queued-work rebind and full journey/production qualification remain open. F026 records passing selected genuine profile re-enrollment/re-scan, completed-stage evidence during outages, independently verified encrypted delivery and a 125-event signed lineage audit. The final current-source aggregate is pending at the owner's request; the prior aggregate passed 28 gates before a browser assertion failed, and the repaired standalone native replay passes. No full-row/journey qualification; feed lifecycle, corpus/ICAP/DLP, delegated exceptions, queued-work rebind, retention/platform/adoption remain open."
     },
     {
       "id": "O-AUDIT",
@@ -2444,12 +2446,13 @@
       "state": "implementing",
       "evidence": [
         "docs/qualification/evidence/F003-signed-audit.json",
-        "docs/qualification/evidence/F025-file-rechecks.json"
+        "docs/qualification/evidence/F025-file-rechecks.json",
+        "docs/qualification/evidence/F026-governed-real-rescans.json"
       ],
       "qualification_blockers": [
         "Authorized MOVEit Automation installation and exact edition/version for observed comparison"
       ],
-      "current_limit": "F025 adds root actor-owned reviewed checked revisions with unchanged original reports/jobs, exact current policy/authority/storage/selectors, explicit signature reuse/new attachment, held copy and separate fresh checks/release. Actual partial-copy and observed post-sync/pre-commit worker death recover exact approved slots. Genuine scanner refresh/re-scan, delegated exceptions, retention/orphan disposition, queued-work rebind and full journey/production qualification remain open."
+      "current_limit": "F025 adds root actor-owned reviewed checked revisions with unchanged original reports/jobs, exact current policy/authority/storage/selectors, explicit signature reuse/new attachment, held copy and separate fresh checks/release. Actual partial-copy and observed post-sync/pre-commit worker death recover exact approved slots. Genuine scanner refresh/re-scan, delegated exceptions, retention/orphan disposition, queued-work rebind and full journey/production qualification remain open. F026 records passing selected genuine profile re-enrollment/re-scan, completed-stage evidence during outages, independently verified encrypted delivery and a 125-event signed lineage audit. The final current-source aggregate is pending at the owner's request; the prior aggregate passed 28 gates before a browser assertion failed, and the repaired standalone native replay passes. No full-row/journey qualification; feed lifecycle, corpus/ICAP/DLP, delegated exceptions, queued-work rebind, retention/platform/adoption remain open."
     },
     {
       "id": "I-OIDC",

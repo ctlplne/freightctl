@@ -217,6 +217,21 @@ test("signed success requires both a stored attachment and a complete proof", ()
   v.check.report_hash = "";
   refuse(v);
 });
+test("scanner failure retains verified signature evidence without a clean report hash", () => {
+  const failed = view();
+  failed.check.state = "failed";
+  failed.check.code = "scanner_unavailable";
+  failed.check.report_hash = "";
+  failed.check.report.code = "scanner_unavailable";
+  failed.check.report.rows = 0;
+  delete failed.check.report.scanner;
+  const parsed = asCheckView(failed);
+  assert.equal(parsed.check.state, "failed");
+  assert.equal(parsed.check.report_hash, "");
+  assert.ok(parsed.signatureProof);
+  assert.equal(parsed.validation.code, "scanner_unavailable");
+});
+
 test("unsigned, held, failed and historical views preserve their actual scope", () => {
   const v = view();
   delete v.signature;

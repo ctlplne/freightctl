@@ -1892,7 +1892,6 @@ try {
       assert.equal(replay.status, 200);
       assert.equal(replay.keys[1], replay.keys[0]);
       assert.equal(replay.replayed, true);
-      await page.unroute("**/checks/*/release");
       record(
         "lost-release-response-keeps-reviewed-command-and-recovers-original-receipt",
       );
@@ -1903,6 +1902,10 @@ try {
         { exact: true },
       )
       .waitFor();
+    // Fulfill acknowledgment does not establish that the browser consumed
+    // the recovered body. Keep interception until the existing UI assertion
+    // confirms completion, then remove it before the next journey operation.
+    if (c.signatures) await page.unroute("**/checks/*/release");
     record("explicit-report-and-revision-bound-release");
     await page.getByRole("button", { name: "Files", exact: true }).click();
     const published = page.getByRole("row").filter({ hasText: "business.csv" });

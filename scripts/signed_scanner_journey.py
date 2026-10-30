@@ -227,6 +227,7 @@ LogLevel VERBOSE
         assert plain.read_bytes() == data and b'DECRYPTION_OKAY' in decrypt and b'GOODMDC' in decrypt
         verification = command('combined-independent-native-verify', [*native, '--metrics', str(raw / 'combined-native-verify-metrics.json'), 'verify', '--key', str(fixture / 'good-public.gpg'), '--signature', str(signature), '--source', str(plain)])
         assert b'VALIDSIG ' + fingerprint['subkey'].upper().encode() in verification
+        queued_recheck_run = h('freeze-original-queued-run', '/workflow-runs', method='POST', body={'workflow': ref(workflow), 'file_id': source['id']}, key='queued-original-recheck')['resource']
         # Invalid signature is rejected before any scanner contact, even while
         # the genuine daemon cannot answer. The ten-second scan timeout stays.
         wrong = upload('wrong-signer', data)
@@ -279,7 +280,9 @@ LogLevel VERBOSE
         assert any(x['resource_id'] == run['id'] and x['kind'] == 'WorkflowRunChanged' and x['payload']['state'] == 'succeeded' for x in events)
         assert any(x['resource_id'] == unsafe['id'] and x['kind'] == 'FileCheckChanged' and x['payload']['code'] == 'scanner_detected' for x in events)
         audit_proof = {'verification': audit_verification, 'release_event_id': released_events[0]['id'], 'delivery_event_id': delivered_events[0]['id'], 'snapshot_sha256': hashlib.sha256(exported.read_bytes()).hexdigest()}
-        return {'state': 'passed', 'source_size': len(data), 'source_sha256': source['sha256'], 'file_id': source['id'], 'check_report_hash': check['report_hash'], 'scanner_profile': ref(profile), 'signer': ref(signer), 'recipient': ref(recipient), 'workflow': ref(workflow), 'run_id': run['id'], 'ciphertext': cipher, 'delivery_observation': done['status']['steps'][0]['observation'], 'same_ciphertext_after_restart': True, 'independent_decrypted_source_match': True, 'independent_signature_verified': True, 'signed_marker_rejected': True, 'invalid_signature_precedes_scanner': True, 'receiver': 'separate native stock OpenSSH daemon/filesystem and stock SFTP client on macOS; actual Linux app uses bounded opaque SSH relay', 'peer_manifests': [str((path / 'manifest.json').relative_to(root)) for path, _ in fixtures], 'native_scanner_versions_before_and_after_restart_equal': True, 'general_business_receipt': False, 'signed_audit': audit_proof}
+        from recheck_scanner_journey import qualify as qualify_rechecks
+        recheck_qualification = qualify_rechecks(locals())
+        return {'state': 'passed', 'governed_rechecks': recheck_qualification, 'source_size': len(data), 'source_sha256': source['sha256'], 'file_id': source['id'], 'check_report_hash': check['report_hash'], 'scanner_profile': ref(profile), 'signer': ref(signer), 'recipient': ref(recipient), 'workflow': ref(workflow), 'run_id': run['id'], 'ciphertext': cipher, 'delivery_observation': done['status']['steps'][0]['observation'], 'same_ciphertext_after_restart': True, 'independent_decrypted_source_match': True, 'independent_signature_verified': True, 'signed_marker_rejected': True, 'invalid_signature_precedes_scanner': True, 'receiver': 'separate native stock OpenSSH daemon/filesystem and stock SFTP client on macOS; actual Linux app uses bounded opaque SSH relay', 'peer_manifests': [str((path / 'manifest.json').relative_to(root)) for path, _ in fixtures], 'native_scanner_versions_before_and_after_restart_equal': True, 'general_business_receipt': False, 'signed_audit': audit_proof}
     finally:
         if paused:
             command('combined-finally-resume-daemon', ['docker', 'kill', '--signal', 'CONT', e['name']])

@@ -974,6 +974,36 @@
       "regression_evidence": [
         "docs/qualification/evidence/F025-file-rechecks.json"
       ]
+    },
+    {
+      "id": "D064",
+      "severity": "completed signature evidence discarded when later scanner operation fails",
+      "state": "fixed locally",
+      "observed_on": "2026-10-29",
+      "candidate": "9926a2d5880c506f82ff9b4f29647b3ee260ace9 plus exact retained source hashes",
+      "journey": "J06",
+      "reproduction": "Real scanner outage correctly held bytes but discarded a completed signature. The native original failed after 546 recorded steps; a real PostgreSQL/native-signature regression reproduced it.",
+      "first_failure": "Original sources, outputs and relevant binary are retained under F026 artifacts.",
+      "cause": "The computed signature proof was omitted by the processing-error completion branch.",
+      "resolution": "Persist bounded completed observations under unchanged bindings, failed state/code and empty release hash. Discard changed-context observations; keep report empty when no stage completed. Three focused real PostgreSQL/native-signature cases, final production integration gate and genuine native journey pass. Complete aggregate remains pending.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F026-governed-real-rescans.json"
+      ]
+    },
+    {
+      "id": "D065",
+      "severity": "signed-browser release interception stalls before the original UI assertion",
+      "state": "open",
+      "observed_on": "2026-10-29",
+      "candidate": "9926a2d5880c506f82ff9b4f29647b3ee260ace9 plus exact retained source hashes",
+      "journey": "J02",
+      "reproduction": "Final aggregate and unchanged native replay timed out after two saved released HTTP receipts. Passive completion observation passed. Retain interception until the unchanged UI assertion; standalone repaired replay passes. Teardown/body-consumption race is inferred, Chromium-internal cause remains open.",
+      "first_failure": "Original sources, outputs and relevant binary are retained under F026 artifacts.",
+      "cause": "Undetermined. A passive completion observer passes. Interception teardown/body-consumption race is inferred, not proven.",
+      "resolution": "Keep interception until the unchanged released-UI assertion confirms browser consumption, then remove it before the next operation. Standalone repaired replay passes; final aggregate remains pending. Internal timing cause stays open.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F026-governed-real-rescans.json"
+      ]
     }
   ]
 }

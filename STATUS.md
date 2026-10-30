@@ -1,6 +1,6 @@
 # freightctl status
 
-- Updated: 2026-10-29; Stage 1. The full product goal is active.
+- Updated: 2026-10-30; Stage 1. The full product goal is active.
 - Workspace: `/Users/shankar/Desktop/ctlplne-freightctl`, local `main`.
 - Both Git author and committer: `imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>`.
 - Local inference stays off. No model runtime, load, warmup or evaluation is authorized. X05 needs an owner-authorized endpoint and explicit resource allowance.
@@ -9,6 +9,20 @@
 
 ## Current work
 
+F026 is in progress. The final full current-source replay is **pending at the owner's request**. The owner selected “Keep verification pending for now” after automatic approval review timed out before process creation. No deferred replay has started. See [F026 evidence](docs/qualification/evidence/F026-governed-real-rescans.json).
+
+The repair retains completed signature or scan observations when a later stage fails under unchanged current bindings. The check stays failed with no release hash. Changed context discards the attempt's observations; no completed stage means an empty report. Three real PostgreSQL/native-signature regressions cover these boundaries.
+
+The final genuine journey passed **599 uniquely captured steps in 140.199 seconds** on the exact Linux/amd64 application binary executed under emulation on this arm64 Mac. It explicitly re-enrolls the same observed scanner definition as version 2, re-checks exact copied revisions, keeps a signed marker rejected and separately checks/releases/encrypts/delivers a clean child. Original reports and queued work retain their original meanings. Independent stock SFTP, GnuPG and OpenSSL verify exact plaintext/signature and a **125-event signed lineage audit**. Feed updates and downstream business acceptance are not claimed.
+
+The scanner/application/curl/relay cgroup enforced **4 GiB RAM and one CPU**. Its largest observed peak across the successful final run's two generations was **1,179,410,432 bytes**, with zero OOM/kill events. The exact runtime was stopped at that run's end. No scanner or model is started for this recordkeeping. Local inference stays off.
+
+The latest aggregate on the final production code passed **28 of 32 required gates**, including **171 top-level integration-run passes with zero skips** and **24 frontend contracts**, then failed the original signed-browser released-UI assertion. The final three gates were not run. The harness synchronization repair keeps interception until that unchanged assertion completes, and the standalone native browser replay passes. D065 preserves the inferred timing cause as open. All 242 frozen current inputs match; the only delta from the genuine journey and failed aggregate is the browser journey script, which the genuine qualifier does not invoke.
+
+The retained current native/Linux source and exact executed Linux binary vulnerability scans report no affected imported package/package finding or reachable vulnerable symbol; the existing module-only advisory remains visible. Final metadata/source/history scan and local checkpoint results are recorded separately in F026. The complete replay and final qualification remain pending; a local checkpoint does not qualify the full aggregate. No push, publication or external deployment is performed. All **83 complete baseline rows and 12 full journeys remain open**.
+
+## Previous completed evidence
+
 F025 adds reviewed re-check requests through the browser/API/CLI. Each request freezes the original accepted file/check/signature and exact current policy/authority/storage/namespace selectors. Separate proposal, approval and explicit copy create a linked held revision with identical bytes. Original reports, releases and queued jobs keep their meanings. Fresh ordinary checks and a separately reviewed exact release still govern access. Migration 21 adds two actor-private forced-RLS relations for **44 total**, with no permission/default-grant changes. See [operator instructions](docs/file-rechecks.md) and [F025 evidence](docs/qualification/evidence/F025-file-rechecks.json).
 
 All **32 core gates pass on 240 unchanged executable/dependency/fixture inputs**, with **168 top-level integration-run passes and zero skips**, plus **23 frontend contracts**. The extended native intake journey passes **102 steps in 82.405 seconds** while retaining the original stock HTTPS/SFTP, receiver bytes, real 70-second lease and stale-worker fencing cases. New cases prove actual copy-worker SIGKILL during staging, exact receipt recovery, retained partials, private history/reload and browser save/approval/copy response-loss recovery, fresh checks and separate conditional release. A supplemental exact-file SQL trigger marker establishes the actual post-file/directory-sync, pre-commit death boundary and recovery of one reserved object with one acceptance event. It changes no frozen core input.
@@ -16,8 +30,6 @@ All **32 core gates pass on 240 unchanged executable/dependency/fixture inputs**
 Focused real PostgreSQL cases also cover policy/source/namespace/authority changes, current protected storage/scanner configuration, signer changes and fresh verification, immutable SQL guards, atomic receipt rollback, private/redacted audit, terminal cancellation, two copy slots, 16 queued intents and three fixed staging pairs. Initial absence, SQL/receipt/storage/focus/accessibility failures and harness/prerequisite observations remain retained. The original assertions, check lease/attempt budget and database timeouts are preserved. Current-source vulnerability analysis finds no imported affected package or reachable vulnerable symbol; the existing unused legacy module advisory stays visible. Source/history scans have zero findings, with final metadata/commit verification recorded separately.
 
 The exact genuine scanner runtime remains stopped with its existing hard **4 GiB / one CPU** limits and retained databases. **No malware engine, signature database or model is loaded by F025.** Genuine scanner refresh/re-enrollment/re-scan on the new revision path, full combined audit/crypto qualification, delegated exceptions, original queued-work rebind, retention/orphan disposition and production/platform/adoption remain open. All **83 complete baseline rows and 12 full journeys remain open**. Local inference remains off; no push, publication or external deployment is performed.
-
-## Previous completed evidence
 
 F024 executes the combined authenticated/signed/genuine-ClamAV/CSV/release/recipient-encrypted SFTP path with actual Linux/amd64 application execution under emulation on this arm64 Mac. The **430-step, 107.930-second** journey retains all original F023 cases, then observes a receiver outage, durable ciphertext, actual task-runtime restart and original-key recovery of the same ciphertext. Independent stock SFTP retrieval, GnuPG authenticated decryption/exact plaintext/signature and stock OpenSSL verification of a scoped **63-event signed audit** all pass. The audit joins exact source, check report, release, ciphertext and delivery events.
 

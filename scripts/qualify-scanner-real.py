@@ -198,6 +198,7 @@ try:
     assert execute('kernel-caps', ['cat', '/sys/fs/cgroup/memory.max', '/sys/fs/cgroup/cpu.max']) == b'4294967296\n100000 100000\n'
     execute('bounded-daemon-readiness', ['/bin/sh', '-ec', 'for i in $(seq 1 30); do if test -S /freightctl/run/s; then exit 0; fi; sleep 1; done; exit 1'])
     execute('runtime-tools', ['/bin/sh', '-ec', 'uname -a; sha256sum /usr/sbin/clamd /freightctl/freightctl /freightctl/clamd.conf /var/lib/clamav/*.cvd; stat -c "%u:%g:%a" /freightctl/run /freightctl/run/s /freightctl/clamd.conf /var/lib/clamav /tmp/freightctl'])
+    assert execute('exact-current-application-digest', ['sha256sum', '/freightctl/freightctl']).decode().split()[0] == runtime['binary_sha256']
     version = execute('observed-engine-version', ['clamdscan', '--config-file=/freightctl/clamd.conf', '--version']).decode().strip()
     assert version.startswith('ClamAV 1.5.4/28168/')
     database_loaded = True

@@ -573,6 +573,19 @@ func (s *Service) run(ctx context.Context, scope store.Scope, id, key string, re
 		if scanFailed {
 			current.Code = "scanner_unavailable"
 		}
+		// Retain completed earlier stages as historical evidence, even when a
+		// later stage cannot finish. The failure code and empty report hash
+		// prevent this partial report from becoming a release decision. Changed
+		// bindings take the branch above and discard this attempt's observations.
+		if report.Signature != nil || report.Scanner != nil {
+			report.Code = current.Code
+			encoded, err := json.Marshal(report)
+			if err != nil {
+				return nil, err
+			}
+			current.Report = encoded
+		}
+		current.ReportHash = ""
 	} else {
 		encoded, hash, err := canonical(report)
 		if err != nil {

@@ -58,6 +58,8 @@ There is one current intake policy per partner. Registering the next exact versi
 
 The engine reads all accepted bytes before a pass, hashes them again during parsing and compares their exact length and SHA-256. Its report binds the file ID/digest, policy hash, engine version, counters and code. Failed or unavailable processing is never a clean result. No offending cell values or original parser error strings enter the report or journal.
 
+If a later stage becomes unavailable, the failed report can retain evidence from stages that already completed. For example, a valid detached signature can remain recorded when the scanner times out. The report then says `scanner_unavailable`, the check stays `failed`, and `report_hash` stays empty. This records what was verified; it does not certify clean content or authorize release. Fix the unavailable service, then run a fresh attempt key within the existing budget. If the bound policy, profile or other current context changed during the attempt, its partial observations are discarded and the check reports `context_changed` instead.
+
 A `passed` file remains unavailable. Review it and run `check-release --file-id FILE_ID --request-file DECISION --idempotency-key KEY` with:
 
 ```json
