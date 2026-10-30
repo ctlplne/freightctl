@@ -1,0 +1,61 @@
+{
+  "snapshot": {
+    "schema_version": 1,
+    "selection": {
+      "plan": {
+        "id": "00000001-1111-4111-8111-111111111111",
+        "version": 2,
+        "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "requirement_id": "00000002-1111-4111-8111-111111111111",
+      "probe_id": "00000003-1111-4111-8111-111111111111",
+      "run_id": "00000004-1111-4111-8111-111111111111",
+      "step_id": "send",
+      "expected_authority_revision": 7
+    },
+    "probe": {
+      "id": "00000003-1111-4111-8111-111111111111",
+      "revision": 3,
+      "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    },
+    "probe_completed_at": "2026-10-30T20:00:00Z",
+    "connection": {
+      "id": "00000005-1111-4111-8111-111111111111",
+      "version": 3,
+      "hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    },
+    "workflow": {
+      "id": "00000006-1111-4111-8111-111111111111",
+      "version": 4,
+      "hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+    },
+    "workflow_revision": 2,
+    "run_revision": 3,
+    "delivery": {
+      "id": "00000007-1111-4111-8111-111111111111",
+      "revision": 5,
+      "hash": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+    },
+    "file": {
+      "id": "00000008-1111-4111-8111-111111111111",
+      "size_bytes": 123,
+      "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "policy": "sha256",
+      "accepted_event_id": "00000009-1111-4111-8111-111111111111"
+    },
+    "receipt_hash": "1111111111111111111111111111111111111111111111111111111111111111",
+    "transfer_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "transfer_bytes": 123,
+    "required_receipt": "integrity",
+    "observed_receipt": "integrity",
+    "file_fsync_acknowledged": true,
+    "reconciled": false
+  },
+  "snapshot_hash": "5af9825ed72004824e0e785fe19629d668921f80ec4f9dbd8b7cba03b59ee8d0",
+  "observed_at": "2026-10-30T20:00:01Z",
+  "ready_for_approval_review": true,
+  "reason": "recorded_evidence_matches",
+  "business_acceptance": "unknown",
+  "production_active": false,
+  "external_contact": false
+}

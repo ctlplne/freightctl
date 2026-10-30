@@ -3260,7 +3260,8 @@
         "docs/qualification/evidence/F016-account-lifecycle.json",
         "docs/qualification/evidence/F017-signed-browser-recovery.json",
         "docs/qualification/evidence/F019-first-run-enrollment.json",
-        "docs/qualification/evidence/F020-tenant-partner-enrollment.json"
+        "docs/qualification/evidence/F020-tenant-partner-enrollment.json",
+        "docs/qualification/evidence/F027-onboarding-exchange-review.json"
       ],
       "qualification_blockers": [
         "Authorized IBM Sterling File Gateway installation and exact edition/version for observed comparison",
@@ -3268,7 +3269,8 @@
         "F017 adds assisted signed browser review and completed-operation receipt recovery; complete partner setup, invitations/providers, delegation and independent onboarding remain open.",
         "F019 adds assisted one-time first tenant/partner/admin setup and a browser workspace reference. Full partner lifecycle, invitations/providers/delegation, production activation and independent onboarding remain open.",
         "F020 adds assisted explicit tenant directory authority and ordinary partner/admin enrollment with native transfer, exact receipt recovery and scope/refusal evidence. Full contacts/checklists, invitations/providers, delegation, environment/lifecycle/activation and independent qualification remain open."
-      ]
+      ],
+      "current_limit": "F027 adds a read-only comparison of saved outbound SFTP requirements with actor-private probes and exact workflow/delivery/source/ciphertext evidence. Unit/race and browser contracts pass; real PostgreSQL tests compile only. Approval, production activation, independent receiver/browser/runtime qualification, queued-work key lifecycle and IBM interoperability remain open. No full-row qualification."
     },
     {
       "id": "B-AXWAY-EXCHANGE",

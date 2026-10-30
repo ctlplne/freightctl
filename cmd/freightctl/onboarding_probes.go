@@ -39,7 +39,7 @@ func runOnboardingProbe(ctx context.Context, command string, o probeCLIOptions) 
 		result, err = service.OnboardingProbeStatus(ctx, scope, o.ID)
 	case "partner-onboarding-probe-work":
 		result, err = service.WorkOnboardingProbe(ctx, scope, o.ID, o.Key, workflow.OnboardingProbeWorkRequest{Hash: o.Hash})
-	case "partner-onboarding-probe-start":
+	case "partner-onboarding-probe-start", "partner-onboarding-exchange-review":
 		f, e := os.Open(o.Input)
 		if e != nil {
 			return errors.New("cannot open onboarding probe request reference")
@@ -54,11 +54,19 @@ func runOnboardingProbe(ctx context.Context, command string, o probeCLIOptions) 
 			return e
 		}
 		defer secure.Clear(data)
-		var request store.OnboardingProbeRequest
-		if workflow.Decode(data, &request) != nil {
-			return workflow.ErrInput
+		if command == "partner-onboarding-exchange-review" {
+			var request workflow.OnboardingExchangeRequest
+			if workflow.Decode(data, &request) != nil {
+				return workflow.ErrInput
+			}
+			result, err = service.ReviewOnboardingExchange(ctx, scope, request)
+		} else {
+			var request store.OnboardingProbeRequest
+			if workflow.Decode(data, &request) != nil {
+				return workflow.ErrInput
+			}
+			result, err = service.StartOnboardingProbe(ctx, scope, o.Key, request)
 		}
-		result, err = service.StartOnboardingProbe(ctx, scope, o.Key, request)
 	}
 	if err != nil {
 		return err
