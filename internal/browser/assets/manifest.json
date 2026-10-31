@@ -46,12 +46,24 @@
       "sha256": "117ca33108669d166a889f57d3a22c7c36265dc92eb6c7637f335910dcd0ff11"
     },
     {
+      "path": "web/src/collection-routing-recovery.ts",
+      "sha256": "efccb875ae356436e8f2b2f70a46bdcc3f8fd5293a1c57a0559990b15a776784"
+    },
+    {
+      "path": "web/src/collection-routing-types.ts",
+      "sha256": "7cf19fb24e0ef246a0104717112a0b8e9911769e970fe346095a8eb5c078a46c"
+    },
+    {
+      "path": "web/src/collection-routing.tsx",
+      "sha256": "7e567acf3a58c6622e3a3856a2bc5c48c57757491e81df9eee6dc3a6fce808b7"
+    },
+    {
       "path": "web/src/collections-types.ts",
-      "sha256": "70811f6bd24f03436da026550b50db2ce7211ffcac15ba099b74acfaa5033cbb"
+      "sha256": "4b5a37581c30d2672419504618c05b85946853df74a726d51c3f37032842ced8"
     },
     {
       "path": "web/src/collections.tsx",
-      "sha256": "d9190469f08a399d2c1a3f0882ff2ca77231451df1f39d14cf8eed323945bc2e"
+      "sha256": "54ad4baef7dff95d7150e64c107555e4a8d30c63d10fdab44ec0f2a1cf021775"
     },
     {
       "path": "web/src/crypto.ts",
@@ -163,7 +175,7 @@
     },
     {
       "path": "web/src/schedules-types.ts",
-      "sha256": "fb3d1ac70550c526d029d3123f5717d54baeecac51a898271e8d8dde850c7622"
+      "sha256": "ed94f8d8cf83e7bc04edd5af0dc64af247bbf868bfdf1769b595bda337567280"
     },
     {
       "path": "web/src/schedules.tsx",
@@ -194,8 +206,8 @@
     },
     {
       "name": "app.js",
-      "sha256": "73eee3d4b9fcd52c981826c998b8f89624852613835f1cc4ace5e5624c511dba",
-      "size": 610096
+      "sha256": "f20386cb8a4505e02a80d92d75d0e98218a4f75b0f5eea4f72b73dc89b0d15f3",
+      "size": 634965
     },
     {
       "name": "app.js.LEGAL.txt",

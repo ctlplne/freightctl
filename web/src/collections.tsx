@@ -3,6 +3,11 @@ import { Api } from "./api";
 import { ApiError, type Session } from "./types";
 import { operationKey } from "./crypto";
 import { ProgramEditor, ProgramReview, PlanReview } from "./programs";
+import { CapturedRouting, RoutingEffects } from "./collection-routing";
+import {
+  asCapturedRoutingMetadata,
+  type CapturedRoutingMetadata,
+} from "./collection-routing-types";
 import type { Program } from "./programs-types";
 import { ApprovalConfirm, approvalPost } from "./onboarding-approvals";
 import {
@@ -101,6 +106,7 @@ type Pending =
       view: CollectionView;
       key: string;
       workflow?: WorkflowConfiguration;
+      routing?: CapturedRoutingMetadata;
     }
   | {
       kind: "send";
@@ -329,6 +335,8 @@ export function Collections({
     [selected, setSelected] = useState<CollectionView | null>(null),
     [selectedWorkflow, setSelectedWorkflow] =
       useState<WorkflowConfiguration | null>(null),
+    [selectedRouting, setSelectedRouting] =
+      useState<CapturedRoutingMetadata | null>(null),
     [routingPreview, setRoutingPreview] = useState<CollectionRunPreview | null>(
       null,
     ),
@@ -414,8 +422,14 @@ export function Collections({
       {},
       (v) => asCollectionConfiguration(v, view.job.definition.workflow),
     );
+    const routing = await api.request(
+      api.prefix + "/workflow-collections/" + id + "/routing/current",
+      {},
+      (v) => asCapturedRoutingMetadata(v, view),
+    );
     setSelected(view);
     setSelectedWorkflow(workflow);
+    setSelectedRouting(routing);
     setRoutingPreview(null);
     setRun(null);
   }
@@ -560,22 +574,8 @@ export function Collections({
   }
   async function inspectRun(input: CollectionInput) {
     if (!selected || !input.run_id) return;
-    let job = selected.job;
-    if (input.first_job_id !== selected.job.id)
-      job = (
-        await api.request(
-          api.prefix + "/workflow-collections/" + input.first_job_id,
-          {},
-          (v) => asCollectionView(v, input.first_job_id, authority),
-        )
-      ).job;
-    const d = job.definition,
-      workflow = await api.request(
-        api.prefix + "/workflows/" + d.workflow.id + "/" + d.workflow.version,
-        {},
-        (v) => asCollectionConfiguration(v, d.workflow),
-      ),
-      context = { workflow, job };
+    const context = await inputContext(input),
+      d = context.job.definition;
     const status = await api.request(
       api.prefix + "/workflow-runs/" + input.run_id,
       {},
@@ -585,30 +585,47 @@ export function Collections({
   }
   async function previewInput(input: CollectionInput) {
     if (!selected || !input.file_id) return;
-    const job =
-      input.first_job_id === selected.job.id
-        ? selected.job
-        : (
-            await api.request(
-              api.prefix + "/workflow-collections/" + input.first_job_id,
-              {},
-              (v) => asCollectionView(v, input.first_job_id, authority),
-            )
-          ).job;
-    const d = job.definition,
-      workflow = await api.request(
-        api.prefix + "/workflows/" + d.workflow.id + "/" + d.workflow.version,
-        {},
-        (v) => asCollectionConfiguration(v, d.workflow),
-      );
+    const context = await inputContext(input),
+      d = context.job.definition;
     const preview = await approvalPost(
       api,
       api.prefix + "/workflow-runs/preview",
-      { workflow: d.workflow, file_id: input.file_id },
+      {
+        workflow:
+          context.routing?.metadata.authorization?.definition.workflow ??
+          d.workflow,
+        file_id: input.file_id,
+      },
       undefined,
-      (v) => asCollectionRunPreview(v, input, d, { workflow, job }),
+      (v) => asCollectionRunPreview(v, input, d, context),
     );
     setRoutingPreview(preview);
+  }
+  async function inputContext(
+    input: CollectionInput,
+  ): Promise<CollectionRunContext> {
+    const view = await api.request(
+      api.prefix + "/workflow-collections/" + input.first_job_id,
+      {},
+      (v) => asCollectionView(v, input.first_job_id, authority),
+    );
+    const job = view.job,
+      d = job.definition;
+    const workflow = await api.request(
+      api.prefix + "/workflows/" + d.workflow.id + "/" + d.workflow.version,
+      {},
+      (v) => asCollectionConfiguration(v, d.workflow),
+    );
+    const metadata = await api.request(
+      api.prefix + "/workflow-collections/" + job.id + "/routing/current",
+      {},
+      (v) => asCapturedRoutingMetadata(v, view),
+    );
+    return {
+      workflow,
+      job,
+      ...(metadata.authorization ? { routing: { view, metadata } } : {}),
+    };
   }
   async function confirm() {
     if (!pending) return;
@@ -809,6 +826,12 @@ export function Collections({
     chosen?.state === "approved" &&
     chosen.definition.source.completion_contract === collectionContract &&
     (!chosen.definition.steps.length || has("deliver"));
+  const effectiveWorkflow = selectedRouting?.workflow ?? selectedWorkflow;
+  const effectiveEffects = selectedRouting?.authorization
+    ? selectedRouting.effects
+    : (selected?.job.definition.effects ?? []);
+  const routingCurrent =
+    !selectedRouting?.authorization || selectedRouting.current_authority;
   return (
     <section aria-label="Collection workflows">
       <h2>Collection workflows</h2>
@@ -1425,6 +1448,7 @@ export function Collections({
               . Retrying keeps the original fixed manifest and input claims.
             </p>
           )}
+          <h4>Original job source and recipient catalog</h4>
           <SourceReview
             source={selected.job.definition.source}
             connection={selected.job.definition.source_connection}
@@ -1445,6 +1469,21 @@ export function Collections({
               <code>{selected.job.manifest_hash ?? "not observed"}</code>.
             </p>
           </details>
+          {selectedRouting && selected.job.captured && (
+            <CapturedRouting
+              key={selected.job.id}
+              api={api}
+              session={session}
+              view={selected}
+              metadata={selectedRouting}
+              disabled={busy || pending !== null}
+              onError={onError}
+              onConfirmed={confirmed}
+              onChanged={async () => {
+                await inspect(selected.job.id, selected.job.definition_hash);
+              }}
+            />
+          )}
           <div className="actions">
             <button
               disabled={busy}
@@ -1477,12 +1516,12 @@ export function Collections({
                 </button>
               )}
             {canExecute &&
-              (has("deliver") ||
-                selected.job.definition.effects.length === 0) &&
+              (has("deliver") || effectiveEffects.length === 0) &&
               selected.current_authority &&
+              routingCurrent &&
               selected.job.state === "captured" &&
-              (selected.job.definition.effects.length > 0 ||
-                selectedWorkflow?.definition.schema_version === 2) && (
+              (effectiveEffects.length > 0 ||
+                effectiveWorkflow?.definition.schema_version === 2) && (
                 <button
                   disabled={busy}
                   onClick={() => {
@@ -1490,14 +1529,17 @@ export function Collections({
                     setPending({
                       kind: "refresh",
                       view: structuredClone(selected),
-                      ...(selectedWorkflow
-                        ? { workflow: structuredClone(selectedWorkflow) }
+                      ...(effectiveWorkflow
+                        ? { workflow: structuredClone(effectiveWorkflow) }
+                        : {}),
+                      ...(selectedRouting?.authorization
+                        ? { routing: structuredClone(selectedRouting) }
                         : {}),
                       key: operationKey(),
                     });
                   }}
                 >
-                  {selectedWorkflow?.definition.schema_version === 2
+                  {effectiveWorkflow?.definition.schema_version === 2
                     ? "Review recording routing outcomes"
                     : "Review queueing downstream work"}
                 </button>
@@ -1631,6 +1673,8 @@ export function Collections({
           </button>
           {canExecute &&
             has("deliver") &&
+            (!run.context.routing ||
+              run.context.routing.metadata.current_authority) &&
             !["succeeded", "cancelled", "kept_local"].includes(
               run.status.observed_state,
             ) && (
@@ -1729,7 +1773,28 @@ export function Collections({
                 <code>{pending.input.file_id}</code>, SHA-256{" "}
                 <code>{pending.input.sha256}</code>.
               </p>
-              <ReceiverEffects effects={pending.definition.effects} />
+              <ReceiverEffects
+                effects={
+                  pending.context.routing?.metadata.effects ??
+                  pending.definition.effects
+                }
+              />
+              {pending.context.routing?.metadata.authorization && (
+                <p>
+                  Routing authorization{" "}
+                  <code>
+                    {pending.context.routing.metadata.authorization.id}
+                  </code>
+                  , fingerprint{" "}
+                  <code>
+                    {
+                      pending.context.routing.metadata.authorization
+                        .definition_hash
+                    }
+                  </code>
+                  .
+                </p>
+              )}
               {pending.run.run.execution_plan && (
                 <PlanReview plan={pending.run.run.execution_plan} />
               )}
@@ -1745,6 +1810,19 @@ export function Collections({
                 connection={pending.view.job.definition.source_connection}
                 effects={pending.view.job.definition.effects}
               />
+              {pending.routing?.authorization && (
+                <>
+                  <p>
+                    Effective routing authorization{" "}
+                    <code>{pending.routing.authorization.id}</code>, fingerprint{" "}
+                    <code>{pending.routing.authorization.definition_hash}</code>
+                    , target workflow revision{" "}
+                    {pending.routing.authorization.definition.workflow.version}.
+                  </p>
+                  <h4>Target recipient catalog</h4>
+                  <RoutingEffects effects={pending.routing.effects} />
+                </>
+              )}
               {pending.workflow?.definition.program && (
                 <ProgramReview program={pending.workflow.definition.program} />
               )}

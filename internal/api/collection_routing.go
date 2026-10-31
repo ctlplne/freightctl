@@ -35,6 +35,12 @@ func (s *Server) collectionRouting(action string) http.HandlerFunc {
 			}
 		case "status":
 			out, err = service.CollectionRoutingStatus(r.Context(), identity, job, r.PathValue("routing"))
+		case "current":
+			out, err = service.CurrentCollectionRouting(r.Context(), identity, job)
+		case "details":
+			out, err = service.CollectionRoutingDetails(r.Context(), identity, job, r.PathValue("routing"))
+		case "receipt":
+			out, err = service.CollectionRoutingReceipt(r.Context(), identity, job, r.PathValue("receipt"))
 		case "history":
 			after, limit := 0, 20
 			if raw := r.URL.Query().Get("after"); raw != "" {

@@ -1,6 +1,6 @@
 # Review new routing for a captured batch
 
-F041 is in progress. Selected backend contracts pass against real PostgreSQL, and the independent browser validation layer passes its data contracts. Browser controls, retained-database upgrade and stock-source/receiver qualification are still pending. F040 remains the last completed routing increment.
+Browser controls are implemented and selected native browser/SFTP journeys pass. The broader F041 qualification remains incomplete: changed-rule/new-revision native delivery, retained upgrade and the remaining authority/capacity combinations are still required. The owner paused the overall goal after this checkpoint.
 
 When an original program cannot decide what to do with captured files, editing its workflow must not silently change that job. A routing authorization is a separate record: it names an already approved schema-2 revision in the same workflow family and pins the exact plan fingerprint for each input owned by the original job. The original producer manifest, source facts, job definition, deadline and earlier input claims stay unchanged.
 
@@ -21,6 +21,9 @@ Let `base` be `/v1/tenants/{tenant}/partners/{partner}/workflow-collections/{col
 | `POST base/proposals` | The selection plus its reviewed `definition_hash` creates one pending proposal. Requires an idempotency key. |
 | `GET base?after={version}&limit={count}` | Private version-ordered history; page size is 1–100. |
 | `GET base/{routing}` | Original definition and current record state/revision. |
+| `GET base/current` | Effective approved/revoked decision, bounded pending proposal and historical target metadata. The current-authority flag grants no execution permission. |
+| `GET base/{routing}/details` | Exact historical target and recipient references, including after revocation. |
+| `GET base/receipts/{key}/result` | Read-only recovery of an original private routing command receipt. An unknown key creates no state. |
 | `POST base/{routing}/approve` | Approve the exact fingerprint and `expected_revision`, with an idempotency key. |
 | `POST base/{routing}/revoke` | Revoke an approved record using its current fingerprint/revision and an idempotency key. |
 | `POST base/{routing}/withdraw` | Withdraw a pending proposal using its current fingerprint/revision and an idempotency key. |
@@ -37,6 +40,9 @@ The matching commands use the normal protected token/database/storage references
 | `workflow-collection-routing-input-preview` | `--collection-id`, `--collection-input-id` |
 | `workflow-collection-routing-propose` | `--collection-id`, original `--idempotency-key` |
 | `workflow-collection-routing-status` | `--collection-id`, `--routing-id` |
+| `workflow-collection-routing-current` | `--collection-id` |
+| `workflow-collection-routing-details` | `--collection-id`, `--routing-id` |
+| `workflow-collection-routing-receipt` | `--collection-id`, original `--idempotency-key` |
 | `workflow-collection-routing-list` | `--collection-id`, optional version `--collection-after` and `--collection-limit` |
 | `workflow-collection-routing-approve` | `--collection-id`, `--routing-id`, original `--idempotency-key` |
 | `workflow-collection-routing-revoke` | The same exact record/key references |
@@ -48,6 +54,6 @@ Preview, proposal and approval check the existing storage identity without readi
 
 Migration 033 executes in temporary fixture databases; it has not been applied to retained storage. Seven new PostgreSQL cases prove selected blocked-batch repair, forged-binding and missing-lineage refusal, revocation without fallback, actor/partner/tenant privacy, protected-journal versus ordinary-feed/audit redaction, workflow revocation, withdrawal, original-key receipts and stale prior-decision refusal. Go and SQL agree on exact wire fingerprints for send/local examples and 64 bindings. The 133 workflow tests and two fuzz harnesses, 17 API tests, three migration/isolation/fencing regressions, 95 frontend data contracts and TypeScript checking pass. These tests do not establish stock-source collection, receiver delivery or a complete browser journey for this feature.
 
-The browser validation layer independently recomputes each input's choices from the original manifest, verifies all bound input/file identities and preserves private receipt identity. Its controls and run inspection are still unwired. Finish browser review of all plans, actual response loss, restart/reload, scheduled capture, partial capacity, concurrency, intake/key/source/calendar changes, separate dispatch consent, retained upgrade and stock receivers under [the implementation contract](architecture/0015-captured-routing-authorization.md). [The progress record](qualification/evidence/F041-captured-routing-authorization.json) preserves the tested source epochs and exact remaining scope.
+The browser independently recomputes each input's choices from the original manifest, verifies all bound input/file identities and preserves private receipt identity. Open a captured collection, inspect its approved target revision, preview the authorization, inspect and acknowledge each owned input plan, then propose it. Approval requires a separate complete plan review. Current/pending decisions and private history expose inspection, withdrawal, revocation and saved-key receipt recovery. Collected-run inspection retains the original source facts and exact authorization even after revocation. Selected browser response-loss/reload, review, revocation/restoration, independent consent and stock sends now pass in [F042](qualification/evidence/F042-captured-routing-browser.json), using the already approved original revision. Finish corrected-revision native delivery, scheduled capture, partial capacity, concurrency, intake/key/source/calendar changes and retained upgrade under [the implementation contract](architecture/0015-captured-routing-authorization.md). [The progress record](qualification/evidence/F041-captured-routing-authorization.json) preserves the tested source epochs and exact remaining scope.
 
 The owner-deferred aggregate replay remains pending. No inference or scanner qualification is part of this increment. The full product goal, whole parity rows and full journeys remain open.

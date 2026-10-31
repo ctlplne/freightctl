@@ -53,6 +53,25 @@ func (t *Transaction) CurrentCollectionRouting(ctx context.Context, job string) 
 	return r, err
 }
 
+// The unique pending-proposal index makes this a bounded singleton lookup.
+func (t *Transaction) PendingCollectionRouting(ctx context.Context, job string) (*CollectionRouting, error) {
+	r, err := scanCollectionRouting(t.Tx.QueryRow(ctx, `SELECT `+collectionRoutingColumns+` FROM workflow_collection_routing WHERE actor_id=$1 AND job_id=$2 AND state='proposed' LIMIT 1`, t.Actor, job))
+	if errors.Is(err, ErrNotFound) {
+		return nil, nil
+	}
+	return r, err
+}
+
+func (t *Transaction) CollectionRoutingReceipt(ctx context.Context, key string) (string, json.RawMessage, error) {
+	var id string
+	var result json.RawMessage
+	err := t.Tx.QueryRow(ctx, `SELECT resource_id::text,result FROM workflow_receipts WHERE actor_id=$1 AND request_key=$2`, t.Actor, key).Scan(&id, &result)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return "", nil, ErrNotFound
+	}
+	return id, result, err
+}
+
 func (t *Transaction) CollectionRoutingVersion(ctx context.Context, job string) (int, error) {
 	var version int
 	err := t.Tx.QueryRow(ctx, `SELECT coalesce(max(version),0) FROM workflow_collection_routing WHERE actor_id=$1 AND job_id=$2`, t.Actor, job).Scan(&version)

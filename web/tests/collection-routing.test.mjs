@@ -7,7 +7,7 @@ import { build } from "esbuild";
 const bundle = await build({
   stdin: {
     contents:
-      'export * from "./src/collection-routing-types"; export { asCollectionView, asCollectionConfiguration } from "./src/collections-types"; export { programFingerprint } from "./src/programs-types";',
+      'export * from "./src/collection-routing-types"; export * from "./src/collection-routing-recovery"; export { asCollectionView, asCollectionConfiguration, asCollectedRun, asCollectedWork, asCollectionRunPreview } from "./src/collections-types"; export { programFingerprint } from "./src/programs-types";',
     resolveDir: fileURLToPath(new URL("..", import.meta.url)),
     loader: "ts",
   },
@@ -27,6 +27,9 @@ const fixtures = JSON.parse(
     "utf8",
   ),
 );
+const legacy = JSON.parse(
+  await readFile(new URL("fixtures/collections.json", import.meta.url), "utf8"),
+).plain;
 const fresh = (name = "send") => {
   const f = structuredClone(fixtures[name]);
   f.view = p.asCollectionView(
@@ -325,4 +328,298 @@ test("stopped capture history stays inspectable while its old proposal cannot be
     f.authorization.definition_hash,
   );
   assert.throws(() => preview(f));
+});
+
+function metadataFixture(name = "send") {
+  const f = fresh(name),
+    record = structuredClone(f.authorization);
+  record.state = "approved";
+  record.revision = 2;
+  record.approval_authority = f.selection.expected_authority_revision;
+  return {
+    ...f,
+    metadata: {
+      authorization: record,
+      workflow: f.workflow,
+      effects: f.input_preview.potential_effects,
+      current_authority: true,
+    },
+  };
+}
+function authorizedRun(name = "send") {
+  const f = metadataFixture(name),
+    status = structuredClone(legacy.run),
+    input = f.view.inputs[0];
+  input.state = "queued";
+  input.run_id = status.run.id;
+  Object.assign(status.run, {
+    workflow_id: f.workflow.id,
+    workflow_version: f.workflow.version,
+    workflow_hash: f.workflow.definition_hash,
+    routing_authorization_id: f.authorization.id,
+    execution_plan: f.input_preview.execution_plan,
+    execution_plan_hash: f.input_preview.execution_plan_hash,
+  });
+  if (name === "local") {
+    status.steps = [];
+    status.observed_state = "kept_local";
+    status.run.state = "kept_local";
+  }
+  const context = {
+    workflow: legacy.workflow,
+    job: f.view.job,
+    routing: { view: f.view, metadata: f.metadata },
+  };
+  return { ...f, status, input, context };
+}
+
+test("effective metadata keeps pending proposals distinct and retains revoked target history", () => {
+  const f = metadataFixture();
+  assert.equal(
+    p.asCapturedRoutingMetadata(f.metadata, f.view).current_authority,
+    true,
+  );
+  const pending = {
+    authorization: null,
+    effects: [],
+    current_authority: false,
+    proposal: f.authorization,
+  };
+  assert.equal(
+    p.asCapturedRoutingMetadata(pending, f.view).proposal.state,
+    "proposed",
+  );
+  f.metadata.authorization.state = "revoked";
+  f.metadata.authorization.revision = 3;
+  f.metadata.workflow.state = "revoked";
+  f.metadata.workflow.revision++;
+  f.metadata.current_authority = false;
+  const historical = p.asCapturedRoutingMetadata(
+    f.metadata,
+    f.view,
+    f.authorization.id,
+  );
+  assert.equal(historical.authorization.state, "revoked");
+  assert.equal(historical.workflow.definition_hash, f.workflow.definition_hash);
+  assert.deepEqual(historical.effects, f.input_preview.potential_effects);
+  for (const mutate of [
+    (m) => (m.current_authority = true),
+    (m) => (m.workflow.definition_hash = "f".repeat(64)),
+    (m) => (m.effects[0].connection.hash = "f".repeat(64)),
+    (m) => (m.proposal = m.authorization),
+    (m) => (m.key_reference = "/private/key"),
+  ]) {
+    const m = structuredClone(f.metadata);
+    mutate(m);
+    assert.throws(() => p.asCapturedRoutingMetadata(m, f.view));
+  }
+  assert.throws(() =>
+    p.asCapturedRoutingMetadata(
+      {
+        authorization: null,
+        effects: f.metadata.effects,
+        current_authority: false,
+      },
+      f.view,
+    ),
+  );
+});
+
+test("run inspection and work preserve exact authorization, target workflow and original plan lineage", () => {
+  const f = authorizedRun();
+  const result = p.asCollectedRun(
+    f.status,
+    f.input,
+    f.view.job.definition,
+    f.context,
+  );
+  assert.equal(result.run.routing_authorization_id, f.authorization.id);
+  assert.equal(result.run.workflow_version, f.workflow.version);
+  assert.equal(
+    result.run.execution_plan_hash,
+    f.preview.definition.inputs[0].plan_hash,
+  );
+  assert.equal(
+    result.run.execution_plan.facts.source.collection_id,
+    f.view.job.id,
+  );
+  const work = {
+    status: f.status,
+    dispatch: {
+      run_id: f.status.run.id,
+      step_id: f.status.steps[0].id,
+      delivery_id: f.status.steps[0].delivery_id,
+    },
+    replayed: true,
+  };
+  assert.equal(
+    p.asCollectedWork(work, f.input, f.view.job.definition, f.context).run
+      .routing_authorization_id,
+    f.authorization.id,
+  );
+  assert.equal(
+    p.asCollectionRunPreview(
+      f.input_preview,
+      f.input,
+      f.view.job.definition,
+      f.context,
+    ).execution_plan_hash,
+    result.run.execution_plan_hash,
+  );
+});
+
+test("a dropped or substituted routing reference cannot hide behind matching file and workflow facts", () => {
+  for (const mutate of [
+    (f) => delete f.status.run.routing_authorization_id,
+    (f) => (f.status.run.routing_authorization_id = f.view.job.id),
+    (f) => (f.status.run.execution_plan_hash = "f".repeat(64)),
+    (f) => f.status.run.workflow_version--,
+    (f) => (f.status.run.workflow_hash = f.view.job.workflow_hash),
+    (f) =>
+      (f.context.routing.metadata.authorization.definition_hash = "f".repeat(
+        64,
+      )),
+    (f) => (f.context.routing.view.job.manifest_hash = "f".repeat(64)),
+    (f) => (f.status.run.source.sha256 = "f".repeat(64)),
+  ]) {
+    const f = authorizedRun();
+    mutate(f);
+    assert.throws(() =>
+      p.asCollectedRun(f.status, f.input, f.view.job.definition, f.context),
+    );
+  }
+  // The unchanged legacy workflow/file references would previously discard
+  // an extra authorization field. Legacy contexts now explicitly refuse it.
+  const r = structuredClone(legacy.run),
+    input = structuredClone(legacy.view.inputs[0]);
+  r.run.routing_authorization_id = fixtures.send.authorization.id;
+  assert.throws(() => p.asCollectedRun(r, input, legacy.view.job.definition));
+});
+
+test("revoked local outcomes remain inspectable without current execution permission", () => {
+  const f = authorizedRun("local");
+  f.context.routing.metadata.authorization.state = "revoked";
+  f.context.routing.metadata.authorization.revision = 3;
+  f.context.routing.metadata.current_authority = false;
+  f.context.routing.metadata.workflow.state = "revoked";
+  const r = p.asCollectedRun(
+    f.status,
+    f.input,
+    f.view.job.definition,
+    f.context,
+  );
+  assert.equal(r.observed_state, "kept_local");
+  assert.deepEqual(r.steps, []);
+  assert.equal(r.run.routing_authorization_id, f.authorization.id);
+});
+
+function keyStorage() {
+  const data = new Map();
+  return {
+    getItem: (k) => data.get(k) ?? null,
+    setItem: (k, v) => data.set(k, v),
+    removeItem: (k) => data.delete(k),
+    key: (i) => [...data.keys()][i] ?? null,
+    get length() {
+      return data.size;
+    },
+    data,
+  };
+}
+const identity = {
+  tenant_id: "00000001-1111-4111-8111-111111111111",
+  partner_id: "00000002-1111-4111-8111-111111111111",
+  actor_id: "00000003-1111-4111-8111-111111111111",
+};
+
+test("reload recovery stores only scoped nonces and reuses the same key for the exact reviewed command", () => {
+  const f = fresh(),
+    store = keyStorage(),
+    body = {
+      selection: f.selection,
+      definition_hash: f.preview.definition_hash,
+    };
+  const ref = p.routingKeyReference(
+    identity,
+    f.view.job.id,
+    "propose",
+    "",
+    body,
+  );
+  const first = p.retainRoutingKey(ref, store),
+    next = p.retainRoutingKey(ref, store);
+  assert.equal(first.persisted, true);
+  assert.equal(next.key, first.key);
+  assert.equal(p.savedRoutingKey(ref, store), first.key);
+  const stored = JSON.stringify([...store.data]);
+  for (const text of [
+    f.view.inputs[0].source_name,
+    "selection",
+    "definition_hash",
+    "execution_plan",
+    "credential",
+    f.workflow.definition.name,
+  ])
+    assert.equal(stored.includes(text), false);
+  for (const mutate of [
+    (x) => (x.actor_id = f.view.job.id),
+    (x) => (x.partner_id = f.view.job.id),
+    (x) => (x.tenant_id = f.view.job.id),
+  ]) {
+    const other = { ...identity };
+    mutate(other);
+    assert.notEqual(
+      p.routingKeyReference(other, f.view.job.id, "propose", "", body),
+      ref,
+    );
+  }
+  assert.notEqual(
+    p.routingKeyReference(
+      identity,
+      f.view.job.id,
+      "approve",
+      f.authorization.id,
+      body,
+    ),
+    ref,
+  );
+  assert.notEqual(
+    p.routingKeyReference(identity, f.view.job.id, "propose", "", {
+      ...body,
+      definition_hash: "f".repeat(64),
+    }),
+    ref,
+  );
+  p.forgetRoutingKey(ref, store);
+  assert.equal(store.data.size, 0);
+  assert.equal(p.savedRoutingKey(ref, store), undefined);
+});
+
+test("untrusted or unavailable browser storage cannot inject command bodies or discard an in-flight key", () => {
+  const f = fresh(),
+    store = keyStorage(),
+    ref = p.routingKeyReference(
+      identity,
+      f.view.job.id,
+      "withdraw",
+      f.authorization.id,
+      {
+        definition_hash: f.authorization.definition_hash,
+        expected_revision: 1,
+      },
+    );
+  store.setItem(ref, '{"approved":true}');
+  const retained = p.retainRoutingKey(ref, store);
+  assert.match(retained.key, /^[a-zA-Z0-9._:-]{1,128}$/);
+  const broken = {
+    ...store,
+    getItem() {
+      throw new Error("unavailable");
+    },
+    setItem() {
+      throw new Error("unavailable");
+    },
+  };
+  assert.equal(p.retainRoutingKey(ref, broken).key, retained.key);
+  p.forgetRoutingKey(ref, store);
 });

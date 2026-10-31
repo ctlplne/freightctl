@@ -4,6 +4,7 @@ import {
   canonicalWorkflowBytes,
   asWorkflowReference,
   asWorkflowEffect,
+  type ScheduleEffect,
   type Reference,
 } from "./schedules-types";
 import {
@@ -61,6 +62,81 @@ export interface CapturedRoutingPreview {
   definition_hash: string;
   external_contact: false;
   approval_required: true;
+}
+
+export interface CapturedRoutingMetadata {
+  authorization: CapturedRoutingRecord | null;
+  workflow?: WorkflowConfiguration;
+  effects: ScheduleEffect[];
+  current_authority: boolean;
+  proposal?: CapturedRoutingRecord;
+}
+
+export function asCapturedRoutingMetadata(
+  v: unknown,
+  view: CollectionView,
+  expectedID?: string,
+): CapturedRoutingMetadata {
+  const o = object(v);
+  keys(
+    o,
+    ["authorization", "effects", "current_authority"],
+    ["workflow", "proposal"],
+  );
+  if (typeof o.current_authority !== "boolean") bad();
+  const proposal =
+    o.proposal === undefined
+      ? undefined
+      : asCapturedRoutingRecord(o.proposal, view);
+  if (proposal && proposal.state !== "proposed") bad();
+  if (o.authorization === null) {
+    if (
+      expectedID ||
+      o.workflow !== undefined ||
+      list(o.effects, 0).length ||
+      o.current_authority
+    )
+      bad();
+    return {
+      authorization: null,
+      effects: [],
+      current_authority: false,
+      ...(proposal ? { proposal } : {}),
+    };
+  }
+  const authorization = asCapturedRoutingRecord(
+      o.authorization,
+      view,
+      expectedID,
+    ),
+    workflow = asCollectionConfiguration(
+      o.workflow,
+      authorization.definition.workflow,
+    );
+  asCapturedRoutingDefinition(authorization.definition, view, workflow);
+  const effects = effectsForWorkflow(o.effects, workflow.definition);
+  if (
+    proposal &&
+    (proposal.id === authorization.id ||
+      proposal.version <= authorization.version)
+  )
+    bad();
+  if (
+    o.current_authority &&
+    (!view.current_authority ||
+      authorization.state !== "approved" ||
+      workflow.state !== "approved" ||
+      workflow.approval_authority !==
+        authorization.definition.authority_revision)
+  )
+    bad();
+  return {
+    authorization,
+    workflow,
+    effects,
+    current_authority: o.current_authority as boolean,
+    ...(proposal ? { proposal } : {}),
+  };
 }
 const bad = (): never => {
   throw new ApiError("invalid_captured_routing", 502);

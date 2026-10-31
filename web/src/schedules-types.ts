@@ -861,6 +861,7 @@ export interface ScheduledRun {
     authority_revision: number;
     execution_plan?: ExecutionPlan;
     execution_plan_hash?: string;
+    routing_authorization_id?: string;
   };
   steps: { id: string; delivery_id: string; state: string; attempts: number }[];
   observed_state: string;
@@ -875,6 +876,7 @@ export function asScheduledRun(
   >,
   workflow?: AnyWorkflowConfiguration,
   expectedSource?: RoutingSource,
+  expectedRoutingID?: string,
 ): ScheduledRun {
   const o = object(v),
     r = object(o.run),
@@ -918,6 +920,10 @@ export function asScheduledRun(
       workflow_hash: hash(r, "workflow_hash"),
       authority_revision: num(r, "authority_revision"),
     };
+  if (r.routing_authorization_id !== expectedRoutingID) bad();
+  if (expectedRoutingID !== undefined) {
+    run.routing_authorization_id = id(r, "routing_authorization_id");
+  }
   let selected = definition.effects.map((e) => e.step_id);
   if (workflow) {
     const wf = asWorkflowConfiguration(workflow, definition.workflow);
@@ -993,6 +999,7 @@ export function asScheduledWork(
   >,
   workflow?: AnyWorkflowConfiguration,
   expectedSource?: RoutingSource,
+  expectedRoutingID?: string,
 ): ScheduledRun {
   const o = object(v);
   bool(o, "replayed");
@@ -1003,6 +1010,7 @@ export function asScheduledWork(
       definition,
       workflow,
       expectedSource,
+      expectedRoutingID,
     );
   if (
     d.run_id !== input.run_id ||

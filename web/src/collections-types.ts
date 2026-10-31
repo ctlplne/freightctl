@@ -1,6 +1,11 @@
 import { ApiError, object, uuid } from "./types";
 import { digestBytes } from "./crypto";
 import {
+  asCapturedRoutingMetadata,
+  asCapturedRoutingInputPreview,
+  type CapturedRoutingMetadata,
+} from "./collection-routing-types";
+import {
   asProgram,
   asExecutionPlan,
   asRoutingFacts,
@@ -1089,6 +1094,25 @@ function linked(i: CollectionInput): { file_id: string; run_id: string } {
 export interface CollectionRunContext {
   workflow: AnyWorkflowConfiguration;
   job: CollectionJob;
+  routing?: { view: CollectionView; metadata: CapturedRoutingMetadata };
+}
+
+function routingExecution(context: CollectionRunContext) {
+  const r = context.routing;
+  if (!r) return undefined;
+  const metadata = asCapturedRoutingMetadata(r.metadata, r.view);
+  if (
+    !metadata.authorization ||
+    !metadata.workflow ||
+    r.view.job.id !== context.job.id ||
+    r.view.job.definition_hash !== context.job.definition_hash ||
+    r.view.job.manifest_hash !== context.job.manifest_hash
+  )
+    bad();
+  return metadata as CapturedRoutingMetadata & {
+    authorization: NonNullable<CapturedRoutingMetadata["authorization"]>;
+    workflow: WorkflowConfiguration;
+  };
 }
 export function workflowProgramShape(d: WorkflowDefinition): ProgramShape {
   if (d.schema_version !== 2 || !d.program) bad();
@@ -1158,6 +1182,19 @@ export function asCollectionRunPreview(
   d: CollectionDefinition,
   context: CollectionRunContext,
 ): CollectionRunPreview {
+  const routing = routingExecution(context);
+  if (routing) {
+    originalRoutingSource(i, d, context);
+    const preview = asCapturedRoutingInputPreview(
+      v,
+      i.id,
+      context.routing!.view,
+      routing.workflow,
+      routing.authorization.definition,
+    );
+    if (!equal(preview.potential_effects, routing.effects)) bad();
+    return preview;
+  }
   const o = object(v);
   keys(
     o,
@@ -1222,6 +1259,23 @@ export function asCollectedRun(
   context?: CollectionRunContext,
 ): ScheduledRun {
   const source = context ? originalRoutingSource(i, d, context) : undefined;
+  const routing = context ? routingExecution(context) : undefined;
+  if (routing) {
+    const r = asScheduledRun(
+      v,
+      linked(i),
+      {
+        workflow: routing.authorization.definition.workflow,
+        authority_revision: routing.authorization.definition.authority_revision,
+        effects: routing.effects,
+      },
+      routing.workflow,
+      source,
+      routing.authorization.id,
+    );
+    checkRoutingRun(r, i, routing);
+    return r;
+  }
   const r = asScheduledRun(v, linked(i), d, context?.workflow, source);
   if (
     r.run.source.size_bytes !== i.size_bytes ||
@@ -1238,6 +1292,23 @@ export function asCollectedWork(
   context?: CollectionRunContext,
 ): ScheduledRun {
   const source = context ? originalRoutingSource(i, d, context) : undefined;
+  const routing = context ? routingExecution(context) : undefined;
+  if (routing) {
+    const r = asScheduledWork(
+      v,
+      linked(i),
+      {
+        workflow: routing.authorization.definition.workflow,
+        authority_revision: routing.authorization.definition.authority_revision,
+        effects: routing.effects,
+      },
+      routing.workflow,
+      source,
+      routing.authorization.id,
+    );
+    checkRoutingRun(r, i, routing);
+    return r;
+  }
   const r = asScheduledWork(v, linked(i), d, context?.workflow, source);
   if (
     r.run.source.size_bytes !== i.size_bytes ||
@@ -1249,6 +1320,25 @@ export function asCollectedWork(
 }
 
 export { manifest as asProducerManifest };
+
+function checkRoutingRun(
+  run: ScheduledRun,
+  input: CollectionInput,
+  metadata: CapturedRoutingMetadata & {
+    authorization: NonNullable<CapturedRoutingMetadata["authorization"]>;
+  },
+) {
+  const binding = metadata.authorization.definition.inputs.find(
+    (b) => b.input_id === input.id && b.file_id === input.file_id,
+  );
+  if (
+    !binding ||
+    binding.plan_hash !== run.run.execution_plan_hash ||
+    run.run.source.sha256 !== input.sha256 ||
+    run.run.source.size_bytes !== input.size_bytes
+  )
+    bad();
+}
 
 export interface WorkflowDifference {
   workflow_id: string;

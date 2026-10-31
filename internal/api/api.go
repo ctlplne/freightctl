@@ -90,6 +90,9 @@ func NewWithBrowserLifetime(service *custody.Service, audits *audit.Service, ena
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/workflow-collections/{collection}/routing/inputs/{input}/preview", s.collectionRouting("input-preview"))
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/workflow-collections/{collection}/routing/proposals", s.collectionRouting("propose"))
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/workflow-collections/{collection}/routing", s.collectionRouting("history"))
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/workflow-collections/{collection}/routing/current", s.collectionRouting("current"))
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/workflow-collections/{collection}/routing/receipts/{receipt}/result", s.collectionRouting("receipt"))
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/workflow-collections/{collection}/routing/{routing}/details", s.collectionRouting("details"))
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/workflow-collections/{collection}/routing/{routing}", s.collectionRouting("status"))
 	for _, action := range []string{"approve", "revoke", "withdraw"} {
 		m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/workflow-collections/{collection}/routing/{routing}/"+action, s.collectionRouting(action))

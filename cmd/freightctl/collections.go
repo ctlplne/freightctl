@@ -75,6 +75,12 @@ func runCollection(ctx context.Context, command string, o testCLIOptions) error 
 		}
 	case "workflow-collection-routing-status":
 		out, e = service.CollectionRoutingStatus(ctx, scope, o.ID, o.Run)
+	case "workflow-collection-routing-current":
+		out, e = service.CurrentCollectionRouting(ctx, scope, o.ID)
+	case "workflow-collection-routing-details":
+		out, e = service.CollectionRoutingDetails(ctx, scope, o.ID, o.Run)
+	case "workflow-collection-routing-receipt":
+		out, e = service.CollectionRoutingReceipt(ctx, scope, o.ID, o.Key)
 	case "workflow-collection-routing-list":
 		after := 0
 		if o.After != "" {

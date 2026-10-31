@@ -1538,6 +1538,42 @@
         ".private/routing-workflow-privacy-final.jsonl",
         "evidence/raw/routing-bcbb1906ea4d4d1cb4c6f40b907628e1/manifest.json"
       ]
+    },
+    {
+      "id": "D097",
+      "severity": "high",
+      "state": "fixed locally",
+      "observed_on": "2026-10-31",
+      "candidate": "a1ec1802881883a123791dc26405fbf5f0fbcea9 plus retained F042 source epochs",
+      "journey": "J03",
+      "title": "Historical routing metadata rejected legacy SSH host records",
+      "reproduction": "Run TestCapturedRoutingCurrentMetadataKeepsRevokedHistoryWithoutExecutionAuthority against real PostgreSQL and inspect the exact pending target.",
+      "first_failure": ".private/amendment-ui-metadata-first.log",
+      "cause": "The workflow request decoder requires lowercase property names, but the preserved schema-1 SSH host JSON contract contains Wire and Fingerprint. Applying the request decoder to stored connection metadata rejected valid history.",
+      "resolution": "Read the preserved connection JSON contract and independently verify its exact canonical definition fingerprint. Keep request decoding strict, keep active execution checks separate, and expose only metadata references/fingerprints.",
+      "regression_evidence": [
+        ".private/amendment-ui-metadata-fixed.log",
+        ".private/amendment-ui-final-postgres.log",
+        "docs/qualification/evidence/F042-captured-routing-browser.json"
+      ]
+    },
+    {
+      "id": "D098",
+      "severity": "high",
+      "state": "fixed locally",
+      "observed_on": "2026-10-31",
+      "candidate": "a1ec1802881883a123791dc26405fbf5f0fbcea9 plus retained F042 source epochs",
+      "journey": "J03",
+      "title": "Routing receipt URL conflicted with the details route and prevented API startup",
+      "reproduction": "Start the native browser replay with GET routing/receipts/{receipt} and GET routing/{routing}/details registered together. Go ServeMux rejects their overlapping receipts/details path.",
+      "first_failure": "evidence/raw/amendment-ui-fe239a7488554334953eb89293d619d3/https-initial.stderr",
+      "cause": "Neither wildcard route was more specific, so constructing the HTTP server panicked.",
+      "resolution": "Use the distinct GET routing/receipts/{receipt}/result path and update browser recovery. Preserve exact receipt scope and use a read-only service operation. Focused API construction, all API tests and the original live journey now pass.",
+      "regression_evidence": [
+        ".private/amendment-ui-router-fixed.log",
+        ".private/amendment-ui-final-go.log",
+        "evidence/raw/amendment-ui-def93f07c591409383cafaaa06397c6d/manifest.json"
+      ]
     }
   ]
 }

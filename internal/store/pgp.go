@@ -31,15 +31,25 @@ type FileSignature struct {
 }
 
 func (t *Transaction) PGPKey(ctx context.Context, id string, version int, lock bool) (*PGPKey, error) {
+	clause := " FOR SHARE"
+	if lock {
+		clause = " FOR UPDATE"
+	}
+	return t.pgpKey(ctx, id, version, clause)
+}
+
+// PGPKeySnapshot reads immutable public metadata without joining the execution
+// guard's row lock. Historical inspection grants no encryption authority.
+func (t *Transaction) PGPKeySnapshot(ctx context.Context, id string, version int) (*PGPKey, error) {
+	return t.pgpKey(ctx, id, version, "")
+}
+
+func (t *Transaction) pgpKey(ctx context.Context, id string, version int, clause string) (*PGPKey, error) {
 	if !ValidID(id) || version < 1 {
 		return nil, ErrNotFound
 	}
 	q := `SELECT key_id::text,version,definition,definition_hash,state,revision,valid_until FROM pgp_keys WHERE key_id=$1 AND version=$2`
-	if lock {
-		q += ` FOR UPDATE`
-	} else {
-		q += ` FOR SHARE`
-	}
+	q += clause
 	k := &PGPKey{}
 	err := t.Tx.QueryRow(ctx, q, id, version).Scan(&k.ID, &k.Version, &k.Definition, &k.Hash, &k.State, &k.Revision, &k.ValidUntil)
 	if errors.Is(err, pgx.ErrNoRows) {
