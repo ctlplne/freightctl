@@ -4,6 +4,7 @@ import { createRoot } from "react-dom/client";
 import { Api } from "./api";
 import { Accounts } from "./accounts";
 import { Partners } from "./partners";
+import { Schedules } from "./schedules";
 import { OutboundDispatchApprovals } from "./outbound-approvals";
 import { OnboardingApprovals } from "./onboarding-approvals";
 import { Onboarding } from "./onboarding";
@@ -58,6 +59,12 @@ const messages: Record<string, string> = {
     "The item you reviewed or its access settings changed. Refresh and review its current revision before continuing.",
   path_exists:
     "A file already exists at that destination. Choose a new path; this upload will not replace it.",
+  invalid_workflow_schedule:
+    "Check the source folder, approved workflow, calendar rules and processing bounds, then preview again.",
+  schedule_authority_or_deadline_required:
+    "Scheduled sending is blocked. Inspect the active schedule revision, account authority, cutoff and existing receipts before preparing new work.",
+  dispatch_approval_required:
+    "Inspect the exact delivery’s current independent approval in Approvals before sending.",
   operation_state_conflict:
     "The current state does not allow that action. Refresh the job and inspect its intake checks.",
   integrity_mismatch:
@@ -123,6 +130,7 @@ function App() {
       | "partners"
       | "onboarding"
       | "approvals"
+      | "schedules"
     >("files"),
     [refresh, setRefresh] = useState(0);
   const [folder, setFolder] = useState("/"),
@@ -631,6 +639,16 @@ function App() {
                 Onboarding
               </button>
             )}
+            {(allowed("workflow_manage") ||
+              allowed("workflow_approve") ||
+              allowed("workflow_execute")) && (
+              <button
+                aria-current={tab === "schedules" ? "page" : undefined}
+                onClick={() => setTab("schedules")}
+              >
+                Schedules
+              </button>
+            )}
             {((allowed("read") && allowed("deliver")) ||
               allowed("workflow_manage") ||
               allowed("workflow_approve") ||
@@ -762,13 +780,15 @@ function App() {
                       ? "Uploads"
                       : tab === "partners"
                         ? "Partners"
-                        : tab === "approvals"
-                          ? "Independent approvals"
-                          : tab === "onboarding"
-                            ? "Onboarding plans"
-                            : tab === "accounts"
-                              ? "Accounts"
-                              : "Intake checks"}
+                        : tab === "schedules"
+                          ? "Workflow schedules"
+                          : tab === "approvals"
+                            ? "Independent approvals"
+                            : tab === "onboarding"
+                              ? "Onboarding plans"
+                              : tab === "accounts"
+                                ? "Accounts"
+                                : "Intake checks"}
                 </h1>
                 <p>
                   {tab === "files"
@@ -777,13 +797,15 @@ function App() {
                       ? "Send one exact file. Continue from the last server-confirmed checkpoint."
                       : tab === "partners"
                         ? "Enroll partners under explicit tenant authority; review each administrator credential and grants."
-                        : tab === "approvals"
-                          ? "Review exact production effects under the partner’s approval policy."
-                          : tab === "onboarding"
-                            ? "Record responsible contacts and exact exchange requirements as versioned drafts."
-                            : tab === "accounts"
-                              ? "Review scoped access, credential rotation, expiry and revocation."
-                              : "Held files need their required checks and a separate release decision."}
+                        : tab === "schedules"
+                          ? "Review calendar rules, complete source revisions, deadlines and ordinary transfer receipts."
+                          : tab === "approvals"
+                            ? "Review exact production effects under the partner’s approval policy."
+                            : tab === "onboarding"
+                              ? "Record responsible contacts and exact exchange requirements as versioned drafts."
+                              : tab === "accounts"
+                                ? "Review scoped access, credential rotation, expiry and revocation."
+                                : "Held files need their required checks and a separate release decision."}
                 </p>
               </div>
               <button
@@ -827,6 +849,14 @@ function App() {
                   }}
                 />
               )}
+            {tab === "schedules" && (
+              <Schedules
+                api={api}
+                session={session}
+                refresh={refresh}
+                onError={reportError}
+              />
+            )}
             {tab === "approvals" &&
               (allowed("workflow_manage") ||
                 allowed("workflow_approve") ||

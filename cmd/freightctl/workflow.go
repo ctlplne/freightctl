@@ -93,6 +93,8 @@ func runWorkflow(ctx context.Context, command, dsn, token, tenant, partner, stor
 		result, err = service.Run(ctx, scope, key, r)
 	case "workflow-run-status":
 		result, err = service.Status(ctx, scope, runID)
+	case "workflow-refresh":
+		result, err = service.RefreshRun(ctx, scope, runID, key)
 	case "workflow-work":
 		result, err = service.Work(ctx, scope, runID, key)
 	case "workflow-diff":

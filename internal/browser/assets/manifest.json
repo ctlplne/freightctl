@@ -27,7 +27,7 @@
     },
     {
       "path": "web/src/app.tsx",
-      "sha256": "d8435978249729010136023cfcc4c72d69cfb0840be750e4ae9f9179c5a8e1b3"
+      "sha256": "aeda21e3e4bee9ec7a333d0fe328eda472226dc1a07901daf1ebf6e2b9b996c5"
     },
     {
       "path": "web/src/assets.d.ts",
@@ -138,8 +138,16 @@
       "sha256": "3be69f113e14b66719d4fd12406742265276f88b6c1c448b2956934463b3385d"
     },
     {
+      "path": "web/src/schedules-types.ts",
+      "sha256": "e0be8cd98397e354f3412514704c3947f9b008a5e1cc0a14299dc36cb7440b7f"
+    },
+    {
+      "path": "web/src/schedules.tsx",
+      "sha256": "7bde5994d35bb95900de38e6f64341f615755ece84e21a30913cfb8575ba71c6"
+    },
+    {
       "path": "web/src/style.css",
-      "sha256": "82e382ab398f401889f45c310bc7ad174b32ae5df52764978bc04cedbc7276b9"
+      "sha256": "2a34509b0926db788a88e9d1f41488d25d21581d7b72b36d7393c62c2a777f7f"
     },
     {
       "path": "web/src/types.ts",
@@ -157,13 +165,13 @@
   "outputs": [
     {
       "name": "app.css",
-      "sha256": "9430eda8a2790fef88ef692aeeb5db394b3d773789d3dc2d28f52c6efd86c743",
-      "size": 10556
+      "sha256": "fcf703e07316879199f02e8b7baf38e0e6c316e027aa9717e6f2fbc284429037",
+      "size": 11503
     },
     {
       "name": "app.js",
-      "sha256": "1f9fe9f64a3dcd8ce45c8bbc2e9a04f79ff04619fcebac49bbdfad1c85375578",
-      "size": 487537
+      "sha256": "c5de5c9c659711c20d16625138b6e07da38eadd7f9ec58e16e8b518160be0ddc",
+      "size": 522850
     },
     {
       "name": "app.js.LEGAL.txt",

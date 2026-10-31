@@ -816,3 +816,66 @@ footer {
   outline: 3px solid #348eac;
   outline-offset: 3px;
 }
+
+.schedule-references > summary {
+  min-height: 44px;
+  padding: 8px 0;
+  cursor: pointer;
+}
+
+.schedule-editor {
+  max-width: 760px;
+}
+.schedule-editor select,
+.schedule-editor textarea {
+  display: block;
+  width: 100%;
+  min-height: 46px;
+  margin: 6px 0 20px;
+  padding: 11px 12px;
+  border: 1px solid #b9c6cc;
+  border-radius: 6px;
+  background: white;
+  color: #20323b;
+  font: inherit;
+}
+.schedule-editor textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+.schedule-editor select:focus-visible,
+.schedule-editor textarea:focus-visible {
+  outline: 3px solid #348eac;
+  outline-offset: 3px;
+}
+.schedule-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 8px;
+  cursor: pointer;
+}
+.schedule-checkbox input[type="checkbox"] {
+  width: 24px;
+  height: 24px;
+  min-height: 24px;
+  margin: 0;
+  padding: 0;
+  accent-color: #146657;
+  flex-shrink: 0;
+}
+.schedule-weekdays {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin: 0 0 20px;
+  padding: 12px;
+  border: 1px solid #b9c6cc;
+  border-radius: 6px;
+}
+.schedule-weekdays legend {
+  padding: 0 6px;
+  font-size: 14px;
+  font-weight: 600;
+}

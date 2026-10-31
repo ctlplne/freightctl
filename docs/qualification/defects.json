@@ -1119,6 +1119,91 @@
         ".private/dispatch-approval-postgres-candidate.log",
         ".private/dispatch-approval-sql-first/manifest.json"
       ]
+    },
+    {
+      "id": "D073",
+      "severity": "valid schedule admission SQL failure",
+      "state": "fixed locally",
+      "observed_on": "2026-10-31",
+      "candidate": "c61f94b8f8126a923a8c7b4148b0cbcf51eec36a plus retained F037 source epochs",
+      "journey": "J03",
+      "reproduction": "Replay the retained original actual PostgreSQL or native schedule journey with its unchanged assertions and original resource/deadline/lease budgets.",
+      "first_failure": ".private/schedule-postgres-sql-first.log and .private/schedule-postgres-sql-second.log",
+      "cause": "Selected DISTINCT file_id::text was ordered by a different expression42P10. A trigger query alias old collided with PL/pgSQL OLD and referenced a missing deadline_at field42703.",
+      "resolution": "Order by the exact selected expression and rename the table alias. Keep all event, current authority, due, source and capacity guards. Replay actual publication timing, transactional failure and concurrent original-key cases.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F037-scheduled-workflows.json",
+        ".private/schedule-postgres-final.log",
+        "evidence/raw/schedules-a960fc24ce3545dba255cdd72f07e36e/manifest.json"
+      ]
+    },
+    {
+      "id": "D074",
+      "severity": "first schedule receipt and retry bytes diverge",
+      "state": "fixed locally",
+      "observed_on": "2026-10-31",
+      "candidate": "c61f94b8f8126a923a8c7b4148b0cbcf51eec36a plus retained F037 source epochs",
+      "journey": "J03",
+      "reproduction": "Replay the retained original actual PostgreSQL or native schedule journey with its unchanged assertions and original resource/deadline/lease budgets.",
+      "first_failure": ".private/schedule-postgres-sql-third.log",
+      "cause": "The first response returned pre-storage JSON field order, while retry returned PostgreSQL JSONB encoding. Byte equality changed despite identical meaning.",
+      "resolution": "Read the exact stored receipt for the first response as well as replay. Preserve original-key request meaning, atomic rollback and strict byte equality assertions.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F037-scheduled-workflows.json",
+        ".private/schedule-postgres-final.log",
+        "evidence/raw/schedules-a960fc24ce3545dba255cdd72f07e36e/manifest.json"
+      ]
+    },
+    {
+      "id": "D075",
+      "severity": "schedule reference disclosure target too small",
+      "state": "fixed locally",
+      "observed_on": "2026-10-31",
+      "candidate": "c61f94b8f8126a923a8c7b4148b0cbcf51eec36a plus retained F037 source epochs",
+      "journey": "J03",
+      "reproduction": "Replay the retained original actual PostgreSQL or native schedule journey with its unchanged assertions and original resource/deadline/lease budgets.",
+      "first_failure": "evidence/raw/schedules-cd8c1e2625894a75bf00638f4313f850/manifest.json",
+      "cause": "The references summary was22.5px tall and failed the original WCAG target-size check.",
+      "resolution": "Give the schedule summary a44px minimum target. Keep the original axe rules and replay all schedule phases. Visually reviewed checkbox/select controls also receive scoped layout and focus styles.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F037-scheduled-workflows.json",
+        ".private/schedule-postgres-final.log",
+        "evidence/raw/schedules-a960fc24ce3545dba255cdd72f07e36e/manifest.json"
+      ]
+    },
+    {
+      "id": "D076",
+      "severity": "metadata-only refresh CLI not registered",
+      "state": "fixed locally",
+      "observed_on": "2026-10-31",
+      "candidate": "c61f94b8f8126a923a8c7b4148b0cbcf51eec36a plus retained F037 source epochs",
+      "journey": "J06",
+      "reproduction": "Replay the retained original actual PostgreSQL or native schedule journey with its unchanged assertions and original resource/deadline/lease budgets.",
+      "first_failure": "evidence/raw/schedules-deaaae4e82c045a4ba626752cacd85d1/manifest.json",
+      "cause": "workflow-refresh existed in help and the workflow helper but was absent from main command dispatch; the stock CLI rejected recovery.",
+      "resolution": "Register the shared command. Replay the original injected run-projection failure, restart metadata repair, and API/CLI original-key receipt equality without receiver contact.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F037-scheduled-workflows.json",
+        ".private/schedule-postgres-final.log",
+        "evidence/raw/schedules-a960fc24ce3545dba255cdd72f07e36e/manifest.json"
+      ]
+    },
+    {
+      "id": "D077",
+      "severity": "cutoff leaves pre-publication claim staging",
+      "state": "fixed locally",
+      "observed_on": "2026-10-31",
+      "candidate": "c61f94b8f8126a923a8c7b4148b0cbcf51eec36a plus retained F037 source epochs",
+      "journey": "J06",
+      "reproduction": "Replay the retained original actual PostgreSQL or native schedule journey with its unchanged assertions and original resource/deadline/lease budgets.",
+      "first_failure": "evidence/raw/schedules-b0767d22b22d43f18509bcb5ee87e8d3/manifest.json",
+      "cause": "Publishing transition was refused after an injected3s pause crossed a2s cutoff; the worker returned before recording a safe staging failure.",
+      "resolution": "Record retry only if the locked durable row is still staging with the same live owner/fence. If a lost acknowledgment left publishing, refuse that transition and preserve read-only reconciliation. Keep original failure, cutoff and lease budgets; replay actual staged bytes/no final publication and no-contact resend refusal.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F037-scheduled-workflows.json",
+        ".private/schedule-postgres-final.log",
+        "evidence/raw/schedules-a960fc24ce3545dba255cdd72f07e36e/manifest.json"
+      ]
     }
   ]
 }

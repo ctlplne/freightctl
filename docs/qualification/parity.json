@@ -1383,13 +1383,15 @@
         "docs/qualification/evidence/F006-upload-checkpoints.json",
         "docs/qualification/evidence/F009-assistance-controls.json",
         "docs/qualification/evidence/F010-held-intake.json",
-        "docs/qualification/evidence/F020-tenant-partner-enrollment.json"
+        "docs/qualification/evidence/F020-tenant-partner-enrollment.json",
+        "docs/qualification/evidence/F037-scheduled-workflows.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison",
         "F020 adds assisted explicit tenant directory authority and ordinary partner/admin enrollment with native transfer, exact receipt recovery and scope/refusal evidence. Full contacts/checklists, invitations/providers, delegation, environment/lifecycle/activation and independent qualification remain open."
       ],
-      "current_limit": "F010 adds configured held intake across HTTPS/SFTP/resume, exact CSV contracts, current hash/revision-bound release and actor/tenant/partner gates. No antivirus/signature/encryption, other-format/processing breadth, delegated UI, full journey, native/enterprise peer or production qualification is implied."
+      "current_limit": "F010 adds configured held intake across HTTPS/SFTP/resume, exact CSV contracts, current hash/revision-bound release and actor/tenant/partner gates. No antivirus/signature/encryption, other-format/processing breadth, delegated UI, full journey, native/enterprise peer or production qualification is implied.",
+      "partial_implementation": "F037 adds reviewed outbound SFTP schedules: frozen time-zone rules, weekday/holiday and missing/repeated-time policy, complete published-file selection, once-per-family revision claims, atomic admission/events/receipts, bounded missed-run/capacity handling and live sending cutoff. Browser/API/CLI share ordinary workflow/file/connection/key and independent exact-file dispatch guards. Thirteen new real PostgreSQL/race cases pass within 82 workflow cases;62 frontend contracts and six calendar cases pass. The selected native replay passes111 steps on 360 unchanged inputs, with 285 operation outputs, three unique browser summaries and 15 selected WCAG states. Original staged worker death retains the 30-second lease; takeover uses attempt/fence2. Actual uncertain publication reconciles under stock read-only SFTP after cutoff without another attempt/fence/write. Full J03 collection/late arrivals/batches/downstream business receipt, general triggers/connectors/migration, native platforms, scale and independent adoption remain required. No model/scanner started; full F026 aggregate remains owner-deferred."
     },
     {
       "id": "A-ROLE",
@@ -1471,12 +1473,14 @@
       "state": "implementing",
       "evidence": [
         "docs/qualification/evidence/F009-assistance-controls.json",
-        "docs/qualification/evidence/F008-versioned-workflows.json"
+        "docs/qualification/evidence/F008-versioned-workflows.json",
+        "docs/qualification/evidence/F037-scheduled-workflows.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
       ],
-      "current_limit": "F008/F009 add shared immutable ordered SFTP definitions, validation/diff/approval/execution and no-inference draft-only proposal adoption. Broader tasks, UI, real AI, full journey and permitted incumbent observation remain open."
+      "current_limit": "F008/F009 add shared immutable ordered SFTP definitions, validation/diff/approval/execution and no-inference draft-only proposal adoption. Broader tasks, UI, real AI, full journey and permitted incumbent observation remain open.",
+      "partial_implementation": "F037 adds reviewed outbound SFTP schedules: frozen time-zone rules, weekday/holiday and missing/repeated-time policy, complete published-file selection, once-per-family revision claims, atomic admission/events/receipts, bounded missed-run/capacity handling and live sending cutoff. Browser/API/CLI share ordinary workflow/file/connection/key and independent exact-file dispatch guards. Thirteen new real PostgreSQL/race cases pass within 82 workflow cases;62 frontend contracts and six calendar cases pass. The selected native replay passes111 steps on 360 unchanged inputs, with 285 operation outputs, three unique browser summaries and 15 selected WCAG states. Original staged worker death retains the 30-second lease; takeover uses attempt/fence2. Actual uncertain publication reconciles under stock read-only SFTP after cutoff without another attempt/fence/write. Full J03 collection/late arrivals/batches/downstream business receipt, general triggers/connectors/migration, native platforms, scale and independent adoption remain required. No model/scanner started; full F026 aggregate remains owner-deferred."
     },
     {
       "id": "W-DATA",
@@ -2245,11 +2249,14 @@
         "independent operator or receiver"
       ],
       "acceptance_journey": "J03",
-      "state": "planned",
-      "evidence": [],
+      "state": "implementing",
+      "evidence": [
+        "docs/qualification/evidence/F037-scheduled-workflows.json"
+      ],
       "qualification_blockers": [
         "Authorized MOVEit Automation installation and exact edition/version for observed comparison"
-      ]
+      ],
+      "partial_implementation": "F037 adds reviewed outbound SFTP schedules: frozen time-zone rules, weekday/holiday and missing/repeated-time policy, complete published-file selection, once-per-family revision claims, atomic admission/events/receipts, bounded missed-run/capacity handling and live sending cutoff. Browser/API/CLI share ordinary workflow/file/connection/key and independent exact-file dispatch guards. Thirteen new real PostgreSQL/race cases pass within 82 workflow cases;62 frontend contracts and six calendar cases pass. The selected native replay passes111 steps on 360 unchanged inputs, with 285 operation outputs, three unique browser summaries and 15 selected WCAG states. Original staged worker death retains the 30-second lease; takeover uses attempt/fence2. Actual uncertain publication reconciles under stock read-only SFTP after cutoff without another attempt/fence/write. Full J03 collection/late arrivals/batches/downstream business receipt, general triggers/connectors/migration, native platforms, scale and independent adoption remain required. No model/scanner started; full F026 aggregate remains owner-deferred."
     },
     {
       "id": "W-CONDITIONAL",

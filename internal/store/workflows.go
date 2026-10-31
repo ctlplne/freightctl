@@ -185,6 +185,16 @@ func (t *Transaction) WorkflowSteps(ctx context.Context, id string) ([]WorkflowS
 	return result, rows.Err()
 }
 func (t *Transaction) CheckExecutionBinding(ctx context.Context, b *ExecutionBinding) error {
+	return t.checkExecutionBinding(ctx, b, false)
+}
+
+// CheckExecutionObservationBinding retains ordinary authority/source/workflow
+// checks while permitting read-only receipt observation after a schedule cutoff.
+// It grants no lease, stream write, retry or new effect.
+func (t *Transaction) CheckExecutionObservationBinding(ctx context.Context, b *ExecutionBinding) error {
+	return t.checkExecutionBinding(ctx, b, true)
+}
+func (t *Transaction) checkExecutionBinding(ctx context.Context, b *ExecutionBinding, observation bool) error {
 	if b == nil {
 		return nil
 	}
@@ -206,6 +216,11 @@ func (t *Transaction) CheckExecutionBinding(ctx context.Context, b *ExecutionBin
 	}
 	if !allowed {
 		return ErrState
+	}
+	if !observation {
+		if err := t.CheckScheduleBinding(ctx, b.RunID); err != nil {
+			return err
+		}
 	}
 	return t.checkOnboardingProofAvailability(ctx, b.RunID)
 }

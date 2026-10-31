@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"time"
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/custody"
@@ -245,6 +246,15 @@ func snapshot(ctx context.Context, t *store.Transaction, r *store.WorkflowRun) (
 			reason = "onboarding_binding_changed"
 		}
 	}
+	if state != "succeeded" && state != "cancelled" {
+		if e := t.ScheduleBindingStatus(ctx, r.ID); e != nil {
+			if !errors.Is(e, store.ErrSchedule) {
+				return nil, "", "", e
+			}
+			state = "attention"
+			reason = "schedule_authority_or_deadline_changed"
+		}
+	}
 	view.ObservedState = state
 	view.ObservedReason = reason
 	return view, state, reason, nil
@@ -429,4 +439,48 @@ func (s *Service) Work(ctx context.Context, scope store.Scope, id, key string) (
 		return nil, err
 	}
 	return &WorkResult{Dispatch: *dispatch, Replayed: replayed, Status: view}, nil
+}
+
+// RefreshRun records the current projection from ordinary immutable receipts.
+// It performs no transfer and can close a worker-crash gap after every intent
+// succeeded, including when a scheduled sending window has since closed.
+func (s *Service) RefreshRun(ctx context.Context, scope store.Scope, id, key string) (*Result, error) {
+	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
+	if !store.ValidID(id) || !keyPattern.MatchString(key) {
+		return nil, ErrInput
+	}
+	t, e := s.begin(ctx, scope, "workflow_execute", "read")
+	if e != nil {
+		return nil, e
+	}
+	defer t.Tx.Rollback(ctx)
+	_, meaning, e := digest(struct{ Kind, ID string }{"refresh_run", id})
+	if e != nil {
+		return nil, e
+	}
+	if prior, e := replay(t, ctx, key, meaning); e != nil || prior != nil {
+		return prior, e
+	}
+	r, e := t.WorkflowRun(ctx, id, true)
+	if e != nil {
+		return nil, e
+	}
+	if r.Authority != t.AuthorityRevision || r.Root != t.Root {
+		return nil, store.ErrUnauthorized
+	}
+	if e = t.FileAccessible(ctx, r.FileID); e != nil {
+		return nil, e
+	}
+	view, state, reason, e := snapshot(ctx, t, r)
+	if e != nil {
+		return nil, e
+	}
+	if e = setProjection(ctx, t, r, state, reason); e != nil {
+		return nil, e
+	}
+	return scheduleResult(t, ctx, key, meaning, id, struct {
+		Kind   string   `json:"kind"`
+		Status *RunView `json:"status"`
+	}{"workflow_run_refresh", view})
 }

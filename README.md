@@ -22,6 +22,8 @@ For selected read-only recovery of original SFTP receipt evidence after trust ro
 
 For an administrator rule requiring named-account consent for each exact outbound SFTP file across direct CLI, ordinary workflow, onboarding test and production paths, see [dispatch approvals](docs/outbound-dispatch-approvals.md). Configuration release approval and file dispatch approval are separate, cumulative checks.
 
+For reviewed calendars, bounded published-file selection and restartable ordered outbound workflows, see [scheduled workflows](docs/scheduled-workflows.md). Activation, queueing and execution are separate decisions; ordinary file and dispatch approvals still apply.
+
 - Organization: [ctlplne](https://github.com/ctlplne)
 - Repository: [ctlplne/freightctl](https://github.com/ctlplne/freightctl)
 - Local workflow: commits on main; pushes and publication remain owner-controlled.

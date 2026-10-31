@@ -55,12 +55,16 @@ func (s *Server) workflow(w http.ResponseWriter, r *http.Request) {
 		if err = workflowInput(w, r, &decision); err == nil {
 			result, err = service.Cancel(r.Context(), identity, r.PathValue("run"), r.Header.Get("Idempotency-Key"), decision)
 		}
-	case "POST /v1/tenants/{tenant}/partners/{partner}/workflow-runs/{run}/work":
+	case "POST /v1/tenants/{tenant}/partners/{partner}/workflow-runs/{run}/refresh", "POST /v1/tenants/{tenant}/partners/{partner}/workflow-runs/{run}/work":
 		r.Body = http.MaxBytesReader(w, r.Body, 1)
 		var b []byte
 		b, err = io.ReadAll(r.Body)
 		if err == nil && len(b) == 0 {
-			result, err = service.Work(r.Context(), identity, r.PathValue("run"), r.Header.Get("Idempotency-Key"))
+			if r.Pattern == "POST /v1/tenants/{tenant}/partners/{partner}/workflow-runs/{run}/refresh" {
+				result, err = service.RefreshRun(r.Context(), identity, r.PathValue("run"), r.Header.Get("Idempotency-Key"))
+			} else {
+				result, err = service.Work(r.Context(), identity, r.PathValue("run"), r.Header.Get("Idempotency-Key"))
+			}
 		} else {
 			err = workflow.ErrInput
 		}

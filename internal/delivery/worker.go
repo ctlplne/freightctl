@@ -293,6 +293,14 @@ func (s *Service) Work(ctx context.Context, scope store.Scope, id string) (*stor
 	// A lost acknowledgment or worker lease now requires read-only reconciliation.
 	d, err = s.transition(ctx, scope, id, owner, fence, "publishing", observation("atomic_publication_pending"))
 	if err != nil {
+		// No final operation has been attempted by this invocation. Record a
+		// stage failure only if the locked durable row is still staging under
+		// this live owner/fence. A lost commit acknowledgment may instead have
+		// left it publishing; transition refuses to move that state to retry.
+		// Preserve the original error even when failure recording succeeds.
+		if failed, recordErr := stageFailure("publication_intent_not_confirmed"); recordErr == nil {
+			return failed, err
+		}
 		return nil, err
 	}
 	if err = check(); err != nil {
@@ -324,7 +332,7 @@ func (s *Service) Reconcile(ctx context.Context, scope store.Scope, id string) (
 	if err = require(t, true); err != nil {
 		return nil, err
 	}
-	if err = t.CheckExecutionBinding(ctx, spec.Binding); err != nil {
+	if err = t.CheckExecutionObservationBinding(ctx, spec.Binding); err != nil {
 		return nil, err
 	}
 	if err = s.storage(spec); err != nil {
@@ -369,7 +377,7 @@ func (s *Service) Reconcile(ctx context.Context, scope store.Scope, id string) (
 		if err := require(t, true); err != nil {
 			return err
 		}
-		if err := t.CheckExecutionBinding(ctx, spec.Binding); err != nil {
+		if err := t.CheckExecutionObservationBinding(ctx, spec.Binding); err != nil {
 			return err
 		}
 		if err := t.FileAccessible(ctx, d.FileID); err != nil {

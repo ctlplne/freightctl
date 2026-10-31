@@ -360,7 +360,12 @@ func (s *Service) transition(ctx context.Context, scope store.Scope, id, owner s
 			return nil, err
 		}
 	}
-	if err = t.CheckExecutionBinding(ctx, spec.Binding); err != nil {
+	if next == "blocked" || next == "retry" || next == "ambiguous" {
+		err = t.CheckExecutionObservationBinding(ctx, spec.Binding)
+	} else {
+		err = t.CheckExecutionBinding(ctx, spec.Binding)
+	}
+	if err != nil {
 		return nil, err
 	}
 	if next != "blocked" && next != "retry" && next != "ambiguous" {

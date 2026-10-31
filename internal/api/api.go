@@ -78,6 +78,17 @@ func NewWithBrowserLifetime(service *custody.Service, audits *audit.Service, ena
 		m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/onboarding-releases/{release}/"+action, s.onboardingReleaseAction(action))
 	}
 
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/workflow-schedule-workflows", s.schedule("workflows"))
+	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/workflow-schedules/preview", s.schedule("preview"))
+	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/workflow-schedules/drafts", s.schedule("draft"))
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/workflow-schedules", s.schedule("list"))
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/workflow-schedules/{schedule}/{version}", s.schedule("status"))
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/workflow-schedules/{schedule}/history", s.schedule("history"))
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/workflow-schedule-occurrences/{occurrence}", s.schedule("occurrence"))
+	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/workflow-schedules/{schedule}/{version}/tick", s.schedule("tick"))
+	for _, action := range []string{"activate", "suspend", "revoke"} {
+		m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/workflow-schedules/{schedule}/{version}/"+action, s.schedule(action))
+	}
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/outbound-dispatch-policy", s.outboundApproval("policy"))
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/outbound-dispatch-policy", s.outboundApproval("policy-change"))
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/outbound-deliveries/{delivery}", s.outboundApproval("delivery"))
@@ -171,6 +182,7 @@ func NewWithBrowserLifetime(service *custody.Service, audits *audit.Service, ena
 		"POST /v1/tenants/{tenant}/partners/{partner}/workflow-runs",
 		"GET /v1/tenants/{tenant}/partners/{partner}/workflow-runs/{run}",
 		"POST /v1/tenants/{tenant}/partners/{partner}/workflow-runs/{run}/work",
+		"POST /v1/tenants/{tenant}/partners/{partner}/workflow-runs/{run}/refresh",
 		"POST /v1/tenants/{tenant}/partners/{partner}/workflow-runs/{run}/cancel",
 	} {
 		m.HandleFunc(pattern, s.workflow)
@@ -306,6 +318,8 @@ func errorStatus(err error) (int, string) {
 		return 409, "revision_conflict"
 	case errors.Is(err, store.ErrExists):
 		return 409, "path_exists"
+	case errors.Is(err, store.ErrSchedule):
+		return 409, "schedule_authority_or_deadline_required"
 	case errors.Is(err, store.ErrDispatchApproval):
 		return 409, "dispatch_approval_required"
 	case errors.Is(err, store.ErrState):

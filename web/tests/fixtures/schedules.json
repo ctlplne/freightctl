@@ -1,0 +1,810 @@
+{
+  "encrypted": {
+    "history": {
+      "occurrences": [
+        {
+          "id": "00000008-1111-4111-8111-111111111111",
+          "schedule_id": "00000006-1111-4111-8111-111111111111",
+          "schedule_version": 1,
+          "due_at": "2024-11-03T05:30:00Z",
+          "deadline_at": "2024-11-03T06:30:00Z",
+          "kind": "queued",
+          "skipped_until": null,
+          "input_count": 1,
+          "event_id": "00000009-1111-4111-8111-111111111111"
+        }
+      ]
+    },
+    "occurrence": {
+      "id": "00000008-1111-4111-8111-111111111111",
+      "schedule_id": "00000006-1111-4111-8111-111111111111",
+      "schedule_version": 1,
+      "due_at": "2024-11-03T05:30:00Z",
+      "deadline_at": "2024-11-03T06:30:00Z",
+      "kind": "queued",
+      "skipped_until": null,
+      "input_count": 1,
+      "event_id": "00000009-1111-4111-8111-111111111111",
+      "inputs": [
+        {
+          "schedule_id": "00000006-1111-4111-8111-111111111111",
+          "schedule_version": 1,
+          "occurrence_id": "00000008-1111-4111-8111-111111111111",
+          "file_id": "0000000a-1111-4111-8111-111111111111",
+          "run_id": "0000000b-1111-4111-8111-111111111111",
+          "event_id": "0000000c-1111-4111-8111-111111111111"
+        }
+      ]
+    },
+    "page": {
+      "schedules": [
+        {
+          "id": "00000006-1111-4111-8111-111111111111",
+          "version": 1,
+          "name": "Payroll \u003creview\u003e \u0026 transfer",
+          "definition_hash": "4fec680dc2b9a83adc0a8c6027792e0052b9910efdee8f6397839f84645eadb6",
+          "state": "active",
+          "revision": 2,
+          "approval_authority": 1,
+          "next_due": "2024-11-03T05:30:00Z",
+          "created_at": "2024-11-02T00:00:00Z",
+          "changed_event_id": "00000007-1111-4111-8111-111111111111",
+          "active_version": 1
+        }
+      ]
+    },
+    "preview": {
+      "definition": {
+        "schema_version": 1,
+        "name": "Payroll \u003creview\u003e \u0026 transfer",
+        "workflow": {
+          "id": "00000001-1111-4111-8111-111111111111",
+          "version": 2,
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "source": {
+          "directory": "/incoming",
+          "filename_pattern": "*.csv",
+          "recursive": false,
+          "filename_regex": "^.*[.]csv$"
+        },
+        "calendar": {
+          "time_zone": "America/New_York",
+          "starts_at": "2024-11-03T00:00:00Z",
+          "ends_at": "2024-11-04T00:00:00Z",
+          "local_times": [
+            "01:30:00"
+          ],
+          "weekdays": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "holidays": [],
+          "gap_policy": "skip",
+          "fold_policy": "both",
+          "offset_rules": [
+            {
+              "from": "2024-11-01T00:00:00Z",
+              "until": "2024-11-03T06:00:00Z",
+              "offset_seconds": -14400,
+              "abbreviation": "EDT"
+            },
+            {
+              "from": "2024-11-03T06:00:00Z",
+              "until": "2024-11-06T00:00:00Z",
+              "offset_seconds": -18000,
+              "abbreviation": "EST"
+            }
+          ]
+        },
+        "missed_run_policy": "latest",
+        "max_catch_up": 4,
+        "max_active_runs": 2,
+        "max_files_per_occurrence": 2,
+        "execution_deadline_seconds": 3600,
+        "late_start_grace_seconds": 30,
+        "authority_revision": 1,
+        "storage_id": "00000004-1111-4111-8111-111111111111",
+        "namespace_root": "/",
+        "effects": [
+          {
+            "step_id": "send",
+            "connection": {
+              "id": "00000002-1111-4111-8111-111111111111",
+              "version": 3,
+              "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            },
+            "address": "127.0.0.1:2222",
+            "directory": "/outbox",
+            "final_name_pattern": "\u003cdelivery UUID\u003e-settlement.csv",
+            "host_fingerprint": "SHA256:synthetic-host",
+            "encryption": {
+              "key": {
+                "id": "00000003-1111-4111-8111-111111111111",
+                "version": 1,
+                "hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+              },
+              "profile": "seipd-v1-aes256"
+            },
+            "recipient_fingerprint": "dddddddddddddddddddddddddddddddddddddddd",
+            "encryption_fingerprint": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+          }
+        ]
+      },
+      "definition_hash": "4fec680dc2b9a83adc0a8c6027792e0052b9910efdee8f6397839f84645eadb6",
+      "first_due": "2024-11-03T05:30:00Z",
+      "latest_due": "2024-11-03T06:30:00Z",
+      "upcoming": [
+        {
+          "at": "2024-11-03T05:30:00Z",
+          "local_time": "2024-11-03T01:30:00",
+          "offset_seconds": -14400,
+          "abbreviation": "EDT"
+        },
+        {
+          "at": "2024-11-03T06:30:00Z",
+          "local_time": "2024-11-03T01:30:00",
+          "offset_seconds": -18000,
+          "abbreviation": "EST"
+        }
+      ],
+      "effects": [
+        {
+          "step_id": "send",
+          "connection": {
+            "id": "00000002-1111-4111-8111-111111111111",
+            "version": 3,
+            "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "address": "127.0.0.1:2222",
+          "directory": "/outbox",
+          "final_name_pattern": "\u003cdelivery UUID\u003e-settlement.csv",
+          "host_fingerprint": "SHA256:synthetic-host",
+          "encryption": {
+            "key": {
+              "id": "00000003-1111-4111-8111-111111111111",
+              "version": 1,
+              "hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            },
+            "profile": "seipd-v1-aes256"
+          },
+          "recipient_fingerprint": "dddddddddddddddddddddddddddddddddddddddd",
+          "encryption_fingerprint": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+        }
+      ],
+      "external_contact": false,
+      "approval_required": true
+    },
+    "run": {
+      "run": {
+        "id": "0000000b-1111-4111-8111-111111111111",
+        "workflow_id": "00000001-1111-4111-8111-111111111111",
+        "workflow_version": 2,
+        "workflow_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "file_id": "0000000a-1111-4111-8111-111111111111",
+        "source": {
+          "id": "0000000a-1111-4111-8111-111111111111",
+          "size_bytes": 3,
+          "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+          "policy": "integrity-only-v1",
+          "accepted_event_id": "0000000d-1111-4111-8111-111111111111"
+        },
+        "storage_id": "00000004-1111-4111-8111-111111111111",
+        "namespace_root": "/",
+        "authority_revision": 1,
+        "state": "queued",
+        "reason": "awaiting_worker",
+        "revision": 1
+      },
+      "steps": [
+        {
+          "id": "send",
+          "ordinal": 0,
+          "delivery_id": "0000000e-1111-4111-8111-111111111111",
+          "state": "queued",
+          "attempts": 0,
+          "observation": {}
+        }
+      ],
+      "observed_state": "queued",
+      "observed_reason": "awaiting_worker"
+    },
+    "selection": {
+      "name": "Payroll \u003creview\u003e \u0026 transfer",
+      "workflow": {
+        "id": "00000001-1111-4111-8111-111111111111",
+        "version": 2,
+        "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "source": {
+        "directory": "/incoming",
+        "filename_pattern": "*.csv",
+        "recursive": false
+      },
+      "calendar": {
+        "time_zone": "America/New_York",
+        "starts_at": "2024-11-03T00:00:00Z",
+        "ends_at": "2024-11-04T00:00:00Z",
+        "local_times": [
+          "01:30:00"
+        ],
+        "weekdays": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "holidays": [],
+        "gap_policy": "skip",
+        "fold_policy": "both"
+      },
+      "missed_run_policy": "latest",
+      "max_catch_up": 4,
+      "max_active_runs": 2,
+      "max_files_per_occurrence": 2,
+      "execution_deadline_seconds": 3600,
+      "late_start_grace_seconds": 30,
+      "expected_authority_revision": 1
+    },
+    "summary": {
+      "id": "00000006-1111-4111-8111-111111111111",
+      "version": 1,
+      "name": "Payroll \u003creview\u003e \u0026 transfer",
+      "definition_hash": "4fec680dc2b9a83adc0a8c6027792e0052b9910efdee8f6397839f84645eadb6",
+      "state": "active",
+      "revision": 2,
+      "approval_authority": 1,
+      "next_due": "2024-11-03T05:30:00Z",
+      "created_at": "2024-11-02T00:00:00Z",
+      "changed_event_id": "00000007-1111-4111-8111-111111111111"
+    },
+    "tick": {
+      "resource": {
+        "kind": "workflow_schedule_tick",
+        "schedule": {
+          "id": "00000006-1111-4111-8111-111111111111",
+          "version": 1,
+          "name": "Payroll \u003creview\u003e \u0026 transfer",
+          "definition_hash": "4fec680dc2b9a83adc0a8c6027792e0052b9910efdee8f6397839f84645eadb6",
+          "state": "active",
+          "revision": 3,
+          "approval_authority": 1,
+          "next_due": "2024-11-03T06:30:00Z",
+          "created_at": "2024-11-02T00:00:00Z",
+          "changed_event_id": "00000007-1111-4111-8111-111111111111"
+        },
+        "occurrences": [
+          {
+            "id": "00000008-1111-4111-8111-111111111111",
+            "schedule_id": "00000006-1111-4111-8111-111111111111",
+            "schedule_version": 1,
+            "due_at": "2024-11-03T05:30:00Z",
+            "deadline_at": "2024-11-03T06:30:00Z",
+            "kind": "queued",
+            "skipped_until": null,
+            "input_count": 1,
+            "event_id": "00000009-1111-4111-8111-111111111111"
+          }
+        ],
+        "run_ids": [
+          "0000000b-1111-4111-8111-111111111111"
+        ],
+        "reason": "queued",
+        "external_contact": false
+      },
+      "replayed": false
+    },
+    "view": {
+      "schedule": {
+        "id": "00000006-1111-4111-8111-111111111111",
+        "version": 1,
+        "name": "Payroll \u003creview\u003e \u0026 transfer",
+        "definition_hash": "4fec680dc2b9a83adc0a8c6027792e0052b9910efdee8f6397839f84645eadb6",
+        "state": "active",
+        "revision": 2,
+        "approval_authority": 1,
+        "next_due": "2024-11-03T05:30:00Z",
+        "created_at": "2024-11-02T00:00:00Z",
+        "changed_event_id": "00000007-1111-4111-8111-111111111111",
+        "definition": {
+          "schema_version": 1,
+          "name": "Payroll \u003creview\u003e \u0026 transfer",
+          "workflow": {
+            "id": "00000001-1111-4111-8111-111111111111",
+            "version": 2,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "source": {
+            "directory": "/incoming",
+            "filename_pattern": "*.csv",
+            "recursive": false,
+            "filename_regex": "^.*[.]csv$"
+          },
+          "calendar": {
+            "time_zone": "America/New_York",
+            "starts_at": "2024-11-03T00:00:00Z",
+            "ends_at": "2024-11-04T00:00:00Z",
+            "local_times": [
+              "01:30:00"
+            ],
+            "weekdays": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "holidays": [],
+            "gap_policy": "skip",
+            "fold_policy": "both",
+            "offset_rules": [
+              {
+                "from": "2024-11-01T00:00:00Z",
+                "until": "2024-11-03T06:00:00Z",
+                "offset_seconds": -14400,
+                "abbreviation": "EDT"
+              },
+              {
+                "from": "2024-11-03T06:00:00Z",
+                "until": "2024-11-06T00:00:00Z",
+                "offset_seconds": -18000,
+                "abbreviation": "EST"
+              }
+            ]
+          },
+          "missed_run_policy": "latest",
+          "max_catch_up": 4,
+          "max_active_runs": 2,
+          "max_files_per_occurrence": 2,
+          "execution_deadline_seconds": 3600,
+          "late_start_grace_seconds": 30,
+          "authority_revision": 1,
+          "storage_id": "00000004-1111-4111-8111-111111111111",
+          "namespace_root": "/",
+          "effects": [
+            {
+              "step_id": "send",
+              "connection": {
+                "id": "00000002-1111-4111-8111-111111111111",
+                "version": 3,
+                "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+              },
+              "address": "127.0.0.1:2222",
+              "directory": "/outbox",
+              "final_name_pattern": "\u003cdelivery UUID\u003e-settlement.csv",
+              "host_fingerprint": "SHA256:synthetic-host",
+              "encryption": {
+                "key": {
+                  "id": "00000003-1111-4111-8111-111111111111",
+                  "version": 1,
+                  "hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+                },
+                "profile": "seipd-v1-aes256"
+              },
+              "recipient_fingerprint": "dddddddddddddddddddddddddddddddddddddddd",
+              "encryption_fingerprint": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+            }
+          ]
+        }
+      },
+      "upcoming": [
+        {
+          "at": "2024-11-03T05:30:00Z",
+          "local_time": "2024-11-03T01:30:00",
+          "offset_seconds": -14400,
+          "abbreviation": "EDT"
+        },
+        {
+          "at": "2024-11-03T06:30:00Z",
+          "local_time": "2024-11-03T01:30:00",
+          "offset_seconds": -18000,
+          "abbreviation": "EST"
+        }
+      ],
+      "pending_runs": [
+        "0000000b-1111-4111-8111-111111111111"
+      ],
+      "active_runs": 1,
+      "current_authority": true
+    }
+  },
+  "plain": {
+    "history": {
+      "occurrences": [
+        {
+          "id": "00000008-1111-4111-8111-111111111111",
+          "schedule_id": "00000005-1111-4111-8111-111111111111",
+          "schedule_version": 1,
+          "due_at": "2024-11-03T05:30:00Z",
+          "deadline_at": "2024-11-03T06:30:00Z",
+          "kind": "queued",
+          "skipped_until": null,
+          "input_count": 1,
+          "event_id": "00000009-1111-4111-8111-111111111111"
+        }
+      ]
+    },
+    "occurrence": {
+      "id": "00000008-1111-4111-8111-111111111111",
+      "schedule_id": "00000005-1111-4111-8111-111111111111",
+      "schedule_version": 1,
+      "due_at": "2024-11-03T05:30:00Z",
+      "deadline_at": "2024-11-03T06:30:00Z",
+      "kind": "queued",
+      "skipped_until": null,
+      "input_count": 1,
+      "event_id": "00000009-1111-4111-8111-111111111111",
+      "inputs": [
+        {
+          "schedule_id": "00000005-1111-4111-8111-111111111111",
+          "schedule_version": 1,
+          "occurrence_id": "00000008-1111-4111-8111-111111111111",
+          "file_id": "0000000a-1111-4111-8111-111111111111",
+          "run_id": "0000000b-1111-4111-8111-111111111111",
+          "event_id": "0000000c-1111-4111-8111-111111111111"
+        }
+      ]
+    },
+    "page": {
+      "schedules": [
+        {
+          "id": "00000005-1111-4111-8111-111111111111",
+          "version": 1,
+          "name": "Payroll \u003creview\u003e \u0026 transfer",
+          "definition_hash": "6ed27870d0eff7a3aa2581f8c35aaac47d205afbcf996110c8e80316fccde6d5",
+          "state": "active",
+          "revision": 2,
+          "approval_authority": 1,
+          "next_due": "2024-11-03T05:30:00Z",
+          "created_at": "2024-11-02T00:00:00Z",
+          "changed_event_id": "00000007-1111-4111-8111-111111111111",
+          "active_version": 1
+        }
+      ]
+    },
+    "preview": {
+      "definition": {
+        "schema_version": 1,
+        "name": "Payroll \u003creview\u003e \u0026 transfer",
+        "workflow": {
+          "id": "00000001-1111-4111-8111-111111111111",
+          "version": 2,
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "source": {
+          "directory": "/incoming",
+          "filename_pattern": "*.csv",
+          "recursive": false,
+          "filename_regex": "^.*[.]csv$"
+        },
+        "calendar": {
+          "time_zone": "America/New_York",
+          "starts_at": "2024-11-03T00:00:00Z",
+          "ends_at": "2024-11-04T00:00:00Z",
+          "local_times": [
+            "01:30:00"
+          ],
+          "weekdays": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "holidays": [],
+          "gap_policy": "skip",
+          "fold_policy": "both",
+          "offset_rules": [
+            {
+              "from": "2024-11-01T00:00:00Z",
+              "until": "2024-11-03T06:00:00Z",
+              "offset_seconds": -14400,
+              "abbreviation": "EDT"
+            },
+            {
+              "from": "2024-11-03T06:00:00Z",
+              "until": "2024-11-06T00:00:00Z",
+              "offset_seconds": -18000,
+              "abbreviation": "EST"
+            }
+          ]
+        },
+        "missed_run_policy": "latest",
+        "max_catch_up": 4,
+        "max_active_runs": 2,
+        "max_files_per_occurrence": 2,
+        "execution_deadline_seconds": 3600,
+        "late_start_grace_seconds": 30,
+        "authority_revision": 1,
+        "storage_id": "00000004-1111-4111-8111-111111111111",
+        "namespace_root": "/",
+        "effects": [
+          {
+            "step_id": "send",
+            "connection": {
+              "id": "00000002-1111-4111-8111-111111111111",
+              "version": 3,
+              "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            },
+            "address": "127.0.0.1:2222",
+            "directory": "/outbox",
+            "final_name_pattern": "\u003cdelivery UUID\u003e-settlement.csv",
+            "host_fingerprint": "SHA256:synthetic-host"
+          }
+        ]
+      },
+      "definition_hash": "6ed27870d0eff7a3aa2581f8c35aaac47d205afbcf996110c8e80316fccde6d5",
+      "first_due": "2024-11-03T05:30:00Z",
+      "latest_due": "2024-11-03T06:30:00Z",
+      "upcoming": [
+        {
+          "at": "2024-11-03T05:30:00Z",
+          "local_time": "2024-11-03T01:30:00",
+          "offset_seconds": -14400,
+          "abbreviation": "EDT"
+        },
+        {
+          "at": "2024-11-03T06:30:00Z",
+          "local_time": "2024-11-03T01:30:00",
+          "offset_seconds": -18000,
+          "abbreviation": "EST"
+        }
+      ],
+      "effects": [
+        {
+          "step_id": "send",
+          "connection": {
+            "id": "00000002-1111-4111-8111-111111111111",
+            "version": 3,
+            "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "address": "127.0.0.1:2222",
+          "directory": "/outbox",
+          "final_name_pattern": "\u003cdelivery UUID\u003e-settlement.csv",
+          "host_fingerprint": "SHA256:synthetic-host"
+        }
+      ],
+      "external_contact": false,
+      "approval_required": true
+    },
+    "run": {
+      "run": {
+        "id": "0000000b-1111-4111-8111-111111111111",
+        "workflow_id": "00000001-1111-4111-8111-111111111111",
+        "workflow_version": 2,
+        "workflow_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "file_id": "0000000a-1111-4111-8111-111111111111",
+        "source": {
+          "id": "0000000a-1111-4111-8111-111111111111",
+          "size_bytes": 3,
+          "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+          "policy": "integrity-only-v1",
+          "accepted_event_id": "0000000d-1111-4111-8111-111111111111"
+        },
+        "storage_id": "00000004-1111-4111-8111-111111111111",
+        "namespace_root": "/",
+        "authority_revision": 1,
+        "state": "queued",
+        "reason": "awaiting_worker",
+        "revision": 1
+      },
+      "steps": [
+        {
+          "id": "send",
+          "ordinal": 0,
+          "delivery_id": "0000000e-1111-4111-8111-111111111111",
+          "state": "queued",
+          "attempts": 0,
+          "observation": {}
+        }
+      ],
+      "observed_state": "queued",
+      "observed_reason": "awaiting_worker"
+    },
+    "selection": {
+      "name": "Payroll \u003creview\u003e \u0026 transfer",
+      "workflow": {
+        "id": "00000001-1111-4111-8111-111111111111",
+        "version": 2,
+        "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "source": {
+        "directory": "/incoming",
+        "filename_pattern": "*.csv",
+        "recursive": false
+      },
+      "calendar": {
+        "time_zone": "America/New_York",
+        "starts_at": "2024-11-03T00:00:00Z",
+        "ends_at": "2024-11-04T00:00:00Z",
+        "local_times": [
+          "01:30:00"
+        ],
+        "weekdays": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "holidays": [],
+        "gap_policy": "skip",
+        "fold_policy": "both"
+      },
+      "missed_run_policy": "latest",
+      "max_catch_up": 4,
+      "max_active_runs": 2,
+      "max_files_per_occurrence": 2,
+      "execution_deadline_seconds": 3600,
+      "late_start_grace_seconds": 30,
+      "expected_authority_revision": 1
+    },
+    "summary": {
+      "id": "00000005-1111-4111-8111-111111111111",
+      "version": 1,
+      "name": "Payroll \u003creview\u003e \u0026 transfer",
+      "definition_hash": "6ed27870d0eff7a3aa2581f8c35aaac47d205afbcf996110c8e80316fccde6d5",
+      "state": "active",
+      "revision": 2,
+      "approval_authority": 1,
+      "next_due": "2024-11-03T05:30:00Z",
+      "created_at": "2024-11-02T00:00:00Z",
+      "changed_event_id": "00000007-1111-4111-8111-111111111111"
+    },
+    "tick": {
+      "resource": {
+        "kind": "workflow_schedule_tick",
+        "schedule": {
+          "id": "00000005-1111-4111-8111-111111111111",
+          "version": 1,
+          "name": "Payroll \u003creview\u003e \u0026 transfer",
+          "definition_hash": "6ed27870d0eff7a3aa2581f8c35aaac47d205afbcf996110c8e80316fccde6d5",
+          "state": "active",
+          "revision": 3,
+          "approval_authority": 1,
+          "next_due": "2024-11-03T06:30:00Z",
+          "created_at": "2024-11-02T00:00:00Z",
+          "changed_event_id": "00000007-1111-4111-8111-111111111111"
+        },
+        "occurrences": [
+          {
+            "id": "00000008-1111-4111-8111-111111111111",
+            "schedule_id": "00000005-1111-4111-8111-111111111111",
+            "schedule_version": 1,
+            "due_at": "2024-11-03T05:30:00Z",
+            "deadline_at": "2024-11-03T06:30:00Z",
+            "kind": "queued",
+            "skipped_until": null,
+            "input_count": 1,
+            "event_id": "00000009-1111-4111-8111-111111111111"
+          }
+        ],
+        "run_ids": [
+          "0000000b-1111-4111-8111-111111111111"
+        ],
+        "reason": "queued",
+        "external_contact": false
+      },
+      "replayed": false
+    },
+    "view": {
+      "schedule": {
+        "id": "00000005-1111-4111-8111-111111111111",
+        "version": 1,
+        "name": "Payroll \u003creview\u003e \u0026 transfer",
+        "definition_hash": "6ed27870d0eff7a3aa2581f8c35aaac47d205afbcf996110c8e80316fccde6d5",
+        "state": "active",
+        "revision": 2,
+        "approval_authority": 1,
+        "next_due": "2024-11-03T05:30:00Z",
+        "created_at": "2024-11-02T00:00:00Z",
+        "changed_event_id": "00000007-1111-4111-8111-111111111111",
+        "definition": {
+          "schema_version": 1,
+          "name": "Payroll \u003creview\u003e \u0026 transfer",
+          "workflow": {
+            "id": "00000001-1111-4111-8111-111111111111",
+            "version": 2,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "source": {
+            "directory": "/incoming",
+            "filename_pattern": "*.csv",
+            "recursive": false,
+            "filename_regex": "^.*[.]csv$"
+          },
+          "calendar": {
+            "time_zone": "America/New_York",
+            "starts_at": "2024-11-03T00:00:00Z",
+            "ends_at": "2024-11-04T00:00:00Z",
+            "local_times": [
+              "01:30:00"
+            ],
+            "weekdays": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "holidays": [],
+            "gap_policy": "skip",
+            "fold_policy": "both",
+            "offset_rules": [
+              {
+                "from": "2024-11-01T00:00:00Z",
+                "until": "2024-11-03T06:00:00Z",
+                "offset_seconds": -14400,
+                "abbreviation": "EDT"
+              },
+              {
+                "from": "2024-11-03T06:00:00Z",
+                "until": "2024-11-06T00:00:00Z",
+                "offset_seconds": -18000,
+                "abbreviation": "EST"
+              }
+            ]
+          },
+          "missed_run_policy": "latest",
+          "max_catch_up": 4,
+          "max_active_runs": 2,
+          "max_files_per_occurrence": 2,
+          "execution_deadline_seconds": 3600,
+          "late_start_grace_seconds": 30,
+          "authority_revision": 1,
+          "storage_id": "00000004-1111-4111-8111-111111111111",
+          "namespace_root": "/",
+          "effects": [
+            {
+              "step_id": "send",
+              "connection": {
+                "id": "00000002-1111-4111-8111-111111111111",
+                "version": 3,
+                "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+              },
+              "address": "127.0.0.1:2222",
+              "directory": "/outbox",
+              "final_name_pattern": "\u003cdelivery UUID\u003e-settlement.csv",
+              "host_fingerprint": "SHA256:synthetic-host"
+            }
+          ]
+        }
+      },
+      "upcoming": [
+        {
+          "at": "2024-11-03T05:30:00Z",
+          "local_time": "2024-11-03T01:30:00",
+          "offset_seconds": -14400,
+          "abbreviation": "EDT"
+        },
+        {
+          "at": "2024-11-03T06:30:00Z",
+          "local_time": "2024-11-03T01:30:00",
+          "offset_seconds": -18000,
+          "abbreviation": "EST"
+        }
+      ],
+      "pending_runs": [
+        "0000000b-1111-4111-8111-111111111111"
+      ],
+      "active_runs": 1,
+      "current_authority": true
+    }
+  }
+}
