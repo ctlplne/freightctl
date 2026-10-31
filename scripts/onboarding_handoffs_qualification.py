@@ -63,6 +63,10 @@ def qualify_handoffs(c):
  try:
   attempted_result=post('handoff-real-receiver-outage','/workflow-runs/'+attempted['run']['id']+'/work',key='handoff-real-outage');assert attempted_result['status']['steps'][0]['attempts']==1 and attempted_result['status']['steps'][0]['state']=='retry'
  finally:c['start']('receiver',receiver_args,c['receiver_port'])
+ prepared_prepublication=None
+ if c['options'].prepublication:
+  from onboarding_prepublication_qualification import prepare_prepublication
+  prepared_prepublication=prepare_prepublication(c,dict(locals()))
  # Rotate the synthetic operator through the existing second-manager policy.
  old_token=private/'handoff-owner-before-rotation.token';shutil.copy2(owner,old_token)
  old_header=private/'handoff-old-owner.headers';shutil.copy2(c['header'],old_header)
@@ -118,3 +122,7 @@ def qualify_handoffs(c):
  # Only the successor transfer and independent fetch should contact after
  # preview; proposal/approval/metadata handoff itself is checked in the browser.
  (raw/'onboarding-handoff-result.json').write_text(json.dumps({'state':'passed','source_run_id':original['run']['id'],'replacement_run_id':h['replacement_run_id'],'source_sha256':accepted['sha256'],'source_size':accepted['size_bytes'],'checked_revision':child,'linked_recheck_id':saved['id'],'old_client_fingerprint':connection['key_fingerprint'],'new_client_fingerprint':connection_b['key_fingerprint'],'old_host_fingerprint':connection['host_fingerprint'],'new_host_fingerprint':connection_b['host_fingerprint'],'old_recipient_fingerprint':old_recipient['fingerprint'],'new_recipient_fingerprint':recipient['fingerprint'],'old_credential_refused':True,'prepared_source_attempts':0,'attempted_source_refused':True,'single_atomic_handoff':True,'new_fixture_manifest':str(new_fixture/'manifest.json'),'receiver_contacts_before_handoff':before,'receiver_contacts_after':contacts(),'receiver_files_before_handoff':files,'receiver_files_after':sorted(x.name for x in inbox.iterdir()),'inference_performed':False,'scanner_started':False},indent=2)+'\n')
+
+ if prepared_prepublication is not None:
+  from onboarding_prepublication_qualification import qualify_prepublication
+  qualify_prepublication(c,dict(locals()),prepared_prepublication)

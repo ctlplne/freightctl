@@ -8,10 +8,13 @@ export interface HandoffSelection {
   source_hash: string;
   target_release: { id: string; revision: number; hash: string };
   file_id: string;
+  profile?:
+    "untouched-production-handoff-v1" | "prepublication-production-handoff-v1";
 }
 export interface HandoffDefinition {
   schema_version: 1;
-  profile: "untouched-production-handoff-v1";
+  profile:
+    "untouched-production-handoff-v1" | "prepublication-production-handoff-v1";
   source: {
     dispatch: {
       id: string;
@@ -23,13 +26,23 @@ export interface HandoffDefinition {
     plan: ProbeReference;
     run_revision: number;
     delivery: { id: string; revision: number; hash: string };
-    state: "queued";
-    attempts: 0;
-    fence: 0;
+    state: "queued" | "retry" | "blocked" | "staging";
+    attempts: number;
+    fence: number;
   };
   target: ProductionDefinition;
   target_hash: string;
   source_recheck_id: string;
+  prepublication_proof?: {
+    transitions: number;
+    history_hash: string;
+    last_event_id: string;
+    ciphertext: {
+      object_id: string;
+      sha256: string;
+      size_bytes: number;
+    } | null;
+  };
 }
 export interface HandoffPreview {
   definition: HandoffDefinition;
@@ -165,13 +178,52 @@ export function asHandoffDefinition(
     plan = ref(s.plan),
     recheck = text(o, "source_recheck_id", 36, true),
     a = before.effect,
-    b = target.effect;
+    b = target.effect,
+    profile = text(o, "profile", 64),
+    state = text(s, "state", 16),
+    attempts = num(s, "attempts", 0),
+    fence = num(s, "fence", 0),
+    delivery = activation(s.delivery);
+  let proof: HandoffDefinition["prepublication_proof"];
+  if (profile === "untouched-production-handoff-v1") {
+    if (
+      state !== "queued" ||
+      attempts !== 0 ||
+      fence !== 0 ||
+      "prepublication_proof" in o
+    )
+      bad();
+  } else if (profile === "prepublication-production-handoff-v1") {
+    const p = object(o.prepublication_proof),
+      transitions = num(p, "transitions", 3);
+    if (
+      !["retry", "blocked", "staging"].includes(state) ||
+      attempts < 1 ||
+      attempts > 8 ||
+      fence !== attempts ||
+      transitions > 256 ||
+      transitions !== delivery.revision
+    )
+      bad();
+    let ciphertext = null;
+    if (p.ciphertext !== null) {
+      const c = object(p.ciphertext);
+      if (!before.effect.encryption) bad();
+      ciphertext = {
+        object_id: id(c, "object_id"),
+        sha256: hash(c, "sha256"),
+        size_bytes: num(c, "size_bytes"),
+      };
+    }
+    proof = {
+      transitions,
+      history_hash: hash(p, "history_hash"),
+      last_event_id: id(p, "last_event_id"),
+      ciphertext,
+    };
+  } else bad();
   if (
     o.schema_version !== 1 ||
-    o.profile !== "untouched-production-handoff-v1" ||
-    s.state !== "queued" ||
-    s.attempts !== 0 ||
-    s.fence !== 0 ||
     raw.author_id !== author ||
     plan.id !== planID ||
     raw.definition_hash !== handoffHash(before) ||
@@ -196,7 +248,7 @@ export function asHandoffDefinition(
     bad();
   return {
     schema_version: 1,
-    profile: "untouched-production-handoff-v1",
+    profile: profile as HandoffDefinition["profile"],
     source: {
       dispatch: {
         id: id(raw, "id"),
@@ -207,14 +259,15 @@ export function asHandoffDefinition(
       },
       plan,
       run_revision: num(s, "run_revision"),
-      delivery: activation(s.delivery),
-      state: "queued",
-      attempts: 0,
-      fence: 0,
+      delivery,
+      state: state as HandoffDefinition["source"]["state"],
+      attempts,
+      fence,
     },
     target,
     target_hash: hash(o, "target_hash"),
     source_recheck_id: recheck,
+    ...(proof ? { prepublication_proof: proof } : {}),
   };
 }
 export function asHandoffPreview(
@@ -229,6 +282,7 @@ export function asHandoffPreview(
   if (
     d.source.dispatch.id !== selection.source_run_id ||
     d.source.dispatch.definition_hash !== selection.source_hash ||
+    d.profile !== (selection.profile ?? "untouched-production-handoff-v1") ||
     !same(d.target.release, selection.target_release) ||
     d.target.file.id !== selection.file_id ||
     h !== handoffHash(d) ||

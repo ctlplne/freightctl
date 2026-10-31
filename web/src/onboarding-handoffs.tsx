@@ -66,6 +66,9 @@ export function OnboardingHandoffs({
   source?: { id: string; hash: string; fileID?: string };
 }) {
   const [runID, setRunID] = useState(""),
+    [profile, setProfile] = useState<NonNullable<HandoffSelection["profile"]>>(
+      "untouched-production-handoff-v1",
+    ),
     [sourceHash, setSourceHash] = useState(""),
     [releaseID, setReleaseID] = useState(""),
     [revision, setRevision] = useState(""),
@@ -177,6 +180,9 @@ export function OnboardingHandoffs({
       source_hash: sourceHash,
       target_release: { id: releaseID, revision: n, hash: releaseHash },
       file_id: fileID,
+      ...(profile === "prepublication-production-handoff-v1"
+        ? { profile }
+        : {}),
     };
     setBusy(true);
     setFailure("");
@@ -364,11 +370,12 @@ export function OnboardingHandoffs({
     <section className="signature-box" aria-label="Queued production handoffs">
       <h2>Queued work after rotation</h2>
       <p>
-        Preserve an untouched production file across a tested key, credential or
+        Preserve queued production bytes across a tested key, credential or
         activation change. Review and approve the exact replacement, then cancel
         the old intent and queue one successor together. Separate execution
-        sends bytes. Any recorded delivery attempt or uncertain outcome blocks
-        this path; use ordinary reconciliation instead.
+        sends bytes. Choose untouched work, or explicitly review a failed
+        attempt whose complete journal proves publication never started. Live
+        workers, publication and uncertain outcomes require reconciliation.
       </p>
       <div className="table-wrap">
         <table>
@@ -434,7 +441,7 @@ export function OnboardingHandoffs({
             {view.handoff.state === "completed"
               ? "The original intent was cancelled and its exact successor queued atomically. This handoff sent no bytes. Inspect and execute the successor separately."
               : view.current_bindings
-                ? "The reviewed source is still untouched and the target activation is current. Approval reserves no worker or remote state."
+                ? "The reviewed source still meets its exact eligibility proof and the target activation is current. Approval reserves no worker or remote state."
                 : view.handoff.state === "cancelled"
                   ? "This handoff was cancelled; original job history is retained."
                   : "A reviewed source or target binding changed. New approval/execution is blocked; prepare a new review when appropriate."}
@@ -545,6 +552,24 @@ export function OnboardingHandoffs({
         }}
       >
         <h3>Prepare a queued-work handoff</h3>
+        <label htmlFor="handoff-profile">Original delivery eligibility</label>
+        <select
+          id="handoff-profile"
+          disabled={busy}
+          value={profile}
+          onChange={(e) =>
+            setProfile(
+              e.target.value as NonNullable<HandoffSelection["profile"]>,
+            )
+          }
+        >
+          <option value="untouched-production-handoff-v1">
+            Untouched: zero delivery attempts
+          </option>
+          <option value="prepublication-production-handoff-v1">
+            Failed before publication: verify the complete journal
+          </option>
+        </select>
         <label htmlFor="handoff-source-run">Original production run UUID</label>
         <input
           id="handoff-source-run"
@@ -635,11 +660,11 @@ export function OnboardingHandoffs({
             </h2>
             <p>
               {review.kind === "proposal"
-                ? "Save this exact untouched source and tested target as a private proposal. No cancellation, successor or receiver contact occurs."
+                ? "Save this exact source eligibility proof and tested target as a private proposal. No cancellation, successor or receiver contact occurs."
                 : review.action === "approve"
                   ? "Approve this exact before/after definition. The source is rechecked now and again at execution; approval does not reserve it."
                   : review.action === "execute"
-                    ? "Atomically cancel the exact untouched original intent and queue one distinct successor with the reviewed source and tested activation. A failed transaction preserves the original. This step sends no bytes."
+                    ? "Atomically cancel the exact eligible original intent and queue one distinct successor with the reviewed source and tested activation. A failed transaction preserves the original. This step sends no bytes."
                     : "Cancel only this handoff proposal. It does not delete original work or evidence."}
             </p>
             <div className="signature-box">
@@ -654,6 +679,31 @@ export function OnboardingHandoffs({
                 {d.source.dispatch.definition.release.revision}.
               </p>
               <Receiver effect={d.source.dispatch.definition.effect} />
+              {d.prepublication_proof && (
+                <p>
+                  Original state {d.source.state}. The complete journal has{" "}
+                  {d.prepublication_proof.transitions} transitions and no
+                  publication boundary. History SHA-256{" "}
+                  <code>{d.prepublication_proof.history_hash}</code>; last event{" "}
+                  <code>{d.prepublication_proof.last_event_id}</code>.
+                  {d.prepublication_proof.ciphertext ? (
+                    <>
+                      {" "}
+                      Retain original ciphertext{" "}
+                      <code>
+                        {d.prepublication_proof.ciphertext.object_id}
+                      </code>{" "}
+                      ({d.prepublication_proof.ciphertext.size_bytes} bytes),
+                      SHA-256{" "}
+                      <code>{d.prepublication_proof.ciphertext.sha256}</code>.
+                    </>
+                  ) : (
+                    " No original ciphertext artifact is recorded."
+                  )}{" "}
+                  Remote partial files remain retained. This proof does not
+                  establish receiver business acceptance.
+                </p>
+              )}
               <p>
                 File <code>{d.source.dispatch.definition.file.id}</code> ·{" "}
                 {d.source.dispatch.definition.file.size_bytes} bytes · SHA-256{" "}
@@ -693,8 +743,8 @@ export function OnboardingHandoffs({
                   ? review.preview.definition_hash
                   : review.view.handoff.definition_hash}
               </code>
-              . Publication, retry or business ambiguity cannot be cleared by
-              this handoff.
+              . Publication or business ambiguity cannot be cleared by this
+              handoff.
             </p>
             {failure && <p role="alert">{failure}</p>}
             <div className="actions">

@@ -141,3 +141,61 @@ test("handoff receipts and private history cannot invent approval, successor or 
     asHandoffPage({ handoffs: [f.summary, f.summary] }, author),
   );
 });
+
+test("pre-publication handoff has a distinct explicit profile and preserves its bounded journal proof", async () => {
+  const f = JSON.parse(
+    await readFile(
+      new URL("fixtures/onboarding-prepublication.json", import.meta.url),
+      "utf8",
+    ),
+  );
+  const p = asHandoffPreview(
+    f.preview,
+    f.selection,
+    f.summary.author_id,
+    f.plan_id,
+  );
+  assert.equal(handoffHash(p.definition), p.definition_hash);
+  assert.equal(
+    p.definition.prepublication_proof.transitions,
+    p.definition.source.delivery.revision,
+  );
+  assert.equal(p.definition.source.attempts, 1);
+  const selection = { ...f.selection };
+  delete selection.profile;
+  assert.throws(() =>
+    asHandoffPreview(f.preview, selection, f.summary.author_id, f.plan_id),
+  );
+  for (const mutate of [
+    (d) => delete d.prepublication_proof,
+    (d) => (d.source.state = "publishing"),
+    (d) => (d.source.state = "ambiguous"),
+    (d) => (d.source.attempts = 0),
+    (d) => (d.source.attempts = 9),
+    (d) => (d.source.fence = 2),
+    (d) => d.prepublication_proof.transitions++,
+    (d) => (d.prepublication_proof.transitions = 257),
+    (d) => (d.prepublication_proof.history_hash = "unknown"),
+    (d) => (d.prepublication_proof.last_event_id = "unknown"),
+    (d) =>
+      (d.prepublication_proof.ciphertext = {
+        object_id: other,
+        sha256: "8".repeat(64),
+        size_bytes: 10,
+      }),
+  ]) {
+    const d = structuredClone(f.preview.definition);
+    mutate(d);
+    assert.throws(() => asHandoffDefinition(d, f.summary.author_id, f.plan_id));
+  }
+  const untouched = fresh();
+  untouched.preview.definition.prepublication_proof =
+    f.preview.definition.prepublication_proof;
+  assert.throws(() =>
+    asHandoffDefinition(
+      untouched.preview.definition,
+      author,
+      untouched.plan_id,
+    ),
+  );
+});

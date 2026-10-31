@@ -22,12 +22,24 @@ type OnboardingHandoffSource struct {
 	Fence       int64                         `json:"fence"`
 }
 type OnboardingHandoffDefinition struct {
-	Schema          int                          `json:"schema_version"`
-	Profile         string                       `json:"profile"`
-	Source          OnboardingHandoffSource      `json:"source"`
-	Target          OnboardingDispatchDefinition `json:"target"`
-	TargetHash      string                       `json:"target_hash"`
-	SourceRecheckID string                       `json:"source_recheck_id"`
+	Schema          int                            `json:"schema_version"`
+	Profile         string                         `json:"profile"`
+	Source          OnboardingHandoffSource        `json:"source"`
+	Target          OnboardingDispatchDefinition   `json:"target"`
+	TargetHash      string                         `json:"target_hash"`
+	SourceRecheckID string                         `json:"source_recheck_id"`
+	Prepublication  *OnboardingPrepublicationProof `json:"prepublication_proof,omitempty"`
+}
+type OnboardingHandoffCiphertext struct {
+	ObjectID string `json:"object_id"`
+	SHA256   string `json:"sha256"`
+	Size     int64  `json:"size_bytes"`
+}
+type OnboardingPrepublicationProof struct {
+	Transitions int64                        `json:"transitions"`
+	HistoryHash string                       `json:"history_hash"`
+	LastEventID string                       `json:"last_event_id"`
+	Ciphertext  *OnboardingHandoffCiphertext `json:"ciphertext"`
 }
 type OnboardingHandoffSummary struct {
 	ID          string                        `json:"id"`
@@ -73,11 +85,29 @@ func (t *Transaction) OnboardingHandoff(ctx context.Context, id string, lock boo
 		return nil, ErrIsolation
 	}
 	encoded, err := json.Marshal(h.Definition)
-	if err != nil || secure.Digest(encoded) != h.Hash || h.SourceRunID != h.Definition.Source.Dispatch.ID || h.Target != h.Definition.Target.Release || h.Definition.Schema != 1 || h.Definition.Profile != "untouched-production-handoff-v1" {
+	if err != nil || secure.Digest(encoded) != h.Hash || h.SourceRunID != h.Definition.Source.Dispatch.ID || h.Target != h.Definition.Target.Release || h.Definition.Schema != 1 || (h.Definition.Profile != "untouched-production-handoff-v1" && h.Definition.Profile != "prepublication-production-handoff-v1") {
 		return nil, ErrIsolation
 	}
 	h.CreatedAt = h.CreatedAt.UTC()
 	return &h, nil
+}
+
+// The database derives this compact commitment from at most 257 indexed
+// immutable transitions. Missing/duplicate history, publication, live leases
+// and the 257th transition all refuse; a retry label alone is never proof.
+func (t *Transaction) OnboardingPrepublicationProof(ctx context.Context, d *Delivery) (*OnboardingPrepublicationProof, error) {
+	var data []byte
+	if err := t.Tx.QueryRow(ctx, `SELECT freightctl_handoff_prepublication_proof($1,$2,$3,$4,$5,false)`, t.Scope.Tenant, t.Scope.Partner, t.Actor, d.ID, d.Revision).Scan(&data); err != nil {
+		return nil, err
+	}
+	if data == nil {
+		return nil, ErrState
+	}
+	var proof OnboardingPrepublicationProof
+	if json.Unmarshal(data, &proof) != nil {
+		return nil, ErrIsolation
+	}
+	return &proof, nil
 }
 func (t *Transaction) SaveOnboardingHandoff(ctx context.Context, h *OnboardingHandoff, previous int64) error {
 	event, err := t.Append(ctx, "OnboardingHandoffChanged", h.ID, h)

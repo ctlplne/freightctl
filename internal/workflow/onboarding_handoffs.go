@@ -15,6 +15,7 @@ type OnboardingHandoffSelection struct {
 	SourceHash  string                              `json:"source_hash"`
 	Target      store.OnboardingActivationReference `json:"target_release"`
 	FileID      string                              `json:"file_id"`
+	Profile     string                              `json:"profile,omitempty"`
 }
 type OnboardingHandoffProposal struct {
 	Definition store.OnboardingHandoffDefinition `json:"definition"`
@@ -36,10 +37,14 @@ type OnboardingHandoffView struct {
 }
 
 func validHandoffSelection(r OnboardingHandoffSelection) bool {
-	return store.ValidID(r.SourceRunID) && hashPattern.MatchString(r.SourceHash) && store.ValidID(r.Target.ID) && r.Target.Revision > 0 && hashPattern.MatchString(r.Target.Hash) && store.ValidID(r.FileID)
+	return store.ValidID(r.SourceRunID) && hashPattern.MatchString(r.SourceHash) && store.ValidID(r.Target.ID) && r.Target.Revision > 0 && hashPattern.MatchString(r.Target.Hash) && store.ValidID(r.FileID) && (r.Profile == "" || r.Profile == "untouched-production-handoff-v1" || r.Profile == "prepublication-production-handoff-v1")
 }
 func handoffSelection(d store.OnboardingHandoffDefinition) OnboardingHandoffSelection {
-	return OnboardingHandoffSelection{SourceRunID: d.Source.Dispatch.ID, SourceHash: d.Source.Dispatch.Hash, Target: d.Target.Release, FileID: d.Target.File.ID}
+	r := OnboardingHandoffSelection{SourceRunID: d.Source.Dispatch.ID, SourceHash: d.Source.Dispatch.Hash, Target: d.Target.Release, FileID: d.Target.File.ID}
+	if d.Profile == "prepublication-production-handoff-v1" {
+		r.Profile = d.Profile
+	}
+	return r
 }
 func sameHandoffEffects(before, after store.OnboardingTestEffect) bool {
 	if before.Address != after.Address || before.User != after.User || before.Directory != after.Directory || before.Filename != after.Filename || (before.Encryption == nil) != (after.Encryption == nil) {
@@ -81,13 +86,25 @@ func (s *Service) handoffPreview(ctx context.Context, t *store.Transaction, r On
 	if err != nil {
 		return nil, nil, nil, nil, err
 	}
-	if intent.State != "queued" || intent.Attempts != 0 || intent.Fence != 0 || intent.LeaseOwner != "" || intent.LeaseUntil != nil {
-		return nil, nil, nil, nil, store.ErrState
+	profile := r.Profile
+	if profile == "" {
+		profile = "untouched-production-handoff-v1"
 	}
-	if artifact, err := t.DeliveryCiphertext(ctx, intent.ID); err != nil && !errors.Is(err, store.ErrNotFound) {
-		return nil, nil, nil, nil, err
-	} else if artifact != nil {
-		return nil, nil, nil, nil, store.ErrState
+	var proof *store.OnboardingPrepublicationProof
+	if profile == "untouched-production-handoff-v1" {
+		if intent.State != "queued" || intent.Attempts != 0 || intent.Fence != 0 || intent.LeaseOwner != "" || intent.LeaseUntil != nil {
+			return nil, nil, nil, nil, store.ErrState
+		}
+		if artifact, err := t.DeliveryCiphertext(ctx, intent.ID); err != nil && !errors.Is(err, store.ErrNotFound) {
+			return nil, nil, nil, nil, err
+		} else if artifact != nil {
+			return nil, nil, nil, nil, store.ErrState
+		}
+	} else {
+		proof, err = t.OnboardingPrepublicationProof(ctx, intent)
+		if err != nil {
+			return nil, nil, nil, nil, err
+		}
 	}
 	prior, err := t.OnboardingRelease(ctx, before.Release.ID, false)
 	if err != nil {
@@ -115,7 +132,7 @@ func (s *Service) handoffPreview(ctx context.Context, t *store.Transaction, r On
 	if err != nil {
 		return nil, nil, nil, nil, err
 	}
-	definition := store.OnboardingHandoffDefinition{Schema: 1, Profile: "untouched-production-handoff-v1", Source: store.OnboardingHandoffSource{Dispatch: *original, Plan: prior.Plan, RunRevision: run.Revision, Delivery: store.OnboardingActivationReference{ID: intent.ID, Revision: intent.Revision, Hash: intent.DefinitionHash}, State: intent.State, Attempts: intent.Attempts, Fence: intent.Fence}, Target: after, TargetHash: target.Hash, SourceRecheckID: recheck}
+	definition := store.OnboardingHandoffDefinition{Schema: 1, Profile: profile, Source: store.OnboardingHandoffSource{Dispatch: *original, Plan: prior.Plan, RunRevision: run.Revision, Delivery: store.OnboardingActivationReference{ID: intent.ID, Revision: intent.Revision, Hash: intent.DefinitionHash}, State: intent.State, Attempts: intent.Attempts, Fence: intent.Fence}, Target: after, TargetHash: target.Hash, SourceRecheckID: recheck, Prepublication: proof}
 	_, hash, err := digest(definition)
 	return &OnboardingHandoffPreview{Definition: definition, Hash: hash}, run, intent, workflow, err
 }
@@ -141,7 +158,7 @@ func (s *Service) PreviewOnboardingHandoff(ctx context.Context, scope store.Scop
 }
 func (s *Service) ProposeOnboardingHandoff(ctx context.Context, scope store.Scope, key string, input OnboardingHandoffProposal) (*Result, error) {
 	d := input.Definition
-	if !keyPattern.MatchString(key) || d.Schema != 1 || d.Profile != "untouched-production-handoff-v1" || !validHandoffSelection(handoffSelection(d)) {
+	if !keyPattern.MatchString(key) || d.Schema != 1 || (d.Profile != "untouched-production-handoff-v1" && d.Profile != "prepublication-production-handoff-v1") || !validHandoffSelection(handoffSelection(d)) {
 		return nil, ErrInput
 	}
 	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
@@ -251,11 +268,13 @@ func (s *Service) DecideOnboardingHandoff(ctx context.Context, scope store.Scope
 		if action == "approve" {
 			h.State = "approved"
 		} else {
-			// Zero attempts/lease/fence were checked while holding this exact row.
+			// The exact selected eligibility proof was checked under this row lock.
 			// Cancel first within the transaction so replacement does not consume an
 			// extra queue slot. Any later failure rolls back both sides and the receipt.
 			prior := intent.Revision
 			intent.State = "cancelled"
+			intent.LeaseOwner = ""
+			intent.LeaseUntil = nil
 			intent.Revision++
 			intent.Observation, _ = json.Marshal(map[string]string{"code": "onboarding_handoff", "handoff_id": h.ID})
 			if err = t.SaveDelivery(ctx, intent, prior); err != nil {

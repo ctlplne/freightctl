@@ -59,11 +59,11 @@
     },
     {
       "path": "web/src/onboarding-handoffs-types.ts",
-      "sha256": "2a33399cb6210c43f59f7c366c601d2e6633dc1687f0d3e3ec192ae08fd74b47"
+      "sha256": "8965759cdf09a84cdf505581bb4964e5b57a314f1825ce0e9cb81161c7764a52"
     },
     {
       "path": "web/src/onboarding-handoffs.tsx",
-      "sha256": "9ff938f39281f622f0ec08d7331613518a67e024736f0a7c25916841692a03d4"
+      "sha256": "dcdcdfde3a9fa1629c83a1cccce8f41ce2cd3ddd1348abf2ee858a6232c12a61"
     },
     {
       "path": "web/src/onboarding-probes-types.ts",
@@ -138,8 +138,8 @@
     },
     {
       "name": "app.js",
-      "sha256": "0361021db20c8cb87301a139b43a05c10e6edb8a1649ad61b6bca686a63f5ff7",
-      "size": 427271
+      "sha256": "3208916b3ded8a61f079b8990594c503011c1962747bd2ef50ddada931ff016e",
+      "size": 429394
     },
     {
       "name": "app.js.LEGAL.txt",

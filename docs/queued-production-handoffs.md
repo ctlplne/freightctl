@@ -2,7 +2,9 @@
 
 A queued handoff replaces an untouched production run with one separately identified successor. It keeps the original dispatch definition, accepted file and audit history. The operator reviews the old and new bindings, approves that exact definition, then executes a metadata transaction that cancels the old intent and queues its successor together. Separate ordinary execution sends the successor's bytes.
 
-This path requires zero delivery attempts, zero fence, no lease, no ciphertext artifact and a still-queued delivery intent. A dispatcher may already have prepared its workflow receipt; it cannot claim or send that cancelled intent later. Any recorded attempt, retry, publication or ambiguous outcome blocks this path. A failed connection is still an attempt. Inspect and reconcile the original outcome; a new key does not prove that resubmission is safe.
+The default `untouched-production-handoff-v1` profile requires zero delivery attempts, zero fence, no lease, no ciphertext artifact and a still-queued delivery intent. A dispatcher may already have prepared its workflow receipt; it cannot claim or send that cancelled intent later. Any recorded attempt, retry, publication or ambiguous outcome blocks this default profile. A failed connection is still an attempt. Inspect the original outcome; a new key does not prove that resubmission is safe.
+
+The separate [pre-publication recovery profile](prepublication-recovery.md) requires a complete bounded immutable journal proving that publication never started. It can preserve quiescent retry/blocked work or an expired staging lease, including retained ciphertext/remote partials. It makes no receiver business-acceptance claim. Publishing, ambiguous or live-leased work remains ineligible. Downstream systems must ignore reserved staging names; otherwise reconcile their business outcome first.
 
 ## Operator sequence
 

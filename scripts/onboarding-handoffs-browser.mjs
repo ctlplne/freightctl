@@ -16,7 +16,10 @@ export async function qualifyQueuedHandoffs(
     selection = c.handoff_selection;
   const button = (name) => section.getByRole("button", { name, exact: true });
   async function noContact() {
-    const log = await readFile(c.raw + "/receiver.log", "utf8");
+    const log = await readFile(
+      c.receiver_log ?? c.raw + "/receiver.log",
+      "utf8",
+    );
     assert.equal(
       log.split("Accepted publickey for ").length - 1,
       c.handoff_contacts_before,
@@ -81,6 +84,10 @@ export async function qualifyQueuedHandoffs(
   await section
     .getByLabel("Accepted replacement file UUID", { exact: true })
     .fill(selection.file_id);
+  if (selection.profile)
+    await section
+      .getByLabel("Original delivery eligibility", { exact: true })
+      .selectOption(selection.profile);
   await button("Preview queued handoff").click();
   const title = page.getByRole("heading", {
     name: "Review queued handoff",
@@ -93,6 +100,15 @@ export async function qualifyQueuedHandoffs(
   );
   await page.getByText(c.handoff_hash, { exact: true }).waitFor();
   await page.getByText(c.new_recipient, { exact: true }).waitFor();
+  if (c.prepublication_proof) {
+    await page
+      .getByText(c.prepublication_proof.history_hash, { exact: true })
+      .waitFor();
+    await page
+      .getByText(c.prepublication_proof.ciphertext.object_id, { exact: true })
+      .waitFor();
+    await page.getByText(/Remote partial files remain retained/).waitFor();
+  }
   await noContact();
   await audit("handoff-review");
   let h = await loss(
