@@ -1034,6 +1034,22 @@
       "regression_evidence": [
         "docs/qualification/evidence/F030-onboarding-production-releases.json"
       ]
+    },
+    {
+      "id": "D068",
+      "severity": "native qualification Docker-daemon connection failure",
+      "state": "open",
+      "observed_on": "2026-10-30",
+      "candidate": "041dd18a9a4ef9a990f8afffc22901393e3cae05 plus F033 exact 313-input candidate",
+      "journey": "J11",
+      "reproduction": "The first 200-step observation qualification reached the existing pre-publication crash fixture, then docker exec psql reported it could not connect to the Docker daemon. The new observation cases had not started. The command was terminal and fixture cleanup subsequently succeeded.",
+      "first_failure": "evidence/raw/onboarding-exchange-da45b7702a3e4e3b8c2b95d428921eea/manifest.json; original output and all 313 source copies retained by F033.",
+      "cause": "Unassigned. Subsequent read-only inspection found the same PostgreSQL ID running with unchanged limits and no OOM flag; direct SQL responded. This does not establish the daemon disconnect cause or identify any external actor.",
+      "resolution": "Preserve the original failure/source epoch and exact-resource recheck. The original 316-step journey passes on identical source/application binary after revalidation, with no shared Docker restart, deadline/assertion/budget change or inferred root-cause repair.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F033-readonly-receipt-observations.json",
+        ".private/onboarding-observation-resource-recheck.json"
+      ]
     }
   ]
 }

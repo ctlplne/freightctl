@@ -165,6 +165,7 @@ function dispatch(value: unknown): ProductionDefinition {
     effect: asTestEffect(o.effect),
   };
 }
+export { dispatch as asDispatchDefinition };
 export function asHandoffDefinition(
   value: unknown,
   author: string,

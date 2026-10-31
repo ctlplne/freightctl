@@ -1,0 +1,152 @@
+{
+  "plan_id": "00000001-1111-4111-8111-111111111111",
+  "selection": {
+    "source_run_id": "00000016-1111-4111-8111-111111111111",
+    "source_hash": "e4829013e3a7fb749f6db04654b8fe6b1d4958de4966c2b0dcea029d6ed5df8e",
+    "probe_id": "000000ab-1111-4111-8111-111111111111",
+    "file_id": "00000014-1111-4111-8111-111111111111",
+    "expected_authority_revision": 8
+  },
+  "preview": {
+    "definition": {
+      "schema_version": 1,
+      "profile": "sftp-published-observation-v1",
+      "source": {
+        "dispatch": {
+          "id": "00000016-1111-4111-8111-111111111111",
+          "author_id": "0000000b-1111-4111-8111-111111111111",
+          "definition": {
+            "schema_version": 1,
+            "release": {
+              "id": "0000000f-1111-4111-8111-111111111111",
+              "revision": 3,
+              "hash": "bbee92455bfb5e3f6d7aaf695af9b99dd67875e0b7395e03ebbd40f1f0cdb7e0"
+            },
+            "requirement_id": "00000002-1111-4111-8111-111111111111",
+            "test_id": "0000000c-1111-4111-8111-111111111111",
+            "test_hash": "74fdfc348a447be9ef8461a92b477f1436cdb068da3042425ca8a6c1a77a6e85",
+            "workflow": {
+              "id": "00000006-1111-4111-8111-111111111111",
+              "version": 4,
+              "hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+            },
+            "file": {
+              "id": "00000014-1111-4111-8111-111111111111",
+              "size_bytes": 123,
+              "sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+              "policy": "sha256",
+              "accepted_event_id": "00000009-1111-4111-8111-111111111111"
+            },
+            "storage_id": "0000000a-1111-4111-8111-111111111111",
+            "namespace_root": "/",
+            "authority_revision": 7,
+            "effect": {
+              "address": "127.0.0.1:2222",
+              "user": "synthetic",
+              "directory": "/inbox",
+              "filename": "sample.csv",
+              "host_fingerprint": "SHA256:synthetic-host",
+              "key_fingerprint": "SHA256:synthetic-client",
+              "recipient_fingerprint": ""
+            }
+          },
+          "definition_hash": "e4829013e3a7fb749f6db04654b8fe6b1d4958de4966c2b0dcea029d6ed5df8e",
+          "created_event_id": "00000017-1111-4111-8111-111111111111"
+        },
+        "plan": {
+          "id": "00000001-1111-4111-8111-111111111111",
+          "version": 2,
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "run_revision": 2,
+        "delivery": {
+          "id": "00000018-1111-4111-8111-111111111111",
+          "revision": 5,
+          "hash": "4444444444444444444444444444444444444444444444444444444444444444"
+        },
+        "state": "ambiguous",
+        "attempts": 1,
+        "fence": 1
+      },
+      "original_connection": {
+        "id": "00000005-1111-4111-8111-111111111111",
+        "version": 3,
+        "hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      },
+      "authorized_file": {
+        "id": "00000014-1111-4111-8111-111111111111",
+        "size_bytes": 123,
+        "sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+        "policy": "sha256",
+        "accepted_event_id": "00000009-1111-4111-8111-111111111111"
+      },
+      "source_recheck_id": "",
+      "probe": {
+        "id": "000000ab-1111-4111-8111-111111111111",
+        "revision": 3,
+        "hash": "a85853ebfe6a816f8121110d046c971d60702b20b5890bb94503c14f4f8ce416"
+      },
+      "observer": {
+        "schema_version": 1,
+        "profile": "sftp-readonly-v1",
+        "plan": {
+          "id": "00000001-1111-4111-8111-111111111111",
+          "version": 3,
+          "hash": "6666666666666666666666666666666666666666666666666666666666666666"
+        },
+        "requirement_id": "00000002-1111-4111-8111-111111111111",
+        "connection": {
+          "id": "00000005-1111-4111-8111-111111111111",
+          "version": 4,
+          "hash": "5555555555555555555555555555555555555555555555555555555555555555"
+        },
+        "authority_revision": 8
+      },
+      "effect": {
+        "address": "127.0.0.1:2222",
+        "user": "synthetic",
+        "directory": "/inbox",
+        "path": "/inbox/00000018-1111-4111-8111-111111111111-sample.csv",
+        "host_fingerprint": "SHA256:rotated-host",
+        "key_fingerprint": "SHA256:rotated-client"
+      },
+      "wire": {
+        "sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+        "size_bytes": 123,
+        "ciphertext": null
+      },
+      "required_receipt": "integrity",
+      "storage_id": "0000000a-1111-4111-8111-111111111111",
+      "namespace_root": "/",
+      "authority_revision": 8
+    },
+    "definition_hash": "ddeba9f01dfcdeb455ab739a83c8cced5f5c4c77b15bdfaa077859b28f1b050b",
+    "external_contact": false,
+    "resend_authorized": false
+  },
+  "summary": {
+    "id": "000000ac-1111-4111-8111-111111111111",
+    "author_id": "0000000b-1111-4111-8111-111111111111",
+    "source_run_id": "00000016-1111-4111-8111-111111111111",
+    "definition_hash": "ddeba9f01dfcdeb455ab739a83c8cced5f5c4c77b15bdfaa077859b28f1b050b",
+    "state": "proposed",
+    "revision": 1,
+    "worker_key": "",
+    "lease_owner": "",
+    "lease_until": null,
+    "started_at": null,
+    "completed_at": null,
+    "result": {
+      "code": "awaiting_review",
+      "integrity_confirmed": false,
+      "sha256": "",
+      "size_bytes": 0,
+      "file_fsync_acknowledged": false,
+      "reconciled": false,
+      "business_acceptance": "unknown",
+      "directory_power_loss_durability": "not established"
+    },
+    "created_at": "2026-10-30T01:00:00Z",
+    "changed_event_id": "000000ad-1111-4111-8111-111111111111"
+  }
+}

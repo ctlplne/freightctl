@@ -24,6 +24,8 @@ Migration 25 adds an indexed immutable transition lookup and the guarded eligibi
 
 These tests distinguish source transaction guards from genuine receiver behavior. Native checks use only disposable fixture databases, task-owned loopback processes, synthetic bytes, stock SFTP and independent bounded GnuPG. Publishing and ambiguous delivery after rotation still require reconciliation; this is not a receiver business idempotency or exactly-once contract. The full owner-deferred replay remains pending, and models/scanner stay off. The retained database is upgraded normally to schema 25/48 forced-RLS tables with counts preserved; the exact task PostgreSQL returns to stopped with its volume/limits intact.
 
+[Read-only receipt observations](receipt-observations.md) now provide a separate reviewed path for expired publication or ambiguous original SFTP outcomes under current tested trust. They hash the original final wire object and preserve its execution history. Recovered integrity is separate from unknown business acceptance; absence or difference cannot authorize resubmission.
+
 ```sh
 PYTHONDONTWRITEBYTECODE=1 \
 FREIGHTCTL_GNUPG_NATIVE_CONFIG="$PWD/.private/freightctl-gnupg-native.json" \

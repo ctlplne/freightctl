@@ -59,11 +59,19 @@
     },
     {
       "path": "web/src/onboarding-handoffs-types.ts",
-      "sha256": "8965759cdf09a84cdf505581bb4964e5b57a314f1825ce0e9cb81161c7764a52"
+      "sha256": "a0b72b76a16bb312dcf0ec38b8c8b12ef9a4f6ff5df58d95a40520b6813d4b9a"
     },
     {
       "path": "web/src/onboarding-handoffs.tsx",
       "sha256": "dcdcdfde3a9fa1629c83a1cccce8f41ce2cd3ddd1348abf2ee858a6232c12a61"
+    },
+    {
+      "path": "web/src/onboarding-observations-types.ts",
+      "sha256": "15a840c7df095190b4dbee29be12215a104c57073eeafbd04bd3a6de4f4b189a"
+    },
+    {
+      "path": "web/src/onboarding-observations.tsx",
+      "sha256": "2a47cb5cce9b800c116210b6371ada0c4ce7cf080d33fe7f7444d5aa3de496bf"
     },
     {
       "path": "web/src/onboarding-probes-types.ts",
@@ -75,11 +83,11 @@
     },
     {
       "path": "web/src/onboarding-releases-types.ts",
-      "sha256": "836b3b83d9731fdbfef34324346fdfbb07ac31afc70a2acb7de985bb88c4cd4a"
+      "sha256": "0814f767efce5c82dc004882694e97a75589f97c02fe6f911a668e52c1292309"
     },
     {
       "path": "web/src/onboarding-releases.tsx",
-      "sha256": "1a24ab5c3be0f47ae9e23884f3fe9f6959deca9ec2158493c9094b2bcd0281cf"
+      "sha256": "237d411ecd8f282a5fa0a5aac98ea3edb6b47d21ad1fe29c9090b7fbf7324b89"
     },
     {
       "path": "web/src/onboarding-tests-types.ts",
@@ -138,8 +146,8 @@
     },
     {
       "name": "app.js",
-      "sha256": "3208916b3ded8a61f079b8990594c503011c1962747bd2ef50ddada931ff016e",
-      "size": 429394
+      "sha256": "eb340b40ccfba9a94e7b9cc2d062e2572d20232f0bd71a0f62de25eebef6ae17",
+      "size": 452316
     },
     {
       "name": "app.js.LEGAL.txt",

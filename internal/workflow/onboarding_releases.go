@@ -521,9 +521,10 @@ func (s *Service) stageProduction(ctx context.Context, t *store.Transaction, d s
 }
 
 type OnboardingProductionView struct {
-	Dispatch *store.OnboardingDispatch `json:"dispatch"`
-	Status   *RunView                  `json:"status"`
-	Current  bool                      `json:"current_bindings"`
+	Dispatch *store.OnboardingDispatch         `json:"dispatch"`
+	Status   *RunView                          `json:"status"`
+	Current  bool                              `json:"current_bindings"`
+	Outcome  *store.OnboardingTransportOutcome `json:"transport_outcome"`
 }
 
 func (s *Service) OnboardingProductionStatus(ctx context.Context, scope store.Scope, id string) (*OnboardingProductionView, error) {
@@ -564,7 +565,17 @@ func (s *Service) OnboardingProductionStatus(ctx context.Context, scope store.Sc
 	if err = t.Reauthorize(ctx); err != nil {
 		return nil, err
 	}
-	return &OnboardingProductionView{Dispatch: d, Status: view, Current: current}, t.Tx.Commit(ctx)
+	outcome, err := t.OnboardingTransportOutcome(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	if outcome.Observation == nil && view.ObservedState == "succeeded" {
+		outcome.State = "integrity_confirmed"
+	}
+	if err = t.Reauthorize(ctx); err != nil {
+		return nil, err
+	}
+	return &OnboardingProductionView{Dispatch: d, Status: view, Current: current, Outcome: outcome}, t.Tx.Commit(ctx)
 }
 func (s *Service) ListOnboardingProduction(ctx context.Context, scope store.Scope, release, after string, limit int) (*store.OnboardingDispatchPage, error) {
 	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)

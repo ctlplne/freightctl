@@ -59,6 +59,14 @@ func NewWithBrowserLifetime(service *custody.Service, audits *audit.Service, ena
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/onboarding-plans/{plan}/probes", s.onboardingProbe)
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/onboarding-probes", s.onboardingProbe)
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/onboarding-exchange-review", s.onboardingExchangeReview)
+
+	for _, action := range []string{"approve", "cancel", "work"} {
+		m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/onboarding-observations/{observation}/"+action, s.onboardingObservationAction(action))
+	}
+	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/onboarding-observations/preview", s.onboardingObservationAction("preview"))
+	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/onboarding-observations", s.onboardingObservationAction("propose"))
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/onboarding-observations/{observation}", s.onboardingObservationAction("status"))
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/onboarding-plans/{plan}/observations", s.onboardingObservationAction("list"))
 	for _, action := range []string{"approve", "cancel", "execute"} {
 		m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/onboarding-handoffs/{handoff}/"+action, s.onboardingHandoffAction(action))
 	}

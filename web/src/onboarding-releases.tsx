@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Api } from "./api";
 import { operationKey } from "./crypto";
+import { OnboardingObservations } from "./onboarding-observations";
 import { OnboardingHandoffs } from "./onboarding-handoffs";
 import { uuid, type Session } from "./types";
 import { asOnboardingView, type OnboardingPlan } from "./onboarding-types";
@@ -660,6 +661,19 @@ export function OnboardingReleases({
                 .join(" ")}
             </p>
           )}
+          {productionStatus?.recovered_receipt && (
+            <p role="status">
+              Recovered integrity receipt{" "}
+              <code>{productionStatus.recovered_receipt.id}</code>, recorded at{" "}
+              <time>{productionStatus.recovered_receipt.completed_at}</time>.
+              Exact original wire SHA-256{" "}
+              <code>{productionStatus.recovered_receipt.result.sha256}</code> ·{" "}
+              {productionStatus.recovered_receipt.result.size_bytes} bytes.
+              Business acceptance remains unknown. The original execution
+              projection and activation stay unchanged; this receipt grants no
+              resend.
+            </p>
+          )}
           <button
             className="secondary"
             disabled={busy}
@@ -680,6 +694,22 @@ export function OnboardingReleases({
           </button>
         </div>
       )}
+      <OnboardingObservations
+        api={api}
+        session={session}
+        plan={plan}
+        onError={onError}
+        {...(run
+          ? {
+              source: {
+                ...run,
+                ...(productionStatus
+                  ? { fileID: productionStatus.definition.file.id }
+                  : {}),
+              },
+            }
+          : {})}
+      />
       <OnboardingHandoffs
         api={api}
         session={session}

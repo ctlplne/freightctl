@@ -109,3 +109,7 @@ def qualify_prepublication(c, h, prepared):
     assert c['sha'](inbox/(prepared['uncertain_id']+'-handoff-data.bin'))==prepared['uncertain_ciphertext']['sha256']
     history=invoke('prepublication-cli-history','partner-onboarding-handoff-list','--onboarding-id',h['plan']['id'],token=h['owner']);assert len(history['handoffs'])==3
     (raw/'prepublication-result.json').write_text(json.dumps({'state':'passed','original_run_id':prepared['original']['run']['id'],'replacement_run_id':handoff['replacement_run_id'],'original_delivery_state':'staging with actual original lease expired','original_attempts_preserved':1,'original_ciphertext':proof['ciphertext'],'retained_remote_partial':prepared['partial'].name,'original_final_never_published':True,'complete_journal':proof,'retry_successor':retry['replacement_run_id'],'published_source_refused_even_after_lease_expiry':True,'uncertain_final_preserved':prepared['uncertain_id'],'stock_sftp_and_new_recipient_decryption':'exact original bytes for both successors','default_profile_still_refuses_attempts':True,'inference_performed':False,'scanner_started':False},indent=2)+'\n')
+
+    if c['options'].observations:
+        from onboarding_observations_qualification import qualify_observations
+        qualify_observations(c,h,prepared)

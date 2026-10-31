@@ -9,6 +9,10 @@ import {
 } from "./onboarding-tests-types";
 import type { OnboardingPlan } from "./onboarding-types";
 import type { ProbeReference } from "./onboarding-probes-types";
+import {
+  asObservationSummary,
+  type ObservationSummary,
+} from "./onboarding-observations-types";
 export interface ReleaseSelection {
   plan: ProbeReference;
   test_ids: string[];
@@ -470,6 +474,7 @@ export interface ProductionStatus {
   reason: string;
   current: boolean;
   definition: ProductionDefinition;
+  recovered_receipt?: ObservationSummary;
   steps: {
     id: string;
     delivery_id: string;
@@ -477,6 +482,36 @@ export interface ProductionStatus {
     attempts: number;
     code: string;
   }[];
+}
+
+export function asRecoveredTransportReceipt(
+  value: unknown,
+  author: string,
+  runID: string,
+  wireHash: string,
+  wireSize: number,
+  ordinarySucceeded: boolean,
+): ObservationSummary | undefined {
+  if (value === undefined) return undefined;
+  const o = object(value);
+  if (o.state === "unresolved") {
+    if (o.observation !== undefined) bad();
+    return undefined;
+  }
+  if (o.state !== "integrity_confirmed") bad();
+  if (o.observation === undefined) {
+    if (!ordinarySucceeded) bad();
+    return undefined;
+  }
+  const receipt = asObservationSummary(o.observation, author);
+  if (
+    receipt.state !== "succeeded" ||
+    receipt.source_run_id !== runID ||
+    receipt.result.sha256 !== wireHash ||
+    receipt.result.size_bytes !== wireSize
+  )
+    bad();
+  return receipt;
 }
 export function asProductionPage(
   value: unknown,
@@ -593,11 +628,36 @@ export function asProductionStatus(
           : text(obs, "code", 128),
     };
   });
+  let wireHash = d.file.sha256,
+    wireSize = d.file.size_bytes;
+  if (
+    o.transport_outcome !== undefined &&
+    object(o.transport_outcome).observation !== undefined &&
+    d.effect.encryption
+  ) {
+    const cipher = object(object((status.steps as unknown[])[0]).ciphertext);
+    if (
+      cipher.source_file_id !== d.file.id ||
+      cipher.source_sha256 !== d.file.sha256
+    )
+      bad();
+    wireHash = hash(cipher, "sha256");
+    wireSize = num(cipher, "size_bytes");
+  }
+  const recovered = asRecoveredTransportReceipt(
+    o.transport_outcome,
+    author,
+    expected.id,
+    wireHash,
+    wireSize,
+    status.observed_state === "succeeded",
+  );
   return {
     state: text(status, "observed_state", 24),
     reason: text(status, "observed_reason", 64),
     current: o.current_bindings as boolean,
     definition: d,
     steps,
+    ...(recovered ? { recovered_receipt: recovered } : {}),
   };
 }

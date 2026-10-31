@@ -6,6 +6,8 @@ The default `untouched-production-handoff-v1` profile requires zero delivery att
 
 The separate [pre-publication recovery profile](prepublication-recovery.md) requires a complete bounded immutable journal proving that publication never started. It can preserve quiescent retry/blocked work or an expired staging lease, including retained ciphertext/remote partials. It makes no receiver business-acceptance claim. Publishing, ambiguous or live-leased work remains ineligible. Downstream systems must ignore reserved staging names; otherwise reconcile their business outcome first.
 
+For an expired publication or ambiguous SFTP outcome, a separately [reviewed read-only receipt observation](receipt-observations.md) can inspect the exact original final bytes using current tested SSH trust. It preserves original execution and records recovered integrity evidence without a replacement transfer. Missing or different bytes remain unresolved and never grant resend authority.
+
 ## Operator sequence
 
 1. Inspect the original production run and keep its UUID, immutable production-definition hash, accepted source and current delivery state. Stop scheduling work against the old activation as appropriate.
