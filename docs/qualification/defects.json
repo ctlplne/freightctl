@@ -1068,6 +1068,40 @@
         ".private/onboarding-observation-evidence-refusal-tests-final.log",
         "evidence/raw/onboarding-exchange-e58ef92c53a847a6b71e1688614cbddd/manifest.json"
       ]
+    },
+    {
+      "id": "D070",
+      "severity": "production status blocked by worker approval account lock",
+      "state": "fixed locally",
+      "observed_on": "2026-10-30",
+      "candidate": "cd3b2b331bd7703daffdbfcbb428e3a368d77b02 plus original328-input F035 candidate",
+      "journey": "J11",
+      "reproduction": "Original native replay reaches the unchanged eight-second pre-publication SQL barrier. Added worker approval check holds the broad account lock, so separate production status waits9.213s and observes publishing instead of staged state.",
+      "first_failure": "evidence/raw/onboarding-exchange-54e116cd1f60429fb70b6bb45e487d99/manifest.json",
+      "cause": "The worker current-approval predicate acquired the account writer lock for its SQL transaction; status uses the management account lock and could not observe staged work while that transaction remained open.",
+      "resolution": "Keep worker approval checks on the shared policy lock; credential updates join the exclusive policy lock after their existing account lock. Add actual status-observability and concurrent credential-mutation regressions. Original native assertions/barrier/leases pass unchanged.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F035-independent-production-approvals.json",
+        ".private/onboarding-approval-postgres-lock-repair.log",
+        ".private/onboarding-approval-postgres-lifecycle.log"
+      ]
+    },
+    {
+      "id": "D071",
+      "severity": "per-invocation browser qualification summaries overwritten",
+      "state": "fixed locally",
+      "observed_on": "2026-10-30",
+      "candidate": "cd3b2b331bd7703daffdbfcbb428e3a368d77b02 and intermediate F035 native epochs",
+      "journey": "J11",
+      "reproduction": "Nine browser invocations in an intermediate original journey leave only six common summary files; F034 has the same three-report loss. Individual command outputs stay intact but earlier runtime-error/egress summaries are overwritten.",
+      "first_failure": ".private/onboarding-approval-browser-evidence-first-finding.json",
+      "cause": "Multiple browser phases write the same compatibility report path, and prior command closure did not preserve/validate an invocation-specific report.",
+      "resolution": "Capture a separate summary and configuration hash immediately after each browser command, before another invocation can overwrite the common file. Refuse page errors/egress or failed reports even with child exit0; include captures in final hash closure. Nine lightweight capture/refusal tests and the full same-application-binary363-step replay pass with nine unique summaries and972 verified operation outputs. Original summaries remain unreconstructed; F034 qualification state corrected.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F035-independent-production-approvals.json",
+        ".private/onboarding-approval-evidence-refusal-tests.log",
+        "evidence/raw/onboarding-exchange-ae503cc8536d4b51a7f8bf16b30e3a67/manifest.json"
+      ]
     }
   ]
 }

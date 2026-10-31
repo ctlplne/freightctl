@@ -106,6 +106,14 @@ func (s *Service) releasePreview(ctx context.Context, t *store.Transaction, r On
 		tests[test.Definition.RequirementID] = test
 	}
 	out := &OnboardingReleasePreview{Definition: store.OnboardingReleaseDefinition{Schema: 1, Profile: "sftp-outbound-production-v1", Plan: r.Plan, Authority: t.AuthorityRevision, Root: t.Root, Proofs: []store.OnboardingReleaseProof{}}, Tests: []store.OnboardingTest{}}
+	policy, err := t.OnboardingApprovalPolicy(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if policy.Revision > 0 {
+		binding := policy.OnboardingApprovalBinding
+		out.Definition.ApprovalPolicy = &binding
+	}
 	for _, req := range plan.Definition.Requirements {
 		if req.Direction != "send" || req.Protocol != "sftp" {
 			return nil, ErrInput
@@ -230,6 +238,13 @@ func (s *Service) validateRelease(ctx context.Context, t *store.Transaction, r *
 	if current.Hash != r.Hash {
 		return store.ErrRevision
 	}
+	approved, err := t.OnboardingApprovalCurrent(ctx, r.ID)
+	if err != nil {
+		return err
+	}
+	if !approved {
+		return store.ErrState
+	}
 	return nil
 }
 func (s *Service) DecideOnboardingRelease(ctx context.Context, scope store.Scope, id, action, key string, decision Decision) (*Result, error) {
@@ -243,7 +258,17 @@ func (s *Service) DecideOnboardingRelease(ctx context.Context, scope store.Scope
 		return nil, err
 	}
 	defer t.Tx.Rollback(ctx)
-	if action == "approve" || action == "revoke" {
+	if action == "approve" {
+		policy, e := t.OnboardingApprovalPolicy(ctx)
+		if e != nil {
+			return nil, e
+		}
+		if policy.Mode == "independent" {
+			err = t.Require("workflow_manage")
+		} else {
+			err = t.Require("workflow_approve")
+		}
+	} else if action == "revoke" {
 		err = t.Require("workflow_approve")
 	} else {
 		err = t.Require("workflow_execute")

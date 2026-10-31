@@ -126,3 +126,7 @@ def qualify_handoffs(c):
  if prepared_prepublication is not None:
   from onboarding_prepublication_qualification import qualify_prepublication
   qualify_prepublication(c,dict(locals()),prepared_prepublication)
+
+ if c['options'].approvals:
+  from onboarding_approvals_qualification import qualify_approvals
+  qualify_approvals(c,dict(locals()))

@@ -4,6 +4,7 @@ import { createRoot } from "react-dom/client";
 import { Api } from "./api";
 import { Accounts } from "./accounts";
 import { Partners } from "./partners";
+import { OnboardingApprovals } from "./onboarding-approvals";
 import { Onboarding } from "./onboarding";
 import { CheckEvidence } from "./check-evidence";
 import { CheckRecovery } from "./check-recovery";
@@ -114,7 +115,13 @@ function App() {
     [notice, setNotice] = useState(""),
     [signingIn, setSigningIn] = useState(false);
   const [tab, setTab] = useState<
-      "files" | "uploads" | "checks" | "accounts" | "partners" | "onboarding"
+      | "files"
+      | "uploads"
+      | "checks"
+      | "accounts"
+      | "partners"
+      | "onboarding"
+      | "approvals"
     >("files"),
     [refresh, setRefresh] = useState(0);
   const [folder, setFolder] = useState("/"),
@@ -623,6 +630,16 @@ function App() {
                 Onboarding
               </button>
             )}
+            {(allowed("workflow_manage") ||
+              allowed("workflow_approve") ||
+              allowed("accounts_manage")) && (
+              <button
+                aria-current={tab === "approvals" ? "page" : undefined}
+                onClick={() => setTab("approvals")}
+              >
+                Approvals
+              </button>
+            )}
             {session.identity.tenant_administration && (
               <button
                 aria-current={tab === "partners" ? "page" : undefined}
@@ -743,11 +760,13 @@ function App() {
                       ? "Uploads"
                       : tab === "partners"
                         ? "Partners"
-                        : tab === "onboarding"
-                          ? "Onboarding plans"
-                          : tab === "accounts"
-                            ? "Accounts"
-                            : "Intake checks"}
+                        : tab === "approvals"
+                          ? "Independent approvals"
+                          : tab === "onboarding"
+                            ? "Onboarding plans"
+                            : tab === "accounts"
+                              ? "Accounts"
+                              : "Intake checks"}
                 </h1>
                 <p>
                   {tab === "files"
@@ -756,11 +775,13 @@ function App() {
                       ? "Send one exact file. Continue from the last server-confirmed checkpoint."
                       : tab === "partners"
                         ? "Enroll partners under explicit tenant authority; review each administrator credential and grants."
-                        : tab === "onboarding"
-                          ? "Record responsible contacts and exact exchange requirements as versioned drafts."
-                          : tab === "accounts"
-                            ? "Review scoped access, credential rotation, expiry and revocation."
-                            : "Held files need their required checks and a separate release decision."}
+                        : tab === "approvals"
+                          ? "Review exact production effects under the partner’s approval policy."
+                          : tab === "onboarding"
+                            ? "Record responsible contacts and exact exchange requirements as versioned drafts."
+                            : tab === "accounts"
+                              ? "Review scoped access, credential rotation, expiry and revocation."
+                              : "Held files need their required checks and a separate release decision."}
                 </p>
               </div>
               <button
@@ -802,6 +823,17 @@ function App() {
                         "Onboarding draft saved. Tests, approval and activation remain required.",
                     );
                   }}
+                />
+              )}
+            {tab === "approvals" &&
+              (allowed("workflow_manage") ||
+                allowed("workflow_approve") ||
+                allowed("accounts_manage")) && (
+                <OnboardingApprovals
+                  api={api}
+                  session={session}
+                  refresh={refresh}
+                  onError={reportError}
                 />
               )}
             {tab === "accounts" && (

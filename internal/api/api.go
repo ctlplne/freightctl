@@ -77,6 +77,16 @@ func NewWithBrowserLifetime(service *custody.Service, audits *audit.Service, ena
 	for _, action := range []string{"approve", "activate", "suspend", "revoke"} {
 		m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/onboarding-releases/{release}/"+action, s.onboardingReleaseAction(action))
 	}
+
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/onboarding-approval-policy", s.onboardingApproval("policy"))
+	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/onboarding-approval-policy", s.onboardingApproval("policy-change"))
+	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/onboarding-approval-reviews/preview", s.onboardingApproval("preview"))
+	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/onboarding-approval-reviews", s.onboardingApproval("propose"))
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/onboarding-approval-reviews", s.onboardingApproval("list"))
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/onboarding-approval-reviews/{review}", s.onboardingApproval("status"))
+	for _, action := range []string{"approve", "reject", "withdraw"} {
+		m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/onboarding-approval-reviews/{review}/"+action, s.onboardingApproval(action))
+	}
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/onboarding-releases/preview", s.onboardingReleaseAction("preview"))
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/onboarding-releases", s.onboardingReleaseAction("propose"))
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/onboarding-releases/{release}", s.onboardingReleaseAction("status"))

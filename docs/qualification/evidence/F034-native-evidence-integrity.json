@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "F034",
   "kind": "Native qualification output integrity and repaired original read-only receipt-observation replay",
-  "state": "verified locally",
+  "state": "in progress",
   "observed_at": "2026-10-31T02:34:43.002986+00:00",
   "qualification_scope": "Selected assisted actor-private outbound SFTP on macOS 27.2 arm64, OpenSSH 10.5p1, Node 26.0.0, Go 1.26.10, real PostgreSQL/storage and independent bounded native GnuPG. Synthetic 73-byte source; complete J05/J06, independent adoption and enterprise/platform/production qualification remain open.",
   "full_journeys_qualified": false,
@@ -1378,7 +1378,8 @@
     "vulnerability_image_analysis": "No new current-source vulnerability/image/OS analysis claimed",
     "qualification_record_refusal_tests": 15,
     "qualification_records": "passed; 83 parity rows, 12 journeys and six protocol contracts, with all whole-row/journey states unchanged",
-    "source_and_history_secret_scans": "Final candidate and committed tree/history checks are recorded separately in the private checkpoint to avoid self-referential artifact hashes."
+    "source_and_history_secret_scans": "Final candidate and committed tree/history checks are recorded separately in the private checkpoint to avoid self-referential artifact hashes.",
+    "browser_summary_closure": "D071: recorded command outputs remain valid, but six browser invocations shared three surviving common reports. Earlier per-invocation runtime-error/egress summaries were overwritten. F035 preserves unique reports and checks every invocation; original F034 raw files remain unchanged."
   },
   "resources": {
     "postgresql": "Exact existing 512 MiB/one-CPU task PostgreSQL only; disposable fixture removed. Retained schema26/49 forced RLS, event/file/credential counts and non-bypass runtime unchanged. Original stopped state, limits and volume restored.",
@@ -6483,6 +6484,8 @@
     "New remote absence/difference is not permission to resend. Broader recovery/contracts/policies/signatures/scanners, protocols/algorithms/platforms, larger workloads, distributed failures, delegation/environment promotion, adoption and all remaining GOAL.md work stay required.",
     "D068 daemon disconnect cause remains unresolved despite unchanged original replay passing; no assertion, timeout, lease, attempt count, isolation or resource target was weakened.",
     "No full current-source aggregate or new vulnerability/image scan is claimed. F026 complete replay remains owner-deferred. Models/scanner remain off; no push/publication/external deployment, global keyring/SSH change or shared Docker lifecycle action.",
-    "D069 fixes qualifier evidence integrity only. F033 original application assertions remain historical, and its incomplete original artifact bundle remains unverified. F034 supplies the repaired native qualification on unchanged application bytes."
-  ]
+    "D069 fixes qualifier evidence integrity only. F033 original application assertions remain historical, and its incomplete original artifact bundle remains unverified. F034 supplies the repaired native qualification on unchanged application bytes.",
+    "D071 prevents treating the original aggregate browser-summary evidence as complete. The 839 recorded operation outputs remain hash-verified; use F035 for repaired per-invocation native qualification."
+  ],
+  "superseded_by": "docs/qualification/evidence/F035-independent-production-approvals.json"
 }

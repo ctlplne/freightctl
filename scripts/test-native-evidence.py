@@ -2,6 +2,7 @@
 """Real temporary-output refusal tests; no service, model or scanner startup."""
 from pathlib import Path
 import hashlib
+import json
 import subprocess
 import sys
 import tempfile
@@ -73,6 +74,37 @@ class NativeOutputContracts(unittest.TestCase):
                 command(name)
         self.assertFalse(counter.exists())
         self.assertEqual((root/'existing.json').read_text(), 'keep')
+
+    def test_browser_invocations_survive_common_summary_overwrite(self):
+        root, steps, proof, counter, command = self.fixture()
+        report = root/'common-browser-report.json'
+        for name in ('first-browser', 'second-browser'):
+            command(name)
+            subprocess.run([sys.executable, '-c', 'import json,pathlib,sys; pathlib.Path(sys.argv[1]).write_text(json.dumps({"state":"passed","runtime_errors":[],"external_egress":[],"invocation":sys.argv[2]}))', str(report), name], check=True)
+            proof.capture_browser(name, report)
+        self.assertEqual(json.loads((root/'first-browser.browser.json').read_text())['invocation'], 'first-browser')
+        self.assertEqual(json.loads((root/'second-browser.browser.json').read_text())['invocation'], 'second-browser')
+        self.assertEqual(json.loads(report.read_text())['invocation'], 'second-browser')
+        self.assertEqual(proof.verify(), 8)
+
+    def test_browser_page_errors_or_egress_refuse_a_reported_pass(self):
+        for errors, egress in [(['actual page exception'], []), ([], ['https://untrusted.invalid'])]:
+            root, steps, proof, counter, command = self.fixture()
+            command('browser-errors')
+            report = root/'common-browser-report.json'
+            report.write_text(json.dumps({'state':'passed', 'runtime_errors':errors, 'external_egress':egress}))
+            with self.assertRaisesRegex(ValueError, 'page errors/external egress'):
+                proof.capture_browser('browser-errors', report)
+            self.assertEqual((root/'browser-errors.browser.json').read_bytes(), report.read_bytes())
+            self.assertEqual(proof.verify(), 4)
+
+    def test_existing_browser_capture_refuses_before_command_effects(self):
+        root, steps, proof, counter, command = self.fixture()
+        (root/'existing.browser.json').write_text('retain first invocation')
+        with self.assertRaisesRegex(ValueError, 'already exists'):
+            command('existing')
+        self.assertFalse(counter.exists())
+        self.assertEqual((root/'existing.browser.json').read_text(), 'retain first invocation')
 
 
 if __name__ == '__main__':

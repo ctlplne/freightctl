@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Api } from "./api";
 import { operationKey } from "./crypto";
+import { IndependentReviewRequest } from "./onboarding-approvals";
 import { OnboardingObservations } from "./onboarding-observations";
 import { OnboardingHandoffs } from "./onboarding-handoffs";
 import { uuid, type Session } from "./types";
@@ -503,13 +504,31 @@ export function OnboardingReleases({
               ? "This exact release is active for explicit production dispatch."
               : view.current_bindings
                 ? "Production dispatch is not active. Approval and activation are separate decisions."
-                : "A recorded binding or source policy changed. New production attempts are blocked; historical receipts keep their meanings."}
+                : "Production is blocked until current bindings and any required independent review pass. Inspect the review and refresh; historical receipts keep their meanings."}
           </p>
           <p>
             Release <code>{r.id}</code> · revision {r.revision} · approved
             revision {r.approved_revision} · plan version {r.plan.version} ·
             SHA-256 <code>{r.definition_hash}</code>.
           </p>
+          {r.definition.approval_policy?.mode === "independent" && (
+            <p>
+              Independent approval policy revision{" "}
+              {r.definition.approval_policy.revision}. A named reviewer must
+              approve before the author can record approval and activate
+              production.
+            </p>
+          )}
+          {r.state === "proposed" &&
+            r.definition.approval_policy?.mode === "independent" &&
+            canManage && (
+              <IndependentReviewRequest
+                api={api}
+                session={session}
+                onError={onError}
+                release={r}
+              />
+            )}
           <div className="actions">
             <button
               className="secondary"
@@ -524,7 +543,9 @@ export function OnboardingReleases({
                   action === "approve"
                     ? r.state === "proposed" &&
                       view.current_bindings &&
-                      canApprove
+                      (canApprove ||
+                        (canManage &&
+                          r.definition.approval_policy?.mode === "independent"))
                     : action === "activate"
                       ? ["approved", "suspended"].includes(r.state) &&
                         view.current_bindings &&
@@ -831,6 +852,18 @@ export function OnboardingReleases({
                 </p>
               </div>
             ))}
+            {review.kind === "proposal" &&
+              review.preview.definition.approval_policy && (
+                <p>
+                  Partner policy revision{" "}
+                  {review.preview.definition.approval_policy.revision}:{" "}
+                  {review.preview.definition.approval_policy.mode ===
+                  "independent"
+                    ? "a different named account must approve before production activation"
+                    : "the author records a separate approval"}
+                  .
+                </p>
+              )}
             {review.kind === "proposal" && (
               <p>
                 Release definition SHA-256{" "}
@@ -891,7 +924,13 @@ export function OnboardingReleases({
                     : review.kind === "production"
                       ? !canExecute
                       : ["approve", "revoke"].includes(review.action)
-                        ? !canApprove
+                        ? !(
+                            canApprove ||
+                            (review.action === "approve" &&
+                              canManage &&
+                              review.view.release.definition.approval_policy
+                                ?.mode === "independent")
+                          )
                         : !canExecute)
                 }
                 onClick={() => void save()}

@@ -22,13 +22,14 @@ type OnboardingReleaseProof struct {
 	ReceiptHash      string `json:"receipt_hash"`
 }
 type OnboardingReleaseDefinition struct {
-	Schema    int                      `json:"schema_version"`
-	Profile   string                   `json:"profile"`
-	Plan      OnboardingReference      `json:"plan"`
-	Authority int64                    `json:"authority_revision"`
-	StorageID string                   `json:"storage_id"`
-	Root      string                   `json:"namespace_root"`
-	Proofs    []OnboardingReleaseProof `json:"proofs"`
+	Schema         int                        `json:"schema_version"`
+	Profile        string                     `json:"profile"`
+	Plan           OnboardingReference        `json:"plan"`
+	Authority      int64                      `json:"authority_revision"`
+	StorageID      string                     `json:"storage_id"`
+	Root           string                     `json:"namespace_root"`
+	Proofs         []OnboardingReleaseProof   `json:"proofs"`
+	ApprovalPolicy *OnboardingApprovalBinding `json:"approval_policy,omitempty"`
 }
 type OnboardingReleaseSummary struct {
 	ID               string              `json:"id"`

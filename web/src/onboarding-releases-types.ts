@@ -35,6 +35,7 @@ export interface ReleaseDefinition {
   storage_id: string;
   namespace_root: "/";
   proofs: ReleaseProof[];
+  approval_policy?: { revision: number; mode: "author" | "independent" };
 }
 export interface ReleaseSummary {
   id: string;
@@ -133,29 +134,19 @@ export function releaseHash(
     bytes.fill(0);
   }
 }
-function definition(value: unknown, plan: OnboardingPlan): ReleaseDefinition {
+export function asReleaseDefinitionSnapshot(value: unknown): ReleaseDefinition {
   const o = object(value);
   if (
     o.schema_version !== 1 ||
     o.profile !== "sftp-outbound-production-v1" ||
     o.namespace_root !== "/" ||
     !Array.isArray(o.proofs) ||
-    o.proofs.length !== plan.definition.requirements.length ||
     o.proofs.length < 1 ||
     o.proofs.length > 64
   )
     bad();
   const proofs = (o.proofs as unknown[]).map((v, i) => {
-    const p = object(v),
-      r = plan.definition.requirements[i];
-    if (
-      !r ||
-      r.direction !== "send" ||
-      r.protocol !== "sftp" ||
-      r.required_receipt === "business" ||
-      p.requirement_id !== r.id
-    )
-      bad();
+    const p = object(v);
     return {
       requirement_id: id(p, "requirement_id"),
       test_id: id(p, "test_id"),
@@ -180,16 +171,38 @@ function definition(value: unknown, plan: OnboardingPlan): ReleaseDefinition {
     namespace_root: "/",
     proofs,
   };
+  if (o.approval_policy !== undefined) {
+    const p = object(o.approval_policy);
+    if (p.mode !== "author" && p.mode !== "independent") bad();
+    d.approval_policy = { revision: num(p, "revision"), mode: p.mode };
+  }
+  return d;
+}
+function definition(value: unknown, plan: OnboardingPlan): ReleaseDefinition {
+  const d = asReleaseDefinitionSnapshot(value);
   if (
     !same(d.plan, {
       id: plan.id,
       version: plan.version,
       hash: plan.definition_hash,
-    })
+    }) ||
+    d.proofs.length !== plan.definition.requirements.length
   )
     bad();
+  d.proofs.forEach((p, i) => {
+    const r = plan.definition.requirements[i];
+    if (
+      !r ||
+      r.direction !== "send" ||
+      r.protocol !== "sftp" ||
+      r.required_receipt === "business" ||
+      p.requirement_id !== r.id
+    )
+      bad();
+  });
   return d;
 }
+
 function tests(
   value: unknown,
   d: ReleaseDefinition,
