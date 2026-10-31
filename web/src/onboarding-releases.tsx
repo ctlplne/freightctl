@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Api } from "./api";
 import { operationKey } from "./crypto";
+import { OnboardingHandoffs } from "./onboarding-handoffs";
 import { uuid, type Session } from "./types";
 import { asOnboardingView, type OnboardingPlan } from "./onboarding-types";
 import {
@@ -679,6 +680,22 @@ export function OnboardingReleases({
           </button>
         </div>
       )}
+      <OnboardingHandoffs
+        api={api}
+        session={session}
+        plan={plan}
+        onError={onError}
+        {...(run
+          ? {
+              source: {
+                ...run,
+                ...(productionStatus
+                  ? { fileID: productionStatus.definition.file.id }
+                  : {}),
+              },
+            }
+          : {})}
+      />
       <form
         onSubmit={(e) => {
           e.preventDefault();

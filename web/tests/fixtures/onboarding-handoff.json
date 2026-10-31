@@ -1,0 +1,131 @@
+{
+  "selection": {
+    "source_run_id": "00000016-1111-4111-8111-111111111111",
+    "source_hash": "e4829013e3a7fb749f6db04654b8fe6b1d4958de4966c2b0dcea029d6ed5df8e",
+    "target_release": {
+      "id": "0000000f-1111-4111-8111-111111111111",
+      "revision": 5,
+      "hash": "bbee92455bfb5e3f6d7aaf695af9b99dd67875e0b7395e03ebbd40f1f0cdb7e0"
+    },
+    "file_id": "00000014-1111-4111-8111-111111111111"
+  },
+  "preview": {
+    "definition": {
+      "schema_version": 1,
+      "profile": "untouched-production-handoff-v1",
+      "source": {
+        "dispatch": {
+          "id": "00000016-1111-4111-8111-111111111111",
+          "author_id": "0000000b-1111-4111-8111-111111111111",
+          "definition": {
+            "schema_version": 1,
+            "release": {
+              "id": "0000000f-1111-4111-8111-111111111111",
+              "revision": 3,
+              "hash": "bbee92455bfb5e3f6d7aaf695af9b99dd67875e0b7395e03ebbd40f1f0cdb7e0"
+            },
+            "requirement_id": "00000002-1111-4111-8111-111111111111",
+            "test_id": "0000000c-1111-4111-8111-111111111111",
+            "test_hash": "74fdfc348a447be9ef8461a92b477f1436cdb068da3042425ca8a6c1a77a6e85",
+            "workflow": {
+              "id": "00000006-1111-4111-8111-111111111111",
+              "version": 4,
+              "hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+            },
+            "file": {
+              "id": "00000014-1111-4111-8111-111111111111",
+              "size_bytes": 123,
+              "sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+              "policy": "sha256",
+              "accepted_event_id": "00000009-1111-4111-8111-111111111111"
+            },
+            "storage_id": "0000000a-1111-4111-8111-111111111111",
+            "namespace_root": "/",
+            "authority_revision": 7,
+            "effect": {
+              "address": "127.0.0.1:2222",
+              "user": "synthetic",
+              "directory": "/inbox",
+              "filename": "sample.csv",
+              "host_fingerprint": "SHA256:synthetic-host",
+              "key_fingerprint": "SHA256:synthetic-client",
+              "recipient_fingerprint": ""
+            }
+          },
+          "definition_hash": "e4829013e3a7fb749f6db04654b8fe6b1d4958de4966c2b0dcea029d6ed5df8e",
+          "created_event_id": "00000017-1111-4111-8111-111111111111"
+        },
+        "plan": {
+          "id": "00000001-1111-4111-8111-111111111111",
+          "version": 2,
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "run_revision": 2,
+        "delivery": {
+          "id": "00000018-1111-4111-8111-111111111111",
+          "revision": 2,
+          "hash": "4444444444444444444444444444444444444444444444444444444444444444"
+        },
+        "state": "queued",
+        "attempts": 0,
+        "fence": 0
+      },
+      "target": {
+        "schema_version": 1,
+        "release": {
+          "id": "0000000f-1111-4111-8111-111111111111",
+          "revision": 5,
+          "hash": "bbee92455bfb5e3f6d7aaf695af9b99dd67875e0b7395e03ebbd40f1f0cdb7e0"
+        },
+        "requirement_id": "00000002-1111-4111-8111-111111111111",
+        "test_id": "0000000c-1111-4111-8111-111111111111",
+        "test_hash": "74fdfc348a447be9ef8461a92b477f1436cdb068da3042425ca8a6c1a77a6e85",
+        "workflow": {
+          "id": "00000006-1111-4111-8111-111111111111",
+          "version": 4,
+          "hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+        },
+        "file": {
+          "id": "00000014-1111-4111-8111-111111111111",
+          "size_bytes": 123,
+          "sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+          "policy": "sha256",
+          "accepted_event_id": "00000009-1111-4111-8111-111111111111"
+        },
+        "storage_id": "0000000a-1111-4111-8111-111111111111",
+        "namespace_root": "/",
+        "authority_revision": 7,
+        "effect": {
+          "address": "127.0.0.1:2222",
+          "user": "synthetic",
+          "directory": "/inbox",
+          "filename": "sample.csv",
+          "host_fingerprint": "SHA256:synthetic-host",
+          "key_fingerprint": "SHA256:synthetic-client",
+          "recipient_fingerprint": ""
+        }
+      },
+      "target_hash": "1830f30061b0e8c567cb484ff3687498dda145949368f14868c6de9f333a52e2",
+      "source_recheck_id": ""
+    },
+    "definition_hash": "f4def6fe4a1f15b35ef3e9268a0562bb7e24a98af6bfdffe089e7ed41170f167",
+    "external_contact": false
+  },
+  "summary": {
+    "id": "00000019-1111-4111-8111-111111111111",
+    "author_id": "0000000b-1111-4111-8111-111111111111",
+    "source_run_id": "00000016-1111-4111-8111-111111111111",
+    "target_release": {
+      "id": "0000000f-1111-4111-8111-111111111111",
+      "revision": 5,
+      "hash": "bbee92455bfb5e3f6d7aaf695af9b99dd67875e0b7395e03ebbd40f1f0cdb7e0"
+    },
+    "definition_hash": "f4def6fe4a1f15b35ef3e9268a0562bb7e24a98af6bfdffe089e7ed41170f167",
+    "state": "proposed",
+    "revision": 1,
+    "replacement_run_id": "",
+    "created_at": "2026-10-30T23:00:00Z",
+    "changed_event_id": "0000001a-1111-4111-8111-111111111111"
+  },
+  "plan_id": "00000001-1111-4111-8111-111111111111"
+}

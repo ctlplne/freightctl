@@ -283,7 +283,7 @@ export function asReleaseView(
   value: unknown,
   plan: OnboardingPlan,
   author: string,
-  expected: ReleaseSummary,
+  expected: { id: string; definition_hash: string },
 ): ReleaseView {
   const o = object(value),
     r = summary(o.release, author, plan.id),

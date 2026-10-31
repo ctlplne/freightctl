@@ -47,3 +47,5 @@ python3 scripts/qualify-onboarding-exchange.py \
 ```
 
 The qualifier creates/removes only a fresh fixture database and its loopback HTTPS/SFTP/browser processes. It checks the existing PostgreSQL workspace label and 512 MiB/one-CPU configuration; it does not start/stop the container. Native crypto retains its sampled 128 MiB child-family watchdog, with observer/OS costs separate. No scanner or model is loaded. F026's complete replay stays pending at the owner's request; this selected journey does not replace it or establish a complete current-source aggregate.
+
+An untouched explicit production run can now use a [reviewed queued handoff](queued-production-handoffs.md) after rotation. Its target needs fresh exact connectivity, approved workflow, completed test and active release evidence. This does not retarget an existing test record or transfer approval; a recorded delivery attempt refuses handoff.

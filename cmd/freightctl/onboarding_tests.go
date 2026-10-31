@@ -39,6 +39,10 @@ func runOnboardingTest(ctx context.Context, command string, o testCLIOptions) er
 	service := &workflow.Service{Custody: &custody.Service{DB: db, Disk: disk, MaxFile: o.MaxFile, MaxStored: o.MaxStored}}
 	var result any
 	switch command {
+	case "partner-onboarding-handoff-status":
+		result, err = service.OnboardingHandoffStatus(ctx, scope, o.ID)
+	case "partner-onboarding-handoff-list":
+		result, err = service.ListOnboardingHandoffs(ctx, scope, o.Plan, o.After, o.Limit)
 	case "partner-onboarding-production-status":
 		result, err = service.OnboardingProductionStatus(ctx, scope, o.Run)
 	case "partner-onboarding-production-list":
@@ -53,7 +57,7 @@ func runOnboardingTest(ctx context.Context, command string, o testCLIOptions) er
 		result, err = service.OnboardingTestStatus(ctx, scope, o.ID)
 	case "partner-onboarding-test-review":
 		result, err = service.ReviewOnboardingTest(ctx, scope, o.ID)
-	case "partner-onboarding-test-preview", "partner-onboarding-test-start", "partner-onboarding-release-preview", "partner-onboarding-release-propose", "partner-onboarding-release-decide", "partner-onboarding-production-preview", "partner-onboarding-production-start":
+	case "partner-onboarding-test-preview", "partner-onboarding-test-start", "partner-onboarding-release-preview", "partner-onboarding-release-propose", "partner-onboarding-release-decide", "partner-onboarding-production-preview", "partner-onboarding-production-start", "partner-onboarding-handoff-preview", "partner-onboarding-handoff-propose", "partner-onboarding-handoff-decide":
 		f, e := os.Open(o.Input)
 		if e != nil {
 			return errors.New("cannot open onboarding test request reference")
@@ -68,7 +72,25 @@ func runOnboardingTest(ctx context.Context, command string, o testCLIOptions) er
 			return e
 		}
 		defer secure.Clear(data)
-		if command == "partner-onboarding-release-preview" {
+		if command == "partner-onboarding-handoff-preview" {
+			var input workflow.OnboardingHandoffSelection
+			if workflow.Decode(data, &input) != nil {
+				return workflow.ErrInput
+			}
+			result, err = service.PreviewOnboardingHandoff(ctx, scope, input)
+		} else if command == "partner-onboarding-handoff-propose" {
+			var input workflow.OnboardingHandoffProposal
+			if workflow.Decode(data, &input) != nil {
+				return workflow.ErrInput
+			}
+			result, err = service.ProposeOnboardingHandoff(ctx, scope, o.Key, input)
+		} else if command == "partner-onboarding-handoff-decide" {
+			var input workflow.Decision
+			if workflow.Decode(data, &input) != nil {
+				return workflow.ErrInput
+			}
+			result, err = service.DecideOnboardingHandoff(ctx, scope, o.ID, o.Action, o.Key, input)
+		} else if command == "partner-onboarding-release-preview" {
 			var input workflow.OnboardingReleaseSelection
 			if workflow.Decode(data, &input) != nil {
 				return workflow.ErrInput

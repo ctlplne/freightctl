@@ -28,6 +28,14 @@ func onboardingTestFixtureReceipt(t *testing.T, receipt string) (*fixture, store
 	f := setup(t)
 	command, r := probePlanReceipt(t, f, receipt)
 	p := startProbe(t, f, "test-probe", r)
+	seedSuccessfulProbe(t, f, p)
+	d := f.definition()
+	d.Steps = d.Steps[:1]
+	wf := f.approved(t, d)
+	return f, command, OnboardingTestPreviewRequest{Plan: r.Plan, RequirementID: r.RequirementID, ProbeID: p.ID, Workflow: Reference{ID: wf.ID, Version: wf.Version, Hash: wf.Hash}, FileID: f.file.ID, ExpectedAuthority: 1}
+}
+func seedSuccessfulProbe(t *testing.T, f *fixture, p store.OnboardingProbe) {
+	t.Helper()
 	tx, err := f.s.Custody.DB.BeginOnboardingManagement(f.ctx, f.scope)
 	if err != nil {
 		t.Fatal(err)
@@ -62,11 +70,8 @@ func onboardingTestFixtureReceipt(t *testing.T, receipt string) (*fixture, store
 	if err = tx.Tx.Commit(f.ctx); err != nil {
 		t.Fatal(err)
 	}
-	d := f.definition()
-	d.Steps = d.Steps[:1]
-	wf := f.approved(t, d)
-	return f, command, OnboardingTestPreviewRequest{Plan: r.Plan, RequirementID: r.RequirementID, ProbeID: p.ID, Workflow: Reference{ID: wf.ID, Version: wf.Version, Hash: wf.Hash}, FileID: f.file.ID, ExpectedAuthority: 1}
 }
+
 func testIntent(t *testing.T, f *fixture, r OnboardingTestPreviewRequest, key string) (*OnboardingTestPreview, *Result, OnboardingTestResult) {
 	t.Helper()
 	p, err := f.s.PreviewOnboardingTest(f.ctx, f.scope, r)

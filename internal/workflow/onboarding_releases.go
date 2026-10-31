@@ -485,15 +485,11 @@ func (s *Service) StartOnboardingProduction(ctx context.Context, scope store.Sco
 	if hash != current.Hash {
 		return nil, store.ErrRevision
 	}
-	run, err := s.stageRun(ctx, t, RunRequest{Workflow: Reference{ID: d.Workflow.ID, Version: d.Workflow.Version, Hash: d.Workflow.Hash}, FileID: d.File.ID}, workflow, &d.File, d.StorageID)
+	target, err := s.stageProduction(ctx, t, d, workflow)
 	if err != nil {
 		return nil, err
 	}
-	dispatch := &store.OnboardingDispatch{ID: run.ID, Author: t.Actor, Definition: d, Hash: hash}
-	if err = t.SaveOnboardingDispatch(ctx, dispatch); err != nil {
-		return nil, err
-	}
-	if err = t.WorkflowReceipt(ctx, key, meaning, run.ID, OnboardingProductionResult{Kind: "onboarding_production", Dispatch: dispatch, Run: run}); err != nil {
+	if err = t.WorkflowReceipt(ctx, key, meaning, target.Run.ID, target); err != nil {
 		return nil, err
 	}
 	data, err := t.WorkflowReplay(ctx, key, meaning)
@@ -504,6 +500,24 @@ func (s *Service) StartOnboardingProduction(ctx context.Context, scope store.Sco
 		return nil, err
 	}
 	return &Result{Resource: data}, t.Tx.Commit(ctx)
+}
+
+// stageProduction commits nothing and makes no contact. Its caller owns the
+// current-target validation, atomic domain transition and idempotency receipt.
+func (s *Service) stageProduction(ctx context.Context, t *store.Transaction, d store.OnboardingDispatchDefinition, workflow *Definition) (*OnboardingProductionResult, error) {
+	run, err := s.stageRun(ctx, t, RunRequest{Workflow: Reference{ID: d.Workflow.ID, Version: d.Workflow.Version, Hash: d.Workflow.Hash}, FileID: d.File.ID}, workflow, &d.File, d.StorageID)
+	if err != nil {
+		return nil, err
+	}
+	_, hash, err := digest(d)
+	if err != nil {
+		return nil, err
+	}
+	dispatch := &store.OnboardingDispatch{ID: run.ID, Author: t.Actor, Definition: d, Hash: hash}
+	if err = t.SaveOnboardingDispatch(ctx, dispatch); err != nil {
+		return nil, err
+	}
+	return &OnboardingProductionResult{Kind: "onboarding_production", Dispatch: dispatch, Run: run}, nil
 }
 
 type OnboardingProductionView struct {

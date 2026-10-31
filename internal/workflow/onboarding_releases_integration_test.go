@@ -22,6 +22,11 @@ func completedReleaseFixture(t *testing.T, receipt string) (*fixture, store.Onbo
 	t.Helper()
 	f, command, request := onboardingTestFixtureReceipt(t, receipt)
 	_, _, result := testIntent(t, f, request, "release-test")
+	completeFixtureExchange(t, f, result)
+	return f, command, OnboardingReleaseSelection{Plan: request.Plan, TestIDs: []string{result.Test.ID}, Authority: 1}, result
+}
+func completeFixtureExchange(t *testing.T, f *fixture, result OnboardingTestResult) {
+	t.Helper()
 	tx, err := f.s.Custody.DB.Begin(f.ctx, f.scope)
 	if err != nil {
 		t.Fatal(err)
@@ -69,8 +74,8 @@ func completedReleaseFixture(t *testing.T, receipt string) (*fixture, store.Onbo
 	if err = tx.Tx.Commit(f.ctx); err != nil {
 		t.Fatal(err)
 	}
-	return f, command, OnboardingReleaseSelection{Plan: request.Plan, TestIDs: []string{result.Test.ID}, Authority: 1}, result
 }
+
 func proposeRelease(t *testing.T, f *fixture, r OnboardingReleaseSelection, key string) (*OnboardingReleasePreview, store.OnboardingReleaseSummary, *Result) {
 	t.Helper()
 	preview, err := f.s.PreviewOnboardingRelease(f.ctx, f.scope, r)

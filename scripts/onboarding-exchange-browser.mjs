@@ -7,6 +7,7 @@ import { createRequire } from "node:module";
 import path from "node:path";
 import { qualifyRecordedTests } from "./onboarding-tests-browser.mjs";
 import { qualifyProductionReleases } from "./onboarding-releases-browser.mjs";
+import { qualifyQueuedHandoffs } from "./onboarding-handoffs-browser.mjs";
 process.umask(0o077);
 const require = createRequire(import.meta.url),
   { chromium } = require("../web/node_modules/playwright");
@@ -206,7 +207,9 @@ try {
   await page.getByRole("button", { name: "Connect", exact: true }).click();
   await page.getByRole("heading", { name: "Files", exact: true }).waitFor();
   await openPlan();
-  if (c.release_only) {
+  if (c.handoff_only) {
+    await qualifyQueuedHandoffs(page, c, audit, record, actualReview, openPlan);
+  } else if (c.release_only) {
     await qualifyProductionReleases(
       page,
       c,
