@@ -4,6 +4,7 @@ import { operationKey } from "./crypto";
 import { OnboardingProbes } from "./onboarding-probes";
 import { OnboardingExchange } from "./onboarding-exchange";
 import { OnboardingTests } from "./onboarding-tests";
+import { OnboardingReleases } from "./onboarding-releases";
 import { ApiError, type Session } from "./types";
 import {
   asOnboardingDefinition,
@@ -615,6 +616,14 @@ export function Onboarding({
           <>
             <OnboardingTests
               key={"tests:" + selected.id + ":" + selected.version}
+              api={api}
+              session={session}
+              plan={selected}
+              authority={authority}
+              onError={onError}
+            />
+            <OnboardingReleases
+              key={"releases:" + selected.id + ":" + selected.version}
               api={api}
               session={session}
               plan={selected}

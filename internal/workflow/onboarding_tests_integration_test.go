@@ -21,9 +21,12 @@ import (
 // transaction/authorization guards. This fixture qualifies no SFTP peer; the
 // separate native journey must use actual successful network probes.
 func onboardingTestFixture(t *testing.T) (*fixture, store.OnboardingCommand, OnboardingTestPreviewRequest) {
+	return onboardingTestFixtureReceipt(t, "business")
+}
+func onboardingTestFixtureReceipt(t *testing.T, receipt string) (*fixture, store.OnboardingCommand, OnboardingTestPreviewRequest) {
 	t.Helper()
 	f := setup(t)
-	command, r := probePlan(t, f)
+	command, r := probePlanReceipt(t, f, receipt)
 	p := startProbe(t, f, "test-probe", r)
 	tx, err := f.s.Custody.DB.BeginOnboardingManagement(f.ctx, f.scope)
 	if err != nil {

@@ -304,8 +304,8 @@ export function OnboardingTests({
             <code>{view.test.definition_hash}</code> ·{" "}
             {view.status.observed_reason}. Source{" "}
             <code>{view.test.definition.file.sha256}</code>; required receipt{" "}
-            {view.test.definition.required_receipt}. Production is not
-            activated.
+            {view.test.definition.required_receipt}. This test record does not
+            activate production.
           </p>
           <div className="actions">
             <button

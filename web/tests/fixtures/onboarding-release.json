@@ -1,0 +1,272 @@
+{
+  "plan": {
+    "id": "00000001-1111-4111-8111-111111111111",
+    "version": 2,
+    "definition_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "state": "draft",
+    "name": "Synthetic release",
+    "author_id": "0000000b-1111-4111-8111-111111111111",
+    "event_id": "00000011-1111-4111-8111-111111111111",
+    "created_at": "2026-10-30T23:00:00Z",
+    "definition": {
+      "schema_version": 1,
+      "name": "Synthetic release",
+      "contacts": [
+        {
+          "id": "00000012-1111-4111-8111-111111111111",
+          "name": "Synthetic operations",
+          "role": "Transfer support",
+          "email": "operations@freightctl.invalid",
+          "phone": ""
+        }
+      ],
+      "requirements": [
+        {
+          "id": "00000002-1111-4111-8111-111111111111",
+          "name": "Synthetic integrity",
+          "contact_id": "00000012-1111-4111-8111-111111111111",
+          "direction": "send",
+          "protocol": "sftp",
+          "required_receipt": "integrity",
+          "receipt_contract": "Synthetic controlled receipt",
+          "notes": ""
+        }
+      ]
+    }
+  },
+  "selection": {
+    "plan": {
+      "id": "00000001-1111-4111-8111-111111111111",
+      "version": 2,
+      "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "test_ids": [
+      "0000000c-1111-4111-8111-111111111111"
+    ],
+    "expected_authority_revision": 7
+  },
+  "preview": {
+    "definition": {
+      "schema_version": 1,
+      "profile": "sftp-outbound-production-v1",
+      "plan": {
+        "id": "00000001-1111-4111-8111-111111111111",
+        "version": 2,
+        "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "authority_revision": 7,
+      "storage_id": "0000000a-1111-4111-8111-111111111111",
+      "namespace_root": "/",
+      "proofs": [
+        {
+          "requirement_id": "00000002-1111-4111-8111-111111111111",
+          "test_id": "0000000c-1111-4111-8111-111111111111",
+          "test_hash": "74fdfc348a447be9ef8461a92b477f1436cdb068da3042425ca8a6c1a77a6e85",
+          "snapshot_hash": "1111111111111111111111111111111111111111111111111111111111111111",
+          "delivery_id": "0000000e-1111-4111-8111-111111111111",
+          "delivery_revision": 5,
+          "receipt_hash": "2222222222222222222222222222222222222222222222222222222222222222"
+        }
+      ]
+    },
+    "definition_hash": "bbee92455bfb5e3f6d7aaf695af9b99dd67875e0b7395e03ebbd40f1f0cdb7e0",
+    "tests": [
+      {
+        "id": "0000000c-1111-4111-8111-111111111111",
+        "run_id": "0000000c-1111-4111-8111-111111111111",
+        "author_id": "0000000b-1111-4111-8111-111111111111",
+        "definition": {
+          "schema_version": 1,
+          "profile": "single-sftp-test-v1",
+          "plan": {
+            "id": "00000001-1111-4111-8111-111111111111",
+            "version": 2,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "requirement_id": "00000002-1111-4111-8111-111111111111",
+          "probe": {
+            "id": "00000003-1111-4111-8111-111111111111",
+            "revision": 3,
+            "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "workflow": {
+            "id": "00000006-1111-4111-8111-111111111111",
+            "version": 4,
+            "hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+          },
+          "workflow_revision": 2,
+          "step_id": "send",
+          "connection": {
+            "id": "00000005-1111-4111-8111-111111111111",
+            "version": 3,
+            "hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+          },
+          "effect": {
+            "address": "127.0.0.1:2222",
+            "user": "synthetic",
+            "directory": "/inbox",
+            "filename": "sample.csv",
+            "host_fingerprint": "SHA256:synthetic-host",
+            "key_fingerprint": "SHA256:synthetic-client",
+            "recipient_fingerprint": ""
+          },
+          "file": {
+            "id": "00000008-1111-4111-8111-111111111111",
+            "size_bytes": 123,
+            "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "policy": "sha256",
+            "accepted_event_id": "00000009-1111-4111-8111-111111111111"
+          },
+          "storage_id": "0000000a-1111-4111-8111-111111111111",
+          "namespace_root": "/",
+          "authority_revision": 7,
+          "required_receipt": "integrity"
+        },
+        "definition_hash": "74fdfc348a447be9ef8461a92b477f1436cdb068da3042425ca8a6c1a77a6e85",
+        "created_at": "2026-10-30T23:00:00Z",
+        "created_event_id": "0000000d-1111-4111-8111-111111111111"
+      }
+    ],
+    "external_contact": false,
+    "production_active": false
+  },
+  "view": {
+    "release": {
+      "id": "0000000f-1111-4111-8111-111111111111",
+      "plan": {
+        "id": "00000001-1111-4111-8111-111111111111",
+        "version": 2,
+        "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "author_id": "0000000b-1111-4111-8111-111111111111",
+      "definition_hash": "bbee92455bfb5e3f6d7aaf695af9b99dd67875e0b7395e03ebbd40f1f0cdb7e0",
+      "state": "active",
+      "revision": 3,
+      "approved_revision": 2,
+      "created_at": "2026-10-30T23:00:00Z",
+      "changed_event_id": "00000010-1111-4111-8111-111111111111",
+      "definition": {
+        "schema_version": 1,
+        "profile": "sftp-outbound-production-v1",
+        "plan": {
+          "id": "00000001-1111-4111-8111-111111111111",
+          "version": 2,
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "authority_revision": 7,
+        "storage_id": "0000000a-1111-4111-8111-111111111111",
+        "namespace_root": "/",
+        "proofs": [
+          {
+            "requirement_id": "00000002-1111-4111-8111-111111111111",
+            "test_id": "0000000c-1111-4111-8111-111111111111",
+            "test_hash": "74fdfc348a447be9ef8461a92b477f1436cdb068da3042425ca8a6c1a77a6e85",
+            "snapshot_hash": "1111111111111111111111111111111111111111111111111111111111111111",
+            "delivery_id": "0000000e-1111-4111-8111-111111111111",
+            "delivery_revision": 5,
+            "receipt_hash": "2222222222222222222222222222222222222222222222222222222222222222"
+          }
+        ]
+      }
+    },
+    "tests": [
+      {
+        "id": "0000000c-1111-4111-8111-111111111111",
+        "run_id": "0000000c-1111-4111-8111-111111111111",
+        "author_id": "0000000b-1111-4111-8111-111111111111",
+        "definition": {
+          "schema_version": 1,
+          "profile": "single-sftp-test-v1",
+          "plan": {
+            "id": "00000001-1111-4111-8111-111111111111",
+            "version": 2,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "requirement_id": "00000002-1111-4111-8111-111111111111",
+          "probe": {
+            "id": "00000003-1111-4111-8111-111111111111",
+            "revision": 3,
+            "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "workflow": {
+            "id": "00000006-1111-4111-8111-111111111111",
+            "version": 4,
+            "hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+          },
+          "workflow_revision": 2,
+          "step_id": "send",
+          "connection": {
+            "id": "00000005-1111-4111-8111-111111111111",
+            "version": 3,
+            "hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+          },
+          "effect": {
+            "address": "127.0.0.1:2222",
+            "user": "synthetic",
+            "directory": "/inbox",
+            "filename": "sample.csv",
+            "host_fingerprint": "SHA256:synthetic-host",
+            "key_fingerprint": "SHA256:synthetic-client",
+            "recipient_fingerprint": ""
+          },
+          "file": {
+            "id": "00000008-1111-4111-8111-111111111111",
+            "size_bytes": 123,
+            "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "policy": "sha256",
+            "accepted_event_id": "00000009-1111-4111-8111-111111111111"
+          },
+          "storage_id": "0000000a-1111-4111-8111-111111111111",
+          "namespace_root": "/",
+          "authority_revision": 7,
+          "required_receipt": "integrity"
+        },
+        "definition_hash": "74fdfc348a447be9ef8461a92b477f1436cdb068da3042425ca8a6c1a77a6e85",
+        "created_at": "2026-10-30T23:00:00Z",
+        "created_event_id": "0000000d-1111-4111-8111-111111111111"
+      }
+    ],
+    "current_bindings": true,
+    "binding_reason": "current",
+    "production_active": true
+  },
+  "production": {
+    "definition": {
+      "schema_version": 1,
+      "release": {
+        "id": "0000000f-1111-4111-8111-111111111111",
+        "revision": 3,
+        "hash": "bbee92455bfb5e3f6d7aaf695af9b99dd67875e0b7395e03ebbd40f1f0cdb7e0"
+      },
+      "requirement_id": "00000002-1111-4111-8111-111111111111",
+      "test_id": "0000000c-1111-4111-8111-111111111111",
+      "test_hash": "74fdfc348a447be9ef8461a92b477f1436cdb068da3042425ca8a6c1a77a6e85",
+      "workflow": {
+        "id": "00000006-1111-4111-8111-111111111111",
+        "version": 4,
+        "hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      },
+      "file": {
+        "id": "00000014-1111-4111-8111-111111111111",
+        "size_bytes": 123,
+        "sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+        "policy": "sha256",
+        "accepted_event_id": "00000009-1111-4111-8111-111111111111"
+      },
+      "storage_id": "0000000a-1111-4111-8111-111111111111",
+      "namespace_root": "/",
+      "authority_revision": 7,
+      "effect": {
+        "address": "127.0.0.1:2222",
+        "user": "synthetic",
+        "directory": "/inbox",
+        "filename": "sample.csv",
+        "host_fingerprint": "SHA256:synthetic-host",
+        "key_fingerprint": "SHA256:synthetic-client",
+        "recipient_fingerprint": ""
+      }
+    },
+    "definition_hash": "e4829013e3a7fb749f6db04654b8fe6b1d4958de4966c2b0dcea029d6ed5df8e",
+    "external_contact": false
+  }
+}

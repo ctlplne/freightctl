@@ -6,6 +6,7 @@ import { X509Certificate, createHash } from "node:crypto";
 import { createRequire } from "node:module";
 import path from "node:path";
 import { qualifyRecordedTests } from "./onboarding-tests-browser.mjs";
+import { qualifyProductionReleases } from "./onboarding-releases-browser.mjs";
 process.umask(0o077);
 const require = createRequire(import.meta.url),
   { chromium } = require("../web/node_modules/playwright");
@@ -150,7 +151,7 @@ async function actualReview(route, label, target = endpoint) {
     headers,
     fields.map(([k, v]) => k + ": " + v).join("\n") + "\n",
   );
-  const bytes = request.postDataBuffer();
+  const bytes = request.postDataBuffer() ?? Buffer.alloc(0);
   assert.ok(bytes && bytes.length <= 32768);
   await writeFile(body, bytes);
   const status = Number(
@@ -188,7 +189,7 @@ async function actualReview(route, label, target = endpoint) {
   return {
     status,
     body: response.toString("utf8"),
-    selection: JSON.parse(bytes),
+    selection: bytes.length ? JSON.parse(bytes) : null,
     idempotency_key: fields.find(([k]) => k === "idempotency-key")?.[1],
   };
 }
@@ -205,7 +206,16 @@ try {
   await page.getByRole("button", { name: "Connect", exact: true }).click();
   await page.getByRole("heading", { name: "Files", exact: true }).waitFor();
   await openPlan();
-  if (c.test_only) {
+  if (c.release_only) {
+    await qualifyProductionReleases(
+      page,
+      c,
+      audit,
+      record,
+      actualReview,
+      openPlan,
+    );
+  } else if (c.test_only) {
     await qualifyRecordedTests(page, c, audit, record, actualReview, openPlan);
   } else {
     await inspect(c.plain, c.plain_hash);

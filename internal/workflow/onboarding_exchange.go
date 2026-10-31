@@ -132,6 +132,20 @@ func (s *Service) ReviewOnboardingExchange(ctx context.Context, scope store.Scop
 		return nil, err
 	}
 	defer t.Tx.Rollback(ctx)
+	result, err := s.reviewExchange(ctx, t, request)
+	if err != nil {
+		return nil, err
+	}
+	if err = t.Reauthorize(ctx); err != nil {
+		return nil, err
+	}
+	return result, t.Tx.Commit(ctx)
+}
+
+// reviewExchange composes evidence with a caller-owned scoped transaction.
+// It neither commits nor makes external contact.
+func (s *Service) reviewExchange(ctx context.Context, t *store.Transaction, request OnboardingExchangeRequest) (*OnboardingExchangeReview, error) {
+	var err error
 	if err = t.Require("read"); err != nil {
 		return nil, err
 	}
@@ -244,8 +258,5 @@ func (s *Service) ReviewOnboardingExchange(ctx context.Context, scope store.Scop
 	if err != nil {
 		return nil, err
 	}
-	if err = t.Reauthorize(ctx); err != nil {
-		return nil, err
-	}
-	return result, t.Tx.Commit(ctx)
+	return result, nil
 }

@@ -59,6 +59,17 @@ func NewWithBrowserLifetime(service *custody.Service, audits *audit.Service, ena
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/onboarding-plans/{plan}/probes", s.onboardingProbe)
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/onboarding-probes", s.onboardingProbe)
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/onboarding-exchange-review", s.onboardingExchangeReview)
+	for _, action := range []string{"approve", "activate", "suspend", "revoke"} {
+		m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/onboarding-releases/{release}/"+action, s.onboardingReleaseAction(action))
+	}
+	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/onboarding-releases/preview", s.onboardingReleaseAction("preview"))
+	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/onboarding-releases", s.onboardingReleaseAction("propose"))
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/onboarding-releases/{release}", s.onboardingReleaseAction("status"))
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/onboarding-plans/{plan}/releases", s.onboardingReleaseAction("list"))
+	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/onboarding-releases/{release}/production-preview", s.onboardingReleaseAction("production-preview"))
+	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/onboarding-production", s.onboardingReleaseAction("production-start"))
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/onboarding-production/{production}", s.onboardingReleaseAction("production-status"))
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/onboarding-releases/{release}/runs", s.onboardingReleaseAction("production-list"))
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/onboarding-tests/preview", s.onboardingTestPreview)
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/onboarding-tests", s.onboardingTests)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/onboarding-tests/{test}", s.onboardingTests)

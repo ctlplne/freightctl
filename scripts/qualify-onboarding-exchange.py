@@ -13,7 +13,7 @@ if not __debug__:
  raise RuntimeError("Qualification requires assertions; remove Python -O/PYTHONOPTIMIZE")
 os.umask(0o077)
 root=Path(__file__).resolve().parents[1];os.chdir(root)
-parser=argparse.ArgumentParser();parser.add_argument('--postgres-container-id',required=True);parser.add_argument('--recorded-tests',action='store_true');options=parser.parse_args()
+parser=argparse.ArgumentParser();parser.add_argument('--postgres-container-id',required=True);parser.add_argument('--recorded-tests',action='store_true');parser.add_argument('--releases',action='store_true');options=parser.parse_args();options.recorded_tests=options.recorded_tests or options.releases
 assert re.fullmatch(r'[0-9a-f]{64}',options.postgres_container_id),'use the exact task-owned PostgreSQL container ID'
 run='onboarding-exchange-'+uuid.uuid4().hex;private=root/'.private'/run;private.mkdir(mode=0o700);raw=root/'evidence/raw'/run;raw.mkdir(parents=True,mode=0o700)
 binary=private/'freightctl';database='freightctl_'+run.replace('-','_');created=False;servers={};logs={};steps=[];cleanup=[];state='failed';failure=None;started=time.monotonic()
@@ -133,14 +133,14 @@ LogLevel VERBOSE
   assert v['probe']['state']=='succeeded' and not v['file_exchange_performed'];probes[label]=v['probe']
  assert list(inbox.iterdir())==[]
  tests={};workflows={}
- def create_run(label,encryption=None,p=None,probe=None):
+ def create_run(label,encryption=None,p=None,probe=None,requirement_id=None):
   step={'id':'send','kind':'sftp.deliver','connection':ref(connection),'filename':label+'.bin'}
   if encryption:step['encryption']=encryption
   draft=post(label+'-draft','/workflows/drafts',{'expected_version':0,'definition':{'schema_version':1,'name':label,'steps':[step]}},key=label+'-draft')['resource']
   approved=post(label+'-approve','/workflows/'+draft['id']+'/1/approve',decision(draft),key=label+'-approve')['resource']
   workflows[label]=approved
   if options.recorded_tests:
-   selection0={'plan':ref(p or plan),'requirement_id':integrity,'probe_id':(probe or probes['integrity'])['id'],'workflow':ref(approved),'file_id':accepted['id'],'expected_authority_revision':1}
+   selection0={'plan':ref(p or plan),'requirement_id':requirement_id or integrity,'probe_id':(probe or probes['integrity'])['id'],'workflow':ref(approved),'file_id':accepted['id'],'expected_authority_revision':1}
    before=(raw/'receiver.log').read_text().count('Accepted publickey for ');before_files=sorted(x.name for x in inbox.iterdir())
    preview=post(label+'-test-preview','/onboarding-tests/preview',selection0)
    cli=invoke(label+'-test-cli-preview','partner-onboarding-test-preview','--request-file',write(label+'-test-selection',selection0),token=owner);assert cli==preview
@@ -211,6 +211,10 @@ LogLevel VERBOSE
   command('browser-test-independent-stock-sftp',['sftp','-F','/dev/null','-P',str(receiver_port),'-oBatchMode=yes','-oStrictHostKeyChecking=yes','-oUserKnownHostsFile='+str(known),'-oIdentitiesOnly=yes','-oIdentityAgent=none','-i',private/'client','-b',batch,user+'@127.0.0.1']);assert received.read_bytes()==data
   stale=create_run('stale-queued');stale_contacts=(raw/'receiver.log').read_text().count('Accepted publickey for ')
   files=sorted(p.name for p in inbox.iterdir())
+ if options.releases:
+  from onboarding_releases_qualification import qualify_releases
+  qualify_releases(dict(globals()))
+  files=sorted(p.name for p in inbox.iterdir());stale_contacts=(raw/'receiver.log').read_text().count('Accepted publickey for ')
  saved['expected_version']=1;saved['definition']['name']='Changed saved requirements'
  current_plan=invoke('save-changed-requirements','partner-onboarding-save','--request-file',write('plan-v2',saved),'--idempotency-key','plan-v2',token=owner)['plan']
  post('old-probe-cannot-qualify-new-plan','/onboarding-exchange-review',selection(plain),expected=409)
@@ -241,7 +245,7 @@ finally:
   try:sql('DROP DATABASE '+database+' WITH (FORCE)','freightctl')
   except Exception:cleanup.append('exact fixture database cleanup failed')
  final=sources();unchanged=initial==final
- manifest={'schema_version':1,'recorded_tests':options.recorded_tests,'state':state if unchanged and not cleanup else 'failed','failure':failure,'cleanup_failures':cleanup,'observed_at':datetime.now(timezone.utc).isoformat(),'postgres_container_id':pg,'starting_commit':subprocess.check_output(['git','rev-parse','HEAD']).decode().strip(),'source_sha256':initial,'sources_unchanged_during_run':unchanged,'changed_source_paths':[p for p in set(initial)|set(final) if initial.get(p)!=final.get(p)],'binary_sha256':sha(binary) if binary.exists() else None,'private_reference':str(private.relative_to(root)),'duration_seconds':round(time.monotonic()-started,3),'steps':steps,'isolated_database_removed':created and not cleanup,'peer_reference':str(fixture/'manifest.json') if 'fixture' in globals() else None,'inference_performed':False,'scanner_engine_started':False,'full_journeys_qualified':False,'limits':['Assisted same-host loopback qualification; independent operators, full J05 approval/activation and production remain open.','Native stock receiver and GnuPG are independent observers; no downstream business acceptance or directory power-loss durability is claimed.','No complete core replay is performed; F026 replay remains owner-deferred.','No model, scanner, signature database or shared Docker lifecycle operation. Native crypto uses its selected sampled 128 MiB process-family watchdog; observer/OS costs remain separate.']}
+ manifest={'schema_version':1,'recorded_tests':options.recorded_tests,'releases':options.releases,'state':state if unchanged and not cleanup else 'failed','failure':failure,'cleanup_failures':cleanup,'observed_at':datetime.now(timezone.utc).isoformat(),'postgres_container_id':pg,'starting_commit':subprocess.check_output(['git','rev-parse','HEAD']).decode().strip(),'source_sha256':initial,'sources_unchanged_during_run':unchanged,'changed_source_paths':[p for p in set(initial)|set(final) if initial.get(p)!=final.get(p)],'binary_sha256':sha(binary) if binary.exists() else None,'private_reference':str(private.relative_to(root)),'duration_seconds':round(time.monotonic()-started,3),'steps':steps,'isolated_database_removed':created and not cleanup,'peer_reference':str(fixture/'manifest.json') if 'fixture' in globals() else None,'inference_performed':False,'scanner_engine_started':False,'full_journeys_qualified':False,'limits':['Assisted same-host loopback qualification; independent operators, full J05 approval/activation and production remain open.','Native stock receiver and GnuPG are independent observers; no downstream business acceptance or directory power-loss durability is claimed.','No complete core replay is performed; F026 replay remains owner-deferred.','No model, scanner, signature database or shared Docker lifecycle operation. Native crypto uses its selected sampled 128 MiB process-family watchdog; observer/OS costs remain separate.']}
  (raw/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n');print(str(raw/'manifest.json'),flush=True)
  if failure:print(failure,flush=True)
 if manifest['state']!='passed':raise SystemExit(1)

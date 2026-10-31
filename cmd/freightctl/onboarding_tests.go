@@ -14,9 +14,9 @@ import (
 )
 
 type testCLIOptions struct {
-	DSN, Token, Tenant, Partner, Storage, Input, Key, Plan, ID, After string
-	Limit                                                             int
-	MaxFile, MaxStored                                                int64
+	DSN, Token, Tenant, Partner, Storage, Input, Key, Plan, ID, After, Action, Run string
+	Limit                                                                          int
+	MaxFile, MaxStored                                                             int64
 }
 
 func runOnboardingTest(ctx context.Context, command string, o testCLIOptions) error {
@@ -39,13 +39,21 @@ func runOnboardingTest(ctx context.Context, command string, o testCLIOptions) er
 	service := &workflow.Service{Custody: &custody.Service{DB: db, Disk: disk, MaxFile: o.MaxFile, MaxStored: o.MaxStored}}
 	var result any
 	switch command {
+	case "partner-onboarding-production-status":
+		result, err = service.OnboardingProductionStatus(ctx, scope, o.Run)
+	case "partner-onboarding-production-list":
+		result, err = service.ListOnboardingProduction(ctx, scope, o.ID, o.After, o.Limit)
+	case "partner-onboarding-release-list":
+		result, err = service.ListOnboardingReleases(ctx, scope, o.Plan, o.After, o.Limit)
+	case "partner-onboarding-release-status":
+		result, err = service.OnboardingReleaseStatus(ctx, scope, o.ID)
 	case "partner-onboarding-test-list":
 		result, err = service.ListOnboardingTests(ctx, scope, o.Plan, o.After, o.Limit)
 	case "partner-onboarding-test-status":
 		result, err = service.OnboardingTestStatus(ctx, scope, o.ID)
 	case "partner-onboarding-test-review":
 		result, err = service.ReviewOnboardingTest(ctx, scope, o.ID)
-	case "partner-onboarding-test-preview", "partner-onboarding-test-start":
+	case "partner-onboarding-test-preview", "partner-onboarding-test-start", "partner-onboarding-release-preview", "partner-onboarding-release-propose", "partner-onboarding-release-decide", "partner-onboarding-production-preview", "partner-onboarding-production-start":
 		f, e := os.Open(o.Input)
 		if e != nil {
 			return errors.New("cannot open onboarding test request reference")
@@ -60,7 +68,37 @@ func runOnboardingTest(ctx context.Context, command string, o testCLIOptions) er
 			return e
 		}
 		defer secure.Clear(data)
-		if command == "partner-onboarding-test-preview" {
+		if command == "partner-onboarding-release-preview" {
+			var input workflow.OnboardingReleaseSelection
+			if workflow.Decode(data, &input) != nil {
+				return workflow.ErrInput
+			}
+			result, err = service.PreviewOnboardingRelease(ctx, scope, input)
+		} else if command == "partner-onboarding-release-propose" {
+			var input workflow.OnboardingReleaseProposal
+			if workflow.Decode(data, &input) != nil {
+				return workflow.ErrInput
+			}
+			result, err = service.ProposeOnboardingRelease(ctx, scope, o.Key, input)
+		} else if command == "partner-onboarding-release-decide" {
+			var input workflow.Decision
+			if workflow.Decode(data, &input) != nil {
+				return workflow.ErrInput
+			}
+			result, err = service.DecideOnboardingRelease(ctx, scope, o.ID, o.Action, o.Key, input)
+		} else if command == "partner-onboarding-production-preview" {
+			var input workflow.OnboardingProductionSelection
+			if workflow.Decode(data, &input) != nil {
+				return workflow.ErrInput
+			}
+			result, err = service.PreviewOnboardingProduction(ctx, scope, o.ID, input)
+		} else if command == "partner-onboarding-production-start" {
+			var input workflow.OnboardingProductionStart
+			if workflow.Decode(data, &input) != nil {
+				return workflow.ErrInput
+			}
+			result, err = service.StartOnboardingProduction(ctx, scope, o.Key, input)
+		} else if command == "partner-onboarding-test-preview" {
 			var input workflow.OnboardingTestPreviewRequest
 			if workflow.Decode(data, &input) != nil {
 				return workflow.ErrInput

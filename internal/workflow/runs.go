@@ -233,7 +233,7 @@ func snapshot(ctx context.Context, t *store.Transaction, r *store.WorkflowRun) (
 		}
 	}
 	if state != "succeeded" && state != "cancelled" {
-		current, err := t.OnboardingTestRunCurrent(ctx, r.ID)
+		current, err := t.OnboardingRunCurrent(ctx, r.ID)
 		if err != nil {
 			return nil, "", "", err
 		}
@@ -326,7 +326,7 @@ func (s *Service) prepare(ctx context.Context, scope store.Scope, id, key string
 	if _, _, err = approved(ctx, t, Reference{ID: r.WorkflowID, Version: r.WorkflowVersion, Hash: r.WorkflowHash}); err != nil {
 		return nil, false, err
 	}
-	current, err := t.OnboardingTestRunCurrent(ctx, r.ID)
+	current, err := t.OnboardingRunCurrent(ctx, r.ID)
 	if err != nil {
 		return nil, false, err
 	}

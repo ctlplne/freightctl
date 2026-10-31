@@ -246,7 +246,7 @@ func (s *Service) OnboardingTestStatus(ctx context.Context, scope store.Scope, i
 		return nil, err
 	}
 	v := &OnboardingTestView{Test: p, Status: view, Reason: "current"}
-	current, err := t.OnboardingTestRunCurrent(ctx, p.RunID)
+	current, err := t.OnboardingRunCurrent(ctx, p.RunID)
 	if err != nil {
 		return nil, err
 	}

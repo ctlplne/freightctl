@@ -10,7 +10,7 @@ import {
 
 const reasons: Record<ExchangeReview["reason"], string> = {
   recorded_evidence_matches:
-    "The recorded remote integrity receipt meets this requirement's transport or integrity level. Review the exact evidence below; approval and production activation are still required.",
+    "The recorded remote integrity receipt meets this requirement's transport or integrity level. Review the exact evidence below; this evidence comparison grants no approval or production activation.",
   business_receipt_missing:
     "Remote file integrity was observed, but downstream business acceptance is unknown. This requirement needs its agreed business acknowledgment before approval can proceed.",
   probe_not_succeeded:
@@ -244,8 +244,7 @@ export function OnboardingExchange({
             This is an observation of saved records, not a live receiver test.
             Business acceptance remains unknown. Credential, storage, policy and
             evidence must be checked again before any approved execution.
-            Explicit onboarding approval and production activation are still
-            required.
+            Explicit release approval and activation are separate decisions.
           </p>
         </div>
       )}

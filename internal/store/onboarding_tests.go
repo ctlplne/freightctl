@@ -120,8 +120,17 @@ func (t *Transaction) OnboardingTests(ctx context.Context, plan, after string, l
 	}
 	return page, rows.Err()
 }
-func (t *Transaction) OnboardingTestRunCurrent(ctx context.Context, id string) (bool, error) {
+func (t *Transaction) OnboardingRunCurrent(ctx context.Context, id string) (bool, error) {
 	var current bool
-	err := t.Tx.QueryRow(ctx, `SELECT freightctl_onboarding_test_run_current($1,$2,$3,$4,$5,$6)`, t.Scope.Tenant, t.Scope.Partner, t.Actor, id, t.AuthorityRevision, t.Root).Scan(&current)
+	err := t.Tx.QueryRow(ctx, `SELECT freightctl_onboarding_run_current($1,$2,$3,$4,$5,$6)`, t.Scope.Tenant, t.Scope.Partner, t.Actor, id, t.AuthorityRevision, t.Root).Scan(&current)
+	if err == nil && current {
+		err = t.checkOnboardingProofAvailability(ctx, id)
+		if err != nil {
+			if errors.Is(err, ErrState) || errors.Is(err, ErrNotFound) || errors.Is(err, ErrForbidden) || errors.Is(err, ErrUnauthorized) {
+				return false, nil
+			}
+			return false, err
+		}
+	}
 	return current, err
 }

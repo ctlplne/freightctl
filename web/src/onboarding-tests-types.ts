@@ -130,7 +130,7 @@ function time(o: Record<string, unknown>, k: string): string {
     bad();
   return t;
 }
-function effect(value: unknown): TestEffect {
+export function asTestEffect(value: unknown): TestEffect {
   const o = object(value),
     recipient = text(o, "recipient_fingerprint", 64, true);
   let encryption: TestEffect["encryption"];
@@ -180,7 +180,7 @@ export function asTestDefinition(value: unknown): TestDefinition {
     workflow_revision: integer(o, "workflow_revision"),
     step_id: step,
     connection: ref(o.connection),
-    effect: effect(o.effect),
+    effect: asTestEffect(o.effect),
     file: {
       id: id(f, "id"),
       size_bytes: integer(f, "size_bytes", 0),
@@ -249,7 +249,7 @@ export function asTestPreview(value: unknown, r: TestSelection): TestPreview {
     production_active: false,
   };
 }
-function recorded(
+export function asRecordedTest(
   value: unknown,
   author: string,
   expected?: { id?: string; hash?: string },
@@ -284,7 +284,9 @@ export function asTestStart(
     result = object(o.resource);
   if (typeof o.replayed !== "boolean" || result.kind !== "onboarding_test")
     bad();
-  const p = recorded(result.test, author, { hash: review.definition_hash }),
+  const p = asRecordedTest(result.test, author, {
+      hash: review.definition_hash,
+    }),
     run = object(result.run),
     d = p.definition;
   if (
@@ -315,7 +317,7 @@ export function asTestPage(
 ): { tests: RecordedTest[]; next?: string } {
   const o = object(value);
   if (!Array.isArray(o.tests) || o.tests.length > 100) bad();
-  const tests = (o.tests as unknown[]).map((v) => recorded(v, author));
+  const tests = (o.tests as unknown[]).map((v) => asRecordedTest(v, author));
   if (
     tests.some((t) => t.definition.plan.id !== plan) ||
     new Set(tests.map((t) => t.id)).size !== tests.length
@@ -329,7 +331,7 @@ export function asTestView(
   expected: { id: string; hash: string },
 ): TestView {
   const o = object(value),
-    p = recorded(o.test, author, expected),
+    p = asRecordedTest(o.test, author, expected),
     status = object(o.status),
     run = object(status.run),
     current = bool(o, "current_bindings"),

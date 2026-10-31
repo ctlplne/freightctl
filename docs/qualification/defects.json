@@ -1019,6 +1019,21 @@
       "regression_evidence": [
         "docs/qualification/evidence/F029-onboarding-test-intents.json"
       ]
+    },
+    {
+      "id": "D067",
+      "severity": "new production UI refuses valid empty queued observations during inspection/recovery",
+      "state": "fixed locally",
+      "observed_on": "2026-10-30",
+      "candidate": "53eead3d2543058bc27c6ba65d64d594fcf44b4c plus F030 exact source epochs",
+      "journey": "J05",
+      "reproduction": "The first 113-step native release journey completed separate proposal/approval/activation and production queue response-loss recovery, then could not display the suspended queued run. The client rejected the ordinary queued delivery observation {} because it required a code. The unit fixture had supplied a code absent from a real newly queued intent.",
+      "first_failure": "evidence/raw/onboarding-exchange-5f117e515b35422a8a9e68d3216bbea0/manifest.json; original frozen input copies are indexed by the F030 retention manifest.",
+      "cause": "The new status decoder treated absence of a delivery observation as malformed data; the server correctly stores an empty observation before work.",
+      "resolution": "Accept the exact empty observation as no observation recorded; retain all identity/hash/state/attempt/type bounds and refuse malformed nonempty observations. Correct the fixture to use real queued shape, retain meaningful source/epoch mutations, and replay the original native journey. The final 170-step journey passes. A later independent Playwright response-body observation failure was fixed using the existing actual-service relay, retaining original UI assertions/timeouts.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F030-onboarding-production-releases.json"
+      ]
     }
   ]
 }

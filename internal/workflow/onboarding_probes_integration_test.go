@@ -16,9 +16,12 @@ import (
 )
 
 func probePlan(t *testing.T, f *fixture) (store.OnboardingCommand, store.OnboardingProbeRequest) {
+	return probePlanReceipt(t, f, "business")
+}
+func probePlanReceipt(t *testing.T, f *fixture, receipt string) (store.OnboardingCommand, store.OnboardingProbeRequest) {
 	t.Helper()
 	contact, requirement := secure.NewID(), secure.NewID()
-	c := store.OnboardingCommand{ID: secure.NewID(), ExpectedAuthority: 1, Definition: store.OnboardingDefinition{Schema: 1, Name: "Synthetic settlement", Contacts: []store.OnboardingContact{{ID: contact, Name: "Operations", Role: "Transfer support", Email: "operations@freightctl.invalid"}}, Requirements: []store.OnboardingRequirement{{ID: requirement, Name: "Settlement delivery", ContactID: contact, Direction: "send", Protocol: "sftp", Receipt: "business", ReceiptContract: "Business agreement remains separate"}}}}
+	c := store.OnboardingCommand{ID: secure.NewID(), ExpectedAuthority: 1, Definition: store.OnboardingDefinition{Schema: 1, Name: "Synthetic settlement", Contacts: []store.OnboardingContact{{ID: contact, Name: "Operations", Role: "Transfer support", Email: "operations@freightctl.invalid"}}, Requirements: []store.OnboardingRequirement{{ID: requirement, Name: "Settlement delivery", ContactID: contact, Direction: "send", Protocol: "sftp", Receipt: receipt, ReceiptContract: "Business agreement remains separate"}}}}
 	p, err := f.s.Custody.DB.SaveOnboarding(f.ctx, f.scope, "probe-plan", c)
 	if err != nil {
 		t.Fatal(err)
