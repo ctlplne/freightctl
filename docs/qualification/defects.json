@@ -1004,6 +1004,21 @@
       "regression_evidence": [
         "docs/qualification/evidence/F026-governed-real-rescans.json"
       ]
+    },
+    {
+      "id": "D066",
+      "severity": "uncommitted test preview did not bind readable receiver to reviewed definition",
+      "state": "fixed locally",
+      "observed_on": "2026-10-30",
+      "candidate": "10449f04616d98b2bbd6b592f01d0ff9a4c775a2 plus F029 exact source hashes",
+      "journey": "J05",
+      "reproduction": "After correcting a fixture mutation that left its value unchanged, changing the displayed receiver address was accepted by the initial new browser validator. This was an uncommitted implementation gap; no deployed wrong delivery is established.",
+      "first_failure": ".private/onboarding-test-review-first/receiver-mismatch.log and F029 hashed original sources",
+      "cause": "The immutable connection reference was hashed, but the separately returned readable receiver fields were not joined to a hashed public effect.",
+      "resolution": "Include receiver/user/directory/filename, host/client fingerprints and optional encryption recipient in the typed definition; reconstruct on server, compare to exact SQL connection/workflow/key records, and independently verify browser hash and displayed-field joins. Meaningful changed-address and source-lineage contracts, targeted PostgreSQL/race cases and native plaintext/encrypted original journeys pass.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F029-onboarding-test-intents.json"
+      ]
     }
   ]
 }

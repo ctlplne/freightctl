@@ -87,11 +87,21 @@ func (s *Service) Run(ctx context.Context, scope store.Scope, key string, r RunR
 	if prior, err := replay(t, ctx, key, meaning); err != nil || prior != nil {
 		return prior, err
 	}
-	if err = t.DeliveryAdmission(ctx, len(definition.Steps)); err != nil {
+	run, err := s.stageRun(ctx, t, r, definition, source, storageID)
+	if err != nil {
+		return nil, err
+	}
+	return result(t, ctx, key, meaning, run.ID, run)
+}
+
+// stageRun writes the ordinary run and delivery intents in its caller's
+// transaction. It makes no network contact and never commits that transaction.
+func (s *Service) stageRun(ctx context.Context, t *store.Transaction, r RunRequest, definition *Definition, source *store.File, storageID string) (*store.WorkflowRun, error) {
+	if err := t.DeliveryAdmission(ctx, len(definition.Steps)); err != nil {
 		return nil, err
 	}
 	run := &store.WorkflowRun{ID: secure.NewID(), WorkflowID: r.Workflow.ID, WorkflowVersion: r.Workflow.Version, WorkflowHash: r.Workflow.Hash, FileID: source.ID, Source: *source, StorageID: storageID, Root: t.Root, Authority: t.AuthorityRevision, State: "queued", Reason: "awaiting_worker", Revision: 1}
-	if err = t.SaveWorkflowRun(ctx, run, 0); err != nil {
+	if err := t.SaveWorkflowRun(ctx, run, 0); err != nil {
 		return nil, err
 	}
 	now, err := t.DatabaseTime(ctx)
@@ -126,7 +136,7 @@ func (s *Service) Run(ctx context.Context, scope store.Scope, key string, r RunR
 			return nil, err
 		}
 	}
-	return result(t, ctx, key, meaning, run.ID, run)
+	return run, nil
 }
 func snapshot(ctx context.Context, t *store.Transaction, r *store.WorkflowRun) (*RunView, string, string, error) {
 	steps, err := t.WorkflowSteps(ctx, r.ID)
@@ -222,6 +232,16 @@ func snapshot(ctx context.Context, t *store.Transaction, r *store.WorkflowRun) (
 			}
 		}
 	}
+	if state != "succeeded" && state != "cancelled" {
+		current, err := t.OnboardingTestRunCurrent(ctx, r.ID)
+		if err != nil {
+			return nil, "", "", err
+		}
+		if !current {
+			state = "attention"
+			reason = "onboarding_binding_changed"
+		}
+	}
 	view.ObservedState = state
 	view.ObservedReason = reason
 	return view, state, reason, nil
@@ -305,6 +325,13 @@ func (s *Service) prepare(ctx context.Context, scope store.Scope, id, key string
 	}
 	if _, _, err = approved(ctx, t, Reference{ID: r.WorkflowID, Version: r.WorkflowVersion, Hash: r.WorkflowHash}); err != nil {
 		return nil, false, err
+	}
+	current, err := t.OnboardingTestRunCurrent(ctx, r.ID)
+	if err != nil {
+		return nil, false, err
+	}
+	if !current {
+		return nil, false, store.ErrState
 	}
 	if data != nil {
 		var dispatch Dispatch

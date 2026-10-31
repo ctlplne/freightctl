@@ -13,7 +13,7 @@ if not __debug__:
  raise RuntimeError("Qualification requires assertions; remove Python -O/PYTHONOPTIMIZE")
 os.umask(0o077)
 root=Path(__file__).resolve().parents[1];os.chdir(root)
-parser=argparse.ArgumentParser();parser.add_argument('--postgres-container-id',required=True);options=parser.parse_args()
+parser=argparse.ArgumentParser();parser.add_argument('--postgres-container-id',required=True);parser.add_argument('--recorded-tests',action='store_true');options=parser.parse_args()
 assert re.fullmatch(r'[0-9a-f]{64}',options.postgres_container_id),'use the exact task-owned PostgreSQL container ID'
 run='onboarding-exchange-'+uuid.uuid4().hex;private=root/'.private'/run;private.mkdir(mode=0o700);raw=root/'evidence/raw'/run;raw.mkdir(parents=True,mode=0o700)
 binary=private/'freightctl';database='freightctl_'+run.replace('-','_');created=False;servers={};logs={};steps=[];cleanup=[];state='failed';failure=None;started=time.monotonic()
@@ -132,11 +132,27 @@ LogLevel VERBOSE
   v=post('probe-work-'+label,'/onboarding-probes/'+p['id']+'/work',{'definition_hash':p['definition_hash']},key='probe-work-'+label)
   assert v['probe']['state']=='succeeded' and not v['file_exchange_performed'];probes[label]=v['probe']
  assert list(inbox.iterdir())==[]
- def create_run(label,encryption=None):
+ tests={};workflows={}
+ def create_run(label,encryption=None,p=None,probe=None):
   step={'id':'send','kind':'sftp.deliver','connection':ref(connection),'filename':label+'.bin'}
   if encryption:step['encryption']=encryption
   draft=post(label+'-draft','/workflows/drafts',{'expected_version':0,'definition':{'schema_version':1,'name':label,'steps':[step]}},key=label+'-draft')['resource']
   approved=post(label+'-approve','/workflows/'+draft['id']+'/1/approve',decision(draft),key=label+'-approve')['resource']
+  workflows[label]=approved
+  if options.recorded_tests:
+   selection0={'plan':ref(p or plan),'requirement_id':integrity,'probe_id':(probe or probes['integrity'])['id'],'workflow':ref(approved),'file_id':accepted['id'],'expected_authority_revision':1}
+   before=(raw/'receiver.log').read_text().count('Accepted publickey for ');before_files=sorted(x.name for x in inbox.iterdir())
+   preview=post(label+'-test-preview','/onboarding-tests/preview',selection0)
+   cli=invoke(label+'-test-cli-preview','partner-onboarding-test-preview','--request-file',write(label+'-test-selection',selection0),token=owner);assert cli==preview
+   assert not preview['external_contact'] and not preview['production_active'] and preview['definition']['effect']['address']==connection['address'] and preview['definition']['effect']['filename']==label+'.bin'
+   if encryption:assert preview['definition']['effect']['recipient_fingerprint']==recipient['fingerprint']
+   body={'definition':preview['definition']};saved0=post(label+'-test-start','/onboarding-tests',body,key=label+'-test')['resource'];test=saved0['test'];tests[label]=test
+   replay0=post(label+'-test-replay','/onboarding-tests',body,key=label+'-test');assert replay0['replayed'] and replay0['resource']==saved0
+   cli=invoke(label+'-test-cli-replay','partner-onboarding-test-start','--request-file',write(label+'-test-start',body),'--idempotency-key',label+'-test',token=owner);assert cli['replayed'] and cli['resource']==saved0
+   status=post(label+'-test-queued','/onboarding-tests/'+test['id'],method='GET');assert status['current_bindings'] and status['status']['observed_state']=='queued' and status['status']['steps'][0]['attempts']==0
+   assert invoke(label+'-test-cli-status','partner-onboarding-test-status','--onboarding-test-id',test['id'],token=owner)==status
+   assert before==(raw/'receiver.log').read_text().count('Accepted publickey for ') and before_files==sorted(x.name for x in inbox.iterdir()),'saving queued test contacted receiver'
+   return saved0['run']
   return post(label+'-run','/workflow-runs',{'workflow':ref(approved),'file_id':accepted['id']},key=label+'-run')['resource']
  def selection(run,label='integrity',p=plan):return {'plan':ref(p),'requirement_id':integrity if label=='integrity' else business,'probe_id':probes[label]['id'],'run_id':run['id'],'step_id':'send','expected_authority_revision':1}
  plain=create_run('plain');pending=post('unfinished-exchange-is-not-proof','/onboarding-exchange-review',selection(plain));assert not pending['ready_for_approval_review'] and pending['reason']=='exchange_not_succeeded'
@@ -165,6 +181,9 @@ LogLevel VERBOSE
   assert not any(s in json.dumps(review) for s in ['SYNTHETIC_PRIVATE_NOTES','SYNTHETIC_PRIVATE_CONTRACT',str(private/'client'),'key_file'])
   cli_review=invoke(label+'-cli-review','partner-onboarding-exchange-review','--request-file',write(label+'-review',req),token=owner)
   assert cli_review['snapshot_hash']==review['snapshot_hash'] and cli_review['snapshot']==review['snapshot'];results[label]=review
+  if options.recorded_tests:
+   test_review=post(label+'-precontact-lineage-review','/onboarding-tests/'+tests[label]['id']+'/review',method='GET');assert {k:v for k,v in test_review.items() if k!='observed_at'}=={k:v for k,v in review.items() if k!='observed_at'}
+   cli_test_review=invoke(label+'-test-cli-review','partner-onboarding-test-review','--onboarding-test-id',tests[label]['id'],token=owner);assert {k:v for k,v in cli_test_review.items() if k!='observed_at'}=={k:v for k,v in review.items() if k!='observed_at'}
  business_review=post('integrity-does-not-meet-business-contract','/onboarding-exchange-review',selection(plain,'business'));assert not business_review['ready_for_approval_review'] and business_review['reason']=='business_receipt_missing' and business_review['snapshot']['observed_receipt']=='integrity'
  for name,tok,expected in [('other-actor',other,404),('missing-workflow-grant',limited,403)]:
   hdr=private/(name+'.headers');hdr.write_bytes(b'Authorization: Bearer '+tok.read_bytes()+b'\n');post(name+'-denied','/onboarding-exchange-review',selection(plain),expected=expected,who=hdr)
@@ -183,15 +202,34 @@ LogLevel VERBOSE
  cfg={'root':str(root),'private':str(private),'raw':str(raw),'url':url,'certificate':str(cert),'tenant':tenant,'partner':partner,'token':str(owner),'plan':plan,'plain':selection(plain),'encrypted':selection(cipher_run),'business':selection(plain,'business'),'plain_hash':results['plain']['snapshot_hash'],'encrypted_hash':results['encrypted']['snapshot_hash']}
  node=env.get('FREIGHTCTL_NODE_BIN') or 'node';command('native-browser-review',[node,'scripts/onboarding-exchange-browser.mjs',write('browser',cfg)],timeout=120)
  assert event_count==sql('SELECT count(*) FROM events WHERE '+resource_filter) and contacts==(raw/'receiver.log').read_text().count('Accepted publickey for ') and files==sorted(p.name for p in inbox.iterdir()),'read-only review mutated exchange or recontacted receiver'
+ if options.recorded_tests:
+  cfg.update(test_only=True,test_selection={'plan':ref(plan),'requirement_id':integrity,'probe_id':probes['integrity']['id'],'workflow':ref(workflows['plain']),'file_id':accepted['id'],'expected_authority_revision':1})
+  command('native-browser-recorded-test',[node,'scripts/onboarding-exchange-browser.mjs',write('test-browser',cfg)],timeout=120)
+  observed=json.loads((raw/'onboarding-test-browser-result.json').read_text());browser_test=observed['test'];assert observed['state']=='passed'
+  status=post('browser-test-status','/onboarding-tests/'+browser_test['id'],method='GET');assert status['status']['observed_state']=='succeeded'
+  target=inbox/(status['status']['steps'][0]['delivery_id']+'-plain.bin');received=private/'browser-received.bin';batch=private/'browser.batch';batch.write_text(f'get {target} {received}\n')
+  command('browser-test-independent-stock-sftp',['sftp','-F','/dev/null','-P',str(receiver_port),'-oBatchMode=yes','-oStrictHostKeyChecking=yes','-oUserKnownHostsFile='+str(known),'-oIdentitiesOnly=yes','-oIdentityAgent=none','-i',private/'client','-b',batch,user+'@127.0.0.1']);assert received.read_bytes()==data
+  stale=create_run('stale-queued');stale_contacts=(raw/'receiver.log').read_text().count('Accepted publickey for ')
+  files=sorted(p.name for p in inbox.iterdir())
  saved['expected_version']=1;saved['definition']['name']='Changed saved requirements'
  current_plan=invoke('save-changed-requirements','partner-onboarding-save','--request-file',write('plan-v2',saved),'--idempotency-key','plan-v2',token=owner)['plan']
  post('old-probe-cannot-qualify-new-plan','/onboarding-exchange-review',selection(plain),expected=409)
+ if options.recorded_tests:
+  changed=post('stale-test-private-history','/onboarding-tests/'+tests['stale-queued']['id'],method='GET');assert not changed['current_bindings'] and changed['status']['observed_state']=='attention'
+  post('stale-test-work-denied','/workflow-runs/'+stale['id']+'/work',key='stale-work',expected=409)
+  changed=post('stale-test-no-attempt','/onboarding-tests/'+tests['stale-queued']['id'],method='GET');assert changed['status']['steps'][0]['attempts']==0 and stale_contacts==(raw/'receiver.log').read_text().count('Accepted publickey for ')
  fresh=post('current-plan-probe-start','/onboarding-probes',{'plan':ref(current_plan),'requirement_id':integrity,'connection':ref(connection),'expected_authority_revision':1},key='current-plan-probe')['resource']
  fresh=post('current-plan-probe-work','/onboarding-probes/'+fresh['id']+'/work',{'definition_hash':fresh['definition_hash']},key='current-plan-probe-work')['probe'];assert fresh['state']=='succeeded';probes['integrity']=fresh
  current_request=selection(cipher_run,p=current_plan)
  current_review=post('current-bindings-positive-control','/onboarding-exchange-review',current_request);assert current_review['ready_for_approval_review'] and current_review['snapshot']['selection']['plan']==ref(current_plan)
+ if options.recorded_tests:
+  fresh_run=create_run('revoke-queued',p=current_plan,probe=fresh)
  post('revoke-connection','/connections/'+connection['id']+'/1/revoke',decision(connection),key='revoke-connection')
  post('revoked-connection-denies-current-review','/onboarding-exchange-review',current_request,expected=409)
+ if options.recorded_tests:
+  changed=post('revoked-test-state','/onboarding-tests/'+tests['revoke-queued']['id'],method='GET');assert not changed['current_bindings'] and changed['status']['steps'][0]['attempts']==0
+  post('revoked-test-work-denied','/workflow-runs/'+fresh_run['id']+'/work',key='revoked-work',expected=409)
+  assert len(post('test-private-history','/onboarding-plans/'+plan['id']+'/tests',method='GET')['tests'])==5
  assert files==sorted(p.name for p in inbox.iterdir())
  state='passed'
 except Exception:failure=traceback.format_exc()
@@ -203,7 +241,7 @@ finally:
   try:sql('DROP DATABASE '+database+' WITH (FORCE)','freightctl')
   except Exception:cleanup.append('exact fixture database cleanup failed')
  final=sources();unchanged=initial==final
- manifest={'schema_version':1,'state':state if unchanged and not cleanup else 'failed','failure':failure,'cleanup_failures':cleanup,'observed_at':datetime.now(timezone.utc).isoformat(),'postgres_container_id':pg,'starting_commit':subprocess.check_output(['git','rev-parse','HEAD']).decode().strip(),'source_sha256':initial,'sources_unchanged_during_run':unchanged,'changed_source_paths':[p for p in set(initial)|set(final) if initial.get(p)!=final.get(p)],'binary_sha256':sha(binary) if binary.exists() else None,'private_reference':str(private.relative_to(root)),'duration_seconds':round(time.monotonic()-started,3),'steps':steps,'isolated_database_removed':created and not cleanup,'peer_reference':str(fixture/'manifest.json') if 'fixture' in globals() else None,'inference_performed':False,'scanner_engine_started':False,'full_journeys_qualified':False,'limits':['Assisted same-host loopback qualification; independent operators, full J05 approval/activation and production remain open.','Native stock receiver and GnuPG are independent observers; no downstream business acceptance or directory power-loss durability is claimed.','No complete core replay is performed; F026 replay remains owner-deferred.','No model, scanner, signature database or shared Docker lifecycle operation. Native crypto uses its selected sampled 128 MiB process-family watchdog; observer/OS costs remain separate.']}
+ manifest={'schema_version':1,'recorded_tests':options.recorded_tests,'state':state if unchanged and not cleanup else 'failed','failure':failure,'cleanup_failures':cleanup,'observed_at':datetime.now(timezone.utc).isoformat(),'postgres_container_id':pg,'starting_commit':subprocess.check_output(['git','rev-parse','HEAD']).decode().strip(),'source_sha256':initial,'sources_unchanged_during_run':unchanged,'changed_source_paths':[p for p in set(initial)|set(final) if initial.get(p)!=final.get(p)],'binary_sha256':sha(binary) if binary.exists() else None,'private_reference':str(private.relative_to(root)),'duration_seconds':round(time.monotonic()-started,3),'steps':steps,'isolated_database_removed':created and not cleanup,'peer_reference':str(fixture/'manifest.json') if 'fixture' in globals() else None,'inference_performed':False,'scanner_engine_started':False,'full_journeys_qualified':False,'limits':['Assisted same-host loopback qualification; independent operators, full J05 approval/activation and production remain open.','Native stock receiver and GnuPG are independent observers; no downstream business acceptance or directory power-loss durability is claimed.','No complete core replay is performed; F026 replay remains owner-deferred.','No model, scanner, signature database or shared Docker lifecycle operation. Native crypto uses its selected sampled 128 MiB process-family watchdog; observer/OS costs remain separate.']}
  (raw/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n');print(str(raw/'manifest.json'),flush=True)
  if failure:print(failure,flush=True)
 if manifest['state']!='passed':raise SystemExit(1)

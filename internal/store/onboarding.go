@@ -300,6 +300,21 @@ func (s *Store) OnboardingPlans(ctx context.Context, scope Scope, after string, 
 // Ordinary event feeds and signed audit exports show a digest, not contact
 // details or free-form requirements. The protected journal retains the source.
 func redactOnboardingEvent(e Event) Event {
+	if e.Kind == "OnboardingTestRecorded" {
+		e.Payload, _ = json.Marshal(map[string]any{"schema_version": 1, "redacted": true, "source_payload_sha256": secure.Digest(e.Payload), "reason": "actor_private_onboarding_test"})
+		return e
+	}
+	if e.Kind == "WorkflowCommandCompleted" {
+		var p struct {
+			Result struct {
+				Kind string `json:"kind"`
+			} `json:"result"`
+		}
+		if json.Unmarshal(e.Payload, &p) == nil && p.Result.Kind == "onboarding_test" {
+			e.Payload, _ = json.Marshal(map[string]any{"schema_version": 1, "redacted": true, "source_payload_sha256": secure.Digest(e.Payload), "reason": "actor_private_onboarding_test"})
+			return e
+		}
+	}
 	privateRecheck := e.Kind == "FileRecheckChanged"
 	if e.Kind == "CheckCommandCompleted" {
 		var payload struct {

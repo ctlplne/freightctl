@@ -3,6 +3,7 @@ import { Api } from "./api";
 import { operationKey } from "./crypto";
 import { OnboardingProbes } from "./onboarding-probes";
 import { OnboardingExchange } from "./onboarding-exchange";
+import { OnboardingTests } from "./onboarding-tests";
 import { ApiError, type Session } from "./types";
 import {
   asOnboardingDefinition,
@@ -611,13 +612,23 @@ export function Onboarding({
         ["workflow_manage", "workflow_approve", "workflow_execute"].some((p) =>
           session.identity.permissions.includes(p),
         ) && (
-          <OnboardingExchange
-            key={selected.id + ":" + selected.version}
-            api={api}
-            plan={selected}
-            authority={authority}
-            onError={onError}
-          />
+          <>
+            <OnboardingTests
+              key={"tests:" + selected.id + ":" + selected.version}
+              api={api}
+              session={session}
+              plan={selected}
+              authority={authority}
+              onError={onError}
+            />
+            <OnboardingExchange
+              key={selected.id + ":" + selected.version}
+              api={api}
+              plan={selected}
+              authority={authority}
+              onError={onError}
+            />
+          </>
         )}
       <dialog
         ref={dialog}

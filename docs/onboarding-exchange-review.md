@@ -7,7 +7,7 @@ F028 passes two real PostgreSQL/race cases and a selected native browser/API/CLI
 ## Operator sequence
 
 1. Save the partner requirements. Run the explicit connectivity test against the selected registered connection; inspect its recorded outcome.
-2. Use the ordinary approved workflow to exchange a safe test file with the intended receiver. Inspect the run and its strongest receipt. This review never sends the file for you.
+2. For a new onboarding test, use [Recorded test exchanges](onboarding-test-exchanges.md) to freeze its exact requirement/probe/workflow/source before contact, save the queued intent and execute it separately. Existing ordinary runs remain readable here. Inspect the run and its strongest receipt. This review never sends the file for you.
 3. In the saved onboarding draft, open **Review file exchange evidence**. Select the outbound SFTP requirement. Copy the probe UUID from connectivity history, the run UUID from its workflow-run receipt, and the exact step ID from the approved workflow definition. Choose **Compare recorded exchange**.
 4. Inspect the source, connection/workflow versions and hashes, delivery ID, stored receipt hash, transferred-object digest/length and snapshot hash. A recipient-encrypted delivery has a different transferred-object digest from its plaintext source; the review checks the stored link between both.
 5. Assess the contact obligations, notes and receipt contract. Explicit onboarding approval, activation and queued-work credential lifecycle are still required and are not implemented by this review. A matching recorded receipt does not activate the partner.

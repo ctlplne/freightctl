@@ -1,0 +1,83 @@
+{
+  "selection": {
+    "plan": {
+      "id": "00000001-1111-4111-8111-111111111111",
+      "version": 2,
+      "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "requirement_id": "00000002-1111-4111-8111-111111111111",
+    "probe_id": "00000003-1111-4111-8111-111111111111",
+    "workflow": {
+      "id": "00000006-1111-4111-8111-111111111111",
+      "version": 4,
+      "hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+    },
+    "file_id": "00000008-1111-4111-8111-111111111111",
+    "expected_authority_revision": 7
+  },
+  "preview": {
+    "definition": {
+      "schema_version": 1,
+      "profile": "single-sftp-test-v1",
+      "plan": {
+        "id": "00000001-1111-4111-8111-111111111111",
+        "version": 2,
+        "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "requirement_id": "00000002-1111-4111-8111-111111111111",
+      "probe": {
+        "id": "00000003-1111-4111-8111-111111111111",
+        "revision": 3,
+        "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "workflow": {
+        "id": "00000006-1111-4111-8111-111111111111",
+        "version": 4,
+        "hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      },
+      "workflow_revision": 2,
+      "step_id": "send",
+      "connection": {
+        "id": "00000005-1111-4111-8111-111111111111",
+        "version": 3,
+        "hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      },
+      "effect": {
+        "address": "127.0.0.1:2222",
+        "user": "synthetic",
+        "directory": "/inbox",
+        "filename": "sample.csv",
+        "host_fingerprint": "SHA256:synthetic-host",
+        "key_fingerprint": "SHA256:synthetic-client",
+        "recipient_fingerprint": ""
+      },
+      "file": {
+        "id": "00000008-1111-4111-8111-111111111111",
+        "size_bytes": 123,
+        "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "policy": "sha256",
+        "accepted_event_id": "00000009-1111-4111-8111-111111111111"
+      },
+      "storage_id": "0000000a-1111-4111-8111-111111111111",
+      "namespace_root": "/",
+      "authority_revision": 7,
+      "required_receipt": "integrity"
+    },
+    "definition_hash": "74fdfc348a447be9ef8461a92b477f1436cdb068da3042425ca8a6c1a77a6e85",
+    "connection": {
+      "id": "00000005-1111-4111-8111-111111111111",
+      "version": 3,
+      "definition_hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "state": "active",
+      "revision": 1,
+      "address": "127.0.0.1:2222",
+      "user": "synthetic",
+      "directory": "/inbox",
+      "host_fingerprint": "SHA256:synthetic-host",
+      "key_fingerprint": "SHA256:synthetic-client"
+    },
+    "filename": "sample.csv",
+    "external_contact": false,
+    "production_active": false
+  }
+}

@@ -5,6 +5,7 @@ import { execFileSync } from "node:child_process";
 import { X509Certificate, createHash } from "node:crypto";
 import { createRequire } from "node:module";
 import path from "node:path";
+import { qualifyRecordedTests } from "./onboarding-tests-browser.mjs";
 process.umask(0o077);
 const require = createRequire(import.meta.url),
   { chromium } = require("../web/node_modules/playwright");
@@ -132,9 +133,9 @@ async function inspect(request, hash, ready = true) {
   );
   if (hash) await page.getByText(hash, { exact: true }).waitFor();
 }
-async function actualReview(route, label) {
+async function actualReview(route, label, target = endpoint) {
   const request = route.request();
-  assert.equal(request.url(), endpoint);
+  assert.equal(request.url(), target);
   assert.equal(request.method(), "POST");
   const headers = c.private + "/" + label + ".headers",
     body = c.private + "/" + label + ".request",
@@ -176,7 +177,7 @@ async function actualReview(route, label) {
         output,
         "--write-out",
         "%{http_code}",
-        endpoint,
+        target,
       ],
       { encoding: "utf8", timeout: 15000, maxBuffer: 4096 },
     ),
@@ -188,6 +189,7 @@ async function actualReview(route, label) {
     status,
     body: response.toString("utf8"),
     selection: JSON.parse(bytes),
+    idempotency_key: fields.find(([k]) => k === "idempotency-key")?.[1],
   };
 }
 try {
@@ -203,58 +205,62 @@ try {
   await page.getByRole("button", { name: "Connect", exact: true }).click();
   await page.getByRole("heading", { name: "Files", exact: true }).waitFor();
   await openPlan();
-  await inspect(c.plain, c.plain_hash);
-  record("native-plain-exchange-and-exact-server-snapshot");
-  await audit("plain-review");
-  await inspect(c.encrypted, c.encrypted_hash);
-  record("native-encrypted-exchange-and-exact-server-snapshot");
-  await audit("encrypted-review");
-  await inspect(c.business, null, false);
-  await page.getByText(/downstream business acceptance is unknown/).waitFor();
-  record("native-business-requirement-remains-incomplete");
-  await audit("business-review");
-  await select(c.plain);
-  const observed = [];
-  await page.route(endpoint, async (route) => {
-    const actual = await actualReview(
-      route,
-      "browser-review-response-" + observed.length,
+  if (c.test_only) {
+    await qualifyRecordedTests(page, c, audit, record, actualReview, openPlan);
+  } else {
+    await inspect(c.plain, c.plain_hash);
+    record("native-plain-exchange-and-exact-server-snapshot");
+    await audit("plain-review");
+    await inspect(c.encrypted, c.encrypted_hash);
+    record("native-encrypted-exchange-and-exact-server-snapshot");
+    await audit("encrypted-review");
+    await inspect(c.business, null, false);
+    await page.getByText(/downstream business acceptance is unknown/).waitFor();
+    record("native-business-requirement-remains-incomplete");
+    await audit("business-review");
+    await select(c.plain);
+    const observed = [];
+    await page.route(endpoint, async (route) => {
+      const actual = await actualReview(
+        route,
+        "browser-review-response-" + observed.length,
+      );
+      observed.push(actual);
+      if (observed.length === 1) await route.abort("failed");
+      else
+        await route.fulfill({
+          status: actual.status,
+          contentType: "application/json",
+          body: actual.body,
+        });
+    });
+    await page
+      .getByRole("button", { name: "Compare recorded exchange", exact: true })
+      .click();
+    await page
+      .getByRole("button", { name: "Compare recorded exchange", exact: true })
+      .waitFor({ state: "visible" });
+    await page.waitForFunction(
+      () =>
+        !document.querySelector('button[type="submit"]:disabled') ||
+        [...document.querySelectorAll("button")].some(
+          (b) => b.textContent === "Compare recorded exchange" && !b.disabled,
+        ),
     );
-    observed.push(actual);
-    if (observed.length === 1) await route.abort("failed");
-    else
-      await route.fulfill({
-        status: actual.status,
-        contentType: "application/json",
-        body: actual.body,
-      });
-  });
-  await page
-    .getByRole("button", { name: "Compare recorded exchange", exact: true })
-    .click();
-  await page
-    .getByRole("button", { name: "Compare recorded exchange", exact: true })
-    .waitFor({ state: "visible" });
-  await page.waitForFunction(
-    () =>
-      !document.querySelector('button[type="submit"]:disabled') ||
-      [...document.querySelectorAll("button")].some(
-        (b) => b.textContent === "Compare recorded exchange" && !b.disabled,
-      ),
-  );
-  assert.equal(observed.length, 1);
-  assert.equal(JSON.parse(observed[0].body).snapshot_hash, c.plain_hash);
-  await inspect(c.plain, c.plain_hash);
-  assert.equal(observed.length, 2);
-  assert.deepEqual(observed[0].selection, observed[1].selection);
-  assert.equal(JSON.parse(observed[1].body).snapshot_hash, c.plain_hash);
-  await page.unroute(endpoint);
-  record("lost-read-response-recovered-with-same-selected-evidence");
-  await page.reload();
-  await page.getByRole("heading", { name: "Files", exact: true }).waitFor();
-  await openPlan();
-  await inspect(c.plain, c.plain_hash);
-  record("reload-reads-same-durable-evidence-without-activation");
+    assert.equal(observed.length, 1);
+    assert.equal(JSON.parse(observed[0].body).snapshot_hash, c.plain_hash);
+    await inspect(c.plain, c.plain_hash);
+    assert.equal(observed.length, 2);
+    assert.deepEqual(observed[0].selection, observed[1].selection);
+    assert.equal(JSON.parse(observed[1].body).snapshot_hash, c.plain_hash);
+    await page.unroute(endpoint);
+    record("lost-read-response-recovered-with-same-selected-evidence");
+    await page.reload();
+    await page.getByRole("heading", { name: "Files", exact: true }).waitFor();
+    await openPlan();
+    await inspect(c.plain, c.plain_hash);
+    record("reload-reads-same-durable-evidence-without-activation");
+  }
   assert.deepEqual(errors, []);
   assert.deepEqual(egress, []);
   await page.screenshot({
