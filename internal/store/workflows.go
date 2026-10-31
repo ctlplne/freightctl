@@ -264,6 +264,15 @@ func (t *Transaction) DeliveryAdmission(ctx context.Context, needed int) error {
 	if _, err := t.Tx.Exec(ctx, `SELECT pg_advisory_xact_lock(hashtextextended($1,0))`, t.Scope.Tenant+":"+t.Scope.Partner+":"+t.Actor+":delivery-admission"); err != nil {
 		return err
 	}
+	return t.DeliveryCapacity(ctx, needed)
+}
+
+// DeliveryCapacity is an advisory read. Admission still takes its original
+// lock and rechecks this bound in the transaction that creates the intents.
+func (t *Transaction) DeliveryCapacity(ctx context.Context, needed int) error {
+	if needed < 1 || needed > 128 {
+		return ErrLimit
+	}
 	var count int
 	if err := t.Tx.QueryRow(ctx, `SELECT count(*) FROM delivery_intents WHERE actor_id=$1 AND state NOT IN ('succeeded','blocked','cancelled')`, t.Actor).Scan(&count); err != nil {
 		return err

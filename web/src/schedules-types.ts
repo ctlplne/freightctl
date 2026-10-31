@@ -1,3 +1,10 @@
+import {
+  asCollectionSource,
+  asCollectionConnection,
+  scheduledCollectionContract,
+  type CollectionSource,
+  type CollectionConnection,
+} from "./collections-types";
 import { ApiError, object, uuid } from "./types";
 import { digestBytes } from "./crypto";
 export interface Reference {
@@ -34,6 +41,17 @@ export interface SourceSelection {
   directory: string;
   filename_pattern: string;
   recursive: boolean;
+  kind?: "sftp.collect";
+}
+export interface ArrivalSelection {
+  late_after_seconds: number;
+  arrival_deadline_seconds: number;
+  poll_interval_seconds: number;
+}
+export interface ScheduleCollection {
+  source: CollectionSource;
+  source_connection: CollectionConnection;
+  arrival: ArrivalSelection;
 }
 export interface ScheduleSelection {
   name: string;
@@ -47,6 +65,7 @@ export interface ScheduleSelection {
   execution_deadline_seconds: number;
   late_start_grace_seconds: number;
   expected_authority_revision: number;
+  arrival?: ArrivalSelection;
 }
 export interface ScheduleEffect {
   step_id: string;
@@ -75,6 +94,7 @@ export interface ScheduleDefinition {
   storage_id: string;
   namespace_root: "/";
   effects: ScheduleEffect[];
+  collection?: ScheduleCollection;
 }
 export interface ScheduleSummary {
   id: string;
@@ -102,6 +122,7 @@ export interface ScheduleView {
   schedule: ScheduleSummary & { definition: ScheduleDefinition };
   upcoming: CalendarOccurrence[];
   pending_runs: string[];
+  pending_arrivals?: string[];
   active_runs: number;
   current_authority: boolean;
 }
@@ -111,7 +132,7 @@ export interface Occurrence {
   schedule_version: number;
   due_at: string;
   deadline_at: string;
-  kind: "queued" | "empty" | "missed" | "skipped";
+  kind: "queued" | "empty" | "missed" | "skipped" | "collection";
   skipped_until: string | null;
   input_count: number;
   event_id: string;
@@ -366,27 +387,52 @@ export function scheduleHash(d: ScheduleDefinition): string {
   return digestBytes(canonicalWorkflowBytes(d));
 }
 
+export function asArrivalSelection(
+  v: unknown,
+  execution: number,
+): ArrivalSelection {
+  const o = object(v);
+  if (Object.keys(o).length !== 3) bad();
+  const a = {
+    late_after_seconds: num(o, "late_after_seconds", 0, 604800),
+    arrival_deadline_seconds: num(o, "arrival_deadline_seconds", 1, 604799),
+    poll_interval_seconds: num(o, "poll_interval_seconds", 1, 3600),
+  };
+  if (
+    a.arrival_deadline_seconds <= a.late_after_seconds ||
+    a.arrival_deadline_seconds >= execution ||
+    a.poll_interval_seconds > a.arrival_deadline_seconds ||
+    Math.ceil(a.arrival_deadline_seconds / a.poll_interval_seconds) + 1 > 65536
+  )
+    bad();
+  return a;
+}
 export function asScheduleDefinition(v: unknown): ScheduleDefinition {
   const o = object(v),
     source = object(o.source),
-    pattern = str(source, "filename_pattern", 128),
-    regex =
-      "^" +
-      pattern.replace(/[.*?]/g, (c) =>
-        c === "." ? "[.]" : c === "*" ? ".*" : ".",
-      ) +
-      "$";
+    pattern = str(source, "filename_pattern", 160),
+    remote = source.kind === "sftp.collect",
+    regex = remote
+      ? ""
+      : "^" +
+        pattern.replace(/[.*?]/g, (c) =>
+          c === "." ? "[.]" : c === "*" ? ".*" : ".",
+        ) +
+        "$";
   if (
     o.schema_version !== 1 ||
     o.namespace_root !== "/" ||
-    !/^[-A-Za-z0-9._*?]{1,128}$/.test(pattern) ||
+    (remote
+      ? source.recursive !== false
+      : source.kind !== undefined ||
+        !/^[-A-Za-z0-9._*?]{1,128}$/.test(pattern)) ||
     source.filename_regex !== regex ||
     !["skip", "latest", "all"].includes(String(o.missed_run_policy))
   )
     bad();
   const effects = arr(o.effects, 16).map(effect);
   if (
-    !effects.length ||
+    (!remote && !effects.length) ||
     new Set(effects.map((e) => e.step_id)).size !== effects.length
   )
     bad();
@@ -406,6 +452,7 @@ export function asScheduleDefinition(v: unknown): ScheduleDefinition {
       directory: canonicalPath(str(source, "directory", 4096)),
       filename_pattern: pattern,
       recursive: bool(source, "recursive"),
+      ...(remote ? { kind: "sftp.collect" as const } : {}),
       filename_regex: regex,
     },
     calendar: calendar(o.calendar),
@@ -421,6 +468,26 @@ export function asScheduleDefinition(v: unknown): ScheduleDefinition {
     namespace_root: "/",
     effects,
   };
+  if (remote) {
+    const c = object(o.collection),
+      input = asCollectionSource(c.source),
+      connection = asCollectionConnection(c.source_connection),
+      arrival = asArrivalSelection(c.arrival, d.execution_deadline_seconds);
+    if (
+      input.completion_contract !== scheduledCollectionContract ||
+      input.manifest !== pattern ||
+      input.target_directory !== d.source.directory ||
+      input.max_files !== d.max_files_per_occurrence ||
+      connection.state !== "active" ||
+      !same(input.connection, {
+        id: connection.id,
+        version: connection.version,
+        hash: connection.definition_hash,
+      })
+    )
+      bad();
+    d.collection = { source: input, source_connection: connection, arrival };
+  } else if (o.collection !== undefined) bad();
   if (
     d.late_start_grace_seconds > d.execution_deadline_seconds ||
     canonicalWorkflowBytes(d).length > 24 * 1024
@@ -480,6 +547,7 @@ export function asSchedulePreview(
       execution_deadline_seconds: selection.execution_deadline_seconds,
       late_start_grace_seconds: selection.late_start_grace_seconds,
       expected_authority_revision: selection.expected_authority_revision,
+      ...(selection.arrival ? { arrival: selection.arrival } : {}),
     },
     actual = {
       name: d.name,
@@ -488,6 +556,7 @@ export function asSchedulePreview(
         directory: d.source.directory,
         filename_pattern: d.source.filename_pattern,
         recursive: d.source.recursive,
+        ...(d.source.kind ? { kind: d.source.kind } : {}),
       },
       calendar: calendarSelection(d.calendar),
       missed_run_policy: d.missed_run_policy,
@@ -497,6 +566,7 @@ export function asSchedulePreview(
       execution_deadline_seconds: d.execution_deadline_seconds,
       late_start_grace_seconds: d.late_start_grace_seconds,
       expected_authority_revision: d.authority_revision,
+      ...(d.collection ? { arrival: d.collection.arrival } : {}),
     };
   if (
     scheduleHash(d) !== h ||
@@ -586,6 +656,18 @@ export function asScheduleView(
     pending_runs: pending,
     active_runs: num(o, "active_runs", 0, 64),
     current_authority: current,
+    ...(o.pending_arrivals === undefined
+      ? {}
+      : {
+          pending_arrivals: (() => {
+            const ids = arr(o.pending_arrivals, 64).map((v) => {
+              if (typeof v !== "string" || !uuid(v)) bad();
+              return v as string;
+            });
+            if (!d.collection || new Set(ids).size !== ids.length) bad();
+            return ids;
+          })(),
+        }),
   };
 }
 export function asSchedulePage(v: unknown): {
@@ -630,7 +712,8 @@ export function asScheduleResult(
 export function asOccurrence(v: unknown, scheduleID?: string): Occurrence {
   const o = object(v),
     kind = str(o, "kind", 16);
-  if (!["queued", "empty", "missed", "skipped"].includes(kind)) bad();
+  if (!["queued", "empty", "missed", "skipped", "collection"].includes(kind))
+    bad();
   const r: Occurrence = {
     id: id(o, "id"),
     schedule_id: id(o, "schedule_id"),
@@ -732,13 +815,19 @@ export function asScheduleTick(
   };
 }
 export function asSchedulableWorkflows(v: unknown): {
-  workflows: (Reference & { name: string })[];
+  workflows: (Reference & { name: string; source?: CollectionSource })[];
   next?: string;
 } {
   const o = object(v),
     list = arr(o.workflows, 100).map((v) => {
       const r = object(v);
-      return { ...reference(r), name: str(r, "name") };
+      return {
+        ...reference(r),
+        name: str(r, "name"),
+        ...(r.source === undefined
+          ? {}
+          : { source: asCollectionSource(r.source) }),
+      };
     });
   if (new Set(list.map((r) => r.id)).size !== list.length) bad();
   const next = o.next === undefined ? undefined : id(o, "next");

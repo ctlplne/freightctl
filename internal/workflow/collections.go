@@ -16,16 +16,17 @@ type CollectionSelection struct {
 	Authority int64     `json:"expected_authority_revision"`
 }
 type CollectionDefinition struct {
-	Schema         int              `json:"schema_version"`
-	Workflow       Reference        `json:"workflow"`
-	Source         CollectionSource `json:"source"`
-	Connection     ConnectionView   `json:"source_connection"`
-	SourceIdentity string           `json:"source_identity"`
-	Authority      int64            `json:"authority_revision"`
-	StorageID      string           `json:"storage_id"`
-	Root           string           `json:"namespace_root"`
-	Timeout        int              `json:"timeout_seconds"`
-	Effects        []Effect         `json:"effects"`
+	Schema         int                        `json:"schema_version"`
+	Workflow       Reference                  `json:"workflow"`
+	Source         CollectionSource           `json:"source"`
+	Connection     ConnectionView             `json:"source_connection"`
+	SourceIdentity string                     `json:"source_identity"`
+	Authority      int64                      `json:"authority_revision"`
+	StorageID      string                     `json:"storage_id"`
+	Root           string                     `json:"namespace_root"`
+	Timeout        int                        `json:"timeout_seconds"`
+	Effects        []Effect                   `json:"effects"`
+	Schedule       *CollectionScheduleBinding `json:"schedule,omitempty"`
 }
 type CollectionPreview struct {
 	Definition       CollectionDefinition `json:"definition"`
@@ -84,8 +85,11 @@ func (s *Service) collectionBegin(ctx context.Context, scope store.Scope, grants
 }
 func collectionDefinition(j *store.CollectionJob) (*CollectionDefinition, error) {
 	var d CollectionDefinition
-	if Decode(j.Definition, &d) != nil || d.Schema != 1 || normalizeCollectionSource(d.Source) != nil || d.Workflow.ID != j.WorkflowID || d.Workflow.Version != j.WorkflowVersion || d.Workflow.Hash != j.WorkflowHash || d.Authority < 1 || d.Root != "/" || !store.ValidID(d.StorageID) || d.Timeout < 1 || d.Timeout > 3600 {
+	if Decode(j.Definition, &d) != nil || d.Schema != 1 || normalizeCollectionSource(d.Source) != nil || d.Workflow.ID != j.WorkflowID || d.Workflow.Version != j.WorkflowVersion || d.Workflow.Hash != j.WorkflowHash || d.Authority < 1 || d.Root != "/" || !store.ValidID(d.StorageID) || d.Timeout < 1 || d.Timeout > 604800 {
 		return nil, store.ErrState
+	}
+	if e := validateCollectionSchedule(j, &d); e != nil {
+		return nil, e
 	}
 	_, hash, e := digest(d)
 	if e != nil || hash != j.Hash {
@@ -104,7 +108,9 @@ func (s *Service) collectionPreview(ctx context.Context, t *store.Transaction, x
 	if e != nil {
 		return nil, e
 	}
-	if w.Source == nil {
+	if w.Source == nil || w.Source.Contract != CollectionContract {
+		// A scheduled source needs a durable, approved due occurrence. Manual
+		// admission cannot invent that occurrence or substitute a wall time.
 		return nil, ErrInput
 	}
 	if len(w.Steps) > 0 {

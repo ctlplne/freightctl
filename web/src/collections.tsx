@@ -11,6 +11,7 @@ import {
 } from "./schedules-types";
 import {
   collectionContract,
+  scheduledCollectionContract,
   asCollectionWorkflow,
   asCollectionWorkflowPreview,
   asCollectionConfiguration,
@@ -40,12 +41,15 @@ type Props = {
   refresh: number;
   onError: (e: unknown) => void;
   onConfirmed: (message: string) => void;
+  jobID?: string;
+  jobHash?: string;
 };
 type WorkflowPreview = ReturnType<typeof asCollectionWorkflowPreview>;
 type Form = {
   name: string;
   source: string;
   manifest: string;
+  scheduled: boolean;
   directory: string;
   maxFiles: number;
   maxFile: number;
@@ -102,6 +106,7 @@ const initial = (maxFile: number): Form => ({
   name: "",
   source: "",
   manifest: "settlement.ready.json",
+  scheduled: false,
   directory: "",
   maxFiles: 4,
   maxFile: Math.min(maxFile, 1048576),
@@ -233,10 +238,13 @@ export function Collections({
   refresh,
   onError,
   onConfirmed,
+  jobID,
+  jobHash,
 }: Props) {
   const has = (p: string) => session.identity.permissions.includes(p),
     authority = session.identity.authority_revision;
-  const canManage = has("workflow_manage") && has("write") && has("list"),
+  const canManage =
+      !jobID && has("workflow_manage") && has("write") && has("list"),
     canApprove = has("workflow_approve") && has("write") && has("list"),
     canExecute =
       has("workflow_execute") && has("read") && has("write") && has("list");
@@ -293,6 +301,7 @@ export function Collections({
     onConfirmed(message);
   }
   async function list(after = "") {
+    if (jobID) return;
     setPage(
       await api.request(
         api.prefix +
@@ -358,10 +367,14 @@ export function Collections({
       );
   }
   useEffect(() => {
+    if (jobID) {
+      void inspect(jobID, jobHash).catch(onError);
+      return;
+    }
     void list().catch(onError);
     void workflowChoices().catch(onError);
     void connectionChoices().catch(onError);
-  }, [api, refresh]);
+  }, [api, refresh, jobID, jobHash]);
   useEffect(() => {
     if (selected) heading.current?.focus();
   }, [selected?.job.id, selected?.job.revision]);
@@ -403,7 +416,9 @@ export function Collections({
         connection: reference(source),
         manifest: form.manifest,
         target_directory: form.directory,
-        completion_contract: collectionContract,
+        completion_contract: form.scheduled
+          ? scheduledCollectionContract
+          : collectionContract,
         max_files: form.maxFiles,
         max_file_bytes: form.maxFile,
         max_total_bytes: form.maxTotal,
@@ -435,6 +450,7 @@ export function Collections({
       name: d.name,
       source: keyReference(d.source.connection),
       manifest: d.source.manifest,
+      scheduled: d.source.completion_contract === scheduledCollectionContract,
       directory: d.source.target_directory,
       maxFiles: d.source.max_files,
       maxFile: d.source.max_file_bytes,
@@ -654,6 +670,7 @@ export function Collections({
   const canStart =
     canExecute &&
     chosen?.state === "approved" &&
+    chosen.definition.source.completion_contract === collectionContract &&
     (!chosen.definition.steps.length || has("deliver"));
   return (
     <section aria-label="Collection workflows">
@@ -714,6 +731,29 @@ export function Collections({
                 </select>
               )}
             </Field>
+            <label className="schedule-checkbox">
+              <input
+                type="checkbox"
+                checked={form.scheduled}
+                onChange={(e) =>
+                  edit({
+                    scheduled: e.target.checked,
+                    manifest: e.target.checked
+                      ? "settlement-{due_utc}.ready.json"
+                      : "settlement.ready.json",
+                  })
+                }
+              />
+              Expect a separate manifest for each scheduled due time
+            </label>
+            {form.scheduled && (
+              <p>
+                Use exactly one <code>{"{due_utc}"}</code> in the filename. It
+                becomes the occurrence’s UTC time, for example{" "}
+                <code>20261031T070000Z</code>. After workflow approval, choose
+                it in Schedules to review arrival and execution cutoffs.
+              </p>
+            )}
             <Field label="Ready manifest filename">
               {(id) => (
                 <input
@@ -924,226 +964,238 @@ export function Collections({
           )}
         </section>
       )}
-      <section aria-label="Choose collection workflow">
-        <h3>Approved workflow and collection job</h3>
-        <Field label="Saved collection workflow">
-          {(id) => (
-            <select
-              id={id}
+      {!jobID && (
+        <section aria-label="Choose collection workflow">
+          <h3>Approved workflow and collection job</h3>
+          <Field label="Saved collection workflow">
+            {(id) => (
+              <select
+                id={id}
+                disabled={busy}
+                value={
+                  chosen
+                    ? keyReference({
+                        id: chosen.id,
+                        version: chosen.version,
+                        hash: chosen.definition_hash,
+                      })
+                    : ""
+                }
+                onChange={(e) => {
+                  const c = [...activeChoice, ...choices.workflows].find(
+                    (c) => keyReference(c) === e.target.value,
+                  );
+                  if (c) void perform(() => loadWorkflow(c));
+                }}
+              >
+                <option value="">Choose a saved collection workflow</option>
+                {[...activeChoice, ...choices.workflows].map((w) => (
+                  <option key={keyReference(w)} value={keyReference(w)}>
+                    {w.name + " · v" + w.version + " · " + w.id.slice(0, 8)}
+                  </option>
+                ))}
+              </select>
+            )}
+          </Field>
+          {choices.next && (
+            <button
               disabled={busy}
-              value={
-                chosen
-                  ? keyReference({
-                      id: chosen.id,
-                      version: chosen.version,
-                      hash: chosen.definition_hash,
-                    })
-                  : ""
-              }
-              onChange={(e) => {
-                const c = [...activeChoice, ...choices.workflows].find(
-                  (c) => keyReference(c) === e.target.value,
-                );
-                if (c) void perform(() => loadWorkflow(c));
-              }}
+              onClick={() => void perform(() => workflowChoices(choices.next))}
             >
-              <option value="">Choose a saved collection workflow</option>
-              {[...activeChoice, ...choices.workflows].map((w) => (
-                <option key={keyReference(w)} value={keyReference(w)}>
-                  {w.name + " · v" + w.version + " · " + w.id.slice(0, 8)}
-                </option>
-              ))}
-            </select>
+              More collection workflows
+            </button>
           )}
-        </Field>
-        {choices.next && (
-          <button
-            disabled={busy}
-            onClick={() => void perform(() => workflowChoices(choices.next))}
-          >
-            More collection workflows
-          </button>
-        )}
-        {chosen && (
-          <section aria-label="Selected workflow definition">
-            <h4>{chosen.definition.name + ": " + chosen.state}</h4>
-            <p>
-              Version {chosen.version}, revision {chosen.revision}. Definition{" "}
-              <code>{chosen.definition_hash}</code>.
-            </p>
-            {chosenPreview && (
+          {chosen && (
+            <section aria-label="Selected workflow definition">
+              <h4>{chosen.definition.name + ": " + chosen.state}</h4>
+              <p>
+                Version {chosen.version}, revision {chosen.revision}. Definition{" "}
+                <code>{chosen.definition_hash}</code>.
+              </p>
+              {chosenPreview && (
+                <SourceReview
+                  source={chosenPreview.definition.source}
+                  connection={chosenPreview.collection.connection}
+                  effects={chosenPreview.effects}
+                />
+              )}
+              {canManage && (
+                <button
+                  disabled={busy}
+                  onClick={() => void perform(() => editWorkflow(chosen))}
+                >
+                  Prepare next workflow revision
+                </button>
+              )}
+              {canApprove && chosenPreview && chosen.state === "draft" && (
+                <button
+                  disabled={busy}
+                  onClick={() => {
+                    setFailure("");
+                    setPending({
+                      kind: "approve",
+                      configuration: structuredClone(chosen),
+                      preview: structuredClone(chosenPreview),
+                      key: operationKey(),
+                    });
+                  }}
+                >
+                  Review workflow approval
+                </button>
+              )}
+              {canApprove && chosenPreview && chosen.state === "approved" && (
+                <button
+                  disabled={busy}
+                  onClick={() => {
+                    setFailure("");
+                    setPending({
+                      kind: "revoke",
+                      configuration: structuredClone(chosen),
+                      preview: structuredClone(chosenPreview),
+                      key: operationKey(),
+                    });
+                  }}
+                >
+                  Review workflow revocation
+                </button>
+              )}
+              {chosen.definition.source.completion_contract ===
+                scheduledCollectionContract && (
+                <p>
+                  This workflow expects a calendar occurrence. Open Schedules,
+                  choose this workflow, and review its due times and arrival
+                  policy before activation.
+                </p>
+              )}
+              {canStart && (
+                <>
+                  <Field label="Collection and sending cutoff from queue time (seconds)">
+                    {(id) => (
+                      <input
+                        id={id}
+                        type="number"
+                        min={1}
+                        max={3600}
+                        required
+                        value={timeout}
+                        onChange={(e) => {
+                          setTimeoutSeconds(Number(e.target.value));
+                          setPreview(null);
+                        }}
+                      />
+                    )}
+                  </Field>
+                  <button
+                    disabled={busy}
+                    onClick={() =>
+                      void perform(async () => {
+                        const selection: CollectionSelection = {
+                          workflow: {
+                            id: chosen.id,
+                            version: chosen.version,
+                            hash: chosen.definition_hash,
+                          },
+                          timeout_seconds: timeout,
+                          expected_authority_revision: authority,
+                        };
+                        setPreview({
+                          selection,
+                          value: await approvalPost(
+                            api,
+                            api.prefix + "/workflow-collections/preview",
+                            selection,
+                            undefined,
+                            (v) =>
+                              asCollectionPreview(
+                                v,
+                                selection,
+                                authority,
+                                chosen,
+                              ),
+                          ),
+                        });
+                      })
+                    }
+                  >
+                    Preview collection job
+                  </button>
+                </>
+              )}
+            </section>
+          )}
+          {preview && (
+            <section aria-label="Collection job preview">
+              <h3 ref={previewHeading} tabIndex={-1}>
+                Collection job preview
+              </h3>
               <SourceReview
-                source={chosenPreview.definition.source}
-                connection={chosenPreview.collection.connection}
-                effects={chosenPreview.effects}
+                source={preview.value.definition.source}
+                connection={preview.value.definition.source_connection}
+                effects={preview.value.definition.effects}
               />
-            )}
-            {canManage && (
-              <button
-                disabled={busy}
-                onClick={() => void perform(() => editWorkflow(chosen))}
-              >
-                Prepare next workflow revision
-              </button>
-            )}
-            {canApprove && chosenPreview && chosen.state === "draft" && (
+              <p>
+                New collection and sending are bounded to{" "}
+                {preview.selection.timeout_seconds} seconds from durable
+                queueing. Queueing records metadata only; a later confirmed
+                worker reads the source.
+              </p>
               <button
                 disabled={busy}
                 onClick={() => {
                   setFailure("");
                   setPending({
-                    kind: "approve",
-                    configuration: structuredClone(chosen),
-                    preview: structuredClone(chosenPreview),
+                    kind: "start",
+                    preview: structuredClone(preview.value),
+                    selection: structuredClone(preview.selection),
                     key: operationKey(),
                   });
                 }}
               >
-                Review workflow approval
+                Review queueing collection
               </button>
-            )}
-            {canApprove && chosenPreview && chosen.state === "approved" && (
-              <button
-                disabled={busy}
-                onClick={() => {
-                  setFailure("");
-                  setPending({
-                    kind: "revoke",
-                    configuration: structuredClone(chosen),
-                    preview: structuredClone(chosenPreview),
-                    key: operationKey(),
-                  });
-                }}
-              >
-                Review workflow revocation
-              </button>
-            )}
-            {canStart && (
-              <>
-                <Field label="Collection and sending cutoff from queue time (seconds)">
-                  {(id) => (
-                    <input
-                      id={id}
-                      type="number"
-                      min={1}
-                      max={3600}
-                      required
-                      value={timeout}
-                      onChange={(e) => {
-                        setTimeoutSeconds(Number(e.target.value));
-                        setPreview(null);
-                      }}
-                    />
-                  )}
-                </Field>
+            </section>
+          )}
+        </section>
+      )}
+      {!jobID && (
+        <section aria-label="Private collection jobs">
+          <h3>Your collection jobs</h3>
+          <button disabled={busy} onClick={() => void perform(() => list())}>
+            Reload collection jobs
+          </button>
+          <ul>
+            {page.jobs.map((j) => (
+              <li key={j.id}>
+                {"Job " +
+                  j.id.slice(0, 8) +
+                  " · " +
+                  j.state +
+                  " · workflow " +
+                  j.workflow_id.slice(0, 8) +
+                  " v" +
+                  j.workflow_version +
+                  " "}
                 <button
                   disabled={busy}
                   onClick={() =>
-                    void perform(async () => {
-                      const selection: CollectionSelection = {
-                        workflow: {
-                          id: chosen.id,
-                          version: chosen.version,
-                          hash: chosen.definition_hash,
-                        },
-                        timeout_seconds: timeout,
-                        expected_authority_revision: authority,
-                      };
-                      setPreview({
-                        selection,
-                        value: await approvalPost(
-                          api,
-                          api.prefix + "/workflow-collections/preview",
-                          selection,
-                          undefined,
-                          (v) =>
-                            asCollectionPreview(
-                              v,
-                              selection,
-                              authority,
-                              chosen,
-                            ),
-                        ),
-                      });
-                    })
+                    void perform(() => inspect(j.id, j.definition_hash))
                   }
                 >
-                  Preview collection job
+                  {"Inspect collection " + j.id}
                 </button>
-              </>
-            )}
-          </section>
-        )}
-        {preview && (
-          <section aria-label="Collection job preview">
-            <h3 ref={previewHeading} tabIndex={-1}>
-              Collection job preview
-            </h3>
-            <SourceReview
-              source={preview.value.definition.source}
-              connection={preview.value.definition.source_connection}
-              effects={preview.value.definition.effects}
-            />
-            <p>
-              New collection and sending are bounded to{" "}
-              {preview.selection.timeout_seconds} seconds from durable queueing.
-              Queueing records metadata only; a later confirmed worker reads the
-              source.
-            </p>
+              </li>
+            ))}
+          </ul>
+          {page.next && (
             <button
               disabled={busy}
-              onClick={() => {
-                setFailure("");
-                setPending({
-                  kind: "start",
-                  preview: structuredClone(preview.value),
-                  selection: structuredClone(preview.selection),
-                  key: operationKey(),
-                });
-              }}
+              onClick={() => void perform(() => list(page.next))}
             >
-              Review queueing collection
+              Next collection jobs
             </button>
-          </section>
-        )}
-      </section>
-      <section aria-label="Private collection jobs">
-        <h3>Your collection jobs</h3>
-        <button disabled={busy} onClick={() => void perform(() => list())}>
-          Reload collection jobs
-        </button>
-        <ul>
-          {page.jobs.map((j) => (
-            <li key={j.id}>
-              {"Job " +
-                j.id.slice(0, 8) +
-                " · " +
-                j.state +
-                " · workflow " +
-                j.workflow_id.slice(0, 8) +
-                " v" +
-                j.workflow_version +
-                " "}
-              <button
-                disabled={busy}
-                onClick={() =>
-                  void perform(() => inspect(j.id, j.definition_hash))
-                }
-              >
-                {"Inspect collection " + j.id}
-              </button>
-            </li>
-          ))}
-        </ul>
-        {page.next && (
-          <button
-            disabled={busy}
-            onClick={() => void perform(() => list(page.next))}
-          >
-            Next collection jobs
-          </button>
-        )}
-      </section>
+          )}
+        </section>
+      )}
       {selected && (
         <section aria-label="Selected collection">
           <h3 ref={heading} tabIndex={-1}>

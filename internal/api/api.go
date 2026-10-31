@@ -94,6 +94,10 @@ func NewWithBrowserLifetime(service *custody.Service, audits *audit.Service, ena
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/workflow-schedules/{schedule}/{version}", s.schedule("status"))
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/workflow-schedules/{schedule}/history", s.schedule("history"))
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/workflow-schedule-occurrences/{occurrence}", s.schedule("occurrence"))
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/workflow-schedule-arrivals/{occurrence}", s.scheduleArrival("status"))
+	for _, action := range []string{"probe", "admit", "cancel"} {
+		m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/workflow-schedule-arrivals/{occurrence}/"+action, s.scheduleArrival(action))
+	}
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/workflow-schedules/{schedule}/{version}/tick", s.schedule("tick"))
 	for _, action := range []string{"activate", "suspend", "revoke"} {
 		m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/workflow-schedules/{schedule}/{version}/"+action, s.schedule(action))
@@ -329,6 +333,8 @@ func errorStatus(err error) (int, string) {
 		return 409, "path_exists"
 	case errors.Is(err, store.ErrSchedule):
 		return 409, "schedule_authority_or_deadline_required"
+	case errors.Is(err, store.ErrArrival):
+		return 409, "arrival_authority_or_probe_required"
 	case errors.Is(err, store.ErrCollection):
 		return 409, "collection_authority_input_or_lease_required"
 	case errors.Is(err, store.ErrDispatchApproval):

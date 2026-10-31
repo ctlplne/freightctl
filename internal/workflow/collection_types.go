@@ -43,7 +43,7 @@ type CollectionEffect struct {
 
 func normalizeCollectionSource(s CollectionSource) error {
 	dir, e := vpath.Canonical(s.Directory)
-	if e != nil || dir != s.Directory || vpath.ControlPath(dir) || s.Kind != "sftp.collect" || s.Contract != CollectionContract || !store.ValidID(s.Connection.ID) || s.Connection.Version < 1 || s.Connection.Version > 2147483647 || !hashPattern.MatchString(s.Connection.Hash) || !filenamePattern.MatchString(s.Manifest) || !strings.HasSuffix(s.Manifest, ".ready.json") || s.MaxFiles < 1 || s.MaxFiles > 64 || s.MaxFile < 1 || s.MaxFile > 1<<30 || s.MaxTotal < 1 || s.MaxTotal > int64(s.MaxFiles)*s.MaxFile {
+	if e != nil || dir != s.Directory || vpath.ControlPath(dir) || s.Kind != "sftp.collect" || (s.Contract != CollectionContract && s.Contract != ScheduledCollectionContract) || !store.ValidID(s.Connection.ID) || s.Connection.Version < 1 || s.Connection.Version > 2147483647 || !hashPattern.MatchString(s.Connection.Hash) || !collectionManifestPattern(s.Contract, s.Manifest) || s.MaxFiles < 1 || s.MaxFiles > 64 || s.MaxFile < 1 || s.MaxFile > 1<<30 || s.MaxTotal < 1 || s.MaxTotal > int64(s.MaxFiles)*s.MaxFile {
 		return ErrInput
 	}
 	if _, e = vpath.Canonical(path.Join(s.Directory, strings.Repeat("x", 193))); e != nil {

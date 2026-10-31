@@ -321,7 +321,7 @@ func redactOnboardingEvent(e Event) Event {
 		e.Payload, _ = json.Marshal(map[string]any{"schema_version": 1, "redacted": true, "source_payload_sha256": secure.Digest(e.Payload), "reason": "actor_private_workflow_collection"})
 		return e
 	}
-	if e.Kind == "WorkflowScheduleChanged" || e.Kind == "WorkflowScheduleOccurrence" || e.Kind == "WorkflowScheduleInput" {
+	if e.Kind == "WorkflowScheduleArrivalChanged" || e.Kind == "WorkflowScheduleChanged" || e.Kind == "WorkflowScheduleOccurrence" || e.Kind == "WorkflowScheduleInput" {
 		e.Payload, _ = json.Marshal(map[string]any{"schema_version": 1, "redacted": true, "source_payload_sha256": secure.Digest(e.Payload), "reason": "actor_private_workflow_schedule"})
 		return e
 	}
@@ -335,7 +335,7 @@ func redactOnboardingEvent(e Event) Event {
 				Kind string `json:"kind"`
 			} `json:"result"`
 		}
-		if json.Unmarshal(e.Payload, &p) == nil && (p.Result.Kind == "workflow_run_refresh" || p.Result.Kind == "workflow_schedule" || p.Result.Kind == "workflow_schedule_tick" || p.Result.Kind == "outbound_dispatch_review" || p.Result.Kind == "outbound_dispatch_policy" || p.Result.Kind == "onboarding_approval" || p.Result.Kind == "onboarding_approval_policy" || p.Result.Kind == "onboarding_test" || p.Result.Kind == "onboarding_release" || p.Result.Kind == "onboarding_production" || p.Result.Kind == "onboarding_handoff" || p.Result.Kind == "onboarding_observation") {
+		if json.Unmarshal(e.Payload, &p) == nil && (p.Result.Kind == "workflow_run_refresh" || p.Result.Kind == "workflow_schedule" || p.Result.Kind == "workflow_schedule_tick" || p.Result.Kind == "workflow_schedule_arrival" || p.Result.Kind == "outbound_dispatch_review" || p.Result.Kind == "outbound_dispatch_policy" || p.Result.Kind == "onboarding_approval" || p.Result.Kind == "onboarding_approval_policy" || p.Result.Kind == "onboarding_test" || p.Result.Kind == "onboarding_release" || p.Result.Kind == "onboarding_production" || p.Result.Kind == "onboarding_handoff" || p.Result.Kind == "onboarding_observation") {
 			e.Payload, _ = json.Marshal(map[string]any{"schema_version": 1, "redacted": true, "source_payload_sha256": secure.Digest(e.Payload), "reason": "actor_private_onboarding_test"})
 			return e
 		}

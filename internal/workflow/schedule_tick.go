@@ -45,7 +45,7 @@ func (s *Service) TickSchedule(ctx context.Context, scope store.Scope, id string
 	}
 	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()
-	t, e := s.scheduleBegin(ctx, scope, "workflow_execute", "list", "read", "deliver")
+	t, e := s.scheduleBegin(ctx, scope, "workflow_execute", "list", "read")
 	if e != nil {
 		return nil, e
 	}
@@ -82,8 +82,10 @@ func (s *Service) TickSchedule(ctx context.Context, scope store.Scope, id string
 	if e = checkScheduleEffects(ctx, t, d, workflow); e != nil {
 		return nil, e
 	}
-	if e = scheduleDirectory(ctx, t, d.Source.Directory); e != nil {
-		return nil, e
+	if d.Collection == nil {
+		if e = scheduleDirectory(ctx, t, d.Source.Directory); e != nil {
+			return nil, e
+		}
 	}
 	if e = s.checkStorage(d.StorageID); e != nil {
 		return nil, e
@@ -114,6 +116,30 @@ func (s *Service) TickSchedule(ctx context.Context, scope store.Scope, id string
 		deadline := due.Add(time.Duration(d.Deadline) * time.Second)
 		if !deadline.After(now) {
 			kind = "missed"
+		} else if d.Collection != nil {
+			arrivalEnd := due.Add(time.Duration(d.Collection.Arrival.Deadline) * time.Second)
+			if arrivalEnd.After(now) {
+				active, e := t.ScheduleCollectionActive(ctx, id)
+				if e != nil {
+					return nil, e
+				}
+				if active >= d.MaxActive {
+					out.Reason = "collection_concurrency"
+					break
+				}
+			}
+			occurrence := store.NewScheduleOccurrence(id, version, due, d.Deadline, "collection", 0)
+			if e = t.SaveScheduleOccurrence(ctx, occurrence); e != nil {
+				return nil, e
+			}
+			if e = s.stageScheduleArrival(ctx, t, record, d, occurrence, now); e != nil {
+				return nil, e
+			}
+			out.Occurrences = append(out.Occurrences, *occurrence)
+			record.NextDue = p.Next(due)
+			changed = true
+			out.Reason = "awaiting_source_arrival"
+			continue
 		} else {
 			active, e := t.ScheduleActiveRuns(ctx, id)
 			if e != nil {
@@ -227,6 +253,9 @@ func (s *Service) ScheduleReady(ctx context.Context, scope store.Scope, id strin
 	ready := record.NextDue != nil && !record.NextDue.After(now)
 	if ready && record.NextDue.Add(time.Duration(d.Deadline)*time.Second).After(now) && !(d.Missed == "skip" && record.NextDue.Add(time.Duration(d.Grace)*time.Second).Before(now)) {
 		active, e := t.ScheduleActiveRuns(ctx, id)
+		if d.Collection != nil {
+			active, e = t.ScheduleCollectionActive(ctx, id)
+		}
 		if e != nil {
 			return false, e
 		}
@@ -238,7 +267,10 @@ func (s *Service) ScheduleReady(ctx context.Context, scope store.Scope, id strin
 		if e != nil {
 			return false, e
 		}
-		ready = active < d.MaxActive && 128-used >= len(workflow.Steps)
+		ready = active < d.MaxActive && (d.Collection != nil || 128-used >= len(workflow.Steps))
+		if d.Collection != nil && !record.NextDue.Add(time.Duration(d.Collection.Arrival.Deadline)*time.Second).After(now) {
+			ready = true
+		}
 	}
 	if e = t.Reauthorize(ctx); e != nil {
 		return false, e

@@ -56,7 +56,8 @@ type ScheduleInput struct {
 }
 type ScheduleOccurrenceView struct {
 	ScheduleOccurrence
-	Inputs []ScheduleInput `json:"inputs"`
+	Inputs  []ScheduleInput  `json:"inputs"`
+	Arrival *ScheduleArrival `json:"arrival,omitempty"`
 }
 type ScheduleHistory struct {
 	Occurrences []ScheduleOccurrence `json:"occurrences"`
@@ -276,7 +277,17 @@ func (t *Transaction) ScheduleOccurrence(ctx context.Context, id string) (*Sched
 	if len(v.Inputs) != o.InputCount || len(v.Inputs) > 64 {
 		return nil, ErrIsolation
 	}
-	return v, rows.Err()
+	if rows.Err() != nil {
+		return nil, rows.Err()
+	}
+	rows.Close()
+	if o.Kind == "collection" {
+		v.Arrival, e = t.ScheduleArrival(ctx, id, false)
+		if e != nil {
+			return nil, e
+		}
+	}
+	return v, nil
 }
 func (t *Transaction) SchedulePending(ctx context.Context, id string, version int, limit int) ([]string, error) {
 	if !ValidID(id) || version < 1 || limit < 1 || limit > 64 {

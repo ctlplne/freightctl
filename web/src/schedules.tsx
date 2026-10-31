@@ -1,4 +1,6 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
+import { dueManifestName, type CollectionSource } from "./collections-types";
+import { ScheduleArrival } from "./schedule-arrivals";
 import { Api } from "./api";
 import { ApiError, type Session } from "./types";
 import { operationKey } from "./crypto";
@@ -49,6 +51,9 @@ type Form = {
   files: number;
   deadline: number;
   grace: number;
+  late: number;
+  arrivalDeadline: number;
+  poll: number;
 };
 type Pending =
   | {
@@ -99,6 +104,9 @@ const initial = (): Form => ({
   files: 1,
   deadline: 3600,
   grace: 30,
+  late: 300,
+  arrivalDeadline: 1800,
+  poll: 30,
 });
 function Field({
   label,
@@ -141,7 +149,8 @@ function Definition({ d }: { d: ScheduleDefinition }) {
   return (
     <>
       <p>
-        Watch <code>{d.source.directory}</code> for{" "}
+        {d.collection ? "Collect into " : "Watch "}
+        <code>{d.source.directory}</code> for{" "}
         <code>{d.source.filename_pattern}</code>
         {d.source.recursive
           ? ", including readable subfolders"
@@ -180,6 +189,19 @@ function Definition({ d }: { d: ScheduleDefinition }) {
         cutoff stops new sender authorization; it does not prove business
         acceptance by a deadline.
       </p>
+      {d.collection && (
+        <p>
+          Read-only SFTP source{" "}
+          <code>{d.collection.source_connection.address}</code>, directory{" "}
+          <code>{d.collection.source_connection.directory}</code>, pinned host{" "}
+          <code>{d.collection.source_connection.host_fingerprint}</code>. Mark
+          an observed manifest late after{" "}
+          {d.collection.arrival.late_after_seconds}s; stop observing after{" "}
+          {d.collection.arrival.arrival_deadline_seconds}s; probe no faster than
+          every {d.collection.arrival.poll_interval_seconds}s. Only verified
+          immutable files enter ordinary intake.
+        </p>
+      )}
       <Effects d={d} />
     </>
   );
@@ -187,19 +209,17 @@ function Definition({ d }: { d: ScheduleDefinition }) {
 export function Schedules({ api, session, refresh, onError }: Props) {
   const grants = session.identity.permissions,
     has = (g: string) => grants.includes(g),
-    canDraft =
-      has("workflow_manage") && has("list") && has("read") && has("deliver"),
+    canDraft = has("workflow_manage") && has("list") && has("read"),
     canControl = has("workflow_approve"),
-    canExecute =
-      has("workflow_execute") && has("list") && has("read") && has("deliver"),
+    canExecute = has("workflow_execute") && has("list") && has("read"),
     authority = session.identity.authority_revision;
   const [form, setForm] = useState(initial),
     [choices, setChoices] = useState<ReturnType<typeof asSchedulableWorkflows>>(
       { workflows: [] },
     ),
-    [workflow, setWorkflow] = useState<(Reference & { name: string }) | null>(
-      null,
-    ),
+    [workflow, setWorkflow] = useState<
+      (Reference & { name: string; source?: CollectionSource }) | null
+    >(null),
     [family, setFamily] = useState<{ id: string; version: number } | null>(
       null,
     ),
@@ -293,7 +313,8 @@ export function Schedules({ api, session, refresh, onError }: Props) {
       source: {
         directory: form.source,
         filename_pattern: form.pattern,
-        recursive: form.recursive,
+        recursive: workflow.source ? false : form.recursive,
+        ...(workflow.source ? { kind: "sftp.collect" as const } : {}),
       },
       calendar: {
         time_zone: form.zone,
@@ -312,6 +333,15 @@ export function Schedules({ api, session, refresh, onError }: Props) {
       execution_deadline_seconds: form.deadline,
       late_start_grace_seconds: form.grace,
       expected_authority_revision: authority,
+      ...(workflow.source
+        ? {
+            arrival: {
+              late_after_seconds: form.late,
+              arrival_deadline_seconds: form.arrivalDeadline,
+              poll_interval_seconds: form.poll,
+            },
+          }
+        : {}),
     };
   }
   async function doPreview() {
@@ -336,7 +366,11 @@ export function Schedules({ api, session, refresh, onError }: Props) {
   function editRevision(v: ScheduleView) {
     const d = v.schedule.definition;
     setFamily({ id: v.schedule.id, version: v.schedule.version });
-    setWorkflow({ ...d.workflow, name: "Previously selected workflow" });
+    setWorkflow({
+      ...d.workflow,
+      name: "Previously selected workflow",
+      ...(d.collection ? { source: d.collection.source } : {}),
+    });
     setForm({
       name: d.name,
       source: d.source.directory,
@@ -355,6 +389,9 @@ export function Schedules({ api, session, refresh, onError }: Props) {
       files: d.max_files_per_occurrence,
       deadline: d.execution_deadline_seconds,
       grace: d.late_start_grace_seconds,
+      late: d.collection?.arrival.late_after_seconds ?? 300,
+      arrivalDeadline: d.collection?.arrival.arrival_deadline_seconds ?? 1800,
+      poll: d.collection?.arrival.poll_interval_seconds ?? 30,
     });
     setPreview(null);
     requestAnimationFrame(() => formHeading.current?.focus());
@@ -559,6 +596,13 @@ export function Schedules({ api, session, refresh, onError }: Props) {
                       (w) => w.id + ":" + w.version === e.target.value,
                     );
                     setWorkflow(v ?? null);
+                    if (v?.source)
+                      edit({
+                        source: v.source.target_directory,
+                        pattern: v.source.manifest,
+                        recursive: false,
+                        files: v.source.max_files,
+                      });
                     setPreview(null);
                   }}
                 >
@@ -582,11 +626,18 @@ export function Schedules({ api, session, refresh, onError }: Props) {
                 More approved workflows
               </button>
             )}
-            <Field label="Published source folder">
+            <Field
+              label={
+                workflow?.source
+                  ? "Approved collection target folder"
+                  : "Published source folder"
+              }
+            >
               {(id) => (
                 <input
                   id={id}
                   required
+                  readOnly={!!workflow?.source}
                   value={form.source}
                   onChange={(e) => edit({ source: e.target.value })}
                 />
@@ -597,7 +648,8 @@ export function Schedules({ api, session, refresh, onError }: Props) {
                 <input
                   id={id}
                   required
-                  maxLength={128}
+                  maxLength={160}
+                  readOnly={!!workflow?.source}
                   value={form.pattern}
                   onChange={(e) => edit({ pattern: e.target.value })}
                 />
@@ -611,11 +663,56 @@ export function Schedules({ api, session, refresh, onError }: Props) {
             <label className="schedule-checkbox">
               <input
                 type="checkbox"
+                disabled={!!workflow?.source}
                 checked={form.recursive}
                 onChange={(e) => edit({ recursive: e.target.checked })}
               />
               Include readable subfolders
             </label>
+            {workflow?.source && (
+              <fieldset>
+                <legend>Expected remote arrival</legend>
+                <p>
+                  The approved source and target are fixed by the workflow. Each
+                  due time expects its own UTC manifest. Missing means no
+                  verified ready manifest was observed before the arrival
+                  cutoff.
+                </p>
+                {(
+                  [
+                    ["Late after due time (seconds)", "late", 0, 604798],
+                    [
+                      "Arrival cutoff after due time (seconds)",
+                      "arrivalDeadline",
+                      1,
+                      604799,
+                    ],
+                    [
+                      "Minimum time between source probes (seconds)",
+                      "poll",
+                      1,
+                      3600,
+                    ],
+                  ] as const
+                ).map(([label, key, min, max]) => (
+                  <Field key={key} label={label}>
+                    {(id) => (
+                      <input
+                        id={id}
+                        type="number"
+                        required
+                        min={min}
+                        max={max}
+                        value={form[key]}
+                        onChange={(e) =>
+                          edit({ [key]: Number(e.target.value) })
+                        }
+                      />
+                    )}
+                  </Field>
+                ))}
+              </fieldset>
+            )}
             <Field label="Time zone">
               {(id) => (
                 <input
@@ -798,6 +895,7 @@ export function Schedules({ api, session, refresh, onError }: Props) {
                   min={1}
                   max={64}
                   required
+                  readOnly={!!workflow?.source}
                   value={form.files}
                   onChange={(e) => edit({ files: Number(e.target.value) })}
                 />
@@ -836,6 +934,17 @@ export function Schedules({ api, session, refresh, onError }: Props) {
             {preview.value.upcoming.map((v) => (
               <li key={v.at}>
                 {v.local_time} {v.abbreviation} → {v.at}
+                {preview.value.definition.collection && (
+                  <>
+                    ; expected{" "}
+                    <code>
+                      {dueManifestName(
+                        preview.value.definition.collection.source,
+                        v.at,
+                      )}
+                    </code>
+                  </>
+                )}
               </li>
             ))}
           </ul>
@@ -1018,6 +1127,16 @@ export function Schedules({ api, session, refresh, onError }: Props) {
             </button>
           )}
         </section>
+      )}
+      {occurrence?.kind === "collection" && (
+        <ScheduleArrival
+          key={occurrence.id}
+          api={api}
+          session={session}
+          occurrence={occurrence}
+          refresh={refresh}
+          onError={onError}
+        />
       )}
       {occurrence && (
         <section aria-label="Selected occurrence">

@@ -23,40 +23,43 @@ type ScheduleSourceSelection struct {
 	Directory string `json:"directory"`
 	Pattern   string `json:"filename_pattern"`
 	Recursive bool   `json:"recursive"`
+	Kind      string `json:"kind,omitempty"`
 }
 type ScheduleSource struct {
 	ScheduleSourceSelection
 	Regex string `json:"filename_regex"`
 }
 type ScheduleSelection struct {
-	Name              string                  `json:"name"`
-	Workflow          Reference               `json:"workflow"`
-	Source            ScheduleSourceSelection `json:"source"`
-	Calendar          calendar.Selection      `json:"calendar"`
-	Missed            string                  `json:"missed_run_policy"`
-	CatchUp           int                     `json:"max_catch_up"`
-	MaxActive         int                     `json:"max_active_runs"`
-	MaxFiles          int                     `json:"max_files_per_occurrence"`
-	Deadline          int                     `json:"execution_deadline_seconds"`
-	Grace             int                     `json:"late_start_grace_seconds"`
-	ExpectedAuthority int64                   `json:"expected_authority_revision"`
+	Name              string                    `json:"name"`
+	Workflow          Reference                 `json:"workflow"`
+	Source            ScheduleSourceSelection   `json:"source"`
+	Calendar          calendar.Selection        `json:"calendar"`
+	Missed            string                    `json:"missed_run_policy"`
+	CatchUp           int                       `json:"max_catch_up"`
+	MaxActive         int                       `json:"max_active_runs"`
+	MaxFiles          int                       `json:"max_files_per_occurrence"`
+	Deadline          int                       `json:"execution_deadline_seconds"`
+	Grace             int                       `json:"late_start_grace_seconds"`
+	ExpectedAuthority int64                     `json:"expected_authority_revision"`
+	Arrival           *ScheduleArrivalSelection `json:"arrival,omitempty"`
 }
 type ScheduleDefinition struct {
-	Schema    int                 `json:"schema_version"`
-	Name      string              `json:"name"`
-	Workflow  Reference           `json:"workflow"`
-	Source    ScheduleSource      `json:"source"`
-	Calendar  calendar.Definition `json:"calendar"`
-	Missed    string              `json:"missed_run_policy"`
-	CatchUp   int                 `json:"max_catch_up"`
-	MaxActive int                 `json:"max_active_runs"`
-	MaxFiles  int                 `json:"max_files_per_occurrence"`
-	Deadline  int                 `json:"execution_deadline_seconds"`
-	Grace     int                 `json:"late_start_grace_seconds"`
-	Authority int64               `json:"authority_revision"`
-	StorageID string              `json:"storage_id"`
-	Root      string              `json:"namespace_root"`
-	Effects   []Effect            `json:"effects"`
+	Schema     int                 `json:"schema_version"`
+	Name       string              `json:"name"`
+	Workflow   Reference           `json:"workflow"`
+	Source     ScheduleSource      `json:"source"`
+	Calendar   calendar.Definition `json:"calendar"`
+	Missed     string              `json:"missed_run_policy"`
+	CatchUp    int                 `json:"max_catch_up"`
+	MaxActive  int                 `json:"max_active_runs"`
+	MaxFiles   int                 `json:"max_files_per_occurrence"`
+	Deadline   int                 `json:"execution_deadline_seconds"`
+	Grace      int                 `json:"late_start_grace_seconds"`
+	Authority  int64               `json:"authority_revision"`
+	StorageID  string              `json:"storage_id"`
+	Root       string              `json:"namespace_root"`
+	Effects    []Effect            `json:"effects"`
+	Collection *ScheduleCollection `json:"collection,omitempty"`
 }
 type SchedulePreview struct {
 	Definition       ScheduleDefinition    `json:"definition"`
@@ -84,6 +87,7 @@ type ScheduleView struct {
 	Pending          []string              `json:"pending_runs"`
 	ActiveRuns       int                   `json:"active_runs"`
 	CurrentAuthority bool                  `json:"current_authority"`
+	PendingArrivals  []string              `json:"pending_arrivals,omitempty"`
 }
 
 var schedulePattern = regexp.MustCompile(`^[A-Za-z0-9._*?-]{1,128}$`)
@@ -93,7 +97,7 @@ func scheduleRegex(pattern string) string {
 }
 func normalizeScheduleSelection(x ScheduleSelection) (ScheduleSelection, error) {
 	x.Name = norm.NFC.String(x.Name)
-	if !utf8.ValidString(x.Name) || len(x.Name) < 1 || len(x.Name) > 256 || x.ExpectedAuthority < 1 || !store.ValidID(x.Workflow.ID) || x.Workflow.Version < 1 || !hashPattern.MatchString(x.Workflow.Hash) || !schedulePattern.MatchString(x.Source.Pattern) || x.CatchUp < 1 || x.CatchUp > 100 || x.MaxActive < 1 || x.MaxActive > 64 || x.MaxFiles < 1 || x.MaxFiles > 64 || x.Deadline < 1 || x.Deadline > 604800 || x.Grace < 1 || x.Grace > 3600 || x.Grace > x.Deadline || (x.Missed != "skip" && x.Missed != "latest" && x.Missed != "all") {
+	if !utf8.ValidString(x.Name) || len(x.Name) < 1 || len(x.Name) > 256 || x.ExpectedAuthority < 1 || !store.ValidID(x.Workflow.ID) || x.Workflow.Version < 1 || !hashPattern.MatchString(x.Workflow.Hash) || !validScheduleSource(x.Source) || x.CatchUp < 1 || x.CatchUp > 100 || x.MaxActive < 1 || x.MaxActive > 64 || x.MaxFiles < 1 || x.MaxFiles > 64 || x.Deadline < 1 || x.Deadline > 604800 || x.Grace < 1 || x.Grace > 3600 || x.Grace > x.Deadline || (x.Missed != "skip" && x.Missed != "latest" && x.Missed != "all") {
 		return x, ErrInput
 	}
 	for _, r := range x.Name {
@@ -103,6 +107,12 @@ func normalizeScheduleSelection(x ScheduleSelection) (ScheduleSelection, error) 
 	}
 	p, e := vpath.Canonical(x.Source.Directory)
 	if e != nil || p != x.Source.Directory || vpath.ControlPath(p) {
+		return x, ErrInput
+	}
+	if (x.Source.Kind == "sftp.collect") != (x.Arrival != nil) {
+		return x, ErrInput
+	}
+	if x.Arrival != nil && normalizeScheduleArrival(*x.Arrival, x.Deadline) != nil {
 		return x, ErrInput
 	}
 	x.Calendar, e = calendar.Normalize(x.Calendar)
@@ -164,7 +174,7 @@ func (s *Service) schedulePreview(ctx context.Context, t *store.Transaction, x S
 	if x.ExpectedAuthority != t.AuthorityRevision {
 		return nil, store.ErrRevision
 	}
-	for _, g := range []string{"list", "read", "deliver"} {
+	for _, g := range []string{"list", "read"} {
 		if e = t.Require(g); e != nil {
 			return nil, e
 		}
@@ -173,7 +183,8 @@ func (s *Service) schedulePreview(ctx context.Context, t *store.Transaction, x S
 	if e != nil {
 		return nil, e
 	}
-	if e = scheduleDirectory(ctx, t, x.Source.Directory); e != nil {
+	collection, e := s.scheduleCollection(ctx, t, x, workflow)
+	if e != nil {
 		return nil, e
 	}
 	if s.Custody.Disk == nil {
@@ -188,6 +199,10 @@ func (s *Service) schedulePreview(ctx context.Context, t *store.Transaction, x S
 		return nil, ErrInput
 	}
 	d := ScheduleDefinition{Schema: 1, Name: x.Name, Workflow: x.Workflow, Source: ScheduleSource{ScheduleSourceSelection: x.Source, Regex: scheduleRegex(x.Source.Pattern)}, Calendar: rules, Missed: x.Missed, CatchUp: x.CatchUp, MaxActive: x.MaxActive, MaxFiles: x.MaxFiles, Deadline: x.Deadline, Grace: x.Grace, Authority: t.AuthorityRevision, StorageID: storage, Root: t.Root}
+	d.Collection = collection
+	if collection != nil {
+		d.Source.Regex = ""
+	}
 	p, _ := calendar.Compile(rules)
 	now, e := t.DatabaseTime(ctx)
 	if e != nil {
@@ -198,7 +213,7 @@ func (s *Service) schedulePreview(ctx context.Context, t *store.Transaction, x S
 		return nil, e
 	}
 	out := &SchedulePreview{Definition: d, FirstDue: p.Next(d.Calendar.Start.Add(-time.Nanosecond)), LatestDue: p.Previous(now.Add(time.Nanosecond)), Upcoming: upcoming, Effects: []Effect{}, ApprovalRequired: true}
-	effects, e := scheduleEffects(ctx, t, workflow)
+	effects, e := workflowEffects(ctx, t, workflow)
 	if e != nil {
 		return nil, e
 	}
@@ -241,7 +256,15 @@ func scheduleDefinition(s *store.Schedule) (*ScheduleDefinition, *calendar.Plan,
 		return nil, nil, store.ErrIsolation
 	}
 	x := ScheduleSelection{Name: d.Name, Workflow: d.Workflow, Source: d.Source.ScheduleSourceSelection, Calendar: d.Calendar.Selection, Missed: d.Missed, CatchUp: d.CatchUp, MaxActive: d.MaxActive, MaxFiles: d.MaxFiles, Deadline: d.Deadline, Grace: d.Grace, ExpectedAuthority: d.Authority}
-	if _, e = normalizeScheduleSelection(x); e != nil || d.Source.Regex != scheduleRegex(d.Source.Pattern) {
+	expectedRegex := scheduleRegex(d.Source.Pattern)
+	if d.Collection != nil {
+		x.Arrival = &d.Collection.Arrival
+		expectedRegex = ""
+		if d.Collection.Source.Contract != ScheduledCollectionContract || normalizeCollectionSource(d.Collection.Source) != nil || d.Source.Directory != d.Collection.Source.Directory || d.Source.Pattern != d.Collection.Source.Manifest || d.MaxFiles != d.Collection.Source.MaxFiles {
+			return nil, nil, store.ErrIsolation
+		}
+	}
+	if _, e = normalizeScheduleSelection(x); e != nil || d.Source.Regex != expectedRegex {
 		return nil, nil, store.ErrIsolation
 	}
 	p, e := calendar.Compile(d.Calendar)
@@ -259,7 +282,7 @@ func (s *Service) DraftSchedule(ctx context.Context, scope store.Scope, key stri
 	}
 	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()
-	t, e := s.scheduleBegin(ctx, scope, "workflow_manage", "list", "read", "deliver")
+	t, e := s.scheduleBegin(ctx, scope, "workflow_manage", "list", "read")
 	if e != nil {
 		return nil, e
 	}
@@ -351,7 +374,7 @@ func (s *Service) ControlSchedule(ctx context.Context, scope store.Scope, id str
 		if record.State != "draft" && record.State != "suspended" {
 			return nil, store.ErrState
 		}
-		for _, g := range []string{"workflow_execute", "list", "read", "deliver"} {
+		for _, g := range []string{"workflow_execute", "list", "read"} {
 			if e = t.Require(g); e != nil {
 				return nil, e
 			}
@@ -370,8 +393,10 @@ func (s *Service) ControlSchedule(ctx context.Context, scope store.Scope, id str
 		if e = checkScheduleEffects(ctx, t, d, workflow); e != nil {
 			return nil, e
 		}
-		if e = scheduleDirectory(ctx, t, d.Source.Directory); e != nil {
-			return nil, e
+		if d.Collection == nil {
+			if e = scheduleDirectory(ctx, t, d.Source.Directory); e != nil {
+				return nil, e
+			}
 		}
 		if e = s.checkStorage(d.StorageID); e != nil {
 			return nil, e
@@ -459,13 +484,21 @@ func (s *Service) ScheduleStatus(ctx context.Context, scope store.Scope, id stri
 		return nil, e
 	}
 	active, e := t.ScheduleActiveRuns(ctx, id)
+	var arrivals []string
+	if d.Collection != nil {
+		active, e = t.ScheduleCollectionActive(ctx, id)
+		if e != nil {
+			return nil, e
+		}
+		arrivals, e = t.ScheduleArrivalPending(ctx, id, version)
+	}
 	if e != nil {
 		return nil, e
 	}
 	if e = t.Reauthorize(ctx); e != nil {
 		return nil, e
 	}
-	return &ScheduleView{Schedule: record, Upcoming: upcoming, Pending: pending, ActiveRuns: active, CurrentAuthority: record.State == "active" && record.ApprovalAuthority == t.AuthorityRevision && d.Authority == t.AuthorityRevision}, t.Tx.Commit(ctx)
+	return &ScheduleView{Schedule: record, Upcoming: upcoming, Pending: pending, PendingArrivals: arrivals, ActiveRuns: active, CurrentAuthority: record.State == "active" && record.ApprovalAuthority == t.AuthorityRevision && d.Authority == t.AuthorityRevision}, t.Tx.Commit(ctx)
 }
 func (s *Service) Schedules(ctx context.Context, scope store.Scope, after string, limit int) (*store.SchedulePage, error) {
 	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
@@ -522,7 +555,7 @@ func (s *Service) ScheduleOccurrence(ctx context.Context, scope store.Scope, id 
 // Keep authorization failures explicit; the worker can wait for a named review,
 // but cannot grant it or turn a stale schedule into current authority.
 func ScheduleWait(err error) bool {
-	return errors.Is(err, store.ErrDispatchApproval) || errors.Is(err, store.ErrSchedule) || errors.Is(err, store.ErrState) || errors.Is(err, store.ErrLimit)
+	return errors.Is(err, store.ErrDispatchApproval) || errors.Is(err, store.ErrSchedule) || errors.Is(err, store.ErrArrival) || errors.Is(err, store.ErrCollection) || errors.Is(err, store.ErrRevision) || errors.Is(err, store.ErrState) || errors.Is(err, store.ErrLimit)
 }
 
 // Return the stored receipt on the first response as well as every replay.
@@ -563,9 +596,33 @@ func workflowEffects(ctx context.Context, t *store.Transaction, workflow *Defini
 	return effects, nil
 }
 func checkScheduleEffects(ctx context.Context, t *store.Transaction, d *ScheduleDefinition, workflow *Definition) error {
-	effects, e := scheduleEffects(ctx, t, workflow)
+	effects, e := workflowEffects(ctx, t, workflow)
 	if e != nil {
 		return e
+	}
+	if d.Collection == nil {
+		if workflow.Source != nil || d.Source.Kind != "" {
+			return store.ErrSchedule
+		}
+		if e = t.Require("deliver"); e != nil {
+			return e
+		}
+	} else {
+		if workflow.Source == nil || d.Source.Kind != "sftp.collect" || !reflect.DeepEqual(*workflow.Source, d.Collection.Source) {
+			return store.ErrSchedule
+		}
+		_, connection, e := collectionConnection(ctx, t, workflow.Source)
+		if e != nil {
+			return e
+		}
+		if !reflect.DeepEqual(*connection, d.Collection.Connection) {
+			return store.ErrSchedule
+		}
+		if len(workflow.Steps) > 0 {
+			if e = t.Require("deliver"); e != nil {
+				return e
+			}
+		}
 	}
 	if !reflect.DeepEqual(effects, d.Effects) {
 		return store.ErrRevision
@@ -575,7 +632,8 @@ func checkScheduleEffects(ctx context.Context, t *store.Transaction, d *Schedule
 
 type SchedulableWorkflow struct {
 	Reference
-	Name string `json:"name"`
+	Name   string            `json:"name"`
+	Source *CollectionSource `json:"source,omitempty"`
 }
 type SchedulableWorkflowPage struct {
 	Workflows []SchedulableWorkflow `json:"workflows"`
@@ -593,16 +651,24 @@ func (s *Service) SchedulableWorkflows(ctx context.Context, scope store.Scope, a
 		return nil, e
 	}
 	defer t.Tx.Rollback(ctx)
-	rows, e := t.Tx.Query(ctx, `SELECT w.workflow_id::text,w.version,w.definition_hash,w.definition->>'name' FROM workflow_revisions w WHERE w.actor_id=$1 AND NOT (w.definition ? 'source') AND w.state='approved' AND w.approval_authority=$2 AND ($3='' OR w.workflow_id>nullif($3,'')::uuid) AND w.version=(SELECT max(v.version) FROM workflow_revisions v WHERE v.actor_id=$1 AND v.workflow_id=w.workflow_id AND v.state='approved' AND v.approval_authority=$2) ORDER BY w.workflow_id LIMIT $4`, t.Actor, t.AuthorityRevision, after, limit+1)
+	rows, e := t.Tx.Query(ctx, `SELECT w.workflow_id::text,w.version,w.definition_hash,w.definition->>'name',w.definition->'source' FROM workflow_revisions w WHERE w.actor_id=$1 AND (NOT (w.definition ? 'source') OR w.definition->'source'->>'completion_contract'='immutable-files-sha256-scheduled-manifest-v1') AND w.state='approved' AND w.approval_authority=$2 AND ($3='' OR w.workflow_id>nullif($3,'')::uuid) AND w.version=(SELECT max(v.version) FROM workflow_revisions v WHERE v.actor_id=$1 AND v.workflow_id=w.workflow_id AND v.state='approved' AND v.approval_authority=$2) ORDER BY w.workflow_id LIMIT $4`, t.Actor, t.AuthorityRevision, after, limit+1)
 	if e != nil {
 		return nil, e
 	}
 	out := &SchedulableWorkflowPage{Workflows: []SchedulableWorkflow{}}
 	for rows.Next() {
 		var w SchedulableWorkflow
-		if e = rows.Scan(&w.ID, &w.Version, &w.Hash, &w.Name); e != nil {
+		var source []byte
+		if e = rows.Scan(&w.ID, &w.Version, &w.Hash, &w.Name, &source); e != nil {
 			rows.Close()
 			return nil, e
+		}
+		if len(source) != 0 {
+			w.Source = &CollectionSource{}
+			if Decode(source, w.Source) != nil || normalizeCollectionSource(*w.Source) != nil || w.Source.Contract != ScheduledCollectionContract {
+				rows.Close()
+				return nil, store.ErrState
+			}
 		}
 		if len(out.Workflows) == limit {
 			out.Next = out.Workflows[len(out.Workflows)-1].ID

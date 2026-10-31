@@ -1289,6 +1289,91 @@
         ".private/collection-workflow-final.log",
         "evidence/raw/collections-c77247f9546740d9ad0c08a27610c6f6/manifest.json"
       ]
+    },
+    {
+      "id": "D083",
+      "severity": "scheduled migration could not parse",
+      "state": "fixed locally",
+      "observed_on": "2026-10-31",
+      "candidate": "c233321fb1dffa246a60d94cff6e782991dc113c plus retained F039 source epochs",
+      "journey": "J03",
+      "reproduction": "Replay the retained original regression and scheduled arrival journey with unchanged file, authority, cutoff, original lease and accessibility bounds.",
+      "first_failure": ".private/arrival-admission-second.log",
+      "cause": "PL/pgSQL parsed an unparenthesized CASE expression in a deadline comparison as an incomplete conditional.",
+      "resolution": "Parenthesize the CASE value; retain the original SQL42601 diagnostic and replay clean/upgrade migrations and original calendar admission.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F039-scheduled-arrivals.json",
+        ".private/arrival-workflow-final.jsonl",
+        "evidence/raw/arrivals-54bd1a8272e14c099b74480088062d29/manifest.json"
+      ]
+    },
+    {
+      "id": "D084",
+      "severity": "nullable producer schema falsely accepted as verified ready",
+      "state": "fixed locally",
+      "observed_on": "2026-10-31",
+      "candidate": "c233321fb1dffa246a60d94cff6e782991dc113c plus retained F039 source epochs",
+      "journey": "J03",
+      "reproduction": "Replay the retained original regression and scheduled arrival journey with unchanged file, authority, cutoff, original lease and accessibility bounds.",
+      "first_failure": ".private/arrival-null-schema-first.log",
+      "cause": "SQL three-valued logic treated a null producer schema comparison as an unknown condition, allowing a ready projection.",
+      "resolution": "Require explicit JSON types and exact schema value before freezing a manifest; reject the original null-schema case under the runtime role.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F039-scheduled-arrivals.json",
+        ".private/arrival-workflow-final.jsonl",
+        "evidence/raw/arrivals-54bd1a8272e14c099b74480088062d29/manifest.json"
+      ]
+    },
+    {
+      "id": "D085",
+      "severity": "arrival disclosure target failed accessibility",
+      "state": "fixed locally",
+      "observed_on": "2026-10-31",
+      "candidate": "c233321fb1dffa246a60d94cff6e782991dc113c plus retained F039 source epochs",
+      "journey": "J03",
+      "reproduction": "Replay the retained original regression and scheduled arrival journey with unchanged file, authority, cutoff, original lease and accessibility bounds.",
+      "first_failure": "evidence/raw/arrivals-e9bef525445e456188cda3cd9991e8bd/arrival-ready-frozen-axe.json",
+      "cause": "The new disclosure control was22.5px high and too close to neighbors under the unchanged target-size check.",
+      "resolution": "Apply the existing44px disclosure spacing; rerun the same browser journey and all six selected accessibility states without relaxing assertions.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F039-scheduled-arrivals.json",
+        ".private/arrival-workflow-final.jsonl",
+        "evidence/raw/arrivals-54bd1a8272e14c099b74480088062d29/manifest.json"
+      ]
+    },
+    {
+      "id": "D086",
+      "severity": "ready observation could be backdated as on time",
+      "state": "fixed locally",
+      "observed_on": "2026-10-31",
+      "candidate": "c233321fb1dffa246a60d94cff6e782991dc113c plus retained F039 source epochs",
+      "journey": "J03",
+      "reproduction": "Replay the retained original regression and scheduled arrival journey with unchanged file, authority, cutoff, original lease and accessibility bounds.",
+      "first_failure": ".private/arrival-observation-time-first.log",
+      "cause": "A direct runtime-role ready projection could supply a past observed_at value and label late input on time.",
+      "resolution": "A PostgreSQL event trigger assigns the ready instant from its own clock; projection and immutable event must match exactly and cannot predate the probe. Original regression and receipt rollback cases pass.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F039-scheduled-arrivals.json",
+        ".private/arrival-workflow-final.jsonl",
+        "evidence/raw/arrivals-54bd1a8272e14c099b74480088062d29/manifest.json"
+      ]
+    },
+    {
+      "id": "D087",
+      "severity": "browser rejected a valid just-late observation",
+      "state": "fixed locally",
+      "observed_on": "2026-10-31",
+      "candidate": "c233321fb1dffa246a60d94cff6e782991dc113c plus retained F039 source epochs",
+      "journey": "J03",
+      "reproduction": "Replay the retained original regression and scheduled arrival journey with unchanged file, authority, cutoff, original lease and accessibility bounds.",
+      "first_failure": ".private/arrival-time-precision-original.log",
+      "cause": "JavaScript Date.parse truncated PostgreSQL microseconds, collapsing a just-late observation onto the exact late boundary.",
+      "resolution": "Compare normalized UTC fractional seconds without truncation. Exact-boundary, one-microsecond-late and false-on-time refusal cases pass, with79 frontend contracts and the original native browser journey.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F039-scheduled-arrivals.json",
+        ".private/arrival-workflow-final.jsonl",
+        "evidence/raw/arrivals-54bd1a8272e14c099b74480088062d29/manifest.json"
+      ]
     }
   ]
 }

@@ -24,6 +24,10 @@ func (s *Service) collectionWorkerBegin(ctx context.Context, scope store.Scope) 
 	if e != nil {
 		return nil, e
 	}
+	if e = t.ScheduleLock(ctx, false); e != nil {
+		t.Tx.Rollback(ctx)
+		return nil, e
+	}
 	if e = t.CollectionLock(ctx, false); e != nil {
 		t.Tx.Rollback(ctx)
 		return nil, e
@@ -263,6 +267,9 @@ func (s *Service) prepareCollectionInput(ctx context.Context, scope store.Scope,
 }
 func (s *Service) acceptCollectionInput(ctx context.Context, scope store.Scope, id, owner string, fence int64, i *store.CollectionInput) error {
 	_, _, e := s.Custody.AcceptSealedAt(ctx, scope, "collect-"+i.ID, store.File{ID: i.ObjectID, Size: i.Size, SHA256: i.SHA256}, custody.UploadTarget{Path: i.Target}, func(ctx context.Context, t *store.Transaction, file *store.File, held bool) error {
+		if e := t.ScheduleLock(ctx, false); e != nil {
+			return e
+		}
 		if e := t.CollectionLock(ctx, false); e != nil {
 			return e
 		}
@@ -289,12 +296,20 @@ func (s *Service) acceptCollectionInput(ctx context.Context, scope store.Scope, 
 	return e
 }
 func (s *Service) completeCollectionWork(ctx context.Context, scope store.Scope, id, owner string, fence int64, key, meaning string) (*Result, error) {
-	t, e := s.collectionWorkerBegin(ctx, scope)
+	// Sealed acceptance already owns namespace before joining effect guards.
+	// Completion uses the same order, then locks its job row.
+	t, e := s.begin(ctx, scope, "workflow_execute", "write", "list", "read")
 	if e != nil {
 		return nil, e
 	}
 	defer t.Tx.Rollback(ctx)
 	if e = t.NamespaceLock(ctx); e != nil {
+		return nil, e
+	}
+	if e = t.ScheduleLock(ctx, false); e != nil {
+		return nil, e
+	}
+	if e = t.CollectionLock(ctx, false); e != nil {
 		return nil, e
 	}
 	j, e := t.Collection(ctx, id, true)
@@ -350,6 +365,9 @@ func (s *Service) failedCollectionWork(scope store.Scope, id, owner string, fenc
 	}
 	defer t.Tx.Rollback(ctx)
 	if e = t.Require("workflow_execute"); e != nil {
+		return nil, e
+	}
+	if e = t.ScheduleLock(ctx, false); e != nil {
 		return nil, e
 	}
 	if e = t.CollectionLock(ctx, false); e != nil {
@@ -486,21 +504,31 @@ func (s *Service) WorkCollection(ctx context.Context, scope store.Scope, id, key
 		return e
 	}
 	if j.Manifest == nil {
-		if e = open(); e != nil {
-			return fail("source_connection_unavailable", false)
-		}
-		data, e := peer.ReadManifest(ctx, d.Source.Manifest, check)
-		if e != nil {
-			return fail("source_manifest_unavailable", false)
-		}
-		manifest, hash, e := parseCollectionManifest(data, d.Source)
-		if e != nil {
-			return fail("producer_manifest_invalid", true)
+		var manifest *CollectionManifest
+		var hash string
+		if d.Schedule != nil {
+			manifest, hash, e = s.scheduledCollectionManifest(ctx, scope, d)
+			if e != nil {
+				return fail("scheduled_manifest_binding_unavailable", true)
+			}
+		} else {
+			if e = open(); e != nil {
+				return fail("source_connection_unavailable", false)
+			}
+			data, readErr := peer.ReadManifest(ctx, d.Source.Manifest, check)
+			if readErr != nil {
+				return fail("source_manifest_unavailable", false)
+			}
+			manifest, hash, e = parseCollectionManifest(data, d.Source)
+			if e != nil {
+				return fail("producer_manifest_invalid", true)
+			}
 		}
 		if e = s.captureCollectionManifest(ctx, scope, id, owner, fence, manifest, hash); e != nil {
 			return fail("producer_batch_binding_refused", true)
 		}
 	}
+
 	read, e := s.collectionRead(ctx, scope)
 	if e != nil {
 		return fail("collection_metadata_unavailable", false)

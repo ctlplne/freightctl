@@ -39,7 +39,7 @@ func runSchedule(ctx context.Context, command string, o scheduleCLIOptions) erro
 	}
 	defer db.Pool.Close()
 	c := &custody.Service{DB: db, MaxFile: o.MaxFile, MaxStored: o.MaxStored}
-	if command == "workflow-schedule-preview" || command == "workflow-schedule-draft" || command == "workflow-schedule-activate" || command == "workflow-schedule-tick" || command == "workflow-schedule-worker" {
+	if command == "workflow-schedule-preview" || command == "workflow-schedule-draft" || command == "workflow-schedule-activate" || command == "workflow-schedule-tick" || command == "workflow-schedule-worker" || command == "workflow-arrival-probe" || command == "workflow-arrival-admit" {
 		disk, e := custody.OpenExisting(o.Storage)
 		if e != nil {
 			return e
@@ -84,6 +84,22 @@ func runSchedule(ctx context.Context, command string, o scheduleCLIOptions) erro
 		out, e = service.Schedules(ctx, scope, o.After, o.Limit)
 	case "workflow-schedule-history":
 		out, e = service.ScheduleHistory(ctx, scope, o.ID, o.After, o.Limit)
+	case "workflow-arrival-status":
+		out, e = service.ScheduleArrivalStatus(ctx, scope, o.Run)
+	case "workflow-arrival-probe":
+		var x workflow.CollectionWorkRequest
+		if e = decode(&x); e == nil {
+			out, e = service.ProbeScheduleArrival(ctx, scope, o.Run, o.Key, x)
+		}
+	case "workflow-arrival-admit", "workflow-arrival-cancel":
+		var x workflow.Decision
+		if e = decode(&x); e == nil {
+			if command == "workflow-arrival-admit" {
+				out, e = service.AdmitScheduleArrival(ctx, scope, o.Run, o.Key, x)
+			} else {
+				out, e = service.CancelScheduleArrival(ctx, scope, o.Run, o.Key, x)
+			}
+		}
 	case "workflow-schedule-occurrence":
 		out, e = service.ScheduleOccurrence(ctx, scope, o.Run)
 	case "workflow-schedule-tick":
@@ -133,6 +149,25 @@ func scheduleWorker(ctx context.Context, service *workflow.Service, scope store.
 			return store.ErrSchedule
 		}
 		if o.Execute {
+			for _, id := range status.PendingArrivals {
+				reason, err := workScheduledArrival(ctx, service, scope, id, enc)
+				if err != nil {
+					if ctx.Err() != nil {
+						return nil
+					}
+					if !workflow.ScheduleWait(err) {
+						return err
+					}
+					reason = "arrival_policy_or_capacity"
+				}
+				if reason != "" {
+					if err = reportWait(reason); err != nil {
+						return err
+					}
+				} else {
+					lastWait = ""
+				}
+			}
 			for _, run := range status.Pending {
 				runStatus, readErr := service.Status(ctx, scope, run)
 				if readErr != nil {

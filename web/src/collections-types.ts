@@ -12,12 +12,15 @@ import {
 } from "./schedules-types";
 
 export const collectionContract = "immutable-files-sha256-manifest-v1";
+export const scheduledCollectionContract =
+  "immutable-files-sha256-scheduled-manifest-v1";
 export interface CollectionSource {
   kind: "sftp.collect";
   connection: Reference;
   manifest: string;
   target_directory: string;
-  completion_contract: typeof collectionContract;
+  completion_contract:
+    typeof collectionContract | typeof scheduledCollectionContract;
   max_files: number;
   max_file_bytes: number;
   max_total_bytes: number;
@@ -56,6 +59,15 @@ export interface CollectionConnection {
   host_fingerprint: string;
   key_fingerprint: string;
 }
+export interface CollectionScheduleBinding {
+  schedule: Reference;
+  occurrence_id: string;
+  due_at: string;
+  arrival_deadline_at: string;
+  deadline_at: string;
+  manifest_name: string;
+  manifest_hash: string;
+}
 export interface CollectionDefinition {
   schema_version: 1;
   workflow: Reference;
@@ -67,6 +79,7 @@ export interface CollectionDefinition {
   namespace_root: "/";
   timeout_seconds: number;
   effects: ScheduleEffect[];
+  schedule?: CollectionScheduleBinding;
 }
 export interface CollectionSelection {
   workflow: Reference;
@@ -280,10 +293,27 @@ export function asCollectionSource(v: unknown): CollectionSource {
     "max_file_bytes",
     "max_total_bytes",
   ]);
-  if (o.kind !== "sftp.collect" || o.completion_contract !== collectionContract)
+  if (
+    o.kind !== "sftp.collect" ||
+    ![collectionContract, scheduledCollectionContract].includes(
+      String(o.completion_contract),
+    )
+  )
     bad();
-  const manifest = filename(str(o, "manifest", 128)),
+  const contract =
+    o.completion_contract as CollectionSource["completion_contract"];
+  const manifest = str(o, "manifest", 160),
     directory = path(str(o, "target_directory", 1024));
+  const name =
+    contract === scheduledCollectionContract
+      ? manifest.replace("{due_utc}", "20060102T150405Z")
+      : manifest;
+  if (
+    contract === scheduledCollectionContract &&
+    manifest.split("{due_utc}").length !== 2
+  )
+    bad();
+  filename(name);
   if (!manifest.endsWith(".ready.json")) bad();
   target(directory, "a".repeat(64), "x".repeat(128));
   const maxFiles = num(o, "max_files", 1, 64),
@@ -294,7 +324,7 @@ export function asCollectionSource(v: unknown): CollectionSource {
     connection: ref(o.connection),
     manifest,
     target_directory: directory,
-    completion_contract: collectionContract,
+    completion_contract: contract,
     max_files: maxFiles,
     max_file_bytes: maxFile,
     max_total_bytes: maxTotal,
@@ -510,20 +540,66 @@ function effectsForWorkflow(
   });
   return effects;
 }
-export function asCollectionDefinition(v: unknown): CollectionDefinition {
+export function dueManifestName(source: CollectionSource, due: string): string {
+  const instant = new Date(due);
+  if (
+    source.completion_contract !== scheduledCollectionContract ||
+    !Number.isFinite(instant.getTime()) ||
+    instant.getUTCMilliseconds() !== 0
+  )
+    bad();
+  const token = instant.toISOString().slice(0, 19).replace(/[-:]/g, "") + "Z";
+  return filename(source.manifest.replace("{due_utc}", token));
+}
+export function asCollectionScheduleBinding(
+  v: unknown,
+  source: CollectionSource,
+): CollectionScheduleBinding {
   const o = object(v);
   keys(o, [
-    "schema_version",
-    "workflow",
-    "source",
-    "source_connection",
-    "source_identity",
-    "authority_revision",
-    "storage_id",
-    "namespace_root",
-    "timeout_seconds",
-    "effects",
+    "schedule",
+    "occurrence_id",
+    "due_at",
+    "arrival_deadline_at",
+    "deadline_at",
+    "manifest_name",
+    "manifest_hash",
   ]);
+  const b = {
+    schedule: ref(o.schedule),
+    occurrence_id: id(o, "occurrence_id"),
+    due_at: date(o, "due_at"),
+    arrival_deadline_at: date(o, "arrival_deadline_at"),
+    deadline_at: date(o, "deadline_at"),
+    manifest_name: str(o, "manifest_name", 128),
+    manifest_hash: hash(o, "manifest_hash"),
+  };
+  if (
+    b.manifest_name !== dueManifestName(source, b.due_at) ||
+    Date.parse(b.arrival_deadline_at) <= Date.parse(b.due_at) ||
+    Date.parse(b.deadline_at) <= Date.parse(b.arrival_deadline_at)
+  )
+    bad();
+  return b;
+}
+export function asCollectionDefinition(v: unknown): CollectionDefinition {
+  const o = object(v);
+  keys(
+    o,
+    [
+      "schema_version",
+      "workflow",
+      "source",
+      "source_connection",
+      "source_identity",
+      "authority_revision",
+      "storage_id",
+      "namespace_root",
+      "timeout_seconds",
+      "effects",
+    ],
+    ["schedule"],
+  );
   if (o.schema_version !== 1 || o.namespace_root !== "/") bad();
   const source = asCollectionSource(o.source),
     connection = asCollectionConnection(o.source_connection),
@@ -555,9 +631,28 @@ export function asCollectionDefinition(v: unknown): CollectionDefinition {
     authority_revision: num(o, "authority_revision"),
     storage_id: id(o, "storage_id"),
     namespace_root: "/",
-    timeout_seconds: num(o, "timeout_seconds", 1, 3600),
+    timeout_seconds: num(
+      o,
+      "timeout_seconds",
+      1,
+      o.schedule === undefined ? 3600 : 604800,
+    ),
     effects,
+    ...(o.schedule === undefined
+      ? {}
+      : { schedule: asCollectionScheduleBinding(o.schedule, source) }),
   };
+  if (
+    (d.schedule !== undefined) !==
+    (source.completion_contract === scheduledCollectionContract)
+  )
+    bad();
+  if (
+    d.schedule &&
+    Date.parse(d.schedule.deadline_at) - Date.parse(d.schedule.due_at) !==
+      d.timeout_seconds * 1000
+  )
+    bad();
   if (canonicalWorkflowBytes(d).length > 24576) bad();
   return d;
 }
@@ -578,6 +673,8 @@ export function asCollectionPreview(
   const d = asCollectionDefinition(o.definition),
     h = hash(o, "definition_hash");
   if (
+    d.schedule !== undefined ||
+    d.source.completion_contract !== collectionContract ||
     h !== collectionHash(d) ||
     !equal(d.workflow, selection.workflow) ||
     d.timeout_seconds !== selection.timeout_seconds ||
@@ -709,8 +806,13 @@ export function asCollectionJob(
   )
     bad();
   if (
-    Date.parse(j.deadline_at) - Date.parse(j.created_at) !==
-      d.timeout_seconds * 1000 ||
+    (d.schedule
+      ? j.deadline_at !== d.schedule.deadline_at ||
+        Date.parse(j.created_at) < Date.parse(d.schedule.due_at) ||
+        Date.parse(j.created_at) >= Date.parse(j.deadline_at)
+      : Date.parse(j.deadline_at) - Date.parse(j.created_at) !==
+        d.timeout_seconds * 1000) ||
+    (d.schedule && mh !== null && mh !== d.schedule.manifest_hash) ||
     Date.parse(j.next_at) < Date.parse(j.created_at) ||
     Date.parse(j.next_at) > Date.parse(j.deadline_at)
   )
@@ -970,3 +1072,5 @@ export function asCollectedWork(
     bad();
   return r;
 }
+
+export { manifest as asProducerManifest };

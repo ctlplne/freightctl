@@ -1,0 +1,863 @@
+{
+  "admitted": {
+    "arrival": {
+      "occurrence_id": "8fb058d5-33d1-4f5e-98c3-474b9c9165c6",
+      "schedule_id": "8975e4f6-9833-488c-b870-94bfc21a20f7",
+      "schedule_version": 1,
+      "definition": {
+        "due_at": "2026-10-31T08:57:32Z",
+        "schedule": {
+          "id": "8975e4f6-9833-488c-b870-94bfc21a20f7",
+          "hash": "e6839d04f8d65f1d89b18b730f138457d0a4437653b9a716ec719658d105a0b7",
+          "version": 1
+        },
+        "deadline_at": "2026-10-31T08:58:32Z",
+        "late_after_at": "2026-10-31T08:57:33Z",
+        "manifest_name": "settlement-20261031T085732Z.ready.json",
+        "occurrence_id": "8fb058d5-33d1-4f5e-98c3-474b9c9165c6",
+        "schema_version": 1,
+        "arrival_deadline_at": "2026-10-31T08:57:42Z"
+      },
+      "definition_hash": "ddba1f28bd7010c99c59cadec46bc412207d030d295dc84c6011107211002884",
+      "state": "admitted",
+      "revision": 4,
+      "fence": 1,
+      "probes": 1,
+      "lease_owner": "",
+      "lease_until": null,
+      "next_probe_at": "2026-10-31T08:57:33.101313Z",
+      "observed_at": "2026-10-31T08:57:32.101313Z",
+      "manifest": {
+        "files": [
+          {
+            "name": "one.csv",
+            "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+            "size_bytes": 3
+          }
+        ],
+        "batch_id": "4279a15c-3648-4d98-9ee1-4cde9dd2f9b4",
+        "schema_version": 1
+      },
+      "manifest_hash": "e4c039cc7017c0f7e08208b22bd0ef15b078a6c6d7c0888b2fb4412ef1c182c9",
+      "collection_id": "8eb2433a-b566-4b82-a85b-e03635e383af",
+      "reason": "ready_manifest_queued_for_collection"
+    },
+    "schedule": {
+      "id": "8975e4f6-9833-488c-b870-94bfc21a20f7",
+      "version": 1,
+      "name": "Expected remote settlement",
+      "definition_hash": "e6839d04f8d65f1d89b18b730f138457d0a4437653b9a716ec719658d105a0b7",
+      "state": "active",
+      "revision": 3,
+      "approval_authority": 1,
+      "next_due": null,
+      "created_at": "2026-10-31T08:57:30.194951Z",
+      "changed_event_id": "d2053481-2a47-47d9-a121-bc2e4aa00884",
+      "definition": {
+        "name": "Expected remote settlement",
+        "source": {
+          "kind": "sftp.collect",
+          "directory": "/",
+          "recursive": false,
+          "filename_regex": "",
+          "filename_pattern": "settlement-{due_utc}.ready.json"
+        },
+        "effects": [
+          {
+            "address": "127.0.0.1:9",
+            "step_id": "first",
+            "directory": "/inbox",
+            "connection": {
+              "id": "c8043146-e630-46cb-ab00-a31110bd4039",
+              "hash": "78a92f04bbea41c3137a968fb3a20f3ff0c3a241aa3ab43b3dc124e17d0b3d16",
+              "version": 1
+            },
+            "host_fingerprint": "SHA256:LYJOEQaBnSDg3KrY4Hf73j2sVpKcwHL5ZWreoNmwBxg",
+            "final_name_pattern": "<delivery UUID>-first.csv"
+          }
+        ],
+        "calendar": {
+          "ends_at": "2026-10-31T08:58:32Z",
+          "holidays": [],
+          "weekdays": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "starts_at": "2026-10-31T08:57:32Z",
+          "time_zone": "UTC",
+          "gap_policy": "skip",
+          "fold_policy": "both",
+          "local_times": [
+            "08:57:32"
+          ],
+          "offset_rules": [
+            {
+              "from": "2026-10-29T08:57:32Z",
+              "until": "2026-11-02T08:58:32Z",
+              "abbreviation": "UTC",
+              "offset_seconds": 0
+            }
+          ]
+        },
+        "workflow": {
+          "id": "0574635f-9d6b-459c-894f-5243ceefc44b",
+          "hash": "5a3f1bf94321299495efb9474bb317ddab70468044060cd4fe52fb1ed0915ae1",
+          "version": 1
+        },
+        "collection": {
+          "source": {
+            "kind": "sftp.collect",
+            "manifest": "settlement-{due_utc}.ready.json",
+            "max_files": 2,
+            "connection": {
+              "id": "c8043146-e630-46cb-ab00-a31110bd4039",
+              "hash": "78a92f04bbea41c3137a968fb3a20f3ff0c3a241aa3ab43b3dc124e17d0b3d16",
+              "version": 1
+            },
+            "max_file_bytes": 1024,
+            "max_total_bytes": 1024,
+            "target_directory": "/",
+            "completion_contract": "immutable-files-sha256-scheduled-manifest-v1"
+          },
+          "arrival": {
+            "late_after_seconds": 1,
+            "poll_interval_seconds": 1,
+            "arrival_deadline_seconds": 10
+          },
+          "source_connection": {
+            "id": "c8043146-e630-46cb-ab00-a31110bd4039",
+            "user": "receiver",
+            "state": "active",
+            "address": "127.0.0.1:9",
+            "version": 1,
+            "revision": 1,
+            "directory": "/inbox",
+            "definition_hash": "78a92f04bbea41c3137a968fb3a20f3ff0c3a241aa3ab43b3dc124e17d0b3d16",
+            "key_fingerprint": "SHA256:w/ySex2Evjy+SNMkvk3Eok8JUtaU8omUINXXB+v+TEQ",
+            "host_fingerprint": "SHA256:LYJOEQaBnSDg3KrY4Hf73j2sVpKcwHL5ZWreoNmwBxg"
+          }
+        },
+        "storage_id": "e691844c-4810-4a33-8ec8-0cc5998f008c",
+        "max_catch_up": 4,
+        "namespace_root": "/",
+        "schema_version": 1,
+        "max_active_runs": 2,
+        "missed_run_policy": "all",
+        "authority_revision": 1,
+        "late_start_grace_seconds": 1,
+        "max_files_per_occurrence": 2,
+        "execution_deadline_seconds": 60
+      }
+    },
+    "current_authority": true,
+    "observed_state": "admitted",
+    "arrival_timeliness": "on_time",
+    "probe_due": false,
+    "collection": {
+      "job": {
+        "id": "8eb2433a-b566-4b82-a85b-e03635e383af",
+        "workflow_id": "0574635f-9d6b-459c-894f-5243ceefc44b",
+        "workflow_version": 1,
+        "workflow_hash": "5a3f1bf94321299495efb9474bb317ddab70468044060cd4fe52fb1ed0915ae1",
+        "definition": {
+          "source": {
+            "kind": "sftp.collect",
+            "manifest": "settlement-{due_utc}.ready.json",
+            "max_files": 2,
+            "connection": {
+              "id": "c8043146-e630-46cb-ab00-a31110bd4039",
+              "hash": "78a92f04bbea41c3137a968fb3a20f3ff0c3a241aa3ab43b3dc124e17d0b3d16",
+              "version": 1
+            },
+            "max_file_bytes": 1024,
+            "max_total_bytes": 1024,
+            "target_directory": "/",
+            "completion_contract": "immutable-files-sha256-scheduled-manifest-v1"
+          },
+          "effects": [
+            {
+              "address": "127.0.0.1:9",
+              "step_id": "first",
+              "directory": "/inbox",
+              "connection": {
+                "id": "c8043146-e630-46cb-ab00-a31110bd4039",
+                "hash": "78a92f04bbea41c3137a968fb3a20f3ff0c3a241aa3ab43b3dc124e17d0b3d16",
+                "version": 1
+              },
+              "host_fingerprint": "SHA256:LYJOEQaBnSDg3KrY4Hf73j2sVpKcwHL5ZWreoNmwBxg",
+              "final_name_pattern": "<delivery UUID>-first.csv"
+            }
+          ],
+          "schedule": {
+            "due_at": "2026-10-31T08:57:32Z",
+            "schedule": {
+              "id": "8975e4f6-9833-488c-b870-94bfc21a20f7",
+              "hash": "e6839d04f8d65f1d89b18b730f138457d0a4437653b9a716ec719658d105a0b7",
+              "version": 1
+            },
+            "deadline_at": "2026-10-31T08:58:32Z",
+            "manifest_hash": "e4c039cc7017c0f7e08208b22bd0ef15b078a6c6d7c0888b2fb4412ef1c182c9",
+            "manifest_name": "settlement-20261031T085732Z.ready.json",
+            "occurrence_id": "8fb058d5-33d1-4f5e-98c3-474b9c9165c6",
+            "arrival_deadline_at": "2026-10-31T08:57:42Z"
+          },
+          "workflow": {
+            "id": "0574635f-9d6b-459c-894f-5243ceefc44b",
+            "hash": "5a3f1bf94321299495efb9474bb317ddab70468044060cd4fe52fb1ed0915ae1",
+            "version": 1
+          },
+          "storage_id": "e691844c-4810-4a33-8ec8-0cc5998f008c",
+          "namespace_root": "/",
+          "schema_version": 1,
+          "source_identity": "47fe3a6fe41a9b8a4408da1047731da0e013c3d7a56ffa569fa7a3a12423f547",
+          "timeout_seconds": 60,
+          "source_connection": {
+            "id": "c8043146-e630-46cb-ab00-a31110bd4039",
+            "user": "receiver",
+            "state": "active",
+            "address": "127.0.0.1:9",
+            "version": 1,
+            "revision": 1,
+            "directory": "/inbox",
+            "definition_hash": "78a92f04bbea41c3137a968fb3a20f3ff0c3a241aa3ab43b3dc124e17d0b3d16",
+            "key_fingerprint": "SHA256:w/ySex2Evjy+SNMkvk3Eok8JUtaU8omUINXXB+v+TEQ",
+            "host_fingerprint": "SHA256:LYJOEQaBnSDg3KrY4Hf73j2sVpKcwHL5ZWreoNmwBxg"
+          },
+          "authority_revision": 1
+        },
+        "definition_hash": "cdbc1bf95dd61e8a6a7cee9670ec3f94b29203fc3f79f74d304765aefbc978b3",
+        "state": "queued",
+        "captured": false,
+        "revision": 1,
+        "fence": 0,
+        "attempts": 0,
+        "lease_owner": "",
+        "lease_until": null,
+        "next_at": "2026-10-31T08:57:32.162752Z",
+        "created_at": "2026-10-31T08:57:32.162752Z",
+        "deadline_at": "2026-10-31T08:58:32Z",
+        "manifest": null,
+        "manifest_hash": null,
+        "reason": "awaiting_collection_worker"
+      },
+      "inputs": [],
+      "current_authority": true,
+      "observed_state": "queued",
+      "business_acceptance": "unknown",
+      "local_states": []
+    }
+  },
+  "captured": {
+    "arrival": {
+      "occurrence_id": "8fb058d5-33d1-4f5e-98c3-474b9c9165c6",
+      "schedule_id": "8975e4f6-9833-488c-b870-94bfc21a20f7",
+      "schedule_version": 1,
+      "definition": {
+        "due_at": "2026-10-31T08:57:32Z",
+        "schedule": {
+          "id": "8975e4f6-9833-488c-b870-94bfc21a20f7",
+          "hash": "e6839d04f8d65f1d89b18b730f138457d0a4437653b9a716ec719658d105a0b7",
+          "version": 1
+        },
+        "deadline_at": "2026-10-31T08:58:32Z",
+        "late_after_at": "2026-10-31T08:57:33Z",
+        "manifest_name": "settlement-20261031T085732Z.ready.json",
+        "occurrence_id": "8fb058d5-33d1-4f5e-98c3-474b9c9165c6",
+        "schema_version": 1,
+        "arrival_deadline_at": "2026-10-31T08:57:42Z"
+      },
+      "definition_hash": "ddba1f28bd7010c99c59cadec46bc412207d030d295dc84c6011107211002884",
+      "state": "admitted",
+      "revision": 4,
+      "fence": 1,
+      "probes": 1,
+      "lease_owner": "",
+      "lease_until": null,
+      "next_probe_at": "2026-10-31T08:57:33.101313Z",
+      "observed_at": "2026-10-31T08:57:32.101313Z",
+      "manifest": {
+        "files": [
+          {
+            "name": "one.csv",
+            "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+            "size_bytes": 3
+          }
+        ],
+        "batch_id": "4279a15c-3648-4d98-9ee1-4cde9dd2f9b4",
+        "schema_version": 1
+      },
+      "manifest_hash": "e4c039cc7017c0f7e08208b22bd0ef15b078a6c6d7c0888b2fb4412ef1c182c9",
+      "collection_id": "8eb2433a-b566-4b82-a85b-e03635e383af",
+      "reason": "ready_manifest_queued_for_collection"
+    },
+    "schedule": {
+      "id": "8975e4f6-9833-488c-b870-94bfc21a20f7",
+      "version": 1,
+      "name": "Expected remote settlement",
+      "definition_hash": "e6839d04f8d65f1d89b18b730f138457d0a4437653b9a716ec719658d105a0b7",
+      "state": "active",
+      "revision": 3,
+      "approval_authority": 1,
+      "next_due": null,
+      "created_at": "2026-10-31T08:57:30.194951Z",
+      "changed_event_id": "d2053481-2a47-47d9-a121-bc2e4aa00884",
+      "definition": {
+        "name": "Expected remote settlement",
+        "source": {
+          "kind": "sftp.collect",
+          "directory": "/",
+          "recursive": false,
+          "filename_regex": "",
+          "filename_pattern": "settlement-{due_utc}.ready.json"
+        },
+        "effects": [
+          {
+            "address": "127.0.0.1:9",
+            "step_id": "first",
+            "directory": "/inbox",
+            "connection": {
+              "id": "c8043146-e630-46cb-ab00-a31110bd4039",
+              "hash": "78a92f04bbea41c3137a968fb3a20f3ff0c3a241aa3ab43b3dc124e17d0b3d16",
+              "version": 1
+            },
+            "host_fingerprint": "SHA256:LYJOEQaBnSDg3KrY4Hf73j2sVpKcwHL5ZWreoNmwBxg",
+            "final_name_pattern": "<delivery UUID>-first.csv"
+          }
+        ],
+        "calendar": {
+          "ends_at": "2026-10-31T08:58:32Z",
+          "holidays": [],
+          "weekdays": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "starts_at": "2026-10-31T08:57:32Z",
+          "time_zone": "UTC",
+          "gap_policy": "skip",
+          "fold_policy": "both",
+          "local_times": [
+            "08:57:32"
+          ],
+          "offset_rules": [
+            {
+              "from": "2026-10-29T08:57:32Z",
+              "until": "2026-11-02T08:58:32Z",
+              "abbreviation": "UTC",
+              "offset_seconds": 0
+            }
+          ]
+        },
+        "workflow": {
+          "id": "0574635f-9d6b-459c-894f-5243ceefc44b",
+          "hash": "5a3f1bf94321299495efb9474bb317ddab70468044060cd4fe52fb1ed0915ae1",
+          "version": 1
+        },
+        "collection": {
+          "source": {
+            "kind": "sftp.collect",
+            "manifest": "settlement-{due_utc}.ready.json",
+            "max_files": 2,
+            "connection": {
+              "id": "c8043146-e630-46cb-ab00-a31110bd4039",
+              "hash": "78a92f04bbea41c3137a968fb3a20f3ff0c3a241aa3ab43b3dc124e17d0b3d16",
+              "version": 1
+            },
+            "max_file_bytes": 1024,
+            "max_total_bytes": 1024,
+            "target_directory": "/",
+            "completion_contract": "immutable-files-sha256-scheduled-manifest-v1"
+          },
+          "arrival": {
+            "late_after_seconds": 1,
+            "poll_interval_seconds": 1,
+            "arrival_deadline_seconds": 10
+          },
+          "source_connection": {
+            "id": "c8043146-e630-46cb-ab00-a31110bd4039",
+            "user": "receiver",
+            "state": "active",
+            "address": "127.0.0.1:9",
+            "version": 1,
+            "revision": 1,
+            "directory": "/inbox",
+            "definition_hash": "78a92f04bbea41c3137a968fb3a20f3ff0c3a241aa3ab43b3dc124e17d0b3d16",
+            "key_fingerprint": "SHA256:w/ySex2Evjy+SNMkvk3Eok8JUtaU8omUINXXB+v+TEQ",
+            "host_fingerprint": "SHA256:LYJOEQaBnSDg3KrY4Hf73j2sVpKcwHL5ZWreoNmwBxg"
+          }
+        },
+        "storage_id": "e691844c-4810-4a33-8ec8-0cc5998f008c",
+        "max_catch_up": 4,
+        "namespace_root": "/",
+        "schema_version": 1,
+        "max_active_runs": 2,
+        "missed_run_policy": "all",
+        "authority_revision": 1,
+        "late_start_grace_seconds": 1,
+        "max_files_per_occurrence": 2,
+        "execution_deadline_seconds": 60
+      }
+    },
+    "current_authority": true,
+    "observed_state": "admitted",
+    "arrival_timeliness": "on_time",
+    "probe_due": false,
+    "collection": {
+      "job": {
+        "id": "8eb2433a-b566-4b82-a85b-e03635e383af",
+        "workflow_id": "0574635f-9d6b-459c-894f-5243ceefc44b",
+        "workflow_version": 1,
+        "workflow_hash": "5a3f1bf94321299495efb9474bb317ddab70468044060cd4fe52fb1ed0915ae1",
+        "definition": {
+          "source": {
+            "kind": "sftp.collect",
+            "manifest": "settlement-{due_utc}.ready.json",
+            "max_files": 2,
+            "connection": {
+              "id": "c8043146-e630-46cb-ab00-a31110bd4039",
+              "hash": "78a92f04bbea41c3137a968fb3a20f3ff0c3a241aa3ab43b3dc124e17d0b3d16",
+              "version": 1
+            },
+            "max_file_bytes": 1024,
+            "max_total_bytes": 1024,
+            "target_directory": "/",
+            "completion_contract": "immutable-files-sha256-scheduled-manifest-v1"
+          },
+          "effects": [
+            {
+              "address": "127.0.0.1:9",
+              "step_id": "first",
+              "directory": "/inbox",
+              "connection": {
+                "id": "c8043146-e630-46cb-ab00-a31110bd4039",
+                "hash": "78a92f04bbea41c3137a968fb3a20f3ff0c3a241aa3ab43b3dc124e17d0b3d16",
+                "version": 1
+              },
+              "host_fingerprint": "SHA256:LYJOEQaBnSDg3KrY4Hf73j2sVpKcwHL5ZWreoNmwBxg",
+              "final_name_pattern": "<delivery UUID>-first.csv"
+            }
+          ],
+          "schedule": {
+            "due_at": "2026-10-31T08:57:32Z",
+            "schedule": {
+              "id": "8975e4f6-9833-488c-b870-94bfc21a20f7",
+              "hash": "e6839d04f8d65f1d89b18b730f138457d0a4437653b9a716ec719658d105a0b7",
+              "version": 1
+            },
+            "deadline_at": "2026-10-31T08:58:32Z",
+            "manifest_hash": "e4c039cc7017c0f7e08208b22bd0ef15b078a6c6d7c0888b2fb4412ef1c182c9",
+            "manifest_name": "settlement-20261031T085732Z.ready.json",
+            "occurrence_id": "8fb058d5-33d1-4f5e-98c3-474b9c9165c6",
+            "arrival_deadline_at": "2026-10-31T08:57:42Z"
+          },
+          "workflow": {
+            "id": "0574635f-9d6b-459c-894f-5243ceefc44b",
+            "hash": "5a3f1bf94321299495efb9474bb317ddab70468044060cd4fe52fb1ed0915ae1",
+            "version": 1
+          },
+          "storage_id": "e691844c-4810-4a33-8ec8-0cc5998f008c",
+          "namespace_root": "/",
+          "schema_version": 1,
+          "source_identity": "47fe3a6fe41a9b8a4408da1047731da0e013c3d7a56ffa569fa7a3a12423f547",
+          "timeout_seconds": 60,
+          "source_connection": {
+            "id": "c8043146-e630-46cb-ab00-a31110bd4039",
+            "user": "receiver",
+            "state": "active",
+            "address": "127.0.0.1:9",
+            "version": 1,
+            "revision": 1,
+            "directory": "/inbox",
+            "definition_hash": "78a92f04bbea41c3137a968fb3a20f3ff0c3a241aa3ab43b3dc124e17d0b3d16",
+            "key_fingerprint": "SHA256:w/ySex2Evjy+SNMkvk3Eok8JUtaU8omUINXXB+v+TEQ",
+            "host_fingerprint": "SHA256:LYJOEQaBnSDg3KrY4Hf73j2sVpKcwHL5ZWreoNmwBxg"
+          },
+          "authority_revision": 1
+        },
+        "definition_hash": "cdbc1bf95dd61e8a6a7cee9670ec3f94b29203fc3f79f74d304765aefbc978b3",
+        "state": "captured",
+        "captured": true,
+        "revision": 4,
+        "fence": 1,
+        "attempts": 1,
+        "lease_owner": "",
+        "lease_until": null,
+        "next_at": "2026-10-31T08:57:32.162752Z",
+        "created_at": "2026-10-31T08:57:32.162752Z",
+        "deadline_at": "2026-10-31T08:58:32Z",
+        "manifest": {
+          "files": [
+            {
+              "name": "one.csv",
+              "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+              "size_bytes": 3
+            }
+          ],
+          "batch_id": "4279a15c-3648-4d98-9ee1-4cde9dd2f9b4",
+          "schema_version": 1
+        },
+        "manifest_hash": "e4c039cc7017c0f7e08208b22bd0ef15b078a6c6d7c0888b2fb4412ef1c182c9",
+        "reason": "batch_captured"
+      },
+      "inputs": [
+        {
+          "id": "dc54be06-4302-40a7-9dd3-60a6569308ee",
+          "first_job_id": "8eb2433a-b566-4b82-a85b-e03635e383af",
+          "workflow_id": "0574635f-9d6b-459c-894f-5243ceefc44b",
+          "source_identity": "47fe3a6fe41a9b8a4408da1047731da0e013c3d7a56ffa569fa7a3a12423f547",
+          "input_identity": "d455bf0a8b0df9b8c5c8bec9246111ae494fa5a38e1ab02079c7c81a33240d0a",
+          "source_name": "one.csv",
+          "size_bytes": 3,
+          "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+          "target_path": "/ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad-one.csv",
+          "object_id": "d50bd83b-3f0e-49d8-afee-92656b828a44",
+          "state": "queued",
+          "revision": 3,
+          "capture_fence": 1,
+          "capture_owner": "47f62055-0f81-4dfc-9c04-8d6911052833",
+          "file_id": "d50bd83b-3f0e-49d8-afee-92656b828a44",
+          "run_id": "35280437-95a6-486f-b027-062743900e4e"
+        }
+      ],
+      "current_authority": true,
+      "observed_state": "captured",
+      "business_acceptance": "unknown",
+      "local_states": [
+        {
+          "input_id": "dc54be06-4302-40a7-9dd3-60a6569308ee",
+          "state": "published"
+        }
+      ]
+    }
+  },
+  "occurrence": {
+    "id": "8fb058d5-33d1-4f5e-98c3-474b9c9165c6",
+    "schedule_id": "8975e4f6-9833-488c-b870-94bfc21a20f7",
+    "schedule_version": 1,
+    "due_at": "2026-10-31T08:57:32Z",
+    "deadline_at": "2026-10-31T08:58:32Z",
+    "kind": "collection",
+    "skipped_until": null,
+    "input_count": 0,
+    "event_id": "8322d1f3-15bf-4a56-aca5-19630ad25583"
+  },
+  "ready": {
+    "arrival": {
+      "occurrence_id": "8fb058d5-33d1-4f5e-98c3-474b9c9165c6",
+      "schedule_id": "8975e4f6-9833-488c-b870-94bfc21a20f7",
+      "schedule_version": 1,
+      "definition": {
+        "due_at": "2026-10-31T08:57:32Z",
+        "schedule": {
+          "id": "8975e4f6-9833-488c-b870-94bfc21a20f7",
+          "hash": "e6839d04f8d65f1d89b18b730f138457d0a4437653b9a716ec719658d105a0b7",
+          "version": 1
+        },
+        "deadline_at": "2026-10-31T08:58:32Z",
+        "late_after_at": "2026-10-31T08:57:33Z",
+        "manifest_name": "settlement-20261031T085732Z.ready.json",
+        "occurrence_id": "8fb058d5-33d1-4f5e-98c3-474b9c9165c6",
+        "schema_version": 1,
+        "arrival_deadline_at": "2026-10-31T08:57:42Z"
+      },
+      "definition_hash": "ddba1f28bd7010c99c59cadec46bc412207d030d295dc84c6011107211002884",
+      "state": "ready",
+      "revision": 3,
+      "fence": 1,
+      "probes": 1,
+      "lease_owner": "",
+      "lease_until": null,
+      "next_probe_at": "2026-10-31T08:57:33.101313Z",
+      "observed_at": "2026-10-31T08:57:32.101313Z",
+      "manifest": {
+        "files": [
+          {
+            "name": "one.csv",
+            "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+            "size_bytes": 3
+          }
+        ],
+        "batch_id": "4279a15c-3648-4d98-9ee1-4cde9dd2f9b4",
+        "schema_version": 1
+      },
+      "manifest_hash": "e4c039cc7017c0f7e08208b22bd0ef15b078a6c6d7c0888b2fb4412ef1c182c9",
+      "collection_id": null,
+      "reason": "verified_ready_manifest_observed"
+    },
+    "schedule": {
+      "id": "8975e4f6-9833-488c-b870-94bfc21a20f7",
+      "version": 1,
+      "name": "Expected remote settlement",
+      "definition_hash": "e6839d04f8d65f1d89b18b730f138457d0a4437653b9a716ec719658d105a0b7",
+      "state": "active",
+      "revision": 3,
+      "approval_authority": 1,
+      "next_due": null,
+      "created_at": "2026-10-31T08:57:30.194951Z",
+      "changed_event_id": "d2053481-2a47-47d9-a121-bc2e4aa00884",
+      "definition": {
+        "name": "Expected remote settlement",
+        "source": {
+          "kind": "sftp.collect",
+          "directory": "/",
+          "recursive": false,
+          "filename_regex": "",
+          "filename_pattern": "settlement-{due_utc}.ready.json"
+        },
+        "effects": [
+          {
+            "address": "127.0.0.1:9",
+            "step_id": "first",
+            "directory": "/inbox",
+            "connection": {
+              "id": "c8043146-e630-46cb-ab00-a31110bd4039",
+              "hash": "78a92f04bbea41c3137a968fb3a20f3ff0c3a241aa3ab43b3dc124e17d0b3d16",
+              "version": 1
+            },
+            "host_fingerprint": "SHA256:LYJOEQaBnSDg3KrY4Hf73j2sVpKcwHL5ZWreoNmwBxg",
+            "final_name_pattern": "<delivery UUID>-first.csv"
+          }
+        ],
+        "calendar": {
+          "ends_at": "2026-10-31T08:58:32Z",
+          "holidays": [],
+          "weekdays": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "starts_at": "2026-10-31T08:57:32Z",
+          "time_zone": "UTC",
+          "gap_policy": "skip",
+          "fold_policy": "both",
+          "local_times": [
+            "08:57:32"
+          ],
+          "offset_rules": [
+            {
+              "from": "2026-10-29T08:57:32Z",
+              "until": "2026-11-02T08:58:32Z",
+              "abbreviation": "UTC",
+              "offset_seconds": 0
+            }
+          ]
+        },
+        "workflow": {
+          "id": "0574635f-9d6b-459c-894f-5243ceefc44b",
+          "hash": "5a3f1bf94321299495efb9474bb317ddab70468044060cd4fe52fb1ed0915ae1",
+          "version": 1
+        },
+        "collection": {
+          "source": {
+            "kind": "sftp.collect",
+            "manifest": "settlement-{due_utc}.ready.json",
+            "max_files": 2,
+            "connection": {
+              "id": "c8043146-e630-46cb-ab00-a31110bd4039",
+              "hash": "78a92f04bbea41c3137a968fb3a20f3ff0c3a241aa3ab43b3dc124e17d0b3d16",
+              "version": 1
+            },
+            "max_file_bytes": 1024,
+            "max_total_bytes": 1024,
+            "target_directory": "/",
+            "completion_contract": "immutable-files-sha256-scheduled-manifest-v1"
+          },
+          "arrival": {
+            "late_after_seconds": 1,
+            "poll_interval_seconds": 1,
+            "arrival_deadline_seconds": 10
+          },
+          "source_connection": {
+            "id": "c8043146-e630-46cb-ab00-a31110bd4039",
+            "user": "receiver",
+            "state": "active",
+            "address": "127.0.0.1:9",
+            "version": 1,
+            "revision": 1,
+            "directory": "/inbox",
+            "definition_hash": "78a92f04bbea41c3137a968fb3a20f3ff0c3a241aa3ab43b3dc124e17d0b3d16",
+            "key_fingerprint": "SHA256:w/ySex2Evjy+SNMkvk3Eok8JUtaU8omUINXXB+v+TEQ",
+            "host_fingerprint": "SHA256:LYJOEQaBnSDg3KrY4Hf73j2sVpKcwHL5ZWreoNmwBxg"
+          }
+        },
+        "storage_id": "e691844c-4810-4a33-8ec8-0cc5998f008c",
+        "max_catch_up": 4,
+        "namespace_root": "/",
+        "schema_version": 1,
+        "max_active_runs": 2,
+        "missed_run_policy": "all",
+        "authority_revision": 1,
+        "late_start_grace_seconds": 1,
+        "max_files_per_occurrence": 2,
+        "execution_deadline_seconds": 60
+      }
+    },
+    "current_authority": true,
+    "observed_state": "ready",
+    "arrival_timeliness": "on_time",
+    "probe_due": false
+  },
+  "waiting": {
+    "arrival": {
+      "occurrence_id": "8fb058d5-33d1-4f5e-98c3-474b9c9165c6",
+      "schedule_id": "8975e4f6-9833-488c-b870-94bfc21a20f7",
+      "schedule_version": 1,
+      "definition": {
+        "due_at": "2026-10-31T08:57:32Z",
+        "schedule": {
+          "id": "8975e4f6-9833-488c-b870-94bfc21a20f7",
+          "hash": "e6839d04f8d65f1d89b18b730f138457d0a4437653b9a716ec719658d105a0b7",
+          "version": 1
+        },
+        "deadline_at": "2026-10-31T08:58:32Z",
+        "late_after_at": "2026-10-31T08:57:33Z",
+        "manifest_name": "settlement-20261031T085732Z.ready.json",
+        "occurrence_id": "8fb058d5-33d1-4f5e-98c3-474b9c9165c6",
+        "schema_version": 1,
+        "arrival_deadline_at": "2026-10-31T08:57:42Z"
+      },
+      "definition_hash": "ddba1f28bd7010c99c59cadec46bc412207d030d295dc84c6011107211002884",
+      "state": "waiting",
+      "revision": 1,
+      "fence": 0,
+      "probes": 0,
+      "lease_owner": "",
+      "lease_until": null,
+      "next_probe_at": "2026-10-31T08:57:32Z",
+      "observed_at": null,
+      "manifest": null,
+      "manifest_hash": null,
+      "collection_id": null,
+      "reason": "awaiting_expected_ready_manifest"
+    },
+    "schedule": {
+      "id": "8975e4f6-9833-488c-b870-94bfc21a20f7",
+      "version": 1,
+      "name": "Expected remote settlement",
+      "definition_hash": "e6839d04f8d65f1d89b18b730f138457d0a4437653b9a716ec719658d105a0b7",
+      "state": "active",
+      "revision": 3,
+      "approval_authority": 1,
+      "next_due": null,
+      "created_at": "2026-10-31T08:57:30.194951Z",
+      "changed_event_id": "d2053481-2a47-47d9-a121-bc2e4aa00884",
+      "definition": {
+        "name": "Expected remote settlement",
+        "source": {
+          "kind": "sftp.collect",
+          "directory": "/",
+          "recursive": false,
+          "filename_regex": "",
+          "filename_pattern": "settlement-{due_utc}.ready.json"
+        },
+        "effects": [
+          {
+            "address": "127.0.0.1:9",
+            "step_id": "first",
+            "directory": "/inbox",
+            "connection": {
+              "id": "c8043146-e630-46cb-ab00-a31110bd4039",
+              "hash": "78a92f04bbea41c3137a968fb3a20f3ff0c3a241aa3ab43b3dc124e17d0b3d16",
+              "version": 1
+            },
+            "host_fingerprint": "SHA256:LYJOEQaBnSDg3KrY4Hf73j2sVpKcwHL5ZWreoNmwBxg",
+            "final_name_pattern": "<delivery UUID>-first.csv"
+          }
+        ],
+        "calendar": {
+          "ends_at": "2026-10-31T08:58:32Z",
+          "holidays": [],
+          "weekdays": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "starts_at": "2026-10-31T08:57:32Z",
+          "time_zone": "UTC",
+          "gap_policy": "skip",
+          "fold_policy": "both",
+          "local_times": [
+            "08:57:32"
+          ],
+          "offset_rules": [
+            {
+              "from": "2026-10-29T08:57:32Z",
+              "until": "2026-11-02T08:58:32Z",
+              "abbreviation": "UTC",
+              "offset_seconds": 0
+            }
+          ]
+        },
+        "workflow": {
+          "id": "0574635f-9d6b-459c-894f-5243ceefc44b",
+          "hash": "5a3f1bf94321299495efb9474bb317ddab70468044060cd4fe52fb1ed0915ae1",
+          "version": 1
+        },
+        "collection": {
+          "source": {
+            "kind": "sftp.collect",
+            "manifest": "settlement-{due_utc}.ready.json",
+            "max_files": 2,
+            "connection": {
+              "id": "c8043146-e630-46cb-ab00-a31110bd4039",
+              "hash": "78a92f04bbea41c3137a968fb3a20f3ff0c3a241aa3ab43b3dc124e17d0b3d16",
+              "version": 1
+            },
+            "max_file_bytes": 1024,
+            "max_total_bytes": 1024,
+            "target_directory": "/",
+            "completion_contract": "immutable-files-sha256-scheduled-manifest-v1"
+          },
+          "arrival": {
+            "late_after_seconds": 1,
+            "poll_interval_seconds": 1,
+            "arrival_deadline_seconds": 10
+          },
+          "source_connection": {
+            "id": "c8043146-e630-46cb-ab00-a31110bd4039",
+            "user": "receiver",
+            "state": "active",
+            "address": "127.0.0.1:9",
+            "version": 1,
+            "revision": 1,
+            "directory": "/inbox",
+            "definition_hash": "78a92f04bbea41c3137a968fb3a20f3ff0c3a241aa3ab43b3dc124e17d0b3d16",
+            "key_fingerprint": "SHA256:w/ySex2Evjy+SNMkvk3Eok8JUtaU8omUINXXB+v+TEQ",
+            "host_fingerprint": "SHA256:LYJOEQaBnSDg3KrY4Hf73j2sVpKcwHL5ZWreoNmwBxg"
+          }
+        },
+        "storage_id": "e691844c-4810-4a33-8ec8-0cc5998f008c",
+        "max_catch_up": 4,
+        "namespace_root": "/",
+        "schema_version": 1,
+        "max_active_runs": 2,
+        "missed_run_policy": "all",
+        "authority_revision": 1,
+        "late_start_grace_seconds": 1,
+        "max_files_per_occurrence": 2,
+        "execution_deadline_seconds": 60
+      }
+    },
+    "current_authority": true,
+    "observed_state": "waiting",
+    "arrival_timeliness": "not_observed",
+    "probe_due": true
+  }
+}
