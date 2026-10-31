@@ -51,7 +51,7 @@ Reconciliation authenticates before inventory, waits on the same staging lock, a
 
 The stock-curl harness also kills its own server during a rate-limited upload, observes an actual partial staging object, restarts, checks that reconciliation reports it, confirms download still returns 404, and retries the request into a new accepted revision. It preserves the old unreferenced object and its quota cost. Crashes after syncing but before committing SQL, ambiguous commit outcomes, automatic cleanup and approved recovery are separate open gates.
 
-`python3 scripts/check-records.py` validates qualification bookkeeping. No test is silently skipped when integration credentials are absent. A passing foundation exercise does not close any of GOAL.md's complete journeys.
+`python3 scripts/check-records.py` validates qualification bookkeeping. `python3 scripts/test-native-evidence.py` checks that retries cannot overwrite native evidence and that missing or changed output cannot produce a passing qualification. No test is silently skipped when integration credentials are absent. A passing foundation exercise does not close any of GOAL.md's complete journeys.
 
 ## Signed audit snapshots
 

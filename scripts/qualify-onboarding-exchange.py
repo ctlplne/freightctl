@@ -9,6 +9,7 @@ from pathlib import Path
 from datetime import datetime, timezone
 from urllib.parse import urlsplit, urlunsplit
 import argparse,hashlib,json,os,re,signal,socket,subprocess,time,traceback,uuid
+from native_evidence import NativeEvidence
 if not __debug__:
  raise RuntimeError("Qualification requires assertions; remove Python -O/PYTHONOPTIMIZE")
 os.umask(0o077)
@@ -17,6 +18,8 @@ parser=argparse.ArgumentParser();parser.add_argument('--postgres-container-id',r
 assert re.fullmatch(r'[0-9a-f]{64}',options.postgres_container_id),'use the exact task-owned PostgreSQL container ID'
 run='onboarding-exchange-'+uuid.uuid4().hex;private=root/'.private'/run;private.mkdir(mode=0o700);raw=root/'evidence/raw'/run;raw.mkdir(parents=True,mode=0o700)
 binary=private/'freightctl';database='freightctl_'+run.replace('-','_');created=False;servers={};logs={};steps=[];cleanup=[];state='failed';failure=None;started=time.monotonic()
+output_proof=NativeEvidence(raw,steps)
+reserve_step=output_proof.reserve
 env=dict(os.environ,GOMAXPROCS='1',GOMEMLIMIT='192MiB',NODE_OPTIONS='--max-old-space-size=192',PLAYWRIGHT_BROWSERS_PATH=str(root/'.cache/freightctl-playwright'))
 pg=options.postgres_container_id
 def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
@@ -25,6 +28,7 @@ def sources():
  return {p:sha(root/p) for p in sorted(set(paths)) if p and (Path(p).suffix in ('.go','.sql','.sh','.py','.ts','.tsx','.js','.mjs','.css','.html','.yml','.yaml') or p.startswith('web/tests/fixtures/') or p in ('go.mod','go.sum','web/package.json','web/package-lock.json','web/tsconfig.json','web/THIRD_PARTY_NOTICES.txt','internal/browser/assets/manifest.json'))}
 initial=sources();(root/'.private/onboarding-exchange-runtime-current').write_text(str(raw)+'\n')
 def command(label,args,expected=0,timeout=100):
+ reserve_step(label)
  start=time.monotonic();out=raw/(label+'.stdout');err=raw/(label+'.stderr')
  with out.open('wb') as o,err.open('wb') as e:r=subprocess.run(list(map(str,args)),stdout=o,stderr=e,env=env,timeout=timeout)
  steps.append({'name':label,'command':list(map(str,args)),'exit_code':r.returncode,'expected_exit_code':expected,'duration_seconds':round(time.monotonic()-start,3),'stdout_sha256':sha(out),'stderr_sha256':sha(err)})
@@ -251,7 +255,11 @@ finally:
   try:sql('DROP DATABASE '+database+' WITH (FORCE)','freightctl')
   except Exception:cleanup.append('exact fixture database cleanup failed')
  final=sources();unchanged=initial==final
- manifest={'schema_version':1,'recorded_tests':options.recorded_tests,'releases':options.releases,'handoffs':options.handoffs,'prepublication':options.prepublication,'observations':options.observations,'state':state if unchanged and not cleanup else 'failed','failure':failure,'cleanup_failures':cleanup,'observed_at':datetime.now(timezone.utc).isoformat(),'postgres_container_id':pg,'starting_commit':subprocess.check_output(['git','rev-parse','HEAD']).decode().strip(),'source_sha256':initial,'sources_unchanged_during_run':unchanged,'changed_source_paths':[p for p in set(initial)|set(final) if initial.get(p)!=final.get(p)],'binary_sha256':sha(binary) if binary.exists() else None,'private_reference':str(private.relative_to(root)),'duration_seconds':round(time.monotonic()-started,3),'steps':steps,'isolated_database_removed':created and not cleanup,'peer_reference':str(fixture/'manifest.json') if 'fixture' in globals() else None,'inference_performed':False,'scanner_engine_started':False,'full_journeys_qualified':False,'limits':['Assisted same-host loopback qualification; independent operators, full J05 approval/activation and production remain open.','Native stock receiver and GnuPG are independent observers; no downstream business acceptance or directory power-loss durability is claimed.','No complete core replay is performed; F026 replay remains owner-deferred.','No model, scanner, signature database or shared Docker lifecycle operation. Native crypto uses its selected sampled 128 MiB process-family watchdog; observer/OS costs remain separate.']}
+ output_failure=None;output_files=0
+ try:output_files=output_proof.verify()
+ except Exception:output_failure=traceback.format_exc()
+ manifest={'schema_version':1,'recorded_tests':options.recorded_tests,'releases':options.releases,'handoffs':options.handoffs,'prepublication':options.prepublication,'observations':options.observations,'state':state if unchanged and not cleanup and not output_failure else 'failed','failure':failure,'output_closure_failure':output_failure,'output_artifacts_verified':output_files,'cleanup_failures':cleanup,'observed_at':datetime.now(timezone.utc).isoformat(),'postgres_container_id':pg,'starting_commit':subprocess.check_output(['git','rev-parse','HEAD']).decode().strip(),'source_sha256':initial,'sources_unchanged_during_run':unchanged,'changed_source_paths':[p for p in set(initial)|set(final) if initial.get(p)!=final.get(p)],'binary_sha256':sha(binary) if binary.exists() else None,'private_reference':str(private.relative_to(root)),'duration_seconds':round(time.monotonic()-started,3),'steps':steps,'isolated_database_removed':created and not cleanup,'peer_reference':str(fixture/'manifest.json') if 'fixture' in globals() else None,'inference_performed':False,'scanner_engine_started':False,'full_journeys_qualified':False,'limits':['Assisted same-host loopback qualification; independent operators, full J05 approval/activation and production remain open.','Native stock receiver and GnuPG are independent observers; no downstream business acceptance or directory power-loss durability is claimed.','No complete core replay is performed; F026 replay remains owner-deferred.','No model, scanner, signature database or shared Docker lifecycle operation. Native crypto uses its selected sampled 128 MiB process-family watchdog; observer/OS costs remain separate.']}
  (raw/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n');print(str(raw/'manifest.json'),flush=True)
  if failure:print(failure,flush=True)
+ if output_failure:print(output_failure,flush=True)
 if manifest['state']!='passed':raise SystemExit(1)

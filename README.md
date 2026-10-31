@@ -18,6 +18,8 @@ For required scans, exact release and the selected real ClamAV runtime evidence,
 
 For the selected combined signed-file, genuine scanner, separate release and recipient-encrypted exchange with independent receiver/audit verification, see [signed/scanned exchange](docs/signed-scanned-exchange.md). Full customer journeys remain open.
 
+For selected read-only recovery of original SFTP receipt evidence after trust rotation, see [receipt observations](docs/receipt-observations.md). [F034](docs/qualification/evidence/F034-native-evidence-integrity.json) supersedes the incomplete original F033 native output bundle; full verification remains pending at the owner’s request.
+
 - Organization: [ctlplne](https://github.com/ctlplne)
 - Repository: [ctlplne/freightctl](https://github.com/ctlplne/freightctl)
 - Local workflow: commits on main; pushes and publication remain owner-controlled.

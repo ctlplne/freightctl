@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "F033",
   "kind": "Reviewed read-only recovery of original published-file integrity under rotated trust, with immutable private evidence and original execution preserved",
-  "state": "verified locally",
+  "state": "in progress",
   "observed_at": "2026-10-31T02:19:45.527741+00:00",
   "qualification_scope": "Selected assisted actor-private outbound SFTP on macOS 27.2 arm64, OpenSSH 10.5p1, Node 26.0.0, Go 1.26.10, real PostgreSQL/storage and independent bounded native GnuPG. Synthetic 73-byte source; complete J05/J06, independent adoption and enterprise/platform/production qualification remain open.",
   "full_journeys_qualified": false,
@@ -1331,7 +1331,8 @@
       "Original source event counts, immutable dispatch and delivery projection remain unchanged; another full manager actor receives 404"
     ],
     "full_core_aggregate": "not run; F026 complete replay remains owner-deferred",
-    "vulnerability_image_analysis": "no new current-source vulnerability/image/OS analysis claimed"
+    "vulnerability_image_analysis": "no new current-source vulnerability/image/OS analysis claimed",
+    "artifact_closure": "Failed after commit: duplicate retry labels overwrote three first-response JSON artifacts. Application assertions passed but the original output closure is not proven. D069 retains that bundle/source epoch; F034 supersedes its native qualification with distinct outputs and independently validated hashes."
   },
   "retained_failures": [
     {
@@ -7625,6 +7626,8 @@
     "Only original explicit actor-private outbound SFTP publication uncertainty is qualified. Current readable source lineage, exact tested observer and point-in-time wire integrity do not establish business acceptance, receiver ingestion/idempotency or present availability after later changes.",
     "New remote absence/difference is not permission to resend. Broader recovery/contracts/policies/signatures/scanners, protocols/algorithms/platforms, larger workloads, distributed failures, delegation/environment promotion, adoption and all remaining GOAL.md work stay required.",
     "D068 daemon disconnect cause remains unresolved despite unchanged original replay passing; no assertion, timeout, lease, attempt count, isolation or resource target was weakened.",
-    "No full current-source aggregate or new vulnerability/image scan is claimed. F026 complete replay remains owner-deferred. Models/scanner remain off; no push/publication/external deployment, global keyring/SSH change or shared Docker lifecycle action."
-  ]
+    "No full current-source aggregate or new vulnerability/image scan is claimed. F026 complete replay remains owner-deferred. Models/scanner remain off; no push/publication/external deployment, global keyring/SSH change or shared Docker lifecycle action.",
+    "Post-commit artifact closure failure D069 prevents treating this original bundle as a complete verified qualification. Preserve its raw files/source epoch and use the repaired original journey in F034."
+  ],
+  "superseded_by": "docs/qualification/evidence/F034-native-evidence-integrity.json"
 }

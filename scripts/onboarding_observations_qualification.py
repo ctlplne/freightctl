@@ -35,7 +35,7 @@ def qualify_observations(c,h,prepared):
         o=post(label+'-propose','/onboarding-observations',{'definition':p['definition']},key=label+'-propose')['resource']['observation']
         o=post(label+'-approve','/onboarding-observations/'+o['id']+'/approve',h['decision'](o),key=label+'-approve')['resource']['observation']
         return o
-    def work(label,o):return post(label,'/onboarding-observations/'+o['id']+'/work',{'definition_hash':o['definition_hash']},key=label)
+    def work(label,o,key=None):return post(label,'/onboarding-observations/'+o['id']+'/work',{'definition_hash':o['definition_hash']},key=key or label)
     negative=[]
     backup=private/'observation-original-final.backup';original_bytes=final.read_bytes();backup.write_bytes(original_bytes)
     for label in ['missing','changed','symlink']:
@@ -45,7 +45,7 @@ def qualify_observations(c,h,prepared):
             if label=='changed':final.write_bytes(bytes([original_bytes[0]^1])+original_bytes[1:])
             elif label=='symlink':final.symlink_to(backup)
             result=work('observation-'+label+'-work',o);assert result['observation']['state']=='unconfirmed' and not result['observation']['result']['integrity_confirmed'] and not result['resend_authorized']
-            before=contacts();replay=work('observation-'+label+'-work',o);assert replay['observation']==result['observation'] and not replay['contact_attempted'] and contacts()==before
+            before=contacts();replay=work('observation-'+label+'-work-replay',o,key='observation-'+label+'-work');assert replay['observation']==result['observation'] and not replay['contact_attempted'] and contacts()==before
             negative.append(label)
         finally:
             if final.is_symlink() or final.exists():final.unlink()
@@ -55,6 +55,7 @@ def qualify_observations(c,h,prepared):
     lost=approved('observation-lost-worker')
     c['sql']("CREATE FUNCTION freightctl_observation_barrier() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.observation_id='"+lost['id']+"' AND NEW.state='succeeded' THEN PERFORM pg_sleep(8);END IF;RETURN NEW;END $$;CREATE TRIGGER freightctl_observation_barrier BEFORE UPDATE ON onboarding_observations FOR EACH ROW EXECUTE FUNCTION freightctl_observation_barrier()")
     args=[c['binary'],'partner-onboarding-observation-work','--dsn-file',c['runtime'],'--tenant',c['tenant'],'--partner',c['partner'],'--storage',c['storage'],'--token-file',h['owner'],'--onboarding-observation-id',lost['id'],'--request-file',write('observation-lost-worker-work',{'definition_hash':lost['definition_hash']}),'--idempotency-key','observation-killed-worker']
+    c['reserve_step']('observation-killed-worker')
     out,err=raw/'observation-killed-worker.stdout',raw/'observation-killed-worker.stderr';started=time.monotonic()
     with out.open('wb') as stdout,err.open('wb') as stderr:
         child=subprocess.Popen(list(map(str,args)),stdout=stdout,stderr=stderr,env=c['env'],start_new_session=True);c['servers']['observation-worker']=child;deadline=time.monotonic()+12

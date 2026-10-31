@@ -10,6 +10,7 @@ def prepare_prepublication(c, h):
     delivery = status['status']['steps'][0]['delivery_id']
     c['sql']("CREATE FUNCTION freightctl_prepublication_barrier() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.delivery_id='" + delivery + "' AND NEW.state='publishing' THEN PERFORM pg_sleep(8); END IF; RETURN NEW; END $$; CREATE TRIGGER freightctl_prepublication_barrier BEFORE UPDATE ON delivery_intents FOR EACH ROW EXECUTE FUNCTION freightctl_prepublication_barrier()")
     args = [c['binary'], 'workflow-work', '--dsn-file', c['runtime'], '--tenant', c['tenant'], '--partner', c['partner'], '--storage', c['storage'], '--token-file', h['owner'], '--run-id', original['run']['id'], '--idempotency-key', 'prepublication-killed-worker']
+    c['reserve_step']('prepublication-killed-worker')
     out, err = raw / 'prepublication-killed-worker.stdout', raw / 'prepublication-killed-worker.stderr'
     started = time.monotonic()
     with out.open('wb') as stdout, err.open('wb') as stderr:

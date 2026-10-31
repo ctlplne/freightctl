@@ -1045,10 +1045,28 @@
       "reproduction": "The first 200-step observation qualification reached the existing pre-publication crash fixture, then docker exec psql reported it could not connect to the Docker daemon. The new observation cases had not started. The command was terminal and fixture cleanup subsequently succeeded.",
       "first_failure": "evidence/raw/onboarding-exchange-da45b7702a3e4e3b8c2b95d428921eea/manifest.json; original output and all 313 source copies retained by F033.",
       "cause": "Unassigned. Subsequent read-only inspection found the same PostgreSQL ID running with unchanged limits and no OOM flag; direct SQL responded. This does not establish the daemon disconnect cause or identify any external actor.",
-      "resolution": "Preserve the original failure/source epoch and exact-resource recheck. The original 316-step journey passes on identical source/application binary after revalidation, with no shared Docker restart, deadline/assertion/budget change or inferred root-cause repair.",
+      "resolution": "Preserve the first failure/source epoch and exact-resource recheck. F033 replay application assertions passed but D069 invalidated its original output closure; F034 repaired original 316-step replay passes on identical application bytes with complete output closure. No shared Docker restart, assertion/deadline/budget relaxation or root-cause repair is claimed.",
       "regression_evidence": [
         "docs/qualification/evidence/F033-readonly-receipt-observations.json",
-        ".private/onboarding-observation-resource-recheck.json"
+        ".private/onboarding-observation-resource-recheck.json",
+        "docs/qualification/evidence/F034-native-evidence-integrity.json"
+      ]
+    },
+    {
+      "id": "D069",
+      "severity": "native qualification evidence loss through retry-output overwrite",
+      "state": "fixed locally",
+      "observed_on": "2026-10-30",
+      "candidate": "504c358c1aaff041c9e75eb465727621b9dac900",
+      "journey": "J11",
+      "reproduction": "Post-commit independent closure audit finds three duplicate observation work labels; each replay replaced its first response JSON while retaining a different first-response hash. Application assertions passed but the original bundle cannot prove all recorded outputs.",
+      "first_failure": ".private/onboarding-observation-evidence-first-failure.json; original native manifest/raw outputs and all 313 original inputs preserved.",
+      "cause": "Output names were reused for retries because output identity was coupled to the idempotency key; the qualifier did not validate recorded output closure before reporting success.",
+      "resolution": "Use distinct replay output labels with unchanged original operation keys; reserve labels before command effects and require independent output closure before pass. Six refusal tests and the full original 316-step targeted native replay pass on the unchanged application binary. Original commit and incomplete bundle remain preserved.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F034-native-evidence-integrity.json",
+        ".private/onboarding-observation-evidence-refusal-tests-final.log",
+        "evidence/raw/onboarding-exchange-e58ef92c53a847a6b71e1688614cbddd/manifest.json"
       ]
     }
   ]
