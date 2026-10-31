@@ -1,0 +1,1928 @@
+{
+  "explicit_local": {
+    "definition": {
+      "schema_version": 2,
+      "name": "Settlement routes",
+      "steps": [
+        {
+          "id": "north",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "north.csv"
+        },
+        {
+          "id": "south",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "south.csv"
+        },
+        {
+          "id": "audit",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "audit.csv"
+        }
+      ],
+      "source": {
+        "kind": "sftp.collect",
+        "connection": {
+          "id": "00000000-0000-0000-0000-000000000001",
+          "version": 1,
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "manifest": "settlement.ready.json",
+        "target_directory": "/incoming",
+        "completion_contract": "immutable-files-sha256-manifest-v1",
+        "max_files": 2,
+        "max_file_bytes": 1024,
+        "max_total_bytes": 1024
+      },
+      "program": {
+        "nodes": [
+          {
+            "kind": "if",
+            "when": {
+              "op": "glob",
+              "field": "source.name",
+              "text": "north-*.csv"
+            },
+            "then": [
+              {
+                "kind": "for_each",
+                "variable": "recipient",
+                "steps": [
+                  "north",
+                  "audit"
+                ],
+                "body": [
+                  {
+                    "kind": "deliver",
+                    "step_variable": "recipient"
+                  }
+                ]
+              }
+            ],
+            "else": [
+              {
+                "kind": "keep_local",
+                "reason": "unmatched_settlement"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "definition_hash": "fd6ecb84e17217b3811edfe04dcc73ddf722158398decc24f191de3548723886",
+    "facts": {
+      "file": {
+        "id": "00000000-0000-0000-0000-000000000002",
+        "size_bytes": 3,
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "policy": "integrity-only-v1",
+        "accepted_event_id": "00000000-0000-0000-0000-000000000003"
+      },
+      "source": {
+        "collection_id": "00000000-0000-0000-0000-000000000004",
+        "manifest_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "name": "south-settlement.csv",
+        "batch_id": "00000000-0000-0000-0000-000000000005",
+        "file_count": 2,
+        "index": 0
+      }
+    },
+    "plan": {
+      "schema_version": 1,
+      "facts": {
+        "file": {
+          "id": "00000000-0000-0000-0000-000000000002",
+          "size_bytes": 3,
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "policy": "integrity-only-v1",
+          "accepted_event_id": "00000000-0000-0000-0000-000000000003"
+        },
+        "source": {
+          "collection_id": "00000000-0000-0000-0000-000000000004",
+          "manifest_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "name": "south-settlement.csv",
+          "batch_id": "00000000-0000-0000-0000-000000000005",
+          "file_count": 2,
+          "index": 0
+        }
+      },
+      "selected_steps": [],
+      "decisions": [
+        {
+          "path": "0",
+          "kind": "if",
+          "matched": false
+        },
+        {
+          "path": "0.else.0",
+          "kind": "keep_local",
+          "reason": "unmatched_settlement"
+        }
+      ],
+      "local_reason": "unmatched_settlement"
+    },
+    "plan_hash": "33407e1a0308cce46dd23a1ec44dfa84f38f6ae1fd07fe8593e356e9be1dac3a"
+  },
+  "local_without_source_or_receiver": {
+    "definition": {
+      "schema_version": 2,
+      "name": "Settlement routes",
+      "steps": [],
+      "program": {
+        "nodes": [
+          {
+            "kind": "keep_local",
+            "reason": "local_policy"
+          }
+        ]
+      }
+    },
+    "definition_hash": "9297ee0ffb71d7bc964ddc5277e3315222a216ee5d2845e67b7b763c20bb1786",
+    "facts": {
+      "file": {
+        "id": "00000000-0000-0000-0000-000000000002",
+        "size_bytes": 3,
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "policy": "integrity-only-v1",
+        "accepted_event_id": "00000000-0000-0000-0000-000000000003"
+      }
+    },
+    "plan": {
+      "schema_version": 1,
+      "facts": {
+        "file": {
+          "id": "00000000-0000-0000-0000-000000000002",
+          "size_bytes": 3,
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "policy": "integrity-only-v1",
+          "accepted_event_id": "00000000-0000-0000-0000-000000000003"
+        }
+      },
+      "selected_steps": [],
+      "decisions": [
+        {
+          "path": "0",
+          "kind": "keep_local",
+          "reason": "local_policy"
+        }
+      ],
+      "local_reason": "local_policy"
+    },
+    "plan_hash": "bd9ea636217b4c1db74c50c468bf6b237325293d9e08eae61e7defa9998bdc7d"
+  },
+  "north_loop": {
+    "definition": {
+      "schema_version": 2,
+      "name": "Settlement routes",
+      "steps": [
+        {
+          "id": "north",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "north.csv"
+        },
+        {
+          "id": "south",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "south.csv"
+        },
+        {
+          "id": "audit",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "audit.csv"
+        }
+      ],
+      "source": {
+        "kind": "sftp.collect",
+        "connection": {
+          "id": "00000000-0000-0000-0000-000000000001",
+          "version": 1,
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "manifest": "settlement.ready.json",
+        "target_directory": "/incoming",
+        "completion_contract": "immutable-files-sha256-manifest-v1",
+        "max_files": 2,
+        "max_file_bytes": 1024,
+        "max_total_bytes": 1024
+      },
+      "program": {
+        "nodes": [
+          {
+            "kind": "if",
+            "when": {
+              "op": "glob",
+              "field": "source.name",
+              "text": "north-*.csv"
+            },
+            "then": [
+              {
+                "kind": "for_each",
+                "variable": "recipient",
+                "steps": [
+                  "north",
+                  "audit"
+                ],
+                "body": [
+                  {
+                    "kind": "deliver",
+                    "step_variable": "recipient"
+                  }
+                ]
+              }
+            ],
+            "else": [
+              {
+                "kind": "keep_local",
+                "reason": "unmatched_settlement"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "definition_hash": "fd6ecb84e17217b3811edfe04dcc73ddf722158398decc24f191de3548723886",
+    "facts": {
+      "file": {
+        "id": "00000000-0000-0000-0000-000000000002",
+        "size_bytes": 3,
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "policy": "integrity-only-v1",
+        "accepted_event_id": "00000000-0000-0000-0000-000000000003"
+      },
+      "source": {
+        "collection_id": "00000000-0000-0000-0000-000000000004",
+        "manifest_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "name": "north-settlement.csv",
+        "batch_id": "00000000-0000-0000-0000-000000000005",
+        "file_count": 2,
+        "index": 0
+      }
+    },
+    "plan": {
+      "schema_version": 1,
+      "facts": {
+        "file": {
+          "id": "00000000-0000-0000-0000-000000000002",
+          "size_bytes": 3,
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "policy": "integrity-only-v1",
+          "accepted_event_id": "00000000-0000-0000-0000-000000000003"
+        },
+        "source": {
+          "collection_id": "00000000-0000-0000-0000-000000000004",
+          "manifest_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "name": "north-settlement.csv",
+          "batch_id": "00000000-0000-0000-0000-000000000005",
+          "file_count": 2,
+          "index": 0
+        }
+      },
+      "selected_steps": [
+        "north",
+        "audit"
+      ],
+      "decisions": [
+        {
+          "path": "0",
+          "kind": "if",
+          "matched": true
+        },
+        {
+          "path": "0.then.0",
+          "kind": "for_each",
+          "variable": "recipient",
+          "steps": [
+            "north",
+            "audit"
+          ]
+        },
+        {
+          "path": "0.then.0[0].body.0",
+          "kind": "deliver",
+          "step": "north"
+        },
+        {
+          "path": "0.then.0[1].body.0",
+          "kind": "deliver",
+          "step": "audit"
+        }
+      ]
+    },
+    "plan_hash": "7910b6c055782f26d3cbdfe42709106345291e66ce5ba33c5ffffac9776dccff"
+  },
+  "operator_eq_file_size_bytes": {
+    "definition": {
+      "schema_version": 2,
+      "name": "Settlement routes",
+      "steps": [
+        {
+          "id": "north",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "north.csv"
+        },
+        {
+          "id": "south",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "south.csv"
+        },
+        {
+          "id": "audit",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "audit.csv"
+        }
+      ],
+      "source": {
+        "kind": "sftp.collect",
+        "connection": {
+          "id": "00000000-0000-0000-0000-000000000001",
+          "version": 1,
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "manifest": "settlement.ready.json",
+        "target_directory": "/incoming",
+        "completion_contract": "immutable-files-sha256-manifest-v1",
+        "max_files": 2,
+        "max_file_bytes": 1024,
+        "max_total_bytes": 1024
+      },
+      "program": {
+        "nodes": [
+          {
+            "kind": "if",
+            "when": {
+              "op": "eq",
+              "field": "file.size_bytes",
+              "number": "3"
+            },
+            "then": [
+              {
+                "kind": "deliver",
+                "step": "north"
+              }
+            ],
+            "else": [
+              {
+                "kind": "keep_local",
+                "reason": "condition_false"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "definition_hash": "ff9e2b2165cbbd3a38bbf8a35f922e0256565242fc27567ba53574eab1d4f1a3",
+    "facts": {
+      "file": {
+        "id": "00000000-0000-0000-0000-000000000002",
+        "size_bytes": 3,
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "policy": "integrity-only-v1",
+        "accepted_event_id": "00000000-0000-0000-0000-000000000003"
+      },
+      "source": {
+        "collection_id": "00000000-0000-0000-0000-000000000004",
+        "manifest_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "name": "north-settlement.csv",
+        "batch_id": "00000000-0000-0000-0000-000000000005",
+        "file_count": 2,
+        "index": 0
+      }
+    },
+    "plan": {
+      "schema_version": 1,
+      "facts": {
+        "file": {
+          "id": "00000000-0000-0000-0000-000000000002",
+          "size_bytes": 3,
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "policy": "integrity-only-v1",
+          "accepted_event_id": "00000000-0000-0000-0000-000000000003"
+        },
+        "source": {
+          "collection_id": "00000000-0000-0000-0000-000000000004",
+          "manifest_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "name": "north-settlement.csv",
+          "batch_id": "00000000-0000-0000-0000-000000000005",
+          "file_count": 2,
+          "index": 0
+        }
+      },
+      "selected_steps": [
+        "north"
+      ],
+      "decisions": [
+        {
+          "path": "0",
+          "kind": "if",
+          "matched": true
+        },
+        {
+          "path": "0.then.0",
+          "kind": "deliver",
+          "step": "north"
+        }
+      ]
+    },
+    "plan_hash": "8fbe49e6c505e782b510c64878cbe484c895d66f723a76bffc3449690c68839c"
+  },
+  "operator_eq_source_name": {
+    "definition": {
+      "schema_version": 2,
+      "name": "Settlement routes",
+      "steps": [
+        {
+          "id": "north",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "north.csv"
+        },
+        {
+          "id": "south",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "south.csv"
+        },
+        {
+          "id": "audit",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "audit.csv"
+        }
+      ],
+      "source": {
+        "kind": "sftp.collect",
+        "connection": {
+          "id": "00000000-0000-0000-0000-000000000001",
+          "version": 1,
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "manifest": "settlement.ready.json",
+        "target_directory": "/incoming",
+        "completion_contract": "immutable-files-sha256-manifest-v1",
+        "max_files": 2,
+        "max_file_bytes": 1024,
+        "max_total_bytes": 1024
+      },
+      "program": {
+        "nodes": [
+          {
+            "kind": "if",
+            "when": {
+              "op": "eq",
+              "field": "source.name",
+              "text": "north-settlement.csv"
+            },
+            "then": [
+              {
+                "kind": "deliver",
+                "step": "north"
+              }
+            ],
+            "else": [
+              {
+                "kind": "keep_local",
+                "reason": "condition_false"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "definition_hash": "4d0ce1c5981b992a9757c25a94c1ae0eece0561f5a3ccab501213ed1b1cab39b",
+    "facts": {
+      "file": {
+        "id": "00000000-0000-0000-0000-000000000002",
+        "size_bytes": 3,
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "policy": "integrity-only-v1",
+        "accepted_event_id": "00000000-0000-0000-0000-000000000003"
+      },
+      "source": {
+        "collection_id": "00000000-0000-0000-0000-000000000004",
+        "manifest_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "name": "north-settlement.csv",
+        "batch_id": "00000000-0000-0000-0000-000000000005",
+        "file_count": 2,
+        "index": 0
+      }
+    },
+    "plan": {
+      "schema_version": 1,
+      "facts": {
+        "file": {
+          "id": "00000000-0000-0000-0000-000000000002",
+          "size_bytes": 3,
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "policy": "integrity-only-v1",
+          "accepted_event_id": "00000000-0000-0000-0000-000000000003"
+        },
+        "source": {
+          "collection_id": "00000000-0000-0000-0000-000000000004",
+          "manifest_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "name": "north-settlement.csv",
+          "batch_id": "00000000-0000-0000-0000-000000000005",
+          "file_count": 2,
+          "index": 0
+        }
+      },
+      "selected_steps": [
+        "north"
+      ],
+      "decisions": [
+        {
+          "path": "0",
+          "kind": "if",
+          "matched": true
+        },
+        {
+          "path": "0.then.0",
+          "kind": "deliver",
+          "step": "north"
+        }
+      ]
+    },
+    "plan_hash": "8fbe49e6c505e782b510c64878cbe484c895d66f723a76bffc3449690c68839c"
+  },
+  "operator_ge_file_size_bytes": {
+    "definition": {
+      "schema_version": 2,
+      "name": "Settlement routes",
+      "steps": [
+        {
+          "id": "north",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "north.csv"
+        },
+        {
+          "id": "south",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "south.csv"
+        },
+        {
+          "id": "audit",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "audit.csv"
+        }
+      ],
+      "source": {
+        "kind": "sftp.collect",
+        "connection": {
+          "id": "00000000-0000-0000-0000-000000000001",
+          "version": 1,
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "manifest": "settlement.ready.json",
+        "target_directory": "/incoming",
+        "completion_contract": "immutable-files-sha256-manifest-v1",
+        "max_files": 2,
+        "max_file_bytes": 1024,
+        "max_total_bytes": 1024
+      },
+      "program": {
+        "nodes": [
+          {
+            "kind": "if",
+            "when": {
+              "op": "ge",
+              "field": "file.size_bytes",
+              "number": "3"
+            },
+            "then": [
+              {
+                "kind": "deliver",
+                "step": "north"
+              }
+            ],
+            "else": [
+              {
+                "kind": "keep_local",
+                "reason": "condition_false"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "definition_hash": "3f8717850a226a71aeba7de12ed54e1025dcf1fc8fd58ea9bd7af720acedde15",
+    "facts": {
+      "file": {
+        "id": "00000000-0000-0000-0000-000000000002",
+        "size_bytes": 3,
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "policy": "integrity-only-v1",
+        "accepted_event_id": "00000000-0000-0000-0000-000000000003"
+      },
+      "source": {
+        "collection_id": "00000000-0000-0000-0000-000000000004",
+        "manifest_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "name": "north-settlement.csv",
+        "batch_id": "00000000-0000-0000-0000-000000000005",
+        "file_count": 2,
+        "index": 0
+      }
+    },
+    "plan": {
+      "schema_version": 1,
+      "facts": {
+        "file": {
+          "id": "00000000-0000-0000-0000-000000000002",
+          "size_bytes": 3,
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "policy": "integrity-only-v1",
+          "accepted_event_id": "00000000-0000-0000-0000-000000000003"
+        },
+        "source": {
+          "collection_id": "00000000-0000-0000-0000-000000000004",
+          "manifest_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "name": "north-settlement.csv",
+          "batch_id": "00000000-0000-0000-0000-000000000005",
+          "file_count": 2,
+          "index": 0
+        }
+      },
+      "selected_steps": [
+        "north"
+      ],
+      "decisions": [
+        {
+          "path": "0",
+          "kind": "if",
+          "matched": true
+        },
+        {
+          "path": "0.then.0",
+          "kind": "deliver",
+          "step": "north"
+        }
+      ]
+    },
+    "plan_hash": "8fbe49e6c505e782b510c64878cbe484c895d66f723a76bffc3449690c68839c"
+  },
+  "operator_glob_source_name": {
+    "definition": {
+      "schema_version": 2,
+      "name": "Settlement routes",
+      "steps": [
+        {
+          "id": "north",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "north.csv"
+        },
+        {
+          "id": "south",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "south.csv"
+        },
+        {
+          "id": "audit",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "audit.csv"
+        }
+      ],
+      "source": {
+        "kind": "sftp.collect",
+        "connection": {
+          "id": "00000000-0000-0000-0000-000000000001",
+          "version": 1,
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "manifest": "settlement.ready.json",
+        "target_directory": "/incoming",
+        "completion_contract": "immutable-files-sha256-manifest-v1",
+        "max_files": 2,
+        "max_file_bytes": 1024,
+        "max_total_bytes": 1024
+      },
+      "program": {
+        "nodes": [
+          {
+            "kind": "if",
+            "when": {
+              "op": "glob",
+              "field": "source.name",
+              "text": "north-??????????.csv"
+            },
+            "then": [
+              {
+                "kind": "deliver",
+                "step": "north"
+              }
+            ],
+            "else": [
+              {
+                "kind": "keep_local",
+                "reason": "condition_false"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "definition_hash": "263d7ad075d3a8713b6bea848b6f3197d8b8cbbe3888a7d86e20b0b5c1d2f81a",
+    "facts": {
+      "file": {
+        "id": "00000000-0000-0000-0000-000000000002",
+        "size_bytes": 3,
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "policy": "integrity-only-v1",
+        "accepted_event_id": "00000000-0000-0000-0000-000000000003"
+      },
+      "source": {
+        "collection_id": "00000000-0000-0000-0000-000000000004",
+        "manifest_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "name": "north-settlement.csv",
+        "batch_id": "00000000-0000-0000-0000-000000000005",
+        "file_count": 2,
+        "index": 0
+      }
+    },
+    "plan": {
+      "schema_version": 1,
+      "facts": {
+        "file": {
+          "id": "00000000-0000-0000-0000-000000000002",
+          "size_bytes": 3,
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "policy": "integrity-only-v1",
+          "accepted_event_id": "00000000-0000-0000-0000-000000000003"
+        },
+        "source": {
+          "collection_id": "00000000-0000-0000-0000-000000000004",
+          "manifest_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "name": "north-settlement.csv",
+          "batch_id": "00000000-0000-0000-0000-000000000005",
+          "file_count": 2,
+          "index": 0
+        }
+      },
+      "selected_steps": [
+        "north"
+      ],
+      "decisions": [
+        {
+          "path": "0",
+          "kind": "if",
+          "matched": true
+        },
+        {
+          "path": "0.then.0",
+          "kind": "deliver",
+          "step": "north"
+        }
+      ]
+    },
+    "plan_hash": "8fbe49e6c505e782b510c64878cbe484c895d66f723a76bffc3449690c68839c"
+  },
+  "operator_gt_file_size_bytes": {
+    "definition": {
+      "schema_version": 2,
+      "name": "Settlement routes",
+      "steps": [
+        {
+          "id": "north",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "north.csv"
+        },
+        {
+          "id": "south",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "south.csv"
+        },
+        {
+          "id": "audit",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "audit.csv"
+        }
+      ],
+      "source": {
+        "kind": "sftp.collect",
+        "connection": {
+          "id": "00000000-0000-0000-0000-000000000001",
+          "version": 1,
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "manifest": "settlement.ready.json",
+        "target_directory": "/incoming",
+        "completion_contract": "immutable-files-sha256-manifest-v1",
+        "max_files": 2,
+        "max_file_bytes": 1024,
+        "max_total_bytes": 1024
+      },
+      "program": {
+        "nodes": [
+          {
+            "kind": "if",
+            "when": {
+              "op": "gt",
+              "field": "file.size_bytes",
+              "number": "2"
+            },
+            "then": [
+              {
+                "kind": "deliver",
+                "step": "north"
+              }
+            ],
+            "else": [
+              {
+                "kind": "keep_local",
+                "reason": "condition_false"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "definition_hash": "d36514ff24f5d74f2e65ea5332a0f7c0e81d1bc4ec5bdb32efa8e6c84bc7d966",
+    "facts": {
+      "file": {
+        "id": "00000000-0000-0000-0000-000000000002",
+        "size_bytes": 3,
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "policy": "integrity-only-v1",
+        "accepted_event_id": "00000000-0000-0000-0000-000000000003"
+      },
+      "source": {
+        "collection_id": "00000000-0000-0000-0000-000000000004",
+        "manifest_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "name": "north-settlement.csv",
+        "batch_id": "00000000-0000-0000-0000-000000000005",
+        "file_count": 2,
+        "index": 0
+      }
+    },
+    "plan": {
+      "schema_version": 1,
+      "facts": {
+        "file": {
+          "id": "00000000-0000-0000-0000-000000000002",
+          "size_bytes": 3,
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "policy": "integrity-only-v1",
+          "accepted_event_id": "00000000-0000-0000-0000-000000000003"
+        },
+        "source": {
+          "collection_id": "00000000-0000-0000-0000-000000000004",
+          "manifest_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "name": "north-settlement.csv",
+          "batch_id": "00000000-0000-0000-0000-000000000005",
+          "file_count": 2,
+          "index": 0
+        }
+      },
+      "selected_steps": [
+        "north"
+      ],
+      "decisions": [
+        {
+          "path": "0",
+          "kind": "if",
+          "matched": true
+        },
+        {
+          "path": "0.then.0",
+          "kind": "deliver",
+          "step": "north"
+        }
+      ]
+    },
+    "plan_hash": "8fbe49e6c505e782b510c64878cbe484c895d66f723a76bffc3449690c68839c"
+  },
+  "operator_le_file_size_bytes": {
+    "definition": {
+      "schema_version": 2,
+      "name": "Settlement routes",
+      "steps": [
+        {
+          "id": "north",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "north.csv"
+        },
+        {
+          "id": "south",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "south.csv"
+        },
+        {
+          "id": "audit",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "audit.csv"
+        }
+      ],
+      "source": {
+        "kind": "sftp.collect",
+        "connection": {
+          "id": "00000000-0000-0000-0000-000000000001",
+          "version": 1,
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "manifest": "settlement.ready.json",
+        "target_directory": "/incoming",
+        "completion_contract": "immutable-files-sha256-manifest-v1",
+        "max_files": 2,
+        "max_file_bytes": 1024,
+        "max_total_bytes": 1024
+      },
+      "program": {
+        "nodes": [
+          {
+            "kind": "if",
+            "when": {
+              "op": "le",
+              "field": "file.size_bytes",
+              "number": "3"
+            },
+            "then": [
+              {
+                "kind": "deliver",
+                "step": "north"
+              }
+            ],
+            "else": [
+              {
+                "kind": "keep_local",
+                "reason": "condition_false"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "definition_hash": "bb409c4c30dacf306197d8d43cd271e00eae514ad293b783f0b8de2941b548a6",
+    "facts": {
+      "file": {
+        "id": "00000000-0000-0000-0000-000000000002",
+        "size_bytes": 3,
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "policy": "integrity-only-v1",
+        "accepted_event_id": "00000000-0000-0000-0000-000000000003"
+      },
+      "source": {
+        "collection_id": "00000000-0000-0000-0000-000000000004",
+        "manifest_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "name": "north-settlement.csv",
+        "batch_id": "00000000-0000-0000-0000-000000000005",
+        "file_count": 2,
+        "index": 0
+      }
+    },
+    "plan": {
+      "schema_version": 1,
+      "facts": {
+        "file": {
+          "id": "00000000-0000-0000-0000-000000000002",
+          "size_bytes": 3,
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "policy": "integrity-only-v1",
+          "accepted_event_id": "00000000-0000-0000-0000-000000000003"
+        },
+        "source": {
+          "collection_id": "00000000-0000-0000-0000-000000000004",
+          "manifest_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "name": "north-settlement.csv",
+          "batch_id": "00000000-0000-0000-0000-000000000005",
+          "file_count": 2,
+          "index": 0
+        }
+      },
+      "selected_steps": [
+        "north"
+      ],
+      "decisions": [
+        {
+          "path": "0",
+          "kind": "if",
+          "matched": true
+        },
+        {
+          "path": "0.then.0",
+          "kind": "deliver",
+          "step": "north"
+        }
+      ]
+    },
+    "plan_hash": "8fbe49e6c505e782b510c64878cbe484c895d66f723a76bffc3449690c68839c"
+  },
+  "operator_lt_file_size_bytes": {
+    "definition": {
+      "schema_version": 2,
+      "name": "Settlement routes",
+      "steps": [
+        {
+          "id": "north",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "north.csv"
+        },
+        {
+          "id": "south",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "south.csv"
+        },
+        {
+          "id": "audit",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "audit.csv"
+        }
+      ],
+      "source": {
+        "kind": "sftp.collect",
+        "connection": {
+          "id": "00000000-0000-0000-0000-000000000001",
+          "version": 1,
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "manifest": "settlement.ready.json",
+        "target_directory": "/incoming",
+        "completion_contract": "immutable-files-sha256-manifest-v1",
+        "max_files": 2,
+        "max_file_bytes": 1024,
+        "max_total_bytes": 1024
+      },
+      "program": {
+        "nodes": [
+          {
+            "kind": "if",
+            "when": {
+              "op": "lt",
+              "field": "file.size_bytes",
+              "number": "9007199254740993"
+            },
+            "then": [
+              {
+                "kind": "deliver",
+                "step": "north"
+              }
+            ],
+            "else": [
+              {
+                "kind": "keep_local",
+                "reason": "condition_false"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "definition_hash": "fa94f261b3ad30df5cfc7279f6df37f1ceafd9e52b6169ecc16d04f343a8657e",
+    "facts": {
+      "file": {
+        "id": "00000000-0000-0000-0000-000000000002",
+        "size_bytes": 3,
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "policy": "integrity-only-v1",
+        "accepted_event_id": "00000000-0000-0000-0000-000000000003"
+      },
+      "source": {
+        "collection_id": "00000000-0000-0000-0000-000000000004",
+        "manifest_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "name": "north-settlement.csv",
+        "batch_id": "00000000-0000-0000-0000-000000000005",
+        "file_count": 2,
+        "index": 0
+      }
+    },
+    "plan": {
+      "schema_version": 1,
+      "facts": {
+        "file": {
+          "id": "00000000-0000-0000-0000-000000000002",
+          "size_bytes": 3,
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "policy": "integrity-only-v1",
+          "accepted_event_id": "00000000-0000-0000-0000-000000000003"
+        },
+        "source": {
+          "collection_id": "00000000-0000-0000-0000-000000000004",
+          "manifest_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "name": "north-settlement.csv",
+          "batch_id": "00000000-0000-0000-0000-000000000005",
+          "file_count": 2,
+          "index": 0
+        }
+      },
+      "selected_steps": [
+        "north"
+      ],
+      "decisions": [
+        {
+          "path": "0",
+          "kind": "if",
+          "matched": true
+        },
+        {
+          "path": "0.then.0",
+          "kind": "deliver",
+          "step": "north"
+        }
+      ]
+    },
+    "plan_hash": "8fbe49e6c505e782b510c64878cbe484c895d66f723a76bffc3449690c68839c"
+  },
+  "operator_ne_file_size_bytes": {
+    "definition": {
+      "schema_version": 2,
+      "name": "Settlement routes",
+      "steps": [
+        {
+          "id": "north",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "north.csv"
+        },
+        {
+          "id": "south",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "south.csv"
+        },
+        {
+          "id": "audit",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "audit.csv"
+        }
+      ],
+      "source": {
+        "kind": "sftp.collect",
+        "connection": {
+          "id": "00000000-0000-0000-0000-000000000001",
+          "version": 1,
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "manifest": "settlement.ready.json",
+        "target_directory": "/incoming",
+        "completion_contract": "immutable-files-sha256-manifest-v1",
+        "max_files": 2,
+        "max_file_bytes": 1024,
+        "max_total_bytes": 1024
+      },
+      "program": {
+        "nodes": [
+          {
+            "kind": "if",
+            "when": {
+              "op": "ne",
+              "field": "file.size_bytes",
+              "number": "4"
+            },
+            "then": [
+              {
+                "kind": "deliver",
+                "step": "north"
+              }
+            ],
+            "else": [
+              {
+                "kind": "keep_local",
+                "reason": "condition_false"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "definition_hash": "058478068a5ae548acdd405ba67bb57a584650a0bd981abf290441351cba9709",
+    "facts": {
+      "file": {
+        "id": "00000000-0000-0000-0000-000000000002",
+        "size_bytes": 3,
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "policy": "integrity-only-v1",
+        "accepted_event_id": "00000000-0000-0000-0000-000000000003"
+      },
+      "source": {
+        "collection_id": "00000000-0000-0000-0000-000000000004",
+        "manifest_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "name": "north-settlement.csv",
+        "batch_id": "00000000-0000-0000-0000-000000000005",
+        "file_count": 2,
+        "index": 0
+      }
+    },
+    "plan": {
+      "schema_version": 1,
+      "facts": {
+        "file": {
+          "id": "00000000-0000-0000-0000-000000000002",
+          "size_bytes": 3,
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "policy": "integrity-only-v1",
+          "accepted_event_id": "00000000-0000-0000-0000-000000000003"
+        },
+        "source": {
+          "collection_id": "00000000-0000-0000-0000-000000000004",
+          "manifest_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "name": "north-settlement.csv",
+          "batch_id": "00000000-0000-0000-0000-000000000005",
+          "file_count": 2,
+          "index": 0
+        }
+      },
+      "selected_steps": [
+        "north"
+      ],
+      "decisions": [
+        {
+          "path": "0",
+          "kind": "if",
+          "matched": true
+        },
+        {
+          "path": "0.then.0",
+          "kind": "deliver",
+          "step": "north"
+        }
+      ]
+    },
+    "plan_hash": "8fbe49e6c505e782b510c64878cbe484c895d66f723a76bffc3449690c68839c"
+  },
+  "operator_ne_source_name": {
+    "definition": {
+      "schema_version": 2,
+      "name": "Settlement routes",
+      "steps": [
+        {
+          "id": "north",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "north.csv"
+        },
+        {
+          "id": "south",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "south.csv"
+        },
+        {
+          "id": "audit",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "audit.csv"
+        }
+      ],
+      "source": {
+        "kind": "sftp.collect",
+        "connection": {
+          "id": "00000000-0000-0000-0000-000000000001",
+          "version": 1,
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "manifest": "settlement.ready.json",
+        "target_directory": "/incoming",
+        "completion_contract": "immutable-files-sha256-manifest-v1",
+        "max_files": 2,
+        "max_file_bytes": 1024,
+        "max_total_bytes": 1024
+      },
+      "program": {
+        "nodes": [
+          {
+            "kind": "if",
+            "when": {
+              "op": "ne",
+              "field": "source.name",
+              "text": "south.csv"
+            },
+            "then": [
+              {
+                "kind": "deliver",
+                "step": "north"
+              }
+            ],
+            "else": [
+              {
+                "kind": "keep_local",
+                "reason": "condition_false"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "definition_hash": "e3da04cca0e6470b336cf1783918a008d15cbbbc104bbd693943bdb418b3521c",
+    "facts": {
+      "file": {
+        "id": "00000000-0000-0000-0000-000000000002",
+        "size_bytes": 3,
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "policy": "integrity-only-v1",
+        "accepted_event_id": "00000000-0000-0000-0000-000000000003"
+      },
+      "source": {
+        "collection_id": "00000000-0000-0000-0000-000000000004",
+        "manifest_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "name": "north-settlement.csv",
+        "batch_id": "00000000-0000-0000-0000-000000000005",
+        "file_count": 2,
+        "index": 0
+      }
+    },
+    "plan": {
+      "schema_version": 1,
+      "facts": {
+        "file": {
+          "id": "00000000-0000-0000-0000-000000000002",
+          "size_bytes": 3,
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "policy": "integrity-only-v1",
+          "accepted_event_id": "00000000-0000-0000-0000-000000000003"
+        },
+        "source": {
+          "collection_id": "00000000-0000-0000-0000-000000000004",
+          "manifest_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "name": "north-settlement.csv",
+          "batch_id": "00000000-0000-0000-0000-000000000005",
+          "file_count": 2,
+          "index": 0
+        }
+      },
+      "selected_steps": [
+        "north"
+      ],
+      "decisions": [
+        {
+          "path": "0",
+          "kind": "if",
+          "matched": true
+        },
+        {
+          "path": "0.then.0",
+          "kind": "deliver",
+          "step": "north"
+        }
+      ]
+    },
+    "plan_hash": "8fbe49e6c505e782b510c64878cbe484c895d66f723a76bffc3449690c68839c"
+  },
+  "operator_prefix_source_name": {
+    "definition": {
+      "schema_version": 2,
+      "name": "Settlement routes",
+      "steps": [
+        {
+          "id": "north",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "north.csv"
+        },
+        {
+          "id": "south",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "south.csv"
+        },
+        {
+          "id": "audit",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "audit.csv"
+        }
+      ],
+      "source": {
+        "kind": "sftp.collect",
+        "connection": {
+          "id": "00000000-0000-0000-0000-000000000001",
+          "version": 1,
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "manifest": "settlement.ready.json",
+        "target_directory": "/incoming",
+        "completion_contract": "immutable-files-sha256-manifest-v1",
+        "max_files": 2,
+        "max_file_bytes": 1024,
+        "max_total_bytes": 1024
+      },
+      "program": {
+        "nodes": [
+          {
+            "kind": "if",
+            "when": {
+              "op": "prefix",
+              "field": "source.name",
+              "text": "north-"
+            },
+            "then": [
+              {
+                "kind": "deliver",
+                "step": "north"
+              }
+            ],
+            "else": [
+              {
+                "kind": "keep_local",
+                "reason": "condition_false"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "definition_hash": "a7ccb6f3e898a1baf8c4289a46b3f0bca08641ca431c7f5fe2dc4a477c170502",
+    "facts": {
+      "file": {
+        "id": "00000000-0000-0000-0000-000000000002",
+        "size_bytes": 3,
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "policy": "integrity-only-v1",
+        "accepted_event_id": "00000000-0000-0000-0000-000000000003"
+      },
+      "source": {
+        "collection_id": "00000000-0000-0000-0000-000000000004",
+        "manifest_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "name": "north-settlement.csv",
+        "batch_id": "00000000-0000-0000-0000-000000000005",
+        "file_count": 2,
+        "index": 0
+      }
+    },
+    "plan": {
+      "schema_version": 1,
+      "facts": {
+        "file": {
+          "id": "00000000-0000-0000-0000-000000000002",
+          "size_bytes": 3,
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "policy": "integrity-only-v1",
+          "accepted_event_id": "00000000-0000-0000-0000-000000000003"
+        },
+        "source": {
+          "collection_id": "00000000-0000-0000-0000-000000000004",
+          "manifest_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "name": "north-settlement.csv",
+          "batch_id": "00000000-0000-0000-0000-000000000005",
+          "file_count": 2,
+          "index": 0
+        }
+      },
+      "selected_steps": [
+        "north"
+      ],
+      "decisions": [
+        {
+          "path": "0",
+          "kind": "if",
+          "matched": true
+        },
+        {
+          "path": "0.then.0",
+          "kind": "deliver",
+          "step": "north"
+        }
+      ]
+    },
+    "plan_hash": "8fbe49e6c505e782b510c64878cbe484c895d66f723a76bffc3449690c68839c"
+  },
+  "operator_suffix_source_name": {
+    "definition": {
+      "schema_version": 2,
+      "name": "Settlement routes",
+      "steps": [
+        {
+          "id": "north",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "north.csv"
+        },
+        {
+          "id": "south",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "south.csv"
+        },
+        {
+          "id": "audit",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "audit.csv"
+        }
+      ],
+      "source": {
+        "kind": "sftp.collect",
+        "connection": {
+          "id": "00000000-0000-0000-0000-000000000001",
+          "version": 1,
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "manifest": "settlement.ready.json",
+        "target_directory": "/incoming",
+        "completion_contract": "immutable-files-sha256-manifest-v1",
+        "max_files": 2,
+        "max_file_bytes": 1024,
+        "max_total_bytes": 1024
+      },
+      "program": {
+        "nodes": [
+          {
+            "kind": "if",
+            "when": {
+              "op": "suffix",
+              "field": "source.name",
+              "text": ".csv"
+            },
+            "then": [
+              {
+                "kind": "deliver",
+                "step": "north"
+              }
+            ],
+            "else": [
+              {
+                "kind": "keep_local",
+                "reason": "condition_false"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "definition_hash": "c8b5eb6be5c410bacfe10d9a18482a5a9710584427a66db96b469b071f07ea9b",
+    "facts": {
+      "file": {
+        "id": "00000000-0000-0000-0000-000000000002",
+        "size_bytes": 3,
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "policy": "integrity-only-v1",
+        "accepted_event_id": "00000000-0000-0000-0000-000000000003"
+      },
+      "source": {
+        "collection_id": "00000000-0000-0000-0000-000000000004",
+        "manifest_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "name": "north-settlement.csv",
+        "batch_id": "00000000-0000-0000-0000-000000000005",
+        "file_count": 2,
+        "index": 0
+      }
+    },
+    "plan": {
+      "schema_version": 1,
+      "facts": {
+        "file": {
+          "id": "00000000-0000-0000-0000-000000000002",
+          "size_bytes": 3,
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "policy": "integrity-only-v1",
+          "accepted_event_id": "00000000-0000-0000-0000-000000000003"
+        },
+        "source": {
+          "collection_id": "00000000-0000-0000-0000-000000000004",
+          "manifest_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "name": "north-settlement.csv",
+          "batch_id": "00000000-0000-0000-0000-000000000005",
+          "file_count": 2,
+          "index": 0
+        }
+      },
+      "selected_steps": [
+        "north"
+      ],
+      "decisions": [
+        {
+          "path": "0",
+          "kind": "if",
+          "matched": true
+        },
+        {
+          "path": "0.then.0",
+          "kind": "deliver",
+          "step": "north"
+        }
+      ]
+    },
+    "plan_hash": "8fbe49e6c505e782b510c64878cbe484c895d66f723a76bffc3449690c68839c"
+  },
+  "scoped_loop_condition": {
+    "definition": {
+      "schema_version": 2,
+      "name": "Settlement routes",
+      "steps": [
+        {
+          "id": "north",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "north.csv"
+        },
+        {
+          "id": "south",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "south.csv"
+        },
+        {
+          "id": "audit",
+          "kind": "sftp.deliver",
+          "connection": {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "filename": "audit.csv"
+        }
+      ],
+      "source": {
+        "kind": "sftp.collect",
+        "connection": {
+          "id": "00000000-0000-0000-0000-000000000001",
+          "version": 1,
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "manifest": "settlement.ready.json",
+        "target_directory": "/incoming",
+        "completion_contract": "immutable-files-sha256-manifest-v1",
+        "max_files": 2,
+        "max_file_bytes": 1024,
+        "max_total_bytes": 1024
+      },
+      "program": {
+        "nodes": [
+          {
+            "kind": "for_each",
+            "variable": "destination",
+            "steps": [
+              "north",
+              "south",
+              "audit"
+            ],
+            "body": [
+              {
+                "kind": "if",
+                "when": {
+                  "op": "eq",
+                  "variable": "destination",
+                  "text": "north"
+                },
+                "then": [
+                  {
+                    "kind": "deliver",
+                    "step_variable": "destination"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "definition_hash": "f62bada3563abccfe86ce34024785bac627fb223c36f9d380030915e27a8316f",
+    "facts": {
+      "file": {
+        "id": "00000000-0000-0000-0000-000000000002",
+        "size_bytes": 3,
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "policy": "integrity-only-v1",
+        "accepted_event_id": "00000000-0000-0000-0000-000000000003"
+      },
+      "source": {
+        "collection_id": "00000000-0000-0000-0000-000000000004",
+        "manifest_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "name": "north-settlement.csv",
+        "batch_id": "00000000-0000-0000-0000-000000000005",
+        "file_count": 2,
+        "index": 0
+      }
+    },
+    "plan": {
+      "schema_version": 1,
+      "facts": {
+        "file": {
+          "id": "00000000-0000-0000-0000-000000000002",
+          "size_bytes": 3,
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "policy": "integrity-only-v1",
+          "accepted_event_id": "00000000-0000-0000-0000-000000000003"
+        },
+        "source": {
+          "collection_id": "00000000-0000-0000-0000-000000000004",
+          "manifest_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "name": "north-settlement.csv",
+          "batch_id": "00000000-0000-0000-0000-000000000005",
+          "file_count": 2,
+          "index": 0
+        }
+      },
+      "selected_steps": [
+        "north"
+      ],
+      "decisions": [
+        {
+          "path": "0",
+          "kind": "for_each",
+          "variable": "destination",
+          "steps": [
+            "north",
+            "south",
+            "audit"
+          ]
+        },
+        {
+          "path": "0[0].body.0",
+          "kind": "if",
+          "matched": true
+        },
+        {
+          "path": "0[0].body.0.then.0",
+          "kind": "deliver",
+          "step": "north"
+        },
+        {
+          "path": "0[1].body.0",
+          "kind": "if",
+          "matched": false
+        },
+        {
+          "path": "0[2].body.0",
+          "kind": "if",
+          "matched": false
+        }
+      ]
+    },
+    "plan_hash": "2c02a6acdfd91c1c270e19b74ddd0c5827ef5a5a9eb87d4393aa3030552bc954"
+  }
+}

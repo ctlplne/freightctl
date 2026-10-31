@@ -10,6 +10,7 @@ import { qualifyProductionReleases } from "./onboarding-releases-browser.mjs";
 import { qualifyReceiptObservations } from "./onboarding-observations-browser.mjs";
 import { qualifyArrivals } from "./arrivals-browser.mjs";
 import { qualifySchedules } from "./schedules-browser.mjs";
+import { qualifyRouting } from "./routing-browser.mjs";
 import { qualifyCollections } from "./collections-browser.mjs";
 import { qualifyOutboundDispatch } from "./outbound-dispatch-browser.mjs";
 import { qualifyIndependentApprovals } from "./onboarding-approvals-browser.mjs";
@@ -33,6 +34,9 @@ const browser = await chromium.launch({
     "--ignore-certificate-errors-spki-list=" + spki,
     "--disable-background-networking",
     "--disable-component-update",
+    ...(c.routing_only
+      ? ["--renderer-process-limit=1", "--js-flags=--max-old-space-size=128"]
+      : []),
   ],
 });
 const context = await browser.newContext({
@@ -213,6 +217,7 @@ try {
   await page.getByRole("button", { name: "Connect", exact: true }).click();
   await page.getByRole("heading", { name: "Files", exact: true }).waitFor();
   if (
+    !c.routing_only &&
     !c.arrivals_only &&
     !c.collections_only &&
     !c.schedules_only &&
@@ -220,7 +225,9 @@ try {
     !(c.approval_only && c.approval_phase === "review")
   )
     await openPlan();
-  if (c.arrivals_only) {
+  if (c.routing_only) {
+    await qualifyRouting(page, c, audit, record, actualReview);
+  } else if (c.arrivals_only) {
     await qualifyArrivals(page, c, audit, record, actualReview);
   } else if (c.collections_only) {
     await qualifyCollections(page, c, audit, record, actualReview);
@@ -315,6 +322,14 @@ try {
   state = "passed";
 } catch (e) {
   failure = String(e.stack ?? e);
+  if (c.routing_only)
+    await writeFile(
+      c.raw + "/routing-accessibility-tree.txt",
+      await page
+        .locator("body")
+        .ariaSnapshot()
+        .catch(() => "unavailable"),
+    );
   await page
     .screenshot({
       path: c.raw + "/onboarding-exchange-failure.png",

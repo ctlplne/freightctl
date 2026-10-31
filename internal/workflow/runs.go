@@ -53,7 +53,7 @@ func (s *Service) Run(ctx context.Context, scope store.Scope, key string, r RunR
 	if !keyPattern.MatchString(key) || !store.ValidID(r.FileID) {
 		return nil, ErrInput
 	}
-	t, err := s.begin(ctx, scope, "workflow_execute", "read", "deliver")
+	t, err := s.begin(ctx, scope, "workflow_execute", "read")
 	if err != nil {
 		return nil, err
 	}
@@ -61,6 +61,13 @@ func (s *Service) Run(ctx context.Context, scope store.Scope, key string, r RunR
 	_, definition, err := approved(ctx, t, r.Workflow)
 	if err != nil {
 		return nil, err
+	}
+	// A schema-2 definition with no recipient catalog can only record an
+	// explicit local outcome. Sending definitions retain their existing grant.
+	if definition.Schema == 1 || len(definition.Steps) > 0 {
+		if err = t.Require("deliver"); err != nil {
+			return nil, err
+		}
 	}
 	if definition.Source != nil {
 		return nil, ErrInput
@@ -101,10 +108,39 @@ func (s *Service) Run(ctx context.Context, scope store.Scope, key string, r RunR
 // stageRun writes the ordinary run and delivery intents in its caller's
 // transaction. It makes no network contact and never commits that transaction.
 func (s *Service) stageRun(ctx context.Context, t *store.Transaction, r RunRequest, definition *Definition, source *store.File, storageID string) (*store.WorkflowRun, error) {
-	if err := t.DeliveryAdmission(ctx, len(definition.Steps)); err != nil {
-		return nil, err
+	steps := definition.Steps
+	var plan *ExecutionPlan
+	if definition.Schema == 2 {
+		var err error
+		plan, steps, err = s.planRun(ctx, t, r, definition, source)
+		if err != nil {
+			return nil, err
+		}
+	} else if definition.Schema != 1 {
+		return nil, store.ErrState
+	}
+	if len(steps) > 0 {
+		if err := t.Require("deliver"); err != nil {
+			return nil, err
+		}
+		if err := t.DeliveryAdmission(ctx, len(steps)); err != nil {
+			return nil, err
+		}
+	} else if plan == nil {
+		return nil, store.ErrState
 	}
 	run := &store.WorkflowRun{ID: secure.NewID(), WorkflowID: r.Workflow.ID, WorkflowVersion: r.Workflow.Version, WorkflowHash: r.Workflow.Hash, FileID: source.ID, Source: *source, StorageID: storageID, Root: t.Root, Authority: t.AuthorityRevision, State: "queued", Reason: "awaiting_worker", Revision: 1}
+	if plan != nil {
+		var err error
+		run.Plan, run.PlanHash, err = digest(plan)
+		if err != nil {
+			return nil, err
+		}
+		if plan.LocalReason != "" {
+			run.State = "kept_local"
+			run.Reason = "kept_local"
+		}
+	}
 	if err := t.SaveWorkflowRun(ctx, run, 0); err != nil {
 		return nil, err
 	}
@@ -112,7 +148,7 @@ func (s *Service) stageRun(ctx context.Context, t *store.Transaction, r RunReque
 	if err != nil {
 		return nil, err
 	}
-	for index, step := range definition.Steps {
+	for index, step := range steps {
 		c, err := t.Configuration(ctx, true, step.Connection.ID, step.Connection.Version, false)
 		if err != nil {
 			return nil, err
@@ -150,10 +186,19 @@ func snapshot(ctx context.Context, t *store.Transaction, r *store.WorkflowRun) (
 	if err != nil {
 		return nil, "", "", err
 	}
-	if len(steps) < 1 {
+	plan, err := storedExecutionPlan(r)
+	if err != nil {
+		return nil, "", "", err
+	}
+	if !planStepsMatch(plan, steps) {
 		return nil, "", "", store.ErrState
 	}
 	view := &RunView{Run: r, Steps: []RunStepView{}}
+	if r.State == "kept_local" {
+		view.ObservedState = "kept_local"
+		view.ObservedReason = r.Reason
+		return view, "kept_local", r.Reason, nil
+	}
 	succeeded := 0
 	reason := "awaiting_worker"
 	state := "queued"
@@ -300,7 +345,7 @@ func setProjection(ctx context.Context, t *store.Transaction, r *store.WorkflowR
 	if r.State == state && r.Reason == reason {
 		return nil
 	}
-	if r.State == "succeeded" || r.State == "cancelled" {
+	if r.State == "succeeded" || r.State == "cancelled" || r.State == "kept_local" {
 		return nil
 	}
 	previous := r.Revision
@@ -368,7 +413,7 @@ func (s *Service) prepare(ctx context.Context, scope store.Scope, id, key string
 		}
 		return &dispatch, true, t.Tx.Commit(ctx)
 	}
-	if r.State == "succeeded" || r.State == "cancelled" {
+	if r.State == "succeeded" || r.State == "cancelled" || r.State == "kept_local" {
 		return nil, false, store.ErrState
 	}
 	view, state, reason, err := snapshot(ctx, t, r)

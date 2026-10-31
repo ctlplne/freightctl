@@ -62,6 +62,10 @@ const messages: Record<string, string> = {
     "A file already exists at that destination. Choose a new path; this upload will not replace it.",
   invalid_workflow_collection:
     "Review the registered source, ready-manifest filename, local target and file limits, then preview again.",
+  invalid_typed_workflow:
+    "Review the source, registered delivery steps, loop variables and routing rules, then preview again. Each selected path needs a delivery or an explicit local outcome.",
+  workflow_routing_decision_required:
+    "The approved rules give this file no complete outcome. Inspect its exact file facts and rule path. This job keeps its original workflow revision.",
   collection_authority_input_or_lease_required:
     "Inspect the collection’s current authority, cutoff, intake receipts and worker lease before retrying.",
   invalid_workflow_schedule:

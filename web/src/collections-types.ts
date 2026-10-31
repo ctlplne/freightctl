@@ -1,6 +1,18 @@
 import { ApiError, object, uuid } from "./types";
 import { digestBytes } from "./crypto";
 import {
+  asProgram,
+  asExecutionPlan,
+  asRoutingFacts,
+  compileProgram,
+  programFingerprint,
+  type Program,
+  type ProgramShape,
+  type RoutingSource,
+  type ExecutionPlan,
+  type RoutingFile,
+} from "./programs-types";
+import {
   asWorkflowReference,
   asWorkflowEffect,
   canonicalWorkflowBytes,
@@ -32,20 +44,27 @@ export interface WorkflowStep {
   filename: string;
   encryption?: ScheduleEffect["encryption"];
 }
-export interface CollectionWorkflow {
-  schema_version: 1;
+export interface WorkflowDefinition {
+  schema_version: 1 | 2;
   name: string;
   steps: WorkflowStep[];
+  source?: CollectionSource;
+  program?: Program;
+}
+export interface CollectionWorkflow extends WorkflowDefinition {
   source: CollectionSource;
 }
-export interface WorkflowConfiguration {
+export interface AnyWorkflowConfiguration {
   id: string;
   version: number;
-  definition: CollectionWorkflow;
+  definition: WorkflowDefinition;
   definition_hash: string;
   state: "draft" | "approved" | "revoked";
   revision: number;
   approval_authority: number;
+}
+export interface WorkflowConfiguration extends AnyWorkflowConfiguration {
+  definition: CollectionWorkflow;
 }
 export interface CollectionConnection {
   id: string;
@@ -375,10 +394,11 @@ export function asCollectionConnections(v: unknown): {
     ...(o.next !== undefined ? { next: id(o, "next") } : {}),
   };
 }
-export function asCollectionWorkflow(v: unknown): CollectionWorkflow {
+export function asWorkflowDefinition(v: unknown): WorkflowDefinition {
   const o = object(v);
-  keys(o, ["schema_version", "name", "steps", "source"]);
-  if (o.schema_version !== 1) bad();
+  keys(o, ["schema_version", "name", "steps"], ["source", "program"]);
+  if (o.schema_version !== 1 && o.schema_version !== 2) bad();
+  if (o.schema_version === 1 && o.program !== undefined) bad();
   const steps = array(o.steps, 16).map((v) => {
     const s = object(v);
     keys(s, ["id", "kind", "connection", "filename"], ["encryption"]);
@@ -406,20 +426,35 @@ export function asCollectionWorkflow(v: unknown): CollectionWorkflow {
     };
   });
   if (new Set(steps.map((s) => s.id)).size !== steps.length) bad();
-  const d: CollectionWorkflow = {
-    schema_version: 1,
+  const d: WorkflowDefinition = {
+    schema_version: o.schema_version as 1 | 2,
     name: str(o, "name", 256),
     steps,
-    source: asCollectionSource(o.source),
+    ...(o.source === undefined ? {} : { source: asCollectionSource(o.source) }),
+    ...(o.schema_version === 2
+      ? {
+          program: asProgram(
+            o.program,
+            steps.map((s) => s.id),
+            o.source !== undefined,
+          ),
+        }
+      : {}),
   };
+  if (d.schema_version === 1 && !d.steps.length && !d.source) bad();
   if (canonicalWorkflowBytes(d).length > 24576) bad();
   return d;
 }
-export const collectionWorkflowHash = (d: CollectionWorkflow) => hashValue(d);
-export function asCollectionConfiguration(
+export function asCollectionWorkflow(v: unknown): CollectionWorkflow {
+  const d = asWorkflowDefinition(v);
+  if (!d.source) bad();
+  return { ...d, source: d.source! };
+}
+export const collectionWorkflowHash = (d: WorkflowDefinition) => hashValue(d);
+export function asWorkflowConfiguration(
   v: unknown,
   expected?: Reference,
-): WorkflowConfiguration {
+): AnyWorkflowConfiguration {
   const o = object(v);
   keys(o, [
     "id",
@@ -430,7 +465,7 @@ export function asCollectionConfiguration(
     "revision",
     "approval_authority",
   ]);
-  const d = asCollectionWorkflow(o.definition),
+  const d = asWorkflowDefinition(o.definition),
     h = hash(o, "definition_hash"),
     state = str(o, "state", 20);
   if (
@@ -438,12 +473,12 @@ export function asCollectionConfiguration(
     !["draft", "approved", "revoked"].includes(state)
   )
     bad();
-  const c: WorkflowConfiguration = {
+  const c: AnyWorkflowConfiguration = {
     id: id(o, "id"),
     version: num(o, "version", 1, 2147483647),
     definition: d,
     definition_hash: h,
-    state: state as WorkflowConfiguration["state"],
+    state: state as AnyWorkflowConfiguration["state"],
     revision: num(o, "revision"),
     approval_authority: num(o, "approval_authority", 0),
   };
@@ -456,6 +491,13 @@ export function asCollectionConfiguration(
     bad();
   if ((state === "draft") !== (c.approval_authority === 0)) bad();
   return c;
+}
+export function asCollectionConfiguration(
+  v: unknown,
+  expected?: Reference,
+): WorkflowConfiguration {
+  const c = asWorkflowConfiguration(v, expected);
+  return { ...c, definition: asCollectionWorkflow(c.definition) };
 }
 export function asCollectionConfigurationResult(
   v: unknown,
@@ -521,9 +563,9 @@ export function asCollectionWorkflowPreview(
     approval_required: true as const,
   };
 }
-function effectsForWorkflow(
+export function effectsForWorkflow(
   v: unknown,
-  d: CollectionWorkflow,
+  d: WorkflowDefinition,
 ): ScheduleEffect[] {
   const effects = array(v, 16).map(asWorkflowEffect);
   if (effects.length !== d.steps.length) bad();
@@ -1044,16 +1086,147 @@ function linked(i: CollectionInput): { file_id: string; run_id: string } {
   if (!i.file_id || !i.run_id) bad();
   return { file_id: i.file_id!, run_id: i.run_id! };
 }
+export interface CollectionRunContext {
+  workflow: AnyWorkflowConfiguration;
+  job: CollectionJob;
+}
+export function workflowProgramShape(d: WorkflowDefinition): ProgramShape {
+  if (d.schema_version !== 2 || !d.program) bad();
+  return {
+    schema_version: 2,
+    steps: d.steps,
+    ...(d.source ? { source: d.source } : {}),
+    program: d.program!,
+  };
+}
+export function compileCollectionProgram(
+  d: CollectionWorkflow,
+  facts: unknown,
+): ExecutionPlan {
+  return compileProgram(workflowProgramShape(asCollectionWorkflow(d)), facts);
+}
+function originalRoutingSource(
+  i: CollectionInput,
+  d: CollectionDefinition,
+  context: CollectionRunContext,
+): RoutingSource {
+  const workflow = asCollectionConfiguration(context.workflow, d.workflow),
+    job = context.job;
+  if (
+    !equal(workflow.definition.source, d.source) ||
+    job.id !== i.first_job_id ||
+    !job.captured ||
+    job.workflow_id !== d.workflow.id ||
+    job.workflow_version !== d.workflow.version ||
+    job.workflow_hash !== d.workflow.hash ||
+    i.workflow_id !== d.workflow.id ||
+    !equal(job.definition, d) ||
+    !job.manifest ||
+    !job.manifest_hash
+  )
+    bad();
+  effectsForWorkflow(d.effects, workflow.definition);
+  const m = manifest(job.manifest, d.source),
+    index = m.files.findIndex(
+      (f) =>
+        f.name === i.source_name &&
+        f.sha256 === i.sha256 &&
+        f.size_bytes === i.size_bytes,
+    );
+  if (index < 0 || hashValue(m) !== job.manifest_hash) bad();
+  return {
+    collection_id: job.id,
+    manifest_hash: job.manifest_hash!,
+    name: i.source_name,
+    batch_id: m.batch_id,
+    file_count: m.files.length,
+    index,
+  };
+}
+export interface CollectionRunPreview {
+  workflow: Reference;
+  source: RoutingFile;
+  potential_effects: ScheduleEffect[];
+  selected_effects: ScheduleEffect[];
+  execution_plan?: ExecutionPlan;
+  execution_plan_hash?: string;
+  external_contact: false;
+}
+export function asCollectionRunPreview(
+  v: unknown,
+  i: CollectionInput,
+  d: CollectionDefinition,
+  context: CollectionRunContext,
+): CollectionRunPreview {
+  const o = object(v);
+  keys(
+    o,
+    [
+      "workflow",
+      "source",
+      "potential_effects",
+      "selected_effects",
+      "external_contact",
+    ],
+    ["execution_plan", "execution_plan_hash"],
+  );
+  const wf = asCollectionConfiguration(context.workflow, d.workflow),
+    source = asRoutingFacts({ file: o.source }).file,
+    expectedSource = originalRoutingSource(i, d, context),
+    potential = effectsForWorkflow(o.potential_effects, wf.definition);
+  if (
+    !equal(ref(o.workflow), d.workflow) ||
+    !equal(potential, d.effects) ||
+    o.external_contact !== false ||
+    source.id !== i.file_id ||
+    source.sha256 !== i.sha256 ||
+    source.size_bytes !== i.size_bytes
+  )
+    bad();
+  let plan: ExecutionPlan | undefined, planHash: string | undefined;
+  if (wf.definition.schema_version === 2) {
+    plan = asExecutionPlan(
+      o.execution_plan,
+      workflowProgramShape(wf.definition),
+      { file: source, source: expectedSource },
+    );
+    planHash = hash(o, "execution_plan_hash");
+    if (programFingerprint(plan) !== planHash) bad();
+  } else if (
+    o.execution_plan !== undefined ||
+    o.execution_plan_hash !== undefined
+  )
+    bad();
+  const selected = array(o.selected_effects, 16).map(asWorkflowEffect),
+    ids = plan?.selected_steps ?? wf.definition.steps.map((s) => s.id);
+  if (
+    !equal(
+      selected,
+      ids.map((id) => potential.find((e) => e.step_id === id)),
+    )
+  )
+    bad();
+  return {
+    workflow: d.workflow,
+    source,
+    potential_effects: potential,
+    selected_effects: selected,
+    ...(plan ? { execution_plan: plan, execution_plan_hash: planHash! } : {}),
+    external_contact: false,
+  };
+}
 export function asCollectedRun(
   v: unknown,
   i: CollectionInput,
   d: CollectionDefinition,
+  context?: CollectionRunContext,
 ): ScheduledRun {
-  const r = asScheduledRun(v, linked(i), d);
+  const source = context ? originalRoutingSource(i, d, context) : undefined;
+  const r = asScheduledRun(v, linked(i), d, context?.workflow, source);
   if (
     r.run.source.size_bytes !== i.size_bytes ||
     r.run.source.sha256 !== i.sha256 ||
-    d.effects.length < 1
+    (d.effects.length < 1 && !r.run.execution_plan)
   )
     bad();
   return r;
@@ -1062,15 +1235,120 @@ export function asCollectedWork(
   v: unknown,
   i: CollectionInput,
   d: CollectionDefinition,
+  context?: CollectionRunContext,
 ): ScheduledRun {
-  const r = asScheduledWork(v, linked(i), d);
+  const source = context ? originalRoutingSource(i, d, context) : undefined;
+  const r = asScheduledWork(v, linked(i), d, context?.workflow, source);
   if (
     r.run.source.size_bytes !== i.size_bytes ||
     r.run.source.sha256 !== i.sha256 ||
-    d.effects.length < 1
+    (d.effects.length < 1 && !r.run.execution_plan)
   )
     bad();
   return r;
 }
 
 export { manifest as asProducerManifest };
+
+export interface WorkflowDifference {
+  workflow_id: string;
+  from_version: number;
+  to_version: number;
+  from_hash: string;
+  to_hash: string;
+  before: WorkflowDefinition;
+  after: WorkflowDefinition;
+  name_changed: boolean;
+  order_changed: boolean;
+  source_changed: boolean;
+  program_changed: boolean;
+  added_steps: string[];
+  removed_steps: string[];
+  changed_steps: string[];
+}
+export function asWorkflowDifference(
+  v: unknown,
+  current: AnyWorkflowConfiguration,
+): WorkflowDifference {
+  const o = object(v),
+    configuration = asWorkflowConfiguration(current);
+  keys(
+    o,
+    [
+      "workflow_id",
+      "from_version",
+      "to_version",
+      "from_hash",
+      "to_hash",
+      "before",
+      "after",
+      "name_changed",
+      "order_changed",
+      "added_steps",
+      "removed_steps",
+      "changed_steps",
+    ],
+    ["source_changed", "program_changed"],
+  );
+  const before = asWorkflowDefinition(o.before),
+    after = asWorkflowDefinition(o.after),
+    from = num(o, "from_version", 1, 2147483647),
+    to = num(o, "to_version", 1, 2147483647),
+    fromHash = hash(o, "from_hash"),
+    toHash = hash(o, "to_hash");
+  if (
+    id(o, "workflow_id") !== configuration.id ||
+    to !== configuration.version ||
+    from !== to - 1 ||
+    fromHash !== collectionWorkflowHash(before) ||
+    toHash !== collectionWorkflowHash(after) ||
+    toHash !== configuration.definition_hash ||
+    !equal(after, configuration.definition)
+  )
+    bad();
+  const oldSteps = new Map(before.steps.map((s) => [s.id, s])),
+    newSteps = new Map(after.steps.map((s) => [s.id, s]));
+  const added = after.steps.filter((s) => !oldSteps.has(s.id)).map((s) => s.id),
+    removed = before.steps.filter((s) => !newSteps.has(s.id)).map((s) => s.id),
+    changed = after.steps
+      .filter((s) => oldSteps.has(s.id) && !equal(oldSteps.get(s.id), s))
+      .map((s) => s.id);
+  const flag = (k: string, expected: boolean) => {
+    const actual = o[k] === undefined ? false : bool(o, k);
+    if (actual !== expected) bad();
+    return actual;
+  };
+  const names = (k: string, expected: string[]) => {
+    const actual = array(o[k], 16).map((v) => {
+      if (typeof v !== "string" || !/^[a-z][a-z0-9_]{0,63}$/.test(v)) bad();
+      return v as string;
+    });
+    if (!equal(actual, expected)) bad();
+    return actual;
+  };
+  return {
+    workflow_id: configuration.id,
+    from_version: from,
+    to_version: to,
+    from_hash: fromHash,
+    to_hash: toHash,
+    before,
+    after,
+    name_changed: flag("name_changed", before.name !== after.name),
+    order_changed: flag(
+      "order_changed",
+      !equal(
+        before.steps.map((s) => s.id),
+        after.steps.map((s) => s.id),
+      ),
+    ),
+    source_changed: flag("source_changed", !equal(before.source, after.source)),
+    program_changed: flag(
+      "program_changed",
+      !equal(before.program, after.program),
+    ),
+    added_steps: names("added_steps", added),
+    removed_steps: names("removed_steps", removed),
+    changed_steps: names("changed_steps", changed),
+  };
+}

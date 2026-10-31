@@ -61,11 +61,17 @@ func (s *Service) CollectionReady(ctx context.Context, scope store.Scope, id str
 		return r, t.Tx.Commit(ctx)
 	}
 	r.Reason = "collection_has_no_pending_routes"
-	if len(d.Effects) == 0 {
+	_, w, err := approved(ctx, t, d.Workflow)
+	if err != nil {
+		return nil, err
+	}
+	if len(d.Effects) == 0 && w.Schema == 1 {
 		return r, t.Tx.Commit(ctx)
 	}
-	if err = t.Require("deliver"); err != nil {
-		return nil, err
+	if len(d.Effects) > 0 {
+		if err = t.Require("deliver"); err != nil {
+			return nil, err
+		}
 	}
 	inputs, err := t.CollectionInputs(ctx, j)
 	if err != nil {
@@ -100,13 +106,38 @@ func (s *Service) CollectionReady(ctx context.Context, scope store.Scope, id str
 		}
 	}
 	if r.RouteReady {
-		if err = t.DeliveryCapacity(ctx, len(d.Effects)); errors.Is(err, store.ErrLimit) {
-			r.RouteReady = false
-			r.Reason = "delivery_capacity_required"
-		} else if err != nil {
-			return nil, err
-		} else {
-			r.Reason = "ordinary_routes_ready"
+		counts := map[string]int{}
+		if w.Schema == 2 {
+			counts, err = s.collectionRoutingCounts(ctx, t, j, d, w, inputs)
+			if errors.Is(err, ErrRouting) {
+				r.RouteReady = false
+				r.Reason = "routing_decision_required"
+				return r, t.Tx.Commit(ctx)
+			} else if err != nil {
+				return nil, err
+			}
+		}
+		r.RouteReady = false
+		r.Reason = "delivery_capacity_required"
+		for _, input := range inputs {
+			if input.JobID != j.ID || input.State != "accepted" {
+				continue
+			}
+			needed := len(d.Effects)
+			if w.Schema == 2 {
+				needed = counts[input.ID]
+			}
+			if needed == 0 {
+				r.RouteReady = true
+			} else if err = t.DeliveryCapacity(ctx, needed); err == nil {
+				r.RouteReady = true
+			} else if !errors.Is(err, store.ErrLimit) {
+				return nil, err
+			}
+			if r.RouteReady {
+				r.Reason = "ordinary_routes_ready"
+				break
+			}
 		}
 	}
 	return r, t.Tx.Commit(ctx)

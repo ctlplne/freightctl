@@ -178,7 +178,7 @@ func (t *Transaction) CheckScheduleBinding(ctx context.Context, run string) erro
 }
 func (t *Transaction) ScheduleActiveRuns(ctx context.Context, id string) (int, error) {
 	var n int
-	e := t.Tx.QueryRow(ctx, `SELECT count(*) FROM workflow_schedule_inputs i JOIN workflow_schedule_occurrences o USING(tenant_id,partner_id,occurrence_id) JOIN workflow_runs r USING(tenant_id,partner_id,run_id) WHERE i.actor_id=$1 AND i.schedule_id=$2 AND o.deadline_at>clock_timestamp() AND EXISTS(SELECT 1 FROM workflow_schedules current_schedule WHERE (current_schedule.tenant_id,current_schedule.partner_id,current_schedule.schedule_id,current_schedule.version)=(i.tenant_id,i.partner_id,i.schedule_id,i.schedule_version) AND current_schedule.state='active') AND r.state NOT IN ('succeeded','cancelled')`, t.Actor, id).Scan(&n)
+	e := t.Tx.QueryRow(ctx, `SELECT count(*) FROM workflow_schedule_inputs i JOIN workflow_schedule_occurrences o USING(tenant_id,partner_id,occurrence_id) JOIN workflow_runs r USING(tenant_id,partner_id,run_id) WHERE i.actor_id=$1 AND i.schedule_id=$2 AND o.deadline_at>clock_timestamp() AND EXISTS(SELECT 1 FROM workflow_schedules current_schedule WHERE (current_schedule.tenant_id,current_schedule.partner_id,current_schedule.schedule_id,current_schedule.version)=(i.tenant_id,i.partner_id,i.schedule_id,i.schedule_version) AND current_schedule.state='active') AND r.state NOT IN ('succeeded','cancelled','kept_local')`, t.Actor, id).Scan(&n)
 	return n, e
 }
 func (t *Transaction) ScheduleCandidates(ctx context.Context, id, directory, pattern string, recursive bool, due time.Time, limit int) ([]File, error) {
@@ -293,7 +293,7 @@ func (t *Transaction) SchedulePending(ctx context.Context, id string, version in
 	if !ValidID(id) || version < 1 || limit < 1 || limit > 64 {
 		return nil, ErrLimit
 	}
-	rows, e := t.Tx.Query(ctx, `SELECT i.run_id::text FROM workflow_schedule_inputs i JOIN workflow_runs r USING(tenant_id,partner_id,run_id) JOIN workflow_schedule_occurrences o USING(tenant_id,partner_id,occurrence_id) WHERE i.actor_id=$1 AND i.schedule_id=$2 AND i.schedule_version=$3 AND o.deadline_at>clock_timestamp() AND EXISTS(SELECT 1 FROM workflow_schedules current_schedule WHERE (current_schedule.tenant_id,current_schedule.partner_id,current_schedule.schedule_id,current_schedule.version)=(i.tenant_id,i.partner_id,i.schedule_id,i.schedule_version) AND current_schedule.state='active') AND r.state NOT IN ('succeeded','cancelled') ORDER BY o.due_at,i.run_id LIMIT $4`, t.Actor, id, version, limit)
+	rows, e := t.Tx.Query(ctx, `SELECT i.run_id::text FROM workflow_schedule_inputs i JOIN workflow_runs r USING(tenant_id,partner_id,run_id) JOIN workflow_schedule_occurrences o USING(tenant_id,partner_id,occurrence_id) WHERE i.actor_id=$1 AND i.schedule_id=$2 AND i.schedule_version=$3 AND o.deadline_at>clock_timestamp() AND EXISTS(SELECT 1 FROM workflow_schedules current_schedule WHERE (current_schedule.tenant_id,current_schedule.partner_id,current_schedule.schedule_id,current_schedule.version)=(i.tenant_id,i.partner_id,i.schedule_id,i.schedule_version) AND current_schedule.state='active') AND r.state NOT IN ('succeeded','cancelled','kept_local') ORDER BY o.due_at,i.run_id LIMIT $4`, t.Actor, id, version, limit)
 	if e != nil {
 		return nil, e
 	}

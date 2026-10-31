@@ -4,7 +4,17 @@ import {
   scheduledCollectionContract,
   type CollectionSource,
   type CollectionConnection,
+  asWorkflowConfiguration,
+  effectsForWorkflow,
+  workflowProgramShape,
+  type AnyWorkflowConfiguration,
 } from "./collections-types";
+import {
+  asExecutionPlan,
+  programFingerprint,
+  type ExecutionPlan,
+  type RoutingSource,
+} from "./programs-types";
 import { ApiError, object, uuid } from "./types";
 import { digestBytes } from "./crypto";
 export interface Reference {
@@ -849,6 +859,8 @@ export interface ScheduledRun {
     workflow_version: number;
     workflow_hash: string;
     authority_revision: number;
+    execution_plan?: ExecutionPlan;
+    execution_plan_hash?: string;
   };
   steps: { id: string; delivery_id: string; state: string; attempts: number }[];
   observed_state: string;
@@ -861,6 +873,8 @@ export function asScheduledRun(
     ScheduleDefinition,
     "workflow" | "authority_revision" | "effects"
   >,
+  workflow?: AnyWorkflowConfiguration,
+  expectedSource?: RoutingSource,
 ): ScheduledRun {
   const o = object(v),
     r = object(o.run),
@@ -889,7 +903,7 @@ export function asScheduledRun(
         attempts: num(s, "attempts", 0, 8),
       };
     }),
-    run = {
+    run: ScheduledRun["run"] = {
       id: id(r, "id"),
       file_id: id(r, "file_id"),
       source: {
@@ -904,6 +918,39 @@ export function asScheduledRun(
       workflow_hash: hash(r, "workflow_hash"),
       authority_revision: num(r, "authority_revision"),
     };
+  let selected = definition.effects.map((e) => e.step_id);
+  if (workflow) {
+    const wf = asWorkflowConfiguration(workflow, definition.workflow);
+    effectsForWorkflow(definition.effects, wf.definition);
+    if (wf.definition.schema_version === 2) {
+      if (
+        (wf.definition.source !== undefined) !==
+        (expectedSource !== undefined)
+      )
+        bad();
+      const plan = asExecutionPlan(
+        r.execution_plan,
+        workflowProgramShape(wf.definition),
+        {
+          file: run.source,
+          ...(expectedSource ? { source: expectedSource } : {}),
+        },
+      );
+      const planHash = hash(r, "execution_plan_hash");
+      if (programFingerprint(plan) !== planHash) bad();
+      run.execution_plan = plan;
+      run.execution_plan_hash = planHash;
+      selected = plan.selected_steps;
+    } else if (
+      r.execution_plan !== undefined ||
+      r.execution_plan_hash !== undefined
+    )
+      bad();
+  } else if (
+    r.execution_plan !== undefined ||
+    r.execution_plan_hash !== undefined
+  )
+    bad();
   if (
     run.id !== input.run_id ||
     run.file_id !== input.file_id ||
@@ -912,16 +959,22 @@ export function asScheduledRun(
     run.workflow_version !== definition.workflow.version ||
     run.workflow_hash !== definition.workflow.hash ||
     run.authority_revision !== definition.authority_revision ||
-    steps.length !== definition.effects.length ||
-    steps.some((s, i) => s.id !== definition.effects[i]!.step_id) ||
+    steps.length !== selected.length ||
+    steps.some((s, i) => s.id !== selected[i]) ||
     new Set(steps.map((s) => s.delivery_id)).size !== steps.length
   )
     bad();
   const state = str(o, "observed_state", 24);
   if (
-    !["queued", "running", "attention", "succeeded", "cancelled"].includes(
-      state,
-    )
+    ![
+      "queued",
+      "running",
+      "attention",
+      "succeeded",
+      "cancelled",
+      "kept_local",
+    ].includes(state) ||
+    (state === "kept_local") !== !!run.execution_plan?.local_reason
   )
     bad();
   return {
@@ -938,11 +991,19 @@ export function asScheduledWork(
     ScheduleDefinition,
     "workflow" | "authority_revision" | "effects"
   >,
+  workflow?: AnyWorkflowConfiguration,
+  expectedSource?: RoutingSource,
 ): ScheduledRun {
   const o = object(v);
   bool(o, "replayed");
   const d = object(o.dispatch),
-    status = asScheduledRun(o.status, input, definition);
+    status = asScheduledRun(
+      o.status,
+      input,
+      definition,
+      workflow,
+      expectedSource,
+    );
   if (
     d.run_id !== input.run_id ||
     !status.steps.some(

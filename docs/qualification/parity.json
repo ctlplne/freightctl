@@ -2292,11 +2292,14 @@
         "independent operator or receiver"
       ],
       "acceptance_journey": "J03",
-      "state": "planned",
-      "evidence": [],
+      "state": "implementing",
+      "evidence": [
+        "docs/qualification/evidence/F040-bounded-routing.json"
+      ],
       "qualification_blockers": [
         "Authorized MOVEit Automation installation and exact edition/version for observed comparison"
-      ]
+      ],
+      "partial_implementation": "F040 adds the ordinary schema2 bounded branch/finite-catalog-loop program, exact original captured facts, immutable plans independently validated by Go/PostgreSQL/browser, explicit kept_local outcomes and metadata-only API/CLI previews. The final privacy-corrected native replay passes133 steps in27.798s on417 unchanged source inputs, with348 verified outputs, five unique browser invocations, eight selected accessibility states and six exact stock-receiver downloads across two distinct receiver identities. Whole-sibling CSV intake, independent consent for each selected file/step, original-key lost-response recovery, restart/reload and actor privacy remain guarded. All123 workflow tests,86 frontend contracts,10 affected Go packages,3 migration/isolation regressions and9 evidence-refusal contracts pass with zero skips;1754 bounded fuzz executions are retained. D096's original cancellation event-feed disclosure is retained and fixed: direct/nested receipt contracts and real feed/audit checks preserve the protected original payload while exposing only its exact digest. Normal init upgrades31->32/61 forced-RLS tables and current-binary init preserves32 without changing31928events/2090files/4522credentials, authority or grants; no program run is created. Exact PostgreSQL returns to its original stopped state; models/scanner stay off. FullJ03/all83 whole rows/all12 journeys, broader routing/transforms/connectors/business acceptance, schema2 revision/cutoff/encrypted-peer combinations, governed repair of undecidable captured inputs, platforms/scale/adoption/release and the owner-deferred F026 aggregate remain open."
     },
     {
       "id": "W-SCRIPTS",

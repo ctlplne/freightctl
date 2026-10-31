@@ -48,6 +48,11 @@ func (s *Server) workflow(w http.ResponseWriter, r *http.Request) {
 		if err = workflowInput(w, r, &request); err == nil {
 			result, err = service.Run(r.Context(), identity, r.Header.Get("Idempotency-Key"), request)
 		}
+	case "POST /v1/tenants/{tenant}/partners/{partner}/workflow-runs/preview":
+		var request workflow.RunRequest
+		if err = workflowInput(w, r, &request); err == nil {
+			result, err = service.PreviewRun(r.Context(), identity, request)
+		}
 	case "GET /v1/tenants/{tenant}/partners/{partner}/workflow-runs/{run}":
 		result, err = service.Status(r.Context(), identity, r.PathValue("run"))
 	case "POST /v1/tenants/{tenant}/partners/{partner}/workflow-runs/{run}/cancel":

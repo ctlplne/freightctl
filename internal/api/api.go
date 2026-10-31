@@ -18,6 +18,7 @@ import (
 	"github.com/ctlplne/freightctl/internal/custody"
 	"github.com/ctlplne/freightctl/internal/store"
 	"github.com/ctlplne/freightctl/internal/vpath"
+	"github.com/ctlplne/freightctl/internal/workflow"
 )
 
 type Server struct {
@@ -193,6 +194,7 @@ func NewWithBrowserLifetime(service *custody.Service, audits *audit.Service, ena
 		"GET /v1/tenants/{tenant}/partners/{partner}/connections/{connection}/{version}",
 		"POST /v1/tenants/{tenant}/partners/{partner}/connections/{connection}/{version}/revoke",
 		"POST /v1/tenants/{tenant}/partners/{partner}/workflow-runs",
+		"POST /v1/tenants/{tenant}/partners/{partner}/workflow-runs/preview",
 		"GET /v1/tenants/{tenant}/partners/{partner}/workflow-runs/{run}",
 		"POST /v1/tenants/{tenant}/partners/{partner}/workflow-runs/{run}/work",
 		"POST /v1/tenants/{tenant}/partners/{partner}/workflow-runs/{run}/refresh",
@@ -337,6 +339,8 @@ func errorStatus(err error) (int, string) {
 		return 409, "arrival_authority_or_probe_required"
 	case errors.Is(err, store.ErrCollection):
 		return 409, "collection_authority_input_or_lease_required"
+	case errors.Is(err, workflow.ErrRouting):
+		return 409, "workflow_routing_decision_required"
 	case errors.Is(err, store.ErrDispatchApproval):
 		return 409, "dispatch_approval_required"
 	case errors.Is(err, store.ErrState):

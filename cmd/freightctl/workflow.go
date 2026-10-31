@@ -91,6 +91,12 @@ func runWorkflow(ctx context.Context, command, dsn, token, tenant, partner, stor
 			return err
 		}
 		result, err = service.Run(ctx, scope, key, r)
+	case "workflow-run-preview":
+		var r workflow.RunRequest
+		if err = decode(&r); err != nil {
+			return err
+		}
+		result, err = service.PreviewRun(ctx, scope, r)
 	case "workflow-run-status":
 		result, err = service.Status(ctx, scope, runID)
 	case "workflow-refresh":

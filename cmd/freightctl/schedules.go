@@ -173,7 +173,7 @@ func scheduleWorker(ctx context.Context, service *workflow.Service, scope store.
 				if readErr != nil {
 					return readErr
 				}
-				if runStatus.ObservedState == "succeeded" {
+				if runStatus.ObservedState == "succeeded" || runStatus.ObservedState == "kept_local" {
 					if _, e = service.RefreshRun(ctx, scope, run, "schedule-project:"+run); e != nil {
 						return e
 					}

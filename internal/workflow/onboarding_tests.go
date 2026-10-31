@@ -103,7 +103,7 @@ func (s *Service) testPreview(ctx context.Context, t *store.Transaction, r Onboa
 	if err != nil {
 		return nil, nil, err
 	}
-	if len(definition.Steps) != 1 {
+	if definition.Schema != 1 || len(definition.Steps) != 1 {
 		return nil, nil, ErrInput
 	}
 	step := definition.Steps[0]

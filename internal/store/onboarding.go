@@ -300,6 +300,26 @@ func (s *Store) OnboardingPlans(ctx context.Context, scope Scope, after string, 
 // Ordinary event feeds and signed audit exports show a digest, not contact
 // details or free-form requirements. The protected journal retains the source.
 func redactOnboardingEvent(e Event) Event {
+	if e.Kind == "WorkflowRunChanged" || e.Kind == "WorkflowCommandCompleted" {
+		var p struct {
+			Plan   json.RawMessage `json:"execution_plan"`
+			Result struct {
+				Plan json.RawMessage `json:"execution_plan"`
+				Run  struct {
+					Plan json.RawMessage `json:"execution_plan"`
+				} `json:"run"`
+				Status struct {
+					Run struct {
+						Plan json.RawMessage `json:"execution_plan"`
+					} `json:"run"`
+				} `json:"status"`
+			} `json:"result"`
+		}
+		if json.Unmarshal(e.Payload, &p) == nil && (len(p.Plan) > 0 || len(p.Result.Plan) > 0 || len(p.Result.Run.Plan) > 0 || len(p.Result.Status.Run.Plan) > 0) {
+			e.Payload, _ = json.Marshal(map[string]any{"schema_version": 1, "redacted": true, "source_payload_sha256": secure.Digest(e.Payload), "reason": "actor_private_workflow_plan"})
+			return e
+		}
+	}
 	privateCollection := e.Kind == "WorkflowCollectionChanged" || e.Kind == "WorkflowCollectionBatch" || e.Kind == "WorkflowCollectionInput"
 	if e.Kind == "WorkflowRevisionChanged" || e.Kind == "WorkflowCommandCompleted" {
 		var p struct {

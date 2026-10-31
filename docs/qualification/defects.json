@@ -1374,6 +1374,170 @@
         ".private/arrival-workflow-final.jsonl",
         "evidence/raw/arrivals-54bd1a8272e14c099b74480088062d29/manifest.json"
       ]
+    },
+    {
+      "id": "D088",
+      "severity": "high",
+      "state": "fixed locally",
+      "observed_on": "2026-10-31",
+      "candidate": "8fa51a48cf165304591a541bf77c6e8bbf801f2b plus retained F040 source epochs",
+      "journey": "J03",
+      "title": "Normalized catalog mutation after validation",
+      "reproduction": "sh scripts/go.sh test ./internal/workflow -run TestRoutingNormalizationOwnsItsCatalogAndControlSnapshot",
+      "first_failure": ".private/routing-boundaries-first.log",
+      "cause": "Normalize retained caller-owned catalog/encryption storage, allowing later mutation of a previously checked definition.",
+      "resolution": "Copy catalog steps and encryption references as well as the control tree; the ownership regression, cross-language plans and runtime bindings pass.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F040-bounded-routing.json",
+        ".private/routing-workflow-current.jsonl",
+        "evidence/raw/routing-0ceb5ea7f5ba4abba7230e637887aa40/manifest.json"
+      ]
+    },
+    {
+      "id": "D089",
+      "severity": "high",
+      "state": "fixed locally",
+      "observed_on": "2026-10-31",
+      "candidate": "8fa51a48cf165304591a541bf77c6e8bbf801f2b plus retained F040 source epochs",
+      "journey": "J03",
+      "title": "Valid routing refused by SQL operator grouping",
+      "reproduction": "Replay the retained independent SQL planning contract against disposable PostgreSQL.",
+      "first_failure": ".private/routing-sql-first-diagnostic/manifest.json",
+      "cause": "A JSON extraction/subtraction expression grouped its operands incorrectly; the defensive SQL compiler returned no valid plan.",
+      "resolution": "Parenthesize JSON extraction before key subtraction. The independent non-owner SQL compiler now matches all15 Go plans.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F040-bounded-routing.json",
+        ".private/routing-workflow-current.jsonl",
+        "evidence/raw/routing-0ceb5ea7f5ba4abba7230e637887aa40/manifest.json"
+      ]
+    },
+    {
+      "id": "D090",
+      "severity": "high",
+      "state": "fixed locally",
+      "observed_on": "2026-10-31",
+      "candidate": "8fa51a48cf165304591a541bf77c6e8bbf801f2b plus retained F040 source epochs",
+      "journey": "J03",
+      "title": "Valid routing refused by SQL alias ambiguity",
+      "reproduction": "Replay the retained independent SQL planning contract against disposable PostgreSQL.",
+      "first_failure": ".private/routing-sql-second-diagnostic/manifest.json",
+      "cause": "A PL/pgSQL variable and a JSON object-key query shared the name k, making the validation query ambiguous.",
+      "resolution": "Use an explicit non-conflicting column alias; keep the same shape, node and visit bounds. All15 SQL/Go plan contracts pass.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F040-bounded-routing.json",
+        ".private/routing-workflow-current.jsonl",
+        "evidence/raw/routing-0ceb5ea7f5ba4abba7230e637887aa40/manifest.json"
+      ]
+    },
+    {
+      "id": "D091",
+      "severity": "high",
+      "state": "fixed locally",
+      "observed_on": "2026-10-31",
+      "candidate": "8fa51a48cf165304591a541bf77c6e8bbf801f2b plus retained F040 source epochs",
+      "journey": "J03",
+      "title": "Explicit local run had no observed-state label",
+      "reproduction": "Run TestBoundedProgramExplicitLocalRunCreatesNoDelivery and scripts/qualify-routing.py.",
+      "first_failure": ".private/routing-run-third.log",
+      "cause": "The early local-terminal return skipped populating the public observed-state/reason fields.",
+      "resolution": "Populate kept_local and its recorded reason before returning. Real database and browser local outcomes show zero send steps and no receiver receipt.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F040-bounded-routing.json",
+        ".private/routing-workflow-current.jsonl",
+        "evidence/raw/routing-0ceb5ea7f5ba4abba7230e637887aa40/manifest.json"
+      ]
+    },
+    {
+      "id": "D092",
+      "severity": "high",
+      "state": "fixed locally",
+      "observed_on": "2026-10-31",
+      "candidate": "8fa51a48cf165304591a541bf77c6e8bbf801f2b plus retained F040 source epochs",
+      "journey": "J03",
+      "title": "Source-only program skipped its explicit decision",
+      "reproduction": "Run TestBoundedProgramSourceOnlyBatchRequiresAnExplicitRecordedLocalDecision.",
+      "first_failure": ".private/routing-batch-first.log",
+      "cause": "A legacy empty-catalog shortcut treated schema2 as an unconditional local collection and suppressed readiness/admission.",
+      "resolution": "Keep the legacy shortcut only for schema1. Schema2 records an explicit frozen local plan; readiness, SQL capacity and CLI terminal handling recognize it.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F040-bounded-routing.json",
+        ".private/routing-workflow-current.jsonl",
+        "evidence/raw/routing-0ceb5ea7f5ba4abba7230e637887aa40/manifest.json"
+      ]
+    },
+    {
+      "id": "D093",
+      "severity": "high",
+      "state": "fixed locally",
+      "observed_on": "2026-10-31",
+      "candidate": "8fa51a48cf165304591a541bf77c6e8bbf801f2b plus retained F040 source epochs",
+      "journey": "J03",
+      "title": "Rule selector did not have a stable exact label",
+      "reproduction": "Replay scripts/qualify-routing.py with the exact task-owned PostgreSQL container ID.",
+      "first_failure": ".private/routing-native-browser-second.log",
+      "cause": "The new control wrapper placed the select and all option text inside its label, so the browser could not locate the control by the displayed exact label.",
+      "resolution": "Give labels their own elements with explicit control IDs. Replay the original structured branch/loop interaction; five final browser invocations and eight selected accessibility states pass.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F040-bounded-routing.json",
+        ".private/routing-workflow-current.jsonl",
+        "evidence/raw/routing-0ceb5ea7f5ba4abba7230e637887aa40/manifest.json"
+      ]
+    },
+    {
+      "id": "D094",
+      "severity": "high",
+      "state": "fixed locally",
+      "observed_on": "2026-10-31",
+      "candidate": "8fa51a48cf165304591a541bf77c6e8bbf801f2b plus retained F040 source epochs",
+      "journey": "J03",
+      "title": "Local-only execution required delivery authority",
+      "reproduction": "Run TestBoundedProgramLocalOnlyRunNeedsNoAdminOrDeliverPermission.",
+      "first_failure": ".private/routing-local-authority-second.log",
+      "cause": "Run required deliver before checking whether a schema2 definition had an empty recipient catalog and could only record an explicit local outcome.",
+      "resolution": "Require execute/read and exact file access first; retain deliver for schema1 and nonempty catalogs. A nonadmin actor without deliver can record/replay its own local outcome, cannot inspect another actor's unpublished raw file, and creates no delivery.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F040-bounded-routing.json",
+        ".private/routing-workflow-current.jsonl",
+        "evidence/raw/routing-0ceb5ea7f5ba4abba7230e637887aa40/manifest.json"
+      ]
+    },
+    {
+      "id": "D095",
+      "severity": "high",
+      "state": "fixed locally",
+      "observed_on": "2026-10-31",
+      "candidate": "8fa51a48cf165304591a541bf77c6e8bbf801f2b plus retained F040 source epochs",
+      "journey": "J03",
+      "title": "Undecidable routing returned a generic unavailable error",
+      "reproduction": "Run TestUndecidableRoutingReturnsAnActionableConflict and TestBoundedProgramBatchRejectsUndecidableSiblingEvenWhenSendQueueIsFull.",
+      "first_failure": ".private/routing-undecidable-api-first.log",
+      "cause": "ErrRouting had no public API error classification and became503 operation_unavailable.",
+      "resolution": "Return409 workflow_routing_decision_required for direct and wrapped routing errors. Explain inspection of original facts/rules; a real full queue cannot conceal the missing sibling decision or create partial state.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F040-bounded-routing.json",
+        ".private/routing-workflow-current.jsonl",
+        "evidence/raw/routing-0ceb5ea7f5ba4abba7230e637887aa40/manifest.json"
+      ]
+    },
+    {
+      "id": "D096",
+      "severity": "security blocker",
+      "state": "fixed locally",
+      "observed_on": "2026-10-31",
+      "candidate": "8fa51a48cf165304591a541bf77c6e8bbf801f2b plus retained F040 privacy source epochs",
+      "journey": "J03",
+      "title": "Cancelled command receipt exposed its nested private plan",
+      "reproduction": "Run TestBoundedProgramCancelledReceiptKeepsPlanPrivateInEventsAndAudit against real PostgreSQL. It creates an approved collected run, cancels it and reads another actor's ordinary event feed and audit snapshot.",
+      "first_failure": ".private/routing-cancellation-privacy-first.log",
+      "cause": "The new redactor recognized a direct execution_plan but cancellation returned a RunView with the plan under result.run.execution_plan. That receipt had no existing private-kind marker.",
+      "resolution": "Inspect direct, run-view and status-wrapper plan fields before ordinary event/audit disclosure. Preserve the exact protected journal payload and emit its digest. Four receipt-shape contracts, the original real PostgreSQL feed/audit regression, all123 workflow tests and the current-source stock/browser replay pass. Legacy results without a plan keep their existing behavior.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F040-bounded-routing.json",
+        ".private/routing-plan-redaction-unit.log",
+        ".private/routing-cancellation-privacy-second.log",
+        ".private/routing-workflow-privacy-final.jsonl",
+        "evidence/raw/routing-bcbb1906ea4d4d1cb4c6f40b907628e1/manifest.json"
+      ]
     }
   ]
 }

@@ -37,10 +37,11 @@ type Step struct {
 	Encryption *store.EncryptionPolicy `json:"encryption,omitempty"`
 }
 type Definition struct {
-	Schema int               `json:"schema_version"`
-	Name   string            `json:"name"`
-	Steps  []Step            `json:"steps"`
-	Source *CollectionSource `json:"source,omitempty"`
+	Schema  int               `json:"schema_version"`
+	Name    string            `json:"name"`
+	Steps   []Step            `json:"steps"`
+	Source  *CollectionSource `json:"source,omitempty"`
+	Program *Program          `json:"program,omitempty"`
 }
 type DraftRequest struct {
 	ID              string     `json:"workflow_id,omitempty"`
@@ -150,7 +151,7 @@ func Decode(data []byte, target any) error {
 	return nil
 }
 func Normalize(d Definition) (Definition, error) {
-	if d.Schema != 1 || (len(d.Steps) < 1 && d.Source == nil) || len(d.Steps) > 16 || !utf8.ValidString(d.Name) {
+	if (d.Schema != 1 && d.Schema != 2) || (d.Schema == 1 && len(d.Steps) < 1 && d.Source == nil) || len(d.Steps) > 16 || !utf8.ValidString(d.Name) {
 		return d, ErrInput
 	}
 	d.Name = norm.NFC.String(d.Name)
@@ -172,6 +173,15 @@ func Normalize(d Definition) (Definition, error) {
 	if len(d.Steps) == 0 {
 		d.Steps = []Step{}
 	}
+	owned := make([]Step, len(d.Steps))
+	for i, step := range d.Steps {
+		if step.Encryption != nil {
+			encryption := *step.Encryption
+			step.Encryption = &encryption
+		}
+		owned[i] = step
+	}
+	d.Steps = owned
 	seen := map[string]bool{}
 	for _, s := range d.Steps {
 		if !stepPattern.MatchString(s.ID) || seen[s.ID] || s.Kind != "sftp.deliver" || !store.ValidID(s.Connection.ID) || s.Connection.Version < 1 || !hashPattern.MatchString(s.Connection.Hash) || !filenamePattern.MatchString(s.Filename) {
@@ -181,6 +191,17 @@ func Normalize(d Definition) (Definition, error) {
 		if s.Encryption != nil && (!store.ValidID(s.Encryption.Key.ID) || s.Encryption.Key.Version < 1 || !hashPattern.MatchString(s.Encryption.Key.Hash) || (s.Encryption.Profile != "seipd-v1-aes256" && s.Encryption.Profile != "seipd-v2-aes256-ocb")) {
 			return d, fmt.Errorf("%w: incomplete recipient encryption policy", ErrInput)
 		}
+	}
+	if d.Schema == 1 {
+		if d.Program != nil {
+			return d, ErrInput
+		}
+	} else {
+		program, err := normalizeProgram(d)
+		if err != nil {
+			return d, err
+		}
+		d.Program = program
 	}
 	return d, nil
 }

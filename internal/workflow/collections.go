@@ -397,11 +397,13 @@ func (s *Service) advanceCollection(ctx context.Context, t *store.Transaction, j
 	if e != nil {
 		return e
 	}
-	if len(w.Steps) == 0 {
+	if len(w.Steps) == 0 && w.Schema == 1 {
 		return nil
 	}
-	if e = t.Require("deliver"); e != nil {
-		return e
+	if len(w.Steps) > 0 {
+		if e = t.Require("deliver"); e != nil {
+			return e
+		}
 	}
 	inputs, e := t.CollectionInputs(ctx, j)
 	if e != nil {
@@ -417,6 +419,13 @@ func (s *Service) advanceCollection(ctx context.Context, t *store.Transaction, j
 		if e = t.FileAvailable(ctx, *input.FileID); errors.Is(e, store.ErrState) {
 			return nil
 		} else if e != nil {
+			return e
+		}
+	}
+	var routingCounts map[string]int
+	if w.Schema == 2 {
+		routingCounts, e = s.collectionRoutingCounts(ctx, t, j, d, w, inputs)
+		if e != nil {
 			return e
 		}
 	}
@@ -443,10 +452,19 @@ func (s *Service) advanceCollection(ctx context.Context, t *store.Transaction, j
 		if e = t.CheckAncestors(ctx, path.Join(d.Source.Directory, "collection-target")); e != nil {
 			return e
 		}
-		if e = t.DeliveryAdmission(ctx, len(w.Steps)); errors.Is(e, store.ErrLimit) {
-			break
-		} else if e != nil {
-			return e
+		needed := len(w.Steps)
+		if w.Schema == 2 {
+			needed = routingCounts[i.ID]
+		}
+		if needed > 0 {
+			if e = t.DeliveryAdmission(ctx, needed); errors.Is(e, store.ErrLimit) {
+				if w.Schema == 2 {
+					continue
+				}
+				break
+			} else if e != nil {
+				return e
+			}
 		}
 		file, e := t.File(ctx, *i.FileID)
 		if e != nil {

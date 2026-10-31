@@ -10,6 +10,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strings"
 	"testing"
 	"time"
@@ -190,7 +191,7 @@ func TestWorkflowAtomicRunBindingsAndRevocation(t *testing.T) {
 	if err == nil {
 		err = json.Unmarshal(replayed.Resource, &replayRun)
 	}
-	if err != nil || !replayed.Replayed || replayRun != run {
+	if err != nil || !replayed.Replayed || !reflect.DeepEqual(replayRun, run) {
 		t.Fatal("run retry changed intents", err)
 	}
 	status, err := f.s.Status(f.ctx, f.scope, run.ID)

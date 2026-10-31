@@ -1,5 +1,11 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
-import { dueManifestName, type CollectionSource } from "./collections-types";
+import {
+  dueManifestName,
+  asWorkflowConfiguration,
+  type AnyWorkflowConfiguration,
+  type CollectionSource,
+} from "./collections-types";
+import { PlanReview } from "./programs";
 import { ScheduleArrival } from "./schedule-arrivals";
 import { Api } from "./api";
 import { ApiError, type Session } from "./types";
@@ -82,6 +88,7 @@ type Pending =
       input: OccurrenceView["inputs"][number];
       definition: ScheduleDefinition;
       run: ScheduledRun;
+      workflow: AnyWorkflowConfiguration;
       deadline: string;
     };
 const utc = (t: number) =>
@@ -238,6 +245,7 @@ export function Schedules({ api, session, refresh, onError }: Props) {
     [run, setRun] = useState<{
       value: ScheduledRun;
       input: OccurrenceView["inputs"][number];
+      workflow: AnyWorkflowConfiguration;
     } | null>(null),
     [pending, setPending] = useState<Pending | null>(null),
     [busy, setBusy] = useState(false),
@@ -477,11 +485,11 @@ export function Schedules({ api, session, refresh, onError }: Props) {
         const r = await api.request(
           `${api.prefix}/workflow-runs/${p.input.run_id}/work`,
           { method: "POST", headers: { "Idempotency-Key": p.key } },
-          (v) => asScheduledWork(v, p.input, p.definition),
+          (v) => asScheduledWork(v, p.input, p.definition, p.workflow),
           90000,
         );
         setPending(null);
-        setRun({ value: r, input: p.input });
+        setRun({ value: r, input: p.input, workflow: p.workflow });
         setNotice(
           `Observed run state: ${r.observed_state}. Business acceptance needs a receiver contract.`,
         );
@@ -537,12 +545,17 @@ export function Schedules({ api, session, refresh, onError }: Props) {
       d = v.schedule.definition;
       setSelected(v);
     }
+    const wf = await api.request(
+      `${api.prefix}/workflows/${d.workflow.id}/${d.workflow.version}`,
+      {},
+      (v) => asWorkflowConfiguration(v, d.workflow),
+    );
     const v = await api.request(
       `${api.prefix}/workflow-runs/${i.run_id}`,
       {},
-      (v) => asScheduledRun(v, i, d),
+      (v) => asScheduledRun(v, i, d, wf),
     );
-    setRun({ value: v, input: i });
+    setRun({ value: v, input: i, workflow: wf });
   }
   const currentChoice =
     workflow &&
@@ -1174,6 +1187,9 @@ export function Schedules({ api, session, refresh, onError }: Props) {
             <code>{run.value.run.source.sha256}</code>. Reason:{" "}
             {run.value.observed_reason}.
           </p>
+          {run.value.run.execution_plan && (
+            <PlanReview plan={run.value.run.execution_plan} />
+          )}
           <ul>
             {run.value.steps.map((s) => (
               <li key={s.id}>
@@ -1184,7 +1200,8 @@ export function Schedules({ api, session, refresh, onError }: Props) {
           </ul>
           {canExecute &&
             run.value.observed_state !== "succeeded" &&
-            run.value.observed_state !== "cancelled" && (
+            run.value.observed_state !== "cancelled" &&
+            run.value.observed_state !== "kept_local" && (
               <button
                 disabled={busy}
                 onClick={() =>
@@ -1194,6 +1211,7 @@ export function Schedules({ api, session, refresh, onError }: Props) {
                     input: run.input,
                     definition: selected.schedule.definition,
                     run: run.value,
+                    workflow: run.workflow,
                     deadline: occurrence.deadline_at,
                   })
                 }
@@ -1274,6 +1292,9 @@ export function Schedules({ api, session, refresh, onError }: Props) {
                 preserved.
               </p>
               <Effects d={pending.definition} />
+              {pending.run.run.execution_plan && (
+                <PlanReview plan={pending.run.run.execution_plan} />
+              )}
             </>
           )}
         </ApprovalConfirm>

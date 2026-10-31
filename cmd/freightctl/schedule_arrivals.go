@@ -85,7 +85,7 @@ func workScheduledArrival(ctx context.Context, service *workflow.Service, scope 
 		if err != nil {
 			return "", err
 		}
-		if run.ObservedState == "succeeded" {
+		if run.ObservedState == "succeeded" || run.ObservedState == "kept_local" {
 			if _, err = service.RefreshRun(ctx, scope, *input.RunID, "schedule-project:"+*input.RunID); err != nil {
 				return "", err
 			}

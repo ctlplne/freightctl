@@ -27,7 +27,7 @@
     },
     {
       "path": "web/src/app.tsx",
-      "sha256": "470ef5f8364e807b644c5c306ccca5d4916e9f1079d0e1adedca56932b5fa262"
+      "sha256": "9a6e394112434e61ba776ea63e4e255ab341bbc6866651a936e5d1269b5e7a77"
     },
     {
       "path": "web/src/arrivals-types.ts",
@@ -47,11 +47,11 @@
     },
     {
       "path": "web/src/collections-types.ts",
-      "sha256": "35f64c2525cc8ecb7719ed2c8156be1b9abb148e29c744b425cb18da33781937"
+      "sha256": "70811f6bd24f03436da026550b50db2ce7211ffcac15ba099b74acfaa5033cbb"
     },
     {
       "path": "web/src/collections.tsx",
-      "sha256": "88277abfdb125a809d05151936480c21b7a8e8aac72573e566fcc35e689da56f"
+      "sha256": "d9190469f08a399d2c1a3f0882ff2ca77231451df1f39d14cf8eed323945bc2e"
     },
     {
       "path": "web/src/crypto.ts",
@@ -138,6 +138,14 @@
       "sha256": "2e1926d12c123ef0549351a89f2c83dbf1c873efacef817622517bd14de7dc3a"
     },
     {
+      "path": "web/src/programs-types.ts",
+      "sha256": "c73b3282f2a52bf01b1f048951a24f170f02b2dbba7b9d350d3b9368f3ed3301"
+    },
+    {
+      "path": "web/src/programs.tsx",
+      "sha256": "6016c0538ec6011b8c9def89e41250c7273189bae056149a20319bc11cfa549e"
+    },
+    {
       "path": "web/src/rechecks-api.ts",
       "sha256": "0c96dde2d79f1c56bb4d3ac5c48520436dc8bfec77e61da3d9f85d57b8834183"
     },
@@ -155,15 +163,15 @@
     },
     {
       "path": "web/src/schedules-types.ts",
-      "sha256": "bd85bf0cc7ade826edb5ce2d54493d39c74420178ce6f825156d24cfa5cd7d3c"
+      "sha256": "fb3d1ac70550c526d029d3123f5717d54baeecac51a898271e8d8dde850c7622"
     },
     {
       "path": "web/src/schedules.tsx",
-      "sha256": "de2b24f4f3745ca5d52bc7da541473f38c76219101c7d358ea61d5a64b99bd30"
+      "sha256": "dd692ca6f422cfad9980033e81409778524bf512ade9aa49f5c747add24a0aa2"
     },
     {
       "path": "web/src/style.css",
-      "sha256": "1bd8f4021ffb63a3a962e243e3513b6a6e0f5926ed8a3cde1b6cde9cc11f7db8"
+      "sha256": "afdb867014f063d08dcd0b74f376de86507e03ccb96780dff837601e368616d4"
     },
     {
       "path": "web/src/types.ts",
@@ -181,13 +189,13 @@
   "outputs": [
     {
       "name": "app.css",
-      "sha256": "e4c05b0128667339cbdcf456cbfdd9787a8de4e797e639314cab5e6692249928",
-      "size": 12102
+      "sha256": "e88ddd2b6ad0c3d97bc7ad0d3344a8bef7f7af79e79f52812ffb51009b66b97b",
+      "size": 12381
     },
     {
       "name": "app.js",
-      "sha256": "34d087de71a89ff3483312551b8f46abfde917c1f304f8f3c028ab99a490d3ae",
-      "size": 583586
+      "sha256": "73eee3d4b9fcd52c981826c998b8f89624852613835f1cc4ace5e5624c511dba",
+      "size": 610096
     },
     {
       "name": "app.js.LEGAL.txt",

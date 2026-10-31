@@ -2,6 +2,8 @@ import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { Api } from "./api";
 import { ApiError, type Session } from "./types";
 import { operationKey } from "./crypto";
+import { ProgramEditor, ProgramReview, PlanReview } from "./programs";
+import type { Program } from "./programs-types";
 import { ApprovalConfirm, approvalPost } from "./onboarding-approvals";
 import {
   asSchedulableWorkflows,
@@ -24,6 +26,11 @@ import {
   asCollectionPage,
   asCollectedRun,
   asCollectedWork,
+  asCollectionRunPreview,
+  asWorkflowDifference,
+  type WorkflowDifference,
+  type CollectionRunContext,
+  type CollectionRunPreview,
   type CollectionWorkflow,
   type WorkflowStep,
   type WorkflowConfiguration,
@@ -54,6 +61,7 @@ type Form = {
   maxFiles: number;
   maxFile: number;
   maxTotal: number;
+  program: Program | undefined;
   steps: {
     id: string;
     connection: string;
@@ -73,6 +81,7 @@ type Pending =
       configuration: WorkflowConfiguration;
       preview: WorkflowPreview;
       key: string;
+      difference?: WorkflowDifference;
     }
   | {
       kind: "revoke";
@@ -84,14 +93,21 @@ type Pending =
       kind: "start";
       preview: CollectionPreview;
       selection: CollectionSelection;
+      workflow: WorkflowConfiguration;
       key: string;
     }
-  | { kind: "work" | "refresh" | "cancel"; view: CollectionView; key: string }
+  | {
+      kind: "work" | "refresh" | "cancel";
+      view: CollectionView;
+      key: string;
+      workflow?: WorkflowConfiguration;
+    }
   | {
       kind: "send";
       input: CollectionInput;
       definition: CollectionDefinition;
       run: ScheduledRun;
+      context: CollectionRunContext;
       key: string;
     };
 const connectionKey = (c: { id: string; version: number }) =>
@@ -112,6 +128,7 @@ const initial = (maxFile: number): Form => ({
   maxFile: Math.min(maxFile, 1048576),
   maxTotal: Math.min(maxFile, 1048576) * 4,
   steps: [],
+  program: undefined,
 });
 function Field({
   label,
@@ -190,6 +207,41 @@ function SourceReview({
     </>
   );
 }
+function DifferenceReview({
+  difference: d,
+}: {
+  difference: WorkflowDifference;
+}) {
+  return (
+    <section aria-label="Workflow changes since previous version">
+      <h4>
+        Changes from version {d.from_version} to {d.to_version}
+      </h4>
+      <p>
+        Name: {d.name_changed ? "changed" : "unchanged"}. Catalog order:{" "}
+        {d.order_changed ? "changed" : "unchanged"}. Source contract:{" "}
+        {d.source_changed ? "changed" : "unchanged"}. Routing decisions:{" "}
+        {d.program_changed ? "changed" : "unchanged"}.
+      </p>
+      <p>
+        Added steps: {d.added_steps.join(", ") || "none"}. Removed steps:{" "}
+        {d.removed_steps.join(", ") || "none"}. Changed delivery templates:{" "}
+        {d.changed_steps.join(", ") || "none"}.
+      </p>
+      <details>
+        <summary>Exact previous definition</summary>
+        <pre>{JSON.stringify(d.before, null, 2)}</pre>
+        <p>
+          Previous definition SHA-256 <code>{d.from_hash}</code>.
+        </p>
+      </details>
+      <p>
+        Approve the current definition only after reviewing its source,
+        potential recipients and routing decisions above.
+      </p>
+    </section>
+  );
+}
 const reasons: Record<string, string> = {
   awaiting_collection_worker:
     "Queued metadata only. A separately confirmed worker can read the approved source.",
@@ -260,6 +312,8 @@ export function Collections({
       ReturnType<typeof asSchedulableWorkflows>
     >({ workflows: [] }),
     [chosen, setChosen] = useState<WorkflowConfiguration | null>(null),
+    [chosenDifference, setChosenDifference] =
+      useState<WorkflowDifference | null>(null),
     [chosenPreview, setChosenPreview] = useState<WorkflowPreview | null>(null),
     [workflowPreview, setWorkflowPreview] = useState<WorkflowPreview | null>(
       null,
@@ -273,10 +327,16 @@ export function Collections({
       jobs: [],
     }),
     [selected, setSelected] = useState<CollectionView | null>(null),
+    [selectedWorkflow, setSelectedWorkflow] =
+      useState<WorkflowConfiguration | null>(null),
+    [routingPreview, setRoutingPreview] = useState<CollectionRunPreview | null>(
+      null,
+    ),
     [run, setRun] = useState<{
       input: CollectionInput;
       definition: CollectionDefinition;
       status: ScheduledRun;
+      context: CollectionRunContext;
     } | null>(null),
     [pending, setPending] = useState<Pending | null>(null),
     [busy, setBusy] = useState(false),
@@ -285,6 +345,7 @@ export function Collections({
   const heading = useRef<HTMLHeadingElement>(null),
     formHeading = useRef<HTMLHeadingElement>(null),
     previewHeading = useRef<HTMLHeadingElement>(null),
+    routingHeading = useRef<HTMLHeadingElement>(null),
     runHeading = useRef<HTMLHeadingElement>(null);
   async function perform(action: () => Promise<void>) {
     setBusy(true);
@@ -339,11 +400,23 @@ export function Collections({
     setConnectionNext(p.next);
   }
   async function inspect(id: string, hash?: string) {
-    setSelected(
-      await api.request(api.prefix + "/workflow-collections/" + id, {}, (v) =>
-        asCollectionView(v, id, authority, hash),
-      ),
+    const view = await api.request(
+      api.prefix + "/workflow-collections/" + id,
+      {},
+      (v) => asCollectionView(v, id, authority, hash),
     );
+    const workflow = await api.request(
+      api.prefix +
+        "/workflows/" +
+        view.job.workflow_id +
+        "/" +
+        view.job.workflow_version,
+      {},
+      (v) => asCollectionConfiguration(v, view.job.definition.workflow),
+    );
+    setSelected(view);
+    setSelectedWorkflow(workflow);
+    setRoutingPreview(null);
     setRun(null);
   }
   async function loadWorkflow(r: Reference) {
@@ -352,7 +425,22 @@ export function Collections({
       {},
       (v) => asCollectionConfiguration(v, r),
     );
+    const difference =
+      c.version > 1
+        ? await api.request(
+            api.prefix +
+              "/workflows/" +
+              c.id +
+              "/" +
+              c.version +
+              "/diff?against=" +
+              (c.version - 1),
+            {},
+            (v) => asWorkflowDifference(v, c),
+          )
+        : null;
     setChosen(c);
+    setChosenDifference(difference);
     setPreview(null);
     setChosenPreview(null);
     if (has("write") && has("list"))
@@ -384,6 +472,9 @@ export function Collections({
   useEffect(() => {
     if (run) runHeading.current?.focus();
   }, [run]);
+  useEffect(() => {
+    if (routingPreview) routingHeading.current?.focus();
+  }, [routingPreview]);
   function edit(patch: Partial<Form>) {
     setForm((v) => ({ ...v, ...patch }));
     setWorkflowPreview(null);
@@ -402,7 +493,7 @@ export function Collections({
   function definition(): CollectionWorkflow {
     const source = selectedConnection(form.source);
     return asCollectionWorkflow({
-      schema_version: 1,
+      schema_version: form.program ? 2 : 1,
       name: form.name.normalize("NFC"),
       steps: form.steps.map((s) => ({
         id: s.id,
@@ -423,6 +514,7 @@ export function Collections({
         max_file_bytes: form.maxFile,
         max_total_bytes: form.maxTotal,
       },
+      ...(form.program ? { program: form.program } : {}),
     });
   }
   async function editWorkflow(c: WorkflowConfiguration) {
@@ -455,6 +547,7 @@ export function Collections({
       maxFiles: d.source.max_files,
       maxFile: d.source.max_file_bytes,
       maxTotal: d.source.max_total_bytes,
+      program: d.program ? structuredClone(d.program) : undefined,
       steps: d.steps.map((s) => ({
         id: s.id,
         connection: keyReference(s.connection),
@@ -467,21 +560,55 @@ export function Collections({
   }
   async function inspectRun(input: CollectionInput) {
     if (!selected || !input.run_id) return;
-    let d = selected.job.definition;
+    let job = selected.job;
     if (input.first_job_id !== selected.job.id)
-      d = (
+      job = (
         await api.request(
           api.prefix + "/workflow-collections/" + input.first_job_id,
           {},
           (v) => asCollectionView(v, input.first_job_id, authority),
         )
-      ).job.definition;
+      ).job;
+    const d = job.definition,
+      workflow = await api.request(
+        api.prefix + "/workflows/" + d.workflow.id + "/" + d.workflow.version,
+        {},
+        (v) => asCollectionConfiguration(v, d.workflow),
+      ),
+      context = { workflow, job };
     const status = await api.request(
       api.prefix + "/workflow-runs/" + input.run_id,
       {},
-      (v) => asCollectedRun(v, input, d),
+      (v) => asCollectedRun(v, input, d, context),
     );
-    setRun({ input, definition: d, status });
+    setRun({ input, definition: d, status, context });
+  }
+  async function previewInput(input: CollectionInput) {
+    if (!selected || !input.file_id) return;
+    const job =
+      input.first_job_id === selected.job.id
+        ? selected.job
+        : (
+            await api.request(
+              api.prefix + "/workflow-collections/" + input.first_job_id,
+              {},
+              (v) => asCollectionView(v, input.first_job_id, authority),
+            )
+          ).job;
+    const d = job.definition,
+      workflow = await api.request(
+        api.prefix + "/workflows/" + d.workflow.id + "/" + d.workflow.version,
+        {},
+        (v) => asCollectionConfiguration(v, d.workflow),
+      );
+    const preview = await approvalPost(
+      api,
+      api.prefix + "/workflow-runs/preview",
+      { workflow: d.workflow, file_id: input.file_id },
+      undefined,
+      (v) => asCollectionRunPreview(v, input, d, { workflow, job }),
+    );
+    setRoutingPreview(preview);
   }
   async function confirm() {
     if (!pending) return;
@@ -508,8 +635,11 @@ export function Collections({
           (p.family && c.id !== p.family.id)
         )
           throw new ApiError("invalid_server_response", 502);
-        setChosen(c);
-        setChosenPreview(p.preview);
+        await loadWorkflow({
+          id: c.id,
+          version: c.version,
+          hash: c.definition_hash,
+        });
         setWorkflowPreview(null);
         setPending(null);
         confirmed(
@@ -567,9 +697,14 @@ export function Collections({
         const next = await api.request(
           api.prefix + "/workflow-runs/" + p.input.run_id + "/work",
           { method: "POST", headers: { "Idempotency-Key": p.key } },
-          (v) => asCollectedWork(v, p.input, p.definition),
+          (v) => asCollectedWork(v, p.input, p.definition, p.context),
         );
-        setRun({ input: p.input, definition: p.definition, status: next });
+        setRun({
+          input: p.input,
+          definition: p.definition,
+          status: next,
+          context: p.context,
+        });
         setPending(null);
         confirmed(
           "The original ordered transfer command is recorded. Current receipts are shown below.",
@@ -621,11 +756,13 @@ export function Collections({
     } catch (e) {
       const code = e instanceof ApiError ? e.code : "";
       setFailure(
-        code === "dispatch_approval_required"
-          ? "A named reviewer must approve this exact file before sending. Use Approvals, then retry here with the same operation key."
-          : code === "collection_authority_input_or_lease_required"
-            ? "This job cannot proceed under its current source, cutoff, retry time or lease. Close and inspect its current state before making another decision."
-            : "The result was not confirmed. Retry here with this original key, or close and inspect the current private state.",
+        code === "workflow_routing_decision_required"
+          ? "The approved rules give a file no complete outcome. Close this dialog and inspect each file’s exact facts and rule path. This job keeps its original workflow revision."
+          : code === "dispatch_approval_required"
+            ? "A named reviewer must approve this exact file before sending. Use Approvals, then retry here with the same operation key."
+            : code === "collection_authority_input_or_lease_required"
+              ? "This job cannot proceed under its current source, cutoff, retry time or lease. Close and inspect its current state before making another decision."
+              : "The result was not confirmed. Retry here with this original key, or close and inspect the current private state.",
       );
     } finally {
       setBusy(false);
@@ -915,6 +1052,39 @@ export function Collections({
               </button>
             )}
             <div className="actions">
+              <Field label="Route each file with approved conditions and finite loops">
+                {(id) => (
+                  <input
+                    id={id}
+                    className="routing-toggle"
+                    type="checkbox"
+                    disabled={busy}
+                    checked={!!form.program}
+                    onChange={(e) =>
+                      edit({
+                        program: e.target.checked
+                          ? {
+                              nodes: [
+                                {
+                                  kind: "keep_local",
+                                  reason: "review_required",
+                                },
+                              ],
+                            }
+                          : undefined,
+                      })
+                    }
+                  />
+                )}
+              </Field>
+              {form.program && (
+                <ProgramEditor
+                  disabled={busy}
+                  value={form.program}
+                  catalog={form.steps.map((s) => s.id)}
+                  onChange={(program) => edit({ program })}
+                />
+              )}
               <button disabled={busy}>Preview workflow definition</button>
               {family && (
                 <button
@@ -941,6 +1111,9 @@ export function Collections({
                 connection={workflowPreview.collection.connection}
                 effects={workflowPreview.effects}
               />
+              {workflowPreview.definition.program && (
+                <ProgramReview program={workflowPreview.definition.program} />
+              )}
               <p>
                 Definition SHA-256{" "}
                 <code>{workflowPreview.definition_hash}</code>. Preview makes no
@@ -1013,11 +1186,19 @@ export function Collections({
                 <code>{chosen.definition_hash}</code>.
               </p>
               {chosenPreview && (
-                <SourceReview
-                  source={chosenPreview.definition.source}
-                  connection={chosenPreview.collection.connection}
-                  effects={chosenPreview.effects}
-                />
+                <>
+                  <SourceReview
+                    source={chosenPreview.definition.source}
+                    connection={chosenPreview.collection.connection}
+                    effects={chosenPreview.effects}
+                  />
+                  {chosenPreview.definition.program && (
+                    <ProgramReview program={chosenPreview.definition.program} />
+                  )}
+                </>
+              )}
+              {chosenDifference && (
+                <DifferenceReview difference={chosenDifference} />
               )}
               {canManage && (
                 <button
@@ -1037,6 +1218,9 @@ export function Collections({
                       configuration: structuredClone(chosen),
                       preview: structuredClone(chosenPreview),
                       key: operationKey(),
+                      ...(chosenDifference
+                        ? { difference: structuredClone(chosenDifference) }
+                        : {}),
                     });
                   }}
                 >
@@ -1123,7 +1307,7 @@ export function Collections({
               )}
             </section>
           )}
-          {preview && (
+          {preview && chosen && (
             <section aria-label="Collection job preview">
               <h3 ref={previewHeading} tabIndex={-1}>
                 Collection job preview
@@ -1147,6 +1331,7 @@ export function Collections({
                     kind: "start",
                     preview: structuredClone(preview.value),
                     selection: structuredClone(preview.selection),
+                    workflow: structuredClone(chosen),
                     key: operationKey(),
                   });
                 }}
@@ -1245,6 +1430,9 @@ export function Collections({
             connection={selected.job.definition.source_connection}
             effects={selected.job.definition.effects}
           />
+          {selectedWorkflow?.definition.program && (
+            <ProgramReview program={selectedWorkflow.definition.program} />
+          )}
           <details className="collection-references">
             <summary>Exact collection references</summary>
             <p>
@@ -1289,10 +1477,12 @@ export function Collections({
                 </button>
               )}
             {canExecute &&
-              has("deliver") &&
+              (has("deliver") ||
+                selected.job.definition.effects.length === 0) &&
               selected.current_authority &&
               selected.job.state === "captured" &&
-              selected.job.definition.effects.length > 0 && (
+              (selected.job.definition.effects.length > 0 ||
+                selectedWorkflow?.definition.schema_version === 2) && (
                 <button
                   disabled={busy}
                   onClick={() => {
@@ -1300,11 +1490,16 @@ export function Collections({
                     setPending({
                       kind: "refresh",
                       view: structuredClone(selected),
+                      ...(selectedWorkflow
+                        ? { workflow: structuredClone(selectedWorkflow) }
+                        : {}),
                       key: operationKey(),
                     });
                   }}
                 >
-                  Review queueing downstream work
+                  {selectedWorkflow?.definition.schema_version === 2
+                    ? "Review recording routing outcomes"
+                    : "Review queueing downstream work"}
                 </button>
               )}
             {has("workflow_execute") &&
@@ -1358,6 +1553,17 @@ export function Collections({
                     {"Inspect downstream run for " + i.source_name}
                   </button>
                 )}
+                {canExecute &&
+                  selected.current_authority &&
+                  selected.job.captured &&
+                  i.file_id && (
+                    <button
+                      disabled={busy}
+                      onClick={() => void perform(() => previewInput(i))}
+                    >
+                      {"Preview routing for " + i.source_name}
+                    </button>
+                  )}
               </li>
             ))}
           </ul>
@@ -1366,6 +1572,29 @@ export function Collections({
             integrity receipt does not prove that the recipient’s business
             system imported the file.
           </p>
+        </section>
+      )}
+      {routingPreview && (
+        <section aria-label="Input-specific routing preview">
+          <h3 ref={routingHeading} tabIndex={-1}>
+            Input-specific routing preview
+          </h3>
+          <p>
+            This preview made no source or receiver contact and reserved no
+            work. The server rechecks the workflow, file policy and authority
+            before execution.
+          </p>
+          <h4>Potential recipient catalog</h4>
+          <ReceiverEffects effects={routingPreview.potential_effects} />
+          <h4>Selected recipients for this input</h4>
+          {routingPreview.selected_effects.length ? (
+            <ReceiverEffects effects={routingPreview.selected_effects} />
+          ) : (
+            <p>No recipient selected for this input.</p>
+          )}
+          {routingPreview.execution_plan && (
+            <PlanReview plan={routingPreview.execution_plan} />
+          )}
         </section>
       )}
       {run && (
@@ -1378,6 +1607,9 @@ export function Collections({
             <code>{run.input.sha256}</code>.{" "}
             {run.status.observed_reason.replaceAll("_", " ")}.
           </p>
+          {run.status.run.execution_plan && (
+            <PlanReview plan={run.status.run.execution_plan} />
+          )}
           <ol>
             {run.status.steps.map((s) => (
               <li key={s.id}>
@@ -1399,7 +1631,9 @@ export function Collections({
           </button>
           {canExecute &&
             has("deliver") &&
-            !["succeeded", "cancelled"].includes(run.status.observed_state) && (
+            !["succeeded", "cancelled", "kept_local"].includes(
+              run.status.observed_state,
+            ) && (
               <button
                 disabled={busy}
                 onClick={() => {
@@ -1409,6 +1643,7 @@ export function Collections({
                     input: structuredClone(run.input),
                     definition: structuredClone(run.definition),
                     run: structuredClone(run.status),
+                    context: structuredClone(run.context),
                     key: operationKey(),
                   });
                 }}
@@ -1454,6 +1689,12 @@ export function Collections({
                 connection={pending.preview.collection.connection}
                 effects={pending.preview.effects}
               />
+              {pending.preview.definition.program && (
+                <ProgramReview program={pending.preview.definition.program} />
+              )}
+              {pending.kind === "approve" && pending.difference && (
+                <DifferenceReview difference={pending.difference} />
+              )}
               <p>
                 Definition <code>{pending.preview.definition_hash}</code>. This
                 records a configuration decision and makes no source or receiver
@@ -1467,6 +1708,9 @@ export function Collections({
                 connection={pending.preview.definition.source_connection}
                 effects={pending.preview.definition.effects}
               />
+              {pending.workflow.definition.program && (
+                <ProgramReview program={pending.workflow.definition.program} />
+              )}
               <p>
                 Cutoff {pending.selection.timeout_seconds} seconds from durable
                 queueing. This action queues metadata only.
@@ -1486,6 +1730,9 @@ export function Collections({
                 <code>{pending.input.sha256}</code>.
               </p>
               <ReceiverEffects effects={pending.definition.effects} />
+              {pending.run.run.execution_plan && (
+                <PlanReview plan={pending.run.run.execution_plan} />
+              )}
             </>
           ) : (
             <>
@@ -1498,6 +1745,9 @@ export function Collections({
                 connection={pending.view.job.definition.source_connection}
                 effects={pending.view.job.definition.effects}
               />
+              {pending.workflow?.definition.program && (
+                <ProgramReview program={pending.workflow.definition.program} />
+              )}
               <p>
                 {pending.kind === "work"
                   ? "This reads the source and accepts verified local bytes under the original lease, cutoff and intake policy. It does not send downstream."

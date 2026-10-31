@@ -106,7 +106,8 @@ All routes use the existing tenant/partner prefix, scoped bearer token and TLS. 
 | `GET workflows/ID/VERSION/diff?against=OLD` | Compare two authorized versions without external contact. |
 | `POST workflows/ID/VERSION/approve` | Approve the reviewed hash/state under current authority. |
 | `POST workflows/ID/VERSION/revoke` | Revoke that exact approval. |
-| `POST workflow-runs` | Atomically create the frozen run and every delivery intent. |
+| `POST workflow-runs/preview` | Read-only exact-input preview with potential and selected effects; see [approved routing programs](workflow-programs.md). |
+| `POST workflow-runs` | Atomically create the frozen run and its selected delivery intents. |
 | `GET workflow-runs/ID` | Current run projection, steps and derived observations. |
 | `POST workflow-runs/ID/work` | Persist one dispatch decision and execute its existing bounded intent. |
 | `POST workflow-runs/ID/cancel` | Cancel eligible queued work using exact run preconditions. |
