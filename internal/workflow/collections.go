@@ -393,10 +393,11 @@ func (s *Service) advanceCollection(ctx context.Context, t *store.Transaction, j
 	if e = s.checkStorage(d.StorageID); e != nil {
 		return e
 	}
-	_, w, e := approved(ctx, t, d.Workflow)
+	execution, e := s.effectiveCollectionRouting(ctx, t, j, d)
 	if e != nil {
 		return e
 	}
+	w := execution.Definition
 	if len(w.Steps) == 0 && w.Schema == 1 {
 		return nil
 	}
@@ -424,7 +425,7 @@ func (s *Service) advanceCollection(ctx context.Context, t *store.Transaction, j
 	}
 	var routingCounts map[string]int
 	if w.Schema == 2 {
-		routingCounts, e = s.collectionRoutingCounts(ctx, t, j, d, w, inputs)
+		routingCounts, e = s.collectionRoutingCounts(ctx, t, j, execution.Workflow, w, inputs, execution.Binding)
 		if e != nil {
 			return e
 		}
@@ -470,7 +471,11 @@ func (s *Service) advanceCollection(ctx context.Context, t *store.Transaction, j
 		if e != nil {
 			return e
 		}
-		run, e := s.stageRun(ctx, t, RunRequest{Workflow: d.Workflow, FileID: file.ID}, w, file, d.StorageID)
+		routingID := ""
+		if execution.Authorization != nil {
+			routingID = execution.Authorization.ID
+		}
+		run, e := s.stageRunWithRouting(ctx, t, RunRequest{Workflow: execution.Workflow, FileID: file.ID}, w, file, d.StorageID, routingID)
 		if e != nil {
 			return e
 		}

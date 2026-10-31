@@ -1,5 +1,7 @@
 # Remote SFTP collection
 
+For separately approved routing changes to an existing captured batch, see [captured routing authorization](captured-routing-authorization.md). Selected backend contracts now pass in temporary PostgreSQL databases; browser controls, retained upgrade and stock-source/receiver qualification remain pending.
+
 Open **Collections** to prepare an ordinary versioned workflow with a remote input. Select a registered source connection, ready-manifest name, existing virtual target folder and file/byte limits. Add outgoing SFTP steps if needed; zero outgoing steps means local collection only. Preview shows the pinned source identity, local paths and all receiver effects without contacting a peer.
 
 Saving a draft, approving its exact definition, queueing a job, reading the source, queueing downstream work and executing each next transfer step are separate actions. A saved draft survives reload in the saved-workflow picker. The picker shows the latest revision of each collection workflow owned by this account. Queueing requires the exact approved revision under current account authority.

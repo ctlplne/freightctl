@@ -108,6 +108,13 @@ func (s *Service) Run(ctx context.Context, scope store.Scope, key string, r RunR
 // stageRun writes the ordinary run and delivery intents in its caller's
 // transaction. It makes no network contact and never commits that transaction.
 func (s *Service) stageRun(ctx context.Context, t *store.Transaction, r RunRequest, definition *Definition, source *store.File, storageID string) (*store.WorkflowRun, error) {
+	return s.stageRunWithRouting(ctx, t, r, definition, source, storageID, "")
+}
+
+func (s *Service) stageRunWithRouting(ctx context.Context, t *store.Transaction, r RunRequest, definition *Definition, source *store.File, storageID, routingID string) (*store.WorkflowRun, error) {
+	if routingID != "" && (!store.ValidID(routingID) || definition.Schema != 2 || definition.Source == nil) {
+		return nil, store.ErrState
+	}
 	steps := definition.Steps
 	var plan *ExecutionPlan
 	if definition.Schema == 2 {
@@ -129,7 +136,7 @@ func (s *Service) stageRun(ctx context.Context, t *store.Transaction, r RunReque
 	} else if plan == nil {
 		return nil, store.ErrState
 	}
-	run := &store.WorkflowRun{ID: secure.NewID(), WorkflowID: r.Workflow.ID, WorkflowVersion: r.Workflow.Version, WorkflowHash: r.Workflow.Hash, FileID: source.ID, Source: *source, StorageID: storageID, Root: t.Root, Authority: t.AuthorityRevision, State: "queued", Reason: "awaiting_worker", Revision: 1}
+	run := &store.WorkflowRun{ID: secure.NewID(), WorkflowID: r.Workflow.ID, WorkflowVersion: r.Workflow.Version, WorkflowHash: r.Workflow.Hash, FileID: source.ID, Source: *source, StorageID: storageID, Root: t.Root, Authority: t.AuthorityRevision, State: "queued", Reason: "awaiting_worker", Revision: 1, RoutingID: routingID}
 	if plan != nil {
 		var err error
 		run.Plan, run.PlanHash, err = digest(plan)

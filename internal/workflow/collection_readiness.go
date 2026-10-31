@@ -61,14 +61,19 @@ func (s *Service) CollectionReady(ctx context.Context, scope store.Scope, id str
 		return r, t.Tx.Commit(ctx)
 	}
 	r.Reason = "collection_has_no_pending_routes"
-	_, w, err := approved(ctx, t, d.Workflow)
+	execution, err := s.effectiveCollectionRouting(ctx, t, j, d)
+	if errors.Is(err, store.ErrCollection) {
+		r.Reason = "routing_authorization_not_current"
+		return r, t.Tx.Commit(ctx)
+	}
 	if err != nil {
 		return nil, err
 	}
-	if len(d.Effects) == 0 && w.Schema == 1 {
+	w := execution.Definition
+	if len(w.Steps) == 0 && w.Schema == 1 {
 		return r, t.Tx.Commit(ctx)
 	}
-	if len(d.Effects) > 0 {
+	if len(w.Steps) > 0 {
 		if err = t.Require("deliver"); err != nil {
 			return nil, err
 		}
@@ -108,7 +113,7 @@ func (s *Service) CollectionReady(ctx context.Context, scope store.Scope, id str
 	if r.RouteReady {
 		counts := map[string]int{}
 		if w.Schema == 2 {
-			counts, err = s.collectionRoutingCounts(ctx, t, j, d, w, inputs)
+			counts, err = s.collectionRoutingCounts(ctx, t, j, execution.Workflow, w, inputs, execution.Binding)
 			if errors.Is(err, ErrRouting) {
 				r.RouteReady = false
 				r.Reason = "routing_decision_required"
@@ -123,7 +128,7 @@ func (s *Service) CollectionReady(ctx context.Context, scope store.Scope, id str
 			if input.JobID != j.ID || input.State != "accepted" {
 				continue
 			}
-			needed := len(d.Effects)
+			needed := len(w.Steps)
 			if w.Schema == 2 {
 				needed = counts[input.ID]
 			}

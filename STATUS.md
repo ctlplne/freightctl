@@ -4,7 +4,17 @@
 - Local `main` only. Author and committer: `imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>`.
 - No push, publication or external deployment. Local inference and the malware scanner stayed off. X05 still needs an authorized inference endpoint and explicit allowance.
 
-## Latest locally verified increment
+## F041 backend checkpoint; full feature in progress
+
+F041's [captured-batch routing authorization](docs/captured-routing-authorization.md) now has a backend candidate: typed metadata preview, per-input plan inspection, separate proposal/approval, revocation/withdrawal, private status/history, API/CLI access and immutable run authorization references. Ordinary batch admission selects the effective approval and checks every pending plan binding. New migration 033 adds actor-private forced RLS, independent SQL plan bindings and fingerprints, event/projection guards, original-source lineage and current execution checks. Applied migrations 001–032 were not changed.
+
+All **133 workflow tests and two fuzz harnesses** pass with zero failures or skips in **255.269 seconds** on **428 archived, unchanged source inputs**. Seven new real PostgreSQL cases cover blocked-batch repair, forged bindings, missing run lineage, revocation without fallback, actor/partner/tenant RLS, exact feed/audit redaction, separate withdrawal, original-key recovery, stale prior decisions and independent Go/SQL wire fingerprints, including 64 bindings. Migration 033 executes only in temporary fixture databases. Three migration/isolation/fencing regressions and all 17 API tests also pass.
+
+The independent browser validation layer reproduces Go fingerprints and rejects forged original facts, stale reviews, ambiguous bindings and invalid receipts. All **95 frontend contracts**, including nine new cases, and TypeScript checking pass. These are data contracts; the browser controls and run inspection are not wired yet. The initial missing-API failure and sandbox-denied API listener attempt remain preserved; the latter passes under authorized loopback execution. [F041 progress evidence](docs/qualification/evidence/F041-captured-routing-authorization.json) keeps the precise component scope and remaining gates.
+
+The owner's final aggregate replay remains pending and was not retried. Task PostgreSQL was restored to its original stopped state after confirming zero attached clients. Retained schema **32 / 61 forced-RLS tables**, **31,928 events, 2,090 files, 4,522 credentials**, grants and account authority are unchanged. Local models and the scanner stayed off. Retained migration upgrade, browser recovery, scheduled/partial-capacity combinations and independent stock-source/receiver qualification remain required. F041 does not qualify a whole parity row or full journey.
+
+## Last completed increment (F040)
 
 F040 adds [approved routing programs](docs/workflow-programs.md) to the ordinary workflow engine. Schema 2 selects from the existing fixed recipient catalog through typed branches and finite loops. Exact file and original collection facts produce one immutable plan. PostgreSQL independently recomputes its choices and fingerprint before selected intents, events and the original receipt commit together. Schema-1 fingerprints and ordered behavior remain unchanged.
 

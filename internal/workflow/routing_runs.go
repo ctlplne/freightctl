@@ -74,7 +74,7 @@ func planStepsMatch(plan *ExecutionPlan, steps []store.WorkflowStep) bool {
 
 // Compile every remaining sibling before capacity can split admission. A full
 // send queue may delay work, but cannot hide an undecidable later input.
-func (s *Service) collectionRoutingCounts(ctx context.Context, t *store.Transaction, j *store.CollectionJob, d *CollectionDefinition, w *Definition, inputs []store.CollectionInput) (map[string]int, error) {
+func (s *Service) collectionRoutingCounts(ctx context.Context, t *store.Transaction, j *store.CollectionJob, ref Reference, w *Definition, inputs []store.CollectionInput, authorization *CollectionRoutingDefinition) (map[string]int, error) {
 	counts := map[string]int{}
 	for _, input := range inputs {
 		if input.JobID != j.ID || input.State != "accepted" {
@@ -97,9 +97,25 @@ func (s *Service) collectionRoutingCounts(ctx context.Context, t *store.Transact
 		if err != nil {
 			return nil, err
 		}
-		_, selected, err := s.planRun(ctx, t, RunRequest{Workflow: d.Workflow, FileID: file.ID}, w, file)
+		plan, selected, err := s.planRun(ctx, t, RunRequest{Workflow: ref, FileID: file.ID}, w, file)
 		if err != nil {
 			return nil, err
+		}
+		if authorization != nil {
+			_, hash, err := digest(plan)
+			if err != nil {
+				return nil, err
+			}
+			matched := false
+			for _, binding := range authorization.Inputs {
+				if binding.InputID == input.ID && binding.FileID == file.ID && binding.PlanHash == hash {
+					matched = true
+					break
+				}
+			}
+			if !matched {
+				return nil, store.ErrRevision
+			}
 		}
 		counts[input.ID] = len(selected)
 	}

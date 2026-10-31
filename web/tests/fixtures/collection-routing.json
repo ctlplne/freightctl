@@ -1,0 +1,679 @@
+{
+  "local": {
+    "view": {
+      "job": {
+        "id": "00000007-1111-4111-8111-111111111111",
+        "workflow_id": "00000004-1111-4111-8111-111111111111",
+        "workflow_version": 2,
+        "workflow_hash": "7c52b1d2cf2ac10f549d49be5de78df31bf82a09bce334d110df84ec85ba4572",
+        "definition": {
+          "schema_version": 1,
+          "workflow": {
+            "id": "00000004-1111-4111-8111-111111111111",
+            "version": 2,
+            "hash": "7c52b1d2cf2ac10f549d49be5de78df31bf82a09bce334d110df84ec85ba4572"
+          },
+          "source": {
+            "kind": "sftp.collect",
+            "connection": {
+              "id": "00000001-1111-4111-8111-111111111111",
+              "version": 1,
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "manifest": "settlement.ready.json",
+            "target_directory": "/incoming",
+            "completion_contract": "immutable-files-sha256-manifest-v1",
+            "max_files": 4,
+            "max_file_bytes": 1048576,
+            "max_total_bytes": 2097152
+          },
+          "source_connection": {
+            "id": "00000001-1111-4111-8111-111111111111",
+            "version": 1,
+            "definition_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "state": "active",
+            "revision": 1,
+            "address": "127.0.0.1:2221",
+            "user": "producer",
+            "directory": "/producer",
+            "host_fingerprint": "SHA256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+            "key_fingerprint": "SHA256:CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
+          },
+          "source_identity": "253722ec90b1d89011fe53bb263322607667071495b30c87f84928a6c3506b5f",
+          "authority_revision": 3,
+          "storage_id": "00000005-1111-4111-8111-111111111111",
+          "namespace_root": "/",
+          "timeout_seconds": 120,
+          "effects": [
+            {
+              "step_id": "send",
+              "connection": {
+                "id": "00000002-1111-4111-8111-111111111111",
+                "version": 2,
+                "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+              },
+              "address": "127.0.0.1:2222",
+              "directory": "/receiver",
+              "final_name_pattern": "\u003cdelivery UUID\u003e-settlement.csv",
+              "host_fingerprint": "SHA256:BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"
+            }
+          ]
+        },
+        "definition_hash": "c471e568f47ae86e0424dd7845689271932b3a10170ad95f18137aa4d1dff6a0",
+        "state": "captured",
+        "captured": true,
+        "revision": 4,
+        "fence": 1,
+        "attempts": 1,
+        "lease_owner": "",
+        "lease_until": null,
+        "next_at": "2026-10-31T12:00:00Z",
+        "created_at": "2026-10-31T12:00:00Z",
+        "deadline_at": "2026-10-31T12:02:00Z",
+        "manifest": {
+          "schema_version": 1,
+          "batch_id": "00000006-1111-4111-8111-111111111111",
+          "files": [
+            {
+              "name": "one.csv",
+              "size_bytes": 3,
+              "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+            }
+          ]
+        },
+        "manifest_hash": "4abd79ff6ac5c652dc2dc5427e63c0d0dbfac34dd856b7833668a073200bb595",
+        "reason": "batch_captured"
+      },
+      "inputs": [
+        {
+          "id": "00000008-1111-4111-8111-111111111111",
+          "first_job_id": "00000007-1111-4111-8111-111111111111",
+          "workflow_id": "00000004-1111-4111-8111-111111111111",
+          "source_identity": "253722ec90b1d89011fe53bb263322607667071495b30c87f84928a6c3506b5f",
+          "input_identity": "1038caafcdc479e3f88ad9a393875ab849a9bb0d500f47f2bdff13d5fead44a7",
+          "source_name": "one.csv",
+          "size_bytes": 3,
+          "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+          "target_path": "/incoming/ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad-one.csv",
+          "object_id": "00000009-1111-4111-8111-111111111111",
+          "state": "accepted",
+          "revision": 2,
+          "capture_fence": 1,
+          "capture_owner": "0000000a-1111-4111-8111-111111111111",
+          "file_id": "00000009-1111-4111-8111-111111111111",
+          "run_id": null
+        }
+      ],
+      "current_authority": true,
+      "observed_state": "captured",
+      "business_acceptance": "unknown",
+      "local_states": [
+        {
+          "input_id": "00000008-1111-4111-8111-111111111111",
+          "state": "published"
+        }
+      ]
+    },
+    "workflow": {
+      "id": "00000004-1111-4111-8111-111111111111",
+      "version": 4,
+      "definition": {
+        "schema_version": 2,
+        "name": "Settlement \u003csource\u003e \u0026 review\u2028next",
+        "steps": [
+          {
+            "id": "send",
+            "kind": "sftp.deliver",
+            "connection": {
+              "id": "00000002-1111-4111-8111-111111111111",
+              "version": 2,
+              "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            },
+            "filename": "settlement.csv"
+          }
+        ],
+        "source": {
+          "kind": "sftp.collect",
+          "connection": {
+            "id": "00000001-1111-4111-8111-111111111111",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "manifest": "settlement.ready.json",
+          "target_directory": "/incoming",
+          "completion_contract": "immutable-files-sha256-manifest-v1",
+          "max_files": 4,
+          "max_file_bytes": 1048576,
+          "max_total_bytes": 2097152
+        },
+        "program": {
+          "nodes": [
+            {
+              "kind": "keep_local",
+              "reason": "reviewed_local_outcome"
+            }
+          ]
+        }
+      },
+      "definition_hash": "c77bd727cb61beb551c880a7aaffaa5fe0d0fa794be25ff5e8d47e6c92692e0d",
+      "state": "approved",
+      "revision": 2,
+      "approval_authority": 3
+    },
+    "selection": {
+      "collection": {
+        "definition_hash": "c471e568f47ae86e0424dd7845689271932b3a10170ad95f18137aa4d1dff6a0",
+        "expected_revision": 4
+      },
+      "workflow": {
+        "id": "00000004-1111-4111-8111-111111111111",
+        "version": 4,
+        "hash": "c77bd727cb61beb551c880a7aaffaa5fe0d0fa794be25ff5e8d47e6c92692e0d"
+      },
+      "expected_authority_revision": 3
+    },
+    "preview": {
+      "definition": {
+        "schema_version": 1,
+        "collection": {
+          "id": "00000007-1111-4111-8111-111111111111",
+          "revision": 4,
+          "definition_hash": "c471e568f47ae86e0424dd7845689271932b3a10170ad95f18137aa4d1dff6a0"
+        },
+        "original_workflow": {
+          "id": "00000004-1111-4111-8111-111111111111",
+          "version": 2,
+          "hash": "7c52b1d2cf2ac10f549d49be5de78df31bf82a09bce334d110df84ec85ba4572"
+        },
+        "workflow": {
+          "id": "00000004-1111-4111-8111-111111111111",
+          "version": 4,
+          "hash": "c77bd727cb61beb551c880a7aaffaa5fe0d0fa794be25ff5e8d47e6c92692e0d"
+        },
+        "manifest_hash": "4abd79ff6ac5c652dc2dc5427e63c0d0dbfac34dd856b7833668a073200bb595",
+        "authority_revision": 3,
+        "storage_id": "00000005-1111-4111-8111-111111111111",
+        "namespace_root": "/",
+        "inputs": [
+          {
+            "input_id": "00000008-1111-4111-8111-111111111111",
+            "file_id": "00000009-1111-4111-8111-111111111111",
+            "plan_hash": "37fb75dec6b0415c6343957eefa396c88ba1174fa77370c958e8f7becec69671"
+          }
+        ],
+        "previous": {
+          "id": "00000040-1111-4111-8111-111111111111",
+          "version": 1,
+          "definition_hash": "691c23bcff0742e007b565f235d4a734d7e3819649941fa6282a16abbe56d0bc",
+          "revision": 2
+        }
+      },
+      "definition_hash": "7767d080c23bcda2f48b479268e23653e2354b02b3651ac2c924fd1d562b5d97",
+      "external_contact": false,
+      "approval_required": true
+    },
+    "authorization": {
+      "id": "00000041-1111-4111-8111-111111111111",
+      "job_id": "00000007-1111-4111-8111-111111111111",
+      "version": 2,
+      "definition": {
+        "schema_version": 1,
+        "collection": {
+          "id": "00000007-1111-4111-8111-111111111111",
+          "revision": 4,
+          "definition_hash": "c471e568f47ae86e0424dd7845689271932b3a10170ad95f18137aa4d1dff6a0"
+        },
+        "original_workflow": {
+          "id": "00000004-1111-4111-8111-111111111111",
+          "version": 2,
+          "hash": "7c52b1d2cf2ac10f549d49be5de78df31bf82a09bce334d110df84ec85ba4572"
+        },
+        "workflow": {
+          "id": "00000004-1111-4111-8111-111111111111",
+          "version": 4,
+          "hash": "c77bd727cb61beb551c880a7aaffaa5fe0d0fa794be25ff5e8d47e6c92692e0d"
+        },
+        "manifest_hash": "4abd79ff6ac5c652dc2dc5427e63c0d0dbfac34dd856b7833668a073200bb595",
+        "authority_revision": 3,
+        "storage_id": "00000005-1111-4111-8111-111111111111",
+        "namespace_root": "/",
+        "inputs": [
+          {
+            "input_id": "00000008-1111-4111-8111-111111111111",
+            "file_id": "00000009-1111-4111-8111-111111111111",
+            "plan_hash": "37fb75dec6b0415c6343957eefa396c88ba1174fa77370c958e8f7becec69671"
+          }
+        ],
+        "previous": {
+          "id": "00000040-1111-4111-8111-111111111111",
+          "version": 1,
+          "definition_hash": "691c23bcff0742e007b565f235d4a734d7e3819649941fa6282a16abbe56d0bc",
+          "revision": 2
+        }
+      },
+      "definition_hash": "7767d080c23bcda2f48b479268e23653e2354b02b3651ac2c924fd1d562b5d97",
+      "state": "proposed",
+      "revision": 1,
+      "approval_authority": 0
+    },
+    "prior": {
+      "id": "00000040-1111-4111-8111-111111111111",
+      "job_id": "00000007-1111-4111-8111-111111111111",
+      "version": 1,
+      "definition": {
+        "schema_version": 1,
+        "collection": {
+          "id": "00000007-1111-4111-8111-111111111111",
+          "revision": 4,
+          "definition_hash": "c471e568f47ae86e0424dd7845689271932b3a10170ad95f18137aa4d1dff6a0"
+        },
+        "original_workflow": {
+          "id": "00000004-1111-4111-8111-111111111111",
+          "version": 2,
+          "hash": "7c52b1d2cf2ac10f549d49be5de78df31bf82a09bce334d110df84ec85ba4572"
+        },
+        "workflow": {
+          "id": "00000004-1111-4111-8111-111111111111",
+          "version": 3,
+          "hash": "2af0ae32d93c227489eeff458a1b56a14010aa90e2b63083fd9fc34c5b0dc3df"
+        },
+        "manifest_hash": "4abd79ff6ac5c652dc2dc5427e63c0d0dbfac34dd856b7833668a073200bb595",
+        "authority_revision": 3,
+        "storage_id": "00000005-1111-4111-8111-111111111111",
+        "namespace_root": "/",
+        "inputs": [
+          {
+            "input_id": "00000008-1111-4111-8111-111111111111",
+            "file_id": "00000009-1111-4111-8111-111111111111",
+            "plan_hash": "92de14addb7ecdb388a42aac3b288a5cf286ab4b949615012f253fa6c6a9d067"
+          }
+        ]
+      },
+      "definition_hash": "691c23bcff0742e007b565f235d4a734d7e3819649941fa6282a16abbe56d0bc",
+      "state": "approved",
+      "revision": 2,
+      "approval_authority": 3
+    },
+    "input_preview": {
+      "workflow": {
+        "id": "00000004-1111-4111-8111-111111111111",
+        "version": 4,
+        "hash": "c77bd727cb61beb551c880a7aaffaa5fe0d0fa794be25ff5e8d47e6c92692e0d"
+      },
+      "source": {
+        "id": "00000009-1111-4111-8111-111111111111",
+        "size_bytes": 3,
+        "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+        "policy": "integrity-only-v1",
+        "accepted_event_id": "0000000c-1111-4111-8111-111111111111"
+      },
+      "potential_effects": [
+        {
+          "step_id": "send",
+          "connection": {
+            "id": "00000002-1111-4111-8111-111111111111",
+            "version": 2,
+            "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "address": "127.0.0.1:2222",
+          "directory": "/receiver",
+          "final_name_pattern": "\u003cdelivery UUID\u003e-settlement.csv",
+          "host_fingerprint": "SHA256:BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"
+        }
+      ],
+      "selected_effects": [],
+      "execution_plan": {
+        "schema_version": 1,
+        "facts": {
+          "file": {
+            "id": "00000009-1111-4111-8111-111111111111",
+            "size_bytes": 3,
+            "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+            "policy": "integrity-only-v1",
+            "accepted_event_id": "0000000c-1111-4111-8111-111111111111"
+          },
+          "source": {
+            "collection_id": "00000007-1111-4111-8111-111111111111",
+            "manifest_hash": "4abd79ff6ac5c652dc2dc5427e63c0d0dbfac34dd856b7833668a073200bb595",
+            "name": "one.csv",
+            "batch_id": "00000006-1111-4111-8111-111111111111",
+            "file_count": 1,
+            "index": 0
+          }
+        },
+        "selected_steps": [],
+        "decisions": [
+          {
+            "path": "0",
+            "kind": "keep_local",
+            "reason": "reviewed_local_outcome"
+          }
+        ],
+        "local_reason": "reviewed_local_outcome"
+      },
+      "execution_plan_hash": "37fb75dec6b0415c6343957eefa396c88ba1174fa77370c958e8f7becec69671",
+      "external_contact": false
+    }
+  },
+  "send": {
+    "view": {
+      "job": {
+        "id": "00000007-1111-4111-8111-111111111111",
+        "workflow_id": "00000004-1111-4111-8111-111111111111",
+        "workflow_version": 2,
+        "workflow_hash": "7c52b1d2cf2ac10f549d49be5de78df31bf82a09bce334d110df84ec85ba4572",
+        "definition": {
+          "schema_version": 1,
+          "workflow": {
+            "id": "00000004-1111-4111-8111-111111111111",
+            "version": 2,
+            "hash": "7c52b1d2cf2ac10f549d49be5de78df31bf82a09bce334d110df84ec85ba4572"
+          },
+          "source": {
+            "kind": "sftp.collect",
+            "connection": {
+              "id": "00000001-1111-4111-8111-111111111111",
+              "version": 1,
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "manifest": "settlement.ready.json",
+            "target_directory": "/incoming",
+            "completion_contract": "immutable-files-sha256-manifest-v1",
+            "max_files": 4,
+            "max_file_bytes": 1048576,
+            "max_total_bytes": 2097152
+          },
+          "source_connection": {
+            "id": "00000001-1111-4111-8111-111111111111",
+            "version": 1,
+            "definition_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "state": "active",
+            "revision": 1,
+            "address": "127.0.0.1:2221",
+            "user": "producer",
+            "directory": "/producer",
+            "host_fingerprint": "SHA256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+            "key_fingerprint": "SHA256:CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
+          },
+          "source_identity": "253722ec90b1d89011fe53bb263322607667071495b30c87f84928a6c3506b5f",
+          "authority_revision": 3,
+          "storage_id": "00000005-1111-4111-8111-111111111111",
+          "namespace_root": "/",
+          "timeout_seconds": 120,
+          "effects": [
+            {
+              "step_id": "send",
+              "connection": {
+                "id": "00000002-1111-4111-8111-111111111111",
+                "version": 2,
+                "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+              },
+              "address": "127.0.0.1:2222",
+              "directory": "/receiver",
+              "final_name_pattern": "\u003cdelivery UUID\u003e-settlement.csv",
+              "host_fingerprint": "SHA256:BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"
+            }
+          ]
+        },
+        "definition_hash": "c471e568f47ae86e0424dd7845689271932b3a10170ad95f18137aa4d1dff6a0",
+        "state": "captured",
+        "captured": true,
+        "revision": 4,
+        "fence": 1,
+        "attempts": 1,
+        "lease_owner": "",
+        "lease_until": null,
+        "next_at": "2026-10-31T12:00:00Z",
+        "created_at": "2026-10-31T12:00:00Z",
+        "deadline_at": "2026-10-31T12:02:00Z",
+        "manifest": {
+          "schema_version": 1,
+          "batch_id": "00000006-1111-4111-8111-111111111111",
+          "files": [
+            {
+              "name": "one.csv",
+              "size_bytes": 3,
+              "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+            }
+          ]
+        },
+        "manifest_hash": "4abd79ff6ac5c652dc2dc5427e63c0d0dbfac34dd856b7833668a073200bb595",
+        "reason": "batch_captured"
+      },
+      "inputs": [
+        {
+          "id": "00000008-1111-4111-8111-111111111111",
+          "first_job_id": "00000007-1111-4111-8111-111111111111",
+          "workflow_id": "00000004-1111-4111-8111-111111111111",
+          "source_identity": "253722ec90b1d89011fe53bb263322607667071495b30c87f84928a6c3506b5f",
+          "input_identity": "1038caafcdc479e3f88ad9a393875ab849a9bb0d500f47f2bdff13d5fead44a7",
+          "source_name": "one.csv",
+          "size_bytes": 3,
+          "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+          "target_path": "/incoming/ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad-one.csv",
+          "object_id": "00000009-1111-4111-8111-111111111111",
+          "state": "accepted",
+          "revision": 2,
+          "capture_fence": 1,
+          "capture_owner": "0000000a-1111-4111-8111-111111111111",
+          "file_id": "00000009-1111-4111-8111-111111111111",
+          "run_id": null
+        }
+      ],
+      "current_authority": true,
+      "observed_state": "captured",
+      "business_acceptance": "unknown",
+      "local_states": [
+        {
+          "input_id": "00000008-1111-4111-8111-111111111111",
+          "state": "published"
+        }
+      ]
+    },
+    "workflow": {
+      "id": "00000004-1111-4111-8111-111111111111",
+      "version": 3,
+      "definition": {
+        "schema_version": 2,
+        "name": "Settlement \u003csource\u003e \u0026 review\u2028next",
+        "steps": [
+          {
+            "id": "send",
+            "kind": "sftp.deliver",
+            "connection": {
+              "id": "00000002-1111-4111-8111-111111111111",
+              "version": 2,
+              "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            },
+            "filename": "settlement.csv"
+          }
+        ],
+        "source": {
+          "kind": "sftp.collect",
+          "connection": {
+            "id": "00000001-1111-4111-8111-111111111111",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "manifest": "settlement.ready.json",
+          "target_directory": "/incoming",
+          "completion_contract": "immutable-files-sha256-manifest-v1",
+          "max_files": 4,
+          "max_file_bytes": 1048576,
+          "max_total_bytes": 2097152
+        },
+        "program": {
+          "nodes": [
+            {
+              "kind": "deliver",
+              "step": "send"
+            }
+          ]
+        }
+      },
+      "definition_hash": "2af0ae32d93c227489eeff458a1b56a14010aa90e2b63083fd9fc34c5b0dc3df",
+      "state": "approved",
+      "revision": 2,
+      "approval_authority": 3
+    },
+    "selection": {
+      "collection": {
+        "definition_hash": "c471e568f47ae86e0424dd7845689271932b3a10170ad95f18137aa4d1dff6a0",
+        "expected_revision": 4
+      },
+      "workflow": {
+        "id": "00000004-1111-4111-8111-111111111111",
+        "version": 3,
+        "hash": "2af0ae32d93c227489eeff458a1b56a14010aa90e2b63083fd9fc34c5b0dc3df"
+      },
+      "expected_authority_revision": 3
+    },
+    "preview": {
+      "definition": {
+        "schema_version": 1,
+        "collection": {
+          "id": "00000007-1111-4111-8111-111111111111",
+          "revision": 4,
+          "definition_hash": "c471e568f47ae86e0424dd7845689271932b3a10170ad95f18137aa4d1dff6a0"
+        },
+        "original_workflow": {
+          "id": "00000004-1111-4111-8111-111111111111",
+          "version": 2,
+          "hash": "7c52b1d2cf2ac10f549d49be5de78df31bf82a09bce334d110df84ec85ba4572"
+        },
+        "workflow": {
+          "id": "00000004-1111-4111-8111-111111111111",
+          "version": 3,
+          "hash": "2af0ae32d93c227489eeff458a1b56a14010aa90e2b63083fd9fc34c5b0dc3df"
+        },
+        "manifest_hash": "4abd79ff6ac5c652dc2dc5427e63c0d0dbfac34dd856b7833668a073200bb595",
+        "authority_revision": 3,
+        "storage_id": "00000005-1111-4111-8111-111111111111",
+        "namespace_root": "/",
+        "inputs": [
+          {
+            "input_id": "00000008-1111-4111-8111-111111111111",
+            "file_id": "00000009-1111-4111-8111-111111111111",
+            "plan_hash": "92de14addb7ecdb388a42aac3b288a5cf286ab4b949615012f253fa6c6a9d067"
+          }
+        ]
+      },
+      "definition_hash": "691c23bcff0742e007b565f235d4a734d7e3819649941fa6282a16abbe56d0bc",
+      "external_contact": false,
+      "approval_required": true
+    },
+    "authorization": {
+      "id": "00000040-1111-4111-8111-111111111111",
+      "job_id": "00000007-1111-4111-8111-111111111111",
+      "version": 1,
+      "definition": {
+        "schema_version": 1,
+        "collection": {
+          "id": "00000007-1111-4111-8111-111111111111",
+          "revision": 4,
+          "definition_hash": "c471e568f47ae86e0424dd7845689271932b3a10170ad95f18137aa4d1dff6a0"
+        },
+        "original_workflow": {
+          "id": "00000004-1111-4111-8111-111111111111",
+          "version": 2,
+          "hash": "7c52b1d2cf2ac10f549d49be5de78df31bf82a09bce334d110df84ec85ba4572"
+        },
+        "workflow": {
+          "id": "00000004-1111-4111-8111-111111111111",
+          "version": 3,
+          "hash": "2af0ae32d93c227489eeff458a1b56a14010aa90e2b63083fd9fc34c5b0dc3df"
+        },
+        "manifest_hash": "4abd79ff6ac5c652dc2dc5427e63c0d0dbfac34dd856b7833668a073200bb595",
+        "authority_revision": 3,
+        "storage_id": "00000005-1111-4111-8111-111111111111",
+        "namespace_root": "/",
+        "inputs": [
+          {
+            "input_id": "00000008-1111-4111-8111-111111111111",
+            "file_id": "00000009-1111-4111-8111-111111111111",
+            "plan_hash": "92de14addb7ecdb388a42aac3b288a5cf286ab4b949615012f253fa6c6a9d067"
+          }
+        ]
+      },
+      "definition_hash": "691c23bcff0742e007b565f235d4a734d7e3819649941fa6282a16abbe56d0bc",
+      "state": "proposed",
+      "revision": 1,
+      "approval_authority": 0
+    },
+    "prior": null,
+    "input_preview": {
+      "workflow": {
+        "id": "00000004-1111-4111-8111-111111111111",
+        "version": 3,
+        "hash": "2af0ae32d93c227489eeff458a1b56a14010aa90e2b63083fd9fc34c5b0dc3df"
+      },
+      "source": {
+        "id": "00000009-1111-4111-8111-111111111111",
+        "size_bytes": 3,
+        "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+        "policy": "integrity-only-v1",
+        "accepted_event_id": "0000000c-1111-4111-8111-111111111111"
+      },
+      "potential_effects": [
+        {
+          "step_id": "send",
+          "connection": {
+            "id": "00000002-1111-4111-8111-111111111111",
+            "version": 2,
+            "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "address": "127.0.0.1:2222",
+          "directory": "/receiver",
+          "final_name_pattern": "\u003cdelivery UUID\u003e-settlement.csv",
+          "host_fingerprint": "SHA256:BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"
+        }
+      ],
+      "selected_effects": [
+        {
+          "step_id": "send",
+          "connection": {
+            "id": "00000002-1111-4111-8111-111111111111",
+            "version": 2,
+            "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "address": "127.0.0.1:2222",
+          "directory": "/receiver",
+          "final_name_pattern": "\u003cdelivery UUID\u003e-settlement.csv",
+          "host_fingerprint": "SHA256:BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"
+        }
+      ],
+      "execution_plan": {
+        "schema_version": 1,
+        "facts": {
+          "file": {
+            "id": "00000009-1111-4111-8111-111111111111",
+            "size_bytes": 3,
+            "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+            "policy": "integrity-only-v1",
+            "accepted_event_id": "0000000c-1111-4111-8111-111111111111"
+          },
+          "source": {
+            "collection_id": "00000007-1111-4111-8111-111111111111",
+            "manifest_hash": "4abd79ff6ac5c652dc2dc5427e63c0d0dbfac34dd856b7833668a073200bb595",
+            "name": "one.csv",
+            "batch_id": "00000006-1111-4111-8111-111111111111",
+            "file_count": 1,
+            "index": 0
+          }
+        },
+        "selected_steps": [
+          "send"
+        ],
+        "decisions": [
+          {
+            "path": "0",
+            "kind": "deliver",
+            "step": "send"
+          }
+        ]
+      },
+      "execution_plan_hash": "92de14addb7ecdb388a42aac3b288a5cf286ab4b949615012f253fa6c6a9d067",
+      "external_contact": false
+    }
+  }
+}

@@ -320,7 +320,7 @@ func redactOnboardingEvent(e Event) Event {
 			return e
 		}
 	}
-	privateCollection := e.Kind == "WorkflowCollectionChanged" || e.Kind == "WorkflowCollectionBatch" || e.Kind == "WorkflowCollectionInput"
+	privateCollection := e.Kind == "WorkflowCollectionChanged" || e.Kind == "WorkflowCollectionBatch" || e.Kind == "WorkflowCollectionInput" || e.Kind == "WorkflowCollectionRoutingChanged"
 	if e.Kind == "WorkflowRevisionChanged" || e.Kind == "WorkflowCommandCompleted" {
 		var p struct {
 			Definition struct {
@@ -333,7 +333,7 @@ func redactOnboardingEvent(e Event) Event {
 				} `json:"definition"`
 			} `json:"result"`
 		}
-		if json.Unmarshal(e.Payload, &p) == nil && (len(p.Definition.Source) > 0 || len(p.Result.Definition.Source) > 0 || p.Result.Kind == "workflow_collection") {
+		if json.Unmarshal(e.Payload, &p) == nil && (len(p.Definition.Source) > 0 || len(p.Result.Definition.Source) > 0 || (p.Result.Kind == "workflow_collection" || p.Result.Kind == "workflow_collection_routing")) {
 			privateCollection = true
 		}
 	}

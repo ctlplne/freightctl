@@ -6,6 +6,8 @@ import (
 	"errors"
 	"io"
 	"os"
+	"strconv"
+	"strings"
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/custody"
@@ -30,7 +32,7 @@ func runCollection(ctx context.Context, command string, o testCLIOptions) error 
 	defer db.Pool.Close()
 	c := &custody.Service{DB: db, MaxFile: o.MaxFile, MaxStored: o.MaxStored}
 	switch command {
-	case "workflow-collection-preview", "workflow-collection-start", "workflow-collection-work", "workflow-collection-refresh":
+	case "workflow-collection-preview", "workflow-collection-start", "workflow-collection-work", "workflow-collection-refresh", "workflow-collection-routing-preview", "workflow-collection-routing-input-preview", "workflow-collection-routing-propose", "workflow-collection-routing-approve":
 		disk, e := custody.OpenExisting(o.Storage)
 		if e != nil {
 			return e
@@ -57,6 +59,35 @@ func runCollection(ctx context.Context, command string, o testCLIOptions) error 
 	}
 	var out any
 	switch command {
+	case "workflow-collection-routing-preview", "workflow-collection-routing-input-preview":
+		var x workflow.CollectionRoutingSelection
+		if e = decode(&x); e == nil {
+			if command == "workflow-collection-routing-input-preview" {
+				out, e = service.PreviewCollectionRoutingInput(ctx, scope, o.ID, o.Plan, x)
+			} else {
+				out, e = service.PreviewCollectionRouting(ctx, scope, o.ID, x)
+			}
+		}
+	case "workflow-collection-routing-propose":
+		var x workflow.CollectionRoutingProposal
+		if e = decode(&x); e == nil {
+			out, e = service.ProposeCollectionRouting(ctx, scope, o.ID, o.Key, x)
+		}
+	case "workflow-collection-routing-status":
+		out, e = service.CollectionRoutingStatus(ctx, scope, o.ID, o.Run)
+	case "workflow-collection-routing-list":
+		after := 0
+		if o.After != "" {
+			after, e = strconv.Atoi(o.After)
+		}
+		if e == nil {
+			out, e = service.CollectionRoutingHistory(ctx, scope, o.ID, after, o.Limit)
+		}
+	case "workflow-collection-routing-approve", "workflow-collection-routing-revoke", "workflow-collection-routing-withdraw":
+		var x workflow.Decision
+		if e = decode(&x); e == nil {
+			out, e = service.DecideCollectionRouting(ctx, scope, o.ID, o.Run, o.Key, strings.TrimPrefix(command, "workflow-collection-routing-"), x)
+		}
 	case "workflow-collection-preview":
 		var x workflow.CollectionSelection
 		if e = decode(&x); e == nil {

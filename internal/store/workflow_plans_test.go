@@ -45,3 +45,20 @@ func TestWorkflowPlanRedactionCoversDirectAndNestedCommandReceipts(t *testing.T)
 		t.Fatal("a legacy result without a plan acquired new redaction behavior")
 	}
 }
+
+func TestCollectionRoutingAuthorizationAndReceiptsKeepPrivateBindingsInProtectedJournal(t *testing.T) {
+	for _, e := range []Event{
+		{Kind: "WorkflowCollectionRoutingChanged", Payload: json.RawMessage(`{"definition":{"inputs":[{"input_id":"private-input","file_id":"private-file","plan_hash":"private-plan"}]}}`)},
+		{Kind: "WorkflowCommandCompleted", Payload: json.RawMessage(`{"result":{"kind":"workflow_collection_routing","id":"private-authorization","job_id":"private-capture"}}`)},
+	} {
+		original := append([]byte(nil), e.Payload...)
+		redacted := redactOnboardingEvent(e)
+		var envelope struct {
+			Redacted bool   `json:"redacted"`
+			Hash     string `json:"source_payload_sha256"`
+		}
+		if json.Unmarshal(redacted.Payload, &envelope) != nil || !envelope.Redacted || envelope.Hash != secure.Digest(original) || bytes.Contains(redacted.Payload, []byte("private-")) || !bytes.Equal(e.Payload, original) {
+			t.Fatal("routing decision escaped its exact digest envelope or changed the protected payload", e.Kind)
+		}
+	}
+}

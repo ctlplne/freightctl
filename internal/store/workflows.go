@@ -44,6 +44,7 @@ type WorkflowRun struct {
 	Revision        int64           `json:"revision"`
 	Plan            json.RawMessage `json:"execution_plan,omitempty"`
 	PlanHash        string          `json:"execution_plan_hash,omitempty"`
+	RoutingID       string          `json:"routing_authorization_id,omitempty"`
 }
 type WorkflowStep struct {
 	RunID             string `json:"run_id"`
@@ -124,13 +125,13 @@ func (t *Transaction) WorkflowRun(ctx context.Context, id string, lock bool) (*W
 	if !ValidID(id) {
 		return nil, ErrNotFound
 	}
-	q := `SELECT run_id::text,workflow_id::text,workflow_version,workflow_hash,file_id::text,source,storage_id::text,namespace_root,authority_revision,state,reason,revision,execution_plan,coalesce(execution_plan_hash,'') FROM workflow_runs WHERE run_id=$1 AND actor_id=$2`
+	q := `SELECT run_id::text,workflow_id::text,workflow_version,workflow_hash,file_id::text,source,storage_id::text,namespace_root,authority_revision,state,reason,revision,execution_plan,coalesce(execution_plan_hash,''),coalesce(routing_authorization_id::text,'') FROM workflow_runs WHERE run_id=$1 AND actor_id=$2`
 	if lock {
 		q += ` FOR UPDATE`
 	}
 	r := &WorkflowRun{}
 	var source []byte
-	err := t.Tx.QueryRow(ctx, q, id, t.Actor).Scan(&r.ID, &r.WorkflowID, &r.WorkflowVersion, &r.WorkflowHash, &r.FileID, &source, &r.StorageID, &r.Root, &r.Authority, &r.State, &r.Reason, &r.Revision, &r.Plan, &r.PlanHash)
+	err := t.Tx.QueryRow(ctx, q, id, t.Actor).Scan(&r.ID, &r.WorkflowID, &r.WorkflowVersion, &r.WorkflowHash, &r.FileID, &source, &r.StorageID, &r.Root, &r.Authority, &r.State, &r.Reason, &r.Revision, &r.Plan, &r.PlanHash, &r.RoutingID)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, ErrNotFound
 	}
@@ -150,7 +151,7 @@ func (t *Transaction) SaveWorkflowRun(ctx context.Context, r *WorkflowRun, previ
 		if err != nil {
 			return err
 		}
-		_, err = t.Tx.Exec(ctx, `INSERT INTO workflow_runs(tenant_id,partner_id,actor_id,run_id,workflow_id,workflow_version,workflow_hash,file_id,source,storage_id,namespace_root,authority_revision,state,reason,revision,changed_event_id,execution_plan,execution_plan_hash) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,nullif($18,''))`, t.Scope.Tenant, t.Scope.Partner, t.Actor, r.ID, r.WorkflowID, r.WorkflowVersion, r.WorkflowHash, r.FileID, source, r.StorageID, r.Root, r.Authority, r.State, r.Reason, r.Revision, event, r.Plan, r.PlanHash)
+		_, err = t.Tx.Exec(ctx, `INSERT INTO workflow_runs(tenant_id,partner_id,actor_id,run_id,workflow_id,workflow_version,workflow_hash,file_id,source,storage_id,namespace_root,authority_revision,state,reason,revision,changed_event_id,execution_plan,execution_plan_hash,routing_authorization_id) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,nullif($18,''),nullif($19,'')::uuid)`, t.Scope.Tenant, t.Scope.Partner, t.Actor, r.ID, r.WorkflowID, r.WorkflowVersion, r.WorkflowHash, r.FileID, source, r.StorageID, r.Root, r.Authority, r.State, r.Reason, r.Revision, event, r.Plan, r.PlanHash, r.RoutingID)
 		return err
 	}
 	tag, err := t.Tx.Exec(ctx, `UPDATE workflow_runs SET state=$1,reason=$2,revision=$3,changed_event_id=$4 WHERE run_id=$5 AND actor_id=$6 AND revision=$7`, r.State, r.Reason, r.Revision, event, r.ID, t.Actor, previous)
