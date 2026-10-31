@@ -4,6 +4,7 @@ import { createRoot } from "react-dom/client";
 import { Api } from "./api";
 import { Accounts } from "./accounts";
 import { Partners } from "./partners";
+import { OutboundDispatchApprovals } from "./outbound-approvals";
 import { OnboardingApprovals } from "./onboarding-approvals";
 import { Onboarding } from "./onboarding";
 import { CheckEvidence } from "./check-evidence";
@@ -630,7 +631,8 @@ function App() {
                 Onboarding
               </button>
             )}
-            {(allowed("workflow_manage") ||
+            {((allowed("read") && allowed("deliver")) ||
+              allowed("workflow_manage") ||
               allowed("workflow_approve") ||
               allowed("accounts_manage")) && (
               <button
@@ -830,6 +832,17 @@ function App() {
                 allowed("workflow_approve") ||
                 allowed("accounts_manage")) && (
                 <OnboardingApprovals
+                  api={api}
+                  session={session}
+                  refresh={refresh}
+                  onError={reportError}
+                />
+              )}
+            {tab === "approvals" &&
+              ((allowed("read") && allowed("deliver")) ||
+                (allowed("inspect") && allowed("workflow_approve")) ||
+                (allowed("admin") && allowed("accounts_manage"))) && (
+                <OutboundDispatchApprovals
                   api={api}
                   session={session}
                   refresh={refresh}

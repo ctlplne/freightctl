@@ -1102,6 +1102,23 @@
         ".private/onboarding-approval-evidence-refusal-tests.log",
         "evidence/raw/onboarding-exchange-ae503cc8536d4b51a7f8bf16b30e3a67/manifest.json"
       ]
+    },
+    {
+      "id": "D072",
+      "severity": "strict metadata projection rejects valid dispatch review",
+      "state": "fixed locally",
+      "observed_on": "2026-10-31",
+      "candidate": "8c63afc84af602ce4f56dd629e31160e61440aa8 plus retained intermediate F036 source hashes",
+      "journey": "J05",
+      "reproduction": "First actual PostgreSQL dispatch-review proposal returns 23514 despite a canonical valid exact metadata package.",
+      "first_failure": ".private/dispatch-approval-postgres-first.log",
+      "cause": "The strict sorted JSON-key equality array put authority_revision before author_id; underscore makes author_id sort first.",
+      "resolution": "Correct the literal key order while preserving exact shape equality, authorization, size and event guards. Original source 335 files retained. Nine new actual PostgreSQL/race cases and the original extended native CLI/API/browser/stock-SFTP journey pass.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F036-outbound-dispatch-approvals.json",
+        ".private/dispatch-approval-postgres-candidate.log",
+        ".private/dispatch-approval-sql-first/manifest.json"
+      ]
     }
   ]
 }

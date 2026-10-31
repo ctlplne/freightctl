@@ -10,10 +10,7 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-type OnboardingApprovalBinding struct {
-	Revision int64  `json:"revision"`
-	Mode     string `json:"mode"`
-}
+type OnboardingApprovalBinding = ApprovalPolicyBinding
 type OnboardingApprovalPolicy struct {
 	OnboardingApprovalBinding
 	Author  string `json:"author_id,omitempty"`
@@ -55,11 +52,6 @@ type OnboardingApprovalPage struct {
 	Next    string                      `json:"next,omitempty"`
 }
 
-// Serialize approval decisions with account authority changes before taking
-// policy/review locks. No manager role or file capability is granted here.
-func (s *Store) BeginOnboardingApproval(ctx context.Context, scope Scope) (*Transaction, error) {
-	return s.beginAuthenticated(ctx, scope, pgx.TxOptions{}, true)
-}
 func (t *Transaction) OnboardingApprovalPolicy(ctx context.Context) (*OnboardingApprovalPolicy, error) {
 	if _, err := t.Tx.Exec(ctx, `SELECT pg_advisory_xact_lock_shared(hashtextextended($1,0))`, t.Scope.Tenant+":"+t.Scope.Partner+":onboarding-approval-policy"); err != nil {
 		return nil, err

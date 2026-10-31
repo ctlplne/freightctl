@@ -144,6 +144,14 @@ func (s *Service) Work(ctx context.Context, scope store.Scope, id string) (*stor
 	if err != nil {
 		return nil, err
 	}
+	if err = admission.CheckExecutionBinding(ctx, planned.Binding); err != nil {
+		admission.Tx.Rollback(ctx)
+		return nil, err
+	}
+	if err = admission.CheckOutboundDispatch(ctx, id); err != nil {
+		admission.Tx.Rollback(ctx)
+		return nil, err
+	}
 	if err = admission.Tx.Commit(ctx); err != nil {
 		return nil, err
 	}

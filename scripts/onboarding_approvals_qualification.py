@@ -50,3 +50,7 @@ def qualify_approvals(c,h):
     before=contacts();post('approval-withdrawn-worker-denied','/workflow-runs/'+queued['run']['id']+'/work',key='approval-withdrawn-worker',expected=409);status=post('approval-withdrawn-queued-status','/onboarding-production/'+queued['run']['id'],method='GET');assert status['status']['steps'][0]['attempts']==0 and contacts()==before and not status['current_bindings']
     history=invoke('approval-reviewer-cli-history','partner-onboarding-approval-review-list',token=token);assert len(history['reviews'])==1 and history['reviews'][0]['state']=='withdrawn'
     (raw/'onboarding-approval-result.json').write_text(json.dumps({'state':'passed','release_id':release['id'],'review_id':review['id'],'reviewer_id':reviewer_id,'least_privilege_reviewer_permissions':['inspect','workflow_approve'],'separate_author_and_reviewer':True,'self_and_unassigned_refused':True,'private_sources_not_granted':True,'review_metadata_no_receiver_contact':True,'lost_response_original_key_recovery':True,'production_exact_original_bytes_independently_decrypted':True,'withdrawn_queued_work_no_attempt_or_contact':True,'full_journeys_qualified':False,'inference_performed':False,'scanner_started':False},indent=2)+'\n')
+
+    if c['options'].dispatch_approvals:
+        from outbound_dispatch_qualification import qualify_dispatch
+        qualify_dispatch(c,h,dict(locals()))

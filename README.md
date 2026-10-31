@@ -20,6 +20,8 @@ For the selected combined signed-file, genuine scanner, separate release and rec
 
 For selected read-only recovery of original SFTP receipt evidence after trust rotation, see [receipt observations](docs/receipt-observations.md). [F035](docs/qualification/evidence/F035-independent-production-approvals.json) adds independent named-account production review and preserves every browser summary after correcting the original F033/F034 evidence gaps. See [independent approvals](docs/independent-approvals.md). The full verification replay remains pending at the owner’s request.
 
+For an administrator rule requiring named-account consent for each exact outbound SFTP file across direct CLI, ordinary workflow, onboarding test and production paths, see [dispatch approvals](docs/outbound-dispatch-approvals.md). Configuration release approval and file dispatch approval are separate, cumulative checks.
+
 - Organization: [ctlplne](https://github.com/ctlplne)
 - Repository: [ctlplne/freightctl](https://github.com/ctlplne/freightctl)
 - Local workflow: commits on main; pushes and publication remain owner-controlled.

@@ -33,17 +33,18 @@ type Request struct {
 	KeyPublicFile  string `json:"key_public_file"`
 }
 type Definition struct {
-	Schema      int                       `json:"schema_version"`
-	Source      store.File                `json:"source"`
-	Destination secure.SSHDestination     `json:"destination"`
-	Directory   string                    `json:"directory"`
-	Filename    string                    `json:"filename"`
-	StorageID   string                    `json:"storage_id"`
-	Root        string                    `json:"namespace_root"`
-	Authority   int64                     `json:"authority_revision"`
-	Binding     *store.ExecutionBinding   `json:"workflow_binding,omitempty"`
-	Encryption  *store.EncryptionPolicy   `json:"encryption,omitempty"`
-	Transfer    *store.DeliveryCiphertext `json:"-"`
+	Schema         int                          `json:"schema_version"`
+	Source         store.File                   `json:"source"`
+	Destination    secure.SSHDestination        `json:"destination"`
+	Directory      string                       `json:"directory"`
+	Filename       string                       `json:"filename"`
+	StorageID      string                       `json:"storage_id"`
+	Root           string                       `json:"namespace_root"`
+	Authority      int64                        `json:"authority_revision"`
+	Binding        *store.ExecutionBinding      `json:"workflow_binding,omitempty"`
+	Encryption     *store.EncryptionPolicy      `json:"encryption,omitempty"`
+	DispatchPolicy *store.ApprovalPolicyBinding `json:"dispatch_approval_policy,omitempty"`
+	Transfer       *store.DeliveryCiphertext    `json:"-"`
 }
 type Result struct {
 	Delivery *store.Delivery `json:"delivery"`
@@ -131,6 +132,14 @@ func (s *Service) Create(ctx context.Context, scope store.Scope, key string, r R
 	if prior != nil {
 		return &Result{prior, true}, t.Tx.Commit(ctx)
 	}
+	meaning := hash
+	if err = BindDispatchPolicy(ctx, t, &definition); err != nil {
+		return nil, err
+	}
+	encoded, hash, err = dispatchDigest(definition)
+	if err != nil {
+		return nil, err
+	}
 	if err = t.DeliveryAdmission(ctx, 1); err != nil {
 		return nil, err
 	}
@@ -142,7 +151,7 @@ func (s *Service) Create(ctx context.Context, scope store.Scope, key string, r R
 	if err = t.SaveDelivery(ctx, d, 0); err != nil {
 		return nil, err
 	}
-	if err = t.DeliveryReceipt(ctx, key, hash, d); err != nil {
+	if err = t.DeliveryReceipt(ctx, key, meaning, d); err != nil {
 		return nil, err
 	}
 	if err = t.Reauthorize(ctx); err != nil {
@@ -293,6 +302,9 @@ func (s *Service) Claim(ctx context.Context, scope store.Scope, id, owner string
 	if err = t.CheckExecutionBinding(ctx, spec.Binding); err != nil {
 		return nil, nil, err
 	}
+	if err = t.CheckOutboundDispatch(ctx, id); err != nil {
+		return nil, nil, err
+	}
 	if err = s.storage(spec); err != nil {
 		return nil, nil, err
 	}
@@ -351,6 +363,11 @@ func (s *Service) transition(ctx context.Context, scope store.Scope, id, owner s
 	if err = t.CheckExecutionBinding(ctx, spec.Binding); err != nil {
 		return nil, err
 	}
+	if next != "blocked" && next != "retry" && next != "ambiguous" {
+		if err = t.CheckOutboundDispatch(ctx, id); err != nil {
+			return nil, err
+		}
+	}
 	if err = s.storage(spec); err != nil {
 		return nil, err
 	}
@@ -408,6 +425,9 @@ func (s *Service) checkLease(ctx context.Context, scope store.Scope, id, owner s
 		}
 	}
 	if err = t.CheckExecutionBinding(ctx, spec.Binding); err != nil {
+		return err
+	}
+	if err = t.CheckOutboundDispatch(ctx, id); err != nil {
 		return err
 	}
 	now, err := t.DatabaseTime(ctx)

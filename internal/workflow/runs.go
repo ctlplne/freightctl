@@ -119,6 +119,9 @@ func (s *Service) stageRun(ctx context.Context, t *store.Transaction, r RunReque
 		}
 		binding := &store.ExecutionBinding{WorkflowID: run.WorkflowID, WorkflowVersion: run.WorkflowVersion, WorkflowHash: run.WorkflowHash, RunID: run.ID, StepID: step.ID, ConnectionID: c.ID, ConnectionVersion: c.Version, ConnectionHash: c.Hash}
 		spec := delivery.Definition{Schema: 1, Source: *source, Destination: conn.Destination, Directory: conn.Directory, Filename: step.Filename, StorageID: storageID, Root: t.Root, Authority: t.AuthorityRevision, Binding: binding, Encryption: step.Encryption}
+		if err = delivery.BindDispatchPolicy(ctx, t, &spec); err != nil {
+			return nil, err
+		}
 		data, hash, err := digest(spec)
 		if err != nil {
 			return nil, err

@@ -27,7 +27,7 @@
     },
     {
       "path": "web/src/app.tsx",
-      "sha256": "da4992fab77f8bf38fc00e42a05adfd31b648d179078408057724a36a41f4541"
+      "sha256": "d8435978249729010136023cfcc4c72d69cfb0840be750e4ae9f9179c5a8e1b3"
     },
     {
       "path": "web/src/assets.d.ts",
@@ -55,7 +55,7 @@
     },
     {
       "path": "web/src/onboarding-approvals.tsx",
-      "sha256": "ffe1409f629c07bf0b1af63ca65e6fc904bfdd7ee1a46df2bbba0d8f413ce33b"
+      "sha256": "42facd8dbfeaa27902cf4970cd560e0fab8d5a0a3cccb7a586f33e5d842529d4"
     },
     {
       "path": "web/src/onboarding-exchange-types.ts",
@@ -114,6 +114,14 @@
       "sha256": "10d958a2f2ab7b472cbe0ebe4c5ce1a8303f82c57f0b1315e4c98098e0fbd61c"
     },
     {
+      "path": "web/src/outbound-approvals-types.ts",
+      "sha256": "79767bf2476e6a60885b0d3168d36e40d5a2ba190de9a1d5311d6aec35fe613b"
+    },
+    {
+      "path": "web/src/outbound-approvals.tsx",
+      "sha256": "dab2c3ffc7c338f9ac590ad0bb1f801710e9577f98dbc1b6427903a6e286113f"
+    },
+    {
       "path": "web/src/partners.tsx",
       "sha256": "2e1926d12c123ef0549351a89f2c83dbf1c873efacef817622517bd14de7dc3a"
     },
@@ -154,8 +162,8 @@
     },
     {
       "name": "app.js",
-      "sha256": "77af74236e594eb46be56f85e521c59ea544a86c78b911bd07d33ceb0f15356a",
-      "size": 469248
+      "sha256": "1f9fe9f64a3dcd8ce45c8bbc2e9a04f79ff04619fcebac49bbdfad1c85375578",
+      "size": 487537
     },
     {
       "name": "app.js.LEGAL.txt",

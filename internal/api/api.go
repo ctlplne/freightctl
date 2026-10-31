@@ -78,6 +78,16 @@ func NewWithBrowserLifetime(service *custody.Service, audits *audit.Service, ena
 		m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/onboarding-releases/{release}/"+action, s.onboardingReleaseAction(action))
 	}
 
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/outbound-dispatch-policy", s.outboundApproval("policy"))
+	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/outbound-dispatch-policy", s.outboundApproval("policy-change"))
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/outbound-deliveries/{delivery}", s.outboundApproval("delivery"))
+	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/outbound-dispatch-reviews/preview", s.outboundApproval("preview"))
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/outbound-dispatch-reviews", s.outboundApproval("list"))
+	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/outbound-dispatch-reviews", s.outboundApproval("propose"))
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/outbound-dispatch-reviews/{review}", s.outboundApproval("status"))
+	for _, action := range []string{"approve", "reject", "withdraw"} {
+		m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/outbound-dispatch-reviews/{review}/"+action, s.outboundApproval(action))
+	}
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/onboarding-approval-policy", s.onboardingApproval("policy"))
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/onboarding-approval-policy", s.onboardingApproval("policy-change"))
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/onboarding-approval-reviews/preview", s.onboardingApproval("preview"))
@@ -296,6 +306,8 @@ func errorStatus(err error) (int, string) {
 		return 409, "revision_conflict"
 	case errors.Is(err, store.ErrExists):
 		return 409, "path_exists"
+	case errors.Is(err, store.ErrDispatchApproval):
+		return 409, "dispatch_approval_required"
 	case errors.Is(err, store.ErrState):
 		return 409, "operation_state_conflict"
 	case errors.Is(err, store.ErrLimit):

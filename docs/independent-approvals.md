@@ -2,7 +2,7 @@
 
 For the explicit onboarding production route, a partner administrator can require a different authenticated account to approve an exact outbound SFTP production release. The author prepares the tested release and chooses its reviewer. The reviewer sees the exact metadata package, makes a separate decision, and grants no file access. The author then records that approval and activates production through the ordinary release workflow. None of these metadata operations contacts the receiver.
 
-This policy governs onboarding production releases; ordinary workflows and direct deliveries retain their existing approval rules. General workflow policies remain required product work.
+This policy governs onboarding production releases. The separate [outbound dispatch policy](outbound-dispatch-approvals.md) can also require exact-file approval across direct deliveries, ordinary workflows, onboarding tests and production runs. When both are enabled their checks are cumulative. General workflow-step policies remain required product work.
 
 The rule separates authenticated accounts. It cannot prove that two accounts belong to different human beings. Independent operators, identity-provider policies and the wider delegation/environment-promotion journey remain separate qualification work.
 

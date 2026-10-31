@@ -109,6 +109,9 @@ func (s *Service) prepareCiphertext(ctx context.Context, scope store.Scope, d *s
 		if err = record.CheckExecutionBinding(ctx, original.Binding); err != nil {
 			return nil, nil, err
 		}
+		if err = record.CheckOutboundDispatch(ctx, d.ID); err != nil {
+			return nil, nil, err
+		}
 		if err = record.SaveDeliveryCiphertext(ctx, artifact); err != nil {
 			return nil, nil, err
 		}

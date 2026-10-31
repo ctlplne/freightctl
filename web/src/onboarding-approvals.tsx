@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, useId, type ReactNode } from "react";
 import { Api } from "./api";
 import { operationKey } from "./crypto";
 import { uuid, type Session } from "./types";
@@ -18,7 +18,7 @@ import {
 } from "./onboarding-approvals-types";
 import type { ReleaseSummary } from "./onboarding-releases-types";
 type Props = { api: Api; session: Session; onError: (e: unknown) => void };
-function post<T>(
+export function approvalPost<T>(
   api: Api,
   path: string,
   input: unknown,
@@ -38,7 +38,7 @@ function post<T>(
     decode,
   );
 }
-function Confirm({
+export function ApprovalConfirm({
   title,
   children,
   busy,
@@ -53,6 +53,7 @@ function Confirm({
   onConfirm: () => void;
   onCancel: () => void;
 }) {
+  const labelID = useId();
   const dialog = useRef<HTMLDialogElement>(null),
     heading = useRef<HTMLHeadingElement>(null);
   useEffect(() => {
@@ -66,13 +67,13 @@ function Confirm({
   return (
     <dialog
       ref={dialog}
-      aria-labelledby="approval-confirm-title"
+      aria-labelledby={labelID}
       onCancel={(e) => {
         e.preventDefault();
         if (!busy) onCancel();
       }}
     >
-      <h2 id="approval-confirm-title" tabIndex={-1} ref={heading}>
+      <h2 id={labelID} tabIndex={-1} ref={heading}>
         {title}
       </h2>
       {children}
@@ -184,7 +185,7 @@ export function IndependentReviewRequest({
       reviewer_id: reviewer,
     };
     try {
-      const p = await post(
+      const p = await approvalPost(
         api,
         `${api.prefix}/onboarding-approval-reviews/preview`,
         selection,
@@ -204,7 +205,7 @@ export function IndependentReviewRequest({
     setBusy(true);
     setFailure("");
     try {
-      const r = await post(
+      const r = await approvalPost(
         api,
         `${api.prefix}/onboarding-approval-reviews`,
         {
@@ -268,7 +269,7 @@ export function IndependentReviewRequest({
         </p>
       )}
       {pending && (
-        <Confirm
+        <ApprovalConfirm
           title="Share exact review metadata"
           busy={busy}
           failure={failure}
@@ -279,7 +280,7 @@ export function IndependentReviewRequest({
           <p>
             Package SHA-256 <code>{pending.preview.definition_hash}</code>.
           </p>
-        </Confirm>
+        </ApprovalConfirm>
       )}
     </section>
   );
@@ -378,7 +379,7 @@ export function OnboardingApprovals({
     setFailure("");
     try {
       if (pending.kind === "policy") {
-        const p = await post(
+        const p = await approvalPost(
           api,
           `${api.prefix}/onboarding-approval-policy`,
           { expected_revision: pending.policy.revision, mode: pending.mode },
@@ -394,7 +395,7 @@ export function OnboardingApprovals({
       } else {
         const x = pending,
           r = x.review;
-        await post(
+        await approvalPost(
           api,
           `${api.prefix}/onboarding-approval-reviews/${r.id}/${x.action}`,
           { definition_hash: r.definition_hash, expected_revision: r.revision },
@@ -582,7 +583,7 @@ export function OnboardingApprovals({
         )}
       </section>
       {pending && (
-        <Confirm
+        <ApprovalConfirm
           title={
             pending.kind === "policy"
               ? "Change partner approval policy"
@@ -614,7 +615,7 @@ export function OnboardingApprovals({
               </p>
             </>
           )}
-        </Confirm>
+        </ApprovalConfirm>
       )}
     </>
   );

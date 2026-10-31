@@ -37,7 +37,7 @@ type OnboardingApprovalPolicyResult struct {
 }
 
 func (s *Service) approvalBegin(ctx context.Context, scope store.Scope) (*store.Transaction, error) {
-	t, err := s.Custody.DB.BeginOnboardingApproval(ctx, scope)
+	t, err := s.Custody.DB.BeginApproval(ctx, scope)
 	if err != nil {
 		return nil, err
 	}
