@@ -541,7 +541,7 @@ func scheduleResult(t *store.Transaction, ctx context.Context, key, meaning, id 
 	return &Result{Resource: data}, t.Tx.Commit(ctx)
 }
 
-func scheduleEffects(ctx context.Context, t *store.Transaction, workflow *Definition) ([]Effect, error) {
+func workflowEffects(ctx context.Context, t *store.Transaction, workflow *Definition) ([]Effect, error) {
 	effects := []Effect{}
 	views, e := connections(ctx, t, *workflow)
 	if e != nil {
@@ -593,7 +593,7 @@ func (s *Service) SchedulableWorkflows(ctx context.Context, scope store.Scope, a
 		return nil, e
 	}
 	defer t.Tx.Rollback(ctx)
-	rows, e := t.Tx.Query(ctx, `SELECT w.workflow_id::text,w.version,w.definition_hash,w.definition->>'name' FROM workflow_revisions w WHERE w.actor_id=$1 AND w.state='approved' AND w.approval_authority=$2 AND ($3='' OR w.workflow_id>nullif($3,'')::uuid) AND w.version=(SELECT max(v.version) FROM workflow_revisions v WHERE v.actor_id=$1 AND v.workflow_id=w.workflow_id AND v.state='approved' AND v.approval_authority=$2) ORDER BY w.workflow_id LIMIT $4`, t.Actor, t.AuthorityRevision, after, limit+1)
+	rows, e := t.Tx.Query(ctx, `SELECT w.workflow_id::text,w.version,w.definition_hash,w.definition->>'name' FROM workflow_revisions w WHERE w.actor_id=$1 AND NOT (w.definition ? 'source') AND w.state='approved' AND w.approval_authority=$2 AND ($3='' OR w.workflow_id>nullif($3,'')::uuid) AND w.version=(SELECT max(v.version) FROM workflow_revisions v WHERE v.actor_id=$1 AND v.workflow_id=w.workflow_id AND v.state='approved' AND v.approval_authority=$2) ORDER BY w.workflow_id LIMIT $4`, t.Actor, t.AuthorityRevision, after, limit+1)
 	if e != nil {
 		return nil, e
 	}
@@ -619,4 +619,11 @@ func (s *Service) SchedulableWorkflows(ctx context.Context, scope store.Scope, a
 		return nil, e
 	}
 	return out, t.Tx.Commit(ctx)
+}
+
+func scheduleEffects(ctx context.Context, t *store.Transaction, workflow *Definition) ([]Effect, error) {
+	if workflow.Source != nil {
+		return nil, ErrInput
+	}
+	return workflowEffects(ctx, t, workflow)
 }

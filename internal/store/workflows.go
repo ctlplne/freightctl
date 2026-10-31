@@ -221,6 +221,9 @@ func (t *Transaction) checkExecutionBinding(ctx context.Context, b *ExecutionBin
 		if err := t.CheckScheduleBinding(ctx, b.RunID); err != nil {
 			return err
 		}
+		if err := t.CheckCollectionBinding(ctx, b.RunID); err != nil {
+			return err
+		}
 	}
 	return t.checkOnboardingProofAvailability(ctx, b.RunID)
 }

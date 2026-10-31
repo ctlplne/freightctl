@@ -36,10 +36,10 @@ type Service struct {
 }
 
 func (s *Service) Accept(ctx context.Context, scope store.Scope, key string, size int64, digest string, body io.Reader) (*store.File, bool, error) {
-	return s.accept(ctx, scope, key, size, digest, body, nil)
+	return s.accept(ctx, scope, key, size, digest, body, nil, nil)
 }
 
-func (s *Service) accept(ctx context.Context, scope store.Scope, key string, size int64, digest string, body io.Reader, target *UploadTarget) (*store.File, bool, error) {
+func (s *Service) accept(ctx context.Context, scope store.Scope, key string, size int64, digest string, body io.Reader, target *UploadTarget, sealed *sealedAcceptance) (*store.File, bool, error) {
 	if size < 0 || size > s.MaxFile || !digestPattern.MatchString(digest) || !keyPattern.MatchString(key) {
 		return nil, false, ErrInput
 	}
@@ -70,6 +70,9 @@ func (s *Service) accept(ctx context.Context, scope store.Scope, key string, siz
 		return nil, false, err
 	}
 	if prior != nil {
+		if sealed != nil && prior.ID != sealed.id {
+			return nil, false, store.ErrConflict
+		}
 		if err = t.Reauthorize(ctx); err != nil {
 			return nil, false, err
 		}
@@ -97,15 +100,24 @@ func (s *Service) accept(ctx context.Context, scope store.Scope, key string, siz
 	if _, err = t.Tx.Exec(ctx, `SELECT pg_advisory_xact_lock(721815034)`); err != nil {
 		return nil, false, err
 	}
-	if err = s.Disk.Capacity(size, s.MaxStored); err != nil {
+	incoming := size
+	if sealed != nil {
+		incoming = 0
+	} // Already sealed bytes are included in disk usage.
+	if err = s.Disk.Capacity(incoming, s.MaxStored); err != nil {
 		return nil, false, err
 	}
 	f := &store.File{ID: secure.NewID(), Size: size, SHA256: digest, Policy: "integrity-only-v1"}
+	if sealed != nil {
+		f.ID = sealed.id
+	}
 	if err = t.ConfigureIntakeFile(ctx, f); err != nil {
 		return nil, false, err
 	}
-	if err = s.Disk.Stage(Name(scope.Tenant, scope.Partner, f.ID), body, size, digest); err != nil {
-		return nil, false, err
+	if sealed == nil {
+		if err = s.Disk.Stage(Name(scope.Tenant, scope.Partner, f.ID), body, size, digest); err != nil {
+			return nil, false, err
+		}
 	}
 	// Once synced, retain bytes even if SQL commit is uncertain. A retry reconciles by request key.
 	if err = t.Accept(ctx, key, meaning, f); err != nil {
@@ -120,8 +132,13 @@ func (s *Service) accept(ctx context.Context, scope store.Scope, key string, siz
 	if err != nil {
 		return nil, false, err
 	}
-	if target != nil && !held {
+	if target != nil && !held && sealed == nil {
 		if _, err = t.ApplyPathCommand(ctx, key, targetCommand(target, f.ID), s.NamespaceMaxEntries); err != nil {
+			return nil, false, err
+		}
+	}
+	if sealed != nil {
+		if err = sealed.bind(ctx, t, f, held); err != nil {
 			return nil, false, err
 		}
 	}

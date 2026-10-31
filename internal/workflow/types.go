@@ -37,9 +37,10 @@ type Step struct {
 	Encryption *store.EncryptionPolicy `json:"encryption,omitempty"`
 }
 type Definition struct {
-	Schema int    `json:"schema_version"`
-	Name   string `json:"name"`
-	Steps  []Step `json:"steps"`
+	Schema int               `json:"schema_version"`
+	Name   string            `json:"name"`
+	Steps  []Step            `json:"steps"`
+	Source *CollectionSource `json:"source,omitempty"`
 }
 type DraftRequest struct {
 	ID              string     `json:"workflow_id,omitempty"`
@@ -149,7 +150,7 @@ func Decode(data []byte, target any) error {
 	return nil
 }
 func Normalize(d Definition) (Definition, error) {
-	if d.Schema != 1 || len(d.Steps) < 1 || len(d.Steps) > 16 || !utf8.ValidString(d.Name) {
+	if d.Schema != 1 || (len(d.Steps) < 1 && d.Source == nil) || len(d.Steps) > 16 || !utf8.ValidString(d.Name) {
 		return d, ErrInput
 	}
 	d.Name = norm.NFC.String(d.Name)
@@ -160,6 +161,16 @@ func Normalize(d Definition) (Definition, error) {
 		if unicode.IsControl(r) {
 			return d, ErrInput
 		}
+	}
+	if d.Source != nil {
+		value := *d.Source
+		if err := normalizeCollectionSource(value); err != nil {
+			return d, err
+		}
+		d.Source = &value
+	}
+	if len(d.Steps) == 0 {
+		d.Steps = []Step{}
 	}
 	seen := map[string]bool{}
 	for _, s := range d.Steps {

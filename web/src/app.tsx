@@ -5,6 +5,7 @@ import { Api } from "./api";
 import { Accounts } from "./accounts";
 import { Partners } from "./partners";
 import { Schedules } from "./schedules";
+import { Collections } from "./collections";
 import { OutboundDispatchApprovals } from "./outbound-approvals";
 import { OnboardingApprovals } from "./onboarding-approvals";
 import { Onboarding } from "./onboarding";
@@ -59,6 +60,10 @@ const messages: Record<string, string> = {
     "The item you reviewed or its access settings changed. Refresh and review its current revision before continuing.",
   path_exists:
     "A file already exists at that destination. Choose a new path; this upload will not replace it.",
+  invalid_workflow_collection:
+    "Review the registered source, ready-manifest filename, local target and file limits, then preview again.",
+  collection_authority_input_or_lease_required:
+    "Inspect the collection’s current authority, cutoff, intake receipts and worker lease before retrying.",
   invalid_workflow_schedule:
     "Check the source folder, approved workflow, calendar rules and processing bounds, then preview again.",
   schedule_authority_or_deadline_required:
@@ -131,6 +136,7 @@ function App() {
       | "onboarding"
       | "approvals"
       | "schedules"
+      | "collections"
     >("files"),
     [refresh, setRefresh] = useState(0);
   const [folder, setFolder] = useState("/"),
@@ -649,6 +655,16 @@ function App() {
                 Schedules
               </button>
             )}
+            {(allowed("workflow_manage") ||
+              allowed("workflow_approve") ||
+              allowed("workflow_execute")) && (
+              <button
+                aria-current={tab === "collections" ? "page" : undefined}
+                onClick={() => setTab("collections")}
+              >
+                Collections
+              </button>
+            )}
             {((allowed("read") && allowed("deliver")) ||
               allowed("workflow_manage") ||
               allowed("workflow_approve") ||
@@ -780,15 +796,17 @@ function App() {
                       ? "Uploads"
                       : tab === "partners"
                         ? "Partners"
-                        : tab === "schedules"
-                          ? "Workflow schedules"
-                          : tab === "approvals"
-                            ? "Independent approvals"
-                            : tab === "onboarding"
-                              ? "Onboarding plans"
-                              : tab === "accounts"
-                                ? "Accounts"
-                                : "Intake checks"}
+                        : tab === "collections"
+                          ? "Remote collection"
+                          : tab === "schedules"
+                            ? "Workflow schedules"
+                            : tab === "approvals"
+                              ? "Independent approvals"
+                              : tab === "onboarding"
+                                ? "Onboarding plans"
+                                : tab === "accounts"
+                                  ? "Accounts"
+                                  : "Intake checks"}
                 </h1>
                 <p>
                   {tab === "files"
@@ -797,15 +815,17 @@ function App() {
                       ? "Send one exact file. Continue from the last server-confirmed checkpoint."
                       : tab === "partners"
                         ? "Enroll partners under explicit tenant authority; review each administrator credential and grants."
-                        : tab === "schedules"
-                          ? "Review calendar rules, complete source revisions, deadlines and ordinary transfer receipts."
-                          : tab === "approvals"
-                            ? "Review exact production effects under the partner’s approval policy."
-                            : tab === "onboarding"
-                              ? "Record responsible contacts and exact exchange requirements as versioned drafts."
-                              : tab === "accounts"
-                                ? "Review scoped access, credential rotation, expiry and revocation."
-                                : "Held files need their required checks and a separate release decision."}
+                        : tab === "collections"
+                          ? "Review ready manifests, exact input receipts, intake holds and separate downstream decisions."
+                          : tab === "schedules"
+                            ? "Review calendar rules, complete source revisions, deadlines and ordinary transfer receipts."
+                            : tab === "approvals"
+                              ? "Review exact production effects under the partner’s approval policy."
+                              : tab === "onboarding"
+                                ? "Record responsible contacts and exact exchange requirements as versioned drafts."
+                                : tab === "accounts"
+                                  ? "Review scoped access, credential rotation, expiry and revocation."
+                                  : "Held files need their required checks and a separate release decision."}
                 </p>
               </div>
               <button
@@ -849,6 +869,15 @@ function App() {
                   }}
                 />
               )}
+            {tab === "collections" && (
+              <Collections
+                api={api}
+                session={session}
+                refresh={refresh}
+                onError={reportError}
+                onConfirmed={() => setError("")}
+              />
+            )}
             {tab === "schedules" && (
               <Schedules
                 api={api}

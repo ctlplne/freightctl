@@ -9,18 +9,19 @@ import (
 )
 
 type Difference struct {
-	WorkflowID   string     `json:"workflow_id"`
-	FromVersion  int        `json:"from_version"`
-	ToVersion    int        `json:"to_version"`
-	FromHash     string     `json:"from_hash"`
-	ToHash       string     `json:"to_hash"`
-	Before       Definition `json:"before"`
-	After        Definition `json:"after"`
-	NameChanged  bool       `json:"name_changed"`
-	OrderChanged bool       `json:"order_changed"`
-	Added        []string   `json:"added_steps"`
-	Removed      []string   `json:"removed_steps"`
-	Changed      []string   `json:"changed_steps"`
+	WorkflowID    string     `json:"workflow_id"`
+	FromVersion   int        `json:"from_version"`
+	ToVersion     int        `json:"to_version"`
+	FromHash      string     `json:"from_hash"`
+	ToHash        string     `json:"to_hash"`
+	Before        Definition `json:"before"`
+	After         Definition `json:"after"`
+	NameChanged   bool       `json:"name_changed"`
+	OrderChanged  bool       `json:"order_changed"`
+	SourceChanged bool       `json:"source_changed,omitempty"`
+	Added         []string   `json:"added_steps"`
+	Removed       []string   `json:"removed_steps"`
+	Changed       []string   `json:"changed_steps"`
 }
 
 func (s *Service) Diff(ctx context.Context, scope store.Scope, id string, from, to int) (*Difference, error) {
@@ -48,6 +49,7 @@ func (s *Service) Diff(ctx context.Context, scope store.Scope, id string, from, 
 		return nil, store.ErrState
 	}
 	d.NameChanged = d.Before.Name != d.After.Name
+	d.SourceChanged = !reflect.DeepEqual(d.Before.Source, d.After.Source)
 	old, new := map[string]Step{}, map[string]Step{}
 	for _, step := range d.Before.Steps {
 		old[step.ID] = step

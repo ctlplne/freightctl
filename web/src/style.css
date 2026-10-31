@@ -879,3 +879,37 @@ footer {
   font-size: 14px;
   font-weight: 600;
 }
+
+.collection-editor {
+  display: grid;
+  gap: 12px;
+}
+.collection-editor fieldset {
+  border: 1px solid #c6d4d7;
+  border-radius: 6px;
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+.collection-editor select,
+section[aria-label="Choose collection workflow"] select {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px;
+  border: 1px solid #aabdc3;
+  border-radius: 5px;
+  background: #fff;
+  color: #19343b;
+  font: inherit;
+}
+.collection-editor select:focus-visible,
+section[aria-label="Choose collection workflow"] select:focus-visible {
+  outline: 3px solid #19745a;
+  outline-offset: 2px;
+}
+.collection-references > summary {
+  min-height: 44px;
+  padding: 12px 0;
+  cursor: pointer;
+}

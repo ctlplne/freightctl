@@ -217,6 +217,11 @@ func (s *Service) RevokeConnection(ctx context.Context, scope store.Scope, id st
 	return result(t, ctx, key, meaning, id, view)
 }
 func connections(ctx context.Context, t *store.Transaction, d Definition) ([]ConnectionView, error) {
+	if d.Source != nil {
+		if _, _, err := collectionConnection(ctx, t, d.Source); err != nil {
+			return nil, err
+		}
+	}
 	views := make([]ConnectionView, 0, len(d.Steps))
 	for _, step := range d.Steps {
 		c, err := t.Configuration(ctx, true, step.Connection.ID, step.Connection.Version, false)
@@ -392,12 +397,13 @@ type Effect struct {
 	EncryptionFingerprint string                  `json:"encryption_fingerprint,omitempty"`
 }
 type Preview struct {
-	Definition       Definition  `json:"definition"`
-	Hash             string      `json:"definition_hash"`
-	Source           *store.File `json:"source,omitempty"`
-	Effects          []Effect    `json:"effects"`
-	ExternalContact  bool        `json:"external_contact"`
-	ApprovalRequired bool        `json:"approval_required"`
+	Definition       Definition        `json:"definition"`
+	Hash             string            `json:"definition_hash"`
+	Source           *store.File       `json:"source,omitempty"`
+	Effects          []Effect          `json:"effects"`
+	ExternalContact  bool              `json:"external_contact"`
+	ApprovalRequired bool              `json:"approval_required"`
+	Collection       *CollectionEffect `json:"collection,omitempty"`
 }
 
 func (s *Service) Validate(ctx context.Context, scope store.Scope, r PreviewRequest) (*Preview, error) {
@@ -413,7 +419,7 @@ func (s *Service) Validate(ctx context.Context, scope store.Scope, r PreviewRequ
 	if !t.Has("workflow_manage") && !t.Has("workflow_approve") && !t.Has("workflow_execute") {
 		return nil, store.ErrForbidden
 	}
-	views, err := connections(ctx, t, d)
+	effects, err := workflowEffects(ctx, t, &d)
 	if err != nil {
 		return nil, err
 	}
@@ -421,7 +427,17 @@ func (s *Service) Validate(ctx context.Context, scope store.Scope, r PreviewRequ
 	if err != nil {
 		return nil, err
 	}
-	preview := &Preview{Definition: d, Hash: hash, ApprovalRequired: true, Effects: []Effect{}}
+	preview := &Preview{Definition: d, Hash: hash, ApprovalRequired: true, Effects: effects}
+	if d.Source != nil {
+		if r.FileID != "" {
+			return nil, ErrInput
+		}
+		_, v, err := collectionConnection(ctx, t, d.Source)
+		if err != nil {
+			return nil, err
+		}
+		preview.Collection = &CollectionEffect{Kind: "sftp.collect", Connection: *v, Source: *d.Source}
+	}
 	if r.FileID != "" {
 		if !store.ValidID(r.FileID) {
 			return nil, ErrInput
@@ -436,19 +452,6 @@ func (s *Service) Validate(ctx context.Context, scope store.Scope, r PreviewRequ
 		if err != nil {
 			return nil, err
 		}
-	}
-	for i, v := range views {
-		step := d.Steps[i]
-		effect := Effect{StepID: step.ID, Connection: step.Connection, Address: v.Address, Directory: v.Directory, FinalNamePattern: "<delivery UUID>-" + step.Filename, HostFingerprint: v.HostFingerprint, Encryption: step.Encryption}
-		if step.Encryption != nil {
-			key, err := t.EncryptionKey(ctx, *step.Encryption)
-			if err != nil {
-				return nil, err
-			}
-			effect.RecipientFingerprint = key.Fingerprint
-			effect.EncryptionFingerprint = key.Recipient.Fingerprint
-		}
-		preview.Effects = append(preview.Effects, effect)
 	}
 	if err = t.Reauthorize(ctx); err != nil {
 		return nil, err

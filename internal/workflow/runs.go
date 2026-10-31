@@ -62,6 +62,9 @@ func (s *Service) Run(ctx context.Context, scope store.Scope, key string, r RunR
 	if err != nil {
 		return nil, err
 	}
+	if definition.Source != nil {
+		return nil, ErrInput
+	}
 	if err = t.FileAccessible(ctx, r.FileID); err != nil {
 		return nil, err
 	}
@@ -253,6 +256,15 @@ func snapshot(ctx context.Context, t *store.Transaction, r *store.WorkflowRun) (
 			}
 			state = "attention"
 			reason = "schedule_authority_or_deadline_changed"
+		}
+	}
+	if state != "succeeded" && state != "cancelled" {
+		if e := t.CollectionBindingStatus(ctx, r.ID); e != nil {
+			if !errors.Is(e, store.ErrCollection) {
+				return nil, "", "", e
+			}
+			state = "attention"
+			reason = "collection_authority_or_deadline_changed"
 		}
 	}
 	view.ObservedState = state

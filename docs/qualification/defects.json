@@ -1204,6 +1204,91 @@
         ".private/schedule-postgres-final.log",
         "evidence/raw/schedules-a960fc24ce3545dba255cdd72f07e36e/manifest.json"
       ]
+    },
+    {
+      "id": "D078",
+      "severity": "collection status SQL parameter collision",
+      "state": "fixed locally",
+      "observed_on": "2026-10-31",
+      "candidate": "b18fb78ab7bb831c231411207b862c334b2fe00e plus retained F038 source epochs",
+      "journey": "J03",
+      "reproduction": "Replay the retained original actual PostgreSQL/native collection regression with unchanged assertions and original file, lease, attempt, cutoff and resource bounds.",
+      "first_failure": ".private/collection-sql-first.log",
+      "cause": "The status function parameter id collided with a selected id column, producing SQL42702.",
+      "resolution": "Rename the parameter target_run while preserving source-lineage/current-state checks.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F038-remote-collection.json",
+        ".private/collection-sql-second.log",
+        "evidence/raw/collections-c77247f9546740d9ad0c08a27610c6f6/manifest.json"
+      ]
+    },
+    {
+      "id": "D079",
+      "severity": "accepted input exposed before complete batch",
+      "state": "fixed locally",
+      "observed_on": "2026-10-31",
+      "candidate": "b18fb78ab7bb831c231411207b862c334b2fe00e plus retained F038 source epochs",
+      "journey": "J03",
+      "reproduction": "Replay the retained original actual PostgreSQL/native collection regression with unchanged assertions and original file, lease, attempt, cutoff and resource bounds.",
+      "first_failure": ".private/collection-batch-gate-first.log",
+      "cause": "The ordinary accepted file became downloadable while a sibling remained unverified.",
+      "resolution": "Defer namespace publication, bind availability to whole-batch capture and commit capture/publication with its receipt. Preserve ordinary intake checks.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F038-remote-collection.json",
+        ".private/collection-cross-actor-second.log",
+        "evidence/raw/collections-c77247f9546740d9ad0c08a27610c6f6/manifest.json"
+      ]
+    },
+    {
+      "id": "D080",
+      "severity": "valid collection admission refused by stored-root assumption",
+      "state": "fixed locally",
+      "observed_on": "2026-10-31",
+      "candidate": "b18fb78ab7bb831c231411207b862c334b2fe00e plus retained F038 source epochs",
+      "journey": "J03",
+      "reproduction": "Replay the retained original actual PostgreSQL/native collection regression with unchanged assertions and original file, lease, attempt, cutoff and resource bounds.",
+      "first_failure": ".private/collection-target-acl-second.log",
+      "cause": "The new target guard required a stored row for the virtual root, which deliberately has no namespace_entries row.",
+      "resolution": "Match Entry(/) virtual owner-mode0770 semantics; retain current write/execute checks on every stored directory and ancestor.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F038-remote-collection.json",
+        ".private/collection-target-acl-third.log",
+        "evidence/raw/collections-c77247f9546740d9ad0c08a27610c6f6/manifest.json"
+      ]
+    },
+    {
+      "id": "D081",
+      "severity": "UTC browser contract rejected durable job metadata",
+      "state": "fixed locally",
+      "observed_on": "2026-10-31",
+      "candidate": "b18fb78ab7bb831c231411207b862c334b2fe00e plus retained F038 source epochs",
+      "journey": "J03",
+      "reproduction": "Replay the retained original actual PostgreSQL/native collection regression with unchanged assertions and original file, lease, attempt, cutoff and resource bounds.",
+      "first_failure": "evidence/raw/collections-539880fca7fe4cd0adfe3289e8b53024/manifest.json",
+      "cause": "PostgreSQL returned local-offset timestamps while the browser job contract requires UTC; reload could not inspect queued jobs.",
+      "resolution": "Normalize next/created/deadline/lease timestamps to UTC at the store read boundary, matching existing schedule behavior. Preserve instants, cutoffs and fingerprints.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F038-remote-collection.json",
+        ".private/collection-workflow-final.log",
+        "evidence/raw/collections-c77247f9546740d9ad0c08a27610c6f6/manifest.json"
+      ]
+    },
+    {
+      "id": "D082",
+      "severity": "foreign administrator bypassed unfinished batch hold",
+      "state": "fixed locally",
+      "observed_on": "2026-10-31",
+      "candidate": "b18fb78ab7bb831c231411207b862c334b2fe00e plus retained F038 source epochs",
+      "journey": "J10",
+      "reproduction": "Replay the retained original actual PostgreSQL/native collection regression with unchanged assertions and original file, lease, attempt, cutoff and resource bounds.",
+      "first_failure": ".private/collection-cross-actor-first.log",
+      "cause": "Actor-private input/job RLS hid another actor\u2019s unfinished hold from the shared availability function, allowing another administrator to download the first accepted input.",
+      "resolution": "Retain private source history. Add a minimal forced-RLS tenant/partner file hold without source/job/actor/path metadata, bound to exact original acceptance/capture events with guarded projections and deferred completeness. Refuse premature clearing by owner and foreign accounts.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F038-remote-collection.json",
+        ".private/collection-workflow-final.log",
+        "evidence/raw/collections-c77247f9546740d9ad0c08a27610c6f6/manifest.json"
+      ]
     }
   ]
 }

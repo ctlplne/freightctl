@@ -9,6 +9,7 @@ import { qualifyRecordedTests } from "./onboarding-tests-browser.mjs";
 import { qualifyProductionReleases } from "./onboarding-releases-browser.mjs";
 import { qualifyReceiptObservations } from "./onboarding-observations-browser.mjs";
 import { qualifySchedules } from "./schedules-browser.mjs";
+import { qualifyCollections } from "./collections-browser.mjs";
 import { qualifyOutboundDispatch } from "./outbound-dispatch-browser.mjs";
 import { qualifyIndependentApprovals } from "./onboarding-approvals-browser.mjs";
 import { qualifyQueuedHandoffs } from "./onboarding-handoffs-browser.mjs";
@@ -211,12 +212,15 @@ try {
   await page.getByRole("button", { name: "Connect", exact: true }).click();
   await page.getByRole("heading", { name: "Files", exact: true }).waitFor();
   if (
+    !c.collections_only &&
     !c.schedules_only &&
     !c.dispatch_approval_only &&
     !(c.approval_only && c.approval_phase === "review")
   )
     await openPlan();
-  if (c.schedules_only) {
+  if (c.collections_only) {
+    await qualifyCollections(page, c, audit, record, actualReview);
+  } else if (c.schedules_only) {
     await qualifySchedules(page, c, audit, record, actualReview);
   } else if (c.dispatch_approval_only) {
     await qualifyOutboundDispatch(page, c, audit, record, actualReview);

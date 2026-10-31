@@ -24,6 +24,8 @@ For an administrator rule requiring named-account consent for each exact outboun
 
 For reviewed calendars, bounded published-file selection and restartable ordered outbound workflows, see [scheduled workflows](docs/scheduled-workflows.md). Activation, queueing and execution are separate decisions; ordinary file and dispatch approvals still apply.
 
+For explicit read-only remote inputs with ready manifests, whole-batch custody, intake gates and separate downstream decisions, see [collection workflows](docs/collection-workflows.md). Repeated input claims remain bound to their original workflow revision; scheduled remote admission and full J03 remain open.
+
 - Organization: [ctlplne](https://github.com/ctlplne)
 - Repository: [ctlplne/freightctl](https://github.com/ctlplne/freightctl)
 - Local workflow: commits on main; pushes and publication remain owner-controlled.

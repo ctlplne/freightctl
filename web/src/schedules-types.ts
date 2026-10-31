@@ -354,7 +354,7 @@ function effect(v: unknown): ScheduleEffect {
       : {}),
   };
 }
-function canonicalSchedule(d: ScheduleDefinition): Uint8Array {
+export function canonicalWorkflowBytes(d: unknown): Uint8Array {
   return new TextEncoder().encode(
     JSON.stringify(d).replace(
       /[<>&\u2028\u2029]/g,
@@ -363,7 +363,7 @@ function canonicalSchedule(d: ScheduleDefinition): Uint8Array {
   );
 }
 export function scheduleHash(d: ScheduleDefinition): string {
-  return digestBytes(canonicalSchedule(d));
+  return digestBytes(canonicalWorkflowBytes(d));
 }
 
 export function asScheduleDefinition(v: unknown): ScheduleDefinition {
@@ -423,7 +423,7 @@ export function asScheduleDefinition(v: unknown): ScheduleDefinition {
   };
   if (
     d.late_start_grace_seconds > d.execution_deadline_seconds ||
-    canonicalSchedule(d).length > 24 * 1024
+    canonicalWorkflowBytes(d).length > 24 * 1024
   )
     bad();
   return d;
@@ -767,8 +767,11 @@ export interface ScheduledRun {
 }
 export function asScheduledRun(
   v: unknown,
-  input: OccurrenceView["inputs"][number],
-  definition: ScheduleDefinition,
+  input: { run_id: string; file_id: string },
+  definition: Pick<
+    ScheduleDefinition,
+    "workflow" | "authority_revision" | "effects"
+  >,
 ): ScheduledRun {
   const o = object(v),
     r = object(o.run),
@@ -841,8 +844,11 @@ export function asScheduledRun(
 }
 export function asScheduledWork(
   v: unknown,
-  input: OccurrenceView["inputs"][number],
-  definition: ScheduleDefinition,
+  input: { run_id: string; file_id: string },
+  definition: Pick<
+    ScheduleDefinition,
+    "workflow" | "authority_revision" | "effects"
+  >,
 ): ScheduledRun {
   const o = object(v);
   bool(o, "replayed");
@@ -857,3 +863,5 @@ export function asScheduledWork(
     bad();
   return status;
 }
+
+export { reference as asWorkflowReference, effect as asWorkflowEffect };

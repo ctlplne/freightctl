@@ -79,6 +79,15 @@ func NewWithBrowserLifetime(service *custody.Service, audits *audit.Service, ena
 	}
 
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/workflow-schedule-workflows", s.schedule("workflows"))
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/workflow-collection-connections", s.collection("connections"))
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/workflow-collection-workflows", s.collection("workflows"))
+	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/workflow-collections/preview", s.collection("preview"))
+	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/workflow-collections", s.collection("start"))
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/workflow-collections", s.collection("list"))
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/workflow-collections/{collection}", s.collection("status"))
+	for _, action := range []string{"work", "refresh", "cancel"} {
+		m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/workflow-collections/{collection}/"+action, s.collection(action))
+	}
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/workflow-schedules/preview", s.schedule("preview"))
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/workflow-schedules/drafts", s.schedule("draft"))
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/workflow-schedules", s.schedule("list"))
@@ -320,6 +329,8 @@ func errorStatus(err error) (int, string) {
 		return 409, "path_exists"
 	case errors.Is(err, store.ErrSchedule):
 		return 409, "schedule_authority_or_deadline_required"
+	case errors.Is(err, store.ErrCollection):
+		return 409, "collection_authority_input_or_lease_required"
 	case errors.Is(err, store.ErrDispatchApproval):
 		return 409, "dispatch_approval_required"
 	case errors.Is(err, store.ErrState):
