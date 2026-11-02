@@ -53,8 +53,8 @@ const steps = [],
   egress = [];
 let state = "failed",
   failure;
-const record = (name) => {
-  steps.push({ name });
+const record = (name, detail = {}) => {
+  steps.push({ name, ...detail });
   console.log("passed: " + name);
 };
 page.on("pageerror", (e) => errors.push(e.message));
@@ -152,7 +152,7 @@ async function inspect(request, hash, ready = true) {
 async function actualReview(route, label, target = endpoint) {
   const request = route.request();
   assert.equal(request.url(), target);
-  assert.equal(request.method(), "POST");
+  assert.ok(["GET", "POST"].includes(request.method()));
   const headers = c.private + "/" + label + ".headers",
     body = c.private + "/" + label + ".request",
     output = c.raw + "/" + label + ".json";
@@ -186,9 +186,8 @@ async function actualReview(route, label, target = endpoint) {
         "--header",
         "@" + headers,
         "--request",
-        "POST",
-        "--data-binary",
-        "@" + body,
+        request.method(),
+        ...(request.method() === "POST" ? ["--data-binary", "@" + body] : []),
         "--output",
         output,
         "--write-out",
@@ -201,6 +200,11 @@ async function actualReview(route, label, target = endpoint) {
   const response = await readFile(output);
   assert.ok(response.length <= 262144);
   assert.equal(status, 200);
+  record(label + "-wire-response", {
+    request_method: request.method(),
+    response_status: status,
+    response_sha256: createHash("sha256").update(response).digest("hex"),
+  });
   return {
     status,
     body: response.toString("utf8"),

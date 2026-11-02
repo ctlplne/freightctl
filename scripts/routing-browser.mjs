@@ -1,9 +1,11 @@
 import assert from "node:assert/strict";
 import { readFile, writeFile } from "node:fs/promises";
 import { probe as qualifyCapturedRouting } from "./captured-routing-browser.mjs";
+import { wireResponse } from "./browser-wire.mjs";
 
-// Every operation reaches the real HTTPS service. The only interception drops
-// the first committed response, so the retry must use the original command key.
+// Every operation reaches the real HTTPS service through certificate-checked
+// response capture. Explicit loss cases drop the first committed response and
+// require retries to retain their original command key.
 export async function qualifyRouting(page, c, audit, record, actual) {
   const prefix = c.url + `/v1/tenants/${c.tenant}/partners/${c.partner}`;
   const region = page.getByRole("region", {
@@ -35,17 +37,15 @@ export async function qualifyRouting(page, c, audit, record, actual) {
       .getByRole("heading", { name: "Collection workflows", exact: true })
       .waitFor();
   };
-  async function response(route, action) {
-    const [r] = await Promise.all([
-      page
-        .waitForResponse(
-          (r) => r.url() === prefix + route && r.status() === 200,
-        )
-        .then((r) => r.json()),
-      action(),
-    ]);
-    return r;
-  }
+  let observation = 0;
+  const response = (route, action) =>
+    wireResponse(
+      page,
+      prefix + route,
+      action,
+      actual,
+      `routing-${c.routing_phase}-response-${observation++}`,
+    );
   async function inspect(id) {
     return response("/workflow-collections/" + id, () =>
       region

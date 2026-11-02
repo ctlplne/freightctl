@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { wireResponse } from "./browser-wire.mjs";
 export async function probe(page, c, selected, view, audit, record, actual) {
   assert.equal(c.routing_target.id, view.job.workflow_id);
   assert.equal(c.routing_target.version, view.job.workflow_version + 1);
@@ -13,15 +14,15 @@ export async function probe(page, c, selected, view, audit, record, actual) {
     page
       .getByRole("button", { name: "Confirm exact decision", exact: true })
       .click();
-  const response = async (path, action) => {
-    const [r] = await Promise.all([
-      page
-        .waitForResponse((r) => r.url() === prefix + path && r.status() === 200)
-        .then((r) => r.json()),
-      action(),
-    ]);
-    return r;
-  };
+  let observation = 0;
+  const response = (path, action) =>
+    wireResponse(
+      page,
+      prefix + path,
+      action,
+      actual,
+      `captured-${c.routing_phase}-response-${observation++}`,
+    );
   async function prepare() {
     await panel()
       .getByRole("spinbutton", {
