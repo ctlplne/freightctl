@@ -1,0 +1,215 @@
+{
+  "schema_version": 1,
+  "id": "F045",
+  "kind": "captured-routing-admission-and-revocation-qualification-progress",
+  "state": "three new guard tests pass on both native Linux architectures; calendar and actor follow-ups pending",
+  "observed_on": "2026-11-02",
+  "candidate": "b1ca6c19ad96ddd869ffbc50b894635ff7a2cc12",
+  "author_and_committer": "imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>",
+  "native_run": "https://github.com/ctlplne/freightctl/actions/runs/41508880131",
+  "source_run": "https://github.com/ctlplne/freightctl/actions/runs/41508880127",
+  "stock_peer_run": "https://github.com/ctlplne/freightctl/actions/runs/41508880021",
+  "platform_run": "https://github.com/ctlplne/freightctl/actions/runs/41508880233",
+  "checks": [
+    {
+      "job": 125495208961,
+      "runner": "ubuntu-24.04-arm aarch64",
+      "state": "passed",
+      "scope": "module/vet/unit race and all implemented real PostgreSQL integration/migration tests",
+      "verbose_pass_records": 524,
+      "verbose_skip_records": 0,
+      "verbose_fail_records": 0,
+      "new_case_seconds": [
+        3.44,
+        1.78,
+        3.14
+      ]
+    },
+    {
+      "job": 125495209348,
+      "runner": "ubuntu-24.04 x86_64",
+      "state": "passed",
+      "scope": "module/vet/unit race and all implemented real PostgreSQL integration/migration tests",
+      "verbose_pass_records": 524,
+      "verbose_skip_records": 0,
+      "verbose_fail_records": 0,
+      "new_case_seconds": [
+        3.46,
+        1.96,
+        3.41
+      ]
+    },
+    {
+      "job": 125495209393,
+      "runner": "ubuntu-24.04 x86_64",
+      "state": "passed",
+      "scope": "eight bounded fuzz targets"
+    },
+    {
+      "job": 125495209175,
+      "runner": "ubuntu-24.04 x86_64",
+      "state": "passed",
+      "scope": "source/security/frontend and qualification records"
+    },
+    {
+      "job": 125495209312,
+      "runner": "windows-2025 amd64",
+      "state": "failed",
+      "defect": "D103",
+      "observation": {
+        "scanner_fixture_socket_type": true,
+        "scanner_fixture_permission_bits": "0666",
+        "requested_fixture_mode": "0600"
+      },
+      "limit": "The existing private-socket guard refuses this metadata. Transport beyond it is not qualified; private-directory ACL and directory durability failures also remain red."
+    },
+    {
+      "job": 125495209771,
+      "runner": "macos-15 arm64",
+      "state": "observed queued",
+      "limit": "No new Mac pass is claimed; F044 records the prior candidate's native Mac unit/race pass."
+    }
+  ],
+  "new_test_cases": [
+    "TestCapturedRoutingPartialCapacityKeepsExactApprovalAndResumesWithoutDuplicateInputs",
+    "TestCapturedRoutingConcurrentAdmissionSerializesAndRevocationFencesEveryQueuedRun",
+    "TestCapturedRoutingSourceRevocationBlocksNewAdmissionAndAlreadyQueuedEffects"
+  ],
+  "observed_contracts": [
+    "Ordinary runs fill 127 of the unchanged 128 delivery slots; exactly one captured input is admitted, original-key recovery adds no effects, cancellation frees capacity and the remaining input keeps the same corrected approval.",
+    "Partial admission preserves every captured input identity, bytes, path and original producer facts. The queued run keeps its exact ID; a partially assigned batch cannot be reinterpreted and another refresh creates no duplicate run.",
+    "Competing refreshes serialize against real PostgreSQL and create exactly two runs/two intents for two inputs. Later routing revocation refuses both queued claims at zero attempts.",
+    "An independently registered source connection can be revoked while the receiver remains active. Both new admission and already queued effects stop, with unchanged durable counts, original captured assignments and access to accepted local byte revisions."
+  ],
+  "safe_manifest_summaries": {
+    "collections": {
+      "state": "passed",
+      "source_commit": "b1ca6c19ad96ddd869ffbc50b894635ff7a2cc12",
+      "manifest_sha256": "39db3b4836922f2e3b107532150d4953855ba932a095e9701c09fd756adfa56d",
+      "source_inputs": 442,
+      "sources_unchanged": true,
+      "recorded_commands": 180,
+      "unexpected_command_exits": 0,
+      "unexpected_http_statuses": 0,
+      "verified_output_artifacts": 480,
+      "output_closure_passed": true,
+      "cleanup_failures": 0,
+      "isolated_database_removed": true,
+      "duration_seconds": 110.121,
+      "inference_performed": false,
+      "scanner_engine_started": false,
+      "browser_failed_reports": 0,
+      "browser_runtime_errors": 0,
+      "browser_external_contacts": 0,
+      "browser_failure_locations": []
+    },
+    "arrivals": {
+      "state": "passed",
+      "source_commit": "b1ca6c19ad96ddd869ffbc50b894635ff7a2cc12",
+      "manifest_sha256": "40a6028f4c35a71141a37c7b184bdd1c91cb208ae721554c726adee851018f04",
+      "source_inputs": 442,
+      "sources_unchanged": true,
+      "recorded_commands": 98,
+      "unexpected_command_exits": 0,
+      "unexpected_http_statuses": 0,
+      "verified_output_artifacts": 270,
+      "output_closure_passed": true,
+      "cleanup_failures": 0,
+      "isolated_database_removed": true,
+      "duration_seconds": 61.539,
+      "inference_performed": false,
+      "scanner_engine_started": false,
+      "browser_failed_reports": 0,
+      "browser_runtime_errors": 0,
+      "browser_external_contacts": 0,
+      "browser_failure_locations": []
+    },
+    "schedules": {
+      "state": "passed",
+      "source_commit": "b1ca6c19ad96ddd869ffbc50b894635ff7a2cc12",
+      "manifest_sha256": "cf6bd05925a717b68e4449846136df982e11f62135b6efc59b96f2420975fa2a",
+      "source_inputs": 442,
+      "sources_unchanged": true,
+      "recorded_commands": 111,
+      "unexpected_command_exits": 0,
+      "unexpected_http_statuses": 0,
+      "verified_output_artifacts": 285,
+      "output_closure_passed": true,
+      "cleanup_failures": 0,
+      "isolated_database_removed": true,
+      "duration_seconds": 78.472,
+      "inference_performed": false,
+      "scanner_engine_started": false,
+      "browser_failed_reports": 0,
+      "browser_runtime_errors": 0,
+      "browser_external_contacts": 0,
+      "browser_failure_locations": []
+    },
+    "routing": {
+      "state": "passed",
+      "source_commit": "b1ca6c19ad96ddd869ffbc50b894635ff7a2cc12",
+      "manifest_sha256": "019597c7be204f9163b94e2220310346098f7e844ad40fa198297316233a1bf5",
+      "source_inputs": 442,
+      "sources_unchanged": true,
+      "recorded_commands": 133,
+      "unexpected_command_exits": 0,
+      "unexpected_http_statuses": 0,
+      "verified_output_artifacts": 348,
+      "output_closure_passed": true,
+      "cleanup_failures": 0,
+      "isolated_database_removed": true,
+      "duration_seconds": 93.662,
+      "inference_performed": false,
+      "scanner_engine_started": false,
+      "browser_failed_reports": 0,
+      "browser_runtime_errors": 0,
+      "browser_external_contacts": 0,
+      "browser_failure_locations": []
+    },
+    "captured-routing": {
+      "state": "passed",
+      "source_commit": "b1ca6c19ad96ddd869ffbc50b894635ff7a2cc12",
+      "manifest_sha256": "0175c18fbe2611545d3b78bba090cb582a264ca6eca6128eba8c9efcc304147c",
+      "source_inputs": 442,
+      "sources_unchanged": true,
+      "recorded_commands": 135,
+      "unexpected_command_exits": 0,
+      "unexpected_http_statuses": 0,
+      "verified_output_artifacts": 354,
+      "output_closure_passed": true,
+      "cleanup_failures": 0,
+      "isolated_database_removed": true,
+      "duration_seconds": 119.358,
+      "inference_performed": false,
+      "scanner_engine_started": false,
+      "browser_failed_reports": 0,
+      "browser_runtime_errors": 0,
+      "browser_external_contacts": 0,
+      "browser_failure_locations": []
+    }
+  },
+  "prepared_followups": {
+    "source_commit": "53bdb77b64ab6882dac007443725867d15821c9d",
+    "tests": [
+      "TestCapturedRoutingRetainsOriginalCalendarCutoffsAndSuspensionFencesEveryPhase",
+      "TestCapturedRoutingCredentialRotationKeepsHistoryWithoutRestoringOldAuthority"
+    ],
+    "local_checks_reference": ".private/f045-pending-23297c11f42341d38e55a9e8554293e5/manifest.json",
+    "local_checks": "compile, vet, gofmt, record validation and diff check passed",
+    "postgres_execution": false,
+    "scope": "Three calendar phases and two credential-rotation phases require their next native PostgreSQL run. The shared fixture refactor also requires that replay.",
+    "local_checks_manifest_sha256": "a5631a4bb9a6fd8f96df02d2c21de652dda73f22b24877061318f40941a99b5a",
+    "source_hashes_match_compiled_commit": true
+  },
+  "inference_performed": false,
+  "scanner_engine_started": false,
+  "full_foundation_aggregate_executed": false,
+  "full_journeys_qualified": false,
+  "overall_goal_complete": false,
+  "limits": [
+    "Database/storage guard tests use trusted source-adapter stand-ins; they do not establish stock source transport, Windows execution, independent adoption or full J03.",
+    "Stock-peer summaries separately record real loopback PostgreSQL, stock OpenSSH and sandboxed Chrome on one native Linux host. Raw fixtures were not uploaded.",
+    "Pass counts include nested cases/fuzz seeds. All 83 whole rows and 12 full journeys remain open.",
+    "Retained database migration 033, broader intake/key/calendar/actor combinations, Windows access control/durability and all other mandatory GOAL.md gates remain required."
+  ]
+}
