@@ -128,6 +128,10 @@ func TestCollectedHandoffRevokedTargetCannotExecuteButHistoricalReceiptRemainsRe
 	if after := routingPreviewCounts(t, f); after != before {
 		t.Fatal("refusal/history read wrote effects")
 	}
+	metadata, err := f.s.CollectionHandoffStatus(f.ctx, f.scope, h.JobID, h.ID)
+	if err != nil || metadata.Current || metadata.Workflow.State != "revoked" || metadata.SourcePlan == nil || len(metadata.SourceEffects) == 0 || len(metadata.Effects) == 0 || metadata.Effects[0].User == "" || metadata.Effects[0].KeyFingerprint == "" {
+		t.Fatal("revoked historical destination, plan or public identity unavailable", err)
+	}
 	h = decideCollectionHandoff(t, f, h, "cancel", "cancel-revoked-target")
 	if h.State != "cancelled" {
 		t.Fatal("cannot cancel stale target proposal")
@@ -193,6 +197,9 @@ func TestCollectedHandoffCanReplaceRevokedRoutingAndRetainRepeatedSuccessorLinea
 	if err != nil || !reflect.DeepEqual(final.Inputs, view.Inputs) || !reflect.DeepEqual(final.Job, view.Job) {
 		t.Fatal("repeated handoff rewrote original capture", err)
 	}
+	if len(final.Replacements) != 1 || final.Replacements[0] != (store.CollectionReplacement{InputID: selection.InputID, JobID: h.JobID, OriginalRunID: oldRun, CurrentRunID: second.PlannedRunID, HandoffID: second.ID, SourceRunID: h.PlannedRunID}) {
+		t.Fatal("collection did not resolve exactly the latest completed successor", final.Replacements)
+	}
 	last, err := f.s.Status(f.ctx, f.scope, second.PlannedRunID)
 	if err != nil || last.Run.WorkflowVersion != originalRef.Version || last.Run.Source.ID != *view.Inputs[0].FileID || last.Steps[0].Attempts != 0 {
 		t.Fatal("repeated successor changed source or contacted receiver", err)
@@ -225,6 +232,9 @@ func TestCollectedHandoffPrivateHistoryReceiptsAndAuditRemainScoped(t *testing.T
 	tx, err := f.s.Custody.DB.Begin(f.ctx, peer)
 	if err != nil {
 		t.Fatal(err)
+	}
+	if replacements, err := tx.CollectionReplacements(f.ctx, original.Inputs); err != nil || len(replacements) != 0 {
+		t.Fatal("peer saw private successor through input read model", err)
 	}
 	var count int
 	var bypass, owns bool
@@ -329,6 +339,11 @@ func TestCollectedHandoffPreservesOriginalAssignmentAndAtomicallyQueuesReviewedS
 	f, original, x := queuedCollectionHandoffFixture(t)
 	before := routingPreviewCounts(t, f)
 	p, h := proposeCollectionHandoff(t, f, original.Job.ID, x)
+	proposed := *h
+	proposedView, err := f.s.CollectionStatus(f.ctx, f.scope, original.Job.ID)
+	if err != nil || len(proposedView.Replacements) != 0 {
+		t.Fatal("uncompleted proposal appeared as replacement work", err)
+	}
 	if h.State != "proposed" || h.PlannedRunID == x.SourceRun || !p.ApprovalRequired || p.ExternalContact {
 		t.Fatal("proposal invented execution")
 	}
@@ -349,6 +364,9 @@ func TestCollectedHandoffPreservesOriginalAssignmentAndAtomicallyQueuesReviewedS
 	view, err := f.s.CollectionStatus(f.ctx, f.scope, original.Job.ID)
 	if err != nil || !reflect.DeepEqual(view.Job, original.Job) || !reflect.DeepEqual(view.Inputs, original.Inputs) {
 		t.Fatal("handoff rewrote original capture or assignment", err)
+	}
+	if len(view.Replacements) != 1 || view.Replacements[0].CurrentRunID != h.PlannedRunID || view.Replacements[0].OriginalRunID != x.SourceRun || view.Replacements[0].HandoffID != h.ID {
+		t.Fatal("completed successor absent from collection metadata")
 	}
 	old, err := f.s.Status(f.ctx, f.scope, x.SourceRun)
 	if err != nil || old.Run.State != "cancelled" || old.Run.Reason != "collection_handoff" {
@@ -379,6 +397,58 @@ func TestCollectedHandoffPreservesOriginalAssignmentAndAtomicallyQueuesReviewedS
 	}
 	if _, err := f.s.PreviewCollectionHandoff(f.ctx, f.scope, h.JobID, x); !errors.Is(err, store.ErrState) {
 		t.Fatal("old source received another successor", err)
+	}
+	metadata, err := f.s.CollectionHandoffStatus(f.ctx, f.scope, h.JobID, h.ID)
+	if err != nil || metadata.Current || metadata.Reason != "completed" || metadata.Workflow.Hash != x.Workflow.Hash || !reflect.DeepEqual(metadata.SourcePlan, p.SourcePlan) {
+		t.Fatal("completed review lost immutable plan or workflow", err)
+	}
+	if destination := os.Getenv("FREIGHTCTL_WRITE_HANDOFF_FIXTURE"); destination != "" {
+		data, err := json.MarshalIndent(map[string]any{"original": original, "selection": x, "preview": p, "proposed": proposed, "approved": approved, "completed": h, "view": view, "metadata": metadata, "original_run": old, "successor_run": next}, "", "  ")
+		if err != nil {
+			t.Fatal(err)
+		}
+		file, err := os.OpenFile(destination, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0600)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if _, err = file.Write(append(data, '\n')); err != nil {
+			file.Close()
+			t.Fatal(err)
+		}
+		if err = file.Close(); err != nil {
+			t.Fatal(err)
+		}
+	}
+}
+
+func TestCollectedHandoffDeduplicatedCollectionShowsOriginalJobsCompletedSuccessor(t *testing.T) {
+	f, original, selection := queuedCollectionHandoffFixture(t)
+	_, handoff := proposeCollectionHandoff(t, f, original.Job.ID, selection)
+	handoff = decideCollectionHandoff(t, f, handoff, "approve", "dedup-approve")
+	handoff = decideCollectionHandoff(t, f, handoff, "execute", "dedup-execute")
+	definition, err := collectionDefinition(original.Job)
+	if err != nil {
+		t.Fatal(err)
+	}
+	job, _ := startCollection(t, f, CollectionSelection{Workflow: definition.Workflow, Timeout: 120, Authority: definition.Authority}, "dedup-replacement-job")
+	owner := secure.NewID()
+	job, _, _, err = f.s.claimCollection(f.ctx, f.scope, job.ID, job.Hash, owner)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var manifest CollectionManifest
+	if Decode(original.Job.Manifest, &manifest) != nil {
+		t.Fatal("original captured manifest")
+	}
+	if err = f.s.captureCollectionManifest(f.ctx, f.scope, job.ID, owner, job.Fence, &manifest, *original.Job.ManifestHash); err != nil {
+		t.Fatal(err)
+	}
+	if _, err = f.s.completeCollectionWork(f.ctx, f.scope, job.ID, owner, job.Fence, "dedup-complete", secure.Digest([]byte(job.ID))); err != nil {
+		t.Fatal(err)
+	}
+	view, err := f.s.CollectionStatus(f.ctx, f.scope, job.ID)
+	if err != nil || !reflect.DeepEqual(view.Inputs, original.Inputs) || len(view.Replacements) != 1 || view.Replacements[0].JobID != original.Job.ID || view.Replacements[0].CurrentRunID != handoff.PlannedRunID || view.Replacements[0].OriginalRunID != selection.SourceRun {
+		t.Fatal("deduplicated batch lost original assignment or completed successor", err)
 	}
 }
 

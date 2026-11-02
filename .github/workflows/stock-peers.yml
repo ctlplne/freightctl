@@ -41,7 +41,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        journey: [arrivals-schedules, routing, captured-routing, intake-routing]
+        journey: [arrivals-schedules, routing, captured-routing, intake-routing, handoff-routing]
     runs-on: ubuntu-24.04
     timeout-minutes: 50
     env:
@@ -71,6 +71,15 @@ jobs:
           node web/node_modules/playwright/cli.js install --with-deps chromium --only-shell
       - name: Task-owned PostgreSQL
         run: python3 scripts/dev-db.py
+      - name: Offline independent encryption peer for handoff replay
+        if: matrix.journey == 'handoff-routing'
+        run: |
+          docker build --label "freightctl.workspace=$PWD" \
+            --label freightctl.purpose=pgp-interoperability \
+            --tag freightctl-pgp-peer:2.4.9-r1 - <<'DOCKERFILE'
+          FROM alpine@sha256:294b683cb724975bec92580e1e685676bd4b50bda910ddb8c51d4cabeaec77e6
+          RUN apk add --no-cache gnupg=2.4.9-r1
+          DOCKERFILE
       - name: Chromium sandbox preflight
         run: |
           node - <<'NODE'
@@ -90,7 +99,9 @@ jobs:
         run: |
           test "$(uname -m)" = x86_64
           task_pg_id=$(docker inspect --format '{{.Id}}' freightctl-postgres-v1)
-          if [ "$FREIGHTCTL_CI_JOURNEY" = intake-routing ]; then
+          if [ "$FREIGHTCTL_CI_JOURNEY" = handoff-routing ]; then
+            python3 scripts/qualify-routing.py --postgres-container-id "$task_pg_id" --collected-handoffs
+          elif [ "$FREIGHTCTL_CI_JOURNEY" = intake-routing ]; then
             python3 scripts/qualify-routing.py --postgres-container-id "$task_pg_id" --captured-routing --intake-revocations
           elif [ "$FREIGHTCTL_CI_JOURNEY" = captured-routing ]; then
             python3 scripts/qualify-routing.py --postgres-container-id "$task_pg_id" --captured-routing
@@ -104,7 +115,9 @@ jobs:
       - name: Safe qualification outcomes and evidence closure
         if: always()
         run: |
-          if [ "$FREIGHTCTL_CI_JOURNEY" = intake-routing ]; then
+          if [ "$FREIGHTCTL_CI_JOURNEY" = handoff-routing ]; then
+            python3 scripts/ci-qualification-summary.py handoff-routing
+          elif [ "$FREIGHTCTL_CI_JOURNEY" = intake-routing ]; then
             python3 scripts/ci-qualification-summary.py intake-routing
           elif [ "$FREIGHTCTL_CI_JOURNEY" = captured-routing ]; then
             python3 scripts/ci-qualification-summary.py captured-routing

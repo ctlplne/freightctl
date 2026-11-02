@@ -46,6 +46,14 @@
       "sha256": "117ca33108669d166a889f57d3a22c7c36265dc92eb6c7637f335910dcd0ff11"
     },
     {
+      "path": "web/src/collection-handoffs-types.ts",
+      "sha256": "537679374565264842dc16e7d5ce0ad9d71ec32f6c090ce36380d56df80de5d9"
+    },
+    {
+      "path": "web/src/collection-handoffs.tsx",
+      "sha256": "a18432ebb04a08b85efbfb0eae2354febe46fabed6fcb2c2dca33078e3358962"
+    },
+    {
       "path": "web/src/collection-routing-recovery.ts",
       "sha256": "efccb875ae356436e8f2b2f70a46bdcc3f8fd5293a1c57a0559990b15a776784"
     },
@@ -59,11 +67,11 @@
     },
     {
       "path": "web/src/collections-types.ts",
-      "sha256": "4b5a37581c30d2672419504618c05b85946853df74a726d51c3f37032842ced8"
+      "sha256": "7d7e52af9014d220b2cecbfb103d22dc0321566123e57a27b43cd609e62b7578"
     },
     {
       "path": "web/src/collections.tsx",
-      "sha256": "54ad4baef7dff95d7150e64c107555e4a8d30c63d10fdab44ec0f2a1cf021775"
+      "sha256": "17383c951da859df93caa3167c1dac4a428cdd0775444041aa1d498142976786"
     },
     {
       "path": "web/src/crypto.ts",
@@ -206,8 +214,8 @@
     },
     {
       "name": "app.js",
-      "sha256": "f20386cb8a4505e02a80d92d75d0e98218a4f75b0f5eea4f72b73dc89b0d15f3",
-      "size": 634965
+      "sha256": "3c152047afc9fe451086e107dfc1c59b573d774f0fb2b535354f438f9e9eba37",
+      "size": 658549
     },
     {
       "name": "app.js.LEGAL.txt",

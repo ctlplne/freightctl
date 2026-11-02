@@ -1,0 +1,1258 @@
+{
+  "approved": {
+    "id": "affdaa98-418e-4eb3-ac15-989a5716d21c",
+    "job_id": "9437bba4-e97e-44f3-adc3-9bc24996cfa4",
+    "input_id": "042e9c1e-3f48-4acb-8a20-b861758fb10b",
+    "source_run_id": "802642e7-2b48-4ff1-b0dd-0d3ebca80f4b",
+    "planned_run_id": "a67f0870-f6fc-45f4-9e22-8446787e9e09",
+    "definition": {
+      "plan": {
+        "facts": {
+          "file": {
+            "id": "c4f3179f-e91b-4502-a931-12f910b1b62d",
+            "policy": "integrity-only-v1",
+            "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+            "size_bytes": 3,
+            "accepted_event_id": "c032a89a-b4e9-4f06-a9d6-f0f9c4d13719"
+          },
+          "source": {
+            "name": "one.csv",
+            "index": 0,
+            "batch_id": "76a5b5b1-9209-4276-a5a3-95c3504b328d",
+            "file_count": 2,
+            "collection_id": "9437bba4-e97e-44f3-adc3-9bc24996cfa4",
+            "manifest_hash": "5f2c4de412d91259e3e57c7e6a3f9dec802d2bff7307d9f1c7725608334d0ad9"
+          }
+        },
+        "decisions": [
+          {
+            "kind": "deliver",
+            "path": "0",
+            "step": "second"
+          }
+        ],
+        "schema_version": 1,
+        "selected_steps": [
+          "second"
+        ]
+      },
+      "intents": [
+        {
+          "id": "df723a0a-c6fd-46ea-b9cb-fb82e347d7ec",
+          "ordinal": 1,
+          "step_id": "first",
+          "revision": 2,
+          "definition_hash": "8247cb274ec46937b98d4ff9a23ee8a061f0af597b099105cc01b09d17a82b1b"
+        }
+      ],
+      "profile": "untouched-collected-handoff-v1",
+      "input_id": "042e9c1e-3f48-4acb-8a20-b861758fb10b",
+      "workflow": {
+        "id": "61788ded-a73c-4b12-b556-fba861ce12a3",
+        "hash": "36f2a4b6ff576c81ff0db0a5a099826a1d00502e13aa51996cdf7a5c0525b293",
+        "version": 2
+      },
+      "plan_hash": "fdb8c8e723070491c25fa84817be084cc222fc0f2236853c820f947d0453d247",
+      "collection": {
+        "id": "9437bba4-e97e-44f3-adc3-9bc24996cfa4",
+        "revision": 4,
+        "definition_hash": "eb96821b63b4931f08b142e1309a75a5de843a1f6b78bd91b37647d0131b714c"
+      },
+      "source_run": {
+        "id": "802642e7-2b48-4ff1-b0dd-0d3ebca80f4b",
+        "revision": 1,
+        "workflow": {
+          "id": "61788ded-a73c-4b12-b556-fba861ce12a3",
+          "hash": "8068b69055de5fddf337022e87c9dbcc86cc07a76afc61fef44478978d983ac1",
+          "version": 1
+        },
+        "plan_hash": "eb0d9d0abe1c641123c17d9f374ac8783a8e877f455aaf599e9c7603e78e4b50"
+      },
+      "storage_id": "0032e32d-18ad-4f8c-8021-0329865ef91b",
+      "namespace_root": "/",
+      "schema_version": 1,
+      "authority_revision": 1
+    },
+    "definition_hash": "754fbf79de7449a026b3c4758818261c304fe5e6f76fa0f7e7b4945d76885cda",
+    "state": "approved",
+    "revision": 2,
+    "approval_authority": 1
+  },
+  "completed": {
+    "id": "affdaa98-418e-4eb3-ac15-989a5716d21c",
+    "job_id": "9437bba4-e97e-44f3-adc3-9bc24996cfa4",
+    "input_id": "042e9c1e-3f48-4acb-8a20-b861758fb10b",
+    "source_run_id": "802642e7-2b48-4ff1-b0dd-0d3ebca80f4b",
+    "planned_run_id": "a67f0870-f6fc-45f4-9e22-8446787e9e09",
+    "definition": {
+      "plan": {
+        "facts": {
+          "file": {
+            "id": "c4f3179f-e91b-4502-a931-12f910b1b62d",
+            "policy": "integrity-only-v1",
+            "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+            "size_bytes": 3,
+            "accepted_event_id": "c032a89a-b4e9-4f06-a9d6-f0f9c4d13719"
+          },
+          "source": {
+            "name": "one.csv",
+            "index": 0,
+            "batch_id": "76a5b5b1-9209-4276-a5a3-95c3504b328d",
+            "file_count": 2,
+            "collection_id": "9437bba4-e97e-44f3-adc3-9bc24996cfa4",
+            "manifest_hash": "5f2c4de412d91259e3e57c7e6a3f9dec802d2bff7307d9f1c7725608334d0ad9"
+          }
+        },
+        "decisions": [
+          {
+            "kind": "deliver",
+            "path": "0",
+            "step": "second"
+          }
+        ],
+        "schema_version": 1,
+        "selected_steps": [
+          "second"
+        ]
+      },
+      "intents": [
+        {
+          "id": "df723a0a-c6fd-46ea-b9cb-fb82e347d7ec",
+          "ordinal": 1,
+          "step_id": "first",
+          "revision": 2,
+          "definition_hash": "8247cb274ec46937b98d4ff9a23ee8a061f0af597b099105cc01b09d17a82b1b"
+        }
+      ],
+      "profile": "untouched-collected-handoff-v1",
+      "input_id": "042e9c1e-3f48-4acb-8a20-b861758fb10b",
+      "workflow": {
+        "id": "61788ded-a73c-4b12-b556-fba861ce12a3",
+        "hash": "36f2a4b6ff576c81ff0db0a5a099826a1d00502e13aa51996cdf7a5c0525b293",
+        "version": 2
+      },
+      "plan_hash": "fdb8c8e723070491c25fa84817be084cc222fc0f2236853c820f947d0453d247",
+      "collection": {
+        "id": "9437bba4-e97e-44f3-adc3-9bc24996cfa4",
+        "revision": 4,
+        "definition_hash": "eb96821b63b4931f08b142e1309a75a5de843a1f6b78bd91b37647d0131b714c"
+      },
+      "source_run": {
+        "id": "802642e7-2b48-4ff1-b0dd-0d3ebca80f4b",
+        "revision": 1,
+        "workflow": {
+          "id": "61788ded-a73c-4b12-b556-fba861ce12a3",
+          "hash": "8068b69055de5fddf337022e87c9dbcc86cc07a76afc61fef44478978d983ac1",
+          "version": 1
+        },
+        "plan_hash": "eb0d9d0abe1c641123c17d9f374ac8783a8e877f455aaf599e9c7603e78e4b50"
+      },
+      "storage_id": "0032e32d-18ad-4f8c-8021-0329865ef91b",
+      "namespace_root": "/",
+      "schema_version": 1,
+      "authority_revision": 1
+    },
+    "definition_hash": "754fbf79de7449a026b3c4758818261c304fe5e6f76fa0f7e7b4945d76885cda",
+    "state": "completed",
+    "revision": 3,
+    "approval_authority": 1
+  },
+  "metadata": {
+    "source_workflow": {
+      "id": "61788ded-a73c-4b12-b556-fba861ce12a3",
+      "version": 1,
+      "definition": {
+        "name": "settlement",
+        "steps": [
+          {
+            "id": "first",
+            "kind": "sftp.deliver",
+            "filename": "first.csv",
+            "connection": {
+              "id": "dfb6a31a-0d4b-4cb4-b4b1-87034394a823",
+              "hash": "73f7ed931ed61f8ad93ad74862a6c60e654533b0d0c3983b25b1587a5d38d6e1",
+              "version": 1
+            }
+          },
+          {
+            "id": "second",
+            "kind": "sftp.deliver",
+            "filename": "second.csv",
+            "connection": {
+              "id": "dfb6a31a-0d4b-4cb4-b4b1-87034394a823",
+              "hash": "73f7ed931ed61f8ad93ad74862a6c60e654533b0d0c3983b25b1587a5d38d6e1",
+              "version": 1
+            }
+          }
+        ],
+        "source": {
+          "kind": "sftp.collect",
+          "manifest": "settlement.ready.json",
+          "max_files": 2,
+          "connection": {
+            "id": "dfb6a31a-0d4b-4cb4-b4b1-87034394a823",
+            "hash": "73f7ed931ed61f8ad93ad74862a6c60e654533b0d0c3983b25b1587a5d38d6e1",
+            "version": 1
+          },
+          "max_file_bytes": 1024,
+          "max_total_bytes": 1024,
+          "target_directory": "/",
+          "completion_contract": "immutable-files-sha256-manifest-v1"
+        },
+        "program": {
+          "nodes": [
+            {
+              "kind": "deliver",
+              "step": "first"
+            }
+          ]
+        },
+        "schema_version": 2
+      },
+      "definition_hash": "8068b69055de5fddf337022e87c9dbcc86cc07a76afc61fef44478978d983ac1",
+      "state": "approved",
+      "revision": 2,
+      "approval_authority": 1
+    },
+    "source_plan": {
+      "schema_version": 1,
+      "facts": {
+        "file": {
+          "id": "c4f3179f-e91b-4502-a931-12f910b1b62d",
+          "size_bytes": 3,
+          "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+          "policy": "integrity-only-v1",
+          "accepted_event_id": "c032a89a-b4e9-4f06-a9d6-f0f9c4d13719"
+        },
+        "source": {
+          "collection_id": "9437bba4-e97e-44f3-adc3-9bc24996cfa4",
+          "manifest_hash": "5f2c4de412d91259e3e57c7e6a3f9dec802d2bff7307d9f1c7725608334d0ad9",
+          "name": "one.csv",
+          "batch_id": "76a5b5b1-9209-4276-a5a3-95c3504b328d",
+          "file_count": 2,
+          "index": 0
+        }
+      },
+      "selected_steps": [
+        "first"
+      ],
+      "decisions": [
+        {
+          "path": "0",
+          "kind": "deliver",
+          "step": "first"
+        }
+      ]
+    },
+    "source_effects": [
+      {
+        "step_id": "first",
+        "connection": {
+          "id": "dfb6a31a-0d4b-4cb4-b4b1-87034394a823",
+          "version": 1,
+          "hash": "73f7ed931ed61f8ad93ad74862a6c60e654533b0d0c3983b25b1587a5d38d6e1"
+        },
+        "address": "127.0.0.1:9",
+        "directory": "/inbox",
+        "final_name_pattern": "\u003cdelivery UUID\u003e-first.csv",
+        "host_fingerprint": "SHA256:/mUPvWiAyFoPY7hXkzSBqhN8UyqAO8UxOmhYpTLW/+Q",
+        "user": "receiver",
+        "key_fingerprint": "SHA256:vDJfwCP/C2ApXLRbP1OLvn5xeKBhren7wVJEfDXsUAw"
+      },
+      {
+        "step_id": "second",
+        "connection": {
+          "id": "dfb6a31a-0d4b-4cb4-b4b1-87034394a823",
+          "version": 1,
+          "hash": "73f7ed931ed61f8ad93ad74862a6c60e654533b0d0c3983b25b1587a5d38d6e1"
+        },
+        "address": "127.0.0.1:9",
+        "directory": "/inbox",
+        "final_name_pattern": "\u003cdelivery UUID\u003e-second.csv",
+        "host_fingerprint": "SHA256:/mUPvWiAyFoPY7hXkzSBqhN8UyqAO8UxOmhYpTLW/+Q",
+        "user": "receiver",
+        "key_fingerprint": "SHA256:vDJfwCP/C2ApXLRbP1OLvn5xeKBhren7wVJEfDXsUAw"
+      }
+    ],
+    "workflow": {
+      "id": "61788ded-a73c-4b12-b556-fba861ce12a3",
+      "version": 2,
+      "definition": {
+        "name": "settlement",
+        "steps": [
+          {
+            "id": "first",
+            "kind": "sftp.deliver",
+            "filename": "first.csv",
+            "connection": {
+              "id": "dfb6a31a-0d4b-4cb4-b4b1-87034394a823",
+              "hash": "73f7ed931ed61f8ad93ad74862a6c60e654533b0d0c3983b25b1587a5d38d6e1",
+              "version": 1
+            }
+          },
+          {
+            "id": "second",
+            "kind": "sftp.deliver",
+            "filename": "second.csv",
+            "connection": {
+              "id": "dfb6a31a-0d4b-4cb4-b4b1-87034394a823",
+              "hash": "73f7ed931ed61f8ad93ad74862a6c60e654533b0d0c3983b25b1587a5d38d6e1",
+              "version": 1
+            }
+          }
+        ],
+        "source": {
+          "kind": "sftp.collect",
+          "manifest": "settlement.ready.json",
+          "max_files": 2,
+          "connection": {
+            "id": "dfb6a31a-0d4b-4cb4-b4b1-87034394a823",
+            "hash": "73f7ed931ed61f8ad93ad74862a6c60e654533b0d0c3983b25b1587a5d38d6e1",
+            "version": 1
+          },
+          "max_file_bytes": 1024,
+          "max_total_bytes": 1024,
+          "target_directory": "/",
+          "completion_contract": "immutable-files-sha256-manifest-v1"
+        },
+        "program": {
+          "nodes": [
+            {
+              "kind": "deliver",
+              "step": "second"
+            }
+          ]
+        },
+        "schema_version": 2
+      },
+      "definition_hash": "36f2a4b6ff576c81ff0db0a5a099826a1d00502e13aa51996cdf7a5c0525b293",
+      "state": "approved",
+      "revision": 2,
+      "approval_authority": 1
+    },
+    "effects": [
+      {
+        "step_id": "first",
+        "connection": {
+          "id": "dfb6a31a-0d4b-4cb4-b4b1-87034394a823",
+          "version": 1,
+          "hash": "73f7ed931ed61f8ad93ad74862a6c60e654533b0d0c3983b25b1587a5d38d6e1"
+        },
+        "address": "127.0.0.1:9",
+        "directory": "/inbox",
+        "final_name_pattern": "\u003cdelivery UUID\u003e-first.csv",
+        "host_fingerprint": "SHA256:/mUPvWiAyFoPY7hXkzSBqhN8UyqAO8UxOmhYpTLW/+Q",
+        "user": "receiver",
+        "key_fingerprint": "SHA256:vDJfwCP/C2ApXLRbP1OLvn5xeKBhren7wVJEfDXsUAw"
+      },
+      {
+        "step_id": "second",
+        "connection": {
+          "id": "dfb6a31a-0d4b-4cb4-b4b1-87034394a823",
+          "version": 1,
+          "hash": "73f7ed931ed61f8ad93ad74862a6c60e654533b0d0c3983b25b1587a5d38d6e1"
+        },
+        "address": "127.0.0.1:9",
+        "directory": "/inbox",
+        "final_name_pattern": "\u003cdelivery UUID\u003e-second.csv",
+        "host_fingerprint": "SHA256:/mUPvWiAyFoPY7hXkzSBqhN8UyqAO8UxOmhYpTLW/+Q",
+        "user": "receiver",
+        "key_fingerprint": "SHA256:vDJfwCP/C2ApXLRbP1OLvn5xeKBhren7wVJEfDXsUAw"
+      }
+    ],
+    "handoff": {
+      "id": "affdaa98-418e-4eb3-ac15-989a5716d21c",
+      "job_id": "9437bba4-e97e-44f3-adc3-9bc24996cfa4",
+      "input_id": "042e9c1e-3f48-4acb-8a20-b861758fb10b",
+      "source_run_id": "802642e7-2b48-4ff1-b0dd-0d3ebca80f4b",
+      "planned_run_id": "a67f0870-f6fc-45f4-9e22-8446787e9e09",
+      "definition": {
+        "plan": {
+          "facts": {
+            "file": {
+              "id": "c4f3179f-e91b-4502-a931-12f910b1b62d",
+              "policy": "integrity-only-v1",
+              "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+              "size_bytes": 3,
+              "accepted_event_id": "c032a89a-b4e9-4f06-a9d6-f0f9c4d13719"
+            },
+            "source": {
+              "name": "one.csv",
+              "index": 0,
+              "batch_id": "76a5b5b1-9209-4276-a5a3-95c3504b328d",
+              "file_count": 2,
+              "collection_id": "9437bba4-e97e-44f3-adc3-9bc24996cfa4",
+              "manifest_hash": "5f2c4de412d91259e3e57c7e6a3f9dec802d2bff7307d9f1c7725608334d0ad9"
+            }
+          },
+          "decisions": [
+            {
+              "kind": "deliver",
+              "path": "0",
+              "step": "second"
+            }
+          ],
+          "schema_version": 1,
+          "selected_steps": [
+            "second"
+          ]
+        },
+        "intents": [
+          {
+            "id": "df723a0a-c6fd-46ea-b9cb-fb82e347d7ec",
+            "ordinal": 1,
+            "step_id": "first",
+            "revision": 2,
+            "definition_hash": "8247cb274ec46937b98d4ff9a23ee8a061f0af597b099105cc01b09d17a82b1b"
+          }
+        ],
+        "profile": "untouched-collected-handoff-v1",
+        "input_id": "042e9c1e-3f48-4acb-8a20-b861758fb10b",
+        "workflow": {
+          "id": "61788ded-a73c-4b12-b556-fba861ce12a3",
+          "hash": "36f2a4b6ff576c81ff0db0a5a099826a1d00502e13aa51996cdf7a5c0525b293",
+          "version": 2
+        },
+        "plan_hash": "fdb8c8e723070491c25fa84817be084cc222fc0f2236853c820f947d0453d247",
+        "collection": {
+          "id": "9437bba4-e97e-44f3-adc3-9bc24996cfa4",
+          "revision": 4,
+          "definition_hash": "eb96821b63b4931f08b142e1309a75a5de843a1f6b78bd91b37647d0131b714c"
+        },
+        "source_run": {
+          "id": "802642e7-2b48-4ff1-b0dd-0d3ebca80f4b",
+          "revision": 1,
+          "workflow": {
+            "id": "61788ded-a73c-4b12-b556-fba861ce12a3",
+            "hash": "8068b69055de5fddf337022e87c9dbcc86cc07a76afc61fef44478978d983ac1",
+            "version": 1
+          },
+          "plan_hash": "eb0d9d0abe1c641123c17d9f374ac8783a8e877f455aaf599e9c7603e78e4b50"
+        },
+        "storage_id": "0032e32d-18ad-4f8c-8021-0329865ef91b",
+        "namespace_root": "/",
+        "schema_version": 1,
+        "authority_revision": 1
+      },
+      "definition_hash": "754fbf79de7449a026b3c4758818261c304fe5e6f76fa0f7e7b4945d76885cda",
+      "state": "completed",
+      "revision": 3,
+      "approval_authority": 1
+    },
+    "current_bindings": false,
+    "binding_reason": "completed"
+  },
+  "original": {
+    "job": {
+      "id": "9437bba4-e97e-44f3-adc3-9bc24996cfa4",
+      "workflow_id": "61788ded-a73c-4b12-b556-fba861ce12a3",
+      "workflow_version": 1,
+      "workflow_hash": "8068b69055de5fddf337022e87c9dbcc86cc07a76afc61fef44478978d983ac1",
+      "definition": {
+        "source": {
+          "kind": "sftp.collect",
+          "manifest": "settlement.ready.json",
+          "max_files": 2,
+          "connection": {
+            "id": "dfb6a31a-0d4b-4cb4-b4b1-87034394a823",
+            "hash": "73f7ed931ed61f8ad93ad74862a6c60e654533b0d0c3983b25b1587a5d38d6e1",
+            "version": 1
+          },
+          "max_file_bytes": 1024,
+          "max_total_bytes": 1024,
+          "target_directory": "/",
+          "completion_contract": "immutable-files-sha256-manifest-v1"
+        },
+        "effects": [
+          {
+            "address": "127.0.0.1:9",
+            "step_id": "first",
+            "directory": "/inbox",
+            "connection": {
+              "id": "dfb6a31a-0d4b-4cb4-b4b1-87034394a823",
+              "hash": "73f7ed931ed61f8ad93ad74862a6c60e654533b0d0c3983b25b1587a5d38d6e1",
+              "version": 1
+            },
+            "host_fingerprint": "SHA256:/mUPvWiAyFoPY7hXkzSBqhN8UyqAO8UxOmhYpTLW/+Q",
+            "final_name_pattern": "\u003cdelivery UUID\u003e-first.csv"
+          },
+          {
+            "address": "127.0.0.1:9",
+            "step_id": "second",
+            "directory": "/inbox",
+            "connection": {
+              "id": "dfb6a31a-0d4b-4cb4-b4b1-87034394a823",
+              "hash": "73f7ed931ed61f8ad93ad74862a6c60e654533b0d0c3983b25b1587a5d38d6e1",
+              "version": 1
+            },
+            "host_fingerprint": "SHA256:/mUPvWiAyFoPY7hXkzSBqhN8UyqAO8UxOmhYpTLW/+Q",
+            "final_name_pattern": "\u003cdelivery UUID\u003e-second.csv"
+          }
+        ],
+        "workflow": {
+          "id": "61788ded-a73c-4b12-b556-fba861ce12a3",
+          "hash": "8068b69055de5fddf337022e87c9dbcc86cc07a76afc61fef44478978d983ac1",
+          "version": 1
+        },
+        "storage_id": "0032e32d-18ad-4f8c-8021-0329865ef91b",
+        "namespace_root": "/",
+        "schema_version": 1,
+        "source_identity": "24c633e9ce3b835937ad29df5f0a8bf4a46b9a4cdca48bd6e21a19a4ca9a4f52",
+        "timeout_seconds": 120,
+        "source_connection": {
+          "id": "dfb6a31a-0d4b-4cb4-b4b1-87034394a823",
+          "user": "receiver",
+          "state": "active",
+          "address": "127.0.0.1:9",
+          "version": 1,
+          "revision": 1,
+          "directory": "/inbox",
+          "definition_hash": "73f7ed931ed61f8ad93ad74862a6c60e654533b0d0c3983b25b1587a5d38d6e1",
+          "key_fingerprint": "SHA256:vDJfwCP/C2ApXLRbP1OLvn5xeKBhren7wVJEfDXsUAw",
+          "host_fingerprint": "SHA256:/mUPvWiAyFoPY7hXkzSBqhN8UyqAO8UxOmhYpTLW/+Q"
+        },
+        "authority_revision": 1
+      },
+      "definition_hash": "eb96821b63b4931f08b142e1309a75a5de843a1f6b78bd91b37647d0131b714c",
+      "state": "captured",
+      "captured": true,
+      "revision": 4,
+      "fence": 1,
+      "attempts": 1,
+      "lease_owner": "",
+      "lease_until": null,
+      "next_at": "2026-11-02T22:11:13.676733Z",
+      "created_at": "2026-11-02T22:11:13.676733Z",
+      "deadline_at": "2026-11-02T22:13:13.676733Z",
+      "manifest": {
+        "files": [
+          {
+            "name": "one.csv",
+            "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+            "size_bytes": 3
+          },
+          {
+            "name": "two.csv",
+            "sha256": "cb8379ac2098aa165029e3938a51da0bcecfc008fd6795f401178647f96c5b34",
+            "size_bytes": 3
+          }
+        ],
+        "batch_id": "76a5b5b1-9209-4276-a5a3-95c3504b328d",
+        "schema_version": 1
+      },
+      "manifest_hash": "5f2c4de412d91259e3e57c7e6a3f9dec802d2bff7307d9f1c7725608334d0ad9",
+      "reason": "batch_captured"
+    },
+    "inputs": [
+      {
+        "id": "042e9c1e-3f48-4acb-8a20-b861758fb10b",
+        "first_job_id": "9437bba4-e97e-44f3-adc3-9bc24996cfa4",
+        "workflow_id": "61788ded-a73c-4b12-b556-fba861ce12a3",
+        "source_identity": "24c633e9ce3b835937ad29df5f0a8bf4a46b9a4cdca48bd6e21a19a4ca9a4f52",
+        "input_identity": "8a74d5f2529c4e79913fc3e006fbac3deee8f7e6e0012cec64766f3952ac6b6c",
+        "source_name": "one.csv",
+        "size_bytes": 3,
+        "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+        "target_path": "/ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad-one.csv",
+        "object_id": "c4f3179f-e91b-4502-a931-12f910b1b62d",
+        "state": "queued",
+        "revision": 3,
+        "capture_fence": 1,
+        "capture_owner": "a7cbf691-772b-46ef-9161-a46710c999ed",
+        "file_id": "c4f3179f-e91b-4502-a931-12f910b1b62d",
+        "run_id": "802642e7-2b48-4ff1-b0dd-0d3ebca80f4b"
+      },
+      {
+        "id": "979edac3-5e2b-4814-ba76-2677690edc6c",
+        "first_job_id": "9437bba4-e97e-44f3-adc3-9bc24996cfa4",
+        "workflow_id": "61788ded-a73c-4b12-b556-fba861ce12a3",
+        "source_identity": "24c633e9ce3b835937ad29df5f0a8bf4a46b9a4cdca48bd6e21a19a4ca9a4f52",
+        "input_identity": "b851172faa9584adb45b5f35f975e889ea43c534a74fb44410593cd5abb55f2a",
+        "source_name": "two.csv",
+        "size_bytes": 3,
+        "sha256": "cb8379ac2098aa165029e3938a51da0bcecfc008fd6795f401178647f96c5b34",
+        "target_path": "/cb8379ac2098aa165029e3938a51da0bcecfc008fd6795f401178647f96c5b34-two.csv",
+        "object_id": "65049514-dd34-489d-b6fe-6fc6dd77618d",
+        "state": "queued",
+        "revision": 3,
+        "capture_fence": 1,
+        "capture_owner": "a7cbf691-772b-46ef-9161-a46710c999ed",
+        "file_id": "65049514-dd34-489d-b6fe-6fc6dd77618d",
+        "run_id": "44b36fba-146a-449d-89f2-44316a9a77d4"
+      }
+    ],
+    "current_authority": true,
+    "observed_state": "captured",
+    "business_acceptance": "unknown",
+    "local_states": [
+      {
+        "input_id": "042e9c1e-3f48-4acb-8a20-b861758fb10b",
+        "state": "published"
+      },
+      {
+        "input_id": "979edac3-5e2b-4814-ba76-2677690edc6c",
+        "state": "published"
+      }
+    ]
+  },
+  "original_run": {
+    "run": {
+      "id": "802642e7-2b48-4ff1-b0dd-0d3ebca80f4b",
+      "workflow_id": "61788ded-a73c-4b12-b556-fba861ce12a3",
+      "workflow_version": 1,
+      "workflow_hash": "8068b69055de5fddf337022e87c9dbcc86cc07a76afc61fef44478978d983ac1",
+      "file_id": "c4f3179f-e91b-4502-a931-12f910b1b62d",
+      "source": {
+        "id": "c4f3179f-e91b-4502-a931-12f910b1b62d",
+        "size_bytes": 3,
+        "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+        "policy": "integrity-only-v1",
+        "accepted_event_id": "c032a89a-b4e9-4f06-a9d6-f0f9c4d13719"
+      },
+      "storage_id": "0032e32d-18ad-4f8c-8021-0329865ef91b",
+      "namespace_root": "/",
+      "authority_revision": 1,
+      "state": "cancelled",
+      "reason": "collection_handoff",
+      "revision": 2,
+      "execution_plan": {
+        "facts": {
+          "file": {
+            "id": "c4f3179f-e91b-4502-a931-12f910b1b62d",
+            "policy": "integrity-only-v1",
+            "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+            "size_bytes": 3,
+            "accepted_event_id": "c032a89a-b4e9-4f06-a9d6-f0f9c4d13719"
+          },
+          "source": {
+            "name": "one.csv",
+            "index": 0,
+            "batch_id": "76a5b5b1-9209-4276-a5a3-95c3504b328d",
+            "file_count": 2,
+            "collection_id": "9437bba4-e97e-44f3-adc3-9bc24996cfa4",
+            "manifest_hash": "5f2c4de412d91259e3e57c7e6a3f9dec802d2bff7307d9f1c7725608334d0ad9"
+          }
+        },
+        "decisions": [
+          {
+            "kind": "deliver",
+            "path": "0",
+            "step": "first"
+          }
+        ],
+        "schema_version": 1,
+        "selected_steps": [
+          "first"
+        ]
+      },
+      "execution_plan_hash": "eb0d9d0abe1c641123c17d9f374ac8783a8e877f455aaf599e9c7603e78e4b50"
+    },
+    "steps": [
+      {
+        "id": "first",
+        "ordinal": 1,
+        "delivery_id": "df723a0a-c6fd-46ea-b9cb-fb82e347d7ec",
+        "state": "cancelled",
+        "attempts": 0,
+        "observation": {
+          "code": "collection_handoff",
+          "handoff_id": "affdaa98-418e-4eb3-ac15-989a5716d21c"
+        }
+      }
+    ],
+    "observed_state": "cancelled",
+    "observed_reason": "operator_cancelled"
+  },
+  "preview": {
+    "source_workflow": {
+      "id": "61788ded-a73c-4b12-b556-fba861ce12a3",
+      "version": 1,
+      "definition": {
+        "name": "settlement",
+        "steps": [
+          {
+            "id": "first",
+            "kind": "sftp.deliver",
+            "filename": "first.csv",
+            "connection": {
+              "id": "dfb6a31a-0d4b-4cb4-b4b1-87034394a823",
+              "hash": "73f7ed931ed61f8ad93ad74862a6c60e654533b0d0c3983b25b1587a5d38d6e1",
+              "version": 1
+            }
+          },
+          {
+            "id": "second",
+            "kind": "sftp.deliver",
+            "filename": "second.csv",
+            "connection": {
+              "id": "dfb6a31a-0d4b-4cb4-b4b1-87034394a823",
+              "hash": "73f7ed931ed61f8ad93ad74862a6c60e654533b0d0c3983b25b1587a5d38d6e1",
+              "version": 1
+            }
+          }
+        ],
+        "source": {
+          "kind": "sftp.collect",
+          "manifest": "settlement.ready.json",
+          "max_files": 2,
+          "connection": {
+            "id": "dfb6a31a-0d4b-4cb4-b4b1-87034394a823",
+            "hash": "73f7ed931ed61f8ad93ad74862a6c60e654533b0d0c3983b25b1587a5d38d6e1",
+            "version": 1
+          },
+          "max_file_bytes": 1024,
+          "max_total_bytes": 1024,
+          "target_directory": "/",
+          "completion_contract": "immutable-files-sha256-manifest-v1"
+        },
+        "program": {
+          "nodes": [
+            {
+              "kind": "deliver",
+              "step": "first"
+            }
+          ]
+        },
+        "schema_version": 2
+      },
+      "definition_hash": "8068b69055de5fddf337022e87c9dbcc86cc07a76afc61fef44478978d983ac1",
+      "state": "approved",
+      "revision": 2,
+      "approval_authority": 1
+    },
+    "source_plan": {
+      "schema_version": 1,
+      "facts": {
+        "file": {
+          "id": "c4f3179f-e91b-4502-a931-12f910b1b62d",
+          "size_bytes": 3,
+          "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+          "policy": "integrity-only-v1",
+          "accepted_event_id": "c032a89a-b4e9-4f06-a9d6-f0f9c4d13719"
+        },
+        "source": {
+          "collection_id": "9437bba4-e97e-44f3-adc3-9bc24996cfa4",
+          "manifest_hash": "5f2c4de412d91259e3e57c7e6a3f9dec802d2bff7307d9f1c7725608334d0ad9",
+          "name": "one.csv",
+          "batch_id": "76a5b5b1-9209-4276-a5a3-95c3504b328d",
+          "file_count": 2,
+          "index": 0
+        }
+      },
+      "selected_steps": [
+        "first"
+      ],
+      "decisions": [
+        {
+          "path": "0",
+          "kind": "deliver",
+          "step": "first"
+        }
+      ]
+    },
+    "source_effects": [
+      {
+        "step_id": "first",
+        "connection": {
+          "id": "dfb6a31a-0d4b-4cb4-b4b1-87034394a823",
+          "version": 1,
+          "hash": "73f7ed931ed61f8ad93ad74862a6c60e654533b0d0c3983b25b1587a5d38d6e1"
+        },
+        "address": "127.0.0.1:9",
+        "directory": "/inbox",
+        "final_name_pattern": "\u003cdelivery UUID\u003e-first.csv",
+        "host_fingerprint": "SHA256:/mUPvWiAyFoPY7hXkzSBqhN8UyqAO8UxOmhYpTLW/+Q",
+        "user": "receiver",
+        "key_fingerprint": "SHA256:vDJfwCP/C2ApXLRbP1OLvn5xeKBhren7wVJEfDXsUAw"
+      },
+      {
+        "step_id": "second",
+        "connection": {
+          "id": "dfb6a31a-0d4b-4cb4-b4b1-87034394a823",
+          "version": 1,
+          "hash": "73f7ed931ed61f8ad93ad74862a6c60e654533b0d0c3983b25b1587a5d38d6e1"
+        },
+        "address": "127.0.0.1:9",
+        "directory": "/inbox",
+        "final_name_pattern": "\u003cdelivery UUID\u003e-second.csv",
+        "host_fingerprint": "SHA256:/mUPvWiAyFoPY7hXkzSBqhN8UyqAO8UxOmhYpTLW/+Q",
+        "user": "receiver",
+        "key_fingerprint": "SHA256:vDJfwCP/C2ApXLRbP1OLvn5xeKBhren7wVJEfDXsUAw"
+      }
+    ],
+    "workflow": {
+      "id": "61788ded-a73c-4b12-b556-fba861ce12a3",
+      "version": 2,
+      "definition": {
+        "name": "settlement",
+        "steps": [
+          {
+            "id": "first",
+            "kind": "sftp.deliver",
+            "filename": "first.csv",
+            "connection": {
+              "id": "dfb6a31a-0d4b-4cb4-b4b1-87034394a823",
+              "hash": "73f7ed931ed61f8ad93ad74862a6c60e654533b0d0c3983b25b1587a5d38d6e1",
+              "version": 1
+            }
+          },
+          {
+            "id": "second",
+            "kind": "sftp.deliver",
+            "filename": "second.csv",
+            "connection": {
+              "id": "dfb6a31a-0d4b-4cb4-b4b1-87034394a823",
+              "hash": "73f7ed931ed61f8ad93ad74862a6c60e654533b0d0c3983b25b1587a5d38d6e1",
+              "version": 1
+            }
+          }
+        ],
+        "source": {
+          "kind": "sftp.collect",
+          "manifest": "settlement.ready.json",
+          "max_files": 2,
+          "connection": {
+            "id": "dfb6a31a-0d4b-4cb4-b4b1-87034394a823",
+            "hash": "73f7ed931ed61f8ad93ad74862a6c60e654533b0d0c3983b25b1587a5d38d6e1",
+            "version": 1
+          },
+          "max_file_bytes": 1024,
+          "max_total_bytes": 1024,
+          "target_directory": "/",
+          "completion_contract": "immutable-files-sha256-manifest-v1"
+        },
+        "program": {
+          "nodes": [
+            {
+              "kind": "deliver",
+              "step": "second"
+            }
+          ]
+        },
+        "schema_version": 2
+      },
+      "definition_hash": "36f2a4b6ff576c81ff0db0a5a099826a1d00502e13aa51996cdf7a5c0525b293",
+      "state": "approved",
+      "revision": 2,
+      "approval_authority": 1
+    },
+    "effects": [
+      {
+        "step_id": "first",
+        "connection": {
+          "id": "dfb6a31a-0d4b-4cb4-b4b1-87034394a823",
+          "version": 1,
+          "hash": "73f7ed931ed61f8ad93ad74862a6c60e654533b0d0c3983b25b1587a5d38d6e1"
+        },
+        "address": "127.0.0.1:9",
+        "directory": "/inbox",
+        "final_name_pattern": "\u003cdelivery UUID\u003e-first.csv",
+        "host_fingerprint": "SHA256:/mUPvWiAyFoPY7hXkzSBqhN8UyqAO8UxOmhYpTLW/+Q",
+        "user": "receiver",
+        "key_fingerprint": "SHA256:vDJfwCP/C2ApXLRbP1OLvn5xeKBhren7wVJEfDXsUAw"
+      },
+      {
+        "step_id": "second",
+        "connection": {
+          "id": "dfb6a31a-0d4b-4cb4-b4b1-87034394a823",
+          "version": 1,
+          "hash": "73f7ed931ed61f8ad93ad74862a6c60e654533b0d0c3983b25b1587a5d38d6e1"
+        },
+        "address": "127.0.0.1:9",
+        "directory": "/inbox",
+        "final_name_pattern": "\u003cdelivery UUID\u003e-second.csv",
+        "host_fingerprint": "SHA256:/mUPvWiAyFoPY7hXkzSBqhN8UyqAO8UxOmhYpTLW/+Q",
+        "user": "receiver",
+        "key_fingerprint": "SHA256:vDJfwCP/C2ApXLRbP1OLvn5xeKBhren7wVJEfDXsUAw"
+      }
+    ],
+    "definition": {
+      "schema_version": 1,
+      "profile": "untouched-collected-handoff-v1",
+      "collection": {
+        "id": "9437bba4-e97e-44f3-adc3-9bc24996cfa4",
+        "revision": 4,
+        "definition_hash": "eb96821b63b4931f08b142e1309a75a5de843a1f6b78bd91b37647d0131b714c"
+      },
+      "input_id": "042e9c1e-3f48-4acb-8a20-b861758fb10b",
+      "source_run": {
+        "id": "802642e7-2b48-4ff1-b0dd-0d3ebca80f4b",
+        "revision": 1,
+        "plan_hash": "eb0d9d0abe1c641123c17d9f374ac8783a8e877f455aaf599e9c7603e78e4b50",
+        "workflow": {
+          "id": "61788ded-a73c-4b12-b556-fba861ce12a3",
+          "version": 1,
+          "hash": "8068b69055de5fddf337022e87c9dbcc86cc07a76afc61fef44478978d983ac1"
+        }
+      },
+      "intents": [
+        {
+          "id": "df723a0a-c6fd-46ea-b9cb-fb82e347d7ec",
+          "revision": 2,
+          "definition_hash": "8247cb274ec46937b98d4ff9a23ee8a061f0af597b099105cc01b09d17a82b1b",
+          "step_id": "first",
+          "ordinal": 1
+        }
+      ],
+      "workflow": {
+        "id": "61788ded-a73c-4b12-b556-fba861ce12a3",
+        "version": 2,
+        "hash": "36f2a4b6ff576c81ff0db0a5a099826a1d00502e13aa51996cdf7a5c0525b293"
+      },
+      "plan": {
+        "schema_version": 1,
+        "facts": {
+          "file": {
+            "id": "c4f3179f-e91b-4502-a931-12f910b1b62d",
+            "size_bytes": 3,
+            "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+            "policy": "integrity-only-v1",
+            "accepted_event_id": "c032a89a-b4e9-4f06-a9d6-f0f9c4d13719"
+          },
+          "source": {
+            "collection_id": "9437bba4-e97e-44f3-adc3-9bc24996cfa4",
+            "manifest_hash": "5f2c4de412d91259e3e57c7e6a3f9dec802d2bff7307d9f1c7725608334d0ad9",
+            "name": "one.csv",
+            "batch_id": "76a5b5b1-9209-4276-a5a3-95c3504b328d",
+            "file_count": 2,
+            "index": 0
+          }
+        },
+        "selected_steps": [
+          "second"
+        ],
+        "decisions": [
+          {
+            "path": "0",
+            "kind": "deliver",
+            "step": "second"
+          }
+        ]
+      },
+      "plan_hash": "fdb8c8e723070491c25fa84817be084cc222fc0f2236853c820f947d0453d247",
+      "authority_revision": 1,
+      "storage_id": "0032e32d-18ad-4f8c-8021-0329865ef91b",
+      "namespace_root": "/"
+    },
+    "definition_hash": "754fbf79de7449a026b3c4758818261c304fe5e6f76fa0f7e7b4945d76885cda",
+    "external_contact": false,
+    "approval_required": true
+  },
+  "proposed": {
+    "id": "affdaa98-418e-4eb3-ac15-989a5716d21c",
+    "job_id": "9437bba4-e97e-44f3-adc3-9bc24996cfa4",
+    "input_id": "042e9c1e-3f48-4acb-8a20-b861758fb10b",
+    "source_run_id": "802642e7-2b48-4ff1-b0dd-0d3ebca80f4b",
+    "planned_run_id": "a67f0870-f6fc-45f4-9e22-8446787e9e09",
+    "definition": {
+      "plan": {
+        "facts": {
+          "file": {
+            "id": "c4f3179f-e91b-4502-a931-12f910b1b62d",
+            "policy": "integrity-only-v1",
+            "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+            "size_bytes": 3,
+            "accepted_event_id": "c032a89a-b4e9-4f06-a9d6-f0f9c4d13719"
+          },
+          "source": {
+            "name": "one.csv",
+            "index": 0,
+            "batch_id": "76a5b5b1-9209-4276-a5a3-95c3504b328d",
+            "file_count": 2,
+            "collection_id": "9437bba4-e97e-44f3-adc3-9bc24996cfa4",
+            "manifest_hash": "5f2c4de412d91259e3e57c7e6a3f9dec802d2bff7307d9f1c7725608334d0ad9"
+          }
+        },
+        "decisions": [
+          {
+            "kind": "deliver",
+            "path": "0",
+            "step": "second"
+          }
+        ],
+        "schema_version": 1,
+        "selected_steps": [
+          "second"
+        ]
+      },
+      "intents": [
+        {
+          "id": "df723a0a-c6fd-46ea-b9cb-fb82e347d7ec",
+          "ordinal": 1,
+          "step_id": "first",
+          "revision": 2,
+          "definition_hash": "8247cb274ec46937b98d4ff9a23ee8a061f0af597b099105cc01b09d17a82b1b"
+        }
+      ],
+      "profile": "untouched-collected-handoff-v1",
+      "input_id": "042e9c1e-3f48-4acb-8a20-b861758fb10b",
+      "workflow": {
+        "id": "61788ded-a73c-4b12-b556-fba861ce12a3",
+        "hash": "36f2a4b6ff576c81ff0db0a5a099826a1d00502e13aa51996cdf7a5c0525b293",
+        "version": 2
+      },
+      "plan_hash": "fdb8c8e723070491c25fa84817be084cc222fc0f2236853c820f947d0453d247",
+      "collection": {
+        "id": "9437bba4-e97e-44f3-adc3-9bc24996cfa4",
+        "revision": 4,
+        "definition_hash": "eb96821b63b4931f08b142e1309a75a5de843a1f6b78bd91b37647d0131b714c"
+      },
+      "source_run": {
+        "id": "802642e7-2b48-4ff1-b0dd-0d3ebca80f4b",
+        "revision": 1,
+        "workflow": {
+          "id": "61788ded-a73c-4b12-b556-fba861ce12a3",
+          "hash": "8068b69055de5fddf337022e87c9dbcc86cc07a76afc61fef44478978d983ac1",
+          "version": 1
+        },
+        "plan_hash": "eb0d9d0abe1c641123c17d9f374ac8783a8e877f455aaf599e9c7603e78e4b50"
+      },
+      "storage_id": "0032e32d-18ad-4f8c-8021-0329865ef91b",
+      "namespace_root": "/",
+      "schema_version": 1,
+      "authority_revision": 1
+    },
+    "definition_hash": "754fbf79de7449a026b3c4758818261c304fe5e6f76fa0f7e7b4945d76885cda",
+    "state": "proposed",
+    "revision": 1,
+    "approval_authority": 0
+  },
+  "selection": {
+    "input_id": "042e9c1e-3f48-4acb-8a20-b861758fb10b",
+    "source_run_id": "802642e7-2b48-4ff1-b0dd-0d3ebca80f4b",
+    "workflow": {
+      "id": "61788ded-a73c-4b12-b556-fba861ce12a3",
+      "version": 2,
+      "hash": "36f2a4b6ff576c81ff0db0a5a099826a1d00502e13aa51996cdf7a5c0525b293"
+    },
+    "expected_authority_revision": 1
+  },
+  "successor_run": {
+    "run": {
+      "id": "a67f0870-f6fc-45f4-9e22-8446787e9e09",
+      "workflow_id": "61788ded-a73c-4b12-b556-fba861ce12a3",
+      "workflow_version": 2,
+      "workflow_hash": "36f2a4b6ff576c81ff0db0a5a099826a1d00502e13aa51996cdf7a5c0525b293",
+      "file_id": "c4f3179f-e91b-4502-a931-12f910b1b62d",
+      "source": {
+        "id": "c4f3179f-e91b-4502-a931-12f910b1b62d",
+        "size_bytes": 3,
+        "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+        "policy": "integrity-only-v1",
+        "accepted_event_id": "c032a89a-b4e9-4f06-a9d6-f0f9c4d13719"
+      },
+      "storage_id": "0032e32d-18ad-4f8c-8021-0329865ef91b",
+      "namespace_root": "/",
+      "authority_revision": 1,
+      "state": "queued",
+      "reason": "awaiting_worker",
+      "revision": 1,
+      "execution_plan": {
+        "facts": {
+          "file": {
+            "id": "c4f3179f-e91b-4502-a931-12f910b1b62d",
+            "policy": "integrity-only-v1",
+            "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+            "size_bytes": 3,
+            "accepted_event_id": "c032a89a-b4e9-4f06-a9d6-f0f9c4d13719"
+          },
+          "source": {
+            "name": "one.csv",
+            "index": 0,
+            "batch_id": "76a5b5b1-9209-4276-a5a3-95c3504b328d",
+            "file_count": 2,
+            "collection_id": "9437bba4-e97e-44f3-adc3-9bc24996cfa4",
+            "manifest_hash": "5f2c4de412d91259e3e57c7e6a3f9dec802d2bff7307d9f1c7725608334d0ad9"
+          }
+        },
+        "decisions": [
+          {
+            "kind": "deliver",
+            "path": "0",
+            "step": "second"
+          }
+        ],
+        "schema_version": 1,
+        "selected_steps": [
+          "second"
+        ]
+      },
+      "execution_plan_hash": "fdb8c8e723070491c25fa84817be084cc222fc0f2236853c820f947d0453d247"
+    },
+    "steps": [
+      {
+        "id": "second",
+        "ordinal": 1,
+        "delivery_id": "eb061348-809c-4b5e-9c4a-eaa7cef9113e",
+        "state": "queued",
+        "attempts": 0,
+        "observation": {}
+      }
+    ],
+    "observed_state": "queued",
+    "observed_reason": "awaiting_worker"
+  },
+  "view": {
+    "job": {
+      "id": "9437bba4-e97e-44f3-adc3-9bc24996cfa4",
+      "workflow_id": "61788ded-a73c-4b12-b556-fba861ce12a3",
+      "workflow_version": 1,
+      "workflow_hash": "8068b69055de5fddf337022e87c9dbcc86cc07a76afc61fef44478978d983ac1",
+      "definition": {
+        "source": {
+          "kind": "sftp.collect",
+          "manifest": "settlement.ready.json",
+          "max_files": 2,
+          "connection": {
+            "id": "dfb6a31a-0d4b-4cb4-b4b1-87034394a823",
+            "hash": "73f7ed931ed61f8ad93ad74862a6c60e654533b0d0c3983b25b1587a5d38d6e1",
+            "version": 1
+          },
+          "max_file_bytes": 1024,
+          "max_total_bytes": 1024,
+          "target_directory": "/",
+          "completion_contract": "immutable-files-sha256-manifest-v1"
+        },
+        "effects": [
+          {
+            "address": "127.0.0.1:9",
+            "step_id": "first",
+            "directory": "/inbox",
+            "connection": {
+              "id": "dfb6a31a-0d4b-4cb4-b4b1-87034394a823",
+              "hash": "73f7ed931ed61f8ad93ad74862a6c60e654533b0d0c3983b25b1587a5d38d6e1",
+              "version": 1
+            },
+            "host_fingerprint": "SHA256:/mUPvWiAyFoPY7hXkzSBqhN8UyqAO8UxOmhYpTLW/+Q",
+            "final_name_pattern": "\u003cdelivery UUID\u003e-first.csv"
+          },
+          {
+            "address": "127.0.0.1:9",
+            "step_id": "second",
+            "directory": "/inbox",
+            "connection": {
+              "id": "dfb6a31a-0d4b-4cb4-b4b1-87034394a823",
+              "hash": "73f7ed931ed61f8ad93ad74862a6c60e654533b0d0c3983b25b1587a5d38d6e1",
+              "version": 1
+            },
+            "host_fingerprint": "SHA256:/mUPvWiAyFoPY7hXkzSBqhN8UyqAO8UxOmhYpTLW/+Q",
+            "final_name_pattern": "\u003cdelivery UUID\u003e-second.csv"
+          }
+        ],
+        "workflow": {
+          "id": "61788ded-a73c-4b12-b556-fba861ce12a3",
+          "hash": "8068b69055de5fddf337022e87c9dbcc86cc07a76afc61fef44478978d983ac1",
+          "version": 1
+        },
+        "storage_id": "0032e32d-18ad-4f8c-8021-0329865ef91b",
+        "namespace_root": "/",
+        "schema_version": 1,
+        "source_identity": "24c633e9ce3b835937ad29df5f0a8bf4a46b9a4cdca48bd6e21a19a4ca9a4f52",
+        "timeout_seconds": 120,
+        "source_connection": {
+          "id": "dfb6a31a-0d4b-4cb4-b4b1-87034394a823",
+          "user": "receiver",
+          "state": "active",
+          "address": "127.0.0.1:9",
+          "version": 1,
+          "revision": 1,
+          "directory": "/inbox",
+          "definition_hash": "73f7ed931ed61f8ad93ad74862a6c60e654533b0d0c3983b25b1587a5d38d6e1",
+          "key_fingerprint": "SHA256:vDJfwCP/C2ApXLRbP1OLvn5xeKBhren7wVJEfDXsUAw",
+          "host_fingerprint": "SHA256:/mUPvWiAyFoPY7hXkzSBqhN8UyqAO8UxOmhYpTLW/+Q"
+        },
+        "authority_revision": 1
+      },
+      "definition_hash": "eb96821b63b4931f08b142e1309a75a5de843a1f6b78bd91b37647d0131b714c",
+      "state": "captured",
+      "captured": true,
+      "revision": 4,
+      "fence": 1,
+      "attempts": 1,
+      "lease_owner": "",
+      "lease_until": null,
+      "next_at": "2026-11-02T22:11:13.676733Z",
+      "created_at": "2026-11-02T22:11:13.676733Z",
+      "deadline_at": "2026-11-02T22:13:13.676733Z",
+      "manifest": {
+        "files": [
+          {
+            "name": "one.csv",
+            "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+            "size_bytes": 3
+          },
+          {
+            "name": "two.csv",
+            "sha256": "cb8379ac2098aa165029e3938a51da0bcecfc008fd6795f401178647f96c5b34",
+            "size_bytes": 3
+          }
+        ],
+        "batch_id": "76a5b5b1-9209-4276-a5a3-95c3504b328d",
+        "schema_version": 1
+      },
+      "manifest_hash": "5f2c4de412d91259e3e57c7e6a3f9dec802d2bff7307d9f1c7725608334d0ad9",
+      "reason": "batch_captured"
+    },
+    "inputs": [
+      {
+        "id": "042e9c1e-3f48-4acb-8a20-b861758fb10b",
+        "first_job_id": "9437bba4-e97e-44f3-adc3-9bc24996cfa4",
+        "workflow_id": "61788ded-a73c-4b12-b556-fba861ce12a3",
+        "source_identity": "24c633e9ce3b835937ad29df5f0a8bf4a46b9a4cdca48bd6e21a19a4ca9a4f52",
+        "input_identity": "8a74d5f2529c4e79913fc3e006fbac3deee8f7e6e0012cec64766f3952ac6b6c",
+        "source_name": "one.csv",
+        "size_bytes": 3,
+        "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+        "target_path": "/ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad-one.csv",
+        "object_id": "c4f3179f-e91b-4502-a931-12f910b1b62d",
+        "state": "queued",
+        "revision": 3,
+        "capture_fence": 1,
+        "capture_owner": "a7cbf691-772b-46ef-9161-a46710c999ed",
+        "file_id": "c4f3179f-e91b-4502-a931-12f910b1b62d",
+        "run_id": "802642e7-2b48-4ff1-b0dd-0d3ebca80f4b"
+      },
+      {
+        "id": "979edac3-5e2b-4814-ba76-2677690edc6c",
+        "first_job_id": "9437bba4-e97e-44f3-adc3-9bc24996cfa4",
+        "workflow_id": "61788ded-a73c-4b12-b556-fba861ce12a3",
+        "source_identity": "24c633e9ce3b835937ad29df5f0a8bf4a46b9a4cdca48bd6e21a19a4ca9a4f52",
+        "input_identity": "b851172faa9584adb45b5f35f975e889ea43c534a74fb44410593cd5abb55f2a",
+        "source_name": "two.csv",
+        "size_bytes": 3,
+        "sha256": "cb8379ac2098aa165029e3938a51da0bcecfc008fd6795f401178647f96c5b34",
+        "target_path": "/cb8379ac2098aa165029e3938a51da0bcecfc008fd6795f401178647f96c5b34-two.csv",
+        "object_id": "65049514-dd34-489d-b6fe-6fc6dd77618d",
+        "state": "queued",
+        "revision": 3,
+        "capture_fence": 1,
+        "capture_owner": "a7cbf691-772b-46ef-9161-a46710c999ed",
+        "file_id": "65049514-dd34-489d-b6fe-6fc6dd77618d",
+        "run_id": "44b36fba-146a-449d-89f2-44316a9a77d4"
+      }
+    ],
+    "current_authority": true,
+    "observed_state": "captured",
+    "business_acceptance": "unknown",
+    "local_states": [
+      {
+        "input_id": "042e9c1e-3f48-4acb-8a20-b861758fb10b",
+        "state": "published"
+      },
+      {
+        "input_id": "979edac3-5e2b-4814-ba76-2677690edc6c",
+        "state": "published"
+      }
+    ],
+    "replacements": [
+      {
+        "input_id": "042e9c1e-3f48-4acb-8a20-b861758fb10b",
+        "job_id": "9437bba4-e97e-44f3-adc3-9bc24996cfa4",
+        "original_run_id": "802642e7-2b48-4ff1-b0dd-0d3ebca80f4b",
+        "current_run_id": "a67f0870-f6fc-45f4-9e22-8446787e9e09",
+        "handoff_id": "affdaa98-418e-4eb3-ac15-989a5716d21c",
+        "source_run_id": "802642e7-2b48-4ff1-b0dd-0d3ebca80f4b"
+      }
+    ]
+  }
+}

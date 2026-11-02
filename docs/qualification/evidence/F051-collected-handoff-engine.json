@@ -194,5 +194,10 @@
     "manifest_reference": ".private/handoff-recipient-final-9be120e47bdf4f68b413ac9550f7476c/manifest.json",
     "manifest_sha256": "5ba841909a4ad30c99db4d0c621ad9657f6d6720eb0aead952003a5a8eee6fb9",
     "meaning": "Only three fixed nonsecret test request identifiers were shortened after scanner review. All product Go/SQL source is unchanged from the original19-record replay."
+  },
+  "native_followup": {
+    "reference": "docs/qualification/evidence/F052-native-handoff-engine.json",
+    "candidate": "5535b7d2f49eae8327628a42d20e650112a542ed",
+    "scope": "both545-record native Linux PostgreSQL/race suites, source/security/frontend, eight fuzz targets, existing stock regressions and schema34 synthetic restores passed; handoff browser/encrypted path is a subsequent candidate"
   }
 }

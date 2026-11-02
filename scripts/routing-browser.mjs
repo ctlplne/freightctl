@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFile, writeFile } from "node:fs/promises";
 import { probe as qualifyCapturedRouting } from "./captured-routing-browser.mjs";
 import { wireResponse } from "./browser-wire.mjs";
+import { qualifyCollectedHandoffs } from "./collected-handoffs-browser.mjs";
 
 // Every operation reaches the real HTTPS service through certificate-checked
 // response capture. Explicit loss cases drop the first committed response and
@@ -103,7 +104,9 @@ export async function qualifyRouting(page, c, audit, record, actual) {
   }
   await open();
   let result = {};
-  if (c.routing_phase === "create") {
+  if (c.routing_phase === "handoff-govern") {
+    result = await qualifyCollectedHandoffs(page, c, audit, record, actual);
+  } else if (c.routing_phase === "create") {
     const before = await contacts();
     for (const [label, value] of Object.entries({
       "Collection workflow name": "Operator settlement routing",
@@ -356,7 +359,10 @@ export async function qualifyRouting(page, c, audit, record, actual) {
     const view = await inspect(c.job.id),
       input = view.inputs.find((i) => i.file_id === c.target_file_id);
     assert.ok(input, "the independently reviewed input must still exist");
-    let status = await response("/workflow-runs/" + input.run_id, () =>
+    const runID =
+      view.replacements?.find((r) => r.input_id === input.id)?.current_run_id ??
+      input.run_id;
+    let status = await response("/workflow-runs/" + runID, () =>
       selected
         .getByRole("button", {
           name: "Inspect downstream run for " + input.source_name,
@@ -376,7 +382,7 @@ export async function qualifyRouting(page, c, audit, record, actual) {
       })
       .click();
     if (c.audit_send) await audit("routing-selected-send-review");
-    const sent = await loss("/workflow-runs/" + input.run_id + "/work", "send");
+    const sent = await loss("/workflow-runs/" + runID + "/work", "send");
     status = sent.status;
     assert.equal(sent.dispatch.step_id, c.target_step);
     assert.equal(status.steps[index].state, "succeeded");

@@ -1822,6 +1822,36 @@
       "regression_evidence": [
         "docs/qualification/evidence/F051-collected-handoff-engine.json"
       ]
+    },
+    {
+      "id": "D113",
+      "severity": "new browser handoff contract blocker",
+      "state": "fixed locally",
+      "observed_on": "2026-11-02",
+      "candidate": "5535b7d2f49eae8327628a42d20e650112a542ed",
+      "journey": "J03/J05 browser handoff review component",
+      "title": "Handoff review decoded captured facts without its source contract",
+      "first_failure": "Actual PostgreSQL/Go handoff fixture was refused as invalid_workflow_program.",
+      "cause": "The new browser normalizer called asRoutingFacts without the workflow source bounds; the ordinary parser correctly refused source facts in that mode.",
+      "resolution": "Pass the exact source contract, then independently compile both plans and compare their captured facts and hashes. Preserve the original refusal; all108 browser contracts pass. Actual stock/browser execution remains pending.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F053-collected-handoff-browser.json"
+      ]
+    },
+    {
+      "id": "D114",
+      "severity": "new browser handoff response validation",
+      "state": "fixed locally",
+      "observed_on": "2026-11-02",
+      "candidate": "5535b7d2f49eae8327628a42d20e650112a542ed",
+      "journey": "Handoff destination metadata boundary",
+      "title": "New handoff effect wrapper did not reject unknown fields before normalization",
+      "first_failure": "Changed workflow source/catalog/unknown-field contract: Missing expected exception for an injected private_key field.",
+      "cause": "The new wrapper reused the ordinary effect normalizer, which selects known display fields. It had not first enforced the handoff response key allowlist.",
+      "resolution": "Validate exact wrapper, connection and encryption-reference keys and bounds before normalization. Reject undeclared identity fields and encryption fingerprints without encryption. Original hostile-field assertions pass; no model or execution authority was involved.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F053-collected-handoff-browser.json"
+      ]
     }
   ]
 }

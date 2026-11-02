@@ -1,9 +1,11 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { Api } from "./api";
-import { ApiError, type Session } from "./types";
+import { ApiError, object, uuid, type Session } from "./types";
 import { operationKey } from "./crypto";
 import { ProgramEditor, ProgramReview, PlanReview } from "./programs";
 import { CapturedRouting, RoutingEffects } from "./collection-routing";
+import { CollectionHandoffs } from "./collection-handoffs";
+import { asCollectionHandoffView } from "./collection-handoffs-types";
 import {
   asCapturedRoutingMetadata,
   type CapturedRoutingMetadata,
@@ -572,15 +574,42 @@ export function Collections({
     setWorkflowPreview(null);
     requestAnimationFrame(() => formHeading.current?.focus());
   }
-  async function inspectRun(input: CollectionInput) {
+  async function inspectRun(input: CollectionInput, original = false) {
     if (!selected || !input.run_id) return;
-    const context = await inputContext(input),
+    const context = await inputContext(input, !original),
       d = context.job.definition;
-    const status = await api.request(
-      api.prefix + "/workflow-runs/" + input.run_id,
+    const runID =
+      context.handoff?.metadata.handoff.planned_run_id ?? input.run_id;
+    const raw = await api.request(
+      api.prefix + "/workflow-runs/" + runID,
       {},
-      (v) => asCollectedRun(v, input, d, context),
+      (v) => object(v),
     );
+    if (!context.handoff) {
+      const routingID = object(raw.run).routing_authorization_id;
+      delete context.routing;
+      if (routingID !== undefined) {
+        if (typeof routingID !== "string" || !uuid(routingID))
+          throw new ApiError("invalid_server_response", 502);
+        const view = await api.request(
+          api.prefix + "/workflow-collections/" + input.first_job_id,
+          {},
+          (v) => asCollectionView(v, input.first_job_id, authority),
+        );
+        const metadata = await api.request(
+          api.prefix +
+            "/workflow-collections/" +
+            view.job.id +
+            "/routing/" +
+            routingID +
+            "/details",
+          {},
+          (v) => asCapturedRoutingMetadata(v, view, routingID),
+        );
+        context.routing = { view, metadata };
+      }
+    }
+    const status = asCollectedRun(raw, input, d, context);
     setRun({ input, definition: d, status, context });
   }
   async function previewInput(input: CollectionInput) {
@@ -603,6 +632,7 @@ export function Collections({
   }
   async function inputContext(
     input: CollectionInput,
+    followReplacement = false,
   ): Promise<CollectionRunContext> {
     const view = await api.request(
       api.prefix + "/workflow-collections/" + input.first_job_id,
@@ -616,6 +646,21 @@ export function Collections({
       {},
       (v) => asCollectionConfiguration(v, d.workflow),
     );
+    const replacement = followReplacement
+      ? view.replacements?.find((r) => r.input_id === input.id)
+      : undefined;
+    if (replacement) {
+      const metadata = await api.request(
+        api.prefix +
+          "/workflow-collections/" +
+          job.id +
+          "/handoffs/" +
+          replacement.handoff_id,
+        {},
+        (v) => asCollectionHandoffView(v, view, replacement.handoff_id),
+      );
+      return { workflow, job, handoff: { view, metadata } };
+    }
     const metadata = await api.request(
       api.prefix + "/workflow-collections/" + job.id + "/routing/current",
       {},
@@ -712,7 +757,7 @@ export function Collections({
         await list();
       } else if (p.kind === "send") {
         const next = await api.request(
-          api.prefix + "/workflow-runs/" + p.input.run_id + "/work",
+          api.prefix + "/workflow-runs/" + p.run.run.id + "/work",
           { method: "POST", headers: { "Idempotency-Key": p.key } },
           (v) => asCollectedWork(v, p.input, p.definition, p.context),
         );
@@ -1484,6 +1529,29 @@ export function Collections({
               }}
             />
           )}
+          {selected.job.captured &&
+            has("workflow_execute") &&
+            has("read") &&
+            selected.inputs.some(
+              (i) => i.first_job_id === selected.job.id && i.run_id,
+            ) && (
+              <CollectionHandoffs
+                key={"handoffs:" + selected.job.id}
+                api={api}
+                session={session}
+                view={selected}
+                disabled={busy || pending !== null}
+                onError={onError}
+                onConfirmed={confirmed}
+                onChanged={async () => {
+                  await inspect(selected.job.id, selected.job.definition_hash);
+                }}
+                onInspectRun={async (inputID) => {
+                  const input = selected.inputs.find((i) => i.id === inputID);
+                  if (input) await inspectRun(input);
+                }}
+              />
+            )}
           <div className="actions">
             <button
               disabled={busy}
@@ -1588,12 +1656,50 @@ export function Collections({
                   <code>{i.file_id ?? "not accepted"}</code>.
                 </p>
                 {i.run_id && (
-                  <button
-                    disabled={busy}
-                    onClick={() => void perform(() => inspectRun(i))}
-                  >
-                    {"Inspect downstream run for " + i.source_name}
-                  </button>
+                  <>
+                    <p>
+                      Original assignment <code>{i.run_id}</code>.{" "}
+                      {selected.replacements?.find(
+                        (r) => r.input_id === i.id,
+                      ) && (
+                        <>
+                          Current replacement{" "}
+                          <code>
+                            {
+                              selected.replacements.find(
+                                (r) => r.input_id === i.id,
+                              )!.current_run_id
+                            }
+                          </code>
+                          ; handoff{" "}
+                          <code>
+                            {
+                              selected.replacements.find(
+                                (r) => r.input_id === i.id,
+                              )!.handoff_id
+                            }
+                          </code>
+                          .
+                        </>
+                      )}
+                    </p>
+                    <button
+                      disabled={busy}
+                      onClick={() => void perform(() => inspectRun(i))}
+                    >
+                      {"Inspect downstream run for " + i.source_name}
+                    </button>
+                    {selected.replacements?.some(
+                      (r) => r.input_id === i.id,
+                    ) && (
+                      <button
+                        disabled={busy}
+                        onClick={() => void perform(() => inspectRun(i, true))}
+                      >
+                        {"Inspect original run for " + i.source_name}
+                      </button>
+                    )}
+                  </>
                 )}
                 {canExecute &&
                   selected.current_authority &&
@@ -1645,6 +1751,14 @@ export function Collections({
             {"Downstream run: " + run.status.observed_state}
           </h3>
           <p>
+            Run <code>{run.status.run.id}</code>.{" "}
+            {run.context.handoff && (
+              <>
+                Completed handoff{" "}
+                <code>{run.context.handoff.metadata.handoff.id}</code> replaces
+                the original assignment <code>{run.input.run_id}</code>.{" "}
+              </>
+            )}
             Exact source <code>{run.input.file_id}</code>, SHA-256{" "}
             <code>{run.input.sha256}</code>.{" "}
             {run.status.observed_reason.replaceAll("_", " ")}.
@@ -1673,7 +1787,8 @@ export function Collections({
           </button>
           {canExecute &&
             has("deliver") &&
-            (!run.context.routing ||
+            (run.context.handoff ||
+              !run.context.routing ||
               run.context.routing.metadata.current_authority) &&
             !["succeeded", "cancelled", "kept_local"].includes(
               run.status.observed_state,
@@ -1775,10 +1890,23 @@ export function Collections({
               </p>
               <ReceiverEffects
                 effects={
+                  pending.context.handoff?.metadata.effects ??
                   pending.context.routing?.metadata.effects ??
                   pending.definition.effects
                 }
               />
+              {pending.context.handoff && (
+                <p>
+                  Replacement authorized by completed handoff{" "}
+                  <code>{pending.context.handoff.metadata.handoff.id}</code>,
+                  fingerprint{" "}
+                  <code>
+                    {pending.context.handoff.metadata.handoff.definition_hash}
+                  </code>
+                  . Current workflow, file, keys, collection cutoff and ordinary
+                  dispatch policy are checked again before sending.
+                </p>
+              )}
               {pending.context.routing?.metadata.authorization && (
                 <p>
                   Routing authorization{" "}

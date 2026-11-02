@@ -49,12 +49,13 @@ type CollectionAction struct {
 	Revision int64  `json:"revision"`
 }
 type CollectionView struct {
-	Job                *store.CollectionJob    `json:"job"`
-	Inputs             []store.CollectionInput `json:"inputs"`
-	Current            bool                    `json:"current_authority"`
-	Observed           string                  `json:"observed_state"`
-	BusinessAcceptance string                  `json:"business_acceptance"`
-	LocalStates        []CollectionLocalState  `json:"local_states"`
+	Job                *store.CollectionJob          `json:"job"`
+	Inputs             []store.CollectionInput       `json:"inputs"`
+	Current            bool                          `json:"current_authority"`
+	Observed           string                        `json:"observed_state"`
+	BusinessAcceptance string                        `json:"business_acceptance"`
+	LocalStates        []CollectionLocalState        `json:"local_states"`
+	Replacements       []store.CollectionReplacement `json:"replacements,omitempty"`
 }
 type CollectionLocalState struct {
 	InputID string `json:"input_id"`
@@ -230,6 +231,10 @@ func collectionView(ctx context.Context, t *store.Transaction, j *store.Collecti
 		return nil, e
 	}
 	v := &CollectionView{Job: j, Inputs: inputs, Current: current == nil && j.Deadline.After(now) && j.State != "cancelled" && j.State != "expired", Observed: j.State, BusinessAcceptance: "unknown"}
+	v.Replacements, e = t.CollectionReplacements(ctx, inputs)
+	if e != nil {
+		return nil, e
+	}
 	v.LocalStates = []CollectionLocalState{}
 	for _, input := range inputs {
 		state := "pending"

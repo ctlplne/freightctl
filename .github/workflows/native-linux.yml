@@ -140,7 +140,7 @@ jobs:
           metadata_cid=$(docker inspect --format '{{.Id}}' freightctl-postgres-v1)
           docker stop --time 15 "$metadata_cid" > .private/metadata-preparation-stop.log
           metadata_status=0
-          python3 scripts/qualify-retained-metadata.py --container-id "$metadata_cid" --expected-schema 34 > .private/metadata-result.json || metadata_status=$?
+          python3 scripts/qualify-retained-metadata.py --container-id "$metadata_cid" --expected-schema 35 > .private/metadata-result.json || metadata_status=$?
           python3 - <<'PY'
           import json
           from pathlib import Path
@@ -167,7 +167,7 @@ jobs:
           assert all(step['exit_code'] == 0 for step in manifest['steps'])
           print(json.dumps({
               'state': 'passed', 'manifest_sha256': result['manifest_sha256'],
-              'schema': 34, 'metadata_tables': 64, 'forced_rls_tables': 63,
+              'schema': 35, 'metadata_tables': 64, 'forced_rls_tables': 63,
               'restored_rows': sum(table['rows'] for table in manifest['restored']['tables']),
               'exact_restore_database_removed': True, 'original_stopped_state_restored': True,
               'inference_performed': False, 'scanner_engine_started': False,

@@ -14,10 +14,11 @@ if not __debug__:
  raise RuntimeError("Qualification requires assertions; remove Python -O/PYTHONOPTIMIZE")
 os.umask(0o077)
 root=Path(__file__).resolve().parents[1];os.chdir(root)
-parser=argparse.ArgumentParser();parser.add_argument('--postgres-container-id',required=True);parser.add_argument('--captured-routing',action='store_true');parser.add_argument('--intake-revocations',action='store_true');options=parser.parse_args()
+parser=argparse.ArgumentParser();parser.add_argument('--postgres-container-id',required=True);parser.add_argument('--captured-routing',action='store_true');parser.add_argument('--intake-revocations',action='store_true');parser.add_argument('--collected-handoffs',action='store_true');options=parser.parse_args()
 if options.intake_revocations and not options.captured_routing:parser.error('--intake-revocations requires --captured-routing')
+if options.collected_handoffs and options.intake_revocations:parser.error('handoff and intake extensions require separate isolated replays')
 assert re.fullmatch(r'[0-9a-f]{64}',options.postgres_container_id),'use the exact task-owned PostgreSQL container ID'
-suite='intake-routing' if options.intake_revocations else ('captured-routing' if options.captured_routing else 'routing')
+suite='handoff-routing' if options.collected_handoffs else ('intake-routing' if options.intake_revocations else ('captured-routing' if options.captured_routing else 'routing'))
 run=suite+'-'+uuid.uuid4().hex;private=root/'.private'/run;private.mkdir(mode=0o700);raw=root/'evidence/raw'/run;raw.mkdir(parents=True,mode=0o700)
 binary=private/'freightctl';database='freightctl_'+run.replace('-','_');created=False;servers={};logs={};steps=[];cleanup=[];state='failed';failure=None;started=time.monotonic()
 output_proof=NativeEvidence(raw,steps)
@@ -287,6 +288,10 @@ LogLevel VERBOSE
   from routing_intake_revocation import qualify_intake_revocation
   result['intake_revocations']=qualify_intake_revocation(globals())
   result['source_contact_scope']='Original routing makes no repeat source contact; the intake extension explicitly captures two new batches, then makes no further contact.'
+ if options.collected_handoffs:
+  from routing_collected_handoffs import qualify_collected_handoffs
+  result['collected_handoffs']=qualify_collected_handoffs(globals())
+  result['source_contact_scope']='The handoff extension explicitly captures one new encrypted-routing batch. Recovery and delivery then use only its original captured bytes and facts.'
  with (raw/'routing-result.json').open('x') as f:json.dump(result,f,indent=2);f.write('\n')
  state='passed'
 except Exception:failure=traceback.format_exc()

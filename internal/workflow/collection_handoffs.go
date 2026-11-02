@@ -46,6 +46,7 @@ type CollectionHandoffDefinition struct {
 	Root       string                    `json:"namespace_root"`
 }
 type CollectionHandoffPreview struct {
+	*CollectionHandoffReview
 	Definition       CollectionHandoffDefinition `json:"definition"`
 	Hash             string                      `json:"definition_hash"`
 	ExternalContact  bool                        `json:"external_contact"`
@@ -56,6 +57,7 @@ type CollectionHandoffProposal struct {
 	Hash      string                     `json:"definition_hash"`
 }
 type CollectionHandoffView struct {
+	*CollectionHandoffReview
 	Handoff *store.CollectionHandoff `json:"handoff"`
 	Current bool                     `json:"current_bindings"`
 	Reason  string                   `json:"binding_reason"`
@@ -222,7 +224,11 @@ func (s *Service) collectionHandoffPreview(ctx context.Context, t *store.Transac
 	if len(raw) > 32<<10 {
 		return nil, store.ErrLimit
 	}
-	return &CollectionHandoffPreview{Definition: d, Hash: hash, ApprovalRequired: true}, nil
+	review, err := collectionHandoffReview(ctx, t, d)
+	if err != nil {
+		return nil, err
+	}
+	return &CollectionHandoffPreview{CollectionHandoffReview: review, Definition: d, Hash: hash, ApprovalRequired: true}, nil
 }
 
 func (s *Service) PreviewCollectionHandoff(ctx context.Context, scope store.Scope, job string, x CollectionHandoffSelection) (*CollectionHandoffPreview, error) {
@@ -401,11 +407,19 @@ func (s *Service) CollectionHandoffStatus(ctx context.Context, scope store.Scope
 		return nil, err
 	}
 	view := &CollectionHandoffView{Handoff: h, Reason: h.State}
+	var d CollectionHandoffDefinition
+	if Decode(h.Definition, &d) != nil {
+		return nil, store.ErrState
+	}
+	_, hash, err := digest(d)
+	if err != nil || hash != h.Hash {
+		return nil, store.ErrState
+	}
+	view.CollectionHandoffReview, err = collectionHandoffReview(ctx, t, d)
+	if err != nil {
+		return nil, err
+	}
 	if h.State == "proposed" || h.State == "approved" {
-		var d CollectionHandoffDefinition
-		if Decode(h.Definition, &d) != nil {
-			return nil, store.ErrState
-		}
 		raw, err := t.CollectionHandoffDefinition(ctx, job, d.InputID, d.Source.ID, d.Workflow.ID, d.Workflow.Version, d.Workflow.Hash)
 		if err != nil && !bindingChanged(err) {
 			return nil, err

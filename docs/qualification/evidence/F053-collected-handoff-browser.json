@@ -1,0 +1,228 @@
+{
+  "schema_version": 1,
+  "id": "F053",
+  "kind": "collected-handoff-browser-review-and-successor-navigation",
+  "state": "implemented; selected ARM backend/race and browser contracts pass; new stock/browser/native-CI replay pending",
+  "observed_on": "2026-11-02",
+  "starting_commit": "5535b7d2f49eae8327628a42d20e650112a542ed",
+  "candidate_note": "Current working tree bound by exact implementation digests; the subsequent owner-authored commit must run the new GitHub stock/browser job.",
+  "author_and_committer": "imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>",
+  "implementation_sha256": [
+    {
+      "path": ".github/workflows/native-linux.yml",
+      "sha256": "3edceb28d1be472f74bff4e3b613e2ec5e5ca4a39d55c9578141efb874e6a531"
+    },
+    {
+      "path": ".github/workflows/stock-peers.yml",
+      "sha256": "c24cfa0678cb1c598bdafd8ddb17b5d86255c231464a2ee103a6f433d9b316e9"
+    },
+    {
+      "path": "internal/browser/assets/app.js",
+      "sha256": "3c152047afc9fe451086e107dfc1c59b573d774f0fb2b535354f438f9e9eba37"
+    },
+    {
+      "path": "internal/browser/assets/manifest.json",
+      "sha256": "469132e0f9f07c3fcf4116ef9370a8014135b75838d269009f136ace6b062e88"
+    },
+    {
+      "path": "internal/store/035_collection_successors.sql",
+      "sha256": "540165dbb8a1a5147ead826e4243854caf0a312bb0ec34272abd547a73ad972d"
+    },
+    {
+      "path": "internal/store/collection_successors.go",
+      "sha256": "eea7753a4b3611aa2cff8955d25f256112e8ff64816181a5373cecec998598e0"
+    },
+    {
+      "path": "internal/store/store.go",
+      "sha256": "7404d4809804f7cd86bc4b041e285d4aac0aad067e247076cd3386357153204d"
+    },
+    {
+      "path": "internal/workflow/collection_handoff_views.go",
+      "sha256": "0396a311b5517b8126287d12521d9ec200ca67db4262190cd6747d51fb4cb7d7"
+    },
+    {
+      "path": "internal/workflow/collection_handoff_views_test.go",
+      "sha256": "b4df27664a1871a62308be731f1d1625c2003ed60e3eda151872aa80e0ec74c4"
+    },
+    {
+      "path": "internal/workflow/collection_handoffs.go",
+      "sha256": "28229d410e567e4f077faeb64df45ee8ac010255fe32acf6a31dcff7e5b5c16d"
+    },
+    {
+      "path": "internal/workflow/collection_handoffs_integration_test.go",
+      "sha256": "141a9427b7ad010c4cff084dd4102e0963c099c8e00a2e20855140c0c173c834"
+    },
+    {
+      "path": "internal/workflow/collections.go",
+      "sha256": "bbe57d3a8311aff7204338767d866033e63d0a02844836fc7ef52b4078a89bf9"
+    },
+    {
+      "path": "scripts/ci-qualification-summary.py",
+      "sha256": "7cb91dc59b4fd08b90095a6fb0ad9c1c748fefd5a256f732f888d124230498bd"
+    },
+    {
+      "path": "scripts/collected-handoffs-browser.mjs",
+      "sha256": "91f69129217826d15eb9dfb4b3af0452deb4d5a9fdd009ecdf13824678b648c7"
+    },
+    {
+      "path": "scripts/qualify-routing.py",
+      "sha256": "958d949bb42b90063ee1a784aa3a3501712d9ecff4a2be5674f46cdff4cb0b27"
+    },
+    {
+      "path": "scripts/routing-browser.mjs",
+      "sha256": "184296ee86881165c068457842117a9993fdc6bea6f136189012411cd71b9266"
+    },
+    {
+      "path": "scripts/routing_collected_handoffs.py",
+      "sha256": "0a2046151eac3541c148fe1635c8d4000115c8cad8c5731710b3028ec77638a0"
+    },
+    {
+      "path": "web/src/collection-handoffs-types.ts",
+      "sha256": "537679374565264842dc16e7d5ce0ad9d71ec32f6c090ce36380d56df80de5d9"
+    },
+    {
+      "path": "web/src/collection-handoffs.tsx",
+      "sha256": "a18432ebb04a08b85efbfb0eae2354febe46fabed6fcb2c2dca33078e3358962"
+    },
+    {
+      "path": "web/src/collections-types.ts",
+      "sha256": "7d7e52af9014d220b2cecbfb103d22dc0321566123e57a27b43cd609e62b7578"
+    },
+    {
+      "path": "web/src/collections.tsx",
+      "sha256": "17383c951da859df93caa3167c1dac4a428cdd0775444041aa1d498142976786"
+    },
+    {
+      "path": "web/tests/collection-handoffs.test.mjs",
+      "sha256": "7566000d87cbb244b89a6d224d119f352ad560134e85a92dee66219effa98911"
+    },
+    {
+      "path": "web/tests/fixtures/collection-handoffs.json",
+      "sha256": "318c71002bce532e169e247849a89791897eea7c78043e884956e46044fdfcc6"
+    }
+  ],
+  "engine_native_followup": "docs/qualification/evidence/F052-native-handoff-engine.json",
+  "native_manifest": {
+    "reference": ".private/retained-metadata-79664a10a2b34e36ad1529ed0256e188/manifest.json",
+    "sha256": "09601a51d2c4cd52ed0c701a056c1e5c6620c32ab502cda588a2d6ce7b49f778",
+    "source_inputs": 299,
+    "sources_unchanged_during_run": true,
+    "seconds": 66.341
+  },
+  "native_results": {
+    "handoff-native": {
+      "exit_code": 0,
+      "seconds": 46.687,
+      "output_reference": ".private/retained-metadata-79664a10a2b34e36ad1529ed0256e188/handoff-native.jsonl",
+      "output_sha256": "afbf8e4f788fe81034cfa57e3cc68839e36c17c9d0383f32708b4013a2f3a2aa",
+      "passed_records": 11,
+      "failed_records": 0,
+      "skipped_records": 0
+    },
+    "affected-units": {
+      "exit_code": 0,
+      "seconds": 12.564,
+      "output_reference": ".private/retained-metadata-79664a10a2b34e36ad1529ed0256e188/affected-units.jsonl",
+      "output_sha256": "fed74878bbcd4af79373537c672dfb1fa6f31d0a6728162636bdddea99a32162",
+      "passed_records": 168,
+      "failed_records": 0,
+      "skipped_records": 0
+    }
+  },
+  "native_record_scope": "11 selected records = ten integration journeys plus one Go wire-fixture unit;168 affected unit/race records are a separate command. No receiver contact in these selected local cases.",
+  "environment": {
+    "host": "actual macOS ARM",
+    "go": "Go1.26.10 race detector;GOMAXPROCS1/GOMEMLIMIT192MiB",
+    "postgres": "exact task-owned PostgreSQL16.15 aarch64;512MiB/oneCPU;fresh test databases only",
+    "frontend": "Node26.0.0,TypeScript7.0.2,esbuild0.28.2;192MiB Node heap",
+    "source_adapter": "stand-in over durably staged synthetic bytes"
+  },
+  "browser_contracts": {
+    "state": "passed",
+    "records": 108,
+    "failed": 0,
+    "skipped": 0,
+    "new_handoff_contracts": 7,
+    "output_reference": ".private/handoff-ui-final-contracts.log",
+    "output_sha256": "17f85c3bdfead0b67321496fa3ff931841fb6710072f77c360229ab4581fa019",
+    "fixture_reference": "web/tests/fixtures/collection-handoffs.json",
+    "fixture_sha256": "318c71002bce532e169e247849a89791897eea7c78043e884956e46044fdfcc6",
+    "fixture_origin": "serialized actual PostgreSQL/service/Go preview, completed handoff, old/new runs and immutable collection views; independently parsed/compiled in browser contracts",
+    "typecheck": "passed",
+    "build_and_check_built": "passed"
+  },
+  "verified_paths": [
+    "One bounded forced-RLS query returns only completed chain leaves, keeps original input assignment and follows repeated replacements. Proposed records remain absent from current work.",
+    "A real later collection deduplicates the original input and sees that original job's completed successor without changing either capture. A different actor sees no links through the new query.",
+    "Exact source/target workflow definitions, original source plan, selected target plan, destination catalogs and public SSH/key identities remain available as metadata after target revocation/completion. No payload/private key path or recipient contact is required.",
+    "The actual Go/SQL fixture has matching independent browser program decisions and handoff fingerprints; forged original facts, rehashed choices, unknown effect fields, changed sources and invented successor links are rejected.",
+    "Browser code has separate proposal/approval/withdrawal/execution confirmations and bounded history. Saved opaque nonces are actor/job/operation/request scoped; receipt lookups are read-only.",
+    "Browser run parsing binds the current successor to the completed link and exact target plan; ordinary work uses its validated ID and catalog. Original cancelled run parsing remains separate."
+  ],
+  "defects": [
+    "D113",
+    "D114"
+  ],
+  "first_failure": {
+    "reference": ".private/handoff-browser-first-dd814da9e866464bb8194f859ab8f900/manifest.json",
+    "sha256": "3847dacdbba73b92ac4d6b01803e43c5e8de4c22d44ca9f4970020679b8617c9",
+    "meaning": "Original Go fixture refusal is retained. The later hostile-effect test exposed an accepted unknown field; exact effect/reference allowlists repair it without weakening compiler or lineage assertions."
+  },
+  "other_checks": {
+    "actionlint": "passed",
+    "python_ast_and_node_syntax": "passed",
+    "qualification_record_contracts": 15,
+    "native_evidence_contracts": 9,
+    "ci_summary_privacy_contracts": 7,
+    "metadata_refusal_contracts": 5,
+    "diff_whitespace": "passed",
+    "integration_vet": "passed"
+  },
+  "retained_estate": {
+    "schema": 33,
+    "tables": 63,
+    "forced_rls_tables": 62,
+    "metadata_catalog_grants_roles_sequences_unchanged": true,
+    "test_database_inventory_unchanged": true,
+    "original_stopped_state_restored": true,
+    "migrations034_and035_applied_to_retained": false
+  },
+  "new_ci_profile": {
+    "state": "prepared; no runtime pass yet",
+    "workflow": ".github/workflows/stock-peers.yml",
+    "matrix_entry": "handoff-routing",
+    "runner": "native ubuntu24.04 x86_64",
+    "command": "python3 scripts/qualify-routing.py --postgres-container-id <exact-task-CID> --collected-handoffs",
+    "checks": [
+      "Fresh actual stock source capture and CSV release; encrypted key1 work with independent dispatch consent.",
+      "Revoke key1, approve key2 workflow, compare real HTTP and CLI metadata previews without writes/contact.",
+      "Actual sandboxed Chrome preview/propose/withdraw/approve/execute, dropped committed responses, page reload and original-nonce read-only receipt recovery.",
+      "Original job/input/facts and cancelled-run evidence preserved; current-successor navigation uses validated target.",
+      "Old dispatch consent cannot authorize the new intent; separately approve and send through the browser with original-key replay.",
+      "Stock SFTP retrieves exactly one ciphertext; pinned independent GnuPG decrypts with key2 and authenticates exact original bytes.",
+      "No source recontact after capture, no models/scanner, exact output closure and isolated-resource cleanup."
+    ],
+    "gnupg_peer_limits": "GitHub Linux:offline128MiB/oneCPU/64processes,read-only root,dropped capabilities,digest-pinned Alpine/GnuPG2.4.9; native Mac helper, if explicitly configured, reports sampled watchdog/serial limits separately."
+  },
+  "inference_performed": false,
+  "scanner_engine_started": false,
+  "full_foundation_aggregate_executed": false,
+  "full_journeys_qualified": false,
+  "overall_goal_complete": false,
+  "limits": [
+    "Browser contracts and code presence do not qualify live operator or receiver behavior. The new native GitHub stock/browser/encrypted journey must run and preserve its first failure if red.",
+    "The new code/migration035 still needs full Linux, security, stock and synthetic restore replays. F052 applies to the preceding engine candidate.",
+    "Retained schema33 remains unchanged; a backed verified33-to35 upgrade and active/queued recovery remain open.",
+    "Untouched schema2 is one required recovery profile. Attempted, leased, encrypted, partial, ambiguous, rechecked-child, source/operator changes, expired and schema1 outcomes remain mandatory future work.",
+    "All83whole rows/12full journeys, privateAI, WindowsD103, independent adoption and enterprise/release readiness remain open."
+  ],
+  "secret_scan": {
+    "state": "passed",
+    "tool": "Gitleaks8.30.1",
+    "public_source_files": 586,
+    "manifest_reference": ".private/handoff-ui-public-review-abdb19dd1c4e49ae8cd999e0c5fcbb51/manifest.json",
+    "diagnostic_sha256": "da952866036d52113e637921667072967f6c768df1ec4333d041e115805387fd",
+    "rules_or_exclusions_changed": false,
+    "scope_note": "Complete public-source snapshot before recording this scan result; no model weights, protected credentials or raw evidence included."
+  }
+}

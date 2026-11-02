@@ -1,6 +1,10 @@
 import { ApiError, object, uuid } from "./types";
 import { digestBytes } from "./crypto";
 import {
+  asCollectionHandoffView,
+  type CollectionHandoffView,
+} from "./collection-handoffs-types";
+import {
   asCapturedRoutingMetadata,
   asCapturedRoutingInputPreview,
   type CapturedRoutingMetadata,
@@ -180,6 +184,15 @@ export interface CollectionView {
   observed_state: CollectionState;
   business_acceptance: "unknown";
   local_states: { input_id: string; state: string }[];
+  replacements?: CollectionReplacement[];
+}
+export interface CollectionReplacement {
+  input_id: string;
+  job_id: string;
+  original_run_id: string;
+  current_run_id: string;
+  handoff_id: string;
+  source_run_id: string;
 }
 export interface CollectionAction {
   kind: "workflow_collection";
@@ -970,14 +983,18 @@ export function asCollectionView(
   expectedHash?: string,
 ): CollectionView {
   const o = object(v);
-  keys(o, [
-    "job",
-    "inputs",
-    "current_authority",
-    "observed_state",
-    "business_acceptance",
-    "local_states",
-  ]);
+  keys(
+    o,
+    [
+      "job",
+      "inputs",
+      "current_authority",
+      "observed_state",
+      "business_acceptance",
+      "local_states",
+    ],
+    ["replacements"],
+  );
   const j = asCollectionJob(o.job, expectedID),
     inputs = array(o.inputs, 64).map((v) => input(v, j)),
     current = bool(o, "current_authority"),
@@ -1038,6 +1055,49 @@ export function asCollectionView(
     return { input_id: inputID, state: s };
   });
   if (local.length !== inputs.length) bad();
+  const replacements =
+    o.replacements === undefined
+      ? undefined
+      : array(o.replacements, 64).map((v) => {
+          const r = object(v);
+          keys(r, [
+            "input_id",
+            "job_id",
+            "original_run_id",
+            "current_run_id",
+            "handoff_id",
+            "source_run_id",
+          ]);
+          const result: CollectionReplacement = {
+            input_id: id(r, "input_id"),
+            job_id: id(r, "job_id"),
+            original_run_id: id(r, "original_run_id"),
+            current_run_id: id(r, "current_run_id"),
+            handoff_id: id(r, "handoff_id"),
+            source_run_id: id(r, "source_run_id"),
+          };
+          const i = inputs.find((i) => i.id === result.input_id);
+          if (
+            !i ||
+            !i.run_id ||
+            i.state !== "queued" ||
+            result.job_id !== i.first_job_id ||
+            result.original_run_id !== i.run_id ||
+            result.current_run_id === result.original_run_id ||
+            result.current_run_id === result.source_run_id
+          )
+            bad();
+          return result;
+        });
+  if (
+    replacements &&
+    ["input_id", "current_run_id", "handoff_id"].some(
+      (key) =>
+        new Set(replacements.map((r) => r[key as keyof CollectionReplacement]))
+          .size !== replacements.length,
+    )
+  )
+    bad();
   return {
     job: j,
     inputs,
@@ -1045,6 +1105,7 @@ export function asCollectionView(
     observed_state: observed,
     business_acceptance: "unknown",
     local_states: local,
+    ...(replacements ? { replacements } : {}),
   };
 }
 export function asCollectionPage(v: unknown): {
@@ -1095,6 +1156,32 @@ export interface CollectionRunContext {
   workflow: AnyWorkflowConfiguration;
   job: CollectionJob;
   routing?: { view: CollectionView; metadata: CapturedRoutingMetadata };
+  handoff?: { view: CollectionView; metadata: CollectionHandoffView };
+}
+
+function handoffExecution(
+  context: CollectionRunContext,
+  input: CollectionInput,
+) {
+  if (!context.handoff) return undefined;
+  const { view } = context.handoff;
+  const metadata = asCollectionHandoffView(
+    context.handoff.metadata,
+    view,
+    context.handoff.metadata.handoff.id,
+  );
+  const r = view.replacements?.find((r) => r.input_id === input.id);
+  if (
+    metadata.handoff.state !== "completed" ||
+    !r ||
+    r.handoff_id !== metadata.handoff.id ||
+    r.current_run_id !== metadata.handoff.planned_run_id ||
+    r.original_run_id !== input.run_id ||
+    context.job.id !== view.job.id ||
+    context.job.definition_hash !== view.job.definition_hash
+  )
+    bad();
+  return metadata;
 }
 
 function routingExecution(context: CollectionRunContext) {
@@ -1259,6 +1346,27 @@ export function asCollectedRun(
   context?: CollectionRunContext,
 ): ScheduledRun {
   const source = context ? originalRoutingSource(i, d, context) : undefined;
+  const handoff = context ? handoffExecution(context, i) : undefined;
+  if (handoff) {
+    const def = handoff.handoff.definition;
+    const r = asScheduledRun(
+      v,
+      { file_id: i.file_id!, run_id: handoff.handoff.planned_run_id },
+      {
+        workflow: def.workflow,
+        authority_revision: def.authority_revision,
+        effects: handoff.effects,
+      },
+      handoff.workflow,
+      source,
+    );
+    if (
+      r.run.execution_plan_hash !== def.plan_hash ||
+      !equal(r.run.execution_plan, def.plan)
+    )
+      bad();
+    return r;
+  }
   const routing = context ? routingExecution(context) : undefined;
   if (routing) {
     const r = asScheduledRun(
@@ -1292,6 +1400,27 @@ export function asCollectedWork(
   context?: CollectionRunContext,
 ): ScheduledRun {
   const source = context ? originalRoutingSource(i, d, context) : undefined;
+  const handoff = context ? handoffExecution(context, i) : undefined;
+  if (handoff) {
+    const def = handoff.handoff.definition;
+    const r = asScheduledWork(
+      v,
+      { file_id: i.file_id!, run_id: handoff.handoff.planned_run_id },
+      {
+        workflow: def.workflow,
+        authority_revision: def.authority_revision,
+        effects: handoff.effects,
+      },
+      handoff.workflow,
+      source,
+    );
+    if (
+      r.run.execution_plan_hash !== def.plan_hash ||
+      !equal(r.run.execution_plan, def.plan)
+    )
+      bad();
+    return r;
+  }
   const routing = context ? routingExecution(context) : undefined;
   if (routing) {
     const r = asScheduledWork(

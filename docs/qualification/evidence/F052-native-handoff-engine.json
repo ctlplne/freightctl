@@ -1,0 +1,276 @@
+{
+  "schema_version": 1,
+  "id": "F052",
+  "kind": "native-collected-handoff-engine-ci",
+  "state": "selected source/Linux/stock gates passed; Mac queued and Windows D103 red",
+  "observed_on": "2026-11-02",
+  "candidate": "5535b7d2f49eae8327628a42d20e650112a542ed",
+  "author_and_committer": "imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>",
+  "source_security_frontend": {
+    "state": "passed",
+    "run_id": 41532828386,
+    "job_id": 125577121817,
+    "url": "https://github.com/ctlplne/freightctl/actions/runs/41532828386/job/125577121817",
+    "checks": [
+      "Go formatting and actionlint",
+      "qualification-record refusal contracts",
+      "exact frontend dependencies, browser contracts/typecheck/build",
+      "JavaScript dependency audit",
+      "Go vulnerability reachability",
+      "full committed source/history secret scan"
+    ]
+  },
+  "native_linux": [
+    {
+      "architecture": "arm64",
+      "state": "success",
+      "run_id": 41532828156,
+      "job_id": 125577120881,
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/41532828156/job/125577120881",
+      "integration_pass_records": 545,
+      "integration_failure_records": 0,
+      "integration_skipped_records": 0,
+      "actual_postgresql_and_independent_gnupg": true
+    },
+    {
+      "architecture": "x86_64",
+      "state": "success",
+      "run_id": 41532828156,
+      "job_id": 125577121092,
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/41532828156/job/125577121092",
+      "integration_pass_records": 545,
+      "integration_failure_records": 0,
+      "integration_skipped_records": 0,
+      "actual_postgresql_and_independent_gnupg": true
+    }
+  ],
+  "bounded_fuzz": {
+    "state": "passed",
+    "targets": 8,
+    "run_id": 41532828156,
+    "job_id": 125577120484,
+    "url": "https://github.com/ctlplne/freightctl/actions/runs/41532828156/job/125577120484"
+  },
+  "metadata_restores": [
+    {
+      "architecture": "arm64",
+      "run_id": 41532828156,
+      "job_id": 125577120915,
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/41532828156/job/125577120915",
+      "state": "passed",
+      "manifest_sha256": "358fb8e7591fed699ff4e403ae9d949c05cc9669b31e8d5af8257d8e43475841",
+      "schema": 34,
+      "metadata_tables": 64,
+      "forced_rls_tables": 63,
+      "restored_rows": 39,
+      "exact_restore_database_removed": true,
+      "original_stopped_state_restored": true,
+      "inference_performed": false,
+      "scanner_engine_started": false,
+      "scope": "synthetic first-run metadata; same-cluster restore; payload/key/clean-host recovery unqualified"
+    },
+    {
+      "architecture": "x86_64",
+      "run_id": 41532828156,
+      "job_id": 125577120956,
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/41532828156/job/125577120956",
+      "state": "passed",
+      "manifest_sha256": "fd1bbd6e11ae1b5dd04562c2d4a05b9aafcce8daed6b7faf5b0c48c81b229192",
+      "schema": 34,
+      "metadata_tables": 64,
+      "forced_rls_tables": 63,
+      "restored_rows": 39,
+      "exact_restore_database_removed": true,
+      "original_stopped_state_restored": true,
+      "inference_performed": false,
+      "scanner_engine_started": false,
+      "scope": "synthetic first-run metadata; same-cluster restore; payload/key/clean-host recovery unqualified"
+    }
+  ],
+  "stock_peers": [
+    {
+      "run_id": 41532828151,
+      "job_id": 125577121294,
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/41532828151/job/125577121294",
+      "summaries": {
+        "intake-routing": {
+          "state": "passed",
+          "source_commit": "5535b7d2f49eae8327628a42d20e650112a542ed",
+          "manifest_sha256": "2d0c17f004c1e7ccd6fb0db7bb9db5ab4d32af835fd11f6a99c10fb3a8762393",
+          "source_inputs": 454,
+          "sources_unchanged": true,
+          "recorded_commands": 187,
+          "unexpected_command_exits": 0,
+          "unexpected_http_statuses": 0,
+          "verified_output_artifacts": 503,
+          "output_closure_passed": true,
+          "cleanup_failures": 0,
+          "isolated_database_removed": true,
+          "duration_seconds": 83.294,
+          "inference_performed": false,
+          "scanner_engine_started": false,
+          "browser_failed_reports": 0,
+          "browser_runtime_errors": 0,
+          "browser_external_contacts": 0,
+          "browser_failure_locations": []
+        }
+      }
+    },
+    {
+      "run_id": 41532828151,
+      "job_id": 125577121691,
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/41532828151/job/125577121691",
+      "summaries": {
+        "routing": {
+          "state": "passed",
+          "source_commit": "5535b7d2f49eae8327628a42d20e650112a542ed",
+          "manifest_sha256": "d052d8566aaf23bd401376ee568d20b4aa78b18aa07aae9e7d90f925376c0b35",
+          "source_inputs": 454,
+          "sources_unchanged": true,
+          "recorded_commands": 133,
+          "unexpected_command_exits": 0,
+          "unexpected_http_statuses": 0,
+          "verified_output_artifacts": 348,
+          "output_closure_passed": true,
+          "cleanup_failures": 0,
+          "isolated_database_removed": true,
+          "duration_seconds": 103.281,
+          "inference_performed": false,
+          "scanner_engine_started": false,
+          "browser_failed_reports": 0,
+          "browser_runtime_errors": 0,
+          "browser_external_contacts": 0,
+          "browser_failure_locations": []
+        }
+      }
+    },
+    {
+      "run_id": 41532828151,
+      "job_id": 125577121719,
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/41532828151/job/125577121719",
+      "summaries": {
+        "captured-routing": {
+          "state": "passed",
+          "source_commit": "5535b7d2f49eae8327628a42d20e650112a542ed",
+          "manifest_sha256": "51287dd6d8900e76b507e9be2b7695cb705923141153388a2f5075653a868e4d",
+          "source_inputs": 454,
+          "sources_unchanged": true,
+          "recorded_commands": 135,
+          "unexpected_command_exits": 0,
+          "unexpected_http_statuses": 0,
+          "verified_output_artifacts": 354,
+          "output_closure_passed": true,
+          "cleanup_failures": 0,
+          "isolated_database_removed": true,
+          "duration_seconds": 91.054,
+          "inference_performed": false,
+          "scanner_engine_started": false,
+          "browser_failed_reports": 0,
+          "browser_runtime_errors": 0,
+          "browser_external_contacts": 0,
+          "browser_failure_locations": []
+        }
+      }
+    },
+    {
+      "run_id": 41532828151,
+      "job_id": 125577121734,
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/41532828151/job/125577121734",
+      "summaries": {
+        "collections": {
+          "state": "passed",
+          "source_commit": "5535b7d2f49eae8327628a42d20e650112a542ed",
+          "manifest_sha256": "3ccc51d0cc574441d6d544119eaf713a3fbe8f956a5f10d79a22b88a80c5f347",
+          "source_inputs": 454,
+          "sources_unchanged": true,
+          "recorded_commands": 180,
+          "unexpected_command_exits": 0,
+          "unexpected_http_statuses": 0,
+          "verified_output_artifacts": 480,
+          "output_closure_passed": true,
+          "cleanup_failures": 0,
+          "isolated_database_removed": true,
+          "duration_seconds": 129.573,
+          "inference_performed": false,
+          "scanner_engine_started": false,
+          "browser_failed_reports": 0,
+          "browser_runtime_errors": 0,
+          "browser_external_contacts": 0,
+          "browser_failure_locations": []
+        },
+        "arrivals": {
+          "state": "passed",
+          "source_commit": "5535b7d2f49eae8327628a42d20e650112a542ed",
+          "manifest_sha256": "d70adb432bf65c771016a06593664c0a8019bdad7f102c017e82d4788143233f",
+          "source_inputs": 454,
+          "sources_unchanged": true,
+          "recorded_commands": 98,
+          "unexpected_command_exits": 0,
+          "unexpected_http_statuses": 0,
+          "verified_output_artifacts": 270,
+          "output_closure_passed": true,
+          "cleanup_failures": 0,
+          "isolated_database_removed": true,
+          "duration_seconds": 63.264,
+          "inference_performed": false,
+          "scanner_engine_started": false,
+          "browser_failed_reports": 0,
+          "browser_runtime_errors": 0,
+          "browser_external_contacts": 0,
+          "browser_failure_locations": []
+        },
+        "schedules": {
+          "state": "passed",
+          "source_commit": "5535b7d2f49eae8327628a42d20e650112a542ed",
+          "manifest_sha256": "8f8a1d0fc2fe6f79e0b1774665422b05330667a5620c45fd1cbd92bbbfe407b5",
+          "source_inputs": 454,
+          "sources_unchanged": true,
+          "recorded_commands": 111,
+          "unexpected_command_exits": 0,
+          "unexpected_http_statuses": 0,
+          "verified_output_artifacts": 285,
+          "output_closure_passed": true,
+          "cleanup_failures": 0,
+          "isolated_database_removed": true,
+          "duration_seconds": 82.64,
+          "inference_performed": false,
+          "scanner_engine_started": false,
+          "browser_failed_reports": 0,
+          "browser_runtime_errors": 0,
+          "browser_external_contacts": 0,
+          "browser_failure_locations": []
+        }
+      }
+    }
+  ],
+  "platforms": {
+    "macos_arm64": {
+      "state": "queued when observed",
+      "run_id": 41532828007,
+      "job_id": 125577122088,
+      "last_actual_pass": "F048/e7d26ab"
+    },
+    "windows_amd64": {
+      "state": "failed",
+      "run_id": 41532828007,
+      "job_id": 125577120518,
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/41532828007/job/125577120518",
+      "failed_test_and_subcase_records": 17,
+      "defect": "D103",
+      "scope": "Native permission/private-root, audit/SSH key custody, directory durability and clamd socket/parser failures remain open."
+    }
+  },
+  "inference_performed": false,
+  "scanner_engine_started": false,
+  "full_foundation_aggregate_executed": false,
+  "retained_estate_migrated": false,
+  "full_journeys_qualified": false,
+  "overall_goal_complete": false,
+  "limits": [
+    "The stock jobs regress existing collection/routing/intake/schedule paths; they do not exercise the new handoff browser or encrypted receiver journey.",
+    "Both complete native Linux integration suites execute 545 case/subcase pass records, including the new handoff service/CLI and API refusal contract. This is component evidence, not 545 whole product capabilities.",
+    "Metadata restore uses a disposable synthetic first-run database with schema34,64tables/63forcedRLS and39rows. Payload/key backup, clean-host recovery, active/queued upgrades and RPO/RTO remain unqualified.",
+    "Local retained schema remains33. New migration035, browser successor review/recovery and new handoff stock profile are a subsequent candidate requiring their own native GitHub replay.",
+    "All83 whole rows and12 full journeys remain open; no release or external deployment is qualified."
+  ]
+}
