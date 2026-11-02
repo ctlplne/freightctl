@@ -139,13 +139,24 @@ jobs:
           umask 077
           metadata_cid=$(docker inspect --format '{{.Id}}' freightctl-postgres-v1)
           docker stop --time 15 "$metadata_cid" > .private/metadata-preparation-stop.log
-          python3 scripts/qualify-retained-metadata.py --container-id "$metadata_cid" --expected-schema 33 > .private/metadata-result.json
+          metadata_status=0
+          python3 scripts/qualify-retained-metadata.py --container-id "$metadata_cid" --expected-schema 33 > .private/metadata-result.json || metadata_status=$?
           python3 - <<'PY'
           import json
           from pathlib import Path
           result = json.loads(Path('.private/metadata-result.json').read_text())
           manifest = json.loads(Path(result['manifest']).read_text())
+          if manifest['state'] != 'passed':
+              print(json.dumps({
+                  'state': 'failed', 'manifest_sha256': result['manifest_sha256'],
+                  'failed_native_steps': [step['name'] for step in manifest['steps'] if step['exit_code'] != 0],
+                  'original_stopped_state_restored': manifest.get('original_stopped_state_restored', False),
+                  'exact_restore_database_removed': manifest.get('exact_restore_database_removed', False),
+                  'scope': 'protected metadata observer failed; raw errors and database records remain private',
+              }))
+              raise SystemExit(1)
           assert result['state'] == manifest['state'] == 'passed'
+          assert manifest['backup']['file_and_directory_synced']
           assert manifest['restored_metadata_matches'] and manifest['retained_database_unchanged']
           assert manifest['original_stopped_state_restored'] and manifest['exact_restore_database_removed']
           assert manifest['before']['runtime_role_safe']
@@ -163,6 +174,7 @@ jobs:
               'scope': 'synthetic first-run metadata; same-cluster restore; payload/key/clean-host recovery unqualified',
           }))
           PY
+          test "$metadata_status" -eq 0
 
   bounded-fuzz:
     runs-on: ubuntu-24.04

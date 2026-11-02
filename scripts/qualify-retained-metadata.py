@@ -31,6 +31,25 @@ def private_directory(path):
         raise ValueError("evidence parent must already be a private directory")
 
 
+def sync_directory(path):
+    descriptor = os.open(path, os.O_RDONLY | os.O_DIRECTORY)
+    try:
+        os.fsync(descriptor)
+    finally:
+        os.close(descriptor)
+
+
+def save_manifest(exercise):
+    path = exercise.private / "manifest.json"
+    descriptor = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    with os.fdopen(descriptor, "w") as stream:
+        stream.write(json.dumps(exercise.manifest, indent=2) + "\n")
+        stream.flush()
+        os.fsync(stream.fileno())
+    sync_directory(exercise.private)
+    return path
+
+
 def validate_resource(metadata, expected_id):
     if (not re.fullmatch(r"[a-f0-9]{64}", expected_id)
             or metadata["Id"] != expected_id
@@ -68,6 +87,7 @@ class Exercise:
         self.private = ROOT / ".private" / ("retained-metadata-" + uuid.uuid4().hex)
         private_directory(ROOT / ".private")
         self.private.mkdir(mode=0o700)
+        sync_directory(self.private.parent)
         self.steps = []
         self.started = False
         self.restore_owned = False
@@ -102,6 +122,11 @@ class Exercise:
             finally:
                 if stdin:
                     stdin.close()
+            out.flush()
+            err.flush()
+            os.fsync(out.fileno())
+            os.fsync(err.fileno())
+        sync_directory(self.private)
         self.steps.append({"name": label, "exit_code": code,
                            "seconds": round(time.monotonic() - began, 3),
                            "stdout_sha256": digest(output), "stdout_bytes": output.stat().st_size,
@@ -300,7 +325,8 @@ SELECT jsonb_build_object(
                               "--username=postgres", "--dbname=freightctl", "--format=custom", "--lock-wait-timeout=10000"], timeout=60)
         self.manifest["backup"] = {"reference": str(backup.relative_to(ROOT)), "bytes": backup.stat().st_size,
                                    "sha256": digest(backup), "database_size_bytes": size,
-                                   "file_mode": oct(backup.stat().st_mode & 0o777)}
+                                   "file_mode": oct(backup.stat().st_mode & 0o777),
+                                   "file_and_directory_synced": True}
         if not backup.stat().st_size or backup.stat().st_mode & 0o077:
             raise RuntimeError("metadata backup is empty or not private")
         if self.sql("refuse-existing-restore-name", "SELECT count(*) FROM pg_database WHERE datname='" + self.restore_name + "';") != "0":
@@ -360,8 +386,7 @@ def main():
     finally:
         exercise.cleanup()
     exercise.manifest["steps"] = exercise.steps
-    path = exercise.private / "manifest.json"
-    path.write_text(json.dumps(exercise.manifest, indent=2) + "\n")
+    path = save_manifest(exercise)
     print(json.dumps({"state": exercise.manifest["state"], "manifest": str(path.relative_to(ROOT)),
                       "manifest_sha256": digest(path), "failure": exercise.manifest.get("failure"),
                       "cleanup_failures": exercise.manifest.get("cleanup_failures", [])}), flush=True)

@@ -100,9 +100,8 @@ def main():
         exercise.manifest["state"] = "failed"
     finally:
         exercise.cleanup()
-    path = exercise.private / "manifest.json"
     exercise.manifest["steps"] = exercise.steps
-    path.write_text(json.dumps(exercise.manifest, indent=2) + "\n")
+    path = metadata.save_manifest(exercise)
     print(json.dumps({"state": exercise.manifest["state"], "manifest": str(path.relative_to(metadata.ROOT)),
                       "manifest_sha256": metadata.digest(path), "failure": exercise.manifest.get("failure"),
                       "cleanup_failures": exercise.manifest.get("cleanup_failures", [])}))

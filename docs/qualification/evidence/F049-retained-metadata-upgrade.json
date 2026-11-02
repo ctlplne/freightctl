@@ -40,7 +40,8 @@
   ],
   "defects": [
     "D108",
-    "D109"
+    "D109",
+    "D110"
   ],
   "resource": {
     "name": "/freightctl-postgres-v1",
@@ -107,7 +108,7 @@
   },
   "native_step_seconds": 18.211,
   "local_checks": {
-    "maintenance_refusal_tests": 4,
+    "maintenance_refusal_tests": 5,
     "actionlint": "passed",
     "python_compile": "passed",
     "diff_whitespace": "passed",
@@ -138,5 +139,32 @@
     "The existing 361 run and763 intent records are preserved; execution through an active or queued upgrade and exactly-once receiver effects are not established by unchanged records.",
     "The retained exercise was on the actual local ARM estate. GitHub synthetic restore gates are separate and remain pending until they run.",
     "All83 whole baseline rows, all12 full journeys, Windows D103, governed queued collected handoff and remaining GOAL.md requirements stay open."
-  ]
+  ],
+  "durability_followup": {
+    "state": "verified on actual retained ARM schema33; native GitHub replay pending",
+    "candidate": "80e603eaf05a07751dda2cff6d27651b04d6fbe7",
+    "private_manifest": {
+      "reference": ".private/retained-metadata-6980693316714788840e56833f3694e0/manifest.json",
+      "sha256": "d04f6d9e1c5e4b69c6ac477ad70727faa11f73609203935fb2067364ef2f224e"
+    },
+    "script_sha256": "08e7800534401cd27ff464523857ab3abcb1135035ebba1d365217adba0f20f5",
+    "backup": {
+      "reference": ".private/retained-metadata-6980693316714788840e56833f3694e0/metadata-backup.stdout",
+      "bytes": 8500277,
+      "sha256": "0779d01d83eba2be0c7aeba85bddd5e62dbe76472ef86f13293be8d97470a11c",
+      "database_size_bytes": 76422167,
+      "file_mode": "0o600",
+      "file_and_directory_synced": true
+    },
+    "tables": 63,
+    "forced_rls": 62,
+    "rows": 64337,
+    "file_and_directory_sync_before_restore": true,
+    "exclusive_private_manifest": true,
+    "original_stopped_state_restored": true,
+    "exact_restore_database_removed": true,
+    "initial_upgrade_backup_explicitly_synced_before_migration": false,
+    "preupgrade_archives_explicitly_synced_after_review_with_original_hashes_preserved": true,
+    "limit": "Host filesystem fsync contract only; no power-loss/redundant-storage or supported downgrade claim."
+  }
 }

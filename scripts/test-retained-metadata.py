@@ -5,6 +5,7 @@ import importlib.util
 import json
 from pathlib import Path
 import tempfile
+from types import SimpleNamespace
 import unittest
 
 spec = importlib.util.spec_from_file_location("retained_metadata", Path(__file__).with_name("qualify-retained-metadata.py"))
@@ -21,6 +22,17 @@ class MaintenanceBoundaries(unittest.TestCase):
             "HostConfig": {"Memory": 536870912, "NanoCpus": 1000000000,
                            "PortBindings": {"5432/tcp": [{"HostIp": "127.0.0.1", "HostPort": "25432"}]}},
         }
+
+    def test_synced_manifest_is_private_and_cannot_replace_original_evidence(self):
+        with tempfile.TemporaryDirectory(prefix="freightctl-manifest-refusal-") as tmp:
+            exercise = SimpleNamespace(private=Path(tmp), manifest={"state": "first failure"})
+            path = module.save_manifest(exercise)
+            original = path.read_bytes()
+            self.assertEqual(path.stat().st_mode & 0o777, 0o600)
+            exercise.manifest = {"state": "later retry"}
+            with self.assertRaises(FileExistsError):
+                module.save_manifest(exercise)
+            self.assertEqual(path.read_bytes(), original)
 
     def test_refuses_identity_resource_and_network_substitution(self):
         module.validate_resource(self.metadata, self.cid)

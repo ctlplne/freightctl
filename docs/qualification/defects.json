@@ -1775,6 +1775,22 @@
       "regression_evidence": [
         "docs/qualification/evidence/F049-retained-metadata-upgrade.json"
       ]
+    },
+    {
+      "id": "D110",
+      "severity": "metadata backup durability gap",
+      "state": "fixed locally",
+      "observed_on": "2026-11-02",
+      "candidate": "80e603eaf05a07751dda2cff6d27651b04d6fbe7",
+      "journey": "J11 metadata backup component",
+      "title": "Metadata backup closed files without explicitly syncing file and directory",
+      "observation_kind": "source review; no runtime data loss observed",
+      "first_failure": "Review of command output persistence found close without explicit file/directory fsync before restore and migration.",
+      "cause": "The observer validated bytes by restoring the archive but did not explicitly flush its host output file and new directory entry. Successful restore alone cannot prove that persistence boundary.",
+      "resolution": "Sync each native output and containing directory before proceeding; create a mode0600 manifest exclusively, sync it and its directory, and refuse replacement. The actual schema33 ARM restore replay and five refusal tests pass. Existing preupgrade archives were explicitly synced after review with original hashes preserved; no earlier sync is retroactively claimed. Native CI must replay the new utility.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F049-retained-metadata-upgrade.json"
+      ]
     }
   ]
 }
