@@ -1,0 +1,3 @@
+# Build and qualification manifests hash the exact committed source bytes.
+# A checkout must not rewrite line endings on Windows or another platform.
+* -text

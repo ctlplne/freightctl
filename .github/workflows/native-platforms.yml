@@ -34,6 +34,7 @@ jobs:
             throw 'Expected native Windows amd64'
           }
           go version
+          git ls-files --eol web/THIRD_PARTY_NOTICES.txt internal/browser/assets/manifest.json
           go mod verify
           go vet ./...
           go test ./...
