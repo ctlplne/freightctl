@@ -1587,12 +1587,15 @@
       "first_failure": "SC2195: This pattern will never match the case statement's word",
       "cause": "The constant matrix architecture was embedded in a shell case word, which ShellCheck resolved as incompatible with the alternative patterns.",
       "resolution": "Commit 61fea3f uses explicit exact uname assertions for the x86_64 and arm64 matrix entries. Local actionlint and the complete source/security job passed on GitHub run 41494054412.",
-      "regression_evidence": ["https://github.com/ctlplne/freightctl/actions/runs/41491331244", "https://github.com/ctlplne/freightctl/actions/runs/41494054412"]
+      "regression_evidence": [
+        "https://github.com/ctlplne/freightctl/actions/runs/41491331244",
+        "https://github.com/ctlplne/freightctl/actions/runs/41494054412"
+      ]
     },
     {
       "id": "D100",
       "severity": "CI gate blocker",
-      "state": "first failure fixed on GitHub; full integration still red",
+      "state": "fixed on GitHub",
       "observed_on": "2026-11-02",
       "candidate": "9e7eee5310b9914e30e93ac7386d4e6cc9010907",
       "journey": "CI native PostgreSQL integration",
@@ -1601,12 +1604,15 @@
       "first_failure": "/bin/sh: can't open '/work/peer.sh': Permission denied",
       "cause": "Runner-owned 0700 fixture directory was bind-mounted into a container started under a different user identity.",
       "resolution": "Commit 61fea3f runs the bounded offline peer as the fixture-owning uid/gid and records actual host/peer platforms. The original peer generation passed locally and both GitHub architectures advanced through integration on run 41494054412. A separate protected recipient mount failure is D102.",
-      "regression_evidence": ["https://github.com/ctlplne/freightctl/actions/runs/41491331244", "https://github.com/ctlplne/freightctl/actions/runs/41494054412"]
+      "regression_evidence": [
+        "https://github.com/ctlplne/freightctl/actions/runs/41491331244",
+        "https://github.com/ctlplne/freightctl/actions/runs/41494054412"
+      ]
     },
     {
       "id": "D101",
       "severity": "CI gate blocker",
-      "state": "repair prepared; GitHub replay pending",
+      "state": "fixed on GitHub",
       "observed_on": "2026-11-02",
       "candidate": "9e7eee5310b9914e30e93ac7386d4e6cc9010907",
       "journey": "CI stock-peer schedule browser",
@@ -1614,13 +1620,17 @@
       "reproduction": "GitHub Actions run 41491331244, stock-peer-linux; collections and arrivals completed before qualify-schedules.py browser-create",
       "first_failure": "FileNotFoundError: browser-create/onboarding-exchange-browser.json",
       "cause": "Run 10's early launch probe reproduced the missing report: Ubuntu 24.04 AppArmor denies unprivileged namespaces to Playwright's downloaded Chromium shell, so Chromium reports no usable sandbox. The original run 9 wrapper log alone did not expose this cause.",
-      "resolution": "Run 10 preserved chromiumSandbox:true and established the launch failure. The next candidate selects the runner-installed Chrome channel, which has a vendor AppArmor profile, while retaining the sandbox, exact browser dependencies and all schedule assertions. GitHub replay is required.",
-      "regression_evidence": ["https://github.com/ctlplne/freightctl/actions/runs/41491331244", "https://github.com/ctlplne/freightctl/actions/runs/41494054412"]
+      "resolution": "Run 10 preserved chromiumSandbox:true and established the launch failure. Commit 1ebf6d0 selects the runner-installed Chrome channel while retaining the sandbox and all schedule assertions. GitHub run 41496634777 launched Chrome 156.0.8078.47 with the sandbox and passed the original collection, arrival and schedule scripts.",
+      "regression_evidence": [
+        "https://github.com/ctlplne/freightctl/actions/runs/41491331244",
+        "https://github.com/ctlplne/freightctl/actions/runs/41494054412",
+        "https://github.com/ctlplne/freightctl/actions/runs/41496634777"
+      ]
     },
     {
       "id": "D102",
       "severity": "CI gate blocker",
-      "state": "repair prepared; GitHub replay pending",
+      "state": "fixed on GitHub",
       "observed_on": "2026-11-02",
       "candidate": "61fea3fbc165199bf7b269d49f5a3c89103d122d",
       "journey": "CI native PostgreSQL integration",
@@ -1628,8 +1638,33 @@
       "reproduction": "GitHub Actions run 41494054412, both native-go-postgres architectures, TestGnuPGIndependentlyDecryptsExactRecipientEnvelope",
       "first_failure": "gpg: can't open '/fixture/recipient-private.gpg': Permission denied",
       "cause": "The test used a default container identity to read a runner-owned 0700 fixture directory, after the separate fixture-generation peer had been repaired.",
-      "resolution": "Run the offline decryption container as the fixture-owning uid/gid, leaving 0700 protection, 128 MiB/one-CPU bounds, read-only input and assertions intact. The exact failed test passes against the existing task-owned fixture locally; both Linux architecture replays remain required.",
-      "regression_evidence": ["https://github.com/ctlplne/freightctl/actions/runs/41494054412"]
+      "resolution": "Commit 1ebf6d0 runs the offline decryption container as the fixture-owning uid/gid, leaving 0700 protection, 128 MiB/one-CPU bounds, read-only input and assertions intact. The exact local test and both complete native Linux integration/migration jobs pass on GitHub run 41496634777.",
+      "regression_evidence": [
+        "https://github.com/ctlplne/freightctl/actions/runs/41494054412",
+        "docs/qualification/evidence/F043-native-ci.json"
+      ]
+    },
+    {
+      "id": "D103",
+      "severity": "native platform qualification blocker",
+      "state": "open",
+      "observed_on": "2026-11-02",
+      "candidate": "1ebf6d04857b9a95ded9fb41a95e8186352fd7ef",
+      "journey": "Windows amd64 native server/platform",
+      "title": "Windows native unit suite exposed unsupported permission and durability behavior",
+      "reproduction": "GitHub Actions run 41496634781, windows-amd64, go test ./... on native Windows 2025",
+      "first_failure": "TestSetupPlanPreservesCredentialAndRefusesChangedReferences: setup reference parent must already be a private mode-0700 directory",
+      "observed_failures": [
+        "Directory Sync returned Access is denied for crypto audit and SSH secret tests.",
+        "Custody tests could not establish a private mode-0700 root under Windows file-permission semantics.",
+        "The browser source byte hash differed for web/THIRD_PARTY_NOTICES.txt on Windows checkout; line-ending conversion is a hypothesis, not established cause.",
+        "Synthetic scanner clean/infected/limit/encrypted cases returned scanner unavailable or unverified."
+      ],
+      "cause": "Windows private-directory mode and directory-sync behavior differ from the current Unix implementation. The browser source-byte mismatch and scanner verdict failures need direct native diagnosis; checkout line endings and transport are hypotheses.",
+      "resolution": "Keep the native Windows job red. Build Windows ACL and durable-directory semantics without relaxing refusal checks; prove exact browser input bytes and diagnose scanner validation/transport on a native runner, then rerun the original suite. A passing cross-build would not close this defect.",
+      "regression_evidence": [
+        "https://github.com/ctlplne/freightctl/actions/runs/41496634781"
+      ]
     }
   ]
 }
