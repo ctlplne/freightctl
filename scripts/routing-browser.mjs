@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { readFile, writeFile } from "node:fs/promises";
+import { probe as qualifyCapturedRouting } from "./captured-routing-browser.mjs";
 
 // Every operation reaches the real HTTPS service. The only interception drops
 // the first committed response, so the retry must use the original command key.
@@ -254,6 +255,17 @@ export async function qualifyRouting(page, c, audit, record, actual) {
     let view = await inspect(c.job.id);
     assert.ok(view.job.captured);
     assert.ok(view.inputs.every((i) => !i.run_id));
+    const routingAuthorization = c.captured_routing
+      ? await qualifyCapturedRouting(
+          page,
+          c,
+          selected,
+          view,
+          audit,
+          record,
+          actual,
+        )
+      : undefined;
     const previews = [];
     for (const input of view.inputs) {
       const p = await response("/workflow-runs/preview", () =>
@@ -304,6 +316,11 @@ export async function qualifyRouting(page, c, audit, record, actual) {
         r.run.execution_plan,
         previews.find((p) => p.source.id === input.file_id).execution_plan,
       );
+      if (routingAuthorization) {
+        assert.equal(r.run.routing_authorization_id, routingAuthorization.id);
+        assert.equal(r.run.workflow_version, c.routing_target.version);
+        assert.equal(r.run.workflow_hash, c.routing_target.definition_hash);
+      }
       runs.push(r);
       if (r.observed_state === "kept_local") {
         await audit("routing-local-outcome");
@@ -333,7 +350,7 @@ export async function qualifyRouting(page, c, audit, record, actual) {
       );
     assert.deepEqual(reloaded.run.execution_plan, runs[0].run.execution_plan);
     assert.deepEqual(await contacts(), before);
-    result = { view, runs, previews };
+    result = { view, runs, previews, routingAuthorization };
     record("routing-original-manifest-plan-after-browser-reload");
   } else if (c.routing_phase.startsWith("send-")) {
     const view = await inspect(c.job.id),

@@ -14,9 +14,10 @@ if not __debug__:
  raise RuntimeError("Qualification requires assertions; remove Python -O/PYTHONOPTIMIZE")
 os.umask(0o077)
 root=Path(__file__).resolve().parents[1];os.chdir(root)
-parser=argparse.ArgumentParser();parser.add_argument('--postgres-container-id',required=True);options=parser.parse_args()
+parser=argparse.ArgumentParser();parser.add_argument('--postgres-container-id',required=True);parser.add_argument('--captured-routing',action='store_true');options=parser.parse_args()
 assert re.fullmatch(r'[0-9a-f]{64}',options.postgres_container_id),'use the exact task-owned PostgreSQL container ID'
-run='routing-'+uuid.uuid4().hex;private=root/'.private'/run;private.mkdir(mode=0o700);raw=root/'evidence/raw'/run;raw.mkdir(parents=True,mode=0o700)
+suite='captured-routing' if options.captured_routing else 'routing'
+run=suite+'-'+uuid.uuid4().hex;private=root/'.private'/run;private.mkdir(mode=0o700);raw=root/'evidence/raw'/run;raw.mkdir(parents=True,mode=0o700)
 binary=private/'freightctl';database='freightctl_'+run.replace('-','_');created=False;servers={};logs={};steps=[];cleanup=[];state='failed';failure=None;started=time.monotonic()
 output_proof=NativeEvidence(raw,steps)
 reserve_step=output_proof.reserve
@@ -26,7 +27,7 @@ def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 def sources():
  paths=subprocess.check_output(['git','ls-files','--cached','--others','--exclude-standard','-z']).decode().split('\0')
  return {p:sha(root/p) for p in sorted(set(paths)) if p and (Path(p).suffix in ('.go','.sql','.sh','.py','.ts','.tsx','.js','.mjs','.css','.html','.yml','.yaml') or p.startswith('web/tests/fixtures/') or p in ('go.mod','go.sum','web/package.json','web/package-lock.json','web/tsconfig.json','web/THIRD_PARTY_NOTICES.txt','internal/browser/assets/manifest.json'))}
-initial=sources();(root/'.private/routing-native-current').write_text(str(raw)+'\n')
+initial=sources();(root/('.private/'+suite+'-native-current')).write_text(str(raw)+'\n')
 def command(label,args,expected=0,timeout=100):
  reserve_step(label)
  start=time.monotonic();out=raw/(label+'.stdout');err=raw/(label+'.stderr')
@@ -233,19 +234,36 @@ LogLevel VERBOSE
  browser_phases=[]
  def browser(phase,**values):
   directory=raw/('browser-'+phase);directory.mkdir(mode=0o700)
-  cfg={'root':str(root),'private':str(private),'url':url,'certificate':str(cert),'token':str(owner),'tenant':tenant,'partner':partner,'raw':str(directory),'routing_only':True,'routing_phase':phase,'peer_logs':[str(raw/(name+'.stderr')) for name in ['source','receiver','audit']],'source':source_connection,'destination':destination,'audit_destination':audit_destination,'expected_program':program,**values}
+  cfg={'root':str(root),'private':str(private),'url':url,'certificate':str(cert),'token':str(owner),'tenant':tenant,'partner':partner,'raw':str(directory),'routing_only':True,'routing_phase':phase,'captured_routing':options.captured_routing,'peer_logs':[str(raw/(name+'.stderr')) for name in ['source','receiver','audit']],'source':source_connection,'destination':destination,'audit_destination':audit_destination,'expected_program':program,**values}
   command('native-browser-'+phase,[node,'scripts/onboarding-exchange-browser.mjs',write('browser-'+phase,cfg)],timeout=180);browser_phases.append(phase)
   return json.loads((directory/'routing-browser-result.json').read_text())
  created_ui=browser('create')
  browser_job=post('browser-original-queued-job','/workflow-collections/'+created_ui['job']['id'],method='GET')['job']
  invoke('browser-source-byte-capture','workflow-collection-work','--collection-id',browser_job['id'],'--request-file',write('browser-capture-request',{'definition_hash':browser_job['definition_hash']}),'--idempotency-key','browser-capture',token=owner)
  browser_held=post('browser-original-captured-files','/workflow-collections/'+browser_job['id'],method='GET')
+ browser_capture_contacts=contacts('source')
  for index,item in enumerate(browser_held['inputs']):
   invoke('browser-csv-check-'+str(index),'check-run','--file-id',item['file_id'],'--idempotency-key','browser-parse-'+str(index),token=owner)
   check=post('browser-csv-proof-'+str(index),'/checks/'+item['file_id'],method='GET')['check'];assert check['state']=='passed' and check['report']['sha256']==item['sha256']
   post('browser-explicit-file-release-'+str(index),'/checks/'+item['file_id']+'/release',{'sha256':item['sha256'],'policy_hash':check['policy_hash'],'report_hash':check['report_hash'],'expected_revision':check['revision']},key='browser-release-'+str(index))
  browser_expected={'north-browser.csv':['north','audit'],'south-browser.csv':['south'],'unmatched-browser.csv':[]}
- routed_ui=browser('route',job=browser_job,expected=browser_expected)
+ routing_target=None
+ if options.captured_routing:
+  # Repair only the approved rules after capture. The source, recipient catalog,
+  # original job, accepted bytes and original workflow revision stay bound.
+  corrected=json.loads(json.dumps(created_ui['workflow']['definition']))
+  branch=corrected['program']['nodes'][0]
+  branch['then'],branch['else'][0]['then']=branch['else'][0]['then'],branch['then']
+  original_workflow=created_ui['workflow']
+  routing_target=post('corrected-routing-draft','/workflows/drafts',{'id':original_workflow['id'],'expected_version':original_workflow['version'],'definition':corrected},key='corrected-routing-draft')['resource']
+  routing_target=post('corrected-routing-approval','/workflows/'+routing_target['id']+'/'+str(routing_target['version'])+'/approve',decision(routing_target),key='corrected-routing-approval')['resource']
+  assert routing_target['version']==original_workflow['version']+1 and routing_target['definition']['source']==original_workflow['definition']['source'] and routing_target['definition']['steps']==original_workflow['definition']['steps']
+  browser_expected={'north-browser.csv':['south'],'south-browser.csv':['north','audit'],'unmatched-browser.csv':[]}
+ routed_ui=browser('route',job=browser_job,expected=browser_expected,routing_target=routing_target)
+ if options.captured_routing:
+  assert routed_ui['view']['job']==browser_held['job']
+  assert routed_ui['routingAuthorization']['state']=='approved'
+  assert all(r['run']['workflow_version']==routing_target['version'] and r['run']['routing_authorization_id']==routed_ui['routingAuthorization']['id'] for r in routed_ui['runs'])
  browser_outputs=0
  for file_index,status in enumerate(routed_ui['runs']):
   item=next(i for i in routed_ui['view']['inputs'] if i['run_id']==status['run']['id'])
@@ -260,7 +278,10 @@ LogLevel VERBOSE
    stock(f'browser-stock-retrieval-{file_index}-{step_index}',receiver_port if peer=='receiver' else audit_port,destination_known if peer=='receiver' else audit_known,f'get {target} {received}\n',peer)
    assert received.read_bytes()==browser_payloads[item['source_name']];browser_outputs+=1
  assert browser_outputs==3
+ if options.captured_routing:
+  assert contacts('source')==browser_capture_contacts,'corrected routing recontacted the source after the browser batch capture'
  result={'state':'passed','scope':'selected assisted same-host approved routing and ordinary intake/dispatch; full J03 remains open','files':3,'selected_delivery_intents':3,'verified_stock_outputs':verified_outputs,'explicit_local_outcomes':1,'distinct_receiver_host_and_client_identities':2,'whole_sibling_intake_before_routing':True,'independent_approval_per_selected_file_and_step':True,'metadata_previews_create_no_events_receipts_runs_or_intents':True,'api_cli_preview_agree':True,'original_manifest_facts_survive_source_name_change_and_manifest_removal':True,'execution_plan_survives_application_restart':True,'original_dispatch_key_replay_makes_no_new_contact':True,'foreign_actor_run_privacy':True,'local_outcome_creates_no_receiver_receipt':True,'sources_not_recontacted_after_capture':True,'unexpected_receiver_files':0,'browser_qualified':True,'browser_phases':browser_phases,'browser_verified_stock_outputs':browser_outputs,'full_journeys_qualified':False,'inference_performed':False,'scanner_engine_started':False}
+ result.update({'captured_routing_corrected_revision':options.captured_routing,'corrected_target_version':routing_target['version'] if routing_target else None,'corrected_source_not_recontacted':contacts('source')==browser_capture_contacts})
  with (raw/'routing-result.json').open('x') as f:json.dump(result,f,indent=2);f.write('\n')
  state='passed'
 except Exception:failure=traceback.format_exc()
