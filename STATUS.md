@@ -1,8 +1,8 @@
 # freightctl status
 
-- Updated: 2026-11-02. The owner authorized public GitHub source visibility and CI offload as a separate task; the full product goal remains paused and incomplete. Local workflow configuration now separates native Linux x86_64/arm64 PostgreSQL/race checks, x86_64 frontend/security/fuzz checks and stock SFTP/Chromium stand-in journeys. The previously deferred complete foundation replay is manual only. GitHub execution and remote publication are pending until observed.
+- Updated: 2026-11-02. The existing `ctlplne/freightctl` repository is public at the owner's confirmed request. Local main commits `dcb9e6b`, `9e7eee5` and `61fea3f` were pushed with `imfeelingtheagi` as both author and committer; no replacement repository or history rewrite was used. GitHub [run 10](https://github.com/ctlplne/freightctl/actions/runs/41494054412) passed source/security and bounded fuzz, while both native Linux integration jobs and the stock-peer browser remained red at D101-D102. The next candidate keeps protected mounts and browser sandboxing and adds native Windows/macOS unit jobs. [The CI plan](docs/qualification/github-actions-plan.md) records further offload and the remaining external peers. The complete foundation replay remains manual and owner-deferred; the overall product contract is incomplete.
 - Updated: 2026-10-31. **Overall goal paused at the owner's request.** Finish this local browser checkpoint, commit and halt. The full GOAL.md contract remains unchanged and incomplete.
-- Local `main` only. Author and committer: `imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>`. No push, publication or external deployment.
+- Local `main` only. Author and committer: `imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>`. Public source and CI push were expressly authorized for this task; no release artifact or external deployment was published.
 - Local inference and the scanner stayed off. F026's final aggregate remains owner-deferred.
 
 ## Completed current task: captured routing browser controls
@@ -17,8 +17,8 @@ Final checks pass: **53 Go/API/CLI/architecture tests**, **12 focused captured-r
 
 PostgreSQL is restored to its original stopped state after checking zero attached clients and removal of the three exact native fixture databases. Retained schema **32 / 61 forced-RLS tables**, **31,928 events, 2,090 files and 4,522 credentials**, existing grants and account authority are unchanged. Migration 033 has run only in temporary databases. The scanner remains stopped under its unchanged 4 GiB/one-CPU allowance.
 
-## Remaining work while paused
+## Remaining product work
 
 All **83 whole baseline rows and 12 full journeys remain open**. F041's broader contract still needs native corrected-revision cases, scheduled/source/calendar/key/actor revocation combinations, partial capacity/concurrency and the retained upgrade. F040 remains the prior completed routing increment; [F041 backend evidence](docs/qualification/evidence/F041-captured-routing-authorization.json) preserves its seven initial PostgreSQL cases, 133-test workflow regression and source epochs.
 
-Migration/cutover, private AI (X05 requires an authorized endpoint and explicit allowance), native platforms, multi-host recovery, scale/endurance and every other mandatory GOAL.md gate remain required. Assisted deployment, independent adoption and enterprise/release qualification remain separate and unqualified. Resume only when the owner requests it.
+Migration/cutover, private AI (X05 requires an authorized endpoint and explicit allowance), native platforms, multi-host recovery, scale/endurance and every other mandatory GOAL.md gate remain required. Assisted deployment, independent adoption and enterprise/release qualification remain separate and unqualified. The owner reactivated the goal tracker on 2026-11-02; this CI task does not itself qualify those product gates.

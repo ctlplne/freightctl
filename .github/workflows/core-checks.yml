@@ -144,6 +144,7 @@ jobs:
       GOMEMLIMIT: 192MiB
       NODE_OPTIONS: --max-old-space-size=192
       PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.cache/freightctl-playwright
+      FREIGHTCTL_BROWSER_CHANNEL: chrome
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
@@ -168,10 +169,11 @@ jobs:
         run: |
           node - <<'NODE'
           const { chromium } = require('./web/node_modules/playwright');
-          chromium.launch({ headless: true, chromiumSandbox: true })
+          chromium.launch({ headless: true, chromiumSandbox: true, channel: 'chrome' })
             .then(async browser => {
+              console.log('Chrome version: ' + browser.version());
               await browser.close();
-              console.log('Chromium sandbox launched on the native Linux runner');
+              console.log('Chrome sandbox launched on the native Linux runner');
             })
             .catch(error => {
               console.error(error.message);

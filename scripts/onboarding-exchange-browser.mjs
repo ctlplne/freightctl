@@ -19,6 +19,9 @@ process.umask(0o077);
 const require = createRequire(import.meta.url),
   { chromium } = require("../web/node_modules/playwright");
 const c = JSON.parse(await readFile(process.argv[2], "utf8"));
+const browserChannel = process.env.FREIGHTCTL_BROWSER_CHANNEL;
+if (browserChannel && browserChannel !== "chrome")
+  throw new Error("Unsupported freightctl browser channel");
 const spki = createHash("sha256")
   .update(
     new X509Certificate(await readFile(c.certificate)).publicKey.export({
@@ -30,6 +33,7 @@ const spki = createHash("sha256")
 const browser = await chromium.launch({
   headless: true,
   chromiumSandbox: true,
+  ...(browserChannel ? { channel: browserChannel } : {}),
   args: [
     "--ignore-certificate-errors-spki-list=" + spki,
     "--disable-background-networking",

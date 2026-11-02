@@ -1574,6 +1574,62 @@
         ".private/amendment-ui-final-go.log",
         "evidence/raw/amendment-ui-def93f07c591409383cafaaa06397c6d/manifest.json"
       ]
+    },
+    {
+      "id": "D099",
+      "severity": "CI gate blocker",
+      "state": "fixed on GitHub",
+      "observed_on": "2026-11-02",
+      "candidate": "9e7eee5310b9914e30e93ac7386d4e6cc9010907",
+      "journey": "CI source checks",
+      "title": "Linux ShellCheck rejected the native architecture case pattern",
+      "reproduction": "GitHub Actions run 41491331244, source-and-browser, Go formatting and workflow syntax",
+      "first_failure": "SC2195: This pattern will never match the case statement's word",
+      "cause": "The constant matrix architecture was embedded in a shell case word, which ShellCheck resolved as incompatible with the alternative patterns.",
+      "resolution": "Commit 61fea3f uses explicit exact uname assertions for the x86_64 and arm64 matrix entries. Local actionlint and the complete source/security job passed on GitHub run 41494054412.",
+      "regression_evidence": ["https://github.com/ctlplne/freightctl/actions/runs/41491331244", "https://github.com/ctlplne/freightctl/actions/runs/41494054412"]
+    },
+    {
+      "id": "D100",
+      "severity": "CI gate blocker",
+      "state": "first failure fixed on GitHub; full integration still red",
+      "observed_on": "2026-11-02",
+      "candidate": "9e7eee5310b9914e30e93ac7386d4e6cc9010907",
+      "journey": "CI native PostgreSQL integration",
+      "title": "Offline GnuPG peer could not read the protected fixture mount",
+      "reproduction": "GitHub Actions run 41491331244, both native-go-postgres architectures, first integration step",
+      "first_failure": "/bin/sh: can't open '/work/peer.sh': Permission denied",
+      "cause": "Runner-owned 0700 fixture directory was bind-mounted into a container started under a different user identity.",
+      "resolution": "Commit 61fea3f runs the bounded offline peer as the fixture-owning uid/gid and records actual host/peer platforms. The original peer generation passed locally and both GitHub architectures advanced through integration on run 41494054412. A separate protected recipient mount failure is D102.",
+      "regression_evidence": ["https://github.com/ctlplne/freightctl/actions/runs/41491331244", "https://github.com/ctlplne/freightctl/actions/runs/41494054412"]
+    },
+    {
+      "id": "D101",
+      "severity": "CI gate blocker",
+      "state": "repair prepared; GitHub replay pending",
+      "observed_on": "2026-11-02",
+      "candidate": "9e7eee5310b9914e30e93ac7386d4e6cc9010907",
+      "journey": "CI stock-peer schedule browser",
+      "title": "Schedule browser invocation produced no report on native Linux",
+      "reproduction": "GitHub Actions run 41491331244, stock-peer-linux; collections and arrivals completed before qualify-schedules.py browser-create",
+      "first_failure": "FileNotFoundError: browser-create/onboarding-exchange-browser.json",
+      "cause": "Run 10's early launch probe reproduced the missing report: Ubuntu 24.04 AppArmor denies unprivileged namespaces to Playwright's downloaded Chromium shell, so Chromium reports no usable sandbox. The original run 9 wrapper log alone did not expose this cause.",
+      "resolution": "Run 10 preserved chromiumSandbox:true and established the launch failure. The next candidate selects the runner-installed Chrome channel, which has a vendor AppArmor profile, while retaining the sandbox, exact browser dependencies and all schedule assertions. GitHub replay is required.",
+      "regression_evidence": ["https://github.com/ctlplne/freightctl/actions/runs/41491331244", "https://github.com/ctlplne/freightctl/actions/runs/41494054412"]
+    },
+    {
+      "id": "D102",
+      "severity": "CI gate blocker",
+      "state": "repair prepared; GitHub replay pending",
+      "observed_on": "2026-11-02",
+      "candidate": "61fea3fbc165199bf7b269d49f5a3c89103d122d",
+      "journey": "CI native PostgreSQL integration",
+      "title": "Independent GnuPG recipient could not read the protected private fixture",
+      "reproduction": "GitHub Actions run 41494054412, both native-go-postgres architectures, TestGnuPGIndependentlyDecryptsExactRecipientEnvelope",
+      "first_failure": "gpg: can't open '/fixture/recipient-private.gpg': Permission denied",
+      "cause": "The test used a default container identity to read a runner-owned 0700 fixture directory, after the separate fixture-generation peer had been repaired.",
+      "resolution": "Run the offline decryption container as the fixture-owning uid/gid, leaving 0700 protection, 128 MiB/one-CPU bounds, read-only input and assertions intact. The exact failed test passes against the existing task-owned fixture locally; both Linux architecture replays remain required.",
+      "regression_evidence": ["https://github.com/ctlplne/freightctl/actions/runs/41494054412"]
     }
   ]
 }

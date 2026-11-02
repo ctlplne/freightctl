@@ -28,5 +28,5 @@ For explicit read-only remote inputs with ready manifests, whole-batch custody, 
 
 - Organization: [ctlplne](https://github.com/ctlplne)
 - Repository: [ctlplne/freightctl](https://github.com/ctlplne/freightctl)
-- Local workflow: commits on main; pushes and publication remain owner-controlled.
+- Local workflow: commits on main; pushes and publication remain owner-controlled. See the [GitHub CI contract](docs/qualification/ci.md) and [off-machine qualification plan](docs/qualification/github-actions-plan.md).
 - Intended license model: source-available BUSL-1.1 core with an owner-approved production-use grant and conversion to MPL-2.0 after four years. No freightctl license or Additional Use Grant has yet been approved; public visibility does not grant production or redistribution rights beyond GitHub's terms. Exact text remains required before a licensed release.

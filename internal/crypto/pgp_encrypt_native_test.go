@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"testing"
 	"time"
@@ -55,7 +56,7 @@ func TestGnuPGIndependentlyDecryptsExactRecipientEnvelope(t *testing.T) {
 			t.Fatal(err)
 		}
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-		command := exec.CommandContext(ctx, "docker", "run", "--rm", "--network=none", "--read-only", "--cap-drop=ALL", "--security-opt=no-new-privileges", "--memory=128m", "--cpus=1", "--pids-limit=32", "--tmpfs", "/tmp:rw,noexec,nosuid,size=32m", "-v", dir+":/fixture:ro", "-v", work+":/result", fixture.Image, "/bin/sh", "-ec", "mkdir -m 700 /tmp/recipient; : > /tmp/recipient/common.conf; gpg --homedir /tmp/recipient --batch --import /fixture/"+name+"-private.gpg; gpg --homedir /tmp/recipient --batch --status-fd 2 --output /result/plain.csv --decrypt /result/cipher.pgp")
+		command := exec.CommandContext(ctx, "docker", "run", "--rm", "--network=none", "--read-only", "--cap-drop=ALL", "--security-opt=no-new-privileges", "--memory=128m", "--cpus=1", "--pids-limit=32", "--tmpfs", "/tmp:rw,noexec,nosuid,size=32m", "--user", strconv.Itoa(os.Getuid())+":"+strconv.Itoa(os.Getgid()), "-v", dir+":/fixture:ro", "-v", work+":/result", fixture.Image, "/bin/sh", "-ec", "mkdir -m 700 /tmp/recipient; : > /tmp/recipient/common.conf; gpg --homedir /tmp/recipient --batch --import /fixture/"+name+"-private.gpg; gpg --homedir /tmp/recipient --batch --status-fd 2 --output /result/plain.csv --decrypt /result/cipher.pgp")
 		if fixture.Backend == "native-macos" {
 			config := os.Getenv("FREIGHTCTL_GNUPG_NATIVE_CONFIG")
 			if config == "" {
