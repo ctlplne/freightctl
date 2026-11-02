@@ -16,6 +16,8 @@ on:
       - 'scripts/prepare-pgp-fixture.py'
       - 'scripts/qualify-retained-metadata.py'
       - 'scripts/test-retained-metadata.py'
+      - 'scripts/ci-metadata-summary.py'
+      - 'scripts/test-ci-metadata-summary.py'
       - '.github/workflows/native-linux.yml'
   pull_request:
     paths:
@@ -31,6 +33,8 @@ on:
       - 'scripts/prepare-pgp-fixture.py'
       - 'scripts/qualify-retained-metadata.py'
       - 'scripts/test-retained-metadata.py'
+      - 'scripts/ci-metadata-summary.py'
+      - 'scripts/test-ci-metadata-summary.py'
       - '.github/workflows/native-linux.yml'
   workflow_dispatch:
 
@@ -127,6 +131,7 @@ jobs:
           umask 077
           python3 scripts/dev-db.py
           sh scripts/go.sh build -p 1 -trimpath -buildvcs=false -o .cache/freightctl-metadata ./cmd/freightctl
+          python3 scripts/ci-metadata-summary.py --check-binary .cache/freightctl-metadata
           .cache/freightctl-metadata init
           .cache/freightctl-metadata setup-plan \
             --output .private/metadata-setup.json \
@@ -140,40 +145,9 @@ jobs:
           metadata_cid=$(docker inspect --format '{{.Id}}' freightctl-postgres-v1)
           docker stop --time 15 "$metadata_cid" > .private/metadata-preparation-stop.log
           metadata_status=0
-          python3 scripts/qualify-retained-metadata.py --container-id "$metadata_cid" --expected-schema 35 > .private/metadata-result.json || metadata_status=$?
-          python3 - <<'PY'
-          import json
-          from pathlib import Path
-          result = json.loads(Path('.private/metadata-result.json').read_text())
-          manifest = json.loads(Path(result['manifest']).read_text())
-          if manifest['state'] != 'passed':
-              print(json.dumps({
-                  'state': 'failed', 'manifest_sha256': result['manifest_sha256'],
-                  'failed_native_steps': [step['name'] for step in manifest['steps'] if step['exit_code'] != 0],
-                  'original_stopped_state_restored': manifest.get('original_stopped_state_restored', False),
-                  'exact_restore_database_removed': manifest.get('exact_restore_database_removed', False),
-                  'scope': 'protected metadata observer failed; raw errors and database records remain private',
-              }))
-              raise SystemExit(1)
-          assert result['state'] == manifest['state'] == 'passed'
-          assert manifest['backup']['file_and_directory_synced']
-          assert manifest['restored_metadata_matches'] and manifest['retained_database_unchanged']
-          assert manifest['original_stopped_state_restored'] and manifest['exact_restore_database_removed']
-          assert manifest['before']['runtime_role_safe']
-          assert not manifest['inference_performed'] and not manifest['scanner_engine_started']
-          assert len(manifest['before']['migration_ledger']) == 34
-          assert manifest['before']['forced_rls_tables'] == 63
-          assert len(manifest['before']['tables']) == 64
-          assert all(step['exit_code'] == 0 for step in manifest['steps'])
-          print(json.dumps({
-              'state': 'passed', 'manifest_sha256': result['manifest_sha256'],
-              'schema': 35, 'metadata_tables': 64, 'forced_rls_tables': 63,
-              'restored_rows': sum(table['rows'] for table in manifest['restored']['tables']),
-              'exact_restore_database_removed': True, 'original_stopped_state_restored': True,
-              'inference_performed': False, 'scanner_engine_started': False,
-              'scope': 'synthetic first-run metadata; same-cluster restore; payload/key/clean-host recovery unqualified',
-          }))
-          PY
+          metadata_expected_schema=$(python3 scripts/ci-metadata-summary.py --print-schema-version)
+          python3 scripts/qualify-retained-metadata.py --container-id "$metadata_cid" --expected-schema "$metadata_expected_schema" > .private/metadata-result.json || metadata_status=$?
+          python3 scripts/ci-metadata-summary.py --result .private/metadata-result.json
           test "$metadata_status" -eq 0
 
   bounded-fuzz:

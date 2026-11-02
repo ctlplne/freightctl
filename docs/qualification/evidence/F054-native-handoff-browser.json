@@ -1,0 +1,315 @@
+{
+  "schema_version": 1,
+  "id": "F054",
+  "kind": "native-collected-handoff-browser-and-encrypted-stock-receiver",
+  "state": "selected handoff/operator runtime verified; metadata CI reporting red at D116 and Windows D103 remains red",
+  "observed_on": "2026-11-02",
+  "candidate": "d2d389a36c3eb292d3cfabca9c46fb09dffec820",
+  "author_and_committer": "imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>",
+  "source_security_frontend": {
+    "state": "passed",
+    "run_id": 41538104476,
+    "job_id": 125595022426,
+    "url": "https://github.com/ctlplne/freightctl/actions/runs/41538104476/job/125595022426",
+    "browser_contracts": 108
+  },
+  "native_linux": [
+    {
+      "architecture": "x86_64",
+      "state": "success",
+      "run_id": 41538104558,
+      "job_id": 125595022723,
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/41538104558/job/125595022723",
+      "integration_pass_records": 547,
+      "integration_failure_records": 0,
+      "integration_skipped_records": 0,
+      "actual_postgresql_and_independent_gnupg": true
+    },
+    {
+      "architecture": "arm64",
+      "state": "success",
+      "run_id": 41538104558,
+      "job_id": 125595023384,
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/41538104558/job/125595023384",
+      "integration_pass_records": 547,
+      "integration_failure_records": 0,
+      "integration_skipped_records": 0,
+      "actual_postgresql_and_independent_gnupg": true
+    }
+  ],
+  "bounded_fuzz": {
+    "state": "passed",
+    "targets": 8,
+    "run_id": 41538104558,
+    "job_id": 125595022806
+  },
+  "stock_peers": [
+    {
+      "run_id": 41538104578,
+      "job_id": 125595022470,
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/41538104578/job/125595022470",
+      "summaries": [
+        {
+          "handoff-routing": {
+            "state": "passed",
+            "source_commit": "d2d389a36c3eb292d3cfabca9c46fb09dffec820",
+            "manifest_sha256": "10172a57d2b290ba40740f839777de1769ab8ecc6ac446932b302ff6301c3c3a",
+            "source_inputs": 464,
+            "sources_unchanged": true,
+            "recorded_commands": 171,
+            "unexpected_command_exits": 0,
+            "unexpected_http_statuses": 0,
+            "verified_output_artifacts": 454,
+            "output_closure_passed": true,
+            "cleanup_failures": 0,
+            "isolated_database_removed": true,
+            "duration_seconds": 131.048,
+            "inference_performed": false,
+            "scanner_engine_started": false,
+            "browser_failed_reports": 0,
+            "browser_runtime_errors": 0,
+            "browser_external_contacts": 0,
+            "browser_failure_locations": []
+          }
+        }
+      ]
+    },
+    {
+      "run_id": 41538104578,
+      "job_id": 125595022671,
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/41538104578/job/125595022671",
+      "summaries": [
+        {
+          "collections": {
+            "state": "passed",
+            "source_commit": "d2d389a36c3eb292d3cfabca9c46fb09dffec820",
+            "manifest_sha256": "b254b3b122ff575284bc1294c264b9d0dc357c02566aac2ea16933170a23d044",
+            "source_inputs": 464,
+            "sources_unchanged": true,
+            "recorded_commands": 180,
+            "unexpected_command_exits": 0,
+            "unexpected_http_statuses": 0,
+            "verified_output_artifacts": 480,
+            "output_closure_passed": true,
+            "cleanup_failures": 0,
+            "isolated_database_removed": true,
+            "duration_seconds": 104.541,
+            "inference_performed": false,
+            "scanner_engine_started": false,
+            "browser_failed_reports": 0,
+            "browser_runtime_errors": 0,
+            "browser_external_contacts": 0,
+            "browser_failure_locations": []
+          },
+          "arrivals": {
+            "state": "passed",
+            "source_commit": "d2d389a36c3eb292d3cfabca9c46fb09dffec820",
+            "manifest_sha256": "191ea5b1c756b109e05b9977a8889765b3d2842efaad33b3a31aa85d2274d02d",
+            "source_inputs": 464,
+            "sources_unchanged": true,
+            "recorded_commands": 98,
+            "unexpected_command_exits": 0,
+            "unexpected_http_statuses": 0,
+            "verified_output_artifacts": 270,
+            "output_closure_passed": true,
+            "cleanup_failures": 0,
+            "isolated_database_removed": true,
+            "duration_seconds": 61.68,
+            "inference_performed": false,
+            "scanner_engine_started": false,
+            "browser_failed_reports": 0,
+            "browser_runtime_errors": 0,
+            "browser_external_contacts": 0,
+            "browser_failure_locations": []
+          },
+          "schedules": {
+            "state": "passed",
+            "source_commit": "d2d389a36c3eb292d3cfabca9c46fb09dffec820",
+            "manifest_sha256": "dbb0fc5b0e00dbf4c56b2ddc365df7b674137461533eb3e4937e9d51e7b4841c",
+            "source_inputs": 464,
+            "sources_unchanged": true,
+            "recorded_commands": 111,
+            "unexpected_command_exits": 0,
+            "unexpected_http_statuses": 0,
+            "verified_output_artifacts": 285,
+            "output_closure_passed": true,
+            "cleanup_failures": 0,
+            "isolated_database_removed": true,
+            "duration_seconds": 79.1,
+            "inference_performed": false,
+            "scanner_engine_started": false,
+            "browser_failed_reports": 0,
+            "browser_runtime_errors": 0,
+            "browser_external_contacts": 0,
+            "browser_failure_locations": []
+          }
+        }
+      ]
+    },
+    {
+      "run_id": 41538104578,
+      "job_id": 125595022829,
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/41538104578/job/125595022829",
+      "summaries": [
+        {
+          "routing": {
+            "state": "passed",
+            "source_commit": "d2d389a36c3eb292d3cfabca9c46fb09dffec820",
+            "manifest_sha256": "490b79a1ccdccfb134a54368837e56bbf88934f96f77454dc8f4ce2ad0d871ea",
+            "source_inputs": 464,
+            "sources_unchanged": true,
+            "recorded_commands": 133,
+            "unexpected_command_exits": 0,
+            "unexpected_http_statuses": 0,
+            "verified_output_artifacts": 348,
+            "output_closure_passed": true,
+            "cleanup_failures": 0,
+            "isolated_database_removed": true,
+            "duration_seconds": 96.227,
+            "inference_performed": false,
+            "scanner_engine_started": false,
+            "browser_failed_reports": 0,
+            "browser_runtime_errors": 0,
+            "browser_external_contacts": 0,
+            "browser_failure_locations": []
+          }
+        }
+      ]
+    },
+    {
+      "run_id": 41538104578,
+      "job_id": 125595022990,
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/41538104578/job/125595022990",
+      "summaries": [
+        {
+          "captured-routing": {
+            "state": "passed",
+            "source_commit": "d2d389a36c3eb292d3cfabca9c46fb09dffec820",
+            "manifest_sha256": "45ad7610c58c7a6daa2794d02f779d524633b20341c4cb6f9f8961df895005b6",
+            "source_inputs": 464,
+            "sources_unchanged": true,
+            "recorded_commands": 135,
+            "unexpected_command_exits": 0,
+            "unexpected_http_statuses": 0,
+            "verified_output_artifacts": 354,
+            "output_closure_passed": true,
+            "cleanup_failures": 0,
+            "isolated_database_removed": true,
+            "duration_seconds": 110.94,
+            "inference_performed": false,
+            "scanner_engine_started": false,
+            "browser_failed_reports": 0,
+            "browser_runtime_errors": 0,
+            "browser_external_contacts": 0,
+            "browser_failure_locations": []
+          }
+        }
+      ]
+    },
+    {
+      "run_id": 41538104578,
+      "job_id": 125595023092,
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/41538104578/job/125595023092",
+      "summaries": [
+        {
+          "intake-routing": {
+            "state": "passed",
+            "source_commit": "d2d389a36c3eb292d3cfabca9c46fb09dffec820",
+            "manifest_sha256": "55d0d5e826a5c4a6350dec631b8f058e927dd8b6c8b57bb589d22e2245e4096c",
+            "source_inputs": 464,
+            "sources_unchanged": true,
+            "recorded_commands": 187,
+            "unexpected_command_exits": 0,
+            "unexpected_http_statuses": 0,
+            "verified_output_artifacts": 503,
+            "output_closure_passed": true,
+            "cleanup_failures": 0,
+            "isolated_database_removed": true,
+            "duration_seconds": 124.467,
+            "inference_performed": false,
+            "scanner_engine_started": false,
+            "browser_failed_reports": 0,
+            "browser_runtime_errors": 0,
+            "browser_external_contacts": 0,
+            "browser_failure_locations": []
+          }
+        }
+      ]
+    }
+  ],
+  "handoff_journey": {
+    "state": "passed",
+    "runner": "actual native Ubuntu24.04 x86_64",
+    "command": "python3 scripts/qualify-routing.py --postgres-container-id <exact-task-CID> --collected-handoffs",
+    "profile": "untouched-collected-handoff-v1",
+    "source": "actual stock OpenSSH SFTP with synthetic payload and immutable manifest; sender is a stand-in",
+    "receiver": "actual separate stock OpenSSH SFTP destination and distinct identity; business acceptance unknown",
+    "cryptographic_peer": "independent digest-pinned offline Alpine/GnuPG2.4.9-r1;128MiB/oneCPU/64processes",
+    "verified": [
+      "New real batch captured, parsed and released; encrypted key1 run and independent dispatch consent recorded before key1 revocation.",
+      "Key1 revocation refuses the original work without attempting delivery. Approved workflow revision2 binds new key2; exact HTTP and CLI handoff previews agree without writes or peer contact.",
+      "Sandboxed Chrome reviews both plans, destination/host/client-public-key/OpenPGP identities and original file facts; proposes, withdraws, proposes again, approves and executes through ordinary real HTTPS endpoints.",
+      "Committed propose/approve/execute responses are dropped. After each page reload, the browser looks up the original saved-nonce receipt without retrying a mutation. Exact resource results and single original request are asserted.",
+      "One atomic successor preserves original collection/input assignment and producer facts. Browser inspects both the cancelled original and current successor; no source/receiver contact occurs during governance.",
+      "Existing dispatch consent does not authorize the new intent. Only new independent reviewer consent permits the ordinary browser worker action; original-key retry returns its existing result.",
+      "Stock retrieval finds exactly one new ciphertext, no old-recipient output; independent GnuPG key2 decryption confirms authenticated MDC and exact original plaintext.",
+      "The source is not contacted again after capture. Browser reports have zero runtime errors/external contacts and all native outputs/cleanup are verified."
+    ],
+    "browser": "sandboxed Chrome156.0.8078.47 on native Linux x86_64"
+  },
+  "metadata_ci": {
+    "state": "failed; report profile drift",
+    "defect": "D116",
+    "run_id": 41538104558,
+    "jobs": [
+      125595022817,
+      125595022983
+    ],
+    "first_failure": "AssertionError at inline report line20: len(before.migration_ledger)==34, after the schema35 restore and previous assertions completed.",
+    "repair": "Prepared shared explicit schema35/table64/forcedRLS63 profile with binary preflight, checksum validation, safe reporting and seven refusal contracts; new native replay required.",
+    "no_pass_claim_for_failed_jobs": true,
+    "first_failure_logs": {
+      "manifest_reference": ".private/metadata-ci-first-3a32f473897748ffa0bf540b47b29102/manifest.json",
+      "sha256": "b6e18d6a12f9e29b684faccd2e42bc43e9d61db7daa8d8b20c32797c6aa0a089",
+      "jobs": [
+        {
+          "job_id": 125595022817,
+          "output_sha256": "2b3d0223f09de31256bb4c5628e16c38f6088c593d752ec768c397f4f2cf5f64"
+        },
+        {
+          "job_id": 125595022983,
+          "output_sha256": "11f8d24b9ad27ec2cb4d59211af62d66a61878f3cc987dea11f6856cb0c2193f"
+        }
+      ]
+    }
+  },
+  "platforms": {
+    "macos_arm64": {
+      "state": "passed",
+      "scope": "native unit/race, not full server qualification",
+      "run_id": 41538104544,
+      "job_id": 125595963034
+    },
+    "windows_amd64": {
+      "state": "failed",
+      "run_id": 41538104544,
+      "job_id": 125595963365,
+      "failed_test_and_subcase_records": 17,
+      "defect": "D103"
+    }
+  },
+  "retained_estate_migrated": false,
+  "inference_performed": false,
+  "scanner_engine_started": false,
+  "full_foundation_aggregate_executed": false,
+  "full_journeys_qualified": false,
+  "overall_goal_complete": false,
+  "limits": [
+    "One assisted synthetic key-rotation journey with actual PostgreSQL, stock peers and sandboxed Chrome does not close whole J03/J05, independent adoption or all encryption/receipt/platform profiles.",
+    "The profile still refuses attempted, leased, prepared-ciphertext, partial, ambiguous, rechecked-child, source/operator changes, expired and schema1 work. Those recovery profiles remain mandatory.",
+    "Native Linux integration passes547 case/subcase records on each architecture. The containing workflow is red because both metadata report jobs fail; these cannot be relabelled as successful restore gates.",
+    "The shared metadata report repair is a subsequent candidate; actual native replay remains required. WindowsD103 is unchanged and red.",
+    "Retained metadata is still schema33. A verified33-to35 restored-copy rehearsal is recorded separately in F055; in-place application awaits explicit owner authority.",
+    "All83whole rows/12full journeys and every readiness verdict remain open."
+  ]
+}

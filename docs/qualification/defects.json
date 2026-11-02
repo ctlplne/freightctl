@@ -1852,6 +1852,37 @@
       "regression_evidence": [
         "docs/qualification/evidence/F053-collected-handoff-browser.json"
       ]
+    },
+    {
+      "id": "D115",
+      "severity": "new upgrade qualification observer blocker",
+      "state": "fixed locally",
+      "observed_on": "2026-11-02",
+      "candidate": "d2d389a36c3eb292d3cfabca9c46fb09dffec820",
+      "journey": "J11 retained schema33-to35 metadata rehearsal",
+      "title": "Upgrade catalog observer omitted constraint records for the three new deferred handoff triggers",
+      "first_failure": "upgrade changed existing constraints, after the restored copy migrated to35 and preserved old rows/authority.",
+      "cause": "PostgreSQL records a deferred constraint trigger in both pg_trigger and pg_constraint. The new observer explicitly allowed the trigger additions but had not allowed their three constraint entries. Existing constraints were unchanged.",
+      "resolution": "Require exactly those three named additional constraints with TRIGGER DEFERRABLE INITIALLY DEFERRED, while preserving every old constraint. Refusal cases reject changed old constraints and a nondeferred new guard; the original actual backup/restore/clone-upgrade/replay journey passes. Retained33 remains unchanged.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F055-retained-handoff-upgrade-rehearsal.json"
+      ]
+    },
+    {
+      "id": "D116",
+      "severity": "native CI metadata report blocker",
+      "state": "fixed locally; native replay pending",
+      "observed_on": "2026-11-02",
+      "candidate": "d2d389a36c3eb292d3cfabca9c46fb09dffec820",
+      "journey": "Native x86_64/ARM synthetic metadata restore report",
+      "title": "Workflow kept a stale schema34 assertion after moving its observer and printed result to35",
+      "first_failure": "Both metadata jobs in41538104558 fail at report line20: assert len(before.migration_ledger)==34.",
+      "cause": "The expected schema appeared in three places. The command argument and printed summary changed to35, but the separate assertion remained34.",
+      "resolution": "Prepare one explicit profile shared by binary preflight, restore expected-schema and safe report validation. Seven contracts refuse stale schemas/checksums, missing fields, changed data/authority, unsafe runtime roles, failed steps and incomplete cleanup/sync. Both original native jobs must replay before qualification.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F054-native-handoff-browser.json",
+        "docs/qualification/evidence/F055-retained-handoff-upgrade-rehearsal.json"
+      ]
     }
   ]
 }

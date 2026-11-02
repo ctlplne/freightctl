@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "id": "F055",
+  "kind": "retained-schema33-to35-upgrade-rehearsal-and-metadata-ci-profile-repair",
+  "state": "actual retained backup/restore and clone upgrade/replay verified; retained apply awaits owner authority; fixed CI reporting needs native replay",
+  "observed_on": "2026-11-02",
+  "starting_commit": "d2d389a36c3eb292d3cfabca9c46fb09dffec820",
+  "product_binary_candidate": "d2d389a36c3eb292d3cfabca9c46fb09dffec820",
+  "binary_sha256": "2ab65926a4645cf77338182c9ef5f176710c22752adef88b1cefb56adc9b38e7",
+  "author_and_committer": "imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>",
+  "implementation_sha256": [
+    {
+      "path": "scripts/qualify-retained-handoff-upgrade.py",
+      "sha256": "3cc3d3b09ddf40849450dd1f92adc1110e41c2effa1631bc1752bab2dbd9824b"
+    },
+    {
+      "path": "scripts/test-retained-handoff-upgrade.py",
+      "sha256": "8716d52c8f57e528da80dd6340b0d0ac54a0063708131d5a0c4756928048ce0e"
+    },
+    {
+      "path": "scripts/ci-metadata-summary.py",
+      "sha256": "b026c9e93f732b11b236b1ba974eee3393c50c966d3ce6663d4d3cb0c1667b52"
+    },
+    {
+      "path": "scripts/test-ci-metadata-summary.py",
+      "sha256": "b977903dcb95312e0df366e4c7be5c405db0689e9ff3f3e35afe554a061ae99f"
+    },
+    {
+      "path": ".github/workflows/native-linux.yml",
+      "sha256": "bba48ba4e7d611e0bb7994772f1353cca2854e816bc8994656a28c1c5b24d3ce"
+    },
+    {
+      "path": ".github/workflows/core-checks.yml",
+      "sha256": "17d322d9bd6179004d31304a85df5366020acdca5be64d27bfe28651da0ff889"
+    }
+  ],
+  "native_manifest": {
+    "reference": ".private/retained-metadata-d903f4bb81db4fe5b224c48cb99ba227/manifest.json",
+    "sha256": "238b3685b87dda3ae6a340c894765763474ca998cd9745a0c8fe599337e7189c",
+    "upgrade_utility_matches_recorded_source": true
+  },
+  "first_failure": {
+    "reference": ".private/retained-metadata-eec2241d8a304cc9be39ee40f8faa4f4/manifest.json",
+    "sha256": "e1d844a2dd263f618d562bfbcc95dfd76e4e74b0278a60626c9c714fd20f3385",
+    "message": "upgrade changed existing constraints",
+    "retained_migrated": false,
+    "meaning": "New deferred constraint triggers also have pg_constraint entries. The old observer did not yet declare those three exact additions. Old constraints themselves were unchanged."
+  },
+  "environment": {
+    "application_and_observer": "actual macOS ARM; Go1.26.10 schema35 binary frozen mode0500 inside mode0700 evidence directory",
+    "postgres": "exact task-owned PostgreSQL16.15 aarch64;512MiB/oneCPU;initially stopped;exact loopback binding",
+    "source": "actual retained private development metadata, not a synthetic first-run database",
+    "scoped_clients": "all other clients must be absent; no forced drops or client termination"
+  },
+  "backup": {
+    "reference": ".private/retained-metadata-d903f4bb81db4fe5b224c48cb99ba227/metadata-backup.stdout",
+    "bytes": 8500277,
+    "sha256": "4852e880370ff9f444fa3233715837a5d1f325e7c769009b5327a21e45a2cbdd",
+    "database_size_bytes": 76422167,
+    "file_mode": "0o600",
+    "file_and_directory_synced": true
+  },
+  "native_results": {
+    "backup_restore_matches_original": true,
+    "retained_matches_F053_before_rehearsal": true,
+    "rehearsal_passed": true,
+    "rehearsal_init_replay_unchanged": true,
+    "retained_database_unchanged_during_rehearsal": true,
+    "retained_database_unchanged": true,
+    "exact_restore_database_removed": true,
+    "original_stopped_state_restored": true,
+    "retained_schema": 33,
+    "retained_tables": 63,
+    "retained_forced_rls": 62,
+    "retained_rows": 64337,
+    "rehearsed_schema": 35,
+    "rehearsed_tables": 64,
+    "rehearsed_forced_rls": 63,
+    "new_handoff_rows": 0
+  },
+  "preserved": [
+    "Every pre-existing table row field, immutable event, captured input/run/intent and checksum-ledger prefix; no invented handoff.",
+    "Existing relation ownership, grants, forced RLS, columns, indexes, constraints and policies; schema/default grants unchanged.",
+    "Existing triggers and function ownership/grants/configuration. Only the explicitly named handoff functions change; the renamed schema33 guard retains its exact original body and authority.",
+    "Global role authority and sequence values, with no runtime password rotation.",
+    "The init replay on the upgraded clone changes nothing; the original retained database remains schema33 and unchanged."
+  ],
+  "retained_apply": {
+    "state": "not executed; explicit owner decision pending",
+    "retained_schema_migrated": false,
+    "retained_migration_outcome": "not_attempted",
+    "risk": "Applying changes the retained schema in place; returning to33 requires a backup restore. The default command upgrades only its restored copy.",
+    "flag": "--apply-retained repeats all backup/restore/rehearsal gates before ordinary retained init; it records an uncertain outcome before execution and never auto-restores retained data."
+  },
+  "ci_profile_repair": {
+    "defect": "D116",
+    "profile": {
+      "schema": 35,
+      "metadata_tables": 64,
+      "forced_rls_tables": 63
+    },
+    "cause": "The workflow passed35 to its metadata observer and printed35, but retained a duplicated34 assertion. Both native job wrappers failed at that line.",
+    "repair": "One explicit ci-metadata-summary.py profile now supplies binary preflight, restore expected-schema and checksum/count/security validation. It emits only safe counts/hashes and fixed failure reasons.",
+    "state": "seven refusal contracts and real schema35 binary preflight pass locally; original native metadata jobs require replay"
+  },
+  "checks": {
+    "upgrade_refusal_contracts": 5,
+    "metadata_summary_contracts": 7,
+    "existing_metadata_refusal_contracts": 5,
+    "actionlint": "passed",
+    "python_syntax": "passed",
+    "diff_whitespace": "passed",
+    "qualification_record_contracts": 15,
+    "native_evidence_contracts": 9,
+    "stock_ci_privacy_contracts": 7,
+    "all_record_references": "83parity rows/12journeys/6protocol contracts valid; no runtime claim inferred"
+  },
+  "defects": [
+    "D115",
+    "D116"
+  ],
+  "inference_performed": false,
+  "scanner_engine_started": false,
+  "full_foundation_aggregate_executed": false,
+  "full_journeys_qualified": false,
+  "overall_goal_complete": false,
+  "limits": [
+    "No in-place retained upgrade was executed. Rehearsal verification is not approval to mutate the retained estate.",
+    "Same-cluster metadata only: payloads, private keys, global-role restoration to a new host, clean-host/disconnected restore, RPO/RTO and active/queued execution remain unqualified.",
+    "The new CI profile/report helper and refusal tests need actual native GitHub replay. F054 metadata jobs remain red; no retrospective pass is claimed.",
+    "All83whole rows/12full journeys, WindowsD103, privateAI, independent adoption and enterprise/release gates remain open."
+  ],
+  "secret_scan": {
+    "state": "passed",
+    "tool": "Gitleaks8.30.1",
+    "public_source_files": 592,
+    "manifest_reference": ".private/metadata-upgrade-public-review-1858865482f843afbfcc409f9ea03364/manifest.json",
+    "diagnostic_sha256": "0bf085d61f723eed27ee2115eaeac11fc328de2db146f9050688346ad3cb4c04",
+    "rules_or_exclusions_changed": false,
+    "scope_note": "Complete public-source snapshot before recording this scan result; protected backups/raw outputs are excluded from Git."
+  }
+}

@@ -224,5 +224,10 @@
     "diagnostic_sha256": "da952866036d52113e637921667072967f6c768df1ec4333d041e115805387fd",
     "rules_or_exclusions_changed": false,
     "scope_note": "Complete public-source snapshot before recording this scan result; no model weights, protected credentials or raw evidence included."
+  },
+  "native_followup": {
+    "reference": "docs/qualification/evidence/F054-native-handoff-browser.json",
+    "candidate": "d2d389a36c3eb292d3cfabca9c46fb09dffec820",
+    "scope": "both547-record native Linux PostgreSQL/race suites, source/security/frontend, eight fuzz targets, Mac and all five stock entries including the browser/encrypted handoff journey pass; metadata report jobs red atD116 and WindowsD103 red"
   }
 }
