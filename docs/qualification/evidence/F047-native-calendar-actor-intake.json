@@ -1,0 +1,241 @@
+{
+  "schema_version": 1,
+  "id": "F047",
+  "kind": "native-captured-routing-calendar-actor-and-intake-checkpoint",
+  "state": "selected native calendar/actor/intake cases verified; recipient-key follow-up pending",
+  "observed_on": "2026-11-02",
+  "candidate": "1963380d96aa19f3761084431517ebec6bdc959e",
+  "author_and_committer": "imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>",
+  "runs": {
+    "source": "https://github.com/ctlplne/freightctl/actions/runs/41515578140",
+    "native_linux": "https://github.com/ctlplne/freightctl/actions/runs/41515578132",
+    "stock_peers": "https://github.com/ctlplne/freightctl/actions/runs/41515578138",
+    "native_platforms": "https://github.com/ctlplne/freightctl/actions/runs/41515578113"
+  },
+  "results": [
+    {
+      "job": 125518179209,
+      "runner": "ubuntu-24.04 x86_64",
+      "state": "passed",
+      "scope": "source/security/frontend and qualification records"
+    },
+    {
+      "job": 125518179790,
+      "runner": "ubuntu-24.04-arm aarch64",
+      "state": "passed",
+      "scope": "module/vet/unit race and all implemented real PostgreSQL integration/migration race tests",
+      "passed_records": 531,
+      "skipped_records": 0,
+      "failed_records": 0,
+      "actor_rotation_seconds": 3.31,
+      "calendar_phase_seconds": [
+        2.83,
+        3.04,
+        3.22
+      ]
+    },
+    {
+      "job": 125518179928,
+      "runner": "ubuntu-24.04 x86_64",
+      "state": "passed",
+      "scope": "module/vet/unit race and all implemented real PostgreSQL integration/migration race tests",
+      "passed_records": 531,
+      "skipped_records": 0,
+      "failed_records": 0,
+      "actor_rotation_seconds": 4.18,
+      "calendar_phase_seconds": [
+        3.53,
+        4.05,
+        4.21
+      ]
+    },
+    {
+      "job": 125518179345,
+      "runner": "ubuntu-24.04 x86_64",
+      "state": "passed",
+      "scope": "eight bounded fuzz targets"
+    },
+    {
+      "job": 125518179978,
+      "runner": "windows-2025 amd64",
+      "state": "failed",
+      "defect": "D103",
+      "scope": "same private-directory/directory-Sync/scanner-socket failures; socket remains0666 despite requested0600"
+    },
+    {
+      "job": 125518179428,
+      "runner": "macos-15 arm64",
+      "state": "cancelled",
+      "scope": "No new pass. F044 retains the last verified native Mac unit/race candidate."
+    }
+  ],
+  "stock_peer_jobs": {
+    "routing": 125518181167,
+    "arrivals_schedules": 125518181657,
+    "captured_routing": 125518182040,
+    "intake_routing": 125518181949
+  },
+  "safe_manifest_summaries": {
+    "routing": {
+      "state": "passed",
+      "source_commit": "1963380d96aa19f3761084431517ebec6bdc959e",
+      "manifest_sha256": "793a53fef121b056bee392a05e5fb27ee6b96292a8516db4f65706a6a22bd3a4",
+      "source_inputs": 444,
+      "sources_unchanged": true,
+      "recorded_commands": 133,
+      "unexpected_command_exits": 0,
+      "unexpected_http_statuses": 0,
+      "verified_output_artifacts": 348,
+      "output_closure_passed": true,
+      "cleanup_failures": 0,
+      "isolated_database_removed": true,
+      "duration_seconds": 101.583,
+      "inference_performed": false,
+      "scanner_engine_started": false,
+      "browser_failed_reports": 0,
+      "browser_runtime_errors": 0,
+      "browser_external_contacts": 0,
+      "browser_failure_locations": []
+    },
+    "collections": {
+      "state": "passed",
+      "source_commit": "1963380d96aa19f3761084431517ebec6bdc959e",
+      "manifest_sha256": "84880d630c6f114cabbc0670579f660c1e8c5140a8704e04aa062b6ea98c2440",
+      "source_inputs": 444,
+      "sources_unchanged": true,
+      "recorded_commands": 180,
+      "unexpected_command_exits": 0,
+      "unexpected_http_statuses": 0,
+      "verified_output_artifacts": 480,
+      "output_closure_passed": true,
+      "cleanup_failures": 0,
+      "isolated_database_removed": true,
+      "duration_seconds": 126.528,
+      "inference_performed": false,
+      "scanner_engine_started": false,
+      "browser_failed_reports": 0,
+      "browser_runtime_errors": 0,
+      "browser_external_contacts": 0,
+      "browser_failure_locations": []
+    },
+    "arrivals": {
+      "state": "passed",
+      "source_commit": "1963380d96aa19f3761084431517ebec6bdc959e",
+      "manifest_sha256": "67b228efce5d02002fff155c65e47a2436647b5874926973ef57a5b6d79589e7",
+      "source_inputs": 444,
+      "sources_unchanged": true,
+      "recorded_commands": 98,
+      "unexpected_command_exits": 0,
+      "unexpected_http_statuses": 0,
+      "verified_output_artifacts": 270,
+      "output_closure_passed": true,
+      "cleanup_failures": 0,
+      "isolated_database_removed": true,
+      "duration_seconds": 63.643,
+      "inference_performed": false,
+      "scanner_engine_started": false,
+      "browser_failed_reports": 0,
+      "browser_runtime_errors": 0,
+      "browser_external_contacts": 0,
+      "browser_failure_locations": []
+    },
+    "schedules": {
+      "state": "passed",
+      "source_commit": "1963380d96aa19f3761084431517ebec6bdc959e",
+      "manifest_sha256": "84a14a486e84cf442e998c0002b192aa00083362bbc116800673ae6a4ca94944",
+      "source_inputs": 444,
+      "sources_unchanged": true,
+      "recorded_commands": 111,
+      "unexpected_command_exits": 0,
+      "unexpected_http_statuses": 0,
+      "verified_output_artifacts": 285,
+      "output_closure_passed": true,
+      "cleanup_failures": 0,
+      "isolated_database_removed": true,
+      "duration_seconds": 81.558,
+      "inference_performed": false,
+      "scanner_engine_started": false,
+      "browser_failed_reports": 0,
+      "browser_runtime_errors": 0,
+      "browser_external_contacts": 0,
+      "browser_failure_locations": []
+    },
+    "captured-routing": {
+      "state": "passed",
+      "source_commit": "1963380d96aa19f3761084431517ebec6bdc959e",
+      "manifest_sha256": "183086e9b68284fbf547bca4b39ca8f38da8720fcf7cf26427ca4a04252a6eae",
+      "source_inputs": 444,
+      "sources_unchanged": true,
+      "recorded_commands": 135,
+      "unexpected_command_exits": 0,
+      "unexpected_http_statuses": 0,
+      "verified_output_artifacts": 354,
+      "output_closure_passed": true,
+      "cleanup_failures": 0,
+      "isolated_database_removed": true,
+      "duration_seconds": 83.799,
+      "inference_performed": false,
+      "scanner_engine_started": false,
+      "browser_failed_reports": 0,
+      "browser_runtime_errors": 0,
+      "browser_external_contacts": 0,
+      "browser_failure_locations": []
+    },
+    "intake-routing": {
+      "state": "passed",
+      "source_commit": "1963380d96aa19f3761084431517ebec6bdc959e",
+      "manifest_sha256": "4b55c9fab9eb291bcf8f85b6d5802168e3d8a77857f8ae1309f1bc9d667c0e81",
+      "source_inputs": 444,
+      "sources_unchanged": true,
+      "recorded_commands": 187,
+      "unexpected_command_exits": 0,
+      "unexpected_http_statuses": 0,
+      "verified_output_artifacts": 503,
+      "output_closure_passed": true,
+      "cleanup_failures": 0,
+      "isolated_database_removed": true,
+      "duration_seconds": 111.271,
+      "inference_performed": false,
+      "scanner_engine_started": false,
+      "browser_failed_reports": 0,
+      "browser_runtime_errors": 0,
+      "browser_external_contacts": 0,
+      "browser_failure_locations": []
+    }
+  },
+  "fixed_first_failures": [
+    "D106",
+    "D107"
+  ],
+  "first_failures_reference": "docs/qualification/evidence/F046-routing-guard-first-failures.json",
+  "observed_contracts": [
+    "Calendar correction keeps the original captured job, due time, arrival deadline and final cutoff values. The stale activation receipt still cannot suspend the calendar; a fresh inspection selects its exact live revision.",
+    "Suspending that original calendar blocks new routing approval, admission and already queued effects at zero attempts. A pending nonexecuting proposal can still be withdrawn.",
+    "After credential rotation, the old credential cannot read routing metadata. The same actor's new credential can inspect historical target metadata and recover the original approval receipt, but cannot restore its old authority or start old queued effects.",
+    "The stock intake extension explicitly collects two new batches, runs deterministic CSV checks and separate release, approves corrected recipient rules after capture and queues one exact file with current independent dispatch consent.",
+    "Revoking intake leaves historical released-check state intact but current=false, refuses ordinary file and delivery-metadata access, prevents a waiting input from being admitted and refuses the queued work at zero attempts.",
+    "Exact scoped read-only database inspection retains one approved dispatch review and zero attempts; run/intent/attempt totals, stock receiver files/hashes and peer contact counts remain unchanged after revocation. No model or scanner participates."
+  ],
+  "prepared_followup": {
+    "test": "TestCapturedRoutingRecipientRevocationFencesProposalAdmissionAndQueuedCiphertext",
+    "state": "prepared locally; native execution pending",
+    "scope": "Use the ordinary CLI with protected runtime/token references to enroll and revoke independent GnuPG public recipient fixtures. Exercise proposal/approved/queued refusal, exact-key pinning and separately reviewed replacement-key admission for unassigned captured inputs.",
+    "limits": "No key-case runtime, ciphertext delivery/decryption or already assigned intent handoff is claimed. Broader queued-work recovery remains required.",
+    "local_checks": {
+      "reference": ".private/f047-key-checks-4b5606bad75d4934bd0c0d809402dd0a/manifest.json",
+      "sha256": "377b90f9e8860b3f8330065372c90e80024188a63bc1fcd7a41df8c8c21885e8",
+      "scope": "compile/vet/format/records/diff only; no key-case runtime yet"
+    }
+  },
+  "inference_performed": false,
+  "scanner_engine_started": false,
+  "full_foundation_aggregate_executed": false,
+  "full_journeys_qualified": false,
+  "overall_goal_complete": false,
+  "limits": [
+    "Pass counts include nested cases and fuzz seeds, not independently qualified product capabilities.",
+    "The native guard cases use trusted source-adapter stand-ins with real PostgreSQL and storage. Stock-peer entries separately use actual loopback PostgreSQL, OpenSSH and sandboxed Chrome.",
+    "Raw runner fixtures were not uploaded. These safe summaries retain their manifest hashes and outcome/cleanup counts, not a complete durable evidence bundle.",
+    "All 83 whole rows and 12 full journeys remain open. Retained upgrade, recipient-key breadth, queued-work handoff, other protocols/connectors, private AI, native Windows, multi-host/reference estate, packaging and independent adoption remain required."
+  ]
+}

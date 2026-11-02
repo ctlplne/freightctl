@@ -1713,7 +1713,7 @@
     {
       "id": "D106",
       "severity": "qualification harness blocker",
-      "state": "repair prepared; native replay pending",
+      "state": "fixed on GitHub",
       "observed_on": "2026-11-02",
       "candidate": "bff22e30fef596d3c780b3d4db92486e08187148",
       "journey": "J03 scheduled corrected routing",
@@ -1721,16 +1721,17 @@
       "reproduction": "Run 41511809750 on either native Linux architecture; all three calendar phases stop at line 126.",
       "first_failure": "resource revision changed",
       "cause": "TickSchedule legitimately advances the calendar revision. The fixture tried to suspend it using the older activation receipt.",
-      "resolution": "Retain an explicit stale-control/no-effect assertion, inspect the current revision of the same calendar and submit the exact suspension decision. Keep original occurrence/cutoff and queued-effect checks. Native replay pending.",
+      "resolution": "Retain an explicit stale-control/no-effect assertion, inspect the current revision of the same calendar and submit the exact suspension decision. Keep original occurrence/cutoff and queued-effect checks. Native replay pending. Candidate1963380 passes all three original phases under real PostgreSQL/race on both native Linux architectures; each complete integration suite has 531 pass records, no skips/failures.",
       "regression_evidence": [
         "docs/qualification/evidence/F046-routing-guard-first-failures.json",
-        "https://github.com/ctlplne/freightctl/actions/runs/41511809750"
+        "https://github.com/ctlplne/freightctl/actions/runs/41511809750",
+        "docs/qualification/evidence/F047-native-calendar-actor-intake.json"
       ]
     },
     {
       "id": "D107",
       "severity": "qualification harness blocker",
-      "state": "repair prepared; native replay pending",
+      "state": "fixed on GitHub",
       "observed_on": "2026-11-02",
       "candidate": "8a4afd8b8c2e36c362524e2ecd8b62b8db490d9a",
       "journey": "J03 captured intake-policy revocation",
@@ -1738,10 +1739,11 @@
       "reproduction": "Run 41513429558, Stock peers (intake-routing), intake-routing-1-zero-attempts.",
       "first_failure": "AssertionError: (intake-routing-1-zero-attempts, 409, 200)",
       "cause": "DispatchDelivery uses FileAccessible, which includes FileAvailable. The revoked required intake proof correctly refuses the metadata read.",
-      "resolution": "Preserve and assert the 409 operation_state_conflict. Independently inspect only the exact tenant/partner/delivery zero attempts and retained approved review in the database; keep no-new-intent/contact/receiver changes assertions. Native replay pending.",
+      "resolution": "Preserve and assert the 409 operation_state_conflict. Independently inspect only the exact tenant/partner/delivery zero attempts and retained approved review in the database; keep no-new-intent/contact/receiver changes assertions. Native replay pending. Candidate1963380 passes the original intake stock-peer journey with 187 commands/503 verified outputs, unchanged sources/receivers/attempts, zero browser errors/egress and exact cleanup.",
       "regression_evidence": [
         "docs/qualification/evidence/F046-routing-guard-first-failures.json",
-        "https://github.com/ctlplne/freightctl/actions/runs/41513429558"
+        "https://github.com/ctlplne/freightctl/actions/runs/41513429558",
+        "docs/qualification/evidence/F047-native-calendar-actor-intake.json"
       ]
     }
   ]

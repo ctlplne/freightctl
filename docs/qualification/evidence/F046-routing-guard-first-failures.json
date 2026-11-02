@@ -86,5 +86,7 @@
     "reference": ".private/f046-fixture-repairs-91dfd456cb42484b915a23ee379215ef/manifest.json",
     "sha256": "db32751f164e0a005763084bd3abd730249772aa7433e0c96bbd741b78856741",
     "state": "passed for syntax/compile/vet/privacy/lint/records only; native replay pending"
-  }
+  },
+  "replay_record": "docs/qualification/evidence/F047-native-calendar-actor-intake.json",
+  "replay_state": "both original repaired paths passed on candidate 1963380; all first failure observations retained"
 }

@@ -25,14 +25,16 @@ import (
 )
 
 type fixture struct {
-	ctx        context.Context
-	admin      *pgxpool.Pool
-	adminPath  string
-	s          *Service
-	scope      store.Scope
-	file       *store.File
-	connection ConnectionView
-	request    ConnectionRequest
+	ctx         context.Context
+	admin       *pgxpool.Pool
+	adminPath   string
+	runtimePath string
+	tokenPath   string
+	s           *Service
+	scope       store.Scope
+	file        *store.File
+	connection  ConnectionView
+	request     ConnectionRequest
 }
 
 func setup(t *testing.T) *fixture {
@@ -114,6 +116,7 @@ func setup(t *testing.T) *fixture {
 	}
 	f.scope.TokenHash = secure.Digest(secret.Bytes)
 	secret.Close()
+	f.runtimePath, f.tokenPath = paths[1], tokenPath
 	f.file, _, err = f.s.Custody.Accept(ctx, f.scope, "source", 3, secure.Digest([]byte("abc")), bytes.NewReader([]byte("abc")))
 	if err != nil {
 		t.Fatal(err)
