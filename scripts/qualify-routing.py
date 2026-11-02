@@ -14,9 +14,10 @@ if not __debug__:
  raise RuntimeError("Qualification requires assertions; remove Python -O/PYTHONOPTIMIZE")
 os.umask(0o077)
 root=Path(__file__).resolve().parents[1];os.chdir(root)
-parser=argparse.ArgumentParser();parser.add_argument('--postgres-container-id',required=True);parser.add_argument('--captured-routing',action='store_true');options=parser.parse_args()
+parser=argparse.ArgumentParser();parser.add_argument('--postgres-container-id',required=True);parser.add_argument('--captured-routing',action='store_true');parser.add_argument('--intake-revocations',action='store_true');options=parser.parse_args()
+if options.intake_revocations and not options.captured_routing:parser.error('--intake-revocations requires --captured-routing')
 assert re.fullmatch(r'[0-9a-f]{64}',options.postgres_container_id),'use the exact task-owned PostgreSQL container ID'
-suite='captured-routing' if options.captured_routing else 'routing'
+suite='intake-routing' if options.intake_revocations else ('captured-routing' if options.captured_routing else 'routing')
 run=suite+'-'+uuid.uuid4().hex;private=root/'.private'/run;private.mkdir(mode=0o700);raw=root/'evidence/raw'/run;raw.mkdir(parents=True,mode=0o700)
 binary=private/'freightctl';database='freightctl_'+run.replace('-','_');created=False;servers={};logs={};steps=[];cleanup=[];state='failed';failure=None;started=time.monotonic()
 output_proof=NativeEvidence(raw,steps)
@@ -282,6 +283,10 @@ LogLevel VERBOSE
   assert contacts('source')==browser_capture_contacts,'corrected routing recontacted the source after the browser batch capture'
  result={'state':'passed','scope':'selected assisted same-host approved routing and ordinary intake/dispatch; full J03 remains open','files':3,'selected_delivery_intents':3,'verified_stock_outputs':verified_outputs,'explicit_local_outcomes':1,'distinct_receiver_host_and_client_identities':2,'whole_sibling_intake_before_routing':True,'independent_approval_per_selected_file_and_step':True,'metadata_previews_create_no_events_receipts_runs_or_intents':True,'api_cli_preview_agree':True,'original_manifest_facts_survive_source_name_change_and_manifest_removal':True,'execution_plan_survives_application_restart':True,'original_dispatch_key_replay_makes_no_new_contact':True,'foreign_actor_run_privacy':True,'local_outcome_creates_no_receiver_receipt':True,'sources_not_recontacted_after_capture':True,'unexpected_receiver_files':0,'browser_qualified':True,'browser_phases':browser_phases,'browser_verified_stock_outputs':browser_outputs,'full_journeys_qualified':False,'inference_performed':False,'scanner_engine_started':False}
  result.update({'captured_routing_corrected_revision':options.captured_routing,'corrected_target_version':routing_target['version'] if routing_target else None,'corrected_source_not_recontacted':contacts('source')==browser_capture_contacts})
+ if options.intake_revocations:
+  from routing_intake_revocation import qualify_intake_revocation
+  result['intake_revocations']=qualify_intake_revocation(globals())
+  result['source_contact_scope']='Original routing makes no repeat source contact; the intake extension explicitly captures two new batches, then makes no further contact.'
  with (raw/'routing-result.json').open('x') as f:json.dump(result,f,indent=2);f.write('\n')
  state='passed'
 except Exception:failure=traceback.format_exc()

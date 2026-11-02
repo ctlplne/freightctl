@@ -8,7 +8,7 @@ import os
 from pathlib import Path
 import re
 
-SUITES = ('collections', 'arrivals', 'schedules', 'routing', 'captured-routing')
+SUITES = ('collections', 'arrivals', 'schedules', 'routing', 'captured-routing', 'intake-routing')
 BOUND = 8 << 20
 
 

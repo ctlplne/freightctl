@@ -41,7 +41,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        journey: [arrivals-schedules, routing, captured-routing]
+        journey: [arrivals-schedules, routing, captured-routing, intake-routing]
     runs-on: ubuntu-24.04
     timeout-minutes: 50
     env:
@@ -90,7 +90,9 @@ jobs:
         run: |
           test "$(uname -m)" = x86_64
           task_pg_id=$(docker inspect --format '{{.Id}}' freightctl-postgres-v1)
-          if [ "$FREIGHTCTL_CI_JOURNEY" = captured-routing ]; then
+          if [ "$FREIGHTCTL_CI_JOURNEY" = intake-routing ]; then
+            python3 scripts/qualify-routing.py --postgres-container-id "$task_pg_id" --captured-routing --intake-revocations
+          elif [ "$FREIGHTCTL_CI_JOURNEY" = captured-routing ]; then
             python3 scripts/qualify-routing.py --postgres-container-id "$task_pg_id" --captured-routing
           elif [ "$FREIGHTCTL_CI_JOURNEY" = routing ]; then
             python3 scripts/qualify-routing.py --postgres-container-id "$task_pg_id"
@@ -102,7 +104,9 @@ jobs:
       - name: Safe qualification outcomes and evidence closure
         if: always()
         run: |
-          if [ "$FREIGHTCTL_CI_JOURNEY" = captured-routing ]; then
+          if [ "$FREIGHTCTL_CI_JOURNEY" = intake-routing ]; then
+            python3 scripts/ci-qualification-summary.py intake-routing
+          elif [ "$FREIGHTCTL_CI_JOURNEY" = captured-routing ]; then
             python3 scripts/ci-qualification-summary.py captured-routing
           elif [ "$FREIGHTCTL_CI_JOURNEY" = routing ]; then
             python3 scripts/ci-qualification-summary.py routing
