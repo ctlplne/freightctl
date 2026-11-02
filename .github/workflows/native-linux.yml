@@ -1,0 +1,115 @@
+name: Native Linux Go, PostgreSQL and fuzz
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'cmd/**'
+      - 'internal/**'
+      - 'web/**'
+      - 'go.mod'
+      - 'go.sum'
+      - '.gitattributes'
+      - 'scripts/go.sh'
+      - 'scripts/integration.sh'
+      - 'scripts/dev-db.py'
+      - 'scripts/prepare-pgp-fixture.py'
+      - '.github/workflows/native-linux.yml'
+  pull_request:
+    paths:
+      - 'cmd/**'
+      - 'internal/**'
+      - 'web/**'
+      - 'go.mod'
+      - 'go.sum'
+      - '.gitattributes'
+      - 'scripts/go.sh'
+      - 'scripts/integration.sh'
+      - 'scripts/dev-db.py'
+      - 'scripts/prepare-pgp-fixture.py'
+      - '.github/workflows/native-linux.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: freightctl-native-linux-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  native-go-postgres:
+    name: Native Go and PostgreSQL (${{ matrix.arch }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x86_64
+            runner: ubuntu-24.04
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 50
+    env:
+      GOMAXPROCS: "1"
+      GOMEMLIMIT: 192MiB
+      NODE_OPTIONS: --max-old-space-size=192
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version: "1.26.10"
+          cache: false
+      - name: Verify native runner architecture
+        run: |
+          test "$(uname -s)" = Linux
+          if [ "${{ matrix.arch }}" = x86_64 ]; then
+            test "$(uname -m)" = x86_64
+          else
+            test "${{ matrix.arch }}" = arm64
+            test "$(uname -m)" = aarch64
+          fi
+      - name: Task-owned PostgreSQL and offline GnuPG peer
+        run: |
+          python3 scripts/dev-db.py
+          docker build --label "freightctl.workspace=$PWD" \
+            --label freightctl.purpose=pgp-interoperability \
+            --tag freightctl-pgp-peer:2.4.9-r1 - <<'DOCKERFILE'
+          FROM alpine@sha256:294b683cb724975bec92580e1e685676bd4b50bda910ddb8c51d4cabeaec77e6
+          RUN apk add --no-cache gnupg=2.4.9-r1
+          DOCKERFILE
+      - name: Module integrity, vet and unit race checks
+        run: |
+          sh scripts/go.sh mod verify
+          sh scripts/go.sh vet -p 1 ./...
+          sh scripts/go.sh test -p 1 -race ./...
+      - name: All implemented real PostgreSQL integration and migration tests
+        run: sh scripts/integration.sh -p 1 -race -v
+
+  bounded-fuzz:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      GOMAXPROCS: "1"
+      GOMEMLIMIT: 192MiB
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version: "1.26.10"
+          cache: false
+      - name: Bounded parser and authority fuzz checks on native x86_64
+        run: |
+          test "$(uname -m)" = x86_64
+          sh scripts/go.sh test ./internal/vpath -fuzz=FuzzCanonicalPath -fuzztime=5s -parallel=2
+          sh scripts/go.sh test ./internal/sftpd -fuzz=FuzzInspectPacket -fuzztime=5s -parallel=2
+          sh scripts/go.sh test ./internal/custody -fuzz=FuzzCustodyName -fuzztime=5s -parallel=2
+          sh scripts/go.sh test ./internal/workflow -fuzz=FuzzTypedWorkflow -fuzztime=5s -parallel=2
+          sh scripts/go.sh test ./internal/checks -fuzz=FuzzCSVContract -fuzztime=5s -parallel=1
+          sh scripts/go.sh test ./internal/scanner -fuzz=FuzzClamdRecordAndVersion -fuzztime=5s -parallel=1
+          sh scripts/go.sh test ./internal/crypto -fuzz=FuzzPGPAdmission -fuzztime=5s -parallel=1
+          sh scripts/go.sh test ./internal/assistance -fuzz=FuzzUntrustedModelOutput -fuzztime=5s -parallel=1

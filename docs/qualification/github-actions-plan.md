@@ -13,6 +13,10 @@ Updated 2026-11-02. This plan moves reproducible work from the owner's shared AR
 
 The repository contract currently commits directly to local `main`; GitHub therefore tests the pushed commit after it arrives. These jobs are visible regression gates, not a pre-push merge barrier. CI never authors commits, so `imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>` remains the verified author and committer for local changes. Required branch checks would need a separately approved branch/review workflow change.
 
+The next native-platform workflow runs automatically when application sources, embedded browser inputs, Go dependencies, checkout-byte policy or that workflow change; it also offers manual dispatch. Changes confined to qualification scripts or prose do not consume another Windows/Mac unit run. Such an omitted run is not a pass for the new commit: retain the last tested candidate and exact application-source scope. The Linux stock-peer matrix still runs the changed qualification scripts against real services.
+
+The next layout also separates [native Linux/race/PostgreSQL/fuzz](../../.github/workflows/native-linux.yml) from [stock-peer journeys](../../.github/workflows/stock-peers.yml) and [source checks](../../.github/workflows/core-checks.yml). It preserves the runtime job bodies exactly. Linux native triggers include Go/application/browser inputs, dependency files, PostgreSQL/GnuPG provisioning scripts and its own workflow; stock-peer triggers additionally include all qualification scripts. This avoids repeatedly queueing unchanged native application tests during browser-fixture diagnosis. Initial workflow creation still requires a live run.
+
 Use only [standard GitHub-hosted runners](https://docs.github.com/en/actions/reference/runners/github-hosted-runners). GitHub documents them as free and unlimited for public repositories; larger runners have separate charges. Per-job timeouts and one-process Go/Node settings keep the plan bounded even when the runner VM has more capacity. Keep all durable private evidence and production credentials outside this public CI path.
 
 ## Current gates and next promotion
@@ -41,6 +45,19 @@ Run 9: [initial native and stock-peer failures](https://github.com/ctlplne/freig
 | 5 | Security and performance depth | Native-hosted race/stress, RLS abuse, crash-boundary and fault tests with actual PostgreSQL/storage/clients; bounded load and endurance profiles with measured p95, resource use, queue bounds and retained versions. | Explicit workload, operating-system/architecture and limits; no reduced assertion or budget to gain a pass. Hosted one-machine tests cannot prove multi-host recovery or power-loss durability. |
 | 6 | AI-disabled controls and eventual private-model evaluation | Authorization, parser/prompt-injection and outage tests can run without inference now. Real model cases require an owner-authorized endpoint/profile, allowed disclosure, resource budget and versioned held-out cases, preferably a separate customer-controlled runner. | No model job or weight acquisition before that authority. Record cold start, memory, latency, cost, wrong proposals and external validation; a GitHub answer alone cannot grant execution. |
 | 7 | Licensed vendor/cloud/identity peers, multi-host HA and independent adoption | Use permitted vendor installations, test cloud accounts, real identity providers or separate hosts under a named protected environment. Ordinary GitHub stand-ins cover only protocol behavior and application failure handling. | Credentials, editions, peer versions, receiver contracts, environment ownership and disclosure policy are supplied; then add isolated opt-in jobs. Keep external gates blocked until the actual counterpart is exercised. |
+
+### Gates beyond a standard hosted runner
+
+[GitHub's hosted runner limits](https://docs.github.com/en/actions/reference/limits) cap a job at six hours. Its [standard public Linux specification](https://docs.github.com/en/actions/reference/runners/github-hosted-runners) provides four CPUs, 16 GB memory and 14 GB SSD. Those limits constrain these GOAL.md claims:
+
+| Goal requirement | What Actions can do | What still needs a named environment |
+| --- | --- | --- |
+| 72-hour mixed-workload endurance | Start, observe and collect safe checkpoints from a continuous external run. | One continuously running estate with durable evidence, enough disk and the approved scanner/model profiles. Chaining fresh six-hour VMs is a different failure model. |
+| 100 GiB resumable and 1 TiB streaming correctness | Run bounded smaller protocol/stream checks and orchestrate a large external test. Generated streaming data can reduce fixture disk needs, but does not prove 100 GiB resume persistence. | Adequate source/custody/receiver storage, independent digests, actual interruption/restart and connector limits. A standard 14 GB runner cannot retain the required resume estate. |
+| Reference 8-vCPU throughput and scale | Detect regressions on the observed hosted VM and run correctness under bounded load. | The specified reference hardware, receiver/network/storage and exact workload; four hosted CPUs cannot be relabeled as the eight-CPU performance reference. |
+| Multi-host HA, network partitions and restore | Orchestrate separate permitted hosts and gather safe evidence. Same-host containers remain useful fault-contract fixtures. | Real independent failure domains, backup/key/storage ownership and controlled network faults. One hosted runner cannot establish multi-host availability. |
+
+Queue time and execution time are recorded separately. A queued, canceled or timed-out job provides no runtime pass; GitHub capacity delay is not permission to emulate an untested architecture on the owner's Mac. No larger paid runner or external infrastructure is provisioned by this plan without owner authority.
 
 ### Existing executable script inventory
 

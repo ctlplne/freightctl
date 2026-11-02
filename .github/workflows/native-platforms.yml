@@ -3,7 +3,24 @@ name: Native Windows and macOS unit checks
 on:
   push:
     branches: [main]
+    paths:
+      - 'cmd/**'
+      - 'internal/**'
+      - 'web/**'
+      - go.mod
+      - go.sum
+      - .gitattributes
+      - .github/workflows/native-platforms.yml
   pull_request:
+    paths:
+      - 'cmd/**'
+      - 'internal/**'
+      - 'web/**'
+      - go.mod
+      - go.sum
+      - .gitattributes
+      - .github/workflows/native-platforms.yml
+  workflow_dispatch:
 
 permissions:
   contents: read
