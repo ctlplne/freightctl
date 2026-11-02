@@ -1670,7 +1670,7 @@
     {
       "id": "D104",
       "severity": "qualification harness blocker",
-      "state": "fixture request fixed on GitHub; full journey still red",
+      "state": "fixed on GitHub",
       "observed_on": "2026-11-02",
       "candidate": "62825fb2094ccca76320dd2fff4612f798dc82b6",
       "journey": "J03 captured corrected-revision native routing",
@@ -1678,17 +1678,18 @@
       "reproduction": "GitHub run 41500650539, Stock peers (captured-routing), corrected-routing-draft",
       "first_failure": "AssertionError: ('corrected-routing-draft', 400, 200)",
       "cause": "The qualification fixture sent id while the strict DraftRequest JSON contract requires workflow_id. The API correctly refused the unknown field.",
-      "resolution": "Use workflow_id in the exact new revision request. GitHub run 41503113307 accepts the corrected revision draft and approval, then reaches the separate D105 browser response-observation failure. Seven summary privacy/refusal contracts and HTTP-status mismatch counting pass.",
+      "resolution": "Use workflow_id in the exact new revision request. GitHub run 41503113307 accepts the corrected revision draft and approval, then reaches the separate D105 browser response-observation failure. Seven summary privacy/refusal contracts and HTTP-status mismatch counting pass. Both complete selected routing scripts now pass on candidate cdbe5e2, including native corrected revision-2 stock delivery; this does not close full J03.",
       "first_safe_manifest_sha256": "166091f98563be5b5a48660fa5853eb817e1a68a8e9038ff19647ad45739e8df",
       "regression_evidence": [
         "https://github.com/ctlplne/freightctl/actions/runs/41500650539",
-        "https://github.com/ctlplne/freightctl/actions/runs/41503113307"
+        "https://github.com/ctlplne/freightctl/actions/runs/41503113307",
+        "docs/qualification/evidence/F044-native-routing-ci.json"
       ]
     },
     {
       "id": "D105",
       "severity": "native routing qualification blocker",
-      "state": "response-observation repair prepared; native replay pending",
+      "state": "fixed on GitHub",
       "observed_on": "2026-11-02",
       "candidate": "62825fb2094ccca76320dd2fff4612f798dc82b6",
       "journey": "J03 stock-peer routing browser",
@@ -1696,11 +1697,12 @@
       "reproduction": "GitHub run 41500650539, Stock peers (routing), native-browser-route",
       "first_failure": "ValueError: browser failed or reported page errors/external egress: native-browser-route",
       "cause": "Hash-checked safe diagnostics on run 41503113307 locate failures at routing-browser.mjs response().then(r.json), first during initial collection inspection in the corrected journey and later during a send-phase inspection in the original journey. Both have zero browser runtime errors and zero external contacts. A transient Chromium response-body observation issue is the leading inference; no product success is inferred.",
-      "resolution": "Capture each genuine GET/POST response using the existing bounded curl bridge with the exact fixture CA, original headers/body and status-200 assertion, then fulfill the browser with those same bytes. Record response hashes in the unique browser report and keep all original routing/approval/receipt/stock-byte assertions. Replay both journeys before closing the defect.",
+      "resolution": "Capture each genuine GET/POST response using the existing bounded curl bridge with the exact fixture CA, original headers/body and status-200 assertion, then fulfill the browser with those same bytes. Record response hashes in the unique browser report and keep all original routing/approval/receipt/stock-byte assertions. Replay both journeys before closing the defect. Candidate cdbe5e2 passes the original routing job (133 commands/348 verified outputs) and corrected-revision routing job (135 commands/354 outputs), with zero browser errors/egress and exact cleanup. The observation failure cause remains an inference; the bounded real-response capture repair is verified for these journeys.",
       "first_safe_manifest_sha256": "fd851a82be67b1e0110c828507930e9c0ef7706d7bf8794f176a73d12975f15f",
       "regression_evidence": [
         "https://github.com/ctlplne/freightctl/actions/runs/41500650539",
-        "https://github.com/ctlplne/freightctl/actions/runs/41503113307"
+        "https://github.com/ctlplne/freightctl/actions/runs/41503113307",
+        "docs/qualification/evidence/F044-native-routing-ci.json"
       ],
       "diagnostic_safe_manifests": [
         "04d401851ab0a71a5e28763ce026ef4728bc929c91bb2a568a3d05a89fd2ffe1",

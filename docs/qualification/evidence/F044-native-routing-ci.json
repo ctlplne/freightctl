@@ -1,0 +1,213 @@
+{
+  "schema_version": 1,
+  "id": "F044",
+  "kind": "native-routing-and-split-ci-progress",
+  "state": "both native routing journeys and split source/Linux/Mac gates passed; Windows red",
+  "observed_on": "2026-11-02",
+  "candidate": "cdbe5e29b94f2e3abb25bb6686c5917bbe3ca23e",
+  "author_and_committer": "imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>",
+  "runs": {
+    "stock_peers": "https://github.com/ctlplne/freightctl/actions/runs/41505321083",
+    "source": "https://github.com/ctlplne/freightctl/actions/runs/41505320685",
+    "native_linux": "https://github.com/ctlplne/freightctl/actions/runs/41505319429",
+    "native_platforms": "https://github.com/ctlplne/freightctl/actions/runs/41505319493"
+  },
+  "results": [
+    {
+      "job": 125483370023,
+      "runner": "ubuntu-24.04 x86_64",
+      "state": "passed",
+      "scope": "source/security/frontend, seven CI-summary privacy/refusal contracts and qualification record checks"
+    },
+    {
+      "job": 125483014057,
+      "runner": "ubuntu-24.04 x86_64",
+      "state": "passed",
+      "scope": "module/vet/unit race and all implemented real PostgreSQL integration/migration tests",
+      "verbose_pass_records": 519,
+      "verbose_skip_records": 0,
+      "verbose_fail_records": 0
+    },
+    {
+      "job": 125483014372,
+      "runner": "ubuntu-24.04-arm aarch64",
+      "state": "passed",
+      "scope": "module/vet/unit race and all implemented real PostgreSQL integration/migration tests",
+      "verbose_pass_records": 519,
+      "verbose_skip_records": 0,
+      "verbose_fail_records": 0
+    },
+    {
+      "job": 125483014250,
+      "runner": "ubuntu-24.04 x86_64",
+      "state": "passed",
+      "scope": "eight bounded fuzz targets"
+    },
+    {
+      "job": 125483013250,
+      "runner": "windows-2025 amd64",
+      "state": "failed",
+      "defect": "D103",
+      "scope": "browser source byte hashes pass; private directories, directory Sync and scanner verdict tests remain red"
+    },
+    {
+      "job": 125483013686,
+      "runner": "macos-15 arm64",
+      "state": "passed",
+      "scope": "module/vet/unit race checks; no PostgreSQL integration on this runner"
+    }
+  ],
+  "stock_peer_jobs": {
+    "arrivals_schedules": 125483015237,
+    "routing": 125483015881,
+    "captured_routing": 125483015709
+  },
+  "safe_manifest_summaries": {
+    "captured-routing": {
+      "state": "passed",
+      "source_commit": "cdbe5e29b94f2e3abb25bb6686c5917bbe3ca23e",
+      "manifest_sha256": "e070157ed5a94e7cbd057d77d49e4b770a1005ec5ca2e90fdaf1ad56a62ea1fd",
+      "source_inputs": 440,
+      "sources_unchanged": true,
+      "recorded_commands": 135,
+      "unexpected_command_exits": 0,
+      "unexpected_http_statuses": 0,
+      "verified_output_artifacts": 354,
+      "output_closure_passed": true,
+      "cleanup_failures": 0,
+      "isolated_database_removed": true,
+      "duration_seconds": 85.573,
+      "inference_performed": false,
+      "scanner_engine_started": false,
+      "browser_failed_reports": 0,
+      "browser_runtime_errors": 0,
+      "browser_external_contacts": 0,
+      "browser_failure_locations": []
+    },
+    "collections": {
+      "state": "passed",
+      "source_commit": "cdbe5e29b94f2e3abb25bb6686c5917bbe3ca23e",
+      "manifest_sha256": "65fa3a2bd15f84d6f518f5617f7cde8e57ca35a8b7fa9801debea774b6bc355b",
+      "source_inputs": 440,
+      "sources_unchanged": true,
+      "recorded_commands": 180,
+      "unexpected_command_exits": 0,
+      "unexpected_http_statuses": 0,
+      "verified_output_artifacts": 480,
+      "output_closure_passed": true,
+      "cleanup_failures": 0,
+      "isolated_database_removed": true,
+      "duration_seconds": 98.171,
+      "inference_performed": false,
+      "scanner_engine_started": false,
+      "browser_failed_reports": 0,
+      "browser_runtime_errors": 0,
+      "browser_external_contacts": 0,
+      "browser_failure_locations": []
+    },
+    "arrivals": {
+      "state": "passed",
+      "source_commit": "cdbe5e29b94f2e3abb25bb6686c5917bbe3ca23e",
+      "manifest_sha256": "ffe40498bf713480f4077e99d0865033a443aa4f03451c4b6bf36f8ff1ff72a9",
+      "source_inputs": 440,
+      "sources_unchanged": true,
+      "recorded_commands": 98,
+      "unexpected_command_exits": 0,
+      "unexpected_http_statuses": 0,
+      "verified_output_artifacts": 270,
+      "output_closure_passed": true,
+      "cleanup_failures": 0,
+      "isolated_database_removed": true,
+      "duration_seconds": 60.883,
+      "inference_performed": false,
+      "scanner_engine_started": false,
+      "browser_failed_reports": 0,
+      "browser_runtime_errors": 0,
+      "browser_external_contacts": 0,
+      "browser_failure_locations": []
+    },
+    "schedules": {
+      "state": "passed",
+      "source_commit": "cdbe5e29b94f2e3abb25bb6686c5917bbe3ca23e",
+      "manifest_sha256": "49f6b2ada2dc98b371a3d4ea880eb11f4817ddbea9a0c2c501f69ec4540e74a2",
+      "source_inputs": 440,
+      "sources_unchanged": true,
+      "recorded_commands": 111,
+      "unexpected_command_exits": 0,
+      "unexpected_http_statuses": 0,
+      "verified_output_artifacts": 285,
+      "output_closure_passed": true,
+      "cleanup_failures": 0,
+      "isolated_database_removed": true,
+      "duration_seconds": 77.248,
+      "inference_performed": false,
+      "scanner_engine_started": false,
+      "browser_failed_reports": 0,
+      "browser_runtime_errors": 0,
+      "browser_external_contacts": 0,
+      "browser_failure_locations": []
+    },
+    "routing": {
+      "state": "passed",
+      "source_commit": "cdbe5e29b94f2e3abb25bb6686c5917bbe3ca23e",
+      "manifest_sha256": "e046ebafaeae157c59617fad5a509d1288c394e2d513c62a2393a95604890a05",
+      "source_inputs": 440,
+      "sources_unchanged": true,
+      "recorded_commands": 133,
+      "unexpected_command_exits": 0,
+      "unexpected_http_statuses": 0,
+      "verified_output_artifacts": 348,
+      "output_closure_passed": true,
+      "cleanup_failures": 0,
+      "isolated_database_removed": true,
+      "duration_seconds": 97.253,
+      "inference_performed": false,
+      "scanner_engine_started": false,
+      "browser_failed_reports": 0,
+      "browser_runtime_errors": 0,
+      "browser_external_contacts": 0,
+      "browser_failure_locations": []
+    }
+  },
+  "captured_routing": {
+    "state": "passed",
+    "claim_qualified": true,
+    "target_revision": 2,
+    "original_captured_job_unchanged": true,
+    "source_not_recontacted_after_capture": true,
+    "stock_byte_exact_downloads": 6,
+    "scope": "selected assisted corrected-revision routing script; no whole J03 claim"
+  },
+  "first_failures_preserved": [
+    "D104",
+    "D105"
+  ],
+  "inference_performed": false,
+  "scanner_engine_started": false,
+  "full_foundation_aggregate_executed": false,
+  "full_journeys_qualified": false,
+  "overall_goal_complete": false,
+  "limits": [
+    "Stock-peer evidence uses synthetic files, real loopback PostgreSQL, stock OpenSSH source/receivers and sandboxed Chrome on a single native Linux runner. It is assisted qualification of the named script only.",
+    "Both original and corrected-revision routing pass with unchanged routing/approval/receipt/stock-byte assertions. D104 and D105 are closed only for these selected stand-in journeys.",
+    "Public logs retain allowlisted manifest summaries and their SHA256 values; protected runner fixtures were not uploaded and disappear with the runner.",
+    "New local capacity, concurrency and separate-source-revocation cases only compile and pass vet so far; they are outside this candidate and require native PostgreSQL execution.",
+    "The 83 complete baseline rows, 12 full journeys, Windows runtime, retained upgrade, independent adoption and wider GOAL.md gates remain open."
+  ],
+  "fixed_first_failures": [
+    "D104",
+    "D105"
+  ],
+  "local_component_checks": {
+    "reference": ".private/f044-component-5e367727d1da4c3980c689e2b4454a80/manifest.json",
+    "manifest_sha256": "f519c9dfb70a6c159626d93ed59015a1e8042bb2c6490c9d964abc822234dd21",
+    "scope": "new pending PostgreSQL cases compile and pass vet; records and diff check pass; not PostgreSQL execution",
+    "synthetic_scanner_unit": {
+      "reference": ".private/f044-scanner-unit-final.log",
+      "sha256": "80b628acdd8b7904637fde0429a10619de095ff59e3cf3dee7dd4f6f3c4a0b0a",
+      "exit_code": 0,
+      "first_environment_failure": "sandbox denied temporary Unix socket bind; original unchanged assertions passed after socket permission was allowed",
+      "real_engine_started": false
+    }
+  }
+}

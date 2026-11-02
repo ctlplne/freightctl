@@ -151,6 +151,15 @@ func TestClamdExactStreamAndAdversarialResults(t *testing.T) {
 			d, now := fixture(t)
 			source := bytes.Repeat([]byte("synthetic authorized CSV bytes\r\n"), 2048)
 			peer(t, d, mode, source)
+			// Keep native transport refusals diagnosable without printing the
+			// private fixture path or weakening the scanner's socket checks.
+			socket, err := os.Lstat(d.Socket)
+			if err != nil {
+				t.Fatal("cannot inspect the native scanner fixture socket")
+			}
+			if socket.Mode()&os.ModeSocket == 0 || socket.Mode().Perm()&0077 != 0 {
+				t.Logf("native scanner socket metadata: is_socket=%t permission_bits=%#o", socket.Mode()&os.ModeSocket != 0, socket.Mode().Perm())
+			}
 			var checks atomic.Int32
 			result, err := Scan(context.Background(), d, now, bytes.NewReader(source), int64(len(source)), secure.Digest(source), func() error { checks.Add(1); return nil })
 			verdicts := map[string]string{"clean": "clean", "infected": "detected", "limit": "blocked", "encrypted": "blocked"}
