@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "id": "F056",
+  "kind": "owner-approved-retained-schema33-to35-upgrade-and-native-metadata-replay",
+  "state": "owner-approved retained upgrade, both native metadata restores and all triggered source/native/stock jobs passed",
+  "observed_on": "2026-11-02",
+  "candidate": "53684d93c80ad3526b48f15456cb0bd51c0e374d",
+  "product_binary_candidate": "d2d389a36c3eb292d3cfabca9c46fb09dffec820",
+  "binary_sha256": "2ab65926a4645cf77338182c9ef5f176710c22752adef88b1cefb56adc9b38e7",
+  "owner_authorization": "Approve retained schema 35 upgrade; explicit reply to the in-place schema33-to35 question after the successful F055 rehearsal",
+  "author_and_committer": "imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>",
+  "native_manifest": {
+    "reference": ".private/retained-metadata-725d45e330e541d887661fbc8cd348e8/manifest.json",
+    "sha256": "e4316f11021f8d07f13dd747c13c2f78c32e2aeed51a489ffcf0f56a31b80160",
+    "started_at": "2026-11-02T23:14:26.106185+00:00",
+    "finished_at": "2026-11-02T23:14:50.437650+00:00",
+    "native_steps": 92,
+    "failed_steps": 0
+  },
+  "backup": {
+    "reference": ".private/retained-metadata-725d45e330e541d887661fbc8cd348e8/metadata-backup.stdout",
+    "bytes": 8500277,
+    "sha256": "7dac7936df4014f760403d34ecdd345d63d1d872189dde038de0bc144f1f4ed2",
+    "database_size_bytes": 76422167,
+    "file_mode": "0o600",
+    "file_and_directory_synced": true,
+    "digest_rechecked_after_completion": true
+  },
+  "environment": {
+    "application": "actual macOS ARM; frozen schema35 Go1.26.10 binary",
+    "postgres": "exact task-owned PostgreSQL16.15 aarch64;512MiB/oneCPU;loopback;initially stopped",
+    "source": "actual retained private development metadata; no private estate uploaded to GitHub",
+    "other_clients": "absent; no forced drops or client termination"
+  },
+  "results": {
+    "fresh_backup_restore_matches_original": true,
+    "clone_upgrade_and_init_replay_passed": true,
+    "retained_database_unchanged_during_rehearsal": true,
+    "retained_migration_outcome": "applied",
+    "retained_schema_migrated": true,
+    "historical_rows_grants_roles_sequences_preserved": true,
+    "retained_init_replay_unchanged": true,
+    "before": {
+      "schema": 33,
+      "metadata_tables": 63,
+      "forced_rls_tables": 62,
+      "rows": 64337
+    },
+    "after": {
+      "schema": 35,
+      "metadata_tables": 64,
+      "forced_rls_tables": 63,
+      "rows": 64339
+    },
+    "row_count_explanation": "All old non-ledger rows match exactly. Only two checksum-ledger rows were added; the new handoff table is empty.",
+    "runtime_role_safe": true,
+    "exact_restore_database_removed": true,
+    "original_stopped_state_restored": true,
+    "postgres_and_scanner_stopped_rechecked": true
+  },
+  "native_metadata_ci": {
+    "run_id": 41542461945,
+    "url": "https://github.com/ctlplne/freightctl/actions/runs/41542461945",
+    "state": "both metadata jobs and containing native workflow passed",
+    "jobs": [
+      {
+        "id": 125609775599,
+        "architecture": "arm64",
+        "state": "success",
+        "manifest_sha256": "f3360ae5a00f562727e6c8efa26eb70dc38f99e8d20b87628dace172c1047f98"
+      },
+      {
+        "id": 125609775677,
+        "architecture": "x86_64",
+        "state": "success",
+        "manifest_sha256": "2b300826644396ec17874430d812a5d7a683e4eec8809004ac9cf96f705cf61b"
+      }
+    ],
+    "profile_each": {
+      "schema": 35,
+      "metadata_tables": 64,
+      "forced_rls_tables": 63,
+      "restored_rows": 40
+    },
+    "scope": "synthetic first-run metadata; same-cluster restore; exact cleanup and original stopped state; no inference or scanner",
+    "protected_log_manifest": {
+      "reference": ".private/metadata-ci-schema35-565c5528225f4369a28028131b521652/manifest.json",
+      "sha256": "bc985fcf54e61cd1acbc36d4b6d54a295cb78e150d31f30261029926406e867c"
+    },
+    "defect": "D116 fixed and verified on both original architectures; original F054 failed jobs remain failed"
+  },
+  "inference_performed": false,
+  "scanner_engine_started": false,
+  "full_foundation_aggregate_executed": false,
+  "full_journeys_qualified": false,
+  "overall_goal_complete": false,
+  "limits": [
+    "Metadata-only same-cluster upgrade and restore. Payload/key recovery, a clean host, active/queued execution upgrades and RPO/RTO remain unqualified.",
+    "The retained database now requires a backup restore to return to schema33. No automatic rollback or retained-data replacement was performed.",
+    "F055 records the earlier rehearsal and pending authority at that time. This later owner-approved application does not rewrite that history.",
+    "All83 whole baseline rows/12full journeys, WindowsD103, broader recovery, privateAI, independent adoption and enterprise/release gates remain open."
+  ],
+  "native_linux": [
+    {
+      "architecture": "arm64",
+      "job_id": 125609775776,
+      "run_id": 41542461945,
+      "state": "success",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/41542461945/job/125609775776",
+      "integration_pass_records": 547,
+      "integration_failure_records": 0,
+      "integration_skipped_records": 0
+    },
+    {
+      "architecture": "x86_64",
+      "job_id": 125609775860,
+      "run_id": 41542461945,
+      "state": "success",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/41542461945/job/125609775860",
+      "integration_pass_records": 547,
+      "integration_failure_records": 0,
+      "integration_skipped_records": 0
+    }
+  ],
+  "source_security_frontend": {
+    "state": "success",
+    "run_id": 41542461859,
+    "job_id": 125609775233,
+    "browser_contracts": 108,
+    "record_refusal_contracts": 48,
+    "typecheck_build_audits_vulnerability_and_history_secret_scan": "passed"
+  },
+  "bounded_fuzz": {
+    "state": "success",
+    "run_id": 41542461945,
+    "job_id": 125609775346,
+    "targets": 8
+  },
+  "stock_peers": {
+    "state": "all five entries passed",
+    "run_id": 41542461902,
+    "jobs": {
+      "intake-routing": 125609774778,
+      "routing": 125609775235,
+      "captured-routing": 125609775261,
+      "arrivals-schedules": 125609775403,
+      "handoff-routing": 125609775407
+    },
+    "handoff_routing": {
+      "manifest_sha256": "84cd9b7d2b607643d4ae758a4714fe2f50f7413c63ebad20b0b04e7005866365",
+      "source_inputs": 468,
+      "recorded_commands": 171,
+      "verified_output_artifacts": 454,
+      "cleanup_failures": 0,
+      "browser_failed_reports": 0,
+      "browser_runtime_errors": 0,
+      "browser_external_contacts": 0
+    },
+    "scope": "Repeat of the F054 assisted synthetic stock/browser journeys; no whole journey or independent adoption claim"
+  },
+  "platforms": {
+    "state": "not triggered for this Python/YAML/docs candidate",
+    "latest_actual_candidate": "d2d389a36c3eb292d3cfabca9c46fb09dffec820",
+    "latest_evidence": "docs/qualification/evidence/F054-native-handoff-browser.json",
+    "mac": "unit/race passed at that earlier candidate",
+    "windows": "D103 remains red with17 failed tests/subcases at that earlier candidate"
+  }
+}

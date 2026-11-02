@@ -1871,17 +1871,18 @@
     {
       "id": "D116",
       "severity": "native CI metadata report blocker",
-      "state": "fixed locally; native replay pending",
+      "state": "fixed and verified on original native ARM and x86 metadata journeys",
       "observed_on": "2026-11-02",
       "candidate": "d2d389a36c3eb292d3cfabca9c46fb09dffec820",
       "journey": "Native x86_64/ARM synthetic metadata restore report",
       "title": "Workflow kept a stale schema34 assertion after moving its observer and printed result to35",
       "first_failure": "Both metadata jobs in41538104558 fail at report line20: assert len(before.migration_ledger)==34.",
       "cause": "The expected schema appeared in three places. The command argument and printed summary changed to35, but the separate assertion remained34.",
-      "resolution": "Prepare one explicit profile shared by binary preflight, restore expected-schema and safe report validation. Seven contracts refuse stale schemas/checksums, missing fields, changed data/authority, unsafe runtime roles, failed steps and incomplete cleanup/sync. Both original native jobs must replay before qualification.",
+      "resolution": "Use one explicit profile shared by binary preflight, restore expected-schema and safe report validation. Seven contracts refuse stale schemas/checksums, missing fields, changed data/authority, unsafe runtime roles, failed steps and incomplete cleanup/sync. Both original native metadata journeys pass at53684d9 in41542461945 (ARM125609775599/x86125609775677), with35/64/63 and40 synthetic rows each. Original F054 failures remain recorded.",
       "regression_evidence": [
         "docs/qualification/evidence/F054-native-handoff-browser.json",
-        "docs/qualification/evidence/F055-retained-handoff-upgrade-rehearsal.json"
+        "docs/qualification/evidence/F055-retained-handoff-upgrade-rehearsal.json",
+        "docs/qualification/evidence/F056-retained-handoff-upgrade-applied.json"
       ]
     }
   ]
