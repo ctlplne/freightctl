@@ -22,7 +22,7 @@ import (
 // definitions, a detection corpus or native malware-scanning qualification.
 func fixture(t *testing.T) (Definition, time.Time) {
 	t.Helper()
-	dir, err := os.MkdirTemp("/private/tmp", "freightctl-scan-")
+	dir, err := os.MkdirTemp("", "freightctl-scan-")
 	if err != nil {
 		t.Fatal(err)
 	}

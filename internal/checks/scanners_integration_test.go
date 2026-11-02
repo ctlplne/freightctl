@@ -30,7 +30,7 @@ func scanFixture(t *testing.T, mode string, valid time.Duration) (*fixture, *Ser
 	t.Helper()
 	f := setup(t)
 	s := &Service{Custody: f.wf.Custody}
-	dir, err := os.MkdirTemp("/private/tmp", "freightctl-scan-pg-")
+	dir, err := os.MkdirTemp("", "freightctl-scan-pg-")
 	if err != nil {
 		t.Fatal(err)
 	}
