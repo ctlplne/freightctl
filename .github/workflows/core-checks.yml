@@ -42,6 +42,7 @@ jobs:
         run: |
           python3 scripts/test-records.py
           python3 scripts/test-native-evidence.py
+          python3 scripts/test-ci-summary.py
           python3 scripts/check-records.py
       - name: Exact frontend dependencies, contracts and browser build
         run: |
@@ -137,6 +138,11 @@ jobs:
           sh scripts/go.sh test ./internal/assistance -fuzz=FuzzUntrustedModelOutput -fuzztime=5s -parallel=1
 
   stock-peer-linux:
+    name: Stock peers (${{ matrix.journey }})
+    strategy:
+      fail-fast: false
+      matrix:
+        journey: [arrivals-schedules, routing]
     runs-on: ubuntu-24.04
     timeout-minutes: 50
     env:
@@ -145,6 +151,7 @@ jobs:
       NODE_OPTIONS: --max-old-space-size=192
       PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.cache/freightctl-playwright
       FREIGHTCTL_BROWSER_CHANNEL: chrome
+      FREIGHTCTL_CI_JOURNEY: ${{ matrix.journey }}
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
@@ -180,10 +187,22 @@ jobs:
               process.exitCode = 1;
             });
           NODE
-      - name: Real loopback SFTP collection, arrival and schedule journeys
+      - name: Real loopback SFTP and browser journey
         run: |
           test "$(uname -m)" = x86_64
           task_pg_id=$(docker inspect --format '{{.Id}}' freightctl-postgres-v1)
-          python3 scripts/qualify-collections.py --postgres-container-id "$task_pg_id" --backend-only
-          python3 scripts/qualify-arrivals.py --postgres-container-id "$task_pg_id" --backend-only
-          python3 scripts/qualify-schedules.py --postgres-container-id "$task_pg_id"
+          if [ "$FREIGHTCTL_CI_JOURNEY" = routing ]; then
+            python3 scripts/qualify-routing.py --postgres-container-id "$task_pg_id"
+          else
+            python3 scripts/qualify-collections.py --postgres-container-id "$task_pg_id" --backend-only
+            python3 scripts/qualify-arrivals.py --postgres-container-id "$task_pg_id" --backend-only
+            python3 scripts/qualify-schedules.py --postgres-container-id "$task_pg_id"
+          fi
+      - name: Safe qualification outcomes and evidence closure
+        if: always()
+        run: |
+          if [ "$FREIGHTCTL_CI_JOURNEY" = routing ]; then
+            python3 scripts/ci-qualification-summary.py routing
+          else
+            python3 scripts/ci-qualification-summary.py collections arrivals schedules
+          fi
