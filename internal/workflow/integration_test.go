@@ -30,6 +30,7 @@ type fixture struct {
 	adminPath   string
 	runtimePath string
 	tokenPath   string
+	storagePath string
 	s           *Service
 	scope       store.Scope
 	file        *store.File
@@ -95,7 +96,8 @@ func setup(t *testing.T) *fixture {
 		t.Fatal(err)
 	}
 	t.Cleanup(db.Pool.Close)
-	disk, err := custody.Open(filepath.Join(t.TempDir(), "custody"))
+	storagePath := filepath.Join(t.TempDir(), "custody")
+	disk, err := custody.Open(storagePath)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -117,6 +119,7 @@ func setup(t *testing.T) *fixture {
 	f.scope.TokenHash = secure.Digest(secret.Bytes)
 	secret.Close()
 	f.runtimePath, f.tokenPath = paths[1], tokenPath
+	f.storagePath = storagePath
 	f.file, _, err = f.s.Custody.Accept(ctx, f.scope, "source", 3, secure.Digest([]byte("abc")), bytes.NewReader([]byte("abc")))
 	if err != nil {
 		t.Fatal(err)

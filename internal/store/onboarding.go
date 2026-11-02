@@ -320,7 +320,17 @@ func redactOnboardingEvent(e Event) Event {
 			return e
 		}
 	}
-	privateCollection := e.Kind == "WorkflowCollectionChanged" || e.Kind == "WorkflowCollectionBatch" || e.Kind == "WorkflowCollectionInput" || e.Kind == "WorkflowCollectionRoutingChanged"
+	privateCollection := e.Kind == "WorkflowCollectionChanged" || e.Kind == "WorkflowCollectionBatch" || e.Kind == "WorkflowCollectionInput" || e.Kind == "WorkflowCollectionRoutingChanged" || e.Kind == "WorkflowCollectionHandoffChanged"
+	if e.Kind == "DeliveryTransitioned" {
+		var payload struct {
+			Observation struct {
+				Code string `json:"code"`
+			} `json:"observation"`
+		}
+		if json.Unmarshal(e.Payload, &payload) == nil && payload.Observation.Code == "collection_handoff" {
+			privateCollection = true
+		}
+	}
 	if e.Kind == "WorkflowRevisionChanged" || e.Kind == "WorkflowCommandCompleted" {
 		var p struct {
 			Definition struct {
@@ -333,7 +343,7 @@ func redactOnboardingEvent(e Event) Event {
 				} `json:"definition"`
 			} `json:"result"`
 		}
-		if json.Unmarshal(e.Payload, &p) == nil && (len(p.Definition.Source) > 0 || len(p.Result.Definition.Source) > 0 || (p.Result.Kind == "workflow_collection" || p.Result.Kind == "workflow_collection_routing")) {
+		if json.Unmarshal(e.Payload, &p) == nil && (len(p.Definition.Source) > 0 || len(p.Result.Definition.Source) > 0 || (p.Result.Kind == "workflow_collection" || p.Result.Kind == "workflow_collection_routing" || p.Result.Kind == "workflow_collection_handoff")) {
 			privateCollection = true
 		}
 	}

@@ -41,6 +41,14 @@ func runCollection(ctx context.Context, command string, o testCLIOptions) error 
 		c.Disk = disk
 	}
 	service := &workflow.Service{Custody: c}
+	if command == "workflow-collection-handoff-preview" || command == "workflow-collection-handoff-propose" || command == "workflow-collection-handoff-approve" || command == "workflow-collection-handoff-execute" {
+		disk, err := custody.OpenExisting(o.Storage)
+		if err != nil {
+			return err
+		}
+		defer disk.Close()
+		c.Disk = disk
+	}
 	decode := func(target any) error {
 		f, e := os.Open(o.Input)
 		if e != nil {
@@ -59,6 +67,27 @@ func runCollection(ctx context.Context, command string, o testCLIOptions) error 
 	}
 	var out any
 	switch command {
+	case "workflow-collection-handoff-list":
+		out, e = service.CollectionHandoffHistory(ctx, scope, o.ID, o.After, o.Limit)
+	case "workflow-collection-handoff-receipt":
+		out, e = service.CollectionHandoffReceipt(ctx, scope, o.ID, o.Key)
+	case "workflow-collection-handoff-preview":
+		var x workflow.CollectionHandoffSelection
+		if e = decode(&x); e == nil {
+			out, e = service.PreviewCollectionHandoff(ctx, scope, o.ID, x)
+		}
+	case "workflow-collection-handoff-propose":
+		var x workflow.CollectionHandoffProposal
+		if e = decode(&x); e == nil {
+			out, e = service.ProposeCollectionHandoff(ctx, scope, o.ID, o.Key, x)
+		}
+	case "workflow-collection-handoff-status":
+		out, e = service.CollectionHandoffStatus(ctx, scope, o.ID, o.Run)
+	case "workflow-collection-handoff-approve", "workflow-collection-handoff-cancel", "workflow-collection-handoff-execute":
+		var x workflow.Decision
+		if e = decode(&x); e == nil {
+			out, e = service.DecideCollectionHandoff(ctx, scope, o.ID, o.Run, o.Key, strings.TrimPrefix(command, "workflow-collection-handoff-"), x)
+		}
 	case "workflow-collection-routing-preview", "workflow-collection-routing-input-preview":
 		var x workflow.CollectionRoutingSelection
 		if e = decode(&x); e == nil {

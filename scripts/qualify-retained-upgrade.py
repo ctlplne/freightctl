@@ -24,6 +24,11 @@ class Upgrade(metadata.Exercise):
         self.manifest["binary_sha256"] = metadata.digest(self.binary)
 
     def run(self):
+        # init applies all bundled migrations. Refuse a newer binary before
+        # starting PostgreSQL, rather than discover a target mismatch afterward.
+        version = self.command("inspect-binary-schema", [str(self.binary), "schema-version"])
+        if json.loads(version.read_text()) != {"schema_version": 33}:
+            raise RuntimeError("this recorded 32-to-33 exercise requires a schema-33 binary; prepare a matching upgrade plan")
         references = [metadata.ROOT / ".private/pg-admin.dsn", metadata.ROOT / ".private/pg-runtime-password"]
         for reference in references:
             if reference.is_symlink() or not stat.S_ISREG(reference.lstat().st_mode) or reference.stat().st_mode & 0o077:

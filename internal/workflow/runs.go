@@ -112,6 +112,13 @@ func (s *Service) stageRun(ctx context.Context, t *store.Transaction, r RunReque
 }
 
 func (s *Service) stageRunWithRouting(ctx context.Context, t *store.Transaction, r RunRequest, definition *Definition, source *store.File, storageID, routingID string) (*store.WorkflowRun, error) {
+	return s.stageRunBound(ctx, t, r, definition, source, storageID, routingID, "")
+}
+
+func (s *Service) stageRunBound(ctx context.Context, t *store.Transaction, r RunRequest, definition *Definition, source *store.File, storageID, routingID, plannedID string) (*store.WorkflowRun, error) {
+	if plannedID != "" && !store.ValidID(plannedID) {
+		return nil, store.ErrState
+	}
 	if routingID != "" && (!store.ValidID(routingID) || definition.Schema != 2 || definition.Source == nil) {
 		return nil, store.ErrState
 	}
@@ -137,6 +144,9 @@ func (s *Service) stageRunWithRouting(ctx context.Context, t *store.Transaction,
 		return nil, store.ErrState
 	}
 	run := &store.WorkflowRun{ID: secure.NewID(), WorkflowID: r.Workflow.ID, WorkflowVersion: r.Workflow.Version, WorkflowHash: r.Workflow.Hash, FileID: source.ID, Source: *source, StorageID: storageID, Root: t.Root, Authority: t.AuthorityRevision, State: "queued", Reason: "awaiting_worker", Revision: 1, RoutingID: routingID}
+	if plannedID != "" {
+		run.ID = plannedID
+	}
 	if plan != nil {
 		var err error
 		run.Plan, run.PlanHash, err = digest(plan)

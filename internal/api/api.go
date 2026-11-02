@@ -87,6 +87,14 @@ func NewWithBrowserLifetime(service *custody.Service, audits *audit.Service, ena
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/workflow-collections", s.collection("list"))
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/workflow-collections/{collection}", s.collection("status"))
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/workflow-collections/{collection}/routing/preview", s.collectionRouting("preview"))
+	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/workflow-collections/{collection}/handoffs/preview", s.collectionHandoff("preview"))
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/workflow-collections/{collection}/handoffs", s.collectionHandoff("history"))
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/workflow-collections/{collection}/handoffs/receipts/{receipt}/result", s.collectionHandoff("receipt"))
+	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/workflow-collections/{collection}/handoffs/proposals", s.collectionHandoff("propose"))
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/workflow-collections/{collection}/handoffs/{handoff}", s.collectionHandoff("status"))
+	for _, action := range []string{"approve", "cancel", "execute"} {
+		m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/workflow-collections/{collection}/handoffs/{handoff}/"+action, s.collectionHandoff(action))
+	}
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/workflow-collections/{collection}/routing/inputs/{input}/preview", s.collectionRouting("input-preview"))
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/workflow-collections/{collection}/routing/proposals", s.collectionRouting("propose"))
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/workflow-collections/{collection}/routing", s.collectionRouting("history"))

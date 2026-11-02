@@ -140,7 +140,7 @@ jobs:
           metadata_cid=$(docker inspect --format '{{.Id}}' freightctl-postgres-v1)
           docker stop --time 15 "$metadata_cid" > .private/metadata-preparation-stop.log
           metadata_status=0
-          python3 scripts/qualify-retained-metadata.py --container-id "$metadata_cid" --expected-schema 33 > .private/metadata-result.json || metadata_status=$?
+          python3 scripts/qualify-retained-metadata.py --container-id "$metadata_cid" --expected-schema 34 > .private/metadata-result.json || metadata_status=$?
           python3 - <<'PY'
           import json
           from pathlib import Path
@@ -161,13 +161,13 @@ jobs:
           assert manifest['original_stopped_state_restored'] and manifest['exact_restore_database_removed']
           assert manifest['before']['runtime_role_safe']
           assert not manifest['inference_performed'] and not manifest['scanner_engine_started']
-          assert len(manifest['before']['migration_ledger']) == 33
-          assert manifest['before']['forced_rls_tables'] == 62
-          assert len(manifest['before']['tables']) == 63
+          assert len(manifest['before']['migration_ledger']) == 34
+          assert manifest['before']['forced_rls_tables'] == 63
+          assert len(manifest['before']['tables']) == 64
           assert all(step['exit_code'] == 0 for step in manifest['steps'])
           print(json.dumps({
               'state': 'passed', 'manifest_sha256': result['manifest_sha256'],
-              'schema': 33, 'metadata_tables': 63, 'forced_rls_tables': 62,
+              'schema': 34, 'metadata_tables': 64, 'forced_rls_tables': 63,
               'restored_rows': sum(table['rows'] for table in manifest['restored']['tables']),
               'exact_restore_database_removed': True, 'original_stopped_state_restored': True,
               'inference_performed': False, 'scanner_engine_started': False,

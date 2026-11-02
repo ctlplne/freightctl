@@ -48,6 +48,9 @@ func TestWorkflowPlanRedactionCoversDirectAndNestedCommandReceipts(t *testing.T)
 
 func TestCollectionRoutingAuthorizationAndReceiptsKeepPrivateBindingsInProtectedJournal(t *testing.T) {
 	for _, e := range []Event{
+		{Kind: "WorkflowCollectionHandoffChanged", Payload: json.RawMessage(`{"definition":{"source_run":{"id":"private-source"},"plan":{"facts":{"source":{"name":"private-input"}}}}}`)},
+		{Kind: "DeliveryTransitioned", Payload: json.RawMessage(`{"observation":{"code":"collection_handoff","handoff_id":"private-handoff"}}`)},
+		{Kind: "WorkflowCommandCompleted", Payload: json.RawMessage(`{"result":{"kind":"workflow_collection_handoff","handoff":{"id":"private-handoff","planned_run_id":"private-successor"}}}`)},
 		{Kind: "WorkflowCollectionRoutingChanged", Payload: json.RawMessage(`{"definition":{"inputs":[{"input_id":"private-input","file_id":"private-file","plan_hash":"private-plan"}]}}`)},
 		{Kind: "WorkflowCommandCompleted", Payload: json.RawMessage(`{"result":{"kind":"workflow_collection_routing","id":"private-authorization","job_id":"private-capture"}}`)},
 	} {

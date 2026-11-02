@@ -1,0 +1,198 @@
+{
+  "schema_version": 1,
+  "id": "F051",
+  "kind": "collected-untouched-handoff-engine-and-cli",
+  "state": "selected engine and CLI paths verified locally on ARM; browser/native-GitHub/stock handoff follow-ups pending",
+  "observed_on": "2026-11-02",
+  "starting_commit": "53ed4b1caf7d0d512529dd5e10bc3b75030d37b1",
+  "candidate_note": "Working-tree implementation identified by exact source digests and unchanged full Go/SQL source manifest; the forthcoming owner-authored commit needs native GitHub replay.",
+  "author_and_committer": "imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>",
+  "implementation_sha256": [
+    {
+      "path": "cmd/freightctl/collections.go",
+      "sha256": "b07809d3ac0285ed0eb391964443e136a79b3489a046198bead754791c30e65b"
+    },
+    {
+      "path": "cmd/freightctl/main.go",
+      "sha256": "185abeeaa974182814cd60c876630108201dcfce14a4180973744d7e04899901"
+    },
+    {
+      "path": "internal/api/api.go",
+      "sha256": "575c0d48e813721f0bc95b1090baadb6baa4eec308620808d02ac824417e045a"
+    },
+    {
+      "path": "internal/api/collection_handoffs.go",
+      "sha256": "e9ad333cb5f63f2f2a9e0eca8195deca823c94c340089ebb21105ad639eca2f3"
+    },
+    {
+      "path": "internal/api/collection_handoffs_test.go",
+      "sha256": "1b12bd09674d0d6dc98026ef7852123de0da1cb661ba30d968c8d11eca0f9fb1"
+    },
+    {
+      "path": "internal/store/034_collection_handoffs.sql",
+      "sha256": "11ef92d64b35525e11dfd4dcaec24bfe320149897de9c4ab06ebba8452dbf33d"
+    },
+    {
+      "path": "internal/store/collection_handoffs.go",
+      "sha256": "ced60ff6a373ece2cb6a0d2b7a5a2220f537f7ea90bfa06c6870a61c30b5b7ac"
+    },
+    {
+      "path": "internal/store/onboarding.go",
+      "sha256": "c04b6e50858c9b93ab184005ea8665c4b24e17d9d5321be1897901103819322b"
+    },
+    {
+      "path": "internal/store/store.go",
+      "sha256": "326bc961e2194f7ba47ba604ba5cc4de5983368c8113737dbfb9901e229461af"
+    },
+    {
+      "path": "internal/store/workflow_plans_test.go",
+      "sha256": "3271a9ec995659453aa485315d73720155e48a192a8afddc6b7d5685ff556892"
+    },
+    {
+      "path": "internal/workflow/collection_handoffs.go",
+      "sha256": "b0f0ad64c7868bedc17d1414efc083c95bdf2ea7edb516243d57d7795bc33f27"
+    },
+    {
+      "path": "internal/workflow/collection_handoffs_integration_test.go",
+      "sha256": "ad08368a4e26621775cdfae297c21867463de244bc9e75854e3f862ee16a85ec"
+    },
+    {
+      "path": "internal/workflow/integration_test.go",
+      "sha256": "cd713eaa1c44c777fcb6169d4d41b7a813b9ca3551f047313f6379f780f1e0cf"
+    },
+    {
+      "path": "internal/workflow/runs.go",
+      "sha256": "16cb3b2b603f903a8af468deeca0f1a3090d56759197fcd80d06e91ffb6ae43e"
+    }
+  ],
+  "native_source_manifest": {
+    "reference": ".private/handoff-qualified-88a92daeaf2140f7ad67493a5ae7ddc4/manifest.json",
+    "sha256": "bb392b95814fb20d1da4db3009b8530e6f1ccbc729e9c2d3cbfa754dbbe85915",
+    "source_inputs": 295,
+    "sources_unchanged_during_run": true
+  },
+  "native_result": {
+    "state": "passed",
+    "exit_code": 0,
+    "seconds": 165.511,
+    "passed_records": 19,
+    "failed_records": 0,
+    "skipped_records": 0,
+    "output_sha256": "6aed0bd7e22b1813e001beb1999d2c03455d19eede16e2c37f2bf8b780956385",
+    "output_reference": ".private/handoff-qualified-88a92daeaf2140f7ad67493a5ae7ddc4/native.log"
+  },
+  "first_failure_manifests": [
+    {
+      "reference": ".private/handoff-native-ff04cec250bb4226880dd6af10ea280c/manifest.json",
+      "sha256": "d496614921a9cdce9bdad8be9fa0d177bcbd28b67d51251627fdebb7748dda79",
+      "native_output_sha256": "a76b8a3b23998903f511d117c34c99a90cf4628afaa1726b784515b58f4c551d"
+    },
+    {
+      "reference": ".private/handoff-native-72745c6bcd7e4c8e9263d9128f9b39e9/manifest.json",
+      "sha256": "26972e3d812e3df723e284d2b26e2190b175726bbb63df0475dce02bb8f3a0c5",
+      "native_output_sha256": "8b724d3fd5f6d2ac48c10bb0cba3ffb5df4e54da590ab5c5a3c2d80b6d747154"
+    }
+  ],
+  "defects": [
+    "D111",
+    "D112"
+  ],
+  "environment": {
+    "host": "actual shared macOS ARM development host",
+    "postgres": "actual task-owned PostgreSQL16.15 aarch64,512MiB/oneCPU; fresh per-test databases",
+    "go": "Go1.26.10 with race detector, GOMAXPROCS1/GOMEMLIMIT192MiB",
+    "source": "trusted source-adapter stand-in; original facts/digests preserved",
+    "public_key_peer": "existing independent synthetic GnuPG public artifacts; actual enrollment/revocation via native CLI",
+    "receiver_contact": false,
+    "inference_performed": false,
+    "scanner_engine_started": false
+  },
+  "verified_paths": [
+    "Exact proposal, separate approval and atomic cancellation/successor/completion/receipt; unchanged original job/input assignment and facts.",
+    "Injected exact PostgreSQL receipt failure rolls back all effects; concurrent original-key execution produces one successor and one recovered receipt. Source/new-run/handoff xmin values prove one commit.",
+    "A real worker claim after approval fences untouched-profile execution; stale proposal can be withdrawn without cancelling the worker.",
+    "Revoked target refuses execution while original metadata/receipts remain readable. Revoked routing can be replaced only by fresh handoff consent, and repeated successor links retain original capture.",
+    "SQL rejects forged plan/source facts and a cancellation without the completed successor. Forced RLS uses a non-owner/non-bypass runtime; other actor/tenant/history/receipt access is refused.",
+    "Private handoff records, mutation receipts and cancellation observations retain exact payload-digest envelopes in real event feed and audit snapshots.",
+    "Actual CLI recipient public-key revoke/re-enroll plus separately approved workflow/handoff bind the successor worker claim to exact replacement key2; no encryption/receiver contact occurs.",
+    "Complete new CLI preview/propose/approve/execute/list/status/receipt journey uses the dedicated handoff flag, saved request and original-key replay; metadata reads succeed with intentionally unavailable storage.",
+    "Selected clean/version-one migration and original routing/privacy regressions pass with no skips."
+  ],
+  "other_checks": {
+    "affected_unit_packages": 4,
+    "integration_vet": "passed",
+    "actionlint": "passed",
+    "record_contract_tests": 15,
+    "native_evidence_contract_tests": 9,
+    "ci_summary_privacy_tests": 7,
+    "metadata_refusal_tests": 5,
+    "diff_whitespace": "passed"
+  },
+  "schema_version_preflight": {
+    "binary_schema": 34,
+    "works_without_credentials": true,
+    "historical_32_to_33_wrapper_refuses_before_postgres_start": true,
+    "manifest_reference": ".private/retained-metadata-be14bd21606446f1961539680a9115b8/manifest.json",
+    "manifest_sha256": "4fc09ac0277c3348694b2f0bc204e76f2afd1ebcb9dfe5c5bceb23a280410dec"
+  },
+  "retained_schema_34_applied": false,
+  "new_github_gate_state": "prepared; schema34/64tables/63forcedRLS restore expectations; no new candidate run yet",
+  "full_foundation_aggregate_executed": false,
+  "full_journeys_qualified": false,
+  "overall_goal_complete": false,
+  "limits": [
+    "Nine new service/CLI journeys and one API refusal contract are component evidence; the19 pass records also include selected regressions/subcases, not whole product capabilities.",
+    "Browser review, saved-nonce recovery, successor navigation and stock-receiver encrypted transfer replay remain mandatory before this operator journey is qualified. API success through a deployed HTTP surface remains separate from the service/CLI and request-refusal checks.",
+    "The untouched profile refuses attempted, leased, encrypted, partial and ambiguous work. Governed recovery for those outcomes, rechecked child files, source/operator rebinding, schema1 and expired work remains required.",
+    "The original input run_id remains immutable. Current browser collection progress still follows that original assignment; a handoff-aware read model/navigation remains required.",
+    "Retained estate remains schema33. Migration034 has run only in fresh test databases; separately backed retained33-to34 upgrade and future rollback/restore qualification remain required.",
+    "All83 whole baseline rows and12 full journeys, WindowsD103, privateAI, other protocols/connectors, independent adoption and enterprise/release qualification remain open."
+  ],
+  "retained_estate_after_tests": {
+    "state": "unchanged; exact resource stopped",
+    "manifest_reference": ".private/retained-metadata-ee05307c3fc348e1955a2c18b138e23e/manifest.json",
+    "manifest_sha256": "a0717f830fd5124262ebb55e33971b71b6987feebf1b48ced078f96604fe655b",
+    "schema": 33,
+    "forced_rls_tables": 62,
+    "metadata_grants_roles_and_sequences_unchanged": true,
+    "original_stopped_state_restored": true,
+    "final_recipient_replay_cleanup": {
+      "manifest_reference": ".private/handoff-final-state-e5b6516b86a94c88b89eb1928ff7b31c/manifest.json",
+      "manifest_sha256": "93f0325955375f4866fa4ea17e385e7eacaf24878090616ea7d5f91d2b60f2ea",
+      "schema": 33,
+      "new_handoff_table_absent": true,
+      "events": 31928,
+      "files": 2090,
+      "credentials": 4522,
+      "other_clients": 0,
+      "postgres_stopped": true
+    }
+  },
+  "secret_scan_review": {
+    "first_scan_findings": 4,
+    "classification": "one public source-checksum mapping and three fixed nonsecret test request identifiers; no credential value found",
+    "protected_report_reference": ".private/handoff-secret-review-ca0047f83b264ed6b0e7ee173efa56dc/report.json",
+    "remedy": "Use explicit path/sha256 entries for source evidence and short descriptive request identifiers. No scanner exception, rule change or excluded path.",
+    "followup": "Complete574-file public-source snapshot passes Gitleaks8.30.1; changed recipient test passes native ARM race replay. All scanner rules remain active.",
+    "diagnostic_sha256": "3e7650e94390d00b68cc3b2ea1da0a28dd5cbf9eabec566b1911c26b23681fdb"
+  },
+  "recipient_nonce_followup": {
+    "state": "passed",
+    "exit_code": 0,
+    "seconds": 14.003,
+    "changed_source": [
+      "internal/workflow/collection_handoffs_integration_test.go"
+    ],
+    "test_source_sha256": "ad08368a4e26621775cdfae297c21867463de244bc9e75854e3f862ee16a85ec",
+    "all_product_source_unchanged_from_original19_record_replay": true,
+    "source_unchanged_during_replay": true,
+    "output_reference": ".private/handoff-recipient-final-9be120e47bdf4f68b413ac9550f7476c/native.log",
+    "output_sha256": "e319c9570ba2f308f3099aa15f562eba9a9c38123ca1c15664eabad20cc9228c",
+    "passed_records": 1,
+    "failed_records": 0,
+    "skipped_records": 0,
+    "manifest_reference": ".private/handoff-recipient-final-9be120e47bdf4f68b413ac9550f7476c/manifest.json",
+    "manifest_sha256": "5ba841909a4ad30c99db4d0c621ad9657f6d6720eb0aead952003a5a8eee6fb9",
+    "meaning": "Only three fixed nonsecret test request identifiers were shortened after scanner review. All product Go/SQL source is unchanged from the original19-record replay."
+  }
+}

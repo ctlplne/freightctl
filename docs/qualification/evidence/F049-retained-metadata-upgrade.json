@@ -166,5 +166,6 @@
     "initial_upgrade_backup_explicitly_synced_before_migration": false,
     "preupgrade_archives_explicitly_synced_after_review_with_original_hashes_preserved": true,
     "limit": "Host filesystem fsync contract only; no power-loss/redundant-storage or supported downgrade claim."
-  }
+  },
+  "native_github_followup": "docs/qualification/evidence/F050-native-metadata-restore.json"
 }

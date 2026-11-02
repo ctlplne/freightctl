@@ -1791,6 +1791,37 @@
       "regression_evidence": [
         "docs/qualification/evidence/F049-retained-metadata-upgrade.json"
       ]
+    },
+    {
+      "id": "D111",
+      "severity": "new migration integration blocker",
+      "state": "fixed locally",
+      "observed_on": "2026-11-02",
+      "candidate": "53ed4b1caf7d0d512529dd5e10bc3b75030d37b1",
+      "candidate_note": "Uncommitted migration034/source identified by F051 digests.",
+      "journey": "J03/J05 collected handoff component",
+      "title": "Handoff constraint trigger alias conflicted with implicit OLD record",
+      "first_failure": "TestCollectedHandoffPreservesOriginalAssignmentAndAtomicallyQueuesReviewedSuccessor: column reference old is ambiguous (SQLSTATE42702).",
+      "cause": "The new deferred delivery-cancellation check used old as a JSON element alias; PL/pgSQL also exposes the OLD trigger record. Parsing failed during ordinary fixture delivery creation.",
+      "resolution": "Use an explicit prior_intent(value) alias. The original journeys and final19-record native PostgreSQL/race replay pass, including deferred unpaired-cancellation refusal; original log/manifest retained.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F051-collected-handoff-engine.json"
+      ]
+    },
+    {
+      "id": "D112",
+      "severity": "API error contract",
+      "state": "fixed locally",
+      "observed_on": "2026-11-02",
+      "candidate": "53ed4b1caf7d0d512529dd5e10bc3b75030d37b1",
+      "journey": "Collected handoff API malformed-input boundary",
+      "title": "New handoff API returned503 for malformed client input",
+      "first_failure": "TestCollectedHandoffAPIRejectsInventedPlansCutoffsApprovalsAndInvalidCursors: /preview returned503 instead of400.",
+      "cause": "The new handler passed workflow.ErrInput to the generic failure path without the explicit client-error mapping used by existing workflow handlers. No database or execution authority was reached.",
+      "resolution": "Map strict request/selection/cursor failures to400 invalid_collection_handoff; retain malformed/duplicate/oversized/invented-authority assertions. The original API test and final19-record replay pass.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F051-collected-handoff-engine.json"
+      ]
     }
   ]
 }
