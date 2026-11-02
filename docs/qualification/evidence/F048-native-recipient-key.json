@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "id": "F048",
+  "kind": "native-captured-routing-recipient-key-checkpoint",
+  "state": "selected recipient-key cases verified on both native Linux architectures",
+  "observed_on": "2026-11-02",
+  "candidate": "e7d26ab3125a11a9343d3f7654dd7db2b360e9ad",
+  "author_and_committer": "imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>",
+  "runs": {
+    "source": "https://github.com/ctlplne/freightctl/actions/runs/41520446021",
+    "native_linux": "https://github.com/ctlplne/freightctl/actions/runs/41520446205",
+    "native_platforms": "https://github.com/ctlplne/freightctl/actions/runs/41520445955"
+  },
+  "results": [
+    {"job": 125534794144, "runner": "ubuntu-24.04 x86_64", "state": "passed", "scope": "source/security/frontend and qualification records"},
+    {"job": 125534794447, "runner": "ubuntu-24.04-arm aarch64", "state": "passed", "passed_records": 535, "failed_records": 0, "skipped_records": 0, "key_case_seconds": 14.08, "phase_seconds": [3.49, 5.11, 3.84]},
+    {"job": 125534794963, "runner": "ubuntu-24.04 x86_64", "state": "passed", "passed_records": 535, "failed_records": 0, "skipped_records": 0, "key_case_seconds": 15.74, "phase_seconds": [3.84, 5.59, 4.28]},
+    {"job": 125534794843, "runner": "ubuntu-24.04 x86_64", "state": "passed", "scope": "eight bounded fuzz targets"},
+    {"job": 125534794710, "runner": "macos-15 arm64", "state": "passed", "scope": "module/vet/unit race; no PostgreSQL or production server claim"},
+    {"job": 125534794873, "runner": "windows-2025 amd64", "state": "failed", "defect": "D103", "scope": "unchanged private-directory, directory-Sync and scanner socket failures"}
+  ],
+  "test": "TestCapturedRoutingRecipientRevocationFencesProposalAdmissionAndQueuedCiphertext",
+  "mechanism": [
+    "A real CLI binary registers and revokes recipient public keys using protected runtime and token references. Native tests use real PostgreSQL/storage and trusted source-adapter stand-ins.",
+    "Revocation fences proposed approval, approved admission and already queued claims. Historical exact key identity remains readable as stale; refusals do not create attempts, ciphertext or replacement plans.",
+    "For unassigned approved inputs, a replacement RSA public key alone cannot revive the old authorization. A separately approved workflow revision and a new separately approved routing decision are required before the original exact inputs are queued.",
+    "Stored delivery definitions bind the replacement key/version/fingerprint with zero attempts and no ciphertext; accepted source bytes remain exact and readable."
+  ],
+  "stock_peer_selection": {
+    "observed_runs_for_candidate": 3,
+    "stock_workflow_triggered": false,
+    "reason": "The push changed only Go test files and qualification prose. Ordered negative Go-test paths correctly omitted a new stock-peer run.",
+    "last_actual_stock_checkpoint": "docs/qualification/evidence/F047-native-calendar-actor-intake.json"
+  },
+  "inference_performed": false,
+  "scanner_engine_started": false,
+  "full_foundation_aggregate_executed": false,
+  "overall_goal_complete": false,
+  "limits": [
+    "Pass counts include nested tests and fuzz seeds; they are not independent product capabilities.",
+    "This case does not encrypt or contact a real recipient. Prior stock evidence remains bound to its own candidate.",
+    "Already assigned-intent handoff, active/ambiguous work, broader key/source/operator rotation, full journeys, production platforms and all GOAL.md gates remain open."
+  ]
+}

@@ -14,6 +14,8 @@ on:
       - 'scripts/integration.sh'
       - 'scripts/dev-db.py'
       - 'scripts/prepare-pgp-fixture.py'
+      - 'scripts/qualify-retained-metadata.py'
+      - 'scripts/test-retained-metadata.py'
       - '.github/workflows/native-linux.yml'
   pull_request:
     paths:
@@ -27,6 +29,8 @@ on:
       - 'scripts/integration.sh'
       - 'scripts/dev-db.py'
       - 'scripts/prepare-pgp-fixture.py'
+      - 'scripts/qualify-retained-metadata.py'
+      - 'scripts/test-retained-metadata.py'
       - '.github/workflows/native-linux.yml'
   workflow_dispatch:
 
@@ -87,6 +91,78 @@ jobs:
           sh scripts/go.sh test -p 1 -race ./...
       - name: All implemented real PostgreSQL integration and migration tests
         run: sh scripts/integration.sh -p 1 -race -v
+
+  metadata-restore:
+    name: Native metadata restore (${{ matrix.arch }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x86_64
+            runner: ubuntu-24.04
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 20
+    env:
+      GOMAXPROCS: "1"
+      GOMEMLIMIT: 192MiB
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version: "1.26.10"
+          cache: false
+      - name: Seed actual PostgreSQL through first-run commands
+        run: |
+          test "$(uname -s)" = Linux
+          if [ "${{ matrix.arch }}" = x86_64 ]; then
+            test "$(uname -m)" = x86_64
+          else
+            test "${{ matrix.arch }}" = arm64
+            test "$(uname -m)" = aarch64
+          fi
+          umask 077
+          python3 scripts/dev-db.py
+          sh scripts/go.sh build -p 1 -trimpath -buildvcs=false -o .cache/freightctl-metadata ./cmd/freightctl
+          .cache/freightctl-metadata init
+          .cache/freightctl-metadata setup-plan \
+            --output .private/metadata-setup.json \
+            --token-file .private/metadata.token \
+            --storage .private/metadata-custody \
+            --tenant-label 'Restore fixture' --partner-label 'Synthetic partner' --admin-label 'Fixture operator'
+          .cache/freightctl-metadata setup --request-file .private/metadata-setup.json > .private/metadata-setup-result.json
+      - name: Back up, restore and verify exact metadata and access controls
+        run: |
+          umask 077
+          metadata_cid=$(docker inspect --format '{{.Id}}' freightctl-postgres-v1)
+          docker stop --time 15 "$metadata_cid" > .private/metadata-preparation-stop.log
+          python3 scripts/qualify-retained-metadata.py --container-id "$metadata_cid" --expected-schema 33 > .private/metadata-result.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          result = json.loads(Path('.private/metadata-result.json').read_text())
+          manifest = json.loads(Path(result['manifest']).read_text())
+          assert result['state'] == manifest['state'] == 'passed'
+          assert manifest['restored_metadata_matches'] and manifest['retained_database_unchanged']
+          assert manifest['original_stopped_state_restored'] and manifest['exact_restore_database_removed']
+          assert manifest['before']['runtime_role_safe']
+          assert not manifest['inference_performed'] and not manifest['scanner_engine_started']
+          assert len(manifest['before']['migration_ledger']) == 33
+          assert manifest['before']['forced_rls_tables'] == 62
+          assert len(manifest['before']['tables']) == 63
+          assert all(step['exit_code'] == 0 for step in manifest['steps'])
+          print(json.dumps({
+              'state': 'passed', 'manifest_sha256': result['manifest_sha256'],
+              'schema': 33, 'metadata_tables': 63, 'forced_rls_tables': 62,
+              'restored_rows': sum(table['rows'] for table in manifest['restored']['tables']),
+              'exact_restore_database_removed': True, 'original_stopped_state_restored': True,
+              'inference_performed': False, 'scanner_engine_started': False,
+              'scope': 'synthetic first-run metadata; same-cluster restore; payload/key/clean-host recovery unqualified',
+          }))
+          PY
 
   bounded-fuzz:
     runs-on: ubuntu-24.04

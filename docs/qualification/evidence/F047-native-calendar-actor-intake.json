@@ -237,5 +237,6 @@
     "The native guard cases use trusted source-adapter stand-ins with real PostgreSQL and storage. Stock-peer entries separately use actual loopback PostgreSQL, OpenSSH and sandboxed Chrome.",
     "Raw runner fixtures were not uploaded. These safe summaries retain their manifest hashes and outcome/cleanup counts, not a complete durable evidence bundle.",
     "All 83 whole rows and 12 full journeys remain open. Retained upgrade, recipient-key breadth, queued-work handoff, other protocols/connectors, private AI, native Windows, multi-host/reference estate, packaging and independent adoption remain required."
-  ]
+  ],
+  "recipient_key_followup": "docs/qualification/evidence/F048-native-recipient-key.json"
 }

@@ -1745,6 +1745,36 @@
         "https://github.com/ctlplne/freightctl/actions/runs/41513429558",
         "docs/qualification/evidence/F047-native-calendar-actor-intake.json"
       ]
+    },
+    {
+      "id": "D108",
+      "severity": "qualification observer blocker",
+      "state": "fixed locally",
+      "observed_on": "2026-11-02",
+      "candidate": "e7d26ab3125a11a9343d3f7654dd7db2b360e9ad",
+      "journey": "J11 metadata restore/retained upgrade component",
+      "title": "Retained metadata observer used a nonexistent role column and shifted migration files",
+      "first_failure": "original-before-authority: column rolconfig does not exist",
+      "cause": "The observer queried rolconfig in pg_authid rather than pg_db_role_setting. Its subsequent checksum mapping also omitted schema.sql version1 and started at002. Both failures preceded backup or retained schema mutation.",
+      "resolution": "Read role settings from their actual catalog, include complete membership options, and map version1 to schema.sql. Meaningful checksum refusal tests and the original retained restore/upgrade replay pass.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F049-retained-metadata-upgrade.json"
+      ]
+    },
+    {
+      "id": "D109",
+      "severity": "qualification observer blocker",
+      "state": "fixed locally",
+      "observed_on": "2026-11-02",
+      "candidate": "e7d26ab3125a11a9343d3f7654dd7db2b360e9ad",
+      "journey": "J11 metadata restore/retained upgrade component",
+      "title": "Metadata restore observer compared policy presentation without a parser round trip",
+      "first_failure": "restored metadata, permissions, roles or sequence state differs",
+      "cause": "All62 tables/64336rows, roles/grants and sequence state matched; one onboarding_probes policy lost a redundant nested AND parenthesis group during PostgreSQL restore parsing. The observer correctly stopped rather than ignore the security mismatch.",
+      "resolution": "Reparse original predicates using PostgreSQL in the isolated restored database, compare the resulting actual policy exactly, and roll back. Preserve raw catalog hashes; all other fields stay exact. Changed predicates/roles/grants/data fail refusal contracts. Original restore and retained upgrade pass.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F049-retained-metadata-upgrade.json"
+      ]
     }
   ]
 }

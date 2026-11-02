@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "id": "F049",
+  "kind": "retained-metadata-restore-and-schema-33-upgrade",
+  "state": "selected same-cluster metadata restore and retained upgrade verified",
+  "observed_on": "2026-11-02",
+  "candidate": "e7d26ab3125a11a9343d3f7654dd7db2b360e9ad",
+  "candidate_note": "Application binary from unchanged candidate; new qualification utilities are bound by their exact source digests. No product Go or SQL source was changed.",
+  "source_digests": {
+    "script_sha256": "7767ef3a75d02bb76d83549345beb939303c5fa2e8b3b50fcc6cd5359315d96c",
+    "upgrade_script_sha256": "417c5886b837e220d395b585017ae386d7e287e6f89c7c4f9969564321557973",
+    "binary_sha256": "238bdb73ed4d33b3e401661c2311011dd9ccb89774038b179a20997478bc67e9"
+  },
+  "private_manifest": {
+    "reference": ".private/retained-metadata-61049b363ab740028eb62a7f0de35322/manifest.json",
+    "sha256": "61588d97eca56c34e5d9c537fe89f81cf30952c82b8433963e20026539477cf4"
+  },
+  "first_failures": [
+    {
+      "reference": ".private/retained-metadata-2eaed4ac31114f6a9ecf43139cfd41bc/manifest.json",
+      "sha256": "214f07c9305496a3097b62a7e0511dfb67c51222901d603f4fe612d188da1b75",
+      "failure": "original-before-authority failed; inspect its protected native output",
+      "original_stopped_state_restored": true,
+      "exact_restore_database_removed": null
+    },
+    {
+      "reference": ".private/retained-metadata-2bc0e7362ea541e6b84d33f5454eddef/manifest.json",
+      "sha256": "54436b615d6d8193891b40fe5a66ad8cf1975bd318aa9b75f9792f4a60b85705",
+      "failure": "retained migration checksum differs from source",
+      "original_stopped_state_restored": true,
+      "exact_restore_database_removed": null
+    },
+    {
+      "reference": ".private/retained-metadata-1756bcc02ec042ca8a30aeeac3d7ff4c/manifest.json",
+      "sha256": "262f1a77d49242c4b978440cc03051c1ac90c44319142295abcab1647f55a981",
+      "failure": "restored metadata, permissions, roles or sequence state differs",
+      "original_stopped_state_restored": true,
+      "exact_restore_database_removed": true
+    }
+  ],
+  "defects": [
+    "D108",
+    "D109"
+  ],
+  "resource": {
+    "name": "/freightctl-postgres-v1",
+    "image": "sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+    "memory_bytes": 536870912,
+    "nano_cpus": 1000000000,
+    "originally_running": false
+  },
+  "postgres_version": "PostgreSQL 16.15 on aarch64-unknown-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit",
+  "backup": {
+    "reference": ".private/retained-metadata-61049b363ab740028eb62a7f0de35322/metadata-backup.stdout",
+    "bytes": 8473143,
+    "sha256": "35799870f9f3ea0289aa4c2ea1c72fef8288461822a8b150940b950d77a1c738",
+    "database_size_bytes": 76332055,
+    "file_mode": "0o600"
+  },
+  "before": {
+    "schema": 32,
+    "tables": 62,
+    "forced_rls": 61,
+    "rows": 64336
+  },
+  "after": {
+    "schema": 33,
+    "tables": 63,
+    "forced_rls": 62,
+    "rows": 64337,
+    "events": 31928,
+    "files": 2090,
+    "credentials": 4522,
+    "workflow_runs": 361,
+    "delivery_intents": 763,
+    "routing_authorizations": 0
+  },
+  "policy_parser_roundtrip": {
+    "method": "original expressions reparsed by PostgreSQL in restored database; exact pg_policies comparison; transaction rolled back",
+    "policies": [
+      {
+        "table": "onboarding_probes",
+        "name": "scope"
+      }
+    ],
+    "original_catalog_sha256": "a33037a782f1a5d3e74334243f44b38b42db31102fd3ab0b3c853c1bbbc94ed7",
+    "restored_catalog_sha256": "139ce67aa3234d3a332660aab3c7fb59a6c7de595e6708f843a10df05c523d0f",
+    "all_other_catalog_fields_equal": true,
+    "reparsed_original_predicates_equal_restored_predicates": true
+  },
+  "verification": {
+    "retained_database_unchanged_before_migration": true,
+    "restored_metadata_matches": true,
+    "historical_table_rows_preserved": true,
+    "historical_grants_and_authority_preserved": true,
+    "ordinary_init_replay_unchanged": true,
+    "new_routing_references_all_null": true,
+    "exact_restore_database_removed": true,
+    "original_stopped_state_restored": true
+  },
+  "historical_row_projection": {
+    "workflow_runs_excludes": [
+      "routing_authorization_id"
+    ],
+    "new_column_independently_required_null": true,
+    "schema_ledger": "old 32 entries and source digests retained; exact new entry33 verified"
+  },
+  "native_step_seconds": 18.211,
+  "local_checks": {
+    "maintenance_refusal_tests": 4,
+    "actionlint": "passed",
+    "python_compile": "passed",
+    "diff_whitespace": "passed",
+    "record_contract_tests": 15,
+    "native_evidence_contract_tests": 9,
+    "ci_summary_privacy_tests": 7,
+    "qualification_records": "valid;83rows/12journeys/6protocolcontracts",
+    "gitleaks": "v8.30.1 selected14-file snapshot, zero leaks",
+    "gitleaks_diagnostic_sha256": "d153e3700d9a43d1484d0b4226b713bcc47a515f64efa7a97f60dac68f6b48e8"
+  },
+  "github_restore_followup": {
+    "state": "prepared, not yet executed",
+    "runners": [
+      "ubuntu-24.04 x86_64",
+      "ubuntu-24.04-arm aarch64"
+    ],
+    "scope": "first-run synthetic metadata, actual PostgreSQL custom dump and transaction restore; no owner data uploaded"
+  },
+  "inference_performed": false,
+  "scanner_engine_started": false,
+  "scanner_resource_observed_stopped_after": true,
+  "full_foundation_aggregate_executed": false,
+  "full_disaster_recovery_qualified": false,
+  "overall_goal_complete": false,
+  "limits": [
+    "Private backups and raw observations stay mode0600 under mode0700 .private; only hashes/counts/references are committed.",
+    "Restore uses a new database in the same bounded cluster and relies on its existing global roles. Payload stores, private keys, clean-host restore, deployment configuration and reference RPO/RTO are not qualified.",
+    "The existing 361 run and763 intent records are preserved; execution through an active or queued upgrade and exactly-once receiver effects are not established by unchanged records.",
+    "The retained exercise was on the actual local ARM estate. GitHub synthetic restore gates are separate and remain pending until they run.",
+    "All83 whole baseline rows, all12 full journeys, Windows D103, governed queued collected handoff and remaining GOAL.md requirements stay open."
+  ]
+}

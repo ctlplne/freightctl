@@ -43,6 +43,7 @@ jobs:
           python3 scripts/test-records.py
           python3 scripts/test-native-evidence.py
           python3 scripts/test-ci-summary.py
+          python3 scripts/test-retained-metadata.py
           python3 scripts/check-records.py
       - name: Exact frontend dependencies, contracts and browser build
         run: |
