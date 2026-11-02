@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "id": "F057",
+  "kind": "per-control-session-ftps-tls-binding-component",
+  "state": "cryptographic component verified on native ARM loopback; protocol adapter absent; native GitHub replay pending",
+  "observed_on": "2026-11-02",
+  "starting_commit": "fd3698d9aaad38be561a8006868b17306e574d82",
+  "author_and_committer": "imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>",
+  "implementation_sha256": [
+    {"path": "internal/crypto/ftps.go", "sha256": "bbfa8da4d740fca284f588ce9f327a54546491d4c01c8e68feb39230af59d946"},
+    {"path": "internal/crypto/ftps_test.go", "sha256": "c56601d557ac4521725c68962527bc1ba9401f242729841185d33e0212487965"},
+    {"path": "docs/architecture/0016-ftps-channel-binding.md", "sha256": "6da123957ef6807a2ea3eac1e21b28906985f162da48a7112cd9b9f3a1a2f32d"}
+  ],
+  "environment": {
+    "runtime": "actual macOS ARM; pinned Go1.26.10",
+    "transport": "real loopback TCP and certificate-verified TLS1.3, including post-handshake session tickets",
+    "go_limits": "GOMAXPROCS=1;GOMEMLIMIT=192MiB",
+    "application_protocol": "TLS stand-in only; no FTP command server, database or file transfer"
+  },
+  "first_attempt": {
+    "state": "sandbox could not bind loopback sockets",
+    "message": "listen tcp 127.0.0.1:0: bind: operation not permitted",
+    "recovery": "Original real-loopback tests replayed with narrowly scoped execution approval. No transport assertions were removed or replaced."
+  },
+  "verification": {
+    "command": "GOMAXPROCS=1 GOMEMLIMIT=192MiB sh scripts/go.sh test -race -count=1 -v -run TestFTPS ./internal/crypto",
+    "top_level_tests": 5,
+    "pass_records_including_subcases": 8,
+    "failed_records": 0,
+    "skipped_records": 0,
+    "architecture_import_boundary": "native ARM race test passed",
+    "go_vet_internal_crypto": "passed",
+    "gofmt_and_diff_whitespace": "passed",
+    "gitleaks_crypto_source": "Gitleaks8.30.1;78583bytes;no leaks;no rule changes"
+  },
+  "observations": [
+    "Only a data connection resuming the authenticated control session's TLS1.3 ticket succeeds.",
+    "A same-IP client with no ticket and a ticket from another control binding are rejected, despite the shared certificate and hostname.",
+    "A ticket before application authentication is rejected. AllowData is one-time; a closed binding cannot reopen and refuses new handshakes.",
+    "A resumed data-session ticket cannot become a fresh control connection.",
+    "Untrusted certificates, wrong hostnames, TLS1.2, unsafe/symlinked/oversized certificate or key references and mismatched keys are rejected.",
+    "Cryptographic policy and key parsing stay inside internal/crypto. PEM and temporary ticket buffers are cleared; Go-owned parsed key/ticket copies remain an explicit library boundary."
+  ],
+  "engine_review": {
+    "candidate": "github.com/fclairamb/ftpserverlib@v0.32.7",
+    "upstream_commit": "a4adf0322c6c4f72e027f5106eeb918d5086f58f",
+    "source": "https://github.com/fclairamb/ftpserverlib/tree/v0.32.7",
+    "downloaded_only_to_ignored_cache": true,
+    "product_dependency_added": false,
+    "reviewed_files_sha256": {
+      "driver.go": "ad619b40b03f45b77b102475beb8372e3b1be12f306bddd313687a24579269a0",
+      "transfer_pasv.go": "992733b34dbc7e651cc4c0670075060e987b2dbd750fcc5e3406b08c4ff2ba63",
+      "handle_files.go": "9128258bd1857aa9ca83b93c1d92ef9684719dff413e6bf403213a5c10c52886"
+    },
+    "finding": "Passive sockets bind wildcard addresses before the wrapper hook; the transfer also retains the original deadline setter. This does not meet the required loopback socket lifecycle.",
+    "next_action": "Select a compatible engine or auditable licensed pinned patch with passive-address and cancellation controls; do not patch module cache. Then integrate shared custody and qualify stock explicit/implicit receiving and independent sending on GitHub."
+  },
+  "inference_performed": false,
+  "scanner_engine_started": false,
+  "postgres_started": false,
+  "full_foundation_aggregate_executed": false,
+  "full_journeys_qualified": false,
+  "overall_goal_complete": false,
+  "limits": [
+    "No FTP listener or client exists yet. All four FTPS parity rows remain planned; this component proves neither wire interoperability nor durable file acceptance.",
+    "The future adapter must create exactly one binding per control connection, authenticate and audit before AllowData, enforce namespace/current authority, cancel contexts and close established streams on shutdown.",
+    "Explicit/implicit sequencing, passive/active data behavior, certificate rollover, stock clients, interruption, resume, firewall/gateway operation and cross-platform execution remain unqualified.",
+    "Payload/key/clean-host recovery, active/queued upgrades, WindowsD103, all83whole rows/12full journeys, independent adoption and enterprise/release gates remain open."
+  ]
+}
