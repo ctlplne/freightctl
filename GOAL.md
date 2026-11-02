@@ -7,7 +7,7 @@
 - GitHub: https://github.com/ctlplne/freightctl
 - Origin: https://github.com/ctlplne/freightctl.git
 - Branch: main
-- Visibility: Private until the owner explicitly changes it
+- Visibility: Owner requested a public repository on 2026-11-02. Source publication and CI are authorized for this task; release artifacts, packages, images and external deployments remain separately gated.
 - Status: Product execution contract. Repository bootstrap does not establish product readiness.
 
 ## 0 Repository ownership and execution authority

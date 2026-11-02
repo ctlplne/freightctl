@@ -1,5 +1,6 @@
 # freightctl status
 
+- Updated: 2026-11-02. The owner authorized public GitHub source visibility and CI offload as a separate task; the full product goal remains paused and incomplete. Local workflow configuration now separates native Linux x86_64/arm64 PostgreSQL/race checks, x86_64 frontend/security/fuzz checks and stock SFTP/Chromium stand-in journeys. The previously deferred complete foundation replay is manual only. GitHub execution and remote publication are pending until observed.
 - Updated: 2026-10-31. **Overall goal paused at the owner's request.** Finish this local browser checkpoint, commit and halt. The full GOAL.md contract remains unchanged and incomplete.
 - Local `main` only. Author and committer: `imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>`. No push, publication or external deployment.
 - Local inference and the scanner stayed off. F026's final aggregate remains owner-deferred.
