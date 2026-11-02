@@ -12,6 +12,42 @@ SUITES = ('collections', 'arrivals', 'schedules', 'routing', 'captured-routing')
 BOUND = 8 << 20
 
 
+def browser_outcomes(path, steps):
+    locations = set()
+    runtime_errors = egress = failed = 0
+    known = {p.name for p in Path(__file__).parent.glob('*.mjs')}
+    for step in steps:
+        if 'browser_report_sha256' not in step:
+            continue
+        name = step.get('name')
+        if not isinstance(name, str) or not re.fullmatch('[A-Za-z0-9][A-Za-z0-9._-]{0,127}', name):
+            raise ValueError('invalid browser evidence name')
+        report_path = path.parent / (name + '.browser.json')
+        if report_path.is_symlink():
+            raise ValueError('unsafe browser evidence')
+        with report_path.open('rb') as source:
+            data = source.read((1 << 20) + 1)
+        if len(data) > 1 << 20 or hashlib.sha256(data).hexdigest() != step['browser_report_sha256']:
+            raise ValueError('browser evidence checksum differs')
+        report = json.loads(data)
+        if report.get('state') not in ('passed', 'failed'):
+            raise ValueError('invalid browser outcome')
+        errors, contacts = report.get('runtime_errors'), report.get('external_egress')
+        if not isinstance(errors, list) or not isinstance(contacts, list):
+            raise ValueError('incomplete browser outcome')
+        runtime_errors += len(errors)
+        egress += len(contacts)
+        failed += report['state'] != 'passed'
+        failure = report.get('failure') or ''
+        if not isinstance(failure, str):
+            raise ValueError('invalid browser failure')
+        for script, line, column in re.findall(r'/scripts/([A-Za-z0-9._-]+\.mjs):([0-9]{1,7}):([0-9]{1,7})', failure):
+            if script in known:
+                locations.add(script + ':' + line + ':' + column)
+    return {'browser_failed_reports': failed, 'browser_runtime_errors': runtime_errors,
+            'browser_external_contacts': egress, 'browser_failure_locations': sorted(locations)[:32]}
+
+
 def summarize(path, expected_commit):
     if path.is_symlink() or not path.is_file():
         raise ValueError('unsafe or missing manifest')
@@ -36,11 +72,17 @@ def summarize(path, expected_commit):
     if not isinstance(steps, list) or not 1 <= len(steps) <= 10000 or not isinstance(cleanup, list) or len(cleanup) > 100:
         raise ValueError('invalid step inventory')
     mismatches = 0
+    http_mismatches = 0
     for step in steps:
         actual, expected = step.get('exit_code'), step.get('expected_exit_code')
         if type(actual) is not int or type(expected) is not int:
             raise ValueError('incomplete command outcome')
         mismatches += actual != expected
+        if 'http_status' in step or 'expected_status' in step:
+            actual_status, expected_status = step.get('http_status'), step.get('expected_status')
+            if type(actual_status) is not int or type(expected_status) is not int or not 100 <= actual_status <= 599 or not 100 <= expected_status <= 599:
+                raise ValueError('incomplete HTTP outcome')
+            http_mismatches += actual_status != expected_status
     outputs, duration = manifest.get('output_artifacts_verified'), manifest.get('duration_seconds')
     if type(outputs) is not int or not 0 <= outputs <= 100000:
         raise ValueError('invalid output count')
@@ -48,18 +90,21 @@ def summarize(path, expected_commit):
         raise ValueError('invalid duration')
     if 'output_closure_failure' not in manifest or 'failure' not in manifest:
         raise ValueError('missing evidence closure')
+    browser = browser_outcomes(path, steps)
     complete = (manifest['state'] == 'passed' and manifest['sources_unchanged_during_run']
-                and manifest['isolated_database_removed'] and not mismatches and not cleanup
+                and manifest['isolated_database_removed'] and not mismatches and not http_mismatches and not cleanup
                 and outputs >= 2 * len(steps) and manifest['output_closure_failure'] is None and manifest['failure'] is None
-                and not manifest['inference_performed'] and not manifest['scanner_engine_started'])
+                and not manifest['inference_performed'] and not manifest['scanner_engine_started']
+                and not browser['browser_failed_reports'] and not browser['browser_runtime_errors'] and not browser['browser_external_contacts'])
     return {'state': 'passed' if complete else 'failed', 'source_commit': commit,
             'manifest_sha256': hashlib.sha256(data).hexdigest(),
             'source_inputs': len(sources), 'sources_unchanged': manifest['sources_unchanged_during_run'],
             'recorded_commands': len(steps), 'unexpected_command_exits': mismatches,
+            'unexpected_http_statuses': http_mismatches,
             'verified_output_artifacts': outputs, 'output_closure_passed': manifest.get('output_closure_failure') is None,
             'cleanup_failures': len(cleanup), 'isolated_database_removed': manifest['isolated_database_removed'],
             'duration_seconds': duration, 'inference_performed': manifest['inference_performed'],
-            'scanner_engine_started': manifest['scanner_engine_started']}
+            'scanner_engine_started': manifest['scanner_engine_started'], **browser}
 
 
 def main():

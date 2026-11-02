@@ -1661,9 +1661,44 @@
         "Synthetic scanner clean/infected/limit/encrypted cases returned scanner unavailable or unverified."
       ],
       "cause": "Windows private-directory mode and directory-sync behavior differ from the current Unix implementation. The browser source-byte mismatch and scanner verdict failures need direct native diagnosis; checkout line endings and transport are hypotheses.",
-      "resolution": "Keep the native Windows job red. Build Windows ACL and durable-directory semantics without relaxing refusal checks; prove exact browser input bytes and diagnose scanner validation/transport on a native runner, then rerun the original suite. A passing cross-build would not close this defect.",
+      "resolution": "Commits a82fec1/a7aae47 preserve committed bytes with .gitattributes. Native Windows run 41499894396 reports i/lf w/lf attr/-text and passes internal/browser. Private-directory mode, directory-sync and scanner verdict failures remain red. Implement Windows ACL and durable metadata semantics without relaxing refusal checks; diagnose native scanner validation/transport and rerun the original suite. A passing cross-build cannot close this defect.",
       "regression_evidence": [
-        "https://github.com/ctlplne/freightctl/actions/runs/41496634781"
+        "https://github.com/ctlplne/freightctl/actions/runs/41496634781",
+        "https://github.com/ctlplne/freightctl/actions/runs/41499894396"
+      ]
+    },
+    {
+      "id": "D104",
+      "severity": "qualification harness blocker",
+      "state": "repair prepared; native replay pending",
+      "observed_on": "2026-11-02",
+      "candidate": "62825fb2094ccca76320dd2fff4612f798dc82b6",
+      "journey": "J03 captured corrected-revision native routing",
+      "title": "Corrected routing fixture used the wrong workflow revision request field",
+      "reproduction": "GitHub run 41500650539, Stock peers (captured-routing), corrected-routing-draft",
+      "first_failure": "AssertionError: ('corrected-routing-draft', 400, 200)",
+      "cause": "The qualification fixture sent id while the strict DraftRequest JSON contract requires workflow_id. The API correctly refused the unknown field.",
+      "resolution": "Use workflow_id in the exact new revision request. Add HTTP-status mismatch counts to the safe summary so a successful curl process cannot hide rejected commands. Six local privacy/refusal contracts pass; replay the original native journey.",
+      "first_safe_manifest_sha256": "166091f98563be5b5a48660fa5853eb817e1a68a8e9038ff19647ad45739e8df",
+      "regression_evidence": [
+        "https://github.com/ctlplne/freightctl/actions/runs/41500650539"
+      ]
+    },
+    {
+      "id": "D105",
+      "severity": "native routing qualification blocker",
+      "state": "open; safe diagnostic replay prepared",
+      "observed_on": "2026-11-02",
+      "candidate": "62825fb2094ccca76320dd2fff4612f798dc82b6",
+      "journey": "J03 stock-peer routing browser",
+      "title": "Original routing browser phase failed on native Linux",
+      "reproduction": "GitHub run 41500650539, Stock peers (routing), native-browser-route",
+      "first_failure": "ValueError: browser failed or reported page errors/external egress: native-browser-route",
+      "cause": "Not established by the wrapper log. The hashed protected browser report was deliberately not uploaded.",
+      "resolution": "Retain the red gate and original safe manifest. Add a hash-checked allowlist that emits only known script filename/line/column and browser error/contact counts, then rerun the original journey without changing its assertions.",
+      "first_safe_manifest_sha256": "fd851a82be67b1e0110c828507930e9c0ef7706d7bf8794f176a73d12975f15f",
+      "regression_evidence": [
+        "https://github.com/ctlplne/freightctl/actions/runs/41500650539"
       ]
     }
   ]

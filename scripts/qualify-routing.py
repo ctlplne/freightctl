@@ -255,7 +255,7 @@ LogLevel VERBOSE
   branch=corrected['program']['nodes'][0]
   branch['then'],branch['else'][0]['then']=branch['else'][0]['then'],branch['then']
   original_workflow=created_ui['workflow']
-  routing_target=post('corrected-routing-draft','/workflows/drafts',{'id':original_workflow['id'],'expected_version':original_workflow['version'],'definition':corrected},key='corrected-routing-draft')['resource']
+  routing_target=post('corrected-routing-draft','/workflows/drafts',{'workflow_id':original_workflow['id'],'expected_version':original_workflow['version'],'definition':corrected},key='corrected-routing-draft')['resource']
   routing_target=post('corrected-routing-approval','/workflows/'+routing_target['id']+'/'+str(routing_target['version'])+'/approve',decision(routing_target),key='corrected-routing-approval')['resource']
   assert routing_target['version']==original_workflow['version']+1 and routing_target['definition']['source']==original_workflow['definition']['source'] and routing_target['definition']['steps']==original_workflow['definition']['steps']
   browser_expected={'north-browser.csv':['south'],'south-browser.csv':['north','audit'],'unmatched-browser.csv':[]}

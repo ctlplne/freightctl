@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Refuse success without evidence and prevent protected manifest disclosure."""
 import importlib.util
+import hashlib
 import json
 from pathlib import Path
 import tempfile
@@ -56,6 +57,16 @@ class SummaryBoundary(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.summary()
 
+    def test_successful_transport_cannot_hide_rejected_http_command(self):
+        self.manifest['steps'][0].update(http_status=400, expected_status=200)
+        report = self.summary()
+        self.assertEqual(report['state'], 'failed')
+        self.assertEqual(report['unexpected_command_exits'], 0)
+        self.assertEqual(report['unexpected_http_statuses'], 1)
+        self.manifest['steps'][0]['http_status'] = 'private-response'
+        with self.assertRaises(ValueError):
+            self.summary()
+
     def test_wrong_commit_and_untrusted_outcome_text_are_refused(self):
         for field, value in (('starting_commit', 'c' * 40), ('state', 'secret-state'),
                              ('duration_seconds', float('nan')), ('output_artifacts_verified', True)):
@@ -73,6 +84,24 @@ class SummaryBoundary(unittest.TestCase):
         self.path.symlink_to(target)
         with self.assertRaises(ValueError):
             module.summarize(self.path, self.commit)
+
+    def test_browser_diagnostic_exposes_only_pinned_source_location_and_counts(self):
+        report = {'state': 'failed', 'runtime_errors': ['secret-page-error'],
+                  'external_egress': ['https://private.invalid'],
+                  'failure': 'private-content at /private-path/scripts/routing-browser.mjs:77:3'}
+        data = json.dumps(report).encode()
+        report_path = self.path.with_name('native-browser-route.browser.json')
+        report_path.write_bytes(data)
+        self.manifest['steps'][0].update(name='native-browser-route', browser_report_sha256=hashlib.sha256(data).hexdigest())
+        result = self.summary()
+        self.assertEqual(result['state'], 'failed')
+        self.assertEqual(result['browser_failure_locations'], ['routing-browser.mjs:77:3'])
+        self.assertEqual(result['browser_runtime_errors'], 1)
+        for private in ('secret-page-error', 'private.invalid', 'private-content', 'private-path'):
+            self.assertNotIn(private, json.dumps(result))
+        report_path.write_bytes(b'{}')
+        with self.assertRaises(ValueError):
+            self.summary()
 
 
 if __name__ == '__main__':
