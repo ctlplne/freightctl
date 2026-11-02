@@ -2,7 +2,7 @@
 """Create synthetic GnuPG interoperability artifacts in one bounded offline peer."""
 from pathlib import Path
 from datetime import datetime,timezone
-import argparse,hashlib,json,os,subprocess,sys,time,uuid
+import argparse,hashlib,json,os,platform,subprocess,sys,time,uuid
 os.umask(0o077)
 root=Path(__file__).resolve().parents[1];os.chdir(root)
 parser=argparse.ArgumentParser();parser.add_argument('--rows',type=int,default=2);parser.add_argument('--native-config',default=os.environ.get('FREIGHTCTL_GNUPG_NATIVE_CONFIG'));args=parser.parse_args()
@@ -11,11 +11,12 @@ run='pgp-fixtures-'+uuid.uuid4().hex;private=root/'.private'/run;private.mkdir(m
 raw=root/'evidence/raw'/run;raw.mkdir(parents=True,mode=0o700)
 image='freightctl-pgp-peer:2.4.9-r1'
 image_id=None
+peer_platform=None
 if not args.native_config:
  metadata=json.loads(subprocess.check_output(['docker','image','inspect',image]))[0]
  assert metadata['Config']['Labels']['freightctl.workspace']==str(root)
  assert metadata['Config']['Labels']['freightctl.purpose']=='pgp-interoperability'
- image_id=metadata['Id']
+ image_id=metadata['Id'];peer_platform=metadata['Os']+'/'+metadata['Architecture']
 data=b'account,amount,day\n'+b'00000001,100.01,2026-10-28\n'*args.rows
 (private/'source.csv').write_bytes(data)
 program=r'''#!/bin/sh
@@ -76,7 +77,7 @@ done
 for task_pgp_label in good other rsa expired recipient recipient-rsa;do gpgconf --homedir /tmp/gnupg-$task_pgp_label --kill all;done
 '''
 (private/'peer.sh').write_text(program)
-command=['docker','run','--rm','--label','freightctl.workspace='+str(root),'--name','freightctl-'+run,'--network=none','--read-only','--cap-drop=ALL','--security-opt=no-new-privileges','--memory=128m','--cpus=1','--pids-limit=64','--tmpfs','/tmp:rw,noexec,nosuid,size=64m','-v',str(private)+':/work',image_id,'/bin/sh','/work/peer.sh']
+command=['docker','run','--rm','--label','freightctl.workspace='+str(root),'--name','freightctl-'+run,'--network=none','--read-only','--cap-drop=ALL','--security-opt=no-new-privileges','--memory=128m','--cpus=1','--pids-limit=64','--tmpfs','/tmp:rw,noexec,nosuid,size=64m','--user',str(os.getuid())+':'+str(os.getgid()),'-v',str(private)+':/work',image_id,'/bin/sh','/work/peer.sh']
 if args.native_config:
  command=[sys.executable,'scripts/pgp-native-peer.py','--config',str(Path(args.native_config).resolve()),'--metrics',str(raw/'native-peer-metrics.json'),'prepare','--work',str(private)]
 start=time.monotonic()
@@ -84,7 +85,7 @@ with (raw/'peer.log').open('wb') as out:result=subprocess.run(command,stdout=out
 if result.returncode:
  print((raw/'peer.log').read_text()[-2500:]);raise SystemExit(result.returncode)
 files=['source.csv','good-public.gpg','good-public.asc','good.sig','good.sig.asc','aged.sig','other-public.gpg','other.sig','rsa-public.gpg','rsa.sig','weak.sig','expired-public.gpg','revoked-public.gpg','recipient-public.gpg','recipient-rsa-public.gpg','gpg-version.txt','packages.txt','good-verification.txt']
-manifest={'schema_version':1,'state':'passed','observed_at':datetime.now(timezone.utc).isoformat(),'fixture_path':str(private.relative_to(root)),'peer_image':image_id,'peer_base':'alpine@sha256:294b683cb724975bec92580e1e685676bd4b50bda910ddb8c51d4cabeaec77e6','command':command,'duration_seconds':round(time.monotonic()-start,3),'gpg_version':(private/'gpg-version.txt').read_text().splitlines()[0],'fingerprints':{n:(private/(n+'-fingerprint.txt')).read_text().strip().lower() for n in ('good','subkey','other','rsa','expired','recipient','recipient-rsa')},'files':[{'path':str((private/n).relative_to(root)),'sha256':hashlib.sha256((private/n).read_bytes()).hexdigest()} for n in files],'private_rejection_fixture':'protected synthetic private packet in the fixture directory; never a production key or Git artifact','inference_performed':False,'resource_limits':{'memory_bytes':128<<20,'cpus':1,'pids':64,'network':'none'},'limits':['Independent GnuPG 2.4.9 Linux aarch64 peer under Docker on this macOS host, not native Linux application qualification.','Synthetic keys and data only. GnuPG time overrides apply to its process; the host clock is unchanged.','V4 Ed25519 primary/signing subkey and RSA3072/SHA256 peer profiles; full algorithm/peer/platform coverage remains open.']}
+manifest={'schema_version':1,'state':'passed','observed_at':datetime.now(timezone.utc).isoformat(),'fixture_path':str(private.relative_to(root)),'peer_image':image_id,'peer_platform':peer_platform,'host_platform':platform.system().lower()+'/'+platform.machine(),'peer_base':'alpine@sha256:294b683cb724975bec92580e1e685676bd4b50bda910ddb8c51d4cabeaec77e6','command':command,'duration_seconds':round(time.monotonic()-start,3),'gpg_version':(private/'gpg-version.txt').read_text().splitlines()[0],'fingerprints':{n:(private/(n+'-fingerprint.txt')).read_text().strip().lower() for n in ('good','subkey','other','rsa','expired','recipient','recipient-rsa')},'files':[{'path':str((private/n).relative_to(root)),'sha256':hashlib.sha256((private/n).read_bytes()).hexdigest()} for n in files],'private_rejection_fixture':'protected synthetic private packet in the fixture directory; never a production key or Git artifact','inference_performed':False,'resource_limits':{'memory_bytes':128<<20,'cpus':1,'pids':64,'network':'none'},'limits':['Independent GnuPG 2.4.9 '+str(peer_platform)+' container peer on '+platform.system().lower()+'/'+platform.machine()+' host; this does not by itself qualify native application runtime.','Synthetic keys and data only. GnuPG time overrides apply to its process; the host clock is unchanged.','V4 Ed25519 primary/signing subkey and RSA3072/SHA256 peer profiles; full algorithm/peer/platform coverage remains open.']}
 manifest['peer_backend']='native-macos' if args.native_config else 'docker'
 if args.native_config:
  metrics=json.loads((raw/'native-peer-metrics.json').read_text());assert metrics['state']=='passed'

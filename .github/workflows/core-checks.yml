@@ -87,10 +87,12 @@ jobs:
       - name: Verify native runner architecture
         run: |
           test "$(uname -s)" = Linux
-          case "${{ matrix.arch }}:$(uname -m)" in
-            x86_64:x86_64|arm64:aarch64) ;;
-            *) echo 'Unexpected runner architecture' >&2; exit 1 ;;
-          esac
+          if [ "${{ matrix.arch }}" = x86_64 ]; then
+            test "$(uname -m)" = x86_64
+          else
+            test "${{ matrix.arch }}" = arm64
+            test "$(uname -m)" = aarch64
+          fi
       - name: Task-owned PostgreSQL and offline GnuPG peer
         run: |
           python3 scripts/dev-db.py
@@ -162,6 +164,20 @@ jobs:
           node web/node_modules/playwright/cli.js install --with-deps chromium --only-shell
       - name: Task-owned PostgreSQL
         run: python3 scripts/dev-db.py
+      - name: Chromium sandbox preflight
+        run: |
+          node - <<'NODE'
+          const { chromium } = require('./web/node_modules/playwright');
+          chromium.launch({ headless: true, chromiumSandbox: true })
+            .then(async browser => {
+              await browser.close();
+              console.log('Chromium sandbox launched on the native Linux runner');
+            })
+            .catch(error => {
+              console.error(error.message);
+              process.exitCode = 1;
+            });
+          NODE
       - name: Real loopback SFTP collection, arrival and schedule journeys
         run: |
           test "$(uname -m)" = x86_64
