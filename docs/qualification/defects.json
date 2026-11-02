@@ -1660,11 +1660,12 @@
         "The browser source byte hash differed for web/THIRD_PARTY_NOTICES.txt on Windows checkout; line-ending conversion is a hypothesis, not established cause.",
         "Synthetic scanner clean/infected/limit/encrypted cases returned scanner unavailable or unverified."
       ],
-      "cause": "Windows private-directory mode and directory-sync behavior differ from the current Unix implementation. The browser source-byte mismatch and scanner verdict failures need direct native diagnosis; checkout line endings and transport are hypotheses.",
-      "resolution": "Commits a82fec1/a7aae47 preserve committed bytes with .gitattributes. Native Windows run 41499894396 reports i/lf w/lf attr/-text and passes internal/browser. Private-directory mode, directory-sync and scanner verdict failures remain red. Implement Windows ACL and durable metadata semantics without relaxing refusal checks; diagnose native scanner validation/transport and rerun the original suite. A passing cross-build cannot close this defect.",
+      "cause": "Native Windows does not provide Unix private-directory/socket permission semantics through os.Chmod, and current directory Sync handles return Access is denied. Byte-preserving checkout repairs the browser source hash. Native job 125495209312 on b1ca6c1 reports is_socket=true and permission_bits=0666 after the fixture requests 0600, so the existing private-socket guard necessarily refuses that metadata; later scanner transport remains unqualified.",
+      "resolution": "Commits a82fec1/a7aae47 preserve committed bytes with .gitattributes; repeated native Windows runs pass internal/browser. Job 125495209312 narrows the scanner refusal to its private-socket metadata boundary (0666 despite requested 0600), without weakening the check. Private-directory ACL, protected socket access and directory durability remain red. Implement and independently test native Windows access-control and durable metadata behavior, then rerun the original unit/service journeys. Cross-builds cannot close this defect.",
       "regression_evidence": [
         "https://github.com/ctlplne/freightctl/actions/runs/41496634781",
-        "https://github.com/ctlplne/freightctl/actions/runs/41499894396"
+        "https://github.com/ctlplne/freightctl/actions/runs/41499894396",
+        "https://github.com/ctlplne/freightctl/actions/runs/41508880233"
       ]
     },
     {
