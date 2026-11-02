@@ -122,10 +122,23 @@ func TestCapturedRoutingRetainsOriginalCalendarCutoffsAndSuspensionFencesEveryPh
 			if err != nil || !reflect.DeepEqual(after.Arrival, arrival.Arrival) {
 				t.Fatal("corrected routing changed the original arrival", err)
 			}
-			if _, err = f.s.ControlSchedule(f.ctx, f.scope, schedule.ID, schedule.Version, "suspend", "suspend-corrected-routing-calendar", Decision{Hash: schedule.Hash, Revision: schedule.Revision}); err != nil {
+			// The due tick advances the calendar's revision. Its old activation
+			// receipt cannot control the new state; inspect before suspending it.
+			before := routingPreviewCounts(t, f)
+			if _, err = f.s.ControlSchedule(f.ctx, f.scope, schedule.ID, schedule.Version, "suspend", "stale-calendar-cannot-suspend", Decision{Hash: schedule.Hash, Revision: schedule.Revision}); !errors.Is(err, store.ErrRevision) {
+				t.Fatal("stale calendar control was not refused", err)
+			}
+			if routingPreviewCounts(t, f) != before {
+				t.Fatal("stale calendar control left effects")
+			}
+			live, err := f.s.ScheduleStatus(f.ctx, f.scope, schedule.ID, schedule.Version)
+			if err != nil || live.Schedule.State != "active" || live.Schedule.Hash != schedule.Hash || live.Schedule.Revision <= schedule.Revision {
+				t.Fatal("cannot inspect the original calendar's current revision", err)
+			}
+			if _, err = f.s.ControlSchedule(f.ctx, f.scope, schedule.ID, schedule.Version, "suspend", "suspend-corrected-routing-calendar", Decision{Hash: schedule.Hash, Revision: live.Schedule.Revision}); err != nil {
 				t.Fatal(err)
 			}
-			before := routingPreviewCounts(t, f)
+			before = routingPreviewCounts(t, f)
 			if phase == "proposed" {
 				if _, err = f.s.DecideCollectionRouting(f.ctx, f.scope, a.JobID, a.ID, "suspended-calendar-cannot-approve", "approve", Decision{Hash: a.Hash, Revision: a.Revision}); !errors.Is(err, store.ErrCollection) {
 					t.Fatal("suspended calendar allowed a new routing approval", err)

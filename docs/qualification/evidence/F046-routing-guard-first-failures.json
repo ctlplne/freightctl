@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "id": "F046",
+  "kind": "routing-guard-first-failures-and-repair-progress",
+  "state": "fixture repairs prepared; original native replays required",
+  "observed_on": "2026-11-02",
+  "candidates": {
+    "native_guards": "bff22e30fef596d3c780b3d4db92486e08187148",
+    "intake_routing": "8a4afd8b8c2e36c362524e2ecd8b62b8db490d9a"
+  },
+  "native_run": "https://github.com/ctlplne/freightctl/actions/runs/41511809750",
+  "intake_run": "https://github.com/ctlplne/freightctl/actions/runs/41513429558",
+  "native_results": [
+    {
+      "job": 125505260799,
+      "runner": "ubuntu-24.04 x86_64",
+      "state": "failed",
+      "passed_records": 527,
+      "failed_records": 4,
+      "skipped_records": 0,
+      "actor_rotation_case": "passed with both pre-admission and already-queued subcases under -race",
+      "actor_rotation_seconds": 3.68
+    },
+    {
+      "job": 125505260821,
+      "runner": "ubuntu-24.04-arm aarch64",
+      "state": "failed",
+      "passed_records": 527,
+      "failed_records": 4,
+      "skipped_records": 0,
+      "actor_rotation_case": "passed with both pre-admission and already-queued subcases under -race",
+      "actor_rotation_seconds": 3.19
+    }
+  ],
+  "intake_job": 125510785274,
+  "safe_manifest_summary": {
+    "state": "failed",
+    "source_commit": "8a4afd8b8c2e36c362524e2ecd8b62b8db490d9a",
+    "manifest_sha256": "87dd33285239c8d1177e42f4fb8a66fc41d7976d6952d6432db207c42ec3afd4",
+    "source_inputs": 444,
+    "sources_unchanged": true,
+    "recorded_commands": 185,
+    "unexpected_command_exits": 0,
+    "unexpected_http_statuses": 1,
+    "verified_output_artifacts": 499,
+    "output_closure_passed": true,
+    "cleanup_failures": 0,
+    "isolated_database_removed": true,
+    "duration_seconds": 112.801,
+    "inference_performed": false,
+    "scanner_engine_started": false,
+    "browser_failed_reports": 0,
+    "browser_runtime_errors": 0,
+    "browser_external_contacts": 0,
+    "browser_failure_locations": []
+  },
+  "first_failures": [
+    {
+      "defect": "D106",
+      "case": "TestCapturedRoutingRetainsOriginalCalendarCutoffsAndSuspensionFencesEveryPhase",
+      "observed": "All three phases refused suspension with resource revision changed at line 126.",
+      "cause": "The fixture reused the activation receipt's calendar revision after the due tick legitimately advanced it.",
+      "repair": "Retain an explicit no-effect stale-control refusal, inspect the same calendar's current revision and suspend that exact state. Original occurrence/deadlines and every suspension/zero-attempt assertion remain."
+    },
+    {
+      "defect": "D107",
+      "case": "intake-routing-1-zero-attempts",
+      "observed": "GET outbound delivery metadata returned 409; the fixture expected 200.",
+      "cause": "DispatchDelivery requires FileAccessible, which includes FileAvailable. Revoking the required intake policy therefore intentionally refuses this metadata view.",
+      "repair": "Assert operation_state_conflict for that read. Independently verify the exact tenant/partner/intent has zero attempts and retains its historical approved dispatch review through read-only database inspection; retain all no-new-intent/no-contact/unchanged-receiver assertions."
+    }
+  ],
+  "product_source_changed_by_repairs": false,
+  "prior_passing_native_baseline": "docs/qualification/evidence/F045-routing-admission-guards.json",
+  "inference_performed": false,
+  "scanner_engine_started": false,
+  "full_foundation_aggregate_executed": false,
+  "full_journeys_qualified": false,
+  "overall_goal_complete": false,
+  "remaining": [
+    "Run the repaired calendar phases on both native Linux architectures and the repaired intake mode against stock peers.",
+    "Retain each first failure and close D106/D107 only after the original journeys pass.",
+    "Complete remaining key/intake/lifecycle breadth, retained migration upgrade and every mandatory GOAL.md gate. Windows D103 remains red."
+  ],
+  "local_repair_checks": {
+    "reference": ".private/f046-fixture-repairs-91dfd456cb42484b915a23ee379215ef/manifest.json",
+    "sha256": "db32751f164e0a005763084bd3abd730249772aa7433e0c96bbd741b78856741",
+    "state": "passed for syntax/compile/vet/privacy/lint/records only; native replay pending"
+  }
+}

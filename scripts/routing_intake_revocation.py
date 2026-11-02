@@ -132,10 +132,15 @@ def qualify_intake_revocation(g):
     for label, run, delivery in deliveries:
         denied = post(label + '-work-refused', '/workflow-runs/' + run + '/work', key=label + '-work-refused', expected=409)
         assert denied['error'] in ('operation_state_conflict', 'collection_authority_input_or_lease_required')
-        effect = post(label + '-zero-attempts', '/outbound-deliveries/' + delivery, method='GET')
-        # Independent dispatch consent is still valid. It cannot override the
-        # separate requirement that the exact file's intake proof is current.
-        assert effect['attempts'] == 0 and effect['current_approval']
+        # Delivery metadata also requires current file access. Preserve its
+        # refusal and independently inspect the untouched durable intent.
+        denied_view = post(label + '-delivery-metadata-refused', '/outbound-deliveries/' + delivery, method='GET', expected=409)
+        assert denied_view['error'] == 'operation_state_conflict'
+        assert str(uuid.UUID(delivery)) == delivery
+        tenant, partner = str(uuid.UUID(g['tenant'])), str(uuid.UUID(g['partner']))
+        retained = sql(label + '-retained-consent-zero-attempts',
+                       "SELECT d.attempts::text||','||(SELECT count(*) FROM outbound_dispatch_reviews r WHERE (r.tenant_id,r.partner_id,r.delivery_id)=(d.tenant_id,d.partner_id,d.delivery_id) AND r.state='approved') FROM delivery_intents d WHERE (d.tenant_id,d.partner_id,d.delivery_id)=('" + tenant + "'::uuid,'" + partner + "'::uuid,'" + delivery + "'::uuid)")
+        assert retained == '0,1'
     assert sql('intake-routing-after-counts', counts) == before_counts
     assert tuple(contacts(name) for name in ('source', 'receiver', 'audit')) == before_contacts
     assert receiver_files() == original_receivers
