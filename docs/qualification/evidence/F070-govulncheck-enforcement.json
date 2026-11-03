@@ -115,5 +115,33 @@
     "source_count": 701,
     "sources_unchanged": true,
     "exit_code": 0
+  },
+  "additional_native_source_configurations": {
+    "state": "prepared;actual native execution pending",
+    "workflow": ".github/workflows/native-vulnerabilities.yml",
+    "profiles": [
+      {
+        "runner": "ubuntu-24.04-arm",
+        "goos": "linux",
+        "goarch": "arm64"
+      },
+      {
+        "runner": "windows-2025",
+        "goos": "windows",
+        "goarch": "amd64"
+      },
+      {
+        "runner": "macos-15",
+        "goos": "darwin",
+        "goarch": "arm64"
+      }
+    ],
+    "scope": "Complement the verified Linuxx86 core source gate with three actual host/default-source configurations. Verify actual system,GOHOSTOS/GOHOSTARCH,GOOS/GOARCH andGo1.26.10;no cross-compilation or runtime-platform claim.",
+    "controls": "Same pinned converter v1.9.0,six actual native offline converter contracts,one original source scan and enforcing text conversion,source-reportSHA256,one-processGo/192MiB,25minute job,read-only token,no secrets/artifact upload/model/scanner/database. Preserve running candidate/newest pending;fail-fastfalse.",
+    "static_checks": {
+      "manifest_reference": ".private/freightctl-native-vuln-workflow-2edcab7171b14e6199a7d32bd0953184/manifest.json",
+      "manifest_sha256": "3187d71b1dede5cef88be54b8b23ff7a1cd280364ef4948aa6cd52eda8a42083"
+    },
+    "limits": "Source analysis of default build configurations only. WindowsD103/runtime/PG/protocol/agent gates,custom tags,images/binaries and complete platform qualification stay open. No heavy scan executes locally. Linuxx86 analysis stays in existing core job and is not duplicated."
   }
 }

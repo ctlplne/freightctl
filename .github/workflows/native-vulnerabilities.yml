@@ -1,0 +1,98 @@
+name: Native source vulnerability configurations
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'cmd/**'
+      - 'internal/**'
+      - 'third_party/**'
+      - 'web/**'
+      - 'go.mod'
+      - 'go.sum'
+      - '.gitattributes'
+      - 'scripts/test-govulncheck-gate.py'
+      - '.github/workflows/native-vulnerabilities.yml'
+  pull_request:
+    paths:
+      - 'cmd/**'
+      - 'internal/**'
+      - 'third_party/**'
+      - 'web/**'
+      - 'go.mod'
+      - 'go.sum'
+      - '.gitattributes'
+      - 'scripts/test-govulncheck-gate.py'
+      - '.github/workflows/native-vulnerabilities.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: freightctl-native-vulnerabilities-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  vulnerability-source:
+    name: Native vulnerability source (${{ matrix.goos }}/${{ matrix.goarch }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-24.04-arm
+            system: Linux
+            goos: linux
+            goarch: arm64
+          - runner: windows-2025
+            system: Windows
+            goos: windows
+            goarch: amd64
+          - runner: macos-15
+            system: Darwin
+            goos: darwin
+            goarch: arm64
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 25
+    env:
+      GOMAXPROCS: "1"
+      GOMEMLIMIT: 192MiB
+      GOTELEMETRY: "off"
+      FREIGHTCTL_EXPECTED_SYSTEM: ${{ matrix.system }}
+      FREIGHTCTL_EXPECTED_GOOS: ${{ matrix.goos }}
+      FREIGHTCTL_EXPECTED_GOARCH: ${{ matrix.goarch }}
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version: "1.26.10"
+          cache: false
+      - name: Actual native source scan and enforcing original converter
+        shell: python
+        run: |
+          import hashlib,json,os,pathlib,platform,subprocess,sys
+          root=pathlib.Path(os.environ['GITHUB_WORKSPACE']).resolve()
+          if os.environ.get('GITHUB_ACTIONS')!='true' or platform.system()!=os.environ['FREIGHTCTL_EXPECTED_SYSTEM']:
+              raise RuntimeError('native vulnerability runner differs')
+          os.chdir(root);os.umask(0o077)
+          private=root/'.private';private.mkdir(mode=0o700,exist_ok=True)
+          prefix=root/'.cache/freightctl-govulncheck-1.9.0';prefix.mkdir(mode=0o700,parents=True,exist_ok=True)
+          env=dict(os.environ,GOCACHE=str(root/'.cache/go-build'),GOMODCACHE=str(root/'.cache/go-mod'),GOPATH=str(root/'.cache/go'),GOTOOLCHAIN='go1.26.10',GOBIN=str(prefix))
+          native=json.loads(subprocess.check_output(['go','env','-json','GOHOSTOS','GOHOSTARCH','GOOS','GOARCH','GOVERSION'],env=env,timeout=30))
+          expected={'GOHOSTOS':env['FREIGHTCTL_EXPECTED_GOOS'],'GOOS':env['FREIGHTCTL_EXPECTED_GOOS'],'GOHOSTARCH':env['FREIGHTCTL_EXPECTED_GOARCH'],'GOARCH':env['FREIGHTCTL_EXPECTED_GOARCH'],'GOVERSION':'go1.26.10'}
+          if native!=expected:raise RuntimeError('native host and source configuration differ')
+          print(json.dumps({'native_source_configuration':native,'runtime_platform_qualified':False}),flush=True)
+          subprocess.run(['go','install','-p','1','golang.org/x/vuln/cmd/govulncheck@v1.9.0'],env=env,check=True,timeout=600)
+          tool=prefix/('govulncheck.exe' if os.name=='nt' else 'govulncheck')
+          subprocess.run([sys.executable,'scripts/test-govulncheck-gate.py','--tool',str(tool)],env=env,check=True,timeout=120)
+          report=private/'govulncheck-native.json'
+          with report.open('xb') as output:
+              subprocess.run([str(tool),'-json','./...'],env=env,stdout=output,check=True,timeout=600)
+          if report.stat().st_size==0:raise RuntimeError('native source scan report missing')
+          with report.open('rb') as source:
+              digest=hashlib.file_digest(source,'sha256').hexdigest()
+          print(json.dumps({'source_commit':env['GITHUB_SHA'],'source_report_sha256':digest,'scan_scope':'default source ./... on actual host;not runtime,custom tags or binary/image qualification'}),flush=True)
+          with report.open('rb') as source:
+              subprocess.run([str(tool),'-mode=convert','-show=version,verbose'],stdin=source,env=env,check=True,timeout=60)
