@@ -35,7 +35,9 @@ permissions:
 
 concurrency:
   group: freightctl-stock-peers-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  # Preserve the first actual peer/browser replay and its failure evidence.
+  # GitHub retains the running candidate and only the newest pending one.
+  cancel-in-progress: false
 
 jobs:
   stock-peer-linux:
