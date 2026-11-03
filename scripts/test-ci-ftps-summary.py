@@ -63,6 +63,18 @@ def synthetic_governance_outputs():
 
 
 class SummaryContracts(unittest.TestCase):
+    def test_check_failure_diagnostic_cannot_publish_paths_ids_errors_or_unbounded_counts(self):
+        check = {"action": "refresh", "wire_phase": "waiting", "error_kind": "other",
+                 "exact_file_visible": True, "exact_path_visible": True, "run_enabled": False,
+                 "refresh_enabled": True, "original_responses": 12}
+        self.assertEqual(browser.safe_check_diagnostic(check), check)
+        for changed in (dict(check, raw_path="private"), dict(check, action="private filename"),
+                        dict(check, wire_phase="private server error"), dict(check, error_kind="private exception"),
+                        dict(check, exact_file_visible="private ID"), dict(check, original_responses=101),
+                        dict(check, original_responses=True)):
+            with self.subTest(changed=changed):
+                self.assertIsNone(browser.safe_check_diagnostic(changed))
+
     def test_required_dispatch_cannot_accept_an_old_or_claim_only_profile(self):
         self.write()
         with self.assertRaises(ValueError):

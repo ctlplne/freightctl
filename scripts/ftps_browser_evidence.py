@@ -16,6 +16,20 @@ ACCESSIBILITY_RULES = set(json.loads((Path(__file__).resolve().parents[1] / "web
 PHASES = {"credential-sign-in", "credential-create", "credential-rotate", "credential-revoke", "intake-sign-in", "policy-register", "intake-list", "check-bad", "check-good", "bad-release-refusal", "release", "policy-revoke", "final-audit"}
 
 
+def safe_check_diagnostic(value):
+    """Only fixed categories, booleans and a bounded count may leave a trace."""
+    if not isinstance(value, dict) or set(value) != {"action", "wire_phase", "error_kind", "exact_file_visible", "exact_path_visible", "run_enabled", "refresh_enabled", "original_responses"}:
+        return None
+    if (any(type(value[k]) is not str for k in ("action", "wire_phase", "error_kind"))
+            or value["action"] not in {"inspect", "run", "refresh", "verify"}
+            or value["wire_phase"] not in {"waiting", "request", "fulfill", "none"}
+            or value["error_kind"] not in {"browser-timeout", "assertion", "other"}
+            or any(type(value[k]) is not bool for k in ("exact_file_visible", "exact_path_visible", "run_enabled", "refresh_enabled"))
+            or type(value["original_responses"]) is not int or not 0 <= value["original_responses"] <= 100):
+        return None
+    return dict(value)
+
+
 EVIDENCE_FAILURES = frozenset({
     'browser FTPS wire proof differs',
     'browser accessibility proof differs',

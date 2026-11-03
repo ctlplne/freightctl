@@ -7,12 +7,19 @@ export async function wireResponse(page, target, action, actual, label) {
     reject = no;
   });
   const timeout = setTimeout(
-    () => reject(new Error("native browser response was not observed")),
+    () =>
+      reject(
+        Object.assign(new Error("native browser response was not observed"), {
+          freightctlWirePhase: "waiting",
+        }),
+      ),
     15000,
   );
   const handler = async (route) => {
+    let wirePhase = "request";
     try {
       const result = await actual(route, label, target);
+      wirePhase = "fulfill";
       await route.fulfill({
         status: result.status,
         contentType: "application/json",
@@ -20,6 +27,7 @@ export async function wireResponse(page, target, action, actual, label) {
       });
       resolve(JSON.parse(result.body));
     } catch (error) {
+      if (error instanceof Error) error.freightctlWirePhase = wirePhase;
       reject(error);
       await route.abort("failed").catch(() => {});
     }

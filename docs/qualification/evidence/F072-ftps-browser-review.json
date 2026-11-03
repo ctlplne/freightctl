@@ -3,8 +3,8 @@
   "id": "F072",
   "observed_at": "2026-11-03",
   "starting_commit": "5094b6577ce9e384bcf0958072ab687a4f4903df",
-  "state": "implemented browser review; canonical/rendered contracts pass; actual browser journey pending",
-  "scope": "Schema2 FTPS metadata in the existing independent dispatch approval UI and public API client. No new authority service or receiver contact is introduced. Real browser/API/CLI qualification remains open.",
+  "state": "implemented; native public FTPS consent/no-contact journey passes; separate receiving browser regression D145 is open",
+  "scope": "Schema2 FTPS metadata in the existing independent dispatch approval UI and public API client. Native public CLI/HTTPS/Chrome consent is qualified only for the named fresh PostgreSQL/storage and contact-spy profile; no FTPS wire or independent vendor claim.",
   "implementation": [
     "Preserve schema1 SFTP canonical metadata; add explicit/implicit FTPS fixtures checked by both Go and the browser parser, including the real 73-character receiver account shape.",
     "Bind schema/protocol, exact stage/final paths, trust/credential reference hashes and receiver-contract identity to the selected delivery. Refuse private paths/password digests, mixed SSH/encryption/workflow shapes, unsupported stronger promises and rehashed substitutions.",
@@ -61,7 +61,7 @@
     }
   },
   "required_native_journey": {
-    "state": "not executed",
+    "state": "passed on native Linux x86 at34f94bb; all four frozen per-mode cases executed",
     "profile": "Native Linux x86 GitHub runner, fresh task-owned real PostgreSQL/storage, sandboxed Chrome, public CLI/HTTPS and an explicitly identified bounded loopback receiver-contact stand-in. No local browser or inference runtime.",
     "cases_each_mode": [
       "Create and queue the exact FTPS intent through public CLI, with independent policy and real accepted source bytes; worker refusal before consent consumes no attempt or receiver contact.",
@@ -69,16 +69,42 @@
       "Separate reviewer browser approves the exact request with original-key recovery, while original delivery/file access remains denied; inspect rendered FTPS terms and critical WCAG states.",
       "Reviewer withdrawal blocks queued work without attempts/fence/contact; retain original receipts and both actors' private histories."
     ],
-    "limits": "A contact spy proves metadata/no-send boundaries only. It cannot qualify FTPS bytes, vendor interoperability, receiver visibility/deduplication, business processing or process-kill recovery. Keep F071's separate actual application-receiver evidence and F068's red vendor profiles."
+    "limits": "A contact spy proves metadata/no-send boundaries only. It cannot qualify FTPS bytes, vendor interoperability, receiver visibility/deduplication, business processing or process-kill recovery. Keep F071's separate actual application-receiver evidence and F068's red vendor profiles.",
+    "runtime": {
+      "candidate": "34f94bb2d4aec8b743f96f97b1b00bde6ee0d516",
+      "run_id": 41639627136,
+      "job_id": 125929525156,
+      "conclusion": "success",
+      "result_manifest_sha256": "cc6e9c70023d28c902f314ee1414407946bd6083045e89ad980d1f1c2d453b8c",
+      "source_inputs": 713,
+      "native_commands": 180,
+      "baseline_native_ftps_pass_records": 21,
+      "ftps_dispatch_browser_phases": 6,
+      "original_key_lost_response_replays": 6,
+      "wcag_audits": 18,
+      "strict_dispatch_cli_refusals": 6,
+      "strict_dispatch_api_refusals": 2,
+      "receiver_connections": 0,
+      "delivery_attempts": 0,
+      "delivery_fences": 0,
+      "contact_spies_stopped": 2,
+      "retained_metadata_and_roles_unchanged": true,
+      "isolated_database_removed": true,
+      "original_resource_state_restored": true,
+      "browser_version": "156.0.8078.47",
+      "node_version": "26.0.0",
+      "full_original_job_log_manifest": ".private/freightctl-ftps-dispatch-native-34-RChWBXEL/manifest.json",
+      "full_original_job_log_manifest_sha256": "6a26af7f152e49aa1fa052f736693987ae3adf84e6fbdc45be1ff3be843603fe"
+    }
   },
   "limits": [
-    "Rendered React output and parser contracts are not actual Chrome, accessibility, public receipt recovery or independent-human qualification.",
+    "The native Chrome/public API/CLI result establishes only the four frozen consent/no-contact cases. It does not establish independent-human adoption, FTPS wire acceptance or receiver persistence. D145 remains red separately.",
     "Registered FTPS connections/workflows, collection, recipient encryption and the complete sending customer journey remain open.",
     "The receiver contract remains an operator assertion; no fsync, exclusive rename, exactly-once business effect or independent vendor qualification is inferred.",
     "Retained schema35 and its stopped resources are untouched. F026 stays owner-deferred, local inference stays off, and all83 whole rows/12 journeys remain open."
   ],
   "qualification_harness": {
-    "state": "implemented; native execution pending",
+    "state": "native dispatch and core jobs pass at34f94bb; original receiving regression needs separate D145 replay",
     "workflow": ".github/workflows/ftps-dispatch.yml",
     "profile": "native Linux x86; fresh bounded PostgreSQL and storage; sandboxed Chrome; public CLI/HTTPS; separate contact-only loopback spy for each FTPS mode",
     "cases_each_mode": {
@@ -91,7 +117,7 @@
     },
     "evidence_contract": "Producer and independent reporter reopen original command outputs, exact source and effect binding, delegated review, actual HTTPS request/key/body/response pairs, DOM text, WCAG reports, histories and the final stopped contact counter. The spy accepts at most16 connections, closes them without speaking TLS, and drains pending accepts before joining.",
     "local_checks": {
-      "reporter_refusal_contracts": 49,
+      "reporter_refusal_contracts": 50,
       "counter_and_cli_refusal_contracts": 2,
       "python_compile": "passed",
       "node_syntax": "passed",
@@ -100,6 +126,66 @@
       "first_result_reference": ".private/freightctl-ftps-dispatch-local-J3UqnDph/manifest.json",
       "first_result_sha256": "3b14ecea7f86dcfb80e0c0e7f7169430dbb36bbf8823a1c4a1ac82c0e5d93fdc"
     },
-    "qualification_claim": false
+    "qualification_claim": "only the four frozen per-mode consent/no-contact cases; not whole FTPS sending",
+    "native_spy_contracts": {
+      "candidate": "34f94bb2d4aec8b743f96f97b1b00bde6ee0d516",
+      "run_id": 41639627098,
+      "job_id": 125929525524,
+      "conclusion": "success",
+      "contract_records": 5,
+      "actual_socket_contracts": 3,
+      "scope": "zero-contact stop, pending connection drain and sixteen-contact exhaustion actually execute on native x86; no skipped socket cases"
+    }
+  },
+  "native_regression_checkpoint": {
+    "candidate": "730d5daa70de1d9de07e2ac519338e6f1454aedb",
+    "linux_run_id": 41637528544,
+    "native_arm_job_id": 125922380955,
+    "native_x86_job_id": 125922381253,
+    "application_pass_records_each": 645,
+    "application_failures_each": 0,
+    "application_skips_each": 0,
+    "ftp_engine_pass_records_each": 223,
+    "ftp_engine_skips_each": [
+      "TestActiveTransferFromPort20"
+    ],
+    "metadata_schema": 36,
+    "metadata_tables": 64,
+    "forced_rls_tables": 63,
+    "metadata_restored_rows_each": 41,
+    "ftps_stock_commands_each": 194,
+    "ftps_browser_commands": 172,
+    "other_passed_profiles": [
+      "core/source/frontend/security",
+      "both metadata restores",
+      "ten bounded fuzz targets",
+      "first enrollment browser and stock readback",
+      "all five stock-peer jobs",
+      "three complementary native source-security profiles",
+      "Mac ARM unit/race"
+    ],
+    "windows_job_id": 125922382270,
+    "windows_fail_records": 44,
+    "windows_fail_record_names_identical_to_job": 125891445236,
+    "full_original_job_log_manifest": ".private/freightctl-ftps-browser-native-730-CpTPNvSo/manifest.json",
+    "full_original_job_log_manifest_sha256": "cfcce88c21eed68d7105ddf579fce172b70e84deb17952bc148d2115a8bdb17e",
+    "limits": "Same-host components only. Windows D103, x86 vendor FTPS failures, all83 whole rows and12 full journeys remain open."
+  },
+  "receiving_regression": {
+    "id": "D145",
+    "state": "open; diagnostic replay prepared",
+    "candidate": "34f94bb2d4aec8b743f96f97b1b00bde6ee0d516",
+    "run_id": 41639627245,
+    "job_id": 125929525119,
+    "phase": "check-bad",
+    "source_line": 0,
+    "cause": "not established; do not infer product or harness cause from the phase alone",
+    "cleanup_failures": 0,
+    "retained_metadata_and_roles_unchanged": true,
+    "isolated_database_removed": true,
+    "original_resource_state_restored": true,
+    "full_original_job_log_manifest": ".private/freightctl-ftps-operator-first-34-ydhlfafB/manifest.json",
+    "full_original_job_log_manifest_sha256": "47e6faab06065fbb9e40ddb300ff6f959125f676cfbdef1ca249e072ac102815",
+    "next": "Replay the exact original browser receiving profile with fixed action/wire-phase categories and bounded DOM booleans. Keep all original assertions, deadlines and resource budgets."
   }
 }

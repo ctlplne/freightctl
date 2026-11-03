@@ -71,7 +71,11 @@ def failure_diagnostics(root, result, commit):
                 if browser_tickets.command_suffix(name)=="browser" and probe.get("state")=="failed" and probe.get("stage") in browser_tickets.STAGES:
                     ticket_browser_failures.append({"command":name,"stage":probe["stage"]})
                 if name in {"browser-explicit-operator", "browser-implicit-operator"} and probe.get("state") == "failed" and probe.get("phase") in browser_evidence.PHASES and type(probe.get("line")) is int and 0 <= probe["line"] <= 10000:
-                    browser_failures.append({"command":name,"phase":probe["phase"],"source_line":probe["line"]})
+                    failure = {"command":name,"phase":probe["phase"],"source_line":probe["line"]}
+                    check = browser_evidence.safe_check_diagnostic(probe.get("check"))
+                    if probe["phase"] in {"check-bad", "check-good"} and check is not None:
+                        failure["check"] = check
+                    browser_failures.append(failure)
                 if name in {"browser-explicit-operator", "browser-implicit-operator"} and probe.get("state") == "failed" and probe.get("audit") in browser_evidence.AUDITS:
                     ids = probe.get("accessibility_rule_ids")
                     if isinstance(ids,list) and 0 < len(ids) <= 100 and all(isinstance(i,str) and i in browser_evidence.ACCESSIBILITY_RULES for i in ids):

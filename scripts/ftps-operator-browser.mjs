@@ -42,6 +42,10 @@ let context,
   state = "failed",
   failure,
   failureLine,
+  failureDiagnostic,
+  checkAction = "none",
+  expectedCheckID,
+  expectedCheckPath,
   phase = "credential-sign-in";
 const steps = [],
   errors = [],
@@ -499,14 +503,20 @@ try {
   const checks = {};
   for (const path of ["/bad.csv", "/good.csv"]) {
     phase = path === "/bad.csv" ? "check-bad" : "check-good";
+    expectedCheckID = ids[path];
+    expectedCheckPath = path;
+    checkAction = "inspect";
     await inspect(path);
+    checkAction = "run";
     await response("/checks/" + ids[path] + "/run", () =>
       button("Run required checks").click(),
     );
+    checkAction = "refresh";
     const v = await response("/checks/" + ids[path], () =>
       button("Refresh").click(),
     );
     checks[path] = v.check;
+    checkAction = "verify";
     assert.equal(v.check.state, path === "/good.csv" ? "passed" : "rejected");
     assert.equal(v.check.attempts, 1);
     if (path === "/bad.csv")
@@ -607,6 +617,39 @@ try {
   failureLine = Number(
     failure.match(/ftps-operator-browser\.mjs:(\d+):\d+/)?.[1] ?? 0,
   );
+  if (["check-bad", "check-good"].includes(phase)) {
+    failureDiagnostic = {
+      action: checkAction,
+      wire_phase: ["waiting", "request", "fulfill"].includes(
+        e?.freightctlWirePhase,
+      )
+        ? e.freightctlWirePhase
+        : "none",
+      error_kind:
+        e?.name === "TimeoutError"
+          ? "browser-timeout"
+          : e?.code === "ERR_ASSERTION"
+            ? "assertion"
+            : "other",
+      exact_file_visible: await page
+        .locator(".check-detail code")
+        .allTextContents()
+        .then((values) => values.includes(expectedCheckID))
+        .catch(() => false),
+      exact_path_visible: await page
+        .locator(".check-detail .filename")
+        .textContent()
+        .then((value) => value === expectedCheckPath)
+        .catch(() => false),
+      run_enabled: await button("Run required checks")
+        .isEnabled()
+        .catch(() => false),
+      refresh_enabled: await button("Refresh")
+        .isEnabled()
+        .catch(() => false),
+      original_responses: responses.length,
+    };
+  }
   if (page) {
     await writeFile(
       c.private + "/failure-visible.txt",
@@ -634,6 +677,7 @@ try {
         state,
         failure,
         failure_line: failureLine,
+        failure_diagnostic: failureDiagnostic,
         phase,
         steps,
         responses,
@@ -648,6 +692,13 @@ try {
   );
 }
 if (state !== "passed")
-  console.log(JSON.stringify({ state, phase, line: failureLine ?? 0 }));
+  console.log(
+    JSON.stringify({
+      state,
+      phase,
+      line: failureLine ?? 0,
+      check: failureDiagnostic,
+    }),
+  );
 if (state !== "passed")
   throw new Error("FTPS operator browser failed; protected evidence retained");
