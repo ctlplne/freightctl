@@ -121,6 +121,17 @@ func (b *FTPSChannelBinding) FTPSImplicitServer(conn net.Conn) net.Conn {
 	return tls.Server(conn, b.config)
 }
 
+// FTPSDataResumed exposes only the completed TLS channel observation. It grants
+// no application authority; protocol code must keep its ordinary live checks.
+func FTPSDataResumed(conn net.Conn) bool {
+	c, ok := conn.(*tls.Conn)
+	if !ok {
+		return false
+	}
+	s := c.ConnectionState()
+	return s.HandshakeComplete && s.Version == tls.VersionTLS13 && s.DidResume
+}
+
 // AllowData follows successful application authentication and its audit commit.
 // Closing a binding is irreversible, even if authentication races with shutdown.
 func (b *FTPSChannelBinding) AllowData() error {

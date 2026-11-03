@@ -21,4 +21,4 @@ for task_deb in ./*.deb; do
   sha256sum "$task_deb"
   dpkg-deb --extract "$task_deb" ../root
 done
-../root/usr/sbin/vsftpd -v
+../root/usr/sbin/vsftpd -v 0>&1

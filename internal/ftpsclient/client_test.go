@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"bytes"
 	"context"
-	"crypto/tls"
 	"errors"
 	"fmt"
 	"io"
@@ -234,7 +233,7 @@ func (f *fixture) serve() {
 				f.mu.Unlock()
 				_, e = secured.Write(b)
 			}
-			if state, ok := secured.(interface{ ConnectionState() tls.ConnectionState }); ok && state.ConnectionState().DidResume {
+			if secure.FTPSDataResumed(secured) {
 				f.mu.Lock()
 				f.resumed++
 				f.mu.Unlock()

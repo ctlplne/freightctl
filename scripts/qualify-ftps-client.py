@@ -24,7 +24,9 @@ import os,resource,select,signal,subprocess,sys
 def bounds():
  os.sched_setaffinity(0,{min(os.sched_getaffinity(0))})
  for kind,limit in [(resource.RLIMIT_AS,268435456),(resource.RLIMIT_CPU,60),(resource.RLIMIT_NOFILE,128),(resource.RLIMIT_FSIZE,16777216),(resource.RLIMIT_NPROC,64)]:resource.setrlimit(kind,(limit,limit))
-p=subprocess.Popen(sys.argv[1:],start_new_session=True,preexec_fn=bounds)
+# vsftpd writes version/startup diagnostics to descriptor0 before it accepts
+# sockets. Keep its fd0 separate from the supervisor's read-only stop pipe.
+p=subprocess.Popen(sys.argv[1:],stdin=sys.stdout,start_new_session=True,preexec_fn=bounds)
 signal.signal(signal.SIGTERM,lambda *_:sys.exit(1))
 try:
  while p.poll() is None:
@@ -87,7 +89,7 @@ def main():
     try:
         if subprocess.run(["id","-u",user],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL).returncode==0 or pam.exists():raise RuntimeError("task account or PAM service collision")
         command("go-version",["sh","scripts/go.sh","version"])
-        command("receiver-version",[receiver,"-v"])
+        command("receiver-version",["sh","-c",'exec "$1" -v 0>&1',"freightctl-receiver-version",receiver])
         command("receiver-library-versions",["dpkg-query","--show","--showformat=${Package} ${Version} ${Architecture}\n","libssl3t64","libpam0g","libwrap0"])
         command("build",["sh","scripts/go.sh","build","-p","1","-trimpath","-buildvcs=false","-o",binary,"./cmd/freightctl"],180)
         manifest["binary_sha256"]=digest(binary);manifest["receiver_sha256"]=digest(receiver)

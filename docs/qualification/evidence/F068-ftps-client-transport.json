@@ -44,7 +44,15 @@
       "state": "bind operation denied;original suite replay passed with loopback access"
     },
     "latest_synthetic_evidence_tampering_contracts": 10,
-    "latest_contract_note": "Ten current bookkeeping/privacy refusal contracts pass;the48record native transport race archive remains unchanged. Runtime stock evidence remains failed at receiver startup."
+    "latest_contract_note": "Ten current bookkeeping/privacy refusal contracts pass;the48record native transport race archive remains unchanged. Runtime stock evidence remains failed at receiver startup.",
+    "latest_original_replay": {
+      "manifest_reference": ".private/freightctl-ftps-boundary-repaired-6ad9e312bdfb4184aed25fd12789825e/manifest.json",
+      "manifest_sha256": "4c99483a99ac9c8ba1d8e747746420509739cc39f85337a054cdf232abd8f9e4",
+      "native_arm_race_pass_records": 49,
+      "failures": 0,
+      "skips": 0,
+      "scope": "Original architecture+FTPS client+crypto suites;no database/scanner/model"
+    }
   },
   "native_ci": {
     "state": "first actual ARM/x86 stock receiver profiles fail at explicit receiver startup;transfer tests did not run;fixed diagnostic replay pending",
@@ -60,7 +68,17 @@
       "manifest_reference": ".private/freightctl-ftps-client-first-stock-16b92cb/manifest.json",
       "manifest_sha256": "be685b8f1dded1184cff42c746cb12c0c657bf9f6e351a754274a980e5206593"
     },
-    "diagnostic_change": "Print only fixed startup categories,known config option names,failed original command names,native stages,numeric FTP codes and manifest digest. Raw receiver text and secrets stay private. No protocol/assertion/resource limit change."
+    "diagnostic_change": "Print only fixed startup categories,known config option names,failed original command names,native stages,numeric FTP codes and manifest digest. Raw receiver text and secrets stay private. No protocol/assertion/resource limit change.",
+    "diagnostic_replay": {
+      "candidate": "94f27c3a937d939ee832d58ca66af9c4136b8b19",
+      "run_id": 41595162669,
+      "arm_job_id": 125780684549,
+      "x86_job_id": 125780684945,
+      "state": "both fail at startup;fixed category supervisor-child-exit;actual receiver cause still unobserved",
+      "arm_manifest_sha256": "823acf27afb19112a8d22e48264a2ca394af3d38e3805feb00f68a62152c07a5",
+      "x86_manifest_sha256": "0e114f5fdf4094868a4c55f2760d956193b7433d1f04222600e21abbf7e8e2bb"
+    },
+    "startup_log_repair": "Stock vsftpd writes bootstrap errors and -v to descriptor0. The receiver inherited a read-only stop pipe;its diagnostics were lost. Give only its fd0 the private stdout sink,keeping the supervisor stop pipe separate;redirect -v fd0 to stdout. Same original runtime profile must replay;no startup cause is invented."
   },
   "next_integration": "docs/protocols/ftps-sending.md",
   "inference_performed": false,
@@ -77,5 +95,18 @@
     "manifest_sha256": "6a9308e71831033b1daae711c0b0dd575d4ba8c64452c51f8c43d24c3b3b3766",
     "source_count": 694,
     "exit_code": 0
+  },
+  "broader_native_first_failure": {
+    "candidate": "16b92cbf7e648905f402a0e5d0b3a56fd2e6d660",
+    "defect": "D134",
+    "linux_arm_job_id": 125778506847,
+    "mac_job_id": 125778507311,
+    "windows_job_id": 125778507470,
+    "finding": "TestCoreImportBoundaries refuses crypto/tls in the new protocol fixture. Move the unchanged TLS1.3/handshake/resumption observation behind internal/crypto;do not exempt tests or weaken the boundary.",
+    "windows_state": "45 failed test/subcase records,including the architecture defect,old22D103 failures and22new protected-reference FTPS cases. No skip/permission relaxation.",
+    "archive": {
+      "manifest_reference": ".private/freightctl-ftps-client-native-failures-16b92cb/manifest.json",
+      "manifest_sha256": "954dc6c0a2b24a4240e9f6b73fbb2027f8032a75aad46c2a086af4a59772b612"
+    }
   }
 }
