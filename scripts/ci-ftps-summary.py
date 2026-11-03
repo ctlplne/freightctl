@@ -36,6 +36,7 @@ def failure_diagnostics(root, result, commit):
         if hashlib.sha256(raw).hexdigest() != header.get("manifest_sha256") or manifest.get("starting_commit") != commit or manifest.get("kind") != "stock-ftps-custody":
             return {}
         failed, categories, cli_failures, browser_failures = set(), set(), set(), []
+        accessibility = []
         allowed = {"native-ftps-integration", "cli-explicit-lftp-probe", "cli-implicit-lftp-probe", "browser-explicit-operator", "browser-implicit-operator"}
         for step in manifest.get("steps", []):
             name = step.get("name")
@@ -65,9 +66,19 @@ def failure_diagnostics(root, result, commit):
                     categories.add((probe["stage"], probe["code"]))
                 if name in {"browser-explicit-operator", "browser-implicit-operator"} and probe.get("state") == "failed" and probe.get("phase") in browser_evidence.PHASES and type(probe.get("line")) is int and 0 <= probe["line"] <= 10000:
                     browser_failures.append({"command":name,"phase":probe["phase"],"source_line":probe["line"]})
+                if name in {"browser-explicit-operator", "browser-implicit-operator"} and probe.get("state") == "failed" and probe.get("audit") in browser_evidence.AUDITS:
+                    ids = probe.get("accessibility_rule_ids")
+                    if isinstance(ids,list) and 0 < len(ids) <= 100 and all(isinstance(i,str) and i in browser_evidence.ACCESSIBILITY_RULES for i in ids):
+                        accessibility.append({"command":name,"audit":probe["audit"],"rule_ids":sorted(set(ids))})
         outcome = {"failed_native_tests": sorted(failed), "lftp_failures": [{"stage": s, "code": c} for s, c in sorted(categories)], "failed_cli_commands": sorted(cli_failures)}
         if browser_failures:
             outcome["browser_failures"] = browser_failures
+        if accessibility:
+            outcome["accessibility_failures"] = accessibility
+        if manifest.get("browser_requested") is True:
+            outcome["cleanup_observation"] = {key: manifest.get(key) is True for key in ("retained_metadata_and_roles_unchanged", "isolated_database_removed", "original_resource_state_restored")}
+            failures = manifest.get("cleanup_failures")
+            outcome["cleanup_observation"]["failure_count"] = len(failures) if isinstance(failures,list) else None
         return outcome
     except Exception:
         return {}

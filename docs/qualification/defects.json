@@ -1981,6 +1981,23 @@
         "web/tests/fixtures/intake-policy-protected.json",
         "web/tests/intake-policy.test.mjs"
       ]
+    },
+    {
+      "id": "D123",
+      "severity": "actual browser accessibility blocker",
+      "state": "open",
+      "observed_on": "2026-11-02",
+      "candidate": "55286c31f698e08366c406ef36d0cc227e7b9ed8",
+      "journey": "Reviewed account credentials during FTPS transfers",
+      "title": "Account creation review fails its actual browser accessibility audit",
+      "reproduction": "GitHub run41569654224 job125699325050;qualify-ftps.py --browser;explicit listener,credential-create phase,ftps-operator-browser.mjs:102",
+      "first_failure": "axe violation count is nonzero in credential-create-review;the original safe diagnostic reports phase/line but no rule IDs.",
+      "cause": "Not yet established. Do not infer a color,dialog or policy defect from this count alone.",
+      "resolution": "Pending. Add only pinned public axe rule IDs to safe diagnostics;keep private selectors/page text protected and all accessibility assertions enforced. Rerun original live-service browser journey,repair observed cause and replay both listener modes.",
+      "regression_evidence": [
+        "https://github.com/ctlplne/freightctl/actions/runs/41569654224",
+        "docs/qualification/evidence/F063-ftps-browser-governance.json"
+      ]
     }
   ]
 }

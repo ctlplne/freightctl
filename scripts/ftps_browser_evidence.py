@@ -12,6 +12,7 @@ from ftps_cli_governance import GOOD_CSV, BAD_CSV, read, require
 
 AUDITS = ["credential-create-review", "credential-rotate-review", "intake-policy-editor", "intake-policy-register-review", "exact-ftps-release-review", "intake-policy-revoke-review", "intake-policy-revoked"]
 PROOFS = ["browser-rotation-revocation-refuse-open-ftps-writers", "browser-ftps-hold-check-release-and-policy-revocation", "lost-accounts-commands-original-key", "lost-intake-policy-original-key", "lost-intake-policy-revoke-original-key"]
+ACCESSIBILITY_RULES = set(json.loads((Path(__file__).resolve().parents[1] / "web/tests/fixtures/axe-rule-ids.json").read_text()))
 PHASES = {"credential-sign-in", "credential-create", "credential-rotate", "credential-revoke", "intake-sign-in", "policy-register", "intake-list", "check-bad", "check-good", "release", "policy-revoke", "final-audit"}
 
 

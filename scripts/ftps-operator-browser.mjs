@@ -99,6 +99,27 @@ async function audit(name) {
     };
   });
   await writeFile(c.private + "/" + name + "-axe.json", JSON.stringify(result));
+  if (result.violations.length) {
+    const allowed = new Set(
+      JSON.parse(
+        await readFile(
+          c.root + "/web/tests/fixtures/axe-rule-ids.json",
+          "utf8",
+        ),
+      ),
+    );
+    console.log(
+      JSON.stringify({
+        state: "failed",
+        audit: name,
+        accessibility_rule_ids: [
+          ...new Set(
+            result.violations.map((v) => v.id).filter((id) => allowed.has(id)),
+          ),
+        ].sort(),
+      }),
+    );
+  }
   assert.equal(result.violations.length, 0, name + " accessibility");
   record(name + "-axe");
 }
@@ -450,7 +471,9 @@ try {
   );
   await intake.next("uploads-held");
   phase = "intake-list";
-  const list = await response("/checks", () => button("Intake checks").click());
+  const list = await response("/checks?limit=50&after=", () =>
+    button("Intake checks").click(),
+  );
   assert.equal(list.checks.length, 2);
   assert.ok(list.checks.every((x) => x.state === "held"));
   const ids = Object.fromEntries(list.checks.map((x) => [x.path, x.file_id]));

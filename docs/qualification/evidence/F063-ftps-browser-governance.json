@@ -15,6 +15,16 @@
       "detail": "Actual Go checks.Normalize accepts a leading U+FEFF literal in a header name;JavaScript trim removes it and the first frontend replay exits1. Match Go Unicode whitespace instead;the regenerated Go golden policy with U+FEFF,HTML and an internal Unicode line separator now passes the original frontend hash/read-model journey.",
       "first_failure_reference": ".private/freightctl-intake-ui-golden-32603109f444400a9d4eaea9a9811c92/bom-first-failure.log",
       "first_failure_sha256": "a166495344adce5d006fb98b390f4fd1fdb82c31526f9e1a8979288513334144"
+    },
+    {
+      "kind": "actual native browser accessibility gate",
+      "candidate": "55286c31f698e08366c406ef36d0cc227e7b9ed8",
+      "run_id": 41569654224,
+      "job_id": 125699325050,
+      "observed": "The browser reaches credential-create;the account-create review axe audit fails at script line102. The original diagnostics suppress private page content but do not report rule IDs. Exact rule/cause still unknown.",
+      "archive_reference": ".private/freightctl-ftps-browser-55286c3-first-failure/manifest.json",
+      "archive_sha256": "346d157519a6245cd0367cfea509e94bac365bc07508a2d138d2131bef108d0e",
+      "next_action": "Rerun the original journey with only public pinned axe rule IDs in the safe diagnostic allowlist. Preserve private selectors/page text. Keep accessibility assertions unchanged."
     }
   ],
   "local_checks": {
@@ -27,7 +37,7 @@
     "qualification_references": "passed"
   },
   "native_browser_replay": {
-    "state": "native x86 job preparing exact browser dependencies;Unicode parser follow-up requires a later candidate",
+    "state": "first actual candidate failed account review accessibility;diagnostic replay pending;no browser runtime qualification",
     "workflow": ".github/workflows/ftps.yml",
     "job": "Native x86 browser and live FTPS governance",
     "command": "python3 scripts/qualify-ftps.py --postgres-container-id EXACT_TASK_ID --browser",
@@ -76,5 +86,6 @@
     "source_count": 669,
     "exit_code": 0,
     "scope": "All public source before this result and D122 record;rules unchanged;private estate excluded"
-  }
+  },
+  "harness_review_fix": "The actual API sends /checks?limit=50&after=. Observe that exact paginated URL rather than /checks;no API behavior/assertion changes. Earlier candidate stopped before this phase."
 }

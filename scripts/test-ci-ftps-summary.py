@@ -141,18 +141,20 @@ class SummaryContracts(unittest.TestCase):
     def test_browser_failure_diagnostics_only_reveal_fixed_phase_and_source_line(self):
         secret = "private browser selector, tenant or credential"
         name = "browser-explicit-operator"
-        data = json.dumps({"state":"failed","phase":"policy-register","line":321,"failure":secret}).encode()
+        data = (json.dumps({"state":"failed","phase":"policy-register","line":321,"failure":secret}) + "\n" + json.dumps({"state":"failed","audit":"credential-create-review","accessibility_rule_ids":["color-contrast"],"selector":secret})).encode()
         (self.directory / (name + ".stdout")).write_bytes(data)
         self.manifest["steps"].append({"name":name,"exit_code":1,"stdout_sha256":hashlib.sha256(data).hexdigest()})
         self.write()
         report = summary.failure_diagnostics(self.root, self.result, "a" * 40)
         self.assertEqual(report["browser_failures"], [{"command":name,"phase":"policy-register","source_line":321}])
         self.assertNotIn(secret, json.dumps(report))
-        data = json.dumps({"state":"failed","phase":secret,"line":321}).encode()
+        self.assertEqual(report["accessibility_failures"], [{"command":name,"audit":"credential-create-review","rule_ids":["color-contrast"]}])
+        data = json.dumps({"state":"failed","phase":secret,"line":321,"audit":"credential-create-review","accessibility_rule_ids":[secret]}).encode()
         (self.directory / (name + ".stdout")).write_bytes(data)
         self.manifest["steps"][-1]["stdout_sha256"] = hashlib.sha256(data).hexdigest()
         self.write()
         self.assertNotIn("browser_failures",summary.failure_diagnostics(self.root,self.result,"a" * 40))
+        self.assertNotIn("accessibility_failures",summary.failure_diagnostics(self.root,self.result,"a" * 40))
 
     def test_missing_or_skipped_tests_refuse(self):
         original = copy.deepcopy(self.manifest)
