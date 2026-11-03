@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "id": "F066",
+  "observed_at": "2026-11-03",
+  "state": "observer repair prepared; original native stock journey replay pending",
+  "starting_commit": "23cb5c5166fe490bfd6afd1f7a3e9d9cb460a679",
+  "scope": "Schedule browser qualification response observation only. No application, calendar, permission, scheduling or delivery semantics change.",
+  "first_failure": {
+    "run_id": 41583125686,
+    "job_id": 125742293204,
+    "url": "https://github.com/ctlplne/freightctl/actions/runs/41583125686",
+    "schedules_manifest_sha256": "d6e4b706e50c73d61a6380be699addec616ee6d23f47195914a03e33eacea7c0",
+    "state": "failed",
+    "browser_failure_locations": [
+      "onboarding-exchange-browser.mjs:243:5",
+      "schedules-browser.mjs:134:27"
+    ],
+    "observation": "HTTP200 assertion passes, then the browser response JSON read fails. Zero browser runtime errors and external contacts;44 output artifacts/closure and exact database cleanup pass. Collections and arrivals components pass.",
+    "archive_reference": ".private/freightctl-schedule-response-23cb5c5/manifest.json",
+    "archive_sha256": "d776b838f9a48ca63cc1b26a60a51703b8b9bb2783bbe8db99291ab198a83eaf"
+  },
+  "cause_assessment": "The direct Playwright response.json observer depends on Chromium retaining the response body after UI follow-up work. This is the observed failing boundary and matches the earlier routing observer pattern; a Chromium-internal cause remains inference because the public safe diagnostic contains source locations, not raw private exceptions.",
+  "repair": [
+    "Observe each exact POST preview through the existing wireResponse helper and actualReview, which forwards the real request to the real certificate-checked loopback HTTPS service and saves its original request/response.",
+    "actualReview still requires HTTP200 and records original response SHA256; the callback additionally requires POST. Parse the original returned body and fulfill the browser with those same bytes.",
+    "Keep exact historical fold times, zero external effects, current effects/digest, UI heading/focus, all axe audits, reviewed mutations, original-key lost-response replay, receiver counts and independent stock downloads unchanged."
+  ],
+  "local_checks": {
+    "node_syntax": "passed",
+    "prettier": "passed",
+    "record_references": "passed",
+    "runtime_qualification": "not performed locally; actual Chrome/stock PostgreSQL journey belongs on native GitHub x86 runner"
+  },
+  "required_replay": "The original complete arrivals-schedules stock job must pass collections, arrivals and schedules through actual services and stock receiver. All other stock entries also replay. A syntax check, old candidate pass or observer change alone is not runtime evidence.",
+  "native_ci": {
+    "state": "pending after source push"
+  },
+  "limits": [
+    "All83 whole parity rows and12 full journeys remain open.",
+    "No local inference, scanner engine, F026 aggregate, artifact publication or deployment."
+  ]
+}

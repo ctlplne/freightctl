@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { readFile, writeFile } from "node:fs/promises";
+import { wireResponse } from "./browser-wire.mjs";
 export async function qualifySchedules(page, c, audit, record, actual) {
   const prefix = c.url + `/v1/tenants/${c.tenant}/partners/${c.partner}`,
     region = page.getByRole("region", {
@@ -118,20 +119,24 @@ export async function qualifySchedules(page, c, audit, record, actual) {
   }
   let schedule = c.schedule,
     result = {};
+  const preview = (label) =>
+    wireResponse(
+      page,
+      prefix + "/workflow-schedules/preview",
+      () =>
+        region
+          .getByRole("button", { name: "Preview schedule", exact: true })
+          .click(),
+      (route, name, target) => {
+        assert.equal(route.request().method(), "POST");
+        return actual(route, name, target);
+      },
+      label,
+    );
   if (c.schedule_phase === "create") {
     await audit("schedule-prepare");
     await fill(c.calendar_probe);
-    let response = page.waitForResponse(
-      (r) =>
-        r.url() === prefix + "/workflow-schedules/preview" &&
-        r.request().method() === "POST",
-    );
-    await region
-      .getByRole("button", { name: "Preview schedule", exact: true })
-      .click();
-    let r = await response;
-    assert.equal(r.status(), 200);
-    const probe = await r.json();
+    const probe = await preview("schedule-historical-preview");
     assert.equal(probe.definition.calendar.fold_policy, "both");
     assert.equal(probe.first_due, "2024-11-03T05:30:00Z");
     assert.equal(probe.latest_due, "2024-11-03T06:30:00Z");
@@ -139,18 +144,8 @@ export async function qualifySchedules(page, c, audit, record, actual) {
     await save("historical-fold-preview", probe);
     record("historical-civil-fold-preview-without-changing-host-clock");
     await fill(c.selection);
-    response = page.waitForResponse(
-      (r) =>
-        r.url() === prefix + "/workflow-schedules/preview" &&
-        r.request().method() === "POST",
-    );
-    await region
-      .getByRole("button", { name: "Preview schedule", exact: true })
-      .click();
-    r = await response;
-    assert.equal(r.status(), 200);
-    const preview = await r.json();
-    await save("current-calendar-preview", preview);
+    const current = await preview("schedule-current-preview");
+    await save("current-calendar-preview", current);
     await region
       .getByRole("heading", { name: "Review schedule preview", exact: true })
       .waitFor();
@@ -160,7 +155,7 @@ export async function qualifySchedules(page, c, audit, record, actual) {
         .evaluate((el) => el === document.activeElement),
       true,
     );
-    assert.equal(preview.effects.length, 2);
+    assert.equal(current.effects.length, 2);
     await audit("schedule-preview");
     await region
       .getByRole("button", {
@@ -182,7 +177,7 @@ export async function qualifySchedules(page, c, audit, record, actual) {
     );
     schedule = draft.schedule;
     assert.equal(schedule.state, "draft");
-    assert.equal(schedule.definition_hash, preview.definition_hash);
+    assert.equal(schedule.definition_hash, current.definition_hash);
     await region
       .getByRole("heading", { name: "Schedule: draft", exact: true })
       .waitFor();
@@ -213,7 +208,7 @@ export async function qualifySchedules(page, c, audit, record, actual) {
     record(
       "schedule-exact-preview-draft-activation-original-key-private-reload-no-receiver-contact",
     );
-    result = { historical_probe: probe, current_preview: preview };
+    result = { historical_probe: probe, current_preview: current };
   } else if (c.schedule_phase === "work") {
     await inspect(schedule);
     await audit("schedule-before-due-queue");
