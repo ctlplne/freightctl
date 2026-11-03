@@ -115,6 +115,10 @@ class ReceiverEvidence(unittest.TestCase):
         (self.directory/"openssl.conf").write_bytes(summary.OPENSSL_PROFILE.replace(b"MinProtocol=TLSv1.3",b"MinProtocol=TLSv1.2"))
         with self.assertRaises(ValueError):self.check()
 
+    def test_receiver_profile_cannot_silently_reenable_kernel_offload(self):
+        (self.directory/"openssl.conf").write_bytes(summary.OPENSSL_PROFILE.replace(b"Options=-KTLS",b"Options=KTLS"))
+        with self.assertRaises(ValueError):self.check()
+
     def test_failed_diagnostic_never_copies_peer_or_password_text(self):
         self.output("native-stock-receiver",b"client_stock_test.go:73: stock store secret-password FTPS receiver status 522\nprivate peer prose\n")
         for s in self.m["steps"]:
@@ -180,6 +184,7 @@ class ReceiverEvidence(unittest.TestCase):
         for path in (estate,home,empty):
             mode=path.stat().st_mode&0o777
             self.assertEqual(mode&0o003,0o001,"nonowner needs traversal without write")
+            self.assertEqual(mode&0o022,0,"group and other identities cannot change receiver directories")
         self.assertEqual(inbox.stat().st_mode&0o077,0,"payload must stay private")
 
 

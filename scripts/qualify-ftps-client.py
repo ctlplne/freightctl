@@ -111,7 +111,7 @@ def main():
         command("create-exact-pam",["sudo","install","--mode=0600",pam_source,pam]);created_pam=True
         users=private/"allowed-users";users.write_text(user+"\n")
         openssl=private/"openssl.conf"
-        openssl.write_text("config_diagnostics=1\nopenssl_conf=freightctl_init\n[freightctl_init]\nssl_conf=freightctl_ssl\n[freightctl_ssl]\nsystem_default=freightctl_tls\n[freightctl_tls]\nMinProtocol=TLSv1.3\nMaxProtocol=TLSv1.3\n")
+        openssl.write_text("config_diagnostics=1\nopenssl_conf=freightctl_init\n[freightctl_init]\nssl_conf=freightctl_ssl\n[freightctl_ssl]\nsystem_default=freightctl_tls\n[freightctl_tls]\nMinProtocol=TLSv1.3\nMaxProtocol=TLSv1.3\nOptions=-KTLS\n")
         references={}
         for implicit in (False,True):
             mode="implicit" if implicit else "explicit"

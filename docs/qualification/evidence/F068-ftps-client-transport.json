@@ -43,7 +43,7 @@
       "manifest_sha256": "441f321bf74402bf956f1bc040136e980ece606fd8a4f39fb8db58f1b2a17a8f",
       "state": "bind operation denied;original suite replay passed with loopback access"
     },
-    "latest_synthetic_evidence_tampering_contracts": 19,
+    "latest_synthetic_evidence_tampering_contracts": 20,
     "latest_contract_note": "Ten current bookkeeping/privacy refusal contracts pass;the48record native transport race archive remains unchanged. Runtime stock evidence remains failed at receiver startup.",
     "latest_original_replay": {
       "manifest_reference": ".private/freightctl-ftps-phase-replay-4dfa69d54eec47fea6aec7bbd8adb946/manifest.json",
@@ -150,7 +150,41 @@
         "manifest_sha256": "56382db3238720497a5df3a36e83e4368d0907e2902a078ccc684e697efb04b4"
       }
     },
-    "independent_failed_gate_handling": "Preserve every failed TLS probe exit/body and failed manifest. Continue independent native Go/receiver-byte observations after the probe fails. A passing transfer cannot erase probe_failures;the independent reporter still requires both exact alert70 refusals and refuses any recorded probe failure. Diagnostic output reports observed native pass-record count only,not qualification."
+    "independent_failed_gate_handling": "Preserve every failed TLS probe exit/body and failed manifest. Continue independent native Go/receiver-byte observations after the probe fails. A passing transfer cannot erase probe_failures;the independent reporter still requires both exact alert70 refusals and refuses any recorded probe failure. Diagnostic output reports observed native pass-record count only,not qualification.",
+    "arm_original_success": {
+      "candidate": "ba03cebe4353a7eb49bae24af7c446277eea1e27",
+      "run_id": 41602945643,
+      "job_id": 125805774273,
+      "state": "passed complete original untraced profile",
+      "outcome": {
+        "manifest_sha256": "786b9b936473ded7ab6d1e874dc59a384453ebc9afd4a90d27d42d45ed18f3c7",
+        "architecture": "aarch64",
+        "native_pass_records": 3,
+        "original_commands": 20,
+        "source_inputs": 694,
+        "independent_receiver_files": 6,
+        "strict_tls13_reuse_and_shutdown": true,
+        "task_user_removed": true,
+        "task_pam_removed": true,
+        "inference_performed": false,
+        "scanner_started": false,
+        "postgres_started": false,
+        "domain_delivery_qualified": false
+      },
+      "archive": {
+        "manifest_reference": ".private/freightctl-ftps-stock-partial-ba03ceb/manifest.json",
+        "manifest_sha256": "2e0a723ffd58471d55441b016c9885993832e63c4b1ef1c5e2e298c2c3f01978"
+      }
+    },
+    "x86_socket_option_failure": {
+      "candidate": "ba03cebe4353a7eb49bae24af7c446277eea1e27",
+      "job_id": 125805774481,
+      "state": "failed original control TLS and both exact protocol refusals",
+      "diagnostic": "both listeners dieSIGSYS after setsockopt(level6,option31,length4),i.e.TCP_ULP;consistent with OpenSSL kernel TLS activation blocked by the receiver sandbox",
+      "inference": "The option/phase/SSL peer identifies optional kernel TLS as the likely cause;the original repaired native replay must confirm it.",
+      "repair": "Add Options=-KTLS to only the private OpenSSL receiver profile. Keep TLS1.3,exact trust,password references,resumption,strict close messages,seccompYES,chroot and every original probe/byte/cleanup/resource assertion. No receiver isolation check or budget is relaxed.",
+      "runtime_repair_state": "pending both actual native architectures"
+    }
   },
   "next_integration": "docs/protocols/ftps-sending.md",
   "inference_performed": false,

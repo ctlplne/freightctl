@@ -11,7 +11,7 @@ import subprocess
 ROOT=Path(__file__).resolve().parents[1]
 PAYLOAD=b"account,amount,day\n"+b"0001,1.01,2026-10-28\n"*10000
 REQUIRED={"go-version","receiver-version","receiver-library-versions","build","token","certificate","create-exact-user","set-exact-password","own-exact-inbox","create-exact-pam","explicit-config-owner","implicit-config-owner","explicit-refuse-tls12","implicit-refuse-tls12","native-stock-receiver","independent-receiver-files","explicit-receiver","implicit-receiver","remove-exact-user","remove-exact-pam"}
-OPENSSL_PROFILE=b"config_diagnostics=1\nopenssl_conf=freightctl_init\n[freightctl_init]\nssl_conf=freightctl_ssl\n[freightctl_ssl]\nsystem_default=freightctl_tls\n[freightctl_tls]\nMinProtocol=TLSv1.3\nMaxProtocol=TLSv1.3\n"
+OPENSSL_PROFILE=b"config_diagnostics=1\nopenssl_conf=freightctl_init\n[freightctl_init]\nssl_conf=freightctl_ssl\n[freightctl_ssl]\nsystem_default=freightctl_tls\n[freightctl_tls]\nMinProtocol=TLSv1.3\nMaxProtocol=TLSv1.3\nOptions=-KTLS\n"
 
 
 def read(path,bound=4<<20):
