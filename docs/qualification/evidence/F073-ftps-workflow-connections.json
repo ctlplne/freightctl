@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "id": "F073",
+  "observed_at": "2026-11-03",
+  "starting_commit": "7879c34f9e917d5c650a60b1800c59050044c01a",
+  "state": "acceptance cases frozen; missing typed operation reproduced; implementation not started",
+  "scope": "Next dependency: versioned registered FTPS destinations and typed workflow sending through ordinary execution and independent dispatch consent. This does not replace remaining encryption, collection, independent peer or whole-product requirements.",
+  "first_failure": {
+    "kind": "actual native ARM typed-workflow contract",
+    "test": "TestRegisteredFTPSWorkflowUsesVersionedConnectionReference",
+    "result": "Normalize refuses ftps.deliver as an unsupported or incomplete step",
+    "profile": "Darwin arm64; Go1.26.10; one CPU and192MiB soft Go memory limit; a Go overlay adds only the frozen test without editing product sources",
+    "manifest_reference": ".private/freightctl-ftps-workflow-first-nzo0hovj/manifest.json",
+    "manifest_sha256": "ea117727650ccd16aef95292a1b04236d0e0c9187c5b2a4897155f4b804e52d6",
+    "postgres_started": false,
+    "browser_started": false,
+    "scanner_started": false,
+    "inference_performed": false,
+    "qualification_claim": false
+  },
+  "mechanism_contract": [
+    "Store the FTPS mode, numeric loopback destination, account, protected CA/password references and proofs, separate staging/final directories and receiver contract in a new immutable connection definition. Public views disclose reference fingerprints and required trust, never local paths, password values or password digests.",
+    "Use the ordinary versioned connection, workflow, run, step and delivery identities. The typed step contains only a registered connection reference and final filename. Its protocol must equal the registered connection protocol before a draft, preview or run can be admitted.",
+    "Freeze the exact FTPS connection into the delivery and include its workflow/run/step/connection binding in the independent review. Go, browser and SQL must agree on that effect. Keep the existing schema1 SFTP bytes and canonical hashes unchanged.",
+    "Keep ordinary file authority, intake release, workflow approval and exact-file independent dispatch consent cumulative. Persist intents, immutable events and saved-key receipts atomically. A metadata preview or refused worker cannot contact the receiver or consume an attempt/fence.",
+    "Keep publication ambiguity and read-only recovery from F071. A workflow success requires the exact original delivery receipt; the UI and receipt cannot invent fsync, exclusive rename, consumer deduplication or business acceptance.",
+    "Use an append-only migration on fresh GitHub databases for protocol/connection/workflow SQL guards. Update every exact schema-profile consumer together. The retained schema35 estate must stay unchanged; no retained upgrade is authorized by this increment."
+  ],
+  "frozen_cases_each_mode": [
+    {
+      "id": "C01",
+      "outcome": "Actual CLI registration and same-key replay preserve one exact version. A changed CA, credential reference/proof, mode, destination, directory or receiver contract requires a new version and hash; public views remain redacted."
+    },
+    {
+      "id": "C02",
+      "outcome": "Typed validation refuses protocol/connection mismatch, raw credentials, mixed SSH/FTPS authority, unusable final names and unsupported receiver promises before run creation or contact. Existing SFTP golden definitions and execution remain valid."
+    },
+    {
+      "id": "C03",
+      "outcome": "Create, validate, approve, queue and replay an ordinary FTPS workflow through public CLI/API with a real accepted source. The run, step, source, registered version, delivery and dispatch review agree exactly."
+    },
+    {
+      "id": "C04",
+      "outcome": "A queued run is blocked before separate named-reviewer consent. Source hold/release and least-privilege reviewer access remain enforced; original file/delivery access is denied to the reviewer."
+    },
+    {
+      "id": "C05",
+      "outcome": "Real browser disclosure, approval, withdrawal and saved-key response-loss recovery display the exact workflow/connection binding and weaker FTPS receipt. Required WCAG states pass. Metadata operations produce zero receiver contacts."
+    },
+    {
+      "id": "C06",
+      "outcome": "With current workflow and dispatch authority, the actual sender transfers the exact source to separate real freightctl receiver/storage stand-ins in both FTPS modes. Independently reopen final bytes and receipts; distinguish this profile from independent vendor interoperability."
+    },
+    {
+      "id": "C07",
+      "outcome": "Registering a newer version cannot silently rebind an already queued run. Revoke the exact connection or workflow and prove that untouched work does not contact either old or new receiver or consume attempts; original saved receipts remain stable."
+    },
+    {
+      "id": "C08",
+      "outcome": "Lose an actual stage or rename completion reply. The same workflow remains uncertain and never resends. Exact final readback can reconcile only under current workflow/connection/file authority and cannot invent missing acknowledgments."
+    },
+    {
+      "id": "C09",
+      "outcome": "Fresh real PostgreSQL refuses forged protocol, connection, workflow/run/step, source, effect or approval bindings even with a matching-looking mutation event. Tenant/partner boundaries, runtime role restrictions and immutable history remain enforced."
+    },
+    {
+      "id": "C10",
+      "outcome": "Ordered and bounded-program workflows retain their normal execution, cancellation and stale-authority rules. Mixed SFTP/FTPS steps execute only their approved protocols and versions; existing workflows continue with AI disabled."
+    }
+  ],
+  "required_execution_profile": "Native Linux x86 and ARM GitHub runners; fresh real PostgreSQL/storage, bounded task-owned application receivers, stock clients where applicable and sandboxed Chrome for browser cases. Local normalization is only the missing-capability observation.",
+  "mandatory_adjacent_work": [
+    "Recipient-encrypted FTPS sending with independent OpenPGP readback and exact artifact/key approval remains required. Unsupported encryption must be refused rather than silently omitted.",
+    "FTPS collection, independent supported x86 receiver qualification, broader protocol behavior and complete receiving/sending customer journeys remain required.",
+    "D145 stays open as intermittent despite a passing diagnostic replay. Windows D103 and all83 whole baseline rows/12 full journeys remain open."
+  ],
+  "next_action": "Implement protocol-aware registered connection validation/views, typed planning and execution plus exact SQL/browser dispatch bindings; then run the frozen cases. Do not treat this contract or its expected missing-operation failure as implementation or runtime qualification."
+}

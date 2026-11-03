@@ -173,7 +173,7 @@
   },
   "receiving_regression": {
     "id": "D145",
-    "state": "open; diagnostic replay prepared",
+    "state": "open as intermittent; original diagnostic replay passes but cause is unproven",
     "candidate": "34f94bb2d4aec8b743f96f97b1b00bde6ee0d516",
     "run_id": 41639627245,
     "job_id": 125929525119,
@@ -186,6 +186,70 @@
     "original_resource_state_restored": true,
     "full_original_job_log_manifest": ".private/freightctl-ftps-operator-first-34-ydhlfafB/manifest.json",
     "full_original_job_log_manifest_sha256": "47e6faab06065fbb9e40ddb300ff6f959125f676cfbdef1ca249e072ac102815",
-    "next": "Replay the exact original browser receiving profile with fixed action/wire-phase categories and bounded DOM booleans. Keep all original assertions, deadlines and resource budgets."
+    "next": "Keep the first red and later green records. Use the fixed diagnostics if the failure recurs; do not claim a repair without a reproduced cause and meaningful coverage. Continue the independent F073 implementation.",
+    "diagnostic_replay": {
+      "candidate": "7879c34f9e917d5c650a60b1800c59050044c01a",
+      "run_id": 41641779421,
+      "job_id": 125936830601,
+      "conclusion": "success",
+      "result_manifest_sha256": "32fd0ea0f3e689e2fba79cc9e9787b70e65b6f46bb68f4eb6f21fea99b7e97a5",
+      "native_ftps_records": 21,
+      "commands": 172,
+      "scope": "Both original receiving browser modes, ordinary credential/intake cases and process-crash ticket cases execute unchanged. No failure diagnostic is emitted, so this does not establish the first cause."
+    }
+  },
+  "native_replay_787": {
+    "candidate": "7879c34f9e917d5c650a60b1800c59050044c01a",
+    "dispatch_run_id": 41641779425,
+    "dispatch_job_id": 125936831177,
+    "dispatch_result_manifest_sha256": "a32eabe16e82f5721bf7fd82e5b6bb3cc4b144785cc11c52fdb42e5efbf7b16a",
+    "dispatch_commands": 180,
+    "dispatch_browser_phases": 6,
+    "dispatch_lost_response_replays": 6,
+    "dispatch_wcag_audits": 18,
+    "dispatch_spy_contacts": 0,
+    "dispatch_attempts_and_fences": 0,
+    "dispatch_spies_stopped": 2,
+    "core_run_id": 41641779487,
+    "core_job_id": 125936831624,
+    "reporter_contracts": 50,
+    "spy_refusal_contracts": 5,
+    "stock_ftps_run_id": 41641779312,
+    "stock_ftps_job_ids": [
+      125936830715,
+      125936831500
+    ],
+    "stock_peer_run_id": 41641779676,
+    "stock_peer_job_ids": [
+      125936832103,
+      125936832413,
+      125936832542,
+      125936832627,
+      125936832651
+    ],
+    "listed_jobs_conclusion": "all10success",
+    "full_original_job_log_manifest": ".private/freightctl-ftps-replay-787-o2WdNak8/manifest.json",
+    "full_original_job_log_manifest_sha256": "ef145730b14a951920cb59fb4953b57e02dbc472f8a3114c0460bb8b6fb2f597",
+    "limits": "Scoped same-host component evidence; D145 cause remains unproven. The full goal and all83whole rows/12full journeys remain open."
+  },
+  "native_regression_34": {
+    "candidate": "34f94bb2d4aec8b743f96f97b1b00bde6ee0d516",
+    "run_id": 41639627021,
+    "conclusion": "all5success",
+    "arm_application_job_id": 125933214001,
+    "x86_application_job_id": 125933214169,
+    "application_pass_records_each": 645,
+    "application_failures_each": 0,
+    "application_skips_each": 0,
+    "metadata_arm_job_id": 125933213512,
+    "metadata_x86_job_id": 125933214166,
+    "metadata_schema": 36,
+    "metadata_tables": 64,
+    "forced_rls_tables": 63,
+    "restored_rows_each": 41,
+    "bounded_fuzz_job_id": 125933214097,
+    "full_original_job_log_manifest": ".private/freightctl-ftps-native-34-AX6Q8ZRS/manifest.json",
+    "full_original_job_log_manifest_sha256": "a11854ff784867d2f4d71436eb46504f21fa51f1d6c70a8e01199c5751054320",
+    "scope": "Exact native suites/metadata/fuzz for the first public FTPS dispatch candidate. The separate original browser receiving failure D145 is preserved; a later7879c34 replay passes without proving the cause."
   }
 }

@@ -2326,13 +2326,13 @@
     {
       "id": "D145",
       "severity": "native browser receiving regression",
-      "state": "open; bounded diagnostic replay prepared",
+      "state": "open as intermittent; instrumented original replay passes without establishing cause",
       "observed_on": "2026-11-03",
       "candidate": "34f94bb2d4aec8b743f96f97b1b00bde6ee0d516",
       "journey": "Real browser intake checks over actual FTPS receiving",
       "title": "The original browser receiving profile fails in check-bad without a precise action diagnostic",
       "first_failure": "Native x86 job125929525119/run41639627245 fails in check-bad with source_line0. No native/CLI/LFTP failure is reported; retained metadata/roles, exact database removal and resource state all pass. Original730d5da browser receiving passes. The new34f94bb FTPS dispatch consent job also passes independently. These separate passes do not resolve this red receiving result.",
-      "resolution": "Cause is not established. Preserve the full original public log and prepare fixed inspect/run/refresh/verify and waiting/request/fulfill categories, exact-file/path DOM booleans, enabled-state booleans and a bounded response count. Never print raw paths, IDs, errors or private traces. Replay the original profile without changing deadlines, protocol checks, assertions or resource budgets.",
+      "resolution": "Cause is not established. Preserve the full original public log and prepare fixed inspect/run/refresh/verify and waiting/request/fulfill categories, exact-file/path DOM booleans, enabled-state booleans and a bounded response count. Never print raw paths, IDs, errors or private traces. Replay the original profile without changing deadlines, protocol checks, assertions or resource budgets. At7879c34, original native receiving job125936830601/run41641779421 passes both modes,21records/172commands with unchanged assertions/deadlines/budgets and exact cleanup. No failure diagnostic is emitted. This later green does not establish or repair the original cause; preserve both results and use the bounded diagnostics on recurrence.",
       "regression_evidence": [
         "docs/qualification/evidence/F072-ftps-browser-review.json"
       ]
