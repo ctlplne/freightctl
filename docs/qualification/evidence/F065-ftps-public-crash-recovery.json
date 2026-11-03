@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "F065",
   "observed_at": "2026-11-03",
-  "state": "selected native ARM public CLI/HTTPS process-crash recovery verified; native Linux replay pending",
+  "state": "selected public CLI/HTTPS FTPS process-crash recovery verified on native Linux ARM/x86; whole goal remains open",
   "starting_commit": "00c1caf1736de2a9022b3a51b998eb6371dbf2c7",
   "scope": "Explicit/implicit FTPS receiving tickets controlled through real public CLI and certificate-checked loopback HTTPS. TLS client stand-in and exact task-owned SIGKILL; no power-loss, multi-host or whole-journey claim.",
   "first_failure": {
@@ -67,11 +67,68 @@
     "archive_sha256": "bd8812099f1d7ee7c794ec51c99358b7b1ac48d6e9188ec26229f69229a046c3"
   },
   "native_ci": {
-    "state": "pending after source push; follow exact handles, never infer a pass",
-    "required": "Both actual native Linux ARM/x86 FTPS jobs must run --tickets and independently report --require-tickets; stock curl/lftp and the existing 21 native FTPS pass records stay required."
+    "state": "passed on both actual native Linux architectures",
+    "candidate": "23cb5c5166fe490bfd6afd1f7a3e9d9cb460a679",
+    "run_id": 41583125693,
+    "url": "https://github.com/ctlplne/freightctl/actions/runs/41583125693",
+    "profiles": {
+      "arm64": {
+        "job_id": 125742292805,
+        "state": "passed",
+        "source_commit": "23cb5c5166fe490bfd6afd1f7a3e9d9cb460a679",
+        "manifest_sha256": "ab5d0b1b1f192d034425636f249c7bffb4f4c3f9c8afc666fc5dd29b2abaa6fc",
+        "stock_curl_qualified": true,
+        "stock_lftp_qualified": true,
+        "native_test_pass_records": 21,
+        "source_inputs": 676,
+        "public_cli_governance_cases": 12,
+        "expected_cli_refusals": 18,
+        "native_commands": 194,
+        "browser_qualified": false,
+        "browser_governance_cases": 0,
+        "strict_browser_api_refusals": 0,
+        "public_ticket_crash_cases": 12,
+        "controlled_ftps_sigkills": 2,
+        "strict_ticket_cli_refusals": 6,
+        "strict_ticket_api_refusals": 2,
+        "retained_metadata_and_roles_unchanged": true,
+        "isolated_database_removed": true,
+        "original_resource_state_restored": true,
+        "inference_performed": false,
+        "scanner_engine_started": false,
+        "scope": "synthetic same-host FTPS receiving and authenticated retrieval; native stock curl/lftp plus TLS client stand-in; full journeys and proactive FTPS sending remain open"
+      },
+      "x86_64": {
+        "job_id": 125742293107,
+        "state": "passed",
+        "source_commit": "23cb5c5166fe490bfd6afd1f7a3e9d9cb460a679",
+        "manifest_sha256": "ee7a667fdee7d8b918d53688b560ee23b816bdc60368065712cb0f5072a60624",
+        "stock_curl_qualified": true,
+        "stock_lftp_qualified": true,
+        "native_test_pass_records": 21,
+        "source_inputs": 676,
+        "public_cli_governance_cases": 12,
+        "expected_cli_refusals": 18,
+        "native_commands": 194,
+        "browser_qualified": false,
+        "browser_governance_cases": 0,
+        "strict_browser_api_refusals": 0,
+        "public_ticket_crash_cases": 12,
+        "controlled_ftps_sigkills": 2,
+        "strict_ticket_cli_refusals": 6,
+        "strict_ticket_api_refusals": 2,
+        "retained_metadata_and_roles_unchanged": true,
+        "isolated_database_removed": true,
+        "original_resource_state_restored": true,
+        "inference_performed": false,
+        "scanner_engine_started": false,
+        "scope": "synthetic same-host FTPS receiving and authenticated retrieval; native stock curl/lftp plus TLS client stand-in; full journeys and proactive FTPS sending remain open"
+      }
+    },
+    "scope": "Selected same-host public CLI/HTTPS-controlled process-crash ticket recovery with TLS1.3 stand-in, plus unchanged stock curl/lftp/native FTPS/governance profile. No browser ticket or whole-journey claim."
   },
   "limits": [
-    "This local peer is a TLS client stand-in. Prior F064 stock lftp interoperability is separate; the new complete stock-native candidate still needs GitHub execution.",
+    "Local and public control peers are TLS client stand-ins; actual stock curl/lftp interoperability also passes both native Linux profiles. These remain selected same-host fixtures, not independent partner or enterprise qualification.",
     "No browser ticket operator journey, power-loss, database failover, clean-host restore, broader protocol or HA qualification.",
     "All 83 whole parity rows and 12 full journeys remain open. Proactive FTPS sending/collection and Windows D103 remain required.",
     "Local inference stays off; scanner stays stopped; F026 aggregate remains owner-deferred. No release artifacts or deployment."
@@ -91,5 +148,33 @@
     "exit_code": 0,
     "scanner": "Gitleaks8.30.1 native ARM",
     "scope": "All public inputs before appending this scan result; no private estate inputs or weakened rules."
+  },
+  "native_archive": {
+    "manifest_reference": ".private/freightctl-public-crash-23cb5c5/manifest.json",
+    "manifest_sha256": "56d8bbe8d5a436a214f7909282c7254639a68975ce498b0f6a03190653d7d365",
+    "scope": "Original complete ARM/x86 FTPS,source/security and Windows D103 job logs; raw fixture evidence stays private."
+  },
+  "current_other_gates": {
+    "core_run_id": 41583125744,
+    "core_job_id": 125742293221,
+    "core_state": "passed;112 frontend/38 evidence contracts,type/build/dependency reachability and source/history secret scans",
+    "mac_job_id": 125742294512,
+    "mac_state": "passed",
+    "windows_job_id": 125742294411,
+    "windows_state": "failed; exact same22 D103 test/subcase names as preceding8e01a30",
+    "full_linux_run_id": 41583125777,
+    "full_linux_state": "running; no pass inferred",
+    "full_linux_arm_job_id": 125742293157,
+    "full_linux_x86_job_id": 125742293206,
+    "metadata_fuzz_state": "both schema35 restore architectures and nine fuzz targets passed",
+    "browser_run_id": 41583125780,
+    "browser_job_id": 125742293171,
+    "browser_state": "passed original F063 explicit/implicit browser regression;not a browser ticket claim",
+    "stock_run_id": 41583125686,
+    "stock_state": "four passed;arrivals-schedules job125742293204 failed at schedules-browser.mjs:134:27 after status200,while reading the browser response body. Collections/arrivals components pass;zero page errors/egress and exact cleanup. Observer repair/replay remains required.",
+    "browser_manifest_sha256": "be1d1c9e7c4f9e1f01bec87bd60f7c84ef2d5024f80c610653369bc6c5515a1a",
+    "browser_original_commands": 140,
+    "browser_cases": 12,
+    "strict_browser_api_refusals": 2
   }
 }
