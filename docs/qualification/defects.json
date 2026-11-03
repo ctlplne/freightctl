@@ -2071,6 +2071,21 @@
         "https://github.com/ctlplne/freightctl/actions/runs/41580438067",
         "https://github.com/ctlplne/freightctl/actions/runs/41580438161"
       ]
+    },
+    {
+      "id": "D128",
+      "severity": "public protocol configuration defect",
+      "state": "fixed and original native ARM public crash journey replayed; native Linux replay pending",
+      "observed_on": "2026-11-03",
+      "candidate": "00c1caf1736de2a9022b3a51b998eb6371dbf2c7",
+      "journey": "Public CLI/HTTPS-controlled FTPS ticket process-crash recovery",
+      "title": "serve-ftps drops the validated upload checkpoint flag",
+      "first_failure": "F065 original public run records 50 offset-zero CLI observations after 64 KiB plus 97 tail bytes were sent. The requested 64 KiB checkpoint was ignored. Retained state/roles and exact cleanup pass.",
+      "cause": "The FTPS command constructs custody without UploadCheckpointBytes, unlike HTTPS and SFTP. Direct-service tests set it explicitly and missed the public wiring.",
+      "resolution": "Pass the validated flag into FTPS custody and clarify its help text. The same original public journey now passes both listener modes with exact checkpoints, task-owned SIGKILL/restart, original receipt recovery, CSV release and independently reopened bytes. Native ARM/x86 stock CI now requires this profile; no bounds or assertions were relaxed.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F065-ftps-public-crash-recovery.json"
+      ]
     }
   ]
 }

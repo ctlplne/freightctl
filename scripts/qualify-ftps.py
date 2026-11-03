@@ -23,6 +23,7 @@ import uuid
 from ftps_contract import CLI_PAYLOAD, HOSTILE_CASE_COUNT, LFTP_CASES, LIMITED_PARENT_TESTS, NATIVE_PARENT_TESTS
 import ftps_cli_governance as governance
 import ftps_browser_evidence as browser_evidence
+import ftps_ticket_governance as tickets
 
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location("metadata", ROOT / "scripts/qualify-retained-metadata.py")
@@ -48,6 +49,7 @@ def main():
     parser.add_argument("--postgres-container-id", required=True)
     parser.add_argument("--native-client-only", action="store_true", help="exercise the native TLS1.3 client stand-in; stock curl stays unqualified")
     parser.add_argument("--browser", action="store_true", help="also qualify reviewed HTTPS browser governance against live FTPS writers and intake")
+    parser.add_argument("--tickets", action="store_true", help="also qualify public CLI/HTTPS ticket recovery across an exact task-owned FTPS SIGKILL")
     args = parser.parse_args()
     if not re.fullmatch(r"[0-9a-f]{64}", args.postgres_container_id):
         raise RuntimeError("use the exact task-owned container ID")
@@ -69,6 +71,7 @@ def main():
                 "full_foundation_aggregate_executed": False, "full_journeys_qualified": False}
     manifest["native_client_only"] = args.native_client_only
     manifest["browser_requested"] = args.browser
+    manifest["tickets_requested"] = args.tickets
     manifest["stock_curl_qualified"] = False
     manifest["stock_lftp_qualified"] = False
     processes, created, started, originally_running = {}, False, False, None
@@ -105,7 +108,7 @@ def main():
         observer.steps.append({"name": label, "exit_code": code, "seconds": round(time.monotonic() - began, 3),
                                "stdout_sha256": metadata.digest(out), "stderr_sha256": metadata.digest(err)})
         try:
-            governance.verify_outcome(label, code, err.read_bytes(), out.read_bytes())
+            tickets.verify_outcome(label, code, err.read_bytes(), out.read_bytes())
         except ValueError:
             raise RuntimeError(label + " failed; protected native output retained") from None
         return out.read_bytes()
@@ -130,6 +133,37 @@ def main():
                                "stderr_sha256": metadata.digest(private / (label + ".stderr"))})
         if code != 0:
             cleanup.append(label + " did not stop cleanly")
+
+    def start(label, argv, port):
+        out, err = (private / (label + ".stdout")).open("xb"), (private / (label + ".stderr")).open("xb")
+        p = subprocess.Popen(list(map(str, argv)), stdout=out, stderr=err, env=env, start_new_session=True)
+        processes[label] = (p, out, err)
+        deadline = time.monotonic() + 10
+        while True:
+            if p.poll() is not None or time.monotonic() > deadline:
+                raise RuntimeError("task-owned listener did not start")
+            try:
+                with socket.create_connection(("127.0.0.1", port), timeout=.2):
+                    break
+            except OSError:
+                time.sleep(.05)
+
+    def crash_restart(mode, argv, port):
+        label = "ticket-" + mode + "-crash"
+        p, out, err = processes[label]
+        if p.poll() is not None:
+            raise RuntimeError("task-owned FTPS exited before controlled crash")
+        # Use only the unreaped Popen launched here. Never look up a shared PID
+        # or signal a container. SIGKILL exercises loss of the in-memory tail.
+        os.killpg(p.pid, signal.SIGKILL)
+        code = p.wait(timeout=5)
+        out.flush(); err.flush(); os.fsync(out.fileno()); os.fsync(err.fileno()); out.close(); err.close()
+        processes.pop(label)
+        observer.steps.append({"name": label, "exit_code": code,
+                               "stdout_sha256": metadata.digest(private / (label + ".stdout")),
+                               "stderr_sha256": metadata.digest(private / (label + ".stderr"))})
+        tickets.verify_outcome(label, code, (private / (label + ".stderr")).read_bytes(), (private / (label + ".stdout")).read_bytes())
+        start("ticket-" + mode + "-restarted", argv, port)
 
     initial = sources()
     manifest["source_sha256"] = initial
@@ -186,7 +220,7 @@ def main():
         command("cli-token", [binary, "token", "--token-file", token])
         command("cli-enroll", [binary, "enroll", "--admin-dsn-file", private / "pg-admin.dsn", "--tenant", tenant, "--partner", partner, "--token-file", token])
         command("cli-cert", [binary, "dev-cert", "--cert", cert, "--key", key])
-        if args.browser:
+        if args.browser or args.tickets:
             with socket.socket() as probe:
                 probe.bind(("127.0.0.1", 0))
                 http_port = probe.getsockname()[1]
@@ -265,7 +299,16 @@ def main():
                     raise RuntimeError("browser original evidence check failed") from None
                 manifest.setdefault("browser_output_sha256", {})[mode] = {str(path.relative_to(directory)): metadata.digest(path) for path in sorted(directory.iterdir()) if path.is_file() and not path.is_symlink()}
             stop(label)
-        if args.browser:
+            if args.tickets:
+                mode = "implicit" if implicit else "explicit"
+                ticket_args = argv + ["--upload-checkpoint-bytes", "65536"]
+                start("ticket-" + mode + "-crash", ticket_args, port)
+                inventory = tickets.exercise(private, mode, port, http_port, cert, binary, env, observer.steps, command, metadata.bounded_output, lambda: crash_restart(mode, ticket_args, port))
+                stop("ticket-" + mode + "-restarted")
+                # Reopen after recording the normal restarted-process exit too.
+                manifest.setdefault("ticket_governance", {})[mode] = tickets.validate(private, mode, observer.steps, inventory)
+                manifest.setdefault("ticket_output_sha256", {})[mode] = inventory
+        if args.browser or args.tickets:
             stop("browser-https")
         manifest["state"] = "passed"
         manifest["stock_curl_qualified"] = not args.native_client_only

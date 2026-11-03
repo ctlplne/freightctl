@@ -11,6 +11,7 @@ import tempfile
 import unittest
 import ftps_cli_governance as governance
 import ftps_browser_evidence as browser
+import ftps_ticket_governance as tickets
 
 from ftps_contract import CLI_PAYLOAD, LFTP_CASES, LFTP_DOWNLOADS, NATIVE_PARENT_TESTS, NATIVE_TESTS
 
@@ -59,6 +60,31 @@ def synthetic_governance_outputs():
 
 
 class SummaryContracts(unittest.TestCase):
+    def test_required_public_ticket_profile_cannot_be_satisfied_by_old_profile(self):
+        self.write()
+        with self.assertRaises(ValueError):
+            summary.summarize(self.root, self.result, "a" * 40, require_tickets=True)
+
+    def test_ticket_claim_without_original_outputs_is_refused(self):
+        self.manifest["tickets_requested"] = True
+        self.manifest["ticket_governance"] = {"explicit": {"state": "passed"}, "implicit": {"state": "passed"}}
+        with self.assertRaises(ValueError): self.check()
+
+    def test_sigkill_is_allowed_only_for_exact_controlled_ftps_step(self):
+        for mode in ("explicit", "implicit"):
+            tickets.verify_outcome("ticket-" + mode + "-crash", -9, b"", b"")
+        for name, code in (("cli-explicit", -9), ("ticket-explicit-restarted", -9), ("ticket-explicit-crash", 0),
+                           ("ticket-explicit-crash", -15), ("ticket-unknown-crash", -9), ("ticket-explicit-crash-extra", -9)):
+            with self.assertRaises(ValueError): tickets.verify_outcome(name, code, b"", b"")
+
+    def test_ticket_refusal_requires_exact_result(self):
+        tickets.verify_outcome("ticket-explicit-foreign-refused", 1, b"freightctl: not found\n", b"")
+        for code, err, out in ((0,b"freightctl: not found\n",b""),(1,b"unavailable\n",b""),(1,b"freightctl: not found\n",b"private result")):
+            with self.assertRaises(ValueError): tickets.verify_outcome("ticket-explicit-foreign-refused", code, err, out)
+        tickets.verify_outcome("ticket-explicit-foreign-api", 0, b"", b"404")
+        for code, err, out in ((0,b"",b"200"),(0,b"",b"500"),(0,b"warning",b"404"),(1,b"",b"404")):
+            with self.assertRaises(ValueError): tickets.verify_outcome("ticket-explicit-foreign-api", code, err, out)
+
     def test_browser_binding_uses_the_go_file_size_bytes_contract(self):
         payload = governance.GOOD_CSV
         check = {"attempts":1,"policy_hash":"a" * 64,"binding":{"file":{"size_bytes":len(payload),"sha256":hashlib.sha256(payload).hexdigest()}}}
@@ -318,6 +344,99 @@ class SummaryContracts(unittest.TestCase):
         with self.assertRaises(ValueError): self.check()
         self.manifest["steps"] = original
         self.replace_output("cli-implicit-gov-intake-published-stat", b'{"file_id":"another-revision"}')
+        with self.assertRaises(ValueError): self.check()
+
+
+class TicketOriginalEvidenceContracts(unittest.TestCase):
+    """Adversarial bookkeeping fixtures; these never qualify protocol execution."""
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory(prefix="freightctl-ticket-evidence-")
+        self.addCleanup(self.tmp.cleanup)
+        self.directory = Path(self.tmp.name)
+        self.prefix = "ticket-explicit-"
+        self.steps, self.inventory = [], {}
+        ident = "a1b2c3d4-1111-4111-8111-000000000001"
+        created = {"id":ident,"path":"/recovered.csv","ftps_path":"/.freightctl/uploads/"+ident,"sftp_path":"/.freightctl/uploads/"+ident,
+                   "expected_size":len(tickets.PAYLOAD),"expected_sha256":tickets.SHA256,"state":"open","committed_offset":0,"chunk_count":0}
+        checkpoint = dict(created,committed_offset=65536,chunk_count=1)
+        completed = dict(created,committed_offset=len(tickets.PAYLOAD),chunk_count=4,state="completed",file_id="synthetic-file",acceptance=tickets.ACCEPTANCE)
+        receipt = {"upload":completed,"replayed":True,"acceptance":tickets.ACCEPTANCE,"file":{"id":"synthetic-file","sha256":tickets.SHA256,"size_bytes":len(tickets.PAYLOAD)}}
+        held = {"file_id":"synthetic-file","policy_hash":"a"*64,"state":"held","binding":{"file":{"sha256":tickets.SHA256,"size_bytes":len(tickets.PAYLOAD)}}}
+        checked = dict(held,state="passed",attempts=1,code="valid_csv",report_hash="b"*64)
+        values = {"create":{"upload":created,"replayed":False},"create-replay":{"upload":created,"replayed":True},
+                  "checkpoint":checkpoint,"after-restart":checkpoint,"completed":completed,"receipt-cli":receipt,
+                  "policy-register":{"resource":{"definition_hash":"a"*64}},"held":{"check":held},"checked":{"check":checked},
+                  "release":{"resource":{"file_id":"synthetic-file"},"replayed":False},"release-replay":{"resource":{"file_id":"synthetic-file"},"replayed":True},
+                  "published-stat":{"file_id":"synthetic-file"},"published-list":{"entries":[{"file_id":"synthetic-file"}]},
+                  "checkpoint-poll-00":checkpoint,"completed-poll-00":completed}
+        names = list(tickets.COMMANDS)
+        names.insert(names.index("checkpoint"),"checkpoint-poll-00")
+        names.insert(names.index("completed"),"completed-poll-00")
+        for name in names:
+            code = -9 if name == "crash" else 1 if name in tickets.REFUSALS else 0
+            out = str(tickets.HTTP[name]).encode() if name in tickets.HTTP else json.dumps(values.get(name,{})).encode()
+            if name == "peer":
+                messages = [{"state":s,"resumed":True} for s in tickets.STATES[:-1]] + [{"state":"passed","case_count":6,"all_data_resumed":True}]
+                out = b"\n".join(json.dumps(m).encode() for m in messages)+b"\n"
+            if name in tickets.REFUSALS:
+                out = b""
+            self.steps.append({"name":self.prefix+name,"exit_code":code})
+            self.write_command(name,out,tickets.REFUSALS.get(name,b""))
+        for name, value in (("checkpoint-api",checkpoint),("after-restart-api",checkpoint),("foreign-api",{"error":"not_found"}),("completed-api",completed),("receipt-api",receipt)):
+            self.write_file(name+".body",json.dumps(value).encode())
+        self.write_file("download",tickets.PAYLOAD)
+
+    def write_file(self,name,data):
+        path = self.directory/(self.prefix+name)
+        path.write_bytes(data)
+        self.inventory[path.name] = hashlib.sha256(data).hexdigest()
+
+    def write_command(self,name,out,err=b""):
+        step = next(s for s in self.steps if s["name"] == self.prefix+name)
+        for ext,data in (("stdout",out),("stderr",err)):
+            (self.directory/(self.prefix+name+"."+ext)).write_bytes(data)
+            step[ext+"_sha256"] = hashlib.sha256(data).hexdigest()
+
+    def check(self):
+        return tickets.validate(self.directory,"explicit",self.steps,self.inventory)
+
+    def test_complete_synthetic_record_proves_only_checker_contract(self):
+        self.assertEqual(self.check()["cases"],6)
+
+    def test_rehashed_wrong_retrieved_bytes_cannot_pass(self):
+        self.write_file("download",b"wrong immutable bytes")
+        with self.assertRaises(ValueError): self.check()
+
+    def test_rehashed_foreign_error_cannot_pass(self):
+        self.write_file("foreign-api.body",b'{"error":"database_unavailable"}')
+        with self.assertRaises(ValueError): self.check()
+
+    def test_rehashed_cross_surface_checkpoint_disagreement_cannot_pass(self):
+        value=json.loads((self.directory/(self.prefix+"after-restart-api.body")).read_text())
+        value["committed_offset"] += 97
+        self.write_file("after-restart-api.body",json.dumps(value).encode())
+        with self.assertRaises(ValueError): self.check()
+
+    def test_rehashed_receipts_cannot_bind_another_file(self):
+        value=json.loads((self.directory/(self.prefix+"receipt-cli.stdout")).read_text())
+        value["file"]["id"]="another-file"
+        self.write_command("receipt-cli",json.dumps(value).encode())
+        self.write_file("receipt-api.body",json.dumps(value).encode())
+        with self.assertRaises(ValueError): self.check()
+
+    def test_rehashed_check_cannot_bind_another_policy_or_bytes(self):
+        value=json.loads((self.directory/(self.prefix+"checked.stdout")).read_text())
+        value["check"]["policy_hash"]="c"*64
+        self.write_command("checked",json.dumps(value).encode())
+        with self.assertRaises(ValueError): self.check()
+
+    def test_missing_original_process_and_wire_phases_cannot_pass(self):
+        self.steps=[s for s in self.steps if s["name"] != self.prefix+"restarted"]
+        with self.assertRaises(ValueError): self.check()
+
+    def test_late_crash_cannot_pass_as_checkpoint_recovery(self):
+        crash=next(s for s in self.steps if s["name"] == self.prefix+"crash")
+        self.steps.remove(crash);self.steps.append(crash)
         with self.assertRaises(ValueError): self.check()
 
 

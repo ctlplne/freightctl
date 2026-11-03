@@ -86,7 +86,7 @@ func run(args []string) error {
 	uploadLimit := f.Int("upload-limit", 50, "owned uploads per page, at most 100")
 	uploadOffset := f.Int64("upload-offset", 0, "expected committed upload offset")
 	chunkFile := f.String("chunk-file", "", "bounded chunk input file reference")
-	checkpointBytes := f.Int("upload-checkpoint-bytes", 1<<20, "resumable SFTP checkpoint size, 64 KiB to 8 MiB")
+	checkpointBytes := f.Int("upload-checkpoint-bytes", 1<<20, "resumable SFTP/FTPS checkpoint size, 64 KiB to 8 MiB")
 	deliveryID := f.String("delivery-id", "", "durable outbound delivery UUID")
 	deliveryHash := f.String("definition-hash", "", "exact reviewed delivery definition digest")
 	deliveryRevision := f.Int64("expected-revision", 0, "exact reviewed delivery state revision")
@@ -513,7 +513,7 @@ func run(args []string) error {
 			return err
 		}
 		defer disk.Close()
-		service, err := ftpsd.New(&custody.Service{DB: db, Disk: disk, MaxFile: *maxFile, MaxStored: *maxStored, NamespaceMaxEntries: *namespaceMax}, ftpsd.Options{Identity: identity, Implicit: *ftpsImplicit, EnableActive: *ftpsActive, MaxConnections: *ftpsConnections, MaxWriters: *ftpsWriters, ListLimit: *ftpsList, SessionLimit: *ftpsSession, IdleLimit: *ftpsIdle})
+		service, err := ftpsd.New(&custody.Service{DB: db, Disk: disk, MaxFile: *maxFile, MaxStored: *maxStored, NamespaceMaxEntries: *namespaceMax, UploadCheckpointBytes: *checkpointBytes}, ftpsd.Options{Identity: identity, Implicit: *ftpsImplicit, EnableActive: *ftpsActive, MaxConnections: *ftpsConnections, MaxWriters: *ftpsWriters, ListLimit: *ftpsList, SessionLimit: *ftpsSession, IdleLimit: *ftpsIdle})
 		if err != nil {
 			return err
 		}

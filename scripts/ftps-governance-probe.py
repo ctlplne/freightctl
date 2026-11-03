@@ -9,6 +9,7 @@ import ftplib
 import importlib.util
 import io
 import json
+import os
 from pathlib import Path
 import re
 import ssl
@@ -48,7 +49,7 @@ def unavailable(client, name):
         raise AssertionError("held, quarantined or revoked bytes were downloadable")
 
 
-def run(settings):
+def run(settings, reference=None):
     context = ssl.create_default_context(cafile=settings["certificate"])
     context.minimum_version = context.maximum_version = ssl.TLSVersion.TLSv1_3
     observed = []
@@ -194,7 +195,15 @@ def run(settings):
             unavailable(c, "recovered.csv")
             emit("ticket-completed-held")
             phase("release-committed")
-            assert download(c, "recovered.csv") == payload
+            retrieved = download(c, "recovered.csv")
+            assert retrieved == payload
+            if "download_reference" in settings:
+                target = Path(settings["download_reference"])
+                assert target.parent.resolve() == reference.parent.resolve() and not target.exists()
+                with target.open("xb") as output:
+                    output.write(retrieved)
+                    output.flush()
+                    os.fsync(output.fileno())
             unavailable(c, ticket)
             c.quit()
             count = 6
@@ -249,7 +258,7 @@ def main():
         settings = json.loads(p.read_text())
         if type(settings["port"]) is not int or not 1024 <= settings["port"] <= 65535 or type(settings["implicit"]) is not bool:
             raise ValueError("invalid loopback governance target")
-        run(settings)
+        run(settings, p)
     except Exception as exc:
         reason = str(exc)
         for key in ("password", "next_password", "observer_password", "foreign_password", "username"):

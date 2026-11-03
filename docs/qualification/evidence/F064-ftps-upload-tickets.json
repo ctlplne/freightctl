@@ -49,7 +49,7 @@
     "Wrong REST offset is refused;the exact offset resumes the remaining original bytes.",
     "The final226 is deliberately not consumed after completion is independently durable;original completion receipt/file ID is recovered.",
     "Wrong completion destination is refused;bound completion replay creates exactly one accepted file revision.",
-    "Full210018-byte CSV remains held until exact validation/release;independent FTPS retrieval matches it and the ticket remains undownloadable."
+    "Full210019-byte CSV remains held until exact validation/release;independent FTPS retrieval matches it and the ticket remains undownloadable."
   ],
   "local_static_checks": {
     "ftps_unit_race": "passed;reserved grammar and absent accepted-type capability fail closed",
@@ -95,7 +95,7 @@
   "limits": [
     "Selected listener restart is not an application SIGKILL,power-loss or clean-host recovery claim.",
     "Public API/CLI ticket creation already shares custody;the new selected Go journey coordinates its controller through the service. Full public operator/browser/process-restart ticket journeys remain required.",
-    "Both native stock Linux architectures and original browser regression pass. Exact full Linux replay remains running. WindowsD103,broader clients/networks,scale/HA,outbound FTPS and all83whole rows/12full journeys remain open.",
+    "Both native stock Linux architectures and original browser regression pass. Exact full Linux replay now passes588 Go/PostgreSQL records per architecture with zero failures/skips. WindowsD103,broader clients/networks,scale/HA,outbound FTPS and all83whole rows/12full journeys remain open.",
     "Local inference remains off;scanner and owner-deferred F026 aggregate are not run."
   ],
   "public_source_review": {
@@ -134,9 +134,14 @@
     },
     "full_linux": {
       "run_id": 41580438130,
-      "state": "running;follow existing handles",
+      "state": "passed on both native architectures",
       "arm_job_id": 125733749822,
-      "x86_job_id": 125733749414
+      "x86_job_id": 125733749414,
+      "pass_records_each": 588,
+      "fail_records_each": 0,
+      "skip_records_each": 0,
+      "archive_reference": ".private/freightctl-native-588-8e01a30/manifest.json",
+      "archive_sha256": "bd8812099f1d7ee7c794ec51c99358b7b1ac48d6e9188ec26229f69229a046c3"
     },
     "metadata_fuzz": "both schema35 restores and nine fuzz targets passed",
     "stock_peer_run_id": 41580438126,
@@ -153,5 +158,6 @@
     "manifest_reference": ".private/freightctl-ftps-tickets-qualified-8e01a30/manifest.json",
     "manifest_sha256": "a14045f3b50ef9476b6d59ab40006f0b7436170bd536e208b5a63f3f20350831",
     "scope": "Complete original native ARM/x86 FTPS,source/security and x86 browser job logs preserved locally;raw fixture artifacts are not uploaded."
-  }
+  },
+  "follow_on": "F065 separately records public CLI/HTTPS controls and an actual task-owned process SIGKILL/restart; it does not reinterpret the F064 listener-only journey."
 }

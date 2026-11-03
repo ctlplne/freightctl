@@ -11,6 +11,7 @@ import subprocess
 from ftps_contract import CLI_PAYLOAD, LFTP_CASES, LFTP_DOWNLOADS, LFTP_FAILURE_CODES, NATIVE_PARENT_TESTS, NATIVE_TESTS
 import ftps_cli_governance as governance
 import ftps_browser_evidence as browser_evidence
+import ftps_ticket_governance as tickets
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -40,17 +41,17 @@ def failure_diagnostics(root, result, commit):
         allowed = {"native-ftps-integration", "cli-explicit-lftp-probe", "cli-implicit-lftp-probe", "browser-explicit-operator", "browser-implicit-operator"}
         for step in manifest.get("steps", []):
             name = step.get("name")
-            if name not in allowed and not governance.command_suffix(name or ""):
+            if name not in allowed and not governance.command_suffix(name or "") and not tickets.command_suffix(name or ""):
                 continue
             data = read(path.parent / (name + ".stdout"), 64 << 20)
             if hashlib.sha256(data).hexdigest() != step.get("stdout_sha256"):
                 return {}
-            if governance.command_suffix(name):
+            if governance.command_suffix(name) or tickets.command_suffix(name):
                 diagnostic = read(path.parent / (name + ".stderr"), 1 << 20)
                 if hashlib.sha256(diagnostic).hexdigest() != step.get("stderr_sha256"):
                     return {}
                 try:
-                    governance.verify_outcome(name, step.get("exit_code"), diagnostic, data)
+                    tickets.verify_outcome(name, step.get("exit_code"), diagnostic, data)
                 except ValueError:
                     cli_failures.add(name)
             output = data.decode(errors="replace")
@@ -87,7 +88,7 @@ def failure_diagnostics(root, result, commit):
         return {}
 
 
-def summarize(root, result, commit, require_browser=False):
+def summarize(root, result, commit, require_browser=False, require_tickets=False):
     header = json.loads(read(result, 8192))
     ref = header.get("manifest_reference")
     if not isinstance(ref, str) or not re.fullmatch(r"\.private/ftps-[0-9a-f]{32}/manifest\.json", ref):
@@ -134,7 +135,7 @@ def summarize(root, result, commit, require_browser=False):
             data = read(path.parent / (step["name"] + "." + extension), 64 << 20)
             if hashlib.sha256(data).hexdigest() != step.get(field):
                 raise ValueError("native FTPS output checksum differs")
-        governance.verify_outcome(step["name"], step.get("exit_code"), read(path.parent / (step["name"] + ".stderr"), 64 << 20), read(path.parent / (step["name"] + ".stdout"), 64 << 20))
+        tickets.verify_outcome(step["name"], step.get("exit_code"), read(path.parent / (step["name"] + ".stderr"), 64 << 20), read(path.parent / (step["name"] + ".stdout"), 64 << 20))
     for mode in ("explicit", "implicit"):
         governance.validate_outputs(path.parent, mode)
     native = read(path.parent / "native-ftps-integration.stdout", 64 << 20).decode()
@@ -169,12 +170,25 @@ def summarize(root, result, commit, require_browser=False):
             checked = browser_evidence.validate(path.parent / ("browser-" + mode), inventory)
             if manifest.get("browser_governance", {}).get(mode) != checked:
                 raise ValueError("browser outcomes differ from original evidence")
+    if require_tickets or manifest.get("tickets_requested"):
+        if manifest.get("tickets_requested") is not True:
+            raise ValueError("required public process-crash ticket profile did not run")
+        for mode in ("explicit", "implicit"):
+            checked = tickets.validate(path.parent, mode, steps, manifest.get("ticket_output_sha256", {}).get(mode))
+            if manifest.get("ticket_governance", {}).get(mode) != checked:
+                raise ValueError("ticket outcomes differ from original evidence")
+    elif any(tickets.command_suffix(n) for n in names):
+        raise ValueError("ticket commands require the complete ticket profile")
     return {"state": "passed", "source_commit": commit, "manifest_sha256": digest,
             "stock_curl_qualified": True, "stock_lftp_qualified": True, "native_test_pass_records": len(NATIVE_TESTS), "source_inputs": len(sources),
             "public_cli_governance_cases": 2 * len(governance.CASES), "expected_cli_refusals": 2 * len(governance.REFUSALS),
             "native_commands": len(steps), "browser_qualified": manifest.get("browser_requested") is True,
             "browser_governance_cases": 12 if manifest.get("browser_requested") is True else 0,
             "strict_browser_api_refusals": 2 if manifest.get("browser_requested") is True else 0,
+            "public_ticket_crash_cases": 12 if manifest.get("tickets_requested") is True else 0,
+            "controlled_ftps_sigkills": 2 if manifest.get("tickets_requested") is True else 0,
+            "strict_ticket_cli_refusals": 6 if manifest.get("tickets_requested") is True else 0,
+            "strict_ticket_api_refusals": 2 if manifest.get("tickets_requested") is True else 0,
             "retained_metadata_and_roles_unchanged": True,
             "isolated_database_removed": True, "original_resource_state_restored": True,
             "inference_performed": False, "scanner_engine_started": False,
@@ -185,11 +199,12 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--result", required=True)
     parser.add_argument("--require-browser", action="store_true")
+    parser.add_argument("--require-tickets", action="store_true")
     args = parser.parse_args()
     commit = os.environ.get("GITHUB_SHA", "")
     try:
         commit = os.environ.get("GITHUB_SHA") or subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT).decode().strip()
-        print(json.dumps(summarize(ROOT, Path(args.result), commit, args.require_browser)))
+        print(json.dumps(summarize(ROOT, Path(args.result), commit, args.require_browser, args.require_tickets)))
         return 0
     except Exception:
         print(json.dumps({"state": "failed", "reason": "FTPS qualification or evidence validation failed; inspect protected outputs", **failure_diagnostics(ROOT, Path(args.result), commit)}))

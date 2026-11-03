@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "id": "F065",
+  "observed_at": "2026-11-03",
+  "state": "selected native ARM public CLI/HTTPS process-crash recovery verified; native Linux replay pending",
+  "starting_commit": "00c1caf1736de2a9022b3a51b998eb6371dbf2c7",
+  "scope": "Explicit/implicit FTPS receiving tickets controlled through real public CLI and certificate-checked loopback HTTPS. TLS client stand-in and exact task-owned SIGKILL; no power-loss, multi-host or whole-journey claim.",
+  "first_failure": {
+    "manifest_reference": ".private/ftps-94ae933fa14d4f66ab610be66579ceea/manifest.json",
+    "manifest_sha256": "440bd16e0c083753f6bfdec8068461be352489bd5c8ca524e049beef5bfb3239",
+    "outcome": "All 50 public CLI observations remain at offset zero after the peer sends 64 KiB plus 97 tail bytes. The serve-ftps command accepts the checkpoint flag but drops it when constructing custody, retaining the 1 MiB default. Retained metadata/roles and resource state are preserved; cleanup succeeds."
+  },
+  "product_change": [
+    "Pass the already validated upload-checkpoint-bytes flag into the public FTPS custody service, matching HTTPS and SFTP. The existing 64 KiB\u20138 MiB bounds and 1 MiB default remain enforced.",
+    "Add an optional public recovery profile to qualify-ftps.py and require it on both native Linux FTPS architectures. The browser regression stays separately scoped."
+  ],
+  "local_replay": {
+    "manifest_reference": ".private/ftps-302f9c414c624b6188ed0cdb4f4077ed/manifest.json",
+    "manifest_sha256": "f08b3caf7029120cb5acb8a34f78b01399e029a9c3c97eb88f527b159ba1fe8b",
+    "binary_sha256": "250c3e8eda6b87a54889c3005ad0f08c7f3a1b5324648d032dcdf4e03841ebb6",
+    "environment": "Go 1.26.10 darwin/arm64; actual task-owned PostgreSQL/storage/application; TLS1.3 stand-in and stock curl HTTPS",
+    "native_pass_records": 12,
+    "native_fail_records": 0,
+    "native_skip_records": 0,
+    "original_commands": 192,
+    "source_inputs": 675,
+    "public_ticket_cases": 12,
+    "controlled_ftps_sigkills": 2,
+    "strict_ticket_cli_refusals": 6,
+    "strict_ticket_api_refusals": 2,
+    "payload_bytes": 210019,
+    "payload_sha256": "d9bea254b8999e2eacf7794b86c897dd5799ee8c2e23bd2bd593cda8fc72838e",
+    "retained_rows": 64339,
+    "retained_metadata_and_roles_unchanged": true,
+    "isolated_database_removed": true,
+    "original_resource_state_restored": true,
+    "postgres_restored_stopped": true,
+    "cleanup_failures": [],
+    "stock_ftps_qualified": false,
+    "scope_note": "Original production/fixture inputs are hashed in the manifest. Later synthetic checker refusal coverage and result documents do not change the tested binary or peer."
+  },
+  "cases": [
+    "Create/replay the exact actor-owned ticket and CSV policy through public CLI. Observe one committed 64 KiB chunk through public CLI and certificate-checked HTTPS while its FTPS writer is still open.",
+    "SIGKILL only the unreaped task-owned serve-ftps Popen. Restart the same binary/listen port/certificate/database/storage with no shared process lookup. The 97 sent but unacknowledged tail bytes do not change durable progress.",
+    "CLI/HTTPS agree on unchanged checkpoint after restart. Exact 404/not_found and empty-result CLI refusal protect actor-private progress; the FTPS peer also proves foreign actor and wrong-offset refusal.",
+    "Resume only the original suffix. Independently observe durable completed/held acceptance through CLI/HTTPS, then discard the FTP final reply without consuming it.",
+    "Recover the same saved completion receipt through HTTPS then CLI using the original shared completion key. Repeated bound rename cannot retarget or create another published file.",
+    "CLI checks/releases the exact file digest/policy/report/revision, replays release, and lists only its one published file ID. Reopen the peer original download and independently compare all bytes. Ticket retrieval stays refused."
+  ],
+  "checker_contracts": {
+    "passed": 38,
+    "scope": "Synthetic reporting/refusal contracts, not protocol qualification. Rehashed wrong bytes, wrong policy/file bindings, cross-surface offset disagreement, missing phases, late crash, false success, wrong errors and old-profile substitution are refused."
+  },
+  "same_preceding_source_full_linux": {
+    "candidate": "8e01a30710156c6eff5f721869acc656032ef868",
+    "run_id": 41580438130,
+    "state": "passed on both native Linux architectures",
+    "arm_job_id": 125733749822,
+    "x86_job_id": 125733749414,
+    "go_postgresql_pass_records_each": 588,
+    "fail_records_each": 0,
+    "skip_records_each": 0,
+    "engine_pass_records_each": 223,
+    "engine_visible_privileged_port20_skips_each": 1,
+    "metadata_and_nine_fuzz_targets": "passed",
+    "archive_reference": ".private/freightctl-native-588-8e01a30/manifest.json",
+    "archive_sha256": "bd8812099f1d7ee7c794ec51c99358b7b1ac48d6e9188ec26229f69229a046c3"
+  },
+  "native_ci": {
+    "state": "pending after source push; follow exact handles, never infer a pass",
+    "required": "Both actual native Linux ARM/x86 FTPS jobs must run --tickets and independently report --require-tickets; stock curl/lftp and the existing 21 native FTPS pass records stay required."
+  },
+  "limits": [
+    "This local peer is a TLS client stand-in. Prior F064 stock lftp interoperability is separate; the new complete stock-native candidate still needs GitHub execution.",
+    "No browser ticket operator journey, power-loss, database failover, clean-host restore, broader protocol or HA qualification.",
+    "All 83 whole parity rows and 12 full journeys remain open. Proactive FTPS sending/collection and Windows D103 remain required.",
+    "Local inference stays off; scanner stays stopped; F026 aggregate remains owner-deferred. No release artifacts or deployment."
+  ],
+  "local_static_checks": {
+    "cmd_and_ftps_unit_race": "passed",
+    "cmd_and_ftps_vet": "passed",
+    "workflow_actionlint": "passed for all three changed workflows",
+    "record_contracts": 15,
+    "ftps_evidence_contracts": 38,
+    "diff_check": "passed"
+  },
+  "public_source_review": {
+    "manifest_reference": ".private/freightctl-public-crash-review-70c82ab1aeb04ff4a54593e53f7eafc7/manifest.json",
+    "manifest_sha256": "dbcaef7243f20c0537f72033f5e05a06827d1b4c8ab4c96879575a1795e9ce98",
+    "source_count": 676,
+    "exit_code": 0,
+    "scanner": "Gitleaks8.30.1 native ARM",
+    "scope": "All public inputs before appending this scan result; no private estate inputs or weakened rules."
+  }
+}
