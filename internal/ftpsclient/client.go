@@ -76,7 +76,13 @@ func (c *Client) Close() error { return c.transport.Close() }
 
 // New authenticates only after verified TLS, then requires encrypted data and
 // binary bytes. There is no plaintext, CCC, active-mode or arbitrary command API.
-func New(ctx context.Context, d secure.FTPSDestination, guard func() error) (*Client, error) {
+func New(ctx context.Context, d secure.FTPSDestination, guard func() error) (result *Client, err error) {
+	phase := "request"
+	defer func() {
+		if err != nil {
+			err = fmt.Errorf("FTPS connection phase %s: %w", phase, err)
+		}
+	}()
 	if guard == nil {
 		return nil, ErrInput
 	}
@@ -86,6 +92,7 @@ func New(ctx context.Context, d secure.FTPSDestination, guard func() error) (*Cl
 	if guard() != nil {
 		return nil, ErrAuthority
 	}
+	phase = "transport"
 	t, err := secure.DialFTPSClient(ctx, d)
 	if err != nil {
 		return nil, secure.ErrFTPSClient
@@ -97,6 +104,7 @@ func New(ctx context.Context, d secure.FTPSDestination, guard func() error) (*Cl
 			c.Close()
 		}
 	}()
+	phase = "greeting"
 	r, err := c.readReply()
 	if err == nil && r.code == 120 {
 		r, err = c.readReply()
@@ -108,19 +116,23 @@ func New(ctx context.Context, d secure.FTPSDestination, guard func() error) (*Cl
 		return nil, &ReplyError{r.code}
 	}
 	if d.Mode == "explicit" {
+		phase = "auth-tls"
 		if _, err = c.command("AUTH", "TLS", 234); err != nil {
 			return nil, err
 		}
 		if c.reader.Buffered() != 0 {
 			return nil, ErrReply
 		}
+		phase = "control-tls"
 		if err = t.SecureControl(); err != nil {
 			return nil, secure.ErrFTPSClient
 		}
 	}
+	phase = "username"
 	if _, err = c.command("USER", d.User, 331); err != nil {
 		return nil, err
 	}
+	phase = "credential-reference"
 	password, err := secure.ReadFTPSPassword(d)
 	if err != nil {
 		return nil, err
@@ -130,6 +142,7 @@ func New(ctx context.Context, d secure.FTPSDestination, guard func() error) (*Cl
 	copy(packet.Bytes[5:], password.Bytes)
 	copy(packet.Bytes[len(packet.Bytes)-2:], []byte("\r\n"))
 	password.Close()
+	phase = "password"
 	err = c.writePacket(packet.Bytes)
 	packet.Close()
 	if err != nil {
@@ -143,6 +156,7 @@ func New(ctx context.Context, d secure.FTPSDestination, guard func() error) (*Cl
 		return nil, &ReplyError{r.code}
 	}
 	for _, cmd := range [][2]string{{"PBSZ", "0"}, {"PROT", "P"}, {"TYPE", "I"}} {
+		phase = "data-protection"
 		if _, err = c.command(cmd[0], cmd[1], 200); err != nil {
 			return nil, err
 		}

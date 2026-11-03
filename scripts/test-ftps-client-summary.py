@@ -117,6 +117,7 @@ class ReceiverEvidence(unittest.TestCase):
             if s["name"]=="native-stock-receiver":s["exit_code"]=1
         self.write();result=summary.failure_diagnostics(self.root,self.result,"b"*40)
         result.pop("manifest_sha256")
+        self.assertEqual(result.pop("tls_probe_categories"),["explicit:version-alert","implicit:version-alert"])
         self.assertEqual(result,{"failed_commands":["native-stock-receiver"],"native_stages":["store"],"reply_codes":[522]})
         self.assertNotIn("private",json.dumps(result));self.assertNotIn("password",json.dumps(result))
 
@@ -128,6 +129,14 @@ class ReceiverEvidence(unittest.TestCase):
         (self.directory/"explicit-receiver.stderr").write_bytes(b"unrecognised variable in config file: private_password_name\n")
         result=summary.failure_diagnostics(self.root,self.result,"b"*40)
         self.assertEqual(result["receiver_categories"],["explicit:unsupported-option:other"])
+
+    def test_connection_diagnostic_omits_untrusted_details_and_unknown_phases(self):
+        self.output("native-stock-receiver",b"client_stock_test.go:52: stock receiver connection FTPS connection phase greeting: invalid or oversized FTPS receiver reply\nFTPS connection phase private-password: secret\n")
+        self.write();result=summary.failure_diagnostics(self.root,self.result,"b"*40)
+        self.assertEqual(result["connection_phases"],["greeting"])
+        self.assertEqual(result["native_stages"],["receiver connection"])
+        self.assertEqual(result["native_categories"],["reply"])
+        for private in ("password","secret","invalid or oversized"):self.assertNotIn(private,json.dumps(result))
 
 
 if __name__=="__main__":unittest.main()

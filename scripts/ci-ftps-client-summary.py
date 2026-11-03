@@ -73,10 +73,23 @@ def failure_diagnostics(root,result,commit):
         if m.get("failure") in {"explicit receiver did not start","implicit receiver did not start"}:result["stage"]=m["failure"].split()[0]+"-receiver-start"
         if m.get("failure") in {"explicit exact TLS1.2 refusal missing","implicit exact TLS1.2 refusal missing"}:result["stage"]=m["failure"].split()[0]+"-tls12-refusal"
         native=read(path.parent/"native-stock-receiver.stdout").decode() if (path.parent/"native-stock-receiver.stdout").exists() else ""
-        stages=re.findall(r"client_stock_test.go:\d+: stock (connection|store|size|independent readback|rename|renamed readback|prefix|resume|resumed integrity|zero-byte upload|zero-byte readback)\b",native)
+        stages=re.findall(r"client_stock_test.go:\d+: stock (receiver connection|connection|store|size|independent readback|rename|renamed readback|prefix|resume|resumed integrity|zero-byte upload|zero-byte readback)\b",native)
         if stages:result["native_stages"]=sorted(set(stages))
         codes=re.findall(r"FTPS receiver status ([1-5][0-9]{2})\b",native)
         if codes:result["reply_codes"]=sorted(set(map(int,codes)))
+        phases=re.findall(r"FTPS connection phase (request|transport|greeting|auth-tls|control-tls|username|credential-reference|password|data-protection):",native)
+        if phases:result["connection_phases"]=sorted(set(phases))
+        fixed={"crypto-policy":"FTPS receiver identity, credential or channel policy failed","reply":"invalid or oversized FTPS receiver reply","native-timeout":"panic: test timed out","native-build":"[build failed]","protected-reference":"exact protected stock receiver reference required"}
+        kinds=[name for name,text in fixed.items() if text in native]
+        if kinds:result["native_categories"]=sorted(kinds)
+        tls_patterns={"unexpected-eof":"unexpected eof while reading","no-protocols":"no protocols available","version-alert":"alert protocol version","connection-refused":"Connection refused","connection-reset":"errno=104","broken-pipe":"errno=32","starttls-refused":"Didn't find STARTTLS"}
+        tls_categories=[]
+        for mode in ("explicit","implicit"):
+            f=path.parent/(mode+"-refuse-tls12.stderr")
+            if f.exists():
+                original=read(f).decode(errors="replace")
+                tls_categories.extend(mode+":"+name for name,text in tls_patterns.items() if text in original)
+        if tls_categories:result["tls_probe_categories"]=sorted(set(tls_categories))
         categories=[]
         patterns={"config-owner":"config file not owned by correct user","certificate-load":"SSL: cannot load RSA certificate","key-load":"SSL: cannot load RSA private key","cipher-list":"SSL: could not set cipher list","supervisor-child-exit":"receiver exited before cleanup","supervisor-preexec":"Exception occurred in preexec_fn","supervisor-resource-limit":"not allowed to raise maximum limit","supervisor-stdin":"receiver supervisor command differs","listener-bind":"could not bind listening IPv4 socket"}
         options={"ssl_tlsv1","ssl_tlsv1_1","ssl_tlsv1_2","ssl_tlsv1_3","ssl_sslv2","ssl_sslv3","seccomp_sandbox","strict_ssl_read_eof","strict_ssl_write_shutdown","require_ssl_reuse"}

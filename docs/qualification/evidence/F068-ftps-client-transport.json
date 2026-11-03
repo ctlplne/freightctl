@@ -43,19 +43,19 @@
       "manifest_sha256": "441f321bf74402bf956f1bc040136e980ece606fd8a4f39fb8db58f1b2a17a8f",
       "state": "bind operation denied;original suite replay passed with loopback access"
     },
-    "latest_synthetic_evidence_tampering_contracts": 12,
+    "latest_synthetic_evidence_tampering_contracts": 13,
     "latest_contract_note": "Ten current bookkeeping/privacy refusal contracts pass;the48record native transport race archive remains unchanged. Runtime stock evidence remains failed at receiver startup.",
     "latest_original_replay": {
-      "manifest_reference": ".private/freightctl-ftps-boundary-repaired-6ad9e312bdfb4184aed25fd12789825e/manifest.json",
-      "manifest_sha256": "4c99483a99ac9c8ba1d8e747746420509739cc39f85337a054cdf232abd8f9e4",
+      "manifest_reference": ".private/freightctl-ftps-phase-replay-4dfa69d54eec47fea6aec7bbd8adb946/manifest.json",
+      "manifest_sha256": "b694bb1088a0e65ca4553c03c174816932bf0d0c86a14c8e220d1cf22a1f0ba9",
       "native_arm_race_pass_records": 49,
       "failures": 0,
       "skips": 0,
-      "scope": "Original architecture+FTPS client+crypto suites;no database/scanner/model"
+      "scope": "Original architecture+FTPS client+crypto suites with fixed phase wrapping;no database/scanner/model"
     }
   },
   "native_ci": {
-    "state": "first actual ARM/x86 stock receiver profiles fail at explicit receiver startup;transfer tests did not run;fixed diagnostic replay pending",
+    "state": "receiver startup repaired;post-startup profiles still fail;fixed connection/TLS-probe diagnostics await original native replay",
     "workflow": ".github/workflows/ftps-client.yml",
     "profile": "Actual native Ubuntu24 ARM/x86,stock vsftpd3.0.5-0ubuntu3.1/OpenSSL/PAM,two TLS1.3 listeners,strict reuse/read EOF/write shutdown,chroot,independent six-file receiver observation and exact user/PAM/process cleanup",
     "receiver_budget": "one CPU,256MiB address space,60CPU seconds,4sessions per listener",
@@ -93,6 +93,21 @@
       },
       "repair": "Use a task-private OpenSSL system_default MinProtocol/MaxProtocol TLSv1.3 profile inherited only by the exact receiver. Remove unsupported version flags. Require actual OpenSSL TLS1.2 probes to fail with exact exit1 and protocol-version alert70 in both listener modes. Same TLS1.3/native receiver/readback/reuse/shutdown/seccomp/resource profile remains mandatory.",
       "runtime_repair_state": "pending original native replay"
+    },
+    "post_startup_profile": {
+      "candidate": "0159f2dc5921e80889291548a5fd66f53393fe93",
+      "run_id": 41596472187,
+      "arm_job_id": 125784907221,
+      "x86_job_id": 125784907506,
+      "arm_manifest_sha256": "9fc4e55709892db1ffc6978f47f75209034a1dd444113d1466acd9067dd562df",
+      "x86_manifest_sha256": "ca6aa0faad28cb195eba0e3c26e19fc690c5bde16d30f38e7542fc8674f3d4bc",
+      "arm_state": "failed native-stock-receiver after both required actual TLS1.2 refusals;exact phase unobserved",
+      "x86_state": "failed explicit exact TLS1.2 refusal after expected exit1;no exact protocol alert;native Go profile not invoked",
+      "archive": {
+        "manifest_reference": ".private/freightctl-ftps-client-profile-first-0159f2d/manifest.json",
+        "manifest_sha256": "b72e19770171c7bc45e11b9682cbc249d18ca54a3db26cadc9e08c501415c3f9"
+      },
+      "diagnostic_change": "Connection errors now wrap only fixed phase names and existing fixed/numeric safe errors;errors.Is remains intact. Reporter recognizes stock receiver connection,the fixed phases,known TLS-probe/stream/ref categories and native timeouts/build failures. No raw prose,no asserted receiver qualification and no relaxed checks."
     }
   },
   "next_integration": "docs/protocols/ftps-sending.md",
@@ -131,7 +146,7 @@
     "mac_job_id": 125782374783,
     "mac_state": "passed original native unit/race profile;D134 boundary failure repaired",
     "windows_job_id": 125782375192,
-    "windows_state": "failed;new exact failure set to reconcile;no skip or permission relaxation",
+    "windows_state": "failed44test/subcase records:old22D103 and22newFTPS protected-reference cases;architecture now passes;no skips/permission relaxation",
     "fuzz_job_id": 125782374644,
     "fuzz_state": "all ten targets passed",
     "metadata_state": "both native schema35 restores passed",
