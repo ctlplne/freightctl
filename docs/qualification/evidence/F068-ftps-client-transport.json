@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "F068",
   "observed_at": "2026-11-03",
-  "state": "ARM system and named software-library stock transport components pass;both native selected library recipes pass;both x86 stock profiles red;governed sending and full goal open",
+  "state": "ARM audited system/software stock components pass;bothx86stock combinations retain distinct native filter failures;native security improved;whole goal open",
   "starting_commit": "1ecc15f37dd8bfb254089804cab5d7b9f91d947f",
   "scope": "Bounded explicit/implicit FTPS transport component only;not connected to governed delivery,collection,connections,workflows or public sending controls. No whole parity row or journey qualified.",
   "implementation": [
@@ -43,8 +43,8 @@
       "manifest_sha256": "441f321bf74402bf956f1bc040136e980ece606fd8a4f39fb8db58f1b2a17a8f",
       "state": "bind operation denied;original suite replay passed with loopback access"
     },
-    "latest_synthetic_evidence_tampering_contracts": 35,
-    "latest_contract_note": "29 synthetic evidence/privacy/permission contracts pass;the49-record native architecture/transport/crypto race archive remains unchanged. Native system ARM stock profile passes;system x86 and separate library harness gates remain red.",
+    "latest_synthetic_evidence_tampering_contracts": 36,
+    "latest_contract_note": "36lightweight evidence/privacy/kernel/passive-scope contracts pass. Original49record nativeGo race scope remains unchanged;no local services started.",
     "latest_original_replay": {
       "manifest_reference": ".private/freightctl-ftps-phase-replay-4dfa69d54eec47fea6aec7bbd8adb946/manifest.json",
       "manifest_sha256": "b694bb1088a0e65ca4553c03c174816932bf0d0c86a14c8e220d1cf22a1f0ba9",
@@ -58,10 +58,14 @@
       "manifest_sha256": "4c6cd5cddb090768c657392a95cfd2ee3ff3dd3ee21bd3c11dc45cb34f7d0d01",
       "records": 35,
       "scope": "Synthetic proc-tree/inherited-filter/reused-ID proofs,actual owned private-log alias/permission custody,and original evidence/privacy refusal contracts. No actual receiver/filter/model/scanner/PG runs locally."
+    },
+    "passive_scope_guard": {
+      "manifest_reference": ".private/freightctl-passive-scope-final-9b097e816fef440d8373b0a442420ca9/manifest.json",
+      "manifest_sha256": "a4610fdafd6c8635b0dce2b6fed31c97737b56f114cc96b633290fbf49b9c300"
     }
   },
   "native_ci": {
-    "state": "At aeec93e,ARM system and software-library stock profiles pass. Both native software libraries and all three original recipes pass,with54visible skip lines onARM and50onx86. X86 system still failsTCP_ULP;software profile reachesTLS1.2 refusal but failsGoTLS withgetrandomSIGSYS. No whole sending or effective ARM seccomp qualification.",
+    "state": "At027d130,both auditedARMstock profiles pass21/23commands with8private audit records per mode and native filter unavailable. X86systemTCP_ULPandsoftwarepassiveSO_REUSEADDRremainred. ActiveFTP stays disabled;the independent passive-only refusal passes36localcontracts and awaits fresh native consumer replay.",
     "workflow": ".github/workflows/ftps-client.yml",
     "profile": "Actual native Ubuntu24 ARM/x86,stock vsftpd3.0.5-0ubuntu3.1/OpenSSL/PAM,two TLS1.3 listeners,strict reuse/read EOF/write shutdown,chroot,independent six-file receiver observation and exact user/PAM/process cleanup",
     "receiver_budget": "one inherited CPU affinity;256MiB per-process address-space and60CPU-second per-process limits;4sessions per listener;not a measured aggregate resident-memory claim",
@@ -709,13 +713,279 @@
       "source_finding": "Pinned vsftpd seccomp prelogin allowsgetrandom only when xferlog_enable or dual_log_enable is enabled. This fixture disabled transfer logging. Investigate a bounded private audited-transfer profile with native kernel-filter witness;do not disable seccomp,change entropy quality or relax existing protocol/resource checks."
     },
     "audited_kernel_witness_profile": {
-      "state": "implemented;actual native replay pending",
+      "state": "Original native027d130 replay complete:bothARMprofiles pass;bothx86profiles fail. Newly strengthened independent passive-only config refusal needs fresh native consumer replay;producer/wire behavior unchanged.",
       "transfer_logging": "Enable the stock daemon bounded private transfer-audit mode,with protocol-command logging disabled. This selects its existing supportedgetrandom allowance;keepseccompYES,chroot,TLS1.3,strong OS entropy and every original assertion/budget. No custom syscall rule or daemon patch.",
       "logs": "One root-owned log per listener under the0700task-private directory;the stopped receiver logs are reopened without symlink following or aliases,bounded at1MiB,hashed and returned to the fixture owner with0600permissions. Raw contents remain private;reporter compares bytes/hash/counts and refuses credential bytes.",
       "kernel_witness": "Root supervisor polls only its exact receiver/descendants every50ms,at most64processes/4KiBstatus. RecheckPPid to reject ID reuse. Compare untrusted nonroot children Seccomp_filters to the supervisor baseline;inherited filter alone is insufficient. Public output contains only fixed bounded counts.",
       "architecture_boundary": "X86 success requires an observed added kernel filter in both modes. ARM explicitly reports selected receiver native implementation unavailable;unexpected added filters require a reviewed support profile. A passing ARM wire journey cannot qualify its native filter.",
       "command_closure": "Original commands plus receiver-audit-logs:21system/23software commands. Same3native records/6independent files,all previous protocol/cleanup gates,and all library recipes remain required. Old20/22command results cannot substitute for this expanded profile.",
-      "limits": "Sampling verifies observed added filters,not every instruction/process lifetime. No raw log/trace/artifact upload,local receiver,model/scanner/database,entropy downgrade,custom filter widening,daemon patch or relaxed budget."
+      "limits": "Sampling verifies observed added filters,not every instruction/process lifetime. No raw log/trace/artifact upload,local receiver,model/scanner/database,entropy downgrade,custom filter widening,daemon patch or relaxed budget.",
+      "original_runtime": {
+        "candidate": "027d13007a52039d705089e7d27b7414cdf6ae40",
+        "run_id": 41618723292,
+        "original_outcomes": {
+          "125858628117": [
+            {
+              "state": "failed",
+              "reason": "native FTPS client receiver qualification or original evidence validation failed;inspect protected outputs",
+              "failed_commands": [
+                "native-stock-receiver"
+              ],
+              "manifest_sha256": "53004d53972150e68f40923e9348ff71995d7229b4c6ed806a68b0642df94fcd",
+              "receiver_library_profile": "system",
+              "failed_tls_probes": [
+                "explicit-refuse-tls12",
+                "implicit-refuse-tls12"
+              ],
+              "observed_native_pass_records": 0,
+              "native_stages": [
+                "receiver connection"
+              ],
+              "connection_phases": [
+                "control-tls",
+                "transport"
+              ],
+              "native_categories": [
+                "crypto-policy"
+              ]
+            },
+            {
+              "state": "failed",
+              "reason": "native FTPS client receiver qualification or original evidence validation failed;inspect protected outputs",
+              "failed_commands": [
+                "native-stock-receiver"
+              ],
+              "manifest_sha256": "530f6329de0da2a156397fbc6190a4a5de17355144bef78f3e4ad00083bef8fc",
+              "receiver_library_profile": "system",
+              "receiver_traced": true,
+              "failed_tls_probes": [
+                "explicit-refuse-tls12",
+                "implicit-refuse-tls12"
+              ],
+              "observed_native_pass_records": 0,
+              "native_stages": [
+                "receiver connection"
+              ],
+              "connection_phases": [
+                "control-tls",
+                "transport"
+              ],
+              "native_categories": [
+                "crypto-policy"
+              ],
+              "trace_categories": [
+                "explicit:SIGSYS",
+                "explicit:last-setsockopt-before-SIGSYS:level=6,option=31,size=4",
+                "explicit:last-syscall-before-SIGSYS:54",
+                "explicit:process-exit:1",
+                "explicit:process-exit:2",
+                "implicit:SIGSYS",
+                "implicit:last-setsockopt-before-SIGSYS:level=6,option=31,size=4",
+                "implicit:last-syscall-before-SIGSYS:54",
+                "implicit:process-exit:2"
+              ]
+            }
+          ],
+          "125858628278": [
+            {
+              "state": "passed",
+              "profile": "openssl-3.5.9-no-ktls",
+              "architecture": "x86_64",
+              "manifest_sha256": "0745ca6cdc0a8ae7d33975f229efa01575c6f99f3533073afb98cc218221f790",
+              "source_sha256": "603f5602e2eef00d77fbd429d34dcd5822bb301757a1bc9cdb24c670f1eb859a",
+              "upstream_skip_lines": 50,
+              "failure_stage": null,
+              "failed_commands": [],
+              "diagnostics": {
+                "harness_files": {
+                  "util/wrap.pl": true,
+                  "util/shlib_wrap.sh": true,
+                  "apps/openssl": true,
+                  "test/sslapitest": true,
+                  "test/ssl_test": true,
+                  "test/fips_version_test": true,
+                  "test/ssl_handshake_rtt_test": true
+                },
+                "recipes_seen": [
+                  "25-test_verify.t",
+                  "80-test_ssl_new.t",
+                  "90-test_sslapi.t"
+                ],
+                "not_ok_records": 0,
+                "categories": [
+                  "missing-file"
+                ]
+              },
+              "scope": "native receiver dependency build and three selected upstream recipes;not protocol,system-library or FIPS qualification"
+            },
+            {
+              "state": "failed",
+              "reason": "native FTPS client receiver qualification or original evidence validation failed;inspect protected outputs",
+              "failed_commands": [
+                "native-stock-receiver"
+              ],
+              "manifest_sha256": "2d86512c46b78813252308d4ac38314305fe360a65ee39c7f2383f648ebceb03",
+              "receiver_library_profile": "no-ktls",
+              "observed_native_pass_records": 0,
+              "native_stages": [
+                "store"
+              ],
+              "native_categories": [
+                "reply"
+              ],
+              "tls_probe_categories": [
+                "explicit:version-alert",
+                "implicit:version-alert"
+              ]
+            },
+            {
+              "state": "failed",
+              "reason": "native FTPS client receiver qualification or original evidence validation failed;inspect protected outputs",
+              "failed_commands": [
+                "native-stock-receiver"
+              ],
+              "manifest_sha256": "9219f71f2202eee1d134d0a4c11a62898fe7b06f767cf27014b43f554db2f7cc",
+              "receiver_library_profile": "no-ktls",
+              "receiver_traced": true,
+              "observed_native_pass_records": 0,
+              "native_stages": [
+                "store"
+              ],
+              "native_categories": [
+                "reply"
+              ],
+              "tls_probe_categories": [
+                "explicit:version-alert",
+                "implicit:version-alert"
+              ],
+              "trace_categories": [
+                "explicit:SIGSYS",
+                "explicit:last-setsockopt-before-SIGSYS:level=1,option=2,size=4",
+                "explicit:last-syscall-before-SIGSYS:54",
+                "explicit:process-exit:2",
+                "implicit:SIGSYS",
+                "implicit:last-setsockopt-before-SIGSYS:level=1,option=2,size=4",
+                "implicit:last-syscall-before-SIGSYS:54",
+                "implicit:process-exit:2",
+                "implicit:recvfrom:EAGAIN"
+              ]
+            }
+          ],
+          "125858628318": [
+            {
+              "state": "passed",
+              "profile": "openssl-3.5.9-no-ktls",
+              "architecture": "aarch64",
+              "manifest_sha256": "12b2ed94fd02e6420bc091b53f7113708fe02a66782479fe975cd3361d6caa02",
+              "source_sha256": "603f5602e2eef00d77fbd429d34dcd5822bb301757a1bc9cdb24c670f1eb859a",
+              "upstream_skip_lines": 54,
+              "failure_stage": null,
+              "failed_commands": [],
+              "diagnostics": {
+                "harness_files": {
+                  "util/wrap.pl": true,
+                  "util/shlib_wrap.sh": true,
+                  "apps/openssl": true,
+                  "test/sslapitest": true,
+                  "test/ssl_test": true,
+                  "test/fips_version_test": true,
+                  "test/ssl_handshake_rtt_test": true
+                },
+                "recipes_seen": [
+                  "25-test_verify.t",
+                  "80-test_ssl_new.t",
+                  "90-test_sslapi.t"
+                ],
+                "not_ok_records": 0,
+                "categories": [
+                  "missing-file"
+                ]
+              },
+              "scope": "native receiver dependency build and three selected upstream recipes;not protocol,system-library or FIPS qualification"
+            },
+            {
+              "state": "passed",
+              "source_commit": "027d13007a52039d705089e7d27b7414cdf6ae40",
+              "manifest_sha256": "a2d61785ea5d3003eecdea61dc8c415708e0c53544022445966370e12eba525c",
+              "architecture": "aarch64",
+              "receiver_library_profile": "no-ktls",
+              "receiver_library": {
+                "manifest_sha256": "12b2ed94fd02e6420bc091b53f7113708fe02a66782479fe975cd3361d6caa02",
+                "version": "3.5.9",
+                "source_sha256": "603f5602e2eef00d77fbd429d34dcd5822bb301757a1bc9cdb24c670f1eb859a",
+                "selected_upstream_recipes": 3,
+                "upstream_skip_lines": 54,
+                "kernel_tls_compiled_out": true
+              },
+              "native_pass_records": 3,
+              "original_commands": 23,
+              "source_inputs": 702,
+              "independent_receiver_files": 6,
+              "strict_tls13_reuse_and_shutdown": true,
+              "private_transfer_audit_records": {
+                "explicit": 8,
+                "implicit": 8
+              },
+              "receiver_native_seccomp": "not implemented by selected ARM receiver",
+              "kernel_filter_observations": {
+                "explicit": 0,
+                "implicit": 0
+              },
+              "task_user_removed": true,
+              "task_pam_removed": true,
+              "inference_performed": false,
+              "scanner_started": false,
+              "postgres_started": false,
+              "domain_delivery_qualified": false,
+              "scope": "actual unmodified stock vsftpd/PAM with named TLS library profile;ARM native filter,governed delivery/collection and whole journeys remain unqualified"
+            }
+          ],
+          "125858628437": [
+            {
+              "state": "passed",
+              "source_commit": "027d13007a52039d705089e7d27b7414cdf6ae40",
+              "manifest_sha256": "e184cbf25fc4fa1d508144eb08ff56d97977de74fd5c8f2751bca0ebd4227c8e",
+              "architecture": "aarch64",
+              "receiver_library_profile": "system",
+              "receiver_library": null,
+              "native_pass_records": 3,
+              "original_commands": 21,
+              "source_inputs": 702,
+              "independent_receiver_files": 6,
+              "strict_tls13_reuse_and_shutdown": true,
+              "private_transfer_audit_records": {
+                "explicit": 8,
+                "implicit": 8
+              },
+              "receiver_native_seccomp": "not implemented by selected ARM receiver",
+              "kernel_filter_observations": {
+                "explicit": 0,
+                "implicit": 0
+              },
+              "task_user_removed": true,
+              "task_pam_removed": true,
+              "inference_performed": false,
+              "scanner_started": false,
+              "postgres_started": false,
+              "domain_delivery_qualified": false,
+              "scope": "actual unmodified stock vsftpd/PAM with named TLS library profile;ARM native filter,governed delivery/collection and whole journeys remain unqualified"
+            }
+          ]
+        },
+        "archive": {
+          "manifest_reference": ".private/freightctl-audited-receiver-and-native-security/manifest.json",
+          "manifest_sha256": "84dd0321dd20eb375f26659b7ca16bc8824f111cca88e7df87f89f1f3ac529d3"
+        },
+        "scope": "ARMsystem3records/21commands andARMsoftware3records/23commands,6independent files each,8private transfer audit records per mode,observed0native filters and explicit unsupportedARMboundary. X86systemTCP_ULPandsoftwareSO_REUSEADDRremainred."
+      }
+    },
+    "passive_filter_failure": {
+      "job_id": 125858628278,
+      "manifest_sha256": "2d86512c46b78813252308d4ac38314305fe360a65ee39c7f2383f648ebceb03",
+      "diagnostic_manifest_sha256": "9219f71f2202eee1d134d0a4c11a62898fe7b06f767cf27014b43f554db2f7cc",
+      "observation": "Audited x86 softwareTLS gets through authentication and both exactTLS1.2 refusals,but firstSTORfails. Diagnostic reportsSIGSYS aftersetsockopt(level1,option2,size4),SO_REUSEADDR.",
+      "source_cause": "In exact upstream3.0.5 seccompsandbox.c,the passive broker permitsSO_REUSEADDR only inside tunable_port_enable. privops.c calls it unconditionally for passive listeners. This is inconsistent with the required passive-only configuration.",
+      "policy": "Keepport_enableNO,pasv_enableYES and the kernel filter. Do not enableactiveFTP,patchout isolation or claim this stock profile passed. The independent reporter now refuses an active-enabled substitution. Qualify a supported independentx86receiver separately;governed workflow work can use explicitly identified actual/stand-in receivers without claiming this vendor combination."
     }
   },
   "next_integration": "docs/protocols/ftps-sending.md",

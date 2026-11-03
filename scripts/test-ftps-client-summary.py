@@ -48,7 +48,7 @@ class ReceiverEvidence(unittest.TestCase):
                 next(s for s in self.m["steps"] if s["name"]==name)["exit_code"]=1
         (self.directory/"openssl.conf").write_bytes(summary.OPENSSL_PROFILE)
         for mode in ("explicit","implicit"):
-            config={"listen_address":"127.0.0.1","ssl_enable":"YES","force_local_logins_ssl":"YES","force_local_data_ssl":"YES","require_ssl_reuse":"YES","strict_ssl_read_eof":"YES","strict_ssl_write_shutdown":"YES","ssl_tlsv11":"NO","ssl_tlsv12":"NO","ssl_tlsv13":"YES","seccomp_sandbox":"YES","chroot_local_user":"YES","anonymous_enable":"NO","implicit_ssl":"YES" if mode=="implicit" else "NO"}
+            config={"listen_address":"127.0.0.1","ssl_enable":"YES","force_local_logins_ssl":"YES","force_local_data_ssl":"YES","require_ssl_reuse":"YES","strict_ssl_read_eof":"YES","strict_ssl_write_shutdown":"YES","ssl_tlsv11":"NO","ssl_tlsv12":"NO","ssl_tlsv13":"YES","seccomp_sandbox":"YES","chroot_local_user":"YES","anonymous_enable":"NO","pasv_enable":"YES","port_enable":"NO","implicit_ssl":"YES" if mode=="implicit" else "NO"}
             config.update(xferlog_enable='YES',dual_log_enable='NO',xferlog_std_format='YES',log_ftp_protocol='NO',xferlog_file=str(self.directory/(mode+'.xferlog')))
             (self.directory/(mode+".conf")).write_text("".join(k+"="+v+"\n" for k,v in config.items()))
 
@@ -270,6 +270,12 @@ class ReceiverEvidence(unittest.TestCase):
         self.assertEqual(self.check()['receiver_native_seccomp'],'not implemented by selected ARM receiver')
         self.output('explicit-receiver',json.dumps({'freightctl_receiver_isolation':{'baseline_observed':True,'native_filter_observations':1,'maximum_added_filters':1}}).encode()+b'\n')
         with self.assertRaises(ValueError):self.check()
+
+    def test_passive_scope_cannot_enable_active_ftp_to_bypass_a_peer_filter_failure(self):
+        path=self.directory/'explicit.conf';good=path.read_text()
+        for altered in (good.replace('port_enable=NO','port_enable=YES'),good.replace('pasv_enable=YES','pasv_enable=NO')):
+            path.write_text(altered)
+            with self.assertRaises(ValueError):self.check()
 
     def test_private_auditing_cannot_be_removed_or_expose_credential_bytes(self):
         p=self.directory/'explicit.conf';good=p.read_text();p.write_text(good.replace('xferlog_enable=YES','xferlog_enable=NO'))

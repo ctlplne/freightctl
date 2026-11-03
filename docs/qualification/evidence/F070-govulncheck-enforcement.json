@@ -3,7 +3,7 @@
   "id": "F070",
   "observed_at": "2026-11-03",
   "starting_commit": "aeec93e2b16374200272aaccab54eb40cf090648",
-  "state": "fixed and actual native x86 security gate replayed;full goal remains open",
+  "state": "enforcing source vulnerability gate passes on actual native Linuxx86/ARM,Windowsamd64 andMacARM default configurations;runtime/full-goal gates remain open",
   "scope": "Enforce the existing default called-symbol govulncheck policy;not a new application vulnerability,full-platform scan,malware detection or full-goal qualification.",
   "defect": "D138",
   "first_failure": {
@@ -117,7 +117,7 @@
     "exit_code": 0
   },
   "additional_native_source_configurations": {
-    "state": "prepared;actual native execution pending",
+    "state": "all three actual native source configuration jobs passed",
     "workflow": ".github/workflows/native-vulnerabilities.yml",
     "profiles": [
       {
@@ -142,6 +142,139 @@
       "manifest_reference": ".private/freightctl-native-vuln-workflow-2edcab7171b14e6199a7d32bd0953184/manifest.json",
       "manifest_sha256": "3187d71b1dede5cef88be54b8b23ff7a1cd280364ef4948aa6cd52eda8a42083"
     },
-    "limits": "Source analysis of default build configurations only. WindowsD103/runtime/PG/protocol/agent gates,custom tags,images/binaries and complete platform qualification stay open. No heavy scan executes locally. Linuxx86 analysis stays in existing core job and is not duplicated."
+    "limits": "Source analysis of default build configurations only. WindowsD103/runtime/PG/protocol/agent gates,custom tags,images/binaries and complete platform qualification stay open. No heavy scan executes locally. Linuxx86 analysis stays in existing core job and is not duplicated.",
+    "candidate": "053a374f55ea2a07ae94bdf0a64334a3ff1bc5e6",
+    "run_id": 41619390036,
+    "original_outcomes": {
+      "125860918815": [
+        {
+          "native_source_configuration": {
+            "GOARCH": "arm64",
+            "GOHOSTARCH": "arm64",
+            "GOHOSTOS": "darwin",
+            "GOOS": "darwin",
+            "GOVERSION": "go1.26.10"
+          },
+          "runtime_platform_qualified": false
+        },
+        {
+          "state": "passed",
+          "manifest_sha256": "e7f3605eff2c721184ae0aff2dd59174d4c43d8e0f57d44c885963ba8df8a8b7",
+          "converter_version": "v1.9.0",
+          "records": 6,
+          "exit_codes": {
+            "tool-version": 0,
+            "legacy-json-called": 0,
+            "text-called": 3,
+            "text-module-only": 0,
+            "text-clean": 0,
+            "text-truncated": 1
+          },
+          "source_scan_performed": false
+        },
+        {
+          "source_commit": "053a374f55ea2a07ae94bdf0a64334a3ff1bc5e6",
+          "source_report_sha256": "de557541e95c49ed9afb87551fbf75bc77b41ededd8a42710310b2cf0b75ebfa",
+          "scan_scope": "default source ./... on actual host;not runtime,custom tags or binary/image qualification"
+        }
+      ],
+      "125860918969": [
+        {
+          "native_source_configuration": {
+            "GOARCH": "amd64",
+            "GOHOSTARCH": "amd64",
+            "GOHOSTOS": "windows",
+            "GOOS": "windows",
+            "GOVERSION": "go1.26.10"
+          },
+          "runtime_platform_qualified": false
+        },
+        {
+          "state": "passed",
+          "manifest_sha256": "4ff53f80f609706537564367b34872ff717e4a434638cfc7b17e6935884a811d",
+          "converter_version": "v1.9.0",
+          "records": 6,
+          "exit_codes": {
+            "tool-version": 0,
+            "legacy-json-called": 0,
+            "text-called": 3,
+            "text-module-only": 0,
+            "text-clean": 0,
+            "text-truncated": 1
+          },
+          "source_scan_performed": false
+        },
+        {
+          "source_commit": "053a374f55ea2a07ae94bdf0a64334a3ff1bc5e6",
+          "source_report_sha256": "20f8c93266ea812d6ae5160cc093957f1f7772e70428fa9bc39def22f580181f",
+          "scan_scope": "default source ./... on actual host;not runtime,custom tags or binary/image qualification"
+        }
+      ],
+      "125860920207": [
+        {
+          "native_source_configuration": {
+            "GOARCH": "arm64",
+            "GOHOSTARCH": "arm64",
+            "GOHOSTOS": "linux",
+            "GOOS": "linux",
+            "GOVERSION": "go1.26.10"
+          },
+          "runtime_platform_qualified": false
+        },
+        {
+          "state": "passed",
+          "manifest_sha256": "c7cc8803404b14dea172571f1febcb4eeb014306e1fba769237adc7372c7a865",
+          "converter_version": "v1.9.0",
+          "records": 6,
+          "exit_codes": {
+            "tool-version": 0,
+            "legacy-json-called": 0,
+            "text-called": 3,
+            "text-module-only": 0,
+            "text-clean": 0,
+            "text-truncated": 1
+          },
+          "source_scan_performed": false
+        },
+        {
+          "source_commit": "053a374f55ea2a07ae94bdf0a64334a3ff1bc5e6",
+          "source_report_sha256": "3cc983d0afabaf50dfc97f050825bf68fbf9fb29d2077c4a76ee2702eb5d6001",
+          "scan_scope": "default source ./... on actual host;not runtime,custom tags or binary/image qualification"
+        }
+      ]
+    },
+    "archive": {
+      "manifest_reference": ".private/freightctl-audited-receiver-and-native-security/manifest.json",
+      "manifest_sha256": "84dd0321dd20eb375f26659b7ca16bc8824f111cca88e7df87f89f1f3ac529d3"
+    },
+    "called_vulnerabilities_each": 0,
+    "imported_package_vulnerabilities_each": 0,
+    "required_module_vulnerabilities_each": 1,
+    "database_modified": "2026-11-02T22:01:43Z"
+  },
+  "latest_core": {
+    "candidate": "053a374f55ea2a07ae94bdf0a64334a3ff1bc5e6",
+    "run_id": 41619390016,
+    "job_id": 125860924557,
+    "state": "passed complete original source/security job,35receiver/refusal contracts,sixconverter contracts,frontend/type/build,audits and source/history secrets",
+    "converter_contract": {
+      "state": "passed",
+      "manifest_sha256": "5d9dd90f145b67b6dd256558fc7b9bed80008141c6d295d0e4bb9cf81d3122b0",
+      "converter_version": "v1.9.0",
+      "records": 6,
+      "exit_codes": {
+        "tool-version": 0,
+        "legacy-json-called": 0,
+        "text-called": 3,
+        "text-module-only": 0,
+        "text-clean": 0,
+        "text-truncated": 1
+      },
+      "source_scan_performed": false
+    },
+    "archive": {
+      "manifest_reference": ".private/freightctl-audited-receiver-and-native-security/manifest.json",
+      "manifest_sha256": "84dd0321dd20eb375f26659b7ca16bc8824f111cca88e7df87f89f1f3ac529d3"
+    }
   }
 }

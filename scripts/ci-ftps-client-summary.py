@@ -99,7 +99,7 @@ def summarize(root,result,commit,library_profile="system"):
         refusal=read(path.parent/(mode+"-refuse-tls12.stderr"))
         if b"alert protocol version" not in refusal or b"SSL alert number 70" not in refusal:raise ValueError("receiver original TLS1.2 refusal differs")
         config=dict(line.split("=",1) for line in read(path.parent/(mode+".conf")).decode().splitlines())
-        for name,value in {"listen_address":"127.0.0.1","ssl_enable":"YES","force_local_logins_ssl":"YES","force_local_data_ssl":"YES","require_ssl_reuse":"YES","strict_ssl_read_eof":"YES","strict_ssl_write_shutdown":"YES","ssl_tlsv11":"NO","ssl_tlsv12":"NO","ssl_tlsv13":"YES","seccomp_sandbox":"YES","chroot_local_user":"YES","anonymous_enable":"NO","implicit_ssl":"YES" if mode=="implicit" else "NO"}.items():
+        for name,value in {"listen_address":"127.0.0.1","ssl_enable":"YES","force_local_logins_ssl":"YES","force_local_data_ssl":"YES","require_ssl_reuse":"YES","strict_ssl_read_eof":"YES","strict_ssl_write_shutdown":"YES","ssl_tlsv11":"NO","ssl_tlsv12":"NO","ssl_tlsv13":"YES","seccomp_sandbox":"YES","chroot_local_user":"YES","anonymous_enable":"NO","pasv_enable":"YES","port_enable":"NO","implicit_ssl":"YES" if mode=="implicit" else "NO"}.items():
             if config.get(name)!=value:raise ValueError("receiver security profile differs")
         for name,value in {'xferlog_enable':'YES','dual_log_enable':'NO','xferlog_std_format':'YES','log_ftp_protocol':'NO','xferlog_file':str(path.parent/(mode+'.xferlog'))}.items():
             if config.get(name)!=value:raise ValueError('receiver private auditing profile differs')
