@@ -43,6 +43,7 @@ jobs:
           python3 scripts/check-ftp-engine.py
           python3 scripts/test-ftp-engine.py
           python3 scripts/test-ci-ftps-summary.py
+          python3 scripts/test-ftps-dispatch-qualification.py
           python3 scripts/test-ftps-client-summary.py
           python3 scripts/test-ci-setup-summary.py
           python3 scripts/test-records.py

@@ -38,7 +38,7 @@ const browser = await chromium.launch({
     "--ignore-certificate-errors-spki-list=" + spki,
     "--disable-background-networking",
     "--disable-component-update",
-    ...(c.routing_only
+    ...(c.routing_only || c.dispatch_protocol === "ftps"
       ? ["--renderer-process-limit=1", "--js-flags=--max-old-space-size=128"]
       : []),
   ],
@@ -363,6 +363,12 @@ try {
         external_egress: egress,
         model_started: false,
         production_activated: false,
+        ...(c.dispatch_protocol === "ftps"
+          ? {
+              browser_version: browser.version(),
+              node_version: process.version,
+            }
+          : {}),
       },
       null,
       2,

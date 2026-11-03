@@ -76,5 +76,30 @@
     "Registered FTPS connections/workflows, collection, recipient encryption and the complete sending customer journey remain open.",
     "The receiver contract remains an operator assertion; no fsync, exclusive rename, exactly-once business effect or independent vendor qualification is inferred.",
     "Retained schema35 and its stopped resources are untouched. F026 stays owner-deferred, local inference stays off, and all83 whole rows/12 journeys remain open."
-  ]
+  ],
+  "qualification_harness": {
+    "state": "implemented; native execution pending",
+    "workflow": ".github/workflows/ftps-dispatch.yml",
+    "profile": "native Linux x86; fresh bounded PostgreSQL and storage; sandboxed Chrome; public CLI/HTTPS; separate contact-only loopback spy for each FTPS mode",
+    "cases_each_mode": {
+      "commands": 25,
+      "strict_cli_refusals": 3,
+      "strict_api_refusals": 1,
+      "browser_phases": 3,
+      "original_key_lost_response_replays": 3,
+      "accessibility_audits": 9
+    },
+    "evidence_contract": "Producer and independent reporter reopen original command outputs, exact source and effect binding, delegated review, actual HTTPS request/key/body/response pairs, DOM text, WCAG reports, histories and the final stopped contact counter. The spy accepts at most16 connections, closes them without speaking TLS, and drains pending accepts before joining.",
+    "local_checks": {
+      "reporter_refusal_contracts": 49,
+      "counter_and_cli_refusal_contracts": 2,
+      "python_compile": "passed",
+      "node_syntax": "passed",
+      "workflow_syntax": "passed",
+      "local_actual_spy_checks": "three loopback binds refused by desktop sandbox; moved to native GitHub core checks without skipping or weakening them",
+      "first_result_reference": ".private/freightctl-ftps-dispatch-local-J3UqnDph/manifest.json",
+      "first_result_sha256": "3b14ecea7f86dcfb80e0c0e7f7169430dbb36bbf8823a1c4a1ac82c0e5d93fdc"
+    },
+    "qualification_claim": false
+  }
 }

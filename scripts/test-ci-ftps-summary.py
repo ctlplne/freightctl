@@ -63,6 +63,15 @@ def synthetic_governance_outputs():
 
 
 class SummaryContracts(unittest.TestCase):
+    def test_required_dispatch_cannot_accept_an_old_or_claim_only_profile(self):
+        self.write()
+        with self.assertRaises(ValueError):
+            summary.summarize(self.root, self.result, "a" * 40, require_dispatch_approvals=True)
+        self.manifest["dispatch_approvals_requested"] = True
+        self.manifest["dispatch_governance"] = {mode: {"state": "passed"} for mode in ("explicit", "implicit")}
+        with self.assertRaises(ValueError):
+            self.check()
+
     def test_current_schema36_cannot_be_rejected_by_stale_retained_profile(self):
         self.manifest["retained_schema"] = CURRENT_PROFILE["schema"]
         self.manifest["retained_before"]["migration_ledger"] = migration_ledger(self.root,CURRENT_PROFILE["schema"])

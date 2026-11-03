@@ -6,9 +6,37 @@ export async function qualifyOutboundDispatch(page, c, audit, record, actual) {
       name: "Outbound dispatch approvals",
     }),
     responses = [];
-  const contacts = async () =>
-    (await readFile(c.receiver_log, "utf8")).split("Accepted publickey for ")
-      .length - 1;
+  const contacts = async () => {
+    const raw = await readFile(c.receiver_log, "utf8");
+    if (c.dispatch_protocol !== "ftps")
+      return raw.split("Accepted publickey for ").length - 1;
+    assert.ok(raw.length <= 1024);
+    const counter = JSON.parse(raw);
+    assert.deepEqual(Object.keys(counter).sort(), [
+      "accepted_connections",
+      "budget_exhausted",
+      "kind",
+      "schema_version",
+      "stopped",
+    ]);
+    assert.equal(counter.schema_version, 1);
+    assert.equal(counter.kind, "freightctl-ftps-contact-spy");
+    assert.equal(counter.stopped, false);
+    assert.equal(counter.budget_exhausted, false);
+    assert.equal(counter.accepted_connections, 0);
+    return counter.accepted_connections;
+  };
+  async function captureFTPS(locator) {
+    if (c.dispatch_protocol !== "ftps") return;
+    const text = await locator.innerText();
+    assert.ok(text.length <= 65536);
+    const effect = c.dispatch_expected.effect;
+    assert.equal(effect.protocol, "ftps");
+    assert.ok(text.includes(effect.final_path));
+    assert.ok(text.includes(effect.ftps.staging_path));
+    assert.ok(text.includes(effect.ftps.password_reference_sha256));
+    await writeFile(c.raw + "/ftps-visible.txt", text + "\n");
+  }
   const before = await contacts();
   await page.getByRole("button", { name: "Approvals", exact: true }).click();
   await region
@@ -74,6 +102,7 @@ export async function qualifyOutboundDispatch(page, c, audit, record, actual) {
       exact: true,
     });
     await heading.waitFor();
+    await captureFTPS(page.locator("dialog[open]"));
     assert.equal(
       await heading.evaluate((el) => el === document.activeElement),
       true,
@@ -130,6 +159,7 @@ export async function qualifyOutboundDispatch(page, c, audit, record, actual) {
       exact: true,
     });
     await title.waitFor();
+    await captureFTPS(region);
     assert.equal(
       await title.evaluate((el) => el === document.activeElement),
       true,

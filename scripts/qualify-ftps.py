@@ -26,6 +26,7 @@ import ftps_cli_governance as governance
 import ftps_browser_evidence as browser_evidence
 import ftps_ticket_governance as tickets
 import ftps_browser_tickets as browser_tickets
+import ftps_dispatch_qualification as dispatch
 
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location("metadata", ROOT / "scripts/qualify-retained-metadata.py")
@@ -54,6 +55,7 @@ def main():
     parser.add_argument("--browser", action="store_true", help="also qualify reviewed HTTPS browser governance against live FTPS writers and intake")
     parser.add_argument("--tickets", action="store_true", help="also qualify public CLI/HTTPS ticket recovery across an exact task-owned FTPS SIGKILL")
     parser.add_argument("--browser-tickets", action="store_true", help="also qualify real browser ticket preparation, process-crash receipt recovery and release; requires --browser")
+    parser.add_argument("--dispatch-approvals", action="store_true", help="also qualify public FTPS dispatch consent with real Chrome and a bounded contact-only stand-in")
     args = parser.parse_args()
     if args.browser_tickets and not args.browser:
         parser.error("--browser-tickets requires the complete --browser profile")
@@ -81,6 +83,7 @@ def main():
     manifest["browser_requested"] = args.browser
     manifest["tickets_requested"] = args.tickets
     manifest["browser_tickets_requested"] = args.browser_tickets
+    manifest["dispatch_approvals_requested"] = args.dispatch_approvals
     manifest["stock_curl_qualified"] = False
     manifest["stock_lftp_qualified"] = False
     processes, created, started, originally_running = {}, False, False, None
@@ -96,7 +99,7 @@ def main():
         with out.open("xb") as stdout, err.open("xb") as stderr:
             child = None
             try:
-                if re.fullmatch(r"browser-(?:explicit|implicit)-operator", label):
+                if re.fullmatch(r"browser-(?:explicit|implicit)-operator|cli-(?:explicit|implicit)-dispatch-browser-(?:request|approve|withdraw)", label):
                     child = subprocess.Popen(list(map(str, argv)), stdout=stdout, stderr=stderr, env=env, start_new_session=True, preexec_fn=metadata.bounded_output)
                     code = child.wait(timeout=timeout)
                 else:
@@ -117,7 +120,7 @@ def main():
         observer.steps.append({"name": label, "exit_code": code, "seconds": round(time.monotonic() - began, 3),
                                "stdout_sha256": metadata.digest(out), "stderr_sha256": metadata.digest(err)})
         try:
-            browser_tickets.verify_outcome(label, code, err.read_bytes(), out.read_bytes())
+            dispatch.verify_outcome(label, code, err.read_bytes(), out.read_bytes())
         except ValueError:
             raise RuntimeError(label + " failed; protected native output retained") from None
         return out.read_bytes()
@@ -232,7 +235,7 @@ def main():
         command("cli-token", [binary, "token", "--token-file", token])
         command("cli-enroll", [binary, "enroll", "--admin-dsn-file", private / "pg-admin.dsn", "--tenant", tenant, "--partner", partner, "--token-file", token])
         command("cli-cert", [binary, "dev-cert", "--cert", cert, "--key", key])
-        if args.browser or args.tickets:
+        if args.browser or args.tickets or args.dispatch_approvals:
             with socket.socket() as probe:
                 probe.bind(("127.0.0.1", 0))
                 http_port = probe.getsockname()[1]
@@ -291,6 +294,11 @@ def main():
                 if report.get("state") != "passed" or report.get("cases") != LFTP_CASES or report.get("stock_client_qualification") is not True:
                     raise RuntimeError(label + " stock lftp probe incomplete")
             manifest.setdefault("cli_governance", {})["implicit" if implicit else "explicit"] = governance.exercise(private, "implicit" if implicit else "explicit", port, cert, binary, env, observer.steps, command, metadata.bounded_output)
+            if args.dispatch_approvals:
+                mode = "implicit" if implicit else "explicit"
+                checked, inventory = dispatch.exercise(ROOT, private, mode, http_port, cert, binary, tenant, partner, token, observer.steps, command)
+                manifest.setdefault("dispatch_governance", {})[mode] = checked
+                manifest.setdefault("dispatch_output_sha256", {})[mode] = inventory
             if args.browser:
                 mode = "implicit" if implicit else "explicit"
                 directory = private / ("browser-" + mode)
@@ -328,7 +336,7 @@ def main():
                 stop("browser-ticket-" + mode + "-restarted")
                 manifest.setdefault("browser_ticket_governance", {})[mode] = browser_tickets.validate(private, mode, observer.steps, inventory)
                 manifest.setdefault("browser_ticket_output_sha256", {})[mode] = inventory
-        if args.browser or args.tickets:
+        if args.browser or args.tickets or args.dispatch_approvals:
             stop("browser-https")
         manifest["state"] = "passed"
         manifest["stock_curl_qualified"] = not args.native_client_only
