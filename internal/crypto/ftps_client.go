@@ -44,16 +44,36 @@ func ftpsText(value string, max int) bool {
 	return true
 }
 
-func ftpsTrust(d FTPSDestination) (*tls.Config, error) {
+// ValidateFTPSDestination checks the frozen reference shape without reading a
+// credential or opening a socket. Work reopens and verifies the exact CA and
+// password bytes; a syntactically valid reference does not grant authority.
+func ValidateFTPSDestination(d FTPSDestination) error {
 	host, port, err := net.SplitHostPort(d.Address)
 	n, pErr := strconv.Atoi(port)
-	if err != nil || net.ParseIP(host) == nil || !net.ParseIP(host).IsLoopback() || pErr != nil || n < 1 || n > 65535 || strconv.Itoa(n) != port || (d.Mode != "explicit" && d.Mode != "implicit") || !ftpsText(d.ServerName, 253) || strings.ContainsAny(d.ServerName, "/\\ ") || (strings.Contains(d.ServerName, ":") && net.ParseIP(d.ServerName) == nil) || !ftpsText(d.User, 256) || !filepath.IsAbs(d.CAFile) || !filepath.IsAbs(d.PasswordFile) || len(d.PasswordSHA256) != 64 {
-		return nil, ErrFTPSClient
+	if err != nil || net.ParseIP(host) == nil || !net.ParseIP(host).IsLoopback() || pErr != nil || n < 1 || n > 65535 || strconv.Itoa(n) != port || (d.Mode != "explicit" && d.Mode != "implicit") || !ftpsText(d.ServerName, 253) || strings.ContainsAny(d.ServerName, "/\\ ") || (strings.Contains(d.ServerName, ":") && net.ParseIP(d.ServerName) == nil) || !ftpsText(d.User, 256) {
+		return ErrFTPSClient
 	}
-	for _, c := range d.PasswordSHA256 {
-		if !(c >= '0' && c <= '9' || c >= 'a' && c <= 'f') {
-			return nil, ErrFTPSClient
+	for _, ref := range []string{d.CAFile, d.PasswordFile} {
+		if !filepath.IsAbs(ref) || filepath.Clean(ref) != ref || !ftpsText(ref, 1024) {
+			return ErrFTPSClient
 		}
+	}
+	for _, hash := range []string{d.CASHA256, d.PasswordSHA256} {
+		if len(hash) != 64 {
+			return ErrFTPSClient
+		}
+		for _, c := range hash {
+			if !(c >= '0' && c <= '9' || c >= 'a' && c <= 'f') {
+				return ErrFTPSClient
+			}
+		}
+	}
+	return nil
+}
+
+func ftpsTrust(d FTPSDestination) (*tls.Config, error) {
+	if err := ValidateFTPSDestination(d); err != nil {
+		return nil, err
 	}
 	st, err := os.Lstat(d.CAFile)
 	if err != nil || !st.Mode().IsRegular() || st.Mode().Perm()&0022 != 0 || st.Size() < 1 || st.Size() > 128<<10 {

@@ -1,6 +1,22 @@
 # Outbound FTPS transport and governed delivery contract
 
-The new `internal/ftpsclient` component can talk to an explicit or implicit FTPS receiver. It is a transport building block. Public delivery, collection, connections and workflows still use the existing SFTP contract; they do not yet expose this component. The next integration must preserve their approvals and recovery rules. No sending parity row is qualified by this implementation.
+`internal/ftpsclient` can talk to an explicit or implicit FTPS receiver. The direct `delivery-create`, approval, worker, status and read-only reconciliation CLI services now also accept a distinct schema2 FTPS definition. Registered connections, workflows, collection and browser sending/review still require integration. No sending parity row is qualified by code presence or the component tests.
+
+## Direct governed sending development profile
+
+Use a schema36 **fresh qualification database** for this candidate. The retained database remains at the approved schema35 checkpoint; this work does not migrate it. Keep the request JSON owner-only under `.private`. Its top-level fields are `file_id`, `directory` (the final directory), `filename` and `ftps`. Omit every SSH request field when selecting FTPS. The `ftps` object contains:
+
+- `destination`: numeric loopback `address`, `server_name`, explicit/implicit `mode`, `user`, absolute `ca_reference`, exact `ca_sha256`, protected `password_reference` and exact `password_sha256`. Password values are absent. The password digest is also sensitive: it stays in the private definition and never appears in independent-review metadata or AI context.
+- `staging_directory`: an existing canonical receiver directory in a separate tree from the final directory. The versioned naming rule reserves `.freightctl-<delivery UUID>.partial` there and `<delivery UUID>-<filename>` in the final directory.
+- `receiver_contract`: `schema_version: 1`, the approved document's `document_sha256`, `staging_visibility: "receiver-private"`, `rename: "may-replace"`, `duplicates: "receiver-deduplicates-delivery-id"` and `receipt: "exact-readback"`. These are explicit operator assertions about the receiving system. A document digest does not verify that its consumers hide staging files or deduplicate effects. Reject unsupported stronger promises such as exclusive rename or receiver fsync.
+
+Create with `delivery-create --request-file .private/ftps-delivery.json --idempotency-key <stable-key>` and the ordinary tenant, partner, token, database and storage references. Review the returned definition/hash, then use `delivery-approve` with its exact ID/hash/revision. The ordinary dispatch policy is cumulative: when it requires an independent reviewer, use the existing `dispatch-review-preview`, `dispatch-review-propose` and `dispatch-review-decide` CLI commands before `delivery-work`. Neither preparation nor approval contacts the receiver. Browser review currently fails closed on schema2; use the CLI for this development profile.
+
+The worker reuses the ordinary exact-file checks, admission slots, lease/fence, current authority and dispatch approval. It commits the immutable publishing intent **before STOR sends any bytes**. It then uploads, verifies the private stage by exact readback, renames, and verifies the final bytes. Every subsequent error remains ambiguous. A crash or missing reply cannot return to automatic sending, even if it occurred before rename. Authentication failures before that intent can use the existing bounded connection-attempt budget. The existing SFTP worker still requires its fsync and exclusive-hardlink extensions.
+
+An uncertain FTPS delivery can use `delivery-reconcile`. That operation only retrieves the exact final path under the original frozen trust and authority. Missing or changed bytes retain ambiguity; matching bytes record integrity without inventing an upload/rename reply, fsync or business acceptance. A new send needs a separate authorized decision. This first profile has no FTPS workflow binding, recipient-encryption attachment, automatic payload resume or verified business-receipt integration.
+
+F071 records native ARM contract checks and the actual GitHub PostgreSQL replay separately. Its receiver is a separate freightctl FTPS/custody service with real storage, explicitly an application stand-in. Controlled reply loss occurs after independently observing its durable upload or rename. This does not qualify an independent vendor receiver, its consumer visibility/deduplication contract, process-kill recovery, or the complete UI/API/CLI journey.
 
 ## Wire and custody profile
 

@@ -231,6 +231,9 @@ func (s *Service) Work(ctx context.Context, scope store.Scope, id string) (*stor
 		}
 	}
 	defer source.Close()
+	if spec.FTPS != nil {
+		return s.workFTPS(ctx, scope, d, spec, owner, fence, check, source)
+	}
 	client, stream, err := connect(ctx, spec)
 	if err != nil {
 		return stageFailure("receiver_connection_failed")
@@ -385,12 +388,18 @@ func (s *Service) Reconcile(ctx context.Context, scope store.Scope, id string) (
 		}
 		return s.storage(spec)
 	}
-	client, stream, err := connect(ctx, spec)
-	if err == nil {
-		defer stream.Close()
-		defer client.Close()
-		if err = remoteDirectory(client, spec.Directory); err == nil {
-			err = verifyRemote(ctx, client, finalPath(d, spec), spec, check)
+	if spec.FTPS != nil {
+		err = observeFTPS(ctx, d, spec, check)
+	} else {
+		var client *sftp.Client
+		var stream io.Closer
+		client, stream, err = connect(ctx, spec)
+		if err == nil {
+			defer stream.Close()
+			defer client.Close()
+			if err = remoteDirectory(client, spec.Directory); err == nil {
+				err = verifyRemote(ctx, client, finalPath(d, spec), spec, check)
+			}
 		}
 	}
 	if err != nil { // Observation failure is itself retained, without inventing a receipt.
@@ -410,6 +419,9 @@ func (s *Service) Reconcile(ctx context.Context, scope store.Scope, id string) (
 	d.Revision++
 	d.State = "succeeded"
 	d.Observation = receipt(d, spec, true)
+	if spec.FTPS != nil {
+		d.Observation = ftpsReceipt(d, spec, true)
+	}
 	if err = t.SaveDelivery(ctx, d, previous); err != nil {
 		return nil, err
 	}

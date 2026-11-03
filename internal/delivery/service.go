@@ -1,4 +1,4 @@
-// Package delivery implements the first explicit, locally approved SFTP intent.
+// Package delivery implements explicit, locally approved transfer intents.
 // Workflow scheduling and receiver business acknowledgments are separate work.
 package delivery
 
@@ -23,14 +23,15 @@ var keyPattern = regexp.MustCompile(`^[A-Za-z0-9._:-]{1,128}$`)
 var namePattern = regexp.MustCompile(`^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$`)
 
 type Request struct {
-	FileID         string `json:"file_id"`
-	Address        string `json:"address"`
-	User           string `json:"user"`
-	Directory      string `json:"directory"`
-	Filename       string `json:"filename"`
-	HostPublicFile string `json:"host_public_file"`
-	KeyFile        string `json:"key_file"`
-	KeyPublicFile  string `json:"key_public_file"`
+	FileID         string          `json:"file_id"`
+	Address        string          `json:"address"`
+	User           string          `json:"user"`
+	Directory      string          `json:"directory"`
+	Filename       string          `json:"filename"`
+	HostPublicFile string          `json:"host_public_file"`
+	KeyFile        string          `json:"key_file"`
+	KeyPublicFile  string          `json:"key_public_file"`
+	FTPS           *FTPSDefinition `json:"ftps,omitempty"`
 }
 type Definition struct {
 	Schema         int                          `json:"schema_version"`
@@ -45,6 +46,7 @@ type Definition struct {
 	Encryption     *store.EncryptionPolicy      `json:"encryption,omitempty"`
 	DispatchPolicy *store.ApprovalPolicyBinding `json:"dispatch_approval_policy,omitempty"`
 	Transfer       *store.DeliveryCiphertext    `json:"-"`
+	FTPS           *FTPSDefinition              `json:"ftps,omitempty"`
 }
 type Result struct {
 	Delivery *store.Delivery `json:"delivery"`
@@ -78,21 +80,8 @@ func (s *Service) Create(ctx context.Context, scope store.Scope, key string, r R
 	if err != nil || directory != r.Directory || vpath.ControlPath(directory) {
 		return nil, ErrInput
 	}
-	keyFile, err := filepath.Abs(r.KeyFile)
+	destination, ftps, err := requestDestination(r)
 	if err != nil {
-		return nil, ErrInput
-	}
-	// Public references contain no authority options; private material is never stored.
-	host, err := secure.ReadSSHPublic(r.HostPublicFile)
-	if err != nil {
-		return nil, err
-	}
-	public, err := secure.ReadSSHPublic(r.KeyPublicFile)
-	if err != nil {
-		return nil, err
-	}
-	destination := secure.SSHDestination{Address: r.Address, User: r.User, Host: host, KeyFile: keyFile, KeyFingerprint: public.Fingerprint}
-	if err = secure.ValidateSSHDestination(destination); err != nil {
 		return nil, err
 	}
 	t, err := s.Custody.DB.Begin(ctx, scope)
@@ -120,6 +109,9 @@ func (s *Service) Create(ctx context.Context, scope store.Scope, key string, r R
 		return nil, err
 	}
 	definition := Definition{Schema: 1, Source: *file, Destination: destination, Directory: directory, Filename: r.Filename, StorageID: s.Custody.Disk.Identity(), Root: t.Root, Authority: t.AuthorityRevision}
+	if ftps != nil {
+		definition.Schema, definition.FTPS = 2, ftps
+	}
 	encoded, err := json.Marshal(definition)
 	if err != nil {
 		return nil, err
@@ -176,7 +168,7 @@ func (s *Service) begin(ctx context.Context, scope store.Scope, id string, lock 
 		return fail(err)
 	}
 	var spec Definition
-	if err = json.Unmarshal(d.Definition, &spec); err != nil || spec.Schema != 1 || spec.Source.ID != d.FileID {
+	if err = json.Unmarshal(d.Definition, &spec); err != nil || !validProtocolDefinition(&spec) || spec.Source.ID != d.FileID {
 		return fail(store.ErrState)
 	}
 	// JSONB reorders keys: the hash identifies the original typed canonical definition.
@@ -198,6 +190,30 @@ func (s *Service) begin(ctx context.Context, scope store.Scope, id string, lock 
 		return fail(store.ErrState)
 	}
 	return t, d, &spec, nil
+}
+
+func requestDestination(r Request) (secure.SSHDestination, *FTPSDefinition, error) {
+	if r.FTPS != nil {
+		if r.Address != "" || r.User != "" || r.HostPublicFile != "" || r.KeyFile != "" || r.KeyPublicFile != "" || !validFTPSDefinition(r.FTPS, r.Directory) {
+			return secure.SSHDestination{}, nil, ErrInput
+		}
+		copy := *r.FTPS
+		return secure.SSHDestination{}, &copy, nil
+	}
+	keyFile, err := filepath.Abs(r.KeyFile)
+	if err != nil {
+		return secure.SSHDestination{}, nil, ErrInput
+	}
+	host, err := secure.ReadSSHPublic(r.HostPublicFile)
+	if err != nil {
+		return secure.SSHDestination{}, nil, err
+	}
+	public, err := secure.ReadSSHPublic(r.KeyPublicFile)
+	if err != nil {
+		return secure.SSHDestination{}, nil, err
+	}
+	d := secure.SSHDestination{Address: r.Address, User: r.User, Host: host, KeyFile: keyFile, KeyFingerprint: public.Fingerprint}
+	return d, nil, secure.ValidateSSHDestination(d)
 }
 func (s *Service) Status(ctx context.Context, scope store.Scope, id string) (*store.Delivery, error) {
 	t, d, _, err := s.begin(ctx, scope, id, false)

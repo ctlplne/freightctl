@@ -172,7 +172,7 @@ func (s *Service) ChangeDispatchPolicy(ctx context.Context, scope store.Scope, k
 }
 func dispatchDefinition(d *store.Delivery) (*Definition, error) {
 	var spec Definition
-	if json.Unmarshal(d.Definition, &spec) != nil || spec.Schema != 1 || spec.Source.ID != d.FileID {
+	if json.Unmarshal(d.Definition, &spec) != nil || !validProtocolDefinition(&spec) || spec.Source.ID != d.FileID {
 		return nil, store.ErrIsolation
 	}
 	b, err := json.Marshal(spec)
@@ -209,6 +209,9 @@ func (s *Service) dispatchSource(ctx context.Context, t *store.Transaction, id s
 	return d, spec, nil
 }
 func dispatchEffect(ctx context.Context, t *store.Transaction, d *store.Delivery, spec *Definition) (*store.OutboundDispatchEffect, error) {
+	if spec.FTPS != nil {
+		return ftpsEffect(d, spec), nil
+	}
 	effect := &store.OutboundDispatchEffect{Protocol: "sftp", Address: spec.Destination.Address, User: spec.Destination.User, Directory: spec.Directory, Filename: spec.Filename, FinalPath: path.Join(spec.Directory, d.ID+"-"+spec.Filename), HostFingerprint: spec.Destination.Host.Fingerprint, KeyFingerprint: spec.Destination.KeyFingerprint, KeyReferenceHash: secure.Digest([]byte(spec.Destination.KeyFile)), Encryption: spec.Encryption, Workflow: spec.Binding}
 	if spec.Encryption != nil {
 		k, err := t.EncryptionKey(ctx, *spec.Encryption)
@@ -313,7 +316,7 @@ func (s *Service) dispatchPreview(ctx context.Context, t *store.Transaction, x D
 	if err != nil {
 		return nil, err
 	}
-	out := &DispatchPreview{Definition: store.OutboundDispatchDefinition{Schema: 1, Author: t.Actor, Authority: t.AuthorityRevision, Reviewer: x.ReviewerID, ReviewerAuthority: authority, Policy: p.ApprovalPolicyBinding, DeliveryID: d.ID, DeliveryRevision: d.Revision, DeliveryHash: d.DefinitionHash, Source: spec.Source, StorageID: spec.StorageID, Root: spec.Root, Effect: *effect, AttemptLimit: 8}}
+	out := &DispatchPreview{Definition: store.OutboundDispatchDefinition{Schema: spec.Schema, Author: t.Actor, Authority: t.AuthorityRevision, Reviewer: x.ReviewerID, ReviewerAuthority: authority, Policy: p.ApprovalPolicyBinding, DeliveryID: d.ID, DeliveryRevision: d.Revision, DeliveryHash: d.DefinitionHash, Source: spec.Source, StorageID: spec.StorageID, Root: spec.Root, Effect: *effect, AttemptLimit: 8}}
 	b, h, err := dispatchDigest(out.Definition)
 	if err != nil {
 		return nil, err

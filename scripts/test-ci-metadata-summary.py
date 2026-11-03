@@ -32,7 +32,7 @@ class MetadataSummaryContracts(unittest.TestCase):
 
     def test_exact_profile_has_one_safe_result_with_no_raw_records_or_paths(self):
         summary = self.summary(self.fixture())
-        self.assertEqual(summary["schema"], 35)
+        self.assertEqual(summary["schema"], 36)
         self.assertEqual(summary["metadata_tables"], 64)
         self.assertEqual(summary["forced_rls_tables"], 63)
         self.assertEqual(summary["restored_rows"], 64)

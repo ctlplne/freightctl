@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "id": "F071",
+  "observed_at": "2026-11-03",
+  "starting_commit": "5993f78fde4a626b722982162f2508b73e1175cd",
+  "state": "implemented direct CLI profile; native PostgreSQL runtime qualification pending",
+  "scope": "Distinct schema2 direct explicit/implicit FTPS delivery under ordinary custody, dispatch approval, immutable intent/events, lease/fence and read-only reconciliation. No whole sending parity row or journey qualified.",
+  "implementation": [
+    "Freeze exact destination, CA and credential references/fingerprints, separate stage/final trees and an explicit receiver contract. Preserve schema1 SFTP canonical hashes and its fsync/exclusive-hardlink worker.",
+    "Require operator-asserted private staging, overwrite-capable rename, receiver deduplication by delivery ID and readback-only receipt; reject invented stronger protocol promises.",
+    "Commit publishing intent before the first STOR, recheck current authority/consent/lease during commands and stream chunks, and never automatically resend after that boundary.",
+    "Reconcile only the exact final bytes; distinguish readback from original upload/rename reply, receiver fsync, power-loss persistence and business acceptance.",
+    "Independent review binds exact redacted FTPS effects in Go and PostgreSQL. Local references and password digests stay private; changes require a new definition and approval."
+  ],
+  "schema": {
+    "new_candidate_target": 36,
+    "retained_target": 35,
+    "retained_database_changed": false,
+    "new_tables": 0,
+    "row_policies_or_existing_grants_changed": false,
+    "fresh_native_ci_profile": "64 metadata tables,63 forced-RLS tables;exact schema36 ledger required"
+  },
+  "local_checks": {
+    "native_arm_race_pass_records": 70,
+    "failures": 0,
+    "skips": 0,
+    "scope": "architecture,delivery,FTPS transport and crypto;loopback scripted peers only,no PostgreSQL/scanner/model",
+    "first_attempt": "sandbox denied loopback bind;original output retained;same suite passed with bounded loopback permission",
+    "metadata_evidence_contracts": 7,
+    "integration_compile_and_vet": "passed;not a runtime qualification",
+    "manifest_reference": ".private/freightctl-governed-ftps-local-vE7rEO/manifest.json",
+    "manifest_sha256": "cc368fca2bc979368941f2c67dd14eb9e3bc9c66bdbc41e4b10e26109c0779ba"
+  },
+  "native_ci": {
+    "state": "pending",
+    "workflow": ".github/workflows/native-linux.yml",
+    "profile": "Actual native Linux ARM/x86,real PostgreSQL and separate freightctl FTPS/custody application stand-in with independent filesystem readback",
+    "new_cases": [
+      "explicit and implicit exact bytes with independent named-account approval and stable draft receipts",
+      "actual durable stage with lost encrypted control completion;no automatic resend or invented final",
+      "actual durable rename with lost encrypted control reply;read-only final reconciliation without a new attempt/fence or receiver mutation",
+      "withdrawn consent after actual staged bytes prevents final rename",
+      "PostgreSQL refuses forged receiver mode/contract/staging effect/schema and unapproved staging"
+    ]
+  },
+  "limits": [
+    "Registered FTPS connections,workflows,collection,recipient encryption and browser review remain open;schema2 browser review fails closed.",
+    "The receiver contract is an administrator assertion;consumer visibility,deduplication and business processing are not qualified by application readback.",
+    "Independent vendor x86 profiles retain F068 red failures;the application stand-in does not replace them.",
+    "Process-kill recovery,public CLI end-to-end replay and complete UI/API customer journeys still require execution.",
+    "The retained database remains stopped at approved schema35;schema36 has no retained upgrade approval or application in this record.",
+    "Local inference and scanner stay off;F026 aggregate replay stays owner-deferred;all83 whole parity rows and12 journeys remain open."
+  ]
+}

@@ -18,18 +18,42 @@ type OutboundDispatchPolicy struct {
 	EventID string `json:"event_id,omitempty"`
 }
 type OutboundDispatchEffect struct {
-	Protocol             string            `json:"protocol"`
-	Address              string            `json:"address"`
-	User                 string            `json:"user"`
-	Directory            string            `json:"directory"`
-	Filename             string            `json:"filename"`
-	FinalPath            string            `json:"final_path"`
-	HostFingerprint      string            `json:"host_fingerprint"`
-	KeyFingerprint       string            `json:"key_fingerprint"`
-	KeyReferenceHash     string            `json:"key_reference_sha256"`
-	Encryption           *EncryptionPolicy `json:"encryption,omitempty"`
-	RecipientFingerprint string            `json:"recipient_fingerprint"`
-	Workflow             *ExecutionBinding `json:"workflow_binding,omitempty"`
+	Protocol             string              `json:"protocol"`
+	Address              string              `json:"address"`
+	User                 string              `json:"user"`
+	Directory            string              `json:"directory"`
+	Filename             string              `json:"filename"`
+	FinalPath            string              `json:"final_path"`
+	HostFingerprint      string              `json:"host_fingerprint"`
+	KeyFingerprint       string              `json:"key_fingerprint"`
+	KeyReferenceHash     string              `json:"key_reference_sha256"`
+	Encryption           *EncryptionPolicy   `json:"encryption,omitempty"`
+	RecipientFingerprint string              `json:"recipient_fingerprint"`
+	Workflow             *ExecutionBinding   `json:"workflow_binding,omitempty"`
+	FTPS                 *OutboundFTPSEffect `json:"ftps,omitempty"`
+}
+
+// FTPSReceiverContract records an explicitly approved receiver promise. The
+// digest identifies the operator's contract document; it is not proof that a
+// receiver enforces the promise. FTP itself cannot enforce consumer visibility
+// or deduplication and its rename can replace an existing name.
+type FTPSReceiverContract struct {
+	Schema            int    `json:"schema_version"`
+	DocumentSHA256    string `json:"document_sha256"`
+	StagingVisibility string `json:"staging_visibility"`
+	Rename            string `json:"rename"`
+	Duplicates        string `json:"duplicates"`
+	Receipt           string `json:"receipt"`
+}
+
+type OutboundFTPSEffect struct {
+	Mode                  string               `json:"mode"`
+	ServerName            string               `json:"server_name"`
+	CASHA256              string               `json:"ca_sha256"`
+	CAReferenceHash       string               `json:"ca_reference_sha256"`
+	PasswordReferenceHash string               `json:"password_reference_sha256"`
+	StagingPath           string               `json:"staging_path"`
+	ReceiverContract      FTPSReceiverContract `json:"receiver_contract"`
 }
 type OutboundDispatchDefinition struct {
 	Schema            int                    `json:"schema_version"`
@@ -124,7 +148,7 @@ func (t *Transaction) OutboundDispatchReview(ctx context.Context, id string, loc
 		return nil, ErrIsolation
 	}
 	b, err := json.Marshal(r.Definition)
-	if err != nil || secure.Digest(b) != r.Hash || r.Definition.Author != r.Author || r.Definition.Reviewer != r.Reviewer || r.Definition.DeliveryID != r.DeliveryID || r.Definition.Schema != 1 {
+	if err != nil || secure.Digest(b) != r.Hash || r.Definition.Author != r.Author || r.Definition.Reviewer != r.Reviewer || r.Definition.DeliveryID != r.DeliveryID || (r.Definition.Schema != 1 && r.Definition.Schema != 2) || (r.Definition.Schema == 2) != (r.Definition.Effect.Protocol == "ftps" && r.Definition.Effect.FTPS != nil) {
 		return nil, ErrIsolation
 	}
 	r.CreatedAt = r.CreatedAt.UTC()

@@ -8,7 +8,7 @@ import re
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
-PROFILE = {"schema": 35, "metadata_tables": 64, "forced_rls_tables": 63}
+PROFILE = {"schema": 36, "metadata_tables": 64, "forced_rls_tables": 63}
 BOUND = 8 << 20
 
 
