@@ -9,12 +9,52 @@ import subprocess
 import sys
 import tempfile
 import unittest
+import ftps_cli_governance as governance
 
 from ftps_contract import CLI_PAYLOAD, LFTP_CASES, LFTP_DOWNLOADS, NATIVE_PARENT_TESTS, NATIVE_TESTS
 
 spec = importlib.util.spec_from_file_location("summary", Path(__file__).with_name("ci-ftps-summary.py"))
 summary = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(summary)
+
+
+def synthetic_governance_outputs():
+    """Bookkeeping fixtures only; no CLI or FTP execution is represented."""
+    values = {name: b"" for name in governance.COMMANDS}
+    actor = "a1b2c3d4-1111-4111-8111-000000000001"
+    good_id, bad_id = "a1b2c3d4-1111-4111-8111-000000000002", "a1b2c3d4-1111-4111-8111-000000000003"
+    def put(name, value):
+        values[name] = json.dumps(value).encode()
+    accounts = []
+    for revision, state in ((1, "active"), (2, "active"), (3, "revoked")):
+        accounts.append({"id": actor, "revision": revision, "authority_revision": revision, "state": state, "changed_event_id": "event-" + str(revision), "observed_at": "synthetic"})
+    for name, account in zip(("credential-account-create", "credential-account-rotate", "credential-account-revoke"), accounts):
+        put(name, {"account": account, "replayed": False})
+    put("credential-final-account", dict(accounts[2], observed_at="later synthetic query"))
+    for name, account in (("credential-rotate-replay", accounts[1]), ("credential-revoke-replay", accounts[2])):
+        put(name, {"account": account, "replayed": True})
+    put("credential-rotated-identity", {"actor_id": actor, "authority_revision": 2})
+    entry = {"path": "/guard.bin", "file_id": "synthetic-guard", "revision": 1}
+    for name in ("credential-original-stat", "credential-rotated-stat", "credential-final-stat"):
+        put(name, entry)
+    put("credential-page-one", {"entries": [entry], "next": "/guard.bin"})
+    put("credential-page-two", {"entries": [{"path": "/rotated-accepted.bin"}], "next": ""})
+    put("intake-held-list", {"entries": [], "next": ""})
+    put("intake-check-list", {"checks": [{"path": path, "file_id": ident, "state": "held"} for path, ident in (("/good.csv", good_id), ("/bad.csv", bad_id))]})
+    for name, ident, payload in (("good", good_id, governance.GOOD_CSV), ("bad", bad_id, governance.BAD_CSV)):
+        put("intake-" + name + "-held", {"check": {"state": "held", "file_id": ident, "binding": {"file": {"sha256": hashlib.sha256(payload).hexdigest()}}}})
+    policy_hash = "b" * 64
+    put("intake-good-passed", {"check": {"file_id": good_id, "state": "passed", "attempts": 1, "code": "valid_csv", "report_hash": "a" * 64, "policy_hash": policy_hash}})
+    put("intake-bad-rejected", {"check": {"file_id": bad_id, "state": "rejected", "attempts": 1, "code": "invalid_cell", "report_hash": "", "policy_hash": policy_hash}})
+    put("intake-policy-register", {"resource": {"definition_hash": policy_hash}})
+    put("intake-published-stat", {"file_id": good_id})
+    for first, again, resource in (("intake-good-release", "intake-release-replay", {"file_id": good_id, "state": "released"}), ("intake-policy-revoke", "intake-policy-replay", {"state": "revoked"})):
+        put(first, {"resource": resource, "replayed": False}); put(again, {"resource": resource, "replayed": True})
+    for name, states, count in (("credential-peer", ["writer-open-before-rotation", "writer-open-before-revocation"], 2), ("intake-peer", ["uploads-held", "passed-still-unreleased", "only-approved-revision-published"], 4)):
+        messages = [{"state": state, "resumed": True} for state in states]
+        messages.append({"state": "passed", "case_count": count, "all_data_resumed": True})
+        values[name] = b"\n".join(json.dumps(m).encode() for m in messages) + b"\n"
+    return values
 
 
 class SummaryContracts(unittest.TestCase):
@@ -28,15 +68,24 @@ class SummaryContracts(unittest.TestCase):
         self.result = self.root / ".private/result.json"
         source = self.root / "synthetic-source"
         source.write_text("report-contract fixture; no FTP execution\n")
-        names = ("native-ftps-integration", "stock-lftp-version", "cli-explicit-upload", "cli-explicit-download", "cli-implicit-upload", "cli-implicit-download", "cli-explicit-lftp-probe", "cli-implicit-lftp-probe", "drop-exact-test-database")
+        names = ("native-ftps-integration", "stock-lftp-version", "cli-explicit-upload", "cli-explicit-download", "cli-implicit-upload", "cli-implicit-download", "cli-explicit-lftp-probe", "cli-implicit-lftp-probe", "drop-exact-test-database") + tuple("cli-" + mode + "-gov-" + name for mode in ("explicit", "implicit") for name in governance.COMMANDS)
         empty = hashlib.sha256(b"").hexdigest()
         steps = []
+        governance_outputs = synthetic_governance_outputs()
         for name in names:
             for extension in ("stdout", "stderr"):
                 (self.directory / (name + "." + extension)).write_bytes(b"")
             steps.append({"name": name, "exit_code": 0, "stdout_sha256": empty, "stderr_sha256": empty})
         for step in steps:
-            if step["name"] == "native-ftps-integration":
+            suffix = governance.command_suffix(step["name"])
+            if suffix:
+                data = governance_outputs[suffix]
+                if suffix in governance.REFUSALS:
+                    diagnostic = governance.REFUSALS[suffix]
+                    (self.directory / (step["name"] + ".stderr")).write_bytes(diagnostic)
+                    step["exit_code"] = 1
+                    step["stderr_sha256"] = hashlib.sha256(diagnostic).hexdigest()
+            elif step["name"] == "native-ftps-integration":
                 data = "\n".join("--- PASS: " + name + " (0.01s)" for name in sorted(NATIVE_TESTS)).encode()
             elif step["name"] in ("cli-explicit-download", "cli-implicit-download"):
                 data = CLI_PAYLOAD
@@ -157,7 +206,7 @@ class SummaryContracts(unittest.TestCase):
         self.manifest["state"] = "failed"
         self.write()
         result = summary.failure_diagnostics(self.root, self.result, "a" * 40)
-        self.assertEqual(result, {"failed_native_tests": [name], "lftp_failures": [{"stage": "transfers", "code": "tls-transfer-refused"}]})
+        self.assertEqual(result, {"failed_native_tests": [name], "lftp_failures": [{"stage": "transfers", "code": "tls-transfer-refused"}], "failed_cli_commands": []})
         self.assertNotIn(secret, json.dumps(result))
         self.assertEqual(summary.failure_diagnostics(self.root, self.result, "b" * 40), {})
 
@@ -178,6 +227,41 @@ class SummaryContracts(unittest.TestCase):
             report = json.loads(result.stdout)
             self.assertEqual(report["state"], "failed")
             self.assertEqual(report["failure_class"], "UnsafeOptimization")
+
+    def replace_output(self, name, data, extension="stdout"):
+        (self.directory / (name + "." + extension)).write_bytes(data)
+        step = next(s for s in self.manifest["steps"] if s["name"] == name)
+        step[extension + "_sha256"] = hashlib.sha256(data).hexdigest()
+
+    def test_cli_expected_refusal_cannot_hide_an_unrelated_error(self):
+        self.replace_output("cli-explicit-gov-intake-wrong-release-refused", b"freightctl: database unavailable\n", "stderr")
+        with self.assertRaises(ValueError): self.check()
+
+    def test_cli_failure_diagnostics_never_emit_raw_errors(self):
+        name = "cli-explicit-gov-intake-wrong-release-refused"
+        self.replace_output(name, b"private diagnostic must not be public", "stderr")
+        self.write()
+        result = summary.failure_diagnostics(self.root, self.result, "a" * 40)
+        self.assertEqual(result["failed_cli_commands"], [name])
+        self.assertNotIn("private diagnostic", json.dumps(result))
+
+    def test_cli_replay_cannot_change_the_committed_receipt(self):
+        data = json.loads((self.directory / "cli-explicit-gov-credential-rotate-replay.stdout").read_bytes())
+        data["account"]["authority_revision"] = 9
+        self.replace_output("cli-explicit-gov-credential-rotate-replay", json.dumps(data).encode())
+        with self.assertRaises(ValueError): self.check()
+
+    def test_cli_namespace_and_wire_proofs_cannot_be_claims_only(self):
+        self.replace_output("cli-implicit-gov-credential-peer", b'{"state":"passed","case_count":2,"all_data_resumed":true}\n')
+        with self.assertRaises(ValueError): self.check()
+
+    def test_cli_governance_commands_and_revision_binding_are_required(self):
+        original = copy.deepcopy(self.manifest["steps"])
+        self.manifest["steps"] = [s for s in self.manifest["steps"] if s["name"] != "cli-explicit-gov-intake-policy-revoke"]
+        with self.assertRaises(ValueError): self.check()
+        self.manifest["steps"] = original
+        self.replace_output("cli-implicit-gov-intake-published-stat", b'{"file_id":"another-revision"}')
+        with self.assertRaises(ValueError): self.check()
 
 
 if __name__ == "__main__":

@@ -21,6 +21,7 @@ from urllib.parse import parse_qsl, urlsplit, urlunsplit
 import uuid
 
 from ftps_contract import CLI_PAYLOAD, HOSTILE_CASE_COUNT, LFTP_CASES, LIMITED_PARENT_TESTS, NATIVE_PARENT_TESTS
+import ftps_cli_governance as governance
 
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location("metadata", ROOT / "scripts/qualify-retained-metadata.py")
@@ -88,8 +89,10 @@ def main():
         metadata.sync_directory(private)
         observer.steps.append({"name": label, "exit_code": code, "seconds": round(time.monotonic() - began, 3),
                                "stdout_sha256": metadata.digest(out), "stderr_sha256": metadata.digest(err)})
-        if code != 0:
-            raise RuntimeError(label + " failed; protected native output retained")
+        try:
+            governance.verify_outcome(label, code, err.read_bytes(), out.read_bytes())
+        except ValueError:
+            raise RuntimeError(label + " failed; protected native output retained") from None
         return out.read_bytes()
 
     def stop(label):
@@ -210,6 +213,7 @@ def main():
                 report = json.loads(command(label + "-lftp-probe", ["python3", "scripts/lftp-probe.py", "--reference", ref]))
                 if report.get("state") != "passed" or report.get("cases") != LFTP_CASES or report.get("stock_client_qualification") is not True:
                     raise RuntimeError(label + " stock lftp probe incomplete")
+            manifest.setdefault("cli_governance", {})["implicit" if implicit else "explicit"] = governance.exercise(private, "implicit" if implicit else "explicit", port, cert, binary, env, observer.steps, command, metadata.bounded_output)
             stop(label)
         manifest["state"] = "passed"
         manifest["stock_curl_qualified"] = not args.native_client_only

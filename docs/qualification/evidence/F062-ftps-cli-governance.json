@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "id": "F062",
+  "kind": "public-cli-namespace-inspection-and-ftps-governance",
+  "state": "final native ARM public CLI/FTPS replay passed both modes; new native stock/platform regression replay pending",
+  "observed_on": "2026-11-02",
+  "starting_commit": "8b3a0fa4beb89af0969991b5203fdf0873c79b22",
+  "author_and_committer": "imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>",
+  "product_change": {
+    "commands": [
+      "namespace-stat",
+      "namespace-list"
+    ],
+    "mechanism": "Protected scoped credential and non-owner runtime role call existing custody.StatPath/ListPath; no alternate SQL or filesystem reader. Virtual-root permissions and tenant/partner RLS stay shared.",
+    "bounds": "10s command context; page size1..100(default50); canonical virtual path and last-path cursor; no mutation or idempotency key required."
+  },
+  "public_journey": [
+    "Bootstrap fresh synthetic scope through ordinary token/enroll commands; create delegated identity through account-create with protected new-token-file.",
+    "Rotate and revoke credentials while resumed-data FTPS writers remain open; verify obsolete-token CLI/FTPS refusal, unaffected old revision and successful new-token transfer.",
+    "Repeat rotate/revoke with the same keys; compare original saved receipts and committed account revisions/events.",
+    "Inspect unchanged guard through namespace-stat and read two one-entry namespace-list pages; refuse wrong partner scope and page sizes0/101, accept100.",
+    "Select a bounded CSV intake policy through CLI. Receive good/bad bytes through the actual FTPS listener; list/status both holds while namespace listing/stat cannot expose them.",
+    "Run actual checks, require passed/rejected outcomes, reject changed-digest and cross-file passing-report approvals, then separately release only the good revision.",
+    "Replay release and policy revocation without changed results. The TLS client independently checks exact published bytes and refusal after revocation."
+  ],
+  "scope": "Both public serve-ftps listener modes, actual freightctl binary/CLI/PostgreSQL/storage and TLS1.3 client stand-in; customer API/browser governance mutation paths and full journeys remain required.",
+  "first_failures": [
+    {
+      "manifest_reference": ".private/ftps-20031f88b9e247639c6e39e71306f260/manifest.json",
+      "manifest_sha256": "cff6f4fbdd7082a5f5eb3752d65a4c5e4c9c11a01427a56781ef6bc3936232b6",
+      "class": "missing public operator interface",
+      "failure": "The original CLI does not define a path read flag or namespace-stat command; the live writer journey stops at credential-original-stat with flag provided but not defined:-path.",
+      "repair": "Add bounded namespace-stat/list through the existing scoped custody read service.",
+      "retained_metadata_and_roles_unchanged": true,
+      "cleanup_failures": []
+    },
+    {
+      "manifest_reference": ".private/ftps-82915b0fa770478896bd7f73ee114a63/manifest.json",
+      "manifest_sha256": "2a40da107eeaee27b209911648584bb5996e84267b7b55fa5c9f73ac2b9811ca",
+      "class": "evidence checker field typo",
+      "failure": "The complete explicit journey succeeds but its verifier looks for attempt rather than the actual attempts field.",
+      "repair": "Read attempts; independently reopen and validate the preserved original outputs; keep exact passed/rejected/report-hash and receipt/namespace/wire assertions.",
+      "retained_metadata_and_roles_unchanged": true,
+      "cleanup_failures": []
+    }
+  ],
+  "initial_local_pass": {
+    "manifest_reference": ".private/ftps-b7063509b5d44287a0d449c08fd00b93/manifest.json",
+    "manifest_sha256": "d51ef4b38a286a7b220c5392f08cbcb63e68b803c87c35ab3d3cfce50beeb705",
+    "scope": "Both CLI governance modes before adding explicit wrong-partner and page boundary checks; no stock-client qualification."
+  },
+  "evidence_contract": {
+    "governance_commands_each_mode": 44,
+    "governance_cases_each_mode": 6,
+    "expected_refusals_each_mode": 9,
+    "refusal_validation": "Original integer exit code1, exact allowlisted stderr and empty stdout. Unknown/nonmatching failures remain failures.",
+    "positive_validation": "Original output hashes plus actor/revision/event and saved-receipt equality, unchanged path views, exact two-page results, file/policy/check/digest relationships and original ordered TLS peer streams.",
+    "safe_public_output": "Counts, hashes and fixed failing command/test names only; raw command outputs, credentials and payloads stay ignored.",
+    "refusal_contracts": 20
+  },
+  "previous_candidate": {
+    "candidate": "075fcbe9f8768d1b873622aaed9557941c1ca149",
+    "ftps_run_id": 41562125104,
+    "ftps_each": "15 native pass records/41 commands;stock curl/lftp;both modes;retained authority and cleanup verified",
+    "native_run_id": 41562125354,
+    "postgres_pass_records_each": 578,
+    "postgres_fail_records_each": 0,
+    "postgres_skip_records_each": 0,
+    "engine_pass_records_each": 223,
+    "engine_fail_records_each": 0,
+    "engine_skip_records_each": 1,
+    "skip": "Existing privileged-port20 test unavailable; skip remains visible and unqualified.",
+    "other_gates": "Both metadata restores,nine fuzz targets,core,all five stock entries,Mac pass;WindowsD103 has22failures.",
+    "archive_reference": ".private/freightctl-ftps-native-075fcbe-bc9a3438f5d047c4b2afc5feff80f11a/manifest.json",
+    "archive_sha256": "dbd40775f1bdc1d2f89049d07efa69b6e34e923a92bdf34d575cfa461e7282b4"
+  },
+  "limits": [
+    "The new CLI journey is a synthetic assisted component, not independent operator adoption or a full parity row.",
+    "Native ARM/x86 stock/cross-platform regression and API/browser governance still require actual execution.",
+    "Upload-ticket recovery, proactive FTPS sending/collection, broader protocols/networks/platforms/scale/HA and all whole journeys remain open.",
+    "Local inference remains off;scanner and F026 aggregate are not run."
+  ],
+  "final_local_replay": {
+    "manifest_reference": ".private/ftps-5e8a31b1144d483eb85a3ff3d9290aa4/manifest.json",
+    "manifest_sha256": "7dc2960550ca3b0f658404fc776ba11186538d92bd44ee2a45c38c1f74ed67cd",
+    "binary_sha256": "3b712932b417d5620a7f2cfc16a888039b4fbff6b124d903fb784611bb77189b",
+    "environment": "Go1.26.10 darwin/arm64;actual application/PostgreSQL/storage;TLS1.3 client stand-in",
+    "native_go_pass_records": 9,
+    "native_go_fail_records": 0,
+    "native_go_skip_records": 0,
+    "governance_commands_each_cli_mode": 44,
+    "governance_cases_each_mode": 6,
+    "strict_expected_refusals_each_mode": 9,
+    "original_native_commands": 127,
+    "original_expected_exit1_records": 18,
+    "outcome_validation": "All original commands match their fixed required outcomes; expected refusals retain actual code1/exact stderr/empty stdout.",
+    "source_inputs": 661,
+    "source_scope": "All original source digests retained; F062 result metadata appended after replay.",
+    "retained_rows": 64339,
+    "retained_metadata_and_roles_unchanged": true,
+    "isolated_database_removed": true,
+    "original_resource_state_restored": true,
+    "postgres_restored_stopped": true,
+    "stock_curl_qualified": false,
+    "stock_lftp_qualified": false,
+    "inference_performed": false,
+    "scanner_started": false,
+    "cleanup_failures": []
+  },
+  "public_source_review": {
+    "manifest_reference": ".private/freightctl-ftps-cli-public-review-affa3de675674578b99cb4224fbd4a97/manifest.json",
+    "manifest_sha256": "852e81dc50195b8a3882865ab21e972d3f27b8d5627d20d114b2df96fb7f8105",
+    "kind": "full-public-source-secret-scan",
+    "scanner": "Gitleaks8.30.1 native ARM",
+    "exit_code": 0,
+    "source_count": 661,
+    "stderr_sha256": "434c34ff8c4e07fcaa5fadef8a0fccaece17d4bc9f38e30ce035bb8c139ff634",
+    "scope": "All661 public source inputs before appending this result; no ignored private estate scanned or published",
+    "rules_changed": false
+  },
+  "local_static_checks": {
+    "cli_vet": "passed",
+    "cli_unit_race": "passed",
+    "ftps_evidence_refusal_contracts": 20,
+    "record_refusal_contracts": 15,
+    "workflow_syntax": "passed",
+    "format_and_diff": "passed"
+  }
+}

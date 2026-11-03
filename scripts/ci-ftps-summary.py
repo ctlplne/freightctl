@@ -9,6 +9,7 @@ import re
 import subprocess
 
 from ftps_contract import CLI_PAYLOAD, LFTP_CASES, LFTP_DOWNLOADS, LFTP_FAILURE_CODES, NATIVE_PARENT_TESTS, NATIVE_TESTS
+import ftps_cli_governance as governance
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -33,15 +34,23 @@ def failure_diagnostics(root, result, commit):
         manifest = json.loads(raw)
         if hashlib.sha256(raw).hexdigest() != header.get("manifest_sha256") or manifest.get("starting_commit") != commit or manifest.get("kind") != "stock-ftps-custody":
             return {}
-        failed, categories = set(), set()
+        failed, categories, cli_failures = set(), set(), set()
         allowed = {"native-ftps-integration", "cli-explicit-lftp-probe", "cli-implicit-lftp-probe"}
         for step in manifest.get("steps", []):
             name = step.get("name")
-            if name not in allowed:
+            if name not in allowed and not governance.command_suffix(name or ""):
                 continue
             data = read(path.parent / (name + ".stdout"), 64 << 20)
             if hashlib.sha256(data).hexdigest() != step.get("stdout_sha256"):
                 return {}
+            if governance.command_suffix(name):
+                diagnostic = read(path.parent / (name + ".stderr"), 1 << 20)
+                if hashlib.sha256(diagnostic).hexdigest() != step.get("stderr_sha256"):
+                    return {}
+                try:
+                    governance.verify_outcome(name, step.get("exit_code"), diagnostic, data)
+                except ValueError:
+                    cli_failures.add(name)
             output = data.decode(errors="replace")
             failed.update(set(re.findall(r"^\s*--- FAIL: (TestFTPS\S+) \(", output, re.MULTILINE)) & NATIVE_TESTS)
             for line in output.splitlines():
@@ -53,7 +62,7 @@ def failure_diagnostics(root, result, commit):
                     continue
                 if probe.get("state") == "failed" and probe.get("stage") in {"version", "transfers"} and probe.get("code") in LFTP_FAILURE_CODES:
                     categories.add((probe["stage"], probe["code"]))
-        return {"failed_native_tests": sorted(failed), "lftp_failures": [{"stage": s, "code": c} for s, c in sorted(categories)]}
+        return {"failed_native_tests": sorted(failed), "lftp_failures": [{"stage": s, "code": c} for s, c in sorted(categories)], "failed_cli_commands": sorted(cli_failures)}
     except Exception:
         return {}
 
@@ -95,13 +104,19 @@ def summarize(root, result, commit):
     for name in ("native-ftps-integration", "stock-lftp-version", "cli-explicit-upload", "cli-explicit-download", "cli-implicit-upload", "cli-implicit-download", "cli-explicit-lftp-probe", "cli-implicit-lftp-probe", "drop-exact-test-database"):
         if name not in names:
             raise ValueError("required FTPS command is missing")
+    for mode in ("explicit", "implicit"):
+        if not {"cli-" + mode + "-gov-" + name for name in governance.COMMANDS} <= names:
+            raise ValueError("public CLI governance command is missing")
     for step in steps:
-        if type(step.get("exit_code")) is not int or step["exit_code"] != 0 or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}", step.get("name", "")):
+        if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}", step.get("name", "")):
             raise ValueError("native FTPS command failed or is incomplete")
         for extension, field in (("stdout", "stdout_sha256"), ("stderr", "stderr_sha256")):
             data = read(path.parent / (step["name"] + "." + extension), 64 << 20)
             if hashlib.sha256(data).hexdigest() != step.get(field):
                 raise ValueError("native FTPS output checksum differs")
+        governance.verify_outcome(step["name"], step.get("exit_code"), read(path.parent / (step["name"] + ".stderr"), 64 << 20), read(path.parent / (step["name"] + ".stdout"), 64 << 20))
+    for mode in ("explicit", "implicit"):
+        governance.validate_outputs(path.parent, mode)
     native = read(path.parent / "native-ftps-integration.stdout", 64 << 20).decode()
     executed = re.findall(r"^\s*--- PASS: (TestFTPS\S+) \(", native, re.MULTILINE)
     if len(executed) != len(NATIVE_TESTS) or set(executed) != NATIVE_TESTS or "--- SKIP:" in native or "--- FAIL:" in native:
@@ -126,6 +141,7 @@ def summarize(root, result, commit):
             raise ValueError("FTPS source identity differs")
     return {"state": "passed", "source_commit": commit, "manifest_sha256": digest,
             "stock_curl_qualified": True, "stock_lftp_qualified": True, "native_test_pass_records": len(NATIVE_TESTS), "source_inputs": len(sources),
+            "public_cli_governance_cases": 2 * len(governance.CASES), "expected_cli_refusals": 2 * len(governance.REFUSALS),
             "native_commands": len(steps), "retained_metadata_and_roles_unchanged": True,
             "isolated_database_removed": True, "original_resource_state_restored": True,
             "inference_performed": False, "scanner_engine_started": False,

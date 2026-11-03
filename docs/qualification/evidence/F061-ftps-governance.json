@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "F061",
   "kind": "ftps-open-writer-credential-lifecycle-and-selected-intake",
-  "state": "final guarded-source native ARM service journey passed; native stock expanded-profile replay pending",
+  "state": "native ARM/x86 expanded FTPS and full regression journeys passed at075fcbe; public CLI governance extension tracked separately",
   "observed_on": "2026-11-02",
   "starting_commit": "e586641424f40ec39d3b1f0799da1852c406f5b6",
   "author_and_committer": "imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>",
@@ -53,7 +53,7 @@
     "scope": "All nine stand-in native pass records before adding explicit Python optimization refusal guards; no stock-client claim."
   },
   "new_native_gate": {
-    "state": "x86_64 running;arm64 queued at observation;follow the exact existing handles",
+    "state": "success on both native architectures",
     "full_parent_tests": 5,
     "full_pass_records_required": 15,
     "local_standin_parent_tests": 3,
@@ -66,7 +66,21 @@
     "jobs": {
       "arm64": 125674937019,
       "x86_64": 125674937219
-    }
+    },
+    "observed_jobs": [
+      {
+        "architecture": "arm64",
+        "id": 125674937019,
+        "manifest_sha256": "c00aff8a2c1994b79157818e546e4c01137e03c9d73e319d7bbc1cccae26bd80"
+      },
+      {
+        "architecture": "x86_64",
+        "id": 125674937219,
+        "manifest_sha256": "52d1149ff8dbd91c19362ea133aa15116ecf612044278cb18c8ecb49c1325630"
+      }
+    ],
+    "native_commands_each": 41,
+    "source_inputs_each": 659
   },
   "previous_candidate_checkpoint": {
     "candidate": "b99c8d2de0b74ac86cb4f88b7f0ee51aa1874c5a",
@@ -145,15 +159,53 @@
     },
     "native_linux": {
       "run_id": 41562125354,
-      "state": "pending observation"
+      "state": "success on both architectures",
+      "jobs": {
+        "arm64": 125674938026,
+        "x86_64": 125674938189
+      },
+      "postgres_pass_records_each": 578,
+      "postgres_fail_records_each": 0,
+      "postgres_skip_records_each": 0,
+      "engine_pass_records_each": 223,
+      "engine_fail_records_each": 0,
+      "engine_skip_records_each": 1
     },
     "stock_peers": {
       "run_id": 41562125108,
-      "state": "pending observation"
+      "state": "all five entries passed"
     },
     "platform": {
       "run_id": 41562125014,
-      "state": "pending observation;WindowsD103 baseline remains open"
+      "state": "Mac passed;WindowsD103 failed22tests/subcases",
+      "mac_job": 125674936897,
+      "windows_job": 125674937198
+    }
+  },
+  "completed_native_archive": {
+    "manifest_reference": ".private/freightctl-ftps-native-075fcbe-bc9a3438f5d047c4b2afc5feff80f11a/manifest.json",
+    "manifest_sha256": "dbd40775f1bdc1d2f89049d07efa69b6e34e923a92bdf34d575cfa461e7282b4",
+    "files": {
+      "125674937019.log": {
+        "bytes": 30345,
+        "sha256": "0acbff3b402866eeea9260682a72dfa1e500a857d02721a0bd9df349638da62a"
+      },
+      "125674937198.log": {
+        "bytes": 23500,
+        "sha256": "322ae2de3a573a4dde12c9bb4dd9d6095037ef9dbb4cc705f6cc7a960e904394"
+      },
+      "125674937219.log": {
+        "bytes": 30208,
+        "sha256": "08d40042de41801be8f94831244cb0c284e8380f19c8f4d7e69d36ae789bfef8"
+      },
+      "125674938026.log": {
+        "bytes": 625065,
+        "sha256": "ff326bef323172872b2e56eb4869ef87a8e672742cb4fe200add77c78826fece"
+      },
+      "125674938189.log": {
+        "bytes": 829521,
+        "sha256": "9b397d7ac7065cf086b4d65757e8e929c4415eda3d3dfefb3678171fb03d6325"
+      }
     }
   }
 }
