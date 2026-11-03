@@ -43,7 +43,7 @@
       "manifest_sha256": "441f321bf74402bf956f1bc040136e980ece606fd8a4f39fb8db58f1b2a17a8f",
       "state": "bind operation denied;original suite replay passed with loopback access"
     },
-    "latest_synthetic_evidence_tampering_contracts": 10,
+    "latest_synthetic_evidence_tampering_contracts": 12,
     "latest_contract_note": "Ten current bookkeeping/privacy refusal contracts pass;the48record native transport race archive remains unchanged. Runtime stock evidence remains failed at receiver startup.",
     "latest_original_replay": {
       "manifest_reference": ".private/freightctl-ftps-boundary-repaired-6ad9e312bdfb4184aed25fd12789825e/manifest.json",
@@ -78,7 +78,22 @@
       "arm_manifest_sha256": "823acf27afb19112a8d22e48264a2ca394af3d38e3805feb00f68a62152c07a5",
       "x86_manifest_sha256": "0e114f5fdf4094868a4c55f2760d956193b7433d1f04222600e21abbf7e8e2bb"
     },
-    "startup_log_repair": "Stock vsftpd writes bootstrap errors and -v to descriptor0. The receiver inherited a read-only stop pipe;its diagnostics were lost. Give only its fd0 the private stdout sink,keeping the supervisor stop pipe separate;redirect -v fd0 to stdout. Same original runtime profile must replay;no startup cause is invented."
+    "startup_log_repair": "Stock vsftpd writes bootstrap errors and -v to descriptor0. The receiver inherited a read-only stop pipe;its diagnostics were lost. Give only its fd0 the private stdout sink,keeping the supervisor stop pipe separate;redirect -v fd0 to stdout. Same original runtime profile must replay;no startup cause is invented.",
+    "startup_cause": {
+      "candidate": "d5aca89d2955ade1c225af505188f0a69b802ecb",
+      "run_id": 41595685336,
+      "arm_job_id": 125782373850,
+      "x86_job_id": 125782374444,
+      "state": "both actual binaries reject ssl_tlsv1_1 before listening",
+      "arm_manifest_sha256": "9720a4221c7188eaa7c281336b0f071bb343f0b60313c070f1463a486908b0a5",
+      "x86_manifest_sha256": "123ba9c3862fb6489f6636c3eec90c55ea49d81f77a124a85a240078ddfe6eb3",
+      "archive": {
+        "manifest_reference": ".private/freightctl-ftps-client-startup-d5aca89/manifest.json",
+        "manifest_sha256": "7a7835eb2a58bb2872657ab8bf2779ab71a8e7d2ea957dacfe2e1f62f9127956"
+      },
+      "repair": "Use a task-private OpenSSL system_default MinProtocol/MaxProtocol TLSv1.3 profile inherited only by the exact receiver. Remove unsupported version flags. Require actual OpenSSL TLS1.2 probes to fail with exact exit1 and protocol-version alert70 in both listener modes. Same TLS1.3/native receiver/readback/reuse/shutdown/seccomp/resource profile remains mandatory.",
+      "runtime_repair_state": "pending original native replay"
+    }
   },
   "next_integration": "docs/protocols/ftps-sending.md",
   "inference_performed": false,
@@ -108,5 +123,18 @@
       "manifest_reference": ".private/freightctl-ftps-client-native-failures-16b92cb/manifest.json",
       "manifest_sha256": "954dc6c0a2b24a4240e9f6b73fbb2027f8032a75aad46c2a086af4a59772b612"
     }
+  },
+  "other_current_gates": {
+    "candidate": "d5aca89d2955ade1c225af505188f0a69b802ecb",
+    "core_job_id": 125782373758,
+    "core_state": "passed",
+    "mac_job_id": 125782374783,
+    "mac_state": "passed original native unit/race profile;D134 boundary failure repaired",
+    "windows_job_id": 125782375192,
+    "windows_state": "failed;new exact failure set to reconcile;no skip or permission relaxation",
+    "fuzz_job_id": 125782374644,
+    "fuzz_state": "all ten targets passed",
+    "metadata_state": "both native schema35 restores passed",
+    "full_native_state": "running original full Linux profiles;not yet qualified"
   }
 }

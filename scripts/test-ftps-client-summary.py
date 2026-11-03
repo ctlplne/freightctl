@@ -28,6 +28,10 @@ class ReceiverEvidence(unittest.TestCase):
             if name=="receiver-version":stdout=b"vsftpd: version 3.0.5\n"
             if name=="independent-receiver-files":stdout=json.dumps(self.files).encode()
             self.output(name,stdout)
+            if name in {"explicit-refuse-tls12","implicit-refuse-tls12"}:
+                self.output(name,b"",b"tlsv1 alert protocol version: SSL alert number 70\n")
+                next(s for s in self.m["steps"] if s["name"]==name)["exit_code"]=1
+        (self.directory/"openssl.conf").write_bytes(summary.OPENSSL_PROFILE)
         for mode in ("explicit","implicit"):
             config={"listen_address":"127.0.0.1","ssl_enable":"YES","force_local_logins_ssl":"YES","force_local_data_ssl":"YES","require_ssl_reuse":"YES","strict_ssl_read_eof":"YES","strict_ssl_write_shutdown":"YES","ssl_tlsv1_2":"NO","ssl_tlsv1_3":"YES","seccomp_sandbox":"YES","chroot_local_user":"YES","anonymous_enable":"NO","implicit_ssl":"YES" if mode=="implicit" else "NO"}
             (self.directory/(mode+".conf")).write_text("".join(k+"="+v+"\n" for k,v in config.items()))
@@ -35,9 +39,9 @@ class ReceiverEvidence(unittest.TestCase):
     @staticmethod
     def sha(b):return hashlib.sha256(b).hexdigest()
 
-    def output(self,name,data):
-        (self.directory/(name+".stdout")).write_bytes(data);(self.directory/(name+".stderr")).write_bytes(b"")
-        self.m["steps"]=[s for s in self.m["steps"] if s["name"]!=name]+[{"name":name,"exit_code":0,"stdout_sha256":self.sha(data),"stderr_sha256":self.sha(b"")}]
+    def output(self,name,data,err=b""):
+        (self.directory/(name+".stdout")).write_bytes(data);(self.directory/(name+".stderr")).write_bytes(err)
+        self.m["steps"]=[s for s in self.m["steps"] if s["name"]!=name]+[{"name":name,"exit_code":0,"stdout_sha256":self.sha(data),"stderr_sha256":self.sha(err)}]
 
     def write(self):
         data=json.dumps(self.m).encode();self.manifest.write_bytes(data)
@@ -47,7 +51,7 @@ class ReceiverEvidence(unittest.TestCase):
         self.write();return summary.summarize(self.root,self.result,"b"*40)
 
     def test_complete_bookkeeping_has_bounded_public_scope(self):
-        result=self.check();self.assertEqual(result["original_commands"],18)
+        result=self.check();self.assertEqual(result["original_commands"],20)
         self.assertFalse(result["domain_delivery_qualified"])
         for private in (str(self.root),"password","source.go"):self.assertNotIn(private,json.dumps(result))
         self.assertNotIn("receiver_files",result)
@@ -97,6 +101,15 @@ class ReceiverEvidence(unittest.TestCase):
         with self.assertRaises(ValueError):self.check()
         self.m["source_sha256"]={"source.go":self.sha(b"synthetic source")};self.write();self.manifest.write_text("{}")
         with self.assertRaises(ValueError):summary.summarize(self.root,self.result,"b"*40)
+
+    def test_unrelated_tls_error_cannot_replace_protocol_version_refusal(self):
+        self.output("explicit-refuse-tls12",b"",b"certificate validation failed\n")
+        next(s for s in self.m["steps"] if s["name"]=="explicit-refuse-tls12")["exit_code"]=1
+        with self.assertRaises(ValueError):self.check()
+
+    def test_weaker_openssl_floor_cannot_be_claimed_as_tls13(self):
+        (self.directory/"openssl.conf").write_bytes(summary.OPENSSL_PROFILE.replace(b"MinProtocol=TLSv1.3",b"MinProtocol=TLSv1.2"))
+        with self.assertRaises(ValueError):self.check()
 
     def test_failed_diagnostic_never_copies_peer_or_password_text(self):
         self.output("native-stock-receiver",b"client_stock_test.go:73: stock store secret-password FTPS receiver status 522\nprivate peer prose\n")

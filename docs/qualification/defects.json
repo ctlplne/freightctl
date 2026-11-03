@@ -2152,28 +2152,29 @@
     {
       "id": "D133",
       "severity": "native stock receiver fixture startup failure",
-      "state": "open;exact cause unobserved;fixed diagnostic replay required",
+      "state": "cause observed on both native architectures;library-profile repair implemented;original runtime replay pending",
       "observed_on": "2026-11-03",
       "candidate": "16b92cbf7e648905f402a0e5d0b3a56fd2e6d660",
       "journey": "Independent vsftpd/OpenSSL/PAM outbound FTPS qualification",
       "title": "Independent explicit receiver exits before the native transfer profile begins",
       "first_failure": "Both actual native Linux jobs fail at explicit-receiver-start. The first ARM original GitHub job log is retained in F068;raw receiver output was private and the original safe diagnostic omitted its category. No transfer or peer interoperability pass is claimed.",
-      "resolution": "Add bounded fixed-category startup diagnostics and preserve manifest hash without exposing raw peer/configuration/credential text. Keep TLS1.3,reuse,strict shutdown,chroot,seccomp and all budgets unchanged;replay the original profile to observe and repair the actual cause. The94f27c3 diagnostic replay reports supervisor-child-exit on both architectures. Upstream utility.c writes startup errors to fd0,which inherited the read-only supervisor stop pipe. Route only receiver fd0 to its private log and -v to stdout before replaying;the underlying startup cause remains unobserved.",
+      "resolution": "Add bounded fixed-category startup diagnostics and preserve manifest hash without exposing raw peer/configuration/credential text. Keep TLS1.3,reuse,strict shutdown,chroot,seccomp and all budgets unchanged;replay the original profile to observe and repair the actual cause. The94f27c3 diagnostic replay reports supervisor-child-exit on both architectures. Upstream utility.c writes startup errors to fd0,which inherited the read-only supervisor stop pipe. Route only receiver fd0 to its private log and -v to stdout before replaying;the underlying startup cause remains unobserved. With fd0 captured,d5aca89 reports unsupported-option:ssl_tlsv1_1 on both actual architectures. Apply TLS1.3 MinProtocol/MaxProtocol through a private OpenSSL system_default profile and require independent real TLS1.2 alert70 refusals in both modes. TLS1.3,reuse,strict shutdown,seccomp,chroot and all budgets remain;original native transfer replay still required.",
       "regression_evidence": [
         "docs/qualification/evidence/F068-ftps-client-transport.json",
         "https://github.com/ctlplne/freightctl/actions/runs/41594478582"
-      ]
+      ],
+      "cause": "The pinned stock3.0.5-0ubuntu3.1 binary rejects ssl_tlsv1_1,despite the current version-labelled Ubuntu manual listing that option. The first two profiles also lost bootstrap diagnostics because vsftpd writes fd0 and inherited a read-only supervisor pipe."
     },
     {
       "id": "D134",
       "severity": "crypto architecture boundary regression in test fixture",
-      "state": "fixed and original native ARM architecture/transport race suites replayed;native GitHub replay pending",
+      "state": "fixed and original native Mac/unit boundary replayed;full Linux replay running",
       "observed_on": "2026-11-03",
       "candidate": "16b92cbf7e648905f402a0e5d0b3a56fd2e6d660",
       "journey": "Core architecture and native platform gate",
       "title": "New protocol fixture imports crypto/tls outside internal/crypto",
       "first_failure": "TestCoreImportBoundaries fails on native Linux ARM,Mac and Windows at internal/ftpsclient/client_test.go. Original Linux/macOS/Windows job logs are retained in F068.",
-      "resolution": "Expose only completed TLS1.3 resumption observation behind internal/crypto and use it in the same protocol fixture. The original boundary rule and all resumption assertions remain. Original native ARM architecture/transport/crypto race replay passes49records with zero failures/skips.",
+      "resolution": "Expose only completed TLS1.3 resumption observation behind internal/crypto and use it in the same protocol fixture. The original boundary rule and all resumption assertions remain. Original native ARM architecture/transport/crypto race replay passes49records with zero failures/skips. Native Mac125782374783 passes atd5aca89;core and all ten fuzz targets pass. Full Linux original profiles remain running.",
       "regression_evidence": [
         "docs/qualification/evidence/F068-ftps-client-transport.json",
         "https://github.com/ctlplne/freightctl/actions/runs/41594478600"

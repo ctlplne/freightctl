@@ -10,7 +10,8 @@ import subprocess
 
 ROOT=Path(__file__).resolve().parents[1]
 PAYLOAD=b"account,amount,day\n"+b"0001,1.01,2026-10-28\n"*10000
-REQUIRED={"go-version","receiver-version","receiver-library-versions","build","token","certificate","create-exact-user","set-exact-password","own-exact-inbox","create-exact-pam","explicit-config-owner","implicit-config-owner","native-stock-receiver","independent-receiver-files","explicit-receiver","implicit-receiver","remove-exact-user","remove-exact-pam"}
+REQUIRED={"go-version","receiver-version","receiver-library-versions","build","token","certificate","create-exact-user","set-exact-password","own-exact-inbox","create-exact-pam","explicit-config-owner","implicit-config-owner","explicit-refuse-tls12","implicit-refuse-tls12","native-stock-receiver","independent-receiver-files","explicit-receiver","implicit-receiver","remove-exact-user","remove-exact-pam"}
+OPENSSL_PROFILE=b"config_diagnostics=1\nopenssl_conf=freightctl_init\n[freightctl_init]\nssl_conf=freightctl_ssl\n[freightctl_ssl]\nsystem_default=freightctl_tls\n[freightctl_tls]\nMinProtocol=TLSv1.3\nMaxProtocol=TLSv1.3\n"
 
 
 def read(path,bound=4<<20):
@@ -33,7 +34,8 @@ def summarize(root,result,commit):
     steps=m.get("steps")
     if not isinstance(steps,list) or {s.get("name") for s in steps}!=REQUIRED or len(steps)!=len(REQUIRED):raise ValueError("receiver command closure differs")
     for s in steps:
-        if type(s.get("exit_code")) is not int or s["exit_code"]!=0:raise ValueError("receiver command failed")
+        expected_code=1 if s["name"] in {"explicit-refuse-tls12","implicit-refuse-tls12"} else 0
+        if type(s.get("exit_code")) is not int or s["exit_code"]!=expected_code:raise ValueError("receiver command failed")
         for ext in ("stdout","stderr"):
             if hashlib.sha256(read(path.parent/(s["name"]+"."+ext),64<<20)).hexdigest()!=s.get(ext+"_sha256"):raise ValueError("receiver original output changed")
     native=read(path.parent/"native-stock-receiver.stdout").decode()
@@ -44,9 +46,12 @@ def summarize(root,result,commit):
     observed=json.loads(read(path.parent/"independent-receiver-files.stdout"))
     expected_files={mode+"-"+suffix:{"size":len(b),"sha256":hashlib.sha256(b).hexdigest()} for mode in ("explicit","implicit") for suffix,b in (("final.csv",PAYLOAD),("resume.csv",PAYLOAD),("empty",b""))}
     if observed!=expected_files or m.get("receiver_files")!=observed:raise ValueError("independent stock receiver bytes differ")
+    if read(path.parent/"openssl.conf")!=OPENSSL_PROFILE:raise ValueError("receiver OpenSSL TLS floor differs")
     for mode in ("explicit","implicit"):
+        refusal=read(path.parent/(mode+"-refuse-tls12.stderr"))
+        if b"alert protocol version" not in refusal or b"SSL alert number 70" not in refusal:raise ValueError("receiver original TLS1.2 refusal differs")
         config=dict(line.split("=",1) for line in read(path.parent/(mode+".conf")).decode().splitlines())
-        for name,value in {"listen_address":"127.0.0.1","ssl_enable":"YES","force_local_logins_ssl":"YES","force_local_data_ssl":"YES","require_ssl_reuse":"YES","strict_ssl_read_eof":"YES","strict_ssl_write_shutdown":"YES","ssl_tlsv1_2":"NO","ssl_tlsv1_3":"YES","seccomp_sandbox":"YES","chroot_local_user":"YES","anonymous_enable":"NO","implicit_ssl":"YES" if mode=="implicit" else "NO"}.items():
+        for name,value in {"listen_address":"127.0.0.1","ssl_enable":"YES","force_local_logins_ssl":"YES","force_local_data_ssl":"YES","require_ssl_reuse":"YES","strict_ssl_read_eof":"YES","strict_ssl_write_shutdown":"YES","seccomp_sandbox":"YES","chroot_local_user":"YES","anonymous_enable":"NO","implicit_ssl":"YES" if mode=="implicit" else "NO"}.items():
             if config.get(name)!=value:raise ValueError("receiver security profile differs")
     sources=m.get("source_sha256")
     if not isinstance(sources,dict) or not 1<=len(sources)<=10000:raise ValueError("receiver source closure missing")
@@ -63,9 +68,10 @@ def failure_diagnostics(root,result,commit):
         if not re.fullmatch(r"\.private/ftps-client-[0-9a-f]{32}/manifest\.json",ref):return {}
         path=root/ref;raw=read(path,8<<20);m=json.loads(raw)
         if hashlib.sha256(raw).hexdigest()!=h.get("manifest_sha256") or m.get("starting_commit")!=commit:return {}
-        failures=[s["name"] for s in m.get("steps",[]) if s.get("name") in REQUIRED and s.get("exit_code")!=0]
+        failures=[s["name"] for s in m.get("steps",[]) if s.get("name") in REQUIRED and s.get("exit_code")!=(1 if s["name"] in {"explicit-refuse-tls12","implicit-refuse-tls12"} else 0)]
         result={"failed_commands":sorted(set(failures)),"manifest_sha256":h["manifest_sha256"]}
         if m.get("failure") in {"explicit receiver did not start","implicit receiver did not start"}:result["stage"]=m["failure"].split()[0]+"-receiver-start"
+        if m.get("failure") in {"explicit exact TLS1.2 refusal missing","implicit exact TLS1.2 refusal missing"}:result["stage"]=m["failure"].split()[0]+"-tls12-refusal"
         native=read(path.parent/"native-stock-receiver.stdout").decode() if (path.parent/"native-stock-receiver.stdout").exists() else ""
         stages=re.findall(r"client_stock_test.go:\d+: stock (connection|store|size|independent readback|rename|renamed readback|prefix|resume|resumed integrity|zero-byte upload|zero-byte readback)\b",native)
         if stages:result["native_stages"]=sorted(set(stages))
