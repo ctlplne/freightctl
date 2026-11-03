@@ -1985,7 +1985,7 @@
     {
       "id": "D123",
       "severity": "actual browser accessibility blocker",
-      "state": "fixed and replayed on native x86 explicit journey;broader profile pending",
+      "state": "fixed and original native x86 explicit/implicit profile replayed",
       "observed_on": "2026-11-02",
       "candidate": "55286c31f698e08366c406ef36d0cc227e7b9ed8",
       "journey": "Reviewed account credentials during FTPS transfers",
@@ -1993,18 +1993,19 @@
       "reproduction": "GitHub run41569654224 job125699325050;qualify-ftps.py --browser;explicit listener,credential-create phase,ftps-operator-browser.mjs:102",
       "first_failure": "axe violation count is nonzero in credential-create-review;the original safe diagnostic reports phase/line but no rule IDs.",
       "cause": "Diagnostic candidate18f6be6 identifies credential-rotate-review and the pinned axe target-size rule. Account controls use20px sizing. The earlier credential-create phase label covered rotation setup too,so it did not establish which account audit failed.",
-      "resolution": "24px square controls with zero inherited input padding and44px clickable labels pass the original rotation audit at9d506bb. Both credential writer rotation/revocation journeys complete before the later policy observer failure. All WCAG assertions stay enforced. Implicit/full browser profile remains pending.",
+      "resolution": "24px square controls with zero inherited input padding and44px clickable labels pass the original rotation audit at9d506bb. Both credential writer rotation/revocation journeys complete before the later policy observer failure. All WCAG assertions stay enforced. Implicit/full browser profile remains pending. Complete6634b3a browser/FTPS profile now passes both listener modes,original output validation,14 automated axe audits,six lost-response replays and two exact rejected-release API refusals. No assertion or budget is relaxed.",
       "regression_evidence": [
         "https://github.com/ctlplne/freightctl/actions/runs/41569654224",
         "docs/qualification/evidence/F063-ftps-browser-governance.json",
         "https://github.com/ctlplne/freightctl/actions/runs/41571174400",
-        "https://github.com/ctlplne/freightctl/actions/runs/41571975937"
+        "https://github.com/ctlplne/freightctl/actions/runs/41571975937",
+        "https://github.com/ctlplne/freightctl/actions/runs/41575668127"
       ]
     },
     {
       "id": "D124",
       "severity": "qualification response-observer defect",
-      "state": "fixed and replayed on native x86 explicit journey;broader profile pending",
+      "state": "fixed and original native x86 explicit/implicit profile replayed",
       "observed_on": "2026-11-02",
       "candidate": "9d506bb8c74d065d9328e768ad13f883949cc538",
       "journey": "Browser FTPS intake policy registration with committed-response loss",
@@ -2012,43 +2013,46 @@
       "reproduction": "GitHub run41571975937 job125706742901;explicit policy-register phase;ftps-operator-browser.mjs:214",
       "first_failure": "The browser closes the confirmed registration dialog,then the observer fails seen.length==2.",
       "cause": "The observer intercepts all methods on the intake-policy URI;the UI automatically GETs the same URI after successful POST/retry.",
-      "resolution": "The POST-only interceptor preserves the strict two-mutation/original-receipt assertions and passes atb13eb99;the actual policy is registered and FTPS CSV uploads reach held/rejected checking. Full/implicit profile still requires the later replay.",
+      "resolution": "The POST-only interceptor preserves the strict two-mutation/original-receipt assertions and passes atb13eb99;the actual policy is registered and FTPS CSV uploads reach held/rejected checking. Full/implicit profile still requires the later replay. Complete6634b3a browser/FTPS profile now passes both listener modes,original output validation,14 automated axe audits,six lost-response replays and two exact rejected-release API refusals. No assertion or budget is relaxed.",
       "regression_evidence": [
         "https://github.com/ctlplne/freightctl/actions/runs/41571975937",
         "docs/qualification/evidence/F063-ftps-browser-governance.json",
-        "https://github.com/ctlplne/freightctl/actions/runs/41572844196"
+        "https://github.com/ctlplne/freightctl/actions/runs/41572844196",
+        "https://github.com/ctlplne/freightctl/actions/runs/41575668127"
       ]
     },
     {
       "id": "D125",
       "severity": "qualification UI contract defect",
-      "state": "repair prepared;original actual replay pending",
+      "state": "fixed and original native x86 explicit/implicit profile replayed",
       "observed_on": "2026-11-02",
       "candidate": "b13eb9907d09b20aacd5ea630b41a0cb78648456",
       "journey": "Rejected FTPS CSV revision through browser intake",
       "title": "Harness expects absence of an intentionally disabled release action",
       "first_failure": "GitHub run41572844196 job125709514146;check-bad;ftps-operator-browser.mjs:511 expects count0,but the product renders the release button disabled unless state is passed.",
       "cause": "The harness tests a DOM presentation assumption rather than the existing disabled-action contract. The actual check state is rejected with one attempt.",
-      "resolution": "Check disabled state and add a real same-session/CSRF API bypass attempt requiring exact409/operation_state_conflict for the rejected immutable file/policy/revision and sibling passing report. Preserve independent FTPS refusal,all receipt/byte assertions and original output closure. Original replay pending.",
+      "resolution": "Check disabled state and add a real same-session/CSRF API bypass attempt requiring exact409/operation_state_conflict for the rejected immutable file/policy/revision and sibling passing report. Preserve independent FTPS refusal,all receipt/byte assertions and original output closure. Original replay pending. Complete6634b3a browser/FTPS profile now passes both listener modes,original output validation,14 automated axe audits,six lost-response replays and two exact rejected-release API refusals. No assertion or budget is relaxed.",
       "regression_evidence": [
         "https://github.com/ctlplne/freightctl/actions/runs/41572844196",
-        "docs/qualification/evidence/F063-ftps-browser-governance.json"
+        "docs/qualification/evidence/F063-ftps-browser-governance.json",
+        "https://github.com/ctlplne/freightctl/actions/runs/41575668127"
       ]
     },
     {
       "id": "D126",
       "severity": "qualification original-output schema defect",
-      "state": "fixed against preserved actual Go outputs;full native replay pending",
+      "state": "fixed and original native x86 explicit/implicit profile replayed",
       "observed_on": "2026-11-02",
       "candidate": "8c89bc9a8001b8cd6c78ceb2eeea9f562c8dbf1c",
       "journey": "Independent browser/FTPS original-output validation",
       "title": "Evidence checker reads file.size although Go serializes size_bytes",
       "first_failure": "Native browser run41574135026 job125713615419 fails without a structured browser phase. Source inspection and reopening both original F062 Go CLI check outputs reproduce missing size;actual Go File keys include size_bytes.",
       "cause": "The new checker used the wrong wire field name. The original failure diagnostic did not expose safe checker invariants.",
-      "resolution": "Use size_bytes and retain exact byte length,digest,policy and attempt checks. Both preserved real Go bindings pass against the original policy/payloads;new refusal coverage rejects changed/missing metadata. Emit only known invariant text or generic missing-field/unclassified categories,never raw exception values. Full original native browser replay remains required.",
+      "resolution": "Use size_bytes and retain exact byte length,digest,policy and attempt checks. Both preserved real Go bindings pass against the original policy/payloads;new refusal coverage rejects changed/missing metadata. Emit only known invariant text or generic missing-field/unclassified categories,never raw exception values. Full original native browser replay remains required. Complete6634b3a browser/FTPS profile now passes both listener modes,original output validation,14 automated axe audits,six lost-response replays and two exact rejected-release API refusals. No assertion or budget is relaxed.",
       "regression_evidence": [
         "https://github.com/ctlplne/freightctl/actions/runs/41574135026",
-        "docs/qualification/evidence/F063-ftps-browser-governance.json"
+        "docs/qualification/evidence/F063-ftps-browser-governance.json",
+        "https://github.com/ctlplne/freightctl/actions/runs/41575668127"
       ]
     }
   ]

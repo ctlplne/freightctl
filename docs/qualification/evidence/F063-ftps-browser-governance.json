@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "F063",
   "observed_at": "2026-11-02",
-  "state": "implemented but unverified",
+  "state": "verified selected native x86 browser/FTPS component;whole goal remains open",
   "scope": "Reviewed browser account and CSV intake policy commands against actual HTTPS/PostgreSQL/storage and an independent TLS1.3 FTPS client stand-in;both explicit and implicit listeners. No whole parity row or customer journey qualifies.",
   "product_change": "Add a bounded CSV intake policy editor using the existing typed API, expected policy version, exact definition hash, normal CSRF and durable idempotency. Preserve configured signer/scanner references. Activation and revocation require separate exact reviews; file release remains separately reviewed.",
   "first_failures": [
@@ -44,17 +44,38 @@
     }
   },
   "native_browser_replay": {
-    "state": "8c89bc9 native browser job fails without a structured browser-operation failure;preserved original output. Checker source references unsupported file.size instead of Go file.size_bytes;repair and safe checker invariant diagnostics prepared. Complete profile still unqualified.",
+    "state": "passed;both listener modes;original-output checker passed",
     "workflow": ".github/workflows/ftps-browser.yml",
     "job": "Native x86 browser and live FTPS governance",
     "command": "python3 scripts/qualify-ftps.py --postgres-container-id EXACT_TASK_ID --browser",
     "evidence_checker": "python3 scripts/ci-ftps-summary.py --result .private/ftps-browser-result.json --require-browser",
-    "claim": "This plan and the lightweight checks do not establish browser runtime qualification.",
-    "candidate": "55286c31f698e08366c406ef36d0cc227e7b9ed8",
-    "run_id": 41569654224,
-    "job_id": 125699325050,
+    "claim": "Selected assisted same-host component through public browser/API/CLI and independent FTPS client;not a whole parity row,independent adoption,scale/HA or full customer journey.",
+    "candidate": "6634b3a1ee8d032dc92b2d0957f61d5fbd86d4e5",
+    "run_id": 41575668127,
+    "job_id": 125718454361,
     "scheduling_refinement": "After original accessibility failure,unchanged browser profile is moved to a separate finish-running/newest-pending concurrency group so another stock architecture cannot block diagnosis.",
-    "unchanged_split_job_sha256": "2c50a6cd270dd566a4a42044f87d9966dd2111508586df39c308dff3770f0a2c"
+    "unchanged_split_job_sha256": "2c50a6cd270dd566a4a42044f87d9966dd2111508586df39c308dff3770f0a2c",
+    "url": "https://github.com/ctlplne/freightctl/actions/runs/41575668127",
+    "manifest_sha256": "72dfe46f20ddbe95af5ffadf513ce89912d3ba7452cde8533bf9d0aa622c9118",
+    "environment": "Native Linux x86_64;ubuntu-24.04;Go1.26.10;Node26.0.0;sandboxed Chrome156.0.8078.47;actual HTTPS/PostgreSQL/storage/FTPS",
+    "browser_governance_cases": 12,
+    "strict_browser_api_refusals": 2,
+    "automated_axe_audits": 14,
+    "lost_committed_response_replays": 6,
+    "native_ftps_pass_records": 15,
+    "native_ftps_fail_records": 0,
+    "native_ftps_skip_records": 0,
+    "public_cli_governance_cases": 12,
+    "strict_cli_refusals": 18,
+    "original_native_commands": 140,
+    "source_inputs": 672,
+    "original_output_validation": "All request/response and complete output hashes;exact byte lengths/digests,actor/file/policy/revision/report bindings,original receipts/keys,ordered resumed-data peer streams and strict error categories independently reopened and checked.",
+    "retained_metadata_and_roles_unchanged": true,
+    "isolated_database_removed": true,
+    "original_resource_state_restored": true,
+    "inference_performed": false,
+    "scanner_engine_started": false,
+    "full_journeys_qualified": false
   },
   "acceptance": {
     "each_listener_mode": [
@@ -78,9 +99,10 @@
     "f026_aggregate": "owner-deferred;not run"
   },
   "limits": [
-    "Browser replay pending. No signature/scanner selector is added here;existing configured requirements are preserved.",
+    "The selected CSV-only browser profile passes both modes. No signature/scanner selector is added here;existing configured requirements are preserved in implementation and Go/Node boundary checks,but signature/scanner-bearing UI edits remain a separate runtime gate.",
     "Stand-in FTPS client establishes selected TLS/protocol behavior;stock curl/lftp qualification remains separately required and runs in the same CI resource.",
-    "Upload-ticket recovery,proactive FTPS sending/collection,Windows protected custody,broader protocols/platforms/HA/recovery and all83whole rows/12full journeys remain open."
+    "Upload-ticket recovery,proactive FTPS sending/collection,Windows protected custody,broader protocols/platforms/HA/recovery and all83whole rows/12full journeys remain open.",
+    "The exact6634b3a full Linux replay is running/queued;all five same-candidate stock-peer entries pass. The preceding8c89bc9 full Go/PostgreSQL suites pass581 records each,with matching application/native-input bytes;223 engine passes and one visible privileged-port20 skip each. WindowsD103 remains red."
   ],
   "public_source_review": {
     "manifest_reference": ".private/freightctl-ftps-browser-public-review-219bf7c0944f4a3f8a5f9fef9afc3c0b/manifest.json",
@@ -108,7 +130,7 @@
     ],
     "cause": "Account permission and saved-credential checkboxes use20px controls;the saved-credential target fails WCAG2.2AA in the rotation review.",
     "repair": "Use24px square controls with no inherited input padding and44px clickable labels;keep the exact axe assertions. Advance phase labeling before the rotation review.",
-    "state": "target repair passes original rotation audit on native x86 explicit mode at9d506bb;full profile stops later in policy observer",
+    "state": "fixed and original complete profile replayed in both listener modes on native x86 at6634b3a",
     "retained_metadata_and_roles_unchanged": true,
     "isolated_database_removed": true,
     "original_resource_state_restored": true,
@@ -142,7 +164,7 @@
     "failure_line": 214,
     "failure": "Exact two-attempt assertion fails. Lost-response interceptor accepts GET and POST on the same intake-policy URI;after successful mutation,the UI automatically reads that URI again.",
     "repair": "Continue GET as an ordinary certificate-pinned browser read;intercept only POST. Keep exactly two mutation attempts,identical keys/bodies and original saved receipt equality.",
-    "state": "fixed and replayed on native x86 explicit mode atb13eb99;later rejected-file UI expectation fails",
+    "state": "fixed and original complete profile replayed in both listener modes on native x86 at6634b3a",
     "retained_metadata_and_roles_unchanged": true,
     "isolated_database_removed": true,
     "original_resource_state_restored": true,
@@ -158,7 +180,7 @@
     "failure_line": 511,
     "failure": "The actual rejected CSV check has one attempt and state rejected;the harness expects no release action,but the existing product renders its release button disabled.",
     "repair": "Assert that the action is disabled. Also bypass that button with an actual same-session/CSRF API request,using rejected file bytes/policy/revision and the good passing report hash. Require exact409/operation_state_conflict,original request/response hashes and the rejected immutable target. Keep independent FTPS bad-byte refusal and good-only publication.",
-    "state": "repair prepared;original full profile pending",
+    "state": "fixed and original complete profile replayed in both listener modes on native x86 at6634b3a",
     "retained_metadata_and_roles_unchanged": true,
     "isolated_database_removed": true,
     "original_resource_state_restored": true,
@@ -176,12 +198,87 @@
     "observation": "The failed browser job reports no browser-operation phase;its original cleanup observations all pass. Source inspection finds the checker reads a nonexistent size key;Go store.File emits size_bytes. The missing key is reproduced against both original F062 Go CLI outputs.",
     "repair": "Read size_bytes and keep exact payload length/digest,registered policy and attempt assertions. Reopen both preserved good/bad Go outputs and independently compare their original registered policy and exact CSV payloads. Add a byte-binding refusal contract and allowlisted checker invariant diagnostics;never print raw exception/field values.",
     "local_result": "Both preserved original Go check bindings pass;bad lengths,digests,policies,attempts and missing size_bytes are refused.26 evidence/refusal/privacy contracts pass.",
-    "state": "full native replay pending;code inspection/local evidence does not qualify the whole browser profile",
+    "state": "fixed and original complete profile replayed in both listener modes on native x86 at6634b3a",
     "retained_metadata_and_roles_unchanged": true,
     "isolated_database_removed": true,
     "original_resource_state_restored": true,
     "cleanup_failures": 0,
     "archive_reference": ".private/freightctl-ftps-browser-size-contract-8c89bc9/manifest.json",
     "archive_sha256": "3d65ed4f0775643ca46ad0d9ef58c7fea59558516da093b2b16a09a4270a24ac"
+  },
+  "successful_candidate_archive": {
+    "manifest_reference": ".private/freightctl-ftps-browser-qualified-6634b3a/manifest.json",
+    "manifest_sha256": "eae46286ec085501d9ac93464f8b06f293ee6e57e4915935587fbcde76d48c20",
+    "scope": "Preserved complete original browser,source and both native stock FTPS job logs;raw fixture files stay in ignored runner paths and are not uploaded."
+  },
+  "same_candidate_gates": {
+    "candidate": "6634b3a1ee8d032dc92b2d0957f61d5fbd86d4e5",
+    "source_security": {
+      "run_id": 41575668159,
+      "job_id": 125718455111,
+      "state": "passed",
+      "frontend_contracts": 112,
+      "ftps_refusal_privacy_contracts": 26,
+      "scope": "TypeScript,exact embedded assets,workflow/record checks,dependency/reachability and both source/history secret scans passed."
+    },
+    "stock_ftps": {
+      "run_id": 41575668090,
+      "state": "both native architectures passed",
+      "arm64": {
+        "job_id": 125718454306,
+        "manifest_sha256": "d628c869ac97de43f7239d212152ea83bab3d879895d6ba037a70e3c01c7992d"
+      },
+      "x86_64": {
+        "job_id": 125718454639,
+        "manifest_sha256": "a422ee3d403303b38ff4b602056fe7207fc12edafe28625e8d65e0c5c8b8da74"
+      },
+      "each": "15 native records/129 original commands;12 CLI cases/18 strict refusals;retained authority/exact cleanup verified."
+    },
+    "full_linux_replay": {
+      "run_id": 41575668268,
+      "state": "x86 running;ARM queued at observation;prior8c89bc9 full replay passed on both architectures",
+      "native_jobs": {
+        "x86_64": 125721602008,
+        "arm64": 125721602334
+      },
+      "metadata_jobs": [
+        125721602311,
+        125721602506
+      ],
+      "fuzz_job": 125721602316
+    },
+    "stock_peers": {
+      "run_id": 41575667977,
+      "state": "all five entries passed",
+      "jobs": {
+        "intake-routing": 125718702125,
+        "captured-routing": 125718702345,
+        "arrivals-schedules": 125718702407,
+        "routing": 125718702435,
+        "handoff-routing": 125718702591
+      }
+    }
+  },
+  "preceding_full_linux_replay": {
+    "candidate": "8c89bc9a8001b8cd6c78ceb2eeea9f562c8dbf1c",
+    "run_id": 41574135083,
+    "arm_job_id": 125715904425,
+    "x86_job_id": 125715904722,
+    "postgres_each": {
+      "pass_records": 581,
+      "fail_records": 0,
+      "skip_records": 0
+    },
+    "engine_each": {
+      "pass_records": 223,
+      "fail_records": 0,
+      "skip_records": 1
+    },
+    "skip": "Existing unavailable privileged-port20 test stays visible and unqualified.",
+    "other": "Both metadata restores and nine fuzz targets passed.",
+    "source_comparison": "git diff between8c89bc9 and6634b3a is empty for cmd/internal/web/third_party,Go dependencies,.gitattributes,the native workflow and its Go/integration/PG/GnuPG/FTP fixture/provisioning inputs. This is an exact application/native-input match,not a completed6634b3a whole-commit run.",
+    "archive_reference": ".private/freightctl-native-581-8c89bc9/manifest.json",
+    "archive_sha256": "7ce09d66391a884ec258814ff10df3708c4dc8bc88fdc35c42eadd4a30e0f6f0",
+    "record_scope": "Pass records in the original integration.sh command include unit and real-PostgreSQL tests and parent/subcase records;these are not581independent customer journeys."
   }
 }
