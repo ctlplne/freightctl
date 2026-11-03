@@ -102,7 +102,7 @@
     "The selected CSV-only browser profile passes both modes. No signature/scanner selector is added here;existing configured requirements are preserved in implementation and Go/Node boundary checks,but signature/scanner-bearing UI edits remain a separate runtime gate.",
     "Stand-in FTPS client establishes selected TLS/protocol behavior;stock curl/lftp qualification remains separately required and runs in the same CI resource.",
     "Upload-ticket recovery,proactive FTPS sending/collection,Windows protected custody,broader protocols/platforms/HA/recovery and all83whole rows/12full journeys remain open.",
-    "The exact6634b3a full Linux replay is running/queued;all five same-candidate stock-peer entries pass. The preceding8c89bc9 full Go/PostgreSQL suites pass581 records each,with matching application/native-input bytes;223 engine passes and one visible privileged-port20 skip each. WindowsD103 remains red."
+    "Exact6634b3a full Linux suites pass581Go/PostgreSQL records each with no failures/skips,engine223passes/one visible privileged-port20 skip each,metadata/fuzz and all five stock peers pass. WindowsD103 remains red."
   ],
   "public_source_review": {
     "manifest_reference": ".private/freightctl-ftps-browser-public-review-219bf7c0944f4a3f8a5f9fef9afc3c0b/manifest.json",
@@ -236,7 +236,7 @@
     },
     "full_linux_replay": {
       "run_id": 41575668268,
-      "state": "x86 running;ARM queued at observation;prior8c89bc9 full replay passed on both architectures",
+      "state": "passed on both native architectures;581Go/PostgreSQL pass records each,zero failures/skips;engine223passes/one visible privileged-port20 skip each;metadata/fuzz passed",
       "native_jobs": {
         "x86_64": 125721602008,
         "arm64": 125721602334
@@ -245,7 +245,9 @@
         125721602311,
         125721602506
       ],
-      "fuzz_job": 125721602316
+      "fuzz_job": 125721602316,
+      "archive_reference": ".private/freightctl-native-581-6634b3a/manifest.json",
+      "archive_sha256": "fdcf6da1d141b82f4584d8901880dad4bb18750baad95928dd9d9de9d5c3c434"
     },
     "stock_peers": {
       "run_id": 41575667977,

@@ -63,7 +63,7 @@ A clean data completion and successful final reply mean that full length/digest 
 
 Ticket download is refused before and after completion, and the control directories cannot be enumerated. Retrieve only the approved ordinary destination. Failed data transfer drops an uncommitted tail, keeps committed checkpoints and cannot publish a partial file. The local native test restarts the FTPS listener and rejoins all its old handles; this is not yet a claim of process-kill, power-loss, multi-host or database recovery.
 
-The selected native ARM stand-in journey passes both FTPS modes with real PostgreSQL/storage. Stock lftp4.9.2/GnuTLS resume, bound completion and independently matched retrieval are prepared for native GitHub Linux ARM/x86. Those new stock ticket paths remain unqualified until the original run succeeds; existing ordinary curl/lftp qualification does not substitute for them.
+The selected native ARM stand-in journey passes both FTPS modes with real PostgreSQL/storage. At `8e01a30`, stock lftp4.9.2/GnuTLS resume, bound completion and independently matched retrieval pass on native GitHub Linux ARM/x86 in both listener modes ([F064](../qualification/evidence/F064-ftps-upload-tickets.json)). This qualifies the selected controlled ticket component; public process-kill/browser ticket journeys and broader recovery remain open.
 
 ## Bounds and evidence
 

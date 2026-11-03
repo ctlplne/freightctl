@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "F064",
   "observed_at": "2026-11-02",
-  "state": "selected native ARM stand-in verified;stock native Linux ticket replay pending",
+  "state": "selected native Linux ARM/x86 stock ticket component verified;whole goal remains open",
   "starting_commit": "68b7e371fe648a1ac9cbfed6f42a2df7d440eeef",
   "scope": "Actor-owned immutable upload tickets through explicit/implicit FTPS;real PostgreSQL/storage/TLS client;CSV hold/check/release. No whole parity row or journey qualifies.",
   "product_change": [
@@ -60,17 +60,42 @@
     "source_patch_inventory": "35upstream files/8modified/3added tests;MIT preserved"
   },
   "native_profile": {
-    "state": "prepared;actual GitHub execution required",
+    "state": "passed on both native Linux architectures;all required parent/subcase records executed with no failures/skips",
     "required_pass_records": 21,
     "limited_pass_records": 12,
     "new_stock_parent": "TestFTPSStockLFTPUploadTicket",
-    "stock_cases": "API commits a real64KiB prefix;stock lftp put -c resumes,performs bound completion replay;Go validates/releases the exact CSV;stock lftp independently retrieves identical bytes. Both modes/architectures required.",
-    "whole_journeys_qualified": false
+    "stock_cases": "Real64KiB prefix;actual stock lftp4.9.2/GnuTLS put -c resume and bound completion replay;exact CSV validation/release;independently reopened original stock-client download matches all bytes. Both listener modes on both architectures pass.",
+    "whole_journeys_qualified": false,
+    "candidate": "8e01a30710156c6eff5f721869acc656032ef868",
+    "run_id": 41580438067,
+    "url": "https://github.com/ctlplne/freightctl/actions/runs/41580438067",
+    "arm64": {
+      "job_id": 125733749068,
+      "manifest_sha256": "022a608fedd49142be6a15163480f733475829a7457496d586198a5b0314b43c"
+    },
+    "x86_64": {
+      "job_id": 125733748785,
+      "manifest_sha256": "25eb4bd8cedbe18b3cc1cb392ab947d6c81eb3708a31fba78673a6a69bdb17fd"
+    },
+    "each": {
+      "native_pass_records": 21,
+      "native_fail_records": 0,
+      "native_skip_records": 0,
+      "original_commands": 129,
+      "public_cli_governance_cases": 12,
+      "strict_cli_refusals": 18,
+      "source_inputs": 674,
+      "stock_curl_qualified": true,
+      "stock_lftp_qualified": true,
+      "retained_authority_unchanged": true,
+      "isolated_database_removed": true,
+      "original_resource_state_restored": true
+    }
   },
   "limits": [
     "Selected listener restart is not an application SIGKILL,power-loss or clean-host recovery claim.",
     "Public API/CLI ticket creation already shares custody;the new selected Go journey coordinates its controller through the service. Full public operator/browser/process-restart ticket journeys remain required.",
-    "Native stock Linux ARM/x86 and full regression replay pending. WindowsD103,broader clients/networks,scale/HA,outbound FTPS and all83whole rows/12full journeys remain open.",
+    "Both native stock Linux architectures and original browser regression pass. Exact full Linux replay remains running. WindowsD103,broader clients/networks,scale/HA,outbound FTPS and all83whole rows/12full journeys remain open.",
     "Local inference remains off;scanner and owner-deferred F026 aggregate are not run."
   ],
   "public_source_review": {
@@ -80,5 +105,53 @@
     "exit_code": 0,
     "scanner": "Gitleaks8.30.1 native ARM",
     "scope": "All public source inputs before appending this result;private estate excluded;rules unchanged"
+  },
+  "verified_at": "2026-11-03",
+  "browser_regression": {
+    "candidate": "8e01a30710156c6eff5f721869acc656032ef868",
+    "run_id": 41580438161,
+    "job_id": 125733749312,
+    "state": "passed",
+    "manifest_sha256": "46e21d42c7034f2fba4d48bafc2dd44507f41a2796127215d5d19e1ae29193ca",
+    "native_pass_records": 21,
+    "browser_cases": 12,
+    "strict_browser_api_refusals": 2,
+    "original_commands": 140,
+    "source_inputs": 674,
+    "retained_authority_unchanged": true,
+    "isolated_database_removed": true,
+    "original_resource_state_restored": true,
+    "scope": "Original F063 credential/intake browser journeys on the new ticket-enabled application;not a browser ticket/SIGKILL qualification."
+  },
+  "other_current_gates": {
+    "source": {
+      "run_id": 41580438159,
+      "job_id": 125733748959,
+      "state": "passed",
+      "frontend_contracts": 112,
+      "ftps_evidence_refusal_contracts": 26,
+      "dependency_reachability_and_source_history_secret_scans": "passed"
+    },
+    "full_linux": {
+      "run_id": 41580438130,
+      "state": "running;follow existing handles",
+      "arm_job_id": 125733749822,
+      "x86_job_id": 125733749414
+    },
+    "metadata_fuzz": "both schema35 restores and nine fuzz targets passed",
+    "stock_peer_run_id": 41580438126,
+    "stock_peer_state": "all five passed",
+    "mac_job_id": 125733750159,
+    "mac_state": "passed",
+    "windows_job_id": 125733749927,
+    "windows_state": "failed;D103 remains open",
+    "windows_failed_test_subcase_records": 22,
+    "windows_archive_reference": ".private/freightctl-windows-d103-8e01a30/manifest.json",
+    "windows_archive_sha256": "ea264951b0b052b46d44e3e6996cbf8c80a33848869abd2d5b37fdf7d0ce78f3"
+  },
+  "native_archive": {
+    "manifest_reference": ".private/freightctl-ftps-tickets-qualified-8e01a30/manifest.json",
+    "manifest_sha256": "a14045f3b50ef9476b6d59ab40006f0b7436170bd536e208b5a63f3f20350831",
+    "scope": "Complete original native ARM/x86 FTPS,source/security and x86 browser job logs preserved locally;raw fixture artifacts are not uploaded."
   }
 }
