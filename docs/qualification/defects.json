@@ -1948,6 +1948,21 @@
       "regression_evidence": [
         "docs/qualification/evidence/F058-ftps-receiving.json"
       ]
+    },
+    {
+      "id": "D121",
+      "severity": "full native upstream-engine gate blocker",
+      "state": "fixed locally; original native replay pending",
+      "observed_on": "2026-11-02",
+      "candidate": "bef49ed36cad6e407b66e5fd109e18561e420edc",
+      "journey": "Native ARM/x86 pinned FTP engine before full PostgreSQL suite",
+      "title": "Upstream test conflated invalid address-family syntax with cross-peer validation",
+      "first_failure": "Both native TestBogusTransferStart cases expected the peer-security message for EPRT |1|::1|2000|; the stricter parser correctly returned a family syntax error.",
+      "cause": "The original test also accepted that malformed request when generic IP checking was disabled. The new RFC2428 parser enforces address family independently.",
+      "resolution": "Preserve malformed-family refusal with exact syntax assertions, retain the original cross-peer assertion using a valid IPv6 family, and test both parsing and valid-family behavior when the generic engine peer check is disabled. Product parser and peer policy remain unchanged. Three focused native ARM race tests and the source-pin contracts pass; full original native replay is pending.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F059-native-ftps-stock.json"
+      ]
     }
   ]
 }

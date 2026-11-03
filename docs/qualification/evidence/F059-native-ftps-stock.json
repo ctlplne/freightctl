@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "id": "F059",
+  "kind": "native-arm-x86-stock-ftps-and-upstream-test-repair",
+  "state": "dedicated stock FTPS qualified on both native architectures; full native workflow red at D121; focused repair passed locally and awaits original replay",
+  "observed_on": "2026-11-02",
+  "candidate": "bef49ed36cad6e407b66e5fd109e18561e420edc",
+  "author_and_committer": "imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>",
+  "native_ftps": {
+    "run_id": 41554473102,
+    "url": "https://github.com/ctlplne/freightctl/actions/runs/41554473102",
+    "state": "success",
+    "jobs": [
+      {
+        "id": 125649877397,
+        "architecture": "x86_64",
+        "manifest_sha256": "de79c581ae71f43db06cc4baddfb6a211ac20b5317667b61afb9674b71e8d677"
+      },
+      {
+        "id": 125649877841,
+        "architecture": "arm64",
+        "manifest_sha256": "be1901c71240bbbd9cb4440dda6b8ee05b9d9adee7755de169b691043c4f1b1f"
+      }
+    ],
+    "stock_client": "curl8.5.0/OpenSSL3.0.13;native x86_64-pc-linux-gnu and aarch64-unknown-linux-gnu",
+    "python_tls": "OpenSSL3.0.13;explicit-session-reuse hostile-client stand-in",
+    "native_test_pass_records_each": 6,
+    "native_commands_each": 38,
+    "source_inputs_each": 651,
+    "stock_curl_qualified": true,
+    "retained_metadata_and_roles_unchanged": true,
+    "isolated_database_removed": true,
+    "original_resource_state_restored": true,
+    "scope": "Synthetic same-host FTPS receiving/authenticated retrieval with actual application/PostgreSQL/storage, both public CLI modes, stock curl, binary bytes, TLS1.2 refusal and native hostile-client cases. No proactive FTPS sending or whole-journey qualification."
+  },
+  "full_native": {
+    "run_id": 41554473118,
+    "state": "failure",
+    "jobs": [
+      125649877701,
+      125649878142
+    ],
+    "engine_pass_records_each": 222,
+    "engine_fail_records_each": 1,
+    "engine_skip_records_each": 1,
+    "failure": "TestBogusTransferStart expected a cross-peer error for an EPRT IPv6 address incorrectly declared as IPv4; stricter parser correctly refused the malformed family earlier.",
+    "skip": "TestActiveTransferFromPort20; privileged legacy port unavailable. This skip remains visible; the product uses explicit unprivileged active callbacks.",
+    "postgres_integration_after_engine": "not executed because the earlier engine step failed; no new full-suite pass is claimed",
+    "metadata_jobs": [
+      125649877749,
+      125649877936
+    ],
+    "metadata_state": "both schema35 jobs passed",
+    "fuzz_job": 125649878017,
+    "fuzz_targets": 9,
+    "fuzz_state": "passed"
+  },
+  "other_jobs": {
+    "source_security_frontend": {
+      "run_id": 41554473475,
+      "job_id": 125649878623,
+      "state": "success",
+      "browser_contracts": 108,
+      "record_and_evidence_refusal_tests": 61
+    },
+    "stock_peers": {
+      "run_id": 41554473123,
+      "state": "all five entries passed",
+      "jobs": [
+        125649877417,
+        125649877708,
+        125649877780,
+        125649877796,
+        125649877892
+      ]
+    },
+    "platforms": {
+      "run_id": 41554473124,
+      "mac_job": 125649877552,
+      "mac_state": "success",
+      "windows_job": 125649877900,
+      "windows_state": "failure",
+      "windows_failed_tests_or_subcases": 22,
+      "defect": "D103"
+    }
+  },
+  "protected_native_logs": {
+    "reference": ".private/freightctl-ftps-native-bef49ed-1b4fb432953b40cd8d8d281d203380e7/manifest.json",
+    "sha256": "ab25e0f4402b7bb26058183fc8a63dc4def463de3d5c4518e61f66cb37b25af1"
+  },
+  "repair": {
+    "defect": "D121",
+    "production_parser_or_peer_policy_changed": false,
+    "changes": [
+      "Keep the malformed IPv4-family/IPv6-address request and require its exact syntax-error category.",
+      "Use a valid IPv6-family request to retain the original cross-peer security-error assertion.",
+      "Prove malformed families still fail even when the generic test engine explicitly disables peer checking; retain valid-family acceptance in that generic-only option.",
+      "Record the eighth modified upstream file in the source pin; product peer checking remains enabled."
+    ],
+    "local_verification": "Native ARM real loopback/race: TestBogusTransferStart and both active-parser tests passed; four source-pin refusal tests passed. Full engine/native PostgreSQL replay remains required.",
+    "implementation_sha256": [
+      {
+        "path": "third_party/ftpserverlib/transfer_test.go",
+        "sha256": "d7bab48b17d5c3f6cb6a0c86f3a665ac3006f9028949abbaa7aff0ca1edfad34"
+      },
+      {
+        "path": "third_party/ftpserverlib/UPSTREAM.json",
+        "sha256": "6caeea696c8dcb3ec611e11da270fd870c0d112ef7213ae31f69449e9145da44"
+      },
+      {
+        "path": "scripts/check-ftp-engine.py",
+        "sha256": "16da6d7e0e26a48570c694a8dc69c53071107bbddb5c8f9e86a52645ecf7ab37"
+      }
+    ]
+  },
+  "inference_performed": false,
+  "scanner_engine_started": false,
+  "full_foundation_aggregate_executed": false,
+  "full_journeys_qualified": false,
+  "overall_goal_complete": false,
+  "limits": [
+    "This stock result qualifies the declared synthetic receiving/retrieval component on the two Linux client builds only; Mac curl/LibreSSL remains refused and unqualified.",
+    "Full native workflow remains failed until D121 replays; the privileged-port skip and WindowsD103 stay visible. No old failed job becomes a retrospective pass.",
+    "Active lifecycle/intake/ticket recovery, additional clients/protocols, proactive sending/collection, larger/longer/crash/production deployments, all83whole rows/12full journeys, privateAI, adoption and enterprise gates remain open."
+  ]
+}

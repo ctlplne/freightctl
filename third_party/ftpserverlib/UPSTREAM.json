@@ -163,7 +163,7 @@
     {
       "path": "transfer_test.go",
       "upstream_sha256": "6266f657f8249d4f8599717a4aed98263ce27ae9909bf21a8bbb87bb147db5b6",
-      "local_sha256": "6266f657f8249d4f8599717a4aed98263ce27ae9909bf21a8bbb87bb147db5b6"
+      "local_sha256": "d7bab48b17d5c3f6cb6a0c86f3a665ac3006f9028949abbaa7aff0ca1edfad34"
     },
     {
       "path": "go.mod",
@@ -199,6 +199,7 @@
     "Explicit numeric passive bind before socket creation; incompatible port multiplexing is refused.",
     "A refusal-only command policy hook and an active-socket wrapper give the adapter policy and cancellation control.",
     "PORT/EPRT construct numeric endpoints without DNS; EPRT honors RFC2428 delimiters and address families. PROT handles letter case consistently with the application policy.",
-    "Upstream TLS tests generate a fresh ephemeral identity instead of committing a reusable private key. New tests cover the local changes."
+    "Upstream TLS tests generate a fresh ephemeral identity instead of committing a reusable private key. New tests cover the local changes.",
+    "Expand TestBogusTransferStart to assert syntax refusal for a mismatched address family, preserve the valid-family peer-refusal assertion, and prove that disabling the generic engine peer check never relaxes parsing. Product peer policy is unchanged."
   ]
 }

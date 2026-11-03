@@ -7,7 +7,7 @@ import re
 
 ROOT = Path(__file__).resolve().parents[1]
 DIRECTORY = ROOT / "third_party/ftpserverlib"
-CHANGED = {"driver.go", "server.go", "transfer_pasv.go", "client_handler.go", "transfer_active.go", "handle_misc.go", "driver_test.go"}
+CHANGED = {"driver.go", "server.go", "transfer_pasv.go", "client_handler.go", "transfer_active.go", "handle_misc.go", "driver_test.go", "transfer_test.go"}
 ADDED = {"freightctl_active_test.go", "freightctl_passive_test.go", "freightctl_tls_fixture_test.go"}
 
 
@@ -44,7 +44,7 @@ def verify(directory=DIRECTORY):
             raise ValueError("FTP patch test bytes differ")
     if {p.name for p in directory.iterdir()} != names | ADDED | {"UPSTREAM.json", "FREIGHTCTL.md"}:
         raise ValueError("unrecorded FTP dependency input")
-    print("Pinned FTP engine:35 upstream files,7 modified files,3 added tests; MIT license preserved. No runtime claim inferred.")
+    print(f"Pinned FTP engine:35 upstream files,{len(CHANGED)} modified files,3 added tests; MIT license preserved. No runtime claim inferred.")
 
 
 if __name__ == "__main__":

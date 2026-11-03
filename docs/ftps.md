@@ -2,7 +2,7 @@
 
 `serve-ftps` receives uploads and serves authenticated downloads through the same PostgreSQL, namespace, permissions, immutable revisions and intake policy used by the other transfer interfaces. Explicit mode starts with a plaintext greeting and requires `AUTH TLS` before login. `--ftps-implicit` negotiates TLS before the greeting. Both control and data connections require TLS1.3.
 
-This is an implementation under qualification. Native ARM application/database/storage journeys pass with the Python TLS client stand-in. The macOS system curl8.7.1/LibreSSL3.3.6 pairing does not resume its TLS1.3 control session for data and is refused. Native Linux stock-curl and full engine replay are GitHub gates; they do not pass merely because this document or the implementation exists. Windows D103, production networking and the complete FTPS parity rows remain open.
+This is an implementation under qualification. Native ARM application/database/storage journeys pass with the Python TLS client stand-in. The macOS system curl8.7.1/LibreSSL3.3.6 pairing does not resume its TLS1.3 control session for data and is refused. The dedicated native Linux ARM/x86 stock-curl jobs pass atbef49ed in F059. The full native workflows remain red at D121 before PostgreSQL integration and require replay after its test-contract repair. These component results do not close a full parity row. Windows D103, production networking and the complete FTPS parity rows remain open.
 
 ## Start a loopback server
 

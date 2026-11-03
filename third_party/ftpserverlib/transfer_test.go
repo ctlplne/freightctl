@@ -452,8 +452,16 @@ func TestBogusTransferStart(t *testing.T) {
 		require.Equal(t, StatusSyntaxErrorParameters, status, resp)
 	}
 
-	{ // good request but unacceptable ip address
+	{ // IPv6 cannot be declared as the IPv4 address family.
 		status, resp, err := returnCode.SendCommand("EPRT |1|::1|2000|")
+		require.NoError(t, err)
+		require.Equal(t, StatusSyntaxErrorParameters, status, resp)
+		require.Contains(t, resp, "Problem parsing")
+		require.Contains(t, resp, "remote address has a bad format")
+	}
+
+	{ // valid address family, but a different control/data peer
+		status, resp, err := returnCode.SendCommand("EPRT |2|::1|2000|")
 		require.NoError(t, err)
 		require.Equal(t, StatusSyntaxErrorParameters, status, resp)
 		require.Contains(t, resp, "Your request does not meet the configured security requirements")
@@ -461,8 +469,16 @@ func TestBogusTransferStart(t *testing.T) {
 
 	server.settings.ActiveConnectionsCheck = IPMatchDisabled
 
-	{ // We end-up on a positive note
+	{ // Disabling the peer check cannot disable address-family parsing.
 		status, resp, err := returnCode.SendCommand("EPRT |1|::1|2000|")
+		require.NoError(t, err)
+		require.Equal(t, StatusSyntaxErrorParameters, status, resp)
+		require.Contains(t, resp, "Problem parsing")
+		require.Contains(t, resp, "remote address has a bad format")
+	}
+
+	{ // The generic engine's explicit peer-check-disabled option accepts a valid family.
+		status, resp, err := returnCode.SendCommand("EPRT |2|::1|2000|")
 		require.NoError(t, err)
 		require.Equal(t, StatusOK, status, resp)
 	}
