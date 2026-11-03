@@ -123,9 +123,9 @@ def main():
             argv=["sudo","python3","-c",SUPERVISOR,openssl,receiver,path]
             if traced:
                 trace=private/(mode+"-receiver.trace");trace.touch(mode=0o600,exist_ok=False)
-                # Only process/resource calls and signals; no read/write buffers,
-                # payloads,password packets or environment values are traced.
-                argv=["sudo","python3","-c",SUPERVISOR,openssl,"strace","-f","-e","trace=process,prlimit64,setrlimit,chroot,setuid,setresuid,setgid,setresgid,setgroups","-o",trace,receiver,path]
+                # Trace raw numeric syscall arguments (pointers,not decoded
+                # buffers/strings),so a seccomp-killed call is not filtered out.
+                argv=["sudo","python3","-c",SUPERVISOR,openssl,"strace","-f","-n","-e","raw=all","-o",trace,receiver,path]
             process=subprocess.Popen(list(map(str,argv)),stdin=subprocess.PIPE,stdout=out,stderr=err,env=env,start_new_session=True);processes[mode+"-receiver"]=(process,out,err)
             deadline=time.monotonic()+10
             while True:

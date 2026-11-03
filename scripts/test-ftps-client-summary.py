@@ -151,5 +151,11 @@ class ReceiverEvidence(unittest.TestCase):
         (self.directory/"explicit-receiver.trace").write_text('--- SIGSEGV ---\n')
         self.assertNotIn("trace_categories",summary.failure_diagnostics(self.root,self.result,"b"*40))
 
+    def test_raw_trace_binds_numeric_signal_and_last_syscall_to_same_process(self):
+        data=b'123 [ 278] getrandom(0x1234, 0x10, 0) = ?\n124 [ 56] openat(0,0,0) = 3\n123 [ 278] +++ killed by SIGSYS +++\n--- SIGSYS {si_syscall=0x116} ---\n--- SIGSYS {si_syscall=99999999} ---\n'
+        (self.directory/"explicit-receiver.trace").write_bytes(data);self.m["trace_sha256"]={"explicit":self.sha(data)};self.write()
+        result=summary.failure_diagnostics(self.root,self.result,"b"*40)
+        self.assertEqual(result["trace_categories"],["explicit:SIGSYS","explicit:last-syscall-before-SIGSYS:278","explicit:syscall-number:278"])
+
 
 if __name__=="__main__":unittest.main()

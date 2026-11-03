@@ -119,6 +119,16 @@ def failure_diagnostics(root,result,commit):
                 if signal in text:trace_categories.append(mode+":"+signal)
             for name in re.findall(r"si_syscall=__NR_([a-z0-9_]{1,64})",text):
                 trace_categories.append(mode+":syscall:"+(name if name in trace_syscalls else "other"))
+            for number in re.findall(r"si_syscall=(0x[0-9a-f]{1,8}|[0-9]{1,8})\b",text):
+                value=int(number,16 if number.startswith("0x") else 10)
+                if value<4096:trace_categories.append(mode+":syscall-number:"+str(value))
+            last={}
+            for line in text.splitlines():
+                match=re.match(r"\s*(?:\[pid\s+)?([0-9]{1,10})\]?\s+(?:\[\s*([0-9]{1,4})\]\s+)?",line)
+                if not match:continue
+                pid,number=match.groups()
+                if number is not None and int(number)<4096 and (pid in last or len(last)<256):last[pid]=int(number)
+                if "killed by SIGSYS" in line and pid in last:trace_categories.append(mode+":last-syscall-before-SIGSYS:"+str(last[pid]))
             for name,errno in re.findall(r"\b([a-z0-9_]{1,64})\([^\n]*\)\s*= -1 (EPERM|ENOMEM|EAGAIN|EACCES)\b",text):
                 if name in trace_syscalls:trace_categories.append(mode+":"+name+":"+errno)
         if trace_categories:result["trace_categories"]=sorted(set(trace_categories))[:32]

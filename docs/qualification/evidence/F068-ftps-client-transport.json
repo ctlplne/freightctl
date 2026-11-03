@@ -43,7 +43,7 @@
       "manifest_sha256": "441f321bf74402bf956f1bc040136e980ece606fd8a4f39fb8db58f1b2a17a8f",
       "state": "bind operation denied;original suite replay passed with loopback access"
     },
-    "latest_synthetic_evidence_tampering_contracts": 15,
+    "latest_synthetic_evidence_tampering_contracts": 16,
     "latest_contract_note": "Ten current bookkeeping/privacy refusal contracts pass;the48record native transport race archive remains unchanged. Runtime stock evidence remains failed at receiver startup.",
     "latest_original_replay": {
       "manifest_reference": ".private/freightctl-ftps-phase-replay-4dfa69d54eec47fea6aec7bbd8adb946/manifest.json",
@@ -122,7 +122,22 @@
       },
       "cause": "unobserved;native process/resource diagnostic needed"
     },
-    "failure_only_trace": "If the original qualifier fails,run a new isolated diagnostic fixture with process/resource-only strace and identical budgets/policy. Keep trace buffers private and bind hashes to its manifest. Public output is restricted to fixed signals,known syscall names and fixed errno categories. receiver_traced=true forces diagnostic state and cannot qualify the untraced receiver,even if all cases pass. Original untraced outcome remains red;normal ARM/x86 replay is mandatory."
+    "failure_only_trace": "If the original qualifier fails,run a new isolated diagnostic fixture with raw-number/undecoded-argument strace and identical budgets/policy. Keep trace buffers private and bind hashes to its manifest. Public output is restricted to fixed signals,known syscall names and fixed errno categories. receiver_traced=true forces diagnostic state and cannot qualify the untraced receiver,even if all cases pass. Original untraced outcome remains red;normal ARM/x86 replay is mandatory.",
+    "first_sigsys_diagnostic": {
+      "candidate": "f0f457e92e0cbe51c095581140766282c9b91006",
+      "run_id": 41598782077,
+      "arm_job_id": 125792310140,
+      "x86_job_id": 125792310314,
+      "arm_state": "original profile fails exact explicit TLS1.2 refusal;separate diagnostic receiver terminates withSIGSYS",
+      "traced_manifest_sha256": "0e4d5ea66bf7ca23457acf8c28b23f738a9e2c9ab8fa5d2063cf70152a678f48",
+      "exact_syscall": "unobserved because selected-call tracing omitted it",
+      "archive": {
+        "manifest_reference": ".private/freightctl-ftps-sigsys-first-f0f457e/manifest.json",
+        "manifest_sha256": "c3890231509a0aa903fb4d837a61f7e522933e797ef90e7adc994b4541770cd0"
+      },
+      "next_diagnostic": "Trace all syscall numbers with raw undecoded arguments;do not decode read/write buffers,argv strings or environment values. Emit bounded numeric syscall/last-call-before-SIGSYS observations only. Last-call metadata is not itself proof of the denied call.",
+      "raw_trace_retention": "private on disposable runner;not uploaded;safe categories and original job-log/hash retained"
+    }
   },
   "next_integration": "docs/protocols/ftps-sending.md",
   "inference_performed": false,
