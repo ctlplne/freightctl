@@ -125,5 +125,29 @@
     "record_refusal_contracts": 15,
     "workflow_syntax": "passed",
     "format_and_diff": "passed"
+  },
+  "native_replay": {
+    "candidate": "b115b314b28d0f0806d0f053fe660eaa3c45cca8",
+    "state": "ARM running;x86 queued at observation;follow existing handles",
+    "ftps_run_id": 41566574013,
+    "ftps_url": "https://github.com/ctlplne/freightctl/actions/runs/41566574013",
+    "ftps_jobs": {
+      "arm64": 125689457458,
+      "x86_64": 125689457624
+    },
+    "native_linux_run_id": 41566573943,
+    "native_linux_jobs": {
+      "arm64": 125689457484,
+      "x86_64": 125689457410
+    },
+    "metadata_jobs": [
+      125689457542,
+      125689457634
+    ],
+    "fuzz_job": 125689457308,
+    "core_run_id": 41566574002,
+    "core_job": 125689456876,
+    "stock_run_id": 41566573950,
+    "platform_run_id": 41566573989
   }
 }
