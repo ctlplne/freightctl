@@ -216,6 +216,22 @@
       "qualification": "Run original untraced vsftpd/PAM profile with exact library version/linkage/artifact/source/build-output binding and every original trust,TLS1.3,reuse,shutdown,probe,byte,cleanup and resource gate. Source variant uses22commands;system profile still uses20.",
       "original_profile_retained": "Both original system-library jobs remain in the same matrix;the x86 red gate is retained,not skipped or replaced. A source-variant pass cannot qualify the system-library profile.",
       "local_tests": "26synthetic evidence/privacy/permission contracts,Python syntax,workflow lint and records pass;no compiler/receiver/model/scanner/database started locally for this addition."
+    },
+    "first_library_build_failure": {
+      "candidate": "791aaddf7b221a5780be78876087bc797a145ebf",
+      "run_id": 41607760972,
+      "x86_job_id": 125821754046,
+      "arm_job_id": 125821754216,
+      "state": "both fail build before selected upstream recipes;first safe output omitted exact exit status",
+      "x86_manifest_sha256": "16aa8d8fb6fe5dd6ddf798f1df2dd6ce5dc7c471a296583a93498a12ca4f55fd",
+      "arm_manifest_sha256": "a12416025f7964352ef2ec0e994a7d26641a51483fd9fcc4ae91af58928fd12c",
+      "archive": {
+        "manifest_reference": ".private/freightctl-ftps-library-build-first-791aadd/manifest.json",
+        "manifest_sha256": "c80cf606845b2ac0d8e5aeef4d071899a0471ade899e120b3959ab03745734ca"
+      },
+      "repair": "Use upstream build_generated/build_libs/build_modules plus exactopenssl,sslapitest,ssl_test,fips_version_test tools and link-utils;run the same complete three original recipes with upstreamrun_tests. Stage only the private receiver libraries/app/header/license so install_sw cannot rebuild every program. Expose failed command exit status. Keep one CPU,360second build,180second recipe and20minute job deadlines unchanged.",
+      "source_contract": "https://raw.githubusercontent.com/openssl/openssl/openssl-3.5.9/Configurations/unix-Makefile.tmpl",
+      "runtime_state": "pending original native replay;no source-library qualification"
     }
   },
   "next_integration": "docs/protocols/ftps-sending.md",

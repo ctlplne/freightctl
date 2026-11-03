@@ -2209,6 +2209,21 @@
       "regression_evidence": [
         "docs/qualification/evidence/F068-ftps-client-transport.json"
       ]
+    },
+    {
+      "id": "D137",
+      "severity": "native receiver dependency qualification build failure",
+      "state": "open;target selection refined;original native replay pending",
+      "observed_on": "2026-11-03",
+      "candidate": "791aaddf7b221a5780be78876087bc797a145ebf",
+      "journey": "Native pinned receiver TLS build and original upstream recipes",
+      "title": "Native OpenSSL build fails before the selected recipes run",
+      "first_failure": "Both actual architectures fail the build phase before any selected recipe or stock receiver qualification. F068 retains original job logs/runner manifest hashes. Exact exit status was omitted by the first safe report;deadline exhaustion remains inference.",
+      "cause": "Upstream build_sw/build_tests build every program;make test and install_sw also depend on the full program set. This is more compilation than the three named recipes require. The exact first termination status remains unobserved.",
+      "resolution": "Build the libraries/modules/generated files and exact required test/CLI tools,run all three unchanged complete original recipes through upstreamrun_tests,and stage only private runtime files plus license. Emit failed command exit status. Keep all CPU,time,protocol,byte and cleanup gates;no tests-disabled flag or recipe exclusion. Native replay remains required.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F068-ftps-client-transport.json"
+      ]
     }
   ]
 }

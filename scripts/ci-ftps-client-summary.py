@@ -14,7 +14,7 @@ REQUIRED={"go-version","receiver-version","receiver-library-versions","build","t
 OPENSSL_PROFILE=b"config_diagnostics=1\nopenssl_conf=freightctl_init\n[freightctl_init]\nssl_conf=freightctl_ssl\n[freightctl_ssl]\nsystem_default=freightctl_tls\n[freightctl_tls]\nMinProtocol=TLSv1.3\nMaxProtocol=TLSv1.3\nOptions=-KTLS\n"
 LIBRARY_BASE=".cache/freightctl-openssl-3.5.9-no-ktls"
 LIBRARY_SOURCE_SHA="603f5602e2eef00d77fbd429d34dcd5822bb301757a1bc9cdb24c670f1eb859a"
-LIBRARY_FILES={"prefix/lib/libssl.so.3","prefix/lib/libcrypto.so.3","prefix/bin/openssl","prefix/include/openssl/configuration.h"}
+LIBRARY_FILES={"prefix/lib/libssl.so.3","prefix/lib/libcrypto.so.3","prefix/bin/openssl","prefix/include/openssl/configuration.h","prefix/LICENSE.txt"}
 LIBRARY_STEPS={"native-compiler","compiler-version","configure","build","selected-upstream-tests","install","installed-version"}
 CUSTOM_COMMANDS={"selected-library-version","selected-library-linkage"}
 

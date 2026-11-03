@@ -16,7 +16,18 @@ ROOT=Path(__file__).resolve().parents[1]
 VERSION="3.5.9"
 SHA256="603f5602e2eef00d77fbd429d34dcd5822bb301757a1bc9cdb24c670f1eb859a"
 URL="https://github.com/openssl/openssl/releases/download/openssl-3.5.9/openssl-3.5.9.tar.gz"
-FILES=("prefix/lib/libssl.so.3","prefix/lib/libcrypto.so.3","prefix/bin/openssl","prefix/include/openssl/configuration.h")
+FILES=("prefix/lib/libssl.so.3","prefix/lib/libcrypto.so.3","prefix/bin/openssl","prefix/include/openssl/configuration.h","prefix/LICENSE.txt")
+STAGE=r'''
+import json,pathlib,shutil,sys
+source,prefix=map(pathlib.Path,sys.argv[1:])
+files={'lib/libssl.so.3':'libssl.so.3','lib/libcrypto.so.3':'libcrypto.so.3','bin/openssl':'apps/openssl','include/openssl/configuration.h':'include/openssl/configuration.h','LICENSE.txt':'LICENSE.txt'}
+for target,original in files.items():
+ path=prefix/target;path.parent.mkdir(mode=0o700,parents=True,exist_ok=True)
+ f=source/original
+ if f.is_symlink() or not f.is_file():raise RuntimeError('receiver artifact is not a regular build output')
+ shutil.copyfile(f,path);path.chmod(0o755 if target=='bin/openssl' else 0o644)
+print(json.dumps({'staged_files':sorted(files),'scope':'private receiver runtime only'}))
+'''
 
 
 def digest(path):
@@ -75,13 +86,15 @@ def main():
         phase="configure"
         command("configure",["perl","Configure","shared","no-ktls","--prefix="+str(prefix),"--libdir=lib"],60,source)
         phase="build"
-        command("build",["make","-j1","build_sw","build_tests"],360,source)
+        # OpenSSL's build_sw/build_tests include every test executable. Build
+        # the exact tools needed by the same three complete original recipes.
+        command("build",["make","-j1","build_generated","build_libs","build_modules","apps/openssl","test/sslapitest","test/ssl_test","test/fips_version_test","link-utils"],360,source)
         phase="selected-upstream-tests"
-        output=command("selected-upstream-tests",["make","-j1","test","TESTS=test_verify test_ssl_new test_sslapi","VERBOSE=1"],180,source)
+        output=command("selected-upstream-tests",["make","-j1","run_tests","TESTS=test_verify test_ssl_new test_sslapi","VERBOSE=1"],180,source)
         if "Result: PASS" not in output or any(name not in output for name in ("25-test_verify.t","80-test_ssl_new.t","90-test_sslapi.t")):raise RuntimeError("selected native upstream recipes incomplete")
         m["upstream_skip_lines"]=len(re.findall(r"^.*#\s*(?:skip|SKIP)\b",output,re.MULTILINE))
         phase="install"
-        command("install",["make","-j1","install_sw"],60,source)
+        command("install",["python3","-c",STAGE,source,prefix],60,source)
         env["LD_LIBRARY_PATH"]=str(prefix/"lib")
         phase="installed-version"
         version=command("installed-version",[prefix/"bin/openssl","version","-a"],10)
@@ -96,7 +109,7 @@ def main():
         path=base/"manifest.json"
         with path.open("x") as out:json.dump(m,out,indent=2);out.write("\n");out.flush();os.fsync(out.fileno())
         fd=os.open(base,os.O_RDONLY);os.fsync(fd);os.close(fd)
-    print(json.dumps({"state":m["state"],"profile":"openssl-3.5.9-no-ktls","architecture":platform.machine(),"manifest_sha256":digest(path),"source_sha256":SHA256,"upstream_skip_lines":m.get("upstream_skip_lines"),"failure_stage":m.get("failure_stage"),"failed_commands":[s["name"] for s in steps if s["exit_code"]!=0],"scope":"native receiver dependency build and three selected upstream recipes;not protocol,system-library or FIPS qualification"}))
+    print(json.dumps({"state":m["state"],"profile":"openssl-3.5.9-no-ktls","architecture":platform.machine(),"manifest_sha256":digest(path),"source_sha256":SHA256,"upstream_skip_lines":m.get("upstream_skip_lines"),"failure_stage":m.get("failure_stage"),"failed_commands":[{"name":s["name"],"exit_code":s["exit_code"]} for s in steps if s["exit_code"]!=0],"scope":"native receiver dependency build and three selected upstream recipes;not protocol,system-library or FIPS qualification"}))
     return 0 if m["state"]=="passed" else 1
 
 
