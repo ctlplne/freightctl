@@ -8,6 +8,7 @@ import tempfile
 import unittest
 import os
 import shutil
+from ftps_receiver_witness import FilterWitness,seal_transfer_logs
 
 spec=importlib.util.spec_from_file_location("summary",Path(__file__).with_name("ci-ftps-client-summary.py"))
 summary=importlib.util.module_from_spec(spec);spec.loader.exec_module(summary)
@@ -28,11 +29,19 @@ class ReceiverEvidence(unittest.TestCase):
         for name in ("inference_performed","scanner_started","postgres_started","domain_delivery_qualified","full_journeys_qualified"):self.m[name]=False
         self.files={mode+"-"+suffix:{"size":len(b),"sha256":self.sha(b)} for mode in ("explicit","implicit") for suffix,b in (("final.csv",summary.PAYLOAD),("resume.csv",summary.PAYLOAD),("empty",b""))}
         self.m["receiver_files"]=self.files
+        self.audit={}
+        (self.directory/'password').write_bytes(b'synthetic-password-not-for-output');(self.directory/'password').chmod(0o600)
+        for mode in ('explicit','implicit'):
+            body=b'synthetic transfer record\n';p=self.directory/(mode+'.xferlog');p.write_bytes(body);p.chmod(0o600)
+            self.audit[mode]={'size_bytes':len(body),'sha256':self.sha(body),'line_records':1}
+        self.m['receiver_audit_logs']=self.audit
         for name in sorted(summary.REQUIRED):
             stdout=b""
             if name=="native-stock-receiver":stdout=b"--- PASS: TestNativeStockReceiver (1s)\n    --- PASS: TestNativeStockReceiver/explicit (1s)\n    --- PASS: TestNativeStockReceiver/implicit (1s)\n"
             if name=="receiver-version":stdout=b"vsftpd: version 3.0.5\n"
             if name=="independent-receiver-files":stdout=json.dumps(self.files).encode()
+            if name=='receiver-audit-logs':stdout=json.dumps(self.audit).encode()
+            if name in {'explicit-receiver','implicit-receiver'}:stdout=json.dumps({'freightctl_receiver_isolation':{'baseline_observed':True,'native_filter_observations':0,'maximum_added_filters':0}}).encode()+b'\n'
             self.output(name,stdout)
             if name in {"explicit-refuse-tls12","implicit-refuse-tls12"}:
                 self.output(name,b"",b"tlsv1 alert protocol version: SSL alert number 70\n")
@@ -40,6 +49,7 @@ class ReceiverEvidence(unittest.TestCase):
         (self.directory/"openssl.conf").write_bytes(summary.OPENSSL_PROFILE)
         for mode in ("explicit","implicit"):
             config={"listen_address":"127.0.0.1","ssl_enable":"YES","force_local_logins_ssl":"YES","force_local_data_ssl":"YES","require_ssl_reuse":"YES","strict_ssl_read_eof":"YES","strict_ssl_write_shutdown":"YES","ssl_tlsv11":"NO","ssl_tlsv12":"NO","ssl_tlsv13":"YES","seccomp_sandbox":"YES","chroot_local_user":"YES","anonymous_enable":"NO","implicit_ssl":"YES" if mode=="implicit" else "NO"}
+            config.update(xferlog_enable='YES',dual_log_enable='NO',xferlog_std_format='YES',log_ftp_protocol='NO',xferlog_file=str(self.directory/(mode+'.xferlog')))
             (self.directory/(mode+".conf")).write_text("".join(k+"="+v+"\n" for k,v in config.items()))
 
     @staticmethod
@@ -57,7 +67,7 @@ class ReceiverEvidence(unittest.TestCase):
         self.write();return summary.summarize(self.root,self.result,"b"*40)
 
     def test_complete_bookkeeping_has_bounded_public_scope(self):
-        result=self.check();self.assertEqual(result["original_commands"],20)
+        result=self.check();self.assertEqual(result["original_commands"],21)
         self.assertFalse(result["domain_delivery_qualified"])
         for private in (str(self.root),"password","source.go"):self.assertNotIn(private,json.dumps(result))
         self.assertNotIn("receiver_files",result)
@@ -216,7 +226,7 @@ class ReceiverEvidence(unittest.TestCase):
 
     def test_complete_library_bookkeeping_retains_visible_skips_and_variant(self):
         self.library_fixture();result=self.library_check()
-        self.assertEqual(result["receiver_library_profile"],"no-ktls");self.assertEqual(result["original_commands"],22)
+        self.assertEqual(result["receiver_library_profile"],"no-ktls");self.assertEqual(result["original_commands"],23)
         self.assertEqual(result["receiver_library"]["upstream_skip_lines"],1)
         self.assertNotIn(str(self.root),json.dumps(result))
 
@@ -246,6 +256,27 @@ class ReceiverEvidence(unittest.TestCase):
     def test_native_receiver_must_resolve_to_exact_selected_library(self):
         self.library_fixture();self.output("selected-library-linkage",b"libssl.so.3 => /usr/lib/libssl.so.3\n")
         with self.assertRaises(ValueError):self.library_check()
+
+    def test_native_x86_filter_must_be_added_beyond_the_supervisor_baseline(self):
+        self.m['architecture']='x86_64'
+        with self.assertRaises(ValueError):self.check()
+        for mode in ('explicit','implicit'):
+            self.output(mode+'-receiver',json.dumps({'freightctl_receiver_isolation':{'baseline_observed':True,'native_filter_observations':1,'maximum_added_filters':1}}).encode()+b'\n')
+        self.assertEqual(self.check()['receiver_native_seccomp'],'added kernel filter observed')
+        self.output('explicit-receiver',json.dumps({'freightctl_receiver_isolation':{'baseline_observed':True,'native_filter_observations':1,'maximum_added_filters':0}}).encode()+b'\n')
+        with self.assertRaises(ValueError):self.check()
+
+    def test_arm_configuration_cannot_claim_native_filter_support(self):
+        self.assertEqual(self.check()['receiver_native_seccomp'],'not implemented by selected ARM receiver')
+        self.output('explicit-receiver',json.dumps({'freightctl_receiver_isolation':{'baseline_observed':True,'native_filter_observations':1,'maximum_added_filters':1}}).encode()+b'\n')
+        with self.assertRaises(ValueError):self.check()
+
+    def test_private_auditing_cannot_be_removed_or_expose_credential_bytes(self):
+        p=self.directory/'explicit.conf';good=p.read_text();p.write_text(good.replace('xferlog_enable=YES','xferlog_enable=NO'))
+        with self.assertRaises(ValueError):self.check()
+        p.write_text(good);body=(self.directory/'password').read_bytes()+b'\n';(self.directory/'explicit.xferlog').write_bytes(body)
+        self.audit['explicit']={'size_bytes':len(body),'sha256':self.sha(body),'line_records':1};self.m['receiver_audit_logs']=self.audit;self.output('receiver-audit-logs',json.dumps(self.audit).encode())
+        with self.assertRaises(ValueError):self.check()
 
 
 class LibraryDiagnostics(unittest.TestCase):
@@ -278,6 +309,35 @@ class LibraryDiagnostics(unittest.TestCase):
         steps=self.outputs(b"");path=self.private/"selected-upstream-tests.stdout"
         with path.open("wb") as out:out.truncate((64<<20)+1)
         self.assertEqual(library_builder.diagnostics(self.source,self.private,steps)["categories"],[])
+
+
+class NativeReceiverWitness(unittest.TestCase):
+    def setUp(self):
+        self.temp=tempfile.TemporaryDirectory(prefix='freightctl-filter-witness-');self.addCleanup(self.temp.cleanup);self.root=Path(self.temp.name)
+
+    def process(self,pid,parent,uid,filters,children=()):
+        p=self.root/str(pid);p.mkdir(exist_ok=True);(p/'status').write_text(f'PPid:\t{parent}\nUid:\t{uid}\t{uid}\t{uid}\t{uid}\nSeccomp:\t{2 if filters else 0}\nSeccomp_filters:\t{filters}\n')
+        task=p/'task'/str(pid);task.mkdir(parents=True,exist_ok=True);(task/'children').write_text(' '.join(map(str,children)))
+
+    def test_inherited_filter_and_reused_child_id_are_not_native_filter_proof(self):
+        self.process(1,0,0,1);self.process(2,1,0,1,(3,));self.process(3,2,1000,1)
+        witness=FilterWitness(self.root,1);witness.observe(2);self.assertEqual(witness.result()['native_filter_observations'],0)
+        self.process(3,999,1000,2);witness.observe(2);self.assertEqual(witness.result()['native_filter_observations'],0)
+        self.process(3,2,1000,2);witness.observe(2);self.assertEqual(witness.result(),{'baseline_observed':True,'native_filter_observations':1,'maximum_added_filters':1})
+
+    def test_missing_or_oversized_baseline_cannot_create_filter_proof(self):
+        self.process(1,0,0,0);(self.root/'1/status').write_bytes(b'x'*4097)
+        self.process(2,1,1000,2);witness=FilterWitness(self.root,1);witness.observe(2)
+        self.assertEqual(witness.result(),{'baseline_observed':False,'native_filter_observations':0,'maximum_added_filters':0})
+
+    def test_actual_private_log_bytes_are_preserved_and_aliases_refused(self):
+        path=self.root/'audit';body=b'private-synthetic-name\n';path.write_bytes(body);path.chmod(0o600)
+        result=seal_transfer_logs({'explicit':path},os.getuid(),os.getgid())
+        self.assertEqual(result,{'explicit':{'size_bytes':len(body),'sha256':hashlib.sha256(body).hexdigest(),'line_records':1}});self.assertEqual(path.read_bytes(),body)
+        alias=self.root/'alias';os.link(path,alias)
+        with self.assertRaises(ValueError):seal_transfer_logs({'explicit':path},os.getuid(),os.getgid())
+        alias.unlink();alias.symlink_to(path)
+        with self.assertRaises(OSError):seal_transfer_logs({'explicit':alias},os.getuid(),os.getgid())
 
 
 if __name__=="__main__":unittest.main()

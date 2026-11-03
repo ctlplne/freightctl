@@ -20,7 +20,8 @@ import uuid
 ROOT=Path(__file__).resolve().parents[1]
 PAYLOAD=b"account,amount,day\n"+b"0001,1.01,2026-10-28\n"*10000
 SUPERVISOR = r'''
-import os,resource,select,signal,subprocess,sys
+import json,os,resource,select,signal,subprocess,sys
+from scripts.ftps_receiver_witness import FilterWitness
 def bounds():
  os.sched_setaffinity(0,{min(os.sched_getaffinity(0))})
  for kind,limit in [(resource.RLIMIT_AS,268435456),(resource.RLIMIT_CPU,60),(resource.RLIMIT_NOFILE,128),(resource.RLIMIT_FSIZE,16777216),(resource.RLIMIT_NPROC,64)]:resource.setrlimit(kind,(limit,limit))
@@ -29,19 +30,23 @@ def bounds():
 os.environ['OPENSSL_CONF']=sys.argv[1]
 if sys.argv[2]:os.environ['LD_LIBRARY_PATH']=sys.argv[2]
 else:os.environ.pop('LD_LIBRARY_PATH',None)
+witness=FilterWitness()
 p=subprocess.Popen(sys.argv[3:],stdin=sys.stdout,start_new_session=True,preexec_fn=bounds)
 signal.signal(signal.SIGTERM,lambda *_:sys.exit(1))
 try:
  while p.poll() is None:
-  if select.select([sys.stdin.buffer],[],[],.2)[0]:
+  witness.observe(p.pid)
+  if select.select([sys.stdin.buffer],[],[],.05)[0]:
    if sys.stdin.buffer.readline(16)!=b'stop\n':raise RuntimeError('receiver supervisor command differs')
    break
  if p.poll() is not None:raise RuntimeError('receiver exited before cleanup')
 finally:
- if p.poll() is None:
-  os.killpg(p.pid,signal.SIGTERM)
-  try:p.wait(timeout=5)
-  except subprocess.TimeoutExpired:os.killpg(p.pid,signal.SIGKILL);p.wait(timeout=2);raise RuntimeError('receiver forced cleanup')
+ try:
+  if p.poll() is None:
+   os.killpg(p.pid,signal.SIGTERM)
+   try:p.wait(timeout=5)
+   except subprocess.TimeoutExpired:os.killpg(p.pid,signal.SIGKILL);p.wait(timeout=2);raise RuntimeError('receiver forced cleanup')
+ finally:print(json.dumps({'freightctl_receiver_isolation':witness.result()}),flush=True)
 '''
 
 
@@ -71,7 +76,7 @@ def main():
     pam=Path("/etc/pam.d")/pam_name
     receiver=ROOT/".cache/freightctl-vsftpd-3.0.5/root/usr/sbin/vsftpd"
     binary=private/"freightctl"
-    steps=[];processes={};cleanup=[];probe_failures=[];created_user=False;created_pam=False
+    steps=[];processes={};cleanup=[];probe_failures=[];created_user=False;created_pam=False;audit_paths={}
     env=dict(os.environ,GOMAXPROCS="1",GOMEMLIMIT="192MiB")
     traced=os.environ.get("FREIGHTCTL_FTPS_TRACE")=="1"
     library_profile=os.environ.get("FREIGHTCTL_FTPS_LIBRARY","system")
@@ -129,7 +134,11 @@ def main():
         for implicit in (False,True):
             mode="implicit" if implicit else "explicit"
             with socket.socket() as probe:probe.bind(("127.0.0.1",0));port=probe.getsockname()[1]
-            config={"listen":"YES","listen_ipv6":"NO","listen_address":"127.0.0.1","listen_port":str(port),"background":"NO","anonymous_enable":"NO","local_enable":"YES","write_enable":"YES","chroot_local_user":"YES","allow_writeable_chroot":"NO","local_root":str(home),"secure_chroot_dir":str(empty),"pam_service_name":pam_name,"userlist_enable":"YES","userlist_deny":"NO","userlist_file":str(users),"ssl_enable":"YES","ssl_tlsv1":"NO","ssl_tlsv11":"NO","ssl_tlsv12":"NO","ssl_tlsv13":"YES","ssl_sslv2":"NO","ssl_sslv3":"NO","ssl_request_cert":"NO","force_local_logins_ssl":"YES","force_local_data_ssl":"YES","require_ssl_reuse":"YES","strict_ssl_read_eof":"YES","strict_ssl_write_shutdown":"YES","rsa_cert_file":str(cert),"rsa_private_key_file":str(key),"implicit_ssl":"YES" if implicit else "NO","pasv_enable":"YES","port_enable":"NO","pasv_address":"127.0.0.1","pasv_min_port":"40000","pasv_max_port":"40100","max_clients":"4","max_per_ip":"4","idle_session_timeout":"30","data_connection_timeout":"15","accept_timeout":"5","connect_timeout":"5","local_umask":"077","file_open_mode":"0600","seccomp_sandbox":"YES","log_ftp_protocol":"NO","xferlog_enable":"NO"}
+            config={"listen":"YES","listen_ipv6":"NO","listen_address":"127.0.0.1","listen_port":str(port),"background":"NO","anonymous_enable":"NO","local_enable":"YES","write_enable":"YES","chroot_local_user":"YES","allow_writeable_chroot":"NO","local_root":str(home),"secure_chroot_dir":str(empty),"pam_service_name":pam_name,"userlist_enable":"YES","userlist_deny":"NO","userlist_file":str(users),"ssl_enable":"YES","ssl_tlsv1":"NO","ssl_tlsv11":"NO","ssl_tlsv12":"NO","ssl_tlsv13":"YES","ssl_sslv2":"NO","ssl_sslv3":"NO","ssl_request_cert":"NO","force_local_logins_ssl":"YES","force_local_data_ssl":"YES","require_ssl_reuse":"YES","strict_ssl_read_eof":"YES","strict_ssl_write_shutdown":"YES","rsa_cert_file":str(cert),"rsa_private_key_file":str(key),"implicit_ssl":"YES" if implicit else "NO","pasv_enable":"YES","port_enable":"NO","pasv_address":"127.0.0.1","pasv_min_port":"40000","pasv_max_port":"40100","max_clients":"4","max_per_ip":"4","idle_session_timeout":"30","data_connection_timeout":"15","accept_timeout":"5","connect_timeout":"5","local_umask":"077","file_open_mode":"0600","seccomp_sandbox":"YES","log_ftp_protocol":"NO"}
+            # Stock transfer auditing also selects the daemon's existing
+            # getrandom allowance. Retain its filter and strong OS entropy.
+            audit_paths[mode]=private/(mode+'.xferlog')
+            config.update(xferlog_enable='YES',dual_log_enable='NO',xferlog_std_format='YES',xferlog_file=str(audit_paths[mode]))
             # The actual parser uses ssl_tlsv11/12/13 (without a second
             # underscore). Keep the independent OpenSSL floor and alert probes.
             path=private/(mode+".conf");path.write_text("".join(k+"="+v+"\n" for k,v in config.items()))
@@ -176,6 +185,12 @@ def main():
         for name in list(processes):
             try:stop(name)
             except Exception:cleanup.append(name+" cleanup failed")
+        if len(audit_paths)==2:
+            try:
+                program="from pathlib import Path;import json,sys;from scripts.ftps_receiver_witness import seal_transfer_logs;print(json.dumps(seal_transfer_logs({'explicit':Path(sys.argv[3]),'implicit':Path(sys.argv[4])},int(sys.argv[1]),int(sys.argv[2]))))"
+                manifest['receiver_audit_logs']=json.loads(command('receiver-audit-logs',['sudo','python3','-c',program,os.getuid(),os.getgid(),audit_paths['explicit'],audit_paths['implicit']]))
+                if manifest['state']=='passed' and any(v['line_records']<1 for v in manifest['receiver_audit_logs'].values()):raise RuntimeError('receiver audit records missing')
+            except Exception:cleanup.append('receiver audit log custody failed')
         if created_user:
             try:command("remove-exact-user",["sudo","userdel",user]);manifest["task_user_removed"]=True
             except Exception:cleanup.append("task user retained")

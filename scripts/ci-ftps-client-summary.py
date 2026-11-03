@@ -11,6 +11,7 @@ import subprocess
 ROOT=Path(__file__).resolve().parents[1]
 PAYLOAD=b"account,amount,day\n"+b"0001,1.01,2026-10-28\n"*10000
 REQUIRED={"go-version","receiver-version","receiver-library-versions","build","token","certificate","create-exact-user","set-exact-password","own-exact-inbox","create-exact-pam","explicit-config-owner","implicit-config-owner","explicit-refuse-tls12","implicit-refuse-tls12","native-stock-receiver","independent-receiver-files","explicit-receiver","implicit-receiver","remove-exact-user","remove-exact-pam"}
+REQUIRED.add('receiver-audit-logs')
 OPENSSL_PROFILE=b"config_diagnostics=1\nopenssl_conf=freightctl_init\n[freightctl_init]\nssl_conf=freightctl_ssl\n[freightctl_ssl]\nsystem_default=freightctl_tls\n[freightctl_tls]\nMinProtocol=TLSv1.3\nMaxProtocol=TLSv1.3\nOptions=-KTLS\n"
 LIBRARY_BASE=".cache/freightctl-openssl-3.5.9-no-ktls"
 LIBRARY_SOURCE_SHA="603f5602e2eef00d77fbd429d34dcd5822bb301757a1bc9cdb24c670f1eb859a"
@@ -100,12 +101,35 @@ def summarize(root,result,commit,library_profile="system"):
         config=dict(line.split("=",1) for line in read(path.parent/(mode+".conf")).decode().splitlines())
         for name,value in {"listen_address":"127.0.0.1","ssl_enable":"YES","force_local_logins_ssl":"YES","force_local_data_ssl":"YES","require_ssl_reuse":"YES","strict_ssl_read_eof":"YES","strict_ssl_write_shutdown":"YES","ssl_tlsv11":"NO","ssl_tlsv12":"NO","ssl_tlsv13":"YES","seccomp_sandbox":"YES","chroot_local_user":"YES","anonymous_enable":"NO","implicit_ssl":"YES" if mode=="implicit" else "NO"}.items():
             if config.get(name)!=value:raise ValueError("receiver security profile differs")
+        for name,value in {'xferlog_enable':'YES','dual_log_enable':'NO','xferlog_std_format':'YES','log_ftp_protocol':'NO','xferlog_file':str(path.parent/(mode+'.xferlog'))}.items():
+            if config.get(name)!=value:raise ValueError('receiver private auditing profile differs')
+    logs=json.loads(read(path.parent/'receiver-audit-logs.stdout'));password=read(path.parent/'password',1024)
+    if not password or set(logs)!={'explicit','implicit'} or m.get('receiver_audit_logs')!=logs:raise ValueError('receiver transfer audit closure differs')
+    observations={}
+    for mode in ('explicit','implicit'):
+        log=path.parent/(mode+'.xferlog');body=read(log,1<<20)
+        expected={'size_bytes':len(body),'sha256':hashlib.sha256(body).hexdigest(),'line_records':len(body.splitlines())}
+        if log.stat().st_mode&0o077 or logs[mode]!=expected or not 1<=expected['line_records']<=32 or password in body:raise ValueError('receiver transfer audit changed or exposed a credential')
+        values=[]
+        for line in read(path.parent/(mode+'-receiver.stdout')).splitlines():
+            if line.startswith(b'{"freightctl_receiver_isolation":'):
+                value=json.loads(line)
+                if set(value)!={'freightctl_receiver_isolation'}:raise ValueError('receiver kernel witness differs')
+                values.append(value['freightctl_receiver_isolation'])
+        if len(values)!=1:raise ValueError('receiver kernel witness missing or duplicate')
+        witness=values[0]
+        if set(witness)!={'baseline_observed','native_filter_observations','maximum_added_filters'} or witness['baseline_observed'] is not True:raise ValueError('receiver kernel baseline missing')
+        count,maximum=witness['native_filter_observations'],witness['maximum_added_filters']
+        if type(count) is not int or type(maximum) is not int or not 0<=count<=50000 or not 0<=maximum<=128:raise ValueError('receiver kernel witness bounds differ')
+        if m['architecture']=='x86_64' and (count<1 or maximum<1):raise ValueError('receiver native x86 filter not observed')
+        if m['architecture']=='aarch64' and (count!=0 or maximum!=0):raise ValueError('unexpected ARM filter requires a reviewed native support profile')
+        observations[mode]=count
     sources=m.get("source_sha256")
     if not isinstance(sources,dict) or not 1<=len(sources)<=10000:raise ValueError("receiver source closure missing")
     for name,sha in sources.items():
         p=root/name
         if not p.resolve().is_relative_to(root.resolve()) or hashlib.sha256(read(p,16<<20)).hexdigest()!=sha:raise ValueError("receiver source identity changed")
-    return {"state":"passed","source_commit":commit,"manifest_sha256":digest,"architecture":m["architecture"],"receiver_library_profile":library_profile,"receiver_library":library,"native_pass_records":3,"original_commands":len(steps),"source_inputs":len(sources),"independent_receiver_files":len(observed),"strict_tls13_reuse_and_shutdown":True,"task_user_removed":True,"task_pam_removed":True,"inference_performed":False,"scanner_started":False,"postgres_started":False,"domain_delivery_qualified":False,"scope":"actual unmodified stock vsftpd/PAM with named TLS library profile;governed delivery/collection integration and whole journeys remain open"}
+    return {"state":"passed","source_commit":commit,"manifest_sha256":digest,"architecture":m["architecture"],"receiver_library_profile":library_profile,"receiver_library":library,"native_pass_records":3,"original_commands":len(steps),"source_inputs":len(sources),"independent_receiver_files":len(observed),"strict_tls13_reuse_and_shutdown":True,"private_transfer_audit_records":{mode:logs[mode]['line_records'] for mode in logs},"receiver_native_seccomp":"added kernel filter observed" if m['architecture']=='x86_64' else "not implemented by selected ARM receiver","kernel_filter_observations":observations,"task_user_removed":True,"task_pam_removed":True,"inference_performed":False,"scanner_started":False,"postgres_started":False,"domain_delivery_qualified":False,"scope":"actual unmodified stock vsftpd/PAM with named TLS library profile;ARM native filter,governed delivery/collection and whole journeys remain unqualified"}
 
 
 def failure_diagnostics(root,result,commit):

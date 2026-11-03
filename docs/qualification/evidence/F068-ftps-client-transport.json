@@ -43,7 +43,7 @@
       "manifest_sha256": "441f321bf74402bf956f1bc040136e980ece606fd8a4f39fb8db58f1b2a17a8f",
       "state": "bind operation denied;original suite replay passed with loopback access"
     },
-    "latest_synthetic_evidence_tampering_contracts": 29,
+    "latest_synthetic_evidence_tampering_contracts": 35,
     "latest_contract_note": "29 synthetic evidence/privacy/permission contracts pass;the49-record native architecture/transport/crypto race archive remains unchanged. Native system ARM stock profile passes;system x86 and separate library harness gates remain red.",
     "latest_original_replay": {
       "manifest_reference": ".private/freightctl-ftps-phase-replay-4dfa69d54eec47fea6aec7bbd8adb946/manifest.json",
@@ -52,6 +52,12 @@
       "failures": 0,
       "skips": 0,
       "scope": "Original architecture+FTPS client+crypto suites with fixed phase wrapping;no database/scanner/model"
+    },
+    "audited_kernel_witness_contracts": {
+      "manifest_reference": ".private/freightctl-ftps-audit-final-452d09afb13f4a349037bde612939c1b/manifest.json",
+      "manifest_sha256": "4c6cd5cddb090768c657392a95cfd2ee3ff3dd3ee21bd3c11dc45cb34f7d0d01",
+      "records": 35,
+      "scope": "Synthetic proc-tree/inherited-filter/reused-ID proofs,actual owned private-log alias/permission custody,and original evidence/privacy refusal contracts. No actual receiver/filter/model/scanner/PG runs locally."
     }
   },
   "native_ci": {
@@ -701,6 +707,15 @@
       "diagnostic_manifest_sha256": "0c121a31bda91bb160d279181b525146e16a68e1822d7cee43f7beba3ba40eb6",
       "observation": "Both software-library listeners pass exactTLS1.2 alert70 refusal. GoTLS1.3 connection still fails;separate raw trace reportsSIGSYS after syscall318,getrandom. Traced results cannot qualify.",
       "source_finding": "Pinned vsftpd seccomp prelogin allowsgetrandom only when xferlog_enable or dual_log_enable is enabled. This fixture disabled transfer logging. Investigate a bounded private audited-transfer profile with native kernel-filter witness;do not disable seccomp,change entropy quality or relax existing protocol/resource checks."
+    },
+    "audited_kernel_witness_profile": {
+      "state": "implemented;actual native replay pending",
+      "transfer_logging": "Enable the stock daemon bounded private transfer-audit mode,with protocol-command logging disabled. This selects its existing supportedgetrandom allowance;keepseccompYES,chroot,TLS1.3,strong OS entropy and every original assertion/budget. No custom syscall rule or daemon patch.",
+      "logs": "One root-owned log per listener under the0700task-private directory;the stopped receiver logs are reopened without symlink following or aliases,bounded at1MiB,hashed and returned to the fixture owner with0600permissions. Raw contents remain private;reporter compares bytes/hash/counts and refuses credential bytes.",
+      "kernel_witness": "Root supervisor polls only its exact receiver/descendants every50ms,at most64processes/4KiBstatus. RecheckPPid to reject ID reuse. Compare untrusted nonroot children Seccomp_filters to the supervisor baseline;inherited filter alone is insufficient. Public output contains only fixed bounded counts.",
+      "architecture_boundary": "X86 success requires an observed added kernel filter in both modes. ARM explicitly reports selected receiver native implementation unavailable;unexpected added filters require a reviewed support profile. A passing ARM wire journey cannot qualify its native filter.",
+      "command_closure": "Original commands plus receiver-audit-logs:21system/23software commands. Same3native records/6independent files,all previous protocol/cleanup gates,and all library recipes remain required. Old20/22command results cannot substitute for this expanded profile.",
+      "limits": "Sampling verifies observed added filters,not every instruction/process lifetime. No raw log/trace/artifact upload,local receiver,model/scanner/database,entropy downgrade,custom filter widening,daemon patch or relaxed budget."
     }
   },
   "next_integration": "docs/protocols/ftps-sending.md",
@@ -784,5 +799,11 @@
     "ubuntu_patches_sha256": "55e8986f1cf79c775359cfb6ce38d550ae54c7f465a575389072a38a132449b5",
     "finding": "The actual upstream parser spells ssl_tlsv11/ssl_tlsv12/ssl_tlsv13 without a second underscore. Current profile now requires those exact settings plus the existing private OpenSSL floor. Ubuntu patch0060 disables the daemon default seccomp setting;our stricter explicitYES stays required and unqualified until fixed without relaxing it.",
     "scope": "Public source read only;no third-party source executed or copied into product"
+  },
+  "public_source_review_audited_profile": {
+    "manifest_reference": ".private/freightctl-ftps-audit-public-9f1de7f4d2814743b7a489bf48e30cbf/manifest.json",
+    "manifest_sha256": "c0ba4b9be1613a3cedfd0104fa2274f5529b344ff81e2b9ce4a3c1207c2846d4",
+    "source_count": 702,
+    "exit_code": 0
   }
 }
