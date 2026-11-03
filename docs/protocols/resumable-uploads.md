@@ -44,6 +44,27 @@ That control-path rename can finalize only the destination already fixed by the 
 
 Ticket stat reports recorded progress. Ticket get/download is denied before and after completion; retrieve the accepted destination through its ordinary path. Directory enumeration, arbitrary truncation/reset, preservation attributes on the ticket, read/write handles and destination changes are unsupported. Final permissions/time come from the approved creation intent. A mismatched complete-file hash rejects publication; do not bypass it to force a resume.
 
+## Explicit and implicit FTPS
+
+Create the same ticket through HTTPS or the CLI, then use its `ftps_path`. New status/creation responses return this alongside `sftp_path`; historical saved receipts keep their original fields. The reserved path is `/.freightctl/uploads/<upload-id>` in both protocols. It names the actor-owned upload, not a host file or a published partner folder.
+
+Use binary mode (`TYPE I`, or the engine's equivalent binary type). Ticket writers refuse ASCII conversion. `SIZE`/metadata reads report only the PostgreSQL committed offset, not a buffered tail. Resume `STOR` with `REST` at exactly that offset, or use `APPE` to append at the receiver's committed end. A truncated restart, a different offset, another actor or changed authority is refused. Ordinary filenames retain their existing transfer semantics.
+
+For stock lftp, [the documented `put -c` command](https://lftp.yar.ru/lftp-man.html) continues an upload. The native Linux qualification uses:
+
+```text
+put -c original.csv -o /.freightctl/uploads/<upload-id>
+mv /.freightctl/uploads/<upload-id> /the-ticket-destination
+```
+
+The second command can complete or recover only the destination fixed by the ticket. It cannot retarget the upload. The completion key is shared with the existing SFTP writer, so retrying completion recovers the same accepted file revision. An ordinary namespace rename still follows its normal permissions and revision rules.
+
+A clean data completion and successful final reply mean that full length/digest verification and durable acceptance completed. Configured intake checks still hold the file until separate release. If the final reply is lost, read `upload-status`/HTTPS status and inspect its state, file ID and acceptance. A full `SIZE` alone is not file acceptance: all chunks can be durable while final verification is still incomplete. Use the bound completion rename or the ordinary API/CLI completion action when necessary.
+
+Ticket download is refused before and after completion, and the control directories cannot be enumerated. Retrieve only the approved ordinary destination. Failed data transfer drops an uncommitted tail, keeps committed checkpoints and cannot publish a partial file. The local native test restarts the FTPS listener and rejoins all its old handles; this is not yet a claim of process-kill, power-loss, multi-host or database recovery.
+
+The selected native ARM stand-in journey passes both FTPS modes with real PostgreSQL/storage. Stock lftp4.9.2/GnuTLS resume, bound completion and independently matched retrieval are prepared for native GitHub Linux ARM/x86. Those new stock ticket paths remain unqualified until the original run succeeds; existing ordinary curl/lftp qualification does not substitute for them.
+
 ## Bounds and evidence
 
 This engineering profile has a 1 GiB file ceiling, 4,096 chunks per upload, 128 open tickets per actor, existing file/storage quotas, one-frame SFTP admission, eight handles/session and bounded writers/time. These are operational development budgets, not edition limits. Assembly temporarily needs another full-file allocation on disk. Chunks remain retained and charged after completion, abort or rejection. Configurable larger estates, 100 GiB/1 TiB gates, cleanup/recovery, storage compaction, fairness, distributed backends and endurance remain open.

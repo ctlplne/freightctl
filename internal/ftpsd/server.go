@@ -219,7 +219,7 @@ func (d *sessionDriver) AuthUser(cc ftp.ClientContext, user, pass string) (ftp.C
 		return nil, errSession
 	}
 	scope.AuthorityRevision = t.AuthorityRevision
-	d.fs = &filesystem{driver: d, scope: scope, open: make(map[*transfer]struct{})}
+	d.fs = &filesystem{driver: d, scope: scope, context: cc, open: make(map[*transfer]struct{})}
 	return d.fs, nil
 }
 

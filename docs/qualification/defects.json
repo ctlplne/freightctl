@@ -2054,6 +2054,21 @@
         "docs/qualification/evidence/F063-ftps-browser-governance.json",
         "https://github.com/ctlplne/freightctl/actions/runs/41575668127"
       ]
+    },
+    {
+      "id": "D127",
+      "severity": "missing protocol recovery interface",
+      "state": "fixed and original native ARM TLS stand-in journey replayed;stock qualification pending",
+      "observed_on": "2026-11-02",
+      "candidate": "68b7e371fe648a1ac9cbfed6f42a2df7d440eeef",
+      "journey": "Governed FTPS upload ticket recovery",
+      "title": "FTPS rejects the shared actor-owned upload-ticket namespace",
+      "first_failure": "Both native listener modes return550 permission denied at ticket metadata before checkpointing. F064 retains the first original failed manifest and unchanged retained authority/cleanup.",
+      "cause": "The adapter rejects all reserved .freightctl paths and opens only ordinary revision writers.",
+      "resolution": "Map narrowly validated ticket stat/write/bound completion to shared custody. Require actual accepted binary type,exact durable offset,current actor/root/authority and immutable expected bytes. Native ARM listener restart/lost-reply/hold/release journey passes both modes;actual stock Linux/native regression still pending.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F064-ftps-upload-tickets.json"
+      ]
     }
   ]
 }

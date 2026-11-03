@@ -314,6 +314,10 @@ func (c *clientHandler) isTLSRequired() bool {
 	return c.tlsRequirement == MandatoryEncryption
 }
 
+// GetTransferType reports the accepted TYPE state. File-open callbacks run
+// before a transfer; the command loop waits for that transfer before TYPE.
+func (c *clientHandler) GetTransferType() TransferType { return c.currentTransferType }
+
 // GetLastCommand returns the last received command
 func (c *clientHandler) GetLastCommand() string {
 	c.paramsMutex.RLock()

@@ -97,6 +97,22 @@ def run(reference, settings):
         "open -u " + quote(settings["username"] + "," + settings["password"]) + " " +
         quote(("ftps" if settings["implicit"] else "ftp") + "://127.0.0.1:" + str(port)),
     ]
+    if settings.get("ticket") is not None:
+        ticket = settings["ticket"]
+        if not isinstance(ticket,str) or not re.fullmatch(r"/\.freightctl/uploads/[0-9a-f-]{36}",ticket) or settings.get("ticket_phase") not in {"resume","download"}:
+            raise ValueError("invalid stock ticket probe")
+        phase = settings["ticket_phase"]
+        commands = base + (["put -c " + quote(str(source)) + " -o " + quote(ticket),
+                            "mv " + quote(ticket) + " /stock-ticket.csv"] if phase == "resume" else
+                           ["get /stock-ticket.csv -o " + quote(str(directory / "ticket.download"))]) + ["bye"]
+        script = directory / "commands"
+        with script.open("x") as stream:
+            stream.write("\n".join(commands)+"\n");stream.flush();os.fsync(stream.fileno())
+        command("transfers",["lftp","--norc","-f",str(script)])
+        if phase == "download" and read(directory / "ticket.download",1 << 20,private=True) != payload:
+            raise ProbeFailure("bytes-differ","stock ticket bytes differ")
+        cases = ["ticket-prefix-resume","bound-completion-replay"] if phase == "resume" else ["released-ticket-bytes"]
+        return {"state":"passed","client":"lftp4.9.2/GnuTLS","cases":cases,"case_count":len(cases),"payload_bytes":len(payload),"payload_sha256":hashlib.sha256(payload).hexdigest(),"stock_client_qualification":True}
     commands = base + [
         "put " + quote(str(source)) + " -o lftp.bin",
         "get lftp.bin -o " + quote(str(directory / "epsv.download")),

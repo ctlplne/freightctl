@@ -121,6 +121,83 @@ def run(settings):
             assert download(observer, "guard.bin") == baseline, "revocation replaced accepted bytes"
             observer.quit()
             count = 2
+        elif settings["scenario"] == "upload-ticket":
+            payload = b"account,amount,day\n" + b"0001,1.01,2026-10-28\n" * 10000
+            ticket = settings["ticket"]
+            assert re.fullmatch(r"/\.freightctl/uploads/[0-9a-f-]{36}", ticket)
+            c = client(settings["password"])
+            c.voidcmd("TYPE I")
+            assert c.size(ticket) == 0, "new ticket did not expose zero durable progress"
+            c.voidcmd("TYPE A")
+            try:
+                c.transfercmd("STOR " + ticket)
+            except ftplib.error_perm as error:
+                assert str(error).startswith("550")
+            else:
+                raise AssertionError("ticket accepted ASCII conversion")
+            c.voidcmd("TYPE I")
+            data = c.transfercmd("STOR " + ticket)
+            assert data.session_reused
+            data.sendall(payload[:65536 + 97])
+            emit("ticket-checkpoint-open", resumed=True)
+            phase("interrupt-now")
+            data.close()  # Deliberate unclean EOF; only durable checkpoints survive.
+            c.close()
+            emit("ticket-interrupted")
+            phase("server-restarted")
+            foreign = client(settings["foreign_password"])
+            try:
+                foreign.size(ticket)
+            except ftplib.error_perm as error:
+                assert str(error).startswith("550")
+            else:
+                raise AssertionError("another actor saw ticket progress")
+            try:
+                foreign.transfercmd("STOR " + ticket)
+            except ftplib.error_perm as error:
+                assert str(error).startswith("550")
+            else:
+                raise AssertionError("another actor opened the ticket writer")
+            foreign.close()
+            c = client(settings["password"])
+            c.voidcmd("TYPE I")
+            assert c.size(ticket) == 65536, "unacknowledged tail changed durable progress"
+            unavailable(c, ticket)
+            unavailable(c, "recovered.csv")
+            try:
+                c.transfercmd("STOR " + ticket, rest=65535)
+            except ftplib.error_perm as error:
+                assert str(error).startswith("550")
+            else:
+                raise AssertionError("wrong restart offset opened a ticket writer")
+            data = c.transfercmd("STOR " + ticket, rest=65536)
+            assert data.session_reused
+            data.sendall(payload[65536:])
+            data.unwrap().close()
+            emit("ticket-data-finished", resumed=True)
+            phase("discard-final-reply")
+            c.close()  # Intentionally never consume the final 226 response.
+            emit("ticket-final-reply-unobserved")
+            phase("receipt-inspected")
+            c = client(settings["password"])
+            c.voidcmd("TYPE I")
+            assert c.size(ticket) == len(payload)
+            unavailable(c, ticket)
+            unavailable(c, "recovered.csv")
+            try:
+                c.rename(ticket, "/wrong-destination.csv")
+            except ftplib.error_perm as error:
+                assert str(error).startswith("550")
+            else:
+                raise AssertionError("ticket completion changed its bound destination")
+            c.rename(ticket, "/recovered.csv")
+            unavailable(c, "recovered.csv")
+            emit("ticket-completed-held")
+            phase("release-committed")
+            assert download(c, "recovered.csv") == payload
+            unavailable(c, ticket)
+            c.quit()
+            count = 6
         elif settings["scenario"] == "intake":
             good = b"account,amount,day\n0001,1.01,2026-10-28\n"
             bad = b"account,amount,day\n0001,invalid,2026-10-28\n"
@@ -175,7 +252,7 @@ def main():
         run(settings)
     except Exception as exc:
         reason = str(exc)
-        for key in ("password", "next_password", "observer_password", "username"):
+        for key in ("password", "next_password", "observer_password", "foreign_password", "username"):
             value = settings.get(key)
             if isinstance(value, str) and value:
                 reason = reason.replace(value, "[redacted]")

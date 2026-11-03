@@ -5,6 +5,7 @@ import (
 	"io"
 	"os"
 	"path"
+	"strings"
 	"sync"
 	"time"
 
@@ -17,11 +18,12 @@ import (
 )
 
 type filesystem struct {
-	driver *sessionDriver
-	scope  store.Scope
-	mu     sync.Mutex
-	closed bool
-	open   map[*transfer]struct{}
+	driver  *sessionDriver
+	scope   store.Scope
+	context ftp.ClientContext
+	mu      sync.Mutex
+	closed  bool
+	open    map[*transfer]struct{}
 }
 
 func publicError(err error) error {
@@ -69,6 +71,33 @@ func (*filesystem) Chmod(string, os.FileMode) error            { return os.ErrPe
 func (*filesystem) Chtimes(string, time.Time, time.Time) error { return os.ErrPermission }
 
 func (f *filesystem) Stat(name string) (os.FileInfo, error) {
+	if id, control := uploadTicket(name); control {
+		if id != "" {
+			u, err := f.driver.server.custody.UploadStatus(f.driver.ctx, f.scope, id)
+			if err != nil {
+				return nil, f.failure(err)
+			}
+			return entryInfo{store.PathEntry{ID: u.ID, Path: name, Kind: "file", Mode: 0600, Size: u.Offset, Modified: u.Modified, Revision: u.Revision}}, nil
+		}
+		if name != "/.freightctl" && name != "/.freightctl/uploads" {
+			return nil, os.ErrPermission
+		}
+		t, err := f.driver.server.custody.DB.Begin(f.driver.ctx, f.scope)
+		if err != nil {
+			return nil, f.failure(err)
+		}
+		defer t.Tx.Rollback(f.driver.ctx)
+		if err = t.Require("write"); err == nil {
+			err = t.Reauthorize(f.driver.ctx)
+		}
+		if err == nil {
+			err = t.Tx.Commit(f.driver.ctx)
+		}
+		if err != nil {
+			return nil, f.failure(err)
+		}
+		return entryInfo{store.PathEntry{Path: name, Kind: "dir", Mode: 0700, Modified: time.Unix(0, 0).UTC()}}, nil
+	}
 	if err := virtual(name); err != nil {
 		return nil, err
 	}
@@ -134,12 +163,54 @@ func (f *filesystem) RemoveDir(name string) error {
 	return f.command(store.PathCommand{Operation: "rmdir", Path: name})
 }
 func (f *filesystem) Rename(old, next string) error {
+	if id, control := uploadTicket(old); control {
+		if id == "" || virtual(next) != nil {
+			return os.ErrPermission
+		}
+		u, err := f.driver.server.custody.UploadStatus(f.driver.ctx, f.scope, id)
+		if err != nil {
+			return f.failure(err)
+		}
+		if next != u.Path {
+			return os.ErrPermission
+		}
+		// This historical opaque key is shared with the SFTP ticket writer.
+		// Reusing it recovers the same completion, never a second file revision.
+		_, err = f.driver.server.custody.CompleteUpload(f.driver.ctx, f.scope, id, "sftp-complete-"+id)
+		return f.failure(err)
+	}
 	return f.command(store.PathCommand{Operation: "rename", Path: old, Target: next})
 }
 
+func uploadTicket(name string) (string, bool) {
+	canonical, err := vpath.Canonical(name)
+	if err != nil {
+		return "", false
+	}
+	if !vpath.ControlPath(canonical) {
+		return "", false
+	}
+	const prefix = "/.freightctl/uploads/"
+	if strings.HasPrefix(canonical, prefix) {
+		id := strings.TrimPrefix(canonical, prefix)
+		if store.ValidID(id) {
+			return id, true
+		}
+	}
+	return "", true
+}
+
 func (f *filesystem) GetHandle(name string, flags int, offset int64) (ftp.FileTransfer, error) {
-	if err := virtual(name); err != nil {
-		return nil, err
+	id, ticket := uploadTicket(name)
+	if ticket {
+		state, ok := f.context.(ftp.ClientContextExtensionTransferType)
+		if id == "" || flags == os.O_RDONLY || !ok || state.GetTransferType() != ftp.TransferTypeBinary {
+			return nil, os.ErrPermission
+		}
+	} else {
+		if err := virtual(name); err != nil {
+			return nil, err
+		}
 	}
 	if offset < 0 || offset > f.driver.server.custody.MaxFile {
 		return nil, errSession
@@ -165,13 +236,28 @@ func (f *filesystem) GetHandle(name string, flags int, offset int64) (ftp.FileTr
 		default:
 			return nil, errSession
 		}
-		w, err := f.driver.server.custody.OpenRevisionWriter(f.driver.ctx, f.scope, name, custody.WriteOptions{Create: true, Truncate: flags&os.O_TRUNC != 0, Append: flags&os.O_APPEND != 0})
+		var w transferWriter
+		var err error
+		options := custody.WriteOptions{Create: true, Truncate: flags&os.O_TRUNC != 0, Append: flags&os.O_APPEND != 0}
+		if ticket {
+			u, e := f.driver.server.custody.WritableUploadStatus(f.driver.ctx, f.scope, id)
+			if e != nil {
+				err = e
+			} else if flags&os.O_APPEND == 0 && offset != u.Offset {
+				err = os.ErrPermission
+			} else {
+				w, err = f.driver.server.custody.OpenUploadWriter(f.driver.ctx, f.scope, id, options)
+			}
+		} else {
+			w, err = f.driver.server.custody.OpenRevisionWriter(f.driver.ctx, f.scope, name, options)
+		}
 		if err != nil {
 			<-f.driver.server.writers
 			return nil, f.failure(err)
 		}
 		t.writer = w
-		if flags&os.O_APPEND != 0 {
+		t.ticket = ticket
+		if flags&os.O_APPEND != 0 || ticket {
 			e, err := w.Stat()
 			if err != nil {
 				w.TransferError(err)
@@ -214,11 +300,19 @@ func (e entryInfo) ModTime() time.Time { return e.entry.Modified }
 func (e entryInfo) IsDir() bool        { return e.entry.Kind == "dir" }
 func (e entryInfo) Sys() any           { return nil }
 
+type transferWriter interface {
+	io.WriterAt
+	io.Closer
+	Stat() (*store.PathEntry, error)
+	TransferError(error)
+}
+
 type transfer struct {
 	fs           *filesystem
 	mu           sync.Mutex
 	reader       *custody.RevisionReader
-	writer       *custody.RevisionWriter
+	writer       transferWriter
+	ticket       bool
 	offset, size int64
 	closed       bool
 	failure      error
@@ -270,6 +364,9 @@ func (t *transfer) Seek(offset int64, whence int) (int64, error) {
 		return 0, t.badSeek()
 	}
 	next := base + offset
+	if t.ticket && next != t.offset {
+		return 0, t.badSeek()
+	}
 	if next < 0 || (t.reader != nil && next > t.size) || (t.writer != nil && next > t.fs.driver.server.custody.MaxFile) {
 		return 0, t.badSeek()
 	}

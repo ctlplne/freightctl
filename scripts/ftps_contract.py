@@ -4,10 +4,12 @@ LIMITED_PARENT_TESTS = [
     "TestFTPSNativeTLSClientProtocolAndInterruption",
     "TestFTPSNativeTLSClientCredentialLifecycle",
     "TestFTPSNativeTLSClientIntakeReleaseAndRevocation",
+    "TestFTPSNativeTLSClientUploadTicketRecovery",
 ]
 NATIVE_PARENT_TESTS = LIMITED_PARENT_TESTS + [
     "TestFTPSStockCurlExplicitImplicitAndActiveCustody",
     "TestFTPSStockLFTPCustody",
+    "TestFTPSStockLFTPUploadTicket",
 ]
 NATIVE_TESTS = {name + suffix for name in NATIVE_PARENT_TESTS
                 for suffix in ("", "/explicit", "/implicit")}

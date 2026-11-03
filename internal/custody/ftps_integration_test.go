@@ -25,12 +25,19 @@ import (
 type ftpsFixture struct {
 	f                        *fixture
 	url, config, cert, token string
+	restart                  func(*testing.T)
 }
 
 func startFTPS(t *testing.T, implicit bool) *ftpsFixture {
 	t.Helper()
+	return startFTPSCheckpoint(t, implicit, 0)
+}
+
+func startFTPSCheckpoint(t *testing.T, implicit bool, checkpoint int) *ftpsFixture {
+	t.Helper()
 	f := setup(t)
 	f.service.NamespaceMaxEntries = 10000
+	f.service.UploadCheckpointBytes = checkpoint
 	dir := t.TempDir()
 	token := filepath.Join(dir, "token")
 	if err := secure.WriteToken(token); err != nil {
@@ -53,18 +60,30 @@ func startFTPS(t *testing.T, implicit bool) *ftpsFixture {
 	if err != nil {
 		t.Fatal(err)
 	}
-	server, err := ftpsd.New(f.service, ftpsd.Options{Identity: identity, Implicit: implicit, EnableActive: true, MaxConnections: 4, MaxWriters: 1, ListLimit: 100, SessionLimit: 30 * time.Second, IdleLimit: 3 * time.Second})
-	if err != nil {
-		t.Fatal(err)
+	address := "127.0.0.1:0"
+	var cancel context.CancelFunc
+	var done chan error
+	start := func() {
+		t.Helper()
+		server, err := ftpsd.New(f.service, ftpsd.Options{Identity: identity, Implicit: implicit, EnableActive: true, MaxConnections: 4, MaxWriters: 1, ListLimit: 100, SessionLimit: 30 * time.Second, IdleLimit: 3 * time.Second})
+		if err != nil {
+			t.Fatal(err)
+		}
+		l, err := net.Listen("tcp", address)
+		if err != nil {
+			t.Fatal(err)
+		}
+		address = l.Addr().String()
+		var ctx context.Context
+		ctx, cancel = context.WithCancel(f.ctx)
+		done = make(chan error, 1)
+		go func() { done <- server.Serve(ctx, l) }()
 	}
-	l, err := net.Listen("tcp", "127.0.0.1:0")
-	if err != nil {
-		t.Fatal(err)
-	}
-	ctx, cancel := context.WithCancel(f.ctx)
-	done := make(chan error, 1)
-	go func() { done <- server.Serve(ctx, l) }()
-	t.Cleanup(func() {
+	stop := func(t *testing.T) {
+		t.Helper()
+		if cancel == nil {
+			return
+		}
 		cancel()
 		select {
 		case err := <-done:
@@ -72,9 +91,12 @@ func startFTPS(t *testing.T, implicit bool) *ftpsFixture {
 				t.Error(err)
 			}
 		case <-time.After(5 * time.Second):
-			t.Error("FTPS session cleanup exceeded deadline")
+			t.Fatal("FTPS session cleanup exceeded deadline")
 		}
-	})
+		cancel = nil
+	}
+	start()
+	t.Cleanup(func() { stop(t) })
 	config := filepath.Join(dir, "curl.conf")
 	// Credentials live in one owner-only reference, never in argv or output.
 	user := f.a.Tenant + "/" + f.a.Partner + ":" + string(secret.Bytes)
@@ -87,7 +109,7 @@ func startFTPS(t *testing.T, implicit bool) *ftpsFixture {
 	if implicit {
 		scheme = "ftps"
 	}
-	return &ftpsFixture{f: f, url: scheme + "://" + l.Addr().String(), config: config, cert: cert, token: token}
+	return &ftpsFixture{f: f, url: scheme + "://" + address, config: config, cert: cert, token: token, restart: func(t *testing.T) { stop(t); start() }}
 }
 
 func (f *ftpsFixture) curl(t *testing.T, args ...string) []byte {

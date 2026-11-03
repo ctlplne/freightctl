@@ -28,6 +28,7 @@ type UploadView struct {
 	ID             string    `json:"id"`
 	Path           string    `json:"path"`
 	SFTPPath       string    `json:"sftp_path"`
+	FTPSPath       string    `json:"ftps_path,omitempty"`
 	ExpectedSize   int64     `json:"expected_size"`
 	ExpectedSHA256 string    `json:"expected_sha256"`
 	Offset         int64     `json:"committed_offset"`
@@ -158,7 +159,7 @@ func uploadView(u *store.UploadSession) (UploadView, error) {
 	if err := json.Unmarshal(u.Target, &target); err != nil {
 		return UploadView{}, store.ErrState
 	}
-	return UploadView{ID: u.ID, Path: target.Path, SFTPPath: "/.freightctl/uploads/" + u.ID, ExpectedSize: u.ExpectedSize, ExpectedSHA256: u.ExpectedSHA, Offset: u.Offset, Chunks: u.Chunks, State: u.State, Revision: u.Revision, Modified: u.Modified, EventID: u.EventID, FileID: u.FileID}, nil
+	return UploadView{ID: u.ID, Path: target.Path, SFTPPath: "/.freightctl/uploads/" + u.ID, FTPSPath: "/.freightctl/uploads/" + u.ID, ExpectedSize: u.ExpectedSize, ExpectedSHA256: u.ExpectedSHA, Offset: u.Offset, Chunks: u.Chunks, State: u.State, Revision: u.Revision, Modified: u.Modified, EventID: u.EventID, FileID: u.FileID}, nil
 }
 
 func uploadViewWithAcceptance(ctx context.Context, t *store.Transaction, u *store.UploadSession) (UploadView, error) {

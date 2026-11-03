@@ -157,6 +157,12 @@ type ClientDriverExtensionSite interface {
 	Site(param string) *AnswerCommand
 }
 
+// ClientContextExtensionTransferType exposes the engine's accepted TYPE state.
+// A driver must not infer it from commands that may not have executed yet.
+type ClientContextExtensionTransferType interface {
+	GetTransferType() TransferType
+}
+
 // ClientContext is implemented on the server side to provide some access to few data around the client
 type ClientContext interface {
 	// Path provides the path of the current connection

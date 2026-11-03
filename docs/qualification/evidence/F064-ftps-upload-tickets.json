@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "id": "F064",
+  "observed_at": "2026-11-02",
+  "state": "selected native ARM stand-in verified;stock native Linux ticket replay pending",
+  "starting_commit": "68b7e371fe648a1ac9cbfed6f42a2df7d440eeef",
+  "scope": "Actor-owned immutable upload tickets through explicit/implicit FTPS;real PostgreSQL/storage/TLS client;CSV hold/check/release. No whole parity row or journey qualifies.",
+  "product_change": [
+    "Route only reserved /.freightctl/uploads/<UUID> writes/stat/completion to the existing shared custody upload service. Other reserved operations and all ticket downloads remain refused.",
+    "Require the engine accepted binary transfer type through a narrow optional getter;never infer execution state from the earlier command-policy hook. Pinned upstream identity/license/patch inventory are preserved.",
+    "STOR REST must match the exact committed offset;APPE appends at the current end. Ordinary files retain previous semantics.",
+    "Completion rename permits only the ticket fixed destination and shares the historical SFTP completion key;lost replies recover one accepted revision.",
+    "Expose derived ftps_path without changing old saved receipt fields;no SQL migration or retained estate change."
+  ],
+  "first_failure": {
+    "manifest_reference": ".private/ftps-1ab9e95da39f4f2ba9678985d141f2bc/manifest.json",
+    "manifest_sha256": "ad676d74be8c88d8ea8b7288378cba73f0be144346751df87bad4253cb4a71f7",
+    "outcome": "Both explicit/implicit native journeys stop at owned ticket metadata with550 permission denied. Existing adapter rejects every reserved control path.",
+    "retained_metadata_and_roles_unchanged": true,
+    "isolated_database_removed": true,
+    "original_resource_state_restored": true,
+    "cleanup_failures": []
+  },
+  "local_replay": {
+    "manifest_reference": ".private/ftps-bacb363755a7404eaf107b9280bff5f3/manifest.json",
+    "manifest_sha256": "20fb67920381bb3eb3a1bda91bc8d0e21795a4c5de21adc20d4ffd518bca08e5",
+    "binary_sha256": "9feef7dc1c0e806b2aaf52cf52c7fa58bb097a859a838dd07aa0d3255ce75ea2",
+    "environment": "Go1.26.10 darwin/arm64;real application/PostgreSQL/storage;TLS1.3 stand-in",
+    "pass_records": 12,
+    "fail_records": 0,
+    "skip_records": 0,
+    "native_commands": 127,
+    "source_inputs": 673,
+    "scope": "All four limited native parent tests across both modes. Original production/fixture digests retained;later parser unit coverage and result documents appended separately.",
+    "retained_rows": 64339,
+    "retained_metadata_and_roles_unchanged": true,
+    "isolated_database_removed": true,
+    "original_resource_state_restored": true,
+    "postgres_restored_stopped": true,
+    "stock_curl_qualified": false,
+    "stock_lftp_qualified": false,
+    "inference_performed": false,
+    "scanner_started": false,
+    "cleanup_failures": []
+  },
+  "ticket_cases": [
+    "Actor-private progress and binary-only writes;another full-root actor cannot inspect or open the ticket.",
+    "One64KiB checkpoint survives an unclean data EOF and listener restart;97 unacknowledged tail bytes are dropped.",
+    "Wrong REST offset is refused;the exact offset resumes the remaining original bytes.",
+    "The final226 is deliberately not consumed after completion is independently durable;original completion receipt/file ID is recovered.",
+    "Wrong completion destination is refused;bound completion replay creates exactly one accepted file revision.",
+    "Full210018-byte CSV remains held until exact validation/release;independent FTPS retrieval matches it and the ticket remains undownloadable."
+  ],
+  "local_static_checks": {
+    "ftps_unit_race": "passed;reserved grammar and absent accepted-type capability fail closed",
+    "custody_ftps_vet": "passed",
+    "integration_compile": "passed;not runtime evidence",
+    "evidence_refusal_contracts": 26,
+    "pinned_engine_integrity_contracts": 4,
+    "source_patch_inventory": "35upstream files/8modified/3added tests;MIT preserved"
+  },
+  "native_profile": {
+    "state": "prepared;actual GitHub execution required",
+    "required_pass_records": 21,
+    "limited_pass_records": 12,
+    "new_stock_parent": "TestFTPSStockLFTPUploadTicket",
+    "stock_cases": "API commits a real64KiB prefix;stock lftp put -c resumes,performs bound completion replay;Go validates/releases the exact CSV;stock lftp independently retrieves identical bytes. Both modes/architectures required.",
+    "whole_journeys_qualified": false
+  },
+  "limits": [
+    "Selected listener restart is not an application SIGKILL,power-loss or clean-host recovery claim.",
+    "Public API/CLI ticket creation already shares custody;the new selected Go journey coordinates its controller through the service. Full public operator/browser/process-restart ticket journeys remain required.",
+    "Native stock Linux ARM/x86 and full regression replay pending. WindowsD103,broader clients/networks,scale/HA,outbound FTPS and all83whole rows/12full journeys remain open.",
+    "Local inference remains off;scanner and owner-deferred F026 aggregate are not run."
+  ],
+  "public_source_review": {
+    "manifest_reference": ".private/freightctl-ticket-public-review-a8c59cbe281a42e7a7edd252f9211bca/manifest.json",
+    "manifest_sha256": "45c646d4409f2a022a8d8771a01f50717f4e4e01cf68faef3343c0684540e86a",
+    "source_count": 674,
+    "exit_code": 0,
+    "scanner": "Gitleaks8.30.1 native ARM",
+    "scope": "All public source inputs before appending this result;private estate excluded;rules unchanged"
+  }
+}

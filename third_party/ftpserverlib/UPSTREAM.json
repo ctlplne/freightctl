@@ -18,7 +18,7 @@
     {
       "path": "client_handler.go",
       "upstream_sha256": "f5e1b51aa6f18118dc2f1ca4740e4d5956c1f4f8d87bfa3853abe733be118009",
-      "local_sha256": "8eba0b0d43e05f77c57efbc78e08063f91a740cf8b31acaaab73bffabb2047e6"
+      "local_sha256": "7aadb5850fe534fe789625ca8aefa45986754bb571cdb807c01492d57eba2d7f"
     },
     {
       "path": "client_handler_test.go",
@@ -48,7 +48,7 @@
     {
       "path": "driver.go",
       "upstream_sha256": "ad619b40b03f45b77b102475beb8372e3b1be12f306bddd313687a24579269a0",
-      "local_sha256": "817261bfc161ae20443978d0248d515293e2574f4fc886ce42b49b3be4fbece2"
+      "local_sha256": "45bea785f447128cea811e42a7d5595c52b6c16956613d1bd6e9911b3cc171ef"
     },
     {
       "path": "driver_test.go",
@@ -200,6 +200,7 @@
     "A refusal-only command policy hook and an active-socket wrapper give the adapter policy and cancellation control.",
     "PORT/EPRT construct numeric endpoints without DNS; EPRT honors RFC2428 delimiters and address families. PROT handles letter case consistently with the application policy.",
     "Upstream TLS tests generate a fresh ephemeral identity instead of committing a reusable private key. New tests cover the local changes.",
-    "Expand TestBogusTransferStart to assert syntax refusal for a mismatched address family, preserve the valid-family peer-refusal assertion, and prove that disabling the generic engine peer check never relaxes parsing. Product peer policy is unchanged."
+    "Expand TestBogusTransferStart to assert syntax refusal for a mismatched address family, preserve the valid-family peer-refusal assertion, and prove that disabling the generic engine peer check never relaxes parsing. Product peer policy is unchanged.",
+    "Optional accepted-transfer-type getter lets scoped upload tickets require binary data without guessing whether a TYPE command executed."
   ]
 }

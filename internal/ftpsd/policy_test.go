@@ -1,10 +1,37 @@
 package ftpsd
 
 import (
+	"errors"
 	"net"
+	"os"
 	"strings"
 	"testing"
 )
+
+func TestFTPReservedUploadPathsDoNotBecomeOrdinaryFiles(t *testing.T) {
+	id := "11111111-1111-4111-8111-111111111111"
+	name := "/.freightctl/uploads/" + id
+	if got, control := uploadTicket(name); !control || got != id {
+		t.Fatal("exact ticket grammar rejected")
+	}
+	for _, value := range []string{"/.freightctl", "/.freightctl/uploads", "/.freightctl/uploads/bad", name + "/suffix", "/other/.freightctl/uploads/" + id} {
+		if got, control := uploadTicket(value); !control || got != "" {
+			t.Fatal("reserved namespace escaped its narrow control grammar")
+		}
+	}
+	for _, value := range []string{"/ordinary.csv", "/uploads/" + id, "/.freightctl/uploads/../" + id, "/.freightctl/uploads/" + id + "\n"} {
+		if _, control := uploadTicket(value); control {
+			t.Fatal("ordinary or malformed path became a ticket")
+		}
+	}
+	// An engine without the accepted-type capability must fail closed even
+	// before any database or host filesystem is consulted.
+	for _, flags := range []int{os.O_RDONLY, os.O_WRONLY | os.O_CREATE} {
+		if _, err := (&filesystem{}).GetHandle(name, flags, 0); !errors.Is(err, os.ErrPermission) {
+			t.Fatal("ticket opened without engine/type authority", err)
+		}
+	}
+}
 
 func TestActiveDestinationCannotBounceToOtherPeersOrPrivilegedServices(t *testing.T) {
 	peer := &net.TCPAddr{IP: net.ParseIP("127.0.0.1"), Port: 40000}

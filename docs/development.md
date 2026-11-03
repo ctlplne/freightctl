@@ -132,7 +132,7 @@ Migration 4 adds namespace projections/history/command receipts, actor-scoped up
 
 ## Durable upload tickets
 
-[Resumable upload tickets](protocols/resumable-uploads.md) describe the shared HTTPS/CLI/SFTP flow, exact progress receipts, storage binding, completion and limits. Migrations 5–6 add immutable checkpoints, actor-private command receipts and a persistent storage reference. The namespace reserves `.freightctl` for protocol controls. Existing source, credentials and accepted bytes remain retained; no orphan is adopted automatically.
+[Resumable upload tickets](protocols/resumable-uploads.md) describe the shared HTTPS/CLI/SFTP/FTPS flow, exact progress receipts, storage binding, completion and limits. Migrations 5–6 add immutable checkpoints, actor-private command receipts and a persistent storage reference. The namespace reserves `.freightctl` for protocol controls. Existing source, credentials and accepted bytes remain retained; no orphan is adopted automatically.
 
 ## Outbound delivery and uncertain receipts
 
