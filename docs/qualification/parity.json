@@ -138,7 +138,8 @@
       "evidence": [
         "docs/qualification/evidence/F058-ftps-receiving.json",
         "docs/qualification/evidence/F059-native-ftps-stock.json",
-        "docs/qualification/evidence/F060-ftps-lftp-identity.json"
+        "docs/qualification/evidence/F060-ftps-lftp-identity.json",
+        "docs/qualification/evidence/F061-ftps-governance.json"
       ],
       "qualification_blockers": [
         "Native stock/enterprise clients and the new exact-commit GitHub replay remain unqualified.",
@@ -221,7 +222,8 @@
       "evidence": [
         "docs/qualification/evidence/F058-ftps-receiving.json",
         "docs/qualification/evidence/F059-native-ftps-stock.json",
-        "docs/qualification/evidence/F060-ftps-lftp-identity.json"
+        "docs/qualification/evidence/F060-ftps-lftp-identity.json",
+        "docs/qualification/evidence/F061-ftps-governance.json"
       ],
       "qualification_blockers": [
         "Native stock/enterprise clients and the new exact-commit GitHub replay remain unqualified.",

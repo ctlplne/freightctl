@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "F060",
   "kind": "native-ftps-stock-lftp-and-wire-identity",
-  "state": "native ARM/x86 stock curl and lftp receiving gates passed; local wire-identity replay passed; original full native repair replay passed; latest full native regression replay in progress",
+  "state": "native ARM/x86 stock curl and lftp receiving gates passed; local wire-identity replay passed; original full native repair replay passed; full native regression replay passed on both architectures",
   "observed_on": "2026-11-02",
   "starting_commit": "563751ee67b2a046664faba0eb78164eb552a5f6",
   "author_and_committer": "imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>",
@@ -211,7 +211,7 @@
   "current_candidate_other_runs": {
     "native_linux": {
       "id": 41558527697,
-      "state": "both module/vet/unit race steps passed;ARM PostgreSQL integration and x86 engine replay in progress",
+      "state": "success on both architectures",
       "jobs": {
         "x86_64": 125663219274,
         "arm64": 125663219294
@@ -222,7 +222,18 @@
       ],
       "metadata_state": "both passed",
       "fuzz_job": 125663218725,
-      "fuzz_state": "all nine targets passed"
+      "fuzz_state": "all nine targets passed",
+      "postgres_integration_each": {
+        "pass_records": 572,
+        "fail_records": 0,
+        "skip_records": 0
+      },
+      "engine_each": {
+        "pass_records": 223,
+        "fail_records": 0,
+        "skip_records": 1,
+        "skip": "TestActiveTransferFromPort20;existing privileged legacy port skip remains visible"
+      }
     },
     "core": {
       "id": 41558527655,
@@ -239,7 +250,7 @@
     },
     "stock_peers": {
       "id": 41558527714,
-      "state": "four entries passed;handoff entry finishing",
+      "state": "all five entries passed",
       "jobs": [
         125663218608,
         125663218981,
@@ -268,6 +279,20 @@
       "125663218492.log": {
         "bytes": 30152,
         "sha256": "4338a0db2e331e1cb90fbeda823ca3519f31d2f209f43ed65170b1aad465de9b"
+      }
+    }
+  },
+  "completed_full_replay_archive": {
+    "manifest_reference": ".private/freightctl-ftps-b99-full-replay-daa9eef1376b48f89d59afd382f8dcaa/manifest.json",
+    "manifest_sha256": "32d1e606e213c8828d3ddc5509f5b520eee856d26c0bb3006fe35a831f93aef9",
+    "files": {
+      "125663219274.log": {
+        "bytes": 475775,
+        "sha256": "a59ff9325dbef67e3e8086ce8d1e0151b7babfa2986287101c239c1b37d326cb"
+      },
+      "125663219294.log": {
+        "bytes": 493498,
+        "sha256": "d600244951079d3cf3b9518452db0b576c9deed5c5b614768b1f5b88194d6148"
       }
     }
   }

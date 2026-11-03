@@ -5,6 +5,8 @@ import hashlib
 import importlib.util
 import json
 from pathlib import Path
+import subprocess
+import sys
 import tempfile
 import unittest
 
@@ -168,6 +170,14 @@ class SummaryContracts(unittest.TestCase):
         self.assertEqual(summary.failure_diagnostics(self.root, self.result, "a" * 40)["lftp_failures"], [])
         (self.directory / "native-ftps-integration.stdout").write_text("changed")
         self.assertEqual(summary.failure_diagnostics(self.root, self.result, "a" * 40), {})
+
+    def test_optimized_python_cannot_disable_wire_assertions(self):
+        for name in ("ftps-probe.py", "ftps-governance-probe.py"):
+            result = subprocess.run([sys.executable, "-O", str(Path(__file__).with_name(name)), "--reference", str(self.root / "unread-reference")], capture_output=True, timeout=5)
+            self.assertNotEqual(result.returncode, 0)
+            report = json.loads(result.stdout)
+            self.assertEqual(report["state"], "failed")
+            self.assertEqual(report["failure_class"], "UnsafeOptimization")
 
 
 if __name__ == "__main__":

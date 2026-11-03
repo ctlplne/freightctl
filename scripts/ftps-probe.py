@@ -254,6 +254,9 @@ def run(settings):
 
 
 def main():
+    if not __debug__:
+        print(json.dumps({"state": "failed", "failure_class": "UnsafeOptimization", "reason": "Python assertions are required for protocol qualification"}))
+        return 1
     parser = argparse.ArgumentParser()
     parser.add_argument("--reference", required=True)
     args = parser.parse_args()

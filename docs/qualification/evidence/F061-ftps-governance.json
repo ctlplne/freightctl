@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "id": "F061",
+  "kind": "ftps-open-writer-credential-lifecycle-and-selected-intake",
+  "state": "final guarded-source native ARM service journey passed; native stock expanded-profile replay pending",
+  "observed_on": "2026-11-02",
+  "starting_commit": "e586641424f40ec39d3b1f0799da1852c406f5b6",
+  "author_and_committer": "imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>",
+  "runtime_source_changed": false,
+  "mechanism": "The TLS1.3 protocol client coordinates fixed phases with the actual scoped account/check services and PostgreSQL. It is a client stand-in; no authorization, parser or storage result is mocked.",
+  "credential_cases": [
+    "A delegated identity authenticates and uploads an accepted guard revision through FTPS.",
+    "While its authenticated resumed-data STOR writer is open, the manager commits a rotate command using the current account revision.",
+    "The invalidated writer must receive no completion success; the old token must return530 on fresh login; a new token must read the original bytes and complete a separate new transfer.",
+    "A second open writer under the rotated identity is revoked by a current manager command. It must fail without changing the original path/revision or committing extra file metadata.",
+    "Fresh revoked-token login returns530; an unaffected manager reads the original bytes through FTPS. All three AccountChanged events are present."
+  ],
+  "intake_cases": [
+    "A selected bounded CSV policy durably holds good and bad FTPS uploads. Neither path is listed or downloadable; raw file IDs cannot bypass the hold.",
+    "Actual deterministic CSV validation passes the good revision and rejects the invalid decimal revision without a releasable report hash. Both remain unavailable before separate release.",
+    "Changed file-digest approval and another file's passing report cannot release wrong or rejected bytes. Exact separate approval publishes only the valid immutable revision.",
+    "Revoking the selected policy blocks subsequent protocol retrieval. Rejected bytes remain unavailable throughout; no scanner verdict is claimed."
+  ],
+  "bounds": {
+    "postgres": "512MiB/oneCPU;exact retained resource;fresh test database only",
+    "go": "GOMAXPROCS=1;GOMEMLIMIT=192MiB",
+    "peer": "16KiB total JSON output;1024-byte fixed phase commands;1MiB read cap;verified TLS1.3 and resumed data;10s Go phase deadline plus existing transport/session deadlines",
+    "csv": "1024bytes/10rows/128bytes per record/2seconds;column limits16/16/10bytes"
+  },
+  "first_failures": [
+    {
+      "manifest_reference": ".private/ftps-19b75649c7bb4a79a0398cea78b88358/manifest.json",
+      "manifest_sha256": "550ff197024a4cc03e138b12f42ade10ee8b9e8e76fd8148151210f502953fec",
+      "class": "fixture policy refused before transfer",
+      "cause": "Default4096-byte columns exceeded the fixture128-byte record budget.",
+      "repair": "Set explicit16/16/10-byte column limits; keep record/file/time budgets unchanged.",
+      "retained_metadata_and_roles_unchanged": true,
+      "cleanup_failures": []
+    },
+    {
+      "manifest_reference": ".private/ftps-6ffc7525c01e4d858273eeb415e2bd0d/manifest.json",
+      "manifest_sha256": "da521c04a98f62d1eb9778414a7275a7367e0821b2ba4ab41d0af3d7ca97e926",
+      "class": "test expectation differed from persisted intake contract",
+      "cause": "The existing API records invalid CSV as rejected with no passing report hash, rather than a state named quarantined.",
+      "repair": "Assert rejected/one attempt/no release hash, then attempt another file's passing report and require ErrState. No product assertion or policy check is weakened.",
+      "retained_metadata_and_roles_unchanged": true,
+      "cleanup_failures": []
+    }
+  ],
+  "initial_passing_local_replay": {
+    "manifest_reference": ".private/ftps-c0c4e7243a3b4a4fb4a9fa3e7b76fd22/manifest.json",
+    "manifest_sha256": "9e92fb24c54ca8ffea92dc68ed3419b086f744af9525b05a2f2e83b0a7af6926",
+    "scope": "All nine stand-in native pass records before adding explicit Python optimization refusal guards; no stock-client claim."
+  },
+  "new_native_gate": {
+    "state": "pending actual replay",
+    "full_parent_tests": 5,
+    "full_pass_records_required": 15,
+    "local_standin_parent_tests": 3,
+    "local_standin_pass_records_required": 9,
+    "reporter_and_probe_refusal_contracts": 15,
+    "optimization": "Both assert-based wire clients refuse Python-O before reading a credential reference or opening a connection."
+  },
+  "previous_candidate_checkpoint": {
+    "candidate": "b99c8d2de0b74ac86cb4f88b7f0ee51aa1874c5a",
+    "native_run_id": 41558527697,
+    "jobs": {
+      "x86_64": 125663219274,
+      "arm64": 125663219294
+    },
+    "postgres_integration_pass_records_each": 572,
+    "postgres_fail_records_each": 0,
+    "postgres_skip_records_each": 0,
+    "engine_pass_records_each": 223,
+    "engine_fail_records_each": 0,
+    "engine_skip_records_each": 1,
+    "engine_skip": "TestActiveTransferFromPort20;existing privileged legacy port unavailable; no qualification follows from a skip.",
+    "stock_ftps": "Both native ARM/x86 curl+lftp jobs passed nine native records/41 commands each in F060.",
+    "other_gates": "Source/security/frontend, metadata, nine fuzz targets, all five stock entries and Mac pass. WindowsD103 stays red with22failures.",
+    "archive_reference": ".private/freightctl-ftps-b99-full-replay-daa9eef1376b48f89d59afd382f8dcaa/manifest.json",
+    "archive_sha256": "32d1e606e213c8828d3ddc5509f5b520eee856d26c0bb3006fe35a831f93aef9"
+  },
+  "limits": [
+    "New governance cases use the actual server adapter and shared Go manager/check services, not public CLI/API/browser governance mutation journeys.",
+    "Python is a TLS client stand-in; native stock curl/lftp must replay the expanded profile separately.",
+    "CSV rejection/unavailability does not qualify a real malware scanner, all quarantine/recheck policies, or processing breadth.",
+    "Queued work, upload-ticket recovery, sending/collection, broader networks/platforms/scale/durability, all whole parity rows and full journeys remain open.",
+    "No model, scanner or deferred F026 aggregate is run."
+  ],
+  "final_local_replay": {
+    "manifest_reference": ".private/ftps-408c01db85844331a1e5a659d86d83d0/manifest.json",
+    "manifest_sha256": "e52776048affbf851698571ece66b08aff4c10edf9eee7e3f741c67a36e8ceaf",
+    "binary_sha256": "35a042bbfed10076012a5bf69ad3a0334339e6d1bf63bcf4b578c3faa8e55d6a",
+    "environment": "Go1.26.10 darwin/arm64;actual PostgreSQL/storage/application;TLS1.3 explicit-resumption client stand-in",
+    "native_pass_records": 9,
+    "native_fail_records": 0,
+    "native_skip_records": 0,
+    "native_commands": 39,
+    "source_inputs": 659,
+    "source_scope": "All original source digests retained; F061 result metadata appended after the replay. No production runtime source changed.",
+    "all_exit_codes_zero": true,
+    "credential_subcase_seconds": [
+      0.78,
+      0.7
+    ],
+    "intake_subcase_seconds": [
+      0.75,
+      0.73
+    ],
+    "existing_idle_timeout_seconds": 3,
+    "retained_rows": 64339,
+    "retained_metadata_and_roles_unchanged": true,
+    "isolated_database_removed": true,
+    "original_resource_state_restored": true,
+    "postgres_restored_stopped": true,
+    "stock_curl_qualified": false,
+    "stock_lftp_qualified": false,
+    "inference_performed": false,
+    "scanner_started": false,
+    "cleanup_failures": []
+  },
+  "public_source_review": {
+    "manifest_reference": ".private/freightctl-ftps-governance-public-review-9cb298d50f974bc5959c8701aef27dbb/manifest.json",
+    "manifest_sha256": "34fce3ea1d2348c0568462232126a87a872958d00143ad28871fb3e4979c101c",
+    "kind": "full-public-source-secret-scan",
+    "scanner": "Gitleaks8.30.1 native ARM",
+    "exit_code": 0,
+    "source_count": 659,
+    "stderr_sha256": "f9f78eab6a97cb29272e575d85342b96a39537708da01efecdb3683aa21dd4a9",
+    "scope": "All659 public source inputs before appending this result; no ignored private estate scanned or published",
+    "rules_changed": false
+  }
+}

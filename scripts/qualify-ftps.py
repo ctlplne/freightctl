@@ -20,7 +20,7 @@ import time
 from urllib.parse import parse_qsl, urlsplit, urlunsplit
 import uuid
 
-from ftps_contract import CLI_PAYLOAD, HOSTILE_CASE_COUNT, LFTP_CASES, NATIVE_PARENT_TESTS
+from ftps_contract import CLI_PAYLOAD, HOSTILE_CASE_COUNT, LFTP_CASES, LIMITED_PARENT_TESTS, NATIVE_PARENT_TESTS
 
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location("metadata", ROOT / "scripts/qualify-retained-metadata.py")
@@ -155,10 +155,12 @@ def main():
         command("stock-curl-version", ["curl", "--version"])
         if not args.native_client_only:
             command("stock-lftp-version", ["lftp", "--version"])
-        selected = "^TestFTPSNativeTLSClient" if args.native_client_only else "^TestFTPS"
+        required = LIMITED_PARENT_TESTS if args.native_client_only else NATIVE_PARENT_TESTS
+        selected = "^(" + "|".join(required) + ")$" if args.native_client_only else "^TestFTPS"
         test_output = command("native-ftps-integration", ["sh", "scripts/go.sh", "test", "-p", "1", "-tags=integration", "-race", "-count=1", "-timeout=120s", "-v", "-run", selected, "./internal/custody"], 150).decode()
-        required = [NATIVE_PARENT_TESTS[0]] if args.native_client_only else NATIVE_PARENT_TESTS
-        if any("--- PASS: " + name + " (" not in test_output for name in required) or "--- SKIP:" in test_output or "--- FAIL:" in test_output:
+        expected = {name + suffix for name in required for suffix in ("", "/explicit", "/implicit")}
+        executed = re.findall(r"^\s*--- PASS: (TestFTPS\S+) \(", test_output, re.MULTILINE)
+        if len(executed) != len(expected) or set(executed) != expected or "--- SKIP:" in test_output or "--- FAIL:" in test_output:
             raise RuntimeError("required native FTPS tests did not execute successfully")
         manifest["native_tests"] = {"required": required, "pass_records": test_output.count("--- PASS:"), "failed_records": 0, "skipped_records": 0}
         tenant, partner = str(uuid.uuid4()), str(uuid.uuid4())

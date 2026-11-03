@@ -1,7 +1,11 @@
 """Shared qualification profile; execution still needs actual native clients."""
 
-NATIVE_PARENT_TESTS = [
+LIMITED_PARENT_TESTS = [
     "TestFTPSNativeTLSClientProtocolAndInterruption",
+    "TestFTPSNativeTLSClientCredentialLifecycle",
+    "TestFTPSNativeTLSClientIntakeReleaseAndRevocation",
+]
+NATIVE_PARENT_TESTS = LIMITED_PARENT_TESTS + [
     "TestFTPSStockCurlExplicitImplicitAndActiveCustody",
     "TestFTPSStockLFTPCustody",
 ]
