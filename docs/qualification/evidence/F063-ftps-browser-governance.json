@@ -32,7 +32,7 @@
     "typescript": "passed",
     "embedded_assets": "rebuilt and exact-source checked",
     "go_browser_unit": "passed",
-    "ftps_evidence_refusal_contracts": 24,
+    "ftps_evidence_refusal_contracts": 26,
     "workflow_syntax": "passed",
     "qualification_references": "passed",
     "current_go_browser_policy_contract": {
@@ -44,7 +44,7 @@
     }
   },
   "native_browser_replay": {
-    "state": "b13eb99 replays the policy loss case and reaches actual rejected CSV check;its DOM absence expectation is wrong because release is rendered disabled. Repair checks disabled state plus a new exact real-API409 refusal;full replay pending.",
+    "state": "8c89bc9 native browser job fails without a structured browser-operation failure;preserved original output. Checker source references unsupported file.size instead of Go file.size_bytes;repair and safe checker invariant diagnostics prepared. Complete profile still unqualified.",
     "workflow": ".github/workflows/ftps-browser.yml",
     "job": "Native x86 browser and live FTPS governance",
     "command": "python3 scripts/qualify-ftps.py --postgres-container-id EXACT_TASK_ID --browser",
@@ -165,5 +165,23 @@
     "cleanup_failures": 0,
     "archive_reference": ".private/freightctl-ftps-browser-bad-release-b13eb99/manifest.json",
     "archive_sha256": "8d391dc6bdba6fa743e9a33387683c98acc262760cdf3e6108f46af1ea2a82ae"
+  },
+  "checker_schema_repair": {
+    "candidate": "8c89bc9a8001b8cd6c78ceb2eeea9f562c8dbf1c",
+    "run_id": 41574135026,
+    "job_id": 125713615419,
+    "source_run_id": 41574135028,
+    "source_job_id": 125713615848,
+    "source_security": "passed112frontend contracts/24FTPSrefusal contracts;source/history secret scans passed",
+    "observation": "The failed browser job reports no browser-operation phase;its original cleanup observations all pass. Source inspection finds the checker reads a nonexistent size key;Go store.File emits size_bytes. The missing key is reproduced against both original F062 Go CLI outputs.",
+    "repair": "Read size_bytes and keep exact payload length/digest,registered policy and attempt assertions. Reopen both preserved good/bad Go outputs and independently compare their original registered policy and exact CSV payloads. Add a byte-binding refusal contract and allowlisted checker invariant diagnostics;never print raw exception/field values.",
+    "local_result": "Both preserved original Go check bindings pass;bad lengths,digests,policies,attempts and missing size_bytes are refused.26 evidence/refusal/privacy contracts pass.",
+    "state": "full native replay pending;code inspection/local evidence does not qualify the whole browser profile",
+    "retained_metadata_and_roles_unchanged": true,
+    "isolated_database_removed": true,
+    "original_resource_state_restored": true,
+    "cleanup_failures": 0,
+    "archive_reference": ".private/freightctl-ftps-browser-size-contract-8c89bc9/manifest.json",
+    "archive_sha256": "3d65ed4f0775643ca46ad0d9ef58c7fea59558516da093b2b16a09a4270a24ac"
   }
 }

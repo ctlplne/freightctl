@@ -258,7 +258,11 @@ def main():
                 ref = directory / "config.json"
                 ref.write_text(json.dumps(cfg))
                 command("browser-" + mode + "-operator", ["node", "scripts/ftps-operator-browser.mjs", ref], 240)
-                manifest.setdefault("browser_governance", {})[mode] = browser_evidence.validate(directory)
+                try:
+                    manifest.setdefault("browser_governance", {})[mode] = browser_evidence.validate(directory)
+                except Exception as exc:
+                    manifest["browser_evidence_failure"] = {"mode":mode,"invariant":browser_evidence.safe_failure(exc)}
+                    raise RuntimeError("browser original evidence check failed") from None
                 manifest.setdefault("browser_output_sha256", {})[mode] = {str(path.relative_to(directory)): metadata.digest(path) for path in sorted(directory.iterdir()) if path.is_file() and not path.is_symlink()}
             stop(label)
         if args.browser:

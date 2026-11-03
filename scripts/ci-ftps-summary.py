@@ -75,6 +75,9 @@ def failure_diagnostics(root, result, commit):
             outcome["browser_failures"] = browser_failures
         if accessibility:
             outcome["accessibility_failures"] = accessibility
+        invariant = manifest.get("browser_evidence_failure")
+        if isinstance(invariant,dict) and invariant.get("mode") in {"explicit","implicit"} and invariant.get("invariant") in browser_evidence.EVIDENCE_FAILURES:
+            outcome["browser_evidence_failure"] = {"mode":invariant["mode"],"invariant":invariant["invariant"]}
         if manifest.get("browser_requested") is True:
             outcome["cleanup_observation"] = {key: manifest.get(key) is True for key in ("retained_metadata_and_roles_unchanged", "isolated_database_removed", "original_resource_state_restored")}
             failures = manifest.get("cleanup_failures")

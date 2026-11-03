@@ -59,6 +59,26 @@ def synthetic_governance_outputs():
 
 
 class SummaryContracts(unittest.TestCase):
+    def test_browser_binding_uses_the_go_file_size_bytes_contract(self):
+        payload = governance.GOOD_CSV
+        check = {"attempts":1,"policy_hash":"a" * 64,"binding":{"file":{"size_bytes":len(payload),"sha256":hashlib.sha256(payload).hexdigest()}}}
+        browser.verify_check_binding(check,"a" * 64,payload)
+        for mutation in (lambda v:v["binding"]["file"].update(size_bytes=len(payload)+1),lambda v:v["binding"]["file"].update(sha256="0"*64),lambda v:v.update(attempts=2),lambda v:v["binding"]["file"].pop("size_bytes")):
+            changed = copy.deepcopy(check);mutation(changed)
+            with self.assertRaises(ValueError): browser.verify_check_binding(changed,"a"*64,payload)
+        with self.assertRaises(ValueError): browser.verify_check_binding(check,"b"*64,payload)
+
+    def test_browser_evidence_diagnostics_refuse_arbitrary_private_messages(self):
+        exact = "browser check byte/policy binding differs"
+        self.manifest["browser_evidence_failure"] = {"mode":"explicit","invariant":exact}
+        self.write()
+        self.assertEqual(summary.failure_diagnostics(self.root,self.result,"a"*40)["browser_evidence_failure"],{"mode":"explicit","invariant":exact})
+        self.manifest["browser_evidence_failure"]["invariant"] = "private browser data must not be printed"
+        self.write()
+        self.assertNotIn("browser_evidence_failure",summary.failure_diagnostics(self.root,self.result,"a"*40))
+        self.assertEqual(browser.safe_failure(ValueError("private")),"unclassified browser evidence failure")
+        self.assertEqual(browser.safe_failure(KeyError("private")),"missing required browser evidence field")
+
     def test_browser_http_refusal_requires_exact_label_status_and_error(self):
         exact = json.dumps({"error":"operation_state_conflict"})
         browser.verify_http_outcome("bad-release",409,exact)

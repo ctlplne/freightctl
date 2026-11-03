@@ -2034,6 +2034,22 @@
         "https://github.com/ctlplne/freightctl/actions/runs/41572844196",
         "docs/qualification/evidence/F063-ftps-browser-governance.json"
       ]
+    },
+    {
+      "id": "D126",
+      "severity": "qualification original-output schema defect",
+      "state": "fixed against preserved actual Go outputs;full native replay pending",
+      "observed_on": "2026-11-02",
+      "candidate": "8c89bc9a8001b8cd6c78ceb2eeea9f562c8dbf1c",
+      "journey": "Independent browser/FTPS original-output validation",
+      "title": "Evidence checker reads file.size although Go serializes size_bytes",
+      "first_failure": "Native browser run41574135026 job125713615419 fails without a structured browser phase. Source inspection and reopening both original F062 Go CLI check outputs reproduce missing size;actual Go File keys include size_bytes.",
+      "cause": "The new checker used the wrong wire field name. The original failure diagnostic did not expose safe checker invariants.",
+      "resolution": "Use size_bytes and retain exact byte length,digest,policy and attempt checks. Both preserved real Go bindings pass against the original policy/payloads;new refusal coverage rejects changed/missing metadata. Emit only known invariant text or generic missing-field/unclassified categories,never raw exception values. Full original native browser replay remains required.",
+      "regression_evidence": [
+        "https://github.com/ctlplne/freightctl/actions/runs/41574135026",
+        "docs/qualification/evidence/F063-ftps-browser-governance.json"
+      ]
     }
   ]
 }

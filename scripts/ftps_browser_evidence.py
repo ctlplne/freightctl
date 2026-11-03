@@ -16,11 +16,65 @@ ACCESSIBILITY_RULES = set(json.loads((Path(__file__).resolve().parents[1] / "web
 PHASES = {"credential-sign-in", "credential-create", "credential-rotate", "credential-revoke", "intake-sign-in", "policy-register", "intake-list", "check-bad", "check-good", "bad-release-refusal", "release", "policy-revoke", "final-audit"}
 
 
+EVIDENCE_FAILURES = frozenset({
+    'browser FTPS wire proof differs',
+    'browser accessibility proof differs',
+    'browser account command count differs',
+    'browser account transition differs',
+    'browser check byte/policy binding differs',
+    'browser command key differs',
+    'browser credential proof differs',
+    'browser did not complete',
+    'browser did not inspect the actual FTPS check',
+    'browser original HTTP outcome differs',
+    'browser original output hash differs',
+    'browser output closure differs',
+    'browser output inventory differs',
+    'browser peer endpoint or scope differs',
+    'browser policy definition differs',
+    'browser policy registration differs',
+    'browser policy revocation differs',
+    'browser refusal did not target the rejected immutable revision',
+    'browser rejected-file release refusal differs',
+    'browser release count differs',
+    'browser release is not bound to the inspected bytes/report/revision',
+    'browser release receipt differs',
+    'browser request is not original selection',
+    'browser response inventory differs',
+    'browser response is not original output',
+    'browser response labels repeat',
+    'browser retry changed reviewed command',
+    'browser retry changed saved receipt',
+    'browser revoked another policy revision',
+    'browser runtime or egress failure',
+    'browser scope differs',
+    'browser sent a raw credential',
+    'browser wire label differs',
+    'browser writer did not resume its control',
+    'missing required browser evidence field',
+    'required browser proof is missing',
+    'unclassified browser evidence failure',
+    'unsafe browser output reference',
+})
+
+def safe_failure(error):
+    if type(error) is ValueError and str(error) in EVIDENCE_FAILURES:
+        return str(error)
+    if type(error) is KeyError:
+        return "missing required browser evidence field"
+    return "unclassified browser evidence failure"
+
+
 def verify_http_outcome(label, status, body):
     require(re.fullmatch(r"(?:wire|loss)-[0-9]{1,3}|bad-release", label), "browser wire label differs")
     require(type(status) is int and status == (409 if label == "bad-release" else 200), "browser original HTTP outcome differs")
     if label == "bad-release":
         require(json.loads(body) == {"error":"operation_state_conflict"}, "browser rejected-file release refusal differs")
+
+
+def verify_check_binding(check, policy_hash, payload):
+    file = check.get("binding", {}).get("file", {})
+    require(check.get("attempts") == 1 and check.get("policy_hash") == policy_hash and file.get("sha256") == hashlib.sha256(payload).hexdigest() and file.get("size_bytes") == len(payload), "browser check byte/policy binding differs")
 
 
 def validate(directory, inventory=None):
@@ -92,7 +146,7 @@ def validate(directory, inventory=None):
         matches = [v for v in views if v.get("state") == state and v.get("binding", {}).get("target", {}).get("path") == path]
         require(matches, "browser did not inspect the actual FTPS check")
         for v in matches:
-            require(v.get("attempts") == 1 and v.get("policy_hash") == policy["definition_hash"] and v["binding"]["file"]["sha256"] == hashlib.sha256(payload).hexdigest() and v["binding"]["file"]["size"] == len(payload), "browser check byte/policy binding differs")
+            verify_check_binding(v, policy["definition_hash"], payload)
     releases = commands("report_hash")
     require(len(releases) == 1, "browser release count differs")
     selection, result, key = releases[0]
