@@ -83,7 +83,7 @@
     },
     {
       "path": "web/src/intake-policy-types.ts",
-      "sha256": "b8af07f32495d11fcd50bab5542f2d7740bee886e2c66ce2175bafb66bea1ab3"
+      "sha256": "5e1f8c2bd4ea26893ef221abbc2998bffddae9169db26439313a2bb578647b01"
     },
     {
       "path": "web/src/intake-policy.tsx",
@@ -222,8 +222,8 @@
     },
     {
       "name": "app.js",
-      "sha256": "71145f6897df4a56bbdd475661b9d9a9b8873aa2df735ec6be5471d5d91887e8",
-      "size": 670667
+      "sha256": "ed83fbf55ece273b1a76711eeddbfdb47ae2af47b5f6d0393edb23d09c88c2f2",
+      "size": 670828
     },
     {
       "name": "app.js.LEGAL.txt",

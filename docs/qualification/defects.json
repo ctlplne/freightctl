@@ -1964,6 +1964,23 @@
         "docs/qualification/evidence/F059-native-ftps-stock.json",
         "docs/qualification/evidence/F060-ftps-lftp-identity.json"
       ]
+    },
+    {
+      "id": "D122",
+      "severity": "browser policy compatibility defect",
+      "state": "fixed and replayed against Go-normalized definition",
+      "observed_on": "2026-11-02",
+      "candidate": "55286c31f698e08366c406ef36d0cc227e7b9ed8",
+      "journey": "Reviewed browser CSV intake policy",
+      "title": "JavaScript whitespace handling rejects a valid stored CSV header",
+      "first_failure": "Go checks.Normalize accepts a literal leading U+FEFF header character;the original frontend policy hash/read-model path exits1 because JavaScript trim removes it.",
+      "cause": "ECMAScript trim and Go strings.TrimSpace use different whitespace sets.",
+      "resolution": "Match Go Unicode whitespace without trimming or rewriting header names. Regenerate the golden definition/hash with actual Go normalization;replay frontend policy/hash validation including signer/scanner references,HTML escaping and embedded Unicode line separator. Bounds and malformed/control-character refusals remain enforced.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F063-ftps-browser-governance.json",
+        "web/tests/fixtures/intake-policy-protected.json",
+        "web/tests/intake-policy.test.mjs"
+      ]
     }
   ]
 }

@@ -93,7 +93,11 @@ export function intakeDefinition(value: unknown): IntakeDefinition {
     keys(c, ["name", "type", "required", "max_bytes", "precision", "scale"]);
     if (
       typeof c.name !== "string" ||
-      c.name.trim() !== c.name ||
+      // Match Go strings.TrimSpace: ECMAScript trim also removes U+FEFF,
+      // which is a valid literal CSV header character in a stored policy.
+      /^[\u0009-\u000d\u0020\u0085\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000]|[\u0009-\u000d\u0020\u0085\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000]$/u.test(
+        c.name,
+      ) ||
       !c.name ||
       new TextEncoder().encode(c.name).length > 128 ||
       /[\p{Cc}\p{Cs}]/u.test(c.name) ||

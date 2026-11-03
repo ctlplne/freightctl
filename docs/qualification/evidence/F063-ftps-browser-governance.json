@@ -9,6 +9,12 @@
     {
       "kind": "golden test fixture validation",
       "detail": "The Go validator rejects an example column name with a trailing Unicode line separator because it is whitespace. Move the separator inside the synthetic name; regenerate the golden JSON using actual checks.Normalize and internal/crypto.Digest. No runtime policy validator was weakened."
+    },
+    {
+      "kind": "UI rejects valid backend CSV header",
+      "detail": "Actual Go checks.Normalize accepts a leading U+FEFF literal in a header name;JavaScript trim removes it and the first frontend replay exits1. Match Go Unicode whitespace instead;the regenerated Go golden policy with U+FEFF,HTML and an internal Unicode line separator now passes the original frontend hash/read-model journey.",
+      "first_failure_reference": ".private/freightctl-intake-ui-golden-32603109f444400a9d4eaea9a9811c92/bom-first-failure.log",
+      "first_failure_sha256": "a166495344adce5d006fb98b390f4fd1fdb82c31526f9e1a8979288513334144"
     }
   ],
   "local_checks": {
@@ -21,12 +27,15 @@
     "qualification_references": "passed"
   },
   "native_browser_replay": {
-    "state": "pending",
+    "state": "native x86 job preparing exact browser dependencies;Unicode parser follow-up requires a later candidate",
     "workflow": ".github/workflows/ftps.yml",
     "job": "Native x86 browser and live FTPS governance",
     "command": "python3 scripts/qualify-ftps.py --postgres-container-id EXACT_TASK_ID --browser",
     "evidence_checker": "python3 scripts/ci-ftps-summary.py --result .private/ftps-browser-result.json --require-browser",
-    "claim": "This plan and the lightweight checks do not establish browser runtime qualification."
+    "claim": "This plan and the lightweight checks do not establish browser runtime qualification.",
+    "candidate": "55286c31f698e08366c406ef36d0cc227e7b9ed8",
+    "run_id": 41569654224,
+    "job_id": 125699325050
   },
   "acceptance": {
     "each_listener_mode": [
@@ -60,5 +69,12 @@
     "source_count": 669,
     "exit_code": 0,
     "scope": "All public source inputs before appending this result and final synthetic refusal cases;ignored estate excluded;rules unchanged"
+  },
+  "unicode_followup_source_review": {
+    "manifest_reference": ".private/freightctl-ftps-browser-unicode-review-e3b80c993f7c47ea86caff9162a2f65f/manifest.json",
+    "manifest_sha256": "a01a846a6d448f80da0042b6b2875f633de19f73bf17d55e80430d0fe5a7b2da",
+    "source_count": 669,
+    "exit_code": 0,
+    "scope": "All public source before this result and D122 record;rules unchanged;private estate excluded"
   }
 }
