@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+from metadata_contract import CURRENT_PROFILE
 
 spec = importlib.util.spec_from_file_location("ci_metadata", Path(__file__).with_name("ci-metadata-summary.py"))
 module = importlib.util.module_from_spec(spec)
@@ -32,7 +33,7 @@ class MetadataSummaryContracts(unittest.TestCase):
 
     def test_exact_profile_has_one_safe_result_with_no_raw_records_or_paths(self):
         summary = self.summary(self.fixture())
-        self.assertEqual(summary["schema"], 36)
+        self.assertEqual(summary["schema"], CURRENT_PROFILE["schema"])
         self.assertEqual(summary["metadata_tables"], 64)
         self.assertEqual(summary["forced_rls_tables"], 63)
         self.assertEqual(summary["restored_rows"], 64)

@@ -60,7 +60,7 @@ func TestOutboundDispatchGoBrowserCanonicalMetadataAndNoContact(t *testing.T) {
 			derived++
 		}
 	}
-	if derived != 6 {
+	if derived != 12 {
 		t.Fatal("missing derived reference cases")
 	}
 	data, err = json.Marshal(templates)
@@ -72,7 +72,7 @@ func TestOutboundDispatchGoBrowserCanonicalMetadataAndNoContact(t *testing.T) {
 		Preview   DispatchPreview              `json:"preview"`
 		Review    store.OutboundDispatchReview `json:"review"`
 	}
-	if json.Unmarshal(data, &f) != nil || len(f) != 4 {
+	if json.Unmarshal(data, &f) != nil || len(f) != 6 {
 		t.Fatal("fixture")
 	}
 	for name, v := range f {

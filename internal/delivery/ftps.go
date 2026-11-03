@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"path"
+	"regexp"
 	"strings"
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
@@ -23,11 +24,21 @@ type FTPSDefinition struct {
 	ReceiverContract store.FTPSReceiverContract `json:"receiver_contract"`
 }
 
-func validFTPSFilename(name string) bool {
+func ValidFTPSFilename(name string) bool {
 	// The immutable final name has a UUID prefix, but a trailing dot still
 	// violates the same virtual-path rule used by the wire adapter. Refuse it
 	// before admitting a draft instead of stranding bytes after STOR.
 	return namePattern.MatchString(name) && !strings.HasSuffix(name, ".")
+}
+
+// Valid checks only the immutable configuration. It opens no file or socket;
+// the worker must still check the live references and execution authority.
+func (f *FTPSDefinition) Valid(directory string) bool { return validFTPSDefinition(f, directory) }
+
+var ftpsStepPattern = regexp.MustCompile(`^[a-z][a-z0-9_]{0,63}$`)
+
+func validFTPSBinding(b *store.ExecutionBinding) bool {
+	return b == nil || (store.ValidID(b.WorkflowID) && b.WorkflowVersion > 0 && dispatchHashPattern.MatchString(b.WorkflowHash) && store.ValidID(b.RunID) && ftpsStepPattern.MatchString(b.StepID) && store.ValidID(b.ConnectionID) && b.ConnectionVersion > 0 && dispatchHashPattern.MatchString(b.ConnectionHash))
 }
 
 func validFTPSDefinition(f *FTPSDefinition, finalDirectory string) bool {
@@ -54,7 +65,7 @@ func validProtocolDefinition(d *Definition) bool {
 		return d.FTPS == nil
 	}
 	ssh := d.Destination
-	return d.Schema == 2 && validFTPSFilename(d.Filename) && d.Encryption == nil && d.Binding == nil && d.Transfer == nil && ssh.Address == "" && ssh.User == "" && len(ssh.Host.Wire) == 0 && ssh.Host.Fingerprint == "" && ssh.KeyFile == "" && ssh.KeyFingerprint == "" && validFTPSDefinition(d.FTPS, d.Directory)
+	return d.Schema == 2 && ValidFTPSFilename(d.Filename) && d.Encryption == nil && validFTPSBinding(d.Binding) && d.Transfer == nil && ssh.Address == "" && ssh.User == "" && len(ssh.Host.Wire) == 0 && ssh.Host.Fingerprint == "" && ssh.KeyFile == "" && ssh.KeyFingerprint == "" && validFTPSDefinition(d.FTPS, d.Directory)
 }
 
 func ftpsStagingPath(d *store.Delivery, spec *Definition) string {
@@ -64,7 +75,7 @@ func ftpsStagingPath(d *store.Delivery, spec *Definition) string {
 func ftpsEffect(d *store.Delivery, spec *Definition) *store.OutboundDispatchEffect {
 	f := spec.FTPS
 	dest := f.Destination
-	return &store.OutboundDispatchEffect{Protocol: "ftps", Address: dest.Address, User: dest.User, Directory: spec.Directory, Filename: spec.Filename, FinalPath: finalPath(d, spec), FTPS: &store.OutboundFTPSEffect{Mode: dest.Mode, ServerName: dest.ServerName, CASHA256: dest.CASHA256, CAReferenceHash: secure.Digest([]byte(dest.CAFile)), PasswordReferenceHash: secure.Digest([]byte(dest.PasswordFile)), StagingPath: ftpsStagingPath(d, spec), ReceiverContract: f.ReceiverContract}}
+	return &store.OutboundDispatchEffect{Protocol: "ftps", Address: dest.Address, User: dest.User, Directory: spec.Directory, Filename: spec.Filename, FinalPath: finalPath(d, spec), Workflow: spec.Binding, FTPS: &store.OutboundFTPSEffect{Mode: dest.Mode, ServerName: dest.ServerName, CASHA256: dest.CASHA256, CAReferenceHash: secure.Digest([]byte(dest.CAFile)), PasswordReferenceHash: secure.Digest([]byte(dest.PasswordFile)), StagingPath: ftpsStagingPath(d, spec), ReceiverContract: f.ReceiverContract}}
 }
 
 func ftpsReceipt(d *store.Delivery, spec *Definition, reconciled bool) json.RawMessage {

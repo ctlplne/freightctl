@@ -5,7 +5,7 @@ import hashlib
 import importlib.util
 import json
 import shutil
-from metadata_contract import CURRENT_PROFILE, RETAINED_PROFILE, migration_ledger
+from metadata_contract import CURRENT_PROFILE, PREVIOUS_PROFILE, RETAINED_PROFILE, migration_ledger
 from pathlib import Path
 import subprocess
 import sys
@@ -84,9 +84,15 @@ class SummaryContracts(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.check()
 
-    def test_current_schema36_cannot_be_rejected_by_stale_retained_profile(self):
+    def test_current_schema_cannot_be_rejected_by_stale_retained_profile(self):
         self.manifest["retained_schema"] = CURRENT_PROFILE["schema"]
         self.manifest["retained_before"]["migration_ledger"] = migration_ledger(self.root,CURRENT_PROFILE["schema"])
+        self.manifest["retained_after"] = copy.deepcopy(self.manifest["retained_before"])
+        self.assertEqual(self.check()["state"], "passed")
+
+    def test_explicit_previous_schema36_remains_an_exact_read_only_profile(self):
+        self.manifest["retained_schema"] = PREVIOUS_PROFILE["schema"]
+        self.manifest["retained_before"]["migration_ledger"] = migration_ledger(self.root,PREVIOUS_PROFILE["schema"])
         self.manifest["retained_after"] = copy.deepcopy(self.manifest["retained_before"])
         self.assertEqual(self.check()["state"], "passed")
 
@@ -102,13 +108,13 @@ class SummaryContracts(unittest.TestCase):
         self.manifest["failure"]="private server failure text"
         self.write()
         result=summary.failure_diagnostics(self.root,self.result,"a"*40)
-        self.assertEqual(result["postgres_profile"],{"declared_schema":None,"migration_records":36,"metadata_tables":64,"forced_rls_tables":63,"matches_exact_source_profile":False})
+        self.assertEqual(result["postgres_profile"],{"declared_schema":None,"migration_records":CURRENT_PROFILE["schema"],"metadata_tables":64,"forced_rls_tables":63,"matches_exact_source_profile":False})
         self.assertNotIn("private",json.dumps(result))
 
     def test_declared_profile_cannot_substitute_missing_changed_or_unknown_migrations(self):
         for change in (
             lambda m:m.update(retained_schema=35),
-            lambda m:m.update(retained_schema=37),
+            lambda m:m.update(retained_schema=CURRENT_PROFILE["schema"]+1),
             lambda m:m.update(retained_schema=True),
             lambda m:m.pop("retained_schema"),
             lambda m:m["retained_before"]["migration_ledger"].pop(),

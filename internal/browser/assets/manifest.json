@@ -155,7 +155,7 @@
     },
     {
       "path": "web/src/outbound-approvals-types.ts",
-      "sha256": "40351f5885a9d6bc60becf901f4a5f6a804768119c07191f50b7c826cebf5d3d"
+      "sha256": "df1ae11f6e09f2e9db2f792ef2235be89f819fe38e1867aacabb36361febd61e"
     },
     {
       "path": "web/src/outbound-approvals.tsx",
@@ -226,8 +226,8 @@
     },
     {
       "name": "app.js",
-      "sha256": "be3f76af3753d9aa01ba25dc23244fd86538477f51e2331951bf6934fff70806",
-      "size": 678835
+      "sha256": "9bd3a0176fddb397ad5aaef02866f08c6ac52d2ae573236296070bd0465a8e27",
+      "size": 679125
     },
     {
       "name": "app.js.LEGAL.txt",

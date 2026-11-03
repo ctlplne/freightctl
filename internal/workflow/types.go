@@ -14,6 +14,7 @@ import (
 	"unicode"
 	"unicode/utf8"
 
+	"github.com/ctlplne/freightctl/internal/delivery"
 	"github.com/ctlplne/freightctl/internal/store"
 	"golang.org/x/text/unicode/norm"
 )
@@ -184,7 +185,7 @@ func Normalize(d Definition) (Definition, error) {
 	d.Steps = owned
 	seen := map[string]bool{}
 	for _, s := range d.Steps {
-		if !stepPattern.MatchString(s.ID) || seen[s.ID] || s.Kind != "sftp.deliver" || !store.ValidID(s.Connection.ID) || s.Connection.Version < 1 || !hashPattern.MatchString(s.Connection.Hash) || !filenamePattern.MatchString(s.Filename) {
+		if !stepPattern.MatchString(s.ID) || seen[s.ID] || (s.Kind != "sftp.deliver" && s.Kind != "ftps.deliver") || !store.ValidID(s.Connection.ID) || s.Connection.Version < 1 || !hashPattern.MatchString(s.Connection.Hash) || !filenamePattern.MatchString(s.Filename) || (s.Kind == "ftps.deliver" && (!delivery.ValidFTPSFilename(s.Filename) || s.Encryption != nil)) {
 			return d, fmt.Errorf("%w: unsupported or incomplete step", ErrInput)
 		}
 		seen[s.ID] = true

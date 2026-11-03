@@ -3,7 +3,7 @@
   "id": "F073",
   "observed_at": "2026-11-03",
   "starting_commit": "7879c34f9e917d5c650a60b1800c59050044c01a",
-  "state": "acceptance cases frozen; missing typed operation reproduced; implementation not started",
+  "state": "partial implementation committed at owner pause; native runtime qualification pending",
   "scope": "Next dependency: versioned registered FTPS destinations and typed workflow sending through ordinary execution and independent dispatch consent. This does not replace remaining encryption, collection, independent peer or whole-product requirements.",
   "first_failure": {
     "kind": "actual native ARM typed-workflow contract",
@@ -74,5 +74,41 @@
     "FTPS collection, independent supported x86 receiver qualification, broader protocol behavior and complete receiving/sending customer journeys remain required.",
     "D145 stays open as intermittent despite a passing diagnostic replay. Windows D103 and all83 whole baseline rows/12 full journeys remain open."
   ],
-  "next_action": "Implement protocol-aware registered connection validation/views, typed planning and execution plus exact SQL/browser dispatch bindings; then run the frozen cases. Do not treat this contract or its expected missing-operation failure as implementation or runtime qualification."
+  "next_action": "Owner-paused. On explicit resume, add and execute the frozen native workflow/SQL/receiver cases and public CLI/browser qualification before claiming F073 runtime support.",
+  "implementation_checkpoint": {
+    "versioned_connection": "schema2 FTPS definitions, strict canonical validation and redacted reference fingerprints",
+    "typed_execution": "ftps.deliver uses exact registered protocol/version; queued delivery includes the workflow/run/step/connection binding; unsupported recipient encryption remains refused",
+    "database_guards": "new append-only037 migration checks connection protocol and exact workflow/delivery/dispatch effects; embedded/compiled only, not runtime-qualified",
+    "browser": "shared typed workflow binding parser and two new matching Go/browser FTPS workflow fixtures; original four fixture meanings and hashes preserved",
+    "schema_profiles": "fresh37, explicit previous36 and retained35 all require their exact source migration ledger; no retained upgrade performed",
+    "embedded_assets": "rebuilt and source/output closure checked"
+  },
+  "local_checks": {
+    "system": "Darwin",
+    "architecture": "arm64",
+    "go_unit_race_pass_records": 171,
+    "frontend_pass_records": 120,
+    "frontend_failures": 0,
+    "frontend_skips": 0,
+    "reporter_contracts": 51,
+    "metadata_contracts": 7,
+    "typecheck": "passed",
+    "embedded_build_and_closure": "passed",
+    "integration_check": "compile only; no runtime tests executed",
+    "manifest_reference": ".private/freightctl-f073-paused-343oy4e1/manifest.json",
+    "manifest_sha256": "a054fe5db31023620a08118c3abe0ee1f4c7596b14a703a1b4ebf0b186af10fd",
+    "first_local_failure": "Request-only lowercase-key decoding rejected historical SSH Wire/Fingerprint storage keys. Stored decoding now preserves those keys, rejects unknown/trailing data and verifies the exact canonical hash. Original and repaired outputs are retained."
+  },
+  "qualification_claim": false,
+  "pause_handoff": {
+    "requested_by": "owner",
+    "state": "halt after local commit; do not push",
+    "remaining": [
+      "Add the frozen real PostgreSQL/application-receiver workflow integration cases; none has executed for schema37.",
+      "Extend the public CLI/API/browser qualification from direct FTPS intents to workflow-created intents; C01\u2013C10 remain unqualified.",
+      "On explicit resume, use the existing source/CI push authorization to run original fresh native Linux, metadata, stock and browser suites through GitHub.",
+      "Keep retained35 unchanged, local inference off and F026 owner-deferred. D145 remains intermittent and WindowsD103/x86vendor gates remain open."
+    ],
+    "resume_at": "Complete F073 integration/public qualification using the frozen cases and current partial implementation. Do not mark F073 or the overall goal complete from these local contracts."
+  }
 }

@@ -68,7 +68,7 @@ for (const value of Object.values(fixture)) {
     derivedReferences++;
   }
 }
-assert.equal(derivedReferences, 6);
+assert.equal(derivedReferences, 12);
 const preview = (f) =>
   asDispatchPreview(
     f.preview,
@@ -77,6 +77,44 @@ const preview = (f) =>
     f.selection,
     asDispatchView(f.view, f.view.id),
   );
+test("registered FTPS workflow reviews preserve Go hashes, exact bindings and rendered workflow identities", () => {
+  for (const mode of ["explicit", "implicit"]) {
+    const f = fresh("ftps_workflow_" + mode),
+      p = preview(f);
+    assert.equal(dispatchHash(p.definition), p.definition_hash);
+    const binding = p.definition.effect.workflow_binding;
+    assert.deepEqual(
+      binding,
+      fixture.workflow.preview.definition.effect.workflow_binding,
+    );
+    const html = renderToStaticMarkup(
+      createElement(DispatchDetails, { d: p.definition }),
+    );
+    for (const value of [
+      binding.workflow_id,
+      binding.run_id,
+      binding.step_id,
+      binding.connection_id,
+    ])
+      assert.ok(html.includes(value));
+    for (const field of [
+      "run_id",
+      "connection_id",
+      "workflow_hash",
+      "connection_hash",
+      "step_id",
+    ]) {
+      const changed = fresh("ftps_workflow_" + mode);
+      changed.preview.definition.effect.workflow_binding[field] =
+        "../../outside";
+      assert.throws(() => asDispatchDefinition(changed.preview.definition));
+    }
+    const extra = fresh("ftps_workflow_" + mode);
+    extra.preview.definition.effect.workflow_binding.password_reference =
+      "/private/password";
+    assert.throws(() => asDispatchDefinition(extra.preview.definition));
+  }
+});
 test("both FTPS modes preserve exact Go review metadata without credential references or password digests", () => {
   for (const name of ["ftps_explicit", "ftps_implicit"]) {
     const f = fresh(name),
@@ -150,8 +188,10 @@ test("FTPS review refuses unsupported promises, visible staging, mixed protocols
       (d.effect.encryption =
         fixture.workflow.preview.definition.effect.encryption),
     (d) =>
-      (d.effect.workflow_binding =
-        fixture.workflow.preview.definition.effect.workflow_binding),
+      (d.effect.workflow_binding = {
+        ...fixture.workflow.preview.definition.effect.workflow_binding,
+        step_id: "../../outside",
+      }),
   ]) {
     const f = fresh("ftps_explicit");
     mutate(f.preview.definition);

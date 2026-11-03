@@ -201,6 +201,7 @@ function ftpsEffect(
     "key_reference_sha256",
     "recipient_fingerprint",
     "ftps",
+    ...(o.workflow_binding === undefined ? [] : ["workflow_binding"]),
   ]);
   const f = object(o.ftps),
     c = object(f.receiver_contract),
@@ -265,6 +266,9 @@ function ftpsEffect(
     key_fingerprint: "",
     key_reference_sha256: "",
     recipient_fingerprint: "",
+    ...(o.workflow_binding === undefined
+      ? {}
+      : { workflow_binding: asWorkflowBinding(o.workflow_binding) }),
     ftps: {
       mode: f.mode,
       server_name: serverName,
@@ -281,6 +285,31 @@ function ftpsEffect(
         receipt: "exact-readback",
       },
     },
+  };
+}
+function asWorkflowBinding(v: unknown): WorkflowBinding {
+  const b = object(v),
+    step = text(b, "step_id", 64);
+  exact(b, [
+    "workflow_id",
+    "workflow_version",
+    "workflow_hash",
+    "run_id",
+    "step_id",
+    "connection_id",
+    "connection_version",
+    "connection_hash",
+  ]);
+  if (!/^[a-z][a-z0-9_]{0,63}$/.test(step)) bad();
+  return {
+    workflow_id: id(b, "workflow_id"),
+    workflow_version: num(b, "workflow_version"),
+    workflow_hash: hash(b, "workflow_hash"),
+    run_id: id(b, "run_id"),
+    step_id: step,
+    connection_id: id(b, "connection_id"),
+    connection_version: num(b, "connection_version"),
+    connection_hash: hash(b, "connection_hash"),
   };
 }
 function effect(v: unknown, deliveryID: string): DispatchEffect {
@@ -303,19 +332,7 @@ function effect(v: unknown, deliveryID: string): DispatchEffect {
     bad();
   let workflow: WorkflowBinding | undefined;
   if (o.workflow_binding !== undefined) {
-    const b = object(o.workflow_binding),
-      step = text(b, "step_id", 64);
-    if (!/^[a-z][a-z0-9_]{0,63}$/.test(step)) bad();
-    workflow = {
-      workflow_id: id(b, "workflow_id"),
-      workflow_version: num(b, "workflow_version"),
-      workflow_hash: hash(b, "workflow_hash"),
-      run_id: id(b, "run_id"),
-      step_id: step,
-      connection_id: id(b, "connection_id"),
-      connection_version: num(b, "connection_version"),
-      connection_hash: hash(b, "connection_hash"),
-    };
+    workflow = asWorkflowBinding(o.workflow_binding);
   }
   return {
     protocol: "sftp",

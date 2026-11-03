@@ -1,43 +1,91 @@
 package workflow
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
+	"io"
 	"path/filepath"
+	"reflect"
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/custody"
+	"github.com/ctlplne/freightctl/internal/delivery"
 	"github.com/ctlplne/freightctl/internal/store"
 	"github.com/ctlplne/freightctl/internal/vpath"
 )
 
 type Service struct{ Custody *custody.Service }
 type ConnectionDefinition struct {
-	Schema      int                   `json:"schema_version"`
-	Destination secure.SSHDestination `json:"destination"`
-	Directory   string                `json:"directory"`
+	Schema      int                      `json:"schema_version"`
+	Destination secure.SSHDestination    `json:"destination"`
+	Directory   string                   `json:"directory"`
+	FTPS        *delivery.FTPSDefinition `json:"ftps,omitempty"`
 }
 type ConnectionRequest struct {
-	ID              string `json:"connection_id,omitempty"`
-	ExpectedVersion int    `json:"expected_version"`
-	Address         string `json:"address"`
-	User            string `json:"user"`
-	Directory       string `json:"directory"`
-	HostPublicFile  string `json:"host_public_file"`
-	KeyFile         string `json:"key_file"`
-	KeyPublicFile   string `json:"key_public_file"`
+	ID              string                   `json:"connection_id,omitempty"`
+	ExpectedVersion int                      `json:"expected_version"`
+	Address         string                   `json:"address"`
+	User            string                   `json:"user"`
+	Directory       string                   `json:"directory"`
+	HostPublicFile  string                   `json:"host_public_file"`
+	KeyFile         string                   `json:"key_file"`
+	KeyPublicFile   string                   `json:"key_public_file"`
+	FTPS            *delivery.FTPSDefinition `json:"ftps,omitempty"`
 }
 type ConnectionView struct {
-	ID              string `json:"id"`
-	Version         int    `json:"version"`
-	Hash            string `json:"definition_hash"`
-	State           string `json:"state"`
-	Revision        int64  `json:"revision"`
-	Address         string `json:"address"`
-	User            string `json:"user"`
-	Directory       string `json:"directory"`
-	HostFingerprint string `json:"host_fingerprint"`
-	KeyFingerprint  string `json:"key_fingerprint"`
+	ID              string              `json:"id"`
+	Version         int                 `json:"version"`
+	Hash            string              `json:"definition_hash"`
+	State           string              `json:"state"`
+	Revision        int64               `json:"revision"`
+	Address         string              `json:"address"`
+	User            string              `json:"user"`
+	Directory       string              `json:"directory"`
+	HostFingerprint string              `json:"host_fingerprint"`
+	KeyFingerprint  string              `json:"key_fingerprint"`
+	Protocol        string              `json:"protocol,omitempty"`
+	FTPS            *FTPSConnectionView `json:"ftps,omitempty"`
+}
+
+type FTPSConnectionView struct {
+	Mode                  string                     `json:"mode"`
+	ServerName            string                     `json:"server_name"`
+	CASHA256              string                     `json:"ca_sha256"`
+	CAReferenceHash       string                     `json:"ca_reference_sha256"`
+	PasswordReferenceHash string                     `json:"password_reference_sha256"`
+	StagingDirectory      string                     `json:"staging_directory"`
+	ReceiverContract      store.FTPSReceiverContract `json:"receiver_contract"`
+}
+
+func connectionDefinition(c *store.Configuration) (*ConnectionDefinition, error) {
+	var d ConnectionDefinition
+	// Stored SSH public identities use the library's historical Wire/Fingerprint
+	// keys. Request Decode's lowercase-key policy is not their storage format.
+	// JSONB removes duplicate keys; strict decoding plus the canonical checksum
+	// below still rejects unknown, changed or trailing stored fields.
+	decoder := json.NewDecoder(bytes.NewReader(c.Definition))
+	decoder.DisallowUnknownFields()
+	var trailing any
+	if len(c.Definition) > 32<<10 || decoder.Decode(&d) != nil || decoder.Decode(&trailing) != io.EOF {
+		return nil, store.ErrState
+	}
+	_, hash, err := digest(d)
+	canonical, pathErr := vpath.Canonical(d.Directory)
+	if err != nil || hash != c.Hash || pathErr != nil || canonical != d.Directory || vpath.ControlPath(canonical) {
+		return nil, store.ErrState
+	}
+	if d.Schema == 1 && d.FTPS == nil && secure.ValidateSSHDestination(d.Destination) == nil {
+		return &d, nil
+	}
+	if d.Schema == 2 && reflect.DeepEqual(d.Destination, secure.SSHDestination{}) && d.FTPS.Valid(d.Directory) {
+		return &d, nil
+	}
+	return nil, store.ErrState
+}
+
+func ftpsConnectionView(f *delivery.FTPSDefinition) *FTPSConnectionView {
+	return &FTPSConnectionView{Mode: f.Destination.Mode, ServerName: f.Destination.ServerName, CASHA256: f.Destination.CASHA256, CAReferenceHash: secure.Digest([]byte(f.Destination.CAFile)), PasswordReferenceHash: secure.Digest([]byte(f.Destination.PasswordFile)), StagingDirectory: f.StagingDirectory, ReceiverContract: f.ReceiverContract}
 }
 
 func (s *Service) begin(ctx context.Context, scope store.Scope, grants ...string) (*store.Transaction, error) {
@@ -58,9 +106,12 @@ func (s *Service) begin(ctx context.Context, scope store.Scope, grants ...string
 	return t, nil
 }
 func viewConnection(c *store.Configuration) (ConnectionView, error) {
-	var d ConnectionDefinition
-	if err := json.Unmarshal(c.Definition, &d); err != nil {
+	d, err := connectionDefinition(c)
+	if err != nil {
 		return ConnectionView{}, store.ErrState
+	}
+	if d.FTPS != nil {
+		return ConnectionView{ID: c.ID, Version: c.Version, Hash: c.Hash, State: c.State, Revision: c.Revision, Address: d.FTPS.Destination.Address, User: d.FTPS.Destination.User, Directory: d.Directory, Protocol: "ftps", FTPS: ftpsConnectionView(d.FTPS)}, nil
 	}
 	return ConnectionView{ID: c.ID, Version: c.Version, Hash: c.Hash, State: c.State, Revision: c.Revision, Address: d.Destination.Address, User: d.Destination.User, Directory: d.Directory, HostFingerprint: d.Destination.Host.Fingerprint, KeyFingerprint: d.Destination.KeyFingerprint}, nil
 }
@@ -110,21 +161,28 @@ func (s *Service) RegisterConnection(ctx context.Context, scope store.Scope, key
 	if err != nil || directory != r.Directory || vpath.ControlPath(directory) {
 		return nil, ErrInput
 	}
-	keyFile, err := filepath.Abs(r.KeyFile)
-	if err != nil {
-		return nil, ErrInput
-	}
-	host, err := secure.ReadSSHPublic(r.HostPublicFile)
-	if err != nil {
-		return nil, err
-	}
-	public, err := secure.ReadSSHPublic(r.KeyPublicFile)
-	if err != nil {
-		return nil, err
-	}
-	definition := ConnectionDefinition{Schema: 1, Destination: secure.SSHDestination{Address: r.Address, User: r.User, Host: host, KeyFile: keyFile, KeyFingerprint: public.Fingerprint}, Directory: directory}
-	if err = secure.ValidateSSHDestination(definition.Destination); err != nil {
-		return nil, err
+	definition := ConnectionDefinition{Schema: 2, Directory: directory, FTPS: r.FTPS}
+	if r.FTPS != nil {
+		if r.Address != "" || r.User != "" || r.HostPublicFile != "" || r.KeyFile != "" || r.KeyPublicFile != "" || !r.FTPS.Valid(directory) {
+			return nil, ErrInput
+		}
+	} else {
+		keyFile, err := filepath.Abs(r.KeyFile)
+		if err != nil {
+			return nil, ErrInput
+		}
+		host, err := secure.ReadSSHPublic(r.HostPublicFile)
+		if err != nil {
+			return nil, err
+		}
+		public, err := secure.ReadSSHPublic(r.KeyPublicFile)
+		if err != nil {
+			return nil, err
+		}
+		definition = ConnectionDefinition{Schema: 1, Destination: secure.SSHDestination{Address: r.Address, User: r.User, Host: host, KeyFile: keyFile, KeyFingerprint: public.Fingerprint}, Directory: directory}
+		if err = secure.ValidateSSHDestination(definition.Destination); err != nil {
+			return nil, err
+		}
 	}
 	data, hash, err := digest(definition)
 	if err != nil {
@@ -233,6 +291,13 @@ func connections(ctx context.Context, t *store.Transaction, d Definition) ([]Con
 		}
 		if c.State != "active" {
 			return nil, store.ErrState
+		}
+		definition, err := connectionDefinition(c)
+		if err != nil {
+			return nil, err
+		}
+		if (step.Kind == "ftps.deliver") != (definition.FTPS != nil) {
+			return nil, ErrInput
 		}
 		if step.Encryption != nil {
 			if _, err = t.EncryptionKey(ctx, *step.Encryption); err != nil {
@@ -395,6 +460,9 @@ type Effect struct {
 	Encryption            *store.EncryptionPolicy `json:"encryption,omitempty"`
 	RecipientFingerprint  string                  `json:"recipient_fingerprint,omitempty"`
 	EncryptionFingerprint string                  `json:"encryption_fingerprint,omitempty"`
+	Protocol              string                  `json:"protocol,omitempty"`
+	User                  string                  `json:"user,omitempty"`
+	FTPS                  *FTPSConnectionView     `json:"ftps,omitempty"`
 }
 type Preview struct {
 	Definition       Definition        `json:"definition"`

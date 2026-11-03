@@ -170,12 +170,19 @@ func (s *Service) stageRunBound(ctx context.Context, t *store.Transaction, r Run
 		if err != nil {
 			return nil, err
 		}
-		var conn ConnectionDefinition
-		if err = json.Unmarshal(c.Definition, &conn); err != nil {
+		conn, err := connectionDefinition(c)
+		if err != nil {
+			return nil, store.ErrState
+		}
+		if (step.Kind == "ftps.deliver") != (conn.FTPS != nil) {
 			return nil, store.ErrState
 		}
 		binding := &store.ExecutionBinding{WorkflowID: run.WorkflowID, WorkflowVersion: run.WorkflowVersion, WorkflowHash: run.WorkflowHash, RunID: run.ID, StepID: step.ID, ConnectionID: c.ID, ConnectionVersion: c.Version, ConnectionHash: c.Hash}
 		spec := delivery.Definition{Schema: 1, Source: *source, Destination: conn.Destination, Directory: conn.Directory, Filename: step.Filename, StorageID: storageID, Root: t.Root, Authority: t.AuthorityRevision, Binding: binding, Encryption: step.Encryption}
+		if conn.FTPS != nil {
+			spec.Schema = 2
+			spec.FTPS = conn.FTPS
+		}
 		if err = delivery.BindDispatchPolicy(ctx, t, &spec); err != nil {
 			return nil, err
 		}

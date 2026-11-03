@@ -583,6 +583,11 @@ func workflowEffects(ctx context.Context, t *store.Transaction, workflow *Defini
 	for i, v := range views {
 		step := workflow.Steps[i]
 		effect := Effect{StepID: step.ID, Connection: step.Connection, Address: v.Address, Directory: v.Directory, FinalNamePattern: "<delivery UUID>-" + step.Filename, HostFingerprint: v.HostFingerprint, Encryption: step.Encryption}
+		if v.FTPS != nil {
+			effect.Protocol = "ftps"
+			effect.User = v.User
+			effect.FTPS = v.FTPS
+		}
 		if step.Encryption != nil {
 			k, e := t.EncryptionKey(ctx, *step.Encryption)
 			if e != nil {
