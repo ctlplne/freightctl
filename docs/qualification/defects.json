@@ -2091,17 +2091,18 @@
     {
       "id": "D129",
       "severity": "native browser qualification observer failure",
-      "state": "repair prepared; original native replay pending",
+      "state": "fixed and original complete native stock journey replayed",
       "observed_on": "2026-11-03",
       "candidate": "23cb5c5166fe490bfd6afd1f7a3e9d9cb460a679",
       "journey": "Native stock arrivals/schedules browser journey",
       "title": "Schedule preview response JSON observer fails after HTTP200",
       "first_failure": "Run41583125686 job125742293204 locates the failure at schedules-browser.mjs:134:27 reading response JSON, after the HTTP200 assertion. Collections/arrivals pass;page errors and egress are zero;original output closure and cleanup pass.",
       "cause": "Direct Chromium response-body retention is the failing observer boundary. Similar routing failures used the existing recorded-response helper. Exact Chromium-internal cause remains inference.",
-      "resolution": "Use the existing wireResponse/actualReview real HTTPS request/response recorder for both exact POST previews, retaining HTTP200, response hashes and every original calendar/UI/approval/receipt/receiver assertion. Node syntax/format/records pass;complete original native replay remains required.",
+      "resolution": "Use the existing wireResponse/actualReview real HTTPS request/response recorder for both exact POST previews, retaining HTTP200, response hashes and every original calendar/UI/approval/receipt/receiver assertion. Node syntax/format/records pass;complete original native replay remains required. The complete original a7af67e replay now passes:collections180commands/480outputs,arrivals98/270,schedules111/285,zero browser failed reports/page errors/egress,zero unexpected exits/HTTP statuses,original output closure and exact cleanup. All five stock entries and source/security pass. No Chromium-internal root-cause claim is inferred.",
       "regression_evidence": [
         "docs/qualification/evidence/F066-schedule-browser-response.json",
-        "https://github.com/ctlplne/freightctl/actions/runs/41583125686"
+        "https://github.com/ctlplne/freightctl/actions/runs/41583125686",
+        "https://github.com/ctlplne/freightctl/actions/runs/41584249139"
       ]
     }
   ]

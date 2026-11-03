@@ -163,7 +163,7 @@
     "windows_job_id": 125742294411,
     "windows_state": "failed; exact same22 D103 test/subcase names as preceding8e01a30",
     "full_linux_run_id": 41583125777,
-    "full_linux_state": "running; no pass inferred",
+    "full_linux_state": "passed on both actual native Linux architectures",
     "full_linux_arm_job_id": 125742293157,
     "full_linux_x86_job_id": 125742293206,
     "metadata_fuzz_state": "both schema35 restore architectures and nine fuzz targets passed",
@@ -171,10 +171,20 @@
     "browser_job_id": 125742293171,
     "browser_state": "passed original F063 explicit/implicit browser regression;not a browser ticket claim",
     "stock_run_id": 41583125686,
-    "stock_state": "four passed;arrivals-schedules job125742293204 failed at schedules-browser.mjs:134:27 after status200,while reading the browser response body. Collections/arrivals components pass;zero page errors/egress and exact cleanup. Observer repair/replay remains required.",
+    "stock_state": "Original23cb5c5 run:four pass,arrivals-schedules fails at the schedule body observer afterHTTP200. F066 preserves the failure and its complete repaired a7af67e replay;all five stock jobs now pass on that candidate.",
     "browser_manifest_sha256": "be1d1c9e7c4f9e1f01bec87bd60f7c84ef2d5024f80c610653369bc6c5515a1a",
     "browser_original_commands": 140,
     "browser_cases": 12,
-    "strict_browser_api_refusals": 2
+    "strict_browser_api_refusals": 2,
+    "full_linux_go_postgresql_pass_records_each": 588,
+    "full_linux_fail_records_each": 0,
+    "full_linux_skip_records_each": 0,
+    "engine_pass_records_each": 223,
+    "engine_visible_privileged_port20_skips_each": 1
+  },
+  "regression_archive": {
+    "manifest_reference": ".private/freightctl-regressions-23cb5c5/manifest.json",
+    "manifest_sha256": "737b55bef17a853f94accf1325e348b37f1f11b94b60c52be0b439444d762f2a",
+    "scope": "Complete original full native Linux ARM/x86 and original browser regression logs."
   }
 }

@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "F066",
   "observed_at": "2026-11-03",
-  "state": "observer repair prepared; original native stock journey replay pending",
+  "state": "original complete native stock journey repaired and replayed",
   "starting_commit": "23cb5c5166fe490bfd6afd1f7a3e9d9cb460a679",
   "scope": "Schedule browser qualification response observation only. No application, calendar, permission, scheduling or delivery semantics change.",
   "first_failure": {
@@ -33,10 +33,50 @@
   },
   "required_replay": "The original complete arrivals-schedules stock job must pass collections, arrivals and schedules through actual services and stock receiver. All other stock entries also replay. A syntax check, old candidate pass or observer change alone is not runtime evidence.",
   "native_ci": {
-    "state": "pending after source push"
+    "state": "passed;all five native stock entries and source/security pass",
+    "candidate": "a7af67e988f92144ebf29a0e731bf82968f36ea4",
+    "run_id": 41584249139,
+    "url": "https://github.com/ctlplne/freightctl/actions/runs/41584249139",
+    "arrivals_schedules_job_id": 125745943387,
+    "core_run_id": 41584249207,
+    "core_job_id": 125745942991,
+    "core_state": "passed",
+    "all_stock_jobs_passed": 5,
+    "collections": {
+      "state": "passed",
+      "manifest_sha256": "c7b8897bb34c198012d827ba9b420fff5f26f3a70ffe4435738fb5516849a0f9",
+      "original_commands": 180,
+      "verified_outputs": 480
+    },
+    "arrivals": {
+      "state": "passed",
+      "manifest_sha256": "15474129651aa33cd7b4faa5486fc60acbf1b4b988bb372ff08d2d90ebb3dcd7",
+      "original_commands": 98,
+      "verified_outputs": 270
+    },
+    "schedules": {
+      "state": "passed",
+      "manifest_sha256": "4191860943b2567703cb97def28b21180a6f62c056e0e1a30eccb8d0d6b59c3e",
+      "original_commands": 111,
+      "verified_outputs": 285,
+      "unexpected_command_exits": 0,
+      "unexpected_http_statuses": 0,
+      "browser_failed_reports": 0,
+      "browser_runtime_errors": 0,
+      "browser_external_contacts": 0,
+      "output_closure_passed": true,
+      "isolated_database_removed": true,
+      "cleanup_failures": 0,
+      "inference_performed": false,
+      "scanner_engine_started": false
+    }
   },
   "limits": [
     "All83 whole parity rows and12 full journeys remain open.",
     "No local inference, scanner engine, F026 aggregate, artifact publication or deployment."
-  ]
+  ],
+  "native_replay_archive": {
+    "manifest_reference": ".private/freightctl-schedule-replay-a7af67e/manifest.json",
+    "manifest_sha256": "d1a1ce68b329e8f602cdcc85969bf280eba5a1a1748a1c0de7d917f7814029ca"
+  }
 }
