@@ -3,6 +3,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { createRoot } from "react-dom/client";
 import { Api } from "./api";
 import { Accounts } from "./accounts";
+import { IntakePolicyEditor } from "./intake-policy";
 import { Partners } from "./partners";
 import { Schedules } from "./schedules";
 import { Collections } from "./collections";
@@ -135,6 +136,7 @@ function App() {
       | "files"
       | "uploads"
       | "checks"
+      | "policy"
       | "accounts"
       | "partners"
       | "onboarding"
@@ -633,6 +635,14 @@ function App() {
             >
               Intake checks
             </button>
+            {allowed("admin") && allowed("intake_manage") && (
+              <button
+                aria-current={tab === "policy" ? "page" : undefined}
+                onClick={() => setTab("policy")}
+              >
+                Intake policy
+              </button>
+            )}
             {allowed("admin") && allowed("accounts_manage") && (
               <button
                 aria-current={tab === "accounts" ? "page" : undefined}
@@ -808,9 +818,11 @@ function App() {
                               ? "Independent approvals"
                               : tab === "onboarding"
                                 ? "Onboarding plans"
-                                : tab === "accounts"
-                                  ? "Accounts"
-                                  : "Intake checks"}
+                                : tab === "policy"
+                                  ? "Intake policy"
+                                  : tab === "accounts"
+                                    ? "Accounts"
+                                    : "Intake checks"}
                 </h1>
                 <p>
                   {tab === "files"
@@ -827,9 +839,11 @@ function App() {
                               ? "Review exact production effects under the partner’s approval policy."
                               : tab === "onboarding"
                                 ? "Record responsible contacts and exact exchange requirements as versioned drafts."
-                                : tab === "accounts"
-                                  ? "Review scoped access, credential rotation, expiry and revocation."
-                                  : "Held files need their required checks and a separate release decision."}
+                                : tab === "policy"
+                                  ? "Review expected columns, processing limits and exact policy versions before activation or revocation."
+                                  : tab === "accounts"
+                                    ? "Review scoped access, credential rotation, expiry and revocation."
+                                    : "Held files need their required checks and a separate release decision."}
                 </p>
               </div>
               <button
@@ -908,6 +922,15 @@ function App() {
                 <OutboundDispatchApprovals
                   api={api}
                   session={session}
+                  refresh={refresh}
+                  onError={reportError}
+                />
+              )}
+            {tab === "policy" &&
+              allowed("admin") &&
+              allowed("intake_manage") && (
+                <IntakePolicyEditor
+                  api={api}
                   refresh={refresh}
                   onError={reportError}
                 />

@@ -22,6 +22,7 @@ import uuid
 
 from ftps_contract import CLI_PAYLOAD, HOSTILE_CASE_COUNT, LFTP_CASES, LIMITED_PARENT_TESTS, NATIVE_PARENT_TESTS
 import ftps_cli_governance as governance
+import ftps_browser_evidence as browser_evidence
 
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location("metadata", ROOT / "scripts/qualify-retained-metadata.py")
@@ -46,6 +47,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--postgres-container-id", required=True)
     parser.add_argument("--native-client-only", action="store_true", help="exercise the native TLS1.3 client stand-in; stock curl stays unqualified")
+    parser.add_argument("--browser", action="store_true", help="also qualify reviewed HTTPS browser governance against live FTPS writers and intake")
     args = parser.parse_args()
     if not re.fullmatch(r"[0-9a-f]{64}", args.postgres_container_id):
         raise RuntimeError("use the exact task-owned container ID")
@@ -66,6 +68,7 @@ def main():
                 "inference_performed": False, "scanner_engine_started": False,
                 "full_foundation_aggregate_executed": False, "full_journeys_qualified": False}
     manifest["native_client_only"] = args.native_client_only
+    manifest["browser_requested"] = args.browser
     manifest["stock_curl_qualified"] = False
     manifest["stock_lftp_qualified"] = False
     processes, created, started, originally_running = {}, False, False, None
@@ -79,12 +82,24 @@ def main():
         err = private / (label + ".stderr")
         began = time.monotonic()
         with out.open("xb") as stdout, err.open("xb") as stderr:
+            child = None
             try:
-                r = subprocess.run(list(map(str, argv)), stdout=stdout, stderr=stderr, env=env,
-                                   timeout=timeout, preexec_fn=metadata.bounded_output)
-                code = r.returncode
+                if re.fullmatch(r"browser-(?:explicit|implicit)-operator", label):
+                    child = subprocess.Popen(list(map(str, argv)), stdout=stdout, stderr=stderr, env=env, start_new_session=True, preexec_fn=metadata.bounded_output)
+                    code = child.wait(timeout=timeout)
+                else:
+                    r = subprocess.run(list(map(str, argv)), stdout=stdout, stderr=stderr, env=env,
+                                       timeout=timeout, preexec_fn=metadata.bounded_output)
+                    code = r.returncode
             except subprocess.TimeoutExpired:
                 code = "timeout"
+                if child is not None:
+                    os.killpg(child.pid, signal.SIGTERM)
+                    try:
+                        child.wait(timeout=5)
+                    except subprocess.TimeoutExpired:
+                        os.killpg(child.pid, signal.SIGKILL)
+                        child.wait(timeout=5)
             stdout.flush(); stderr.flush(); os.fsync(stdout.fileno()); os.fsync(stderr.fileno())
         metadata.sync_directory(private)
         observer.steps.append({"name": label, "exit_code": code, "seconds": round(time.monotonic() - began, 3),
@@ -171,6 +186,22 @@ def main():
         command("cli-token", [binary, "token", "--token-file", token])
         command("cli-enroll", [binary, "enroll", "--admin-dsn-file", private / "pg-admin.dsn", "--tenant", tenant, "--partner", partner, "--token-file", token])
         command("cli-cert", [binary, "dev-cert", "--cert", cert, "--key", key])
+        if args.browser:
+            with socket.socket() as probe:
+                probe.bind(("127.0.0.1", 0))
+                http_port = probe.getsockname()[1]
+            out, err = (private / "browser-https.stdout").open("xb"), (private / "browser-https.stderr").open("xb")
+            p = subprocess.Popen(list(map(str, [binary, "serve", "--listen", "127.0.0.1:" + str(http_port), "--dsn-file", private / "pg-runtime.dsn", "--storage", private / "custody", "--cert", cert, "--key", key])), stdout=out, stderr=err, env=env, start_new_session=True)
+            processes["browser-https"] = (p, out, err)
+            deadline = time.monotonic() + 10
+            while True:
+                if p.poll() is not None or time.monotonic() > deadline:
+                    raise RuntimeError("browser HTTPS listener did not start")
+                try:
+                    with socket.create_connection(("127.0.0.1", http_port), timeout=.2):
+                        break
+                except OSError:
+                    time.sleep(.05)
         config = private / "curl.conf"
         config.write_text("user = " + json.dumps(tenant + "/" + partner + ":" + token.read_text()) + "\ncacert = " + json.dumps(str(cert)) + "\nssl-reqd\ntls-max = \"1.3\"\nnoproxy = \"*\"\nconnect-timeout = 3\nmax-time = 10\nsilent\nshow-error\n")
         payload = CLI_PAYLOAD
@@ -214,7 +245,24 @@ def main():
                 if report.get("state") != "passed" or report.get("cases") != LFTP_CASES or report.get("stock_client_qualification") is not True:
                     raise RuntimeError(label + " stock lftp probe incomplete")
             manifest.setdefault("cli_governance", {})["implicit" if implicit else "explicit"] = governance.exercise(private, "implicit" if implicit else "explicit", port, cert, binary, env, observer.steps, command, metadata.bounded_output)
+            if args.browser:
+                mode = "implicit" if implicit else "explicit"
+                directory = private / ("browser-" + mode)
+                directory.mkdir(mode=0o700)
+                cfg = {"root": str(ROOT), "private": str(directory), "url": "https://127.0.0.1:" + str(http_port), "certificate": str(cert), "port": port, "implicit": implicit}
+                for kind in ("credential", "intake"):
+                    who = {"tenant": str(uuid.uuid4()), "partner": str(uuid.uuid4()), "token": str(directory / (kind + ".token"))}
+                    command("browser-" + mode + "-" + kind + "-token", [binary, "token", "--token-file", who["token"]])
+                    command("browser-" + mode + "-" + kind + "-enroll", [binary, "enroll", "--admin-dsn-file", private / "pg-admin.dsn", "--tenant", who["tenant"], "--partner", who["partner"], "--token-file", who["token"]])
+                    cfg[kind] = who
+                ref = directory / "config.json"
+                ref.write_text(json.dumps(cfg))
+                command("browser-" + mode + "-operator", ["node", "scripts/ftps-operator-browser.mjs", ref], 240)
+                manifest.setdefault("browser_governance", {})[mode] = browser_evidence.validate(directory)
+                manifest.setdefault("browser_output_sha256", {})[mode] = {str(path.relative_to(directory)): metadata.digest(path) for path in sorted(directory.iterdir()) if path.is_file() and not path.is_symlink()}
             stop(label)
+        if args.browser:
+            stop("browser-https")
         manifest["state"] = "passed"
         manifest["stock_curl_qualified"] = not args.native_client_only
         manifest["stock_lftp_qualified"] = not args.native_client_only

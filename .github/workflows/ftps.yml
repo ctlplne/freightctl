@@ -6,6 +6,7 @@ on:
     paths:
       - 'cmd/**'
       - 'internal/**'
+      - 'web/**'
       - 'third_party/**'
       - 'go.mod'
       - 'go.sum'
@@ -14,6 +15,9 @@ on:
       - 'scripts/ftps-probe.py'
       - 'scripts/ftps-governance-probe.py'
       - 'scripts/ftps_cli_governance.py'
+      - 'scripts/ftps-operator-browser.mjs'
+      - 'scripts/ftps_browser_evidence.py'
+      - 'scripts/browser-wire.mjs'
       - 'scripts/ftps_contract.py'
       - 'scripts/lftp-probe.py'
       - 'scripts/install-ftps-clients.sh'
@@ -28,6 +32,7 @@ on:
     paths:
       - 'cmd/**'
       - 'internal/**'
+      - 'web/**'
       - 'third_party/**'
       - 'go.mod'
       - 'go.sum'
@@ -36,6 +41,9 @@ on:
       - 'scripts/ftps-probe.py'
       - 'scripts/ftps-governance-probe.py'
       - 'scripts/ftps_cli_governance.py'
+      - 'scripts/ftps-operator-browser.mjs'
+      - 'scripts/ftps_browser_evidence.py'
+      - 'scripts/browser-wire.mjs'
       - 'scripts/ftps_contract.py'
       - 'scripts/lftp-probe.py'
       - 'scripts/install-ftps-clients.sh'
@@ -104,4 +112,60 @@ jobs:
           qualification_status=0
           python3 scripts/qualify-ftps.py --postgres-container-id "$task_pg_id" > .private/ftps-result.json || qualification_status=$?
           python3 scripts/ci-ftps-summary.py --result .private/ftps-result.json
+          exit "$qualification_status"
+
+  browser-ftps:
+    name: Native x86 browser and live FTPS governance
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      GOMAXPROCS: "1"
+      GOMEMLIMIT: 192MiB
+      NODE_OPTIONS: --max-old-space-size=192
+      FREIGHTCTL_BROWSER_CHANNEL: chrome
+      PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.cache/freightctl-playwright
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version: "1.26.10"
+          cache: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: "26.0.0"
+      - name: Native x86 stock peers and exact browser dependencies
+        run: |
+          test "$(uname -s)" = Linux
+          test "$(uname -m)" = x86_64
+          sh scripts/install-ftps-clients.sh
+          npm --prefix web --cache "$GITHUB_WORKSPACE/.cache/freightctl-npm" ci --ignore-scripts --no-fund
+          node web/node_modules/playwright/cli.js install --with-deps chromium --only-shell
+          npm --prefix web run check-built
+      - name: Chromium sandbox preflight
+        run: |
+          node - <<'NODE'
+          const { chromium } = require('./web/node_modules/playwright');
+          chromium.launch({ headless: true, chromiumSandbox: true, channel: 'chrome' })
+            .then(async browser => {
+              console.log('Chrome version: ' + browser.version());
+              await browser.close();
+            })
+            .catch(error => {
+              console.error(error.message);
+              process.exitCode = 1;
+            });
+          NODE
+      - name: Task-owned PostgreSQL
+        run: |
+          python3 scripts/dev-db.py
+          sh scripts/go.sh run ./cmd/freightctl init
+      - name: Real browser policy and credential commands during FTPS transfers
+        run: |
+          umask 077
+          task_pg_id=$(docker inspect --format '{{.Id}}' freightctl-postgres-v1)
+          qualification_status=0
+          python3 scripts/qualify-ftps.py --postgres-container-id "$task_pg_id" --browser > .private/ftps-browser-result.json || qualification_status=$?
+          python3 scripts/ci-ftps-summary.py --result .private/ftps-browser-result.json --require-browser
           exit "$qualification_status"

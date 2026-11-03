@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "id": "F063",
+  "observed_at": "2026-11-02",
+  "state": "implemented but unverified",
+  "scope": "Reviewed browser account and CSV intake policy commands against actual HTTPS/PostgreSQL/storage and an independent TLS1.3 FTPS client stand-in;both explicit and implicit listeners. No whole parity row or customer journey qualifies.",
+  "product_change": "Add a bounded CSV intake policy editor using the existing typed API, expected policy version, exact definition hash, normal CSRF and durable idempotency. Preserve configured signer/scanner references. Activation and revocation require separate exact reviews; file release remains separately reviewed.",
+  "first_failures": [
+    {
+      "kind": "golden test fixture validation",
+      "detail": "The Go validator rejects an example column name with a trailing Unicode line separator because it is whitespace. Move the separator inside the synthetic name; regenerate the golden JSON using actual checks.Normalize and internal/crypto.Digest. No runtime policy validator was weakened."
+    }
+  ],
+  "local_checks": {
+    "browser_contracts": 112,
+    "typescript": "passed",
+    "embedded_assets": "rebuilt and exact-source checked",
+    "go_browser_unit": "passed",
+    "ftps_evidence_refusal_contracts": 23,
+    "workflow_syntax": "passed",
+    "qualification_references": "passed"
+  },
+  "native_browser_replay": {
+    "state": "pending",
+    "workflow": ".github/workflows/ftps.yml",
+    "job": "Native x86 browser and live FTPS governance",
+    "command": "python3 scripts/qualify-ftps.py --postgres-container-id EXACT_TASK_ID --browser",
+    "evidence_checker": "python3 scripts/ci-ftps-summary.py --result .private/ftps-browser-result.json --require-browser",
+    "claim": "This plan and the lightweight checks do not establish browser runtime qualification."
+  },
+  "acceptance": {
+    "each_listener_mode": [
+      "Browser creates a delegated write account;only the credential fingerprint enters the account mutation API.",
+      "Rotate credentials while resumed-data STOR is open;old login and replacement are refused;original accepted bytes survive.",
+      "Revoke while another writer is open;new login and replacement are refused.",
+      "Register reviewed CSV policy;FTPS uploads remain held.",
+      "Run both good and bad checks in browser;passed bytes remain unavailable before release and rejected bytes cannot release.",
+      "Approve the exact file/policy/report/revision;independent FTPS client retrieves only good bytes.",
+      "Revoke reviewed policy;both reads are refused.",
+      "Drop committed rotation,policy-registration and policy-revocation replies;retry original keys and recover identical original receipts.",
+      "Seven actual-browser accessibility audits,empty persistent credential storage,no external egress or page errors."
+    ],
+    "evidence": "Reopen original certificate-checked HTTPS request/response files,receipt keys and revisions,FTPS phase streams,byte/policy/check bindings and complete output hashes. Claimed counters alone cannot pass."
+  },
+  "resource_state": {
+    "local_inference": "off",
+    "scanner": "stopped;not run",
+    "postgres": "exact task resource remains stopped;no local browser qualification run",
+    "f026_aggregate": "owner-deferred;not run"
+  },
+  "limits": [
+    "Browser replay pending. No signature/scanner selector is added here;existing configured requirements are preserved.",
+    "Stand-in FTPS client establishes selected TLS/protocol behavior;stock curl/lftp qualification remains separately required and runs in the same CI resource.",
+    "Upload-ticket recovery,proactive FTPS sending/collection,Windows protected custody,broader protocols/platforms/HA/recovery and all83whole rows/12full journeys remain open."
+  ],
+  "public_source_review": {
+    "manifest_reference": ".private/freightctl-ftps-browser-public-review-219bf7c0944f4a3f8a5f9fef9afc3c0b/manifest.json",
+    "manifest_sha256": "55b8241873c067774a79dac24dc4cf3b02894bf7a58c55f144f5078aea587198",
+    "kind": "full-public-source-secret-scan",
+    "source_count": 669,
+    "exit_code": 0,
+    "scope": "All public source inputs before appending this result and final synthetic refusal cases;ignored estate excluded;rules unchanged"
+  }
+}

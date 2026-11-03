@@ -1,0 +1,33 @@
+{
+  "definition": {
+    "schema_version": 1,
+    "kind": "csv",
+    "columns": [
+      {
+        "name": "account",
+        "type": "text",
+        "required": true,
+        "max_bytes": 16
+      },
+      {
+        "name": "amount",
+        "type": "decimal",
+        "required": true,
+        "max_bytes": 16,
+        "precision": 12,
+        "scale": 2
+      },
+      {
+        "name": "day",
+        "type": "date",
+        "required": true,
+        "max_bytes": 10
+      }
+    ],
+    "max_bytes": 1024,
+    "max_rows": 10,
+    "max_record_bytes": 128,
+    "timeout_seconds": 2
+  },
+  "definition_hash": "6ba5dc1adc6dd21fa271d3b856a36d88dafb05c0cbc2dfa3a7772d2b662ac236"
+}

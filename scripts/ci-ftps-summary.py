@@ -10,6 +10,7 @@ import subprocess
 
 from ftps_contract import CLI_PAYLOAD, LFTP_CASES, LFTP_DOWNLOADS, LFTP_FAILURE_CODES, NATIVE_PARENT_TESTS, NATIVE_TESTS
 import ftps_cli_governance as governance
+import ftps_browser_evidence as browser_evidence
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -34,8 +35,8 @@ def failure_diagnostics(root, result, commit):
         manifest = json.loads(raw)
         if hashlib.sha256(raw).hexdigest() != header.get("manifest_sha256") or manifest.get("starting_commit") != commit or manifest.get("kind") != "stock-ftps-custody":
             return {}
-        failed, categories, cli_failures = set(), set(), set()
-        allowed = {"native-ftps-integration", "cli-explicit-lftp-probe", "cli-implicit-lftp-probe"}
+        failed, categories, cli_failures, browser_failures = set(), set(), set(), []
+        allowed = {"native-ftps-integration", "cli-explicit-lftp-probe", "cli-implicit-lftp-probe", "browser-explicit-operator", "browser-implicit-operator"}
         for step in manifest.get("steps", []):
             name = step.get("name")
             if name not in allowed and not governance.command_suffix(name or ""):
@@ -62,12 +63,17 @@ def failure_diagnostics(root, result, commit):
                     continue
                 if probe.get("state") == "failed" and probe.get("stage") in {"version", "transfers"} and probe.get("code") in LFTP_FAILURE_CODES:
                     categories.add((probe["stage"], probe["code"]))
-        return {"failed_native_tests": sorted(failed), "lftp_failures": [{"stage": s, "code": c} for s, c in sorted(categories)], "failed_cli_commands": sorted(cli_failures)}
+                if name in {"browser-explicit-operator", "browser-implicit-operator"} and probe.get("state") == "failed" and probe.get("phase") in browser_evidence.PHASES and type(probe.get("line")) is int and 0 <= probe["line"] <= 10000:
+                    browser_failures.append({"command":name,"phase":probe["phase"],"source_line":probe["line"]})
+        outcome = {"failed_native_tests": sorted(failed), "lftp_failures": [{"stage": s, "code": c} for s, c in sorted(categories)], "failed_cli_commands": sorted(cli_failures)}
+        if browser_failures:
+            outcome["browser_failures"] = browser_failures
+        return outcome
     except Exception:
         return {}
 
 
-def summarize(root, result, commit):
+def summarize(root, result, commit, require_browser=False):
     header = json.loads(read(result, 8192))
     ref = header.get("manifest_reference")
     if not isinstance(ref, str) or not re.fullmatch(r"\.private/ftps-[0-9a-f]{32}/manifest\.json", ref):
@@ -139,10 +145,22 @@ def summarize(root, result, commit):
         p = root / name
         if not p.resolve().is_relative_to(root.resolve()) or hashlib.sha256(read(p, 16 << 20)).hexdigest() != expected:
             raise ValueError("FTPS source identity differs")
+    if require_browser or manifest.get("browser_requested"):
+        if manifest.get("browser_requested") is not True:
+            raise ValueError("required browser profile did not run")
+        for mode in ("explicit", "implicit"):
+            inventory = manifest.get("browser_output_sha256", {}).get(mode)
+            if not isinstance(inventory, dict):
+                raise ValueError("browser output closure missing")
+            checked = browser_evidence.validate(path.parent / ("browser-" + mode), inventory)
+            if manifest.get("browser_governance", {}).get(mode) != checked:
+                raise ValueError("browser outcomes differ from original evidence")
     return {"state": "passed", "source_commit": commit, "manifest_sha256": digest,
             "stock_curl_qualified": True, "stock_lftp_qualified": True, "native_test_pass_records": len(NATIVE_TESTS), "source_inputs": len(sources),
             "public_cli_governance_cases": 2 * len(governance.CASES), "expected_cli_refusals": 2 * len(governance.REFUSALS),
-            "native_commands": len(steps), "retained_metadata_and_roles_unchanged": True,
+            "native_commands": len(steps), "browser_qualified": manifest.get("browser_requested") is True,
+            "browser_governance_cases": 12 if manifest.get("browser_requested") is True else 0,
+            "retained_metadata_and_roles_unchanged": True,
             "isolated_database_removed": True, "original_resource_state_restored": True,
             "inference_performed": False, "scanner_engine_started": False,
             "scope": "synthetic same-host FTPS receiving and authenticated retrieval; native stock curl/lftp plus TLS client stand-in; full journeys and proactive FTPS sending remain open"}
@@ -151,11 +169,12 @@ def summarize(root, result, commit):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--result", required=True)
+    parser.add_argument("--require-browser", action="store_true")
     args = parser.parse_args()
     commit = os.environ.get("GITHUB_SHA", "")
     try:
         commit = os.environ.get("GITHUB_SHA") or subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT).decode().strip()
-        print(json.dumps(summarize(ROOT, Path(args.result), commit)))
+        print(json.dumps(summarize(ROOT, Path(args.result), commit, args.require_browser)))
         return 0
     except Exception:
         print(json.dumps({"state": "failed", "reason": "FTPS qualification or evidence validation failed; inspect protected outputs", **failure_diagnostics(ROOT, Path(args.result), commit)}))

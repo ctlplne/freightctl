@@ -1,0 +1,87 @@
+import assert from "node:assert/strict";
+import { test } from "node:test";
+import { readFile } from "node:fs/promises";
+import { build } from "esbuild";
+
+const bundle = await build({
+  entryPoints: ["src/intake-policy-types.ts"],
+  absWorkingDir: new URL("..", import.meta.url).pathname,
+  bundle: true,
+  write: false,
+  format: "esm",
+  target: "es2022",
+});
+const p = await import(
+  "data:text/javascript;base64," +
+    Buffer.from(bundle.outputFiles[0].contents).toString("base64")
+);
+const fixtures = await Promise.all(
+  ["intake-policy.json", "intake-policy-protected.json"].map(async (name) =>
+    JSON.parse(
+      await readFile(new URL("fixtures/" + name, import.meta.url), "utf8"),
+    ),
+  ),
+);
+const view = (f) => ({
+  id: "33333333-3333-4333-8333-333333333333",
+  version: 1,
+  definition: f.definition,
+  definition_hash: f.definition_hash,
+  state: "active",
+  revision: 1,
+});
+
+test("CSV definitions match actual Go normalized hashes including escaped names and protected requirements", () => {
+  for (const f of fixtures) {
+    assert.equal(p.intakeHash(f.definition), f.definition_hash);
+    assert.deepEqual(p.asIntakePolicy(view(f)).definition, f.definition);
+  }
+  assert.equal(p.asIntakePolicy(null), null);
+});
+test("CSV policy bounds, duplicate names and invalid decimal semantics fail before review", () => {
+  for (const change of [
+    (d) => (d.max_record_bytes = 63),
+    (d) => (d.max_rows = 1000001),
+    (d) => (d.timeout_seconds = 0),
+    (d) => (d.columns[1].name = d.columns[0].name),
+    (d) => (d.columns[1].scale = 13),
+    (d) => (d.columns[0].precision = 1),
+    (d) => (d.columns[0].max_bytes = d.max_record_bytes + 1),
+    (d) => (d.columns[0].name = "account\nname"),
+    (d) => (d.columns = []),
+    (d) =>
+      (d.columns = Array.from({ length: 128 }, (_, i) => ({
+        name: String(i).padEnd(120, "x"),
+        type: "text",
+        required: true,
+        max_bytes: 64,
+      }))),
+    (d) => (d.unrecognized_control = true),
+  ]) {
+    const d = structuredClone(fixtures[0].definition);
+    change(d);
+    assert.throws(() => p.intakeDefinition(d));
+  }
+});
+test("edited limits retain signer/scanner bindings and cannot keep the old definition hash", () => {
+  const f = structuredClone(fixtures[1]);
+  f.definition.max_rows++;
+  const d = p.intakeDefinition(f.definition);
+  assert.deepEqual(d.signature, fixtures[1].definition.signature);
+  assert.deepEqual(d.scanner, fixtures[1].definition.scanner);
+  assert.notEqual(p.intakeHash(d), f.definition_hash);
+  assert.throws(() => p.asIntakePolicy(view(f)));
+});
+test("changed or malformed server policy identities and references cannot become current review state", () => {
+  for (const change of [
+    (v) => (v.definition_hash = "f".repeat(64)),
+    (v) => (v.revision = 0),
+    (v) => (v.state = "unexpected"),
+    (v) => (v.definition.signature.key.id = "wrong"),
+    (v) => (v.definition.scanner.hash = "wrong"),
+  ]) {
+    const v = view(structuredClone(fixtures[1]));
+    change(v);
+    assert.throws(() => p.asIntakePolicy(v));
+  }
+});

@@ -128,6 +128,32 @@ class SummaryContracts(unittest.TestCase):
         self.manifest["native_client_only"] = True
         with self.assertRaises(ValueError): self.check()
 
+    def test_required_browser_profile_cannot_be_satisfied_by_stock_only(self):
+        self.write()
+        with self.assertRaises(ValueError):
+            summary.summarize(self.root, self.result, "a" * 40, require_browser=True)
+
+    def test_browser_claim_without_closed_original_outputs_is_refused(self):
+        self.manifest["browser_requested"] = True
+        self.manifest["browser_governance"] = {"explicit":{"state":"passed"},"implicit":{"state":"passed"}}
+        with self.assertRaises(ValueError): self.check()
+
+    def test_browser_failure_diagnostics_only_reveal_fixed_phase_and_source_line(self):
+        secret = "private browser selector, tenant or credential"
+        name = "browser-explicit-operator"
+        data = json.dumps({"state":"failed","phase":"policy-register","line":321,"failure":secret}).encode()
+        (self.directory / (name + ".stdout")).write_bytes(data)
+        self.manifest["steps"].append({"name":name,"exit_code":1,"stdout_sha256":hashlib.sha256(data).hexdigest()})
+        self.write()
+        report = summary.failure_diagnostics(self.root, self.result, "a" * 40)
+        self.assertEqual(report["browser_failures"], [{"command":name,"phase":"policy-register","source_line":321}])
+        self.assertNotIn(secret, json.dumps(report))
+        data = json.dumps({"state":"failed","phase":secret,"line":321}).encode()
+        (self.directory / (name + ".stdout")).write_bytes(data)
+        self.manifest["steps"][-1]["stdout_sha256"] = hashlib.sha256(data).hexdigest()
+        self.write()
+        self.assertNotIn("browser_failures",summary.failure_diagnostics(self.root,self.result,"a" * 40))
+
     def test_missing_or_skipped_tests_refuse(self):
         original = copy.deepcopy(self.manifest)
         for field, value in (("required", []), ("skipped_records", 1), ("pass_records", 0)):

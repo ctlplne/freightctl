@@ -76,7 +76,7 @@
   },
   "limits": [
     "The new CLI journey is a synthetic assisted component, not independent operator adoption or a full parity row.",
-    "Native ARM/x86 stock/cross-platform regression and API/browser governance still require actual execution.",
+    "Native ARM/x86 stock/full Linux component replay passed at b115b31. API/browser governance requires the next actual browser replay;Windows custody remains red.",
     "Upload-ticket recovery, proactive FTPS sending/collection, broader protocols/networks/platforms/scale/HA and all whole journeys remain open.",
     "Local inference remains off;scanner and F026 aggregate are not run."
   ],
@@ -128,7 +128,7 @@
   },
   "native_replay": {
     "candidate": "b115b314b28d0f0806d0f053fe660eaa3c45cca8",
-    "state": "ARM running;x86 queued at observation;follow existing handles",
+    "state": "completed;both native FTPS and full Linux suites passed;WindowsD103 remains red",
     "ftps_run_id": 41566574013,
     "ftps_url": "https://github.com/ctlplne/freightctl/actions/runs/41566574013",
     "ftps_jobs": {
@@ -148,6 +148,45 @@
     "core_run_id": 41566574002,
     "core_job": 125689456876,
     "stock_run_id": 41566573950,
-    "platform_run_id": 41566573989
+    "platform_run_id": 41566573989,
+    "ftps_results": {
+      "arm64": {
+        "job_id": 125689457458,
+        "manifest_sha256": "9d1400cb87e60927e3d2f3292a95b8a1976e48e0e04bdf4f239d32fec66bb2a5"
+      },
+      "x86_64": {
+        "job_id": 125689457624,
+        "manifest_sha256": "70aaab99086b898a2e7afc6f12424a7deaa1d2c80a7302330d098ea52f584329"
+      }
+    },
+    "ftps_each": {
+      "native_pass_records": 15,
+      "native_fail_records": 0,
+      "native_skip_records": 0,
+      "public_cli_governance_cases": 12,
+      "strict_expected_cli_refusals": 18,
+      "original_commands": 129,
+      "source_inputs": 661,
+      "stock_curl_qualified": true,
+      "stock_lftp_qualified": true,
+      "retained_authority_unchanged": true,
+      "exact_cleanup_verified": true
+    },
+    "linux_each": {
+      "postgres_pass_records": 578,
+      "postgres_fail_records": 0,
+      "postgres_skip_records": 0,
+      "engine_pass_records": 223,
+      "engine_fail_records": 0,
+      "engine_skip_records": 1
+    },
+    "other_gates": "Both metadata restores,nine fuzz targets,all five stock entries and Mac passed. Core at b115 was superseded during vulnerability analysis by the following documentation commit; do not call that canceled job a full pass. WindowsD103 fails22tests/subcases.",
+    "archive_reference": ".private/freightctl-ftps-native-b115b31-01be9c6ac270419da37af22a6567f261/manifest.json",
+    "archive_sha256": "0432897750e365bc9036ee9b49c9aba0520abf4b528b7c6197a7499097789d64",
+    "core_following_documentation_commit": {
+      "candidate": "8ce63f536f306a770d57c19431b165a210d77c0e",
+      "run_id": 41566904403,
+      "conclusion": "success"
+    }
   }
 }
