@@ -140,11 +140,15 @@
         "docs/qualification/evidence/F059-native-ftps-stock.json",
         "docs/qualification/evidence/F060-ftps-lftp-identity.json",
         "docs/qualification/evidence/F061-ftps-governance.json",
-        "docs/qualification/evidence/F062-ftps-cli-governance.json"
+        "docs/qualification/evidence/F062-ftps-cli-governance.json",
+        "docs/qualification/evidence/F063-ftps-browser-governance.json",
+        "docs/qualification/evidence/F064-ftps-upload-tickets.json",
+        "docs/qualification/evidence/F065-ftps-public-crash-recovery.json",
+        "docs/qualification/evidence/F067-ftps-browser-tickets.json"
       ],
       "qualification_blockers": [
-        "Native stock/enterprise clients and the new exact-commit GitHub replay remain unqualified.",
-        "Active rotation/revocation, selected intake/quarantine, upload-ticket recovery, broader IPv6/firewall/gateway/production profiles, large files/load and full row acceptance remain required."
+        "Selected native Linux stock curl/lftp,live credential/intake governance and CLI/browser ticket process-crash components pass in F062-F067. Enterprise clients and whole-row acceptance remain required.",
+        "Broader IPv6/firewall/gateway/production peers,larger files/load,power-loss durability,Windows and complete recovery acceptance remain required."
       ]
     },
     {
@@ -180,10 +184,14 @@
         "independent FTPS-explicit peer"
       ],
       "acceptance_journey": "J01",
-      "state": "planned",
-      "evidence": [],
+      "state": "implementing",
+      "evidence": [
+        "docs/qualification/evidence/F068-ftps-client-transport.json"
+      ],
       "qualification_blockers": [
-        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison",
+        "Transport component passes native ARM scripted TLS peer only;actual native stock receiver replay pending.",
+        "Distinct versioned connection/delivery/workflow bindings,public UI/API/CLI controls,PostgreSQL approvals/leases/fencing,receiver publication/duplicate contract,ambiguous recovery and whole-row acceptance remain required."
       ]
     },
     {
@@ -225,11 +233,15 @@
         "docs/qualification/evidence/F059-native-ftps-stock.json",
         "docs/qualification/evidence/F060-ftps-lftp-identity.json",
         "docs/qualification/evidence/F061-ftps-governance.json",
-        "docs/qualification/evidence/F062-ftps-cli-governance.json"
+        "docs/qualification/evidence/F062-ftps-cli-governance.json",
+        "docs/qualification/evidence/F063-ftps-browser-governance.json",
+        "docs/qualification/evidence/F064-ftps-upload-tickets.json",
+        "docs/qualification/evidence/F065-ftps-public-crash-recovery.json",
+        "docs/qualification/evidence/F067-ftps-browser-tickets.json"
       ],
       "qualification_blockers": [
-        "Native stock/enterprise clients and the new exact-commit GitHub replay remain unqualified.",
-        "Active rotation/revocation, selected intake/quarantine, upload-ticket recovery, broader IPv6/firewall/gateway/production profiles, large files/load and full row acceptance remain required."
+        "Selected native Linux stock curl/lftp,live credential/intake governance and CLI/browser ticket process-crash components pass in F062-F067. Enterprise clients and whole-row acceptance remain required.",
+        "Broader IPv6/firewall/gateway/production peers,larger files/load,power-loss durability,Windows and complete recovery acceptance remain required."
       ]
     },
     {
@@ -265,10 +277,14 @@
         "independent FTPS-implicit peer"
       ],
       "acceptance_journey": "J01",
-      "state": "planned",
-      "evidence": [],
+      "state": "implementing",
+      "evidence": [
+        "docs/qualification/evidence/F068-ftps-client-transport.json"
+      ],
       "qualification_blockers": [
-        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison",
+        "Transport component passes native ARM scripted TLS peer only;actual native stock receiver replay pending.",
+        "Distinct versioned connection/delivery/workflow bindings,public UI/API/CLI controls,PostgreSQL approvals/leases/fencing,receiver publication/duplicate contract,ambiguous recovery and whole-row acceptance remain required."
       ]
     },
     {

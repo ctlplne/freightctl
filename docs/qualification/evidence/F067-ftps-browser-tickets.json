@@ -102,9 +102,9 @@
     "dedicated_ftps_x86_job_id": 125756652421,
     "dedicated_ftps_arm_job_id": 125756652645,
     "full_linux_run_id": 41587610204,
-    "full_linux_state": "running original full integration on both architectures;not a pass yet",
+    "full_linux_state": "passed both original full native Linux suites;588Go/PostgreSQL records each with zero failures/skips;223engine passes plus one visible privileged-port20 skip each",
     "stock_run_id": 41587610346,
-    "stock_state": "queued;follow exact existing run",
+    "stock_state": "all five original stock/browser jobs passed",
     "full_linux_arm_job_id": 125756652473,
     "full_linux_x86_job_id": 125756652607,
     "metadata_state": "both actual native schema35 restores passed",
@@ -178,5 +178,9 @@
   "dedicated_ftps_archive": {
     "manifest_reference": ".private/freightctl-ftps-regression-1fd1534/manifest.json",
     "manifest_sha256": "74a60b31143755118cd37a0f822684a009402bff2a5220a8a66582dc48284e07"
+  },
+  "broader_regression_archive": {
+    "manifest_reference": ".private/freightctl-ftps-prior-regressions-1fd1534/manifest.json",
+    "manifest_sha256": "a4233430ec63f469ad13eb9477ec888b92368581e69bb983c5f554b3b8ab82fd"
   }
 }

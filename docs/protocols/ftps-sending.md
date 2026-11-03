@@ -1,0 +1,38 @@
+# Outbound FTPS transport and governed delivery contract
+
+The new `internal/ftpsclient` component can talk to an explicit or implicit FTPS receiver. It is a transport building block. Public delivery, collection, connections and workflows still use the existing SFTP contract; they do not yet expose this component. The next integration must preserve their approvals and recovery rules. No sending parity row is qualified by this implementation.
+
+## Wire and custody profile
+
+TLS lives behind `internal/crypto`. A destination contains approved address, username, server name, mode, CA reference/fingerprint and protected password reference/fingerprint. It contains no password value. The initial development profile accepts numeric loopback addresses only, verifies the normal certificate chain and hostname against the exact approved CA bytes, and requires TLS 1.3. Explicit mode sends only greeting/AUTH before TLS. USER/PASS follow certificate verification. The owned password and command buffers are cleared; Go TLS and operating-system copies are outside that clearing guarantee.
+
+Every data socket connects to the approved control IP and an unprivileged passive port. An address advertised inside PASV cannot redirect it. Data TLS must resume the original control session with the same leaf certificate. Each control session owns its cache; data tickets cannot replace the control ticket. PBSZ 0, PROT P and TYPE I are mandatory. Plaintext, active mode, CCC and arbitrary FTP commands are absent from this client API. Inbound FTPS active-mode evidence is separate.
+
+The client bounds individual reply lines to its 4 KiB reader, a multiline reply to 64 lines/64 KiB, encrypted control reads to 512 KiB, commands to 64, one active data socket, dial to five seconds, socket idle time to 15 seconds and the complete session to 90 seconds. A development file ceiling is 1 GiB; it is a resource bound, not a commercial edition limit. Streams use cleared 32 KiB buffers. Context cancellation closes the exact owned sockets and joins its watcher. Source readers and staging writers must themselves be bounded, trusted local custody handles; arbitrary blocking user callbacks cannot be made interruptible by the socket layer.
+
+STOR verifies the entire source length and SHA-256, including a locally reread prefix when using REST. A receiver's retained prefix is independently retrieved and checked before publication. RETR writes only into private staging or a discard sink until exact length, digest, EOF and the final FTP reply are verified. A matching file hash does not authorize a destination or release a quarantined revision.
+
+Both stream directions require TLS close notification. Go TLS normally tolerates a bare TCP EOF at a record boundary. The private data socket wrapper converts that underlying EOF into an error before TLS can normalize it, while a real encrypted close alert still becomes a clean TLS EOF. A scripted peer that sends exact bytes and a 226 but omits close notification must fail. The independent receiver profile also enables strict read EOF and write shutdown.
+
+Errors expose fixed categories and parsed numeric FTP status codes. They do not copy receiver prose or live policy error text. Lost final replies remain uncertain and are never automatically retried. Client session objects are single-operation-at-a-time; separate worker leases need separate clients.
+
+## Publication is a separate promise
+
+FTP's RNFR/RNTO does not give the existing SFTP worker's `fsync@openssh.com` plus exclusive `hardlink@openssh.com` guarantee. A receiver can replace an existing destination during rename. SIZE, 226 and successful RNTO also do not prove power-loss persistence or business processing. A prior existence check cannot fix a rename race. Never route FTPS through the SFTP worker by changing only the dialer.
+
+The next implementation must:
+
+1. Add a distinct versioned FTPS connection/delivery definition and canonical hash. Freeze protocol, mode, address, hostname, exact trust/credential references, staging path, final path and the explicit receiver publication/receipt contract. Preserve decoding and hashes for old SFTP revisions. Redact private references from public views and AI context.
+2. Use ordinary tenant/partner/file authority, exact immutable source revision, live checks, independent approval, idempotency and audit through the same UI/API/CLI/workflow services. Store the intent, immutable event and external-effect record in one PostgreSQL transaction. Do not infer approval from a transport callback.
+3. Acquire the existing bounded lease/fence and recheck it before network work, each stream chunk and publication. Stage under an approved receiver path hidden from consumers by the receiver contract. Verify readback; persist publishing intent before RNTO. A receiver that cannot guarantee the configured visibility/duplicate policy is rejected or explicitly uses a weaker, separately approved promise.
+4. On a lost STOR/RNTO reply, retain an ambiguous outcome. Recovery observes the exact receiver path and bytes read-only under the original intent. It cannot invent the original reply, resend, rename or claim exactly-once business effects. A new effect requires a separately authorized recovery decision and a receiver contract that addresses duplicate processing.
+5. Persist the strongest actual observation: bytes dispatched, FTP completion observed, exact bytes read back, rename observed or business receipt. Never label readback as a receiver fsync or business acknowledgment. Collection similarly stages untrusted remote bytes through ordinary intake/check/release before workflow consumption.
+6. Replay real PostgreSQL and stock vsftpd public UI/API/CLI workflows on native ARM/x86 GitHub runners, including authority/credential/trust changes, lease loss, partial streams, wrong prefix, collision, process kills and lost replies. Keep SFTP's stronger publication checks unchanged.
+
+## Qualification placement
+
+Lightweight native ARM tests use a scripted TCP/TLS peer to exercise hostile replies, channel binding, integrity, cancellation and uncertain outcomes. They do not qualify a vendor receiver. The separate `ftps-client.yml` workflow extracts Ubuntu's pinned vsftpd package on disposable Linux ARM/x86 runners and uses real OpenSSL/PAM, two loopback listeners, a unique restricted account, chroot and exact cleanup. No distribution-wide FTP daemon is installed or started. The receiver is limited to one CPU, 256 MiB address space, 60 CPU seconds, four sessions and bounded passive ports. Each receiver gets its own supervisor and process group.
+
+The original Go profile must pass both modes with store/readback/rename, suffix resume, empty files and wrong hostname/password refusals. A separate Python receiver-side observer reopens six actual files and compares their bytes. An independent reporter reopens original outputs, source hashes and strict receiver settings and requires exact account/PAM removal. It emits only aggregate outcomes and hashes. No raw artifact upload, model, scanner, retained database or local system-account setup is involved. Actual GitHub results remain pending until their original jobs finish; a stand-in, compiled tag or workflow file is not a stock receiver pass.
+
+Wire references: [FTP commands and rename](https://www.rfc-editor.org/rfc/rfc959.html), [FTPS negotiation and protected data](https://www.rfc-editor.org/rfc/rfc4217.html), [extended passive operation](https://www.rfc-editor.org/rfc/rfc2428.html), [Ubuntu noble vsftpd options](https://manpages.ubuntu.com/manpages/noble/man5/vsftpd.conf.5.html). These specifications describe mechanisms; native evidence establishes this implementation's tested behavior.

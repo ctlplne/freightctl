@@ -201,6 +201,7 @@ jobs:
           sh scripts/go.sh test ./internal/vpath -fuzz=FuzzCanonicalPath -fuzztime=5s -parallel=2
           sh scripts/go.sh test ./internal/sftpd -fuzz=FuzzInspectPacket -fuzztime=5s -parallel=2
           sh scripts/go.sh test ./internal/ftpsd -fuzz=FuzzActiveDestination -fuzztime=5s -parallel=1
+          sh scripts/go.sh test ./internal/ftpsclient -fuzz=FuzzPassiveReplyNeverEscapesPortBudget -fuzztime=5s -parallel=1
           sh scripts/go.sh test ./internal/custody -fuzz=FuzzCustodyName -fuzztime=5s -parallel=2
           sh scripts/go.sh test ./internal/workflow -fuzz=FuzzTypedWorkflow -fuzztime=5s -parallel=2
           sh scripts/go.sh test ./internal/checks -fuzz=FuzzCSVContract -fuzztime=5s -parallel=1

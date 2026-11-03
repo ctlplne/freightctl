@@ -2119,6 +2119,35 @@
         "docs/qualification/evidence/F067-ftps-browser-tickets.json",
         "https://github.com/ctlplne/freightctl/actions/runs/41587610137"
       ]
+    },
+    {
+      "id": "D131",
+      "severity": "outbound FTPS reply parser defect",
+      "state": "fixed and original native ARM regression replayed;stock native replay pending",
+      "observed_on": "2026-11-03",
+      "candidate": "1ecc15f37dd8bfb254089804cab5d7b9f91d947f",
+      "journey": "Outbound FTPS passive reply refusal",
+      "title": "EPSV parser accepts a signed decimal port",
+      "first_failure": "Original native ARM test accepts +1024 because strconv.Atoi permits a leading plus. Approved control IP and unprivileged range remained enforced.",
+      "resolution": "Require every port character to be an ASCII digit before conversion;retain signed/low/high/malformed fixtures and native fuzz target.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F068-ftps-client-transport.json"
+      ]
+    },
+    {
+      "id": "D132",
+      "severity": "outbound FTPS TLS truncation acceptance",
+      "state": "fixed and both original native ARM failure cases replayed",
+      "observed_on": "2026-11-03",
+      "candidate": "1ecc15f37dd8bfb254089804cab5d7b9f91d947f",
+      "journey": "Outbound FTPS exact stream shutdown",
+      "title": "Bare TCP EOF is mistaken for an encrypted TLS close notification",
+      "first_failure": "Both store and readback accept an abrupt peer close after exact bytes and 226. Original failing test output and source fingerprints are retained in F068.",
+      "cause": "Go TLS accepts underlying EOF at a record boundary for web compatibility. Checking only tls.Conn.Read io.EOF cannot distinguish it.",
+      "resolution": "Translate underlying data-socket EOF to a fixed error before TLS normalization. Genuine close_notify remains clean;abrupt store/readback fail. Full native ARM race suite including original cases passes.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F068-ftps-client-transport.json"
+      ]
     }
   ]
 }

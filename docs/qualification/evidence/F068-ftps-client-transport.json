@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "id": "F068",
+  "observed_at": "2026-11-03",
+  "state": "outbound FTPS transport verified with native ARM stand-in;independent native stock receiver replay pending",
+  "starting_commit": "1ecc15f37dd8bfb254089804cab5d7b9f91d947f",
+  "scope": "Bounded explicit/implicit FTPS transport component only;not connected to governed delivery,collection,connections,workflows or public sending controls. No whole parity row or journey qualified.",
+  "implementation": [
+    "Original bounded FTP reply/passive/stream/rename subset with TLS and credential custody behind internal/crypto;no new dependency.",
+    "Numeric loopback approved peers,verified hostname/CA bytes,TLS1.3,original-control-only data resumption,protected credentials,binary encrypted data and mandatory live guard.",
+    "Exact source/readback size/digest,full-source REST hashing,cleared buffers,clean TLS shutdown,limited replies/commands/time/socket count and joined cancellation.",
+    "Peer prose stays private;lost final transfer/publication replies remain uncertain and do not retry. RNTO has no implied no-replace,fsync or business receipt guarantee."
+  ],
+  "first_failures": [
+    {
+      "defect": "D131",
+      "kind": "native ARM passive parser regression",
+      "manifest_reference": ".private/freightctl-ftps-client-first-01a1c8c13d714a25a80cc1647bff0f2e/manifest.json",
+      "manifest_sha256": "3c892c27b3fa086684766e807e19742befdfbb16f28b0635c06d2d4f5a09a96f",
+      "observation": "Signed EPSV port +1024 passed strconv.Atoi;strict digit grammar now refuses it. It never supplied a foreign control IP."
+    },
+    {
+      "defect": "D132",
+      "kind": "native ARM abrupt TLS peer regression",
+      "manifest_reference": ".private/freightctl-ftps-unclean-first-7ee9006cc01a406bb94617820d387996/manifest.json",
+      "manifest_sha256": "b001ccb7d40411a0164b9827bcecf8f8a38984d8f5f07b256558914f72fbe230",
+      "observation": "Both store/retrieve accepted exact bytes plus bare TCP EOF without close_notify. Go TLS normalizes record-boundary EOF;the data socket wrapper now preserves it as an error before TLS normalization."
+    }
+  ],
+  "local_checks": {
+    "manifest_reference": ".private/freightctl-ftps-client-final-455e57a19ab9438eba3c20ba98da3ebd/manifest.json",
+    "manifest_sha256": "a85ad609a2ccc37a182fed2b42204cf32f498257a2f521e86862d5eee4cdd93a",
+    "native_arm_race": "passed original full internal/ftpsclient and internal/crypto suite after both repairs",
+    "pass_records": 48,
+    "failures": 0,
+    "skips": 0,
+    "vet": "passed",
+    "synthetic_evidence_tampering_contracts": 8,
+    "workflow_actionlint": "passed",
+    "stock_receiver": "not executed locally;compile-only is not runtime qualification",
+    "sandbox_refusal": {
+      "manifest_reference": ".private/freightctl-ftps-client-repaired-d11aa21afe2540c88e9c3f618a4dce8d/manifest.json",
+      "manifest_sha256": "441f321bf74402bf956f1bc040136e980ece606fd8a4f39fb8db58f1b2a17a8f",
+      "state": "bind operation denied;original suite replay passed with loopback access"
+    },
+    "latest_synthetic_evidence_tampering_contracts": 9,
+    "latest_contract_note": "The final native archive retains the eight-contract source version;the additional fixed failure-diagnostic privacy contract and18-command configuration ownership closure pass separately after runner configuration review. Go transport sources are unchanged."
+  },
+  "native_ci": {
+    "state": "pending",
+    "workflow": ".github/workflows/ftps-client.yml",
+    "profile": "Actual native Ubuntu24 ARM/x86,stock vsftpd3.0.5-0ubuntu3.1/OpenSSL/PAM,two TLS1.3 listeners,strict reuse/read EOF/write shutdown,chroot,independent six-file receiver observation and exact user/PAM/process cleanup",
+    "receiver_budget": "one CPU,256MiB address space,60CPU seconds,4sessions per listener",
+    "no_artifact_upload": true
+  },
+  "next_integration": "docs/protocols/ftps-sending.md",
+  "inference_performed": false,
+  "scanner_started": false,
+  "postgres_started": false,
+  "full_goal_complete": false,
+  "limits": [
+    "Existing SFTP definitions/hashes/publication contract remain unchanged. A distinct frozen FTPS definition,live approvals/lease/fence,receiver visibility/duplicate contract,publication intent and read-only ambiguous reconciliation remain required.",
+    "Collection/listing,active mode,production network peers,TLS profile breadth,Windows custody,scale,power-loss persistence and business receipts remain open.",
+    "All83whole rows/12full journeys and all three readiness verdicts remain open;F026 aggregate stays owner-deferred."
+  ]
+}

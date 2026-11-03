@@ -1,0 +1,73 @@
+name: Native FTPS client and independent stock receiver
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'internal/crypto/**'
+      - 'internal/ftpsclient/**'
+      - 'go.mod'
+      - 'go.sum'
+      - 'scripts/go.sh'
+      - 'scripts/install-ftps-receiver.sh'
+      - 'scripts/qualify-ftps-client.py'
+      - 'scripts/ci-ftps-client-summary.py'
+      - 'scripts/test-ftps-client-summary.py'
+      - '.github/workflows/ftps-client.yml'
+  pull_request:
+    paths:
+      - 'internal/crypto/**'
+      - 'internal/ftpsclient/**'
+      - 'go.mod'
+      - 'go.sum'
+      - 'scripts/go.sh'
+      - 'scripts/install-ftps-receiver.sh'
+      - 'scripts/qualify-ftps-client.py'
+      - 'scripts/ci-ftps-client-summary.py'
+      - 'scripts/test-ftps-client-summary.py'
+      - '.github/workflows/ftps-client.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: freightctl-ftps-client-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  stock-receiver:
+    name: Native FTPS client (${{ matrix.arch }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x86_64
+            runner: ubuntu-24.04
+          - arch: aarch64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 20
+    env:
+      GOMAXPROCS: "1"
+      GOMEMLIMIT: 192MiB
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version: "1.26.10"
+          cache: false
+      - name: Native runner and stock receiver package
+        run: |
+          test "$(uname -m)" = "${{ matrix.arch }}"
+          sh scripts/install-ftps-receiver.sh
+      - name: Actual client with two loopback TLS receivers and independent files
+        run: |
+          umask 077
+          mkdir -p .private
+          receiver_status=0
+          python3 scripts/qualify-ftps-client.py > .private/ftps-client-result.json || receiver_status=$?
+          python3 scripts/ci-ftps-client-summary.py --result .private/ftps-client-result.json
+          exit "$receiver_status"
