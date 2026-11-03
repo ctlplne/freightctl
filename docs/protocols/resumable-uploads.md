@@ -24,9 +24,11 @@ The corresponding CLI commands are `upload-create`, `upload-status`, `upload-app
 
 Storage has a persistent UUID marker. A ticket cannot resume on another directory merely because both processes use the same database. Use the same initialized store on restart. Invalid markers are preserved and rejected, not overwritten. Metadata-only abort remains possible when storage is unavailable. Existing experimental unbound tickets cannot be guessed into a new store.
 
-## Stock SFTP
+## Browser transfer-client tickets
 
-The browser can prepare the same immutable receiving job without sending bytes. Choose the source and destination under **Uploads**, then **Prepare transfer ticket**. It displays the returned SFTP/FTPS paths and the exact expected digest/length. **Refresh upload status** reads durable progress or the saved accepted file ID after a lost reply. Reload discovers the same owned ticket. These browser controls use the same scoped upload API; [F067](../qualification/evidence/F067-ftps-browser-tickets.json) tracks their required actual browser/process-crash replay, currently pending.
+The browser can prepare the same immutable receiving job without sending bytes. Choose the source and destination under **Uploads**, then **Prepare transfer ticket**. It displays the returned SFTP/FTPS paths and the exact expected digest/length. **Refresh upload status** reads durable progress or the saved accepted file ID after a lost reply. Reload discovers the same owned ticket. These browser controls use the same scoped upload API; [F067](../qualification/evidence/F067-ftps-browser-tickets.json) records their passing actual native Linux x86 Chrome/process-crash replay in both FTPS modes, with exact original output closure and independent bytes. Broader browser/platform and whole-journey qualification remain open.
+
+## Stock SFTP
 
 Creation returns a private protocol path such as `/.freightctl/uploads/<upload-id>`. It is a receiving job, not an ordinary published file. Use stock sftp with explicit host-key trust and your enrolled identity:
 

@@ -2108,15 +2108,16 @@
     {
       "id": "D130",
       "severity": "missing public operator recovery surface",
-      "state": "implemented;actual native browser replay pending",
+      "state": "fixed and original native x86 browser ticket profile replayed",
       "observed_on": "2026-11-03",
       "candidate": "62cf513e24f44c9b51e0a249882ea39d31fc4419",
       "journey": "Browser-created shared FTPS ticket process-crash recovery",
       "title": "Browser cannot prepare or inspect shared transfer-client ticket recovery",
       "first_finding": "Source/interface inspection shows protocol path fields dropped and no ticket-only preparation or selected-ticket refresh action. This is not a claimed native browser first-failure run.",
-      "resolution": "Add ticket-only preparation,strict ID-bound protocol path decoding and current saved progress/acceptance/immutable-file display. Require actual browser creation/reload/foreign-authority/lost-reply/check/release/process-kill and independent byte replay in native CI. Static contracts pass;runtime remains pending.",
+      "resolution": "Add ticket-only preparation,strict ID-bound protocol path decoding and current saved progress/acceptance/immutable-file display. Require actual browser creation/reload/foreign-authority/lost-reply/check/release/process-kill and independent byte replay in native CI. Static contracts pass;runtime remains pending. Candidate1fd1534 now passes the complete original native Chrome/FTPS profile in both modes:12new browser ticket cases/two exact server kills/two API refusals/12additional axe audits/four saved create+release replays,all21native records/172original commands,unchanged retained authority and exact cleanup. Original stock/CLI/credential/intake browser gates also pass. No baseline native failure or whole-journey qualification is invented.",
       "regression_evidence": [
-        "docs/qualification/evidence/F067-ftps-browser-tickets.json"
+        "docs/qualification/evidence/F067-ftps-browser-tickets.json",
+        "https://github.com/ctlplne/freightctl/actions/runs/41587610137"
       ]
     }
   ]

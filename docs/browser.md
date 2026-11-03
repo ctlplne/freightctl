@@ -26,7 +26,7 @@ Saved-upload listing is keyset-paginated, at most 100 records per request. It fi
 
 Completion means the server verified and durably accepted the exact full bytes. The receipt distinguishes integrity-only acceptance from held intake. It does not establish malware clearance, dispatch, recipient consumption or business acknowledgment. A completed ticket retains its original acceptance meaning after later policy changes or release.
 
-## Inspect and release held revisions
+## Prepare and inspect a transfer-client ticket
 
 To prepare a file for an enrolled SFTP or FTPS client, open **Uploads**, choose the original file and its destination, then select **Prepare transfer ticket**. The browser computes its full SHA-256 and saves the expected size and destination without sending file bytes. The saved details show the ticket's exact **SFTP transfer path** and **FTPS transfer path**. Use your verified server identity and enrolled account in the transfer client; FTPS requires binary mode. These paths identify a private receiving job, not a published file.
 
@@ -34,7 +34,9 @@ Select **Refresh upload status** to read the receiver's committed offset. After 
 
 If the final transfer reply was lost, refresh or reload and inspect the saved acceptance record, its **Accepted file ID**, digest and acceptance boundary before sending again. A full progress bar without completed acceptance is insufficient. A held file still needs its required checks and separate reviewed release; **Inspect intake check** uses the ordinary intake controls. This read recovers the committed file identity and acceptance state; it does not invent a transport reply or prove downstream business delivery. See [the shared ticket profile](protocols/resumable-uploads.md).
 
-The new browser/FTPS crash journey is prepared in [F067](qualification/evidence/F067-ftps-browser-tickets.json). Runtime qualification remains pending until its original native GitHub browser profile completes; static checks alone do not qualify it.
+The selected browser/FTPS journey passes on actual native Linux x86 Chrome in [F067](qualification/evidence/F067-ftps-browser-tickets.json): both listener modes, real server kills, reload/foreign-authority/receipt recovery, reviewed release replay and independently reopened bytes. The original stock/CLI/browser profile also passes. Broader browser/platform, independent operator and whole-journey qualification remain open.
+
+## Inspect and release held revisions
 
 **Intake checks** shows this account's held revisions and current result. A required detached signature can be attached as a bounded public sidecar (at most 32 KiB). Private signing keys remain with their owner. The existing signature parser rejects unsupported/private/mixed packets and binds the artifact to the exact source, policy and check revision. Fresh positive independent signature qualification for the current candidate remains open because the offline peer cannot start; the UI does not relax the age policy.
 
