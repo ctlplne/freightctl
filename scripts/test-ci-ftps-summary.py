@@ -10,6 +10,7 @@ import sys
 import tempfile
 import unittest
 import ftps_cli_governance as governance
+import ftps_browser_evidence as browser
 
 from ftps_contract import CLI_PAYLOAD, LFTP_CASES, LFTP_DOWNLOADS, NATIVE_PARENT_TESTS, NATIVE_TESTS
 
@@ -58,6 +59,14 @@ def synthetic_governance_outputs():
 
 
 class SummaryContracts(unittest.TestCase):
+    def test_browser_http_refusal_requires_exact_label_status_and_error(self):
+        exact = json.dumps({"error":"operation_state_conflict"})
+        browser.verify_http_outcome("bad-release",409,exact)
+        browser.verify_http_outcome("wire-0",200,'{}')
+        for label,status,body in (("bad-release",200,exact),("bad-release",403,exact),("bad-release",500,exact),("wire-0",409,exact),("unknown",409,exact),("bad-release",409,'{"error":"database_unavailable"}'),("bad-release",409,'{"error":"operation_state_conflict","extra":"private"}')):
+            with self.assertRaises(ValueError):
+                browser.verify_http_outcome(label,status,body)
+
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory(prefix="freightctl-ftps-report-")
         self.addCleanup(self.tmp.cleanup)

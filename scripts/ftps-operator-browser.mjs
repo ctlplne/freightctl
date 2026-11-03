@@ -178,6 +178,8 @@ async function actual(route, label, target) {
   const result = {
     status,
     body,
+    method: request.method(),
+    url: target,
     selection: bytes.length ? JSON.parse(bytes) : null,
     idempotency_key: fields.find(([k]) => k === "idempotency-key")?.[1],
   };
@@ -508,8 +510,52 @@ try {
     assert.equal(v.check.state, path === "/good.csv" ? "passed" : "rejected");
     assert.equal(v.check.attempts, 1);
     if (path === "/bad.csv")
-      assert.equal(await button("Review release").count(), 0);
+      assert.equal(await button("Review release").isDisabled(), true);
   }
+  // The UI deliberately shows a disabled action. Also try its actual API to
+  // prove that bypassing the button cannot release a rejected revision.
+  phase = "bad-release-refusal";
+  const checkPost = responses.findLast((r) => r.method === "POST");
+  const csrf = (
+    await readFile(c.private + "/" + checkPost.label + ".headers", "utf8")
+  ).match(/^x-csrf-token: ([^\r\n]+)$/m)?.[1];
+  assert.ok(csrf);
+  const bad = checks["/bad.csv"],
+    good = checks["/good.csv"];
+  const refusedBody = {
+    sha256: bad.binding.file.sha256,
+    policy_hash: bad.policy_hash,
+    report_hash: good.report_hash,
+    expected_revision: bad.revision,
+  };
+  const refusalTarget = prefix + "/checks/" + ids["/bad.csv"] + "/release";
+  const refusal = await wireResponse(
+    page,
+    refusalTarget,
+    () =>
+      page.evaluate(
+        async ({ url, csrf, body }) => {
+          const r = await fetch(url, {
+            method: "POST",
+            credentials: "same-origin",
+            redirect: "error",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRF-Token": csrf,
+              "Idempotency-Key": "browser-bad-release",
+            },
+            body: JSON.stringify(body),
+          });
+          return r.json();
+        },
+        { url: refusalTarget, csrf, body: refusedBody },
+      ),
+    actual,
+    "bad-release",
+  );
+  assert.equal(responses.at(-1).status, 409);
+  assert.deepEqual(refusal, { error: "operation_state_conflict" });
+  record("rejected-ftps-file-release-api-refused");
   intake.send("checks-completed");
   await intake.next("passed-still-unreleased");
   phase = "release";

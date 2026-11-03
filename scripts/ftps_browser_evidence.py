@@ -11,9 +11,16 @@ from pathlib import Path
 from ftps_cli_governance import GOOD_CSV, BAD_CSV, read, require
 
 AUDITS = ["credential-create-review", "credential-rotate-review", "intake-policy-editor", "intake-policy-register-review", "exact-ftps-release-review", "intake-policy-revoke-review", "intake-policy-revoked"]
-PROOFS = ["browser-rotation-revocation-refuse-open-ftps-writers", "browser-ftps-hold-check-release-and-policy-revocation", "lost-accounts-commands-original-key", "lost-intake-policy-original-key", "lost-intake-policy-revoke-original-key"]
+PROOFS = ["browser-rotation-revocation-refuse-open-ftps-writers", "browser-ftps-hold-check-release-and-policy-revocation", "lost-accounts-commands-original-key", "lost-intake-policy-original-key", "lost-intake-policy-revoke-original-key", "rejected-ftps-file-release-api-refused"]
 ACCESSIBILITY_RULES = set(json.loads((Path(__file__).resolve().parents[1] / "web/tests/fixtures/axe-rule-ids.json").read_text()))
-PHASES = {"credential-sign-in", "credential-create", "credential-rotate", "credential-revoke", "intake-sign-in", "policy-register", "intake-list", "check-bad", "check-good", "release", "policy-revoke", "final-audit"}
+PHASES = {"credential-sign-in", "credential-create", "credential-rotate", "credential-revoke", "intake-sign-in", "policy-register", "intake-list", "check-bad", "check-good", "bad-release-refusal", "release", "policy-revoke", "final-audit"}
+
+
+def verify_http_outcome(label, status, body):
+    require(re.fullmatch(r"(?:wire|loss)-[0-9]{1,3}|bad-release", label), "browser wire label differs")
+    require(type(status) is int and status == (409 if label == "bad-release" else 200), "browser original HTTP outcome differs")
+    if label == "bad-release":
+        require(json.loads(body) == {"error":"operation_state_conflict"}, "browser rejected-file release refusal differs")
 
 
 def validate(directory, inventory=None):
@@ -38,16 +45,21 @@ def validate(directory, inventory=None):
     responses = report.get("responses")
     require(isinstance(responses, list) and 12 <= len(responses) <= 40, "browser response inventory differs")
     requests = []
+    negative = []
     for r in responses:
         label = r.get("label", "")
-        require(re.fullmatch(r"(?:wire|loss)-[0-9]{1,3}", label), "browser wire label differs")
-        require(r.get("status") == 200 and r.get("body") == read(directory / (label + ".response")).decode(), "browser response is not original success")
+        verify_http_outcome(label, r.get("status"), r.get("body"))
+        require(r.get("body") == read(directory / (label + ".response")).decode(), "browser response is not original output")
         body = read(directory / (label + ".request"))
         require(r.get("selection") == (json.loads(body) if body else None), "browser request is not original selection")
         header = read(directory / (label + ".headers")).decode()
         keys = re.findall(r"(?mi)^idempotency-key: ([^\r\n]+)$", header)
         require(keys == ([r["idempotency_key"]] if r.get("idempotency_key") else []), "browser command key differs")
-        requests.append((r["selection"], json.loads(r["body"]), r.get("idempotency_key")))
+        if label == "bad-release":
+            require(json.loads(r["body"]) == {"error":"operation_state_conflict"} and r.get("idempotency_key") == "browser-bad-release" and r.get("method") == "POST", "browser rejected-file release refusal differs")
+            negative.append(r)
+        else:
+            requests.append((r["selection"], json.loads(r["body"]), r.get("idempotency_key")))
     require(len({r["label"] for r in responses}) == len(responses), "browser response labels repeat")
     def commands(field):
         return [(s, r, k) for s, r, k in requests if isinstance(s, dict) and field in s]
@@ -85,6 +97,8 @@ def validate(directory, inventory=None):
     require(len(releases) == 1, "browser release count differs")
     selection, result, key = releases[0]
     good = next(v for v in views if v.get("state") == "passed")
+    bad = next(v for v in views if v.get("state") == "rejected")
+    require(len(negative) == 1 and negative[0]["selection"] == {"sha256":bad["binding"]["file"]["sha256"],"policy_hash":bad["policy_hash"],"report_hash":good["report_hash"],"expected_revision":bad["revision"]} and negative[0].get("url") == cfg["url"] + "/v1/tenants/" + cfg["intake"]["tenant"] + "/partners/" + cfg["intake"]["partner"] + "/checks/" + bad["file_id"] + "/release", "browser refusal did not target the rejected immutable revision")
     require(key and selection == {"sha256": good["binding"]["file"]["sha256"], "policy_hash":good["policy_hash"], "report_hash":good["report_hash"], "expected_revision":good["revision"]}, "browser release is not bound to the inspected bytes/report/revision")
     require(result["resource"].get("state") == "released" and result["resource"].get("file_id") == good["file_id"] and result["resource"].get("revision") == good["revision"] + 1, "browser release receipt differs")
     for name, phases, count in (("credential-peer", ["writer-open-before-rotation", "writer-open-before-revocation", "passed"], 2), ("intake-peer", ["uploads-held", "passed-still-unreleased", "only-approved-revision-published", "passed"], 4)):
@@ -95,4 +109,4 @@ def validate(directory, inventory=None):
         settings = load(name + ".json")
         who = cfg["credential" if name == "credential-peer" else "intake"]
         require(settings.get("username") == who["tenant"] + "/" + who["partner"] and settings.get("port") == cfg["port"] and settings.get("implicit") is cfg["implicit"] and settings.get("certificate") == cfg["certificate"], "browser peer endpoint or scope differs")
-    return {"state":"passed", "governance_cases":6, "accessibility_audits":len(AUDITS), "lost_response_replays":3, "original_https_responses":len(responses)}
+    return {"state":"passed", "governance_cases":6, "strict_api_refusals":1, "accessibility_audits":len(AUDITS), "lost_response_replays":3, "original_https_responses":len(responses)}

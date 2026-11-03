@@ -2004,7 +2004,7 @@
     {
       "id": "D124",
       "severity": "qualification response-observer defect",
-      "state": "repair prepared;original actual replay pending",
+      "state": "fixed and replayed on native x86 explicit journey;broader profile pending",
       "observed_on": "2026-11-02",
       "candidate": "9d506bb8c74d065d9328e768ad13f883949cc538",
       "journey": "Browser FTPS intake policy registration with committed-response loss",
@@ -2012,9 +2012,26 @@
       "reproduction": "GitHub run41571975937 job125706742901;explicit policy-register phase;ftps-operator-browser.mjs:214",
       "first_failure": "The browser closes the confirmed registration dialog,then the observer fails seen.length==2.",
       "cause": "The observer intercepts all methods on the intake-policy URI;the UI automatically GETs the same URI after successful POST/retry.",
-      "resolution": "Let GET continue as an ordinary certificate-pinned browser request;intercept only POST and retain exactly two mutation attempts,identical keys/bodies and saved receipt equality. Prepared;original journey replay is required.",
+      "resolution": "The POST-only interceptor preserves the strict two-mutation/original-receipt assertions and passes atb13eb99;the actual policy is registered and FTPS CSV uploads reach held/rejected checking. Full/implicit profile still requires the later replay.",
       "regression_evidence": [
         "https://github.com/ctlplne/freightctl/actions/runs/41571975937",
+        "docs/qualification/evidence/F063-ftps-browser-governance.json",
+        "https://github.com/ctlplne/freightctl/actions/runs/41572844196"
+      ]
+    },
+    {
+      "id": "D125",
+      "severity": "qualification UI contract defect",
+      "state": "repair prepared;original actual replay pending",
+      "observed_on": "2026-11-02",
+      "candidate": "b13eb9907d09b20aacd5ea630b41a0cb78648456",
+      "journey": "Rejected FTPS CSV revision through browser intake",
+      "title": "Harness expects absence of an intentionally disabled release action",
+      "first_failure": "GitHub run41572844196 job125709514146;check-bad;ftps-operator-browser.mjs:511 expects count0,but the product renders the release button disabled unless state is passed.",
+      "cause": "The harness tests a DOM presentation assumption rather than the existing disabled-action contract. The actual check state is rejected with one attempt.",
+      "resolution": "Check disabled state and add a real same-session/CSRF API bypass attempt requiring exact409/operation_state_conflict for the rejected immutable file/policy/revision and sibling passing report. Preserve independent FTPS refusal,all receipt/byte assertions and original output closure. Original replay pending.",
+      "regression_evidence": [
+        "https://github.com/ctlplne/freightctl/actions/runs/41572844196",
         "docs/qualification/evidence/F063-ftps-browser-governance.json"
       ]
     }

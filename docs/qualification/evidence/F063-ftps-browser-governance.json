@@ -32,7 +32,7 @@
     "typescript": "passed",
     "embedded_assets": "rebuilt and exact-source checked",
     "go_browser_unit": "passed",
-    "ftps_evidence_refusal_contracts": 23,
+    "ftps_evidence_refusal_contracts": 24,
     "workflow_syntax": "passed",
     "qualification_references": "passed",
     "current_go_browser_policy_contract": {
@@ -44,7 +44,7 @@
     }
   },
   "native_browser_replay": {
-    "state": "9d506bb passes credential lifecycle and rotation accessibility in explicit mode;policy registration observer counts a refresh GET and fails its strict mutation count;observer repair prepared",
+    "state": "b13eb99 replays the policy loss case and reaches actual rejected CSV check;its DOM absence expectation is wrong because release is rendered disabled. Repair checks disabled state plus a new exact real-API409 refusal;full replay pending.",
     "workflow": ".github/workflows/ftps-browser.yml",
     "job": "Native x86 browser and live FTPS governance",
     "command": "python3 scripts/qualify-ftps.py --postgres-container-id EXACT_TASK_ID --browser",
@@ -66,7 +66,8 @@
       "Approve the exact file/policy/report/revision;independent FTPS client retrieves only good bytes.",
       "Revoke reviewed policy;both reads are refused.",
       "Drop committed rotation,policy-registration and policy-revocation replies;retry original keys and recover identical original receipts.",
-      "Seven actual-browser accessibility audits,empty persistent credential storage,no external egress or page errors."
+      "Seven actual-browser accessibility audits,empty persistent credential storage,no external egress or page errors.",
+      "Require an exact409/operation_state_conflict when a real same-session API request tries to release the rejected revision with a passing sibling report;no arbitrary error may count as this refusal."
     ],
     "evidence": "Reopen original certificate-checked HTTPS request/response files,receipt keys and revisions,FTPS phase streams,byte/policy/check bindings and complete output hashes. Claimed counters alone cannot pass."
   },
@@ -141,12 +142,28 @@
     "failure_line": 214,
     "failure": "Exact two-attempt assertion fails. Lost-response interceptor accepts GET and POST on the same intake-policy URI;after successful mutation,the UI automatically reads that URI again.",
     "repair": "Continue GET as an ordinary certificate-pinned browser read;intercept only POST. Keep exactly two mutation attempts,identical keys/bodies and original saved receipt equality.",
-    "state": "repair prepared;original replay pending",
+    "state": "fixed and replayed on native x86 explicit mode atb13eb99;later rejected-file UI expectation fails",
     "retained_metadata_and_roles_unchanged": true,
     "isolated_database_removed": true,
     "original_resource_state_restored": true,
     "cleanup_failures": 0,
     "archive_reference": ".private/freightctl-ftps-browser-policy-loss-9d506bb/manifest.json",
     "archive_sha256": "046b9d4dff0f33061730fcba1ac893b899fb2a0f7ac4441ac2c61ff243d5136a"
+  },
+  "rejected_release_observation": {
+    "candidate": "b13eb9907d09b20aacd5ea630b41a0cb78648456",
+    "run_id": 41572844196,
+    "job_id": 125709514146,
+    "phase": "check-bad",
+    "failure_line": 511,
+    "failure": "The actual rejected CSV check has one attempt and state rejected;the harness expects no release action,but the existing product renders its release button disabled.",
+    "repair": "Assert that the action is disabled. Also bypass that button with an actual same-session/CSRF API request,using rejected file bytes/policy/revision and the good passing report hash. Require exact409/operation_state_conflict,original request/response hashes and the rejected immutable target. Keep independent FTPS bad-byte refusal and good-only publication.",
+    "state": "repair prepared;original full profile pending",
+    "retained_metadata_and_roles_unchanged": true,
+    "isolated_database_removed": true,
+    "original_resource_state_restored": true,
+    "cleanup_failures": 0,
+    "archive_reference": ".private/freightctl-ftps-browser-bad-release-b13eb99/manifest.json",
+    "archive_sha256": "8d391dc6bdba6fa743e9a33387683c98acc262760cdf3e6108f46af1ea2a82ae"
   }
 }

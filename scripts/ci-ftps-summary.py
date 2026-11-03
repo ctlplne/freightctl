@@ -171,6 +171,7 @@ def summarize(root, result, commit, require_browser=False):
             "public_cli_governance_cases": 2 * len(governance.CASES), "expected_cli_refusals": 2 * len(governance.REFUSALS),
             "native_commands": len(steps), "browser_qualified": manifest.get("browser_requested") is True,
             "browser_governance_cases": 12 if manifest.get("browser_requested") is True else 0,
+            "strict_browser_api_refusals": 2 if manifest.get("browser_requested") is True else 0,
             "retained_metadata_and_roles_unchanged": True,
             "isolated_database_removed": True, "original_resource_state_restored": True,
             "inference_performed": False, "scanner_engine_started": False,
