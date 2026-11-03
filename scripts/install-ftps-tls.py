@@ -18,7 +18,7 @@ SHA256="603f5602e2eef00d77fbd429d34dcd5822bb301757a1bc9cdb24c670f1eb859a"
 URL="https://github.com/openssl/openssl/releases/download/openssl-3.5.9/openssl-3.5.9.tar.gz"
 FILES=("prefix/lib/libssl.so.3","prefix/lib/libcrypto.so.3","prefix/bin/openssl","prefix/include/openssl/configuration.h","prefix/LICENSE.txt")
 RECIPES=("25-test_verify.t","80-test_ssl_new.t","90-test_sslapi.t")
-HARNESS_FILES=("util/wrap.pl","apps/openssl","test/sslapitest","test/ssl_test","test/fips_version_test")
+HARNESS_FILES=("util/wrap.pl","util/shlib_wrap.sh","apps/openssl","test/sslapitest","test/ssl_test","test/fips_version_test")
 STAGE=r'''
 import json,pathlib,shutil,sys
 source,prefix=map(pathlib.Path,sys.argv[1:])
@@ -50,7 +50,7 @@ def diagnostics(source,private,steps):
             data=path.read_bytes()
             if hashlib.sha256(data).hexdigest()==step.get(ext+"_sha256"):output.append(data.decode(errors="replace"))
     text="\n".join(output)
-    categories={"missing-file":"No such file or directory","missing-perl-module":"Can't locate ","shared-library-loader":"error while loading shared libraries","tap-failure":"Failed test","tap-bailout":"Bailout called","signal":"Segmentation fault","make-target":"No rule to make target"}
+    categories={"missing-file":"No such file or directory","missing-perl-module":"Can't locate ","shared-library-loader":"error while loading shared libraries","library-symbol-version":"version `OPENSSL_","tap-failure":"Failed test","tap-bailout":"Bailout called","signal":"Segmentation fault","make-target":"No rule to make target"}
     return {"harness_files":{name:bool((source/name).is_file() and not (source/name).is_symlink() and os.access(source/name,os.X_OK)) for name in HARNESS_FILES},"recipes_seen":[name for name in RECIPES if name in text],"not_ok_records":len(re.findall(r"^\s*not ok\s+[0-9]+\b",text,re.MULTILINE)),"categories":sorted(name for name,pattern in categories.items() if pattern in text)}
 
 
@@ -105,7 +105,7 @@ def main():
         phase="build"
         # OpenSSL's build_sw/build_tests include every test executable. Build
         # the exact tools needed by the same three complete original recipes.
-        command("build",["make","-j1","build_generated","build_libs","build_modules","util/wrap.pl","apps/openssl","test/sslapitest","test/ssl_test","test/fips_version_test","link-utils"],360,source)
+        command("build",["make","-j1","build_generated","build_libs","build_modules","util/wrap.pl","util/shlib_wrap.sh","apps/openssl","test/sslapitest","test/ssl_test","test/fips_version_test","link-utils"],360,source)
         phase="selected-upstream-tests"
         output=command("selected-upstream-tests",["make","-j1","run_tests","TESTS=test_verify test_ssl_new test_sslapi","VERBOSE=1"],180,source)
         if "Result: PASS" not in output or any(name not in output for name in RECIPES):raise RuntimeError("selected native upstream recipes incomplete")

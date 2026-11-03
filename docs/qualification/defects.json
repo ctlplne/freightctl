@@ -2213,14 +2213,14 @@
     {
       "id": "D137",
       "severity": "native receiver dependency qualification build failure",
-      "state": "open;native compilation repaired;original upstream harness exits2;wrapper prerequisite and fixed diagnostics await native replay",
+      "state": "open;native compilation passes;both original upstream recipes fail;shared-library wrapper prerequisite awaits replay",
       "observed_on": "2026-11-03",
       "candidate": "791aaddf7b221a5780be78876087bc797a145ebf",
       "journey": "Native pinned receiver TLS build and original upstream recipes",
       "title": "Native OpenSSL build fails before the selected recipes run",
       "first_failure": "Both actual architectures fail the build phase before any selected recipe or stock receiver qualification. F068 retains original job logs/runner manifest hashes. Exact exit status was omitted by the first safe report;deadline exhaustion remains inference.",
       "cause": "Upstream build_sw/build_tests build every program;make test and install_sw also depend on the full program set. This is more compilation than the three named recipes require. The exact first termination status remains unobserved.",
-      "resolution": "Build the libraries/modules/generated files and exact required test/CLI tools,run all three unchanged complete original recipes through upstreamrun_tests,and stage only private runtime files plus license. Emit failed command exit status. Keep all CPU,time,protocol,byte and cleanup gates;no tests-disabled flag or recipe exclusion. Native replay remains required. At86448c4 both native compilations complete within the unchanged360second deadline,then selected-upstream-tests exits2. The safe report does not expose the exact cause. Original OpenSSL::Test uses generatedutil/wrap.pl,which the selected targets omitted;add that generated prerequisite and hash-bound fixed harness/recipe/error metadata. Preserve all three complete recipes and original limits;actual replay remains required.",
+      "resolution": "Build the libraries/modules/generated files and exact required test/CLI tools,run all three unchanged complete original recipes through upstreamrun_tests,and stage only private runtime files plus license. Emit failed command exit status. Keep all CPU,time,protocol,byte and cleanup gates;no tests-disabled flag or recipe exclusion. Native replay remains required. At86448c4 both native compilations complete within the unchanged360second deadline,then selected-upstream-tests exits2. The safe report does not expose the exact cause. Original OpenSSL::Test uses generatedutil/wrap.pl,which the selected targets omitted;add that generated prerequisite and hash-bound fixed harness/recipe/error metadata. Preserve all three complete recipes and original limits;actual replay remains required. At7f7cb02 both native profiles confirmutil/wrap.pl and all four test/CLI executables exist,but original recipes still exit2 with283not-ok records and missing-file/tap-failure categories. Source review identifies the second generatedutil/shlib_wrap.sh used by the Perl wrapper to select built shared libraries. Add this original prerequisite,keeping every recipe and deadline. Exact causal repair remains unconfirmed until actual native replay.",
       "regression_evidence": [
         "docs/qualification/evidence/F068-ftps-client-transport.json"
       ]

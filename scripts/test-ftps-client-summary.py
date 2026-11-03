@@ -260,10 +260,10 @@ class LibraryDiagnostics(unittest.TestCase):
         return [{"name":"selected-upstream-tests","exit_code":2,"stdout_sha256":hashlib.sha256(data).hexdigest(),"stderr_sha256":hashlib.sha256(b"").hexdigest()}]
 
     def test_fixed_failure_metadata_never_echoes_protected_text(self):
-        steps=self.outputs(b"25-test_verify.t\nnot ok 1 - SYNTHETIC_SECRET\nNo such file or directory /private/SYNTHETIC_SECRET\n")
+        steps=self.outputs(b"25-test_verify.t\nnot ok 1 - SYNTHETIC_SECRET\nNo such file or directory /private/SYNTHETIC_SECRET\nversion `OPENSSL_3.5.0' not found in /private/SYNTHETIC_SECRET\n")
         result=library_builder.diagnostics(self.source,self.private,steps)
         self.assertEqual(result["not_ok_records"],1);self.assertEqual(result["recipes_seen"],["25-test_verify.t"])
-        self.assertEqual(result["categories"],["missing-file"])
+        self.assertEqual(result["categories"],["library-symbol-version","missing-file"])
         self.assertNotIn("SYNTHETIC_SECRET",json.dumps(result));self.assertNotIn(str(self.root),json.dumps(result))
         self.assertTrue(all(value is False for value in result["harness_files"].values()))
 

@@ -271,6 +271,97 @@
       "primary_source": "https://raw.githubusercontent.com/openssl/openssl/openssl-3.5.9/util/perl/OpenSSL/Test.pm",
       "diagnostic": "Reopen hash-bound bounded original build/test output;emit only known harness-file availability,known recipe names,numeric not-ok count and fixed error categories. No upstream prose,paths,credentials or raw artifact upload.",
       "runtime_state": "pending actual native ARM/x86 original replay"
+    },
+    "latest_library_harness_matrix": {
+      "candidate": "7f7cb02118c235bd93578892d9fb2029c00a428f",
+      "run_id": 41612322098,
+      "original_outcomes": {
+        "125837026350": {
+          "state": "failed",
+          "profile": "openssl-3.5.9-no-ktls",
+          "architecture": "x86_64",
+          "manifest_sha256": "776a44a1a5b9525a84a11919ea575eadb9a88a3d1b5b50ed0b60284d576e926b",
+          "source_sha256": "603f5602e2eef00d77fbd429d34dcd5822bb301757a1bc9cdb24c670f1eb859a",
+          "upstream_skip_lines": null,
+          "failure_stage": "selected-upstream-tests",
+          "failed_commands": [
+            {
+              "name": "selected-upstream-tests",
+              "exit_code": 2
+            }
+          ],
+          "diagnostics": {
+            "harness_files": {
+              "util/wrap.pl": true,
+              "apps/openssl": true,
+              "test/sslapitest": true,
+              "test/ssl_test": true,
+              "test/fips_version_test": true
+            },
+            "recipes_seen": [
+              "25-test_verify.t",
+              "80-test_ssl_new.t",
+              "90-test_sslapi.t"
+            ],
+            "not_ok_records": 283,
+            "categories": [
+              "missing-file",
+              "tap-failure"
+            ]
+          },
+          "scope": "native receiver dependency build and three selected upstream recipes;not protocol,system-library or FIPS qualification"
+        },
+        "125837026690": {
+          "state": "failed",
+          "profile": "openssl-3.5.9-no-ktls",
+          "architecture": "aarch64",
+          "manifest_sha256": "82c58afb658b713a05402447b88ed381de5f5cda4faf631ac9233c5255e9c2ca",
+          "source_sha256": "603f5602e2eef00d77fbd429d34dcd5822bb301757a1bc9cdb24c670f1eb859a",
+          "upstream_skip_lines": null,
+          "failure_stage": "selected-upstream-tests",
+          "failed_commands": [
+            {
+              "name": "selected-upstream-tests",
+              "exit_code": 2
+            }
+          ],
+          "diagnostics": {
+            "harness_files": {
+              "util/wrap.pl": true,
+              "apps/openssl": true,
+              "test/sslapitest": true,
+              "test/ssl_test": true,
+              "test/fips_version_test": true
+            },
+            "recipes_seen": [
+              "25-test_verify.t",
+              "80-test_ssl_new.t",
+              "90-test_sslapi.t"
+            ],
+            "not_ok_records": 283,
+            "categories": [
+              "missing-file",
+              "tap-failure"
+            ]
+          },
+          "scope": "native receiver dependency build and three selected upstream recipes;not protocol,system-library or FIPS qualification"
+        }
+      },
+      "archive": {
+        "manifest_reference": ".private/freightctl-ftps-wrapper-first-7f7cb02/manifest.json",
+        "manifest_sha256": "3955af3f4dd1060fab8f3a3e12b6ab04134891b3567ea1361a7e89e139e83522"
+      },
+      "finding": "Both native compilations complete;all five observed executable prerequisites exist;all three recipes are encountered but each native profile has283not-ok records and fixed missing-file/tap-failure categories. Exact individual failures remain private/unobserved here."
+    },
+    "shared_library_wrapper_followup": {
+      "source_observation": "Upstreamutil/wrap.pl dispatches through generatedutil/shlib_wrap.sh to select this build shared libraries. util/build.info declares both wrappers as generated scripts. The selected targets built only the first. Add the original shared-library wrapper to compilation and availability metadata.",
+      "primary_sources": [
+        "https://raw.githubusercontent.com/openssl/openssl/openssl-3.5.9/util/wrap.pl.in",
+        "https://raw.githubusercontent.com/openssl/openssl/openssl-3.5.9/util/build.info",
+        "https://raw.githubusercontent.com/openssl/openssl/openssl-3.5.9/util/shlib_wrap.sh.in"
+      ],
+      "runtime_state": "Pending original native replay;the missing shared-library wrapper is source-observed,but causal resolution is not claimed before that replay.",
+      "limits": "Same pinned source,default features,three complete original recipes,oneCPU,360second build/180second tests/20minute job and unchanged stock protocol/sandbox gates."
     }
   },
   "next_integration": "docs/protocols/ftps-sending.md",
