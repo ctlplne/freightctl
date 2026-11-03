@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"path"
+	"strings"
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/ftpsclient"
@@ -20,6 +21,13 @@ type FTPSDefinition struct {
 	Destination      secure.FTPSDestination     `json:"destination"`
 	StagingDirectory string                     `json:"staging_directory"`
 	ReceiverContract store.FTPSReceiverContract `json:"receiver_contract"`
+}
+
+func validFTPSFilename(name string) bool {
+	// The immutable final name has a UUID prefix, but a trailing dot still
+	// violates the same virtual-path rule used by the wire adapter. Refuse it
+	// before admitting a draft instead of stranding bytes after STOR.
+	return namePattern.MatchString(name) && !strings.HasSuffix(name, ".")
 }
 
 func validFTPSDefinition(f *FTPSDefinition, finalDirectory string) bool {
@@ -46,7 +54,7 @@ func validProtocolDefinition(d *Definition) bool {
 		return d.FTPS == nil
 	}
 	ssh := d.Destination
-	return d.Schema == 2 && namePattern.MatchString(d.Filename) && d.Encryption == nil && d.Binding == nil && d.Transfer == nil && ssh.Address == "" && ssh.User == "" && len(ssh.Host.Wire) == 0 && ssh.Host.Fingerprint == "" && ssh.KeyFile == "" && ssh.KeyFingerprint == "" && validFTPSDefinition(d.FTPS, d.Directory)
+	return d.Schema == 2 && validFTPSFilename(d.Filename) && d.Encryption == nil && d.Binding == nil && d.Transfer == nil && ssh.Address == "" && ssh.User == "" && len(ssh.Host.Wire) == 0 && ssh.Host.Fingerprint == "" && ssh.KeyFile == "" && ssh.KeyFingerprint == "" && validFTPSDefinition(d.FTPS, d.Directory)
 }
 
 func ftpsStagingPath(d *store.Delivery, spec *Definition) string {

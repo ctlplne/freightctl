@@ -168,7 +168,8 @@
       "surfaces": [
         "protocol",
         "API",
-        "CLI"
+        "CLI",
+        "UI"
       ],
       "implementation_owner": "core",
       "goal_sections": [
@@ -186,12 +187,16 @@
       "acceptance_journey": "J01",
       "state": "implementing",
       "evidence": [
-        "docs/qualification/evidence/F068-ftps-client-transport.json"
+        "docs/qualification/evidence/F068-ftps-client-transport.json",
+        "docs/qualification/evidence/F071-governed-ftps-delivery.json",
+        "docs/qualification/evidence/F072-ftps-browser-review.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison",
-        "Transport component passes native ARM scripted TLS peer only;actual native stock receiver replay pending.",
-        "Distinct versioned connection/delivery/workflow bindings,public UI/API/CLI controls,PostgreSQL approvals/leases/fencing,receiver publication/duplicate contract,ambiguous recovery and whole-row acceptance remain required."
+        "Selected audited native ARM stock transport profiles pass,with native receiver seccomp unavailable. Both original x86 vendor/library profiles remain red;independent x86,other peers/platforms,gateway/firewall and full protocol roles remain open.",
+        "Schema2 direct governed sending and read-only uncertain recovery pass real PostgreSQL/application-receiver stand-in journeys on native ARM/x86 at153d24c. Public CLI/browser/API runtime,registered connection/workflow/collection bindings,recipient encryption and interrupted-payload recovery decisions still need qualification.",
+        "F072 implements the ordinary browser metadata review with matching Go hashes and119frontend/26ARMGo contracts. Real Chrome,WCAG,independent-account original-key receipts and no-contact proof remain unverified.",
+        "Receiver staging visibility,deduplication,rename/power-loss durability,business acknowledgment and whole-row customer acceptance remain required;readback and an administrator assertion cannot establish them."
       ]
     },
     {
@@ -261,7 +266,8 @@
       "surfaces": [
         "protocol",
         "API",
-        "CLI"
+        "CLI",
+        "UI"
       ],
       "implementation_owner": "core",
       "goal_sections": [
@@ -279,12 +285,16 @@
       "acceptance_journey": "J01",
       "state": "implementing",
       "evidence": [
-        "docs/qualification/evidence/F068-ftps-client-transport.json"
+        "docs/qualification/evidence/F068-ftps-client-transport.json",
+        "docs/qualification/evidence/F071-governed-ftps-delivery.json",
+        "docs/qualification/evidence/F072-ftps-browser-review.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison",
-        "Transport component passes native ARM scripted TLS peer only;actual native stock receiver replay pending.",
-        "Distinct versioned connection/delivery/workflow bindings,public UI/API/CLI controls,PostgreSQL approvals/leases/fencing,receiver publication/duplicate contract,ambiguous recovery and whole-row acceptance remain required."
+        "Selected audited native ARM stock transport profiles pass,with native receiver seccomp unavailable. Both original x86 vendor/library profiles remain red;independent x86,other peers/platforms,gateway/firewall and full protocol roles remain open.",
+        "Schema2 direct governed sending and read-only uncertain recovery pass real PostgreSQL/application-receiver stand-in journeys on native ARM/x86 at153d24c. Public CLI/browser/API runtime,registered connection/workflow/collection bindings,recipient encryption and interrupted-payload recovery decisions still need qualification.",
+        "F072 implements the ordinary browser metadata review with matching Go hashes and119frontend/26ARMGo contracts. Real Chrome,WCAG,independent-account original-key receipts and no-contact proof remain unverified.",
+        "Receiver staging visibility,deduplication,rename/power-loss durability,business acknowledgment and whole-row customer acceptance remain required;readback and an administrator assertion cannot establish them."
       ]
     },
     {
@@ -3373,6 +3383,10 @@
       "observed_on": "2026-10-29",
       "change": "Pin protocol specification/profile contracts for 13 existing rows; clarify exact AS2 retry recovery and required AS4 ebHandler roles. All 83 row IDs, states and incumbent observations are preserved.",
       "scope_changed": false
+    },
+    {
+      "observed_at": "2026-11-03",
+      "change": "Link F071 native governed components and F072 browser implementation to both existing FTPS send rows;clarify UI surface already required by GOAL16. Preserve row count,state,original behavior and acceptance journeys;no whole-row verification or scope exclusion."
     }
   ]
 }

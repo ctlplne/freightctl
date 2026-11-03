@@ -3,7 +3,7 @@ import { readFile, writeFile } from "node:fs/promises";
 export async function qualifyOutboundDispatch(page, c, audit, record, actual) {
   const prefix = c.url + `/v1/tenants/${c.tenant}/partners/${c.partner}`,
     region = page.getByRole("region", {
-      name: "Outbound SFTP dispatch approvals",
+      name: "Outbound dispatch approvals",
     }),
     responses = [];
   const contacts = async () =>
@@ -13,7 +13,7 @@ export async function qualifyOutboundDispatch(page, c, audit, record, actual) {
   await page.getByRole("button", { name: "Approvals", exact: true }).click();
   await region
     .getByRole("heading", {
-      name: "Outbound SFTP dispatch approvals",
+      name: "Outbound dispatch approvals",
       exact: true,
     })
     .waitFor();

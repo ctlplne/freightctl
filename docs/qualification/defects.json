@@ -2256,13 +2256,13 @@
     {
       "id": "D140",
       "severity": "frozen FTPS definition validation gap",
-      "state": "repaired;native ARM refusal replay passes;fresh native PostgreSQL replay pending",
+      "state": "repaired;original refusal and both642-record native Linux suites pass",
       "observed_on": "2026-11-03",
       "candidate": "b5819e8ba2cfa08da40bb83063f51fa04f4b806d",
       "journey": "Governed FTPS definition reload before sending",
       "title": "Reloaded schema2 definitions must recheck the filename constraint",
       "first_failure": "A native ARM mutation contract accepts a frozen filename ../../outside.csv. Public Create already rejects this value;this is a reload validation gap,not observed public path traversal or receiver contact. Original failing JSONL and repaired replay are retained.",
-      "resolution": "Recheck the exact ASCII filename grammar while validating every frozen schema2 definition,before status,approval,claim or network work. All22 focused native ARM delivery records pass,without reducing existing checks.",
+      "resolution": "Recheck the exact ASCII filename grammar while validating every frozen schema2 definition,before status,approval,claim or network work. All22 focused native ARM delivery records pass,without reducing existing checks. Original153d24cnativeARM/x86integration suites pass642records each with0fail/0skip.",
       "regression_evidence": [
         "docs/qualification/evidence/F071-governed-ftps-delivery.json"
       ]
@@ -2270,13 +2270,13 @@
     {
       "id": "D141",
       "severity": "native Windows test fixture regression",
-      "state": "host-native reference fixture repaired;actual Windows replay pending",
+      "state": "repaired on actual native Windows;44D103baseline failures remain open",
       "observed_on": "2026-11-03",
       "candidate": "b5819e8ba2cfa08da40bb83063f51fa04f4b806d",
       "journey": "Actual native Windows direct FTPS definition contracts",
       "title": "A Unix reference literal is not a Windows absolute credential path",
       "first_failure": "Actual Windows job125877767055 inrun41624337280 fails46records:the44existingD103records plus two new delivery fixture cases. Both new cases use /private reference literals and fail actual Windows filepath.IsAbs before exercising their intended assertions. Full original job log is retained.",
-      "resolution": "Build only the synthetic local-reference names with host-native os.TempDir/filepath.Join. Keep virtual receiver paths as POSIX names and preserve every production path/private-permission check. This does not repairD103 or qualify Windows runtime;native replay remains mandatory.",
+      "resolution": "Build only the synthetic local-reference names with host-native os.TempDir/filepath.Join. Keep virtual receiver paths as POSIX names and preserve every production path/private-permission check. This does not repairD103 or qualify Windows runtime;native replay remains mandatory. Actual5094b65Windows job125891445236 has44D103failures and zero newdeliveryfixture failures;Macjob125891444881passes.",
       "regression_evidence": [
         "docs/qualification/evidence/F071-governed-ftps-delivery.json"
       ]
@@ -2284,13 +2284,13 @@
     {
       "id": "D142",
       "severity": "native qualification profile drift",
-      "state": "shared explicit profiles and refusal contracts repaired;actual original native replay pending",
+      "state": "repaired;both original native stock FTPS and browser profiles pass",
       "observed_on": "2026-11-03",
       "candidate": "b5819e8ba2cfa08da40bb83063f51fa04f4b806d",
       "journey": "Native stock/browser FTPS on fresh schema36",
       "title": "FTPS producer/reporting still pins retained schema35 after fresh CI moves to36",
       "first_failure": "Both native stock FTPS jobs and x86 browser FTPS fail with no listed native/CLI/LFTP failure. Source reporter unconditionally requires35ledger entries;fresh init produces36. A synthetic36 evidence contract reproduces the exact profile rejection. Full originals retained;no protocol pass inferred from empty failure lists.",
-      "resolution": "Share explicit current36 and retained35 profiles. CI selects current36 explicitly;local retained35 observations remain distinct and read-only. Producer and reporter require exact source migration checksums,role safety and table/RLS counts.48 FTPS and7 metadata evidence/privacy contracts pass,including unknown/missing/forged/boolean versions;new failed-profile diagnostics emit only bounded counts. Replay original stock/browser jobs without changing protocol assertions or resource budgets.",
+      "resolution": "Share explicit current36 and retained35 profiles. CI selects current36 explicitly;local retained35 observations remain distinct and read-only. Producer and reporter require exact source migration checksums,role safety and table/RLS counts.48 FTPS and7 metadata evidence/privacy contracts pass,including unknown/missing/forged/boolean versions;new failed-profile diagnostics emit only bounded counts. Replay original stock/browser jobs without changing protocol assertions or resource budgets. Original153d24cstock jobs125889425141/125889425595 pass21native records/194commands each;browser125889424612passes21records/172commands. No protocol/assertion/resource budget change.",
       "regression_evidence": [
         "docs/qualification/evidence/F071-governed-ftps-delivery.json"
       ]
@@ -2298,15 +2298,29 @@
     {
       "id": "D143",
       "severity": "read-only recovery qualification invariant mismatch",
-      "state": "original audit-aware invariant repaired and compile/vet passed;actual native replay pending",
+      "state": "repaired;original lost-reply journeys pass both native Linux profiles",
       "observed_on": "2026-11-03",
       "candidate": "b5819e8ba2cfa08da40bb83063f51fa04f4b806d",
       "journey": "Actual FTPS upload/rename reply loss and read-only reconciliation",
       "title": "Read-only recovery must retain its exact audit events while preserving receiver data",
       "first_failure": "Both native Linux jobs fail the same three lost-reply records after638passes/0skips each. The receiver has2new events after missing-final observation plus independent stage read,or3after final retrieval plus independent final read. Existing code deliberately audits ProtocolSessionStarted/FileDownloadAuthorized. The test incorrectly equated audit inserts with payload mutation;original application outcome and byte assertions passed before that final invariant.",
-      "resolution": "Observe all63non-event receiver tables in read-only repeatable-read snapshots and hash every original full event. Require unchanged tables/original events plus exactly one new authenticated recovery session and only precise actor/file/digest/session-bound read audit records. Keep source attempt/fence,state,exact-byte and no automatic resend assertions. No event is deleted or ignored wholesale;fresh native original replay remains required.",
+      "resolution": "Observe all63non-event receiver tables in read-only repeatable-read snapshots and hash every original full event. Require unchanged tables/original events plus exactly one new authenticated recovery session and only precise actor/file/digest/session-bound read audit records. Keep source attempt/fence,state,exact-byte and no automatic resend assertions. No event is deleted or ignored wholesale;fresh native original replay remains required. Both original153d24cGo/PostgreSQL jobs125889425198/125889425621 pass642records/0fail/0skip,including all8new governedFTPSrecords and strict receiver-table/original-event/new-audit proofs.",
       "regression_evidence": [
         "docs/qualification/evidence/F071-governed-ftps-delivery.json"
+      ]
+    },
+    {
+      "id": "D144",
+      "severity": "FTPS filename admission mismatch",
+      "state": "repaired with native ARM refusal coverage;fresh native replay pending",
+      "observed_on": "2026-11-03",
+      "candidate": "5094b6577ce9e384bcf0958072ab687a4f4903df",
+      "journey": "Consistent FTPS CLI/frozen-definition/browser path validation",
+      "title": "An FTPS final name ending in a dot must fail before draft admission",
+      "first_failure": "A native ARM frozen-definition contract accepts payroll. even though the bounded wire adapter canonical-path rule refuses its final path. Public Create uses the same permissive filename grammar. This is a source/contract finding;no public transfer with that name or stranded payload was observed.",
+      "resolution": "Use one FTPS filename predicate in request admission and frozen-definition validation. Keep ordinary filename grammar and reject a trailing dot before draft creation or receiver contact. Browser checks the same canonical final/staging path rules. Original failed contract is retained;26architecture/delivery race records and119frontend contracts pass. Native original/customer replay remains required.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F072-ftps-browser-review.json"
       ]
     }
   ]

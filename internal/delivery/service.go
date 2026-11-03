@@ -194,7 +194,7 @@ func (s *Service) begin(ctx context.Context, scope store.Scope, id string, lock 
 
 func requestDestination(r Request) (secure.SSHDestination, *FTPSDefinition, error) {
 	if r.FTPS != nil {
-		if r.Address != "" || r.User != "" || r.HostPublicFile != "" || r.KeyFile != "" || r.KeyPublicFile != "" || !validFTPSDefinition(r.FTPS, r.Directory) {
+		if r.Address != "" || r.User != "" || r.HostPublicFile != "" || r.KeyFile != "" || r.KeyPublicFile != "" || !validFTPSFilename(r.Filename) || !validFTPSDefinition(r.FTPS, r.Directory) {
 			return secure.SSHDestination{}, nil, ErrInput
 		}
 		copy := *r.FTPS

@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "id": "F072",
+  "observed_at": "2026-11-03",
+  "starting_commit": "5094b6577ce9e384bcf0958072ab687a4f4903df",
+  "state": "implemented browser review; canonical/rendered contracts pass; actual browser journey pending",
+  "scope": "Schema2 FTPS metadata in the existing independent dispatch approval UI and public API client. No new authority service or receiver contact is introduced. Real browser/API/CLI qualification remains open.",
+  "implementation": [
+    "Preserve schema1 SFTP canonical metadata; add explicit/implicit FTPS fixtures checked by both Go and the browser parser, including the real 73-character receiver account shape.",
+    "Bind schema/protocol, exact stage/final paths, trust/credential reference hashes and receiver-contract identity to the selected delivery. Refuse private paths/password digests, mixed SSH/encryption/workflow shapes, unsupported stronger promises and rehashed substitutions.",
+    "Display required TLS1.3, approved CA, private stage, overwrite-capable rename, receiver assertions and readback-only receipt. Explain that metadata review has not yet verified the receiver and that uncertain writes cannot automatically resend.",
+    "Use the existing revision-bound confirmation, stable retry keys and separate named-account policy. Generalize the panel/qualification selector so the policy truthfully covers both protocols.",
+    "Reject trailing-dot FTPS filenames in request admission and frozen-definition reload, before a private upload could be stranded by the wire path validator. Preserve old SFTP behavior.",
+    "Golden fixture templates store a public reference input and fixed expected canonical hashes. Go and Node independently materialize the derived reference fingerprint before wire validation;null placeholders are refused by the production parser. No secret-scanner exception,baseline,rule or exclusion is added."
+  ],
+  "first_failures": [
+    "Original browser contract rejects schema2 FTPS review metadata with invalid_server_response: six passes/two failures. It previously supported only schema1 SFTP.",
+    "D144: original native ARM frozen-definition mutation accepts an unusable trailing-dot final name; public runtime contact was not attempted.",
+    "The default staged Gitleaks scan flags six copies of the public synthetic reference-path fingerprint. Classification proves it is SHA256 of the checked-in public input;fixed golden hashes remain unchanged after explicit fixture construction. Original findings and default-scan replay are retained."
+  ],
+  "local_checks": {
+    "system": "Darwin",
+    "architecture": "arm64",
+    "go_version": "1.26.10",
+    "node_version": "26.0.0",
+    "go_architecture_delivery_race_pass_records": 26,
+    "frontend_pass_records": 119,
+    "failures": 0,
+    "skips": 0,
+    "frontend_test_concurrency": 1,
+    "typecheck": "passed",
+    "integration_compile_and_vet": "passed; not a runtime result",
+    "browser_started": false,
+    "postgres_started": false,
+    "inference_performed": false,
+    "manifest_reference": ".private/freightctl-ftps-browser-review-4hil93h4/manifest.json",
+    "manifest_sha256": "8a31e82f5adaf11dd16adcd0780e27c4bd75a4ee6182335ea886d906c39723fb",
+    "embedded_browser_build_and_source_output_check": "passed",
+    "public_reference_fixture_proof": {
+      "manifest_reference": ".private/freightctl-ftps-public-input-final-x9114wev/manifest.json",
+      "manifest_sha256": "3ce870566b391a7b04427af6c61accfa5b6efcfc09caed3a6a33019824b79baf",
+      "original_generic_findings": 6,
+      "classification": "public-input reference fingerprint;no credential or password digest",
+      "default_staged_secret_scan": "passed with unchanged rules and no scanner exceptions",
+      "fixed_golden_hashes": "unchanged",
+      "go_race_records": 26,
+      "frontend_pass_records": 119,
+      "wire_null_placeholders": "refused"
+    },
+    "malware_engine_started": false,
+    "public_source_and_history_scan": {
+      "tool": "Gitleaks8.30.1",
+      "source_files": 710,
+      "source_findings": 0,
+      "existing_history_findings": 0,
+      "history_head": "5094b6577ce9e384bcf0958072ab687a4f4903df",
+      "actual_canary": "one synthetic private canary produced exactlyone actual scanner finding,then was moved outside the publication snapshot",
+      "rules_or_exceptions_changed": false,
+      "manifest_reference": ".private/freightctl-ftps-source-scan-pg0kwcsj/manifest.json",
+      "manifest_sha256": "10e68b9c6668880936f984902b3596059b52e24a198965ea81ce8ab20f2db2e3"
+    }
+  },
+  "required_native_journey": {
+    "state": "not executed",
+    "profile": "Native Linux x86 GitHub runner, fresh task-owned real PostgreSQL/storage, sandboxed Chrome, public CLI/HTTPS and an explicitly identified bounded loopback receiver-contact stand-in. No local browser or inference runtime.",
+    "cases_each_mode": [
+      "Create and queue the exact FTPS intent through public CLI, with independent policy and real accepted source bytes; worker refusal before consent consumes no attempt or receiver contact.",
+      "Author browser previews/discloses the same exact metadata with lost-response original-key recovery and private reload; preparation makes no receiver contact.",
+      "Separate reviewer browser approves the exact request with original-key recovery, while original delivery/file access remains denied; inspect rendered FTPS terms and critical WCAG states.",
+      "Reviewer withdrawal blocks queued work without attempts/fence/contact; retain original receipts and both actors' private histories."
+    ],
+    "limits": "A contact spy proves metadata/no-send boundaries only. It cannot qualify FTPS bytes, vendor interoperability, receiver visibility/deduplication, business processing or process-kill recovery. Keep F071's separate actual application-receiver evidence and F068's red vendor profiles."
+  },
+  "limits": [
+    "Rendered React output and parser contracts are not actual Chrome, accessibility, public receipt recovery or independent-human qualification.",
+    "Registered FTPS connections/workflows, collection, recipient encryption and the complete sending customer journey remain open.",
+    "The receiver contract remains an operator assertion; no fsync, exclusive rename, exactly-once business effect or independent vendor qualification is inferred.",
+    "Retained schema35 and its stopped resources are untouched. F026 stays owner-deferred, local inference stays off, and all83 whole rows/12 journeys remain open."
+  ]
+}

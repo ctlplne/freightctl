@@ -3,7 +3,7 @@
   "id": "F071",
   "observed_at": "2026-11-03",
   "starting_commit": "5993f78fde4a626b722982162f2508b73e1175cd",
-  "state": "direct CLI implementation;first native runtime failures retained;repaired original replay pending",
+  "state": "scoped direct governed adapter and original read-only recovery pass both native Linux profiles;whole sending journey open",
   "scope": "Distinct schema2 direct explicit/implicit FTPS delivery under ordinary custody, dispatch approval, immutable intent/events, lease/fence and read-only reconciliation. No whole sending parity row or journey qualified.",
   "implementation": [
     "Freeze exact destination, CA and credential references/fingerprints, separate stage/final trees and an explicit receiver contract. Preserve schema1 SFTP canonical hashes and its fsync/exclusive-hardlink worker.",
@@ -48,7 +48,7 @@
     "read_audit_repair": "Integration compile/vet passed. Revised original journey compares all63non-event receiver tables and every original full event,requiring one exact new session plus precisely bound independent/FTPS download audit records. No payload-write/audit/budget gate removed;actual native replay pending."
   },
   "native_ci": {
-    "state": "Atb5819e8,both native Linux integrations report638pass/3fail/0skip. Five new governed sending/approval/withdrawal/SQL-effect records pass;both lost-reply audit invariants fail. Both metadata restores,fuzz,first-run and four source-security profiles pass. Stock/browser FTPS jobs fail stale profile enforcement;native repaired replays remain required.",
+    "state": "At153d24c,both complete native Go/PostgreSQL suites pass642records/0fail/0skip. Original explicit/implicit governed sending,reply-loss read-only reconciliation,exact receiver tables/events,withdrawal and SQL effect refusals pass. Metadata,fuzz,first-run,stock/browser and complementary source-security profiles pass. At same-implementation5094b65,core/Mac pass and Windows retains44D103failures. Whole product gates remain open.",
     "workflow": ".github/workflows/native-linux.yml",
     "profile": "Actual native Linux ARM/x86,real PostgreSQL and separate freightctl FTPS/custody application stand-in with independent filesystem readback",
     "new_cases": [
@@ -130,11 +130,91 @@
       "original_windows_job": 125877767055,
       "original_mac_queued_job": 125877766487,
       "repair_run_held_pending": 41627783869,
-      "state": "move unchanged native OS job bodies to distinct job-level concurrency groups;finish each running profile without Mac queue holding Windows. Actionlint passed;actual new scheduling and native results pending."
+      "state": "Actual5094b65job run41628392376 completes:Macpasses,Windowsretains44D103failures with zero newfixturefailures. Separate per-OS groups execute the unchanged native bodies;old queued original jobs are preserved."
+    },
+    "repaired_original_replay": {
+      "candidate": "153d24cc0603021c240de05219a2114d5ea5c1b1",
+      "run_id": 41627783987,
+      "arm_job_id": 125889425198,
+      "x86_job_id": 125889425621,
+      "integration_pass_records_each": 642,
+      "fail_records_each": 0,
+      "skips_each": 0,
+      "new_governed_records_each": 8,
+      "scope": "Actual real PostgreSQL and separate freightctl receiver/storage application stand-in. All63non-event receiver tables and every original event stay unchanged;only the exact recovery session/download audits are added. Original states,attempts,fences,bytes and no resend gates retained.",
+      "manifest_reference": ".private/freightctl-ftps-governed-native-repaired-Nxyzqc/manifest.json",
+      "manifest_sha256": "730223f08b34906d9bce7efdb7b4d2edb9c50a5bce115263c10e37b529c1ec22",
+      "full_original_job_logs": 20
+    },
+    "repaired_profile_regressions": {
+      "candidate": "153d24cc0603021c240de05219a2114d5ea5c1b1",
+      "stock_ftps_run_id": 41627783855,
+      "x86_job": 125889425141,
+      "arm_job": 125889425595,
+      "native_test_records_each": 21,
+      "original_commands_each": 194,
+      "x86_manifest_sha256": "ead36deffc508a4bc02cf596cfc2dbc39727cb66f8e13221a6e28dfd24f2e337",
+      "arm_manifest_sha256": "d44d9687a16ceea544abe7d63796b8bd0d4888fd67d7491c3c20167736929697",
+      "browser_run_id": 41627783897,
+      "browser_job": 125889424612,
+      "browser_original_commands": 172,
+      "browser_manifest_sha256": "8a3fc0c0790c7f5a367a110f7beb2649bc44cf777524f41f80deb551720d9f43",
+      "scope": "Original inbound stock curl/lftp,CLI governance/process kills and browser tickets with exact source checksum profiles. Does not qualify new outbound browser review.",
+      "manifest_reference": ".private/freightctl-ftps-governed-native-repaired-Nxyzqc/manifest.json",
+      "manifest_sha256": "730223f08b34906d9bce7efdb7b4d2edb9c50a5bce115263c10e37b529c1ec22",
+      "full_original_job_logs": 20
+    },
+    "other_repaired_regressions": {
+      "candidate": "153d24cc0603021c240de05219a2114d5ea5c1b1",
+      "metadata_jobs": [
+        125889424843,
+        125889425341
+      ],
+      "metadata_schema": 36,
+      "metadata_tables": 64,
+      "forced_rls_tables": 63,
+      "restored_rows_each": 41,
+      "fuzz_job": 125889425310,
+      "first_run": {
+        "run_id": 41627783974,
+        "job_id": 125889424608,
+        "manifest_sha256": "d44414d6151aba717b6bff2e86dea9249ec36400b891951589306a7d464ed476",
+        "commands": 13,
+        "browser_records": 6,
+        "accessibility_audits": 2,
+        "exact_readbacks": 3,
+        "bytes": 47
+      },
+      "stock_run": 41627783874,
+      "stock_jobs": [
+        125889424948,
+        125889425000,
+        125889425140,
+        125889425144,
+        125889425150
+      ],
+      "native_source_security_run": 41627783896,
+      "native_source_security_jobs": [
+        125889425133,
+        125889425509,
+        125889425537
+      ],
+      "same_implementation_followup_candidate": "5094b6577ce9e384bcf0958072ab687a4f4903df",
+      "same_application_and_qualification_source_diff": "empty across cmd,internal,web,scripts,go.mod,go.sum,third_party",
+      "core_run": 41628392392,
+      "core_job": 125891449142,
+      "mac_job": 125891444881,
+      "windows_job": 125891445236,
+      "windows_preexisting_D103_failures": 44,
+      "windows_new_fixture_failures": 0,
+      "cancelled_core_run_not_a_pass": 41627783861,
+      "manifest_reference": ".private/freightctl-ftps-governed-native-repaired-Nxyzqc/manifest.json",
+      "manifest_sha256": "730223f08b34906d9bce7efdb7b4d2edb9c50a5bce115263c10e37b529c1ec22",
+      "full_original_job_logs": 20
     }
   },
   "limits": [
-    "Registered FTPS connections,workflows,collection,recipient encryption and browser review remain open;schema2 browser review fails closed.",
+    "Registered FTPS connections,workflows,collection and recipient encryption remain open. F071 does not qualify outbound browser review;F072 adds the browser implementation with actual runtime qualification pending.",
     "The receiver contract is an administrator assertion;consumer visibility,deduplication and business processing are not qualified by application readback.",
     "Independent vendor x86 profiles retain F068 red failures;the application stand-in does not replace them.",
     "Process-kill recovery,public CLI end-to-end replay and complete UI/API customer journeys still require execution.",

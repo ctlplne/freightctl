@@ -25,7 +25,7 @@ export interface WorkflowBinding {
   connection_hash: string;
 }
 export interface DispatchEffect {
-  protocol: "sftp";
+  protocol: "sftp" | "ftps";
   address: string;
   user: string;
   directory: string;
@@ -37,6 +37,23 @@ export interface DispatchEffect {
   encryption?: TestEffect["encryption"];
   recipient_fingerprint: string;
   workflow_binding?: WorkflowBinding;
+  ftps?: FTPSReviewEffect;
+}
+export interface FTPSReviewEffect {
+  mode: "explicit" | "implicit";
+  server_name: string;
+  ca_sha256: string;
+  ca_reference_sha256: string;
+  password_reference_sha256: string;
+  staging_path: string;
+  receiver_contract: {
+    schema_version: 1;
+    document_sha256: string;
+    staging_visibility: "receiver-private";
+    rename: "may-replace";
+    duplicates: "receiver-deduplicates-delivery-id";
+    receipt: "exact-readback";
+  };
 }
 export interface DispatchSelection {
   delivery_id: string;
@@ -45,7 +62,7 @@ export interface DispatchSelection {
   reviewer_id: string;
 }
 export interface DispatchDefinition {
-  schema_version: 1;
+  schema_version: 1 | 2;
   author_id: string;
   authority_revision: number;
   reviewer_id: string;
@@ -148,9 +165,129 @@ function source(v: unknown): TestDefinition["file"] {
     accepted_event_id: id(o, "accepted_event_id"),
   };
 }
+function exact(o: Record<string, unknown>, keys: string[]) {
+  if (!same(Object.keys(o).sort(), [...keys].sort())) bad();
+}
+function ftpsPath(o: Record<string, unknown>, key: string, max = 1024): string {
+  const v = text(o, key, max);
+  if (!v.startsWith("/") || v.normalize("NFC") !== v) bad();
+  if (v !== "/")
+    for (const part of v.slice(1).split("/"))
+      if (
+        !part ||
+        part === "." ||
+        part === ".." ||
+        part === ".freightctl" ||
+        new TextEncoder().encode(part).length > 255 ||
+        /[\\:]|[. ]$/.test(part) ||
+        /^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])(?:\.|$)/i.test(part)
+      )
+        bad();
+  return v;
+}
+function ftpsEffect(
+  o: Record<string, unknown>,
+  deliveryID: string,
+): DispatchEffect {
+  exact(o, [
+    "protocol",
+    "address",
+    "user",
+    "directory",
+    "filename",
+    "final_path",
+    "host_fingerprint",
+    "key_fingerprint",
+    "key_reference_sha256",
+    "recipient_fingerprint",
+    "ftps",
+  ]);
+  const f = object(o.ftps),
+    c = object(f.receiver_contract),
+    directory = ftpsPath(o, "directory", 768),
+    filename = text(o, "filename", 128),
+    final = ftpsPath(o, "final_path"),
+    stage = ftpsPath(f, "staging_path"),
+    serverName = text(f, "server_name", 253);
+  exact(f, [
+    "mode",
+    "server_name",
+    "ca_sha256",
+    "ca_reference_sha256",
+    "password_reference_sha256",
+    "staging_path",
+    "receiver_contract",
+  ]);
+  exact(c, [
+    "schema_version",
+    "document_sha256",
+    "staging_visibility",
+    "rename",
+    "duplicates",
+    "receipt",
+  ]);
+  if (
+    (f.mode !== "explicit" && f.mode !== "implicit") ||
+    /[\/\\ ]/.test(serverName) ||
+    !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(filename) ||
+    final !==
+      `${directory === "/" ? "" : directory}/${deliveryID}-${filename}` ||
+    !stage.endsWith(`/.freightctl-${deliveryID}.partial`) ||
+    o.host_fingerprint !== "" ||
+    o.key_fingerprint !== "" ||
+    o.key_reference_sha256 !== "" ||
+    o.recipient_fingerprint !== "" ||
+    c.schema_version !== 1 ||
+    c.staging_visibility !== "receiver-private" ||
+    c.rename !== "may-replace" ||
+    c.duplicates !== "receiver-deduplicates-delivery-id" ||
+    c.receipt !== "exact-readback"
+  )
+    bad();
+  const stagingDirectory = stage.slice(0, stage.lastIndexOf("/")) || "/";
+  if (
+    directory === "/" ||
+    stagingDirectory === "/" ||
+    new TextEncoder().encode(stagingDirectory).length > 768 ||
+    directory === stagingDirectory ||
+    directory.startsWith(stagingDirectory + "/") ||
+    stagingDirectory.startsWith(directory + "/")
+  )
+    bad();
+  return {
+    protocol: "ftps",
+    address: text(o, "address", 128),
+    user: text(o, "user", 256),
+    directory,
+    filename,
+    final_path: final,
+    host_fingerprint: "",
+    key_fingerprint: "",
+    key_reference_sha256: "",
+    recipient_fingerprint: "",
+    ftps: {
+      mode: f.mode,
+      server_name: serverName,
+      ca_sha256: hash(f, "ca_sha256"),
+      ca_reference_sha256: hash(f, "ca_reference_sha256"),
+      password_reference_sha256: hash(f, "password_reference_sha256"),
+      staging_path: stage,
+      receiver_contract: {
+        schema_version: 1,
+        document_sha256: hash(c, "document_sha256"),
+        staging_visibility: "receiver-private",
+        rename: "may-replace",
+        duplicates: "receiver-deduplicates-delivery-id",
+        receipt: "exact-readback",
+      },
+    },
+  };
+}
 function effect(v: unknown, deliveryID: string): DispatchEffect {
-  const o = object(v),
-    base = asTestEffect(v),
+  const o = object(v);
+  if (o.protocol === "ftps") return ftpsEffect(o, deliveryID);
+  if (o.ftps !== undefined) bad();
+  const base = asTestEffect(v),
     final = text(o, "final_path", 1280);
   if (
     o.protocol !== "sftp" ||
@@ -213,9 +350,12 @@ export function asDispatchDefinition(v: unknown): DispatchDefinition {
     policy = binding(o.policy),
     deliveryID = id(o, "delivery_id"),
     author = id(o, "author_id"),
-    reviewer = id(o, "reviewer_id");
+    reviewer = id(o, "reviewer_id"),
+    schema = o.schema_version,
+    fx = effect(o.effect, deliveryID);
   if (
-    o.schema_version !== 1 ||
+    (schema !== 1 && schema !== 2) ||
+    (schema === 2) !== (fx.protocol === "ftps") ||
     o.namespace_root !== "/" ||
     o.attempt_limit !== 8 ||
     policy.mode !== "independent" ||
@@ -224,7 +364,7 @@ export function asDispatchDefinition(v: unknown): DispatchDefinition {
   )
     bad();
   return {
-    schema_version: 1,
+    schema_version: schema,
     author_id: author,
     authority_revision: num(o, "authority_revision"),
     reviewer_id: reviewer,
@@ -236,7 +376,7 @@ export function asDispatchDefinition(v: unknown): DispatchDefinition {
     source: source(o.source),
     storage_id: id(o, "storage_id"),
     namespace_root: "/",
-    effect: effect(o.effect, deliveryID),
+    effect: fx,
     attempt_limit: 8,
   };
 }

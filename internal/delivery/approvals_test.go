@@ -2,6 +2,7 @@ package delivery
 
 import (
 	"encoding/json"
+	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/store"
 	"os"
 	"reflect"
@@ -13,12 +14,65 @@ func TestOutboundDispatchGoBrowserCanonicalMetadataAndNoContact(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	// Keep the public reference input and fixed canonical hashes in the golden
+	// fixture. Independently derive its reference fingerprint here and in Node;
+	// this is not a password digest or a captured credential-bearing response.
+	var templates map[string]map[string]json.RawMessage
+	if json.Unmarshal(data, &templates) != nil {
+		t.Fatal("fixture templates")
+	}
+	derived := 0
+	object := func(value any) map[string]any {
+		t.Helper()
+		v, ok := value.(map[string]any)
+		if !ok {
+			t.Fatal("fixture object")
+		}
+		return v
+	}
+	for _, fields := range templates {
+		input, ok := fields["public_reference_input"]
+		if !ok {
+			continue
+		}
+		var reference string
+		if json.Unmarshal(input, &reference) != nil || reference != "/synthetic/receiver-password-reference" {
+			t.Fatal("public fixture reference")
+		}
+		for _, section := range []string{"preview", "review", "view"} {
+			var value map[string]any
+			if json.Unmarshal(fields[section], &value) != nil {
+				t.Fatal("fixture section")
+			}
+			definition := value
+			if section != "view" {
+				definition = object(value["definition"])
+			}
+			ftps := object(object(definition["effect"])["ftps"])
+			if value, present := ftps["password_reference_sha256"]; !present || value != nil {
+				t.Fatal("derived fixture placeholder")
+			}
+			ftps["password_reference_sha256"] = secure.Digest([]byte(reference))
+			fields[section], err = json.Marshal(value)
+			if err != nil {
+				t.Fatal(err)
+			}
+			derived++
+		}
+	}
+	if derived != 6 {
+		t.Fatal("missing derived reference cases")
+	}
+	data, err = json.Marshal(templates)
+	if err != nil {
+		t.Fatal(err)
+	}
 	var f map[string]struct {
 		Selection DispatchSelection            `json:"selection"`
 		Preview   DispatchPreview              `json:"preview"`
 		Review    store.OutboundDispatchReview `json:"review"`
 	}
-	if json.Unmarshal(data, &f) != nil || len(f) != 2 {
+	if json.Unmarshal(data, &f) != nil || len(f) != 4 {
 		t.Fatal("fixture")
 	}
 	for name, v := range f {
@@ -28,7 +82,7 @@ func TestOutboundDispatchGoBrowserCanonicalMetadataAndNoContact(t *testing.T) {
 				t.Fatal("canonical metadata/flags", hash, err)
 			}
 			d := v.Preview.Definition
-			if d.DeliveryHash != v.Selection.Hash || d.DeliveryID != v.Selection.DeliveryID || d.DeliveryRevision != v.Selection.Revision || d.Reviewer != v.Selection.ReviewerID || d.Effect.KeyReferenceHash == "" {
+			if d.DeliveryHash != v.Selection.Hash || d.DeliveryID != v.Selection.DeliveryID || d.DeliveryRevision != v.Selection.Revision || d.Reviewer != v.Selection.ReviewerID || (d.Schema == 1 && d.Effect.KeyReferenceHash == "") || (d.Schema == 2 && (d.Effect.FTPS == nil || d.Effect.FTPS.PasswordReferenceHash == "")) {
 				t.Fatal("binding")
 			}
 		})

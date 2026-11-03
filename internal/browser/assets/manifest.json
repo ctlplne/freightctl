@@ -155,11 +155,11 @@
     },
     {
       "path": "web/src/outbound-approvals-types.ts",
-      "sha256": "79767bf2476e6a60885b0d3168d36e40d5a2ba190de9a1d5311d6aec35fe613b"
+      "sha256": "40351f5885a9d6bc60becf901f4a5f6a804768119c07191f50b7c826cebf5d3d"
     },
     {
       "path": "web/src/outbound-approvals.tsx",
-      "sha256": "dab2c3ffc7c338f9ac590ad0bb1f801710e9577f98dbc1b6427903a6e286113f"
+      "sha256": "328e41fb793292513084287f47d809cdcbb447008a1d6e8514785fb219a9eead"
     },
     {
       "path": "web/src/partners.tsx",
@@ -226,8 +226,8 @@
     },
     {
       "name": "app.js",
-      "sha256": "3dd7576277b6499785933a901a6252a283e6a1025473de851ff128e5c0ee9f5f",
-      "size": 674889
+      "sha256": "be3f76af3753d9aa01ba25dc23244fd86538477f51e2331951bf6934fff70806",
+      "size": 678835
     },
     {
       "name": "app.js.LEGAL.txt",

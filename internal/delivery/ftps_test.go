@@ -26,6 +26,7 @@ func TestFTPSDefinitionFreezesDistinctReceiverContractAndRefusesMixedAuthority(t
 		"legacy schema":               func(d *Definition) { d.Schema = 1 },
 		"mixed SSH":                   func(d *Definition) { d.Destination.Address = "127.0.0.1:22" },
 		"frozen filename escape":      func(d *Definition) { d.Filename = "../../outside.csv" },
+		"unusable trailing dot":       func(d *Definition) { d.Filename = "payroll." },
 		"unqualified encryption":      func(d *Definition) { d.Encryption = &store.EncryptionPolicy{} },
 		"unqualified workflow":        func(d *Definition) { d.Binding = &store.ExecutionBinding{} },
 		"visible staging":             func(d *Definition) { d.FTPS.StagingDirectory = "/inbox/stage" },
@@ -90,10 +91,15 @@ func TestFTPSEffectRedactsLocalReferencesAndPasswordDigest(t *testing.T) {
 
 func TestFTPSRequestNeverCombinesSSHAndPasswordReferences(t *testing.T) {
 	d := contractDefinition()
-	r := Request{Directory: d.Directory, FTPS: d.FTPS}
+	r := Request{Directory: d.Directory, Filename: d.Filename, FTPS: d.FTPS}
 	if _, ftps, err := requestDestination(r); err != nil || ftps == nil {
 		t.Fatal(err)
 	}
+	r.Filename = "payroll."
+	if _, _, err := requestDestination(r); err != ErrInput {
+		t.Fatal("unusable final path admitted before draft", err)
+	}
+	r.Filename = d.Filename
 	r.KeyFile = "/private/client-key"
 	if _, _, err := requestDestination(r); err != ErrInput {
 		t.Fatal("mixed request admitted", err)

@@ -338,5 +338,389 @@
         }
       }
     }
+  },
+  "ftps_explicit": {
+    "preview": {
+      "definition": {
+        "schema_version": 2,
+        "author_id": "000000a1-1111-4111-8111-111111111111",
+        "authority_revision": 1,
+        "reviewer_id": "000000a2-1111-4111-8111-111111111111",
+        "reviewer_authority_revision": 2,
+        "policy": {
+          "revision": 1,
+          "mode": "independent"
+        },
+        "delivery_id": "000000c1-1111-4111-8111-111111111111",
+        "delivery_revision": 2,
+        "delivery_hash": "76c0331f7fdecedbd69980469c2271b9f79ed29fd31873d7f3d608ad4cb09731",
+        "source": {
+          "id": "000000a5-1111-4111-8111-111111111111",
+          "size_bytes": 3,
+          "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+          "policy": "integrity-only-v1",
+          "accepted_event_id": "000000a6-1111-4111-8111-111111111111"
+        },
+        "storage_id": "000000a7-1111-4111-8111-111111111111",
+        "namespace_root": "/",
+        "effect": {
+          "protocol": "ftps",
+          "address": "127.0.0.1:990",
+          "user": "00000101-1111-4111-8111-111111111111/00000102-1111-4111-8111-111111111111",
+          "directory": "/inbox",
+          "filename": "payroll.csv",
+          "final_path": "/inbox/000000c1-1111-4111-8111-111111111111-payroll.csv",
+          "host_fingerprint": "",
+          "key_fingerprint": "",
+          "key_reference_sha256": "",
+          "recipient_fingerprint": "",
+          "ftps": {
+            "mode": "explicit",
+            "server_name": "localhost",
+            "ca_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "ca_reference_sha256": "0f444f634f883cbca1e6b54f13c67a179d2a8e1ebdb60a1e7612fc5da44e8027",
+            "password_reference_sha256": null,
+            "staging_path": "/private-stage/.freightctl-000000c1-1111-4111-8111-111111111111.partial",
+            "receiver_contract": {
+              "schema_version": 1,
+              "document_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "staging_visibility": "receiver-private",
+              "rename": "may-replace",
+              "duplicates": "receiver-deduplicates-delivery-id",
+              "receipt": "exact-readback"
+            }
+          }
+        },
+        "attempt_limit": 8
+      },
+      "definition_hash": "894aa7ff8d8cb6f7b02e2757bdb338fac404f4479eb5231c66406d735e287be9",
+      "external_contact": false,
+      "grants_file_access": false
+    },
+    "selection": {
+      "delivery_id": "000000c1-1111-4111-8111-111111111111",
+      "definition_hash": "76c0331f7fdecedbd69980469c2271b9f79ed29fd31873d7f3d608ad4cb09731",
+      "expected_revision": 2,
+      "reviewer_id": "000000a2-1111-4111-8111-111111111111"
+    },
+    "review": {
+      "id": "000000b1-1111-4111-8111-111111111111",
+      "author_id": "000000a1-1111-4111-8111-111111111111",
+      "reviewer_id": "000000a2-1111-4111-8111-111111111111",
+      "delivery_id": "000000c1-1111-4111-8111-111111111111",
+      "definition_hash": "894aa7ff8d8cb6f7b02e2757bdb338fac404f4479eb5231c66406d735e287be9",
+      "state": "pending",
+      "revision": 1,
+      "created_at": "2026-10-31T04:00:00Z",
+      "changed_event_id": "000000ad-1111-4111-8111-111111111111",
+      "definition": {
+        "schema_version": 2,
+        "author_id": "000000a1-1111-4111-8111-111111111111",
+        "authority_revision": 1,
+        "reviewer_id": "000000a2-1111-4111-8111-111111111111",
+        "reviewer_authority_revision": 2,
+        "policy": {
+          "revision": 1,
+          "mode": "independent"
+        },
+        "delivery_id": "000000c1-1111-4111-8111-111111111111",
+        "delivery_revision": 2,
+        "delivery_hash": "76c0331f7fdecedbd69980469c2271b9f79ed29fd31873d7f3d608ad4cb09731",
+        "source": {
+          "id": "000000a5-1111-4111-8111-111111111111",
+          "size_bytes": 3,
+          "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+          "policy": "integrity-only-v1",
+          "accepted_event_id": "000000a6-1111-4111-8111-111111111111"
+        },
+        "storage_id": "000000a7-1111-4111-8111-111111111111",
+        "namespace_root": "/",
+        "effect": {
+          "protocol": "ftps",
+          "address": "127.0.0.1:990",
+          "user": "00000101-1111-4111-8111-111111111111/00000102-1111-4111-8111-111111111111",
+          "directory": "/inbox",
+          "filename": "payroll.csv",
+          "final_path": "/inbox/000000c1-1111-4111-8111-111111111111-payroll.csv",
+          "host_fingerprint": "",
+          "key_fingerprint": "",
+          "key_reference_sha256": "",
+          "recipient_fingerprint": "",
+          "ftps": {
+            "mode": "explicit",
+            "server_name": "localhost",
+            "ca_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "ca_reference_sha256": "0f444f634f883cbca1e6b54f13c67a179d2a8e1ebdb60a1e7612fc5da44e8027",
+            "password_reference_sha256": null,
+            "staging_path": "/private-stage/.freightctl-000000c1-1111-4111-8111-111111111111.partial",
+            "receiver_contract": {
+              "schema_version": 1,
+              "document_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "staging_visibility": "receiver-private",
+              "rename": "may-replace",
+              "duplicates": "receiver-deduplicates-delivery-id",
+              "receipt": "exact-readback"
+            }
+          }
+        },
+        "attempt_limit": 8
+      }
+    },
+    "summary": {
+      "id": "000000b1-1111-4111-8111-111111111111",
+      "author_id": "000000a1-1111-4111-8111-111111111111",
+      "reviewer_id": "000000a2-1111-4111-8111-111111111111",
+      "delivery_id": "000000c1-1111-4111-8111-111111111111",
+      "definition_hash": "894aa7ff8d8cb6f7b02e2757bdb338fac404f4479eb5231c66406d735e287be9",
+      "state": "pending",
+      "revision": 1,
+      "created_at": "2026-10-31T04:00:00Z",
+      "changed_event_id": "000000ad-1111-4111-8111-111111111111"
+    },
+    "view": {
+      "id": "000000c1-1111-4111-8111-111111111111",
+      "definition_hash": "76c0331f7fdecedbd69980469c2271b9f79ed29fd31873d7f3d608ad4cb09731",
+      "state": "queued",
+      "revision": 2,
+      "attempts": 0,
+      "policy": {
+        "revision": 1,
+        "mode": "independent"
+      },
+      "current_policy": {
+        "revision": 1,
+        "mode": "independent"
+      },
+      "current_approval": false,
+      "reviewable": true,
+      "source": {
+        "id": "000000a5-1111-4111-8111-111111111111",
+        "size_bytes": 3,
+        "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+        "policy": "integrity-only-v1",
+        "accepted_event_id": "000000a6-1111-4111-8111-111111111111"
+      },
+      "effect": {
+        "protocol": "ftps",
+        "address": "127.0.0.1:990",
+        "user": "00000101-1111-4111-8111-111111111111/00000102-1111-4111-8111-111111111111",
+        "directory": "/inbox",
+        "filename": "payroll.csv",
+        "final_path": "/inbox/000000c1-1111-4111-8111-111111111111-payroll.csv",
+        "host_fingerprint": "",
+        "key_fingerprint": "",
+        "key_reference_sha256": "",
+        "recipient_fingerprint": "",
+        "ftps": {
+          "mode": "explicit",
+          "server_name": "localhost",
+          "ca_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "ca_reference_sha256": "0f444f634f883cbca1e6b54f13c67a179d2a8e1ebdb60a1e7612fc5da44e8027",
+          "password_reference_sha256": null,
+          "staging_path": "/private-stage/.freightctl-000000c1-1111-4111-8111-111111111111.partial",
+          "receiver_contract": {
+            "schema_version": 1,
+            "document_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "staging_visibility": "receiver-private",
+            "rename": "may-replace",
+            "duplicates": "receiver-deduplicates-delivery-id",
+            "receipt": "exact-readback"
+          }
+        }
+      }
+    },
+    "public_reference_input": "/synthetic/receiver-password-reference"
+  },
+  "ftps_implicit": {
+    "preview": {
+      "definition": {
+        "schema_version": 2,
+        "author_id": "000000a1-1111-4111-8111-111111111111",
+        "authority_revision": 1,
+        "reviewer_id": "000000a2-1111-4111-8111-111111111111",
+        "reviewer_authority_revision": 2,
+        "policy": {
+          "revision": 1,
+          "mode": "independent"
+        },
+        "delivery_id": "000000c2-1111-4111-8111-111111111111",
+        "delivery_revision": 2,
+        "delivery_hash": "17f57cc35ae34fce530c4a333886e905e357c676444c715600d3f7da41980879",
+        "source": {
+          "id": "000000a5-1111-4111-8111-111111111111",
+          "size_bytes": 3,
+          "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+          "policy": "integrity-only-v1",
+          "accepted_event_id": "000000a6-1111-4111-8111-111111111111"
+        },
+        "storage_id": "000000a7-1111-4111-8111-111111111111",
+        "namespace_root": "/",
+        "effect": {
+          "protocol": "ftps",
+          "address": "127.0.0.1:990",
+          "user": "00000101-1111-4111-8111-111111111111/00000102-1111-4111-8111-111111111111",
+          "directory": "/inbox",
+          "filename": "payroll.csv",
+          "final_path": "/inbox/000000c2-1111-4111-8111-111111111111-payroll.csv",
+          "host_fingerprint": "",
+          "key_fingerprint": "",
+          "key_reference_sha256": "",
+          "recipient_fingerprint": "",
+          "ftps": {
+            "mode": "implicit",
+            "server_name": "localhost",
+            "ca_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "ca_reference_sha256": "0f444f634f883cbca1e6b54f13c67a179d2a8e1ebdb60a1e7612fc5da44e8027",
+            "password_reference_sha256": null,
+            "staging_path": "/private-stage/.freightctl-000000c2-1111-4111-8111-111111111111.partial",
+            "receiver_contract": {
+              "schema_version": 1,
+              "document_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "staging_visibility": "receiver-private",
+              "rename": "may-replace",
+              "duplicates": "receiver-deduplicates-delivery-id",
+              "receipt": "exact-readback"
+            }
+          }
+        },
+        "attempt_limit": 8
+      },
+      "definition_hash": "6e7fa9c9da7fc7dacd55b8c1c96cbb9b9ec1bbfd1dcd3e8d96b4b8d29ca4455a",
+      "external_contact": false,
+      "grants_file_access": false
+    },
+    "selection": {
+      "delivery_id": "000000c2-1111-4111-8111-111111111111",
+      "definition_hash": "17f57cc35ae34fce530c4a333886e905e357c676444c715600d3f7da41980879",
+      "expected_revision": 2,
+      "reviewer_id": "000000a2-1111-4111-8111-111111111111"
+    },
+    "review": {
+      "id": "000000b2-1111-4111-8111-111111111111",
+      "author_id": "000000a1-1111-4111-8111-111111111111",
+      "reviewer_id": "000000a2-1111-4111-8111-111111111111",
+      "delivery_id": "000000c2-1111-4111-8111-111111111111",
+      "definition_hash": "6e7fa9c9da7fc7dacd55b8c1c96cbb9b9ec1bbfd1dcd3e8d96b4b8d29ca4455a",
+      "state": "pending",
+      "revision": 1,
+      "created_at": "2026-10-31T04:00:00Z",
+      "changed_event_id": "000000ad-1111-4111-8111-111111111111",
+      "definition": {
+        "schema_version": 2,
+        "author_id": "000000a1-1111-4111-8111-111111111111",
+        "authority_revision": 1,
+        "reviewer_id": "000000a2-1111-4111-8111-111111111111",
+        "reviewer_authority_revision": 2,
+        "policy": {
+          "revision": 1,
+          "mode": "independent"
+        },
+        "delivery_id": "000000c2-1111-4111-8111-111111111111",
+        "delivery_revision": 2,
+        "delivery_hash": "17f57cc35ae34fce530c4a333886e905e357c676444c715600d3f7da41980879",
+        "source": {
+          "id": "000000a5-1111-4111-8111-111111111111",
+          "size_bytes": 3,
+          "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+          "policy": "integrity-only-v1",
+          "accepted_event_id": "000000a6-1111-4111-8111-111111111111"
+        },
+        "storage_id": "000000a7-1111-4111-8111-111111111111",
+        "namespace_root": "/",
+        "effect": {
+          "protocol": "ftps",
+          "address": "127.0.0.1:990",
+          "user": "00000101-1111-4111-8111-111111111111/00000102-1111-4111-8111-111111111111",
+          "directory": "/inbox",
+          "filename": "payroll.csv",
+          "final_path": "/inbox/000000c2-1111-4111-8111-111111111111-payroll.csv",
+          "host_fingerprint": "",
+          "key_fingerprint": "",
+          "key_reference_sha256": "",
+          "recipient_fingerprint": "",
+          "ftps": {
+            "mode": "implicit",
+            "server_name": "localhost",
+            "ca_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "ca_reference_sha256": "0f444f634f883cbca1e6b54f13c67a179d2a8e1ebdb60a1e7612fc5da44e8027",
+            "password_reference_sha256": null,
+            "staging_path": "/private-stage/.freightctl-000000c2-1111-4111-8111-111111111111.partial",
+            "receiver_contract": {
+              "schema_version": 1,
+              "document_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "staging_visibility": "receiver-private",
+              "rename": "may-replace",
+              "duplicates": "receiver-deduplicates-delivery-id",
+              "receipt": "exact-readback"
+            }
+          }
+        },
+        "attempt_limit": 8
+      }
+    },
+    "summary": {
+      "id": "000000b2-1111-4111-8111-111111111111",
+      "author_id": "000000a1-1111-4111-8111-111111111111",
+      "reviewer_id": "000000a2-1111-4111-8111-111111111111",
+      "delivery_id": "000000c2-1111-4111-8111-111111111111",
+      "definition_hash": "6e7fa9c9da7fc7dacd55b8c1c96cbb9b9ec1bbfd1dcd3e8d96b4b8d29ca4455a",
+      "state": "pending",
+      "revision": 1,
+      "created_at": "2026-10-31T04:00:00Z",
+      "changed_event_id": "000000ad-1111-4111-8111-111111111111"
+    },
+    "view": {
+      "id": "000000c2-1111-4111-8111-111111111111",
+      "definition_hash": "17f57cc35ae34fce530c4a333886e905e357c676444c715600d3f7da41980879",
+      "state": "queued",
+      "revision": 2,
+      "attempts": 0,
+      "policy": {
+        "revision": 1,
+        "mode": "independent"
+      },
+      "current_policy": {
+        "revision": 1,
+        "mode": "independent"
+      },
+      "current_approval": false,
+      "reviewable": true,
+      "source": {
+        "id": "000000a5-1111-4111-8111-111111111111",
+        "size_bytes": 3,
+        "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+        "policy": "integrity-only-v1",
+        "accepted_event_id": "000000a6-1111-4111-8111-111111111111"
+      },
+      "effect": {
+        "protocol": "ftps",
+        "address": "127.0.0.1:990",
+        "user": "00000101-1111-4111-8111-111111111111/00000102-1111-4111-8111-111111111111",
+        "directory": "/inbox",
+        "filename": "payroll.csv",
+        "final_path": "/inbox/000000c2-1111-4111-8111-111111111111-payroll.csv",
+        "host_fingerprint": "",
+        "key_fingerprint": "",
+        "key_reference_sha256": "",
+        "recipient_fingerprint": "",
+        "ftps": {
+          "mode": "implicit",
+          "server_name": "localhost",
+          "ca_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "ca_reference_sha256": "0f444f634f883cbca1e6b54f13c67a179d2a8e1ebdb60a1e7612fc5da44e8027",
+          "password_reference_sha256": null,
+          "staging_path": "/private-stage/.freightctl-000000c2-1111-4111-8111-111111111111.partial",
+          "receiver_contract": {
+            "schema_version": 1,
+            "document_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "staging_visibility": "receiver-private",
+            "rename": "may-replace",
+            "duplicates": "receiver-deduplicates-delivery-id",
+            "receipt": "exact-readback"
+          }
+        }
+      }
+    },
+    "public_reference_input": "/synthetic/receiver-password-reference"
   }
 }

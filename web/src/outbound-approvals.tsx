@@ -19,7 +19,7 @@ import {
   type DispatchReview,
   type DispatchDefinition,
 } from "./outbound-approvals-types";
-function Details({
+export function DispatchDetails({
   d,
 }: {
   d: Pick<DispatchDefinition, "delivery_id" | "source" | "effect">;
@@ -34,18 +34,51 @@ function Details({
         <code>{d.source.policy}</code>.
       </p>
       <p>
-        SFTP{" "}
+        {e.protocol === "ftps" ? "FTPS" : "SFTP"}{" "}
         <code>
           {e.user}@{e.address}
         </code>
-        . Exact reserved final path <code>{e.final_path}</code>.
+        . {e.ftps ? "Exact final path" : "Exact reserved final path"}{" "}
+        <code>{e.final_path}</code>.
       </p>
-      <p>
-        Host identity <code>{e.host_fingerprint}</code>; client key{" "}
-        <code>{e.key_fingerprint}</code>. Protected key-reference SHA-256{" "}
-        <code>{e.key_reference_sha256}</code>. No private-key value or local key
-        path is shared.
-      </p>
+      {e.ftps ? (
+        <>
+          <p>
+            {e.ftps.mode === "explicit" ? "Explicit" : "Implicit"} TLS 1.3
+            required; certificate hostname <code>{e.ftps.server_name}</code>.
+            Approved certificate authority (CA) SHA-256{" "}
+            <code>{e.ftps.ca_sha256}</code>.
+          </p>
+          <p>
+            CA reference fingerprint <code>{e.ftps.ca_reference_sha256}</code>;
+            credential reference fingerprint{" "}
+            <code>{e.ftps.password_reference_sha256}</code>. These identify the
+            approved references; password values and local paths are not shared.
+            Certificate and credential checks run when sending starts.
+          </p>
+          <p>
+            Private staging path <code>{e.ftps.staging_path}</code>; upload may
+            replace bytes at this path. Receiver contract document SHA-256{" "}
+            <code>{e.ftps.receiver_contract.document_sha256}</code>. The
+            receiver must hide staged files from consumers and deduplicate
+            business processing by delivery ID. This records the
+            administrator&apos;s agreed contract; it does not verify those
+            receiver promises.
+          </p>
+          <p>
+            Rename may replace an existing final file. The required receipt
+            verifies exact bytes read back; it does not acknowledge a receiver
+            disk flush (fsync), power-loss persistence or business processing.
+          </p>
+        </>
+      ) : (
+        <p>
+          Host identity <code>{e.host_fingerprint}</code>; client key{" "}
+          <code>{e.key_fingerprint}</code>. Protected key-reference SHA-256{" "}
+          <code>{e.key_reference_sha256}</code>. No private-key value or local
+          key path is shared.
+        </p>
+      )}
       {e.encryption ? (
         <p>
           Recipient encryption <code>{e.encryption.profile}</code>, key{" "}
@@ -66,12 +99,21 @@ function Details({
           {e.workflow_binding.connection_version}.
         </p>
       )}
-      <p>
-        Approval permits this intent's existing bounded retry rules, up to eight
-        attempts. Uncertain publication is reconciled by a bounded read; it is
-        not blindly resent. Transport integrity does not establish downstream
-        business acceptance.
-      </p>
+      {e.ftps ? (
+        <p>
+          Up to eight connection attempts are allowed before a write intent is
+          committed. Once upload may begin, a missing reply blocks automatic
+          resend. Recovery only reads the exact final bytes and cannot invent
+          the original upload or rename reply.
+        </p>
+      ) : (
+        <p>
+          Approval permits this intent's existing bounded retry rules, up to
+          eight attempts. Uncertain publication is reconciled by a bounded read;
+          it is not blindly resent. Transport integrity does not establish
+          downstream business acceptance.
+        </p>
+      )}
     </>
   );
 }
@@ -326,13 +368,13 @@ export function OutboundDispatchApprovals({
     }
   }
   return (
-    <section className="panel" aria-label="Outbound SFTP dispatch approvals">
-      <h2>Outbound SFTP dispatch approvals</h2>
+    <section className="panel" aria-label="Outbound dispatch approvals">
+      <h2>Outbound dispatch approvals</h2>
       <p>
-        This rule applies to every outbound SFTP delivery intent, including
-        ordinary workflows, onboarding test/production sends and direct CLI
-        sends. Release/configuration approval and approval of this exact file
-        are separate controls. It does not govern incoming transfers or ordinary
+        This rule applies to every outbound delivery intent, including ordinary
+        workflows, onboarding test/production sends and direct CLI sends.
+        Release/configuration approval and approval of this exact file are
+        separate controls. It does not govern incoming transfers or ordinary
         downloads.
       </p>
       <p>
@@ -343,7 +385,7 @@ export function OutboundDispatchApprovals({
       {canGovern && policy && (
         <>
           <label>
-            Policy for outbound SFTP dispatches
+            Policy for outbound dispatches
             <select
               value={mode}
               disabled={busy}
@@ -400,7 +442,7 @@ export function OutboundDispatchApprovals({
               <h4 tabIndex={-1} ref={viewHeading}>
                 Outbound delivery: {view.state}
               </h4>
-              <Details
+              <DispatchDetails
                 d={{
                   delivery_id: view.id,
                   source: view.source,
@@ -496,7 +538,7 @@ export function OutboundDispatchApprovals({
           <h4 tabIndex={-1} ref={reviewHeading}>
             Dispatch review: {selected.state}
           </h4>
-          <Details d={selected.definition} />
+          <DispatchDetails d={selected.definition} />
           <p>
             Author <code>{selected.author_id}</code>, assigned reviewer{" "}
             <code>{selected.reviewer_id}</code> at authority revision{" "}
@@ -574,7 +616,7 @@ export function OutboundDispatchApprovals({
               Change dispatch policy revision {pending.policy.revision} to{" "}
               {pending.policy.revision + 1}, using{" "}
               {pending.mode === "independent"
-                ? "a different named account's approval for every outbound SFTP intent"
+                ? "a different named account's approval for every outbound intent"
                 : "existing author/workflow approval rules"}
               . Existing intents retain their old policy revision and fail
               current-policy checks. No files are sent or removed by this
@@ -582,7 +624,7 @@ export function OutboundDispatchApprovals({
             </p>
           ) : pending.kind === "proposal" ? (
             <>
-              <Details d={pending.preview.definition} />
+              <DispatchDetails d={pending.preview.definition} />
               <p>
                 Share this metadata with{" "}
                 <code>{pending.preview.definition.reviewer_id}</code>. Delivery
@@ -596,7 +638,7 @@ export function OutboundDispatchApprovals({
             </>
           ) : (
             <>
-              <Details d={pending.review.definition} />
+              <DispatchDetails d={pending.review.definition} />
               <p>
                 Exact review <code>{pending.review.id}</code>, revision{" "}
                 {pending.review.revision}, SHA-256{" "}
