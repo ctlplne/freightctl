@@ -12,6 +12,7 @@ from ftps_contract import CLI_PAYLOAD, LFTP_CASES, LFTP_DOWNLOADS, LFTP_FAILURE_
 import ftps_cli_governance as governance
 import ftps_browser_evidence as browser_evidence
 import ftps_ticket_governance as tickets
+import ftps_browser_tickets as browser_tickets
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -37,21 +38,21 @@ def failure_diagnostics(root, result, commit):
         if hashlib.sha256(raw).hexdigest() != header.get("manifest_sha256") or manifest.get("starting_commit") != commit or manifest.get("kind") != "stock-ftps-custody":
             return {}
         failed, categories, cli_failures, browser_failures = set(), set(), set(), []
-        accessibility = []
+        accessibility, ticket_browser_failures = [], []
         allowed = {"native-ftps-integration", "cli-explicit-lftp-probe", "cli-implicit-lftp-probe", "browser-explicit-operator", "browser-implicit-operator"}
         for step in manifest.get("steps", []):
             name = step.get("name")
-            if name not in allowed and not governance.command_suffix(name or "") and not tickets.command_suffix(name or ""):
+            if name not in allowed and not governance.command_suffix(name or "") and not tickets.command_suffix(name or "") and not browser_tickets.command_suffix(name or ""):
                 continue
             data = read(path.parent / (name + ".stdout"), 64 << 20)
             if hashlib.sha256(data).hexdigest() != step.get("stdout_sha256"):
                 return {}
-            if governance.command_suffix(name) or tickets.command_suffix(name):
+            if governance.command_suffix(name) or tickets.command_suffix(name) or browser_tickets.command_suffix(name):
                 diagnostic = read(path.parent / (name + ".stderr"), 1 << 20)
                 if hashlib.sha256(diagnostic).hexdigest() != step.get("stderr_sha256"):
                     return {}
                 try:
-                    tickets.verify_outcome(name, step.get("exit_code"), diagnostic, data)
+                    browser_tickets.verify_outcome(name, step.get("exit_code"), diagnostic, data)
                 except ValueError:
                     cli_failures.add(name)
             output = data.decode(errors="replace")
@@ -65,6 +66,8 @@ def failure_diagnostics(root, result, commit):
                     continue
                 if probe.get("state") == "failed" and probe.get("stage") in {"version", "transfers"} and probe.get("code") in LFTP_FAILURE_CODES:
                     categories.add((probe["stage"], probe["code"]))
+                if browser_tickets.command_suffix(name)=="browser" and probe.get("state")=="failed" and probe.get("stage") in browser_tickets.STAGES:
+                    ticket_browser_failures.append({"command":name,"stage":probe["stage"]})
                 if name in {"browser-explicit-operator", "browser-implicit-operator"} and probe.get("state") == "failed" and probe.get("phase") in browser_evidence.PHASES and type(probe.get("line")) is int and 0 <= probe["line"] <= 10000:
                     browser_failures.append({"command":name,"phase":probe["phase"],"source_line":probe["line"]})
                 if name in {"browser-explicit-operator", "browser-implicit-operator"} and probe.get("state") == "failed" and probe.get("audit") in browser_evidence.AUDITS:
@@ -76,6 +79,8 @@ def failure_diagnostics(root, result, commit):
             outcome["browser_failures"] = browser_failures
         if accessibility:
             outcome["accessibility_failures"] = accessibility
+        if ticket_browser_failures:
+            outcome["browser_ticket_failures"] = ticket_browser_failures
         invariant = manifest.get("browser_evidence_failure")
         if isinstance(invariant,dict) and invariant.get("mode") in {"explicit","implicit"} and invariant.get("invariant") in browser_evidence.EVIDENCE_FAILURES:
             outcome["browser_evidence_failure"] = {"mode":invariant["mode"],"invariant":invariant["invariant"]}
@@ -88,7 +93,7 @@ def failure_diagnostics(root, result, commit):
         return {}
 
 
-def summarize(root, result, commit, require_browser=False, require_tickets=False):
+def summarize(root, result, commit, require_browser=False, require_tickets=False, require_browser_tickets=False):
     header = json.loads(read(result, 8192))
     ref = header.get("manifest_reference")
     if not isinstance(ref, str) or not re.fullmatch(r"\.private/ftps-[0-9a-f]{32}/manifest\.json", ref):
@@ -135,7 +140,7 @@ def summarize(root, result, commit, require_browser=False, require_tickets=False
             data = read(path.parent / (step["name"] + "." + extension), 64 << 20)
             if hashlib.sha256(data).hexdigest() != step.get(field):
                 raise ValueError("native FTPS output checksum differs")
-        tickets.verify_outcome(step["name"], step.get("exit_code"), read(path.parent / (step["name"] + ".stderr"), 64 << 20), read(path.parent / (step["name"] + ".stdout"), 64 << 20))
+        browser_tickets.verify_outcome(step["name"], step.get("exit_code"), read(path.parent / (step["name"] + ".stderr"), 64 << 20), read(path.parent / (step["name"] + ".stdout"), 64 << 20))
     for mode in ("explicit", "implicit"):
         governance.validate_outputs(path.parent, mode)
     native = read(path.parent / "native-ftps-integration.stdout", 64 << 20).decode()
@@ -160,7 +165,7 @@ def summarize(root, result, commit, require_browser=False, require_tickets=False
         p = root / name
         if not p.resolve().is_relative_to(root.resolve()) or hashlib.sha256(read(p, 16 << 20)).hexdigest() != expected:
             raise ValueError("FTPS source identity differs")
-    if require_browser or manifest.get("browser_requested"):
+    if require_browser or require_browser_tickets or manifest.get("browser_requested"):
         if manifest.get("browser_requested") is not True:
             raise ValueError("required browser profile did not run")
         for mode in ("explicit", "implicit"):
@@ -179,6 +184,15 @@ def summarize(root, result, commit, require_browser=False, require_tickets=False
                 raise ValueError("ticket outcomes differ from original evidence")
     elif any(tickets.command_suffix(n) for n in names):
         raise ValueError("ticket commands require the complete ticket profile")
+    if require_browser_tickets or manifest.get("browser_tickets_requested"):
+        if manifest.get("browser_tickets_requested") is not True or manifest.get("browser_requested") is not True:
+            raise ValueError("required browser ticket profile did not run")
+        for mode in ("explicit", "implicit"):
+            checked=browser_tickets.validate(path.parent,mode,steps,manifest.get("browser_ticket_output_sha256",{}).get(mode))
+            if manifest.get("browser_ticket_governance",{}).get(mode)!=checked:
+                raise ValueError("browser ticket outcomes differ from original evidence")
+    elif any(browser_tickets.command_suffix(n) for n in names):
+        raise ValueError("browser ticket commands require the complete profile")
     return {"state": "passed", "source_commit": commit, "manifest_sha256": digest,
             "stock_curl_qualified": True, "stock_lftp_qualified": True, "native_test_pass_records": len(NATIVE_TESTS), "source_inputs": len(sources),
             "public_cli_governance_cases": 2 * len(governance.CASES), "expected_cli_refusals": 2 * len(governance.REFUSALS),
@@ -189,6 +203,11 @@ def summarize(root, result, commit, require_browser=False, require_tickets=False
             "controlled_ftps_sigkills": 2 if manifest.get("tickets_requested") is True else 0,
             "strict_ticket_cli_refusals": 6 if manifest.get("tickets_requested") is True else 0,
             "strict_ticket_api_refusals": 2 if manifest.get("tickets_requested") is True else 0,
+            "browser_ticket_cases": 12 if manifest.get("browser_tickets_requested") is True else 0,
+            "browser_ticket_sigkills": 2 if manifest.get("browser_tickets_requested") is True else 0,
+            "browser_ticket_api_refusals": 2 if manifest.get("browser_tickets_requested") is True else 0,
+            "browser_ticket_accessibility_audits": 12 if manifest.get("browser_tickets_requested") is True else 0,
+            "browser_ticket_lost_response_replays": 4 if manifest.get("browser_tickets_requested") is True else 0,
             "retained_metadata_and_roles_unchanged": True,
             "isolated_database_removed": True, "original_resource_state_restored": True,
             "inference_performed": False, "scanner_engine_started": False,
@@ -200,11 +219,12 @@ def main():
     parser.add_argument("--result", required=True)
     parser.add_argument("--require-browser", action="store_true")
     parser.add_argument("--require-tickets", action="store_true")
+    parser.add_argument("--require-browser-tickets", action="store_true")
     args = parser.parse_args()
     commit = os.environ.get("GITHUB_SHA", "")
     try:
         commit = os.environ.get("GITHUB_SHA") or subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT).decode().strip()
-        print(json.dumps(summarize(ROOT, Path(args.result), commit, args.require_browser, args.require_tickets)))
+        print(json.dumps(summarize(ROOT, Path(args.result), commit, args.require_browser, args.require_tickets, args.require_browser_tickets)))
         return 0
     except Exception:
         print(json.dumps({"state": "failed", "reason": "FTPS qualification or evidence validation failed; inspect protected outputs", **failure_diagnostics(ROOT, Path(args.result), commit)}))

@@ -13,6 +13,7 @@ import { Onboarding } from "./onboarding";
 import { CheckEvidence } from "./check-evidence";
 import { CheckRecovery } from "./check-recovery";
 import { WorkspaceReference } from "./workspace-reference";
+import { UploadTicket } from "./upload-ticket";
 import { digestBytes, digestFile, operationKey } from "./crypto";
 import {
   ApiError,
@@ -350,9 +351,10 @@ function App() {
     setNotice("");
     setTab("uploads");
   }
-  async function transfer(event: FormEvent) {
+  async function transfer(event: FormEvent, prepareOnly = false) {
     event.preventDefault();
-    if (!session || !file || busy || acting) return;
+    if (!session || !file || busy || acting || (prepareOnly && selected))
+      return;
     const c = new AbortController();
     active.current = c;
     const generation = epoch.current;
@@ -382,7 +384,7 @@ function App() {
       )
         throw new Error("source_mismatch");
       if (!upload) {
-        const path = destination.trim();
+        const path = destination.trim().normalize("NFC");
         const previous = intent.current;
         if (
           !previous ||
@@ -412,6 +414,17 @@ function App() {
       if (generation !== epoch.current || c.signal.aborted)
         throw new DOMException("Canceled", "AbortError");
       setSelected(upload);
+      setDestination(upload.path);
+      if (prepareOnly) {
+        setPhase("idle");
+        setFile(null);
+        if (fileInput.current) fileInput.current.value = "";
+        setNotice(
+          "Transfer ticket prepared. No file bytes were sent. Use its SFTP or FTPS path, then refresh the saved progress or acceptance record.",
+        );
+        setRefresh((v) => v + 1);
+        return;
+      }
       setPhase("sending");
       const chunkSize = Math.max(
         session.limits.min_chunk_bytes,
@@ -465,6 +478,42 @@ function App() {
       }
     } finally {
       if (generation === epoch.current) setBusy(false);
+    }
+  }
+  async function refreshUpload() {
+    if (!selected || busy || acting) return;
+    const c = new AbortController(),
+      generation = epoch.current;
+    active.current = c;
+    setActing(true);
+    setError("");
+    setNotice("");
+    try {
+      const current = await api.upload(selected.id, c.signal);
+      if (generation !== epoch.current || c.signal.aborted) return;
+      if (
+        current.path !== selected.path ||
+        current.expected_size !== selected.expected_size ||
+        current.expected_sha256 !== selected.expected_sha256
+      )
+        throw new ApiError("invalid_server_response", 502);
+      setSelected(current);
+      setPhase(current.state === "completed" ? "accepted" : "idle");
+      if (current.state !== "open") {
+        setFile(null);
+        if (fileInput.current) fileInput.current.value = "";
+      }
+      setNotice(
+        current.state === "completed"
+          ? "Recovered the server’s saved acceptance record. Inspect its file ID and required checks before sending again."
+          : "Refreshed the server’s committed position. Uncommitted bytes are not counted.",
+      );
+      setRefresh((v) => v + 1);
+    } catch (e) {
+      if (generation === epoch.current && !aborted(e)) reportError(e);
+    } finally {
+      if (generation === epoch.current) setActing(false);
+      if (active.current === c) active.current = null;
     }
   }
   async function abortUpload() {
@@ -1076,6 +1125,7 @@ function App() {
                     {selected && !busy && (
                       <button
                         className="quiet"
+                        disabled={acting}
                         onClick={() => selectUpload(null)}
                       >
                         Start a new upload
@@ -1124,6 +1174,15 @@ function App() {
                         A saved upload keeps its original destination. Existing
                         files require a separately reviewed replacement.
                       </p>
+                      {!selected && (
+                        <p className="help" id="ticket-prepare-help">
+                          Preparing a transfer ticket reads the chosen file to
+                          fix its size and SHA-256, then saves its destination.
+                          It sends no file bytes; your transfer client sends
+                          them later.
+                        </p>
+                      )}
+                      {selected && <UploadTicket upload={selected} />}
                       {(busy || selected) && (
                         <div className="progress-box">
                           <p className="progress-label">
@@ -1167,6 +1226,27 @@ function App() {
                         </div>
                       )}
                       <div className="actions">
+                        {!selected && !busy && (
+                          <button
+                            type="button"
+                            className="secondary"
+                            aria-describedby="ticket-prepare-help"
+                            disabled={!file || acting}
+                            onClick={(event) => void transfer(event, true)}
+                          >
+                            Prepare transfer ticket
+                          </button>
+                        )}
+                        {selected && !busy && (
+                          <button
+                            type="button"
+                            className="secondary"
+                            disabled={acting}
+                            onClick={() => void refreshUpload()}
+                          >
+                            Refresh upload status
+                          </button>
+                        )}
                         {busy ? (
                           <button
                             key="pause-upload"

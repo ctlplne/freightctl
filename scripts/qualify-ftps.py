@@ -24,6 +24,7 @@ from ftps_contract import CLI_PAYLOAD, HOSTILE_CASE_COUNT, LFTP_CASES, LIMITED_P
 import ftps_cli_governance as governance
 import ftps_browser_evidence as browser_evidence
 import ftps_ticket_governance as tickets
+import ftps_browser_tickets as browser_tickets
 
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location("metadata", ROOT / "scripts/qualify-retained-metadata.py")
@@ -50,7 +51,10 @@ def main():
     parser.add_argument("--native-client-only", action="store_true", help="exercise the native TLS1.3 client stand-in; stock curl stays unqualified")
     parser.add_argument("--browser", action="store_true", help="also qualify reviewed HTTPS browser governance against live FTPS writers and intake")
     parser.add_argument("--tickets", action="store_true", help="also qualify public CLI/HTTPS ticket recovery across an exact task-owned FTPS SIGKILL")
+    parser.add_argument("--browser-tickets", action="store_true", help="also qualify real browser ticket preparation, process-crash receipt recovery and release; requires --browser")
     args = parser.parse_args()
+    if args.browser_tickets and not args.browser:
+        parser.error("--browser-tickets requires the complete --browser profile")
     if not re.fullmatch(r"[0-9a-f]{64}", args.postgres_container_id):
         raise RuntimeError("use the exact task-owned container ID")
     os.chdir(ROOT)
@@ -72,6 +76,7 @@ def main():
     manifest["native_client_only"] = args.native_client_only
     manifest["browser_requested"] = args.browser
     manifest["tickets_requested"] = args.tickets
+    manifest["browser_tickets_requested"] = args.browser_tickets
     manifest["stock_curl_qualified"] = False
     manifest["stock_lftp_qualified"] = False
     processes, created, started, originally_running = {}, False, False, None
@@ -108,7 +113,7 @@ def main():
         observer.steps.append({"name": label, "exit_code": code, "seconds": round(time.monotonic() - began, 3),
                                "stdout_sha256": metadata.digest(out), "stderr_sha256": metadata.digest(err)})
         try:
-            tickets.verify_outcome(label, code, err.read_bytes(), out.read_bytes())
+            browser_tickets.verify_outcome(label, code, err.read_bytes(), out.read_bytes())
         except ValueError:
             raise RuntimeError(label + " failed; protected native output retained") from None
         return out.read_bytes()
@@ -148,8 +153,10 @@ def main():
             except OSError:
                 time.sleep(.05)
 
-    def crash_restart(mode, argv, port):
-        label = "ticket-" + mode + "-crash"
+    def crash_restart(mode, argv, port, prefix="ticket"):
+        if prefix not in {"ticket", "browser-ticket"} or mode not in {"explicit", "implicit"}:
+            raise RuntimeError("unknown controlled process crash profile")
+        label = prefix + "-" + mode + "-crash"
         p, out, err = processes[label]
         if p.poll() is not None:
             raise RuntimeError("task-owned FTPS exited before controlled crash")
@@ -162,8 +169,8 @@ def main():
         observer.steps.append({"name": label, "exit_code": code,
                                "stdout_sha256": metadata.digest(private / (label + ".stdout")),
                                "stderr_sha256": metadata.digest(private / (label + ".stderr"))})
-        tickets.verify_outcome(label, code, (private / (label + ".stderr")).read_bytes(), (private / (label + ".stdout")).read_bytes())
-        start("ticket-" + mode + "-restarted", argv, port)
+        browser_tickets.verify_outcome(label, code, (private / (label + ".stderr")).read_bytes(), (private / (label + ".stdout")).read_bytes())
+        start(prefix + "-" + mode + "-restarted", argv, port)
 
     initial = sources()
     manifest["source_sha256"] = initial
@@ -308,6 +315,14 @@ def main():
                 # Reopen after recording the normal restarted-process exit too.
                 manifest.setdefault("ticket_governance", {})[mode] = tickets.validate(private, mode, observer.steps, inventory)
                 manifest.setdefault("ticket_output_sha256", {})[mode] = inventory
+            if args.browser_tickets:
+                mode = "implicit" if implicit else "explicit"
+                ticket_args = argv + ["--upload-checkpoint-bytes", "65536"]
+                start("browser-ticket-" + mode + "-crash", ticket_args, port)
+                inventory = browser_tickets.exercise(ROOT, private, mode, port, http_port, cert, binary, env, observer.steps, command, metadata.bounded_output, lambda: crash_restart(mode, ticket_args, port, "browser-ticket"))
+                stop("browser-ticket-" + mode + "-restarted")
+                manifest.setdefault("browser_ticket_governance", {})[mode] = browser_tickets.validate(private, mode, observer.steps, inventory)
+                manifest.setdefault("browser_ticket_output_sha256", {})[mode] = inventory
         if args.browser or args.tickets:
             stop("browser-https")
         manifest["state"] = "passed"

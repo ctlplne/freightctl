@@ -26,6 +26,8 @@ Storage has a persistent UUID marker. A ticket cannot resume on another director
 
 ## Stock SFTP
 
+The browser can prepare the same immutable receiving job without sending bytes. Choose the source and destination under **Uploads**, then **Prepare transfer ticket**. It displays the returned SFTP/FTPS paths and the exact expected digest/length. **Refresh upload status** reads durable progress or the saved accepted file ID after a lost reply. Reload discovers the same owned ticket. These browser controls use the same scoped upload API; [F067](../qualification/evidence/F067-ftps-browser-tickets.json) tracks their required actual browser/process-crash replay, currently pending.
+
 Creation returns a private protocol path such as `/.freightctl/uploads/<upload-id>`. It is a receiving job, not an ordinary published file. Use stock sftp with explicit host-key trust and your enrolled identity:
 
 ```text

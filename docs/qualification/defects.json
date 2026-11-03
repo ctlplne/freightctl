@@ -2104,6 +2104,20 @@
         "https://github.com/ctlplne/freightctl/actions/runs/41583125686",
         "https://github.com/ctlplne/freightctl/actions/runs/41584249139"
       ]
+    },
+    {
+      "id": "D130",
+      "severity": "missing public operator recovery surface",
+      "state": "implemented;actual native browser replay pending",
+      "observed_on": "2026-11-03",
+      "candidate": "62cf513e24f44c9b51e0a249882ea39d31fc4419",
+      "journey": "Browser-created shared FTPS ticket process-crash recovery",
+      "title": "Browser cannot prepare or inspect shared transfer-client ticket recovery",
+      "first_finding": "Source/interface inspection shows protocol path fields dropped and no ticket-only preparation or selected-ticket refresh action. This is not a claimed native browser first-failure run.",
+      "resolution": "Add ticket-only preparation,strict ID-bound protocol path decoding and current saved progress/acceptance/immutable-file display. Require actual browser creation/reload/foreign-authority/lost-reply/check/release/process-kill and independent byte replay in native CI. Static contracts pass;runtime remains pending.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F067-ftps-browser-tickets.json"
+      ]
     }
   ]
 }

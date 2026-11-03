@@ -12,6 +12,7 @@ import unittest
 import ftps_cli_governance as governance
 import ftps_browser_evidence as browser
 import ftps_ticket_governance as tickets
+import ftps_browser_tickets as browser_tickets
 
 from ftps_contract import CLI_PAYLOAD, LFTP_CASES, LFTP_DOWNLOADS, NATIVE_PARENT_TESTS, NATIVE_TESTS
 
@@ -60,6 +61,54 @@ def synthetic_governance_outputs():
 
 
 class SummaryContracts(unittest.TestCase):
+    def test_browser_ticket_failure_diagnostic_reveals_only_fixed_stage(self):
+        name="browser-ticket-explicit-browser"
+        for stage in ("prepare","private-selector-or-credential"):
+            data=json.dumps({"state":"failed","stage":stage,"failure":"private request details"}).encode()
+            (self.directory/(name+".stdout")).write_bytes(data)
+            (self.directory/(name+".stderr")).write_bytes(b"")
+            step={"name":name,"exit_code":1,"stdout_sha256":hashlib.sha256(data).hexdigest(),"stderr_sha256":hashlib.sha256(b"").hexdigest()}
+            self.manifest["steps"]=[s for s in self.manifest["steps"] if s["name"]!=name]+[step]
+            self.write();result=summary.failure_diagnostics(self.root,self.result,"a"*40)
+            self.assertNotIn("private",json.dumps(result))
+            if stage=="prepare":self.assertEqual(result["browser_ticket_failures"],[{"command":name,"stage":"prepare"}])
+            else:self.assertNotIn("browser_ticket_failures",result)
+
+    def test_browser_ticket_api_refusal_requires_exact_original_category(self):
+        browser_tickets.verify_http_outcome("foreign-status",404,b'{"error":"not_found"}')
+        for label,status,body in (("foreign-status",200,b'{"error":"not_found"}'),("foreign-status",500,b'{"error":"not_found"}'),("foreign-status",404,b'{"error":"database_unavailable"}'),("foreign-status",404,b'{"error":"not_found","extra":"private"}'),("unknown",404,b'{"error":"not_found"}'),("create-0",200,b'{}')):
+            with self.assertRaises(ValueError): browser_tickets.verify_http_outcome(label,status,body)
+
+    def test_browser_ticket_replay_cannot_substitute_intent_key_or_receipt(self):
+        first=({"idempotency_key":"original","selection":{"path":"/recovered.csv"}},{"upload":{"id":"one"},"replayed":False})
+        second=copy.deepcopy(first);second[1]["replayed"]=True
+        browser_tickets.verify_saved_replay(first,second)
+        for mutate in (lambda v:v[0].update(idempotency_key="new"),lambda v:v[0]["selection"].update(path="/other.csv"),lambda v:v[1]["upload"].update(id="other"),lambda v:v[1].update(replayed=False)):
+            changed=copy.deepcopy(second);mutate(changed)
+            with self.assertRaises(ValueError): browser_tickets.verify_saved_replay(first,changed)
+
+    def test_browser_ticket_dom_reading_cannot_substitute_bound_acceptance(self):
+        u={"id":"11111111-1111-4111-8111-111111111111","state":"completed","committed_offset":len(tickets.PAYLOAD),"file_id":"22222222-2222-4222-8222-222222222222"}
+        v={"state":"completed","path":"/recovered.csv","expected_size":str(len(tickets.PAYLOAD)),"committed_offset":str(len(tickets.PAYLOAD)),"expected_sha256":tickets.SHA256,"sftp_path":"/.freightctl/uploads/"+u["id"],"ftps_path":"/.freightctl/uploads/"+u["id"],"file_id":u["file_id"],"acceptance":"Accepted and held for checks and release"}
+        browser_tickets.verify_visible_receipt(v,u)
+        for changes in ({"file_id":"other"},{"path":"/other.csv"},{"committed_offset":"65536"},{"expected_sha256":"0"*64},{"acceptance":"published"},{"ftps_path":"/.freightctl/uploads/another"}):
+            with self.assertRaises(ValueError): browser_tickets.verify_visible_receipt(dict(v,**changes),u)
+
+    def test_required_browser_ticket_profile_cannot_be_satisfied_by_old_browser_or_cli_claims(self):
+        self.write()
+        with self.assertRaises(ValueError):
+            summary.summarize(self.root, self.result, "a" * 40, require_browser_tickets=True)
+        self.manifest["browser_requested"] = True
+        self.manifest["browser_tickets_requested"] = True
+        self.manifest["browser_ticket_governance"] = {"explicit":{"state":"passed"},"implicit":{"state":"passed"}}
+        with self.assertRaises(ValueError): self.check()
+
+    def test_browser_ticket_sigkill_cannot_approve_other_process_outcomes(self):
+        browser_tickets.verify_outcome("browser-ticket-explicit-crash",-9,b"",b"")
+        browser_tickets.verify_outcome("browser-ticket-implicit-crash",-9,b"",b"")
+        for name,code in (("browser-ticket-explicit-browser",-9),("browser-ticket-explicit-peer",-9),("browser-ticket-explicit-restarted",-9),("browser-ticket-explicit-crash",0),("browser-ticket-explicit-crash",-15),("browser-ticket-unknown-crash",-9)):
+            with self.assertRaises(ValueError): browser_tickets.verify_outcome(name,code,b"",b"")
+
     def test_required_public_ticket_profile_cannot_be_satisfied_by_old_profile(self):
         self.write()
         with self.assertRaises(ValueError):

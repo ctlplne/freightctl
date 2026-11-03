@@ -16,6 +16,8 @@ on:
       - 'scripts/ftps-governance-probe.py'
       - 'scripts/ftps_cli_governance.py'
       - 'scripts/ftps_ticket_governance.py'
+      - 'scripts/ftps_browser_tickets.py'
+      - 'scripts/ftps-ticket-browser.mjs'
       - 'scripts/ftps-operator-browser.mjs'
       - 'scripts/ftps_browser_evidence.py'
       - 'scripts/browser-wire.mjs'
@@ -44,6 +46,8 @@ on:
       - 'scripts/ftps-governance-probe.py'
       - 'scripts/ftps_cli_governance.py'
       - 'scripts/ftps_ticket_governance.py'
+      - 'scripts/ftps_browser_tickets.py'
+      - 'scripts/ftps-ticket-browser.mjs'
       - 'scripts/ftps-operator-browser.mjs'
       - 'scripts/ftps_browser_evidence.py'
       - 'scripts/browser-wire.mjs'
@@ -121,6 +125,6 @@ jobs:
           umask 077
           task_pg_id=$(docker inspect --format '{{.Id}}' freightctl-postgres-v1)
           qualification_status=0
-          python3 scripts/qualify-ftps.py --postgres-container-id "$task_pg_id" --browser > .private/ftps-browser-result.json || qualification_status=$?
-          python3 scripts/ci-ftps-summary.py --result .private/ftps-browser-result.json --require-browser
+          python3 scripts/qualify-ftps.py --postgres-container-id "$task_pg_id" --browser --browser-tickets > .private/ftps-browser-result.json || qualification_status=$?
+          python3 scripts/ci-ftps-summary.py --result .private/ftps-browser-result.json --require-browser --require-browser-tickets
           exit "$qualification_status"

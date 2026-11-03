@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "id": "F067",
+  "observed_at": "2026-11-03",
+  "state": "implemented;actual native browser ticket qualification pending",
+  "starting_commit": "62cf513e24f44c9b51e0a249882ea39d31fc4419",
+  "scope": "Browser preparation and recovery of shared actor-owned FTPS receiving tickets with real Chrome/HTTPS/PostgreSQL/storage and independent TLS1.3 client stand-in. No whole parity row or journey claim.",
+  "initial_finding": {
+    "kind": "source/interface inspection, not runtime failure evidence",
+    "observation": "The existing browser resumes browser uploads but discards sftp_path/ftps_path, cannot prepare a transfer-client ticket without sending file bytes, and cannot explicitly refresh a selected ticket after an unobserved transfer completion."
+  },
+  "product_change": [
+    "Prepare transfer ticket hashes the original complete file and creates the immutable expected size/digest/destination without appending bytes. An interrupted creation reuses its original meaning/key.",
+    "Display only optional protocol paths exactly bound to the returned upload ID. Missing/empty historical paths remain absent; another ID/path or URL is rejected.",
+    "Expose committed bytes, expected digest/size, accepted immutable file ID and the held acceptance boundary. Refresh reads current authority/state and rejects a substituted ID or changed immutable intent. A full progress bar is not acceptance.",
+    "Preserve existing pause/resume/send paths, required checks and separate release. Status recovers saved accepted identity, not a fabricated original FTP reply or business acceptance."
+  ],
+  "qualification_contract": [
+    "Both listener modes run the original full stock/native/CLI/browser profile plus --browser-tickets, and the reporter requires --require-browser-tickets.",
+    "Actual Chrome prepares the ticket;the real first creation reply is dropped and same-key replay must recover it. No browser PATCH/completion/abort is permitted in this transfer-client journey.",
+    "An independent FTPS peer sends64KiB+97tail bytes. CLI and visible browser/API progress must agree before only the exact task-owned FTPS Popen is killed. Same database/storage/certificate/port restart must preserve the checkpoint.",
+    "The browser reloads,refuses another full-root actor through listing and exact404/not_found,and returns to the original owned ticket. The peer refuses wrong offsets and resumes the original suffix.",
+    "The peer never consumes the completed transfer226. Browser reload/status must recover the same independently observed completed/held file ID,digest,length and acceptance without sending bytes.",
+    "Browser checks the exact revision and separately reviews release. Drop the first actual release response,replay its original key/selection/receipt,then independently retrieve and reopen exactly210019bytes.",
+    "Six WCAG2.2AA automated audits per mode,zero page errors/egress/credential storage,ordered original node/peer/CLI phases,exact controlledSIGKILL outcomes,and original HTTP/DOM/byte/source/output closure are required."
+  ],
+  "local_checks": {
+    "frontend_contracts": 115,
+    "typecheck": "passed",
+    "browser_build_and_embedded_asset_replay": "passed",
+    "evidence_refusal_privacy_contracts": 44,
+    "workflow_actionlint": "passed for all three changed workflows",
+    "node_python_syntax": "passed",
+    "go_api_unit": "passed natively on ARM after loopback sandbox refusal;no PostgreSQL/model/scanner",
+    "runtime_browser": "not executed locally;offloaded to actual native GitHub Chrome"
+  },
+  "native_ci": {
+    "state": "pending after source push"
+  },
+  "limits": [
+    "This implementation and static coverage do not establish browser/process-crash runtime qualification until original native execution.",
+    "The independent protocol peer is a TLS client stand-in;stock curl/lftp/native FTPS remains required in the same full profile. No new vendor-peer claim.",
+    "No power-loss,multi-host/database-failover/clean-host restore or broader browser/platform/scale qualification.",
+    "All83 whole rows and12 full journeys remain open;proactive FTPS sending/collection,WindowsD103 and remaining GOAL.md gates stay required.",
+    "Local inference stays off;PostgreSQL/scanner were observed stopped and were not started for this implementation. F026 aggregate remains owner-deferred. No release artifacts or deployment."
+  ],
+  "public_source_review": {
+    "manifest_reference": ".private/freightctl-browser-ticket-final-public-552ec464dc634314ae751f719daae7f4/manifest.json",
+    "manifest_sha256": "e3230406d64668fc2249d92ea4c41f44af7a3abe29175da6284a483e7e96ecf4",
+    "source_count": 682,
+    "exit_code": 0
+  }
+}

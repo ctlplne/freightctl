@@ -203,7 +203,7 @@ export class Api {
     return this.request(
       `${this.prefix}/uploads/${id}`,
       signal ? { signal } : {},
-      asUpload,
+      (value) => asUpload(value, { id }),
     );
   }
   uploads(after = "", signal?: AbortSignal) {
@@ -233,13 +233,21 @@ export class Api {
         method: "POST",
         headers: { "Content-Type": "application/json", "Idempotency-Key": key },
         body: JSON.stringify({
-          path,
+          path: path.normalize("NFC"),
           expected_size: size,
           expected_sha256: sha256,
         }),
         signal,
       },
-      asUploadResult,
+      (value) => {
+        const result = asUploadResult(value);
+        asUpload(result.upload, {
+          path: path.normalize("NFC"),
+          expected_size: size,
+          expected_sha256: sha256,
+        });
+        return result;
+      },
     );
   }
   append(

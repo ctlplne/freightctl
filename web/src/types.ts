@@ -111,6 +111,8 @@ export interface Session {
 export interface Upload {
   id: string;
   path: string;
+  sftp_path?: string;
+  ftps_path?: string;
   expected_size: number;
   expected_sha256: string;
   committed_offset: number;
@@ -325,7 +327,12 @@ export function asSession(value: unknown): Session {
     },
   };
 }
-export function asUpload(value: unknown): Upload {
+export function asUpload(
+  value: unknown,
+  expected?: Partial<
+    Pick<Upload, "id" | "path" | "expected_size" | "expected_sha256">
+  >,
+): Upload {
   const o = object(value);
   const size = number(o, "expected_size", 1073741824);
   const u: Upload = {
@@ -340,12 +347,28 @@ export function asUpload(value: unknown): Upload {
   };
   if (o.file_id !== undefined && o.file_id !== "") u.file_id = id(o, "file_id");
   if (o.acceptance !== undefined) u.acceptance = text(o, "acceptance", 128);
+  for (const field of ["sftp_path", "ftps_path"] as const) {
+    if (o[field] !== undefined && o[field] !== "") {
+      const path = text(o, field, 64);
+      if (path !== `/.freightctl/uploads/${u.id}`)
+        throw new ApiError("invalid_server_response", 502);
+      u[field] = path;
+    }
+  }
+  for (const field of [
+    "id",
+    "path",
+    "expected_size",
+    "expected_sha256",
+  ] as const)
+    if (expected?.[field] !== undefined && expected[field] !== u[field])
+      throw new ApiError("invalid_server_response", 502);
   return u;
 }
 export function asUploadPage(value: unknown): UploadPage {
   const o = object(value);
   const page: UploadPage = {
-    uploads: array(o, "uploads", 100).map(asUpload),
+    uploads: array(o, "uploads", 100).map((value) => asUpload(value)),
     blocked_by_access_change: bool(o, "blocked_by_access_change"),
   };
   if (o.next !== undefined) page.next = id(o, "next");

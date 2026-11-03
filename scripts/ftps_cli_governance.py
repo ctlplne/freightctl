@@ -116,21 +116,23 @@ def validate_outputs(private, mode):
 
 
 class Peer:
-    def __init__(self, private, label, settings, env, steps, bounded_output):
+    def __init__(self, private, label, settings, env, steps, bounded_output, argv=None, phase_timeout=10):
+        require(10 <= phase_timeout <= 45, "governance phase bound differs")
+        self.phase_timeout = phase_timeout
         self.private, self.label, self.steps = private, label, steps
         ref = private / (label + ".json")
         with ref.open("x") as f:
             json.dump(settings, f)
         self.stdout = (private / (label + ".stdout")).open("xb")
         self.stderr = (private / (label + ".stderr")).open("xb")
-        self.process = subprocess.Popen(["python3", "scripts/ftps-governance-probe.py", "--reference", str(ref)], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=self.stderr, env=env, start_new_session=True, preexec_fn=bounded_output)
+        self.process = subprocess.Popen([*(argv or ["python3", "scripts/ftps-governance-probe.py"]), "--reference", str(ref)], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=self.stderr, env=env, start_new_session=True, preexec_fn=bounded_output)
         os.set_blocking(self.process.stdout.fileno(), False)
         self.selector = selectors.DefaultSelector()
         self.selector.register(self.process.stdout, selectors.EVENT_READ)
         self.buffer, self.total, self.recorded = b"", 0, False
 
     def next(self, expected):
-        deadline = time.monotonic() + 10
+        deadline = time.monotonic() + self.phase_timeout
         while b"\n" not in self.buffer:
             require(time.monotonic() < deadline, "governance peer phase deadline exceeded")
             if not self.selector.select(max(0, deadline - time.monotonic())):
