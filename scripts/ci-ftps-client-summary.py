@@ -64,13 +64,25 @@ def failure_diagnostics(root,result,commit):
         path=root/ref;raw=read(path,8<<20);m=json.loads(raw)
         if hashlib.sha256(raw).hexdigest()!=h.get("manifest_sha256") or m.get("starting_commit")!=commit:return {}
         failures=[s["name"] for s in m.get("steps",[]) if s.get("name") in REQUIRED and s.get("exit_code")!=0]
-        result={"failed_commands":sorted(set(failures))}
+        result={"failed_commands":sorted(set(failures)),"manifest_sha256":h["manifest_sha256"]}
         if m.get("failure") in {"explicit receiver did not start","implicit receiver did not start"}:result["stage"]=m["failure"].split()[0]+"-receiver-start"
         native=read(path.parent/"native-stock-receiver.stdout").decode() if (path.parent/"native-stock-receiver.stdout").exists() else ""
         stages=re.findall(r"client_stock_test.go:\d+: stock (connection|store|size|independent readback|rename|renamed readback|prefix|resume|resumed integrity|zero-byte upload|zero-byte readback)\b",native)
         if stages:result["native_stages"]=sorted(set(stages))
         codes=re.findall(r"FTPS receiver status ([1-5][0-9]{2})\b",native)
         if codes:result["reply_codes"]=sorted(set(map(int,codes)))
+        categories=[]
+        patterns={"config-owner":"config file not owned by correct user","certificate-load":"SSL: cannot load RSA certificate","key-load":"SSL: cannot load RSA private key","cipher-list":"SSL: could not set cipher list","supervisor-child-exit":"receiver exited before cleanup","supervisor-preexec":"Exception occurred in preexec_fn","supervisor-resource-limit":"not allowed to raise maximum limit","supervisor-stdin":"receiver supervisor command differs","listener-bind":"could not bind listening IPv4 socket"}
+        options={"ssl_tlsv1","ssl_tlsv1_1","ssl_tlsv1_2","ssl_tlsv1_3","ssl_sslv2","ssl_sslv3","seccomp_sandbox","strict_ssl_read_eof","strict_ssl_write_shutdown","require_ssl_reuse"}
+        for mode in ("explicit","implicit"):
+            for ext in ("stdout","stderr"):
+                f=path.parent/(mode+"-receiver."+ext)
+                if not f.exists():continue
+                original=read(f).decode(errors="replace")
+                categories.extend(mode+":"+label for label,text in patterns.items() if text in original)
+                for option in re.findall(r"unrecognised variable in config file: ([a-z0-9_]+)",original):
+                    categories.append(mode+":unsupported-option:"+(option if option in options else "other"))
+        if categories:result["receiver_categories"]=sorted(set(categories))
         return result
     except Exception:return {}
 

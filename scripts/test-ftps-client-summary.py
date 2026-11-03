@@ -103,8 +103,18 @@ class ReceiverEvidence(unittest.TestCase):
         for s in self.m["steps"]:
             if s["name"]=="native-stock-receiver":s["exit_code"]=1
         self.write();result=summary.failure_diagnostics(self.root,self.result,"b"*40)
+        result.pop("manifest_sha256")
         self.assertEqual(result,{"failed_commands":["native-stock-receiver"],"native_stages":["store"],"reply_codes":[522]})
         self.assertNotIn("private",json.dumps(result));self.assertNotIn("password",json.dumps(result))
+
+    def test_receiver_startup_diagnostic_reveals_only_known_categories(self):
+        (self.directory/"explicit-receiver.stderr").write_bytes(b"500 OOPS: unrecognised variable in config file: ssl_tlsv1_3\nsecret-password\nTraceback: receiver exited before cleanup\n")
+        self.write();result=summary.failure_diagnostics(self.root,self.result,"b"*40)
+        self.assertEqual(result["receiver_categories"],["explicit:supervisor-child-exit","explicit:unsupported-option:ssl_tlsv1_3"])
+        self.assertNotIn("secret",json.dumps(result))
+        (self.directory/"explicit-receiver.stderr").write_bytes(b"unrecognised variable in config file: private_password_name\n")
+        result=summary.failure_diagnostics(self.root,self.result,"b"*40)
+        self.assertEqual(result["receiver_categories"],["explicit:unsupported-option:other"])
 
 
 if __name__=="__main__":unittest.main()

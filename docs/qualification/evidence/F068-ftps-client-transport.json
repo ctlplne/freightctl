@@ -43,15 +43,24 @@
       "manifest_sha256": "441f321bf74402bf956f1bc040136e980ece606fd8a4f39fb8db58f1b2a17a8f",
       "state": "bind operation denied;original suite replay passed with loopback access"
     },
-    "latest_synthetic_evidence_tampering_contracts": 9,
-    "latest_contract_note": "The final native archive retains the eight-contract source version;the additional fixed failure-diagnostic privacy contract and18-command configuration ownership closure pass separately after runner configuration review. Go transport sources are unchanged."
+    "latest_synthetic_evidence_tampering_contracts": 10,
+    "latest_contract_note": "Ten current bookkeeping/privacy refusal contracts pass;the48record native transport race archive remains unchanged. Runtime stock evidence remains failed at receiver startup."
   },
   "native_ci": {
-    "state": "pending",
+    "state": "first actual ARM/x86 stock receiver profiles fail at explicit receiver startup;transfer tests did not run;fixed diagnostic replay pending",
     "workflow": ".github/workflows/ftps-client.yml",
     "profile": "Actual native Ubuntu24 ARM/x86,stock vsftpd3.0.5-0ubuntu3.1/OpenSSL/PAM,two TLS1.3 listeners,strict reuse/read EOF/write shutdown,chroot,independent six-file receiver observation and exact user/PAM/process cleanup",
     "receiver_budget": "one CPU,256MiB address space,60CPU seconds,4sessions per listener",
-    "no_artifact_upload": true
+    "no_artifact_upload": true,
+    "candidate": "16b92cbf7e648905f402a0e5d0b3a56fd2e6d660",
+    "run_id": 41594478582,
+    "arm_job_id": 125778506976,
+    "x86_job_id": 125778507464,
+    "first_failure_archive": {
+      "manifest_reference": ".private/freightctl-ftps-client-first-stock-16b92cb/manifest.json",
+      "manifest_sha256": "be685b8f1dded1184cff42c746cb12c0c657bf9f6e351a754274a980e5206593"
+    },
+    "diagnostic_change": "Print only fixed startup categories,known config option names,failed original command names,native stages,numeric FTP codes and manifest digest. Raw receiver text and secrets stay private. No protocol/assertion/resource limit change."
   },
   "next_integration": "docs/protocols/ftps-sending.md",
   "inference_performed": false,
@@ -62,5 +71,11 @@
     "Existing SFTP definitions/hashes/publication contract remain unchanged. A distinct frozen FTPS definition,live approvals/lease/fence,receiver visibility/duplicate contract,publication intent and read-only ambiguous reconciliation remain required.",
     "Collection/listing,active mode,production network peers,TLS profile breadth,Windows custody,scale,power-loss persistence and business receipts remain open.",
     "All83whole rows/12full journeys and all three readiness verdicts remain open;F026 aggregate stays owner-deferred."
-  ]
+  ],
+  "public_source_review": {
+    "manifest_reference": ".private/freightctl-ftps-client-final-source-5705afb05d6f46dfafb34e4ab53d92da/manifest.json",
+    "manifest_sha256": "6a9308e71831033b1daae711c0b0dd575d4ba8c64452c51f8c43d24c3b3b3766",
+    "source_count": 694,
+    "exit_code": 0
+  }
 }
