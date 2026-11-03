@@ -4,6 +4,8 @@ import copy
 import hashlib
 import importlib.util
 import json
+import shutil
+from metadata_contract import CURRENT_PROFILE, RETAINED_PROFILE, migration_ledger
 from pathlib import Path
 import subprocess
 import sys
@@ -61,6 +63,43 @@ def synthetic_governance_outputs():
 
 
 class SummaryContracts(unittest.TestCase):
+    def test_current_schema36_cannot_be_rejected_by_stale_retained_profile(self):
+        self.manifest["retained_schema"] = CURRENT_PROFILE["schema"]
+        self.manifest["retained_before"]["migration_ledger"] = migration_ledger(self.root,CURRENT_PROFILE["schema"])
+        self.manifest["retained_after"] = copy.deepcopy(self.manifest["retained_before"])
+        self.assertEqual(self.check()["state"], "passed")
+
+    def test_explicit_unchanged_retained_schema35_is_a_separate_read_only_profile(self):
+        self.manifest["retained_schema"] = RETAINED_PROFILE["schema"]
+        self.manifest["retained_before"]["migration_ledger"] = migration_ledger(self.root,RETAINED_PROFILE["schema"])
+        self.manifest["retained_after"] = copy.deepcopy(self.manifest["retained_before"])
+        self.assertEqual(self.check()["state"],"passed")
+
+    def test_failed_profile_diagnostic_cannot_print_raw_snapshot_or_failure_text(self):
+        self.manifest["retained_schema"]="private reference must not appear"
+        self.manifest["retained_before"]["migration_ledger"][0]["digest"]="private migration record"
+        self.manifest["failure"]="private server failure text"
+        self.write()
+        result=summary.failure_diagnostics(self.root,self.result,"a"*40)
+        self.assertEqual(result["postgres_profile"],{"declared_schema":None,"migration_records":36,"metadata_tables":64,"forced_rls_tables":63,"matches_exact_source_profile":False})
+        self.assertNotIn("private",json.dumps(result))
+
+    def test_declared_profile_cannot_substitute_missing_changed_or_unknown_migrations(self):
+        for change in (
+            lambda m:m.update(retained_schema=35),
+            lambda m:m.update(retained_schema=37),
+            lambda m:m.update(retained_schema=True),
+            lambda m:m.pop("retained_schema"),
+            lambda m:m["retained_before"]["migration_ledger"].pop(),
+            lambda m:m["retained_before"]["migration_ledger"][0].update(digest="f"*64),
+            lambda m:m["retained_before"].update(forced_rls_tables=0),
+        ):
+            original=copy.deepcopy(self.manifest)
+            change(self.manifest)
+            self.manifest["retained_after"]=copy.deepcopy(self.manifest["retained_before"])
+            with self.assertRaises(ValueError): self.check()
+            self.manifest=original
+
     def test_browser_ticket_failure_diagnostic_reveals_only_fixed_stage(self):
         name="browser-ticket-explicit-browser"
         for stage in ("prepare","private-selector-or-credential"):
@@ -166,6 +205,11 @@ class SummaryContracts(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory(prefix="freightctl-ftps-report-")
         self.addCleanup(self.tmp.cleanup)
         self.root = Path(self.tmp.name)
+        source_root=Path(__file__).resolve().parents[1]/"internal/store"
+        target=self.root/"internal/store"
+        target.mkdir(parents=True)
+        for p in [source_root/"schema.sql"]+sorted(source_root.glob("[0-9][0-9][0-9]_*.sql")):
+            shutil.copyfile(p,target/p.name)
         self.directory = self.root / ".private" / ("ftps-" + "1" * 32)
         self.directory.mkdir(parents=True)
         self.path = self.directory / "manifest.json"
@@ -204,8 +248,8 @@ class SummaryContracts(unittest.TestCase):
             directory.mkdir()
             for name in LFTP_DOWNLOADS:
                 (directory / name).write_bytes(CLI_PAYLOAD)
-        before = {"runtime_role_safe": True, "migration_ledger": [{} for _ in range(35)], "forced_rls_tables": 63, "tables": [{} for _ in range(64)]}
-        self.manifest = {"schema_version": 1, "kind": "stock-ftps-custody", "starting_commit": "a" * 40, "state": "passed",
+        before = {"runtime_role_safe": True, "migration_ledger": migration_ledger(self.root,CURRENT_PROFILE["schema"]), "forced_rls_tables": 63, "tables": [{} for _ in range(64)]}
+        self.manifest = {"schema_version": 1, "retained_schema":CURRENT_PROFILE["schema"], "kind": "stock-ftps-custody", "starting_commit": "a" * 40, "state": "passed",
                          "stock_curl_qualified": True, "stock_lftp_qualified": True, "retained_metadata_and_roles_unchanged": True,
                          "isolated_database_removed": True, "original_resource_state_restored": True, "sources_unchanged": True,
                          "native_client_only": False, "inference_performed": False, "scanner_engine_started": False,

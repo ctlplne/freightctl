@@ -3,7 +3,7 @@
   "id": "F071",
   "observed_at": "2026-11-03",
   "starting_commit": "5993f78fde4a626b722982162f2508b73e1175cd",
-  "state": "implemented direct CLI profile; native PostgreSQL runtime qualification pending",
+  "state": "direct CLI implementation;first native runtime failures retained;repaired original replay pending",
   "scope": "Distinct schema2 direct explicit/implicit FTPS delivery under ordinary custody, dispatch approval, immutable intent/events, lease/fence and read-only reconciliation. No whole sending parity row or journey qualified.",
   "implementation": [
     "Freeze exact destination, CA and credential references/fingerprints, separate stage/final trees and an explicit receiver contract. Preserve schema1 SFTP canonical hashes and its fsync/exclusive-hardlink worker.",
@@ -29,10 +29,26 @@
     "metadata_evidence_contracts": 7,
     "integration_compile_and_vet": "passed;not a runtime qualification",
     "manifest_reference": ".private/freightctl-governed-ftps-local-vE7rEO/manifest.json",
-    "manifest_sha256": "cc368fca2bc979368941f2c67dd14eb9e3bc9c66bdbc41e4b10e26109c0779ba"
+    "manifest_sha256": "cc368fca2bc979368941f2c67dd14eb9e3bc9c66bdbc41e4b10e26109c0779ba",
+    "frozen_definition_followup": {
+      "manifest_reference": ".private/freightctl-ftps-frozen-path-and-windows-deHCJb/manifest.json",
+      "manifest_sha256": "823637b4f8181b763755725f54938092d411b1f66920151a7fb72d7e8cf4020f",
+      "native_arm_delivery_pass_records": 22,
+      "failures": 0,
+      "skips": 0,
+      "scope": "First filename escape refusal failed in frozen schema2 validation;public Create already refused it. Recheck the filename during reload. Original focused replay passes;fixture local references now use actual host-native absolute paths."
+    },
+    "schema_profile_repairs": {
+      "ftps_evidence_refusal_contracts": 48,
+      "metadata_evidence_refusal_contracts": 7,
+      "state": "passed;exact35/36source checksums,missing/forged/unknown/boolean versions,private-diagnostic refusal;no SQL/network runtime",
+      "manifest_reference": ".private/freightctl-ftps-schema36-first-native-j1nXUx/manifest.json",
+      "manifest_sha256": "cc4f6846578cd604ff796539d98a79301c7cb6f9c491e3d81f81de0625ab503b"
+    },
+    "read_audit_repair": "Integration compile/vet passed. Revised original journey compares all63non-event receiver tables and every original full event,requiring one exact new session plus precisely bound independent/FTPS download audit records. No payload-write/audit/budget gate removed;actual native replay pending."
   },
   "native_ci": {
-    "state": "pending",
+    "state": "Atb5819e8,both native Linux integrations report638pass/3fail/0skip. Five new governed sending/approval/withdrawal/SQL-effect records pass;both lost-reply audit invariants fail. Both metadata restores,fuzz,first-run and four source-security profiles pass. Stock/browser FTPS jobs fail stale profile enforcement;native repaired replays remain required.",
     "workflow": ".github/workflows/native-linux.yml",
     "profile": "Actual native Linux ARM/x86,real PostgreSQL and separate freightctl FTPS/custody application stand-in with independent filesystem readback",
     "new_cases": [
@@ -41,7 +57,70 @@
       "actual durable rename with lost encrypted control reply;read-only final reconciliation without a new attempt/fence or receiver mutation",
       "withdrawn consent after actual staged bytes prevents final rename",
       "PostgreSQL refuses forged receiver mode/contract/staging effect/schema and unapproved staging"
-    ]
+    ],
+    "windows_first_failure": {
+      "candidate": "b5819e8ba2cfa08da40bb83063f51fa04f4b806d",
+      "run_id": 41624337280,
+      "job_id": 125877767055,
+      "fail_records": 46,
+      "preexisting_D103_records": 44,
+      "new_fixture_failures": 2,
+      "state": "Two new delivery fixture cases use invalid Unix-only local reference paths on Windows. Host-native fixture repair prepared;actual native replay pending. Original44 custody/durability/scanner failures stay open.",
+      "manifest_reference": ".private/freightctl-ftps-frozen-path-and-windows-deHCJb/manifest.json",
+      "manifest_sha256": "823637b4f8181b763755725f54938092d411b1f66920151a7fb72d7e8cf4020f"
+    },
+    "first_governed_replay": {
+      "candidate": "b5819e8ba2cfa08da40bb83063f51fa04f4b806d",
+      "run_id": 41624337261,
+      "x86_job_id": 125877766425,
+      "arm_job_id": 125877766615,
+      "integration_pass_records_each": 638,
+      "fail_records_each": 3,
+      "skips_each": 0,
+      "scope": "Direct explicit/implicit bytes,independent consent,withdrawal and SQL effects observed;lost upload/rename read-only tests fail zero-event expectation because reads are audited. Overall jobs stay failed.",
+      "manifest_reference": ".private/freightctl-ftps-governed-first-native-b581-7rAPHQ/manifest.json",
+      "manifest_sha256": "3ad5e8103caa11dcb196e1f48e2d9af0539d4132a2dc8f0679e2ecc48b157b2b"
+    },
+    "schema_profile_first_failure": {
+      "candidate": "b5819e8ba2cfa08da40bb83063f51fa04f4b806d",
+      "ftps_run_id": 41624337288,
+      "ftps_jobs": [
+        125877767003,
+        125877767271
+      ],
+      "browser_run_id": 41624337292,
+      "browser_job": 125877767270,
+      "state": "allfailed;source shows reporter only accepts35 while fresh CI initializes36;synthetic36 rejection reproduced;actual repaired replay pending",
+      "manifest_reference": ".private/freightctl-ftps-schema36-first-native-j1nXUx/manifest.json",
+      "manifest_sha256": "cc4f6846578cd604ff796539d98a79301c7cb6f9c491e3d81f81de0625ab503b"
+    },
+    "supporting_actual_passes": {
+      "first_run": {
+        "run_id": 41624337263,
+        "job_id": 125877767023,
+        "manifest_sha256": "6aca892b226bd26c1bd56a56b295c1019917f51eb99663b55d09ff0ca8a92cfe"
+      },
+      "metadata_schema36": {
+        "run_id": 41624337261,
+        "x86_job": 125877766891,
+        "arm_job": 125877767119,
+        "x86_manifest_sha256": "22f474c379dad9820838e4ac89aa7fc295c66423ef71b2910c2fcce617a4975d",
+        "arm_manifest_sha256": "3720fa2a472d5e2d924c622a0ea3af776bf3caf28a51043d1dd054bc68faa00c",
+        "tables": 64,
+        "forced_rls": 63,
+        "restored_rows_each": 41
+      },
+      "fuzz_job": 125877766739,
+      "core_job": 125877767326,
+      "native_source_security_run": 41624337260,
+      "native_source_security_jobs": [
+        125877766520,
+        125877767233,
+        125877767483
+      ],
+      "manifest_reference": ".private/freightctl-ftps-schema36-first-native-j1nXUx/manifest.json",
+      "manifest_sha256": "cc4f6846578cd604ff796539d98a79301c7cb6f9c491e3d81f81de0625ab503b"
+    }
   },
   "limits": [
     "Registered FTPS connections,workflows,collection,recipient encryption and browser review remain open;schema2 browser review fails closed.",

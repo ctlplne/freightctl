@@ -20,6 +20,7 @@ import (
 	"github.com/ctlplne/freightctl/internal/delivery"
 	"github.com/ctlplne/freightctl/internal/ftpsd"
 	"github.com/ctlplne/freightctl/internal/store"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 )
 
@@ -147,6 +148,147 @@ func readReceiverBytes(t *testing.T, r *fixture, name string) []byte {
 	return b
 }
 
+type receiverAuditEvent struct {
+	kind, resource, actor, digest string
+	payload                       map[string]any
+}
+type receiverReadSnapshot struct {
+	tables map[string]string
+	events map[string]receiverAuditEvent
+}
+
+// Compare every receiver table and every original event, while requiring the
+// exact new read/session audit records. Audited reads must not be confused with
+// payload mutation; dropping all audit checks would miss a hidden write.
+func snapshotReceiverReads(t *testing.T, r *fixture) receiverReadSnapshot {
+	t.Helper()
+	tx, err := r.admin.BeginTx(r.ctx, pgx.TxOptions{IsoLevel: pgx.RepeatableRead, AccessMode: pgx.ReadOnly})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer tx.Rollback(r.ctx)
+	result := receiverReadSnapshot{tables: map[string]string{}, events: map[string]receiverAuditEvent{}}
+	rows, err := tx.Query(r.ctx, `SELECT tablename FROM pg_tables WHERE schemaname='public' AND tablename<>'events' ORDER BY tablename`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var tables []string
+	for rows.Next() {
+		var name string
+		if err = rows.Scan(&name); err != nil {
+			t.Fatal(err)
+		}
+		tables = append(tables, name)
+	}
+	err = rows.Err()
+	rows.Close()
+	if err != nil || len(tables) != 63 {
+		t.Fatal("receiver table observation incomplete", len(tables), err)
+	}
+	for _, name := range tables {
+		var raw []byte
+		query := `SELECT coalesce(jsonb_agg(to_jsonb(t) ORDER BY to_jsonb(t)::text),'[]'::jsonb) FROM ` + pgx.Identifier{name}.Sanitize() + ` t`
+		if err = tx.QueryRow(r.ctx, query).Scan(&raw); err != nil {
+			t.Fatal(err)
+		}
+		result.tables[name] = secure.Digest(raw)
+		secure.Clear(raw)
+	}
+	rows, err = tx.Query(r.ctx, `SELECT event_id::text,kind,resource_id::text,actor_id::text,payload,to_jsonb(e) FROM events e ORDER BY event_id`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for rows.Next() {
+		var id string
+		var e receiverAuditEvent
+		var raw, payload []byte
+		if err = rows.Scan(&id, &e.kind, &e.resource, &e.actor, &payload, &raw); err != nil {
+			t.Fatal(err)
+		}
+		e.digest = secure.Digest(raw)
+		secure.Clear(raw)
+		if json.Unmarshal(payload, &e.payload) != nil {
+			t.Fatal("invalid receiver journal payload")
+		}
+		secure.Clear(payload)
+		result.events[id] = e
+	}
+	err = rows.Err()
+	rows.Close()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err = tx.Commit(r.ctx); err != nil {
+		t.Fatal(err)
+	}
+	return result
+}
+
+func requireOnlyReceiverReadAudit(t *testing.T, r *fixture, before, after receiverReadSnapshot, fileID, phase string) {
+	t.Helper()
+	if len(before.tables) != len(after.tables) {
+		t.Fatal("receiver table set changed")
+	}
+	for name, digest := range before.tables {
+		if after.tables[name] != digest {
+			t.Fatal("read-only recovery changed receiver table", name)
+		}
+	}
+	for id, event := range before.events {
+		if after.events[id].digest != event.digest {
+			t.Fatal("original receiver event changed or disappeared")
+		}
+	}
+	identity, err := r.s.Custody.DB.Identity(r.ctx, r.scope)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var session string
+	var added []receiverAuditEvent
+	for id, event := range after.events {
+		if _, old := before.events[id]; old {
+			continue
+		}
+		if event.actor != identity.Actor {
+			t.Fatal("unexpected recovery audit actor")
+		}
+		added = append(added, event)
+		if event.kind == "ProtocolSessionStarted" {
+			if session != "" || !store.ValidID(event.resource) || len(event.payload) != 3 || event.payload["protocol"] != "ftps-explicit" || event.payload["tls_profile"] != "tls13-resumed-data-v1" || event.payload["authority_revision"] != float64(identity.AuthorityRevision) {
+				t.Fatal("unexpected recovery protocol session")
+			}
+			session = event.resource
+		}
+	}
+	wantDownloads := 1
+	if phase == "rename" {
+		wantDownloads = 2
+	}
+	if session == "" || len(added) != 1+wantDownloads {
+		t.Fatal("unexpected receiver recovery audit count", len(added))
+	}
+	localReads, boundReads := 0, 0
+	for _, event := range added {
+		if event.kind == "ProtocolSessionStarted" {
+			continue
+		}
+		if event.kind != "FileDownloadAuthorized" || event.resource != fileID || len(event.payload) != 2 || event.payload["sha256"] != secure.Digest([]byte("abc")) {
+			t.Fatal("recovery added an unexpected receiver effect")
+		}
+		switch event.payload["protocol_session_id"] {
+		case "":
+			localReads++
+		case session:
+			boundReads++
+		default:
+			t.Fatal("read audit not bound to exact recovery session")
+		}
+	}
+	if localReads != 1 || boundReads != wantDownloads-1 {
+		t.Fatal("missing independent or protocol-bound read audit")
+	}
+}
+
 func approveFTPS(t *testing.T, f *fixture, s *delivery.Service, d *store.Delivery, reviewer store.Scope, account store.AccountCommand) store.OutboundDispatchSummary {
 	t.Helper()
 	p, r, _ := proposeDispatch(t, f, s, d, account.ID, "ftps-review")
@@ -220,10 +362,11 @@ func TestGovernedFTPSLostActualCompletionNeverResendsAndReconcilesReadOnly(t *te
 			if err != nil || out.State != "ambiguous" || !loss.fired.Load() {
 				t.Fatal("lost reply not retained", out, err)
 			}
-			var events int64
-			if err = r.admin.QueryRow(r.ctx, `SELECT count(*) FROM events`).Scan(&events); err != nil {
+			entry, err := r.s.Custody.StatPath(r.ctx, r.scope, cut)
+			if err != nil {
 				t.Fatal(err)
 			}
+			before := snapshotReceiverReads(t, r)
 			if _, err = s.Work(f.ctx, f.scope, d.ID); !errors.Is(err, store.ErrState) {
 				t.Fatal("uncertain payload automatically retried", err)
 			}
@@ -247,10 +390,7 @@ func TestGovernedFTPSLostActualCompletionNeverResendsAndReconcilesReadOnly(t *te
 					t.Fatal("readback invented lost reply")
 				}
 			}
-			var after int64
-			if err = r.admin.QueryRow(r.ctx, `SELECT count(*) FROM events`).Scan(&after); err != nil || after != events {
-				t.Fatal("recovery mutated receiver", events, after, err)
-			}
+			requireOnlyReceiverReadAudit(t, r, before, snapshotReceiverReads(t, r), entry.FileID, phase)
 		})
 	}
 }

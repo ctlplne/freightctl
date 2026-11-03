@@ -2,6 +2,8 @@ package delivery
 
 import (
 	"encoding/json"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -10,7 +12,8 @@ import (
 )
 
 func contractDefinition() Definition {
-	return Definition{Schema: 2, Source: store.File{ID: "00000000-0000-0000-0000-000000000001", Size: 3, SHA256: secure.Digest([]byte("abc"))}, Directory: "/inbox", Filename: "payroll.csv", FTPS: &FTPSDefinition{Destination: secure.FTPSDestination{Address: "127.0.0.1:990", ServerName: "localhost", Mode: "implicit", User: "receiver", CAFile: "/private/receiver-ca.pem", CASHA256: strings.Repeat("a", 64), PasswordFile: "/private/receiver-password", PasswordSHA256: strings.Repeat("b", 64)}, StagingDirectory: "/private-stage", ReceiverContract: store.FTPSReceiverContract{Schema: 1, DocumentSHA256: strings.Repeat("c", 64), StagingVisibility: "receiver-private", Rename: "may-replace", Duplicates: "receiver-deduplicates-delivery-id", Receipt: "exact-readback"}}}
+	refs := filepath.Join(os.TempDir(), "freightctl-contract-fixture")
+	return Definition{Schema: 2, Source: store.File{ID: "00000000-0000-0000-0000-000000000001", Size: 3, SHA256: secure.Digest([]byte("abc"))}, Directory: "/inbox", Filename: "payroll.csv", FTPS: &FTPSDefinition{Destination: secure.FTPSDestination{Address: "127.0.0.1:990", ServerName: "localhost", Mode: "implicit", User: "receiver", CAFile: filepath.Join(refs, "receiver-ca.pem"), CASHA256: strings.Repeat("a", 64), PasswordFile: filepath.Join(refs, "receiver-password"), PasswordSHA256: strings.Repeat("b", 64)}, StagingDirectory: "/private-stage", ReceiverContract: store.FTPSReceiverContract{Schema: 1, DocumentSHA256: strings.Repeat("c", 64), StagingVisibility: "receiver-private", Rename: "may-replace", Duplicates: "receiver-deduplicates-delivery-id", Receipt: "exact-readback"}}}
 }
 
 func TestFTPSDefinitionFreezesDistinctReceiverContractAndRefusesMixedAuthority(t *testing.T) {
@@ -22,6 +25,7 @@ func TestFTPSDefinitionFreezesDistinctReceiverContractAndRefusesMixedAuthority(t
 	for name, change := range map[string]func(*Definition){
 		"legacy schema":               func(d *Definition) { d.Schema = 1 },
 		"mixed SSH":                   func(d *Definition) { d.Destination.Address = "127.0.0.1:22" },
+		"frozen filename escape":      func(d *Definition) { d.Filename = "../../outside.csv" },
 		"unqualified encryption":      func(d *Definition) { d.Encryption = &store.EncryptionPolicy{} },
 		"unqualified workflow":        func(d *Definition) { d.Binding = &store.ExecutionBinding{} },
 		"visible staging":             func(d *Definition) { d.FTPS.StagingDirectory = "/inbox/stage" },

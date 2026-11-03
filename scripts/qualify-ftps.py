@@ -19,6 +19,7 @@ import subprocess
 import time
 from urllib.parse import parse_qsl, urlsplit, urlunsplit
 import uuid
+from metadata_contract import RETAINED_PROFILE, profile, require_snapshot
 
 from ftps_contract import CLI_PAYLOAD, HOSTILE_CASE_COUNT, LFTP_CASES, LIMITED_PARENT_TESTS, NATIVE_PARENT_TESTS
 import ftps_cli_governance as governance
@@ -48,6 +49,7 @@ def main():
         raise RuntimeError("qualification requires assertions; remove Python optimization")
     parser = argparse.ArgumentParser()
     parser.add_argument("--postgres-container-id", required=True)
+    parser.add_argument("--retained-schema", type=int, default=RETAINED_PROFILE["schema"], help="explicit observed resource schema;does not authorize an upgrade")
     parser.add_argument("--native-client-only", action="store_true", help="exercise the native TLS1.3 client stand-in; stock curl stays unqualified")
     parser.add_argument("--browser", action="store_true", help="also qualify reviewed HTTPS browser governance against live FTPS writers and intake")
     parser.add_argument("--tickets", action="store_true", help="also qualify public CLI/HTTPS ticket recovery across an exact task-owned FTPS SIGKILL")
@@ -59,7 +61,8 @@ def main():
         raise RuntimeError("use the exact task-owned container ID")
     os.chdir(ROOT)
     os.umask(0o077)
-    observer = metadata.Exercise(args.postgres_container_id, 35)
+    profile(args.retained_schema)
+    observer = metadata.Exercise(args.postgres_container_id, args.retained_schema)
     # Reuse bounded native SQL observations, not the backup/upgrade journey.
     private = ROOT / ".private" / ("ftps-" + uuid.uuid4().hex)
     observer.private.rename(private)
@@ -74,6 +77,7 @@ def main():
                 "inference_performed": False, "scanner_engine_started": False,
                 "full_foundation_aggregate_executed": False, "full_journeys_qualified": False}
     manifest["native_client_only"] = args.native_client_only
+    manifest["retained_schema"] = args.retained_schema
     manifest["browser_requested"] = args.browser
     manifest["tickets_requested"] = args.tickets
     manifest["browser_tickets_requested"] = args.browser_tickets
@@ -196,6 +200,7 @@ def main():
             raise RuntimeError("another client uses the retained resource")
         before = observer.snapshot("retained-before")
         manifest["retained_before"] = before
+        require_snapshot(ROOT, before, args.retained_schema)
         observer.sql("create-exact-test-database", "CREATE DATABASE " + database + " TEMPLATE template0;")
         created = True
         for name in ("pg-admin.dsn", "pg-runtime.dsn"):

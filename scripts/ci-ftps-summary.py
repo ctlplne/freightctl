@@ -7,6 +7,7 @@ import os
 from pathlib import Path
 import re
 import subprocess
+from metadata_contract import require_snapshot
 
 from ftps_contract import CLI_PAYLOAD, LFTP_CASES, LFTP_DOWNLOADS, LFTP_FAILURE_CODES, NATIVE_PARENT_TESTS, NATIVE_TESTS
 import ftps_cli_governance as governance
@@ -75,6 +76,21 @@ def failure_diagnostics(root, result, commit):
                     if isinstance(ids,list) and 0 < len(ids) <= 100 and all(isinstance(i,str) and i in browser_evidence.ACCESSIBILITY_RULES for i in ids):
                         accessibility.append({"command":name,"audit":probe["audit"],"rule_ids":sorted(set(ids))})
         outcome = {"failed_native_tests": sorted(failed), "lftp_failures": [{"stage": s, "code": c} for s, c in sorted(categories)], "failed_cli_commands": sorted(cli_failures)}
+        snapshot = manifest.get("retained_before")
+        if isinstance(snapshot,dict):
+            def count(value):
+                return value if type(value) is int and 0 <= value <= 128 else None
+            version=count(manifest.get("retained_schema"))
+            matches=False
+            try:
+                require_snapshot(root,snapshot,version)
+                matches=True
+            except (ValueError,OSError):
+                pass
+            ledger=snapshot.get("migration_ledger")
+            tables=snapshot.get("tables")
+            if not matches:
+                outcome["postgres_profile"]={"declared_schema":version,"migration_records":count(len(ledger)) if isinstance(ledger,list) else None,"metadata_tables":count(len(tables)) if isinstance(tables,list) else None,"forced_rls_tables":count(snapshot.get("forced_rls_tables")),"matches_exact_source_profile":False}
         if browser_failures:
             outcome["browser_failures"] = browser_failures
         if accessibility:
@@ -117,8 +133,7 @@ def summarize(root, result, commit, require_browser=False, require_tickets=False
     if manifest.get("cleanup_failures") != [] or manifest.get("retained_before") != manifest.get("retained_after"):
         raise ValueError("FTPS cleanup or retained state differs")
     before = manifest.get("retained_before")
-    if not isinstance(before, dict) or before.get("runtime_role_safe") is not True or len(before.get("migration_ledger", [])) != 35 or before.get("forced_rls_tables") != 63 or len(before.get("tables", [])) != 64:
-        raise ValueError("FTPS PostgreSQL security profile differs")
+    require_snapshot(root, before, manifest.get("retained_schema"))
     tests = manifest.get("native_tests")
     required = NATIVE_PARENT_TESTS
     if not isinstance(tests, dict) or tests.get("required") != required or tests.get("pass_records") != len(NATIVE_TESTS) or tests.get("failed_records") != 0 or tests.get("skipped_records") != 0:

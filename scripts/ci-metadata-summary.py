@@ -6,9 +6,9 @@ import json
 from pathlib import Path
 import re
 import subprocess
+from metadata_contract import CURRENT_PROFILE as PROFILE, migration_ledger
 
 ROOT = Path(__file__).resolve().parents[1]
-PROFILE = {"schema": 36, "metadata_tables": 64, "forced_rls_tables": 63}
 BOUND = 8 << 20
 
 
@@ -39,9 +39,7 @@ def summarize(result, manifest, data):
     require(isinstance(before, dict) and isinstance(restored, dict), "metadata_snapshot_missing")
     require(before.get("runtime_role_safe") is True and restored.get("runtime_role_safe") is True, "metadata_runtime_role_unsafe")
     ledger = before.get("migration_ledger")
-    source = ROOT / "internal/store"
-    migrations = [source / "schema.sql"] + sorted(source.glob("[0-9][0-9][0-9]_*.sql"))
-    expected = [{"version": i + 1, "digest": hashlib.sha256(p.read_bytes()).hexdigest()} for i, p in enumerate(migrations)]
+    expected = migration_ledger(ROOT, PROFILE["schema"])
     require(len(expected) == PROFILE["schema"] and ledger == expected and ledger == restored.get("migration_ledger"), "metadata_schema_profile_mismatch")
     tables = before.get("tables")
     require(isinstance(tables, list) and len(tables) == PROFILE["metadata_tables"] and tables == restored.get("tables"), "metadata_table_profile_or_restore_mismatch")

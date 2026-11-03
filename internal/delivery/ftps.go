@@ -46,7 +46,7 @@ func validProtocolDefinition(d *Definition) bool {
 		return d.FTPS == nil
 	}
 	ssh := d.Destination
-	return d.Schema == 2 && d.Encryption == nil && d.Binding == nil && d.Transfer == nil && ssh.Address == "" && ssh.User == "" && len(ssh.Host.Wire) == 0 && ssh.Host.Fingerprint == "" && ssh.KeyFile == "" && ssh.KeyFingerprint == "" && validFTPSDefinition(d.FTPS, d.Directory)
+	return d.Schema == 2 && namePattern.MatchString(d.Filename) && d.Encryption == nil && d.Binding == nil && d.Transfer == nil && ssh.Address == "" && ssh.User == "" && len(ssh.Host.Wire) == 0 && ssh.Host.Fingerprint == "" && ssh.KeyFile == "" && ssh.KeyFingerprint == "" && validFTPSDefinition(d.FTPS, d.Directory)
 }
 
 func ftpsStagingPath(d *store.Delivery, spec *Definition) string {

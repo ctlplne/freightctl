@@ -25,6 +25,8 @@ on:
       - 'scripts/lftp-probe.py'
       - 'scripts/install-ftps-clients.sh'
       - 'scripts/qualify-ftps.py'
+      - 'scripts/metadata_contract.py'
+      - 'scripts/ci-metadata-summary.py'
       - 'scripts/qualify-retained-metadata.py'
       - 'scripts/ci-ftps-summary.py'
       - 'scripts/test-ci-ftps-summary.py'
@@ -54,6 +56,8 @@ on:
       - 'scripts/lftp-probe.py'
       - 'scripts/install-ftps-clients.sh'
       - 'scripts/qualify-ftps.py'
+      - 'scripts/metadata_contract.py'
+      - 'scripts/ci-metadata-summary.py'
       - 'scripts/qualify-retained-metadata.py'
       - 'scripts/ci-ftps-summary.py'
       - 'scripts/test-ci-ftps-summary.py'
@@ -116,6 +120,6 @@ jobs:
           umask 077
           task_pg_id=$(docker inspect --format '{{.Id}}' freightctl-postgres-v1)
           qualification_status=0
-          python3 scripts/qualify-ftps.py --tickets --postgres-container-id "$task_pg_id" > .private/ftps-result.json || qualification_status=$?
+          python3 scripts/qualify-ftps.py --retained-schema "$(python3 scripts/ci-metadata-summary.py --print-schema-version)" --tickets --postgres-container-id "$task_pg_id" > .private/ftps-result.json || qualification_status=$?
           python3 scripts/ci-ftps-summary.py --require-tickets --result .private/ftps-result.json
           exit "$qualification_status"

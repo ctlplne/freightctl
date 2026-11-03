@@ -65,7 +65,7 @@
     }
   },
   "native_ci": {
-    "state": "At027d130,both auditedARMstock profiles pass21/23commands with8private audit records per mode and native filter unavailable. X86systemTCP_ULPandsoftwarepassiveSO_REUSEADDRremainred. ActiveFTP stays disabled;the independent passive-only refusal passes36localcontracts and awaits fresh native consumer replay.",
+    "state": "At5993f78,the strengthened passive-only reporter passes both auditedARMstock profiles and allfive stock/browser/core gates. Bothx86vendor profiles retain distinct nativefilter failures. No governed or whole sending qualification.",
     "workflow": ".github/workflows/ftps-client.yml",
     "profile": "Actual native Ubuntu24 ARM/x86,stock vsftpd3.0.5-0ubuntu3.1/OpenSSL/PAM,two TLS1.3 listeners,strict reuse/read EOF/write shutdown,chroot,independent six-file receiver observation and exact user/PAM/process cleanup",
     "receiver_budget": "one inherited CPU affinity;256MiB per-process address-space and60CPU-second per-process limits;4sessions per listener;not a measured aggregate resident-memory claim",
@@ -986,6 +986,31 @@
       "observation": "Audited x86 softwareTLS gets through authentication and both exactTLS1.2 refusals,but firstSTORfails. Diagnostic reportsSIGSYS aftersetsockopt(level1,option2,size4),SO_REUSEADDR.",
       "source_cause": "In exact upstream3.0.5 seccompsandbox.c,the passive broker permitsSO_REUSEADDR only inside tunable_port_enable. privops.c calls it unconditionally for passive listeners. This is inconsistent with the required passive-only configuration.",
       "policy": "Keepport_enableNO,pasv_enableYES and the kernel filter. Do not enableactiveFTP,patchout isolation or claim this stock profile passed. The independent reporter now refuses an active-enabled substitution. Qualify a supported independentx86receiver separately;governed workflow work can use explicitly identified actual/stand-in receivers without claiming this vendor combination."
+    },
+    "passive_scope_original_replay": {
+      "candidate": "5993f78fde4a626b722982162f2508b73e1175cd",
+      "run_id": 41622069862,
+      "arm_system_job": 125870008775,
+      "arm_system_manifest_sha256": "e37c6115d474b8eab16aeb673c70e429f29392d67a50d048eac98fa772bdfed2",
+      "arm_software_job": 125870008624,
+      "arm_software_manifest_sha256": "a04213027c0330118ec71da8ff93d07bbf73cf1a7df97be405f8808dd0eaddfc",
+      "arm_software_build_manifest_sha256": "669a44078b6fdae718f0aed64af8c0dff505961d84d215433dbea91a0e04a525",
+      "arm_profiles": "bothpass original21/23commands,three native records,six file readbacks,eight audits per mode,nativeARMfilter unavailable",
+      "x86_system_job": 125870008880,
+      "x86_system_manifest_sha256": "5d31b9703aa90f1dc9b01f5a3d75b1e3481131cfda969a36c13ce5897c8019f0",
+      "x86_software_job": 125870008798,
+      "x86_software_manifest_sha256": "ac9634e16893bbc3023e232bd8a2966f9c178cfe2aba4511bb09632c374a5525",
+      "x86_profiles": "bothred;systemTCP_ULP andsoftwarepassiveSO_REUSEADDR conflicts remain;activeFTP staysdisabled",
+      "stock_run_id": 41622069923,
+      "all_five_stock_browser_jobs": "success",
+      "core_run_id": 41622069848,
+      "core_job_id": 125870009388,
+      "core_conclusion": "success",
+      "archive": {
+        "manifest_reference": ".private/freightctl-passive-native-5993f78-OZUaZA/manifest.json",
+        "manifest_sha256": "739084a3d38ef20c61db1e9199e8ef0116c6e04ee6530a747606950b7976f3c8",
+        "original_job_logs": 10
+      }
     }
   },
   "next_integration": "docs/protocols/ftps-sending.md",

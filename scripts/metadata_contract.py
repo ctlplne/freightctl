@@ -1,0 +1,35 @@
+"""Explicit fresh-CI and retained metadata profiles; no database lifecycle."""
+import hashlib
+
+CURRENT_PROFILE = {"schema": 36, "metadata_tables": 64, "forced_rls_tables": 63}
+RETAINED_PROFILE = {"schema": 35, "metadata_tables": 64, "forced_rls_tables": 63}
+
+
+def profile(version):
+    if type(version) is not int:
+        raise ValueError("metadata schema profile differs")
+    for value in (CURRENT_PROFILE, RETAINED_PROFILE):
+        if version == value["schema"]:
+            return value
+    raise ValueError("metadata schema profile differs")
+
+
+def migration_ledger(root, version):
+    profile(version)
+    source = root / "internal/store"
+    files = [source / "schema.sql"] + sorted(source.glob("[0-9][0-9][0-9]_*.sql"))
+    if len(files) != CURRENT_PROFILE["schema"] or any(p.is_symlink() or not p.is_file() for p in files):
+        raise ValueError("metadata migration source profile differs")
+    return [{"version": i + 1, "digest": hashlib.sha256(p.read_bytes()).hexdigest()}
+            for i, p in enumerate(files[:version])]
+
+
+def require_snapshot(root, snapshot, version):
+    expected = profile(version)
+    if (not isinstance(snapshot, dict) or snapshot.get("runtime_role_safe") is not True
+            or snapshot.get("migration_ledger") != migration_ledger(root, version)
+            or type(snapshot.get("forced_rls_tables")) is not int
+            or snapshot["forced_rls_tables"] != expected["forced_rls_tables"]
+            or not isinstance(snapshot.get("tables"), list)
+            or len(snapshot["tables"]) != expected["metadata_tables"]):
+        raise ValueError("metadata schema/security profile differs")
