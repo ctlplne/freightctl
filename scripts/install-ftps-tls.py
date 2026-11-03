@@ -18,7 +18,7 @@ SHA256="603f5602e2eef00d77fbd429d34dcd5822bb301757a1bc9cdb24c670f1eb859a"
 URL="https://github.com/openssl/openssl/releases/download/openssl-3.5.9/openssl-3.5.9.tar.gz"
 FILES=("prefix/lib/libssl.so.3","prefix/lib/libcrypto.so.3","prefix/bin/openssl","prefix/include/openssl/configuration.h","prefix/LICENSE.txt")
 RECIPES=("25-test_verify.t","80-test_ssl_new.t","90-test_sslapi.t")
-HARNESS_FILES=("util/wrap.pl","util/shlib_wrap.sh","apps/openssl","test/sslapitest","test/ssl_test","test/fips_version_test")
+HARNESS_FILES=("util/wrap.pl","util/shlib_wrap.sh","apps/openssl","test/sslapitest","test/ssl_test","test/fips_version_test","test/ssl_handshake_rtt_test")
 STAGE=r'''
 import json,pathlib,shutil,sys
 source,prefix=map(pathlib.Path,sys.argv[1:])
@@ -105,7 +105,7 @@ def main():
         phase="build"
         # OpenSSL's build_sw/build_tests include every test executable. Build
         # the exact tools needed by the same three complete original recipes.
-        command("build",["make","-j1","build_generated","build_libs","build_modules","util/wrap.pl","util/shlib_wrap.sh","apps/openssl","test/sslapitest","test/ssl_test","test/fips_version_test","link-utils"],360,source)
+        command("build",["make","-j1","build_generated","build_libs","build_modules","util/wrap.pl","util/shlib_wrap.sh","apps/openssl","test/sslapitest","test/ssl_test","test/fips_version_test","test/ssl_handshake_rtt_test","link-utils"],360,source)
         phase="selected-upstream-tests"
         output=command("selected-upstream-tests",["make","-j1","run_tests","TESTS=test_verify test_ssl_new test_sslapi","VERBOSE=1"],180,source)
         if "Result: PASS" not in output or any(name not in output for name in RECIPES):raise RuntimeError("selected native upstream recipes incomplete")

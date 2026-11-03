@@ -55,7 +55,7 @@
     }
   },
   "native_ci": {
-    "state": "Complete original system ARM receiver profile passes;system x86 remains red at TCP_ULP/seccomp. Both separate native library builds now finish within360seconds but original upstream test invocation exits2;wrapper prerequisite and bounded diagnostics await native replay.",
+    "state": "Original system ARM passes and system x86 remains red;both source-library profiles compile and reach all recipes but retain1not-ok record. Missing final recipe executable added;native replay pending.",
     "workflow": ".github/workflows/ftps-client.yml",
     "profile": "Actual native Ubuntu24 ARM/x86,stock vsftpd3.0.5-0ubuntu3.1/OpenSSL/PAM,two TLS1.3 listeners,strict reuse/read EOF/write shutdown,chroot,independent six-file receiver observation and exact user/PAM/process cleanup",
     "receiver_budget": "one inherited CPU affinity;256MiB per-process address-space and60CPU-second per-process limits;4sessions per listener;not a measured aggregate resident-memory claim",
@@ -362,6 +362,92 @@
       ],
       "runtime_state": "Pending original native replay;the missing shared-library wrapper is source-observed,but causal resolution is not claimed before that replay.",
       "limits": "Same pinned source,default features,three complete original recipes,oneCPU,360second build/180second tests/20minute job and unchanged stock protocol/sandbox gates."
+    },
+    "latest_missing_recipe_tool": {
+      "candidate": "d55ddabb879269d8cf7541377aa1487c6bd1c79c",
+      "run_id": 41613663081,
+      "original_outcomes": {
+        "125841592844": {
+          "state": "failed",
+          "profile": "openssl-3.5.9-no-ktls",
+          "architecture": "x86_64",
+          "manifest_sha256": "27d64071c1df34c1e70578bee424d348c29320fc8f100408a356527ee8f84102",
+          "source_sha256": "603f5602e2eef00d77fbd429d34dcd5822bb301757a1bc9cdb24c670f1eb859a",
+          "upstream_skip_lines": null,
+          "failure_stage": "selected-upstream-tests",
+          "failed_commands": [
+            {
+              "name": "selected-upstream-tests",
+              "exit_code": 2
+            }
+          ],
+          "diagnostics": {
+            "harness_files": {
+              "util/wrap.pl": true,
+              "util/shlib_wrap.sh": true,
+              "apps/openssl": true,
+              "test/sslapitest": true,
+              "test/ssl_test": true,
+              "test/fips_version_test": true
+            },
+            "recipes_seen": [
+              "25-test_verify.t",
+              "80-test_ssl_new.t",
+              "90-test_sslapi.t"
+            ],
+            "not_ok_records": 1,
+            "categories": [
+              "missing-file",
+              "tap-failure"
+            ]
+          },
+          "scope": "native receiver dependency build and three selected upstream recipes;not protocol,system-library or FIPS qualification"
+        },
+        "125841592969": {
+          "state": "failed",
+          "profile": "openssl-3.5.9-no-ktls",
+          "architecture": "aarch64",
+          "manifest_sha256": "da0c19eacb99e2da69e9f5017665f23e95aff2cf012e9ae49dead9dcbf0fb52f",
+          "source_sha256": "603f5602e2eef00d77fbd429d34dcd5822bb301757a1bc9cdb24c670f1eb859a",
+          "upstream_skip_lines": null,
+          "failure_stage": "selected-upstream-tests",
+          "failed_commands": [
+            {
+              "name": "selected-upstream-tests",
+              "exit_code": 2
+            }
+          ],
+          "diagnostics": {
+            "harness_files": {
+              "util/wrap.pl": true,
+              "util/shlib_wrap.sh": true,
+              "apps/openssl": true,
+              "test/sslapitest": true,
+              "test/ssl_test": true,
+              "test/fips_version_test": true
+            },
+            "recipes_seen": [
+              "25-test_verify.t",
+              "80-test_ssl_new.t",
+              "90-test_sslapi.t"
+            ],
+            "not_ok_records": 1,
+            "categories": [
+              "missing-file",
+              "tap-failure"
+            ]
+          },
+          "scope": "native receiver dependency build and three selected upstream recipes;not protocol,system-library or FIPS qualification"
+        }
+      },
+      "archive": {
+        "manifest_reference": ".private/freightctl-ftps-final-tool-first-d55ddab/manifest.json",
+        "manifest_sha256": "8c04c5ad941db09c0bb9306aa3cf6b75f14aa14df1425d7530502aa5a4cefab8"
+      },
+      "observed": "Both native original recipe runs now have1not-ok record after both wrappers are built;all three recipes are encountered.",
+      "source_observation": "The final line of original90-test_sslapi.t calls ssl_handshake_rtt_test. That executable was omitted from the selected build targets. Include the unchanged upstream tool instead of skipping the last assertion.",
+      "primary_source": "https://raw.githubusercontent.com/openssl/openssl/openssl-3.5.9/test/recipes/90-test_sslapi.t",
+      "repair_state": "pending actual native replay with every original assertion/default feature/deadline unchanged"
     }
   },
   "next_integration": "docs/protocols/ftps-sending.md",
