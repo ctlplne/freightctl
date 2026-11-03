@@ -47,22 +47,29 @@ def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def receiver_directories():
+    # chmod after creation is deliberate:the private077 umask must not make
+    # approved non-owner traversal impossible. Only the payload inbox is0700.
+    estate=Path(tempfile.mkdtemp(prefix="freightctl-ftps-receiver-"));estate.chmod(0o755)
+    home=estate/"home";home.mkdir(mode=0o755);home.chmod(0o755)
+    inbox=home/"inbox";inbox.mkdir(mode=0o700)
+    empty=estate/"empty";empty.mkdir(mode=0o755);empty.chmod(0o755)
+    return estate,home,inbox,empty
+
+
 def main():
     if not __debug__ or os.environ.get("GITHUB_ACTIONS")!="true" or platform.system()!="Linux" or Path(os.environ.get("GITHUB_WORKSPACE",".")).resolve()!=ROOT:
         raise RuntimeError("stock receiver requires its disposable native GitHub runner")
     if platform.machine() not in {"x86_64","aarch64"}:raise RuntimeError("unsupported native receiver architecture")
     os.chdir(ROOT);os.umask(0o077)
     private=ROOT/".private"/("ftps-client-"+uuid.uuid4().hex);private.mkdir(mode=0o700)
-    estate=Path(tempfile.mkdtemp(prefix="freightctl-ftps-receiver-"));estate.chmod(0o755)
-    home=estate/"home";home.mkdir(mode=0o755)
-    inbox=home/"inbox";inbox.mkdir(mode=0o700)
-    empty=estate/"empty";empty.mkdir(mode=0o755)
+    estate,home,inbox,empty=receiver_directories()
     user="freightctl_ftp_"+uuid.uuid4().hex[:10]
     pam_name="freightctl_ftp_"+uuid.uuid4().hex[:12]
     pam=Path("/etc/pam.d")/pam_name
     receiver=ROOT/".cache/freightctl-vsftpd-3.0.5/root/usr/sbin/vsftpd"
     binary=private/"freightctl"
-    steps=[];processes={};cleanup=[];created_user=False;created_pam=False
+    steps=[];processes={};cleanup=[];probe_failures=[];created_user=False;created_pam=False
     env=dict(os.environ,GOMAXPROCS="1",GOMEMLIMIT="192MiB")
     traced=os.environ.get("FREIGHTCTL_FTPS_TRACE")=="1"
     names=sorted(set(subprocess.check_output(["git","ls-files","--cached","--others","--exclude-standard","-z"]).decode().split("\0"))-{ "" })
@@ -109,11 +116,9 @@ def main():
         for implicit in (False,True):
             mode="implicit" if implicit else "explicit"
             with socket.socket() as probe:probe.bind(("127.0.0.1",0));port=probe.getsockname()[1]
-            config={"listen":"YES","listen_ipv6":"NO","listen_address":"127.0.0.1","listen_port":str(port),"background":"NO","anonymous_enable":"NO","local_enable":"YES","write_enable":"YES","chroot_local_user":"YES","allow_writeable_chroot":"NO","local_root":str(home),"secure_chroot_dir":str(empty),"pam_service_name":pam_name,"userlist_enable":"YES","userlist_deny":"NO","userlist_file":str(users),"ssl_enable":"YES","ssl_tlsv1":"NO","ssl_tlsv1_1":"NO","ssl_tlsv1_2":"NO","ssl_tlsv1_3":"YES","ssl_sslv2":"NO","ssl_sslv3":"NO","ssl_request_cert":"NO","force_local_logins_ssl":"YES","force_local_data_ssl":"YES","require_ssl_reuse":"YES","strict_ssl_read_eof":"YES","strict_ssl_write_shutdown":"YES","rsa_cert_file":str(cert),"rsa_private_key_file":str(key),"implicit_ssl":"YES" if implicit else "NO","pasv_enable":"YES","port_enable":"NO","pasv_address":"127.0.0.1","pasv_min_port":"40000","pasv_max_port":"40100","max_clients":"4","max_per_ip":"4","idle_session_timeout":"30","data_connection_timeout":"15","accept_timeout":"5","connect_timeout":"5","local_umask":"077","file_open_mode":"0600","seccomp_sandbox":"YES","log_ftp_protocol":"NO","xferlog_enable":"NO"}
-            # This pinned binary lacks the later per-version boolean options.
-            # OpenSSL's private system_default profile enforces TLS1.3 instead;
-            # independent real TLS1.2 probes below must observe alert70.
-            for unsupported in ("ssl_tlsv1_1","ssl_tlsv1_2","ssl_tlsv1_3"):del config[unsupported]
+            config={"listen":"YES","listen_ipv6":"NO","listen_address":"127.0.0.1","listen_port":str(port),"background":"NO","anonymous_enable":"NO","local_enable":"YES","write_enable":"YES","chroot_local_user":"YES","allow_writeable_chroot":"NO","local_root":str(home),"secure_chroot_dir":str(empty),"pam_service_name":pam_name,"userlist_enable":"YES","userlist_deny":"NO","userlist_file":str(users),"ssl_enable":"YES","ssl_tlsv1":"NO","ssl_tlsv11":"NO","ssl_tlsv12":"NO","ssl_tlsv13":"YES","ssl_sslv2":"NO","ssl_sslv3":"NO","ssl_request_cert":"NO","force_local_logins_ssl":"YES","force_local_data_ssl":"YES","require_ssl_reuse":"YES","strict_ssl_read_eof":"YES","strict_ssl_write_shutdown":"YES","rsa_cert_file":str(cert),"rsa_private_key_file":str(key),"implicit_ssl":"YES" if implicit else "NO","pasv_enable":"YES","port_enable":"NO","pasv_address":"127.0.0.1","pasv_min_port":"40000","pasv_max_port":"40100","max_clients":"4","max_per_ip":"4","idle_session_timeout":"30","data_connection_timeout":"15","accept_timeout":"5","connect_timeout":"5","local_umask":"077","file_open_mode":"0600","seccomp_sandbox":"YES","log_ftp_protocol":"NO","xferlog_enable":"NO"}
+            # The actual parser uses ssl_tlsv11/12/13 (without a second
+            # underscore). Keep the independent OpenSSL floor and alert probes.
             path=private/(mode+".conf");path.write_text("".join(k+"="+v+"\n" for k,v in config.items()))
             # vsftpd requires the launching uid to own its config. The containing
             # private directory stays0700;0644 lets the independent reporter read.
@@ -136,9 +141,14 @@ def main():
             references[mode]={"address":"127.0.0.1:"+str(port),"server_name":"localhost","mode":mode,"user":user,"ca_reference":str(cert),"ca_sha256":digest(cert),"password_reference":str(token),"password_sha256":digest(token)}
             probe=["openssl","s_client","-connect","127.0.0.1:"+str(port),"-servername","localhost","-verify_hostname","localhost","-verify_return_error","-CAfile",cert,"-tls1_2","-brief"]
             if not implicit:probe.extend(["-starttls","ftp"])
-            command(mode+"-refuse-tls12",probe,timeout=10,input_bytes=b"",expected_code=1)
-            refusal=(private/(mode+"-refuse-tls12.stderr")).read_bytes()
-            if b"alert protocol version" not in refusal or b"SSL alert number 70" not in refusal:raise RuntimeError(mode+" exact TLS1.2 refusal missing")
+            label=mode+"-refuse-tls12"
+            try:
+                command(label,probe,timeout=10,input_bytes=b"",expected_code=1)
+                refusal=(private/(label+".stderr")).read_bytes()
+                if b"alert protocol version" not in refusal or b"SSL alert number 70" not in refusal:probe_failures.append(label)
+            except RuntimeError:probe_failures.append(label)
+            # Keep the failed probe red while observing independent client and
+            # receiver byte gates. Passing transfers cannot erase this failure.
         reference=private/"receiver.json";reference.write_text(json.dumps(references));env["FREIGHTCTL_FTPS_RECEIVER_FILE"]=str(reference)
         native=command("native-stock-receiver",["sh","scripts/go.sh","test","-p","1","-tags=ftpspeer","-race","-count=1","-timeout=120s","-v","-run","^TestNativeStockReceiver$","./internal/ftpsclient"],150).decode()
         passed=re.findall(r"^\s*--- PASS: (\S+) \(",native,re.MULTILINE)
@@ -146,7 +156,7 @@ def main():
         observer_code="import pathlib,hashlib,json,sys;p=pathlib.Path(sys.argv[1]);data=b'account,amount,day\\n'+b'0001,1.01,2026-10-28\\n'*10000;out={};\nfor mode in ('explicit','implicit'):\n for suffix in ('final.csv','resume.csv','empty'):\n  name=mode+'-'+suffix;b=(p/name).read_bytes();expected=b'' if suffix=='empty' else data;assert b==expected;out[name]={'size':len(b),'sha256':hashlib.sha256(b).hexdigest()}\nprint(json.dumps(out))"
         observed=json.loads(command("independent-receiver-files",["sudo","python3","-c",observer_code,inbox]))
         if len(observed)!=6:raise RuntimeError("independent receiver file closure differs")
-        manifest["receiver_files"]=observed;manifest["native_pass_records"]=3;manifest["state"]="passed"
+        manifest["receiver_files"]=observed;manifest["native_pass_records"]=3;manifest["state"]="failed" if probe_failures else "passed"
     except Exception as error:
         manifest["failure"]=str(error)
     finally:
@@ -159,7 +169,7 @@ def main():
         if created_pam:
             try:command("remove-exact-pam",["sudo","rm","--",pam]);manifest["task_pam_removed"]=True
             except Exception:cleanup.append("task PAM retained")
-        manifest["cleanup_failures"]=cleanup;manifest["sources_unchanged"]=all(digest(ROOT/n)==sha for n,sha in sources.items());manifest["steps"]=steps
+        manifest["cleanup_failures"]=cleanup;manifest["probe_failures"]=probe_failures;manifest["sources_unchanged"]=all(digest(ROOT/n)==sha for n,sha in sources.items());manifest["steps"]=steps
         if traced:manifest["trace_sha256"]={mode:digest(private/(mode+"-receiver.trace")) for mode in ("explicit","implicit") if (private/(mode+"-receiver.trace")).exists()}
         if cleanup or not manifest["sources_unchanged"]:manifest["state"]="failed"
         if traced:manifest["state"]="diagnostic"

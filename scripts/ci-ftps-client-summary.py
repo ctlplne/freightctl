@@ -31,7 +31,7 @@ def summarize(root,result,commit):
     for name in ("inference_performed","scanner_started","postgres_started","domain_delivery_qualified","full_journeys_qualified"):
         if m.get(name) is not False:raise ValueError("receiver scope differs")
     if m.get("receiver_traced") is not False:raise ValueError("traced receiver cannot qualify the normal profile")
-    if m.get("cleanup_failures")!=[] or m.get("native_pass_records")!=3:raise ValueError("receiver execution incomplete")
+    if m.get("cleanup_failures")!=[] or m.get("probe_failures")!=[] or m.get("native_pass_records")!=3:raise ValueError("receiver execution incomplete")
     steps=m.get("steps")
     if not isinstance(steps,list) or {s.get("name") for s in steps}!=REQUIRED or len(steps)!=len(REQUIRED):raise ValueError("receiver command closure differs")
     for s in steps:
@@ -52,7 +52,7 @@ def summarize(root,result,commit):
         refusal=read(path.parent/(mode+"-refuse-tls12.stderr"))
         if b"alert protocol version" not in refusal or b"SSL alert number 70" not in refusal:raise ValueError("receiver original TLS1.2 refusal differs")
         config=dict(line.split("=",1) for line in read(path.parent/(mode+".conf")).decode().splitlines())
-        for name,value in {"listen_address":"127.0.0.1","ssl_enable":"YES","force_local_logins_ssl":"YES","force_local_data_ssl":"YES","require_ssl_reuse":"YES","strict_ssl_read_eof":"YES","strict_ssl_write_shutdown":"YES","seccomp_sandbox":"YES","chroot_local_user":"YES","anonymous_enable":"NO","implicit_ssl":"YES" if mode=="implicit" else "NO"}.items():
+        for name,value in {"listen_address":"127.0.0.1","ssl_enable":"YES","force_local_logins_ssl":"YES","force_local_data_ssl":"YES","require_ssl_reuse":"YES","strict_ssl_read_eof":"YES","strict_ssl_write_shutdown":"YES","ssl_tlsv11":"NO","ssl_tlsv12":"NO","ssl_tlsv13":"YES","seccomp_sandbox":"YES","chroot_local_user":"YES","anonymous_enable":"NO","implicit_ssl":"YES" if mode=="implicit" else "NO"}.items():
             if config.get(name)!=value:raise ValueError("receiver security profile differs")
     sources=m.get("source_sha256")
     if not isinstance(sources,dict) or not 1<=len(sources)<=10000:raise ValueError("receiver source closure missing")
@@ -79,9 +79,15 @@ def failure_diagnostics(root,result,commit):
         failures=[s["name"] for s in m.get("steps",[]) if s.get("name") in REQUIRED and s.get("exit_code")!=(1 if s["name"] in {"explicit-refuse-tls12","implicit-refuse-tls12"} else 0)]
         result={"failed_commands":sorted(set(failures)),"manifest_sha256":h["manifest_sha256"]}
         if m.get("receiver_traced") is True:result["receiver_traced"]=True
+        probes=m.get("probe_failures",[])
+        if isinstance(probes,list):
+            values=sorted({v for v in probes if isinstance(v,str) and v in {"explicit-refuse-tls12","implicit-refuse-tls12"}})
+            if values:result["failed_tls_probes"]=values
         if m.get("failure") in {"explicit receiver did not start","implicit receiver did not start"}:result["stage"]=m["failure"].split()[0]+"-receiver-start"
         if m.get("failure") in {"explicit exact TLS1.2 refusal missing","implicit exact TLS1.2 refusal missing"}:result["stage"]=m["failure"].split()[0]+"-tls12-refusal"
         native=original("native-stock-receiver","stdout").decode(errors="replace")
+        if "native-stock-receiver" in steps:
+            result["observed_native_pass_records"]=len(re.findall(r"^\s*--- PASS: TestNativeStockReceiver(?:/(?:explicit|implicit))? \(",native,re.MULTILINE))
         stages=re.findall(r"client_stock_test.go:\d+: stock (receiver connection|connection|store|size|independent readback|rename|renamed readback|prefix|resume|resumed integrity|zero-byte upload|zero-byte readback)\b",native)
         if stages:result["native_stages"]=sorted(set(stages))
         codes=re.findall(r"FTPS receiver status ([1-5][0-9]{2})\b",native)
@@ -122,13 +128,27 @@ def failure_diagnostics(root,result,commit):
             for number in re.findall(r"si_syscall=(0x[0-9a-f]{1,8}|[0-9]{1,8})\b",text):
                 value=int(number,16 if number.startswith("0x") else 10)
                 if value<4096:trace_categories.append(mode+":syscall-number:"+str(value))
-            last={}
+            last={};socket_options={}
             for line in text.splitlines():
                 match=re.match(r"\s*(?:\[pid\s+)?([0-9]{1,10})\]?\s+(?:\[\s*([0-9]{1,4})\]\s+)?",line)
                 if not match:continue
                 pid,number=match.groups()
                 if number is not None and int(number)<4096 and (pid in last or len(last)<256):last[pid]=int(number)
-                if "killed by SIGSYS" in line and pid in last:trace_categories.append(mode+":last-syscall-before-SIGSYS:"+str(last[pid]))
+                sock=re.search(r"\bsetsockopt\(([^()]*)\)",line)
+                if sock and len(socket_options)<256:
+                    args=[s.strip() for s in sock[1].split(",")]
+                    if len(args)==5 and all(re.fullmatch(r"(?:0x[0-9a-f]{1,16}|[0-9]{1,10})",args[i]) for i in (1,2,4)):
+                        values=[int(args[i],16 if args[i].startswith("0x") else 10) for i in (1,2,4)]
+                        if values[0]<4096 and values[1]<4096 and values[2]<=256:socket_options[pid]=values
+                if "killed by SIGSYS" in line and pid in last:
+                    trace_categories.append(mode+":last-syscall-before-SIGSYS:"+str(last[pid]))
+                    if pid in socket_options and last[pid] in {54,208}:
+                        level,option,size=socket_options[pid]
+                        trace_categories.append(mode+":last-setsockopt-before-SIGSYS:level="+str(level)+",option="+str(option)+",size="+str(size))
+                exited=re.search(r"\bexit_group\((0x[0-9a-f]{1,8}|[0-9]{1,8})\)",line)
+                if exited:
+                    code=int(exited[1],16 if exited[1].startswith("0x") else 10)
+                    if 0<code<=255:trace_categories.append(mode+":process-exit:"+str(code))
             for name,errno in re.findall(r"\b([a-z0-9_]{1,64})\([^\n]*\)\s*= -1 (EPERM|ENOMEM|EAGAIN|EACCES)\b",text):
                 if name in trace_syscalls:trace_categories.append(mode+":"+name+":"+errno)
         if trace_categories:result["trace_categories"]=sorted(set(trace_categories))[:32]

@@ -43,7 +43,7 @@
       "manifest_sha256": "441f321bf74402bf956f1bc040136e980ece606fd8a4f39fb8db58f1b2a17a8f",
       "state": "bind operation denied;original suite replay passed with loopback access"
     },
-    "latest_synthetic_evidence_tampering_contracts": 16,
+    "latest_synthetic_evidence_tampering_contracts": 19,
     "latest_contract_note": "Ten current bookkeeping/privacy refusal contracts pass;the48record native transport race archive remains unchanged. Runtime stock evidence remains failed at receiver startup.",
     "latest_original_replay": {
       "manifest_reference": ".private/freightctl-ftps-phase-replay-4dfa69d54eec47fea6aec7bbd8adb946/manifest.json",
@@ -137,7 +137,20 @@
       },
       "next_diagnostic": "Trace all syscall numbers with raw undecoded arguments;do not decode read/write buffers,argv strings or environment values. Emit bounded numeric syscall/last-call-before-SIGSYS observations only. Last-call metadata is not itself proof of the denied call.",
       "raw_trace_retention": "private on disposable runner;not uploaded;safe categories and original job-log/hash retained"
-    }
+    },
+    "latest_syscall_observation": {
+      "candidate": "b5cdcf701429d8725613defd3d1c545aac1eb7f1",
+      "run_id": 41600218363,
+      "arm_job_id": 125796921188,
+      "x86_job_id": 125796921506,
+      "x86": "untraced TLS probe fails;diagnostic observesSIGSYS after syscall54 (setsockopt);option not yet observed",
+      "arm": "untraced and diagnostic native profile fails password/reply;both TLS1.2 alert70 refusals pass",
+      "archive": {
+        "manifest_reference": ".private/freightctl-ftps-syscall-b5cdcf7/manifest.json",
+        "manifest_sha256": "56382db3238720497a5df3a36e83e4368d0907e2902a078ccc684e697efb04b4"
+      }
+    },
+    "independent_failed_gate_handling": "Preserve every failed TLS probe exit/body and failed manifest. Continue independent native Go/receiver-byte observations after the probe fails. A passing transfer cannot erase probe_failures;the independent reporter still requires both exact alert70 refusals and refuses any recorded probe failure. Diagnostic output reports observed native pass-record count only,not qualification."
   },
   "next_integration": "docs/protocols/ftps-sending.md",
   "inference_performed": false,
@@ -184,5 +197,20 @@
       "manifest_reference": ".private/freightctl-ftps-native-regressions-d5aca89/manifest.json",
       "manifest_sha256": "ef2c3498cc148d32ed7bd9856282bc0e34d5aee4dceea5aa9693b6320892a7a5"
     }
+  },
+  "fixture_directory_defect": {
+    "defect": "D136",
+    "observation": "Under actual umask077,mkdir(mode0755) creates0700. The receiver home/empty directories were owned by the runner and lacked FTP/nobody traversal. Native password-stage causality remains inference until repaired replay.",
+    "manifest_reference": ".private/freightctl-ftps-directory-first-dc59552a391e4a1e8f81ecc4760973fe/manifest.json",
+    "manifest_sha256": "dfd0f35a3090f02e52e2d1f88681dd434bdcdc31126ea7b44de3803be3542a72",
+    "repair": "Explicitly chmod only the intended traversable estate/home/empty directories0755 after creation. Keep the FTP-owned payload inbox0700 and private credentials/directories0600/0700. Actual filesystem test verifies nonowner traversal without write and private payload access."
+  },
+  "receiver_source_review": {
+    "upstream_url": "https://security.appspot.com/downloads/vsftpd-3.0.5.tar.gz",
+    "upstream_sha256": "26b602ae454b0ba6d99ef44a09b6b9e0dfa7f67228106736df1f278c70bc91d3",
+    "ubuntu_patches_url": "https://archive.ubuntu.com/ubuntu/pool/main/v/vsftpd/vsftpd_3.0.5-0ubuntu3.1.debian.tar.xz",
+    "ubuntu_patches_sha256": "55e8986f1cf79c775359cfb6ce38d550ae54c7f465a575389072a38a132449b5",
+    "finding": "The actual upstream parser spells ssl_tlsv11/ssl_tlsv12/ssl_tlsv13 without a second underscore. Current profile now requires those exact settings plus the existing private OpenSSL floor. Ubuntu patch0060 disables the daemon default seccomp setting;our stricter explicitYES stays required and unqualified until fixed without relaxing it.",
+    "scope": "Public source read only;no third-party source executed or copied into product"
   }
 }

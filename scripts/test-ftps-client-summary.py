@@ -6,9 +6,13 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+import os
+import shutil
 
 spec=importlib.util.spec_from_file_location("summary",Path(__file__).with_name("ci-ftps-client-summary.py"))
 summary=importlib.util.module_from_spec(spec);spec.loader.exec_module(summary)
+spec=importlib.util.spec_from_file_location("qualifier",Path(__file__).with_name("qualify-ftps-client.py"))
+qualifier=importlib.util.module_from_spec(spec);spec.loader.exec_module(qualifier)
 
 
 class ReceiverEvidence(unittest.TestCase):
@@ -18,7 +22,7 @@ class ReceiverEvidence(unittest.TestCase):
         self.directory=self.root/".private"/("ftps-client-"+"a"*32);self.directory.mkdir(parents=True)
         self.result=self.root/"result.json";self.manifest=self.directory/"manifest.json"
         (self.root/"source.go").write_bytes(b"synthetic source")
-        self.m={"kind":"native-ftps-client-stock-receiver","state":"passed","starting_commit":"b"*40,"architecture":"aarch64","sources_unchanged":True,"task_user_removed":True,"task_pam_removed":True,"cleanup_failures":[],"native_pass_records":3,"receiver_traced":False,"source_sha256":{"source.go":self.sha(b"synthetic source")},"steps":[]}
+        self.m={"kind":"native-ftps-client-stock-receiver","state":"passed","starting_commit":"b"*40,"architecture":"aarch64","sources_unchanged":True,"task_user_removed":True,"task_pam_removed":True,"cleanup_failures":[],"probe_failures":[],"native_pass_records":3,"receiver_traced":False,"source_sha256":{"source.go":self.sha(b"synthetic source")},"steps":[]}
         for name in ("inference_performed","scanner_started","postgres_started","domain_delivery_qualified","full_journeys_qualified"):self.m[name]=False
         self.files={mode+"-"+suffix:{"size":len(b),"sha256":self.sha(b)} for mode in ("explicit","implicit") for suffix,b in (("final.csv",summary.PAYLOAD),("resume.csv",summary.PAYLOAD),("empty",b""))}
         self.m["receiver_files"]=self.files
@@ -33,7 +37,7 @@ class ReceiverEvidence(unittest.TestCase):
                 next(s for s in self.m["steps"] if s["name"]==name)["exit_code"]=1
         (self.directory/"openssl.conf").write_bytes(summary.OPENSSL_PROFILE)
         for mode in ("explicit","implicit"):
-            config={"listen_address":"127.0.0.1","ssl_enable":"YES","force_local_logins_ssl":"YES","force_local_data_ssl":"YES","require_ssl_reuse":"YES","strict_ssl_read_eof":"YES","strict_ssl_write_shutdown":"YES","ssl_tlsv1_2":"NO","ssl_tlsv1_3":"YES","seccomp_sandbox":"YES","chroot_local_user":"YES","anonymous_enable":"NO","implicit_ssl":"YES" if mode=="implicit" else "NO"}
+            config={"listen_address":"127.0.0.1","ssl_enable":"YES","force_local_logins_ssl":"YES","force_local_data_ssl":"YES","require_ssl_reuse":"YES","strict_ssl_read_eof":"YES","strict_ssl_write_shutdown":"YES","ssl_tlsv11":"NO","ssl_tlsv12":"NO","ssl_tlsv13":"YES","seccomp_sandbox":"YES","chroot_local_user":"YES","anonymous_enable":"NO","implicit_ssl":"YES" if mode=="implicit" else "NO"}
             (self.directory/(mode+".conf")).write_text("".join(k+"="+v+"\n" for k,v in config.items()))
 
     @staticmethod
@@ -118,7 +122,7 @@ class ReceiverEvidence(unittest.TestCase):
         self.write();result=summary.failure_diagnostics(self.root,self.result,"b"*40)
         result.pop("manifest_sha256")
         self.assertEqual(result.pop("tls_probe_categories"),["explicit:version-alert","implicit:version-alert"])
-        self.assertEqual(result,{"failed_commands":["native-stock-receiver"],"native_stages":["store"],"reply_codes":[522]})
+        self.assertEqual(result,{"failed_commands":["native-stock-receiver"],"native_stages":["store"],"reply_codes":[522],"observed_native_pass_records":0})
         self.assertNotIn("private",json.dumps(result));self.assertNotIn("password",json.dumps(result))
 
     def test_receiver_startup_diagnostic_reveals_only_known_categories(self):
@@ -156,6 +160,27 @@ class ReceiverEvidence(unittest.TestCase):
         (self.directory/"explicit-receiver.trace").write_bytes(data);self.m["trace_sha256"]={"explicit":self.sha(data)};self.write()
         result=summary.failure_diagnostics(self.root,self.result,"b"*40)
         self.assertEqual(result["trace_categories"],["explicit:SIGSYS","explicit:last-syscall-before-SIGSYS:278","explicit:syscall-number:278"])
+
+    def test_socket_option_diagnostic_omits_descriptor_pointer_and_buffer(self):
+        data=b'123 [54] setsockopt(0x99,0x6,0x1f,0xdeadbeef,0x4) = ?\n123 [54] +++ killed by SIGSYS +++\n124 [231] exit_group(0x2) = ?\n'
+        (self.directory/"explicit-receiver.trace").write_bytes(data);self.m["trace_sha256"]={"explicit":self.sha(data)};self.write()
+        result=summary.failure_diagnostics(self.root,self.result,"b"*40)
+        self.assertEqual(result["trace_categories"],["explicit:SIGSYS","explicit:last-setsockopt-before-SIGSYS:level=6,option=31,size=4","explicit:last-syscall-before-SIGSYS:54","explicit:process-exit:2"])
+        self.assertNotIn("deadbeef",json.dumps(result));self.assertNotIn("0x99",json.dumps(result))
+
+    def test_passing_transfers_cannot_overrule_failed_security_probe(self):
+        self.m["probe_failures"]=["explicit-refuse-tls12"]
+        with self.assertRaises(ValueError):self.check()
+
+    def test_private_umask_keeps_payload_private_and_receiver_home_traversable(self):
+        previous=os.umask(0o077)
+        try:estate,home,inbox,empty=qualifier.receiver_directories()
+        finally:os.umask(previous)
+        self.addCleanup(shutil.rmtree,estate)
+        for path in (estate,home,empty):
+            mode=path.stat().st_mode&0o777
+            self.assertEqual(mode&0o003,0o001,"nonowner needs traversal without write")
+        self.assertEqual(inbox.stat().st_mode&0o077,0,"payload must stay private")
 
 
 if __name__=="__main__":unittest.main()
