@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "F068",
   "observed_at": "2026-11-03",
-  "state": "outbound FTPS transport verified with native ARM stand-in;independent native stock receiver replay pending",
+  "state": "outbound FTPS transport and native ARM stock component verified;system-library x86 red;separate native library variant pending;whole goal open",
   "starting_commit": "1ecc15f37dd8bfb254089804cab5d7b9f91d947f",
   "scope": "Bounded explicit/implicit FTPS transport component only;not connected to governed delivery,collection,connections,workflows or public sending controls. No whole parity row or journey qualified.",
   "implementation": [
@@ -43,7 +43,7 @@
       "manifest_sha256": "441f321bf74402bf956f1bc040136e980ece606fd8a4f39fb8db58f1b2a17a8f",
       "state": "bind operation denied;original suite replay passed with loopback access"
     },
-    "latest_synthetic_evidence_tampering_contracts": 20,
+    "latest_synthetic_evidence_tampering_contracts": 26,
     "latest_contract_note": "Ten current bookkeeping/privacy refusal contracts pass;the48record native transport race archive remains unchanged. Runtime stock evidence remains failed at receiver startup.",
     "latest_original_replay": {
       "manifest_reference": ".private/freightctl-ftps-phase-replay-4dfa69d54eec47fea6aec7bbd8adb946/manifest.json",
@@ -184,6 +184,38 @@
       "inference": "The option/phase/SSL peer identifies optional kernel TLS as the likely cause;the original repaired native replay must confirm it.",
       "repair": "Add Options=-KTLS to only the private OpenSSL receiver profile. Keep TLS1.3,exact trust,password references,resumption,strict close messages,seccompYES,chroot and every original probe/byte/cleanup/resource assertion. No receiver isolation check or budget is relaxed.",
       "runtime_repair_state": "pending both actual native architectures"
+    },
+    "runtime_option_limit": {
+      "candidate": "cc1fe869dd9dc15d97224cf40584afb53f8a67d0",
+      "run_id": 41604144412,
+      "arm_job_id": 125809704641,
+      "arm_state": "passed complete original system-library profile;3records/20commands/6receiver files",
+      "arm_manifest_sha256": "5284843c4573093de2d82be1f87cf0539a4bce6dee546ec619c3ffa3d5628888",
+      "x86_job_id": 125809704160,
+      "x86_state": "still fails;separate diagnosticTCP_ULP level6/option31,size4 SIGSYS",
+      "archive": {
+        "manifest_reference": ".private/freightctl-ftps-runtime-option-cc1fe86/manifest.json",
+        "manifest_sha256": "8fb5e239e006151836f48c36a0cb6f1fe363daf30adc67403fbf9f03dbd73e62"
+      },
+      "source_explanation": "OpenSSL3.0 BIO_new_socket unconditionally calls ktls_enable when compiled with kernel-TLS support,before the runtime -KTLS flag can prevent that probe. The flag alone does not fix this library ABI interaction.",
+      "primary_source": "https://raw.githubusercontent.com/openssl/openssl/openssl-3.0.13/crypto/bio/bss_sock.c"
+    },
+    "additional_library_profile": {
+      "state": "implemented;native build/upstream/stock replay pending",
+      "profile": "openssl-3.5.9-no-ktls",
+      "source_url": "https://github.com/openssl/openssl/releases/download/openssl-3.5.9/openssl-3.5.9.tar.gz",
+      "source_sha256": "603f5602e2eef00d77fbd429d34dcd5822bb301757a1bc9cdb24c670f1eb859a",
+      "source_authentication": "SHA256 pinned from official openssl/openssl release asset metadata;current3.5LTS release checked against official downloads2026-11-03",
+      "build": "native compiler and execution on actual ARM/x86 GitHub runners,one inherited CPU affinity,make-j1,shared/no-ktls,task-owned prefix;no tests-disabled flag,global install,artifact upload or local build",
+      "selected_upstream_recipes": [
+        "25-test_verify.t",
+        "80-test_ssl_new.t",
+        "90-test_sslapi.t"
+      ],
+      "upstream_limits": "All three original recipes must run and pass;preserve and independently recount their visible FIPS/feature skip lines. This is not full OpenSSL/FIPS or kernel-offload qualification.",
+      "qualification": "Run original untraced vsftpd/PAM profile with exact library version/linkage/artifact/source/build-output binding and every original trust,TLS1.3,reuse,shutdown,probe,byte,cleanup and resource gate. Source variant uses22commands;system profile still uses20.",
+      "original_profile_retained": "Both original system-library jobs remain in the same matrix;the x86 red gate is retained,not skipped or replaced. A source-variant pass cannot qualify the system-library profile.",
+      "local_tests": "26synthetic evidence/privacy/permission contracts,Python syntax,workflow lint and records pass;no compiler/receiver/model/scanner/database started locally for this addition."
     }
   },
   "next_integration": "docs/protocols/ftps-sending.md",

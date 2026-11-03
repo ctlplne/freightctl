@@ -10,6 +10,7 @@ on:
       - 'go.sum'
       - 'scripts/go.sh'
       - 'scripts/install-ftps-receiver.sh'
+      - 'scripts/install-ftps-tls.py'
       - 'scripts/qualify-ftps-client.py'
       - 'scripts/ci-ftps-client-summary.py'
       - 'scripts/test-ftps-client-summary.py'
@@ -22,6 +23,7 @@ on:
       - 'go.sum'
       - 'scripts/go.sh'
       - 'scripts/install-ftps-receiver.sh'
+      - 'scripts/install-ftps-tls.py'
       - 'scripts/qualify-ftps-client.py'
       - 'scripts/ci-ftps-client-summary.py'
       - 'scripts/test-ftps-client-summary.py'
@@ -37,20 +39,29 @@ concurrency:
 
 jobs:
   stock-receiver:
-    name: Native FTPS client (${{ matrix.arch }})
+    name: Native FTPS client (${{ matrix.arch }}, ${{ matrix.library }})
     strategy:
       fail-fast: false
       matrix:
         include:
           - arch: x86_64
             runner: ubuntu-24.04
+            library: system
           - arch: aarch64
             runner: ubuntu-24.04-arm
+            library: system
+          - arch: x86_64
+            runner: ubuntu-24.04
+            library: no-ktls
+          - arch: aarch64
+            runner: ubuntu-24.04-arm
+            library: no-ktls
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 20
     env:
       GOMAXPROCS: "1"
       GOMEMLIMIT: 192MiB
+      FREIGHTCTL_FTPS_LIBRARY: ${{ matrix.library }}
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
@@ -63,6 +74,9 @@ jobs:
         run: |
           test "$(uname -m)" = "${{ matrix.arch }}"
           sh scripts/install-ftps-receiver.sh
+      - name: Native pinned TLS library without optional kernel offload
+        if: matrix.library == 'no-ktls'
+        run: python3 scripts/install-ftps-tls.py
       - name: Actual client with two loopback TLS receivers and independent files
         id: qualify
         run: |
@@ -70,7 +84,7 @@ jobs:
           mkdir -p .private
           receiver_status=0
           python3 scripts/qualify-ftps-client.py > .private/ftps-client-result.json || receiver_status=$?
-          python3 scripts/ci-ftps-client-summary.py --result .private/ftps-client-result.json
+          python3 scripts/ci-ftps-client-summary.py --result .private/ftps-client-result.json --library-profile "${{ matrix.library }}"
           exit "$receiver_status"
       - name: Failed receiver process diagnostic (never qualification)
         if: failure() && steps.qualify.outcome == 'failure'
@@ -78,5 +92,5 @@ jobs:
           umask 077
           trace_status=0
           FREIGHTCTL_FTPS_TRACE=1 python3 scripts/qualify-ftps-client.py > .private/ftps-client-trace-result.json || trace_status=$?
-          python3 scripts/ci-ftps-client-summary.py --result .private/ftps-client-trace-result.json
+          python3 scripts/ci-ftps-client-summary.py --result .private/ftps-client-trace-result.json --library-profile "${{ matrix.library }}"
           exit "$trace_status"

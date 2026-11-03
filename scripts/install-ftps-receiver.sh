@@ -8,7 +8,7 @@ test "$(uname -s)" = Linux
 test "$ID" = ubuntu
 test "$VERSION_ID" = 24.04
 sudo apt-get update
-sudo apt-get install --yes --no-install-recommends libwrap0 strace
+sudo apt-get install --yes --no-install-recommends libwrap0 strace libtext-template-perl
 mkdir -p .cache/freightctl-vsftpd-3.0.5/packages .cache/freightctl-vsftpd-3.0.5/root
 cd .cache/freightctl-vsftpd-3.0.5/packages
 apt-get download vsftpd=3.0.5-0ubuntu3.1

@@ -27,7 +27,9 @@ def bounds():
 # vsftpd writes version/startup diagnostics to descriptor0 before it accepts
 # sockets. Keep its fd0 separate from the supervisor's read-only stop pipe.
 os.environ['OPENSSL_CONF']=sys.argv[1]
-p=subprocess.Popen(sys.argv[2:],stdin=sys.stdout,start_new_session=True,preexec_fn=bounds)
+if sys.argv[2]:os.environ['LD_LIBRARY_PATH']=sys.argv[2]
+else:os.environ.pop('LD_LIBRARY_PATH',None)
+p=subprocess.Popen(sys.argv[3:],stdin=sys.stdout,start_new_session=True,preexec_fn=bounds)
 signal.signal(signal.SIGTERM,lambda *_:sys.exit(1))
 try:
  while p.poll() is None:
@@ -72,9 +74,14 @@ def main():
     steps=[];processes={};cleanup=[];probe_failures=[];created_user=False;created_pam=False
     env=dict(os.environ,GOMAXPROCS="1",GOMEMLIMIT="192MiB")
     traced=os.environ.get("FREIGHTCTL_FTPS_TRACE")=="1"
+    library_profile=os.environ.get("FREIGHTCTL_FTPS_LIBRARY","system")
+    if library_profile not in {"system","no-ktls"}:raise RuntimeError("unknown receiver library profile")
+    library_base=ROOT/".cache/freightctl-openssl-3.5.9-no-ktls"
+    library_dir=library_base/"prefix/lib" if library_profile=="no-ktls" else None
     names=sorted(set(subprocess.check_output(["git","ls-files","--cached","--others","--exclude-standard","-z"]).decode().split("\0"))-{ "" })
     sources={n:digest(ROOT/n) for n in names}
     manifest={"schema_version":1,"kind":"native-ftps-client-stock-receiver","state":"failed","starting_commit":subprocess.check_output(["git","rev-parse","HEAD"]).decode().strip(),"architecture":platform.machine(),"source_sha256":sources,"receiver_traced":traced,"inference_performed":False,"scanner_started":False,"postgres_started":False,"domain_delivery_qualified":False,"full_journeys_qualified":False}
+    manifest["receiver_library_profile"]=library_profile
 
     def command(label,argv,timeout=60,input_bytes=None,expected_code=0):
         out,err=private/(label+".stdout"),private/(label+".stderr")
@@ -100,6 +107,12 @@ def main():
         command("go-version",["sh","scripts/go.sh","version"])
         command("receiver-version",["sh","-c",'exec "$1" -v 0>&1',"freightctl-receiver-version",receiver])
         command("receiver-library-versions",["dpkg-query","--show","--showformat=${Package} ${Version} ${Architecture}\n","libssl3t64","libpam0g","libwrap0"])
+        if library_dir is not None:
+            library_manifest=json.loads((library_base/"manifest.json").read_text())
+            if library_manifest.get("state")!="passed" or library_manifest.get("source_sha256")!="603f5602e2eef00d77fbd429d34dcd5822bb301757a1bc9cdb24c670f1eb859a":raise RuntimeError("receiver TLS build incomplete")
+            manifest["receiver_library_manifest_sha256"]=digest(library_base/"manifest.json")
+            command("selected-library-version",["env","LD_LIBRARY_PATH="+str(library_dir),library_base/"prefix/bin/openssl","version","-a"])
+            command("selected-library-linkage",["env","LD_LIBRARY_PATH="+str(library_dir),"ldd",receiver])
         command("build",["sh","scripts/go.sh","build","-p","1","-trimpath","-buildvcs=false","-o",binary,"./cmd/freightctl"],180)
         manifest["binary_sha256"]=digest(binary);manifest["receiver_sha256"]=digest(receiver)
         token,cert,key=private/"password",private/"cert.pem",private/"key.pem"
@@ -125,12 +138,12 @@ def main():
             path.chmod(0o644)
             command(mode+"-config-owner",["sudo","chown","root:root",path])
             out,err=(private/(mode+"-receiver.stdout")).open("xb"),(private/(mode+"-receiver.stderr")).open("xb")
-            argv=["sudo","python3","-c",SUPERVISOR,openssl,receiver,path]
+            argv=["sudo","python3","-c",SUPERVISOR,openssl,str(library_dir) if library_dir is not None else "",receiver,path]
             if traced:
                 trace=private/(mode+"-receiver.trace");trace.touch(mode=0o600,exist_ok=False)
                 # Trace raw numeric syscall arguments (pointers,not decoded
                 # buffers/strings),so a seccomp-killed call is not filtered out.
-                argv=["sudo","python3","-c",SUPERVISOR,openssl,"strace","-f","-n","-e","raw=all","-o",trace,receiver,path]
+                argv=["sudo","python3","-c",SUPERVISOR,openssl,str(library_dir) if library_dir is not None else "","strace","-f","-n","-e","raw=all","-o",trace,receiver,path]
             process=subprocess.Popen(list(map(str,argv)),stdin=subprocess.PIPE,stdout=out,stderr=err,env=env,start_new_session=True);processes[mode+"-receiver"]=(process,out,err)
             deadline=time.monotonic()+10
             while True:

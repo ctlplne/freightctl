@@ -22,7 +22,7 @@ class ReceiverEvidence(unittest.TestCase):
         self.directory=self.root/".private"/("ftps-client-"+"a"*32);self.directory.mkdir(parents=True)
         self.result=self.root/"result.json";self.manifest=self.directory/"manifest.json"
         (self.root/"source.go").write_bytes(b"synthetic source")
-        self.m={"kind":"native-ftps-client-stock-receiver","state":"passed","starting_commit":"b"*40,"architecture":"aarch64","sources_unchanged":True,"task_user_removed":True,"task_pam_removed":True,"cleanup_failures":[],"probe_failures":[],"native_pass_records":3,"receiver_traced":False,"source_sha256":{"source.go":self.sha(b"synthetic source")},"steps":[]}
+        self.m={"kind":"native-ftps-client-stock-receiver","state":"passed","starting_commit":"b"*40,"architecture":"aarch64","receiver_library_profile":"system","sources_unchanged":True,"task_user_removed":True,"task_pam_removed":True,"cleanup_failures":[],"probe_failures":[],"native_pass_records":3,"receiver_traced":False,"source_sha256":{"source.go":self.sha(b"synthetic source")},"steps":[]}
         for name in ("inference_performed","scanner_started","postgres_started","domain_delivery_qualified","full_journeys_qualified"):self.m[name]=False
         self.files={mode+"-"+suffix:{"size":len(b),"sha256":self.sha(b)} for mode in ("explicit","implicit") for suffix,b in (("final.csv",summary.PAYLOAD),("resume.csv",summary.PAYLOAD),("empty",b""))}
         self.m["receiver_files"]=self.files
@@ -126,7 +126,7 @@ class ReceiverEvidence(unittest.TestCase):
         self.write();result=summary.failure_diagnostics(self.root,self.result,"b"*40)
         result.pop("manifest_sha256")
         self.assertEqual(result.pop("tls_probe_categories"),["explicit:version-alert","implicit:version-alert"])
-        self.assertEqual(result,{"failed_commands":["native-stock-receiver"],"native_stages":["store"],"reply_codes":[522],"observed_native_pass_records":0})
+        self.assertEqual(result,{"failed_commands":["native-stock-receiver"],"native_stages":["store"],"reply_codes":[522],"observed_native_pass_records":0,"receiver_library_profile":"system"})
         self.assertNotIn("private",json.dumps(result));self.assertNotIn("password",json.dumps(result))
 
     def test_receiver_startup_diagnostic_reveals_only_known_categories(self):
@@ -186,6 +186,64 @@ class ReceiverEvidence(unittest.TestCase):
             self.assertEqual(mode&0o003,0o001,"nonowner needs traversal without write")
             self.assertEqual(mode&0o022,0,"group and other identities cannot change receiver directories")
         self.assertEqual(inbox.stat().st_mode&0o077,0,"payload must stay private")
+
+    def library_fixture(self):
+        base=self.root/summary.LIBRARY_BASE;base.mkdir(parents=True)
+        for name in summary.LIBRARY_FILES:
+            path=base/name;path.parent.mkdir(parents=True,exist_ok=True)
+            path.write_bytes(b'#define OPENSSL_NO_KTLS\n' if name.endswith("configuration.h") else b'synthetic artifact;not a real library')
+        directory=self.root/".private"/("ftps-library-"+"c"*32);directory.mkdir()
+        lib={"kind":"native-receiver-openssl-no-ktls","state":"passed","version":"3.5.9","source_url":"https://github.com/openssl/openssl/releases/download/openssl-3.5.9/openssl-3.5.9.tar.gz","source_sha256":summary.LIBRARY_SOURCE_SHA,"architecture":"aarch64","configuration":["shared","no-ktls"],"inference_performed":False,"scanner_started":False,"postgres_started":False,"upstream_skip_lines":1,"files_sha256":{n:self.sha((base/n).read_bytes()) for n in summary.LIBRARY_FILES},"original_output_reference":str(directory.relative_to(self.root)),"steps":[]}
+        for name in sorted(summary.LIBRARY_STEPS):
+            value=b""
+            if name=="native-compiler":value=b"aarch64-linux-gnu\n"
+            if name=="installed-version":value=b"OpenSSL 3.5.9\n"
+            if name=="selected-upstream-tests":value=b"25-test_verify.t ok\n80-test_ssl_new.t ok\n90-test_sslapi.t ok\n# SKIP FIPS fixture\nResult: PASS\n"
+            (directory/(name+".stdout")).write_bytes(value);(directory/(name+".stderr")).write_bytes(b"")
+            lib["steps"].append({"name":name,"exit_code":0,"stdout_sha256":self.sha(value),"stderr_sha256":self.sha(b"")})
+        self.m["receiver_library_profile"]="no-ktls";self.lib=lib;self.lib_directory=directory;self.lib_base=base
+        self.library_write()
+        self.output("selected-library-version",b"OpenSSL 3.5.9\n")
+        self.output("selected-library-linkage","".join(n+" => "+str(base/"prefix/lib"/n)+"\n" for n in ("libssl.so.3","libcrypto.so.3")).encode())
+
+    def library_write(self):
+        raw=json.dumps(self.lib).encode();(self.lib_base/"manifest.json").write_bytes(raw);self.m["receiver_library_manifest_sha256"]=self.sha(raw)
+
+    def library_check(self):
+        self.library_write();self.write();return summary.summarize(self.root,self.result,"b"*40,"no-ktls")
+
+    def test_complete_library_bookkeeping_retains_visible_skips_and_variant(self):
+        self.library_fixture();result=self.library_check()
+        self.assertEqual(result["receiver_library_profile"],"no-ktls");self.assertEqual(result["original_commands"],22)
+        self.assertEqual(result["receiver_library"]["upstream_skip_lines"],1)
+        self.assertNotIn(str(self.root),json.dumps(result))
+
+    def test_library_profile_cannot_substitute_for_system_profile(self):
+        self.library_fixture();self.write()
+        with self.assertRaises(ValueError):summary.summarize(self.root,self.result,"b"*40)
+
+    def test_library_source_and_compiled_feature_must_match_pinned_variant(self):
+        self.library_fixture();self.lib["source_sha256"]="0"*64
+        with self.assertRaises(ValueError):self.library_check()
+        self.lib["source_sha256"]=summary.LIBRARY_SOURCE_SHA;self.lib["configuration"]=["shared"]
+        with self.assertRaises(ValueError):self.library_check()
+
+    def test_changed_library_binary_or_upstream_output_refused(self):
+        self.library_fixture();file=self.lib_base/"prefix/lib/libssl.so.3";good=file.read_bytes();file.write_bytes(b"changed artifact")
+        with self.assertRaises(ValueError):self.library_check()
+        file.write_bytes(good);(self.lib_directory/"selected-upstream-tests.stdout").write_bytes(b"fabricated pass")
+        with self.assertRaises(ValueError):self.library_check()
+
+    def test_hidden_upstream_skip_or_failed_recipe_refused(self):
+        self.library_fixture();self.lib["upstream_skip_lines"]=0
+        with self.assertRaises(ValueError):self.library_check()
+        self.lib["upstream_skip_lines"]=1
+        next(s for s in self.lib["steps"] if s["name"]=="selected-upstream-tests")["exit_code"]=1
+        with self.assertRaises(ValueError):self.library_check()
+
+    def test_native_receiver_must_resolve_to_exact_selected_library(self):
+        self.library_fixture();self.output("selected-library-linkage",b"libssl.so.3 => /usr/lib/libssl.so.3\n")
+        with self.assertRaises(ValueError):self.library_check()
 
 
 if __name__=="__main__":unittest.main()
