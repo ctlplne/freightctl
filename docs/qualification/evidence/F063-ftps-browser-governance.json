@@ -34,7 +34,14 @@
     "go_browser_unit": "passed",
     "ftps_evidence_refusal_contracts": 23,
     "workflow_syntax": "passed",
-    "qualification_references": "passed"
+    "qualification_references": "passed",
+    "current_go_browser_policy_contract": {
+      "environment": "Go1.26.10 darwin/arm64;race;GOMAXPROCS1/GOMEMLIMIT192MiB",
+      "pass_records": 3,
+      "fail_records": 0,
+      "skip_records": 0,
+      "scope": "Current Go normalization and canonical hash match both shared frontend fixtures;Node replays four policy contracts. Pure boundary check only;no PostgreSQL/model/scanner/browser startup and no native Linux or Windows runtime claim."
+    }
   },
   "native_browser_replay": {
     "state": "D123 isolated to target-size in credential-rotate-review at18f6be6;target repair awaits original replay",
