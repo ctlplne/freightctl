@@ -195,6 +195,14 @@ async function commit(suffix, name, lost = false) {
   const target = prefix + suffix,
     seen = [];
   const handler = async (route) => {
+    // Registration and its automatic read refresh share the policy URI.
+    // Only mutation replies participate in loss/replay; reads stay ordinary
+    // certificate-pinned browser requests and cannot count as another attempt.
+    if (route.request().method() === "GET") {
+      await route.continue();
+      return;
+    }
+    assert.equal(route.request().method(), "POST");
     const r = await actual(route, "loss-" + sequence++, target);
     seen.push(r);
     if (seen.length === 1) await route.abort("failed");

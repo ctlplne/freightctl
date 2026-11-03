@@ -44,7 +44,7 @@
     }
   },
   "native_browser_replay": {
-    "state": "D123 isolated to target-size in credential-rotate-review at18f6be6;target repair awaits original replay",
+    "state": "9d506bb passes credential lifecycle and rotation accessibility in explicit mode;policy registration observer counts a refresh GET and fails its strict mutation count;observer repair prepared",
     "workflow": ".github/workflows/ftps-browser.yml",
     "job": "Native x86 browser and live FTPS governance",
     "command": "python3 scripts/qualify-ftps.py --postgres-container-id EXACT_TASK_ID --browser",
@@ -107,7 +107,7 @@
     ],
     "cause": "Account permission and saved-credential checkboxes use20px controls;the saved-credential target fails WCAG2.2AA in the rotation review.",
     "repair": "Use24px square controls with no inherited input padding and44px clickable labels;keep the exact axe assertions. Advance phase labeling before the rotation review.",
-    "state": "repair prepared;original browser replay pending",
+    "state": "target repair passes original rotation audit on native x86 explicit mode at9d506bb;full profile stops later in policy observer",
     "retained_metadata_and_roles_unchanged": true,
     "isolated_database_removed": true,
     "original_resource_state_restored": true,
@@ -126,6 +126,27 @@
     "x86_job_id": 125699324856,
     "x86_manifest_sha256": "9aa6a019b93c9870bc37382a6ee49dcb955af581fc38ef177222e8235776482f",
     "ftps_each": "15native pass records/129original commands;12CLI governance cases/18strict refusals;retained authority/cleanup verified",
-    "other": "All five stock entries,metadata restores,nine fuzz targets and Mac pass;WindowsD103 remains red. Full Linux suites still running when observed."
+    "other": "Both full Linux suites pass578 PostgreSQL records each with zero failures/skips;engine223passes/one visible privileged-port20 skip each. All five stock entries,metadata restores,nine fuzz targets and Mac pass;WindowsD103 remains red.",
+    "native_linux_run_id": 41569654278,
+    "native_linux_jobs": [
+      125699324781,
+      125699324870
+    ]
+  },
+  "policy_loss_observation": {
+    "candidate": "9d506bb8c74d065d9328e768ad13f883949cc538",
+    "run_id": 41571975937,
+    "job_id": 125706742901,
+    "phase": "policy-register",
+    "failure_line": 214,
+    "failure": "Exact two-attempt assertion fails. Lost-response interceptor accepts GET and POST on the same intake-policy URI;after successful mutation,the UI automatically reads that URI again.",
+    "repair": "Continue GET as an ordinary certificate-pinned browser read;intercept only POST. Keep exactly two mutation attempts,identical keys/bodies and original saved receipt equality.",
+    "state": "repair prepared;original replay pending",
+    "retained_metadata_and_roles_unchanged": true,
+    "isolated_database_removed": true,
+    "original_resource_state_restored": true,
+    "cleanup_failures": 0,
+    "archive_reference": ".private/freightctl-ftps-browser-policy-loss-9d506bb/manifest.json",
+    "archive_sha256": "046b9d4dff0f33061730fcba1ac893b899fb2a0f7ac4441ac2c61ff243d5136a"
   }
 }

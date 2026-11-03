@@ -1985,7 +1985,7 @@
     {
       "id": "D123",
       "severity": "actual browser accessibility blocker",
-      "state": "repair prepared;original actual browser replay pending",
+      "state": "fixed and replayed on native x86 explicit journey;broader profile pending",
       "observed_on": "2026-11-02",
       "candidate": "55286c31f698e08366c406ef36d0cc227e7b9ed8",
       "journey": "Reviewed account credentials during FTPS transfers",
@@ -1993,11 +1993,29 @@
       "reproduction": "GitHub run41569654224 job125699325050;qualify-ftps.py --browser;explicit listener,credential-create phase,ftps-operator-browser.mjs:102",
       "first_failure": "axe violation count is nonzero in credential-create-review;the original safe diagnostic reports phase/line but no rule IDs.",
       "cause": "Diagnostic candidate18f6be6 identifies credential-rotate-review and the pinned axe target-size rule. Account controls use20px sizing. The earlier credential-create phase label covered rotation setup too,so it did not establish which account audit failed.",
-      "resolution": "Enlarge the checkboxes to24px with zero inherited padding and make their labels44px high. Keep all WCAG2.2AA assertions. Advance phase before rotation audit;rerun original browser credential/intake journey in both modes. Runtime repair still pending.",
+      "resolution": "24px square controls with zero inherited input padding and44px clickable labels pass the original rotation audit at9d506bb. Both credential writer rotation/revocation journeys complete before the later policy observer failure. All WCAG assertions stay enforced. Implicit/full browser profile remains pending.",
       "regression_evidence": [
         "https://github.com/ctlplne/freightctl/actions/runs/41569654224",
         "docs/qualification/evidence/F063-ftps-browser-governance.json",
-        "https://github.com/ctlplne/freightctl/actions/runs/41571174400"
+        "https://github.com/ctlplne/freightctl/actions/runs/41571174400",
+        "https://github.com/ctlplne/freightctl/actions/runs/41571975937"
+      ]
+    },
+    {
+      "id": "D124",
+      "severity": "qualification response-observer defect",
+      "state": "repair prepared;original actual replay pending",
+      "observed_on": "2026-11-02",
+      "candidate": "9d506bb8c74d065d9328e768ad13f883949cc538",
+      "journey": "Browser FTPS intake policy registration with committed-response loss",
+      "title": "Automatic policy read refresh is counted as a mutation retry",
+      "reproduction": "GitHub run41571975937 job125706742901;explicit policy-register phase;ftps-operator-browser.mjs:214",
+      "first_failure": "The browser closes the confirmed registration dialog,then the observer fails seen.length==2.",
+      "cause": "The observer intercepts all methods on the intake-policy URI;the UI automatically GETs the same URI after successful POST/retry.",
+      "resolution": "Let GET continue as an ordinary certificate-pinned browser request;intercept only POST and retain exactly two mutation attempts,identical keys/bodies and saved receipt equality. Prepared;original journey replay is required.",
+      "regression_evidence": [
+        "https://github.com/ctlplne/freightctl/actions/runs/41571975937",
+        "docs/qualification/evidence/F063-ftps-browser-governance.json"
       ]
     }
   ]
