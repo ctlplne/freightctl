@@ -388,10 +388,10 @@ try {
     .filter({ hasText: id })
     .getByRole("button", { name: "Review FTPS browser writer", exact: true })
     .click();
+  phase = "credential-rotate";
   await button("Review credential rotation").click();
   await saveCredential(next);
   await audit("credential-rotate-review");
-  phase = "credential-rotate";
   const writer = await peer(
     {
       scenario: "credential-lifecycle",

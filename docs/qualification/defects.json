@@ -1985,18 +1985,19 @@
     {
       "id": "D123",
       "severity": "actual browser accessibility blocker",
-      "state": "open",
+      "state": "repair prepared;original actual browser replay pending",
       "observed_on": "2026-11-02",
       "candidate": "55286c31f698e08366c406ef36d0cc227e7b9ed8",
       "journey": "Reviewed account credentials during FTPS transfers",
-      "title": "Account creation review fails its actual browser accessibility audit",
+      "title": "Saved-credential target is too small in account rotation review",
       "reproduction": "GitHub run41569654224 job125699325050;qualify-ftps.py --browser;explicit listener,credential-create phase,ftps-operator-browser.mjs:102",
       "first_failure": "axe violation count is nonzero in credential-create-review;the original safe diagnostic reports phase/line but no rule IDs.",
-      "cause": "Not yet established. Do not infer a color,dialog or policy defect from this count alone.",
-      "resolution": "Pending. Add only pinned public axe rule IDs to safe diagnostics;keep private selectors/page text protected and all accessibility assertions enforced. Rerun original live-service browser journey,repair observed cause and replay both listener modes.",
+      "cause": "Diagnostic candidate18f6be6 identifies credential-rotate-review and the pinned axe target-size rule. Account controls use20px sizing. The earlier credential-create phase label covered rotation setup too,so it did not establish which account audit failed.",
+      "resolution": "Enlarge the checkboxes to24px with zero inherited padding and make their labels44px high. Keep all WCAG2.2AA assertions. Advance phase before rotation audit;rerun original browser credential/intake journey in both modes. Runtime repair still pending.",
       "regression_evidence": [
         "https://github.com/ctlplne/freightctl/actions/runs/41569654224",
-        "docs/qualification/evidence/F063-ftps-browser-governance.json"
+        "docs/qualification/evidence/F063-ftps-browser-governance.json",
+        "https://github.com/ctlplne/freightctl/actions/runs/41571174400"
       ]
     }
   ]

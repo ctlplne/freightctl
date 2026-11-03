@@ -21,7 +21,7 @@
       "candidate": "55286c31f698e08366c406ef36d0cc227e7b9ed8",
       "run_id": 41569654224,
       "job_id": 125699325050,
-      "observed": "The browser reaches credential-create;the account-create review axe audit fails at script line102. The original diagnostics suppress private page content but do not report rule IDs. Exact rule/cause still unknown.",
+      "observed": "The browser stops under the credential-create phase label at the common axe assertion line102. The original diagnostics suppress private page content and do not identify the exact audit or rule. The later diagnostic candidate identifies credential-rotate-review/target-size;the original phase label did not advance until after that audit.",
       "archive_reference": ".private/freightctl-ftps-browser-55286c3-first-failure/manifest.json",
       "archive_sha256": "346d157519a6245cd0367cfea509e94bac365bc07508a2d138d2131bef108d0e",
       "next_action": "Rerun the original journey with only public pinned axe rule IDs in the safe diagnostic allowlist. Preserve private selectors/page text. Keep accessibility assertions unchanged."
@@ -37,7 +37,7 @@
     "qualification_references": "passed"
   },
   "native_browser_replay": {
-    "state": "first actual candidate failed account review accessibility;diagnostic replay pending;no browser runtime qualification",
+    "state": "D123 isolated to target-size in credential-rotate-review at18f6be6;target repair awaits original replay",
     "workflow": ".github/workflows/ftps-browser.yml",
     "job": "Native x86 browser and live FTPS governance",
     "command": "python3 scripts/qualify-ftps.py --postgres-container-id EXACT_TASK_ID --browser",
@@ -46,7 +46,8 @@
     "candidate": "55286c31f698e08366c406ef36d0cc227e7b9ed8",
     "run_id": 41569654224,
     "job_id": 125699325050,
-    "scheduling_refinement": "After original accessibility failure,unchanged browser profile is moved to a separate finish-running/newest-pending concurrency group so another stock architecture cannot block diagnosis."
+    "scheduling_refinement": "After original accessibility failure,unchanged browser profile is moved to a separate finish-running/newest-pending concurrency group so another stock architecture cannot block diagnosis.",
+    "unchanged_split_job_sha256": "2c50a6cd270dd566a4a42044f87d9966dd2111508586df39c308dff3770f0a2c"
   },
   "acceptance": {
     "each_listener_mode": [
@@ -88,5 +89,36 @@
     "exit_code": 0,
     "scope": "All public source before this result and D122 record;rules unchanged;private estate excluded"
   },
-  "harness_review_fix": "The actual API sends /checks?limit=50&after=. Observe that exact paginated URL rather than /checks;no API behavior/assertion changes. Earlier candidate stopped before this phase."
+  "harness_review_fix": "The actual API sends /checks?limit=50&after=. Observe that exact paginated URL rather than /checks;no API behavior/assertion changes. Earlier candidate stopped before this phase.",
+  "accessibility_diagnostic": {
+    "candidate": "18f6be66e9953ed574553d353e52fa07e51e7460",
+    "run_id": 41571174400,
+    "job_id": 125704149467,
+    "audit": "credential-rotate-review",
+    "rule_ids": [
+      "target-size"
+    ],
+    "cause": "Account permission and saved-credential checkboxes use20px controls;the saved-credential target fails WCAG2.2AA in the rotation review.",
+    "repair": "Use24px square controls with no inherited input padding and44px clickable labels;keep the exact axe assertions. Advance phase labeling before the rotation review.",
+    "state": "repair prepared;original browser replay pending",
+    "retained_metadata_and_roles_unchanged": true,
+    "isolated_database_removed": true,
+    "original_resource_state_restored": true,
+    "cleanup_failures": 0,
+    "archive_reference": ".private/freightctl-ftps-browser-d123-18f6be6/manifest.json",
+    "archive_sha256": "7164b818f55068c21286f4ff6328792c3460c52ca35c4df9739001a6e2dce578"
+  },
+  "initial_candidate_other_gates": {
+    "candidate": "55286c31f698e08366c406ef36d0cc227e7b9ed8",
+    "core_run_id": 41569654282,
+    "core_job_id": 125699324296,
+    "source_security": "passed;112frontend contracts/23FTPSrefusal contracts;dependency/reachability and both source/history scans passed",
+    "stock_ftps_run_id": 41569654224,
+    "arm_job_id": 125699324728,
+    "arm_manifest_sha256": "cb3029a3f8a6245bc9ea2b4f5840a10656139b694005df20af07c7d522993a56",
+    "x86_job_id": 125699324856,
+    "x86_manifest_sha256": "9aa6a019b93c9870bc37382a6ee49dcb955af581fc38ef177222e8235776482f",
+    "ftps_each": "15native pass records/129original commands;12CLI governance cases/18strict refusals;retained authority/cleanup verified",
+    "other": "All five stock entries,metadata restores,nine fuzz targets and Mac pass;WindowsD103 remains red. Full Linux suites still running when observed."
+  }
 }

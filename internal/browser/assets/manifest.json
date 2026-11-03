@@ -199,7 +199,7 @@
     },
     {
       "path": "web/src/style.css",
-      "sha256": "afdb867014f063d08dcd0b74f376de86507e03ccb96780dff837601e368616d4"
+      "sha256": "4b362ae7fff0f12e809468f0fd9ecf4b7a5f4285e007875be69c2bcf0d934d85"
     },
     {
       "path": "web/src/types.ts",
@@ -217,8 +217,8 @@
   "outputs": [
     {
       "name": "app.css",
-      "sha256": "e88ddd2b6ad0c3d97bc7ad0d3344a8bef7f7af79e79f52812ffb51009b66b97b",
-      "size": 12381
+      "sha256": "166bfc3289d9878a95a932fd952bedfdc89c33e8b59f37668f9383995ae81860",
+      "size": 12466
     },
     {
       "name": "app.js",
