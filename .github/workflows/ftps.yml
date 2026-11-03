@@ -12,6 +12,9 @@ on:
       - 'scripts/go.sh'
       - 'scripts/dev-db.py'
       - 'scripts/ftps-probe.py'
+      - 'scripts/ftps_contract.py'
+      - 'scripts/lftp-probe.py'
+      - 'scripts/install-ftps-clients.sh'
       - 'scripts/qualify-ftps.py'
       - 'scripts/qualify-retained-metadata.py'
       - 'scripts/ci-ftps-summary.py'
@@ -29,6 +32,9 @@ on:
       - 'scripts/go.sh'
       - 'scripts/dev-db.py'
       - 'scripts/ftps-probe.py'
+      - 'scripts/ftps_contract.py'
+      - 'scripts/lftp-probe.py'
+      - 'scripts/install-ftps-clients.sh'
       - 'scripts/qualify-ftps.py'
       - 'scripts/qualify-retained-metadata.py'
       - 'scripts/ci-ftps-summary.py'
@@ -43,7 +49,8 @@ permissions:
 
 concurrency:
   group: freightctl-ftps-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  # Finish the running qualification candidate; newer pushes wait.
+  cancel-in-progress: false
 
 jobs:
   stock-ftps:
@@ -80,6 +87,8 @@ jobs:
           fi
           curl --version
           python3 -c 'import ssl; assert ssl.HAS_TLSv1_3; print(ssl.OPENSSL_VERSION)'
+      - name: Pinned stock FTPS client
+        run: sh scripts/install-ftps-clients.sh
       - name: Task-owned PostgreSQL
         run: |
           python3 scripts/dev-db.py

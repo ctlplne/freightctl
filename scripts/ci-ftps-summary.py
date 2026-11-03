@@ -8,6 +8,8 @@ from pathlib import Path
 import re
 import subprocess
 
+from ftps_contract import CLI_PAYLOAD, LFTP_CASES, LFTP_DOWNLOADS, LFTP_FAILURE_CODES, NATIVE_PARENT_TESTS, NATIVE_TESTS
+
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -15,6 +17,45 @@ def read(path, bound):
     if path.is_symlink() or not path.is_file() or path.stat().st_size > bound:
         raise ValueError("unsafe or oversized FTPS evidence")
     return path.read_bytes()
+
+
+def failure_diagnostics(root, result, commit):
+    """Only fixed profile names/categories can leave failed protected evidence."""
+    try:
+        header = json.loads(read(result, 8192))
+        ref = header.get("manifest_reference")
+        if not isinstance(ref, str) or not re.fullmatch(r"\.private/ftps-[0-9a-f]{32}/manifest\.json", ref):
+            return {}
+        path = root / ref
+        if not path.resolve().is_relative_to((root / ".private").resolve()):
+            return {}
+        raw = read(path, 8 << 20)
+        manifest = json.loads(raw)
+        if hashlib.sha256(raw).hexdigest() != header.get("manifest_sha256") or manifest.get("starting_commit") != commit or manifest.get("kind") != "stock-ftps-custody":
+            return {}
+        failed, categories = set(), set()
+        allowed = {"native-ftps-integration", "cli-explicit-lftp-probe", "cli-implicit-lftp-probe"}
+        for step in manifest.get("steps", []):
+            name = step.get("name")
+            if name not in allowed:
+                continue
+            data = read(path.parent / (name + ".stdout"), 64 << 20)
+            if hashlib.sha256(data).hexdigest() != step.get("stdout_sha256"):
+                return {}
+            output = data.decode(errors="replace")
+            failed.update(set(re.findall(r"^\s*--- FAIL: (TestFTPS\S+) \(", output, re.MULTILINE)) & NATIVE_TESTS)
+            for line in output.splitlines():
+                if "{" not in line:
+                    continue
+                try:
+                    probe = json.loads(line[line.index("{"):])
+                except ValueError:
+                    continue
+                if probe.get("state") == "failed" and probe.get("stage") in {"version", "transfers"} and probe.get("code") in LFTP_FAILURE_CODES:
+                    categories.add((probe["stage"], probe["code"]))
+        return {"failed_native_tests": sorted(failed), "lftp_failures": [{"stage": s, "code": c} for s, c in sorted(categories)]}
+    except Exception:
+        return {}
 
 
 def summarize(root, result, commit):
@@ -32,7 +73,7 @@ def summarize(root, result, commit):
     manifest = json.loads(raw)
     if header.get("state") != "passed" or manifest.get("state") != "passed" or manifest.get("kind") != "stock-ftps-custody" or manifest.get("starting_commit") != commit:
         raise ValueError("FTPS qualification failed or belongs to another candidate")
-    for key in ("stock_curl_qualified", "retained_metadata_and_roles_unchanged", "isolated_database_removed", "original_resource_state_restored", "sources_unchanged"):
+    for key in ("stock_curl_qualified", "stock_lftp_qualified", "retained_metadata_and_roles_unchanged", "isolated_database_removed", "original_resource_state_restored", "sources_unchanged"):
         if manifest.get(key) is not True:
             raise ValueError("FTPS qualification or cleanup is incomplete")
     for key in ("native_client_only", "inference_performed", "scanner_engine_started", "full_foundation_aggregate_executed", "full_journeys_qualified"):
@@ -44,14 +85,14 @@ def summarize(root, result, commit):
     if not isinstance(before, dict) or before.get("runtime_role_safe") is not True or len(before.get("migration_ledger", [])) != 35 or before.get("forced_rls_tables") != 63 or len(before.get("tables", [])) != 64:
         raise ValueError("FTPS PostgreSQL security profile differs")
     tests = manifest.get("native_tests")
-    required = ["TestFTPSNativeTLSClientProtocolAndInterruption", "TestFTPSStockCurlExplicitImplicitAndActiveCustody"]
-    if not isinstance(tests, dict) or tests.get("required") != required or tests.get("pass_records") != 6 or tests.get("failed_records") != 0 or tests.get("skipped_records") != 0:
+    required = NATIVE_PARENT_TESTS
+    if not isinstance(tests, dict) or tests.get("required") != required or tests.get("pass_records") != len(NATIVE_TESTS) or tests.get("failed_records") != 0 or tests.get("skipped_records") != 0:
         raise ValueError("required FTPS tests are missing or skipped")
     steps = manifest.get("steps")
     if not isinstance(steps, list) or not 1 <= len(steps) <= 1000 or len({s.get("name") for s in steps}) != len(steps):
         raise ValueError("invalid FTPS command inventory")
     names = {s.get("name") for s in steps}
-    for name in ("native-ftps-integration", "cli-explicit-upload", "cli-explicit-download", "cli-implicit-upload", "cli-implicit-download", "drop-exact-test-database"):
+    for name in ("native-ftps-integration", "stock-lftp-version", "cli-explicit-upload", "cli-explicit-download", "cli-implicit-upload", "cli-implicit-download", "cli-explicit-lftp-probe", "cli-implicit-lftp-probe", "drop-exact-test-database"):
         if name not in names:
             raise ValueError("required FTPS command is missing")
     for step in steps:
@@ -62,14 +103,20 @@ def summarize(root, result, commit):
             if hashlib.sha256(data).hexdigest() != step.get(field):
                 raise ValueError("native FTPS output checksum differs")
     native = read(path.parent / "native-ftps-integration.stdout", 64 << 20).decode()
-    expected_tests = {name + suffix for name in required for suffix in ("", "/explicit", "/implicit")}
     executed = re.findall(r"^\s*--- PASS: (TestFTPS\S+) \(", native, re.MULTILINE)
-    if len(executed) != 6 or set(executed) != expected_tests or "--- SKIP:" in native or "--- FAIL:" in native:
+    if len(executed) != len(NATIVE_TESTS) or set(executed) != NATIVE_TESTS or "--- SKIP:" in native or "--- FAIL:" in native:
         raise ValueError("native FTPS output does not prove every required test")
-    payload = b"exact FTPS CLI bytes\x00\r\n"
+    payload = CLI_PAYLOAD
     for name in ("cli-explicit-download", "cli-implicit-download"):
         if read(path.parent / (name + ".stdout"), 8192) != payload:
             raise ValueError("stock FTPS CLI bytes differ")
+    for mode in ("explicit", "implicit"):
+        report = json.loads(read(path.parent / ("cli-" + mode + "-lftp-probe.stdout"), 8192))
+        if report.get("state") != "passed" or report.get("cases") != LFTP_CASES or report.get("stock_client_qualification") is not True or report.get("payload_bytes") != len(payload) or report.get("payload_sha256") != hashlib.sha256(payload).hexdigest():
+            raise ValueError("stock lftp probe profile differs")
+        for name in LFTP_DOWNLOADS:
+            if read(path.parent / ("cli-" + mode + ".lftp") / name, 8192) != payload:
+                raise ValueError("stock lftp CLI bytes differ")
     sources = manifest.get("source_sha256")
     if not isinstance(sources, dict) or not 1 <= len(sources) <= 10000:
         raise ValueError("invalid FTPS source inventory")
@@ -78,23 +125,24 @@ def summarize(root, result, commit):
         if not p.resolve().is_relative_to(root.resolve()) or hashlib.sha256(read(p, 16 << 20)).hexdigest() != expected:
             raise ValueError("FTPS source identity differs")
     return {"state": "passed", "source_commit": commit, "manifest_sha256": digest,
-            "stock_curl_qualified": True, "native_test_pass_records": 6, "source_inputs": len(sources),
+            "stock_curl_qualified": True, "stock_lftp_qualified": True, "native_test_pass_records": len(NATIVE_TESTS), "source_inputs": len(sources),
             "native_commands": len(steps), "retained_metadata_and_roles_unchanged": True,
             "isolated_database_removed": True, "original_resource_state_restored": True,
             "inference_performed": False, "scanner_engine_started": False,
-            "scope": "synthetic same-host FTPS receiving and authenticated retrieval; native stock curl plus TLS client stand-in; full journeys and proactive FTPS sending remain open"}
+            "scope": "synthetic same-host FTPS receiving and authenticated retrieval; native stock curl/lftp plus TLS client stand-in; full journeys and proactive FTPS sending remain open"}
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--result", required=True)
     args = parser.parse_args()
+    commit = os.environ.get("GITHUB_SHA", "")
     try:
         commit = os.environ.get("GITHUB_SHA") or subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT).decode().strip()
         print(json.dumps(summarize(ROOT, Path(args.result), commit)))
         return 0
     except Exception:
-        print(json.dumps({"state": "failed", "reason": "FTPS qualification or evidence validation failed; inspect protected outputs"}))
+        print(json.dumps({"state": "failed", "reason": "FTPS qualification or evidence validation failed; inspect protected outputs", **failure_diagnostics(ROOT, Path(args.result), commit)}))
         return 1
 
 

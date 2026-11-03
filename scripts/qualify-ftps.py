@@ -20,6 +20,8 @@ import time
 from urllib.parse import parse_qsl, urlsplit, urlunsplit
 import uuid
 
+from ftps_contract import CLI_PAYLOAD, HOSTILE_CASE_COUNT, LFTP_CASES, NATIVE_PARENT_TESTS
+
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location("metadata", ROOT / "scripts/qualify-retained-metadata.py")
 metadata = importlib.util.module_from_spec(spec)
@@ -64,6 +66,7 @@ def main():
                 "full_foundation_aggregate_executed": False, "full_journeys_qualified": False}
     manifest["native_client_only"] = args.native_client_only
     manifest["stock_curl_qualified"] = False
+    manifest["stock_lftp_qualified"] = False
     processes, created, started, originally_running = {}, False, False, None
     before = None
     cleanup = []
@@ -150,11 +153,11 @@ def main():
         command("migrate-test-database", [binary, "init", "--admin-dsn-file", private / "pg-admin.dsn"])
         env.update(FREIGHTCTL_TEST_ADMIN_FILE=str(private / "pg-admin.dsn"), FREIGHTCTL_TEST_RUNTIME_FILE=str(private / "pg-runtime.dsn"))
         command("stock-curl-version", ["curl", "--version"])
+        if not args.native_client_only:
+            command("stock-lftp-version", ["lftp", "--version"])
         selected = "^TestFTPSNativeTLSClient" if args.native_client_only else "^TestFTPS"
         test_output = command("native-ftps-integration", ["sh", "scripts/go.sh", "test", "-p", "1", "-tags=integration", "-race", "-count=1", "-timeout=120s", "-v", "-run", selected, "./internal/custody"], 150).decode()
-        required = ["TestFTPSNativeTLSClientProtocolAndInterruption"]
-        if not args.native_client_only:
-            required.append("TestFTPSStockCurlExplicitImplicitAndActiveCustody")
+        required = [NATIVE_PARENT_TESTS[0]] if args.native_client_only else NATIVE_PARENT_TESTS
         if any("--- PASS: " + name + " (" not in test_output for name in required) or "--- SKIP:" in test_output or "--- FAIL:" in test_output:
             raise RuntimeError("required native FTPS tests did not execute successfully")
         manifest["native_tests"] = {"required": required, "pass_records": test_output.count("--- PASS:"), "failed_records": 0, "skipped_records": 0}
@@ -165,7 +168,7 @@ def main():
         command("cli-cert", [binary, "dev-cert", "--cert", cert, "--key", key])
         config = private / "curl.conf"
         config.write_text("user = " + json.dumps(tenant + "/" + partner + ":" + token.read_text()) + "\ncacert = " + json.dumps(str(cert)) + "\nssl-reqd\ntls-max = \"1.3\"\nnoproxy = \"*\"\nconnect-timeout = 3\nmax-time = 10\nsilent\nshow-error\n")
-        payload = b"exact FTPS CLI bytes\x00\r\n"
+        payload = CLI_PAYLOAD
         source = private / "payload"
         source.write_bytes(payload)
         for implicit in (False, True):
@@ -193,16 +196,22 @@ def main():
                 ref = private / (label + ".probe.json")
                 ref.write_text(json.dumps({"port": port, "implicit": implicit, "certificate": str(cert), "username": tenant + "/" + partner, "password": token.read_text()}))
                 report = json.loads(command(label + "-native-probe", ["python3", "scripts/ftps-probe.py", "--reference", ref]))
-                if report["state"] != "passed" or report["case_count"] != 12 or not report["all_ordinary_data_resumed"]:
+                if report["state"] != "passed" or report["case_count"] != HOSTILE_CASE_COUNT or not report["all_ordinary_data_resumed"]:
                     raise RuntimeError(label + " native probe incomplete")
             else:
                 command(label + "-upload", ["curl", "-q", "--config", config, "--upload-file", source, url])
                 downloaded = command(label + "-download", ["curl", "-q", "--config", config, url])
                 if downloaded != payload:
                     raise RuntimeError(label + " changed opaque bytes")
+                ref = private / (label + ".json")
+                ref.write_text(json.dumps({"port": port, "implicit": implicit, "certificate": str(cert), "source": str(source), "username": tenant + "/" + partner, "password": token.read_text()}))
+                report = json.loads(command(label + "-lftp-probe", ["python3", "scripts/lftp-probe.py", "--reference", ref]))
+                if report.get("state") != "passed" or report.get("cases") != LFTP_CASES or report.get("stock_client_qualification") is not True:
+                    raise RuntimeError(label + " stock lftp probe incomplete")
             stop(label)
         manifest["state"] = "passed"
         manifest["stock_curl_qualified"] = not args.native_client_only
+        manifest["stock_lftp_qualified"] = not args.native_client_only
     except Exception as exc:
         manifest["failure"] = str(exc)
     finally:

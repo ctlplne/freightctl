@@ -189,7 +189,7 @@ func TestFTPSNativeTLSClientProtocolAndInterruption(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			settings := map[string]any{"port": number, "implicit": implicit, "certificate": f.cert, "username": f.f.a.Tenant + "/" + f.f.a.Partner, "password": string(secret.Bytes)}
+			settings := map[string]any{"port": number, "implicit": implicit, "certificate": f.cert, "username": f.f.a.Tenant + "/" + f.f.a.Partner, "password": string(secret.Bytes), "other_partner_identity": f.f.b.Tenant + "/" + f.f.b.Partner, "other_tenant_identity": f.f.c.Tenant + "/" + f.f.c.Partner}
 			secret.Close()
 			ref := filepath.Join(t.TempDir(), "probe.json")
 			data, err := json.Marshal(settings)
@@ -209,10 +209,64 @@ func TestFTPSNativeTLSClientProtocolAndInterruption(t *testing.T) {
 				CaseCount int  `json:"case_count"`
 				Resumed   bool `json:"all_ordinary_data_resumed"`
 			}
-			if err := json.Unmarshal(out, &report); err != nil || report.State != "passed" || report.CaseCount != 12 || !report.Resumed {
+			if err := json.Unmarshal(out, &report); err != nil || report.State != "passed" || report.CaseCount != 15 || !report.Resumed {
 				t.Fatalf("incomplete native TLS probe: %v; %s", err, out)
 			}
-			t.Logf("native TLS1.3 FTP stand-in passed12 protocol/interruption cases; stock-client qualification remains separate")
+			t.Logf("native TLS1.3 FTP stand-in passed15 protocol/identity/interruption cases; stock-client qualification remains separate")
+		})
+	}
+}
+
+func TestFTPSStockLFTPCustody(t *testing.T) {
+	for _, implicit := range []bool{false, true} {
+		t.Run(map[bool]string{false: "explicit", true: "implicit"}[implicit], func(t *testing.T) {
+			f := startFTPS(t, implicit)
+			u, err := url.Parse(f.url)
+			if err != nil {
+				t.Fatal(err)
+			}
+			_, port, err := net.SplitHostPort(u.Host)
+			if err != nil {
+				t.Fatal(err)
+			}
+			number, err := strconv.Atoi(port)
+			if err != nil {
+				t.Fatal(err)
+			}
+			dir := t.TempDir()
+			source := filepath.Join(dir, "payload")
+			payload := bytes.Repeat([]byte("stock lftp\x00opaque\r\nbytes\n"), 2048)
+			if err := os.WriteFile(source, payload, 0600); err != nil {
+				t.Fatal(err)
+			}
+			secret, err := secure.ReadSecret(f.token, 64)
+			if err != nil {
+				t.Fatal(err)
+			}
+			settings := map[string]any{"port": number, "implicit": implicit, "certificate": f.cert, "source": source, "username": f.f.a.Tenant + "/" + f.f.a.Partner, "password": string(secret.Bytes)}
+			secret.Close()
+			data, err := json.Marshal(settings)
+			if err != nil {
+				t.Fatal(err)
+			}
+			ref := filepath.Join(dir, "probe.json")
+			if err := os.WriteFile(ref, data, 0600); err != nil {
+				t.Fatal(err)
+			}
+			probe := exec.CommandContext(f.f.ctx, "python3", filepath.Join("..", "..", "scripts", "lftp-probe.py"), "--reference", ref)
+			out, err := probe.CombinedOutput()
+			if err != nil {
+				t.Fatalf("stock lftp probe failed: %v; %s", err, out)
+			}
+			var report struct {
+				State     string
+				CaseCount int  `json:"case_count"`
+				Stock     bool `json:"stock_client_qualification"`
+			}
+			if err := json.Unmarshal(out, &report); err != nil || report.State != "passed" || report.CaseCount != 4 || !report.Stock {
+				t.Fatalf("incomplete stock lftp probe: %v; %s", err, out)
+			}
+			t.Logf("stock lftp preserved %d opaque bytes through EPSV/PASV/active transfers and namespace commands", len(payload))
 		})
 	}
 }

@@ -14,6 +14,9 @@ on:
       - 'scripts/go.sh'
       - 'scripts/integration.sh'
       - 'scripts/ftps-probe.py'
+      - 'scripts/ftps_contract.py'
+      - 'scripts/lftp-probe.py'
+      - 'scripts/install-ftps-clients.sh'
       - 'scripts/qualify-ftps.py'
       - 'scripts/ci-ftps-summary.py'
       - 'scripts/dev-db.py'
@@ -35,6 +38,9 @@ on:
       - 'scripts/go.sh'
       - 'scripts/integration.sh'
       - 'scripts/ftps-probe.py'
+      - 'scripts/ftps_contract.py'
+      - 'scripts/lftp-probe.py'
+      - 'scripts/install-ftps-clients.sh'
       - 'scripts/qualify-ftps.py'
       - 'scripts/ci-ftps-summary.py'
       - 'scripts/dev-db.py'
@@ -51,7 +57,8 @@ permissions:
 
 concurrency:
   group: freightctl-native-linux-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  # Finish the running qualification candidate; newer pushes wait.
+  cancel-in-progress: false
 
 jobs:
   native-go-postgres:
@@ -87,6 +94,8 @@ jobs:
             test "${{ matrix.arch }}" = arm64
             test "$(uname -m)" = aarch64
           fi
+      - name: Pinned stock FTPS client
+        run: sh scripts/install-ftps-clients.sh
       - name: Task-owned PostgreSQL and offline GnuPG peer
         run: |
           python3 scripts/dev-db.py

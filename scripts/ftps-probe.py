@@ -13,6 +13,9 @@ import os
 from pathlib import Path
 import socket
 import ssl
+import uuid
+
+from ftps_contract import HOSTILE_CASE_COUNT
 
 
 class BoundFTP(ftplib.FTP_TLS):
@@ -29,7 +32,7 @@ class BoundFTP(ftplib.FTP_TLS):
         self.settings["last_command"] = line.split(" ", 1)[0].upper()
         return super().putcmd(line)
 
-    def open_control(self):
+    def open_control(self, authenticate=True):
         self.host = "127.0.0.1"
         port = self.settings["port"]
         if self.settings["implicit"]:
@@ -42,6 +45,8 @@ class BoundFTP(ftplib.FTP_TLS):
             self.connect(self.host, port)
             self.auth()
         assert self.sock.version() == "TLSv1.3", "control TLS version differs"
+        if not authenticate:
+            return self
         self.login(self.settings["username"], self.settings["password"])
         self.prot_p()
         assert self.sock.session.has_ticket, "control did not issue a TLS ticket"
@@ -100,6 +105,29 @@ def run(settings):
             raise AssertionError("unsafe command accepted")
 
     try:
+        tenant, partner = settings["username"].split("/")
+        wrong_password = ("0" if settings["password"][0] != "0" else "1") + settings["password"][1:]
+        for label, username, password in (
+                ("wrong-token", settings["username"], wrong_password),
+                ("wrong-partner", settings.get("other_partner_identity", tenant + "/" + str(uuid.uuid4())), settings["password"]),
+                ("wrong-tenant", settings.get("other_tenant_identity", str(uuid.uuid4()) + "/" + partner), settings["password"])):
+            denied = BoundFTP(settings, context).open_control(authenticate=False)
+            try:
+                try:
+                    denied.login(username, password)
+                except ftplib.error_perm as error:
+                    assert str(error).startswith("530"), "wrong identity refusal category"
+                else:
+                    raise AssertionError("FTPS accepted a credential outside its bound identity")
+                # The engine closes after its observed530 authentication
+                # refusal. A remaining socket may only refuse the file command.
+                try:
+                    refuse(denied, "SIZE guard.bin", 530)
+                except EOFError:
+                    pass
+                cases.append(label + "-refused-on-wire")
+            finally:
+                denied.close()
         c = client()
         payload = b"opaque\x00FTPS\r\nbytes\n" * 1024
         c.storbinary("STOR wire.bin", io.BytesIO(payload))
@@ -215,6 +243,7 @@ def run(settings):
         cleanup = client()
         cleanup.delete("guard.bin")
         cleanup.quit()
+        assert len(cases) == HOSTILE_CASE_COUNT, "hostile-client profile differs"
         return {"state": "passed", "client": "Python stdlib TLS1.3 FTP stand-in with explicit session reuse",
                 "cases": cases, "case_count": len(cases), "ordinary_resumed_data_channels": len(ordinary),
                 "payload_sha256": hashlib.sha256(payload).hexdigest(), "payload_bytes": len(payload),

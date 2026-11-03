@@ -1,0 +1,16 @@
+"""Shared qualification profile; execution still needs actual native clients."""
+
+NATIVE_PARENT_TESTS = [
+    "TestFTPSNativeTLSClientProtocolAndInterruption",
+    "TestFTPSStockCurlExplicitImplicitAndActiveCustody",
+    "TestFTPSStockLFTPCustody",
+]
+NATIVE_TESTS = {name + suffix for name in NATIVE_PARENT_TESTS
+                for suffix in ("", "/explicit", "/implicit")}
+HOSTILE_CASE_COUNT = 15
+CLI_PAYLOAD = b"exact FTPS CLI bytes\x00\r\n"
+LFTP_CASES = ["epsv-exact-bytes", "pasv-exact-bytes", "active-exact-bytes", "namespace-commands"]
+LFTP_DOWNLOADS = ("epsv.download", "pasv.download", "active.download", "renamed.download")
+LFTP_FAILURE_CODES = {"client-unavailable", "client-deadline", "client-profile-differs",
+                      "certificate-refused", "authentication-refused", "tls-transfer-refused",
+                      "client-command-failed", "listing-differs", "bytes-differ", "probe-failed"}

@@ -1,0 +1,181 @@
+{
+  "schema_version": 1,
+  "id": "F060",
+  "kind": "native-ftps-stock-lftp-and-wire-identity",
+  "state": "original full native replay passed on both architectures; local wire-identity replay passed; native lftp runtime gate pending",
+  "observed_on": "2026-11-02",
+  "starting_commit": "563751ee67b2a046664faba0eb78164eb552a5f6",
+  "author_and_committer": "imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>",
+  "local_replay": {
+    "manifest_reference": ".private/ftps-12b330d56a5f4758a7368d7f3f3e6a11/manifest.json",
+    "manifest_sha256": "e9e9bb9ab77af11c7a0b38f23f016befdd9e7bc3b9dd379e50298577dd575ec9",
+    "binary_sha256": "35a042bbfed10076012a5bf69ad3a0334339e6d1bf63bcf4b578c3faa8e55d6a",
+    "environment": "Go1.26.10 darwin/arm64; actual application/PostgreSQL/storage; Python TLS1.3 explicit-resumption client stand-in",
+    "source_scope": "Uncommitted test-harness extension at starting_commit;655 original source digests retained in protected manifest. No production runtime source changed.",
+    "native_pass_records": 3,
+    "native_commands": 39,
+    "all_exit_codes_zero": true,
+    "cases_each_service_and_cli_mode": 15,
+    "ordinary_resumed_data_channels_each_cli_mode": 22,
+    "new_cases": [
+      "wrong token returns530",
+      "existing other partner with first token returns530",
+      "existing other tenant with first token returns530"
+    ],
+    "cli_identity_scope": "CLI fixtures use nonexistent other partner/tenant; service fixtures use existing other partner/tenant.",
+    "stock_curl_qualified": false,
+    "stock_lftp_qualified": false,
+    "retained_metadata_and_roles_unchanged": true,
+    "isolated_database_removed": true,
+    "original_resource_state_restored": true,
+    "postgres_resource": "exact task-owned512MiB/oneCPU resource restored stopped; retained schema35/64tables/63forcedRLS;64339rows unchanged",
+    "scanner_started": false,
+    "inference_performed": false
+  },
+  "first_test_failure": {
+    "manifest_reference": ".private/ftps-bcc583c2000a465298c8c9491715be49/manifest.json",
+    "manifest_sha256": "426f5ae2b2cba305b62779284deb067216ac85889362cbf0ad222dc6d18ffa44",
+    "failure": "The new test expected a second530 reply to SIZE after an observed530 login refusal; the engine closes immediately after rejecting authentication, so the test saw EOF.",
+    "repair": "Require the first530, then accept EOF or a further530. Successful login or a successful file command still fails. Authentication code and permissions are unchanged.",
+    "cleanup_failures": [],
+    "retained_metadata_and_roles_unchanged": true
+  },
+  "new_native_gate": {
+    "state": "pending actual GitHub execution",
+    "architectures": [
+      "Linux x86_64",
+      "Linux arm64"
+    ],
+    "client": "Ubuntu noble-updates lftp4.9.2-2ubuntu1.1; separate stock process using GnuTLS",
+    "installation": "GitHub Actions only, Ubuntu24.04 signed apt repositories; exact revision required; actual package/library/architecture recorded",
+    "tests": [
+      "EPSV exact bytes",
+      "PASV exact bytes",
+      "active upload/download exact bytes",
+      "listing and create/rename/delete"
+    ],
+    "service_and_cli_listener_modes": [
+      "explicit",
+      "implicit"
+    ],
+    "native_pass_records_required": 9,
+    "safety": "protected command reference, fresh LFTP_HOME, no user rc/proxy inheritance, verified CA/hostname, TLS1.3, bounded retries/output/time, no secret argv",
+    "reporting": "Original Go outcomes/command hashes/source hashes checked; four actual CLI download files per mode independently compared. Failed output exposes only allowlisted test names and error categories.",
+    "reporter_refusal_contracts": 14,
+    "workflow_concurrency": "Finish the running native/FTPS candidate; retain only the newest pending candidate. No queue:max backlog and no automatic retries/cancellation of a valid live handle."
+  },
+  "starting_candidate_ci": {
+    "candidate": "563751ee67b2a046664faba0eb78164eb552a5f6",
+    "full_native_run": 41556111837,
+    "full_native_state": "success on both native architectures",
+    "native_jobs": {
+      "x86_64": 125655281000,
+      "arm64": 125655281065
+    },
+    "stock_ftps_run": 41556111999,
+    "stock_ftps_state": "success on both native architectures; curl only at this candidate",
+    "stock_ftps_jobs": [
+      {
+        "architecture": "arm64",
+        "id": 125655281316,
+        "manifest_sha256": "ea14650681abd46a473057dea39ca4da819e36d01e00cf835c78a8ad76a487a9"
+      },
+      {
+        "architecture": "x86_64",
+        "id": 125655281703,
+        "manifest_sha256": "ea77d626d781684f1e79e31b849099c725be9aea42ac72a2f6d05b997a7def61"
+      }
+    ],
+    "stock_ftps_each": {
+      "native_pass_records": 6,
+      "native_commands": 38,
+      "source_inputs": 652,
+      "retained_metadata_and_roles_unchanged": true,
+      "isolated_database_removed": true,
+      "original_resource_state_restored": true
+    },
+    "metadata_and_fuzz": "both metadata jobs and all nine fuzz targets passed",
+    "stock_peers_run": 41556112732,
+    "stock_peers_state": "all five entries passed",
+    "platform_run": 41556112093,
+    "mac_job": 125655282068,
+    "mac_state": "success",
+    "windows_job": 125655281808,
+    "windows_state": "failure;22 tests/subcases;D103 remains open",
+    "core_run": 41556112219,
+    "core_job": 125655282165,
+    "core_state": "success",
+    "engine_each": {
+      "pass_records": 223,
+      "fail_records": 0,
+      "skip_records": 1,
+      "skip": "TestActiveTransferFromPort20;privileged legacy port unavailable; product unprivileged active callbacks are independently exercised"
+    },
+    "postgres_integration_each": {
+      "pass_records": 569,
+      "fail_records": 0,
+      "skip_records": 0
+    }
+  },
+  "limits": [
+    "Receiving and authenticated retrieval components only; proactive FTPS sending/collection remains open.",
+    "No whole parity row or full customer journey qualified.",
+    "Active lifecycle/intake/ticket recovery, broader clients/production networks, Windows, scale/durability and all other mandatory gates remain open.",
+    "No local inference, scanner or owner-deferred F026 aggregate."
+  ],
+  "sources": [
+    {
+      "url": "https://lftp.yar.ru/lftp-man.html",
+      "role": "stock client command language and TLS options"
+    },
+    {
+      "url": "https://packages.ubuntu.com/en/noble-updates/lftp",
+      "role": "exact Ubuntu package revision, native architectures and library dependency"
+    },
+    {
+      "url": "https://ubuntu.com/server/docs/explanation/crypto/gnutls/",
+      "role": "TLS1.3 priority string"
+    },
+    {
+      "url": "https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency",
+      "role": "one running/newest pending concurrency behavior"
+    }
+  ],
+  "native_log_archive": {
+    "manifest_reference": ".private/freightctl-ftps-native-563751e-7e8161d591894d0e89dbf6a1908481ae/manifest.json",
+    "manifest_sha256": "4ca981352d8e37ee74b080e9cacb6b9a2f5839d711eaae43e2d6a85c96946b45",
+    "files": {
+      "125655281000.log": {
+        "bytes": 656922,
+        "sha256": "b9e09927a05892c2d9165d11caae6f47f9244c490bfc824dd1927750d4894925"
+      },
+      "125655281065.log": {
+        "bytes": 547716,
+        "sha256": "8b397a1aba3980f17d1b1624c3ef429ee166bdb3ff42e002db4707592f0e594a"
+      },
+      "125655281316.log": {
+        "bytes": 22439,
+        "sha256": "7482ea102df427f52391cc0911cee5566c5dca14ccb3ee4e24b19c81942608e3"
+      },
+      "125655281703.log": {
+        "bytes": 22525,
+        "sha256": "7467a49a1cb3845d792efc087f88382675103c7564914c5a7b3dd56b9c45de23"
+      },
+      "125655281808.log": {
+        "bytes": 23500,
+        "sha256": "19e7277cdec4089437cc1759fba17e44f1d552b4ef6b685eb43c9d701298b204"
+      }
+    }
+  },
+  "public_source_review": {
+    "manifest_reference": ".private/freightctl-ftps-lftp-public-review-fe09f64df1754e5dac2eab43325fc8b5/manifest.json",
+    "manifest_sha256": "67c32efc6c01749bb6110ee7aca4fd9970bd5424922d758404e995ff8db2bea9",
+    "kind": "full-public-source-secret-scan",
+    "scanner": "Gitleaks8.30.1 native ARM",
+    "exit_code": 0,
+    "source_count": 656,
+    "stderr_sha256": "0d4786a859c7ffeae636b8c993594ba3076b243a0fb4a29c290275289412bf56",
+    "scope": "656 public source inputs copied before appending this scan result; no ignored private estate scanned or published",
+    "rules_changed": false
+  }
+}
