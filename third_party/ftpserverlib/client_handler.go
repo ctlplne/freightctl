@@ -1,0 +1,1061 @@
+package ftpserver
+
+import (
+	"bufio"
+	"compress/flate"
+	"crypto/tls"
+	"errors"
+	"fmt"
+	"io"
+	"log/slog"
+	"net"
+	"strings"
+	"sync"
+	"time"
+)
+
+// HASHAlgo is the enumerable that represents the supported HASH algorithms.
+type HASHAlgo int8
+
+// Supported hash algorithms
+const (
+	HASHAlgoCRC32 HASHAlgo = iota
+	HASHAlgoMD5
+	HASHAlgoSHA1
+	HASHAlgoSHA256
+	HASHAlgoSHA512
+)
+
+// TransferType is the enumerable that represents the supported transfer types.
+type TransferType int8
+
+// Supported transfer type
+const (
+	TransferTypeASCII TransferType = iota
+	TransferTypeBinary
+)
+
+// TransferMode is the enumerable that represents the transfer mode (stream, block, compressed, deflate)
+type TransferMode int8
+
+// Transfer modes
+const (
+	// TransferModeStream is the standard uncompressed transfer mode
+	TransferModeStream TransferMode = iota
+	// TransferModeDeflate is the compressed transfer mode using deflate algorithm
+	TransferModeDeflate
+)
+
+// DataChannel is the enumerable that represents the data channel (active or passive)
+type DataChannel int8
+
+// Supported data channel types
+const (
+	DataChannelPassive DataChannel = iota + 1
+	DataChannelActive
+)
+
+const (
+	maxCommandSize = 4096
+)
+
+var (
+	errNoTransferConnection  = errors.New("unable to open transfer: no transfer connection")
+	errTLSRequired           = errors.New("unable to open transfer: TLS is required")
+	errInvalidTLSRequirement = errors.New("invalid TLS requirement")
+	errProtMismatch          = errors.New("unable to open transfer: the data connection does not " +
+		"match the requested protection level, issue PASV or PORT again")
+)
+
+func getHashMapping() map[string]HASHAlgo {
+	mapping := make(map[string]HASHAlgo)
+	mapping["CRC32"] = HASHAlgoCRC32
+	mapping["MD5"] = HASHAlgoMD5
+	mapping["SHA-1"] = HASHAlgoSHA1
+	mapping["SHA-256"] = HASHAlgoSHA256
+	mapping["SHA-512"] = HASHAlgoSHA512
+
+	return mapping
+}
+
+func getHashName(algo HASHAlgo) string {
+	hashName := ""
+	hashMapping := getHashMapping()
+
+	for k, v := range hashMapping {
+		if v == algo {
+			hashName = k
+		}
+	}
+
+	return hashName
+}
+
+type clientHandler struct {
+	connectedAt         time.Time       // Date of connection
+	paramsMutex         sync.RWMutex    // mutex to protect the parameters exposed to the library users
+	driver              ClientDriver    // Client handling driver
+	conn                net.Conn        // TCP connection
+	user                string          // Authenticated user
+	path                string          // Current path
+	listPath            string          // Path for NLST/LIST requests
+	clnt                string          // Identified client
+	command             string          // Command received on the connection
+	ctxRnfr             string          // Rename from
+	logger              *slog.Logger    // Client handler logging
+	transferWg          sync.WaitGroup  // wait group for command that open a transfer connection
+	transfer            transferHandler // Transfer connection (passive or active)s
+	extra               any             // Additional application-specific data
+	server              *FtpServer      // Server on which the connection was accepted
+	writer              *bufio.Writer   // Writer on the TCP connection
+	reader              *bufio.Reader   // Reader on the TCP connection
+	ctxRest             int64           // Restart point
+	transferMu          sync.Mutex      // this mutex will protect the transfer parameters
+	id                  uint32          // ID of the client
+	selectedHashAlgo    HASHAlgo        // algorithm used when we receive the HASH command
+	currentTransferType TransferType    // current transfer type
+	lastDataChannel     DataChannel     // Last data channel mode (passive or active)
+	debug               bool            // Show debugging info on the server side
+	transferTLS         bool            // Use TLS for transfer connection
+	controlTLS          bool            // Use TLS for control connection
+	transferMode        TransferMode    // Transfer mode (stream, deflate)
+	isTransferOpen      bool            // indicate if the transfer connection is opened
+	isTransferAborted   bool            // indicate if the transfer was aborted
+	connClosed          bool            // indicates if the connection has been commanded to close
+	tlsRequirement      TLSRequirement  // TLS requirement to respect
+}
+
+// newClientHandler initializes a client handler when someone connects
+func (server *FtpServer) newClientHandler(
+	connection net.Conn,
+	clientID uint32,
+	transferType TransferType,
+) *clientHandler {
+	return &clientHandler{
+		server:              server,
+		conn:                connection,
+		id:                  clientID,
+		writer:              bufio.NewWriter(connection),
+		reader:              bufio.NewReaderSize(connection, maxCommandSize),
+		connectedAt:         time.Now().UTC(),
+		path:                "/",
+		selectedHashAlgo:    HASHAlgoSHA256,
+		currentTransferType: transferType,
+		logger:              server.Logger.With("clientId", clientID),
+	}
+}
+
+// disconnects the connection without any other messaging
+func (c *clientHandler) disconnect() error {
+	if c.connClosed {
+		return nil
+	}
+
+	err := c.conn.Close()
+	if err != nil {
+		err = newNetworkError("error closing control connection", err)
+		c.logger.Warn(
+			"Problem disconnecting a client",
+			"err", err,
+		)
+	}
+
+	c.connClosed = true
+
+	return err
+}
+
+// Path provides the current working directory of the client
+func (c *clientHandler) Path() string {
+	c.paramsMutex.RLock()
+	defer c.paramsMutex.RUnlock()
+
+	return c.path
+}
+
+// SetPath changes the current working directory
+func (c *clientHandler) SetPath(value string) {
+	c.paramsMutex.Lock()
+	defer c.paramsMutex.Unlock()
+
+	c.path = value
+}
+
+// getListPath returns the path for the last LIST/NLST request
+func (c *clientHandler) getListPath() string {
+	c.paramsMutex.RLock()
+	defer c.paramsMutex.RUnlock()
+
+	return c.listPath
+}
+
+// SetListPath changes the path for the last LIST/NLST request
+func (c *clientHandler) SetListPath(value string) {
+	c.paramsMutex.Lock()
+	defer c.paramsMutex.Unlock()
+
+	c.listPath = value
+}
+
+// Debug defines if we will list all interaction
+func (c *clientHandler) Debug() bool {
+	c.paramsMutex.RLock()
+	defer c.paramsMutex.RUnlock()
+
+	return c.debug
+}
+
+// SetDebug changes the debug flag
+func (c *clientHandler) SetDebug(debug bool) {
+	c.paramsMutex.Lock()
+	defer c.paramsMutex.Unlock()
+
+	c.debug = debug
+}
+
+// ID provides the client's ID
+func (c *clientHandler) ID() uint32 {
+	return c.id
+}
+
+// RemoteAddr returns the remote network address.
+func (c *clientHandler) RemoteAddr() net.Addr {
+	return c.conn.RemoteAddr()
+}
+
+// LocalAddr returns the local network address.
+func (c *clientHandler) LocalAddr() net.Addr {
+	return c.conn.LocalAddr()
+}
+
+// GetClientVersion returns the identified client, can be empty.
+func (c *clientHandler) GetClientVersion() string {
+	c.paramsMutex.RLock()
+	defer c.paramsMutex.RUnlock()
+
+	return c.clnt
+}
+
+func (c *clientHandler) setClientVersion(value string) {
+	c.paramsMutex.Lock()
+	defer c.paramsMutex.Unlock()
+
+	c.clnt = value
+}
+
+// HasTLSForControl returns true if the control connection is over TLS
+func (c *clientHandler) HasTLSForControl() bool {
+	if c.server.settings.TLSRequired == ImplicitEncryption {
+		return true
+	}
+
+	c.paramsMutex.RLock()
+	defer c.paramsMutex.RUnlock()
+
+	return c.controlTLS
+}
+
+func (c *clientHandler) setTLSForControl(value bool) {
+	c.paramsMutex.Lock()
+	defer c.paramsMutex.Unlock()
+
+	c.controlTLS = value
+}
+
+// HasTLSForTransfers returns true if the transfer connection is over TLS
+func (c *clientHandler) HasTLSForTransfers() bool {
+	if c.server.settings.TLSRequired == ImplicitEncryption {
+		return true
+	}
+
+	c.paramsMutex.RLock()
+	defer c.paramsMutex.RUnlock()
+
+	return c.transferTLS
+}
+
+func (c *clientHandler) SetExtra(extra any) {
+	c.extra = extra
+}
+
+func (c *clientHandler) Extra() any {
+	return c.extra
+}
+
+func (c *clientHandler) setTLSForTransfer(value bool) {
+	c.paramsMutex.Lock()
+	defer c.paramsMutex.Unlock()
+
+	c.transferTLS = value
+}
+
+// SetTLSRequirement sets the TLS requirement to respect for this connection
+func (c *clientHandler) SetTLSRequirement(requirement TLSRequirement) error {
+	if requirement < ClearOrEncrypted || requirement > MandatoryEncryption {
+		return errInvalidTLSRequirement
+	}
+
+	c.paramsMutex.Lock()
+	defer c.paramsMutex.Unlock()
+
+	c.tlsRequirement = requirement
+
+	return nil
+}
+
+func (c *clientHandler) isTLSRequired() bool {
+	if c.server.settings.TLSRequired == MandatoryEncryption {
+		return true
+	}
+
+	c.paramsMutex.RLock()
+	defer c.paramsMutex.RUnlock()
+
+	return c.tlsRequirement == MandatoryEncryption
+}
+
+// GetLastCommand returns the last received command
+func (c *clientHandler) GetLastCommand() string {
+	c.paramsMutex.RLock()
+	defer c.paramsMutex.RUnlock()
+
+	return c.command
+}
+
+// GetLastDataChannel returns the last data channel mode
+func (c *clientHandler) GetLastDataChannel() DataChannel {
+	c.paramsMutex.RLock()
+	defer c.paramsMutex.RUnlock()
+
+	return c.lastDataChannel
+}
+
+func (c *clientHandler) setLastCommand(cmd string) {
+	c.paramsMutex.Lock()
+	defer c.paramsMutex.Unlock()
+
+	c.command = cmd
+}
+
+func (c *clientHandler) setLastDataChannel(channel DataChannel) {
+	c.paramsMutex.Lock()
+	defer c.paramsMutex.Unlock()
+
+	c.lastDataChannel = channel
+}
+
+func (c *clientHandler) closeTransfer() error {
+	var err error
+	if c.transfer == nil {
+		return nil
+	}
+
+	err = c.transfer.Close()
+	c.isTransferOpen = false
+	c.transfer = nil
+
+	if c.debug {
+		c.logger.Debug("Transfer connection closed")
+	}
+
+	if err != nil {
+		err = fmt.Errorf("error closing transfer connection: %w", err)
+
+		return err
+	}
+
+	return nil
+}
+
+// Close closes the active transfer, if any, and the control connection
+func (c *clientHandler) Close() error {
+	c.transferMu.Lock()
+	defer c.transferMu.Unlock()
+
+	// set isTransferAborted to true so any transfer in progress will not try to write
+	// to the closed connection on transfer close
+	c.isTransferAborted = true
+
+	if err := c.closeTransfer(); err != nil {
+		c.logger.Warn(
+			"Problem closing a transfer on external close request",
+			"err", err,
+		)
+	}
+
+	// don't be tempted to send a message to the client before
+	// closing the connection:
+	//
+	// 1) it is racy, we need to lock writeMessage to do this
+	// 2) the client could wait for another response and so we break the protocol
+	//
+	// closing the connection from a different goroutine should be safe
+	return c.disconnect()
+}
+
+// disconnects client and ends transfer notifying the driver
+func (c *clientHandler) end() {
+	c.server.driver.ClientDisconnected(c)
+	c.server.clientDeparture(c)
+
+	c.transferMu.Lock()
+	if err := c.closeTransfer(); err != nil {
+		c.logger.Warn(
+			"Problem closing a transfer",
+			"err", err,
+		)
+	}
+	c.transferMu.Unlock()
+
+	if err := c.disconnect(); err != nil {
+		c.logger.Warn(
+			"Problem disconnecting client on end",
+			"err", err,
+		)
+	}
+}
+
+func (c *clientHandler) isCommandAborted() bool {
+	c.transferMu.Lock()
+	defer c.transferMu.Unlock()
+
+	return c.isTransferAborted
+}
+
+// HandleCommands reads the stream of commands
+func (c *clientHandler) HandleCommands() {
+	defer c.end()
+
+	if msg, err := c.server.driver.ClientConnected(c); err == nil {
+		c.writeMessage(StatusServiceReady, msg)
+	} else {
+		c.writeMessage(StatusSyntaxErrorNotRecognised, msg)
+
+		return
+	}
+
+	for {
+		if c.readCommand() {
+			return
+		}
+	}
+}
+
+func (c *clientHandler) readCommand() bool {
+	if c.reader == nil {
+		if c.debug {
+			c.logger.Debug("Client disconnected", "clean", true)
+		}
+
+		return true
+	}
+
+	// florent(2018-01-14): #58: IDLE timeout: Preparing the deadline before we read
+	if c.server.settings.IdleTimeout > 0 && c.setIdleDeadline() {
+		return true
+	}
+
+	lineSlice, isPrefix, err := c.reader.ReadLine()
+
+	if isPrefix {
+		if c.debug {
+			c.logger.Warn("Received line too long, disconnecting client",
+				"size", len(lineSlice))
+		}
+
+		return true
+	}
+
+	if err != nil {
+		shouldDisconnect := c.handleCommandsStreamError(err)
+
+		return shouldDisconnect
+	}
+
+	line := string(lineSlice)
+
+	if c.debug {
+		c.logger.Debug("Received line", "line", redactLine(line))
+	}
+
+	c.handleCommand(line)
+
+	return false
+}
+
+func (c *clientHandler) handleCommandsStreamError(err error) bool {
+	// florent(2018-01-14): #58: IDLE timeout: Adding some code to deal with the deadline
+	var errNetError net.Error
+	if errors.As(err, &errNetError) {
+		return c.handleNetworkError(err, errNetError)
+	}
+
+	// Check for closed connection errors before logging as error
+	if isClosedConnError(err) {
+		if c.debug {
+			c.logger.Debug("Client disconnected", "clean", false)
+		}
+
+		return true
+	}
+
+	if errors.Is(err, io.EOF) {
+		if c.debug {
+			c.logger.Debug("Client disconnected", "clean", false)
+		}
+	} else {
+		c.logger.Error("Read error", "err", err)
+	}
+
+	return true
+}
+
+// setIdleDeadline arms the idle deadline. It returns true if the connection is already closed.
+func (c *clientHandler) setIdleDeadline() bool {
+	err := c.conn.SetDeadline(c.idleDeadline())
+	if err == nil {
+		return false
+	}
+
+	// If the connection is already closed, return early instead of trying to read
+	if isClosedConnError(err) {
+		if c.debug {
+			c.logger.Debug("Client disconnected before first command")
+		}
+
+		return true
+	}
+
+	c.logger.Error("Network error", "err", err)
+
+	return false
+}
+
+func (c *clientHandler) idleDeadline() time.Time {
+	return time.Now().Add(time.Duration(time.Second.Nanoseconds() * int64(c.server.settings.IdleTimeout)))
+}
+
+// handleNetworkError handles a network error while reading a command: it returns true if the client
+// should be disconnected.
+func (c *clientHandler) handleNetworkError(err error, errNetError net.Error) bool {
+	if errNetError.Timeout() {
+		return c.handleTimeout(err)
+	}
+
+	// Check if this is a closed connection error - treat as normal disconnect
+	if isClosedConnError(err) {
+		if c.debug {
+			c.logger.Debug("Client disconnected", "clean", false)
+		}
+
+		return true
+	}
+
+	c.logger.Error("Network error", "err", err)
+
+	return true
+}
+
+// handleCommand takes care of executing the received line
+func (c *clientHandler) handleCommand(line string) {
+	command, param := parseLine(line)
+	command = strings.ToUpper(command)
+
+	cmdDesc := commandsMap[command]
+	if cmdDesc == nil {
+		// Search among commands having a "special semantic". They
+		// should be sent by following the RFC-959 procedure of sending
+		// Telnet IP/Synch sequence (chr 242 and 255) as OOB data but
+		// since many ftp clients don't do it correctly we check the
+		// command suffix.
+		for _, cmd := range specialAttentionCommands {
+			if strings.HasSuffix(command, cmd) {
+				cmdDesc = commandsMap[cmd]
+				command = cmd
+
+				break
+			}
+		}
+
+		if cmdDesc == nil {
+			c.logger.Warn("Unknown command", "command", command)
+			c.setLastCommand(command)
+			c.writeMessage(StatusSyntaxErrorNotRecognised, fmt.Sprintf("Unknown command %#v", command))
+
+			return
+		}
+	}
+
+	if c.driver == nil && !cmdDesc.Open {
+		c.writeMessage(StatusNotLoggedIn, "Please login with USER and PASS")
+
+		return
+	}
+	if policy, ok := c.server.driver.(MainDriverExtensionCommandPolicy); ok {
+		if answer := policy.BeforeCommand(c, command, param); answer != nil {
+			c.writeMessage(answer.Code, answer.Message)
+			return
+		}
+	}
+
+	// All commands are serialized except the ones that require special action.
+	// Special action commands are not executed in a separate goroutine so we can
+	// have at most one command that can open a transfer connection and one special
+	// action command running at the same time.
+	// Only server STAT is a special action command so we do an additional check here
+	if !cmdDesc.SpecialAction || (command == cmdSTAT && param != "") {
+		c.transferWg.Wait()
+	}
+
+	c.setLastCommand(command)
+
+	if cmdDesc.TransferRelated {
+		// these commands will be started in a separate goroutine so
+		// they can be aborted.
+		// We cannot have two concurrent transfers so also set isTransferAborted
+		// to false here.
+		// isTransferAborted could remain to true if the previous command is
+		// aborted and it does not open a transfer connection, see "transferFile"
+		// for details. For this to happen a client should send an ABOR before
+		// receiving the StatusFileStatusOK response. This is very unlikely
+		// A lock is not required here, we cannot have another concurrent ABOR
+		// or transfer active here
+		c.isTransferAborted = false
+
+		c.transferWg.Add(1)
+
+		go func(cmd, param string) {
+			defer c.transferWg.Done()
+
+			c.executeCommandFn(cmdDesc, cmd, param)
+		}(command, param)
+	} else {
+		c.executeCommandFn(cmdDesc, command, param)
+	}
+}
+
+func (c *clientHandler) executeCommandFn(cmdDesc *CommandDescription, command, param string) {
+	// Let's prepare to recover in case there's a command error
+	defer func() {
+		if r := recover(); r != nil {
+			c.writeMessage(StatusSyntaxErrorNotRecognised, fmt.Sprintf("Unhandled internal error: %s", r))
+			c.logger.Warn(
+				"Internal command handling error",
+				"err", r,
+				"command", command,
+				"param", redactParam(command, param),
+			)
+		}
+	}()
+
+	if err := cmdDesc.Fn(c, param); err != nil {
+		c.writeMessage(StatusSyntaxErrorNotRecognised, fmt.Sprintf("Error: %s", err))
+	}
+}
+
+func (c *clientHandler) writeLine(line string) {
+	if c.debug {
+		c.logger.Debug("Sending answer", "line", line)
+	}
+
+	if _, err := fmt.Fprintf(c.writer, "%s\r\n", line); err != nil {
+		c.logger.Warn(
+			"Answer couldn't be sent",
+			"line", line,
+			"err", err,
+		)
+	}
+
+	if err := c.writer.Flush(); err != nil {
+		c.logger.Warn(
+			"Couldn't flush line",
+			"err", err,
+		)
+	}
+}
+
+func (c *clientHandler) writeMessage(code int, message string) {
+	lines := getMessageLines(message)
+
+	for idx, line := range lines {
+		if idx < len(lines)-1 {
+			c.writeLine(fmt.Sprintf("%d-%s", code, line))
+		} else {
+			c.writeLine(fmt.Sprintf("%d %s", code, line))
+		}
+	}
+}
+
+func (c *clientHandler) GetTranferInfo() string {
+	if c.transfer == nil {
+		return ""
+	}
+
+	return c.transfer.GetInfo()
+}
+
+// discardFailedTransfer closes the transfer handler after a failed TransferOpen, so that its data connection
+// can't be reused by a later transfer: the client has to send PASV/PORT again. transferMu must be held.
+func (c *clientHandler) discardFailedTransfer() {
+	if err := c.closeTransfer(); err != nil {
+		c.logger.Warn("Problem closing the failed transfer", "err", err)
+	}
+}
+
+func (c *clientHandler) TransferOpen(info string) (io.ReadWriter, error) {
+	c.transferMu.Lock()
+	defer c.transferMu.Unlock()
+
+	if c.transfer == nil {
+		// a transfer could be aborted before it is opened, in this case no response should be returned
+		if c.isTransferAborted {
+			c.isTransferAborted = false
+
+			return nil, errNoTransferConnection
+		}
+
+		c.writeMessage(StatusActionNotTaken, errNoTransferConnection.Error())
+
+		return nil, errNoTransferConnection
+	}
+
+	if c.isTLSRequired() && !c.HasTLSForTransfers() {
+		c.writeMessage(StatusServiceNotAvailable, errTLSRequired.Error())
+
+		return nil, errTLSRequired
+	}
+
+	conn, err := c.transfer.Open()
+	if err != nil {
+		c.logger.Warn(
+			"Unable to open transfer",
+			"error", err)
+
+		c.writeMessage(StatusCannotOpenDataConnection, err.Error())
+		c.discardFailedTransfer()
+
+		err = newNetworkError("Unable to open transfer", err)
+
+		return nil, err
+	}
+
+	// PASV/PORT prepare the data connection with the protection in force at that time, so a PROT
+	// received afterwards can leave it different from the one the client asked for.
+	if _, isTLS := conn.(*tls.Conn); isTLS != c.HasTLSForTransfers() {
+		c.logger.Warn(
+			"Data connection protection does not match the PROT command",
+			"encrypted", isTLS,
+			"requested", c.HasTLSForTransfers())
+
+		c.writeMessage(StatusCannotOpenDataConnection, errProtMismatch.Error())
+		c.discardFailedTransfer()
+
+		return nil, errProtMismatch
+	}
+
+	var transferStream io.ReadWriter = conn
+
+	if c.transferMode == TransferModeDeflate {
+		transferStream, err = newDeflateTransfer(transferStream, c.server.settings.DeflateCompressionLevel)
+		if err != nil {
+			c.writeMessage(StatusActionNotTaken, fmt.Sprintf("Could not switch to deflate mode: %v", err))
+			c.discardFailedTransfer()
+
+			return nil, fmt.Errorf("could not switch to deflate mode: %w", err)
+		}
+	}
+
+	c.isTransferOpen = true
+	c.transfer.SetInfo(info)
+
+	c.writeMessage(StatusFileStatusOK, "Using transfer connection")
+
+	if c.debug {
+		c.logger.Debug(
+			"Transfer connection opened",
+			"remoteAddr", conn.RemoteAddr().String(),
+			"localAddr", conn.LocalAddr().String())
+	}
+
+	return transferStream, nil
+}
+
+// Flusher is the interface that wraps the basic Flush method.
+type Flusher interface {
+	Flush() error
+}
+
+// TransferFinalizer is the interface for transfer streams that need explicit
+// finalization (e.g., deflate streams need to write end-of-stream markers).
+// This is distinct from closing the underlying connection.
+// We use FinalizeTransfer() instead of Close() to distinguish from io.Closer,
+// since net.Conn already implements io.Closer and we don't want to accidentally
+// close the underlying connection.
+type TransferFinalizer interface {
+	FinalizeTransfer() error
+}
+
+func (c *clientHandler) TransferClose(transfer io.ReadWriter, err error) {
+	c.transferMu.Lock()
+	defer c.transferMu.Unlock()
+
+	// Check if this is a transfer stream that needs explicit finalization (e.g., deflate).
+	// TransferFinalizer.FinalizeTransfer() for deflate writes the end-of-stream marker AND flushes,
+	// so we don't need to call Flush() separately.
+	if finalizer, ok := transfer.(TransferFinalizer); ok {
+		if errFinalize := finalizer.FinalizeTransfer(); errFinalize != nil {
+			c.logger.Warn(
+				"Error finalizing transfer stream",
+				"err", errFinalize,
+			)
+		}
+	} else if flush, ok := transfer.(Flusher); ok {
+		// Only flush if NOT a TransferCloser (deflate's Close already flushes)
+		if errFlush := flush.Flush(); errFlush != nil {
+			c.logger.Warn(
+				"Error flushing transfer connection",
+				"err", errFlush,
+			)
+		}
+	}
+
+	// Finally close the underlying connection.
+	// "Use of closed network connection" is normal in FTP - the client can close
+	// the connection when done, and we should treat this as success.
+	errClose := c.closeTransfer()
+	if errClose != nil && !isClosedConnError(errClose) {
+		c.logger.Warn(
+			"Problem closing transfer connection",
+			"err", errClose,
+		)
+	}
+
+	// if the transfer was aborted we don't have to send a response
+	if c.isTransferAborted {
+		c.isTransferAborted = false
+
+		return
+	}
+
+	// Treat "connection already closed" as success - it means transfer completed
+	if isClosedConnError(errClose) {
+		errClose = nil
+	}
+
+	switch {
+	case err == nil && errClose == nil:
+		c.writeMessage(StatusClosingDataConn, "Closing transfer connection")
+	case errClose != nil:
+		c.writeMessage(StatusActionNotTaken, fmt.Sprintf("Issue during transfer close: %v", errClose))
+	case err != nil:
+		c.writeMessage(getErrorCode(err, StatusActionNotTaken), fmt.Sprintf("Issue during transfer: %v", err))
+	}
+}
+
+// isClosedConnError checks if the error indicates the connection is already closed.
+// This is normal FTP behavior - the client can close the connection when done.
+func isClosedConnError(err error) bool {
+	if err == nil {
+		return false
+	}
+
+	errStr := err.Error()
+
+	return strings.Contains(errStr, "use of closed network connection") ||
+		strings.Contains(errStr, "connection reset by peer")
+}
+
+func (c *clientHandler) checkDataConnectionRequirement(dataConnIP net.IP, channelType DataChannel) error {
+	var requirement DataConnectionRequirement
+
+	switch channelType {
+	case DataChannelActive:
+		requirement = c.server.settings.ActiveConnectionsCheck
+	case DataChannelPassive:
+		requirement = c.server.settings.PasvConnectionsCheck
+	}
+
+	switch requirement {
+	case IPMatchRequired:
+		controlConnIP, err := getIPFromRemoteAddr(c.RemoteAddr())
+		if err != nil {
+			return err
+		}
+
+		if !controlConnIP.Equal(dataConnIP) {
+			return &ipValidationError{error: fmt.Sprintf("data connection ip address %v "+
+				"does not match control connection ip address %v",
+				dataConnIP, controlConnIP)}
+		}
+
+		return nil
+	case IPMatchDisabled:
+		return nil
+	default:
+		return &ipValidationError{error: fmt.Sprintf("unhandled data connection requirement: %v",
+			requirement)}
+	}
+}
+
+func getIPFromRemoteAddr(remoteAddr net.Addr) (net.IP, error) {
+	if remoteAddr == nil {
+		return nil, &ipValidationError{error: "nil remote address"}
+	}
+
+	ipAddress, _, err := net.SplitHostPort(remoteAddr.String())
+	if err != nil {
+		return nil, fmt.Errorf("error parsing remote address: %w", err)
+	}
+
+	remoteIP := net.ParseIP(ipAddress)
+	if remoteIP == nil {
+		return nil, &ipValidationError{error: fmt.Sprintf("invalid remote IP: %v", ipAddress)}
+	}
+
+	return remoteIP, nil
+}
+
+func parseLine(line string) (string, string) {
+	params := strings.SplitN(line, " ", 2)
+	if len(params) == 1 {
+		return params[0], ""
+	}
+
+	return params[0], params[1]
+}
+
+const redactedValue = "****"
+
+// redactLine hides the parameter of credential-carrying commands so it never reaches the logs
+func redactLine(line string) string {
+	command, param := parseLine(line)
+	if param != "" && strings.EqualFold(command, "PASS") {
+		return command + " " + redactedValue
+	}
+
+	return line
+}
+
+// redactParam hides the parameter of credential-carrying commands so it never reaches the logs
+func redactParam(command, param string) string {
+	if param != "" && strings.EqualFold(command, "PASS") {
+		return redactedValue
+	}
+
+	return param
+}
+
+func (c *clientHandler) multilineAnswer(code int, message string) func() {
+	c.writeLine(fmt.Sprintf("%d-%s", code, message))
+
+	return func() {
+		c.writeLine(fmt.Sprintf("%d End", code))
+	}
+}
+
+func getMessageLines(message string) []string {
+	lines := make([]string, 0, 1)
+	sc := bufio.NewScanner(strings.NewReader(message))
+
+	for sc.Scan() {
+		lines = append(lines, sc.Text())
+	}
+
+	if len(lines) == 0 {
+		lines = append(lines, "")
+	}
+
+	return lines
+}
+
+// Compile-time checks that deflateReadWriter implements required interfaces
+var (
+	_ Flusher           = (*deflateReadWriter)(nil)
+	_ TransferFinalizer = (*deflateReadWriter)(nil)
+)
+
+type deflateReadWriter struct {
+	reader io.ReadCloser // flate.NewReader returns io.ReadCloser
+	writer *flate.Writer
+}
+
+func (d *deflateReadWriter) Read(p []byte) (int, error) {
+	return d.reader.Read(p)
+}
+
+func (d *deflateReadWriter) Write(p []byte) (int, error) {
+	return d.writer.Write(p)
+}
+
+// Flush flushes buffered data to the underlying writer.
+func (d *deflateReadWriter) Flush() error {
+	return d.writer.Flush()
+}
+
+// FinalizeTransfer finalizes the deflate stream by writing the BFINAL block (end-of-stream marker).
+// This does NOT close the underlying connection - it only finalizes the deflate stream.
+func (d *deflateReadWriter) FinalizeTransfer() error {
+	// Close the writer to write the BFINAL block
+	if err := d.writer.Close(); err != nil {
+		return fmt.Errorf("error closing deflate writer: %w", err)
+	}
+
+	// Close the reader to release resources
+	if err := d.reader.Close(); err != nil {
+		return fmt.Errorf("error closing deflate reader: %w", err)
+	}
+
+	return nil
+}
+
+func newDeflateTransfer(conn io.ReadWriter, level int) (*deflateReadWriter, error) {
+	writer, err := flate.NewWriter(conn, level)
+	if err != nil {
+		return nil, fmt.Errorf("could not create deflate writer: %w", err)
+	}
+
+	reader := flate.NewReader(conn)
+
+	return &deflateReadWriter{
+		reader: reader,
+		writer: writer,
+	}, nil
+}
+
+// handleTimeout handles a read timeout: it returns true if the client should be disconnected.
+func (c *clientHandler) handleTimeout(err error) bool {
+	// Check if there's an active data transfer before closing the control connection
+	c.transferMu.Lock()
+	hasActiveTransfer := c.isTransferOpen
+	c.transferMu.Unlock()
+
+	if hasActiveTransfer {
+		// If there's an active data transfer, extend the deadline and continue
+		if errSet := c.conn.SetDeadline(c.idleDeadline()); errSet != nil {
+			c.logger.Error("Could not extend read deadline during active transfer", "err", errSet)
+		}
+
+		if c.debug {
+			c.logger.Debug("Idle timeout occurred during active transfer, extending deadline")
+		}
+
+		// Don't disconnect - the transfer is still active
+		return false
+	}
+
+	// We have to extend the deadline now
+	if errSet := c.conn.SetDeadline(time.Now().Add(time.Minute)); errSet != nil {
+		c.logger.Error("Could not set read deadline", "err", errSet)
+	}
+
+	c.logger.Info("Client IDLE timeout", "err", err)
+	c.writeMessage(
+		StatusServiceNotAvailable,
+		fmt.Sprintf("command timeout (%d seconds): closing control connection", c.server.settings.IdleTimeout))
+
+	if errFlush := c.writer.Flush(); errFlush != nil {
+		c.logger.Error("Flush error", "err", errFlush)
+	}
+
+	return true
+}

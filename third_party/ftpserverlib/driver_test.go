@@ -1,0 +1,656 @@
+package ftpserver
+
+import (
+	"crypto/tls"
+	"errors"
+	"io"
+	"log/slog"
+	"net"
+	"os"
+	"strings"
+	"sync"
+	"testing"
+	"time"
+
+	"github.com/spf13/afero"
+	"github.com/stretchr/testify/require"
+)
+
+type tlsVerificationReply int8
+
+const (
+	// tls certificate is ok but a password is required too
+	tlsVerificationOK tlsVerificationReply = iota
+	// tls certificate verification failed, the client will be disconnected
+	tlsVerificationFailed
+	// tls certificate is ok and no password is required
+	tlsVerificationAuthenticated
+)
+
+const (
+	authUser    = "test"
+	authPass    = "test"
+	authUserID  = 1000
+	authGroupID = 500
+)
+
+var errInvalidTLSCertificate = errors.New("invalid TLS certificate")
+
+// NewTestServer provides a test server with or without debugging
+func NewTestServer(t *testing.T, debug bool) *FtpServer {
+	t.Helper()
+
+	return NewTestServerWithTestDriver(t, &TestServerDriver{Debug: debug})
+}
+
+func (driver *TestServerDriver) Init() {
+	if driver.Settings == nil {
+		driver.Settings = &Settings{
+			DefaultTransferType: TransferTypeBinary,
+		}
+	}
+
+	if driver.Settings.ListenAddr == "" {
+		driver.Settings.ListenAddr = "127.0.0.1:0"
+	}
+
+	{
+		driver.serverDir, _ = os.MkdirTemp("", "example")
+		if err := os.MkdirAll(driver.serverDir, 0o750); err != nil {
+			panic(err)
+		}
+
+		driver.fs = afero.NewBasePathFs(afero.NewOsFs(), driver.serverDir)
+	}
+}
+
+func NewTestServerWithTestDriver(t *testing.T, driver *TestServerDriver) *FtpServer {
+	t.Helper()
+
+	driver.Init()
+
+	// If we are in debug mode, we should log things
+	var logger *slog.Logger
+	if driver.Debug {
+		logger = slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
+			AddSource: true,
+			Level:     slog.LevelDebug,
+		}))
+	} else {
+		logger = slog.New(slog.NewTextHandler(io.Discard, nil)) //nolint:sloglint // DiscardHandler requires Go 1.23+
+	}
+
+	s := NewTestServerWithDriverAndLogger(t, driver, logger)
+
+	return s
+}
+
+// NewTestServerWithTestDriver provides a server instantiated with some settings
+func NewTestServerWithDriverAndLogger(t *testing.T, driver MainDriver, logger *slog.Logger) *FtpServer {
+	t.Helper()
+
+	server := NewFtpServer(driver)
+
+	if logger != nil {
+		server.Logger = logger
+	}
+
+	if err := server.Listen(); err != nil {
+		return nil
+	}
+
+	t.Cleanup(func() {
+		mustStopServer(server)
+	})
+
+	go func() {
+		if err := server.Serve(); err != nil && !errors.Is(err, io.EOF) {
+			server.Logger.Error("problem serving", "err", err)
+		}
+	}()
+
+	return server
+}
+
+func NewTestServerWithDriver(t *testing.T, driver MainDriver) *FtpServer {
+	t.Helper()
+
+	return NewTestServerWithDriverAndLogger(t, driver, nil)
+}
+
+type authUserProvider func(user, pass string) (ClientDriver, error)
+
+// TestServerDriver defines a minimal serverftp server driver
+type TestServerDriver struct {
+	Clients              []ClientContext
+	errPassiveListener   error
+	serverDir            string
+	fs                   afero.Fs
+	clientMU             sync.Mutex
+	AuthProvider         authUserProvider
+	Settings             *Settings // Settings
+	TLSVerificationReply tlsVerificationReply
+	TLSRequirement       TLSRequirement
+	Debug                bool // To display connection logs information
+	TLS                  bool
+	CloseOnConnect       bool // disconnect the client as soon as it connects
+	// transferFiles tracks the *testFile wrappers handed back from OpenFile,
+	// keyed by the path the FTP layer requested. Tests use it to inspect
+	// errTransfer after an interrupted transfer.
+	transferFiles sync.Map
+}
+
+// getTransferFile returns the *testFile previously registered under path, if any.
+func (driver *TestServerDriver) getTransferFile(path string) *testFile {
+	v, ok := driver.transferFiles.Load(path)
+	if !ok {
+		return nil
+	}
+
+	file, _ := v.(*testFile)
+
+	return file
+}
+
+// TestClientDriver defines a minimal serverftp client driver
+type TestClientDriver struct {
+	afero.Fs
+	server *TestServerDriver
+}
+
+// statRecordingDriver is a TestClientDriver that records every path given to Stat.
+type statRecordingDriver struct {
+	*TestClientDriver
+	mu    sync.Mutex
+	paths []string
+}
+
+func (driver *statRecordingDriver) Stat(name string) (os.FileInfo, error) {
+	driver.mu.Lock()
+	driver.paths = append(driver.paths, name)
+	driver.mu.Unlock()
+
+	return driver.TestClientDriver.Stat(name)
+}
+
+// statPaths returns the paths Stat was called with, and resets the record.
+func (driver *statRecordingDriver) statPaths() []string {
+	driver.mu.Lock()
+	defer driver.mu.Unlock()
+
+	paths := driver.paths
+	driver.paths = nil
+
+	return paths
+}
+
+// newStatRecordingServer starts a test server whose client driver records Stat calls.
+func newStatRecordingServer(t *testing.T, settings *Settings) (*FtpServer, *statRecordingDriver) {
+	t.Helper()
+
+	recorder := &statRecordingDriver{}
+	serverDriver := &TestServerDriver{Debug: false, Settings: settings}
+	serverDriver.AuthProvider = func(_, _ string) (ClientDriver, error) {
+		recorder.mu.Lock()
+		if recorder.TestClientDriver == nil {
+			recorder.TestClientDriver = NewTestClientDriver(serverDriver)
+		}
+		recorder.mu.Unlock()
+
+		return recorder, nil
+	}
+
+	return NewTestServerWithTestDriver(t, serverDriver), recorder
+}
+
+type testFile struct {
+	afero.File
+	errTransferMu sync.Mutex
+	errTransfer   error
+}
+
+var (
+	errFailClose   = errors.New("couldn't close")
+	errFailWrite   = errors.New("couldn't write")
+	errFailSeek    = errors.New("couldn't seek")
+	errFailReaddir = errors.New("couldn't readdir")
+	errFailOpen    = errors.New("couldn't open")
+)
+
+func (f *testFile) Read(out []byte) (int, error) {
+	// simulating a slow reading allows us to test ABOR
+	if strings.Contains(f.Name(), "delay-io") {
+		time.Sleep(500 * time.Millisecond)
+	}
+
+	return f.File.Read(out)
+}
+
+func (f *testFile) Write(out []byte) (int, error) {
+	if strings.Contains(f.Name(), "fail-to-write") {
+		return 0, errFailWrite
+	}
+
+	// simulating a slow writing allows us to test ABOR
+	if strings.Contains(f.Name(), "delay-io") {
+		time.Sleep(500 * time.Millisecond)
+	}
+
+	return f.File.Write(out)
+}
+
+func (f *testFile) Close() error {
+	if strings.Contains(f.Name(), "fail-to-close") {
+		return errFailClose
+	}
+
+	return f.File.Close()
+}
+
+func (f *testFile) Seek(offset int64, whence int) (int64, error) {
+	// by delaying the seek and sending a REST before the actual transfer
+	// we can delay the opening of the transfer and then test an ABOR before
+	// opening a transfer. I'm not sure if this can really happen but it is
+	// better to be prepared for buggy clients too
+	if strings.Contains(f.Name(), "delay-io") {
+		time.Sleep(500 * time.Millisecond)
+	}
+
+	if strings.Contains(f.Name(), "fail-to-seek") {
+		return 0, errFailSeek
+	}
+
+	return f.File.Seek(offset, whence)
+}
+
+func (f *testFile) Readdir(count int) ([]os.FileInfo, error) {
+	if strings.Contains(f.Name(), "delay-io") {
+		time.Sleep(500 * time.Millisecond)
+	}
+
+	if strings.Contains(f.Name(), "fail-to-readdir") {
+		return nil, errFailReaddir
+	}
+
+	return f.File.Readdir(count)
+}
+
+// TransferError implements the FileTransferError interface
+func (f *testFile) TransferError(err error) {
+	f.errTransferMu.Lock()
+	defer f.errTransferMu.Unlock()
+	f.errTransfer = err
+}
+
+// getErrTransfer returns the error recorded by TransferError, if any. It is
+// safe to call concurrently with the transfer goroutine (e.g. while polling
+// for a connection-drop interruption).
+func (f *testFile) getErrTransfer() error {
+	f.errTransferMu.Lock()
+	defer f.errTransferMu.Unlock()
+
+	return f.errTransfer
+}
+
+// NewTestClientDriver creates a client driver
+func NewTestClientDriver(server *TestServerDriver) *TestClientDriver {
+	return &TestClientDriver{
+		Fs:     server.fs,
+		server: server,
+	}
+}
+
+func mustStopServer(server *FtpServer) {
+	err := server.Stop()
+	if err != nil {
+		panic(err)
+	}
+}
+
+var errConnectionNotAllowed = errors.New("connection not allowed")
+
+// ClientConnected is the very first message people will see
+func (driver *TestServerDriver) ClientConnected(cltContext ClientContext) (string, error) {
+	driver.clientMU.Lock()
+	defer driver.clientMU.Unlock()
+
+	var err error
+
+	if driver.CloseOnConnect {
+		err = errConnectionNotAllowed
+	}
+
+	cltContext.SetDebug(driver.Debug)
+	// we set the client id as extra data just for testing
+	cltContext.SetExtra(cltContext.ID())
+	driver.Clients = append(driver.Clients, cltContext)
+	// This will remain the official name for now
+	return "TEST Server", err
+}
+
+var errBadUserNameOrPassword = errors.New("bad username or password")
+
+// AuthUser with authenticate users
+func (driver *TestServerDriver) AuthUser(_ ClientContext, user, pass string) (ClientDriver, error) {
+	if driver.AuthProvider != nil {
+		return driver.AuthProvider(user, pass)
+	}
+
+	if user == authUser && pass == authPass {
+		clientdriver := NewTestClientDriver(driver)
+
+		return clientdriver, nil
+	} else if user == nilUser && pass == nilUser {
+		// Definitely a bad behavior (but can be done on the driver side)
+		return nil, nil //nolint:nilnil
+	}
+
+	return nil, errBadUserNameOrPassword
+}
+
+type MesssageDriver struct {
+	TestServerDriver
+}
+
+// PostAuthMessage returns a message displayed after authentication
+func (driver *MesssageDriver) PostAuthMessage(_ ClientContext, _ string, authErr error) string {
+	if authErr != nil {
+		return "You are not welcome here"
+	}
+
+	return "Welcome to the FTP Server"
+}
+
+// QuitMessage returns a goodbye message
+func (driver *MesssageDriver) QuitMessage() string {
+	return "Sayonara, bye bye!"
+}
+
+// ClientDisconnected is called when the user disconnects
+func (driver *TestServerDriver) ClientDisconnected(cc ClientContext) {
+	driver.clientMU.Lock()
+	defer driver.clientMU.Unlock()
+
+	for idx, client := range driver.Clients {
+		if client.ID() == cc.ID() {
+			lastIdx := len(driver.Clients) - 1
+			driver.Clients[idx] = driver.Clients[lastIdx]
+			driver.Clients[lastIdx] = nil
+			driver.Clients = driver.Clients[:lastIdx]
+
+			return
+		}
+	}
+}
+
+// GetClientsInfo returns info about the connected clients
+func (driver *TestServerDriver) GetClientsInfo() map[uint32]interface{} {
+	driver.clientMU.Lock()
+	defer driver.clientMU.Unlock()
+
+	info := make(map[uint32]interface{})
+
+	for _, clientContext := range driver.Clients {
+		ccInfo := make(map[string]interface{})
+
+		ccInfo["localAddr"] = clientContext.LocalAddr()
+		ccInfo["remoteAddr"] = clientContext.RemoteAddr()
+		ccInfo["clientVersion"] = clientContext.GetClientVersion()
+		ccInfo["path"] = clientContext.Path()
+		ccInfo["hasTLSForControl"] = clientContext.HasTLSForControl()
+		ccInfo["hasTLSForTransfers"] = clientContext.HasTLSForTransfers()
+		ccInfo["lastCommand"] = clientContext.GetLastCommand()
+		ccInfo["debug"] = clientContext.Debug()
+		ccInfo["extra"] = clientContext.Extra()
+
+		info[clientContext.ID()] = ccInfo
+	}
+
+	return info
+}
+
+var errNoClientConnected = errors.New("no client connected")
+
+// DisconnectClient disconnect one of the connected clients
+func (driver *TestServerDriver) DisconnectClient() error {
+	driver.clientMU.Lock()
+	defer driver.clientMU.Unlock()
+
+	if len(driver.Clients) > 0 {
+		return driver.Clients[0].Close()
+	}
+
+	return errNoClientConnected
+}
+
+// GetSettings fetches the basic server settings
+func (driver *TestServerDriver) GetSettings() (*Settings, error) {
+	return driver.Settings, nil
+}
+
+var errNoTLS = errors.New("TLS is not configured")
+
+// GetTLSConfig fetches the TLS config
+func (driver *TestServerDriver) GetTLSConfig() (*tls.Config, error) {
+	if driver.TLS {
+		keypair, err := tls.X509KeyPair(localhostCert, localhostKey)
+		if err != nil {
+			return nil, err
+		}
+
+		return &tls.Config{
+			MinVersion:   tls.VersionTLS12,
+			Certificates: []tls.Certificate{keypair},
+		}, nil
+	}
+
+	return nil, errNoTLS
+}
+
+func (driver *TestServerDriver) PreAuthUser(cc ClientContext, _ string) error {
+	return cc.SetTLSRequirement(driver.TLSRequirement)
+}
+
+func (driver *TestServerDriver) VerifyConnection(_ ClientContext, _ string,
+	_ *tls.Conn,
+) (ClientDriver, error) {
+	switch driver.TLSVerificationReply {
+	case tlsVerificationFailed:
+		return nil, errInvalidTLSCertificate
+	case tlsVerificationAuthenticated:
+		clientdriver := NewTestClientDriver(driver)
+
+		return clientdriver, nil
+	case tlsVerificationOK:
+		return nil, nil //nolint:nilnil
+	}
+
+	return nil, nil //nolint:nilnil
+}
+
+func (driver *TestServerDriver) WrapPassiveListener(listener net.Listener) (net.Listener, error) {
+	if driver.errPassiveListener != nil {
+		return nil, driver.errPassiveListener
+	}
+
+	return listener, nil
+}
+
+// OpenFile opens a file in 3 possible modes: read, write, appending write (use appropriate flags)
+func (driver *TestClientDriver) OpenFile(path string, flag int, perm os.FileMode) (afero.File, error) {
+	if strings.Contains(path, "fail-to-open") {
+		return nil, errFailOpen
+	}
+
+	if strings.Contains(path, "quota-exceeded") {
+		return nil, ErrStorageExceeded
+	}
+
+	if strings.Contains(path, "not-allowed") {
+		return nil, ErrFileNameNotAllowed
+	}
+
+	file, err := driver.Fs.OpenFile(path, flag, perm)
+
+	if err == nil {
+		wrapped := &testFile{File: file}
+		if driver.server != nil {
+			driver.server.transferFiles.Store(path, wrapped)
+		}
+		file = wrapped
+	}
+
+	return file, err
+}
+
+func (driver *TestClientDriver) Open(name string) (afero.File, error) {
+	if strings.Contains(name, "fail-to-open") {
+		return nil, errFailOpen
+	}
+
+	file, err := driver.Fs.Open(name)
+
+	if err == nil {
+		wrapped := &testFile{File: file}
+		if driver.server != nil {
+			driver.server.transferFiles.Store(name, wrapped)
+		}
+		file = wrapped
+	}
+
+	return file, err
+}
+
+func (driver *TestClientDriver) Rename(oldname, newname string) error {
+	if strings.Contains(newname, "not-allowed") {
+		return ErrFileNameNotAllowed
+	}
+
+	return driver.Fs.Rename(oldname, newname)
+}
+
+var errTooMuchSpaceRequested = errors.New("you're requesting too much space")
+
+func (driver *TestClientDriver) AllocateSpace(size int) error {
+	if size < 1*1024*1024 {
+		return nil
+	}
+
+	return errTooMuchSpaceRequested
+}
+
+var errAvblNotPermitted = errors.New("you're not allowed to request available space for this directory")
+
+func (driver *TestClientDriver) GetAvailableSpace(dirName string) (int64, error) {
+	if dirName == "/noavbl" {
+		return 0, errAvblNotPermitted
+	}
+
+	return int64(123), nil
+}
+
+var (
+	errInvalidChownUser  = errors.New("invalid chown on user")
+	errInvalidChownGroup = errors.New("invalid chown on group")
+)
+
+func (driver *TestClientDriver) Chown(name string, uid int, gid int) error {
+	if uid != 0 && uid != authUserID {
+		return errInvalidChownUser
+	}
+
+	if gid != 0 && gid != authGroupID {
+		return errInvalidChownGroup
+	}
+
+	_, err := driver.Stat(name)
+
+	return err
+}
+
+var errSymlinkNotImplemented = errors.New("symlink not implemented")
+
+func (driver *TestClientDriver) Symlink(oldname, newname string) error {
+	if linker, ok := driver.Fs.(afero.Linker); ok {
+		return linker.SymlinkIfPossible(oldname, newname)
+	}
+
+	return errSymlinkNotImplemented
+}
+
+// freightctl generates a fresh test identity; no reusable private key is committed.
+var localhostCert, localhostKey = makeLocalhostTLSFixture()
+
+// TestPortRangeFetchNextError tests error handling in PortRange.FetchNext
+func TestPortRangeFetchNextError(t *testing.T) {
+	req := require.New(t)
+
+	// Test with a range that could potentially cause issues
+	portRange := PortRange{
+		Start: 65535,
+		End:   65535,
+	}
+
+	// This should still work since it's a valid range
+	exposedPort, listenedPort, ok := portRange.FetchNext()
+	req.True(ok)
+	req.Equal(65535, exposedPort)
+	req.Equal(65535, listenedPort)
+}
+
+// TestPortMappingRangeFetchNextError tests error handling in PortMappingRange.FetchNext
+func TestPortMappingRangeFetchNextError(t *testing.T) {
+	req := require.New(t)
+
+	// Test with a valid range
+	portMappingRange := PortMappingRange{
+		ExposedStart:  8000,
+		ListenedStart: 9000,
+		Count:         10,
+	}
+
+	exposedPort, listenedPort, ok := portMappingRange.FetchNext()
+	req.True(ok)
+	req.GreaterOrEqual(exposedPort, 8000)
+	req.LessOrEqual(exposedPort, 8009)
+	req.GreaterOrEqual(listenedPort, 9000)
+	req.LessOrEqual(listenedPort, 9009)
+	req.Equal(exposedPort-8000, listenedPort-9000) // Should maintain offset
+}
+
+// TestPortMappingRangeNumberAttempts tests the NumberAttempts method
+func TestPortMappingRangeNumberAttempts(t *testing.T) {
+	req := require.New(t)
+
+	portMappingRange := PortMappingRange{
+		ExposedStart:  8000,
+		ListenedStart: 9000,
+		Count:         25,
+	}
+
+	req.Equal(25, portMappingRange.NumberAttempts())
+}
+
+// TestCryptoRandError tests what happens when crypto/rand fails
+func TestCryptoRandError(t *testing.T) {
+	req := require.New(t)
+
+	// We can't easily mock crypto/rand.Int, but we can test with edge cases
+	// Test with zero count (should handle gracefully)
+	portMappingRange := PortMappingRange{
+		ExposedStart:  8000,
+		ListenedStart: 9000,
+		Count:         1, // Minimum valid count
+	}
+
+	exposedPort, listenedPort, ok := portMappingRange.FetchNext()
+	req.True(ok)
+	req.Equal(8000, exposedPort)
+	req.Equal(9000, listenedPort)
+}
+
+const (
+	nilUser    = "nil"
+	firstLine  = "first line"
+	secondLine = "second line"
+)

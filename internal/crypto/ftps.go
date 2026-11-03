@@ -115,6 +115,12 @@ func (i *FTPSIdentity) BindFTPSControl(local net.Addr) (*FTPSChannelBinding, err
 
 func (b *FTPSChannelBinding) TLSConfig() *TLSConfiguration { return b.config }
 
+// FTPSImplicitServer wraps the already accepted control socket. Explicit FTPS
+// uses the protocol library's AUTH TLS with the same immutable configuration.
+func (b *FTPSChannelBinding) FTPSImplicitServer(conn net.Conn) net.Conn {
+	return tls.Server(conn, b.config)
+}
+
 // AllowData follows successful application authentication and its audit commit.
 // Closing a binding is irreversible, even if authentication races with shutdown.
 func (b *FTPSChannelBinding) AllowData() error {

@@ -1,0 +1,405 @@
+package ftpserver
+
+import (
+	"crypto/rand"
+	"crypto/tls"
+	"io"
+	"math/big"
+	"net"
+	"os"
+
+	"github.com/spf13/afero"
+)
+
+// This file is the driver part of the server. It must be implemented by anyone wanting to use the server.
+
+// MainDriver handles the authentication and ClientHandlingDriver selection
+type MainDriver interface {
+	// GetSettings returns some general settings around the server setup
+	GetSettings() (*Settings, error)
+
+	// ClientConnected is called to send the very first welcome message
+	ClientConnected(cc ClientContext) (string, error)
+
+	// ClientDisconnected is called when the user disconnects, even if he never authenticated
+	ClientDisconnected(cc ClientContext)
+
+	// AuthUser authenticates the user and selects an handling driver
+	AuthUser(cc ClientContext, user, pass string) (ClientDriver, error)
+
+	// GetTLSConfig returns a TLS Certificate to use
+	// The certificate could frequently change if we use something like "let's encrypt"
+	GetTLSConfig() (*tls.Config, error)
+}
+
+// MainDriverExtensionTLSVerifier is an extension that allows to verify the TLS connection
+// estabilished on the control channel
+type MainDriverExtensionTLSVerifier interface {
+	// VerifyConnection is called when receiving the "USER" command.
+	// If it returns a non-nil error, the client will receive a 530 error and it will be disconnected.
+	// If it returns a non-nil ClientDriver and a nil error the client will be authenticated.
+	// If it returns a nil ClientDriver and a nil error the user password is required
+	VerifyConnection(cc ClientContext, user string, tlsConn *tls.Conn) (ClientDriver, error)
+}
+
+// MainDriverExtensionPassiveWrapper is an extension that allows to wrap the listener
+// used for passive connection
+type MainDriverExtensionPassiveWrapper interface {
+	// WrapPassiveListener is called after creating the listener for passive
+	// data connections.
+	// You can wrap the passed listener or just return it unmodified.
+	// Returning an error will cause the passive connection to fail
+	WrapPassiveListener(listener net.Listener) (net.Listener, error)
+}
+
+// MainDriverExtensionActiveWrapper applies the same transport lifetime and
+// cancellation controls to an active data socket, before TLS wraps it.
+type MainDriverExtensionActiveWrapper interface {
+	WrapActiveConnection(conn net.Conn) (net.Conn, error)
+}
+
+// MainDriverExtensionUserVerifier is an extension that allows to control user access
+// once username is known, before the authentication
+type MainDriverExtensionUserVerifier interface {
+	// PreAuthUser is called when receiving the "USER" command before proceeding with any other checks
+	// If it returns a non-nil error, the client will receive a 530 error and be disconnected.
+	PreAuthUser(cc ClientContext, user string) error
+}
+
+// MainDriverExtensionCommandPolicy can refuse a command before any command
+// handler or transfer goroutine runs. A nil answer continues ordinary checks.
+// It cannot grant authentication or bypass the filesystem driver's authority.
+type MainDriverExtensionCommandPolicy interface {
+	BeforeCommand(cc ClientContext, command, parameter string) *AnswerCommand
+}
+
+// MainDriverExtensionPostAuthMessage is an extension that allows to send a message
+// after the authentication
+type MainDriverExtensionPostAuthMessage interface {
+	// PostAuthMessage is called after the authentication
+	PostAuthMessage(cc ClientContext, user string, authErr error) string
+}
+
+// MainDriverExtensionQuitMessage is an extension that allows to control the quit message
+type MainDriverExtensionQuitMessage interface {
+	// QuitMessage returns the message to display when the user quits the server
+	QuitMessage() string
+}
+
+// ClientDriver is the base FS implementation that allows to manipulate files
+type ClientDriver interface {
+	afero.Fs
+}
+
+// ClientDriverExtensionAllocate is an extension to support the "ALLO" - file allocation - command
+type ClientDriverExtensionAllocate interface {
+	// AllocateSpace reserves the space necessary to upload files
+	AllocateSpace(size int) error
+}
+
+// ClientDriverExtensionSymlink is an extension to support the "SITE SYMLINK" - symbolic link creation - command
+type ClientDriverExtensionSymlink interface {
+	// Symlink creates a symlink
+	Symlink(oldname, newname string) error
+
+	// SymlinkIfPossible allows to get the source of a symlink (but we don't need for now)
+	// ReadlinkIfPossible(name string) (string, error)
+}
+
+// ClientDriverExtensionFileList is a convenience extension to allow to return file listing
+// without requiring to implement the methods Open/Readdir for your custom afero.File
+type ClientDriverExtensionFileList interface {
+	// ReadDir reads the directory named by name and return a list of directory entries.
+	ReadDir(name string) ([]os.FileInfo, error)
+}
+
+// ClientDriverExtentionFileTransfer is a convenience extension to allow to transfer files
+// without requiring to implement the methods Create/Open/OpenFile for your custom afero.File.
+type ClientDriverExtentionFileTransfer interface {
+	// GetHandle return an handle to upload or download a file based on flags:
+	// os.O_RDONLY indicates a download
+	// os.O_WRONLY indicates an upload and can be combined with os.O_APPEND (resume) or
+	// os.O_CREATE (upload to new file/truncate)
+	//
+	// offset is the argument of a previous REST command, if any, or 0
+	GetHandle(name string, flags int, offset int64) (FileTransfer, error)
+}
+
+// ClientDriverExtensionRemoveDir is an extension to implement if you need to distinguish
+// between the FTP command DELE (remove a file) and RMD (remove a dir). If you don't
+// implement this extension they will be both mapped to the Remove method defined in your
+// afero.Fs implementation
+type ClientDriverExtensionRemoveDir interface {
+	RemoveDir(name string) error
+}
+
+// ClientDriverExtensionHasher is an extension to implement if you want to handle file digests
+// yourself. You have to set EnableHASH to true for this extension to be called
+type ClientDriverExtensionHasher interface {
+	ComputeHash(name string, algo HASHAlgo, startOffset, endOffset int64) (string, error)
+}
+
+// ClientDriverExtensionAvailableSpace is an extension to implement to support
+// the AVBL ftp command
+type ClientDriverExtensionAvailableSpace interface {
+	GetAvailableSpace(dirName string) (int64, error)
+}
+
+// AnswerCommand is a struct to answer a command to the client
+type AnswerCommand struct {
+	Code    int
+	Message string
+}
+
+// ClientDriverExtensionSite is an extension to implement if you want to handle SITE command
+// yourself. You have to set DisableSite to false for this extension to be called
+type ClientDriverExtensionSite interface {
+	Site(param string) *AnswerCommand
+}
+
+// ClientContext is implemented on the server side to provide some access to few data around the client
+type ClientContext interface {
+	// Path provides the path of the current connection
+	Path() string
+
+	// SetPath sets the path of the current connection.
+	// This method is useful to set a start directory, you should use it before returning a successful
+	// authentication response from your driver implementation.
+	// Calling this method after the authentication step could lead to undefined behavior
+	SetPath(value string)
+
+	// SetListPath allows to change the path for the last LIST/NLST request.
+	// This method is useful if the driver expands wildcards and so the returned results
+	// refer to a path different from the requested one.
+	// The value must be cleaned using path.Clean
+	SetListPath(value string)
+
+	// SetDebug activates the debugging of this connection commands
+	SetDebug(debug bool)
+
+	// Debug returns the current debugging status of this connection commands
+	Debug() bool
+
+	// Client's ID on the server
+	ID() uint32
+
+	// Client's address
+	RemoteAddr() net.Addr
+
+	// Servers's address
+	LocalAddr() net.Addr
+
+	// Client's version can be empty
+	GetClientVersion() string
+
+	// Close closes the connection and disconnects the client.
+	Close() error
+
+	// HasTLSForControl returns true if the control connection is over TLS
+	HasTLSForControl() bool
+
+	// HasTLSForTransfers returns true if the transfer connection is over TLS
+	HasTLSForTransfers() bool
+
+	// GetLastCommand returns the last received command
+	GetLastCommand() string
+
+	// GetLastDataChannel returns the last data channel mode
+	GetLastDataChannel() DataChannel
+
+	// SetTLSRequirement sets the TLS requirement to respect on a per-client basis.
+	// The requirement is checked when the client issues the "USER" command,
+	// after executing the MainDriverExtensionUserVerifier extension, and
+	// before opening transfer connections.
+	// Supported values: ClearOrEncrypted, MandatoryEncryption.
+	// If you want to enforce the same requirement for all
+	// clients, use the TLSRequired parameter defined in server settings instead
+	SetTLSRequirement(requirement TLSRequirement) error
+
+	// SetExtra allows to set application specific data
+	SetExtra(extra any)
+
+	// Extra returns application specific data set using SetExtra
+	Extra() any
+}
+
+// FileTransfer defines the inferface for file transfers.
+type FileTransfer interface {
+	io.Reader
+	io.Writer
+	io.Seeker
+	io.Closer
+}
+
+// FileTransferError is a FileTransfer extension used to notify the driver
+// that a transfer did not complete normally.
+//
+// TransferError is called before the file's Close method whenever the data
+// transfer is interrupted by:
+//   - an ABOR command from the client,
+//   - the client dropping the data connection (TCP RST or otherwise),
+//   - an I/O error while copying bytes between the data connection and the file.
+//
+// It is NOT called when the transfer ends cleanly (the data connection is
+// closed gracefully by the client after sending all of its bytes). In that
+// case only Close is invoked.
+//
+// A common pattern is to set a flag in TransferError and inspect it in Close
+// to distinguish a completed upload from an interrupted one:
+//
+//	type monitoredFile struct {
+//	    afero.File
+//	    transferErr error
+//	}
+//
+//	func (f *monitoredFile) TransferError(err error) { f.transferErr = err }
+//
+//	func (f *monitoredFile) Close() error {
+//	    err := f.File.Close()
+//	    if f.transferErr != nil {
+//	        // upload was interrupted: f.transferErr describes why
+//	    } else {
+//	        // upload completed (as far as the server can tell)
+//	    }
+//	    return err
+//	}
+//
+// Keep in mind that FTP provides no length header for STOR transfers, so a
+// client that closes the data connection mid-upload without sending ABOR is
+// indistinguishable from a normal completion. Implementing this interface
+// catches every case the server can detect.
+type FileTransferError interface {
+	TransferError(err error)
+}
+
+// PasvPortGetter defined how the driver fetch a pair of ports used in passive transfer
+type PasvPortGetter interface {
+	// FetchNext returns the exposed one, the listened one and whether succeeded
+	FetchNext() (int, int, bool)
+	// NumberAttempts returns maximum number of attempts on finding an available passive transfer port
+	NumberAttempts() int
+}
+
+// PortRange is a range of ports
+type PortRange struct {
+	Start int // Range start
+	End   int // Range end
+}
+
+// FetchNext returns the next port to try for the range
+func (r PortRange) FetchNext() (int, int, bool) {
+	n, err := rand.Int(rand.Reader, big.NewInt(int64(r.End-r.Start+1)))
+	if err != nil {
+		return 0, 0, false
+	}
+	port := r.Start + int(n.Int64())
+
+	return port, port, true
+}
+
+// NumberAttempts returns the number of attempts for the range
+func (r PortRange) NumberAttempts() int {
+	return r.End - r.Start + 1
+}
+
+// PortMappingRange is a range of mapped ports
+type PortMappingRange struct {
+	ExposedStart  int
+	ListenedStart int
+	Count         int
+}
+
+// FetchNext returns the next port mapping to try for the range
+func (r PortMappingRange) FetchNext() (int, int, bool) {
+	n, err := rand.Int(rand.Reader, big.NewInt(int64(r.Count)))
+	if err != nil {
+		return 0, 0, false
+	}
+
+	return r.ExposedStart + int(n.Int64()), r.ListenedStart + int(n.Int64()), true
+}
+
+// NumberAttempts returns the number of attempts for the range
+func (r PortMappingRange) NumberAttempts() int {
+	return r.Count
+}
+
+// PublicIPResolver takes a ClientContext for a connection and returns the public IP
+// to use in the response to the PASV command, or an error if a public IP cannot be determined.
+type PublicIPResolver func(ClientContext) (string, error)
+
+// ActiveTransferLocalIPResolver takes the ClientContext of a control connection and returns the
+// local IP address the server dials from when it opens an active mode (PORT or EPRT) data
+// connection to that client. A nil result leaves the choice to the operating system.
+type ActiveTransferLocalIPResolver func(ClientContext) net.IP
+
+// TLSRequirement is the enumerable that represents the supported TLS mode
+type TLSRequirement int8
+
+// TLS modes
+const (
+	ClearOrEncrypted TLSRequirement = iota
+	MandatoryEncryption
+	ImplicitEncryption
+)
+
+// DataConnectionRequirement is the enumerable that represents the supported
+// protection mode for data channels
+type DataConnectionRequirement int8
+
+// Supported data connection requirements
+const (
+	// IPMatchRequired requires matching peer IP addresses of control and data connection
+	IPMatchRequired DataConnectionRequirement = iota
+	// IPMatchDisabled disables checking peer IP addresses of control and data connection
+	IPMatchDisabled
+)
+
+// Settings defines all the server settings
+type Settings struct {
+	Listener   net.Listener // (Optional) To provide an already initialized listener
+	ListenAddr string       // Listening address
+	PublicHost string       // Public IP to expose (only an IP address is accepted at this stage)
+	// PassiveTransferListenIP binds passive sockets before listening. It must
+	// be a specific numeric address; it is incompatible with port multiplexing.
+	// freightctl sets this explicitly for every control session.
+	PassiveTransferListenIP string
+	Banner                  string // Banner to use in server status response
+	// PassiveTransferPortRange is the optional port mapping for passive data connections.
+	PassiveTransferPortRange        PasvPortGetter
+	PassiveTransferPortMultiplexing bool             // Allow different client IPs to share passive listener ports
+	PublicIPResolver                PublicIPResolver // (Optional) To fetch a public IP lookup
+	IdleTimeout                     int              // Maximum inactivity time before disconnecting (#58)
+	ConnectionTimeout               int              // Maximum time to establish passive or active transfer connections
+	ActiveTransferPortNon20         bool             // Do not impose the port 20 for active data transfer (#88, RFC 1579)
+	DisableMLSD                     bool             // Disable MLSD support
+	DisableMLST                     bool             // Disable MLST support
+	DisableMFMT                     bool             // Disable MFMT support (modify file mtime)
+	TLSRequired                     TLSRequirement   // defines the TLS mode
+	DisableLISTArgs                 bool             // Disable ls like options (-a,-la etc.) for directory listing
+	DisableSite                     bool             // Disable SITE command
+	DisableActiveMode               bool             // Disable Active FTP
+	EnableHASH                      bool             // Enable support for calculating hash value of files
+	// DisableSTAT disables Server STATUS. STAT on files and directories still works.
+	DisableSTAT             bool
+	DisableSYST             bool         // Disable SYST
+	EnableCOMB              bool         // Enable COMB support
+	DeflateCompressionLevel int          // Deflate compression level (0-9). 0 means disabled
+	DefaultTransferType     TransferType // Transfer type to use if the client don't send the TYPE command
+	// DisableASCIIConversion disables CRLF/LF line-ending conversion for TYPE A (ASCII) transfers.
+	// When true, files are transferred byte-for-byte even in ASCII mode, and SIZE and REST are
+	// allowed in ASCII mode. This is not RFC 959-compliant but matches the behavior of vsftpd's
+	// ascii_download_enable/ascii_upload_enable=NO and is useful when clients do not want the
+	// server to modify their files.
+	DisableASCIIConversion bool
+	// ActiveConnectionsCheck defines the security requirements for active connections
+	ActiveConnectionsCheck DataConnectionRequirement
+	// PasvConnectionsCheck defines the security requirements for passive connections
+	PasvConnectionsCheck DataConnectionRequirement
+	// ActiveTransferLocalIPResolver (Optional) selects the local IP address active mode (PORT, EPRT)
+	// data connections are dialed from. Without it the operating system picks the source address
+	// from its routing table, which on a multi homed host is not necessarily the address the client
+	// connected to, and clients and firewalls generally expect the data connection to come from
+	// that address. Only the address is taken from it, the port still follows ActiveTransferPortNon20.
+	ActiveTransferLocalIPResolver ActiveTransferLocalIPResolver
+}

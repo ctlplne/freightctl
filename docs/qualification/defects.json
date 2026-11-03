@@ -1884,6 +1884,70 @@
         "docs/qualification/evidence/F055-retained-handoff-upgrade-rehearsal.json",
         "docs/qualification/evidence/F056-retained-handoff-upgrade-applied.json"
       ]
+    },
+    {
+      "id": "D117",
+      "severity": "client qualification configuration blocker",
+      "state": "fixed client option; server policy unchanged",
+      "observed_on": "2026-11-02",
+      "candidate": "a2f53f7ad58ce1400afdbaefab1c8abcdd92500c",
+      "candidate_scope": "starting commit; later adapter bytes and first native outputs are bound by F058",
+      "journey": "FTPS receiving native service and public CLI",
+      "title": "Mac curl rejected its explicit TLS1.3 minimum option before a file transfer",
+      "first_failure": "curl8.7.1/LibreSSL3.3.6 returns feature-not-built exit4; a certificate-verified loopback probe with normal negotiation reaches TLS1.3.",
+      "cause": "The client cannot set that explicit minimum option even though it can negotiate TLS1.3.",
+      "resolution": "Use normal client negotiation with max1.3 against the unchanged TLS1.3-only server. A forced-TLS1.2 client must fail. No certificate or server-floor assertion is removed.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F058-ftps-receiving.json"
+      ]
+    },
+    {
+      "id": "D118",
+      "severity": "stock client interoperability gap",
+      "state": "open; native GitHub stock replay pending",
+      "observed_on": "2026-11-02",
+      "candidate": "a2f53f7ad58ce1400afdbaefab1c8abcdd92500c",
+      "candidate_scope": "starting commit; later adapter bytes and first native outputs are bound by F058",
+      "journey": "FTPS receiving native service and public CLI",
+      "title": "Mac LibreSSL FTPS data does not resume its control-session ticket",
+      "first_failure": "Both listener modes receive control authentication but data is refused: FTPS data connection is not bound to an authenticated control session.",
+      "cause": "The observed curl/LibreSSL pairing does not supply a resumed data session; the per-control server binding correctly refuses it.",
+      "resolution": "Keep the pairing unqualified. Use the explicit-resumption native TLS client for scoped local adapter tests and run actual stock OpenSSL curl on native GitHub ARM/x86. No IP-only, plaintext or TLS-version fallback.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F058-ftps-receiving.json"
+      ]
+    },
+    {
+      "id": "D119",
+      "severity": "FTP command compatibility defect",
+      "state": "fixed and replayed with actual native client",
+      "observed_on": "2026-11-02",
+      "candidate": "a2f53f7ad58ce1400afdbaefab1c8abcdd92500c",
+      "candidate_scope": "starting commit; later adapter bytes and first native outputs are bound by F058",
+      "journey": "FTPS receiving native service and public CLI",
+      "title": "Premature TYPE A refusal blocked ordinary listings",
+      "first_failure": "The native client reaches TYPE before listing and receives504 This byte-preserving profile requires TYPE I.",
+      "cause": "Standard FTP clients select TYPE A for directory text; the application policy incorrectly refused the engine-supported transfer type globally.",
+      "resolution": "Let the engine validate and perform ordinary ASCII conversion. Add a real ASCII logical-line round trip while retaining exact opaque TYPE I byte checks and all transport/authority gates. The original native service and CLI journeys pass.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F058-ftps-receiving.json"
+      ]
+    },
+    {
+      "id": "D120",
+      "severity": "upstream FTP parser conformance defect",
+      "state": "fixed and replayed with parser and actual wire coverage",
+      "observed_on": "2026-11-02",
+      "candidate": "a2f53f7ad58ce1400afdbaefab1c8abcdd92500c",
+      "candidate_scope": "starting commit; later adapter bytes and first native outputs are bound by F058",
+      "journey": "FTPS receiving native service and public CLI",
+      "title": "Pinned EPRT parser accepted only the recommended delimiter",
+      "first_failure": "Native parser regression rejects #1#127.0.0.1#2048# with remote address has a bad format.",
+      "cause": "The copied parser split only on | although RFC2428 permits a printable ASCII delimiter.",
+      "resolution": "Honor the delimiter and matching numeric address family/port, construct TCPAddr without DNS, reject PORT octet overflow and add actual alternate-delimiter active transfers. Same-peer/unprivileged application policy remains enforced.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F058-ftps-receiving.json"
+      ]
     }
   ]
 }

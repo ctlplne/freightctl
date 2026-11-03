@@ -1,0 +1,9 @@
+# Pinned FTP protocol engine
+
+This directory is the MIT-licensed `github.com/fclairamb/ftpserverlib` v0.32.7 source at commit `a4adf0322c6c4f72e027f5106eeb918d5086f58f`. The original `license.txt` applies to this dependency. `UPSTREAM.json` records every copied file's original SHA256, its local SHA256, the added tests and the permitted patch scope. Core uses a local Go-module replacement; it never patches the Go module cache.
+
+The local changes provide an explicit passive listen IP before the socket opens, refusal-only command policy, active-socket lifetime control, numeric PORT/EPRT parsing without DNS, RFC2428 delimiter/family handling and consistent PROT case handling. Upstream tests retain their assertions and generate a fresh TLS test key at runtime. The original reusable test private key is not included. New native socket and parser tests exercise these changes. The application keeps wildcard passive binding and port multiplexing unavailable through its adapter.
+
+The engine is a documented protocol-library cryptographic boundary: it internally uses Go TLS, while `internal/crypto` loads the server identity and requires per-control-session TLS1.3 resumption on data channels. `internal/ftpsd` supplies the only filesystem driver. It maps operations to scoped PostgreSQL/custody services; it never supplies an OS filesystem or relaxes transport policy.
+
+Run the focused patch tests with `GOMAXPROCS=1 GOMEMLIMIT=192MiB sh scripts/go.sh -C third_party/ftpserverlib test -race -run TestFreightctl ./...`. Full upstream protocol/race tests run on isolated native GitHub runners; their platform skips remain visible and do not qualify product behavior. The actual application, database, storage, stock clients and malicious-client cases have separate gates. `scripts/check-ftp-engine.py` checks local bytes and the patch inventory; hashes prove source identity, not protocol correctness or security.

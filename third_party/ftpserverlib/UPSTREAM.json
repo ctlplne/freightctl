@@ -1,0 +1,204 @@
+{
+  "module": "github.com/fclairamb/ftpserverlib",
+  "version": "v0.32.7",
+  "commit": "a4adf0322c6c4f72e027f5106eeb918d5086f58f",
+  "license": "MIT; license.txt preserved verbatim",
+  "source": "https://github.com/fclairamb/ftpserverlib/tree/v0.32.7",
+  "files": [
+    {
+      "path": "asciiconverter.go",
+      "upstream_sha256": "2c1797df336cca07ae29048871740527b916a8f9dd8af426412237b23363e55d",
+      "local_sha256": "2c1797df336cca07ae29048871740527b916a8f9dd8af426412237b23363e55d"
+    },
+    {
+      "path": "asciiconverter_test.go",
+      "upstream_sha256": "3c4c0aa1eb6e2111fef52a541682121fa27c5e8900620930d097e959090d4ac8",
+      "local_sha256": "3c4c0aa1eb6e2111fef52a541682121fa27c5e8900620930d097e959090d4ac8"
+    },
+    {
+      "path": "client_handler.go",
+      "upstream_sha256": "f5e1b51aa6f18118dc2f1ca4740e4d5956c1f4f8d87bfa3853abe733be118009",
+      "local_sha256": "8eba0b0d43e05f77c57efbc78e08063f91a740cf8b31acaaab73bffabb2047e6"
+    },
+    {
+      "path": "client_handler_test.go",
+      "upstream_sha256": "59c2ccde52a58e68fb3bd0c9bfe7717e6ef215c0e1116eef7ab7cfe83c9cc67a",
+      "local_sha256": "59c2ccde52a58e68fb3bd0c9bfe7717e6ef215c0e1116eef7ab7cfe83c9cc67a"
+    },
+    {
+      "path": "consts.go",
+      "upstream_sha256": "a845937fc9c4a213e0cf97e0a6c963dffb2316fdedf7f4caf3be3451be96b289",
+      "local_sha256": "a845937fc9c4a213e0cf97e0a6c963dffb2316fdedf7f4caf3be3451be96b289"
+    },
+    {
+      "path": "control_fallback.go",
+      "upstream_sha256": "0dbbb2bd81f029f35c3745b365ba6208c8d93c96c3849b57c0f9a013b1a2c03a",
+      "local_sha256": "0dbbb2bd81f029f35c3745b365ba6208c8d93c96c3849b57c0f9a013b1a2c03a"
+    },
+    {
+      "path": "control_unix.go",
+      "upstream_sha256": "c6c245e798d3905cce22876307e3ce2bf5c2b0e8729cea62f0ca419c6c3f8f3e",
+      "local_sha256": "c6c245e798d3905cce22876307e3ce2bf5c2b0e8729cea62f0ca419c6c3f8f3e"
+    },
+    {
+      "path": "control_windows.go",
+      "upstream_sha256": "a84d33297cb0ea71337f9f1fccf0c1e1c6b6fccaf2f0b3ce09fd4b0f1c22ad78",
+      "local_sha256": "a84d33297cb0ea71337f9f1fccf0c1e1c6b6fccaf2f0b3ce09fd4b0f1c22ad78"
+    },
+    {
+      "path": "driver.go",
+      "upstream_sha256": "ad619b40b03f45b77b102475beb8372e3b1be12f306bddd313687a24579269a0",
+      "local_sha256": "817261bfc161ae20443978d0248d515293e2574f4fc886ce42b49b3be4fbece2"
+    },
+    {
+      "path": "driver_test.go",
+      "upstream_sha256": "42c598983b2a77caff773fbdf57e6d7c02cd09c3b344521a0feec07b22632b39",
+      "local_sha256": "7ffc2769eb480cb8932530458e69bba86a727ce84091f7fb5c705cd9fba62ddc"
+    },
+    {
+      "path": "errors.go",
+      "upstream_sha256": "f286a77f16b7f66193aa43d603ab90eb82696b84b899eabc7b2bb988306de361",
+      "local_sha256": "f286a77f16b7f66193aa43d603ab90eb82696b84b899eabc7b2bb988306de361"
+    },
+    {
+      "path": "errors_test.go",
+      "upstream_sha256": "d455c55c7426367693094f6e4c86fac02e1cd9f0fe58904023536ada04854074",
+      "local_sha256": "d455c55c7426367693094f6e4c86fac02e1cd9f0fe58904023536ada04854074"
+    },
+    {
+      "path": "handle_auth.go",
+      "upstream_sha256": "bec9e60c00353e4eda14c39c295e01a7abe4dacdbc3e45029dbfab57115e008a",
+      "local_sha256": "bec9e60c00353e4eda14c39c295e01a7abe4dacdbc3e45029dbfab57115e008a"
+    },
+    {
+      "path": "handle_auth_test.go",
+      "upstream_sha256": "d83be3ac5585ae314434990340a45b937f5d4bf3050550cf7fdf1808cdd35f27",
+      "local_sha256": "d83be3ac5585ae314434990340a45b937f5d4bf3050550cf7fdf1808cdd35f27"
+    },
+    {
+      "path": "handle_dirs.go",
+      "upstream_sha256": "e333646b1a0cd744f4eb2a3d8607ecb33841bd4e0101ac8ec5f3f78e40bbb22c",
+      "local_sha256": "e333646b1a0cd744f4eb2a3d8607ecb33841bd4e0101ac8ec5f3f78e40bbb22c"
+    },
+    {
+      "path": "handle_dirs_test.go",
+      "upstream_sha256": "5fe65b3651f7bd76e7daab7f83d199519562083b8cf505e88c10550ac13597c9",
+      "local_sha256": "5fe65b3651f7bd76e7daab7f83d199519562083b8cf505e88c10550ac13597c9"
+    },
+    {
+      "path": "handle_files.go",
+      "upstream_sha256": "9128258bd1857aa9ca83b93c1d92ef9684719dff413e6bf403213a5c10c52886",
+      "local_sha256": "9128258bd1857aa9ca83b93c1d92ef9684719dff413e6bf403213a5c10c52886"
+    },
+    {
+      "path": "handle_files_test.go",
+      "upstream_sha256": "ca4fb8c3237dac78a772a87e110293c98b558cc9355407bea72d6a539106463e",
+      "local_sha256": "ca4fb8c3237dac78a772a87e110293c98b558cc9355407bea72d6a539106463e"
+    },
+    {
+      "path": "handle_misc.go",
+      "upstream_sha256": "51d22eb33de477186cd7c66aaabc70ba015cbd988bb35c3f6a7cb2928c3313ed",
+      "local_sha256": "28127d90d7c3385cd02e40e7b7ca371e7eec8f7196447517d3e48aa816c0a110"
+    },
+    {
+      "path": "handle_misc_test.go",
+      "upstream_sha256": "2c6fb67edf3d690582daf05ca3abd47565d797bfb28a8778d0c09d2da1c1eec3",
+      "local_sha256": "2c6fb67edf3d690582daf05ca3abd47565d797bfb28a8778d0c09d2da1c1eec3"
+    },
+    {
+      "path": "idle_timeout_transfer_test.go",
+      "upstream_sha256": "9575e3643558cc3d17f5dfb6a963dd39baa95c1006eee86e7e97f7c99bb87ede",
+      "local_sha256": "9575e3643558cc3d17f5dfb6a963dd39baa95c1006eee86e7e97f7c99bb87ede"
+    },
+    {
+      "path": "no_ports_test.go",
+      "upstream_sha256": "4cb3ec50c83261ea5d1ce867c29b0b692426a97839bec2b28a2ae7d5c11d983e",
+      "local_sha256": "4cb3ec50c83261ea5d1ce867c29b0b692426a97839bec2b28a2ae7d5c11d983e"
+    },
+    {
+      "path": "passive_multiplexer.go",
+      "upstream_sha256": "2c6dbf2e4d30c00892048f80995635544ad256e1043de898fcaaa9e0b3e5262d",
+      "local_sha256": "2c6dbf2e4d30c00892048f80995635544ad256e1043de898fcaaa9e0b3e5262d"
+    },
+    {
+      "path": "passive_multiplexer_test.go",
+      "upstream_sha256": "a014cd5be65ceb49d130c128e2ab9cec6da3de009a99c141ea3ec9732005334f",
+      "local_sha256": "a014cd5be65ceb49d130c128e2ab9cec6da3de009a99c141ea3ec9732005334f"
+    },
+    {
+      "path": "server.go",
+      "upstream_sha256": "91795a41a4cdb14beb5781710cd0a0e652f95c03a3aab315a772a061d6545e1e",
+      "local_sha256": "7c465cfa7f4bded8c2e354b65bb4178840ad8028005045b85d74b6ab0a35dcb1"
+    },
+    {
+      "path": "server_stop_test.go",
+      "upstream_sha256": "097dc7333bacc36d0f06a62c3ce21d235f1a421b47ba0b607cb67208187b2e6a",
+      "local_sha256": "097dc7333bacc36d0f06a62c3ce21d235f1a421b47ba0b607cb67208187b2e6a"
+    },
+    {
+      "path": "server_test.go",
+      "upstream_sha256": "fd248bebee38873fe316f7cfbd69a05487b6358017bd5e24e8830c5c487360d4",
+      "local_sha256": "fd248bebee38873fe316f7cfbd69a05487b6358017bd5e24e8830c5c487360d4"
+    },
+    {
+      "path": "simple_coverage_test.go",
+      "upstream_sha256": "184978ba1faaceaba670dccde26f9c69507f98c5d15963149a1b534c7fc57c14",
+      "local_sha256": "184978ba1faaceaba670dccde26f9c69507f98c5d15963149a1b534c7fc57c14"
+    },
+    {
+      "path": "transfer_active.go",
+      "upstream_sha256": "08dedb19823dca72d8e0e3bcca780d6dd16e83ee9a87b01c776541707c9b0937",
+      "local_sha256": "2eb1b1a21506316162cee3ea2759190d1891114151b4bad64f15f786a41f23ba"
+    },
+    {
+      "path": "transfer_active_test.go",
+      "upstream_sha256": "0d617dcd3ebeaeecbc5fbc98a0b6b96c6c51682d22b84e0323d1ab4824322e08",
+      "local_sha256": "0d617dcd3ebeaeecbc5fbc98a0b6b96c6c51682d22b84e0323d1ab4824322e08"
+    },
+    {
+      "path": "transfer_pasv.go",
+      "upstream_sha256": "992733b34dbc7e651cc4c0670075060e987b2dbd750fcc5e3406b08c4ff2ba63",
+      "local_sha256": "b99f2443f9db2101ea931fb0e2fe29fbe82a71e9175ad4a7277330d862088309"
+    },
+    {
+      "path": "transfer_test.go",
+      "upstream_sha256": "6266f657f8249d4f8599717a4aed98263ce27ae9909bf21a8bbb87bb147db5b6",
+      "local_sha256": "6266f657f8249d4f8599717a4aed98263ce27ae9909bf21a8bbb87bb147db5b6"
+    },
+    {
+      "path": "go.mod",
+      "upstream_sha256": "f0b1aaae58f69777c6dbd61876e534471f3e223f65bf329dca58fd87439c80bc",
+      "local_sha256": "f0b1aaae58f69777c6dbd61876e534471f3e223f65bf329dca58fd87439c80bc"
+    },
+    {
+      "path": "go.sum",
+      "upstream_sha256": "9341ec463933572783efc1c899d708705a6d3824455464960fcb2278a61446bf",
+      "local_sha256": "9341ec463933572783efc1c899d708705a6d3824455464960fcb2278a61446bf"
+    },
+    {
+      "path": "license.txt",
+      "upstream_sha256": "9c14c26364dcaa9d980c716660c772a17ae66f1853203f903e40e791b7801ac5",
+      "local_sha256": "9c14c26364dcaa9d980c716660c772a17ae66f1853203f903e40e791b7801ac5"
+    }
+  ],
+  "added_files": [
+    {
+      "path": "freightctl_active_test.go",
+      "sha256": "397c63d162cf8ebecb3adc670f5a3a84db97ed8f1647e137007aef8c9e42f47e"
+    },
+    {
+      "path": "freightctl_passive_test.go",
+      "sha256": "3cf29b63fe562546033e4abd552c687783b970c39af862889e7216d752087b08"
+    },
+    {
+      "path": "freightctl_tls_fixture_test.go",
+      "sha256": "0508a4535b12c84c42c6e5bd4fe6f240a9418a660c40a115fdb50161ea87c0c5"
+    }
+  ],
+  "patches": [
+    "Explicit numeric passive bind before socket creation; incompatible port multiplexing is refused.",
+    "A refusal-only command policy hook and an active-socket wrapper give the adapter policy and cancellation control.",
+    "PORT/EPRT construct numeric endpoints without DNS; EPRT honors RFC2428 delimiters and address families. PROT handles letter case consistently with the application policy.",
+    "Upstream TLS tests generate a fresh ephemeral identity instead of committing a reusable private key. New tests cover the local changes."
+  ]
+}

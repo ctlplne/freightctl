@@ -6,12 +6,16 @@ on:
     paths:
       - 'cmd/**'
       - 'internal/**'
+      - 'third_party/**'
       - 'web/**'
       - 'go.mod'
       - 'go.sum'
       - '.gitattributes'
       - 'scripts/go.sh'
       - 'scripts/integration.sh'
+      - 'scripts/ftps-probe.py'
+      - 'scripts/qualify-ftps.py'
+      - 'scripts/ci-ftps-summary.py'
       - 'scripts/dev-db.py'
       - 'scripts/prepare-pgp-fixture.py'
       - 'scripts/qualify-retained-metadata.py'
@@ -23,12 +27,16 @@ on:
     paths:
       - 'cmd/**'
       - 'internal/**'
+      - 'third_party/**'
       - 'web/**'
       - 'go.mod'
       - 'go.sum'
       - '.gitattributes'
       - 'scripts/go.sh'
       - 'scripts/integration.sh'
+      - 'scripts/ftps-probe.py'
+      - 'scripts/qualify-ftps.py'
+      - 'scripts/ci-ftps-summary.py'
       - 'scripts/dev-db.py'
       - 'scripts/prepare-pgp-fixture.py'
       - 'scripts/qualify-retained-metadata.py'
@@ -93,6 +101,10 @@ jobs:
           sh scripts/go.sh mod verify
           sh scripts/go.sh vet -p 1 ./...
           sh scripts/go.sh test -p 1 -race ./...
+      - name: Pinned FTP engine upstream protocol and race checks
+        run: |
+          python3 scripts/check-ftp-engine.py
+          sh scripts/go.sh -C third_party/ftpserverlib test -p 1 -race -count=1 -timeout=10m -v ./...
       - name: All implemented real PostgreSQL integration and migration tests
         run: sh scripts/integration.sh -p 1 -race -v
 
@@ -169,6 +181,7 @@ jobs:
           test "$(uname -m)" = x86_64
           sh scripts/go.sh test ./internal/vpath -fuzz=FuzzCanonicalPath -fuzztime=5s -parallel=2
           sh scripts/go.sh test ./internal/sftpd -fuzz=FuzzInspectPacket -fuzztime=5s -parallel=2
+          sh scripts/go.sh test ./internal/ftpsd -fuzz=FuzzActiveDestination -fuzztime=5s -parallel=1
           sh scripts/go.sh test ./internal/custody -fuzz=FuzzCustodyName -fuzztime=5s -parallel=2
           sh scripts/go.sh test ./internal/workflow -fuzz=FuzzTypedWorkflow -fuzztime=5s -parallel=2
           sh scripts/go.sh test ./internal/checks -fuzz=FuzzCSVContract -fuzztime=5s -parallel=1

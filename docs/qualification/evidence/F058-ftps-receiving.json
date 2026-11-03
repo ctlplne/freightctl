@@ -1,0 +1,237 @@
+{
+  "schema_version": 1,
+  "id": "F058",
+  "kind": "ftps-receiving-adapter-native-service-cli-and-pinned-engine",
+  "state": "native ARM service/public CLI verified with TLS client stand-in; stock curl and new native GitHub gates pending",
+  "observed_on": "2026-11-02",
+  "starting_commit": "a2f53f7ad58ce1400afdbaefab1c8abcdd92500c",
+  "author_and_committer": "imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>",
+  "artifact_source_binding": "Native manifest records the650source inputs and unchanged bytes during execution; this adapter was built on starting_commit with the implementation hashes below. A new exact-commit GitHub replay is required.",
+  "binary_sha256": "35a042bbfed10076012a5bf69ad3a0334339e6d1bf63bcf4b578c3faa8e55d6a",
+  "implementation_sha256": [
+    {
+      "path": "cmd/freightctl/main.go",
+      "sha256": "095905ff665fa125e0e7ea2d4a379d3dd99af8bcb92ffc6ab3edef332ebbd123"
+    },
+    {
+      "path": "go.mod",
+      "sha256": "f1a69d5447041bcb6553b22edc9f2ecd9a1561b5d8c4de4e14e366dae662e727"
+    },
+    {
+      "path": "go.sum",
+      "sha256": "ecc5353e24df361234d81bdca0415cf3e0eda92cf3dceb3a38ce5a3ce6b556de"
+    },
+    {
+      "path": "internal/crypto/ftps.go",
+      "sha256": "293315280bfad5c55f3e6ef3a70d6d3d1dac8df924af3eeac6218152d9a0df9f"
+    },
+    {
+      "path": "internal/ftpsd/server.go",
+      "sha256": "7fd088f4771d020894d90b7088bebba20c986c58c3fc9c57a696ca93bc5c20d0"
+    },
+    {
+      "path": "internal/ftpsd/policy.go",
+      "sha256": "de4deed148035bc6112ee64c9c638c422b297a42a992526fe59a5bb83eb4f669"
+    },
+    {
+      "path": "internal/ftpsd/filesystem.go",
+      "sha256": "d8cc42fab0bd02f4c9662b816e1a7f8afda667f774c383c02e31e9dde2769d19"
+    },
+    {
+      "path": "internal/ftpsd/policy_test.go",
+      "sha256": "4097d3b6a58daf46b37e73d7f9a34800422b048c8610b09338ada3dbdbfd9883"
+    },
+    {
+      "path": "internal/custody/ftps_integration_test.go",
+      "sha256": "5117edd41abb4ad3aa9a3b14f7271a46bab82528799301de621a7a5cb680352f"
+    },
+    {
+      "path": "scripts/ftps-probe.py",
+      "sha256": "185b62e58159f86eaa853a3d3b994300e1746a02c922a4cb40ad23796646a8af"
+    },
+    {
+      "path": "scripts/qualify-ftps.py",
+      "sha256": "df33cf8e350c27dbc329c269bad926f156d4e22a7f198edfc2143824019a47da"
+    },
+    {
+      "path": "scripts/ci-ftps-summary.py",
+      "sha256": "2560227e528b2607b75803bc478fae04ec63acda924189bbfa3a313e71e515ea"
+    },
+    {
+      "path": "scripts/check-ftp-engine.py",
+      "sha256": "f124aad73d1dc705c6023d784ba89a68e048af409008deb0b97f0d47c9d58b03"
+    },
+    {
+      "path": "third_party/ftpserverlib/UPSTREAM.json",
+      "sha256": "78c2d06055cc04d49c82c1719e44402fe9a15200452c858d4a305989d01ba3c3"
+    },
+    {
+      "path": ".github/workflows/ftps.yml",
+      "sha256": "5b2786957bbad548956712e90c57113e975984d3f4163703618608377acf802a"
+    },
+    {
+      "path": ".github/workflows/native-linux.yml",
+      "sha256": "3e3ed20db3c087793baa220cf0c83b9bdb83da00344f9c56e8d009cf0b930074"
+    }
+  ],
+  "native_manifest": {
+    "reference": ".private/ftps-69e75094dd694979a7455f5448941293/manifest.json",
+    "sha256": "d374438b20446b780188936e5262813ff334759b1333794dddb9ecf99d88797f",
+    "native_steps": 39,
+    "source_inputs": 650
+  },
+  "environment": {
+    "application": "actual macOS ARM; Go1.26.10;GOMAXPROCS=1/GOMEMLIMIT=192MiB",
+    "database": "exact task-owned PostgreSQL16.15 ARM;512MiB/oneCPU;fresh test database;forcedRLS/nonowner runtime role",
+    "client": "native Python/OpenSSL3.6.5 FTP stand-in with certificate verification, TLS1.3 and explicit control-session resumption",
+    "stock_mac_client": "curl8.7.1 reports x86_64-apple-darwin26.0;LibreSSL3.3.6;data resumption pairing refused and unqualified"
+  },
+  "native_results": {
+    "native_client_only": true,
+    "stock_curl_qualified": false,
+    "service_tests": {
+      "required": [
+        "TestFTPSNativeTLSClientProtocolAndInterruption"
+      ],
+      "pass_records": 3,
+      "failed_records": 0,
+      "skipped_records": 0
+    },
+    "public_cli_modes": [
+      "explicit",
+      "implicit"
+    ],
+    "cases_per_mode_per_surface": 12,
+    "ordinary_resumed_data_channels_per_cli_mode": 22,
+    "opaque_reference_bytes": 19467,
+    "opaque_reference_sha256": "2ffed54351500dac2308a11a72543187a411ba1050a62cce7caa8fdf3d176375",
+    "retained_matches_F056_applied": true,
+    "retained_rows": 64339,
+    "retained_metadata_and_roles_unchanged": true,
+    "isolated_database_removed": true,
+    "original_resource_state_restored": true,
+    "original_stopped_state_restored": true,
+    "sources_unchanged": true,
+    "cleanup_failures": [],
+    "postgres_and_scanner_stopped_rechecked": true
+  },
+  "cases": [
+    "TLS1.3 control/data with exact per-control ticket reuse and current scoped custody authority",
+    "EPSV/PASV, PORT and RFC2428 alternate-delimiter EPRT; opaque bytes unchanged",
+    "accepted-prefix REST, APPE, namespace operations and ASCII logical-line conversion",
+    "clear-data downgrade, unsupported type, cross-peer/DNS/privileged-port callback refusals",
+    "missing/foreign tickets, unnotified data EOF, control loss and ABOR preserve the previous accepted revision"
+  ],
+  "pinned_engine": {
+    "module": "github.com/fclairamb/ftpserverlib@v0.32.7",
+    "upstream_commit": "a4adf0322c6c4f72e027f5106eeb918d5086f58f",
+    "license": "Original MIT license.txt preserved verbatim.",
+    "upstream_files": 35,
+    "modified_files": 7,
+    "added_tests": 3,
+    "private_test_keys": "generated at runtime; no reusable private key committed",
+    "focused_patch_tests": "native ARM socket/deadline, numeric-address and delimiter refusal tests passed; full upstream native replay pending"
+  },
+  "checks": {
+    "affected_crypto_adapter_architecture_race": "passed on native ARM",
+    "module_integrity": "all modules verified",
+    "vet": "affected crypto/adapter/CLI packages passed",
+    "engine_pin_refusal_contracts": 4,
+    "safe_ci_summary_refusal_contracts": 9,
+    "actionlint": "passed at1.7.12",
+    "python_syntax": "passed",
+    "diff_whitespace": "passed"
+  },
+  "prior_candidate_ci": {
+    "candidate": "a2f53f7ad58ce1400afdbaefab1c8abcdd92500c",
+    "scope": "earlier TLS primitive candidate; none of these jobs qualify the new adapter",
+    "source_security_frontend": {
+      "run_id": 41545736285,
+      "job_id": 125620768561,
+      "state": "success"
+    },
+    "native_linux": {
+      "run_id": 41545736291,
+      "jobs": [
+        125620769332,
+        125620769442
+      ],
+      "pass_records_each": 555,
+      "failure_records_each": 0,
+      "skip_records_each": 0,
+      "metadata_jobs": [
+        125620769358,
+        125620769461
+      ],
+      "fuzz_job": 125620769043,
+      "fuzz_targets": 8,
+      "state": "all passed"
+    },
+    "stock_peers": {
+      "run_id": 41545736244,
+      "state": "all five passed",
+      "handoff_job": 125620768940,
+      "handoff_manifest_sha256": "a864896b8bde06597f192e61a976049bdc50dc5a09ce5e1ce6f51afd998350d5",
+      "handoff_commands": 171,
+      "handoff_verified_outputs": 454
+    },
+    "platforms": {
+      "run_id": 41545736202,
+      "mac_job": 125620768657,
+      "mac_state": "success",
+      "windows_job": 125620768507,
+      "windows_state": "failure",
+      "failed_test_or_subcase_records": 22,
+      "defect": "D103; five added FTPS identity tests expose the same existing Windows protected-file boundary"
+    }
+  },
+  "first_failures": [
+    {
+      "reference": ".private/ftps-26c087f694654e6eb33913876d326cfb/manifest.json",
+      "sha256": "11b17ec8de0f98225ce8902bf79eb0d07d630e65d547770d3ff12df0395319fb",
+      "meaning": "D117: stock curl cannot set its explicit TLS1.3 minimum. Corrected client configuration uses normal negotiation against the unchanged server floor, with TLS1.2 refusal coverage."
+    },
+    {
+      "reference": ".private/ftps-5ab10a3a5aa7492183cc86c50650517c/manifest.json",
+      "sha256": "7743ec72a84a573de780a5cae8ed9e500b9c8ad4600311776daeed91ef340054",
+      "meaning": "D118: actual Mac LibreSSL data-resumption pairing is refused and remains unqualified."
+    },
+    {
+      "reference": ".private/ftps-16d3d0ac86614e44b4e065ad590b93ac/manifest.json",
+      "sha256": "e2c178b984320d17ba22d755be9a18503cd1d90be2e3be814c2711b482191a82",
+      "meaning": "D119: premature TYPE A refusal blocked standard directory listings. Corrected with real ASCII logical-line round-trip coverage."
+    },
+    {
+      "reference": ".private/freightctl-ftps-eprt-first-bb3ca605421c4837870b8902f41a62a1/manifest.json",
+      "sha256": "900c634d8a423c5ca66f7237f110d3a435a1bf4358fd98dbf6aa8a23391a85c6",
+      "meaning": "D120: upstream EPRT parser rejected an RFC2428 alternate delimiter. Corrected numeric parsing and actual wire coverage."
+    },
+    {
+      "reference": ".private/ftps-6b29edf5c1f240df9ca6719c498d8c76/manifest.json",
+      "sha256": "5ab07a36ee0b78f7b427caa1207deaf03612184871a6bfe133f68a4b0c320b10",
+      "meaning": "Fixture-only collision: implicit CLI rename correctly refused an existing guard path. Probe-owned namespace cleanup follows all revision-preservation checks."
+    }
+  ],
+  "inference_performed": false,
+  "scanner_engine_started": false,
+  "full_foundation_aggregate_executed": false,
+  "full_journeys_qualified": false,
+  "overall_goal_complete": false,
+  "limits": [
+    "Stock curl qualification is explicitly false on this Mac. The new native Linux ARM/x86 stock workflow and full engine replay must actually run. No fallback to plaintext, TLS1.2 or IP-only data authentication.",
+    "This is receiving and authenticated retrieval, not proactive FTPS delivery or remote collection. Sending rows remain planned.",
+    "Atomic interrupted overwrite preserves old bytes; durable resumption of an unaccepted interrupted upload through governed tickets remains required.",
+    "Active revocation/rotation, selected intake/quarantine, IPv6/firewall/gateway, fair admission, larger files/load, process/power-loss and broader platform/client gates remain open.",
+    "All83whole rows/12full journeys, WindowsD103, privateAI, independent adoption and enterprise/release gates remain open."
+  ],
+  "secret_scan": {
+    "state": "passed",
+    "public_source_files": 651,
+    "scanner": "Gitleaks8.30.1",
+    "exit_code": 0,
+    "diagnostic_sha256": "5c6d895293b30668b0d7aa61580c80a037673f9bb63bb8827c30512a64360933",
+    "rules_or_exclusions_changed": false,
+    "manifest_reference": ".private/freightctl-ftps-public-review-35dabd6b109a46ada1e2bacb88041326/manifest.json",
+    "scope_note": "Complete public source snapshot before recording this scan result; private raw evidence/credentials and caches remain excluded from Git."
+  }
+}

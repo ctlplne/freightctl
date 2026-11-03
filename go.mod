@@ -6,12 +6,17 @@ toolchain go1.26.10
 
 require (
 	github.com/ProtonMail/go-crypto v1.5.2
+	github.com/fclairamb/ftpserverlib v0.32.7
 	github.com/jackc/pgx/v5 v5.11.0
 	github.com/pkg/sftp v1.13.12
+	github.com/spf13/afero v1.15.0
 	golang.org/x/crypto v0.58.0
 	golang.org/x/sys v0.49.0
 	golang.org/x/text v0.43.0
 )
+
+// Pinned MIT source and narrow socket/policy hooks; see third_party/ftpserverlib/UPSTREAM.json.
+replace github.com/fclairamb/ftpserverlib => ./third_party/ftpserverlib
 
 require (
 	github.com/cloudflare/circl v1.6.3 // indirect

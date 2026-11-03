@@ -6,6 +6,7 @@ on:
     paths:
       - 'cmd/**'
       - 'internal/**'
+      - 'third_party/**'
       - 'web/**'
       - go.mod
       - go.sum
@@ -15,6 +16,7 @@ on:
     paths:
       - 'cmd/**'
       - 'internal/**'
+      - 'third_party/**'
       - 'web/**'
       - go.mod
       - go.sum

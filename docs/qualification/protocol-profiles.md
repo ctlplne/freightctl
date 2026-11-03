@@ -29,3 +29,17 @@ python3 scripts/test-records.py
 ```
 
 The same refusal tests are wired into core CI; GitHub execution remains unverified. No protocol conformance command is advertised before its implementation exists. Exact incumbent editions, gateway/client versions, permitted PeSIT material, security profiles and independent peers remain open under R001/R008. No model, malware database or new service is needed for these record checks.
+
+
+## FTPS receiving development profile
+
+The [receiving profile](../ftps.md) and [F058](evidence/F058-ftps-receiving.json) describe the current implementation. Its two receiving rows are implementing, and its proactive sending rows remain planned. This profile is distinct from the six independently gated AS-family/legacy contracts above.
+
+| Boundary | Current mechanism and evidence |
+| --- | --- |
+| Role/security | Explicit AUTH TLS and implicit receiving/authenticated retrieval; TLS1.3 with certificate verification and a distinct control-session ticket key. Data must resume that authenticated control session. |
+| Network | Numeric loopback control and passive sockets; EPSV/PASV; explicitly enabled PORT/EPRT callbacks restricted to the same numeric peer and unprivileged ports. RFC2428 alternate delimiter covered. |
+| Files | Shared scoped PostgreSQL/custody; binary bytes unchanged, ordinary ASCII text conversion, listings/directories/rename/delete, accepted-prefix REST and append. No host filesystem driver. |
+| Acceptance | Success follows staged-byte sync/hash and the metadata/intake transaction. Held data stays unpublished; no scan/business/ exactly-once promise follows from226. Detected abort, control loss, missing/foreign tickets and unnotified EOF preserve the old accepted revision. |
+| Current proof | Actual native ARM service/public CLI with real PostgreSQL/storage and the TLS client stand-in,12 cases per mode. Mac stock curl/LibreSSL resumption pairing refused. Native Linux stock/full-engine gates pending. |
+| Still required | Full stock/vendor/client, active lifecycle/intake/ticket recovery, production TLS/listeners, IPv6/firewall/gateway, larger/longer/crash/platform and whole-row acceptance; proactive remote FTPS sending and collection. |

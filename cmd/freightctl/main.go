@@ -20,6 +20,7 @@ import (
 	"github.com/ctlplne/freightctl/internal/audit"
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/custody"
+	"github.com/ctlplne/freightctl/internal/ftpsd"
 	"github.com/ctlplne/freightctl/internal/sftpd"
 	"github.com/ctlplne/freightctl/internal/store"
 )
@@ -32,7 +33,7 @@ func main() {
 }
 func run(args []string) error {
 	if len(args) == 0 || args[0] == "--help" || args[0] == "help" {
-		fmt.Println("freightctl: schema-version | init | setup-plan | setup | token | enroll | identity | namespace | dev-cert | serve | reconcile | audit-keygen | audit-export | ssh-host-keygen | ssh-key-enroll | ssh-key-revoke | serve-sftp | upload-create | upload-list | upload-status | upload-append | upload-complete | upload-abort | delivery-create | delivery-status | delivery-approve | delivery-cancel | delivery-work | delivery-reconcile\nPartners: partner-create | partner-list | tenant-admin-grant | tenant-admin-revoke | tenant-admin-status\nOnboarding plans: partner-onboarding-save | partner-onboarding-list | partner-onboarding-status | partner-onboarding-probe-start | partner-onboarding-probe-list | partner-onboarding-probe-status | partner-onboarding-probe-work | partner-onboarding-exchange-review\nOnboarding tests: partner-onboarding-test-preview | partner-onboarding-test-start | partner-onboarding-test-list | partner-onboarding-test-status | partner-onboarding-test-review\nOnboarding releases: partner-onboarding-release-preview | partner-onboarding-release-propose | partner-onboarding-release-status | partner-onboarding-release-list | partner-onboarding-release-decide | partner-onboarding-production-preview | partner-onboarding-production-start | partner-onboarding-production-list | partner-onboarding-production-status\nOutbound dispatch approvals: dispatch-policy-status | dispatch-policy-set | dispatch-delivery-status | dispatch-review-preview | dispatch-review-propose | dispatch-review-list | dispatch-review-status | dispatch-review-decide\nIndependent approvals: partner-onboarding-approval-policy-status | partner-onboarding-approval-policy-set | partner-onboarding-approval-review-preview | partner-onboarding-approval-review-propose | partner-onboarding-approval-review-list | partner-onboarding-approval-review-status | partner-onboarding-approval-review-decide\nReceipt observations: partner-onboarding-observation-preview | partner-onboarding-observation-propose | partner-onboarding-observation-list | partner-onboarding-observation-status | partner-onboarding-observation-decide | partner-onboarding-observation-work\nQueued handoffs: partner-onboarding-handoff-preview | partner-onboarding-handoff-propose | partner-onboarding-handoff-list | partner-onboarding-handoff-status | partner-onboarding-handoff-decide\nAccounts: account-create | account-update | account-rotate | account-revoke | account-list | account-status\nConnections: connection-register | connection-status | connection-revoke\nWorkflows: workflow-validate | workflow-draft | workflow-status | workflow-diff | workflow-approve | workflow-revoke | workflow-run-preview | workflow-run | workflow-run-status | workflow-work | workflow-refresh | workflow-cancel\nCollections: workflow-collection-connections | workflow-collection-workflows | workflow-collection-preview | workflow-collection-start | workflow-collection-status | workflow-collection-list | workflow-collection-work | workflow-collection-refresh | workflow-collection-cancel\nCollected handoffs: workflow-collection-handoff-preview | workflow-collection-handoff-propose | workflow-collection-handoff-list | workflow-collection-handoff-status | workflow-collection-handoff-receipt | workflow-collection-handoff-approve | workflow-collection-handoff-cancel | workflow-collection-handoff-execute\nCaptured routing: workflow-collection-routing-preview | workflow-collection-routing-input-preview | workflow-collection-routing-propose | workflow-collection-routing-status | workflow-collection-routing-current | workflow-collection-routing-details | workflow-collection-routing-receipt | workflow-collection-routing-list | workflow-collection-routing-approve | workflow-collection-routing-revoke | workflow-collection-routing-withdraw\nSchedules: workflow-schedule-workflows | workflow-schedule-preview | workflow-schedule-draft | workflow-schedule-list | workflow-schedule-status | workflow-schedule-activate | workflow-schedule-suspend | workflow-schedule-revoke | workflow-schedule-tick | workflow-schedule-history | workflow-schedule-occurrence | workflow-schedule-worker\nScheduled arrivals: workflow-arrival-status | workflow-arrival-probe | workflow-arrival-admit | workflow-arrival-cancel\nAssistance: ai-profile-register | ai-profile-status | ai-profile-revoke | ai-propose | ai-diagnose | ai-status | ai-approve | ai-generate | ai-adopt\nIntake: intake-policy-register | intake-policy-status | intake-policy-revoke | check-list | check-status | check-run | check-recover | check-release\nRe-checks: check-recheck-preview | check-recheck-propose | check-recheck-list | check-recheck-status | check-recheck-decide | check-recheck-copy\nScanners: scanner-register | scanner-status | scanner-revoke\nOpenPGP: pgp-key-register | pgp-key-status | pgp-key-revoke | check-signature\nRead docs/development.md. This is an unqualified local custody foundation.")
+		fmt.Println("freightctl: schema-version | init | setup-plan | setup | token | enroll | identity | namespace | dev-cert | serve | reconcile | audit-keygen | audit-export | ssh-host-keygen | ssh-key-enroll | ssh-key-revoke | serve-sftp | serve-ftps | upload-create | upload-list | upload-status | upload-append | upload-complete | upload-abort | delivery-create | delivery-status | delivery-approve | delivery-cancel | delivery-work | delivery-reconcile\nPartners: partner-create | partner-list | tenant-admin-grant | tenant-admin-revoke | tenant-admin-status\nOnboarding plans: partner-onboarding-save | partner-onboarding-list | partner-onboarding-status | partner-onboarding-probe-start | partner-onboarding-probe-list | partner-onboarding-probe-status | partner-onboarding-probe-work | partner-onboarding-exchange-review\nOnboarding tests: partner-onboarding-test-preview | partner-onboarding-test-start | partner-onboarding-test-list | partner-onboarding-test-status | partner-onboarding-test-review\nOnboarding releases: partner-onboarding-release-preview | partner-onboarding-release-propose | partner-onboarding-release-status | partner-onboarding-release-list | partner-onboarding-release-decide | partner-onboarding-production-preview | partner-onboarding-production-start | partner-onboarding-production-list | partner-onboarding-production-status\nOutbound dispatch approvals: dispatch-policy-status | dispatch-policy-set | dispatch-delivery-status | dispatch-review-preview | dispatch-review-propose | dispatch-review-list | dispatch-review-status | dispatch-review-decide\nIndependent approvals: partner-onboarding-approval-policy-status | partner-onboarding-approval-policy-set | partner-onboarding-approval-review-preview | partner-onboarding-approval-review-propose | partner-onboarding-approval-review-list | partner-onboarding-approval-review-status | partner-onboarding-approval-review-decide\nReceipt observations: partner-onboarding-observation-preview | partner-onboarding-observation-propose | partner-onboarding-observation-list | partner-onboarding-observation-status | partner-onboarding-observation-decide | partner-onboarding-observation-work\nQueued handoffs: partner-onboarding-handoff-preview | partner-onboarding-handoff-propose | partner-onboarding-handoff-list | partner-onboarding-handoff-status | partner-onboarding-handoff-decide\nAccounts: account-create | account-update | account-rotate | account-revoke | account-list | account-status\nConnections: connection-register | connection-status | connection-revoke\nWorkflows: workflow-validate | workflow-draft | workflow-status | workflow-diff | workflow-approve | workflow-revoke | workflow-run-preview | workflow-run | workflow-run-status | workflow-work | workflow-refresh | workflow-cancel\nCollections: workflow-collection-connections | workflow-collection-workflows | workflow-collection-preview | workflow-collection-start | workflow-collection-status | workflow-collection-list | workflow-collection-work | workflow-collection-refresh | workflow-collection-cancel\nCollected handoffs: workflow-collection-handoff-preview | workflow-collection-handoff-propose | workflow-collection-handoff-list | workflow-collection-handoff-status | workflow-collection-handoff-receipt | workflow-collection-handoff-approve | workflow-collection-handoff-cancel | workflow-collection-handoff-execute\nCaptured routing: workflow-collection-routing-preview | workflow-collection-routing-input-preview | workflow-collection-routing-propose | workflow-collection-routing-status | workflow-collection-routing-current | workflow-collection-routing-details | workflow-collection-routing-receipt | workflow-collection-routing-list | workflow-collection-routing-approve | workflow-collection-routing-revoke | workflow-collection-routing-withdraw\nSchedules: workflow-schedule-workflows | workflow-schedule-preview | workflow-schedule-draft | workflow-schedule-list | workflow-schedule-status | workflow-schedule-activate | workflow-schedule-suspend | workflow-schedule-revoke | workflow-schedule-tick | workflow-schedule-history | workflow-schedule-occurrence | workflow-schedule-worker\nScheduled arrivals: workflow-arrival-status | workflow-arrival-probe | workflow-arrival-admit | workflow-arrival-cancel\nAssistance: ai-profile-register | ai-profile-status | ai-profile-revoke | ai-propose | ai-diagnose | ai-status | ai-approve | ai-generate | ai-adopt\nIntake: intake-policy-register | intake-policy-status | intake-policy-revoke | check-list | check-status | check-run | check-recover | check-release\nRe-checks: check-recheck-preview | check-recheck-propose | check-recheck-list | check-recheck-status | check-recheck-decide | check-recheck-copy\nScanners: scanner-register | scanner-status | scanner-revoke\nOpenPGP: pgp-key-register | pgp-key-status | pgp-key-revoke | check-signature\nRead docs/development.md. This is an unqualified local custody foundation.")
 		return nil
 	}
 	f := flag.NewFlagSet(args[0], flag.ContinueOnError)
@@ -54,6 +55,9 @@ func run(args []string) error {
 	defaultListen := "127.0.0.1:28446"
 	if args[0] == "serve-sftp" {
 		defaultListen = "127.0.0.1:28447"
+	}
+	if args[0] == "serve-ftps" {
+		defaultListen = "127.0.0.1:28449"
 	}
 	listen := f.String("listen", defaultListen, "numeric loopback address")
 	storage := f.String("storage", ".private/custody", "private custody directory")
@@ -145,13 +149,20 @@ func run(args []string) error {
 	sshWriters := f.Int("ssh-max-writers", 2, "maximum open SFTP writers in the initial serialized profile")
 	sshSession := f.Duration("ssh-session-limit", 5*time.Minute, "absolute SSH connection lifetime")
 	sshIdle := f.Duration("ssh-idle-limit", 30*time.Second, "maximum SSH inactivity")
+	ftpsImplicit := f.Bool("ftps-implicit", false, "begin TLS before the FTP greeting; default uses explicit AUTH TLS")
+	ftpsActive := f.Bool("ftps-active", false, "allow encrypted active callbacks only to the control peer's numeric address and unprivileged ports")
+	ftpsConnections := f.Int("ftps-max-connections", 16, "maximum concurrent FTPS control connections in the initial pool profile")
+	ftpsWriters := f.Int("ftps-max-writers", 2, "maximum open FTPS custody writers")
+	ftpsList := f.Int("ftps-list-limit", 1000, "maximum entries buffered for one FTP directory listing")
+	ftpsSession := f.Duration("ftps-session-limit", 5*time.Minute, "absolute FTPS connection lifetime")
+	ftpsIdle := f.Duration("ftps-idle-limit", 30*time.Second, "maximum FTPS socket inactivity")
 	if err := f.Parse(args[1:]); err != nil {
 		return err
 	}
 	if f.NArg() != 0 {
 		return errors.New("unexpected positional arguments")
 	}
-	if args[0] == "serve" || args[0] == "serve-sftp" || strings.HasPrefix(args[0], "upload-") {
+	if args[0] == "serve" || args[0] == "serve-sftp" || args[0] == "serve-ftps" || strings.HasPrefix(args[0], "upload-") {
 		if *checkpointBytes < int(custody.MinUploadChunk) || *checkpointBytes > int(custody.MaxUploadChunk) || *maxFile < 1 || *maxFile > 1<<30 || *maxStored < *maxFile || *namespaceMax < 1 {
 			return errors.New("invalid upload checkpoint, file, storage or namespace budget")
 		}
@@ -459,6 +470,38 @@ func run(args []string) error {
 			return err
 		}
 		return json.NewEncoder(os.Stdout).Encode(report)
+	case "serve-ftps":
+		host, _, err := net.SplitHostPort(*listen)
+		if err != nil || net.ParseIP(host) == nil || !net.ParseIP(host).IsLoopback() {
+			return errors.New("development FTPS profile requires numeric loopback")
+		}
+		identity, err := secure.LoadFTPSIdentity(*cert, *key)
+		if err != nil {
+			return err
+		}
+		db, err := store.Open(ctx, *dsn)
+		if err != nil {
+			return err
+		}
+		defer db.Pool.Close()
+		disk, err := custody.Open(*storage)
+		if err != nil {
+			return err
+		}
+		defer disk.Close()
+		service, err := ftpsd.New(&custody.Service{DB: db, Disk: disk, MaxFile: *maxFile, MaxStored: *maxStored, NamespaceMaxEntries: *namespaceMax}, ftpsd.Options{Identity: identity, Implicit: *ftpsImplicit, EnableActive: *ftpsActive, MaxConnections: *ftpsConnections, MaxWriters: *ftpsWriters, ListLimit: *ftpsList, SessionLimit: *ftpsSession, IdleLimit: *ftpsIdle})
+		if err != nil {
+			return err
+		}
+		listener, err := net.Listen("tcp", *listen)
+		if err != nil {
+			return errors.New("cannot open FTPS listener")
+		}
+		defer listener.Close()
+		stop, cancel := signal.NotifyContext(ctx, os.Interrupt, syscall.SIGTERM)
+		defer cancel()
+		fmt.Println("freightctl FTPS custody listening on", *listen, "(TLS1.3 session-bound data; development profile)")
+		return service.Serve(stop, listener)
 	case "serve-sftp":
 		host, _, err := net.SplitHostPort(*listen)
 		if err != nil {

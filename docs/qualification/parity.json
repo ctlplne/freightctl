@@ -134,10 +134,13 @@
         "independent FTPS-explicit peer"
       ],
       "acceptance_journey": "J01",
-      "state": "planned",
-      "evidence": [],
+      "state": "implementing",
+      "evidence": [
+        "docs/qualification/evidence/F058-ftps-receiving.json"
+      ],
       "qualification_blockers": [
-        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+        "Native stock/enterprise clients and the new exact-commit GitHub replay remain unqualified.",
+        "Active rotation/revocation, selected intake/quarantine, upload-ticket recovery, broader IPv6/firewall/gateway/production profiles, large files/load and full row acceptance remain required."
       ]
     },
     {
@@ -212,10 +215,13 @@
         "independent FTPS-implicit peer"
       ],
       "acceptance_journey": "J01",
-      "state": "planned",
-      "evidence": [],
+      "state": "implementing",
+      "evidence": [
+        "docs/qualification/evidence/F058-ftps-receiving.json"
+      ],
       "qualification_blockers": [
-        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+        "Native stock/enterprise clients and the new exact-commit GitHub replay remain unqualified.",
+        "Active rotation/revocation, selected intake/quarantine, upload-ticket recovery, broader IPv6/firewall/gateway/production profiles, large files/load and full row acceptance remain required."
       ]
     },
     {

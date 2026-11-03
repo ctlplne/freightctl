@@ -40,6 +40,9 @@ jobs:
           sh scripts/go.sh run -p 1 github.com/rhysd/actionlint/cmd/actionlint@v1.7.12 .github/workflows/*.yml
       - name: Qualification record refusal contracts
         run: |
+          python3 scripts/check-ftp-engine.py
+          python3 scripts/test-ftp-engine.py
+          python3 scripts/test-ci-ftps-summary.py
           python3 scripts/test-records.py
           python3 scripts/test-native-evidence.py
           python3 scripts/test-ci-summary.py
