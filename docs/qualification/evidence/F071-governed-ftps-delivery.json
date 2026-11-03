@@ -120,6 +120,17 @@
       ],
       "manifest_reference": ".private/freightctl-ftps-schema36-first-native-j1nXUx/manifest.json",
       "manifest_sha256": "cc4f6846578cd604ff796539d98a79301c7cb6f9c491e3d81f81de0625ab503b"
+    },
+    "repair_candidate": "153d24cc0603021c240de05219a2114d5ea5c1b1",
+    "repair_run_id": 41627783987,
+    "repair_ftps_run_id": 41627783855,
+    "repair_browser_run_id": 41627783897,
+    "per_os_scheduling": {
+      "observed_running_candidate": "b5819e8ba2cfa08da40bb83063f51fa04f4b806d",
+      "original_windows_job": 125877767055,
+      "original_mac_queued_job": 125877766487,
+      "repair_run_held_pending": 41627783869,
+      "state": "move unchanged native OS job bodies to distinct job-level concurrency groups;finish each running profile without Mac queue holding Windows. Actionlint passed;actual new scheduling and native results pending."
     }
   },
   "limits": [

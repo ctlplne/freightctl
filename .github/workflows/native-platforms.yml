@@ -27,15 +27,14 @@ on:
 permissions:
   contents: read
 
-concurrency:
-  group: freightctl-native-${{ github.workflow }}-${{ github.ref }}
-  # Complete native platform evidence before accepting the newest candidate.
-  cancel-in-progress: false
-
 jobs:
   windows-amd64:
     runs-on: windows-2025
     timeout-minutes: 25
+    concurrency:
+      # Finish each OS's running evidence; a queued Mac cannot hold Windows.
+      group: freightctl-native-${{ github.workflow }}-windows-amd64-${{ github.ref }}
+      cancel-in-progress: false
     env:
       GOMAXPROCS: "1"
       GOMEMLIMIT: 192MiB
@@ -62,6 +61,9 @@ jobs:
   macos-arm64:
     runs-on: macos-15
     timeout-minutes: 25
+    concurrency:
+      group: freightctl-native-${{ github.workflow }}-macos-arm64-${{ github.ref }}
+      cancel-in-progress: false
     env:
       GOMAXPROCS: "1"
       GOMEMLIMIT: 192MiB
