@@ -53,13 +53,20 @@
     "scope": "All nine stand-in native pass records before adding explicit Python optimization refusal guards; no stock-client claim."
   },
   "new_native_gate": {
-    "state": "pending actual replay",
+    "state": "x86_64 running;arm64 queued at observation;follow the exact existing handles",
     "full_parent_tests": 5,
     "full_pass_records_required": 15,
     "local_standin_parent_tests": 3,
     "local_standin_pass_records_required": 9,
     "reporter_and_probe_refusal_contracts": 15,
-    "optimization": "Both assert-based wire clients refuse Python-O before reading a credential reference or opening a connection."
+    "optimization": "Both assert-based wire clients refuse Python-O before reading a credential reference or opening a connection.",
+    "candidate": "075fcbe9f8768d1b873622aaed9557941c1ca149",
+    "run_id": 41562125104,
+    "url": "https://github.com/ctlplne/freightctl/actions/runs/41562125104",
+    "jobs": {
+      "arm64": 125674937019,
+      "x86_64": 125674937219
+    }
   },
   "previous_candidate_checkpoint": {
     "candidate": "b99c8d2de0b74ac86cb4f88b7f0ee51aa1874c5a",
@@ -129,5 +136,24 @@
     "stderr_sha256": "f9f78eab6a97cb29272e575d85342b96a39537708da01efecdb3683aa21dd4a9",
     "scope": "All659 public source inputs before appending this result; no ignored private estate scanned or published",
     "rules_changed": false
+  },
+  "new_candidate_other_runs": {
+    "core": {
+      "run_id": 41562124807,
+      "job_id": 125674936430,
+      "state": "success"
+    },
+    "native_linux": {
+      "run_id": 41562125354,
+      "state": "pending observation"
+    },
+    "stock_peers": {
+      "run_id": 41562125108,
+      "state": "pending observation"
+    },
+    "platform": {
+      "run_id": 41562125014,
+      "state": "pending observation;WindowsD103 baseline remains open"
+    }
   }
 }
