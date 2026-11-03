@@ -13,6 +13,8 @@ spec=importlib.util.spec_from_file_location("summary",Path(__file__).with_name("
 summary=importlib.util.module_from_spec(spec);spec.loader.exec_module(summary)
 spec=importlib.util.spec_from_file_location("qualifier",Path(__file__).with_name("qualify-ftps-client.py"))
 qualifier=importlib.util.module_from_spec(spec);spec.loader.exec_module(qualifier)
+spec=importlib.util.spec_from_file_location("library_builder",Path(__file__).with_name("install-ftps-tls.py"))
+library_builder=importlib.util.module_from_spec(spec);spec.loader.exec_module(library_builder)
 
 
 class ReceiverEvidence(unittest.TestCase):
@@ -244,6 +246,38 @@ class ReceiverEvidence(unittest.TestCase):
     def test_native_receiver_must_resolve_to_exact_selected_library(self):
         self.library_fixture();self.output("selected-library-linkage",b"libssl.so.3 => /usr/lib/libssl.so.3\n")
         with self.assertRaises(ValueError):self.library_check()
+
+
+class LibraryDiagnostics(unittest.TestCase):
+    def setUp(self):
+        self.temp=tempfile.TemporaryDirectory(prefix="freightctl-library-diagnostic-");self.addCleanup(self.temp.cleanup)
+        self.root=Path(self.temp.name);self.source=self.root/"source";self.private=self.root/"private"
+        self.source.mkdir();self.private.mkdir()
+
+    def outputs(self,data):
+        (self.private/"selected-upstream-tests.stdout").write_bytes(data)
+        (self.private/"selected-upstream-tests.stderr").write_bytes(b"")
+        return [{"name":"selected-upstream-tests","exit_code":2,"stdout_sha256":hashlib.sha256(data).hexdigest(),"stderr_sha256":hashlib.sha256(b"").hexdigest()}]
+
+    def test_fixed_failure_metadata_never_echoes_protected_text(self):
+        steps=self.outputs(b"25-test_verify.t\nnot ok 1 - SYNTHETIC_SECRET\nNo such file or directory /private/SYNTHETIC_SECRET\n")
+        result=library_builder.diagnostics(self.source,self.private,steps)
+        self.assertEqual(result["not_ok_records"],1);self.assertEqual(result["recipes_seen"],["25-test_verify.t"])
+        self.assertEqual(result["categories"],["missing-file"])
+        self.assertNotIn("SYNTHETIC_SECRET",json.dumps(result));self.assertNotIn(str(self.root),json.dumps(result))
+        self.assertTrue(all(value is False for value in result["harness_files"].values()))
+
+    def test_changed_or_symlinked_original_cannot_supply_diagnostic(self):
+        steps=self.outputs(b"No such file or directory\n");path=self.private/"selected-upstream-tests.stdout"
+        path.write_bytes(b"Failed test\n")
+        self.assertEqual(library_builder.diagnostics(self.source,self.private,steps)["categories"],[])
+        path.unlink();outside=self.root/"outside";outside.write_bytes(b"No such file or directory\n");path.symlink_to(outside)
+        self.assertEqual(library_builder.diagnostics(self.source,self.private,steps)["categories"],[])
+
+    def test_oversized_original_is_not_read(self):
+        steps=self.outputs(b"");path=self.private/"selected-upstream-tests.stdout"
+        with path.open("wb") as out:out.truncate((64<<20)+1)
+        self.assertEqual(library_builder.diagnostics(self.source,self.private,steps)["categories"],[])
 
 
 if __name__=="__main__":unittest.main()

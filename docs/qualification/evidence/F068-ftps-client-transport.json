@@ -43,8 +43,8 @@
       "manifest_sha256": "441f321bf74402bf956f1bc040136e980ece606fd8a4f39fb8db58f1b2a17a8f",
       "state": "bind operation denied;original suite replay passed with loopback access"
     },
-    "latest_synthetic_evidence_tampering_contracts": 26,
-    "latest_contract_note": "Ten current bookkeeping/privacy refusal contracts pass;the48record native transport race archive remains unchanged. Runtime stock evidence remains failed at receiver startup.",
+    "latest_synthetic_evidence_tampering_contracts": 29,
+    "latest_contract_note": "29 synthetic evidence/privacy/permission contracts pass;the49-record native architecture/transport/crypto race archive remains unchanged. Native system ARM stock profile passes;system x86 and separate library harness gates remain red.",
     "latest_original_replay": {
       "manifest_reference": ".private/freightctl-ftps-phase-replay-4dfa69d54eec47fea6aec7bbd8adb946/manifest.json",
       "manifest_sha256": "b694bb1088a0e65ca4553c03c174816932bf0d0c86a14c8e220d1cf22a1f0ba9",
@@ -55,7 +55,7 @@
     }
   },
   "native_ci": {
-    "state": "receiver startup repaired;post-startup profiles still fail;fixed connection/TLS-probe diagnostics await original native replay",
+    "state": "Complete original system ARM receiver profile passes;system x86 remains red at TCP_ULP/seccomp. Both separate native library builds now finish within360seconds but original upstream test invocation exits2;wrapper prerequisite and bounded diagnostics await native replay.",
     "workflow": ".github/workflows/ftps-client.yml",
     "profile": "Actual native Ubuntu24 ARM/x86,stock vsftpd3.0.5-0ubuntu3.1/OpenSSL/PAM,two TLS1.3 listeners,strict reuse/read EOF/write shutdown,chroot,independent six-file receiver observation and exact user/PAM/process cleanup",
     "receiver_budget": "one inherited CPU affinity;256MiB per-process address-space and60CPU-second per-process limits;4sessions per listener;not a measured aggregate resident-memory claim",
@@ -201,7 +201,7 @@
       "primary_source": "https://raw.githubusercontent.com/openssl/openssl/openssl-3.0.13/crypto/bio/bss_sock.c"
     },
     "additional_library_profile": {
-      "state": "implemented;native build/upstream/stock replay pending",
+      "state": "Native selected compilation succeeds on both architectures;upstream harness exits2;required wrapper target/allowlisted diagnostic replay pending",
       "profile": "openssl-3.5.9-no-ktls",
       "source_url": "https://github.com/openssl/openssl/releases/download/openssl-3.5.9/openssl-3.5.9.tar.gz",
       "source_sha256": "603f5602e2eef00d77fbd429d34dcd5822bb301757a1bc9cdb24c670f1eb859a",
@@ -232,6 +232,45 @@
       "repair": "Use upstream build_generated/build_libs/build_modules plus exactopenssl,sslapitest,ssl_test,fips_version_test tools and link-utils;run the same complete three original recipes with upstreamrun_tests. Stage only the private receiver libraries/app/header/license so install_sw cannot rebuild every program. Expose failed command exit status. Keep one CPU,360second build,180second recipe and20minute job deadlines unchanged.",
       "source_contract": "https://raw.githubusercontent.com/openssl/openssl/openssl-3.5.9/Configurations/unix-Makefile.tmpl",
       "runtime_state": "pending original native replay;no source-library qualification"
+    },
+    "latest_matrix": {
+      "candidate": "86448c467bf3b1093e55419797432faa5b1f63ff",
+      "run_id": 41611080132,
+      "arm_system": {
+        "job_id": 125832819363,
+        "state": "passed",
+        "manifest_sha256": "966f7c25da9baaaf535982229f3e4d95877a6d68adf6979f1e464a6fc5933b07",
+        "native_pass_records": 3,
+        "original_commands": 20,
+        "receiver_files": 6
+      },
+      "x86_system": {
+        "job_id": 125832819658,
+        "state": "failed original control TLS and both exactTLS1.2 refusals;separate diagnosticTCP_ULP SIGSYS",
+        "manifest_sha256": "c4842928aa38f69babbae442764e22d145fc057144a7d20e251baebdbb0922e7"
+      },
+      "arm_no_ktls": {
+        "job_id": 125832819977,
+        "state": "build succeeds;selected-upstream-tests exit2;stock profile not invoked",
+        "manifest_sha256": "8c596e5ddcfcae89d8d5158e0dc50b3352b8ba539479f2a6be01a803c60067e2"
+      },
+      "x86_no_ktls": {
+        "job_id": 125832819560,
+        "state": "build succeeds;selected-upstream-tests exit2;stock profile not invoked",
+        "manifest_sha256": "2158cf2dc58332928ab35e6a436058bba97adfffb85ed658c0a1ecedc63193c8"
+      },
+      "archive": {
+        "manifest_reference": ".private/freightctl-ftps-library-harness-first-86448c4/manifest.json",
+        "manifest_sha256": "ce94f393ca64987a2017f219e488051af1f6a34029cc6c0e3acaab84a4786bf5"
+      }
+    },
+    "library_harness_followup": {
+      "defect": "D137",
+      "observed_failure": "Both original native builds now complete within360seconds;selected-upstream-tests exits2 before staging. Exact recipe cause unobserved in first safe report.",
+      "source_observation": "Original OpenSSL::Test wraps executable calls through generatedutil/wrap.pl. The exact target selection omitted this generated script. Add that prerequisite without changing recipes or assertions.",
+      "primary_source": "https://raw.githubusercontent.com/openssl/openssl/openssl-3.5.9/util/perl/OpenSSL/Test.pm",
+      "diagnostic": "Reopen hash-bound bounded original build/test output;emit only known harness-file availability,known recipe names,numeric not-ok count and fixed error categories. No upstream prose,paths,credentials or raw artifact upload.",
+      "runtime_state": "pending actual native ARM/x86 original replay"
     }
   },
   "next_integration": "docs/protocols/ftps-sending.md",
@@ -278,6 +317,26 @@
     "full_native_archive": {
       "manifest_reference": ".private/freightctl-ftps-native-regressions-d5aca89/manifest.json",
       "manifest_sha256": "ef2c3498cc148d32ed7bd9856282bc0e34d5aee4dceea5aa9693b6320892a7a5"
+    },
+    "latest_application_replay": {
+      "candidate": "137b87e24cc7a1b351704dbabe679f62652a2be6",
+      "full_native_run_id": 41597449751,
+      "x86_job_id": 125788122844,
+      "arm_job_id": 125788122876,
+      "application_pass_records_each": 616,
+      "application_failures_each": 0,
+      "application_skips_each": 0,
+      "engine_pass_records_each": 223,
+      "visible_engine_privileged_port20_skips_each": 1,
+      "mac_job_id": 125788013777,
+      "mac_state": "passed",
+      "windows_job_id": 125788013983,
+      "windows_state": "failed44records;D103 unchanged",
+      "archive": {
+        "manifest_reference": ".private/freightctl-ftps-phase-native-137b87e/manifest.json",
+        "manifest_sha256": "8528c49b3fbdd3b53e27c30cfb971bf3a08dbb05ced452316c38cfd75052ba39"
+      },
+      "scope": "Latest application Go source;later candidates change receiver qualification scripts/workflow/records only. Both metadata/fuzz jobs also pass at this candidate;their original logs are not included in this four-log archive."
     }
   },
   "fixture_directory_defect": {
