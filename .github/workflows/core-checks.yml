@@ -44,6 +44,7 @@ jobs:
           python3 scripts/test-ftp-engine.py
           python3 scripts/test-ci-ftps-summary.py
           python3 scripts/test-ftps-client-summary.py
+          python3 scripts/test-ci-setup-summary.py
           python3 scripts/test-records.py
           python3 scripts/test-native-evidence.py
           python3 scripts/test-ci-summary.py

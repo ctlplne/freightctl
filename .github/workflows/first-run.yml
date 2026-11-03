@@ -1,0 +1,86 @@
+name: Native first enrollment and browser exchange
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'cmd/**'
+      - '!cmd/**/*_test.go'
+      - 'internal/**'
+      - '!internal/**/*_test.go'
+      - 'web/**'
+      - 'go.mod'
+      - 'go.sum'
+      - '.gitattributes'
+      - 'scripts/go.sh'
+      - 'scripts/dev-db.py'
+      - 'scripts/qualify-setup.py'
+      - 'scripts/ci-setup-summary.py'
+      - 'scripts/test-ci-setup-summary.py'
+      - 'scripts/browser-journey.mjs'
+      - '.github/workflows/first-run.yml'
+  pull_request:
+    paths:
+      - 'cmd/**'
+      - '!cmd/**/*_test.go'
+      - 'internal/**'
+      - '!internal/**/*_test.go'
+      - 'web/**'
+      - 'go.mod'
+      - 'go.sum'
+      - '.gitattributes'
+      - 'scripts/go.sh'
+      - 'scripts/dev-db.py'
+      - 'scripts/qualify-setup.py'
+      - 'scripts/ci-setup-summary.py'
+      - 'scripts/test-ci-setup-summary.py'
+      - 'scripts/browser-journey.mjs'
+      - '.github/workflows/first-run.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: freightctl-first-run-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  first-run:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      GOMAXPROCS: "1"
+      GOMEMLIMIT: 192MiB
+      NODE_OPTIONS: --max-old-space-size=192
+      FREIGHTCTL_BROWSER_CHANNEL: chrome
+      PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.cache/freightctl-playwright
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version: "1.26.10"
+          cache: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: "26.0.0"
+      - name: Native runner and exact browser dependencies
+        run: |
+          test "$(uname -s)" = Linux
+          test "$(uname -m)" = x86_64
+          python3 --version
+          curl --version
+          npm --prefix web --cache "$GITHUB_WORKSPACE/.cache/freightctl-npm" ci --ignore-scripts --no-fund
+          node web/node_modules/playwright/cli.js install --with-deps chromium --only-shell
+          npm --prefix web run check-built
+      - name: Bounded task-owned PostgreSQL
+        run: python3 scripts/dev-db.py
+      - name: Original first-run CLI, browser and stock curl journey
+        run: |
+          umask 077
+          qualification_status=0
+          python3 scripts/qualify-setup.py > .private/first-run.stdout 2> .private/first-run.stderr || qualification_status=$?
+          python3 scripts/ci-setup-summary.py --manifest "$(cat .private/setup-current)/manifest.json"
+          exit "$qualification_status"

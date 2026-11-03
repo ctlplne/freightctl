@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "id": "F069",
+  "observed_at": "2026-11-03",
+  "starting_commit": "7f7cb02118c235bd93578892d9fb2029c00a428f",
+  "state": "native first-install browser gate prepared;actual GitHub replay pending;whole goal open",
+  "scope": "Promote the existing assisted first-run CLI/browser/curl experiment into a separately bounded disposable native Linux x86 gate. No new whole J01 or parity qualification.",
+  "implementation": [
+    "Preserve the original thirteen command sequence,three strict setup refusals,saved original receipt replay,browser workspace-reference refusal,first upload/download and stock curl readbacks before/after restart.",
+    "Resolve the exact workspace-owned512MiB/oneCPU PostgreSQL container before SQL;create and remove only a fresh named database;record actual database removal and cleanup failures. Use a private per-run binary.",
+    "Capture original CLI outputs,all nine browser/byte/plan/receipt files,exact source closure and binary identity. Independently reopen and compare them;manifest flags alone cannot qualify.",
+    "Require six original browser records,two original WCAG audits,zero browser errors/egress,exact source/browser/two stock bytes and matching original receipt/plan/credential identities.",
+    "Separate PR/main/manual workflow with read-only token,pinned actions,unpersisted checkout credentials,one-process Go/192MiB Go and Node budgets,20minute job,finish-running/newest-pending concurrency. Browser/real PostgreSQL run only on disposable GitHub native x86. No raw artifact upload."
+  ],
+  "local_checks": {
+    "manifest_reference": ".private/freightctl-first-run-contracts-f2fc0f6d3e124b30a8779d532924437f/manifest.json",
+    "manifest_sha256": "da0002540ee498a833a35f0413049a259766bb95f5338eaebe4d65102c09d5da",
+    "synthetic_evidence_privacy_refusal_contracts": 14,
+    "syntax": "passed",
+    "workflow_lint": "passed",
+    "actual_local_services_started": false,
+    "scope": "Synthetic evidence/permission/privacy refusal checks only;not setup/browser/service qualification."
+  },
+  "native_ci": {
+    "workflow": ".github/workflows/first-run.yml",
+    "state": "not yet observed",
+    "required_original_commands": 13,
+    "required_browser_records": 6,
+    "required_accessibility_audits": 2,
+    "required_exact_readbacks": 3,
+    "required_original_receipt_replays": 2
+  },
+  "inference_performed": false,
+  "local_postgres_started": false,
+  "scanner_started": false,
+  "full_goal_complete": false,
+  "limits": [
+    "Disconnected installation/bundles,Windows/native production platform,ordinary partner lifecycle,independent operator adoption and wholeJ01 remain open.",
+    "The original fullF026 aggregate remains manual and owner-deferred. No aggregate replay or model/scanner execution is introduced.",
+    "Runner private originals disappear after the job;public fixed aggregates/hash/run handles are retained,without raw artifact upload.",
+    "No change to retained schema35,data,roles or stopped resources. All83whole rows/12full journeys and all readiness verdicts remain open."
+  ],
+  "public_source_review": {
+    "manifest_reference": ".private/freightctl-first-run-public-e2521d43f2084f15aa0a1f9c8e07aa37/manifest.json",
+    "manifest_sha256": "36b4f11bad52809784d930df5a7844bb8585607fd290546b4cf3d6976d1a9573",
+    "source_count": 699,
+    "exit_code": 0,
+    "sources_unchanged": true
+  }
+}

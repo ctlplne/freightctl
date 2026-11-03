@@ -3,11 +3,12 @@
 from pathlib import Path
 from datetime import datetime, timezone
 from urllib.parse import urlsplit, urlunsplit
-import hashlib,json,os,shutil,socket,subprocess,time,traceback,uuid
+import hashlib,json,os,platform,shutil,socket,subprocess,time,traceback,uuid
+if not __debug__:raise RuntimeError('First-run qualification requires assertions; remove Python optimization')
 os.umask(0o077)
 root=Path(__file__).resolve().parents[1];os.chdir(root)
 run='setup-'+uuid.uuid4().hex;private=root/'.private'/run;private.mkdir(mode=0o700);raw=root/'evidence/raw'/run;raw.mkdir(parents=True,mode=0o700)
-name='freightctl_'+run.replace('-','_');binary=root/'.cache/freightctl-setup';created=False;server=None;log=None;steps=[];started=time.monotonic();state='failed';failure=None
+name='freightctl_'+run.replace('-','_');binary=private/'freightctl';created=False;removed=False;server=None;log=None;steps=[];cleanup=[];started=time.monotonic();state='failed';failure=None;pg=None
 env=dict(os.environ,GOMAXPROCS='1',GOMEMLIMIT='192MiB',NODE_OPTIONS='--max-old-space-size=192',PLAYWRIGHT_BROWSERS_PATH=str(root/'.cache/freightctl-playwright'))
 def digest(p):
  with Path(p).open('rb')as f:return hashlib.file_digest(f,'sha256').hexdigest()
@@ -17,13 +18,14 @@ def sources():
  return {p:digest(root/p)for p in sorted(set(paths))if p and (Path(p).suffix in('.go','.sql','.sh','.py','.ts','.tsx','.js','.mjs','.css','.html','.yml','.yaml')or p in special)}
 initial=sources()
 def command(label,args,expected=0,timeout=120):
+ if any(s['name']==label for s in steps):raise RuntimeError('duplicate first-run command label')
  p=raw/(label+'.log');start=time.monotonic()
  with p.open('wb')as out:r=subprocess.run(args,stdout=out,stderr=subprocess.STDOUT,env=env,timeout=timeout)
  steps.append({'name':label,'command':args,'exit_code':r.returncode,'expected_exit_code':expected,'duration_seconds':round(time.monotonic()-start,3),'native_output':str(p.relative_to(root)),'native_output_sha256':digest(p)})
  if r.returncode!=expected:raise RuntimeError(label+' failed; inspect protected output')
  return p
 def sql(text,database='freightctl'):
- return subprocess.check_output(['docker','exec','-i','freightctl-postgres-v1','psql','-X','-v','ON_ERROR_STOP=1','-U','postgres','-d',database,'-At','-c',text],env=env,timeout=30).decode().strip()
+ return subprocess.check_output(['docker','exec','-i',pg,'psql','-X','-v','ON_ERROR_STOP=1','-U','postgres','-d',database,'-At','-c',text],env=env,timeout=30).decode().strip()
 def stop():
  global server,log
  if server is not None:
@@ -34,7 +36,8 @@ def stop():
  if log is not None:log.close();log=None
 try:
  metadata=json.loads(subprocess.check_output(['docker','inspect','freightctl-postgres-v1']))[0]
- assert metadata['Config'].get('Labels',{}).get('freightctl.workspace')==str(root) and metadata['State']['Running']
+ assert metadata['Config'].get('Labels',{}).get('freightctl.workspace')==str(root) and metadata['State']['Running'] and metadata['HostConfig']['Memory']==536870912 and metadata['HostConfig']['NanoCpus']==1000000000
+ pg=metadata['Id'];assert len(pg)==64 and all(c in '0123456789abcdef' for c in pg)
  command('build',['sh','scripts/go.sh','build','-p','1','-trimpath','-buildvcs=false','-o',str(binary),'./cmd/freightctl'])
  sql('CREATE DATABASE '+name);created=True
  for source in ['pg-admin.dsn','pg-runtime.dsn']:
@@ -82,11 +85,17 @@ try:
 except Exception:
  failure=traceback.format_exc()
 finally:
- stop()
+ try:stop()
+ except Exception:cleanup.append('exact-first-run-server-stop');failure=(failure or '')+'\nExact fixture server cleanup failed';state='failed'
  if created:
-  try:sql('DROP DATABASE '+name+' WITH (FORCE)')
-  except Exception:failure=(failure or '')+'\nExact fixture database cleanup failed';state='failed'
+  try:sql('DROP DATABASE '+name+' WITH (FORCE)');removed=True
+  except Exception:cleanup.append('exact-first-run-database-remove');failure=(failure or '')+'\nExact fixture database cleanup failed';state='failed'
 final_sources=sources();unchanged=initial==final_sources
-manifest={'schema_version':1,'state':state if unchanged else 'failed','starting_commit':subprocess.check_output(['git','rev-parse','HEAD']).decode().strip(),'observed_at':datetime.now(timezone.utc).isoformat(),'source_sha256':final_sources,'sources_unchanged_during_run':unchanged,'steps':steps,'duration_seconds':round(time.monotonic()-started,3),'binary_sha256':digest(binary)if binary.exists()else None,'fixture_reference':str(private.relative_to(root)),'first_failure':'.private/first-run-first-failure','inference_performed':False,'scanner_engine_started':False,'database':name,'exact_fixture_database_removed':created,'failure':failure,'limits':['Assisted same-host first tenant/partner/admin enrollment and exact-byte integrity-only exchange. No independent operator or disconnected bundle qualification.','One-time setup uses the separate deployment-admin reference; no unauthenticated network bootstrap endpoint exists. Ordinary partner lifecycle, invitations/providers/delegation and production activation remain open.','No model, malware engine, private signing/decryption or business acknowledgment is exercised.']}
+observed={}
+for prefix,base,names in [('raw',raw,('setup-result.json','setup-login-axe.json','setup-published-files-axe.json')),('fixture',private,('source.csv','browser-received.csv','stock-curl-first-exchange.csv','stock-curl-after-restart.csv','setup.json','workspace.json'))]:
+ for file in names:
+  p=base/file
+  if p.is_file() and not p.is_symlink():observed[prefix+'/'+file]=digest(p)
+manifest={'schema_version':1,'kind':'native-first-run-browser','state':state if unchanged else 'failed','starting_commit':subprocess.check_output(['git','rev-parse','HEAD']).decode().strip(),'observed_at':datetime.now(timezone.utc).isoformat(),'system':platform.system(),'architecture':platform.machine(),'source_sha256':final_sources,'sources_unchanged_during_run':unchanged,'steps':steps,'duration_seconds':round(time.monotonic()-started,3),'binary_sha256':digest(binary)if binary.exists()else None,'fixture_reference':str(private.relative_to(root)),'original_files_sha256':observed,'first_failure':'.private/first-run-first-failure','inference_performed':False,'scanner_engine_started':False,'database':name,'exact_fixture_database_removed':removed,'cleanup_failures':cleanup,'failure':failure,'limits':['Assisted same-host first tenant/partner/admin enrollment and exact-byte integrity-only exchange. No independent operator or disconnected bundle qualification.','One-time setup uses the separate deployment-admin reference; no unauthenticated network bootstrap endpoint exists. Ordinary partner lifecycle, invitations/providers/delegation and production activation remain open.','No model, malware engine, private signing/decryption or business acknowledgment is exercised.']}
 (raw/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n');(root/'.private/setup-current').write_text(str(raw)+'\n');print(str(raw/'manifest.json'),flush=True)
 if manifest['state']!='passed':print(failure,flush=True);raise SystemExit(1)
