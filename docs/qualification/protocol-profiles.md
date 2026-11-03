@@ -1,6 +1,6 @@
 # Protocol acceptance contracts
 
-Baseline `2026-10-29.1` adds [structured contracts](protocol-profiles.json) to the existing 13 AS1/AS2/AS3/AS4/OFTP2/PeSIT rows. It preserves all 83 row IDs, states and incumbent observations. Every protocol row remains planned. The new records define what must be proved before a support claim; they provide no runtime or vendor interoperability evidence.
+Baseline `2026-10-29.1` adds [structured contracts](protocol-profiles.json) to the existing 13 AS1/AS2/AS3/AS4/OFTP2/PeSIT rows. It preserves all 83 row IDs, states and incumbent observations. All13 rows covered by those six contracts remain planned. The new records define what must be proved before a support claim; they provide no runtime or vendor interoperability evidence.
 
 | Contract | Specification and target | Still required before qualification |
 | --- | --- | --- |
@@ -41,5 +41,5 @@ The [receiving profile](../ftps.md) and [F058](evidence/F058-ftps-receiving.json
 | Network | Numeric loopback control and passive sockets; EPSV/PASV; explicitly enabled PORT/EPRT callbacks restricted to the same numeric peer and unprivileged ports. RFC2428 alternate delimiter covered. |
 | Files | Shared scoped PostgreSQL/custody; binary bytes unchanged, ordinary ASCII text conversion, listings/directories/rename/delete, accepted-prefix REST and append. No host filesystem driver. |
 | Acceptance | Success follows staged-byte sync/hash and the metadata/intake transaction. Held data stays unpublished; no scan/business/ exactly-once promise follows from226. Detected abort, control loss, missing/foreign tickets and unnotified EOF preserve the old accepted revision. |
-| Current proof | Actual native ARM service/public CLI with real PostgreSQL/storage and the TLS client stand-in,12 cases per mode. Mac stock curl/LibreSSL resumption pairing refused. Native Linux stock/full-engine gates pending. |
+| Current proof | F060: native Linux ARM/x86 stock curl service and public CLI modes pass at563751e; full PostgreSQL suites pass569 records each and engine suites pass223 with one visible privileged-port20 skip. The expanded native ARM stand-in passes15 protocol/identity/interruption cases per service/CLI mode. Pinned stock lftp/curl atb99c8d2 pass on both native Linux architectures: nine test records/41 commands each with exact CLI bytes and cleanup. Mac curl/LibreSSL resumption pairing remains refused. |
 | Still required | Full stock/vendor/client, active lifecycle/intake/ticket recovery, production TLS/listeners, IPv6/firewall/gateway, larger/longer/crash/platform and whole-row acceptance; proactive remote FTPS sending and collection. |

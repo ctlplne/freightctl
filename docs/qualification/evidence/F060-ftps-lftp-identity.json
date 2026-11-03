@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "F060",
   "kind": "native-ftps-stock-lftp-and-wire-identity",
-  "state": "original full native replay passed on both architectures; local wire-identity replay passed; native lftp runtime gate pending",
+  "state": "native ARM/x86 stock curl and lftp receiving gates passed; local wire-identity replay passed; original full native repair replay passed; latest full native regression replay in progress",
   "observed_on": "2026-11-02",
   "starting_commit": "563751ee67b2a046664faba0eb78164eb552a5f6",
   "author_and_committer": "imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>",
@@ -41,7 +41,7 @@
     "retained_metadata_and_roles_unchanged": true
   },
   "new_native_gate": {
-    "state": "pending actual GitHub execution",
+    "state": "success on both native architectures",
     "architectures": [
       "Linux x86_64",
       "Linux arm64"
@@ -62,7 +62,37 @@
     "safety": "protected command reference, fresh LFTP_HOME, no user rc/proxy inheritance, verified CA/hostname, TLS1.3, bounded retries/output/time, no secret argv",
     "reporting": "Original Go outcomes/command hashes/source hashes checked; four actual CLI download files per mode independently compared. Failed output exposes only allowlisted test names and error categories.",
     "reporter_refusal_contracts": 14,
-    "workflow_concurrency": "Finish the running native/FTPS candidate; retain only the newest pending candidate. No queue:max backlog and no automatic retries/cancellation of a valid live handle."
+    "workflow_concurrency": "Finish the running native/FTPS candidate; retain only the newest pending candidate. No queue:max backlog and no automatic retries/cancellation of a valid live handle.",
+    "candidate": "b99c8d2de0b74ac86cb4f88b7f0ee51aa1874c5a",
+    "run_id": 41558527658,
+    "url": "https://github.com/ctlplne/freightctl/actions/runs/41558527658",
+    "observed_jobs": [
+      {
+        "id": 125663218421,
+        "architecture": "x86_64",
+        "state": "success",
+        "manifest_sha256": "4da4ee2002dc6907da3b44a7eb5915c08770d9f926992fe1c3d474fab0270923",
+        "native_pass_records": 9,
+        "native_commands": 41,
+        "source_inputs": 656,
+        "retained_metadata_and_roles_unchanged": true,
+        "isolated_database_removed": true,
+        "original_resource_state_restored": true
+      },
+      {
+        "id": 125663218492,
+        "architecture": "arm64",
+        "state": "success",
+        "manifest_sha256": "bc511cf3e9815bbb005f1daf0ccf35bb723a25dffb12c5cb9b405a51575726d7",
+        "native_pass_records": 9,
+        "native_commands": 41,
+        "source_inputs": 656,
+        "retained_metadata_and_roles_unchanged": true,
+        "isolated_database_removed": true,
+        "original_resource_state_restored": true
+      }
+    ],
+    "observed_client": "both architectures:lftp4.9.2-2ubuntu1.1;GnuTLS3.8.3;libgnutls30t64=3.8.3-1.1ubuntu3.6;Ubuntu24.04"
   },
   "starting_candidate_ci": {
     "candidate": "563751ee67b2a046664faba0eb78164eb552a5f6",
@@ -177,5 +207,68 @@
     "stderr_sha256": "0d4786a859c7ffeae636b8c993594ba3076b243a0fb4a29c290275289412bf56",
     "scope": "656 public source inputs copied before appending this scan result; no ignored private estate scanned or published",
     "rules_changed": false
+  },
+  "current_candidate_other_runs": {
+    "native_linux": {
+      "id": 41558527697,
+      "state": "both module/vet/unit race steps passed;ARM PostgreSQL integration and x86 engine replay in progress",
+      "jobs": {
+        "x86_64": 125663219274,
+        "arm64": 125663219294
+      },
+      "metadata_jobs": [
+        125663219061,
+        125663219172
+      ],
+      "metadata_state": "both passed",
+      "fuzz_job": 125663218725,
+      "fuzz_state": "all nine targets passed"
+    },
+    "core": {
+      "id": 41558527655,
+      "job_id": 125663218140,
+      "state": "success",
+      "browser_contracts": 108,
+      "record_and_evidence_refusal_tests": 66
+    },
+    "platform": {
+      "id": 41558527682,
+      "state": "Mac passed;WindowsD103 failure with22 failed tests/subcases",
+      "mac_job": 125663218529,
+      "windows_job": 125663218143
+    },
+    "stock_peers": {
+      "id": 41558527714,
+      "state": "four entries passed;handoff entry finishing",
+      "jobs": [
+        125663218608,
+        125663218981,
+        125663219041,
+        125663219236,
+        125663219277
+      ]
+    }
+  },
+  "lftp_native_log_archive": {
+    "manifest_reference": ".private/freightctl-ftps-lftp-native-b99c8d2-1feb281d96554c31a7345a2c229f2c8f/manifest.json",
+    "manifest_sha256": "67dbe273198a548050764722c66cb40d17c4ce6936b68e9d027748b7e16d93f5",
+    "files": {
+      "125663218140.log": {
+        "bytes": 1430538,
+        "sha256": "83cde6470292244c5d60ebb9fc781e4f56e9cb2d2900ef0854b2d87707f99f27"
+      },
+      "125663218143.log": {
+        "bytes": 23499,
+        "sha256": "671062f5fbccd74f801590b78b14a5cd64e9886ec805a867039ca474f5f8519a"
+      },
+      "125663218421.log": {
+        "bytes": 30279,
+        "sha256": "1847ab1167f0446bbb0f73d3f86676b91f2d7b1bf86fd7e4aa81cc575c56105a"
+      },
+      "125663218492.log": {
+        "bytes": 30152,
+        "sha256": "4338a0db2e331e1cb90fbeda823ca3519f31d2f209f43ed65170b1aad465de9b"
+      }
+    }
   }
 }
