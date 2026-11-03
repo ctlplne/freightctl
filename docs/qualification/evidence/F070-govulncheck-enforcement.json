@@ -3,7 +3,7 @@
   "id": "F070",
   "observed_at": "2026-11-03",
   "starting_commit": "aeec93e2b16374200272aaccab54eb40cf090648",
-  "state": "JSON-only vulnerability gate defect reproduced and repaired;actual native GitHub source replay pending",
+  "state": "fixed and actual native x86 security gate replayed;full goal remains open",
   "scope": "Enforce the existing default called-symbol govulncheck policy;not a new application vulnerability,full-platform scan,malware detection or full-goal qualification.",
   "defect": "D138",
   "first_failure": {
@@ -62,7 +62,37 @@
   },
   "native_ci": {
     "workflow": ".github/workflows/core-checks.yml",
-    "state": "pending actual native x86 contracts plus fresh original source scan and enforced conversion"
+    "state": "passed complete original core/security job with enforcing source scan and converter",
+    "candidate": "bb88ff9a6498f947b96d37236a95ae8b14fc8790",
+    "run_id": 41615720980,
+    "job_id": 125848537569,
+    "converter_contract": {
+      "state": "passed",
+      "manifest_sha256": "618c83ed498f7547bd3c51a29d6768a9a859fd9f56dfa1867b4674e269a5a590",
+      "converter_version": "v1.9.0",
+      "records": 6,
+      "exit_codes": {
+        "tool-version": 0,
+        "legacy-json-called": 0,
+        "text-called": 3,
+        "text-module-only": 0,
+        "text-clean": 0,
+        "text-truncated": 1
+      },
+      "source_scan_performed": false
+    },
+    "called_vulnerabilities": 0,
+    "imported_package_vulnerabilities": 0,
+    "required_module_vulnerabilities": 1,
+    "scanner_version": "v1.9.0",
+    "go_version": "go1.26.10",
+    "database_modified": "2026-11-02T22:01:43Z",
+    "source_and_history_secret_scans": "both passed",
+    "archive": {
+      "manifest_reference": ".private/freightctl-native-security-and-library-aeec-bb88/manifest.json",
+      "manifest_sha256": "8dac63eb88a651f4ca7249c4ffc877bb3af64e4fae7a8dfe1dae147cb39bec7c"
+    },
+    "original_json_retention": "Raw currentJSON stays private on disposable runner and is not uploaded;retained original job log contains actual converter outcomes,version/feed/scope/result and secret-scan outputs."
   },
   "primary_sources": [
     "https://pkg.go.dev/golang.org/x/vuln@v1.9.0/cmd/govulncheck#hdr-Exit_codes",

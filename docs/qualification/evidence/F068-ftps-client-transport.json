@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "F068",
   "observed_at": "2026-11-03",
-  "state": "outbound FTPS transport and native ARM stock component verified;system-library x86 red;separate native library variant pending;whole goal open",
+  "state": "ARM system and named software-library stock transport components pass;both native selected library recipes pass;both x86 stock profiles red;governed sending and full goal open",
   "starting_commit": "1ecc15f37dd8bfb254089804cab5d7b9f91d947f",
   "scope": "Bounded explicit/implicit FTPS transport component only;not connected to governed delivery,collection,connections,workflows or public sending controls. No whole parity row or journey qualified.",
   "implementation": [
@@ -55,7 +55,7 @@
     }
   },
   "native_ci": {
-    "state": "Original system ARM passes and system x86 remains red;both source-library profiles compile and reach all recipes but retain1not-ok record. Missing final recipe executable added;native replay pending.",
+    "state": "At aeec93e,ARM system and software-library stock profiles pass. Both native software libraries and all three original recipes pass,with54visible skip lines onARM and50onx86. X86 system still failsTCP_ULP;software profile reachesTLS1.2 refusal but failsGoTLS withgetrandomSIGSYS. No whole sending or effective ARM seccomp qualification.",
     "workflow": ".github/workflows/ftps-client.yml",
     "profile": "Actual native Ubuntu24 ARM/x86,stock vsftpd3.0.5-0ubuntu3.1/OpenSSL/PAM,two TLS1.3 listeners,strict reuse/read EOF/write shutdown,chroot,independent six-file receiver observation and exact user/PAM/process cleanup",
     "receiver_budget": "one inherited CPU affinity;256MiB per-process address-space and60CPU-second per-process limits;4sessions per listener;not a measured aggregate resident-memory claim",
@@ -201,7 +201,7 @@
       "primary_source": "https://raw.githubusercontent.com/openssl/openssl/openssl-3.0.13/crypto/bio/bss_sock.c"
     },
     "additional_library_profile": {
-      "state": "Native selected compilation succeeds on both architectures;upstream harness exits2;required wrapper target/allowlisted diagnostic replay pending",
+      "state": "actual native ARM/x86 compilation and all three original upstream recipes pass;ARM unchanged stock journey passes;x86 stock journey remains red at a different entropy syscall",
       "profile": "openssl-3.5.9-no-ktls",
       "source_url": "https://github.com/openssl/openssl/releases/download/openssl-3.5.9/openssl-3.5.9.tar.gz",
       "source_sha256": "603f5602e2eef00d77fbd429d34dcd5822bb301757a1bc9cdb24c670f1eb859a",
@@ -448,6 +448,259 @@
       "source_observation": "The final line of original90-test_sslapi.t calls ssl_handshake_rtt_test. That executable was omitted from the selected build targets. Include the unchanged upstream tool instead of skipping the last assertion.",
       "primary_source": "https://raw.githubusercontent.com/openssl/openssl/openssl-3.5.9/test/recipes/90-test_sslapi.t",
       "repair_state": "pending actual native replay with every original assertion/default feature/deadline unchanged"
+    },
+    "observed_matrix_aeec93e": {
+      "candidate": "aeec93e2b16374200272aaccab54eb40cf090648",
+      "run_id": 41615192786,
+      "original_outcomes": {
+        "125846781271": [
+          {
+            "state": "passed",
+            "profile": "openssl-3.5.9-no-ktls",
+            "architecture": "aarch64",
+            "manifest_sha256": "b12fc804a118bad595fea2afa0e37a0ef6667288addc3996218d5611e7f4668b",
+            "source_sha256": "603f5602e2eef00d77fbd429d34dcd5822bb301757a1bc9cdb24c670f1eb859a",
+            "upstream_skip_lines": 54,
+            "failure_stage": null,
+            "failed_commands": [],
+            "diagnostics": {
+              "harness_files": {
+                "util/wrap.pl": true,
+                "util/shlib_wrap.sh": true,
+                "apps/openssl": true,
+                "test/sslapitest": true,
+                "test/ssl_test": true,
+                "test/fips_version_test": true,
+                "test/ssl_handshake_rtt_test": true
+              },
+              "recipes_seen": [
+                "25-test_verify.t",
+                "80-test_ssl_new.t",
+                "90-test_sslapi.t"
+              ],
+              "not_ok_records": 0,
+              "categories": [
+                "missing-file"
+              ]
+            },
+            "scope": "native receiver dependency build and three selected upstream recipes;not protocol,system-library or FIPS qualification"
+          },
+          {
+            "state": "passed",
+            "source_commit": "aeec93e2b16374200272aaccab54eb40cf090648",
+            "manifest_sha256": "62e6808df9a835d2ba76ceaac3d5650d47c1b7b7b3ca37029e5cb7765ba0948c",
+            "architecture": "aarch64",
+            "receiver_library_profile": "no-ktls",
+            "receiver_library": {
+              "manifest_sha256": "b12fc804a118bad595fea2afa0e37a0ef6667288addc3996218d5611e7f4668b",
+              "version": "3.5.9",
+              "source_sha256": "603f5602e2eef00d77fbd429d34dcd5822bb301757a1bc9cdb24c670f1eb859a",
+              "selected_upstream_recipes": 3,
+              "upstream_skip_lines": 54,
+              "kernel_tls_compiled_out": true
+            },
+            "native_pass_records": 3,
+            "original_commands": 22,
+            "source_inputs": 699,
+            "independent_receiver_files": 6,
+            "strict_tls13_reuse_and_shutdown": true,
+            "task_user_removed": true,
+            "task_pam_removed": true,
+            "inference_performed": false,
+            "scanner_started": false,
+            "postgres_started": false,
+            "domain_delivery_qualified": false,
+            "scope": "actual unmodified stock vsftpd/PAM with named TLS library profile;governed delivery/collection integration and whole journeys remain open"
+          }
+        ],
+        "125846781727": [
+          {
+            "state": "failed",
+            "reason": "native FTPS client receiver qualification or original evidence validation failed;inspect protected outputs",
+            "failed_commands": [
+              "native-stock-receiver"
+            ],
+            "manifest_sha256": "eea145a2ef8039005742bb07bec799805dd6327b1ac2b122ccdbfde883987dba",
+            "receiver_library_profile": "system",
+            "failed_tls_probes": [
+              "explicit-refuse-tls12",
+              "implicit-refuse-tls12"
+            ],
+            "observed_native_pass_records": 0,
+            "native_stages": [
+              "receiver connection"
+            ],
+            "connection_phases": [
+              "control-tls",
+              "transport"
+            ],
+            "native_categories": [
+              "crypto-policy"
+            ]
+          },
+          {
+            "state": "failed",
+            "reason": "native FTPS client receiver qualification or original evidence validation failed;inspect protected outputs",
+            "failed_commands": [
+              "native-stock-receiver"
+            ],
+            "manifest_sha256": "ee1296a78d0b1c581fe1210184d81189b17117a52a10602561e258311631e25c",
+            "receiver_library_profile": "system",
+            "receiver_traced": true,
+            "failed_tls_probes": [
+              "explicit-refuse-tls12",
+              "implicit-refuse-tls12"
+            ],
+            "observed_native_pass_records": 0,
+            "native_stages": [
+              "receiver connection"
+            ],
+            "connection_phases": [
+              "control-tls",
+              "transport"
+            ],
+            "native_categories": [
+              "crypto-policy"
+            ],
+            "trace_categories": [
+              "explicit:SIGSYS",
+              "explicit:last-setsockopt-before-SIGSYS:level=6,option=31,size=4",
+              "explicit:last-syscall-before-SIGSYS:54",
+              "explicit:process-exit:2",
+              "implicit:SIGSYS",
+              "implicit:last-setsockopt-before-SIGSYS:level=6,option=31,size=4",
+              "implicit:last-syscall-before-SIGSYS:54",
+              "implicit:process-exit:2"
+            ]
+          }
+        ],
+        "125846781833": [
+          {
+            "state": "passed",
+            "profile": "openssl-3.5.9-no-ktls",
+            "architecture": "x86_64",
+            "manifest_sha256": "78a2a31bd8311b2c19b1722d222a5f7b7895dbb9f294c9fe80f0ad875a528d9d",
+            "source_sha256": "603f5602e2eef00d77fbd429d34dcd5822bb301757a1bc9cdb24c670f1eb859a",
+            "upstream_skip_lines": 50,
+            "failure_stage": null,
+            "failed_commands": [],
+            "diagnostics": {
+              "harness_files": {
+                "util/wrap.pl": true,
+                "util/shlib_wrap.sh": true,
+                "apps/openssl": true,
+                "test/sslapitest": true,
+                "test/ssl_test": true,
+                "test/fips_version_test": true,
+                "test/ssl_handshake_rtt_test": true
+              },
+              "recipes_seen": [
+                "25-test_verify.t",
+                "80-test_ssl_new.t",
+                "90-test_sslapi.t"
+              ],
+              "not_ok_records": 0,
+              "categories": [
+                "missing-file"
+              ]
+            },
+            "scope": "native receiver dependency build and three selected upstream recipes;not protocol,system-library or FIPS qualification"
+          },
+          {
+            "state": "failed",
+            "reason": "native FTPS client receiver qualification or original evidence validation failed;inspect protected outputs",
+            "failed_commands": [
+              "native-stock-receiver"
+            ],
+            "manifest_sha256": "f475f708f7792563767fdec662ead5be1c69fe450de3e7ff867fd4682c21a45a",
+            "receiver_library_profile": "no-ktls",
+            "observed_native_pass_records": 0,
+            "native_stages": [
+              "receiver connection"
+            ],
+            "connection_phases": [
+              "control-tls",
+              "transport"
+            ],
+            "native_categories": [
+              "crypto-policy"
+            ],
+            "tls_probe_categories": [
+              "explicit:version-alert",
+              "implicit:version-alert"
+            ]
+          },
+          {
+            "state": "failed",
+            "reason": "native FTPS client receiver qualification or original evidence validation failed;inspect protected outputs",
+            "failed_commands": [
+              "native-stock-receiver"
+            ],
+            "manifest_sha256": "0c121a31bda91bb160d279181b525146e16a68e1822d7cee43f7beba3ba40eb6",
+            "receiver_library_profile": "no-ktls",
+            "receiver_traced": true,
+            "observed_native_pass_records": 0,
+            "native_stages": [
+              "receiver connection"
+            ],
+            "connection_phases": [
+              "control-tls",
+              "transport"
+            ],
+            "native_categories": [
+              "crypto-policy"
+            ],
+            "tls_probe_categories": [
+              "explicit:version-alert",
+              "implicit:version-alert"
+            ],
+            "trace_categories": [
+              "explicit:SIGSYS",
+              "explicit:last-syscall-before-SIGSYS:318",
+              "explicit:process-exit:1",
+              "explicit:process-exit:2",
+              "implicit:SIGSYS",
+              "implicit:last-syscall-before-SIGSYS:318",
+              "implicit:process-exit:2"
+            ]
+          }
+        ],
+        "125846781883": [
+          {
+            "state": "passed",
+            "source_commit": "aeec93e2b16374200272aaccab54eb40cf090648",
+            "manifest_sha256": "6fa7438504c1a5f900baff823c9e2cebd1492464b132718e683342c13a36eb20",
+            "architecture": "aarch64",
+            "receiver_library_profile": "system",
+            "receiver_library": null,
+            "native_pass_records": 3,
+            "original_commands": 20,
+            "source_inputs": 699,
+            "independent_receiver_files": 6,
+            "strict_tls13_reuse_and_shutdown": true,
+            "task_user_removed": true,
+            "task_pam_removed": true,
+            "inference_performed": false,
+            "scanner_started": false,
+            "postgres_started": false,
+            "domain_delivery_qualified": false,
+            "scope": "actual unmodified stock vsftpd/PAM with named TLS library profile;governed delivery/collection integration and whole journeys remain open"
+          }
+        ]
+      },
+      "archive": {
+        "manifest_reference": ".private/freightctl-native-security-and-library-aeec-bb88/manifest.json",
+        "manifest_sha256": "8dac63eb88a651f4ca7249c4ffc877bb3af64e4fae7a8dfe1dae147cb39bec7c"
+      },
+      "upstream_scope": "All three unchanged original recipes pass on each native architecture;visible feature/FIPS skips are54lines onARM,50onx86. No fullOpenSSL/FIPS/KTLS qualification.",
+      "stock_scope": "ARMsystem3records/20commands andARMsoftware3records/22commands,each6independent receiver files,exact trust/reuse/shutdown/TLS1.2 refusals and cleanup. X86system/software remainred."
+    },
+    "getrandom_observation": {
+      "job_id": 125846781833,
+      "manifest_sha256": "f475f708f7792563767fdec662ead5be1c69fe450de3e7ff867fd4682c21a45a",
+      "diagnostic_manifest_sha256": "0c121a31bda91bb160d279181b525146e16a68e1822d7cee43f7beba3ba40eb6",
+      "observation": "Both software-library listeners pass exactTLS1.2 alert70 refusal. GoTLS1.3 connection still fails;separate raw trace reportsSIGSYS after syscall318,getrandom. Traced results cannot qualify.",
+      "source_finding": "Pinned vsftpd seccomp prelogin allowsgetrandom only when xferlog_enable or dual_log_enable is enabled. This fixture disabled transfer logging. Investigate a bounded private audited-transfer profile with native kernel-filter witness;do not disable seccomp,change entropy quality or relax existing protocol/resource checks."
     }
   },
   "next_integration": "docs/protocols/ftps-sending.md",
@@ -458,7 +711,8 @@
   "limits": [
     "Existing SFTP definitions/hashes/publication contract remain unchanged. A distinct frozen FTPS definition,live approvals/lease/fence,receiver visibility/duplicate contract,publication intent and read-only ambiguous reconciliation remain required.",
     "Collection/listing,active mode,production network peers,TLS profile breadth,Windows custody,scale,power-loss persistence and business receipts remain open.",
-    "All83whole rows/12full journeys and all three readiness verdicts remain open;F026 aggregate stays owner-deferred."
+    "All83whole rows/12full journeys and all three readiness verdicts remain open;F026 aggregate stays owner-deferred.",
+    "Pinned vsftpd upstream/Ubuntu source implements its native seccomp only on Linuxx86_64;the ARM functions are no-ops. seccomp_sandbox=YES is a configuration observation,not proof of an effective ARM filter. Actual kernel-filter observation and an explicit platform-support boundary remain required (D139). ARM wire/byte/PAM/chroot/resource observations remain scoped to their original experiments."
   ],
   "public_source_review": {
     "manifest_reference": ".private/freightctl-ftps-client-final-source-5705afb05d6f46dfafb34e4ab53d92da/manifest.json",
