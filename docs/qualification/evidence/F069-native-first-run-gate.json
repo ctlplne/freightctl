@@ -3,7 +3,7 @@
   "id": "F069",
   "observed_at": "2026-11-03",
   "starting_commit": "7f7cb02118c235bd93578892d9fb2029c00a428f",
-  "state": "native first-install browser gate prepared;actual GitHub replay pending;whole goal open",
+  "state": "original assisted first-install journey passes on actual native Linux x86 GitHub;wholeJ01 and overall goal remain open",
   "scope": "Promote the existing assisted first-run CLI/browser/curl experiment into a separately bounded disposable native Linux x86 gate. No new whole J01 or parity qualification.",
   "implementation": [
     "Preserve the original thirteen command sequence,three strict setup refusals,saved original receipt replay,browser workspace-reference refusal,first upload/download and stock curl readbacks before/after restart.",
@@ -23,12 +23,40 @@
   },
   "native_ci": {
     "workflow": ".github/workflows/first-run.yml",
-    "state": "not yet observed",
+    "state": "passed original complete native first-run profile",
     "required_original_commands": 13,
     "required_browser_records": 6,
     "required_accessibility_audits": 2,
     "required_exact_readbacks": 3,
-    "required_original_receipt_replays": 2
+    "required_original_receipt_replays": 2,
+    "candidate": "95427924244830024303c231f232e89c71944277",
+    "run_id": 41613514166,
+    "job_id": 125841100035,
+    "outcome": {
+      "state": "passed",
+      "source_commit": "95427924244830024303c231f232e89c71944277",
+      "manifest_sha256": "cbda98da90e531826b2edf662dea56168ef342e33a45d8615955e7f7b2870435",
+      "system": "Linux",
+      "architecture": "x86_64",
+      "browser_version": "156.0.8078.47",
+      "node_version": "v26.0.0",
+      "source_inputs": 533,
+      "original_commands": 13,
+      "browser_records": 6,
+      "accessibility_audits": 2,
+      "independent_exact_readbacks": 3,
+      "payload_bytes": 47,
+      "original_receipt_replays": 2,
+      "exact_fixture_database_removed": true,
+      "inference_performed": false,
+      "scanner_engine_started": false,
+      "whole_journey_qualified": false,
+      "scope": "assisted first enrollment,original receipt recovery,sandboxed browser exchange and stock curl readback after process restart;disconnected installation and independent adoption remain open"
+    },
+    "archive": {
+      "manifest_reference": ".private/freightctl-first-run-native-9542792/manifest.json",
+      "manifest_sha256": "ec8c4079fb420ef79104be9e3c1d5cb46ea663f42ceca3b1fa7a78b8f66ee6c0"
+    }
   },
   "inference_performed": false,
   "local_postgres_started": false,
@@ -46,5 +74,30 @@
     "source_count": 699,
     "exit_code": 0,
     "sources_unchanged": true
+  },
+  "broader_regressions": {
+    "source": {
+      "candidate": "d55ddabb879269d8cf7541377aa1487c6bd1c79c",
+      "run_id": 41613663086,
+      "job_id": 125841828999,
+      "state": "job succeeds;JSON vulnerability output requires separate reachability assessment and gate repair",
+      "limit": "Govulncheck-json exits0 regardless of findings;no automatic no-called-vulnerability assertion follows from this historical green job."
+    },
+    "stock": {
+      "candidate": "95427924244830024303c231f232e89c71944277",
+      "run_id": 41613514218,
+      "state": "all five original stock/browser entries passed",
+      "job_ids": [
+        125841100467,
+        125841100599,
+        125841100657,
+        125841100741,
+        125841100975
+      ]
+    },
+    "archive": {
+      "manifest_reference": ".private/freightctl-first-run-native-regressions/manifest.json",
+      "manifest_sha256": "35fb6973ccd303db1f49759ae0264d46685421a8fdba0669079ced389d881012"
+    }
   }
 }
