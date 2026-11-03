@@ -64,6 +64,7 @@ jobs:
           test "$(uname -m)" = "${{ matrix.arch }}"
           sh scripts/install-ftps-receiver.sh
       - name: Actual client with two loopback TLS receivers and independent files
+        id: qualify
         run: |
           umask 077
           mkdir -p .private
@@ -71,3 +72,11 @@ jobs:
           python3 scripts/qualify-ftps-client.py > .private/ftps-client-result.json || receiver_status=$?
           python3 scripts/ci-ftps-client-summary.py --result .private/ftps-client-result.json
           exit "$receiver_status"
+      - name: Failed receiver process diagnostic (never qualification)
+        if: failure() && steps.qualify.outcome == 'failure'
+        run: |
+          umask 077
+          trace_status=0
+          FREIGHTCTL_FTPS_TRACE=1 python3 scripts/qualify-ftps-client.py > .private/ftps-client-trace-result.json || trace_status=$?
+          python3 scripts/ci-ftps-client-summary.py --result .private/ftps-client-trace-result.json
+          exit "$trace_status"

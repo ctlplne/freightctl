@@ -18,7 +18,7 @@ class ReceiverEvidence(unittest.TestCase):
         self.directory=self.root/".private"/("ftps-client-"+"a"*32);self.directory.mkdir(parents=True)
         self.result=self.root/"result.json";self.manifest=self.directory/"manifest.json"
         (self.root/"source.go").write_bytes(b"synthetic source")
-        self.m={"kind":"native-ftps-client-stock-receiver","state":"passed","starting_commit":"b"*40,"architecture":"aarch64","sources_unchanged":True,"task_user_removed":True,"task_pam_removed":True,"cleanup_failures":[],"native_pass_records":3,"source_sha256":{"source.go":self.sha(b"synthetic source")},"steps":[]}
+        self.m={"kind":"native-ftps-client-stock-receiver","state":"passed","starting_commit":"b"*40,"architecture":"aarch64","sources_unchanged":True,"task_user_removed":True,"task_pam_removed":True,"cleanup_failures":[],"native_pass_records":3,"receiver_traced":False,"source_sha256":{"source.go":self.sha(b"synthetic source")},"steps":[]}
         for name in ("inference_performed","scanner_started","postgres_started","domain_delivery_qualified","full_journeys_qualified"):self.m[name]=False
         self.files={mode+"-"+suffix:{"size":len(b),"sha256":self.sha(b)} for mode in ("explicit","implicit") for suffix,b in (("final.csv",summary.PAYLOAD),("resume.csv",summary.PAYLOAD),("empty",b""))}
         self.m["receiver_files"]=self.files
@@ -122,11 +122,11 @@ class ReceiverEvidence(unittest.TestCase):
         self.assertNotIn("private",json.dumps(result));self.assertNotIn("password",json.dumps(result))
 
     def test_receiver_startup_diagnostic_reveals_only_known_categories(self):
-        (self.directory/"explicit-receiver.stderr").write_bytes(b"500 OOPS: unrecognised variable in config file: ssl_tlsv1_3\nsecret-password\nTraceback: receiver exited before cleanup\n")
+        self.output("explicit-receiver",b"",b"500 OOPS: unrecognised variable in config file: ssl_tlsv1_3\nsecret-password\nTraceback: receiver exited before cleanup\n")
         self.write();result=summary.failure_diagnostics(self.root,self.result,"b"*40)
         self.assertEqual(result["receiver_categories"],["explicit:supervisor-child-exit","explicit:unsupported-option:ssl_tlsv1_3"])
         self.assertNotIn("secret",json.dumps(result))
-        (self.directory/"explicit-receiver.stderr").write_bytes(b"unrecognised variable in config file: private_password_name\n")
+        self.output("explicit-receiver",b"",b"unrecognised variable in config file: private_password_name\n");self.write()
         result=summary.failure_diagnostics(self.root,self.result,"b"*40)
         self.assertEqual(result["receiver_categories"],["explicit:unsupported-option:other"])
 
@@ -137,6 +137,19 @@ class ReceiverEvidence(unittest.TestCase):
         self.assertEqual(result["native_stages"],["receiver connection"])
         self.assertEqual(result["native_categories"],["reply"])
         for private in ("password","secret","invalid or oversized"):self.assertNotIn(private,json.dumps(result))
+
+    def test_traced_run_cannot_qualify_untraced_stock_receiver(self):
+        self.m["receiver_traced"]=True
+        with self.assertRaises(ValueError):self.check()
+
+    def test_trace_diagnostic_exposes_only_fixed_signals_and_syscalls(self):
+        (self.directory/"explicit-receiver.trace").write_text('123 --- SIGSYS {si_syscall=__NR_getrandom} ---\nread(5, "private-password", 16) = 16\n123 --- SIGSYS {si_syscall=__NR_private_password} ---\nchroot("/private-path") = -1 EACCES\n')
+        self.m["trace_sha256"]={"explicit":self.sha((self.directory/"explicit-receiver.trace").read_bytes())}
+        self.write();result=summary.failure_diagnostics(self.root,self.result,"b"*40)
+        self.assertEqual(result["trace_categories"],["explicit:SIGSYS","explicit:chroot:EACCES","explicit:syscall:getrandom","explicit:syscall:other"])
+        for private in ("password","private-path"):self.assertNotIn(private,json.dumps(result))
+        (self.directory/"explicit-receiver.trace").write_text('--- SIGSEGV ---\n')
+        self.assertNotIn("trace_categories",summary.failure_diagnostics(self.root,self.result,"b"*40))
 
 
 if __name__=="__main__":unittest.main()

@@ -64,9 +64,10 @@ def main():
     binary=private/"freightctl"
     steps=[];processes={};cleanup=[];created_user=False;created_pam=False
     env=dict(os.environ,GOMAXPROCS="1",GOMEMLIMIT="192MiB")
+    traced=os.environ.get("FREIGHTCTL_FTPS_TRACE")=="1"
     names=sorted(set(subprocess.check_output(["git","ls-files","--cached","--others","--exclude-standard","-z"]).decode().split("\0"))-{ "" })
     sources={n:digest(ROOT/n) for n in names}
-    manifest={"schema_version":1,"kind":"native-ftps-client-stock-receiver","state":"failed","starting_commit":subprocess.check_output(["git","rev-parse","HEAD"]).decode().strip(),"architecture":platform.machine(),"source_sha256":sources,"inference_performed":False,"scanner_started":False,"postgres_started":False,"domain_delivery_qualified":False,"full_journeys_qualified":False}
+    manifest={"schema_version":1,"kind":"native-ftps-client-stock-receiver","state":"failed","starting_commit":subprocess.check_output(["git","rev-parse","HEAD"]).decode().strip(),"architecture":platform.machine(),"source_sha256":sources,"receiver_traced":traced,"inference_performed":False,"scanner_started":False,"postgres_started":False,"domain_delivery_qualified":False,"full_journeys_qualified":False}
 
     def command(label,argv,timeout=60,input_bytes=None,expected_code=0):
         out,err=private/(label+".stdout"),private/(label+".stderr")
@@ -120,6 +121,11 @@ def main():
             command(mode+"-config-owner",["sudo","chown","root:root",path])
             out,err=(private/(mode+"-receiver.stdout")).open("xb"),(private/(mode+"-receiver.stderr")).open("xb")
             argv=["sudo","python3","-c",SUPERVISOR,openssl,receiver,path]
+            if traced:
+                trace=private/(mode+"-receiver.trace");trace.touch(mode=0o600,exist_ok=False)
+                # Only process/resource calls and signals; no read/write buffers,
+                # payloads,password packets or environment values are traced.
+                argv=["sudo","python3","-c",SUPERVISOR,openssl,"strace","-f","-e","trace=process,prlimit64,setrlimit,chroot,setuid,setresuid,setgid,setresgid,setgroups","-o",trace,receiver,path]
             process=subprocess.Popen(list(map(str,argv)),stdin=subprocess.PIPE,stdout=out,stderr=err,env=env,start_new_session=True);processes[mode+"-receiver"]=(process,out,err)
             deadline=time.monotonic()+10
             while True:
@@ -154,7 +160,9 @@ def main():
             try:command("remove-exact-pam",["sudo","rm","--",pam]);manifest["task_pam_removed"]=True
             except Exception:cleanup.append("task PAM retained")
         manifest["cleanup_failures"]=cleanup;manifest["sources_unchanged"]=all(digest(ROOT/n)==sha for n,sha in sources.items());manifest["steps"]=steps
+        if traced:manifest["trace_sha256"]={mode:digest(private/(mode+"-receiver.trace")) for mode in ("explicit","implicit") if (private/(mode+"-receiver.trace")).exists()}
         if cleanup or not manifest["sources_unchanged"]:manifest["state"]="failed"
+        if traced:manifest["state"]="diagnostic"
         path=private/"manifest.json"
         with path.open("x") as output:json.dump(manifest,output,indent=2);output.write("\n");output.flush();os.fsync(output.fileno())
         fd=os.open(private,os.O_RDONLY);os.fsync(fd);os.close(fd)

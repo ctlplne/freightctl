@@ -43,7 +43,7 @@
       "manifest_sha256": "441f321bf74402bf956f1bc040136e980ece606fd8a4f39fb8db58f1b2a17a8f",
       "state": "bind operation denied;original suite replay passed with loopback access"
     },
-    "latest_synthetic_evidence_tampering_contracts": 13,
+    "latest_synthetic_evidence_tampering_contracts": 15,
     "latest_contract_note": "Ten current bookkeeping/privacy refusal contracts pass;the48record native transport race archive remains unchanged. Runtime stock evidence remains failed at receiver startup.",
     "latest_original_replay": {
       "manifest_reference": ".private/freightctl-ftps-phase-replay-4dfa69d54eec47fea6aec7bbd8adb946/manifest.json",
@@ -58,7 +58,7 @@
     "state": "receiver startup repaired;post-startup profiles still fail;fixed connection/TLS-probe diagnostics await original native replay",
     "workflow": ".github/workflows/ftps-client.yml",
     "profile": "Actual native Ubuntu24 ARM/x86,stock vsftpd3.0.5-0ubuntu3.1/OpenSSL/PAM,two TLS1.3 listeners,strict reuse/read EOF/write shutdown,chroot,independent six-file receiver observation and exact user/PAM/process cleanup",
-    "receiver_budget": "one CPU,256MiB address space,60CPU seconds,4sessions per listener",
+    "receiver_budget": "one inherited CPU affinity;256MiB per-process address-space and60CPU-second per-process limits;4sessions per listener;not a measured aggregate resident-memory claim",
     "no_artifact_upload": true,
     "candidate": "16b92cbf7e648905f402a0e5d0b3a56fd2e6d660",
     "run_id": 41594478582,
@@ -108,7 +108,21 @@
         "manifest_sha256": "b72e19770171c7bc45e11b9682cbc249d18ca54a3db26cadc9e08c501415c3f9"
       },
       "diagnostic_change": "Connection errors now wrap only fixed phase names and existing fixed/numeric safe errors;errors.Is remains intact. Reporter recognizes stock receiver connection,the fixed phases,known TLS-probe/stream/ref categories and native timeouts/build failures. No raw prose,no asserted receiver qualification and no relaxed checks."
-    }
+    },
+    "latest_failure": {
+      "candidate": "137b87e24cc7a1b351704dbabe679f62652a2be6",
+      "run_id": 41597449715,
+      "arm_job_id": 125788013600,
+      "x86_job_id": 125788013984,
+      "arm_state": "failed waiting for password response;fixed phase password,reply category;both actual TLS1.2 alert70 refusals pass",
+      "x86_state": "queued;follow original handle",
+      "archive": {
+        "manifest_reference": ".private/freightctl-ftps-password-first-137b87e/manifest.json",
+        "manifest_sha256": "fd303d6bb42af26cf28e5c8f8e6453adfdebacc9948bb61add0992f36cac27cc"
+      },
+      "cause": "unobserved;native process/resource diagnostic needed"
+    },
+    "failure_only_trace": "If the original qualifier fails,run a new isolated diagnostic fixture with process/resource-only strace and identical budgets/policy. Keep trace buffers private and bind hashes to its manifest. Public output is restricted to fixed signals,known syscall names and fixed errno categories. receiver_traced=true forces diagnostic state and cannot qualify the untraced receiver,even if all cases pass. Original untraced outcome remains red;normal ARM/x86 replay is mandatory."
   },
   "next_integration": "docs/protocols/ftps-sending.md",
   "inference_performed": false,
@@ -150,6 +164,10 @@
     "fuzz_job_id": 125782374644,
     "fuzz_state": "all ten targets passed",
     "metadata_state": "both native schema35 restores passed",
-    "full_native_state": "running original full Linux profiles;not yet qualified"
+    "full_native_state": "both original full Linux suites passed616Go/PostgreSQL records each,zero failures/skips;223engine passes/one visible privileged-port20 skip each",
+    "full_native_archive": {
+      "manifest_reference": ".private/freightctl-ftps-native-regressions-d5aca89/manifest.json",
+      "manifest_sha256": "ef2c3498cc148d32ed7bd9856282bc0e34d5aee4dceea5aa9693b6320892a7a5"
+    }
   }
 }

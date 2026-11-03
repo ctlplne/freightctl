@@ -2179,6 +2179,22 @@
         "docs/qualification/evidence/F068-ftps-client-transport.json",
         "https://github.com/ctlplne/freightctl/actions/runs/41594478600"
       ]
+    },
+    {
+      "id": "D135",
+      "severity": "native stock FTPS authentication-stage interoperability failure",
+      "state": "open;exact process cause unobserved;failure-only diagnostic replay pending",
+      "observed_on": "2026-11-03",
+      "candidate": "137b87e24cc7a1b351704dbabe679f62652a2be6",
+      "journey": "Independent vsftpd/OpenSSL/PAM outbound transport qualification",
+      "title": "Native ARM client receives no valid FTP reply after password command",
+      "first_failure": "Job125788013600 passes both exact TLS1.2 alert70 refusals then fails the native stock Go profile at fixed connection phase password with reply category. F068 preserves original job log and runner manifest hash. X86 original handle remains queued;prior0159x86 failed its exact TLS refusal before invoking native Go.",
+      "cause": "unobserved;no protocol or receiver success inferred",
+      "resolution": "Add failure-only,task-owned process/resource strace on native GitHub runners. Bind original output/trace hashes and emit only fixed signal/syscall/errno categories. Traced runs are diagnostic and cannot qualify a receiver;keep the first untraced failure,allTLS1.3/reuse/shutdown/permission assertions and all budgets. Fix the observed cause and rerun the original untraced ARM/x86 profile.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F068-ftps-client-transport.json",
+        "https://github.com/ctlplne/freightctl/actions/runs/41597449715"
+      ]
     }
   ]
 }

@@ -30,6 +30,7 @@ def summarize(root,result,commit):
         if m.get(name) is not True:raise ValueError("receiver cleanup or source identity incomplete")
     for name in ("inference_performed","scanner_started","postgres_started","domain_delivery_qualified","full_journeys_qualified"):
         if m.get(name) is not False:raise ValueError("receiver scope differs")
+    if m.get("receiver_traced") is not False:raise ValueError("traced receiver cannot qualify the normal profile")
     if m.get("cleanup_failures")!=[] or m.get("native_pass_records")!=3:raise ValueError("receiver execution incomplete")
     steps=m.get("steps")
     if not isinstance(steps,list) or {s.get("name") for s in steps}!=REQUIRED or len(steps)!=len(REQUIRED):raise ValueError("receiver command closure differs")
@@ -68,11 +69,19 @@ def failure_diagnostics(root,result,commit):
         if not re.fullmatch(r"\.private/ftps-client-[0-9a-f]{32}/manifest\.json",ref):return {}
         path=root/ref;raw=read(path,8<<20);m=json.loads(raw)
         if hashlib.sha256(raw).hexdigest()!=h.get("manifest_sha256") or m.get("starting_commit")!=commit:return {}
+        steps={s["name"]:s for s in m.get("steps",[]) if s.get("name") in REQUIRED}
+        def original(name,ext):
+            if name not in steps:return b""
+            f=path.parent/(name+"."+ext)
+            if not f.exists():return b""
+            b=read(f,64<<20)
+            return b if hashlib.sha256(b).hexdigest()==steps[name].get(ext+"_sha256") else b""
         failures=[s["name"] for s in m.get("steps",[]) if s.get("name") in REQUIRED and s.get("exit_code")!=(1 if s["name"] in {"explicit-refuse-tls12","implicit-refuse-tls12"} else 0)]
         result={"failed_commands":sorted(set(failures)),"manifest_sha256":h["manifest_sha256"]}
+        if m.get("receiver_traced") is True:result["receiver_traced"]=True
         if m.get("failure") in {"explicit receiver did not start","implicit receiver did not start"}:result["stage"]=m["failure"].split()[0]+"-receiver-start"
         if m.get("failure") in {"explicit exact TLS1.2 refusal missing","implicit exact TLS1.2 refusal missing"}:result["stage"]=m["failure"].split()[0]+"-tls12-refusal"
-        native=read(path.parent/"native-stock-receiver.stdout").decode() if (path.parent/"native-stock-receiver.stdout").exists() else ""
+        native=original("native-stock-receiver","stdout").decode(errors="replace")
         stages=re.findall(r"client_stock_test.go:\d+: stock (receiver connection|connection|store|size|independent readback|rename|renamed readback|prefix|resume|resumed integrity|zero-byte upload|zero-byte readback)\b",native)
         if stages:result["native_stages"]=sorted(set(stages))
         codes=re.findall(r"FTPS receiver status ([1-5][0-9]{2})\b",native)
@@ -85,23 +94,34 @@ def failure_diagnostics(root,result,commit):
         tls_patterns={"unexpected-eof":"unexpected eof while reading","no-protocols":"no protocols available","version-alert":"alert protocol version","connection-refused":"Connection refused","connection-reset":"errno=104","broken-pipe":"errno=32","starttls-refused":"Didn't find STARTTLS"}
         tls_categories=[]
         for mode in ("explicit","implicit"):
-            f=path.parent/(mode+"-refuse-tls12.stderr")
-            if f.exists():
-                original=read(f).decode(errors="replace")
-                tls_categories.extend(mode+":"+name for name,text in tls_patterns.items() if text in original)
+            text=original(mode+"-refuse-tls12","stderr").decode(errors="replace")
+            tls_categories.extend(mode+":"+name for name,pattern in tls_patterns.items() if pattern in text)
         if tls_categories:result["tls_probe_categories"]=sorted(set(tls_categories))
         categories=[]
         patterns={"config-owner":"config file not owned by correct user","certificate-load":"SSL: cannot load RSA certificate","key-load":"SSL: cannot load RSA private key","cipher-list":"SSL: could not set cipher list","supervisor-child-exit":"receiver exited before cleanup","supervisor-preexec":"Exception occurred in preexec_fn","supervisor-resource-limit":"not allowed to raise maximum limit","supervisor-stdin":"receiver supervisor command differs","listener-bind":"could not bind listening IPv4 socket"}
         options={"ssl_tlsv1","ssl_tlsv1_1","ssl_tlsv1_2","ssl_tlsv1_3","ssl_sslv2","ssl_sslv3","seccomp_sandbox","strict_ssl_read_eof","strict_ssl_write_shutdown","require_ssl_reuse"}
         for mode in ("explicit","implicit"):
             for ext in ("stdout","stderr"):
-                f=path.parent/(mode+"-receiver."+ext)
-                if not f.exists():continue
-                original=read(f).decode(errors="replace")
-                categories.extend(mode+":"+label for label,text in patterns.items() if text in original)
-                for option in re.findall(r"unrecognised variable in config file: ([a-z0-9_]+)",original):
+                text=original(mode+"-receiver",ext).decode(errors="replace")
+                categories.extend(mode+":"+label for label,pattern in patterns.items() if pattern in text)
+                for option in re.findall(r"unrecognised variable in config file: ([a-z0-9_]+)",text):
                     categories.append(mode+":unsupported-option:"+(option if option in options else "other"))
         if categories:result["receiver_categories"]=sorted(set(categories))
+        trace_syscalls={"newfstatat","statx","getdents64","readlinkat","getrandom","clock_gettime","clock_gettime64","futex","openat","openat2","prlimit64","setrlimit","mmap","mprotect","munmap","mremap","brk","rseq","clone","clone3","arch_prctl","rt_sigprocmask","rt_sigaction","rt_sigreturn","recvfrom","sendto","sendmsg","recvmsg","getsockopt","setsockopt","ioctl","fcntl","getpid","gettid","exit_group","epoll_pwait","epoll_wait","epoll_ctl","ppoll","poll","pselect6","socket","accept","accept4","bind","connect","listen","close","read","write","writev","readv","pread64","pwrite64","fsync","fchmod","fchown","chroot","capset","capget","setuid","setgid","setresuid","setresgid","setgroups","wait4","waitid","unshare","getuid","geteuid","getgid","getegid","umask"}
+        trace_categories=[]
+        for mode in ("explicit","implicit"):
+            f=path.parent/(mode+"-receiver.trace")
+            if not f.exists():continue
+            b=read(f,16<<20)
+            if hashlib.sha256(b).hexdigest()!=m.get("trace_sha256",{}).get(mode):continue
+            text=b.decode(errors="replace")
+            for signal in ("SIGSYS","SIGSEGV","SIGABRT"):
+                if signal in text:trace_categories.append(mode+":"+signal)
+            for name in re.findall(r"si_syscall=__NR_([a-z0-9_]{1,64})",text):
+                trace_categories.append(mode+":syscall:"+(name if name in trace_syscalls else "other"))
+            for name,errno in re.findall(r"\b([a-z0-9_]{1,64})\([^\n]*\)\s*= -1 (EPERM|ENOMEM|EAGAIN|EACCES)\b",text):
+                if name in trace_syscalls:trace_categories.append(mode+":"+name+":"+errno)
+        if trace_categories:result["trace_categories"]=sorted(set(trace_categories))[:32]
         return result
     except Exception:return {}
 
