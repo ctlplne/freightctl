@@ -2224,6 +2224,20 @@
       "regression_evidence": [
         "docs/qualification/evidence/F068-ftps-client-transport.json"
       ]
+    },
+    {
+      "id": "D138",
+      "severity": "security CI result enforcement",
+      "state": "fixed and actual native converter contracts pass;original fresh native source replay pending",
+      "observed_on": "2026-11-03",
+      "candidate": "d55ddabb879269d8cf7541377aa1487c6bd1c79c",
+      "journey": "Default shipped-source vulnerability gate",
+      "title": "JSON-only govulncheck command succeeds even with called vulnerabilities",
+      "first_failure": "The actual pinned native tool returns0 when a called-symbol report is emitted asJSON,and3 for the same report converted to text. The previous workflow used only-json;its green exit could not enforce reachability. F070 preserves both original outcomes.",
+      "resolution": "Keep one original source scan and its exact privateJSON output. Run the pinned tool text converter over that same report,propagating called finding exit3 and malformed report failure. Six actual-native synthetic converter contracts pass;the full actual native GitHub source gate must replay. No scan-level reduction,ignorelist,suppression,policy/budget relaxation or extra expensive scan.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F070-govulncheck-enforcement.json"
+      ]
     }
   ]
 }

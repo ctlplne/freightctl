@@ -61,7 +61,14 @@ jobs:
       - name: JavaScript dependency audit
         run: npm --prefix web --cache "$GITHUB_WORKSPACE/.cache/freightctl-npm" audit
       - name: Go vulnerability reachability
-        run: sh scripts/go.sh run -p 1 golang.org/x/vuln/cmd/govulncheck@v1.9.0 -json ./...
+        run: |
+          umask 077
+          mkdir -p .private .cache/freightctl-govulncheck-1.9.0
+          GOBIN="$GITHUB_WORKSPACE/.cache/freightctl-govulncheck-1.9.0" sh scripts/go.sh install -p 1 golang.org/x/vuln/cmd/govulncheck@v1.9.0
+          python3 scripts/test-govulncheck-gate.py --tool "$GITHUB_WORKSPACE/.cache/freightctl-govulncheck-1.9.0/govulncheck"
+          .cache/freightctl-govulncheck-1.9.0/govulncheck -json ./... > .private/govulncheck.json
+          test -s .private/govulncheck.json
+          .cache/freightctl-govulncheck-1.9.0/govulncheck -mode=convert -show=version,verbose < .private/govulncheck.json
       - name: Committed source and history secret scan
         run: |
           task_source_snapshot=$(mktemp -d "$RUNNER_TEMP/freightctl-source.XXXXXX")
