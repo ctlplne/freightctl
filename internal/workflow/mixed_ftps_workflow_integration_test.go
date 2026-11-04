@@ -18,6 +18,7 @@ import (
 	"time"
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
+	"github.com/ctlplne/freightctl/internal/delivery"
 	"github.com/ctlplne/freightctl/internal/store"
 )
 
@@ -255,16 +256,19 @@ func TestMixedRegisteredFTPSAndStockSFTPKeepOrderConsentAndReceipts(t *testing.T
 					if ftpListener.contacts.Load() != 0 || ssh.sessions(t) != 0 {
 						t.Fatal("unapproved mixed run authenticated to a receiver")
 					}
-					reviews := make([]store.OutboundDispatchSummary, 2)
-					for i, d := range deliveries {
+					reviewAt := func(i int) store.OutboundDispatchSummary {
+						d := deliveries[i]
 						preview, review, _ := proposeDispatch(t, f, sender, d, account.ID, fmt.Sprintf("mixed-review-%d", i))
 						binding := preview.Definition.Effect.Workflow
 						if binding == nil || binding.RunID != run.ID || binding.StepID != steps[i].ID || binding.ConnectionHash != steps[i].Connection.Hash {
 							t.Fatal("mixed independent review lost exact binding")
 						}
-						reviews[i] = review
+						return review
 					}
-					if _, _, err = decideDispatch(t, f, sender, reviewer, reviews[0], "approve", "mixed-first-consent"); err != nil {
+					if _, err = sender.PreviewDispatchReview(f.ctx, f.scope, delivery.DispatchSelection{DeliveryID: deliveries[1].ID, DispatchDecision: delivery.DispatchDecision{Hash: deliveries[1].DefinitionHash, Revision: deliveries[1].Revision}, ReviewerID: account.ID}); !errors.Is(err, store.ErrState) {
+						t.Fatal("later review bypassed the incomplete predecessor", err)
+					}
+					if _, _, err = decideDispatch(t, f, sender, reviewer, reviewAt(0), "approve", "mixed-first-consent"); err != nil {
 						t.Fatal(err)
 					}
 					if _, err = sender.Work(f.ctx, f.scope, deliveries[1].ID); !errors.Is(err, store.ErrState) {
@@ -296,7 +300,7 @@ func TestMixedRegisteredFTPSAndStockSFTPKeepOrderConsentAndReceipts(t *testing.T
 							t.Fatal("later SFTP receiver touched before its turn", err)
 						}
 					}
-					if _, _, err = decideDispatch(t, f, sender, reviewer, reviews[1], "approve", "mixed-second-consent"); err != nil {
+					if _, _, err = decideDispatch(t, f, sender, reviewer, reviewAt(1), "approve", "mixed-second-consent"); err != nil {
 						t.Fatal(err)
 					}
 					secondResult, err := f.s.Work(f.ctx, f.scope, run.ID, "mixed-second")

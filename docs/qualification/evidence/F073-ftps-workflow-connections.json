@@ -3,7 +3,7 @@
   "id": "F073",
   "observed_at": "2026-11-04",
   "starting_commit": "7879c34f9e917d5c650a60b1800c59050044c01a",
-  "state": "resumed; native x86 reaches670pass/1replay-comparison failure; strict receipt repair prepared; mixed native run and exact ARM retry pending",
+  "state": "both mixed native suites retain670pass/10fail; D150/D153 repairs and C01/revocation/diagnostic expansion prepared; exact ARM retry running",
   "scope": "Next dependency: versioned registered FTPS destinations and typed workflow sending through ordinary execution and independent dispatch consent. This does not replace remaining encryption, collection, independent peer or whole-product requirements.",
   "first_failure": {
     "kind": "actual native ARM typed-workflow contract",
@@ -74,7 +74,7 @@
     "FTPS collection, independent supported x86 receiver qualification, broader protocol behavior and complete receiving/sending customer journeys remain required.",
     "D145 stays open as intermittent despite a passing diagnostic replay. Windows D103 and all83 whole baseline rows/12 full journeys remain open."
   ],
-  "next_action": "Follow2da246b native ARM/x86 jobs126663975240/126663975284 through their original mixed execution and full suite. Then follow6ebccf0 exact ARM retry inrun41852235851 attempt2. Do not replace either pending candidate. Push local C01/D150 changes when the retry has started, then replay the original named tests and expanded public matrix. D150 cause and all frozen/whole-goal gates remain unqualified.",
+  "next_action": "Push the accumulated local C01/D150/revocation/diagnostic/D153 changes now that exact6ebccf0 ARM retry126676577153 has started, preserving its live run. Follow the new native candidate and the unchanged original retry separately; replay both public failures with fixed observations and unchanged assertions/deadlines. D150-D153 outcomes and all frozen/whole-goal gates remain open.",
   "implementation_checkpoint": {
     "versioned_connection": "schema2 FTPS definitions, strict canonical validation and redacted reference fingerprints",
     "typed_execution": "ftps.deliver uses exact registered protocol/version; queued delivery includes the workflow/run/step/connection binding; unsupported recipient encryption remains refused",
@@ -254,7 +254,7 @@
       "manifest_sha256": "8f01d699fa9b1910cbd208e579c6e9046098ae7bc304c8c000bc803587150eb0",
       "connector_retry": "403 Resource not accessible by integration",
       "cli_retry": "CLI reports job cannot be rerun; parent run is still active. Revisit after terminal run; reason not established.",
-      "retry": "Exact job API accepted retry; run41852235851 attempt2 is pending behind the mixed candidate. No retry job ID allocated yet."
+      "retry": "Exact job API accepted retry; run41852235851 attempt2 ARM job126676577153 is now running. Keep following its original candidate6ebccf0."
     },
     "arm_metadata_manifest_sha256": "6679cf87470d7a191f50fcc10abdec0b093f4f80014aad38e416f99d1688be4d",
     "registered_workflow_job_id": 126651290506,
@@ -285,10 +285,16 @@
       "all_four_lost_reply_cases": "passed; both modes/stage+rename",
       "manifest_reference": ".private/freightctl-f073-resumed-runtime-7y0wu9bs/x86-first-manifest.json",
       "manifest_sha256": "8f1df09ea0bfb8f84b71f2f21a383c7ea7e4e62834186912ac285fa1e7005d1d"
-    }
+    },
+    "mac_unit": {
+      "job_id": 126651290639,
+      "state": "cancelled while queued; no pass",
+      "newer_platform_run_id": 41853908988
+    },
+    "all_four_recovery_cases_both_architectures": "passed in both complete2da246b native originals; D148 repaired"
   },
   "mixed_protocol_execution": {
-    "state": "both actual native ARM/x86 jobs executing full real-PostgreSQL suites; metadata/fuzz pass; mixed outcomes not yet observed",
+    "state": "both native original suites failed before mixed sending; test review sequence repair prepared and compiled/vetted",
     "test": "TestMixedRegisteredFTPSAndStockSFTPKeepOrderConsentAndReceipts",
     "cases": 8,
     "matrix": {
@@ -328,7 +334,16 @@
     "native_go_job_ids": [
       126663975240,
       126663975284
-    ]
+    ],
+    "first_result": {
+      "application_pass_records_each": 670,
+      "application_fail_records_each": 10,
+      "application_skip_records_each": 0,
+      "failures": "D150 bounded-program receipt plus mixed parent/eight cases (D153)",
+      "manifest_reference": ".private/freightctl-f073-mixed-first-43VMEgPL/manifest.json",
+      "manifest_sha256": "34e64e70c0bd2a477d3018f3e3a4e895d59fce8fbae211aecd9f1547bd184a7b"
+    },
+    "sequence_repair": "The original test proposed the second review while its predecessor was queued, and the existing execution-binding guard correctly refused it. Explicitly require that early review refusal, then propose/approve the first intent, finish it, prove separate second consent is still required, and only then propose/approve the second intent. Keep original protocol, order, replay, attempt/fence, byte and persistence assertions."
   },
   "connection_rotation_matrix": {
     "state": "implemented locally; expanded native public runtime replay pending",
@@ -406,5 +421,37 @@
       "integration_compilation": "passed; no runtime tests",
       "integration_vet": "passed"
     }
+  },
+  "public_replay_failures": {
+    "candidate": "2da246b6c2fb257f005d65d0bd81ea56abe79658",
+    "state": "red; precise causes unproven; bounded diagnostics prepared",
+    "workflow": {
+      "id": "D151",
+      "run_id": 41853908639,
+      "job_id": 126657222320,
+      "failed_command": "cli-explicit-workflow-dispatch-browser-withdraw",
+      "category": "dispatch-evidence"
+    },
+    "direct": {
+      "id": "D152",
+      "run_id": 41853908782,
+      "job_id": 126657222732,
+      "stage": "transfers",
+      "code": "client-command-failed"
+    },
+    "both_cleanup_preservation_checks": "passed; retained metadata/roles unchanged, isolated database removed, original resource state restored",
+    "first_logs_manifest": ".private/freightctl-f073-public-first-Q07BEKko/manifest.json",
+    "first_logs_manifest_sha256": "820fd132575213337cd720e65ac809843b6c1a08e48b2a876caae59cd133ef42",
+    "prepared_diagnostics": [
+      "Fixed browser decision phase, action stage, wire phase, bounded response count/overflow and tri-state dialog/error visibility; no selector, resource identity, request body or error text is public.",
+      "Fixed stock lftp command-file progress markers identify only the last observed action. Preserve every protocol/TLS/byte/cleanup assertion and existing timeout/resource limits."
+    ],
+    "local_checks": {
+      "reporter_tests": 56,
+      "actual_node_failure_emitter": "passed with a DOM stand-in; no Chrome, sockets or product runtime",
+      "python_compile": "passed",
+      "node_syntax": "passed"
+    },
+    "qualification_claim": false
   }
 }

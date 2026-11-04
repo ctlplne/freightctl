@@ -20,6 +20,22 @@ from ftps_cli_governance import read, require
 from ftps_contract import CLI_PAYLOAD
 
 PHASES = ("request", "approve", "withdraw")
+BROWSER_FAILURE_STAGES = frozenset(("contacts-before", "navigation", "source-inspect", "source-audit", "disclosure-preview", "disclosure-terms-focus", "disclosure-audit", "requested-review-binding", "history-audit", "history-reload", "reviewer-inspect", "reviewer-terms-focus", "reviewer-audit", "confirmation-open", "confirmation-audit", "first-decision", "lost-response-notice", "replay-decision", "dialog-close", "receipt-binding", "decided-review-binding", "decision-history", "decision-history-audit", "contacts-after", "result-write"))
+
+
+def safe_browser_failure(value):
+    keys = {"kind", "phase", "stage", "wire", "response_count", "response_overflow", "dialog_open", "decision_error_visible"}
+    if (type(value) is not dict or set(value) != keys or value["kind"] != "ftps-dispatch-failure"
+            or any(type(value[k]) is not str for k in ("phase", "stage", "wire"))
+            or value["phase"] not in PHASES or value["stage"] not in BROWSER_FAILURE_STAGES
+            or value["wire"] not in {"idle", "request", "abort-first", "fulfill-replay"}
+            or type(value["response_count"]) is not int or not 0 <= value["response_count"] <= 8
+            or type(value["response_overflow"]) is not bool or (value["response_overflow"] and value["response_count"] != 8)
+            or any(type(value[k]) is not bool and value[k] is not None for k in ("dialog_open", "decision_error_visible"))):
+        return None
+    return dict(value)
+
+
 COMMANDS = (
     "source-stat", "policy-status", "policy-set", "reviewer-token", "reviewer-create",
     "create", "create-replay", "queue", "work-before-consent", "status-before",

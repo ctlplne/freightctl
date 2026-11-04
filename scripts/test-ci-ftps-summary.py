@@ -427,6 +427,57 @@ class SummaryContracts(unittest.TestCase):
         self.assertNotIn(secret, json.dumps(result))
         self.assertEqual(summary.failure_diagnostics(self.root, self.result, "b" * 40), {})
 
+    def test_dispatch_failure_diagnostics_require_exact_bounded_phase_and_wire_observations(self):
+        name = "cli-explicit-workflow-dispatch-browser-withdraw"
+        probe = {"kind":"ftps-dispatch-failure", "phase":"withdraw", "stage":"dialog-close", "wire":"fulfill-replay",
+                 "response_count":2, "response_overflow":False, "dialog_open":True, "decision_error_visible":False}
+        (self.directory / (name + ".stderr")).write_bytes(b"private browser exception")
+        self.manifest["steps"].append({"name":name,"exit_code":1,"stdout_sha256":"", "stderr_sha256":hashlib.sha256(b"private browser exception").hexdigest()})
+        def report(value):
+            self.replace_output(name, json.dumps(value).encode())
+            self.write()
+            return summary.failure_diagnostics(self.root,self.result,"a" * 40)
+        self.assertEqual(report(probe)["dispatch_browser_failures"],[{"command":name, **probe}])
+        for change in ({"stage":"private selector"}, {"phase":"request"}, {"wire":"private error"},
+                       {"response_count":True}, {"response_count":9}, {"response_overflow":True},
+                       {"dialog_open":"private path"}, {"stage":{}}, {"reason":"private credential"}):
+            self.assertNotIn("dispatch_browser_failures",report(dict(probe, **change)))
+        self.replace_output(name,b"changed without updating the original digest")
+        (self.directory / (name + ".stdout")).write_bytes(b"unbound record")
+        self.write()
+        self.assertEqual(summary.failure_diagnostics(self.root,self.result,"a" * 40),{})
+
+    def test_actual_dispatch_failure_emitter_keeps_errors_private_without_launching_browser(self):
+        counter = self.directory / "emitter-counter.json"
+        counter.write_text(json.dumps({"schema_version":1,"kind":"freightctl-ftps-contact-spy","accepted_connections":0,"stopped":False,"budget_exhausted":False}))
+        script = '''
+import assert from 'node:assert/strict';
+const {qualifyOutboundDispatch}=await import(process.argv[2]);
+const privateError=new Error('private selector or credential');
+const region={getByText:()=>({isVisible:async()=>false})};
+const page={getByRole:(kind)=>kind==='region'?region:{click:async()=>{throw privateError}},locator:()=>({isVisible:async()=>false})};
+let failure;try{await qualifyOutboundDispatch(page,{url:'https://127.0.0.1:443',tenant:'synthetic',partner:'synthetic',dispatch_protocol:'ftps',dispatch_phase:'withdraw',receiver_log:process.argv[1]},()=>{},()=>{},()=>{})}catch(e){failure=e}
+assert.equal(failure,privateError);
+'''
+        result = subprocess.run(["node","--input-type=module","-e",script,str(counter),Path(__file__).with_name("outbound-dispatch-browser.mjs").as_uri()],capture_output=True,timeout=5)
+        self.assertEqual(result.returncode,0)
+        self.assertNotIn(b"private selector or credential",result.stdout)
+        self.assertEqual(json.loads(result.stdout),{"kind":"ftps-dispatch-failure","phase":"withdraw","stage":"navigation","wire":"idle","response_count":0,"response_overflow":False,"dialog_open":False,"decision_error_visible":False})
+
+    def test_lftp_failure_progress_is_a_bounded_fixed_action_from_original_output(self):
+        spec = importlib.util.spec_from_file_location("lftp_probe",Path(__file__).with_name("lftp-probe.py"))
+        probe = importlib.util.module_from_spec(spec);spec.loader.exec_module(probe)
+        self.assertEqual(probe.observed_action(b"freightctl-stock-phase:setup\nfreightctl-stock-phase:pasv-download\nprivate error\n"),"pasv-download")
+        for data in (b"private selector",b"freightctl-stock-phase:private-credential\n",b"prefix freightctl-stock-phase:active-upload\n",b"x" * ((4 << 20) + 1)):
+            self.assertIsNone(probe.observed_action(data))
+        name="cli-explicit-lftp-probe"
+        for action, expected in (("active-upload",{"action":"active-upload"}),("private credential",{}),({},{})):
+            self.replace_output(name,json.dumps({"state":"failed","stage":"transfers","code":"client-command-failed","action":action,"reason":"private value"}).encode())
+            self.write()
+            report=summary.failure_diagnostics(self.root,self.result,"a" * 40)
+            self.assertEqual(report["lftp_failures"],[{"stage":"transfers","code":"client-command-failed",**expected}])
+            self.assertNotIn("private value",json.dumps(report))
+
     def test_unverified_or_arbitrary_failure_diagnostics_refuse(self):
         data = json.dumps({"state": "failed", "stage": "transfers", "code": "private-value-must-not-escape", "reason": "sensitive"}).encode()
         (self.directory / "cli-explicit-lftp-probe.stdout").write_bytes(data)

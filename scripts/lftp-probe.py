@@ -14,7 +14,15 @@ import re
 import resource
 import subprocess
 
-from ftps_contract import LFTP_CASES, LFTP_DOWNLOADS
+from ftps_contract import LFTP_ACTIONS, LFTP_CASES, LFTP_DOWNLOADS
+
+
+def observed_action(data):
+    if type(data) is not bytes or len(data) > 4 << 20:
+        return None
+    actions = re.findall(rb"^freightctl-stock-phase:([a-z-]{1,32})\r?$", data, re.MULTILINE)
+    action = actions[-1].decode("ascii") if actions else None
+    return action if action in LFTP_ACTIONS else None
 
 
 class ProbeFailure(RuntimeError):
@@ -66,6 +74,8 @@ def run(reference, settings):
                 result = subprocess.run(argv, cwd=runtime, env=env, stdout=stdout, stderr=stderr, timeout=20, preexec_fn=bound_output)
             finally:
                 stdout.flush(); stderr.flush(); os.fsync(stdout.fileno()); os.fsync(stderr.fileno())
+                with out.open("rb") as progress:
+                    settings["action"] = observed_action(progress.read((4 << 20) + 1))
         if result.returncode != 0:
             diagnostic = err.read_bytes()[:4096].decode(errors="replace")
             lower = diagnostic.lower()
@@ -84,6 +94,7 @@ def run(reference, settings):
     if not first_line.lower().startswith("lftp") or not re.search(r"\bVersion\s+4\.9\.2\b", first_line) or "GnuTLS" not in version:
         raise ProbeFailure("client-profile-differs", "stock lftp4.9.2/GnuTLS profile differs")
     base = [
+        "echo freightctl-stock-phase:setup",
         "debug 0", "set cmd:fail-exit yes", "set cmd:move-background no",
         "set cmd:save-cwd-history no", "set bmk:save-passwords no",
         "set net:max-retries 1", "set net:timeout 3", "set net:reconnect-interval-base 1",
@@ -102,9 +113,9 @@ def run(reference, settings):
         if not isinstance(ticket,str) or not re.fullmatch(r"/\.freightctl/uploads/[0-9a-f-]{36}",ticket) or settings.get("ticket_phase") not in {"resume","download"}:
             raise ValueError("invalid stock ticket probe")
         phase = settings["ticket_phase"]
-        commands = base + (["put -c " + quote(str(source)) + " -o " + quote(ticket),
-                            "mv " + quote(ticket) + " /stock-ticket.csv"] if phase == "resume" else
-                           ["get /stock-ticket.csv -o " + quote(str(directory / "ticket.download"))]) + ["bye"]
+        commands = base + (["echo freightctl-stock-phase:ticket-resume", "put -c " + quote(str(source)) + " -o " + quote(ticket),
+                            "echo freightctl-stock-phase:ticket-complete", "mv " + quote(ticket) + " /stock-ticket.csv"] if phase == "resume" else
+                           ["echo freightctl-stock-phase:ticket-download", "get /stock-ticket.csv -o " + quote(str(directory / "ticket.download"))]) + ["echo freightctl-stock-phase:finish", "bye"]
         script = directory / "commands"
         with script.open("x") as stream:
             stream.write("\n".join(commands)+"\n");stream.flush();os.fsync(stream.fileno())
@@ -114,17 +125,28 @@ def run(reference, settings):
         cases = ["ticket-prefix-resume","bound-completion-replay"] if phase == "resume" else ["released-ticket-bytes"]
         return {"state":"passed","client":"lftp4.9.2/GnuTLS","cases":cases,"case_count":len(cases),"payload_bytes":len(payload),"payload_sha256":hashlib.sha256(payload).hexdigest(),"stock_client_qualification":True}
     commands = base + [
+        "echo freightctl-stock-phase:initial-upload",
         "put " + quote(str(source)) + " -o lftp.bin",
+        "echo freightctl-stock-phase:epsv-download",
         "get lftp.bin -o " + quote(str(directory / "epsv.download")),
+        "echo freightctl-stock-phase:pasv-download",
         "set ftp:prefer-epsv no",
         "get lftp.bin -o " + quote(str(directory / "pasv.download")),
+        "echo freightctl-stock-phase:active-upload",
         "set ftp:passive-mode no",
         "put " + quote(str(source)) + " -o active.bin",
+        "echo freightctl-stock-phase:active-download",
         "get active.bin -o " + quote(str(directory / "active.download")),
+        "echo freightctl-stock-phase:listing",
         "set ftp:passive-mode yes", "set ftp:prefer-epsv yes", "cls -1",
-        "mkdir lftp-inbox", "mv lftp.bin lftp-inbox/renamed.bin",
+        "echo freightctl-stock-phase:mkdir", "mkdir lftp-inbox",
+        "echo freightctl-stock-phase:rename", "mv lftp.bin lftp-inbox/renamed.bin",
+        "echo freightctl-stock-phase:renamed-download",
         "get lftp-inbox/renamed.bin -o " + quote(str(directory / "renamed.download")),
-        "rm lftp-inbox/renamed.bin", "rmdir lftp-inbox", "rm active.bin", "bye",
+        "echo freightctl-stock-phase:remove-renamed", "rm lftp-inbox/renamed.bin",
+        "echo freightctl-stock-phase:remove-directory", "rmdir lftp-inbox",
+        "echo freightctl-stock-phase:remove-active", "rm active.bin",
+        "echo freightctl-stock-phase:finish", "bye",
     ]
     script = directory / "commands"
     with script.open("x") as stream:
@@ -161,7 +183,7 @@ def main():
                 reason = reason.replace(value, "[redacted]")
         reason = re.sub(r"[0-9a-fA-F]{64}", "[redacted]", reason)[:512]
         code = exc.code if isinstance(exc, ProbeFailure) else "client-unavailable" if isinstance(exc, FileNotFoundError) else "client-deadline" if isinstance(exc, subprocess.TimeoutExpired) else "probe-failed"
-        print(json.dumps({"state": "failed", "stage": settings.get("stage"), "code": code, "failure_class": type(exc).__name__, "reason": reason}))
+        print(json.dumps({"state": "failed", "stage": settings.get("stage"), "code": code, "action": settings.get("action"), "failure_class": type(exc).__name__, "reason": reason}))
         return 1
     print(json.dumps(report))
     return 0

@@ -2355,13 +2355,13 @@
     {
       "id": "D147",
       "severity": "native workflow qualification failure",
-      "state": "original SQL refusal repaired on native x86; bounded program journey now blocked atD150; ARM pending",
+      "state": "original SQL refusal repaired on both native Linux profiles; whole program journey still blocked atD150",
       "observed_on": "2026-11-03",
       "candidate": "07a73b5a55d6ae904fcca963a7db168f31c6bfa4",
       "journey": "Registered FTPS bounded-program execution",
       "title": "Independent bounded-program SQL compiler does not catalog FTPS delivery",
       "first_failure": "Both actual native Linux suites at07a73b5 fail TestRegisteredFTPSWorkflowBoundedProgramUsesTheSameConsentAndSender with SQLSTATE23514:run requires exact independently compiled program and authoritative facts. Both suites retain667passes/4failed records/0skips. The original compiler in032 accepts only sftp.deliver.",
-      "resolution": "Append038 replacing the independent compiler with the same checks and an exact two-protocol catalog. Do not edit applied032/037. Local integration compilation and53reporter/7metadata contracts pass; PostgreSQL runtime replay remains pending at owner-requested halt. No retained schema upgrade. At6ebccf0 native x86 the original SQL23514 refusal disappears and the case reaches a later run-receipt comparison failure (D150). This does not yet qualify the whole bounded-program journey.",
+      "resolution": "Append038 replacing the independent compiler with the same checks and an exact two-protocol catalog. Do not edit applied032/037. Local integration compilation and53reporter/7metadata contracts pass; PostgreSQL runtime replay remains pending at owner-requested halt. No retained schema upgrade. At6ebccf0 native x86 the original SQL23514 refusal disappears and the case reaches a later run-receipt comparison failure (D150). This does not yet qualify the whole bounded-program journey. At2da246b both complete native profiles reach the later receipt-comparison failure without the original SQL23514 refusal.",
       "regression_evidence": [
         "docs/qualification/evidence/F073-ftps-workflow-connections.json"
       ]
@@ -2369,13 +2369,13 @@
     {
       "id": "D148",
       "severity": "native workflow qualification failure",
-      "state": "repaired on native x86; all four original mode/phase cases pass; ARM replay pending",
+      "state": "repaired; all four original mode/phase recovery cases pass both complete native Linux profiles",
       "observed_on": "2026-11-03",
       "candidate": "07a73b5a55d6ae904fcca963a7db168f31c6bfa4",
       "journey": "Actual implicit FTPS lost-reply recovery and read-only audit proof",
       "title": "Implicit FTPS recovery audit is compared to an explicit-only test expectation",
       "first_failure": "Both actual native Linux suites at07a73b5 fail implicit stage and rename recovery at unexpected recovery protocol session. The shared qualification helper hardcodes ftps-explicit; original F071 cases used explicit mode only.",
-      "resolution": "Pass the configured listener mode to the shared helper and require exactly ftps-explicit or ftps-implicit as configured. Reject unknown modes. Preserve all original event, actor, session, digest, receiver-table, attempt/fence and no-resend checks. Local integration compilation passes; original native recovery runtime replay remains pending at owner-requested halt. At6ebccf0 native x86 all four explicit/implicit stage/rename lost-reply cases pass with unchanged strict receiver/audit invariants. ARM first attempt stops at dependency acquisition before tests; its exact retry is pending.",
+      "resolution": "Pass the configured listener mode to the shared helper and require exactly ftps-explicit or ftps-implicit as configured. Reject unknown modes. Preserve all original event, actor, session, digest, receiver-table, attempt/fence and no-resend checks. Local integration compilation passes; original native recovery runtime replay remains pending at owner-requested halt. At6ebccf0 native x86 all four explicit/implicit stage/rename lost-reply cases pass with unchanged strict receiver/audit invariants. ARM first attempt stops at dependency acquisition before tests; its exact retry is pending. At2da246b jobs126663975240/126663975284 every original explicit/implicit stage/rename recovery case passes. Both complete suites retain670pass/10fail at other cases(D150/D153); no aggregate green is claimed.",
       "regression_evidence": [
         "docs/qualification/evidence/F073-ftps-workflow-connections.json"
       ]
@@ -2383,13 +2383,13 @@
     {
       "id": "D149",
       "severity": "native dependency acquisition interruption",
-      "state": "original log retained; exact ARM retry accepted and pending",
+      "state": "original log retained; exact ARM retry running",
       "observed_on": "2026-11-04",
       "candidate": "6ebccf01d2af0129d355438bb8cd48cccc2991de",
       "journey": "Fresh native ARM Go/PostgreSQL qualification",
       "title": "Go module proxy download stops the original ARM replay before runtime tests",
       "first_failure": "Job126651291656 inrun41852235851 exits1 during module/vet/unit preparation: golang.org/x/crypto v0.58.0 download reports HTTP2 stream INTERNAL_ERROR. No application runtime result follows. The same candidate ARM schema38 metadata restore succeeds independently.",
-      "resolution": "Preserve the complete original job log and retry only this terminal job using the unchanged candidate and checks. GitHub connector lacks Actions write permission (403); CLI reports the job cannot be rerun. The parent run is still active; the retry refusal's cause is not established. Retry remains pending; do not disable module integrity, checksums or proxy trust, or count this as a pass. The direct GitHub job API subsequently accepts retry of exactjob126651291656. Run41852235851 attempt2 is pending behind the mixed candidate; no replacement job ID is allocated yet. Preserve both original and retry results.",
+      "resolution": "Preserve the complete original job log and retry only this terminal job using the unchanged candidate and checks. GitHub connector lacks Actions write permission (403); CLI reports the job cannot be rerun. The parent run is still active; the retry refusal's cause is not established. Retry remains pending; do not disable module integrity, checksums or proxy trust, or count this as a pass. The direct GitHub job API subsequently accepts retry of exactjob126651291656. Run41852235851 attempt2 is pending behind the mixed candidate; no replacement job ID is allocated yet. Preserve both original and retry results. Exact ARM retry job126676577153 inattempt2 is now running; preserve its original6ebccf0 identity and pending result.",
       "regression_evidence": [
         "docs/qualification/evidence/F073-ftps-workflow-connections.json"
       ]
@@ -2404,6 +2404,48 @@
       "title": "A raw execution-plan JSON representation comparison may reject the same typed receipt",
       "first_failure": "Actual native x86 job126651291441/run41852235851 attempt1 has670application passes/1failure/0skips. TestRegisteredFTPSWorkflowBoundedProgramUsesTheSameConsentAndSender reaches run replay changed intents after successful SQL run admission. All four FTPS recovery cases pass. The combined original comparison does not print which condition failed; raw JSON formatting is a source-supported hypothesis, not a confirmed runtime cause.",
       "resolution": "Split receipt decoding errors from plan/hash validation and full run comparison. Strictly validate each typed execution plan, exact source and recorded canonical plan hash with storedExecutionPlan. Canonicalize only that validated representation and compare every run field. Add a fixed diagnostic only when raw receipt representations differ while all canonical fields match. A local race contract reproduces format-only inequality and refuses17 changed run/plan cases (18pass records including parent); integration compilation passes. No production behavior, binding, SQL check or budget is relaxed; original native replay must confirm the actual cause and outcome.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F073-ftps-workflow-connections.json"
+      ]
+    },
+    {
+      "id": "D151",
+      "severity": "public native regression without precise cause",
+      "state": "original retained; bounded diagnostics prepared; cause and original replay pending",
+      "observed_on": "2026-11-04",
+      "candidate": "2da246b6c2fb257f005d65d0bd81ea56abe79658",
+      "journey": "Actual registered FTPS workflow browser withdrawal and saved-key recovery",
+      "title": "Public workflow browser withdrawal fails without a precise action observation",
+      "first_failure": "At2da246b job126657222320/run41853908639 fails cli-explicit-workflow-dispatch-browser-withdraw with generic dispatch-evidence. No native test or lftp failure is reported. Exact metadata/role/resource preservation and cleanup pass. Original6ebccf0 public workflow profile passes; that prior pass does not repair this red result.",
+      "resolution": "Preserve complete original log. Add fixed action-stage/wire-phase observations, bounded response count and dialog/error visibility to failed FTPS browser output. Strictly whitelist shape, types, phases and bounds before publication. Preserve original assertion/error propagation, decisions, response-loss handling, budgets and deadlines. The actual Node failure emitter and privacy/refusal contracts pass locally within56reporter tests, without launching Chrome. Original native replay remains required; cause unproven.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F073-ftps-workflow-connections.json"
+      ]
+    },
+    {
+      "id": "D152",
+      "severity": "public native regression without precise cause",
+      "state": "original retained; bounded diagnostics prepared; cause and original replay pending",
+      "observed_on": "2026-11-04",
+      "candidate": "2da246b6c2fb257f005d65d0bd81ea56abe79658",
+      "journey": "Actual stock lftp FTPS baseline before dispatch consent",
+      "title": "Stock lftp transfer batch fails without naming its last action",
+      "first_failure": "At2da246b job126657222732/run41853908782 reports lftp transfers/client-command-failed with no failed CLI/native records. Exact metadata/role/resource preservation and cleanup pass. Both dedicated stock FTPS jobs and original6ebccf0 direct-dispatch profile pass separately; those do not repair this red result.",
+      "resolution": "Preserve complete original log. Add fixed local echo progress markers around existing stock lftp actions and publish only a whitelisted last-observed action from hash-bound original stdout. Unknown/malformed/oversized observations cannot expose strings. Keep all original active/passive receiving cases, TLS1.3/session checks, command/byte assertions, client retry/deadline and resource budgets unchanged. This changes failure observation, not the demonstrated cause or qualification state; original native replay is required.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F073-ftps-workflow-connections.json"
+      ]
+    },
+    {
+      "id": "D153",
+      "severity": "mixed-protocol qualification sequence error",
+      "state": "repair prepared; original native mixed replay pending",
+      "observed_on": "2026-11-04",
+      "candidate": "2da246b6c2fb257f005d65d0bd81ea56abe79658",
+      "journey": "Ordered and bounded-program mixed SFTP/FTPS independent consent",
+      "title": "The mixed test requests a later review before its predecessor can authorize it",
+      "first_failure": "Both complete native suites retain670pass/10fail/0skip. All eight mixed mode/schema/order cases fail at proposeDispatch for the second intent, before sending, with ErrState. The existing dispatchPreview checks current execution binding, which correctly requires every predecessor to succeed. The other failed case is D150. Complete originals are retained.",
+      "resolution": "Correct the test's order: explicitly require early second-review refusal, propose/approve the first review, execute the first intent, prove first consent cannot authorize second work, then propose/approve and execute the second intent. Preserve the existing product gate, direct later-worker refusal, exact saved keys, all attempts/fences, stock/FTPS byte checks and distinct persistence receipts. Local integration compilation and vet pass; native sending replay remains required.",
       "regression_evidence": [
         "docs/qualification/evidence/F073-ftps-workflow-connections.json"
       ]

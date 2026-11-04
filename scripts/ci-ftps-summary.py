@@ -9,7 +9,7 @@ import re
 import subprocess
 from metadata_contract import require_snapshot
 
-from ftps_contract import CLI_PAYLOAD, LFTP_CASES, LFTP_DOWNLOADS, LFTP_FAILURE_CODES, NATIVE_PARENT_TESTS, NATIVE_TESTS
+from ftps_contract import CLI_PAYLOAD, LFTP_ACTIONS, LFTP_CASES, LFTP_DOWNLOADS, LFTP_FAILURE_CODES, NATIVE_PARENT_TESTS, NATIVE_TESTS
 import ftps_cli_governance as governance
 import ftps_browser_evidence as browser_evidence
 import ftps_ticket_governance as tickets
@@ -40,7 +40,7 @@ def failure_diagnostics(root, result, commit):
         if hashlib.sha256(raw).hexdigest() != header.get("manifest_sha256") or manifest.get("starting_commit") != commit or manifest.get("kind") != "stock-ftps-custody":
             return {}
         failed, categories, cli_failures, browser_failures = set(), set(), set(), []
-        accessibility, ticket_browser_failures = [], []
+        accessibility, ticket_browser_failures, dispatch_browser_failures = [], [], []
         allowed = {"native-ftps-integration", "cli-explicit-lftp-probe", "cli-implicit-lftp-probe", "browser-explicit-operator", "browser-implicit-operator"}
         for step in manifest.get("steps", []):
             name = step.get("name")
@@ -66,8 +66,12 @@ def failure_diagnostics(root, result, commit):
                     probe = json.loads(line[line.index("{"):])
                 except ValueError:
                     continue
+                dispatch_probe = dispatch.safe_browser_failure(probe)
+                if dispatch.command_suffix(name) == "browser-" + str(probe.get("phase")) and dispatch_probe is not None:
+                    dispatch_browser_failures.append({"command": name, **dispatch_probe})
                 if probe.get("state") == "failed" and probe.get("stage") in {"version", "transfers"} and probe.get("code") in LFTP_FAILURE_CODES:
-                    categories.add((probe["stage"], probe["code"]))
+                    action = probe.get("action")
+                    categories.add((probe["stage"], probe["code"], action if type(action) is str and action in LFTP_ACTIONS else ""))
                 if browser_tickets.command_suffix(name)=="browser" and probe.get("state")=="failed" and probe.get("stage") in browser_tickets.STAGES:
                     ticket_browser_failures.append({"command":name,"stage":probe["stage"]})
                 if name in {"browser-explicit-operator", "browser-implicit-operator"} and probe.get("state") == "failed" and probe.get("phase") in browser_evidence.PHASES and type(probe.get("line")) is int and 0 <= probe["line"] <= 10000:
@@ -80,7 +84,7 @@ def failure_diagnostics(root, result, commit):
                     ids = probe.get("accessibility_rule_ids")
                     if isinstance(ids,list) and 0 < len(ids) <= 100 and all(isinstance(i,str) and i in browser_evidence.ACCESSIBILITY_RULES for i in ids):
                         accessibility.append({"command":name,"audit":probe["audit"],"rule_ids":sorted(set(ids))})
-        outcome = {"failed_native_tests": sorted(failed), "lftp_failures": [{"stage": s, "code": c} for s, c in sorted(categories)], "failed_cli_commands": sorted(cli_failures)}
+        outcome = {"failed_native_tests": sorted(failed), "lftp_failures": [{"stage": s, "code": c, **({"action": a} if a else {})} for s, c, a in sorted(categories)], "failed_cli_commands": sorted(cli_failures)}
         snapshot = manifest.get("retained_before")
         if isinstance(snapshot,dict):
             def count(value):
@@ -102,6 +106,8 @@ def failure_diagnostics(root, result, commit):
             outcome["accessibility_failures"] = accessibility
         if ticket_browser_failures:
             outcome["browser_ticket_failures"] = ticket_browser_failures
+        if dispatch_browser_failures:
+            outcome["dispatch_browser_failures"] = dispatch_browser_failures
         dispatch_failure=manifest.get("dispatch_evidence_failure")
         if isinstance(dispatch_failure,dict) and dispatch_failure.get("mode") in {"explicit","implicit"} and dispatch_failure.get("profile") in {"dispatch","workflow_dispatch"} and dispatch_failure.get("category") in set(dispatch.FAILURE_CODES.values())|{"dispatch-evidence"}:
             outcome["dispatch_evidence_failure"]={k:dispatch_failure[k] for k in ("mode","profile","category")}
