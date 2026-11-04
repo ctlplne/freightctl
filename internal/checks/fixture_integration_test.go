@@ -26,6 +26,7 @@ type fixture struct {
 	ctx        context.Context
 	admin      *pgxpool.Pool
 	adminPath  string
+	tokenPath  string
 	wf         *workflow.Service
 	scope      store.Scope
 	file       *store.File
@@ -113,6 +114,7 @@ func setup(t *testing.T) *fixture {
 	}
 	f.scope.TokenHash = secure.Digest(secret.Bytes)
 	secret.Close()
+	f.tokenPath = tokenPath
 	f.file, _, err = f.wf.Custody.Accept(ctx, f.scope, "source", 3, secure.Digest([]byte("abc")), bytes.NewReader([]byte("abc")))
 	if err != nil {
 		t.Fatal(err)

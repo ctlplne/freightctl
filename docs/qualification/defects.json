@@ -2383,13 +2383,13 @@
     {
       "id": "D149",
       "severity": "native dependency acquisition interruption",
-      "state": "original log retained; exact ARM retry running",
+      "state": "dependency acquisition succeeds in exact original ARM retry; application remains red atD150",
       "observed_on": "2026-11-04",
       "candidate": "6ebccf01d2af0129d355438bb8cd48cccc2991de",
       "journey": "Fresh native ARM Go/PostgreSQL qualification",
       "title": "Go module proxy download stops the original ARM replay before runtime tests",
       "first_failure": "Job126651291656 inrun41852235851 exits1 during module/vet/unit preparation: golang.org/x/crypto v0.58.0 download reports HTTP2 stream INTERNAL_ERROR. No application runtime result follows. The same candidate ARM schema38 metadata restore succeeds independently.",
-      "resolution": "Preserve the complete original job log and retry only this terminal job using the unchanged candidate and checks. GitHub connector lacks Actions write permission (403); CLI reports the job cannot be rerun. The parent run is still active; the retry refusal's cause is not established. Retry remains pending; do not disable module integrity, checksums or proxy trust, or count this as a pass. The direct GitHub job API subsequently accepts retry of exactjob126651291656. Run41852235851 attempt2 is pending behind the mixed candidate; no replacement job ID is allocated yet. Preserve both original and retry results. Exact ARM retry job126676577153 inattempt2 is now running; preserve its original6ebccf0 identity and pending result.",
+      "resolution": "Preserve the complete original job log and retry only this terminal job using the unchanged candidate and checks. GitHub connector lacks Actions write permission (403); CLI reports the job cannot be rerun. The parent run is still active; the retry refusal's cause is not established. Retry remains pending; do not disable module integrity, checksums or proxy trust, or count this as a pass. The direct GitHub job API subsequently accepts retry of exactjob126651291656. Run41852235851 attempt2 is pending behind the mixed candidate; no replacement job ID is allocated yet. Preserve both original and retry results. Exact ARM retry job126676577153 inattempt2 is now running; preserve its original6ebccf0 identity and pending result. Exact original retry126676577153 successfully completes module integrity/vet/unit preparation and all application tests; logs retain670pass/1fail/0skip atD150. No new dependency trust or checksum exception was introduced. API aggregate still reports in_progress after logged steps terminate; preserve the handle and its original evidence.",
       "regression_evidence": [
         "docs/qualification/evidence/F073-ftps-workflow-connections.json"
       ]
@@ -2411,13 +2411,13 @@
     {
       "id": "D151",
       "severity": "public native regression without precise cause",
-      "state": "original retained; bounded diagnostics prepared; cause and original replay pending",
+      "state": "open as intermittent; original red and instrumented later green retained; cause unproven",
       "observed_on": "2026-11-04",
       "candidate": "2da246b6c2fb257f005d65d0bd81ea56abe79658",
       "journey": "Actual registered FTPS workflow browser withdrawal and saved-key recovery",
       "title": "Public workflow browser withdrawal fails without a precise action observation",
       "first_failure": "At2da246b job126657222320/run41853908639 fails cli-explicit-workflow-dispatch-browser-withdraw with generic dispatch-evidence. No native test or lftp failure is reported. Exact metadata/role/resource preservation and cleanup pass. Original6ebccf0 public workflow profile passes; that prior pass does not repair this red result.",
-      "resolution": "Preserve complete original log. Add fixed action-stage/wire-phase observations, bounded response count and dialog/error visibility to failed FTPS browser output. Strictly whitelist shape, types, phases and bounds before publication. Preserve original assertion/error propagation, decisions, response-loss handling, budgets and deadlines. The actual Node failure emitter and privacy/refusal contracts pass locally within56reporter tests, without launching Chrome. Original native replay remains required; cause unproven.",
+      "resolution": "Preserve complete original log. Add fixed action-stage/wire-phase observations, bounded response count and dialog/error visibility to failed FTPS browser output. Strictly whitelist shape, types, phases and bounds before publication. Preserve original assertion/error propagation, decisions, response-loss handling, budgets and deadlines. The actual Node failure emitter and privacy/refusal contracts pass locally within56reporter tests, without launching Chrome. Original native replay remains required; cause unproven. Actualcac6767 job126679124138 passes the complete original profile with unchanged assertions/deadlines; no failure diagnostic appears. This later green establishes no cause or repair. Prepare three fixed fresh complete replays in the existing job, requiring all to pass and preserving/stopping at the first failure. Keep original30minute job and resource budgets.",
       "regression_evidence": [
         "docs/qualification/evidence/F073-ftps-workflow-connections.json"
       ]
@@ -2425,13 +2425,13 @@
     {
       "id": "D152",
       "severity": "public native regression without precise cause",
-      "state": "original retained; bounded diagnostics prepared; cause and original replay pending",
+      "state": "open as intermittent; original red and instrumented later green retained; cause unproven",
       "observed_on": "2026-11-04",
       "candidate": "2da246b6c2fb257f005d65d0bd81ea56abe79658",
       "journey": "Actual stock lftp FTPS baseline before dispatch consent",
       "title": "Stock lftp transfer batch fails without naming its last action",
       "first_failure": "At2da246b job126657222732/run41853908782 reports lftp transfers/client-command-failed with no failed CLI/native records. Exact metadata/role/resource preservation and cleanup pass. Both dedicated stock FTPS jobs and original6ebccf0 direct-dispatch profile pass separately; those do not repair this red result.",
-      "resolution": "Preserve complete original log. Add fixed local echo progress markers around existing stock lftp actions and publish only a whitelisted last-observed action from hash-bound original stdout. Unknown/malformed/oversized observations cannot expose strings. Keep all original active/passive receiving cases, TLS1.3/session checks, command/byte assertions, client retry/deadline and resource budgets unchanged. This changes failure observation, not the demonstrated cause or qualification state; original native replay is required.",
+      "resolution": "Preserve complete original log. Add fixed local echo progress markers around existing stock lftp actions and publish only a whitelisted last-observed action from hash-bound original stdout. Unknown/malformed/oversized observations cannot expose strings. Keep all original active/passive receiving cases, TLS1.3/session checks, command/byte assertions, client retry/deadline and resource budgets unchanged. This changes failure observation, not the demonstrated cause or qualification state; original native replay is required. Actualcac6767 job126679123830 passes the complete original profile with unchanged assertions/deadlines; no failure diagnostic appears. This later green establishes no cause or repair. Prepare three fixed fresh complete replays in the existing job, requiring all to pass and preserving/stopping at the first failure. Keep original30minute job and resource budgets.",
       "regression_evidence": [
         "docs/qualification/evidence/F073-ftps-workflow-connections.json"
       ]

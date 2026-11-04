@@ -74,7 +74,7 @@
     "FTPS collection, independent supported x86 receiver qualification, broader protocol behavior and complete receiving/sending customer journeys remain required.",
     "D145 stays open as intermittent despite a passing diagnostic replay. Windows D103 and all83 whole baseline rows/12 full journeys remain open."
   ],
-  "next_action": "Push the accumulated local C01/D150/revocation/diagnostic/D153 changes now that exact6ebccf0 ARM retry126676577153 has started, preserving its live run. Follow the new native candidate and the unchanged original retry separately; replay both public failures with fixed observations and unchanged assertions/deadlines. D150-D153 outcomes and all frozen/whole-goal gates remain open.",
+  "next_action": "Confirm cac6767 native run41860071143 has actually started before the next push. Follow the original retry126676577153 until its aggregate terminal state is published. Then push the compiled C04 cases and fixed three-run public gates. Preserve every original result; D150/D153 native outcomes and D151/D152 causes remain open.",
   "implementation_checkpoint": {
     "versioned_connection": "schema2 FTPS definitions, strict canonical validation and redacted reference fingerprints",
     "typed_execution": "ftps.deliver uses exact registered protocol/version; queued delivery includes the workflow/run/step/connection binding; unsupported recipient encryption remains refused",
@@ -254,7 +254,7 @@
       "manifest_sha256": "8f01d699fa9b1910cbd208e579c6e9046098ae7bc304c8c000bc803587150eb0",
       "connector_retry": "403 Resource not accessible by integration",
       "cli_retry": "CLI reports job cannot be rerun; parent run is still active. Revisit after terminal run; reason not established.",
-      "retry": "Exact job API accepted retry; run41852235851 attempt2 ARM job126676577153 is now running. Keep following its original candidate6ebccf0."
+      "retry": "Exact original ARM retry126676577153 completed all logged steps and application execution at670pass/1fail/0skip; D150 persists. API aggregate status is still in_progress, so keep polling its handle rather than restart."
     },
     "arm_metadata_manifest_sha256": "6679cf87470d7a191f50fcc10abdec0b093f4f80014aad38e416f99d1688be4d",
     "registered_workflow_job_id": 126651290506,
@@ -346,7 +346,7 @@
     "sequence_repair": "The original test proposed the second review while its predecessor was queued, and the existing execution-binding guard correctly refused it. Explicitly require that early review refusal, then propose/approve the first intent, finish it, prove separate second consent is still required, and only then propose/approve the second intent. Keep original protocol, order, replay, attempt/fence, byte and persistence assertions."
   },
   "connection_rotation_matrix": {
-    "state": "implemented locally; expanded native public runtime replay pending",
+    "state": "passed actual native public CLI metadata profile atcac6767; whole FTPS sending remains unqualified",
     "frozen_case": "C01",
     "changed_fields_per_mode": [
       "address",
@@ -376,7 +376,7 @@
       "manifest_sha256": "c6afd629c93632062cca6343910a83abac3405c3fd2a961c375bb7dbad276896"
     },
     "local_commit": "259074b64e5816beef3aad395f6642dde6207e8a",
-    "push_state": "held locally to preserve existing pending native candidate and exact ARM retry"
+    "push_state": "pushed incac6767; actual public replay passed"
   },
   "canonical_receipt_repair": {
     "id": "D150",
@@ -424,7 +424,7 @@
   },
   "public_replay_failures": {
     "candidate": "2da246b6c2fb257f005d65d0bd81ea56abe79658",
-    "state": "red; precise causes unproven; bounded diagnostics prepared",
+    "state": "original red and latercac6767 green retained; both causes unproven and open as intermittent",
     "workflow": {
       "id": "D151",
       "run_id": 41853908639,
@@ -452,6 +452,88 @@
       "python_compile": "passed",
       "node_syntax": "passed"
     },
+    "qualification_claim": false,
+    "later_replay": {
+      "candidate": "cac676757e48c90a7c721f76e699ccc0991e7ecc",
+      "workflow_job_id": 126679124138,
+      "direct_job_id": 126679123830,
+      "result": "both passed; no failure diagnostic emitted; no root-cause repair established"
+    }
+  },
+  "current_candidate": {
+    "commit": "cac676757e48c90a7c721f76e699ccc0991e7ecc",
+    "pushed": true,
+    "native_linux_run_id": 41860071143,
+    "state": "pending behind exact original ARM retry",
+    "workflow_run_id": 41860070893,
+    "workflow_job_id": 126679124138,
+    "workflow_state": "passed actual native x86 public profile",
+    "direct_run_id": 41860070906,
+    "direct_job_id": 126679123830,
+    "direct_state": "passed actual native x86 public profile",
+    "core_run_id": 41860070534,
+    "core_job_id": 126679121553,
+    "core_state": "passed",
+    "qualification_claim": false,
+    "public_result": {
+      "commands_workflow": 260,
+      "commands_direct": 180,
+      "rotation_cases_workflow": 20,
+      "browser_phases_each": 6,
+      "saved_key_replays_each": 6,
+      "wcag_audits_each": 18,
+      "source_inputs": 722,
+      "receiver_contacts": 0,
+      "delivery_attempts": 0,
+      "delivery_fences": 0,
+      "workflow_result_manifest_sha256": "0a71cfeca5123fd09642b8828c2367077df721cd9c4465ea19383502bc982f96",
+      "direct_result_manifest_sha256": "376d0030691929fa8d9d8dbe83e698d2b1b045e0539259e61346c2c49c61d958",
+      "logs_manifest": ".private/freightctl-f073-public-cac-retry-S1zSsnf3/manifest.json",
+      "logs_manifest_sha256": "918df63e3656d30aab8aee72d50fd7e4649ab24b664213929ed283e1e5ee8db4",
+      "scope": "actual CLI/HTTPS/Chrome metadata consent with stock receiving baselines and contact-only sending spies; no FTPS wire-sending or vendor persistence claim"
+    }
+  },
+  "intake_release_execution": {
+    "state": "source added; local integration compile/vet passed; actual native runtime pending",
+    "frozen_case": "C04",
+    "test": "TestRegisteredFTPSWorkflowRequiresExactIntakeReleaseAndCurrentPolicy",
+    "cases": 8,
+    "matrix": {
+      "ftps_modes": [
+        "explicit",
+        "implicit"
+      ],
+      "workflow_schemas": [
+        1,
+        2
+      ],
+      "outcomes": [
+        "exact released source sends after separate dispatch consent",
+        "revoked intake policy blocks the saved worker before contact"
+      ]
+    },
+    "mechanism": "Use the existing real CSV checker and release service against fresh non-owner PostgreSQL roles and real custody. Before release, preview/run must refuse held and parsed-but-unreleased bytes without creating runs/intents or contacting the receiver. A wrong report hash cannot authorize release. After exact release, independently named reviewer consent is still required. Policy revocation must preserve the entire original intent. Otherwise reopen the separate receiver bytes and truthful receipt, then replay the same worker key without another contact.",
+    "peers": "separate actual freightctl FTPS/custody receiver with protected local TLS and credential references; an application stand-in, not independent vendor interoperability",
+    "fixture_change": "Retain the existing task-private token reference in the checks test fixture for its separate receiver; no production authority or token behavior changes.",
+    "limits": "CSV-only intake component; scanner/signature/encryption and whole payroll/receiving/sending journeys remain required. No local PostgreSQL, socket receiver, scanner or inference was started.",
+    "local_checks": {
+      "integration_compilation": "passed; no runtime tests executed",
+      "integration_vet": "passed"
+    },
+    "qualification_claim": false
+  },
+  "fixed_public_repetition": {
+    "state": "workflow source prepared and actionlint passed; native execution pending",
+    "profile_replays": 3,
+    "scope": "three fresh complete workflow-consent journeys and three fresh complete direct-consent journeys in their existing jobs",
+    "invariants": [
+      "all three must pass in sequence; stop and preserve the first failure",
+      "each producer result header and private fixture has a unique reference; do not overwrite an earlier result",
+      "independently validate every original CLI/browser/stock output and cleanup for each run",
+      "keep existing per-command deadlines,30minute job limits,512MiB/oneCPU PostgreSQL,oneCPU/192MiB Go and existing browser settings",
+      "keep original failures and unproven causes visible even when later repeats pass"
+    ],
+    "reason": "D151/D152 did not recur on the single instrumented replay. Fixed repetitions improve observation of intermittent failure without selectively rerunning to obtain a green result.",
     "qualification_claim": false
   }
 }
