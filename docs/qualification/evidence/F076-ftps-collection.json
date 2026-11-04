@@ -265,5 +265,13 @@
       "state": "completed/cancelled, unqualified",
       "reason": "All5jobs remained queued with no started steps immediately before conditional CLI cancellation; confirmedD163 producer fixture error already retained on bothde93 architectures. Native source was superseded only after verified exact-CAS repair. Other runs were not cancelled."
     }
+  },
+  "registration_failure_standin": {
+    "manifest_reference": ".private/freightctl-f076-registration-closure-3ov_x1ye/manifest.json",
+    "manifest_sha256": "2aa86f2f1825a51b8063e680001eb951769865c3506ec1b38b283390d1e2d708",
+    "methods": 8,
+    "scope": "Python unit runner exercises the real producer function with a command/source-spy stand-in, stopping at synthetic registration failure. Under022, request/password are0600 and child0700, credential bytes never enter argv, exact spy closes once and owner token remains unchanged. No actual product subprocess, network socket, TLS, PostgreSQL, Chrome or inference.",
+    "runtime_qualification": false,
+    "submission": "local follow-up only; keep unknown28cdfcb native/public candidates intact"
   }
 }

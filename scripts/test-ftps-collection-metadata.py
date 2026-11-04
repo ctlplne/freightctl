@@ -195,6 +195,55 @@ class CollectionMetadataContracts(unittest.TestCase):
             command.assert_not_called()
             spy.assert_not_called()
 
+    def test_registration_failure_closes_owned_spy_and_never_places_credentials_in_arguments(self):
+        certificate = self.private/'cert.pem'
+        owner = self.private/'owner.token'
+        metadata.private_write(certificate, b'synthetic public CA, no TLS claim')
+        metadata.private_write(owner, b'private-owner-canary')
+        spy = Mock()
+        spy.port = 49151
+        calls = []
+        directory = self.private/'collection-metadata-explicit'
+        def command(name, argv, timeout):
+            calls.append(name)
+            self.assertEqual(timeout, 20)
+            self.assertEqual(argv[argv.index('--token-file')+1], owner)
+            self.assertNotIn('private-owner-canary', str(argv))
+            if argv[1] == 'identity':
+                return b'{"actor_id":"55555555-2222-4333-8444-555555555555","authority_revision":3}'
+            self.assertEqual(argv[1], 'connection-register')
+            path = argv[argv.index('--request-file')+1]
+            self.assertEqual(path, directory/'connection.json')
+            request = metadata.load(path)
+            destination = request['ftps']['destination']
+            password = directory/'source-password'
+            self.assertEqual(destination['password_reference'], str(password))
+            self.assertEqual(destination['password_sha256'], hashlib.sha256(password.read_bytes()).hexdigest())
+            self.assertEqual(destination['ca_reference'], str(certificate))
+            self.assertEqual(destination['ca_sha256'], hashlib.sha256(certificate.read_bytes()).hexdigest())
+            self.assertEqual(destination['address'], '127.0.0.1:49151')
+            self.assertEqual(destination['mode'], 'explicit')
+            self.assertNotIn(password.read_text(), str(argv))
+            self.assertEqual(password.stat().st_mode & 0o777, 0o600)
+            self.assertEqual(path.stat().st_mode & 0o777, 0o600)
+            self.assertEqual(directory.stat().st_mode & 0o777, 0o700)
+            raise RuntimeError('synthetic-registration-failure')
+        mask = os.umask(0o022)
+        try:
+            with patch.dict(os.environ, {'GITHUB_ACTIONS': 'true', 'GITHUB_WORKSPACE': str(self.private)}), \
+                 patch.object(metadata.platform, 'system', return_value='Linux'), \
+                 patch.object(metadata.dispatch, 'ContactSpy', return_value=spy) as create_spy:
+                with self.assertRaisesRegex(RuntimeError, '^synthetic-registration-failure$'):
+                    metadata.exercise(self.private, self.private, 'explicit', 1, certificate,
+                        self.private/'binary', 'tenant', 'partner', owner, [], command)
+                create_spy.assert_called_once_with(directory/'source.json')
+        finally:
+            os.umask(mask)
+        spy.stop.assert_called_once_with()
+        self.assertEqual(calls, ['cli-explicit-collection-metadata-identity',
+            'cli-explicit-collection-metadata-connection-register'])
+        self.assertEqual(owner.read_bytes(), b'private-owner-canary')
+
     def test_private_input_creation_is_explicit_and_cannot_overwrite_original(self):
         path = self.private/'private-input'
         mask = os.umask(0o022)
