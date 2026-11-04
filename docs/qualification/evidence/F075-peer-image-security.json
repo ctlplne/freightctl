@@ -3,7 +3,7 @@
   "id": "F075",
   "observed_at": "2026-11-04",
   "starting_commit": "63e153f6511f6cb457dfa46f70d39f2548f200b6",
-  "state": "Source28 x86 exact failed-container state confirms feedOOM under unchanged1GiB/oneCPU/no-swap. ARM feed failure remains unclassified with no command/state. Both exact disk cleanups pass; no feed/report/image-scan qualification.",
+  "state": "f08 ARMdownload reaches actual regular database1692762112bytes,exceeding original1GiBfile cap; scan never qualifies and disk unmount passes. Earlier source28x86OOM remains proven separately,not ARM OOM. Original x86f08 still running; image gate red.",
   "scope": "Scan the exact disposable independent OpenPGP recipient image used by native Linux tests. This is test infrastructure, not a released server image or runtime security qualification.",
   "qualification_claim": false,
   "frozen_cases": [
@@ -37,7 +37,7 @@
     }
   ],
   "first_observation": "The pinned independent peer Dockerfile audits npm dependencies, but no workflow scans its OS image or binds an image scan to actual runtime identity. Source inspection establishes a missing gate only; it is not a native scanner result.",
-  "next_action": "Preserve both original native disk/feed failures and submit bounded state-before-delete observation with unchanged execution limits. Read actual OOM/exit evidence before choosing a memory/caching/IO repair, then require original native fresh-feed/immutable-image gates. No actual scan or released-security claim yet.",
+  "next_action": "Preserve actual D168feed-file budget failure and original D166x86OOM. Investigate a supported complete feed/scan path within current limits; do not silently raise file/RAM/disk/time caps or omit OS/library/severity coverage. Continue independent mandatory product work while exact x86/image replay and constraints remain open.",
   "implementation": {
     "workflow": ".github/workflows/native-linux.yml",
     "execution": "after all original runtime tests, including failure when peer build succeeded; no changed existing budgets",
@@ -281,5 +281,47 @@
     "local_manifest_reference": ".private/freightctl-f075-feed-files-local-ehlo1mn0/manifest.json",
     "local_manifest_sha256": "4d01d09ee43a3394ab5ee064adc7aaa6fdccf7bc5d4380573291b68890c09ba4",
     "local_methods": 21
+  },
+  "source_f08_arm": {
+    "application": {
+      "candidate": "f08c7cf9f5cffc7489edaba36e0f6ef9aa81f594",
+      "run_id": 41924952419,
+      "job_id": 126906787047,
+      "architecture": "arm64",
+      "application_pass": 880,
+      "application_fail": 0,
+      "application_skip": 0,
+      "workflow_seconds": 493.054,
+      "ftps_native_leaves_pass": 17,
+      "process_parent_seconds": 67.52,
+      "process_explicit_seconds": 33.22,
+      "process_implicit_seconds": 33.23,
+      "manifest_reference": ".private/freightctl-f076-f08-arm-native-gfuGHN/manifest.json",
+      "manifest_sha256": "623821cf31e22df9e36316ffe501fa5b31fbee4fcd247e0402f90a85faa77f0f",
+      "scope": "Complete original ARM application section. All original FTPS17leaves including exact SQL positive control/six forgeries,both frozen scheduled admissions/workers,CSVrelease and real process-death pairs pass. Image gate fails afterward; later source/operator/mixed cases and all whole goals remain unqualified."
+    },
+    "image_gate": "failure",
+    "phase": "feed-files",
+    "runner_failure_manifest_sha256": "60b3bfbe44a9c84d7359ac8d056897e59d02461da0130c22655fa42a0268af23",
+    "feed_files": {
+      "database": {
+        "present": true,
+        "regular": true,
+        "symlink": false,
+        "bytes": 1692762112,
+        "size_capped": false
+      },
+      "metadata": {
+        "present": true,
+        "regular": true,
+        "symlink": false,
+        "bytes": 153,
+        "size_capped": false
+      }
+    },
+    "database_file_limit_bytes": 1073741824,
+    "metadata_file_limit_bytes": 1048576,
+    "scratch_cleanup": "unmounted",
+    "scope": "Download returns before original postcondition check; actual unpacked regular database exceeds original1GiBfile cap. No failed command/state is required for this postcondition failure; do not infer ARM OOM or a scan/feed/report pass. Keep hard1GiB/no-swap/oneCPU,soft768MiB,GOGC25,2GiBdisk and all input/time/isolation/freshness/inventory/severity gates unchanged."
   }
 }

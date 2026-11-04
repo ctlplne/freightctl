@@ -3,7 +3,7 @@
   "id": "F076",
   "observed_at": "2026-11-04",
   "starting_commit": "4d771b2e6a961a70b764681fd578ff175d064db7",
-  "state": "f08 core and both independent ARM stock metadata profiles pass their exact scopes. Both metadata Chrome matrices remain red at original response.json reads; one plaintext fresh estate passes both modes before the next fails. Native f08 SQL/scheduled/process/application replay is in progress; operator byte-copy and verified-curl body repair are locally prepared, not runtime-qualified.",
+  "state": "f08 ARM application880pass/0fail/0skip includes all17FTPSleaves and repaired D164/D165. X86 original running. Core/ARMstock metadata pass exact scopes. Both required metadata Chrome matrices remain red at response-body reads; verified-curl repair/full operator d6cedfb submitted, mixed collected delivery local compile/vet only. Whole goal unqualified.",
   "scope": "Read/copy input stage of ordinary immutable workflows, using exact registered FTPS revisions and the existing bounded producer-manifest, custody, intake, lease and event machinery. Transport metadata reading alone does not qualify collection.",
   "qualification_claim": false,
   "frozen_cases": [
@@ -302,17 +302,21 @@
     }
   },
   "newest_submission": {
-    "candidate": "f08c7cf9f5cffc7489edaba36e0f6ef9aa81f594",
-    "native_run_id": 41924952419,
-    "native_state": "ARM/x86 application running; ARM metadata succeeds; fuzz running; x86 metadata queued",
-    "public_workflow_metadata_run_id": 41924952454,
-    "public_state": "completed/failure:plaintext implicit at inspect-definition/line250 and encrypted explicit at preview-request/line180, both response.json calls; one earlier plaintext fresh estate passes",
-    "stock_metadata_run_id": 41924952668,
-    "stock_state": "completed:ARM system/no-ktls independent metadata pass; x86 system/no-ktls retain original filter failures",
-    "core_run_id": 41924952402,
-    "core_state": "completed/success:137frontend plus current pure contracts/source/security; source f08 only",
-    "scope": "IncludesD164/D165fixture repairs,feed-onlyGOGC25 and file postcondition observations,independent stock primitive metadata profile and fixed browser diagnostics. Native source witness/lifecycle prepared,pure tests only; full operator byte-copy wiring still required.",
-    "submission_rule": "All required prior9e5native/public jobs started and finished; exact first outcomes retained before push. Hold another relevant source candidate while requiredf08jobs remain pending; no artifact,release,retained upgrade or deployment."
+    "candidate": "d6cedfb3a4497c33b90f34933e939ad229e3e157",
+    "native_run_id": 41929132201,
+    "native_state": "pending/unqualified; prior f08 jobs preserved",
+    "public_workflow_operator_run_id": 41929132162,
+    "public_state": "queued/unqualified; required original-wire metadata and full native-source operator capture in all three fresh plaintext/encrypted estates",
+    "public_jobs": [
+      126921241643,
+      126921242145
+    ],
+    "core_run_id": 41929132273,
+    "core_job_id": 126921241711,
+    "core_state": "queued/unqualified",
+    "scope": "Source includes full operator producer/driver/strict verifier and required CI flags,verified-curl original-body repair,141frontend/70reporter and focused fixture contracts. Every prior runtime result remains scoped to its exact source. No runtime success inferred for this candidate.",
+    "source_push_authorized": true,
+    "submission_rule": "Every required f08 native/public job started before push; original public/core/stock outcomes retained and native/metadata/fuzz jobs preserved with cancel-in-progress false. Hold another relevant source candidate until required d6c jobs start. No artifact,release,retained upgrade or deployment."
   },
   "registration_failure_standin": {
     "manifest_reference": ".private/freightctl-f076-registration-closure-3ov_x1ye/manifest.json",
@@ -705,7 +709,37 @@
       "manifest_reference": ".private/freightctl-f076-f08-core-AIs7UU/manifest.json",
       "manifest_sha256": "0aa180004d0aefcfa71edb981b2bd5fdb15db3a7ed6e128298087c3288018475"
     },
-    "native_state": "In progress, no completion or repaired D164/D165 pass inferred."
+    "native_state": "ARM original application880pass/0fail/0skip; all17FTPSleaves pass. x86 application still running. Both metadata restores/fuzz succeed at job level. Image ARMfeed postcondition exceeds original file-size cap; job red.",
+    "submission": {
+      "candidate": "f08c7cf9f5cffc7489edaba36e0f6ef9aa81f594",
+      "native_run_id": 41924952419,
+      "native_state": "ARM/x86 application running; ARM metadata succeeds; fuzz running; x86 metadata queued",
+      "public_workflow_metadata_run_id": 41924952454,
+      "public_state": "completed/failure:plaintext implicit at inspect-definition/line250 and encrypted explicit at preview-request/line180, both response.json calls; one earlier plaintext fresh estate passes",
+      "stock_metadata_run_id": 41924952668,
+      "stock_state": "completed:ARM system/no-ktls independent metadata pass; x86 system/no-ktls retain original filter failures",
+      "core_run_id": 41924952402,
+      "core_state": "completed/success:137frontend plus current pure contracts/source/security; source f08 only",
+      "scope": "IncludesD164/D165fixture repairs,feed-onlyGOGC25 and file postcondition observations,independent stock primitive metadata profile and fixed browser diagnostics. Native source witness/lifecycle prepared,pure tests only; full operator byte-copy wiring still required.",
+      "submission_rule": "All required prior9e5native/public jobs started and finished; exact first outcomes retained before push. Hold another relevant source candidate while requiredf08jobs remain pending; no artifact,release,retained upgrade or deployment."
+    },
+    "native_arm": {
+      "candidate": "f08c7cf9f5cffc7489edaba36e0f6ef9aa81f594",
+      "run_id": 41924952419,
+      "job_id": 126906787047,
+      "architecture": "arm64",
+      "application_pass": 880,
+      "application_fail": 0,
+      "application_skip": 0,
+      "workflow_seconds": 493.054,
+      "ftps_native_leaves_pass": 17,
+      "process_parent_seconds": 67.52,
+      "process_explicit_seconds": 33.22,
+      "process_implicit_seconds": 33.23,
+      "manifest_reference": ".private/freightctl-f076-f08-arm-native-gfuGHN/manifest.json",
+      "manifest_sha256": "623821cf31e22df9e36316ffe501fa5b31fbee4fcd247e0402f90a85faa77f0f",
+      "scope": "Complete original ARM application section. All original FTPS17leaves including exact SQL positive control/six forgeries,both frozen scheduled admissions/workers,CSVrelease and real process-death pairs pass. Image gate fails afterward; later source/operator/mixed cases and all whole goals remain unqualified."
+    }
   },
   "public_operator_prepared": {
     "implementation": [
@@ -728,5 +762,16 @@
     "source_lifecycle_python_methods": 6,
     "runtime_qualification": false,
     "scope": "Only Page/route/HTTP/process/signal stand-ins and own-file fixtures locally. Native freightctl source is not an independent vendor. No actual local DB/source/browser/scanner/model. Full independent typed collection, receiver/business acceptance and whole customer journeys remain open."
+  },
+  "mixed_collected_delivery_prepared": {
+    "implementation": "internal/workflow/ftps_collection_mixed_integration_test.go",
+    "prepared_leaves": 2,
+    "test": "TestFTPSCollectionRoutesStockSFTPAndEncryptedFTPSWithSeparateConsent",
+    "mechanism": "Both source TLS modes capture the exact producer batch once,then ordinary collection admission queues an ordered stock-SFTP plaintext step and an opposite-mode FTPS AES256/MDC recipient-encrypted step. Separate current dispatch consent is required for each receiver; no ciphertext before encrypted consent. Exact source/object/file/run/workflow/connection/recipient bindings,unchanged source contact count,attempt1/fence1,stock client/filesystem bytes,independent GnuPG decryption and strongest protocol-specific receipts are required. Original source/admission/worker keys recover saved receipts without recollection or resend.",
+    "local_manifest_reference": ".private/freightctl-f076-mixed-local-u0dfiuqw/manifest.json",
+    "local_manifest_sha256": "32b58e158d3bec64e721d2905d0bff06db36ec1937382bdba1beabe9d784e017",
+    "local_scope": "Integration race binary compiles and Go vet passes only. No local runtime/services. Native source and FTPS receiver are explicit stand-ins;stock OpenSSH/GnuPG independently verify their own boundaries. Runtime,whole journey and business acceptance remain unqualified.",
+    "runtime_qualification": false,
+    "submission_state": "local only; does not belong to already pushed d6cedfb"
   }
 }
