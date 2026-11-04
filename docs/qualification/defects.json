@@ -2473,7 +2473,7 @@
       "journey": "Encrypted FTPS lost-rename reply and read-only artifact recovery",
       "title": "The new test compares a workflow aggregate to a delivery-only state",
       "first_failure": "Actual ARM job126720350556/run41869838920 retains759application pass/14fail/0skip. All eight normal GnuPG readback cases and all recipient-policy SQL cases pass. All eight lost-rename cases and two ambiguous revocation cases stop at their combined lost-completion assertion, before recovery.",
-      "resolution": "runs.go derives workflow attention/delivery_ambiguous from an ambiguous delivery. Require that exact aggregate/reason, exactly one step in ambiguous, and the actual receiver-triggered reply-loss hook. Preserve attempts/fence, no-resend, ciphertext equality, current authority, independent decrypted bytes and immutable read-only receiver audit checks. Apply the same correction to prepared AEAD tests before their first runtime. Compile/vet pass; no encrypted recovery runtime pass is claimed.",
+      "resolution": "runs.go derives workflow attention/delivery_ambiguous from an ambiguous delivery. Require that exact aggregate/reason, exactly one step in ambiguous, and the actual receiver-triggered reply-loss hook. Preserve attempts/fence, no-resend, ciphertext equality, current authority, independent decrypted bytes and immutable read-only receiver audit checks. Apply the same correction to prepared AEAD tests before their first runtime. Compile/vet pass; no encrypted recovery runtime pass is claimed. Originalcc05701 retains twelve D155 failure records on both architectures: eight lost-rename cases, two ambiguous-revocation cases and two parents.0c681c7 contains the exact expectation repair; native41879484903 is queued, not qualified.",
       "regression_evidence": [
         "docs/qualification/evidence/F074-ftps-recipient-encryption.json"
       ]
@@ -2481,13 +2481,13 @@
     {
       "id": "D156",
       "severity": "native qualification CLI request error",
-      "state": "corrected atcc05701; original runtime replay pending",
+      "state": "repaired; original untouched recipient rotation/revocation cases pass native ARM and x86 atcc05701",
       "observed_on": "2026-11-04",
       "candidate": "4577313c58a9e9c08e7a3e5d3ba0925b9fbc1685",
       "journey": "Encrypted FTPS recipient version rotation and saved-worker revocation",
       "title": "The new rotation fixture uses id instead of the typed key_id field",
       "first_failure": "Both untouched ARM rotation cases stop at pgp-key-register with diagnostic SHA256 c947f2b74ecbcdf92f43fc7f64c053b6cd7b9ac37abce1a17aae8f0d1edff927. This exactly matches the fixed CLI invalid intake policy or decision error; cmd/freightctl/pgp.go rejects the unknown id field before registration. Ambiguous cases fail earlier atD155.",
-      "resolution": "Correct only the fixture request to key_id. Keep the public parser strict and preserve version/hash, queued-intent equality, original-key and revoked-key no-contact assertions. The fix was found by source review and is committed/pushed atcc05701; native rotation/revocation replay remains pending.",
+      "resolution": "Correct only the fixture request to key_id. Keep the public parser strict and preserve version/hash, queued-intent equality, original-key and revoked-key no-contact assertions. The fix was found by source review and is committed/pushed atcc05701; native rotation/revocation replay remains pending. Actualcc05701 jobs126741306582/126741306958 pass both untouched rotation/revocation cases. This confirms the typed request repair only; ambiguous cases still stop atD155, and the full suites remain red.",
       "regression_evidence": [
         "docs/qualification/evidence/F074-ftps-recipient-encryption.json"
       ]
@@ -2501,7 +2501,7 @@
       "journey": "Complete native x86 Go/PostgreSQL workflow replay",
       "title": "The expanded workflow package reaches its unchanged ten-minute deadline",
       "first_failure": "Job126720350261/run41869838920 records612application passes/14D155-D156 failure records/0skips, then panic:test timed out after10m0s in TestOnboardingProbeProductionLeaseExpiresWithoutNewContactAndFencesLateResults. The suite is incomplete; do not equate it with ARM759/14. The preceding895f1f4 workflow package completed500.774seconds on x86 and451.713seconds on ARM.",
-      "resolution": "Keep every test, live lease wait, per-case deadline, the ten-minute Go package limit,50minute job and CPU/memory budgets. Prepare one task-owned schema-only PostgreSQL template, verify64tables/63forced-RLS tables and zero domain rows, close its connections and deny runtime CONNECT. Each fixture still receives an independent copied database and custody root, runs exact Migrate checksum verification and Store.Open role/RLS checks. A new real PostgreSQL regression proves independent databases/data and runtime template denial; store cold migration/upgrade tests remain untouched. Lazy initialization and exact package-end cleanup allow local compile/pure contracts without opening PostgreSQL. Local compile/vet and18pure race records pass; runtime safety and speedup remain unqualified until the original complete native gate replays.",
+      "resolution": "Keep every test, live lease wait, per-case deadline, the ten-minute Go package limit,50minute job and CPU/memory budgets. Prepare one task-owned schema-only PostgreSQL template, verify64tables/63forced-RLS tables and zero domain rows, close its connections and deny runtime CONNECT. Each fixture still receives an independent copied database and custody root, runs exact Migrate checksum verification and Store.Open role/RLS checks. A new real PostgreSQL regression proves independent databases/data and runtime template denial; store cold migration/upgrade tests remain untouched. Lazy initialization and exact package-end cleanup allow local compile/pure contracts without opening PostgreSQL. Local compile/vet and18pure race records pass; runtime safety and speedup remain unqualified until the original complete native gate replays. Originalcc05701 x86 repeats the unchanged600second timeout after702pass/12D155fail/0skip during TestSchedulePublishedAfterDueWaitsForNextOccurrence; ARM completes761pass/12fail/0skip, workflow522.461seconds. Neither includes the new template;0c681c7 full replay remains queued.",
       "mechanism_source": "https://www.postgresql.org/docs/16/sql-createdatabase.html",
       "regression_evidence": [
         "docs/qualification/evidence/F074-ftps-recipient-encryption.json"

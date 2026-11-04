@@ -3,7 +3,7 @@
   "id": "F074",
   "observed_at": "2026-11-04",
   "starting_commit": "ed23703000287e2170f1e9a54224dcb26127f0f5",
-  "state": "original ARM normal encrypted delivery/independent GnuPG and SQL cases pass; recovery/rotation test errors and public setup failure remain red with repairs prepared",
+  "state": "Original normal GnuPG and SQL cases pass; cc05701 confirms D156 repair while D155 and x86 deadline remain red; complete repair0c681c7 is queued",
   "scope": "Recipient-encrypted registered FTPS workflows through ordinary engine and independent dispatch consent. FTPS server is an application stand-in; independent GnuPG establishes envelope compatibility only.",
   "first_failure": {
     "test": "TestRegisteredFTPSWorkflowBindsExactRecipientEncryption",
@@ -48,7 +48,7 @@
     "Local checks are lightweight Mac ARM contracts and compilation only. Native real PostgreSQL/receivers/GnuPG and browser tests run on GitHub. Local inference stays off; scanner stays stopped."
   ],
   "qualification_claim": false,
-  "next_action": "Submit the saved peer, exact D154/D155/D156 repairs, diagnostic observations and D157 fixture optimization. Supersede only the still-unstartedcc05701 native candidate, which contains the now-confirmed wrong aggregate expectation; its actual public first failures and original4577313 ARM/x86/metadata logs are retained. Preserve running candidates. Require the original complete gates and encrypted recovery/revocation/AEAD/public profiles; all whole-goal gates remain open.",
+  "next_action": "Preserve the running cc05701 result and queued0c681c7 original full gates. Inspect native application/AEAD/template results and all three fresh public profiles without dropping cases or changing budgets. Qualify recovery, revocation and independent AEAD only from actual results; keep whole GOAL.md and external dependencies open.",
   "implementation": {
     "typed_workflow": "FTPS ordered/program steps retain strict key ID/version/hash and explicit OpenPGP profile; direct FTPS encryption remains unavailable without an exact workflow binding",
     "approval": "common recipient lookup binds FTPS and SFTP reviews to the exact current public key; browser strictly validates policy shape and renders separate recipient/transport disclosure",
@@ -76,7 +76,7 @@
     "commit": "4577313c58a9e9c08e7a3e5d3ba0925b9fbc1685",
     "pushed": true,
     "native_run_id": 41869838920,
-    "state": "native ARM job126720350556 has started; exact original tests remain pending",
+    "state": "Original4577313 application failures and both schema39 metadata results are retained below; superseded source is not the repair result.",
     "runtime_qualification": false
   },
   "public_profile_prepared": {
@@ -99,7 +99,7 @@
       "integration_compilation": "passed; no runtime tests",
       "full_socket_contract_suite": "three existing local socket-spy tests refused by sandbox; native GitHub full suite remains required"
     },
-    "native_state": "submitted atcc05701d210e5be74f2447689bc24b7f64a95b80; native run41873492289 and public workflow run41873492251 pending. Preserve these handles before a newer push."
+    "native_state": "First cc05701 public failures are retained. Repair0c681c7 run41879485022 has queued plaintext126747986599 and recipient-encrypted126747986956 jobs."
   },
   "test_request_correction": "Source review found the new rotation test supplied id instead of the existing public CLI key_id field. Corrected only that test request; original4577313 candidate remains distinct and pending. No production registration schema or check is relaxed.",
   "aead_peer_prepared": {
@@ -137,7 +137,7 @@
     },
     "security": "runtime/failure diagnostics whitelist fixed stages;18local race records cover privacy/refusal. npm integrity and dependency audit required in native image build. Base OS image scan, larger files, v6 keys and broader peers remain required.",
     "local_resources": "no peer install/runtime or image build/pull/container run locally; only dependency lock resolution and read-only remote manifest inspection",
-    "native_state": "not submitted; hold push until pendingcc05701 native run starts",
+    "native_state": "Submitted in0c681c7; native run41879484903 is queued. No runtime result yet.",
     "local_commit": "99b16efc547caa02adf39106b561488d66c6dae6"
   },
   "native_first_result": {
@@ -186,7 +186,7 @@
       "actionlint": "passed",
       "node_syntax": "passed"
     },
-    "native_state": "not submitted; preserve pendingcc05701 native41873492289 before next push"
+    "native_state": "Submitted in0c681c7. Preserve full native41879484903 and public41879485022 results; queued is unqualified."
   },
   "fixture_efficiency_repair": {
     "id": "D157",
@@ -198,5 +198,33 @@
     "scope": "fixture initialization overhead only; no product throughput, startup, capacity, recovery or enterprise performance claim",
     "cleanup": "lazy TestMain opens no database for compile/pure contracts; exact generated template/private references removed at package end"
   },
-  "supersession_decision": "The earlier hold preserved first outcomes while causes were unknown. Original4577313 ARM/x86 first failures are now fully retained and identify a test expectation still present in unstartedcc05701 native. Replace that unstarted known-bad successor with the verified repair candidate to avoid consuming a full replay on a confirmed error. Record cancellation as unqualified, never a pass; do not cancel a running unknown candidate."
+  "supersession_decision": "The earlier hold preserved first outcomes while causes were unknown. Original4577313 ARM/x86 first failures are now fully retained and identify a test expectation still present in unstartedcc05701 native. Replace that unstarted known-bad successor with the verified repair candidate to avoid consuming a full replay on a confirmed error. Record cancellation as unqualified, never a pass; do not cancel a running unknown candidate. Actual action-time outcome: cc05701 started before the0c681c7 push. It was preserved, not cancelled. Its original failures are retained in cc05701_native_result;0c681c7 waits behind it.",
+  "cc05701_native_result": {
+    "candidate": "cc05701d210e5be74f2447689bc24b7f64a95b80",
+    "run_id": 41873492289,
+    "observation": "Original job logs retrieved after Complete job; jobs API still reports in_progress. Do not restart/cancel from this lag.",
+    "arm_job_id": 126741306958,
+    "arm_pass_records": 761,
+    "arm_fail_records": 12,
+    "arm_skip_records": 0,
+    "arm_workflow_seconds": 522.461,
+    "x86_job_id": 126741306582,
+    "x86_pass_records": 702,
+    "x86_fail_records": 12,
+    "x86_skip_records": 0,
+    "x86_state": "incomplete: workflow package600.036seconds, panic:test timed out after10m0s during TestSchedulePublishedAfterDueWaitsForNextOccurrence",
+    "scope": "D156 untouched rotation cases pass both architectures. D155 still blocks eight lost-rename and two ambiguous-revocation cases plus two failed parent records. No D155 repair, template or independent AEAD source is present in this candidate.",
+    "manifest_reference": ".private/freightctl-f074-cc-native-DMFxjHUI/manifest.json",
+    "manifest_sha256": "445514449ea736ed0759c54564d321d2f533a1c9e4ae7cc09a5a1a3f524d2247"
+  },
+  "current_candidate": {
+    "commit": "0c681c7fe9b27d7dce35bdb309927f6eeb2797d5",
+    "native_run_id": 41879484903,
+    "application_arm_job_id": 126751890358,
+    "application_x86_job_id": 126751890499,
+    "public_run_id": 41879485022,
+    "plaintext_job_id": 126747986599,
+    "encrypted_job_id": 126747986956,
+    "state": "queued; no native runtime or public repair qualification"
+  }
 }
