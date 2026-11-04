@@ -107,7 +107,11 @@ jobs:
             test "$(uname -m)" = aarch64
           fi
       - name: Pinned stock FTPS client
-        run: sh scripts/install-ftps-clients.sh
+        run: |
+          sh scripts/install-ftps-clients.sh
+          sudo apt-get install --yes --no-install-recommends openssh-server
+          sudo install -d -m 755 /run/sshd
+          dpkg-query --show --showformat='${Package} ${Version} ${Architecture}\n' openssh-server openssh-client
       - name: Task-owned PostgreSQL and offline GnuPG peer
         run: |
           python3 scripts/dev-db.py

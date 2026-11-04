@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "id": "F073",
-  "observed_at": "2026-11-03",
+  "observed_at": "2026-11-04",
   "starting_commit": "7879c34f9e917d5c650a60b1800c59050044c01a",
-  "state": "owner-paused after native schema37 replay; public consent passes; D147/D148 repairs saved with runtime replay pending",
+  "state": "resumed; original schema38 native replay running; mixed stock-SFTP/application-FTPS execution coverage prepared",
   "scope": "Next dependency: versioned registered FTPS destinations and typed workflow sending through ordinary execution and independent dispatch consent. This does not replace remaining encryption, collection, independent peer or whole-product requirements.",
   "first_failure": {
     "kind": "actual native ARM typed-workflow contract",
@@ -74,7 +74,7 @@
     "FTPS collection, independent supported x86 receiver qualification, broader protocol behavior and complete receiving/sending customer journeys remain required.",
     "D145 stays open as intermittent despite a passing diagnostic replay. Windows D103 and all83 whole baseline rows/12 full journeys remain open."
   ],
-  "next_action": "On owner resume, push the local schema38 compiler and exact-mode audit repairs, then replay both original native Go/PostgreSQL suites and fresh metadata profiles. C01-C10, mixed SFTP/FTPS execution and whole-product gates remain open.",
+  "next_action": "Follow exact6ebccf0 native runs through completion. Push and replay the eight mixed-protocol cases after the original native run has started, preserving its first results. C01-C10 and whole-product gates remain open.",
   "implementation_checkpoint": {
     "versioned_connection": "schema2 FTPS definitions, strict canonical validation and redacted reference fingerprints",
     "typed_execution": "ftps.deliver uses exact registered protocol/version; queued delivery includes the workflow/run/step/connection binding; unsupported recipient encryption remains refused",
@@ -102,7 +102,7 @@
   "qualification_claim": false,
   "pause_handoff": {
     "requested_by": "owner",
-    "state": "paused at explicit graceful-halt request; local repair checkpoint only",
+    "state": "historical owner halt completed at6ebccf0; owner resumed",
     "prepared_repairs": [
       "D147: append migration038 replacing only the independent program compiler catalog predicate to admit sftp.deliver and ftps.deliver; preserve all other node/facts/visit/outcome checks.",
       "D148: bind receiver recovery audit protocol to the exact configured listener mode; preserve all actor, session, digest, receiver-table and original-event checks."
@@ -231,5 +231,71 @@
     "completed_regression_logs_manifest_sha256": "617a3f9895880de0bf3b5527281ba67d326337234478f9a8d4cd56e188e6b152",
     "original_failure_and_local_repair_manifest": ".private/freightctl-f073-halt-vH1GULbk/manifest.json",
     "original_failure_and_local_repair_manifest_sha256": "77a8d3d3af1635a4bc02dce64bc10b0d8c26ac0f3c69922fd5141e57de62e1cd"
+  },
+  "current_resume": {
+    "starting_commit": "6ebccf01d2af0129d355438bb8cd48cccc2991de",
+    "pushed_under_existing_source_ci_authorization": true,
+    "native_linux_run_id": 41852235851,
+    "native_go_job_ids": [
+      126651291441,
+      126651291656
+    ],
+    "metadata_job_ids": [
+      126651291524,
+      126651291603
+    ],
+    "arm_metadata_result": "passed schema38/64 tables/63 forced-RLS tables/43 synthetic rows; exact restore database removed and original stopped state restored",
+    "local_resources": "exact retained PostgreSQL and scanner inspected stopped; no lifecycle change",
+    "arm_full_suite_first_attempt": {
+      "job_id": 126651291656,
+      "state": "failed before runtime tests",
+      "category": "Go module proxy HTTP2 INTERNAL_ERROR downloading golang.org/x/crypto v0.58.0",
+      "manifest_reference": ".private/freightctl-f073-resume-download-d6erv5d1/manifest.json",
+      "manifest_sha256": "8f01d699fa9b1910cbd208e579c6e9046098ae7bc304c8c000bc803587150eb0",
+      "connector_retry": "403 Resource not accessible by integration",
+      "cli_retry": "CLI reports job cannot be rerun; parent run is still active. Revisit after terminal run; reason not established."
+    },
+    "arm_metadata_manifest_sha256": "6679cf87470d7a191f50fcc10abdec0b093f4f80014aad38e416f99d1688be4d",
+    "registered_workflow_job_id": 126651290506,
+    "registered_workflow_job_state": "success; full public log retention pending",
+    "core_job_id": 126651290891,
+    "core_job_state": "success"
+  },
+  "mixed_protocol_execution": {
+    "state": "source prepared and integration compiled only; runtime not executed",
+    "test": "TestMixedRegisteredFTPSAndStockSFTPKeepOrderConsentAndReceipts",
+    "cases": 8,
+    "matrix": {
+      "ftps_modes": [
+        "explicit",
+        "implicit"
+      ],
+      "workflow_schemas": [
+        1,
+        2
+      ],
+      "first_protocols": [
+        "sftp",
+        "ftps"
+      ]
+    },
+    "peers": "separate unprivileged stock OpenSSH daemon and private filesystem plus existing separate freightctl FTPS/custody receiver stand-in",
+    "assertions": [
+      "exact immutable workflow/run/step/connection bindings in each independent dispatch review",
+      "each protocol requires its own named-reviewer consent",
+      "later direct delivery cannot bypass predecessor; later attempts/fences stay zero",
+      "saved first worker key cannot send again or advance to the second step",
+      "actual independent filesystem and stock SFTP client readback, plus FTPS receiver storage readback of original source bytes",
+      "SFTP requires fsync acknowledgement and its unchanged hardlink contract; FTPS cannot inherit fsync or business acceptance",
+      "task-owned loopback daemon and process-group cleanup; strict host checking, StrictModes, no password or forwarding"
+    ],
+    "runtime_profile": "existing native Linux ARM/x86 Go/PostgreSQL jobs install stock OpenSSH alongside existing pinned FTPS client; no new local service or generic CI framework",
+    "qualification_claim": false,
+    "local_checks": {
+      "integration_compilation": "passed; no runtime tests",
+      "integration_vet": "passed",
+      "actionlint": "passed",
+      "record_tests": 15
+    }
   }
 }
