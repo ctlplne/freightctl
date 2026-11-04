@@ -524,5 +524,16 @@
     },
     "runtime_qualification": false,
     "submission": "Local only. Required9e5native/public jobs remain queued and unqualified."
+  },
+  "public_byte_source_fixture_prepared": {
+    "implementation": "scripts/peers/ftps-source",
+    "lifecycle": "scripts/ftps_collection_source.py",
+    "mechanism": "Qualification-only native source uses ordinary custody/FTPS, exact fresh freightctl_ftps database and protected refs,loopback,TLS,4active/16lifetime control accepts,1writer,1MiBfile/8MiBstore,30second session/5second idle and3minute process lifetime. Owner-only atomic counter records accepts before authentication; bounded kernel queue drain counts pending accepts before close. No product test switch. Controller waits on actual counter without probe socket, owns one process group,records exact stop and preserves first errors on cleanup failure.",
+    "local_manifest_reference": ".private/freightctl-f076-source-lifecycle-local-84i8xi7t/manifest.json",
+    "local_manifest_sha256": "dad3e6a3f2240404e6414e95dc24d0359a58d75bcc18faaec6582564e61e5284",
+    "pure_go_race_methods": 5,
+    "python_lifecycle_methods": 6,
+    "runtime_qualification": false,
+    "scope": "Pure configuration/refusal,counter/file-mode/drain and process/signal stand-ins only; no actual socket/source/PG/browser locally. Endpoint runtime and full operator create/approve/queue/read/saved-key/custody/readback journey still require runner integration and actual GitHub execution. Not an independent stock peer."
   }
 }
