@@ -2,6 +2,7 @@
 """Run orchestration against a Docker-command stand-in; no daemon or scan."""
 import contextlib
 from datetime import datetime, timezone
+import hashlib
 import importlib.util
 import io
 import json
@@ -157,6 +158,8 @@ class ScanOrchestration(unittest.TestCase):
         self.assertEqual(code, 2)
         self.assertEqual(output['phase'], 'feed-download')
         self.assertEqual(len(created), 1)
+        self.assertEqual(output['command']['category'], 'deadline-exceeded')
+        self.assertEqual(output['command']['command_phase'], 'feed-download')
 
     def test_non_github_invocation_refuses_before_any_subprocess(self):
         with patch.object(sys, 'argv', ['scan-peer-image.py', '--architecture', 'amd64']), \
@@ -165,6 +168,50 @@ class ScanOrchestration(unittest.TestCase):
             self.assertEqual(runner.main(), 2)
             invoked.assert_not_called()
             self.assertEqual(json.loads(output.getvalue())['reason'], 'native-github-peer-scan-required')
+
+    def test_fixed_diagnostic_categories_never_publish_raw_strings(self):
+        with tempfile.TemporaryDirectory(prefix='freightctl-image-diagnostic-') as directory:
+            root = Path(directory)
+            for category, patterns in runner.DIAGNOSTICS.items():
+                with self.subTest(category=category):
+                    path = root/'feed-download.stderr'
+                    raw = contracts.PRIVATE.encode()+b'\n'+patterns[0]+b'\n'
+                    path.write_bytes(raw)
+                    failed = {'phase': 'feed-download', 'exit_code': 1,
+                              'stdout_sha256': 'a'*64, 'stderr_sha256': hashlib.sha256(raw).hexdigest()}
+                    # Cleanup succeeds after the failure; it must not hide it.
+                    result = runner.failure_observation([failed, {'phase': 'feed-download-cleanup', 'exit_code': 0}], root)
+                    self.assertEqual(result['category'], category)
+                    self.assertEqual(result['exit_code'], 1)
+                    self.assertNotIn(contracts.PRIVATE, json.dumps(result))
+                    self.assertEqual(set(result), {'command_phase', 'exit_code', 'category', 'stdout_sha256', 'stderr_sha256'})
+
+    def test_ambiguous_unbound_missing_or_private_observations_stay_unrecognized(self):
+        with tempfile.TemporaryDirectory(prefix='freightctl-image-diagnostic-') as directory:
+            root = Path(directory)
+            path = root/'feed-download.stderr'
+            for raw in (contracts.PRIVATE.encode(), b'unknown flag; unauthorized'):
+                path.write_bytes(raw)
+                row = {'phase': 'feed-download', 'exit_code': 1, 'stderr_sha256': hashlib.sha256(raw).hexdigest()}
+                self.assertEqual(runner.failure_observation([row], root)['category'], 'unrecognized-diagnostic')
+            path.write_bytes(b'unknown flag')
+            row = {'phase': 'feed-download', 'exit_code': 1, 'stderr_sha256': 'a'*64}
+            self.assertEqual(runner.failure_observation([row], root)['category'], 'unrecognized-diagnostic')
+            row['phase'] = '../'+contracts.PRIVATE
+            result = runner.failure_observation([row], root)
+            self.assertEqual(result['command_phase'], 'not-recorded')
+            self.assertNotIn(contracts.PRIVATE, json.dumps(result))
+            row['phase'], row['exit_code'] = 'feed-download', True
+            self.assertEqual(runner.failure_observation([row], root)['command_phase'], 'not-recorded')
+            row['phase'], row['exit_code'] = [contracts.PRIVATE], 1
+            self.assertEqual(runner.failure_observation([row], root)['command_phase'], 'not-recorded')
+            row['phase'], row['stderr_sha256'] = 'feed-download', contracts.PRIVATE
+            result = runner.failure_observation([row], root)
+            self.assertIsNone(result['stderr_sha256'])
+            self.assertNotIn(contracts.PRIVATE, json.dumps(result))
+            path.unlink()
+            row['exit_code'] = 1
+            self.assertEqual(runner.failure_observation([row], root)['category'], 'unrecognized-diagnostic')
 
 
 if __name__ == '__main__':

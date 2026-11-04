@@ -2495,13 +2495,13 @@
     {
       "id": "D157",
       "severity": "native complete-suite qualification deadline",
-      "state": "fixture repair passes native ARM/x86 isolation and original execution deadlines; full gate still red at independent D158",
+      "state": "repaired; both complete native802-record application gates including AEAD fit unchanged package budget with isolation checks",
       "observed_on": "2026-11-04",
       "candidate": "4577313c58a9e9c08e7a3e5d3ba0925b9fbc1685",
       "journey": "Complete native x86 Go/PostgreSQL workflow replay",
       "title": "The expanded workflow package reaches its unchanged ten-minute deadline",
       "first_failure": "Job126720350261/run41869838920 records612application passes/14D155-D156 failure records/0skips, then panic:test timed out after10m0s in TestOnboardingProbeProductionLeaseExpiresWithoutNewContactAndFencesLateResults. The suite is incomplete; do not equate it with ARM759/14. The preceding895f1f4 workflow package completed500.774seconds on x86 and451.713seconds on ARM.",
-      "resolution": "Keep every test, live lease wait, per-case deadline, the ten-minute Go package limit,50minute job and CPU/memory budgets. Prepare one task-owned schema-only PostgreSQL template, verify64tables/63forced-RLS tables and zero domain rows, close its connections and deny runtime CONNECT. Each fixture still receives an independent copied database and custody root, runs exact Migrate checksum verification and Store.Open role/RLS checks. A new real PostgreSQL regression proves independent databases/data and runtime template denial; store cold migration/upgrade tests remain untouched. Lazy initialization and exact package-end cleanup allow local compile/pure contracts without opening PostgreSQL. Local compile/vet and18pure race records pass; runtime safety and speedup remain unqualified until the original complete native gate replays. Originalcc05701 x86 repeats the unchanged600second timeout after702pass/12D155fail/0skip during TestSchedulePublishedAfterDueWaitsForNextOccurrence; ARM completes761pass/12fail/0skip, workflow522.461seconds. Neither includes the new template;0c681c7 full replay remains queued. Actual0c681c7 ARM completes every application test without skips in406.030workflow seconds, passing the real clone/data/runtime-CONNECT regression; its only failure is independent AEAD setupD158. This establishes ARM fixture behavior, not product capacity or a passing whole gate. Native x86 remains running. Actual0c681c7 x86 completes in441.160workflow seconds with the clone/data/CONNECT regression passing and onlyD158 failing before AEAD children. No panic or skips occur. ARM406.030/x86441.160 establishes original fixture behavior within600seconds; mandatory AEAD cases and the full green gate remain required.",
+      "resolution": "Keep every test, live lease wait, per-case deadline, the ten-minute Go package limit,50minute job and CPU/memory budgets. Prepare one task-owned schema-only PostgreSQL template, verify64tables/63forced-RLS tables and zero domain rows, close its connections and deny runtime CONNECT. Each fixture still receives an independent copied database and custody root, runs exact Migrate checksum verification and Store.Open role/RLS checks. A new real PostgreSQL regression proves independent databases/data and runtime template denial; store cold migration/upgrade tests remain untouched. Lazy initialization and exact package-end cleanup allow local compile/pure contracts without opening PostgreSQL. Local compile/vet and18pure race records pass; runtime safety and speedup remain unqualified until the original complete native gate replays. Originalcc05701 x86 repeats the unchanged600second timeout after702pass/12D155fail/0skip during TestSchedulePublishedAfterDueWaitsForNextOccurrence; ARM completes761pass/12fail/0skip, workflow522.461seconds. Neither includes the new template;0c681c7 full replay remains queued. Actual0c681c7 ARM completes every application test without skips in406.030workflow seconds, passing the real clone/data/runtime-CONNECT regression; its only failure is independent AEAD setupD158. This establishes ARM fixture behavior, not product capacity or a passing whole gate. Native x86 remains running. Actual0c681c7 x86 completes in441.160workflow seconds with the clone/data/CONNECT regression passing and onlyD158 failing before AEAD children. No panic or skips occur. ARM406.030/x86441.160 establishes original fixture behavior within600seconds; mandatory AEAD cases and the full green gate remain required. Actual2da04d3 complete application gates pass802/0/0 each, including all mandatory AEAD children, in368.489x86/400.321ARM workflow seconds. This closes the original fixture timeout mechanism only; image setupD159 and product performance/whole readiness stay open.",
       "mechanism_source": "https://www.postgresql.org/docs/16/sql-createdatabase.html",
       "regression_evidence": [
         "docs/qualification/evidence/F074-ftps-recipient-encryption.json"
@@ -2510,15 +2510,29 @@
     {
       "id": "D158",
       "severity": "native independent-peer setup failure",
-      "state": "explicit private child fixture repaired locally; original native AEAD replay pending",
+      "state": "repaired; all original independent AEAD cases pass both complete native application suites at2da04d3",
       "observed_on": "2026-11-04",
       "candidate": "0c681c7fe9b27d7dce35bdb309927f6eeb2797d5",
       "journey": "Independent AEAD recipient generation and encrypted FTPS recovery",
       "title": "The mounted test directory lacks an explicit owner-only child",
       "first_failure": "ARMjob126751890358/run41879484903 records792pass/1fail/0skip. The independent peer returns fixed stage directory and diagnostic SHA256 b03ee4049a262101582f5014e054b2af3c5e545e44fad8af5372aec29f3442f2 before key generation or the eight AEAD cases. All GnuPG/recovery/rotation and clone-isolation cases pass. Exact x86job126751890499 later records the same792pass/1fail/0skip and same fixed directory diagnostic,workflow441.160seconds. Its independent immutable log is retained in F074.",
-      "resolution": "Preserve the strict independent peer directory/symlink/mode checks. Go testing creates its numbered child with0777 masked by process umask; original local077 yields0700, controlled022 reproduces0755 refusal. Native mode itself is not directly observed. Create an explicit os.MkdirTemp0700 child before recipient/result mounts and verify actual private directory/file permissions under022. Local filesystem race test and integration compile/vet pass; native interoperability remains required. Retain corrected immutable manifest, including the original local pass and controlled failure, without rewriting evidence.",
+      "resolution": "Preserve the strict independent peer directory/symlink/mode checks. Go testing creates its numbered child with0777 masked by process umask; original local077 yields0700, controlled022 reproduces0755 refusal. Native mode itself is not directly observed. Create an explicit os.MkdirTemp0700 child before recipient/result mounts and verify actual private directory/file permissions under022. Local filesystem race test and integration compile/vet pass; native interoperability remains required. Retain corrected immutable manifest, including the original local pass and controlled failure, without rewriting evidence. Actual2da04d3 jobs126768000849/126768001126 pass all eight AEAD cases each and all802application records/0fail/0skip. Original strict peer directory checks stay unchanged; complete image jobs fail later at separate F075 feed setupD159.",
       "regression_evidence": [
         "docs/qualification/evidence/F074-ftps-recipient-encryption.json"
+      ]
+    },
+    {
+      "id": "D159",
+      "severity": "native image-security qualification prerequisite failure",
+      "state": "open; exact first failures retained, underlying cause unknown; bounded command observations prepared",
+      "observed_on": "2026-11-04",
+      "candidate": "2da04d34db31eb2c057fcd317183af6b247e7d88",
+      "journey": "Exact same-image vulnerability scan after actual native application tests",
+      "title": "Feed preparation fails before scanning without a precise public command observation",
+      "first_failure": "Both actual native jobs126768000849/126768001126 pass802application records/0fail/0skip, then the F075 step fails at feed-download. Original public outputs retain only phase and private failure-manifest hashes05c85ee550d79e91b9b3cb86baadc05054c414652a2ee26099b8036e0db8672b and d0e315c1e593c06616a3d20ae41d51df6d87645168b223bcf54ed173ec7571cd. No image report is produced and the precise cause is unknown.",
+      "resolution": "Retain both originals. Publish only validated fixed command phase, bounded exit/timeout and exact output hashes plus one hash-bound known diagnostic category. Refuse raw/private/unbound/ambiguous observations. Sixteen local reporter/orchestration stand-in methods plus syntax/lint pass; there is no underlying feed repair or native scan pass yet. Keep original CPU/memory/deadlines, feed schema/endpoints, privacy and every vulnerability gate unchanged.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F075-peer-image-security.json"
       ]
     }
   ]

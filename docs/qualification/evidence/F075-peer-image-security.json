@@ -3,7 +3,7 @@
   "id": "F075",
   "observed_at": "2026-11-04",
   "starting_commit": "63e153f6511f6cb457dfa46f70d39f2548f200b6",
-  "state": "same-image native gate implemented;14 local synthetic verifier/orchestration methods and compile/vet/lint pass; actual scan pending",
+  "state": "original actual native image gates fail at feed-download before scanning; cause unknown; bounded diagnostic observations prepared",
   "scope": "Scan the exact disposable independent OpenPGP recipient image used by native Linux tests. This is test infrastructure, not a released server image or runtime security qualification.",
   "qualification_claim": false,
   "frozen_cases": [
@@ -37,7 +37,7 @@
     }
   ],
   "first_observation": "The pinned independent peer Dockerfile audits npm dependencies, but no workflow scans its OS image or binds an image scan to actual runtime identity. Source inspection establishes a missing gate only; it is not a native scanner result.",
-  "next_action": "Commit and submit the native same-image gate after preserving the running0c681c7 qualifications. Require original full application and actual per-architecture image outcomes; retain first scan failure and assess actual findings without suppressing them. Shipped images/release artifacts, reachability and full product qualification remain required.",
+  "next_action": "Queue the bounded diagnostics behind the already-started5ef3f3b native candidate; capture the original command outcome, determine the actual prerequisite failure and replay the exact image gate. No scan or release-security claim until actual image and feed evidence passes.",
   "implementation": {
     "workflow": ".github/workflows/native-linux.yml",
     "execution": "after all original runtime tests, including failure when peer build succeeded; no changed existing budgets",
@@ -78,5 +78,25 @@
     "repair_commit": "2da04d34db31eb2c057fcd317183af6b247e7d88",
     "repair_run_id": 41884853382,
     "state": "native ARM/x86 application jobs started; exact-image steps execute after runtime. No actual scan result yet."
+  },
+  "first_native_result": {
+    "candidate": "2da04d34db31eb2c057fcd317183af6b247e7d88",
+    "run_id": 41884853382,
+    "jobs": [
+      126768000849,
+      126768001126
+    ],
+    "result": "both original application suites pass802/0/0; image step fails at feed-download before any vulnerability report",
+    "precise_cause": "unproven; original public summary omitted failed command status/diagnostic category",
+    "x86_manifest_reference": ".private/freightctl-f075-first-feed-gMe9EHW8/manifest.json",
+    "x86_manifest_sha256": "b06e70caf264b627bb0fe1dfc25bec4271629a6c13592b1ba1c1fed683f269fd",
+    "arm_manifest_reference": ".private/freightctl-f074-aead-arm-EX5twdho/manifest.json",
+    "arm_manifest_sha256": "e6e8aa1ac1e51ac4e7a60f9b75f1badfd335991f17eb4bcd2503cf9b63a626c4",
+    "limits": "not a vulnerability finding or a clean scan; do not change feed/profile/budgets from an inferred cause"
+  },
+  "diagnostic_observation_prepared": {
+    "mechanism": "retain the original failure despite later successful cleanup; allow only fixed command phases, bounded numeric exit, timeout boolean, original stdout/stderr hashes and one hash-bound fixed category. Missing/unbound/ambiguous/private/oversized observations remain unrecognized. No raw exception or argument output, new retries, endpoint or resource changes.",
+    "local_test_methods": 16,
+    "state": "all reporter/orchestration stand-in methods and syntax/workflow lint pass; actual native observation and underlying repair pending"
   }
 }

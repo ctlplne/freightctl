@@ -3,7 +3,7 @@
   "id": "F074",
   "observed_at": "2026-11-04",
   "starting_commit": "ed23703000287e2170f1e9a54224dcb26127f0f5",
-  "state": "both native architectures pass GnuPG sending/recovery/revocation and clone isolation within original deadline; independent AEAD remains red at D158; private-directory repair running",
+  "state": "both native application suites pass802/0/0 including independent AEAD; full jobs remain red at F075 feed-download prerequisite; full product/collection unqualified",
   "scope": "Recipient-encrypted registered FTPS workflows through ordinary engine and independent dispatch consent. FTPS server is an application stand-in; independent GnuPG establishes envelope compatibility only.",
   "first_failure": {
     "test": "TestRegisteredFTPSWorkflowBindsExactRecipientEncryption",
@@ -48,7 +48,7 @@
     "Local checks are lightweight Mac ARM contracts and compilation only. Native real PostgreSQL/receivers/GnuPG and browser tests run on GitHub. Local inference stays off; scanner stays stopped."
   ],
   "qualification_claim": false,
-  "next_action": "Preserve running2da04d3 full native repair/AEAD/image-scan handles. Queue F076 bounded reader/adapter only after that native candidate starts. Keep actual independent AEAD, image findings, complete collection and all whole-goal gates open.",
+  "next_action": "Preserve actual2da04d3 application/AEAD passes separately from both F075 feed failures. Add bounded hash-bound command diagnostics and replay the image prerequisite without relaxing budgets or treating missing scan as clean. Preserve running5ef3f3b bounded-reader candidate before pushing newer work; F076 source/SQL/custody/public/scheduled integration remains unfinished.",
   "implementation": {
     "typed_workflow": "FTPS ordered/program steps retain strict key ID/version/hash and explicit OpenPGP profile; direct FTPS encryption remains unavailable without an exact workflow binding",
     "approval": "common recipient lookup binds FTPS and SFTP reviews to the exact current public key; browser strictly validates policy shape and renders separate recipient/transport disclosure",
@@ -103,7 +103,7 @@
   },
   "test_request_correction": "Source review found the new rotation test supplied id instead of the existing public CLI key_id field. Corrected only that test request; original4577313 candidate remains distinct and pending. No production registration schema or check is relaxed.",
   "aead_peer_prepared": {
-    "state": "source implemented, locally compiled/vetted and syntax-checked; no peer execution or runtime qualification",
+    "state": "all eight original independent AEAD cases pass on both actual native architectures at2da04d3; larger/v6/broader peers and image gate remain open",
     "peer": "OpenPGP.js6.3.2, test-only standalone package; no server/browser dependency",
     "package_integrity": "sha512-wcZTzHz41LV8Y48zH/JlD1JT8YdNmpWOuMAjQ/podvvCwsjBEU37K3znJh4UQcj3hksE5z9TzvhbUbwzsGvlLQ==",
     "license": "LGPL-3.0+; peer artifact not published or bundled",
@@ -137,7 +137,7 @@
     },
     "security": "runtime/failure diagnostics whitelist fixed stages;18local race records cover privacy/refusal. npm integrity and dependency audit required in native image build. F075 prepares exact same-image native OS/library scanning; actual image result, larger files, v6 keys and broader peers remain required.",
     "local_resources": "no peer install/runtime or image build/pull/container run locally; only dependency lock resolution and read-only remote manifest inspection",
-    "native_state": "Submitted in0c681c7; native run41879484903 is queued. No runtime result yet.",
+    "native_state": "original complete application suites802/0/0 each; manifests in independent_aead_native_result",
     "local_commit": "99b16efc547caa02adf39106b561488d66c6dae6"
   },
   "native_first_result": {
@@ -190,7 +190,7 @@
   },
   "fixture_efficiency_repair": {
     "id": "D157",
-    "state": "implemented, compiled/vetted and lazy pure-race checks pass locally; native safety/performance replay pending",
+    "state": "real isolation/role checks and complete802-record executions including AEAD pass both native architectures within unchanged600second package budget; fixture claim only",
     "mechanism": "create and migrate one empty task-owned PostgreSQL template; require64tables/63forced-RLS and zero domain rows, deny runtime CONNECT, close source connections; every fixture clones into its own independently named database/storage and still verifies all migration hashes and runtime role/RLS",
     "retained_estate": "never used as a template or upgraded; no local PostgreSQL/resource lifecycle action",
     "coverage": "new native test checks different actual database identities, no file/data crossing and runtime CONNECT denial. All original test functions and cold store migration/upgrade tests remain.",
@@ -293,7 +293,7 @@
   },
   "aead_directory_repair": {
     "id": "D158",
-    "state": "explicit private child implemented; actual local filesystem regression under022, integration compile/vet pass; native peer replay required",
+    "state": "repaired; original independent peer directory checks and all eight native AEAD cases pass both architectures",
     "mechanism": "Go1.26.10 testing creates its numbered child with0777 masked by process umask. The original local077 environment yields0700; controlled022 yields0755 and fails the unchanged privacy contract. Native mode is inferred from source/failure, not directly observed. Create an os.MkdirTemp0700 child before mounting both recipient and decrypted-result directories; retain Node non-symlink/private-mode checks and every byte/key/envelope assertion.",
     "checks_manifest_reference": ".private/freightctl-f074-directory-first-B1KBViip/manifest-corrected.json",
     "checks_manifest_sha256": "3cde1fe5e3ad47254d74cbb3762e18d7e25e9dc4041f5efe35cdcd2c5e5f77b1",
@@ -316,5 +316,25 @@
     "first_failure": "same D158 directory stage/digest before key generation and all eight AEAD subcases; no deadline panic",
     "manifest_reference": ".private/freightctl-f074-x86-directory-rcGe1EPJ/manifest.json",
     "manifest_sha256": "69f4f4b0202ff0e3e728dccfa651d3204fb04333e470bc1ce6f066e458aea92a"
+  },
+  "independent_aead_native_result": {
+    "candidate": "2da04d34db31eb2c057fcd317183af6b247e7d88",
+    "run_id": 41884853382,
+    "x86_job_id": 126768000849,
+    "arm_job_id": 126768001126,
+    "each_application_pass_records": 802,
+    "each_application_fail_records": 0,
+    "each_application_skip_records": 0,
+    "each_independent_aead_cases": 8,
+    "workflow_seconds": {
+      "x86": 368.489,
+      "arm": 400.321
+    },
+    "scope": "complete original application executions, all GnuPG/AEAD exact receiver readbacks, lost-rename/replay/revocation/SQL and clone isolation; application receiver is a stand-in, cryptographic peers independent; existing limits unchanged",
+    "x86_manifest_reference": ".private/freightctl-f075-first-feed-gMe9EHW8/manifest.json",
+    "x86_manifest_sha256": "b06e70caf264b627bb0fe1dfc25bec4271629a6c13592b1ba1c1fed683f269fd",
+    "arm_manifest_reference": ".private/freightctl-f074-aead-arm-EX5twdho/manifest.json",
+    "arm_manifest_sha256": "e6e8aa1ac1e51ac4e7a60f9b75f1badfd335991f17eb4bcd2503cf9b63a626c4",
+    "whole_native_job_state": "both fail afterward in the newly added F075 feed-download prerequisite; no image scan or whole product pass"
   }
 }

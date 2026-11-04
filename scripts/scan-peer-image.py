@@ -17,6 +17,60 @@ SPEC = importlib.util.spec_from_file_location('peer_image_summary', ROOT/'script
 gate = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(gate)
 
+COMMAND_PHASES = frozenset(('checkout', 'image-identity', 'image-archive', 'scanner-image',
+    'scanner-identity', 'input-closure', 'enforcing-summary', *(
+        stage + suffix for stage in ('feed-download', 'scanner-version', 'image-scan')
+        for suffix in ('', '-create', '-cleanup'))))
+DIAGNOSTICS = {
+    'unsupported-option': (b'unknown flag', b'flag provided but not defined'),
+    'registry-rate-limit': (b'toomanyrequests', b'too many requests', b'429 too many'),
+    'registry-authorization': (b'unauthorized', b'authentication required', b'denied: requested access'),
+    'registry-tls': (b'x509:', b'certificate verify failed', b'certificate signed by unknown authority'),
+    'storage-capacity': (b'no space left on device', b'disk quota exceeded'),
+    'filesystem-refused': (b'permission denied', b'read-only file system'),
+    'network-unavailable': (b'no such host', b'network is unreachable', b'connection refused', b'tls handshake timeout'),
+    'feed-schema': (b'version of db schema', b'old db schema', b'db schema version does not match'),
+}
+
+
+def failure_observation(steps, private):
+    """Hash-bound diagnostic clues only; never authority or an inferred cause."""
+    result = {'command_phase': 'not-recorded', 'exit_code': None,
+              'category': 'unrecognized-diagnostic', 'stdout_sha256': None, 'stderr_sha256': None}
+    for step in reversed(steps):
+        if not isinstance(step, dict):
+            continue
+        code = step.get('exit_code')
+        if not (type(code) is int and -128 <= code <= 255 and code != 0 or step.get('incomplete') is True):
+            continue
+        name = step.get('phase')
+        if not isinstance(name, str) or name not in COMMAND_PHASES:
+            return result
+        result['command_phase'] = name
+        result['exit_code'] = code if type(code) is int and -128 <= code <= 255 else None
+        for stream in ('stdout', 'stderr'):
+            value = step.get(stream+'_sha256')
+            if isinstance(value, str) and re.fullmatch('[0-9a-f]{64}', value):
+                result[stream+'_sha256'] = value
+        if step.get('timed_out') is True:
+            result['category'] = 'deadline-exceeded'
+            return result
+        try:
+            path = private/(name+'.stderr')
+            if path.is_symlink() or not path.is_file() or path.stat().st_size > 32 << 20:
+                return result
+            raw = path.read_bytes()
+            if hashlib.sha256(raw).hexdigest() != result['stderr_sha256']:
+                return result
+            raw = raw.lower()
+            matches = {kind for kind, patterns in DIAGNOSTICS.items() if any(p in raw for p in patterns)}
+            if len(matches) == 1:
+                result['category'] = matches.pop()
+        except OSError:
+            pass
+        return result
+    return result
+
 
 def digest(path):
     with path.open('rb') as stream:
@@ -51,8 +105,9 @@ def main():
         try:
             with stdout.open('xb') as out, stderr.open('xb') as err:
                 result = subprocess.run(arguments, stdout=out, stderr=err, timeout=timeout)
-        except (OSError, subprocess.SubprocessError):
+        except (OSError, subprocess.SubprocessError) as failure:
             steps.append({'phase': name, 'exit_code': None, 'incomplete': True,
+                          'timed_out': isinstance(failure, subprocess.TimeoutExpired),
                           'stdout_sha256': digest(stdout), 'stderr_sha256': digest(stderr)})
             raise
         if stdout.stat().st_size > 32 << 20 or stderr.stat().st_size > 32 << 20:
@@ -159,7 +214,8 @@ def main():
         record = private/'failure.json'
         record.write_text(json.dumps({'schema_version': 1, 'state': 'failed', 'phase': phase, 'steps': steps}, indent=2)+'\n')
         print(json.dumps({'state': 'failed', 'reason': 'native-peer-image-scan-failed',
-                          'phase': phase, 'manifest_sha256': digest(record)}))
+                          'phase': phase, 'manifest_sha256': digest(record),
+                          'command': failure_observation(steps, private)}))
         return 2
 
 
