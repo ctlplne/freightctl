@@ -302,28 +302,22 @@
     }
   },
   "newest_submission": {
-    "candidate": "d6cedfb3a4497c33b90f34933e939ad229e3e157",
-    "native_run_id": 41929132201,
-    "native_state": "queued/unqualified; five exact jobs now created",
-    "public_workflow_operator_run_id": 41929132162,
-    "public_state": "Both completed/failure:first explicit metadata Chrome command completes but original evidence validation refuses; no byte operator phase reached. D170cause unobserved; original logs retained.",
+    "candidate": "e2a2b592371dd6c3aea8fe363b9eac38bc9b0968",
+    "native_run_id": 41932617128,
+    "native_state": "pending/unqualified behind preserved d6 native run",
+    "public_workflow_operator_run_id": 41932617234,
     "public_jobs": [
-      126921241643,
-      126921242145
+      126933057028,
+      126933057411
     ],
-    "core_run_id": 41929132273,
-    "core_job_id": 126921241711,
-    "core_state": "completed/success:141frontend/0fail/0skip and exact d6source/security checks only",
-    "scope": "Source includes full operator producer/driver/strict verifier and required CI flags,verified-curl original-body repair,141frontend/70reporter and focused fixture contracts. Every prior runtime result remains scoped to its exact source. No runtime success inferred for this candidate.",
+    "public_state": "queued/unqualified; original metadata/consent/full operator matrix and fixed reopener reason diagnostics required",
+    "core_run_id": 41932617126,
+    "core_job_id": 126933056992,
+    "core_state": "queued/unqualified",
+    "prepared_mixed_native_leaves": 2,
     "source_push_authorized": true,
-    "submission_rule": "Every required f08 native/public job started before push; original public/core/stock outcomes retained and native/metadata/fuzz jobs preserved with cancel-in-progress false. Hold another relevant source candidate until required d6c jobs start. No artifact,release,retained upgrade or deployment.",
-    "native_jobs": [
-      126926515393,
-      126926515746,
-      126926515789,
-      126926515883,
-      126926516008
-    ]
+    "scope": "Includes exact parent database/DSN binding,privacy-safe verifier stages/reasons and two mixed collected SFTP/encrypted-FTPS leaves. Both original d6public/core outcomes retained; original native jobs running without cancellation. Original scanner database-file cap remains1GiB; owner1792MiBproposal stays unapplied.",
+    "submission_rule": "Every required d6native job and both original public jobs started before push. Preserve originals;hold another relevant source candidate until required e2jobs start. No artifact,release,retained upgrade,deployment,local scanner/model or unapproved budget change."
   },
   "registration_failure_standin": {
     "manifest_reference": ".private/freightctl-f076-registration-closure-3ov_x1ye/manifest.json",
@@ -796,7 +790,7 @@
     "local_manifest_sha256": "32b58e158d3bec64e721d2905d0bff06db36ec1937382bdba1beabe9d784e017",
     "local_scope": "Integration race binary compiles and Go vet passes only. No local runtime/services. Native source and FTPS receiver are explicit stand-ins;stock OpenSSH/GnuPG independently verify their own boundaries. Runtime,whole journey and business acceptance remain unqualified.",
     "runtime_qualification": false,
-    "submission_state": "local only; does not belong to already pushed d6cedfb"
+    "submission_state": "Submitted in e2a2b592371dd6c3aea8fe363b9eac38bc9b0968; native run41932617128 pending/unqualified"
   },
   "source_d6_observation": {
     "candidate": "d6cedfb3a4497c33b90f34933e939ad229e3e157",
@@ -826,7 +820,31 @@
       "manifest_reference": ".private/freightctl-f076-d6-core-6ula79/manifest.json",
       "manifest_sha256": "45894d307737491168e9ca72628aed03f9e3b40f38d9cabc0dce684b4350d31e"
     },
-    "native": "All five required jobs remain queued/unqualified; preserve pending candidate."
+    "native": "All five exact jobs started and are preserved; no terminal result inferred.",
+    "submission": {
+      "candidate": "d6cedfb3a4497c33b90f34933e939ad229e3e157",
+      "native_run_id": 41929132201,
+      "native_state": "queued/unqualified; five exact jobs now created",
+      "public_workflow_operator_run_id": 41929132162,
+      "public_state": "Both completed/failure:first explicit metadata Chrome command completes but original evidence validation refuses; no byte operator phase reached. D170cause unobserved; original logs retained.",
+      "public_jobs": [
+        126921241643,
+        126921242145
+      ],
+      "core_run_id": 41929132273,
+      "core_job_id": 126921241711,
+      "core_state": "completed/success:141frontend/0fail/0skip and exact d6source/security checks only",
+      "scope": "Source includes full operator producer/driver/strict verifier and required CI flags,verified-curl original-body repair,141frontend/70reporter and focused fixture contracts. Every prior runtime result remains scoped to its exact source. No runtime success inferred for this candidate.",
+      "source_push_authorized": true,
+      "submission_rule": "Every required f08 native/public job started before push; original public/core/stock outcomes retained and native/metadata/fuzz jobs preserved with cancel-in-progress false. Hold another relevant source candidate until required d6c jobs start. No artifact,release,retained upgrade or deployment.",
+      "native_jobs": [
+        126926515393,
+        126926515746,
+        126926515789,
+        126926515883,
+        126926516008
+      ]
+    }
   },
   "parent_database_repair_prepared": {
     "defect": "D169",
