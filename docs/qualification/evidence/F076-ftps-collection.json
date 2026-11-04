@@ -3,7 +3,7 @@
   "id": "F076",
   "observed_at": "2026-11-04",
   "starting_commit": "4d771b2e6a961a70b764681fd578ff175d064db7",
-  "state": "bounded transport primitive and20 native TLS stand-in cases prepared; pure invalid-input race/compile/vet pass locally; FTPS source admission and complete collection remain unavailable",
+  "state": "Bounded reader/adapter pass both native architectures; typed source40 SQL/custody/intake/scheduled/browser metadata implementation prepared with local contracts and compile/vet, complete collection runtime pending",
   "scope": "Read/copy input stage of ordinary immutable workflows, using exact registered FTPS revisions and the existing bounded producer-manifest, custody, intake, lease and event machinery. Transport metadata reading alone does not qualify collection.",
   "qualification_claim": false,
   "frozen_cases": [
@@ -44,7 +44,7 @@
       "outcome": "Existing SFTP collection/arrival/schedules, FTPS/SFTP sending, ciphertext, intake, RLS, receipts and native regression gates remain enforced. No local PostgreSQL, model or scanner execution is needed."
     }
   ],
-  "next_action": "Queue saved bounded reader and read-only adapter behind the now-running2da04d3 native41884853382, preserving that first repair. Require original20TLS cases and regressions on GitHub. Then integrate exact source/SQL/custody/intake/public/scheduled journeys; no complete FTPS collection or whole goal pass is claimed.",
+  "next_action": "Push the verified source40 candidate behind already-started8905385, then require actual native PostgreSQL/FTPS collection, original regressions and fresh metadata40 restore. Capture first failure before repair. Add real public CLI/API/browser, crash/changed-batch/event-DML, mixed/encrypted routing and independent-peer journeys; keep stock x86 isolationF068/D159 image feed and every whole-goal gate visible.",
   "first_failure": {
     "test": "TestFTPSCollectionSourceMissingContract",
     "result": "existing typed source refuses ftps.collect; no service contact",
@@ -73,5 +73,42 @@
     "repair_observation_reference": ".private/freightctl-f076-adapter-first-1NerT5s8/repair-observation.json",
     "repair_observation_sha256": "0cd036faed2ea0269dd190ae8218d2a09fdbafb11cc909e1936b37fddba4fd97",
     "integration": "not connected to workflow admission/SQL/worker/public controls yet; original typed source remains unsupported"
+  },
+  "native_reader_observation": {
+    "source_commit": "5ef3f3b8736d541ce3c6bd92bca2521d6d522590",
+    "run_id": 41887677840,
+    "jobs": [
+      {
+        "id": 126781101454,
+        "architecture": "x86_64",
+        "application_pass": 841,
+        "application_fail": 0,
+        "application_skip": 0,
+        "workflow_seconds": 447.784
+      },
+      {
+        "id": 126781101206,
+        "architecture": "arm64",
+        "application_pass": 841,
+        "application_fail": 0,
+        "application_skip": 0,
+        "workflow_seconds": 382.646
+      }
+    ],
+    "manifest_reference": ".private/freightctl-f076-native-reader-eqkDUxbf/manifest.json",
+    "manifest_sha256": "5d8abcc5665a503ab854192d69abc0efb9e37e92db830478a2794a6d21a59db7",
+    "scope": "All20 TLS metadata leaves and17 read-only adapter records pass each; original application regressions pass. Both image steps fail afterward at feed-downloadD159; no complete collection or whole gate pass."
+  },
+  "admission_prepared": {
+    "schema": 40,
+    "retained_schema": 35,
+    "retained_changed": false,
+    "mechanism": "Exact ftps.collect kind, registered ID/version/hash and public TLS proof flow through ordinary workflow, collection, immutable batch/custody/intake and calendar arrival machinery. Runtime SQL binds source kind and connection schema, full peer view, effects, authority, namespace and schedule. Read-only transport exposes no source mutations.",
+    "migration": "Append-only040; prior migration bytes,64tables,63forced-RLS tables, grants/roles unchanged in source; fresh actual PostgreSQL and restore results remain required.",
+    "native_cases_prepared": "13 leaves:4 exact mode/schema copy/replay,2 partial-batch digest isolation,2 exact source revocation,1 runtime-role predicate with6 forged source/view mutations,2 scheduled frozen-manifest/replay and2 exact CSV policy/release cases. Not locally executed. Predicate cases do not substitute for event-bound DML/crash/duplicate-batch qualification.",
+    "browser": "Four cross-language synthetic canonical vectors;5 new frontend contracts,126 total pass. UI selects actual protocol and reviews TLS identity while redacting references; no new CLI/API/Chrome journey executed.",
+    "local_checks_manifest_reference": ".private/freightctl-f076-admission-local-hr8z7pq6/manifest.json",
+    "local_checks_manifest_sha256": "f51cb40f2f191249c482b64c294c09d1a5675a3f5be12bedf4be681d7f721c6a",
+    "local_scope": "Pure/race workflow contracts and read adapter stand-ins, pre-network bounds, integration compile/vet,126 frontend contracts, typecheck/embedded closure and12 metadata contracts. A prior broad local ftpsclient attempt failed at sandbox loopback binds; no runtime pass follows and no socket permission was escalated."
   }
 }

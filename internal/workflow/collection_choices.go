@@ -60,7 +60,7 @@ func (s *Service) CollectionWorkflows(ctx context.Context, scope store.Scope, af
 		return nil, e
 	}
 	defer t.Tx.Rollback(ctx)
-	rows, e := t.Tx.Query(ctx, `SELECT w.workflow_id::text,w.version,w.definition_hash,w.definition->>'name' FROM workflow_revisions w WHERE w.actor_id=$1 AND w.definition->'source'->>'kind'='sftp.collect' AND ($2='' OR w.workflow_id>nullif($2,'')::uuid) AND w.version=(SELECT max(v.version) FROM workflow_revisions v WHERE v.actor_id=$1 AND v.workflow_id=w.workflow_id) ORDER BY w.workflow_id LIMIT $3`, t.Actor, after, limit+1)
+	rows, e := t.Tx.Query(ctx, `SELECT w.workflow_id::text,w.version,w.definition_hash,w.definition->>'name' FROM workflow_revisions w WHERE w.actor_id=$1 AND w.definition->'source'->>'kind' IN ('sftp.collect','ftps.collect') AND ($2='' OR w.workflow_id>nullif($2,'')::uuid) AND w.version=(SELECT max(v.version) FROM workflow_revisions v WHERE v.actor_id=$1 AND v.workflow_id=w.workflow_id) ORDER BY w.workflow_id LIMIT $3`, t.Actor, after, limit+1)
 	if e != nil {
 		return nil, e
 	}

@@ -504,7 +504,7 @@ func (s *Service) Validate(ctx context.Context, scope store.Scope, r PreviewRequ
 		if err != nil {
 			return nil, err
 		}
-		preview.Collection = &CollectionEffect{Kind: "sftp.collect", Connection: *v, Source: *d.Source}
+		preview.Collection = &CollectionEffect{Kind: d.Source.Kind, Connection: *v, Source: *d.Source}
 	}
 	if r.FileID != "" {
 		if !store.ValidID(r.FileID) {

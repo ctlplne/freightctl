@@ -30,16 +30,8 @@ func historicalWorkflowEffects(ctx context.Context, t *store.Transaction, d *Def
 		if err != nil {
 			return nil, err
 		}
-		var definition ConnectionDefinition
-		// Stored schema-1 SSH host records retain their original Wire and
-		// Fingerprint field names. The request/workflow decoder intentionally
-		// accepts only lowercase keys, so use the existing connection contract
-		// here and still verify its exact canonical fingerprint.
-		if json.Unmarshal(c.Definition, &definition) != nil || definition.Schema != 1 {
-			return nil, store.ErrState
-		}
-		_, hash, err := digest(definition)
-		if err != nil || hash != c.Hash || c.Hash != step.Connection.Hash {
+		definition, err := connectionDefinition(c)
+		if err != nil || c.Hash != step.Connection.Hash || (step.Kind == "ftps.deliver") != (definition.FTPS != nil) {
 			return nil, store.ErrState
 		}
 		view, err := viewConnection(c)
@@ -47,6 +39,9 @@ func historicalWorkflowEffects(ctx context.Context, t *store.Transaction, d *Def
 			return nil, err
 		}
 		effect := Effect{StepID: step.ID, Connection: step.Connection, Address: view.Address, Directory: view.Directory, FinalNamePattern: "<delivery UUID>-" + step.Filename, HostFingerprint: view.HostFingerprint, Encryption: step.Encryption}
+		if view.FTPS != nil {
+			effect.Protocol, effect.User, effect.FTPS = "ftps", view.User, view.FTPS
+		}
 		if policy := step.Encryption; policy != nil {
 			row, err := t.PGPKeySnapshot(ctx, policy.Key.ID, policy.Key.Version)
 			if err != nil {

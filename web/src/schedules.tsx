@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
+import { FTPSPeerIdentity, FTPSReceiverTerms } from "./ftps-peer-identity";
 import {
   dueManifestName,
   asWorkflowConfiguration,
@@ -135,10 +136,20 @@ function Effects({ d }: { d: ScheduleDefinition }) {
     <ul>
       {d.effects.map((e) => (
         <li key={e.step_id}>
-          <strong>{e.step_id}</strong>: SFTP <code>{e.address}</code>, directory{" "}
-          <code>{e.directory}</code>, final filename{" "}
-          <code>{e.final_name_pattern}</code>. Host fingerprint{" "}
-          <code>{e.host_fingerprint}</code>.{" "}
+          <strong>{e.step_id}</strong>:{" "}
+          {e.protocol === "ftps" ? "FTPS" : "SFTP"} <code>{e.address}</code>,
+          directory <code>{e.directory}</code>, final filename{" "}
+          <code>{e.final_name_pattern}</code>.{" "}
+          {e.ftps ? (
+            <>
+              <FTPSPeerIdentity proof={e.ftps} />{" "}
+              <FTPSReceiverTerms proof={e.ftps} />{" "}
+            </>
+          ) : (
+            <>
+              Host fingerprint <code>{e.host_fingerprint}</code>.{" "}
+            </>
+          )}
           {e.encryption ? (
             <>
               Recipient <code>{e.recipient_fingerprint}</code>;{" "}
@@ -198,11 +209,19 @@ function Definition({ d }: { d: ScheduleDefinition }) {
       </p>
       {d.collection && (
         <p>
-          Read-only SFTP source{" "}
+          Read-only{" "}
+          {d.collection.source.kind === "ftps.collect" ? "FTPS" : "SFTP"} source{" "}
           <code>{d.collection.source_connection.address}</code>, directory{" "}
-          <code>{d.collection.source_connection.directory}</code>, pinned host{" "}
-          <code>{d.collection.source_connection.host_fingerprint}</code>. Mark
-          an observed manifest late after{" "}
+          <code>{d.collection.source_connection.directory}</code>,{" "}
+          {d.collection.source_connection.ftps ? (
+            <FTPSPeerIdentity proof={d.collection.source_connection.ftps} />
+          ) : (
+            <>
+              pinned host{" "}
+              <code>{d.collection.source_connection.host_fingerprint}</code>.
+            </>
+          )}{" "}
+          Mark an observed manifest late after{" "}
           {d.collection.arrival.late_after_seconds}s; stop observing after{" "}
           {d.collection.arrival.arrival_deadline_seconds}s; probe no faster than
           every {d.collection.arrival.poll_interval_seconds}s. Only verified
@@ -322,7 +341,7 @@ export function Schedules({ api, session, refresh, onError }: Props) {
         directory: form.source,
         filename_pattern: form.pattern,
         recursive: workflow.source ? false : form.recursive,
-        ...(workflow.source ? { kind: "sftp.collect" as const } : {}),
+        ...(workflow.source ? { kind: workflow.source.kind } : {}),
       },
       calendar: {
         time_zone: form.zone,

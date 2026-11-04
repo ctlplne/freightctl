@@ -12,7 +12,6 @@ import (
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/custody"
-	"github.com/ctlplne/freightctl/internal/delivery"
 	"github.com/ctlplne/freightctl/internal/store"
 )
 
@@ -489,7 +488,7 @@ func (s *Service) WorkCollection(ctx context.Context, scope store.Scope, id, key
 	fail := func(reason string, attention bool) (*Result, error) {
 		return s.failedCollectionWork(scope, id, owner, fence, key, meaning, reason, attention)
 	}
-	var peer *delivery.CollectionPeer
+	var peer collectionReadPeer
 	defer func() {
 		if peer != nil {
 			peer.Close()
@@ -500,7 +499,7 @@ func (s *Service) WorkCollection(ctx context.Context, scope store.Scope, id, key
 			return nil
 		}
 		var e error
-		peer, e = delivery.OpenCollectionPeer(ctx, connection.Destination, connection.Directory, check)
+		peer, e = openCollectionSourcePeer(ctx, connection, d.Source.Kind, check)
 		return e
 	}
 	if j.Manifest == nil {

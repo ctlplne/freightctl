@@ -109,7 +109,7 @@ func normalizeScheduleSelection(x ScheduleSelection) (ScheduleSelection, error) 
 	if e != nil || p != x.Source.Directory || vpath.ControlPath(p) {
 		return x, ErrInput
 	}
-	if (x.Source.Kind == "sftp.collect") != (x.Arrival != nil) {
+	if collectionSourceKind(x.Source.Kind) != (x.Arrival != nil) {
 		return x, ErrInput
 	}
 	if x.Arrival != nil && normalizeScheduleArrival(*x.Arrival, x.Deadline) != nil {
@@ -613,7 +613,7 @@ func checkScheduleEffects(ctx context.Context, t *store.Transaction, d *Schedule
 			return e
 		}
 	} else {
-		if workflow.Source == nil || d.Source.Kind != "sftp.collect" || !reflect.DeepEqual(*workflow.Source, d.Collection.Source) {
+		if workflow.Source == nil || d.Source.Kind != workflow.Source.Kind || !collectionSourceKind(d.Source.Kind) || !reflect.DeepEqual(*workflow.Source, d.Collection.Source) {
 			return store.ErrSchedule
 		}
 		_, connection, e := collectionConnection(ctx, t, workflow.Source)

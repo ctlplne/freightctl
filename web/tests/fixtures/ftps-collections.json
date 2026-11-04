@@ -1,0 +1,1662 @@
+{
+  "explicit-local": {
+    "action": {
+      "resource": {
+        "kind": "workflow_collection",
+        "id": "00000007-1111-4111-8111-111111111111",
+        "definition_hash": "2a4bc00924a33c50f5198f422d08ea5f87fddfd77ade5463e8fd4042d5686080",
+        "state": "captured",
+        "revision": 4
+      },
+      "replayed": false
+    },
+    "preview": {
+      "definition": {
+        "schema_version": 1,
+        "workflow": {
+          "id": "00000004-1111-4111-8111-111111111111",
+          "version": 2,
+          "hash": "499dabe11edd47dc937100fe74072aedb912ef2cb27f2fcbdadc4144ffc65889"
+        },
+        "source": {
+          "kind": "ftps.collect",
+          "connection": {
+            "id": "00000001-1111-4111-8111-111111111111",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "manifest": "settlement.ready.json",
+          "target_directory": "/incoming",
+          "completion_contract": "immutable-files-sha256-manifest-v1",
+          "max_files": 4,
+          "max_file_bytes": 1048576,
+          "max_total_bytes": 2097152
+        },
+        "source_connection": {
+          "id": "00000001-1111-4111-8111-111111111111",
+          "version": 1,
+          "definition_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "state": "active",
+          "revision": 1,
+          "address": "127.0.0.1:2121",
+          "user": "producer",
+          "directory": "/producer",
+          "host_fingerprint": "",
+          "key_fingerprint": "",
+          "protocol": "ftps",
+          "ftps": {
+            "mode": "explicit",
+            "server_name": "localhost",
+            "ca_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "ca_reference_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "password_reference_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "staging_directory": "/source-private",
+            "receiver_contract": {
+              "schema_version": 1,
+              "document_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+              "staging_visibility": "receiver-private",
+              "rename": "may-replace",
+              "duplicates": "receiver-deduplicates-delivery-id",
+              "receipt": "exact-readback"
+            }
+          }
+        },
+        "source_identity": "253722ec90b1d89011fe53bb263322607667071495b30c87f84928a6c3506b5f",
+        "authority_revision": 3,
+        "storage_id": "00000005-1111-4111-8111-111111111111",
+        "namespace_root": "/",
+        "timeout_seconds": 120,
+        "effects": []
+      },
+      "definition_hash": "2a4bc00924a33c50f5198f422d08ea5f87fddfd77ade5463e8fd4042d5686080",
+      "external_contact": false,
+      "approval_required": true
+    },
+    "run": {
+      "run": {
+        "id": "0000000b-1111-4111-8111-111111111111",
+        "workflow_id": "00000004-1111-4111-8111-111111111111",
+        "workflow_version": 2,
+        "workflow_hash": "499dabe11edd47dc937100fe74072aedb912ef2cb27f2fcbdadc4144ffc65889",
+        "file_id": "00000009-1111-4111-8111-111111111111",
+        "source": {
+          "id": "00000009-1111-4111-8111-111111111111",
+          "size_bytes": 3,
+          "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+          "policy": "integrity-only-v1",
+          "accepted_event_id": "0000000c-1111-4111-8111-111111111111"
+        },
+        "storage_id": "00000005-1111-4111-8111-111111111111",
+        "namespace_root": "/",
+        "authority_revision": 3,
+        "state": "queued",
+        "reason": "awaiting_worker",
+        "revision": 1
+      },
+      "steps": [],
+      "observed_state": "queued",
+      "observed_reason": "awaiting_worker"
+    },
+    "selection": {
+      "workflow": {
+        "id": "00000004-1111-4111-8111-111111111111",
+        "version": 2,
+        "hash": "499dabe11edd47dc937100fe74072aedb912ef2cb27f2fcbdadc4144ffc65889"
+      },
+      "timeout_seconds": 120,
+      "expected_authority_revision": 3
+    },
+    "view": {
+      "job": {
+        "id": "00000007-1111-4111-8111-111111111111",
+        "workflow_id": "00000004-1111-4111-8111-111111111111",
+        "workflow_version": 2,
+        "workflow_hash": "499dabe11edd47dc937100fe74072aedb912ef2cb27f2fcbdadc4144ffc65889",
+        "definition": {
+          "schema_version": 1,
+          "workflow": {
+            "id": "00000004-1111-4111-8111-111111111111",
+            "version": 2,
+            "hash": "499dabe11edd47dc937100fe74072aedb912ef2cb27f2fcbdadc4144ffc65889"
+          },
+          "source": {
+            "kind": "ftps.collect",
+            "connection": {
+              "id": "00000001-1111-4111-8111-111111111111",
+              "version": 1,
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "manifest": "settlement.ready.json",
+            "target_directory": "/incoming",
+            "completion_contract": "immutable-files-sha256-manifest-v1",
+            "max_files": 4,
+            "max_file_bytes": 1048576,
+            "max_total_bytes": 2097152
+          },
+          "source_connection": {
+            "id": "00000001-1111-4111-8111-111111111111",
+            "version": 1,
+            "definition_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "state": "active",
+            "revision": 1,
+            "address": "127.0.0.1:2121",
+            "user": "producer",
+            "directory": "/producer",
+            "host_fingerprint": "",
+            "key_fingerprint": "",
+            "protocol": "ftps",
+            "ftps": {
+              "mode": "explicit",
+              "server_name": "localhost",
+              "ca_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "ca_reference_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "password_reference_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "staging_directory": "/source-private",
+              "receiver_contract": {
+                "schema_version": 1,
+                "document_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+                "staging_visibility": "receiver-private",
+                "rename": "may-replace",
+                "duplicates": "receiver-deduplicates-delivery-id",
+                "receipt": "exact-readback"
+              }
+            }
+          },
+          "source_identity": "253722ec90b1d89011fe53bb263322607667071495b30c87f84928a6c3506b5f",
+          "authority_revision": 3,
+          "storage_id": "00000005-1111-4111-8111-111111111111",
+          "namespace_root": "/",
+          "timeout_seconds": 120,
+          "effects": []
+        },
+        "definition_hash": "2a4bc00924a33c50f5198f422d08ea5f87fddfd77ade5463e8fd4042d5686080",
+        "state": "captured",
+        "captured": true,
+        "revision": 4,
+        "fence": 1,
+        "attempts": 1,
+        "lease_owner": "",
+        "lease_until": null,
+        "next_at": "2026-10-31T12:00:00Z",
+        "created_at": "2026-10-31T12:00:00Z",
+        "deadline_at": "2026-10-31T12:02:00Z",
+        "manifest": {
+          "schema_version": 1,
+          "batch_id": "00000006-1111-4111-8111-111111111111",
+          "files": [
+            {
+              "name": "one.csv",
+              "size_bytes": 3,
+              "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+            }
+          ]
+        },
+        "manifest_hash": "4abd79ff6ac5c652dc2dc5427e63c0d0dbfac34dd856b7833668a073200bb595",
+        "reason": "batch_captured"
+      },
+      "inputs": [
+        {
+          "id": "00000008-1111-4111-8111-111111111111",
+          "first_job_id": "00000007-1111-4111-8111-111111111111",
+          "workflow_id": "00000004-1111-4111-8111-111111111111",
+          "source_identity": "253722ec90b1d89011fe53bb263322607667071495b30c87f84928a6c3506b5f",
+          "input_identity": "1038caafcdc479e3f88ad9a393875ab849a9bb0d500f47f2bdff13d5fead44a7",
+          "source_name": "one.csv",
+          "size_bytes": 3,
+          "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+          "target_path": "/incoming/ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad-one.csv",
+          "object_id": "00000009-1111-4111-8111-111111111111",
+          "state": "accepted",
+          "revision": 3,
+          "capture_fence": 1,
+          "capture_owner": "0000000a-1111-4111-8111-111111111111",
+          "file_id": "00000009-1111-4111-8111-111111111111",
+          "run_id": null
+        }
+      ],
+      "current_authority": true,
+      "observed_state": "captured",
+      "business_acceptance": "unknown",
+      "local_states": [
+        {
+          "input_id": "00000008-1111-4111-8111-111111111111",
+          "state": "published"
+        }
+      ]
+    },
+    "workflow": {
+      "id": "00000004-1111-4111-8111-111111111111",
+      "version": 2,
+      "definition": {
+        "schema_version": 1,
+        "name": "Settlement <source> & review next FTPS explicit",
+        "steps": [],
+        "source": {
+          "kind": "ftps.collect",
+          "connection": {
+            "id": "00000001-1111-4111-8111-111111111111",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "manifest": "settlement.ready.json",
+          "target_directory": "/incoming",
+          "completion_contract": "immutable-files-sha256-manifest-v1",
+          "max_files": 4,
+          "max_file_bytes": 1048576,
+          "max_total_bytes": 2097152
+        }
+      },
+      "definition_hash": "499dabe11edd47dc937100fe74072aedb912ef2cb27f2fcbdadc4144ffc65889",
+      "state": "approved",
+      "revision": 2,
+      "approval_authority": 3
+    },
+    "workflow_preview": {
+      "definition": {
+        "schema_version": 1,
+        "name": "Settlement <source> & review next FTPS explicit",
+        "steps": [],
+        "source": {
+          "kind": "ftps.collect",
+          "connection": {
+            "id": "00000001-1111-4111-8111-111111111111",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "manifest": "settlement.ready.json",
+          "target_directory": "/incoming",
+          "completion_contract": "immutable-files-sha256-manifest-v1",
+          "max_files": 4,
+          "max_file_bytes": 1048576,
+          "max_total_bytes": 2097152
+        }
+      },
+      "definition_hash": "499dabe11edd47dc937100fe74072aedb912ef2cb27f2fcbdadc4144ffc65889",
+      "effects": [],
+      "external_contact": false,
+      "approval_required": true,
+      "collection": {
+        "kind": "ftps.collect",
+        "connection": {
+          "id": "00000001-1111-4111-8111-111111111111",
+          "version": 1,
+          "definition_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "state": "active",
+          "revision": 1,
+          "address": "127.0.0.1:2121",
+          "user": "producer",
+          "directory": "/producer",
+          "host_fingerprint": "",
+          "key_fingerprint": "",
+          "protocol": "ftps",
+          "ftps": {
+            "mode": "explicit",
+            "server_name": "localhost",
+            "ca_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "ca_reference_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "password_reference_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "staging_directory": "/source-private",
+            "receiver_contract": {
+              "schema_version": 1,
+              "document_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+              "staging_visibility": "receiver-private",
+              "rename": "may-replace",
+              "duplicates": "receiver-deduplicates-delivery-id",
+              "receipt": "exact-readback"
+            }
+          }
+        },
+        "source": {
+          "kind": "ftps.collect",
+          "connection": {
+            "id": "00000001-1111-4111-8111-111111111111",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "manifest": "settlement.ready.json",
+          "target_directory": "/incoming",
+          "completion_contract": "immutable-files-sha256-manifest-v1",
+          "max_files": 4,
+          "max_file_bytes": 1048576,
+          "max_total_bytes": 2097152
+        }
+      }
+    }
+  },
+  "implicit-sftp": {
+    "action": {
+      "resource": {
+        "kind": "workflow_collection",
+        "id": "00000007-1111-4111-8111-111111111111",
+        "definition_hash": "6eb49da81a04b58bafdb9aca1558305fdcb4c9c4de585089c190b1e25004cd4d",
+        "state": "captured",
+        "revision": 4
+      },
+      "replayed": false
+    },
+    "preview": {
+      "definition": {
+        "schema_version": 1,
+        "workflow": {
+          "id": "00000004-1111-4111-8111-111111111111",
+          "version": 2,
+          "hash": "4e4029a0062ead23f77b25de221bf121b5844479be338b9745b2243bdafd09d0"
+        },
+        "source": {
+          "kind": "ftps.collect",
+          "connection": {
+            "id": "00000001-1111-4111-8111-111111111111",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "manifest": "settlement.ready.json",
+          "target_directory": "/incoming",
+          "completion_contract": "immutable-files-sha256-manifest-v1",
+          "max_files": 4,
+          "max_file_bytes": 1048576,
+          "max_total_bytes": 2097152
+        },
+        "source_connection": {
+          "id": "00000001-1111-4111-8111-111111111111",
+          "version": 1,
+          "definition_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "state": "active",
+          "revision": 1,
+          "address": "127.0.0.1:2121",
+          "user": "producer",
+          "directory": "/producer",
+          "host_fingerprint": "",
+          "key_fingerprint": "",
+          "protocol": "ftps",
+          "ftps": {
+            "mode": "implicit",
+            "server_name": "localhost",
+            "ca_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "ca_reference_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "password_reference_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "staging_directory": "/source-private",
+            "receiver_contract": {
+              "schema_version": 1,
+              "document_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+              "staging_visibility": "receiver-private",
+              "rename": "may-replace",
+              "duplicates": "receiver-deduplicates-delivery-id",
+              "receipt": "exact-readback"
+            }
+          }
+        },
+        "source_identity": "253722ec90b1d89011fe53bb263322607667071495b30c87f84928a6c3506b5f",
+        "authority_revision": 3,
+        "storage_id": "00000005-1111-4111-8111-111111111111",
+        "namespace_root": "/",
+        "timeout_seconds": 120,
+        "effects": [
+          {
+            "step_id": "send",
+            "connection": {
+              "id": "00000002-1111-4111-8111-111111111111",
+              "version": 2,
+              "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            },
+            "address": "127.0.0.1:2222",
+            "directory": "/receiver",
+            "final_name_pattern": "<delivery UUID>-settlement.csv",
+            "host_fingerprint": "SHA256:BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"
+          }
+        ]
+      },
+      "definition_hash": "6eb49da81a04b58bafdb9aca1558305fdcb4c9c4de585089c190b1e25004cd4d",
+      "external_contact": false,
+      "approval_required": true
+    },
+    "run": {
+      "run": {
+        "id": "0000000b-1111-4111-8111-111111111111",
+        "workflow_id": "00000004-1111-4111-8111-111111111111",
+        "workflow_version": 2,
+        "workflow_hash": "4e4029a0062ead23f77b25de221bf121b5844479be338b9745b2243bdafd09d0",
+        "file_id": "00000009-1111-4111-8111-111111111111",
+        "source": {
+          "id": "00000009-1111-4111-8111-111111111111",
+          "size_bytes": 3,
+          "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+          "policy": "integrity-only-v1",
+          "accepted_event_id": "0000000c-1111-4111-8111-111111111111"
+        },
+        "storage_id": "00000005-1111-4111-8111-111111111111",
+        "namespace_root": "/",
+        "authority_revision": 3,
+        "state": "queued",
+        "reason": "awaiting_worker",
+        "revision": 1
+      },
+      "steps": [
+        {
+          "id": "send",
+          "ordinal": 1,
+          "delivery_id": "0000000d-1111-4111-8111-111111111111",
+          "state": "queued",
+          "attempts": 0,
+          "observation": {}
+        }
+      ],
+      "observed_state": "queued",
+      "observed_reason": "awaiting_worker"
+    },
+    "selection": {
+      "workflow": {
+        "id": "00000004-1111-4111-8111-111111111111",
+        "version": 2,
+        "hash": "4e4029a0062ead23f77b25de221bf121b5844479be338b9745b2243bdafd09d0"
+      },
+      "timeout_seconds": 120,
+      "expected_authority_revision": 3
+    },
+    "view": {
+      "job": {
+        "id": "00000007-1111-4111-8111-111111111111",
+        "workflow_id": "00000004-1111-4111-8111-111111111111",
+        "workflow_version": 2,
+        "workflow_hash": "4e4029a0062ead23f77b25de221bf121b5844479be338b9745b2243bdafd09d0",
+        "definition": {
+          "schema_version": 1,
+          "workflow": {
+            "id": "00000004-1111-4111-8111-111111111111",
+            "version": 2,
+            "hash": "4e4029a0062ead23f77b25de221bf121b5844479be338b9745b2243bdafd09d0"
+          },
+          "source": {
+            "kind": "ftps.collect",
+            "connection": {
+              "id": "00000001-1111-4111-8111-111111111111",
+              "version": 1,
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "manifest": "settlement.ready.json",
+            "target_directory": "/incoming",
+            "completion_contract": "immutable-files-sha256-manifest-v1",
+            "max_files": 4,
+            "max_file_bytes": 1048576,
+            "max_total_bytes": 2097152
+          },
+          "source_connection": {
+            "id": "00000001-1111-4111-8111-111111111111",
+            "version": 1,
+            "definition_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "state": "active",
+            "revision": 1,
+            "address": "127.0.0.1:2121",
+            "user": "producer",
+            "directory": "/producer",
+            "host_fingerprint": "",
+            "key_fingerprint": "",
+            "protocol": "ftps",
+            "ftps": {
+              "mode": "implicit",
+              "server_name": "localhost",
+              "ca_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "ca_reference_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "password_reference_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "staging_directory": "/source-private",
+              "receiver_contract": {
+                "schema_version": 1,
+                "document_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+                "staging_visibility": "receiver-private",
+                "rename": "may-replace",
+                "duplicates": "receiver-deduplicates-delivery-id",
+                "receipt": "exact-readback"
+              }
+            }
+          },
+          "source_identity": "253722ec90b1d89011fe53bb263322607667071495b30c87f84928a6c3506b5f",
+          "authority_revision": 3,
+          "storage_id": "00000005-1111-4111-8111-111111111111",
+          "namespace_root": "/",
+          "timeout_seconds": 120,
+          "effects": [
+            {
+              "step_id": "send",
+              "connection": {
+                "id": "00000002-1111-4111-8111-111111111111",
+                "version": 2,
+                "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+              },
+              "address": "127.0.0.1:2222",
+              "directory": "/receiver",
+              "final_name_pattern": "<delivery UUID>-settlement.csv",
+              "host_fingerprint": "SHA256:BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"
+            }
+          ]
+        },
+        "definition_hash": "6eb49da81a04b58bafdb9aca1558305fdcb4c9c4de585089c190b1e25004cd4d",
+        "state": "captured",
+        "captured": true,
+        "revision": 4,
+        "fence": 1,
+        "attempts": 1,
+        "lease_owner": "",
+        "lease_until": null,
+        "next_at": "2026-10-31T12:00:00Z",
+        "created_at": "2026-10-31T12:00:00Z",
+        "deadline_at": "2026-10-31T12:02:00Z",
+        "manifest": {
+          "schema_version": 1,
+          "batch_id": "00000006-1111-4111-8111-111111111111",
+          "files": [
+            {
+              "name": "one.csv",
+              "size_bytes": 3,
+              "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+            }
+          ]
+        },
+        "manifest_hash": "4abd79ff6ac5c652dc2dc5427e63c0d0dbfac34dd856b7833668a073200bb595",
+        "reason": "batch_captured"
+      },
+      "inputs": [
+        {
+          "id": "00000008-1111-4111-8111-111111111111",
+          "first_job_id": "00000007-1111-4111-8111-111111111111",
+          "workflow_id": "00000004-1111-4111-8111-111111111111",
+          "source_identity": "253722ec90b1d89011fe53bb263322607667071495b30c87f84928a6c3506b5f",
+          "input_identity": "1038caafcdc479e3f88ad9a393875ab849a9bb0d500f47f2bdff13d5fead44a7",
+          "source_name": "one.csv",
+          "size_bytes": 3,
+          "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+          "target_path": "/incoming/ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad-one.csv",
+          "object_id": "00000009-1111-4111-8111-111111111111",
+          "state": "queued",
+          "revision": 4,
+          "capture_fence": 1,
+          "capture_owner": "0000000a-1111-4111-8111-111111111111",
+          "file_id": "00000009-1111-4111-8111-111111111111",
+          "run_id": "0000000b-1111-4111-8111-111111111111"
+        }
+      ],
+      "current_authority": true,
+      "observed_state": "captured",
+      "business_acceptance": "unknown",
+      "local_states": [
+        {
+          "input_id": "00000008-1111-4111-8111-111111111111",
+          "state": "published"
+        }
+      ]
+    },
+    "workflow": {
+      "id": "00000004-1111-4111-8111-111111111111",
+      "version": 2,
+      "definition": {
+        "schema_version": 1,
+        "name": "Settlement <source> & review next FTPS implicit",
+        "steps": [
+          {
+            "id": "send",
+            "kind": "sftp.deliver",
+            "connection": {
+              "id": "00000002-1111-4111-8111-111111111111",
+              "version": 2,
+              "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            },
+            "filename": "settlement.csv"
+          }
+        ],
+        "source": {
+          "kind": "ftps.collect",
+          "connection": {
+            "id": "00000001-1111-4111-8111-111111111111",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "manifest": "settlement.ready.json",
+          "target_directory": "/incoming",
+          "completion_contract": "immutable-files-sha256-manifest-v1",
+          "max_files": 4,
+          "max_file_bytes": 1048576,
+          "max_total_bytes": 2097152
+        }
+      },
+      "definition_hash": "4e4029a0062ead23f77b25de221bf121b5844479be338b9745b2243bdafd09d0",
+      "state": "approved",
+      "revision": 2,
+      "approval_authority": 3
+    },
+    "workflow_preview": {
+      "definition": {
+        "schema_version": 1,
+        "name": "Settlement <source> & review next FTPS implicit",
+        "steps": [
+          {
+            "id": "send",
+            "kind": "sftp.deliver",
+            "connection": {
+              "id": "00000002-1111-4111-8111-111111111111",
+              "version": 2,
+              "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            },
+            "filename": "settlement.csv"
+          }
+        ],
+        "source": {
+          "kind": "ftps.collect",
+          "connection": {
+            "id": "00000001-1111-4111-8111-111111111111",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "manifest": "settlement.ready.json",
+          "target_directory": "/incoming",
+          "completion_contract": "immutable-files-sha256-manifest-v1",
+          "max_files": 4,
+          "max_file_bytes": 1048576,
+          "max_total_bytes": 2097152
+        }
+      },
+      "definition_hash": "4e4029a0062ead23f77b25de221bf121b5844479be338b9745b2243bdafd09d0",
+      "effects": [
+        {
+          "step_id": "send",
+          "connection": {
+            "id": "00000002-1111-4111-8111-111111111111",
+            "version": 2,
+            "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "address": "127.0.0.1:2222",
+          "directory": "/receiver",
+          "final_name_pattern": "<delivery UUID>-settlement.csv",
+          "host_fingerprint": "SHA256:BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"
+        }
+      ],
+      "external_contact": false,
+      "approval_required": true,
+      "collection": {
+        "kind": "ftps.collect",
+        "connection": {
+          "id": "00000001-1111-4111-8111-111111111111",
+          "version": 1,
+          "definition_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "state": "active",
+          "revision": 1,
+          "address": "127.0.0.1:2121",
+          "user": "producer",
+          "directory": "/producer",
+          "host_fingerprint": "",
+          "key_fingerprint": "",
+          "protocol": "ftps",
+          "ftps": {
+            "mode": "implicit",
+            "server_name": "localhost",
+            "ca_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "ca_reference_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "password_reference_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "staging_directory": "/source-private",
+            "receiver_contract": {
+              "schema_version": 1,
+              "document_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+              "staging_visibility": "receiver-private",
+              "rename": "may-replace",
+              "duplicates": "receiver-deduplicates-delivery-id",
+              "receipt": "exact-readback"
+            }
+          }
+        },
+        "source": {
+          "kind": "ftps.collect",
+          "connection": {
+            "id": "00000001-1111-4111-8111-111111111111",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "manifest": "settlement.ready.json",
+          "target_directory": "/incoming",
+          "completion_contract": "immutable-files-sha256-manifest-v1",
+          "max_files": 4,
+          "max_file_bytes": 1048576,
+          "max_total_bytes": 2097152
+        }
+      }
+    }
+  },
+  "explicit-ftps": {
+    "action": {
+      "resource": {
+        "kind": "workflow_collection",
+        "id": "00000007-1111-4111-8111-111111111111",
+        "definition_hash": "61da3448d89af3d4f2fbccbc2e56c69f7f26cfa1cba0f16a5082bd8590197ec5",
+        "state": "captured",
+        "revision": 4
+      },
+      "replayed": false
+    },
+    "preview": {
+      "definition": {
+        "schema_version": 1,
+        "workflow": {
+          "id": "00000004-1111-4111-8111-111111111111",
+          "version": 2,
+          "hash": "d1fe93b200e6c7f81ddfea7508b111a427c8d562d128001fbe2fbbc2fdf8126b"
+        },
+        "source": {
+          "kind": "ftps.collect",
+          "connection": {
+            "id": "00000001-1111-4111-8111-111111111111",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "manifest": "settlement.ready.json",
+          "target_directory": "/incoming",
+          "completion_contract": "immutable-files-sha256-manifest-v1",
+          "max_files": 4,
+          "max_file_bytes": 1048576,
+          "max_total_bytes": 2097152
+        },
+        "source_connection": {
+          "id": "00000001-1111-4111-8111-111111111111",
+          "version": 1,
+          "definition_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "state": "active",
+          "revision": 1,
+          "address": "127.0.0.1:2121",
+          "user": "producer",
+          "directory": "/producer",
+          "host_fingerprint": "",
+          "key_fingerprint": "",
+          "protocol": "ftps",
+          "ftps": {
+            "mode": "explicit",
+            "server_name": "localhost",
+            "ca_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "ca_reference_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "password_reference_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "staging_directory": "/source-private",
+            "receiver_contract": {
+              "schema_version": 1,
+              "document_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+              "staging_visibility": "receiver-private",
+              "rename": "may-replace",
+              "duplicates": "receiver-deduplicates-delivery-id",
+              "receipt": "exact-readback"
+            }
+          }
+        },
+        "source_identity": "253722ec90b1d89011fe53bb263322607667071495b30c87f84928a6c3506b5f",
+        "authority_revision": 3,
+        "storage_id": "00000005-1111-4111-8111-111111111111",
+        "namespace_root": "/",
+        "timeout_seconds": 120,
+        "effects": [
+          {
+            "step_id": "send",
+            "connection": {
+              "id": "00000002-1111-4111-8111-111111111111",
+              "version": 2,
+              "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            },
+            "address": "127.0.0.1:2122",
+            "directory": "/receiver",
+            "final_name_pattern": "<delivery UUID>-settlement.csv",
+            "host_fingerprint": "",
+            "protocol": "ftps",
+            "user": "receiver",
+            "ftps": {
+              "mode": "implicit",
+              "server_name": "localhost",
+              "ca_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "ca_reference_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "password_reference_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "staging_directory": "/receiver-private",
+              "receiver_contract": {
+                "schema_version": 1,
+                "document_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+                "staging_visibility": "receiver-private",
+                "rename": "may-replace",
+                "duplicates": "receiver-deduplicates-delivery-id",
+                "receipt": "exact-readback"
+              }
+            }
+          }
+        ]
+      },
+      "definition_hash": "61da3448d89af3d4f2fbccbc2e56c69f7f26cfa1cba0f16a5082bd8590197ec5",
+      "external_contact": false,
+      "approval_required": true
+    },
+    "run": {
+      "run": {
+        "id": "0000000b-1111-4111-8111-111111111111",
+        "workflow_id": "00000004-1111-4111-8111-111111111111",
+        "workflow_version": 2,
+        "workflow_hash": "d1fe93b200e6c7f81ddfea7508b111a427c8d562d128001fbe2fbbc2fdf8126b",
+        "file_id": "00000009-1111-4111-8111-111111111111",
+        "source": {
+          "id": "00000009-1111-4111-8111-111111111111",
+          "size_bytes": 3,
+          "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+          "policy": "integrity-only-v1",
+          "accepted_event_id": "0000000c-1111-4111-8111-111111111111"
+        },
+        "storage_id": "00000005-1111-4111-8111-111111111111",
+        "namespace_root": "/",
+        "authority_revision": 3,
+        "state": "queued",
+        "reason": "awaiting_worker",
+        "revision": 1
+      },
+      "steps": [
+        {
+          "id": "send",
+          "ordinal": 1,
+          "delivery_id": "0000000d-1111-4111-8111-111111111111",
+          "state": "queued",
+          "attempts": 0,
+          "observation": {}
+        }
+      ],
+      "observed_state": "queued",
+      "observed_reason": "awaiting_worker"
+    },
+    "selection": {
+      "workflow": {
+        "id": "00000004-1111-4111-8111-111111111111",
+        "version": 2,
+        "hash": "d1fe93b200e6c7f81ddfea7508b111a427c8d562d128001fbe2fbbc2fdf8126b"
+      },
+      "timeout_seconds": 120,
+      "expected_authority_revision": 3
+    },
+    "view": {
+      "job": {
+        "id": "00000007-1111-4111-8111-111111111111",
+        "workflow_id": "00000004-1111-4111-8111-111111111111",
+        "workflow_version": 2,
+        "workflow_hash": "d1fe93b200e6c7f81ddfea7508b111a427c8d562d128001fbe2fbbc2fdf8126b",
+        "definition": {
+          "schema_version": 1,
+          "workflow": {
+            "id": "00000004-1111-4111-8111-111111111111",
+            "version": 2,
+            "hash": "d1fe93b200e6c7f81ddfea7508b111a427c8d562d128001fbe2fbbc2fdf8126b"
+          },
+          "source": {
+            "kind": "ftps.collect",
+            "connection": {
+              "id": "00000001-1111-4111-8111-111111111111",
+              "version": 1,
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "manifest": "settlement.ready.json",
+            "target_directory": "/incoming",
+            "completion_contract": "immutable-files-sha256-manifest-v1",
+            "max_files": 4,
+            "max_file_bytes": 1048576,
+            "max_total_bytes": 2097152
+          },
+          "source_connection": {
+            "id": "00000001-1111-4111-8111-111111111111",
+            "version": 1,
+            "definition_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "state": "active",
+            "revision": 1,
+            "address": "127.0.0.1:2121",
+            "user": "producer",
+            "directory": "/producer",
+            "host_fingerprint": "",
+            "key_fingerprint": "",
+            "protocol": "ftps",
+            "ftps": {
+              "mode": "explicit",
+              "server_name": "localhost",
+              "ca_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "ca_reference_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "password_reference_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "staging_directory": "/source-private",
+              "receiver_contract": {
+                "schema_version": 1,
+                "document_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+                "staging_visibility": "receiver-private",
+                "rename": "may-replace",
+                "duplicates": "receiver-deduplicates-delivery-id",
+                "receipt": "exact-readback"
+              }
+            }
+          },
+          "source_identity": "253722ec90b1d89011fe53bb263322607667071495b30c87f84928a6c3506b5f",
+          "authority_revision": 3,
+          "storage_id": "00000005-1111-4111-8111-111111111111",
+          "namespace_root": "/",
+          "timeout_seconds": 120,
+          "effects": [
+            {
+              "step_id": "send",
+              "connection": {
+                "id": "00000002-1111-4111-8111-111111111111",
+                "version": 2,
+                "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+              },
+              "address": "127.0.0.1:2122",
+              "directory": "/receiver",
+              "final_name_pattern": "<delivery UUID>-settlement.csv",
+              "host_fingerprint": "",
+              "protocol": "ftps",
+              "user": "receiver",
+              "ftps": {
+                "mode": "implicit",
+                "server_name": "localhost",
+                "ca_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "ca_reference_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "password_reference_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                "staging_directory": "/receiver-private",
+                "receiver_contract": {
+                  "schema_version": 1,
+                  "document_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+                  "staging_visibility": "receiver-private",
+                  "rename": "may-replace",
+                  "duplicates": "receiver-deduplicates-delivery-id",
+                  "receipt": "exact-readback"
+                }
+              }
+            }
+          ]
+        },
+        "definition_hash": "61da3448d89af3d4f2fbccbc2e56c69f7f26cfa1cba0f16a5082bd8590197ec5",
+        "state": "captured",
+        "captured": true,
+        "revision": 4,
+        "fence": 1,
+        "attempts": 1,
+        "lease_owner": "",
+        "lease_until": null,
+        "next_at": "2026-10-31T12:00:00Z",
+        "created_at": "2026-10-31T12:00:00Z",
+        "deadline_at": "2026-10-31T12:02:00Z",
+        "manifest": {
+          "schema_version": 1,
+          "batch_id": "00000006-1111-4111-8111-111111111111",
+          "files": [
+            {
+              "name": "one.csv",
+              "size_bytes": 3,
+              "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+            }
+          ]
+        },
+        "manifest_hash": "4abd79ff6ac5c652dc2dc5427e63c0d0dbfac34dd856b7833668a073200bb595",
+        "reason": "batch_captured"
+      },
+      "inputs": [
+        {
+          "id": "00000008-1111-4111-8111-111111111111",
+          "first_job_id": "00000007-1111-4111-8111-111111111111",
+          "workflow_id": "00000004-1111-4111-8111-111111111111",
+          "source_identity": "253722ec90b1d89011fe53bb263322607667071495b30c87f84928a6c3506b5f",
+          "input_identity": "1038caafcdc479e3f88ad9a393875ab849a9bb0d500f47f2bdff13d5fead44a7",
+          "source_name": "one.csv",
+          "size_bytes": 3,
+          "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+          "target_path": "/incoming/ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad-one.csv",
+          "object_id": "00000009-1111-4111-8111-111111111111",
+          "state": "queued",
+          "revision": 4,
+          "capture_fence": 1,
+          "capture_owner": "0000000a-1111-4111-8111-111111111111",
+          "file_id": "00000009-1111-4111-8111-111111111111",
+          "run_id": "0000000b-1111-4111-8111-111111111111"
+        }
+      ],
+      "current_authority": true,
+      "observed_state": "captured",
+      "business_acceptance": "unknown",
+      "local_states": [
+        {
+          "input_id": "00000008-1111-4111-8111-111111111111",
+          "state": "published"
+        }
+      ]
+    },
+    "workflow": {
+      "id": "00000004-1111-4111-8111-111111111111",
+      "version": 2,
+      "definition": {
+        "schema_version": 1,
+        "name": "Settlement <source> & review next FTPS explicit",
+        "steps": [
+          {
+            "id": "send",
+            "kind": "ftps.deliver",
+            "connection": {
+              "id": "00000002-1111-4111-8111-111111111111",
+              "version": 2,
+              "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            },
+            "filename": "settlement.csv"
+          }
+        ],
+        "source": {
+          "kind": "ftps.collect",
+          "connection": {
+            "id": "00000001-1111-4111-8111-111111111111",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "manifest": "settlement.ready.json",
+          "target_directory": "/incoming",
+          "completion_contract": "immutable-files-sha256-manifest-v1",
+          "max_files": 4,
+          "max_file_bytes": 1048576,
+          "max_total_bytes": 2097152
+        }
+      },
+      "definition_hash": "d1fe93b200e6c7f81ddfea7508b111a427c8d562d128001fbe2fbbc2fdf8126b",
+      "state": "approved",
+      "revision": 2,
+      "approval_authority": 3
+    },
+    "workflow_preview": {
+      "definition": {
+        "schema_version": 1,
+        "name": "Settlement <source> & review next FTPS explicit",
+        "steps": [
+          {
+            "id": "send",
+            "kind": "ftps.deliver",
+            "connection": {
+              "id": "00000002-1111-4111-8111-111111111111",
+              "version": 2,
+              "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            },
+            "filename": "settlement.csv"
+          }
+        ],
+        "source": {
+          "kind": "ftps.collect",
+          "connection": {
+            "id": "00000001-1111-4111-8111-111111111111",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "manifest": "settlement.ready.json",
+          "target_directory": "/incoming",
+          "completion_contract": "immutable-files-sha256-manifest-v1",
+          "max_files": 4,
+          "max_file_bytes": 1048576,
+          "max_total_bytes": 2097152
+        }
+      },
+      "definition_hash": "d1fe93b200e6c7f81ddfea7508b111a427c8d562d128001fbe2fbbc2fdf8126b",
+      "effects": [
+        {
+          "step_id": "send",
+          "connection": {
+            "id": "00000002-1111-4111-8111-111111111111",
+            "version": 2,
+            "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "address": "127.0.0.1:2122",
+          "directory": "/receiver",
+          "final_name_pattern": "<delivery UUID>-settlement.csv",
+          "host_fingerprint": "",
+          "protocol": "ftps",
+          "user": "receiver",
+          "ftps": {
+            "mode": "implicit",
+            "server_name": "localhost",
+            "ca_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "ca_reference_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "password_reference_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "staging_directory": "/receiver-private",
+            "receiver_contract": {
+              "schema_version": 1,
+              "document_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+              "staging_visibility": "receiver-private",
+              "rename": "may-replace",
+              "duplicates": "receiver-deduplicates-delivery-id",
+              "receipt": "exact-readback"
+            }
+          }
+        }
+      ],
+      "external_contact": false,
+      "approval_required": true,
+      "collection": {
+        "kind": "ftps.collect",
+        "connection": {
+          "id": "00000001-1111-4111-8111-111111111111",
+          "version": 1,
+          "definition_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "state": "active",
+          "revision": 1,
+          "address": "127.0.0.1:2121",
+          "user": "producer",
+          "directory": "/producer",
+          "host_fingerprint": "",
+          "key_fingerprint": "",
+          "protocol": "ftps",
+          "ftps": {
+            "mode": "explicit",
+            "server_name": "localhost",
+            "ca_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "ca_reference_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "password_reference_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "staging_directory": "/source-private",
+            "receiver_contract": {
+              "schema_version": 1,
+              "document_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+              "staging_visibility": "receiver-private",
+              "rename": "may-replace",
+              "duplicates": "receiver-deduplicates-delivery-id",
+              "receipt": "exact-readback"
+            }
+          }
+        },
+        "source": {
+          "kind": "ftps.collect",
+          "connection": {
+            "id": "00000001-1111-4111-8111-111111111111",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "manifest": "settlement.ready.json",
+          "target_directory": "/incoming",
+          "completion_contract": "immutable-files-sha256-manifest-v1",
+          "max_files": 4,
+          "max_file_bytes": 1048576,
+          "max_total_bytes": 2097152
+        }
+      }
+    }
+  },
+  "implicit-encrypted-ftps": {
+    "action": {
+      "resource": {
+        "kind": "workflow_collection",
+        "id": "00000007-1111-4111-8111-111111111111",
+        "definition_hash": "6bf9aa1881f98b7dbcf7007a188b9db58d81efe9b26d97c2a789fe6379085a55",
+        "state": "captured",
+        "revision": 4
+      },
+      "replayed": false
+    },
+    "preview": {
+      "definition": {
+        "schema_version": 1,
+        "workflow": {
+          "id": "00000004-1111-4111-8111-111111111111",
+          "version": 2,
+          "hash": "4fc4579f2c9acdedb0f089fab3b2433fd9a88d19df626c24a075ec9d3ed296c3"
+        },
+        "source": {
+          "kind": "ftps.collect",
+          "connection": {
+            "id": "00000001-1111-4111-8111-111111111111",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "manifest": "settlement.ready.json",
+          "target_directory": "/incoming",
+          "completion_contract": "immutable-files-sha256-manifest-v1",
+          "max_files": 4,
+          "max_file_bytes": 1048576,
+          "max_total_bytes": 2097152
+        },
+        "source_connection": {
+          "id": "00000001-1111-4111-8111-111111111111",
+          "version": 1,
+          "definition_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "state": "active",
+          "revision": 1,
+          "address": "127.0.0.1:2121",
+          "user": "producer",
+          "directory": "/producer",
+          "host_fingerprint": "",
+          "key_fingerprint": "",
+          "protocol": "ftps",
+          "ftps": {
+            "mode": "implicit",
+            "server_name": "localhost",
+            "ca_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "ca_reference_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "password_reference_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "staging_directory": "/source-private",
+            "receiver_contract": {
+              "schema_version": 1,
+              "document_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+              "staging_visibility": "receiver-private",
+              "rename": "may-replace",
+              "duplicates": "receiver-deduplicates-delivery-id",
+              "receipt": "exact-readback"
+            }
+          }
+        },
+        "source_identity": "253722ec90b1d89011fe53bb263322607667071495b30c87f84928a6c3506b5f",
+        "authority_revision": 3,
+        "storage_id": "00000005-1111-4111-8111-111111111111",
+        "namespace_root": "/",
+        "timeout_seconds": 120,
+        "effects": [
+          {
+            "step_id": "send",
+            "connection": {
+              "id": "00000002-1111-4111-8111-111111111111",
+              "version": 2,
+              "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            },
+            "address": "127.0.0.1:2122",
+            "directory": "/receiver",
+            "final_name_pattern": "<delivery UUID>-settlement.csv",
+            "host_fingerprint": "",
+            "encryption": {
+              "key": {
+                "id": "00000003-1111-4111-8111-111111111111",
+                "version": 1,
+                "hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+              },
+              "profile": "seipd-v1-aes256"
+            },
+            "recipient_fingerprint": "dddddddddddddddddddddddddddddddddddddddd",
+            "encryption_fingerprint": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "protocol": "ftps",
+            "user": "receiver",
+            "ftps": {
+              "mode": "explicit",
+              "server_name": "localhost",
+              "ca_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "ca_reference_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "password_reference_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "staging_directory": "/receiver-private",
+              "receiver_contract": {
+                "schema_version": 1,
+                "document_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+                "staging_visibility": "receiver-private",
+                "rename": "may-replace",
+                "duplicates": "receiver-deduplicates-delivery-id",
+                "receipt": "exact-readback"
+              }
+            }
+          }
+        ]
+      },
+      "definition_hash": "6bf9aa1881f98b7dbcf7007a188b9db58d81efe9b26d97c2a789fe6379085a55",
+      "external_contact": false,
+      "approval_required": true
+    },
+    "run": {
+      "run": {
+        "id": "0000000b-1111-4111-8111-111111111111",
+        "workflow_id": "00000004-1111-4111-8111-111111111111",
+        "workflow_version": 2,
+        "workflow_hash": "4fc4579f2c9acdedb0f089fab3b2433fd9a88d19df626c24a075ec9d3ed296c3",
+        "file_id": "00000009-1111-4111-8111-111111111111",
+        "source": {
+          "id": "00000009-1111-4111-8111-111111111111",
+          "size_bytes": 3,
+          "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+          "policy": "integrity-only-v1",
+          "accepted_event_id": "0000000c-1111-4111-8111-111111111111"
+        },
+        "storage_id": "00000005-1111-4111-8111-111111111111",
+        "namespace_root": "/",
+        "authority_revision": 3,
+        "state": "queued",
+        "reason": "awaiting_worker",
+        "revision": 1
+      },
+      "steps": [
+        {
+          "id": "send",
+          "ordinal": 1,
+          "delivery_id": "0000000d-1111-4111-8111-111111111111",
+          "state": "queued",
+          "attempts": 0,
+          "observation": {}
+        }
+      ],
+      "observed_state": "queued",
+      "observed_reason": "awaiting_worker"
+    },
+    "selection": {
+      "workflow": {
+        "id": "00000004-1111-4111-8111-111111111111",
+        "version": 2,
+        "hash": "4fc4579f2c9acdedb0f089fab3b2433fd9a88d19df626c24a075ec9d3ed296c3"
+      },
+      "timeout_seconds": 120,
+      "expected_authority_revision": 3
+    },
+    "view": {
+      "job": {
+        "id": "00000007-1111-4111-8111-111111111111",
+        "workflow_id": "00000004-1111-4111-8111-111111111111",
+        "workflow_version": 2,
+        "workflow_hash": "4fc4579f2c9acdedb0f089fab3b2433fd9a88d19df626c24a075ec9d3ed296c3",
+        "definition": {
+          "schema_version": 1,
+          "workflow": {
+            "id": "00000004-1111-4111-8111-111111111111",
+            "version": 2,
+            "hash": "4fc4579f2c9acdedb0f089fab3b2433fd9a88d19df626c24a075ec9d3ed296c3"
+          },
+          "source": {
+            "kind": "ftps.collect",
+            "connection": {
+              "id": "00000001-1111-4111-8111-111111111111",
+              "version": 1,
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "manifest": "settlement.ready.json",
+            "target_directory": "/incoming",
+            "completion_contract": "immutable-files-sha256-manifest-v1",
+            "max_files": 4,
+            "max_file_bytes": 1048576,
+            "max_total_bytes": 2097152
+          },
+          "source_connection": {
+            "id": "00000001-1111-4111-8111-111111111111",
+            "version": 1,
+            "definition_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "state": "active",
+            "revision": 1,
+            "address": "127.0.0.1:2121",
+            "user": "producer",
+            "directory": "/producer",
+            "host_fingerprint": "",
+            "key_fingerprint": "",
+            "protocol": "ftps",
+            "ftps": {
+              "mode": "implicit",
+              "server_name": "localhost",
+              "ca_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "ca_reference_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "password_reference_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "staging_directory": "/source-private",
+              "receiver_contract": {
+                "schema_version": 1,
+                "document_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+                "staging_visibility": "receiver-private",
+                "rename": "may-replace",
+                "duplicates": "receiver-deduplicates-delivery-id",
+                "receipt": "exact-readback"
+              }
+            }
+          },
+          "source_identity": "253722ec90b1d89011fe53bb263322607667071495b30c87f84928a6c3506b5f",
+          "authority_revision": 3,
+          "storage_id": "00000005-1111-4111-8111-111111111111",
+          "namespace_root": "/",
+          "timeout_seconds": 120,
+          "effects": [
+            {
+              "step_id": "send",
+              "connection": {
+                "id": "00000002-1111-4111-8111-111111111111",
+                "version": 2,
+                "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+              },
+              "address": "127.0.0.1:2122",
+              "directory": "/receiver",
+              "final_name_pattern": "<delivery UUID>-settlement.csv",
+              "host_fingerprint": "",
+              "encryption": {
+                "key": {
+                  "id": "00000003-1111-4111-8111-111111111111",
+                  "version": 1,
+                  "hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+                },
+                "profile": "seipd-v1-aes256"
+              },
+              "recipient_fingerprint": "dddddddddddddddddddddddddddddddddddddddd",
+              "encryption_fingerprint": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+              "protocol": "ftps",
+              "user": "receiver",
+              "ftps": {
+                "mode": "explicit",
+                "server_name": "localhost",
+                "ca_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "ca_reference_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "password_reference_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                "staging_directory": "/receiver-private",
+                "receiver_contract": {
+                  "schema_version": 1,
+                  "document_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+                  "staging_visibility": "receiver-private",
+                  "rename": "may-replace",
+                  "duplicates": "receiver-deduplicates-delivery-id",
+                  "receipt": "exact-readback"
+                }
+              }
+            }
+          ]
+        },
+        "definition_hash": "6bf9aa1881f98b7dbcf7007a188b9db58d81efe9b26d97c2a789fe6379085a55",
+        "state": "captured",
+        "captured": true,
+        "revision": 4,
+        "fence": 1,
+        "attempts": 1,
+        "lease_owner": "",
+        "lease_until": null,
+        "next_at": "2026-10-31T12:00:00Z",
+        "created_at": "2026-10-31T12:00:00Z",
+        "deadline_at": "2026-10-31T12:02:00Z",
+        "manifest": {
+          "schema_version": 1,
+          "batch_id": "00000006-1111-4111-8111-111111111111",
+          "files": [
+            {
+              "name": "one.csv",
+              "size_bytes": 3,
+              "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+            }
+          ]
+        },
+        "manifest_hash": "4abd79ff6ac5c652dc2dc5427e63c0d0dbfac34dd856b7833668a073200bb595",
+        "reason": "batch_captured"
+      },
+      "inputs": [
+        {
+          "id": "00000008-1111-4111-8111-111111111111",
+          "first_job_id": "00000007-1111-4111-8111-111111111111",
+          "workflow_id": "00000004-1111-4111-8111-111111111111",
+          "source_identity": "253722ec90b1d89011fe53bb263322607667071495b30c87f84928a6c3506b5f",
+          "input_identity": "1038caafcdc479e3f88ad9a393875ab849a9bb0d500f47f2bdff13d5fead44a7",
+          "source_name": "one.csv",
+          "size_bytes": 3,
+          "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+          "target_path": "/incoming/ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad-one.csv",
+          "object_id": "00000009-1111-4111-8111-111111111111",
+          "state": "queued",
+          "revision": 4,
+          "capture_fence": 1,
+          "capture_owner": "0000000a-1111-4111-8111-111111111111",
+          "file_id": "00000009-1111-4111-8111-111111111111",
+          "run_id": "0000000b-1111-4111-8111-111111111111"
+        }
+      ],
+      "current_authority": true,
+      "observed_state": "captured",
+      "business_acceptance": "unknown",
+      "local_states": [
+        {
+          "input_id": "00000008-1111-4111-8111-111111111111",
+          "state": "published"
+        }
+      ]
+    },
+    "workflow": {
+      "id": "00000004-1111-4111-8111-111111111111",
+      "version": 2,
+      "definition": {
+        "schema_version": 1,
+        "name": "Settlement <source> & review next FTPS implicit",
+        "steps": [
+          {
+            "id": "send",
+            "kind": "ftps.deliver",
+            "connection": {
+              "id": "00000002-1111-4111-8111-111111111111",
+              "version": 2,
+              "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            },
+            "filename": "settlement.csv",
+            "encryption": {
+              "key": {
+                "id": "00000003-1111-4111-8111-111111111111",
+                "version": 1,
+                "hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+              },
+              "profile": "seipd-v1-aes256"
+            }
+          }
+        ],
+        "source": {
+          "kind": "ftps.collect",
+          "connection": {
+            "id": "00000001-1111-4111-8111-111111111111",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "manifest": "settlement.ready.json",
+          "target_directory": "/incoming",
+          "completion_contract": "immutable-files-sha256-manifest-v1",
+          "max_files": 4,
+          "max_file_bytes": 1048576,
+          "max_total_bytes": 2097152
+        }
+      },
+      "definition_hash": "4fc4579f2c9acdedb0f089fab3b2433fd9a88d19df626c24a075ec9d3ed296c3",
+      "state": "approved",
+      "revision": 2,
+      "approval_authority": 3
+    },
+    "workflow_preview": {
+      "definition": {
+        "schema_version": 1,
+        "name": "Settlement <source> & review next FTPS implicit",
+        "steps": [
+          {
+            "id": "send",
+            "kind": "ftps.deliver",
+            "connection": {
+              "id": "00000002-1111-4111-8111-111111111111",
+              "version": 2,
+              "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            },
+            "filename": "settlement.csv",
+            "encryption": {
+              "key": {
+                "id": "00000003-1111-4111-8111-111111111111",
+                "version": 1,
+                "hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+              },
+              "profile": "seipd-v1-aes256"
+            }
+          }
+        ],
+        "source": {
+          "kind": "ftps.collect",
+          "connection": {
+            "id": "00000001-1111-4111-8111-111111111111",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "manifest": "settlement.ready.json",
+          "target_directory": "/incoming",
+          "completion_contract": "immutable-files-sha256-manifest-v1",
+          "max_files": 4,
+          "max_file_bytes": 1048576,
+          "max_total_bytes": 2097152
+        }
+      },
+      "definition_hash": "4fc4579f2c9acdedb0f089fab3b2433fd9a88d19df626c24a075ec9d3ed296c3",
+      "effects": [
+        {
+          "step_id": "send",
+          "connection": {
+            "id": "00000002-1111-4111-8111-111111111111",
+            "version": 2,
+            "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "address": "127.0.0.1:2122",
+          "directory": "/receiver",
+          "final_name_pattern": "<delivery UUID>-settlement.csv",
+          "host_fingerprint": "",
+          "encryption": {
+            "key": {
+              "id": "00000003-1111-4111-8111-111111111111",
+              "version": 1,
+              "hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            },
+            "profile": "seipd-v1-aes256"
+          },
+          "recipient_fingerprint": "dddddddddddddddddddddddddddddddddddddddd",
+          "encryption_fingerprint": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+          "protocol": "ftps",
+          "user": "receiver",
+          "ftps": {
+            "mode": "explicit",
+            "server_name": "localhost",
+            "ca_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "ca_reference_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "password_reference_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "staging_directory": "/receiver-private",
+            "receiver_contract": {
+              "schema_version": 1,
+              "document_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+              "staging_visibility": "receiver-private",
+              "rename": "may-replace",
+              "duplicates": "receiver-deduplicates-delivery-id",
+              "receipt": "exact-readback"
+            }
+          }
+        }
+      ],
+      "external_contact": false,
+      "approval_required": true,
+      "collection": {
+        "kind": "ftps.collect",
+        "connection": {
+          "id": "00000001-1111-4111-8111-111111111111",
+          "version": 1,
+          "definition_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "state": "active",
+          "revision": 1,
+          "address": "127.0.0.1:2121",
+          "user": "producer",
+          "directory": "/producer",
+          "host_fingerprint": "",
+          "key_fingerprint": "",
+          "protocol": "ftps",
+          "ftps": {
+            "mode": "implicit",
+            "server_name": "localhost",
+            "ca_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "ca_reference_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "password_reference_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "staging_directory": "/source-private",
+            "receiver_contract": {
+              "schema_version": 1,
+              "document_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+              "staging_visibility": "receiver-private",
+              "rename": "may-replace",
+              "duplicates": "receiver-deduplicates-delivery-id",
+              "receipt": "exact-readback"
+            }
+          }
+        },
+        "source": {
+          "kind": "ftps.collect",
+          "connection": {
+            "id": "00000001-1111-4111-8111-111111111111",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "manifest": "settlement.ready.json",
+          "target_directory": "/incoming",
+          "completion_contract": "immutable-files-sha256-manifest-v1",
+          "max_files": 4,
+          "max_file_bytes": 1048576,
+          "max_total_bytes": 2097152
+        }
+      }
+    }
+  }
+}

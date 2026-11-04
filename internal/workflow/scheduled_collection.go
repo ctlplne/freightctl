@@ -251,7 +251,7 @@ func validScheduleSource(source ScheduleSourceSelection) bool {
 	if source.Kind == "" {
 		return schedulePattern.MatchString(source.Pattern)
 	}
-	return source.Kind == "sftp.collect" && !source.Recursive && collectionManifestPattern(ScheduledCollectionContract, source.Pattern)
+	return collectionSourceKind(source.Kind) && !source.Recursive && collectionManifestPattern(ScheduledCollectionContract, source.Pattern)
 }
 func (s *Service) scheduleCollection(ctx context.Context, t *store.Transaction, x ScheduleSelection, w *Definition) (*ScheduleCollection, error) {
 	if x.Source.Kind == "" {
@@ -263,7 +263,7 @@ func (s *Service) scheduleCollection(ctx context.Context, t *store.Transaction, 
 		}
 		return nil, scheduleDirectory(ctx, t, x.Source.Directory)
 	}
-	if w.Source == nil || w.Source.Contract != ScheduledCollectionContract || x.Arrival == nil || x.Source.Directory != w.Source.Directory || x.Source.Pattern != w.Source.Manifest || x.MaxFiles != w.Source.MaxFiles {
+	if w.Source == nil || w.Source.Kind != x.Source.Kind || w.Source.Contract != ScheduledCollectionContract || x.Arrival == nil || x.Source.Directory != w.Source.Directory || x.Source.Pattern != w.Source.Manifest || x.MaxFiles != w.Source.MaxFiles {
 		return nil, ErrInput
 	}
 	if len(w.Steps) > 0 {

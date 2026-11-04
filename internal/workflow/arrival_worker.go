@@ -7,7 +7,6 @@ import (
 	"time"
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
-	"github.com/ctlplne/freightctl/internal/delivery"
 	"github.com/ctlplne/freightctl/internal/store"
 )
 
@@ -126,7 +125,7 @@ func (s *Service) ProbeScheduleArrival(ctx context.Context, scope store.Scope, i
 		}
 		return s.checkArrivalProbe(readCtx, scope, id, owner, fence)
 	}
-	peer, err := delivery.OpenCollectionPeer(readCtx, connection.Destination, connection.Directory, check)
+	peer, err := openCollectionSourcePeer(readCtx, connection, d.Collection.Source.Kind, check)
 	reason := "source_connection_unavailable"
 	state := "attention"
 	var manifest *CollectionManifest

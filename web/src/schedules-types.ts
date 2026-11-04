@@ -17,6 +17,10 @@ import {
 } from "./programs-types";
 import { ApiError, object, uuid } from "./types";
 import { digestBytes } from "./crypto";
+import {
+  asFTPSConnectionProof,
+  type FTPSConnectionProof,
+} from "./ftps-metadata";
 export interface Reference {
   id: string;
   version: number;
@@ -51,7 +55,7 @@ export interface SourceSelection {
   directory: string;
   filename_pattern: string;
   recursive: boolean;
-  kind?: "sftp.collect";
+  kind?: "sftp.collect" | "ftps.collect";
 }
 export interface ArrivalSelection {
   late_after_seconds: number;
@@ -87,6 +91,9 @@ export interface ScheduleEffect {
   encryption?: { key: Reference; profile: string };
   recipient_fingerprint?: string;
   encryption_fingerprint?: string;
+  protocol?: "ftps";
+  user?: string;
+  ftps?: FTPSConnectionProof;
 }
 export interface ScheduleDefinition {
   schema_version: 1;
@@ -362,6 +369,29 @@ function effect(v: unknown): ScheduleEffect {
   const o = object(v),
     step = str(o, "step_id", 64);
   if (!/^[a-z][a-z0-9_]{0,63}$/.test(step)) bad();
+  const ftps = o.protocol === "ftps";
+  if (o.protocol !== undefined && !ftps) bad();
+  if (ftps) {
+    const expected = [
+      "step_id",
+      "connection",
+      "address",
+      "directory",
+      "final_name_pattern",
+      "host_fingerprint",
+      "protocol",
+      "user",
+      "ftps",
+      ...(o.encryption === undefined
+        ? []
+        : ["encryption", "recipient_fingerprint", "encryption_fingerprint"]),
+    ];
+    if (
+      Object.keys(o).sort().join("\0") !== expected.sort().join("\0") ||
+      o.host_fingerprint !== ""
+    )
+      bad();
+  } else if (o.ftps !== undefined) bad();
   let encryption: ScheduleEffect["encryption"];
   if (o.encryption !== undefined) {
     const e = object(o.encryption),
@@ -375,12 +405,22 @@ function effect(v: unknown): ScheduleEffect {
     address: str(o, "address", 300),
     directory: canonicalPath(str(o, "directory", 4096)),
     final_name_pattern: str(o, "final_name_pattern", 160),
-    host_fingerprint: str(o, "host_fingerprint", 100),
+    host_fingerprint: ftps ? "" : str(o, "host_fingerprint", 100),
     ...(encryption
       ? {
           encryption,
           recipient_fingerprint: str(o, "recipient_fingerprint", 100),
           encryption_fingerprint: str(o, "encryption_fingerprint", 100),
+        }
+      : {}),
+    ...(ftps
+      ? {
+          protocol: "ftps" as const,
+          user: str(o, "user", 64),
+          ftps: asFTPSConnectionProof(
+            o.ftps,
+            canonicalPath(str(o, "directory", 4096)),
+          ),
         }
       : {}),
   };
@@ -421,7 +461,7 @@ export function asScheduleDefinition(v: unknown): ScheduleDefinition {
   const o = object(v),
     source = object(o.source),
     pattern = str(source, "filename_pattern", 160),
-    remote = source.kind === "sftp.collect",
+    remote = source.kind === "sftp.collect" || source.kind === "ftps.collect",
     regex = remote
       ? ""
       : "^" +
@@ -462,7 +502,7 @@ export function asScheduleDefinition(v: unknown): ScheduleDefinition {
       directory: canonicalPath(str(source, "directory", 4096)),
       filename_pattern: pattern,
       recursive: bool(source, "recursive"),
-      ...(remote ? { kind: "sftp.collect" as const } : {}),
+      ...(remote ? { kind: source.kind as CollectionSource["kind"] } : {}),
       filename_regex: regex,
     },
     calendar: calendar(o.calendar),
@@ -485,6 +525,8 @@ export function asScheduleDefinition(v: unknown): ScheduleDefinition {
       arrival = asArrivalSelection(c.arrival, d.execution_deadline_seconds);
     if (
       input.completion_contract !== scheduledCollectionContract ||
+      input.kind !== d.source.kind ||
+      (input.kind === "ftps.collect") !== (connection.protocol === "ftps") ||
       input.manifest !== pattern ||
       input.target_directory !== d.source.directory ||
       input.max_files !== d.max_files_per_occurrence ||

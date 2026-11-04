@@ -3,7 +3,7 @@
   "id": "F075",
   "observed_at": "2026-11-04",
   "starting_commit": "63e153f6511f6cb457dfa46f70d39f2548f200b6",
-  "state": "original actual native image gates fail at feed-download before scanning; cause unknown; bounded diagnostic observations prepared",
+  "state": "Actual image gates fail before scanning; native8905385 ARM narrows feed failure to hash-bound storage-capacity, exact exhausted filesystem/repair still pending",
   "scope": "Scan the exact disposable independent OpenPGP recipient image used by native Linux tests. This is test infrastructure, not a released server image or runtime security qualification.",
   "qualification_claim": false,
   "frozen_cases": [
@@ -37,7 +37,7 @@
     }
   ],
   "first_observation": "The pinned independent peer Dockerfile audits npm dependencies, but no workflow scans its OS image or binds an image scan to actual runtime identity. Source inspection establishes a missing gate only; it is not a native scanner result.",
-  "next_action": "Queue the bounded diagnostics behind the already-started5ef3f3b native candidate; capture the original command outcome, determine the actual prerequisite failure and replay the exact image gate. No scan or release-security claim until actual image and feed evidence passes.",
+  "next_action": "Preserve original native storage failure, determine exact filesystem mechanism without increasing scanner memory/CPU or weakening freshness/inventory/privacy/vulnerability rules, then replay exact immutable image gate on GitHub. No clean-image or release-security claim follows.",
   "implementation": {
     "workflow": ".github/workflows/native-linux.yml",
     "execution": "after all original runtime tests, including failure when peer build succeeded; no changed existing budgets",
@@ -98,5 +98,23 @@
     "mechanism": "retain the original failure despite later successful cleanup; allow only fixed command phases, bounded numeric exit, timeout boolean, original stdout/stderr hashes and one hash-bound fixed category. Missing/unbound/ambiguous/private/oversized observations remain unrecognized. No raw exception or argument output, new retries, endpoint or resource changes.",
     "local_test_methods": 16,
     "state": "all reporter/orchestration stand-in methods and syntax/workflow lint pass; actual native observation and underlying repair pending"
+  },
+  "storage_failure_observation": {
+    "source_commit": "890538560760792513b49c30864ce5044c16f16e",
+    "run_id": 41890271080,
+    "job_id": 126798311197,
+    "architecture": "arm64",
+    "manifest_reference": ".private/freightctl-f075-storage-first-iBmAX4wR/manifest.json",
+    "manifest_sha256": "98fb54f75e0f1b24fd3418618250184b7bb71dc1d4ffe7c0b9ed4d5b2b3bfee7",
+    "application_pass": 841,
+    "application_fail": 0,
+    "application_skip": 0,
+    "workflow_seconds": 393.214,
+    "command_phase": "feed-download",
+    "exit_code": 1,
+    "category": "storage-capacity",
+    "runner_failure_manifest_sha256": "6931105a6bcf7f6ebaf0517913adb2907975e15840d607aa0a4e744f23c9aba3",
+    "stderr_sha256": "38464ac52314844940089fda17c78b4b39dc94cb3c8137e6afd6aa35515744ff",
+    "scope": "Fixed category is hash-bound to the private failed command stderr. Exact exhausted filesystem/path and repair remain unproven; no scan report or clean/security claim."
   }
 }

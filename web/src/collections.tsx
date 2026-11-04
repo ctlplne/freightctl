@@ -6,6 +6,7 @@ import { ProgramEditor, ProgramReview, PlanReview } from "./programs";
 import { CapturedRouting, RoutingEffects } from "./collection-routing";
 import { CollectionHandoffs } from "./collection-handoffs";
 import { asCollectionHandoffView } from "./collection-handoffs-types";
+import { FTPSPeerIdentity, FTPSReceiverTerms } from "./ftps-peer-identity";
 import {
   asCapturedRoutingMetadata,
   type CapturedRoutingMetadata,
@@ -158,10 +159,20 @@ function ReceiverEffects({ effects }: { effects: ScheduleEffect[] }) {
     <ol>
       {effects.map((e) => (
         <li key={e.step_id}>
-          <strong>{e.step_id}</strong>: SFTP <code>{e.address}</code>, folder{" "}
-          <code>{e.directory}</code>, final name{" "}
-          <code>{e.final_name_pattern}</code>. Pinned host{" "}
-          <code>{e.host_fingerprint}</code>.{" "}
+          <strong>{e.step_id}</strong>:{" "}
+          {e.protocol === "ftps" ? "FTPS" : "SFTP"} <code>{e.address}</code>,
+          folder <code>{e.directory}</code>, final name{" "}
+          <code>{e.final_name_pattern}</code>.{" "}
+          {e.ftps ? (
+            <>
+              <FTPSPeerIdentity proof={e.ftps} />{" "}
+              <FTPSReceiverTerms proof={e.ftps} />{" "}
+            </>
+          ) : (
+            <>
+              Pinned host <code>{e.host_fingerprint}</code>.{" "}
+            </>
+          )}
           {e.encryption ? (
             <>
               Recipient encryption {e.encryption.profile}, fingerprint{" "}
@@ -207,9 +218,15 @@ function SourceReview({
       <p>
         At most {source.max_files} files,{" "}
         {source.max_file_bytes.toLocaleString()} bytes per file and{" "}
-        {source.max_total_bytes.toLocaleString()} bytes per batch. Pinned source
-        host <code>{connection.host_fingerprint}</code>; client identity{" "}
-        <code>{connection.key_fingerprint}</code>.
+        {source.max_total_bytes.toLocaleString()} bytes per batch.{" "}
+        {connection.ftps ? (
+          <FTPSPeerIdentity proof={connection.ftps} />
+        ) : (
+          <>
+            Pinned source host <code>{connection.host_fingerprint}</code>;
+            client identity <code>{connection.key_fingerprint}</code>.
+          </>
+        )}
       </p>
       <ReceiverEffects effects={effects} />
     </>
@@ -513,13 +530,16 @@ export function Collections({
       name: form.name.normalize("NFC"),
       steps: form.steps.map((s) => ({
         id: s.id,
-        kind: "sftp.deliver",
+        kind:
+          selectedConnection(s.connection).protocol === "ftps"
+            ? "ftps.deliver"
+            : "sftp.deliver",
         connection: reference(selectedConnection(s.connection)),
         filename: s.filename,
         ...(s.encryption ? { encryption: s.encryption } : {}),
       })),
       source: {
-        kind: "sftp.collect",
+        kind: source.protocol === "ftps" ? "ftps.collect" : "sftp.collect",
         connection: reference(source),
         manifest: form.manifest,
         target_directory: form.directory,
@@ -839,7 +859,9 @@ export function Collections({
           value={connectionKey(c)}
           disabled={c.state !== "active"}
         >
-          {c.user +
+          {(c.protocol === "ftps" ? "FTPS " + c.ftps!.mode : "SFTP") +
+            " · " +
+            c.user +
             "@" +
             c.address +
             " · " +

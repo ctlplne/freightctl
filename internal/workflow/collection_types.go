@@ -2,11 +2,9 @@ package workflow
 
 import (
 	"context"
-	"encoding/json"
 	"path"
 	"strings"
 
-	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/store"
 	"github.com/ctlplne/freightctl/internal/vpath"
 )
@@ -41,9 +39,11 @@ type CollectionEffect struct {
 	Source     CollectionSource `json:"source"`
 }
 
+func collectionSourceKind(kind string) bool { return kind == "sftp.collect" || kind == "ftps.collect" }
+
 func normalizeCollectionSource(s CollectionSource) error {
 	dir, e := vpath.Canonical(s.Directory)
-	if e != nil || dir != s.Directory || vpath.ControlPath(dir) || s.Kind != "sftp.collect" || (s.Contract != CollectionContract && s.Contract != ScheduledCollectionContract) || !store.ValidID(s.Connection.ID) || s.Connection.Version < 1 || s.Connection.Version > 2147483647 || !hashPattern.MatchString(s.Connection.Hash) || !collectionManifestPattern(s.Contract, s.Manifest) || s.MaxFiles < 1 || s.MaxFiles > 64 || s.MaxFile < 1 || s.MaxFile > 1<<30 || s.MaxTotal < 1 || s.MaxTotal > int64(s.MaxFiles)*s.MaxFile {
+	if e != nil || dir != s.Directory || vpath.ControlPath(dir) || !collectionSourceKind(s.Kind) || (s.Contract != CollectionContract && s.Contract != ScheduledCollectionContract) || !store.ValidID(s.Connection.ID) || s.Connection.Version < 1 || s.Connection.Version > 2147483647 || !hashPattern.MatchString(s.Connection.Hash) || !collectionManifestPattern(s.Contract, s.Manifest) || s.MaxFiles < 1 || s.MaxFiles > 64 || s.MaxFile < 1 || s.MaxFile > 1<<30 || s.MaxTotal < 1 || s.MaxTotal > int64(s.MaxFiles)*s.MaxFile {
 		return ErrInput
 	}
 	if _, e = vpath.Canonical(path.Join(s.Directory, strings.Repeat("x", 193))); e != nil {
@@ -100,20 +100,17 @@ func collectionConnection(ctx context.Context, t *store.Transaction, source *Col
 	if e != nil {
 		return nil, nil, e
 	}
-	if c.Hash != source.Connection.Hash || c.State != "active" {
+	return collectionSourceConnection(*source, c)
+}
+
+func collectionSourceConnection(source CollectionSource, c *store.Configuration) (*ConnectionDefinition, *ConnectionView, error) {
+	if normalizeCollectionSource(source) != nil || c == nil || c.ID != source.Connection.ID || c.Version != source.Connection.Version || c.Hash != source.Connection.Hash || c.State != "active" {
 		return nil, nil, store.ErrState
 	}
-	var d ConnectionDefinition
-	if json.Unmarshal(c.Definition, &d) != nil {
+	d, e := connectionDefinition(c)
+	if e != nil || source.Kind == "sftp.collect" && d.Schema != 1 || source.Kind == "ftps.collect" && d.Schema != 2 {
 		return nil, nil, store.ErrState
-	}
-	_, hash, e := digest(d)
-	if e != nil || hash != c.Hash || d.Schema != 1 {
-		return nil, nil, store.ErrState
-	}
-	if e = secure.ValidateSSHDestination(d.Destination); e != nil {
-		return nil, nil, e
 	}
 	v, e := viewConnection(c)
-	return &d, &v, e
+	return d, &v, e
 }

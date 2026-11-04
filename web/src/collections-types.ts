@@ -1,6 +1,10 @@
 import { ApiError, object, uuid } from "./types";
 import { digestBytes } from "./crypto";
 import {
+  asFTPSConnectionProof,
+  type FTPSConnectionProof,
+} from "./ftps-metadata";
+import {
   asCollectionHandoffView,
   type CollectionHandoffView,
 } from "./collection-handoffs-types";
@@ -36,7 +40,7 @@ export const collectionContract = "immutable-files-sha256-manifest-v1";
 export const scheduledCollectionContract =
   "immutable-files-sha256-scheduled-manifest-v1";
 export interface CollectionSource {
-  kind: "sftp.collect";
+  kind: "sftp.collect" | "ftps.collect";
   connection: Reference;
   manifest: string;
   target_directory: string;
@@ -48,7 +52,7 @@ export interface CollectionSource {
 }
 export interface WorkflowStep {
   id: string;
-  kind: "sftp.deliver";
+  kind: "sftp.deliver" | "ftps.deliver";
   connection: Reference;
   filename: string;
   encryption?: ScheduleEffect["encryption"];
@@ -86,6 +90,8 @@ export interface CollectionConnection {
   directory: string;
   host_fingerprint: string;
   key_fingerprint: string;
+  protocol?: "ftps";
+  ftps?: FTPSConnectionProof;
 }
 export interface CollectionScheduleBinding {
   schedule: Reference;
@@ -331,7 +337,7 @@ export function asCollectionSource(v: unknown): CollectionSource {
     "max_total_bytes",
   ]);
   if (
-    o.kind !== "sftp.collect" ||
+    (o.kind !== "sftp.collect" && o.kind !== "ftps.collect") ||
     ![collectionContract, scheduledCollectionContract].includes(
       String(o.completion_contract),
     )
@@ -357,7 +363,7 @@ export function asCollectionSource(v: unknown): CollectionSource {
     maxFile = num(o, "max_file_bytes", 1, 1073741824),
     maxTotal = num(o, "max_total_bytes", 1, maxFiles * maxFile);
   return {
-    kind: "sftp.collect",
+    kind: o.kind as CollectionSource["kind"],
     connection: ref(o.connection),
     manifest,
     target_directory: directory,
@@ -369,19 +375,32 @@ export function asCollectionSource(v: unknown): CollectionSource {
 }
 export function asCollectionConnection(v: unknown): CollectionConnection {
   const o = object(v);
-  keys(o, [
-    "id",
-    "version",
-    "definition_hash",
-    "state",
-    "revision",
-    "address",
-    "user",
-    "directory",
-    "host_fingerprint",
-    "key_fingerprint",
-  ]);
+  keys(
+    o,
+    [
+      "id",
+      "version",
+      "definition_hash",
+      "state",
+      "revision",
+      "address",
+      "user",
+      "directory",
+      "host_fingerprint",
+      "key_fingerprint",
+    ],
+    o.protocol === "ftps" ? ["protocol", "ftps"] : [],
+  );
   if (o.state !== "active" && o.state !== "revoked") bad();
+  const directory = path(str(o, "directory", 1024));
+  if (o.protocol !== undefined && o.protocol !== "ftps") bad();
+  if (
+    o.protocol === "ftps" &&
+    (o.host_fingerprint !== "" ||
+      o.key_fingerprint !== "" ||
+      o.ftps === undefined)
+  )
+    bad();
   return {
     id: id(o, "id"),
     version: num(o, "version", 1, 2147483647),
@@ -390,9 +409,21 @@ export function asCollectionConnection(v: unknown): CollectionConnection {
     revision: num(o, "revision"),
     address: str(o, "address", 300),
     user: str(o, "user", 64),
-    directory: path(str(o, "directory", 1024)),
-    host_fingerprint: sshFingerprint(str(o, "host_fingerprint", 100)),
-    key_fingerprint: sshFingerprint(str(o, "key_fingerprint", 100)),
+    directory,
+    host_fingerprint:
+      o.protocol === "ftps"
+        ? ""
+        : sshFingerprint(str(o, "host_fingerprint", 100)),
+    key_fingerprint:
+      o.protocol === "ftps"
+        ? ""
+        : sshFingerprint(str(o, "key_fingerprint", 100)),
+    ...(o.protocol === "ftps"
+      ? {
+          protocol: "ftps" as const,
+          ftps: asFTPSConnectionProof(o.ftps, directory),
+        }
+      : {}),
   };
 }
 export function asCollectionConnections(v: unknown): {
@@ -421,7 +452,10 @@ export function asWorkflowDefinition(v: unknown): WorkflowDefinition {
     const s = object(v);
     keys(s, ["id", "kind", "connection", "filename"], ["encryption"]);
     const step = str(s, "id", 64);
-    if (s.kind !== "sftp.deliver" || !/^[a-z][a-z0-9_]{0,63}$/.test(step))
+    if (
+      (s.kind !== "sftp.deliver" && s.kind !== "ftps.deliver") ||
+      !/^[a-z][a-z0-9_]{0,63}$/.test(step)
+    )
       bad();
     let encryption: ScheduleEffect["encryption"];
     if (s.encryption !== undefined) {
@@ -437,7 +471,7 @@ export function asWorkflowDefinition(v: unknown): WorkflowDefinition {
     }
     return {
       id: step,
-      kind: "sftp.deliver" as const,
+      kind: s.kind as WorkflowStep["kind"],
       connection: ref(s.connection),
       filename: filename(str(s, "filename", 128)),
       ...(encryption ? { encryption } : {}),
@@ -554,7 +588,7 @@ export function asCollectionWorkflowPreview(
   const c = object(o.collection);
   keys(c, ["kind", "connection", "source"]);
   if (
-    c.kind !== "sftp.collect" ||
+    c.kind !== d.source.kind ||
     !equal(asCollectionSource(c.source), d.source)
   )
     bad();
@@ -568,7 +602,8 @@ export function asCollectionWorkflowPreview(
       },
       d.source.connection,
     ) ||
-    connection.state !== "active"
+    connection.state !== "active" ||
+    (d.source.kind === "ftps.collect") !== (connection.protocol === "ftps")
   )
     bad();
   const effects = effectsForWorkflow(o.effects, d);
@@ -576,7 +611,7 @@ export function asCollectionWorkflowPreview(
     definition: d,
     definition_hash: collectionWorkflowHash(d),
     effects,
-    collection: { kind: "sftp.collect" as const, connection, source: d.source },
+    collection: { kind: d.source.kind, connection, source: d.source },
     external_contact: false as const,
     approval_required: true as const,
   };
@@ -593,10 +628,11 @@ export function effectsForWorkflow(
       e.step_id !== s.id ||
       !equal(e.connection, s.connection) ||
       e.final_name_pattern !== "<delivery UUID>-" + s.filename ||
-      !equal(e.encryption, s.encryption)
+      !equal(e.encryption, s.encryption) ||
+      (s.kind === "ftps.deliver") !== (e.protocol === "ftps")
     )
       bad();
-    sshFingerprint(e.host_fingerprint);
+    if (e.protocol !== "ftps") sshFingerprint(e.host_fingerprint);
   });
   return effects;
 }
@@ -667,6 +703,7 @@ export function asCollectionDefinition(v: unknown): CollectionDefinition {
     effects = array(o.effects, 16).map(asWorkflowEffect);
   if (
     connection.state !== "active" ||
+    (source.kind === "ftps.collect") !== (connection.protocol === "ftps") ||
     !equal(
       {
         id: connection.id,
