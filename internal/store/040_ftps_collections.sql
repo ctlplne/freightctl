@@ -77,7 +77,7 @@ CREATE OR REPLACE FUNCTION freightctl_collection_definition_current(t uuid,p uui
  WHERE (w.tenant_id,w.partner_id,w.actor_id,w.workflow_id,w.version,w.definition_hash,w.state,w.approval_authority)=(t,p,a,(d->'workflow'->>'id')::uuid,(d->'workflow'->>'version')::integer,d->'workflow'->>'hash','approved',(d->>'authority_revision')::bigint)
  AND w.definition->'source'=d->'source' AND freightctl_collection_protocol_matches(d->'source',c) AND freightctl_collection_manifest_pattern(d->'source'->>'completion_contract',d->'source'->>'manifest')
  AND ARRAY(SELECT jsonb_object_keys(d->'source') ORDER BY 1)=ARRAY['completion_contract','connection','kind','manifest','max_file_bytes','max_files','max_total_bytes','target_directory']::text[]
- 
+
  AND (d->'source'->>'max_files')::integer BETWEEN 1 AND 64 AND (d->'source'->>'max_file_bytes')::bigint BETWEEN 1 AND 1073741824
  AND (d->'source'->>'max_total_bytes')::bigint BETWEEN 1 AND (d->'source'->>'max_files')::bigint*(d->'source'->>'max_file_bytes')::bigint
  AND d->>'source_identity'=encode(sha256(convert_to(c.connection_id::text||':'||(c.definition->>'directory'),'UTF8')),'hex')
