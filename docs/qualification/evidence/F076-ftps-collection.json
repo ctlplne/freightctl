@@ -44,7 +44,7 @@
       "outcome": "Existing SFTP collection/arrival/schedules, FTPS/SFTP sending, ciphertext, intake, RLS, receipts and native regression gates remain enforced. No local PostgreSQL, model or scanner execution is needed."
     }
   ],
-  "next_action": "Push the verified source40 candidate behind already-started8905385, then require actual native PostgreSQL/FTPS collection, original regressions and fresh metadata40 restore. Capture first failure before repair. Add real public CLI/API/browser, crash/changed-batch/event-DML, mixed/encrypted routing and independent-peer journeys; keep stock x86 isolationF068/D159 image feed and every whole-goal gate visible.",
+  "next_action": "Submit bounded scanner/batch-SQL successor behind now-runningfb317e5, preserving original collection/application replay. Require actual native40 collection/regression results and disk/feed/image scan; then implement actual public CLI/API/Chrome, crash/recovery, mixed/encrypted forwarding/handoff and independent-peer source journeys. Keep retained35, inference boundary, stock x86 isolation and all whole-goal gates unchanged.",
   "first_failure": {
     "test": "TestFTPSCollectionSourceMissingContract",
     "result": "existing typed source refuses ftps.collect; no service contact",
@@ -143,5 +143,14 @@
       "runner_manifest_sha256": "c7fcd1d513ab31dc2ff96b1b593e270be39979334ec08a2c5009ba7c51364f85",
       "scope": "Fresh actual PostgreSQL same-cluster metadata only; collection runtime and retained35 upgrade unqualified."
     }
+  },
+  "batch_sql_followup_prepared": {
+    "local_manifest_reference": ".private/freightctl-f076-batch-sql-local-sx06g_rp/manifest.json",
+    "local_manifest_sha256": "9e768eb2a0eea20b6e046537e7f29a301aeee703f61e550a2282ca709ced8e5a",
+    "local_scope": "Integration compile/vet only; no local service execution.",
+    "new_cases": "Two native FTPS modes: same producer batch keeps original accepted object/input ownership; changed contents under that batch ID refuse before any new local acceptance, preserving original history.",
+    "strengthened_cases": "Existing SQL predicate case now also attempts correctly matching-event DML under the runtime role, with exact canonical positive control and savepoint rollback for every forgery. Existing schema2 cases admit and inspect their immutable kept-local run/plan without contacting source.",
+    "native_leaf_cases_prepared": 15,
+    "submitted_candidate_scope": "Originalfb317e5 has13 leaves and predicate-only SQL; this follow-up adds2 leaves and stronger DML/kept-local assertions. No native result follows from compilation."
   }
 }

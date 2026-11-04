@@ -140,6 +140,23 @@ func TestFTPSCollectionCopiesExactSourceAndReplaysWithoutAnotherContact(t *testi
 				if _, err = x.f.s.Run(x.f.ctx, x.f.scope, "inject-uncollected-file", RunRequest{Workflow: x.workflow, FileID: x.f.file.ID}); !errors.Is(err, ErrInput) {
 					t.Fatal("manual file bypassed FTPS source lineage", err)
 				}
+				if program {
+					if _, err = x.f.s.RefreshCollection(x.f.ctx, x.f.scope, job.ID, "admit-collected-ftps-local-plan", Decision{Hash: job.Hash, Revision: v.Job.Revision}); err != nil {
+						t.Fatal(err)
+					}
+					local, err := x.f.s.CollectionStatus(x.f.ctx, x.f.scope, job.ID)
+					if err != nil || len(local.Inputs) != 1 || local.Inputs[0].RunID == nil {
+						t.Fatal("collected FTPS program did not admit its owned input", err)
+					}
+					run, err := x.f.s.Status(x.f.ctx, x.f.scope, *local.Inputs[0].RunID)
+					if err != nil || run.Run.State != "kept_local" || run.Run.FileID != *v.Inputs[0].FileID || len(run.Steps) != 0 || x.listener.contacts.Load() != contacts {
+						t.Fatal("local FTPS collection plan changed source or made a remote effect", err)
+					}
+					plan, err := storedExecutionPlan(run.Run)
+					if err != nil || plan == nil || plan.LocalReason != "reviewed_local_collection" || len(plan.Steps) != 0 {
+						t.Fatal("local outcome lost its immutable compiled plan", err)
+					}
+				}
 			})
 		}
 	}
@@ -174,6 +191,51 @@ func TestFTPSCollectionMismatchCannotPublishAnAcceptedSibling(t *testing.T) {
 	}
 }
 
+func TestFTPSCollectionProducerBatchCannotDuplicateOrChangeItsCapturedMeaning(t *testing.T) {
+	for _, implicit := range []bool{false, true} {
+		t.Run(fmt.Sprint(implicit), func(t *testing.T) {
+			x := newFTPSCollection(t, implicit, false, false)
+			body := []byte("abc")
+			publishFTPSCollectionObject(t, x, "one.csv", body)
+			manifest := publishFTPSCollectionManifest(t, x, x.source.Manifest, []CollectionFile{{Name: "one.csv", Size: 3, SHA256: secure.Digest(body)}})
+			first, _ := startCollection(t, x.f, x.selection, "original-ftps-batch")
+			if _, err := x.f.s.WorkCollection(x.f.ctx, x.f.scope, first.ID, "capture-original-ftps-batch", CollectionWorkRequest{Hash: first.Hash}); err != nil {
+				t.Fatal(err)
+			}
+			captured := requireCollectedFTPSBytes(t, x, first.ID, body)
+			duplicate, _ := startCollection(t, x.f, x.selection, "same-ftps-batch-new-job")
+			if _, err := x.f.s.WorkCollection(x.f.ctx, x.f.scope, duplicate.ID, "observe-same-ftps-batch", CollectionWorkRequest{Hash: duplicate.Hash}); err != nil {
+				t.Fatal(err)
+			}
+			v, err := x.f.s.CollectionStatus(x.f.ctx, x.f.scope, duplicate.ID)
+			if err != nil || !v.Job.Captured || !reflect.DeepEqual(v.Inputs, captured.Inputs) {
+				t.Fatal("repeated producer batch replaced accepted custody or original ownership", err)
+			}
+			// The producer can publish another immutable namespace revision. Its
+			// old batch ID still cannot authorize a different payload manifest.
+			publishFTPSCollectionObject(t, x, "two.csv", []byte("def"))
+			if _, err = x.producer.s.Custody.PathCommand(x.producer.ctx, x.producer.scope, secure.NewID(), store.PathCommand{Operation: "remove", Path: path.Join("/inbox", x.source.Manifest)}); err != nil {
+				t.Fatal(err)
+			}
+			changed := *manifest
+			changed.Files = []CollectionFile{{Name: "two.csv", Size: 3, SHA256: secure.Digest([]byte("def"))}}
+			raw, _, _ := digest(changed)
+			publishFTPSCollectionObject(t, x, x.source.Manifest, raw)
+			forged, _ := startCollection(t, x.f, x.selection, "changed-ftps-batch-meaning")
+			if _, err = x.f.s.WorkCollection(x.f.ctx, x.f.scope, forged.ID, "refuse-changed-ftps-batch", CollectionWorkRequest{Hash: forged.Hash}); err != nil {
+				t.Fatal(err)
+			}
+			v, err = x.f.s.CollectionStatus(x.f.ctx, x.f.scope, forged.ID)
+			if err != nil || v.Job.Captured || v.Job.State != "attention" || v.Job.Reason != "producer_batch_binding_refused" || v.Job.Manifest != nil || len(v.Inputs) != 0 {
+				t.Fatal("changed producer batch became accepted input authority", err)
+			}
+			if original := requireCollectedFTPSBytes(t, x, first.ID, body); !reflect.DeepEqual(original.Job, captured.Job) || !reflect.DeepEqual(original.Inputs, captured.Inputs) {
+				t.Fatal("refused batch altered original immutable history")
+			}
+		})
+	}
+}
+
 func TestFTPSCollectionRevocationFencesOriginalWorkerBeforeContact(t *testing.T) {
 	for _, implicit := range []bool{false, true} {
 		t.Run(fmt.Sprint(implicit), func(t *testing.T) {
@@ -199,6 +261,7 @@ func TestFTPSCollectionRuntimeSQLRejectsDetachedProtocolAndPeerViews(t *testing.
 	if err != nil {
 		t.Fatal(err)
 	}
+	base, _ := startCollection(t, x.f, x.selection, "exact-ftps-sql-control")
 	tx, err := x.f.s.Custody.DB.Begin(x.f.ctx, x.f.scope)
 	if err != nil {
 		t.Fatal(err)
@@ -229,6 +292,36 @@ func TestFTPSCollectionRuntimeSQLRejectsDetachedProtocolAndPeerViews(t *testing.
 		var current bool
 		if err = tx.Tx.QueryRow(x.f.ctx, `SELECT freightctl_collection_definition_current($1,$2,$3,$4)`, x.f.scope.Tenant, x.f.scope.Partner, x.f.scope.Actor, raw).Scan(&current); err != nil || current != (index == 0) {
 			t.Fatal("runtime SQL accepted a detached source/view or rejected exact metadata", index, err)
+		}
+		if _, err = tx.Tx.Exec(x.f.ctx, "SAVEPOINT ftps_collection_forgery"); err != nil {
+			t.Fatal(err)
+		}
+		forged := *base
+		forged.ID, forged.Definition, forged.Hash = secure.NewID(), raw, secure.Digest(raw)
+		if index == 0 {
+			forged.Definition, forged.Hash = base.Definition, base.Hash
+		}
+		forged.Created, err = tx.DatabaseTime(x.f.ctx)
+		if err != nil {
+			t.Fatal(err)
+		}
+		forged.Next, forged.Deadline = forged.Created, forged.Created.Add(120*time.Second)
+		// SaveCollection appends the correctly matching event before DML.
+		// The refusal must therefore come from source/view authority rather
+		// than an absent or detached journal event. The exact control must pass.
+		err = tx.SaveCollection(x.f.ctx, &forged, 0)
+		if index == 0 {
+			if err != nil {
+				t.Fatal("matching-event exact SQL control failed", err)
+			}
+		} else {
+			collectionSQLRefusal(t, err)
+		}
+		if _, err = tx.Tx.Exec(x.f.ctx, "ROLLBACK TO SAVEPOINT ftps_collection_forgery"); err != nil {
+			t.Fatal(err)
+		}
+		if _, err = tx.Tx.Exec(x.f.ctx, "RELEASE SAVEPOINT ftps_collection_forgery"); err != nil {
+			t.Fatal(err)
 		}
 	}
 	if x.listener.contacts.Load() != 0 {
