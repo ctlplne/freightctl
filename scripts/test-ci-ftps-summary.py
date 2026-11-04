@@ -63,6 +63,19 @@ def synthetic_governance_outputs():
 
 
 class SummaryContracts(unittest.TestCase):
+    def test_encrypted_workflow_requires_explicit_profile_and_closed_original_outputs(self):
+        self.write()
+        with self.assertRaises(ValueError):
+            summary.summarize(self.root,self.result,"a"*40,require_workflow_dispatch_encryption=True)
+        for encrypted in (True, "true", 1):
+            with self.subTest(encrypted=encrypted):
+                self.manifest["workflow_dispatch_encryption_requested"]=encrypted
+                with self.assertRaises(ValueError): self.check()
+        self.manifest["workflow_dispatch_encryption_requested"]=True
+        self.manifest["workflow_dispatch_approvals_requested"]=True
+        self.manifest["workflow_dispatch_governance"]={mode:{"state":"passed","recipient_encrypted":True} for mode in ("explicit","implicit")}
+        with self.assertRaises(ValueError): self.check()
+
     def test_required_workflow_dispatch_cannot_be_replaced_with_direct_or_claim_only_evidence(self):
         self.write()
         with self.assertRaises(ValueError):

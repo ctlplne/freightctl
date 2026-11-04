@@ -541,7 +541,7 @@
     "qualification_claim": false
   },
   "fixed_public_repetition": {
-    "state": "workflow source prepared and actionlint passed; native execution pending",
+    "state": "all three original fresh workflow profiles and all three direct profiles pass at895f1f4",
     "profile_replays": 3,
     "scope": "three fresh complete workflow-consent journeys and three fresh complete direct-consent journeys in their existing jobs",
     "invariants": [
@@ -552,7 +552,35 @@
       "keep original failures and unproven causes visible even when later repeats pass"
     ],
     "reason": "D151/D152 did not recur on the single instrumented replay. Fixed repetitions improve observation of intermittent failure without selectively rerunning to obtain a green result.",
-    "qualification_claim": false
+    "qualification_claim": false,
+    "native_result": {
+      "candidate": "895f1f48cd911166fca5eec71348ae3d0c564026",
+      "workflow_run_id": 41867348009,
+      "workflow_job_id": 126704879645,
+      "direct_run_id": 41867347984,
+      "direct_job_id": 126704879081,
+      "workflow_commands_each_run": 260,
+      "direct_commands_each_run": 180,
+      "browser_phases_each_run": 6,
+      "original_key_replays_each_run": 6,
+      "wcag_audits_each_run": 18,
+      "workflow_rotation_cases_each_run": 20,
+      "source_inputs": 723,
+      "all_receiver_contacts_attempts_fences": 0,
+      "workflow_result_manifest_sha256": [
+        "2266f7e6a144182c481072db75736fd3b510f5474c0e37de1a96ac69264715a3",
+        "fe4785e6cd0292f47086f90122be0d39ba86a3590a6149784177e5437121d0bd",
+        "57cfce48354e83d2ac0ebe6f88af77d118c1086c218de463647d6db07528bb1b"
+      ],
+      "direct_result_manifest_sha256": [
+        "50e4a833e0d8f035e5cf349a89ce041fd2e7fc13d59bc7b4772166b64f351ee2",
+        "2384933d07b510e8cc502256a5964c04d3b17070fa001f66015892bd28e90dee",
+        "b8328c82dc579b935a82a5519a37b531ba67fb2aa5477e2457f0ce7da7604a00"
+      ],
+      "logs_manifest": ".private/freightctl-f073-three-replays-Ap9d1Lh6/manifest.json",
+      "logs_manifest_sha256": "75a593de21f87a326b85eaab9e28f8f09babe4a3b889b3b0801df42b3b623eb2",
+      "limits": "D151/D152 did not recur; precise causes remain unproven and open as intermittent. Sending qualification is separate."
+    }
   },
   "submitted_checkpoint": {
     "commit": "895f1f48cd911166fca5eec71348ae3d0c564026",

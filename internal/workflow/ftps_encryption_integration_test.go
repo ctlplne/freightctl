@@ -308,7 +308,7 @@ func TestEncryptedFTPSRecipientRotationAndRevocationFenceSavedWork(t *testing.T)
 				contacts := listener.contacts.Load()
 				snapshot := snapshotReceiverReads(t, r)
 				request := filepath.Join(t.TempDir(), "rotated-recipient.json")
-				raw, _ := json.Marshal(map[string]any{"id": key.ID, "expected_version": key.Version, "purpose": "encrypt", "fingerprint": peer.Fingerprints["recipient-rsa"]})
+				raw, _ := json.Marshal(map[string]any{"key_id": key.ID, "expected_version": key.Version, "purpose": "encrypt", "fingerprint": peer.Fingerprints["recipient-rsa"]})
 				if err = os.WriteFile(request, raw, 0600); err != nil {
 					t.Fatal(err)
 				}

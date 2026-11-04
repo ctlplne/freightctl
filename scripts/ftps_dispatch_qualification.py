@@ -56,6 +56,7 @@ WORKFLOW_COMMANDS = tuple(n for n in COMMANDS if n not in {"create", "create-rep
     "workflow-validate", "workflow-draft", "workflow-approve", "workflow-run", "workflow-run-replay", "workflow-api-replay", "workflow-run-status",
     "connection-version", "connection-revoke", "work-after-revoke",
 ) + ROTATION_COMMANDS
+RECIPIENT_COMMANDS = ("recipient-register", "recipient-register-replay", "recipient-status")
 WORKFLOW_REFUSALS = dict(REFUSALS, **{"work-after-revoke": b"freightctl: operation does not match the current resource state\n"})
 SPY_KIND = "freightctl-ftps-contact-spy"
 FAILURE_CODES = {
@@ -82,7 +83,7 @@ def safe_failure(error):
 
 def command_suffix(name):
     match = re.fullmatch(r"cli-(?:explicit|implicit)-(workflow-)?dispatch-(.+)", name)
-    return match[2] if match and match[2] in (WORKFLOW_COMMANDS if match[1] else COMMANDS) else None
+    return match[2] if match and match[2] in (WORKFLOW_COMMANDS + RECIPIENT_COMMANDS if match[1] else COMMANDS) else None
 
 
 def verify_outcome(name, code, stderr, stdout=b""):
@@ -202,15 +203,20 @@ def visible_terms(effect, source, delivery_id):
     if "workflow_binding" in effect:
         b=effect["workflow_binding"]
         terms += [b["workflow_id"],b["run_id"],b["step_id"],b["connection_id"],b["workflow_hash"],b["connection_hash"]]
+    if "encryption" in effect:
+        e=effect["encryption"]
+        terms += [e["key"]["id"], str(e["key"]["version"]), e["profile"], effect["recipient_fingerprint"], "Ciphertext is created from these exact approved plaintext bytes and key."]
     return terms
 
 
-def validate(private, mode, steps, inventory, workflow=False):
+def validate(private, mode, steps, inventory, workflow=False, encrypted=False):
+    require(type(encrypted) is bool and (not encrypted or workflow), "encrypted dispatch requires a registered workflow")
+    commands = (WORKFLOW_COMMANDS + RECIPIENT_COMMANDS if encrypted else WORKFLOW_COMMANDS) if workflow else COMMANDS
     kind = "workflow-dispatch" if workflow else "dispatch"
     prefix = "cli-" + mode + "-" + kind + "-"
     directory = private / (kind + "-" + mode)
     names = [s["name"][len(prefix):] for s in steps if s["name"].startswith(prefix)]
-    require(len(names) == len(set(names)) and set(names) == set(WORKFLOW_COMMANDS if workflow else COMMANDS), "dispatch command closure differs")
+    require(len(names) == len(set(names)) and set(names) == set(commands), "dispatch command closure differs")
     actual = {str(p.relative_to(directory)) for p in directory.rglob("*") if p.is_file()}
     require(isinstance(inventory, dict) and 1 <= len(inventory) <= 100 and set(inventory) == actual,
             "dispatch private file closure differs")
@@ -264,13 +270,17 @@ def validate(private, mode, steps, inventory, workflow=False):
             and before["source"] == source and before["policy"] == before["current_policy"] == definition["dispatch_approval_policy"]
             and before["policy"] == {"revision": policy["revision"], "mode": "independent"}
             and before["current_approval"] is False and before["reviewable"] is True, "dispatch view does not bind intent")
+    recipient = validate_recipient_outputs(directory, output) if encrypted else None
+    encryption = {"key":{"id":recipient["id"],"version":recipient["version"],"hash":recipient["definition_hash"]},"profile":"seipd-v1-aes256"} if encrypted else None
+    require(definition.get("encryption") == encryption, "dispatch recipient policy differs")
     private_destination = definition["ftps"]["destination"]
     require(definition["schema_version"] == 2 and private_destination["mode"] == mode
             and (workflow or definition == original["delivery"]["definition"])
             and effect == {"protocol": "ftps", "address": private_destination["address"], "user": private_destination["user"],
                 "directory": definition["directory"], "filename": definition["filename"],
                 "final_path": definition["directory"] + "/" + delivery["id"] + "-" + definition["filename"],
-                "host_fingerprint": "", "key_fingerprint": "", "key_reference_sha256": "", "recipient_fingerprint": "",
+                "host_fingerprint": "", "key_fingerprint": "", "key_reference_sha256": "", "recipient_fingerprint": recipient["fingerprint"] if encrypted else "",
+                **({"encryption":encryption} if encrypted else {}),
                 "ftps": {"mode": mode, "server_name": private_destination["server_name"], "ca_sha256": private_destination["ca_sha256"],
                     "ca_reference_sha256": hashlib.sha256(private_destination["ca_reference"].encode()).hexdigest(),
                     "password_reference_sha256": hashlib.sha256(private_destination["password_reference"].encode()).hexdigest(),
@@ -278,7 +288,7 @@ def validate(private, mode, steps, inventory, workflow=False):
                     "receiver_contract": definition["ftps"]["receiver_contract"]},
                 **({"workflow_binding":definition["workflow_binding"]} if workflow else {})}, "dispatch public effect changed approved destination")
     if workflow:
-        validate_workflow_outputs(output, delivery, mode)
+        validate_workflow_outputs(output, delivery, mode, encryption)
         validate_connection_rotations(directory, output, definition)
         require(read(private/(prefix+"workflow-api-replay.stdout"))==b"200"
                 and json.loads(read(directory/"workflow-api-replay.body"))==dict(output("workflow-run"),replayed=True),
@@ -343,10 +353,11 @@ def validate(private, mode, steps, inventory, workflow=False):
             and all(r["state"] == "withdrawn" for r in history["reviews"]) and not history.get("next"), "dispatch author history differs")
     require(output("reviewer-history")["reviews"] == [reviews[-1]] and not output("reviewer-history").get("next"),
             "dispatch reviewer private history differs")
-    return {"state": "passed", "mode": mode, "commands": len(WORKFLOW_COMMANDS if workflow else COMMANDS), "strict_cli_refusals": len(WORKFLOW_REFUSALS if workflow else REFUSALS),
+    return {"state": "passed", "mode": mode, "commands": len(commands), "strict_cli_refusals": len(WORKFLOW_REFUSALS if workflow else REFUSALS),
             "strict_api_refusals": 1, "browser_phases": len(PHASES), "lost_response_replays": 3,
             "accessibility_audits": 9, "receiver_connections": 0, "attempts": 0, "fence": 0,
             "spy_stopped": True, "registered_workflow":workflow,
+            **({"recipient_encrypted":True} if encrypted else {}),
             "connection_rotation_cases": len(ROTATION_FIELDS) if workflow else 0,
             "rotation_spy_stopped": True if workflow else None,
             "scope": "metadata consent and no-contact refusals; no FTPS wire or receiver persistence claim"}
@@ -421,13 +432,58 @@ def validate_connection_rotations(directory, output, definition):
     check_counter(json.loads(read(directory / "rotation-receiver.json")), True)
 
 
-def create_workflow_intent(invoke, request, ftps, source, prefix, mode):
+def register_recipient(root, directory, invoke, request, prefix):
+    fixture = Path(read(root / ".private/pgp-fixture-current", 4096).decode().strip())
+    require(fixture.is_absolute() and fixture.resolve().is_relative_to((root / ".private").resolve())
+            and not any(p.is_symlink() for p in (fixture, *fixture.parents)), "dispatch recipient fixture differs")
+    manifest = json.loads(read(fixture / "manifest.json"))
+    fingerprint = read(fixture / "recipient-fingerprint.txt", 128).decode().strip().lower()
+    require(manifest.get("state") == "passed" and manifest.get("peer_backend") == "docker"
+            and manifest.get("fingerprints", {}).get("recipient") == fingerprint
+            and re.fullmatch(r"[0-9a-f]{40}", fingerprint), "dispatch recipient fixture differs")
+    public = read(fixture / "recipient-public.gpg", 128 << 10)
+    public_ref = directory / "recipient-public.gpg"
+    expected = [v for v in manifest.get("files", []) if v.get("path") == str((fixture / "recipient-public.gpg").relative_to(root))]
+    require(len(expected) == 1 and expected[0].get("sha256") == hashlib.sha256(public).hexdigest(), "dispatch recipient fixture differs")
+    with public_ref.open("xb") as f:
+        f.write(public)
+    with (directory / "recipient-fingerprint.txt").open("x") as f:
+        f.write(fingerprint)
+    args = ("--request-file", request("recipient", {"expected_version":0,"purpose":"encrypt","fingerprint":fingerprint}),
+            "--pgp-public-file", public_ref, "--idempotency-key", prefix+"recipient")
+    key = invoke("recipient-register", "pgp-key-register", *args)["resource"]
+    invoke("recipient-register-replay", "pgp-key-register", *args)
+    invoke("recipient-status", "pgp-key-status", "--pgp-key-id", key["id"], "--version", str(key["version"]))
+    return {"key":{"id":key["id"],"version":key["version"],"hash":key["definition_hash"]},"profile":"seipd-v1-aes256"}
+
+
+def validate_recipient_outputs(directory, output):
+    first, replay = output("recipient-register"), output("recipient-register-replay")
+    require(first.get("replayed") is False and replay == dict(first,replayed=True), "dispatch recipient replay differs")
+    key = first["resource"]
+    profiles = key.get("recipient",{}).get("profiles")
+    require(output("recipient-status") == key and key.get("purpose") == "encrypt"
+            and key.get("version") == key.get("revision") == 1 and key.get("state") == "active"
+            and type(key.get("id")) is str and str(uuid.UUID(key["id"])) == key["id"]
+            and type(key.get("definition_hash")) is str and re.fullmatch(r"[0-9a-f]{64}",key["definition_hash"])
+            and key.get("fingerprint") == read(directory / "recipient-fingerprint.txt",128).decode()
+            and re.fullmatch(r"[0-9a-f]{40}",key["fingerprint"])
+            and type(profiles) is list and 1 <= len(profiles) <= 2 and len(set(profiles)) == len(profiles)
+            and all(type(p) is str and p in {"seipd-v1-aes256","seipd-v2-aes256-ocb"} for p in profiles)
+            and "seipd-v1-aes256" in profiles
+            and re.fullmatch(r"[0-9a-f]{40}",key.get("recipient",{}).get("encryption_fingerprint","")), "dispatch recipient registration differs")
+    require(0 < len(read(directory / "recipient-public.gpg",128 << 10)) <= 128 << 10, "dispatch recipient fixture differs")
+    return key
+
+
+def create_workflow_intent(invoke, request, ftps, source, prefix, mode, encryption=None):
     args=("--request-file",request("connection",{"expected_version":0,"directory":"/dispatch-inbox-"+mode,"ftps":ftps}),"--idempotency-key",prefix+"connection")
     connection=invoke("connection-register","connection-register",*args)["resource"]
     invoke("connection-register-replay","connection-register",*args)
     invoke("connection-status","connection-status","--connection-id",connection["id"],"--version",str(connection["version"]))
     definition={"schema_version":1,"name":"Registered FTPS consent "+mode,"steps":[{"id":"send","kind":"ftps.deliver",
         "connection":{"id":connection["id"],"version":connection["version"],"hash":connection["definition_hash"]},"filename":"approved.bin"}]}
+    if encryption is not None: definition["steps"][0]["encryption"] = encryption
     invoke("workflow-validate","workflow-validate","--request-file",request("validate",{"definition":definition,"file_id":source["file_id"]}))
     draft=invoke("workflow-draft","workflow-draft","--request-file",request("workflow",{"expected_version":0,"definition":definition}),"--idempotency-key",prefix+"draft")["resource"]
     approved=invoke("workflow-approve","workflow-approve","--workflow-id",draft["id"],"--version",str(draft["version"]),
@@ -441,7 +497,7 @@ def create_workflow_intent(invoke, request, ftps, source, prefix, mode):
     return run,{"id":status["steps"][0]["delivery_id"]},connection
 
 
-def validate_workflow_outputs(output, delivery, mode):
+def validate_workflow_outputs(output, delivery, mode, encryption=None):
     first,replayed=(output(n) for n in ("connection-register","connection-register-replay"))
     require(first.get("replayed") is False and replayed==dict(first,replayed=True),"dispatch connection registration replay differs")
     c=first["resource"]
@@ -453,7 +509,7 @@ def validate_workflow_outputs(output, delivery, mode):
             and draft["state"]=="draft" and approved["state"]=="approved" and draft["revision"]==1 and approved["revision"]==2,
             "dispatch workflow approval changed definition")
     steps=approved["definition"]["steps"]
-    require(len(steps)==1 and steps[0]=={"id":"send","kind":"ftps.deliver","connection":{"id":c["id"],"version":1,"hash":c["definition_hash"]},"filename":"approved.bin"},
+    require(len(steps)==1 and steps[0]=={"id":"send","kind":"ftps.deliver","connection":{"id":c["id"],"version":1,"hash":c["definition_hash"]},"filename":"approved.bin",**({"encryption":encryption} if encryption else {})},
             "dispatch workflow step does not select the registered FTPS version")
     preview=output("workflow-validate")
     require(preview["definition"]==draft["definition"] and preview["definition_hash"]==draft["definition_hash"]
@@ -461,6 +517,9 @@ def validate_workflow_outputs(output, delivery, mode):
             and preview["external_contact"] is False and preview["approval_required"] is True
             and len(preview["effects"])==1 and preview["effects"][0]["protocol"]=="ftps"
             and preview["effects"][0]["ftps"]==c["ftps"],"dispatch public workflow preview differs")
+    if encryption is not None:
+        effect=preview["effects"][0]; recipient=output("recipient-status")
+        require(effect.get("encryption")==encryption and effect.get("recipient_fingerprint")==recipient["fingerprint"] and effect.get("encryption_fingerprint")==recipient["recipient"]["encryption_fingerprint"], "dispatch encrypted workflow preview differs")
     run=output("workflow-run")["resource"]
     status=output("workflow-run-status")
     binding={"workflow_id":approved["id"],"workflow_version":1,"workflow_hash":approved["definition_hash"],"run_id":run["id"],"step_id":"send",
@@ -475,7 +534,8 @@ def validate_workflow_outputs(output, delivery, mode):
             and next_connection["state"]=="active" and revoked==dict(c,state="revoked",revision=2),"dispatch connection rotation or revocation rebound original work")
 
 
-def exercise(root, private, mode, http_port, cert, binary, tenant, partner, owner, steps, command, workflow=False):
+def exercise(root, private, mode, http_port, cert, binary, tenant, partner, owner, steps, command, workflow=False, encrypted=False):
+    require(type(encrypted) is bool and (not encrypted or workflow), "encrypted dispatch requires a registered workflow")
     kind = "workflow-dispatch" if workflow else "dispatch"
     prefix = "cli-" + mode + "-" + kind + "-"
     directory = private / (kind + "-" + mode)
@@ -512,7 +572,8 @@ def exercise(root, private, mode, http_port, cert, binary, tenant, partner, owne
                 "staging_visibility": "receiver-private", "rename": "may-replace", "duplicates": "receiver-deduplicates-delivery-id", "receipt": "exact-readback"}}
         run = connection = None
         if workflow:
-            run, delivery, connection = create_workflow_intent(invoke, request, ftps, source, prefix, mode)
+            encryption = register_recipient(root, directory, invoke, request, prefix) if encrypted else None
+            run, delivery, connection = create_workflow_intent(invoke, request, ftps, source, prefix, mode, encryption)
             owner_headers = directory/"workflow-owner.headers"
             owner_headers.write_bytes(b"Authorization: Bearer "+read(owner)+b"\nIdempotency-Key: "+(prefix+"run").encode()+b"\nContent-Type: application/json\n")
             command(prefix+"workflow-api-replay",["curl","-q","--silent","--show-error","--noproxy","*","--proto","=https",
@@ -600,4 +661,4 @@ def exercise(root, private, mode, http_port, cert, binary, tenant, partner, owne
         spy.stop()
     inventory = {str(p.relative_to(directory)): hashlib.sha256(read(p, 8 << 20)).hexdigest()
                  for p in sorted(directory.rglob("*")) if p.is_file()}
-    return validate(private, mode, steps, inventory, workflow), inventory
+    return validate(private, mode, steps, inventory, workflow, encrypted), inventory

@@ -11,6 +11,7 @@ on:
       - 'go.mod'
       - 'go.sum'
       - 'scripts/go.sh'
+      - 'scripts/prepare-pgp-fixture.py'
       - 'scripts/dev-db.py'
       - 'scripts/ftps-probe.py'
       - 'scripts/ftps-governance-probe.py'
@@ -49,6 +50,7 @@ on:
       - 'go.mod'
       - 'go.sum'
       - 'scripts/go.sh'
+      - 'scripts/prepare-pgp-fixture.py'
       - 'scripts/dev-db.py'
       - 'scripts/ftps-probe.py'
       - 'scripts/ftps-governance-probe.py'
@@ -90,7 +92,11 @@ concurrency:
 
 jobs:
   workflow-ftps:
-    name: Native x86 registered FTPS workflow consent
+    name: Native x86 registered FTPS workflow consent (${{ matrix.profile }})
+    strategy:
+      fail-fast: false
+      matrix:
+        profile: [plaintext, recipient-encrypted]
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     env:
@@ -98,6 +104,7 @@ jobs:
       GOMEMLIMIT: 192MiB
       NODE_OPTIONS: --max-old-space-size=192
       FREIGHTCTL_BROWSER_CHANNEL: chrome
+      FREIGHTCTL_FTPS_PROFILE: ${{ matrix.profile }}
       PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.cache/freightctl-playwright
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
@@ -132,6 +139,16 @@ jobs:
               process.exitCode = 1;
             });
           NODE
+      - name: Pinned task-owned independent recipient fixture
+        if: matrix.profile == 'recipient-encrypted'
+        run: |
+          docker build --label "freightctl.workspace=$PWD" \
+            --label freightctl.purpose=pgp-interoperability \
+            --tag freightctl-pgp-peer:2.4.9-r1 - <<'DOCKERFILE'
+          FROM alpine@sha256:294b683cb724975bec92580e1e685676bd4b50bda910ddb8c51d4cabeaec77e6
+          RUN apk add --no-cache gnupg=2.4.9-r1
+          DOCKERFILE
+          python3 scripts/prepare-pgp-fixture.py
       - name: Task-owned PostgreSQL
         run: |
           python3 scripts/dev-db.py
@@ -140,11 +157,17 @@ jobs:
         run: |
           umask 077
           task_pg_id=$(docker inspect --format '{{.Id}}' freightctl-postgres-v1)
+          producer_args=()
+          reporter_args=()
+          if [ "$FREIGHTCTL_FTPS_PROFILE" = recipient-encrypted ]; then
+            producer_args+=(--workflow-dispatch-encryption)
+            reporter_args+=(--require-workflow-dispatch-encryption)
+          fi
           for qualification_run in 1 2 3; do
             qualification_status=0
             qualification_result=".private/ftps-workflows-result-${qualification_run}.json"
-            python3 scripts/qualify-ftps.py --retained-schema "$(python3 scripts/ci-metadata-summary.py --print-schema-version)" --postgres-container-id "$task_pg_id" --workflow-dispatch-approvals > "$qualification_result" || qualification_status=$?
-            python3 scripts/ci-ftps-summary.py --result "$qualification_result" --require-workflow-dispatch-approvals
+            python3 scripts/qualify-ftps.py --retained-schema "$(python3 scripts/ci-metadata-summary.py --print-schema-version)" --postgres-container-id "$task_pg_id" --workflow-dispatch-approvals "${producer_args[@]}" > "$qualification_result" || qualification_status=$?
+            python3 scripts/ci-ftps-summary.py --result "$qualification_result" --require-workflow-dispatch-approvals "${reporter_args[@]}"
             if [ "$qualification_status" -ne 0 ]; then
               exit "$qualification_status"
             fi

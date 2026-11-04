@@ -57,7 +57,10 @@ def main():
     parser.add_argument("--browser-tickets", action="store_true", help="also qualify real browser ticket preparation, process-crash receipt recovery and release; requires --browser")
     parser.add_argument("--dispatch-approvals", action="store_true", help="also qualify public FTPS dispatch consent with real Chrome and a bounded contact-only stand-in")
     parser.add_argument("--workflow-dispatch-approvals", action="store_true", help="qualify registered FTPS workflow consent with real CLI/Chrome and a contact-only stand-in")
+    parser.add_argument("--workflow-dispatch-encryption", action="store_true", help="require exact registered recipient disclosure in the complete workflow consent profile; no sending")
     args = parser.parse_args()
+    if args.workflow_dispatch_encryption and not args.workflow_dispatch_approvals:
+        parser.error("--workflow-dispatch-encryption requires --workflow-dispatch-approvals")
     if args.browser_tickets and not args.browser:
         parser.error("--browser-tickets requires the complete --browser profile")
     if args.dispatch_approvals and args.workflow_dispatch_approvals:
@@ -90,6 +93,7 @@ def main():
     manifest["browser_tickets_requested"] = args.browser_tickets
     manifest["dispatch_approvals_requested"] = args.dispatch_approvals
     manifest["workflow_dispatch_approvals_requested"] = args.workflow_dispatch_approvals
+    manifest["workflow_dispatch_encryption_requested"] = args.workflow_dispatch_encryption
     manifest["stock_curl_qualified"] = False
     manifest["stock_lftp_qualified"] = False
     processes, created, started, originally_running = {}, False, False, None
@@ -304,7 +308,7 @@ def main():
                 mode = "implicit" if implicit else "explicit"
                 kind = "workflow_dispatch" if args.workflow_dispatch_approvals else "dispatch"
                 try:
-                    checked, inventory = dispatch.exercise(ROOT, private, mode, http_port, cert, binary, tenant, partner, token, observer.steps, command, args.workflow_dispatch_approvals)
+                    checked, inventory = dispatch.exercise(ROOT, private, mode, http_port, cert, binary, tenant, partner, token, observer.steps, command, args.workflow_dispatch_approvals, args.workflow_dispatch_encryption)
                 except Exception as exc:
                     manifest["dispatch_evidence_failure"]={"mode":mode,"profile":kind,"category":dispatch.safe_failure(exc)}
                     raise RuntimeError("dispatch original evidence check failed") from None

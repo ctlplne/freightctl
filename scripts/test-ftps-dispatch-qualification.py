@@ -114,6 +114,17 @@ class ContactContracts(unittest.TestCase):
                 "workflow-run":{"resource":run},"workflow-run-status":{"run":run,"steps":[{"delivery_id":"delivery"}]},
                 "connection-version":{"resource":dict(c,version=2,definition_hash="c"*64)},"connection-revoke":{"resource":dict(c,revision=2,state="revoked")}}
         dispatch.validate_workflow_outputs(values.__getitem__,delivery,"explicit")
+        encrypted=copy.deepcopy(values)
+        policy={"key":{"id":"recipient","version":1,"hash":"e"*64},"profile":"seipd-v1-aes256"}
+        for label in ("workflow-draft","workflow-approve"):
+            encrypted[label]["resource"]["definition"]["steps"][0]["encryption"]=policy
+        encrypted["workflow-validate"]["definition"]["steps"][0]["encryption"]=policy
+        encrypted["recipient-status"]={"fingerprint":"f"*40,"recipient":{"encryption_fingerprint":"a"*40}}
+        encrypted["workflow-validate"]["effects"][0].update(encryption=policy,recipient_fingerprint="f"*40,encryption_fingerprint="a"*40)
+        dispatch.validate_workflow_outputs(encrypted.__getitem__,delivery,"explicit",policy)
+        for field in ("encryption","recipient_fingerprint","encryption_fingerprint"):
+            changed=copy.deepcopy(encrypted);changed["workflow-validate"]["effects"][0].pop(field)
+            with self.assertRaises(ValueError):dispatch.validate_workflow_outputs(changed.__getitem__,delivery,"explicit",policy)
         for change in (lambda v:v["workflow-run-status"]["steps"][0].update(delivery_id="other"),
                        lambda v:v["connection-status"].update(protocol="sftp"),
                        lambda v:v["workflow-validate"].update(external_contact=True),
@@ -126,6 +137,60 @@ class ContactContracts(unittest.TestCase):
         self.previous_umask = os.umask(0o077)
         self.temporary = tempfile.TemporaryDirectory(prefix="freightctl-contact-contract-", dir="/private/tmp" if Path("/private/tmp").is_dir() else None)
         self.path = Path(self.temporary.name) / "receiver.json"
+
+    def test_recipient_disclosure_requires_exact_original_key_replay_status_and_pin(self):
+        directory = self.path.parent
+        (directory / "recipient-fingerprint.txt").write_text("a"*40)
+        (directory / "recipient-public.gpg").write_bytes(b"synthetic public fixture; no crypto qualification")
+        key={"id":"00000000-0000-0000-0000-000000000001","version":1,"revision":1,"state":"active","purpose":"encrypt","definition_hash":"b"*64,"fingerprint":"a"*40,"recipient":{"profiles":["seipd-v1-aes256"],"encryption_fingerprint":"c"*40}}
+        values={"recipient-register":{"resource":copy.deepcopy(key),"replayed":False},"recipient-register-replay":{"resource":copy.deepcopy(key),"replayed":True},"recipient-status":copy.deepcopy(key)}
+        self.assertEqual(dispatch.validate_recipient_outputs(directory,values.__getitem__),key)
+        for mutate in (
+                lambda v:v["recipient-register-replay"].update(replayed=False),
+                lambda v:v["recipient-status"].update(id="00000000-0000-0000-0000-000000000002"),
+                lambda v:v["recipient-status"].update(fingerprint="d"*40),
+                lambda v:v["recipient-status"].update(state="revoked"),
+                lambda v:v["recipient-status"].update(purpose="verify"),
+                lambda v:v["recipient-status"]["recipient"].update(profiles="seipd-v1-aes256"),
+                lambda v:v["recipient-status"]["recipient"].update(profiles=["automatic"]),
+                lambda v:v["recipient-status"].update(definition_hash="invalid")):
+            with self.subTest(mutation=mutate):
+                altered=copy.deepcopy(values);mutate(altered)
+                with self.assertRaises(ValueError):dispatch.validate_recipient_outputs(directory,altered.__getitem__)
+
+    def test_recipient_fixture_registration_copies_only_pinned_public_material(self):
+        root=self.path.parent;private=root/".private";private.mkdir(mode=0o700)
+        fixture=private/"recipient-fixture";fixture.mkdir(mode=0o700)
+        (private/"pgp-fixture-current").write_text(str(fixture)+"\n")
+        public=b"synthetic public key";fingerprint="a"*40
+        (fixture/"recipient-public.gpg").write_bytes(public)
+        (fixture/"recipient-private.gpg").write_bytes(b"NEVER COPY A PRIVATE KEY")
+        (fixture/"recipient-fingerprint.txt").write_text(fingerprint+"\n")
+        manifest={"state":"passed","peer_backend":"docker","fingerprints":{"recipient":fingerprint},"files":[{"path":str((fixture/"recipient-public.gpg").relative_to(root)),"sha256":hashlib.sha256(public).hexdigest()}]}
+        (fixture/"manifest.json").write_text(json.dumps(manifest))
+        directory=private/"dispatch";directory.mkdir(mode=0o700)
+        commands=[];requests={}
+        def invoke(label,operation,*args):
+            commands.append((label,operation,args));return {"resource":{"id":"key","version":1,"definition_hash":"b"*64}}
+        def request(label,value):requests[label]=value;return directory/(label+".json")
+        policy=dispatch.register_recipient(root,directory,invoke,request,"synthetic-")
+        self.assertEqual(policy,{"key":{"id":"key","version":1,"hash":"b"*64},"profile":"seipd-v1-aes256"})
+        self.assertEqual([c[0] for c in commands],list(dispatch.RECIPIENT_COMMANDS))
+        self.assertEqual(requests,{"recipient":{"expected_version":0,"purpose":"encrypt","fingerprint":fingerprint}})
+        self.assertEqual({p.name for p in directory.iterdir()},{"recipient-public.gpg","recipient-fingerprint.txt"})
+        (fixture/"recipient-public.gpg").write_bytes(b"changed")
+        commands.clear()
+        with self.assertRaises(ValueError):dispatch.register_recipient(root,directory,invoke,request,"synthetic-")
+        self.assertFalse(commands)
+
+    def test_encrypted_commands_cannot_masquerade_as_direct_or_unencrypted_profile(self):
+        for suffix in dispatch.RECIPIENT_COMMANDS:
+            label="cli-explicit-workflow-dispatch-"+suffix
+            self.assertEqual(dispatch.command_suffix(label),suffix)
+            self.assertIsNone(dispatch.command_suffix("cli-explicit-dispatch-"+suffix))
+            dispatch.verify_outcome(label,0,b"",b"{}")
+            with self.assertRaises(ValueError):dispatch.verify_outcome(label,1,b"unrelated private failure")
+        with self.assertRaises(ValueError):dispatch.validate(self.path.parent,"explicit",[],{},False,True)
 
     def tearDown(self):
         self.temporary.cleanup()

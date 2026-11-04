@@ -71,5 +71,35 @@
     "integration_vet": "passed",
     "typecheck": "passed",
     "embedded_build_and_closure": "passed"
-  }
+  },
+  "submitted_candidate": {
+    "commit": "4577313c58a9e9c08e7a3e5d3ba0925b9fbc1685",
+    "pushed": true,
+    "native_run_id": 41869838920,
+    "state": "pending behind running895f1f4; no jobs allocated at observation",
+    "runtime_qualification": false
+  },
+  "public_profile_prepared": {
+    "workflow": ".github/workflows/ftps-workflows.yml",
+    "profiles": [
+      "original plaintext",
+      "recipient-encrypted"
+    ],
+    "fixed_fresh_runs_each": 3,
+    "producer_flag": "--workflow-dispatch-encryption",
+    "required_reporter_flag": "--require-workflow-dispatch-encryption",
+    "key_handling": "generate the existing bounded task-owned GnuPG fixture on GitHub only; copy only hash-pinned public material and its fingerprint into closed private evidence; actual public CLI registration/replay/status must agree",
+    "checks": "require exact workflow/source/key/profile/primary and encryption-subkey preview metadata, real browser disclosure/approval/withdrawal and saved-key recovery, zero receiver contacts/attempts/fences, exact command/output closure and18audits per run",
+    "limits": "metadata consent only; actual sender and GnuPG decrypt remain separate native integration cases. AEAD peer remains open. Preserve30minute job and existing resources/deadlines; no artifacts uploaded.",
+    "local_verification": {
+      "pure_dispatch_contracts": 10,
+      "reporter_contracts": 58,
+      "actionlint": "passed",
+      "python_compile": "passed",
+      "integration_compilation": "passed; no runtime tests",
+      "full_socket_contract_suite": "three existing local socket-spy tests refused by sandbox; native GitHub full suite remains required"
+    },
+    "native_state": "not submitted; preserve currently pending4577313 candidate before next push"
+  },
+  "test_request_correction": "Source review found the new rotation test supplied id instead of the existing public CLI key_id field. Corrected only that test request; original4577313 candidate remains distinct and pending. No production registration schema or check is relaxed."
 }

@@ -123,7 +123,7 @@ def failure_diagnostics(root, result, commit):
         return {}
 
 
-def summarize(root, result, commit, require_browser=False, require_tickets=False, require_browser_tickets=False, require_dispatch_approvals=False, require_workflow_dispatch_approvals=False):
+def summarize(root, result, commit, require_browser=False, require_tickets=False, require_browser_tickets=False, require_dispatch_approvals=False, require_workflow_dispatch_approvals=False, require_workflow_dispatch_encryption=False):
     header = json.loads(read(result, 8192))
     ref = header.get("manifest_reference")
     if not isinstance(ref, str) or not re.fullmatch(r"\.private/ftps-[0-9a-f]{32}/manifest\.json", ref):
@@ -232,16 +232,20 @@ def summarize(root, result, commit, require_browser=False, require_tickets=False
     elif any(dispatch.command_suffix(n) for n in names):
         if any(dispatch.command_suffix(n) and "-workflow-dispatch-" not in n for n in names):
             raise ValueError("dispatch commands require the complete profile")
+    encrypted = manifest.get("workflow_dispatch_encryption_requested", False)
+    if type(encrypted) is not bool or (encrypted and manifest.get("workflow_dispatch_approvals_requested") is not True) or (require_workflow_dispatch_encryption and not encrypted):
+        raise ValueError("required encrypted FTPS workflow profile did not run")
     if require_workflow_dispatch_approvals or manifest.get("workflow_dispatch_approvals_requested"):
         if manifest.get("workflow_dispatch_approvals_requested") is not True or manifest.get("dispatch_approvals_requested") is True:
             raise ValueError("required registered FTPS workflow dispatch profile did not run in isolation")
         for mode in ("explicit", "implicit"):
-            checked=dispatch.validate(path.parent,mode,steps,manifest.get("workflow_dispatch_output_sha256",{}).get(mode),True)
+            checked=dispatch.validate(path.parent,mode,steps,manifest.get("workflow_dispatch_output_sha256",{}).get(mode),True,encrypted)
             if manifest.get("workflow_dispatch_governance",{}).get(mode)!=checked:
                 raise ValueError("workflow dispatch outcomes differ from original evidence")
     elif any(dispatch.command_suffix(n) and "-workflow-dispatch-" in n for n in names):
         raise ValueError("workflow dispatch commands require the complete profile")
-    return {"state": "passed", "source_commit": commit, "manifest_sha256": digest,
+    return {"state": "passed", "source_commit": commit,
+            **({"ftps_workflow_recipient_encryption":"exact registered SEIPDv1 AES256 recipient; metadata consent only"} if encrypted else {}), "manifest_sha256": digest,
             "stock_curl_qualified": True, "stock_lftp_qualified": True, "native_test_pass_records": len(NATIVE_TESTS), "source_inputs": len(sources),
             "public_cli_governance_cases": 2 * len(governance.CASES), "expected_cli_refusals": 2 * len(governance.REFUSALS),
             "native_commands": len(steps), "browser_qualified": manifest.get("browser_requested") is True,
@@ -280,11 +284,12 @@ def main():
     parser.add_argument("--require-browser-tickets", action="store_true")
     parser.add_argument("--require-dispatch-approvals", action="store_true")
     parser.add_argument("--require-workflow-dispatch-approvals", action="store_true")
+    parser.add_argument("--require-workflow-dispatch-encryption", action="store_true")
     args = parser.parse_args()
     commit = os.environ.get("GITHUB_SHA", "")
     try:
         commit = os.environ.get("GITHUB_SHA") or subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT).decode().strip()
-        print(json.dumps(summarize(ROOT, Path(args.result), commit, args.require_browser, args.require_tickets, args.require_browser_tickets, args.require_dispatch_approvals, args.require_workflow_dispatch_approvals)))
+        print(json.dumps(summarize(ROOT, Path(args.result), commit, args.require_browser, args.require_tickets, args.require_browser_tickets, args.require_dispatch_approvals, args.require_workflow_dispatch_approvals, args.require_workflow_dispatch_encryption)))
         return 0
     except Exception:
         print(json.dumps({"state": "failed", "reason": "FTPS qualification or evidence validation failed; inspect protected outputs", **failure_diagnostics(ROOT, Path(args.result), commit)}))
