@@ -31,21 +31,47 @@ REFUSALS = {
     "work-after-withdraw": b"freightctl: current outbound dispatch approval required\n",
     "reviewer-original-denied": b"freightctl: permission denied\n",
 }
+WORKFLOW_COMMANDS = tuple(n for n in COMMANDS if n not in {"create", "create-replay", "queue"}) + (
+    "connection-register", "connection-register-replay", "connection-status",
+    "workflow-validate", "workflow-draft", "workflow-approve", "workflow-run", "workflow-run-replay", "workflow-api-replay", "workflow-run-status",
+    "connection-version", "connection-revoke", "work-after-revoke",
+)
+WORKFLOW_REFUSALS = dict(REFUSALS, **{"work-after-revoke": b"freightctl: operation does not match the current resource state\n"})
 SPY_KIND = "freightctl-ftps-contact-spy"
+FAILURE_CODES = {
+    "dispatch workflow run replay differs":"workflow-replay",
+    "dispatch workflow CLI/API original receipt differs":"workflow-api-replay",
+    "dispatch workflow intent did not queue":"workflow-queue",
+    "dispatch connection registration replay differs":"connection-replay",
+    "dispatch exact connection status differs":"connection-status",
+    "dispatch workflow approval changed definition":"workflow-approval",
+    "dispatch workflow step does not select the registered FTPS version":"workflow-step",
+    "dispatch public workflow preview differs":"workflow-preview",
+    "dispatch workflow intent binding differs":"workflow-binding",
+    "dispatch connection rotation or revocation rebound original work":"connection-version",
+    "dispatch public effect changed approved destination":"effect-binding",
+    "dispatch rendered FTPS terms differ":"rendered-terms",
+    "dispatch private file closure differs":"file-closure",
+}
+
+
+def safe_failure(error):
+    return FAILURE_CODES.get(str(error),"dispatch-evidence") if type(error) is ValueError else "dispatch-evidence"
 
 
 def command_suffix(name):
-    match = re.fullmatch(r"cli-(?:explicit|implicit)-dispatch-(.+)", name)
-    return match[1] if match and match[1] in COMMANDS else None
+    match = re.fullmatch(r"cli-(?:explicit|implicit)-(workflow-)?dispatch-(.+)", name)
+    return match[2] if match and match[2] in (WORKFLOW_COMMANDS if match[1] else COMMANDS) else None
 
 
 def verify_outcome(name, code, stderr, stdout=b""):
     suffix = command_suffix(name)
     if suffix is None:
         return previous.verify_outcome(name, code, stderr, stdout)
-    require(type(code) is int and code == (1 if suffix in REFUSALS else 0), "dispatch CLI outcome differs")
-    if suffix in REFUSALS:
-        require(stderr == REFUSALS[suffix] and stdout == b"", "dispatch CLI refusal differs")
+    refusals = WORKFLOW_REFUSALS if "-workflow-dispatch-" in name else REFUSALS
+    require(type(code) is int and code == (1 if suffix in refusals else 0), "dispatch CLI outcome differs")
+    if suffix in refusals:
+        require(stderr == refusals[suffix] and stdout == b"", "dispatch CLI refusal differs")
 
 
 def check_counter(value, stopped):
@@ -141,7 +167,7 @@ def audit_names(phase):
 
 def visible_terms(effect, source, delivery_id):
     ftps = effect["ftps"]
-    return [delivery_id, source["id"], str(source["size_bytes"]), source["sha256"],
+    terms = [delivery_id, source["id"], str(source["size_bytes"]), source["sha256"],
             effect["user"] + "@" + effect["address"], effect["final_path"],
             ("Explicit" if ftps["mode"] == "explicit" else "Implicit") + " TLS 1.3 required",
             ftps["server_name"], ftps["ca_sha256"], ftps["ca_reference_sha256"],
@@ -152,13 +178,18 @@ def visible_terms(effect, source, delivery_id):
             "Rename may replace an existing final file.",
             "it does not acknowledge a receiver disk flush (fsync), power-loss persistence or business processing.",
             "a missing reply blocks automatic resend.", "Recovery only reads the exact final bytes"]
+    if "workflow_binding" in effect:
+        b=effect["workflow_binding"]
+        terms += [b["workflow_id"],b["run_id"],b["step_id"],b["connection_id"],b["workflow_hash"],b["connection_hash"]]
+    return terms
 
 
-def validate(private, mode, steps, inventory):
-    prefix = "cli-" + mode + "-dispatch-"
-    directory = private / ("dispatch-" + mode)
+def validate(private, mode, steps, inventory, workflow=False):
+    kind = "workflow-dispatch" if workflow else "dispatch"
+    prefix = "cli-" + mode + "-" + kind + "-"
+    directory = private / (kind + "-" + mode)
     names = [s["name"][len(prefix):] for s in steps if s["name"].startswith(prefix)]
-    require(len(names) == len(set(names)) and set(names) == set(COMMANDS), "dispatch command closure differs")
+    require(len(names) == len(set(names)) and set(names) == set(WORKFLOW_COMMANDS if workflow else COMMANDS), "dispatch command closure differs")
     actual = {str(p.relative_to(directory)) for p in directory.rglob("*") if p.is_file()}
     require(isinstance(inventory, dict) and 1 <= len(inventory) <= 100 and set(inventory) == actual,
             "dispatch private file closure differs")
@@ -178,12 +209,18 @@ def validate(private, mode, steps, inventory):
                     and hashlib.sha256(stderr).hexdigest() == step["stderr_sha256"], "dispatch CLI original output changed")
             verify_outcome(step["name"], step["exit_code"], stderr, stdout)
     check_counter(json.loads(read(directory / "receiver.json")), True)
-    original, replay, queued = (output(n) for n in ("create", "create-replay", "queue"))
-    require(original.get("replayed") is False and replay == dict(original, replayed=True), "dispatch create replay differs")
-    delivery = queued["delivery"]
-    require(delivery["id"] == original["delivery"]["id"] and delivery["definition_hash"] == original["delivery"]["definition_hash"]
-            and original["delivery"]["state"] == "draft" and delivery["state"] == "queued"
-            and delivery["revision"] == original["delivery"]["revision"] + 1, "dispatch queue changed intent")
+    if workflow:
+        original, replay = (output(n) for n in ("workflow-run", "workflow-run-replay"))
+        require(original.get("replayed") is False and replay == dict(original,replayed=True), "dispatch workflow run replay differs")
+        delivery = output("status-before")
+        require(delivery["state"] == "queued" and delivery["revision"] == 2, "dispatch workflow intent did not queue")
+    else:
+        original, replay, queued = (output(n) for n in ("create", "create-replay", "queue"))
+        require(original.get("replayed") is False and replay == dict(original, replayed=True), "dispatch create replay differs")
+        delivery = queued["delivery"]
+        require(delivery["id"] == original["delivery"]["id"] and delivery["definition_hash"] == original["delivery"]["definition_hash"]
+                and original["delivery"]["state"] == "draft" and delivery["state"] == "queued"
+                and delivery["revision"] == original["delivery"]["revision"] + 1, "dispatch queue changed intent")
     for name in ("status-before", "status-approved", "status-withdrawn"):
         status = output(name)
         require(status == delivery and status["attempts"] == status["fence"] == 0
@@ -208,7 +245,7 @@ def validate(private, mode, steps, inventory):
             and before["current_approval"] is False and before["reviewable"] is True, "dispatch view does not bind intent")
     private_destination = definition["ftps"]["destination"]
     require(definition["schema_version"] == 2 and private_destination["mode"] == mode
-            and definition == original["delivery"]["definition"]
+            and (workflow or definition == original["delivery"]["definition"])
             and effect == {"protocol": "ftps", "address": private_destination["address"], "user": private_destination["user"],
                 "directory": definition["directory"], "filename": definition["filename"],
                 "final_path": definition["directory"] + "/" + delivery["id"] + "-" + definition["filename"],
@@ -217,7 +254,13 @@ def validate(private, mode, steps, inventory):
                     "ca_reference_sha256": hashlib.sha256(private_destination["ca_reference"].encode()).hexdigest(),
                     "password_reference_sha256": hashlib.sha256(private_destination["password_reference"].encode()).hexdigest(),
                     "staging_path": definition["ftps"]["staging_directory"] + "/.freightctl-" + delivery["id"] + ".partial",
-                    "receiver_contract": definition["ftps"]["receiver_contract"]}}, "dispatch public effect changed approved destination")
+                    "receiver_contract": definition["ftps"]["receiver_contract"]},
+                **({"workflow_binding":definition["workflow_binding"]} if workflow else {})}, "dispatch public effect changed approved destination")
+    if workflow:
+        validate_workflow_outputs(output, delivery, mode)
+        require(read(private/(prefix+"workflow-api-replay.stdout"))==b"200"
+                and json.loads(read(directory/"workflow-api-replay.body"))==dict(output("workflow-run"),replayed=True),
+                "dispatch workflow CLI/API original receipt differs")
     forbidden = [private_destination[k] for k in ("ca_reference", "password_reference", "password_sha256")]
     forbidden += [read(directory / "receiver-password").decode()]
     reviews = []
@@ -278,15 +321,70 @@ def validate(private, mode, steps, inventory):
             and all(r["state"] == "withdrawn" for r in history["reviews"]) and not history.get("next"), "dispatch author history differs")
     require(output("reviewer-history")["reviews"] == [reviews[-1]] and not output("reviewer-history").get("next"),
             "dispatch reviewer private history differs")
-    return {"state": "passed", "mode": mode, "commands": len(COMMANDS), "strict_cli_refusals": len(REFUSALS),
+    return {"state": "passed", "mode": mode, "commands": len(WORKFLOW_COMMANDS if workflow else COMMANDS), "strict_cli_refusals": len(WORKFLOW_REFUSALS if workflow else REFUSALS),
             "strict_api_refusals": 1, "browser_phases": len(PHASES), "lost_response_replays": 3,
             "accessibility_audits": 9, "receiver_connections": 0, "attempts": 0, "fence": 0,
-            "spy_stopped": True, "scope": "metadata consent and no-contact refusals; no FTPS wire or receiver persistence claim"}
+            "spy_stopped": True, "registered_workflow":workflow, "scope": "metadata consent and no-contact refusals; no FTPS wire or receiver persistence claim"}
 
 
-def exercise(root, private, mode, http_port, cert, binary, tenant, partner, owner, steps, command):
-    prefix = "cli-" + mode + "-dispatch-"
-    directory = private / ("dispatch-" + mode)
+def create_workflow_intent(invoke, request, ftps, source, prefix, mode):
+    args=("--request-file",request("connection",{"expected_version":0,"directory":"/dispatch-inbox-"+mode,"ftps":ftps}),"--idempotency-key",prefix+"connection")
+    connection=invoke("connection-register","connection-register",*args)["resource"]
+    invoke("connection-register-replay","connection-register",*args)
+    invoke("connection-status","connection-status","--connection-id",connection["id"],"--version",str(connection["version"]))
+    definition={"schema_version":1,"name":"Registered FTPS consent "+mode,"steps":[{"id":"send","kind":"ftps.deliver",
+        "connection":{"id":connection["id"],"version":connection["version"],"hash":connection["definition_hash"]},"filename":"approved.bin"}]}
+    invoke("workflow-validate","workflow-validate","--request-file",request("validate",{"definition":definition,"file_id":source["file_id"]}))
+    draft=invoke("workflow-draft","workflow-draft","--request-file",request("workflow",{"expected_version":0,"definition":definition}),"--idempotency-key",prefix+"draft")["resource"]
+    approved=invoke("workflow-approve","workflow-approve","--workflow-id",draft["id"],"--version",str(draft["version"]),
+        "--definition-hash",draft["definition_hash"],"--expected-revision",str(draft["revision"]),"--idempotency-key",prefix+"approve")["resource"]
+    ref={"id":approved["id"],"version":approved["version"],"hash":approved["definition_hash"]}
+    args=("--request-file",request("run",{"workflow":ref,"file_id":source["file_id"]}),"--idempotency-key",prefix+"run")
+    run=invoke("workflow-run","workflow-run",*args)["resource"]
+    invoke("workflow-run-replay","workflow-run",*args)
+    status=invoke("workflow-run-status","workflow-run-status","--run-id",run["id"])
+    require(len(status["steps"])==1,"dispatch workflow step inventory differs")
+    return run,{"id":status["steps"][0]["delivery_id"]},connection
+
+
+def validate_workflow_outputs(output, delivery, mode):
+    first,replayed=(output(n) for n in ("connection-register","connection-register-replay"))
+    require(first.get("replayed") is False and replayed==dict(first,replayed=True),"dispatch connection registration replay differs")
+    c=first["resource"]
+    require(output("connection-status")==c and c["protocol"]=="ftps" and c["ftps"]["mode"]==mode
+            and c["version"]==c["revision"]==1 and c["state"]=="active","dispatch exact connection status differs")
+    draft,approved=(output(n)["resource"] for n in ("workflow-draft","workflow-approve"))
+    require(draft["id"]==approved["id"] and draft["version"]==approved["version"]==1
+            and draft["definition"]==approved["definition"] and draft["definition_hash"]==approved["definition_hash"]
+            and draft["state"]=="draft" and approved["state"]=="approved" and draft["revision"]==1 and approved["revision"]==2,
+            "dispatch workflow approval changed definition")
+    steps=approved["definition"]["steps"]
+    require(len(steps)==1 and steps[0]=={"id":"send","kind":"ftps.deliver","connection":{"id":c["id"],"version":1,"hash":c["definition_hash"]},"filename":"approved.bin"},
+            "dispatch workflow step does not select the registered FTPS version")
+    preview=output("workflow-validate")
+    require(preview["definition"]==draft["definition"] and preview["definition_hash"]==draft["definition_hash"]
+            and preview["source"]==delivery["definition"]["source"]
+            and preview["external_contact"] is False and preview["approval_required"] is True
+            and len(preview["effects"])==1 and preview["effects"][0]["protocol"]=="ftps"
+            and preview["effects"][0]["ftps"]==c["ftps"],"dispatch public workflow preview differs")
+    run=output("workflow-run")["resource"]
+    status=output("workflow-run-status")
+    binding={"workflow_id":approved["id"],"workflow_version":1,"workflow_hash":approved["definition_hash"],"run_id":run["id"],"step_id":"send",
+             "connection_id":c["id"],"connection_version":1,"connection_hash":c["definition_hash"]}
+    require(delivery["definition"]["workflow_binding"]==binding and status["run"]==run and len(status["steps"])==1
+            and status["steps"][0]["delivery_id"]==delivery["id"] and run["file_id"]==delivery["file_id"]
+            and run["workflow_id"]==approved["id"] and run["workflow_version"]==1 and run["workflow_hash"]==approved["definition_hash"]
+            and run["source"]==delivery["definition"]["source"],"dispatch workflow intent binding differs")
+    next_connection=output("connection-version")["resource"]
+    revoked=output("connection-revoke")["resource"]
+    require(next_connection["id"]==c["id"] and next_connection["version"]==2 and next_connection["definition_hash"]!=c["definition_hash"]
+            and next_connection["state"]=="active" and revoked==dict(c,state="revoked",revision=2),"dispatch connection rotation or revocation rebound original work")
+
+
+def exercise(root, private, mode, http_port, cert, binary, tenant, partner, owner, steps, command, workflow=False):
+    kind = "workflow-dispatch" if workflow else "dispatch"
+    prefix = "cli-" + mode + "-" + kind + "-"
+    directory = private / (kind + "-" + mode)
     directory.mkdir(mode=0o700)
     def request(label, value):
         ref = directory / (label + ".json")
@@ -318,16 +416,30 @@ def exercise(root, private, mode, http_port, cert, binary, tenant, partner, owne
             "staging_directory": "/dispatch-stage-" + mode,
             "receiver_contract": {"schema_version": 1, "document_sha256": hashlib.sha256(b"synthetic contact-only contract; no receiver qualification").hexdigest(),
                 "staging_visibility": "receiver-private", "rename": "may-replace", "duplicates": "receiver-deduplicates-delivery-id", "receipt": "exact-readback"}}
-        ref = request("delivery", {"file_id": source["file_id"], "address": "", "user": "",
+        run = connection = None
+        if workflow:
+            run, delivery, connection = create_workflow_intent(invoke, request, ftps, source, prefix, mode)
+            owner_headers = directory/"workflow-owner.headers"
+            owner_headers.write_bytes(b"Authorization: Bearer "+read(owner)+b"\nIdempotency-Key: "+(prefix+"run").encode()+b"\nContent-Type: application/json\n")
+            command(prefix+"workflow-api-replay",["curl","-q","--silent","--show-error","--noproxy","*","--proto","=https",
+                "--cacert",cert,"--connect-timeout","3","--max-time","8","--max-filesize","65536","--header","@"+str(owner_headers),
+                "--data-binary","@"+str(directory/"run.json"),"--output",directory/"workflow-api-replay.body","--write-out","%{http_code}",
+                "https://127.0.0.1:"+str(http_port)+"/v1/tenants/"+tenant+"/partners/"+partner+"/workflow-runs"])
+        else:
+            ref = request("delivery", {"file_id": source["file_id"], "address": "", "user": "",
             "directory": "/dispatch-inbox-" + mode, "filename": "approved.bin", "host_public_file": "", "key_file": "", "key_public_file": "", "ftps": ftps})
-        args = ("--request-file", ref, "--idempotency-key", prefix + "create")
-        delivery = invoke("create", "delivery-create", *args)["delivery"]
-        invoke("create-replay", "delivery-create", *args)
-        delivery = invoke("queue", "delivery-approve", "--delivery-id", delivery["id"],
-            "--definition-hash", delivery["definition_hash"], "--expected-revision", str(delivery["revision"]),
-            "--idempotency-key", prefix + "queue")["delivery"]
+            args = ("--request-file", ref, "--idempotency-key", prefix + "create")
+            delivery = invoke("create", "delivery-create", *args)["delivery"]
+            invoke("create-replay", "delivery-create", *args)
+            delivery = invoke("queue", "delivery-approve", "--delivery-id", delivery["id"],
+                "--definition-hash", delivery["definition_hash"], "--expected-revision", str(delivery["revision"]),
+                "--idempotency-key", prefix + "queue")["delivery"]
         id_args = ("--delivery-id", delivery["id"])
-        invoke("work-before-consent", "delivery-work", *id_args)
+        def work(label):
+            if workflow:
+                return invoke(label,"workflow-work","--run-id",run["id"],"--idempotency-key",prefix+"worker")
+            return invoke(label,"delivery-work",*id_args)
+        work("work-before-consent")
         invoke("status-before", "delivery-status", *id_args)
         invoke("reviewer-original-denied", "dispatch-delivery-status", *id_args, who=reviewer_token)
         headers = directory / "reviewer.headers"
@@ -358,7 +470,15 @@ def exercise(root, private, mode, http_port, cert, binary, tenant, partner, owne
         invoke("status-approved", "delivery-status", *id_args)
         invoke("reviewer-review-cli", "dispatch-review-status", "--dispatch-review-id", approved["id"], who=reviewer_token)
         browser("withdraw", approved)
-        invoke("work-after-withdraw", "delivery-work", *id_args)
+        work("work-after-withdraw")
+        if workflow:
+            changed = json.loads(json.dumps(ftps))
+            changed["receiver_contract"]["document_sha256"] = hashlib.sha256(b"synthetic revised contact-only contract").hexdigest()
+            invoke("connection-version","connection-register","--request-file",request("connection-next",{
+                "connection_id":connection["id"],"expected_version":connection["version"],"directory":"/dispatch-inbox-"+mode,"ftps":changed}),"--idempotency-key",prefix+"connection-next")
+            invoke("connection-revoke","connection-revoke","--connection-id",connection["id"],"--version",str(connection["version"]),
+                "--definition-hash",connection["definition_hash"],"--expected-revision",str(connection["revision"]),"--idempotency-key",prefix+"connection-revoke")
+            work("work-after-revoke")
         invoke("status-withdrawn", "delivery-status", *id_args)
         invoke("view-withdrawn", "dispatch-delivery-status", *id_args)
         invoke("owner-history", "dispatch-review-list")
@@ -367,4 +487,4 @@ def exercise(root, private, mode, http_port, cert, binary, tenant, partner, owne
         spy.stop()
     inventory = {str(p.relative_to(directory)): hashlib.sha256(read(p, 8 << 20)).hexdigest()
                  for p in sorted(directory.rglob("*")) if p.is_file()}
-    return validate(private, mode, steps, inventory), inventory
+    return validate(private, mode, steps, inventory, workflow), inventory

@@ -56,9 +56,14 @@ def main():
     parser.add_argument("--tickets", action="store_true", help="also qualify public CLI/HTTPS ticket recovery across an exact task-owned FTPS SIGKILL")
     parser.add_argument("--browser-tickets", action="store_true", help="also qualify real browser ticket preparation, process-crash receipt recovery and release; requires --browser")
     parser.add_argument("--dispatch-approvals", action="store_true", help="also qualify public FTPS dispatch consent with real Chrome and a bounded contact-only stand-in")
+    parser.add_argument("--workflow-dispatch-approvals", action="store_true", help="qualify registered FTPS workflow consent with real CLI/Chrome and a contact-only stand-in")
     args = parser.parse_args()
     if args.browser_tickets and not args.browser:
         parser.error("--browser-tickets requires the complete --browser profile")
+    if args.dispatch_approvals and args.workflow_dispatch_approvals:
+        parser.error("direct and workflow dispatch profiles use separate isolated qualifications")
+    if args.native_client_only and (args.dispatch_approvals or args.workflow_dispatch_approvals):
+        parser.error("dispatch profiles require the actual stock-client source upload")
     if not re.fullmatch(r"[0-9a-f]{64}", args.postgres_container_id):
         raise RuntimeError("use the exact task-owned container ID")
     os.chdir(ROOT)
@@ -84,6 +89,7 @@ def main():
     manifest["tickets_requested"] = args.tickets
     manifest["browser_tickets_requested"] = args.browser_tickets
     manifest["dispatch_approvals_requested"] = args.dispatch_approvals
+    manifest["workflow_dispatch_approvals_requested"] = args.workflow_dispatch_approvals
     manifest["stock_curl_qualified"] = False
     manifest["stock_lftp_qualified"] = False
     processes, created, started, originally_running = {}, False, False, None
@@ -99,7 +105,7 @@ def main():
         with out.open("xb") as stdout, err.open("xb") as stderr:
             child = None
             try:
-                if re.fullmatch(r"browser-(?:explicit|implicit)-operator|cli-(?:explicit|implicit)-dispatch-browser-(?:request|approve|withdraw)", label):
+                if re.fullmatch(r"browser-(?:explicit|implicit)-operator|cli-(?:explicit|implicit)-(?:workflow-)?dispatch-browser-(?:request|approve|withdraw)", label):
                     child = subprocess.Popen(list(map(str, argv)), stdout=stdout, stderr=stderr, env=env, start_new_session=True, preexec_fn=metadata.bounded_output)
                     code = child.wait(timeout=timeout)
                 else:
@@ -235,7 +241,7 @@ def main():
         command("cli-token", [binary, "token", "--token-file", token])
         command("cli-enroll", [binary, "enroll", "--admin-dsn-file", private / "pg-admin.dsn", "--tenant", tenant, "--partner", partner, "--token-file", token])
         command("cli-cert", [binary, "dev-cert", "--cert", cert, "--key", key])
-        if args.browser or args.tickets or args.dispatch_approvals:
+        if args.browser or args.tickets or args.dispatch_approvals or args.workflow_dispatch_approvals:
             with socket.socket() as probe:
                 probe.bind(("127.0.0.1", 0))
                 http_port = probe.getsockname()[1]
@@ -294,11 +300,16 @@ def main():
                 if report.get("state") != "passed" or report.get("cases") != LFTP_CASES or report.get("stock_client_qualification") is not True:
                     raise RuntimeError(label + " stock lftp probe incomplete")
             manifest.setdefault("cli_governance", {})["implicit" if implicit else "explicit"] = governance.exercise(private, "implicit" if implicit else "explicit", port, cert, binary, env, observer.steps, command, metadata.bounded_output)
-            if args.dispatch_approvals:
+            if args.dispatch_approvals or args.workflow_dispatch_approvals:
                 mode = "implicit" if implicit else "explicit"
-                checked, inventory = dispatch.exercise(ROOT, private, mode, http_port, cert, binary, tenant, partner, token, observer.steps, command)
-                manifest.setdefault("dispatch_governance", {})[mode] = checked
-                manifest.setdefault("dispatch_output_sha256", {})[mode] = inventory
+                kind = "workflow_dispatch" if args.workflow_dispatch_approvals else "dispatch"
+                try:
+                    checked, inventory = dispatch.exercise(ROOT, private, mode, http_port, cert, binary, tenant, partner, token, observer.steps, command, args.workflow_dispatch_approvals)
+                except Exception as exc:
+                    manifest["dispatch_evidence_failure"]={"mode":mode,"profile":kind,"category":dispatch.safe_failure(exc)}
+                    raise RuntimeError("dispatch original evidence check failed") from None
+                manifest.setdefault(kind+"_governance", {})[mode] = checked
+                manifest.setdefault(kind+"_output_sha256", {})[mode] = inventory
             if args.browser:
                 mode = "implicit" if implicit else "explicit"
                 directory = private / ("browser-" + mode)
@@ -336,7 +347,7 @@ def main():
                 stop("browser-ticket-" + mode + "-restarted")
                 manifest.setdefault("browser_ticket_governance", {})[mode] = browser_tickets.validate(private, mode, observer.steps, inventory)
                 manifest.setdefault("browser_ticket_output_sha256", {})[mode] = inventory
-        if args.browser or args.tickets or args.dispatch_approvals:
+        if args.browser or args.tickets or args.dispatch_approvals or args.workflow_dispatch_approvals:
             stop("browser-https")
         manifest["state"] = "passed"
         manifest["stock_curl_qualified"] = not args.native_client_only

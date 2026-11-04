@@ -3,7 +3,7 @@
   "id": "F073",
   "observed_at": "2026-11-03",
   "starting_commit": "7879c34f9e917d5c650a60b1800c59050044c01a",
-  "state": "resumed; registered workflow receiver/SQL integration source added; native runtime qualification pending",
+  "state": "first native37 initialization fails atD146; syntax repair and public workflow profile prepared; replay pending",
   "scope": "Next dependency: versioned registered FTPS destinations and typed workflow sending through ordinary execution and independent dispatch consent. This does not replace remaining encryption, collection, independent peer or whole-product requirements.",
   "first_failure": {
     "kind": "actual native ARM typed-workflow contract",
@@ -74,7 +74,7 @@
     "FTPS collection, independent supported x86 receiver qualification, broader protocol behavior and complete receiving/sending customer journeys remain required.",
     "D145 stays open as intermittent despite a passing diagnostic replay. Windows D103 and all83 whole baseline rows/12 full journeys remain open."
   ],
-  "next_action": "Execute the new native PostgreSQL/receiver cases through GitHub, preserve first failures, repair and replay. Extend the public CLI/browser profile to workflow-created intents; frozen C01\u2013C10 remain unqualified until their required journeys run.",
+  "next_action": "Push the grouped CASE repair and the public workflow profile, replay the exact original native suites and execute the new service/browser cases. Preserve first failures. C01\u2013C10 and the whole goal remain open.",
   "implementation_checkpoint": {
     "versioned_connection": "schema2 FTPS definitions, strict canonical validation and redacted reference fingerprints",
     "typed_execution": "ftps.deliver uses exact registered protocol/version; queued delivery includes the workflow/run/step/connection binding; unsupported recipient encryption remains refused",
@@ -125,5 +125,57 @@
       "bounded-program consent and sending",
       "SQL rejection of changed protocol and connection effects"
     ]
+  },
+  "native_first_failure": {
+    "id": "D146",
+    "candidate": "9d661519b2ae1ebfddd6fd7c2fea52a27a250526",
+    "linux_run_id": 41761974185,
+    "native_go_job_ids": [
+      126351496625,
+      126351496903
+    ],
+    "metadata_job_ids": [
+      126351496738,
+      126351496762
+    ],
+    "direct_dispatch_run_id": 41761974181,
+    "direct_dispatch_job_id": 126351496412,
+    "sqlstate": "42601",
+    "category": "syntax error at end of input",
+    "new_workflow_runtime_tests_executed": false,
+    "retained_database_touched": false,
+    "first_logs_manifest": ".private/freightctl-f073-schema37-first-B9y4H94L/manifest.json",
+    "first_logs_manifest_sha256": "a1b365da00b3bdbcf4cd7484de36b3976804243121b3e5465fe7b4a4ffcee729",
+    "native_originals_manifest": ".private/freightctl-f073-native-original-clzJD1AV/manifest.json",
+    "native_originals_manifest_sha256": "469e58bdd32f22c3228a4a55f2e2b5f3b24282787739cd199b96ef2f23432d40"
+  },
+  "public_workflow_profile": {
+    "state": "implemented; native execution pending",
+    "workflow": ".github/workflows/ftps-workflows.yml",
+    "qualifier_flag": "--workflow-dispatch-approvals",
+    "reporter_flag": "--require-workflow-dispatch-approvals",
+    "native_commands_each_mode": 35,
+    "strict_cli_refusals_each_mode": 4,
+    "strict_api_refusals_each_mode": 1,
+    "browser_phases_each_mode": 3,
+    "original_key_browser_replays_each_mode": 3,
+    "wcag_audits_each_mode": 9,
+    "source": "Actual stock-uploaded bytes in fresh PostgreSQL/storage. Registered connection/workflow creation uses CLI; HTTPS replays the original CLI workflow-run key. Least-privilege browser consent uses the exact workflow/connection binding. Rotation/revocation retain the original untouched delivery.",
+    "limits": "Contact-only stand-in proves zero connections and no attempt/fence use during metadata/refusal cases. It does not qualify FTPS bytes,independent vendor behavior or receiver persistence. New native service cases separately exercise actual receiver bytes; those are pending."
+  },
+  "public_profile_local_checks": {
+    "frontend_pass_records": 120,
+    "reporter_contracts": 52,
+    "metadata_contracts": 7,
+    "pure_workflow_refusal_contracts": 2,
+    "typecheck": "passed",
+    "embedded_build_and_closure": "passed",
+    "integration_compilation": "passed;not runtime execution",
+    "workflow_syntax": "passed",
+    "python_compile": "passed",
+    "manifest_reference": ".private/freightctl-f073-workflow-public-local-2yt_347u/manifest.json",
+    "manifest_sha256": "88dec30b8cccd233d83bea5b592bfcec5ffcdadb3ae51f0d0957bf5bd9d5f186",
+    "workflow_refusal_manifest_reference": ".private/freightctl-f073-workflow-refusals-9rafactc/manifest.json",
+    "workflow_refusal_manifest_sha256": "ecbc8f577b3e0f80ccd0003f767d69bf88ee30c42dd11cbedab9141b84ae23c2"
   }
 }

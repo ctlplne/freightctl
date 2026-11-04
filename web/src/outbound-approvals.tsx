@@ -96,7 +96,9 @@ export function DispatchDetails({
           <code>{e.workflow_binding.run_id}</code>, step{" "}
           <code>{e.workflow_binding.step_id}</code>; registered connection{" "}
           <code>{e.workflow_binding.connection_id}</code> version{" "}
-          {e.workflow_binding.connection_version}.
+          {e.workflow_binding.connection_version}. Workflow SHA-256{" "}
+          <code>{e.workflow_binding.workflow_hash}</code>; connection SHA-256{" "}
+          <code>{e.workflow_binding.connection_hash}</code>.
         </p>
       )}
       {e.ftps ? (

@@ -2336,6 +2336,21 @@
       "regression_evidence": [
         "docs/qualification/evidence/F072-ftps-browser-review.json"
       ]
+    },
+    {
+      "id": "D146",
+      "severity": "fresh PostgreSQL migration blocker",
+      "state": "repair prepared; original native replay pending",
+      "observed_on": "2026-11-03",
+      "candidate": "9d661519b2ae1ebfddd6fd7c2fea52a27a250526",
+      "journey": "Fresh schema37 initialization before registered FTPS workflow qualification",
+      "title": "A CASE expression inside the protocol guard IF must be grouped for the PL/pgSQL reader",
+      "first_failure": "Both native Go/PostgreSQL jobs and both metadata jobs stop at initialization with SQLSTATE42601:syntax error at end of input. The separate direct dispatch job stops at the same initialization error. No new PostgreSQL workflow/receiver integration test executed. Full original logs are retained.",
+      "resolution": "Group the CASE expression used to compare the registered protocol schema inside the IF predicate. PostgreSQL expr_until_then/read_sql_construct stops on THEN outside parentheses; it consumes the first CASE THEN otherwise. The comparison and all exact bindings remain unchanged. Migration37 failed within the migration transaction and has no accepted ledger entry in any observed environment; migrations1\u201336 and retained35 remain unchanged. Repair requires fresh native initialization and the original suites plus new workflow cases to replay before it is called verified.",
+      "mechanism_source": "https://github.com/postgres/postgres/blob/REL_17_STABLE/src/pl/plpgsql/src/pl_gram.y#L2535-L2601",
+      "regression_evidence": [
+        "docs/qualification/evidence/F073-ftps-workflow-connections.json"
+      ]
     }
   ]
 }

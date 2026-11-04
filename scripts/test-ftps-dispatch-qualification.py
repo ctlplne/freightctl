@@ -12,6 +12,40 @@ import ftps_dispatch_qualification as dispatch
 
 
 class ContactContracts(unittest.TestCase):
+    def test_workflow_namespace_keeps_exact_refusals_and_private_errors_out_of_diagnostics(self):
+        for mode in ("explicit","implicit"):
+            for suffix,expected in dispatch.WORKFLOW_REFUSALS.items():
+                label="cli-"+mode+"-workflow-dispatch-"+suffix
+                dispatch.verify_outcome(label,1,expected)
+                with self.assertRaises(ValueError): dispatch.verify_outcome(label,1,b"private unrelated error\n")
+                with self.assertRaises(ValueError): dispatch.verify_outcome(label,0,expected)
+        self.assertEqual(dispatch.safe_failure(ValueError("private credential or path")),"dispatch-evidence")
+        self.assertEqual(dispatch.safe_failure(ValueError("dispatch workflow intent binding differs")),"workflow-binding")
+
+    def test_workflow_metadata_cannot_substitute_protocol_version_or_execution_binding(self):
+        c={"id":"connection","version":1,"revision":1,"state":"active","protocol":"ftps","definition_hash":"a"*64,"ftps":{"mode":"explicit"}}
+        step={"id":"send","kind":"ftps.deliver","connection":{"id":"connection","version":1,"hash":"a"*64},"filename":"approved.bin"}
+        definition={"schema_version":1,"name":"Synthetic evidence only","steps":[step]}
+        draft={"id":"workflow","version":1,"revision":1,"state":"draft","definition_hash":"b"*64,"definition":definition}
+        approved=dict(draft,revision=2,state="approved")
+        source={"id":"file"}
+        run={"id":"run","file_id":"file","workflow_id":"workflow","workflow_version":1,"workflow_hash":"b"*64,"source":source}
+        binding={"workflow_id":"workflow","workflow_version":1,"workflow_hash":"b"*64,"run_id":"run","step_id":"send","connection_id":"connection","connection_version":1,"connection_hash":"a"*64}
+        delivery={"id":"delivery","file_id":"file","definition":{"workflow_binding":binding,"source":source}}
+        values={"connection-register":{"resource":c,"replayed":False},"connection-register-replay":{"resource":c,"replayed":True},"connection-status":c,
+                "workflow-draft":{"resource":draft},"workflow-approve":{"resource":approved},
+                "workflow-validate":{"definition":definition,"definition_hash":"b"*64,"source":source,"external_contact":False,"approval_required":True,"effects":[{"protocol":"ftps","ftps":c["ftps"]}]},
+                "workflow-run":{"resource":run},"workflow-run-status":{"run":run,"steps":[{"delivery_id":"delivery"}]},
+                "connection-version":{"resource":dict(c,version=2,definition_hash="c"*64)},"connection-revoke":{"resource":dict(c,revision=2,state="revoked")}}
+        dispatch.validate_workflow_outputs(values.__getitem__,delivery,"explicit")
+        for change in (lambda v:v["workflow-run-status"]["steps"][0].update(delivery_id="other"),
+                       lambda v:v["connection-status"].update(protocol="sftp"),
+                       lambda v:v["workflow-validate"].update(external_contact=True),
+                       lambda v:v["connection-version"]["resource"].update(version=1),
+                       lambda v:v["workflow-run"]["resource"].update(id="other")):
+            altered=copy.deepcopy(values);change(altered)
+            with self.assertRaises(ValueError):dispatch.validate_workflow_outputs(altered.__getitem__,delivery,"explicit")
+
     def setUp(self):
         self.previous_umask = os.umask(0o077)
         self.temporary = tempfile.TemporaryDirectory(prefix="freightctl-contact-contract-", dir="/private/tmp" if Path("/private/tmp").is_dir() else None)

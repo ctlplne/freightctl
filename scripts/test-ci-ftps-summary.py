@@ -63,6 +63,14 @@ def synthetic_governance_outputs():
 
 
 class SummaryContracts(unittest.TestCase):
+    def test_required_workflow_dispatch_cannot_be_replaced_with_direct_or_claim_only_evidence(self):
+        self.write()
+        with self.assertRaises(ValueError):
+            summary.summarize(self.root,self.result,"a"*40,require_workflow_dispatch_approvals=True)
+        self.manifest["workflow_dispatch_approvals_requested"]=True
+        self.manifest["workflow_dispatch_governance"]={mode:{"state":"passed"} for mode in ("explicit","implicit")}
+        with self.assertRaises(ValueError): self.check()
+
     def test_check_failure_diagnostic_cannot_publish_paths_ids_errors_or_unbounded_counts(self):
         check = {"action": "refresh", "wire_phase": "waiting", "error_kind": "other",
                  "exact_file_visible": True, "exact_path_visible": True, "run_enabled": False,
