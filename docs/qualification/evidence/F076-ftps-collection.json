@@ -44,7 +44,7 @@
       "outcome": "Existing SFTP collection/arrival/schedules, FTPS/SFTP sending, ciphertext, intake, RLS, receipts and native regression gates remain enforced. No local PostgreSQL, model or scanner execution is needed."
     }
   ],
-  "next_action": "Preserve running originalfb317e5 ARM and completed x86 failure. The unstarted de93ddd native successor contains the same known D160/D161 fixture errors; submit exact fixture/review repairs with unchanged disk fix after originals are retained. Require full native15-leaf SQL/scheduled/kept-local/batch replay and original image gate. Then actual public CLI/API/Chrome, crash/recovery, mixed/encrypted forwarding/handoff and independent-peer source journeys; retain35 and all whole-goal gates stay open.",
+  "next_action": "Observe preserved runningde93 first outcomes (including bounded image disk/feed/scan) and newest2c64086 original fixture/review repair; no more relevant source push while required repair candidate remains pending. Require full15native leaves, matching-event SQL and scheduled original journey. Add real public CLI/API/Chrome, crash/recovery, mixed/encrypted forwarding/handoff and independent-peer source qualification; retained35, inference and all whole-goal gates stay unchanged.",
   "first_failure": {
     "test": "TestFTPSCollectionSourceMissingContract",
     "result": "existing typed source refuses ftps.collect; no service contact",
@@ -167,7 +167,17 @@
     "passing_scope": "10 FTPS leaves:4 mode/schema exact copy/replay and source lineage;2 bad-digest sibling isolation;2 exact source revocation before contact;2 ordinary CSV check/release. All prior application regressions pass.",
     "failures": "D160 SQL fixture passes empty scope.Actor before the actual predicate; D161 scheduled source-only preview reuses unrelated one-recipient helper. SQL predicate, scheduled probe/admission/copy, schema2 kept-local admission and batch/matching-event follow-up remain unqualified.",
     "image_gate": "Known D159 storage-capacity failure after application; no report",
-    "arm_state": "still running at observation; preserve original"
+    "arm_state": "completed same862pass/4failed records/0skip, workflow446.068seconds; exact original retained",
+    "arm": {
+      "job_id": 126811748608,
+      "application_pass": 862,
+      "application_fail": 4,
+      "application_skip": 0,
+      "workflow_seconds": 446.068,
+      "manifest_reference": ".private/freightctl-f076-native-arm-first-JzYtjkaO/manifest.json",
+      "manifest_sha256": "f74c68a978ffc7d8c0997a28321ff5512ee12ec1489076c942b2b6b7180709ce",
+      "scope": "Same ten exact native FTPS component leaves and old regressions pass; D160/D161 block SQL/scheduled paths. Known image feedD159 fails afterward."
+    }
   },
   "fixture_and_review_repairs_prepared": {
     "local_checks_manifest_reference": ".private/freightctl-f076-review-schedule-local-2wpvtef7/manifest.json",
@@ -180,5 +190,13 @@
     "review_first_result": "4 pure methods:2 actual FTPS parser/rendering failures,2 original SSH/refusal controls pass. No runtime/browser.",
     "earlier_harness_note": "Original manifest0b41e681f3b277366cf1eeb99c1d218f9bca84bf1744037a28dfba7c0507489a remains immutable. Its raw-JSONB-order SSH control was a harness error; corrected reproduction uses ordinary production normalization. A later static JSX harness required the same automatic JSX transform as the app; no production React/runtime defect inferred.",
     "checks": "130 frontend contracts/0fail/0skip; Go typed canonical/synthetic handoff wire race contracts, integration compile/vet, typecheck and embedded closure. Synthetic handoff vectors do not replace native/public workflow execution."
+  },
+  "repair_submission": {
+    "candidate": "2c640862801d849178d9cd0bfb02e9ea2f02ebcb",
+    "state": "pushed; native repair outcome unqualified",
+    "prior_candidate": "de93ddd611943ef94fa1fbd8b351ef93b4918ac6",
+    "prior_native_run_id": 41900064641,
+    "prior_state": "started before repair push; preserved, not cancelled or restarted",
+    "note": "Original de93 contains known D160/D161 fixture errors plus independent bounded disk and batch/kept-local changes. Observe each original scope; do not infer repair result from queued or metadata jobs."
   }
 }
