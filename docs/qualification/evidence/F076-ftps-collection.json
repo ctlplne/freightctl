@@ -3,7 +3,7 @@
   "id": "F076",
   "observed_at": "2026-11-04",
   "starting_commit": "4d771b2e6a961a70b764681fd578ff175d064db7",
-  "state": "Both9e5native suites complete871pass/4failed records/0skip:14of17FTPS leaves pass, including both actual CLI SIGKILL/sealed-object recovery cases per architecture. KnownD164/D165remain red; local repairs await replay. Both new collection Chrome profiles failD167with no classified stage/cause; original logs retained and safe diagnostics prepared.",
+  "state": "f08 core and both independent ARM stock metadata profiles pass their exact scopes. Both metadata Chrome matrices remain red at original response.json reads; one plaintext fresh estate passes both modes before the next fails. Native f08 SQL/scheduled/process/application replay is in progress; operator byte-copy and verified-curl body repair are locally prepared, not runtime-qualified.",
   "scope": "Read/copy input stage of ordinary immutable workflows, using exact registered FTPS revisions and the existing bounded producer-manifest, custody, intake, lease and event machinery. Transport metadata reading alone does not qualify collection.",
   "qualification_claim": false,
   "frozen_cases": [
@@ -44,7 +44,7 @@
       "outcome": "Existing SFTP collection/arrival/schedules, FTPS/SFTP sending, ciphertext, intake, RLS, receipts and native regression gates remain enforced. No local PostgreSQL, model or scanner execution is needed."
     }
   ],
-  "next_action": "Observe newest28cdfcb native41907798160 and public metadata41907798532; queued jobs are unqualified. Do not push another relevant source candidate until this unknown required candidate starts. Capture first exact-CAS/SQL/scheduled/public/state failure before repair; require original15native leaves and actual CLI/API closure. Actual collection Chrome, crash/recovery, mixed/encrypted forwarding/handoff, independent source peers and whole-goal gates remain open.",
+  "next_action": "Retain exact f08 native/metadata/fuzz results. Submit the verified-curl body capture repair and required full UI create/approve/queue/work plus independent HTTPS readbacks after the current required candidate starts; require all original three fresh plaintext/encrypted estates. Keep independent full typed collection, mixed/encrypted routing and whole journeys open.",
   "first_failure": {
     "test": "TestFTPSCollectionSourceMissingContract",
     "result": "existing typed source refuses ftps.collect; no service contact",
@@ -304,13 +304,13 @@
   "newest_submission": {
     "candidate": "f08c7cf9f5cffc7489edaba36e0f6ef9aa81f594",
     "native_run_id": 41924952419,
-    "native_state": "queued/unqualified",
+    "native_state": "ARM/x86 application running; ARM metadata succeeds; fuzz running; x86 metadata queued",
     "public_workflow_metadata_run_id": 41924952454,
-    "public_state": "queued/unqualified with fixed safe-stage diagnostics",
+    "public_state": "completed/failure:plaintext implicit at inspect-definition/line250 and encrypted explicit at preview-request/line180, both response.json calls; one earlier plaintext fresh estate passes",
     "stock_metadata_run_id": 41924952668,
-    "stock_state": "queued/unqualified; new required primitive boundary profile, originalx86filter failures retained",
+    "stock_state": "completed:ARM system/no-ktls independent metadata pass; x86 system/no-ktls retain original filter failures",
     "core_run_id": 41924952402,
-    "core_state": "queued/unqualified",
+    "core_state": "completed/success:137frontend plus current pure contracts/source/security; source f08 only",
     "scope": "IncludesD164/D165fixture repairs,feed-onlyGOGC25 and file postcondition observations,independent stock primitive metadata profile and fixed browser diagnostics. Native source witness/lifecycle prepared,pure tests only; full operator byte-copy wiring still required.",
     "submission_rule": "All required prior9e5native/public jobs started and finished; exact first outcomes retained before push. Hold another relevant source candidate while requiredf08jobs remain pending; no artifact,release,retained upgrade or deployment."
   },
@@ -662,5 +662,71 @@
         "manifest_sha256": "f6978a4237848108f203c79c7b9d8d6a0f8735898fc5da422a7d20e506ae01ef"
       }
     ]
+  },
+  "source_f08_observation": {
+    "candidate": "f08c7cf9f5cffc7489edaba36e0f6ef9aa81f594",
+    "public_run_id": 41924952454,
+    "public": [
+      {
+        "profile": "plaintext",
+        "job_id": 126906786312,
+        "state": "failure",
+        "first_fresh_estates_passed": 1,
+        "failed_mode": "implicit",
+        "stage": "inspect-definition",
+        "source_line": 250,
+        "error_kind": "other",
+        "statement": "const view = await inspected.json();",
+        "manifest_reference": ".private/freightctl-f076-f08-plaintext-iVXsKL/manifest.json",
+        "manifest_sha256": "70c2c9c43b0bd6da0a58a71ab6a53c13207ef737c3d194dea7b5ec3f563b7284"
+      },
+      {
+        "profile": "recipient-encrypted",
+        "job_id": 126906786761,
+        "state": "failure",
+        "first_fresh_estates_passed": 0,
+        "failed_mode": "explicit",
+        "stage": "preview-request",
+        "source_line": 180,
+        "error_kind": "other",
+        "statement": "const preview = await response.json();",
+        "manifest_reference": ".private/freightctl-f076-f08-encrypted-6tzA0x/manifest.json",
+        "manifest_sha256": "6c5f2e1c21bed9424d4f8d9cb610c41184921b8a7f4596d2c3c54af8adebdfd5"
+      }
+    ],
+    "failure_limits": "Exact failing statements observed; underlying exception and Chromium retention/resource cause remain unobserved. Both failing estates preserve no native/lftp failures and exact retained-state/resource cleanup. A single fresh estate cannot pass the required three-estate matrix.",
+    "core": {
+      "run_id": 41924952402,
+      "job_id": 126906786132,
+      "state": "success",
+      "frontend_pass": 137,
+      "frontend_fail": 0,
+      "frontend_skip": 0,
+      "manifest_reference": ".private/freightctl-f076-f08-core-AIs7UU/manifest.json",
+      "manifest_sha256": "0aa180004d0aefcfa71edb981b2bd5fdb15db3a7ed6e128298087c3288018475"
+    },
+    "native_state": "In progress, no completion or repaired D164/D165 pass inferred."
+  },
+  "public_operator_prepared": {
+    "implementation": [
+      "scripts/ftps_collection_operator.py",
+      "scripts/ftps-collection-operator-browser.mjs"
+    ],
+    "runner_flag": "--workflow-collection-operator",
+    "reporter_flag": "--require-workflow-collection-operator",
+    "mechanism": "Separate producer tenant/identity uploads source.csv then exact ready manifest through stock curl to the bounded ordinary native FTPS source. Operator uses ordinary UI preview/draft/approval/queue/work; each of four decisions loses its first real committed response and recovers the same resource through its original key. Require no source contact before work, one control session for capture, attempt1/fence1, exact immutable accepted input/published namespace, unchanged source revisions and independent authenticated HTTPS source/manifest/consumer byte readbacks. Stop only exact owned source child and reopen its final counter.",
+    "verification": "Reopen fixed original files, protected credentials/config references, exact CLI/HTTP bodies, browser requests/headers/keys, canonical workflow/manifest/collection hashes, all six WCAG audits, runtime versions/no errors/no egress, screenshot and exact process outputs. Claim-only summaries and rehashed byte/state/key/authority changes fail.",
+    "wire_body_repair": "Use existing wireResponse verified-curl interception for the original HTTP request; retain body before UI fulfillment instead of asking Chromium for its inspector copy. Metadata profile preserves all old assertions and gains original header/request/response closure. Page stand-ins deliberately reject the old waitForResponse path. Actual repair remains unqualified.",
+    "execution": "Required in both modes in every original three-fresh-estate plaintext/encrypted matrix. Original six consent phases/18audits and two metadata phases/6audits remain; operator adds two phases/12audits/eight original-key recoveries. Job30minutes, existing command/browser/source/resource/isolation gates remain unchanged.",
+    "local_manifest_reference": ".private/freightctl-f076-operator-local-oav4i4ra/manifest.json",
+    "local_manifest_sha256": "19694e495d9a33e20de5ee9e1d0ee3ed7e824c193e38833a70c7779d018dc7b4",
+    "frontend_methods": 141,
+    "reporter_python_methods": 70,
+    "metadata_python_methods": 8,
+    "browser_evidence_python_methods": 7,
+    "operator_python_methods": 6,
+    "source_lifecycle_python_methods": 6,
+    "runtime_qualification": false,
+    "scope": "Only Page/route/HTTP/process/signal stand-ins and own-file fixtures locally. Native freightctl source is not an independent vendor. No actual local DB/source/browser/scanner/model. Full independent typed collection, receiver/business acceptance and whole customer journeys remain open."
   }
 }

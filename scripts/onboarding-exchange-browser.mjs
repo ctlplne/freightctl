@@ -16,6 +16,10 @@ import {
   qualifyFTPSCollectionMetadata,
   ftpsCollectionBrowserObservation,
 } from "./ftps-collection-browser.mjs";
+import {
+  qualifyFTPSCollectionOperator,
+  ftpsOperatorObservation,
+} from "./ftps-collection-operator-browser.mjs";
 import { qualifyOutboundDispatch } from "./outbound-dispatch-browser.mjs";
 import { qualifyIndependentApprovals } from "./onboarding-approvals-browser.mjs";
 import { qualifyQueuedHandoffs } from "./onboarding-handoffs-browser.mjs";
@@ -32,6 +36,7 @@ const collectionObservation = (value) => {
 const dispatchLifecycle = (stage) => {
   collectionLifecycleStage = stage;
   collectionObservation(ftpsCollectionBrowserObservation(c, stage));
+  collectionObservation(ftpsOperatorObservation(c, stage));
   if (c.dispatch_protocol === "ftps")
     console.log(
       JSON.stringify({
@@ -64,7 +69,7 @@ const browser = await chromium.launch({
     "--disable-component-update",
     ...(c.routing_only ||
     c.dispatch_protocol === "ftps" ||
-    c.collection_phase === "ftps-metadata"
+    ["ftps-metadata", "ftps-operator"].includes(c.collection_phase)
       ? ["--renderer-process-limit=1", "--js-flags=--max-old-space-size=128"]
       : []),
   ],
@@ -180,8 +185,13 @@ async function actualReview(route, label, target = endpoint) {
   const request = route.request();
   assert.equal(request.url(), target);
   assert.ok(["GET", "POST"].includes(request.method()));
-  const headers = c.private + "/" + label + ".headers",
-    body = c.private + "/" + label + ".request",
+  const wirePrivate = ["ftps-metadata", "ftps-operator"].includes(
+    c.collection_phase,
+  )
+    ? c.raw
+    : c.private;
+  const headers = wirePrivate + "/" + label + ".headers",
+    body = wirePrivate + "/" + label + ".request",
     output = c.raw + "/" + label + ".json";
   const fields = Object.entries(await request.allHeaders()).filter(
     ([k]) =>
@@ -200,12 +210,17 @@ async function actualReview(route, label, target = endpoint) {
     execFileSync(
       "curl",
       [
+        "-q",
         "--silent",
         "--show-error",
+        "--noproxy",
+        "*",
         "--proto",
         "=https",
         "--cacert",
         c.certificate,
+        "--connect-timeout",
+        "3",
         "--max-time",
         "12",
         "--max-filesize",
@@ -276,6 +291,16 @@ try {
         c,
         audit,
         record,
+        collectionObservation,
+        actualReview,
+      );
+    else if (c.collection_phase === "ftps-operator")
+      await qualifyFTPSCollectionOperator(
+        page,
+        c,
+        audit,
+        record,
+        actualReview,
         collectionObservation,
       );
     else await qualifyCollections(page, c, audit, record, actualReview);
@@ -376,6 +401,9 @@ try {
   collectionObservation(
     ftpsCollectionBrowserObservation(c, collectionLifecycleStage, e),
   );
+  collectionObservation(
+    ftpsOperatorObservation(c, collectionLifecycleStage, e),
+  );
   dispatchLifecycle("failure-capture");
   failure = String(e.stack ?? e);
   if (c.routing_only)
@@ -413,7 +441,7 @@ try {
         model_started: false,
         production_activated: false,
         ...(c.dispatch_protocol === "ftps" ||
-        c.collection_phase === "ftps-metadata"
+        ["ftps-metadata", "ftps-operator"].includes(c.collection_phase)
           ? {
               browser_version: browser.version(),
               node_version: process.version,

@@ -64,6 +64,68 @@ def synthetic_governance_outputs():
 
 
 class SummaryContracts(unittest.TestCase):
+    def test_collection_operator_requires_complete_metadata_profile_and_both_original_results(self):
+        self.write()
+        with self.assertRaises(ValueError):
+            summary.summarize(self.root, self.result, 'a'*40, require_workflow_collection_operator=True)
+        self.assertNotIn('ftps_collection_operator_phases', self.check())
+        for value in (True, 1, 'true'):
+            self.manifest['workflow_collection_operator_requested'] = value
+            with self.assertRaises(ValueError):
+                self.check()
+        old = {'state': 'passed', 'synthetic': True}
+        checked = {'state': 'passed', 'source_kind': 'native-freightctl', 'original_key_replays': 4}
+        self.manifest.update(workflow_dispatch_approvals_requested=True, workflow_collection_metadata_requested=True,
+            workflow_collection_browser_requested=True, workflow_collection_operator_requested=True,
+            workflow_dispatch_governance={m: old for m in ('explicit', 'implicit')},
+            collection_metadata_governance={m: old for m in ('explicit', 'implicit')},
+            collection_browser_governance={m: old for m in ('explicit', 'implicit')},
+            collection_operator_governance={m: checked for m in ('explicit', 'implicit')},
+            collection_operator_output_sha256={m: {'synthetic': 'a'*64} for m in ('explicit', 'implicit')})
+        with patch.object(summary.dispatch, 'validate', return_value=old), patch.object(summary.collection_metadata, 'validate', return_value=old), patch.object(summary.collection_browser, 'validate', return_value=old):
+            with self.assertRaises(ValueError):
+                self.check()
+            with patch.object(summary.collection_operator, 'validate', return_value=checked) as verify:
+                result = self.check()
+                self.assertEqual([call.args[2] for call in verify.call_args_list], ['explicit', 'implicit'])
+                self.assertEqual(result['ftps_collection_operator_phases'], 2)
+                self.assertEqual(result['ftps_collection_operator_saved_key_replays'], 8)
+                self.assertEqual(result['ftps_collection_operator_source'], 'native-freightctl')
+                self.assertEqual(result['ftps_collection_operator_business_acceptance'], 'unknown')
+                self.manifest['collection_operator_governance']['implicit'] = dict(checked, original_key_replays=True)
+                with self.assertRaises(ValueError):
+                    self.check()
+
+    def test_collection_operator_diagnostics_bind_first_failure_to_exact_mode_and_original_outputs(self):
+        name = 'cli-explicit-collection-operator-browser'
+        progress = {'kind': 'ftps-operator-browser-progress', 'mode': 'explicit', 'stage': 'operator-work'}
+        failure = {'kind': 'ftps-operator-browser-failure', 'mode': 'explicit', 'stage': 'operator-work',
+            'error_kind': 'assertion', 'source_file': 'driver', 'source_line': 200}
+        self.manifest['collection_operator_evidence_failure'] = {'mode': 'explicit', 'category': 'original-output-contract'}
+        def report(values):
+            raw = b'\n'.join(json.dumps(v).encode() for v in values)+b'\n'
+            (self.directory/(name+'.stdout')).write_bytes(raw)
+            (self.directory/(name+'.stderr')).write_bytes(b'private-evidence-canary')
+            self.manifest['steps'] = [s for s in self.manifest['steps'] if s['name'] != name]+[{
+                'name': name, 'exit_code': 1, 'stdout_sha256': hashlib.sha256(raw).hexdigest(),
+                'stderr_sha256': hashlib.sha256(b'private-evidence-canary').hexdigest()}]
+            self.write()
+            return summary.failure_diagnostics(self.root, self.result, 'a'*40)
+        result = report([progress, failure, dict(progress, stage='complete'), dict(failure, stage='files-ready')])
+        self.assertEqual(result['collection_operator_progress'], [{'command': name, **progress}])
+        self.assertEqual(result['collection_operator_failures'], [{'command': name, **failure}])
+        self.assertEqual(result['collection_operator_evidence_failure'], {'mode': 'explicit', 'category': 'original-output-contract'})
+        self.assertNotIn('private-evidence-canary', json.dumps(result))
+        for change in ({'stage': 'private-evidence-canary'}, {'source_file': '/private/key'}, {'source_line': True},
+                {'exception': 'private-evidence-canary'}, {'mode': 'implicit'}):
+            result = report([dict(failure, **change)])
+            self.assertNotIn('collection_operator_failures', result)
+            self.assertNotIn('private-evidence-canary', json.dumps(result))
+        (self.directory/(name+'.stdout')).write_bytes(b'changed')
+        self.assertEqual(summary.failure_diagnostics(self.root, self.result, 'a'*40), {})
+        self.manifest['collection_operator_evidence_failure']['category'] = 'private-evidence-canary'
+        self.assertNotIn('collection_operator_evidence_failure', report([failure]))
+
     def test_collection_browser_progress_and_first_failure_are_private_typed_and_source_bound(self):
         name = 'cli-explicit-collection-browser'
         progress = {'kind': 'ftps-collection-browser-progress', 'mode': 'explicit', 'stage': 'preview-visible'}

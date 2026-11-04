@@ -1110,5 +1110,42 @@
     "local_methods": 42,
     "runtime_qualification": false,
     "known_failures": "Original distinct x86system/no-ktls stockfilter failures retained unchanged; no filter/TLS/budget bypass, activeFTP stays disabled."
+  },
+  "source_f08_stock_metadata": {
+    "candidate": "f08c7cf9f5cffc7489edaba36e0f6ef9aa81f594",
+    "run_id": 41924952668,
+    "arm_system": {
+      "job_id": 126906788189,
+      "state": "success",
+      "original_commands": 23,
+      "native_pass_records": 3,
+      "manifest_reference": ".private/freightctl-f076-f08-stock-arm-system-MnsUtd/manifest.json",
+      "manifest_sha256": "a95264c38f92598fffd0cb0fb9fdc5dcf0f721edd9ca9799113a22f3a9b4dc78"
+    },
+    "arm_no_ktls": {
+      "job_id": 126906787623,
+      "state": "success",
+      "original_commands": 25,
+      "native_pass_records": 3,
+      "upstream_skip_lines": 54,
+      "manifest_reference": ".private/freightctl-f076-f08-stock-arm-software-nBxKC4/manifest.json",
+      "manifest_sha256": "6be0efb2ef926027248988a3d1a42ce026b36bd31fd6d9132e6e344f8868ba7b"
+    },
+    "arm_scope": "Each actual stock profile passes both modes/four bounded metadata cases per mode/32768byte maximum/six unchanged0400source files, all original transport/readback cases and12private transfer audits per mode. Native ARM stock seccomp remains unimplemented; no kernel-filter or full typed-collection claim.",
+    "x86_system": {
+      "job_id": 126906788100,
+      "state": "failure",
+      "trace": "Both modes SIGSYS, last setsockopt level6/option31/size4, syscall54; original crypto-policy/control-TLS failure retained.",
+      "manifest_reference": ".private/freightctl-f076-f08-stock-x86-system-1QOk5x/manifest.json",
+      "manifest_sha256": "8deea6dde769b43011d19c677dfbeb73f131dce09f1bfa81a4dc1bd973f88795"
+    },
+    "x86_no_ktls": {
+      "job_id": 126906787953,
+      "state": "failure",
+      "trace": "Both modes SIGSYS, last setsockopt level1/option2/size4, syscall54; original store/reply failure retained.",
+      "manifest_reference": ".private/freightctl-f076-f08-stock-x86-software-n8e5vg/manifest.json",
+      "manifest_sha256": "14bb8109c9f6fbb98ac696c21967c14bda3c923ef3c1ed51f425d6708d367308"
+    },
+    "limits": "Active FTP remains disabled; no stock filter bypass. Full independent typed source collection and whole protocol/journeys remain open."
   }
 }

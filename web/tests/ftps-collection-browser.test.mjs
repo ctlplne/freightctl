@@ -117,6 +117,7 @@ async function exercise({
         data: view,
       },
     ];
+    let active;
     const locator = (name) => ({
       getByRole: (_role, options) => locator(options.name),
       getByLabel: (label) => locator(label),
@@ -141,29 +142,26 @@ async function exercise({
         clicked.push(name);
         if (name.startsWith("Inspect collection"))
           await writeFile(c.source_counter, JSON.stringify(counter(after)));
+        if (name !== "Collections")
+          await active.handler({
+            request: () => ({ method: () => active.next.method }),
+            fulfill: async () => {},
+            abort: async () => {},
+          });
       },
     });
     const page = {
       getByRole: (_role, options) => locator(options.name),
-      waitForResponse: async (predicate) => {
+      waitForResponse: async () => {
+        throw new Error("Chromium response body unavailable");
+      },
+      route: async (target, handler) => {
         const next = replies.shift();
         assert.ok(next);
-        const response = {
-          url: () => base + next.route,
-          status: () => 200,
-          json: async () => next.data,
-          text: async () => JSON.stringify(next.data),
-          request: () => ({
-            method: () => next.method,
-            postDataJSON: () =>
-              next.method === "POST"
-                ? { definition: c.workflow.definition }
-                : null,
-          }),
-        };
-        assert.ok(predicate(response));
-        return response;
+        assert.equal(target, base + next.route);
+        active = { target, handler, next };
       },
+      unroute: async (target) => assert.equal(target, active.target),
     };
     await qualifyFTPSCollectionMetadata(
       page,
@@ -173,6 +171,17 @@ async function exercise({
       },
       (name) => records.push(name),
       observe,
+      async (_route, _label, target) => {
+        assert.equal(target, active.target);
+        return {
+          status: 200,
+          selection:
+            active.next.method === "POST"
+              ? { definition: c.workflow.definition }
+              : null,
+          body: JSON.stringify(active.next.data),
+        };
+      },
     );
     const result = JSON.parse(
       await readFile(

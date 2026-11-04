@@ -2640,14 +2640,14 @@
     {
       "id": "D167",
       "severity": "public browser qualification",
-      "state": "first actual failures retained; fixed stage diagnostics prepared, original replay pending",
+      "state": "original body-read failures retained; verified-curl capture repair prepared, actual replay pending",
       "observed_on": "2026-11-04",
       "candidate": "9e5f429c9c563759c427b719c7f036f75bffcba2",
       "journey": "F076public collection metadata Chrome",
-      "title": "New collection metadata browser command fails without a safe stage observation",
+      "title": "Collection metadata Chrome response-body retrieval fails intermittently",
       "first_failure": "Both9e5profilesfail:plaintext explicit,recipient-encrypted implicit. Original native/stockreceiving tests show no failure and retained-state/owned-resource cleanup succeeds; full browser profile unqualified.",
-      "cause": "Unobserved. Protected browser outputs do not appear in allowed public summary; no selector,rendering,protocol or resource cause is invented.",
-      "resolution": "Add fixed lifecycle/driver stage,error-kind and bounded source location, preserve first failure through cleanup and require original output hashes.83Python/137frontendcontracts pass locally; actual replay and cause repair remain required.",
+      "cause": "f08 safe diagnostics locate response.json() at driver180(preview) and250(inspect). The underlying exception/Chromium retention or resource cause remains unobserved; do not infer it from source location. One plaintext estate passes both modes, then the second fails; required full matrix stays red.",
+      "resolution": "Use existing verified-curl wireResponse interception to preserve the original authenticated request and returned bytes before rendering; add original request/header/response closure and source-bound wire records. Pure Page stand-ins refuse the unavailable inspector-body path; all prior state/identity/TLS/no-contact/privacy/WCAG assertions remain. Runtime replay pending.",
       "regression_evidence": [
         "docs/qualification/evidence/F076-ftps-collection.json"
       ]

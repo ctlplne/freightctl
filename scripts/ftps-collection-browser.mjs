@@ -2,6 +2,7 @@
 // contact-only source spy; this driver never works or accepts source bytes.
 import assert from "node:assert/strict";
 import { readFile, writeFile } from "node:fs/promises";
+import { wireResponse } from "./browser-wire.mjs";
 
 export const ftpsCollectionMetadataAudits = [
   "ftps-collection-form",
@@ -93,6 +94,7 @@ export async function qualifyFTPSCollectionMetadata(
   audit,
   record,
   emit = () => {},
+  actual,
 ) {
   let stage = "definition";
   const progress = (next) => {
@@ -106,6 +108,35 @@ export async function qualifyFTPSCollectionMetadata(
     assert.equal(c.source.protocol, "ftps");
     assert.ok(["explicit", "implicit"].includes(c.source.ftps.mode));
     const definition = c.workflow.definition;
+    assert.equal(typeof actual, "function");
+    const responses = [];
+    async function readResponse(name, route, method, request, action) {
+      return wireResponse(
+        page,
+        prefix + route,
+        action,
+        async (intercepted, label, target) => {
+          assert.equal(intercepted.request().method(), method);
+          const observed = await actual(intercepted, label, target);
+          assert.equal(observed.status, 200);
+          assert.deepEqual(observed.selection, request);
+          assert.ok(Buffer.byteLength(observed.body) <= 262144);
+          await writeFile(c.raw + "/" + name + ".body", observed.body, {
+            mode: 0o600,
+            flag: "wx",
+          });
+          responses.push({
+            name,
+            method,
+            route,
+            status: observed.status,
+            request,
+          });
+          return observed;
+        },
+        name,
+      );
+    }
     assert.equal(definition.schema_version, 1);
     assert.equal(definition.source.kind, "ftps.collect");
     assert.deepEqual(definition.steps, []);
@@ -165,21 +196,20 @@ export async function qualifyFTPSCollectionMetadata(
     progress("form-audit");
     await audit(ftpsCollectionMetadataAudits[0]);
     progress("preview-wire");
-    const [response] = await Promise.all([
-      page.waitForResponse(
-        (r) => r.url() === prefix + "/workflows/validate" && r.status() === 200,
-      ),
-      region
-        .getByRole("button", {
-          name: "Preview workflow definition",
-          exact: true,
-        })
-        .click(),
-    ]);
+    const preview = await readResponse(
+      "workflow-preview",
+      "/workflows/validate",
+      "POST",
+      { definition },
+      () =>
+        region
+          .getByRole("button", {
+            name: "Preview workflow definition",
+            exact: true,
+          })
+          .click(),
+    );
     progress("preview-request");
-    const preview = await response.json();
-    assert.equal(response.request().method(), "POST");
-    assert.deepEqual(response.request().postDataJSON(), { definition });
     progress("preview-definition");
     assert.equal(preview.external_contact, false);
     assert.equal(preview.approval_required, true);
@@ -231,23 +261,20 @@ export async function qualifyFTPSCollectionMetadata(
       exact: true,
     });
     progress("inspect-wire");
-    const [inspected] = await Promise.all([
-      page.waitForResponse(
-        (r) =>
-          r.url() === prefix + "/workflow-collections/" + c.view.job.id &&
-          r.status() === 200,
-      ),
-      region
-        .getByRole("button", {
-          name: "Inspect collection " + c.view.job.id,
-          exact: true,
-        })
-        .click(),
-    ]);
+    const view = await readResponse(
+      "collection-view",
+      "/workflow-collections/" + c.view.job.id,
+      "GET",
+      null,
+      () =>
+        region
+          .getByRole("button", {
+            name: "Inspect collection " + c.view.job.id,
+            exact: true,
+          })
+          .click(),
+    );
     progress("inspect-definition");
-    assert.equal(inspected.request().method(), "GET");
-    assert.equal(inspected.request().postDataJSON(), null);
-    const view = await inspected.json();
     assert.deepEqual(view, c.view);
     progress("inspect-state");
     assert.equal(view.job.state, "queued");
@@ -268,31 +295,6 @@ export async function qualifyFTPSCollectionMetadata(
     assert.deepEqual(after, before);
     record("ftps-collection-exact-preview-inspection-without-source-contact");
     progress("response-records");
-    const responses = [];
-    for (const [name, r, method, route, request] of [
-      [
-        "workflow-preview",
-        response,
-        "POST",
-        "/workflows/validate",
-        { definition },
-      ],
-      [
-        "collection-view",
-        inspected,
-        "GET",
-        "/workflow-collections/" + view.job.id,
-        null,
-      ],
-    ]) {
-      const body = await r.text();
-      assert.ok(Buffer.byteLength(body) <= 1 << 20);
-      await writeFile(c.raw + "/" + name + ".body", body, {
-        mode: 0o600,
-        flag: "wx",
-      });
-      responses.push({ name, method, route, status: r.status(), request });
-    }
     progress("result-write");
     await writeFile(
       c.raw + "/ftps-collection-browser-result.json",

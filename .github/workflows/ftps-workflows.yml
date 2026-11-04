@@ -38,6 +38,9 @@ on:
       - 'scripts/peers/ftps-source/**'
       - 'scripts/ftps_collection_source.py'
       - 'scripts/test-ftps-collection-source.py'
+      - 'scripts/ftps_collection_operator.py'
+      - 'scripts/test-ftps-collection-operator.py'
+      - 'scripts/ftps-collection-operator-browser.mjs'
       - 'scripts/ftps_collection_metadata.py'
       - 'scripts/test-ftps-collection-metadata.py'
       - 'scripts/metadata_contract.py'
@@ -85,6 +88,9 @@ on:
       - 'scripts/peers/ftps-source/**'
       - 'scripts/ftps_collection_source.py'
       - 'scripts/test-ftps-collection-source.py'
+      - 'scripts/ftps_collection_operator.py'
+      - 'scripts/test-ftps-collection-operator.py'
+      - 'scripts/ftps-collection-operator-browser.mjs'
       - 'scripts/ftps_collection_metadata.py'
       - 'scripts/test-ftps-collection-metadata.py'
       - 'scripts/metadata_contract.py'
@@ -169,7 +175,7 @@ jobs:
           RUN apk add --no-cache gnupg=2.4.9-r1
           DOCKERFILE
           python3 scripts/prepare-pgp-fixture.py
-      - name: Three fresh registered FTPS workflow consent and collection metadata journeys
+      - name: Three fresh registered FTPS consent, metadata and operator capture journeys
         run: |
           umask 077
           task_pg_id=$(docker inspect --format '{{.Id}}' freightctl-postgres-v1)
@@ -182,8 +188,8 @@ jobs:
           for qualification_run in 1 2 3; do
             qualification_status=0
             qualification_result=".private/ftps-workflows-result-${qualification_run}.json"
-            python3 scripts/qualify-ftps.py --retained-schema "$(python3 scripts/ci-metadata-summary.py --print-schema-version)" --postgres-container-id "$task_pg_id" --workflow-dispatch-approvals --workflow-collection-metadata --workflow-collection-browser "${producer_args[@]}" > "$qualification_result" || qualification_status=$?
-            python3 scripts/ci-ftps-summary.py --result "$qualification_result" --require-workflow-dispatch-approvals --require-workflow-collection-metadata --require-workflow-collection-browser "${reporter_args[@]}"
+            python3 scripts/qualify-ftps.py --retained-schema "$(python3 scripts/ci-metadata-summary.py --print-schema-version)" --postgres-container-id "$task_pg_id" --workflow-dispatch-approvals --workflow-collection-metadata --workflow-collection-browser --workflow-collection-operator "${producer_args[@]}" > "$qualification_result" || qualification_status=$?
+            python3 scripts/ci-ftps-summary.py --result "$qualification_result" --require-workflow-dispatch-approvals --require-workflow-collection-metadata --require-workflow-collection-browser --require-workflow-collection-operator "${reporter_args[@]}"
             if [ "$qualification_status" -ne 0 ]; then
               exit "$qualification_status"
             fi

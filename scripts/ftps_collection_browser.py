@@ -17,6 +17,7 @@ BROWSER_STAGES = frozenset(('certificate', 'browser-launch', 'context-create', '
 FILES = frozenset(('config.json', 'raw/ftps-collection-browser-result.json',
     'raw/onboarding-exchange-browser.json', 'raw/onboarding-exchange-review.png',
     'raw/workflow-preview.body', 'raw/collection-view.body',
+    *('raw/'+name+'.'+suffix for name in ('workflow-preview', 'collection-view') for suffix in ('json', 'request', 'headers')),
     *(('raw/'+name+'-axe.json') for name in AUDITS)))
 
 
@@ -89,12 +90,31 @@ def validate(root, private, mode, steps, inventory):
         'workflow': approved['resource'], 'view': view}
     require(metadata.same(config, expected_config), 'collection browser fixture detached from original CLI evidence')
     summary = metadata.load(directory/'raw/onboarding-exchange-browser.json')
+    wire_steps = {}
+    for name, method, request in (('workflow-preview', 'POST', {'definition': approved['resource']['definition']}),
+            ('collection-view', 'GET', None)):
+        body = read(directory/('raw/'+name+'.body'), 262144)
+        require(read(directory/('raw/'+name+'.json'), 262144) == body
+            and (metadata.same(metadata.load(directory/('raw/'+name+'.request')), request) if request is not None
+                else read(directory/('raw/'+name+'.request'), 32768) == b''), 'collection browser original wire request differs')
+        headers = {}
+        for line in read(directory/('raw/'+name+'.headers'), 16384).decode().splitlines():
+            key, sep, value = line.partition(':')
+            key = key.lower()
+            require(sep and key not in headers, 'collection browser original header duplicated or invalid')
+            headers[key] = value.strip()
+        require(headers.get('authorization') == 'Bearer '+read(private/'owner.token', 256).decode()
+            and (method == 'GET' or headers.get('content-type') == 'application/json'), 'collection browser original HTTP identity differs')
+        wire_steps[name] = {'name': name+'-wire-response', 'request_method': method, 'response_status': 200,
+            'response_sha256': hashlib.sha256(body).hexdigest()}
+    expected_steps = [{'name': AUDITS[0]+'-axe'}, wire_steps['workflow-preview'], {'name': AUDITS[1]+'-axe'},
+        wire_steps['collection-view'], {'name': AUDITS[2]+'-axe'}, {'name': STEP}]
     require(summary.get('state') == 'passed' and not summary.get('failure')
         and summary.get('runtime_errors') == summary.get('external_egress') == []
         and summary.get('model_started') is False and summary.get('production_activated') is False
         and isinstance(summary.get('browser_version'), str) and re.fullmatch(r'[0-9]+(?:\.[0-9]+){3}', summary['browser_version'])
         and isinstance(summary.get('node_version'), str) and re.fullmatch(r'v[0-9]+\.[0-9]+\.[0-9]+', summary['node_version'])
-        and metadata.same(summary.get('steps'), [{'name': name+'-axe'} for name in AUDITS]+[{'name': STEP}]),
+        and metadata.same(summary.get('steps'), expected_steps),
         'collection actual Chrome did not pass')
     for name in AUDITS:
         audit = metadata.load(directory/('raw/'+name+'-axe.json'))

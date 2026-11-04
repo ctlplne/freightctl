@@ -56,6 +56,16 @@ class BrowserEvidenceContracts(unittest.TestCase):
             'raw/workflow-preview.body': preview, 'raw/collection-view.body': view,
             **{'raw/'+name+'-axe.json': {'violations': [], 'passes': 5} for name in browser.AUDITS}}
         self.files = {k: copy.deepcopy(v) for k, v in self.files.items()}
+        for name, value, request, method in (('workflow-preview', preview, {'definition': workflow['definition']}, 'POST'),
+                ('collection-view', view, None, 'GET')):
+            body = json.dumps(value).encode()
+            for suffix, data in (('json', body), ('request', json.dumps(request).encode() if request is not None else b''),
+                    ('headers', b'authorization: Bearer private-evidence-canary\ncontent-type: application/json\n')):
+                metadata.private_write(self.directory/('raw/'+name+'.'+suffix), data)
+            wire = {'name': name+'-wire-response', 'request_method': method, 'response_status': 200,
+                'response_sha256': hashlib.sha256(body).hexdigest()}
+            summary_steps = self.files['raw/onboarding-exchange-browser.json']['steps']
+            summary_steps.insert(1 if name == 'workflow-preview' else 3, wire)
         path = self.directory/'raw/onboarding-exchange-review.png'
         path.write_bytes(b'\x89PNG\r\n\x1a\n'+bytes(100))
         path.chmod(0o600)
