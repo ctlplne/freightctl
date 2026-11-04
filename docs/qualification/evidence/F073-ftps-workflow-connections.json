@@ -3,7 +3,7 @@
   "id": "F073",
   "observed_at": "2026-11-04",
   "starting_commit": "7879c34f9e917d5c650a60b1800c59050044c01a",
-  "state": "cac6767 both complete native application suites pass707 records/0fail/0skip; intake-release and fixed public repetitions submitted at895f1f4",
+  "state": "895f1f4 both complete native application suites pass716 records/0fail/0skip; all eight intake cases and six fixed fresh public profiles pass",
   "scope": "Next dependency: versioned registered FTPS destinations and typed workflow sending through ordinary execution and independent dispatch consent. This does not replace remaining encryption, collection, independent peer or whole-product requirements.",
   "first_failure": {
     "kind": "actual native ARM typed-workflow contract",
@@ -74,7 +74,7 @@
     "FTPS collection, independent supported x86 receiver qualification, broader protocol behavior and complete receiving/sending customer journeys remain required.",
     "D145 stays open as intermittent despite a passing diagnostic replay. Windows D103 and all83 whole baseline rows/12 full journeys remain open."
   ],
-  "next_action": "Follow895f1f4 native intake-release and fixed three-run public gates. Continue recipient-encrypted FTPS under a separately frozen contract. Keep WindowsD103, intermittentD145/D151/D152 and every whole-goal gate open.",
+  "next_action": "Qualify F074 encrypted sender/key/artifact and browser profiles on native GitHub runners; preserve original first outcomes and exact pending candidates. D145/D151/D152 and WindowsD103 remain open; no whole row or journey closes.",
   "implementation_checkpoint": {
     "versioned_connection": "schema2 FTPS definitions, strict canonical validation and redacted reference fingerprints",
     "typed_execution": "ftps.deliver uses exact registered protocol/version; queued delivery includes the workflow/run/step/connection binding; unsupported recipient encryption remains refused",
@@ -512,7 +512,7 @@
     }
   },
   "intake_release_execution": {
-    "state": "source added; local integration compile/vet passed; actual native runtime pending",
+    "state": "all eight original cases pass both complete native Linux suites at895f1f4",
     "frozen_case": "C04",
     "test": "TestRegisteredFTPSWorkflowRequiresExactIntakeReleaseAndCurrentPolicy",
     "cases": 8,
@@ -538,7 +538,21 @@
       "integration_compilation": "passed; no runtime tests executed",
       "integration_vet": "passed"
     },
-    "qualification_claim": false
+    "qualification_claim": false,
+    "native_result": {
+      "candidate": "895f1f48cd911166fca5eec71348ae3d0c564026",
+      "run_id": 41867347903,
+      "job_ids": [
+        126704878672,
+        126704879142
+      ],
+      "application_pass_records_each": 716,
+      "application_fail_records_each": 0,
+      "application_skip_records_each": 0,
+      "manifest_reference": ".private/freightctl-f073-intake-native-Dl3Vf50A/manifest.json",
+      "manifest_sha256": "0a6a8dc5d99eb331211b69eabdaf290bbacd6d4c618d072d526b31ea898b671b",
+      "scope": "CSV exact-release and independent-consent component against actual PostgreSQL/storage/application FTPS receivers; whole payroll/signature/scanner/encryption journey remains open"
+    }
   },
   "fixed_public_repetition": {
     "state": "all three original fresh workflow profiles and all three direct profiles pass at895f1f4",
@@ -588,7 +602,7 @@
     "native_run_id": 41867347903,
     "workflow_consent_run_id": 41867348009,
     "direct_consent_run_id": 41867347984,
-    "state": "queued at submission; poll exact handles",
+    "state": "completed success; both native jobs pass716records and both fixed three-run public profiles pass",
     "runtime_qualified": false
   }
 }

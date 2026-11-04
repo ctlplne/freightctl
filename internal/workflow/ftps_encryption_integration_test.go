@@ -33,6 +33,11 @@ type ftpsPGPPeer struct {
 func ftpsRecipient(t *testing.T, f *fixture, binary, name string) (routingRecipientKey, ftpsPGPPeer, string) {
 	t.Helper()
 	dir := os.Getenv("FREIGHTCTL_TEST_PGP_DIR")
+	return ftpsRecipientAt(t, f, binary, name, dir)
+}
+
+func ftpsRecipientAt(t *testing.T, f *fixture, binary, name, dir string) (routingRecipientKey, ftpsPGPPeer, string) {
+	t.Helper()
 	manifest, err := os.ReadFile(filepath.Join(dir, "manifest.json"))
 	var peer ftpsPGPPeer
 	if err != nil || json.Unmarshal(manifest, &peer) != nil || peer.Fingerprints[name] == "" || !strings.HasPrefix(peer.Image, "sha256:") {
@@ -49,7 +54,12 @@ func ftpsRecipient(t *testing.T, f *fixture, binary, name string) (routingRecipi
 
 func encryptedFTPSRun(t *testing.T, f *fixture, s *delivery.Service, c ConnectionView, key routingRecipientKey, program bool) (*store.WorkflowRun, *store.Delivery) {
 	t.Helper()
-	policy := &store.EncryptionPolicy{Key: store.PGPReference{ID: key.ID, Version: key.Version, Hash: key.Hash}, Profile: secure.PGPEncryptMDC}
+	return encryptedFTPSRunProfile(t, f, s, c, key, program, secure.PGPEncryptMDC)
+}
+
+func encryptedFTPSRunProfile(t *testing.T, f *fixture, s *delivery.Service, c ConnectionView, key routingRecipientKey, program bool, profile string) (*store.WorkflowRun, *store.Delivery) {
+	t.Helper()
+	policy := &store.EncryptionPolicy{Key: store.PGPReference{ID: key.ID, Version: key.Version, Hash: key.Hash}, Profile: profile}
 	step := Step{ID: "send", Kind: "ftps.deliver", Connection: Reference{ID: c.ID, Version: c.Version, Hash: c.Hash}, Filename: "payroll.pgp", Encryption: policy}
 	definition := Definition{Schema: 1, Name: "Encrypted registered FTPS", Steps: []Step{step}}
 	if program {
@@ -143,6 +153,29 @@ func decryptFTPSReceiver(t *testing.T, r *fixture, filename, keyName string, pee
 	}
 	ctx, cancel := context.WithTimeout(r.ctx, 30*time.Second)
 	defer cancel()
+	if a.Policy.Profile == secure.PGPEncryptAEAD {
+		if peer.Backend != "docker-openpgpjs" {
+			t.Fatal("independent AEAD recipient required")
+		}
+		command := exec.CommandContext(ctx, "docker", "run", "--rm", "--network=none", "--read-only", "--cap-drop=ALL", "--security-opt=no-new-privileges", "--memory=192m", "--cpus=1", "--pids-limit=32", "--tmpfs", "/tmp:rw,noexec,nosuid,size=16m", "--user", strconv.Itoa(os.Getuid())+":"+strconv.Itoa(os.Getgid()), "-v", fixtureDir+":/fixture:ro", "-v", work+":/result", peer.Image, "decrypt", "/fixture", "/result")
+		output, err := command.Output()
+		if err != nil {
+			t.Fatalf("independent AEAD recipient failed: %v (stage %s; diagnostic sha256 %s)", err, aeadPeerFailureStage(output), secure.Digest(output))
+		}
+		var actual map[string]any
+		expected := map[string]any{"schema_version": float64(1), "state": "passed", "peer": "OpenPGP.js", "version": "6.3.2", "profile": secure.PGPEncryptAEAD, "primary_fingerprint": a.Proof.PrimaryFingerprint, "encryption_fingerprint": a.Proof.EncryptionFingerprint, "seipd_version": float64(2), "cipher": "AES-256", "aead": "OCB", "plaintext_bytes": float64(3), "plaintext_sha256": secure.Digest([]byte("abc")), "ciphertext_sha256": a.SHA256, "corrupt_refused": true, "truncated_refused": true}
+		if json.Unmarshal(output, &actual) != nil || !reflect.DeepEqual(actual, expected) {
+			t.Fatal("independent AEAD proof differs")
+		}
+		plain, err := os.ReadFile(filepath.Join(work, "plain.csv"))
+		if err != nil || !bytes.Equal(plain, []byte("abc")) {
+			t.Fatal("independent AEAD plaintext differs", err)
+		}
+		return
+	}
+	if a.Policy.Profile != secure.PGPEncryptMDC || peer.Backend != "docker" {
+		t.Fatal("independent GnuPG recipient required")
+	}
 	// Only the independent peer sees this synthetic private recipient. The
 	// product stores its public key; neither model nor product receives a secret.
 	command := exec.CommandContext(ctx, "docker", "run", "--rm", "--network=none", "--read-only", "--cap-drop=ALL", "--security-opt=no-new-privileges", "--memory=128m", "--cpus=1", "--pids-limit=32", "--tmpfs", "/tmp:rw,noexec,nosuid,size=32m", "--user", strconv.Itoa(os.Getuid())+":"+strconv.Itoa(os.Getgid()), "-v", fixtureDir+":/fixture:ro", "-v", work+":/result", peer.Image, "/bin/sh", "-ec", "mkdir -m 700 /tmp/recipient; : > /tmp/recipient/common.conf; gpg --homedir /tmp/recipient --batch --import /fixture/"+keyName+"-private.gpg; gpg --homedir /tmp/recipient --batch --status-fd 2 --output /result/plain.csv --decrypt /result/cipher.pgp")

@@ -1,0 +1,10 @@
+{
+  "name": "freightctl-openpgp-qualification-peer",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Independent test-only recipient; never imported by shipped application code",
+  "dependencies": {
+    "openpgp": "6.3.2"
+  }
+}

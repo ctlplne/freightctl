@@ -26,6 +26,7 @@ on:
       - 'scripts/ci-ftps-summary.py'
       - 'scripts/dev-db.py'
       - 'scripts/prepare-pgp-fixture.py'
+      - 'scripts/peers/openpgp/**'
       - 'scripts/metadata_contract.py'
       - 'scripts/qualify-retained-metadata.py'
       - 'scripts/test-retained-metadata.py'
@@ -56,6 +57,7 @@ on:
       - 'scripts/ci-ftps-summary.py'
       - 'scripts/dev-db.py'
       - 'scripts/prepare-pgp-fixture.py'
+      - 'scripts/peers/openpgp/**'
       - 'scripts/metadata_contract.py'
       - 'scripts/qualify-retained-metadata.py'
       - 'scripts/test-retained-metadata.py'
@@ -121,6 +123,11 @@ jobs:
           FROM alpine@sha256:294b683cb724975bec92580e1e685676bd4b50bda910ddb8c51d4cabeaec77e6
           RUN apk add --no-cache gnupg=2.4.9-r1
           DOCKERFILE
+      - name: Pinned independent AEAD recipient peer
+        run: |
+          docker build --label "freightctl.workspace=$PWD" \
+            --label freightctl.purpose=openpgp-interoperability \
+            --tag freightctl-openpgp-peer:6.3.2-r1 scripts/peers/openpgp
       - name: Module integrity, vet and unit race checks
         run: |
           sh scripts/go.sh mod verify

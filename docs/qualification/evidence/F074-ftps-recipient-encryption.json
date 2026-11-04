@@ -76,7 +76,7 @@
     "commit": "4577313c58a9e9c08e7a3e5d3ba0925b9fbc1685",
     "pushed": true,
     "native_run_id": 41869838920,
-    "state": "pending behind running895f1f4; no jobs allocated at observation",
+    "state": "native ARM job126720350556 has started; exact original tests remain pending",
     "runtime_qualification": false
   },
   "public_profile_prepared": {
@@ -99,7 +99,44 @@
       "integration_compilation": "passed; no runtime tests",
       "full_socket_contract_suite": "three existing local socket-spy tests refused by sandbox; native GitHub full suite remains required"
     },
-    "native_state": "not submitted; preserve currently pending4577313 candidate before next push"
+    "native_state": "submitted atcc05701d210e5be74f2447689bc24b7f64a95b80; native run41873492289 and public workflow run41873492251 pending. Preserve these handles before a newer push."
   },
-  "test_request_correction": "Source review found the new rotation test supplied id instead of the existing public CLI key_id field. Corrected only that test request; original4577313 candidate remains distinct and pending. No production registration schema or check is relaxed."
+  "test_request_correction": "Source review found the new rotation test supplied id instead of the existing public CLI key_id field. Corrected only that test request; original4577313 candidate remains distinct and pending. No production registration schema or check is relaxed.",
+  "aead_peer_prepared": {
+    "state": "source implemented, locally compiled/vetted and syntax-checked; no peer execution or runtime qualification",
+    "peer": "OpenPGP.js6.3.2, test-only standalone package; no server/browser dependency",
+    "package_integrity": "sha512-wcZTzHz41LV8Y48zH/JlD1JT8YdNmpWOuMAjQ/podvvCwsjBEU37K3znJh4UQcj3hksE5z9TzvhbUbwzsGvlLQ==",
+    "license": "LGPL-3.0+; peer artifact not published or bundled",
+    "base_image": "node:26.0.0-bookworm-slim@sha256:3529ef69feecddd94e9c5ecd3d25a96f2f23ea40661f494f932ae2b12ab1977c",
+    "mechanism": "independently generate a v4 Curve25519 AES256/OCB recipient, register only its public key through actual CLI, then independently decrypt separately reopened receiver ciphertext; require exact SEIPDv2/AES256/OCB and recipient/subkey, exact source bytes, corrupted/truncated refusal before plaintext output",
+    "cases": 8,
+    "matrix": {
+      "ftps_modes": [
+        "explicit",
+        "implicit"
+      ],
+      "workflow_schemas": [
+        1,
+        2
+      ],
+      "outcomes": [
+        "normal exact-key saved receipt replay",
+        "actual lost rename reply and read-only exact-artifact reconciliation"
+      ]
+    },
+    "bounds": {
+      "network": "none",
+      "root": "read-only",
+      "capabilities": "none",
+      "memory_bytes": 201326592,
+      "javascript_heap_mib": 128,
+      "cpus": 1,
+      "pids": 32,
+      "deadline_seconds": 30,
+      "ciphertext_limit_bytes": 1048576
+    },
+    "security": "runtime/failure diagnostics whitelist fixed stages;18local race records cover privacy/refusal. npm integrity and dependency audit required in native image build. Base OS image scan, larger files, v6 keys and broader peers remain required.",
+    "local_resources": "no peer install/runtime or image build/pull/container run locally; only dependency lock resolution and read-only remote manifest inspection",
+    "native_state": "not submitted; hold push until pendingcc05701 native run starts"
+  }
 }
