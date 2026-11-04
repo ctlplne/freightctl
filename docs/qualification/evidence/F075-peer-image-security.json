@@ -70,5 +70,13 @@
     "integration_vet": "pass",
     "workflow_lint": "pass",
     "scope": "synthetic files and Docker-command stand-in; no local image build, scanner/container/PostgreSQL/inference execution"
+  },
+  "submitted_state": {
+    "first_commit": "4d771b2e6a961a70b764681fd578ff175d064db7",
+    "first_run_id": 41883389493,
+    "first_state": "completed/cancelled, unstarted with no jobs; no image result",
+    "repair_commit": "2da04d34db31eb2c057fcd317183af6b247e7d88",
+    "repair_run_id": 41884853382,
+    "state": "native ARM/x86 application jobs started; exact-image steps execute after runtime. No actual scan result yet."
   }
 }

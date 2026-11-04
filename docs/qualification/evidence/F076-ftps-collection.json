@@ -44,7 +44,7 @@
       "outcome": "Existing SFTP collection/arrival/schedules, FTPS/SFTP sending, ciphertext, intake, RLS, receipts and native regression gates remain enforced. No local PostgreSQL, model or scanner execution is needed."
     }
   ],
-  "next_action": "Commit the isolated bounded reader after final records/secret checks; hold its source push until2da04d3 native41884853382 starts, preserving original0c681c7 x86. Integrate FTPS source admission, read-only adapter, exact SQL/custody/public/scheduled journeys next; the original typed FTPS-source failure stays open.",
+  "next_action": "Queue saved bounded reader and read-only adapter behind the now-running2da04d3 native41884853382, preserving that first repair. Require original20TLS cases and regressions on GitHub. Then integrate exact source/SQL/custody/intake/public/scheduled journeys; no complete FTPS collection or whole goal pass is claimed.",
   "first_failure": {
     "test": "TestFTPSCollectionSourceMissingContract",
     "result": "existing typed source refuses ftps.collect; no service contact",
@@ -63,5 +63,15 @@
     "local_checks_manifest_reference": ".private/freightctl-f076-reader-local-FvcVmmkq/manifest.json",
     "local_checks_manifest_sha256": "685adf5b406c00dccd80fa6adec9ede627297ea4d27b0cb744bd1f6924cd20f3",
     "local_scope": "one pure pre-network invalid-input race test plus compile/vet; no TLS receiver or local service started. A final explicit successful-resumption assertion was added and compilation passed afterward; native execution remains pending."
+  },
+  "readonly_adapter_prepared": {
+    "state": "implemented;9pure stand-in test methods/17pass records plus vet/compile pass; no native source/custody or TLS claim",
+    "mechanism": "read-only interface excludes mutation APIs; exact directory/name/size/digest, guard before every staging write and after completion, operation-context cancellation closes a longer session, unavailable550 is not invented as file absence",
+    "first_failure": "a final guard that cancels context and returns nil could expose metadata; recheck cancellation after the callback and clear refused buffers",
+    "first_manifest_reference": ".private/freightctl-f076-adapter-first-1NerT5s8/manifest.json",
+    "first_manifest_sha256": "58838ff3726fc96b1253a2425b981af67a0252dda243e6ec152fe38b69d0a089",
+    "repair_observation_reference": ".private/freightctl-f076-adapter-first-1NerT5s8/repair-observation.json",
+    "repair_observation_sha256": "0cd036faed2ea0269dd190ae8218d2a09fdbafb11cc909e1936b37fddba4fd97",
+    "integration": "not connected to workflow admission/SQL/worker/public controls yet; original typed source remains unsupported"
   }
 }
