@@ -67,6 +67,9 @@ class ScanOrchestration(unittest.TestCase):
                 if arguments[:3] == ['sudo', '-n', 'umount']:
                     self.assertNotEqual(mode, 'foreign-volume')
                     self.assertEqual(arguments[3:], ['--', volume['root']])
+                    if mode == 'changed-state':
+                        (Path(volume['root']).parent/'feed-download-state.stdout').write_text(
+                            json.dumps({'OOMKilled': True, 'Running': False, 'ExitCode': 137}))
                     volume['mounted'], volume['unmounted'] = False, True
                     return subprocess.CompletedProcess(arguments, 0)
                 if arguments[0] != 'docker':
@@ -98,6 +101,9 @@ class ScanOrchestration(unittest.TestCase):
                     if '--download-db-only' in options:
                         if mode == 'timeout':
                             raise subprocess.TimeoutExpired(contracts.PRIVATE, timeout)
+                        if mode in ('oom', 'killed', 'foreign-state', 'bad-state', 'state-failed', 'changed-state'):
+                            stderr.write(contracts.PRIVATE.encode())
+                            return subprocess.CompletedProcess(arguments, 137)
                         (cache/'db').mkdir()
                         (cache/'db/trivy.db').write_bytes(b'synthetic feed database')
                         (cache/'db/metadata.json').write_text(json.dumps(version['VulnerabilityDB']))
@@ -117,6 +123,18 @@ class ScanOrchestration(unittest.TestCase):
                             # Simulate unexpected mutation outside the read-only mount.
                             (cache/'db/trivy.db').write_bytes(b'changed feed database')
                         (source('/output')/'report.json').write_text(json.dumps(report))
+                elif arguments[1] == 'inspect':
+                    self.assertEqual(arguments[2:4], ['--format', '{{json .State}}'])
+                    self.assertIn(arguments[-1], created)
+                    if mode == 'state-failed':
+                        stderr.write(contracts.PRIVATE.encode())
+                        return subprocess.CompletedProcess(arguments, 1)
+                    state = {'OOMKilled': mode == 'oom', 'Running': mode == 'timeout',
+                             'ExitCode': 0 if mode in ('timeout', 'foreign-state') else 137,
+                             'Error': contracts.PRIVATE}
+                    if mode == 'bad-state':
+                        state['OOMKilled'] = 'private-not-a-boolean'
+                    stdout.write(json.dumps(state).encode())
                 elif arguments[1:3] == ['rm', '--force']:
                     self.assertIn(arguments[-1], created)
                     removed.append(arguments[-1])
@@ -221,6 +239,27 @@ class ScanOrchestration(unittest.TestCase):
         self.assertEqual(output['phase'], 'scratch-volume')
         self.assertEqual(output['scratch_cleanup'], 'unproven')
         self.assertEqual(created, {})
+
+    def test_recorded_container_oom_is_bound_before_exact_cleanup_without_changing_limits(self):
+        code, output, created = self.exercise(mode='oom')
+        self.assertEqual(code, 2)
+        self.assertEqual(len(created), 1)
+        self.assertEqual(output['command']['category'], 'container-oom')
+        state = output['command']['container_state']
+        self.assertTrue(state['oom_killed'])
+        self.assertFalse(state['running'])
+        self.assertEqual(state['exit_code'], 137)
+        self.assertRegex(state['state_sha256'], '^[0-9a-f]{64}$')
+        self.assertEqual(output['scratch_cleanup'], 'unmounted')
+
+    def test_exit137_alone_and_invalid_or_mismatched_state_do_not_invent_oom(self):
+        for mode in ('killed', 'foreign-state', 'bad-state', 'state-failed', 'changed-state'):
+            code, output, _ = self.exercise(mode=mode)
+            self.assertEqual(code, 2)
+            self.assertEqual(output['command']['exit_code'], 137)
+            self.assertEqual(output['command']['category'], 'unrecognized-diagnostic')
+            if mode in ('bad-state', 'state-failed', 'changed-state'):
+                self.assertNotIn('container_state', output['command'])
 
     def test_fixed_diagnostic_categories_never_publish_raw_strings(self):
         with tempfile.TemporaryDirectory(prefix='freightctl-image-diagnostic-') as directory:

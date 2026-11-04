@@ -22,7 +22,7 @@ COMMAND_PHASES = frozenset(('checkout', 'image-identity', 'image-archive', 'scan
     'scratch-mount-identity', 'scratch-loop-identity', 'scratch-unmount',
     'scratch-cleanup-mount-identity', 'scratch-cleanup-loop-identity', *(
         stage + suffix for stage in ('feed-download', 'scanner-version', 'image-scan')
-        for suffix in ('', '-create', '-cleanup'))))
+        for suffix in ('', '-create', '-state', '-cleanup'))))
 DIAGNOSTICS = {
     'unsupported-option': (b'unknown flag', b'flag provided but not defined'),
     'registry-rate-limit': (b'toomanyrequests', b'too many requests', b'429 too many'),
@@ -46,6 +46,10 @@ def failure_observation(steps, private):
         if not (type(code) is int and -128 <= code <= 255 and code != 0 or step.get('incomplete') is True):
             continue
         name = step.get('phase')
+        if isinstance(name, str) and name.endswith('-state'):
+            # Diagnostic read failures cannot replace the original failed
+            # execution. Missing/unbound state simply proves no OOM fact.
+            continue
         if not isinstance(name, str) or name not in COMMAND_PHASES:
             return result
         result['command_phase'] = name
@@ -54,8 +58,15 @@ def failure_observation(steps, private):
             value = step.get(stream+'_sha256')
             if isinstance(value, str) and re.fullmatch('[0-9a-f]{64}', value):
                 result[stream+'_sha256'] = value
+        state = container_failure_state(steps, private, name)
+        if state is not None:
+            result['container_state'] = state
         if step.get('timed_out') is True:
             result['category'] = 'deadline-exceeded'
+            return result
+        if (state is not None and state['oom_killed'] and not state['running']
+                and state['exit_code'] == result['exit_code']):
+            result['category'] = 'container-oom'
             return result
         try:
             path = private/(name+'.stderr')
@@ -72,6 +83,29 @@ def failure_observation(steps, private):
             pass
         return result
     return result
+
+
+def container_failure_state(steps, private, phase):
+    """Only exact failed-container state, before deletion, can describe OOM."""
+    if phase not in ('feed-download', 'scanner-version', 'image-scan'):
+        return None
+    for step in reversed(steps):
+        if not isinstance(step, dict) or step.get('phase') != phase+'-state':
+            continue
+        try:
+            path = private/(phase+'-state.stdout')
+            if step.get('exit_code') != 0 or type(step.get('exit_code')) is not int or path.is_symlink():
+                return None
+            state, actual = gate.load(path, 1 << 20)
+            if (actual != step.get('stdout_sha256') or not isinstance(state, dict)
+                    or type(state.get('OOMKilled')) is not bool or type(state.get('Running')) is not bool
+                    or type(state.get('ExitCode')) is not int or not 0 <= state['ExitCode'] <= 255):
+                return None
+            return {'oom_killed': state['OOMKilled'], 'running': state['Running'],
+                'exit_code': state['ExitCode'], 'state_sha256': actual}
+        except (OSError, ValueError, TypeError, KeyError):
+            return None
+    return None
 
 
 def digest(path):
@@ -213,6 +247,14 @@ def main():
             raise RuntimeError('container-identity-invalid')
         try:
             return command(name, ['docker', 'start', '--attach', ident], timeout)
+        except (OSError, ValueError, TypeError, KeyError, RuntimeError, subprocess.SubprocessError):
+            try:
+                # Capture only this exact created container, before rm destroys
+                # the evidence. Raw State.Error/PID/timestamps remain private.
+                command(name+'-state', ['docker', 'inspect', '--format', '{{json .State}}', ident], 15, check=False)
+            except (OSError, ValueError, TypeError, KeyError, RuntimeError, subprocess.SubprocessError):
+                pass
+            raise
         finally:
             # Only the exact ID returned by this invocation is ever removed.
             command(name+'-cleanup', ['docker', 'rm', '--force', ident], 30)

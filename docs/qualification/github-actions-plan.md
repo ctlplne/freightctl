@@ -76,7 +76,7 @@ and runtime/RLS checks. Cold store upgrades remain independent. Template
 optimization proves fixture behavior, not product throughput or capacity.
 
 The F075 image scanner uses one CPU and 1 GiB RAM, no swap, 128 processes and a bounded
-fallback temporary memory filesystem. The prepared D159 repair uses a separate2GiB ext4 disk volume for cache and `TMPDIR`, verified by exact mount/loop backing before use and unmount, including timeout. Native filesystem/feed/scan replay remains pending. Download its feed in a separate bounded container; scan an
+fallback temporary memory filesystem. The prepared D159 repair uses a separate2GiB ext4 disk volume for cache and `TMPDIR`, verified by exact mount/loop backing before use and unmount, including timeout. Bothde93 native mount/identity/cleanup paths execute; feed still exits137 without OOM state. Exact failed-container state-before-delete observation is prepared; actual feed/scan replay remains required. Download its feed in a separate bounded container; scan an
 immutable image archive offline with no Docker socket, read-only root/input/feed
 and no capabilities/new privileges. Require fresh feed/report times, unchanged
 input hashes and OS plus installed OpenPGP inventory. Count all severities and

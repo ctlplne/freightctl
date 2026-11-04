@@ -3,7 +3,7 @@
   "id": "F075",
   "observed_at": "2026-11-04",
   "starting_commit": "63e153f6511f6cb457dfa46f70d39f2548f200b6",
-  "state": "Both8905385 native application suites pass841/0/0, image feeds fail with storage-capacity; source-supported double-archive mechanism and disk-backed bounded repair prepared, actual replay pending",
+  "state": "Actual bounded disk identity/cleanup executes on bothde93 native architectures; feed exits137 without recorded container OOM fact. Exact state-before-delete diagnostic prepared; no feed/report/scan pass.",
   "scope": "Scan the exact disposable independent OpenPGP recipient image used by native Linux tests. This is test infrastructure, not a released server image or runtime security qualification.",
   "qualification_claim": false,
   "frozen_cases": [
@@ -37,7 +37,7 @@
     }
   ],
   "first_observation": "The pinned independent peer Dockerfile audits npm dependencies, but no workflow scans its OS image or binds an image scan to actual runtime identity. Source inspection establishes a missing gate only; it is not a native scanner result.",
-  "next_action": "Preserve source40fb317e5 native candidate until application jobs start, then submit bounded disk repair. Require exact ARM/x86 volume ownership/cleanup, fresh feed and original immutable peer-image scan. Keep original memory/CPU/deadlines and all vulnerability/privacy gates; an unexecuted repair is not a scan pass.",
+  "next_action": "Preserve both original native disk/feed failures and submit bounded state-before-delete observation with unchanged execution limits. Read actual OOM/exit evidence before choosing a memory/caching/IO repair, then require original native fresh-feed/immutable-image gates. No actual scan or released-security claim yet.",
   "implementation": {
     "workflow": ".github/workflows/native-linux.yml",
     "execution": "after all original runtime tests, including failure when peer build succeeded; no changed existing budgets",
@@ -138,5 +138,40 @@
     "scope": "Synthetic command/JSON stand-ins and sparse-file size checks only. Original runtime candidate and actual native filesystem/feed/scan/cleanup remain pending.",
     "local_checks_manifest_reference": ".private/freightctl-f075-disk-final-bytvy3hv/manifest.json",
     "local_checks_manifest_sha256": "9ec0abec6b8ba6805d7151aa12e84ad5f33c4bd5fe9640ad8c68cc34c57eb236"
+  },
+  "disk_native_first_result": {
+    "candidate": "de93ddd611943ef94fa1fbd8b351ef93b4918ac6",
+    "run_id": 41900064641,
+    "jobs": [
+      {
+        "job_id": 126826239999,
+        "architecture": "arm64",
+        "manifest_reference": ".private/freightctl-f076-batch-first-T2TDX2JU/manifest.json",
+        "manifest_sha256": "10738980280a76d54d16512197c3ab75830fd81b0983d506b9a484d09625ba28",
+        "runner_manifest_sha256": "aebf3c8b6c88fb8fb491dec5d5051d0b7980f78e39736ee8d05e8eafe2fba648",
+        "stderr_sha256": "6ee4940dc6e4a696780a98236e4f754d4f036bf07614df127c44de4bc8d5f60a"
+      },
+      {
+        "job_id": 126826240303,
+        "architecture": "x86_64",
+        "manifest_reference": ".private/freightctl-f076-batch-x86-first-g4bZmVVO/manifest.json",
+        "manifest_sha256": "7f38ad0ddd1bad755035bacf92cc09401dd977bbda27c74c68db05d28436ce65",
+        "runner_manifest_sha256": "dff7138d8b494975ac20bcd28c1917e8ce7a6bbfb252d40f18ca74f4748d0100",
+        "stderr_sha256": "9989b3d9c2e5a452c969f28661202ff9e91372bcacd6f3c8607916f40581aacf"
+      }
+    ],
+    "phase": "feed-download",
+    "exit_code": 137,
+    "scratch_cleanup": "unmounted",
+    "scope": "Exact bounded ext4 mount/loop identity and unmount execute. Feed process terminates137 with unrecognized diagnostic; original container state was deleted before inspection. OOM/cause remains unproven; no feed/report or clean-image claim."
+  },
+  "container_state_diagnostic_prepared": {
+    "mechanism": "Inspect only exact container ID returned by this invocation after a failed/timed-out start and before exact deletion. Keep raw Docker State private; publish only hash-bound boolean OOMKilled/Running and bounded integer ExitCode. Classify container-oom only when a stopped snapshot records OOM and matches original exit.",
+    "refusals": "Exit137 alone, malformed/unbound/changed or mismatched state cannot invent OOM. Failed diagnostic read cannot replace original failed execution. Raw State.Error/PID/times/paths/exception values never reach summary.",
+    "limits": "Existing1GiB RAM/no swap/one CPU/768MiB Go memory target/128pids/2GiB disk/256MiB fallback tmpfs and all source/feed/inventory/severity/privacy/deadline rules unchanged. No blind retry or limit increase.",
+    "local_methods": 20,
+    "local_checks_manifest_reference": ".private/freightctl-f076-public-cas-diagnostic-local-u_5nce7y/manifest.json",
+    "local_checks_manifest_sha256": "d6a2db0b5f4ee2d1dd7d1a895f38d60152d0d25f60491d8abd9017e0889c7a5d",
+    "scope": "12Docker-command/mount/state stand-in methods plus8reporter methods; no actual local Docker, mount, scan or inference."
   }
 }
