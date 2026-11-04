@@ -2397,13 +2397,13 @@
     {
       "id": "D150",
       "severity": "native bounded-program receipt qualification mismatch",
-      "state": "strict canonical comparison repair prepared; native diagnosis/replay pending",
+      "state": "repaired and confirmed in both complete native Linux suites",
       "observed_on": "2026-11-04",
       "candidate": "6ebccf01d2af0129d355438bb8cd48cccc2991de",
       "journey": "Registered FTPS bounded-program original-key run receipt replay",
       "title": "A raw execution-plan JSON representation comparison may reject the same typed receipt",
       "first_failure": "Actual native x86 job126651291441/run41852235851 attempt1 has670application passes/1failure/0skips. TestRegisteredFTPSWorkflowBoundedProgramUsesTheSameConsentAndSender reaches run replay changed intents after successful SQL run admission. All four FTPS recovery cases pass. The combined original comparison does not print which condition failed; raw JSON formatting is a source-supported hypothesis, not a confirmed runtime cause.",
-      "resolution": "Split receipt decoding errors from plan/hash validation and full run comparison. Strictly validate each typed execution plan, exact source and recorded canonical plan hash with storedExecutionPlan. Canonicalize only that validated representation and compare every run field. Add a fixed diagnostic only when raw receipt representations differ while all canonical fields match. A local race contract reproduces format-only inequality and refuses17 changed run/plan cases (18pass records including parent); integration compilation passes. No production behavior, binding, SQL check or budget is relaxed; original native replay must confirm the actual cause and outcome.",
+      "resolution": "Split receipt decoding errors from plan/hash validation and full run comparison. Strictly validate each typed execution plan, exact source and recorded canonical plan hash with storedExecutionPlan. Canonicalize only that validated representation and compare every run field. Add a fixed diagnostic only when raw receipt representations differ while all canonical fields match. A local race contract reproduces format-only inequality and refuses17 changed run/plan cases (18pass records including parent); integration compilation passes. No production behavior, binding, SQL check or budget is relaxed; original native replay must confirm the actual cause and outcome. Atcac6767 both native jobs126686004483/126686004528 pass707application records/0fail/0skip. The original bounded-program replay emits the fixed format-only diagnostic, confirming JSON representation as the cause while canonical plan/hash and every run field agree.",
       "regression_evidence": [
         "docs/qualification/evidence/F073-ftps-workflow-connections.json"
       ]
@@ -2439,13 +2439,13 @@
     {
       "id": "D153",
       "severity": "mixed-protocol qualification sequence error",
-      "state": "repair prepared; original native mixed replay pending",
+      "state": "repaired; all eight original mixed cases pass both complete native Linux suites",
       "observed_on": "2026-11-04",
       "candidate": "2da246b6c2fb257f005d65d0bd81ea56abe79658",
       "journey": "Ordered and bounded-program mixed SFTP/FTPS independent consent",
       "title": "The mixed test requests a later review before its predecessor can authorize it",
       "first_failure": "Both complete native suites retain670pass/10fail/0skip. All eight mixed mode/schema/order cases fail at proposeDispatch for the second intent, before sending, with ErrState. The existing dispatchPreview checks current execution binding, which correctly requires every predecessor to succeed. The other failed case is D150. Complete originals are retained.",
-      "resolution": "Correct the test's order: explicitly require early second-review refusal, propose/approve the first review, execute the first intent, prove first consent cannot authorize second work, then propose/approve and execute the second intent. Preserve the existing product gate, direct later-worker refusal, exact saved keys, all attempts/fences, stock/FTPS byte checks and distinct persistence receipts. Local integration compilation and vet pass; native sending replay remains required.",
+      "resolution": "Correct the test's order: explicitly require early second-review refusal, propose/approve the first review, execute the first intent, prove first consent cannot authorize second work, then propose/approve and execute the second intent. Preserve the existing product gate, direct later-worker refusal, exact saved keys, all attempts/fences, stock/FTPS byte checks and distinct persistence receipts. Local integration compilation and vet pass; native sending replay remains required. Atcac6767 all eight mode/schema/order cases pass on native x86 and ARM, including actual stock OpenSSH sending/readback and separate FTPS receiver readback, consent/order and distinct receipts. Complete suites pass707application records each without failures/skips.",
       "regression_evidence": [
         "docs/qualification/evidence/F073-ftps-workflow-connections.json"
       ]

@@ -3,7 +3,7 @@
   "id": "F073",
   "observed_at": "2026-11-04",
   "starting_commit": "7879c34f9e917d5c650a60b1800c59050044c01a",
-  "state": "both mixed native suites retain670pass/10fail; D150/D153 repairs and C01/revocation/diagnostic expansion prepared; exact ARM retry running",
+  "state": "cac6767 both complete native application suites pass707 records/0fail/0skip; intake-release and fixed public repetitions submitted at895f1f4",
   "scope": "Next dependency: versioned registered FTPS destinations and typed workflow sending through ordinary execution and independent dispatch consent. This does not replace remaining encryption, collection, independent peer or whole-product requirements.",
   "first_failure": {
     "kind": "actual native ARM typed-workflow contract",
@@ -74,7 +74,7 @@
     "FTPS collection, independent supported x86 receiver qualification, broader protocol behavior and complete receiving/sending customer journeys remain required.",
     "D145 stays open as intermittent despite a passing diagnostic replay. Windows D103 and all83 whole baseline rows/12 full journeys remain open."
   ],
-  "next_action": "Confirm cac6767 native run41860071143 has actually started before the next push. Follow the original retry126676577153 until its aggregate terminal state is published. Then push the compiled C04 cases and fixed three-run public gates. Preserve every original result; D150/D153 native outcomes and D151/D152 causes remain open.",
+  "next_action": "Follow895f1f4 native intake-release and fixed three-run public gates. Continue recipient-encrypted FTPS under a separately frozen contract. Keep WindowsD103, intermittentD145/D151/D152 and every whole-goal gate open.",
   "implementation_checkpoint": {
     "versioned_connection": "schema2 FTPS definitions, strict canonical validation and redacted reference fingerprints",
     "typed_execution": "ftps.deliver uses exact registered protocol/version; queued delivery includes the workflow/run/step/connection binding; unsupported recipient encryption remains refused",
@@ -294,7 +294,7 @@
     "all_four_recovery_cases_both_architectures": "passed in both complete2da246b native originals; D148 repaired"
   },
   "mixed_protocol_execution": {
-    "state": "both native original suites failed before mixed sending; test review sequence repair prepared and compiled/vetted",
+    "state": "all eight cases pass both complete native suites atcac6767",
     "test": "TestMixedRegisteredFTPSAndStockSFTPKeepOrderConsentAndReceipts",
     "cases": 8,
     "matrix": {
@@ -380,7 +380,7 @@
   },
   "canonical_receipt_repair": {
     "id": "D150",
-    "state": "prepared locally; native original replay pending",
+    "state": "verified in both complete native suites; exact format-only diagnostic confirms original cause",
     "observed_failure": "actual native x866ebccf0 bounded program passes SQL run admission then fails the combined run-receipt comparison",
     "suspected_cause": "The helper compares json.RawMessage execution_plan bytes. JSONB may reorder those object keys. No raw actual receipt difference was printed in the original log, so the exact cause remains unconfirmed until native diagnostic replay.",
     "repair": "Decode each original and replayed plan with existing strict storedExecutionPlan validation, require its exact captured source and recorded canonical plan hash, canonicalize only the validated plan representation, then compare every WorkflowRun field. Native replay prints one fixed format-only diagnostic only if raw receipts differ but every canonical field matches. No plan, run field or authority binding is ignored.",
@@ -389,10 +389,11 @@
       "scope": "format-only positive and17 run/plan mutations; no PostgreSQL, sockets, scanner or inference",
       "integration_compilation": "passed"
     },
-    "local_commit": "26a08fdbc4ec391e30cc81bac8938f6be8605388"
+    "local_commit": "26a08fdbc4ec391e30cc81bac8938f6be8605388",
+    "confirmed_cause": "Both native original bounded-program replays emit the fixed JSON-format-only diagnostic after strict plan/hash validation and comparison of every run field. Both pass."
   },
   "revocation_execution_cases": {
-    "state": "source added and integration compiled/vetted locally; native runtime pending",
+    "state": "all eight cases pass both complete native suites atcac6767",
     "test": "TestRegisteredFTPSWorkflowRevocationBlocksSavedWorkersAndAmbiguousReadback",
     "cases": 8,
     "matrix": {
@@ -464,7 +465,7 @@
     "commit": "cac676757e48c90a7c721f76e699ccc0991e7ecc",
     "pushed": true,
     "native_linux_run_id": 41860071143,
-    "state": "pending behind exact original ARM retry",
+    "state": "actual ARM job success; x86 all steps including integration/Complete job success, aggregate still in_progress at observation",
     "workflow_run_id": 41860070893,
     "workflow_job_id": 126679124138,
     "workflow_state": "passed actual native x86 public profile",
@@ -491,6 +492,23 @@
       "logs_manifest": ".private/freightctl-f073-public-cac-retry-S1zSsnf3/manifest.json",
       "logs_manifest_sha256": "918df63e3656d30aab8aee72d50fd7e4649ab24b664213929ed283e1e5ee8db4",
       "scope": "actual CLI/HTTPS/Chrome metadata consent with stock receiving baselines and contact-only sending spies; no FTPS wire-sending or vendor persistence claim"
+    },
+    "native_result": {
+      "go_job_ids": [
+        126686004483,
+        126686004528
+      ],
+      "application_pass_records_each": 707,
+      "application_fail_records_each": 0,
+      "application_skip_records_each": 0,
+      "upstream_engine_skip": "TestActiveTransferFromPort20 remains separately visible; no application skip",
+      "metadata_job_ids": [
+        126686004692,
+        126686004754
+      ],
+      "metadata_result": "both pass schema38/64tables/63forced-RLS/43rows; exact cleanup and stopped-state restoration",
+      "manifest_reference": ".private/freightctl-f073-cac-native-7RSPfOxw/manifest.json",
+      "manifest_sha256": "b5e9445267b888b66c3bc749e6e337b93fa83d6ebb75282d49f7db20a727a7a2"
     }
   },
   "intake_release_execution": {
@@ -535,5 +553,14 @@
     ],
     "reason": "D151/D152 did not recur on the single instrumented replay. Fixed repetitions improve observation of intermittent failure without selectively rerunning to obtain a green result.",
     "qualification_claim": false
+  },
+  "submitted_checkpoint": {
+    "commit": "895f1f48cd911166fca5eec71348ae3d0c564026",
+    "pushed": true,
+    "native_run_id": 41867347903,
+    "workflow_consent_run_id": 41867348009,
+    "direct_consent_run_id": 41867347984,
+    "state": "queued at submission; poll exact handles",
+    "runtime_qualified": false
   }
 }
