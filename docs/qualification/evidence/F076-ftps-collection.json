@@ -294,5 +294,21 @@
     "local_count_correction_sha256": "2a335d492672875bade65ad9fca1710bc6fee57a2b608b2af7399fc295291988",
     "local_checks": "Seven synthetic original-file browser contracts, eight metadata producer/verifier methods,67reporter contracts,135frontend contracts including five pure driver stand-ins; syntax/Prettier/actionlint/diff checks. First test-only formatting refusal retained; no local Chrome, product process, DB, socket, scanner, inference or peer.",
     "submission": "Local only; preserve queued required28cdfcb source candidate."
+  },
+  "native_process_recovery_prepared": {
+    "test": "internal/workflow/ftps_collection_recovery_integration_test.go",
+    "cases": 2,
+    "modes": [
+      "explicit",
+      "implicit"
+    ],
+    "mechanism": "Run ordinary public collection-work CLI as one owned child. Observe original eight-second SQL acceptance barrier and a hash-verified0400 sealed object with pending input/no path, kill exact child by SIGKILL and require no successful receipt. Preserve original live30second lease (legitimate pre-kill renewal may extend it, never shorten it). Remove payload/manifest via producer exact namespace revisions. Original key must fail while lease is live, then recover same sealed object/input under attempt2/fence2 and replay one captured receipt with zero new source contacts and exactly one FileAccepted event/file row.",
+    "scope": "Native freightctl TLS/source stand-in plus real PostgreSQL, disk and public CLI on GitHub only; no independent stock-peer, outage/RPO/RTO, multi-host or complete recovery journey claim.",
+    "budgets": "Original60second fixture,30second worker lease,8second acceptance barrier,600second package and50minute native job limits unchanged. Payload fits existing1024byte collection budget. No lease backdating or test-only application fault hooks.",
+    "local_checks_manifest_reference": ".private/freightctl-f076-recovery-compile-jdcjde23/manifest.json",
+    "local_checks_manifest_sha256": "496747908f6df118d5cd6931b9340f1ae76dc342af94b0898a940cdab0057516",
+    "local_scope": "Native macOS ARM integration compilation and vet only. No setup fixture, actual child, process kill, source, PostgreSQL, scanner or inference ran.",
+    "runtime_qualification": false,
+    "submission": "Local follow-up only. Latest28cdfcb remains15prepared native leaves; this follow-up prepares17, without asserting any new native pass."
   }
 }
