@@ -3,7 +3,7 @@
   "id": "F073",
   "observed_at": "2026-11-03",
   "starting_commit": "7879c34f9e917d5c650a60b1800c59050044c01a",
-  "state": "partial implementation committed at owner pause; native runtime qualification pending",
+  "state": "resumed; registered workflow receiver/SQL integration source added; native runtime qualification pending",
   "scope": "Next dependency: versioned registered FTPS destinations and typed workflow sending through ordinary execution and independent dispatch consent. This does not replace remaining encryption, collection, independent peer or whole-product requirements.",
   "first_failure": {
     "kind": "actual native ARM typed-workflow contract",
@@ -74,7 +74,7 @@
     "FTPS collection, independent supported x86 receiver qualification, broader protocol behavior and complete receiving/sending customer journeys remain required.",
     "D145 stays open as intermittent despite a passing diagnostic replay. Windows D103 and all83 whole baseline rows/12 full journeys remain open."
   ],
-  "next_action": "Owner-paused. On explicit resume, add and execute the frozen native workflow/SQL/receiver cases and public CLI/browser qualification before claiming F073 runtime support.",
+  "next_action": "Execute the new native PostgreSQL/receiver cases through GitHub, preserve first failures, repair and replay. Extend the public CLI/browser profile to workflow-created intents; frozen C01\u2013C10 remain unqualified until their required journeys run.",
   "implementation_checkpoint": {
     "versioned_connection": "schema2 FTPS definitions, strict canonical validation and redacted reference fingerprints",
     "typed_execution": "ftps.deliver uses exact registered protocol/version; queued delivery includes the workflow/run/step/connection binding; unsupported recipient encryption remains refused",
@@ -102,7 +102,7 @@
   "qualification_claim": false,
   "pause_handoff": {
     "requested_by": "owner",
-    "state": "halt after local commit; do not push",
+    "state": "historical pause completed; owner resumed the goal",
     "remaining": [
       "Add the frozen real PostgreSQL/application-receiver workflow integration cases; none has executed for schema37.",
       "Extend the public CLI/API/browser qualification from direct FTPS intents to workflow-created intents; C01\u2013C10 remain unqualified.",
@@ -110,5 +110,20 @@
       "Keep retained35 unchanged, local inference off and F026 owner-deferred. D145 remains intermittent and WindowsD103/x86vendor gates remain open."
     ],
     "resume_at": "Complete F073 integration/public qualification using the frozen cases and current partial implementation. Do not mark F073 or the overall goal complete from these local contracts."
+  },
+  "resumed_from_commit": "463b6ca7976aaabe5e485f95f104feec8a73d5b5",
+  "resume_compile": {
+    "manifest_reference": ".private/freightctl-f073-resume-compile-ycd8rc4_/manifest.json",
+    "manifest_sha256": "964b1c2273b3082c0985cf285451a2ca9804a9a83b66ea824e3247219c24e20c",
+    "tests_file": "internal/workflow/ftps_workflow_integration_test.go",
+    "runtime_executed": false,
+    "cases": [
+      "explicit/implicit independent consent and receiver bytes",
+      "exact version rotation/revocation/no-contact",
+      "protocol mismatch before draft/preview",
+      "explicit/implicit stage and rename reply loss with read-only reconciliation",
+      "bounded-program consent and sending",
+      "SQL rejection of changed protocol and connection effects"
+    ]
   }
 }

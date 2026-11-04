@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "goal_state": "paused",
+  "goal_state": "active",
   "items": [
     {
       "id": "R001",

@@ -30,8 +30,9 @@ import (
 // observed durable receiver effect. Data sockets and TLS policy stay unchanged.
 type replyLossListener struct {
 	net.Listener
-	after atomic.Pointer[replyLossHook]
-	fired atomic.Bool
+	after    atomic.Pointer[replyLossHook]
+	fired    atomic.Bool
+	contacts atomic.Int64
 }
 type replyLossHook struct{ after func() bool }
 
@@ -47,6 +48,7 @@ func (l *replyLossListener) Accept() (net.Conn, error) {
 	if err != nil {
 		return nil, err
 	}
+	l.contacts.Add(1)
 	return &replyLossConn{Conn: c, owner: l}, nil
 }
 func (c *replyLossConn) Write(b []byte) (int, error) {
