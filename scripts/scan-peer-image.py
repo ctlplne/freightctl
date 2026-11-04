@@ -18,7 +18,9 @@ gate = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(gate)
 
 COMMAND_PHASES = frozenset(('checkout', 'image-identity', 'image-archive', 'scanner-image',
-    'scanner-identity', 'input-closure', 'enforcing-summary', *(
+    'scanner-identity', 'input-closure', 'enforcing-summary', 'scratch-format', 'scratch-mount',
+    'scratch-mount-identity', 'scratch-loop-identity', 'scratch-unmount',
+    'scratch-cleanup-mount-identity', 'scratch-cleanup-loop-identity', *(
         stage + suffix for stage in ('feed-download', 'scanner-version', 'image-scan')
         for suffix in ('', '-create', '-cleanup'))))
 DIAGNOSTICS = {
@@ -77,6 +79,78 @@ def digest(path):
         return hashlib.file_digest(stream, 'sha256').hexdigest()
 
 
+class BoundedScratch:
+    """A private 2GiB ext4 volume; temporary archives consume disk, not RAM."""
+    size = 2 << 30
+
+    def __init__(self, private):
+        self.backing = private/'scratch.ext4'
+        self.root = private/'scratch'
+        self.root.mkdir(mode=0o700)
+        with self.backing.open('xb') as stream:
+            stream.truncate(self.size)
+            stream.flush()
+            os.fsync(stream.fileno())
+        self.backing.chmod(0o600)
+        self.attempted = False
+        self.mounted = False
+        self.cleanup_attempted = False
+
+    def identity(self, command, cleanup=False):
+        prefix = 'scratch-cleanup-' if cleanup else 'scratch-'
+        code, output = command(prefix+'mount-identity', ['findmnt', '--json', '--mountpoint',
+            str(self.root), '--output', 'SOURCE,FSTYPE,TARGET,OPTIONS'], 15, check=False)
+        if code == 1 and not self.mounted:
+            return False
+        gate.require(code == 0)
+        value, _ = gate.load(output, 1 << 20)
+        gate.require(isinstance(value, dict))
+        filesystems = value.get('filesystems')
+        gate.require(isinstance(filesystems, list) and len(filesystems) == 1)
+        mount = filesystems[0]
+        gate.require(isinstance(mount, dict) and mount.get('fstype') == 'ext4'
+                     and mount.get('target') == str(self.root)
+                     and isinstance(mount.get('source'), str)
+                     and re.fullmatch('/dev/loop[0-9]+', mount['source']))
+        options = mount.get('options', '')
+        gate.require(isinstance(options, str) and {'rw', 'nodev', 'nosuid', 'noexec'} <= set(options.split(',')))
+        _, output = command(prefix+'loop-identity', ['losetup', '--json', '--list', '--associated',
+            str(self.backing), '--output', 'NAME,BACK-FILE'], 15)
+        value, _ = gate.load(output, 1 << 20)
+        gate.require(isinstance(value, dict))
+        loops = value.get('loopdevices')
+        gate.require(isinstance(loops, list) and len(loops) == 1
+                     and isinstance(loops[0], dict)
+                     and loops[0].get('name') == mount['source']
+                     and loops[0].get('back-file') == str(self.backing)
+                     and self.backing.is_file() and not self.backing.is_symlink()
+                     and self.backing.stat().st_size == self.size)
+        return True
+
+    def prepare(self, command):
+        command('scratch-format', ['mkfs.ext4', '-q', '-F', '-m', '0', '-E',
+            'root_owner='+str(os.getuid())+':'+str(os.getgid()), str(self.backing)], 30)
+        # Mark before invoking mount: even a timed-out command needs exact
+        # ownership inspection before deciding whether cleanup is necessary.
+        self.attempted = True
+        command('scratch-mount', ['sudo', '-n', 'mount', '--types', 'ext4', '--options',
+            'loop,nodev,nosuid,noexec', '--source', str(self.backing), '--target', str(self.root)], 30)
+        self.mounted = True
+        self.identity(command)
+        self.root.chmod(0o700)
+        for name in ('cache', 'tmp'):
+            (self.root/name).mkdir(mode=0o700)
+
+    def close(self, command):
+        if not self.attempted or self.cleanup_attempted:
+            return
+        self.cleanup_attempted = True
+        if self.identity(command, cleanup=True):
+            command('scratch-unmount', ['sudo', '-n', 'umount', '--', str(self.root)], 30)
+        self.mounted = False
+        self.attempted = False
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--architecture', required=True, choices=('amd64', 'arm64'))
@@ -95,10 +169,10 @@ def main():
     private = ROOT/'.private'/('freightctl-peer-image-scan-'+session)
     private.mkdir(mode=0o700)
     cache, output = private/'cache', private/'output'
-    cache.mkdir(mode=0o700)
     output.mkdir(mode=0o700)
     phase = 'checkout'
     steps = []
+    scratch = None
 
     def command(name, arguments, timeout, *, check=True):
         stdout, stderr = private/(name+'.stdout'), private/(name+'.stderr')
@@ -124,10 +198,12 @@ def main():
                   '--user', str(os.getuid())+':'+str(os.getgid()),
                   '--tmpfs', '/tmp:rw,noexec,nosuid,size=256m', '--workdir', '/tmp',
                   '--env', 'GOMAXPROCS=1', '--env', 'GOMEMLIMIT=768MiB',
+                  '--env', 'TMPDIR=/scratch',
                   '--network', network,
                   '--label', 'freightctl.purpose=peer-image-scan',
                   '--label', 'freightctl.scan='+session,
-                  '--mount', 'type=bind,src='+str(cache)+',dst=/cache'+('' if writable_cache else ',readonly')]
+                  '--mount', 'type=bind,src='+str(cache)+',dst=/cache'+('' if writable_cache else ',readonly'),
+                  '--mount', 'type=bind,src='+str(scratch.root/'tmp')+',dst=/scratch']
         for mount in mounts:
             limits.extend(['--mount', mount])
         _, created = command(name+'-create', ['docker', 'create', '--name',
@@ -165,6 +241,10 @@ def main():
         scanner, _ = gate.load(scanner_inspect, 1 << 20)
         gate.require(isinstance(scanner, list) and len(scanner) == 1
                      and scanner[0].get('Architecture') == args.architecture and scanner[0].get('Os') == 'linux')
+        phase = 'scratch-volume'
+        scratch = BoundedScratch(private)
+        scratch.prepare(command)
+        cache = scratch.root/'cache'
         phase = 'feed-download'
         common = ['--cache-dir', '/cache', '--config', '/dev/null']
         container(phase, [*common, 'image', '--download-db-only', '--db-repository',
@@ -200,21 +280,36 @@ def main():
         result, summary_sha = gate.load(summary, 1 << 20)
         gate.require(code in (0, 1) and isinstance(result, dict)
                      and result.get('state') == ('passed' if code == 0 else 'failed'))
+        phase = 'scratch-cleanup'
+        scratch.close(command)
         manifest = {'schema_version': 1, 'source_commit': commit, 'image_id': image_id,
                     'architecture': args.architecture, 'state': result['state'], 'steps': steps,
                     'summary_sha256': summary_sha, 'scanner_inspect_sha256': digest(scanner_inspect),
-                    'feed_metadata_sha256': metadata_sha, 'runtime_qualification': False}
+                    'feed_metadata_sha256': metadata_sha, 'scratch_bytes': BoundedScratch.size,
+                    'scratch_unmounted': not scratch.attempted, 'runtime_qualification': False}
         record = private/'manifest.json'
         record.write_text(json.dumps(manifest, indent=2)+'\n')
         # Only this verifier's own bounded allowlisted summary reaches stdout.
         result['manifest_sha256'] = digest(record)
+        result['scratch_bytes'] = BoundedScratch.size
+        result['scratch_cleanup'] = 'unmounted'
         print(json.dumps(result, sort_keys=True))
         return code
     except (OSError, ValueError, TypeError, KeyError, RuntimeError, subprocess.SubprocessError):
+        if scratch is not None and scratch.attempted:
+            try:
+                scratch.close(command)
+            except (OSError, ValueError, TypeError, KeyError, RuntimeError, subprocess.SubprocessError):
+                # Refuse to unmount a foreign or unproven device. This remains
+                # a failed job; the disposable runner is the final boundary.
+                pass
+        cleanup = 'not-created' if scratch is None else 'unmounted' if not scratch.attempted else 'unproven'
         record = private/'failure.json'
-        record.write_text(json.dumps({'schema_version': 1, 'state': 'failed', 'phase': phase, 'steps': steps}, indent=2)+'\n')
+        record.write_text(json.dumps({'schema_version': 1, 'state': 'failed', 'phase': phase,
+            'steps': steps, 'scratch_cleanup': cleanup, 'scratch_bytes': BoundedScratch.size}, indent=2)+'\n')
         print(json.dumps({'state': 'failed', 'reason': 'native-peer-image-scan-failed',
                           'phase': phase, 'manifest_sha256': digest(record),
+                          'scratch_cleanup': cleanup,
                           'command': failure_observation(steps, private)}))
         return 2
 

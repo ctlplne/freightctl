@@ -38,13 +38,42 @@ class ScanOrchestration(unittest.TestCase):
             shutil.copyfile(HERE/'ci-peer-image-summary.py', root/'scripts/ci-peer-image-summary.py')
             report, version, image = contracts.inputs(datetime.now(timezone.utc), arch)
             created, removed, invocations = {}, [], []
+            volume = {'mounted': False, 'unmounted': False}
             original_cwd = Path.cwd()
             def docker(arguments, *, stdout, stderr, timeout):
                 invocations.append(arguments)
+                if arguments[0] == 'mkfs.ext4':
+                    volume['backing'] = arguments[-1]
+                    self.assertEqual(Path(arguments[-1]).stat().st_size, 2 << 30)
+                    return subprocess.CompletedProcess(arguments, 0)
+                if arguments[:3] == ['sudo', '-n', 'mount']:
+                    volume['root'] = arguments[-1]
+                    self.assertEqual(arguments[arguments.index('--source')+1], volume['backing'])
+                    self.assertIn('loop,nodev,nosuid,noexec', arguments)
+                    volume['mounted'] = True
+                    if mode == 'mount-timeout':
+                        raise subprocess.TimeoutExpired(contracts.PRIVATE, timeout)
+                    return subprocess.CompletedProcess(arguments, 0)
+                if arguments[0] == 'findmnt':
+                    self.assertEqual(arguments[arguments.index('--mountpoint')+1], volume['root'])
+                    stdout.write(json.dumps({'filesystems': [{'source': '/dev/loop123', 'fstype': 'ext4',
+                        'target': volume['root'], 'options': 'rw,nodev,nosuid,noexec,relatime'}]}).encode())
+                    return subprocess.CompletedProcess(arguments, 0)
+                if arguments[0] == 'losetup':
+                    self.assertEqual(arguments[arguments.index('--associated')+1], volume['backing'])
+                    stdout.write(json.dumps({'loopdevices': [{'name': '/dev/loop123',
+                        'back-file': volume['backing'] if mode != 'foreign-volume' else contracts.PRIVATE}]}).encode())
+                    return subprocess.CompletedProcess(arguments, 0)
+                if arguments[:3] == ['sudo', '-n', 'umount']:
+                    self.assertNotEqual(mode, 'foreign-volume')
+                    self.assertEqual(arguments[3:], ['--', volume['root']])
+                    volume['mounted'], volume['unmounted'] = False, True
+                    return subprocess.CompletedProcess(arguments, 0)
                 if arguments[0] != 'docker':
                     if arguments[:2] == ['git', 'rev-parse']:
                         stdout.write((contracts.COMMIT+'\n').encode())
                         return subprocess.CompletedProcess(arguments, 0)
+                    self.assertEqual(arguments[:2], [sys.executable, str(root/'scripts/ci-peer-image-summary.py')])
                     return REAL_RUN(arguments, stdout=stdout, stderr=stderr, timeout=timeout)
                 action = arguments[1:3]
                 if action == ['image', 'inspect']:
@@ -106,6 +135,7 @@ class ScanOrchestration(unittest.TestCase):
                 output = stream.getvalue()
                 self.assertNotIn(contracts.PRIVATE, output)
                 self.assertEqual(set(created), set(removed))
+                self.assertEqual(volume['unmounted'], mode != 'foreign-volume')
                 if mode == 'timeout':
                     failure = json.loads(next((root/'.private').glob('*/failure.json')).read_text())
                     interrupted = [s for s in failure['steps'] if s.get('incomplete')]
@@ -118,11 +148,16 @@ class ScanOrchestration(unittest.TestCase):
                                   '--memory=1g', '--memory-swap=1g', '--cpus=1', '--pids-limit=128'):
                         self.assertIn(fixed, create)
                     self.assertNotIn('/var/run/docker.sock', str(create))
+                    self.assertIn('TMPDIR=/scratch', create)
                     options = create[create.index(runner.gate.SCANNER_IMAGE)+1:]
                     self.assertEqual(create[create.index('--network')+1], 'bridge' if '--download-db-only' in options else 'none')
                     cache_mount = next(create[n+1] for n, arg in enumerate(create)
                                        if arg == '--mount' and ',dst=/cache' in create[n+1])
                     self.assertEqual(cache_mount.endswith(',readonly'), '--download-db-only' not in options)
+                    scratch_mount = next(create[n+1] for n, arg in enumerate(create)
+                        if arg == '--mount' and ',dst=/scratch' in create[n+1])
+                    self.assertEqual(scratch_mount, 'type=bind,src='+str(Path(volume['root'])/'tmp')+',dst=/scratch')
+                    self.assertTrue(cache_mount.startswith('type=bind,src='+str(Path(volume['root'])/'cache')+','))
                 return code, json.loads(output), created
             finally:
                 runner.os.chdir(original_cwd)
@@ -136,6 +171,8 @@ class ScanOrchestration(unittest.TestCase):
                 self.assertEqual(output['image_id'], contracts.IMAGE)
                 self.assertEqual(len(created), 3)
                 self.assertRegex(output['manifest_sha256'], '^[0-9a-f]{64}$')
+                self.assertEqual(output['scratch_bytes'], 2 << 30)
+                self.assertEqual(output['scratch_cleanup'], 'unmounted')
 
     def test_actual_python_converter_nonzero_blocks_an_exit_zero_scanner(self):
         code, output, _ = self.exercise(mode='high')
@@ -160,6 +197,7 @@ class ScanOrchestration(unittest.TestCase):
         self.assertEqual(len(created), 1)
         self.assertEqual(output['command']['category'], 'deadline-exceeded')
         self.assertEqual(output['command']['command_phase'], 'feed-download')
+        self.assertEqual(output['scratch_cleanup'], 'unmounted')
 
     def test_non_github_invocation_refuses_before_any_subprocess(self):
         with patch.object(sys, 'argv', ['scan-peer-image.py', '--architecture', 'amd64']), \
@@ -168,6 +206,21 @@ class ScanOrchestration(unittest.TestCase):
             self.assertEqual(runner.main(), 2)
             invoked.assert_not_called()
             self.assertEqual(json.loads(output.getvalue())['reason'], 'native-github-peer-scan-required')
+
+    def test_mount_timeout_still_unmounts_only_the_exact_owned_backing(self):
+        code, output, created = self.exercise(mode='mount-timeout')
+        self.assertEqual(code, 2)
+        self.assertEqual(output['phase'], 'scratch-volume')
+        self.assertEqual(output['command']['category'], 'deadline-exceeded')
+        self.assertEqual(output['scratch_cleanup'], 'unmounted')
+        self.assertEqual(created, {})
+
+    def test_foreign_loop_backing_is_never_unmounted_or_exposed_to_scanner(self):
+        code, output, created = self.exercise(mode='foreign-volume')
+        self.assertEqual(code, 2)
+        self.assertEqual(output['phase'], 'scratch-volume')
+        self.assertEqual(output['scratch_cleanup'], 'unproven')
+        self.assertEqual(created, {})
 
     def test_fixed_diagnostic_categories_never_publish_raw_strings(self):
         with tempfile.TemporaryDirectory(prefix='freightctl-image-diagnostic-') as directory:

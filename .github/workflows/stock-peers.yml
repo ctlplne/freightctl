@@ -14,6 +14,10 @@ on:
       - 'go.sum'
       - '.gitattributes'
       - 'scripts/**'
+      - '!scripts/scan-peer-image.py'
+      - '!scripts/ci-peer-image-summary.py'
+      - '!scripts/test-scan-peer-image.py'
+      - '!scripts/test-ci-peer-image-summary.py'
       - '.github/workflows/stock-peers.yml'
   pull_request:
     paths:
@@ -27,6 +31,10 @@ on:
       - 'go.sum'
       - '.gitattributes'
       - 'scripts/**'
+      - '!scripts/scan-peer-image.py'
+      - '!scripts/ci-peer-image-summary.py'
+      - '!scripts/test-scan-peer-image.py'
+      - '!scripts/test-ci-peer-image-summary.py'
       - '.github/workflows/stock-peers.yml'
   workflow_dispatch:
 

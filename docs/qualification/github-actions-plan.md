@@ -39,7 +39,7 @@ reports, image archives, credentials, payloads, keys or private evidence.
 | Gate | Workflow and actual environment | Contract and current limit |
 | --- | --- | --- |
 | Source, frontend and supply chain | [core-checks.yml](../../.github/workflows/core-checks.yml), Linux x86 | Formatting/static checks, frontend contracts/type/build/embedded closure, npm auditing, Gitleaks history/change scans, source govulncheck and actual converter refusal contracts. Parser/report success alone cannot pass a vulnerability finding. |
-| Native application, migrations and isolation | [native-linux.yml](../../.github/workflows/native-linux.yml), actual Linux ARM and x86, separate PostgreSQL fixtures capped at 512 MiB and one CPU | All implemented unit/race/integration tests, cold migrations, RLS/runtime authority and independent peer cases. At 2da04d3 both application suites pass 802 records with zero failures/skips, including independent AEAD. Both jobs fail afterward at the new image-feed prerequisite D159; full jobs remain red. F074/F075 retain exact separate results. |
+| Native application, migrations and isolation | [native-linux.yml](../../.github/workflows/native-linux.yml), actual Linux ARM and x86, separate PostgreSQL fixtures capped at 512 MiB and one CPU | All implemented unit/race/integration tests, cold migrations, RLS/runtime authority and independent peer cases. At 5ef3f3b and8905385 both application suites pass841 records with zero failures/skips, including independent AEAD. Both jobs fail afterward at the new image-feed prerequisite D159; full jobs remain red. F074/F075 retain exact separate results. |
 | Metadata restore | Same native Linux workflow, separately seeded real PostgreSQL per architecture | Fresh schema 39, 64 tables, 63 with forced RLS and 44 synthetic rows passes both at0c681c7. Retained schema 35 is separately approved and unchanged. Metadata-only restore does not qualify payload/key/clean-host recovery or RPO/RTO. |
 | Parser/authority fuzz | Same native Linux workflow, Linux x86 | Ten bounded implemented targets; add targets with real parsers. Missing targets and unexecuted cases remain open. Keep original budgets and surface any corpus failure. |
 | Exact independent peer image | Same native Linux job, after runtime even on failure if peer build succeeded | [F075](evidence/F075-peer-image-security.json): scan the same immutable source-labelled image ID, without uploading it. Pinned Trivy, current hash-bound feed, OS/library inventory, native identity and enforcing safe summary are required. Both actual native attempts fail at feed preparation before scanning (D159). Fixed hash-bound command observations are prepared. The earlier4d771b2 run was cancelled unstarted and is not a pass. |
@@ -76,7 +76,7 @@ and runtime/RLS checks. Cold store upgrades remain independent. Template
 optimization proves fixture behavior, not product throughput or capacity.
 
 The F075 image scanner uses one CPU and 1 GiB RAM, no swap, 128 processes and a bounded
-temporary filesystem. Download its feed in a separate bounded container; scan an
+fallback temporary memory filesystem. The prepared D159 repair uses a separate2GiB ext4 disk volume for cache and `TMPDIR`, verified by exact mount/loop backing before use and unmount, including timeout. Native filesystem/feed/scan replay remains pending. Download its feed in a separate bounded container; scan an
 immutable image archive offline with no Docker socket, read-only root/input/feed
 and no capabilities/new privileges. Require fresh feed/report times, unchanged
 input hashes and OS plus installed OpenPGP inventory. Count all severities and
@@ -102,7 +102,7 @@ The stopped local scanner and retained schema 35 estate stay unchanged.
 2. Fast source checks may supersede older source checks. Other workflows use
    finish-running/newest-pending groups; Windows and Mac have separate OS groups.
    Ordered path filters may omit irrelevant work, including selected `_test.go`
-   changes from stock journeys. An omitted run establishes no result for the
+   changes and the four image-scanner-only scripts from stock journeys. The scanner remains in native Linux and core gates. An omitted run establishes no result for the
    new commit. Review every trigger consumer when adding scripts/migrations.
 3. Preserve the first actual failure and immutable original logs before editing.
    Add a meaningful regression, fix the mechanism, replay the original journey

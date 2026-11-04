@@ -110,5 +110,38 @@
     "local_checks_manifest_reference": ".private/freightctl-f076-admission-local-hr8z7pq6/manifest.json",
     "local_checks_manifest_sha256": "f51cb40f2f191249c482b64c294c09d1a5675a3f5be12bedf4be681d7f721c6a",
     "local_scope": "Pure/race workflow contracts and read adapter stand-ins, pre-network bounds, integration compile/vet,126 frontend contracts, typecheck/embedded closure and12 metadata contracts. A prior broad local ftpsclient attempt failed at sandbox loopback binds; no runtime pass follows and no socket permission was escalated."
+  },
+  "submitted_source40": {
+    "implementation_commit": "3a730efa1599c701b15a413365c9042c347e3aeb",
+    "candidate": "fb317e50008561f233d804e1dabe87f2a8446ee4",
+    "note": "Fresh unexecuted040 SQL trailing whitespace corrected in a separate forward commit before first source push; original local manifest remains immutable and records its earlier bytes. No historical001-039 migration or commit is rewritten.",
+    "run_id": 41897763165,
+    "application_jobs": [
+      126811748608,
+      126811749026
+    ],
+    "application_state": "both native application jobs started; integration outcomes pending",
+    "metadata_x86": {
+      "job_id": 126811748790,
+      "schema": 40,
+      "metadata_tables": 64,
+      "forced_rls_tables": 63,
+      "restored_rows": 45,
+      "manifest_reference": ".private/freightctl-f076-metadata40-first-ueUSpEOh/manifest.json",
+      "manifest_sha256": "3824fafa4b76f01f3823130082e7612d52709a40c068d801453fe3ee75100afc",
+      "runner_manifest_sha256": "903e7a27ba69fe4181ad4ebb884e2e91a0038b32d4471dc66c7b79dfae44dd8a",
+      "scope": "Fresh actual PostgreSQL same-cluster metadata only; no collection runtime or retained35 change."
+    },
+    "metadata_arm": {
+      "job_id": 126811748850,
+      "schema": 40,
+      "metadata_tables": 64,
+      "forced_rls_tables": 63,
+      "restored_rows": 45,
+      "manifest_reference": ".private/freightctl-f076-metadata40-arm-Gqp2zWxZ/manifest.json",
+      "manifest_sha256": "fc22b2a062f011b24ade9e5f0a67a9c1a3513231e9571b418a039a0927ff6e3b",
+      "runner_manifest_sha256": "c7fcd1d513ab31dc2ff96b1b593e270be39979334ec08a2c5009ba7c51364f85",
+      "scope": "Fresh actual PostgreSQL same-cluster metadata only; collection runtime and retained35 upgrade unqualified."
+    }
   }
 }

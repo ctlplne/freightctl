@@ -3,7 +3,7 @@
   "id": "F075",
   "observed_at": "2026-11-04",
   "starting_commit": "63e153f6511f6cb457dfa46f70d39f2548f200b6",
-  "state": "Actual image gates fail before scanning; native8905385 ARM narrows feed failure to hash-bound storage-capacity, exact exhausted filesystem/repair still pending",
+  "state": "Both8905385 native application suites pass841/0/0, image feeds fail with storage-capacity; source-supported double-archive mechanism and disk-backed bounded repair prepared, actual replay pending",
   "scope": "Scan the exact disposable independent OpenPGP recipient image used by native Linux tests. This is test infrastructure, not a released server image or runtime security qualification.",
   "qualification_claim": false,
   "frozen_cases": [
@@ -37,7 +37,7 @@
     }
   ],
   "first_observation": "The pinned independent peer Dockerfile audits npm dependencies, but no workflow scans its OS image or binds an image scan to actual runtime identity. Source inspection establishes a missing gate only; it is not a native scanner result.",
-  "next_action": "Preserve original native storage failure, determine exact filesystem mechanism without increasing scanner memory/CPU or weakening freshness/inventory/privacy/vulnerability rules, then replay exact immutable image gate on GitHub. No clean-image or release-security claim follows.",
+  "next_action": "Preserve source40fb317e5 native candidate until application jobs start, then submit bounded disk repair. Require exact ARM/x86 volume ownership/cleanup, fresh feed and original immutable peer-image scan. Keep original memory/CPU/deadlines and all vulnerability/privacy gates; an unexecuted repair is not a scan pass.",
   "implementation": {
     "workflow": ".github/workflows/native-linux.yml",
     "execution": "after all original runtime tests, including failure when peer build succeeded; no changed existing budgets",
@@ -53,10 +53,11 @@
       "tmpfs_bytes": 268435456,
       "scan_deadline_seconds": 600,
       "command_deadline_seconds": 660,
-      "existing_native_job_minutes": 50
+      "existing_native_job_minutes": 50,
+      "scratch_disk_bytes": 2147483648
     },
     "isolation": "read-only root, nonroot host uid/gid, no capabilities/new privileges, no Docker socket, offline scan with read-only archive/feed; only fixed phase/digest/count/advisory output",
-    "cleanup": "each container is created and its exact returned ID removed even after timeout; retain private incomplete-command output hashes",
+    "cleanup": "each container is created and its exact returned ID removed even after timeout; retain private incomplete-command output hashes Prepared disk repair verifies exact ext4/loop backing before unmount, including mount timeout; an unproven foreign volume is never unmounted and remains a red gate.",
     "gate": "count all severities/unfixed; HIGH/CRITICAL/UNKNOWN or suppression fail; require Debian12 OS and exact installed OpenPGP6.3.2 inventory; no ignore/VEX/filter workaround",
     "publication": "none; raw reports, image archives and diagnostics stay private on disposable runner"
   },
@@ -116,5 +117,26 @@
     "runner_failure_manifest_sha256": "6931105a6bcf7f6ebaf0517913adb2907975e15840d607aa0a4e744f23c9aba3",
     "stderr_sha256": "38464ac52314844940089fda17c78b4b39dc94cb3c8137e6afd6aa35515744ff",
     "scope": "Fixed category is hash-bound to the private failed command stderr. Exact exhausted filesystem/path and repair remain unproven; no scan report or clean/security claim."
+  },
+  "disk_repair_prepared": {
+    "original_x86_manifest_reference": ".private/freightctl-f075-disk-repair-v8SnYiRT/manifest.json",
+    "original_x86_manifest_sha256": "bd0987025befe92245ce0f3c3eb668f2d5b88d6bee2dcc02545948abefef8023",
+    "x86_job_id": 126798310929,
+    "application_pass": 841,
+    "application_fail": 0,
+    "application_skip": 0,
+    "workflow_seconds": 452.253,
+    "inference": "Pinned Trivy saves its OCI archive in TMPDIR; pinned go-getter copies it to a second temporary archive before decompression. Observed feed138714876bytes requires at least277429752 simultaneous archive bytes, exceeding256MiB268435456. Native fixed diagnostics say storage-capacity; exact private stderr path is not observed. Original native replay must confirm the proposed mechanism/repair.",
+    "primary_sources": [
+      "https://github.com/aquasecurity/trivy/blob/v0.76.1/pkg/oci/artifact.go",
+      "https://github.com/aquasecurity/trivy/blob/v0.76.1/pkg/downloader/download.go",
+      "https://github.com/hashicorp/go-getter/blob/v1.8.10/client.go"
+    ],
+    "mechanism": "Separate task-owned sparse2GiB ext4 disk image holds cache and TMPDIR. Nonroot scanner retains1GiB RAM/no swap/one CPU/128pids and256MiB fallback tmpfs. Require exact mount target/ext4/nodev/nosuid/noexec and loop backing path/size before use and unmount; inspect even after mount timeout, refuse foreign ownership. No actual local mount/format/container/scan.",
+    "disk_bytes": 2147483648,
+    "local_test_methods": 18,
+    "scope": "Synthetic command/JSON stand-ins and sparse-file size checks only. Original runtime candidate and actual native filesystem/feed/scan/cleanup remain pending.",
+    "local_checks_manifest_reference": ".private/freightctl-f075-disk-final-bytvy3hv/manifest.json",
+    "local_checks_manifest_sha256": "9ec0abec6b8ba6805d7151aa12e84ad5f33c4bd5fe9640ad8c68cc34c57eb236"
   }
 }
