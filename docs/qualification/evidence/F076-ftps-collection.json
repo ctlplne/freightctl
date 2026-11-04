@@ -241,23 +241,99 @@
     "mechanism": "Both modes use actual CLI identity/registered connection/workflow/collection preview and queue/cancel; exact original CLI and HTTPS keys replay before and after cancellation/source revocation. New bounded source spy is stopped and drained with zero contacts; no worker runs.",
     "commands_per_mode": 16,
     "saved_key_replays_per_mode": 5,
-    "output_scope": "Actual CLI/API metadata-only gate is prepared, not executed. Bytes and browser remain separately unqualified; original six workflow-consent browser phases/18audits and three fresh profiles are unchanged.",
+    "output_scope": "Actual collection CLI/API metadata passes both modes on3recipient-encrypted fresh profiles at28cdfcb; plaintext remains in progress. Bytes/collection Chrome remain unqualified. Original six consent browser phases/18audits and exact cleanup pass on each completed encrypted profile.",
     "verifier": "Reopen fixed command/file closure and protected input/output hashes; independent typed connection/source fingerprints, original requests/header identity/key, strict JSON/number/boolean/duplicate checks, unchanged attempts/fences and current versus historical state. Fixed failure enums/names only.",
     "local_methods": 71,
     "local_checks_manifest_reference": ".private/freightctl-f076-public-cas-diagnostic-local-u_5nce7y/manifest.json",
     "local_checks_manifest_sha256": "d6a2db0b5f4ee2d1dd7d1a895f38d60152d0d25f60491d8abd9017e0889c7a5d",
-    "local_scope": "7synthetic metadata original-output/refusal methods plus64FTPS reporter contracts, syntax/lint. Combined local worktree manifest also retains CAS compile/vet and20image stand-in methods. No service/CLI/API/Chrome/scanner/inference execution locally."
+    "local_scope": "7synthetic metadata original-output/refusal methods plus64FTPS reporter contracts, syntax/lint. Combined local worktree manifest also retains CAS compile/vet and20image stand-in methods. No service/CLI/API/Chrome/scanner/inference execution locally.",
+    "current_runtime_observation": {
+      "candidate": "28cdfcbbd83e2571fb626b3ee47b8783cccad4db",
+      "run_id": 41907798532,
+      "job_id": 126847012099,
+      "profile": "recipient-encrypted",
+      "state": "completed/success",
+      "fresh_profiles": 3,
+      "collection_commands_per_profile": 32,
+      "collection_saved_key_replays_per_profile": 10,
+      "source_contacts_per_profile": 0,
+      "existing_consent_browser_phases_per_profile": 6,
+      "existing_consent_audits_per_profile": 18,
+      "connection_rotations_per_profile": 20,
+      "manifest_reference": ".private/freightctl-f076-public-encrypted-first-em9ccdq4/manifest.json",
+      "manifest_sha256": "2001271311b25c7e9738fdacc13c72697d5550f95d01a4ef65845a6e179ee4fe",
+      "scope": "First actual CLI/API collection metadata pass in both modes on three fresh profiles; original keys preserve queue/cancel/revocation history with zero attempts/fences/contact and exact cleanup. This does not qualify source bytes or the new collection Chrome phase, nor9e5process death. Plaintext profile still running."
+    }
   },
   "newest_submission": {
+    "candidate": "9e5f429c9c563759c427b719c7f036f75bffcba2",
+    "native_run_id": 41914913896,
+    "native_state": "pending behind preserved running28cdfcb; unqualified",
+    "public_workflow_metadata_run_id": 41914914123,
+    "public_state": "pending behind preserved running28cdfcb; unqualified",
+    "core_run_id": 41914914270,
+    "core_state": "queued/unqualified",
+    "prepared_native_leaves": 17,
+    "prepared_collection_browser_phases_per_profile": 2,
+    "prepared_collection_browser_audits_per_profile": 6,
+    "source_push_authorized": true,
+    "submission_rule": "Both original28 native application jobs and both public profiles started before this source push. Preserve every original result; hold another relevant candidate while required9e5 jobs remain pending. No artifact, release, retained upgrade or deployment."
+  },
+  "registration_failure_standin": {
+    "manifest_reference": ".private/freightctl-f076-registration-closure-3ov_x1ye/manifest.json",
+    "manifest_sha256": "2aa86f2f1825a51b8063e680001eb951769865c3506ec1b38b283390d1e2d708",
+    "methods": 8,
+    "scope": "Python unit runner exercises the real producer function with a command/source-spy stand-in, stopping at synthetic registration failure. Under022, request/password are0600 and child0700, credential bytes never enter argv, exact spy closes once and owner token remains unchanged. No actual product subprocess, network socket, TLS, PostgreSQL, Chrome or inference.",
+    "runtime_qualification": false,
+    "submission": "local follow-up only; keep unknown28cdfcb native/public candidates intact"
+  },
+  "browser_metadata_prepared": {
+    "driver": "scripts/ftps-collection-browser.mjs",
+    "verifier": "scripts/ftps_collection_browser.py",
+    "runner": "scripts/qualify-ftps.py --workflow-dispatch-approvals --workflow-collection-metadata --workflow-collection-browser",
+    "reporter": "scripts/ci-ftps-summary.py --require-workflow-dispatch-approvals --require-workflow-collection-metadata --require-workflow-collection-browser",
+    "workflow": ".github/workflows/ftps-workflows.yml",
+    "mechanism": "Before source cancellation/revocation, actual sandboxed Chrome fills the FTPS collection form, previews the exact registered source/workflow and inspects the original queued job. Wait for rendered headings; compare original HTTP bodies to independent CLI snapshots, visible account/address/TLS proof/directory/manifest, three actual WCAG audits, no runtime errors or egress and active then stopped zero-contact spies. No worker or source bytes.",
+    "phases_per_profile": 2,
+    "additional_accessibility_audits_per_profile": 6,
+    "original_profile_preserved": "Existing six workflow consent browser phases/18audits and16collection commands/mode/five saved-key replays stay enforced. Three fresh plaintext/encrypted profiles and30minute job limit stay unchanged. New150second browser process uses an owned process group for timeout cleanup.",
+    "scope": "Metadata preview/read inspection only; byte collection, scheduled public controls, mutation recovery, mixed/encrypted forwarding and complete customer journeys remain unqualified.",
+    "local_python_methods": 82,
+    "local_frontend_contracts": 135,
+    "runtime_qualification": false,
+    "local_checks_manifest_reference": ".private/freightctl-f076-browser-metadata-local-pssakjik/manifest.json",
+    "local_checks_manifest_sha256": "0651af92ecaa3d017c3ff3e607fa3a91ec429e21a0f511fa4a7d4c2d25c04c73",
+    "local_count_correction_reference": ".private/freightctl-f076-browser-metadata-local-pssakjik/count-correction.json",
+    "local_count_correction_sha256": "2a335d492672875bade65ad9fca1710bc6fee57a2b608b2af7399fc295291988",
+    "local_checks": "Seven synthetic original-file browser contracts, eight metadata producer/verifier methods,67reporter contracts,135frontend contracts including five pure driver stand-ins; syntax/Prettier/actionlint/diff checks. First test-only formatting refusal retained; no local Chrome, product process, DB, socket, scanner, inference or peer.",
+    "submission": "Pushed at9e5f429; actual collection Chrome phase remains pending/unqualified."
+  },
+  "native_process_recovery_prepared": {
+    "test": "internal/workflow/ftps_collection_recovery_integration_test.go",
+    "cases": 2,
+    "modes": [
+      "explicit",
+      "implicit"
+    ],
+    "mechanism": "Run ordinary public collection-work CLI as one owned child. Observe original eight-second SQL acceptance barrier and a hash-verified0400 sealed object with pending input/no path, kill exact child by SIGKILL and require no successful receipt. Preserve original live30second lease (legitimate pre-kill renewal may extend it, never shorten it). Remove payload/manifest via producer exact namespace revisions. Original key must fail while lease is live, then recover same sealed object/input under attempt2/fence2 and replay one captured receipt with zero new source contacts and exactly one FileAccepted event/file row.",
+    "scope": "Native freightctl TLS/source stand-in plus real PostgreSQL, disk and public CLI on GitHub only; no independent stock-peer, outage/RPO/RTO, multi-host or complete recovery journey claim.",
+    "budgets": "Original60second fixture,30second worker lease,8second acceptance barrier,600second package and50minute native job limits unchanged. Payload fits existing1024byte collection budget. No lease backdating or test-only application fault hooks.",
+    "local_checks_manifest_reference": ".private/freightctl-f076-recovery-compile-jdcjde23/manifest.json",
+    "local_checks_manifest_sha256": "496747908f6df118d5cd6931b9340f1ae76dc342af94b0898a940cdab0057516",
+    "local_scope": "Native macOS ARM integration compilation and vet only. No setup fixture, actual child, process kill, source, PostgreSQL, scanner or inference ran.",
+    "runtime_qualification": false,
+    "submission": "Pushed at9e5f429;17prepared native leaves including these2process-death cases remain unqualified. Original28 retains15-leaf scope."
+  },
+  "source28_observation": {
     "candidate": "28cdfcbbd83e2571fb626b3ee47b8783cccad4db",
     "native_run_id": 41907798160,
     "native_jobs": [
       126848477397,
       126848477483
     ],
-    "native_state": "Both native application jobs started/in progress at2026-11-04T21:18Z; fuzz and ARM metadata completed success; x86 metadata started. Preserve original15-leaf scope and first outcomes.",
+    "native_state": "Both application jobs started/in progress; both metadata jobs and fuzz completed success. Original15FTPS leaf scope, no process-death case in this source.",
     "public_workflow_metadata_run_id": 41907798532,
-    "public_state": "Both public CLI/API metadata profiles started/in progress at2026-11-04T21:18Z, still unqualified. Later actual collection Chrome phase is absent from this source.",
+    "public_state": "Recipient-encrypted completes all3fresh profiles successfully; plaintext remains in progress at2026-11-04T21:20Z. No actual collection Chrome phase in this source.",
     "core_run_id": 41907798513,
     "superseded_native": {
       "candidate": "2c640862801d849178d9cd0bfb02e9ea2f02ebcb",
@@ -288,51 +364,43 @@
       "manifest_sha256": "1b8c92f62676e07e42ff3ddc409baf173faed318d9de1619e72e70c53a438f91",
       "scope": "Source contracts/type/embedded/dependency and source/history secret checks only. One module-level advisory stays visible; no reachable package vulnerability reported. Runtime/image/later local commits unqualified."
     },
-    "fuzz_state": "completed/success; full log retention follows"
-  },
-  "registration_failure_standin": {
-    "manifest_reference": ".private/freightctl-f076-registration-closure-3ov_x1ye/manifest.json",
-    "manifest_sha256": "2aa86f2f1825a51b8063e680001eb951769865c3506ec1b38b283390d1e2d708",
-    "methods": 8,
-    "scope": "Python unit runner exercises the real producer function with a command/source-spy stand-in, stopping at synthetic registration failure. Under022, request/password are0600 and child0700, credential bytes never enter argv, exact spy closes once and owner token remains unchanged. No actual product subprocess, network socket, TLS, PostgreSQL, Chrome or inference.",
-    "runtime_qualification": false,
-    "submission": "local follow-up only; keep unknown28cdfcb native/public candidates intact"
-  },
-  "browser_metadata_prepared": {
-    "driver": "scripts/ftps-collection-browser.mjs",
-    "verifier": "scripts/ftps_collection_browser.py",
-    "runner": "scripts/qualify-ftps.py --workflow-dispatch-approvals --workflow-collection-metadata --workflow-collection-browser",
-    "reporter": "scripts/ci-ftps-summary.py --require-workflow-dispatch-approvals --require-workflow-collection-metadata --require-workflow-collection-browser",
-    "workflow": ".github/workflows/ftps-workflows.yml",
-    "mechanism": "Before source cancellation/revocation, actual sandboxed Chrome fills the FTPS collection form, previews the exact registered source/workflow and inspects the original queued job. Wait for rendered headings; compare original HTTP bodies to independent CLI snapshots, visible account/address/TLS proof/directory/manifest, three actual WCAG audits, no runtime errors or egress and active then stopped zero-contact spies. No worker or source bytes.",
-    "phases_per_profile": 2,
-    "additional_accessibility_audits_per_profile": 6,
-    "original_profile_preserved": "Existing six workflow consent browser phases/18audits and16collection commands/mode/five saved-key replays stay enforced. Three fresh plaintext/encrypted profiles and30minute job limit stay unchanged. New150second browser process uses an owned process group for timeout cleanup.",
-    "scope": "Metadata preview/read inspection only; byte collection, scheduled public controls, mutation recovery, mixed/encrypted forwarding and complete customer journeys remain unqualified.",
-    "local_python_methods": 82,
-    "local_frontend_contracts": 135,
-    "runtime_qualification": false,
-    "local_checks_manifest_reference": ".private/freightctl-f076-browser-metadata-local-pssakjik/manifest.json",
-    "local_checks_manifest_sha256": "0651af92ecaa3d017c3ff3e607fa3a91ec429e21a0f511fa4a7d4c2d25c04c73",
-    "local_count_correction_reference": ".private/freightctl-f076-browser-metadata-local-pssakjik/count-correction.json",
-    "local_count_correction_sha256": "2a335d492672875bade65ad9fca1710bc6fee57a2b608b2af7399fc295291988",
-    "local_checks": "Seven synthetic original-file browser contracts, eight metadata producer/verifier methods,67reporter contracts,135frontend contracts including five pure driver stand-ins; syntax/Prettier/actionlint/diff checks. First test-only formatting refusal retained; no local Chrome, product process, DB, socket, scanner, inference or peer.",
-    "submission": "Local only; preserve queued required28cdfcb source candidate."
-  },
-  "native_process_recovery_prepared": {
-    "test": "internal/workflow/ftps_collection_recovery_integration_test.go",
-    "cases": 2,
-    "modes": [
-      "explicit",
-      "implicit"
-    ],
-    "mechanism": "Run ordinary public collection-work CLI as one owned child. Observe original eight-second SQL acceptance barrier and a hash-verified0400 sealed object with pending input/no path, kill exact child by SIGKILL and require no successful receipt. Preserve original live30second lease (legitimate pre-kill renewal may extend it, never shorten it). Remove payload/manifest via producer exact namespace revisions. Original key must fail while lease is live, then recover same sealed object/input under attempt2/fence2 and replay one captured receipt with zero new source contacts and exactly one FileAccepted event/file row.",
-    "scope": "Native freightctl TLS/source stand-in plus real PostgreSQL, disk and public CLI on GitHub only; no independent stock-peer, outage/RPO/RTO, multi-host or complete recovery journey claim.",
-    "budgets": "Original60second fixture,30second worker lease,8second acceptance barrier,600second package and50minute native job limits unchanged. Payload fits existing1024byte collection budget. No lease backdating or test-only application fault hooks.",
-    "local_checks_manifest_reference": ".private/freightctl-f076-recovery-compile-jdcjde23/manifest.json",
-    "local_checks_manifest_sha256": "496747908f6df118d5cd6931b9340f1ae76dc342af94b0898a940cdab0057516",
-    "local_scope": "Native macOS ARM integration compilation and vet only. No setup fixture, actual child, process kill, source, PostgreSQL, scanner or inference ran.",
-    "runtime_qualification": false,
-    "submission": "Local follow-up only. Latest28cdfcb remains15prepared native leaves; this follow-up prepares17, without asserting any new native pass."
+    "fuzz_state": "completed/success; full log retention follows",
+    "x86_metadata": {
+      "job_id": 126848477252,
+      "state": "completed/success",
+      "schema": 40,
+      "tables": 64,
+      "forced_rls_tables": 63,
+      "restored_rows": 45,
+      "runner_manifest_sha256": "bb17491972e795e27f632c6a1e777d7c70e8a649c617de64a41bf048762a109e",
+      "manifest_reference": ".private/freightctl-f076-metadata40-x86-current-n7xfzmdn/manifest.json",
+      "manifest_sha256": "a04d87e057736d091102ddee4b7c30495a2b9291bac53947ff63e63068f1f078",
+      "scope": "Fresh synthetic same-cluster metadata only, exact cleanup; retained35/payload/key/clean-host recovery unchanged/unqualified."
+    },
+    "fuzz": {
+      "job_id": 126848476677,
+      "state": "completed/success",
+      "targets": 10,
+      "manifest_reference": ".private/freightctl-f076-fuzz-current-agc2hdfn/manifest.json",
+      "manifest_sha256": "03a422d1d1b1e0bd29afad4a64890de4f24f4478b8fc37cfe046fb1f8c07df37",
+      "scope": "Ten bounded native Linux x86 parser/authority targets only; no inference or exhaustive-fuzz qualification."
+    },
+    "public_recipient_encrypted": {
+      "candidate": "28cdfcbbd83e2571fb626b3ee47b8783cccad4db",
+      "run_id": 41907798532,
+      "job_id": 126847012099,
+      "profile": "recipient-encrypted",
+      "state": "completed/success",
+      "fresh_profiles": 3,
+      "collection_commands_per_profile": 32,
+      "collection_saved_key_replays_per_profile": 10,
+      "source_contacts_per_profile": 0,
+      "existing_consent_browser_phases_per_profile": 6,
+      "existing_consent_audits_per_profile": 18,
+      "connection_rotations_per_profile": 20,
+      "manifest_reference": ".private/freightctl-f076-public-encrypted-first-em9ccdq4/manifest.json",
+      "manifest_sha256": "2001271311b25c7e9738fdacc13c72697d5550f95d01a4ef65845a6e179ee4fe",
+      "scope": "First actual CLI/API collection metadata pass in both modes on three fresh profiles; original keys preserve queue/cancel/revocation history with zero attempts/fences/contact and exact cleanup. This does not qualify source bytes or the new collection Chrome phase, nor9e5process death. Plaintext profile still running."
+    }
   }
 }
