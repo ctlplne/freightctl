@@ -201,6 +201,7 @@ function ftpsEffect(
     "key_reference_sha256",
     "recipient_fingerprint",
     "ftps",
+    ...(o.encryption === undefined ? [] : ["encryption"]),
     ...(o.workflow_binding === undefined ? [] : ["workflow_binding"]),
   ]);
   const f = object(o.ftps),
@@ -237,7 +238,6 @@ function ftpsEffect(
     o.host_fingerprint !== "" ||
     o.key_fingerprint !== "" ||
     o.key_reference_sha256 !== "" ||
-    o.recipient_fingerprint !== "" ||
     c.schema_version !== 1 ||
     c.staging_visibility !== "receiver-private" ||
     c.rename !== "may-replace" ||
@@ -245,6 +245,28 @@ function ftpsEffect(
     c.receipt !== "exact-readback"
   )
     bad();
+  const recipient =
+    o.recipient_fingerprint === "" ? "" : text(o, "recipient_fingerprint", 64);
+  let encryption: DispatchEffect["encryption"];
+  if (o.encryption !== undefined) {
+    const e = object(o.encryption),
+      key = object(e.key),
+      profile = text(e, "profile", 32);
+    exact(e, ["key", "profile"]);
+    exact(key, ["id", "version", "hash"]);
+    if (
+      o.workflow_binding === undefined ||
+      !["seipd-v1-aes256", "seipd-v2-aes256-ocb"].includes(profile) ||
+      !/^(?:[a-f0-9]{40}|[a-f0-9]{64})$/.test(recipient)
+    )
+      bad();
+    const version = num(key, "version");
+    if (version > 2147483647) bad();
+    encryption = {
+      key: { id: id(key, "id"), version, hash: hash(key, "hash") },
+      profile,
+    };
+  } else if (recipient) bad();
   const stagingDirectory = stage.slice(0, stage.lastIndexOf("/")) || "/";
   if (
     directory === "/" ||
@@ -265,7 +287,8 @@ function ftpsEffect(
     host_fingerprint: "",
     key_fingerprint: "",
     key_reference_sha256: "",
-    recipient_fingerprint: "",
+    ...(encryption ? { encryption } : {}),
+    recipient_fingerprint: recipient,
     ...(o.workflow_binding === undefined
       ? {}
       : { workflow_binding: asWorkflowBinding(o.workflow_binding) }),

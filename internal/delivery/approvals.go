@@ -209,10 +209,12 @@ func (s *Service) dispatchSource(ctx context.Context, t *store.Transaction, id s
 	return d, spec, nil
 }
 func dispatchEffect(ctx context.Context, t *store.Transaction, d *store.Delivery, spec *Definition) (*store.OutboundDispatchEffect, error) {
+	var effect *store.OutboundDispatchEffect
 	if spec.FTPS != nil {
-		return ftpsEffect(d, spec), nil
+		effect = ftpsEffect(d, spec)
+	} else {
+		effect = &store.OutboundDispatchEffect{Protocol: "sftp", Address: spec.Destination.Address, User: spec.Destination.User, Directory: spec.Directory, Filename: spec.Filename, FinalPath: path.Join(spec.Directory, d.ID+"-"+spec.Filename), HostFingerprint: spec.Destination.Host.Fingerprint, KeyFingerprint: spec.Destination.KeyFingerprint, KeyReferenceHash: secure.Digest([]byte(spec.Destination.KeyFile)), Encryption: spec.Encryption, Workflow: spec.Binding}
 	}
-	effect := &store.OutboundDispatchEffect{Protocol: "sftp", Address: spec.Destination.Address, User: spec.Destination.User, Directory: spec.Directory, Filename: spec.Filename, FinalPath: path.Join(spec.Directory, d.ID+"-"+spec.Filename), HostFingerprint: spec.Destination.Host.Fingerprint, KeyFingerprint: spec.Destination.KeyFingerprint, KeyReferenceHash: secure.Digest([]byte(spec.Destination.KeyFile)), Encryption: spec.Encryption, Workflow: spec.Binding}
 	if spec.Encryption != nil {
 		k, err := t.EncryptionKey(ctx, *spec.Encryption)
 		if err != nil {

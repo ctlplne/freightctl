@@ -68,7 +68,7 @@ for (const value of Object.values(fixture)) {
     derivedReferences++;
   }
 }
-assert.equal(derivedReferences, 12);
+assert.equal(derivedReferences, 18);
 const preview = (f) =>
   asDispatchPreview(
     f.preview,
@@ -77,6 +77,49 @@ const preview = (f) =>
     f.selection,
     asDispatchView(f.view, f.view.id),
   );
+test("encrypted FTPS review binds recipient policy separately from transport and refuses altered disclosure", () => {
+  for (const mode of ["explicit", "implicit"]) {
+    const f = fresh("ftps_encrypted_" + mode),
+      p = preview(f),
+      e = p.definition.effect;
+    assert.equal(dispatchHash(p.definition), p.definition_hash);
+    const html = renderToStaticMarkup(
+      createElement(DispatchDetails, { d: p.definition }),
+    );
+    for (const value of [
+      e.encryption.profile,
+      e.encryption.key.id,
+      e.recipient_fingerprint,
+      "disk flush (fsync), power-loss persistence or business processing",
+    ])
+      assert.ok(html.includes(value), value);
+    for (const mutate of [
+      (d) => d.effect.encryption.key.version++,
+      (d) => (d.effect.encryption.key.hash = "c".repeat(64)),
+      (d) => (d.effect.recipient_fingerprint = "d".repeat(40)),
+      (d) => delete d.effect.encryption,
+    ]) {
+      const changed = fresh("ftps_encrypted_" + mode);
+      mutate(changed.preview.definition);
+      changed.preview.definition_hash = dispatchHash(
+        changed.preview.definition,
+      );
+      assert.throws(() => preview(changed));
+    }
+    for (const mutate of [
+      (d) => (d.effect.encryption.profile = "automatic"),
+      (d) => (d.effect.encryption.private_key = "forbidden"),
+      (d) => (d.effect.encryption.key.private_reference = "/private/key"),
+      (d) => (d.effect.encryption.key.version = 2147483648),
+      (d) => (d.effect.recipient_fingerprint = ""),
+      (d) => delete d.effect.workflow_binding,
+    ]) {
+      const changed = fresh("ftps_encrypted_" + mode);
+      mutate(changed.preview.definition);
+      assert.throws(() => asDispatchDefinition(changed.preview.definition));
+    }
+  }
+});
 test("registered FTPS workflow reviews preserve Go hashes, exact bindings and rendered workflow identities", () => {
   for (const mode of ["explicit", "implicit"]) {
     const f = fresh("ftps_workflow_" + mode),

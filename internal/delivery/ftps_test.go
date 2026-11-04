@@ -105,3 +105,54 @@ func TestFTPSRequestNeverCombinesSSHAndPasswordReferences(t *testing.T) {
 		t.Fatal("mixed request admitted", err)
 	}
 }
+
+func TestFTPSRecipientPolicyAndReceiptKeepExactArtifactWithoutInventingFsync(t *testing.T) {
+	for _, profile := range []string{secure.PGPEncryptMDC, secure.PGPEncryptAEAD} {
+		t.Run(profile, func(t *testing.T) {
+			spec := contractDefinition()
+			spec.Binding = &store.ExecutionBinding{WorkflowID: "00000000-0000-0000-0000-000000000003", WorkflowVersion: 1, WorkflowHash: strings.Repeat("c", 64), RunID: "00000000-0000-0000-0000-000000000004", StepID: "send", ConnectionID: "00000000-0000-0000-0000-000000000005", ConnectionVersion: 1, ConnectionHash: strings.Repeat("d", 64)}
+			spec.Encryption = &store.EncryptionPolicy{Key: store.PGPReference{ID: "00000000-0000-0000-0000-000000000006", Version: 1, Hash: strings.Repeat("e", 64)}, Profile: profile}
+			if !validProtocolDefinition(&spec) {
+				t.Fatal("exact workflow recipient refused")
+			}
+			_, original, _ := dispatchDigest(spec)
+			for name, mutate := range map[string]func(*Definition){
+				"missing workflow":                   func(d *Definition) { d.Binding = nil },
+				"missing key":                        func(d *Definition) { d.Encryption.Key.ID = "" },
+				"changed profile":                    func(d *Definition) { d.Encryption.Profile = "automatic" },
+				"missing version":                    func(d *Definition) { d.Encryption.Key.Version = 0 },
+				"missing hash":                       func(d *Definition) { d.Encryption.Key.Hash = "" },
+				"wire artifact in stored definition": func(d *Definition) { d.Transfer = &store.DeliveryCiphertext{} },
+			} {
+				t.Run(name, func(t *testing.T) {
+					bad := spec
+					policy := *spec.Encryption
+					bad.Encryption = &policy
+					mutate(&bad)
+					if validProtocolDefinition(&bad) {
+						t.Fatal("invalid stored recipient admitted")
+					}
+					_, hash, _ := dispatchDigest(bad)
+					if name != "wire artifact in stored definition" && hash == original {
+						t.Fatal("changed recipient meaning retained hash")
+					}
+				})
+			}
+			a := &store.DeliveryCiphertext{ObjectID: "00000000-0000-0000-0000-000000000007", SourceID: spec.Source.ID, SourceSHA256: spec.Source.SHA256, StorageID: spec.StorageID, Policy: *spec.Encryption, Size: 100, SHA256: strings.Repeat("f", 64), Proof: secure.PGPEncryption{Profile: profile, Cipher: "AES-256", Compression: "none", PrimaryFingerprint: strings.Repeat("a", 40), EncryptionFingerprint: strings.Repeat("b", 40)}}
+			wire, err := encryptedDefinition(&spec, a)
+			if err != nil {
+				t.Fatal(err)
+			}
+			for _, reconciled := range []bool{false, true} {
+				var receipt map[string]any
+				if json.Unmarshal(ftpsReceipt(&store.Delivery{ID: "00000000-0000-0000-0000-000000000008"}, wire, reconciled), &receipt) != nil || receipt["sha256"] != a.SHA256 || receipt["size_bytes"] != float64(a.Size) || receipt["file_fsync_acknowledged"] != false || receipt["rename_acknowledged"] != !reconciled || receipt["business_acceptance"] != "unknown" {
+					t.Fatal("encrypted FTPS receipt inflated transport promise")
+				}
+				proof, ok := receipt["encryption"].(map[string]any)
+				if !ok || proof["ciphertext_object_id"] != a.ObjectID || proof["source_file_id"] != spec.Source.ID || proof["source_sha256"] != spec.Source.SHA256 || proof["primary_fingerprint"] != a.Proof.PrimaryFingerprint || proof["encryption_fingerprint"] != a.Proof.EncryptionFingerprint || proof["profile"] != profile {
+					t.Fatal("receipt lost exact recipient/source proof")
+				}
+			}
+		})
+	}
+}

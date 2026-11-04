@@ -228,6 +228,11 @@ func snapshotReceiverReads(t *testing.T, r *fixture) receiverReadSnapshot {
 
 func requireOnlyReceiverReadAudit(t *testing.T, r *fixture, before, after receiverReadSnapshot, fileID, phase, mode string) {
 	t.Helper()
+	requireOnlyReceiverReadAuditDigest(t, r, before, after, fileID, phase, mode, secure.Digest([]byte("abc")))
+}
+
+func requireOnlyReceiverReadAuditDigest(t *testing.T, r *fixture, before, after receiverReadSnapshot, fileID, phase, mode, expectedSHA string) {
+	t.Helper()
 	if mode != "explicit" && mode != "implicit" {
 		t.Fatal("unknown FTPS recovery audit profile")
 	}
@@ -277,7 +282,7 @@ func requireOnlyReceiverReadAudit(t *testing.T, r *fixture, before, after receiv
 		if event.kind == "ProtocolSessionStarted" {
 			continue
 		}
-		if event.kind != "FileDownloadAuthorized" || event.resource != fileID || len(event.payload) != 2 || event.payload["sha256"] != secure.Digest([]byte("abc")) {
+		if event.kind != "FileDownloadAuthorized" || event.resource != fileID || len(event.payload) != 2 || event.payload["sha256"] != expectedSHA {
 			t.Fatal("recovery added an unexpected receiver effect")
 		}
 		switch event.payload["protocol_session_id"] {

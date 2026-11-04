@@ -128,9 +128,7 @@ func verifyRemote(ctx context.Context, client *sftp.Client, name string, spec *D
 }
 func receipt(d *store.Delivery, spec *Definition, reconciled bool) json.RawMessage {
 	value := map[string]any{"code": "remote_file_integrity_observed", "path": finalPath(d, spec), "size_bytes": spec.Source.Size, "sha256": spec.Source.SHA256, "host_fingerprint": spec.Destination.Host.Fingerprint, "file_fsync_acknowledged": !reconciled, "reconciled": reconciled, "business_acceptance": "unknown", "directory_power_loss_durability": "not established"}
-	if a := spec.Transfer; a != nil {
-		value["encryption"] = map[string]any{"key": a.Policy.Key, "profile": a.Policy.Profile, "primary_fingerprint": a.Proof.PrimaryFingerprint, "encryption_fingerprint": a.Proof.EncryptionFingerprint, "ciphertext_object_id": a.ObjectID, "source_file_id": a.SourceID, "source_sha256": a.SourceSHA256, "cipher": a.Proof.Cipher, "compression": a.Proof.Compression}
-	}
+	addEncryptionReceipt(value, spec.Transfer)
 	result, _ := json.Marshal(value)
 	return result
 }
@@ -342,9 +340,16 @@ func (s *Service) Reconcile(ctx context.Context, scope store.Scope, id string) (
 		return nil, err
 	}
 	if spec.Encryption != nil {
+		key, err := t.EncryptionKey(ctx, *spec.Encryption)
+		if err != nil {
+			return nil, err
+		}
 		artifact, err := t.DeliveryCiphertext(ctx, id)
 		if err != nil {
 			return nil, err
+		}
+		if artifact.DefinitionHash != d.DefinitionHash || artifact.DeliveryID != d.ID || artifact.Proof.PrimaryFingerprint != key.Fingerprint || artifact.Proof.EncryptionFingerprint != key.Recipient.Fingerprint {
+			return nil, store.ErrState
 		}
 		spec, err = encryptedDefinition(spec, artifact)
 		if err != nil {
@@ -385,6 +390,11 @@ func (s *Service) Reconcile(ctx context.Context, scope store.Scope, id string) (
 		}
 		if err := t.FileAccessible(ctx, d.FileID); err != nil {
 			return err
+		}
+		if spec.Encryption != nil {
+			if _, err := t.EncryptionKey(ctx, *spec.Encryption); err != nil {
+				return err
+			}
 		}
 		return s.storage(spec)
 	}

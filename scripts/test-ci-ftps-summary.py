@@ -98,15 +98,21 @@ class SummaryContracts(unittest.TestCase):
         self.manifest["retained_after"] = copy.deepcopy(self.manifest["retained_before"])
         self.assertEqual(self.check()["state"], "passed")
 
-    def test_explicit_previous_schema37_remains_an_exact_read_only_profile(self):
+    def test_explicit_previous_schema38_remains_an_exact_read_only_profile(self):
         self.manifest["retained_schema"] = PREVIOUS_PROFILE["schema"]
         self.manifest["retained_before"]["migration_ledger"] = migration_ledger(self.root,PREVIOUS_PROFILE["schema"])
         self.manifest["retained_after"] = copy.deepcopy(self.manifest["retained_before"])
         self.assertEqual(self.check()["state"], "passed")
 
-    def test_explicit_legacy_schema36_remains_an_exact_read_only_profile(self):
+    def test_explicit_legacy_schema37_remains_an_exact_read_only_profile(self):
         self.manifest["retained_schema"] = LEGACY_PROFILE["schema"]
         self.manifest["retained_before"]["migration_ledger"] = migration_ledger(self.root,LEGACY_PROFILE["schema"])
+        self.manifest["retained_after"] = copy.deepcopy(self.manifest["retained_before"])
+        self.assertEqual(self.check()["state"], "passed")
+
+    def test_explicit_direct_ftps_schema36_remains_an_exact_read_only_profile(self):
+        self.manifest["retained_schema"] = 36
+        self.manifest["retained_before"]["migration_ledger"] = migration_ledger(self.root,36)
         self.manifest["retained_after"] = copy.deepcopy(self.manifest["retained_before"])
         self.assertEqual(self.check()["state"], "passed")
 

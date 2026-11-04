@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "id": "F074",
+  "observed_at": "2026-11-04",
+  "starting_commit": "ed23703000287e2170f1e9a54224dcb26127f0f5",
+  "state": "implemented and locally verified contracts; native runtime qualification pending",
+  "scope": "Recipient-encrypted registered FTPS workflows through ordinary engine and independent dispatch consent. FTPS server is an application stand-in; independent GnuPG establishes envelope compatibility only.",
+  "first_failure": {
+    "test": "TestRegisteredFTPSWorkflowBindsExactRecipientEncryption",
+    "result": "both existing OpenPGP profiles refused as unsupported FTPS steps",
+    "manifest_reference": ".private/freightctl-f074-first/manifest.json",
+    "manifest_sha256": "ca0ceeb47001fad9243fbb72d1f59f8943656bc1da8fbd8dfe386291d28d0f9b",
+    "runtime_qualification": false
+  },
+  "frozen_cases": [
+    {
+      "id": "C01",
+      "outcome": "Preserve exact key version/hash/profile in typed ordered and bounded-program FTPS workflows; reject invalid/unknown/extra policies."
+    },
+    {
+      "id": "C02",
+      "outcome": "No preview, approval or refused worker contacts a receiver or creates ciphertext. Review shows exact recipient and transport separately, with Go/browser/SQL hashes equal and private key/reference values absent."
+    },
+    {
+      "id": "C03",
+      "outcome": "Both FTPS modes and both OpenPGP profiles send a sealed ciphertext bound to the exact original source/delivery/key; independent GnuPG decrypts separately reopened receiver bytes to the original plaintext."
+    },
+    {
+      "id": "C04",
+      "outcome": "Original worker-key replay and ambiguous completion never re-encrypt or resend. Exact read-only recovery retains artifact/key proof and never invents fsync, rename acknowledgment or business acceptance."
+    },
+    {
+      "id": "C05",
+      "outcome": "Key rotation cannot rebind saved work. Revoking the exact recipient blocks untouched work and ambiguous read-only recovery before contact; original intent/artifact/event history stays equal."
+    },
+    {
+      "id": "C06",
+      "outcome": "Real runtime-role PostgreSQL rejects changed/omitted recipient, policy/profile, source/artifact and approval bindings even alongside matching-looking events; exact selected program step is authoritative."
+    },
+    {
+      "id": "C07",
+      "outcome": "Existing unencrypted FTPS and SFTP canonical metadata, sending, receipts, intake, RLS and SQL gates continue to pass on both native architectures."
+    }
+  ],
+  "implementation_rules": [
+    "Reuse the bounded internal/crypto OpenPGP pipeline and existing sealed delivery_ciphertexts; no new cryptographic primitive or local service.",
+    "Append schema39; preserve all historical migration bytes and exact native source ledgers. Retained schema35 remains unchanged.",
+    "Local checks are lightweight Mac ARM contracts and compilation only. Native real PostgreSQL/receivers/GnuPG and browser tests run on GitHub. Local inference stays off; scanner stays stopped."
+  ],
+  "qualification_claim": false,
+  "next_action": "Push verified source for both complete native Linux suites and exact schema39 metadata restores. Diagnose the first actual runtime failure and replay original journeys. Complete independent AEAD peer and public browser/CLI encrypted workflow qualification; retain F073 fixed repetition outcomes and all whole-goal gates.",
+  "implementation": {
+    "typed_workflow": "FTPS ordered/program steps retain strict key ID/version/hash and explicit OpenPGP profile; direct FTPS encryption remains unavailable without an exact workflow binding",
+    "approval": "common recipient lookup binds FTPS and SFTP reviews to the exact current public key; browser strictly validates policy shape and renders separate recipient/transport disclosure",
+    "sender": "reuse existing bounded ciphertext generation, custody sealing, event/projection and retry reuse before opening the receiver",
+    "receipt": "FTPS includes exact ciphertext/key/subkey/original-source proof without receiver fsync, lost rename acknowledgment or business acceptance claims",
+    "recovery": "read-only reconciliation rechecks current recipient and exact delivery/definition/primary/subkey artifact bindings",
+    "database": "append-only039 validates the distinct FTPS encryption policy and exact review effect; schema32 selected-plan policy and existing live-key/ciphertext/RLS/event guards remain enforced",
+    "metadata": "fresh39, previous38, legacy37, directFTPS36 and retained35 exact source ledgers; no retained upgrade",
+    "peer_scope": "16 native prepared cases cover two FTPS modes, ordered/program selection, Ed25519/Curve25519 and RSA recipients, and normal/lost-rename outcomes. Four key rotation/revocation cases and12 SQL policy mutations are prepared. Independent GnuPG proof targets SEIPDv1 AES256; AEAD independent peer and live browser replay remain mandatory."
+  },
+  "local_checks": {
+    "manifest_reference": ".private/freightctl-f074-first/local-checks-manifest.json",
+    "manifest_sha256": "a9e66fd21eb6bb8461027528d3d0cd3acfe4a10ed7226ca515c64fd3d1c1a7bb",
+    "go_race_pass_records": 208,
+    "frontend_pass_records": 121,
+    "reporter_contracts": 57,
+    "metadata_reporter_contracts": 7,
+    "retained_maintenance_contracts": 5,
+    "integration_compilation": "passed;no runtime tests",
+    "integration_vet": "passed",
+    "typecheck": "passed",
+    "embedded_build_and_closure": "passed"
+  }
+}

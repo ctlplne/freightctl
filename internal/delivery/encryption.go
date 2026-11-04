@@ -18,6 +18,14 @@ type encryptionReader struct {
 	check  func() error
 }
 
+// Both transports describe the same sealed ciphertext and original plaintext.
+// Transport-specific acknowledgment and persistence claims stay in each receipt.
+func addEncryptionReceipt(value map[string]any, a *store.DeliveryCiphertext) {
+	if a != nil {
+		value["encryption"] = map[string]any{"key": a.Policy.Key, "profile": a.Policy.Profile, "primary_fingerprint": a.Proof.PrimaryFingerprint, "encryption_fingerprint": a.Proof.EncryptionFingerprint, "ciphertext_object_id": a.ObjectID, "source_file_id": a.SourceID, "source_sha256": a.SourceSHA256, "cipher": a.Proof.Cipher, "compression": a.Proof.Compression}
+	}
+}
+
 func (r encryptionReader) Read(p []byte) (int, error) {
 	if err := r.ctx.Err(); err != nil {
 		return 0, err

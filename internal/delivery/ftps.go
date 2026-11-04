@@ -17,7 +17,7 @@ import (
 
 // FTPSDefinition is a distinct schema2 delivery profile. It deliberately cannot
 // inherit SFTP's exclusive hardlink or fsync guarantees. Registered workflows
-// retain their exact execution binding; recipient encryption remains refused.
+// retain their exact execution binding and optional approved recipient policy.
 type FTPSDefinition struct {
 	Destination      secure.FTPSDestination     `json:"destination"`
 	StagingDirectory string                     `json:"staging_directory"`
@@ -65,7 +65,9 @@ func validProtocolDefinition(d *Definition) bool {
 		return d.FTPS == nil
 	}
 	ssh := d.Destination
-	return d.Schema == 2 && ValidFTPSFilename(d.Filename) && d.Encryption == nil && validFTPSBinding(d.Binding) && d.Transfer == nil && ssh.Address == "" && ssh.User == "" && len(ssh.Host.Wire) == 0 && ssh.Host.Fingerprint == "" && ssh.KeyFile == "" && ssh.KeyFingerprint == "" && validFTPSDefinition(d.FTPS, d.Directory)
+	encryption := d.Encryption
+	validEncryption := encryption == nil || (d.Binding != nil && store.ValidID(encryption.Key.ID) && encryption.Key.Version > 0 && dispatchHashPattern.MatchString(encryption.Key.Hash) && (encryption.Profile == secure.PGPEncryptMDC || encryption.Profile == secure.PGPEncryptAEAD))
+	return d.Schema == 2 && ValidFTPSFilename(d.Filename) && validEncryption && validFTPSBinding(d.Binding) && d.Transfer == nil && ssh.Address == "" && ssh.User == "" && len(ssh.Host.Wire) == 0 && ssh.Host.Fingerprint == "" && ssh.KeyFile == "" && ssh.KeyFingerprint == "" && validFTPSDefinition(d.FTPS, d.Directory)
 }
 
 func ftpsStagingPath(d *store.Delivery, spec *Definition) string {
@@ -75,11 +77,13 @@ func ftpsStagingPath(d *store.Delivery, spec *Definition) string {
 func ftpsEffect(d *store.Delivery, spec *Definition) *store.OutboundDispatchEffect {
 	f := spec.FTPS
 	dest := f.Destination
-	return &store.OutboundDispatchEffect{Protocol: "ftps", Address: dest.Address, User: dest.User, Directory: spec.Directory, Filename: spec.Filename, FinalPath: finalPath(d, spec), Workflow: spec.Binding, FTPS: &store.OutboundFTPSEffect{Mode: dest.Mode, ServerName: dest.ServerName, CASHA256: dest.CASHA256, CAReferenceHash: secure.Digest([]byte(dest.CAFile)), PasswordReferenceHash: secure.Digest([]byte(dest.PasswordFile)), StagingPath: ftpsStagingPath(d, spec), ReceiverContract: f.ReceiverContract}}
+	return &store.OutboundDispatchEffect{Protocol: "ftps", Address: dest.Address, User: dest.User, Directory: spec.Directory, Filename: spec.Filename, FinalPath: finalPath(d, spec), Encryption: spec.Encryption, Workflow: spec.Binding, FTPS: &store.OutboundFTPSEffect{Mode: dest.Mode, ServerName: dest.ServerName, CASHA256: dest.CASHA256, CAReferenceHash: secure.Digest([]byte(dest.CAFile)), PasswordReferenceHash: secure.Digest([]byte(dest.PasswordFile)), StagingPath: ftpsStagingPath(d, spec), ReceiverContract: f.ReceiverContract}}
 }
 
 func ftpsReceipt(d *store.Delivery, spec *Definition, reconciled bool) json.RawMessage {
-	result, _ := json.Marshal(map[string]any{"code": "remote_file_integrity_observed", "protocol": "ftps", "path": finalPath(d, spec), "size_bytes": spec.Source.Size, "sha256": spec.Source.SHA256, "ca_sha256": spec.FTPS.Destination.CASHA256, "receiver_contract_sha256": spec.FTPS.ReceiverContract.DocumentSHA256, "upload_completion_acknowledged": !reconciled, "readback_completion_acknowledged": true, "rename_acknowledged": !reconciled, "file_fsync_acknowledged": false, "reconciled": reconciled, "business_acceptance": "unknown", "directory_power_loss_durability": "not established"})
+	value := map[string]any{"code": "remote_file_integrity_observed", "protocol": "ftps", "path": finalPath(d, spec), "size_bytes": spec.Source.Size, "sha256": spec.Source.SHA256, "ca_sha256": spec.FTPS.Destination.CASHA256, "receiver_contract_sha256": spec.FTPS.ReceiverContract.DocumentSHA256, "upload_completion_acknowledged": !reconciled, "readback_completion_acknowledged": true, "rename_acknowledged": !reconciled, "file_fsync_acknowledged": false, "reconciled": reconciled, "business_acceptance": "unknown", "directory_power_loss_durability": "not established"}
+	addEncryptionReceipt(value, spec.Transfer)
+	result, _ := json.Marshal(value)
 	return result
 }
 
