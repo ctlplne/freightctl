@@ -2724,6 +2724,21 @@
       "regression_evidence": [
         "docs/qualification/evidence/F076-ftps-collection.json"
       ]
+    },
+    {
+      "id": "D171",
+      "severity": "native qualification fixture",
+      "state": "native first failure retained; controlled missing-reference repair passes local resolved-path regression",
+      "observed_on": "2026-11-04",
+      "candidate": "e2a2b592371dd6c3aea8fe363b9eac38bc9b0968",
+      "journey": "F076native core evidence contracts",
+      "title": "Missing DSN hits stat before controlled refusal on Linux",
+      "first_failure": "Corejob126933056992 reports1FileNotFoundError among71reporter methods; no frontend/full source check success. Invalid synthetic operator profile lacks pg-runtime.dsn.",
+      "cause": "Verifier calls dsn.stat() without is_file precondition. macOS temporary-parent symlink short-circuits the earlier path guard,concealing this Linux error category difference.",
+      "resolution": "Require protected DSN is_file before stat and exercise deletion in an actual resolved private fixture directory.7producer/71reporter methods pass locally; no source/authority/byte/receipt guard weakened. Original native replay still required.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F076-ftps-collection.json"
+      ]
     }
   ]
 }

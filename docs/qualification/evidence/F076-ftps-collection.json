@@ -313,7 +313,7 @@
     "public_state": "queued/unqualified; original metadata/consent/full operator matrix and fixed reopener reason diagnostics required",
     "core_run_id": 41932617126,
     "core_job_id": 126933056992,
-    "core_state": "queued/unqualified",
+    "core_state": "completed/failure:D171one error among71reporter methods on native Linux; frontend/source checks not reached",
     "prepared_mixed_native_leaves": 2,
     "source_push_authorized": true,
     "scope": "Includes exact parent database/DSN binding,privacy-safe verifier stages/reasons and two mixed collected SFTP/encrypted-FTPS leaves. Both original d6public/core outcomes retained; original native jobs running without cancellation. Original scanner database-file cap remains1GiB; owner1792MiBproposal stays unapplied.",
@@ -859,5 +859,20 @@
     "reporter_methods": 71,
     "runtime_qualification": false,
     "scope": "Actual Python producer/verifiers with process/HTTP/Page/file stand-ins only; no local DB/source/socket/browser/scanner/model. Actual operator runtime and D170cause repair still required."
+  },
+  "source_e2_core_first": {
+    "candidate": "e2a2b592371dd6c3aea8fe363b9eac38bc9b0968",
+    "run_id": 41932617126,
+    "job_id": 126933056992,
+    "state": "failure",
+    "manifest_reference": ".private/freightctl-f076-e2-core-first-QxWMlj/manifest.json",
+    "manifest_sha256": "73ca6bed21f1beccab4e5839a9eae8802be5c32587cc9a5ed2e6018f78b7169d",
+    "first_failure": "71reporter methods/1error:missing synthetic pg-runtime.dsn raises FileNotFoundError before expected controlled ValueError on Linux. No full source/frontend pass.",
+    "repair": "Explicit is_file guard before stat. Resolved temporary-directory producer regression deletes the DSN and requires the controlled refusal, independent of macOS temp-parent symlinks. All privacy/fresh-name/loopback/source/receipt checks remain.",
+    "local_manifest_reference": ".private/freightctl-f076-missing-dsn-local-tovufdw6/manifest.json",
+    "local_manifest_sha256": "2f7e453770bfd8dcc518f7992b9b3f25b2f8ca80e5f35ccb832cc0226c4513b6",
+    "operator_methods": 7,
+    "reporter_methods": 71,
+    "runtime_qualification": false
   }
 }

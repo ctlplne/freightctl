@@ -194,7 +194,7 @@ def validate(root, private, mode, steps, observed, database):
     require(mode in ('explicit', 'implicit') and type(database) is str
         and re.fullmatch('freightctl_ftps_[0-9a-f]{32}', database), 'operator mode or fresh database differs')
     dsn = private/'pg-runtime.dsn'
-    require(not any(p.is_symlink() for p in (dsn, *dsn.parents)) and dsn.stat().st_mode & 0o077 == 0,
+    require(not any(p.is_symlink() for p in (dsn, *dsn.parents)) and dsn.is_file() and dsn.stat().st_mode & 0o077 == 0,
         'operator runtime database reference is linked or not private')
     uri = urlsplit(read(dsn, 4096).decode())
     require(uri.scheme in ('postgres', 'postgresql') and uri.hostname in ('127.0.0.1', '::1')

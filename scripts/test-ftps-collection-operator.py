@@ -316,6 +316,9 @@ class OperatorContracts(unittest.TestCase):
         path.chmod(0o600)
         with self.assertRaises(ValueError):
             operator.validate(self.root, self.private, 'explicit', self.steps, operator.inventory(self.private, 'explicit'), None)
+        path.unlink()
+        with self.assertRaises(ValueError):
+            self.check()
 
     def test_fixed_diagnostics_refuse_secret_fields_unknown_stages_and_boolean_lines(self):
         value = {'kind': 'ftps-operator-browser-failure', 'mode': 'implicit', 'stage': 'operator-work',
