@@ -1,6 +1,6 @@
 # GitHub Actions qualification plan
 
-Updated 2026-11-03. This plan moves reproducible work from the owner's shared ARM Mac to short-lived GitHub runners. It covers the existing public `ctlplne/freightctl` repository. A green job proves only the named test on the recorded commit, operating system, architecture, and peer. It does not close a parity row, whole customer journey, release gate, or independent adoption claim by itself.
+Updated 2026-11-04. This plan moves reproducible work from the owner's shared ARM Mac to short-lived GitHub runners. It covers the existing public `ctlplne/freightctl` repository. A green job proves only the named test on the recorded commit, operating system, architecture, and peer. It does not close a parity row, whole customer journey, release gate, or independent adoption claim by itself.
 
 ## Operating rules
 
@@ -30,6 +30,7 @@ Use only [standard GitHub-hosted runners](https://docs.github.com/en/actions/ref
 | Source, frontend and supply chain | Actual Ubuntu x86_64;Go/Node,actionlint/ShellCheck,records,npm audit,govulncheck,Gitleaks | PR and `main` | At053a374 the complete source/security job passes frontend/type/build,audits,35receiver/refusal contracts,six actual converter contracts and source/history secrets. F070 enforces the one original vulnerability report through the pinned text converter. The newly strengthened passive-only refusal passes36local contracts and needs its native consumer replay. |
 | First enrollment and browser exchange | Native Ubuntu x86_64;fresh actual PostgreSQL,sandboxed Chrome and stock curl | PR,`main` and manual;separate finish-running/newest-pending group | F069 binds9542792 to13original commands,six browser records,two WCAG audits,three exact47byte readbacks,two original receipt replays and exact fresh-database cleanup. Fourteen synthetic refusal/privacy contracts also pass. No disconnected/independent-adoption or wholeJ01 claim. |
 | Native source vulnerability configurations | Actual Linux ARM,Windows amd64 and Mac ARM Go hosts;Linux x86 stays in core | PR,`main` and manual;own finish-running/newest-pending group | F070 adds three complementary default-source profiles,verifying host/target/Go version and rerunning the same real converter contracts,one source scan and enforcing conversion. At053a374 all three actual native jobs pass six real converter contracts and one enforcing source scan each,with0called/0imported findings and1visible module advisory. This does not qualify platform runtime or close WindowsD103. |
+| Exact independent peer image security | Same native Ubuntu ARM/x86 job and immutable image ID used by runtime; pinned Trivy0.76.1; offline archive scan | Peer/source/scanner/workflow changes in native gate; after tests even on failure if peer build succeeded | F075 prepares OS and installed-library inventory, fresh feed/input hashes, strict image/source/native identity and enforcing summary. HIGH/CRITICAL/UNKNOWN, suppression, stale/missing/EOL/foreign evidence fail. Fourteen local verifier/orchestration contracts use synthetic files and a Docker-command stand-in only; actual native scan remains pending. No image/archive/report upload. |
 | Native Go/PostgreSQL | Native Ubuntu x86_64 and arm64;bounded real PostgreSQL and offline pinned GnuPG per runner | PR and `main` | At137b87e both actual native suites pass616 Go/PostgreSQL records each with zero failures/skips. The engine passes223 records with one visible privileged-port20 skip each;metadata/fuzz pass. F068 preserves the full original logs. No Windows or complete product claim follows. |
 | Metadata backup/restore | Native Ubuntu x86_64 and arm64; separate512MiB/oneCPU PostgreSQL fixtures seeded through actual first-run commands | PR and `main` | Both schema35 jobs pass at137b87e. F071 at153d24c passes both native36-migration/64table/63forced-RLS restores with41synthetic rows each. Retained schema35 stays unchanged. F056 separately records the approved retained33→35 upgrade. Same-cluster metadata fixtures do not qualify payload/key/clean-host recovery,active/queued upgrades or RPO/RTO. |
 | Bounded fuzz | Native Ubuntu x86_64; ten implemented parser and authority targets | PR and `main` | All ten targets pass at137b87e,including outbound passive replies;no missing execution counts as a pass. Add targets when MIME/XML,archives,importers,transformations,receipts and tool arguments exist. Do not infer coverage for absent code. |
@@ -247,3 +248,27 @@ Original4577313 ARM retains759pass/14fail/0skip: all eight normal independent Gn
 D157 retains the exact original x86 timeout:612pass/14known failure records/0skip, followed by the unchanged600second workflow package deadline; remaining tests did not execute. Optimize fixture preparation rather than enlarge the budget or split/drop tests: migrate one empty task-owned PostgreSQL16 template, verify64/63 and zero domain rows, deny runtime CONNECT and close it. Every case still uses its own cloned database and storage, exact migration ledger and runtime checks; cold migration/upgrade gates stay independent. Add a real clone/isolation/permission regression and lazy exact cleanup; local compile/vet and pure checks do not establish native safety or speed. Product performance claims remain separate.
 
 Pending-candidate policy refinement: preserve first actual failures and running unknown qualifications. Once their original outputs are retained and a source error is confirmed, an unstarted successor containing the same error may be superseded by the verified repair candidate. Record it as queued cancellation/unqualified, never green. This applies tocc05701 native41873492289 afterD155 is preserved on the original4577313 ARM/x86 logs. Earlier hold notes describe the prior unknown state; this evidence-based decision replaces that hold and avoids spending a full native run on a confirmed bad assertion.
+
+
+F075 closes a missing CI command, not a security qualification claim. The independent
+recipient image previously had npm auditing only. The native job now prepares a
+scan of the same immutable image ID after runtime, and records that ID in the
+recipient test. Keeping the scan in that job avoids image uploads and a second
+build with a different identity. Run it after a failed integration step when its
+image exists; preserve the original failure and the scan as separate step results.
+The existing50minute job and every original test/timeout/resource cap remain.
+
+Use pinned [Trivy0.76.1](https://github.com/aquasecurity/trivy/releases/tag/v0.76.1)
+and its observed multi-architecture image digest. Download its vulnerability feed
+in one bounded container, then scan the saved image with no network or Docker
+socket, a read-only root and input/feed mounts, one CPU,1GiB RAM,128processes and
+a10minute scanner deadline. The reporter binds scanner version, actual image and
+source, OS/library inventory, report time, feed freshness and immutable input
+hashes. Count all severities and unfixed findings; fail on high, critical, unknown,
+modified/suppressed or incomplete evidence. Lower findings remain visible and
+need assessment. This scans a disposable test peer, not a shipped image or runtime
+reachability. No model or malware engine starts. All image builds/scanning stay
+on GitHub; local verification uses parser/exit/privacy contracts and a Docker
+command stand-in. Actual native outcomes remain required. See [image archive
+scanning](https://trivy.dev/docs/latest/target/container_image/) and
+[feed controls](https://trivy.dev/docs/latest/configuration/db/).

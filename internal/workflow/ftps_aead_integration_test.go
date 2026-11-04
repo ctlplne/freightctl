@@ -28,9 +28,10 @@ func independentAEADRecipient(t *testing.T) string {
 	defer cancel()
 	image, err := exec.CommandContext(ctx, "docker", "image", "inspect", "--format", "{{.Id}}", "freightctl-openpgp-peer:6.3.2-r1").Output()
 	id := strings.TrimSpace(string(image))
-	if err != nil || !strings.HasPrefix(id, "sha256:") || len(id) != 71 {
+	if err != nil || !strings.HasPrefix(id, "sha256:") || len(id) != 71 || !hashPattern.MatchString(id[7:]) {
 		t.Fatal("pinned independent AEAD image required", err)
 	}
+	t.Logf("independent AEAD recipient image %s; OpenPGP.js6.3.2", id)
 	command := exec.CommandContext(ctx, "docker", "run", "--rm", "--network=none", "--read-only", "--cap-drop=ALL", "--security-opt=no-new-privileges", "--memory=192m", "--cpus=1", "--pids-limit=32", "--tmpfs", "/tmp:rw,noexec,nosuid,size=16m", "--user", strconv.Itoa(os.Getuid())+":"+strconv.Itoa(os.Getgid()), "-v", dir+":/fixture", id, "generate", "/fixture")
 	output, err := command.Output()
 	if err != nil {

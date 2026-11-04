@@ -2453,13 +2453,13 @@
     {
       "id": "D154",
       "severity": "native qualification setup failure",
-      "state": "workflow order repaired locally; original encrypted public journey replay pending",
+      "state": "repaired; original encrypted public profile passes all three fresh native replays at0c681c7",
       "observed_on": "2026-11-04",
       "candidate": "cc05701d210e5be74f2447689bc24b7f64a95b80",
       "journey": "Encrypted public FTPS workflow consent",
       "title": "GnuPG fixture preparation runs before the private workspace prerequisite",
       "first_failure": "Actual native x86 job126726601543/run41873492251 fails in prepare-pgp-fixture.py with FileNotFoundError creating its private fixture directory. No encrypted workflow/browser execution follows. The new workflow placed fixture preparation before dev-db.py, which establishes the protected .private parent.",
-      "resolution": "Move the pinned GnuPG fixture step after the existing task-owned PostgreSQL/init prerequisite. Keep all permission, ownership, source, crypto and browser checks and budgets unchanged. Actionlint passes; actual original encrypted public replay remains required.",
+      "resolution": "Move the pinned GnuPG fixture step after the existing task-owned PostgreSQL/init prerequisite. Keep all permission, ownership, source, crypto and browser checks and budgets unchanged. Actionlint passes; actual original encrypted public replay remains required. Actual0c681c7 job126747986956/run41879485022 passes all three fresh complete encrypted metadata-consent profiles, each266commands/six browser phases/six saved-key replays/18audits and zero contacts/attempts/fences with exact cleanup. Full original and repaired logs remain separate in F074. This does not qualify actual encrypted sending or ambiguous recovery.",
       "regression_evidence": [
         "docs/qualification/evidence/F074-ftps-recipient-encryption.json"
       ]

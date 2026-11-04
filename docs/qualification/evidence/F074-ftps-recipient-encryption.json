@@ -99,7 +99,7 @@
       "integration_compilation": "passed; no runtime tests",
       "full_socket_contract_suite": "three existing local socket-spy tests refused by sandbox; native GitHub full suite remains required"
     },
-    "native_state": "First cc05701 public failures are retained. Repair0c681c7 run41879485022 has queued plaintext126747986599 and recipient-encrypted126747986956 jobs."
+    "native_state": "Encrypted0c681c7 job126747986956 passes all three fresh profiles; exact logs retained in public_repair_result. Plaintext126747986599 remains running."
   },
   "test_request_correction": "Source review found the new rotation test supplied id instead of the existing public CLI key_id field. Corrected only that test request; original4577313 candidate remains distinct and pending. No production registration schema or check is relaxed.",
   "aead_peer_prepared": {
@@ -135,7 +135,7 @@
       "deadline_seconds": 30,
       "ciphertext_limit_bytes": 1048576
     },
-    "security": "runtime/failure diagnostics whitelist fixed stages;18local race records cover privacy/refusal. npm integrity and dependency audit required in native image build. Base OS image scan, larger files, v6 keys and broader peers remain required.",
+    "security": "runtime/failure diagnostics whitelist fixed stages;18local race records cover privacy/refusal. npm integrity and dependency audit required in native image build. F075 prepares exact same-image native OS/library scanning; actual image result, larger files, v6 keys and broader peers remain required.",
     "local_resources": "no peer install/runtime or image build/pull/container run locally; only dependency lock resolution and read-only remote manifest inspection",
     "native_state": "Submitted in0c681c7; native run41879484903 is queued. No runtime result yet.",
     "local_commit": "99b16efc547caa02adf39106b561488d66c6dae6"
@@ -225,6 +225,42 @@
     "public_run_id": 41879485022,
     "plaintext_job_id": 126747986599,
     "encrypted_job_id": 126747986956,
-    "state": "queued; no native runtime or public repair qualification"
+    "state": "both native application jobs and plaintext public job are running; encrypted public three profiles, both metadata restores, core and fuzz pass; sender/recovery/AEAD remain unqualified"
+  },
+  "public_repair_result": {
+    "candidate": "0c681c7fe9b27d7dce35bdb309927f6eeb2797d5",
+    "run_id": 41879485022,
+    "encrypted_job_id": 126747986956,
+    "state": "passed;three fresh complete metadata-consent profiles",
+    "each_profile": {
+      "native_commands": 266,
+      "connection_rotation_cases": 20,
+      "browser_phases": 6,
+      "saved_key_replays": 6,
+      "accessibility_audits": 18,
+      "sending_contacts": 0,
+      "sending_attempts": 0,
+      "sending_fences": 0,
+      "retained_metadata_and_roles_unchanged": true,
+      "exact_cleanup": true,
+      "source_inputs": 735
+    },
+    "result_manifest_sha256": [
+      "63796bfa842b38ce28c19c2de12e10ca9e73ddd3bcda6d632cbb151257aafabf",
+      "4d03284bbc292c84e0c59e363a4a6b36df259a10497e779a66634400b7796a11",
+      "eaa700814125e765df8c27cd25e16c86da358d81b7bb200a23c186450c824257"
+    ],
+    "metadata_jobs": [
+      126751890315,
+      126751890417
+    ],
+    "metadata_result": "both pass39/64tables/63forced-RLS/44rows, exact restore cleanup and stopped state restored",
+    "metadata_manifest_sha256": [
+      "bf02f50f4044919350b8ae949b652a2c13e0607b33d2083a70e86332cd190b01",
+      "34d2f8a3b6adfeff1048d8855783dc2edb5db2d0cce1d052508ead0a5a458d0e"
+    ],
+    "manifest_reference": ".private/freightctl-f074-public-repair-jOvHMbrN/manifest.json",
+    "manifest_sha256": "8510b9dfa86ae9febe0eb9f31822de828382325bb2d9d8e3058fca3df867b5bf",
+    "limits": "metadata consent only; actual sender/recovery/AEAD complete native suites and plaintext repeated profile remain pending"
   }
 }

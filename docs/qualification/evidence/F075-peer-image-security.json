@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "id": "F075",
+  "observed_at": "2026-11-04",
+  "starting_commit": "63e153f6511f6cb457dfa46f70d39f2548f200b6",
+  "state": "same-image native gate implemented;14 local synthetic verifier/orchestration methods and compile/vet/lint pass; actual scan pending",
+  "scope": "Scan the exact disposable independent OpenPGP recipient image used by native Linux tests. This is test infrastructure, not a released server image or runtime security qualification.",
+  "qualification_claim": false,
+  "frozen_cases": [
+    {
+      "id": "C01",
+      "outcome": "Both actual native Linux architectures scan the immutable image ID used by the independent recipient, including OS and installed JavaScript package inventory."
+    },
+    {
+      "id": "C02",
+      "outcome": "Pin the scanner image digest/version, verify host/image architecture and source labels, record the exact input archive/report/feed digests and require a current complete feed."
+    },
+    {
+      "id": "C03",
+      "outcome": "Reject missing, malformed, truncated, stale, foreign-image, empty-inventory, EOL and suppressed reports. An exit-zero JSON producer alone cannot make the gate pass."
+    },
+    {
+      "id": "C04",
+      "outcome": "Count all reported severities without ignoring unfixed findings. HIGH, CRITICAL, UNKNOWN, suppressed findings or incomplete coverage fail the new gate; lower severities remain visible and require assessment."
+    },
+    {
+      "id": "C05",
+      "outcome": "Keep raw reports, image archives, package strings and scanner diagnostics private. Publish only bounded fixed fields, standardized advisory IDs and hashes, with meaningful refusal/privacy contracts."
+    },
+    {
+      "id": "C06",
+      "outcome": "Run only on disposable GitHub runners with read-only token, no secrets, no Docker socket mount into the scanner, bounded CPU/memory/deadlines, offline image inspection and no artifact/image publication."
+    },
+    {
+      "id": "C07",
+      "outcome": "Preserve original runtime tests and all existing limits. Scan after runtime, including on a test failure when image preparation succeeded, so findings cannot hide the original protocol failure."
+    }
+  ],
+  "first_observation": "The pinned independent peer Dockerfile audits npm dependencies, but no workflow scans its OS image or binds an image scan to actual runtime identity. Source inspection establishes a missing gate only; it is not a native scanner result.",
+  "next_action": "Commit and submit the native same-image gate after preserving the running0c681c7 qualifications. Require original full application and actual per-architecture image outcomes; retain first scan failure and assess actual findings without suppressing them. Shipped images/release artifacts, reachability and full product qualification remain required.",
+  "implementation": {
+    "workflow": ".github/workflows/native-linux.yml",
+    "execution": "after all original runtime tests, including failure when peer build succeeded; no changed existing budgets",
+    "scanner_image": "aquasec/trivy:0.76.1@sha256:790fd66d1697395d8693d1acaa1ea702406a20f109b6fc7bac8db623eca6c06c",
+    "scanner_release": "https://github.com/aquasecurity/trivy/releases/tag/v0.76.1",
+    "input": "same source-labelled immutable peer image ID; save by ID, scan archive, require report ImageID equality and actual native platform",
+    "feed": "separate bounded download; verify schema2, UpdatedAt<=24hours, future NextUpdate and current download/report; hash exact DB and require unchanged DB/metadata/archive",
+    "limits": {
+      "cpus": 1,
+      "memory_bytes": 1073741824,
+      "swap_bytes": 0,
+      "pids": 128,
+      "tmpfs_bytes": 268435456,
+      "scan_deadline_seconds": 600,
+      "command_deadline_seconds": 660,
+      "existing_native_job_minutes": 50
+    },
+    "isolation": "read-only root, nonroot host uid/gid, no capabilities/new privileges, no Docker socket, offline scan with read-only archive/feed; only fixed phase/digest/count/advisory output",
+    "cleanup": "each container is created and its exact returned ID removed even after timeout; retain private incomplete-command output hashes",
+    "gate": "count all severities/unfixed; HIGH/CRITICAL/UNKNOWN or suppression fail; require Debian12 OS and exact installed OpenPGP6.3.2 inventory; no ignore/VEX/filter workaround",
+    "publication": "none; raw reports, image archives and diagnostics stay private on disposable runner"
+  },
+  "local_checks": {
+    "manifest_reference": ".private/freightctl-f075-local-379HyvuG/manifest.json",
+    "manifest_sha256": "56f38752f05119f91f7124894f6d6ed04937298ba8d207957e29c13e6bd8add2",
+    "reporter_test_methods": 8,
+    "orchestration_standin_test_methods": 6,
+    "actual_python_exit_checks": "clean0, vulnerable1, missing/duplicate/truncated/oversized/foreign2",
+    "integration_compilation": "pass; no runtime tests",
+    "integration_vet": "pass",
+    "workflow_lint": "pass",
+    "scope": "synthetic files and Docker-command stand-in; no local image build, scanner/container/PostgreSQL/inference execution"
+  }
+}

@@ -22,6 +22,10 @@ the independent implementation's behavior is documented in the
 
 Code presence and syntax checks do not establish interoperability. Native
 results, image identity, exact fingerprints and source/ciphertext digests must
-be retained before this profile is called qualified. The pinned base image's
-OS vulnerability scan, larger files, v6 keys and other peers remain separate
-qualification work.
+be retained before this profile is called qualified. The native Linux job now
+prepares an exact-image vulnerability gate after runtime tests; it has no actual
+result until GitHub executes it. Trivy runs offline against an immutable image
+archive with OS and discovered-library inventory, a fresh hash-bound feed and
+strict evidence validation. Raw inputs remain private, and nothing is uploaded.
+Larger files, v6 keys, other peers, scanner coverage and finding assessment remain
+separate qualification work. See [F075](../../../docs/qualification/evidence/F075-peer-image-security.json).

@@ -62,3 +62,17 @@ Native Linux also runs the full pinned MIT engine protocol/race suite and a nint
 The [native vulnerability workflow](../../.github/workflows/native-vulnerabilities.yml) complements the existing Linuxx86 core scan with actual LinuxARM,Windowsamd64 andMacARM default-source configurations. Each checks the host and target against its runner,uses the same six actual converter contracts,scans once and enforces the original report. It prints the report hash without uploadingJSON. New native execution remains pending;static call analysis does not qualify Windows or other platform runtime behavior.
 
 F070 native source configurations now pass on actual LinuxARM,Windowsamd64 andMacARM at053a374,alongside the Linuxx86 core gate. All useGo1.26.10 andgovulncheck1.9.0 with six actual converter contracts and enforcing source analysis. Zero called/imported findings and one required-module advisory remain visible in each tested default configuration. These results do not repair Windows runtimeD103.
+
+
+[F075](evidence/F075-peer-image-security.json) prepares exact-image peer scanning
+inside the existing native Linux job, after the original runtime tests and also
+after their failure when image preparation succeeded. This preserves the same
+immutable image ID without publishing or transferring it between jobs. A pinned
+Trivy container downloads a fresh feed, then scans the image archive offline with
+one CPU/1GiB RAM, no Docker socket and no secrets. The strict reporter requires
+source/native/image identity, OS and OpenPGP package inventory, fresh feed/report
+and unchanged input hashes; high/critical/unknown, suppressed or incomplete
+findings fail. Fourteen lightweight local contracts exercise synthetic reports,
+actual Python exits and a Docker-command stand-in. The actual native scan and
+finding assessment remain pending. This is a vulnerability scanner for a test
+image; the stopped malware scanner and owner-deferred F026 remain unchanged.
