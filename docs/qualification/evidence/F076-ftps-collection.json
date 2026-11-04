@@ -3,7 +3,7 @@
   "id": "F076",
   "observed_at": "2026-11-04",
   "starting_commit": "4d771b2e6a961a70b764681fd578ff175d064db7",
-  "state": "Both de93 native suites:862pass/7failed records/0skip; original10FTPS leaves and schema2 kept-local plans pass. Exact SQL/schedule/producer-CAS fixture repairs are pushed at28cdfcb but native/public jobs remain queued. CLI/API and actual-Chrome metadata profile is prepared, not runtime qualified.",
+  "state": "Both de93 native suites:862pass/7failed records/0skip; original10FTPS leaves and schema2 kept-local plans pass. Exact SQL/schedule/producer-CAS repairs at28cdfcb are now executing on both native architectures and both public profiles. Later local browser metadata and process-death coverage is prepared, not runtime qualified.",
   "scope": "Read/copy input stage of ordinary immutable workflows, using exact registered FTPS revisions and the existing bounded producer-manifest, custody, intake, lease and event machinery. Transport metadata reading alone does not qualify collection.",
   "qualification_claim": false,
   "frozen_cases": [
@@ -255,16 +255,40 @@
       126848477397,
       126848477483
     ],
-    "native_state": "queued/unqualified at observation",
+    "native_state": "Both native application jobs started/in progress at2026-11-04T21:18Z; fuzz and ARM metadata completed success; x86 metadata started. Preserve original15-leaf scope and first outcomes.",
     "public_workflow_metadata_run_id": 41907798532,
-    "public_state": "queued/unqualified at observation",
+    "public_state": "Both public CLI/API metadata profiles started/in progress at2026-11-04T21:18Z, still unqualified. Later actual collection Chrome phase is absent from this source.",
     "core_run_id": 41907798513,
     "superseded_native": {
       "candidate": "2c640862801d849178d9cd0bfb02e9ea2f02ebcb",
       "run_id": 41902121982,
       "state": "completed/cancelled, unqualified",
       "reason": "All5jobs remained queued with no started steps immediately before conditional CLI cancellation; confirmedD163 producer fixture error already retained on bothde93 architectures. Native source was superseded only after verified exact-CAS repair. Other runs were not cancelled."
-    }
+    },
+    "core_state": "completed/success on source28cdfcb; no qualification of later local commits",
+    "arm_metadata": {
+      "job_id": 126848477772,
+      "state": "completed/success",
+      "schema": 40,
+      "tables": 64,
+      "forced_rls_tables": 63,
+      "restored_rows": 45,
+      "runner_manifest_sha256": "9c920c14ca5098b78b41f70d824db65c17b7966b5403b7461554832967d19a7e",
+      "manifest_reference": ".private/freightctl-f076-metadata40-arm-current-42s1ugjt/manifest.json",
+      "manifest_sha256": "07023db75b617119052a4afb2fb0017755abe71abaa5b62be25236729fa35117",
+      "scope": "Fresh synthetic same-cluster metadata only; exact restore DB removed and original stopped resource state restored; retained35/payloads/keys/clean-host recovery unchanged/unqualified."
+    },
+    "core": {
+      "job_id": 126847012821,
+      "state": "completed/success",
+      "frontend_contracts": 130,
+      "frontend_failed": 0,
+      "frontend_skipped": 0,
+      "manifest_reference": ".private/freightctl-f076-core-current-c12qomrq/manifest.json",
+      "manifest_sha256": "1b8c92f62676e07e42ff3ddc409baf173faed318d9de1619e72e70c53a438f91",
+      "scope": "Source contracts/type/embedded/dependency and source/history secret checks only. One module-level advisory stays visible; no reachable package vulnerability reported. Runtime/image/later local commits unqualified."
+    },
+    "fuzz_state": "completed/success; full log retention follows"
   },
   "registration_failure_standin": {
     "manifest_reference": ".private/freightctl-f076-registration-closure-3ov_x1ye/manifest.json",
