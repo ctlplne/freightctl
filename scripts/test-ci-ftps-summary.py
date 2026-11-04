@@ -64,6 +64,52 @@ def synthetic_governance_outputs():
 
 
 class SummaryContracts(unittest.TestCase):
+    def test_collection_browser_failure_only_exposes_its_fixed_command_name(self):
+        name = 'cli-explicit-collection-browser'
+        raw = b'private-evidence-canary /private/credential'
+        (self.directory/(name+'.stdout')).write_bytes(b'')
+        (self.directory/(name+'.stderr')).write_bytes(raw)
+        self.manifest['steps'].append({'name': name, 'exit_code': 'timeout',
+            'stdout_sha256': hashlib.sha256(b'').hexdigest(), 'stderr_sha256': hashlib.sha256(raw).hexdigest()})
+        self.write()
+        result = summary.failure_diagnostics(self.root, self.result, 'a'*40)
+        self.assertIn(name, result['failed_cli_commands'])
+        self.assertNotIn('private-evidence-canary', json.dumps(result))
+        self.assertNotIn('/private/credential', json.dumps(result))
+
+    def test_collection_browser_requirement_refuses_missing_nonboolean_and_claim_only_profiles(self):
+        self.write()
+        with self.assertRaises(ValueError):
+            summary.summarize(self.root, self.result, 'a'*40, require_workflow_collection_browser=True)
+        self.assertNotIn('ftps_collection_browser_phases', self.check())
+        for value in (True, 1, 'true'):
+            self.manifest['workflow_collection_browser_requested'] = value
+            with self.assertRaises(ValueError):
+                self.check()
+
+    def test_collection_browser_reporter_reopens_both_modes_and_refuses_forged_aggregate(self):
+        old = {'state': 'passed', 'synthetic': True}
+        checked = {'state': 'passed', 'browser_phases': 1, 'accessibility_audits': 3,
+            'source_contacts': 0, 'source_work_performed': False, 'bytes_qualified': False}
+        self.manifest.update(workflow_dispatch_approvals_requested=True, workflow_collection_metadata_requested=True,
+            workflow_collection_browser_requested=True,
+            workflow_dispatch_governance={m: old for m in ('explicit', 'implicit')},
+            collection_metadata_governance={m: old for m in ('explicit', 'implicit')},
+            collection_browser_governance={m: checked for m in ('explicit', 'implicit')},
+            collection_browser_output_sha256={m: {'synthetic': 'a'*64} for m in ('explicit', 'implicit')})
+        with patch.object(summary.dispatch, 'validate', return_value=old), patch.object(summary.collection_metadata, 'validate', return_value=old):
+            with self.assertRaises(ValueError):
+                self.check()
+            with patch.object(summary.collection_browser, 'validate', return_value=checked) as verify:
+                result = self.check()
+                self.assertEqual(result['ftps_collection_browser_phases'], 2)
+                self.assertEqual(result['ftps_collection_accessibility_audits'], 6)
+                self.assertFalse(result['ftps_collection_browser_bytes_qualified'])
+                self.assertEqual([call.args[2] for call in verify.call_args_list], ['explicit', 'implicit'])
+                self.manifest['collection_browser_governance']['implicit'] = dict(checked, source_contacts=True)
+                with self.assertRaises(ValueError):
+                    self.check()
+
     def test_collection_metadata_requirement_cannot_be_satisfied_by_absence_or_profile_claims(self):
         self.write()
         with self.assertRaises(ValueError):

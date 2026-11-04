@@ -12,6 +12,7 @@ import { qualifyArrivals } from "./arrivals-browser.mjs";
 import { qualifySchedules } from "./schedules-browser.mjs";
 import { qualifyRouting } from "./routing-browser.mjs";
 import { qualifyCollections } from "./collections-browser.mjs";
+import { qualifyFTPSCollectionMetadata } from "./ftps-collection-browser.mjs";
 import { qualifyOutboundDispatch } from "./outbound-dispatch-browser.mjs";
 import { qualifyIndependentApprovals } from "./onboarding-approvals-browser.mjs";
 import { qualifyQueuedHandoffs } from "./onboarding-handoffs-browser.mjs";
@@ -52,7 +53,9 @@ const browser = await chromium.launch({
     "--ignore-certificate-errors-spki-list=" + spki,
     "--disable-background-networking",
     "--disable-component-update",
-    ...(c.routing_only || c.dispatch_protocol === "ftps"
+    ...(c.routing_only ||
+    c.dispatch_protocol === "ftps" ||
+    c.collection_phase === "ftps-metadata"
       ? ["--renderer-process-limit=1", "--js-flags=--max-old-space-size=128"]
       : []),
   ],
@@ -258,7 +261,9 @@ try {
   } else if (c.arrivals_only) {
     await qualifyArrivals(page, c, audit, record, actualReview);
   } else if (c.collections_only) {
-    await qualifyCollections(page, c, audit, record, actualReview);
+    if (c.collection_phase === "ftps-metadata")
+      await qualifyFTPSCollectionMetadata(page, c, audit, record);
+    else await qualifyCollections(page, c, audit, record, actualReview);
   } else if (c.schedules_only) {
     await qualifySchedules(page, c, audit, record, actualReview);
   } else if (c.dispatch_approval_only) {
@@ -389,7 +394,8 @@ try {
         external_egress: egress,
         model_started: false,
         production_activated: false,
-        ...(c.dispatch_protocol === "ftps"
+        ...(c.dispatch_protocol === "ftps" ||
+        c.collection_phase === "ftps-metadata"
           ? {
               browser_version: browser.version(),
               node_version: process.version,

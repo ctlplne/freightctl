@@ -3,7 +3,7 @@
   "id": "F076",
   "observed_at": "2026-11-04",
   "starting_commit": "4d771b2e6a961a70b764681fd578ff175d064db7",
-  "state": "First source40 native x86:862pass/4failed records/0skip;10 exact collection/custody/intake/revocation leaves pass. SQL/scheduled tests stop at fixture errors; exact repairs and transport-aware handoff review compile/contracts pass, original replay pending.",
+  "state": "Both de93 native suites:862pass/7failed records/0skip; original10FTPS leaves and schema2 kept-local plans pass. Exact SQL/schedule/producer-CAS fixture repairs are pushed at28cdfcb but native/public jobs remain queued. CLI/API and actual-Chrome metadata profile is prepared, not runtime qualified.",
   "scope": "Read/copy input stage of ordinary immutable workflows, using exact registered FTPS revisions and the existing bounded producer-manifest, custody, intake, lease and event machinery. Transport metadata reading alone does not qualify collection.",
   "qualification_claim": false,
   "frozen_cases": [
@@ -273,5 +273,26 @@
     "scope": "Python unit runner exercises the real producer function with a command/source-spy stand-in, stopping at synthetic registration failure. Under022, request/password are0600 and child0700, credential bytes never enter argv, exact spy closes once and owner token remains unchanged. No actual product subprocess, network socket, TLS, PostgreSQL, Chrome or inference.",
     "runtime_qualification": false,
     "submission": "local follow-up only; keep unknown28cdfcb native/public candidates intact"
+  },
+  "browser_metadata_prepared": {
+    "driver": "scripts/ftps-collection-browser.mjs",
+    "verifier": "scripts/ftps_collection_browser.py",
+    "runner": "scripts/qualify-ftps.py --workflow-dispatch-approvals --workflow-collection-metadata --workflow-collection-browser",
+    "reporter": "scripts/ci-ftps-summary.py --require-workflow-dispatch-approvals --require-workflow-collection-metadata --require-workflow-collection-browser",
+    "workflow": ".github/workflows/ftps-workflows.yml",
+    "mechanism": "Before source cancellation/revocation, actual sandboxed Chrome fills the FTPS collection form, previews the exact registered source/workflow and inspects the original queued job. Wait for rendered headings; compare original HTTP bodies to independent CLI snapshots, visible account/address/TLS proof/directory/manifest, three actual WCAG audits, no runtime errors or egress and active then stopped zero-contact spies. No worker or source bytes.",
+    "phases_per_profile": 2,
+    "additional_accessibility_audits_per_profile": 6,
+    "original_profile_preserved": "Existing six workflow consent browser phases/18audits and16collection commands/mode/five saved-key replays stay enforced. Three fresh plaintext/encrypted profiles and30minute job limit stay unchanged. New150second browser process uses an owned process group for timeout cleanup.",
+    "scope": "Metadata preview/read inspection only; byte collection, scheduled public controls, mutation recovery, mixed/encrypted forwarding and complete customer journeys remain unqualified.",
+    "local_python_methods": 82,
+    "local_frontend_contracts": 135,
+    "runtime_qualification": false,
+    "local_checks_manifest_reference": ".private/freightctl-f076-browser-metadata-local-pssakjik/manifest.json",
+    "local_checks_manifest_sha256": "0651af92ecaa3d017c3ff3e607fa3a91ec429e21a0f511fa4a7d4c2d25c04c73",
+    "local_count_correction_reference": ".private/freightctl-f076-browser-metadata-local-pssakjik/count-correction.json",
+    "local_count_correction_sha256": "2a335d492672875bade65ad9fca1710bc6fee57a2b608b2af7399fc295291988",
+    "local_checks": "Seven synthetic original-file browser contracts, eight metadata producer/verifier methods,67reporter contracts,135frontend contracts including five pure driver stand-ins; syntax/Prettier/actionlint/diff checks. First test-only formatting refusal retained; no local Chrome, product process, DB, socket, scanner, inference or peer.",
+    "submission": "Local only; preserve queued required28cdfcb source candidate."
   }
 }

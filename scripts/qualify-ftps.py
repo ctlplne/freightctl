@@ -28,6 +28,7 @@ import ftps_ticket_governance as tickets
 import ftps_browser_tickets as browser_tickets
 import ftps_dispatch_qualification as dispatch
 import ftps_collection_metadata as collection_metadata
+import ftps_collection_browser as collection_browser
 
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location("metadata", ROOT / "scripts/qualify-retained-metadata.py")
@@ -60,7 +61,10 @@ def main():
     parser.add_argument("--workflow-dispatch-approvals", action="store_true", help="qualify registered FTPS workflow consent with real CLI/Chrome and a contact-only stand-in")
     parser.add_argument("--workflow-dispatch-encryption", action="store_true", help="require exact registered recipient disclosure in the complete workflow consent profile; no sending")
     parser.add_argument("--workflow-collection-metadata", action="store_true", help="also qualify public FTPS source previews, queue/cancel and original-key CLI/HTTPS recovery without source contact; no byte/browser claim")
+    parser.add_argument("--workflow-collection-browser", action="store_true", help="require real Chrome source metadata preview and queued inspection; requires --workflow-collection-metadata; no source bytes")
     args = parser.parse_args()
+    if args.workflow_collection_browser and not args.workflow_collection_metadata:
+        parser.error("--workflow-collection-browser requires --workflow-collection-metadata")
     if args.workflow_dispatch_encryption and not args.workflow_dispatch_approvals:
         parser.error("--workflow-dispatch-encryption requires --workflow-dispatch-approvals")
     if args.workflow_collection_metadata:
@@ -101,6 +105,7 @@ def main():
     manifest["workflow_dispatch_approvals_requested"] = args.workflow_dispatch_approvals
     manifest["workflow_dispatch_encryption_requested"] = args.workflow_dispatch_encryption
     manifest["workflow_collection_metadata_requested"] = args.workflow_collection_metadata
+    manifest["workflow_collection_browser_requested"] = args.workflow_collection_browser
     manifest["stock_curl_qualified"] = False
     manifest["stock_lftp_qualified"] = False
     processes, created, started, originally_running = {}, False, False, None
@@ -116,7 +121,7 @@ def main():
         with out.open("xb") as stdout, err.open("xb") as stderr:
             child = None
             try:
-                if re.fullmatch(r"browser-(?:explicit|implicit)-operator|cli-(?:explicit|implicit)-(?:workflow-)?dispatch-browser-(?:request|approve|withdraw)", label):
+                if re.fullmatch(r"browser-(?:explicit|implicit)-operator|cli-(?:explicit|implicit)-(?:workflow-)?dispatch-browser-(?:request|approve|withdraw)|cli-(?:explicit|implicit)-collection-browser", label):
                     child = subprocess.Popen(list(map(str, argv)), stdout=stdout, stderr=stderr, env=env, start_new_session=True, preexec_fn=metadata.bounded_output)
                     code = child.wait(timeout=timeout)
                 else:
@@ -323,8 +328,17 @@ def main():
                 manifest.setdefault(kind+"_output_sha256", {})[mode] = inventory
                 if args.workflow_collection_metadata:
                     try:
+                        browser_inventory = {}
+                        def collection_browser_phase(c, approved, view, counter):
+                            browser_inventory.update(collection_browser.exercise(ROOT, private, mode, http_port,
+                                cert, tenant, partner, token, observer.steps, command, c, approved, view, counter))
                         checked, inventory = collection_metadata.exercise(ROOT, private, mode, http_port, cert,
-                            binary, tenant, partner, token, observer.steps, command)
+                            binary, tenant, partner, token, observer.steps, command,
+                            collection_browser_phase if args.workflow_collection_browser else None)
+                        if args.workflow_collection_browser:
+                            browser_checked = collection_browser.validate(ROOT, private, mode, observer.steps, browser_inventory)
+                            manifest.setdefault("collection_browser_governance", {})[mode] = browser_checked
+                            manifest.setdefault("collection_browser_output_sha256", {})[mode] = browser_inventory
                     except Exception:
                         manifest["collection_metadata_evidence_failure"] = {"mode": mode, "category": "original-output-contract"}
                         raise RuntimeError("collection metadata original evidence check failed") from None

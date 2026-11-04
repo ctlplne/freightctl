@@ -197,7 +197,7 @@ def validate(private, mode, steps, inventory):
         'bytes_qualified': False, 'browser_qualified': False}
 
 
-def exercise(root, private, mode, http_port, cert, binary, tenant, partner, owner, steps, command):
+def exercise(root, private, mode, http_port, cert, binary, tenant, partner, owner, steps, command, browser=None):
     require_environment(root)
     directory = private/('collection-metadata-'+mode)
     directory.mkdir(mode=0o700)
@@ -250,6 +250,8 @@ def exercise(root, private, mode, http_port, cert, binary, tenant, partner, owne
         api_replay('collection-api-replay')
         id_args = ('--collection-id', first['resource']['id'])
         status = invoke('collection-status', 'workflow-collection-status', *id_args)
+        if browser is not None:
+            browser(c, approved, status, directory/'source.json')
         cancel = ('--request-file', request('cancel', {'definition_hash': status['job']['definition_hash'],
             'expected_revision': status['job']['revision']}), '--idempotency-key', prefix+'cancel')
         invoke('collection-cancel', 'workflow-collection-cancel', *id_args, *cancel)
