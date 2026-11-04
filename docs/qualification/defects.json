@@ -2595,14 +2595,14 @@
     {
       "id": "D164",
       "severity": "qualification fixture",
-      "state": "original repair passes complete native ARM f08 replay; native x86 replay pending",
+      "state": "fixed; complete original native ARM/x86 f08 regression replay passes",
       "observed_on": "2026-11-04",
       "candidate": "28cdfcbbd83e2571fb626b3ee47b8783cccad4db",
       "journey": "F076runtime SQL",
       "title": "New-row SQL positive control conflicts with its own still-open original job",
       "first_failure": "Both28native suites868pass/4failed records/0skip; positive SaveCollection control hits workflow_collection_one_open23505 before six negative DML forgeries.",
       "cause": "Fixture clones queued baseline under a new ID while the original one-open workflow slot remains occupied. Existing uniqueness guard correctly refuses it.",
-      "resolution": "Cancel original through ordinary API and verify no source work before attempting the exact new-row control. Keep index,authority,event/savepoint and all6negative assertions. Complete f08ARM880/0/0 original application replay passes this case; native x86 replay remains pending.",
+      "resolution": "Cancel original through ordinary API and verify no source work before attempting the exact new-row control. Keep index,authority,event/savepoint and all6negative assertions. Complete original f08native ARM and x86 application suites each880/0/0 pass this case; all assertions and original guards retained.",
       "regression_evidence": [
         "docs/qualification/evidence/F076-ftps-collection.json"
       ],
@@ -2610,20 +2610,28 @@
         "candidate": "f08c7cf9f5cffc7489edaba36e0f6ef9aa81f594",
         "job_id": 126906787047,
         "architecture": "arm64",
-        "evidence": "docs/qualification/evidence/F076-ftps-collection.json"
+        "evidence": "docs/qualification/evidence/F076-ftps-collection.json",
+        "architectures": [
+          "arm64",
+          "x86_64"
+        ],
+        "job_ids": [
+          126906787047,
+          126906786550
+        ]
       }
     },
     {
       "id": "D165",
       "severity": "qualification fixture",
-      "state": "original repair passes complete native ARM f08 replay; native x86 replay pending",
+      "state": "fixed; complete original native ARM/x86 f08 regression replay passes",
       "observed_on": "2026-11-04",
       "candidate": "28cdfcbbd83e2571fb626b3ee47b8783cccad4db",
       "journey": "F076scheduled arrival",
       "title": "Scheduled fixture expects byte-worker job capture during metadata-only arrival admission",
       "first_failure": "Both28native explicit/implicit leaves reach admitted frozen manifest after producer removal, then fail job.Manifest assertion before byte worker.",
       "cause": "Admission stores exact arrival snapshot/hash in definition.Schedule; job.Manifest is captured by the later byte worker. Fixture checks the wrong persistence layer.",
-      "resolution": "Assert exact schedule/occurrence/due/name/hash/cutoff and no-copy admission, independently reopen saved snapshot after source removal, then require unchanged ordinary worker/custody readback. Complete f08ARM880/0/0 original application replay passes this case; native x86 replay remains pending.",
+      "resolution": "Assert exact schedule/occurrence/due/name/hash/cutoff and no-copy admission, independently reopen saved snapshot after source removal, then require unchanged ordinary worker/custody readback. Complete original f08native ARM and x86 application suites each880/0/0 pass this case; all assertions and original guards retained.",
       "regression_evidence": [
         "docs/qualification/evidence/F076-ftps-collection.json"
       ],
@@ -2631,20 +2639,28 @@
         "candidate": "f08c7cf9f5cffc7489edaba36e0f6ef9aa81f594",
         "job_id": 126906787047,
         "architecture": "arm64",
-        "evidence": "docs/qualification/evidence/F076-ftps-collection.json"
+        "evidence": "docs/qualification/evidence/F076-ftps-collection.json",
+        "architectures": [
+          "arm64",
+          "x86_64"
+        ],
+        "job_ids": [
+          126906787047,
+          126906786550
+        ]
       }
     },
     {
       "id": "D166",
       "severity": "CI resource qualification",
-      "state": "x86container OOM confirmed; bounded feed-GC experiment prepared, original replay pending",
+      "state": "original x86OOM retained; both f08downloads proceed to separate file-budget failure; full scan unqualified",
       "observed_on": "2026-11-04",
       "candidate": "28cdfcbbd83e2571fb626b3ee47b8783cccad4db",
       "journey": "F075independent peer image",
       "title": "Pinned feed setup is OOM-killed under its original hard1GiB container budget",
       "first_failure": "x86job126848477397 exit137 matches exact stoppedOOMKilledtrue State before deletion; volume unmount passes. ARMreport is not-recorded/no state and does not establish OOM.",
       "cause": "Container OOM fact is proven, not its allocation source. Soft768MiBGo cap may overshoot and excludes other memory; no heap/page-cache allocation attribution available.",
-      "resolution": "Try feed-onlyGOGC25 with all hard/soft,disk,CPU,time,security/feed/inventory/severity gates unchanged.20local stand-in/report contracts pass; actualfeed/scanremain unqualified.",
+      "resolution": "Try feed-onlyGOGC25 with all hard/soft,disk,CPU,time,security/feed/inventory/severity gates unchanged.20local stand-in/report contracts pass; actualfeed/scanremain unqualified. Bothf08downloads return under unchanged hard/soft/CPU limits and GOGC25,then D168file guard stops scan. This does not attribute original allocation cause or qualify actual scanning.",
       "regression_evidence": [
         "docs/qualification/evidence/F075-peer-image-security.json"
       ]
@@ -2667,14 +2683,14 @@
     {
       "id": "D168",
       "severity": "CI resource qualification",
-      "state": "actual feed-file budget failure retained; complete image scan remains red",
+      "state": "both actual native file-budget failures retained; owner file-cap proposal pending",
       "observed_on": "2026-11-04",
       "candidate": "f08c7cf9f5cffc7489edaba36e0f6ef9aa81f594",
       "journey": "F075independent peer image",
       "title": "Pinned unpacked vulnerability database exceeds the original1GiBfile limit",
-      "first_failure": "f08ARMjob126906787047 completes880application records with0fail/0skip,then stops at feed-files:database present/regular/not linked1692762112bytes,metadata153bytes,exact scratch unmount passes. Runner failure manifest60b3bfbe44a9c84d7359ac8d056897e59d02461da0130c22655fa42a0268af23.",
+      "first_failure": "f08ARMjob126906787047 completes880application records with0fail/0skip,then stops at feed-files:database present/regular/not linked1692762112bytes,metadata153bytes,exact scratch unmount passes. Runner failure manifest60b3bfbe44a9c84d7359ac8d056897e59d02461da0130c22655fa42a0268af23. Exactf08x86job126906786550 reproduces same1692762112byte DB/153byte metadata and exact disk unmount after880/0/0;runner failure manifest1dd2af298c4efe024d5c068bef46ea1d6435f9aec1eb33648b2a097b44a9d64c.",
       "cause": "Original post-download database size guard is1073741824bytes; observed file exceeds it. This is a file-budget failure,not evidence of ARM OOM,feed freshness,inventory completion or vulnerability cleanliness.",
-      "resolution": "Keep original1GiBdatabase cap,hard1GiBmemory/no-swap/oneCPU,soft768MiB,GOGC25,2GiBdisk,time and all scanner policies. Investigate a supported complete feed/scan path within limits; preserve red gate rather than raise budgets,filter required inventory or invent a clean report.",
+      "resolution": "Keep original1GiBdatabase cap,hard1GiBmemory/no-swap/oneCPU,soft768MiB,GOGC25,2GiBdisk,time and all scanner policies. Investigate a supported complete feed/scan path within limits; preserve red gate rather than raise budgets,filter required inventory or invent a clean report. Prepared unapplied1792MiBdatabase-file-only patch and21stand-in methods for owner review; no budget change until explicit approval. Pinned light flag is ignored and upstream pipeline already compacts; no supported full-feed shrink established.",
       "regression_evidence": [
         "docs/qualification/evidence/F075-peer-image-security.json"
       ]

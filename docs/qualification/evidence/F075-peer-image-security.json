@@ -3,7 +3,7 @@
   "id": "F075",
   "observed_at": "2026-11-04",
   "starting_commit": "63e153f6511f6cb457dfa46f70d39f2548f200b6",
-  "state": "f08 ARMdownload reaches actual regular database1692762112bytes,exceeding original1GiBfile cap; scan never qualifies and disk unmount passes. Earlier source28x86OOM remains proven separately,not ARM OOM. Original x86f08 still running; image gate red.",
+  "state": "Both f08 native application suites880/0/0;both image gates fail at actual regular1692762112byte database over original1GiBfile cap,metadata153bytes,both exact disk cleanups pass. Expanded1792MiBfile-only proposal is unapplied/pending owner decision. Hard RAM/CPU and all scan policies unchanged; no feed/report/image qualification.",
   "scope": "Scan the exact disposable independent OpenPGP recipient image used by native Linux tests. This is test infrastructure, not a released server image or runtime security qualification.",
   "qualification_claim": false,
   "frozen_cases": [
@@ -323,5 +323,73 @@
     "metadata_file_limit_bytes": 1048576,
     "scratch_cleanup": "unmounted",
     "scope": "Download returns before original postcondition check; actual unpacked regular database exceeds original1GiBfile cap. No failed command/state is required for this postcondition failure; do not infer ARM OOM or a scan/feed/report pass. Keep hard1GiB/no-swap/oneCPU,soft768MiB,GOGC25,2GiBdisk and all input/time/isolation/freshness/inventory/severity gates unchanged."
+  },
+  "source_f08_x86": {
+    "application": {
+      "candidate": "f08c7cf9f5cffc7489edaba36e0f6ef9aa81f594",
+      "run_id": 41924952419,
+      "job_id": 126906786550,
+      "architecture": "x86_64",
+      "application_pass": 880,
+      "application_fail": 0,
+      "application_skip": 0,
+      "workflow_seconds": 550.339,
+      "ftps_native_leaves_pass": 17,
+      "process_parent_seconds": 68.48,
+      "process_explicit_seconds": 33.52,
+      "process_implicit_seconds": 33.48,
+      "manifest_reference": ".private/freightctl-f076-f08-x86-native-4fmx5y/manifest.json",
+      "manifest_sha256": "4753106052f1ce3561c6ad0351d62551bd81e67ac52bf3a6047599e8097de5cd",
+      "scope": "Complete original x86 application section; all17FTPSleaves pass,including SQL/sixforgeries,scheduled workers and process-death pairs. Image scan red after application; no later-source or whole-goal pass."
+    },
+    "image_gate": "failure",
+    "phase": "feed-files",
+    "runner_failure_manifest_sha256": "1dd2af298c4efe024d5c068bef46ea1d6435f9aec1eb33648b2a097b44a9d64c",
+    "feed_files": {
+      "database": {
+        "present": true,
+        "regular": true,
+        "symlink": false,
+        "bytes": 1692762112,
+        "size_capped": false
+      },
+      "metadata": {
+        "present": true,
+        "regular": true,
+        "symlink": false,
+        "bytes": 153,
+        "size_capped": false
+      }
+    },
+    "database_file_limit_bytes": 1073741824,
+    "metadata_file_limit_bytes": 1048576,
+    "scratch_cleanup": "unmounted",
+    "scope": "Exact x86download also reaches regular1692762112byte DB and153byte metadata. Original1GiBfile guard correctly stops before scan;no OOM or clean scan inferred. Earlier source28x86OOM retained separately."
+  },
+  "capacity_change_proposal": {
+    "state": "owner decision pending; prepared patch not applied",
+    "proposal_reference": ".private/freightctl-f075-cap-review-v7jl8i74/proposal.json",
+    "proposal_sha256": "b3c61e4677b9fb157f56780860681fcfcddea393326297db36d777a9b1961c98",
+    "patch_reference": ".private/freightctl-f075-cap-review-v7jl8i74/proposal.patch",
+    "patch_sha256": "376d15bbe4b98f639982cf5393c2498b74b84ae2b054feece8f9905bd6d411fc",
+    "verification_reference": ".private/freightctl-f075-cap-review-v7jl8i74/verification.json",
+    "verification_sha256": "92ef4e914a2ad817fef1810a0eba4ecd9802b29cb64a4cdaa0f7a8d428a7e823",
+    "proposed_database_file_bytes": 1879048192,
+    "current_database_file_bytes": 1073741824,
+    "observed_database_bytes": 1692762112,
+    "unchanged": "1GiBhardRAM/no-swap,768MiBsoft,oneCPU,2GiBscratch,128pids,metadata/time/isolation/freshness/inventory/severity checks; no local scan or inference.",
+    "local_contract_methods": 21,
+    "authority": "AGENTS.md prohibits weakening existing budgets; explicit owner file-cap decision requested before applying/replaying.",
+    "upstream_review": [
+      {
+        "url": "https://raw.githubusercontent.com/aquasecurity/trivy/v0.76.1/pkg/flag/db_flags.go",
+        "observation": "Pinned light flag is deprecated and ignored."
+      },
+      {
+        "url": "https://raw.githubusercontent.com/aquasecurity/trivy-db/main/.github/workflows/cron.yml",
+        "observation": "Current upstream publishing pipeline compacts then compresses the database; not proof of provenance for the exact downloaded artifact."
+      }
+    ],
+    "limit": "Pinned --light is ignored; upstream current pipeline compacts. This establishes no supported shrink remedy and does not independently attest the exact downloaded artifact."
   }
 }
