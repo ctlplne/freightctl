@@ -308,7 +308,7 @@
     "public_workflow_metadata_run_id": 41914914123,
     "public_state": "pending behind preserved running28cdfcb; unqualified",
     "core_run_id": 41914914270,
-    "core_state": "queued/unqualified",
+    "core_state": "completed/success on9e5source only",
     "prepared_native_leaves": 17,
     "prepared_collection_browser_phases_per_profile": 2,
     "prepared_collection_browser_audits_per_profile": 6,
@@ -321,7 +321,18 @@
     "public_jobs": [
       126874462798,
       126874463015
-    ]
+    ],
+    "core": {
+      "job_id": 126871919070,
+      "state": "completed/success",
+      "frontend_pass": 135,
+      "frontend_fail": 0,
+      "frontend_skip": 0,
+      "collection_reporter_python_methods": 82,
+      "manifest_reference": ".private/freightctl-f076-core-nine-wvyadqyp/manifest.json",
+      "manifest_sha256": "9d20ebdf4b286b9b7ed4e56b90e70af14a0ab9f940107cedfda929c7f944779d",
+      "scope": "Native Linux source/type/embedded/dependency/source-history checks, including pure browser driver/evidence. No actual Chrome, process-death, stock metadata, feed/image or later local source qualification. Module advisory remains visible without reachable package finding."
+    }
   },
   "registration_failure_standin": {
     "manifest_reference": ".private/freightctl-f076-registration-closure-3ov_x1ye/manifest.json",
