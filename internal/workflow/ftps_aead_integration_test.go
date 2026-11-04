@@ -23,7 +23,7 @@ import (
 
 func independentAEADRecipient(t *testing.T) string {
 	t.Helper()
-	dir := t.TempDir()
+	dir := privatePeerDirectory(t)
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	image, err := exec.CommandContext(ctx, "docker", "image", "inspect", "--format", "{{.Id}}", "freightctl-openpgp-peer:6.3.2-r1").Output()

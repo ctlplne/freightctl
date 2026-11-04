@@ -147,7 +147,7 @@ func decryptFTPSReceiver(t *testing.T, r *fixture, filename, keyName string, pee
 	if err != nil || int64(len(body)) != a.Size || secure.Digest(body) != a.SHA256 || bytes.Equal(body, []byte("abc")) {
 		t.Fatal("separate receiver ciphertext differs", err)
 	}
-	work := t.TempDir()
+	work := privatePeerDirectory(t)
 	if err = os.WriteFile(filepath.Join(work, "cipher.pgp"), body, 0600); err != nil {
 		t.Fatal(err)
 	}

@@ -3,7 +3,7 @@
   "id": "F074",
   "observed_at": "2026-11-04",
   "starting_commit": "ed23703000287e2170f1e9a54224dcb26127f0f5",
-  "state": "Original normal GnuPG and SQL cases pass; cc05701 confirms D156 repair while D155 and x86 deadline remain red; complete repair0c681c7 is queued",
+  "state": "ARM repaired GnuPG sending/recovery/revocation and clone isolation pass; independent AEAD stops at strict directory setup; both public profile matrices pass",
   "scope": "Recipient-encrypted registered FTPS workflows through ordinary engine and independent dispatch consent. FTPS server is an application stand-in; independent GnuPG establishes envelope compatibility only.",
   "first_failure": {
     "test": "TestRegisteredFTPSWorkflowBindsExactRecipientEncryption",
@@ -48,7 +48,7 @@
     "Local checks are lightweight Mac ARM contracts and compilation only. Native real PostgreSQL/receivers/GnuPG and browser tests run on GitHub. Local inference stays off; scanner stays stopped."
   ],
   "qualification_claim": false,
-  "next_action": "Preserve the running cc05701 result and queued0c681c7 original full gates. Inspect native application/AEAD/template results and all three fresh public profiles without dropping cases or changing budgets. Qualify recovery, revocation and independent AEAD only from actual results; keep whole GOAL.md and external dependencies open.",
+  "next_action": "Replay original full native gates after the explicit private-directory repair, keeping strict peer checks and all existing budgets. Preserve running0c681c7 x86; replace only unstarted known-bad4d771b2 native if still pending at push. Require independent AEAD and F075 exact-image scan results, and keep FTPS collection and all whole-goal work open.",
   "implementation": {
     "typed_workflow": "FTPS ordered/program steps retain strict key ID/version/hash and explicit OpenPGP profile; direct FTPS encryption remains unavailable without an exact workflow binding",
     "approval": "common recipient lookup binds FTPS and SFTP reviews to the exact current public key; browser strictly validates policy shape and renders separate recipient/transport disclosure",
@@ -225,7 +225,7 @@
     "public_run_id": 41879485022,
     "plaintext_job_id": 126747986599,
     "encrypted_job_id": 126747986956,
-    "state": "both native application jobs and plaintext public job are running; encrypted public three profiles, both metadata restores, core and fuzz pass; sender/recovery/AEAD remain unqualified"
+    "state": "ARM finishes792pass/1D158fail/0skip; x86 remains running. Both public three-profile matrices, metadata, core and fuzz pass; full native gate stays red."
   },
   "public_repair_result": {
     "candidate": "0c681c7fe9b27d7dce35bdb309927f6eeb2797d5",
@@ -261,6 +261,42 @@
     ],
     "manifest_reference": ".private/freightctl-f074-public-repair-jOvHMbrN/manifest.json",
     "manifest_sha256": "8510b9dfa86ae9febe0eb9f31822de828382325bb2d9d8e3058fca3df867b5bf",
-    "limits": "metadata consent only; actual sender/recovery/AEAD complete native suites and plaintext repeated profile remain pending"
+    "limits": "metadata consent only; both matrices pass. Complete native sender/recovery/AEAD remains red at D158, and broader interoperability/whole product gates stay open.",
+    "plaintext_job_id": 126747986599,
+    "plaintext_state": "all three fresh complete original profiles pass;260commands/20rotations/six browser phases/six saved-key replays/18audits each, zero contacts/attempts/fences and exact cleanup;735source inputs",
+    "plaintext_result_manifest_sha256": [
+      "afd615699ed3e4905d4a67828c4fd90a77d35e3da3b13b87f816cec937ede4ce",
+      "e3b5f07157202ae5b50ab9ae705090fc6264d2f10f06eafda9b61b64fdd9aca2",
+      "f2553cafe63372fcf1b07adb15ea1c43705c8fbedefe3091e3df9bfc34d22751"
+    ],
+    "plaintext_log_manifest_reference": ".private/freightctl-f074-directory-first-B1KBViip/manifest-corrected.json",
+    "plaintext_log_manifest_sha256": "3cde1fe5e3ad47254d74cbb3762e18d7e25e9dc4041f5efe35cdcd2c5e5f77b1"
+  },
+  "arm_repair_result": {
+    "candidate": "0c681c7fe9b27d7dce35bdb309927f6eeb2797d5",
+    "run_id": 41879484903,
+    "job_id": 126751890358,
+    "pass_records": 792,
+    "fail_records": 1,
+    "skip_records": 0,
+    "workflow_seconds": 406.03,
+    "passed_component_cases": {
+      "gnupg_normal_and_actual_lost_rename_recovery": 16,
+      "recipient_rotation_and_revocation": 4,
+      "sql_recipient_mutations": 12,
+      "template_clone_runtime_isolation_and_connect_denial": 1
+    },
+    "first_failure": "D158 independent AEAD generation stops at fixed directory stage before key generation; eight AEAD subcases do not execute",
+    "manifest_reference": ".private/freightctl-f074-directory-first-B1KBViip/manifest-corrected.json",
+    "manifest_sha256": "3cde1fe5e3ad47254d74cbb3762e18d7e25e9dc4041f5efe35cdcd2c5e5f77b1",
+    "x86_state": "original job126751890499 remains running; do not cancel or infer a pass"
+  },
+  "aead_directory_repair": {
+    "id": "D158",
+    "state": "explicit private child implemented; actual local filesystem regression under022, integration compile/vet pass; native peer replay required",
+    "mechanism": "Go1.26.10 testing creates its numbered child with0777 masked by process umask. The original local077 environment yields0700; controlled022 yields0755 and fails the unchanged privacy contract. Native mode is inferred from source/failure, not directly observed. Create an os.MkdirTemp0700 child before mounting both recipient and decrypted-result directories; retain Node non-symlink/private-mode checks and every byte/key/envelope assertion.",
+    "checks_manifest_reference": ".private/freightctl-f074-directory-first-B1KBViip/manifest-corrected.json",
+    "checks_manifest_sha256": "3cde1fe5e3ad47254d74cbb3762e18d7e25e9dc4041f5efe35cdcd2c5e5f77b1",
+    "pending_candidate": "4d771b2 native41883389493 is unstarted and contains the same known setup error. After retaining the first ARM/public results, supersede only that pending successor with this verified fixture repair; preserve running0c681c7 x86."
   }
 }
