@@ -174,7 +174,12 @@ function effects(v: unknown, w: WorkflowConfiguration): HandoffEffect[] {
         "user",
         "key_fingerprint",
       ],
-      ["encryption", "recipient_fingerprint", "encryption_fingerprint"],
+      [
+        "encryption",
+        "recipient_fingerprint",
+        "encryption_fingerprint",
+        ...(o.protocol === "ftps" ? ["protocol", "ftps"] : []),
+      ],
     );
     reference(o.connection);
     if (o.encryption !== undefined) {
@@ -188,14 +193,21 @@ function effects(v: unknown, w: WorkflowConfiguration): HandoffEffect[] {
       bad();
   }
   const base = effectsForWorkflow(
-    raw.map(({ user: _user, key_fingerprint: _key, ...effect }) => effect),
+    raw.map(({ user, key_fingerprint: _key, ...effect }) =>
+      effect.protocol === "ftps" ? { ...effect, user } : effect,
+    ),
     w.definition,
   );
   return base.map((effect, index) => {
     const o = raw[index]!;
-    const user = text(o, "user", 128),
+    const user = text(o, "user", effect.protocol === "ftps" ? 64 : 128);
+    let key = "";
+    if (effect.protocol === "ftps") {
+      if (o.key_fingerprint !== "" || user !== effect.user) bad();
+    } else {
       key = text(o, "key_fingerprint", 100);
-    if (!/^SHA256:[A-Za-z0-9+/]{43}$/.test(key)) bad();
+      if (!/^SHA256:[A-Za-z0-9+/]{43}$/.test(key)) bad();
+    }
     return { ...effect, user, key_fingerprint: key };
   });
 }

@@ -2534,6 +2534,48 @@
       "regression_evidence": [
         "docs/qualification/evidence/F075-peer-image-security.json"
       ]
+    },
+    {
+      "id": "D160",
+      "severity": "qualification fixture",
+      "state": "exact repair prepared; local contracts/compile pass, original native/public replay pending",
+      "observed_on": "2026-11-04",
+      "candidate": "fb317e50008561f233d804e1dabe87f2a8446ee4",
+      "journey": "F076 typed FTPS collection",
+      "title": "FTPS SQL qualification uses an unresolved empty actor",
+      "cause": "New test passes scope.Actor, which is unresolved until authenticated transaction creation; PostgreSQL rejects empty UUID before evaluating the source predicate.",
+      "resolution": "Use transaction.Actor; keep exact positive control and all correctly matching-event DML forgeries. Compile/vet pass only; actual native replay required.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F076-ftps-collection.json"
+      ]
+    },
+    {
+      "id": "D161",
+      "severity": "qualification fixture",
+      "state": "exact repair prepared; local contracts/compile pass, original native/public replay pending",
+      "observed_on": "2026-11-04",
+      "candidate": "fb317e50008561f233d804e1dabe87f2a8446ee4",
+      "journey": "F076 typed FTPS collection",
+      "title": "FTPS scheduled source-only case uses one-recipient fixture helper",
+      "cause": "Existing saveSchedule intentionally asserts exactly one outgoing effect. New FTPS source-only workflow has zero recipients and stops at that assertion before draft/probe.",
+      "resolution": "Use separate exact zero-recipient FTPS schedule helper with full source/connection/hash/calendar and no-contact checks; leave original one-recipient assertion and every original deadline/budget intact. Compile/vet only; actual replay required.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F076-ftps-collection.json"
+      ]
+    },
+    {
+      "id": "D162",
+      "severity": "operator review correctness",
+      "state": "exact repair prepared; local contracts/compile pass, original native/public replay pending",
+      "observed_on": "2026-11-04",
+      "candidate": "de93ddd611943ef94fa1fbd8b351ef93b4918ac6",
+      "journey": "F076 typed FTPS collection",
+      "title": "FTPS handoff metadata rejected and rendered as SSH",
+      "cause": "Handoff wrapper assumes nonempty SSH key and strips user from all base effects; routing review always labels SSH host and handoff SSH account, omitting TLS proof.",
+      "resolution": "Preserve exact FTPS account/proof with empty SSH identities; reject mixed/private/changed recipient metadata and show actual TLS identity/receiver receipt limits. Four new synthetic contract/static rendering methods plus Go wire checks pass within130frontend contracts. Public/native handoff replay remains required.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F076-ftps-collection.json"
+      ]
     }
   ]
 }

@@ -290,7 +290,7 @@ func TestFTPSCollectionRuntimeSQLRejectsDetachedProtocolAndPeerViews(t *testing.
 		}
 		raw, _ = json.Marshal(value)
 		var current bool
-		if err = tx.Tx.QueryRow(x.f.ctx, `SELECT freightctl_collection_definition_current($1,$2,$3,$4)`, x.f.scope.Tenant, x.f.scope.Partner, x.f.scope.Actor, raw).Scan(&current); err != nil || current != (index == 0) {
+		if err = tx.Tx.QueryRow(x.f.ctx, `SELECT freightctl_collection_definition_current($1,$2,$3,$4)`, x.f.scope.Tenant, x.f.scope.Partner, tx.Actor, raw).Scan(&current); err != nil || current != (index == 0) {
 			t.Fatal("runtime SQL accepted a detached source/view or rejected exact metadata", index, err)
 		}
 		if _, err = tx.Tx.Exec(x.f.ctx, "SAVEPOINT ftps_collection_forgery"); err != nil {
@@ -329,6 +329,32 @@ func TestFTPSCollectionRuntimeSQLRejectsDetachedProtocolAndPeerViews(t *testing.
 	}
 }
 
+func saveFTPSCollectionSchedule(t *testing.T, x ftpsCollectionSetup, selection ScheduleSelection) store.ScheduleSummary {
+	t.Helper()
+	f := x.f
+	p, err := f.s.PreviewSchedule(f.ctx, f.scope, selection)
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, hash, err := digest(p.Definition)
+	if err != nil || hash != p.Hash || p.ExternalContact || !p.ApprovalRequired || len(p.Effects) != 0 || len(p.Definition.Calendar.Rules) == 0 || p.Definition.Collection == nil || !reflect.DeepEqual(p.Definition.Collection.Source, x.source) || !reflect.DeepEqual(p.Definition.Collection.Connection, x.connection) || x.listener.contacts.Load() != 0 {
+		t.Fatal("exact local-only FTPS schedule preview required", err)
+	}
+	// The existing saveSchedule helper intentionally asserts one outgoing
+	// recipient. This source-only contract must instead prove zero recipients
+	// and the complete exact reviewed source, without changing that helper.
+	out, err := f.s.DraftSchedule(f.ctx, f.scope, "scheduled-ftps", ScheduleDraftRequest{Selection: selection, Hash: p.Hash})
+	var resource ScheduleResource
+	if err != nil || json.Unmarshal(out.Resource, &resource) != nil || resource.Kind != "workflow_schedule" || resource.Schedule.Hash != p.Hash {
+		t.Fatal("exact FTPS schedule draft receipt", err)
+	}
+	out, err = f.s.ControlSchedule(f.ctx, f.scope, resource.Schedule.ID, resource.Schedule.Version, "activate", "scheduled-ftps-activate", Decision{Hash: resource.Schedule.Hash, Revision: resource.Schedule.Revision})
+	if err != nil || json.Unmarshal(out.Resource, &resource) != nil || resource.Schedule.State != "active" || resource.Schedule.Hash != p.Hash || x.listener.contacts.Load() != 0 {
+		t.Fatal("exact no-contact FTPS schedule activation", err)
+	}
+	return resource.Schedule
+}
+
 func TestScheduledFTPSCollectionUsesFrozenDueManifestAndOriginalReceipts(t *testing.T) {
 	for _, implicit := range []bool{false, true} {
 		t.Run(fmt.Sprint(implicit), func(t *testing.T) {
@@ -341,7 +367,7 @@ func TestScheduledFTPSCollectionUsesFrozenDueManifestAndOriginalReceipts(t *test
 			if _, err := x.f.s.PreviewCollection(x.f.ctx, x.f.scope, x.selection); !errors.Is(err, ErrInput) {
 				t.Fatal("manual admission bypassed a scheduled FTPS source", err)
 			}
-			schedule := saveSchedule(t, x.f, selection, "", 0, "scheduled-ftps")
+			schedule := saveFTPSCollectionSchedule(t, x, selection)
 			waitSchedule(t, x.f, due)
 			_, tick := tickSchedule(t, x.f, schedule, "scheduled-ftps-due")
 			if len(tick.Occurrences) != 1 || x.listener.contacts.Load() != 0 {

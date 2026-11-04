@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { FTPSPeerIdentity, FTPSReceiverTerms } from "./ftps-peer-identity";
 import { Api } from "./api";
 import { ApiError, type Session } from "./types";
 import { ApprovalConfirm, approvalPost } from "./onboarding-approvals";
@@ -67,10 +68,19 @@ export function RoutingEffects({ effects }: { effects: ScheduleEffect[] }) {
         <li key={e.step_id}>
           <strong>{e.step_id}</strong>: {e.address}, directory{" "}
           <code>{e.directory}</code>, final name{" "}
-          <code>{e.final_name_pattern}</code>. Host{" "}
-          <code>{e.host_fingerprint}</code>; connection{" "}
-          <code>{e.connection.id}</code> revision {e.connection.version},
-          fingerprint <code>{e.connection.hash}</code>.{" "}
+          <code>{e.final_name_pattern}</code>.{" "}
+          {e.ftps ? (
+            <>
+              <FTPSPeerIdentity proof={e.ftps} /> Account <code>{e.user}</code>.{" "}
+              <FTPSReceiverTerms proof={e.ftps} />{" "}
+            </>
+          ) : (
+            <>
+              SSH host <code>{e.host_fingerprint}</code>.{" "}
+            </>
+          )}
+          Connection <code>{e.connection.id}</code> revision{" "}
+          {e.connection.version}, fingerprint <code>{e.connection.hash}</code>.{" "}
           {e.encryption && (
             <>
               Encryption {e.encryption.profile}, recipient{" "}

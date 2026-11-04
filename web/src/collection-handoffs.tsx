@@ -85,12 +85,14 @@ function Effects({ effects }: { effects: HandoffEffect[] }) {
       <RoutingEffects effects={effects} />
       {effects.length > 0 && (
         <ul>
-          {effects.map((e) => (
-            <li key={e.step_id}>
-              {e.step_id}: SSH account <code>{e.user}</code>, client public key{" "}
-              <code>{e.key_fingerprint}</code>.
-            </li>
-          ))}
+          {effects
+            .filter((e) => e.protocol !== "ftps")
+            .map((e) => (
+              <li key={e.step_id}>
+                {e.step_id}: SSH account <code>{e.user}</code>, client public
+                key <code>{e.key_fingerprint}</code>.
+              </li>
+            ))}
         </ul>
       )}
     </>

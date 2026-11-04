@@ -47,11 +47,11 @@
     },
     {
       "path": "web/src/collection-handoffs-types.ts",
-      "sha256": "537679374565264842dc16e7d5ce0ad9d71ec32f6c090ce36380d56df80de5d9"
+      "sha256": "b1d79896656c91b8c994017b1ccae923e9f7fe9df8edd9e4c44cd22a866e6cc4"
     },
     {
       "path": "web/src/collection-handoffs.tsx",
-      "sha256": "a18432ebb04a08b85efbfb0eae2354febe46fabed6fcb2c2dca33078e3358962"
+      "sha256": "3ddc0d39d172f90a745208fcade8990605d35a46ed00706657d39f063757e00d"
     },
     {
       "path": "web/src/collection-routing-recovery.ts",
@@ -63,7 +63,7 @@
     },
     {
       "path": "web/src/collection-routing.tsx",
-      "sha256": "7e567acf3a58c6622e3a3856a2bc5c48c57757491e81df9eee6dc3a6fce808b7"
+      "sha256": "c04f9fe02fa7edb28ec31f4a834db81ac6a0c1d70133e3a8ca9c959df7adea9e"
     },
     {
       "path": "web/src/collections-types.ts",
@@ -83,7 +83,7 @@
     },
     {
       "path": "web/src/ftps-peer-identity.tsx",
-      "sha256": "00cc4be44d02ac258cc5de2e48db0da1f63d89a39babc36aa5ada15b7b51acc8"
+      "sha256": "c17bfeb12e67b6fdc630cad2cdcc583eeccf5105cedca59e1dbc76016bd1579c"
     },
     {
       "path": "web/src/hash-worker.ts",
@@ -234,8 +234,8 @@
     },
     {
       "name": "app.js",
-      "sha256": "33de0b52f25cf5fe5cbc07a0090c0d5c7623efa1c7e0ec4c6930a0c2838541bf",
-      "size": 683998
+      "sha256": "3b0fa81a0f59526aa204c7d3eaa2944f30cc11572d818908860233fd51ea7d2c",
+      "size": 684529
     },
     {
       "name": "app.js.LEGAL.txt",

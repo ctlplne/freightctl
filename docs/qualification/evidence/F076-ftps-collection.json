@@ -3,7 +3,7 @@
   "id": "F076",
   "observed_at": "2026-11-04",
   "starting_commit": "4d771b2e6a961a70b764681fd578ff175d064db7",
-  "state": "Bounded reader/adapter pass both native architectures; typed source40 SQL/custody/intake/scheduled/browser metadata implementation prepared with local contracts and compile/vet, complete collection runtime pending",
+  "state": "First source40 native x86:862pass/4failed records/0skip;10 exact collection/custody/intake/revocation leaves pass. SQL/scheduled tests stop at fixture errors; exact repairs and transport-aware handoff review compile/contracts pass, original replay pending.",
   "scope": "Read/copy input stage of ordinary immutable workflows, using exact registered FTPS revisions and the existing bounded producer-manifest, custody, intake, lease and event machinery. Transport metadata reading alone does not qualify collection.",
   "qualification_claim": false,
   "frozen_cases": [
@@ -44,7 +44,7 @@
       "outcome": "Existing SFTP collection/arrival/schedules, FTPS/SFTP sending, ciphertext, intake, RLS, receipts and native regression gates remain enforced. No local PostgreSQL, model or scanner execution is needed."
     }
   ],
-  "next_action": "Submit bounded scanner/batch-SQL successor behind now-runningfb317e5, preserving original collection/application replay. Require actual native40 collection/regression results and disk/feed/image scan; then implement actual public CLI/API/Chrome, crash/recovery, mixed/encrypted forwarding/handoff and independent-peer source journeys. Keep retained35, inference boundary, stock x86 isolation and all whole-goal gates unchanged.",
+  "next_action": "Preserve running originalfb317e5 ARM and completed x86 failure. The unstarted de93ddd native successor contains the same known D160/D161 fixture errors; submit exact fixture/review repairs with unchanged disk fix after originals are retained. Require full native15-leaf SQL/scheduled/kept-local/batch replay and original image gate. Then actual public CLI/API/Chrome, crash/recovery, mixed/encrypted forwarding/handoff and independent-peer source journeys; retain35 and all whole-goal gates stay open.",
   "first_failure": {
     "test": "TestFTPSCollectionSourceMissingContract",
     "result": "existing typed source refuses ftps.collect; no service contact",
@@ -62,7 +62,7 @@
     "cases": "both modes x exact,empty,maximum,oversize,short,grown,lost completion,unclean TLS,foreign data session,revocation; verify no mutations/partial bytes, exact safe commands and successful control resumption",
     "local_checks_manifest_reference": ".private/freightctl-f076-reader-local-FvcVmmkq/manifest.json",
     "local_checks_manifest_sha256": "685adf5b406c00dccd80fa6adec9ede627297ea4d27b0cb744bd1f6924cd20f3",
-    "local_scope": "one pure pre-network invalid-input race test plus compile/vet; no TLS receiver or local service started. A final explicit successful-resumption assertion was added and compilation passed afterward; native execution remains pending."
+    "local_scope": "Original pure primitive checkpoint only:pre-network bounds/race and compile/vet, no TLS/service execution locally. Both subsequent actual native20TLS sets pass in native_reader_observation."
   },
   "readonly_adapter_prepared": {
     "state": "implemented;9pure stand-in test methods/17pass records plus vet/compile pass; no native source/custody or TLS claim",
@@ -72,7 +72,7 @@
     "first_manifest_sha256": "58838ff3726fc96b1253a2425b981af67a0252dda243e6ec152fe38b69d0a089",
     "repair_observation_reference": ".private/freightctl-f076-adapter-first-1NerT5s8/repair-observation.json",
     "repair_observation_sha256": "0cd036faed2ea0269dd190ae8218d2a09fdbafb11cc909e1936b37fddba4fd97",
-    "integration": "not connected to workflow admission/SQL/worker/public controls yet; original typed source remains unsupported"
+    "integration": "At the original0016 adapter checkpoint, not yet connected; source40 integration and exact actual/pending observations are recorded separately above."
   },
   "native_reader_observation": {
     "source_commit": "5ef3f3b8736d541ce3c6bd92bca2521d6d522590",
@@ -152,5 +152,33 @@
     "strengthened_cases": "Existing SQL predicate case now also attempts correctly matching-event DML under the runtime role, with exact canonical positive control and savepoint rollback for every forgery. Existing schema2 cases admit and inspect their immutable kept-local run/plan without contacting source.",
     "native_leaf_cases_prepared": 15,
     "submitted_candidate_scope": "Originalfb317e5 has13 leaves and predicate-only SQL; this follow-up adds2 leaves and stronger DML/kept-local assertions. No native result follows from compilation."
+  },
+  "first_source40_native": {
+    "candidate": "fb317e50008561f233d804e1dabe87f2a8446ee4",
+    "run_id": 41897763165,
+    "job_id": 126811749026,
+    "architecture": "x86_64",
+    "application_pass": 862,
+    "application_fail": 4,
+    "application_skip": 0,
+    "workflow_seconds": 342.162,
+    "manifest_reference": ".private/freightctl-f076-native-first-QxtpyZTU/manifest.json",
+    "manifest_sha256": "1cedfeb170e78e1f2f16b8e63ad4d158e0e5cbcae87599a3872a9ebbf7500dde",
+    "passing_scope": "10 FTPS leaves:4 mode/schema exact copy/replay and source lineage;2 bad-digest sibling isolation;2 exact source revocation before contact;2 ordinary CSV check/release. All prior application regressions pass.",
+    "failures": "D160 SQL fixture passes empty scope.Actor before the actual predicate; D161 scheduled source-only preview reuses unrelated one-recipient helper. SQL predicate, scheduled probe/admission/copy, schema2 kept-local admission and batch/matching-event follow-up remain unqualified.",
+    "image_gate": "Known D159 storage-capacity failure after application; no report",
+    "arm_state": "still running at observation; preserve original"
+  },
+  "fixture_and_review_repairs_prepared": {
+    "local_checks_manifest_reference": ".private/freightctl-f076-review-schedule-local-2wpvtef7/manifest.json",
+    "local_checks_manifest_sha256": "5ad2ba8b57df99c70ff550a1d28f82f66089072f2865393e7a6f0bcf884180c9",
+    "D160": "Use authenticated transaction.Actor in runtime SQL predicate; no identity inferred from unresolved caller scope. Matching-event DML follow-up stays enforced.",
+    "D161": "Add separate zero-recipient FTPS source schedule helper: exact source/connection/hash/calendar/no-contact preview, exact draft and activation. Original saveSchedule len(effects)==1 assertion remains unchanged; original due/cutoff/lease/CPU/memory/package/job budgets remain unchanged.",
+    "D162": "FTPS handoff wire parser preserves public account/proof and empty SSH keys, refuses mixed/unknown/private fields and mismatched recipient references. Routing/handoff render actual TLS identity and receiver terms, including no receiver fsync/business receipt and no automatic resend after uncertain reply.",
+    "review_first_corrected_manifest_reference": ".private/freightctl-f076-handoff-first-correct-gji4pshw/manifest.json",
+    "review_first_corrected_manifest_sha256": "e7adbc872c1ed8c3d2a75f36ea8c2ca9413f8ec2c2d6cdf191c08e6a90a97383",
+    "review_first_result": "4 pure methods:2 actual FTPS parser/rendering failures,2 original SSH/refusal controls pass. No runtime/browser.",
+    "earlier_harness_note": "Original manifest0b41e681f3b277366cf1eeb99c1d218f9bca84bf1744037a28dfba7c0507489a remains immutable. Its raw-JSONB-order SSH control was a harness error; corrected reproduction uses ordinary production normalization. A later static JSX harness required the same automatic JSX transform as the app; no production React/runtime defect inferred.",
+    "checks": "130 frontend contracts/0fail/0skip; Go typed canonical/synthetic handoff wire race contracts, integration compile/vet, typecheck and embedded closure. Synthetic handoff vectors do not replace native/public workflow execution."
   }
 }

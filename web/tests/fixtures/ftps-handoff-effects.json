@@ -1,0 +1,261 @@
+{
+  "scope": "Synthetic Go/browser wire contracts only; no runtime handoff or operator qualification",
+  "cases": [
+    {
+      "name": "explicit-ftps",
+      "workflow": {
+        "id": "00000004-1111-4111-8111-111111111111",
+        "version": 2,
+        "definition": {
+          "schema_version": 2,
+          "name": "Settlement <source> & review\u2028next FTPS explicit",
+          "steps": [
+            {
+              "id": "send",
+              "kind": "ftps.deliver",
+              "connection": {
+                "id": "00000002-1111-4111-8111-111111111111",
+                "version": 2,
+                "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+              },
+              "filename": "settlement.csv"
+            }
+          ],
+          "source": {
+            "kind": "ftps.collect",
+            "connection": {
+              "id": "00000001-1111-4111-8111-111111111111",
+              "version": 1,
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "manifest": "settlement.ready.json",
+            "target_directory": "/incoming",
+            "completion_contract": "immutable-files-sha256-manifest-v1",
+            "max_files": 4,
+            "max_file_bytes": 1048576,
+            "max_total_bytes": 2097152
+          },
+          "program": {
+            "nodes": [
+              {
+                "kind": "deliver",
+                "step": "send"
+              }
+            ]
+          }
+        },
+        "definition_hash": "0845cc58d5ad83ffe9b01238d9a9fd6b1d7686003750567b933ace1271542945",
+        "state": "approved",
+        "revision": 2,
+        "approval_authority": 3
+      },
+      "base_effects": [
+        {
+          "step_id": "send",
+          "connection": {
+            "id": "00000002-1111-4111-8111-111111111111",
+            "version": 2,
+            "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "address": "127.0.0.1:2122",
+          "directory": "/receiver",
+          "final_name_pattern": "<delivery UUID>-settlement.csv",
+          "host_fingerprint": "",
+          "protocol": "ftps",
+          "user": "receiver",
+          "ftps": {
+            "mode": "implicit",
+            "server_name": "localhost",
+            "ca_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "ca_reference_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "password_reference_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "staging_directory": "/receiver-private",
+            "receiver_contract": {
+              "schema_version": 1,
+              "document_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+              "staging_visibility": "receiver-private",
+              "rename": "may-replace",
+              "duplicates": "receiver-deduplicates-delivery-id",
+              "receipt": "exact-readback"
+            }
+          }
+        }
+      ],
+      "handoff_effects": [
+        {
+          "step_id": "send",
+          "connection": {
+            "id": "00000002-1111-4111-8111-111111111111",
+            "version": 2,
+            "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "address": "127.0.0.1:2122",
+          "directory": "/receiver",
+          "final_name_pattern": "<delivery UUID>-settlement.csv",
+          "host_fingerprint": "",
+          "protocol": "ftps",
+          "user": "receiver",
+          "ftps": {
+            "mode": "implicit",
+            "server_name": "localhost",
+            "ca_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "ca_reference_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "password_reference_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "staging_directory": "/receiver-private",
+            "receiver_contract": {
+              "schema_version": 1,
+              "document_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+              "staging_visibility": "receiver-private",
+              "rename": "may-replace",
+              "duplicates": "receiver-deduplicates-delivery-id",
+              "receipt": "exact-readback"
+            }
+          },
+          "key_fingerprint": ""
+        }
+      ]
+    },
+    {
+      "name": "implicit-encrypted-ftps",
+      "workflow": {
+        "id": "00000004-1111-4111-8111-111111111111",
+        "version": 2,
+        "definition": {
+          "schema_version": 2,
+          "name": "Settlement <source> & review\u2028next FTPS implicit",
+          "steps": [
+            {
+              "id": "send",
+              "kind": "ftps.deliver",
+              "connection": {
+                "id": "00000002-1111-4111-8111-111111111111",
+                "version": 2,
+                "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+              },
+              "filename": "settlement.csv",
+              "encryption": {
+                "key": {
+                  "id": "00000003-1111-4111-8111-111111111111",
+                  "version": 1,
+                  "hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+                },
+                "profile": "seipd-v1-aes256"
+              }
+            }
+          ],
+          "source": {
+            "kind": "ftps.collect",
+            "connection": {
+              "id": "00000001-1111-4111-8111-111111111111",
+              "version": 1,
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "manifest": "settlement.ready.json",
+            "target_directory": "/incoming",
+            "completion_contract": "immutable-files-sha256-manifest-v1",
+            "max_files": 4,
+            "max_file_bytes": 1048576,
+            "max_total_bytes": 2097152
+          },
+          "program": {
+            "nodes": [
+              {
+                "kind": "deliver",
+                "step": "send"
+              }
+            ]
+          }
+        },
+        "definition_hash": "25a143656d858c7aa9c0e5f401e6dd9dc03233c55d51b748dd932b93aa23e103",
+        "state": "approved",
+        "revision": 2,
+        "approval_authority": 3
+      },
+      "base_effects": [
+        {
+          "step_id": "send",
+          "connection": {
+            "id": "00000002-1111-4111-8111-111111111111",
+            "version": 2,
+            "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "address": "127.0.0.1:2122",
+          "directory": "/receiver",
+          "final_name_pattern": "<delivery UUID>-settlement.csv",
+          "host_fingerprint": "",
+          "encryption": {
+            "key": {
+              "id": "00000003-1111-4111-8111-111111111111",
+              "version": 1,
+              "hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            },
+            "profile": "seipd-v1-aes256"
+          },
+          "recipient_fingerprint": "dddddddddddddddddddddddddddddddddddddddd",
+          "encryption_fingerprint": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+          "protocol": "ftps",
+          "user": "receiver",
+          "ftps": {
+            "mode": "explicit",
+            "server_name": "localhost",
+            "ca_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "ca_reference_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "password_reference_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "staging_directory": "/receiver-private",
+            "receiver_contract": {
+              "schema_version": 1,
+              "document_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+              "staging_visibility": "receiver-private",
+              "rename": "may-replace",
+              "duplicates": "receiver-deduplicates-delivery-id",
+              "receipt": "exact-readback"
+            }
+          }
+        }
+      ],
+      "handoff_effects": [
+        {
+          "step_id": "send",
+          "connection": {
+            "id": "00000002-1111-4111-8111-111111111111",
+            "version": 2,
+            "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "address": "127.0.0.1:2122",
+          "directory": "/receiver",
+          "final_name_pattern": "<delivery UUID>-settlement.csv",
+          "host_fingerprint": "",
+          "encryption": {
+            "key": {
+              "id": "00000003-1111-4111-8111-111111111111",
+              "version": 1,
+              "hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            },
+            "profile": "seipd-v1-aes256"
+          },
+          "recipient_fingerprint": "dddddddddddddddddddddddddddddddddddddddd",
+          "encryption_fingerprint": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+          "protocol": "ftps",
+          "user": "receiver",
+          "ftps": {
+            "mode": "explicit",
+            "server_name": "localhost",
+            "ca_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "ca_reference_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "password_reference_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "staging_directory": "/receiver-private",
+            "receiver_contract": {
+              "schema_version": 1,
+              "document_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+              "staging_visibility": "receiver-private",
+              "rename": "may-replace",
+              "duplicates": "receiver-deduplicates-delivery-id",
+              "receipt": "exact-readback"
+            }
+          },
+          "key_fingerprint": ""
+        }
+      ]
+    }
+  ]
+}

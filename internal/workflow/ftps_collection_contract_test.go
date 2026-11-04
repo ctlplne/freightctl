@@ -100,3 +100,42 @@ func TestFTPSCollectionScheduleSourceRequiresExactRemoteShape(t *testing.T) {
 		t.Fatal("plaintext source inferred from FTPS")
 	}
 }
+
+func TestFTPSHandoffSyntheticBrowserWireMatchesGoEncoding(t *testing.T) {
+	raw, err := os.ReadFile("../../web/tests/fixtures/ftps-handoff-effects.json")
+	var fixture struct {
+		Cases []struct {
+			Name     string              `json:"name"`
+			Workflow store.Configuration `json:"workflow"`
+			Effects  []Effect            `json:"base_effects"`
+			Expected json.RawMessage     `json:"handoff_effects"`
+		} `json:"cases"`
+	}
+	if err != nil || json.Unmarshal(raw, &fixture) != nil || len(fixture.Cases) != 2 {
+		t.Fatal("synthetic FTPS handoff wire vectors required", err)
+	}
+	for _, f := range fixture.Cases {
+		t.Run(f.Name, func(t *testing.T) {
+			var d Definition
+			if Decode(f.Workflow.Definition, &d) != nil {
+				t.Fatal("typed workflow required")
+			}
+			d, err := Normalize(d)
+			_, hash, hashErr := digest(d)
+			if err != nil || hashErr != nil || hash != f.Workflow.Hash || d.Schema != 2 || len(f.Effects) != len(d.Steps) {
+				t.Fatal("synthetic workflow canonical identity differs", err, hashErr)
+			}
+			wire := make([]CollectionHandoffEffect, 0, len(f.Effects))
+			for i, effect := range f.Effects {
+				if effect.Protocol != "ftps" || effect.FTPS == nil || effect.HostFingerprint != "" || effect.User == "" || effect.Connection != d.Steps[i].Connection {
+					t.Fatal("typed public FTPS recipient changed")
+				}
+				wire = append(wire, CollectionHandoffEffect{Effect: effect, User: effect.User, KeyFingerprint: ""})
+			}
+			encoded, err := json.Marshal(wire)
+			if err != nil || !jsonEqual(encoded, f.Expected) {
+				t.Fatal("Go embedded effect/user wire encoding differs from browser vector", err)
+			}
+		})
+	}
+}

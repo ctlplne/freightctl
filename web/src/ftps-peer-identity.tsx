@@ -14,7 +14,9 @@ export function FTPSReceiverTerms({ proof }: { proof: FTPSConnectionProof }) {
     <>
       Receiver-private staging <code>{proof.staging_directory}</code>. The
       receiver may replace the final name and must deduplicate the delivery ID.
-      The receipt proves exact readback. Receiver contract{" "}
+      The sender checks exact readback. The receipt does not acknowledge
+      receiver fsync or business acceptance. A missing reply blocks automatic
+      resend. Receiver contract{" "}
       <code>{proof.receiver_contract.document_sha256}</code>.
     </>
   );
