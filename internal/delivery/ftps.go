@@ -16,8 +16,8 @@ import (
 )
 
 // FTPSDefinition is a distinct schema2 delivery profile. It deliberately cannot
-// inherit SFTP's exclusive hardlink or fsync guarantees. This first direct-CLI
-// integration does not admit workflow bindings or recipient encryption yet.
+// inherit SFTP's exclusive hardlink or fsync guarantees. Registered workflows
+// retain their exact execution binding; recipient encryption remains refused.
 type FTPSDefinition struct {
 	Destination      secure.FTPSDestination     `json:"destination"`
 	StagingDirectory string                     `json:"staging_directory"`

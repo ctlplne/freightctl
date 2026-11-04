@@ -288,7 +288,7 @@
     }
   },
   "mixed_protocol_execution": {
-    "state": "actual native ARM/x86 jobs running; mixed cases not yet observed",
+    "state": "both actual native ARM/x86 jobs executing full real-PostgreSQL suites; metadata/fuzz pass; mixed outcomes not yet observed",
     "test": "TestMixedRegisteredFTPSAndStockSFTPKeepOrderConsentAndReceipts",
     "cases": 8,
     "matrix": {
@@ -373,6 +373,38 @@
       "unit_race_pass_records": 18,
       "scope": "format-only positive and17 run/plan mutations; no PostgreSQL, sockets, scanner or inference",
       "integration_compilation": "passed"
+    },
+    "local_commit": "26a08fdbc4ec391e30cc81bac8938f6be8605388"
+  },
+  "revocation_execution_cases": {
+    "state": "source added and integration compiled/vetted locally; native runtime pending",
+    "test": "TestRegisteredFTPSWorkflowRevocationBlocksSavedWorkersAndAmbiguousReadback",
+    "cases": 8,
+    "matrix": {
+      "ftps_modes": [
+        "explicit",
+        "implicit"
+      ],
+      "revoked_resources": [
+        "exact connection version",
+        "approved workflow version"
+      ],
+      "prior_state": [
+        "untouched bounded-program intent",
+        "actual lost rename reply with exact final bytes"
+      ]
+    },
+    "assertions": [
+      "prepare the original worker key before independent consent and retain it after consent",
+      "explicit workflow/connection revocation blocks that saved worker key before another contact",
+      "ambiguous recovery is refused under revoked authority before even reading the receiver",
+      "every field of the original delivery stays equal, including attempts/fence/lease/observation",
+      "all63receiver non-event tables and every immutable receiver event stay identical after refused work"
+    ],
+    "scope": "actual application receiver stand-in, real PostgreSQL/storage and encrypted completion loss on native CI; no independent vendor or whole-journey claim",
+    "local_checks": {
+      "integration_compilation": "passed; no runtime tests",
+      "integration_vet": "passed"
     }
   }
 }

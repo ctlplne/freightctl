@@ -371,3 +371,65 @@ func TestRegisteredFTPSWorkflowSQLRejectsRewrittenProtocolAndConnection(t *testi
 		}
 	}
 }
+
+func TestRegisteredFTPSWorkflowRevocationBlocksSavedWorkersAndAmbiguousReadback(t *testing.T) {
+	for _, mode := range []string{"explicit", "implicit"} {
+		for _, revoked := range []string{"connection", "workflow"} {
+			for _, phase := range []string{"untouched-program", "ambiguous-rename"} {
+				t.Run(mode+"/"+revoked+"/"+phase, func(t *testing.T) {
+					f, sender, reviewer, account := outboundFixture(t)
+					r, spec, listener := governedFTPSReceiver(t, mode == "implicit")
+					c := registeredFTPSConnection(t, f, spec)
+					run, d := registeredFTPSRun(t, f, sender, c, phase == "untouched-program")
+					if _, err := f.s.Work(f.ctx, f.scope, run.ID, "revocation-worker"); !errors.Is(err, store.ErrDispatchApproval) {
+						t.Fatal("worker key bypassed initial independent consent", err)
+					}
+					requireUntouchedFTPSWorkflow(t, f, sender, d, listener, 0)
+					approveFTPS(t, f, sender, d, reviewer, account)
+					if phase == "ambiguous-rename" {
+						final := "/inbox/" + d.ID + "-payroll.csv"
+						listener.setAfter(func() bool { _, err := r.s.Custody.StatPath(r.ctx, r.scope, final); return err == nil })
+						out, err := f.s.Work(f.ctx, f.scope, run.ID, "revocation-worker")
+						if err != nil || !out.Replayed || out.Status.Steps[0].State != "ambiguous" || !listener.fired.Load() {
+							t.Fatal("actual lost rename reply was not retained", err)
+						}
+						readReceiverBytes(t, r, final)
+					}
+					before, err := sender.Status(f.ctx, f.scope, d.ID)
+					if err != nil {
+						t.Fatal(err)
+					}
+					contacts := listener.contacts.Load()
+					receiver := snapshotReceiverReads(t, r)
+					if revoked == "connection" {
+						_, err = f.s.RevokeConnection(f.ctx, f.scope, c.ID, c.Version, "revoke-bound-connection", Decision{Hash: c.Hash, Revision: c.Revision})
+					} else {
+						var workflow *store.Configuration
+						workflow, err = f.s.Configuration(f.ctx, f.scope, run.WorkflowID, run.WorkflowVersion)
+						if err == nil {
+							_, err = f.s.Decide(f.ctx, f.scope, workflow.ID, workflow.Version, "revoke-bound-workflow", "revoke", Decision{Hash: workflow.Hash, Revision: workflow.Revision})
+						}
+					}
+					if err != nil {
+						t.Fatal(err)
+					}
+					if _, err = f.s.Work(f.ctx, f.scope, run.ID, "revocation-worker"); !errors.Is(err, store.ErrState) {
+						t.Fatal("saved worker receipt bypassed current authority", err)
+					}
+					if phase == "ambiguous-rename" {
+						if _, err = sender.Reconcile(f.ctx, f.scope, d.ID); !errors.Is(err, store.ErrState) {
+							t.Fatal("read-only recovery bypassed revoked workflow or connection", err)
+						}
+					}
+					after, err := sender.Status(f.ctx, f.scope, d.ID)
+					if err != nil || !reflect.DeepEqual(before, after) || listener.contacts.Load() != contacts {
+						t.Fatal("revoked work contacted receiver or changed the original intent", err)
+					}
+					if !reflect.DeepEqual(receiver, snapshotReceiverReads(t, r)) {
+						t.Fatal("revoked observation changed receiver data or audit history")
+					}
+				})
+			}
+		}
+	}
+}
