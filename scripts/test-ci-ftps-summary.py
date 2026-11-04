@@ -481,7 +481,61 @@ assert.equal(failure,privateError);
         result = subprocess.run(["node","--input-type=module","-e",script,str(counter),Path(__file__).with_name("outbound-dispatch-browser.mjs").as_uri()],capture_output=True,timeout=5)
         self.assertEqual(result.returncode,0)
         self.assertNotIn(b"private selector or credential",result.stdout)
-        self.assertEqual(json.loads(result.stdout),{"kind":"ftps-dispatch-failure","phase":"withdraw","stage":"navigation","wire":"idle","response_count":0,"response_overflow":False,"dialog_open":False,"decision_error_visible":False})
+        messages=[json.loads(line) for line in result.stdout.splitlines()]
+        self.assertEqual(messages[-1],{"kind":"ftps-dispatch-failure","phase":"withdraw","stage":"navigation","wire":"idle","response_count":0,"response_overflow":False,"dialog_open":False,"decision_error_visible":False})
+        self.assertEqual([m["stage"] for m in messages[:-1]],["contacts-before","navigation"])
+        for m in messages[:-1]:self.assertIsNotNone(summary.dispatch.safe_browser_progress(m))
+
+    def test_actual_stalled_dispatch_retains_progress_without_reaching_catch(self):
+        counter=self.directory/"stalled-counter.json"
+        counter.write_text(json.dumps({"schema_version":1,"kind":"freightctl-ftps-contact-spy","accepted_connections":0,"stopped":False,"budget_exhausted":False}))
+        script='''
+const {qualifyOutboundDispatch}=await import(process.argv[2]);
+const page={getByRole:kind=>kind==='region'?{}:{click:async()=>new Promise(()=>{})}};
+setTimeout(()=>process.exit(0),100);
+await qualifyOutboundDispatch(page,{url:'https://127.0.0.1:443',tenant:'synthetic',partner:'synthetic',dispatch_protocol:'ftps',dispatch_phase:'withdraw',receiver_log:process.argv[1]},()=>{},()=>{},()=>{});
+'''
+        result=subprocess.run(["node","--input-type=module","-e",script,str(counter),Path(__file__).with_name("outbound-dispatch-browser.mjs").as_uri()],capture_output=True,timeout=5)
+        self.assertEqual(result.returncode,0)
+        messages=[json.loads(line) for line in result.stdout.splitlines()]
+        self.assertEqual([m["stage"] for m in messages],["contacts-before","navigation"])
+        for m in messages:self.assertIsNotNone(summary.dispatch.safe_browser_progress(m))
+        self.assertTrue(all(m["kind"]=="ftps-dispatch-progress" for m in messages))
+
+    def test_failed_dispatch_progress_and_outcome_are_bounded_and_hash_bound(self):
+        name="cli-implicit-workflow-dispatch-browser-withdraw"
+        progress={"kind":"ftps-dispatch-progress","phase":"withdraw","stage":"dialog-close","wire":"fulfill-replay","response_count":2,"response_overflow":False,"dialog_open":None,"decision_error_visible":None}
+        (self.directory/(name+".stderr")).write_bytes(b"private renderer exception")
+        step={"name":name,"exit_code":"timeout","seconds":150.1234,"stdout_sha256":"","stderr_sha256":hashlib.sha256(b"private renderer exception").hexdigest()}
+        self.manifest["steps"].append(step)
+        def report(value):
+            self.replace_output(name,json.dumps(value).encode());self.write()
+            return summary.failure_diagnostics(self.root,self.result,"a"*40)
+        result=report(progress)
+        self.assertEqual(result["dispatch_browser_progress"],[{"command":name,**progress}])
+        self.assertEqual(result["dispatch_command_outcomes"],[{"command":name,"outcome":"timeout","elapsed_seconds":150.123}])
+        for changed in (dict(progress,stage="/private/credential"),dict(progress,phase="request"),dict(progress,response_count=999),dict(progress,secret="PRIVATE KEY"),dict(progress,wire="private error")):
+            self.assertNotIn("dispatch_browser_progress",report(changed))
+        for duration in (True,-1,3601,"private value"):
+            step["seconds"]=duration
+            self.assertIsNone(report(progress)["dispatch_command_outcomes"][0]["elapsed_seconds"])
+        self.replace_output(name,json.dumps(progress).encode());self.write()
+        (self.directory/(name+".stdout")).write_bytes(b"unbound progress")
+        self.assertEqual(summary.failure_diagnostics(self.root,self.result,"a"*40),{})
+
+    def test_dispatch_lifecycle_diagnostic_requires_exact_fixed_hash_bound_observation(self):
+        name="cli-implicit-workflow-dispatch-browser-withdraw"
+        (self.directory/(name+".stderr")).write_bytes(b"private startup or shutdown exception")
+        self.manifest["steps"].append({"name":name,"exit_code":"timeout","seconds":150,"stdout_sha256":"","stderr_sha256":hashlib.sha256(b"private startup or shutdown exception").hexdigest()})
+        lifecycle={"kind":"ftps-dispatch-lifecycle","phase":"withdraw","stage":"browser-close"}
+        def report(value):
+            self.replace_output(name,json.dumps(value).encode());self.write()
+            return summary.failure_diagnostics(self.root,self.result,"a"*40)
+        self.assertEqual(report(lifecycle)["dispatch_browser_lifecycle"],[{"command":name,**lifecycle}])
+        for changed in (dict(lifecycle,stage="/private/key"),dict(lifecycle,phase="approve"),dict(lifecycle,exception="PRIVATE KEY"),dict(lifecycle,stage={})):self.assertNotIn("dispatch_browser_lifecycle",report(changed))
+        self.replace_output(name,json.dumps(lifecycle).encode());self.write()
+        (self.directory/(name+".stderr")).write_bytes(b"changed original exception")
+        self.assertEqual(summary.failure_diagnostics(self.root,self.result,"a"*40),{})
 
     def test_lftp_failure_progress_is_a_bounded_fixed_action_from_original_output(self):
         spec = importlib.util.spec_from_file_location("lftp_probe",Path(__file__).with_name("lftp-probe.py"))

@@ -94,7 +94,7 @@ func TestEncryptedFTPSAEADIndependentRecipientAndRecovery(t *testing.T) {
 					}
 					contacts := listener.contacts.Load()
 					if lost {
-						if out.Status.ObservedState != "ambiguous" || !listener.fired.Load() {
+						if out.Status.ObservedState != "attention" || out.Status.ObservedReason != "delivery_ambiguous" || len(out.Status.Steps) != 1 || out.Status.Steps[0].State != "ambiguous" || !listener.fired.Load() {
 							t.Fatal("lost AEAD rename not retained")
 						}
 						if _, err = f.s.Work(f.ctx, f.scope, run.ID, "aead-worker"); !errors.Is(err, store.ErrState) || listener.contacts.Load() != contacts {

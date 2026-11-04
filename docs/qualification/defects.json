@@ -2417,7 +2417,7 @@
       "journey": "Actual registered FTPS workflow browser withdrawal and saved-key recovery",
       "title": "Public workflow browser withdrawal fails without a precise action observation",
       "first_failure": "At2da246b job126657222320/run41853908639 fails cli-explicit-workflow-dispatch-browser-withdraw with generic dispatch-evidence. No native test or lftp failure is reported. Exact metadata/role/resource preservation and cleanup pass. Original6ebccf0 public workflow profile passes; that prior pass does not repair this red result.",
-      "resolution": "Preserve complete original log. Add fixed action-stage/wire-phase observations, bounded response count and dialog/error visibility to failed FTPS browser output. Strictly whitelist shape, types, phases and bounds before publication. Preserve original assertion/error propagation, decisions, response-loss handling, budgets and deadlines. The actual Node failure emitter and privacy/refusal contracts pass locally within56reporter tests, without launching Chrome. Original native replay remains required; cause unproven. Actualcac6767 job126679124138 passes the complete original profile with unchanged assertions/deadlines; no failure diagnostic appears. This later green establishes no cause or repair. Prepare three fixed fresh complete replays in the existing job, requiring all to pass and preserving/stopping at the first failure. Keep original30minute job and resource budgets. At895f1f4 all three fixed fresh original profiles pass: workflow126704879645 and direct126704879081 retain separate manifests, original assertions, deadlines, cleanup and zero contacts/attempts/fences. The failures did not recur; cause remains unproven.",
+      "resolution": "Preserve complete original log. Add fixed action-stage/wire-phase observations, bounded response count and dialog/error visibility to failed FTPS browser output. Strictly whitelist shape, types, phases and bounds before publication. Preserve original assertion/error propagation, decisions, response-loss handling, budgets and deadlines. The actual Node failure emitter and privacy/refusal contracts pass locally within56reporter tests, without launching Chrome. Original native replay remains required; cause unproven. Actualcac6767 job126679124138 passes the complete original profile with unchanged assertions/deadlines; no failure diagnostic appears. This later green establishes no cause or repair. Prepare three fixed fresh complete replays in the existing job, requiring all to pass and preserving/stopping at the first failure. Keep original30minute job and resource budgets. At895f1f4 all three fixed fresh original profiles pass: workflow126704879645 and direct126704879081 retain separate manifests, original assertions, deadlines, cleanup and zero contacts/attempts/fences. The failures did not recur; cause remains unproven. Atcc05701 plaintext job126726601103 the original withdrawal failure recurs in implicit mode, with passing preservation/cleanup and no precise browser observation. Preserve that red result. Add hash-bound fixed progress before awaited actions and fixed launch/login/screenshot/shutdown stages, plus bounded elapsed/outcome classification, so an interrupted process can be observed without reaching catch. This adds observation only; original assertions and budgets remain unchanged and cause stays unproven.",
       "regression_evidence": [
         "docs/qualification/evidence/F073-ftps-workflow-connections.json"
       ]
@@ -2448,6 +2448,48 @@
       "resolution": "Correct the test's order: explicitly require early second-review refusal, propose/approve the first review, execute the first intent, prove first consent cannot authorize second work, then propose/approve and execute the second intent. Preserve the existing product gate, direct later-worker refusal, exact saved keys, all attempts/fences, stock/FTPS byte checks and distinct persistence receipts. Local integration compilation and vet pass; native sending replay remains required. Atcac6767 all eight mode/schema/order cases pass on native x86 and ARM, including actual stock OpenSSH sending/readback and separate FTPS receiver readback, consent/order and distinct receipts. Complete suites pass707application records each without failures/skips.",
       "regression_evidence": [
         "docs/qualification/evidence/F073-ftps-workflow-connections.json"
+      ]
+    },
+    {
+      "id": "D154",
+      "severity": "native qualification setup failure",
+      "state": "workflow order repaired locally; original encrypted public journey replay pending",
+      "observed_on": "2026-11-04",
+      "candidate": "cc05701d210e5be74f2447689bc24b7f64a95b80",
+      "journey": "Encrypted public FTPS workflow consent",
+      "title": "GnuPG fixture preparation runs before the private workspace prerequisite",
+      "first_failure": "Actual native x86 job126726601543/run41873492251 fails in prepare-pgp-fixture.py with FileNotFoundError creating its private fixture directory. No encrypted workflow/browser execution follows. The new workflow placed fixture preparation before dev-db.py, which establishes the protected .private parent.",
+      "resolution": "Move the pinned GnuPG fixture step after the existing task-owned PostgreSQL/init prerequisite. Keep all permission, ownership, source, crypto and browser checks and budgets unchanged. Actionlint passes; actual original encrypted public replay remains required.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F074-ftps-recipient-encryption.json"
+      ]
+    },
+    {
+      "id": "D155",
+      "severity": "native encrypted recovery qualification expectation error",
+      "state": "precise workflow/step expectation repair prepared; original runtime replay pending",
+      "observed_on": "2026-11-04",
+      "candidate": "4577313c58a9e9c08e7a3e5d3ba0925b9fbc1685",
+      "journey": "Encrypted FTPS lost-rename reply and read-only artifact recovery",
+      "title": "The new test compares a workflow aggregate to a delivery-only state",
+      "first_failure": "Actual ARM job126720350556/run41869838920 retains759application pass/14fail/0skip. All eight normal GnuPG readback cases and all recipient-policy SQL cases pass. All eight lost-rename cases and two ambiguous revocation cases stop at their combined lost-completion assertion, before recovery.",
+      "resolution": "runs.go derives workflow attention/delivery_ambiguous from an ambiguous delivery. Require that exact aggregate/reason, exactly one step in ambiguous, and the actual receiver-triggered reply-loss hook. Preserve attempts/fence, no-resend, ciphertext equality, current authority, independent decrypted bytes and immutable read-only receiver audit checks. Apply the same correction to prepared AEAD tests before their first runtime. Compile/vet pass; no encrypted recovery runtime pass is claimed.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F074-ftps-recipient-encryption.json"
+      ]
+    },
+    {
+      "id": "D156",
+      "severity": "native qualification CLI request error",
+      "state": "corrected atcc05701; original runtime replay pending",
+      "observed_on": "2026-11-04",
+      "candidate": "4577313c58a9e9c08e7a3e5d3ba0925b9fbc1685",
+      "journey": "Encrypted FTPS recipient version rotation and saved-worker revocation",
+      "title": "The new rotation fixture uses id instead of the typed key_id field",
+      "first_failure": "Both untouched ARM rotation cases stop at pgp-key-register with diagnostic SHA256 c947f2b74ecbcdf92f43fc7f64c053b6cd7b9ac37abce1a17aae8f0d1edff927. This exactly matches the fixed CLI invalid intake policy or decision error; cmd/freightctl/pgp.go rejects the unknown id field before registration. Ambiguous cases fail earlier atD155.",
+      "resolution": "Correct only the fixture request to key_id. Keep the public parser strict and preserve version/hash, queued-intent equality, original-key and revoked-key no-contact assertions. The fix was found by source review and is committed/pushed atcc05701; native rotation/revocation replay remains pending.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F074-ftps-recipient-encryption.json"
       ]
     }
   ]

@@ -260,7 +260,7 @@ func TestEncryptedFTPSWorkflowGnuPGReadbackAndAmbiguousRecovery(t *testing.T) {
 						}
 						contacts := listener.contacts.Load()
 						if lost {
-							if out.Status.ObservedState != "ambiguous" || !listener.fired.Load() {
+							if out.Status.ObservedState != "attention" || out.Status.ObservedReason != "delivery_ambiguous" || len(out.Status.Steps) != 1 || out.Status.Steps[0].State != "ambiguous" || !listener.fired.Load() {
 								t.Fatal("lost completion not ambiguous")
 							}
 							if _, err = f.s.Work(f.ctx, f.scope, run.ID, "encrypted-worker"); !errors.Is(err, store.ErrState) || listener.contacts.Load() != contacts {
@@ -326,7 +326,7 @@ func TestEncryptedFTPSRecipientRotationAndRevocationFenceSavedWork(t *testing.T)
 					final := "/inbox/" + d.ID + "-payroll.pgp"
 					listener.setAfter(func() bool { _, err := r.s.Custody.StatPath(r.ctx, r.scope, final); return err == nil })
 					out, err := f.s.Work(f.ctx, f.scope, run.ID, "encrypted-revoke-worker")
-					if err != nil || out.Status.ObservedState != "ambiguous" || !listener.fired.Load() {
+					if err != nil || out.Status.ObservedState != "attention" || out.Status.ObservedReason != "delivery_ambiguous" || len(out.Status.Steps) != 1 || out.Status.Steps[0].State != "ambiguous" || !listener.fired.Load() {
 						t.Fatal("real encrypted rename loss", err)
 					}
 					artifact = ftpsCiphertext(t, f, d.ID)

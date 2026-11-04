@@ -3,7 +3,7 @@
   "id": "F074",
   "observed_at": "2026-11-04",
   "starting_commit": "ed23703000287e2170f1e9a54224dcb26127f0f5",
-  "state": "implemented and locally verified contracts; native runtime qualification pending",
+  "state": "original ARM normal encrypted delivery/independent GnuPG and SQL cases pass; recovery/rotation test errors and public setup failure remain red with repairs prepared",
   "scope": "Recipient-encrypted registered FTPS workflows through ordinary engine and independent dispatch consent. FTPS server is an application stand-in; independent GnuPG establishes envelope compatibility only.",
   "first_failure": {
     "test": "TestRegisteredFTPSWorkflowBindsExactRecipientEncryption",
@@ -48,7 +48,7 @@
     "Local checks are lightweight Mac ARM contracts and compilation only. Native real PostgreSQL/receivers/GnuPG and browser tests run on GitHub. Local inference stays off; scanner stays stopped."
   ],
   "qualification_claim": false,
-  "next_action": "Push verified source for both complete native Linux suites and exact schema39 metadata restores. Diagnose the first actual runtime failure and replay original journeys. Complete independent AEAD peer and public browser/CLI encrypted workflow qualification; retain F073 fixed repetition outcomes and all whole-goal gates.",
+  "next_action": "Finish original4577313 native observations and preserve x86 outcome. Wait forcc05701 native41873492289 to start before pushing saved independent AEAD source plus D154/D155/diagnostic repairs. Require original encrypted recovery/rotation/SQL, independent AEAD and both public profiles to replay; keep D151 and all whole-goal gates open.",
   "implementation": {
     "typed_workflow": "FTPS ordered/program steps retain strict key ID/version/hash and explicit OpenPGP profile; direct FTPS encryption remains unavailable without an exact workflow binding",
     "approval": "common recipient lookup binds FTPS and SFTP reviews to the exact current public key; browser strictly validates policy shape and renders separate recipient/transport disclosure",
@@ -137,6 +137,53 @@
     },
     "security": "runtime/failure diagnostics whitelist fixed stages;18local race records cover privacy/refusal. npm integrity and dependency audit required in native image build. Base OS image scan, larger files, v6 keys and broader peers remain required.",
     "local_resources": "no peer install/runtime or image build/pull/container run locally; only dependency lock resolution and read-only remote manifest inspection",
-    "native_state": "not submitted; hold push until pendingcc05701 native run starts"
+    "native_state": "not submitted; hold push until pendingcc05701 native run starts",
+    "local_commit": "99b16efc547caa02adf39106b561488d66c6dae6"
+  },
+  "native_first_result": {
+    "candidate": "4577313c58a9e9c08e7a3e5d3ba0925b9fbc1685",
+    "run_id": 41869838920,
+    "arm_job_id": 126720350556,
+    "application_pass_records": 759,
+    "application_fail_records": 14,
+    "application_skip_records": 0,
+    "normal_gnupg_readback_cases": 8,
+    "recipient_sql_mutation_cases": 12,
+    "red_cases": "D155 wrong workflow aggregate expectation blocks eight recovery and two ambiguous-revocation cases; D156 wrong typed CLI field blocks two untouched rotation cases. Two failed parent records are included in14.",
+    "metadata_job_ids": [
+      126720350847,
+      126720350852
+    ],
+    "metadata_result": "both pass schema39/64tables/63forced-RLS/44rows with exact cleanup and original stopped state restored",
+    "arm_metadata_manifest_sha256": "4526f476f61813d2caff66aa091775e842ca7975a0fd4090e37f073945dfc284",
+    "x86_metadata_manifest_sha256": "9e13022959996296ee057a138a99a52bfbba500dbac7b75e80fe83816c8ee621",
+    "x86_application_job_id": 126720350261,
+    "x86_application_state": "still running at observation; do not infer a result",
+    "manifest_reference": ".private/freightctl-f074-native-first-O71INeVH/manifest.json",
+    "manifest_sha256": "6858339ca50848e75ee9937a2495409a712eec267716e226268b5a27d9d6588d"
+  },
+  "public_first_result": {
+    "candidate": "cc05701d210e5be74f2447689bc24b7f64a95b80",
+    "run_id": 41873492251,
+    "plaintext_job_id": 126726601103,
+    "plaintext_result": "D151 recurs at implicit browser withdrawal; exact metadata/roles/resource cleanup pass; precise cause unproven",
+    "encrypted_job_id": 126726601543,
+    "encrypted_result": "D154 prerequisite failure before any encrypted public workflow execution",
+    "manifest_reference": ".private/freightctl-f074-public-first-D1I0p0S3/manifest.json",
+    "manifest_sha256": "59ed7a6a7016d92ed451318eb1e8a3f785cd890e5230b3b8174b11d27a132e85"
+  },
+  "prepared_repairs": {
+    "D154": "GnuPG fixture step follows the existing protected private-workspace/PostgreSQL prerequisite",
+    "D155": "require workflow attention/delivery_ambiguous, exact ambiguous step and actual receiver hook; preserve all original artifact/no-resend/recovery assertions",
+    "D156": "typed key_id fixture correction already included incc05701",
+    "D151_observation": "fixed pre-await progress and browser lifecycle observations survive missing catch output; exact output hashes, shape/types/stage bounds and elapsed/outcome whitelist guard publication; no success criterion, protocol check, retry, deadline or memory limit changes",
+    "local_checks": {
+      "reporter_contracts": 61,
+      "actual_failure_and_stalled_node_emitters": "pass with stand-ins; no Chrome",
+      "integration_compile_and_vet": "pass; no runtime tests",
+      "actionlint": "passed",
+      "node_syntax": "passed"
+    },
+    "native_state": "not submitted; preserve pendingcc05701 native41873492289 before next push"
   }
 }

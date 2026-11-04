@@ -19,6 +19,19 @@ process.umask(0o077);
 const require = createRequire(import.meta.url),
   { chromium } = require("../web/node_modules/playwright");
 const c = JSON.parse(await readFile(process.argv[2], "utf8"));
+// Fixed lifecycle observations survive a hung launch, screenshot or shutdown.
+// They carry no credentials, selectors, URLs, resource IDs or exception text.
+const dispatchLifecycle = (stage) => {
+  if (c.dispatch_protocol === "ftps")
+    console.log(
+      JSON.stringify({
+        kind: "ftps-dispatch-lifecycle",
+        phase: c.dispatch_phase,
+        stage,
+      }),
+    );
+};
+dispatchLifecycle("certificate");
 const browserChannel = process.env.FREIGHTCTL_BROWSER_CHANNEL;
 if (browserChannel && browserChannel !== "chrome")
   throw new Error("Unsupported freightctl browser channel");
@@ -30,6 +43,7 @@ const spki = createHash("sha256")
     }),
   )
   .digest("base64");
+dispatchLifecycle("browser-launch");
 const browser = await chromium.launch({
   headless: true,
   chromiumSandbox: true,
@@ -43,6 +57,7 @@ const browser = await chromium.launch({
       : []),
   ],
 });
+dispatchLifecycle("context-create");
 const context = await browser.newContext({
     viewport: { width: 1320, height: 950 },
   }),
@@ -213,17 +228,22 @@ async function actualReview(route, label, target = endpoint) {
   };
 }
 try {
+  dispatchLifecycle("login-navigation");
   await page.goto(c.url);
   await page
     .getByRole("heading", { name: "Connect to your workspace" })
     .waitFor();
+  dispatchLifecycle("login-identity");
   await page.getByLabel("Tenant ID", { exact: true }).fill(c.tenant);
   await page.getByLabel("Partner ID", { exact: true }).fill(c.partner);
+  dispatchLifecycle("login-credential");
   await page
     .getByLabel("Account credential file", { exact: true })
     .setInputFiles(c.token);
+  dispatchLifecycle("login-submit");
   await page.getByRole("button", { name: "Connect", exact: true }).click();
   await page.getByRole("heading", { name: "Files", exact: true }).waitFor();
+  dispatchLifecycle("files-ready");
   if (
     !c.routing_only &&
     !c.arrivals_only &&
@@ -242,7 +262,9 @@ try {
   } else if (c.schedules_only) {
     await qualifySchedules(page, c, audit, record, actualReview);
   } else if (c.dispatch_approval_only) {
+    dispatchLifecycle("dispatch-start");
     await qualifyOutboundDispatch(page, c, audit, record, actualReview);
+    dispatchLifecycle("dispatch-finished");
   } else if (c.approval_only) {
     await qualifyIndependentApprovals(page, c, audit, record, actualReview);
   } else if (c.observation_only) {
@@ -321,14 +343,17 @@ try {
     await inspect(c.plain, c.plain_hash);
     record("reload-reads-same-durable-evidence-without-activation");
   }
+  dispatchLifecycle("runtime-checks");
   assert.deepEqual(errors, []);
   assert.deepEqual(egress, []);
+  dispatchLifecycle("success-screenshot");
   await page.screenshot({
     path: c.raw + "/onboarding-exchange-review.png",
     fullPage: true,
   });
   state = "passed";
 } catch (e) {
+  dispatchLifecycle("failure-capture");
   failure = String(e.stack ?? e);
   if (c.routing_only)
     await writeFile(
@@ -352,6 +377,7 @@ try {
       .catch(() => "unavailable"),
   );
 } finally {
+  dispatchLifecycle("record-write");
   await writeFile(
     c.raw + "/onboarding-exchange-browser.json",
     JSON.stringify(
@@ -374,7 +400,10 @@ try {
       2,
     ) + "\n",
   );
+  dispatchLifecycle("context-close");
   await context.close();
+  dispatchLifecycle("browser-close");
   await browser.close();
+  dispatchLifecycle("complete");
 }
 if (state !== "passed") throw new Error(failure);

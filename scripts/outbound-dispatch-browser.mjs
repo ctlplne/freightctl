@@ -9,6 +9,27 @@ export async function qualifyOutboundDispatch(page, c, audit, record, actual) {
   let stage = "contacts-before",
     wire = "idle",
     responseCount = 0;
+  // Emit fixed progress before each awaited action. A killed or stuck browser
+  // cannot reach catch; the parent can still publish the last bounded stage.
+  const progress = () => {
+    if (c.dispatch_protocol !== "ftps") return;
+    console.log(
+      JSON.stringify({
+        kind: "ftps-dispatch-progress",
+        phase: c.dispatch_phase,
+        stage,
+        wire,
+        response_count: Math.min(responseCount, 8),
+        response_overflow: responseCount > 8,
+        dialog_open: null,
+        decision_error_visible: null,
+      }),
+    );
+  };
+  const mark = (value) => {
+    stage = value;
+    progress();
+  };
   const contacts = async () => {
     const raw = await readFile(c.receiver_log, "utf8");
     if (c.dispatch_protocol !== "ftps")
@@ -41,8 +62,9 @@ export async function qualifyOutboundDispatch(page, c, audit, record, actual) {
     await writeFile(c.raw + "/ftps-visible.txt", text + "\n");
   }
   try {
+    progress();
     const before = await contacts();
-    stage = "navigation";
+    mark("navigation");
     await page.getByRole("button", { name: "Approvals", exact: true }).click();
     await region
       .getByRole("heading", {
@@ -54,10 +76,12 @@ export async function qualifyOutboundDispatch(page, c, audit, record, actual) {
       const seen = [];
       await page.route(target, async (route) => {
         wire = "request";
+        progress();
         const r = await actual(route, label + "-" + seen.length, target);
         seen.push(r);
         responseCount = seen.length;
         wire = seen.length === 1 ? "abort-first" : "fulfill-replay";
+        progress();
         if (seen.length === 1) await route.abort("failed");
         else
           await route.fulfill({
@@ -66,15 +90,15 @@ export async function qualifyOutboundDispatch(page, c, audit, record, actual) {
             body: r.body,
           });
       });
-      stage = "first-decision";
+      mark("first-decision");
       await action();
-      stage = "lost-response-notice";
+      mark("lost-response-notice");
       await region.getByText(/Dispatch decision not confirmed/).waitFor();
-      stage = "replay-decision";
+      mark("replay-decision");
       await action();
-      stage = "dialog-close";
+      mark("dialog-close");
       await page.locator("dialog[open]").waitFor({ state: "hidden" });
-      stage = "receipt-binding";
+      mark("receipt-binding");
       assert.equal(seen.length, 2);
       assert.ok(seen[0].idempotency_key);
       assert.equal(seen[0].idempotency_key, seen[1].idempotency_key);
@@ -91,7 +115,7 @@ export async function qualifyOutboundDispatch(page, c, audit, record, actual) {
     }
     let review;
     if (c.dispatch_phase.startsWith("request")) {
-      stage = "source-inspect";
+      mark("source-inspect");
       await region
         .getByLabel("Outbound delivery ID", { exact: true })
         .fill(c.dispatch_delivery.id);
@@ -104,9 +128,9 @@ export async function qualifyOutboundDispatch(page, c, audit, record, actual) {
           exact: true,
         })
         .waitFor();
-      stage = "source-audit";
+      mark("source-audit");
       await audit("dispatch-" + c.dispatch_phase + "-source");
-      stage = "disclosure-preview";
+      mark("disclosure-preview");
       await region
         .getByLabel("Dispatch reviewer account ID", { exact: true })
         .fill(c.dispatch_reviewer_id);
@@ -121,13 +145,13 @@ export async function qualifyOutboundDispatch(page, c, audit, record, actual) {
         exact: true,
       });
       await heading.waitFor();
-      stage = "disclosure-terms-focus";
+      mark("disclosure-terms-focus");
       await captureFTPS(page.locator("dialog[open]"));
       assert.equal(
         await heading.evaluate((el) => el === document.activeElement),
         true,
       );
-      stage = "disclosure-audit";
+      mark("disclosure-audit");
       await audit("dispatch-" + c.dispatch_phase + "-disclosure");
       const result = await loss(
         prefix + "/outbound-dispatch-reviews",
@@ -141,7 +165,7 @@ export async function qualifyOutboundDispatch(page, c, audit, record, actual) {
             .click(),
       );
       review = result.review;
-      stage = "requested-review-binding";
+      mark("requested-review-binding");
       assert.equal(review.delivery_id, c.dispatch_delivery.id);
       assert.equal(review.reviewer_id, c.dispatch_reviewer_id);
       await region
@@ -153,9 +177,9 @@ export async function qualifyOutboundDispatch(page, c, audit, record, actual) {
       await region
         .getByRole("heading", { name: "Dispatch review: pending", exact: true })
         .waitFor();
-      stage = "history-audit";
+      mark("history-audit");
       await audit("dispatch-" + c.dispatch_phase + "-history");
-      stage = "history-reload";
+      mark("history-reload");
       await page.reload();
       await page
         .getByRole("button", { name: "Approvals", exact: true })
@@ -175,7 +199,7 @@ export async function qualifyOutboundDispatch(page, c, audit, record, actual) {
           "-lost-response-exact-key-private-reload",
       );
     } else {
-      stage = "reviewer-inspect";
+      mark("reviewer-inspect");
       const source = c.dispatch_review;
       await region
         .getByRole("button", {
@@ -189,7 +213,7 @@ export async function qualifyOutboundDispatch(page, c, audit, record, actual) {
         exact: true,
       });
       await title.waitFor();
-      stage = "reviewer-terms-focus";
+      mark("reviewer-terms-focus");
       await captureFTPS(region);
       assert.equal(
         await title.evaluate((el) => el === document.activeElement),
@@ -201,9 +225,9 @@ export async function qualifyOutboundDispatch(page, c, audit, record, actual) {
           .count(),
         0,
       );
-      stage = "reviewer-audit";
+      mark("reviewer-audit");
       await audit("dispatch-" + c.dispatch_phase + "-reviewer");
-      stage = "confirmation-open";
+      mark("confirmation-open");
       const action = c.dispatch_phase === "withdraw" ? "withdraw" : "approve";
       await region
         .getByRole("button", {
@@ -220,7 +244,7 @@ export async function qualifyOutboundDispatch(page, c, audit, record, actual) {
           exact: true,
         })
         .waitFor();
-      stage = "confirmation-audit";
+      mark("confirmation-audit");
       await audit("dispatch-" + c.dispatch_phase + "-confirmation");
       const result = await loss(
         prefix + "/outbound-dispatch-reviews/" + source.id + "/" + action,
@@ -234,12 +258,12 @@ export async function qualifyOutboundDispatch(page, c, audit, record, actual) {
             .click(),
       );
       review = result.review;
-      stage = "decided-review-binding";
+      mark("decided-review-binding");
       assert.equal(
         review.state,
         action === "withdraw" ? "withdrawn" : "approved",
       );
-      stage = "decision-history";
+      mark("decision-history");
       await region
         .getByRole("button", {
           name: "Inspect dispatch review " + review.id.slice(0, 8),
@@ -252,7 +276,7 @@ export async function qualifyOutboundDispatch(page, c, audit, record, actual) {
           exact: true,
         })
         .waitFor();
-      stage = "decision-history-audit";
+      mark("decision-history-audit");
       await audit("dispatch-" + c.dispatch_phase + "-decision-history");
       record(
         "dispatch-" +
@@ -260,9 +284,9 @@ export async function qualifyOutboundDispatch(page, c, audit, record, actual) {
           "-least-privilege-exact-consent-original-key",
       );
     }
-    stage = "contacts-after";
+    mark("contacts-after");
     assert.equal(await contacts(), before);
-    stage = "result-write";
+    mark("result-write");
     await writeFile(
       c.raw + "/outbound-dispatch-browser-result.json",
       JSON.stringify(

@@ -41,6 +41,7 @@ def failure_diagnostics(root, result, commit):
             return {}
         failed, categories, cli_failures, browser_failures = set(), set(), set(), []
         accessibility, ticket_browser_failures, dispatch_browser_failures = [], [], []
+        dispatch_progress, dispatch_outcomes, dispatch_lifecycle = {}, [], {}
         allowed = {"native-ftps-integration", "cli-explicit-lftp-probe", "cli-implicit-lftp-probe", "browser-explicit-operator", "browser-implicit-operator"}
         for step in manifest.get("steps", []):
             name = step.get("name")
@@ -57,6 +58,10 @@ def failure_diagnostics(root, result, commit):
                     dispatch.verify_outcome(name, step.get("exit_code"), diagnostic, data)
                 except ValueError:
                     cli_failures.add(name)
+                    if dispatch.command_suffix(name):
+                        seconds = step.get("seconds")
+                        dispatch_outcomes.append({"command":name,"outcome":"timeout" if step.get("exit_code")=="timeout" else "nonzero" if type(step.get("exit_code")) is int else "unknown",
+                            "elapsed_seconds":round(seconds,3) if type(seconds) in (int,float) and 0 <= seconds <= 3600 else None})
             output = data.decode(errors="replace")
             failed.update(set(re.findall(r"^\s*--- FAIL: (TestFTPS\S+) \(", output, re.MULTILINE)) & NATIVE_TESTS)
             for line in output.splitlines():
@@ -66,6 +71,12 @@ def failure_diagnostics(root, result, commit):
                     probe = json.loads(line[line.index("{"):])
                 except ValueError:
                     continue
+                lifecycle = dispatch.safe_browser_lifecycle(probe)
+                if lifecycle is not None and dispatch.command_suffix(name) == "browser-" + lifecycle["phase"]:
+                    dispatch_lifecycle[name] = {"command":name, **lifecycle}
+                observation = dispatch.safe_browser_progress(probe)
+                if observation is not None and dispatch.command_suffix(name) == "browser-" + observation["phase"]:
+                    dispatch_progress[name] = {"command":name, **observation}
                 dispatch_probe = dispatch.safe_browser_failure(probe)
                 if dispatch.command_suffix(name) == "browser-" + str(probe.get("phase")) and dispatch_probe is not None:
                     dispatch_browser_failures.append({"command": name, **dispatch_probe})
@@ -108,6 +119,14 @@ def failure_diagnostics(root, result, commit):
             outcome["browser_ticket_failures"] = ticket_browser_failures
         if dispatch_browser_failures:
             outcome["dispatch_browser_failures"] = dispatch_browser_failures
+        failed_progress = [v for name,v in dispatch_progress.items() if name in cli_failures]
+        if failed_progress:
+            outcome["dispatch_browser_progress"] = failed_progress
+        if dispatch_outcomes:
+            outcome["dispatch_command_outcomes"] = dispatch_outcomes
+        failed_lifecycle = [v for name,v in dispatch_lifecycle.items() if name in cli_failures]
+        if failed_lifecycle:
+            outcome["dispatch_browser_lifecycle"] = failed_lifecycle
         dispatch_failure=manifest.get("dispatch_evidence_failure")
         if isinstance(dispatch_failure,dict) and dispatch_failure.get("mode") in {"explicit","implicit"} and dispatch_failure.get("profile") in {"dispatch","workflow_dispatch"} and dispatch_failure.get("category") in set(dispatch.FAILURE_CODES.values())|{"dispatch-evidence"}:
             outcome["dispatch_evidence_failure"]={k:dispatch_failure[k] for k in ("mode","profile","category")}

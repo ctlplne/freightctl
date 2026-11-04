@@ -36,6 +36,24 @@ def safe_browser_failure(value):
     return dict(value)
 
 
+def safe_browser_progress(value):
+    if type(value) is not dict or value.get("kind") != "ftps-dispatch-progress":
+        return None
+    checked = safe_browser_failure(dict(value, kind="ftps-dispatch-failure"))
+    return dict(checked, kind="ftps-dispatch-progress") if checked else None
+
+
+BROWSER_LIFECYCLE_STAGES = frozenset(("certificate", "browser-launch", "context-create", "login-navigation", "login-identity", "login-credential", "login-submit", "files-ready", "dispatch-start", "dispatch-finished", "runtime-checks", "success-screenshot", "failure-capture", "record-write", "context-close", "browser-close", "complete"))
+
+def safe_browser_lifecycle(value):
+    if (type(value) is not dict or set(value) != {"kind","phase","stage"}
+            or value.get("kind") != "ftps-dispatch-lifecycle" or type(value.get("phase")) is not str
+            or value["phase"] not in PHASES or type(value.get("stage")) is not str
+            or value["stage"] not in BROWSER_LIFECYCLE_STAGES):
+        return None
+    return dict(value)
+
+
 COMMANDS = (
     "source-stat", "policy-status", "policy-set", "reviewer-token", "reviewer-create",
     "create", "create-replay", "queue", "work-before-consent", "status-before",

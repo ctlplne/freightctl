@@ -139,6 +139,10 @@ jobs:
               process.exitCode = 1;
             });
           NODE
+      - name: Task-owned PostgreSQL
+        run: |
+          python3 scripts/dev-db.py
+          sh scripts/go.sh run ./cmd/freightctl init
       - name: Pinned task-owned independent recipient fixture
         if: matrix.profile == 'recipient-encrypted'
         run: |
@@ -149,10 +153,6 @@ jobs:
           RUN apk add --no-cache gnupg=2.4.9-r1
           DOCKERFILE
           python3 scripts/prepare-pgp-fixture.py
-      - name: Task-owned PostgreSQL
-        run: |
-          python3 scripts/dev-db.py
-          sh scripts/go.sh run ./cmd/freightctl init
       - name: Three fresh registered FTPS workflow consent journeys
         run: |
           umask 077
