@@ -173,5 +173,14 @@
     "local_checks_manifest_reference": ".private/freightctl-f076-public-cas-diagnostic-local-u_5nce7y/manifest.json",
     "local_checks_manifest_sha256": "d6a2db0b5f4ee2d1dd7d1a895f38d60152d0d25f60491d8abd9017e0889c7a5d",
     "scope": "12Docker-command/mount/state stand-in methods plus8reporter methods; no actual local Docker, mount, scan or inference."
+  },
+  "state_diagnostic_submission": {
+    "candidate": "28cdfcbbd83e2571fb626b3ee47b8783cccad4db",
+    "native_run_id": 41907798160,
+    "native_jobs": [
+      126848477397,
+      126848477483
+    ],
+    "state": "queued/unqualified; no actual container-state/feed/scan result yet"
   }
 }

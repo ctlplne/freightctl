@@ -44,7 +44,7 @@
       "outcome": "Existing SFTP collection/arrival/schedules, FTPS/SFTP sending, ciphertext, intake, RLS, receipts and native regression gates remain enforced. No local PostgreSQL, model or scanner execution is needed."
     }
   ],
-  "next_action": "Preserve both completedde93 original logs. Pending2c64086 contains the same now-confirmedD163 producer mutation error; supersede only if still unstarted with exact-CAS repair and additive required public metadata gate, preserving all original cases/budgets. Require native15-leaf matching-event/scheduled/batch and actual CLI/API metadata results. Actual Chrome collection, crash/recovery, mixed/encrypted forwarding/handoff and independent source peers remain required; all whole-goal gates remain open.",
+  "next_action": "Observe newest28cdfcb native41907798160 and public metadata41907798532; queued jobs are unqualified. Do not push another relevant source candidate until this unknown required candidate starts. Capture first exact-CAS/SQL/scheduled/public/state failure before repair; require original15native leaves and actual CLI/API closure. Actual collection Chrome, crash/recovery, mixed/encrypted forwarding/handoff, independent source peers and whole-goal gates remain open.",
   "first_failure": {
     "test": "TestFTPSCollectionSourceMissingContract",
     "result": "existing typed source refuses ftps.collect; no service contact",
@@ -247,5 +247,23 @@
     "local_checks_manifest_reference": ".private/freightctl-f076-public-cas-diagnostic-local-u_5nce7y/manifest.json",
     "local_checks_manifest_sha256": "d6a2db0b5f4ee2d1dd7d1a895f38d60152d0d25f60491d8abd9017e0889c7a5d",
     "local_scope": "7synthetic metadata original-output/refusal methods plus64FTPS reporter contracts, syntax/lint. Combined local worktree manifest also retains CAS compile/vet and20image stand-in methods. No service/CLI/API/Chrome/scanner/inference execution locally."
+  },
+  "newest_submission": {
+    "candidate": "28cdfcbbd83e2571fb626b3ee47b8783cccad4db",
+    "native_run_id": 41907798160,
+    "native_jobs": [
+      126848477397,
+      126848477483
+    ],
+    "native_state": "queued/unqualified at observation",
+    "public_workflow_metadata_run_id": 41907798532,
+    "public_state": "queued/unqualified at observation",
+    "core_run_id": 41907798513,
+    "superseded_native": {
+      "candidate": "2c640862801d849178d9cd0bfb02e9ea2f02ebcb",
+      "run_id": 41902121982,
+      "state": "completed/cancelled, unqualified",
+      "reason": "All5jobs remained queued with no started steps immediately before conditional CLI cancellation; confirmedD163 producer fixture error already retained on bothde93 architectures. Native source was superseded only after verified exact-CAS repair. Other runs were not cancelled."
+    }
   }
 }
