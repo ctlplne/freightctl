@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "id": "F077",
+  "observed_at": "2026-11-04",
+  "starting_commit": "2c4398abe902fb77307ac8247bd9df2dc5b77ffc",
+  "state": "prepared; six compiler/process/archive stand-in methods pass; actual native GitHub execution pending",
+  "scope": "Same-runner native Linux core executable reproduction in two different committed-source copies and independent empty build caches. No cross-architecture comparison,independent-host reproduction,complete release SBOM/signing/offline installation,publication or production-platform claim.",
+  "qualification_claim": false,
+  "frozen_cases": [
+    {
+      "id": "R01",
+      "outcome": "Require actual GitHub Linux host/machine and native Go1.26.10 host/target identity; refuse local or cross-compiled qualification before creating resources."
+    },
+    {
+      "id": "R02",
+      "outcome": "Archive exact committed clean source; reject traversal,links,special files,duplicate paths and oversized archives. Build two different source roots with separate initially empty caches."
+    },
+    {
+      "id": "R03",
+      "outcome": "Prime verified public module inputs once,then disable module downloading and verify cache contents before/after both builds. Require readonly module files,CGO0,trimpath,no VCS/build ID and exact native baseline target."
+    },
+    {
+      "id": "R04",
+      "outcome": "Require byte-identical final reopened binaries,complete identical embedded Go build inventories and exact read-only CLI help outputs. Require every nonlocal module checksum in original go.sum and only the pinned committed FTP engine replacement."
+    },
+    {
+      "id": "R05",
+      "outcome": "Reopen archive,both source trees and original command outputs after all steps; changed earlier source/binary/log artifacts cannot pass."
+    },
+    {
+      "id": "R06",
+      "outcome": "Filter inherited credentials/config,keep all raw artifacts private/ephemeral,emit only fixed failure phase/check and hashes/counts. Preserve original command timeout and signal only exact owned child group."
+    }
+  ],
+  "implementation": {
+    "workflow": ".github/workflows/reproducible-builds.yml",
+    "runner": "scripts/qualify-repro-builds.py",
+    "contracts": "scripts/test-repro-builds.py",
+    "environments": [
+      {
+        "runner": "ubuntu-24.04",
+        "architecture": "amd64"
+      },
+      {
+        "runner": "ubuntu-24.04-arm",
+        "architecture": "arm64"
+      }
+    ],
+    "toolchain": "go1.26.10",
+    "go_environment": "GOMAXPROCS1,GOMEMLIMIT192MiB,GOTOOLCHAINlocal,GOENVoff,GOTELEMETRYoff;no inherited GOFLAGS/credentials/model/database variables.",
+    "commands": 13,
+    "builds_per_architecture": 2,
+    "build_timeout_seconds": 300,
+    "module_download_timeout_seconds": 300,
+    "module_verify_timeout_seconds": 60,
+    "help_timeout_seconds": 10,
+    "job_minutes": 20,
+    "source_archive_max_bytes": 67108864,
+    "source_file_max_bytes": 16777216,
+    "binary_child_file_max_bytes": 134217728,
+    "private_command_output_max_bytes": 33554432,
+    "working_bytes_max_after_steps": 4294967296,
+    "disk_limit_scope": "Checked after commands and at final record;not a kernel disk quota. Go heap setting is soft,not a hard host memory cap.",
+    "module_inventory_scope": "Embedded Go dependencies only. Frontend/OS/external-tool/model inventory and complete SPDX/CycloneDX SBOM remain required. This gate performs no vulnerability scan and inherits no security cleanliness from byte equality.",
+    "publication": "No upload-artifact,release,image/package push,signing credential or deployment. Build binaries and raw records remain on disposable runner only."
+  },
+  "local_checks": {
+    "manifest_reference": ".private/freightctl-f077-local-h91i2hti/manifest.json",
+    "manifest_sha256": "37f6e349cd9c51a616d59fc1cc1e30ba19106e847a171c4d661b5d1957d74de2",
+    "methods": 6,
+    "checks": [
+      "real orchestration/checker with compiler/process/host stand-ins",
+      "both native identity profiles and early local/foreign-machine refusal",
+      "different roots and empty caches; module download then offline flags",
+      "exact Go checksums/target flags/local replacement;bad source/binary/help/inventory refusal",
+      "reopen earlier binary/source/output after second build",
+      "bounded safe archive extraction including traversal/link/special/duplicate refusal",
+      "exact task-child timeout signal and private diagnostics",
+      "Python syntax/workflow lint/diff checks"
+    ],
+    "limits": "No new local build or binary execution,actual native compiler reproduction,network/PG/browser/scanner/model operation. Parser and stand-in passes do not qualify reproducibility."
+  },
+  "next_action": "Run both original native GitHub profiles on an exact submitted source. Preserve first failure,repair with meaningful coverage and replay without relaxing input,byte equality or resource assertions. Keep release signatures,complete SBOM/offline bundle,independent-host/platform/security/adoption and all whole GOAL.md gates open."
+}

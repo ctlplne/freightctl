@@ -1,0 +1,67 @@
+name: Native reproducible core binaries
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'cmd/**'
+      - 'internal/**'
+      - 'third_party/**'
+      - 'web/**'
+      - 'go.mod'
+      - 'go.sum'
+      - '.gitattributes'
+      - 'scripts/qualify-repro-builds.py'
+      - 'scripts/test-repro-builds.py'
+      - '.github/workflows/reproducible-builds.yml'
+  pull_request:
+    paths:
+      - 'cmd/**'
+      - 'internal/**'
+      - 'third_party/**'
+      - 'web/**'
+      - 'go.mod'
+      - 'go.sum'
+      - '.gitattributes'
+      - 'scripts/qualify-repro-builds.py'
+      - 'scripts/test-repro-builds.py'
+      - '.github/workflows/reproducible-builds.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: freightctl-reproducible-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  core-binary:
+    name: Native core reproduction (${{ matrix.architecture }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-24.04
+            architecture: amd64
+          - runner: ubuntu-24.04-arm
+            architecture: arm64
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 20
+    env:
+      GOMAXPROCS: "1"
+      GOMEMLIMIT: 192MiB
+      GOTELEMETRY: "off"
+      FREIGHTCTL_REPRO_ARCHITECTURE: ${{ matrix.architecture }}
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version: "1.26.10"
+          cache: false
+      - name: Fresh source copies, caches and exact native binary comparison
+        run: python3 scripts/qualify-repro-builds.py --architecture "$FREIGHTCTL_REPRO_ARCHITECTURE"
+      # Binaries, module inventories and raw evidence stay ephemeral on runner.
+      # Signing, SBOM/bundle completion and artifact distribution are separate.

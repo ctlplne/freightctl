@@ -51,6 +51,7 @@ jobs:
           sh scripts/go.sh test -p 1 -race ./scripts/peers/ftps-source
           python3 scripts/test-ftps-collection-source.py
           python3 scripts/test-ftps-collection-operator.py
+          python3 scripts/test-repro-builds.py
           python3 scripts/test-ci-setup-summary.py
           python3 scripts/test-records.py
           python3 scripts/test-native-evidence.py
