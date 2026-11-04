@@ -74,7 +74,7 @@
     "FTPS collection, independent supported x86 receiver qualification, broader protocol behavior and complete receiving/sending customer journeys remain required.",
     "D145 stays open as intermittent despite a passing diagnostic replay. Windows D103 and all83 whole baseline rows/12 full journeys remain open."
   ],
-  "next_action": "Follow exact6ebccf0 native runs through completion. Push and replay the eight mixed-protocol cases after the original native run has started, preserving its first results. C01-C10 and whole-product gates remain open.",
+  "next_action": "Finish original6ebccf0 x86 runtime, retry its exact terminal ARM download failure when allowed, and execute2da246b mixed native runtime. Preserve their exact first results before pushing the expanded C01 public rotation matrix; never replace a queued mandatory candidate. C01-C10 and whole-product gates remain open.",
   "implementation_checkpoint": {
     "versioned_connection": "schema2 FTPS definitions, strict canonical validation and redacted reference fingerprints",
     "typed_execution": "ftps.deliver uses exact registered protocol/version; queued delivery includes the workflow/run/step/connection binding; unsupported recipient encryption remains refused",
@@ -257,12 +257,24 @@
     },
     "arm_metadata_manifest_sha256": "6679cf87470d7a191f50fcc10abdec0b093f4f80014aad38e416f99d1688be4d",
     "registered_workflow_job_id": 126651290506,
-    "registered_workflow_job_state": "success; full public log retention pending",
+    "registered_workflow_job_state": "success; 200commands/six browser phases/six original-key replays/18WCAG audits; zero contacts/attempts/fences",
     "core_job_id": 126651290891,
-    "core_job_state": "success"
+    "core_job_state": "success",
+    "x86_metadata_result": "passed schema38/64 tables/63 forced-RLS tables/43 synthetic rows; exact cleanup and original stopped state restored",
+    "x86_metadata_manifest_sha256": "f1ba0e8058b009fcce62a43fa2a62f561fd9c30d729675378b96a6ff0e8d5a19",
+    "registered_workflow_result_manifest_sha256": "01a6f9b5ef2db70c06d13b4bef761726919a034cd6fa74c2d686126fd702ff1d",
+    "completed_public_logs_manifest": ".private/freightctl-f073-resumed-public-5TSnpt90/manifest.json",
+    "completed_public_logs_manifest_sha256": "d10eacd2047e25b4aedd21714c682fa0678545b6dc27a2b5d092d06d1c442c81",
+    "windows": {
+      "job_id": 126651291112,
+      "failure_records": 44,
+      "exact_failure_names_equal_baseline_job": 125891445236,
+      "manifest_reference": ".private/freightctl-f073-resumed-runtime-7y0wu9bs/windows-manifest.json",
+      "manifest_sha256": "da2902de4e9765d83eb1923a709d70444364bc1eb20379345556c29bfa3f8423"
+    }
   },
   "mixed_protocol_execution": {
-    "state": "source prepared and integration compiled only; runtime not executed",
+    "state": "committed and pushed; native runtime queued behind original6ebccf0",
     "test": "TestMixedRegisteredFTPSAndStockSFTPKeepOrderConsentAndReceipts",
     "cases": 8,
     "matrix": {
@@ -296,6 +308,39 @@
       "integration_vet": "passed",
       "actionlint": "passed",
       "record_tests": 15
+    },
+    "candidate": "2da246b6c2fb257f005d65d0bd81ea56abe79658",
+    "native_run_id": 41853908628
+  },
+  "connection_rotation_matrix": {
+    "state": "implemented locally; expanded native public runtime replay pending",
+    "frozen_case": "C01",
+    "changed_fields_per_mode": [
+      "address",
+      "server name",
+      "TLS mode",
+      "user",
+      "CA reference",
+      "CA proof",
+      "password reference",
+      "password proof",
+      "staging directory",
+      "final directory"
+    ],
+    "additional_existing_rotation": "receiver-contract document remains the independently checked version2 change in each mode",
+    "new_cli_commands_each_mode": 65,
+    "new_total_profile_commands": 260,
+    "rotation_cases_total": 20,
+    "checks": "Each variant creates its own exact family version3-12, original-key replay and status. Python independently derives the Go canonical definition hash and every redacted public field. Both original and changed-address contact spies must stop at zero; queued original intent and its source/effect/binding remain unchanged.",
+    "limits": "Metadata registration does not validate live files, credentials, certificates or receiver promises. Proof-only variants intentionally mismatch their files and are never used to send. No FTPS wire or persistence claim follows.",
+    "local_checks": {
+      "actual_go_python_canonical_cases": 22,
+      "go_pass_records_including_parent": 23,
+      "reporter_tests": 53,
+      "pure_dispatch_tests": 7,
+      "python_compile": "passed",
+      "manifest_reference": ".private/freightctl-f073-rotation-canonical-w7k0neu8/manifest.json",
+      "manifest_sha256": "c6afd629c93632062cca6343910a83abac3405c3fd2a961c375bb7dbad276896"
     }
   }
 }

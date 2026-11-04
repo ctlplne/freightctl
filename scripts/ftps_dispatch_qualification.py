@@ -6,12 +6,14 @@ Reopen original CLI, HTTPS, DOM, accessibility and counter records before any
 aggregate result can pass. Credentials and raw outputs stay task-private.
 """
 import hashlib
+import copy
 import json
 import os
 import re
 import socket
 import threading
 import uuid
+from pathlib import Path
 
 import ftps_browser_tickets as previous
 from ftps_cli_governance import read, require
@@ -31,11 +33,13 @@ REFUSALS = {
     "work-after-withdraw": b"freightctl: current outbound dispatch approval required\n",
     "reviewer-original-denied": b"freightctl: permission denied\n",
 }
+ROTATION_FIELDS = ("address", "server-name", "mode", "user", "ca-reference", "ca-proof", "password-reference", "password-proof", "staging-directory", "final-directory")
+ROTATION_COMMANDS = tuple("connection-rotate-" + field + suffix for field in ROTATION_FIELDS for suffix in ("", "-replay", "-status"))
 WORKFLOW_COMMANDS = tuple(n for n in COMMANDS if n not in {"create", "create-replay", "queue"}) + (
     "connection-register", "connection-register-replay", "connection-status",
     "workflow-validate", "workflow-draft", "workflow-approve", "workflow-run", "workflow-run-replay", "workflow-api-replay", "workflow-run-status",
     "connection-version", "connection-revoke", "work-after-revoke",
-)
+) + ROTATION_COMMANDS
 WORKFLOW_REFUSALS = dict(REFUSALS, **{"work-after-revoke": b"freightctl: operation does not match the current resource state\n"})
 SPY_KIND = "freightctl-ftps-contact-spy"
 FAILURE_CODES = {
@@ -52,6 +56,7 @@ FAILURE_CODES = {
     "dispatch public effect changed approved destination":"effect-binding",
     "dispatch rendered FTPS terms differ":"rendered-terms",
     "dispatch private file closure differs":"file-closure",
+    "dispatch connection rotation metadata differs":"connection-rotation",
 }
 
 
@@ -258,6 +263,7 @@ def validate(private, mode, steps, inventory, workflow=False):
                 **({"workflow_binding":definition["workflow_binding"]} if workflow else {})}, "dispatch public effect changed approved destination")
     if workflow:
         validate_workflow_outputs(output, delivery, mode)
+        validate_connection_rotations(directory, output, definition)
         require(read(private/(prefix+"workflow-api-replay.stdout"))==b"200"
                 and json.loads(read(directory/"workflow-api-replay.body"))==dict(output("workflow-run"),replayed=True),
                 "dispatch workflow CLI/API original receipt differs")
@@ -324,7 +330,79 @@ def validate(private, mode, steps, inventory, workflow=False):
     return {"state": "passed", "mode": mode, "commands": len(WORKFLOW_COMMANDS if workflow else COMMANDS), "strict_cli_refusals": len(WORKFLOW_REFUSALS if workflow else REFUSALS),
             "strict_api_refusals": 1, "browser_phases": len(PHASES), "lost_response_replays": 3,
             "accessibility_audits": 9, "receiver_connections": 0, "attempts": 0, "fence": 0,
-            "spy_stopped": True, "registered_workflow":workflow, "scope": "metadata consent and no-contact refusals; no FTPS wire or receiver persistence claim"}
+            "spy_stopped": True, "registered_workflow":workflow,
+            "connection_rotation_cases": len(ROTATION_FIELDS) if workflow else 0,
+            "rotation_spy_stopped": True if workflow else None,
+            "scope": "metadata consent and no-contact refusals; no FTPS wire or receiver persistence claim"}
+
+
+def connection_rotation_requests(directory, original, address):
+    """One changed field relative to the original connection, never live trust.
+
+    Proof-only variants intentionally do not match the local files. Registration
+    freezes metadata; only a sending worker may validate live trust/credentials.
+    No variant is used to authorize a transfer in this contact-only profile.
+    """
+    require(re.fullmatch(r"127\.0\.0\.1:([1-9][0-9]{0,4})", address) is not None
+            and 1 <= int(address.rsplit(":", 1)[1]) <= 65535
+            and address != original["ftps"]["destination"]["address"], "dispatch connection rotation metadata differs")
+    changes = {
+        "address": ("destination", "address", address),
+        "server-name": ("destination", "server_name", "rotated.freightctl.invalid"),
+        "mode": ("destination", "mode", "implicit" if original["ftps"]["destination"]["mode"] == "explicit" else "explicit"),
+        "user": ("destination", "user", "rotated-contact-only"),
+        "ca-reference": ("destination", "ca_reference", str(directory / "rotated-ca.pem")),
+        "ca-proof": ("destination", "ca_sha256", hashlib.sha256(b"synthetic different CA proof; metadata only").hexdigest()),
+        "password-reference": ("destination", "password_reference", str(directory / "rotated-password")),
+        "password-proof": ("destination", "password_sha256", hashlib.sha256(b"synthetic different password proof; metadata only").hexdigest()),
+        "staging-directory": (None, "staging_directory", "/rotated-private-stage"),
+        "final-directory": (None, "directory", "/rotated-final-inbox"),
+    }
+    result = {}
+    for field in ROTATION_FIELDS:
+        value = {"directory": original["directory"], "ftps": copy.deepcopy(original["ftps"])}
+        parent, key, replacement = changes[field]
+        target = value["ftps"][parent] if parent else value if key == "directory" else value["ftps"]
+        target[key] = replacement
+        result[field] = value
+    return result
+
+
+def expected_connection_rotation(original, value, version):
+    """Independently encode the typed Go connection schema in its field order."""
+    destination = value["ftps"]["destination"]
+    canonical_destination = {key: destination[key] for key in ("address", "server_name", "mode", "user", "ca_reference", "ca_sha256", "password_reference", "password_sha256")}
+    contract = {key: value["ftps"]["receiver_contract"][key] for key in ("schema_version", "document_sha256", "staging_visibility", "rename", "duplicates", "receipt")}
+    definition = {"schema_version": 2, "destination": {"address": "", "user": "", "host": {"Wire": None, "Fingerprint": ""}, "key_reference": "", "key_fingerprint": ""},
+                  "directory": value["directory"], "ftps": {"destination": canonical_destination, "staging_directory": value["ftps"]["staging_directory"], "receiver_contract": contract}}
+    encoded = json.dumps(definition, separators=(",", ":"), ensure_ascii=False)
+    for char, escaped in (("<", "\\u003c"), (">", "\\u003e"), ("&", "\\u0026"), ("\u2028", "\\u2028"), ("\u2029", "\\u2029")):
+        encoded = encoded.replace(char, escaped)
+    return {"id": original["id"], "version": version, "definition_hash": hashlib.sha256(encoded.encode()).hexdigest(), "state": "active", "revision": 1,
+            "address": destination["address"], "user": destination["user"], "directory": value["directory"], "host_fingerprint": "", "key_fingerprint": "", "protocol": "ftps",
+            "ftps": {"mode": destination["mode"], "server_name": destination["server_name"], "ca_sha256": destination["ca_sha256"],
+                     "ca_reference_sha256": hashlib.sha256(destination["ca_reference"].encode()).hexdigest(),
+                     "password_reference_sha256": hashlib.sha256(destination["password_reference"].encode()).hexdigest(),
+                     "staging_directory": value["ftps"]["staging_directory"], "receiver_contract": contract}}
+
+
+def validate_connection_rotations(directory, output, definition):
+    original = output("connection-register")["resource"]
+    address = json.loads(read(directory / "rotation-address.json"))
+    require(type(address) is str, "dispatch connection rotation metadata differs")
+    cases = connection_rotation_requests(directory, definition, address)
+    require(read(directory / "rotated-ca.pem") == read(Path(definition["ftps"]["destination"]["ca_reference"]))
+            and read(directory / "rotated-password") == read(directory / "receiver-password"), "dispatch connection rotation metadata differs")
+    hashes = {original["definition_hash"], output("connection-version")["resource"]["definition_hash"]}
+    for version, field in enumerate(ROTATION_FIELDS, 3):
+        label = "connection-rotate-" + field
+        expected = expected_connection_rotation(original, cases[field], version)
+        first, replay, status = (output(label + suffix) for suffix in ("", "-replay", "-status"))
+        require(first.get("replayed") is False and first["resource"] == expected
+                and replay == dict(first, replayed=True) and status == expected
+                and expected["definition_hash"] not in hashes, "dispatch connection rotation metadata differs")
+        hashes.add(expected["definition_hash"])
+    check_counter(json.loads(read(directory / "rotation-receiver.json")), True)
 
 
 def create_workflow_intent(invoke, request, ftps, source, prefix, mode):
@@ -476,6 +554,25 @@ def exercise(root, private, mode, http_port, cert, binary, tenant, partner, owne
             changed["receiver_contract"]["document_sha256"] = hashlib.sha256(b"synthetic revised contact-only contract").hexdigest()
             invoke("connection-version","connection-register","--request-file",request("connection-next",{
                 "connection_id":connection["id"],"expected_version":connection["version"],"directory":"/dispatch-inbox-"+mode,"ftps":changed}),"--idempotency-key",prefix+"connection-next")
+            # Exercise every mutable connection field through the actual CLI.
+            # An independent stopped spy watches the changed destination too.
+            (directory / "rotated-ca.pem").write_bytes(read(cert))
+            (directory / "rotated-password").write_bytes(read(password))
+            rotated_spy = ContactSpy(directory / "rotation-receiver.json")
+            try:
+                address = "127.0.0.1:" + str(rotated_spy.port)
+                request("rotation-address", address)
+                cases = connection_rotation_requests(directory, {"directory": "/dispatch-inbox-"+mode, "ftps": ftps}, address)
+                for version, field in enumerate(ROTATION_FIELDS, 3):
+                    label = "connection-rotate-" + field
+                    args = ("--request-file", request(label, dict(cases[field], connection_id=connection["id"], expected_version=version-1)),
+                            "--idempotency-key", prefix + label)
+                    invoke(label, "connection-register", *args)
+                    invoke(label + "-replay", "connection-register", *args)
+                    invoke(label + "-status", "connection-status", "--connection-id", connection["id"], "--version", str(version))
+                check_counter(json.loads(read(directory / "rotation-receiver.json")), False)
+            finally:
+                rotated_spy.stop()
             invoke("connection-revoke","connection-revoke","--connection-id",connection["id"],"--version",str(connection["version"]),
                 "--definition-hash",connection["definition_hash"],"--expected-revision",str(connection["revision"]),"--idempotency-key",prefix+"connection-revoke")
             work("work-after-revoke")

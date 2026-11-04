@@ -258,6 +258,7 @@ def summarize(root, result, commit, require_browser=False, require_tickets=False
             "ftps_workflow_dispatch_accessibility_audits": 18 if manifest.get("workflow_dispatch_approvals_requested") is True else 0,
             "ftps_workflow_dispatch_lost_response_replays": 6 if manifest.get("workflow_dispatch_approvals_requested") is True else 0,
             "ftps_workflow_dispatch_cli_refusals": 8 if manifest.get("workflow_dispatch_approvals_requested") is True else 0,
+            "ftps_workflow_connection_rotation_cases": 20 if manifest.get("workflow_dispatch_approvals_requested") is True else 0,
             "ftps_workflow_dispatch_contact_spy": "zero contacts; stopped" if manifest.get("workflow_dispatch_approvals_requested") is True else "not run",
             "retained_metadata_and_roles_unchanged": True,
             "isolated_database_removed": True, "original_resource_state_restored": True,
