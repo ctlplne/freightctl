@@ -18,6 +18,7 @@ import (
 )
 
 const MaxFile int64 = 1 << 30
+const MaxMetadata int64 = 32 << 10
 
 var ErrInput = errors.New("invalid FTPS operation or configured bound")
 var ErrReply = errors.New("invalid or oversized FTPS receiver reply")
@@ -335,6 +336,10 @@ func (c *Client) openTransfer(verb, name string, offset int64) (*secure.FTPSClie
 func (c *Client) Size(name string) (int64, error) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
+	return c.size(name)
+}
+
+func (c *Client) size(name string) (int64, error) {
 	if !validPath(name) {
 		return 0, ErrInput
 	}
@@ -358,6 +363,64 @@ func (c *Client) Size(name string) (int64, error) {
 		return 0, ErrReply
 	}
 	return size, nil
+}
+
+// ReadBounded reads small, untrusted metadata whose digest is not known yet.
+// It returns no bytes until the declared length, EOF, TLS shutdown, completion
+// reply and live guard all pass. This is not a producer signature or a file
+// acceptance decision. Callers must validate and durably bind the exact bytes.
+// Payload reads keep using RetrieveToStage with a known immutable digest.
+func (c *Client) ReadBounded(name string, maximum int64) ([]byte, error) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	if !validPath(name) || name == "/" || maximum < 1 || maximum > MaxMetadata {
+		return nil, ErrInput
+	}
+	size, err := c.size(name)
+	if err != nil {
+		return nil, err
+	}
+	if size > maximum {
+		return nil, ErrInput
+	}
+	d, err := c.openTransfer("RETR", name, 0)
+	if err != nil {
+		return nil, err
+	}
+	body := make([]byte, size)
+	verified := false
+	defer func() {
+		if !verified {
+			secure.Clear(body)
+			d.Abort()
+			c.Close()
+		}
+	}()
+	if err = c.check(); err != nil {
+		return nil, err
+	}
+	if _, err = io.ReadFull(d, body); err != nil {
+		return nil, ErrIntegrity
+	}
+	var tail [1]byte
+	if n, e := d.Read(tail[:]); n != 0 || e != io.EOF {
+		return nil, ErrIntegrity
+	}
+	if err = c.check(); err != nil {
+		return nil, err
+	}
+	if err = d.Close(); err != nil {
+		return nil, ErrCompletionUnknown
+	}
+	r, err := c.readReply()
+	if err != nil || r.code != 226 && r.code != 250 {
+		return nil, ErrCompletionUnknown
+	}
+	if err = c.check(); err != nil {
+		return nil, err
+	}
+	verified = true
+	return body, nil
 }
 
 type StoreResult struct {

@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "id": "F076",
+  "observed_at": "2026-11-04",
+  "starting_commit": "4d771b2e6a961a70b764681fd578ff175d064db7",
+  "state": "bounded transport primitive and20 native TLS stand-in cases prepared; pure invalid-input race/compile/vet pass locally; FTPS source admission and complete collection remain unavailable",
+  "scope": "Read/copy input stage of ordinary immutable workflows, using exact registered FTPS revisions and the existing bounded producer-manifest, custody, intake, lease and event machinery. Transport metadata reading alone does not qualify collection.",
+  "qualification_claim": false,
+  "frozen_cases": [
+    {
+      "id": "C01",
+      "outcome": "Ordered and bounded-program workflows retain an exact FTPS source kind, connection ID/version/hash and producer completion contract; source protocol cannot be changed or mixed with SSH authority."
+    },
+    {
+      "id": "C02",
+      "outcome": "Read at most32KiB of untrusted manifest data over authenticated control-bound TLS; require exact declared size, EOF, clean TLS shutdown, final completion reply and live authority before exposing bytes. Refuse growth, truncation, oversize, lost reply and revocation without returning partial metadata."
+    },
+    {
+      "id": "C03",
+      "outcome": "Strictly validate and durably bind the exact producer batch/manifest. Verify every exact payload size/hash in private sealed custody; ordinary intake and atomic batch visibility apply. Never mutate the remote source or promise physical remote inode isolation from FTP metadata."
+    },
+    {
+      "id": "C04",
+      "outcome": "Saved-key replay, lost responses, worker death and duplicate/changed producer batches cannot duplicate accepted inputs or replace original source identity. Resume from durable sealed inputs with current leases/fences."
+    },
+    {
+      "id": "C05",
+      "outcome": "Current tenant/partner/actor, source/workflow/connection, namespace, policy, lease and credential checks fence every effect. Runtime-role PostgreSQL refuses mismatched protocol, source/view, immutable batch and event bindings."
+    },
+    {
+      "id": "C06",
+      "outcome": "Public CLI/API/browser use the same typed stage and exact canonical hashes; choices and disclosures name the actual transport, redact private references, preserve original-key recovery and prove previews do not contact a source."
+    },
+    {
+      "id": "C07",
+      "outcome": "Scheduled source arrival uses the exact reviewed due occurrence and bounded manifest probe; no manual admission or arbitrary matching filename bypasses the scheduled completion contract."
+    },
+    {
+      "id": "C08",
+      "outcome": "Actual native ARM/x86 service stand-ins and independently implemented peers establish only their observed scope. Keep the original independent x86 FTPS receiver failure visible; do not enable active FTP to evade its filter."
+    },
+    {
+      "id": "C09",
+      "outcome": "Existing SFTP collection/arrival/schedules, FTPS/SFTP sending, ciphertext, intake, RLS, receipts and native regression gates remain enforced. No local PostgreSQL, model or scanner execution is needed."
+    }
+  ],
+  "next_action": "Commit the isolated bounded reader after final records/secret checks; hold its source push until2da04d3 native41884853382 starts, preserving original0c681c7 x86. Integrate FTPS source admission, read-only adapter, exact SQL/custody/public/scheduled journeys next; the original typed FTPS-source failure stays open.",
+  "first_failure": {
+    "test": "TestFTPSCollectionSourceMissingContract",
+    "result": "existing typed source refuses ftps.collect; no service contact",
+    "manifest_reference": ".private/freightctl-f076-first-cmu15YR9/manifest.json",
+    "manifest_sha256": "f3e21e0e89ba14978b9341ecb78cc1cd1a102afe98ebc7a8357fb98c9ce90de7",
+    "runtime_qualification": false
+  },
+  "transport_prepared": {
+    "operation": "ftpsclient.ReadBounded",
+    "ceiling_bytes": 32768,
+    "mechanism": "serialize SIZE and passive control-bound RETR; require exact length/EOF/clean TLS/final completion/current guard before returning metadata; clear and return no bytes on failed transfer",
+    "authority": "no policy, acceptance, publication or producer signature is inferred; caller must validate and durably freeze untrusted metadata",
+    "existing_behavior": "payload RetrieveToStage digest requirements and64command limit unchanged; no arbitrary or mutation command exposed",
+    "native_tls_cases": 20,
+    "cases": "both modes x exact,empty,maximum,oversize,short,grown,lost completion,unclean TLS,foreign data session,revocation; verify no mutations/partial bytes, exact safe commands and successful control resumption",
+    "local_checks_manifest_reference": ".private/freightctl-f076-reader-local-FvcVmmkq/manifest.json",
+    "local_checks_manifest_sha256": "685adf5b406c00dccd80fa6adec9ede627297ea4d27b0cb744bd1f6924cd20f3",
+    "local_scope": "one pure pre-network invalid-input race test plus compile/vet; no TLS receiver or local service started. A final explicit successful-resumption assertion was added and compilation passed afterward; native execution remains pending."
+  }
+}

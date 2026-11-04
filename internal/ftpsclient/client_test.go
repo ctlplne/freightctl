@@ -35,6 +35,8 @@ type fixture struct {
 	pasv, drop, fresh bool
 	unclean           bool
 	banner            string
+	reportedSize      *int64
+	afterRetrieve     func()
 }
 
 func newFixture(t *testing.T, implicit bool) *fixture {
@@ -162,7 +164,11 @@ func (f *fixture) serve() {
 			if !ok {
 				write("550 unavailable")
 			} else {
-				write(fmt.Sprintf("213 %d", len(b)))
+				size := int64(len(b))
+				if f.reportedSize != nil {
+					size = *f.reportedSize
+				}
+				write(fmt.Sprintf("213 %d", size))
 			}
 		case "EPSV", "PASV":
 			if verb == "EPSV" && f.pasv {
@@ -232,6 +238,9 @@ func (f *fixture) serve() {
 				b := append([]byte{}, f.files[arg]...)
 				f.mu.Unlock()
 				_, e = secured.Write(b)
+				if f.afterRetrieve != nil {
+					f.afterRetrieve()
+				}
 			}
 			if secure.FTPSDataResumed(secured) {
 				f.mu.Lock()
