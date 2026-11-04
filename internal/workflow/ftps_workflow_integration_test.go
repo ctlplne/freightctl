@@ -253,7 +253,7 @@ func TestRegisteredFTPSWorkflowLostRepliesRemainAmbiguousAndReadOnly(t *testing.
 					t.Fatal("reconciliation invented or missed exact publication")
 				}
 				readReceiverBytes(t, r, cut)
-				requireOnlyReceiverReadAudit(t, r, snapshot, snapshotReceiverReads(t, r), entry.FileID, phase)
+				requireOnlyReceiverReadAudit(t, r, snapshot, snapshotReceiverReads(t, r), entry.FileID, phase, mode)
 				if phase == "rename" {
 					var receipt map[string]any
 					json.Unmarshal(reconciled.Observation, &receipt)

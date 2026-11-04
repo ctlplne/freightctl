@@ -2340,14 +2340,42 @@
     {
       "id": "D146",
       "severity": "fresh PostgreSQL migration blocker",
-      "state": "repair prepared; original native replay pending",
+      "state": "repaired; both original native schema37 initializations and metadata restores pass",
       "observed_on": "2026-11-03",
       "candidate": "9d661519b2ae1ebfddd6fd7c2fea52a27a250526",
       "journey": "Fresh schema37 initialization before registered FTPS workflow qualification",
       "title": "A CASE expression inside the protocol guard IF must be grouped for the PL/pgSQL reader",
       "first_failure": "Both native Go/PostgreSQL jobs and both metadata jobs stop at initialization with SQLSTATE42601:syntax error at end of input. The separate direct dispatch job stops at the same initialization error. No new PostgreSQL workflow/receiver integration test executed. Full original logs are retained.",
-      "resolution": "Group the CASE expression used to compare the registered protocol schema inside the IF predicate. PostgreSQL expr_until_then/read_sql_construct stops on THEN outside parentheses; it consumes the first CASE THEN otherwise. The comparison and all exact bindings remain unchanged. Migration37 failed within the migration transaction and has no accepted ledger entry in any observed environment; migrations1\u201336 and retained35 remain unchanged. Repair requires fresh native initialization and the original suites plus new workflow cases to replay before it is called verified.",
+      "resolution": "Group the CASE expression used to compare the registered protocol schema inside the IF predicate. PostgreSQL expr_until_then/read_sql_construct stops on THEN outside parentheses; it consumes the first CASE THEN otherwise. The comparison and all exact bindings remain unchanged. Migration37 failed within the migration transaction and has no accepted ledger entry in any observed environment; migrations1\u201336 and retained35 remain unchanged. Repair requires fresh native initialization and the original suites plus new workflow cases to replay before it is called verified. At07a73b5 both complete native suites initialize successfully and both exact metadata restores pass schema37/64 tables/63 forced-RLS tables/42 synthetic rows. The public workflow and direct dispatch profiles also initialize and pass. Separate D147/D148 failures remain visible; those do not reopen this parser defect.",
       "mechanism_source": "https://github.com/postgres/postgres/blob/REL_17_STABLE/src/pl/plpgsql/src/pl_gram.y#L2535-L2601",
+      "regression_evidence": [
+        "docs/qualification/evidence/F073-ftps-workflow-connections.json"
+      ]
+    },
+    {
+      "id": "D147",
+      "severity": "native workflow qualification failure",
+      "state": "repair prepared; owner-paused before native runtime replay",
+      "observed_on": "2026-11-03",
+      "candidate": "07a73b5a55d6ae904fcca963a7db168f31c6bfa4",
+      "journey": "Registered FTPS bounded-program execution",
+      "title": "Independent bounded-program SQL compiler does not catalog FTPS delivery",
+      "first_failure": "Both actual native Linux suites at07a73b5 fail TestRegisteredFTPSWorkflowBoundedProgramUsesTheSameConsentAndSender with SQLSTATE23514:run requires exact independently compiled program and authoritative facts. Both suites retain667passes/4failed records/0skips. The original compiler in032 accepts only sftp.deliver.",
+      "resolution": "Append038 replacing the independent compiler with the same checks and an exact two-protocol catalog. Do not edit applied032/037. Local integration compilation and53reporter/7metadata contracts pass; PostgreSQL runtime replay remains pending at owner-requested halt. No retained schema upgrade.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F073-ftps-workflow-connections.json"
+      ]
+    },
+    {
+      "id": "D148",
+      "severity": "native workflow qualification failure",
+      "state": "repair prepared; owner-paused before native runtime replay",
+      "observed_on": "2026-11-03",
+      "candidate": "07a73b5a55d6ae904fcca963a7db168f31c6bfa4",
+      "journey": "Actual implicit FTPS lost-reply recovery and read-only audit proof",
+      "title": "Implicit FTPS recovery audit is compared to an explicit-only test expectation",
+      "first_failure": "Both actual native Linux suites at07a73b5 fail implicit stage and rename recovery at unexpected recovery protocol session. The shared qualification helper hardcodes ftps-explicit; original F071 cases used explicit mode only.",
+      "resolution": "Pass the configured listener mode to the shared helper and require exactly ftps-explicit or ftps-implicit as configured. Reject unknown modes. Preserve all original event, actor, session, digest, receiver-table, attempt/fence and no-resend checks. Local integration compilation passes; original native recovery runtime replay remains pending at owner-requested halt.",
       "regression_evidence": [
         "docs/qualification/evidence/F073-ftps-workflow-connections.json"
       ]

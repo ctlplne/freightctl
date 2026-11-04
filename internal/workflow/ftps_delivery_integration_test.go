@@ -226,8 +226,11 @@ func snapshotReceiverReads(t *testing.T, r *fixture) receiverReadSnapshot {
 	return result
 }
 
-func requireOnlyReceiverReadAudit(t *testing.T, r *fixture, before, after receiverReadSnapshot, fileID, phase string) {
+func requireOnlyReceiverReadAudit(t *testing.T, r *fixture, before, after receiverReadSnapshot, fileID, phase, mode string) {
 	t.Helper()
+	if mode != "explicit" && mode != "implicit" {
+		t.Fatal("unknown FTPS recovery audit profile")
+	}
 	if len(before.tables) != len(after.tables) {
 		t.Fatal("receiver table set changed")
 	}
@@ -256,7 +259,7 @@ func requireOnlyReceiverReadAudit(t *testing.T, r *fixture, before, after receiv
 		}
 		added = append(added, event)
 		if event.kind == "ProtocolSessionStarted" {
-			if session != "" || !store.ValidID(event.resource) || len(event.payload) != 3 || event.payload["protocol"] != "ftps-explicit" || event.payload["tls_profile"] != "tls13-resumed-data-v1" || event.payload["authority_revision"] != float64(identity.AuthorityRevision) {
+			if session != "" || !store.ValidID(event.resource) || len(event.payload) != 3 || event.payload["protocol"] != "ftps-"+mode || event.payload["tls_profile"] != "tls13-resumed-data-v1" || event.payload["authority_revision"] != float64(identity.AuthorityRevision) {
 				t.Fatal("unexpected recovery protocol session")
 			}
 			session = event.resource
@@ -392,7 +395,7 @@ func TestGovernedFTPSLostActualCompletionNeverResendsAndReconcilesReadOnly(t *te
 					t.Fatal("readback invented lost reply")
 				}
 			}
-			requireOnlyReceiverReadAudit(t, r, before, snapshotReceiverReads(t, r), entry.FileID, phase)
+			requireOnlyReceiverReadAudit(t, r, before, snapshotReceiverReads(t, r), entry.FileID, phase, "explicit")
 		})
 	}
 }

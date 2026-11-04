@@ -1,15 +1,16 @@
 """Explicit fresh-CI and retained metadata profiles; no database lifecycle."""
 import hashlib
 
-CURRENT_PROFILE = {"schema": 37, "metadata_tables": 64, "forced_rls_tables": 63}
-PREVIOUS_PROFILE = {"schema": 36, "metadata_tables": 64, "forced_rls_tables": 63}
+CURRENT_PROFILE = {"schema": 38, "metadata_tables": 64, "forced_rls_tables": 63}
+PREVIOUS_PROFILE = {"schema": 37, "metadata_tables": 64, "forced_rls_tables": 63}
+LEGACY_PROFILE = {"schema": 36, "metadata_tables": 64, "forced_rls_tables": 63}
 RETAINED_PROFILE = {"schema": 35, "metadata_tables": 64, "forced_rls_tables": 63}
 
 
 def profile(version):
     if type(version) is not int:
         raise ValueError("metadata schema profile differs")
-    for value in (CURRENT_PROFILE, PREVIOUS_PROFILE, RETAINED_PROFILE):
+    for value in (CURRENT_PROFILE, PREVIOUS_PROFILE, LEGACY_PROFILE, RETAINED_PROFILE):
         if version == value["schema"]:
             return value
     raise ValueError("metadata schema profile differs")

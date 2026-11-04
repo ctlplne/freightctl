@@ -3,7 +3,7 @@
   "id": "F073",
   "observed_at": "2026-11-03",
   "starting_commit": "7879c34f9e917d5c650a60b1800c59050044c01a",
-  "state": "first native37 initialization fails atD146; syntax repair and public workflow profile prepared; replay pending",
+  "state": "owner-paused after native schema37 replay; public consent passes; D147/D148 repairs saved with runtime replay pending",
   "scope": "Next dependency: versioned registered FTPS destinations and typed workflow sending through ordinary execution and independent dispatch consent. This does not replace remaining encryption, collection, independent peer or whole-product requirements.",
   "first_failure": {
     "kind": "actual native ARM typed-workflow contract",
@@ -74,13 +74,13 @@
     "FTPS collection, independent supported x86 receiver qualification, broader protocol behavior and complete receiving/sending customer journeys remain required.",
     "D145 stays open as intermittent despite a passing diagnostic replay. Windows D103 and all83 whole baseline rows/12 full journeys remain open."
   ],
-  "next_action": "Push the grouped CASE repair and the public workflow profile, replay the exact original native suites and execute the new service/browser cases. Preserve first failures. C01\u2013C10 and the whole goal remain open.",
+  "next_action": "On owner resume, push the local schema38 compiler and exact-mode audit repairs, then replay both original native Go/PostgreSQL suites and fresh metadata profiles. C01-C10, mixed SFTP/FTPS execution and whole-product gates remain open.",
   "implementation_checkpoint": {
     "versioned_connection": "schema2 FTPS definitions, strict canonical validation and redacted reference fingerprints",
     "typed_execution": "ftps.deliver uses exact registered protocol/version; queued delivery includes the workflow/run/step/connection binding; unsupported recipient encryption remains refused",
-    "database_guards": "new append-only037 migration checks connection protocol and exact workflow/delivery/dispatch effects; embedded/compiled only, not runtime-qualified",
+    "database_guards": "schema37 applied successfully in fresh native fixtures; append-only038 adds FTPS to the bounded program compiler catalog. Migration37 remains byte-identical. Schema38 has compile-only local evidence, not PostgreSQL runtime qualification.",
     "browser": "shared typed workflow binding parser and two new matching Go/browser FTPS workflow fixtures; original four fixture meanings and hashes preserved",
-    "schema_profiles": "fresh37, explicit previous36 and retained35 all require their exact source migration ledger; no retained upgrade performed",
+    "schema_profiles": "fresh38, previous37, legacy36 and retained35 require exact source migration ledgers; no retained upgrade performed",
     "embedded_assets": "rebuilt and source/output closure checked"
   },
   "local_checks": {
@@ -102,14 +102,24 @@
   "qualification_claim": false,
   "pause_handoff": {
     "requested_by": "owner",
-    "state": "historical pause completed; owner resumed the goal",
-    "remaining": [
-      "Add the frozen real PostgreSQL/application-receiver workflow integration cases; none has executed for schema37.",
-      "Extend the public CLI/API/browser qualification from direct FTPS intents to workflow-created intents; C01\u2013C10 remain unqualified.",
-      "On explicit resume, use the existing source/CI push authorization to run original fresh native Linux, metadata, stock and browser suites through GitHub.",
-      "Keep retained35 unchanged, local inference off and F026 owner-deferred. D145 remains intermittent and WindowsD103/x86vendor gates remain open."
+    "state": "paused at explicit graceful-halt request; local repair checkpoint only",
+    "prepared_repairs": [
+      "D147: append migration038 replacing only the independent program compiler catalog predicate to admit sftp.deliver and ftps.deliver; preserve all other node/facts/visit/outcome checks.",
+      "D148: bind receiver recovery audit protocol to the exact configured listener mode; preserve all actor, session, digest, receiver-table and original-event checks."
     ],
-    "resume_at": "Complete F073 integration/public qualification using the frozen cases and current partial implementation. Do not mark F073 or the overall goal complete from these local contracts."
+    "local_checks": {
+      "go_integration_compilation": "passed; no runtime tests executed",
+      "ftps_reporter_tests": 53,
+      "metadata_tests": 7,
+      "schema38_runtime_executed": false
+    },
+    "remaining": [
+      "Replay schema38 initialization, both complete native application suites and the original failing cases on fresh GitHub databases after owner resume.",
+      "Continue frozen C01-C10 coverage, including successful mixed SFTP/FTPS ordered execution without weakening SFTP publication guarantees.",
+      "Keep retained schema35 unchanged, local inference off, F026 owner-deferred and all unresolved whole-goal gates visible."
+    ],
+    "push_at_this_halt": false,
+    "new_ci_started_at_this_halt": false
   },
   "resumed_from_commit": "463b6ca7976aaabe5e485f95f104feec8a73d5b5",
   "resume_compile": {
@@ -150,7 +160,7 @@
     "native_originals_manifest_sha256": "469e58bdd32f22c3228a4a55f2e2b5f3b24282787739cd199b96ef2f23432d40"
   },
   "public_workflow_profile": {
-    "state": "implemented; native execution pending",
+    "state": "passed on actual native x86 GitHub runner at07a73b5",
     "workflow": ".github/workflows/ftps-workflows.yml",
     "qualifier_flag": "--workflow-dispatch-approvals",
     "reporter_flag": "--require-workflow-dispatch-approvals",
@@ -161,7 +171,23 @@
     "original_key_browser_replays_each_mode": 3,
     "wcag_audits_each_mode": 9,
     "source": "Actual stock-uploaded bytes in fresh PostgreSQL/storage. Registered connection/workflow creation uses CLI; HTTPS replays the original CLI workflow-run key. Least-privilege browser consent uses the exact workflow/connection binding. Rotation/revocation retain the original untouched delivery.",
-    "limits": "Contact-only stand-in proves zero connections and no attempt/fence use during metadata/refusal cases. It does not qualify FTPS bytes,independent vendor behavior or receiver persistence. New native service cases separately exercise actual receiver bytes; those are pending."
+    "limits": "Contact-only stand-in proves zero connections and no attempt/fence use during metadata/refusal cases. It does not qualify FTPS bytes, independent vendor behavior or receiver persistence. Separate application-receiver tests ran in native suites; those suites retain D147/D148 failures.",
+    "native_result": {
+      "candidate": "07a73b5a55d6ae904fcca963a7db168f31c6bfa4",
+      "run_id": 41763673133,
+      "job_id": 126356936923,
+      "commands": 200,
+      "baseline_ftps_records": 21,
+      "browser_phases": 6,
+      "original_key_replays": 6,
+      "wcag_audits": 18,
+      "strict_cli_refusals": 8,
+      "receiver_contacts": 0,
+      "delivery_attempts": 0,
+      "delivery_fences": 0,
+      "both_contact_spies_stopped": true,
+      "result_manifest_sha256": "7098cbeaf52af9c4c8b554ba2a6665680cf6ac2f6e88b17d4a4b7c3c96a265ce"
+    }
   },
   "public_profile_local_checks": {
     "frontend_pass_records": 120,
@@ -177,5 +203,33 @@
     "manifest_sha256": "88dec30b8cccd233d83bea5b592bfcec5ffcdadb3ae51f0d0957bf5bd9d5f186",
     "workflow_refusal_manifest_reference": ".private/freightctl-f073-workflow-refusals-9rafactc/manifest.json",
     "workflow_refusal_manifest_sha256": "ecbc8f577b3e0f80ccd0003f767d69bf88ee30c42dd11cbedab9141b84ae23c2"
+  },
+  "native_replay": {
+    "candidate": "07a73b5a55d6ae904fcca963a7db168f31c6bfa4",
+    "schema37_initialization": "passed; D146 repaired",
+    "linux_run_id": 41763673081,
+    "go_job_ids": [
+      126356937343,
+      126356937395
+    ],
+    "application_pass_records_each": 667,
+    "application_fail_records_each": 4,
+    "application_skip_records_each": 0,
+    "failures": [
+      "TestRegisteredFTPSWorkflowLostRepliesRemainAmbiguousAndReadOnly",
+      "TestRegisteredFTPSWorkflowLostRepliesRemainAmbiguousAndReadOnly/implicit/stage",
+      "TestRegisteredFTPSWorkflowLostRepliesRemainAmbiguousAndReadOnly/implicit/rename",
+      "TestRegisteredFTPSWorkflowBoundedProgramUsesTheSameConsentAndSender"
+    ],
+    "metadata_job_ids": [
+      126356937095,
+      126356937490
+    ],
+    "metadata_result": "both schema37/64 tables/63 forced-RLS tables/42 synthetic rows passed",
+    "other_results": "Core, direct/public workflow consent, receiving browser, both stock FTPS, all five stock peers, first enrollment, fuzz, three native source-security profiles and Mac passed. Windows retains exactly44D103 records.",
+    "completed_regression_logs_manifest": ".private/freightctl-f073-native-replay-07a-X5g1RcBP/manifest.json",
+    "completed_regression_logs_manifest_sha256": "617a3f9895880de0bf3b5527281ba67d326337234478f9a8d4cd56e188e6b152",
+    "original_failure_and_local_repair_manifest": ".private/freightctl-f073-halt-vH1GULbk/manifest.json",
+    "original_failure_and_local_repair_manifest_sha256": "77a8d3d3af1635a4bc02dce64bc10b0d8c26ac0f3c69922fd5141e57de62e1cd"
   }
 }
