@@ -9,6 +9,7 @@ import json
 from pathlib import Path
 import re
 import uuid
+from urllib.parse import urlsplit
 
 import ftps_collection_metadata as metadata
 import ftps_collection_source as source
@@ -186,11 +187,19 @@ def exercise(root, private, mode, database, http_port, cert, binary, tenant, par
     else:
         witness.stop()
     observed = inventory(private, mode)
-    return validate(root, private, mode, steps, observed), observed
+    return validate(root, private, mode, steps, observed, database), observed
 
 
-def validate(root, private, mode, steps, observed):
-    require(mode in ('explicit', 'implicit'), 'operator mode differs')
+def validate(root, private, mode, steps, observed, database):
+    require(mode in ('explicit', 'implicit') and type(database) is str
+        and re.fullmatch('freightctl_ftps_[0-9a-f]{32}', database), 'operator mode or fresh database differs')
+    dsn = private/'pg-runtime.dsn'
+    require(not any(p.is_symlink() for p in (dsn, *dsn.parents)) and dsn.stat().st_mode & 0o077 == 0,
+        'operator runtime database reference is linked or not private')
+    uri = urlsplit(read(dsn, 4096).decode())
+    require(uri.scheme in ('postgres', 'postgresql') and uri.hostname in ('127.0.0.1', '::1')
+        and type(uri.port) is int and 1 <= uri.port <= 65535 and uri.path == '/'+database,
+        'operator runtime database differs from original parent estate')
     directory, helper = private/('collection-operator-'+mode), private/('source-helper-'+mode)
     require(type(observed) is dict and set(observed) == {'operator', 'source', 'helper_sha256'}
         and set(observed['operator']) == FILES and set(observed['source']) == {'config.json', 'counter.json'},
@@ -224,7 +233,7 @@ def validate(root, private, mode, steps, observed):
         'operator stock producer credentials or TLS configuration changed')
     stopped = source.counter(helper/'counter.json', mode, True)
     require(stopped['accepted_connections'] == 3, 'operator stopped source count differs')
-    helper_config = {'database': 'freightctl_ftps_'+private.name.removeprefix('ftps-'),
+    helper_config = {'database': database,
         'dsn_file': str(private/'pg-runtime.dsn'), 'storage': str(private/'custody'),
         'certificate': str(private/'cert.pem'), 'key': str(private/'key.pem'), 'mode': mode}
     require(metadata.same(metadata.load(helper/'config.json'), helper_config), 'operator source fixture detached from exact estate')

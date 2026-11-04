@@ -27,6 +27,10 @@ class OperatorContracts(unittest.TestCase):
         for name, value in (('cert.pem', b'synthetic CA'), ('owner.token', b'owner-private-canary'), ('key.pem', b'synthetic key')):
             metadata.private_write(self.private/name, value)
         self.steps, self.argv, self.stops, self.counts = [], [], [], {}
+        # The real parent generates estate and database IDs independently.
+        self.database = 'freightctl_ftps_'+'b'*32
+        metadata.private_write(self.private/'pg-runtime.dsn',
+            ('postgresql://runtime:private-stand-in@127.0.0.1:25432/'+self.database+'?sslmode=disable').encode())
         self.fail_browser = False
         self.consumer = {'tenant_id': '10000000-1111-4111-8111-111111111111',
             'partner_id': '10000001-1111-4111-8111-111111111111',
@@ -38,6 +42,7 @@ class OperatorContracts(unittest.TestCase):
         class FakeSource:
             def __init__(self, root, private, mode, database, steps, bounded_output):
                 self.mode, self.private, self.steps = mode, private, steps
+                self.database = database
                 self.directory = private/('source-helper-'+mode)
                 self.label = 'cli-'+mode+'-collection-source'
                 self.closed = False
@@ -55,7 +60,7 @@ class OperatorContracts(unittest.TestCase):
 
             def start(self):
                 self.directory.mkdir(mode=0o700)
-                metadata.private_write(self.directory/'config.json', metadata.canonical({'database': 'freightctl_ftps_'+'a'*32,
+                metadata.private_write(self.directory/'config.json', metadata.canonical({'database': self.database,
                     'dsn_file': str(self.private/'pg-runtime.dsn'), 'storage': str(self.private/'custody'),
                     'certificate': str(self.private/'cert.pem'), 'key': str(self.private/'key.pem'), 'mode': self.mode}))
                 return self.save()
@@ -212,12 +217,12 @@ class OperatorContracts(unittest.TestCase):
     def run_fixture(self, mode='explicit'):
         self.views = getattr(self, 'views', {})
         with patch.object(metadata, 'require_environment'), patch.object(operator.source, 'Source', self.fake_source):
-            return operator.exercise(self.root, self.private, mode, 'freightctl_ftps_'+'a'*32, 49152,
+            return operator.exercise(self.root, self.private, mode, self.database, 49152,
                 self.private/'cert.pem', self.private/'freightctl', self.consumer['tenant_id'], self.consumer['partner_id'],
                 self.private/'owner.token', self.steps, self.command, lambda: None)
 
     def check(self, mode='explicit'):
-        return operator.validate(self.root, self.private, mode, self.steps, operator.inventory(self.private, mode))
+        return operator.validate(self.root, self.private, mode, self.steps, operator.inventory(self.private, mode), self.database)
 
     def change(self, path, mutate):
         value = metadata.load(path)
@@ -290,7 +295,27 @@ class OperatorContracts(unittest.TestCase):
         self.change(path, lambda v: v.update(stopped=True))
         (self.private/'collection-operator-explicit/consumer.body').write_bytes(b'wrong')
         with self.assertRaisesRegex(ValueError, 'original evidence changed'):
-            operator.validate(self.root, self.private, 'explicit', self.steps, inventory)
+            operator.validate(self.root, self.private, 'explicit', self.steps, inventory, self.database)
+
+    def test_parent_database_and_protected_runtime_reference_must_agree_without_deriving_from_directory_uuid(self):
+        self.run_fixture()
+        self.assertNotEqual(self.private.name.removeprefix('ftps-'), self.database.removeprefix('freightctl_ftps_'))
+        self.assertEqual(self.check()['state'], 'passed')
+        path = self.private/'pg-runtime.dsn'
+        original = path.read_bytes()
+        for dsn in (b'postgresql://runtime@127.0.0.1:25432/freightctl',
+                ('postgresql://runtime@127.0.0.1:25432/freightctl_ftps_'+'a'*32).encode(),
+                ('postgresql://runtime@remote.invalid:25432/'+self.database).encode()):
+            path.write_bytes(dsn)
+            with self.assertRaises(ValueError):
+                self.check()
+        path.write_bytes(original)
+        path.chmod(0o644)
+        with self.assertRaises(ValueError):
+            self.check()
+        path.chmod(0o600)
+        with self.assertRaises(ValueError):
+            operator.validate(self.root, self.private, 'explicit', self.steps, operator.inventory(self.private, 'explicit'), None)
 
     def test_fixed_diagnostics_refuse_secret_fields_unknown_stages_and_boolean_lines(self):
         value = {'kind': 'ftps-operator-browser-failure', 'mode': 'implicit', 'stage': 'operator-work',

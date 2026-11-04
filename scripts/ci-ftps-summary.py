@@ -163,6 +163,13 @@ def failure_diagnostics(root, result, commit):
         if (type(operator_failure) is dict and operator_failure.get("mode") in {"explicit", "implicit"}
                 and operator_failure.get("category") == "original-output-contract"):
             outcome["collection_operator_evidence_failure"] = {"mode": operator_failure["mode"], "category": "original-output-contract"}
+        diagnostic = manifest.get('collection_metadata_diagnostics')
+        if (type(diagnostic) is dict and set(diagnostic) == {'mode', 'stage', 'category'}
+                and type(diagnostic['mode']) is str and diagnostic['mode'] in ('explicit', 'implicit')
+                and type(diagnostic['stage']) is str and diagnostic['stage'] in ('metadata-exercise', 'browser-exercise', 'browser-reopen')
+                and type(diagnostic['category']) is str and diagnostic['category'] in
+                    set(collection_metadata.FAILURE_CODES.values())|set(collection_browser.FAILURE_CODES.values())|collection_metadata.BASE_FAILURE_CODES):
+            outcome['collection_metadata_diagnostics'] = dict(diagnostic)
         invariant = manifest.get("browser_evidence_failure")
         if isinstance(invariant,dict) and invariant.get("mode") in {"explicit","implicit"} and invariant.get("invariant") in browser_evidence.EVIDENCE_FAILURES:
             outcome["browser_evidence_failure"] = {"mode":invariant["mode"],"invariant":invariant["invariant"]}
@@ -324,7 +331,7 @@ def summarize(root, result, commit, require_browser=False, require_tickets=False
         raise ValueError("required FTPS collection operator profile did not run")
     if operator_requested:
         for mode in ("explicit", "implicit"):
-            checked = collection_operator.validate(root, path.parent, mode, steps, manifest.get("collection_operator_output_sha256", {}).get(mode))
+            checked = collection_operator.validate(root, path.parent, mode, steps, manifest.get("collection_operator_output_sha256", {}).get(mode), manifest.get("database"))
             if not collection_metadata.same(manifest.get("collection_operator_governance", {}).get(mode), checked):
                 raise ValueError("collection operator outcomes differ from original evidence")
     elif any(collection_operator.command_suffix(n) for n in names):

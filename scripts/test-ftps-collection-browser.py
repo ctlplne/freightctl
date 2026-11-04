@@ -18,6 +18,13 @@ spec.loader.exec_module(fixture)
 
 
 class BrowserEvidenceContracts(unittest.TestCase):
+    def test_fixed_original_evidence_reason_does_not_emit_private_exception_fields(self):
+        for message, code in browser.FAILURE_CODES.items():
+            self.assertEqual(browser.failure_code(ValueError(message)), code)
+            self.assertEqual(browser.failure_code(ValueError(message+' private-canary')), 'unrecognized-evidence')
+        self.assertEqual(browser.failure_code(KeyError('private-canary')), 'missing-field')
+        self.assertEqual(browser.failure_code(OSError('private-canary')), 'filesystem')
+
     def fixture(self, mode='explicit'):
         case = fixture.CollectionMetadataContracts('runTest')
         case.setUp()

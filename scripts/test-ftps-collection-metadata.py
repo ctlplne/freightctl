@@ -13,6 +13,13 @@ import ftps_collection_metadata as metadata
 
 
 class CollectionMetadataContracts(unittest.TestCase):
+    def test_fixed_evidence_classification_does_not_expose_exception_text(self):
+        self.assertEqual(metadata.failure_code(ValueError('collection metadata command closure differs')), 'command-closure')
+        self.assertEqual(metadata.failure_code(KeyError('private-canary')), 'missing-field')
+        self.assertEqual(metadata.failure_code(OSError('private-canary')), 'filesystem')
+        self.assertEqual(metadata.failure_code(ValueError('private-canary')), 'unrecognized-evidence')
+        self.assertEqual(metadata.failure_code(RuntimeError('collection metadata command closure differs')), 'unrecognized-evidence')
+
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory(prefix='freightctl-collection-metadata-')
         self.addCleanup(self.temporary.cleanup)

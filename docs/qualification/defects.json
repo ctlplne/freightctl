@@ -2694,6 +2694,36 @@
       "regression_evidence": [
         "docs/qualification/evidence/F075-peer-image-security.json"
       ]
+    },
+    {
+      "id": "D169",
+      "severity": "qualification verifier",
+      "state": "local reproduction repaired; actual operator execution pending",
+      "observed_on": "2026-11-04",
+      "candidate": "d6cedfb3a4497c33b90f34933e939ad229e3e157",
+      "journey": "F076public operator native source",
+      "title": "Operator verifier derives a fresh database from an unrelated private-directory UUID",
+      "first_failure": "Independent parent database/private-directory IDs reproduce4checker errors among6original stand-in methods:operator source fixture detached from exact estate. Parent runner creates these UUIDs independently; original paired fixture concealed the assumption.",
+      "cause": "Verifier builds expected database from private.name instead of parent database and protected runtime DSN. Native Go helper already validates actual configured DSN and does not require matching UUIDs.",
+      "resolution": "Pass exact fresh parent database through exercise and aggregate reporter; reopen protected nonlinked numeric-loopback DSN and require the same database/helper config.7operator methods and71reporter methods pass; no original assertion weakened. Runtime qualification pending; not a claimed cause of D170before operator execution.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F076-ftps-collection.json"
+      ]
+    },
+    {
+      "id": "D170",
+      "severity": "public browser evidence qualification",
+      "state": "first actual metadata reopener failures retained; fixed reason diagnostics prepared",
+      "observed_on": "2026-11-04",
+      "candidate": "d6cedfb3a4497c33b90f34933e939ad229e3e157",
+      "journey": "F076public collection metadata Chrome",
+      "title": "Both matrices complete the explicit metadata browser command then fail original evidence reopening",
+      "first_failure": "Jobs126921241643/126921242145 both show cli-explicit-collection-browser stagecomplete,no failed CLI/native/lftp commands,then collection_metadata_evidence_failure original-output-contract. Exact retained metadata/resource/database cleanup passes; first explicit estate stops before byte operator.",
+      "cause": "Unobserved. Aggregate protected-output contract lacks a fixed checker stage/reason. Do not invent failed wire/header/step/file assertion or blame later operator database check.",
+      "resolution": "Add only fixed metadata/browser exercise/reopen stages and exact allowlisted verifier reason codes,generic JSON/key/filesystem categories,original source/output hashes and privacy refusal tests.9metadata/8browser/71reporter methods pass; actual diagnostic replay and repair remain required.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F076-ftps-collection.json"
+      ]
     }
   ]
 }

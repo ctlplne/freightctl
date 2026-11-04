@@ -82,12 +82,14 @@ class SummaryContracts(unittest.TestCase):
             collection_browser_governance={m: old for m in ('explicit', 'implicit')},
             collection_operator_governance={m: checked for m in ('explicit', 'implicit')},
             collection_operator_output_sha256={m: {'synthetic': 'a'*64} for m in ('explicit', 'implicit')})
+        self.manifest['database'] = 'freightctl_ftps_'+'b'*32
         with patch.object(summary.dispatch, 'validate', return_value=old), patch.object(summary.collection_metadata, 'validate', return_value=old), patch.object(summary.collection_browser, 'validate', return_value=old):
             with self.assertRaises(ValueError):
                 self.check()
             with patch.object(summary.collection_operator, 'validate', return_value=checked) as verify:
                 result = self.check()
                 self.assertEqual([call.args[2] for call in verify.call_args_list], ['explicit', 'implicit'])
+                self.assertEqual([call.args[5] for call in verify.call_args_list], [self.manifest['database']]*2)
                 self.assertEqual(result['ftps_collection_operator_phases'], 2)
                 self.assertEqual(result['ftps_collection_operator_saved_key_replays'], 8)
                 self.assertEqual(result['ftps_collection_operator_source'], 'native-freightctl')
@@ -95,6 +97,20 @@ class SummaryContracts(unittest.TestCase):
                 self.manifest['collection_operator_governance']['implicit'] = dict(checked, original_key_replays=True)
                 with self.assertRaises(ValueError):
                     self.check()
+
+    def test_collection_evidence_failure_codes_cannot_print_exception_fields_or_unbound_categories(self):
+        diagnostic = {'mode': 'explicit', 'stage': 'browser-reopen', 'category': 'chrome-record'}
+        self.manifest['collection_metadata_diagnostics'] = diagnostic
+        self.write()
+        result = summary.failure_diagnostics(self.root, self.result, 'a'*40)
+        self.assertEqual(result['collection_metadata_diagnostics'], diagnostic)
+        for change in ({'mode': 'private-canary'}, {'stage': '/private/canary'}, {'category': 'private-canary'},
+                {'category': True}, {'exception': 'private-canary'}):
+            self.manifest['collection_metadata_diagnostics'] = dict(diagnostic, **change)
+            self.write()
+            result = summary.failure_diagnostics(self.root, self.result, 'a'*40)
+            self.assertNotIn('collection_metadata_diagnostics', result)
+            self.assertNotIn('private-canary', json.dumps(result))
 
     def test_collection_operator_diagnostics_bind_first_failure_to_exact_mode_and_original_outputs(self):
         name = 'cli-explicit-collection-operator-browser'

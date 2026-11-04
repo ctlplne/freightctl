@@ -21,6 +21,48 @@ FILES = frozenset(('connection.json', 'workflow-preview.json', 'workflow.json', 
     'cancel.json', 'source-password', 'source.json', 'owner.headers', 'collection-api-replay.body',
     'collection-api-history-replay.body'))
 
+FAILURE_CODES = {
+    'collection metadata HTTPS original identity/key differs': 'api-identity-key',
+    'collection metadata HTTPS replay failed': 'api-replay',
+    'collection metadata admission differs': 'admission',
+    'collection metadata authenticated identity missing': 'identity',
+    'collection metadata cancel receipt differs': 'cancel-receipt',
+    'collection metadata command closure differs': 'command-closure',
+    'collection metadata command failed or changed': 'command-result',
+    'collection metadata connection replay differs': 'connection-replay',
+    'collection metadata current/history identity differs': 'history',
+    'collection metadata duplicate evidence key': 'json-duplicate',
+    'collection metadata exact source preview changed': 'source-preview',
+    'collection metadata file closure differs': 'file-closure',
+    'collection metadata input changed': 'input-bytes',
+    'collection metadata input shape differs': 'input-shape',
+    'collection metadata invalid JSON number': 'json-number',
+    'collection metadata original admission request differs': 'admission-request',
+    'collection metadata original connection differs': 'source-connection',
+    'collection metadata original credential references differ': 'credential-reference',
+    'collection metadata performed or invented acquisition': 'unexpected-acquisition',
+    'collection metadata requires its disposable GitHub runner': 'environment',
+    'collection metadata reviewed workflow request differs': 'workflow-request',
+    'collection metadata saved-key result changed': 'saved-key-receipt',
+    'collection metadata source revocation differs': 'source-revocation',
+    'collection metadata unexpected floating number': 'json-floating-number',
+    'collection metadata unsafe evidence name': 'evidence-name',
+    'collection metadata workflow changed': 'workflow',
+    'collection metadata workflow preview changed': 'workflow-preview',
+}
+BASE_FAILURE_CODES = frozenset(('invalid-json', 'missing-field', 'filesystem', 'unrecognized-evidence'))
+
+
+def failure_code(error, reasons=None):
+    reasons = FAILURE_CODES if reasons is None else reasons
+    if isinstance(error, json.JSONDecodeError):
+        return 'invalid-json'
+    if isinstance(error, KeyError):
+        return 'missing-field'
+    if isinstance(error, OSError):
+        return 'filesystem'
+    return reasons.get(str(error), 'unrecognized-evidence') if isinstance(error, ValueError) else 'unrecognized-evidence'
+
 
 def require_environment(root):
     require(os.environ.get('GITHUB_ACTIONS') == 'true' and platform.system() == 'Linux'

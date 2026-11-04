@@ -332,20 +332,28 @@ def main():
                 manifest.setdefault(kind+"_governance", {})[mode] = checked
                 manifest.setdefault(kind+"_output_sha256", {})[mode] = inventory
                 if args.workflow_collection_metadata:
+                    collection_stage = 'metadata-exercise'
                     try:
                         browser_inventory = {}
                         def collection_browser_phase(c, approved, view, counter):
+                            nonlocal collection_stage
+                            collection_stage = 'browser-exercise'
                             browser_inventory.update(collection_browser.exercise(ROOT, private, mode, http_port,
                                 cert, tenant, partner, token, observer.steps, command, c, approved, view, counter))
+                            collection_stage = 'metadata-exercise'
                         checked, inventory = collection_metadata.exercise(ROOT, private, mode, http_port, cert,
                             binary, tenant, partner, token, observer.steps, command,
                             collection_browser_phase if args.workflow_collection_browser else None)
                         if args.workflow_collection_browser:
+                            collection_stage = 'browser-reopen'
                             browser_checked = collection_browser.validate(ROOT, private, mode, observer.steps, browser_inventory)
                             manifest.setdefault("collection_browser_governance", {})[mode] = browser_checked
                             manifest.setdefault("collection_browser_output_sha256", {})[mode] = browser_inventory
-                    except Exception:
+                    except Exception as failure:
                         manifest["collection_metadata_evidence_failure"] = {"mode": mode, "category": "original-output-contract"}
+                        classifier = collection_browser if collection_stage == 'browser-reopen' else collection_metadata
+                        manifest['collection_metadata_diagnostics'] = {'mode': mode, 'stage': collection_stage,
+                            'category': classifier.failure_code(failure)}
                         raise RuntimeError("collection metadata original evidence check failed") from None
                     manifest.setdefault("collection_metadata_governance", {})[mode] = checked
                     manifest.setdefault("collection_metadata_output_sha256", {})[mode] = inventory

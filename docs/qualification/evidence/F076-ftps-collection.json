@@ -3,7 +3,7 @@
   "id": "F076",
   "observed_at": "2026-11-04",
   "starting_commit": "4d771b2e6a961a70b764681fd578ff175d064db7",
-  "state": "Both f08 native application suites880pass/0fail/0skip with all17FTPSleaves including repairedD164/D165 and process-death pairs. Image jobs red at actual file budgetD168. d6cedfb original-wire/public operator candidate is running/queued; local mixed leaves compile/vet only. All whole rows/journeys remain open.",
+  "state": "Both f08native application suites880/0/0/all17FTPSleaves pass;image jobs remainD168red. D6corepasses141frontend/source checks,but both public profiles stop after successful explicit metadata Chrome at unclassified evidence reopeningD170. Exact parent-DB repairD169 and private-safe verifier diagnostics pass local contracts only. Whole goal open.",
   "scope": "Read/copy input stage of ordinary immutable workflows, using exact registered FTPS revisions and the existing bounded producer-manifest, custody, intake, lease and event machinery. Transport metadata reading alone does not qualify collection.",
   "qualification_claim": false,
   "frozen_cases": [
@@ -306,14 +306,14 @@
     "native_run_id": 41929132201,
     "native_state": "queued/unqualified; five exact jobs now created",
     "public_workflow_operator_run_id": 41929132162,
-    "public_state": "recipient-encrypted126921241643 running;plaintext126921242145 queued; no operator pass inferred",
+    "public_state": "Both completed/failure:first explicit metadata Chrome command completes but original evidence validation refuses; no byte operator phase reached. D170cause unobserved; original logs retained.",
     "public_jobs": [
       126921241643,
       126921242145
     ],
     "core_run_id": 41929132273,
     "core_job_id": 126921241711,
-    "core_state": "126921241711 running/unqualified",
+    "core_state": "completed/success:141frontend/0fail/0skip and exact d6source/security checks only",
     "scope": "Source includes full operator producer/driver/strict verifier and required CI flags,verified-curl original-body repair,141frontend/70reporter and focused fixture contracts. Every prior runtime result remains scoped to its exact source. No runtime success inferred for this candidate.",
     "source_push_authorized": true,
     "submission_rule": "Every required f08 native/public job started before push; original public/core/stock outcomes retained and native/metadata/fuzz jobs preserved with cancel-in-progress false. Hold another relevant source candidate until required d6c jobs start. No artifact,release,retained upgrade or deployment.",
@@ -797,5 +797,49 @@
     "local_scope": "Integration race binary compiles and Go vet passes only. No local runtime/services. Native source and FTPS receiver are explicit stand-ins;stock OpenSSH/GnuPG independently verify their own boundaries. Runtime,whole journey and business acceptance remain unqualified.",
     "runtime_qualification": false,
     "submission_state": "local only; does not belong to already pushed d6cedfb"
+  },
+  "source_d6_observation": {
+    "candidate": "d6cedfb3a4497c33b90f34933e939ad229e3e157",
+    "public_run_id": 41929132162,
+    "public": [
+      {
+        "profile": "recipient-encrypted",
+        "job_id": 126921241643,
+        "manifest_reference": ".private/freightctl-f076-d6-encrypted-sRXkNI/manifest.json",
+        "manifest_sha256": "dc01bd975d2feeb00e1d791f7ec37e1a3f0ee10c6eefa5fcd5beeaedda303a61"
+      },
+      {
+        "profile": "plaintext",
+        "job_id": 126921242145,
+        "manifest_reference": ".private/freightctl-f076-d6-plaintext-8HSJ9f/manifest.json",
+        "manifest_sha256": "85b10ac2aa5ac1afaaa7fa82fe972a75d0030ee516a2d0628dfc5d441558edfa"
+      }
+    ],
+    "public_scope": "Both first explicit metadata browser processes complete with no CLI/native/lftp failures; then original metadata/browser evidence reopening refuses. Exact retained-state/database/resource cleanup passes. Underlying checker cause is not exposed; do not attribute it to the separate operator database assumption before operator runs.",
+    "core": {
+      "run_id": 41929132273,
+      "job_id": 126921241711,
+      "state": "success",
+      "frontend_pass": 141,
+      "frontend_fail": 0,
+      "frontend_skip": 0,
+      "manifest_reference": ".private/freightctl-f076-d6-core-6ula79/manifest.json",
+      "manifest_sha256": "45894d307737491168e9ca72628aed03f9e3b40f38d9cabc0dce684b4350d31e"
+    },
+    "native": "All five required jobs remain queued/unqualified; preserve pending candidate."
+  },
+  "parent_database_repair_prepared": {
+    "defect": "D169",
+    "mechanism": "Parent intentionally creates independent private directory and fresh database UUIDs. Pass exact parent manifest database to producer/reporter verification; require fresh freightctl_ftps name, protected nonlinked numeric-loopback DSN for that exact database, and matching helper configuration. Do not infer database identity from the directory. All original source/byte/approval/receipt constraints stay enforced.",
+    "first_failure": "Independent UUIDs reproduce4errors among6original stand-in methods at helper-config comparison. This local verifier bug is separate from D170actual metadata reopening failure before operator execution.",
+    "diagnostics": "Fixed metadata-exercise/browser-exercise/browser-reopen stage and exact allowlisted evidence reason codes; JSON/missing-field/filesystem exceptions have generic codes only. No exception prose,paths,credentials or identities leave protected evidence.",
+    "local_manifest_reference": ".private/freightctl-f076-parent-db-local-2edyejzh/manifest.json",
+    "local_manifest_sha256": "5d652ab4d484593ccdb09a64d45f444c5d65e9928552e42dfd4703cdb6c9cd81",
+    "operator_methods": 7,
+    "metadata_methods": 9,
+    "browser_methods": 8,
+    "reporter_methods": 71,
+    "runtime_qualification": false,
+    "scope": "Actual Python producer/verifiers with process/HTTP/Page/file stand-ins only; no local DB/source/socket/browser/scanner/model. Actual operator runtime and D170cause repair still required."
   }
 }

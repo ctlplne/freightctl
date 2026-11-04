@@ -20,6 +20,34 @@ FILES = frozenset(('config.json', 'raw/ftps-collection-browser-result.json',
     *('raw/'+name+'.'+suffix for name in ('workflow-preview', 'collection-view') for suffix in ('json', 'request', 'headers')),
     *(('raw/'+name+'-axe.json') for name in AUDITS)))
 
+FAILURE_CODES = {
+    'collection actual Chrome did not pass': 'chrome-record',
+    'collection browser HTTPS address differs': 'url',
+    'collection browser accessibility audit missing or failed': 'accessibility',
+    'collection browser evidence directory is linked': 'directory-link',
+    'collection browser evidence directory is not private': 'directory-permissions',
+    'collection browser file closure differs': 'file-closure',
+    'collection browser fixture detached from original CLI evidence': 'config-binding',
+    'collection browser inventory differs': 'inventory',
+    'collection browser mode differs': 'mode',
+    'collection browser original HTTP identity differs': 'http-identity',
+    'collection browser original HTTP response differs': 'http-response',
+    'collection browser original evidence changed': 'evidence-bytes',
+    'collection browser original header duplicated or invalid': 'headers',
+    'collection browser original source or queued state differs': 'queued-source',
+    'collection browser original wire request differs': 'wire-request',
+    'collection browser output exposed private references': 'private-reference',
+    'collection browser process did not pass': 'process-exit',
+    'collection browser process output changed': 'process-bytes',
+    'collection browser rendered identity or privacy differs': 'visible-identity',
+    'collection browser reviewed metadata or contacts differ': 'result',
+    'collection browser screenshot missing': 'screenshot',
+}
+
+
+def failure_code(error):
+    return metadata.failure_code(error, FAILURE_CODES)
+
 
 def command_suffix(name):
     return 'browser' if isinstance(name, str) and re.fullmatch('cli-(explicit|implicit)-collection-browser', name) else None
