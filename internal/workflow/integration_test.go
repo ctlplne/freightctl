@@ -61,8 +61,12 @@ func setup(t *testing.T) *fixture {
 	}
 	admin := open(adminRef)
 	t.Cleanup(admin.Close)
+	template, err := workflowTemplateName(ctx, admin, adminRef)
+	if err != nil {
+		t.Fatal("cannot prepare pristine workflow test template", err)
+	}
 	name := "freightctl_workflow_" + strings.ReplaceAll(secure.NewID(), "-", "")
-	if _, err := admin.Exec(ctx, "CREATE DATABASE "+pgx.Identifier{name}.Sanitize()); err != nil {
+	if _, err := admin.Exec(ctx, "CREATE DATABASE "+pgx.Identifier{name}.Sanitize()+" TEMPLATE "+pgx.Identifier{template}.Sanitize()); err != nil {
 		t.Fatal(err)
 	}
 	t.Cleanup(func() {

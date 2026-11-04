@@ -48,7 +48,7 @@
     "Local checks are lightweight Mac ARM contracts and compilation only. Native real PostgreSQL/receivers/GnuPG and browser tests run on GitHub. Local inference stays off; scanner stays stopped."
   ],
   "qualification_claim": false,
-  "next_action": "Finish original4577313 native observations and preserve x86 outcome. Wait forcc05701 native41873492289 to start before pushing saved independent AEAD source plus D154/D155/diagnostic repairs. Require original encrypted recovery/rotation/SQL, independent AEAD and both public profiles to replay; keep D151 and all whole-goal gates open.",
+  "next_action": "Submit the saved peer, exact D154/D155/D156 repairs, diagnostic observations and D157 fixture optimization. Supersede only the still-unstartedcc05701 native candidate, which contains the now-confirmed wrong aggregate expectation; its actual public first failures and original4577313 ARM/x86/metadata logs are retained. Preserve running candidates. Require the original complete gates and encrypted recovery/revocation/AEAD/public profiles; all whole-goal gates remain open.",
   "implementation": {
     "typed_workflow": "FTPS ordered/program steps retain strict key ID/version/hash and explicit OpenPGP profile; direct FTPS encryption remains unavailable without an exact workflow binding",
     "approval": "common recipient lookup binds FTPS and SFTP reviews to the exact current public key; browser strictly validates policy shape and renders separate recipient/transport disclosure",
@@ -158,9 +158,11 @@
     "arm_metadata_manifest_sha256": "4526f476f61813d2caff66aa091775e842ca7975a0fd4090e37f073945dfc284",
     "x86_metadata_manifest_sha256": "9e13022959996296ee057a138a99a52bfbba500dbac7b75e80fe83816c8ee621",
     "x86_application_job_id": 126720350261,
-    "x86_application_state": "still running at observation; do not infer a result",
+    "x86_application_state": "failed:612pass/14D155-D156 failure records/0skip followed by ten-minute workflow package panic; suite incomplete",
     "manifest_reference": ".private/freightctl-f074-native-first-O71INeVH/manifest.json",
-    "manifest_sha256": "6858339ca50848e75ee9937a2495409a712eec267716e226268b5a27d9d6588d"
+    "manifest_sha256": "6858339ca50848e75ee9937a2495409a712eec267716e226268b5a27d9d6588d",
+    "x86_timeout_manifest_reference": ".private/freightctl-f074-x86-timeout-z55DH49O/manifest.json",
+    "x86_timeout_manifest_sha256": "ee804dfccaa782c019c5a608b45493b4d7d1c8b57aab1473008db84e6ce672db"
   },
   "public_first_result": {
     "candidate": "cc05701d210e5be74f2447689bc24b7f64a95b80",
@@ -185,5 +187,16 @@
       "node_syntax": "passed"
     },
     "native_state": "not submitted; preserve pendingcc05701 native41873492289 before next push"
-  }
+  },
+  "fixture_efficiency_repair": {
+    "id": "D157",
+    "state": "implemented, compiled/vetted and lazy pure-race checks pass locally; native safety/performance replay pending",
+    "mechanism": "create and migrate one empty task-owned PostgreSQL template; require64tables/63forced-RLS and zero domain rows, deny runtime CONNECT, close source connections; every fixture clones into its own independently named database/storage and still verifies all migration hashes and runtime role/RLS",
+    "retained_estate": "never used as a template or upgraded; no local PostgreSQL/resource lifecycle action",
+    "coverage": "new native test checks different actual database identities, no file/data crossing and runtime CONNECT denial. All original test functions and cold store migration/upgrade tests remain.",
+    "budgets": "unchanged:600second package,50minute job,60second fixture contexts,live lease waits,CPU/memory. No sharding, filtering, skip or timeout increase.",
+    "scope": "fixture initialization overhead only; no product throughput, startup, capacity, recovery or enterprise performance claim",
+    "cleanup": "lazy TestMain opens no database for compile/pure contracts; exact generated template/private references removed at package end"
+  },
+  "supersession_decision": "The earlier hold preserved first outcomes while causes were unknown. Original4577313 ARM/x86 first failures are now fully retained and identify a test expectation still present in unstartedcc05701 native. Replace that unstarted known-bad successor with the verified repair candidate to avoid consuming a full replay on a confirmed error. Record cancellation as unqualified, never a pass; do not cancel a running unknown candidate."
 }

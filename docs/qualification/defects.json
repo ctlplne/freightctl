@@ -2491,6 +2491,21 @@
       "regression_evidence": [
         "docs/qualification/evidence/F074-ftps-recipient-encryption.json"
       ]
+    },
+    {
+      "id": "D157",
+      "severity": "native complete-suite qualification deadline",
+      "state": "fixture initialization optimization prepared; original ten-minute complete workflow gate still red",
+      "observed_on": "2026-11-04",
+      "candidate": "4577313c58a9e9c08e7a3e5d3ba0925b9fbc1685",
+      "journey": "Complete native x86 Go/PostgreSQL workflow replay",
+      "title": "The expanded workflow package reaches its unchanged ten-minute deadline",
+      "first_failure": "Job126720350261/run41869838920 records612application passes/14D155-D156 failure records/0skips, then panic:test timed out after10m0s in TestOnboardingProbeProductionLeaseExpiresWithoutNewContactAndFencesLateResults. The suite is incomplete; do not equate it with ARM759/14. The preceding895f1f4 workflow package completed500.774seconds on x86 and451.713seconds on ARM.",
+      "resolution": "Keep every test, live lease wait, per-case deadline, the ten-minute Go package limit,50minute job and CPU/memory budgets. Prepare one task-owned schema-only PostgreSQL template, verify64tables/63forced-RLS tables and zero domain rows, close its connections and deny runtime CONNECT. Each fixture still receives an independent copied database and custody root, runs exact Migrate checksum verification and Store.Open role/RLS checks. A new real PostgreSQL regression proves independent databases/data and runtime template denial; store cold migration/upgrade tests remain untouched. Lazy initialization and exact package-end cleanup allow local compile/pure contracts without opening PostgreSQL. Local compile/vet and18pure race records pass; runtime safety and speedup remain unqualified until the original complete native gate replays.",
+      "mechanism_source": "https://www.postgresql.org/docs/16/sql-createdatabase.html",
+      "regression_evidence": [
+        "docs/qualification/evidence/F074-ftps-recipient-encryption.json"
+      ]
     }
   ]
 }
