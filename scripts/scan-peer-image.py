@@ -8,6 +8,7 @@ import os
 from pathlib import Path
 import platform
 import re
+import stat
 import subprocess
 import sys
 import uuid
@@ -113,6 +114,18 @@ def digest(path):
         return hashlib.file_digest(stream, 'sha256').hexdigest()
 
 
+def feed_file_observation(path):
+    """Fixed file facts only; no host paths, link targets or file contents."""
+    try:
+        value = path.lstat()
+    except FileNotFoundError:
+        return {'present': False, 'regular': False, 'symlink': False, 'bytes': None, 'size_capped': False}
+    regular = stat.S_ISREG(value.st_mode)
+    size = min(value.st_size, (2 << 30)+1) if regular else None
+    return {'present': True, 'regular': regular, 'symlink': stat.S_ISLNK(value.st_mode),
+        'bytes': size, 'size_capped': regular and value.st_size > 2 << 30}
+
+
 class BoundedScratch:
     """A private 2GiB ext4 volume; temporary archives consume disk, not RAM."""
     size = 2 << 30
@@ -207,6 +220,7 @@ def main():
     phase = 'checkout'
     steps = []
     scratch = None
+    feed_files = None
 
     def command(name, arguments, timeout, *, check=True):
         stdout, stderr = private/(name+'.stdout'), private/(name+'.stderr')
@@ -300,6 +314,9 @@ def main():
                   'ghcr.io/aquasecurity/trivy-db:2', '--no-progress', '--disable-telemetry',
                   '--skip-version-check', '--timeout', '4m'], network='bridge', writable_cache=True, timeout=300)
         feed_database, feed_metadata = cache/'db/trivy.db', cache/'db/metadata.json'
+        phase = 'feed-files'
+        feed_files = {'database': feed_file_observation(feed_database), 'metadata': feed_file_observation(feed_metadata)}
+        gate.require(all(v['regular'] and not v['symlink'] for v in feed_files.values()))
         gate.require(feed_database.is_file() and 0 < feed_database.stat().st_size <= 1 << 30)
         gate.require(feed_metadata.is_file() and 0 < feed_metadata.stat().st_size <= 1 << 20)
         feed_sha, metadata_sha = digest(feed_database), digest(feed_metadata)
@@ -355,10 +372,12 @@ def main():
         cleanup = 'not-created' if scratch is None else 'unmounted' if not scratch.attempted else 'unproven'
         record = private/'failure.json'
         record.write_text(json.dumps({'schema_version': 1, 'state': 'failed', 'phase': phase,
-            'steps': steps, 'scratch_cleanup': cleanup, 'scratch_bytes': BoundedScratch.size}, indent=2)+'\n')
+            'steps': steps, 'scratch_cleanup': cleanup, 'scratch_bytes': BoundedScratch.size,
+            **({'feed_files': feed_files} if feed_files is not None else {})}, indent=2)+'\n')
         print(json.dumps({'state': 'failed', 'reason': 'native-peer-image-scan-failed',
                           'phase': phase, 'manifest_sha256': digest(record),
                           'scratch_cleanup': cleanup,
+                          **({'feed_files': feed_files} if feed_files is not None else {}),
                           'command': failure_observation(steps, private)}))
         return 2
 

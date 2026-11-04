@@ -64,6 +64,33 @@ def synthetic_governance_outputs():
 
 
 class SummaryContracts(unittest.TestCase):
+    def test_collection_browser_progress_and_first_failure_are_private_typed_and_source_bound(self):
+        name = 'cli-explicit-collection-browser'
+        progress = {'kind': 'ftps-collection-browser-progress', 'mode': 'explicit', 'stage': 'preview-visible'}
+        failure = {'kind': 'ftps-collection-browser-failure', 'mode': 'explicit', 'stage': 'preview-visible',
+            'error_kind': 'assertion', 'source_file': 'driver', 'source_line': 203}
+        def report(values):
+            raw = b'\n'.join(json.dumps(v).encode() for v in values)+b'\n'
+            (self.directory/(name+'.stdout')).write_bytes(raw)
+            (self.directory/(name+'.stderr')).write_bytes(b'private-evidence-canary')
+            self.manifest['steps'] = [s for s in self.manifest['steps'] if s['name'] != name]+[{
+                'name': name, 'exit_code': 1, 'stdout_sha256': hashlib.sha256(raw).hexdigest(),
+                'stderr_sha256': hashlib.sha256(b'private-evidence-canary').hexdigest()}]
+            self.write()
+            return summary.failure_diagnostics(self.root, self.result, 'a'*40)
+        result = report([progress, failure, dict(progress, stage='complete'), dict(failure, stage='files-ready')])
+        self.assertEqual(result['collection_browser_progress'], [{'command': name, **progress}])
+        self.assertEqual(result['collection_browser_failures'], [{'command': name, **failure}])
+        self.assertNotIn('private-evidence-canary', json.dumps(result))
+        for change in ({'stage': 'private-evidence-canary'}, {'source_file': '/private/key'},
+                {'source_line': True}, {'source_line': 4001}, {'exception': 'private-evidence-canary'},
+                {'error_kind': 'private-evidence-canary'}, {'mode': 'implicit'}):
+            result = report([dict(failure, **change)])
+            self.assertNotIn('collection_browser_failures', result)
+            self.assertNotIn('private-evidence-canary', json.dumps(result))
+        (self.directory/(name+'.stdout')).write_bytes(b'changed')
+        self.assertEqual(summary.failure_diagnostics(self.root, self.result, 'a'*40), {})
+
     def test_collection_browser_failure_only_exposes_its_fixed_command_name(self):
         name = 'cli-explicit-collection-browser'
         raw = b'private-evidence-canary /private/credential'

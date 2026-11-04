@@ -12,7 +12,10 @@ import { qualifyArrivals } from "./arrivals-browser.mjs";
 import { qualifySchedules } from "./schedules-browser.mjs";
 import { qualifyRouting } from "./routing-browser.mjs";
 import { qualifyCollections } from "./collections-browser.mjs";
-import { qualifyFTPSCollectionMetadata } from "./ftps-collection-browser.mjs";
+import {
+  qualifyFTPSCollectionMetadata,
+  ftpsCollectionBrowserObservation,
+} from "./ftps-collection-browser.mjs";
 import { qualifyOutboundDispatch } from "./outbound-dispatch-browser.mjs";
 import { qualifyIndependentApprovals } from "./onboarding-approvals-browser.mjs";
 import { qualifyQueuedHandoffs } from "./onboarding-handoffs-browser.mjs";
@@ -22,7 +25,13 @@ const require = createRequire(import.meta.url),
 const c = JSON.parse(await readFile(process.argv[2], "utf8"));
 // Fixed lifecycle observations survive a hung launch, screenshot or shutdown.
 // They carry no credentials, selectors, URLs, resource IDs or exception text.
+let collectionLifecycleStage = "certificate";
+const collectionObservation = (value) => {
+  if (value) console.log(JSON.stringify(value));
+};
 const dispatchLifecycle = (stage) => {
+  collectionLifecycleStage = stage;
+  collectionObservation(ftpsCollectionBrowserObservation(c, stage));
   if (c.dispatch_protocol === "ftps")
     console.log(
       JSON.stringify({
@@ -262,7 +271,13 @@ try {
     await qualifyArrivals(page, c, audit, record, actualReview);
   } else if (c.collections_only) {
     if (c.collection_phase === "ftps-metadata")
-      await qualifyFTPSCollectionMetadata(page, c, audit, record);
+      await qualifyFTPSCollectionMetadata(
+        page,
+        c,
+        audit,
+        record,
+        collectionObservation,
+      );
     else await qualifyCollections(page, c, audit, record, actualReview);
   } else if (c.schedules_only) {
     await qualifySchedules(page, c, audit, record, actualReview);
@@ -358,6 +373,9 @@ try {
   });
   state = "passed";
 } catch (e) {
+  collectionObservation(
+    ftpsCollectionBrowserObservation(c, collectionLifecycleStage, e),
+  );
   dispatchLifecycle("failure-capture");
   failure = String(e.stack ?? e);
   if (c.routing_only)

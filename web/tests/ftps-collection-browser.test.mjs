@@ -7,6 +7,8 @@ import { createHash } from "node:crypto";
 import {
   qualifyFTPSCollectionMetadata,
   ftpsCollectionMetadataAudits,
+  ftpsCollectionBrowserObservation,
+  ftpsCollectionBrowserStages,
 } from "../../scripts/ftps-collection-browser.mjs";
 
 const fixtures = JSON.parse(
@@ -31,6 +33,7 @@ async function exercise({
   before = 0,
   after = 0,
   textSuffix = "",
+  observe = () => {},
 } = {}) {
   const directory = await mkdtemp(
     join(tmpdir(), "freightctl-browser-driver-contract-"),
@@ -169,6 +172,7 @@ async function exercise({
         audits.push(name);
       },
       (name) => records.push(name),
+      observe,
     );
     const result = JSON.parse(
       await readFile(
@@ -259,4 +263,76 @@ test("any source contact or leaked private reference refuses the read-only brows
     { textSuffix: " Pinned source host SHA256:invented" },
   ])
     await assert.rejects(exercise(options));
+});
+
+test("actual driver failure emits only a bounded fixed stage and source location", async () => {
+  const seen = [];
+  await assert.rejects(
+    exercise({
+      change: (_c, preview) => {
+        preview.effects = [{ recipient: "private-evidence-canary" }];
+      },
+      observe: (value) => seen.push(value),
+    }),
+  );
+  const failure = seen.find(
+    (v) => v.kind === "ftps-collection-browser-failure",
+  );
+  assert.equal(failure.stage, "preview-effects");
+  assert.equal(failure.error_kind, "assertion");
+  assert.equal(failure.source_file, "driver");
+  assert.ok(failure.source_line > 0 && failure.source_line <= 4000);
+  assert.ok(seen.some((v) => v.kind === "ftps-collection-browser-progress"));
+  assert.ok(!JSON.stringify(seen).includes("private-evidence-canary"));
+});
+
+test("diagnostic emitter cannot publish exception prose, paths or arbitrary mode/stage values", () => {
+  const c = {
+    collection_phase: "ftps-metadata",
+    source: { ftps: { mode: "explicit" } },
+  };
+  for (const name of [
+    "AssertionError",
+    "TimeoutError",
+    "SyntaxError",
+    "private-evidence-canary",
+    "constructor",
+    "__proto__",
+  ]) {
+    const value = ftpsCollectionBrowserObservation(c, "preview-visible", {
+      name,
+      message: "private-evidence-canary",
+      stack:
+        "private-evidence-canary\n at /private/source/ftps-collection-browser.mjs:203:8",
+    });
+    assert.equal(value.source_line, 203);
+    assert.equal(value.source_file, "driver");
+    assert.ok(
+      ["assertion", "timeout", "syntax", "other"].includes(value.error_kind),
+    );
+    assert.ok(!JSON.stringify(value).includes("private-evidence-canary"));
+    assert.ok(!JSON.stringify(value).includes("/private/"));
+  }
+  assert.equal(
+    ftpsCollectionBrowserObservation(c, "private-evidence-canary"),
+    null,
+  );
+  assert.equal(
+    ftpsCollectionBrowserObservation(
+      { ...c, collection_phase: "create" },
+      "definition",
+    ),
+    null,
+  );
+  assert.equal(
+    ftpsCollectionBrowserObservation(
+      { ...c, source: { ftps: { mode: "private-evidence-canary" } } },
+      "definition",
+    ),
+    null,
+  );
+  assert.equal(
+    new Set(ftpsCollectionBrowserStages).size,
+    ftpsCollectionBrowserStages.length,
+  );
 });

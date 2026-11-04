@@ -237,5 +237,49 @@
     },
     "runtime_qualification": false,
     "submission": "Local only;9e5still contains original scanner setup and known x86OOM. No local feed/image/model pull or execution."
+  },
+  "source9e5_native": {
+    "jobs": [
+      {
+        "candidate": "9e5f429c9c563759c427b719c7f036f75bffcba2",
+        "run_id": 41914913896,
+        "job_id": 126879828485,
+        "architecture": "x86_64",
+        "application_pass": 871,
+        "application_fail": 4,
+        "application_skip": 0,
+        "workflow_seconds": 544.772,
+        "process_parent_seconds": 68.38,
+        "process_explicit_seconds": 33.47,
+        "process_implicit_seconds": 33.46,
+        "manifest_reference": ".private/freightctl-f076-process-x86-first-gab37t2p/manifest.json",
+        "manifest_sha256": "4142f943680112253a553f5dd956834b7bc2cafd5cb4f31819a927cde1fd990e"
+      },
+      {
+        "candidate": "9e5f429c9c563759c427b719c7f036f75bffcba2",
+        "run_id": 41914913896,
+        "job_id": 126879828625,
+        "architecture": "arm64",
+        "application_pass": 871,
+        "application_fail": 4,
+        "application_skip": 0,
+        "workflow_seconds": 516.14,
+        "process_parent_seconds": 67.99,
+        "process_explicit_seconds": 33.51,
+        "process_implicit_seconds": 33.37,
+        "manifest_reference": ".private/freightctl-f076-process-arm-first-_yxrv7rv/manifest.json",
+        "manifest_sha256": "981d554d7a23779bc03635e09c6773fccf2e2d613cfc5ae84acb31a0567b2fb6"
+      }
+    ],
+    "state": "Both feed failures unclassified:command not-recorded,null exit/state; exact disk unmount passes. Do not infer OOM or successful feed. Earlier source28x86OOM remains a separate proven fact."
+  },
+  "feed_file_observation_prepared": {
+    "phase": "feed-files",
+    "mechanism": "After successful download, emit only fixed database/metadata presence,regular/symlink type,bytes capped at2GiB+1 andcap flag before original checks. Hash-bind facts in failure manifest; no paths,link targets or contents. Missing,linked,empty or >1GiBdatabase/>1MiBmetadata remains red; no scan starts.",
+    "scope": "Post-download failures can occur without a failed command; actual reason remains unobserved until replay. Original size/time/RAM/CPU/disk/inventory/severity gates unchanged.",
+    "runtime_qualification": false,
+    "local_manifest_reference": ".private/freightctl-f075-feed-files-local-ehlo1mn0/manifest.json",
+    "local_manifest_sha256": "4d01d09ee43a3394ab5ee064adc7aaa6fdccf7bc5d4380573291b68890c09ba4",
+    "local_methods": 21
   }
 }

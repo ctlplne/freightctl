@@ -107,6 +107,15 @@ class ScanOrchestration(unittest.TestCase):
                         (cache/'db').mkdir()
                         (cache/'db/trivy.db').write_bytes(b'synthetic feed database')
                         (cache/'db/metadata.json').write_text(json.dumps(version['VulnerabilityDB']))
+                        if mode == 'feed-oversize':
+                            # Sparse stand-in: no database is generated/read.
+                            with (cache/'db/trivy.db').open('wb') as stream:
+                                stream.truncate((1 << 30)+1)
+                        elif mode == 'feed-missing':
+                            (cache/'db/trivy.db').unlink()
+                        elif mode == 'feed-symlink':
+                            (cache/'db/trivy.db').unlink()
+                            (cache/'db/trivy.db').symlink_to(contracts.PRIVATE)
                     elif 'version' in options:
                         stdout.write(json.dumps(version).encode())
                     else:
@@ -200,6 +209,28 @@ class ScanOrchestration(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertEqual(output['severities']['HIGH'], 1)
         self.assertEqual(output['state'], 'failed')
+
+    def test_exit_zero_download_still_refuses_missing_linked_or_oversize_feed_with_safe_file_facts(self):
+        for mode in ('feed-oversize', 'feed-missing', 'feed-symlink'):
+            code, output, created = self.exercise(mode=mode)
+            self.assertEqual(code, 2)
+            self.assertEqual(output['phase'], 'feed-files')
+            self.assertEqual(len(created), 1, 'invalid feed must not reach scanner-version/image scan')
+            self.assertEqual(output['scratch_cleanup'], 'unmounted')
+            database = output['feed_files']['database']
+            self.assertEqual(set(database), {'present', 'regular', 'symlink', 'bytes', 'size_capped'})
+            if mode == 'feed-oversize':
+                self.assertEqual(database['bytes'], (1 << 30)+1)
+                self.assertTrue(database['regular'])
+                self.assertFalse(database['size_capped'])
+            elif mode == 'feed-missing':
+                self.assertFalse(database['present'])
+                self.assertIsNone(database['bytes'])
+            else:
+                self.assertTrue(database['symlink'])
+                self.assertFalse(database['regular'])
+                self.assertIsNone(database['bytes'])
+            self.assertNotIn(contracts.PRIVATE, json.dumps(output))
 
     def test_foreign_image_report_refused_without_exposing_private_diagnostics(self):
         code, output, _ = self.exercise(mode='foreign')

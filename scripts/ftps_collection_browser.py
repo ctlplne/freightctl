@@ -7,6 +7,13 @@ from ftps_cli_governance import read, require
 
 AUDITS = ('ftps-collection-form', 'ftps-collection-preview', 'ftps-collection-selected')
 STEP = 'ftps-collection-exact-preview-inspection-without-source-contact'
+BROWSER_STAGES = frozenset(('certificate', 'browser-launch', 'context-create', 'login-navigation',
+    'login-identity', 'login-credential', 'login-submit', 'files-ready', 'runtime-checks',
+    'success-screenshot', 'failure-capture', 'record-write', 'context-close', 'browser-close',
+    'complete', 'definition', 'counter-before', 'navigation', 'form', 'form-audit', 'preview-wire',
+    'preview-request', 'preview-definition', 'preview-effects', 'preview-source', 'preview-visible',
+    'preview-audit', 'inspect-wire', 'inspect-definition', 'inspect-state', 'inspect-visible',
+    'selected-audit', 'counter-after', 'response-records', 'result-write'))
 FILES = frozenset(('config.json', 'raw/ftps-collection-browser-result.json',
     'raw/onboarding-exchange-browser.json', 'raw/onboarding-exchange-review.png',
     'raw/workflow-preview.body', 'raw/collection-view.body',
@@ -15,6 +22,25 @@ FILES = frozenset(('config.json', 'raw/ftps-collection-browser-result.json',
 
 def command_suffix(name):
     return 'browser' if isinstance(name, str) and re.fullmatch('cli-(explicit|implicit)-collection-browser', name) else None
+
+
+def safe_observation(value):
+    if (type(value) is not dict or type(value.get('mode')) is not str
+            or value['mode'] not in ('explicit', 'implicit') or type(value.get('stage')) is not str
+            or value['stage'] not in BROWSER_STAGES):
+        return None
+    if value.get('kind') == 'ftps-collection-browser-progress' and set(value) == {'kind', 'mode', 'stage'}:
+        return dict(value)
+    if (value.get('kind') != 'ftps-collection-browser-failure'
+            or set(value) != {'kind', 'mode', 'stage', 'error_kind', 'source_file', 'source_line'}
+            or type(value.get('error_kind')) is not str or value['error_kind'] not in ('assertion', 'timeout', 'syntax', 'other')):
+        return None
+    file, line = value['source_file'], value['source_line']
+    if file is None and line is None:
+        return dict(value)
+    if type(file) is str and file in ('driver', 'wrapper') and type(line) is int and 1 <= line <= 4000:
+        return dict(value)
+    return None
 
 
 def validate(root, private, mode, steps, inventory):

@@ -44,6 +44,7 @@ def failure_diagnostics(root, result, commit):
         failed, categories, cli_failures, browser_failures = set(), set(), set(), []
         accessibility, ticket_browser_failures, dispatch_browser_failures = [], [], []
         dispatch_progress, dispatch_outcomes, dispatch_lifecycle = {}, [], {}
+        collection_progress, collection_failures = {}, {}
         allowed = {"native-ftps-integration", "cli-explicit-lftp-probe", "cli-implicit-lftp-probe", "browser-explicit-operator", "browser-implicit-operator"}
         for step in manifest.get("steps", []):
             name = step.get("name")
@@ -73,6 +74,12 @@ def failure_diagnostics(root, result, commit):
                     probe = json.loads(line[line.index("{"):])
                 except ValueError:
                     continue
+                collection_observation = collection_browser.safe_observation(probe)
+                if collection_observation is not None and name == 'cli-'+collection_observation['mode']+'-collection-browser':
+                    if collection_observation['kind'] == 'ftps-collection-browser-failure':
+                        collection_failures.setdefault(name, {'command': name, **collection_observation})
+                    elif name not in collection_failures:
+                        collection_progress[name] = {'command': name, **collection_observation}
                 lifecycle = dispatch.safe_browser_lifecycle(probe)
                 if lifecycle is not None and dispatch.command_suffix(name) == "browser-" + lifecycle["phase"]:
                     dispatch_lifecycle[name] = {"command":name, **lifecycle}
@@ -98,6 +105,10 @@ def failure_diagnostics(root, result, commit):
                     if isinstance(ids,list) and 0 < len(ids) <= 100 and all(isinstance(i,str) and i in browser_evidence.ACCESSIBILITY_RULES for i in ids):
                         accessibility.append({"command":name,"audit":probe["audit"],"rule_ids":sorted(set(ids))})
         outcome = {"failed_native_tests": sorted(failed), "lftp_failures": [{"stage": s, "code": c, **({"action": a} if a else {})} for s, c, a in sorted(categories)], "failed_cli_commands": sorted(cli_failures)}
+        if collection_failures:
+            outcome['collection_browser_failures'] = [collection_failures[n] for n in sorted(collection_failures)]
+        if collection_progress:
+            outcome['collection_browser_progress'] = [collection_progress[n] for n in sorted(collection_progress)]
         snapshot = manifest.get("retained_before")
         if isinstance(snapshot,dict):
             def count(value):

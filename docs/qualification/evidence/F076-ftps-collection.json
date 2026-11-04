@@ -3,7 +3,7 @@
   "id": "F076",
   "observed_at": "2026-11-04",
   "starting_commit": "4d771b2e6a961a70b764681fd578ff175d064db7",
-  "state": "Both28cdfcb native suites complete868pass/4failed records/0skip.12of15prepared FTPS leaves pass, including both repaired producer-batch cases. SQL/schedule stop at new fixture errorsD164/D165; exact further repairs compile/vet only. Both public CLI/API metadata matrices pass3fresh profiles each.9e5Chrome/process-death and stock follow-up remain unqualified.",
+  "state": "Both9e5native suites complete871pass/4failed records/0skip:14of17FTPS leaves pass, including both actual CLI SIGKILL/sealed-object recovery cases per architecture. KnownD164/D165remain red; local repairs await replay. Both new collection Chrome profiles failD167with no classified stage/cause; original logs retained and safe diagnostics prepared.",
   "scope": "Read/copy input stage of ordinary immutable workflows, using exact registered FTPS revisions and the existing bounded producer-manifest, custody, intake, lease and event machinery. Transport metadata reading alone does not qualify collection.",
   "qualification_claim": false,
   "frozen_cases": [
@@ -304,9 +304,9 @@
   "newest_submission": {
     "candidate": "9e5f429c9c563759c427b719c7f036f75bffcba2",
     "native_run_id": 41914913896,
-    "native_state": "queued after completed28cdfcb; contains knownD164/D165 fixture errors plus unexecuted process-death cases. Preserve first outcome unless an exact reviewed supersession is separately recorded.",
+    "native_state": "completed/failure:both871pass/4failed records/0skip; process-death pairs pass; knownD164/D165 fixture errors remain",
     "public_workflow_metadata_run_id": 41914914123,
-    "public_state": "pending behind preserved running28cdfcb; unqualified",
+    "public_state": "completed/failure:plaintext explicit and encrypted implicit new collection Chrome commands; stage/cause unobserved",
     "core_run_id": 41914914270,
     "core_state": "completed/success on9e5source only",
     "prepared_native_leaves": 17,
@@ -332,7 +332,55 @@
       "manifest_reference": ".private/freightctl-f076-core-nine-wvyadqyp/manifest.json",
       "manifest_sha256": "9d20ebdf4b286b9b7ed4e56b90e70af14a0ab9f940107cedfda929c7f944779d",
       "scope": "Native Linux source/type/embedded/dependency/source-history checks, including pure browser driver/evidence. No actual Chrome, process-death, stock metadata, feed/image or later local source qualification. Module advisory remains visible without reachable package finding."
-    }
+    },
+    "applications": [
+      {
+        "candidate": "9e5f429c9c563759c427b719c7f036f75bffcba2",
+        "run_id": 41914913896,
+        "job_id": 126879828485,
+        "architecture": "x86_64",
+        "application_pass": 871,
+        "application_fail": 4,
+        "application_skip": 0,
+        "workflow_seconds": 544.772,
+        "process_parent_seconds": 68.38,
+        "process_explicit_seconds": 33.47,
+        "process_implicit_seconds": 33.46,
+        "manifest_reference": ".private/freightctl-f076-process-x86-first-gab37t2p/manifest.json",
+        "manifest_sha256": "4142f943680112253a553f5dd956834b7bc2cafd5cb4f31819a927cde1fd990e"
+      },
+      {
+        "candidate": "9e5f429c9c563759c427b719c7f036f75bffcba2",
+        "run_id": 41914913896,
+        "job_id": 126879828625,
+        "architecture": "arm64",
+        "application_pass": 871,
+        "application_fail": 4,
+        "application_skip": 0,
+        "workflow_seconds": 516.14,
+        "process_parent_seconds": 67.99,
+        "process_explicit_seconds": 33.51,
+        "process_implicit_seconds": 33.37,
+        "manifest_reference": ".private/freightctl-f076-process-arm-first-_yxrv7rv/manifest.json",
+        "manifest_sha256": "981d554d7a23779bc03635e09c6773fccf2e2d613cfc5ae84acb31a0567b2fb6"
+      }
+    ],
+    "public_browser_first_failures": [
+      {
+        "profile": "plaintext",
+        "job_id": 126874462798,
+        "failed_command": "cli-explicit-collection-browser",
+        "manifest_reference": ".private/freightctl-f076-chrome-plaintext-first-hc9lr7da/manifest.json",
+        "manifest_sha256": "1013773b5cca70017b9252fea43585a828d0dcd337c061c7da21fbc71880252b"
+      },
+      {
+        "profile": "recipient-encrypted",
+        "job_id": 126874463015,
+        "failed_command": "cli-implicit-collection-browser",
+        "manifest_reference": ".private/freightctl-f076-chrome-recipient-encrypted-first-an0zj5gw/manifest.json",
+        "manifest_sha256": "f6978a4237848108f203c79c7b9d8d6a0f8735898fc5da422a7d20e506ae01ef"
+      }
+    ]
   },
   "registration_failure_standin": {
     "manifest_reference": ".private/freightctl-f076-registration-closure-3ov_x1ye/manifest.json",
@@ -361,7 +409,28 @@
     "local_count_correction_reference": ".private/freightctl-f076-browser-metadata-local-pssakjik/count-correction.json",
     "local_count_correction_sha256": "2a335d492672875bade65ad9fca1710bc6fee57a2b608b2af7399fc295291988",
     "local_checks": "Seven synthetic original-file browser contracts, eight metadata producer/verifier methods,67reporter contracts,135frontend contracts including five pure driver stand-ins; syntax/Prettier/actionlint/diff checks. First test-only formatting refusal retained; no local Chrome, product process, DB, socket, scanner, inference or peer.",
-    "submission": "Pushed at9e5f429; actual collection Chrome phase remains pending/unqualified."
+    "submission": "Pushed at9e5f429; actual collection Chrome phase remains pending/unqualified.",
+    "first_runtime_failures": {
+      "candidate": "9e5f429c9c563759c427b719c7f036f75bffcba2",
+      "run_id": 41914914123,
+      "profiles": [
+        {
+          "profile": "plaintext",
+          "job_id": 126874462798,
+          "failed_command": "cli-explicit-collection-browser",
+          "manifest_reference": ".private/freightctl-f076-chrome-plaintext-first-hc9lr7da/manifest.json",
+          "manifest_sha256": "1013773b5cca70017b9252fea43585a828d0dcd337c061c7da21fbc71880252b"
+        },
+        {
+          "profile": "recipient-encrypted",
+          "job_id": 126874463015,
+          "failed_command": "cli-implicit-collection-browser",
+          "manifest_reference": ".private/freightctl-f076-chrome-recipient-encrypted-first-an0zj5gw/manifest.json",
+          "manifest_sha256": "f6978a4237848108f203c79c7b9d8d6a0f8735898fc5da422a7d20e506ae01ef"
+        }
+      ],
+      "state": "Actual browser failures, no collection Chrome qualification; safe summary gives command only and cause remains unobserved. Both retained metadata/roles and exact cleanup pass."
+    }
   },
   "native_process_recovery_prepared": {
     "test": "internal/workflow/ftps_collection_recovery_integration_test.go",
@@ -377,7 +446,43 @@
     "local_checks_manifest_sha256": "496747908f6df118d5cd6931b9340f1ae76dc342af94b0898a940cdab0057516",
     "local_scope": "Native macOS ARM integration compilation and vet only. No setup fixture, actual child, process kill, source, PostgreSQL, scanner or inference ran.",
     "runtime_qualification": false,
-    "submission": "Pushed at9e5f429;17prepared native leaves including these2process-death cases remain unqualified. Original28 retains15-leaf scope."
+    "submission": "Pushed at9e5f429;17prepared native leaves including these2process-death cases remain unqualified. Original28 retains15-leaf scope.",
+    "current_runtime_observation": {
+      "jobs": [
+        {
+          "candidate": "9e5f429c9c563759c427b719c7f036f75bffcba2",
+          "run_id": 41914913896,
+          "job_id": 126879828485,
+          "architecture": "x86_64",
+          "application_pass": 871,
+          "application_fail": 4,
+          "application_skip": 0,
+          "workflow_seconds": 544.772,
+          "process_parent_seconds": 68.38,
+          "process_explicit_seconds": 33.47,
+          "process_implicit_seconds": 33.46,
+          "manifest_reference": ".private/freightctl-f076-process-x86-first-gab37t2p/manifest.json",
+          "manifest_sha256": "4142f943680112253a553f5dd956834b7bc2cafd5cb4f31819a927cde1fd990e"
+        },
+        {
+          "candidate": "9e5f429c9c563759c427b719c7f036f75bffcba2",
+          "run_id": 41914913896,
+          "job_id": 126879828625,
+          "architecture": "arm64",
+          "application_pass": 871,
+          "application_fail": 4,
+          "application_skip": 0,
+          "workflow_seconds": 516.14,
+          "process_parent_seconds": 67.99,
+          "process_explicit_seconds": 33.51,
+          "process_implicit_seconds": 33.37,
+          "manifest_reference": ".private/freightctl-f076-process-arm-first-_yxrv7rv/manifest.json",
+          "manifest_sha256": "981d554d7a23779bc03635e09c6773fccf2e2d613cfc5ae84acb31a0567b2fb6"
+        }
+      ],
+      "claim": "Both native architectures pass explicit/implicit exact owned CLI SIGKILL after seal/before acceptance; real30second lease and exact producer-CAS removal, same-key attempt2/fence2 reuse of original sealed object/input with oneFileAcceptedrow/event and zero new source contacts. Original600second package/50minute job/60second fixture budgets unchanged.",
+      "scope": "Native freightctl FTPS source stand-in only, not independent stock source,clean-host recovery,multi-host RPO/RTO or whole journey."
+    }
   },
   "source28_observation": {
     "candidate": "28cdfcbbd83e2571fb626b3ee47b8783cccad4db",
@@ -535,5 +640,14 @@
     "python_lifecycle_methods": 6,
     "runtime_qualification": false,
     "scope": "Pure configuration/refusal,counter/file-mode/drain and process/signal stand-ins only; no actual socket/source/PG/browser locally. Endpoint runtime and full operator create/approve/queue/read/saved-key/custody/readback journey still require runner integration and actual GitHub execution. Not an independent stock peer."
+  },
+  "browser_stage_diagnostics_prepared": {
+    "mechanism": "Both common Chrome lifecycle and read-only driver emit fixed mode/stage only. First failure adds fixed error_kind,driver-or-wrapper and bounded1..4000line, never exception prose/paths/selectors/resource IDs. Source-bound reporter preserves first failure through later cleanup/progress and refuses malformed/mismatched/changed original output. All original assertions,deadlines,budgets and accessibility checks remain.",
+    "local_manifest_reference": ".private/freightctl-f076-chrome-diagnostic-local-2djde7st/manifest.json",
+    "local_manifest_sha256": "f059e9572ea75ef6dca635813c440adc96676e4abfbba36dc252321b64ddd8c0",
+    "python_methods": 83,
+    "frontend_contracts": 137,
+    "runtime_qualification": false,
+    "scope": "Pure driver/Page failure and diagnostic privacy/refusal contracts only; original actual Chrome cause/repair remains unproven."
   }
 }

@@ -2636,6 +2636,21 @@
       "regression_evidence": [
         "docs/qualification/evidence/F075-peer-image-security.json"
       ]
+    },
+    {
+      "id": "D167",
+      "severity": "public browser qualification",
+      "state": "first actual failures retained; fixed stage diagnostics prepared, original replay pending",
+      "observed_on": "2026-11-04",
+      "candidate": "9e5f429c9c563759c427b719c7f036f75bffcba2",
+      "journey": "F076public collection metadata Chrome",
+      "title": "New collection metadata browser command fails without a safe stage observation",
+      "first_failure": "Both9e5profilesfail:plaintext explicit,recipient-encrypted implicit. Original native/stockreceiving tests show no failure and retained-state/owned-resource cleanup succeeds; full browser profile unqualified.",
+      "cause": "Unobserved. Protected browser outputs do not appear in allowed public summary; no selector,rendering,protocol or resource cause is invented.",
+      "resolution": "Add fixed lifecycle/driver stage,error-kind and bounded source location, preserve first failure through cleanup and require original output hashes.83Python/137frontendcontracts pass locally; actual replay and cause repair remain required.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F076-ftps-collection.json"
+      ]
     }
   ]
 }
