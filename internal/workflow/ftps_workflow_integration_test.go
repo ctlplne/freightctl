@@ -64,8 +64,22 @@ func registeredFTPSRun(t *testing.T, f *fixture, s *delivery.Service, c Connecti
 		t.Fatal("workflow receipt not recovered", err)
 	}
 	var run, replay store.WorkflowRun
-	if json.Unmarshal(first.Resource, &run) != nil || json.Unmarshal(again.Resource, &replay) != nil || !reflect.DeepEqual(run, replay) {
+	if json.Unmarshal(first.Resource, &run) != nil || json.Unmarshal(again.Resource, &replay) != nil {
+		t.Fatal("run receipt could not be decoded")
+	}
+	canonicalRun, err := canonicalWorkflowRunReceipt(run)
+	if err != nil {
+		t.Fatal("original run plan/hash binding differs", err)
+	}
+	canonicalReplay, err := canonicalWorkflowRunReceipt(replay)
+	if err != nil {
+		t.Fatal("replayed run plan/hash binding differs", err)
+	}
+	if !reflect.DeepEqual(canonicalRun, canonicalReplay) {
 		t.Fatal("run replay changed intents")
+	}
+	if !reflect.DeepEqual(run, replay) {
+		t.Log("run receipt JSON formatting differs; canonical plan/hash and every run field are equal")
 	}
 	status, err := f.s.Status(f.ctx, f.scope, run.ID)
 	if err != nil || len(status.Steps) != 1 {

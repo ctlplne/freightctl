@@ -3,7 +3,7 @@
   "id": "F073",
   "observed_at": "2026-11-04",
   "starting_commit": "7879c34f9e917d5c650a60b1800c59050044c01a",
-  "state": "resumed; original schema38 native replay running; mixed stock-SFTP/application-FTPS execution coverage prepared",
+  "state": "resumed; native x86 reaches670pass/1replay-comparison failure; strict receipt repair prepared; mixed native run and exact ARM retry pending",
   "scope": "Next dependency: versioned registered FTPS destinations and typed workflow sending through ordinary execution and independent dispatch consent. This does not replace remaining encryption, collection, independent peer or whole-product requirements.",
   "first_failure": {
     "kind": "actual native ARM typed-workflow contract",
@@ -74,7 +74,7 @@
     "FTPS collection, independent supported x86 receiver qualification, broader protocol behavior and complete receiving/sending customer journeys remain required.",
     "D145 stays open as intermittent despite a passing diagnostic replay. Windows D103 and all83 whole baseline rows/12 full journeys remain open."
   ],
-  "next_action": "Finish original6ebccf0 x86 runtime, retry its exact terminal ARM download failure when allowed, and execute2da246b mixed native runtime. Preserve their exact first results before pushing the expanded C01 public rotation matrix; never replace a queued mandatory candidate. C01-C10 and whole-product gates remain open.",
+  "next_action": "Follow2da246b native ARM/x86 jobs126663975240/126663975284 through their original mixed execution and full suite. Then follow6ebccf0 exact ARM retry inrun41852235851 attempt2. Do not replace either pending candidate. Push local C01/D150 changes when the retry has started, then replay the original named tests and expanded public matrix. D150 cause and all frozen/whole-goal gates remain unqualified.",
   "implementation_checkpoint": {
     "versioned_connection": "schema2 FTPS definitions, strict canonical validation and redacted reference fingerprints",
     "typed_execution": "ftps.deliver uses exact registered protocol/version; queued delivery includes the workflow/run/step/connection binding; unsupported recipient encryption remains refused",
@@ -253,7 +253,8 @@
       "manifest_reference": ".private/freightctl-f073-resume-download-d6erv5d1/manifest.json",
       "manifest_sha256": "8f01d699fa9b1910cbd208e579c6e9046098ae7bc304c8c000bc803587150eb0",
       "connector_retry": "403 Resource not accessible by integration",
-      "cli_retry": "CLI reports job cannot be rerun; parent run is still active. Revisit after terminal run; reason not established."
+      "cli_retry": "CLI reports job cannot be rerun; parent run is still active. Revisit after terminal run; reason not established.",
+      "retry": "Exact job API accepted retry; run41852235851 attempt2 is pending behind the mixed candidate. No retry job ID allocated yet."
     },
     "arm_metadata_manifest_sha256": "6679cf87470d7a191f50fcc10abdec0b093f4f80014aad38e416f99d1688be4d",
     "registered_workflow_job_id": 126651290506,
@@ -271,10 +272,23 @@
       "exact_failure_names_equal_baseline_job": 125891445236,
       "manifest_reference": ".private/freightctl-f073-resumed-runtime-7y0wu9bs/windows-manifest.json",
       "manifest_sha256": "da2902de4e9765d83eb1923a709d70444364bc1eb20379345556c29bfa3f8423"
+    },
+    "x86_application": {
+      "run_id": 41852235851,
+      "attempt": 1,
+      "job_id": 126651291441,
+      "pass_records": 670,
+      "fail_records": 1,
+      "skip_records": 0,
+      "only_failed_test": "TestRegisteredFTPSWorkflowBoundedProgramUsesTheSameConsentAndSender",
+      "failure": "run replay changed intents",
+      "all_four_lost_reply_cases": "passed; both modes/stage+rename",
+      "manifest_reference": ".private/freightctl-f073-resumed-runtime-7y0wu9bs/x86-first-manifest.json",
+      "manifest_sha256": "8f1df09ea0bfb8f84b71f2f21a383c7ea7e4e62834186912ac285fa1e7005d1d"
     }
   },
   "mixed_protocol_execution": {
-    "state": "committed and pushed; native runtime queued behind original6ebccf0",
+    "state": "actual native ARM/x86 jobs running; mixed cases not yet observed",
     "test": "TestMixedRegisteredFTPSAndStockSFTPKeepOrderConsentAndReceipts",
     "cases": 8,
     "matrix": {
@@ -310,7 +324,11 @@
       "record_tests": 15
     },
     "candidate": "2da246b6c2fb257f005d65d0bd81ea56abe79658",
-    "native_run_id": 41853908628
+    "native_run_id": 41853908628,
+    "native_go_job_ids": [
+      126663975240,
+      126663975284
+    ]
   },
   "connection_rotation_matrix": {
     "state": "implemented locally; expanded native public runtime replay pending",
@@ -341,6 +359,20 @@
       "python_compile": "passed",
       "manifest_reference": ".private/freightctl-f073-rotation-canonical-w7k0neu8/manifest.json",
       "manifest_sha256": "c6afd629c93632062cca6343910a83abac3405c3fd2a961c375bb7dbad276896"
+    },
+    "local_commit": "259074b64e5816beef3aad395f6642dde6207e8a",
+    "push_state": "held locally to preserve existing pending native candidate and exact ARM retry"
+  },
+  "canonical_receipt_repair": {
+    "id": "D150",
+    "state": "prepared locally; native original replay pending",
+    "observed_failure": "actual native x866ebccf0 bounded program passes SQL run admission then fails the combined run-receipt comparison",
+    "suspected_cause": "The helper compares json.RawMessage execution_plan bytes. JSONB may reorder those object keys. No raw actual receipt difference was printed in the original log, so the exact cause remains unconfirmed until native diagnostic replay.",
+    "repair": "Decode each original and replayed plan with existing strict storedExecutionPlan validation, require its exact captured source and recorded canonical plan hash, canonicalize only the validated plan representation, then compare every WorkflowRun field. Native replay prints one fixed format-only diagnostic only if raw receipts differ but every canonical field matches. No plan, run field or authority binding is ignored.",
+    "local_checks": {
+      "unit_race_pass_records": 18,
+      "scope": "format-only positive and17 run/plan mutations; no PostgreSQL, sockets, scanner or inference",
+      "integration_compilation": "passed"
     }
   }
 }
