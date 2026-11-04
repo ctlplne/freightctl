@@ -1100,5 +1100,15 @@
     "manifest_sha256": "c0ba4b9be1613a3cedfd0104fa2274f5529b344ff81e2b9ce4a3c1207c2846d4",
     "source_count": 702,
     "exit_code": 0
+  },
+  "bounded_collection_metadata_prepared": {
+    "evidence": "docs/qualification/evidence/F076-ftps-collection.json",
+    "script": "scripts/ftps_stock_metadata.py",
+    "scope": "Prepare independent stock-peer primitive ReadBounded boundary cases, not governed source collection. Six producer0400source files stay exact before/after; both original native mode leaves retain all old assertions and add four metadata classes plus same-session post-refusal read. Existing three-record stock transport profile count is unchanged; new explicit producer/reporter requirements prevent accepting legacy evidence.",
+    "local_manifest_reference": ".private/freightctl-f076-stock-metadata-local-4bbo4diq/manifest.json",
+    "local_manifest_sha256": "72df5527b03bd9a12795951fc0208f0351bb570967e062d50d58fb390abce125",
+    "local_methods": 42,
+    "runtime_qualification": false,
+    "known_failures": "Original distinct x86system/no-ktls stockfilter failures retained unchanged; no filter/TLS/budget bypass, activeFTP stays disabled."
   }
 }

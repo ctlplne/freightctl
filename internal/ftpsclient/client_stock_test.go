@@ -6,6 +6,8 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -30,6 +32,7 @@ func TestNativeStockReceiver(t *testing.T) {
 	var cfg struct {
 		Explicit secure.FTPSDestination `json:"explicit"`
 		Implicit secure.FTPSDestination `json:"implicit"`
+		Metadata bool                   `json:"collection_metadata"`
 	}
 	d := json.NewDecoder(io.LimitReader(f, 16385))
 	d.DisallowUnknownFields()
@@ -90,6 +93,9 @@ func TestNativeStockReceiver(t *testing.T) {
 			if err = client.RetrieveToStage(base+"-empty", io.Discard, 0, secure.Digest(nil)); err != nil {
 				t.Fatal("stock zero-byte readback", err)
 			}
+			if cfg.Metadata {
+				qualifyStockMetadata(t, client, entry.mode, payload)
+			}
 			wrong := entry.destination
 			wrong.ServerName = "unapproved.invalid"
 			if c, e := New(context.Background(), wrong, func() error { return nil }); e == nil {
@@ -112,3 +118,45 @@ func TestNativeStockReceiver(t *testing.T) {
 }
 
 func stringsRepeatRow() string { return string(bytes.Repeat([]byte("0001,1.01,2026-10-28\n"), 10000)) }
+
+func qualifyStockMetadata(t *testing.T, client *Client, mode string, payload []byte) {
+	t.Helper()
+	base := "/inbox/" + mode
+	// The independent host producer publishes these exact read-only source
+	// names. This client must never upload or rename the metadata fixtures.
+	expected := []byte(fmt.Sprintf("{\"schema_version\":1,\"batch_id\":\"11111111-2222-4333-8444-555555555555\",\"files\":[{\"name\":\"%s-final.csv\",\"size_bytes\":%d,\"sha256\":\"%s\"}]}\n", mode, len(payload), secure.Digest(payload)))
+	ready, err := client.ReadBounded(base+"-ready.json", MaxMetadata)
+	if err != nil || !bytes.Equal(ready, expected) {
+		t.Fatal("stock metadata exact published bytes", err)
+	}
+	maximum, err := client.ReadBounded(base+"-max.metadata", MaxMetadata)
+	if err != nil || !bytes.Equal(maximum, bytes.Repeat([]byte("M"), int(MaxMetadata))) {
+		t.Fatal("stock metadata exact maximum", err)
+	}
+	empty, err := client.ReadBounded(base+"-empty", MaxMetadata)
+	if err != nil || len(empty) != 0 {
+		t.Fatal("stock metadata exact empty object", err)
+	}
+	if partial, err := client.ReadBounded(base+"-oversize.metadata", MaxMetadata); !errors.Is(err, ErrInput) || partial != nil {
+		t.Fatal("stock metadata oversize returned bytes or wrong refusal", err)
+	}
+	again, err := client.ReadBounded(base+"-ready.json", MaxMetadata)
+	if err != nil || !bytes.Equal(again, expected) {
+		t.Fatal("stock metadata bounded refusal damaged the original control session", err)
+	}
+	proof := struct {
+		Kind        string `json:"kind"`
+		Mode        string `json:"mode"`
+		ReadySize   int    `json:"ready_size"`
+		ReadyHash   string `json:"ready_sha256"`
+		MaximumSize int    `json:"maximum_size"`
+		MaximumHash string `json:"maximum_sha256"`
+		EmptySize   int    `json:"empty_size"`
+		EmptyHash   string `json:"empty_sha256"`
+		Oversize    bool   `json:"oversize_refused"`
+		Usable      bool   `json:"session_usable_after_refusal"`
+	}{"freightctl-stock-ftps-metadata-v1", mode, len(ready), secure.Digest(ready), len(maximum), secure.Digest(maximum), len(empty), secure.Digest(empty), true, true}
+	if err := json.NewEncoder(os.Stdout).Encode(proof); err != nil {
+		t.Fatal(err)
+	}
+}

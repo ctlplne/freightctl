@@ -12,6 +12,8 @@ on:
       - 'scripts/install-ftps-receiver.sh'
       - 'scripts/install-ftps-tls.py'
       - 'scripts/qualify-ftps-client.py'
+      - 'scripts/ftps_stock_metadata.py'
+      - 'scripts/test-ftps-stock-metadata.py'
       - 'scripts/ftps_receiver_witness.py'
       - 'scripts/ci-ftps-client-summary.py'
       - 'scripts/test-ftps-client-summary.py'
@@ -26,6 +28,8 @@ on:
       - 'scripts/install-ftps-receiver.sh'
       - 'scripts/install-ftps-tls.py'
       - 'scripts/qualify-ftps-client.py'
+      - 'scripts/ftps_stock_metadata.py'
+      - 'scripts/test-ftps-stock-metadata.py'
       - 'scripts/ftps_receiver_witness.py'
       - 'scripts/ci-ftps-client-summary.py'
       - 'scripts/test-ftps-client-summary.py'
@@ -85,14 +89,14 @@ jobs:
           umask 077
           mkdir -p .private
           receiver_status=0
-          python3 scripts/qualify-ftps-client.py > .private/ftps-client-result.json || receiver_status=$?
-          python3 scripts/ci-ftps-client-summary.py --result .private/ftps-client-result.json --library-profile "${{ matrix.library }}"
+          python3 scripts/qualify-ftps-client.py --collection-metadata > .private/ftps-client-result.json || receiver_status=$?
+          python3 scripts/ci-ftps-client-summary.py --require-collection-metadata --result .private/ftps-client-result.json --library-profile "${{ matrix.library }}"
           exit "$receiver_status"
       - name: Failed receiver process diagnostic (never qualification)
         if: failure() && steps.qualify.outcome == 'failure'
         run: |
           umask 077
           trace_status=0
-          FREIGHTCTL_FTPS_TRACE=1 python3 scripts/qualify-ftps-client.py > .private/ftps-client-trace-result.json || trace_status=$?
-          python3 scripts/ci-ftps-client-summary.py --result .private/ftps-client-trace-result.json --library-profile "${{ matrix.library }}"
+          FREIGHTCTL_FTPS_TRACE=1 python3 scripts/qualify-ftps-client.py --collection-metadata > .private/ftps-client-trace-result.json || trace_status=$?
+          python3 scripts/ci-ftps-client-summary.py --require-collection-metadata --result .private/ftps-client-trace-result.json --library-profile "${{ matrix.library }}"
           exit "$trace_status"

@@ -7,6 +7,7 @@ import os
 from pathlib import Path
 import re
 import subprocess
+import ftps_stock_metadata as stock_metadata
 
 ROOT=Path(__file__).resolve().parents[1]
 PAYLOAD=b"account,amount,day\n"+b"0001,1.01,2026-10-28\n"*10000
@@ -18,6 +19,7 @@ LIBRARY_SOURCE_SHA="603f5602e2eef00d77fbd429d34dcd5822bb301757a1bc9cdb24c670f1eb
 LIBRARY_FILES={"prefix/lib/libssl.so.3","prefix/lib/libcrypto.so.3","prefix/bin/openssl","prefix/include/openssl/configuration.h","prefix/LICENSE.txt"}
 LIBRARY_STEPS={"native-compiler","compiler-version","configure","build","selected-upstream-tests","install","installed-version"}
 CUSTOM_COMMANDS={"selected-library-version","selected-library-linkage"}
+METADATA_COMMANDS={'seed-source-metadata','independent-source-metadata'}
 
 
 def read(path,bound=4<<20):
@@ -55,7 +57,7 @@ def verify_library(root,architecture):
     return {"manifest_sha256":hashlib.sha256(raw).hexdigest(),"version":"3.5.9","source_sha256":LIBRARY_SOURCE_SHA,"selected_upstream_recipes":3,"upstream_skip_lines":skips,"kernel_tls_compiled_out":True}
 
 
-def summarize(root,result,commit,library_profile="system"):
+def summarize(root,result,commit,library_profile="system",require_collection_metadata=False):
     h=json.loads(read(result,8192));ref=h.get("manifest_reference","")
     if not re.fullmatch(r"\.private/ftps-client-[0-9a-f]{32}/manifest\.json",ref):raise ValueError("receiver reference differs")
     path=root/ref
@@ -74,7 +76,9 @@ def summarize(root,result,commit,library_profile="system"):
     if m.get("receiver_traced") is not False:raise ValueError("traced receiver cannot qualify the normal profile")
     if m.get("cleanup_failures")!=[] or m.get("probe_failures")!=[] or m.get("native_pass_records")!=3:raise ValueError("receiver execution incomplete")
     steps=m.get("steps")
-    required=REQUIRED|CUSTOM_COMMANDS if library_profile=="no-ktls" else REQUIRED
+    metadata_requested=m.get('collection_metadata_requested',False)
+    if type(metadata_requested) is not bool or require_collection_metadata and not metadata_requested:raise ValueError('required stock collection metadata profile did not run')
+    required=(REQUIRED|CUSTOM_COMMANDS if library_profile=="no-ktls" else REQUIRED)|(METADATA_COMMANDS if metadata_requested else set())
     if not isinstance(steps,list) or {s.get("name") for s in steps}!=required or len(steps)!=len(required):raise ValueError("receiver command closure differs")
     for s in steps:
         expected_code=1 if s["name"] in {"explicit-refuse-tls12","implicit-refuse-tls12"} else 0
@@ -94,6 +98,9 @@ def summarize(root,result,commit,library_profile="system"):
     observed=json.loads(read(path.parent/"independent-receiver-files.stdout"))
     expected_files={mode+"-"+suffix:{"size":len(b),"sha256":hashlib.sha256(b).hexdigest()} for mode in ("explicit","implicit") for suffix,b in (("final.csv",PAYLOAD),("resume.csv",PAYLOAD),("empty",b""))}
     if observed!=expected_files or m.get("receiver_files")!=observed:raise ValueError("independent stock receiver bytes differ")
+    if metadata_requested:
+        metadata=stock_metadata.validate(path.parent,read)
+        if not stock_metadata.same(m.get('collection_metadata'),metadata):raise ValueError('stock metadata aggregate differs from original evidence')
     if read(path.parent/"openssl.conf")!=OPENSSL_PROFILE:raise ValueError("receiver OpenSSL TLS floor differs")
     for mode in ("explicit","implicit"):
         refusal=read(path.parent/(mode+"-refuse-tls12.stderr"))
@@ -129,7 +136,7 @@ def summarize(root,result,commit,library_profile="system"):
     for name,sha in sources.items():
         p=root/name
         if not p.resolve().is_relative_to(root.resolve()) or hashlib.sha256(read(p,16<<20)).hexdigest()!=sha:raise ValueError("receiver source identity changed")
-    return {"state":"passed","source_commit":commit,"manifest_sha256":digest,"architecture":m["architecture"],"receiver_library_profile":library_profile,"receiver_library":library,"native_pass_records":3,"original_commands":len(steps),"source_inputs":len(sources),"independent_receiver_files":len(observed),"strict_tls13_reuse_and_shutdown":True,"private_transfer_audit_records":{mode:logs[mode]['line_records'] for mode in logs},"receiver_native_seccomp":"added kernel filter observed" if m['architecture']=='x86_64' else "not implemented by selected ARM receiver","kernel_filter_observations":observations,"task_user_removed":True,"task_pam_removed":True,"inference_performed":False,"scanner_started":False,"postgres_started":False,"domain_delivery_qualified":False,"scope":"actual unmodified stock vsftpd/PAM with named TLS library profile;ARM native filter,governed delivery/collection and whole journeys remain unqualified"}
+    return {"state":"passed",**({'stock_collection_metadata':metadata} if metadata_requested else {}),"source_commit":commit,"manifest_sha256":digest,"architecture":m["architecture"],"receiver_library_profile":library_profile,"receiver_library":library,"native_pass_records":3,"original_commands":len(steps),"source_inputs":len(sources),"independent_receiver_files":len(observed),"strict_tls13_reuse_and_shutdown":True,"private_transfer_audit_records":{mode:logs[mode]['line_records'] for mode in logs},"receiver_native_seccomp":"added kernel filter observed" if m['architecture']=='x86_64' else "not implemented by selected ARM receiver","kernel_filter_observations":observations,"task_user_removed":True,"task_pam_removed":True,"inference_performed":False,"scanner_started":False,"postgres_started":False,"domain_delivery_qualified":False,"scope":"actual unmodified stock vsftpd/PAM with named TLS library profile;ARM native filter,governed delivery/collection and whole journeys remain unqualified"}
 
 
 def failure_diagnostics(root,result,commit):
@@ -139,14 +146,14 @@ def failure_diagnostics(root,result,commit):
         if not re.fullmatch(r"\.private/ftps-client-[0-9a-f]{32}/manifest\.json",ref):return {}
         path=root/ref;raw=read(path,8<<20);m=json.loads(raw)
         if hashlib.sha256(raw).hexdigest()!=h.get("manifest_sha256") or m.get("starting_commit")!=commit:return {}
-        steps={s["name"]:s for s in m.get("steps",[]) if s.get("name") in REQUIRED|CUSTOM_COMMANDS}
+        steps={s["name"]:s for s in m.get("steps",[]) if s.get("name") in REQUIRED|CUSTOM_COMMANDS|METADATA_COMMANDS}
         def original(name,ext):
             if name not in steps:return b""
             f=path.parent/(name+"."+ext)
             if not f.exists():return b""
             b=read(f,64<<20)
             return b if hashlib.sha256(b).hexdigest()==steps[name].get(ext+"_sha256") else b""
-        failures=[s["name"] for s in m.get("steps",[]) if s.get("name") in REQUIRED|CUSTOM_COMMANDS and s.get("exit_code")!=(1 if s["name"] in {"explicit-refuse-tls12","implicit-refuse-tls12"} else 0)]
+        failures=[s["name"] for s in m.get("steps",[]) if s.get("name") in REQUIRED|CUSTOM_COMMANDS|METADATA_COMMANDS and s.get("exit_code")!=(1 if s["name"] in {"explicit-refuse-tls12","implicit-refuse-tls12"} else 0)]
         result={"failed_commands":sorted(set(failures)),"manifest_sha256":h["manifest_sha256"]}
         if m.get("receiver_library_profile") in {"system","no-ktls"}:result["receiver_library_profile"]=m["receiver_library_profile"]
         if m.get("receiver_traced") is True:result["receiver_traced"]=True
@@ -228,10 +235,10 @@ def failure_diagnostics(root,result,commit):
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument("--result",required=True);p.add_argument("--library-profile",choices=("system","no-ktls"),default="system");args=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument("--result",required=True);p.add_argument("--library-profile",choices=("system","no-ktls"),default="system");p.add_argument('--require-collection-metadata',action='store_true');args=p.parse_args()
     try:
         commit=os.environ.get("GITHUB_SHA") or subprocess.check_output(["git","rev-parse","HEAD"],cwd=ROOT).decode().strip()
-        print(json.dumps(summarize(ROOT,Path(args.result),commit,args.library_profile)));return 0
+        print(json.dumps(summarize(ROOT,Path(args.result),commit,args.library_profile,args.require_collection_metadata)));return 0
     except Exception:
         diagnostic=failure_diagnostics(ROOT,Path(args.result),locals().get("commit",""))
         print(json.dumps({"state":"failed","reason":"native FTPS client receiver qualification or original evidence validation failed;inspect protected outputs",**diagnostic}));return 1

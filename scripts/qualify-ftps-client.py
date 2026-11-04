@@ -4,6 +4,7 @@
 Creates one exact PAM account/service and two loopback receivers. It never
 installs/starts a global FTP daemon, uses retained PostgreSQL or runs inference.
 """
+import argparse
 import hashlib
 import json
 import os
@@ -16,6 +17,7 @@ import subprocess
 import tempfile
 import time
 import uuid
+import ftps_stock_metadata as stock_metadata
 
 ROOT=Path(__file__).resolve().parents[1]
 PAYLOAD=b"account,amount,day\n"+b"0001,1.01,2026-10-28\n"*10000
@@ -68,6 +70,9 @@ def main():
     if not __debug__ or os.environ.get("GITHUB_ACTIONS")!="true" or platform.system()!="Linux" or Path(os.environ.get("GITHUB_WORKSPACE",".")).resolve()!=ROOT:
         raise RuntimeError("stock receiver requires its disposable native GitHub runner")
     if platform.machine() not in {"x86_64","aarch64"}:raise RuntimeError("unsupported native receiver architecture")
+    parser=argparse.ArgumentParser()
+    parser.add_argument('--collection-metadata',action='store_true',help='also require exact bounded reads of independently published stock-peer metadata; no domain collection')
+    args=parser.parse_args()
     os.chdir(ROOT);os.umask(0o077)
     private=ROOT/".private"/("ftps-client-"+uuid.uuid4().hex);private.mkdir(mode=0o700)
     estate,home,inbox,empty=receiver_directories()
@@ -87,6 +92,7 @@ def main():
     sources={n:digest(ROOT/n) for n in names}
     manifest={"schema_version":1,"kind":"native-ftps-client-stock-receiver","state":"failed","starting_commit":subprocess.check_output(["git","rev-parse","HEAD"]).decode().strip(),"architecture":platform.machine(),"source_sha256":sources,"receiver_traced":traced,"inference_performed":False,"scanner_started":False,"postgres_started":False,"domain_delivery_qualified":False,"full_journeys_qualified":False}
     manifest["receiver_library_profile"]=library_profile
+    manifest['collection_metadata_requested']=args.collection_metadata
 
     def command(label,argv,timeout=60,input_bytes=None,expected_code=0):
         out,err=private/(label+".stdout"),private/(label+".stderr")
@@ -125,6 +131,8 @@ def main():
         command("create-exact-user",["sudo","useradd","--no-create-home","--home-dir",home,"--shell","/usr/sbin/nologin",user]);created_user=True
         command("set-exact-password",["sudo","chpasswd"],input_bytes=user.encode()+b":"+token.read_bytes()+b"\n")
         command("own-exact-inbox",["sudo","chown",user+":"+user,inbox])
+        if args.collection_metadata:
+            command('seed-source-metadata',['sudo','python3','-c',stock_metadata.SEED,inbox,user])
         pam_source=private/"pam.conf";pam_source.write_text("auth required pam_unix.so\naccount required pam_unix.so\n")
         command("create-exact-pam",["sudo","install","--mode=0600",pam_source,pam]);created_pam=True
         users=private/"allowed-users";users.write_text(user+"\n")
@@ -171,6 +179,7 @@ def main():
             except RuntimeError:probe_failures.append(label)
             # Keep the failed probe red while observing independent client and
             # receiver byte gates. Passing transfers cannot erase this failure.
+        if args.collection_metadata:references['collection_metadata']=True
         reference=private/"receiver.json";reference.write_text(json.dumps(references));env["FREIGHTCTL_FTPS_RECEIVER_FILE"]=str(reference)
         native=command("native-stock-receiver",["sh","scripts/go.sh","test","-p","1","-tags=ftpspeer","-race","-count=1","-timeout=120s","-v","-run","^TestNativeStockReceiver$","./internal/ftpsclient"],150).decode()
         passed=re.findall(r"^\s*--- PASS: (\S+) \(",native,re.MULTILINE)
@@ -178,6 +187,9 @@ def main():
         observer_code="import pathlib,hashlib,json,sys;p=pathlib.Path(sys.argv[1]);data=b'account,amount,day\\n'+b'0001,1.01,2026-10-28\\n'*10000;out={};\nfor mode in ('explicit','implicit'):\n for suffix in ('final.csv','resume.csv','empty'):\n  name=mode+'-'+suffix;b=(p/name).read_bytes();expected=b'' if suffix=='empty' else data;assert b==expected;out[name]={'size':len(b),'sha256':hashlib.sha256(b).hexdigest()}\nprint(json.dumps(out))"
         observed=json.loads(command("independent-receiver-files",["sudo","python3","-c",observer_code,inbox]))
         if len(observed)!=6:raise RuntimeError("independent receiver file closure differs")
+        if args.collection_metadata:
+            command('independent-source-metadata',['sudo','python3','-c',stock_metadata.OBSERVE,inbox])
+            manifest['collection_metadata']=stock_metadata.validate(private,stock_metadata.read_original)
         manifest["receiver_files"]=observed;manifest["native_pass_records"]=3;manifest["state"]="failed" if probe_failures else "passed"
     except Exception as error:
         manifest["failure"]=str(error)

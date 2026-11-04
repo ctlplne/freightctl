@@ -3,7 +3,7 @@
   "id": "F076",
   "observed_at": "2026-11-04",
   "starting_commit": "4d771b2e6a961a70b764681fd578ff175d064db7",
-  "state": "Both de93 native suites:862pass/7failed records/0skip; original10FTPS leaves and schema2 kept-local plans pass. Exact SQL/schedule/producer-CAS repairs at28cdfcb are now executing on both native architectures and both public profiles. Later local browser metadata and process-death coverage is prepared, not runtime qualified.",
+  "state": "Both de93 native suites:862pass/7failed records/0skip; original10FTPS leaves and schema2 kept-local plans pass. Exact SQL/schedule/producer-CAS repairs at28cdfcb are executing on both native architectures. Both public CLI/API metadata profiles pass all3fresh estates. New9e5collection Chrome/process death and local stock metadata follow-up remain unqualified.",
   "scope": "Read/copy input stage of ordinary immutable workflows, using exact registered FTPS revisions and the existing bounded producer-manifest, custody, intake, lease and event machinery. Transport metadata reading alone does not qualify collection.",
   "qualification_claim": false,
   "frozen_cases": [
@@ -241,13 +241,49 @@
     "mechanism": "Both modes use actual CLI identity/registered connection/workflow/collection preview and queue/cancel; exact original CLI and HTTPS keys replay before and after cancellation/source revocation. New bounded source spy is stopped and drained with zero contacts; no worker runs.",
     "commands_per_mode": 16,
     "saved_key_replays_per_mode": 5,
-    "output_scope": "Actual collection CLI/API metadata passes both modes on3recipient-encrypted fresh profiles at28cdfcb; plaintext remains in progress. Bytes/collection Chrome remain unqualified. Original six consent browser phases/18audits and exact cleanup pass on each completed encrypted profile.",
+    "output_scope": "Actual collection CLI/API metadata passes both modes on three plaintext and three recipient-encrypted fresh profiles at28cdfcb. Each proves32collection commands/10saved-key replays/zero source contacts, original six consent browser phases/18audits and exact cleanup. Collection bytes and the new9e5collection Chrome phase remain unqualified.",
     "verifier": "Reopen fixed command/file closure and protected input/output hashes; independent typed connection/source fingerprints, original requests/header identity/key, strict JSON/number/boolean/duplicate checks, unchanged attempts/fences and current versus historical state. Fixed failure enums/names only.",
     "local_methods": 71,
     "local_checks_manifest_reference": ".private/freightctl-f076-public-cas-diagnostic-local-u_5nce7y/manifest.json",
     "local_checks_manifest_sha256": "d6a2db0b5f4ee2d1dd7d1a895f38d60152d0d25f60491d8abd9017e0889c7a5d",
     "local_scope": "7synthetic metadata original-output/refusal methods plus64FTPS reporter contracts, syntax/lint. Combined local worktree manifest also retains CAS compile/vet and20image stand-in methods. No service/CLI/API/Chrome/scanner/inference execution locally.",
-    "current_runtime_observation": {
+    "current_runtime_observations": [
+      {
+        "candidate": "28cdfcbbd83e2571fb626b3ee47b8783cccad4db",
+        "run_id": 41907798532,
+        "job_id": 126847012099,
+        "profile": "recipient-encrypted",
+        "state": "completed/success",
+        "fresh_profiles": 3,
+        "collection_commands_per_profile": 32,
+        "collection_saved_key_replays_per_profile": 10,
+        "source_contacts_per_profile": 0,
+        "existing_consent_browser_phases_per_profile": 6,
+        "existing_consent_audits_per_profile": 18,
+        "connection_rotations_per_profile": 20,
+        "manifest_reference": ".private/freightctl-f076-public-encrypted-first-em9ccdq4/manifest.json",
+        "manifest_sha256": "2001271311b25c7e9738fdacc13c72697d5550f95d01a4ef65845a6e179ee4fe",
+        "scope": "First actual CLI/API collection metadata pass in both modes on three fresh profiles; original keys preserve queue/cancel/revocation history with zero attempts/fences/contact and exact cleanup. This does not qualify source bytes or the new collection Chrome phase, nor9e5process death. Plaintext subsequently also passes, recorded separately."
+      },
+      {
+        "candidate": "28cdfcbbd83e2571fb626b3ee47b8783cccad4db",
+        "run_id": 41907798532,
+        "job_id": 126847012481,
+        "profile": "plaintext",
+        "state": "completed/success",
+        "fresh_profiles": 3,
+        "collection_commands_per_profile": 32,
+        "collection_saved_key_replays_per_profile": 10,
+        "source_contacts_per_profile": 0,
+        "existing_consent_browser_phases_per_profile": 6,
+        "existing_consent_audits_per_profile": 18,
+        "connection_rotations_per_profile": 20,
+        "manifest_reference": ".private/freightctl-f076-public-plaintext-first-s24d3qjg/manifest.json",
+        "manifest_sha256": "eb1af948cc8c53b37801a90a1210cbe1d8abfee0e2bb2ec0053dc86001b95cb5",
+        "scope": "First actual CLI/API collection metadata pass in both modes on three fresh plaintext estates; saved-key queue/cancel/revocation history, zero contact/attempts/fences and exact cleanup. Collection bytes/Chrome,9e5process-death and whole journeys remain unqualified."
+      }
+    ],
+    "first_runtime_observation": {
       "candidate": "28cdfcbbd83e2571fb626b3ee47b8783cccad4db",
       "run_id": 41907798532,
       "job_id": 126847012099,
@@ -333,7 +369,7 @@
     ],
     "native_state": "Both application jobs started/in progress; both metadata jobs and fuzz completed success. Original15FTPS leaf scope, no process-death case in this source.",
     "public_workflow_metadata_run_id": 41907798532,
-    "public_state": "Recipient-encrypted completes all3fresh profiles successfully; plaintext remains in progress at2026-11-04T21:20Z. No actual collection Chrome phase in this source.",
+    "public_state": "Both plaintext and recipient-encrypted complete all3fresh profiles successfully. No actual collection Chrome phase in this source.",
     "core_run_id": 41907798513,
     "superseded_native": {
       "candidate": "2c640862801d849178d9cd0bfb02e9ea2f02ebcb",
@@ -400,7 +436,36 @@
       "connection_rotations_per_profile": 20,
       "manifest_reference": ".private/freightctl-f076-public-encrypted-first-em9ccdq4/manifest.json",
       "manifest_sha256": "2001271311b25c7e9738fdacc13c72697d5550f95d01a4ef65845a6e179ee4fe",
-      "scope": "First actual CLI/API collection metadata pass in both modes on three fresh profiles; original keys preserve queue/cancel/revocation history with zero attempts/fences/contact and exact cleanup. This does not qualify source bytes or the new collection Chrome phase, nor9e5process death. Plaintext profile still running."
+      "scope": "First actual CLI/API collection metadata pass in both modes on three fresh profiles; original keys preserve queue/cancel/revocation history with zero attempts/fences/contact and exact cleanup. This does not qualify source bytes or the new collection Chrome phase, nor9e5process death. Plaintext subsequently also passes, recorded separately."
+    },
+    "public_plaintext": {
+      "candidate": "28cdfcbbd83e2571fb626b3ee47b8783cccad4db",
+      "run_id": 41907798532,
+      "job_id": 126847012481,
+      "profile": "plaintext",
+      "state": "completed/success",
+      "fresh_profiles": 3,
+      "collection_commands_per_profile": 32,
+      "collection_saved_key_replays_per_profile": 10,
+      "source_contacts_per_profile": 0,
+      "existing_consent_browser_phases_per_profile": 6,
+      "existing_consent_audits_per_profile": 18,
+      "connection_rotations_per_profile": 20,
+      "manifest_reference": ".private/freightctl-f076-public-plaintext-first-s24d3qjg/manifest.json",
+      "manifest_sha256": "eb1af948cc8c53b37801a90a1210cbe1d8abfee0e2bb2ec0053dc86001b95cb5",
+      "scope": "First actual CLI/API collection metadata pass in both modes on three fresh plaintext estates; saved-key queue/cancel/revocation history, zero contact/attempts/fences and exact cleanup. Collection bytes/Chrome,9e5process-death and whole journeys remain unqualified."
     }
+  },
+  "independent_metadata_prepared": {
+    "workflow": ".github/workflows/ftps-client.yml",
+    "producer": "scripts/qualify-ftps-client.py --collection-metadata",
+    "verifier": "scripts/ci-ftps-client-summary.py --require-collection-metadata",
+    "mechanism": "Independently publish six0400stock-source objects via exclusive temporary files, file/directory fsync and rename. On each original stock vsftpd explicit/implicit control session, require exact ready bytes,32KiBmaximum,empty,oversize nil/ErrInput and usable original session afterward. Reopen source inventories before/after and exact Go witnesses. Original stock receiving/readback/resume/empty/identity cases, TLS floor/reuse/clean shutdown, audit/kernel evidence and resource budgets remain enforced. No source worker or domain custody claim.",
+    "local_manifest_reference": ".private/freightctl-f076-stock-metadata-local-4bbo4diq/manifest.json",
+    "local_manifest_sha256": "72df5527b03bd9a12795951fc0208f0351bb570967e062d50d58fb390abce125",
+    "local_python_methods": 42,
+    "local_scope": "Six synthetic verifier/real task-owned file-publication contracts plus36original stock reporter contracts, native ARM ftpspeer compile/vet,syntax/actionlint. No actual stock process/PAM/user/TLS/socket locally.",
+    "runtime_qualification": false,
+    "submission": "Local only; required9e5native/public candidate remains pending. Known x86stockfilter failures remain red; activeFTP stays disabled. Full independent typed collection remains required."
   }
 }
