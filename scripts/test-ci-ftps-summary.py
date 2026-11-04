@@ -11,6 +11,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 import ftps_cli_governance as governance
 import ftps_browser_evidence as browser
 import ftps_ticket_governance as tickets
@@ -63,6 +64,61 @@ def synthetic_governance_outputs():
 
 
 class SummaryContracts(unittest.TestCase):
+    def test_collection_metadata_requirement_cannot_be_satisfied_by_absence_or_profile_claims(self):
+        self.write()
+        with self.assertRaises(ValueError):
+            summary.summarize(self.root, self.result, 'a'*40, require_workflow_collection_metadata=True)
+        self.assertNotIn('ftps_collection_metadata_commands', self.check())
+        for value in (True, 'true', 1):
+            self.manifest['workflow_collection_metadata_requested'] = value
+            with self.assertRaises(ValueError):
+                self.check()
+
+    def test_collection_metadata_reporter_reopens_both_original_scopes_and_refuses_claim_only(self):
+        old = {'state': 'passed', 'synthetic': True}
+        checked = {'state': 'passed', 'commands': 16, 'source_contacts': 0, 'attempts': 0, 'fences': 0,
+            'saved_key_replays': 5, 'current_state': 'cancelled', 'source_state': 'revoked',
+            'bytes_qualified': False, 'browser_qualified': False}
+        self.manifest.update(workflow_dispatch_approvals_requested=True, workflow_collection_metadata_requested=True,
+            workflow_dispatch_governance={mode: old for mode in ('explicit', 'implicit')},
+            collection_metadata_governance={mode: checked for mode in ('explicit', 'implicit')},
+            collection_metadata_output_sha256={'explicit': {'original': 'a'*64}, 'implicit': {'original': 'b'*64}})
+        # These two stubs test reporter composition only. The actual collection
+        # verifier's original file/hash/refusal contracts run in its own suite.
+        with patch.object(summary.dispatch, 'validate', return_value=old):
+            with self.assertRaises(ValueError):
+                self.check()
+            with patch.object(summary.collection_metadata, 'validate', return_value=checked) as verify:
+                result = self.check()
+                self.assertEqual(result['ftps_collection_metadata_commands'], 32)
+                self.assertEqual(result['ftps_collection_metadata_saved_key_replays'], 10)
+                self.assertFalse(result['ftps_collection_metadata_bytes_qualified'])
+                self.assertFalse(result['ftps_collection_metadata_browser_qualified'])
+                self.assertEqual([call.args[1] for call in verify.call_args_list], ['explicit', 'implicit'])
+                self.manifest['collection_metadata_governance']['implicit'] = dict(checked, attempts=True)
+                with self.assertRaises(ValueError):
+                    self.check()
+
+    def test_collection_metadata_failure_diagnostics_only_expose_bound_commands_and_fixed_categories(self):
+        name = 'cli-explicit-collection-metadata-collection-start'
+        raw = b'private-evidence-canary'
+        (self.directory/(name+'.stdout')).write_bytes(b'')
+        (self.directory/(name+'.stderr')).write_bytes(raw)
+        self.manifest['steps'].append({'name': name, 'exit_code': 1,
+            'stdout_sha256': hashlib.sha256(b'').hexdigest(), 'stderr_sha256': hashlib.sha256(raw).hexdigest()})
+        self.manifest['collection_metadata_evidence_failure'] = {'mode': 'explicit', 'category': 'original-output-contract'}
+        self.write()
+        result = summary.failure_diagnostics(self.root, self.result, 'a'*40)
+        self.assertIn(name, result['failed_cli_commands'])
+        self.assertEqual(result['collection_metadata_evidence_failure'], {'mode': 'explicit', 'category': 'original-output-contract'})
+        self.assertNotIn('private-evidence-canary', json.dumps(result))
+        for field in ('mode', 'category'):
+            self.manifest['collection_metadata_evidence_failure'][field] = 'private-evidence-canary'
+            self.write()
+            result = summary.failure_diagnostics(self.root, self.result, 'a'*40)
+            self.assertNotIn('collection_metadata_evidence_failure', result)
+            self.assertNotIn('private-evidence-canary', json.dumps(result))
+
     def test_encrypted_workflow_requires_explicit_profile_and_closed_original_outputs(self):
         self.write()
         with self.assertRaises(ValueError):

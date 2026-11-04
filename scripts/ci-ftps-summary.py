@@ -15,6 +15,7 @@ import ftps_browser_evidence as browser_evidence
 import ftps_ticket_governance as tickets
 import ftps_browser_tickets as browser_tickets
 import ftps_dispatch_qualification as dispatch
+import ftps_collection_metadata as collection_metadata
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -45,12 +46,12 @@ def failure_diagnostics(root, result, commit):
         allowed = {"native-ftps-integration", "cli-explicit-lftp-probe", "cli-implicit-lftp-probe", "browser-explicit-operator", "browser-implicit-operator"}
         for step in manifest.get("steps", []):
             name = step.get("name")
-            if name not in allowed and not governance.command_suffix(name or "") and not tickets.command_suffix(name or "") and not browser_tickets.command_suffix(name or "") and not dispatch.command_suffix(name or ""):
+            if name not in allowed and not governance.command_suffix(name or "") and not tickets.command_suffix(name or "") and not browser_tickets.command_suffix(name or "") and not dispatch.command_suffix(name or "") and not collection_metadata.command_suffix(name):
                 continue
             data = read(path.parent / (name + ".stdout"), 64 << 20)
             if hashlib.sha256(data).hexdigest() != step.get("stdout_sha256"):
                 return {}
-            if governance.command_suffix(name) or tickets.command_suffix(name) or browser_tickets.command_suffix(name) or dispatch.command_suffix(name):
+            if governance.command_suffix(name) or tickets.command_suffix(name) or browser_tickets.command_suffix(name) or dispatch.command_suffix(name) or collection_metadata.command_suffix(name):
                 diagnostic = read(path.parent / (name + ".stderr"), 1 << 20)
                 if hashlib.sha256(diagnostic).hexdigest() != step.get("stderr_sha256"):
                     return {}
@@ -130,6 +131,10 @@ def failure_diagnostics(root, result, commit):
         dispatch_failure=manifest.get("dispatch_evidence_failure")
         if isinstance(dispatch_failure,dict) and dispatch_failure.get("mode") in {"explicit","implicit"} and dispatch_failure.get("profile") in {"dispatch","workflow_dispatch"} and dispatch_failure.get("category") in set(dispatch.FAILURE_CODES.values())|{"dispatch-evidence"}:
             outcome["dispatch_evidence_failure"]={k:dispatch_failure[k] for k in ("mode","profile","category")}
+        collection_failure = manifest.get("collection_metadata_evidence_failure")
+        if (isinstance(collection_failure, dict) and collection_failure.get("mode") in {"explicit", "implicit"}
+                and collection_failure.get("category") == "original-output-contract"):
+            outcome["collection_metadata_evidence_failure"] = {"mode": collection_failure["mode"], "category": "original-output-contract"}
         invariant = manifest.get("browser_evidence_failure")
         if isinstance(invariant,dict) and invariant.get("mode") in {"explicit","implicit"} and invariant.get("invariant") in browser_evidence.EVIDENCE_FAILURES:
             outcome["browser_evidence_failure"] = {"mode":invariant["mode"],"invariant":invariant["invariant"]}
@@ -142,7 +147,7 @@ def failure_diagnostics(root, result, commit):
         return {}
 
 
-def summarize(root, result, commit, require_browser=False, require_tickets=False, require_browser_tickets=False, require_dispatch_approvals=False, require_workflow_dispatch_approvals=False, require_workflow_dispatch_encryption=False):
+def summarize(root, result, commit, require_browser=False, require_tickets=False, require_browser_tickets=False, require_dispatch_approvals=False, require_workflow_dispatch_approvals=False, require_workflow_dispatch_encryption=False, require_workflow_collection_metadata=False):
     header = json.loads(read(result, 8192))
     ref = header.get("manifest_reference")
     if not isinstance(ref, str) or not re.fullmatch(r"\.private/ftps-[0-9a-f]{32}/manifest\.json", ref):
@@ -263,7 +268,22 @@ def summarize(root, result, commit, require_browser=False, require_tickets=False
                 raise ValueError("workflow dispatch outcomes differ from original evidence")
     elif any(dispatch.command_suffix(n) and "-workflow-dispatch-" in n for n in names):
         raise ValueError("workflow dispatch commands require the complete profile")
+    collection_requested = manifest.get("workflow_collection_metadata_requested", False)
+    if (type(collection_requested) is not bool or require_workflow_collection_metadata and not collection_requested
+            or collection_requested and manifest.get("workflow_dispatch_approvals_requested") is not True):
+        raise ValueError("required FTPS collection metadata profile did not run")
+    if collection_requested:
+        for mode in ("explicit", "implicit"):
+            checked = collection_metadata.validate(path.parent, mode, steps, manifest.get("collection_metadata_output_sha256", {}).get(mode))
+            if not collection_metadata.same(manifest.get("collection_metadata_governance", {}).get(mode), checked):
+                raise ValueError("collection metadata outcomes differ from original evidence")
+    elif any(collection_metadata.command_suffix(n) for n in names):
+        raise ValueError("collection metadata commands require the complete profile")
     return {"state": "passed", "source_commit": commit,
+            **({"ftps_collection_metadata_commands": 2 * len(collection_metadata.COMMANDS),
+                "ftps_collection_metadata_saved_key_replays": 10, "ftps_collection_metadata_source_contacts": 0,
+                "ftps_collection_metadata_bytes_qualified": False, "ftps_collection_metadata_browser_qualified": False}
+                if collection_requested else {}),
             **({"ftps_workflow_recipient_encryption":"exact registered SEIPDv1 AES256 recipient; metadata consent only"} if encrypted else {}), "manifest_sha256": digest,
             "stock_curl_qualified": True, "stock_lftp_qualified": True, "native_test_pass_records": len(NATIVE_TESTS), "source_inputs": len(sources),
             "public_cli_governance_cases": 2 * len(governance.CASES), "expected_cli_refusals": 2 * len(governance.REFUSALS),
@@ -304,11 +324,12 @@ def main():
     parser.add_argument("--require-dispatch-approvals", action="store_true")
     parser.add_argument("--require-workflow-dispatch-approvals", action="store_true")
     parser.add_argument("--require-workflow-dispatch-encryption", action="store_true")
+    parser.add_argument("--require-workflow-collection-metadata", action="store_true")
     args = parser.parse_args()
     commit = os.environ.get("GITHUB_SHA", "")
     try:
         commit = os.environ.get("GITHUB_SHA") or subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT).decode().strip()
-        print(json.dumps(summarize(ROOT, Path(args.result), commit, args.require_browser, args.require_tickets, args.require_browser_tickets, args.require_dispatch_approvals, args.require_workflow_dispatch_approvals, args.require_workflow_dispatch_encryption)))
+        print(json.dumps(summarize(ROOT, Path(args.result), commit, args.require_browser, args.require_tickets, args.require_browser_tickets, args.require_dispatch_approvals, args.require_workflow_dispatch_approvals, args.require_workflow_dispatch_encryption, args.require_workflow_collection_metadata)))
         return 0
     except Exception:
         print(json.dumps({"state": "failed", "reason": "FTPS qualification or evidence validation failed; inspect protected outputs", **failure_diagnostics(ROOT, Path(args.result), commit)}))

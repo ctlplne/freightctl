@@ -32,6 +32,8 @@ on:
       - '.github/workflows/ftps-dispatch.yml'
       - '.github/workflows/ftps-workflows.yml'
       - 'scripts/qualify-ftps.py'
+      - 'scripts/ftps_collection_metadata.py'
+      - 'scripts/test-ftps-collection-metadata.py'
       - 'scripts/metadata_contract.py'
       - 'scripts/ci-metadata-summary.py'
       - 'scripts/qualify-retained-metadata.py'
@@ -71,6 +73,8 @@ on:
       - '.github/workflows/ftps-dispatch.yml'
       - '.github/workflows/ftps-workflows.yml'
       - 'scripts/qualify-ftps.py'
+      - 'scripts/ftps_collection_metadata.py'
+      - 'scripts/test-ftps-collection-metadata.py'
       - 'scripts/metadata_contract.py'
       - 'scripts/ci-metadata-summary.py'
       - 'scripts/qualify-retained-metadata.py'
@@ -166,8 +170,8 @@ jobs:
           for qualification_run in 1 2 3; do
             qualification_status=0
             qualification_result=".private/ftps-workflows-result-${qualification_run}.json"
-            python3 scripts/qualify-ftps.py --retained-schema "$(python3 scripts/ci-metadata-summary.py --print-schema-version)" --postgres-container-id "$task_pg_id" --workflow-dispatch-approvals "${producer_args[@]}" > "$qualification_result" || qualification_status=$?
-            python3 scripts/ci-ftps-summary.py --result "$qualification_result" --require-workflow-dispatch-approvals "${reporter_args[@]}"
+            python3 scripts/qualify-ftps.py --retained-schema "$(python3 scripts/ci-metadata-summary.py --print-schema-version)" --postgres-container-id "$task_pg_id" --workflow-dispatch-approvals --workflow-collection-metadata "${producer_args[@]}" > "$qualification_result" || qualification_status=$?
+            python3 scripts/ci-ftps-summary.py --result "$qualification_result" --require-workflow-dispatch-approvals --require-workflow-collection-metadata "${reporter_args[@]}"
             if [ "$qualification_status" -ne 0 ]; then
               exit "$qualification_status"
             fi

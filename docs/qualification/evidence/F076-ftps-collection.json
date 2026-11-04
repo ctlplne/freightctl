@@ -44,7 +44,7 @@
       "outcome": "Existing SFTP collection/arrival/schedules, FTPS/SFTP sending, ciphertext, intake, RLS, receipts and native regression gates remain enforced. No local PostgreSQL, model or scanner execution is needed."
     }
   ],
-  "next_action": "Observe preserved runningde93 first outcomes (including bounded image disk/feed/scan) and newest2c64086 original fixture/review repair; no more relevant source push while required repair candidate remains pending. Require full15native leaves, matching-event SQL and scheduled original journey. Add real public CLI/API/Chrome, crash/recovery, mixed/encrypted forwarding/handoff and independent-peer source qualification; retained35, inference and all whole-goal gates stay unchanged.",
+  "next_action": "Preserve both completedde93 original logs. Pending2c64086 contains the same now-confirmedD163 producer mutation error; supersede only if still unstarted with exact-CAS repair and additive required public metadata gate, preserving all original cases/budgets. Require native15-leaf matching-event/scheduled/batch and actual CLI/API metadata results. Actual Chrome collection, crash/recovery, mixed/encrypted forwarding/handoff and independent source peers remain required; all whole-goal gates remain open.",
   "first_failure": {
     "test": "TestFTPSCollectionSourceMissingContract",
     "result": "existing typed source refuses ftps.collect; no service contact",
@@ -198,5 +198,54 @@
     "prior_native_run_id": 41900064641,
     "prior_state": "started before repair push; preserved, not cancelled or restarted",
     "note": "Original de93 contains known D160/D161 fixture errors plus independent bounded disk and batch/kept-local changes. Observe each original scope; do not infer repair result from queued or metadata jobs."
+  },
+  "de93_native_observation": {
+    "candidate": "de93ddd611943ef94fa1fbd8b351ef93b4918ac6",
+    "run_id": 41900064641,
+    "jobs": [
+      {
+        "id": 126826239999,
+        "architecture": "arm64",
+        "application_pass": 862,
+        "application_fail": 7,
+        "application_skip": 0,
+        "workflow_seconds": 404.811,
+        "manifest_reference": ".private/freightctl-f076-batch-first-T2TDX2JU/manifest.json",
+        "manifest_sha256": "10738980280a76d54d16512197c3ab75830fd81b0983d506b9a484d09625ba28"
+      },
+      {
+        "id": 126826240303,
+        "architecture": "x86_64",
+        "application_pass": 862,
+        "application_fail": 7,
+        "application_skip": 0,
+        "workflow_seconds": 400.981,
+        "manifest_reference": ".private/freightctl-f076-batch-x86-first-g4bZmVVO/manifest.json",
+        "manifest_sha256": "7f38ad0ddd1bad755035bacf92cc09401dd977bbda27c74c68db05d28436ce65"
+      }
+    ],
+    "passing_scope": "Original10FTPS leaves and all prior regressions, including both newly strengthened schema2 kept-local admission/immutable plans. New same-batch equality assertion is reached before fixture mutation failure; the whole batch test remains failed.",
+    "failures": "D160/D161 original fixture errors plusD163 producer remove without observed expected_revision before changed-batch refusal. New exact-CAS fixture repair compiles/vets; collector never receives extra source mutation authority.",
+    "image_scope": "Both exact ext4 volumes mount/verify/unmount; feed exits137 without captured OOM state, no image report or clean claim."
+  },
+  "producer_cas_repair_prepared": {
+    "defect": "D163",
+    "mechanism": "Observe producer namespace entry revision. Replace ready metadata through ordinary AcceptAt with exact ExpectedRevision; scheduled producer removal also supplies its observed revision. Existing namespace CAS guard remains enforced; source collector stays read-only.",
+    "local_scope": "Integration compile/vet only, no local PostgreSQL or receiver."
+  },
+  "public_metadata_prepared": {
+    "producer": "scripts/ftps_collection_metadata.py",
+    "runner": "scripts/qualify-ftps.py --workflow-dispatch-approvals --workflow-collection-metadata",
+    "reporter": "scripts/ci-ftps-summary.py --require-workflow-dispatch-approvals --require-workflow-collection-metadata",
+    "workflow": ".github/workflows/ftps-workflows.yml",
+    "mechanism": "Both modes use actual CLI identity/registered connection/workflow/collection preview and queue/cancel; exact original CLI and HTTPS keys replay before and after cancellation/source revocation. New bounded source spy is stopped and drained with zero contacts; no worker runs.",
+    "commands_per_mode": 16,
+    "saved_key_replays_per_mode": 5,
+    "output_scope": "Actual CLI/API metadata-only gate is prepared, not executed. Bytes and browser remain separately unqualified; original six workflow-consent browser phases/18audits and three fresh profiles are unchanged.",
+    "verifier": "Reopen fixed command/file closure and protected input/output hashes; independent typed connection/source fingerprints, original requests/header identity/key, strict JSON/number/boolean/duplicate checks, unchanged attempts/fences and current versus historical state. Fixed failure enums/names only.",
+    "local_methods": 71,
+    "local_checks_manifest_reference": ".private/freightctl-f076-public-cas-diagnostic-local-u_5nce7y/manifest.json",
+    "local_checks_manifest_sha256": "d6a2db0b5f4ee2d1dd7d1a895f38d60152d0d25f60491d8abd9017e0889c7a5d",
+    "local_scope": "7synthetic metadata original-output/refusal methods plus64FTPS reporter contracts, syntax/lint. Combined local worktree manifest also retains CAS compile/vet and20image stand-in methods. No service/CLI/API/Chrome/scanner/inference execution locally."
   }
 }

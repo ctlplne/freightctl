@@ -214,13 +214,17 @@ func TestFTPSCollectionProducerBatchCannotDuplicateOrChangeItsCapturedMeaning(t 
 			// The producer can publish another immutable namespace revision. Its
 			// old batch ID still cannot authorize a different payload manifest.
 			publishFTPSCollectionObject(t, x, "two.csv", []byte("def"))
-			if _, err = x.producer.s.Custody.PathCommand(x.producer.ctx, x.producer.scope, secure.NewID(), store.PathCommand{Operation: "remove", Path: path.Join("/inbox", x.source.Manifest)}); err != nil {
+			manifestPath := path.Join("/inbox", x.source.Manifest)
+			entry, err := x.producer.s.Custody.StatPath(x.producer.ctx, x.producer.scope, manifestPath)
+			if err != nil {
 				t.Fatal(err)
 			}
 			changed := *manifest
 			changed.Files = []CollectionFile{{Name: "two.csv", Size: 3, SHA256: secure.Digest([]byte("def"))}}
 			raw, _, _ := digest(changed)
-			publishFTPSCollectionObject(t, x, x.source.Manifest, raw)
+			if _, _, err = x.producer.s.Custody.AcceptAt(x.producer.ctx, x.producer.scope, secure.NewID(), int64(len(raw)), secure.Digest(raw), bytes.NewReader(raw), custody.UploadTarget{Path: manifestPath, ExpectedRevision: &entry.Revision}); err != nil {
+				t.Fatal("producer replacement requires its observed namespace revision", err)
+			}
 			forged, _ := startCollection(t, x.f, x.selection, "changed-ftps-batch-meaning")
 			if _, err = x.f.s.WorkCollection(x.f.ctx, x.f.scope, forged.ID, "refuse-changed-ftps-batch", CollectionWorkRequest{Hash: forged.Hash}); err != nil {
 				t.Fatal(err)
@@ -392,7 +396,11 @@ func TestScheduledFTPSCollectionUsesFrozenDueManifestAndOriginalReceipts(t *test
 			if err != nil || arrival.Arrival.State != "ready" || arrival.Arrival.ManifestHash == nil || arrival.Collection != nil {
 				t.Fatal("ready probe copied payloads or lost frozen manifest", err)
 			}
-			if _, err = x.producer.s.Custody.PathCommand(x.producer.ctx, x.producer.scope, secure.NewID(), store.PathCommand{Operation: "remove", Path: path.Join("/inbox", name)}); err != nil {
+			entry, err := x.producer.s.Custody.StatPath(x.producer.ctx, x.producer.scope, path.Join("/inbox", name))
+			if err != nil {
+				t.Fatal(err)
+			}
+			if _, err = x.producer.s.Custody.PathCommand(x.producer.ctx, x.producer.scope, secure.NewID(), store.PathCommand{Operation: "remove", Path: path.Join("/inbox", name), ExpectedRevision: &entry.Revision}); err != nil {
 				t.Fatal("producer manifest removal", err)
 			}
 			decision := Decision{Hash: arrival.Arrival.Hash, Revision: arrival.Arrival.Revision}

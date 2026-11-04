@@ -27,6 +27,7 @@ import ftps_browser_evidence as browser_evidence
 import ftps_ticket_governance as tickets
 import ftps_browser_tickets as browser_tickets
 import ftps_dispatch_qualification as dispatch
+import ftps_collection_metadata as collection_metadata
 
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location("metadata", ROOT / "scripts/qualify-retained-metadata.py")
@@ -58,9 +59,14 @@ def main():
     parser.add_argument("--dispatch-approvals", action="store_true", help="also qualify public FTPS dispatch consent with real Chrome and a bounded contact-only stand-in")
     parser.add_argument("--workflow-dispatch-approvals", action="store_true", help="qualify registered FTPS workflow consent with real CLI/Chrome and a contact-only stand-in")
     parser.add_argument("--workflow-dispatch-encryption", action="store_true", help="require exact registered recipient disclosure in the complete workflow consent profile; no sending")
+    parser.add_argument("--workflow-collection-metadata", action="store_true", help="also qualify public FTPS source previews, queue/cancel and original-key CLI/HTTPS recovery without source contact; no byte/browser claim")
     args = parser.parse_args()
     if args.workflow_dispatch_encryption and not args.workflow_dispatch_approvals:
         parser.error("--workflow-dispatch-encryption requires --workflow-dispatch-approvals")
+    if args.workflow_collection_metadata:
+        if not args.workflow_dispatch_approvals:
+            parser.error("--workflow-collection-metadata requires --workflow-dispatch-approvals")
+        collection_metadata.require_environment(ROOT)
     if args.browser_tickets and not args.browser:
         parser.error("--browser-tickets requires the complete --browser profile")
     if args.dispatch_approvals and args.workflow_dispatch_approvals:
@@ -94,6 +100,7 @@ def main():
     manifest["dispatch_approvals_requested"] = args.dispatch_approvals
     manifest["workflow_dispatch_approvals_requested"] = args.workflow_dispatch_approvals
     manifest["workflow_dispatch_encryption_requested"] = args.workflow_dispatch_encryption
+    manifest["workflow_collection_metadata_requested"] = args.workflow_collection_metadata
     manifest["stock_curl_qualified"] = False
     manifest["stock_lftp_qualified"] = False
     processes, created, started, originally_running = {}, False, False, None
@@ -314,6 +321,15 @@ def main():
                     raise RuntimeError("dispatch original evidence check failed") from None
                 manifest.setdefault(kind+"_governance", {})[mode] = checked
                 manifest.setdefault(kind+"_output_sha256", {})[mode] = inventory
+                if args.workflow_collection_metadata:
+                    try:
+                        checked, inventory = collection_metadata.exercise(ROOT, private, mode, http_port, cert,
+                            binary, tenant, partner, token, observer.steps, command)
+                    except Exception:
+                        manifest["collection_metadata_evidence_failure"] = {"mode": mode, "category": "original-output-contract"}
+                        raise RuntimeError("collection metadata original evidence check failed") from None
+                    manifest.setdefault("collection_metadata_governance", {})[mode] = checked
+                    manifest.setdefault("collection_metadata_output_sha256", {})[mode] = inventory
             if args.browser:
                 mode = "implicit" if implicit else "explicit"
                 directory = private / ("browser-" + mode)

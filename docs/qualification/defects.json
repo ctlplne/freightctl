@@ -2576,6 +2576,21 @@
       "regression_evidence": [
         "docs/qualification/evidence/F076-ftps-collection.json"
       ]
+    },
+    {
+      "id": "D163",
+      "severity": "qualification fixture",
+      "state": "exact producer CAS repair prepared; compile/vet pass, native replay pending",
+      "observed_on": "2026-11-04",
+      "candidate": "de93ddd611943ef94fa1fbd8b351ef93b4918ac6",
+      "journey": "F076 duplicate/changed producer batch and frozen scheduled manifest",
+      "title": "Producer fixture mutation omits the required observed namespace revision",
+      "first_failure": "Both native jobs862pass/7failed records/0skip: the added batch parent/2leaves stop at producer remove with resource revision changed, after same-batch equality assertion. The scheduled path has the same unreviewed mutation form but stops earlier atD161 in this source.",
+      "cause": "Fixture attempts ordinary namespace remove without ExpectedRevision; the existing CAS guard correctly refuses it.",
+      "resolution": "Use observed StatPath revision for atomic immutable ready-file replacement through AcceptAt and for scheduled removal. Do not weaken namespace guard or grant mutation to collector. Compile/vet only; original actual replay remains required.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F076-ftps-collection.json"
+      ]
     }
   ]
 }
