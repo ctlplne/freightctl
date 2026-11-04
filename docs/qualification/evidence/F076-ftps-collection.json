@@ -3,7 +3,7 @@
   "id": "F076",
   "observed_at": "2026-11-04",
   "starting_commit": "4d771b2e6a961a70b764681fd578ff175d064db7",
-  "state": "Both de93 native suites:862pass/7failed records/0skip; original10FTPS leaves and schema2 kept-local plans pass. Exact SQL/schedule/producer-CAS repairs at28cdfcb are executing on both native architectures. Both public CLI/API metadata profiles pass all3fresh estates. New9e5collection Chrome/process death and local stock metadata follow-up remain unqualified.",
+  "state": "Both28cdfcb native suites complete868pass/4failed records/0skip.12of15prepared FTPS leaves pass, including both repaired producer-batch cases. SQL/schedule stop at new fixture errorsD164/D165; exact further repairs compile/vet only. Both public CLI/API metadata matrices pass3fresh profiles each.9e5Chrome/process-death and stock follow-up remain unqualified.",
   "scope": "Read/copy input stage of ordinary immutable workflows, using exact registered FTPS revisions and the existing bounded producer-manifest, custody, intake, lease and event machinery. Transport metadata reading alone does not qualify collection.",
   "qualification_claim": false,
   "frozen_cases": [
@@ -304,7 +304,7 @@
   "newest_submission": {
     "candidate": "9e5f429c9c563759c427b719c7f036f75bffcba2",
     "native_run_id": 41914913896,
-    "native_state": "pending behind preserved running28cdfcb; unqualified",
+    "native_state": "queued after completed28cdfcb; contains knownD164/D165 fixture errors plus unexecuted process-death cases. Preserve first outcome unless an exact reviewed supersession is separately recorded.",
     "public_workflow_metadata_run_id": 41914914123,
     "public_state": "pending behind preserved running28cdfcb; unqualified",
     "core_run_id": 41914914270,
@@ -313,7 +313,15 @@
     "prepared_collection_browser_phases_per_profile": 2,
     "prepared_collection_browser_audits_per_profile": 6,
     "source_push_authorized": true,
-    "submission_rule": "Both original28 native application jobs and both public profiles started before this source push. Preserve every original result; hold another relevant candidate while required9e5 jobs remain pending. No artifact, release, retained upgrade or deployment."
+    "submission_rule": "Both original28 native application jobs and both public profiles started before this source push. Preserve every original result; hold another relevant candidate while required9e5 jobs remain pending. No artifact, release, retained upgrade or deployment.",
+    "native_jobs": [
+      126879828485,
+      126879828625
+    ],
+    "public_jobs": [
+      126874462798,
+      126874463015
+    ]
   },
   "registration_failure_standin": {
     "manifest_reference": ".private/freightctl-f076-registration-closure-3ov_x1ye/manifest.json",
@@ -367,7 +375,7 @@
       126848477397,
       126848477483
     ],
-    "native_state": "Both application jobs started/in progress; both metadata jobs and fuzz completed success. Original15FTPS leaf scope, no process-death case in this source.",
+    "native_state": "Both application jobs completed/failure:868pass/4failed records/0skip each. Original12of15FTPS leaves and prior regressions pass; SQL new-row control and both schedule leaves fail atD164/D165. Image x86OOM,ARMunclassified; no feed/scan pass.",
     "public_workflow_metadata_run_id": 41907798532,
     "public_state": "Both plaintext and recipient-encrypted complete all3fresh profiles successfully. No actual collection Chrome phase in this source.",
     "core_run_id": 41907798513,
@@ -454,7 +462,34 @@
       "manifest_reference": ".private/freightctl-f076-public-plaintext-first-s24d3qjg/manifest.json",
       "manifest_sha256": "eb1af948cc8c53b37801a90a1210cbe1d8abfee0e2bb2ec0053dc86001b95cb5",
       "scope": "First actual CLI/API collection metadata pass in both modes on three fresh plaintext estates; saved-key queue/cancel/revocation history, zero contact/attempts/fences and exact cleanup. Collection bytes/Chrome,9e5process-death and whole journeys remain unqualified."
-    }
+    },
+    "applications": [
+      {
+        "candidate": "28cdfcbbd83e2571fb626b3ee47b8783cccad4db",
+        "run_id": 41907798160,
+        "job_id": 126848477397,
+        "architecture": "x86_64",
+        "application_pass": 868,
+        "application_fail": 4,
+        "application_skip": 0,
+        "workflow_seconds": 350.442,
+        "manifest_reference": ".private/freightctl-f076-repair-x86-first-lw43tuqh/manifest.json",
+        "manifest_sha256": "a26b37c354941ec1ede0bd6c9df2d6db7ad54ab08bbcabecffaffc90244c71d4"
+      },
+      {
+        "candidate": "28cdfcbbd83e2571fb626b3ee47b8783cccad4db",
+        "run_id": 41907798160,
+        "job_id": 126848477483,
+        "architecture": "arm64",
+        "application_pass": 868,
+        "application_fail": 4,
+        "application_skip": 0,
+        "workflow_seconds": 426.918,
+        "manifest_reference": ".private/freightctl-f076-repair-arm-first-k456frn4/manifest-corrected.json",
+        "manifest_sha256": "873e795d4a5b4c3e1c4b6c9be739a21e4f4ee40b889ba03dcd39d497a267c3bf",
+        "archive_correction": "Original archive template copied an x86 OOM scope sentence onto ARM. Corrected manifest links unchanged original log/manifest and explicitly refuses that inference. ARM command/state remain unclassified."
+      }
+    ]
   },
   "independent_metadata_prepared": {
     "workflow": ".github/workflows/ftps-client.yml",
@@ -467,5 +502,16 @@
     "local_scope": "Six synthetic verifier/real task-owned file-publication contracts plus36original stock reporter contracts, native ARM ftpspeer compile/vet,syntax/actionlint. No actual stock process/PAM/user/TLS/socket locally.",
     "runtime_qualification": false,
     "submission": "Local only; required9e5native/public candidate remains pending. Known x86stockfilter failures remain red; activeFTP stays disabled. Full independent typed collection remains required."
+  },
+  "source28_further_fixture_repairs_prepared": {
+    "D164": "Ordinarily cancel original queued control job, verify cancelled revision2/no work/no contact, then use its original queued definition for matching-event new-row positive control and all6negative savepoint forgeries. Keep actual one-open-job index and runtime authority/event guards.",
+    "D165": "Admission binds exact frozen manifest in definition.Schedule/original arrival, before job.Manifest capture. Require exact schedule ref/occurrence/due/name/hash/cutoff, job.Manifestnil/attempts0/fence0, and reopen identical saved manifest after producer ready-name removal with zero contact. Ordinary byte worker still must copy and independently read back exact bytes.",
+    "local_checks": {
+      "manifest_reference": ".private/freightctl-f076-further-fixture-gc-local-gz526qbr/manifest.json",
+      "manifest_sha256": "ee2d92b200cd32cdded0d02c41eda1a467124468d7255730ae1ed726afb5fd7c",
+      "scope": "Native ARM integration compile/vet and20scanner orchestration/reporter stand-ins only, plus actionlint/diff. No product services, stock peer, scanner, feed, inference or local domain runtime."
+    },
+    "runtime_qualification": false,
+    "submission": "Local only. Required9e5native/public jobs remain queued and unqualified."
   }
 }

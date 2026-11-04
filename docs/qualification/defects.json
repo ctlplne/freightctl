@@ -2580,7 +2580,7 @@
     {
       "id": "D163",
       "severity": "qualification fixture",
-      "state": "exact producer CAS repair prepared; compile/vet pass, native replay pending",
+      "state": "both28native producer-batch repair leaves pass; scheduled producer removal reaches laterD165; fullscheduled gate remains pending",
       "observed_on": "2026-11-04",
       "candidate": "de93ddd611943ef94fa1fbd8b351ef93b4918ac6",
       "journey": "F076 duplicate/changed producer batch and frozen scheduled manifest",
@@ -2590,6 +2590,51 @@
       "resolution": "Use observed StatPath revision for atomic immutable ready-file replacement through AcceptAt and for scheduled removal. Do not weaken namespace guard or grant mutation to collector. Compile/vet only; original actual replay remains required.",
       "regression_evidence": [
         "docs/qualification/evidence/F076-ftps-collection.json"
+      ]
+    },
+    {
+      "id": "D164",
+      "severity": "qualification fixture",
+      "state": "exact repair prepared; native replay pending",
+      "observed_on": "2026-11-04",
+      "candidate": "28cdfcbbd83e2571fb626b3ee47b8783cccad4db",
+      "journey": "F076runtime SQL",
+      "title": "New-row SQL positive control conflicts with its own still-open original job",
+      "first_failure": "Both28native suites868pass/4failed records/0skip; positive SaveCollection control hits workflow_collection_one_open23505 before six negative DML forgeries.",
+      "cause": "Fixture clones queued baseline under a new ID while the original one-open workflow slot remains occupied. Existing uniqueness guard correctly refuses it.",
+      "resolution": "Cancel original through ordinary API and verify no source work before attempting the exact new-row control. Keep index,authority,event/savepoint and all6negative assertions. Compile/vet only.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F076-ftps-collection.json"
+      ]
+    },
+    {
+      "id": "D165",
+      "severity": "qualification fixture",
+      "state": "exact repair prepared; native replay pending",
+      "observed_on": "2026-11-04",
+      "candidate": "28cdfcbbd83e2571fb626b3ee47b8783cccad4db",
+      "journey": "F076scheduled arrival",
+      "title": "Scheduled fixture expects byte-worker job capture during metadata-only arrival admission",
+      "first_failure": "Both28native explicit/implicit leaves reach admitted frozen manifest after producer removal, then fail job.Manifest assertion before byte worker.",
+      "cause": "Admission stores exact arrival snapshot/hash in definition.Schedule; job.Manifest is captured by the later byte worker. Fixture checks the wrong persistence layer.",
+      "resolution": "Assert exact schedule/occurrence/due/name/hash/cutoff and no-copy admission, independently reopen saved snapshot after source removal, then require unchanged ordinary worker/custody readback. Compile/vet only.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F076-ftps-collection.json"
+      ]
+    },
+    {
+      "id": "D166",
+      "severity": "CI resource qualification",
+      "state": "x86container OOM confirmed; bounded feed-GC experiment prepared, original replay pending",
+      "observed_on": "2026-11-04",
+      "candidate": "28cdfcbbd83e2571fb626b3ee47b8783cccad4db",
+      "journey": "F075independent peer image",
+      "title": "Pinned feed setup is OOM-killed under its original hard1GiB container budget",
+      "first_failure": "x86job126848477397 exit137 matches exact stoppedOOMKilledtrue State before deletion; volume unmount passes. ARMreport is not-recorded/no state and does not establish OOM.",
+      "cause": "Container OOM fact is proven, not its allocation source. Soft768MiBGo cap may overshoot and excludes other memory; no heap/page-cache allocation attribution available.",
+      "resolution": "Try feed-onlyGOGC25 with all hard/soft,disk,CPU,time,security/feed/inventory/severity gates unchanged.20local stand-in/report contracts pass; actualfeed/scanremain unqualified.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F075-peer-image-security.json"
       ]
     }
   ]

@@ -3,7 +3,7 @@
   "id": "F075",
   "observed_at": "2026-11-04",
   "starting_commit": "63e153f6511f6cb457dfa46f70d39f2548f200b6",
-  "state": "Actual bounded disk identity/cleanup executes on bothde93 native architectures; feed exits137 without recorded container OOM fact. Exact state-before-delete diagnostic prepared; no feed/report/scan pass.",
+  "state": "Source28 x86 exact failed-container state confirms feedOOM under unchanged1GiB/oneCPU/no-swap. ARM feed failure remains unclassified with no command/state. Both exact disk cleanups pass; no feed/report/image-scan qualification.",
   "scope": "Scan the exact disposable independent OpenPGP recipient image used by native Linux tests. This is test infrastructure, not a released server image or runtime security qualification.",
   "qualification_claim": false,
   "frozen_cases": [
@@ -182,5 +182,60 @@
       126848477483
     ],
     "state": "queued/unqualified; no actual container-state/feed/scan result yet"
+  },
+  "source28_native": {
+    "x86": {
+      "candidate": "28cdfcbbd83e2571fb626b3ee47b8783cccad4db",
+      "run_id": 41907798160,
+      "job_id": 126848477397,
+      "architecture": "x86_64",
+      "application_pass": 868,
+      "application_fail": 4,
+      "application_skip": 0,
+      "workflow_seconds": 350.442,
+      "manifest_reference": ".private/freightctl-f076-repair-x86-first-lw43tuqh/manifest.json",
+      "manifest_sha256": "a26b37c354941ec1ede0bd6c9df2d6db7ad54ab08bbcabecffaffc90244c71d4",
+      "image_runner_manifest_sha256": "c76e51fffd11445d035d3f7f85f2ab9e8b6804b5f27e3149d8bc8f423ab8e816",
+      "feed_exit_code": 137,
+      "category": "container-oom",
+      "oom_killed": true,
+      "running": false,
+      "state_exit_code": 137,
+      "state_sha256": "38a0c1af9cb0c6fb9aae2b6bbdbbea2d6271e4584df563afba8afa2bd5b143ac",
+      "stderr_sha256": "9d1377589e8a43ca853797b185205721c47e1f023398021c781cca9886b5165e",
+      "scratch_cleanup": "unmounted"
+    },
+    "arm": {
+      "candidate": "28cdfcbbd83e2571fb626b3ee47b8783cccad4db",
+      "run_id": 41907798160,
+      "job_id": 126848477483,
+      "architecture": "arm64",
+      "application_pass": 868,
+      "application_fail": 4,
+      "application_skip": 0,
+      "workflow_seconds": 426.918,
+      "manifest_reference": ".private/freightctl-f076-repair-arm-first-k456frn4/manifest-corrected.json",
+      "manifest_sha256": "873e795d4a5b4c3e1c4b6c9be739a21e4f4ee40b889ba03dcd39d497a267c3bf",
+      "archive_correction": "Original archive template copied an x86 OOM scope sentence onto ARM. Corrected manifest links unchanged original log/manifest and explicitly refuses that inference. ARM command/state remain unclassified.",
+      "image_runner_manifest_sha256": "ca9320d960c1e33c7e1280391262402447d09ae21b412d4ef4b8e3e83983fc96",
+      "category": "unrecognized-diagnostic",
+      "command_phase": "not-recorded",
+      "feed_exit_code": null,
+      "state": null,
+      "scratch_cleanup": "unmounted"
+    }
+  },
+  "feed_reclamation_replay_prepared": {
+    "defect": "D166",
+    "change": "Feed-download container only explicitly setsGOGC25, retainingGOMEMLIMIT768MiB,hard1GiB/no-swap,oneCPU/128pids,2GiBverifieddisk,4minute feed/300second command,10minute scan and50minute job deadlines. Scanner-version/image-scan phases unchanged.",
+    "hypothesis": "Earlier collection of dead Go objects may reduce transient process memory and leave headroom; exact allocation cause was not observed. Go memory limit is soft and does not account for every container memory source. This setting is an experiment, not a proven remedy; OOM/timeout/malformed/stale/incomplete evidence remain enforcing failures.",
+    "primary_source": "https://go.dev/doc/gc-guide#Memory_limit",
+    "local_checks": {
+      "manifest_reference": ".private/freightctl-f076-further-fixture-gc-local-gz526qbr/manifest.json",
+      "manifest_sha256": "ee2d92b200cd32cdded0d02c41eda1a467124468d7255730ae1ed726afb5fd7c",
+      "scope": "Native ARM integration compile/vet and20scanner orchestration/reporter stand-ins only, plus actionlint/diff. No product services, stock peer, scanner, feed, inference or local domain runtime."
+    },
+    "runtime_qualification": false,
+    "submission": "Local only;9e5still contains original scanner setup and known x86OOM. No local feed/image/model pull or execution."
   }
 }

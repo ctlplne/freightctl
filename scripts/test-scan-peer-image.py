@@ -167,7 +167,10 @@ class ScanOrchestration(unittest.TestCase):
                         self.assertIn(fixed, create)
                     self.assertNotIn('/var/run/docker.sock', str(create))
                     self.assertIn('TMPDIR=/scratch', create)
+                    self.assertIn('GOMAXPROCS=1', create)
+                    self.assertIn('GOMEMLIMIT=768MiB', create)
                     options = create[create.index(runner.gate.SCANNER_IMAGE)+1:]
+                    self.assertEqual('GOGC=25' in create, '--download-db-only' in options)
                     self.assertEqual(create[create.index('--network')+1], 'bridge' if '--download-db-only' in options else 'none')
                     cache_mount = next(create[n+1] for n, arg in enumerate(create)
                                        if arg == '--mount' and ',dst=/cache' in create[n+1])

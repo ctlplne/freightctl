@@ -238,6 +238,13 @@ def main():
                   '--label', 'freightctl.scan='+session,
                   '--mount', 'type=bind,src='+str(cache)+',dst=/cache'+('' if writable_cache else ',readonly'),
                   '--mount', 'type=bind,src='+str(scratch.root/'tmp')+',dst=/scratch']
+        if name == 'feed-download':
+            # Confirmed container OOM is not an allocation profile. Try earlier
+            # reclamation only in feed setup, retaining the hard1GiB/oneCPU,
+            # soft768MiB and original deadlines. This hypothesis needs a real
+            # replay; it cannot establish a feed or image-scan pass.
+            # https://go.dev/doc/gc-guide#Memory_limit
+            limits.extend(['--env', 'GOGC=25'])
         for mount in mounts:
             limits.extend(['--mount', mount])
         _, created = command(name+'-create', ['docker', 'create', '--name',

@@ -266,6 +266,15 @@ func TestFTPSCollectionRuntimeSQLRejectsDetachedProtocolAndPeerViews(t *testing.
 		t.Fatal(err)
 	}
 	base, _ := startCollection(t, x.f, x.selection, "exact-ftps-sql-control")
+	// Keep the real one-open-job constraint. The new-row positive control
+	// needs an empty slot, not a second active job for the same workflow.
+	if _, err = x.f.s.CancelCollection(x.f.ctx, x.f.scope, base.ID, "close-ftps-sql-fixture-slot", Decision{Hash: base.Hash, Revision: base.Revision}); err != nil {
+		t.Fatal("close original SQL control through ordinary cancellation", err)
+	}
+	closed, err := x.f.s.CollectionStatus(x.f.ctx, x.f.scope, base.ID)
+	if err != nil || closed.Job.State != "cancelled" || closed.Job.Revision != 2 || closed.Job.Attempts != 0 || closed.Job.Fence != 0 || x.listener.contacts.Load() != 0 {
+		t.Fatal("original SQL fixture slot was not closed without source work", err)
+	}
 	tx, err := x.f.s.Custody.DB.Begin(x.f.ctx, x.f.scope)
 	if err != nil {
 		t.Fatal(err)
@@ -366,7 +375,7 @@ func TestScheduledFTPSCollectionUsesFrozenDueManifestAndOriginalReceipts(t *test
 			publishFTPSCollectionObject(t, x, "one.csv", []byte("abc"))
 			due := time.Now().UTC().Truncate(time.Second).Add(2 * time.Second)
 			name := strings.Replace(x.source.Manifest, "{due_utc}", due.Format("20060102T150405Z"), 1)
-			publishFTPSCollectionManifest(t, x, name, []CollectionFile{{Name: "one.csv", Size: 3, SHA256: secure.Digest([]byte("abc"))}})
+			manifest := publishFTPSCollectionManifest(t, x, name, []CollectionFile{{Name: "one.csv", Size: 3, SHA256: secure.Digest([]byte("abc"))}})
 			selection := ScheduleSelection{Name: "Expected FTPS settlement", Workflow: x.workflow, Source: ScheduleSourceSelection{Directory: x.source.Directory, Pattern: x.source.Manifest, Kind: x.source.Kind}, Calendar: calendar.Selection{Zone: "UTC", Start: due, End: due.Add(time.Minute), Times: []string{due.Format("15:04:05")}, Weekdays: []int{0, 1, 2, 3, 4, 5, 6}, Holidays: []string{}, Gap: "skip", Fold: "both"}, Missed: "all", CatchUp: 2, MaxActive: 1, MaxFiles: x.source.MaxFiles, Deadline: 60, Grace: 1, ExpectedAuthority: x.selection.Authority, Arrival: &ScheduleArrivalSelection{LateAfter: 0, Deadline: 30, Poll: 1}}
 			if _, err := x.f.s.PreviewCollection(x.f.ctx, x.f.scope, x.selection); !errors.Is(err, ErrInput) {
 				t.Fatal("manual admission bypassed a scheduled FTPS source", err)
@@ -417,8 +426,18 @@ func TestScheduledFTPSCollectionUsesFrozenDueManifestAndOriginalReceipts(t *test
 				t.Fatal(err)
 			}
 			job := arrival.Collection.Job
-			if job.Manifest == nil || !job.Deadline.Equal(due.Add(time.Minute)) {
-				t.Fatal("arrival lost exact manifest or original cutoff")
+			frozen, err := collectionDefinition(job)
+			_, manifestHash, _ := digest(manifest)
+			if err != nil || frozen.Schedule == nil || frozen.Schedule.Schedule != (Reference{ID: schedule.ID, Version: schedule.Version, Hash: schedule.Hash}) || frozen.Schedule.OccurrenceID != id || !frozen.Schedule.Due.Equal(due) || frozen.Schedule.ManifestName != name || frozen.Schedule.ManifestHash != manifestHash || !job.Deadline.Equal(due.Add(time.Minute)) || job.Manifest != nil || job.Attempts != 0 || job.Fence != 0 {
+				t.Fatal("arrival lost its exact frozen source binding, original cutoff or no-copy admission boundary", err)
+			}
+			// Admission freezes the manifest in its original arrival record;
+			// the byte worker captures that snapshot into job.Manifest later.
+			// The producer name is already gone, so this must be the exact saved
+			// object with zero new source contact, not an invented current read.
+			snapshot, snapshotHash, err := x.f.s.scheduledCollectionManifest(x.f.ctx, x.f.scope, frozen)
+			if err != nil || !reflect.DeepEqual(snapshot, manifest) || snapshotHash != manifestHash || x.listener.contacts.Load() != contacts {
+				t.Fatal("arrival did not retain the exact independently published manifest", err)
 			}
 			if _, err = x.f.s.WorkCollection(x.f.ctx, x.f.scope, job.ID, "scheduled-ftps-worker", CollectionWorkRequest{Hash: job.Hash}); err != nil {
 				t.Fatal(err)
