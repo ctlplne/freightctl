@@ -34,6 +34,18 @@ freightctl is the ctlplne self-hosted secure artifact exchange platform for agen
 
 ## Quality and delivery
 
+Owner decision S003 (2026-11-05), recorded verbatim in
+docs/qualification/remaining.json, resumes the full baseline and AX01–AX08.
+During implementation retain focused red/green regression, affected static checks
+and the item's own interface proof. Defer broad checks and nonsecurity CI log
+investigation/repair until FINISH; all deferred qualification remains mandatory.
+Inspect CI completion metadata for batching and triage new security failures now.
+Source/CI fast-forward pushes to existing origin/main are authorized after the
+previous push's required runs are terminal. Keep the pre-push Gitleaks guard
+enabled. Continue implementation while CI runs; never cancel original runtime
+runs. F026 stays manual/owner-deferred. No publication/deployment or resource
+increase is authorized. S003 replaces conflicting pause/testing cadence only.
+
 Use real PostgreSQL, real storage, stock clients and independent receivers for the relevant claims. Capture the first failure, fix it with meaningful coverage, rerun the original journey, update evidence and remaining work, and commit locally. Mocks, code presence, an AI answer, skipped tests and cross-compilation do not establish runtime qualification.
 
 Run checks appropriate to the actual change and the required GOAL.md gates. Never weaken isolation, protocol or security checks, assertions, or budgets to obtain a pass. Keep red gates and external dependencies visible. Report assisted deployment, independent adoption and enterprise qualification separately.

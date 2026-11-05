@@ -138,21 +138,23 @@ Bound owned CDP cleanup to5seconds and keep original failures red.
 
 ## Scheduling and evidence lifecycle
 
-1. Follow each exact source commit, run, attempt and job ID. Preserve the running
-   original and keep the newest pending successor. Hold another relevant source
-   push while required current native/public/reproduction jobs remain unstarted.
-   An unstarted successor with an already-confirmed error may be superseded only
-   after retaining the original failure and proving the exact same bad source.
-   Recheck every job/runner/step immediately before cancellation. If any job has
-   started, refuse cancellation and preserve the live run. An earlier eligible
-   snapshot is not current authority. Cancellation never counts as a pass.
+1. Owner decision S003 supersedes earlier scheduling/testing cadence. Follow exact
+   source commit, run, attempt and job IDs. Push the next verified source/CI batch
+   only after the previous push's required runs are terminal; keep implementing
+   locally while they run. Never cancel original runtime runs. Keep the effective
+   pre-push Gitleaks/owner/fast-forward guard enabled. No force-push or publication.
 2. Fast source checks may supersede older source checks. Runtime workflows finish
    their running candidate; Windows/Mac have separate OS groups. Review every
    trigger consumer when adding imports/scripts/migrations. Ordered path filters
    may omit irrelevant test/scanner-only changes; an omitted run proves nothing
    about that commit's runtime. Direct-main testing is not a pre-push merge gate;
    branch protection needs an approved branch/review contract change.
-3. Capture the first actual failure before editing. Add meaningful coverage,
+3. During implementation inspect completion metadata for batching and security
+   outcomes only; triage newly failing security checks immediately. Defer
+   nonsecurity CI log investigation/repair and broad qualification until FINISH.
+   Retain exact original handles and focused per-item red/green, static and own
+   interface proof. Every deferred gate remains mandatory at final source.
+   Capture the first actual failure before editing. Add meaningful coverage,
    repair the mechanism and replay the original journey. Preserve every security,
    isolation, protocol, assertion and resource requirement. A later unexplained
    green does not establish an intermittent failure's cause. Fixed fresh

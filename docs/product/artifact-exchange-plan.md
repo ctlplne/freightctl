@@ -11,7 +11,8 @@ This is the implementation plan for that definition. The first compelling custom
 workflow, buyer and market wedge remain unselected. Reference exchanges below test
 the foundation; they do not establish customer demand, adoption or superiority.
 [GOAL.md](../../GOAL.md) remains the complete acceptance contract. Planning does
-not resume the owner-paused application build.
+not establish runtime qualification. Owner decision S003 resumes implementation
+and authorizes source/CI batches under its focused-proof and FINISH rules.
 
 ## Product model
 
@@ -165,5 +166,6 @@ real caller/receiver/provider versions, original failures, independent byte chec
 permission refusals, persisted event/receipt assertions, recovery and limits. A
 model answer, contract document, mocked peer, skipped test or passing ledger check
 cannot qualify the profile. Assisted deployment, independent adoption and enterprise
-readiness remain separate. This plan approves no push, deployment, inference load,
-scanner run or resource increase and does not resume paused application execution.
+readiness remain separate. This plan itself grants no deployment, inference load,
+scanner run or resource increase. S003 supplies current application-resume and
+source/CI push authority.
