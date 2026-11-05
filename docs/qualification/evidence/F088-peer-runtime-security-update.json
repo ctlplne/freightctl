@@ -1,0 +1,317 @@
+{
+  "schema_version": 1,
+  "id": "F088",
+  "observed_at": "2026-11-05",
+  "starting_commit": "668f8247aefe9537109f72769f8d2abc1c764734",
+  "state": "Actual native image findings recorded; pinned Node security update and runtime-tool cleanup prepared; native remediation proof owed.",
+  "qualification_claim": false,
+  "native_observation": {
+    "candidate": "6d304760120cb4950727b915525d30c6955c051c",
+    "run_id": 42095800313,
+    "jobs": [
+      {
+        "job_id": 127485377994,
+        "architecture": "x86_64",
+        "summary": {
+          "additional_advisory_ids": 125,
+          "advisory_ids": [
+            "CVE-2005-2541",
+            "CVE-2007-5686",
+            "CVE-2010-4756",
+            "CVE-2011-3374",
+            "CVE-2011-3389",
+            "CVE-2011-4116",
+            "CVE-2013-4392",
+            "CVE-2016-2781",
+            "CVE-2017-18018",
+            "CVE-2018-20796",
+            "CVE-2018-6829",
+            "CVE-2019-1010022",
+            "CVE-2019-1010023",
+            "CVE-2019-1010024",
+            "CVE-2019-1010025",
+            "CVE-2019-9192",
+            "CVE-2022-0563",
+            "CVE-2022-27943",
+            "CVE-2022-3219",
+            "CVE-2023-31437",
+            "CVE-2023-31438",
+            "CVE-2023-31439",
+            "CVE-2023-31486",
+            "CVE-2023-45853",
+            "CVE-2023-50495",
+            "CVE-2024-10041",
+            "CVE-2024-2236",
+            "CVE-2024-56433",
+            "CVE-2025-13151",
+            "CVE-2025-14104",
+            "CVE-2025-15281",
+            "CVE-2025-15649",
+            "CVE-2025-30258",
+            "CVE-2025-5278",
+            "CVE-2025-6141",
+            "CVE-2025-6297",
+            "CVE-2025-68972",
+            "CVE-2025-69720",
+            "CVE-2026-0861",
+            "CVE-2026-0915",
+            "CVE-2026-101911",
+            "CVE-2026-101912",
+            "CVE-2026-101913",
+            "CVE-2026-102010",
+            "CVE-2026-102276",
+            "CVE-2026-102277",
+            "CVE-2026-102278",
+            "CVE-2026-102473",
+            "CVE-2026-102474",
+            "CVE-2026-103111"
+          ],
+          "architecture": "amd64",
+          "feed_database_sha256": "2ce29bda5b2483d84da3f4365398addcf03a7decf5c79e29dc73db8f0fa454ed",
+          "feed_next_update": "2026-11-06T19:01:45.286712+00:00",
+          "feed_updated_at": "2026-11-05T19:01:45.286712+00:00",
+          "image_archive_sha256": "c0fbffcb5041e43a0d1a36c2c9451293f92a3532129fb5870a1147164feab21d",
+          "image_id": "sha256:b79610a7483667d4f3fdaad24ddd0eb2b69f8e6ec3b7ce341c5b30d984ba933c",
+          "image_inspect_sha256": "b15408dc0db4e42d827d5f877a1383d96fa22ee825df43a286f260fcd97fbd54",
+          "kind": "native-peer-image-vulnerabilities",
+          "manifest_sha256": "c6e36ae6e401999bcd196a54ef1aa29513760be7cb657d57caa9b448c3a68bad",
+          "os_family": "debian",
+          "os_version": "12.13",
+          "package_counts": {
+            "lang-pkgs": 147,
+            "os-pkgs": 89
+          },
+          "report_created_at": "2026-11-05T19:47:49.488091+00:00",
+          "report_sha256": "6d6b92525c81bac1785106a0e633e3a68fc37051eda24723a747ce954e0e4258",
+          "resource_policy": "github-runner-capacity",
+          "result_classes": {
+            "lang-pkgs": 1,
+            "os-pkgs": 1
+          },
+          "scanner_image": "aquasec/trivy:0.76.1@sha256:790fd66d1697395d8693d1acaa1ea702406a20f109b6fc7bac8db623eca6c06c",
+          "scanner_version": "0.76.1",
+          "scanner_version_report_sha256": "788fecffff295db8ad74df3b49322c93bf98ff8b14e8f4625aac8d12bea874f0",
+          "scope": "exact test peer image; OS and discovered libraries; no reachability, protocol, released image or complete product claim",
+          "scratch_bytes": 90109853696,
+          "scratch_cleanup": "unmounted",
+          "severities": {
+            "CRITICAL": 7,
+            "HIGH": 58,
+            "LOW": 92,
+            "MEDIUM": 154,
+            "UNKNOWN": 5
+          },
+          "source_commit": "6d304760120cb4950727b915525d30c6955c051c",
+          "state": "failed",
+          "suppressed_findings": 0
+        }
+      },
+      {
+        "job_id": 127485378525,
+        "architecture": "arm64",
+        "summary": {
+          "additional_advisory_ids": 125,
+          "advisory_ids": [
+            "CVE-2005-2541",
+            "CVE-2007-5686",
+            "CVE-2010-4756",
+            "CVE-2011-3374",
+            "CVE-2011-3389",
+            "CVE-2011-4116",
+            "CVE-2013-4392",
+            "CVE-2016-2781",
+            "CVE-2017-18018",
+            "CVE-2018-20796",
+            "CVE-2018-6829",
+            "CVE-2019-1010022",
+            "CVE-2019-1010023",
+            "CVE-2019-1010024",
+            "CVE-2019-1010025",
+            "CVE-2019-9192",
+            "CVE-2022-0563",
+            "CVE-2022-27943",
+            "CVE-2022-3219",
+            "CVE-2023-31437",
+            "CVE-2023-31438",
+            "CVE-2023-31439",
+            "CVE-2023-31486",
+            "CVE-2023-45853",
+            "CVE-2023-50495",
+            "CVE-2024-10041",
+            "CVE-2024-2236",
+            "CVE-2024-56433",
+            "CVE-2025-13151",
+            "CVE-2025-14104",
+            "CVE-2025-15281",
+            "CVE-2025-15649",
+            "CVE-2025-30258",
+            "CVE-2025-5278",
+            "CVE-2025-6141",
+            "CVE-2025-6297",
+            "CVE-2025-68972",
+            "CVE-2025-69720",
+            "CVE-2026-0861",
+            "CVE-2026-0915",
+            "CVE-2026-101911",
+            "CVE-2026-101912",
+            "CVE-2026-101913",
+            "CVE-2026-102010",
+            "CVE-2026-102276",
+            "CVE-2026-102277",
+            "CVE-2026-102278",
+            "CVE-2026-102473",
+            "CVE-2026-102474",
+            "CVE-2026-103111"
+          ],
+          "architecture": "arm64",
+          "feed_database_sha256": "2ce29bda5b2483d84da3f4365398addcf03a7decf5c79e29dc73db8f0fa454ed",
+          "feed_next_update": "2026-11-06T19:01:45.286712+00:00",
+          "feed_updated_at": "2026-11-05T19:01:45.286712+00:00",
+          "image_archive_sha256": "29d3fc21b11b18b54172668ab907eba44645651f3d551a92ea552625b6e2b16b",
+          "image_id": "sha256:fdd4393beeb40cd0bbebe0776b15ac182725c0696402f799d3c3ec04d123ca10",
+          "image_inspect_sha256": "0c8015dceca147ee96aba25691ff40501891c411491a066dbd335a955e874c44",
+          "kind": "native-peer-image-vulnerabilities",
+          "manifest_sha256": "9bdf8ad7d2364fba7a33f89f75c5bac7fc3b5bbd71b249423c30977ee44bffe9",
+          "os_family": "debian",
+          "os_version": "12.13",
+          "package_counts": {
+            "lang-pkgs": 147,
+            "os-pkgs": 89
+          },
+          "report_created_at": "2026-11-05T19:47:26.283948+00:00",
+          "report_sha256": "107c37d77bc0170204f0afccc7b0465b01e95ac1227ecce1cc3edd34e0e7045b",
+          "resource_policy": "github-runner-capacity",
+          "result_classes": {
+            "lang-pkgs": 1,
+            "os-pkgs": 1
+          },
+          "scanner_image": "aquasec/trivy:0.76.1@sha256:790fd66d1697395d8693d1acaa1ea702406a20f109b6fc7bac8db623eca6c06c",
+          "scanner_version": "0.76.1",
+          "scanner_version_report_sha256": "2e312e04666f3bcc9f3d0eb4ce2bd226d77b18b28f651d7518f685a064753c4c",
+          "scope": "exact test peer image; OS and discovered libraries; no reachability, protocol, released image or complete product claim",
+          "scratch_bytes": 112480804864,
+          "scratch_cleanup": "unmounted",
+          "severities": {
+            "CRITICAL": 7,
+            "HIGH": 58,
+            "LOW": 92,
+            "MEDIUM": 154,
+            "UNKNOWN": 5
+          },
+          "source_commit": "6d304760120cb4950727b915525d30c6955c051c",
+          "state": "failed",
+          "suppressed_findings": 0
+        }
+      }
+    ]
+  },
+  "change": [
+    "Update peer base fromNode26.0.0 to immutable official26.13.0/bookworm-slim manifest,verified forLinuxARM/x86. KeepOpenPGP.js6.3.2 locked and preserve nonroot/read-only/offline runtime and fullOS/library/finding gates.",
+    "Use separate dependency install/audit stage and remove unused global npm/corepack from the actual recipient image; no scanner filters, ignores or suppressed findings.",
+    "Update active GitHub host Node pins to26.13.0, including the new receive-browser profile. Historical tool-version records/fixtures remain unchanged.",
+    "Publish bounded standardized advisory IDs separately forCRITICAL/HIGH/UNKNOWN, including truncation and unrecognized-ID counts. Preserve all original severity totals and privacy/refusal checks."
+  ],
+  "red": [
+    {
+      "kind": "actual-native-image-findings",
+      "candidate": "6d304760120cb4950727b915525d30c6955c051c",
+      "jobs": [
+        127485377994,
+        127485378525
+      ],
+      "each": {
+        "CRITICAL": 7,
+        "HIGH": 58,
+        "LOW": 92,
+        "MEDIUM": 154,
+        "UNKNOWN": 5
+      }
+    },
+    {
+      "test": "ImageReportContracts.test_blocking_advisories_remain_visible_after_the_general_id_list_fills",
+      "result": "KeyError:blocking_advisory_ids; earlier alphabetical output could omit blocking IDs after its50-entry diagnostic bound",
+      "reference": ".private/freightctl-blocking-advisories-red.log",
+      "sha256": "888aa22ef91cea3ac8f3af53700004ec0d20622b2dccb170d85444b07d0c058a"
+    }
+  ],
+  "green": {
+    "reporter_methods": 11,
+    "orchestration_methods": 15,
+    "workflow_lint": "actionlint1.7.12 pass",
+    "base_resolution": "Actual official public TLS registry metadata validates pinned index and both native architectures; metadata read only",
+    "diff_check": "pass"
+  },
+  "source_files": [
+    {
+      "path": ".github/workflows/core-checks.yml",
+      "sha256": "135a125c77203f9a9b794996dcfc1e151fb74d562417ace3f7dc220df874be8e"
+    },
+    {
+      "path": ".github/workflows/first-run.yml",
+      "sha256": "16060c03efce07872bda235d5aa8c2bb2b5335c7914a9246eb33e34077280f17"
+    },
+    {
+      "path": ".github/workflows/ftps-browser.yml",
+      "sha256": "2b16051b5b6c79780640bab17b8f4048d8b556f9ae97adb82d0d64da6067b7ea"
+    },
+    {
+      "path": ".github/workflows/ftps-dispatch.yml",
+      "sha256": "2647c639a8017da8c926123c4674d245ffdd0a5661c63a0fee2b912199a802a2"
+    },
+    {
+      "path": ".github/workflows/ftps-workflows.yml",
+      "sha256": "c3eb1d223cb587353ccf10ed747e4d3ab58f1454815bf6c23f96585ef655642d"
+    },
+    {
+      "path": ".github/workflows/full-foundation.yml",
+      "sha256": "3423510b17518932cf4e8bceb22255128aaf1f5aeb8163b24d7c75bc0734902e"
+    },
+    {
+      "path": ".github/workflows/stock-peers.yml",
+      "sha256": "2fde2104c4e85a43f5c227969ae72df2e1903b00e49b4640944440a9ddbc9049"
+    },
+    {
+      "path": "scripts/ci-peer-image-summary.py",
+      "sha256": "1425dab7a7c3b5d6bff0288d735e44913c3598eb12ce22e75d795d27cbad377b"
+    },
+    {
+      "path": "scripts/peers/openpgp/Dockerfile",
+      "sha256": "ff169e283ea51759755340bb4e87ab24ce1f9ff1a82c1bae9d30bb94899d074d"
+    },
+    {
+      "path": "scripts/peers/openpgp/README.md",
+      "sha256": "b47b34b7c65eae3ddba2b9a70de70514918a6ea254e24ceb739587d9b47cf2de"
+    },
+    {
+      "path": "scripts/test-ci-peer-image-summary.py",
+      "sha256": "6114b26ae56d8782002cd9d2a627bcda7924b9abd1f878160869eac655f974f4"
+    }
+  ],
+  "registry_metadata": {
+    "source": "https://hub.docker.com/v2/repositories/library/node/tags/26.13.0-bookworm-slim",
+    "reference": ".private/freightctl-peer-base-20261105.json",
+    "sha256": "eede2120a1c7a85a914c8443adeef7d161b239f49897b4cef9d06f290bd4c346",
+    "tag": "26.13.0-bookworm-slim",
+    "index_digest": "sha256:add5c17c14752c54d2f3d519ec46a3815684d41c33f198bcb09fb998f7dcbf68",
+    "architectures": [
+      "amd64",
+      "arm64",
+      "ppc64le"
+    ]
+  },
+  "local_manifest": {
+    "reference": ".private/freightctl-f088-peer-security-20261105/manifest.json",
+    "sha256": "0de8fcdbbce7996ea4f1e7e9c2f3b49a451919e875288333920270e505fb3e7c"
+  },
+  "primary_sources": [
+    "https://nodejs.org/en/blog/release/v26.13.0/",
+    "https://nodejs.org/en/blog/release/v26.12.1/",
+    "https://hub.docker.com/v2/repositories/library/node/tags/26.13.0-bookworm-slim"
+  ],
+  "inference": "Node26.13.0 includes the26.12.1 security release. Updating the obsolete runtime and removing unused installer packages are candidate remediations; complete per-package causes and actual remaining findings must be established by native replay. No assertion that every finding is fixed.",
+  "owed": [
+    "Actual build,dependency audit,strict complete ARM/x86 scan and all original OpenPGP recipient interoperability at final source",
+    "Assess every remainingCRITICAL/HIGH/UNKNOWN and retain all lower severities; no ignore/VEX/reachability narrowing or clean-image claim",
+    "Keep original native/application/public failures and deferred nonsecurity FINISH work. All12sixd runs terminal before next push; exact handles retained."
+  ]
+}

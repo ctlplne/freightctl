@@ -118,6 +118,20 @@ class ImageReportContracts(unittest.TestCase):
         self.assertEqual(result['additional_advisory_ids'], 20)
         self.assertNotIn(PRIVATE, json.dumps(result))
 
+    def test_blocking_advisories_remain_visible_after_the_general_id_list_fills(self):
+        r, v, i = inputs()
+        findings = [{'Severity':'LOW','VulnerabilityID':f'CVE-2000-{10000+n}'} for n in range(70)]
+        findings += [{'Severity':s,'VulnerabilityID':f'CVE-2026-{20000+n}'} for n,s in enumerate(('CRITICAL','HIGH','UNKNOWN'))]
+        findings.append({'Severity':'HIGH','VulnerabilityID':PRIVATE})
+        r['Results'][0]['Vulnerabilities'] = findings
+        result = self.check(r,v,i)
+        self.assertEqual(result['blocking_advisory_ids'], {'CRITICAL':['CVE-2026-20000'],'HIGH':['CVE-2026-20001'],'UNKNOWN':['CVE-2026-20002']})
+        self.assertEqual(result['unrecognized_blocking_advisories'], {'CRITICAL':0,'HIGH':1,'UNKNOWN':0})
+        self.assertEqual(result['severities']['LOW'],70)
+        self.assertEqual(result['severities']['HIGH'],2)
+        self.assertEqual(result['state'],'failed')
+        self.assertNotIn(PRIVATE,json.dumps(result))
+
     def test_metadata_foreign_image_platform_scanner_and_source_refusals(self):
         mutations = [
             lambda r, v, i: r.update(SchemaVersion=True),

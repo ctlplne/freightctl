@@ -3,7 +3,7 @@
   "id": "F086",
   "observed_at": "2026-11-05",
   "starting_commit": "2ab7b95c43ac5c33ec6dbc1e43dfd1fc89cbd3d2",
-  "state": "Debian12 point-version report handling repaired; native scan replay owed.",
+  "state": "Actual6d native ARM/x86 scans accept Debian12.13 and reach real vulnerability findings; F086 format mechanism proven for this candidate. Image gate remains failed.",
   "qualification_claim": false,
   "native_observation": {
     "candidate": "db593d0b57cd0286f9a78b67bcee5652e86ed9c3",
@@ -121,5 +121,16 @@
     "Original856 refusal remains separately unknown; laterdb line103 does not prove its exact cause",
     "Currentdb native integration/metadata/public failures remain red; nonsecurity logs and repair deferred to FINISH. Exact handles preserved",
     "All broader product/runtime/native/release qualification remains governed by GOAL; source presence and stand-ins do not pass it"
-  ]
+  ],
+  "format_runtime_qualified": true,
+  "native_replay": {
+    "candidate": "6d304760120cb4950727b915525d30c6955c051c",
+    "run_id": 42095800313,
+    "jobs": [
+      127485377994,
+      127485378525
+    ],
+    "os_version": "12.13",
+    "evidence": "docs/qualification/evidence/F088-peer-runtime-security-update.json"
+  }
 }

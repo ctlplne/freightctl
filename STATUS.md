@@ -14,8 +14,8 @@ no original runtime run was canceled. Exact run/job handles and failures persist
 F075 now completes actual native ARM/x86 image scans with full OS/library inventory.
 Each finds7CRITICAL/58HIGH/5UNKNOWN,92LOW/154MEDIUM,zero suppressed. Debian12.13
 validates F086 report handling; the image security gate correctly stays red. This
-is the independent test peer, not a freightctl server-image result. F088 is
-preparing a pinned security-updated runtime and removal of unused build tools;
+is the independent test peer, not a freightctl server-image result. F088 prepares
+immutable Node26.13.0 for the peer/CI and removal of unused runtime build tools;
 actual finding remediation and interoperability replay remain owed.
 
 F080–F083 implement canonical exchange contracts, append-only endpoint/current-head

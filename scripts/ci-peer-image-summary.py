@@ -118,6 +118,8 @@ def summarize(report, version, image, commit, architecture, now):
     counts, packages, classes = Counter({s: 0 for s in SEVERITIES}), Counter(), Counter()
     suppressed, inventory_openpgp, inventory_os = 0, False, False
     advisory_ids = set()
+    blocking_ids = {s:set() for s in ('CRITICAL','HIGH','UNKNOWN')}
+    unrecognized_blocking = {s:0 for s in blocking_ids}
     for result in results:
         require(isinstance(result, dict) and result.get('Class') in ('os-pkgs', 'lang-pkgs'))
         kind = result['Class']
@@ -146,6 +148,10 @@ def summarize(report, version, image, commit, architecture, now):
             require(isinstance(ident, str) and 0 < len(ident) <= 128)
             if ADVISORY.fullmatch(ident):
                 advisory_ids.add(ident)
+                if finding['Severity'] in blocking_ids:
+                    blocking_ids[finding['Severity']].add(ident)
+            elif finding['Severity'] in blocking_ids:
+                unrecognized_blocking[finding['Severity']] += 1
     require(inventory_os and inventory_openpgp)
     blocked = suppressed > 0 or any(counts[s] > 0 for s in ('HIGH', 'CRITICAL', 'UNKNOWN'))
     return {
@@ -158,6 +164,9 @@ def summarize(report, version, image, commit, architecture, now):
         'package_counts': dict(packages), 'result_classes': dict(classes),
         'suppressed_findings': suppressed, 'advisory_ids': sorted(advisory_ids)[:50],
         'additional_advisory_ids': max(0, len(advisory_ids) - 50),
+        'blocking_advisory_ids': {s:sorted(ids)[:50] for s,ids in blocking_ids.items()},
+        'additional_blocking_advisory_ids': {s:max(0,len(ids)-50) for s,ids in blocking_ids.items()},
+        'unrecognized_blocking_advisories': unrecognized_blocking,
         'scope': 'exact test peer image; OS and discovered libraries; no reachability, protocol, released image or complete product claim',
     }
 

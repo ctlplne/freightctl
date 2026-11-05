@@ -2,7 +2,10 @@
 
 This is a test-only OpenPGP.js 6.3.2 peer. The server and browser do not import
 this package. Its npm lock binds the published package integrity and records
-LGPL-3.0+; its Node 26 image is pinned by the multi-architecture manifest digest.
+LGPL-3.0+; its Node26.13.0/bookworm image is pinned by the multi-architecture manifest digest.
+Installation/audit run in a separate stage. The recipient image copies only its
+locked runtime dependencies and removes unused global npm/corepack tools. Every
+remaining OS/library package still participates in the full exact-image scan.
 No peer artifact is published or included in a release bundle.
 
 GitHub builds the image and audits its JavaScript dependencies. Test execution
@@ -23,8 +26,9 @@ the independent implementation's behavior is documented in the
 Code presence and syntax checks do not establish interoperability. Native
 results, image identity, exact fingerprints and source/ciphertext digests must
 be retained before this profile is called qualified. The native Linux job now
-prepares an exact-image vulnerability gate after runtime tests; it has no actual
-result until GitHub executes it. Trivy runs offline against an immutable image
+prepares an exact-image vulnerability gate after runtime tests. Source6d30476
+completes both native scans and reports blocking findings; the Node patch/runtime
+cleanup is a prepared remediation, not a clean-image claim. Trivy runs offline against an immutable image
 archive with OS and discovered-library inventory, a fresh hash-bound feed and
 strict evidence validation. Raw inputs remain private, and nothing is uploaded.
 Larger files, v6 keys, other peers, scanner coverage and finding assessment remain
