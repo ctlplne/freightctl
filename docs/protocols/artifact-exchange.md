@@ -119,6 +119,7 @@ participant bindings in the protected journal.
 API/CLI closure, offered-view browser decline,reviewed browser sending and
 [sender history](artifact-exchange-outgoing.md) are implemented.
 [Browser endpoint administration](artifact-exchange-admin-browser.md) is implemented.
-Agent tools remain implementation work; the exchange OpenAPI contract is a subset
-of the overall product API. Actual stock-client,
+The [MCP exchange-tool profile](artifact-exchange-mcp.md) is implemented;
+its native qualification and additional partner/workflow/diagnostic/recovery tools
+remain owed. The exchange OpenAPI contract is a subset of the overall product API. Actual stock-client,
 independent-receiver, crash/recovery, capacity and AX profile proofs remain owed.

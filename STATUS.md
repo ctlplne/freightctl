@@ -74,6 +74,15 @@ adapter methods and the shared Go canonical fixture pass. The original native
 Chrome profile now requires15accessibility states plus3immutable endpoint versions,
 3command receipts and one revoked revision3 head;actual runtime proof remains owed.
 
+F099 adds12MCP exchange tools using pinned official SDK1.8.0 and2026-07-28 stateless
+HTTPS. Ordinary identity/services guard every tool; strict control schemas supply
+no actor switch,arbitrary address,SQL,shell,inline bytes or inference. Preparation
+has no durable effect/receipt and leaves physical bytes unchecked;actual offers
+recheck live authority,exact hash and storage. Five focused methods and affected
+compile/vet/architecture checks pass. Actual PG zero-effect preview and stock SDK
+HTTPS separate-reply/role/replay/terminal proofs are prepared and owed. Additional
+agent tools,AI governance/evaluations and every complete AX profile remain open.
+
 Focused local parser/client/filesystem/summary regressions and affected static,
 frontend build, native compilation/vet and architecture checks pass. They establish
 no PostgreSQL, served browser, stock-peer or complete AX profile qualification.
@@ -88,7 +97,7 @@ isolation, exact inputs and finding/evidence checks remain. Local shared-machine
 limits and no-inference constraint stay unchanged. No local database, Chrome,
 scanner, peer, image or model runtime was started by this work.
 
-Next: complete agent surfaces and and exchange controls, bridge
+Next: complete agent surfaces and exchange controls, bridge
 ingress/onward delivery, qualify AX-J01/J02/J03 and finish every applicable baseline
 gate. Trust Control X07 blocks only its real provider profile; no API is invented.
 F026 stays manual/owner-deferred. Source/CI push authority grants no release,

@@ -1,0 +1,10 @@
+{
+  "module": "github.com/modelcontextprotocol/go-sdk",
+  "version": "v1.8.0",
+  "source": "https://github.com/modelcontextprotocol/go-sdk/tree/v1.8.0",
+  "license_file": "third_party/mcp-go-sdk/LICENSE",
+  "license_sha256": "af679003d933f045393a6a029f43da113f9ae364eac651d9ae268392985580f5",
+  "license_scope": "Upstream licensing transition:Apache-2.0 contributions and retained MIT contributions;upstream documentation excluding specifications CC-BY-4.0. Preserve upstream exact notice. SDK code is a pinned module,not vendored here.",
+  "dependencies": "Exact runtime graph and checksums in go.mod/go.sum. Full final-source SBOM,notice/redistribution validation and disconnected bundle remain owed.",
+  "protocol_profile": "2026-07-28 Streamable HTTP,stateless JSON responses;no legacy sessions,inference,sampling,arbitrary external contacts or inline artifact bytes"
+}

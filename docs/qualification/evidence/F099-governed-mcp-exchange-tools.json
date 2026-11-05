@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "id": "F099",
+  "observed_at": "2026-11-05",
+  "starting_commit": "fa064edd21f4fd70d9020f5dde76cf9ea8901eb7",
+  "state": "Twelve governed MCP exchange tools implemented;actual native/independent conformance owed",
+  "qualification_claim": false,
+  "change": [
+    "Pinned official MCP Go SDK1.8.0 and JSON Schema validator0.4.3;modern2026-07-28 stateless Streamable HTTP/JSON profile under the existing tenant/partner HTTPS service. Every discovery/list/call authenticates ordinary current credential;no requested actor/scope/provider substitution.",
+    "Whole control envelope32KiB/depth16/8192tokens rejects duplicate/casefold aliases,nulls,batches,lossy IDs,trailing/unknown fields. Origin/media/header/session ambiguity guards precede dispatch;SDK validates protocol/header/body agreement. All tool arguments resolve against exact schemas and ordinary domain validators.",
+    "Metadata-only prepare shares actual offer authorization but rolls back without events,views,receipts or reservation. It has no exchange/event identity and explicitly leaves physical storage not checked. Actual offer requires exact canonical request hash and independently verifies bytes and live authority through the ordinary service.",
+    "Discovery,source,receive,history and exact terminal controls share existing forced-RLS/domain services. Retrieval returns only an authenticated relative path and integrity metadata,never inline artifact bytes,credentials or a bearer URL. Receiving grants no onward/execution permission. Receiver persistence/processing stay unknown.",
+    "Tool descriptions advertise effects;only offering and closing mutate product state. Fixed schemas expose no shell,SQL,arbitrary host path/network,sampling or tool loop. Shared eight-request admission,originating HTTP cancellation,10second action and15second request limits protect transfer resources;these are product controls,not GitHub build ceilings.",
+    "Original native HTTPS fixture gains an official stock SDK client profile with exact offer replay,wrong-scope/role refusal,receive polling,independent HTTPS bytes,separately approved/new-source reply,cancel and honest history. A separate actual PG preview case requires no durable effects. Both are compiled,not runtime-qualified.",
+    "Exact upstream mixed Apache-2.0/MIT licensing-transition notice is retained;documentation licensing is separately noted. Full dependency-security/SBOM/redistribution/disconnected/final-source proof remains owed."
+  ],
+  "red": {
+    "observed": "Required MCP route was absent:malformed envelope returned404 rather than400 before database",
+    "reference": ".private/freightctl-f099-mcp-red.log",
+    "sha256": "223dc78026f0e70cb2444e195ebd62e17b75c46015f82175a475d45e1b362c88"
+  },
+  "green": {
+    "focused_mcp_methods": 5,
+    "embedded_tool_schemas": 12,
+    "affected_tagged_native_compilation_and_vet": "pass,no runtime claim",
+    "architecture_format_diff": "pass",
+    "module_graph": "tidied and checksum-pinned;native source-security replay for new graph owed",
+    "frontend": "unchanged since F098;not redundantly replayed"
+  },
+  "native_profile": {
+    "state": "prepared,not qualified",
+    "required": [
+      "Actual PostgreSQL metadata preview has zero durable effects and consumes no admission slot",
+      "Official SDK1.8.0 current-revision client over verified HTTPS;ordinary credential role/scope,current canonical inputs and own domain services",
+      "Actual independent byte reads,separately authorized new-source reply,terminal event/honest history;no inference",
+      "Additional independent non-SDK conformance,actual response/socket loss,process death/recovery and all final-source checks"
+    ]
+  },
+  "source_files": [
+    {
+      "path": "docs/protocols/artifact-exchange-mcp.md",
+      "sha256": "b692ae0bc7aca1eca9dad303da3065561673845e12e12fde2012425a76c03d9d"
+    },
+    {
+      "path": "docs/protocols/artifact-exchange.md",
+      "sha256": "a87616f1ad27407bc23867d0b08a1f3b62164c8d2c2d28a368e56a5d875d6074"
+    },
+    {
+      "path": "go.mod",
+      "sha256": "ba0a8df4ef228aaf621c019da294768246c29e60853495eba7995655ddd583fa"
+    },
+    {
+      "path": "go.sum",
+      "sha256": "d1cbc6e88e466035d1a0f9fb1433662a66a3f65b3fef6ed706c107aad05c4506"
+    },
+    {
+      "path": "internal/api/api.go",
+      "sha256": "584f054ba582a2b53768c5581d014595e60e4d7d553a5c1ceb1d58cf6f1c7c3c"
+    },
+    {
+      "path": "internal/api/mcp-tools.json",
+      "sha256": "e5934bdb4f8ce784767b74c8e52f311584671621f6d3ee9bc1bd54fe3072b0a2"
+    },
+    {
+      "path": "internal/api/mcp.go",
+      "sha256": "252e4a2ff35d1b97ce92c4a1a0194c94a00987b758084e0fd37a58536b254fd9"
+    },
+    {
+      "path": "internal/api/mcp_integration_test.go",
+      "sha256": "76ed7a77c57a48548abb4a5113b6a1f3cbf53d7b83b058e6b3e371fe24a2c66f"
+    },
+    {
+      "path": "internal/api/mcp_test.go",
+      "sha256": "c793e0e97c9a5a67e4035cff667d6eaf8aed376c71af32a618f7d50ca4a6f08e"
+    },
+    {
+      "path": "internal/api/mcp_wire.go",
+      "sha256": "592cc38c1fc9d185aaf7d4bef4c403ddb645d21f42b433c90368cd7673d5ec14"
+    },
+    {
+      "path": "internal/custody/exchange_preview.go",
+      "sha256": "32b5447fb0dc997857c2e94ebc4d810294990bf63953942e4b10bcc0c26f7a3b"
+    },
+    {
+      "path": "internal/custody/exchange_preview_integration_test.go",
+      "sha256": "63043994adfc6ed1fbbb3c820311527a26a33e83da31782739ec9a763d364872"
+    },
+    {
+      "path": "third_party/mcp-go-sdk/LICENSE",
+      "sha256": "af679003d933f045393a6a029f43da113f9ae364eac651d9ae268392985580f5"
+    },
+    {
+      "path": "third_party/mcp-go-sdk/UPSTREAM.json",
+      "sha256": "6bea0199261082f5023abd54808a8729c999e021831809e7db690d2fe863d4d8"
+    }
+  ],
+  "local_manifest": {
+    "reference": ".private/freightctl-f099/manifest.json",
+    "sha256": "de7d667bf8d040751004eacaf2ac3a1a8c84059f7dcee35e93386c2a684081d3"
+  },
+  "protocol_sources": [
+    "https://modelcontextprotocol.io/specification/2026-07-28/basic/versioning",
+    "https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http",
+    "https://modelcontextprotocol.io/specification/2026-07-28/server/tools",
+    "https://github.com/modelcontextprotocol/go-sdk/releases/tag/v1.8.0"
+  ],
+  "owed": [
+    "All prepared actual native profiles and independent conformance;no overall AX qualification",
+    "Additional partner/workflow/diagnostic/recovery tools and all GOAL13/14 private-model/disclosure/injection/provider quality requirements",
+    "Ingress/onward bridges,capacity/fairness,actual crash/restore and full mandatory baseline/AX/FINISH gates",
+    "Compatible patched image inputs and full security replay;all original nonsecurity failures remain deferred to FINISH"
+  ]
+}

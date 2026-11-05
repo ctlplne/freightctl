@@ -51,6 +51,7 @@ func NewWithBrowserLifetime(service *custody.Service, audits *audit.Service, ena
 		w.Header().Set("Content-Type", "application/json")
 		io.WriteString(w, `{"status":"process-running","transfer_readiness":"not-qualified"}`)
 	})
+	m.Handle("POST /v1/tenants/{tenant}/partners/{partner}/mcp", s.mcpHandler())
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/files", s.upload)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/files/{file}", s.download)
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/exchange-endpoints/commands", s.exchangeEndpointCommand)
