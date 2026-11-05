@@ -178,6 +178,125 @@
           }
         ]
       }
+    },
+    "/v1/tenants/{tenant}/partners/{partner}/onward/status": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "tenant",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ID"
+          }
+        },
+        {
+          "in": "path",
+          "name": "partner",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ID"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "onwardStatus",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OnwardRunAction"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Receipt-bound current observation;work may perform approved remote writes. No receiver persistence or business guarantee.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OnwardObservation"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "browserCookie": []
+          }
+        ]
+      }
+    },
+    "/v1/tenants/{tenant}/partners/{partner}/onward/work": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "tenant",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ID"
+          }
+        },
+        {
+          "in": "path",
+          "name": "partner",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ID"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "onwardWork",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OnwardRunAction"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Receipt-bound current observation;work may perform approved remote writes. No receiver persistence or business guarantee.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OnwardWorkObservation"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "browserCookie": []
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -439,6 +558,249 @@
           "resource",
           "replayed"
         ]
+      },
+      "OnwardRunAction": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "start",
+          "receipt_key",
+          "run_id"
+        ],
+        "properties": {
+          "start": {
+            "$ref": "#/components/schemas/OnwardStart"
+          },
+          "receipt_key": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+          },
+          "run_id": {
+            "$ref": "#/components/schemas/ID"
+          }
+        }
+      },
+      "OnwardObservation": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "run_id",
+          "workflow",
+          "artifact",
+          "observed_state",
+          "reason_sha256",
+          "receiver_persistence",
+          "business_processing",
+          "steps"
+        ],
+        "properties": {
+          "run_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "workflow": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+              },
+              "version": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 2147483647
+              },
+              "hash": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            },
+            "required": [
+              "id",
+              "version",
+              "hash"
+            ]
+          },
+          "artifact": {
+            "$ref": "#/components/schemas/Artifact"
+          },
+          "observed_state": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "attention",
+              "succeeded",
+              "cancelled"
+            ]
+          },
+          "reason_sha256": {
+            "$ref": "#/components/schemas/SHA256"
+          },
+          "receiver_persistence": {
+            "const": "unknown"
+          },
+          "business_processing": {
+            "const": "unknown"
+          },
+          "steps": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 16,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "ordinal",
+                "delivery_id",
+                "state",
+                "observation_sha256"
+              ],
+              "properties": {
+                "ordinal": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 16
+                },
+                "delivery_id": {
+                  "$ref": "#/components/schemas/ID"
+                },
+                "state": {
+                  "type": "string",
+                  "enum": [
+                    "queued",
+                    "staging",
+                    "publishing",
+                    "retry",
+                    "blocked",
+                    "ambiguous",
+                    "succeeded",
+                    "cancelled"
+                  ]
+                },
+                "observation_sha256": {
+                  "$ref": "#/components/schemas/SHA256"
+                }
+              }
+            }
+          }
+        }
+      },
+      "OnwardWorkObservation": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "run_id",
+          "workflow",
+          "artifact",
+          "observed_state",
+          "reason_sha256",
+          "receiver_persistence",
+          "business_processing",
+          "steps",
+          "replayed",
+          "selected_delivery_id"
+        ],
+        "properties": {
+          "run_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "workflow": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+              },
+              "version": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 2147483647
+              },
+              "hash": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            },
+            "required": [
+              "id",
+              "version",
+              "hash"
+            ]
+          },
+          "artifact": {
+            "$ref": "#/components/schemas/Artifact"
+          },
+          "observed_state": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "attention",
+              "succeeded",
+              "cancelled"
+            ]
+          },
+          "reason_sha256": {
+            "$ref": "#/components/schemas/SHA256"
+          },
+          "receiver_persistence": {
+            "const": "unknown"
+          },
+          "business_processing": {
+            "const": "unknown"
+          },
+          "steps": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 16,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "ordinal",
+                "delivery_id",
+                "state",
+                "observation_sha256"
+              ],
+              "properties": {
+                "ordinal": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 16
+                },
+                "delivery_id": {
+                  "$ref": "#/components/schemas/ID"
+                },
+                "state": {
+                  "type": "string",
+                  "enum": [
+                    "queued",
+                    "staging",
+                    "publishing",
+                    "retry",
+                    "blocked",
+                    "ambiguous",
+                    "succeeded",
+                    "cancelled"
+                  ]
+                },
+                "observation_sha256": {
+                  "$ref": "#/components/schemas/SHA256"
+                }
+              }
+            }
+          },
+          "replayed": {
+            "type": "boolean"
+          },
+          "selected_delivery_id": {
+            "$ref": "#/components/schemas/ID"
+          }
+        }
       }
     }
   }

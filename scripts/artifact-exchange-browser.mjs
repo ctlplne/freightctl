@@ -24,6 +24,8 @@ for (const value of [
   c.sender_actor,
   c.recipient_actor,
   c.manager_actor,
+  c.onward_file,
+  c.onward_workflow,
 ])
   assert.match(value, /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/);
 assert.match(c.sha256, /^[0-9a-f]{64}$/);
@@ -53,6 +55,10 @@ let browser,
   recoveryRoundtrips = 0,
   endpointCommands = 0,
   humanIngress = 0,
+  onwardRuns = 0,
+  onwardRecoveries = 0,
+  onwardRefusals = 0,
+  onwardRequests = 0,
   offerRequests = 0,
   exchangeRequests = 0,
   failureHash;
@@ -105,6 +111,12 @@ try {
         route.request().method() === "POST"
       )
         offerRequests++;
+      if (
+        target.pathname.startsWith(
+          `/v1/tenants/${c.tenant}/partners/${c.partner}/onward/`,
+        )
+      )
+        onwardRequests++;
       return route.continue(); // Original requests and responses; no mock/replay.
     });
     const page = await context.newPage();
@@ -846,6 +858,207 @@ try {
   endpointCommands++;
   await accessibility(manager.page, "manager-revoke-accessibility");
   await manager.context.close();
+
+  phase = "onward-login";
+  assert.equal(
+    await recipient.page
+      .getByRole("button", { name: "Onward delivery", exact: true })
+      .count(),
+    0,
+  );
+  const operator = await login(c.onward_token);
+  await operator.page
+    .getByRole("button", { name: "Onward delivery", exact: true })
+    .click();
+  await operator.page
+    .getByLabel("Onward source file revision ID", { exact: true })
+    .fill(c.onward_file);
+  await operator.page
+    .getByLabel("Approved onward workflow ID", { exact: true })
+    .fill(c.onward_workflow);
+  await operator.page
+    .getByLabel("Approved onward workflow SHA256", { exact: true })
+    .fill(c.onward_hash);
+  phase = "onward-review";
+  await operator.page
+    .getByRole("button", { name: "Review onward delivery", exact: true })
+    .click();
+  await operator.page
+    .getByRole("heading", { name: "Review exact onward delivery", exact: true })
+    .waitFor();
+  assert.ok(
+    (await operator.page.locator("body").innerText()).includes(c.onward_hash),
+  );
+  await accessibility(operator.page, "onward-review-accessibility");
+  phase = "onward-save-recovery";
+  const onwardDownload = operator.page.waitForEvent("download");
+  await operator.page
+    .getByRole("button", { name: "Save onward recovery", exact: true })
+    .click();
+  const onwardSavedFile = await onwardDownload;
+  assert.equal(
+    onwardSavedFile.suggestedFilename(),
+    "freightctl-onward-recovery.json",
+  );
+  assert.equal(await onwardSavedFile.failure(), null);
+  await onwardSavedFile.saveAs(c.onward_recovery);
+  await chmod(c.onward_recovery, 0o600);
+  const onwardSaved = JSON.parse(await readFile(c.onward_recovery, "utf8"));
+  assert.equal(
+    onwardSaved.review.request.artifact.file_revision_id,
+    c.onward_file,
+  );
+  const untrustedSaved = structuredClone(onwardSaved);
+  untrustedSaved.review.effects[0].connection.id = c.endpoint;
+  await writeFile(
+    c.onward_recovery + ".untrusted.json",
+    JSON.stringify(untrustedSaved),
+    { mode: 0o600, flag: "wx" },
+  );
+  let acceptedRun;
+  const startURL = `${origin.origin}/v1/tenants/${c.tenant}/partners/${c.partner}/onward/runs`;
+  // Send the original request to the actual server, then deliberately lose its
+  // real response. No fabricated acceptance or replay response is supplied.
+  await operator.page.route(startURL, async (route) => {
+    assert.equal(route.request().method(), "POST");
+    assert.equal(
+      route.request().headers()["idempotency-key"],
+      onwardSaved.request_key,
+    );
+    const response = await route.fetch();
+    assert.equal(response.status(), 200);
+    const actual = await response.json();
+    assert.equal(actual.replayed, false);
+    acceptedRun = actual.resource.id;
+    assert.equal(
+      actual.resource.onward_review_hash,
+      onwardSaved.review.review_hash,
+    );
+    await response.dispose();
+    await route.abort("failed");
+  });
+  phase = "onward-lost-response";
+  await operator.page
+    .getByRole("button", {
+      name: "Confirm queue or recover original run",
+      exact: true,
+    })
+    .click();
+  await operator.page.getByRole("alert").waitFor();
+  assert.match(acceptedRun, /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/);
+  assert.equal(
+    await operator.page
+      .getByRole("heading", { name: "Recorded onward run", exact: true })
+      .count(),
+    0,
+  );
+  onwardRuns++;
+  phase = "onward-reload-recovery";
+  await operator.page.unroute(startURL);
+  await operator.page.reload();
+  await operator.page
+    .getByRole("button", { name: "Onward delivery", exact: true })
+    .click();
+  const beforeOnwardImport = onwardRequests;
+  await operator.page
+    .getByLabel("Import saved onward review", { exact: true })
+    .setInputFiles(c.onward_recovery + ".untrusted.json");
+  await operator.page
+    .getByRole("status")
+    .filter({ hasText: "Saved review imported." })
+    .waitFor();
+  assert.equal(onwardRequests, beforeOnwardImport);
+  assert.equal(
+    await operator.page
+      .getByRole("button", {
+        name: "Confirm queue or recover original run",
+        exact: true,
+      })
+      .isDisabled(),
+    true,
+  );
+  assert.equal(
+    await operator.page
+      .getByRole("heading", { name: "Recorded onward run", exact: true })
+      .count(),
+    0,
+  );
+  await accessibility(operator.page, "onward-recovery-accessibility");
+  phase = "onward-receipt";
+  const onwardReceipt = operator.page.waitForResponse((r) =>
+    new URL(r.url()).pathname.endsWith("/onward/receipts"),
+  );
+  await operator.page
+    .getByRole("button", {
+      name: "Find original onward receipt only",
+      exact: true,
+    })
+    .click();
+  const onwardReceiptResponse = await onwardReceipt;
+  assert.equal(onwardReceiptResponse.status(), 200);
+  const recoveredOnward = await onwardReceiptResponse.json();
+  assert.equal(recoveredOnward.replayed, true);
+  assert.equal(recoveredOnward.resource.id, acceptedRun);
+  await operator.page
+    .getByRole("heading", { name: "Recorded onward run", exact: true })
+    .waitFor();
+  onwardRecoveries++;
+  await accessibility(operator.page, "onward-receipt-accessibility");
+  assert.equal(
+    await operator.page
+      .getByRole("button", {
+        name: "Perform one onward work step",
+        exact: true,
+      })
+      .isDisabled(),
+    true,
+  );
+  phase = "onward-verify-review";
+  const freshOnwardReview = operator.page.waitForResponse((r) =>
+    new URL(r.url()).pathname.endsWith("/onward/previews"),
+  );
+  await operator.page
+    .getByRole("button", {
+      name: "Verify saved onward review with server",
+      exact: true,
+    })
+    .click();
+  assert.equal((await freshOnwardReview).status(), 200);
+  await operator.page
+    .getByRole("button", {
+      name: "Verify saved onward review with server",
+      exact: true,
+    })
+    .waitFor({ state: "hidden" });
+  assert.ok(
+    (
+      await operator.page
+        .getByRole("region", { name: "Exact onward review", exact: true })
+        .innerText()
+    ).includes(onwardSaved.review.effects[0].connection.id),
+  );
+  assert.equal(
+    await operator.page
+      .getByRole("button", {
+        name: "Perform one onward work step",
+        exact: true,
+      })
+      .isDisabled(),
+    false,
+  );
+  phase = "onward-status";
+  await operator.page
+    .getByRole("button", { name: "Inspect current onward state", exact: true })
+    .click();
+  await operator.page
+    .getByRole("heading", { name: "Current onward observation", exact: true })
+    .waitFor();
+  const observedOnward = await operator.page
+    .getByRole("region", { name: "Current onward observation", exact: true })
+    .innerText();
+  assert.ok(observedOnward.includes("Observed state: queued"));
+  assert.ok(observedOnward.includes("Receiver persistence: unknown"));
+  await accessibility(operator.page, "onward-status-accessibility");
   phase = "revocation-barrier";
   await writeFile(c.ready, "ready\n", { mode: 0o600, flag: "wx" });
   const deadline = Date.now() + 15000;
@@ -858,6 +1071,24 @@ try {
     }
     await delay(25);
   }
+  phase = "onward-refusal";
+  const onwardWork = operator.page.waitForResponse((r) =>
+    new URL(r.url()).pathname.endsWith("/onward/work"),
+  );
+  await operator.page
+    .getByRole("button", { name: "Perform one onward work step", exact: true })
+    .click();
+  assert.equal((await onwardWork).status(), 409);
+  await operator.page
+    .getByRole("button", {
+      name: "Retry the same onward work step",
+      exact: true,
+    })
+    .waitFor();
+  await operator.page.getByRole("alert").waitFor();
+  onwardRefusals++;
+  await accessibility(operator.page, "onward-refusal-accessibility");
+  await operator.context.close();
   phase = "revoked-discovery";
   const refusal = recipient.page.waitForResponse((r) =>
     r.url().includes("/exchange-endpoints/" + c.endpoint + "/incoming?"),
@@ -900,6 +1131,9 @@ try {
     recovery_roundtrips: recoveryRoundtrips,
     endpoint_commands: endpointCommands,
     human_ingress: humanIngress,
+    onward_runs: onwardRuns,
+    onward_recoveries: onwardRecoveries,
+    onward_refusals: onwardRefusals,
     model_started: false,
     browser_sandbox: true,
     accessibility_checks: accessibilityChecks,

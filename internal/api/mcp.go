@@ -198,37 +198,11 @@ func (s *Server) callMCPTool(ctx context.Context, scope store.Scope, name string
 		}
 		return mcpOnwardAcceptance(result)
 	case "freightctl.onward_status", "freightctl.work_onward":
-		service := &workflow.Service{Custody: s.Service}
 		var original workflow.OnwardStart
 		if workflow.Decode(args.Start, &original) != nil {
 			return nil, store.ErrExchangeInput
 		}
-		accepted, err := service.OnwardReceipt(ctx, scope, workflow.OnwardLookup{Start: original, ReceiptKey: args.ReceiptKey})
-		if err != nil {
-			return nil, err
-		}
-		var bound store.WorkflowRun
-		if json.Unmarshal(accepted.Resource, &bound) != nil || bound.ID != args.Run {
-			return nil, store.ErrRevision
-		}
-		if name == "freightctl.onward_status" {
-			view, err := service.Status(ctx, scope, args.Run)
-			if err != nil {
-				return nil, err
-			}
-			return mcpOnwardStatus(view)
-		}
-		result, err := service.Work(ctx, scope, args.Run, args.Key)
-		if err != nil {
-			return nil, err
-		}
-		summary, err := mcpOnwardStatus(result.Status)
-		if err != nil {
-			return nil, err
-		}
-		summary["replayed"] = result.Replayed
-		summary["selected_delivery_id"] = result.Dispatch.DeliveryID
-		return summary, nil
+		return s.onwardRun(ctx, scope, onwardRunAction{Start: original, ReceiptKey: args.ReceiptKey, RunID: args.Run}, name == "freightctl.work_onward", args.Key)
 	case "freightctl.identity":
 		return s.Service.DB.Identity(ctx, scope)
 	case "freightctl.exchange_source":

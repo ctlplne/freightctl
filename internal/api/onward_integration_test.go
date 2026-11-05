@@ -79,6 +79,33 @@ func TestOnwardHTTPSUsesOrdinaryReviewAtomicStartAndPrivateReceipt(t *testing.T)
 	if json.Unmarshal(raw, &result) != nil || !result.Replayed || string(result.Resource) != accepted {
 		t.Fatal("exact start retry staged new work")
 	}
+	var receipt workflow.OnwardRunReceipt
+	if json.Unmarshal([]byte(accepted), &receipt) != nil {
+		t.Fatal("invalid typed receipt")
+	}
+	action := onwardRunAction{Start: original, ReceiptKey: "onward-api-original", RunID: receipt.ID}
+	_, observed := exchangeAPIRequest(t, server, "POST", prefix+"/onward/status", cookie, headers, exchangeAPIJSON(t, action), 200)
+	var facts map[string]any
+	if json.Unmarshal(observed, &facts) != nil || facts["run_id"] != receipt.ID || facts["observed_state"] != "queued" || facts["receiver_persistence"] != "unknown" || facts["storage_id"] != nil || facts["namespace_root"] != nil {
+		t.Fatal("ordinary status overstated receipt or disclosed transport bindings")
+	}
+	wrongRun := action
+	wrongRun.RunID = secure.NewID()
+	exchangeAPIRequest(t, server, "POST", prefix+"/onward/status", cookie, headers, exchangeAPIJSON(t, wrongRun), 409)
+	missing := action
+	missing.ReceiptKey = "never-started"
+	exchangeAPIRequest(t, server, "POST", prefix+"/onward/work", cookie, headers, exchangeAPIJSON(t, missing), 404)
+	// Mutating observation endpoints retain ordinary cookie CSRF protection.
+	exchangeAPIRequest(t, server, "POST", prefix+"/onward/status", cookie, map[string]string{"Origin": server.URL}, exchangeAPIJSON(t, action), 403)
+	configuration, err := wf.Configuration(t.Context(), scope, config.ID, config.Version)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err = wf.Decide(t.Context(), scope, config.ID, config.Version, "onward-api-revoke", "revoke", workflow.Decision{Hash: configuration.Hash, Revision: configuration.Revision}); err != nil {
+		t.Fatal(err)
+	}
+	headers["Idempotency-Key"] = "onward-api-work-after-revoke"
+	exchangeAPIRequest(t, server, "POST", prefix+"/onward/work", cookie, headers, exchangeAPIJSON(t, action), 409)
 	var runs, intents int
 	tx, err := service.DB.Begin(t.Context(), scope)
 	if err != nil {
@@ -87,5 +114,9 @@ func TestOnwardHTTPSUsesOrdinaryReviewAtomicStartAndPrivateReceipt(t *testing.T)
 	defer tx.Tx.Rollback(t.Context())
 	if err = tx.Tx.QueryRow(t.Context(), `SELECT (SELECT count(*) FROM workflow_runs),(SELECT count(*) FROM delivery_intents)`).Scan(&runs, &intents); err != nil || runs != 1 || intents != 1 {
 		t.Fatal("HTTP retries changed atomic run/intent counts")
+	}
+	var attempts int
+	if err = tx.Tx.QueryRow(t.Context(), `SELECT coalesce(sum(attempts),0) FROM delivery_intents`).Scan(&attempts); err != nil || attempts != 0 {
+		t.Fatal("receipt-only/missing/revoked requests attempted a delivery", attempts, err)
 	}
 }

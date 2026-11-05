@@ -20,6 +20,7 @@ import (
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/custody"
 	"github.com/ctlplne/freightctl/internal/store"
+	"github.com/ctlplne/freightctl/internal/workflow"
 )
 
 type exchangeBrowserSummary struct {
@@ -33,6 +34,9 @@ type exchangeBrowserSummary struct {
 	Recovery         *int   `json:"recovery_roundtrips"`
 	EndpointCommands *int   `json:"endpoint_commands"`
 	HumanIngress     *int   `json:"human_ingress"`
+	OnwardRuns       *int   `json:"onward_runs"`
+	OnwardRecoveries *int   `json:"onward_recoveries"`
+	OnwardRefusals   *int   `json:"onward_refusals"`
 	Model            *bool  `json:"model_started"`
 	Sandbox          *bool  `json:"browser_sandbox"`
 	Accessibility    *int   `json:"accessibility_checks"`
@@ -43,7 +47,7 @@ type exchangeBrowserSummary struct {
 }
 
 func TestExchangeBrowserSummaryRefusesAmbiguousEvidence(t *testing.T) {
-	valid := `{"state":"passed","phase":"complete","external_egress":0,"exact_downloads":2,"terminal_declines":1,"committed_offers":1,"sender_cancellations":1,"recovery_roundtrips":1,"model_started":false,"browser_sandbox":true,"endpoint_commands":3,"human_ingress":1,"accessibility_checks":17,"browser_version":"142.0.1","node_version":"v26.13.0","axe_version":"4.14.0"}`
+	valid := `{"state":"passed","phase":"complete","external_egress":0,"exact_downloads":2,"terminal_declines":1,"committed_offers":1,"sender_cancellations":1,"recovery_roundtrips":1,"model_started":false,"browser_sandbox":true,"endpoint_commands":3,"human_ingress":1,"onward_runs":1,"onward_recoveries":1,"onward_refusals":1,"accessibility_checks":22,"browser_version":"142.0.1","node_version":"v26.13.0","axe_version":"4.14.0"}`
 	for _, raw := range []string{
 		strings.Replace(valid, `"external_egress":0`, `"external_egress":1,"external_egress":0`, 1),
 		strings.Replace(valid, `"model_started":false`, `"model_started":true,"MODEL_STARTED":false`, 1),
@@ -54,6 +58,10 @@ func TestExchangeBrowserSummaryRefusesAmbiguousEvidence(t *testing.T) {
 		strings.Replace(valid, `"recovery_roundtrips":1,`, "", 1),
 		strings.Replace(valid, `"endpoint_commands":3,`, "", 1),
 		strings.Replace(valid, `"human_ingress":1,`, "", 1),
+		strings.Replace(valid, `"onward_runs":1,`, "", 1),
+		strings.Replace(valid, `"onward_recoveries":1,`, "", 1),
+		strings.Replace(valid, `"onward_refusals":1,`, "", 1),
+		strings.Replace(valid, `"onward_runs":1`, `"onward_runs":0,"ONWARD_RUNS":1`, 1),
 		strings.Replace(valid, `"human_ingress":1`, `"human_ingress":0,"HUMAN_INGRESS":1`, 1),
 		strings.Replace(valid, `"endpoint_commands":3`, `"endpoint_commands":0,"ENDPOINT_COMMANDS":3`, 1),
 		strings.Replace(valid, `"recovery_roundtrips":1`, `"recovery_roundtrips":0,"RECOVERY_ROUNDTRIPS":1`, 1),
@@ -99,7 +107,7 @@ func readExchangeBrowserSummary(path string) (*exchangeBrowserSummary, string) {
 		return nil, hash
 	}
 	seen := map[string]bool{}
-	allowed := map[string]bool{"state": true, "phase": true, "external_egress": true, "exact_downloads": true, "terminal_declines": true, "committed_offers": true, "sender_cancellations": true, "recovery_roundtrips": true, "endpoint_commands": true, "human_ingress": true, "model_started": true, "browser_sandbox": true, "accessibility_checks": true, "browser_version": true, "node_version": true, "axe_version": true, "failure_sha256": true}
+	allowed := map[string]bool{"state": true, "phase": true, "external_egress": true, "exact_downloads": true, "terminal_declines": true, "committed_offers": true, "sender_cancellations": true, "recovery_roundtrips": true, "endpoint_commands": true, "human_ingress": true, "onward_runs": true, "onward_recoveries": true, "onward_refusals": true, "model_started": true, "browser_sandbox": true, "accessibility_checks": true, "browser_version": true, "node_version": true, "axe_version": true, "failure_sha256": true}
 	for keys.More() {
 		field, err := keys.Token()
 		name, ok := field.(string)
@@ -116,11 +124,11 @@ func readExchangeBrowserSummary(path string) (*exchangeBrowserSummary, string) {
 	d.DisallowUnknownFields()
 	var s exchangeBrowserSummary
 	var tail any
-	if d.Decode(&s) != nil || d.Decode(&tail) != io.EOF || s.Egress == nil || s.Downloads == nil || s.Declines == nil || s.Offers == nil || s.Cancels == nil || s.Recovery == nil || s.EndpointCommands == nil || s.HumanIngress == nil || s.Model == nil || s.Sandbox == nil || s.Accessibility == nil || *s.Egress < 0 || *s.Downloads < 0 || *s.Downloads > 2 || *s.Declines < 0 || *s.Declines > 1 || *s.Accessibility < 0 || *s.Accessibility > 17 || *s.HumanIngress < 0 || *s.HumanIngress > 1 || *s.EndpointCommands < 0 || *s.EndpointCommands > 3 || *s.Recovery < 0 || *s.Recovery > 1 || *s.Offers < 0 || *s.Offers > 1 || *s.Cancels < 0 || *s.Cancels > 1 {
+	if d.Decode(&s) != nil || d.Decode(&tail) != io.EOF || s.Egress == nil || s.Downloads == nil || s.Declines == nil || s.Offers == nil || s.Cancels == nil || s.Recovery == nil || s.EndpointCommands == nil || s.HumanIngress == nil || s.OnwardRuns == nil || s.OnwardRecoveries == nil || s.OnwardRefusals == nil || s.Model == nil || s.Sandbox == nil || s.Accessibility == nil || *s.Egress < 0 || *s.Downloads < 0 || *s.Downloads > 2 || *s.Declines < 0 || *s.Declines > 1 || *s.Accessibility < 0 || *s.Accessibility > 22 || *s.HumanIngress < 0 || *s.HumanIngress > 1 || *s.OnwardRuns < 0 || *s.OnwardRuns > 1 || *s.OnwardRecoveries < 0 || *s.OnwardRecoveries > 1 || *s.OnwardRefusals < 0 || *s.OnwardRefusals > 1 || *s.EndpointCommands < 0 || *s.EndpointCommands > 3 || *s.Recovery < 0 || *s.Recovery > 1 || *s.Offers < 0 || *s.Offers > 1 || *s.Cancels < 0 || *s.Cancels > 1 {
 		return nil, hash
 	}
 	switch s.Phase {
-	case "launch", "recipient-login", "recipient-directory", "recipient-discovery", "receive-accessibility", "recipient-details", "details-accessibility", "exact-download", "sender-login", "sender-upload", "sender-upload-accessibility", "sender-human-receive", "sender-human-receive-accessibility", "sender-directory", "sender-review", "sender-review-accessibility", "sender-offer", "sender-receipt-accessibility", "sender-cancel", "sender-save-recovery", "sender-reload-recovery", "sender-recovery-accessibility", "sender-recover-offer", "sender-recover-cancel", "sender-history", "sender-history-accessibility", "sender-history-details", "sender-history-detail-accessibility", "recipient-decline-review", "decline-review-accessibility", "recipient-decline", "declined-retrieval", "declined-discovery", "declined-accessibility", "unrelated-directory", "unrelated-discovery", "unrelated-accessibility", "manager-login", "manager-accounts", "manager-review", "manager-review-accessibility", "manager-create", "manager-create-accessibility", "manager-replay", "manager-replace", "manager-replace-accessibility", "manager-revoke", "manager-revoke-accessibility", "revocation-barrier", "revoked-discovery", "revoked-accessibility", "complete":
+	case "onward-verify-review", "onward-login", "onward-review", "onward-review-accessibility", "onward-save-recovery", "onward-lost-response", "onward-reload-recovery", "onward-recovery-accessibility", "onward-receipt", "onward-receipt-accessibility", "onward-status", "onward-status-accessibility", "onward-refusal", "onward-refusal-accessibility", "launch", "recipient-login", "recipient-directory", "recipient-discovery", "receive-accessibility", "recipient-details", "details-accessibility", "exact-download", "sender-login", "sender-upload", "sender-upload-accessibility", "sender-human-receive", "sender-human-receive-accessibility", "sender-directory", "sender-review", "sender-review-accessibility", "sender-offer", "sender-receipt-accessibility", "sender-cancel", "sender-save-recovery", "sender-reload-recovery", "sender-recovery-accessibility", "sender-recover-offer", "sender-recover-cancel", "sender-history", "sender-history-accessibility", "sender-history-details", "sender-history-detail-accessibility", "recipient-decline-review", "decline-review-accessibility", "recipient-decline", "declined-retrieval", "declined-discovery", "declined-accessibility", "unrelated-directory", "unrelated-discovery", "unrelated-accessibility", "manager-login", "manager-accounts", "manager-review", "manager-review-accessibility", "manager-create", "manager-create-accessibility", "manager-replay", "manager-replace", "manager-replace-accessibility", "manager-revoke", "manager-revoke-accessibility", "revocation-barrier", "revoked-discovery", "revoked-accessibility", "complete":
 	default:
 		return nil, hash
 	}
@@ -167,6 +175,7 @@ func TestArtifactExchangeNativeBrowserReceiptWrongActorAndRevocation(t *testing.
 	b, recipient, actorB := participant([]string{"read", "list"})
 	other, _, _ := participant([]string{"read", "list"})
 	managerToken, managerScope, managerActor := participant([]string{"read", "list", "admin", "accounts_manage"})
+	onwardToken, onwardScope, _ := participant([]string{"read", "write", "list", "deliver", "workflow_manage", "workflow_approve", "workflow_execute"})
 	limits, _, err := s.ExchangeLimits()
 	if err != nil {
 		t.Fatal(err)
@@ -193,12 +202,47 @@ func TestArtifactExchangeNativeBrowserReceiptWrongActorAndRevocation(t *testing.
 		t.Fatal(err)
 	}
 	ready, revoked, result := filepath.Join(private, "ready"), filepath.Join(private, "revoked"), filepath.Join(private, "result.json")
+	// Provision through ordinary trusted operator services. The receive-only
+	// participant gets neither these grants nor workflow configuration powers.
+	host, hostPub := filepath.Join(private, "onward-host"), filepath.Join(private, "onward-host.pub")
+	key, keyPub := filepath.Join(private, "onward-key"), filepath.Join(private, "onward-key.pub")
+	if err = secure.GenerateSSHHostIdentity(host, hostPub); err != nil {
+		t.Fatal(err)
+	}
+	if err = secure.GenerateSSHHostIdentity(key, keyPub); err != nil {
+		t.Fatal(err)
+	}
+	wf := &workflow.Service{Custody: s}
+	registered, err := wf.RegisterConnection(ctx, onwardScope, "browser-onward-connection", workflow.ConnectionRequest{Address: "127.0.0.1:9", User: "receiver", Directory: "/inbox", HostPublicFile: hostPub, KeyFile: key, KeyPublicFile: keyPub})
+	if err != nil {
+		t.Fatal(err)
+	}
+	var connection workflow.ConnectionView
+	if json.Unmarshal(registered.Resource, &connection) != nil {
+		t.Fatal("onward connection")
+	}
+	drafted, err := wf.Draft(ctx, onwardScope, "browser-onward-draft", workflow.DraftRequest{Definition: workflow.Definition{Schema: 1, Name: "Browser reviewed onward", Steps: []workflow.Step{{ID: "send", Kind: "sftp.deliver", Connection: workflow.Reference{ID: connection.ID, Version: connection.Version, Hash: connection.Hash}, Filename: "onward.bin"}}}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	var configuration store.Configuration
+	if json.Unmarshal(drafted.Resource, &configuration) != nil {
+		t.Fatal("onward draft")
+	}
+	if _, err = wf.Decide(ctx, onwardScope, configuration.ID, configuration.Version, "browser-onward-approve", "approve", workflow.Decision{Hash: configuration.Hash, Revision: configuration.Revision}); err != nil {
+		t.Fatal(err)
+	}
+	onwardFile, _, err := s.Accept(ctx, onwardScope, "browser-onward-source", int64(len(data)), secure.Digest(data), bytes.NewReader(data))
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	uploadSource := filepath.Join(private, "human-upload-source.json")
 	if err = os.WriteFile(uploadSource, data, 0600); err != nil {
 		t.Fatal(err)
 	}
 	config := map[string]any{"url": server.URL, "tenant": administrator.Tenant, "partner": administrator.Partner, "endpoint": endpoint.Endpoint.ID, "exchange": offer.Exchange.ID, "closure_exchange": declineOffer.Exchange.ID, "closure_request_hash": declineOffer.Exchange.RequestHash, "file": file.ID, "size": file.Size, "sha256": file.SHA256, "recipient_token": b, "sender_token": a, "sender_actor": actorA.Actor, "recipient_actor": actorB.Actor, "unrelated_token": other, "manager_token": managerToken, "manager_actor": managerActor.Actor, "upload_source": uploadSource, "human_download": filepath.Join(private, "human-download"), "certificate_der": base64.StdEncoding.EncodeToString(server.Certificate().Raw), "download": filepath.Join(private, "download"), "recovery": filepath.Join(private, "recovery.json"), "ready": ready, "revoked": revoked, "result": result, "failure": filepath.Join(private, "first-failure.log")}
+	config["onward_token"], config["onward_file"], config["onward_workflow"], config["onward_hash"], config["onward_recovery"] = onwardToken, onwardFile.ID, configuration.ID, configuration.Hash, filepath.Join(private, "onward-recovery.json")
 	encoded, err := json.Marshal(config)
 	if err != nil {
 		t.Fatal(err)
@@ -247,6 +291,13 @@ func TestArtifactExchangeNativeBrowserReceiptWrongActorAndRevocation(t *testing.
 	if _, err = s.DB.RegisterExchangeEndpoint(ctx, administrator, "browser-endpoint-revoke", store.ExchangeEndpointCommand{Operation: "revoke", ID: endpoint.Endpoint.ID, ExpectedRevision: 1}, limits, 16); err != nil {
 		t.Fatal(err)
 	}
+	currentWorkflow, err := wf.Configuration(ctx, onwardScope, configuration.ID, configuration.Version)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err = wf.Decide(ctx, onwardScope, configuration.ID, configuration.Version, "browser-onward-revoke", "revoke", workflow.Decision{Hash: currentWorkflow.Hash, Revision: currentWorkflow.Revision}); err != nil {
+		t.Fatal(err)
+	}
 	if err = os.WriteFile(revoked, []byte("revoked\n"), 0600); err != nil {
 		t.Fatal(err)
 	}
@@ -256,7 +307,7 @@ func TestArtifactExchangeNativeBrowserReceiptWrongActorAndRevocation(t *testing.
 		t.Fatal("browser did not finish after exact endpoint revocation")
 	}
 	summary, hash := readExchangeBrowserSummary(result)
-	if err != nil || summary == nil || summary.State != "passed" || summary.Phase != "complete" || *summary.Egress != 0 || *summary.Downloads != 2 || *summary.Declines != 1 || *summary.Offers != 1 || *summary.Cancels != 1 || *summary.Recovery != 1 || *summary.Model || !*summary.Sandbox || *summary.Accessibility != 17 || *summary.HumanIngress != 1 || *summary.EndpointCommands != 3 || summary.Browser == "" || summary.FailureHash != "" {
+	if err != nil || summary == nil || summary.State != "passed" || summary.Phase != "complete" || *summary.Egress != 0 || *summary.Downloads != 2 || *summary.Declines != 1 || *summary.Offers != 1 || *summary.Cancels != 1 || *summary.Recovery != 1 || *summary.Model || !*summary.Sandbox || *summary.Accessibility != 22 || *summary.OnwardRuns != 1 || *summary.OnwardRecoveries != 1 || *summary.OnwardRefusals != 1 || *summary.HumanIngress != 1 || *summary.EndpointCommands != 3 || summary.Browser == "" || summary.FailureHash != "" {
 		t.Fatalf("native receive browser proof failed; safe result SHA256=%s", hash)
 	}
 	proof, err := s.DB.Begin(ctx, sender)
@@ -287,6 +338,23 @@ func TestArtifactExchangeNativeBrowserReceiptWrongActorAndRevocation(t *testing.
 		t.Fatal("browser manager retry changed immutable versions/receipts/head", versions, commands, revokedHeads, err)
 	}
 	if err = management.Tx.Commit(ctx); err != nil {
+		t.Fatal(err)
+	}
+	onwardProof, err := s.DB.Begin(ctx, onwardScope)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer onwardProof.Tx.Rollback(ctx)
+	var onwardRuns, onwardIntents, onwardReceipts, onwardAttempts int
+	if err = onwardProof.Tx.QueryRow(ctx, `SELECT (SELECT count(*) FROM workflow_runs WHERE actor_id=$1),(SELECT count(*) FROM delivery_intents WHERE actor_id=$1),(SELECT coalesce(sum(attempts),0) FROM delivery_intents WHERE actor_id=$1)`, onwardProof.Actor).Scan(&onwardRuns, &onwardIntents, &onwardAttempts); err != nil {
+		t.Fatal(err)
+	}
+	// The original run's private receipt is one of the operator's configuration
+	// receipts. Bind it by its exact run instead of counting setup commands.
+	if err = onwardProof.Tx.QueryRow(ctx, `SELECT count(*) FROM workflow_receipts wr JOIN workflow_runs r ON r.run_id=wr.resource_id AND r.actor_id=wr.actor_id WHERE r.actor_id=$1`, onwardProof.Actor).Scan(&onwardReceipts); err != nil || onwardRuns != 1 || onwardIntents != 1 || onwardReceipts != 1 || onwardAttempts != 0 {
+		t.Fatal("browser onward recovery/refusal changed durable run/intents/receipt/attempts", onwardRuns, onwardIntents, onwardReceipts, onwardAttempts, err)
+	}
+	if err = onwardProof.Tx.Commit(ctx); err != nil {
 		t.Fatal(err)
 	}
 	t.Logf("native receive browser proof passed; exact result SHA256=%s; bytes=%d; Chrome=%s; axe=%s", hash, file.Size, summary.Browser, summary.Axe)

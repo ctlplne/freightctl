@@ -99,6 +99,17 @@ ordinary services. Nine focused methods and affected static checks pass. Actual
 API/CLI/SDK,PG and own FTPS/intake/byte/contact-counter proofs are prepared,not
 qualified. UI,stock/collection bridges,full lineage/recovery and AX outcomes remain owed.
 
+F105 adds root-authorized Onward delivery in the browser with exact source/workflow
+review,queue/private original-receipt recovery,current observation and explicit
+one-step work. Shared receipt-bound API/MCP adoption,Go-compatible receipt hash
+checks and fresh server verification of untrusted imported destination hints
+preserve authority and unknown receiver outcomes. Seven browser/four affected
+recovery tests,the Go fixture and affected static/security-boundary checks pass.
+The original native Chrome profile now requires22a11y states,lost real queue
+response/reload recovery,tampered-hint revalidation and revoked-work refusal with
+exact1run/1intent/1private receipt/0attempts. Runtime proof is prepared and owed.
+No new migration;fresh44/retained35 remain unchanged.
+
 Focused local parser/client/filesystem/summary regressions and affected static,
 frontend build, native compilation/vet and architecture checks pass. They establish
 no PostgreSQL, served browser, stock-peer or complete AX profile qualification.

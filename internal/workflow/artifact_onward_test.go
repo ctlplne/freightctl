@@ -1,11 +1,45 @@
 package workflow
 
 import (
+	"encoding/json"
+	"os"
 	"strings"
 	"testing"
 
 	"github.com/ctlplne/freightctl/internal/store"
 )
+
+func TestOnwardBrowserFixtureMatchesExactGoReviewAndReceipt(t *testing.T) {
+	raw, err := os.ReadFile("../../web/tests/fixtures/artifact-onward.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var fixture struct {
+		Binding   onwardBinding `json:"binding"`
+		Review    OnwardReview  `json:"review"`
+		Result    Result        `json:"result"`
+		Canonical string        `json:"result_canonical"`
+	}
+	if json.Unmarshal(raw, &fixture) != nil {
+		t.Fatal("invalid fixture")
+	}
+	hash, err := onwardBindingHash(fixture.Binding)
+	if err != nil || hash != fixture.Review.ReviewHash {
+		t.Fatal("browser and server review fingerprints differ", err)
+	}
+	var receipt OnwardRunReceipt
+	if json.Unmarshal(fixture.Result.Resource, &receipt) != nil || receipt.ReviewHash != hash || receipt.Profile != OnwardProfile || receipt.WorkflowRevision != fixture.Binding.WorkflowRevision {
+		t.Fatal("typed reviewed receipt differs")
+	}
+	encoded, err := json.Marshal(receipt)
+	if err != nil {
+		t.Fatal(err)
+	}
+	actual, err := json.Marshal(Result{Resource: encoded, Replayed: false})
+	if err != nil || string(actual) != fixture.Canonical {
+		t.Fatal("browser receipt fixture differs from actual Go shape", err)
+	}
+}
 
 func onwardBindingFixture() onwardBinding {
 	id := func(n string) string { return n + "1111111-1111-4111-8111-111111111111" }

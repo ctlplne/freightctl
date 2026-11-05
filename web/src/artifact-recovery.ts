@@ -134,7 +134,7 @@ function normalize(
 
 // Validate syntax before JSON.parse can erase repeated fields or round a
 // number. Control-file bounds protect the browser, not artifact/build sizes.
-function strictJSON(text: string): unknown {
+export function strictRecoveryJSON(text: string): unknown {
   if (
     typeof text !== "string" ||
     new TextEncoder().encode(text).length > offerRecoveryMaximum ||
@@ -238,7 +238,7 @@ export function decodeOfferRecovery(
   origin: string,
 ): OfferRecovery {
   try {
-    return normalize(strictJSON(text), context, origin);
+    return normalize(strictRecoveryJSON(text), context, origin);
   } catch {
     return refuse();
   }

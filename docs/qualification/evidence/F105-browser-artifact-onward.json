@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "id": "F105",
+  "observed_at": "2026-11-05",
+  "starting_commit": "96e22f5ca18e6ea67b128d3fcc3f2f6f31e47d91",
+  "state": "Reviewed onward browser and shared receipt-bound observation/work implemented;actual native proof owed",
+  "qualification_claim": false,
+  "change": [
+    "Browser pins exact current root workflow_execute/read/deliver context,source tuple,approved workflow and original queue/work keys. Review and queue contact no destination;explicit work may perform ordinary approved remote writes.",
+    "Reconstruct immutable Go review fingerprint from the accepted ordinary run receipt. Historical queued acceptance is separate from current observation and unknown receiver persistence/business processing.",
+    "Saved control documents bind HTTPS origin,scope,actor,authority/root and original keys with strict bounded parsing. Import contacts nothing and creates no receipt. Untrusted destination hints require fresh matching server review before queue/work;lookup remains receipt-only.",
+    "Five HTTPS paths;MCP and HTTPS share exact reviewed-receipt adoption before status/work. Current worker policy,approval,leases,fencing and ambiguity remain unchanged.",
+    "Extend the original native Chrome/PG journey without dropping earlier scenarios. Lose one actual committed queue response,retain original exported file,import a separately tampered hint copy,recover exact typed server receipt,revalidate live destinations and refuse work after real workflow revocation. No new migration or retained environment change."
+  ],
+  "red": [
+    {
+      "observed": "Missing onward/status route returned404 before database instead of malformed-authority400",
+      "reference": ".private/freightctl-f105-route-red.log"
+    },
+    {
+      "observed": "Untrusted saved destination refresh operation missing",
+      "reference": ".private/freightctl-f105-recovery-red.log"
+    }
+  ],
+  "green": {
+    "new_browser_contract_methods": 7,
+    "affected_existing_offer_recovery_methods": 4,
+    "exact_go_browser_receipt_fixture": "pass",
+    "affected_route_projection_schema_summary_architecture_and_compile_vet": "pass",
+    "frontend_type_build_format": "pass",
+    "generated_app_bytes": 758109,
+    "openapi_paths": 5,
+    "local_openapi_references_resolved": 44,
+    "external_openapi_conformance": "owed"
+  },
+  "native_profile": {
+    "state": "prepared,not qualified",
+    "required_accessibility_states": 22,
+    "exact_counts": {
+      "onward_runs": 1,
+      "delivery_intents": 1,
+      "original_run_receipts": 1,
+      "delivery_attempts_after_revocation": 0
+    },
+    "claims_excluded": [
+      "Actual current Chrome/API/PG outcomes",
+      "Successful independent stock-receiver onward delivery",
+      "Actual worker process-death/restore and complete cross-hop derivation lineage"
+    ]
+  },
+  "source_files": [
+    {
+      "path": "docs/api/artifact-onward.openapi.json",
+      "sha256": "83f3a07368c3d30e50c7c3b0482f914ac79577b5e0644ddd502f5c19ca1d7ffd"
+    },
+    {
+      "path": "docs/product/artifact-exchange-plan.md",
+      "sha256": "174f36fb0976771eb494fd0fcec22ee0b0d934abcd9fb92cd0023ab61ad19722"
+    },
+    {
+      "path": "docs/protocols/artifact-onward.md",
+      "sha256": "d8cd5983f2fabee8ae079449ebd9f87abfe76b62e9b7bd7e91253004e8433417"
+    },
+    {
+      "path": "internal/api/api.go",
+      "sha256": "4d2948ef7686003703391fe1bd8b9d8bf3515191ed7ba4a9bb2590481fdc2cc2"
+    },
+    {
+      "path": "internal/api/artifact_exchange_browser_integration_test.go",
+      "sha256": "910b22c67e2cc295258c6efe4241f8521180b4c20c15c5e32c0809a123080a83"
+    },
+    {
+      "path": "internal/api/mcp.go",
+      "sha256": "2c4ea9f55c1d9bc7dee868f0496fa7788d716da1bac76f344210e4b8ff9dbe0f"
+    },
+    {
+      "path": "internal/api/onward.go",
+      "sha256": "5ff49c09eaf569cdf177658989e249ce67d86a92ffa692c4d8805a71426296bc"
+    },
+    {
+      "path": "internal/api/onward_integration_test.go",
+      "sha256": "845193df46864632eac131dc432800ae2de4fce17dd83cc4cb635bdb2dbd688c"
+    },
+    {
+      "path": "internal/api/onward_test.go",
+      "sha256": "18533cd4f9ef78c876b43b8df28ba6cbf92386632c12eb538defb81099475ad9"
+    },
+    {
+      "path": "internal/browser/assets/app.js",
+      "sha256": "9a7931723415cec7bbf491b82743d7e81125f6f9810c8e440057b88142d86c39"
+    },
+    {
+      "path": "internal/browser/assets/manifest.json",
+      "sha256": "7dd01249d23e9bfda585e0ad62f91a79cbf9968fa9897c2019a1886e9763a840"
+    },
+    {
+      "path": "internal/workflow/artifact_onward_test.go",
+      "sha256": "e445187a80122a53139dab3aba1a0755cc79417aa0aa542d0159e7d5f69ae556"
+    },
+    {
+      "path": "scripts/artifact-exchange-browser.mjs",
+      "sha256": "2a516e2d1eb19d14d749725d4c2a1379cc9a4c3d5a4bf16e4b8085d06d6ae53e"
+    },
+    {
+      "path": "web/src/app.tsx",
+      "sha256": "2053800f2a42bec6b46ebdf7d1a7c6eef9523ab6bf43e911f29cce041909768f"
+    },
+    {
+      "path": "web/src/artifact-onward-api.ts",
+      "sha256": "85b034ce74af223779a14fa307280c7db462a80a1c272eff815872420a9bc72d"
+    },
+    {
+      "path": "web/src/artifact-onward-types.ts",
+      "sha256": "7f2d39bac3b2535775e2ad87dfdf1f4bbc18f5aa64da9c050f5380f76c328198"
+    },
+    {
+      "path": "web/src/artifact-onward.tsx",
+      "sha256": "b8bcf707810685c9f5214285aa92dae0aabf1c7e9aa2cb113db3f57ffb2617aa"
+    },
+    {
+      "path": "web/src/artifact-recovery.ts",
+      "sha256": "bb960b9c6453742226b01ccc7f1c83e0b9fa4a1a95b6d4c1ad01b2d3f2349ad7"
+    },
+    {
+      "path": "web/tests/artifact-onward.test.mjs",
+      "sha256": "cfcf3d16ea19491290f54272fc6a1ae55b54af64a3c16c4b6884820210133ba7"
+    },
+    {
+      "path": "web/tests/fixtures/artifact-onward.json",
+      "sha256": "343047aab23b69053c94744810f7d21884a5f8b77a01b2189695ce5fd0f5d78f"
+    }
+  ],
+  "local_manifest": {
+    "reference": ".private/freightctl-f105/manifest.json",
+    "sha256": "1255ba4f77091cfa84a6805e5982244e6e7602a90d2f2951ae91332d10c13f70"
+  },
+  "owed": [
+    "All prepared actual native/API/CLI/SDK/browser proofs and original failures replay at mandatory FINISH",
+    "Stock SFTP/FTPS ingress,collection/schema2 bridges,full lineage/retention/fairness and remaining applicable baseline/AX gates",
+    "Compatible peer security remediation,actual independent receiver and final-source qualification;no deployment/adoption/enterprise completion claim"
+  ]
+}

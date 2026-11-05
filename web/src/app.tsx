@@ -1,5 +1,6 @@
 import { ArtifactExchanges } from "./artifact-exchanges";
 import { ArtifactSend } from "./artifact-send";
+import { ArtifactOnward } from "./artifact-onward";
 import type { ExchangeSourceExpectation } from "./artifact-exchanges-types";
 import { ArtifactEndpointAdmin } from "./artifact-endpoint-admin";
 import { ArtifactOutgoing } from "./artifact-outgoing";
@@ -149,6 +150,7 @@ function App() {
   const [tab, setTab] = useState<
       | "receive"
       | "send"
+      | "onward"
       | "sent"
       | "endpoints"
       | "files"
@@ -215,6 +217,12 @@ function App() {
     fileInput = useRef<HTMLInputElement>(null);
   const allowed = (grant: string) =>
     session?.identity.permissions.includes(grant) ?? false;
+  const canOnward =
+    allowed("workflow_execute") &&
+    allowed("read") &&
+    allowed("deliver") &&
+    session?.identity.root_policy_digest ===
+      digestBytes(new TextEncoder().encode("/"));
   const resetWork = () => {
     setTab("files");
     setSendSource(null);
@@ -751,6 +759,14 @@ function App() {
                 Sent artifacts
               </button>
             )}
+            {canOnward && (
+              <button
+                aria-current={tab === "onward" ? "page" : undefined}
+                onClick={() => setTab("onward")}
+              >
+                Onward delivery
+              </button>
+            )}
             {allowed("admin") &&
               allowed("accounts_manage") &&
               session.identity.root_policy_digest ===
@@ -923,62 +939,66 @@ function App() {
                     : "PARTNER WORKSPACE"}
                 </p>
                 <h1>
-                  {tab === "endpoints"
-                    ? "Receive endpoints"
-                    : tab === "sent"
-                      ? "Sent artifacts"
-                      : tab === "send"
-                        ? "Send artifacts"
-                        : tab === "receive"
-                          ? "Receive artifacts"
-                          : tab === "files"
-                            ? "Files"
-                            : tab === "uploads"
-                              ? "Uploads"
-                              : tab === "partners"
-                                ? "Partners"
-                                : tab === "collections"
-                                  ? "Remote collection"
-                                  : tab === "schedules"
-                                    ? "Workflow schedules"
-                                    : tab === "approvals"
-                                      ? "Independent approvals"
-                                      : tab === "onboarding"
-                                        ? "Onboarding plans"
-                                        : tab === "policy"
-                                          ? "Intake policy"
-                                          : tab === "accounts"
-                                            ? "Accounts"
-                                            : "Intake checks"}
+                  {tab === "onward"
+                    ? "Onward delivery"
+                    : tab === "endpoints"
+                      ? "Receive endpoints"
+                      : tab === "sent"
+                        ? "Sent artifacts"
+                        : tab === "send"
+                          ? "Send artifacts"
+                          : tab === "receive"
+                            ? "Receive artifacts"
+                            : tab === "files"
+                              ? "Files"
+                              : tab === "uploads"
+                                ? "Uploads"
+                                : tab === "partners"
+                                  ? "Partners"
+                                  : tab === "collections"
+                                    ? "Remote collection"
+                                    : tab === "schedules"
+                                      ? "Workflow schedules"
+                                      : tab === "approvals"
+                                        ? "Independent approvals"
+                                        : tab === "onboarding"
+                                          ? "Onboarding plans"
+                                          : tab === "policy"
+                                            ? "Intake policy"
+                                            : tab === "accounts"
+                                              ? "Accounts"
+                                              : "Intake checks"}
                 </h1>
                 <p>
-                  {tab === "endpoints"
-                    ? "Approve exact participant bindings and versioned receive endpoint changes."
-                    : tab === "sent"
-                      ? "Inspect original offer receipts and current access state; receiver outcomes stay explicit."
-                      : tab === "send"
-                        ? "Review an exact source and approved recipient before offering access."
-                        : tab === "receive"
-                          ? "Discover and retrieve exact artifacts under current receive permissions."
-                          : tab === "files"
-                            ? "Published paths. Retrieval checks your current access and intake policy."
-                            : tab === "uploads"
-                              ? "Send one exact file. Continue from the last server-confirmed checkpoint."
-                              : tab === "partners"
-                                ? "Enroll partners under explicit tenant authority; review each administrator credential and grants."
-                                : tab === "collections"
-                                  ? "Review ready manifests, exact input receipts, intake holds and separate downstream decisions."
-                                  : tab === "schedules"
-                                    ? "Review calendar rules, complete source revisions, deadlines and ordinary transfer receipts."
-                                    : tab === "approvals"
-                                      ? "Review exact production effects under the partner’s approval policy."
-                                      : tab === "onboarding"
-                                        ? "Record responsible contacts and exact exchange requirements as versioned drafts."
-                                        : tab === "policy"
-                                          ? "Review expected columns, processing limits and exact policy versions before activation or revocation."
-                                          : tab === "accounts"
-                                            ? "Review scoped access, credential rotation, expiry and revocation."
-                                            : "Held files need their required checks and a separate release decision."}
+                  {tab === "onward"
+                    ? "Review an owned artifact and an already approved workflow, then queue and work through ordinary transfer controls."
+                    : tab === "endpoints"
+                      ? "Approve exact participant bindings and versioned receive endpoint changes."
+                      : tab === "sent"
+                        ? "Inspect original offer receipts and current access state; receiver outcomes stay explicit."
+                        : tab === "send"
+                          ? "Review an exact source and approved recipient before offering access."
+                          : tab === "receive"
+                            ? "Discover and retrieve exact artifacts under current receive permissions."
+                            : tab === "files"
+                              ? "Published paths. Retrieval checks your current access and intake policy."
+                              : tab === "uploads"
+                                ? "Send one exact file. Continue from the last server-confirmed checkpoint."
+                                : tab === "partners"
+                                  ? "Enroll partners under explicit tenant authority; review each administrator credential and grants."
+                                  : tab === "collections"
+                                    ? "Review ready manifests, exact input receipts, intake holds and separate downstream decisions."
+                                    : tab === "schedules"
+                                      ? "Review calendar rules, complete source revisions, deadlines and ordinary transfer receipts."
+                                      : tab === "approvals"
+                                        ? "Review exact production effects under the partner’s approval policy."
+                                        : tab === "onboarding"
+                                          ? "Record responsible contacts and exact exchange requirements as versioned drafts."
+                                          : tab === "policy"
+                                            ? "Review expected columns, processing limits and exact policy versions before activation or revocation."
+                                            : tab === "accounts"
+                                              ? "Review scoped access, credential rotation, expiry and revocation."
+                                              : "Held files need their required checks and a separate release decision."}
                 </p>
               </div>
               <button
@@ -1013,6 +1033,14 @@ function App() {
                     ? sendSource.expected
                     : undefined
                 }
+                onError={reportError}
+              />
+            )}
+            {tab === "onward" && canOnward && (
+              <ArtifactOnward
+                key={sendContext}
+                api={api}
+                session={session}
                 onError={reportError}
               />
             )}

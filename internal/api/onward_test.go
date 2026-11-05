@@ -9,7 +9,7 @@ import (
 
 func TestOnwardRoutesRefuseInventedAuthorityBeforeDatabase(t *testing.T) {
 	handler := New(&custody.Service{MaxFile: 1024}, nil)
-	for _, route := range []string{"onward/previews", "onward/runs", "onward/receipts"} {
+	for _, route := range []string{"onward/previews", "onward/runs", "onward/receipts", "onward/status", "onward/work"} {
 		request := httptest.NewRequest("POST", "https://freightctl.invalid/v1/tenants/11111111-1111-4111-8111-111111111111/partners/22222222-2222-4222-8222-222222222222/"+route, strings.NewReader(`{"approved":true,"recipient":"unregistered"}`))
 		request.Header.Set("Authorization", "Bearer "+strings.Repeat("0", 64))
 		response := httptest.NewRecorder()

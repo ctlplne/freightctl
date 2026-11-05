@@ -180,7 +180,10 @@ disclosure and adversarial requirements in GOAL13/14 remain open and unchanged.
 The current onward implementation pins `ordered-workflow-onward-v1`:an owned
 available artifact,already approved schema1 ordered workflow,exact review binding,
 ordinary transactional run/intents and separately authorized work. The
-[onward contract](../protocols/artifact-onward.md) states its API/CLI/MCP limits.
+[onward contract](../protocols/artifact-onward.md) states its API/CLI/MCP/browser
+limits. Browser review,private saved recovery,original receipt lookup,current
+observation and explicit one-step work share ordinary services. Imported hints
+require fresh server verification before new effects. Native UI proof is owed.
 No collection/routing adoption,implicit forwarding,content-derivation lineage or
 complete runtime qualification is inferred;remaining AX-J02 pairs remain owed.
 

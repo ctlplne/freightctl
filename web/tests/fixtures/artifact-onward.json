@@ -1,0 +1,86 @@
+{
+  "binding": {
+    "request": {
+      "schema_version": 1,
+      "profile": "ordered-workflow-onward-v1",
+      "workflow": {
+        "id": "00000004-1111-4111-8111-111111111111",
+        "version": 1,
+        "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "artifact": {
+        "file_revision_id": "00000005-1111-4111-8111-111111111111",
+        "size_bytes": 3,
+        "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+        "acceptance_policy": "integrity-only-v1"
+      }
+    },
+    "tenant_id": "00000001-1111-4111-8111-111111111111",
+    "partner_id": "00000002-1111-4111-8111-111111111111",
+    "actor_id": "00000003-1111-4111-8111-111111111111",
+    "authority_revision": 2,
+    "root_policy_digest": "8a5edab282632443219e051e4ade2d1d5bbc671c781051bf1437897cbdfea0f1",
+    "workflow_revision": 2,
+    "storage_identity_digest": "540a957494e5ffcfab8335f999e6f894b2a18ee69ae1d02121eb7b0fa8276d8e"
+  },
+  "review": {
+    "request": {
+      "schema_version": 1,
+      "profile": "ordered-workflow-onward-v1",
+      "workflow": {
+        "id": "00000004-1111-4111-8111-111111111111",
+        "version": 1,
+        "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "artifact": {
+        "file_revision_id": "00000005-1111-4111-8111-111111111111",
+        "size_bytes": 3,
+        "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+        "acceptance_policy": "integrity-only-v1"
+      }
+    },
+    "review_hash": "8aa937ee99bd0006f047dcc185994fc01c422949bdbd7b45e64a6ccc46c3e5da",
+    "effects": [
+      {
+        "ordinal": 1,
+        "protocol": "sftp",
+        "connection": {
+          "id": "00000007-1111-4111-8111-111111111111",
+          "version": 1,
+          "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      }
+    ],
+    "state": "review-only",
+    "external_contact": false,
+    "receiver_persistence": "unknown",
+    "business_processing": "unknown"
+  },
+  "result": {
+    "resource": {
+      "id": "00000008-1111-4111-8111-111111111111",
+      "workflow_id": "00000004-1111-4111-8111-111111111111",
+      "workflow_version": 1,
+      "workflow_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "file_id": "00000005-1111-4111-8111-111111111111",
+      "source": {
+        "id": "00000005-1111-4111-8111-111111111111",
+        "size_bytes": 3,
+        "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+        "policy": "integrity-only-v1",
+        "accepted_event_id": "00000009-1111-4111-8111-111111111111"
+      },
+      "storage_id": "00000006-1111-4111-8111-111111111111",
+      "namespace_root": "/",
+      "authority_revision": 2,
+      "state": "queued",
+      "reason": "awaiting_worker",
+      "revision": 1,
+      "onward_profile": "ordered-workflow-onward-v1",
+      "onward_review_hash": "8aa937ee99bd0006f047dcc185994fc01c422949bdbd7b45e64a6ccc46c3e5da",
+      "onward_workflow_revision": 2
+    },
+    "replayed": false
+  },
+  "result_canonical": "{\"resource\":{\"id\":\"00000008-1111-4111-8111-111111111111\",\"workflow_id\":\"00000004-1111-4111-8111-111111111111\",\"workflow_version\":1,\"workflow_hash\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"file_id\":\"00000005-1111-4111-8111-111111111111\",\"source\":{\"id\":\"00000005-1111-4111-8111-111111111111\",\"size_bytes\":3,\"sha256\":\"ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad\",\"policy\":\"integrity-only-v1\",\"accepted_event_id\":\"00000009-1111-4111-8111-111111111111\"},\"storage_id\":\"00000006-1111-4111-8111-111111111111\",\"namespace_root\":\"/\",\"authority_revision\":2,\"state\":\"queued\",\"reason\":\"awaiting_worker\",\"revision\":1,\"onward_profile\":\"ordered-workflow-onward-v1\",\"onward_review_hash\":\"8aa937ee99bd0006f047dcc185994fc01c422949bdbd7b45e64a6ccc46c3e5da\",\"onward_workflow_revision\":2},\"replayed\":false}"
+}

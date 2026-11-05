@@ -55,6 +55,8 @@ func NewWithBrowserLifetime(service *custody.Service, audits *audit.Service, ena
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/onward/previews", s.onward)
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/onward/runs", s.onward)
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/onward/receipts", s.onward)
+	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/onward/status", s.onward)
+	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/onward/work", s.onward)
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/files", s.upload)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/files/{file}", s.download)
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/exchange-endpoints/commands", s.exchangeEndpointCommand)

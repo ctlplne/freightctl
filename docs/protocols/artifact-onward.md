@@ -21,8 +21,10 @@ Under `/v1/tenants/{tenant}/partners/{partner}`:
 | `onward/previews` | `OnwardRequest` | Read current source,policy,approved workflow and registered connection metadata. No run,intent,reservation or peer contact. |
 | `onward/runs` | `{request,review_hash}` plus original `Idempotency-Key` | Compare the exact review inside the same transaction that records the ordinary run,intents and private command receipt. No peer contact. |
 | `onward/receipts` | `{start:{request,review_hash},receipt_key}` | Recover only an already recorded exact reviewed-start receipt. Never creates or adopts a run. |
+| `onward/status` | `{start,receipt_key,run_id}` | Inspect only that exact previously accepted reviewed run;no transfer. |
+| `onward/work` | `{start,receipt_key,run_id}` plus stable `Idempotency-Key` | Work one ordinary pending intent. May perform the approved remote writes. |
 
-The [OpenAPI subset](../api/artifact-onward.openapi.json) pins these three paths;
+The [OpenAPI subset](../api/artifact-onward.openapi.json) pins these five paths;
 full external schema conformance remains owed.
 
 An `OnwardRequest` contains `schema_version:1`,
@@ -83,12 +85,40 @@ An ordinary authorized operator can inspect the full workflow/receipt through it
 existing interfaces. Required independent approvals and current worker checks are
 unchanged.
 
+The browser's **Onward delivery** workspace is available to a root-namespace
+participant with workflow_execute,read and deliver. Enter the exact available
+file revision and approved workflow ID,version and hash. Review shows source
+integrity and the ordered registered connection references. Confirm queue records
+one ordinary run and intents without contacting a destination. The acceptance
+receipt reconstructs the exact Go review fingerprint,including current original
+participant,authority,root,approval revision and storage identity. It reports
+historical queued acceptance separately from current state.
+
+Save the recovery document before a consequential action. It contains no account
+credential or transport secret;protect its private scope and metadata. Import
+binds the exact HTTPS origin,actor,authority and root and contacts nothing. Saved
+destination hints are untrusted. A fresh server preview must replace them and
+match the original fingerprint before queueing or work is enabled. Original
+receipt lookup and current observation remain separate read operations. A lost
+response retains its original request/work key. Retrying a work key cannot move
+to another step. A successful response allows the next explicit one-step action;
+neither success nor a status label implies receiver business acceptance.
+
+The ordinary HTTPS status/work paths and MCP share one receipt-bound adoption
+helper. Their projection omits namespace/storage/transport references,raw step
+observations and private labels. Current permissions,checks,approval,leases and
+fencing are still enforced by the existing worker. No endpoint registration,
+workflow approval,collection adoption or new forwarding grant is supplied here.
+
 Prepared native proof covers zero-effect preparation,atomic run/intents/receipt,
 exact-key replay,stale review,workflow revocation,policy holds,new-admission change,
 wrong principal,credential rotation and legacy-run refusal. Actual HTTPS review/
 start/lookup and a real native freightctl FTPS peer with independent byte readback
 and contact counters are prepared. This own-product peer is not an independent
 stock-receiver interoperability claim. Only focused pure tests and affected
-compilation/vet/architecture checks have run locally. Actual native/stock/client,
-UI,collection/cross-hop lineage,crash/restore and all final-source qualification
+compilation/vet/architecture checks have run locally. The original Chrome profile
+is extended for a lost real queue response,reload/private receipt recovery,
+tampered saved destination hints,current observation and revoked-work refusal,
+with22accessibility states and exact SQL run/intent/receipt/zero-attempt counts.
+Actual native/stock/client,UI,collection/cross-hop lineage,crash/restore and all final-source qualification
 remain owed. Local inference and heavy runtimes stay off.
