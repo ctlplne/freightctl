@@ -1027,5 +1027,29 @@
     ],
     "runtime_qualification": false,
     "scope": "Compile/vet only; no local product/test binary,PostgreSQL,source,receiver,Chrome,scanner or inference execution. Source7c contains the original fixture error and does not inherit this local repair."
+  },
+  "source_7c_terminal_core_public": {
+    "candidate": "7c163a834a7a95cb6482730fbb3e486b1b8aa879",
+    "manifest_reference": ".private/freightctl-7c-first-results-CUH1Yf/manifest.json",
+    "manifest_sha256": "c2940d2cca0a6c93c499d62a82409f9a595592241cf7716e44062f0151b4bebd",
+    "core": {
+      "run_id": 41939612581,
+      "job_id": 126956736422,
+      "state": "success",
+      "frontend_pass": 144,
+      "frontend_fail": 0,
+      "frontend_skip": 0,
+      "scope": "Full exact-source core/security job,including Linux original D171missing-DSN regression. Does not qualify protocol,public byte operator or image scan."
+    },
+    "public": {
+      "run_id": 41939612320,
+      "jobs": [
+        126956735885,
+        126956736067
+      ],
+      "state": "both failure",
+      "observation": "First explicit metadata Chrome command completes,including cookie capture and two verified HTTPS probes;reopening refuses session-proof. No failed native/CLI/lftp commands;exact retained metadata/role/resource/DB cleanup succeeds. Byte operator not reached.",
+      "cause": "Unobserved within the new session verifier. Preserve every identity/authority/CSRF/expiry/header/resource assertion and add fixed private-safe subreason diagnostics;do not guess timing or header cause."
+    }
   }
 }

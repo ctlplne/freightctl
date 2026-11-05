@@ -19,6 +19,7 @@ import tarfile
 import tempfile
 
 import core_component_inventory as components
+import core_bom_schema as schema_gate
 
 ROOT = Path(__file__).resolve().parents[1]
 GO_VERSION = 'go1.26.10'
@@ -27,11 +28,11 @@ SOURCE_MAX = 64 << 20
 BINARY_MAX = 128 << 20
 WORKING_MAX = 4 << 30
 COMMANDS = ('source-identity', 'source-clean', 'native-go', 'source-archive', 'module-download', 'module-verify-before',
-    'build-a', 'inventory-a', 'help-a', 'build-b', 'inventory-b', 'help-b', 'module-verify-after')
-PHASES = frozenset(('preflight', *COMMANDS, 'source-extract', 'source-closure', 'binary-closure', 'inventory-closure', 'component-inventory', 'record'))
+    'build-a', 'build-id-a', 'inventory-a', 'help-a', 'build-b', 'build-id-b', 'inventory-b', 'help-b', 'module-verify-after')
+PHASES = frozenset(('preflight', *COMMANDS, 'source-extract', 'source-closure', 'binary-closure', 'inventory-closure', 'component-inventory', 'component-schema', 'record'))
 CHECKS = frozenset(('evidence', 'binary-identity', 'build-settings', 'dependency-inventory', 'dependency-entry',
     'local-replacement', 'dependency-checksum', 'native-configuration', 'binary-equality', 'source-unchanged',
-    'command-status', 'working-budget', 'runner-identity', 'structure', 'filesystem'))
+    'command-status', 'working-budget', 'runner-identity', 'build-id', 'structure', 'filesystem'))
 
 
 class InvalidEvidence(ValueError):
@@ -131,8 +132,13 @@ def inventory(value, source, arch):
             and type(item['Value']) is str and item['Key'] not in settings and not item['Key'].startswith('vcs'), 'build-settings')
         settings[item['Key']] = item['Value']
     for key, wanted in {'GOOS': 'linux', 'GOARCH': arch, 'CGO_ENABLED': '0', '-trimpath': 'true',
-            '-buildmode': 'exe', '-compiler': 'gc', '-ldflags': '-buildid='}.items():
+            '-buildmode': 'exe', '-compiler': 'gc'}.items():
         require(settings.get(key) == wanted, 'build-settings')
+    # Go1.26 intentionally omits -ldflags when -trimpath is set (go.dev/issue/52372).
+    # The original build command still requires -buildid=; independently inspect
+    # the resulting executable's physical build ID below rather than invent a
+    # flag entry that this toolchain cannot emit.
+    require('-ldflags' not in settings, 'build-settings')
     require(settings.get('GOAMD64' if arch == 'amd64' else 'GOARM64') == ('v1' if arch == 'amd64' else 'v8.0'), 'build-settings')
     sums = set((source/'go.sum').read_text().splitlines())
     dependencies = value.get('Deps')
@@ -247,6 +253,9 @@ def main():
             run('build-'+label, [go, 'build', '-p', '1', '-mod=readonly', '-trimpath', '-buildvcs=false',
                 '-ldflags=-buildid=', '-o', binary, './cmd/freightctl'], source, build_env, 300)
             results.append(digest(binary, BINARY_MAX))
+            build_id = run('build-id-'+label, [go, 'tool', 'buildid', binary], timeout=10)
+            require(build_id.read_bytes() == b'\n'
+                and (work/('build-id-'+label+'.stderr')).read_bytes() == b'', 'build-id')
             info = load(run('inventory-'+label, [go, 'version', '-m', '-json', binary]))
             phase = 'inventory-closure'
             count = inventory(info, source, arch)
@@ -280,18 +289,21 @@ def main():
         component_path.write_bytes(docs[0])
         require(component_path.read_bytes() == docs[0] and len(docs[0]) <= 4 << 20)
         component_sha = digest(component_path, 4 << 20)
+        phase = 'component-schema'
+        schema_validation = schema_gate.validate(first, components.load(component_path.read_bytes()))
         phase = 'record'
         manifest = {'schema_version': 1, 'kind': 'freightctl-native-reproducible-core-v1', 'state': 'passed',
             'source_commit': commit, 'architecture': arch, 'native_go': native, 'source_archive_sha256': source_sha,
             'source_files': len(original), 'source_tree_sha256': hashlib.sha256(json.dumps(original, sort_keys=True).encode()).hexdigest(),
             'binary_sha256': results[0], 'dependency_modules': count, 'help_sha256': help_hashes[0], 'steps': steps,
             'component_inventory_sha256': component_sha, 'component_inventory_format': 'CycloneDX1.6',
+            'component_schema_validation': schema_validation,
             'working_bytes_after_steps': working_bytes(work), 'working_bytes_after_steps_max': WORKING_MAX,
             'artifact_published': False, 'complete_sbom': False, 'disconnected_install_qualified': False,
             'signing_qualified': False, 'production_platform_qualified': False}
         path = work/'manifest.json'; path.write_text(json.dumps(manifest, indent=2)+'\n')
         print(json.dumps({key: manifest[key] for key in ('state', 'source_commit', 'architecture', 'binary_sha256',
-            'source_archive_sha256', 'source_files', 'dependency_modules', 'component_inventory_sha256', 'component_inventory_format', 'artifact_published', 'complete_sbom',
+            'source_archive_sha256', 'source_files', 'dependency_modules', 'component_inventory_sha256', 'component_inventory_format', 'component_schema_validation', 'artifact_published', 'complete_sbom',
             'disconnected_install_qualified', 'signing_qualified', 'production_platform_qualified')}
             | {'manifest_sha256': digest(path, 4 << 20)}, sort_keys=True))
         return 0

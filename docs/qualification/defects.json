@@ -2769,6 +2769,21 @@
       "regression_evidence": [
         "docs/qualification/evidence/F076-ftps-collection.json"
       ]
+    },
+    {
+      "id": "D174",
+      "severity": "native reproducibility verifier",
+      "state": "Both actual native failures retained; false metadata assumption replaced with physical build-ID checks; original replay pending",
+      "observed_on": "2026-11-05",
+      "candidate": "7c163a834a7a95cb6482730fbb3e486b1b8aa879",
+      "journey": "F077native core executable reproduction",
+      "title": "Verifier requires a linker-flag metadata entry that trimpath intentionally omits",
+      "first_failure": "Jobs126956736582/126956737910 both stop inventory-closure/build-settings; no complete reproduction/BOM pass. Paired original safe failure hashes and full protected logs retained.",
+      "cause": "Pinned Go1.26.10 source explicitly omits serialized -ldflags under -trimpath; old checker requires it. This expectation necessarily fails before the complete native proof. Other native settings still need actual repaired replay.",
+      "resolution": "Keep original deterministic linker command and strict native settings. Require serialized -ldflags absent; independently run read-only go tool buildid on both actual executables and require exact empty ID/newline plus empty stderr. Retained build ID/unexpected metadata flags fail new process/compiler contracts. All original equality/source/checksum/resource gates remain.16focused trust/component/orchestration methods pass;actual native replay pending.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F077-native-reproducible-core.json"
+      ]
     }
   ]
 }

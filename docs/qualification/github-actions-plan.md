@@ -189,3 +189,18 @@ fixture repair gives the receiver its own saved key and explicitly proves the ol
 source key still rejects that receiver. Compile/vet pass only. Preserve source7c's
 required original jobs,which still contain that fixture error,and require original
 ARM/x86 journey replay after the next eligible source submission.
+
+D174 preserves both original7cnative reproduction failures at inventory-closure/
+build-settings. Go omits serialized linker flags under trimpath. The repair keeps
+the exact deterministic linker command and independently reads each executable's
+physical build ID;empty ID required,15command records,original budgets unchanged.
+F077 also prepares stock CycloneDX schema validation:unmodified pinned licensed
+schemas,hash-pinned wheel-only validator in a disposable GitHub venv,offline
+reference registry,and actual positive/negative controls before accepting the
+native inventory.16local contracts pass;no native or stock-schema pass inferred.
+
+Source7ccore passes144frontend and the original Linux missing-DSN case. Both public
+profiles now fail session-proof after complete explicit metadata Chrome and two
+verified session probes. Preserve strict authority/CSRF/expiry/header checks and
+expose only fixed verifier subreasons to identify the actual failure;byte operator
+and full public journeys remain open.

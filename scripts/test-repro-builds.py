@@ -29,7 +29,7 @@ def build_info(arch='amd64'):
     return {'GoVersion': runner.GO_VERSION, 'Path': runner.MODULE+'/cmd/freightctl',
         'Main': {'Path': runner.MODULE, 'Version': '(devel)'},
         'Settings': [{'Key': k, 'Value': v} for k, v in {'GOOS': 'linux', 'GOARCH': arch, 'CGO_ENABLED': '0',
-            '-trimpath': 'true', '-buildmode': 'exe', '-compiler': 'gc', '-ldflags': '-buildid=',
+            '-trimpath': 'true', '-buildmode': 'exe', '-compiler': 'gc',
             'GOAMD64' if arch == 'amd64' else 'GOARM64': 'v1' if arch == 'amd64' else 'v8.0'}.items()],
         'Deps': [{'Path': name, 'Version': 'v1.0.0', 'Sum': SUM} for name in
             ('github.com/jackc/pgx/v5', 'github.com/ProtonMail/go-crypto')]+[
@@ -91,6 +91,9 @@ class ReproBuildContracts(unittest.TestCase):
                     self.assertEqual(argv[1:], ['mod', 'verify'])
                     if mode == 'final-binary-change' and label == 'module-verify-after':
                         (work/'freightctl-a').write_bytes(b'changed after all earlier observations')
+                elif label.startswith('build-id-'):
+                    self.assertEqual(list(map(str, argv[1:])), ['tool', 'buildid', str(work/('freightctl-'+label[-1]))])
+                    data = b'original-build-id\n' if mode == 'retained-build-id' else b'\n'
                 elif label.startswith('build-'):
                     self.assertEqual(env['GOPROXY'], 'off')
                     self.assertEqual(argv[1:8], ['build', '-p', '1', '-mod=readonly', '-trimpath', '-buildvcs=false', '-ldflags=-buildid='])
@@ -114,6 +117,8 @@ class ReproBuildContracts(unittest.TestCase):
                         next(v for v in info['Settings'] if v['Key'] == 'CGO_ENABLED')['Value'] = '1'
                     if mode == 'vcs-setting':
                         info['Settings'].append({'Key': 'vcs.revision', 'Value': COMMIT})
+                    if mode == 'unexpected-ldflags':
+                        info['Settings'].append({'Key': '-ldflags', 'Value': '-buildid='})
                     data = json.dumps(info).encode()
                 elif label.startswith('help-'):
                     self.assertEqual(argv[1:], ['--help'])
@@ -130,8 +135,12 @@ class ReproBuildContracts(unittest.TestCase):
             values = {'GITHUB_ACTIONS': 'true', 'GITHUB_SHA': COMMIT, 'GITHUB_WORKSPACE': str(root), 'RUNNER_TEMP': str(temporary),
                 'GITHUB_TOKEN': 'private-canary', 'FREIGHTCTL_TEST_RUNTIME_FILE': '/private-canary', 'GOFLAGS': '-tags=private-canary'}
             buffer = io.StringIO()
-            with patch.object(runner, 'ROOT', root), patch.dict(os.environ, values), patch.object(runner.platform, 'system', return_value='Linux'), patch.object(runner.platform, 'machine', return_value='x86_64' if arch == 'amd64' else 'aarch64'), patch.object(runner, 'command', command), patch.object(runner.shutil, 'which', return_value='/synthetic/go'), patch('sys.argv', ['qualify-repro-builds.py', '--architecture', arch]), contextlib.redirect_stdout(buffer):
+            schema_result = {'engine': 'stand-in-only-not-qualified'}
+            with patch.object(runner, 'ROOT', root), patch.dict(os.environ, values), patch.object(runner.platform, 'system', return_value='Linux'), patch.object(runner.platform, 'machine', return_value='x86_64' if arch == 'amd64' else 'aarch64'), patch.object(runner, 'command', command), patch.object(runner.shutil, 'which', return_value='/synthetic/go'), patch.object(runner.schema_gate, 'validate', return_value=schema_result, side_effect=ValueError('private-canary') if mode == 'schema-refusal' else None) as schema, patch('sys.argv', ['qualify-repro-builds.py', '--architecture', arch]), contextlib.redirect_stdout(buffer):
                 code = runner.main()
+                if code == 0:
+                    schema.assert_called_once()
+                    self.assertEqual(schema.call_args.args[1]['bomFormat'], 'CycloneDX')
             result = json.loads(buffer.getvalue())
             work = next(temporary.iterdir())
             manifest = runner.load(work/('manifest.json' if code == 0 else 'failure.json'))
@@ -149,7 +158,7 @@ class ReproBuildContracts(unittest.TestCase):
             self.assertFalse(result['signing_qualified'])
             self.assertFalse(result['production_platform_qualified'])
             self.assertEqual(tuple(c['label'] for c in calls), runner.COMMANDS)
-            builds = [c for c in calls if c['label'].startswith('build-')]
+            builds = [c for c in calls if c['label'] in ('build-a', 'build-b')]
             self.assertNotEqual(builds[0]['cwd'], builds[1]['cwd'])
             self.assertNotEqual(builds[0]['env']['GOCACHE'], builds[1]['env']['GOCACHE'])
             self.assertEqual(builds[0]['env']['GOMODCACHE'], builds[1]['env']['GOMODCACHE'])
@@ -157,11 +166,13 @@ class ReproBuildContracts(unittest.TestCase):
             self.assertEqual(manifest['binary_sha256'], result['binary_sha256'])
             self.assertEqual(result['component_inventory_format'], 'CycloneDX1.6')
             self.assertRegex(result['component_inventory_sha256'], '^[0-9a-f]{64}$')
+            self.assertEqual(result['component_schema_validation'], {'engine': 'stand-in-only-not-qualified'})
 
     def test_real_orchestration_refuses_changed_source_binary_inventory_platform_and_help(self):
         for mode in ('different-binary', 'different-help', 'wrong-dependency', 'foreign-replacement',
                 'cgo-enabled', 'vcs-setting', 'prime-source-change', 'build-source-change', 'wrong-commit', 'wrong-toolchain',
-                'prior-binary-change', 'prior-source-change', 'prior-log-change', 'final-binary-change'):
+                'prior-binary-change', 'prior-source-change', 'prior-log-change', 'final-binary-change', 'schema-refusal',
+                'unexpected-ldflags', 'retained-build-id'):
             with self.subTest(mode=mode):
                 code, result, manifest, _ = self.exercise(mode=mode)
                 self.assertEqual(code, 2)

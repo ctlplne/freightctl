@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "python": "3.12",
+  "scope": "GitHub-only independent schema validation;not part of production runtime or release artifact",
+  "requirements_sha256": "1504dd994a452f41c933721b9954fd8360d41d71d64f190f77d4a0d018549cb1",
+  "schema_upstream_manifest_sha256": "49a108348f81042056ca4bba5824f4ffc559c38559392c0da57d9351d4675c3a",
+  "packages": [
+    {
+      "name": "jsonschema",
+      "version": "4.26.0",
+      "wheels": [
+        {
+          "filename": "jsonschema-4.26.0-py3-none-any.whl",
+          "sha256": "d489f15263b8d200f8387e64b4c3a75f06629559fb73deb8fdfb525f2dab50ce",
+          "bytes": 90630
+        }
+      ],
+      "metadata_sha256": "697a0d4384e479461a5c84357a5d0d495dd1aeec1f42ad13ae7209112faaaec9",
+      "source": "https://pypi.org/pypi/jsonschema/4.26.0/json"
+    },
+    {
+      "name": "attrs",
+      "version": "26.1.0",
+      "wheels": [
+        {
+          "filename": "attrs-26.1.0-py3-none-any.whl",
+          "sha256": "c647aa4a12dfbad9333ca4e71fe62ddc36f4e63b2d260a37a8b83d2f043ac309",
+          "bytes": 67548
+        }
+      ],
+      "metadata_sha256": "2e33bd22386702899e76471b04f3211f7e108ee96b288699e58fd4bc2f01c1d6",
+      "source": "https://pypi.org/pypi/attrs/26.1.0/json"
+    },
+    {
+      "name": "jsonschema-specifications",
+      "version": "2025.9.1",
+      "wheels": [
+        {
+          "filename": "jsonschema_specifications-2025.9.1-py3-none-any.whl",
+          "sha256": "98802fee3a11ee76ecaca44429fda8a41bff98b00a0f2838151b113f210cc6fe",
+          "bytes": 18437
+        }
+      ],
+      "metadata_sha256": "325493907e2e79ab6279d22ea3526ff2dd615d6f35e1ac4040619d7d89e35019",
+      "source": "https://pypi.org/pypi/jsonschema-specifications/2025.9.1/json"
+    },
+    {
+      "name": "referencing",
+      "version": "0.37.0",
+      "wheels": [
+        {
+          "filename": "referencing-0.37.0-py3-none-any.whl",
+          "sha256": "381329a9f99628c9069361716891d34ad94af76e461dcb0335825aecc7692231",
+          "bytes": 26766
+        }
+      ],
+      "metadata_sha256": "8cade92a4e786c196bbfad784526a6344d77f0d4ff54970e8ed448085c4556d6",
+      "source": "https://pypi.org/pypi/referencing/0.37.0/json"
+    },
+    {
+      "name": "rpds-py",
+      "version": "2026.9.1",
+      "wheels": [
+        {
+          "filename": "rpds_py-2026.9.1-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl",
+          "sha256": "2693b2728bbcc48d09a981a356954b0c47c53ff25b545856f28a889ea619f69a",
+          "bytes": 373053
+        },
+        {
+          "filename": "rpds_py-2026.9.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+          "sha256": "addeda51556dac7c1a2f14cda62db8b621cd12afba3091d03a96c72932387eab",
+          "bytes": 371261
+        }
+      ],
+      "metadata_sha256": "eb5234052812c626b47a935b584c51e3d8c95823fa5e71b2e908a8ede97633ec",
+      "source": "https://pypi.org/pypi/rpds-py/2026.9.1/json"
+    },
+    {
+      "name": "typing-extensions",
+      "version": "4.16.0",
+      "wheels": [
+        {
+          "filename": "typing_extensions-4.16.0-py3-none-any.whl",
+          "sha256": "481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8",
+          "bytes": 45571
+        }
+      ],
+      "metadata_sha256": "2e567d7ca1b1c70a8e8f23b7204a8bd51b0bacd39e2fe53b33b153cff255ac68",
+      "source": "https://pypi.org/pypi/typing-extensions/4.16.0/json"
+    }
+  ]
+}

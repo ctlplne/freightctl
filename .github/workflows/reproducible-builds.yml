@@ -15,6 +15,10 @@ on:
       - 'scripts/test-repro-builds.py'
       - 'scripts/core_component_inventory.py'
       - 'scripts/test-core-component-inventory.py'
+      - 'scripts/core_bom_schema.py'
+      - 'scripts/test-core-bom-schema.py'
+      - 'scripts/bom-validator-pins.json'
+      - 'scripts/bom-validator-requirements.txt'
       - '.github/workflows/reproducible-builds.yml'
   pull_request:
     paths:
@@ -29,6 +33,10 @@ on:
       - 'scripts/test-repro-builds.py'
       - 'scripts/core_component_inventory.py'
       - 'scripts/test-core-component-inventory.py'
+      - 'scripts/core_bom_schema.py'
+      - 'scripts/test-core-bom-schema.py'
+      - 'scripts/bom-validator-pins.json'
+      - 'scripts/bom-validator-requirements.txt'
       - '.github/workflows/reproducible-builds.yml'
   workflow_dispatch:
 
@@ -65,7 +73,17 @@ jobs:
         with:
           go-version: "1.26.10"
           cache: false
+      - name: Pinned independent BOM validator in an isolated disposable environment
+        run: |
+          umask 077
+          freightctl_schema_env="$RUNNER_TEMP/freightctl-bom-validator"
+          test ! -e "$freightctl_schema_env"
+          test ! -L "$freightctl_schema_env"
+          python3.12 -m venv "$freightctl_schema_env"
+          timeout 90s "$freightctl_schema_env/bin/python" -m pip install --isolated --disable-pip-version-check --no-cache-dir --require-hashes --only-binary=:all: --no-deps --index-url https://pypi.org/simple -r scripts/bom-validator-requirements.txt
+          "$freightctl_schema_env/bin/python" -m pip check
+          timeout 60s "$freightctl_schema_env/bin/python" scripts/test-core-bom-schema.py --real
       - name: Fresh source copies, caches and exact native binary comparison
-        run: python3 scripts/qualify-repro-builds.py --architecture "$FREIGHTCTL_REPRO_ARCHITECTURE"
+        run: '"$RUNNER_TEMP/freightctl-bom-validator/bin/python" scripts/qualify-repro-builds.py --architecture "$FREIGHTCTL_REPRO_ARCHITECTURE"'
       # Binaries, module inventories and raw evidence stay ephemeral on runner.
       # Signing, SBOM/bundle completion and artifact distribution are separate.
