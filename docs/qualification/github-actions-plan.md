@@ -209,3 +209,11 @@ D175 adds18fixed private-safe session subreasons to the unchanged proof predicat
 102focused local Python contracts pass;the original actual failure remains unclassified
 within the proof and requires the same public replay. Preserve every authority,
 CSRF,expiry,wire,source,byte and resource guard;do not turn diagnostics into a pass.
+
+The source7cknown-bad unstarted-successor exception was reviewed but not used.
+Although the first exact snapshot had five queued/unassigned jobs and identical
+D173source blobs,the fresh action-time check observed a started metadata job and
+refused before invoking cancellation. No cancel request or restart occurred.
+Preserve the now-live run and require every required job to start before pushing
+the prepared repaired source. Never use an earlier eligible snapshot as current
+authority to cancel a run whose state has changed.

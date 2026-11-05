@@ -1067,5 +1067,15 @@
     },
     "runtime_qualification": false,
     "scope": "102pure own-file/HTTP/Page/process/parser contracts. No actual local Chrome,PG,source,scanner or inference; no underlying session repair claimed. Require exact original public GitHub replay to expose actual subreason."
+  },
+  "source_7c_unstarted_review_not_used": {
+    "run_id": 41939612321,
+    "review_reference": ".private/freightctl-7c-unstarted-review-5kb286u8/review.json",
+    "review_sha256": "cfa589a5ecbc7f73a666800ac499507202ea4bc260935a4546f775d5d58fdc0b",
+    "guard_refusal_reference": ".private/freightctl-7c-cancel-refused-t1i4zgc3/manifest.json",
+    "guard_refusal_sha256": "8e5c21982c09bd98d2169cc8f34044741157917bc81dee7306c97beb18d44f50",
+    "outcome": "Initial state had five queued/unassigned jobs and exact same D173source blobs as retained e2failures. Fresh action-time CLI recheck observed metadata job126963224014started,so the guard exited1before invoking cancellation. No cancel request or restart occurred. Preserve active original and wait for every required job to start before another source push.",
+    "cancellation_requested": false,
+    "qualification_claim": false
   }
 }
