@@ -540,5 +540,21 @@
     "evidence_reference": ".private/freightctl-pause-handoff-DiqCKw/manifest.json",
     "evidence_sha256": "73e94716ee286a33605ac8efec647838a49a0f1962042419e624ed9ca242ab81",
     "scope": "Reconfirms independent memory gate. Owner file-only1792MiB allowance does not grant a RAM change or image qualification."
+  },
+  "s003_security_triage": {
+    "source_commit": "85695f62a0b40bdccca92e16aa6ffbb17543c0a1",
+    "run_id": 41959611415,
+    "job_ids": [
+      127022581558,
+      127022581788
+    ],
+    "result": "Both original scans pass the approved file guard with DB1691381760, then enforcing-summary exits2. Its stdout hash equals the fixed peer-image-evidence-invalid summary; the exact failed assertion is unknown. Exact scratch unmounted. Earlier OOMs remain blockers; no scan qualified.",
+    "original_manifest": {
+      "reference": ".private/freightctl-s003-resume-security/manifest.json",
+      "sha256": "7dffb350c24e2512034d498d4a287ef75129aef85cb552124bcbe9345160f6ba"
+    },
+    "change": "Add only hash-bound fixed verifier function/line diagnostics; all checks, findings, inventory, limits and cleanup unchanged.",
+    "proof": "Original focused foreign-image diagnostic regression fails unrecognized-diagnostic, then passes; all13 orchestration and8 reporter contracts pass. New hash/shape/privacy control passes. No Docker/scanner/image ran locally.",
+    "owed": "Actual same-image security replay, actionable finding/check repair, and final-source scan under unchanged budgets."
   }
 }

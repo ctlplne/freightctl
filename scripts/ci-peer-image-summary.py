@@ -14,10 +14,24 @@ SCANNER_IMAGE = 'aquasec/trivy:0.76.1@sha256:790fd66d1697395d8693d1acaa1ea702406
 SEVERITIES = ('UNKNOWN', 'LOW', 'MEDIUM', 'HIGH', 'CRITICAL')
 ADVISORY = re.compile(r'(?:CVE-[0-9]{4}-[0-9]{4,12}|GHSA-[23456789cfghjmpqrvwx]{4}-[23456789cfghjmpqrvwx]{4}-[23456789cfghjmpqrvwx]{4})\Z')
 DIGEST = re.compile(r'sha256:[0-9a-f]{64}\Z')
+REFUSAL_FUNCTIONS = frozenset(('load', 'timestamp', 'summarize', 'main'))
 
 
 class InvalidReport(ValueError):
     """Only the fixed refusal category reaches public output."""
+
+
+def refusal_site(error):
+    """Static verifier location only: never exception text, locals or paths."""
+    site = None
+    frame = error.__traceback__
+    while frame is not None:
+        code = frame.tb_frame.f_code
+        if (code.co_filename == __file__ and code.co_name in REFUSAL_FUNCTIONS
+                and 1 <= frame.tb_lineno <= 10000):
+            site = {'function': code.co_name, 'line': frame.tb_lineno}
+        frame = frame.tb_next
+    return site
 
 
 def require(condition):
@@ -154,8 +168,9 @@ def main():
                 result[name + '_sha256'] = hashlib.file_digest(stream, 'sha256').hexdigest()
         print(json.dumps(result, sort_keys=True))
         return 1 if result['state'] == 'failed' else 0
-    except (InvalidReport, OSError, TypeError, KeyError, OverflowError, RecursionError):
-        print(json.dumps({'state': 'failed', 'reason': 'peer-image-evidence-invalid'}))
+    except (InvalidReport, OSError, TypeError, KeyError, OverflowError, RecursionError) as error:
+        print(json.dumps({'state': 'failed', 'reason': 'peer-image-evidence-invalid',
+                          'refusal_site': refusal_site(error)}))
         return 2
 
 

@@ -236,6 +236,42 @@ class ScanOrchestration(unittest.TestCase):
         code, output, _ = self.exercise(mode='foreign')
         self.assertEqual(code, 2)
         self.assertEqual(output['phase'], 'enforcing-summary')
+        self.assertEqual(output['command']['category'], 'evidence-verifier-refused')
+        site = output['command']['verifier_refusal_site']
+        self.assertEqual(site['function'], 'summarize')
+        self.assertIs(type(site['line']), int)
+        self.assertGreater(site['line'], 0)
+        self.assertLessEqual(site['line'], 10000)
+
+    def test_verifier_location_requires_exact_stdout_hash_and_fixed_shape(self):
+        with tempfile.TemporaryDirectory(prefix='freightctl-verifier-site-') as directory:
+            root = Path(directory)
+            path = root/'enforcing-summary.stdout'
+            (root/'enforcing-summary.stderr').write_bytes(b'')
+            valid = {'state': 'failed', 'reason': 'peer-image-evidence-invalid',
+                     'refusal_site': {'function': 'summarize', 'line': 94}}
+            invalid = [
+                {'function': contracts.PRIVATE, 'line': 94},
+                {'function': 'summarize', 'line': True},
+                {'function': 'summarize', 'line': 10001},
+                {'function': 'summarize', 'line': 0},
+                {'function': 'summarize', 'line': 94, 'detail': contracts.PRIVATE},
+            ]
+            for site in [valid['refusal_site'], *invalid]:
+                summary = dict(valid, refusal_site=site)
+                path.write_text(json.dumps(summary))
+                step = {'phase': 'enforcing-summary', 'exit_code': 2,
+                        'stdout_sha256': runner.digest(path),
+                        'stderr_sha256': runner.digest(root/'enforcing-summary.stderr')}
+                observed = runner.failure_observation([step], root)
+                self.assertEqual('verifier_refusal_site' in observed, site == valid['refusal_site'])
+                self.assertNotIn(contracts.PRIVATE, json.dumps(observed))
+            path.write_text(json.dumps(valid))
+            step['stdout_sha256'] = '0'*64
+            self.assertNotIn('verifier_refusal_site', runner.failure_observation([step], root))
+            path.write_text('{"state":"failed","state":"failed"}')
+            step['stdout_sha256'] = runner.digest(path)
+            self.assertNotIn('verifier_refusal_site', runner.failure_observation([step], root))
 
     def test_archive_or_feed_change_refuses_completion(self):
         code, output, _ = self.exercise(mode='input-change')

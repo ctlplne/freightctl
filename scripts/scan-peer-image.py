@@ -69,6 +69,24 @@ def failure_observation(steps, private):
                 and state['exit_code'] == result['exit_code']):
             result['category'] = 'container-oom'
             return result
+        if name == 'enforcing-summary' and code == 2:
+            try:
+                path = private/(name+'.stdout')
+                if not path.is_symlink():
+                    summary, actual = gate.load(path, 1 << 20)
+                    site = summary.get('refusal_site') if isinstance(summary, dict) else None
+                    if (actual == result['stdout_sha256']
+                            and set(summary) == {'state', 'reason', 'refusal_site'}
+                            and summary['state'] == 'failed'
+                            and summary['reason'] == 'peer-image-evidence-invalid'
+                            and isinstance(site, dict) and set(site) == {'function', 'line'}
+                            and site['function'] in gate.REFUSAL_FUNCTIONS
+                            and type(site['line']) is int and 1 <= site['line'] <= 10000):
+                        result['category'] = 'evidence-verifier-refused'
+                        result['verifier_refusal_site'] = site
+                        return result
+            except (OSError, ValueError, TypeError, KeyError):
+                pass
         try:
             path = private/(name+'.stderr')
             if path.is_symlink() or not path.is_file() or path.stat().st_size > 32 << 20:
