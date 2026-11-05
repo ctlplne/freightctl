@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
   "id": "F077",
-  "observed_at": "2026-11-04",
+  "observed_at": "2026-11-05",
   "starting_commit": "2c4398abe902fb77307ac8247bd9df2dc5b77ffc",
-  "state": "Original97 ARM/x86 fail build-id-a/command-status; exit versus timeout is not exposed. Separate pinned builtin-reader preparation, fixed command diagnostics and bounded native Go package/source closure are prepared;22local contract methods pass only. No repaired native reproduction/schema or complete SBOM claim.",
+  "state": "Qualified only at exact6dd candidate for original same-runner native ARM/x86 core two-build/package/component-schema gate. Both actual jobs pass;all18commands and final closures execute. Independent-host reproduction,complete deployment/build-tool/SBOM/license/signing/offline/platform readiness remain open.",
   "scope": "Same-runner native Linux core executable reproduction in two different committed-source copies and independent empty build caches. No cross-architecture comparison,independent-host reproduction,complete release SBOM/signing/offline installation,publication or production-platform claim.",
-  "qualification_claim": false,
+  "qualification_claim": true,
   "frozen_cases": [
     {
       "id": "R01",
@@ -83,7 +83,7 @@
     ],
     "limits": "No new local build or binary execution,actual native compiler reproduction,network/PG/browser/scanner/model operation. Parser and stand-in passes do not qualify reproducibility."
   },
-  "next_action": "Preserve original97 failures; require exact native ARM/x86 replay of separately prepared stock reader, both binary builds/package graphs/final source closures and actual independent stock-schema validation. Do not infer reproduction,complete SBOM,license/signing/offline/platform/adoption or whole-goal completion from local contracts.",
+  "next_action": "Preserve exact6dd scoped pass and original7c/97failures. Require current-source replays when relevant inputs change;complete independent-host same-target reproduction,implicit/generated/build-tool/deployment inventory,licenses,owner grant,signing and disconnected install/export/rollback. Do not promote this component result to a release,whole parity row,journey or production qualification.",
   "core_component_inventory_prepared": {
     "implementation": "scripts/core_component_inventory.py",
     "contracts": "scripts/test-core-component-inventory.py",
@@ -228,5 +228,75 @@
     "review_reference": ".private/freightctl-6dd-submission-review-6sexv4z_/manifest.json",
     "review_sha256": "a02d07aa94a4fd0e9e0ef78335939d5bd35b30de979456080beee593bb6cf230",
     "scope": "Five exact-owner source commits/full-range secret scan;all required originals started/terminal,live97native retained. No artifact/release/image/package/deployment or changed F075file budget."
+  },
+  "qualified_candidate": "6ddcb30ecbced590f5a9b0c45316c60f590f0a32",
+  "source_6dd_native_pass": {
+    "run_id": 41951088070,
+    "manifest_reference": ".private/freightctl-6dd-native-results-WfLp8Y/manifest.json",
+    "manifest_sha256": "7a02a3b5d4183bbabdd8251c0f6514fbf92ffcfb69df6b84796a2c0face242de",
+    "jobs": [
+      {
+        "job_id": 126994932912,
+        "result": {
+          "architecture": "arm64",
+          "artifact_published": false,
+          "binary_sha256": "b0e9421fe4412398f1165030dfe924f77d7581caee18ae3ef936e5bccea1ffe8",
+          "complete_sbom": false,
+          "component_inventory_format": "CycloneDX1.6",
+          "component_inventory_sha256": "dfeff1d6a37acc90ec048010bfbf12c2758228905399e7df8fc29eef6289c91d",
+          "component_schema_validation": {
+            "engine": "python-jsonschema",
+            "python": "3.12",
+            "requirements_sha256": "1504dd994a452f41c933721b9954fd8360d41d71d64f190f77d4a0d018549cb1",
+            "schema_upstream_manifest_sha256": "49a108348f81042056ca4bba5824f4ffc559c38559392c0da57d9351d4675c3a",
+            "version": "4.26.0"
+          },
+          "dependency_modules": 14,
+          "disconnected_install_qualified": false,
+          "go_package_graph_sha256": "6fc91ca84bde670e8e06191e56a52e7d61dce6d479849beaf2af28edc09220c7",
+          "go_standard_library_packages": 214,
+          "manifest_sha256": "8932ff70167d366f2dc025b82a8542fa87a97d13544b05715a85ba25a47d3df7",
+          "production_platform_qualified": false,
+          "selected_toolchain_source_sha256": "f807c420e43f923c66e2c1a8f5a77b8ecf5acd0005c719e37600a41074d571a8",
+          "signing_qualified": false,
+          "source_archive_sha256": "a57e2ef42567ce4127844aec7d0c96ac11a7ca6371df0bed05acbea73a4624ab",
+          "source_commit": "6ddcb30ecbced590f5a9b0c45316c60f590f0a32",
+          "source_files": 803,
+          "state": "passed"
+        }
+      },
+      {
+        "job_id": 126994933184,
+        "result": {
+          "architecture": "amd64",
+          "artifact_published": false,
+          "binary_sha256": "f91b5a33ebd1fd90e15877e83ae30fe7c287a9bb81c06e2929f94a4a3831c4b8",
+          "complete_sbom": false,
+          "component_inventory_format": "CycloneDX1.6",
+          "component_inventory_sha256": "572fb286d9503f6c80a6758d9cea5132cd67a81cedc74dcdd3c4974d00f6a49e",
+          "component_schema_validation": {
+            "engine": "python-jsonschema",
+            "python": "3.12",
+            "requirements_sha256": "1504dd994a452f41c933721b9954fd8360d41d71d64f190f77d4a0d018549cb1",
+            "schema_upstream_manifest_sha256": "49a108348f81042056ca4bba5824f4ffc559c38559392c0da57d9351d4675c3a",
+            "version": "4.26.0"
+          },
+          "dependency_modules": 14,
+          "disconnected_install_qualified": false,
+          "go_package_graph_sha256": "36eb93bc95affe1f21aae998f96bfa16b03f046e0614e013182cdb1dd7525d22",
+          "go_standard_library_packages": 215,
+          "manifest_sha256": "6216c97c8a6047097e389f849f91a10914f9120cc35860a79322a59c700d92e5",
+          "production_platform_qualified": false,
+          "selected_toolchain_source_sha256": "9937c6d51b5cb15ceef766e13109a5f72ddbfde8b634c08715e82fad720b1cf7",
+          "signing_qualified": false,
+          "source_archive_sha256": "a57e2ef42567ce4127844aec7d0c96ac11a7ca6371df0bed05acbea73a4624ab",
+          "source_commit": "6ddcb30ecbced590f5a9b0c45316c60f590f0a32",
+          "source_files": 803,
+          "state": "passed"
+        }
+      }
+    ],
+    "mechanism": "Both originally empty-cache source copies produce identical final binaries/build info/help and canonical component inventories within each native architecture. Original source/archive/command/tool/source-file closures and physical empty build IDs remain enforced.14Go dependency modules plus exact embedded UI/four runtime packages;214ARM/215x86 standard/compiler-provided/vendor package inputs. Actual pinned stock python-jsonschema4.26.0/CPython3.12 validates canonical CycloneDX1.6 and negative controls with offline refs.",
+    "limits": "No cross-architecture byte comparison or independent-host same-target repeat. Complete deployment/build-tool/implicit/generated-input SBOM,upstream vendor version/license completeness,signing,offline installation and release/platform claims are not qualified. No artifacts uploaded. Original97reader command cause remains unknown;new separately prepared reader passes without enlarging10second reads."
   }
 }

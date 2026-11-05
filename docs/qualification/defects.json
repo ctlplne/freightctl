@@ -1667,7 +1667,14 @@
         "https://github.com/ctlplne/freightctl/actions/runs/41499894396",
         "https://github.com/ctlplne/freightctl/actions/runs/41508880233",
         "docs/qualification/evidence/F078-windows-filesystem-observation.json"
-      ]
+      ],
+      "source_6dd_api_observation": {
+        "run_id": 41951088055,
+        "job_id": 126994932338,
+        "state": "recorded;elevatedNTFSonly;unitjobstillred",
+        "evidence": "docs/qualification/evidence/F078-windows-filesystem-observation.json",
+        "meaning": "Protected explicit ACLs can be independently inspected;read-write directory handles flush0,read-only handles/reopen-upgrade fail5. Go mode bits do not represent private ACLs. No production guard change or platform qualification."
+      }
     },
     {
       "id": "D104",
@@ -2795,7 +2802,7 @@
     {
       "id": "D174",
       "severity": "native reproducibility verifier",
-      "state": "Both actual native failures retained; false metadata assumption replaced with physical build-ID checks; original replay pending",
+      "state": "resolved for exact6dd same-runner native reproduction gate",
       "observed_on": "2026-11-05",
       "candidate": "7c163a834a7a95cb6482730fbb3e486b1b8aa879",
       "journey": "F077native core executable reproduction",
@@ -2815,6 +2822,16 @@
         "phase": "build-id-a",
         "check": "command-status",
         "cause": "Exact exit versus timeout unexposed;not proven. Go may build builtin reader on demand. Separate reader preparation and fixed status diagnostics prepared with all10second read assertions unchanged;actual repaired native replay required."
+      },
+      "source_6dd_resolution": {
+        "run_id": 41951088070,
+        "jobs": [
+          126994932912,
+          126994933184
+        ],
+        "result": "Both pass physical build-ID,original18command/two-build/final closures and actual stock component-schema gate. Native14Go modules and214ARM/215x86toolchain packages bind actual selected inputs.",
+        "scope": "Unsupported serialized linker-flag requirement repaired. Original97reader command exit-versus-timeout remains unexposed;do not invent old cause. No whole SBOM/release/platform claim.",
+        "evidence": "docs/qualification/evidence/F077-native-reproducible-core.json"
       }
     },
     {

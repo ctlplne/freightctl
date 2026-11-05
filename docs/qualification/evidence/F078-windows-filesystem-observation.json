@@ -3,7 +3,7 @@
   "id": "F078",
   "observed_at": "2026-11-05",
   "starting_commit": "182f05579be2e2a3b33497423321d40cea024d65",
-  "state": "Prepared for actual Windows GitHub execution; no native API result yet.",
+  "state": "Original6dd native Windows API observation recorded on elevated NTFS. Original unit job stays red;no private ACL isolation,durability,protected scanner transport or platform qualification.",
   "defect": "D103",
   "scope": "Measure Go and explicit Win32 file/directory handle behavior using public synthetic bytes. API success is not crash/power-loss, permission-isolation, server, scanner-transport or complete Windows-platform qualification.",
   "qualification_claim": false,
@@ -57,7 +57,7 @@
     "https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-reopenfile",
     "https://learn.microsoft.com/en-us/windows/win32/secauthz/security-descriptor-string-format"
   ],
-  "next_action": "Push only after current97required originals start; observe exact probe on actual Windows and implement smallest justified repair. Independently test access isolation,reparse/race behavior,durability and protected scanner transport,then replay original D103unit/service journeys. Windows server/agent and broader GOAL.md gates remain open.",
+  "next_action": "Use exact native facts to implement Windows private-directory/file ownership+ACL handling and initially writable anchored directory handles. Keep Unix checks intact;do not treat elevated API flush as durability. Add actual unprivileged/restricted-token negative access,reparse/race,protection and original D103unit/service replays before any platform claim.",
   "submission": {
     "candidate": "6ddcb30ecbced590f5a9b0c45316c60f590f0a32",
     "run_id": 41951088055,
@@ -69,5 +69,284 @@
       "manifest_reference": ".private/freightctl-97-terminal-followup-RjRoYF/manifest.json",
       "manifest_sha256": "81d8d5ea6f29b47d4901012d5416b2e78510655b5f904d9dfb4413edf8f28c88"
     }
+  },
+  "source_6dd_native_observation": {
+    "run_id": 41951088055,
+    "job_id": 126994932338,
+    "manifest_reference": ".private/freightctl-6dd-native-results-WfLp8Y/manifest.json",
+    "manifest_sha256": "7a02a3b5d4183bbabdd8251c0f6514fbf92ffcfb69df6b84796a2c0face242de",
+    "observation": {
+      "architecture": "amd64",
+      "cases": [
+        {
+          "acl": {
+            "ace_count": 2,
+            "code": 0,
+            "expected_descriptor": false,
+            "null": false,
+            "owner_current": false,
+            "protected": false,
+            "queried": true
+          },
+          "case": "go-file",
+          "close": {
+            "attempted": true,
+            "code": 0
+          },
+          "flush": {
+            "attempted": true,
+            "code": 0
+          },
+          "mode_bits": 438,
+          "open": {
+            "attempted": true,
+            "code": 0
+          },
+          "parent_close": {
+            "attempted": false,
+            "code": 0
+          },
+          "readback": true,
+          "write": {
+            "attempted": true,
+            "code": 0
+          }
+        },
+        {
+          "acl": {
+            "ace_count": 2,
+            "code": 0,
+            "expected_descriptor": true,
+            "null": false,
+            "owner_current": true,
+            "protected": true,
+            "queried": true
+          },
+          "case": "go-directory",
+          "close": {
+            "attempted": true,
+            "code": 0
+          },
+          "flush": {
+            "attempted": true,
+            "code": 5
+          },
+          "mode_bits": 511,
+          "open": {
+            "attempted": true,
+            "code": 0
+          },
+          "parent_close": {
+            "attempted": false,
+            "code": 0
+          },
+          "readback": false,
+          "write": {
+            "attempted": false,
+            "code": 0
+          }
+        },
+        {
+          "acl": {
+            "ace_count": 2,
+            "code": 0,
+            "expected_descriptor": true,
+            "null": false,
+            "owner_current": true,
+            "protected": true,
+            "queried": true
+          },
+          "case": "win-directory-read",
+          "close": {
+            "attempted": true,
+            "code": 0
+          },
+          "flush": {
+            "attempted": true,
+            "code": 5
+          },
+          "mode_bits": 0,
+          "open": {
+            "attempted": true,
+            "code": 0
+          },
+          "parent_close": {
+            "attempted": false,
+            "code": 0
+          },
+          "readback": false,
+          "write": {
+            "attempted": false,
+            "code": 0
+          }
+        },
+        {
+          "acl": {
+            "ace_count": 2,
+            "code": 0,
+            "expected_descriptor": true,
+            "null": false,
+            "owner_current": true,
+            "protected": true,
+            "queried": true
+          },
+          "case": "win-directory-read-write",
+          "close": {
+            "attempted": true,
+            "code": 0
+          },
+          "flush": {
+            "attempted": true,
+            "code": 0
+          },
+          "mode_bits": 0,
+          "open": {
+            "attempted": true,
+            "code": 0
+          },
+          "parent_close": {
+            "attempted": false,
+            "code": 0
+          },
+          "readback": false,
+          "write": {
+            "attempted": false,
+            "code": 0
+          }
+        },
+        {
+          "acl": {
+            "ace_count": 2,
+            "code": 0,
+            "expected_descriptor": true,
+            "null": false,
+            "owner_current": true,
+            "protected": true,
+            "queried": true
+          },
+          "case": "win-directory-write-through",
+          "close": {
+            "attempted": true,
+            "code": 0
+          },
+          "flush": {
+            "attempted": true,
+            "code": 0
+          },
+          "mode_bits": 0,
+          "open": {
+            "attempted": true,
+            "code": 0
+          },
+          "parent_close": {
+            "attempted": false,
+            "code": 0
+          },
+          "readback": false,
+          "write": {
+            "attempted": false,
+            "code": 0
+          }
+        },
+        {
+          "acl": {
+            "ace_count": 0,
+            "code": 0,
+            "expected_descriptor": false,
+            "null": false,
+            "owner_current": false,
+            "protected": false,
+            "queried": false
+          },
+          "case": "reopened-directory-read-write",
+          "close": {
+            "attempted": false,
+            "code": 0
+          },
+          "flush": {
+            "attempted": false,
+            "code": 0
+          },
+          "mode_bits": 0,
+          "open": {
+            "attempted": true,
+            "code": 5
+          },
+          "parent_close": {
+            "attempted": true,
+            "code": 0
+          },
+          "readback": false,
+          "write": {
+            "attempted": false,
+            "code": 0
+          }
+        },
+        {
+          "acl": {
+            "ace_count": 2,
+            "code": 0,
+            "expected_descriptor": true,
+            "null": false,
+            "owner_current": true,
+            "protected": true,
+            "queried": true
+          },
+          "case": "win-file-write-through",
+          "close": {
+            "attempted": true,
+            "code": 0
+          },
+          "flush": {
+            "attempted": true,
+            "code": 0
+          },
+          "mode_bits": 438,
+          "open": {
+            "attempted": true,
+            "code": 0
+          },
+          "parent_close": {
+            "attempted": false,
+            "code": 0
+          },
+          "readback": true,
+          "write": {
+            "attempted": true,
+            "code": 0
+          }
+        }
+      ],
+      "cleanup": {
+        "attempted": true,
+        "code": 0
+      },
+      "cleanup_absent": true,
+      "directory_acl": {
+        "ace_count": 2,
+        "code": 0,
+        "expected_descriptor": true,
+        "null": false,
+        "owner_current": true,
+        "protected": true,
+        "queried": true
+      },
+      "elevated": true,
+      "error": {
+        "attempted": false,
+        "code": 0
+      },
+      "filesystem": "NTFS",
+      "go_version": "go1.26.10",
+      "kind": "freightctl-windows-fs-api-observation-v1",
+      "phase": "complete",
+      "qualification_claim": false,
+      "schema_version": 1,
+      "source_commit": "6ddcb30ecbced590f5a9b0c45316c60f590f0a32",
+      "state": "recorded",
+      "system": "Windows"
+    },
+    "facts": "Explicit current-owner+SYSTEM protected2ACE directory/native file descriptors match independent handle inspection. Go mode bits remain0777directory/0666file;Go-created file owner differs from current token SID. Read-only directory handles fail FlushFileBuffers with5;explicit read-write/write-through directory opens and flushes return0. ReOpenFile from read-only to read-write returns5. Exact cleanup succeeds.",
+    "scope": "Observation is elevated NTFS API behavior,not unprivileged access isolation,reparse/race safety,crash/power-loss or supported Windows server/agent qualification."
   }
 }

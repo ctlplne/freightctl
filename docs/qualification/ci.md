@@ -76,3 +76,7 @@ findings fail. Fourteen lightweight local contracts exercise synthetic reports,
 actual Python exits and a Docker-command stand-in. The actual native scan and
 finding assessment remain pending. This is a vulnerability scanner for a test
 image; the stopped malware scanner and owner-deferred F026 remain unchanged.
+
+At exact6ddcb30, [F077](evidence/F077-native-reproducible-core.json) passes both original native [ARM/x86 reproduction jobs](https://github.com/ctlplne/freightctl/actions/runs/41951088070):18commands,two source copies/empty caches,physical build-ID/final closures,14Go modules,exact UI/four runtime packages and214ARM/215x86toolchain package inputs. Pinned stock CycloneDX validation passes. This qualifies the frozen same-runner component gate only;independent-host repeats,complete build-tool/deployment inventory,license/signing/offline/platform gates remain open.
+
+[F078](evidence/F078-windows-filesystem-observation.json) records actual elevated NTFS API behavior while its unit job stays red:initial read-write directory handles flush0,read-only handles/reopen upgrades fail5,explicit protected ACLs match and Go mode bits stay0666/0777. No access-isolation or durability qualification. Core/Mac pass;four stock profiles pass,but arrivals-schedules has one unattributed command exit with0HTTP/browser/cleanup failures. Original97native application880/3/0 now exposes mixed fixture step grammarD176;the shared-parser repair and native Chrome final-header/response observer are prepared for original replay.

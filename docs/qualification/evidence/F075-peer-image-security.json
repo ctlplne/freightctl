@@ -495,5 +495,23 @@
     },
     "scratch_cleanup": "both unmounted",
     "scope": "ARM now independently proves hard-budget OOM during pinned feed preparation. This does not identify the allocation or prove an image scan. File-only1792MiB proposal remains unapplied/pending; it cannot resolve either architecture OOM. Every original guard/budget unchanged."
+  },
+  "source_97_native_terminal": {
+    "run_id": 41944580495,
+    "jobs": [
+      126979507277,
+      126979507687
+    ],
+    "phase": "feed-files",
+    "each_database_bytes": 1691381760,
+    "each_metadata_bytes": 153,
+    "both_regular": true,
+    "both_symlinks": false,
+    "arm_failure_manifest_sha256": "037430ae943b592be4d311bebb012883b772e506f29a1320768a4e624ce05e6b",
+    "amd_failure_manifest_sha256": "730d7b134431a55fc1fbdd01525dd28f2c3280897d694cce7643481ab17b8915",
+    "scratch_cleanup": "both unmounted",
+    "manifest_reference": ".private/freightctl-97-native-terminal-fUEV6x/manifest.json",
+    "manifest_sha256": "229c0f89d527c084b47f6ac191a4a936d255a91254c9545320aaa875180c020d",
+    "scope": "Changed upstream DB size still exceeds original1GiB file cap. No qualified image scan;earlier exact ARM/x86 OOM remains separately proven. File-only proposal unchanged/unapplied/pending."
   }
 }
