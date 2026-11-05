@@ -6,6 +6,11 @@ import {
   asEndpointPage,
   asEndpointRecord,
   asExchangeClosureResult,
+  asExchangeArtifact,
+  asExchangeRequest,
+  asExchangeOfferResult,
+  type ExchangeRequest,
+  type ArtifactExchange,
   type ExchangeClosureCommand,
   bindingIsCurrent,
   type DirectoryContext,
@@ -99,6 +104,105 @@ export class ExchangeReceiveApi {
       this.directory.can_receive &&
       bindingIsCurrent(checked.definition.recipient, this.directory)
     );
+  }
+  isSendEndpoint(record: EndpointRecord): boolean {
+    this.current();
+    const checked = asEndpointRecord(record, this.directory);
+    return (
+      checked.state === "active" &&
+      this.directory.can_send &&
+      checked.definition.senders.some((s) =>
+        bindingIsCurrent(s, this.directory),
+      )
+    );
+  }
+  async source(id: string, signal?: AbortSignal) {
+    this.current();
+    if (!uuid(id))
+      throw new ApiError("invalid_artifact_exchange_contract", 400);
+    const result = await this.api.request(
+      `${this.prefix}/exchange-sources/${id}`,
+      signal ? { signal } : {},
+      (value) => {
+        this.current();
+        return asExchangeArtifact(value, id);
+      },
+    );
+    this.current();
+    return result;
+  }
+  async offer(
+    request: ExchangeRequest,
+    endpoint: EndpointRecord,
+    key: string,
+    signal?: AbortSignal,
+  ) {
+    this.current();
+    const normalized = asExchangeRequest(request);
+    if (
+      !this.isSendEndpoint(endpoint) ||
+      normalized.endpoint.id !== endpoint.id ||
+      normalized.endpoint.revision !== endpoint.revision ||
+      normalized.endpoint.hash !== endpoint.definition_hash ||
+      !/^[A-Za-z0-9._:-]{1,128}$/.test(key)
+    )
+      throw new ApiError("invalid_artifact_exchange_contract", 400);
+    const result = await this.api.request(
+      `${this.prefix}/exchanges`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Idempotency-Key": key },
+        body: JSON.stringify(normalized),
+        ...(signal ? { signal } : {}),
+      },
+      (value) => {
+        this.current();
+        return asExchangeOfferResult(
+          value,
+          normalized,
+          this.identity,
+          endpoint.definition.recipient.actor_id,
+        );
+      },
+    );
+    this.current();
+    return result;
+  }
+  async cancelOffer(
+    exchange: ArtifactExchange,
+    key: string,
+    signal?: AbortSignal,
+  ) {
+    this.current();
+    const checked = asExchangeOfferResult(
+      { exchange, replayed: false },
+      exchange.request,
+      this.identity,
+      exchange.recipient_actor_id,
+    ).exchange;
+    if (!/^[A-Za-z0-9._:-]{1,128}$/.test(key))
+      throw new ApiError("invalid_artifact_exchange_contract", 400);
+    const command: ExchangeClosureCommand = {
+      schema_version: 1,
+      exchange_id: checked.id,
+      request_hash: checked.request_hash,
+      operation: "cancel",
+    };
+    const result = await this.api.request(
+      `${this.prefix}/exchange-closures`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Idempotency-Key": key },
+        body: JSON.stringify(command),
+        ...(signal ? { signal } : {}),
+      },
+      (value) => {
+        this.current();
+        return asExchangeClosureResult(value, command);
+      },
+    );
+    this.current();
+    return result;
   }
   async incoming(endpoint: string, after = "", signal?: AbortSignal) {
     this.current();

@@ -861,7 +861,8 @@
         "docs/qualification/evidence/F085-artifact-exchange-cli.json",
         "docs/qualification/evidence/F087-artifact-receive-browser.json",
         "docs/qualification/evidence/F089-exchange-endpoint-directory.json",
-        "docs/qualification/evidence/F091-exchange-closures.json"
+        "docs/qualification/evidence/F091-exchange-closures.json",
+        "docs/qualification/evidence/F093-browser-artifact-offer.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -876,11 +877,11 @@
         "S003 resumes the full product and authorizes guarded source/CI batches after previous required runs are terminal. Contract validators are implemented with focused red/green proof; durable services and five API paths are implemented; remaining surfaces and actual AX profiles remain owed. Broad/deferred qualification is mandatory at FINISH."
       ],
       "current_item": {
-        "id": "F091",
-        "state": "Exact per-view sender cancellation/recipient decline API/CLI/browser implemented;native proof owed",
-        "proof": "Observed missing-route and audit-privacy reds repaired;focused6Go/9browser/7metadata/1summary methods and affected static/build/architecture checks pass",
-        "native": "New real-PG lock/role/RLS/journal/receipt cases and original HTTPS/CLI/Chrome profile extensions prepared;not locally run",
-        "next": "Continue outgoing lifecycle/send/admin/agent surfaces and ingress/onward bridges;triage new security findings immediately,repair deferred nonsecurity failures at mandatory FINISH"
+        "id": "F093",
+        "state": "Shared source review and browser offer/withdrawal implemented;native/durable recovery proof owed",
+        "proof": "Missing-route red repaired;2Go/11browser/1summary focused methods plus affected format/type/build/compile/vet/architecture pass",
+        "native": "Original API/CLI/Chrome and new source-policy case prepared;not locally run",
+        "next": "Durable review recovery,outgoing lifecycle/admin/agent surfaces,ingress/onward bridges;triage new security failures and finish all deferred qualification."
       }
     }
   ],

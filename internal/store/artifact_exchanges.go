@@ -167,25 +167,12 @@ func (t *Transaction) PrepareArtifactExchange(ctx context.Context, r ExchangeReq
 	if err = t.validateExchangeEndpointParticipants(ctx, ExchangeEndpointDefinition{Recipient: d.Recipient, Senders: []ExchangeParticipant{sender}}); err != nil {
 		return nil, err
 	}
-	if err = t.exchangeNamespaceReadLock(ctx); err != nil {
-		return nil, err
-	}
-	policy, err := t.IntakePolicy(ctx, false)
-	if err != nil {
-		return nil, err
-	}
-	if err = t.FileAccessible(ctx, r.Artifact.ID); err != nil {
-		return nil, err
-	}
-	f, err := t.File(ctx, r.Artifact.ID)
+	f, err := t.AuthorizeExchangeSource(ctx, r.Artifact.ID)
 	if err != nil {
 		return nil, err
 	}
 	if r.Artifact != (ExchangeArtifact{ID: f.ID, Size: f.Size, SHA256: f.SHA256, Policy: f.Policy}) {
 		return nil, ErrRevision
-	}
-	if err = exchangePolicyCurrent(f, policy); err != nil {
-		return nil, err
 	}
 	now, err := t.DatabaseTime(ctx)
 	if err != nil {
@@ -213,6 +200,41 @@ func (t *Transaction) PrepareArtifactExchange(ctx context.Context, r ExchangeReq
 		return nil, err
 	}
 	return &ArtifactExchange{ID: secure.NewID(), Sender: t.Actor, Recipient: d.Recipient.Actor, Request: r, RequestHash: hash}, nil
+}
+
+// AuthorizeExchangeSource is shared by source review and actual offer creation.
+// Incoming view permission is deliberately absent from FileAccessible: reading
+// another participant's view never turns that file into an onward source.
+func (t *Transaction) AuthorizeExchangeSource(ctx context.Context, id string) (*File, error) {
+	if !ValidID(id) {
+		return nil, ErrExchangeInput
+	}
+	for _, permission := range []string{"read", "deliver"} {
+		if err := t.Require(permission); err != nil {
+			return nil, err
+		}
+	}
+	if err := t.exchangeNamespaceReadLock(ctx); err != nil {
+		return nil, err
+	}
+	policy, err := t.IntakePolicy(ctx, false)
+	if err != nil {
+		return nil, err
+	}
+	if err = t.FileAccessible(ctx, id); err != nil {
+		return nil, err
+	}
+	f, err := t.File(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	if err = exchangePolicyCurrent(f, policy); err != nil {
+		return nil, err
+	}
+	if err = t.Reauthorize(ctx); err != nil {
+		return nil, err
+	}
+	return f, nil
 }
 
 func (t *Transaction) SaveArtifactExchange(ctx context.Context, key string, e *ArtifactExchange) error {

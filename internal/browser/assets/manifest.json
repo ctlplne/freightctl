@@ -27,7 +27,7 @@
     },
     {
       "path": "web/src/app.tsx",
-      "sha256": "0acde905144e403ac3d23fee467d43936aab6944deeec89d156dfce91b27df72"
+      "sha256": "05aa6afb5314bc373a72de8496649852a84a65c510088c699ebe4247ddf69e4c"
     },
     {
       "path": "web/src/arrivals-types.ts",
@@ -35,15 +35,19 @@
     },
     {
       "path": "web/src/artifact-exchanges-api.ts",
-      "sha256": "dfdc96d99a522566ba511756d08255461faa68736f48a0068d8358567f5dd779"
+      "sha256": "ddb853e9e57bbc1e4efe3effb69e362f5b6ab5e059377dc936f1a385926eee9a"
     },
     {
       "path": "web/src/artifact-exchanges-types.ts",
-      "sha256": "f570132da2a285712fc65d398eb371815685ac278474e438b6f84aad94a47e05"
+      "sha256": "c991c0b7dd81f5219c96f3dd053384d8c3c9a5214581256bb63d4e113610fe24"
     },
     {
       "path": "web/src/artifact-exchanges.tsx",
       "sha256": "9413bad4b47b26b15776b53a5a680eb436d5bb445b624185ac7f6a327c8b1d75"
+    },
+    {
+      "path": "web/src/artifact-send.tsx",
+      "sha256": "1be55f73bd92c74cfc82b892160d38ffa574eb3063568f1006277187c8022a87"
     },
     {
       "path": "web/src/assets.d.ts",
@@ -246,8 +250,8 @@
     },
     {
       "name": "app.js",
-      "sha256": "0d9c5a581b0f58180cfa599a1de08e189324489bd55b3e23db29a73f15111a28",
-      "size": 702795
+      "sha256": "2d8aefc9ee1fb5ddaf1b026908e0b986d6867d5b967deebf8ec82e6e00619d03",
+      "size": 714321
     },
     {
       "name": "app.js.LEGAL.txt",

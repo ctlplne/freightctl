@@ -14,6 +14,11 @@ export interface ExchangeRequest {
   receipt: "availability-only-v1";
   reply_to?: string;
 }
+export type ExchangeArtifact = ExchangeRequest["artifact"];
+export interface ExchangeOfferResult {
+  exchange: ArtifactExchange;
+  replayed: boolean;
+}
 export interface ArtifactExchange {
   id: string;
   sender_actor_id: string;
@@ -326,30 +331,12 @@ export function asExchangeRequest(value: unknown): ExchangeRequest {
     ["schema_version", "artifact", "endpoint", "expires_at", "receipt"],
     ["reply_to"],
   );
-  const a = fields(o.artifact, [
-    "file_revision_id",
-    "size_bytes",
-    "sha256",
-    "acceptance_policy",
-  ]);
+  const artifact = asExchangeArtifact(o.artifact);
   const e = fields(o.endpoint, ["id", "revision", "hash"]);
-  if (
-    o.schema_version !== 1 ||
-    o.receipt !== "availability-only-v1" ||
-    typeof a.acceptance_policy !== "string" ||
-    !/^(?:integrity-only-v1|intake-csv-v1:[0-9a-f]{64})$/.test(
-      a.acceptance_policy,
-    )
-  )
-    refuse();
+  if (o.schema_version !== 1 || o.receipt !== "availability-only-v1") refuse();
   return {
     schema_version: 1,
-    artifact: {
-      file_revision_id: identifier(a.file_revision_id),
-      size_bytes: integer(a.size_bytes, 0),
-      sha256: hash(a.sha256),
-      acceptance_policy: a.acceptance_policy,
-    },
+    artifact,
     endpoint: {
       id: identifier(e.id),
       revision: integer(e.revision, 1),
@@ -360,11 +347,59 @@ export function asExchangeRequest(value: unknown): ExchangeRequest {
     ...(o.reply_to !== undefined ? { reply_to: identifier(o.reply_to) } : {}),
   };
 }
+export function asExchangeArtifact(
+  value: unknown,
+  expectedID?: string,
+): ExchangeArtifact {
+  const a = fields(value, [
+    "file_revision_id",
+    "size_bytes",
+    "sha256",
+    "acceptance_policy",
+  ]);
+  if (
+    (expectedID !== undefined &&
+      identifier(a.file_revision_id) !== expectedID) ||
+    typeof a.acceptance_policy !== "string" ||
+    !/^(?:integrity-only-v1|intake-csv-v1:[0-9a-f]{64})$/.test(
+      a.acceptance_policy,
+    )
+  )
+    refuse();
+  return {
+    file_revision_id: identifier(a.file_revision_id),
+    size_bytes: integer(a.size_bytes, 0),
+    sha256: hash(a.sha256),
+    acceptance_policy: a.acceptance_policy,
+  };
+}
 export function exchangeRequestBytes(value: unknown): Uint8Array {
   return new TextEncoder().encode(JSON.stringify(asExchangeRequest(value)));
 }
 export function exchangeRequestHash(value: unknown): string {
   return digestBytes(exchangeRequestBytes(value));
+}
+
+export function asExchangeOfferResult(
+  value: unknown,
+  request: ExchangeRequest,
+  context: ExchangeIdentity,
+  recipient: string,
+): ExchangeOfferResult {
+  const o = fields(value, ["exchange", "replayed"]);
+  const e = object(o.exchange);
+  const row = asIncomingView(
+    { id: e.id, state: "offered", exchange: e },
+    { ...context, actor: identifier(recipient) },
+  );
+  if (
+    row.state !== "offered" ||
+    row.exchange.sender_actor_id !== context.actor ||
+    row.exchange.request_hash !== exchangeRequestHash(request) ||
+    typeof o.replayed !== "boolean"
+  )
+    refuse();
+  return { exchange: row.exchange, replayed: o.replayed };
 }
 export function asIncomingView(
   value: unknown,

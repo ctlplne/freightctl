@@ -179,6 +179,20 @@ func (s *Server) closeExchange(w http.ResponseWriter, r *http.Request) {
 	respond(w, 200, result)
 }
 
+func (s *Server) exchangeSource(w http.ResponseWriter, r *http.Request) {
+	identity, err := scope(r)
+	if err != nil {
+		failure(w, err)
+		return
+	}
+	result, err := s.Service.InspectExchangeSource(r.Context(), identity, r.PathValue("file"))
+	if err != nil {
+		failure(w, err)
+		return
+	}
+	respond(w, 200, result)
+}
+
 func (s *Server) inspectExchange(w http.ResponseWriter, r *http.Request) {
 	identity, err := scope(r)
 	if err != nil {

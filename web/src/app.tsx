@@ -1,4 +1,5 @@
 import { ArtifactExchanges } from "./artifact-exchanges";
+import { ArtifactSend } from "./artifact-send";
 import { FileRechecks } from "./rechecks";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { createRoot } from "react-dom/client";
@@ -48,7 +49,7 @@ const messages: Record<string, string> = {
   artifact_exchange_unavailable:
     "Artifact exchange is disabled or its deployment settings are unavailable. Ask the operator to review the exchange configuration.",
   context_changed:
-    "Your workspace or account authority changed. Reconnect and reopen the receive endpoint.",
+    "Your workspace or account authority changed. Reconnect and reopen the exchange review or receive endpoint.",
   invalid_onboarding_command:
     "Review the draft name, responsible contacts and exchange requirements. Each requirement must name a contact in this draft; keep credentials out of notes.",
   invalid_partner_command:
@@ -142,6 +143,7 @@ function App() {
     [signingIn, setSigningIn] = useState(false);
   const [tab, setTab] = useState<
       | "receive"
+      | "send"
       | "files"
       | "uploads"
       | "checks"
@@ -157,6 +159,22 @@ function App() {
   const [folder, setFolder] = useState("/"),
     [files, setFiles] = useState<EntryPage>({ entries: [] }),
     [fileAfter, setFileAfter] = useState("");
+  const [sendSource, setSendSource] = useState<{
+    id: string;
+    context: string;
+  } | null>(null);
+  const sendContext = session
+    ? JSON.stringify([
+        session.identity.tenant_id,
+        session.identity.partner_id,
+        session.identity.actor_id,
+        session.identity.authority_revision,
+        session.identity.root_policy_digest,
+        session.session.id,
+      ])
+    : "";
+  const initialSendFile =
+    sendSource?.context === sendContext ? sendSource.id : "";
   const [uploads, setUploads] = useState<UploadPage>(emptyUploads),
     [uploadAfter, setUploadAfter] = useState("");
   const [checks, setChecks] = useState<CheckPage>({ checks: [] }),
@@ -191,6 +209,7 @@ function App() {
     session?.identity.permissions.includes(grant) ?? false;
   const resetWork = () => {
     setTab("files");
+    setSendSource(null);
     dialog.current?.close();
     setSignature(null);
     active.current?.abort();
@@ -708,6 +727,14 @@ function App() {
                 Receive artifacts
               </button>
             )}
+            {allowed("read") && allowed("deliver") && (
+              <button
+                aria-current={tab === "send" ? "page" : undefined}
+                onClick={() => setTab("send")}
+              >
+                Send artifacts
+              </button>
+            )}
             {allowed("admin") && allowed("accounts_manage") && (
               <button
                 aria-current={tab === "accounts" ? "page" : undefined}
@@ -869,50 +896,54 @@ function App() {
                     : "PARTNER WORKSPACE"}
                 </p>
                 <h1>
-                  {tab === "receive"
-                    ? "Receive artifacts"
-                    : tab === "files"
-                      ? "Files"
-                      : tab === "uploads"
-                        ? "Uploads"
-                        : tab === "partners"
-                          ? "Partners"
-                          : tab === "collections"
-                            ? "Remote collection"
-                            : tab === "schedules"
-                              ? "Workflow schedules"
-                              : tab === "approvals"
-                                ? "Independent approvals"
-                                : tab === "onboarding"
-                                  ? "Onboarding plans"
-                                  : tab === "policy"
-                                    ? "Intake policy"
-                                    : tab === "accounts"
-                                      ? "Accounts"
-                                      : "Intake checks"}
+                  {tab === "send"
+                    ? "Send artifacts"
+                    : tab === "receive"
+                      ? "Receive artifacts"
+                      : tab === "files"
+                        ? "Files"
+                        : tab === "uploads"
+                          ? "Uploads"
+                          : tab === "partners"
+                            ? "Partners"
+                            : tab === "collections"
+                              ? "Remote collection"
+                              : tab === "schedules"
+                                ? "Workflow schedules"
+                                : tab === "approvals"
+                                  ? "Independent approvals"
+                                  : tab === "onboarding"
+                                    ? "Onboarding plans"
+                                    : tab === "policy"
+                                      ? "Intake policy"
+                                      : tab === "accounts"
+                                        ? "Accounts"
+                                        : "Intake checks"}
                 </h1>
                 <p>
-                  {tab === "receive"
-                    ? "Discover and retrieve exact artifacts under current receive permissions."
-                    : tab === "files"
-                      ? "Published paths. Retrieval checks your current access and intake policy."
-                      : tab === "uploads"
-                        ? "Send one exact file. Continue from the last server-confirmed checkpoint."
-                        : tab === "partners"
-                          ? "Enroll partners under explicit tenant authority; review each administrator credential and grants."
-                          : tab === "collections"
-                            ? "Review ready manifests, exact input receipts, intake holds and separate downstream decisions."
-                            : tab === "schedules"
-                              ? "Review calendar rules, complete source revisions, deadlines and ordinary transfer receipts."
-                              : tab === "approvals"
-                                ? "Review exact production effects under the partner’s approval policy."
-                                : tab === "onboarding"
-                                  ? "Record responsible contacts and exact exchange requirements as versioned drafts."
-                                  : tab === "policy"
-                                    ? "Review expected columns, processing limits and exact policy versions before activation or revocation."
-                                    : tab === "accounts"
-                                      ? "Review scoped access, credential rotation, expiry and revocation."
-                                      : "Held files need their required checks and a separate release decision."}
+                  {tab === "send"
+                    ? "Review an exact source and approved recipient before offering access."
+                    : tab === "receive"
+                      ? "Discover and retrieve exact artifacts under current receive permissions."
+                      : tab === "files"
+                        ? "Published paths. Retrieval checks your current access and intake policy."
+                        : tab === "uploads"
+                          ? "Send one exact file. Continue from the last server-confirmed checkpoint."
+                          : tab === "partners"
+                            ? "Enroll partners under explicit tenant authority; review each administrator credential and grants."
+                            : tab === "collections"
+                              ? "Review ready manifests, exact input receipts, intake holds and separate downstream decisions."
+                              : tab === "schedules"
+                                ? "Review calendar rules, complete source revisions, deadlines and ordinary transfer receipts."
+                                : tab === "approvals"
+                                  ? "Review exact production effects under the partner’s approval policy."
+                                  : tab === "onboarding"
+                                    ? "Record responsible contacts and exact exchange requirements as versioned drafts."
+                                    : tab === "policy"
+                                      ? "Review expected columns, processing limits and exact policy versions before activation or revocation."
+                                      : tab === "accounts"
+                                        ? "Review scoped access, credential rotation, expiry and revocation."
+                                        : "Held files need their required checks and a separate release decision."}
                 </p>
               </div>
               <button
@@ -933,6 +964,15 @@ function App() {
                 api={api}
                 session={session}
                 refresh={refresh}
+                onError={reportError}
+              />
+            )}
+            {tab === "send" && allowed("read") && allowed("deliver") && (
+              <ArtifactSend
+                key={sendContext + ":" + initialSendFile}
+                api={api}
+                session={session}
+                initialFileID={initialSendFile}
                 onError={reportError}
               />
             )}
@@ -1112,6 +1152,27 @@ function App() {
                                     </span>
                                   </a>
                                 )}
+                                {entry.kind === "file" &&
+                                  entry.file_id &&
+                                  allowed("read") &&
+                                  allowed("deliver") && (
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        setSendSource({
+                                          id: entry.file_id!,
+                                          context: sendContext,
+                                        });
+                                        setTab("send");
+                                      }}
+                                    >
+                                      Send artifact
+                                      <span className="sr-only">
+                                        {" "}
+                                        {name(entry.path)}
+                                      </span>
+                                    </button>
+                                  )}
                               </td>
                             </tr>
                           ))}

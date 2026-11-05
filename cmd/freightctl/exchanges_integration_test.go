@@ -182,6 +182,14 @@ func TestArtifactExchangeCLIUsesOrdinaryAuthorityAndPublishesVerifiedDownload(t 
 		t.Fatal(err)
 	}
 	request := store.ExchangeRequest{Schema: 1, Artifact: store.ExchangeArtifact{ID: file.ID, Size: file.Size, SHA256: file.SHA256, Policy: file.Policy}, Endpoint: store.ExchangeEndpointReference{ID: endpoint.Endpoint.ID, Revision: endpoint.Endpoint.Revision, Hash: endpoint.Endpoint.Hash}, ExpiresAt: time.Now().UTC().Add(2 * time.Minute).Truncate(time.Microsecond), Receipt: "availability-only-v1"}
+	body, err = command(a, "exchange-source-inspect", "-exchange-id", file.ID)
+	var source store.ExchangeArtifact
+	if err != nil || json.Unmarshal(body, &source) != nil || source != request.Artifact {
+		t.Fatal("CLI source review metadata", err)
+	}
+	if _, err = command(b, "exchange-source-inspect", "-exchange-id", file.ID); !errors.Is(err, store.ErrForbidden) {
+		t.Fatal("CLI receive-only role gained source review", err)
+	}
 	input = requestFile(request)
 	// Discard the first command result; the original key must recover it.
 	if _, err = command(a, "exchange-offer", "-request-file", input, "-idempotency-key", "offer"); err != nil {

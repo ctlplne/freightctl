@@ -73,7 +73,7 @@ func runExchanges(ctx context.Context, command string, o exchangeOptions, output
 		if !store.ValidID(o.Endpoint) {
 			return store.ErrExchangeInput
 		}
-	case "exchange-inspect", "exchange-download":
+	case "exchange-inspect", "exchange-download", "exchange-source-inspect":
 		if !store.ValidID(o.ID) {
 			return store.ErrExchangeInput
 		}
@@ -133,6 +133,8 @@ func runExchanges(ctx context.Context, command string, o exchangeOptions, output
 		result, err = db.IncomingExchanges(ctx, scope, o.Endpoint, o.After, o.Limit, limits)
 	case "exchange-inspect":
 		result, err = service.InspectExchange(ctx, scope, o.ID)
+	case "exchange-source-inspect":
+		result, err = service.InspectExchangeSource(ctx, scope, o.ID)
 	case "exchange-download":
 		var file *store.File
 		var reader *custody.RevisionReader

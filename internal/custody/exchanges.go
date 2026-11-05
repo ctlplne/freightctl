@@ -83,6 +83,30 @@ func (s *Service) OfferExchange(ctx context.Context, scope store.Scope, key stri
 	return &store.ArtifactExchangeResult{Exchange: *e}, t.Tx.Commit(ctx)
 }
 
+// Review metadata only. Publication still independently verifies the complete
+// storage bytes, endpoint/head/participants, policy and every request binding.
+func (s *Service) InspectExchangeSource(ctx context.Context, scope store.Scope, id string) (*store.ExchangeArtifact, error) {
+	if !store.ValidID(id) {
+		return nil, store.ErrExchangeInput
+	}
+	if _, _, err := s.ExchangeLimits(); err != nil {
+		return nil, err
+	}
+	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
+	t, err := s.DB.Begin(ctx, scope)
+	if err != nil {
+		return nil, err
+	}
+	defer t.Tx.Rollback(ctx)
+	f, err := t.AuthorizeExchangeSource(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	result := &store.ExchangeArtifact{ID: f.ID, Size: f.Size, SHA256: f.SHA256, Policy: f.Policy}
+	return result, t.Tx.Commit(ctx)
+}
+
 func (s *Service) OpenExchangeReader(ctx context.Context, scope store.Scope, id string) (*store.File, *RevisionReader, error) {
 	if !store.ValidID(id) {
 		return nil, nil, store.ErrNotFound

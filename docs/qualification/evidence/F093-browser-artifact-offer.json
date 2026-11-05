@@ -1,0 +1,157 @@
+{
+  "schema_version": 1,
+  "id": "F093",
+  "observed_at": "2026-11-05",
+  "starting_commit": "e00191ac66ffdc2a26742498b8df4952d3b9ac56",
+  "state": "Exact-source API/CLI review and browser offer/withdrawal implemented; native runtime/complete AX acceptance owed",
+  "qualification_claim": false,
+  "change": [
+    "Factor ordinary read/deliver,current namespace/source and intake policy checks into AuthorizeExchangeSource,shared by metadata review and actual offer creation. No incoming-view bypass. Metadata review reserves nothing and verifies no storage bytes.",
+    "GET exchange-sources/{file} and exchange-source-inspect CLI return only exact immutable artifact metadata. Actual offer creation independently checks complete storage bytes and all live endpoint/participant/policy bindings.",
+    "Send artifacts UI uses explicit own source,approved current sender-bound endpoint,exact expiry and optional reply correlation. Files links the selected immutable revision. Review and confirmation are separate user actions.",
+    "Offer receipt validation binds sender,recipient,canonical exact request,event and replay boolean; invented stronger receipt facts refuse. Sender withdrawal uses the ordinary terminal decision service.",
+    "Exact offer and withdrawal keys survive response loss while the review remains mounted. Scope/session/authority changes prevent old review/receipt disclosure. No payload bytes,credentials or artifact instructions enter the review.",
+    "Native Chrome adds ordinary sender directory/source review,real offer and sender cancellation plus independent recipient404,retaining original exact download,decline,wrong-actor,actual endpoint revocation/stale digest removal and all eight accessibility states."
+  ],
+  "red": {
+    "test": "TestExchangeSourceRejectsMalformedRevisionBeforeDatabase",
+    "observed": "Missing source review route returns404 rather than selector400 before database access",
+    "reference": ".private/freightctl-f093-source-red.log",
+    "sha256": "5c44c610262d27fad1997cf59f7de519e6834709dfc660b54e42becc5b1f5738"
+  },
+  "green": {
+    "browser_methods": 11,
+    "Go_handler_CLI_methods": 2,
+    "native_browser_summary_pure_method": 1,
+    "typecheck": "pass",
+    "build": "pass app.js714321bytes",
+    "affected_native_compilation": "pass; no runtime",
+    "affected_vet": "pass",
+    "architecture": "pass",
+    "formatting": "pass",
+    "driver_syntax": "pass",
+    "OpenAPI_local_refs": "9paths/163refs resolved"
+  },
+  "prepared_native": [
+    "Real PG source review own/unrelated/receive-only/current-policy refusal",
+    "Original served HTTPS source metadata positive and receive-only/broader-role-but-no-source refusals",
+    "Original CLI command-dispatch source review exact metadata/role refusal",
+    "Original actual Chrome now requires one committed offer,one sender cancellation,one recipient decline,one exact download,eight accessibility states,zero egress and no model; complete source/runtime proof owed"
+  ],
+  "limits": [
+    "UI review lives only in memory; navigation/reload loses it. Durable export/import,outgoing history and actual browser response-loss/crash recovery remain mandatory work.",
+    "Browser JSON integers must remain exactly safe; API/CLI retain their explicit int64 contracts. No silent rounding.",
+    "No new SQL migration,retained upgrade,local heavy runtime,inference,publication or deployment."
+  ],
+  "source_files": [
+    {
+      "path": "cmd/freightctl/exchanges.go",
+      "sha256": "7d5c736180d86cc472e15665b3ade4c8c6debac739f2789aa81e5f0d76fbbcd6"
+    },
+    {
+      "path": "cmd/freightctl/exchanges_integration_test.go",
+      "sha256": "a8ea3026d2debcbbbdda93173fe87e0047ea157d10efa46fb4e0dbee3c0231de"
+    },
+    {
+      "path": "cmd/freightctl/exchanges_test.go",
+      "sha256": "124b1d31ac967975b484d6d93c2d07978ee00002e2d5f1ff8a387a302f0f6110"
+    },
+    {
+      "path": "cmd/freightctl/main.go",
+      "sha256": "727926d344fe479df3f0cbbd5a0387a53bc860aae09c327be057b7b8b61c680e"
+    },
+    {
+      "path": "docs/api/artifact-exchange.openapi.json",
+      "sha256": "460f37758272fba4320a759ed33ed9deb080d4b3354473fde041ad4b624dc1db"
+    },
+    {
+      "path": "docs/protocols/artifact-exchange-browser.md",
+      "sha256": "36ef74a474c9655e6f27ddb86a34a7be69a9c851e262a9784a219d0435900273"
+    },
+    {
+      "path": "docs/protocols/artifact-exchange-cli.md",
+      "sha256": "67c2598b2b152520219bbea2c178c59a5c65ac72eada0ee0241cae6b4578369d"
+    },
+    {
+      "path": "docs/protocols/artifact-exchange-send-browser.md",
+      "sha256": "b75e38e40e208e2d7e2d9ac0f2937187612db81f81e3a4f72e56733c7b65fb3f"
+    },
+    {
+      "path": "docs/protocols/artifact-exchange.md",
+      "sha256": "80b512f11d2eef886f19bff28c365597c617cf984226e7b8fbe5bb0e471f2315"
+    },
+    {
+      "path": "internal/api/api.go",
+      "sha256": "29c5ee6218a233010b6688866240d7826deedbd835267430f6b67a22acfe990e"
+    },
+    {
+      "path": "internal/api/artifact_exchange_browser_integration_test.go",
+      "sha256": "c0ae93731b27760571f0649bbb97400aa51dd31381da17ccbc805e17be237aa3"
+    },
+    {
+      "path": "internal/api/artifact_exchanges.go",
+      "sha256": "44ff5a0cb4e497bbd205a042c5e34dcfcdbc1e8cf0b209a95af17668fe46731b"
+    },
+    {
+      "path": "internal/api/artifact_exchanges_integration_test.go",
+      "sha256": "885bad1af82f377b3c7f1c3957bf4ce92a1dbdbc4e5b13bc7b77dd0dccad543c"
+    },
+    {
+      "path": "internal/api/artifact_exchanges_test.go",
+      "sha256": "170ea6673fe5a6472543261ee4ef2aabbf9594e55a113ce1a0f6e1d02b881d01"
+    },
+    {
+      "path": "internal/browser/assets/app.js",
+      "sha256": "2d8aefc9ee1fb5ddaf1b026908e0b986d6867d5b967deebf8ec82e6e00619d03"
+    },
+    {
+      "path": "internal/browser/assets/manifest.json",
+      "sha256": "94ab15e8f92d94a90d2be6064cd8b25199fcc75958b994878dd4e50a4d903e8c"
+    },
+    {
+      "path": "internal/custody/exchange_source_integration_test.go",
+      "sha256": "3371beb62597eed1bc787c81e6988aedfd0c6e7a0d91797f1c6123e8590fb973"
+    },
+    {
+      "path": "internal/custody/exchanges.go",
+      "sha256": "ea32935e1418909080baadf5a1f915bca081bd781ad52effdcc909f25c590a1d"
+    },
+    {
+      "path": "internal/store/artifact_exchanges.go",
+      "sha256": "878819a5d07a8cf577426bfc741ccb65331f0560906062fffedfbeb5c4ac2c5a"
+    },
+    {
+      "path": "scripts/artifact-exchange-browser.mjs",
+      "sha256": "3f4934b096b86e8b229ab823e183b9d277338a21cb42c6dcb1563dbadff0af75"
+    },
+    {
+      "path": "web/src/app.tsx",
+      "sha256": "05aa6afb5314bc373a72de8496649852a84a65c510088c699ebe4247ddf69e4c"
+    },
+    {
+      "path": "web/src/artifact-exchanges-api.ts",
+      "sha256": "ddb853e9e57bbc1e4efe3effb69e362f5b6ab5e059377dc936f1a385926eee9a"
+    },
+    {
+      "path": "web/src/artifact-exchanges-types.ts",
+      "sha256": "c991c0b7dd81f5219c96f3dd053384d8c3c9a5214581256bb63d4e113610fe24"
+    },
+    {
+      "path": "web/src/artifact-send.tsx",
+      "sha256": "1be55f73bd92c74cfc82b892160d38ffa574eb3063568f1006277187c8022a87"
+    },
+    {
+      "path": "web/tests/artifact-exchange.test.mjs",
+      "sha256": "05a9aae5d6f361130a51296c97d2047f3828fbc3a4c963e112b4dba5740fe14a"
+    }
+  ],
+  "local_manifest": {
+    "reference": ".private/freightctl-f093/manifest.json",
+    "sha256": "221c1c27ac54a723a935918e8ab9e7563487fcb3a85c8ef6dbe7f59c2f2280d3"
+  },
+  "owed": [
+    "Actual final-source PG/HTTPS/CLI/Chrome runtime and independent caller/receiver proof; parser/static/compile results do not qualify runtime",
+    "Durable review recovery,outgoing history,endpoint admin/agent surfaces,ingress/onward bridges,all AX profiles",
+    "Current e001 original CI security results and deferred nonsecurity failures; all mandatory FINISH gates and original83whole rows/12journeys remain open"
+  ]
+}

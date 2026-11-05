@@ -602,6 +602,57 @@
           }
         }
       }
+    },
+    "/v1/tenants/{tenant}/partners/{partner}/exchange-sources/{file}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/tenant"
+        },
+        {
+          "$ref": "#/components/parameters/partner"
+        },
+        {
+          "$ref": "#/components/parameters/file"
+        }
+      ],
+      "get": {
+        "operationId": "reviewArtifactExchangeSource",
+        "summary": "Review an exact source revision under current sender authority",
+        "description": "Read/deliver authority and ordinary source-file/namespace/intake checks are required. An incoming view alone is not source permission. This returns metadata only,not verified storage bytes,a reserved endpoint or a publication grant. Actual offer creation independently repeats these checks and verifies exact complete storage bytes.",
+        "responses": {
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "413": {
+            "$ref": "#/components/responses/413"
+          },
+          "503": {
+            "$ref": "#/components/responses/503"
+          },
+          "200": {
+            "description": "Currently authorized exact immutable source metadata. Subsequent publication still checks all live dependencies.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Artifact"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -673,6 +724,14 @@
           "type": "string"
         },
         "description": "Required for cookie mutations and must equal the HTTPS origin. Explicit bearer requests do not fall back to cookie identity."
+      },
+      "file": {
+        "name": "file",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "$ref": "#/components/schemas/ID"
+        }
       }
     },
     "responses": {

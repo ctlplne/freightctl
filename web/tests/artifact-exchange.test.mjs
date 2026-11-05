@@ -422,3 +422,151 @@ test("directory adapter never turns a sender-only or stale manager record into a
   stale.definition_hash = p.endpointDefinitionHash(stale.definition, context);
   assert.equal(manager.isReceiveEndpoint(stale), false);
 });
+
+test("source review and offer receipts bind exact bytes,sender,recipient and original request", () => {
+  const row = offered(),
+    sender = { ...context, actor: row.exchange.sender_actor_id };
+  const request = row.exchange.request;
+  const result = { exchange: row.exchange, replayed: false };
+  assert.deepEqual(
+    p.asExchangeArtifact(request.artifact, request.artifact.file_revision_id),
+    request.artifact,
+  );
+  assert.throws(() => p.asExchangeArtifact(request.artifact, id(99)));
+  for (const patch of [
+    { size_bytes: Number.MAX_SAFE_INTEGER + 1 },
+    { acceptance_policy: "approved" },
+    { sha256: "private" },
+    { file_revision_id: "https://unapproved.invalid" },
+    { storage_id: id(99) },
+  ])
+    assert.throws(() =>
+      p.asExchangeArtifact({ ...request.artifact, ...patch }),
+    );
+  assert.deepEqual(
+    p.asExchangeOfferResult(result, request, sender, context.actor),
+    result,
+  );
+  for (const change of [
+    (r) => (r.exchange.sender_actor_id = id(99)),
+    (r) => (r.exchange.recipient_actor_id = id(99)),
+    (r) => {
+      r.exchange.request.artifact.sha256 = "e".repeat(64);
+      r.exchange.request_hash = p.exchangeRequestHash(r.exchange.request);
+    },
+    (r) => (r.exchange.event_id = "not-an-id"),
+    (r) => (r.replayed = null),
+    (r) => (r.business_processed = true),
+  ]) {
+    const bad = structuredClone(result);
+    change(bad);
+    assert.throws(() =>
+      p.asExchangeOfferResult(bad, request, sender, context.actor),
+    );
+  }
+});
+
+test("sender adapter reuses exact offer/cancel keys and rechecks current participant bindings", async () => {
+  const fixture = JSON.parse(
+    await readFile(
+      new URL("fixtures/artifact-exchange.json", import.meta.url),
+      "utf8",
+    ),
+  );
+  const endpoint = {
+    id: context.endpoint,
+    revision: 1,
+    definition: fixture.endpoint,
+    definition_hash: fixture.endpoint_sha256,
+    state: "active",
+    recorded_by: id(7),
+    event_id: id(8),
+  };
+  const row = offered();
+  row.exchange.request.endpoint.hash = endpoint.definition_hash;
+  row.exchange.request_hash = p.exchangeRequestHash(row.exchange.request);
+  const request = row.exchange.request,
+    source = request.artifact;
+  const { createHash } = await import("node:crypto");
+  const close = {
+    schema_version: 1,
+    exchange_id: row.id,
+    request_hash: row.exchange.request_hash,
+    operation: "cancel",
+  };
+  const terminal = {
+    exchange_id: row.id,
+    state: "canceled",
+    command_hash: createHash("sha256")
+      .update(p.exchangeClosureBytes(close))
+      .digest("hex"),
+    event_id: id(21),
+    replayed: false,
+  };
+  let during = () => {},
+    replayed = false;
+  const calls = [];
+  const api = {
+    session: {
+      identity: {
+        tenant_id: context.tenant,
+        partner_id: context.partner,
+        actor_id: id(6),
+        authority_revision: 1,
+        root_policy_digest: "d".repeat(64),
+        permissions: ["read", "deliver"],
+      },
+      session: { id: id(99) },
+    },
+    request: async (path, options, decode) => {
+      calls.push({ path, options });
+      during();
+      return decode(
+        path.includes("exchange-sources/")
+          ? source
+          : path.endsWith("exchange-closures")
+            ? terminal
+            : { exchange: row.exchange, replayed },
+      );
+    },
+  };
+  const client = new a.ExchangeReceiveApi(api);
+  assert.equal(client.isSendEndpoint(endpoint), true);
+  assert.equal(client.isReceiveEndpoint(endpoint), false);
+  assert.deepEqual(await client.source(source.file_revision_id), source);
+  assert.deepEqual(await client.offer(request, endpoint, "fixed-offer"), {
+    exchange: row.exchange,
+    replayed: false,
+  });
+  replayed = true;
+  assert.equal(
+    (await client.offer(request, endpoint, "fixed-offer")).replayed,
+    true,
+  );
+  assert.deepEqual(calls[1], calls[2]);
+  assert.deepEqual(JSON.parse(calls[1].options.body), request);
+  assert.equal(calls[1].options.headers["Idempotency-Key"], "fixed-offer");
+  assert.deepEqual(
+    await client.cancelOffer(row.exchange, "fixed-cancel"),
+    terminal,
+  );
+  assert.deepEqual(JSON.parse(calls[3].options.body), close);
+  await assert.rejects(() =>
+    client.offer(request, { ...endpoint, state: "revoked" }, "fixed-offer"),
+  );
+  await assert.rejects(() =>
+    client.offer(
+      { ...request, endpoint: { ...request.endpoint, revision: 2 } },
+      endpoint,
+      "fixed-offer",
+    ),
+  );
+  await assert.rejects(() => client.source("not-a-revision"));
+  assert.equal(calls.length, 4);
+  during = () => api.session.identity.authority_revision++;
+  await assert.rejects(
+    () => client.offer(request, endpoint, "fixed-offer"),
+    (e) => e.code === "context_changed",
+  );
+  assert.equal(client.isCurrent(), false);
+});

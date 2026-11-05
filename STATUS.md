@@ -45,6 +45,14 @@ receipts survive. Public audit hashes protect private closure keys/bindings. Bot
 missing-route and audit-privacy reds are repaired. Native lock/RLS/SQL/API/CLI and
 six-state Chrome proofs are prepared and owed, preserving original failures.
 
+F093 adds exact source review through API/CLI and reviewed browser sending with
+approved-recipient discovery,original offer/withdrawal retry keys and typed exact
+receipt validation. Source review and offer creation share ordinary source/path/
+policy authorization; an incoming view supplies no onward permission. Eleven
+browser adapter/parser methods and affected local checks pass. Native source/
+HTTPS/CLI and eight-state Chrome profiles are prepared,not qualified. Reviews are
+currently held in memory; durable review recovery/outgoing history remain work.
+
 Focused local parser/client/filesystem/summary regressions and affected static,
 frontend build, native compilation/vet and architecture checks pass. They establish
 no PostgreSQL, served browser, stock-peer or complete AX profile qualification.

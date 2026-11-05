@@ -21,6 +21,8 @@ for (const value of [
   c.exchange,
   c.closure_exchange,
   c.file,
+  c.sender_actor,
+  c.recipient_actor,
 ])
   assert.match(value, /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/);
 assert.match(c.sha256, /^[0-9a-f]{64}$/);
@@ -45,6 +47,8 @@ let browser,
   accessibilityChecks = 0,
   downloads = 0,
   declines = 0,
+  offers = 0,
+  cancels = 0,
   failureHash;
 try {
   browser = await chromium.launch({
@@ -203,6 +207,122 @@ try {
     await recipient.page.evaluate(() => globalThis.freightctlArtifactExecuted),
     undefined,
   );
+  phase = "sender-login";
+  const sender = await login(c.sender_token);
+  await sender.page
+    .getByRole("button", { name: "Send artifacts", exact: true })
+    .click();
+  phase = "sender-directory";
+  const recipients = sender.page.waitForResponse((r) =>
+    new URL(r.url()).pathname.endsWith("/exchange-endpoints"),
+  );
+  await sender.page
+    .getByRole("button", { name: "Find approved recipients", exact: true })
+    .click();
+  assert.equal((await recipients).status(), 200);
+  await sender.page
+    .getByRole("button", {
+      name: "Use endpoint " + c.endpoint.slice(0, 8),
+      exact: true,
+    })
+    .click();
+  await sender.page
+    .getByLabel("Source file revision ID", { exact: true })
+    .fill(c.file);
+  phase = "sender-review";
+  await sender.page
+    .getByRole("button", { name: "Review artifact offer", exact: true })
+    .click();
+  await sender.page
+    .getByRole("heading", { name: "Review exact artifact offer", exact: true })
+    .waitFor();
+  assert.ok((await sender.page.locator("body").innerText()).includes(c.sha256));
+  await accessibility(sender.page, "sender-review-accessibility");
+  phase = "sender-offer";
+  const publication = sender.page.waitForResponse(
+    (r) =>
+      new URL(r.url()).pathname.endsWith("/exchanges") &&
+      r.request().method() === "POST",
+  );
+  await sender.page
+    .getByRole("button", {
+      name: "Confirm artifact offer or recover result",
+      exact: true,
+    })
+    .click();
+  const publicationResponse = await publication;
+  assert.equal(publicationResponse.status(), 201);
+  const sent = await publicationResponse.json();
+  assert.equal(sent.replayed, false);
+  assert.equal(sent.exchange.sender_actor_id, c.sender_actor);
+  assert.equal(sent.exchange.recipient_actor_id, c.recipient_actor);
+  assert.equal(sent.exchange.request.artifact.file_revision_id, c.file);
+  assert.equal(sent.exchange.request.artifact.size_bytes, c.size);
+  assert.equal(sent.exchange.request.artifact.sha256, c.sha256);
+  assert.equal(sent.exchange.request.receipt, "availability-only-v1");
+  assert.equal(
+    sent.exchange.request_hash,
+    createHash("sha256")
+      .update(JSON.stringify(sent.exchange.request))
+      .digest("hex"),
+  );
+  await sender.page
+    .getByRole("heading", {
+      name: "Committed availability receipt",
+      exact: true,
+    })
+    .waitFor();
+  offers++;
+  await accessibility(sender.page, "sender-receipt-accessibility");
+  phase = "sender-cancel";
+  const withdrawal = sender.page.waitForResponse(
+    (r) =>
+      new URL(r.url()).pathname.endsWith("/exchange-closures") &&
+      r.request().method() === "POST",
+  );
+  await sender.page
+    .getByRole("button", {
+      name: "Withdraw this artifact offer or recover result",
+      exact: true,
+    })
+    .click();
+  const withdrawalResponse = await withdrawal;
+  assert.equal(withdrawalResponse.status(), 200);
+  const withdrawn = await withdrawalResponse.json();
+  assert.equal(withdrawn.exchange_id, sent.exchange.id);
+  assert.equal(withdrawn.state, "canceled");
+  assert.equal(withdrawn.replayed, false);
+  assert.equal(
+    withdrawn.command_hash,
+    createHash("sha256")
+      .update(
+        JSON.stringify({
+          schema_version: 1,
+          exchange_id: sent.exchange.id,
+          request_hash: sent.exchange.request_hash,
+          operation: "cancel",
+        }),
+      )
+      .digest("hex"),
+  );
+  await sender.page
+    .getByRole("status")
+    .filter({ hasText: "This offer was withdrawn." })
+    .waitFor();
+  cancels++;
+  const canceledStatus = await recipient.page.evaluate(
+    async (path) =>
+      (
+        await fetch(path, {
+          credentials: "same-origin",
+          redirect: "error",
+          cache: "no-store",
+        })
+      ).status,
+    `/v1/tenants/${c.tenant}/partners/${c.partner}/exchanges/${sent.exchange.id}/file`,
+  );
+  assert.equal(canceledStatus, 404);
+  await sender.context.close();
   phase = "recipient-decline-review";
   await recipient.page
     .getByRole("button", {
@@ -382,6 +502,8 @@ try {
     external_egress: egress,
     exact_downloads: downloads,
     terminal_declines: declines,
+    committed_offers: offers,
+    sender_cancellations: cancels,
     model_started: false,
     browser_sandbox: true,
     accessibility_checks: accessibilityChecks,

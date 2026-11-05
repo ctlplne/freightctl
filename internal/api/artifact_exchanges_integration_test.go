@@ -114,6 +114,12 @@ func TestArtifactExchangeHTTPSUsesSameCookieAndBearerAuthorityAndSeparateReply(t
 	exchangeAPIRequest(t, server, "GET", prefix+"/exchange-endpoints/"+command.ID, nil, map[string]string{"Authorization": "Bearer " + string(other.Bytes)}, nil, 404)
 	exchangeAPIRequest(t, server, "POST", prefix+"/exchange-endpoints/commands", nil, map[string]string{"Authorization": bearerA["Authorization"], "Idempotency-Key": "sender-cannot-admin"}, commandData, 403)
 	r := store.ExchangeRequest{Schema: 1, Artifact: store.ExchangeArtifact{ID: accepted.File.ID, Size: accepted.File.Size, SHA256: accepted.File.SHA256, Policy: accepted.File.Policy}, Endpoint: store.ExchangeEndpointReference{ID: endpoint.Endpoint.ID, Revision: endpoint.Endpoint.Revision, Hash: endpoint.Endpoint.Hash}, ExpiresAt: time.Now().UTC().Add(2 * time.Minute).Truncate(time.Microsecond), Receipt: "availability-only-v1"}
+	_, data = exchangeAPIRequest(t, server, "GET", prefix+"/exchange-sources/"+accepted.File.ID, nil, bearerA, nil, 200)
+	var reviewedSource store.ExchangeArtifact
+	if json.Unmarshal(data, &reviewedSource) != nil || reviewedSource != r.Artifact {
+		t.Fatal("source review did not bind actual authorized revision")
+	}
+	exchangeAPIRequest(t, server, "GET", prefix+"/exchange-sources/"+accepted.File.ID, nil, bearerB, nil, 403)
 	adminHeaders["Idempotency-Key"] = "admin-cannot-impersonate-sender"
 	exchangeAPIRequest(t, server, "POST", prefix+"/exchanges", cookie, adminHeaders, exchangeAPIJSON(t, r), 404)
 	offerHeaders := map[string]string{"Authorization": bearerA["Authorization"], "Idempotency-Key": "original-offer"}
@@ -166,6 +172,7 @@ func TestArtifactExchangeHTTPSUsesSameCookieAndBearerAuthorityAndSeparateReply(t
 		t.Fatal("reply authority did not advance")
 	}
 	actorB.AuthorityRevision, actorB.RootPolicyDigest = newIdentity.AuthorityRevision, newIdentity.RootPolicyDigest
+	exchangeAPIRequest(t, server, "GET", prefix+"/exchange-sources/"+accepted.File.ID, nil, bearerB, nil, 404)
 	command.ID = secure.NewID()
 	command.Definition = &store.ExchangeEndpointDefinition{Schema: 1, Profile: "custody-https-poll-v1", Recipient: actorA, Senders: []store.ExchangeParticipant{actorB}}
 	adminHeaders["Idempotency-Key"] = "reply-endpoint"

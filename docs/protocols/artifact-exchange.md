@@ -48,6 +48,9 @@ selectors must match the authenticated identity; they are not permission grants.
    Required checks and release must pass for the exact revision. Receive views
    require the current intake policy. A changed policy can hold an existing view;
    recovery can require a newly checked revision and a new view.
+   `GET exchange-sources/{file}` reviews its exact metadata with read/deliver,
+   namespace and current intake authorization. It grants no publication or bytes;
+   offer creation independently checks the same source path and exact storage.
 3. A root account manager posts `exchange-endpoints/commands` with an exact
    recipient and allowed sender bindings. `create`, `replace` and `revoke` use
    expected revisions and an idempotency key. Registration returns the approved
@@ -111,7 +114,7 @@ under their own permissions. Ordinary event feeds/audit exports retain the closu
 event identity and exact payload digest, keeping its operation key and private
 participant bindings in the protected journal.
 
-API/CLI closure and offered-view browser decline are implemented; agent tools,
-outgoing history, browser sending/admin and the complete OpenAPI surface remain
+API/CLI closure, offered-view browser decline and reviewed browser sending are
+implemented. Agent tools,outgoing history,browser endpoint administration and the complete OpenAPI surface remain
 implementation work. Actual stock-client,
 independent-receiver, crash/recovery, capacity and AX profile proofs remain owed.

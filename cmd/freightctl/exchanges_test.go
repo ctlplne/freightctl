@@ -22,6 +22,7 @@ func TestExchangeCLIRefusesInvalidSelectorsBeforeOpeningReferences(t *testing.T)
 		{"exchange-endpoint-inspect", "-exchange-endpoint-id", "not-an-id"},
 		{"exchange-incoming", "-exchange-endpoint-id", "not-an-id"},
 		{"exchange-inspect", "-exchange-id", "not-an-id"},
+		{"exchange-source-inspect", "-exchange-id", "not-an-id"},
 		{"exchange-download", "-exchange-id", "not-an-id", "-output", "must-not-create"},
 		{"exchange-offer", "-idempotency-key", "bad key"},
 		{"exchange-close", "-idempotency-key", "bad key"},
