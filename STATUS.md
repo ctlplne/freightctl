@@ -1,41 +1,42 @@
 # freightctl status
 
-Updated 2026-11-05. Application implementation is **active** under owner decision
-S003, recorded verbatim in [the owner-decision ledger](docs/qualification/remaining.json).
-The complete GOAL.md baseline and AX01–AX08 remain required. All 83 whole parity
-rows and twelve full customer journeys remain open. Assisted deployment,
+Updated 2026-11-05. The full GOAL.md baseline and AX01–AX08 are **active** under
+owner decision S003, recorded verbatim in the owner-decision ledger. All 83 whole
+parity rows and twelve full customer journeys remain open. Assisted deployment,
 independent adoption and enterprise readiness remain separately unqualified.
 
-Starting local main: dc74d8e33487dae53f18ebaa030a372e97770e9d; clean on resume.
-Origin/main: fc577d5745f873344b57d91153b27f21b0918314, pushed through the
-enabled guard (five outgoing commits, no leaks). Its first-run job passes; other
-required runs remain queued in the current completion snapshot. Next source push
-waits for terminal runs; implementation continues locally. Exact handles retained.
-Nonsecurity log investigation/repair is deferred to FINISH; none canceled.
+Origin/main is fc577d5745f873344b57d91153b27f21b0918314, pushed through the
+enabled Gitleaks/owner/fast-forward guard. Its first-run and FTPS workflows finish
+successfully; Windows/Mac finishes with a job failure. Nonsecurity log investigation
+and repair remain deferred to mandatory FINISH. Other required runs remain queued;
+the next source batch waits for terminal runs while implementation continues.
+Exact original run/job handles are retained. No original runtime run was canceled.
 
-Security triage: source/core/native vulnerability gates pass at 85695f6.
-Both native peer-image scans now reach enforcing-summary and refuse invalid
-evidence (exit2); the precise check is unknown. Both observe DB1691381760 within
-the approved1792MiB file allowance and exact scratch unmount. Existing F075 OOMs
-remain separate blockers. A static verifier-location diagnostic is prepared;
-it changes no check, finding policy, coverage or budget. No image is qualified.
-Original security evidence: .private/freightctl-s003-resume-security/manifest.json
-SHA256 7dffb350c24e2512034d498d4a287ef75129aef85cb552124bcbe9345160f6ba.
+F080/F081 provide canonical exchange contracts and journaled endpoint registration.
+F082 adds durable exact-revision receive views, actor-private retry receipts,
+bounded polling and per-chunk retrieval checks. Both live identities, source path
+authority, endpoint revision, storage identity and current intake policy are
+required. Receiving bytes grants no forwarding right; a new reply needs its own
+artifact and delivery permission. Read authorization proves neither receiver
+persistence nor business processing.
 
-Source/CI batches are authorized after previous required runs are terminal.
-The repository-local pre-push guard is enabled: pinned Gitleaks, exact owner
-author/committer and existing-origin/main fast-forward checks. It never authorizes
-release/package/image/artifact publication, visibility changes or deployment.
+Local F082 proof: three binding/policy/privacy methods, a configuration regression,
+seven metadata refusal checks, integration compilation/vet and import architecture
+pass. Eight native receive-view cases and four endpoint cases are prepared and
+owed. No PostgreSQL runtime or SQL validation is claimed by compilation. Fresh
+target42 expects69 metadata tables/68 forced-RLS tables; all41 historical SQL files
+are unchanged and retained schema35 is untouched.
 
-F080 implements bounded canonical endpoint/exchange contracts. Four focused
-methods, store vet and import architecture pass; the observed uppercase JSON alias
-regression is repaired. This grants no runtime or exchange qualification. Next:
-F081 prepares durable endpoint registration/current heads and atomic events/retry
-receipts. New fresh target41 has three additional forced-RLS tables; retained35
-is untouched. One command regression, seven metadata checks, compile/vet and
-architecture pass. Four real PostgreSQL tests and restore remain owed. Next:
-implement exchange records, polling/retrieval and separately authorized reply on
-these services, then expose shared public interfaces. Keep per-item focused proof; native/served outcomes
-stay owed until actual CI. Trust Control X07 blocks only its real provider profile.
-Retained schema35 and resources are unchanged. Local inference and heavy runtime
-qualification stay off; F026 remains manual/owner-deferred.
+Next: expose the shared services through API/CLI/UI/agent tools and qualify real
+AX-J01/J02/J03, including stock clients, independent bytes, interrupted/response-loss
+and process-death recovery. Per-view cancellation, retention, fairness/capacity and
+all remaining applicable baseline work remain required. Trust Control X07 blocks
+only its real provider profile; no API is invented.
+
+F075 stays red: original856 scans fit the approved1792MiB file allowance but fail
+strict evidence verification at an unknown check. Its fixed verifier-location
+diagnostic is in submitted fc577d5; that security replay is queued. Earlier exact
+OOMs remain separate blockers. All scanner/model/CPU/disk/time/security budgets
+remain unchanged. No local PG,Chrome,peer,scanner,image or inference runtime was
+started by this work. F026 remains manual/owner-deferred. Source/CI push authority
+does not authorize release/artifact publication,visibility changes or deployment.

@@ -127,8 +127,29 @@ nulls, trailing JSON, unqualified profiles and stronger receipt assertions. Its
 Configured artifact size, sender count and new-exchange lifetime impose admission
 bounds; expiry does not change the canonical meaning of a receipt replay. None of
 these structural checks authenticates a participant, opens a file or grants access.
-Registration, durable exchange records, polling, live checks, retrieval and public
-interface/runtime proof are the next implementation items and remain owed.
+Public surfaces and actual runtime proof remain owed for the services below.
+
+F081/F082 now implement the internal registration and receive-view services;
+their native PostgreSQL and public-interface proof remains owed. A view is a
+revocable permission for one exact file, not a copy/forwarding permission. Both
+participants, the original source path permission, endpoint revision, storage
+identity and current intake policy are rechecked before each bounded read. The
+server checks the stored sender's authority as a dependency without authenticating
+or acting as that sender. A reply uses a new artifact and separately granted
+delivery authority. Publication, retrieval authorization, receiver persistence and
+business processing retain separate meanings.
+
+Receive discovery pages contain at most 100 entries. A cursor completes one poll
+cycle; each new cycle starts without it so concurrent lower UUIDs are not lost.
+Held entries expose only a view ID and fixed state. Authority changes refuse the
+whole affected page rather than leaking an unauthorized cursor. Byte reads keep
+the existing 256 KiB cap and a 10 second authorization deadline. Deployment settings
+bound available views per sender, allowed senders and lifetime (whole seconds);
+requests retain exact UTC microsecond expiry. Admission counts unexpired views,
+including temporarily unavailable views. An unconfigured adapter refuses.
+These local checks establish no actual PostgreSQL,HTTPS,stock-client,process-death,
+independent-receiver,capacity or complete AX qualification. Public surfaces,
+per-view cancellation,retention/fairness and all reference profiles remain owed.
 
 | Existing foundation | Planned use |
 | --- | --- |

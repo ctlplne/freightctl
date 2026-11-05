@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "id": "F082",
+  "observed_at": "2026-11-05",
+  "starting_commit": "8e09454d7d732d0899f8a841d176dfa26a830251",
+  "state": "Receive-view core implemented; native and public-interface qualification owed.",
+  "qualification_claim": false,
+  "change": "Durable exact-revision receive views; shared source/endpoint/current-policy authorization; actor-private immutable command receipts; bounded receive discovery and per-chunk byte authorization. New replies require new artifact and separate delivery permission. No public exchange surface yet.",
+  "red": [
+    {
+      "test": "TestExchangeConfigurationRefusesUnusableLifetimeBeforeDatabaseUse",
+      "result": "exit1: unusable lifetime1ns accepted; fixed trusted configuration now requires positive whole seconds, with request expiry still exact UTC microseconds"
+    },
+    {
+      "test": "MetadataSummaryContracts.test_exact_profile_has_one_safe_result_with_no_raw_records_or_paths",
+      "result": "exit1: metadata migration source profile differs after adding42; fresh profile updated explicitly with all historical profiles retained"
+    }
+  ],
+  "green": {
+    "store_binding_policy_privacy_methods": 3,
+    "configuration_method": 1,
+    "metadata_refusal_methods": 7,
+    "integration_binary": "compiled only; never executed locally",
+    "integration_vet": "store and custody pass",
+    "architecture": "TestCoreImportBoundaries pass",
+    "migration_history": "41 historical SQL files byte-for-byte unchanged",
+    "fresh_target": {
+      "schema": 42,
+      "metadata_tables": 69,
+      "forced_rls_tables": 68
+    },
+    "retained": {
+      "schema": 35,
+      "metadata_tables": 64,
+      "forced_rls_tables": 63,
+      "action": "none"
+    }
+  },
+  "native_tests_owed": [
+    "TestArtifactExchangeReceiveAndSeparatelyAuthorizedReply",
+    "TestArtifactExchangeRevocationStopsAlreadyOpenReaderAndDiscovery",
+    "TestArtifactExchangeSQLRejectsMatchingEventForUnreadableSource",
+    "TestArtifactExchangeCurrentIntakePolicyStopsExistingAndNewViews",
+    "TestArtifactExchangeSenderRotationRemovesDiscoveryAndOpenReadAuthority",
+    "TestArtifactExchangeAdmissionPaginationAndStorageIdentityStayBounded",
+    "TestArtifactExchangeReceiptFailureRollsBackViewAndEventsThenOriginalKeyRecovers",
+    "TestArtifactExchangeSQLSourceCheckMatchesNamespaceModesAndAncestors"
+  ],
+  "source_files": {
+    "internal/store/042_artifact_exchanges.sql": "52128d9f7b42f763aa04487a1aaf83e7e21107df6c19d6e83e37200a95a1c7a0",
+    "internal/store/artifact_exchanges.go": "094c46308abc45f919f61ef38c37b75978b3583a30290b4cb398c121d535d5df",
+    "internal/store/artifact_exchanges_test.go": "e1b944d25508119b0b858810a6c5ad316f777462d2b41bbfa57a16c40519b16b",
+    "internal/store/exchange_contract.go": "b6368c7202706d803d08cfad43b44409e159d9a6ff62e891de1483ff390f57e7",
+    "internal/store/store.go": "7ea1e430b5892809e7ea306af783cdb6d7162bba2f71feb54892921e53a55704",
+    "internal/custody/exchanges.go": "308d8ef9c769918eeb94d41f5a292287bcbba9e6368f4b7970d1359174714649",
+    "internal/custody/exchanges_test.go": "9fdfed8ea3c1223a554551a59708622c06d176ba41e2f13d9daca7ffe78c5eb7",
+    "internal/custody/exchanges_integration_test.go": "417f6a64090a3375c1ff60c65ad020be879cc27e1504d9a522421975faa22d9b",
+    "internal/custody/service.go": "19d62b6128af7be90f2c6b574b6c291ef38b61a3cd8a4411ebf51226c7400145",
+    "internal/custody/writer.go": "92e415f0275b2c771367d9f06b34eae84b286340adee0e50163f998c3170ac4c",
+    "scripts/metadata_contract.py": "527ed222bf7c7a9f2757a77fdedf4eff0ea4f62b70c7a104500f4a70791d7e58",
+    "scripts/test-ci-metadata-summary.py": "b4e4a979210d54fd1cc10379cb7d8fc260b97e5334675202c9d7787c2e88155f"
+  },
+  "local_manifest": {
+    "reference": ".private/freightctl-f082-receive-views-20261105/manifest.json",
+    "sha256": "e7baecfde1bdb316e216d0637e94c000da5dc901c9031514e5ae14c3efa6a44c"
+  },
+  "limits": "Domain PostgreSQL/storage calls only when actually run. These tests do not establish HTTPS clients, independent peers, process death, model quality or a complete AX profile. They have not run locally.",
+  "owed": [
+    "Actual native migration42,all12 F081/F082 domain cases and metadata restore",
+    "Public API/CLI/UI/agent tools using these shared services",
+    "Actual AX-J01/J02/J03 with stock clients/independent byte observers and process/response-loss/recovery proof",
+    "Per-view cancellation,capacity/fairness/retention/endurance and all remaining GOAL gates",
+    "Mandatory FINISH includes original failures and deferred broad qualification; F026 remains manual/owner-deferred"
+  ]
+}

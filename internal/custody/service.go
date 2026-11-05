@@ -33,6 +33,7 @@ type Service struct {
 	ReconcileMaxBytes     int64
 	UploadCheckpointBytes int
 	NamespaceMaxEntries   int
+	Exchanges             ExchangeSettings
 }
 
 func (s *Service) Accept(ctx context.Context, scope store.Scope, key string, size int64, digest string, body io.Reader) (*store.File, bool, error) {

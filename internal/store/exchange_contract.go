@@ -66,7 +66,7 @@ type ExchangeLimits struct {
 }
 
 func (limits ExchangeLimits) valid() bool {
-	return limits.MaxArtifactBytes >= 0 && limits.MaxLifetime > 0 && limits.MaxSenders >= 1 && limits.MaxSenders <= 128
+	return limits.MaxArtifactBytes >= 0 && limits.MaxLifetime >= time.Second && limits.MaxLifetime%time.Second == 0 && limits.MaxSenders >= 1 && limits.MaxSenders <= 128
 }
 
 func validExchangeParticipant(p ExchangeParticipant) bool {

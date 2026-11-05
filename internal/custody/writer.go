@@ -388,13 +388,14 @@ func (w *RevisionWriter) Close() error {
 // RevisionReader rechecks current key/account/mount/mode authority for each
 // bounded read from the verified immutable descriptor.
 type RevisionReader struct {
-	mu      sync.Mutex
-	service *Service
-	ctx     context.Context
-	scope   store.Scope
-	file    *store.File
-	data    *os.File
-	closed  bool
+	mu         sync.Mutex
+	service    *Service
+	ctx        context.Context
+	scope      store.Scope
+	file       *store.File
+	data       *os.File
+	closed     bool
+	exchangeID string
 }
 
 func (s *Service) OpenRevisionReader(ctx context.Context, scope store.Scope, virtual string) (*RevisionReader, error) {
@@ -426,18 +427,34 @@ func (r *RevisionReader) ReadAt(p []byte, offset int64) (int, error) {
 	if len(p) > 256<<10 || offset < 0 {
 		return 0, ErrInput
 	}
-	t, err := r.service.DB.Begin(r.ctx, r.scope)
+	readContext := r.ctx
+	if r.exchangeID != "" {
+		var cancel context.CancelFunc
+		readContext, cancel = context.WithTimeout(r.ctx, 10*time.Second)
+		defer cancel()
+	}
+	t, err := r.service.DB.Begin(readContext, r.scope)
 	if err != nil {
 		return 0, err
 	}
-	defer t.Tx.Rollback(r.ctx)
+	defer t.Tx.Rollback(readContext)
 	if err = t.Require("read"); err != nil {
 		return 0, err
 	}
-	if err = t.FileAccessible(r.ctx, r.file.ID); err != nil {
+	if r.exchangeID != "" {
+		err = r.checkExchangeRead(readContext, t)
+	} else {
+		err = t.FileAccessible(readContext, r.file.ID)
+	}
+	if err != nil {
 		return 0, err
 	}
-	if err = t.Reauthorize(r.ctx); err != nil {
+	if r.exchangeID == "" {
+		if err = t.Reauthorize(readContext); err != nil {
+			return 0, err
+		}
+	}
+	if err = readContext.Err(); err != nil {
 		return 0, err
 	}
 	// Hold the authorization transaction until this bounded read finishes.
@@ -445,7 +462,7 @@ func (r *RevisionReader) ReadAt(p []byte, offset int64) (int, error) {
 	if err != nil && err != io.EOF {
 		return n, err
 	}
-	if commitErr := t.Tx.Commit(r.ctx); commitErr != nil {
+	if commitErr := t.Tx.Commit(readContext); commitErr != nil {
 		return 0, commitErr
 	}
 	return n, err

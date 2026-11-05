@@ -26,7 +26,8 @@
       ],
       "evidence": [
         "docs/qualification/evidence/F080-artifact-exchange-contract.json",
-        "docs/qualification/evidence/F081-artifact-exchange-endpoints.json"
+        "docs/qualification/evidence/F081-artifact-exchange-endpoints.json",
+        "docs/qualification/evidence/F082-artifact-receive-views.json"
       ]
     },
     {
@@ -43,7 +44,8 @@
         "AX-J02"
       ],
       "evidence": [
-        "docs/qualification/evidence/F080-artifact-exchange-contract.json"
+        "docs/qualification/evidence/F080-artifact-exchange-contract.json",
+        "docs/qualification/evidence/F082-artifact-receive-views.json"
       ]
     },
     {
@@ -61,7 +63,8 @@
       ],
       "evidence": [
         "docs/qualification/evidence/F080-artifact-exchange-contract.json",
-        "docs/qualification/evidence/F081-artifact-exchange-endpoints.json"
+        "docs/qualification/evidence/F081-artifact-exchange-endpoints.json",
+        "docs/qualification/evidence/F082-artifact-receive-views.json"
       ]
     },
     {
@@ -80,7 +83,8 @@
       ],
       "evidence": [
         "docs/qualification/evidence/F080-artifact-exchange-contract.json",
-        "docs/qualification/evidence/F081-artifact-exchange-endpoints.json"
+        "docs/qualification/evidence/F081-artifact-exchange-endpoints.json",
+        "docs/qualification/evidence/F082-artifact-receive-views.json"
       ]
     },
     {
@@ -97,7 +101,8 @@
         "AX-J02"
       ],
       "evidence": [
-        "docs/qualification/evidence/F080-artifact-exchange-contract.json"
+        "docs/qualification/evidence/F080-artifact-exchange-contract.json",
+        "docs/qualification/evidence/F082-artifact-receive-views.json"
       ]
     },
     {
@@ -116,14 +121,15 @@
       ],
       "evidence": [
         "docs/qualification/evidence/F080-artifact-exchange-contract.json",
-        "docs/qualification/evidence/F081-artifact-exchange-endpoints.json"
+        "docs/qualification/evidence/F081-artifact-exchange-endpoints.json",
+        "docs/qualification/evidence/F082-artifact-receive-views.json"
       ]
     },
     {
       "id": "AX07",
       "title": "Shared surfaces and inference independence",
       "requirement": "UI, API, CLI and agent tools use the same domain services and authorization; participant exchange requires no freightctl model runtime.",
-      "state": "planned",
+      "state": "implementing",
       "acceptance": [
         "Exercise public interfaces and stock clients against real PostgreSQL/storage; no agent-only permission bypass or leaked transport secret.",
         "Reference exchanges succeed with inference disabled; deterministic callers establish exchange behavior only, not actual AI quality."
@@ -133,7 +139,9 @@
         "AX-J02",
         "AX-J03"
       ],
-      "evidence": []
+      "evidence": [
+        "docs/qualification/evidence/F082-artifact-receive-views.json"
+      ]
     },
     {
       "id": "AX08",
@@ -156,7 +164,7 @@
       "id": "AX-J01",
       "name": "Bidirectional agent reference exchange",
       "kind": "engineering qualification profile; not a selected customer workflow",
-      "state": "planned",
+      "state": "implementing",
       "participants": [
         "Separately authenticated deterministic agent A",
         "Separately authenticated deterministic agent B"
@@ -179,7 +187,9 @@
       "candidate": null,
       "artifact_digests": [],
       "environment": null,
-      "evidence": []
+      "evidence": [
+        "docs/qualification/evidence/F082-artifact-receive-views.json"
+      ]
     },
     {
       "id": "AX-J02",
