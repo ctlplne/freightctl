@@ -602,7 +602,8 @@
         "docs/qualification/evidence/F037-scheduled-workflows.json"
       ],
       "remaining_details": [
-        "Owner decision S001 excludes the trstctl suite, general credential/trust control plane and dedicated trstctl integration requirement. Implement only freightctl transfer-scoped identity/credential controls and customer-managed provider interfaces required by GOAL4/11/12; all existing security, parity and journey gates remain open.",
+        "S002 clarifies S001: the trstctl suite and general credential/trust control plane remain excluded, while an optional real Trust Control provider integration is planned alongside customer-managed credentials. Pin and qualify the actual provider contract under X07/AX08; preserve independent core operation and all transfer-scoped security gates.",
+        "The secure artifact exchange plan treats agents, applications, people and systems as both senders and recipients. New cross-cutting requirements/profiles are planned in artifact-exchange.json under R016; no provider or complete exchange qualification is inherited from existing component evidence.",
         "Current account/key/mount and destination/parent checks gate transfer mutations. Complete delegated lifecycle, policy reapproval/rebinding, human identity/MFA/providers, complete denial/session auditing, approval UI and governance remain open.",
         "F009 separates ai_manage, ai_use and ai_disclose, actor-private forced row security and exact disclosure/proposal revisions. No implicit grant upgrade. Complete delegated lifecycle, providers, human approval UI, retention and content/disclosure governance remain open.",
         "F010 adds explicit intake_manage/check_run/check_release grants, actor-private check records and current release authority. Separate delegated reviewers, upload-only sender lifecycle, human approval UI and complete governance remain open.",
@@ -836,6 +837,35 @@
       "state": "planned",
       "evidence": [],
       "remaining_details": []
+    },
+    {
+      "id": "R016",
+      "priority_stage": 1,
+      "description": "Bidirectional secure artifact exchange for agents, applications, people and systems",
+      "goal_sections": [
+        1,
+        4,
+        5,
+        10,
+        11,
+        13,
+        16,
+        25
+      ],
+      "state": "planned",
+      "evidence": [],
+      "planning_records": [
+        "docs/product/artifact-exchange-plan.md",
+        "docs/qualification/artifact-exchange.json"
+      ],
+      "remaining_details": [
+        "Implement and qualify AX01-AX08 and the three engineering profiles using existing custody, identity, workflow, approval, intent and receipt services.",
+        "Freeze request/receive/receipt and adapter-role contracts before implementation. Qualify a two-agent exact-byte exchange and separately authorized reply with ordinary credentials and inference disabled.",
+        "Qualify human/system ingress, governed source collection and independently verified agent-to-system onward delivery. Every handoff requires current permission; notification never grants retrieval or forwarding.",
+        "Resolve X07 and qualify actual optional Trust Control integration before compatibility claims; fixture evidence is scoped and ordinary core operation remains independent.",
+        "Retain all original parity rows, full customer journeys, red gates and evidence. The first customer workflow/buyer/wedge remains unselected.",
+        "The current owner authorization covers product/plan/ledger edits and a local commit; application execution remains paused, with no push, services, inference or resource changes."
+      ]
     }
   ],
   "external_dependencies": [
@@ -893,6 +923,15 @@
         "max_cpus": 1,
         "owner_answer": "Allow up to 4 GiB RAM and one CPU"
       }
+    },
+    {
+      "id": "X07",
+      "requirement": "Actual approved Trust Control provider/version, credential verification and issuer/audience/scope/delegation profile, rotation/revocation/outage contract and qualification endpoint/access. No provider protocol or credential format is assumed. This blocks real Trust Control interoperability qualification only; ordinary-provider exchange work and core operation remain independent.",
+      "affects": [
+        "R009",
+        "R016"
+      ],
+      "qualification_profile": "AX-J03"
     }
   ],
   "readiness": {
@@ -932,6 +971,41 @@
       "customer_journeys_removed": [],
       "qualification_state_changed": false,
       "execution_state": "Application build remains paused; this authorization covers the scope update only."
+    },
+    {
+      "id": "S002",
+      "recorded_on": "2026-11-05",
+      "state": "owner-approved scope change",
+      "owner_authorization": {
+        "source": "Owner accepted the bidirectional secure artifact exchange definition in this chat and requested formalization and changes.",
+        "instruction": "So should we just go ahead and formalize the plan and make the changes?"
+      },
+      "starting_commit": "93cf90e20889eab4103703f445b5c46ba11ac1af",
+      "definition": "freightctl is a secure artifact exchange platform that lets agents, applications, people and systems send and receive artifacts under explicit permissions, with reliable delivery and traceable outcomes.",
+      "scope_additions": [
+        "Agents, applications, people and systems can each be senders and recipients through explicitly supported, authorized endpoints.",
+        "Participant, artifact, endpoint, exchange policy and exchange record form the shared model, reusing existing managed-file-transfer foundations.",
+        "Optional Trust Control identity/credential provider integration is part of the plan; pin the real contract and qualify it before compatibility claims.",
+        "Eight additional planned exchange requirements and three engineering profiles are tracked under R016. Customer workflow/buyer/wedge remain unselected."
+      ],
+      "supersedes": [
+        {
+          "decision": "S001",
+          "only": "The exclusion of a dedicated Trust Control provider integration from the plan. The suite/general control-plane exclusion and independent core operation remain in force."
+        }
+      ],
+      "planning_records": [
+        "docs/product/artifact-exchange-plan.md",
+        "docs/qualification/artifact-exchange.json"
+      ],
+      "remaining_items": [
+        "R009",
+        "R016"
+      ],
+      "parity_rows_removed": [],
+      "customer_journeys_removed": [],
+      "existing_qualification_state_changed": false,
+      "execution_state": "Authorize planning/contract/ledger edits and a focused local commit only. Application build remains paused; no push, deployment, service/inference startup or resource increase."
     }
   ]
 }

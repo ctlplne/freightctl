@@ -1,4 +1,4 @@
-# freightctl product build and qualification goal
+# freightctl secure artifact exchange build and qualification goal
 
 - Owner: Shankar
 - Product: freightctl, a ctlplne studio product
@@ -22,9 +22,13 @@ This goal authorizes sustained local implementation, isolated setup, testing, di
 
 ## 1 Mission and standard of quality
 
-Build freightctl into a leading self-hosted managed file transfer platform. Managed file transfer means exchanging files with partners, customers, employees, and internal systems while controlling access, processing, delivery, failures, and evidence. A working SFTP server is one component of this product.
+**freightctl is a secure artifact exchange platform that lets agents, applications, people and systems send and receive artifacts under explicit permissions, with reliable delivery and traceable outcomes.** Build it as an independent self-hosted product. An artifact is a bounded object such as a document, dataset, generated output or software package, with an immutable byte revision and integrity identity. Each participant can send, receive, or do both.
+
+Managed file transfer supplies the transport, custody, processing, recovery and evidence foundation. Its committed protocol and customer-workflow baseline remains required. Extend those foundations to governed agent-to-agent, system-to-agent, person-to-agent and reverse-direction exchanges. A working protocol server or an agent tool wrapper alone cannot establish this product.
 
 The target is functional parity with the relevant paid self-managed incumbents, plus demonstrated improvements in migration effort, partner onboarding, operator workload, trustworthy automation, security, portability, and total operating cost. Build complete production workflows and qualify them. A demo, a feature list, generated code, or a passing unit suite cannot establish parity or superiority.
+
+The owner accepted this definition on 2026-11-05. The first compelling customer workflow and market wedge remain unselected. The [artifact exchange plan](docs/product/artifact-exchange-plan.md) defines the build sequence and engineering reference exchanges; these are qualification targets, not evidence of customer demand or competitive advantage. New exchange requirements are tracked separately in [artifact-exchange.json](docs/qualification/artifact-exchange.json), without rewriting incumbent observations or marking old requirements complete.
 
 The defining AI experience is: give freightctl the existing setup and a partner's requirements; receive an understandable migration plan, tested transfer workflows, and evidence-backed operational help. AI must improve the whole journey from requirements through recovery. It must remain usable with a customer-controlled model and disconnected infrastructure.
 
@@ -69,15 +73,19 @@ Maintain docs/qualification/journeys.json, defects.json, ai-evaluations.json, an
 
 ## 4 Product boundaries and studio integration
 
-freightctl owns secure file exchange: connections, partner mailboxes, workflows, file processing, delivery verification, sharing, migration, and operations. It must run independently of every other ctlplne product.
+freightctl owns governed artifact exchange: participant access, receive endpoints and mailboxes, connections, custody, workflows, processing, delivery verification, sharing, migration, and operations. Each handoff binds an authenticated participant, exact artifact revision, approved recipient/endpoint, policy and promised receipt. It must run independently of every other ctlplne product.
 
-Owner-approved scope change, 2026-11-04: the **trstctl feature suite is excluded from freightctl**. Do not bundle or rebuild that suite, add a general credential/trust management control plane, or require a trstctl installation, account, API or service. The former dedicated trstctl credential-lifecycle integration requirement is removed from this build and its acceptance gates. General-purpose certificate-authority infrastructure, organization-wide credential discovery and a standalone secrets-management product are outside freightctl's scope. This decision is recorded as S001 in [the remaining-work ledger](docs/qualification/remaining.json).
+Owner clarification S002, 2026-11-05: **Trust Control (`trstctl`) owns identity and credential lifecycle; freightctl consumes verified identity to govern exchanges.** Plan and qualify an optional Trust Control provider integration alongside customer-managed credentials and other configured providers. Pin its actual issuer, credential validation, scope/delegation, rotation, revocation and outage contract before implementation or a compatibility claim. No particular Trust Control API or credential format is assumed to exist. Missing provider access blocks that integration's qualification, not independent exchange implementation.
+
+The **trstctl feature suite remains excluded from freightctl**. Do not bundle or rebuild its general credential/trust control plane, general-purpose certificate-authority infrastructure, organization-wide credential discovery or a standalone secrets-management product. A Trust Control installation, account or live service is not a prerequisite for core operation. S002 supersedes only S001's exclusion of a dedicated provider integration from the plan; S001's suite exclusion remains in force. Both decisions are retained in [the remaining-work ledger](docs/qualification/remaining.json).
 
 freightctl still owns the security needed for its own file exchanges: scoped account and credential enrollment, protected secret storage and references, SSH host verification, TLS certificate validation, OpenPGP operations, and safe rotation/revocation for partners, connections, gateways, agents and queued transfers. Use customer-managed keys, certificates, KMS/HSM backends and ordinary secret providers where configured. These transfer controls remain required under sections 11 and 12; they do not authorize building a general identity, PKI or secrets-management product.
 
 Integrate with probectl and standard observability systems for telemetry, and with ordinary paging services for escalation. Use cratectl for release distribution where useful. These integrations must not make another studio product a prerequisite.
 
 Include the data validation, mapping, routing, and business acknowledgments needed for transfer workflows. Keep general ERP functionality, a universal application builder, an arbitrary autonomous agent platform, and a complete office collaboration suite outside this goal. A boundary must not erase a documented baseline transfer capability. Record unclear cases and resolve them against the actual customer job.
+
+"Any participant" means an authorized sender or recipient reached through an explicitly supported endpoint profile. It does not claim every protocol, unrestricted network access or automatic cross-tenant routing. An artifact's contents, suggested destination or model output cannot grant forwarding, retrieval or code-execution permission. Every onward handoff needs its own current authorization, immutable bindings and evidence. A receive notification announces availability only; retrieval and processing are separate outcomes.
 
 ## 5 Required customer journeys
 
@@ -97,6 +105,8 @@ Walk these journeys from a clean installation using public documentation, the br
 12. Export files, configuration, workflows, partner mappings, receipts, and audit records in documented formats, then recover or move them using ordinary tools.
 
 For each journey record the candidate commit and artifact digests, environment, exact steps, time and assistance, success evidence, failures, recovery, and limits. Run repeated schedules and renewals; one successful execution does not prove unattended operation. Keep everyday operator adoption separate from an assisted demonstration.
+
+Also qualify the cross-cutting artifact-exchange requirements and three engineering profiles in [artifact-exchange.json](docs/qualification/artifact-exchange.json): a two-agent exchange and separately authorized reply, human/system ingress and onward handoff through supported adapters, and the optional real Trust Control provider profile. Exercise wrong-scope and revoked identities, held bytes, response loss, restart, duplicate requests and uncertain delivery. These supplement all twelve customer journeys. Deterministic software agents can establish caller/recipient behavior with inference disabled; they cannot establish actual model quality, Trust Control interoperability or independent customer adoption.
 
 ## 6 Protocol compatibility and delivery semantics
 
@@ -122,6 +132,8 @@ Provide virtual folders with consistent permissions across protocols. Paths are 
 Provide a separate edge gateway for a perimeter network, commonly called a DMZ. It forwards only configured protocol traffic to permitted internal services, supports internal-initiated connectivity where required, and keeps plaintext payload persistence and primary credentials out of the perimeter by default. Define TLS termination, trust, buffering, connection limits, and failure behavior. It must not become a general-purpose proxy.
 
 Provide bounded, least-privileged agents for private networks and remote hosts, with enrolled identities, scoped jobs, signed updates, revocation, connection recovery, and visible health. No arbitrary remote shell is granted by installing an agent. Qualify gateway and agent identity rotation during live workloads.
+
+These deployment agents are freightctl components. A participant agent is any authorized software workload that sends or receives artifacts; participating does not require installing a freightctl deployment agent or running a model inside freightctl.
 
 ## 8 Workflow engine and scheduled operation
 
@@ -225,9 +237,13 @@ Create reports, partner onboarding checklists, workflow explanations, handover d
 
 Identify unusual volume, lateness, failure patterns, and destination changes with transparent rules or evaluated statistical models. Label suggestions and confidence. An anomaly can trigger investigation or an approved hold; AI cannot silently reroute confidential data or relax security to meet a deadline.
 
-### Other agents as authorized clients
+### Agents as senders recipients and authorized clients
 
-Expose documented APIs and a Model Context Protocol interface, a standard way for AI clients to call tools. Tools include inspecting a partner, validating a workflow, preparing a transfer, checking receipts, gathering diagnostic evidence, proposing a change, and requesting an allowed recovery. Use the same tenant, identity, permission, policy, idempotency, and audit checks as every other interface.
+Agents are both exchange initiators and recipients. Provide scoped receive endpoints/inboxes, authorized discovery or polling, retrieval and receipt inspection, as well as submission and separately authorized onward delivery. An inbox is an access-controlled view over durable custody, not a grant to list another participant's files. Apply the same live authorization and redaction to notifications and status as to byte retrieval. Bound polling, pending work, notification retries, payloads and context.
+
+An agent's credential can come from Trust Control or another configured source under section 4. Credential validity establishes identity; freightctl separately checks the requested exchange. Sender credentials and destination transport secrets have distinct custody and disclosure rules. Participant exchange must work with freightctl's own inference disabled, independently of the private-model assistant requirements below.
+
+Expose documented APIs and a Model Context Protocol interface, a standard way for AI clients to call tools. Tools include inspecting a partner, validating a workflow, preparing an exchange, discovering authorized incoming artifacts, retrieving exact revisions, checking receipts, gathering diagnostic evidence, proposing a change, and requesting an allowed recovery. Use the same tenant, identity, permission, policy, idempotency, and audit checks as every other interface.
 
 Bind requests to explicit resources and immutable revisions. Advertise tool effects accurately, separate preparation from execution, support cancellation and deadlines, and bound tool loops, runtime, token use, and concurrency. Do not grant an agent a database shell, unrestricted filesystem, arbitrary network access, or a universal administrator token.
 
@@ -272,6 +288,8 @@ Provide documented, versioned exports for files, manifests, connections, partner
 ## 16 Operator experience and automation surfaces
 
 Provide a coherent administration UI, partner portal, CLI, REST API with OpenAPI, declarative configuration, and supported automation integrations. Required features must be discoverable and operable through documented surfaces. Use stable machine-readable errors, actionable human explanations, consistent operation IDs, pagination, search, bulk actions, cancellation, and progress reporting.
+
+Present participant, artifact, endpoint, policy and exchange record consistently across those surfaces. Show incoming and outgoing exchanges, what is currently retrievable, which approvals or checks remain, the strongest observed receipt, and whether an onward exchange has separate authority. Reuse the existing file, connection, workflow, custody and delivery services; new terminology does not authorize bypassing their guards or rewriting historical identities and receipts.
 
 Make configuration understandable: show partner, environment, protocol, destination, credential reference, trust identity, file rules, required checks, schedule time zone, expected receipt, and retention in one reviewable plan. Distinguish a draft, tested configuration, approved revision, active schedule, queued run, and completed business exchange.
 
@@ -348,6 +366,8 @@ Verify the repository and preserve its state. Create architecture decisions, thr
 
 Build PostgreSQL isolation and durable events, staged file custody, authentication and permissions, bounded processing and delivery, the operator surfaces, and real SFTP and HTTPS journeys. Prove independent delivery verification, failure handling, retry ambiguity, audit export, and restart recovery. Add the first AI-generated workflow and evidence-backed diagnosis against these real operations, including a model-disabled run.
 
+Use the artifact exchange plan to add the smallest bidirectional agent reference exchange over these same services. Freeze the participant/endpoint and provider contracts, then qualify exact-byte receive/retrieve/reply, current permissions and failure recovery with inference disabled. Preserve and replay affected existing journeys. A reference exchange does not select a market wedge or replace the remaining stages.
+
 ### Stage 2 Complete adoption and migration
 
 Deliver partner onboarding, browser exchange, sharing, forms, scheduled workflows, stock-client compatibility, supported migration importers, comparison mode and cutover, and the remaining connection and storage requirements. Make the AI migration assistant and workflow planner operate through the actual engine. Replay original journeys after each repair.
@@ -385,6 +405,7 @@ Measure improvements on identical customer jobs and comparable environments:
 - Faster partner onboarding and workflow creation with validated plans, clear missing-input handling, and fewer undocumented manual steps.
 - Faster, more accurate incident investigation with inspectable evidence and safe recovery under administrator-defined policy.
 - Better delivery visibility: the product explains exactly which file reached which stage, the available receipt, and what remains unknown.
+- Governed bidirectional exchanges between agents, applications, people and systems: measure setup effort, time to an authorized handoff, policy refusals, recovery effort and receipt accuracy on the same defined jobs. Treat this as a hypothesis until customer workflows and comparison evidence exist.
 - Private AI and ordinary automation that continue to be useful with no vendor connectivity, and transfer continuity when the model stops.
 - Strong isolation, disciplined custody, resilient operation, and a simpler operator experience backed by current tests.
 
@@ -392,7 +413,7 @@ Free licensing alone does not establish a win. Incumbents already offer substant
 
 ## 25 Completion and readiness
 
-The complete product goal is achieved only when all mandatory baseline rows and customer journeys are implemented and qualified, private AI requirements pass, ordinary operation works with AI disabled, native clients and peers confirm interoperability, migration and exit are demonstrated, required security and architecture gates pass, and production resilience, recovery, performance, packaging and documentation have current evidence.
+The complete product goal is achieved only when all mandatory baseline rows, customer journeys and artifact-exchange requirements are implemented and qualified, private AI requirements pass, ordinary operation works with AI disabled, native clients and peers confirm interoperability, migration and exit are demonstrated, required security and architecture gates pass, and production resilience, recovery, performance, packaging and documentation have current evidence. An optional provider's compatibility requires its real qualification profile; a deployment can use ordinary configured credentials without that provider.
 
 An owner-approved scope change is explicit and recorded. An unavailable vendor installation, certification, cloud account, native machine or multi-host environment creates an open qualification blocker; it does not become an implicit exclusion or a successful test. Local implementation stages may complete while the overall product remains unqualified.
 

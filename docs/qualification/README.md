@@ -4,9 +4,13 @@
 
 `journeys.json` tracks the 12 complete outcomes. A narrower foundation experiment can have its own evidence manifest without marking a complete journey passed. `defects.json` retains the first failure and subsequent repair evidence. `remaining.json` keeps all work groups and external dependencies visible. `ai-evaluations.json` records acceptance thresholds without fabricated model results.
 
+Owner decision S002 (2026-11-05) adds the [secure artifact exchange plan](../product/artifact-exchange-plan.md) and `artifact-exchange.json`: eight planned product requirements and three engineering profiles for bidirectional agent/human/system exchange and optional real Trust Control integration. R016 tracks that work; X07 tracks the actual provider contract/access. These additions preserve all 83 incumbent rows, twelve customer journeys and historical evidence. S002 supersedes only S001's exclusion of the dedicated provider integration; the trstctl suite stays outside freightctl and core remains independent. The customer workflow and market wedge remain unselected.
+
 Evidence must identify a tested Git commit (or starting commit plus exact dirty source hashes), built artifact digests, environment, command, native result, assistance, duration and limitations. Keep large logs and payloads out of Git. Commit safe manifests with references and hashes, after checking for credentials and sensitive data. A verified row needs nonempty evidence; an excluded row needs explicit owner authorization. These records never turn a skipped test into success.
 
 Run `python3 scripts/check-records.py` to check record references and evidence requirements. This validates bookkeeping only. It does not qualify product behavior.
+
+The existing checker covers parity, journeys and protocol contracts; it does not yet validate the new artifact-exchange schema. The new register is a planning contract with empty runtime evidence. Before promoting any exchange profile, validate its references and exact candidate/artifact/environment/receiver/provider evidence and extend the checker with meaningful refusal coverage. No profile is qualified by adding this register.
 
 Baseline `2026-10-29.1` preserves the original 83 rows and incumbent observations while adding [six protocol acceptance contracts](protocol-profiles.md) across 13 existing rows. Five official specifications are pinned; PeSIT selection and all security/bounds/peer/conformance prerequisites remain open. Run `python3 scripts/test-records.py` for the refusal contracts. Named profiles, case/role coverage and hashed evidence are required before a protocol support claim; no protocol runtime is qualified by these checks.
 

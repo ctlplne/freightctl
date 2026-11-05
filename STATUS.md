@@ -1,6 +1,7 @@
 # freightctl status
 
-Updated 2026-11-04. Application execution remains **paused at the owner's request**;GOAL.md remains
+Updated 2026-11-05 for the owner-approved product definition and plan. Application
+execution remains **paused at the owner's request**;GOAL.md remains
 incomplete. All **83 whole baseline rows
 and 12 full customer journeys remain open**. Assisted deployment, independent
 adoption and enterprise readiness remain separately unqualified. Work stays on
@@ -8,13 +9,24 @@ local main; both author and committer are exactly
 `imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>`.
 Owner source/CI push authority does not authorize artifacts, releases or deployment.
 
-The owner explicitly removed the trstctl feature suite from freightctl. GOAL4/12,
-README and ledger decision S001 exclude the bundled suite, general credential/trust
-control plane and dedicated trstctl integration requirement. Transfer-scoped
-credential custody, authentication, certificate validation, encryption and safe
-rotation/revocation remain required. No existing parity row or journey is removed
-or qualified by this boundary change. This scope-only update does not resume the
-application build, start services or authorize a push.
+The accepted definition is a **secure artifact exchange platform that lets agents,
+applications, people and systems send and receive artifacts under explicit
+permissions, with reliable delivery and traceable outcomes**. Managed file transfer
+remains its transport/custody/recovery foundation. The first customer workflow,
+buyer and market wedge remain unselected.
+
+The [artifact exchange plan](docs/product/artifact-exchange-plan.md) and
+[new requirement register](docs/qualification/artifact-exchange.json) add eight
+planned requirements and three engineering profiles under R016. All 83 existing
+parity rows, twelve full journeys, prior defects/evidence and readiness verdicts
+are preserved. Planning establishes no new runtime qualification.
+
+Owner decision S002 clarifies S001: the trstctl suite/general credential-trust
+control plane stays excluded, while an optional real Trust Control identity and
+credential provider integration is planned. X07 tracks its unpinned actual contract
+and qualification access. Core operation remains independent; every exchange and
+onward handoff needs its own authority. This planning-only update does not resume
+the application build, start services, change resources or authorize a push.
 
 The prior application handoff is **85695f6**, following **99e57b1** (approved Trivy file-only allowance) and
 **ecb3427** ([F079](docs/qualification/evidence/F079-handle-bound-directory-sync.json)
@@ -22,8 +34,10 @@ handle-bound directory flushing). This handoff accompanies the requested commit/
 source push/pause. Native checks for those changes remain pending. On resume,
 inspect current origin/main and its exact jobs before continuing;preserve originals.
 
-Read-only CI refresh: all eleven workflows for submitted **85695f6** are queued
-at this snapshot; there is no completed result for F079 or the approved F075 patch.
+Historical 2026-11-04 read-only CI snapshot: all eleven workflows for submitted
+**85695f6** were queued when checked; no completed result for F079 or the approved
+F075 patch was then observed. CI was not refreshed for this planning-only update;
+inspect current exact jobs on application resume.
 Prior submitted **ba011f5** now has both native application gates complete:
 x86 native127007225597 and ARM127007225840 each884 pass/0 fail/0 skip. Both jobs
 remain red at the separate image gate: x86 records OOM under hard1GiB; ARM records

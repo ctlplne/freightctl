@@ -1,0 +1,229 @@
+{
+  "schema_version": 1,
+  "decision": "S002",
+  "recorded_on": "2026-11-05",
+  "state": "planned",
+  "definition": "freightctl is a secure artifact exchange platform that lets agents, applications, people and systems send and receive artifacts under explicit permissions, with reliable delivery and traceable outcomes.",
+  "plan": "docs/product/artifact-exchange-plan.md",
+  "scope": "Additional owner-approved product requirements. These are not incumbent capability observations or replacements for the original 83 parity rows and twelve complete customer journeys.",
+  "first_customer_workflow": {
+    "state": "unselected",
+    "evidence": []
+  },
+  "requirements": [
+    {
+      "id": "AX01",
+      "title": "Participants can send and receive",
+      "requirement": "Agents, applications, people and systems are scoped participants; a participant may send, receive or do both.",
+      "state": "planned",
+      "acceptance": [
+        "Two separately authenticated agents exchange an exact artifact and a separately authorized reply with inference disabled.",
+        "Wrong-tenant, wrong-partner and unrelated participant discovery/retrieval are denied without metadata disclosure."
+      ],
+      "required_profiles": [
+        "AX-J01",
+        "AX-J02"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "AX02",
+      "title": "Immutable artifact custody",
+      "requirement": "Artifacts bind exact revisions, length, digest, storage identity and provenance using existing durable custody and intake guards.",
+      "state": "planned",
+      "acceptance": [
+        "Verify bytes independently and refuse changed revisions, incomplete uploads and mismatched integrity identities.",
+        "Required checks/approvals gate the exact bytes; held or unverified revisions cannot be retrieved or delivered after restart."
+      ],
+      "required_profiles": [
+        "AX-J01",
+        "AX-J02"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "AX03",
+      "title": "Approved endpoints and both exchange directions",
+      "requirement": "Support push, permitted receive discovery/retrieval and governed source collection through explicitly qualified endpoint adapters.",
+      "state": "planned",
+      "acceptance": [
+        "Exercise agent-to-agent and human/system-to-agent plus agent-to-system profiles; pin each actual adapter and role.",
+        "Refuse arbitrary addresses, unsafe path resolution and stale endpoint revisions; notifications convey no retrieval authority."
+      ],
+      "required_profiles": [
+        "AX-J01",
+        "AX-J02"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "AX04",
+      "title": "Permission for every handoff",
+      "requirement": "Bind caller/delegation, artifact, recipient, policy and approvals; verify live authority for each consequential effect.",
+      "state": "planned",
+      "acceptance": [
+        "Retrieval grants no forwarding or execution right; an unauthorized onward exchange is refused before external contact.",
+        "Stale approval, credential rotation/revocation and artifact-embedded instructions cannot change recipient, scope or privileges."
+      ],
+      "required_profiles": [
+        "AX-J01",
+        "AX-J02",
+        "AX-J03"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "AX05",
+      "title": "Honest lifecycle and receipts",
+      "requirement": "Correlate acceptance, holds, availability, delivery, retrieval, integrity evidence and separately contracted processing outcomes.",
+      "state": "planned",
+      "acceptance": [
+        "A notification, socket completion or byte receipt cannot claim receiver durability or business processing.",
+        "Redact status and lineage by participant authority; unavailable stronger evidence remains explicitly unknown."
+      ],
+      "required_profiles": [
+        "AX-J01",
+        "AX-J02"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "AX06",
+      "title": "Durable recovery and bounded execution",
+      "requirement": "Use transactional events/intents/idempotency, bounded streams/queues, leases and fencing for recoverable exchanges.",
+      "state": "planned",
+      "acceptance": [
+        "Same-key response-loss recovery preserves the original result; changed meaning under that key is refused.",
+        "Kill actual processes, retain acknowledged bytes and pending work, and expose ambiguous publication without unsafe resend or duplicate effects.",
+        "Prove admission, polling/notification and retry bounds without relaxing existing resources or isolation."
+      ],
+      "required_profiles": [
+        "AX-J01",
+        "AX-J02"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "AX07",
+      "title": "Shared surfaces and inference independence",
+      "requirement": "UI, API, CLI and agent tools use the same domain services and authorization; participant exchange requires no freightctl model runtime.",
+      "state": "planned",
+      "acceptance": [
+        "Exercise public interfaces and stock clients against real PostgreSQL/storage; no agent-only permission bypass or leaked transport secret.",
+        "Reference exchanges succeed with inference disabled; deterministic callers establish exchange behavior only, not actual AI quality."
+      ],
+      "required_profiles": [
+        "AX-J01",
+        "AX-J02",
+        "AX-J03"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "AX08",
+      "title": "External identity and optional Trust Control integration",
+      "requirement": "Consume verified identities from configured sources; qualify an optional real Trust Control adapter while preserving independent core operation.",
+      "state": "planned",
+      "acceptance": [
+        "Pin actual provider version, credential/issuer/audience/scope/delegation, expiry, rotation/revocation and outage behavior before integration claims.",
+        "Use the real approved provider to refuse wrong identity/authority and test queued/active rotation, revocation and fail-closed provider outage.",
+        "Repeat ordinary-provider exchange with Trust Control absent; a fixture cannot qualify real provider compatibility."
+      ],
+      "required_profiles": [
+        "AX-J03"
+      ],
+      "evidence": []
+    }
+  ],
+  "profiles": [
+    {
+      "id": "AX-J01",
+      "name": "Bidirectional agent reference exchange",
+      "kind": "engineering qualification profile; not a selected customer workflow",
+      "state": "planned",
+      "participants": [
+        "Separately authenticated deterministic agent A",
+        "Separately authenticated deterministic agent B"
+      ],
+      "scope": "One approved tenant/partner scope; wrong-scope refusals required. No general cross-tenant routing claim.",
+      "steps": [
+        "Use real PostgreSQL, actual storage, a frozen ordinary identity profile and verified HTTPS with freightctl inference disabled.",
+        "A submits an immutable artifact to an approved B receive endpoint; required checks and approvals precede availability.",
+        "B discovers and retrieves only its authorized exact revision; a stock client/independent byte observer checks received bytes.",
+        "Refuse forwarding without permission; separately authorize B to send a new immutable reply to A.",
+        "Replay response loss, same-key recovery and changed meaning; revoke authority between notification and retrieval.",
+        "Kill actual processes at selected custody/delivery boundaries, verify retained acceptance and recheck pending-work authority; preserve ambiguous remote outcomes."
+      ],
+      "dependencies": [
+        "R002",
+        "R004",
+        "R009",
+        "R016"
+      ],
+      "candidate": null,
+      "artifact_digests": [],
+      "environment": null,
+      "evidence": []
+    },
+    {
+      "id": "AX-J02",
+      "name": "Human/system ingress and agent onward exchange",
+      "kind": "engineering qualification profile; exact adapter pairs must be frozen",
+      "state": "planned",
+      "participants": [
+        "Human using browser or ordinary client",
+        "External system using a stock protocol client or source",
+        "Authorized receiving/sending agent",
+        "Independent destination receiver"
+      ],
+      "steps": [
+        "Freeze selected HTTPS/browser, SFTP and FTPS push/collection adapter-role profiles against the existing protocol contracts.",
+        "A human and a system separately provide known artifacts to an agent receive endpoint, including a governed collection case.",
+        "The agent retrieves only approved revisions, then prepares a separately authorized onward exchange to a system endpoint.",
+        "Independently verify exact received bytes, current-policy refusals, per-hop evidence and inference-disabled behavior.",
+        "Exercise notification/retrieval revocation, endpoint change, interruption, idempotent recovery and ambiguous delivery; replay affected original journeys."
+      ],
+      "dependencies": [
+        "R003",
+        "R004",
+        "R006",
+        "R008",
+        "R016"
+      ],
+      "candidate": null,
+      "artifact_digests": [],
+      "environment": null,
+      "evidence": []
+    },
+    {
+      "id": "AX-J03",
+      "name": "Optional real Trust Control identity provider",
+      "kind": "provider interoperability profile; optional deployment dependency",
+      "state": "planned",
+      "prerequisite": "X07: actual approved provider profile/access; no API or token format assumed.",
+      "steps": [
+        "Pin real Trust Control provider/version and its credential verification, issuer/audience/scope/delegation and revocation/outage contract.",
+        "Authenticate separate participant identities and exercise a permitted exchange through ordinary freightctl services.",
+        "Refuse wrong issuer/audience/scope, expired/revoked credentials, excessive delegation and artifact-supplied authority before external effects.",
+        "Rotate/revoke identities during queued/active work and prove the frozen fail-closed behavior when the provider is unavailable.",
+        "Repeat the ordinary-provider reference exchange with Trust Control absent; inspect evidence for secret and cross-scope disclosure."
+      ],
+      "dependencies": [
+        "R009",
+        "R016",
+        "X07"
+      ],
+      "candidate": null,
+      "artifact_digests": [],
+      "environment": null,
+      "evidence": []
+    }
+  ],
+  "qualification_requirements": [
+    "Bind every claimed pass to exact candidate/artifact identities, native environment, actual callers/receivers/providers, steps and safe hashed evidence.",
+    "Retain first failures, meaningful regression coverage, original-journey replay and remaining limits.",
+    "Fixtures, design documents, ledger checks, model answers and skips establish no runtime or real provider qualification.",
+    "Preserve original parity/journey/defect/evaluation records and separate assisted deployment, independent adoption and enterprise readiness."
+  ],
+  "execution": "Planning only; paused application execution, resource limits and publication authority are unchanged."
+}

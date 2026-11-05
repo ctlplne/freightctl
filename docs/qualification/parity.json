@@ -3394,6 +3394,14 @@
       "scope_changed": true,
       "owner_authorization": "Owner instruction: we need to explicitly remove trstctl feature suite out of freightctl.",
       "scope_decision": "docs/qualification/remaining.json#S001"
+    },
+    {
+      "observed_at": "2026-11-05",
+      "change": "Owner decision S002 adopts bidirectional secure artifact exchange for agents, applications, people and systems; preserves the trstctl suite exclusion while planning optional real provider integration. Additional product requirements are tracked in artifact-exchange.json/R016. All 83 incumbent row IDs, states, observations and twelve full journeys remain unchanged; no competitive or runtime qualification is inferred.",
+      "scope_changed": true,
+      "owner_authorization": "Owner accepted the product definition and requested plan formalization and changes in the current chat.",
+      "scope_decision": "docs/qualification/remaining.json#S002",
+      "additional_product_requirements": "docs/qualification/artifact-exchange.json"
     }
   ]
 }

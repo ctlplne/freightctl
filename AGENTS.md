@@ -1,6 +1,6 @@
 # AGENTS.md — freightctl
 
-freightctl is the ctlplne self-hosted managed file transfer platform. Read this file, GOAL.md, STATUS.md, and the current qualification records before implementation. GOAL.md defines the full product and acceptance contract. All language must be deeply technical and ELI5: explain the mechanism in familiar words and make the next action clear.
+freightctl is the ctlplne self-hosted secure artifact exchange platform for agents, applications, people and systems. Managed file transfer supplies its transport, custody and recovery foundation. Read this file, GOAL.md, STATUS.md, docs/product/artifact-exchange-plan.md, and the current qualification records, including docs/qualification/artifact-exchange.json, before implementation. GOAL.md defines the full product and acceptance contract. All language must be deeply technical and ELI5: explain the mechanism in familiar words and make the next action clear.
 
 ## Repository and authority
 
@@ -12,6 +12,7 @@ freightctl is the ctlplne self-hosted managed file transfer platform. Read this 
 
 ## Architecture and security
 
+- Treat agents as both senders and recipients under the same exchange permissions as other participants. Trust Control may supply identity and credentials through a qualified provider integration; keep its feature suite outside freightctl and preserve independent operation. Receiving an artifact never grants forwarding or execution authority.
 - PostgreSQL holds durable metadata, events and coordination in every deployment. No SQLite or Redis. Domain tables carry tenant_id; enforce row-level security with non-owner runtime roles that cannot bypass it.
 - Emit immutable domain events and derive read models. Commit idempotency records, transitions and external-effect intents with the relevant events in the same transaction.
 - Stage bytes durably and bind checks to the exact immutable file revision. Never acknowledge durable acceptance before its promised persistence, and never publish partial, quarantined or unverified bytes.

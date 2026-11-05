@@ -1,12 +1,14 @@
 # freightctl
 
-freightctl is a ctlplne product for secure, automated file exchange between partners, customers and internal systems. It is being built as a broad, free, self-hosted core with private AI assistance for workflow creation, migration and operations.
+freightctl is a secure artifact exchange platform that lets agents, applications, people and systems send and receive artifacts under explicit permissions, with reliable delivery and traceable outcomes. It is a ctlplne product being built as an independent, free, self-hosted core. An artifact can be a document, dataset, generated output or software package; every participant can be a sender, a recipient, or both.
 
-The product target is complete paid-incumbent workflow parity, followed by measured improvements in migration, operator effort, security and operating cost. The repository contains the execution contract, qualification records and an incomplete local custody implementation. No production capability or complete customer journey is qualified.
+Managed file transfer supplies the transport, custody, processing and recovery foundation. The existing paid-incumbent workflow baseline remains required, alongside the planned bidirectional artifact exchanges. Private AI assistance for workflow creation, migration and operations uses the same governed services. The first compelling customer workflow and market wedge remain unselected. No complete baseline capability or customer journey is qualified.
 
 Start with [GOAL.md](GOAL.md), [AGENTS.md](AGENTS.md), and [STATUS.md](STATUS.md).
 
-The trstctl feature suite is explicitly outside freightctl's scope. freightctl does not bundle trstctl or require its service or a dedicated integration. It retains the credential enrollment, protected secrets, certificate checks, encryption and safe key rotation needed for its own transfers. See the [product boundary](GOAL.md#4-product-boundaries-and-studio-integration).
+Read the [artifact exchange plan](docs/product/artifact-exchange-plan.md) for the participant/artifact/endpoint/policy/record model, build order and engineering acceptance profiles. These are planned capabilities, not current runtime claims or a selected customer wedge.
+
+Trust Control (`trstctl`) can supply identity and credentials through a planned optional provider integration; freightctl authorizes and executes each exchange. The trstctl feature suite stays outside freightctl, and core operation remains independent of it. Existing credential custody, certificate checks, encryption and safe key rotation remain required. See the [product boundary](GOAL.md#4-product-boundaries-and-studio-integration).
 
 For the implemented local first tenant, partner and administrator path, see [first-run enrollment](docs/first-run.md). It includes protected setup plans, exact retry and browser sign-in; production installation and complete journeys remain unqualified.
 
