@@ -123,6 +123,18 @@ from receiver fsync and business acceptance. Unknown or ambiguous delivery must
 remain visible and block automatic resend where required. Model output, a tool
 answer or a passing metadata preview cannot grant execution or recipient authority.
 
+FTPS metadata/operator browser evidence uses Chrome's original HTTPS requests
+and final network headers,correlated to the original response. A pre-network
+route snapshot cannot prove which security headers Chrome sends. Stream at most
+262144response bytes in64KiB chunks,retain exact private request/body records and
+forward the original status/body. Preserve cookie,origin,CSRF and fetch-site
+assertions;missing protocol evidence fails. Drop only the first already-completed
+response for the two-attempt original-key recovery cases. Keep12seconds per
+exchange,15seconds observation per attempt and the150second process cap. The
+3second first-response-header guard conservatively includes connection/server
+time;it is stricter than a connection-only deadline,not a product latency SLA.
+Bound owned CDP cleanup to5seconds and keep original failures red.
+
 ## Scheduling and evidence lifecycle
 
 1. Follow each exact source commit, run, attempt and job ID. Preserve the running

@@ -97,6 +97,7 @@ export async function qualifyFTPSCollectionMetadata(
   record,
   emit = () => {},
   actual,
+  transport,
 ) {
   let stage = "definition";
   const progress = (next) => {
@@ -113,7 +114,7 @@ export async function qualifyFTPSCollectionMetadata(
     assert.equal(typeof actual, "function");
     const responses = [];
     async function readResponse(name, route, method, request, action) {
-      return wireResponse(
+      return (transport ?? wireResponse)(
         page,
         prefix + route,
         action,

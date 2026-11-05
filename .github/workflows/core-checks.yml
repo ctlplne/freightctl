@@ -47,6 +47,7 @@ jobs:
           python3 scripts/test-ftps-collection-metadata.py
           python3 scripts/test-ftps-collection-browser.py
           python3 scripts/test-browser-session-evidence.py
+          node --test --test-concurrency=1 scripts/test-browser-native-wire.mjs
           python3 scripts/test-ftps-client-summary.py
           python3 scripts/test-ftps-stock-metadata.py
           sh scripts/go.sh test -p 1 -race ./scripts/peers/ftps-source

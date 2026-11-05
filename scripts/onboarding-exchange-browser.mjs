@@ -27,6 +27,10 @@ import {
 import { qualifyOutboundDispatch } from "./outbound-dispatch-browser.mjs";
 import { qualifyIndependentApprovals } from "./onboarding-approvals-browser.mjs";
 import { qualifyQueuedHandoffs } from "./onboarding-handoffs-browser.mjs";
+import {
+  nativeWireObservation,
+  nativeWireResponse,
+} from "./browser-native-wire.mjs";
 process.umask(0o077);
 const require = createRequire(import.meta.url),
   { chromium } = require("../web/node_modules/playwright");
@@ -186,6 +190,9 @@ async function inspect(request, hash, ready = true) {
   if (hash) await page.getByText(hash, { exact: true }).waitFor();
 }
 async function actualReview(route, label, target = endpoint) {
+  const native = route[nativeWireObservation];
+  if (native)
+    assert.ok(["ftps-metadata", "ftps-operator"].includes(c.collection_phase));
   const request = route.request();
   assert.equal(request.url(), target);
   assert.ok(["GET", "POST"].includes(request.method()));
@@ -206,44 +213,56 @@ async function actualReview(route, label, target = endpoint) {
   await writeFile(
     headers,
     fields.map(([k, v]) => k + ": " + v).join("\n") + "\n",
+    native ? { mode: 0o600, flag: "wx" } : undefined,
   );
   const bytes = request.postDataBuffer() ?? Buffer.alloc(0);
   assert.ok(bytes && bytes.length <= 32768);
-  await writeFile(body, bytes);
-  const status = Number(
-    execFileSync(
-      "curl",
-      [
-        "-q",
-        "--silent",
-        "--show-error",
-        "--noproxy",
-        "*",
-        "--proto",
-        "=https",
-        "--cacert",
-        c.certificate,
-        "--connect-timeout",
-        "3",
-        "--max-time",
-        "12",
-        "--max-filesize",
-        "262144",
-        "--header",
-        "@" + headers,
-        "--request",
-        request.method(),
-        ...(request.method() === "POST" ? ["--data-binary", "@" + body] : []),
-        "--output",
-        output,
-        "--write-out",
-        "%{http_code}",
-        target,
-      ],
-      { encoding: "utf8", timeout: 15000, maxBuffer: 4096 },
-    ),
+  await writeFile(
+    body,
+    bytes,
+    native ? { mode: 0o600, flag: "wx" } : undefined,
   );
-  const response = await readFile(output);
+  const status = native
+    ? native.status
+    : Number(
+        execFileSync(
+          "curl",
+          [
+            "-q",
+            "--silent",
+            "--show-error",
+            "--noproxy",
+            "*",
+            "--proto",
+            "=https",
+            "--cacert",
+            c.certificate,
+            "--connect-timeout",
+            "3",
+            "--max-time",
+            "12",
+            "--max-filesize",
+            "262144",
+            "--header",
+            "@" + headers,
+            "--request",
+            request.method(),
+            ...(request.method() === "POST"
+              ? ["--data-binary", "@" + body]
+              : []),
+            "--output",
+            output,
+            "--write-out",
+            "%{http_code}",
+            target,
+          ],
+          { encoding: "utf8", timeout: 15000, maxBuffer: 4096 },
+        ),
+      );
+  const response = native
+    ? Buffer.from(native.body, "utf8")
+    : await readFile(output);
+  if (native) await writeFile(output, response, { mode: 0o600, flag: "wx" });
   assert.ok(response.length <= 262144);
   assert.equal(status, 200);
   record(label + "-wire-response", {
@@ -301,6 +320,7 @@ try {
         record,
         collectionObservation,
         actualReview,
+        nativeWireResponse,
       );
     else if (c.collection_phase === "ftps-operator")
       await qualifyFTPSCollectionOperator(
@@ -310,6 +330,7 @@ try {
         record,
         actualReview,
         collectionObservation,
+        nativeWireResponse,
       );
     else await qualifyCollections(page, c, audit, record, actualReview);
   } else if (c.schedules_only) {

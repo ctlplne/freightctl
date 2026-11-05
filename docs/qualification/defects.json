@@ -2836,6 +2836,11 @@
         "job_id": 126973496977,
         "category": "session-wire-fetch-site",
         "meaning": "Original explicit metadata Chrome completes; exact recorded fetch-site assertion fails. Header value/absence/request identity remain unobserved; never relax assertion to gain pass. Need actual native browser network evidence."
+      },
+      "native_capture_prepared": {
+        "evidence": "docs/qualification/evidence/F076-ftps-collection.json",
+        "state": "Native Chrome request/final-header and bounded original response capture prepared;actual replay pending.",
+        "scope": "Original bad header exact value/missing status is still unexposed. The request-route bridge is a demonstrated observation-design limitation,not proof of a production auth defect. Preserve every assertion.8native protocol/144frontend/102Python contracts pass;no real local Chrome."
       }
     }
   ]

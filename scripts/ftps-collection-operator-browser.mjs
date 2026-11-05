@@ -72,6 +72,7 @@ export async function qualifyFTPSCollectionOperator(
   record,
   actual,
   emit = () => {},
+  transport,
 ) {
   let stage = "operator-definition";
   const mark = (next) => {
@@ -80,14 +81,14 @@ export async function qualifyFTPSCollectionOperator(
   };
   try {
     mark(stage);
-    return await runOperator(page, c, audit, record, actual, mark);
+    return await runOperator(page, c, audit, record, actual, mark, transport);
   } catch (error) {
     emit(ftpsOperatorObservation(c, stage, error));
     throw error;
   }
 }
 
-async function runOperator(page, c, audit, record, actual, mark) {
+async function runOperator(page, c, audit, record, actual, mark, transport) {
   assert.equal(c.collection_phase, "ftps-operator");
   assert.equal(c.source.protocol, "ftps");
   assert.ok(["explicit", "implicit"].includes(c.source.ftps.mode));
@@ -134,7 +135,7 @@ async function runOperator(page, c, audit, record, actual, mark) {
   const responses = [],
     reads = [];
   async function response(route, name, action) {
-    return wireResponse(
+    return (transport ?? wireResponse)(
       page,
       prefix + route,
       action,
@@ -161,34 +162,46 @@ async function runOperator(page, c, audit, record, actual, mark) {
   async function loss(route, label) {
     const seen = [],
       target = prefix + route;
-    await page.route(target, async (intercepted) => {
+    const observe = async (intercepted, name) => {
       assert.ok(
         seen.length < 2,
         "a saved-key decision may be attempted only twice",
       );
-      const value = await actual(
-        intercepted,
-        label + "-" + seen.length,
-        target,
-      );
+      const value = await actual(intercepted, name, target);
       seen.push(value);
-      if (seen.length === 1) await intercepted.abort("failed");
-      else
-        await intercepted.fulfill({
-          status: value.status,
-          contentType: "application/json",
-          body: value.body,
-        });
-    });
+      return value;
+    };
     const confirm = () =>
       page
         .getByRole("button", { name: "Confirm exact decision", exact: true })
         .click();
-    await confirm();
-    await page.getByText(/^The result was not confirmed\./).waitFor();
-    await confirm();
-    await page.locator("dialog[open]").waitFor({ state: "hidden" });
-    await page.unroute(target);
+    const decisions = async () => {
+      await confirm();
+      await page.getByText(/^The result was not confirmed\./).waitFor();
+      await confirm();
+      await page.locator("dialog[open]").waitFor({ state: "hidden" });
+    };
+    if (transport) {
+      await transport(page, target, decisions, observe, label, {
+        attempts: 2,
+        dropFirst: true,
+      });
+    } else {
+      // Existing Page-only contracts retain their route stand-in. The actual
+      // Chrome wrapper always supplies the native response-stage observer.
+      await page.route(target, async (intercepted) => {
+        const value = await observe(intercepted, label + "-" + seen.length);
+        if (seen.length === 1) await intercepted.abort("failed");
+        else
+          await intercepted.fulfill({
+            status: value.status,
+            contentType: "application/json",
+            body: value.body,
+          });
+      });
+      await decisions();
+      await page.unroute(target);
+    }
     assert.equal(seen.length, 2);
     assert.equal(seen[0].status, 200);
     assert.equal(seen[1].status, 200);

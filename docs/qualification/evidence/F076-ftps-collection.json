@@ -1138,5 +1138,27 @@
     "manifest_reference": ".private/freightctl-97-terminal-followup-RjRoYF/manifest.json",
     "manifest_sha256": "81d8d5ea6f29b47d4901012d5416b2e78510655b5f904d9dfb4413edf8f28c88",
     "scope": "Same narrow metadata evidence failure as plaintext;retain all checks and original cleanup. Core97success is separate. Both97native integrations remain live and preserved."
+  },
+  "native_browser_network_capture_prepared": {
+    "implementation": "scripts/browser-native-wire.mjs",
+    "contracts": "scripts/test-browser-native-wire.mjs",
+    "mechanism": "Let original Chrome requests reach the real HTTPS API. Bind requestWillBeSent and final raw requestWillBeSentExtraInfo headers to the same networkId at Fetch response stage;never invent fetch-site,cookie,CSRF,origin,body or operation key. Read original JSON through a bounded sequential stream,record exact private headers/request/body,then deliver exact status/body to the page. Preserve API headers except hop-by-hop framing;refuse encoding/cookie renewal/unexpected responses. Two-decision recovery drops only first completed server response and uses original saved-key UI recovery. Old request-route curl bridge remains only for unrelated journeys/Page-only contracts;actual metadata/operator wrapper explicitly selects native transport.",
+    "assertions": "Independent existing cookie/session/CLI identity,authority,CSRF,expiry,wire-header,HTTP/body/idempotency,source/receiver byte,source-contact,cleanup and WCAG checks unchanged. Browser session verifier source hash is preserved.",
+    "bounds": "262144response/32768request/16384header bytes,64KiBreads,64header-correlation entries,exact1or2responses. Preserve12second exchange and15second observation per attempt;3second initial-response-header deadline conservatively includes original3second connection threshold and server processing. This stricter smoke deadline is not a product latency SLA.5second owned-CDP cleanup does not enlarge original150second browser process cap. Node192MiB/one worker;Chrome sandbox/SPKI/resource flags unchanged.",
+    "first_findings": "Prototype two-attempt ACK race reproduced;bounded serial response handling fixes it. Cleanup RPC refusal reproduced a missing detach;always attempt exact session detach while preserving failure. All8protocol methods now pass.",
+    "local_manifest_reference": ".private/freightctl-f076-native-wire-local-82ecsol0/final.json",
+    "local_manifest_sha256": "24e0cadcb571f569f65a2ea2d321051050112f9d7b0efc4f31ba2072c0813e67",
+    "local_methods": {
+      "native_protocol": 8,
+      "frontend": 144,
+      "python_session_metadata_browser_operator_reporter": 102
+    },
+    "runtime_qualification": false,
+    "scope": "No actual local Chrome,PG,source/receiver,scanner or model. Require exact original plaintext/encrypted public matrices on GitHub. No new operator/full-browser/whole-journey qualification.",
+    "primary_sources": [
+      "https://raw.githubusercontent.com/ChromeDevTools/devtools-protocol/master/pdl/domains/Fetch.pdl",
+      "https://playwright.dev/docs/api/class-cdpsession"
+    ],
+    "next_action": "Retain97session-wire-fetch-site failures;replay the native response-stage observer without relaxing that assertion. Missing native protocol data remains failure;never fall back to invented headers or an easier journey."
   }
 }
