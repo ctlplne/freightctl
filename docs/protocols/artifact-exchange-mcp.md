@@ -42,6 +42,8 @@ same-origin CSRF protection. Tool-list results are private and immediately stale
 | `retrieval_descriptor` | Return exact integrity metadata and a relative authenticated HTTPS download path, without artifact bytes. |
 | `outgoing_exchanges`, `exchange_receipt` | Inspect own original offer receipts and separately checked current state. Enumeration also needs list. |
 | `close_exchange` | Record one exact sender cancellation or recipient decline using its original request hash and stable operation key. |
+| `prepare_onward`, `start_onward` | Review an owned artifact/approved ordered workflow,then atomically record ordinary intents under the exact review. |
+| `onward_status`, `work_onward` | Inspect or execute one ordinary step only with the original reviewed-start receipt and exact run binding. |
 
 Preparation returns `state: metadata-review-only` and `storage_verification:
 not-checked`. It writes no event, view, receipt or reservation, and returns no
@@ -73,8 +75,10 @@ unknown argument fields. Ordinary16KiB request/24KiB endpoint/4KiB closure and
 existing queue/read/admission controls keep their meanings. The shared API admits
 at most eight concurrent requests; each tool runs under the originating HTTP
 cancellation and a10second action deadline, inside a15second request deadline.
-There is no tool loop, shell, database console, arbitrary filesystem/network tool,
-model runtime, sampling callback or background execution queue.
+There is no tool loop,shell,database console,arbitrary filesystem/network tool,
+model runtime or sampling callback. This interface starts no autonomous worker or
+separate queue;onward intents use ordinary PostgreSQL coordination and explicit
+workers.
 
 Local proof covers strict wire/schema/authority-argument guards and compilation.
 Prepared actual PostgreSQL proof checks preview creates no durable objects; the
@@ -82,8 +86,8 @@ original HTTPS fixture gains an official SDK client profile for polling, exact
 same-key replay, wrong-scope/role refusals, independent HTTPS byte observation,
 separately approved reply, cancellation and honest history. Native runtime,
 actual socket-loss/process-death recovery and independent non-SDK conformance
-remain owed. Partner/workflow/diagnostic/recovery tools beyond this narrow exchange
-profile and the remaining GOAL13/14 work remain open.
+remain owed. Additional partner/workflow/diagnostic/recovery tools beyond the
+[reviewed onward profile](artifact-onward.md) and the remaining GOAL13/14 work remain open.
 
 Protocol references: [versioning](https://modelcontextprotocol.io/specification/2026-07-28/basic/versioning),
 [Streamable HTTP](https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http),

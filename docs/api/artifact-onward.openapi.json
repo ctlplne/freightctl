@@ -1,0 +1,445 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "freightctl reviewed ordered artifact onward profile",
+    "version": "1",
+    "description": "Implemented request contracts;actual native,independent-client/schema conformance and complete AX qualification remain owed. Cookie mutations require existing same-origin CSRF headers. Protocol bodies stay bounded by the ordinary32KiB control decoder. Input integers retain explicit interface precision limits."
+  },
+  "paths": {
+    "/v1/tenants/{tenant}/partners/{partner}/onward/previews": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "tenant",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ID"
+          }
+        },
+        {
+          "in": "path",
+          "name": "partner",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ID"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "onwardPreviews",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OnwardRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Scoped result;no receiver business guarantee",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OnwardReview"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "browserCookie": []
+          }
+        ]
+      }
+    },
+    "/v1/tenants/{tenant}/partners/{partner}/onward/runs": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "tenant",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ID"
+          }
+        },
+        {
+          "in": "path",
+          "name": "partner",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ID"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "onwardRuns",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OnwardStart"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Scoped result;no receiver business guarantee",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OnwardResult"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "browserCookie": []
+          }
+        ]
+      }
+    },
+    "/v1/tenants/{tenant}/partners/{partner}/onward/receipts": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "tenant",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ID"
+          }
+        },
+        {
+          "in": "path",
+          "name": "partner",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ID"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "onwardReceipts",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OnwardLookup"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Scoped result;no receiver business guarantee",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OnwardResult"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "browserCookie": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Existing protected scoped freightctl credential;no fallback to cookies for an explicit bearer header."
+      },
+      "browserCookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "__Host-freightctl-session"
+      }
+    },
+    "schemas": {
+      "ID": {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+      },
+      "SHA256": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      },
+      "Artifact": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "file_revision_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "size_bytes": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0,
+            "maximum": 9223372036854775807
+          },
+          "sha256": {
+            "$ref": "#/components/schemas/SHA256"
+          },
+          "acceptance_policy": {
+            "type": "string",
+            "pattern": "^(integrity-only-v1|intake-csv-v1:[0-9a-f]{64})$"
+          }
+        },
+        "required": [
+          "file_revision_id",
+          "size_bytes",
+          "sha256",
+          "acceptance_policy"
+        ]
+      },
+      "OnwardRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "type": "integer",
+            "const": 1
+          },
+          "profile": {
+            "type": "string",
+            "const": "ordered-workflow-onward-v1"
+          },
+          "workflow": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+              },
+              "version": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 2147483647
+              },
+              "hash": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            },
+            "required": [
+              "id",
+              "version",
+              "hash"
+            ]
+          },
+          "artifact": {
+            "$ref": "#/components/schemas/Artifact"
+          }
+        },
+        "required": [
+          "schema_version",
+          "profile",
+          "workflow",
+          "artifact"
+        ]
+      },
+      "OnwardStart": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "request": {
+            "$ref": "#/components/schemas/OnwardRequest"
+          },
+          "review_hash": {
+            "$ref": "#/components/schemas/SHA256"
+          }
+        },
+        "required": [
+          "request",
+          "review_hash"
+        ]
+      },
+      "OnwardLookup": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "start": {
+            "$ref": "#/components/schemas/OnwardStart"
+          },
+          "receipt_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          }
+        },
+        "required": [
+          "start",
+          "receipt_key"
+        ]
+      },
+      "OnwardEffect": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "ordinal": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 16
+          },
+          "protocol": {
+            "enum": [
+              "sftp",
+              "ftps"
+            ]
+          },
+          "connection": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+              },
+              "version": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 2147483647
+              },
+              "hash": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            },
+            "required": [
+              "id",
+              "version",
+              "hash"
+            ]
+          }
+        },
+        "required": [
+          "ordinal",
+          "protocol",
+          "connection"
+        ]
+      },
+      "OnwardReview": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "request": {
+            "$ref": "#/components/schemas/OnwardRequest"
+          },
+          "review_hash": {
+            "$ref": "#/components/schemas/SHA256"
+          },
+          "effects": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 16,
+            "items": {
+              "$ref": "#/components/schemas/OnwardEffect"
+            }
+          },
+          "state": {
+            "const": "review-only"
+          },
+          "external_contact": {
+            "const": false
+          },
+          "receiver_persistence": {
+            "const": "unknown"
+          },
+          "business_processing": {
+            "const": "unknown"
+          }
+        },
+        "required": [
+          "request",
+          "review_hash",
+          "effects",
+          "state",
+          "external_contact",
+          "receiver_persistence",
+          "business_processing"
+        ]
+      },
+      "OnwardResult": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "resource": {
+            "type": "object",
+            "description": "Ordinary actor-authorized WorkflowRun fields plus exact onward_profile,onward_review_hash,onward_workflow_revision. This API operator representation includes its normal private scope/storage bindings;MCP projects only approved metadata.",
+            "properties": {
+              "id": {
+                "$ref": "#/components/schemas/ID"
+              },
+              "onward_profile": {
+                "const": "ordered-workflow-onward-v1"
+              },
+              "onward_review_hash": {
+                "$ref": "#/components/schemas/SHA256"
+              },
+              "onward_workflow_revision": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "required": [
+              "id",
+              "onward_profile",
+              "onward_review_hash",
+              "onward_workflow_revision"
+            ]
+          },
+          "replayed": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "resource",
+          "replayed"
+        ]
+      }
+    }
+  }
+}

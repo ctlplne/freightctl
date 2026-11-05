@@ -685,5 +685,846 @@
       "idempotentHint": true,
       "openWorldHint": false
     }
+  },
+  {
+    "name": "freightctl.prepare_onward",
+    "description": "Review an owned artifact and an already approved ordered sending workflow. No run,intent,peer contact or forwarding grant.",
+    "inputSchema": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "schema_version": {
+              "type": "integer",
+              "const": 1
+            },
+            "profile": {
+              "type": "string",
+              "const": "ordered-workflow-onward-v1"
+            },
+            "workflow": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 2147483647
+                },
+                "hash": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              },
+              "required": [
+                "id",
+                "version",
+                "hash"
+              ]
+            },
+            "artifact": {
+              "$ref": "#/$defs/Artifact"
+            }
+          },
+          "required": [
+            "schema_version",
+            "profile",
+            "workflow",
+            "artifact"
+          ]
+        }
+      },
+      "required": [
+        "request"
+      ],
+      "$defs": {
+        "ID": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "SHA256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "Artifact": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "file_revision_id": {
+              "$ref": "#/$defs/ID"
+            },
+            "size_bytes": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "sha256": {
+              "$ref": "#/$defs/SHA256"
+            },
+            "acceptance_policy": {
+              "type": "string",
+              "pattern": "^(integrity-only-v1|intake-csv-v1:[0-9a-f]{64})$"
+            }
+          },
+          "required": [
+            "file_revision_id",
+            "size_bytes",
+            "sha256",
+            "acceptance_policy"
+          ]
+        },
+        "EndpointReference": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "$ref": "#/$defs/ID"
+            },
+            "revision": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1,
+              "maximum": 9223372036854775807
+            },
+            "hash": {
+              "$ref": "#/$defs/SHA256"
+            }
+          },
+          "required": [
+            "id",
+            "revision",
+            "hash"
+          ]
+        },
+        "ExchangeRequest": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "schema_version": {
+              "type": "integer",
+              "const": 1
+            },
+            "artifact": {
+              "$ref": "#/$defs/Artifact"
+            },
+            "endpoint": {
+              "$ref": "#/$defs/EndpointReference"
+            },
+            "expires_at": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]{1,6}0*)?(?:Z|[+-](?:[01][0-9]|2[0-3]):[0-5][0-9])$",
+              "description": "Exact microsecond instant; harmless trailing fractional zeroes and equivalent offsets normalize to UTC. Admission uses database time and configured lifetime."
+            },
+            "receipt": {
+              "type": "string",
+              "const": "availability-only-v1"
+            },
+            "reply_to": {
+              "$ref": "#/$defs/ID"
+            }
+          },
+          "required": [
+            "schema_version",
+            "artifact",
+            "endpoint",
+            "expires_at",
+            "receipt"
+          ]
+        },
+        "ExchangeClosureCommand": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "schema_version": {
+              "const": 1
+            },
+            "exchange_id": {
+              "$ref": "#/$defs/ID"
+            },
+            "request_hash": {
+              "$ref": "#/$defs/SHA256"
+            },
+            "operation": {
+              "enum": [
+                "cancel",
+                "decline"
+              ]
+            }
+          },
+          "required": [
+            "schema_version",
+            "exchange_id",
+            "request_hash",
+            "operation"
+          ]
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "freightctl.start_onward",
+    "description": "Atomically check the exact review and record ordinary workflow run/intents. No peer contact;required workflow/source/delivery permissions remain.",
+    "inputSchema": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "schema_version": {
+              "type": "integer",
+              "const": 1
+            },
+            "profile": {
+              "type": "string",
+              "const": "ordered-workflow-onward-v1"
+            },
+            "workflow": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 2147483647
+                },
+                "hash": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              },
+              "required": [
+                "id",
+                "version",
+                "hash"
+              ]
+            },
+            "artifact": {
+              "$ref": "#/$defs/Artifact"
+            }
+          },
+          "required": [
+            "schema_version",
+            "profile",
+            "workflow",
+            "artifact"
+          ]
+        },
+        "review_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "request_key": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._:-]+$"
+        }
+      },
+      "required": [
+        "request",
+        "review_hash",
+        "request_key"
+      ],
+      "$defs": {
+        "ID": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "SHA256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "Artifact": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "file_revision_id": {
+              "$ref": "#/$defs/ID"
+            },
+            "size_bytes": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "sha256": {
+              "$ref": "#/$defs/SHA256"
+            },
+            "acceptance_policy": {
+              "type": "string",
+              "pattern": "^(integrity-only-v1|intake-csv-v1:[0-9a-f]{64})$"
+            }
+          },
+          "required": [
+            "file_revision_id",
+            "size_bytes",
+            "sha256",
+            "acceptance_policy"
+          ]
+        },
+        "EndpointReference": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "$ref": "#/$defs/ID"
+            },
+            "revision": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1,
+              "maximum": 9223372036854775807
+            },
+            "hash": {
+              "$ref": "#/$defs/SHA256"
+            }
+          },
+          "required": [
+            "id",
+            "revision",
+            "hash"
+          ]
+        },
+        "ExchangeRequest": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "schema_version": {
+              "type": "integer",
+              "const": 1
+            },
+            "artifact": {
+              "$ref": "#/$defs/Artifact"
+            },
+            "endpoint": {
+              "$ref": "#/$defs/EndpointReference"
+            },
+            "expires_at": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]{1,6}0*)?(?:Z|[+-](?:[01][0-9]|2[0-3]):[0-5][0-9])$",
+              "description": "Exact microsecond instant; harmless trailing fractional zeroes and equivalent offsets normalize to UTC. Admission uses database time and configured lifetime."
+            },
+            "receipt": {
+              "type": "string",
+              "const": "availability-only-v1"
+            },
+            "reply_to": {
+              "$ref": "#/$defs/ID"
+            }
+          },
+          "required": [
+            "schema_version",
+            "artifact",
+            "endpoint",
+            "expires_at",
+            "receipt"
+          ]
+        },
+        "ExchangeClosureCommand": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "schema_version": {
+              "const": 1
+            },
+            "exchange_id": {
+              "$ref": "#/$defs/ID"
+            },
+            "request_hash": {
+              "$ref": "#/$defs/SHA256"
+            },
+            "operation": {
+              "enum": [
+                "cancel",
+                "decline"
+              ]
+            }
+          },
+          "required": [
+            "schema_version",
+            "exchange_id",
+            "request_hash",
+            "operation"
+          ]
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "freightctl.onward_status",
+    "description": "Read current authorized workflow state and receipt hashes;no private transport references,paths,raw observations or business-acceptance inference. Requires the original exact reviewed start and its recorded receipt key;never adopts a generic unreviewed run.",
+    "inputSchema": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "run_id": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "start": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "request": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "schema_version": {
+                  "type": "integer",
+                  "const": 1
+                },
+                "profile": {
+                  "type": "string",
+                  "const": "ordered-workflow-onward-v1"
+                },
+                "workflow": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+                    },
+                    "version": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    "hash": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "version",
+                    "hash"
+                  ]
+                },
+                "artifact": {
+                  "$ref": "#/$defs/Artifact"
+                }
+              },
+              "required": [
+                "schema_version",
+                "profile",
+                "workflow",
+                "artifact"
+              ]
+            },
+            "review_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "request",
+            "review_hash"
+          ]
+        },
+        "receipt_key": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._:-]+$"
+        }
+      },
+      "required": [
+        "run_id",
+        "start",
+        "receipt_key"
+      ],
+      "$defs": {
+        "ID": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "SHA256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "Artifact": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "file_revision_id": {
+              "$ref": "#/$defs/ID"
+            },
+            "size_bytes": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "sha256": {
+              "$ref": "#/$defs/SHA256"
+            },
+            "acceptance_policy": {
+              "type": "string",
+              "pattern": "^(integrity-only-v1|intake-csv-v1:[0-9a-f]{64})$"
+            }
+          },
+          "required": [
+            "file_revision_id",
+            "size_bytes",
+            "sha256",
+            "acceptance_policy"
+          ]
+        },
+        "EndpointReference": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "$ref": "#/$defs/ID"
+            },
+            "revision": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1,
+              "maximum": 9223372036854775807
+            },
+            "hash": {
+              "$ref": "#/$defs/SHA256"
+            }
+          },
+          "required": [
+            "id",
+            "revision",
+            "hash"
+          ]
+        },
+        "ExchangeRequest": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "schema_version": {
+              "type": "integer",
+              "const": 1
+            },
+            "artifact": {
+              "$ref": "#/$defs/Artifact"
+            },
+            "endpoint": {
+              "$ref": "#/$defs/EndpointReference"
+            },
+            "expires_at": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]{1,6}0*)?(?:Z|[+-](?:[01][0-9]|2[0-3]):[0-5][0-9])$",
+              "description": "Exact microsecond instant; harmless trailing fractional zeroes and equivalent offsets normalize to UTC. Admission uses database time and configured lifetime."
+            },
+            "receipt": {
+              "type": "string",
+              "const": "availability-only-v1"
+            },
+            "reply_to": {
+              "$ref": "#/$defs/ID"
+            }
+          },
+          "required": [
+            "schema_version",
+            "artifact",
+            "endpoint",
+            "expires_at",
+            "receipt"
+          ]
+        },
+        "ExchangeClosureCommand": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "schema_version": {
+              "const": 1
+            },
+            "exchange_id": {
+              "$ref": "#/$defs/ID"
+            },
+            "request_hash": {
+              "$ref": "#/$defs/SHA256"
+            },
+            "operation": {
+              "enum": [
+                "cancel",
+                "decline"
+              ]
+            }
+          },
+          "required": [
+            "schema_version",
+            "exchange_id",
+            "request_hash",
+            "operation"
+          ]
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "freightctl.work_onward",
+    "description": "Execute at most one ordinary pending step at its registered approved peer under current policy/leases/fencing. Same work key fixes the selected intent. A lost response may hide a remote effect;inspect status and original receipt before recovery. Requires the original exact reviewed start and its recorded receipt key;never adopts a generic unreviewed run. Remote writes follow the approved adapter contract and may replace data where that contract permits;no stronger exclusivity or business guarantee is implied.",
+    "inputSchema": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "run_id": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "request_key": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._:-]+$"
+        },
+        "start": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "request": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "schema_version": {
+                  "type": "integer",
+                  "const": 1
+                },
+                "profile": {
+                  "type": "string",
+                  "const": "ordered-workflow-onward-v1"
+                },
+                "workflow": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+                    },
+                    "version": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    "hash": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "version",
+                    "hash"
+                  ]
+                },
+                "artifact": {
+                  "$ref": "#/$defs/Artifact"
+                }
+              },
+              "required": [
+                "schema_version",
+                "profile",
+                "workflow",
+                "artifact"
+              ]
+            },
+            "review_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "request",
+            "review_hash"
+          ]
+        },
+        "receipt_key": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._:-]+$"
+        }
+      },
+      "required": [
+        "run_id",
+        "request_key",
+        "start",
+        "receipt_key"
+      ],
+      "$defs": {
+        "ID": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "SHA256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "Artifact": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "file_revision_id": {
+              "$ref": "#/$defs/ID"
+            },
+            "size_bytes": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "sha256": {
+              "$ref": "#/$defs/SHA256"
+            },
+            "acceptance_policy": {
+              "type": "string",
+              "pattern": "^(integrity-only-v1|intake-csv-v1:[0-9a-f]{64})$"
+            }
+          },
+          "required": [
+            "file_revision_id",
+            "size_bytes",
+            "sha256",
+            "acceptance_policy"
+          ]
+        },
+        "EndpointReference": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "$ref": "#/$defs/ID"
+            },
+            "revision": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1,
+              "maximum": 9223372036854775807
+            },
+            "hash": {
+              "$ref": "#/$defs/SHA256"
+            }
+          },
+          "required": [
+            "id",
+            "revision",
+            "hash"
+          ]
+        },
+        "ExchangeRequest": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "schema_version": {
+              "type": "integer",
+              "const": 1
+            },
+            "artifact": {
+              "$ref": "#/$defs/Artifact"
+            },
+            "endpoint": {
+              "$ref": "#/$defs/EndpointReference"
+            },
+            "expires_at": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]{1,6}0*)?(?:Z|[+-](?:[01][0-9]|2[0-3]):[0-5][0-9])$",
+              "description": "Exact microsecond instant; harmless trailing fractional zeroes and equivalent offsets normalize to UTC. Admission uses database time and configured lifetime."
+            },
+            "receipt": {
+              "type": "string",
+              "const": "availability-only-v1"
+            },
+            "reply_to": {
+              "$ref": "#/$defs/ID"
+            }
+          },
+          "required": [
+            "schema_version",
+            "artifact",
+            "endpoint",
+            "expires_at",
+            "receipt"
+          ]
+        },
+        "ExchangeClosureCommand": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "schema_version": {
+              "const": 1
+            },
+            "exchange_id": {
+              "$ref": "#/$defs/ID"
+            },
+            "request_hash": {
+              "$ref": "#/$defs/SHA256"
+            },
+            "operation": {
+              "enum": [
+                "cancel",
+                "decline"
+              ]
+            }
+          },
+          "required": [
+            "schema_version",
+            "exchange_id",
+            "request_hash",
+            "operation"
+          ]
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": true,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
   }
 ]

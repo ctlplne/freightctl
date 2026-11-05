@@ -57,7 +57,8 @@
         "docs/qualification/evidence/F087-artifact-receive-browser.json",
         "docs/qualification/evidence/F093-browser-artifact-offer.json",
         "docs/qualification/evidence/F099-governed-mcp-exchange-tools.json",
-        "docs/qualification/evidence/F101-upload-to-exchange-review.json"
+        "docs/qualification/evidence/F101-upload-to-exchange-review.json",
+        "docs/qualification/evidence/F103-reviewed-artifact-onward.json"
       ]
     },
     {
@@ -84,7 +85,8 @@
         "docs/qualification/evidence/F093-browser-artifact-offer.json",
         "docs/qualification/evidence/F098-browser-endpoint-administration.json",
         "docs/qualification/evidence/F099-governed-mcp-exchange-tools.json",
-        "docs/qualification/evidence/F101-upload-to-exchange-review.json"
+        "docs/qualification/evidence/F101-upload-to-exchange-review.json",
+        "docs/qualification/evidence/F103-reviewed-artifact-onward.json"
       ]
     },
     {
@@ -115,7 +117,8 @@
         "docs/qualification/evidence/F096-outgoing-exchange-history.json",
         "docs/qualification/evidence/F098-browser-endpoint-administration.json",
         "docs/qualification/evidence/F099-governed-mcp-exchange-tools.json",
-        "docs/qualification/evidence/F101-upload-to-exchange-review.json"
+        "docs/qualification/evidence/F101-upload-to-exchange-review.json",
+        "docs/qualification/evidence/F103-reviewed-artifact-onward.json"
       ]
     },
     {
@@ -142,7 +145,8 @@
         "docs/qualification/evidence/F094-browser-offer-recovery.json",
         "docs/qualification/evidence/F096-outgoing-exchange-history.json",
         "docs/qualification/evidence/F099-governed-mcp-exchange-tools.json",
-        "docs/qualification/evidence/F101-upload-to-exchange-review.json"
+        "docs/qualification/evidence/F101-upload-to-exchange-review.json",
+        "docs/qualification/evidence/F103-reviewed-artifact-onward.json"
       ]
     },
     {
@@ -172,7 +176,8 @@
         "docs/qualification/evidence/F096-outgoing-exchange-history.json",
         "docs/qualification/evidence/F098-browser-endpoint-administration.json",
         "docs/qualification/evidence/F099-governed-mcp-exchange-tools.json",
-        "docs/qualification/evidence/F101-upload-to-exchange-review.json"
+        "docs/qualification/evidence/F101-upload-to-exchange-review.json",
+        "docs/qualification/evidence/F103-reviewed-artifact-onward.json"
       ]
     },
     {
@@ -201,7 +206,8 @@
         "docs/qualification/evidence/F096-outgoing-exchange-history.json",
         "docs/qualification/evidence/F098-browser-endpoint-administration.json",
         "docs/qualification/evidence/F099-governed-mcp-exchange-tools.json",
-        "docs/qualification/evidence/F101-upload-to-exchange-review.json"
+        "docs/qualification/evidence/F101-upload-to-exchange-review.json",
+        "docs/qualification/evidence/F103-reviewed-artifact-onward.json"
       ]
     },
     {
@@ -292,7 +298,8 @@
       "artifact_digests": [],
       "environment": null,
       "evidence": [
-        "docs/qualification/evidence/F101-upload-to-exchange-review.json"
+        "docs/qualification/evidence/F101-upload-to-exchange-review.json",
+        "docs/qualification/evidence/F103-reviewed-artifact-onward.json"
       ]
     },
     {

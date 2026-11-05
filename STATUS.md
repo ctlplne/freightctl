@@ -92,6 +92,14 @@ browser upload,new-revision offer and independent recipient download,17a11y stat
 and exact completed-upload SQL binding. Initial AX-J02 HTTPS-browser/custody-poll
 pair is frozen;actual runtime,stock ingress/collection/onward outcomes remain owed.
 
+F103 adds reviewed owned-artifact onward delivery through approved ordered SFTP/
+FTPS workflows. Exact authority/source/approval/storage bindings,atomic ordinary
+run/intents/private receipt and typed receipt-only worker adoption protect each
+handoff. Three API paths,three protected CLI commands and16total MCP tools share
+ordinary services. Nine focused methods and affected static checks pass. Actual
+API/CLI/SDK,PG and own FTPS/intake/byte/contact-counter proofs are prepared,not
+qualified. UI,stock/collection bridges,full lineage/recovery and AX outcomes remain owed.
+
 Focused local parser/client/filesystem/summary regressions and affected static,
 frontend build, native compilation/vet and architecture checks pass. They establish
 no PostgreSQL, served browser, stock-peer or complete AX profile qualification.

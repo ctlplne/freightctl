@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"path/filepath"
 	"strconv"
 	"testing"
 	"time"
@@ -15,6 +16,7 @@ import (
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/custody"
 	"github.com/ctlplne/freightctl/internal/store"
+	"github.com/ctlplne/freightctl/internal/workflow"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
@@ -85,7 +87,7 @@ func TestMCPStockClientExchangeUsesOrdinaryAuthorityAndSeparateReply(t *testing.
 		t.Fatal("wrong partner discovered MCP catalog")
 	}
 	catalog, err := a.ListTools(ctx, &mcp.ListToolsParams{})
-	if err != nil || len(catalog.Tools) != 12 || catalog.NextCursor != "" || catalog.TTLMs != 0 || catalog.CacheScope != "private" {
+	if err != nil || len(catalog.Tools) != 16 || catalog.NextCursor != "" || catalog.TTLMs != 0 || catalog.CacheScope != "private" {
 		t.Fatal("stock client did not observe exact private noncached catalog")
 	}
 	call := func(client *mcp.ClientSession, name string, args map[string]any, ok bool) *mcp.CallToolResult {
@@ -195,4 +197,69 @@ func TestMCPStockClientExchangeUsesOrdinaryAuthorityAndSeparateReply(t *testing.
 	if history.State != "canceled" || history.ClosureEvent == "" || history.ReceiverPersistence != "unknown" || history.BusinessProcessing != "unknown" {
 		t.Fatal("MCP history overstated receiver facts")
 	}
+	// The operator provisions/approves the ordinary workflow outside MCP. The
+	// stock client can only review/stage its exact permitted immutable source.
+	operator, err := connect(admin, prefix)
+	if err != nil {
+		t.Fatal("stock MCP operator discovery failed")
+	}
+	defer operator.Close()
+	directory := t.TempDir()
+	host, hostPub := filepath.Join(directory, "host"), filepath.Join(directory, "host.pub")
+	key, keyPub := filepath.Join(directory, "key"), filepath.Join(directory, "key.pub")
+	if err = secure.GenerateSSHHostIdentity(host, hostPub); err != nil {
+		t.Fatal(err)
+	}
+	if err = secure.GenerateSSHHostIdentity(key, keyPub); err != nil {
+		t.Fatal(err)
+	}
+	workflows := &workflow.Service{Custody: service}
+	registered, err := workflows.RegisterConnection(ctx, scope, "mcp-onward-connection", workflow.ConnectionRequest{Address: "127.0.0.1:9", User: "receiver", Directory: "/inbox", HostPublicFile: hostPub, KeyFile: key, KeyPublicFile: keyPub})
+	if err != nil {
+		t.Fatal(err)
+	}
+	var connection workflow.ConnectionView
+	if json.Unmarshal(registered.Resource, &connection) != nil {
+		t.Fatal("connection response")
+	}
+	draft, err := workflows.Draft(ctx, scope, "mcp-onward-draft", workflow.DraftRequest{Definition: workflow.Definition{Schema: 1, Name: "Preapproved MCP onward", Steps: []workflow.Step{{ID: "send", Kind: "sftp.deliver", Connection: workflow.Reference{ID: connection.ID, Version: connection.Version, Hash: connection.Hash}, Filename: "onward.bin"}}}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	var config store.Configuration
+	if json.Unmarshal(draft.Resource, &config) != nil {
+		t.Fatal("draft response")
+	}
+	if _, err = workflows.Decide(ctx, scope, config.ID, config.Version, "mcp-onward-approve", "approve", workflow.Decision{Hash: config.Hash, Revision: config.Revision}); err != nil {
+		t.Fatal(err)
+	}
+	owned := upload(admin, "mcp-owned-onward-source", []byte("explicit new onward source"))
+	onwardRequest := workflow.OnwardRequest{Schema: 1, Profile: workflow.OnwardProfile, Workflow: workflow.Reference{ID: config.ID, Version: config.Version, Hash: config.Hash}, Artifact: store.ExchangeArtifact{ID: owned.ID, Size: owned.Size, SHA256: owned.SHA256, Policy: owned.Policy}}
+	var onwardReview workflow.OnwardReview
+	mcpDecodeResult(t, call(operator, "prepare_onward", map[string]any{"request": onwardRequest}, true), &onwardReview)
+	call(b, "prepare_onward", map[string]any{"request": onwardRequest}, false)
+	onset := workflow.OnwardStart{Request: onwardRequest, ReviewHash: onwardReview.ReviewHash}
+	var acceptedOnward struct {
+		ID          string `json:"run_id"`
+		Acceptance  string `json:"acceptance"`
+		Current     string `json:"current_state"`
+		Persistence string `json:"receiver_persistence"`
+		Replayed    bool   `json:"replayed"`
+	}
+	mcpDecodeResult(t, call(operator, "start_onward", map[string]any{"request": onwardRequest, "review_hash": onwardReview.ReviewHash, "request_key": "mcp-reviewed-onward"}, true), &acceptedOnward)
+	if acceptedOnward.Acceptance != "recorded-run-and-intents-only" || acceptedOnward.Current != "not-checked" || acceptedOnward.Persistence != "unknown" || acceptedOnward.Replayed {
+		t.Fatal("MCP onward staging claimed a receiver outcome")
+	}
+	call(operator, "onward_status", map[string]any{"run_id": acceptedOnward.ID, "start": onset, "receipt_key": "mcp-reviewed-onward"}, true)
+	call(operator, "work_onward", map[string]any{"run_id": acceptedOnward.ID, "start": onset, "receipt_key": "missing-origin", "request_key": "must-not-contact"}, false)
+	legacy, err := workflows.Run(ctx, scope, "mcp-generic-run", workflow.RunRequest{Workflow: onwardRequest.Workflow, FileID: owned.ID})
+	if err != nil {
+		t.Fatal(err)
+	}
+	var generic store.WorkflowRun
+	if json.Unmarshal(legacy.Resource, &generic) != nil {
+		t.Fatal("legacy run response")
+	}
+	call(operator, "work_onward", map[string]any{"run_id": generic.ID, "start": onset, "receipt_key": "mcp-generic-run", "request_key": "must-not-adopt"}, false)
+
 }

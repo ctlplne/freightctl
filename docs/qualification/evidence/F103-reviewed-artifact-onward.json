@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "id": "F103",
+  "observed_at": "2026-11-05",
+  "starting_commit": "afaf60acfd498c32fd8b15140e054852b7f02b98",
+  "state": "Reviewed owned-artifact/approved ordered-workflow onward profile implemented;actual native and independent qualification owed",
+  "qualification_claim": false,
+  "change": [
+    "Freeze ordered-workflow-onward-v1 for owned available exact source and already approved schema1 ordered SFTP/FTPS workflows. Current ordinary root workflow_execute/read/deliver,source/path/intake and registered connection guards apply. No arbitrary recipient/URL/path/credential or collection/schema2 adoption. Receiving creates no forwarding or ordinary source right.",
+    "Review fingerprint binds exact request,tenant/partner/actor,authority/root,workflow approval revision and storage identity. Lock approval row through staging;compare fingerprint inside the same ordinary transaction that records run,intents and private receipt. No peer contact occurs during preparation/staging.",
+    "Retain exact profile,review hash and approval revision with the ordinary run receipt;lookup reconstructs the fingerprint. Same-key recovery cannot stage/wake more work;changed meaning conflicts. Current original authority and source-receipt permission remain required. Later revocation/hold/new admission reduction cannot turn historical acceptance into a new action.",
+    "Three shared HTTPS paths,three protected-reference CLI commands and four additional MCP tools use these services. Worker/status tools require exact original reviewed-start receipt/run binding;generic or collection/routing runs cannot be adopted. Work delegates one ordinary intent with current policy,leases,fencing and ambiguity semantics.",
+    "MCP effect hints conservatively disclose external/potentially destructive writes. Projections expose integrity/resource/status/receipt hashes,keeping storage/root/transport references,private labels,raw observations and parsed bytes out of model context. Historical accepted state is separate from current status;receiver persistence/processing stay unknown.",
+    "Prepared native profiles cover actual API/CLI/official-SDK review/start/lookup,original exchange journeys,three PG receipt/isolation/rotation cases and actual freightctl FTPS/intake/byte/contact-counter proof. This own-product peer is not independent stock interoperability. No new migration or retained database change."
+  ],
+  "red": {
+    "observed": "Required reviewed onward route missing:malformed invented-authority request returned404 rather than400 before database",
+    "reference": ".private/freightctl-f103-onward-red.log",
+    "sha256": "cda4eba8b0a9a9e6bef2453517924f5c77dea9eff3714c9e59e64cd59be5d582"
+  },
+  "green": {
+    "api_mcp_methods": 7,
+    "workflow_binding_methods": 2,
+    "resolved_mcp_tool_schemas": 16,
+    "openapi_paths": 3,
+    "resolved_local_openapi_references": 23,
+    "affected_tagged_compilation_vet_architecture_format_diff": "pass,no runtime claim",
+    "frontend": "unchanged;not redundantly replayed"
+  },
+  "native_profile": {
+    "state": "prepared,not qualified",
+    "required": [
+      "Actual PG zero-effect review,atomic intents/receipt,exact replay,stale hash,revocation/hold/admission changes,other principal,credential rotation and legacy-run refusal",
+      "Actual served HTTPS,protected-reference CLI and official stock SDK routes including original exchange profiles",
+      "Actual FTPS peer byte observation and zero-contact refusal after holds;independent stock SFTP/FTPS and complete AX-J02 remain owed"
+    ]
+  },
+  "source_files": [
+    {
+      "path": "cmd/freightctl/exchanges_integration_test.go",
+      "sha256": "610ca43994bc69bd71866106f598f5f61e906b0cd5cb87a063808fbd97b9c2d9"
+    },
+    {
+      "path": "cmd/freightctl/main.go",
+      "sha256": "a3e39af76bcfee349ddf0b998cf8e395fd2f785633c07d643c72bab086678ae3"
+    },
+    {
+      "path": "cmd/freightctl/workflow.go",
+      "sha256": "de740db24d9539bf2d78589e0a0832ac3caf83c7ce6fff6258de4b87ec32c1f4"
+    },
+    {
+      "path": "docs/api/artifact-onward.openapi.json",
+      "sha256": "1a81145e645c8fedaeac33fae5801b6cbb1ed6279915da654ba71ba4c7ba8dc2"
+    },
+    {
+      "path": "docs/product/artifact-exchange-plan.md",
+      "sha256": "56995d05e379cbeffb0a4cbd0c6a477a76e56fb4148ff6aeafe10f48a333c4c6"
+    },
+    {
+      "path": "docs/protocols/artifact-exchange-mcp.md",
+      "sha256": "f009d4c1c52612fc72e9ee5e69599ac018ed20363eff83096427df4cc76f4bf7"
+    },
+    {
+      "path": "docs/protocols/artifact-exchange.md",
+      "sha256": "09f0d8ecd2ca90940cc60140fdf045f6048314616e287d2a7e7584ccb6b1047d"
+    },
+    {
+      "path": "docs/protocols/artifact-onward.md",
+      "sha256": "dd37249f936539f230679dd55aaf67dbcadd03a2ce64aaa6901515e45e4ca306"
+    },
+    {
+      "path": "internal/api/api.go",
+      "sha256": "99e986fc6b6341ef89e555c33008bf6307fd672c7b51ddf8e2e32631193b13bf"
+    },
+    {
+      "path": "internal/api/mcp-tools.json",
+      "sha256": "fc23a34248188c77e8931b1cc8a81455afcf8187876cfc65d50131cd3459a9b5"
+    },
+    {
+      "path": "internal/api/mcp.go",
+      "sha256": "cc2bf924718650b4b3bd1b4c24100b02e6c827e824e2997154d590014a6c23c2"
+    },
+    {
+      "path": "internal/api/mcp_integration_test.go",
+      "sha256": "8ec806c9f4e3350696ea08c4d0a0312f91426e5c00fb81b957e316f4ba76244f"
+    },
+    {
+      "path": "internal/api/mcp_onward.go",
+      "sha256": "c90beea325570beffd78fd68b5ea4cd4f571a5fbbf560e2a70467584916e0190"
+    },
+    {
+      "path": "internal/api/mcp_test.go",
+      "sha256": "371af027e2f40b2320211a992003f83395dc2acd7180d38b8bcd5acc70f0cc9d"
+    },
+    {
+      "path": "internal/api/onward.go",
+      "sha256": "ed8f8d3b50f3981830886ac50db727b0589fc0ce755410c228c3a95d0fdb69eb"
+    },
+    {
+      "path": "internal/api/onward_integration_test.go",
+      "sha256": "2da7cdc89722a3ef15550529d85a66145db53e4449174b395cb0c6f21ff0e729"
+    },
+    {
+      "path": "internal/api/onward_test.go",
+      "sha256": "e765a8680c8bd586dc7882704a6c1aac3cc0a46596e2016a3342cfe83e2817fb"
+    },
+    {
+      "path": "internal/checks/artifact_onward_integration_test.go",
+      "sha256": "bde6eee19d6ff1c8b8b1685a5683a59cd71fbdef473a14fcd1193cc9dfe4fb0c"
+    },
+    {
+      "path": "internal/workflow/artifact_onward.go",
+      "sha256": "0ac91d4fbb84c895813bab3038142f80b84f3ff1748f2329ccfcfb2e5064f374"
+    },
+    {
+      "path": "internal/workflow/artifact_onward_integration_test.go",
+      "sha256": "1676e1e6b0233edf69e52596c6883d7af77a00692a39998ce4f99d081eee53bb"
+    },
+    {
+      "path": "internal/workflow/artifact_onward_test.go",
+      "sha256": "2ddc2eaabf6ca028e45e8fe7e212f2466d3b82b67333421f2821a63f75709569"
+    }
+  ],
+  "local_manifest": {
+    "reference": ".private/freightctl-f103/manifest.json",
+    "sha256": "e618b5d3e187306ccf83dfb43987cc8925a82bec7aa7742a862359217af47c4b"
+  },
+  "owed": [
+    "All prepared current-source native/interface proofs and full external OpenAPI/independent-client conformance",
+    "Browser onward UI,stock SFTP/FTPS ingress,governed collection/schema2 bridges and complete cross-hop/derivation lineage",
+    "Actual socket-loss/process-death/restore,retention/fairness,remaining agent/AI/provider and mandatory baseline/AX/FINISH work",
+    "Compatible patched peer inputs and security replay;all original nonsecurity CI failure logs/repairs remain deferred to FINISH"
+  ]
+}

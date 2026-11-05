@@ -29,7 +29,7 @@ func runWorkflow(ctx context.Context, command, dsn, token, tenant, partner, stor
 	}
 	defer db.Pool.Close()
 	custodyService := &custody.Service{DB: db, MaxFile: maxFile, MaxStored: maxStored}
-	if command == "workflow-run" || command == "workflow-work" {
+	if command == "workflow-run" || command == "workflow-work" || command == "onward-preview" || command == "onward-start" {
 		disk, err := custody.OpenExisting(storage)
 		if err != nil {
 			return err
@@ -39,6 +39,15 @@ func runWorkflow(ctx context.Context, command, dsn, token, tenant, partner, stor
 	}
 	service := &workflow.Service{Custody: custodyService}
 	decode := func(v any) error {
+		if command == "onward-preview" || command == "onward-start" || command == "onward-receipt" {
+			request, err := secure.ReadSecret(input, 32<<10)
+			if err != nil {
+				return errors.New("onward request must be a protected bounded regular file")
+			}
+			defer request.Close()
+			return workflow.Decode(request.Bytes, v)
+		}
+
 		f, err := os.Open(input)
 		if err != nil {
 			return errors.New("cannot open workflow request reference")
@@ -57,6 +66,25 @@ func runWorkflow(ctx context.Context, command, dsn, token, tenant, partner, stor
 	var result any
 	decision := workflow.Decision{Hash: hash, Revision: revision}
 	switch command {
+
+	case "onward-receipt":
+		var request workflow.OnwardLookup
+		if err = decode(&request); err != nil {
+			return err
+		}
+		result, err = service.OnwardReceipt(ctx, scope, request)
+	case "onward-preview":
+		var request workflow.OnwardRequest
+		if err = decode(&request); err != nil {
+			return err
+		}
+		result, err = service.PrepareOnward(ctx, scope, request)
+	case "onward-start":
+		var request workflow.OnwardStart
+		if err = decode(&request); err != nil {
+			return err
+		}
+		result, err = service.StartOnward(ctx, scope, key, request)
 	case "connection-register":
 		var r workflow.ConnectionRequest
 		if err = decode(&r); err != nil {

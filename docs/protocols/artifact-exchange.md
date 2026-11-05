@@ -121,5 +121,7 @@ API/CLI closure, offered-view browser decline,reviewed browser sending and
 [Browser endpoint administration](artifact-exchange-admin-browser.md) is implemented.
 The [MCP exchange-tool profile](artifact-exchange-mcp.md) is implemented;
 its native qualification and additional partner/workflow/diagnostic/recovery tools
-remain owed. The exchange OpenAPI contract is a subset of the overall product API. Actual stock-client,
+remain owed. The exchange OpenAPI contract is a subset of the overall product API. The [reviewed onward profile](artifact-onward.md) stages only ordinary preapproved
+ordered SFTP/FTPS workflows from a separately authorized owned artifact.
+Actual stock-client,
 independent-receiver, crash/recovery, capacity and AX profile proofs remain owed.

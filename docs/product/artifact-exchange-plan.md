@@ -177,6 +177,13 @@ AI tools cannot invent recipients or gain broader rights. Artifact exchange must
 work with freightctl inference disabled. The separate private-model quality,
 disclosure and adversarial requirements in GOAL13/14 remain open and unchanged.
 
+The current onward implementation pins `ordered-workflow-onward-v1`:an owned
+available artifact,already approved schema1 ordered workflow,exact review binding,
+ordinary transactional run/intents and separately authorized work. The
+[onward contract](../protocols/artifact-onward.md) states its API/CLI/MCP limits.
+No collection/routing adoption,implicit forwarding,content-derivation lineage or
+complete runtime qualification is inferred;remaining AX-J02 pairs remain owed.
+
 ## Build order and exit evidence
 
 1. **Freeze the contracts.** On application resume, inspect exact current source,

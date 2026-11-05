@@ -18,6 +18,7 @@ import (
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/custody"
 	"github.com/ctlplne/freightctl/internal/store"
+	"github.com/ctlplne/freightctl/internal/workflow"
 	"github.com/jackc/pgx/v5"
 )
 
@@ -277,4 +278,77 @@ func TestArtifactExchangeCLIUsesOrdinaryAuthorityAndPublishesVerifiedDownload(t 
 	if _, err = os.Lstat(filepath.Join(outputDirectory, "must-not-exist")); !errors.Is(err, os.ErrNotExist) {
 		t.Fatal("closed view left a download file", err)
 	}
+	// Continue the original native CLI journey through the separately reviewed
+	// ordered onward profile. It stages ordinary intents,not peer contact.
+	onwardDirectory := t.TempDir()
+	host, hostPub := filepath.Join(onwardDirectory, "host"), filepath.Join(onwardDirectory, "host.pub")
+	key, keyPub := filepath.Join(onwardDirectory, "key"), filepath.Join(onwardDirectory, "key.pub")
+	if err = secure.GenerateSSHHostIdentity(host, hostPub); err != nil {
+		t.Fatal(err)
+	}
+	if err = secure.GenerateSSHHostIdentity(key, keyPub); err != nil {
+		t.Fatal(err)
+	}
+	workflows := &workflow.Service{Custody: service}
+	registered, err := workflows.RegisterConnection(ctx, scope, "cli-onward-connection", workflow.ConnectionRequest{Address: "127.0.0.1:9", User: "receiver", Directory: "/inbox", HostPublicFile: hostPub, KeyFile: key, KeyPublicFile: keyPub})
+	if err != nil {
+		t.Fatal(err)
+	}
+	var connection workflow.ConnectionView
+	if json.Unmarshal(registered.Resource, &connection) != nil {
+		t.Fatal("connection response")
+	}
+	draft := workflow.DraftRequest{Definition: workflow.Definition{Schema: 1, Name: "CLI onward", Steps: []workflow.Step{{ID: "send", Kind: "sftp.deliver", Connection: workflow.Reference{ID: connection.ID, Version: connection.Version, Hash: connection.Hash}, Filename: "onward.bin"}}}}
+	raw, err := command(adminToken, "workflow-draft", "-request-file", requestFile(draft), "-idempotency-key", "cli-onward-draft")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var draftResult workflow.Result
+	var configuration store.Configuration
+	if json.Unmarshal(raw, &draftResult) != nil || json.Unmarshal(draftResult.Resource, &configuration) != nil {
+		t.Fatal("draft response")
+	}
+	if _, err = workflows.Decide(ctx, scope, configuration.ID, configuration.Version, "cli-onward-approve", "approve", workflow.Decision{Hash: configuration.Hash, Revision: configuration.Revision}); err != nil {
+		t.Fatal(err)
+	}
+	onwardFile, _, err := service.Accept(ctx, scope, "cli-onward-source", 3, secure.Digest([]byte("new")), bytes.NewReader([]byte("new")))
+	if err != nil {
+		t.Fatal(err)
+	}
+	onward := workflow.OnwardRequest{Schema: 1, Profile: workflow.OnwardProfile, Workflow: workflow.Reference{ID: configuration.ID, Version: configuration.Version, Hash: configuration.Hash}, Artifact: store.ExchangeArtifact{ID: onwardFile.ID, Size: onwardFile.Size, SHA256: onwardFile.SHA256, Policy: onwardFile.Policy}}
+	raw, err = command(adminToken, "onward-preview", "-request-file", requestFile(onward))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var review workflow.OnwardReview
+	if json.Unmarshal(raw, &review) != nil || review.ExternalContact || review.State != "review-only" {
+		t.Fatal("CLI onward review claimed contact")
+	}
+	start := workflow.OnwardStart{Request: onward, ReviewHash: review.ReviewHash}
+	startFile := requestFile(start)
+	raw, err = command(adminToken, "onward-start", "-request-file", startFile, "-idempotency-key", "cli-onward-original")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var started workflow.Result
+	if json.Unmarshal(raw, &started) != nil || started.Replayed {
+		t.Fatal("CLI onward start")
+	}
+	raw, err = command(adminToken, "onward-receipt", "-request-file", requestFile(workflow.OnwardLookup{Start: start, ReceiptKey: "cli-onward-original"}))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var lookedUp workflow.Result
+	if json.Unmarshal(raw, &lookedUp) != nil || !lookedUp.Replayed || string(lookedUp.Resource) != string(started.Resource) {
+		t.Fatal("CLI onward lookup changed original receipt")
+	}
+	raw, err = command(adminToken, "onward-start", "-request-file", startFile, "-idempotency-key", "cli-onward-original")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var replayedOnward workflow.Result
+	if json.Unmarshal(raw, &replayedOnward) != nil || !replayedOnward.Replayed || string(replayedOnward.Resource) != string(started.Resource) {
+		t.Fatal("CLI onward replay changed original run")
+	}
+
 }
