@@ -859,7 +859,8 @@
         "docs/qualification/evidence/F082-artifact-receive-views.json",
         "docs/qualification/evidence/F083-artifact-exchange-api.json",
         "docs/qualification/evidence/F085-artifact-exchange-cli.json",
-        "docs/qualification/evidence/F087-artifact-receive-browser.json"
+        "docs/qualification/evidence/F087-artifact-receive-browser.json",
+        "docs/qualification/evidence/F089-exchange-endpoint-directory.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -874,11 +875,11 @@
         "S003 resumes the full product and authorizes guarded source/CI batches after previous required runs are terminal. Contract validators are implemented with focused red/green proof; durable services and five API paths are implemented; remaining surfaces and actual AX profiles remain owed. Broad/deferred qualification is mandatory at FINISH."
       ],
       "current_item": {
-        "id": "F087",
-        "state": "Receive UI/client and native profile implemented; actual browser/runtime proof owed",
-        "proof": "Five contract/client methods,Go canonical fixture,actual ambiguous-summary red/green,TypeScript/build/syntax/native compile/vet/architecture pass",
-        "native": "Dedicated GitHub Chrome/PostgreSQL profile prepared; no local browser or database execution",
-        "next": "Finish remaining shared surfaces/controls and full AX profiles; security triage now and mandatory deferred broad/native repair at FINISH."
+        "id": "F089",
+        "state": "Current-head endpoint directory API/CLI/UI implemented; native proof owed",
+        "proof": "Focused selector/canonical-scope/client/cursor checks,shared Go/JS wire fixtures,frontend build,native compile/vet/architecture pass",
+        "native": "Original real API/CLI/browser profiles extended and one new RLS/current-head case prepared; no local heavy runtime",
+        "next": "Continue exchange lifecycle/history/send/admin/agent/bridge implementation; triage new security findings and complete all deferred qualification at FINISH."
       }
     }
   ],

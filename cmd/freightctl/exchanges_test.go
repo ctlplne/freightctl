@@ -18,6 +18,8 @@ import (
 
 func TestExchangeCLIRefusesInvalidSelectorsBeforeOpeningReferences(t *testing.T) {
 	for _, args := range [][]string{
+		{"exchange-endpoint-list", "-exchange-after", "not-an-id"},
+		{"exchange-endpoint-inspect", "-exchange-endpoint-id", "not-an-id"},
 		{"exchange-incoming", "-exchange-endpoint-id", "not-an-id"},
 		{"exchange-inspect", "-exchange-id", "not-an-id"},
 		{"exchange-download", "-exchange-id", "not-an-id", "-output", "must-not-create"},

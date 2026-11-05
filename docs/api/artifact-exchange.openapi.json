@@ -409,6 +409,124 @@
           }
         }
       }
+    },
+    "/v1/tenants/{tenant}/partners/{partner}/exchange-endpoints": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/tenant"
+        },
+        {
+          "$ref": "#/components/parameters/partner"
+        }
+      ],
+      "get": {
+        "operationId": "listCurrentExchangeEndpoints",
+        "summary": "Discover currently visible registered endpoint heads",
+        "description": "Current participant or root account-manager authority. RLS and shared head locks prevent historical visibility or removal races from supplying a directory entry or cursor. Revoked heads may be visible as history; reading grants no publication or retrieval permission.",
+        "parameters": [
+          {
+            "name": "after",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "413": {
+            "$ref": "#/components/responses/413"
+          },
+          "503": {
+            "$ref": "#/components/responses/503"
+          },
+          "200": {
+            "description": "Bounded authorized current-head page.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointPage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/tenants/{tenant}/partners/{partner}/exchange-endpoints/{endpoint}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/tenant"
+        },
+        {
+          "$ref": "#/components/parameters/partner"
+        },
+        {
+          "$ref": "#/components/parameters/endpoint"
+        }
+      ],
+      "get": {
+        "operationId": "inspectCurrentExchangeEndpoint",
+        "summary": "Read one currently visible endpoint head",
+        "description": "Current participant or root account-manager authority; exact scope, canonical definition and current head, never a highest visible historical version.",
+        "responses": {
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "413": {
+            "$ref": "#/components/responses/413"
+          },
+          "503": {
+            "$ref": "#/components/responses/503"
+          },
+          "200": {
+            "description": "Current visible registered endpoint version; not permission to exchange bytes.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointVersion"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -969,6 +1087,25 @@
         },
         "required": [
           "error"
+        ]
+      },
+      "EndpointPage": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "endpoints": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "$ref": "#/components/schemas/EndpointVersion"
+            }
+          },
+          "next": {
+            "$ref": "#/components/schemas/ID"
+          }
+        },
+        "required": [
+          "endpoints"
         ]
       }
     }

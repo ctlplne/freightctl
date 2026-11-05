@@ -16,5 +16,27 @@
     "receipt": "availability-only-v1"
   },
   "canonical": "{\"schema_version\":1,\"artifact\":{\"file_revision_id\":\"55555555-5555-4555-8555-555555555555\",\"size_bytes\":8,\"sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"acceptance_policy\":\"integrity-only-v1\"},\"endpoint\":{\"id\":\"44444444-4444-4444-8444-444444444444\",\"revision\":1,\"hash\":\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"},\"expires_at\":\"2026-11-05T20:00:00.000001Z\",\"receipt\":\"availability-only-v1\"}",
-  "sha256": "69609c67b176b1c7a893e00d6649b36585d7abd77dad0cab4923ba2ab2c64ecc"
+  "sha256": "69609c67b176b1c7a893e00d6649b36585d7abd77dad0cab4923ba2ab2c64ecc",
+  "endpoint": {
+    "schema_version": 1,
+    "profile": "custody-https-poll-v1",
+    "recipient": {
+      "tenant_id": "00000001-1111-4111-8111-111111111111",
+      "partner_id": "00000002-1111-4111-8111-111111111111",
+      "actor_id": "00000003-1111-4111-8111-111111111111",
+      "authority_revision": 1,
+      "root_policy_digest": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+    },
+    "senders": [
+      {
+        "tenant_id": "00000001-1111-4111-8111-111111111111",
+        "partner_id": "00000002-1111-4111-8111-111111111111",
+        "actor_id": "00000006-1111-4111-8111-111111111111",
+        "authority_revision": 1,
+        "root_policy_digest": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      }
+    ]
+  },
+  "endpoint_canonical": "{\"schema_version\":1,\"profile\":\"custody-https-poll-v1\",\"recipient\":{\"tenant_id\":\"00000001-1111-4111-8111-111111111111\",\"partner_id\":\"00000002-1111-4111-8111-111111111111\",\"actor_id\":\"00000003-1111-4111-8111-111111111111\",\"authority_revision\":1,\"root_policy_digest\":\"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\"},\"senders\":[{\"tenant_id\":\"00000001-1111-4111-8111-111111111111\",\"partner_id\":\"00000002-1111-4111-8111-111111111111\",\"actor_id\":\"00000006-1111-4111-8111-111111111111\",\"authority_revision\":1,\"root_policy_digest\":\"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\"}]}",
+  "endpoint_sha256": "b30e8c2ba61cf337044e27166913f9a6de01e985c415d819c9cb69aae4c39a1f"
 }

@@ -7,7 +7,7 @@ bounded read. Registering an endpoint and publishing a view are separate actions
 
 This describes implemented API code. Actual native/served qualification is owed
 in F081–F083. The [wire contract](../api/artifact-exchange.openapi.json) describes
-these five paths using [OpenAPI 3.1.0](https://spec.openapis.org/oas/v3.1.0.html).
+these seven paths using [OpenAPI 3.1.0](https://spec.openapis.org/oas/v3.1.0.html).
 It is a subset of the product API; independent schema validation remains owed.
 
 ## Configure and authenticate
@@ -41,6 +41,9 @@ selectors must match the authenticated identity; they are not permission grants.
 1. Obtain each participant's current bindings from `GET /identity`: tenant,
    partner, actor, authority revision and namespace-root digest. A participant
    can be a software agent, application, person or system.
+   `GET /exchange-endpoints` lists currently visible heads; `GET
+   /exchange-endpoints/{endpoint}` inspects one. Old visible journal versions do
+   not become directory entries. These reads grant no exchange or byte access.
 2. Accept the source through the existing file/upload/namespace interfaces.
    Required checks and release must pass for the exact revision. Receive views
    require the current intake policy. A changed policy can hold an existing view;

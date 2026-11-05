@@ -270,3 +270,61 @@ func TestExchangeEndpointRLSAndForgedHeadRefuseRuntimeWriter(t *testing.T) {
 		t.Fatal("rejected SQL attack changed current endpoint", err)
 	}
 }
+
+func TestExchangeEndpointDirectoryUsesOnlyCurrentVisibleHeadsAndRechecksPagination(t *testing.T) {
+	f := newBrowserFixture(t)
+	a, scopeA := endpointParticipant(t, f, []string{"read", "deliver"})
+	b, scopeB := endpointParticipant(t, f, []string{"read", "list"})
+	c, scopeC := endpointParticipant(t, f, []string{"read", "deliver"})
+	_, unrelated := endpointParticipant(t, f, []string{"read", "list"})
+	limits := ExchangeLimits{MaxArtifactBytes: 1024, MaxLifetime: time.Hour, MaxSenders: 16}
+	first, second := "00000001-1111-4111-8111-111111111111", "00000002-1111-4111-8111-111111111111"
+	for i, entry := range []struct {
+		id     string
+		sender ExchangeParticipant
+	}{{first, a}, {second, c}} {
+		_, err := f.db.RegisterExchangeEndpoint(f.ctx, f.scope, "directory-"+entry.id, ExchangeEndpointCommand{Operation: "create", ID: entry.id, Definition: &ExchangeEndpointDefinition{Schema: 1, Profile: "custody-https-poll-v1", Recipient: b, Senders: []ExchangeParticipant{entry.sender}}}, limits, 2)
+		if err != nil {
+			t.Fatal("directory fixture", i, err)
+		}
+	}
+	page, err := f.db.ExchangeEndpoints(f.ctx, scopeA, "", 20)
+	if err != nil || len(page.Endpoints) != 1 || page.Endpoints[0].ID != first || page.Next != "" {
+		t.Fatal("sender saw unrelated current endpoint", err)
+	}
+	page, err = f.db.ExchangeEndpoints(f.ctx, scopeB, "", 1)
+	if err != nil || len(page.Endpoints) != 1 || page.Endpoints[0].ID != first || page.Next != first {
+		t.Fatal("recipient first page", err)
+	}
+	page, err = f.db.ExchangeEndpoints(f.ctx, scopeB, page.Next, 1)
+	if err != nil || len(page.Endpoints) != 1 || page.Endpoints[0].ID != second || page.Next != "" {
+		t.Fatal("recipient second page", err)
+	}
+	page, err = f.db.ExchangeEndpoints(f.ctx, unrelated, "", 20)
+	if err != nil || len(page.Endpoints) != 0 || page.Next != "" {
+		t.Fatal("unrelated actor learned endpoint or cursor", err)
+	}
+	if _, err = f.db.ExchangeEndpoint(f.ctx, unrelated, first); !errors.Is(err, ErrNotFound) {
+		t.Fatal("unrelated endpoint lookup", err)
+	}
+	_, err = f.db.RegisterExchangeEndpoint(f.ctx, f.scope, "directory-replace", ExchangeEndpointCommand{Operation: "replace", ID: first, ExpectedRevision: 1, Definition: &ExchangeEndpointDefinition{Schema: 1, Profile: "custody-https-poll-v1", Recipient: b, Senders: []ExchangeParticipant{c}}}, limits, 2)
+	if err != nil {
+		t.Fatal(err)
+	}
+	page, err = f.db.ExchangeEndpoints(f.ctx, scopeA, "", 20)
+	if err != nil || len(page.Endpoints) != 0 || page.Next != "" {
+		t.Fatal("historical sender version became a directory entry", err)
+	}
+	if _, err = f.db.ExchangeEndpoint(f.ctx, scopeA, first); !errors.Is(err, ErrNotFound) {
+		t.Fatal("removed sender lookup", err)
+	}
+	if current, err := f.db.ExchangeEndpoint(f.ctx, scopeC, first); err != nil || current.Revision != 2 {
+		t.Fatal("new sender current head", err)
+	}
+	if _, err = f.db.RegisterExchangeEndpoint(f.ctx, f.scope, "directory-revoke", ExchangeEndpointCommand{Operation: "revoke", ID: first, ExpectedRevision: 2}, limits, 2); err != nil {
+		t.Fatal(err)
+	}
+	if current, err := f.db.ExchangeEndpoint(f.ctx, f.scope, first); err != nil || current.Revision != 3 || current.State != "revoked" {
+		t.Fatal("manager cannot inspect revoked head", err)
+	}
+}

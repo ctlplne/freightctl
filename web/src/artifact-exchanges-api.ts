@@ -3,6 +3,11 @@ import { ApiError, uuid } from "./types";
 import {
   asIncomingPage,
   asIncomingView,
+  asEndpointPage,
+  asEndpointRecord,
+  bindingIsCurrent,
+  type DirectoryContext,
+  type EndpointRecord,
   type ExchangeIdentity,
   type IncomingExchange,
 } from "./artifact-exchanges-types";
@@ -11,6 +16,7 @@ export class ExchangeReceiveApi {
   private identity: ExchangeIdentity;
   private prefix: string;
   private who: string;
+  private directory: DirectoryContext;
   constructor(private api: Api) {
     const s = api.session;
     if (!s) throw new ApiError("unauthorized", 401);
@@ -20,6 +26,17 @@ export class ExchangeReceiveApi {
       actor: s.identity.actor_id,
     };
     this.prefix = `/v1/tenants/${this.identity.tenant}/partners/${this.identity.partner}`;
+    const permissions = s.identity.permissions;
+    this.directory = {
+      ...this.identity,
+      authority_revision: s.identity.authority_revision,
+      root_policy_digest: s.identity.root_policy_digest,
+      manager:
+        permissions.includes("admin") &&
+        permissions.includes("accounts_manage"),
+      can_receive: permissions.includes("read") && permissions.includes("list"),
+      can_send: permissions.includes("read") && permissions.includes("deliver"),
+    };
     this.who = this.context();
   }
   private context(): string {
@@ -32,6 +49,7 @@ export class ExchangeReceiveApi {
           s.identity.authority_revision,
           s.identity.root_policy_digest,
           s.session.id,
+          s.identity.permissions,
         ])
       : "";
   }
@@ -40,6 +58,45 @@ export class ExchangeReceiveApi {
   }
   isCurrent(): boolean {
     return this.context() === this.who;
+  }
+  async endpoints(after = "", signal?: AbortSignal) {
+    this.current();
+    if (after !== "" && !uuid(after))
+      throw new ApiError("invalid_artifact_exchange_contract", 400);
+    const result = await this.api.request(
+      `${this.prefix}/exchange-endpoints?${new URLSearchParams({ limit: "10", after })}`,
+      signal ? { signal } : {},
+      (value) => {
+        this.current();
+        return asEndpointPage(value, this.directory, after, 10);
+      },
+    );
+    this.current();
+    return result;
+  }
+  async endpoint(id: string, signal?: AbortSignal) {
+    this.current();
+    if (!uuid(id))
+      throw new ApiError("invalid_artifact_exchange_contract", 400);
+    const result = await this.api.request(
+      `${this.prefix}/exchange-endpoints/${id}`,
+      signal ? { signal } : {},
+      (value) => {
+        this.current();
+        return asEndpointRecord(value, this.directory, id);
+      },
+    );
+    this.current();
+    return result;
+  }
+  isReceiveEndpoint(record: EndpointRecord): boolean {
+    this.current();
+    const checked = asEndpointRecord(record, this.directory);
+    return (
+      checked.state === "active" &&
+      this.directory.can_receive &&
+      bindingIsCurrent(checked.definition.recipient, this.directory)
+    );
   }
   async incoming(endpoint: string, after = "", signal?: AbortSignal) {
     this.current();

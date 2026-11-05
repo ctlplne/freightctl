@@ -47,6 +47,50 @@ func (s *Server) exchangeEndpointCommand(w http.ResponseWriter, r *http.Request)
 	respond(w, 200, result)
 }
 
+func (s *Server) exchangeEndpoints(w http.ResponseWriter, r *http.Request) {
+	identity, err := scope(r)
+	if err != nil {
+		failure(w, err)
+		return
+	}
+	if _, _, err = s.Service.ExchangeLimits(); err != nil {
+		failure(w, err)
+		return
+	}
+	limit := 20
+	if raw := r.URL.Query().Get("limit"); raw != "" {
+		limit, err = strconv.Atoi(raw)
+	}
+	if err != nil {
+		failure(w, store.ErrExchangeInput)
+		return
+	}
+	result, err := s.Service.DB.ExchangeEndpoints(r.Context(), identity, r.URL.Query().Get("after"), limit)
+	if err != nil {
+		failure(w, err)
+		return
+	}
+	respond(w, 200, result)
+}
+
+func (s *Server) exchangeEndpoint(w http.ResponseWriter, r *http.Request) {
+	identity, err := scope(r)
+	if err != nil {
+		failure(w, err)
+		return
+	}
+	if _, _, err = s.Service.ExchangeLimits(); err != nil {
+		failure(w, err)
+		return
+	}
+	result, err := s.Service.DB.ExchangeEndpoint(r.Context(), identity, r.PathValue("endpoint"))
+	if err != nil {
+		failure(w, err)
+		return
+	}
+	respond(w, 200, result)
+}
+
 func (s *Server) offerExchange(w http.ResponseWriter, r *http.Request) {
 	identity, err := scope(r)
 	if err != nil {

@@ -44,6 +44,176 @@ export interface IncomingPage {
   next: string;
 }
 
+export interface ExchangeBinding {
+  tenant_id: string;
+  partner_id: string;
+  actor_id: string;
+  authority_revision: number;
+  root_policy_digest: string;
+}
+export interface EndpointDefinition {
+  schema_version: 1;
+  profile: "custody-https-poll-v1";
+  recipient: ExchangeBinding;
+  senders: ExchangeBinding[];
+}
+export interface EndpointRecord {
+  id: string;
+  revision: number;
+  definition: EndpointDefinition;
+  definition_hash: string;
+  state: "active" | "revoked";
+  recorded_by: string;
+  event_id: string;
+}
+export interface DirectoryContext extends ExchangeIdentity {
+  authority_revision: number;
+  root_policy_digest: string;
+  manager: boolean;
+  can_receive: boolean;
+  can_send: boolean;
+}
+export interface EndpointPage {
+  endpoints: EndpointRecord[];
+  next: string;
+}
+
+function binding(value: unknown, context: ExchangeIdentity): ExchangeBinding {
+  const o = fields(value, [
+    "tenant_id",
+    "partner_id",
+    "actor_id",
+    "authority_revision",
+    "root_policy_digest",
+  ]);
+  const result = {
+    tenant_id: identifier(o.tenant_id),
+    partner_id: identifier(o.partner_id),
+    actor_id: identifier(o.actor_id),
+    authority_revision: integer(o.authority_revision, 1),
+    root_policy_digest: hash(o.root_policy_digest),
+  };
+  if (
+    result.tenant_id !== context.tenant ||
+    result.partner_id !== context.partner
+  )
+    refuse();
+  return result;
+}
+export function asEndpointDefinition(
+  value: unknown,
+  context: ExchangeIdentity,
+): EndpointDefinition {
+  const o = fields(value, [
+    "schema_version",
+    "profile",
+    "recipient",
+    "senders",
+  ]);
+  if (
+    o.schema_version !== 1 ||
+    o.profile !== "custody-https-poll-v1" ||
+    !Array.isArray(o.senders) ||
+    o.senders.length < 1 ||
+    o.senders.length > 128
+  )
+    refuse();
+  const senders = o.senders.map((v) => binding(v, context));
+  if (senders.some((s, i) => i > 0 && s.actor_id <= senders[i - 1]!.actor_id))
+    refuse();
+  return {
+    schema_version: 1,
+    profile: "custody-https-poll-v1",
+    recipient: binding(o.recipient, context),
+    senders,
+  };
+}
+export function endpointDefinitionHash(
+  value: unknown,
+  context: ExchangeIdentity,
+): string {
+  return digestBytes(
+    new TextEncoder().encode(
+      JSON.stringify(asEndpointDefinition(value, context)),
+    ),
+  );
+}
+export function bindingIsCurrent(
+  value: ExchangeBinding,
+  context: DirectoryContext,
+): boolean {
+  return (
+    value.tenant_id === context.tenant &&
+    value.partner_id === context.partner &&
+    value.actor_id === context.actor &&
+    value.authority_revision === context.authority_revision &&
+    value.root_policy_digest === context.root_policy_digest
+  );
+}
+export function asEndpointRecord(
+  value: unknown,
+  context: DirectoryContext,
+  expectedID?: string,
+): EndpointRecord {
+  const o = fields(value, [
+    "id",
+    "revision",
+    "definition",
+    "definition_hash",
+    "state",
+    "recorded_by",
+    "event_id",
+  ]);
+  const id = identifier(o.id),
+    definition = asEndpointDefinition(o.definition, context);
+  if (
+    (expectedID !== undefined && id !== expectedID) ||
+    (o.state !== "active" && o.state !== "revoked") ||
+    hash(o.definition_hash) !== endpointDefinitionHash(definition, context)
+  )
+    refuse();
+  if (
+    !context.manager &&
+    !(context.can_receive && bindingIsCurrent(definition.recipient, context)) &&
+    !(
+      context.can_send &&
+      definition.senders.some((s) => bindingIsCurrent(s, context))
+    )
+  )
+    refuse();
+  return {
+    id,
+    revision: integer(o.revision, 1),
+    definition,
+    definition_hash: hash(o.definition_hash),
+    state: o.state,
+    recorded_by: identifier(o.recorded_by),
+    event_id: identifier(o.event_id),
+  };
+}
+export function asEndpointPage(
+  value: unknown,
+  context: DirectoryContext,
+  after: string,
+  limit: number,
+): EndpointPage {
+  if (after !== "") identifier(after);
+  if (!Number.isSafeInteger(limit) || limit < 1 || limit > 100) refuse();
+  const o = fields(value, ["endpoints"], ["next"]);
+  if (!Array.isArray(o.endpoints) || o.endpoints.length > limit) refuse();
+  const endpoints = o.endpoints.map((v) => asEndpointRecord(v, context));
+  if (
+    endpoints.some(
+      (e, i) => e.id <= after || (i > 0 && e.id <= endpoints[i - 1]!.id),
+    )
+  )
+    refuse();
+  const next = Object.hasOwn(o, "next") ? identifier(o.next) : "";
+  if (next && (endpoints.length !== limit || next !== endpoints.at(-1)?.id))
+    refuse();
+  return { endpoints, next };
+}
+
 function refuse(): never {
   throw new ApiError("invalid_server_response", 502);
 }

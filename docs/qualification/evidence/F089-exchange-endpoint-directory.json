@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "id": "F089",
+  "observed_at": "2026-11-05",
+  "starting_commit": "4d89fca7e518aed4cf508f54e01c38a2085e5c19",
+  "state": "Current-head endpoint directory across API/CLI/UI implemented; actual native/RLS/served proof owed.",
+  "qualification_claim": false,
+  "change": "Read-only directory uses current head RLS and shared endpoint locks, validates canonical scope/hash/event bindings, rechecks the extra pagination row and caller authority, and never falls back to historical visible versions. Sender/recipient/manager visibility stays in existing PostgreSQL policies. UI picks only active exact-current recipient bindings; discovery never grants sending/retrieval/execution.",
+  "red": {
+    "test": "TestExchangeEndpointDirectoryRejectsInvalidSelectorsBeforeDatabase",
+    "result": "FAIL:404 missing directory route; expected400 before database access",
+    "reference": ".private/freightctl-exchange-endpoint-directory-red.log",
+    "sha256": "8bb346dc40ff14c0359b447fbece67be6452ea0ae951d4ccc8bdac380b6f336d"
+  },
+  "green": {
+    "api_selector_method": 1,
+    "canonical_record_scope_refusal_method": 1,
+    "cli_selector_method": "existing method extended for both new read commands; pass",
+    "canonical_fixture_method": "actual Go endpoint/request bytes and hashes match shared browser fixture",
+    "browser_contract_methods": 7,
+    "frontend": "TypeScript and deterministic embedded asset build pass; app.js699898bytes measured, no size gate",
+    "native": "store/API/CLI binaries compile; affected integration/exchangebrowser vet passes; no actual PostgreSQL/Chrome runtime",
+    "architecture": "TestCoreImportBoundaries pass",
+    "openapi": "seven paths,stdlib JSON and133 local refs resolve; independent schema validation owed",
+    "node_syntax": "native driver pass",
+    "diff_check": "pass"
+  },
+  "source_files": [
+    {
+      "path": "cmd/freightctl/exchanges.go",
+      "sha256": "23f2c292292b9a40c854812789a42ab56b7d63237c821de750a334c9c9da2dd8"
+    },
+    {
+      "path": "cmd/freightctl/exchanges_integration_test.go",
+      "sha256": "bd2b1e1af45e6e9844f38233ffb18d47dfe733aa67037f8f0274b9c46e57bfa9"
+    },
+    {
+      "path": "cmd/freightctl/exchanges_test.go",
+      "sha256": "5f2c4bf38f9e2ec54628ae1cf67e35da2d39ce83938ab97138a08ebc484fb54e"
+    },
+    {
+      "path": "cmd/freightctl/main.go",
+      "sha256": "6f397229330c6fff83bf4e5df7556a09884f469927910e6bd6959d04bc5e013a"
+    },
+    {
+      "path": "docs/api/artifact-exchange.openapi.json",
+      "sha256": "b9426f56fcd01eb4246b7e31884be9e028ed471a254ac5a40b62cb63d90dd974"
+    },
+    {
+      "path": "docs/protocols/artifact-exchange-browser.md",
+      "sha256": "6dad212fac0c8497991f21d96a66ccc45a6be7213d2cf397a6d2f5fa2e191dd2"
+    },
+    {
+      "path": "docs/protocols/artifact-exchange-cli.md",
+      "sha256": "63dae09991e68b8c2f58c7f4f6de7060f1d86ece56729a0bf4198fcde8eb0fbc"
+    },
+    {
+      "path": "docs/protocols/artifact-exchange.md",
+      "sha256": "69dcbff83ecc246b90be56eb001fb71a6b86d16716a0eac1b2834b5bbdb1322d"
+    },
+    {
+      "path": "internal/api/api.go",
+      "sha256": "f9bfca7ba4dffee61cd69ed7db2ba7cbfe26a0fbfd695c09fa42b746bece89e2"
+    },
+    {
+      "path": "internal/api/artifact_exchange_browser_integration_test.go",
+      "sha256": "086b663a94ddcb7ce57554780112b51819a8aa9269371f97bed934961b880962"
+    },
+    {
+      "path": "internal/api/artifact_exchanges.go",
+      "sha256": "37973f3c39f574c2f30febadec56d3333cb08dd8714aa83c7482cbd4173ddcb8"
+    },
+    {
+      "path": "internal/api/artifact_exchanges_integration_test.go",
+      "sha256": "5045004032e1d221ed36d671b20698cdd6973489e5147177884760df1e7faccd"
+    },
+    {
+      "path": "internal/api/artifact_exchanges_test.go",
+      "sha256": "ea30e26328b5dad035079a301b9635db408ff6ef75c6f9ab4f98d65192007b05"
+    },
+    {
+      "path": "internal/browser/assets/app.js",
+      "sha256": "33958223723386763dc75b46c4ca20a72ba326cd27d6f8caa1bc0ff3563335fb"
+    },
+    {
+      "path": "internal/browser/assets/manifest.json",
+      "sha256": "7f620a92a4df065f4a6190f22aa236587f690fc4bdf435885b17ad7838a12fc0"
+    },
+    {
+      "path": "internal/store/exchange_browser_contract_test.go",
+      "sha256": "dbfc281e6d78d3f5357b20c6870eb912be8de6064760e8f4eb91568fd80e28c9"
+    },
+    {
+      "path": "internal/store/exchange_endpoint_directory.go",
+      "sha256": "f0710c51a71bfba8b73f89999b350b1bf3b84880e13bd3222d8bc86b59a7609e"
+    },
+    {
+      "path": "internal/store/exchange_endpoint_directory_test.go",
+      "sha256": "2672e106816974b97a786db92fa53cdd330e29674b40a21225684a12d893b876"
+    },
+    {
+      "path": "internal/store/exchange_endpoints_integration_test.go",
+      "sha256": "bf4870cb6108a7e3ab871b4264e5794df445156a7b7e500affc28376ce59949c"
+    },
+    {
+      "path": "scripts/artifact-exchange-browser.mjs",
+      "sha256": "42d4ccd53f600a867c5114c1a690bf3fbb081c407458a02344c729ff68127caa"
+    },
+    {
+      "path": "web/src/artifact-exchanges-api.ts",
+      "sha256": "629efa034aad4c13fc4a004abb88df06233628eefe90ffcedbac6a7932d7cb5a"
+    },
+    {
+      "path": "web/src/artifact-exchanges-types.ts",
+      "sha256": "11246978dcc0101a52219f30e3ce1b2f0f9fb7a48754de293d1fb54d5ac48f59"
+    },
+    {
+      "path": "web/src/artifact-exchanges.tsx",
+      "sha256": "9d1d51fb8307b2d209d7f1a929426dd8980847e4843fb3138cfbc212abc993f8"
+    },
+    {
+      "path": "web/tests/artifact-exchange.test.mjs",
+      "sha256": "29c0fa45822e94205d43f3bd951845426624ebe140d375e20a586d1459e201b3"
+    },
+    {
+      "path": "web/tests/fixtures/artifact-exchange.json",
+      "sha256": "163cc06f995166b03c7e8039136174cb779dc42ea5216c7727ed2f27579ed6bb"
+    }
+  ],
+  "local_manifest": {
+    "reference": ".private/freightctl-f089-endpoint-directory-20261105/manifest.json",
+    "sha256": "a8bae4c7104831bcda4f51c1b7187424c67b2378ab57ba07967ac75d8c62eb64"
+  },
+  "native_owed": [
+    "TestExchangeEndpointDirectoryUsesOnlyCurrentVisibleHeadsAndRechecksPagination",
+    "Existing original API HTTPS case extended with directory/get/wrong-actor controls",
+    "Existing CLI dispatch case extended with directory/get/wrong-actor controls",
+    "Existing dedicated real browser case extended with recipient picker and unrelated empty directory,then actual original bytes/revocation/accessibility"
+  ],
+  "prepared_profile": "Two endpoints with distinct senders,real paged recipient/manager visibility,unrelated empty/no-cursor lookup,head replacement removing a historically visible sender,and manager revoked-head inspection. Fresh42 only; no migration or retained35 change.",
+  "owed": [
+    "Actual native source-bound directory/RLS/API/CLI/browser proof and all prior failed native journeys; F087 first submitted browser job42100377963/job127501286172 failed before any structured security observation; nonsecurity cause investigation remains deferred to FINISH",
+    "Outgoing history,per-view controls,sending/admin UI,agent tools,bridges and full AX01-AX08/GOAL contract",
+    "Independent OpenAPI validation/manual WCAG/full product and enterprise qualification; nothing unproven is passed"
+  ]
+}

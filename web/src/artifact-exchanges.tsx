@@ -5,6 +5,7 @@ import { ExchangeReceiveApi } from "./artifact-exchanges-api";
 import type {
   IncomingExchange,
   IncomingPage,
+  EndpointPage,
 } from "./artifact-exchanges-types";
 
 export function ArtifactExchanges({
@@ -25,6 +26,11 @@ export function ArtifactExchanges({
   const [busy, setBusy] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [selected, setSelected] = useState<IncomingExchange | null>(null);
+  const [directory, setDirectory] = useState<EndpointPage>({
+    endpoints: [],
+    next: "",
+  });
+  const [directoryLoaded, setDirectoryLoaded] = useState(false);
   const active = useRef<AbortController | null>(null);
   const generation = useRef(0);
 
@@ -48,6 +54,26 @@ export function ArtifactExchanges({
       if (serial !== generation.current || controller.signal.aborted) return;
       setPage(result);
       setLoaded(true);
+    } catch (error) {
+      if (serial === generation.current && !controller.signal.aborted)
+        onError(error);
+    } finally {
+      if (serial === generation.current) setBusy(false);
+    }
+  }
+  async function findEndpoints(after = "") {
+    clear();
+    const serial = ++generation.current,
+      controller = new AbortController();
+    active.current = controller;
+    setBusy(true);
+    setDirectory({ endpoints: [], next: "" });
+    setDirectoryLoaded(false);
+    try {
+      const result = await client.endpoints(after, controller.signal);
+      if (serial !== generation.current || controller.signal.aborted) return;
+      setDirectory(result);
+      setDirectoryLoaded(true);
     } catch (error) {
       if (serial === generation.current && !controller.signal.aborted)
         onError(error);
@@ -84,6 +110,7 @@ export function ArtifactExchanges({
   }
   useEffect(() => {
     if (endpoint) void load(endpoint);
+    else clear();
     return () => {
       generation.current++;
       active.current?.abort();
@@ -147,6 +174,59 @@ export function ArtifactExchanges({
           Open receive endpoint
         </button>
       </form>
+      <div className="actions">
+        <button
+          type="button"
+          disabled={busy}
+          onClick={() => void findEndpoints()}
+        >
+          Find my receive endpoints
+        </button>
+        {directory.next && (
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => void findEndpoints(directory.next)}
+          >
+            Next endpoint page
+          </button>
+        )}
+      </div>
+      {directoryLoaded && (
+        <section aria-label="Discovered receive endpoints">
+          <h3>Receive endpoints at last directory check</h3>
+          {!directory.endpoints.some((row) =>
+            client.isReceiveEndpoint(row),
+          ) && (
+            <p>No active receive endpoints for this account on this page.</p>
+          )}
+          <ul>
+            {directory.endpoints
+              .filter((row) => client.isReceiveEndpoint(row))
+              .map((row) => (
+                <li key={row.id}>
+                  <code>{row.id}</code> · revision {row.revision}{" "}
+                  <button
+                    type="button"
+                    disabled={busy}
+                    onClick={() => {
+                      clear();
+                      setDraft(row.id);
+                      if (row.id === endpoint) void load(row.id);
+                      else setEndpoint(row.id);
+                    }}
+                  >
+                    Open {row.id.slice(0, 8)}
+                  </button>
+                </li>
+              ))}
+          </ul>
+          <p className="help">
+            Registration and current permissions decide access. Opening a
+            discovered endpoint rechecks the current head.
+          </p>
+        </section>
+      )}
       {endpoint && (
         <p>
           Receive endpoint: <code>{endpoint}</code>

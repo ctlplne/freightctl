@@ -9,6 +9,8 @@ participant authentication, row-level security or current exchange permissions.
 | Command | Input and result |
 | --- | --- |
 | `exchange-endpoint-command` | Protected `--request-file` plus original `--idempotency-key`; a root account manager records create/replace/revoke and its receipt. |
+| `exchange-endpoint-list` | Optional `--exchange-after` and `--exchange-limit`; only currently visible endpoint heads and their page cursor. |
+| `exchange-endpoint-inspect` | `--exchange-endpoint-id`; one currently visible canonical endpoint version. |
 | `exchange-offer` | Protected canonical exchange request plus original key; publish or recover the original exact-revision view. |
 | `exchange-incoming` | `--exchange-endpoint-id`, optional `--exchange-after`, `--exchange-limit` from1to100; recipient-only receive page. Restart each new polling cycle without the old cursor. |
 | `exchange-inspect` | `--exchange-id`; current recipient-authorized offered/held status. |

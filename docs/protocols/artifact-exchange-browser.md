@@ -2,7 +2,11 @@
 
 Connect with the ordinary workspace and account credential, then choose
 **Receive artifacts**. This account needs read and list permission. Open the
-approved endpoint ID from its registration receipt. The ID supplies a selector;
+approved endpoint ID from its registration receipt, or choose **Find my receive
+endpoints** and open a discovered entry. The directory uses current heads and
+participant bindings, with explicit pages. A manager may inspect other registered
+endpoints through API/CLI; this picker offers only active endpoints whose current
+recipient binding matches this account. The ID supplies a selector;
 the server still decides whether this account may discover or retrieve anything.
 
 The page shows only currently authorized receive views. **Inspect** refreshes one

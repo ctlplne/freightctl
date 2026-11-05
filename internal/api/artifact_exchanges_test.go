@@ -63,3 +63,17 @@ func TestArtifactExchangeAPIUnconfiguredAdapterRefusesWithoutDatabase(t *testing
 		t.Fatal("unconfigured exchange adapter did not fail closed", w.Code)
 	}
 }
+
+func TestExchangeEndpointDirectoryRejectsInvalidSelectorsBeforeDatabase(t *testing.T) {
+	h := New(&custody.Service{MaxFile: 1024, Exchanges: custody.ExchangeSettings{MaxLifetime: time.Hour, MaxSenders: 16, MaxOpenViews: 128, MaxEndpoints: 16}}, nil)
+	prefix := "https://freightctl.invalid/v1/tenants/11111111-1111-4111-8111-111111111111/partners/22222222-2222-4222-8222-222222222222/"
+	for _, path := range []string{"exchange-endpoints?after=not-an-id", "exchange-endpoints?limit=101", "exchange-endpoints/not-an-id"} {
+		r := httptest.NewRequest(http.MethodGet, prefix+path, nil)
+		r.Header.Set("Authorization", "Bearer "+strings.Repeat("0", 64))
+		w := httptest.NewRecorder()
+		h.ServeHTTP(w, r)
+		if w.Code != 400 {
+			t.Fatal("endpoint directory did not refuse malformed selectors before storage", w.Code)
+		}
+	}
+}

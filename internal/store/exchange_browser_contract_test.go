@@ -13,9 +13,12 @@ func TestExchangeBrowserCanonicalFixtureMatchesServerBytes(t *testing.T) {
 		t.Fatal(err)
 	}
 	var fixture struct {
-		Request   ExchangeRequest `json:"request"`
-		Canonical string          `json:"canonical"`
-		SHA256    string          `json:"sha256"`
+		Request           ExchangeRequest            `json:"request"`
+		Canonical         string                     `json:"canonical"`
+		SHA256            string                     `json:"sha256"`
+		Endpoint          ExchangeEndpointDefinition `json:"endpoint"`
+		EndpointCanonical string                     `json:"endpoint_canonical"`
+		EndpointSHA256    string                     `json:"endpoint_sha256"`
 	}
 	if err = json.Unmarshal(raw, &fixture); err != nil {
 		t.Fatal(err)
@@ -23,5 +26,9 @@ func TestExchangeBrowserCanonicalFixtureMatchesServerBytes(t *testing.T) {
 	data, hash, err := CanonicalExchangeRequest(fixture.Request, ExchangeLimits{MaxArtifactBytes: 1024, MaxLifetime: time.Hour, MaxSenders: 16})
 	if err != nil || string(data) != fixture.Canonical || hash != fixture.SHA256 {
 		t.Fatal("browser fixture does not describe actual server canonical meaning", err)
+	}
+	data, hash, err = CanonicalExchangeEndpoint(fixture.Endpoint, ExchangeLimits{MaxArtifactBytes: 1024, MaxLifetime: time.Hour, MaxSenders: 16})
+	if err != nil || string(data) != fixture.EndpointCanonical || hash != fixture.EndpointSHA256 {
+		t.Fatal("browser endpoint fixture differs from actual server canonical meaning", err)
 	}
 }

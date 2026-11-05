@@ -165,6 +165,17 @@ func TestArtifactExchangeCLIUsesOrdinaryAuthorityAndPublishesVerifiedDownload(t 
 	if err != nil || json.Unmarshal(body, &endpoint) != nil || endpoint.Endpoint.ID != endpointCommand.ID {
 		t.Fatal("CLI registration failed", err)
 	}
+	body, err = command(b, "exchange-endpoint-list", "-exchange-limit", "1")
+	var directory store.ExchangeEndpointPage
+	if err != nil || json.Unmarshal(body, &directory) != nil || len(directory.Endpoints) != 1 || directory.Endpoints[0].ID != endpointCommand.ID {
+		t.Fatal("CLI endpoint directory", err)
+	}
+	if _, err = command(b, "exchange-endpoint-inspect", "-exchange-endpoint-id", endpointCommand.ID); err != nil {
+		t.Fatal("CLI current endpoint", err)
+	}
+	if _, err = command(other, "exchange-endpoint-inspect", "-exchange-endpoint-id", endpointCommand.ID); !errors.Is(err, store.ErrNotFound) {
+		t.Fatal("unrelated CLI endpoint lookup", err)
+	}
 	data := []byte("exact inert CLI artifact\n")
 	file, _, err := service.Accept(ctx, sourceScope, "cli-source", int64(len(data)), secure.Digest(data), bytes.NewReader(data))
 	if err != nil {

@@ -109,6 +109,17 @@ try {
       .click();
     return result;
   }
+  async function directory(page) {
+    const result = page.waitForResponse(
+      (r) =>
+        new URL(r.url()).pathname ===
+        `/v1/tenants/${c.tenant}/partners/${c.partner}/exchange-endpoints`,
+    );
+    await page
+      .getByRole("button", { name: "Find my receive endpoints", exact: true })
+      .click();
+    return result;
+  }
   async function accessibility(page, name) {
     phase = name;
     await page.evaluate(axe.source);
@@ -131,8 +142,19 @@ try {
   }
   phase = "recipient-login";
   const recipient = await login(c.recipient_token);
+  phase = "recipient-directory";
+  assert.equal((await directory(recipient.page)).status(), 200);
+  const incoming = recipient.page.waitForResponse((r) =>
+    r.url().includes("/exchange-endpoints/" + c.endpoint + "/incoming?"),
+  );
+  await recipient.page
+    .getByRole("button", {
+      name: "Open " + c.endpoint.slice(0, 8),
+      exact: true,
+    })
+    .click();
   phase = "recipient-discovery";
-  assert.equal((await open(recipient.page)).status(), 200);
+  assert.equal((await incoming).status(), 200);
   await recipient.page
     .getByRole("table", { name: "Authorized incoming artifacts" })
     .waitFor();
@@ -171,6 +193,14 @@ try {
   );
   phase = "unrelated-discovery";
   const unrelated = await login(c.unrelated_token);
+  phase = "unrelated-directory";
+  assert.equal((await directory(unrelated.page)).status(), 200);
+  await unrelated.page
+    .getByText("No active receive endpoints for this account on this page.", {
+      exact: true,
+    })
+    .waitFor();
+  phase = "unrelated-discovery";
   assert.equal((await open(unrelated.page)).status(), 404);
   await unrelated.page.getByRole("alert").waitFor();
   const unrelatedText = await unrelated.page.locator("body").innerText();

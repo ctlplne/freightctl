@@ -101,6 +101,17 @@ func TestArtifactExchangeHTTPSUsesSameCookieAndBearerAuthorityAndSeparateReply(t
 	if json.Unmarshal(data, &endpoint) != nil || endpoint.Endpoint.ID != command.ID {
 		t.Fatal("registered endpoint mismatch")
 	}
+	_, directoryData := exchangeAPIRequest(t, server, "GET", prefix+"/exchange-endpoints?limit=1", nil, bearerB, nil, 200)
+	var directory store.ExchangeEndpointPage
+	if json.Unmarshal(directoryData, &directory) != nil || len(directory.Endpoints) != 1 || directory.Endpoints[0].ID != command.ID || directory.Next != "" {
+		t.Fatal("recipient endpoint directory differs")
+	}
+	exchangeAPIRequest(t, server, "GET", prefix+"/exchange-endpoints/"+command.ID, nil, bearerA, nil, 200)
+	_, directoryData = exchangeAPIRequest(t, server, "GET", prefix+"/exchange-endpoints", nil, map[string]string{"Authorization": "Bearer " + string(other.Bytes)}, nil, 200)
+	if json.Unmarshal(directoryData, &directory) != nil || len(directory.Endpoints) != 0 || directory.Next != "" {
+		t.Fatal("unrelated actor learned endpoint directory metadata")
+	}
+	exchangeAPIRequest(t, server, "GET", prefix+"/exchange-endpoints/"+command.ID, nil, map[string]string{"Authorization": "Bearer " + string(other.Bytes)}, nil, 404)
 	exchangeAPIRequest(t, server, "POST", prefix+"/exchange-endpoints/commands", nil, map[string]string{"Authorization": bearerA["Authorization"], "Idempotency-Key": "sender-cannot-admin"}, commandData, 403)
 	r := store.ExchangeRequest{Schema: 1, Artifact: store.ExchangeArtifact{ID: accepted.File.ID, Size: accepted.File.Size, SHA256: accepted.File.SHA256, Policy: accepted.File.Policy}, Endpoint: store.ExchangeEndpointReference{ID: endpoint.Endpoint.ID, Revision: endpoint.Endpoint.Revision, Hash: endpoint.Endpoint.Hash}, ExpiresAt: time.Now().UTC().Add(2 * time.Minute).Truncate(time.Microsecond), Receipt: "availability-only-v1"}
 	adminHeaders["Idempotency-Key"] = "admin-cannot-impersonate-sender"

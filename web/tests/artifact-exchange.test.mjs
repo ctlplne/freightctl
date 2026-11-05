@@ -141,6 +141,7 @@ test("receive adapter binds requests and navigation to current session without b
         actor_id: context.actor,
         authority_revision: 1,
         root_policy_digest: "d".repeat(64),
+        permissions: ["read", "list"],
       },
       session: { id: id(99) },
     },
@@ -199,4 +200,124 @@ test("canonical receive times and numeric fields never silently lose request mea
     row.exchange.request.artifact.size_bytes = value;
     assert.throws(() => p.asIncomingPage({ exchanges: [row] }, context));
   }
+});
+
+test("endpoint directory uses canonical scoped bindings and refuses stale participant visibility", async () => {
+  const fixture = JSON.parse(
+    await readFile(
+      new URL("fixtures/artifact-exchange.json", import.meta.url),
+      "utf8",
+    ),
+  );
+  const who = {
+    ...context,
+    authority_revision: 1,
+    root_policy_digest: "d".repeat(64),
+    manager: false,
+    can_receive: true,
+    can_send: false,
+  };
+  const row = {
+    id: context.endpoint,
+    revision: 1,
+    definition: fixture.endpoint,
+    definition_hash: fixture.endpoint_sha256,
+    state: "active",
+    recorded_by: id(7),
+    event_id: id(8),
+  };
+  assert.equal(
+    p.endpointDefinitionHash(fixture.endpoint, context),
+    fixture.endpoint_sha256,
+  );
+  assert.deepEqual(p.asEndpointPage({ endpoints: [row] }, who, "", 10), {
+    endpoints: [row],
+    next: "",
+  });
+  for (const mutate of [
+    (e) => (e.definition.recipient.partner_id = id(99)),
+    (e) => e.definition.recipient.authority_revision++,
+    (e) => e.definition.senders.push({ ...e.definition.senders[0] }),
+    (e) => (e.definition.url = "https://unapproved.invalid"),
+    (e) => (e.definition_hash = "e".repeat(64)),
+    (e) => (e.state = "approved-to-execute"),
+  ]) {
+    const bad = structuredClone(row);
+    mutate(bad);
+    assert.throws(() => p.asEndpointPage({ endpoints: [bad] }, who, "", 10));
+  }
+  const stale = structuredClone(row);
+  stale.definition.recipient.authority_revision++;
+  stale.definition_hash = p.endpointDefinitionHash(stale.definition, context);
+  assert.throws(() => p.asEndpointPage({ endpoints: [stale] }, who, "", 10));
+  assert.equal(
+    p.asEndpointPage({ endpoints: [stale] }, { ...who, manager: true }, "", 10)
+      .endpoints.length,
+    1,
+  );
+  assert.throws(() =>
+    p.asEndpointPage({ endpoints: [row], next: id(99) }, who, "", 1),
+  );
+});
+
+test("directory adapter never turns a sender-only or stale manager record into a receive endpoint", async () => {
+  const fixture = JSON.parse(
+    await readFile(
+      new URL("fixtures/artifact-exchange.json", import.meta.url),
+      "utf8",
+    ),
+  );
+  const row = {
+    id: context.endpoint,
+    revision: 1,
+    definition: fixture.endpoint,
+    definition_hash: fixture.endpoint_sha256,
+    state: "active",
+    recorded_by: id(7),
+    event_id: id(8),
+  };
+  const calls = [];
+  let response = { endpoints: [row] };
+  const api = {
+    session: {
+      identity: {
+        tenant_id: context.tenant,
+        partner_id: context.partner,
+        actor_id: context.actor,
+        authority_revision: 1,
+        root_policy_digest: "d".repeat(64),
+        permissions: ["read", "list"],
+      },
+      session: { id: id(99) },
+    },
+    request: async (path, options, decode) => {
+      calls.push(path);
+      return decode(response);
+    },
+  };
+  const client = new a.ExchangeReceiveApi(api);
+  const page = await client.endpoints();
+  assert.equal(page.endpoints.length, 1);
+  assert.ok(client.isReceiveEndpoint(row));
+  assert.match(calls[0], /exchange-endpoints\?limit=10&after=$/);
+  response = row;
+  assert.equal((await client.endpoint(context.endpoint)).id, context.endpoint);
+  await assert.rejects(() => client.endpoint(id(99)));
+  assert.equal(client.isReceiveEndpoint({ ...row, state: "revoked" }), false);
+  api.session.identity.permissions = ["read", "deliver"];
+  api.session.identity.actor_id = id(6);
+  const sender = new a.ExchangeReceiveApi(api);
+  assert.equal(sender.isReceiveEndpoint(row), false);
+  api.session.identity.permissions = [
+    "read",
+    "list",
+    "admin",
+    "accounts_manage",
+  ];
+  api.session.identity.actor_id = context.actor;
+  const manager = new a.ExchangeReceiveApi(api);
+  const stale = structuredClone(row);
+  stale.definition.recipient.authority_revision++;
+  stale.definition_hash = p.endpointDefinitionHash(stale.definition, context);
+  assert.equal(manager.isReceiveEndpoint(stale), false);
 });

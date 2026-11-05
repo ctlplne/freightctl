@@ -104,7 +104,7 @@ func readExchangeBrowserSummary(path string) (*exchangeBrowserSummary, string) {
 		return nil, hash
 	}
 	switch s.Phase {
-	case "launch", "recipient-login", "recipient-discovery", "receive-accessibility", "recipient-details", "details-accessibility", "exact-download", "unrelated-discovery", "unrelated-accessibility", "revocation-barrier", "revoked-discovery", "revoked-accessibility", "complete":
+	case "launch", "recipient-login", "recipient-directory", "recipient-discovery", "receive-accessibility", "recipient-details", "details-accessibility", "exact-download", "unrelated-directory", "unrelated-discovery", "unrelated-accessibility", "revocation-barrier", "revoked-discovery", "revoked-accessibility", "complete":
 	default:
 		return nil, hash
 	}

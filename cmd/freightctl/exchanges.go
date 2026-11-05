@@ -60,6 +60,14 @@ func runExchanges(ctx context.Context, command string, o exchangeOptions, output
 		if !store.ValidID(o.Endpoint) || o.After != "" && !store.ValidID(o.After) || o.Limit < 1 || o.Limit > 100 {
 			return store.ErrExchangeInput
 		}
+	case "exchange-endpoint-list":
+		if o.After != "" && !store.ValidID(o.After) || o.Limit < 1 || o.Limit > 100 {
+			return store.ErrExchangeInput
+		}
+	case "exchange-endpoint-inspect":
+		if !store.ValidID(o.Endpoint) {
+			return store.ErrExchangeInput
+		}
 	case "exchange-inspect", "exchange-download":
 		if !store.ValidID(o.ID) {
 			return store.ErrExchangeInput
@@ -108,6 +116,10 @@ func runExchanges(ctx context.Context, command string, o exchangeOptions, output
 	switch command {
 	case "exchange-endpoint-command":
 		result, err = db.RegisterExchangeEndpoint(ctx, scope, o.Key, *registration, limits, o.Settings.MaxEndpoints)
+	case "exchange-endpoint-list":
+		result, err = db.ExchangeEndpoints(ctx, scope, o.After, o.Limit)
+	case "exchange-endpoint-inspect":
+		result, err = db.ExchangeEndpoint(ctx, scope, o.Endpoint)
 	case "exchange-offer":
 		result, err = service.OfferExchange(ctx, scope, o.Key, *offer)
 	case "exchange-incoming":
