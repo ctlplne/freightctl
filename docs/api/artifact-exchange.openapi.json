@@ -527,6 +527,81 @@
           }
         }
       }
+    },
+    "/v1/tenants/{tenant}/partners/{partner}/exchange-closures": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/tenant"
+        },
+        {
+          "$ref": "#/components/parameters/partner"
+        }
+      ],
+      "post": {
+        "operationId": "closeArtifactExchange",
+        "summary": "Sender cancels or recipient declines one exact view",
+        "description": "Body at most4096 bytes. Requires the acting participant original current credential/root binding and role permission. The exact offer request hash is mandatory. First terminal decision wins. Same-key exact retries recover its receipt; changed meaning refuses. Existing endpoint revocation, expiry or held bytes do not prevent an otherwise authorized closure. No source deletion, other-view change or recall of previous bytes. Every later byte chunk rechecks closure under the shared/exclusive view lock.",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "browserSession": [],
+            "csrfToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/OperationKey"
+          },
+          {
+            "$ref": "#/components/parameters/Origin"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExchangeClosureCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "413": {
+            "$ref": "#/components/responses/413"
+          },
+          "503": {
+            "$ref": "#/components/responses/503"
+          },
+          "200": {
+            "description": "Immutable terminal decision, event and actor-private operation receipt committed together, or exact replay. Metadata/bytes remain subject to live authority.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExchangeClosureResult"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1106,6 +1181,64 @@
         },
         "required": [
           "endpoints"
+        ]
+      },
+      "ExchangeClosureCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "const": 1
+          },
+          "exchange_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "request_hash": {
+            "$ref": "#/components/schemas/SHA256"
+          },
+          "operation": {
+            "enum": [
+              "cancel",
+              "decline"
+            ]
+          }
+        },
+        "required": [
+          "schema_version",
+          "exchange_id",
+          "request_hash",
+          "operation"
+        ]
+      },
+      "ExchangeClosureResult": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "exchange_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "state": {
+            "enum": [
+              "canceled",
+              "declined"
+            ]
+          },
+          "command_hash": {
+            "$ref": "#/components/schemas/SHA256"
+          },
+          "event_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "replayed": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "exchange_id",
+          "state",
+          "command_hash",
+          "event_id",
+          "replayed"
         ]
       }
     }

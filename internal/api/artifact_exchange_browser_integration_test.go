@@ -27,6 +27,7 @@ type exchangeBrowserSummary struct {
 	Phase         string `json:"phase"`
 	Egress        *int   `json:"external_egress"`
 	Downloads     *int   `json:"exact_downloads"`
+	Declines      *int   `json:"terminal_declines"`
 	Model         *bool  `json:"model_started"`
 	Sandbox       *bool  `json:"browser_sandbox"`
 	Accessibility *int   `json:"accessibility_checks"`
@@ -37,12 +38,14 @@ type exchangeBrowserSummary struct {
 }
 
 func TestExchangeBrowserSummaryRefusesAmbiguousEvidence(t *testing.T) {
-	valid := `{"state":"passed","phase":"complete","external_egress":0,"exact_downloads":1,"model_started":false,"browser_sandbox":true,"accessibility_checks":4,"browser_version":"142.0.1","node_version":"v26.13.0","axe_version":"4.14.0"}`
+	valid := `{"state":"passed","phase":"complete","external_egress":0,"exact_downloads":1,"terminal_declines":1,"model_started":false,"browser_sandbox":true,"accessibility_checks":6,"browser_version":"142.0.1","node_version":"v26.13.0","axe_version":"4.14.0"}`
 	for _, raw := range []string{
 		strings.Replace(valid, `"external_egress":0`, `"external_egress":1,"external_egress":0`, 1),
 		strings.Replace(valid, `"model_started":false`, `"model_started":true,"MODEL_STARTED":false`, 1),
 		strings.Replace(valid, `"model_started":false,`, "", 1),
 		strings.Replace(valid, `"model_started":false`, `"model_started":null`, 1),
+		strings.Replace(valid, `"terminal_declines":1,`, "", 1),
+		strings.Replace(valid, `"terminal_declines":1`, `"terminal_declines":0,"terminal_declines":1`, 1),
 		strings.Replace(valid, `"phase":"complete"`, `"phase":"private-path-and-credential"`, 1),
 		strings.Replace(valid, `"node_version":"v26.13.0"`, `"node_version":"v25.0.0"`, 1),
 		valid + `{}`,
@@ -83,7 +86,7 @@ func readExchangeBrowserSummary(path string) (*exchangeBrowserSummary, string) {
 		return nil, hash
 	}
 	seen := map[string]bool{}
-	allowed := map[string]bool{"state": true, "phase": true, "external_egress": true, "exact_downloads": true, "model_started": true, "browser_sandbox": true, "accessibility_checks": true, "browser_version": true, "node_version": true, "axe_version": true, "failure_sha256": true}
+	allowed := map[string]bool{"state": true, "phase": true, "external_egress": true, "exact_downloads": true, "terminal_declines": true, "model_started": true, "browser_sandbox": true, "accessibility_checks": true, "browser_version": true, "node_version": true, "axe_version": true, "failure_sha256": true}
 	for keys.More() {
 		field, err := keys.Token()
 		name, ok := field.(string)
@@ -100,11 +103,11 @@ func readExchangeBrowserSummary(path string) (*exchangeBrowserSummary, string) {
 	d.DisallowUnknownFields()
 	var s exchangeBrowserSummary
 	var tail any
-	if d.Decode(&s) != nil || d.Decode(&tail) != io.EOF || s.Egress == nil || s.Downloads == nil || s.Model == nil || s.Sandbox == nil || s.Accessibility == nil || *s.Egress < 0 || *s.Downloads < 0 || *s.Downloads > 1 || *s.Accessibility < 0 || *s.Accessibility > 4 {
+	if d.Decode(&s) != nil || d.Decode(&tail) != io.EOF || s.Egress == nil || s.Downloads == nil || s.Declines == nil || s.Model == nil || s.Sandbox == nil || s.Accessibility == nil || *s.Egress < 0 || *s.Downloads < 0 || *s.Downloads > 1 || *s.Declines < 0 || *s.Declines > 1 || *s.Accessibility < 0 || *s.Accessibility > 6 {
 		return nil, hash
 	}
 	switch s.Phase {
-	case "launch", "recipient-login", "recipient-directory", "recipient-discovery", "receive-accessibility", "recipient-details", "details-accessibility", "exact-download", "unrelated-directory", "unrelated-discovery", "unrelated-accessibility", "revocation-barrier", "revoked-discovery", "revoked-accessibility", "complete":
+	case "launch", "recipient-login", "recipient-directory", "recipient-discovery", "receive-accessibility", "recipient-details", "details-accessibility", "exact-download", "recipient-decline-review", "decline-review-accessibility", "recipient-decline", "declined-retrieval", "declined-discovery", "declined-accessibility", "unrelated-directory", "unrelated-discovery", "unrelated-accessibility", "revocation-barrier", "revoked-discovery", "revoked-accessibility", "complete":
 	default:
 		return nil, hash
 	}
@@ -165,12 +168,16 @@ func TestArtifactExchangeNativeBrowserReceiptWrongActorAndRevocation(t *testing.
 	if err != nil {
 		t.Fatal(err)
 	}
+	declineOffer, err := s.OfferExchange(ctx, sender, "browser-decline-offer", offer.Exchange.Request)
+	if err != nil {
+		t.Fatal(err)
+	}
 	private := t.TempDir()
 	if err = os.Chmod(private, 0700); err != nil {
 		t.Fatal(err)
 	}
 	ready, revoked, result := filepath.Join(private, "ready"), filepath.Join(private, "revoked"), filepath.Join(private, "result.json")
-	config := map[string]any{"url": server.URL, "tenant": administrator.Tenant, "partner": administrator.Partner, "endpoint": endpoint.Endpoint.ID, "exchange": offer.Exchange.ID, "file": file.ID, "size": file.Size, "sha256": file.SHA256, "recipient_token": b, "unrelated_token": other, "certificate_der": base64.StdEncoding.EncodeToString(server.Certificate().Raw), "download": filepath.Join(private, "download"), "ready": ready, "revoked": revoked, "result": result, "failure": filepath.Join(private, "first-failure.log")}
+	config := map[string]any{"url": server.URL, "tenant": administrator.Tenant, "partner": administrator.Partner, "endpoint": endpoint.Endpoint.ID, "exchange": offer.Exchange.ID, "closure_exchange": declineOffer.Exchange.ID, "closure_request_hash": declineOffer.Exchange.RequestHash, "file": file.ID, "size": file.Size, "sha256": file.SHA256, "recipient_token": b, "unrelated_token": other, "certificate_der": base64.StdEncoding.EncodeToString(server.Certificate().Raw), "download": filepath.Join(private, "download"), "ready": ready, "revoked": revoked, "result": result, "failure": filepath.Join(private, "first-failure.log")}
 	encoded, err := json.Marshal(config)
 	if err != nil {
 		t.Fatal(err)
@@ -224,7 +231,7 @@ func TestArtifactExchangeNativeBrowserReceiptWrongActorAndRevocation(t *testing.
 		t.Fatal("browser did not finish after exact endpoint revocation")
 	}
 	summary, hash := readExchangeBrowserSummary(result)
-	if err != nil || summary == nil || summary.State != "passed" || summary.Phase != "complete" || *summary.Egress != 0 || *summary.Downloads != 1 || *summary.Model || !*summary.Sandbox || *summary.Accessibility != 4 || summary.Browser == "" || summary.FailureHash != "" {
+	if err != nil || summary == nil || summary.State != "passed" || summary.Phase != "complete" || *summary.Egress != 0 || *summary.Downloads != 1 || *summary.Declines != 1 || *summary.Model || !*summary.Sandbox || *summary.Accessibility != 6 || summary.Browser == "" || summary.FailureHash != "" {
 		t.Fatalf("native receive browser proof failed; safe result SHA256=%s", hash)
 	}
 	t.Logf("native receive browser proof passed; exact result SHA256=%s; bytes=%d; Chrome=%s; axe=%s", hash, file.Size, summary.Browser, summary.Axe)

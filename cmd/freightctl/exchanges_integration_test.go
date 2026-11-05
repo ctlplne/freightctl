@@ -235,4 +235,25 @@ func TestArtifactExchangeCLIUsesOrdinaryAuthorityAndPublishesVerifiedDownload(t 
 	if _, err = command(b, "exchange-offer", "-request-file", input, "-idempotency-key", "forward"); !errors.Is(err, store.ErrForbidden) {
 		t.Fatal("receive authority granted forwarding", err)
 	}
+	closure := store.ExchangeClosureCommand{Schema: 1, ID: offered.Exchange.ID, RequestHash: offered.Exchange.RequestHash, Operation: "cancel"}
+	closureFile := requestFile(closure)
+	if _, err = command(b, "exchange-close", "-request-file", closureFile, "-idempotency-key", "wrong-cancel"); !errors.Is(err, store.ErrNotFound) {
+		t.Fatal("CLI wrong-role cancellation", err)
+	}
+	body, err = command(a, "exchange-close", "-request-file", closureFile, "-idempotency-key", "cancel")
+	var closed store.ExchangeClosureResult
+	if err != nil || json.Unmarshal(body, &closed) != nil || closed.State != "canceled" || closed.Replayed {
+		t.Fatal("CLI cancellation receipt", err)
+	}
+	body, err = command(a, "exchange-close", "-request-file", closureFile, "-idempotency-key", "cancel")
+	var recovered store.ExchangeClosureResult
+	if err != nil || json.Unmarshal(body, &recovered) != nil || !recovered.Replayed || recovered.EventID != closed.EventID {
+		t.Fatal("CLI cancellation response recovery", err)
+	}
+	if _, err = command(b, "exchange-download", "-exchange-id", offered.Exchange.ID, "-output", filepath.Join(outputDirectory, "must-not-exist")); !errors.Is(err, store.ErrNotFound) {
+		t.Fatal("CLI cancellation failed to stop retrieval", err)
+	}
+	if _, err = os.Lstat(filepath.Join(outputDirectory, "must-not-exist")); !errors.Is(err, os.ErrNotExist) {
+		t.Fatal("closed view left a download file", err)
+	}
 }

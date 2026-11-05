@@ -38,5 +38,13 @@
     ]
   },
   "endpoint_canonical": "{\"schema_version\":1,\"profile\":\"custody-https-poll-v1\",\"recipient\":{\"tenant_id\":\"00000001-1111-4111-8111-111111111111\",\"partner_id\":\"00000002-1111-4111-8111-111111111111\",\"actor_id\":\"00000003-1111-4111-8111-111111111111\",\"authority_revision\":1,\"root_policy_digest\":\"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\"},\"senders\":[{\"tenant_id\":\"00000001-1111-4111-8111-111111111111\",\"partner_id\":\"00000002-1111-4111-8111-111111111111\",\"actor_id\":\"00000006-1111-4111-8111-111111111111\",\"authority_revision\":1,\"root_policy_digest\":\"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\"}]}",
-  "endpoint_sha256": "b30e8c2ba61cf337044e27166913f9a6de01e985c415d819c9cb69aae4c39a1f"
+  "endpoint_sha256": "b30e8c2ba61cf337044e27166913f9a6de01e985c415d819c9cb69aae4c39a1f",
+  "closure": {
+    "schema_version": 1,
+    "exchange_id": "0000000a-1111-4111-8111-111111111111",
+    "request_hash": "69609c67b176b1c7a893e00d6649b36585d7abd77dad0cab4923ba2ab2c64ecc",
+    "operation": "decline"
+  },
+  "closure_canonical": "{\"schema_version\":1,\"exchange_id\":\"0000000a-1111-4111-8111-111111111111\",\"request_hash\":\"69609c67b176b1c7a893e00d6649b36585d7abd77dad0cab4923ba2ab2c64ecc\",\"operation\":\"decline\"}",
+  "closure_sha256": "4e55cffa412ce70bae4fdadc558c8642a4c379255175eedf747cd28d21be5e90"
 }

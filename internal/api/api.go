@@ -58,6 +58,7 @@ func NewWithBrowserLifetime(service *custody.Service, audits *audit.Service, ena
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/exchange-endpoints/{endpoint}", s.exchangeEndpoint)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/exchange-endpoints/{endpoint}/incoming", s.incomingExchanges)
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/exchanges", s.offerExchange)
+	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/exchange-closures", s.closeExchange)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/exchanges/{exchange}", s.inspectExchange)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/exchanges/{exchange}/file", s.downloadExchange)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/events", s.events)

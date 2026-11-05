@@ -44,6 +44,69 @@ export interface IncomingPage {
   next: string;
 }
 
+export interface ExchangeClosureCommand {
+  schema_version: 1;
+  exchange_id: string;
+  request_hash: string;
+  operation: "cancel" | "decline";
+}
+export interface ExchangeClosureResult {
+  exchange_id: string;
+  state: "canceled" | "declined";
+  command_hash: string;
+  event_id: string;
+  replayed: boolean;
+}
+export function exchangeClosureBytes(value: unknown): Uint8Array {
+  const o = fields(value, [
+    "schema_version",
+    "exchange_id",
+    "request_hash",
+    "operation",
+  ]);
+  if (
+    o.schema_version !== 1 ||
+    (o.operation !== "cancel" && o.operation !== "decline")
+  )
+    refuse();
+  return new TextEncoder().encode(
+    JSON.stringify({
+      schema_version: 1,
+      exchange_id: identifier(o.exchange_id),
+      request_hash: hash(o.request_hash),
+      operation: o.operation,
+    }),
+  );
+}
+export function asExchangeClosureResult(
+  value: unknown,
+  command: ExchangeClosureCommand,
+): ExchangeClosureResult {
+  const expected = digestBytes(exchangeClosureBytes(command));
+  const state = command.operation === "cancel" ? "canceled" : "declined";
+  const o = fields(value, [
+    "exchange_id",
+    "state",
+    "command_hash",
+    "event_id",
+    "replayed",
+  ]);
+  if (
+    identifier(o.exchange_id) !== command.exchange_id ||
+    hash(o.command_hash) !== expected ||
+    o.state !== state ||
+    typeof o.replayed !== "boolean"
+  )
+    refuse();
+  return {
+    exchange_id: command.exchange_id,
+    state,
+    command_hash: expected,
+    event_id: identifier(o.event_id),
+    replayed: o.replayed,
+  };
+}
+
 export interface ExchangeBinding {
   tenant_id: string;
   partner_id: string;

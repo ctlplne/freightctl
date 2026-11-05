@@ -31,14 +31,17 @@ func runExchanges(ctx context.Context, command string, o exchangeOptions, output
 	}
 	var registration *store.ExchangeEndpointCommand
 	var offer *store.ExchangeRequest
+	var closure *store.ExchangeClosureCommand
 	switch command {
-	case "exchange-endpoint-command", "exchange-offer":
+	case "exchange-endpoint-command", "exchange-offer", "exchange-close":
 		if !store.ValidBrowserOperationKey(o.Key) {
 			return store.ErrExchangeInput
 		}
 		maximum := int64(16 << 10)
 		if command == "exchange-endpoint-command" {
 			maximum = 24 << 10
+		} else if command == "exchange-close" {
+			maximum = 4096
 		}
 		// Request references are protected regular files, never symlinks or stdin.
 		// Clear the owned bounded buffer even though credentials are not allowed
@@ -49,6 +52,8 @@ func runExchanges(ctx context.Context, command string, o exchangeOptions, output
 		}
 		if command == "exchange-endpoint-command" {
 			registration, err = store.DecodeExchangeEndpointCommand(input.Bytes, limits)
+		} else if command == "exchange-close" {
+			closure, err = store.DecodeExchangeClosure(input.Bytes)
 		} else {
 			offer, _, _, err = store.DecodeExchangeRequest(input.Bytes, limits)
 		}
@@ -114,6 +119,8 @@ func runExchanges(ctx context.Context, command string, o exchangeOptions, output
 	}
 	var result any
 	switch command {
+	case "exchange-close":
+		result, err = db.CloseExchange(ctx, scope, o.Key, *closure)
 	case "exchange-endpoint-command":
 		result, err = db.RegisterExchangeEndpoint(ctx, scope, o.Key, *registration, limits, o.Settings.MaxEndpoints)
 	case "exchange-endpoint-list":

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { Api } from "./api";
 import { ApiError, uuid, type Session } from "./types";
 import { ExchangeReceiveApi } from "./artifact-exchanges-api";
+import { operationKey } from "./crypto";
 import type {
   IncomingExchange,
   IncomingPage,
@@ -26,6 +27,11 @@ export function ArtifactExchanges({
   const [busy, setBusy] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [selected, setSelected] = useState<IncomingExchange | null>(null);
+  const [decline, setDecline] = useState<{
+    row: IncomingExchange;
+    key: string;
+  } | null>(null);
+  const [closed, setClosed] = useState("");
   const [directory, setDirectory] = useState<EndpointPage>({
     endpoints: [],
     next: "",
@@ -33,6 +39,7 @@ export function ArtifactExchanges({
   const [directoryLoaded, setDirectoryLoaded] = useState(false);
   const active = useRef<AbortController | null>(null);
   const generation = useRef(0);
+  const viewOwner = useRef(client);
 
   function clear() {
     generation.current++;
@@ -108,7 +115,46 @@ export function ArtifactExchanges({
       if (serial === generation.current) setBusy(false);
     }
   }
+  async function declineSelected() {
+    if (!decline || busy) return;
+    active.current?.abort();
+    const serial = ++generation.current,
+      controller = new AbortController();
+    active.current = controller;
+    setBusy(true);
+    // Hide cached links before the first attempt, including an uncertain result.
+    setPage({ exchanges: [], next: "" });
+    setSelected(null);
+    setLoaded(false);
+    try {
+      const result = await client.decline(
+        decline.row,
+        decline.key,
+        controller.signal,
+      );
+      if (serial !== generation.current || controller.signal.aborted) return;
+      setClosed(result.exchange_id);
+      setDecline(null);
+    } catch (error) {
+      if (serial === generation.current && !controller.signal.aborted)
+        onError(error);
+      // Preserve this exact key/offer for recovery after a lost response.
+    } finally {
+      if (serial === generation.current) setBusy(false);
+    }
+  }
   useEffect(() => {
+    if (viewOwner.current !== client) {
+      viewOwner.current = client;
+      clear();
+      setDecline(null);
+      setClosed("");
+      setDirectory({ endpoints: [], next: "" });
+      setDirectoryLoaded(false);
+      setDraft("");
+      setEndpoint("");
+      return;
+    }
     if (endpoint) void load(endpoint);
     else clear();
     return () => {
@@ -120,10 +166,12 @@ export function ArtifactExchanges({
   function submit(event: FormEvent) {
     event.preventDefault();
     if (!uuid(draft) || busy) return;
+    setDecline(null);
+    setClosed("");
     if (draft === endpoint) void load(endpoint);
     else setEndpoint(draft);
   }
-  if (!client.isCurrent())
+  if (!client.isCurrent() || viewOwner.current !== client)
     return (
       <section aria-label="Receive context changed">
         <p role="alert">
@@ -141,6 +189,42 @@ export function ArtifactExchanges({
   return (
     <section aria-labelledby="artifact-receive-title">
       <h2 id="artifact-receive-title">Receive artifacts</h2>
+      {closed && (
+        <p role="status">
+          Exchange <code>{closed}</code> declined. Future retrieval through this
+          view is disabled. Previously received copies remain with their
+          recipients.
+        </p>
+      )}
+      {decline && (
+        <section aria-label="Review artifact decline">
+          <h3>Decline this receive view</h3>
+          <p>
+            Close exchange <code>{decline.row.id}</code> for this account. The
+            source file and other receive views remain available under their own
+            permissions. This decision cannot reopen the view or recall earlier
+            downloads.
+          </p>
+          <p className="help">
+            Retry operation <code>{decline.key}</code> with the same offer if a
+            response is lost. A timeout does not prove the decision failed.
+          </p>
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => void declineSelected()}
+          >
+            Confirm decline or recover result
+          </button>
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => setDecline(null)}
+          >
+            Dismiss review
+          </button>
+        </section>
+      )}
       <p>
         Open an endpoint registered for this account. The server checks the
         sender, recipient, exact artifact, current policy and permissions again
@@ -273,7 +357,16 @@ export function ArtifactExchanges({
                       {" "}
                       <a href={client.downloadPath(row)} download="artifact">
                         Download artifact
-                      </a>
+                      </a>{" "}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setClosed("");
+                          setDecline({ row, key: operationKey() });
+                        }}
+                      >
+                        Review decline {row.id.slice(0, 8)}
+                      </button>
                     </>
                   )}
                 </td>

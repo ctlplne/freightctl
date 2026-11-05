@@ -24,6 +24,7 @@ func TestExchangeCLIRefusesInvalidSelectorsBeforeOpeningReferences(t *testing.T)
 		{"exchange-inspect", "-exchange-id", "not-an-id"},
 		{"exchange-download", "-exchange-id", "not-an-id", "-output", "must-not-create"},
 		{"exchange-offer", "-idempotency-key", "bad key"},
+		{"exchange-close", "-idempotency-key", "bad key"},
 		{"exchange-endpoint-command", "-idempotency-key", "bad key"},
 	} {
 		if err := run(args); !errors.Is(err, store.ErrExchangeInput) {
@@ -38,7 +39,7 @@ func TestExchangeCLIRefusesPayloadAuthorityBeforeCredentialAndDatabase(t *testin
 		t.Fatal(err)
 	}
 	o := exchangeOptions{Input: path, Key: "original-key", MaxFile: 1024, Settings: custody.ExchangeSettings{MaxLifetime: time.Hour, MaxSenders: 16, MaxOpenViews: 128, MaxEndpoints: 16}}
-	for _, command := range []string{"exchange-offer", "exchange-endpoint-command"} {
+	for _, command := range []string{"exchange-offer", "exchange-endpoint-command", "exchange-close"} {
 		err := runExchanges(context.Background(), command, o, io.Discard)
 		if runtime.GOOS == "windows" {
 			// Windows protected-reference qualification is owed. Its regular-file

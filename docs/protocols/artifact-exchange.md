@@ -65,6 +65,14 @@ selectors must match the authenticated identity; they are not permission grants.
    recipient, forwarding or execution right. Receiving a view does not add
    ordinary namespace/file access. Source access for any onward handoff needs its
    own authorization through existing permissions and publication controls.
+7. `POST exchange-closures` withdraws one exact view. Its command is
+   `{"schema_version":1,"exchange_id":"UUID","request_hash":"ORIGINAL_SHA256","operation":"cancel"}`
+   for the sender, or `operation: "decline"` for the recipient. Use an original
+   `Idempotency-Key`; the body is at most4096 bytes. The actor must still match
+   its original participant binding, with the role's read/deliver or read/list
+   permissions. A hold, expired offer or revoked endpoint does not prevent the
+   unchanged participant from closing its own view. The API returns the exact
+   decision's ID,state,canonical command hash,event ID and replay flag.
 
 JSON bodies reject unknown fields, duplicate/case-folded aliases and nulls.
 Endpoint commands are at most 24 KiB; offer requests are at most 16 KiB. Expiry
@@ -92,6 +100,18 @@ only `read-authorized-only`. Availability, byte retrieval, receiver persistence
 and business processing are distinct outcomes. No processing outcome is inferred
 from a download or reply.
 
-CLI commands, UI/agent tools, outgoing history, per-view cancellation and the
-complete OpenAPI surface remain implementation work. Actual stock-client,
+Cancellation/decline commits an immutable decision,event and actor-private retry
+receipt in one transaction. Only the first terminal decision succeeds; a changed
+command under its original key refuses. The original offer receipt survives and
+cannot reopen bytes. Each bounded read holds a shared view lock; closing takes
+the exclusive lock. An earlier authorized chunk may finish before closing commits;
+no later chunk is authorized. Closed views disappear from live incoming lists and
+return404 to recipient inspection/retrieval. Source bytes and other views remain
+under their own permissions. Ordinary event feeds/audit exports retain the closure
+event identity and exact payload digest, keeping its operation key and private
+participant bindings in the protected journal.
+
+API/CLI closure and offered-view browser decline are implemented; agent tools,
+outgoing history, browser sending/admin and the complete OpenAPI surface remain
+implementation work. Actual stock-client,
 independent-receiver, crash/recovery, capacity and AX profile proofs remain owed.

@@ -14,9 +14,18 @@ const origin = new URL(c.url);
 assert.equal(origin.protocol, "https:");
 assert.equal(origin.hostname, "127.0.0.1");
 assert.equal(origin.pathname, "/");
-for (const value of [c.tenant, c.partner, c.endpoint, c.exchange, c.file])
+for (const value of [
+  c.tenant,
+  c.partner,
+  c.endpoint,
+  c.exchange,
+  c.closure_exchange,
+  c.file,
+])
   assert.match(value, /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/);
 assert.match(c.sha256, /^[0-9a-f]{64}$/);
+assert.match(c.closure_request_hash, /^[0-9a-f]{64}$/);
+assert.notEqual(c.closure_exchange, c.exchange);
 assert.ok(Number.isSafeInteger(c.size) && c.size > 0 && c.size < 16384);
 const spki = createHash("sha256")
   .update(
@@ -35,6 +44,7 @@ let browser,
   egress = 0,
   accessibilityChecks = 0,
   downloads = 0,
+  declines = 0,
   failureHash;
 try {
   browser = await chromium.launch({
@@ -176,6 +186,8 @@ try {
   phase = "exact-download";
   const attachment = recipient.page.waitForEvent("download");
   await recipient.page
+    .getByRole("row")
+    .filter({ hasText: c.exchange })
     .getByRole("link", { name: "Download artifact", exact: true })
     .click();
   const download = await attachment;
@@ -190,6 +202,113 @@ try {
   assert.equal(
     await recipient.page.evaluate(() => globalThis.freightctlArtifactExecuted),
     undefined,
+  );
+  phase = "recipient-decline-review";
+  await recipient.page
+    .getByRole("button", {
+      name: "Review decline " + c.closure_exchange.slice(0, 8),
+      exact: true,
+    })
+    .click();
+  await accessibility(recipient.page, "decline-review-accessibility");
+  phase = "recipient-decline";
+  const closureResponse = recipient.page.waitForResponse(
+    (r) =>
+      new URL(r.url()).pathname.endsWith("/exchange-closures") &&
+      r.request().method() === "POST",
+  );
+  await recipient.page
+    .getByRole("button", {
+      name: "Confirm decline or recover result",
+      exact: true,
+    })
+    .click();
+  const closure = await closureResponse;
+  assert.equal(closure.status(), 200);
+  const receipt = await closure.json();
+  assert.equal(receipt.exchange_id, c.closure_exchange);
+  assert.equal(receipt.state, "declined");
+  assert.equal(receipt.replayed, false);
+  assert.match(
+    receipt.event_id,
+    /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/,
+  );
+  assert.equal(
+    receipt.command_hash,
+    createHash("sha256")
+      .update(
+        JSON.stringify({
+          schema_version: 1,
+          exchange_id: c.closure_exchange,
+          request_hash: c.closure_request_hash,
+          operation: "decline",
+        }),
+      )
+      .digest("hex"),
+  );
+  await recipient.page
+    .getByRole("status")
+    .filter({ hasText: "Future retrieval through this view is disabled." })
+    .waitFor();
+  declines++;
+  phase = "declined-retrieval";
+  const refused = await recipient.page.evaluate(async (path) => {
+    const response = await fetch(path, {
+      credentials: "same-origin",
+      redirect: "error",
+      cache: "no-store",
+    });
+    return {
+      status: response.status,
+      revision: response.headers.get("X-File-Revision-ID"),
+      digest: response.headers.get("X-Content-SHA256"),
+      contentType: response.headers.get("Content-Type"),
+    };
+  }, `/v1/tenants/${c.tenant}/partners/${c.partner}/exchanges/${c.closure_exchange}/file`);
+  assert.equal(refused.status, 404);
+  assert.equal(refused.revision, null);
+  assert.equal(refused.digest, null);
+  assert.match(refused.contentType, /^application\/json/);
+  phase = "declined-discovery";
+  const afterDecline = recipient.page.waitForResponse((r) =>
+    r.url().includes("/exchange-endpoints/" + c.endpoint + "/incoming?"),
+  );
+  await recipient.page
+    .getByRole("button", { name: "Check for new artifacts", exact: true })
+    .click();
+  assert.equal((await afterDecline).status(), 200);
+  await recipient.page
+    .getByRole("row")
+    .filter({ hasText: c.exchange })
+    .waitFor();
+  assert.equal(
+    await recipient.page
+      .getByRole("row")
+      .filter({ hasText: c.closure_exchange })
+      .count(),
+    0,
+  );
+  assert.equal(
+    await recipient.page
+      .getByRole("link", { name: "Download artifact", exact: true })
+      .count(),
+    1,
+  );
+  await accessibility(recipient.page, "declined-accessibility");
+  // Keep original details visible again so the later endpoint-revocation
+  // journey still proves that stale digest/details and links are removed.
+  phase = "recipient-details";
+  await recipient.page
+    .getByRole("button", {
+      name: "Inspect " + c.exchange.slice(0, 8),
+      exact: true,
+    })
+    .click();
+  await recipient.page
+    .getByRole("heading", { name: "Current exchange details", exact: true })
+    .waitFor();
+  assert.ok(
+    (await recipient.page.locator("body").innerText()).includes(c.sha256),
   );
   phase = "unrelated-discovery";
   const unrelated = await login(c.unrelated_token);
@@ -262,6 +381,7 @@ try {
     phase,
     external_egress: egress,
     exact_downloads: downloads,
+    terminal_declines: declines,
     model_started: false,
     browser_sandbox: true,
     accessibility_checks: accessibilityChecks,

@@ -15,6 +15,7 @@ participant authentication, row-level security or current exchange permissions.
 | `exchange-incoming` | `--exchange-endpoint-id`, optional `--exchange-after`, `--exchange-limit` from1to100; recipient-only receive page. Restart each new polling cycle without the old cursor. |
 | `exchange-inspect` | `--exchange-id`; current recipient-authorized offered/held status. |
 | `exchange-download` | `--exchange-id` and explicit new `--output`; verify and sync a local file before returning its JSON result. |
+| `exchange-close` | Protected closure command plus original key; the sender cancels or recipient declines one exact offer. No storage reference is needed. |
 
 All commands take the ordinary `--dsn-file`, `--token-file`, `--tenant` and
 `--partner` references. Offer/download also take `--storage`. They accept the
@@ -23,6 +24,16 @@ grant no permission. Keep requests and credentials in protected regular files
 with mode0600 or stricter. No command reads credentials or request bodies from
 artifact contents. A received artifact supplies neither forwarding nor execution
 authority; separately authorized replies use new source bytes and a new key.
+
+The closure file contains only `schema_version:1`, `exchange_id`, the exact
+original `request_hash`, and `operation` (`cancel` for its sender or `decline` for
+its recipient). Preserve it and the operation key for response-loss recovery.
+The same key with changed meaning refuses. A new key cannot replace a terminal
+decision. Current credentials must still match the participant's original
+authority revision and root binding. Closing after endpoint revocation or a hold
+is allowed for that unchanged participant; it grants no artifact metadata or bytes.
+The source, other views and original publication receipt remain intact. An open
+reader rechecks before every bounded chunk; bytes already received cannot be recalled.
 
 For example, after accepting the source and registering the endpoint:
 

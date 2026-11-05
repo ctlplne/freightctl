@@ -99,7 +99,8 @@
         "docs/qualification/evidence/F083-artifact-exchange-api.json",
         "docs/qualification/evidence/F085-artifact-exchange-cli.json",
         "docs/qualification/evidence/F087-artifact-receive-browser.json",
-        "docs/qualification/evidence/F089-exchange-endpoint-directory.json"
+        "docs/qualification/evidence/F089-exchange-endpoint-directory.json",
+        "docs/qualification/evidence/F091-exchange-closures.json"
       ]
     },
     {
@@ -120,7 +121,8 @@
         "docs/qualification/evidence/F082-artifact-receive-views.json",
         "docs/qualification/evidence/F083-artifact-exchange-api.json",
         "docs/qualification/evidence/F085-artifact-exchange-cli.json",
-        "docs/qualification/evidence/F087-artifact-receive-browser.json"
+        "docs/qualification/evidence/F087-artifact-receive-browser.json",
+        "docs/qualification/evidence/F091-exchange-closures.json"
       ]
     },
     {
@@ -143,7 +145,8 @@
         "docs/qualification/evidence/F082-artifact-receive-views.json",
         "docs/qualification/evidence/F083-artifact-exchange-api.json",
         "docs/qualification/evidence/F085-artifact-exchange-cli.json",
-        "docs/qualification/evidence/F087-artifact-receive-browser.json"
+        "docs/qualification/evidence/F087-artifact-receive-browser.json",
+        "docs/qualification/evidence/F091-exchange-closures.json"
       ]
     },
     {
@@ -165,7 +168,8 @@
         "docs/qualification/evidence/F083-artifact-exchange-api.json",
         "docs/qualification/evidence/F085-artifact-exchange-cli.json",
         "docs/qualification/evidence/F087-artifact-receive-browser.json",
-        "docs/qualification/evidence/F089-exchange-endpoint-directory.json"
+        "docs/qualification/evidence/F089-exchange-endpoint-directory.json",
+        "docs/qualification/evidence/F091-exchange-closures.json"
       ]
     },
     {
@@ -217,7 +221,8 @@
         "docs/qualification/evidence/F083-artifact-exchange-api.json",
         "docs/qualification/evidence/F085-artifact-exchange-cli.json",
         "docs/qualification/evidence/F087-artifact-receive-browser.json",
-        "docs/qualification/evidence/F089-exchange-endpoint-directory.json"
+        "docs/qualification/evidence/F089-exchange-endpoint-directory.json",
+        "docs/qualification/evidence/F091-exchange-closures.json"
       ]
     },
     {

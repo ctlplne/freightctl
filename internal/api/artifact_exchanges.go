@@ -151,6 +151,34 @@ func (s *Server) incomingExchanges(w http.ResponseWriter, r *http.Request) {
 	respond(w, 200, page)
 }
 
+func (s *Server) closeExchange(w http.ResponseWriter, r *http.Request) {
+	identity, err := scope(r)
+	if err != nil {
+		failure(w, err)
+		return
+	}
+	if _, _, err = s.Service.ExchangeLimits(); err != nil {
+		failure(w, err)
+		return
+	}
+	data, err := exchangeBody(w, r, 4096)
+	if err != nil {
+		failure(w, err)
+		return
+	}
+	command, err := store.DecodeExchangeClosure(data)
+	if err != nil {
+		failure(w, err)
+		return
+	}
+	result, err := s.Service.DB.CloseExchange(r.Context(), identity, r.Header.Get("Idempotency-Key"), *command)
+	if err != nil {
+		failure(w, err)
+		return
+	}
+	respond(w, 200, result)
+}
+
 func (s *Server) inspectExchange(w http.ResponseWriter, r *http.Request) {
 	identity, err := scope(r)
 	if err != nil {

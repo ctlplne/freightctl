@@ -19,6 +19,9 @@ func TestExchangeBrowserCanonicalFixtureMatchesServerBytes(t *testing.T) {
 		Endpoint          ExchangeEndpointDefinition `json:"endpoint"`
 		EndpointCanonical string                     `json:"endpoint_canonical"`
 		EndpointSHA256    string                     `json:"endpoint_sha256"`
+		Closure           ExchangeClosureCommand     `json:"closure"`
+		ClosureCanonical  string                     `json:"closure_canonical"`
+		ClosureSHA256     string                     `json:"closure_sha256"`
 	}
 	if err = json.Unmarshal(raw, &fixture); err != nil {
 		t.Fatal(err)
@@ -30,5 +33,9 @@ func TestExchangeBrowserCanonicalFixtureMatchesServerBytes(t *testing.T) {
 	data, hash, err = CanonicalExchangeEndpoint(fixture.Endpoint, ExchangeLimits{MaxArtifactBytes: 1024, MaxLifetime: time.Hour, MaxSenders: 16})
 	if err != nil || string(data) != fixture.EndpointCanonical || hash != fixture.EndpointSHA256 {
 		t.Fatal("browser endpoint fixture differs from actual server canonical meaning", err)
+	}
+	data, hash, err = CanonicalExchangeClosure(fixture.Closure)
+	if err != nil || string(data) != fixture.ClosureCanonical || hash != fixture.ClosureSHA256 {
+		t.Fatal("browser closure fixture differs from exact server command meaning", err)
 	}
 }

@@ -77,3 +77,17 @@ func TestExchangeEndpointDirectoryRejectsInvalidSelectorsBeforeDatabase(t *testi
 		}
 	}
 }
+
+func TestExchangeClosureRejectsInventedAuthorityBeforeDatabase(t *testing.T) {
+	h := New(&custody.Service{MaxFile: 1024, Exchanges: custody.ExchangeSettings{MaxLifetime: time.Hour, MaxSenders: 16, MaxOpenViews: 128, MaxEndpoints: 16}}, nil)
+	url := "https://freightctl.invalid/v1/tenants/11111111-1111-4111-8111-111111111111/partners/22222222-2222-4222-8222-222222222222/exchange-closures"
+	for _, body := range []string{`{"operation":"cancel","approved":true}`, `{"schema_version":1,"operation":"cancel","OPERATION":"decline"}`, `null`, `{"operation":"reopen"}`, strings.Repeat(" ", 4097)} {
+		r := httptest.NewRequest(http.MethodPost, url, strings.NewReader(body))
+		r.Header.Set("Authorization", "Bearer "+strings.Repeat("0", 64))
+		w := httptest.NewRecorder()
+		h.ServeHTTP(w, r)
+		if w.Code != 400 {
+			t.Fatalf("closure command reached storage or missing handler: status %d", w.Code)
+		}
+	}
+}

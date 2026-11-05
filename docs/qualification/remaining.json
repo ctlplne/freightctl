@@ -860,7 +860,8 @@
         "docs/qualification/evidence/F083-artifact-exchange-api.json",
         "docs/qualification/evidence/F085-artifact-exchange-cli.json",
         "docs/qualification/evidence/F087-artifact-receive-browser.json",
-        "docs/qualification/evidence/F089-exchange-endpoint-directory.json"
+        "docs/qualification/evidence/F089-exchange-endpoint-directory.json",
+        "docs/qualification/evidence/F091-exchange-closures.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -875,11 +876,11 @@
         "S003 resumes the full product and authorizes guarded source/CI batches after previous required runs are terminal. Contract validators are implemented with focused red/green proof; durable services and five API paths are implemented; remaining surfaces and actual AX profiles remain owed. Broad/deferred qualification is mandatory at FINISH."
       ],
       "current_item": {
-        "id": "F089",
-        "state": "Current-head endpoint directory API/CLI/UI implemented; native proof owed",
-        "proof": "Focused selector/canonical-scope/client/cursor checks,shared Go/JS wire fixtures,frontend build,native compile/vet/architecture pass",
-        "native": "Original real API/CLI/browser profiles extended and one new RLS/current-head case prepared; no local heavy runtime",
-        "next": "Continue exchange lifecycle/history/send/admin/agent/bridge implementation; triage new security findings and complete all deferred qualification at FINISH."
+        "id": "F091",
+        "state": "Exact per-view sender cancellation/recipient decline API/CLI/browser implemented;native proof owed",
+        "proof": "Observed missing-route and audit-privacy reds repaired;focused6Go/9browser/7metadata/1summary methods and affected static/build/architecture checks pass",
+        "native": "New real-PG lock/role/RLS/journal/receipt cases and original HTTPS/CLI/Chrome profile extensions prepared;not locally run",
+        "next": "Continue outgoing lifecycle/send/admin/agent surfaces and ingress/onward bridges;triage new security findings immediately,repair deferred nonsecurity failures at mandatory FINISH"
       }
     }
   ],

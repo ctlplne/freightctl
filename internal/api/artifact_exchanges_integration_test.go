@@ -198,6 +198,37 @@ func TestArtifactExchangeHTTPSUsesSameCookieAndBearerAuthorityAndSeparateReply(t
 	if !bytes.Equal(data, replyBytes) {
 		t.Fatal("separately authorized HTTPS reply bytes mismatch")
 	}
+	// Exercise recipient decline through the same cookie/Origin/CSRF guard as
+	// every other browser command, then separately exercise sender cancellation.
+	aCookie, aCSRF := loginBrowser(t, server, bScope, a)
+	closure := store.ExchangeClosureCommand{Schema: 1, ID: reply.Exchange.ID, RequestHash: reply.Exchange.RequestHash, Operation: "decline"}
+	closeHeaders := map[string]string{"Origin": server.URL, "Idempotency-Key": "decline-reply"}
+	exchangeAPIRequest(t, server, "POST", prefix+"/exchange-closures", aCookie, closeHeaders, exchangeAPIJSON(t, closure), 403)
+	closeHeaders["X-CSRF-Token"] = aCSRF
+	_, data = exchangeAPIRequest(t, server, "POST", prefix+"/exchange-closures", aCookie, closeHeaders, exchangeAPIJSON(t, closure), 200)
+	var terminal store.ExchangeClosureResult
+	if json.Unmarshal(data, &terminal) != nil || terminal.State != "declined" || terminal.Replayed {
+		t.Fatal("recipient terminal receipt invalid")
+	}
+	_, data = exchangeAPIRequest(t, server, "POST", prefix+"/exchange-closures", aCookie, closeHeaders, exchangeAPIJSON(t, closure), 200)
+	var terminalReplay store.ExchangeClosureResult
+	if json.Unmarshal(data, &terminalReplay) != nil || !terminalReplay.Replayed || terminalReplay.EventID != terminal.EventID {
+		t.Fatal("terminal response-loss receipt changed")
+	}
+	exchangeAPIRequest(t, server, "GET", prefix+"/exchanges/"+reply.Exchange.ID+"/file", nil, bearerA, nil, 404)
+	_, data = exchangeAPIRequest(t, server, "POST", prefix+"/exchanges", nil, map[string]string{"Authorization": bearerB["Authorization"], "Idempotency-Key": "second-reply-view"}, exchangeAPIJSON(t, r), 201)
+	var cancelOffer store.ArtifactExchangeResult
+	if json.Unmarshal(data, &cancelOffer) != nil {
+		t.Fatal("cancellation offer invalid")
+	}
+	closure.ID, closure.RequestHash, closure.Operation = cancelOffer.Exchange.ID, cancelOffer.Exchange.RequestHash, "cancel"
+	exchangeAPIRequest(t, server, "POST", prefix+"/exchange-closures", nil, map[string]string{"Authorization": bearerA["Authorization"], "Idempotency-Key": "wrong-cancel-role"}, exchangeAPIJSON(t, closure), 404)
+	exchangeAPIRequest(t, server, "POST", prefix+"/exchange-closures", nil, map[string]string{"Authorization": bearerB["Authorization"], "Idempotency-Key": "sender-cancel"}, exchangeAPIJSON(t, closure), 200)
+	exchangeAPIRequest(t, server, "GET", prefix+"/exchanges/"+cancelOffer.Exchange.ID+"/file", nil, bearerA, nil, 404)
+	_, data = exchangeAPIRequest(t, server, "GET", prefix+"/files/"+replyFile.File.ID, nil, bearerB, nil, 200)
+	if !bytes.Equal(data, replyBytes) {
+		t.Fatal("closing a view removed its source bytes")
+	}
 	adminHeaders["Idempotency-Key"] = "revoke-original-endpoint"
 	revoke := store.ExchangeEndpointCommand{Operation: "revoke", ID: offer.Exchange.Request.Endpoint.ID, ExpectedRevision: 1}
 	_, data = exchangeAPIRequest(t, server, "POST", prefix+"/exchange-endpoints/commands", cookie, adminHeaders, exchangeAPIJSON(t, revoke), 200)

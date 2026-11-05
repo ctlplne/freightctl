@@ -249,6 +249,9 @@ func (t *Transaction) SaveArtifactExchange(ctx context.Context, key string, e *A
 // Resolve the immutable record internally. An untrusted caller cannot turn a
 // hand-built record with a real endpoint into permission for an unoffered file.
 func (t *Transaction) AuthorizeIncomingExchange(ctx context.Context, id string, limits ExchangeLimits) (*ArtifactExchange, *File, error) {
+	if !ValidID(id) {
+		return nil, nil, ErrNotFound
+	}
 	e, err := t.ArtifactExchange(ctx, id)
 	if err != nil {
 		return nil, nil, err
@@ -266,6 +269,9 @@ func (t *Transaction) AuthorizeIncomingExchange(ctx context.Context, id string, 
 func (t *Transaction) authorizeIncomingExchange(ctx context.Context, e *ArtifactExchange, limits ExchangeLimits) (*File, error) {
 	if e == nil || e.Recipient != t.Actor {
 		return nil, ErrNotFound
+	}
+	if err := t.exchangeViewReadLock(ctx, e.ID); err != nil {
+		return nil, err
 	}
 	if err := t.Require("read"); err != nil {
 		return nil, err

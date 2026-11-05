@@ -36,6 +36,107 @@ const context = {
   after: "",
   limit: 20,
 };
+
+test("terminal receipts bind the exact offer, operation and canonical Go bytes", async () => {
+  const fixture = JSON.parse(
+    await readFile(
+      new URL("fixtures/artifact-exchange.json", import.meta.url),
+      "utf8",
+    ),
+  );
+  assert.equal(
+    new TextDecoder().decode(p.exchangeClosureBytes(fixture.closure)),
+    fixture.closure_canonical,
+  );
+  const command = fixture.closure;
+  const receipt = {
+    exchange_id: command.exchange_id,
+    state: "declined",
+    command_hash: fixture.closure_sha256,
+    event_id: id(15),
+    replayed: false,
+  };
+  assert.deepEqual(p.asExchangeClosureResult(receipt, command), receipt);
+  for (const patch of [
+    { exchange_id: id(99) },
+    { state: "canceled" },
+    { command_hash: "e".repeat(64) },
+    { event_id: "not-an-id" },
+    { replayed: null },
+    { artifact: { file_revision_id: id(99) } },
+  ])
+    assert.throws(() =>
+      p.asExchangeClosureResult({ ...receipt, ...patch }, command),
+    );
+  assert.throws(() => p.exchangeClosureBytes({ ...command, approved: true }));
+  assert.throws(() =>
+    p.exchangeClosureBytes({ ...command, operation: "reopen" }),
+  );
+});
+
+test("recipient decline preserves an exact retry and refuses stale session or opaque held metadata", async () => {
+  const row = offered();
+  const command = {
+    schema_version: 1,
+    exchange_id: row.id,
+    request_hash: row.exchange.request_hash,
+    operation: "decline",
+  };
+  const { createHash } = await import("node:crypto");
+  const receipt = {
+    exchange_id: row.id,
+    state: "declined",
+    command_hash: createHash("sha256")
+      .update(p.exchangeClosureBytes(command))
+      .digest("hex"),
+    event_id: id(15),
+    replayed: false,
+  };
+  const calls = [];
+  let during = () => {};
+  let response = receipt;
+  const api = {
+    session: {
+      identity: {
+        tenant_id: context.tenant,
+        partner_id: context.partner,
+        actor_id: context.actor,
+        authority_revision: 1,
+        root_policy_digest: "d".repeat(64),
+        permissions: ["read", "list"],
+      },
+      session: { id: id(99) },
+    },
+    request: async (path, options, decode) => {
+      calls.push({ path, options });
+      during();
+      return decode(response);
+    },
+  };
+  const client = new a.ExchangeReceiveApi(api);
+  assert.deepEqual(await client.decline(row, "fixed-key"), receipt);
+  response = { ...receipt, replayed: true };
+  assert.equal((await client.decline(row, "fixed-key")).replayed, true);
+  assert.deepEqual(calls[0], calls[1]);
+  assert.equal(
+    calls[0].path,
+    `/v1/tenants/${context.tenant}/partners/${context.partner}/exchange-closures`,
+  );
+  assert.equal(calls[0].options.method, "POST");
+  assert.equal(calls[0].options.headers["Idempotency-Key"], "fixed-key");
+  assert.deepEqual(JSON.parse(calls[0].options.body), command);
+  await assert.rejects(() =>
+    client.decline({ id: row.id, state: "held" }, "fixed-key"),
+  );
+  await assert.rejects(() => client.decline(row, "invalid key"));
+  assert.equal(calls.length, 2);
+  during = () => api.session.identity.authority_revision++;
+  await assert.rejects(
+    () => client.decline(row, "fixed-key"),
+    (e) => e.code === "context_changed",
+  );
+  assert.equal(client.isCurrent(), false);
+});
 function offered(n = 10) {
   const request = {
     schema_version: 1,

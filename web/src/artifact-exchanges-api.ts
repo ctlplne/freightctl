@@ -5,6 +5,8 @@ import {
   asIncomingView,
   asEndpointPage,
   asEndpointRecord,
+  asExchangeClosureResult,
+  type ExchangeClosureCommand,
   bindingIsCurrent,
   type DirectoryContext,
   type EndpointRecord,
@@ -140,5 +142,32 @@ export class ExchangeReceiveApi {
     // The browser's native attachment path streams bytes. No URL, name,
     // execution instruction or secret is taken from an artifact or its payload.
     return `${this.prefix}/exchanges/${validated.id}/file`;
+  }
+  async decline(row: IncomingExchange, key: string, signal?: AbortSignal) {
+    this.current();
+    const validated = asIncomingView(row, this.identity);
+    if (validated.state !== "offered" || !/^[A-Za-z0-9._:-]{1,128}$/.test(key))
+      throw new ApiError("invalid_artifact_exchange_contract", 400);
+    const command: ExchangeClosureCommand = {
+      schema_version: 1,
+      exchange_id: validated.id,
+      request_hash: validated.exchange.request_hash,
+      operation: "decline",
+    };
+    const result = await this.api.request(
+      `${this.prefix}/exchange-closures`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Idempotency-Key": key },
+        body: JSON.stringify(command),
+        ...(signal ? { signal } : {}),
+      },
+      (value) => {
+        this.current();
+        return asExchangeClosureResult(value, command);
+      },
+    );
+    this.current();
+    return result;
   }
 }

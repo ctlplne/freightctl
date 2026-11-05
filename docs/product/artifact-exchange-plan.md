@@ -149,7 +149,12 @@ requests retain exact UTC microsecond expiry. Admission counts unexpired views,
 including temporarily unavailable views. An unconfigured adapter refuses.
 These local checks establish no actual PostgreSQL,HTTPS,stock-client,process-death,
 independent-receiver,capacity or complete AX qualification. Public surfaces,
-per-view cancellation,retention/fairness and all reference profiles remain owed.
+runtime qualification of per-view cancellation, retention/fairness and all
+reference profiles remain owed. F091 implements one immutable sender cancellation
+or recipient decline, with the exact request hash, current original participant
+binding, transactional event/receipt, and a shared/exclusive view lock around every
+bounded read. It revokes future access without recalling prior copies. Its actual
+PostgreSQL/API/CLI/browser runtime proof remains owed.
 
 | Existing foundation | Planned use |
 | --- | --- |
