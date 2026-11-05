@@ -100,5 +100,13 @@
     "Browser sending,endpoint administration,outgoing history,agent tools and all other exchange controls",
     "Separate stock clients/independent receivers/process death/restore and complete AX-J01/J02/J03",
     "Manual WCAG,all baseline GOAL gates and mandatory FINISH; no independent adoption or enterprise claim"
-  ]
+  ],
+  "first_native_submission": {
+    "candidate": "4d89fca7e518aed4cf508f54e01c38a2085e5c19",
+    "run_id": 42100377963,
+    "job_id": 127501286172,
+    "state": "failed before any structured security phase",
+    "evidence": "docs/qualification/evidence/F090-peer-debian13-profile.json",
+    "scope": "No actual browser pass; nonsecurity cause deferred to FINISH under S003."
+  }
 }

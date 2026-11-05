@@ -1,9 +1,9 @@
-FROM node:26.13.0-bookworm-slim@sha256:add5c17c14752c54d2f3d519ec46a3815684d41c33f198bcb09fb998f7dcbf68 AS dependencies
+FROM node:26.13.0-trixie-slim@sha256:5adad64f9a1fca2d51972caa65983634c8a774eb300d72b20f7f2a0f60368072 AS dependencies
 WORKDIR /peer
 COPY package.json package-lock.json ./
 RUN npm ci --ignore-scripts --no-fund && npm audit --omit=dev --audit-level=low
 
-FROM node:26.13.0-bookworm-slim@sha256:add5c17c14752c54d2f3d519ec46a3815684d41c33f198bcb09fb998f7dcbf68
+FROM node:26.13.0-trixie-slim@sha256:5adad64f9a1fca2d51972caa65983634c8a774eb300d72b20f7f2a0f60368072
 WORKDIR /peer
 # npm/corepack are installation tools, not recipient runtime dependencies.
 # Remove them from the actual final image; scan every remaining OS/library package.

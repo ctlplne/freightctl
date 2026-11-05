@@ -3,7 +3,7 @@
   "id": "F075",
   "observed_at": "2026-11-04",
   "starting_commit": "63e153f6511f6cb457dfa46f70d39f2548f200b6",
-  "state": "Actual6d native ARM/x86 scans complete:each7CRITICAL/58HIGH/5UNKNOWN/92LOW/154MEDIUM,zero suppressed. Scanner/format/resource execution works; image gate stays red. F088 prepares pinned Node26.13.0 and runtime-tool removal; native remediation/interoperability owed.",
+  "state": "Scanner completes:actual4d ARM/x86 images each1CRITICAL/33HIGH/0UNKNOWN,83LOW/104MEDIUM,zero suppressed after Node patch/runtime-tool cleanup. F090 pins replacement Debian13 input with exact-major guard; actual complete remediation and interop remain owed. No clean-image or product-image claim.",
   "scope": "Scan the exact disposable independent OpenPGP recipient image used by native Linux tests. This is test infrastructure, not a released server image or runtime security qualification.",
   "qualification_claim": false,
   "frozen_cases": [
@@ -659,5 +659,12 @@
     "suppressed": 0,
     "evidence": "docs/qualification/evidence/F088-peer-runtime-security-update.json",
     "scope": "Exact independent test peer only; no freightctl server-image or release claim."
+  },
+  "current_candidate_profile": {
+    "os": "Debian13/trixie",
+    "node": "26.13.0",
+    "base_index_digest": "sha256:5adad64f9a1fca2d51972caa65983634c8a774eb300d72b20f7f2a0f60368072",
+    "evidence": "docs/qualification/evidence/F090-peer-debian13-profile.json",
+    "scope": "Prepared new test-peer input; both actual old Bookworm failure sets remain recorded."
   }
 }

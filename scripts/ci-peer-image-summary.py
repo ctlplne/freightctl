@@ -108,10 +108,10 @@ def summarize(report, version, image, commit, architecture, now):
     require(isinstance(platform, dict) and platform.get('architecture') == architecture and platform.get('os') == 'linux')
     os_info = metadata.get('OS')
     # Trivy's pinned Debian analyzer reports the complete /etc/debian_version
-    # line, including point releases. Pin Debian major12, not the spelling12.
+    # line, including point releases. Pin the replacement Debian major13, not an arbitrary report.
     require(isinstance(os_info, dict) and os_info.get('Family') == 'debian'
             and isinstance(os_info.get('Name'), str)
-            and re.fullmatch(r'12(?:\.(?:0|[1-9][0-9]{0,4})){0,2}', os_info['Name']))
+            and re.fullmatch(r'13(?:\.(?:0|[1-9][0-9]{0,4})){0,2}', os_info['Name']))
     require(os_info.get('EOSL', False) is False)
     results = report.get('Results')
     require(isinstance(results, list) and 1 <= len(results) <= 2000)

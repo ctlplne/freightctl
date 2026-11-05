@@ -1,0 +1,324 @@
+{
+  "schema_version": 1,
+  "id": "F090",
+  "observed_at": "2026-11-05",
+  "starting_commit": "c6bb55d6da7defc10545591bb903ac12c57470a8",
+  "state": "Actual remaining1critical/33high findings retained; pinned Debian13 replacement profile prepared,actual full scan and interop owed.",
+  "qualification_claim": false,
+  "native_observation": {
+    "candidate": "4d89fca7e518aed4cf508f54e01c38a2085e5c19",
+    "run_id": 42100377285,
+    "jobs": [
+      {
+        "job_id": 127501280844,
+        "architecture": "arm64",
+        "summary": {
+          "additional_advisory_ids": 46,
+          "additional_blocking_advisory_ids": {
+            "CRITICAL": 0,
+            "HIGH": 0,
+            "UNKNOWN": 0
+          },
+          "advisory_ids": [
+            "CVE-2005-2541",
+            "CVE-2007-5686",
+            "CVE-2010-4756",
+            "CVE-2011-3374",
+            "CVE-2011-3389",
+            "CVE-2011-4116",
+            "CVE-2013-4392",
+            "CVE-2016-2781",
+            "CVE-2017-18018",
+            "CVE-2018-20796",
+            "CVE-2018-6829",
+            "CVE-2019-1010022",
+            "CVE-2019-1010023",
+            "CVE-2019-1010024",
+            "CVE-2019-1010025",
+            "CVE-2019-9192",
+            "CVE-2022-0563",
+            "CVE-2022-27943",
+            "CVE-2022-3219",
+            "CVE-2023-31437",
+            "CVE-2023-31438",
+            "CVE-2023-31439",
+            "CVE-2023-31486",
+            "CVE-2023-45853",
+            "CVE-2023-50495",
+            "CVE-2024-10041",
+            "CVE-2024-2236",
+            "CVE-2024-56433",
+            "CVE-2025-13151",
+            "CVE-2025-14104",
+            "CVE-2025-30258",
+            "CVE-2025-5278",
+            "CVE-2025-6141",
+            "CVE-2025-68972",
+            "CVE-2025-69720",
+            "CVE-2026-102010",
+            "CVE-2026-102473",
+            "CVE-2026-102474",
+            "CVE-2026-105712",
+            "CVE-2026-114690",
+            "CVE-2026-114691",
+            "CVE-2026-115455",
+            "CVE-2026-13595",
+            "CVE-2026-13757",
+            "CVE-2026-15059",
+            "CVE-2026-15534",
+            "CVE-2026-16742",
+            "CVE-2026-18374",
+            "CVE-2026-18477",
+            "CVE-2026-18508"
+          ],
+          "architecture": "arm64",
+          "blocking_advisory_ids": {
+            "CRITICAL": [
+              "CVE-2023-45853"
+            ],
+            "HIGH": [
+              "CVE-2025-69720",
+              "CVE-2026-16742",
+              "CVE-2026-41992",
+              "CVE-2026-53613",
+              "CVE-2026-53615",
+              "CVE-2026-54369",
+              "CVE-2026-76844",
+              "CVE-2026-78410",
+              "CVE-2026-9538"
+            ],
+            "UNKNOWN": []
+          },
+          "feed_database_sha256": "2ce29bda5b2483d84da3f4365398addcf03a7decf5c79e29dc73db8f0fa454ed",
+          "feed_next_update": "2026-11-06T19:01:45.286712+00:00",
+          "feed_updated_at": "2026-11-05T19:01:45.286712+00:00",
+          "image_archive_sha256": "7cf20f1b4db430a71d285be914511423ca782fce78c9271cb336f454a5f5fad4",
+          "image_id": "sha256:138a88602dde864038aaf473064abbf08603ee5cf3f0e7696c826b737e3f52ad",
+          "image_inspect_sha256": "e4a33062f8ff5329a5a49d7a8a193e68750fe11f4360720ad9ab17f6ddb7d8b1",
+          "kind": "native-peer-image-vulnerabilities",
+          "manifest_sha256": "07af474dbfd08cb6ae612f1ab56f5aef9f82dbe1d981ff13b591442ca4ef00d0",
+          "os_family": "debian",
+          "os_version": "12.15",
+          "package_counts": {
+            "lang-pkgs": 2,
+            "os-pkgs": 89
+          },
+          "report_created_at": "2026-11-05T20:12:12.626968+00:00",
+          "report_sha256": "6b055a5042eb4b430136ab8ef37472a3a452bdd6a2c6878c9705cf143b5eb38e",
+          "resource_policy": "github-runner-capacity",
+          "result_classes": {
+            "lang-pkgs": 1,
+            "os-pkgs": 1
+          },
+          "scanner_image": "aquasec/trivy:0.76.1@sha256:790fd66d1697395d8693d1acaa1ea702406a20f109b6fc7bac8db623eca6c06c",
+          "scanner_version": "0.76.1",
+          "scanner_version_report_sha256": "a6a22bffd9c434a07bdec384e5df1d1e7e20ca8721decd0eab54058846dcd282",
+          "scope": "exact test peer image; OS and discovered libraries; no reachability, protocol, released image or complete product claim",
+          "scratch_bytes": 112455917568,
+          "scratch_cleanup": "unmounted",
+          "severities": {
+            "CRITICAL": 1,
+            "HIGH": 33,
+            "LOW": 83,
+            "MEDIUM": 104,
+            "UNKNOWN": 0
+          },
+          "source_commit": "4d89fca7e518aed4cf508f54e01c38a2085e5c19",
+          "state": "failed",
+          "suppressed_findings": 0,
+          "unrecognized_blocking_advisories": {
+            "CRITICAL": 0,
+            "HIGH": 0,
+            "UNKNOWN": 0
+          }
+        }
+      },
+      {
+        "job_id": 127501281343,
+        "architecture": "x86_64",
+        "summary": {
+          "additional_advisory_ids": 46,
+          "additional_blocking_advisory_ids": {
+            "CRITICAL": 0,
+            "HIGH": 0,
+            "UNKNOWN": 0
+          },
+          "advisory_ids": [
+            "CVE-2005-2541",
+            "CVE-2007-5686",
+            "CVE-2010-4756",
+            "CVE-2011-3374",
+            "CVE-2011-3389",
+            "CVE-2011-4116",
+            "CVE-2013-4392",
+            "CVE-2016-2781",
+            "CVE-2017-18018",
+            "CVE-2018-20796",
+            "CVE-2018-6829",
+            "CVE-2019-1010022",
+            "CVE-2019-1010023",
+            "CVE-2019-1010024",
+            "CVE-2019-1010025",
+            "CVE-2019-9192",
+            "CVE-2022-0563",
+            "CVE-2022-27943",
+            "CVE-2022-3219",
+            "CVE-2023-31437",
+            "CVE-2023-31438",
+            "CVE-2023-31439",
+            "CVE-2023-31486",
+            "CVE-2023-45853",
+            "CVE-2023-50495",
+            "CVE-2024-10041",
+            "CVE-2024-2236",
+            "CVE-2024-56433",
+            "CVE-2025-13151",
+            "CVE-2025-14104",
+            "CVE-2025-30258",
+            "CVE-2025-5278",
+            "CVE-2025-6141",
+            "CVE-2025-68972",
+            "CVE-2025-69720",
+            "CVE-2026-102010",
+            "CVE-2026-102473",
+            "CVE-2026-102474",
+            "CVE-2026-105712",
+            "CVE-2026-114690",
+            "CVE-2026-114691",
+            "CVE-2026-115455",
+            "CVE-2026-13595",
+            "CVE-2026-13757",
+            "CVE-2026-15059",
+            "CVE-2026-15534",
+            "CVE-2026-16742",
+            "CVE-2026-18374",
+            "CVE-2026-18477",
+            "CVE-2026-18508"
+          ],
+          "architecture": "amd64",
+          "blocking_advisory_ids": {
+            "CRITICAL": [
+              "CVE-2023-45853"
+            ],
+            "HIGH": [
+              "CVE-2025-69720",
+              "CVE-2026-16742",
+              "CVE-2026-41992",
+              "CVE-2026-53613",
+              "CVE-2026-53615",
+              "CVE-2026-54369",
+              "CVE-2026-76844",
+              "CVE-2026-78410",
+              "CVE-2026-9538"
+            ],
+            "UNKNOWN": []
+          },
+          "feed_database_sha256": "2ce29bda5b2483d84da3f4365398addcf03a7decf5c79e29dc73db8f0fa454ed",
+          "feed_next_update": "2026-11-06T19:01:45.286712+00:00",
+          "feed_updated_at": "2026-11-05T19:01:45.286712+00:00",
+          "image_archive_sha256": "7b18f604ae343955fe252257f7e7d2b86b1f731ff1c8f5c71acc43c600c6d8df",
+          "image_id": "sha256:a29d681766e5c90b8d87c04bd9503d1ee1b16a4a4070dcae2a8ff91a57ada510",
+          "image_inspect_sha256": "e8c76db48d5dc86688c272db9784ddd0910fee0814dbd9f1ae60519d5e27445b",
+          "kind": "native-peer-image-vulnerabilities",
+          "manifest_sha256": "13f1e32e089afec989243d819d2c26cf3ab4d2948f86f9277f35c711d5d00309",
+          "os_family": "debian",
+          "os_version": "12.15",
+          "package_counts": {
+            "lang-pkgs": 2,
+            "os-pkgs": 89
+          },
+          "report_created_at": "2026-11-05T20:12:32.906068+00:00",
+          "report_sha256": "e3d022ea946c82f5c8c7b0506e27bc6a6d1767e546b5595adb68345b5a78ea01",
+          "resource_policy": "github-runner-capacity",
+          "result_classes": {
+            "lang-pkgs": 1,
+            "os-pkgs": 1
+          },
+          "scanner_image": "aquasec/trivy:0.76.1@sha256:790fd66d1697395d8693d1acaa1ea702406a20f109b6fc7bac8db623eca6c06c",
+          "scanner_version": "0.76.1",
+          "scanner_version_report_sha256": "96959ae8539aa644eb16f8a0db48ab25b9ea891ae90bc8a2d73e837e4852c859",
+          "scope": "exact test peer image; OS and discovered libraries; no reachability, protocol, released image or complete product claim",
+          "scratch_bytes": 90083213312,
+          "scratch_cleanup": "unmounted",
+          "severities": {
+            "CRITICAL": 1,
+            "HIGH": 33,
+            "LOW": 83,
+            "MEDIUM": 104,
+            "UNKNOWN": 0
+          },
+          "source_commit": "4d89fca7e518aed4cf508f54e01c38a2085e5c19",
+          "state": "failed",
+          "suppressed_findings": 0,
+          "unrecognized_blocking_advisories": {
+            "CRITICAL": 0,
+            "HIGH": 0,
+            "UNKNOWN": 0
+          }
+        }
+      }
+    ]
+  },
+  "change": "Move both dependency/runtime stages to the official immutable Node26.13.0-trixie-slim multiarch index. Require exact Debian13 family/major and bounded numeric point spelling; Debian12,foreign/EOL/missing inventories still fail. Keep OpenPGP6.3.2,nonroot/read-only/offline execution,all severity/suppression/privacy/source/input/freshness guards and unlimited-by-synthetic-cap GitHub scanner policy.",
+  "engineering_decision": {
+    "reason": "The actual Bookworm peer retains criticalCVE-2023-45853 and nine distinct high advisory IDs after F088. Debian tracker lists zlib fixed in Trixie,with a Bookworm not-built caveat. Select the supported current official Node Trixie base instead of waiving/reclassifying the finding or applying VEX/ignore/reachability filters. Exact per-package remediation remains subject to actual native scan.",
+    "boundary": "This changes the test-peer input/profile,not product-server supported platforms or security severity thresholds. Original12.13/12.15 results stay immutable. No claim every high finding is fixed."
+  },
+  "red": {
+    "test": "ImageReportContracts.test_replacement_profile_requires_debian13_and_refuses_old_major",
+    "result": "Valid13.1 fixture raises InvalidReport under old12-only profile. New exact13 profile passes while12.15 refuses; no broadening to arbitrary OS majors.",
+    "reference": ".private/freightctl-debian13-profile-red.log",
+    "sha256": "d067f9ffbbe9a4dadd23a249b10450489989f6f7af231c3bab10108900e68654"
+  },
+  "green": {
+    "reporter_methods": 12,
+    "orchestration_methods": 15,
+    "diff_check": "pass"
+  },
+  "source_files": [
+    {
+      "path": "scripts/ci-peer-image-summary.py",
+      "sha256": "40211bd52f5ca8a432adf264787f068f1a8abcb9441677dac95309ab36581f6c"
+    },
+    {
+      "path": "scripts/test-ci-peer-image-summary.py",
+      "sha256": "b30c1a771c6e5b5a62cf14531616d652807fea42c11f4c833b3f8ba017c27c2e"
+    },
+    {
+      "path": "scripts/peers/openpgp/Dockerfile",
+      "sha256": "e4464cfd6abdb7fb0769b00423960d6a45b62f0a6dd5d212a3514d399c5a9a2c"
+    },
+    {
+      "path": "scripts/peers/openpgp/README.md",
+      "sha256": "9e0ac5ec8a27ff11266314ae4f23fdcc4b1e972e31660afa91755d68003d7e46"
+    }
+  ],
+  "registry_metadata": {
+    "source": "https://hub.docker.com/v2/repositories/library/node/tags/26.13.0-trixie-slim",
+    "reference": ".private/freightctl-peer-trixie-base-20261105.json",
+    "sha256": "82a8f54e7560f568c862a7a9241d53f9d50e013100ce3d7301cdf5b637d59923",
+    "tag": "26.13.0-trixie-slim",
+    "index_digest": "sha256:5adad64f9a1fca2d51972caa65983634c8a774eb300d72b20f7f2a0f60368072",
+    "architectures": [
+      "amd64",
+      "arm64",
+      "ppc64le",
+      "s390x"
+    ]
+  },
+  "local_manifest": {
+    "reference": ".private/freightctl-f090-peer-os-20261105/manifest.json",
+    "sha256": "f57ef4995f4c54f77ee2e7e4a4efde29f25cbdc23effc96171628b101e55306f"
+  },
+  "primary_sources": [
+    "https://security-tracker.debian.org/tracker/CVE-2023-45853",
+    "https://github.com/nodejs/docker-node/blob/main/26/trixie-slim/Dockerfile",
+    "https://hub.docker.com/v2/repositories/library/node/tags/26.13.0-trixie-slim"
+  ],
+  "owed": [
+    "Actual native ARM/x86 rebuilt image scan with all existing findings,coverage and strict current-source evidence guards",
+    "Original independent OpenPGP recipient journeys and native compatibility on the replacement image",
+    "Assess all remaining blocking IDs; no suppression,narrowed scan,resource excuse or clean-image claim",
+    "Mandatory FINISH:all deferred integration/metadata/public/browser failures and every remaining GOAL gate; exact twelve4d runs are terminal before next push"
+  ]
+}

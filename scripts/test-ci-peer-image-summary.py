@@ -25,7 +25,7 @@ def inputs(now=NOW, arch='amd64'):
     stamp = lambda delta: (now + delta).isoformat()
     report = {'SchemaVersion': 2, 'Trivy': {'Version': '0.76.1'},
               'ArtifactType': 'container_image', 'CreatedAt': stamp(timedelta()),
-              'Metadata': {'ImageID': IMAGE, 'OS': {'Family': 'debian', 'Name': '12'},
+              'Metadata': {'ImageID': IMAGE, 'OS': {'Family': 'debian', 'Name': '13'},
                            'ImageConfig': {'architecture': arch, 'os': 'linux'}},
               'Results': [{'Class': 'os-pkgs', 'Type': 'debian', 'Target': PRIVATE,
                            'Packages': [{'Name': PRIVATE, 'Version': PRIVATE}]},
@@ -42,15 +42,22 @@ def inputs(now=NOW, arch='amd64'):
 
 
 class ImageReportContracts(unittest.TestCase):
-    def test_debian_12_point_versions_keep_the_same_pinned_major_and_eol_guard(self):
-        for release in ('12', '12.0', '12.13', '12.13.1'):
+    def test_replacement_profile_requires_debian13_and_refuses_old_major(self):
+        report,version,image=inputs()
+        report['Metadata']['OS']['Name']='13.1'
+        self.assertEqual(self.check(report,version,image)['state'],'passed')
+        report['Metadata']['OS']['Name']='12.15'
+        with self.assertRaises(gate.InvalidReport):self.check(report,version,image)
+
+    def test_debian_13_point_versions_keep_the_same_pinned_major_and_eol_guard(self):
+        for release in ('13', '13.0', '13.1', '13.1.1'):
             report, version, image = inputs()
             report['Metadata']['OS']['Name'] = release
             self.assertEqual(self.check(report, version, image)['state'], 'passed')
             report['Metadata']['OS']['EOSL'] = True
             with self.assertRaises(gate.InvalidReport):
                 self.check(report, version, image)
-        for release in ('13', '120', '12x', '12.1-private', '12.1\n', ' 12', '12.1.2.3', None, 12, True):
+        for release in ('12', '130', '13x', '13.1-private', '13.1\n', ' 13', '13.1.2.3', None, 13, True):
             report, version, image = inputs()
             report['Metadata']['OS']['Name'] = release
             with self.assertRaises(gate.InvalidReport):

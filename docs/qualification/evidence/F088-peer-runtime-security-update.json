@@ -3,7 +3,7 @@
   "id": "F088",
   "observed_at": "2026-11-05",
   "starting_commit": "668f8247aefe9537109f72769f8d2abc1c764734",
-  "state": "Actual native image findings recorded; pinned Node security update and runtime-tool cleanup prepared; native remediation proof owed.",
+  "state": "Actual4d native scans exercise Node26.13.0/runtime-tool cleanup:each1CRITICAL/33HIGH/0UNKNOWN,83LOW/104MEDIUM,zero suppressed. Image gate remains red. F090 prepares strict Debian13 replacement; final remediation/interop owed.",
   "qualification_claim": false,
   "native_observation": {
     "candidate": "6d304760120cb4950727b915525d30c6955c051c",
@@ -313,5 +313,26 @@
     "Actual build,dependency audit,strict complete ARM/x86 scan and all original OpenPGP recipient interoperability at final source",
     "Assess every remainingCRITICAL/HIGH/UNKNOWN and retain all lower severities; no ignore/VEX/reachability narrowing or clean-image claim",
     "Keep original native/application/public failures and deferred nonsecurity FINISH work. All12sixd runs terminal before next push; exact handles retained."
-  ]
+  ],
+  "native_replay": {
+    "candidate": "4d89fca7e518aed4cf508f54e01c38a2085e5c19",
+    "run_id": 42100377285,
+    "job_ids": [
+      127501280844,
+      127501281343
+    ],
+    "each_severities": {
+      "CRITICAL": 1,
+      "HIGH": 33,
+      "LOW": 83,
+      "MEDIUM": 104,
+      "UNKNOWN": 0
+    },
+    "each_packages": {
+      "lang-pkgs": 2,
+      "os-pkgs": 89
+    },
+    "os": "Debian12.15",
+    "evidence": "docs/qualification/evidence/F090-peer-debian13-profile.json"
+  }
 }

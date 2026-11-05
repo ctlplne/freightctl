@@ -16,7 +16,8 @@ F088's actual rebuilt image reports1CRITICAL/33HIGH/0UNKNOWN,83LOW/104MEDIUM on
 each architecture,zero suppressed; original6d7/58/5 counts remain recorded.
 Node26.13.0/runtime-tool removal is exercised, but the gate remains red. This is
 the independent test peer, not a freightctl server image. A supported newer Debian
-base is being prepared for the remaining OS findings; full scan/interop is owed.
+base is prepared as F090: immutable Node26.13.0/trixie,with an exact Debian13
+verifier profile and no advisory exceptions. Full scan/interop is owed.
 
 F080–F083 implement canonical exchange contracts, append-only endpoint/current-head
 registration, exact-revision receive views and five ordinary-authority HTTPS paths.
