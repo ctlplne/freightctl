@@ -2739,6 +2739,21 @@
       "regression_evidence": [
         "docs/qualification/evidence/F076-ftps-collection.json"
       ]
+    },
+    {
+      "id": "D172",
+      "severity": "reproducibility qualification verifier",
+      "state": "original false pass reproduced with stand-ins;final-command binary reopening repair passes locally;native replay pending",
+      "observed_on": "2026-11-04",
+      "candidate": "07281626308aea8f3457bfe94fc77e1240381a5f",
+      "journey": "F077native core executable reproduction",
+      "title": "Final module verification can change an earlier binary after its last equality observation",
+      "first_failure": "Original orchestrator with final-binary-change command stand-in returns passed after replacing first executable during module-verify-after. Protected paired before/after finding retained;no actual compiler or executable run locally.",
+      "cause": "Both executable hashes were reopened before the final external command. Final source/output reopening did not reopen executable bytes again.",
+      "resolution": "Reopen both exact executable hashes after the final external command and before generating component evidence. Same journey now refuses binary-closure/binary-equality.6orchestration and6component/asset/lock contracts pass;actual native replay required.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F077-native-reproducible-core.json"
+      ]
     }
   ]
 }

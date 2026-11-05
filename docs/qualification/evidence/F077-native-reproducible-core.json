@@ -3,7 +3,7 @@
   "id": "F077",
   "observed_at": "2026-11-04",
   "starting_commit": "2c4398abe902fb77307ac8247bd9df2dc5b77ffc",
-  "state": "prepared; six compiler/process/archive stand-in methods pass; actual native GitHub execution pending",
+  "state": "Prepared native reproduction plus embedded core component inventory;12focused parser/compiler/process/archive stand-in methods pass;actual native GitHub execution pending",
   "scope": "Same-runner native Linux core executable reproduction in two different committed-source copies and independent empty build caches. No cross-architecture comparison,independent-host reproduction,complete release SBOM/signing/offline installation,publication or production-platform claim.",
   "qualification_claim": false,
   "frozen_cases": [
@@ -80,5 +80,27 @@
     ],
     "limits": "No new local build or binary execution,actual native compiler reproduction,network/PG/browser/scanner/model operation. Parser and stand-in passes do not qualify reproducibility."
   },
-  "next_action": "Run both original native GitHub profiles on an exact submitted source. Preserve first failure,repair with meaningful coverage and replay without relaxing input,byte equality or resource assertions. Keep release signatures,complete SBOM/offline bundle,independent-host/platform/security/adoption and all whole GOAL.md gates open."
+  "next_action": "Submit exact source once current e2native required jobs have started,then require both original native ARM/x86 reproduction and component inventory profiles. Preserve first native failure,repair with meaningful coverage and replay without relaxing source/checksum/byte/asset/closure or resource guards. Complete SBOM/schema interoperability/signing/offline installation/platform/adoption and whole GOAL.md qualification remain open.",
+  "core_component_inventory_prepared": {
+    "implementation": "scripts/core_component_inventory.py",
+    "contracts": "scripts/test-core-component-inventory.py",
+    "format": "CycloneDX1.6",
+    "mechanism": "Use already verified exact native Go build info and module checksums. Reopen committed frontend manifest sources,output hashes/sizes and every exact final binary asset byte with bounded streaming search. Require production lockfile/root versions,registry SRI,same-lock dependency/peer closure and exact bundled package coverage. Refuse optional/link/nested/foreign/unlisted package shapes rather than silently omit them. Preserve Go h1 as a directory-hash property,never label it a file/archive SHA256. Bind local FTP replacement to the exact full committed local tree hash. Generate identical canonical documents from both source copies and binaries;keep BOM private/ephemeral with its hash in the safe native result.",
+    "actual_ui_contract": "Current committed UI manifest and four runtime packages pass using a synthetic executable only. First contract rejected valid ReactDOM peer metadata;explicit required peer closure repairs this without omitting peers.",
+    "scope": "Embedded Go modules and exact UI assets/production locked package inputs only. No complete deployment or build-tool inventory,OS/external-program/model SBOM,complete license analysis,independent schema-tool interoperability,signing or disconnected-installation claim. No grant or publication. Root Go toolchain identity is recorded;standard-library package enumeration remains outside this component inventory.",
+    "local_manifest_reference": ".private/freightctl-f077-component-local-71c8v307/manifest.json",
+    "local_manifest_sha256": "37da8147d2bb5b193515c48f0e01b1d931668102486701a2e269b716ad855ae3",
+    "component_methods": 6,
+    "reproduction_methods": 6,
+    "runtime_qualification": false,
+    "official_format_source": "https://cyclonedx.org/docs/1.6/json/"
+  },
+  "final_binary_reopen_repair": {
+    "defect": "D172",
+    "original_candidate": "07281626308aea8f3457bfe94fc77e1240381a5f",
+    "first_findings_reference": ".private/freightctl-f077-component-local-71c8v307/first-findings.json",
+    "first_findings_sha256": "bf1ff37cc501b721644216793f88691d28d230f41175d93da702448a8b2d03bb",
+    "reproduction": "Real original orchestrator with command/compiler stand-ins returns passed when final module-verify step replaces the earlier binary after its previous byte equality check. No actual binary executed.",
+    "repair": "Reopen both exact binaries after the final external command;require original hashes before assembling component evidence. Same original stand-in journey now fails at binary-closure/binary-equality;all six orchestration methods pass."
+  }
 }

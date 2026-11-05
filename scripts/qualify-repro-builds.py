@@ -18,6 +18,8 @@ import subprocess
 import tarfile
 import tempfile
 
+import core_component_inventory as components
+
 ROOT = Path(__file__).resolve().parents[1]
 GO_VERSION = 'go1.26.10'
 MODULE = 'github.com/ctlplne/freightctl'
@@ -26,7 +28,7 @@ BINARY_MAX = 128 << 20
 WORKING_MAX = 4 << 30
 COMMANDS = ('source-identity', 'source-clean', 'native-go', 'source-archive', 'module-download', 'module-verify-before',
     'build-a', 'inventory-a', 'help-a', 'build-b', 'inventory-b', 'help-b', 'module-verify-after')
-PHASES = frozenset(('preflight', *COMMANDS, 'source-extract', 'source-closure', 'binary-closure', 'inventory-closure', 'record'))
+PHASES = frozenset(('preflight', *COMMANDS, 'source-extract', 'source-closure', 'binary-closure', 'inventory-closure', 'component-inventory', 'record'))
 CHECKS = frozenset(('evidence', 'binary-identity', 'build-settings', 'dependency-inventory', 'dependency-entry',
     'local-replacement', 'dependency-checksum', 'native-configuration', 'binary-equality', 'source-unchanged',
     'command-status', 'working-budget', 'runner-identity', 'structure', 'filesystem'))
@@ -267,17 +269,29 @@ def main():
             for stream in ('stdout', 'stderr'):
                 require(digest(work/(step['name']+'.'+stream), 32 << 20, allow_empty=True) == step[stream+'_sha256'])
         require(digest(archive, SOURCE_MAX) == source_sha)
+        phase = 'binary-closure'
+        require([digest(work/('freightctl-'+label), BINARY_MAX) for label in ('a', 'b')] == results, 'binary-equality')
+        phase = 'component-inventory'
+        docs = [components.encoded(components.create(source, original, info, commit, arch,
+            work/('freightctl-'+label), results[index]))
+            for index, (label, source, info) in enumerate((('a', first, infos[0]), ('b', second, infos[1])))]
+        require(docs[0] == docs[1])
+        component_path = work/'core.cdx.json'
+        component_path.write_bytes(docs[0])
+        require(component_path.read_bytes() == docs[0] and len(docs[0]) <= 4 << 20)
+        component_sha = digest(component_path, 4 << 20)
         phase = 'record'
         manifest = {'schema_version': 1, 'kind': 'freightctl-native-reproducible-core-v1', 'state': 'passed',
             'source_commit': commit, 'architecture': arch, 'native_go': native, 'source_archive_sha256': source_sha,
             'source_files': len(original), 'source_tree_sha256': hashlib.sha256(json.dumps(original, sort_keys=True).encode()).hexdigest(),
             'binary_sha256': results[0], 'dependency_modules': count, 'help_sha256': help_hashes[0], 'steps': steps,
+            'component_inventory_sha256': component_sha, 'component_inventory_format': 'CycloneDX1.6',
             'working_bytes_after_steps': working_bytes(work), 'working_bytes_after_steps_max': WORKING_MAX,
             'artifact_published': False, 'complete_sbom': False, 'disconnected_install_qualified': False,
             'signing_qualified': False, 'production_platform_qualified': False}
         path = work/'manifest.json'; path.write_text(json.dumps(manifest, indent=2)+'\n')
         print(json.dumps({key: manifest[key] for key in ('state', 'source_commit', 'architecture', 'binary_sha256',
-            'source_archive_sha256', 'source_files', 'dependency_modules', 'artifact_published', 'complete_sbom',
+            'source_archive_sha256', 'source_files', 'dependency_modules', 'component_inventory_sha256', 'component_inventory_format', 'artifact_published', 'complete_sbom',
             'disconnected_install_qualified', 'signing_qualified', 'production_platform_qualified')}
             | {'manifest_sha256': digest(path, 4 << 20)}, sort_keys=True))
         return 0

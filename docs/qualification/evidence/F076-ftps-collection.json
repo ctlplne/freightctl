@@ -932,5 +932,44 @@
     "frontend_methods": 144,
     "runtime_qualification": false,
     "scope": "Parser,Page,route,process and own-file stand-ins only;no local service,actual browser,source,scanner or inference. All original public/native journeys require GitHub replay."
+  },
+  "source_e2_native_started": {
+    "candidate": "e2a2b592371dd6c3aea8fe363b9eac38bc9b0968",
+    "run_id": 41932617128,
+    "jobs": [
+      {
+        "id": 126940773930,
+        "name": "Native Go and PostgreSQL (arm64)",
+        "status": "in_progress",
+        "conclusion": null
+      },
+      {
+        "id": 126940774310,
+        "name": "Native metadata restore (x86_64)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 126940774396,
+        "name": "bounded-fuzz",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 126940774475,
+        "name": "Native metadata restore (arm64)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 126940774543,
+        "name": "Native Go and PostgreSQL (x86_64)",
+        "status": "in_progress",
+        "conclusion": null
+      }
+    ],
+    "manifest_reference": ".private/freightctl-f076-e2-started-ebxyenhh/manifest.json",
+    "manifest_sha256": "cbaec8023f3ca5a7bc53fa081d7883dfcad95494407aab3746e2f779865aa00f",
+    "application_qualified": false
   }
 }

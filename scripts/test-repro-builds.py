@@ -21,6 +21,8 @@ runner = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(runner)
 COMMIT = 'a'*40
 SUM = 'h1:'+'A'*43+'='
+ASSET = b'<html>qualification fixture, never served</html>\n'
+BINARY = b'synthetic native binary; never executed\x00'+ASSET
 
 
 def build_info(arch='amd64'):
@@ -36,11 +38,19 @@ def build_info(arch='amd64'):
 
 
 def archive(path, extra=None):
+    package = {'name': 'qualification-ui', 'version': '0.0.0', 'dependencies': {'example': '1.2.3'}}
+    lock = {'lockfileVersion': 3, 'packages': {'': package, 'node_modules/example': {'version': '1.2.3',
+        'resolved': 'https://registry.npmjs.org/example/-/example-1.2.3.tgz', 'integrity': 'sha512-'+'A'*86+'=='}}}
+    web = {'web/package.json': json.dumps(package).encode(), 'web/package-lock.json': json.dumps(lock).encode()}
+    browser = {'schema_version': 1, 'sources': [{'path': k, 'sha256': hashlib.sha256(v).hexdigest()} for k,v in web.items()],
+        'outputs': [{'name': 'index.html', 'sha256': hashlib.sha256(ASSET).hexdigest(), 'size': len(ASSET)}],
+        'bundled_packages': ['node_modules/example/index.js']}
     values = {'go.mod': ('module '+runner.MODULE+'\n').encode(),
         'go.sum': ('\n'.join(name+' v1.0.0 '+SUM for name in
             ('github.com/jackc/pgx/v5', 'github.com/ProtonMail/go-crypto'))+'\n').encode(),
         'cmd/freightctl/main.go': b'// stand-in source; never compiled\n',
-        'third_party/ftpserverlib/UPSTREAM.json': b'{"scope":"synthetic pinned source"}\n'}
+        'third_party/ftpserverlib/UPSTREAM.json': b'{"scope":"synthetic pinned source"}\n', **web,
+        'internal/browser/assets/manifest.json': json.dumps(browser).encode(), 'internal/browser/assets/index.html': ASSET}
     with tarfile.open(path, 'w:') as output:
         for name, body in values.items():
             member = tarfile.TarInfo(name); member.mode = 0o644; member.size = len(body)
@@ -79,13 +89,15 @@ class ReproBuildContracts(unittest.TestCase):
                 elif label.startswith('module-verify-'):
                     self.assertEqual(env['GOPROXY'], 'off')
                     self.assertEqual(argv[1:], ['mod', 'verify'])
+                    if mode == 'final-binary-change' and label == 'module-verify-after':
+                        (work/'freightctl-a').write_bytes(b'changed after all earlier observations')
                 elif label.startswith('build-'):
                     self.assertEqual(env['GOPROXY'], 'off')
                     self.assertEqual(argv[1:8], ['build', '-p', '1', '-mod=readonly', '-trimpath', '-buildvcs=false', '-ldflags=-buildid='])
                     self.assertFalse(Path(env['GOCACHE']).exists())
                     Path(env['GOCACHE']).mkdir()
                     binary = Path(argv[argv.index('-o')+1])
-                    binary.write_bytes(b'different' if mode == 'different-binary' and label == 'build-b' else b'synthetic native binary; never executed')
+                    binary.write_bytes(b'different' if mode == 'different-binary' and label == 'build-b' else BINARY)
                     if mode == 'prior-binary-change' and label == 'build-b':
                         (work/'freightctl-a').write_bytes(b'changed after first observation')
                     if mode == 'prior-source-change' and label == 'build-b':
@@ -143,11 +155,13 @@ class ReproBuildContracts(unittest.TestCase):
             self.assertEqual(builds[0]['env']['GOMODCACHE'], builds[1]['env']['GOMODCACHE'])
             self.assertNotIn('private-canary', json.dumps(result))
             self.assertEqual(manifest['binary_sha256'], result['binary_sha256'])
+            self.assertEqual(result['component_inventory_format'], 'CycloneDX1.6')
+            self.assertRegex(result['component_inventory_sha256'], '^[0-9a-f]{64}$')
 
     def test_real_orchestration_refuses_changed_source_binary_inventory_platform_and_help(self):
         for mode in ('different-binary', 'different-help', 'wrong-dependency', 'foreign-replacement',
                 'cgo-enabled', 'vcs-setting', 'prime-source-change', 'build-source-change', 'wrong-commit', 'wrong-toolchain',
-                'prior-binary-change', 'prior-source-change', 'prior-log-change'):
+                'prior-binary-change', 'prior-source-change', 'prior-log-change', 'final-binary-change'):
             with self.subTest(mode=mode):
                 code, result, manifest, _ = self.exercise(mode=mode)
                 self.assertEqual(code, 2)

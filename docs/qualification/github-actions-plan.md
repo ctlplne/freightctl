@@ -169,3 +169,15 @@ D6 native application sections also pass880/0/0 on each architecture. Its x86 fe
 container proves another exact OOM despiteGOGC25; ARM reaches the file cap. The
 pending file-only capacity proposal does not fix or authorize a RAM increase. Keep
 this memory failure visible and investigate a supported bounded full-feed path.
+
+F077 additionally prepares a private CycloneDX1.6 core component inventory. It binds
+the final native executable hash,verified embedded Go modules/local FTP tree,committed
+bundler source/output hashes,exact asset bytes in that executable,and all four runtime
+NPM packages including required peer closure. Go h1 directory hashes retain their
+meaning;they are not relabeled as archive/file checksums. Two source copies produce
+identical inventory bytes. D172's original final-command binary-change false pass is
+retained;reopening after every external command fixes that verifier gap. Twelve focused
+stand-in methods pass. Actual native execution,independent schema interoperability,
+complete deployment/build-tool/standard-library inventory,license review,signing and
+offline installation remain required. The safe result exposes only inventory format/hash;
+raw BOM and executable stay on the disposable runner.

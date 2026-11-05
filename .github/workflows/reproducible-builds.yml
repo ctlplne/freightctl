@@ -13,6 +13,8 @@ on:
       - '.gitattributes'
       - 'scripts/qualify-repro-builds.py'
       - 'scripts/test-repro-builds.py'
+      - 'scripts/core_component_inventory.py'
+      - 'scripts/test-core-component-inventory.py'
       - '.github/workflows/reproducible-builds.yml'
   pull_request:
     paths:
@@ -25,6 +27,8 @@ on:
       - '.gitattributes'
       - 'scripts/qualify-repro-builds.py'
       - 'scripts/test-repro-builds.py'
+      - 'scripts/core_component_inventory.py'
+      - 'scripts/test-core-component-inventory.py'
       - '.github/workflows/reproducible-builds.yml'
   workflow_dispatch:
 
