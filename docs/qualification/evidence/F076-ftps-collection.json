@@ -3,7 +3,7 @@
   "id": "F076",
   "observed_at": "2026-11-04",
   "starting_commit": "4d771b2e6a961a70b764681fd578ff175d064db7",
-  "state": "Both e2 native application sections pass 880 records and fail the new mixed parent/two leaves, with zero skips. D173 is a fixture registration-key collision before collection; distinct-key repair compiles/vets only. Both image gates repeat D168. Source7c public/core/reproduction/native jobs remain pending or running; no whole goal qualification.",
+  "state": "Both e2native sections880pass/3fail/0skip retain D173fixture first failures. Source7ccore passes144frontend and D171Linux replay;both public profiles fail new session-proof D175,cause still unobserved. Source97submits distinct-key repair,physical build-ID/stock-schema repair and18safe session subreasons;all new runtime qualification pending. Live7cnative original preserved,no cancellation/restart. Whole goal open.",
   "scope": "Read/copy input stage of ordinary immutable workflows, using exact registered FTPS revisions and the existing bounded producer-manifest, custody, intake, lease and event machinery. Transport metadata reading alone does not qualify collection.",
   "qualification_claim": false,
   "frozen_cases": [
@@ -44,7 +44,7 @@
       "outcome": "Existing SFTP collection/arrival/schedules, FTPS/SFTP sending, ciphertext, intake, RLS, receipts and native regression gates remain enforced. No local PostgreSQL, model or scanner execution is needed."
     }
   ],
-  "next_action": "Follow preserved e2native run41932617128 for original mixed collection evidence. Follow exact7csource native41939612321,public41939612320,core41939612581 and reproduction41939612495. Retain first failures and require actual repair replays;hold another relevant push until required current native/public/reproduction jobs start. Owner scanner file-only proposal remains unapplied.",
+  "next_action": "Follow exact97source native41944580495,public41944580530,core41944580446 and reproduction41944580545. Require D173original mixed replay,D174physical-build-ID/stock-schema replay,and D175actual fixed subreason then underlying repair. Preserve live7cnative41939612321 and all original failures;no retries from observation gaps. Scanner file-cap proposal remains unapplied.",
   "first_failure": {
     "test": "TestFTPSCollectionSourceMissingContract",
     "result": "existing typed source refuses ftps.collect; no service contact",
@@ -1077,5 +1077,17 @@
     "outcome": "Initial state had five queued/unassigned jobs and exact same D173source blobs as retained e2failures. Fresh action-time CLI recheck observed metadata job126963224014started,so the guard exited1before invoking cancellation. No cancel request or restart occurred. Preserve active original and wait for every required job to start before another source push.",
     "cancellation_requested": false,
     "qualification_claim": false
+  },
+  "source_97_submission": {
+    "candidate": "97c739c69625b12e98966c75aa2ea18281ec29ed",
+    "native_run_id": 41944580495,
+    "core_run_id": 41944580446,
+    "public_run_id": 41944580530,
+    "reproduction_run_id": 41944580545,
+    "state": "submitted;new required jobs queued/pending,no inherited runtime pass",
+    "manifest_reference": ".private/freightctl-source-97-submission-buc6g2wj/manifest.json",
+    "manifest_sha256": "b95aa54b68002ca18c9eb26fc85b345da96aebfcb3eaea1de23dcedae5fc3055",
+    "preserved_prior_native_run_id": 41939612321,
+    "authority": "Owner source/CI authorization;all five prior native jobs actually started before push;no cancellation request or restart. Hold another relevant source push until current required native/public/reproduction jobs start."
   }
 }

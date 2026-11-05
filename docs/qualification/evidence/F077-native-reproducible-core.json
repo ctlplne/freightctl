@@ -172,5 +172,22 @@
       "https://github.com/CycloneDX/specification/tree/8a27bfd1be5be0dcb2c208a34d2f4fa0b6d75bd7/schema",
       "https://python-jsonschema.readthedocs.io/en/stable/referencing/"
     ]
+  },
+  "source_97_submission": {
+    "candidate": "97c739c69625b12e98966c75aa2ea18281ec29ed",
+    "native_run_id": 41944580495,
+    "core_run_id": 41944580446,
+    "public_run_id": 41944580530,
+    "reproduction_run_id": 41944580545,
+    "state": "submitted;new required jobs queued/pending,no inherited runtime pass",
+    "manifest_reference": ".private/freightctl-source-97-submission-buc6g2wj/manifest.json",
+    "manifest_sha256": "b95aa54b68002ca18c9eb26fc85b345da96aebfcb3eaea1de23dcedae5fc3055",
+    "preserved_prior_native_run_id": 41939612321,
+    "authority": "Owner source/CI authorization;all five prior native jobs actually started before push;no cancellation request or restart. Hold another relevant source push until current required native/public/reproduction jobs start.",
+    "reproduction_jobs": [
+      126973496758,
+      126973497017
+    ],
+    "independent_schema_engine_runtime_qualified": false
   }
 }

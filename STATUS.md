@@ -1,31 +1,84 @@
 # freightctl status
 
-Updated 2026-11-04. GOAL.md is active and incomplete. Work stays on local main. Author and committer must both be `imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>`. Source/CI pushes are authorized; releases, artifacts and deployments need separate authority. All **83 whole baseline rows and 12 full customer journeys remain open**. Assisted deployment, independent adoption and enterprise readiness remain separately unqualified.
+Updated 2026-11-05. GOAL.md is active and incomplete. All **83 whole baseline rows
+and 12 full customer journeys remain open**. Assisted deployment,independent
+adoption and enterprise readiness remain separately unqualified. Work stays on
+local main;both author and committer are exactly
+`imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>`.
+Owner source/CI push authorization does not authorize releases,artifacts or deployment.
 
-The retained database remains at approved schema35: 64,339 rows, 64 tables and 63 forced-RLS tables ([F056](docs/qualification/evidence/F056-retained-handoff-upgrade-applied.json)). PostgreSQL and scanner were last inspected stopped at 512MiB/one CPU and 4GiB/one CPU. No local service, actual Chrome, source socket, scanner or model ran during this work. Inference stays off, F026 remains manual and owner-deferred, and fresh CI schema40 restores do not authorize a retained upgrade.
+Latest pushed source **97c739c** contains D173's distinct FTPS registration keys,
+D174's physical build-ID repair,pinned independent CycloneDX validation and
+D175's private-safe session subreasons. Exact GitHub runs are native41944580495,
+public41944580530,core41944580446 and reproduction41944580545. Required new jobs
+are queued/pending;no earlier pass is inherited. Five outgoing commits passed
+exact owner-identity and full-range secret checks. Hold another relevant push
+until current required native/public/reproduction jobs start.
 
-Latest pushed source **7c163a8** passes the full core job41939612581:144frontend checks and the original Linux D171missing-DSN regression. Both public profiles41939612320 finish first explicit metadata Chrome,then fail the new session-proof verifier; exact cause is not yet exposed and byte operator is not reached. Both native reproduction profiles41939612495 fail at D174's impossible serialized linker-flag expectation; the local repair inspects each physical build ID instead. The native application successor41939612321 contains D173's now-known fixture key collision; x86restore now passes,x86application/fuzz run,and ARM remains queued. Local commit71d14a4 fixes that fixture; native replay is mandatory. All originals and cleanup evidence remain preserved. Hold another relevant push until current required jobs start,or the documented known-bad unstarted-successor exception is proven. Scanner file-cap proposal remains unapplied and awaits the owner.
+All five prior 7c native jobs started before this push;that original41939612321
+remains preserved. A proposed known-bad unstarted-successor cancellation was
+refused by the fresh action-time guard when a metadata job started. No cancel
+request or restart occurred. The [durable CI plan](docs/qualification/github-actions-plan.md)
+now separates stable execution rules from immutable dated histories and exact evidence.
 
-Both complete **f08c7cf native application sections pass 880 records, with zero failures or skips**, in 493.054 ARM/550.339 x86 workflow seconds. All17 prepared FTPS collection leaves pass on each architecture: exact copy/replay, digest sibling isolation, producer batch identity, revocation, runtime SQL positive control/six matching-event forgeries, frozen scheduled admission/workers, CSV hold/check/release and both real CLI SIGKILL-after-seal cases. D164/D165 fixture repairs pass their original journeys on both architectures. Recovery retains the original30second lease, exact sealed object/input, attempt2/fence2, one acceptance row/event and no new source contact. Both metadata restores and fuzz also succeed. These component results do not qualify whole collection/recovery journeys or the later public operator code.
+The retained database remains at approved schema35: 64,339 rows, 64 tables and
+63 forced-RLS tables ([F056](docs/qualification/evidence/F056-retained-handoff-upgrade-applied.json)).
+Read-only inspection reconfirmed the exact PostgreSQL/scanner containers exited
+at512 MiB/one CPU and4 GiB/one CPU. Neither changed. Fresh CI schema40 restores do
+not authorize a retained upgrade. Local inference stays off;no local PG,actual
+Chrome,source/receiver,scanner,image or model qualification ran. F026 remains
+manual and owner-deferred. Only bounded contracts,source inspection and compile/vet ran here.
 
-The public gate requires ordinary UI preview/draft/approval/queue/work, four lost-response original-key recoveries per mode, immutable publication, unchanged producer revisions, one acquisition and independent HTTPS byte readbacks. Original consent/metadata checks remain in all three fresh plaintext/encrypted estates. D170 is now diagnosed: the UI uses a secure session cookie and CSRF after initial bearer login, while both verifiers incorrectly expected bearer on every request. The prepared repair captures the exact private cookie, makes two verified HTTPS identity/session reads, independently checks CSRF, and binds all original UI headers to the same actor and authority. All byte, key, source, audit and privacy checks remain. Local contracts pass144frontend and101focused Python methods; actual public replay is pending. No byte-operator phase has yet passed. D167's earlier response-body failures remain preserved; their underlying Chromium cause remains unproven. The native freightctl source is a named stand-in.
+[F076](docs/qualification/evidence/F076-ftps-collection.json) retains complete f08
+and d6 native application880 pass/0 fail/0 skip on each architecture. All17 original
+FTPS collection leaves pass at f08,including SQL positive/six forgery controls,
+frozen schedules,CSV hold/release,batch/revocation and real CLI SIGKILL sealed
+recovery. These component passes do not qualify later source/operator/mixed journeys.
+Both e2 native application sections pass880/fail 3/skip 0:the new mixed parent/two
+leaves stop before capture because a helper reuses one operation key for source
+and different receiver registrations. D173's local repair gives the receiver a
+separate saved key and explicitly requires source-key reuse to fail ErrConflict.
+Exact final race binary compile and Go vet pass;original native replay is pending.
 
-Both f08 ARM system/no-ktls stock metadata profiles pass both TLS modes, four boundary cases and six unchanged source files per profile, with original transport/readback checks. Native ARM stock filtering remains unavailable; both x86 stock profiles retain their distinct filter failures and active FTP stays disabled ([F068](docs/qualification/evidence/F068-ftps-client-transport.json)). Full independent typed collection remains open.
+Source7c core passes its full job,144 frontend checks and the original Linux
+D171missing-DSN regression. Both7c public profiles complete first explicit metadata
+Chrome,including cookie capture/two verified HTTPS session probes,then the proof
+reopener refuses. D175's underlying cause remains unobserved.18 fixed diagnostic
+subreasons preserve every identity,authority,CSRF,expiry,header,byte and resource
+assertion;102 focused Python contracts pass locally. Byte operator has not yet
+passed. Original three fresh plaintext/encrypted estates,consent/metadata/operator
+phases,original-key recovery and exact producer/receiver bytes remain required.
+Native freightctl is a named source stand-in. Earlier intermittent D145/D151/D152/
+D167 browser failures and unexplained causes remain visible.
 
-[F075](docs/qualification/evidence/F075-peer-image-security.json) keeps the image gate red. Both f08 downloads expose a regular1,692,762,112byte database over the original1GiB file cap. D6 repeats the file failure on ARM, while x86 again proves an exact stopped-container OOM despite feed-onlyGOGC25. Both d6 application sections pass880/0/0 in498.759ARM/541.737x86workflow seconds; metadata restores and fuzz succeed. Both image scratch disks unmount. No image report is qualified. The unapplied1792MiB file-only proposal passes21stand-in methods and awaits owner approval under AGENTS.md. It does not increase RAM or fix the proven x86memory failure. Hard1GiB RAM/no swap, soft768MiB, one CPU,2GiB scratch and all feed/inventory/severity/isolation checks remain. Pinned Trivy ignores light mode; upstream publication already compacts.
+[F075](docs/qualification/evidence/F075-peer-image-security.json) keeps image
+security red. Both e2 image gates observe a regular1,692,762,112-byte DB over the
+original1 GiB file cap,153-byte metadata and exact disk unmount. Earlier d6/source 28
+x86 exact stopped-container OOM remains proven;GOGC25 is not a memory remedy.
+No image report is qualified. The1792 MiB database-file-only proposal is unapplied
+and awaits the owner's existing decision;all four active source files still match
+its original hashes. Hard1 GiB RAM/no swap,soft768 MiB,one CPU,2 GiB scratch and every
+inventory,severity,freshness,isolation and time guard remain unchanged.
 
-The new mixed collection case has actual first failures on both architectures: **880 pass/3 fail/0 skip**, in494.840ARM/542.851x86workflow seconds. Both mode leaves stop before capture because the fixture reuses one idempotency key for two different FTPS registrations. D173's repair gives the receiver its own key and explicitly proves the source key still refuses that different request. Exact final race binary compile and vet pass only; the new source/capture/consent/SFTP/GnuPG journey is not qualified. Source7c still contains the original fixture error. Both e2 image gates repeat the unchanged file-budget failure and unmount their exact scratch disks.
+[F077](docs/qualification/evidence/F077-native-reproducible-core.json) retains both
+original7c native failures at inventory-closure/build-settings. Go hides serialized
+linker flags under trimpath;D174's repair keeps the deterministic build command
+and directly reads each executable's build ID. Two source copies/empty caches,
+verified modules,15 command records and exact final byte/source/output closure
+remain mandatory. The component inventory binds embedded Go modules/local FTP
+tree,exact UI asset bytes and four production packages with required peer closure.
+Pinned stock CycloneDX schemas and a hash-pinned wheel-only validator run on
+GitHub in an isolated venv with offline references and positive/negative controls.
+16 local trust/component/orchestration methods pass;no stock validator was installed
+or executed locally. Actual repaired reproduction/schema interoperability,independent
+hosts,complete deployment/build-tool/standard-library SBOM,license review,signing
+and disconnected installation remain open. No build artifact is uploaded.
 
-[F074](docs/qualification/evidence/F074-ftps-recipient-encryption.json) retains its independent GnuPG/OpenPGP.js encryption and revocation evidence. FTPS receipts prove exact readback, not receiver fsync or business acceptance. WindowsD103, intermittent browserD145/D151/D152, full protocols/operator/recovery/capacity/upgrade/packaging/adoption gates and X05's authorized inference endpoint remain open. The [durable GitHub Actions plan](docs/qualification/github-actions-plan.md) and exact evidence define next work.
-
-D169 local reproduction fixes a separate operator verifier assumption: fresh database and private-directory UUIDs are independent. Exact parent database now binds the protected loopback DSN/helper config; retained or foreign databases stay refused.7operator,9metadata,8browser-evidence and71reporter methods pass locally. This is separate from the diagnosed D170cookie verifier failure before operator execution; actual operator replay remains required.
-
-D171 native Linux first failure is retained. An explicit is_file check now refuses a missing runtime DSN before stat; resolved-directory coverage avoids the macOS temporary-parent symlink shortcut.7operator/71reporter methods pass locally. Required native repair replay remains pending.
-
-[F077](docs/qualification/evidence/F077-native-reproducible-core.json) prepares native ARM/x86 core reproduction and an ephemeral CycloneDX1.6 component inventory. Two committed source copies/empty caches must produce identical executables,Go inventories,help and source/output closure. The inventory binds exact embedded UI bytes,committed bundler sources,all four production packages with required peer closure,and Go directory checksums/local replacement tree. D172's original stand-in false pass after final-command binary replacement is retained;final reopening now refuses it. Six orchestration and six component contracts pass locally. Actual GitHub reproduction,independent schema interoperability,complete deployment/build-tool/standard-library inventory,licensing,signing and offline installation remain unqualified. Nothing is uploaded.
-
-F077 additionally prepares an independent stock CycloneDX schema check on GitHub:unmodified pinned schemas/license,hash-pinned wheel-only Python validator,isolated venv,offline reference registry and required positive/negative controls. Sixteen trust/component/orchestration stand-in methods pass locally;no stock validator was installed or run here. Native reproduction and actual schema interoperability remain unqualified. Read-only inspection reconfirms the exact retained PostgreSQL/scanner containers exited at512MiB/oneCPU and4GiB/oneCPU; neither resource changed.
-
-D175's new session-proof failure now has18fixed diagnostic subreasons,with every original assertion unchanged.102focused Python contracts pass. The next actual browser replay must identify which check fails;the diagnostic cannot print cookies,tokens,paths,response bodies or exception prose. No underlying session repair or public byte qualification is claimed.
-
-A reviewed known-bad unstarted-successor cancellation was refused by the fresh action-time guard when a native metadata job started. No cancellation request or restart occurred. The live run remains preserved;prepared repairs wait for all required jobs to start.
+[F068](docs/qualification/evidence/F068-ftps-client-transport.json) retains ARM
+stock bounded-metadata passes and both x86 filter failures;native ARM filtering
+is unavailable and active FTP stays disabled. Full independent typed collection
+is open. [F074](docs/qualification/evidence/F074-ftps-recipient-encryption.json)
+retains independent encryption/revocation evidence;readback is distinct from
+receiver fsync and business acceptance. WindowsD103,full protocol/processing/
+operator/recovery/capacity/upgrade/packaging/adoption gates and X05's authorized
+inference endpoint remain open. Exact evidence and remaining work govern the next action.
