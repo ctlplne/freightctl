@@ -2,10 +2,21 @@
 
 This is a test-only OpenPGP.js 6.3.2 peer. The server and browser do not import
 this package. Its npm lock binds the published package integrity and records
-LGPL-3.0+; its Node26.13.0/trixie image is pinned by the multi-architecture manifest digest.
-Installation/audit run in a separate stage. The recipient image copies only its
-locked runtime dependencies and removes unused global npm/corepack tools. Every
-remaining OS/library package still participates in the full exact-image scan.
+LGPL-3.0+. Installation/audit use the pinned official Node26.13.0/trixie builder.
+The `6.3.2-r2` candidate pins Distroless Node26/Debian13;its ARM64/x86_64
+manifest annotations identify Node26.13.0,which actual native proof must verify. It copies only locked runtime dependencies
+and the fixture/proof scripts. Builder shells,package managers and unrelated
+general utilities are absent from this actual runtime. All base package metadata
+and every remaining OS/library package still participate in the full exact-image
+scan. No findings,inventory entries or severities are removed from reports.
+
+The exact runtime index is
+`sha256:9b945e92c1b5463a4b75f11e8417515e4bea7355f6adfd79ec220fbbe905dda8`.
+Its two native manifest annotations name Node26.13.0. An offline native build
+probe independently checks the actual binary/version,UID/GID,OpenPGP import,
+retained Debian package metadata and absent unneeded programs. The scan verifier
+also pins profile/base provenance and absolute entrypoint. Registry metadata and
+stand-ins are not runtime,scan or interoperability qualification.
 No peer artifact is published or included in a release bundle.
 
 GitHub builds the image and audits its JavaScript dependencies. Test execution
@@ -28,7 +39,11 @@ results, image identity, exact fingerprints and source/ciphertext digests must
 be retained before this profile is called qualified. The native Linux job now
 prepares an exact-image vulnerability gate after runtime tests. Source6d30476
 completes both native scans and reports blocking findings; the Node patch/runtime
-cleanup leaves1critical/33high findings in source4d89fca. The replacement Debian13/trixie profile is prepared, not a clean-image claim. Trivy runs offline against an immutable image
+cleanup leaves1critical/33high findings in source4d89fca. The full Debian13/trixie
+profile completes scans with45high/6unknown findings on each native architecture.
+The minimal Distroless replacement is prepared,not a clean-image claim. Actual
+runtime/scans and original independent AEAD decryption/corruption/recovery replay
+are owed. Trivy runs offline against an immutable image
 archive with OS and discovered-library inventory, a fresh hash-bound feed and
 strict evidence validation. Raw inputs remain private, and nothing is uploaded.
 Larger files, v6 keys, other peers, scanner coverage and finding assessment remain

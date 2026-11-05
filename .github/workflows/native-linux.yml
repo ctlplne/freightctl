@@ -142,7 +142,7 @@ jobs:
           docker build --label "freightctl.workspace=$PWD" \
             --label freightctl.purpose=openpgp-interoperability \
             --label "freightctl.source=$GITHUB_SHA" \
-            --tag freightctl-openpgp-peer:6.3.2-r1 scripts/peers/openpgp
+            --tag freightctl-openpgp-peer:6.3.2-r2 scripts/peers/openpgp
       - name: Module integrity, vet and unit race checks
         run: |
           sh scripts/go.sh mod verify

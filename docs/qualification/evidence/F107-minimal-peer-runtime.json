@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "id": "F107",
+  "observed_at": "2026-11-05",
+  "starting_commit": "9e0e6284be1845d11b730072d30e915330047c95",
+  "state": "Pinned minimal independent peer runtime and enforcing provenance guard prepared;actual native scan/runtime/interop owed",
+  "qualification_claim": false,
+  "problem": "Both original native scans complete on96e22with45HIGH/6UNKNOWN each;primary Debian package triage remainsF092. Change the actual runtime contents instead of suppressing inventory/findings or weakening the security gate.",
+  "change": [
+    "Keep pinned official Node26.13.0/trixie npm builder and complete lock/audit. Replace actual final peer base with supported pinned Distroless Node26/Debian13 nonroot;builder tools/general utilities are not copied. Preserve all base package metadata,complete OS/discovered-library scan and existing finding/privacy/freshness/isolation controls.",
+    "New6.3.2-r2 candidate tag,absolute Node entrypoint and exact runtime/base provenance labels are required by the unchanged-severity complete-report guard. All current critical/high/unknown and suppressed findings still fail.",
+    "Prepare an actual offline native build probe for exact Node26.13.0,both supported architectures,UID/GID65532,actual OpenPGP6.3.2 imports,retained Debian metadata and absent unneeded tools. Original independent AEAD generation,decryption,corruption/refusal and recovery tests stay required.",
+    "No package/image/artifact publication,release or external deployment. No local image layer download,build,container,scanner or model runtime."
+  ],
+  "candidate_input": {
+    "image": "gcr.io/distroless/nodejs26-debian13:nonroot@sha256:9b945e92c1b5463a4b75f11e8417515e4bea7355f6adfd79ec220fbbe905dda8",
+    "index_body_sha256": "9b945e92c1b5463a4b75f11e8417515e4bea7355f6adfd79ec220fbbe905dda8",
+    "platforms": [
+      {
+        "architecture": "amd64",
+        "manifest_digest": "sha256:070587ffceddf4e981a054782b6dbb63bb439b215a01f326a25a8d38b434fde4",
+        "config_digest": "sha256:c3ed1ce4b1a9d3fe9958abb1d1fec298a40a1b00455e0670b94505a96635745c",
+        "node_version_annotation": "26.13.0",
+        "upstream_user": "65532",
+        "upstream_entrypoint": [
+          "/nodejs/bin/node"
+        ]
+      },
+      {
+        "architecture": "arm64",
+        "manifest_digest": "sha256:17702052b2dfd678ef41750522d72712c6e80bff6e372a75f775db06d727175a",
+        "config_digest": "sha256:4cac3778f05df9abd252a3016349de16593f5357f3d5a661788eec0fd6f5d750",
+        "node_version_annotation": "26.13.0",
+        "upstream_user": "65532",
+        "upstream_entrypoint": [
+          "/nodejs/bin/node"
+        ]
+      }
+    ],
+    "metadata_meaning": "Public OCI JSON/body/config hashes verified;annotations are metadata,not execution or clean-scan proof"
+  },
+  "red": {
+    "observed": "Prior report guard accepted missing/changed runtime provenance and shell entrypoint;new assertion failed before repair",
+    "reference": ".private/freightctl-f107-runtime-red.log"
+  },
+  "green": {
+    "reporter_contract_methods": 14,
+    "orchestration_stand_in_methods": 15,
+    "workflow_lint": "pass",
+    "probe_syntax": "pass",
+    "affected_native_go_compilation": "pass,no tests selected",
+    "actual_native_runtime_scan_and_interoperability": "owed"
+  },
+  "source_files": [
+    {
+      "path": ".github/workflows/native-linux.yml",
+      "sha256": "0ff77230e17ef1385da66fd5b22006fe9ba8fe1e26eced737e65e03150fb41d5"
+    },
+    {
+      "path": "internal/workflow/ftps_aead_integration_test.go",
+      "sha256": "ccda4b955ac45a5b044cdf870970c199624cb999c30d27fd82ba1c83ce8ce9b3"
+    },
+    {
+      "path": "scripts/ci-peer-image-summary.py",
+      "sha256": "b89afd995fe9bce86630ef78b445d432301bf14cf59d867df58277a46800433d"
+    },
+    {
+      "path": "scripts/peers/openpgp/Dockerfile",
+      "sha256": "d31bd39e6aadfaceaa1e92bc0a20f8220cf370f94d2302dfad44c5190a11315f"
+    },
+    {
+      "path": "scripts/peers/openpgp/README.md",
+      "sha256": "7e88c996806e4a230f8a5516649319a718a4c6d88b3891ae30c3ca2700b8c243"
+    },
+    {
+      "path": "scripts/peers/openpgp/runtime-proof.mjs",
+      "sha256": "a4570b11efe724b437f63ff0d05947ee33df8b87909c74491925563ba8aa3c2f"
+    },
+    {
+      "path": "scripts/scan-peer-image.py",
+      "sha256": "c1ff636f35b28f9748d75e95149d432c631152901e1dd9d9871042f71eeeb054"
+    },
+    {
+      "path": "scripts/test-ci-peer-image-summary.py",
+      "sha256": "4b7f808a7712d6c1470521852114988d491f57357c1bdb5a0214e94a618323f2"
+    }
+  ],
+  "local_manifest": {
+    "reference": ".private/freightctl-f107-distroless/manifest.json",
+    "sha256": "5d27347ca1976f52b6dd8c4695732fbf7b2be983321b3db14fccd12ba17dd385"
+  },
+  "primary_sources": [
+    "https://github.com/GoogleContainerTools/distroless",
+    "https://github.com/GoogleContainerTools/distroless/blob/main/nodejs/README.md",
+    "https://github.com/GoogleContainerTools/distroless/blob/main/nodejs/config.bzl",
+    "https://github.com/GoogleContainerTools/distroless/blob/main/nodejs/nodejs.bzl",
+    "https://gcr.io/v2/distroless/nodejs26-debian13/manifests/nonroot"
+  ],
+  "owed": [
+    "Actual two-native-architecture build probe,full image inventory/security scans and original independent AEAD/crypto/recovery profiles",
+    "Assess and repair any remaining actual findings without suppression,inventory edits or coverage narrowing",
+    "Every deferred original nonsecurity CI issue at mandatory FINISH and all remaining product/AX requirements"
+  ]
+}

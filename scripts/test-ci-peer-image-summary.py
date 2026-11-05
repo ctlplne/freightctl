@@ -35,13 +35,27 @@ def inputs(now=NOW, arch='amd64'):
                'UpdatedAt': stamp(-timedelta(hours=1)), 'NextUpdate': stamp(timedelta(hours=5)),
                'DownloadedAt': stamp(-timedelta(minutes=2))}}
     image = [{'Id': IMAGE, 'Architecture': arch, 'Os': 'linux',
-              'Config': {'User': '65532:65532', 'Labels': {
+              'Config': {'User': '65532:65532', 'Entrypoint':['/nodejs/bin/node','/peer/peer.mjs'], 'Labels': {
+                  'freightctl.peer.runtime':gate.PEER_RUNTIME,
+                  'org.opencontainers.image.base.name':gate.PEER_BASE,
+                  'org.opencontainers.image.base.digest':gate.PEER_BASE_DIGEST,
                   'freightctl.purpose': 'openpgp-interoperability', 'freightctl.source': COMMIT,
                   'freightctl.workspace': PRIVATE}}}]
     return report, version, image
 
 
 class ImageReportContracts(unittest.TestCase):
+    def test_minimal_runtime_identity_cannot_be_adopted_from_a_label_or_entrypoint_change(self):
+        for change in (
+            lambda c:c['Labels'].pop('freightctl.peer.runtime',None),
+            lambda c:c['Labels'].__setitem__('org.opencontainers.image.base.digest','sha256:'+'0'*64),
+            lambda c:c.__setitem__('Entrypoint',['/bin/sh','-c','node /peer/peer.mjs']),
+        ):
+            report,version,image=inputs()
+            change(image[0]['Config'])
+            with self.assertRaises(gate.InvalidReport):
+                self.check(report,version,image)
+
     def test_replacement_profile_requires_debian13_and_refuses_old_major(self):
         report,version,image=inputs()
         report['Metadata']['OS']['Name']='13.1'

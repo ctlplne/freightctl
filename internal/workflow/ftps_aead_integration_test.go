@@ -26,7 +26,7 @@ func independentAEADRecipient(t *testing.T) string {
 	dir := privatePeerDirectory(t)
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
-	image, err := exec.CommandContext(ctx, "docker", "image", "inspect", "--format", "{{.Id}}", "freightctl-openpgp-peer:6.3.2-r1").Output()
+	image, err := exec.CommandContext(ctx, "docker", "image", "inspect", "--format", "{{.Id}}", "freightctl-openpgp-peer:6.3.2-r2").Output()
 	id := strings.TrimSpace(string(image))
 	if err != nil || !strings.HasPrefix(id, "sha256:") || len(id) != 71 || !hashPattern.MatchString(id[7:]) {
 		t.Fatal("pinned independent AEAD image required", err)

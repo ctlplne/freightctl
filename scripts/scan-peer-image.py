@@ -296,7 +296,7 @@ def main():
         if head.read_text().strip() != commit:
             raise RuntimeError('source-identity-invalid')
         phase = 'image-identity'
-        _, inspected = command(phase, ['docker', 'image', 'inspect', 'freightctl-openpgp-peer:6.3.2-r1'], None)
+        _, inspected = command(phase, ['docker', 'image', 'inspect', 'freightctl-openpgp-peer:6.3.2-r2'], None)
         image, _ = gate.load(inspected, 1 << 20)
         gate.require(isinstance(image, list) and len(image) == 1 and isinstance(image[0], dict))
         image_id = image[0].get('Id', '')

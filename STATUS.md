@@ -25,6 +25,14 @@ package swap or clean-image/interop/product-image claim is made.
 F095 observes the diagnostic on both nativee001 reports:all51blocking fix fields
 are absent on each architecture. This is not proof no patch exists elsewhere.
 
+F107 prepares a pinned Distroless Node26/Debian13 independent peer candidate,
+retaining actual Node26.13.0/OpenPGP6.3.2 requirements,full base package metadata,
+complete inventory/finding scans and all isolation controls. Public OCI metadata
+hashes match;14reporter/15orchestration contracts,workflow lint and native
+compilation pass. Actual offline runtime probe,both full scans and original
+independent AEAD decryption/corruption/recovery replay are owed. No clean-image
+claim or local image/scanner/model runtime.
+
 F080–F083 implement canonical exchange contracts, append-only endpoint/current-head
 registration, exact-revision receive views and five ordinary-authority HTTPS paths.
 F085 adds five CLI commands with protected exact-byte/digest verification and
