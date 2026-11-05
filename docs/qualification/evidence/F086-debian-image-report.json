@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "id": "F086",
+  "observed_at": "2026-11-05",
+  "starting_commit": "2ab7b95c43ac5c33ec6dbc1e43dfd1fc89cbd3d2",
+  "state": "Debian12 point-version report handling repaired; native scan replay owed.",
+  "qualification_claim": false,
+  "native_observation": {
+    "candidate": "db593d0b57cd0286f9a78b67bcee5652e86ed9c3",
+    "run_id": 42090651659,
+    "jobs": [
+      {
+        "job_id": 127467461291,
+        "architecture": "arm64",
+        "summary": {
+          "state": "failed",
+          "reason": "native-peer-image-scan-failed",
+          "phase": "enforcing-summary",
+          "manifest_sha256": "1ccba24db029ed55de5c9ff1e6cb40386be7df96f0a7566b7055386700b91b52",
+          "scratch_cleanup": "unmounted",
+          "feed_files": {
+            "database": {
+              "present": true,
+              "regular": true,
+              "symlink": false,
+              "bytes": 1691983872,
+              "size_capped": false
+            },
+            "metadata": {
+              "present": true,
+              "regular": true,
+              "symlink": false,
+              "bytes": 153,
+              "size_capped": false
+            }
+          },
+          "command": {
+            "command_phase": "enforcing-summary",
+            "exit_code": 2,
+            "category": "evidence-verifier-refused",
+            "stdout_sha256": "d7f22e5a20a10c71b7a289c7a1fa50316103359ffd897cc6f99c19afd21c122a",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "verifier_refusal_site": {
+              "function": "summarize",
+              "line": 103
+            }
+          }
+        }
+      },
+      {
+        "job_id": 127467461521,
+        "architecture": "x86_64",
+        "summary": {
+          "state": "failed",
+          "reason": "native-peer-image-scan-failed",
+          "phase": "enforcing-summary",
+          "manifest_sha256": "17068f3c165df523bfd9105427192fdfc949caa1c74ed96e872bb303facf61a8",
+          "scratch_cleanup": "unmounted",
+          "feed_files": {
+            "database": {
+              "present": true,
+              "regular": true,
+              "symlink": false,
+              "bytes": 1691983872,
+              "size_capped": false
+            },
+            "metadata": {
+              "present": true,
+              "regular": true,
+              "symlink": false,
+              "bytes": 153,
+              "size_capped": false
+            }
+          },
+          "command": {
+            "command_phase": "enforcing-summary",
+            "exit_code": 2,
+            "category": "evidence-verifier-refused",
+            "stdout_sha256": "d7f22e5a20a10c71b7a289c7a1fa50316103359ffd897cc6f99c19afd21c122a",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "verifier_refusal_site": {
+              "function": "summarize",
+              "line": 103
+            }
+          }
+        }
+      }
+    ],
+    "reporter_source_sha256": "165bdbebee47e26ed5fd85a035cca0a0f3cd360bafd029e7243fed42e71480d8",
+    "scope": "Native diagnostics prove refusal at original line103 containing the combined OS family/name assertion. The actual old OS fields are not retained publicly and remain unobserved. Pinned analyzer source independently establishes Name is the complete /etc/debian_version line. Supporting valid12.x reports fixes a reproduced format refusal, not proof of the original raw value or a native image pass."
+  },
+  "change": "Validate pinned Debian major12 with strict bounded numeric point-version spelling; expose only validated family/version on success. Continue rejecting Debian13, malformed/foreign/private versions and EOL, plus every prior inventory, source identity, freshness, severity and suppression condition.",
+  "red": {
+    "test": "ImageReportContracts.test_debian_12_point_versions_keep_the_same_pinned_major_and_eol_guard",
+    "reference": ".private/freightctl-debian-point-release-red.log",
+    "sha256": "e1b7681ee2e8af02683c63f5fa3b7453de425f881c57acf416a1c9fe44e959bd",
+    "result": "Valid Debian12 point-version fixture raises InvalidReport at the literal Name12 assertion"
+  },
+  "green": {
+    "reporter_methods": 10,
+    "orchestration_methods": 15,
+    "diff_check": "pass"
+  },
+  "source_files": [
+    {
+      "path": "scripts/ci-peer-image-summary.py",
+      "sha256": "7e6e21d22319aa0444b48bf67b683ed9b30e61ac9df99dee6ba65c4384c162c6"
+    },
+    {
+      "path": "scripts/test-ci-peer-image-summary.py",
+      "sha256": "0f524b6f810bfe3d4a9f2d2b6534df76f99e68aa3cf96b9b19335737ddba4bc0"
+    }
+  ],
+  "local_manifest": {
+    "reference": ".private/freightctl-f086-os-guard-20261105/manifest.json",
+    "sha256": "78607a5c3327292f20a17a62fbf883a858b7c70e5a98514d7717d5d88140683d"
+  },
+  "primary_source": "https://github.com/aquasecurity/trivy/blob/v0.76.1/pkg/fanal/analyzer/os/debian/debian.go",
+  "owed": [
+    "Exact native ARM/x86 complete scan and honest vulnerability counts at final source",
+    "Original856 refusal remains separately unknown; laterdb line103 does not prove its exact cause",
+    "Currentdb native integration/metadata/public failures remain red; nonsecurity logs and repair deferred to FINISH. Exact handles preserved",
+    "All broader product/runtime/native/release qualification remains governed by GOAL; source presence and stand-ins do not pass it"
+  ]
+}

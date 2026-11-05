@@ -52,6 +52,11 @@ remain. The audit establishes at least15 resource-blocked scan jobs and a separa
 suite timeout; no historical binary-size failure is invented. Focused stand-in,
 streaming hash, environment and syntax checks pass. Native replay remains owed;
 existing F075 OOMs and unknown856 verifier refusal stay preserved, not passed.
+Later db diagnostics pinpoint its own refusal at the OS family/version assertion.
+F086 accepts valid Debian12 point-version spelling, as emitted by the pinned
+analyzer, while retaining major/EOL/inventory/finding checks. Ten reporter and15
+orchestration stand-in methods pass; exact old OS values and native repair proof
+remain unobserved/owed. This does not identify the earlier856 cause.
 Local constraints remain unchanged. No local PG,Chrome,peer,scanner,image or inference runtime was
 started by this work. F026 remains manual/owner-deferred. Source/CI push authority
 does not authorize release/artifact publication,visibility changes or deployment.

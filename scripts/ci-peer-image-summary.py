@@ -107,7 +107,11 @@ def summarize(report, version, image, commit, architecture, now):
     platform = metadata.get('ImageConfig')
     require(isinstance(platform, dict) and platform.get('architecture') == architecture and platform.get('os') == 'linux')
     os_info = metadata.get('OS')
-    require(isinstance(os_info, dict) and os_info.get('Family') == 'debian' and os_info.get('Name') == '12')
+    # Trivy's pinned Debian analyzer reports the complete /etc/debian_version
+    # line, including point releases. Pin Debian major12, not the spelling12.
+    require(isinstance(os_info, dict) and os_info.get('Family') == 'debian'
+            and isinstance(os_info.get('Name'), str)
+            and re.fullmatch(r'12(?:\.(?:0|[1-9][0-9]{0,4})){0,2}', os_info['Name']))
     require(os_info.get('EOSL', False) is False)
     results = report.get('Results')
     require(isinstance(results, list) and 1 <= len(results) <= 2000)
@@ -148,6 +152,7 @@ def summarize(report, version, image, commit, architecture, now):
         'state': 'failed' if blocked else 'passed', 'kind': 'native-peer-image-vulnerabilities',
         'source_commit': commit, 'architecture': architecture, 'image_id': image['Id'],
         'scanner_version': SCANNER_VERSION, 'scanner_image': SCANNER_IMAGE,
+        'os_family': 'debian', 'os_version': os_info['Name'],
         'feed_updated_at': updated.isoformat(), 'feed_next_update': next_update.isoformat(),
         'report_created_at': created.isoformat(), 'severities': dict(counts),
         'package_counts': dict(packages), 'result_classes': dict(classes),

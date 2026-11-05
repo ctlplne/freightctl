@@ -42,6 +42,20 @@ def inputs(now=NOW, arch='amd64'):
 
 
 class ImageReportContracts(unittest.TestCase):
+    def test_debian_12_point_versions_keep_the_same_pinned_major_and_eol_guard(self):
+        for release in ('12', '12.0', '12.13', '12.13.1'):
+            report, version, image = inputs()
+            report['Metadata']['OS']['Name'] = release
+            self.assertEqual(self.check(report, version, image)['state'], 'passed')
+            report['Metadata']['OS']['EOSL'] = True
+            with self.assertRaises(gate.InvalidReport):
+                self.check(report, version, image)
+        for release in ('13', '120', '12x', '12.1-private', '12.1\n', ' 12', '12.1.2.3', None, 12, True):
+            report, version, image = inputs()
+            report['Metadata']['OS']['Name'] = release
+            with self.assertRaises(gate.InvalidReport):
+                self.check(report, version, image)
+
     def test_generated_payload_sizes_are_not_security_gates(self):
         with tempfile.TemporaryDirectory(prefix='freightctl-peer-size-') as directory:
             path = Path(directory)/'large-sparse-feed'
