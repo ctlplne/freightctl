@@ -101,6 +101,17 @@ hashes/fixed fields. Raw executables, BOMs, reports and credentials stay private
 and ephemeral; no upload-artifact or release occurs. A Go module h1 directory
 hash must never be relabeled as an archive/file SHA256 checksum.
 
+Prepare the pinned builtin build-ID reader separately (120seconds) because Go
+may compile less-used tools on demand; hash/reopen its exact owned executable.
+Each physical read still has10seconds. Two additional60second readonly/offline
+package-list commands bind native compiler dependency graphs to selected
+standard/compiler-provided/vendor package source files. Require graph closure,
+matching verified modules, no CGO/test/error inputs, exact package directories,
+bounded hashes and final reopening. Preserve the20minute whole-job bound.
+Toolchain source manifests are properties,not archive/file hashes; distribution
+versions of vendored packages are not inferred upstream versions. Implicit and
+generated inputs,complete build-tool/deployment SBOM and licensing remain open.
+
 Local inference stays off. GitHub also has no model-weight download, inference
 endpoint or evaluation authority until the owner names an endpoint, disclosure
 policy and explicit compute allowance. Malware qualification has its separate

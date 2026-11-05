@@ -1115,5 +1115,18 @@
     "metadata": "both success",
     "fuzz": "success",
     "scope": "Original native failures are preserved. Separate image failures remain red; no later-source/whole-journey pass."
+  },
+  "source_97_public_plaintext_first": {
+    "run_id": 41944580530,
+    "job_id": 126973496977,
+    "stage": "browser-reopen",
+    "category": "session-wire-fetch-site",
+    "first_metadata_chrome": "complete",
+    "native_failures": 0,
+    "cli_failures": 0,
+    "cleanup": "retained metadata and roles unchanged;isolated DB removed;original resource state restored;0failures",
+    "manifest_reference": ".private/freightctl-97-first-failures-tvVXpx/manifest.json",
+    "manifest_sha256": "32b3a537ede85379dd68a72484056b7d8946536b2af3123feabe4f7f7dc8070e",
+    "scope": "Actual reason narrows to recorded fetch-site header;its exact value/missing status and request name are not observed. Preserve assertion. Request-route observation before Chromium final network headers is a hypothesis to investigate,not a proven cause or product repair. Byte operator is not reached."
   }
 }

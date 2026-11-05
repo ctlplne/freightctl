@@ -2805,7 +2805,17 @@
       "resolution": "Keep original deterministic linker command and strict native settings. Require serialized -ldflags absent; independently run read-only go tool buildid on both actual executables and require exact empty ID/newline plus empty stderr. Retained build ID/unexpected metadata flags fail new process/compiler contracts. All original equality/source/checksum/resource gates remain.16focused trust/component/orchestration methods pass;actual native replay pending.",
       "regression_evidence": [
         "docs/qualification/evidence/F077-native-reproducible-core.json"
-      ]
+      ],
+      "source_97_followup": {
+        "run_id": 41944580545,
+        "jobs": [
+          126973497017,
+          126973496758
+        ],
+        "phase": "build-id-a",
+        "check": "command-status",
+        "cause": "Exact exit versus timeout unexposed;not proven. Go may build builtin reader on demand. Separate reader preparation and fixed status diagnostics prepared with all10second read assertions unchanged;actual repaired native replay required."
+      }
     },
     {
       "id": "D175",
@@ -2820,7 +2830,13 @@
       "resolution": "Assign18static subreasons to the exact existing assertions;keep all predicates,budgets and privacy controls. Original parent/report enums accept only those exact reasons,never private exception prose or arbitrary labels.102focused stand-in/parser methods pass;actual diagnostic replay and underlying repair remain required.",
       "regression_evidence": [
         "docs/qualification/evidence/F076-ftps-collection.json"
-      ]
+      ],
+      "source_97_observation": {
+        "run_id": 41944580530,
+        "job_id": 126973496977,
+        "category": "session-wire-fetch-site",
+        "meaning": "Original explicit metadata Chrome completes; exact recorded fetch-site assertion fails. Header value/absence/request identity remain unobserved; never relax assertion to gain pass. Need actual native browser network evidence."
+      }
     }
   ]
 }

@@ -84,7 +84,7 @@ if REAL:
             spec = importlib.util.spec_from_file_location('component_fixture', ROOT/'scripts/test-core-component-inventory.py')
             fixture = importlib.util.module_from_spec(spec); spec.loader.exec_module(fixture)
             case = fixture.ComponentContracts('runTest'); case.setUp(); self.addCleanup(case.doCleanups)
-            original = case.create()
+            original = case.create(case.standard_library())
             self.assertEqual(gate.validate(ROOT, original)['engine'], 'python-jsonschema')
             for change in (lambda v: v.update(bomFormat='invented'), lambda v: v['components'][0].update(type='invented'),
                     lambda v: v['metadata']['component']['hashes'][0].update(alg='invented'),

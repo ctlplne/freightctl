@@ -20,6 +20,7 @@ import tempfile
 
 import core_component_inventory as components
 import core_bom_schema as schema_gate
+import core_go_packages as go_packages
 
 ROOT = Path(__file__).resolve().parents[1]
 GO_VERSION = 'go1.26.10'
@@ -27,9 +28,9 @@ MODULE = 'github.com/ctlplne/freightctl'
 SOURCE_MAX = 64 << 20
 BINARY_MAX = 128 << 20
 WORKING_MAX = 4 << 30
-COMMANDS = ('source-identity', 'source-clean', 'native-go', 'source-archive', 'module-download', 'module-verify-before',
-    'build-a', 'build-id-a', 'inventory-a', 'help-a', 'build-b', 'build-id-b', 'inventory-b', 'help-b', 'module-verify-after')
-PHASES = frozenset(('preflight', *COMMANDS, 'source-extract', 'source-closure', 'binary-closure', 'inventory-closure', 'component-inventory', 'component-schema', 'record'))
+COMMANDS = ('source-identity', 'source-clean', 'native-go', 'source-archive', 'module-download', 'module-verify-before', 'prepare-build-id-tool',
+    'build-a', 'build-id-a', 'inventory-a', 'packages-a', 'help-a', 'build-b', 'build-id-b', 'inventory-b', 'packages-b', 'help-b', 'module-verify-after')
+PHASES = frozenset(('preflight', *COMMANDS, 'source-extract', 'source-closure', 'binary-closure', 'inventory-closure', 'package-closure', 'component-inventory', 'component-schema', 'record'))
 CHECKS = frozenset(('evidence', 'binary-identity', 'build-settings', 'dependency-inventory', 'dependency-entry',
     'local-replacement', 'dependency-checksum', 'native-configuration', 'binary-equality', 'source-unchanged',
     'command-status', 'working-budget', 'runner-identity', 'build-id', 'structure', 'filesystem'))
@@ -227,8 +228,10 @@ def main():
             return command(work, steps, label, argv, cwd, variables or env, timeout)
         require(run('source-identity', ['git', 'rev-parse', 'HEAD']).read_text().strip() == commit)
         run('source-clean', ['git', 'diff', '--quiet', 'HEAD', '--'])
-        native = load(run('native-go', [go, 'env', '-json', 'GOHOSTOS', 'GOHOSTARCH', 'GOOS', 'GOARCH', 'GOVERSION']))
-        require(native == {'GOHOSTOS': 'linux', 'GOOS': 'linux', 'GOHOSTARCH': arch, 'GOARCH': arch, 'GOVERSION': GO_VERSION}, 'native-configuration')
+        native = load(run('native-go', [go, 'env', '-json', 'GOHOSTOS', 'GOHOSTARCH', 'GOOS', 'GOARCH', 'GOVERSION', 'GOROOT']))
+        require(set(native) == {'GOHOSTOS', 'GOOS', 'GOHOSTARCH', 'GOARCH', 'GOVERSION', 'GOROOT'}
+            and {k:v for k,v in native.items() if k != 'GOROOT'} == {'GOHOSTOS': 'linux', 'GOOS': 'linux', 'GOHOSTARCH': arch, 'GOARCH': arch, 'GOVERSION': GO_VERSION}
+            and type(native['GOROOT']) is str and Path(native['GOROOT']).is_absolute(), 'native-configuration')
         archive = work/'source.tar'
         run('source-archive', ['git', 'archive', '--format=tar', '--output='+str(archive), commit])
         source_sha = digest(archive, SOURCE_MAX)
@@ -243,9 +246,19 @@ def main():
         prime['GOCACHE'] = str(work/'prime-cache')
         run('module-download', [go, 'mod', 'download', '-json'], first, prime, 300)
         run('module-verify-before', [go, 'mod', 'verify'], first, timeout=60)
+        # Go1.26 may build less-used builtin tools on demand. Prepare the pinned
+        # stock reader separately; physical ID reads retain their10second cap.
+        reader_output = run('prepare-build-id-tool', [go, 'tool', '-n', 'buildid'], first, timeout=120)
+        reader_lines = reader_output.read_text().splitlines()
+        require(len(reader_lines) == 1 and (work/'prepare-build-id-tool.stderr').read_bytes() == b'', 'build-id')
+        reader = Path(reader_lines[0])
+        allowed = ((work/'tool-cache').resolve(), (Path(native['GOROOT'])/'pkg/tool').resolve())
+        require(reader.is_absolute() and '..' not in reader.parts and any(reader.is_relative_to(root) for root in allowed)
+            and any(reader.resolve(strict=True).is_relative_to(root) for root in allowed) and not reader.is_symlink(), 'build-id')
+        reader_sha = digest(reader, BINARY_MAX)
         phase = 'source-closure'
         require(sources(first) == original and sources(second) == original, 'source-unchanged')
-        results, infos, help_hashes = [], [], []
+        results, infos, help_hashes, package_inventories = [], [], [], []
         for label, source in (('a', first), ('b', second)):
             build_env = dict(env, GOCACHE=str(work/('cache-'+label)))
             require(not Path(build_env['GOCACHE']).exists())
@@ -253,13 +266,18 @@ def main():
             run('build-'+label, [go, 'build', '-p', '1', '-mod=readonly', '-trimpath', '-buildvcs=false',
                 '-ldflags=-buildid=', '-o', binary, './cmd/freightctl'], source, build_env, 300)
             results.append(digest(binary, BINARY_MAX))
-            build_id = run('build-id-'+label, [go, 'tool', 'buildid', binary], timeout=10)
+            require(digest(reader, BINARY_MAX) == reader_sha, 'build-id')
+            build_id = run('build-id-'+label, [reader, binary], timeout=10)
             require(build_id.read_bytes() == b'\n'
                 and (work/('build-id-'+label+'.stderr')).read_bytes() == b'', 'build-id')
             info = load(run('inventory-'+label, [go, 'version', '-m', '-json', binary]))
             phase = 'inventory-closure'
             count = inventory(info, source, arch)
             infos.append(info)
+            graph = run('packages-'+label, [go, 'list', '-p', '1', '-mod=readonly', '-trimpath', '-buildvcs=false',
+                '-ldflags=-buildid=', '-deps', '-json', './cmd/freightctl'], source, build_env, 60)
+            phase = 'package-closure'
+            package_inventories.append(go_packages.capture(graph.read_bytes(), native['GOROOT'], info))
             output = run('help-'+label, [binary, '--help'], source, build_env, 10)
             help_bytes = output.read_bytes()
             require(help_bytes.startswith(b'freightctl: schema-version') and b'serve-ftps' in help_bytes
@@ -280,9 +298,13 @@ def main():
         require(digest(archive, SOURCE_MAX) == source_sha)
         phase = 'binary-closure'
         require([digest(work/('freightctl-'+label), BINARY_MAX) for label in ('a', 'b')] == results, 'binary-equality')
+        phase = 'package-closure'
+        require(package_inventories[0] == package_inventories[1])
+        go_packages.reopen(package_inventories[0], native['GOROOT'])
+        require(digest(reader, BINARY_MAX) == reader_sha, 'build-id')
         phase = 'component-inventory'
         docs = [components.encoded(components.create(source, original, info, commit, arch,
-            work/('freightctl-'+label), results[index]))
+            work/('freightctl-'+label), results[index], package_inventories[index]))
             for index, (label, source, info) in enumerate((('a', first, infos[0]), ('b', second, infos[1])))]
         require(docs[0] == docs[1])
         component_path = work/'core.cdx.json'
@@ -298,12 +320,16 @@ def main():
             'binary_sha256': results[0], 'dependency_modules': count, 'help_sha256': help_hashes[0], 'steps': steps,
             'component_inventory_sha256': component_sha, 'component_inventory_format': 'CycloneDX1.6',
             'component_schema_validation': schema_validation,
+            'go_standard_library_packages': len(package_inventories[0]['packages']),
+            'go_package_graph_sha256': package_inventories[0]['package_graph_sha256'],
+            'selected_toolchain_source_sha256': package_inventories[0]['toolchain_source_sha256'],
+            'build_id_reader_sha256': reader_sha,
             'working_bytes_after_steps': working_bytes(work), 'working_bytes_after_steps_max': WORKING_MAX,
             'artifact_published': False, 'complete_sbom': False, 'disconnected_install_qualified': False,
             'signing_qualified': False, 'production_platform_qualified': False}
         path = work/'manifest.json'; path.write_text(json.dumps(manifest, indent=2)+'\n')
         print(json.dumps({key: manifest[key] for key in ('state', 'source_commit', 'architecture', 'binary_sha256',
-            'source_archive_sha256', 'source_files', 'dependency_modules', 'component_inventory_sha256', 'component_inventory_format', 'component_schema_validation', 'artifact_published', 'complete_sbom',
+            'source_archive_sha256', 'source_files', 'dependency_modules', 'component_inventory_sha256', 'component_inventory_format', 'component_schema_validation', 'go_standard_library_packages', 'go_package_graph_sha256', 'selected_toolchain_source_sha256', 'artifact_published', 'complete_sbom',
             'disconnected_install_qualified', 'signing_qualified', 'production_platform_qualified')}
             | {'manifest_sha256': digest(path, 4 << 20)}, sort_keys=True))
         return 0
@@ -312,6 +338,14 @@ def main():
         result = {'state': 'failed', 'reason': 'native-reproducible-build-failed',
             'phase': phase if phase in PHASES else 'preflight', 'artifact_published': False,
             'check': error.check if isinstance(error, InvalidEvidence) else 'filesystem' if isinstance(error, OSError) else 'structure'}
+        if steps and steps[-1]['name'] == phase:
+            last = steps[-1]
+            # Fixed command label, bounded exit category and hashes only.
+            # Never publish original stderr, arguments, paths or exception text.
+            status = last['exit_code']
+            result['command'] = {'name':last['name'],
+                'exit_code':status if type(status) is int and -255 <= status <= 255 else status if status == 'timeout' else 'unrecognized',
+                'stdout_sha256':last['stdout_sha256'], 'stderr_sha256':last['stderr_sha256']}
         if work is not None:
             try:
                 path = work/'failure.json'; path.write_text(json.dumps({'steps': steps, **result}, indent=2)+'\n')

@@ -28,9 +28,25 @@ class ComponentContracts(unittest.TestCase):
         self.binary.write_bytes(fixture.BINARY)
         self.info = fixture.build_info()
 
-    def create(self):
+    def create(self, standard_library=None):
         return inventory.create(self.source, fixture.runner.sources(self.source), self.info,
-            fixture.COMMIT, 'amd64', self.binary, hashlib.sha256(self.binary.read_bytes()).hexdigest())
+            fixture.COMMIT, 'amd64', self.binary, hashlib.sha256(self.binary.read_bytes()).hexdigest(), standard_library)
+
+    def standard_library(self):
+        root = self.root/'toolchain'; root.mkdir()
+        packages = fixture.package_fixture.fixture(root, self.info)
+        return fixture.runner.go_packages.capture(fixture.package_fixture.raw(packages), root, self.info)
+
+    def test_standard_library_source_manifest_properties_and_native_import_edges_are_bound(self):
+        selected = self.standard_library(); result = self.create(selected)
+        libraries = {v['name']:v for v in result['components'] if any(p['name'] == 'freightctl:ecosystem'
+            and p['value'] == 'go-toolchain-package' for p in v.get('properties', []))}
+        self.assertEqual(set(libraries), {'go/fmt', 'go/unsafe', 'go/vendor/example.test/leaf'})
+        self.assertTrue(all(v['version'] == 'go1.26.10' and 'hashes' not in v for v in libraries.values()))
+        self.assertEqual(next(v['dependsOn'] for v in result['dependencies'] if v['ref'] == libraries['go/fmt']['bom-ref']),
+            sorted(libraries[v]['bom-ref'] for v in ('go/unsafe','go/vendor/example.test/leaf')))
+        properties = {v['name']:v['value'] for v in result['metadata']['component']['properties']}
+        self.assertEqual(properties['freightctl:go-package-graph-sha256'], selected['package_graph_sha256'])
 
     def mutate(self, name, change):
         path = self.source/name

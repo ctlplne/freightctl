@@ -3,7 +3,7 @@
   "id": "F077",
   "observed_at": "2026-11-04",
   "starting_commit": "2c4398abe902fb77307ac8247bd9df2dc5b77ffc",
-  "state": "Both original7c native jobs fail inventory-closure/build-settings. A required serialized linker flag is incompatible with pinned Go trimpath. Physical build-ID readback repair and independent offline stock-schema gate pass16local trust/contract methods only;actual repaired native reproduction remains pending.",
+  "state": "Original97 ARM/x86 fail build-id-a/command-status; exit versus timeout is not exposed. Separate pinned builtin-reader preparation, fixed command diagnostics and bounded native Go package/source closure are prepared;22local contract methods pass only. No repaired native reproduction/schema or complete SBOM claim.",
   "scope": "Same-runner native Linux core executable reproduction in two different committed-source copies and independent empty build caches. No cross-architecture comparison,independent-host reproduction,complete release SBOM/signing/offline installation,publication or production-platform claim.",
   "qualification_claim": false,
   "frozen_cases": [
@@ -48,7 +48,7 @@
     ],
     "toolchain": "go1.26.10",
     "go_environment": "GOMAXPROCS1,GOMEMLIMIT192MiB,GOTOOLCHAINlocal,GOENVoff,GOTELEMETRYoff;no inherited GOFLAGS/credentials/model/database variables.",
-    "commands": 15,
+    "commands": 18,
     "builds_per_architecture": 2,
     "build_timeout_seconds": 300,
     "module_download_timeout_seconds": 300,
@@ -61,9 +61,11 @@
     "private_command_output_max_bytes": 33554432,
     "working_bytes_max_after_steps": 4294967296,
     "disk_limit_scope": "Checked after commands and at final record;not a kernel disk quota. Go heap setting is soft,not a hard host memory cap.",
-    "module_inventory_scope": "Embedded Go dependencies only. Frontend/OS/external-tool/model inventory and complete SPDX/CycloneDX SBOM remain required. This gate performs no vulnerability scan and inherits no security cleanliness from byte equality.",
+    "module_inventory_scope": "Verified embedded Go modules, exact UI packages/assets and native compiler dependency package inputs with selected Go/S/ H/embed source manifests. Standard, compiler-provided unsafe and toolchain-vendored packages are distinct. Vendor versions identify the pinned Go distribution, not inferred upstream versions. OS/external programs/complete build tools/full licensing and deployment SBOM remain open.",
     "publication": "No upload-artifact,release,image/package push,signing credential or deployment. Build binaries and raw records remain on disposable runner only.",
-    "build_id_timeout_seconds": 10
+    "build_id_timeout_seconds": 10,
+    "package_list_timeout_seconds": 60,
+    "build_id_tool_preparation_timeout_seconds": 120
   },
   "local_checks": {
     "manifest_reference": ".private/freightctl-f077-local-h91i2hti/manifest.json",
@@ -81,7 +83,7 @@
     ],
     "limits": "No new local build or binary execution,actual native compiler reproduction,network/PG/browser/scanner/model operation. Parser and stand-in passes do not qualify reproducibility."
   },
-  "next_action": "Require original native ARM/x86 replay of the corrected physical build-ID check and independent stock-schema gate on an exact submitted source. Preserve original7cfailures. No reproduction,complete deployment SBOM,signing,offline-installation,security/platform/adoption or whole GOAL.md pass may be inferred from local contracts.",
+  "next_action": "Preserve original97 failures; require exact native ARM/x86 replay of separately prepared stock reader, both binary builds/package graphs/final source closures and actual independent stock-schema validation. Do not infer reproduction,complete SBOM,license/signing/offline/platform/adoption or whole-goal completion from local contracts.",
   "core_component_inventory_prepared": {
     "implementation": "scripts/core_component_inventory.py",
     "contracts": "scripts/test-core-component-inventory.py",
@@ -189,5 +191,34 @@
       126973497017
     ],
     "independent_schema_engine_runtime_qualified": false
+  },
+  "source_97_original_failure": {
+    "candidate": "97c739c69625b12e98966c75aa2ea18281ec29ed",
+    "run_id": 41944580545,
+    "arm_job": 126973497017,
+    "amd_job": 126973496758,
+    "phase": "build-id-a",
+    "check": "command-status",
+    "original_exit_or_timeout": "not exposed;cause unproven",
+    "arm_failure_manifest_sha256": "ae242fa176571b950bb68142bb391f2a084643b8e19831da9dbf7d824a7e8fe8",
+    "amd_failure_manifest_sha256": "66e0121906ed9c906d06027d085f04e62564544bb2e7edfb056732511d9b0aab",
+    "original_manifest_reference": ".private/freightctl-97-first-failures-tvVXpx/manifest.json",
+    "original_manifest_sha256": "32b3a537ede85379dd68a72484056b7d8946536b2af3123feabe4f7f7dc8070e"
+  },
+  "native_go_package_inventory_prepared": {
+    "implementation": "scripts/core_go_packages.py",
+    "contracts": "scripts/test-core-go-packages.py",
+    "mechanism": "After each original build, run exact readonly/offline go list -deps -json under the same native target/flags/cache. Require complete reachable acyclic package graph, module paths/versions/replacements matching independently verified BuildInfo and no failed/incomplete/test/CGO inputs. Bind selected GoFiles,SFiles,HFiles,EmbedFiles to exact GOROOT/src package directories; reject links/traversal/foreign directories and hash current license plus vendor manifest. Compare both inventories and reopen selected source files after final command. Emit per-package source-manifest properties and standard-package import edges in the stock-validated CycloneDX document; never label a manifest hash as a package archive/file hash.",
+    "bounds": "4096graph nodes,1024imports or selected files per package,8192selected toolchain files,16MiB/file,64MiBselected source,32MiBgraph JSON; bounded1MiB reads. Same original20minute job/4GiBworking limit/one Go worker/192MiBsoft heap and all old binary/source/security checks remain.",
+    "reader_preparation": "Pinned Go source cmd/go/internal/tool/tool.go builds missing builtin tools on demand. A bounded local tool-resolution probe printed its cache-resident buildid path; no product/native ELF reader ran. New separate go tool -n buildid preparation120seconds requires an exact file inside task tool-cache or native GOROOT/pkg/tool; hash before each use and after final commands. Execute that stock reader directly with unchanged10second read cap. Fixed exit/timeout and output hashes now accompany command failures. This is a prepared repair,not proven cause of either original97failure.",
+    "local_manifest_reference": ".private/freightctl-f077-go-packages-local-imskj5aw/manifest.json",
+    "local_manifest_sha256": "4053387bb12105b37b66ac34724fc41a70ec8bd4aa97a60884fa5c2498484c2c",
+    "local_methods": 22,
+    "runtime_qualification": false,
+    "limits": "Compiler dependency inputs do not prove every function survives linker pruning,generated/implicit toolchain inputs or complete build-tool/deployment SBOM. No new local product build, binary execution, actual package enumeration or stock-schema runtime.",
+    "primary_sources": [
+      "https://pkg.go.dev/cmd/go@go1.26.10#hdr-List_packages_or_modules",
+      "https://github.com/golang/go/blob/go1.26.10/src/cmd/go/internal/tool/tool.go"
+    ]
   }
 }

@@ -53,7 +53,7 @@ def embedded(binary, data):
     return False
 
 
-def create(source, tree, info, commit, arch, binary, binary_sha):
+def create(source, tree, info, commit, arch, binary, binary_sha, standard_library=None):
     # Caller independently verifies native build info, modules, final binary
     # hash and both clean source copies. Never reinterpret Go h1 directory
     # hashes as archive/file SHA256 checksums.
@@ -122,6 +122,7 @@ def create(source, tree, info, commit, arch, binary, binary_sha):
         if hashes:
             value['hashes'] = hashes
         components.append(value); refs.append(ref)
+        return ref
     for item in manifest['outputs']:
         name = item['name']
         require(type(name) is str and re.fullmatch('[A-Za-z0-9._-]+', name) and name not in output_names)
@@ -146,6 +147,19 @@ def create(source, tree, info, commit, arch, binary, binary_sha):
         component('library', name, value['version'], [('freightctl:ecosystem', 'npm'),
             ('freightctl:checksum-source', 'committed package-lock integrity; not fetched by this inventory gate')],
             [{'alg': 'SHA-512', 'content': checksum}])
+    standard_refs, standard_edges = {}, []
+    if standard_library is not None:
+        require(standard_library['packages'])
+        for value in standard_library['packages']:
+            standard_refs[value['name']] = component('library', 'go/'+value['name'], value['version'], [
+                ('freightctl:ecosystem', 'go-toolchain-package'),
+                ('freightctl:go-package-class', value['class']),
+                ('freightctl:selected-source-manifest-sha256', value['source_manifest_sha256']),
+                ('freightctl:selected-source-files', str(value['source_files'])),
+                ('freightctl:scope', 'Native compiler dependency input; linker may remove unused functions. Toolchain vendored packages use the Go distribution version, not an inferred upstream version.')])
+        for value in standard_library['packages']:
+            standard_edges.append({'ref':standard_refs[value['name']],
+                'dependsOn':sorted(standard_refs[name] for name in value['imports'])})
     require(len(refs) == len(set(refs)))
     return {'bomFormat': 'CycloneDX', 'specVersion': '1.6', 'version': 1,
         'metadata': {'lifecycles': [{'phase': 'post-build'}],
@@ -154,6 +168,9 @@ def create(source, tree, info, commit, arch, binary, binary_sha):
                 'hashes': [{'alg': 'SHA-256', 'content': binary_sha}], 'properties': [
                     {'name': 'freightctl:architecture', 'value': arch},
                     {'name': 'freightctl:go-toolchain', 'value': info['GoVersion']},
-                    {'name': 'freightctl:scope', 'value': 'Verified embedded Go modules and exact UI assets/production lock packages only; excludes OS,external programs,build tools,models,full license analysis,signing and deployment qualification.'}]}},
+                    {'name': 'freightctl:scope', 'value': 'Verified embedded Go modules,exact UI assets/production lock packages and any supplied native Go toolchain package dependency inputs; excludes OS,external programs,complete build tools,models,full license analysis,signing and deployment qualification.'},
+                    *([{'name':'freightctl:go-package-graph-sha256','value':standard_library['package_graph_sha256']},
+                       {'name':'freightctl:selected-toolchain-source-sha256','value':standard_library['toolchain_source_sha256']}]
+                       if standard_library is not None else [])]}},
         'components': components,
-        'dependencies': [{'ref': 'freightctl-core', 'dependsOn': sorted(refs)}]}
+        'dependencies': [{'ref': 'freightctl-core', 'dependsOn': sorted(refs)}, *standard_edges]}

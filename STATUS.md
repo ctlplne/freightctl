@@ -11,7 +11,8 @@ Latest pushed source **97c739c** contains D173's distinct FTPS registration keys
 D174's physical build-ID repair,pinned independent CycloneDX validation and
 D175's private-safe session subreasons. Exact GitHub runs are native41944580495,
 public41944580530,core41944580446 and reproduction41944580545. Required new jobs
-are queued/pending;no earlier pass is inherited. Five outgoing commits passed
+have begun: ARM application/metadata and both public/reproduction profiles started;
+x86 application/fuzz still queued. No earlier pass is inherited. Five outgoing commits passed
 exact owner-identity and full-range secret checks. Hold another relevant push
 until current required native/public/reproduction jobs start.
 
@@ -44,7 +45,9 @@ Exact final race binary compile and Go vet pass;original native replay is pendin
 Source7c core passes its full job,144 frontend checks and the original Linux
 D171missing-DSN regression. Both7c public profiles complete first explicit metadata
 Chrome,including cookie capture/two verified HTTPS session probes,then the proof
-reopener refuses. D175's underlying cause remains unobserved.18 fixed diagnostic
+reopener refuses. Exact97plaintext now identifies session-wire-fetch-site;the
+recorded value/absence and request identity remain unobserved. Preserve that
+assertion and investigate native network capture.18 fixed diagnostic
 subreasons preserve every identity,authority,CSRF,expiry,header,byte and resource
 assertion;102 focused Python contracts pass locally. Byte operator has not yet
 passed. Original three fresh plaintext/encrypted estates,consent/metadata/operator
@@ -67,13 +70,18 @@ inventory,severity,freshness,isolation and time guard remain unchanged.
 original7c native failures at inventory-closure/build-settings. Go hides serialized
 linker flags under trimpath;D174's repair keeps the deterministic build command
 and directly reads each executable's build ID. Two source copies/empty caches,
-verified modules,15 command records and exact final byte/source/output closure
+verified modules,18 prepared command records and exact final byte/source/output closure
 remain mandatory. The component inventory binds embedded Go modules/local FTP
 tree,exact UI asset bytes and four production packages with required peer closure.
 Pinned stock CycloneDX schemas and a hash-pinned wheel-only validator run on
 GitHub in an isolated venv with offline references and positive/negative controls.
-16 local trust/component/orchestration methods pass;no stock validator was installed
-or executed locally. Actual repaired reproduction/schema interoperability,independent
+Original97ARM/x86 both fail build-id-a/command-status;exit versus timeout is
+unexposed. Separate pinned builtin-reader preparation and fixed status diagnostics
+are prepared while physical reads keep10seconds. Native Go package/source closure
+now includes standard/compiler-provided/vendor inputs with import edges and final
+source reopening.22local methods pass;actual new compiler/package/schema checks
+remain on GitHub. No stock validator was installed locally. Actual repaired
+reproduction/schema interoperability,implicit/generated inputs,independent
 hosts,complete deployment/build-tool/standard-library SBOM,license review,signing
 and disconnected installation remain open. No build artifact is uploaded.
 

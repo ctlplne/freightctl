@@ -23,6 +23,9 @@ COMMIT = 'a'*40
 SUM = 'h1:'+'A'*43+'='
 ASSET = b'<html>qualification fixture, never served</html>\n'
 BINARY = b'synthetic native binary; never executed\x00'+ASSET
+PACKAGE_SPEC = importlib.util.spec_from_file_location('go_package_fixture', HERE/'test-core-go-packages.py')
+package_fixture = importlib.util.module_from_spec(PACKAGE_SPEC)
+PACKAGE_SPEC.loader.exec_module(package_fixture)
 
 
 def build_info(arch='amd64'):
@@ -65,6 +68,8 @@ class ReproBuildContracts(unittest.TestCase):
             root = Path(directory).resolve()
             temporary = root/'temporary'; temporary.mkdir()
             calls = []
+            goroot = root/'toolchain'; goroot.mkdir()
+            packages = package_fixture.fixture(goroot, build_info(arch))
             def command(work, steps, label, argv, cwd, env, timeout):
                 calls.append({'label': label, 'argv': list(map(str, argv)), 'cwd': cwd, 'env': env, 'timeout': timeout})
                 out, err = work/(label+'.stdout'), work/(label+'.stderr')
@@ -79,7 +84,8 @@ class ReproBuildContracts(unittest.TestCase):
                     data = (('b'*40 if mode == 'wrong-commit' else COMMIT)+'\n').encode()
                 elif label == 'native-go':
                     data = json.dumps({'GOHOSTOS': 'linux', 'GOOS': 'linux', 'GOHOSTARCH': arch,
-                        'GOARCH': arch, 'GOVERSION': 'go1.25.0' if mode == 'wrong-toolchain' else runner.GO_VERSION}).encode()
+                        'GOARCH': arch, 'GOVERSION': 'go1.25.0' if mode == 'wrong-toolchain' else runner.GO_VERSION,
+                        'GOROOT':str(goroot)}).encode()
                 elif label == 'source-archive':
                     archive(Path(str(argv[3]).split('=', 1)[1]))
                 elif label == 'module-download':
@@ -91,8 +97,19 @@ class ReproBuildContracts(unittest.TestCase):
                     self.assertEqual(argv[1:], ['mod', 'verify'])
                     if mode == 'final-binary-change' and label == 'module-verify-after':
                         (work/'freightctl-a').write_bytes(b'changed after all earlier observations')
+                    if mode == 'final-toolchain-change' and label == 'module-verify-after':
+                        (goroot/'src/fmt/print.go').write_bytes(b'changed after both package captures')
+                    if mode == 'final-reader-change' and label == 'module-verify-after':
+                        (work/'tool-cache/tool/buildid').write_bytes(b'changed stock reader')
+                elif label == 'prepare-build-id-tool':
+                    self.assertEqual(list(map(str,argv[1:])), ['tool','-n','buildid'])
+                    self.assertEqual(timeout, 120)
+                    reader = work/'tool-cache/tool/buildid'; reader.parent.mkdir(parents=True)
+                    reader.write_bytes(b'synthetic pinned reader; never executed')
+                    data = ((str(root/'outside-reader') if mode == 'foreign-reader' else str(reader))+'\n').encode()
                 elif label.startswith('build-id-'):
-                    self.assertEqual(list(map(str, argv[1:])), ['tool', 'buildid', str(work/('freightctl-'+label[-1]))])
+                    self.assertEqual(list(map(str, argv)), [str(work/'tool-cache/tool/buildid'), str(work/('freightctl-'+label[-1]))])
+                    self.assertEqual(timeout, 10)
                     data = b'original-build-id\n' if mode == 'retained-build-id' else b'\n'
                 elif label.startswith('build-'):
                     self.assertEqual(env['GOPROXY'], 'off')
@@ -120,6 +137,13 @@ class ReproBuildContracts(unittest.TestCase):
                     if mode == 'unexpected-ldflags':
                         info['Settings'].append({'Key': '-ldflags', 'Value': '-buildid='})
                     data = json.dumps(info).encode()
+                elif label.startswith('packages-'):
+                    self.assertEqual(timeout, 60)
+                    self.assertEqual(env['GOPROXY'], 'off')
+                    self.assertEqual(list(map(str,argv[1:])), ['list', '-p', '1', '-mod=readonly', '-trimpath', '-buildvcs=false', '-ldflags=-buildid=', '-deps', '-json', './cmd/freightctl'])
+                    current = copy.deepcopy(packages)
+                    if mode == 'missing-package' and label == 'packages-b': current.pop()
+                    data = package_fixture.raw(current)
                 elif label.startswith('help-'):
                     self.assertEqual(argv[1:], ['--help'])
                     self.assertEqual(env['GOPROXY'], 'off')
@@ -167,12 +191,13 @@ class ReproBuildContracts(unittest.TestCase):
             self.assertEqual(result['component_inventory_format'], 'CycloneDX1.6')
             self.assertRegex(result['component_inventory_sha256'], '^[0-9a-f]{64}$')
             self.assertEqual(result['component_schema_validation'], {'engine': 'stand-in-only-not-qualified'})
+            self.assertEqual(result['go_standard_library_packages'], 3)
 
     def test_real_orchestration_refuses_changed_source_binary_inventory_platform_and_help(self):
         for mode in ('different-binary', 'different-help', 'wrong-dependency', 'foreign-replacement',
                 'cgo-enabled', 'vcs-setting', 'prime-source-change', 'build-source-change', 'wrong-commit', 'wrong-toolchain',
                 'prior-binary-change', 'prior-source-change', 'prior-log-change', 'final-binary-change', 'schema-refusal',
-                'unexpected-ldflags', 'retained-build-id'):
+                'unexpected-ldflags', 'retained-build-id', 'final-toolchain-change', 'missing-package', 'final-reader-change', 'foreign-reader'):
             with self.subTest(mode=mode):
                 code, result, manifest, _ = self.exercise(mode=mode)
                 self.assertEqual(code, 2)
