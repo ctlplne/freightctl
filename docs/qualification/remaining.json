@@ -857,7 +857,8 @@
         "docs/qualification/evidence/F080-artifact-exchange-contract.json",
         "docs/qualification/evidence/F081-artifact-exchange-endpoints.json",
         "docs/qualification/evidence/F082-artifact-receive-views.json",
-        "docs/qualification/evidence/F083-artifact-exchange-api.json"
+        "docs/qualification/evidence/F083-artifact-exchange-api.json",
+        "docs/qualification/evidence/F085-artifact-exchange-cli.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -872,11 +873,11 @@
         "S003 resumes the full product and authorizes guarded source/CI batches after previous required runs are terminal. Contract validators are implemented with focused red/green proof; durable services and five API paths are implemented; remaining surfaces and actual AX profiles remain owed. Broad/deferred qualification is mandatory at FINISH."
       ],
       "current_item": {
-        "id": "F083",
-        "state": "API and serve controls implemented; native/served proof owed",
-        "proof": "4 API refusal methods,1 serve configuration regression,1 exact expiry regression,1 strict command wire method; integration compile/vet and architecture pass",
-        "native": "Four F081,eight F082 and one served F083 cases prepared/owed; fresh42 only,retained35 untouched",
-        "next": "Guarded source push now that all fc577d5 runs are terminal; implement CLI/UI/agent surfaces and remaining exchange controls. Native proofs run on GitHub."
+        "id": "F085",
+        "state": "Five CLI commands and protected verified download implemented; actual native dispatch proof owed",
+        "proof": "Six focused parser/filesystem methods, including actual red/green directory substitution and foreign-cleanup refusal; native compile/vet and import architecture pass",
+        "native": "F081-F083 and new F085 main.run PostgreSQL cases owed; runtime failures remain preserved, not passed",
+        "next": "UI/agent tools, outgoing/admin history and per-view controls; qualify complete AX profiles and FINISH all remaining GOAL work."
       }
     }
   ],

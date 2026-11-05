@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "id": "F085",
+  "observed_at": "2026-11-05",
+  "starting_commit": "db593d0b57cd0286f9a78b67bcee5652e86ed9c3",
+  "state": "CLI commands and protected verified downloads implemented; native command-dispatch qualification owed.",
+  "qualification_claim": false,
+  "change": "Five ordinary-authority command paths; protected request decoding, same domain events/receipts and live retrieval services; full streaming verification and exclusive pinned-directory output publication. No received artifact gains forwarding or execution authority.",
+  "red": [
+    {
+      "test": "TestExchangeCLIRefusesInvalidSelectorsBeforeOpeningReferences",
+      "result": "FAIL: unknown -exchange-endpoint-id; command wiring absent",
+      "reference": ".private/freightctl-exchange-cli-red.log",
+      "sha256": "c0792d09a11bcfff12a1ad0e7a6aef73a461379279f5ccad3ac03fdbaecbc47e"
+    },
+    {
+      "tests": [
+        "TestExchangeDownloadRefusesUnprotectedOutputDirectory",
+        "TestExchangeDownloadDirectoryReplacementCannotSubstituteVerifiedOutput"
+      ],
+      "result": "Both FAIL with nil error: unprotected parent accepted, and directory replacement substituted an unverified staging pathname. Repaired with private pinned directory, same-inode check and rooted publication/cleanup.",
+      "reference": ".private/freightctl-exchange-directory-red.log",
+      "sha256": "2f0df3c8ce4dc7b2727095bd39bd76ea2278c33fb8fb573a3172000b770afa7e"
+    }
+  ],
+  "green": {
+    "focused_methods": 6,
+    "scope": "Actual local parser and filesystem stand-ins; six methods include exact length/digest/empty/private-mode/no-overwrite and expected interruption/cancellation errors, directory permissions and live directory substitution/foreign-cleanup refusal. Windows only fail-closed assertions, not ACL qualification.",
+    "integration_compile": "cmd/freightctl pass; no PostgreSQL run",
+    "integration_vet": "cmd/freightctl pass",
+    "architecture": "TestCoreImportBoundaries pass",
+    "diff_check": "pass"
+  },
+  "source_files": [
+    {
+      "path": "cmd/freightctl/main.go",
+      "sha256": "6ef703abcf8f6fd7bdc09242d5c685f305811ab054325e7dbe289634af88e09e"
+    },
+    {
+      "path": "cmd/freightctl/exchanges.go",
+      "sha256": "c0591cdf891a43289d8978b19b03955256e12250ad81dac833c0fdf94eab3f94"
+    },
+    {
+      "path": "cmd/freightctl/exchanges_test.go",
+      "sha256": "fde806d5e88cec3bb30a24faba58274e3e9a7276740af03889e1d186c8edd127"
+    },
+    {
+      "path": "cmd/freightctl/exchanges_integration_test.go",
+      "sha256": "9d3690a09add74d3a05c56cb300edec9ad24cce1458f6de168af2a2490eecaf7"
+    },
+    {
+      "path": "docs/protocols/artifact-exchange-cli.md",
+      "sha256": "87e5e5e9f0508bbe2dbea52233dd6864e149288c6bb9d4f3b90b7210a35981d4"
+    }
+  ],
+  "local_manifest": {
+    "reference": ".private/freightctl-f085-cli-20261105/manifest.json",
+    "sha256": "9e667adfdeedbf01f271762a799a8c3d3ca663ef2443e28e531a53a577ba5c55"
+  },
+  "native_tests_owed": [
+    "TestArtifactExchangeCLIUsesOrdinaryAuthorityAndPublishesVerifiedDownload"
+  ],
+  "prepared_native_scope": "Fresh task-owned PostgreSQL/schema42 and actual custody; main.run flag dispatch with ordinary participant credentials. Root manager registration, denied sender administration, own-file acceptance, discarded first offer result/original key recovery/conflict, bounded discovery, unrelated actor refusal, inspection, exact protected output/no overwrite and no inherited delivery. Compiled only.",
+  "owed": [
+    "Actual native command-dispatch runtime and all prior F081-F083 cases",
+    "Separate-process CLI, stock HTTPS/independent receiver, crash/restart and complete AX profiles",
+    "Native Windows protected references, ACLs and custody; other new surfaces and all GOAL gates"
+  ]
+}

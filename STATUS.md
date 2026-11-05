@@ -7,10 +7,11 @@ independent adoption and enterprise readiness remain separately unqualified.
 
 Origin/main is db593d0b57cd0286f9a78b67bcee5652e86ed9c3, pushed through the
 enabled Gitleaks/owner/fast-forward guard with all three outgoing author/committer
-identities verified. Its original required runs remain active. Core record
-contracts fail before security steps execute; F084 makes the independent security
-steps run despite earlier unrelated failures. Source vulnerability configurations
-pass. Nonsecurity log investigation/repair remains deferred to mandatory FINISH.
+identities verified. All eleven original runs are terminal. Core record contracts
+fail before security steps execute; F084 makes the independent security steps run
+despite earlier unrelated failures. Source vulnerability configurations and
+reproducibility pass. Native integration/metadata and other public/native jobs are
+red, with individual nonsecurity log investigation/repair deferred to FINISH.
 Exact original handles are retained; no original runtime run was canceled.
 
 F080/F081 provide canonical exchange contracts and journaled endpoint registration.
@@ -30,7 +31,14 @@ architecture pass. Four endpoint, eight receive-view and one served HTTPS case
 are prepared and owed. Compilation proves no PostgreSQL or served runtime claim.
 Fresh42 expects69 metadata tables/68 forced-RLS tables; retained35 is untouched.
 
-Next: expose the shared services through CLI/UI/agent tools and qualify real
+F085 adds five ordinary-authority CLI commands and protected verified downloads.
+Six local methods pass, including observed directory replacement and its repair:
+private pinned directory, exact full bytes/digest, exclusive publication, file and
+directory sync, no overwrite and no cleanup of a foreign replacement. Native
+command-dispatch proof is compiled/vetted and owed; separate-process CLI, stock
+client and Windows ACL/custody proof remain owed.
+
+Next: expose the shared services through UI/agent tools and qualify real
 AX-J01/J02/J03, including stock clients, independent bytes, interrupted/response-loss
 and process-death recovery. Per-view cancellation, retention, fairness/capacity and
 all remaining applicable baseline work remain required. Trust Control X07 blocks
