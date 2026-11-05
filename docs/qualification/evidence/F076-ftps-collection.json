@@ -1051,5 +1051,21 @@
       "observation": "First explicit metadata Chrome command completes,including cookie capture and two verified HTTPS probes;reopening refuses session-proof. No failed native/CLI/lftp commands;exact retained metadata/role/resource/DB cleanup succeeds. Byte operator not reached.",
       "cause": "Unobserved within the new session verifier. Preserve every identity/authority/CSRF/expiry/header/resource assertion and add fixed private-safe subreason diagnostics;do not guess timing or header cause."
     }
+  },
+  "session_subreason_diagnostics_prepared": {
+    "defect": "D175",
+    "cause": "Actual new session-proof assertion remains unobserved; do not infer identity,timing,CSRF or header cause.",
+    "mechanism": "Split only the existing proof predicates into18fixed allowlisted subreason labels for cookie envelope/scope/expiry,session envelope/identity/state/expiry/CSRF/limits,probe headers/body and original wire authentication/fetch-site/origin/CSRF/method. Unknown labels collapse to a fixed unrecognized-proof category; modified error prose is unrecognized evidence. Original proof predicates,byte/identity/authority/CSRF/expiry/header/privacy checks and budgets are unchanged.",
+    "local_manifest_reference": ".private/freightctl-f076-session-reasons-b_6_3myl/manifest.json",
+    "local_manifest_sha256": "52bcdbc9a66e1a2f2c1d926d057c577132566d6d64ccaf5b2000682d5d7585e9",
+    "python_methods": {
+      "session": 5,
+      "metadata": 9,
+      "browser": 9,
+      "operator": 8,
+      "reporter": 71
+    },
+    "runtime_qualification": false,
+    "scope": "102pure own-file/HTTP/Page/process/parser contracts. No actual local Chrome,PG,source,scanner or inference; no underlying session repair claimed. Require exact original public GitHub replay to expose actual subreason."
   }
 }

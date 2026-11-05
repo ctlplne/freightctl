@@ -36,6 +36,18 @@ def fixture(directory, config, identity):
 
 
 class SessionContracts(unittest.TestCase):
+    def test_every_subreason_is_fixed_and_exception_or_unknown_reason_stays_private(self):
+        import ftps_collection_browser as browser
+        for reason in session.REASONS:
+            with self.assertRaises(ValueError) as caught:
+                session.check(False, reason)
+            self.assertEqual(browser.failure_code(caught.exception), 'session-'+reason)
+            self.assertEqual(browser.failure_code(ValueError(str(caught.exception)+' private-canary')), 'unrecognized-evidence')
+        with self.assertRaises(ValueError) as caught:
+            session.check(False, '/private/credential-canary')
+        self.assertEqual(browser.failure_code(caught.exception), 'session-unrecognized-proof')
+        self.assertNotIn('credential-canary', str(caught.exception))
+
     def setUp(self):
         temporary = tempfile.TemporaryDirectory(prefix='freightctl-session-contract-')
         self.addCleanup(temporary.cleanup)

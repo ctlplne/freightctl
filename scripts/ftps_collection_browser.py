@@ -24,6 +24,7 @@ FILES = frozenset(('config.json', 'raw/ftps-collection-browser-result.json',
 
 FAILURE_CODES = {
     session.ERROR: 'session-proof',
+    **{session.message(reason): 'session-'+reason for reason in session.REASONS},
     'collection actual Chrome did not pass': 'chrome-record',
     'collection browser HTTPS address differs': 'url',
     'collection browser accessibility audit missing or failed': 'accessibility',

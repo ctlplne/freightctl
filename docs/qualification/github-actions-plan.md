@@ -204,3 +204,8 @@ profiles now fail session-proof after complete explicit metadata Chrome and two
 verified session probes. Preserve strict authority/CSRF/expiry/header checks and
 expose only fixed verifier subreasons to identify the actual failure;byte operator
 and full public journeys remain open.
+
+D175 adds18fixed private-safe session subreasons to the unchanged proof predicates.
+102focused local Python contracts pass;the original actual failure remains unclassified
+within the proof and requires the same public replay. Preserve every authority,
+CSRF,expiry,wire,source,byte and resource guard;do not turn diagnostics into a pass.

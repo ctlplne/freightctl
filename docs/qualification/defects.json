@@ -2784,6 +2784,21 @@
       "regression_evidence": [
         "docs/qualification/evidence/F077-native-reproducible-core.json"
       ]
+    },
+    {
+      "id": "D175",
+      "severity": "public session evidence qualification",
+      "state": "Both original actual failures retained; strict predicates gain fixed private-safe subreasons; actual cause/replay pending",
+      "observed_on": "2026-11-05",
+      "candidate": "7c163a834a7a95cb6482730fbb3e486b1b8aa879",
+      "journey": "F076public collection metadata Chrome session proof",
+      "title": "New session reopener refuses after complete browser journey and two HTTPS session probes",
+      "first_failure": "Jobs126956735885/126956736067 complete first explicit metadata Chrome command,including cookie capture and two verified HTTPS reads;browser-reopen/session-proof refuses. No failed native/CLI/lftp commands;all retained metadata/role/resource/database cleanup passes. Byte operator not reached.",
+      "cause": "Unobserved within the newly introduced proof verifier. The original fixed category does not identify which unchanged assertion failed. Do not invent a timing,identity,CSRF or header explanation.",
+      "resolution": "Assign18static subreasons to the exact existing assertions;keep all predicates,budgets and privacy controls. Original parent/report enums accept only those exact reasons,never private exception prose or arbitrary labels.102focused stand-in/parser methods pass;actual diagnostic replay and underlying repair remain required.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F076-ftps-collection.json"
+      ]
     }
   ]
 }
