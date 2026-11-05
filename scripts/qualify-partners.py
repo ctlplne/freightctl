@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Explicit tenant authority, ordinary partner enrollment and independent exact-byte exchange."""
+from ci_resources import environment as ci_environment
 from pathlib import Path
 from datetime import datetime, timezone
 from urllib.parse import urlsplit, urlunsplit
@@ -8,7 +9,7 @@ os.umask(0o077)
 root=Path(__file__).resolve().parents[1];os.chdir(root)
 run='partners-'+uuid.uuid4().hex;private=root/'.private'/run;private.mkdir(mode=0o700);raw=root/'evidence/raw'/run;raw.mkdir(parents=True,mode=0o700)
 name='freightctl_'+run.replace('-','_');binary=root/'.cache/freightctl-partners';created=False;server=None;log=None;steps=[];started=time.monotonic();state='failed';failure=None
-env=dict(os.environ,GOMAXPROCS='1',GOMEMLIMIT='192MiB',NODE_OPTIONS='--max-old-space-size=192',PLAYWRIGHT_BROWSERS_PATH=str(root/'.cache/freightctl-playwright'))
+env=ci_environment(dict(os.environ,GOMAXPROCS='1',GOMEMLIMIT='192MiB',NODE_OPTIONS='--max-old-space-size=192',PLAYWRIGHT_BROWSERS_PATH=str(root/'.cache/freightctl-playwright')))
 def digest(p):
  with Path(p).open('rb')as f:return hashlib.file_digest(f,'sha256').hexdigest()
 def sources():

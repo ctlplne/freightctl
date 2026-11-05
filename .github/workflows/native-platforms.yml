@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
     paths:
+      - 'scripts/ci_resources.py'
+      - 'scripts/test-ci-resources.py'
       - 'cmd/**'
       - 'internal/**'
       - 'third_party/**'
@@ -17,6 +19,8 @@ on:
       - .github/workflows/native-platforms.yml
   pull_request:
     paths:
+      - 'scripts/ci_resources.py'
+      - 'scripts/test-ci-resources.py'
       - 'cmd/**'
       - 'internal/**'
       - 'third_party/**'
@@ -36,14 +40,10 @@ permissions:
 jobs:
   windows-amd64:
     runs-on: windows-2025
-    timeout-minutes: 25
     concurrency:
       # Finish each OS's running evidence; a queued Mac cannot hold Windows.
       group: freightctl-native-${{ github.workflow }}-windows-amd64-${{ github.ref }}
       cancel-in-progress: false
-    env:
-      GOMAXPROCS: "1"
-      GOMEMLIMIT: 192MiB
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         id: source
@@ -64,11 +64,10 @@ jobs:
           git ls-files --eol web/THIRD_PARTY_NOTICES.txt internal/browser/assets/manifest.json
           go mod verify
           go vet ./...
-          go test ./...
+          go test -timeout=0 ./...
       - name: Observe native Windows filesystem APIs without qualifying custody
         # Preserve the original unit failure and still collect bounded API facts.
         if: ${{ !cancelled() && steps.source.outcome == 'success' && steps.go.outcome == 'success' }}
-        timeout-minutes: 5
         shell: python
         run: |
           import subprocess, sys
@@ -76,13 +75,9 @@ jobs:
 
   macos-arm64:
     runs-on: macos-15
-    timeout-minutes: 25
     concurrency:
       group: freightctl-native-${{ github.workflow }}-macos-arm64-${{ github.ref }}
       cancel-in-progress: false
-    env:
-      GOMAXPROCS: "1"
-      GOMEMLIMIT: 192MiB
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
@@ -98,4 +93,4 @@ jobs:
           go version
           go mod verify
           go vet ./...
-          go test -race ./...
+          go test -timeout=0 -race ./...

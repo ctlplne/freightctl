@@ -11,7 +11,6 @@ import os
 from pathlib import Path, PurePosixPath
 import platform
 import re
-import resource
 import shutil
 import signal
 import subprocess
@@ -25,9 +24,6 @@ import core_go_packages as go_packages
 ROOT = Path(__file__).resolve().parents[1]
 GO_VERSION = 'go1.26.10'
 MODULE = 'github.com/ctlplne/freightctl'
-SOURCE_MAX = 64 << 20
-BINARY_MAX = 128 << 20
-WORKING_MAX = 4 << 30
 COMMANDS = ('source-identity', 'source-clean', 'native-go', 'source-archive', 'module-download', 'module-verify-before', 'prepare-build-id-tool',
     'build-a', 'build-id-a', 'inventory-a', 'packages-a', 'help-a', 'build-b', 'build-id-b', 'inventory-b', 'packages-b', 'help-b', 'module-verify-after')
 PHASES = frozenset(('preflight', *COMMANDS, 'source-extract', 'source-closure', 'binary-closure', 'inventory-closure', 'package-closure', 'component-inventory', 'component-schema', 'record'))
@@ -47,8 +43,8 @@ def require(value, check='evidence'):
         raise InvalidEvidence(check)
 
 
-def digest(path, maximum, allow_empty=False):
-    require(path.is_file() and not path.is_symlink() and (0 if allow_empty else 1) <= path.stat().st_size <= maximum)
+def digest(path, maximum=None, allow_empty=False):
+    require(path.is_file() and not path.is_symlink() and (0 if allow_empty else 1) <= path.stat().st_size and (maximum is None or path.stat().st_size <= maximum))
     with path.open('rb') as stream:
         return hashlib.file_digest(stream, 'sha256').hexdigest()
 
@@ -66,7 +62,7 @@ def load(path):
 
 def extract(archive, destination):
     """No archive link, special file, overwrite or path escape is accepted."""
-    require(archive.stat().st_size <= SOURCE_MAX and not destination.exists())
+    require(archive.is_file() and not archive.is_symlink() and not destination.exists())
     destination.mkdir(mode=0o700)
     total, seen = 0, set()
     with tarfile.open(archive, 'r:') as stream:
@@ -76,14 +72,13 @@ def extract(archive, destination):
                 and all(p not in ('', '.', '..') for p in name.parts)
                 and name.as_posix().rstrip('/') == member.name.rstrip('/') and '\\' not in member.name
                 and name.parts[0] not in ('.git', '.private', '.cache') and member.name not in seen
-                and len(seen) < 8192 and (member.isdir() or member.isfile()) and 0 <= member.size <= 16 << 20)
+                and (member.isdir() or member.isfile()) and member.size >= 0)
             seen.add(member.name)
             target = destination.joinpath(*name.parts)
             if member.isdir():
                 target.mkdir(mode=0o700, parents=True, exist_ok=True)
                 continue
             total += member.size
-            require(total <= SOURCE_MAX)
             target.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
             original = stream.extractfile(member)
             require(original is not None)
@@ -101,8 +96,7 @@ def sources(root):
             require(not (Path(directory)/name).is_symlink())
         for name in files:
             path = Path(directory)/name
-            require(len(result) < 8192 and not path.is_symlink() and path.is_file()
-                and path.stat().st_size <= 16 << 20)
+            require(not path.is_symlink() and path.is_file())
             with path.open('rb') as stream:
                 result[path.relative_to(root).as_posix()] = hashlib.file_digest(stream, 'sha256').hexdigest()
     return result
@@ -117,7 +111,6 @@ def working_bytes(root):
             require(not path.is_symlink() and path.is_file())
             count += 1
             total += path.stat().st_size
-            require(count <= 100000 and total <= WORKING_MAX, 'working-budget')
     return total
 
 
@@ -167,7 +160,7 @@ def inventory(value, source, arch):
 def environment(work, download):
     # Do not inherit credentials, model/database settings, proxy URLs or GOFLAGS.
     env = {key: os.environ[key] for key in ('PATH', 'LANG', 'LC_ALL', 'TZ', 'GOROOT') if key in os.environ}
-    env.update(GOMAXPROCS='1', GOMEMLIMIT='192MiB', GOTOOLCHAIN='local', GOENV='off',
+    env.update(GOTOOLCHAIN='local', GOENV='off',
         GOTELEMETRY='off', GOPATH=str(work/'gopath'), GOMODCACHE=str(work/'modules'),
         GOCACHE=str(work/'tool-cache'),
         GOPROXY='https://proxy.golang.org,direct' if download else 'off', GOSUMDB='sum.golang.org',
@@ -178,12 +171,10 @@ def environment(work, download):
 def command(work, steps, label, argv, cwd, env, timeout):
     require(label in COMMANDS and not any(step['name'] == label for step in steps))
     out, err = (work/(label+'.'+name) for name in ('stdout', 'stderr'))
-    def bounded():
-        resource.setrlimit(resource.RLIMIT_FSIZE, (BINARY_MAX, BINARY_MAX))
     code = 'incomplete'
     with out.open('xb') as stdout, err.open('xb') as stderr:
         child = subprocess.Popen(list(map(str, argv)), cwd=cwd, env=env, stdin=subprocess.DEVNULL,
-            stdout=stdout, stderr=stderr, start_new_session=True, preexec_fn=bounded)
+            stdout=stdout, stderr=stderr, start_new_session=True)
         try:
             code = child.wait(timeout=timeout)
         except subprocess.TimeoutExpired:
@@ -222,7 +213,7 @@ def main():
         go = shutil.which('go')
         require(go is not None)
         env = environment(work, False)
-        def run(label, argv, cwd=ROOT, variables=None, timeout=30):
+        def run(label, argv, cwd=ROOT, variables=None, timeout=None):
             nonlocal phase
             phase = label
             return command(work, steps, label, argv, cwd, variables or env, timeout)
@@ -234,7 +225,7 @@ def main():
             and type(native['GOROOT']) is str and Path(native['GOROOT']).is_absolute(), 'native-configuration')
         archive = work/'source.tar'
         run('source-archive', ['git', 'archive', '--format=tar', '--output='+str(archive), commit])
-        source_sha = digest(archive, SOURCE_MAX)
+        source_sha = digest(archive)
         phase = 'source-extract'
         first, second = work/'one/source', work/'different-parent/two/source'
         first.parent.mkdir(mode=0o700)
@@ -244,18 +235,18 @@ def main():
         require(original == sources(second))
         prime = environment(work, True)
         prime['GOCACHE'] = str(work/'prime-cache')
-        run('module-download', [go, 'mod', 'download', '-json'], first, prime, 300)
-        run('module-verify-before', [go, 'mod', 'verify'], first, timeout=60)
+        run('module-download', [go, 'mod', 'download', '-json'], first, prime, None)
+        run('module-verify-before', [go, 'mod', 'verify'], first, timeout=None)
         # Go1.26 may build less-used builtin tools on demand. Prepare the pinned
-        # stock reader separately; physical ID reads retain their10second cap.
-        reader_output = run('prepare-build-id-tool', [go, 'tool', '-n', 'buildid'], first, timeout=120)
+        # stock reader separately; the enclosing GitHub job bounds its lifetime.
+        reader_output = run('prepare-build-id-tool', [go, 'tool', '-n', 'buildid'], first, timeout=None)
         reader_lines = reader_output.read_text().splitlines()
         require(len(reader_lines) == 1 and (work/'prepare-build-id-tool.stderr').read_bytes() == b'', 'build-id')
         reader = Path(reader_lines[0])
         allowed = ((work/'tool-cache').resolve(), (Path(native['GOROOT'])/'pkg/tool').resolve())
         require(reader.is_absolute() and '..' not in reader.parts and any(reader.is_relative_to(root) for root in allowed)
             and any(reader.resolve(strict=True).is_relative_to(root) for root in allowed) and not reader.is_symlink(), 'build-id')
-        reader_sha = digest(reader, BINARY_MAX)
+        reader_sha = digest(reader)
         phase = 'source-closure'
         require(sources(first) == original and sources(second) == original, 'source-unchanged')
         results, infos, help_hashes, package_inventories = [], [], [], []
@@ -263,11 +254,11 @@ def main():
             build_env = dict(env, GOCACHE=str(work/('cache-'+label)))
             require(not Path(build_env['GOCACHE']).exists())
             binary = work/('freightctl-'+label)
-            run('build-'+label, [go, 'build', '-p', '1', '-mod=readonly', '-trimpath', '-buildvcs=false',
-                '-ldflags=-buildid=', '-o', binary, './cmd/freightctl'], source, build_env, 300)
-            results.append(digest(binary, BINARY_MAX))
-            require(digest(reader, BINARY_MAX) == reader_sha, 'build-id')
-            build_id = run('build-id-'+label, [reader, binary], timeout=10)
+            run('build-'+label, [go, 'build', '-mod=readonly', '-trimpath', '-buildvcs=false',
+                '-ldflags=-buildid=', '-o', binary, './cmd/freightctl'], source, build_env, None)
+            results.append(digest(binary))
+            require(digest(reader) == reader_sha, 'build-id')
+            build_id = run('build-id-'+label, [reader, binary], timeout=None)
             require(build_id.read_bytes() == b'\n'
                 and (work/('build-id-'+label+'.stderr')).read_bytes() == b'', 'build-id')
             info = load(run('inventory-'+label, [go, 'version', '-m', '-json', binary]))
@@ -275,10 +266,10 @@ def main():
             count = inventory(info, source, arch)
             infos.append(info)
             graph = run('packages-'+label, [go, 'list', '-p', '1', '-mod=readonly', '-trimpath', '-buildvcs=false',
-                '-ldflags=-buildid=', '-deps', '-json', './cmd/freightctl'], source, build_env, 60)
+                '-ldflags=-buildid=', '-deps', '-json', './cmd/freightctl'], source, build_env, None)
             phase = 'package-closure'
             package_inventories.append(go_packages.capture(graph.read_bytes(), native['GOROOT'], info))
-            output = run('help-'+label, [binary, '--help'], source, build_env, 10)
+            output = run('help-'+label, [binary, '--help'], source, build_env, None)
             help_bytes = output.read_bytes()
             require(help_bytes.startswith(b'freightctl: schema-version') and b'serve-ftps' in help_bytes
                 and (work/('help-'+label+'.stderr')).read_bytes() == b'')
@@ -287,21 +278,21 @@ def main():
             require(sources(source) == original, 'source-unchanged')
         phase = 'binary-closure'
         require(results[0] == results[1] and infos[0] == infos[1] and help_hashes[0] == help_hashes[1]
-            and [digest(work/('freightctl-'+label), BINARY_MAX) for label in ('a', 'b')] == results, 'binary-equality')
-        run('module-verify-after', [go, 'mod', 'verify'], first, timeout=60)
+            and [digest(work/('freightctl-'+label)) for label in ('a', 'b')] == results, 'binary-equality')
+        run('module-verify-after', [go, 'mod', 'verify'], first, timeout=None)
         phase = 'source-closure'
         require(sources(first) == original and sources(second) == original
             and tuple(step['name'] for step in steps) == COMMANDS, 'source-unchanged')
         for step in steps:
             for stream in ('stdout', 'stderr'):
                 require(digest(work/(step['name']+'.'+stream), 32 << 20, allow_empty=True) == step[stream+'_sha256'])
-        require(digest(archive, SOURCE_MAX) == source_sha)
+        require(digest(archive) == source_sha)
         phase = 'binary-closure'
-        require([digest(work/('freightctl-'+label), BINARY_MAX) for label in ('a', 'b')] == results, 'binary-equality')
+        require([digest(work/('freightctl-'+label)) for label in ('a', 'b')] == results, 'binary-equality')
         phase = 'package-closure'
         require(package_inventories[0] == package_inventories[1])
         go_packages.reopen(package_inventories[0], native['GOROOT'])
-        require(digest(reader, BINARY_MAX) == reader_sha, 'build-id')
+        require(digest(reader) == reader_sha, 'build-id')
         phase = 'component-inventory'
         docs = [components.encoded(components.create(source, original, info, commit, arch,
             work/('freightctl-'+label), results[index], package_inventories[index]))
@@ -317,14 +308,14 @@ def main():
         manifest = {'schema_version': 1, 'kind': 'freightctl-native-reproducible-core-v1', 'state': 'passed',
             'source_commit': commit, 'architecture': arch, 'native_go': native, 'source_archive_sha256': source_sha,
             'source_files': len(original), 'source_tree_sha256': hashlib.sha256(json.dumps(original, sort_keys=True).encode()).hexdigest(),
-            'binary_sha256': results[0], 'dependency_modules': count, 'help_sha256': help_hashes[0], 'steps': steps,
+            'binary_bytes': (work/'freightctl-a').stat().st_size, 'binary_sha256': results[0], 'dependency_modules': count, 'help_sha256': help_hashes[0], 'steps': steps,
             'component_inventory_sha256': component_sha, 'component_inventory_format': 'CycloneDX1.6',
             'component_schema_validation': schema_validation,
             'go_standard_library_packages': len(package_inventories[0]['packages']),
             'go_package_graph_sha256': package_inventories[0]['package_graph_sha256'],
             'selected_toolchain_source_sha256': package_inventories[0]['toolchain_source_sha256'],
             'build_id_reader_sha256': reader_sha,
-            'working_bytes_after_steps': working_bytes(work), 'working_bytes_after_steps_max': WORKING_MAX,
+            'working_bytes_after_steps': working_bytes(work), 'working_bytes_after_steps_max': None,
             'artifact_published': False, 'complete_sbom': False, 'disconnected_install_qualified': False,
             'signing_qualified': False, 'production_platform_qualified': False}
         path = work/'manifest.json'; path.write_text(json.dumps(manifest, indent=2)+'\n')

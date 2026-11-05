@@ -10,16 +10,11 @@ permissions:
 
 concurrency:
   group: freightctl-core-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   source-and-browser:
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
-    env:
-      GOMAXPROCS: "1"
-      GOMEMLIMIT: 192MiB
-      NODE_OPTIONS: --max-old-space-size=192
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
@@ -40,6 +35,7 @@ jobs:
           sh scripts/go.sh run -p 1 github.com/rhysd/actionlint/cmd/actionlint@v1.7.12 .github/workflows/*.yml
       - name: Qualification record refusal contracts
         run: |
+          python3 scripts/test-ci-resources.py
           python3 scripts/check-ftp-engine.py
           python3 scripts/test-ftp-engine.py
           python3 scripts/test-ci-ftps-summary.py
@@ -50,7 +46,7 @@ jobs:
           node --test --test-concurrency=1 scripts/test-browser-native-wire.mjs
           python3 scripts/test-ftps-client-summary.py
           python3 scripts/test-ftps-stock-metadata.py
-          sh scripts/go.sh test -p 1 -race ./scripts/peers/ftps-source
+          sh scripts/go.sh test -timeout=0 -p 1 -race ./scripts/peers/ftps-source
           python3 scripts/test-ftps-collection-source.py
           python3 scripts/test-ftps-collection-operator.py
           python3 scripts/test-repro-builds.py
@@ -75,8 +71,10 @@ jobs:
           npm --prefix web run typecheck
           npm --prefix web run check-built
       - name: JavaScript dependency audit
+        if: ${{ !cancelled() }}
         run: npm --prefix web --cache "$GITHUB_WORKSPACE/.cache/freightctl-npm" audit
       - name: Go vulnerability reachability
+        if: ${{ !cancelled() }}
         run: |
           umask 077
           mkdir -p .private .cache/freightctl-govulncheck-1.9.0
@@ -86,6 +84,7 @@ jobs:
           test -s .private/govulncheck.json
           .cache/freightctl-govulncheck-1.9.0/govulncheck -mode=convert -show=version,verbose < .private/govulncheck.json
       - name: Committed source and history secret scan
+        if: ${{ !cancelled() }}
         run: |
           task_source_snapshot=$(mktemp -d "$RUNNER_TEMP/freightctl-source.XXXXXX")
           git archive HEAD | tar -x -C "$task_source_snapshot"

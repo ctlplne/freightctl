@@ -5,6 +5,7 @@ Uses one exact retained task PostgreSQL instance, a fresh fixture database,
 loopback HTTPS/stock SFTP and bounded task-owned application processes.
 No inference, scanner or shared Docker lifecycle operation.
 """
+from ci_resources import environment as ci_environment
 from pathlib import Path
 from datetime import datetime, timezone
 from urllib.parse import urlsplit, urlunsplit
@@ -20,7 +21,7 @@ run='collections-'+uuid.uuid4().hex;private=root/'.private'/run;private.mkdir(mo
 binary=private/'freightctl';database='freightctl_'+run.replace('-','_');created=False;servers={};logs={};steps=[];cleanup=[];state='failed';failure=None;started=time.monotonic()
 output_proof=NativeEvidence(raw,steps)
 reserve_step=output_proof.reserve
-env=dict(os.environ,GOMAXPROCS='1',GOMEMLIMIT='192MiB',NODE_OPTIONS='--max-old-space-size=192',PLAYWRIGHT_BROWSERS_PATH=str(root/'.cache/freightctl-playwright'))
+env=ci_environment(dict(os.environ,GOMAXPROCS='1',GOMEMLIMIT='192MiB',NODE_OPTIONS='--max-old-space-size=192',PLAYWRIGHT_BROWSERS_PATH=str(root/'.cache/freightctl-playwright')))
 pg=options.postgres_container_id
 def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 def sources():

@@ -75,9 +75,9 @@ const browser = await chromium.launch({
     "--ignore-certificate-errors-spki-list=" + spki,
     "--disable-background-networking",
     "--disable-component-update",
-    ...(c.routing_only ||
+    ...(process.env.GITHUB_ACTIONS !== "true" && (c.routing_only ||
     c.dispatch_protocol === "ftps" ||
-    ["ftps-metadata", "ftps-operator"].includes(c.collection_phase)
+    ["ftps-metadata", "ftps-operator"].includes(c.collection_phase))
       ? ["--renderer-process-limit=1", "--js-flags=--max-old-space-size=128"]
       : []),
   ],

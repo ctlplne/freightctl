@@ -3,6 +3,7 @@
 The Go helper uses real custody/FTPS; this lifecycle never opens a probe socket.
 Only the exact child it starts can receive a stop signal. Not a stock peer.
 """
+from ci_resources import environment as ci_environment
 import hashlib
 import os
 from pathlib import Path
@@ -62,7 +63,7 @@ class Source:
             self.stderr = output(self.err_path)
             self.began = time.monotonic()
             self.process = subprocess.Popen([str(self.private/'source-ftps'), str(self.config)],
-                cwd=self.root, env=dict(os.environ, GOMAXPROCS='1', GOMEMLIMIT='192MiB'),
+                cwd=self.root, env=ci_environment(dict(os.environ, GOMAXPROCS='1', GOMEMLIMIT='192MiB')),
                 stdin=subprocess.DEVNULL, stdout=self.stdout, stderr=self.stderr,
                 start_new_session=True, preexec_fn=self.bounded_output)
             deadline = time.monotonic()+10

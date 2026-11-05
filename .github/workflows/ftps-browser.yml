@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
     paths:
+      - 'scripts/ci_resources.py'
+      - 'scripts/test-ci-resources.py'
       - 'cmd/**'
       - 'internal/**'
       - 'web/**'
@@ -44,6 +46,8 @@ on:
       - '.github/workflows/ftps-browser.yml'
   pull_request:
     paths:
+      - 'scripts/ci_resources.py'
+      - 'scripts/test-ci-resources.py'
       - 'cmd/**'
       - 'internal/**'
       - 'web/**'
@@ -96,11 +100,7 @@ jobs:
   browser-ftps:
     name: Native x86 browser and live FTPS governance
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
     env:
-      GOMAXPROCS: "1"
-      GOMEMLIMIT: 192MiB
-      NODE_OPTIONS: --max-old-space-size=192
       FREIGHTCTL_BROWSER_CHANNEL: chrome
       PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.cache/freightctl-playwright
     steps:

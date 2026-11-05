@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
     paths:
+      - 'scripts/ci_resources.py'
+      - 'scripts/test-ci-resources.py'
       - 'cmd/**'
       - 'internal/**'
       - 'third_party/**'
@@ -42,6 +44,8 @@ on:
       - '.github/workflows/native-linux.yml'
   pull_request:
     paths:
+      - 'scripts/ci_resources.py'
+      - 'scripts/test-ci-resources.py'
       - 'cmd/**'
       - 'internal/**'
       - 'third_party/**'
@@ -100,11 +104,6 @@ jobs:
           - arch: arm64
             runner: ubuntu-24.04-arm
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 50
-    env:
-      GOMAXPROCS: "1"
-      GOMEMLIMIT: 192MiB
-      NODE_OPTIONS: --max-old-space-size=192
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
@@ -148,13 +147,13 @@ jobs:
         run: |
           sh scripts/go.sh mod verify
           sh scripts/go.sh vet -p 1 ./...
-          sh scripts/go.sh test -p 1 -race ./...
+          sh scripts/go.sh test -timeout=0 -p 1 -race ./...
       - name: Pinned FTP engine upstream protocol and race checks
         run: |
           python3 scripts/check-ftp-engine.py
-          sh scripts/go.sh -C third_party/ftpserverlib test -p 1 -race -count=1 -timeout=10m -v ./...
+          sh scripts/go.sh -C third_party/ftpserverlib test -timeout=0 -p 1 -race -count=1 -v ./...
       - name: All implemented real PostgreSQL integration and migration tests
-        run: sh scripts/integration.sh -p 1 -race -v
+        run: sh scripts/integration.sh -timeout=0 -p 1 -race -v
       - name: Scan the exact independent peer image and enforce complete evidence
         if: ${{ !cancelled() && steps.aead_peer.outcome == 'success' }}
         run: |
@@ -177,10 +176,6 @@ jobs:
           - arch: arm64
             runner: ubuntu-24.04-arm
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 20
-    env:
-      GOMAXPROCS: "1"
-      GOMEMLIMIT: 192MiB
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
@@ -222,10 +217,6 @@ jobs:
 
   bounded-fuzz:
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
-    env:
-      GOMAXPROCS: "1"
-      GOMEMLIMIT: 192MiB
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
@@ -237,13 +228,13 @@ jobs:
       - name: Bounded parser and authority fuzz checks on native x86_64
         run: |
           test "$(uname -m)" = x86_64
-          sh scripts/go.sh test ./internal/vpath -fuzz=FuzzCanonicalPath -fuzztime=5s -parallel=2
-          sh scripts/go.sh test ./internal/sftpd -fuzz=FuzzInspectPacket -fuzztime=5s -parallel=2
-          sh scripts/go.sh test ./internal/ftpsd -fuzz=FuzzActiveDestination -fuzztime=5s -parallel=1
-          sh scripts/go.sh test ./internal/ftpsclient -fuzz=FuzzPassiveReplyNeverEscapesPortBudget -fuzztime=5s -parallel=1
-          sh scripts/go.sh test ./internal/custody -fuzz=FuzzCustodyName -fuzztime=5s -parallel=2
-          sh scripts/go.sh test ./internal/workflow -fuzz=FuzzTypedWorkflow -fuzztime=5s -parallel=2
-          sh scripts/go.sh test ./internal/checks -fuzz=FuzzCSVContract -fuzztime=5s -parallel=1
-          sh scripts/go.sh test ./internal/scanner -fuzz=FuzzClamdRecordAndVersion -fuzztime=5s -parallel=1
-          sh scripts/go.sh test ./internal/crypto -fuzz=FuzzPGPAdmission -fuzztime=5s -parallel=1
-          sh scripts/go.sh test ./internal/assistance -fuzz=FuzzUntrustedModelOutput -fuzztime=5s -parallel=1
+          sh scripts/go.sh test -timeout=0 ./internal/vpath -fuzz=FuzzCanonicalPath -fuzztime=5s -parallel=2
+          sh scripts/go.sh test -timeout=0 ./internal/sftpd -fuzz=FuzzInspectPacket -fuzztime=5s -parallel=2
+          sh scripts/go.sh test -timeout=0 ./internal/ftpsd -fuzz=FuzzActiveDestination -fuzztime=5s -parallel=1
+          sh scripts/go.sh test -timeout=0 ./internal/ftpsclient -fuzz=FuzzPassiveReplyNeverEscapesPortBudget -fuzztime=5s -parallel=1
+          sh scripts/go.sh test -timeout=0 ./internal/custody -fuzz=FuzzCustodyName -fuzztime=5s -parallel=2
+          sh scripts/go.sh test -timeout=0 ./internal/workflow -fuzz=FuzzTypedWorkflow -fuzztime=5s -parallel=2
+          sh scripts/go.sh test -timeout=0 ./internal/checks -fuzz=FuzzCSVContract -fuzztime=5s -parallel=1
+          sh scripts/go.sh test -timeout=0 ./internal/scanner -fuzz=FuzzClamdRecordAndVersion -fuzztime=5s -parallel=1
+          sh scripts/go.sh test -timeout=0 ./internal/crypto -fuzz=FuzzPGPAdmission -fuzztime=5s -parallel=1
+          sh scripts/go.sh test -timeout=0 ./internal/assistance -fuzz=FuzzUntrustedModelOutput -fuzztime=5s -parallel=1

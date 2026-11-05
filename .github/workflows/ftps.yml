@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
     paths:
+      - 'scripts/ci_resources.py'
+      - 'scripts/test-ci-resources.py'
       - 'cmd/**'
       - 'internal/**'
       - 'web/**'
@@ -43,6 +45,8 @@ on:
       - '.github/workflows/ftps.yml'
   pull_request:
     paths:
+      - 'scripts/ci_resources.py'
+      - 'scripts/test-ci-resources.py'
       - 'cmd/**'
       - 'internal/**'
       - 'web/**'
@@ -102,10 +106,6 @@ jobs:
           - arch: arm64
             runner: ubuntu-24.04-arm
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 25
-    env:
-      GOMAXPROCS: "1"
-      GOMEMLIMIT: 192MiB
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:

@@ -5,6 +5,7 @@ Only the exact task-owned bounded PostgreSQL resource may start. Tests use a
 fresh database. Retained metadata/roles are observed before and after; models,
 scanners, shared Docker lifecycle and the deferred aggregate are never run.
 """
+from ci_resources import environment as ci_environment
 import argparse
 from datetime import datetime, timezone
 import hashlib
@@ -116,7 +117,7 @@ def main():
     processes, created, started, originally_running = {}, False, False, None
     before = None
     cleanup = []
-    env = dict(os.environ, GOMAXPROCS="1", GOMEMLIMIT="192MiB")
+    env = ci_environment(dict(os.environ, GOMAXPROCS="1", GOMEMLIMIT="192MiB"))
 
     def command(label, argv, timeout=60):
         # Passing secret values in argv is forbidden; callers use references.

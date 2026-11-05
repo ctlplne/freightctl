@@ -1030,6 +1030,25 @@
       },
       "supersedes": "Earlier pause and testing-cadence instructions only where they conflict. Security, custody, isolation, resource limits and evidence standards unchanged.",
       "execution_state": "Active implementation; source/CI fast-forward batches to origin/main after previous required runs are terminal. All mandatory gates remain owed."
+    },
+    {
+      "id": "S004",
+      "recorded_on": "2026-11-05",
+      "state": "owner-authorized product-first CI resource policy",
+      "starting_commit": "db593d0b57cd0286f9a78b67bcee5652e86ed9c3",
+      "owner_authorization": {
+        "source": "Owner annotation on the image-scan resource failure in this chat",
+        "instruction": "this is arbitrary. there should be no limit. product first. across the entire build, how many times have we been doing arbitrary blocks like this. ie like binary sizes. we build first. product first!"
+      },
+      "interpretation": "Remove arbitrary GitHub build/scan compute and generated-file-size ceilings; measure consumption instead. Preserve actual security findings, isolation, exact-input/evidence checks, untrusted parsing/protocol protections and platform-enforced runner boundaries. Separate local shared-machine/inference restrictions remain unchanged. Audit recorded resource-only failures and active build controls; do not infer a passed runtime from budget removal.",
+      "evidence": [
+        "docs/qualification/evidence/F084-ci-runner-capacity.json"
+      ],
+      "exact_batch_approval": {
+        "source": "Owner answer to the automatic-approval-review scope question in this chat",
+        "answer": "Approve full CI capacity batch",
+        "scope": "Prepared50-file F084 batch: GitHub scanner RAM/CPU/process/file caps, generated binary/source/working-size ceilings, copied Go/Node/Chrome limits and custom aggregate deadlines. Security findings/authentication/custody/nonroot/read-only/offline isolation/evidence and local limits remain enforced."
+      }
     }
   ]
 }

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Retain native foundation checks and exact input hashes; no readiness inferred."""
+from ci_resources import environment as ci_environment
 from pathlib import Path
 from datetime import datetime, timezone
 import hashlib
@@ -17,7 +18,7 @@ def source_hashes():
     paths=subprocess.check_output(['git','ls-files','--cached','--others','--exclude-standard','-z']).decode().split('\0')
     return {p:hashlib.sha256((root/p).read_bytes()).hexdigest() for p in sorted(set(paths)) if p and ((root/p).suffix in ('.go','.sql','.sh','.py','.ts','.tsx','.js','.mjs','.css','.html','.yml','.yaml') or p.startswith('web/tests/fixtures/') or p in ('go.mod','go.sum','web/package.json','web/package-lock.json','web/tsconfig.json','web/THIRD_PARTY_NOTICES.txt','internal/browser/assets/manifest.json'))}
 starting_sources=source_hashes()
-env=dict(os.environ,GOMAXPROCS='1',NODE_OPTIONS='--max-old-space-size=192')
+env=ci_environment(dict(os.environ,GOMAXPROCS='1',NODE_OPTIONS='--max-old-space-size=192'))
 commands=[
 ('records',['python3','scripts/check-records.py']),
 ('frontend-evidence-contract',['npm','--prefix','web','test']),

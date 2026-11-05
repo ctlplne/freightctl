@@ -94,8 +94,7 @@ const browser = await chromium.launch({
     "--ignore-certificate-errors-spki-list=" + spki,
     "--disable-background-networking",
     "--disable-component-update",
-    "--renderer-process-limit=1",
-    "--js-flags=--max-old-space-size=128",
+    ...(process.env.GITHUB_ACTIONS === "true" ? [] : ["--renderer-process-limit=1", "--js-flags=--max-old-space-size=128"]),
   ],
 });
 let context,

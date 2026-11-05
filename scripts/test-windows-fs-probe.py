@@ -87,7 +87,9 @@ class WindowsObservationContracts(unittest.TestCase):
             self.assertEqual(value['SystemRoot'], 'owned-system')
             self.assertNotIn('private-canary', str(value)); self.assertNotIn('GOFLAGS', value)
             self.assertNotIn('GOOS', value); self.assertNotIn('GOARCH', value)
-            self.assertEqual(value['GOTOOLCHAIN'], 'local'); self.assertEqual(value['GOMAXPROCS'], '1')
+            self.assertEqual(value['GOTOOLCHAIN'], 'local')
+            self.assertNotIn('GOMAXPROCS', value)
+            self.assertNotIn('GOMEMLIMIT', value)
 
     def execute_standin(self, mutate=None):
         with tempfile.TemporaryDirectory(prefix='freightctl-windows-contract-') as directory:

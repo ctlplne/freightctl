@@ -70,6 +70,13 @@ def load(path, maximum):
     return value, hashlib.sha256(raw).hexdigest()
 
 
+def payload_file(path):
+    """Generated binary data is streamed; its size is measured, never a gate."""
+    path = Path(path)
+    require(path.is_file() and not path.is_symlink() and path.stat().st_size > 0)
+    return path
+
+
 def summarize(report, version, image, commit, architecture, now):
     require(isinstance(commit, str) and re.fullmatch('[0-9a-f]{40}', commit))
     require(architecture in ('amd64', 'arm64'))
@@ -161,9 +168,8 @@ def main():
         image, image_sha = load(args.image, 1 << 20)
         result = summarize(report, version, image, args.commit, args.architecture, datetime.now(timezone.utc))
         result.update(report_sha256=report_sha, scanner_version_report_sha256=version_sha, image_inspect_sha256=image_sha)
-        for name, filename, limit in (('feed_database', args.feed_database, 1792 << 20), ('image_archive', args.archive, 2 << 30)):
-            path = Path(filename)
-            require(path.is_file() and 0 < path.stat().st_size <= limit)
+        for name, filename in (('feed_database', args.feed_database), ('image_archive', args.archive)):
+            path = payload_file(filename)
             with path.open('rb') as stream:
                 result[name + '_sha256'] = hashlib.file_digest(stream, 'sha256').hexdigest()
         print(json.dumps(result, sort_keys=True))

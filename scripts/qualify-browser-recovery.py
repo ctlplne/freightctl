@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """Real check-worker death, original database lease and browser recovery."""
+from ci_resources import environment as ci_environment
 from pathlib import Path
 from datetime import datetime,timezone
 import hashlib,json,os,shutil,signal,socket,subprocess,time,traceback,uuid
 os.umask(0o077)
 root=Path(__file__).resolve().parents[1];os.chdir(root)
 run='browser-recovery-'+uuid.uuid4().hex;private=root/'.private'/run;private.mkdir(mode=0o700);raw=root/'evidence/raw'/run;raw.mkdir(parents=True,mode=0o700)
-binary=root/'.cache/freightctl-browser-recovery';env=dict(os.environ,GOMAXPROCS='1',NODE_OPTIONS='--max-old-space-size=192',PLAYWRIGHT_BROWSERS_PATH=str(root/'.cache/freightctl-playwright'))
+binary=root/'.cache/freightctl-browser-recovery';env=ci_environment(dict(os.environ,GOMAXPROCS='1',NODE_OPTIONS='--max-old-space-size=192',PLAYWRIGHT_BROWSERS_PATH=str(root/'.cache/freightctl-playwright')))
 steps=[];server=None;worker=None;handles=[];started=time.monotonic();failure=None;state='failed'
 def sources():
  paths=subprocess.check_output(['git','ls-files','--cached','--others','--exclude-standard','-z']).decode().split('\0')

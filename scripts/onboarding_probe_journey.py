@@ -3,6 +3,7 @@
 No model, scanner engine, shared service lifecycle or non-fixture resources.
 The original workflow and independent receiver assertions still run afterward.
 """
+from ci_resources import environment as ci_environment
 from pathlib import Path
 import json
 import os
@@ -24,7 +25,7 @@ def exercise(e):
     config = {'root': str(root), 'private': str(private), 'raw': str(raw), 'url': f"https://127.0.0.1:{e['http_port']}", 'certificate': str(e['cert']), 'tenant': tenant, 'partner': partner, 'identities': [{'tenant': tenant, 'partner': partner, 'token': str(e['owner'])}], 'probe_plan': plan, 'probe_connection': connection}
     cfg = write('probe-browser', config)
     node = os.environ.get('FREIGHTCTL_NODE_BIN') or e['command'](['which', 'node']).decode().strip()
-    env = dict(os.environ, GOMAXPROCS='1', GOMEMLIMIT='192MiB', NODE_OPTIONS='--max-old-space-size=192', PLAYWRIGHT_BROWSERS_PATH=str(root/'.cache/freightctl-playwright'))
+    env = ci_environment(dict(os.environ, GOMAXPROCS='1', GOMEMLIMIT='192MiB', NODE_OPTIONS='--max-old-space-size=192', PLAYWRIGHT_BROWSERS_PATH=str(root/'.cache/freightctl-playwright')))
     browser = subprocess.run([node, 'scripts/browser-journey.mjs', str(cfg), 'probes'], stdout=(raw/'native-onboarding-probes.log').open('wb'), stderr=subprocess.STDOUT, timeout=100, env=env)
     assert browser.returncode == 0, 'native probe journey failed; inspect retained output and screenshot'
     observed = json.loads((private/'probe-browser-observations.json').read_text())

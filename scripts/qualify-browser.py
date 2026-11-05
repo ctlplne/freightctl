@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Real native browser, PostgreSQL and filesystem journey; no inference or AV engine."""
+from ci_resources import environment as ci_environment
 from pathlib import Path
 from datetime import datetime,timezone
 import argparse,hashlib,json,os,shutil,socket,subprocess,time,uuid
@@ -8,7 +9,7 @@ root=Path(__file__).resolve().parents[1];os.chdir(root)
 parser=argparse.ArgumentParser();parser.add_argument('--signed',action='store_true');args=parser.parse_args()
 profile='browser-signed' if args.signed else 'browser'
 run=profile+'-'+uuid.uuid4().hex;private=root/'.private'/run;private.mkdir(mode=0o700);raw=root/'evidence/raw'/run;raw.mkdir(parents=True,mode=0o700)
-server=None;log=None;steps=[];started=time.monotonic();env=dict(os.environ,GOMAXPROCS='1',NODE_OPTIONS='--max-old-space-size=192',PLAYWRIGHT_BROWSERS_PATH=str(root/'.cache/freightctl-playwright'))
+server=None;log=None;steps=[];started=time.monotonic();env=ci_environment(dict(os.environ,GOMAXPROCS='1',NODE_OPTIONS='--max-old-space-size=192',PLAYWRIGHT_BROWSERS_PATH=str(root/'.cache/freightctl-playwright')))
 binary=root/'.cache/freightctl-browser'
 def sources():
  paths=subprocess.check_output(['git','ls-files','--cached','--others','--exclude-standard','-z']).decode().split('\0')

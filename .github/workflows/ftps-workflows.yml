@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
     paths:
+      - 'scripts/ci_resources.py'
+      - 'scripts/test-ci-resources.py'
       - 'cmd/**'
       - 'internal/**'
       - 'web/**'
@@ -59,6 +61,8 @@ on:
       - '.github/workflows/ftps-browser.yml'
   pull_request:
     paths:
+      - 'scripts/ci_resources.py'
+      - 'scripts/test-ci-resources.py'
       - 'cmd/**'
       - 'internal/**'
       - 'web/**'
@@ -130,11 +134,7 @@ jobs:
       matrix:
         profile: [plaintext, recipient-encrypted]
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
     env:
-      GOMAXPROCS: "1"
-      GOMEMLIMIT: 192MiB
-      NODE_OPTIONS: --max-old-space-size=192
       FREIGHTCTL_BROWSER_CHANNEL: chrome
       FREIGHTCTL_FTPS_PROFILE: ${{ matrix.profile }}
       PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.cache/freightctl-playwright

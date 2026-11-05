@@ -42,6 +42,21 @@ def inputs(now=NOW, arch='amd64'):
 
 
 class ImageReportContracts(unittest.TestCase):
+    def test_generated_payload_sizes_are_not_security_gates(self):
+        with tempfile.TemporaryDirectory(prefix='freightctl-peer-size-') as directory:
+            path = Path(directory)/'large-sparse-feed'
+            with path.open('xb') as stream:
+                stream.truncate((4 << 30)+1)
+            self.assertEqual(gate.payload_file(path), path)
+            empty = Path(directory)/'empty'
+            empty.touch()
+            with self.assertRaises(gate.InvalidReport):
+                gate.payload_file(empty)
+            link = Path(directory)/'linked-feed'
+            link.symlink_to(path)
+            with self.assertRaises(gate.InvalidReport):
+                gate.payload_file(link)
+
     def check(self, report=None, version=None, image=None, **kwargs):
         original = inputs()
         return gate.summarize(report if report is not None else original[0],

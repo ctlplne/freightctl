@@ -5,13 +5,13 @@ owner decision S003, recorded verbatim in the owner-decision ledger. All 83 whol
 parity rows and twelve full customer journeys remain open. Assisted deployment,
 independent adoption and enterprise readiness remain separately unqualified.
 
-Origin/main is fc577d5745f873344b57d91153b27f21b0918314, pushed through the
-enabled Gitleaks/owner/fast-forward guard. All eleven runs are now terminal. Core
-security and native source vulnerability runs pass. Windows/Mac, public FTPS
-workflow and stock-peer runs have failures; their nonsecurity logs and repair are
-deferred to mandatory FINISH. Exact original run/job handles are retained in the
-F075 security manifest. No original runtime run was canceled. The next verified
-source batch is eligible to push.
+Origin/main is db593d0b57cd0286f9a78b67bcee5652e86ed9c3, pushed through the
+enabled Gitleaks/owner/fast-forward guard with all three outgoing author/committer
+identities verified. Its original required runs remain active. Core record
+contracts fail before security steps execute; F084 makes the independent security
+steps run despite earlier unrelated failures. Source vulnerability configurations
+pass. Nonsecurity log investigation/repair remains deferred to mandatory FINISH.
+Exact original handles are retained; no original runtime run was canceled.
 
 F080/F081 provide canonical exchange contracts and journaled endpoint registration.
 F082 adds durable exact-revision receive views, actor-private retry receipts,
@@ -36,11 +36,14 @@ and process-death recovery. Per-view cancellation, retention, fairness/capacity 
 all remaining applicable baseline work remain required. Trust Control X07 blocks
 only its real provider profile; no API is invented.
 
-F075 stays red: both fc577d5 native feed downloads are stopped OOM/exit137 under
-the unchanged hard1GiB memory cap; scratch cleanup succeeds. No scan report was
-produced. This failure precedes the diagnostic for original856 strict verification,
-so that earlier refusal remains unidentified. Original OOMs remain preserved.
-All scanner/model/CPU/disk/time/security budgets
-remain unchanged. No local PG,Chrome,peer,scanner,image or inference runtime was
+Owner S004 removes arbitrary GitHub build/scanner resource ceilings. F084 removes
+copied workflow/helper Go/Node/Chrome limits, artificial binary/source/working
+size gates and aggregate job/package clocks. The scan uses runner capacity and
+dynamic exact-owned scratch; all findings, inventory, input and isolation checks
+remain. The audit establishes at least15 resource-blocked scan jobs and a separate
+suite timeout; no historical binary-size failure is invented. Focused stand-in,
+streaming hash, environment and syntax checks pass. Native replay remains owed;
+existing F075 OOMs and unknown856 verifier refusal stay preserved, not passed.
+Local constraints remain unchanged. No local PG,Chrome,peer,scanner,image or inference runtime was
 started by this work. F026 remains manual/owner-deferred. Source/CI push authority
 does not authorize release/artifact publication,visibility changes or deployment.

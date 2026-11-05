@@ -5,6 +5,7 @@ Uses an existing synthetic OpenPGP fixture for signature/encryption regressions.
 Independent crypto-container journeys are separate F011/F012 evidence; this
 command does not silently substitute protocol fixtures for malware detection.
 """
+from ci_resources import environment as ci_environment
 from pathlib import Path
 from datetime import datetime, timezone
 import argparse
@@ -38,9 +39,9 @@ for entry in fixture_manifest['files']:
         raise SystemExit('The protected independent fixture manifest does not match its files')
 raw = root / 'evidence/raw' / ('scanner-controls-' + uuid.uuid4().hex)
 raw.mkdir(parents=True, mode=0o700)
-env = dict(os.environ, GOMAXPROCS='1', FREIGHTCTL_TEST_ADMIN_FILE=str(root / '.private/pg-admin.dsn'),
+env = ci_environment(dict(os.environ, GOMAXPROCS='1', FREIGHTCTL_TEST_ADMIN_FILE=str(root / '.private/pg-admin.dsn'),
            FREIGHTCTL_TEST_RUNTIME_FILE=str(root / '.private/pg-runtime.dsn'),
-           FREIGHTCTL_TEST_PGP_DIR=str(fixture))
+           FREIGHTCTL_TEST_PGP_DIR=str(fixture)))
 
 def source_hashes():
     paths = subprocess.check_output(['git', 'ls-files', '--cached', '--others', '--exclude-standard', '-z']).decode().split('\0')

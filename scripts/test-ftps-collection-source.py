@@ -42,8 +42,8 @@ class SourceLifecycleContracts(unittest.TestCase):
         def start(argv, **options):
             self.assertEqual(argv, [str(self.private/'source-ftps'), str(config.parent/'config.json')])
             self.assertTrue(options['start_new_session'])
-            self.assertEqual(options['env']['GOMEMLIMIT'], '192MiB')
-            self.assertEqual(options['env']['GOMAXPROCS'], '1')
+            self.assertNotIn('GOMEMLIMIT', options['env'])
+            self.assertNotIn('GOMAXPROCS', options['env'])
             self.assertNotIn('private-evidence-canary', str(argv))
             source.metadata.private_write(config, json.dumps(value).encode())
             if bad:

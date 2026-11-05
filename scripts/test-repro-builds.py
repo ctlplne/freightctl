@@ -77,8 +77,8 @@ class ReproBuildContracts(unittest.TestCase):
                 self.assertNotIn('GITHUB_TOKEN', env)
                 self.assertNotIn('FREIGHTCTL_TEST_RUNTIME_FILE', env)
                 self.assertNotIn('GOFLAGS', env)
-                self.assertEqual(env['GOMAXPROCS'], '1')
-                self.assertEqual(env['GOMEMLIMIT'], '192MiB')
+                self.assertNotIn('GOMAXPROCS', env)
+                self.assertNotIn('GOMEMLIMIT', env)
                 self.assertEqual(env['GOTOOLCHAIN'], 'local')
                 if label == 'source-identity':
                     data = (('b'*40 if mode == 'wrong-commit' else COMMIT)+'\n').encode()
@@ -103,17 +103,18 @@ class ReproBuildContracts(unittest.TestCase):
                         (work/'tool-cache/tool/buildid').write_bytes(b'changed stock reader')
                 elif label == 'prepare-build-id-tool':
                     self.assertEqual(list(map(str,argv[1:])), ['tool','-n','buildid'])
-                    self.assertEqual(timeout, 120)
+                    self.assertIsNone(timeout)
                     reader = work/'tool-cache/tool/buildid'; reader.parent.mkdir(parents=True)
                     reader.write_bytes(b'synthetic pinned reader; never executed')
                     data = ((str(root/'outside-reader') if mode == 'foreign-reader' else str(reader))+'\n').encode()
                 elif label.startswith('build-id-'):
                     self.assertEqual(list(map(str, argv)), [str(work/'tool-cache/tool/buildid'), str(work/('freightctl-'+label[-1]))])
-                    self.assertEqual(timeout, 10)
+                    self.assertIsNone(timeout)
                     data = b'original-build-id\n' if mode == 'retained-build-id' else b'\n'
                 elif label.startswith('build-'):
                     self.assertEqual(env['GOPROXY'], 'off')
-                    self.assertEqual(argv[1:8], ['build', '-p', '1', '-mod=readonly', '-trimpath', '-buildvcs=false', '-ldflags=-buildid='])
+                    self.assertEqual(argv[1:6], ['build', '-mod=readonly', '-trimpath', '-buildvcs=false', '-ldflags=-buildid='])
+                    self.assertIsNone(timeout)
                     self.assertFalse(Path(env['GOCACHE']).exists())
                     Path(env['GOCACHE']).mkdir()
                     binary = Path(argv[argv.index('-o')+1])
@@ -138,7 +139,7 @@ class ReproBuildContracts(unittest.TestCase):
                         info['Settings'].append({'Key': '-ldflags', 'Value': '-buildid='})
                     data = json.dumps(info).encode()
                 elif label.startswith('packages-'):
-                    self.assertEqual(timeout, 60)
+                    self.assertIsNone(timeout)
                     self.assertEqual(env['GOPROXY'], 'off')
                     self.assertEqual(list(map(str,argv[1:])), ['list', '-p', '1', '-mod=readonly', '-trimpath', '-buildvcs=false', '-ldflags=-buildid=', '-deps', '-json', './cmd/freightctl'])
                     current = copy.deepcopy(packages)
@@ -242,6 +243,32 @@ class ReproBuildContracts(unittest.TestCase):
             self.assertEqual(runner.main(), 2)
             command.assert_not_called(); create.assert_not_called()
             self.assertEqual(json.loads(output.getvalue())['check'], 'runner-identity')
+
+    def test_build_does_not_impose_a_generated_binary_file_limit(self):
+        with tempfile.TemporaryDirectory(prefix='freightctl-repro-process-') as directory:
+            work = Path(directory); steps = []
+            child = unittest.mock.Mock(pid=12345)
+            child.wait.return_value = 0
+            with patch.object(runner.subprocess, 'Popen', return_value=child) as spawn:
+                runner.command(work, steps, 'build-a', ['not-executed'], work, {}, None)
+            self.assertNotIn('preexec_fn', spawn.call_args.kwargs,
+                             'A correct build must not fail because its generated binary exceeds an invented file-size ceiling')
+
+    def test_generated_binary_hash_streams_past_the_previous_size_ceiling(self):
+        with tempfile.TemporaryDirectory(prefix='freightctl-repro-size-') as directory:
+            path = Path(directory)/'synthetic-output'
+            size = (128 << 20)+1
+            with path.open('xb') as stream:
+                stream.truncate(size)
+            actual = runner.digest(path)
+            expected = hashlib.sha256()
+            remaining = size
+            block = bytes(65536)
+            while remaining:
+                chunk = block[:min(remaining, len(block))]
+                expected.update(chunk)
+                remaining -= len(chunk)
+            self.assertEqual(actual, expected.hexdigest())
 
     def test_timeout_signals_only_its_own_child_and_keeps_original_timeout_failure(self):
         with tempfile.TemporaryDirectory(prefix='freightctl-repro-process-') as directory:

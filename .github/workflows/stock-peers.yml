@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
     paths:
+      - 'scripts/ci_resources.py'
+      - 'scripts/test-ci-resources.py'
       - 'cmd/**'
       - '!cmd/**/*_test.go'
       - 'internal/**'
@@ -25,6 +27,8 @@ on:
       - '.github/workflows/stock-peers.yml'
   pull_request:
     paths:
+      - 'scripts/ci_resources.py'
+      - 'scripts/test-ci-resources.py'
       - 'cmd/**'
       - '!cmd/**/*_test.go'
       - 'internal/**'
@@ -62,11 +66,7 @@ jobs:
       matrix:
         journey: [arrivals-schedules, routing, captured-routing, intake-routing, handoff-routing]
     runs-on: ubuntu-24.04
-    timeout-minutes: 50
     env:
-      GOMAXPROCS: "1"
-      GOMEMLIMIT: 192MiB
-      NODE_OPTIONS: --max-old-space-size=192
       PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.cache/freightctl-playwright
       FREIGHTCTL_BROWSER_CHANNEL: chrome
       FREIGHTCTL_CI_JOURNEY: ${{ matrix.journey }}

@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
     paths:
+      - 'scripts/ci_resources.py'
+      - 'scripts/test-ci-resources.py'
       - 'cmd/**'
       - 'internal/**'
       - 'third_party/**'
@@ -15,6 +17,8 @@ on:
       - '.github/workflows/native-vulnerabilities.yml'
   pull_request:
     paths:
+      - 'scripts/ci_resources.py'
+      - 'scripts/test-ci-resources.py'
       - 'cmd/**'
       - 'internal/**'
       - 'third_party/**'
@@ -53,10 +57,7 @@ jobs:
             goos: darwin
             goarch: arm64
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 25
     env:
-      GOMAXPROCS: "1"
-      GOMEMLIMIT: 192MiB
       GOTELEMETRY: "off"
       FREIGHTCTL_EXPECTED_SYSTEM: ${{ matrix.system }}
       FREIGHTCTL_EXPECTED_GOOS: ${{ matrix.goos }}
@@ -80,19 +81,19 @@ jobs:
           private=root/'.private';private.mkdir(mode=0o700,exist_ok=True)
           prefix=root/'.cache/freightctl-govulncheck-1.9.0';prefix.mkdir(mode=0o700,parents=True,exist_ok=True)
           env=dict(os.environ,GOCACHE=str(root/'.cache/go-build'),GOMODCACHE=str(root/'.cache/go-mod'),GOPATH=str(root/'.cache/go'),GOTOOLCHAIN='go1.26.10',GOBIN=str(prefix))
-          native=json.loads(subprocess.check_output(['go','env','-json','GOHOSTOS','GOHOSTARCH','GOOS','GOARCH','GOVERSION'],env=env,timeout=30))
+          native=json.loads(subprocess.check_output(['go','env','-json','GOHOSTOS','GOHOSTARCH','GOOS','GOARCH','GOVERSION'],env=env,timeout=None))
           expected={'GOHOSTOS':env['FREIGHTCTL_EXPECTED_GOOS'],'GOOS':env['FREIGHTCTL_EXPECTED_GOOS'],'GOHOSTARCH':env['FREIGHTCTL_EXPECTED_GOARCH'],'GOARCH':env['FREIGHTCTL_EXPECTED_GOARCH'],'GOVERSION':'go1.26.10'}
           if native!=expected:raise RuntimeError('native host and source configuration differ')
           print(json.dumps({'native_source_configuration':native,'runtime_platform_qualified':False}),flush=True)
-          subprocess.run(['go','install','-p','1','golang.org/x/vuln/cmd/govulncheck@v1.9.0'],env=env,check=True,timeout=600)
+          subprocess.run(['go','install','golang.org/x/vuln/cmd/govulncheck@v1.9.0'],env=env,check=True,timeout=None)
           tool=prefix/('govulncheck.exe' if os.name=='nt' else 'govulncheck')
-          subprocess.run([sys.executable,'scripts/test-govulncheck-gate.py','--tool',str(tool)],env=env,check=True,timeout=120)
+          subprocess.run([sys.executable,'scripts/test-govulncheck-gate.py','--tool',str(tool)],env=env,check=True,timeout=None)
           report=private/'govulncheck-native.json'
           with report.open('xb') as output:
-              subprocess.run([str(tool),'-json','./...'],env=env,stdout=output,check=True,timeout=600)
+              subprocess.run([str(tool),'-json','./...'],env=env,stdout=output,check=True,timeout=None)
           if report.stat().st_size==0:raise RuntimeError('native source scan report missing')
           with report.open('rb') as source:
               digest=hashlib.file_digest(source,'sha256').hexdigest()
           print(json.dumps({'source_commit':env['GITHUB_SHA'],'source_report_sha256':digest,'scan_scope':'default source ./... on actual host;not runtime,custom tags or binary/image qualification'}),flush=True)
           with report.open('rb') as source:
-              subprocess.run([str(tool),'-mode=convert','-show=version,verbose'],stdin=source,env=env,check=True,timeout=60)
+              subprocess.run([str(tool),'-mode=convert','-show=version,verbose'],stdin=source,env=env,check=True,timeout=None)

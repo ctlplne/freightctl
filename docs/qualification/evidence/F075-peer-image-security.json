@@ -3,7 +3,7 @@
   "id": "F075",
   "observed_at": "2026-11-04",
   "starting_commit": "63e153f6511f6cb457dfa46f70d39f2548f200b6",
-  "state": "Still red: fc577d5 both native feed downloads OOM under the unchanged hard1GiB cap; prior856 strict-evidence refusal and all original failures preserved. No image qualification.",
+  "state": "S004 removes arbitrary GitHub resource ceilings; F084 source repair prepared, actual complete image-scan replay owed. Every original OOM/file/incomplete-evidence result remains failed.",
   "scope": "Scan the exact disposable independent OpenPGP recipient image used by native Linux tests. This is test infrastructure, not a released server image or runtime security qualification.",
   "qualification_claim": false,
   "frozen_cases": [
@@ -37,7 +37,7 @@
     }
   ],
   "first_observation": "The pinned independent peer Dockerfile audits npm dependencies, but no workflow scans its OS image or binds an image scan to actual runtime identity. Source inspection establishes a missing gate only; it is not a native scanner result.",
-  "next_action": "Continue independent product implementation. Preserve exact failed native jobs and investigate a complete supported scan within current limits; do not raise budgets, narrow coverage or suppress findings. Prior856 verifier location remains unobserved because fc feed-download failed earlier.",
+  "next_action": "Run the exact repaired scan on native GitHub ARM/x86 after prior batch terminal. Keep complete feed/inventory/findings/freshness/input/isolation evidence; runtime result still owed.",
   "implementation": {
     "workflow": ".github/workflows/native-linux.yml",
     "execution": "after all original runtime tests, including failure when peer build succeeded; no changed existing budgets",
@@ -617,5 +617,10 @@
     "application_steps": "Module/vet/unit-race, upstream protocol/race and all implemented integration/migration steps success on both native jobs; no counts inferred.",
     "prior_verifier_refusal": "Still owed: this replay OOMs before evidence verification, so it does not identify or resolve the earlier856 refusal.",
     "qualification_claim": false
+  },
+  "s004_resource_policy": {
+    "authority": "S004",
+    "evidence": "docs/qualification/evidence/F084-ci-runner-capacity.json",
+    "scope": "GitHub build/scanner capacity only. Supersedes earlier synthetic compute/generated-file ceilings, not original failure evidence or local resource constraints."
   }
 }

@@ -126,7 +126,7 @@ def environment():
     allowed = {'PATH', 'SYSTEMROOT', 'WINDIR', 'TEMP', 'TMP', 'USERPROFILE', 'APPDATA', 'LOCALAPPDATA', 'GOROOT'}
     result = {k:v for k,v in os.environ.items() if k.upper() in allowed}
     result.update(GOENV='off', GOTOOLCHAIN='local', GOTELEMETRY='off', GOWORK='off', CGO_ENABLED='0',
-        GOMAXPROCS='1', GOMEMLIMIT='192MiB', GITHUB_ACTIONS='true', GITHUB_SHA=os.environ['GITHUB_SHA'])
+        GITHUB_ACTIONS='true', GITHUB_SHA=os.environ['GITHUB_SHA'])
     return result
 
 

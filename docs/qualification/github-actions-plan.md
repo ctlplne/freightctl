@@ -69,20 +69,29 @@ verify lockfiles, checksums and exact committed local replacements. A missing
 peer cannot silently become an unpinned implementation, weaker TLS, disabled
 Chrome sandbox or skipped security gate.
 
-Preserve existing job/package/case deadlines, single-worker settings, live lease
-waits, bounded streams and task-owned resource names. Native application jobs
-retain50 minutes and600-second package limits. Schema-only templates may avoid
-repeating migrations, but each case still needs isolated real databases/storage,
+Owner decision S004 supersedes arbitrary CI build and scan ceilings. GitHub jobs
+use runner capacity and the platform job lifetime. Remove copied laptop Go/Node
+heap and CPU settings, artificial generated-binary/source/working-directory size
+gates and aggregate package deadlines. Record actual binary/source/working bytes.
+The 128 MiB binary number is not a product requirement. The static audit records
+at least15 scan attempts blocked by resource ceilings; it does not invent a
+historical binary-size failure or turn those failed scans into passes.
+
+[F084](evidence/F084-ci-runner-capacity.json) separates GitHub capacity from local
+shared-machine defaults, including helper Go/Node environments and browser heap
+arguments. Local inference stays off. Existing retained/runtime reference fixtures
+and security parser/protocol/lease bounds retain their stated purpose; any remaining
+reference-fixture cap needs explicit CI-versus-local classification rather than
+becoming an engineering hold. Schema templates still need isolated actual databases,
 exact migration checksums and runtime/RLS checks. Fixture speed is not product
 throughput or capacity evidence.
 
-F075 retains hard1 GiB RAM/no swap, soft768 MiB, one CPU,128 processes and the exact
-bounded2 GiB ext4 cache/TMPDIR disk with verified mount/loop ownership and cleanup.
-Feed-onlyGOGC25 is an experiment, not an OOM remedy. The database-file
-cap is1792 MiB after the owner's explicit2026-11-05 file-only approval;the exact
-reviewed patch and21stand-in methods are recorded inF075. No RAM,CPU,scratch,time
-or security/inventory allowance follows from that approval.
-Keep actual file-budget and exact stopped-container OOM failures separate.
+F075 removes scanner RAM/CPU/process and feed/archive-size ceilings. Its task-owned
+ext4 scratch uses actual free runner disk, with the same exact mount/loop ownership,
+non-execution options and cleanup checks. An actual runner exhaustion stays visible
+as a hardware failure. Prior file-cap and OOM failures stay immutable evidence;
+only a real complete scan can qualify image security. No source-only change or
+successful feed download establishes that result.
 
 Download the complete feed in its own bounded container. Scan an immutable
 saved image offline, with read-only input/feed/root, no Docker socket,
@@ -156,7 +165,7 @@ Bound owned CDP cleanup to5seconds and keep original failures red.
    interface proof. Every deferred gate remains mandatory at final source.
    Capture the first actual failure before editing. Add meaningful coverage,
    repair the mechanism and replay the original journey. Preserve every security,
-   isolation, protocol, assertion and resource requirement. A later unexplained
+   isolation, protocol and correctness assertion. Apply S004 to arbitrary CI resource ceilings while keeping purposeful local and product limits. A later unexplained
    green does not establish an intermittent failure's cause. Fixed fresh
    repetitions stop at first failure; they are not retries until green.
 4. Read failures, log404s and API lag do not authorize execution restart or
@@ -176,7 +185,7 @@ Bound owned CDP cleanup to5seconds and keep original failures red.
 | Work | Next executable proof | Boundary that stays open |
 | --- | --- | --- |
 | Collection and mixed/encrypted routing | [F076](evidence/F076-ftps-collection.json):native D173distinct-registration-key replay and actual D175session-subreason diagnosis/repair across original public matrices | Independent source vendors,whole operator/recovery journeys and business acceptance need their own actual evidence. |
-| Image security | [F075](evidence/F075-peer-image-security.json):owner file-cap decision plus supported full-feed/scan path inside unchanged hard budgets | No clean image can be inferred from successful download,earlier GC,byte equality or source scanning. |
+| Image security | [F075](evidence/F075-peer-image-security.json) and [F084](evidence/F084-ci-runner-capacity.json):actual complete native scan using runner capacity under S004 | No clean image can be inferred from successful download,earlier GC,byte equality or source scanning. |
 | Packaging | [F077](evidence/F077-native-reproducible-core.json):native physical build-ID repair,full two-build comparison and actual stock-schema validation | Independent-host reproduction,complete deployment/build-tool/standard-library SBOM,license review,signing and disconnected bundle/install/export/rollback remain mandatory. |
 | Payload/key/clean-host recovery and upgrades | Isolated real storage/keys/active-work failure injection and restore into fresh environments,with measured outcomes | Metadata-only same-cluster restore cannot establish RPO/RTO,business delivery or retained-upgrade authority. |
 | Processing and protocol breadth | Implement and run actual archive/MIME/XML/receipt/importer/transform/DLP/connector/native-peer gates | No placeholder command,limited parser,stand-in vendor or owner-deferred aggregate can satisfy broader parity. |

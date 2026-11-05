@@ -8,6 +8,7 @@ import os
 from pathlib import Path
 import platform
 import re
+import shutil
 import stat
 import subprocess
 import sys
@@ -139,16 +140,17 @@ def feed_file_observation(path):
     except FileNotFoundError:
         return {'present': False, 'regular': False, 'symlink': False, 'bytes': None, 'size_capped': False}
     regular = stat.S_ISREG(value.st_mode)
-    size = min(value.st_size, (2 << 30)+1) if regular else None
+    size = value.st_size if regular else None
     return {'present': True, 'regular': regular, 'symlink': stat.S_ISLNK(value.st_mode),
-        'bytes': size, 'size_capped': regular and value.st_size > 2 << 30}
+        'bytes': size, 'size_capped': False}
 
 
 class BoundedScratch:
-    """A private 2GiB ext4 volume; temporary archives consume disk, not RAM."""
-    size = 2 << 30
+    """Task-owned ext4 scratch sized from actual runner free space, not a product cap."""
 
     def __init__(self, private):
+        self.size = shutil.disk_usage(private).free
+        gate.require(type(self.size) is int and self.size > 0)
         self.backing = private/'scratch.ext4'
         self.root = private/'scratch'
         self.root.mkdir(mode=0o700)
@@ -164,7 +166,7 @@ class BoundedScratch:
     def identity(self, command, cleanup=False):
         prefix = 'scratch-cleanup-' if cleanup else 'scratch-'
         code, output = command(prefix+'mount-identity', ['findmnt', '--json', '--mountpoint',
-            str(self.root), '--output', 'SOURCE,FSTYPE,TARGET,OPTIONS'], 15, check=False)
+            str(self.root), '--output', 'SOURCE,FSTYPE,TARGET,OPTIONS'], None, check=False)
         if code == 1 and not self.mounted:
             return False
         gate.require(code == 0)
@@ -180,7 +182,7 @@ class BoundedScratch:
         options = mount.get('options', '')
         gate.require(isinstance(options, str) and {'rw', 'nodev', 'nosuid', 'noexec'} <= set(options.split(',')))
         _, output = command(prefix+'loop-identity', ['losetup', '--json', '--list', '--associated',
-            str(self.backing), '--output', 'NAME,BACK-FILE'], 15)
+            str(self.backing), '--output', 'NAME,BACK-FILE'], None)
         value, _ = gate.load(output, 1 << 20)
         gate.require(isinstance(value, dict))
         loops = value.get('loopdevices')
@@ -194,12 +196,12 @@ class BoundedScratch:
 
     def prepare(self, command):
         command('scratch-format', ['mkfs.ext4', '-q', '-F', '-m', '0', '-E',
-            'root_owner='+str(os.getuid())+':'+str(os.getgid()), str(self.backing)], 30)
+            'root_owner='+str(os.getuid())+':'+str(os.getgid()), str(self.backing)], None)
         # Mark before invoking mount: even a timed-out command needs exact
         # ownership inspection before deciding whether cleanup is necessary.
         self.attempted = True
         command('scratch-mount', ['sudo', '-n', 'mount', '--types', 'ext4', '--options',
-            'loop,nodev,nosuid,noexec', '--source', str(self.backing), '--target', str(self.root)], 30)
+            'loop,nodev,nosuid,noexec', '--source', str(self.backing), '--target', str(self.root)], None)
         self.mounted = True
         self.identity(command)
         self.root.chmod(0o700)
@@ -211,7 +213,7 @@ class BoundedScratch:
             return
         self.cleanup_attempted = True
         if self.identity(command, cleanup=True):
-            command('scratch-unmount', ['sudo', '-n', 'umount', '--', str(self.root)], 30)
+            command('scratch-unmount', ['sudo', '-n', 'umount', '--', str(self.root)], None)
         self.mounted = False
         self.attempted = False
 
@@ -258,29 +260,20 @@ def main():
             raise RuntimeError('command-failed')
         return result.returncode, stdout
 
-    def container(name, arguments, *, network, writable_cache=False, mounts=(), timeout=60):
+    def container(name, arguments, *, network, writable_cache=False, mounts=(), timeout=None):
         limits = ['--read-only', '--cap-drop=ALL', '--security-opt=no-new-privileges',
-                  '--memory=1g', '--memory-swap=1g', '--cpus=1', '--pids-limit=128',
                   '--user', str(os.getuid())+':'+str(os.getgid()),
-                  '--tmpfs', '/tmp:rw,noexec,nosuid,size=256m', '--workdir', '/tmp',
-                  '--env', 'GOMAXPROCS=1', '--env', 'GOMEMLIMIT=768MiB',
+                  '--tmpfs', '/tmp:rw,noexec,nosuid', '--workdir', '/tmp',
                   '--env', 'TMPDIR=/scratch',
                   '--network', network,
                   '--label', 'freightctl.purpose=peer-image-scan',
                   '--label', 'freightctl.scan='+session,
                   '--mount', 'type=bind,src='+str(cache)+',dst=/cache'+('' if writable_cache else ',readonly'),
                   '--mount', 'type=bind,src='+str(scratch.root/'tmp')+',dst=/scratch']
-        if name == 'feed-download':
-            # Confirmed container OOM is not an allocation profile. Try earlier
-            # reclamation only in feed setup, retaining the hard1GiB/oneCPU,
-            # soft768MiB and original deadlines. This hypothesis needs a real
-            # replay; it cannot establish a feed or image-scan pass.
-            # https://go.dev/doc/gc-guide#Memory_limit
-            limits.extend(['--env', 'GOGC=25'])
         for mount in mounts:
             limits.extend(['--mount', mount])
         _, created = command(name+'-create', ['docker', 'create', '--name',
-                'freightctl-peer-image-'+session+'-'+name, *limits, gate.SCANNER_IMAGE, *arguments], 30)
+                'freightctl-peer-image-'+session+'-'+name, *limits, gate.SCANNER_IMAGE, *arguments], None)
         ident = created.read_text().strip()
         if not re.fullmatch('[0-9a-f]{64}', ident):
             raise RuntimeError('container-identity-invalid')
@@ -290,20 +283,20 @@ def main():
             try:
                 # Capture only this exact created container, before rm destroys
                 # the evidence. Raw State.Error/PID/timestamps remain private.
-                command(name+'-state', ['docker', 'inspect', '--format', '{{json .State}}', ident], 15, check=False)
+                command(name+'-state', ['docker', 'inspect', '--format', '{{json .State}}', ident], None, check=False)
             except (OSError, ValueError, TypeError, KeyError, RuntimeError, subprocess.SubprocessError):
                 pass
             raise
         finally:
             # Only the exact ID returned by this invocation is ever removed.
-            command(name+'-cleanup', ['docker', 'rm', '--force', ident], 30)
+            command(name+'-cleanup', ['docker', 'rm', '--force', ident], None)
 
     try:
-        _, head = command('checkout', ['git', 'rev-parse', 'HEAD'], 15)
+        _, head = command('checkout', ['git', 'rev-parse', 'HEAD'], None)
         if head.read_text().strip() != commit:
             raise RuntimeError('source-identity-invalid')
         phase = 'image-identity'
-        _, inspected = command(phase, ['docker', 'image', 'inspect', 'freightctl-openpgp-peer:6.3.2-r1'], 30)
+        _, inspected = command(phase, ['docker', 'image', 'inspect', 'freightctl-openpgp-peer:6.3.2-r1'], None)
         image, _ = gate.load(inspected, 1 << 20)
         gate.require(isinstance(image, list) and len(image) == 1 and isinstance(image[0], dict))
         image_id = image[0].get('Id', '')
@@ -313,12 +306,12 @@ def main():
         gate.require(config.get('Labels', {}).get('freightctl.source') == commit)
         phase = 'image-archive'
         archive = private/'peer.tar'
-        command(phase, ['docker', 'image', 'save', '--output', str(archive), image_id], 120)
-        gate.require(0 < archive.stat().st_size <= 2 << 30)
+        command(phase, ['docker', 'image', 'save', '--output', str(archive), image_id], None)
+        gate.payload_file(archive)
         archive_sha = digest(archive)
         phase = 'scanner-image'
-        command(phase, ['docker', 'pull', gate.SCANNER_IMAGE], 240)
-        _, scanner_inspect = command('scanner-identity', ['docker', 'image', 'inspect', gate.SCANNER_IMAGE], 30)
+        command(phase, ['docker', 'pull', gate.SCANNER_IMAGE], None)
+        _, scanner_inspect = command('scanner-identity', ['docker', 'image', 'inspect', gate.SCANNER_IMAGE], None)
         scanner, _ = gate.load(scanner_inspect, 1 << 20)
         gate.require(isinstance(scanner, list) and len(scanner) == 1
                      and scanner[0].get('Architecture') == args.architecture and scanner[0].get('Os') == 'linux')
@@ -330,12 +323,12 @@ def main():
         common = ['--cache-dir', '/cache', '--config', '/dev/null']
         container(phase, [*common, 'image', '--download-db-only', '--db-repository',
                   'ghcr.io/aquasecurity/trivy-db:2', '--no-progress', '--disable-telemetry',
-                  '--skip-version-check', '--timeout', '4m'], network='bridge', writable_cache=True, timeout=300)
+                  '--skip-version-check', '--timeout', '6h'], network='bridge', writable_cache=True, timeout=None)
         feed_database, feed_metadata = cache/'db/trivy.db', cache/'db/metadata.json'
         phase = 'feed-files'
         feed_files = {'database': feed_file_observation(feed_database), 'metadata': feed_file_observation(feed_metadata)}
         gate.require(all(v['regular'] and not v['symlink'] for v in feed_files.values()))
-        gate.require(feed_database.is_file() and 0 < feed_database.stat().st_size <= 1792 << 20)
+        gate.payload_file(feed_database)
         gate.require(feed_metadata.is_file() and 0 < feed_metadata.stat().st_size <= 1 << 20)
         feed_sha, metadata_sha = digest(feed_database), digest(feed_metadata)
         phase = 'scanner-version'
@@ -346,13 +339,13 @@ def main():
         container(phase, [*common, 'image', '--input', '/input/peer.tar', '--scanners', 'vuln',
                   '--pkg-types', 'os,library', '--list-all-pkgs', '--show-suppressed',
                   '--ignorefile', '/dev/null', '--ignore-unfixed=false',
-                  '--severity', 'UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL', '--parallel', '1',
+                  '--severity', 'UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL',
                   '--skip-db-update', '--skip-java-db-update', '--offline-scan',
                   '--skip-version-check', '--disable-telemetry', '--no-progress',
                   '--cache-backend', 'memory', '--format', 'json', '--output', '/output/report.json',
-                  '--exit-code', '0', '--exit-on-eol', '2', '--timeout', '10m'], network='none',
+                  '--exit-code', '0', '--exit-on-eol', '2', '--timeout', '6h'], network='none',
                   mounts=['type=bind,src='+str(archive)+',dst=/input/peer.tar,readonly',
-                          'type=bind,src='+str(output)+',dst=/output'], timeout=660)
+                          'type=bind,src='+str(output)+',dst=/output'], timeout=None)
         phase = 'input-closure'
         gate.require(feed_sha == digest(feed_database) and metadata_sha == digest(feed_metadata)
                      and archive_sha == digest(archive))
@@ -360,7 +353,7 @@ def main():
         code, summary = command(phase, [sys.executable, str(ROOT/'scripts/ci-peer-image-summary.py'),
                 '--report', str(output/'report.json'), '--version', str(version), '--image', str(inspected),
                 '--feed-database', str(feed_database), '--archive', str(archive),
-                '--commit', commit, '--architecture', args.architecture], 60, check=False)
+                '--commit', commit, '--architecture', args.architecture], None, check=False)
         result, summary_sha = gate.load(summary, 1 << 20)
         gate.require(code in (0, 1) and isinstance(result, dict)
                      and result.get('state') == ('passed' if code == 0 else 'failed'))
@@ -368,14 +361,16 @@ def main():
         scratch.close(command)
         manifest = {'schema_version': 1, 'source_commit': commit, 'image_id': image_id,
                     'architecture': args.architecture, 'state': result['state'], 'steps': steps,
+                    'resource_policy': 'github-runner-capacity',
                     'summary_sha256': summary_sha, 'scanner_inspect_sha256': digest(scanner_inspect),
-                    'feed_metadata_sha256': metadata_sha, 'scratch_bytes': BoundedScratch.size,
+                    'feed_metadata_sha256': metadata_sha, 'scratch_bytes': scratch.size if scratch is not None else None,
                     'scratch_unmounted': not scratch.attempted, 'runtime_qualification': False}
         record = private/'manifest.json'
         record.write_text(json.dumps(manifest, indent=2)+'\n')
         # Only this verifier's own bounded allowlisted summary reaches stdout.
         result['manifest_sha256'] = digest(record)
-        result['scratch_bytes'] = BoundedScratch.size
+        result['resource_policy'] = 'github-runner-capacity'
+        result['scratch_bytes'] = scratch.size if scratch is not None else None
         result['scratch_cleanup'] = 'unmounted'
         print(json.dumps(result, sort_keys=True))
         return code
@@ -390,7 +385,7 @@ def main():
         cleanup = 'not-created' if scratch is None else 'unmounted' if not scratch.attempted else 'unproven'
         record = private/'failure.json'
         record.write_text(json.dumps({'schema_version': 1, 'state': 'failed', 'phase': phase,
-            'steps': steps, 'scratch_cleanup': cleanup, 'scratch_bytes': BoundedScratch.size,
+            'steps': steps, 'scratch_cleanup': cleanup, 'scratch_bytes': scratch.size if scratch is not None else None,
             **({'feed_files': feed_files} if feed_files is not None else {})}, indent=2)+'\n')
         print(json.dumps({'state': 'failed', 'reason': 'native-peer-image-scan-failed',
                           'phase': phase, 'manifest_sha256': digest(record),

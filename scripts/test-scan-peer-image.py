@@ -44,7 +44,7 @@ class ScanOrchestration(unittest.TestCase):
                 invocations.append(arguments)
                 if arguments[0] == 'mkfs.ext4':
                     volume['backing'] = arguments[-1]
-                    self.assertEqual(Path(arguments[-1]).stat().st_size, 2 << 30)
+                    self.assertEqual(Path(arguments[-1]).stat().st_size, 8 << 30)
                     return subprocess.CompletedProcess(arguments, 0)
                 if arguments[:3] == ['sudo', '-n', 'mount']:
                     volume['root'] = arguments[-1]
@@ -107,10 +107,10 @@ class ScanOrchestration(unittest.TestCase):
                         (cache/'db').mkdir()
                         (cache/'db/trivy.db').write_bytes(b'synthetic feed database')
                         (cache/'db/metadata.json').write_text(json.dumps(version['VulnerabilityDB']))
-                        if mode == 'feed-oversize':
+                        if mode == 'feed-empty':
                             # Sparse stand-in: no database is generated/read.
                             with (cache/'db/trivy.db').open('wb') as stream:
-                                stream.truncate((1792 << 20)+1)
+                                stream.truncate(0)
                         elif mode == 'feed-missing':
                             (cache/'db/trivy.db').unlink()
                         elif mode == 'feed-symlink':
@@ -156,6 +156,7 @@ class ScanOrchestration(unittest.TestCase):
                 with patch.object(runner, 'ROOT', root), patch.object(sys, 'argv', ['scan-peer-image.py', '--architecture', arch]), \
                      patch.dict('os.environ', {'GITHUB_ACTIONS': 'true', 'GITHUB_SHA': contracts.COMMIT}), \
                      patch.object(runner.platform, 'system', return_value='Linux'), \
+                     patch.object(runner.shutil, 'disk_usage', return_value=type('DiskUsage', (), {'free': 8 << 30})()), \
                      patch.object(runner.platform, 'machine', return_value='x86_64' if arch == 'amd64' else 'aarch64'), \
                      patch.object(runner.subprocess, 'run', side_effect=docker), contextlib.redirect_stdout(stream):
                     code = runner.main()
@@ -171,15 +172,11 @@ class ScanOrchestration(unittest.TestCase):
                     self.assertRegex(interrupted[0]['stdout_sha256'], '^[0-9a-f]{64}$')
                     self.assertRegex(interrupted[0]['stderr_sha256'], '^[0-9a-f]{64}$')
                 for create in created.values():
-                    for fixed in ('--read-only', '--cap-drop=ALL', '--security-opt=no-new-privileges',
-                                  '--memory=1g', '--memory-swap=1g', '--cpus=1', '--pids-limit=128'):
+                    for fixed in ('--read-only', '--cap-drop=ALL', '--security-opt=no-new-privileges'):
                         self.assertIn(fixed, create)
                     self.assertNotIn('/var/run/docker.sock', str(create))
                     self.assertIn('TMPDIR=/scratch', create)
-                    self.assertIn('GOMAXPROCS=1', create)
-                    self.assertIn('GOMEMLIMIT=768MiB', create)
                     options = create[create.index(runner.gate.SCANNER_IMAGE)+1:]
-                    self.assertEqual('GOGC=25' in create, '--download-db-only' in options)
                     self.assertEqual(create[create.index('--network')+1], 'bridge' if '--download-db-only' in options else 'none')
                     cache_mount = next(create[n+1] for n, arg in enumerate(create)
                                        if arg == '--mount' and ',dst=/cache' in create[n+1])
@@ -201,8 +198,16 @@ class ScanOrchestration(unittest.TestCase):
                 self.assertEqual(output['image_id'], contracts.IMAGE)
                 self.assertEqual(len(created), 3)
                 self.assertRegex(output['manifest_sha256'], '^[0-9a-f]{64}$')
-                self.assertEqual(output['scratch_bytes'], 2 << 30)
+                self.assertEqual(output['scratch_bytes'], 8 << 30)
                 self.assertEqual(output['scratch_cleanup'], 'unmounted')
+
+    def test_owner_runner_capacity_has_no_synthetic_compute_quota(self):
+        code, output, created = self.exercise()
+        self.assertEqual(code, 0)
+        for command in created.values():
+            self.assertFalse(any(argument.startswith(('--memory=', '--memory-swap=', '--cpus=', '--pids-limit='))
+                                 or argument.startswith(('GOMAXPROCS=', 'GOMEMLIMIT=', 'GOGC=')) for argument in command),
+                             'GitHub scan must use runner capacity, not the local-machine resource profile')
 
     def test_actual_python_converter_nonzero_blocks_an_exit_zero_scanner(self):
         code, output, _ = self.exercise(mode='high')
@@ -210,8 +215,8 @@ class ScanOrchestration(unittest.TestCase):
         self.assertEqual(output['severities']['HIGH'], 1)
         self.assertEqual(output['state'], 'failed')
 
-    def test_exit_zero_download_still_refuses_missing_linked_or_oversize_feed_with_safe_file_facts(self):
-        for mode in ('feed-oversize', 'feed-missing', 'feed-symlink'):
+    def test_exit_zero_download_still_refuses_missing_linked_or_empty_feed_with_safe_file_facts(self):
+        for mode in ('feed-empty', 'feed-missing', 'feed-symlink'):
             code, output, created = self.exercise(mode=mode)
             self.assertEqual(code, 2)
             self.assertEqual(output['phase'], 'feed-files')
@@ -219,8 +224,8 @@ class ScanOrchestration(unittest.TestCase):
             self.assertEqual(output['scratch_cleanup'], 'unmounted')
             database = output['feed_files']['database']
             self.assertEqual(set(database), {'present', 'regular', 'symlink', 'bytes', 'size_capped'})
-            if mode == 'feed-oversize':
-                self.assertEqual(database['bytes'], (1792 << 20)+1)
+            if mode == 'feed-empty':
+                self.assertEqual(database['bytes'], 0)
                 self.assertTrue(database['regular'])
                 self.assertFalse(database['size_capped'])
             elif mode == 'feed-missing':

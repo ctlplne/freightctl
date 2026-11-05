@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
     paths:
+      - 'scripts/ci_resources.py'
+      - 'scripts/test-ci-resources.py'
       - 'internal/crypto/**'
       - 'internal/ftpsclient/**'
       - 'go.mod'
@@ -20,6 +22,8 @@ on:
       - '.github/workflows/ftps-client.yml'
   pull_request:
     paths:
+      - 'scripts/ci_resources.py'
+      - 'scripts/test-ci-resources.py'
       - 'internal/crypto/**'
       - 'internal/ftpsclient/**'
       - 'go.mod'
@@ -63,10 +67,7 @@ jobs:
             runner: ubuntu-24.04-arm
             library: no-ktls
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 20
     env:
-      GOMAXPROCS: "1"
-      GOMEMLIMIT: 192MiB
       FREIGHTCTL_FTPS_LIBRARY: ${{ matrix.library }}
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5

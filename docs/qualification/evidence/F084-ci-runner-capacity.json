@@ -1,0 +1,331 @@
+{
+  "schema_version": 1,
+  "id": "F084",
+  "observed_at": "2026-11-05",
+  "starting_commit": "db593d0b57cd0286f9a78b67bcee5652e86ed9c3",
+  "authority": "S004",
+  "state": "Arbitrary GitHub build/scanner ceilings removed; actual native replay owed.",
+  "qualification_claim": false,
+  "change": [
+    "All13 workflow files: remove copied Go/Node heap and CPU settings and custom job/step wall-clock caps; Go aggregate tests use timeout0 under the enclosing GitHub job. Keep serialized fixture execution and bounded fuzz work.",
+    "Pinned image scanner uses available runner CPU/RAM/process capacity, dynamic scratch from actual free disk, streamed feed/archive hashes without invented file-size gates, and the platform lifetime instead of short phase deadlines.",
+    "Reproducible builds remove128MiB RLIMIT_FSIZE/binary,64MiB source,4GiB working and per-source/working-count gates; stream and record actual sizes. Same-source/different-root/empty-cache byte equality and complete inventory remain enforced.",
+    "Core npm/go/secret checks run after earlier unrelated failure; original runs are never canceled.",
+    "Sixteen helper environments, one native Windows profile and three Chrome launch profiles now use GitHub runner capacity, while preserving local defaults. Twelve kernel/reference fixture control locations remain purpose-specific and inventoried; no blanket local resource grant."
+  ],
+  "historical_audit": {
+    "confirmed_resource_blocked_scan_attempts_minimum": 15,
+    "kinds": {
+      "container_oom": 6,
+      "database_file_ceiling": 8,
+      "scratch_storage_capacity": 1
+    },
+    "exact_jobs": [
+      {
+        "job_id": 126848477397,
+        "kind": "container-oom",
+        "reference": "F075.source28_native.x86"
+      },
+      {
+        "job_id": 126926515789,
+        "kind": "container-oom",
+        "reference": "F075.source_d6_terminal.x86_image"
+      },
+      {
+        "job_id": 126963223620,
+        "kind": "container-oom",
+        "reference": "F075.source_7c_terminal.arm64"
+      },
+      {
+        "job_id": 127007225597,
+        "kind": "container-oom",
+        "reference": "F075.source_ba_x86_oom_before_approved_file_patch"
+      },
+      {
+        "job_id": 127404194165,
+        "kind": "container-oom",
+        "reference": "F075.fc577d5_native_result"
+      },
+      {
+        "job_id": 127404194242,
+        "kind": "container-oom",
+        "reference": "F075.fc577d5_native_result"
+      },
+      {
+        "job_id": 126906787047,
+        "kind": "database-file-ceiling",
+        "reference": "F075.source_f08_arm"
+      },
+      {
+        "job_id": 126906786550,
+        "kind": "database-file-ceiling",
+        "reference": "F075.source_f08_x86"
+      },
+      {
+        "job_id": 126926515393,
+        "kind": "database-file-ceiling",
+        "reference": "F075.source_d6_terminal.arm_image"
+      },
+      {
+        "job_id": 126940773930,
+        "kind": "database-file-ceiling",
+        "reference": "F075.source_e2_terminal"
+      },
+      {
+        "job_id": 126940774543,
+        "kind": "database-file-ceiling",
+        "reference": "F075.source_e2_terminal"
+      },
+      {
+        "job_id": 126963223955,
+        "kind": "database-file-ceiling",
+        "reference": "F075.source_7c_terminal.amd64"
+      },
+      {
+        "job_id": 126979507277,
+        "kind": "database-file-ceiling",
+        "reference": "F075.source_97_native_terminal"
+      },
+      {
+        "job_id": 126979507687,
+        "kind": "database-file-ceiling",
+        "reference": "F075.source_97_native_terminal"
+      },
+      {
+        "job_id": 126798311197,
+        "kind": "scratch-storage-capacity",
+        "reference": "F075.storage_failure_observation"
+      }
+    ],
+    "additional_suite_timeout": {
+      "defect": "D157",
+      "run_id": 41869838920,
+      "job_id": 126720350261,
+      "scope": "Original suite reached its ten-minute package timeout; other actual failures remain distinct. CI aggregate timeout0 now leaves the enclosing job/platform as the boundary."
+    },
+    "binary_ceiling": "128MiB generated binary/file ceiling found in source. No historical binary-size failure is established by this audit.",
+    "scope": "Tracked scripts and workflows; lexical inventory, not a claim every matching control is arbitrary or every historical budget incident is counted. Product internal queue/parser/protocol controls are outside build-cap removal.",
+    "remaining": "Removed build/scanner compute, generated-output and aggregate job/package ceilings. Keep payload parser/protocol/policy boundaries and local explicitly authorized reference workloads. Remaining script-local reference-workload caps are inventoried for CI-vs-local classification; no blanket product-cap or memory-safety waiver."
+  },
+  "red": [
+    {
+      "test": "ScanOrchestration.test_owner_runner_capacity_has_no_synthetic_compute_quota",
+      "reference": ".private/freightctl-ci-cap-policy-red.log",
+      "sha256": "e37e594d7ef0ec74e984563ca58f7cd559b1f68e390c8d571fbfebe6579de733",
+      "result": "FAIL: old Docker memory/CPU/process and Go runtime quotas were present"
+    },
+    {
+      "test": "ReproBuildContracts.test_build_does_not_impose_a_generated_binary_file_limit",
+      "reference": ".private/freightctl-ci-binary-cap-red.log",
+      "sha256": "0059f99180838f07c1ea6e07e95388bf29ad1cd6b039eaec66d2afab880ee166",
+      "result": "FAIL: preexec_fn imposed RLIMIT_FSIZE128MiB"
+    }
+  ],
+  "green": {
+    "scan_orchestration_methods": 15,
+    "image_reporter_methods": 9,
+    "repro_methods": 8,
+    "large_generated_hash": "Actual sparse128MiB+1 hashed by bounded streaming and compared to an independent incremental digest; no compiler or scanner execution",
+    "workflow_lint": "actionlint1.7.12 pass",
+    "diff_check": "pass",
+    "resource_environment_methods": 3,
+    "source_lifecycle_standin_methods": 6,
+    "windows_observation_standin_methods": 9,
+    "node_syntax": "three changed browser scripts pass; no browser launched",
+    "python_syntax": "all changed Python parsed",
+    "records": "83 parity rows,12 journeys,6 protocol-contract references valid; no runtime claim"
+  },
+  "source_files": [
+    {
+      "path": ".github/workflows/core-checks.yml",
+      "sha256": "ae57e9074ceae3d0641195523eb3d5eb57ef08ff75cfe6256e04527ecc5ca867"
+    },
+    {
+      "path": ".github/workflows/first-run.yml",
+      "sha256": "41175e2154f36a91291d22a1b01a18193e263e79113fcab53b0579375f98e453"
+    },
+    {
+      "path": ".github/workflows/ftps-browser.yml",
+      "sha256": "f10cc905e34a34149e052769d93cd630da951ddf7970db02167ca0a4cf0f0bcf"
+    },
+    {
+      "path": ".github/workflows/ftps-client.yml",
+      "sha256": "874e7bfd43e6f950cd7efc1be02cfed5bbb68a4177049ecaf3ca3c283618fb89"
+    },
+    {
+      "path": ".github/workflows/ftps-dispatch.yml",
+      "sha256": "e60f81e3d9674a972150543b6952e0352f13ca80a4f5f28fbfd4b4dec3fd5e36"
+    },
+    {
+      "path": ".github/workflows/ftps-workflows.yml",
+      "sha256": "7c22ca03595c1d833e780c97bd41b489be0cb18ad495135d54b6812d28f2bd12"
+    },
+    {
+      "path": ".github/workflows/ftps.yml",
+      "sha256": "8d06cbe119c14d891afcd378e07a912abe881f538889c270e5e1e3e9b9dfe7e5"
+    },
+    {
+      "path": ".github/workflows/full-foundation.yml",
+      "sha256": "06c3f6603d1f73c6c0b16d9a41cd67be7cf1b438cfc090960080e5371a30f6d9"
+    },
+    {
+      "path": ".github/workflows/native-linux.yml",
+      "sha256": "7dd7f5b4bce983fda5c93c3f5849beb28d20bd544eecb292ef5e67dc870a5694"
+    },
+    {
+      "path": ".github/workflows/native-platforms.yml",
+      "sha256": "18b4b841e77362e3e8ca2af930f1c776173eca2b3ae00cdc9d17b47451ef7eca"
+    },
+    {
+      "path": ".github/workflows/native-vulnerabilities.yml",
+      "sha256": "3b7ac001859a45762b54006c4d72ad5ef4d5e133c80f25049a4216417eec326f"
+    },
+    {
+      "path": ".github/workflows/reproducible-builds.yml",
+      "sha256": "bc028c6443fd64df6ef3e005ffbd123d227a2231f6f9e9089afa091b1288135d"
+    },
+    {
+      "path": ".github/workflows/stock-peers.yml",
+      "sha256": "3af21aadd5f02bc187804e38cb9549fe8ec9f2456d6d7f97948b7786749cae98"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "aa1ff1bb6f5a782e74dba31c1e2ed871706bcf241a5c4a9031fa9dd264502864"
+    },
+    {
+      "path": "scripts/ci-peer-image-summary.py",
+      "sha256": "661620f6285311d290f59d728501764ec55c7162852449de2a1c1ec969f43d2d"
+    },
+    {
+      "path": "scripts/ci_resources.py",
+      "sha256": "ccdea976d410f971fc2ec8e39a2710bd5d1630c0f31621e5fb33d0e39a574807"
+    },
+    {
+      "path": "scripts/ftps-operator-browser.mjs",
+      "sha256": "f1fea7077607df8fba4055f9cbcec72803879d46f38458965a27edd29a3c04ec"
+    },
+    {
+      "path": "scripts/ftps-ticket-browser.mjs",
+      "sha256": "0a35dc5f7effdf30710107adddc54d39570fa3b565c65e7461d9c080033aab4c"
+    },
+    {
+      "path": "scripts/ftps_collection_source.py",
+      "sha256": "37a66941f114166de1093cf194ce2af17eb96f8f3db2b82884b1030b156a6ed4"
+    },
+    {
+      "path": "scripts/onboarding-exchange-browser.mjs",
+      "sha256": "8e3bfe5cbec0b0bb13d727761173b291cf9423d672afc6f94fa00afd2b4f64cc"
+    },
+    {
+      "path": "scripts/onboarding_probe_journey.py",
+      "sha256": "0bed72611ccfd78dcb1926fb26e4524100ea58af97d72d9f355bf8062608fe4e"
+    },
+    {
+      "path": "scripts/qualify-arrivals.py",
+      "sha256": "aa0cf897b29e5777f9805dff00d2ff471bd9fc2b275bfa7885c877b94e258826"
+    },
+    {
+      "path": "scripts/qualify-browser-controls.py",
+      "sha256": "2d0c1ff6278560b1ed83c892a589c2342d6c60a73375e4e4aa93632c4ae2802b"
+    },
+    {
+      "path": "scripts/qualify-browser-recovery.py",
+      "sha256": "0ba51d822a0d03db933cabd84c693ab79fa7eb8b48a12028b7ae36d7a328494d"
+    },
+    {
+      "path": "scripts/qualify-browser.py",
+      "sha256": "084197ea5f588d885a9b8572eca29742f09b4b79d43ca5536ee709ee18732d0c"
+    },
+    {
+      "path": "scripts/qualify-collections.py",
+      "sha256": "4d25f0d8cc3d69185967719c7f7d8ef1e9ab18661e40e67b798ae86440654b44"
+    },
+    {
+      "path": "scripts/qualify-foundation.py",
+      "sha256": "6df8c3e215f9536bda2ef622288fe8779659f6f562647e5b9c75f551caad312a"
+    },
+    {
+      "path": "scripts/qualify-ftps-client.py",
+      "sha256": "e2d6ff7f3a55278e4b419906d6c0fd08813853999cab8a3a463cfdba639ebe6a"
+    },
+    {
+      "path": "scripts/qualify-ftps.py",
+      "sha256": "a828c79890293428a69b361ba5ae0558f3ae580f00ef34870da3aa4a7a5865a6"
+    },
+    {
+      "path": "scripts/qualify-onboarding-exchange.py",
+      "sha256": "8ea4b2e024de3efbedce3d26f0eea6ae5eaf0639dedb519ebd07bba21aacba8f"
+    },
+    {
+      "path": "scripts/qualify-partners.py",
+      "sha256": "bbc8f50cd55d34940122cf682f9d380410c59d540510130cc828eca3b5336b4e"
+    },
+    {
+      "path": "scripts/qualify-repro-builds.py",
+      "sha256": "ce0117d160bdf1c6168a8df5fc6748ed1a84f03ca74aee940c018d6ad7306c94"
+    },
+    {
+      "path": "scripts/qualify-routing.py",
+      "sha256": "f108f717c7c00d7e71c14a45661f8f156411efaf40800ea77327d16558935a16"
+    },
+    {
+      "path": "scripts/qualify-scanner-controls.py",
+      "sha256": "2ec77fc11023ea11f6b7e3582fe16f67f758ad2dccde1cb44a002bf5f0c1c6f3"
+    },
+    {
+      "path": "scripts/qualify-schedules.py",
+      "sha256": "65a12623cdfd796b7824730dabf6d2cd1c70de560b223e2c32413029ecaaf375"
+    },
+    {
+      "path": "scripts/qualify-setup.py",
+      "sha256": "aedee88a88042efd0485c98edb80a7826729864627fb0711d1d35940a56337af"
+    },
+    {
+      "path": "scripts/qualify-windows-fs.py",
+      "sha256": "158f15622c5e7732837f60461d8dbf8b12ca90f1f6bfc149a343837532fa46f6"
+    },
+    {
+      "path": "scripts/scan-peer-image.py",
+      "sha256": "4c10a841cb04db954f9f30abca82bbe9ffc0446638cb3fb81138f6e8c4fa9aef"
+    },
+    {
+      "path": "scripts/test-ci-peer-image-summary.py",
+      "sha256": "42f1f3d595ff93a0944e2c71faf4eca718abee153b61158a95a8b7ba8245e0e5"
+    },
+    {
+      "path": "scripts/test-ci-resources.py",
+      "sha256": "fc1b0911c6bd3b3be0bad56c3489724b546e221d7c97d444efc0cbbd366145db"
+    },
+    {
+      "path": "scripts/test-ftps-collection-source.py",
+      "sha256": "03575fc96d194b8f3d36af4e8140cbd096e170a1d01536f4e7e31c2d6381f332"
+    },
+    {
+      "path": "scripts/test-repro-builds.py",
+      "sha256": "6a56b47fa12b7b816411c6467aada0584b61c6dff4663f98febf41a5436c7a02"
+    },
+    {
+      "path": "scripts/test-scan-peer-image.py",
+      "sha256": "d6c163931e48b71e4911e6a443a33be45406b15c4d58dfbc7f8adb4921a3f9cc"
+    },
+    {
+      "path": "scripts/test-windows-fs-probe.py",
+      "sha256": "62a3086235378dbbf3b610e2ff6c37ddab76624f7c0c2d077889f594bd0f888c"
+    }
+  ],
+  "local_manifest": {
+    "reference": ".private/freightctl-f084-ci-capacity-20261105/manifest.json",
+    "sha256": "0dbe2358634b6b163db490c316233a352b7ed9f21c1f3856e2eed046e20bde15"
+  },
+  "kept": "Nonroot/read-only/no capabilities/no new privileges/no Docker socket; offline exact image scan and read-only input closure; pinned tools; complete OS/library inventory; freshness; all severity findings/suppression enforcement; strict/private evidence; archive traversal/link/special-file/overwrite refusal; product parsing/authorization/custody/lease limits; local no-inference and shared-machine constraints.",
+  "native_owed": [
+    "Actual repaired ARM/x86 image scan with original finding/evidence gates and exact original failure replay",
+    "Native reproducibility at actual final source, with uncapped size measurements",
+    "Remaining helper/reference-runtime caps CI-vs-local classification and full historical incident census; minimum15 is not an exhaustive total",
+    "All current db593d0 original runs terminal before the next push; nonsecurity logs deferred to FINISH under S003"
+  ],
+  "platform_boundary": {
+    "source": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax",
+    "scope": "Removing custom caps uses GitHub default job timeout360minutes and actual runner capacity; it does not promise physically unlimited hardware or release publication."
+  }
+}

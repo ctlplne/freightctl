@@ -4,6 +4,7 @@
 Creates one exact PAM account/service and two loopback receivers. It never
 installs/starts a global FTP daemon, uses retained PostgreSQL or runs inference.
 """
+from ci_resources import environment as ci_environment
 import argparse
 import hashlib
 import json
@@ -82,7 +83,7 @@ def main():
     receiver=ROOT/".cache/freightctl-vsftpd-3.0.5/root/usr/sbin/vsftpd"
     binary=private/"freightctl"
     steps=[];processes={};cleanup=[];probe_failures=[];created_user=False;created_pam=False;audit_paths={}
-    env=dict(os.environ,GOMAXPROCS="1",GOMEMLIMIT="192MiB")
+    env=ci_environment(dict(os.environ,GOMAXPROCS="1",GOMEMLIMIT="192MiB"))
     traced=os.environ.get("FREIGHTCTL_FTPS_TRACE")=="1"
     library_profile=os.environ.get("FREIGHTCTL_FTPS_LIBRARY","system")
     if library_profile not in {"system","no-ktls"}:raise RuntimeError("unknown receiver library profile")

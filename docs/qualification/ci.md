@@ -2,6 +2,8 @@
 
 The owner authorized public source and CI pushes for the existing `ctlplne/freightctl` repository. These workflows test the pushed commit after it arrives on local `main`; they are regression evidence, not a pre-push merge barrier. Every result stays bound to its actual commit, operating system, architecture and peer. A skipped, filtered, cancelled or queued job gives no runtime pass.
 
+Owner decision S004 makes product construction the priority. The [capacity audit](evidence/F084-ci-runner-capacity.json) removes arbitrary GitHub build/scanner ceilings and records actual sizes. GitHub helper Go/Node environments and Chrome arguments stop inheriting the laptop profile; local limits remain unchanged. Correctness, secrets, vulnerability findings, custody, isolation and exact evidence remain gates. Failed historical scans remain failed until actual repaired replay. The platform still has finite runner capacity and a job lifetime; it is not an unlimited machine.
+
 The automatic workflows separate the work:
 
 - [Source and security](../../.github/workflows/core-checks.yml) checks formatting, actionlint/ShellCheck, qualification records and their refusal tests, frontend contracts, TypeScript, reproducible assets, npm audit, reachable Go vulnerabilities and committed-source/full-history secrets.

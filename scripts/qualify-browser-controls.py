@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Retain complete browser gates plus current foundation controls, including red prerequisites."""
+from ci_resources import environment as ci_environment
 from pathlib import Path
 from datetime import datetime,timezone
 import argparse,hashlib,json,os,subprocess,time,uuid
@@ -7,7 +8,7 @@ os.umask(0o077)
 root=Path(__file__).resolve().parents[1];os.chdir(root)
 p=argparse.ArgumentParser();p.add_argument('--pgp-fixture-reference',required=True);args=p.parse_args()
 raw=root/'evidence/raw'/('browser-controls-'+uuid.uuid4().hex);raw.mkdir(parents=True,mode=0o700)
-env=dict(os.environ,GOMAXPROCS='1',NODE_OPTIONS='--max-old-space-size=192')
+env=ci_environment(dict(os.environ,GOMAXPROCS='1',NODE_OPTIONS='--max-old-space-size=192'))
 def sources():
  paths=subprocess.check_output(['git','ls-files','--cached','--others','--exclude-standard','-z']).decode().split('\0')
  special={'go.mod','go.sum','web/package.json','web/package-lock.json','web/tsconfig.json','web/THIRD_PARTY_NOTICES.txt','internal/browser/assets/manifest.json'}
