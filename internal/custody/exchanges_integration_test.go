@@ -43,7 +43,7 @@ func exchangeActor(t *testing.T, f *fixture, permissions []string) (store.Scope,
 func newExchangeFixture(t *testing.T) *exchangeFixture {
 	t.Helper()
 	f := setup(t)
-	f.service.Exchanges = custody.ExchangeSettings{MaxLifetime: time.Hour, MaxSenders: 16, MaxOpenViews: 2}
+	f.service.Exchanges = custody.ExchangeSettings{MaxLifetime: time.Hour, MaxSenders: 16, MaxOpenViews: 2, MaxEndpoints: 16}
 	a, actorA := exchangeActor(t, f, []string{"read", "write", "list", "deliver"})
 	b, actorB := exchangeActor(t, f, []string{"read", "write", "list"})
 	other, actorOther := exchangeActor(t, f, []string{"read", "write", "list", "deliver"})
@@ -444,7 +444,8 @@ func TestArtifactExchangeSQLSourceCheckMatchesNamespaceModesAndAncestors(t *test
 		}
 	}
 	check(file.ID, true)
-	shared, err := f.service.OfferExchange(f.ctx, f.other, "namespace-offer", exchangeRequest(file, f.endpoint))
+	sharedRequest := exchangeRequest(file, f.endpoint)
+	shared, err := f.service.OfferExchange(f.ctx, f.other, "namespace-offer", sharedRequest)
 	if err != nil {
 		t.Fatal("readable namespace revision could not be exchanged", err)
 	}
@@ -465,6 +466,9 @@ func TestArtifactExchangeSQLSourceCheckMatchesNamespaceModesAndAncestors(t *test
 		t.Fatal(err)
 	}
 	check(file.ID, false)
+	if _, err := f.service.OfferExchange(f.ctx, f.other, "namespace-offer", sharedRequest); !errors.Is(err, store.ErrNotFound) {
+		t.Fatal("historical receipt redisclosed an unreadable source", err)
+	}
 	if n, err := sourceReader.ReadAt(make([]byte, 4), 4); err == nil || n != 0 {
 		t.Fatal("source-mode revocation left an already open view readable", n, err)
 	}

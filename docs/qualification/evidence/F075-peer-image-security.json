@@ -3,7 +3,7 @@
   "id": "F075",
   "observed_at": "2026-11-04",
   "starting_commit": "63e153f6511f6cb457dfa46f70d39f2548f200b6",
-  "state": "Both f08 application880/0/0,image feed-files beyond original1GiB file cap. D6also application880/0/0 both;ARM repeats file failure,x86 exact stopped state proves feed OOM despite GOGC25. Both disk cleanups pass. File-only proposal unapplied/pending owner;hard RAM/CPU and all policies unchanged;no image qualification.",
+  "state": "Still red: fc577d5 both native feed downloads OOM under the unchanged hard1GiB cap; prior856 strict-evidence refusal and all original failures preserved. No image qualification.",
   "scope": "Scan the exact disposable independent OpenPGP recipient image used by native Linux tests. This is test infrastructure, not a released server image or runtime security qualification.",
   "qualification_claim": false,
   "frozen_cases": [
@@ -37,7 +37,7 @@
     }
   ],
   "first_observation": "The pinned independent peer Dockerfile audits npm dependencies, but no workflow scans its OS image or binds an image scan to actual runtime identity. Source inspection establishes a missing gate only; it is not a native scanner result.",
-  "next_action": "Preserve actual D168feed-file budget failure and original D166x86OOM. Investigate a supported complete feed/scan path within current limits; do not silently raise file/RAM/disk/time caps or omit OS/library/severity coverage. Continue independent mandatory product work while exact x86/image replay and constraints remain open.",
+  "next_action": "Continue independent product implementation. Preserve exact failed native jobs and investigate a complete supported scan within current limits; do not raise budgets, narrow coverage or suppress findings. Prior856 verifier location remains unobserved because fc feed-download failed earlier.",
   "implementation": {
     "workflow": ".github/workflows/native-linux.yml",
     "execution": "after all original runtime tests, including failure when peer build succeeded; no changed existing budgets",
@@ -556,5 +556,66 @@
     "change": "Add only hash-bound fixed verifier function/line diagnostics; all checks, findings, inventory, limits and cleanup unchanged.",
     "proof": "Original focused foreign-image diagnostic regression fails unrecognized-diagnostic, then passes; all13 orchestration and8 reporter contracts pass. New hash/shape/privacy control passes. No Docker/scanner/image ran locally.",
     "owed": "Actual same-image security replay, actionable finding/check repair, and final-source scan under unchanged budgets."
+  },
+  "fc577d5_native_result": {
+    "source_commit": "fc577d5745f873344b57d91153b27f21b0918314",
+    "run_id": 42072582935,
+    "jobs": [
+      {
+        "job_id": 127404194165,
+        "architecture": "x86_64",
+        "summary": {
+          "state": "failed",
+          "reason": "native-peer-image-scan-failed",
+          "phase": "feed-download",
+          "manifest_sha256": "2190b1a0cfc3cf486235feb598f18418bb24494982c8653f0d7f49bf644799d8",
+          "scratch_cleanup": "unmounted",
+          "command": {
+            "command_phase": "feed-download",
+            "exit_code": 137,
+            "category": "container-oom",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "4476d4f9a1ccf4666c0778dd7c5c19592dfbac1eeed1b1f6f0e3c57873ab9436",
+            "container_state": {
+              "oom_killed": true,
+              "running": false,
+              "exit_code": 137,
+              "state_sha256": "db7dd997f6ed9d5b2fcb2d2c41e571eacfc279a86b290efa24514cf9a0d8ccfe"
+            }
+          }
+        }
+      },
+      {
+        "job_id": 127404194242,
+        "architecture": "arm64",
+        "summary": {
+          "state": "failed",
+          "reason": "native-peer-image-scan-failed",
+          "phase": "feed-download",
+          "manifest_sha256": "b9475ad52209476f90ea2ba30c34aae472666929d381a1015d67e0b4c1db349c",
+          "scratch_cleanup": "unmounted",
+          "command": {
+            "command_phase": "feed-download",
+            "exit_code": 137,
+            "category": "container-oom",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "8df7b5078b51c6c9b7adbac96dda7d15727e01920faacc276696968009916171",
+            "container_state": {
+              "oom_killed": true,
+              "running": false,
+              "exit_code": 137,
+              "state_sha256": "c753119dee70aeafaa801451348853cf86e7e1e9663a136f7cd11995b8364a35"
+            }
+          }
+        }
+      }
+    ],
+    "local_manifest": {
+      "reference": ".private/freightctl-fc-security-20261105/manifest.json",
+      "sha256": "2173ef7ed8c104f82a97e7fab77fee4bd4933df56db6c840e2b47370487ac547"
+    },
+    "application_steps": "Module/vet/unit-race, upstream protocol/race and all implemented integration/migration steps success on both native jobs; no counts inferred.",
+    "prior_verifier_refusal": "Still owed: this replay OOMs before evidence verification, so it does not identify or resolve the earlier856 refusal.",
+    "qualification_claim": false
   }
 }

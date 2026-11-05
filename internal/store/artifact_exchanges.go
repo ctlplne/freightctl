@@ -126,6 +126,16 @@ func (t *Transaction) ArtifactExchangeReplay(ctx context.Context, key, meaning s
 	if _, err = exchangeSender(*d, t.exchangeParticipant()); err != nil || e.Sender != t.Actor {
 		return nil, ErrNotFound
 	}
+	if err = t.exchangeNamespaceReadLock(ctx); err != nil {
+		return nil, err
+	}
+	var sourceAllowed bool
+	if err = t.Tx.QueryRow(ctx, `SELECT freightctl_exchange_actor_source_readable($1,$2,$3,$4)`, t.Scope.Tenant, t.Scope.Partner, e.Request.Artifact.ID, t.Actor).Scan(&sourceAllowed); err != nil {
+		return nil, err
+	}
+	if !sourceAllowed {
+		return nil, ErrNotFound
+	}
 	return e, nil
 }
 

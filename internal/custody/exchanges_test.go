@@ -9,7 +9,7 @@ import (
 )
 
 func TestExchangeConfigurationRefusesUnusableLifetimeBeforeDatabaseUse(t *testing.T) {
-	valid := ExchangeSettings{MaxLifetime: time.Hour, MaxSenders: 16, MaxOpenViews: 128}
+	valid := ExchangeSettings{MaxLifetime: time.Hour, MaxSenders: 16, MaxOpenViews: 128, MaxEndpoints: 16}
 	for _, duration := range []time.Duration{0, -time.Second, time.Nanosecond, time.Microsecond, time.Second + time.Nanosecond} {
 		settings := valid
 		settings.MaxLifetime = duration

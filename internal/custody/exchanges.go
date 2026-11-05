@@ -3,10 +3,13 @@ package custody
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/ctlplne/freightctl/internal/store"
 )
+
+var ErrExchangeConfiguration = fmt.Errorf("artifact exchange limits are unconfigured or invalid: %w", store.ErrState)
 
 // Settings are trusted deployment controls. A request cannot raise them and an
 // unconfigured service does not silently enable the exchange adapter.
@@ -14,12 +17,13 @@ type ExchangeSettings struct {
 	MaxLifetime  time.Duration
 	MaxSenders   int
 	MaxOpenViews int
+	MaxEndpoints int
 }
 
 func (s *Service) ExchangeLimits() (store.ExchangeLimits, int, error) {
 	settings := s.Exchanges
-	if settings.MaxLifetime < time.Second || settings.MaxLifetime%time.Second != 0 || settings.MaxSenders < 1 || settings.MaxSenders > 128 || settings.MaxOpenViews < 1 || settings.MaxOpenViews > 10000 || s.MaxFile < 0 {
-		return store.ExchangeLimits{}, 0, store.ErrState
+	if settings.MaxLifetime < time.Second || settings.MaxLifetime%time.Second != 0 || settings.MaxSenders < 1 || settings.MaxSenders > 128 || settings.MaxOpenViews < 1 || settings.MaxOpenViews > 10000 || settings.MaxEndpoints < 1 || settings.MaxEndpoints > 10000 || s.MaxFile < 0 {
+		return store.ExchangeLimits{}, 0, ErrExchangeConfiguration
 	}
 	return store.ExchangeLimits{MaxArtifactBytes: s.MaxFile, MaxLifetime: settings.MaxLifetime, MaxSenders: settings.MaxSenders}, settings.MaxOpenViews, nil
 }
@@ -80,6 +84,9 @@ func (s *Service) OfferExchange(ctx context.Context, scope store.Scope, key stri
 }
 
 func (s *Service) OpenExchangeReader(ctx context.Context, scope store.Scope, id string) (*store.File, *RevisionReader, error) {
+	if !store.ValidID(id) {
+		return nil, nil, store.ErrNotFound
+	}
 	limits, _, err := s.ExchangeLimits()
 	if err != nil {
 		return nil, nil, err
@@ -143,6 +150,9 @@ func (r *RevisionReader) checkExchangeRead(ctx context.Context, t *store.Transac
 }
 
 func (s *Service) InspectExchange(ctx context.Context, scope store.Scope, id string) (*store.IncomingExchange, error) {
+	if !store.ValidID(id) {
+		return nil, store.ErrNotFound
+	}
 	limits, _, err := s.ExchangeLimits()
 	if err != nil {
 		return nil, err

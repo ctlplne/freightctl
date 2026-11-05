@@ -1,0 +1,976 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "freightctl artifact receive-view API",
+    "version": "1",
+    "description": "Implemented surface subset, not a complete freightctl API specification or qualification claim. JSON duplicates, nulls, unknown/case-folded fields and lossy expiry are refused. Integer fields use JSON integer literals. Deployment limits may be stricter than structural bounds. Inference is not required."
+  },
+  "externalDocs": {
+    "description": "OpenAPI document format",
+    "url": "https://spec.openapis.org/oas/v3.1.0.html"
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    },
+    {
+      "browserSession": []
+    }
+  ],
+  "paths": {
+    "/v1/tenants/{tenant}/partners/{partner}/exchange-endpoints/commands": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/tenant"
+        },
+        {
+          "$ref": "#/components/parameters/partner"
+        }
+      ],
+      "post": {
+        "operationId": "changeArtifactReceiveEndpoint",
+        "summary": "Register, replace or revoke a receive endpoint",
+        "description": "Requires current root admin and accounts_manage authority. Exact participant bindings are rechecked. Body at most 24 KiB; canonical definition at most 16 KiB. No authority comes from submitted identity selectors.",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "browserSession": [],
+            "csrfToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/OperationKey"
+          },
+          {
+            "$ref": "#/components/parameters/Origin"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EndpointCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "413": {
+            "$ref": "#/components/responses/413"
+          },
+          "503": {
+            "$ref": "#/components/responses/503"
+          },
+          "200": {
+            "description": "Committed endpoint and original retry receipt.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/tenants/{tenant}/partners/{partner}/exchange-endpoints/{endpoint}/incoming": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/tenant"
+        },
+        {
+          "$ref": "#/components/parameters/partner"
+        },
+        {
+          "$ref": "#/components/parameters/endpoint"
+        }
+      ],
+      "get": {
+        "operationId": "listIncomingArtifacts",
+        "summary": "Poll one approved receive endpoint",
+        "description": "Current recipient/read/list authority only. Source and endpoint revocation are rechecked. Held entries expose only a view ID and fixed state. Restart every new polling cycle without after.",
+        "parameters": [
+          {
+            "name": "after",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "413": {
+            "$ref": "#/components/responses/413"
+          },
+          "503": {
+            "$ref": "#/components/responses/503"
+          },
+          "200": {
+            "description": "Bounded authorized receive page; not a retrieval or processing receipt.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IncomingPage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/tenants/{tenant}/partners/{partner}/exchanges": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/tenant"
+        },
+        {
+          "$ref": "#/components/parameters/partner"
+        }
+      ],
+      "post": {
+        "operationId": "offerArtifactExchange",
+        "summary": "Publish one exact-revision receive view",
+        "description": "Requires current read/deliver permission, a registered sender/recipient endpoint, readable verified custody and current intake checks/release. Body at most 16 KiB. Receiving a view grants no forwarding/execution authority. A reply is a new request with separate permission and readable source.",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "browserSession": [],
+            "csrfToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/OperationKey"
+          },
+          {
+            "$ref": "#/components/parameters/Origin"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExchangeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "413": {
+            "$ref": "#/components/responses/413"
+          },
+          "503": {
+            "$ref": "#/components/responses/503"
+          },
+          "201": {
+            "description": "New view and command receipt committed atomically.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExchangeResult"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Original historical publication receipt replayed; current retrieval still rechecks authority.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExchangeResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/tenants/{tenant}/partners/{partner}/exchanges/{exchange}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/tenant"
+        },
+        {
+          "$ref": "#/components/parameters/partner"
+        },
+        {
+          "$ref": "#/components/parameters/exchange"
+        }
+      ],
+      "get": {
+        "operationId": "inspectIncomingArtifact",
+        "summary": "Inspect an incoming view under current authority",
+        "description": "Recipient-only current status. Senders recover their original publication receipt through the original offer key. This is not an outgoing history API.",
+        "responses": {
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "413": {
+            "$ref": "#/components/responses/413"
+          },
+          "503": {
+            "$ref": "#/components/responses/503"
+          },
+          "200": {
+            "description": "Offered metadata or a redacted held state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IncomingExchange"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/tenants/{tenant}/partners/{partner}/exchanges/{exchange}/file": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/tenant"
+        },
+        {
+          "$ref": "#/components/parameters/partner"
+        },
+        {
+          "$ref": "#/components/parameters/exchange"
+        }
+      ],
+      "get": {
+        "operationId": "retrieveIncomingArtifact",
+        "summary": "Retrieve only the permitted immutable revision",
+        "description": "TLS, current recipient, source permission, endpoint/policy and storage identity required. Every read is at most 256 KiB with a 10 second authority deadline. Revocation interrupts later reads. Interrupted output is partial and must not be treated as accepted. Filename is the static artifact. Errors may be a readable HTML page for browser download navigation.",
+        "parameters": [
+          {
+            "name": "Range",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "413": {
+            "$ref": "#/components/responses/413"
+          },
+          "503": {
+            "$ref": "#/components/responses/503"
+          },
+          "200": {
+            "description": "Exact verified revision bytes or a requested byte range; no receiver-durability or business-processing claim.",
+            "headers": {
+              "X-Content-SHA256": {
+                "description": "Full immutable revision digest, including on a partial range response.",
+                "schema": {
+                  "$ref": "#/components/schemas/SHA256"
+                }
+              },
+              "X-File-Revision-ID": {
+                "schema": {
+                  "$ref": "#/components/schemas/ID"
+                }
+              },
+              "X-Artifact-Exchange-ID": {
+                "schema": {
+                  "$ref": "#/components/schemas/ID"
+                }
+              }
+            },
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "206": {
+            "description": "Exact verified revision bytes or a requested byte range; no receiver-durability or business-processing claim.",
+            "headers": {
+              "X-Content-SHA256": {
+                "description": "Full immutable revision digest, including on a partial range response.",
+                "schema": {
+                  "$ref": "#/components/schemas/SHA256"
+                }
+              },
+              "X-File-Revision-ID": {
+                "schema": {
+                  "$ref": "#/components/schemas/ID"
+                }
+              },
+              "X-Artifact-Exchange-ID": {
+                "schema": {
+                  "$ref": "#/components/schemas/ID"
+                }
+              }
+            },
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "416": {
+            "description": "Requested range is not satisfiable."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "64 lowercase hexadecimal characters; send the actual credential, never its digest"
+      },
+      "browserSession": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "__Host-freightctl-session"
+      },
+      "csrfToken": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-CSRF-Token"
+      }
+    },
+    "parameters": {
+      "tenant": {
+        "name": "tenant",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "$ref": "#/components/schemas/ID"
+        }
+      },
+      "partner": {
+        "name": "partner",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "$ref": "#/components/schemas/ID"
+        }
+      },
+      "endpoint": {
+        "name": "endpoint",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "$ref": "#/components/schemas/ID"
+        }
+      },
+      "exchange": {
+        "name": "exchange",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "$ref": "#/components/schemas/ID"
+        }
+      },
+      "OperationKey": {
+        "name": "Idempotency-Key",
+        "in": "header",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "description": "Same actor/key and meaning recover the original receipt; changed meaning refuses. A replay never reactivates byte access."
+      },
+      "Origin": {
+        "name": "Origin",
+        "in": "header",
+        "required": false,
+        "schema": {
+          "type": "string"
+        },
+        "description": "Required for cookie mutations and must equal the HTTPS origin. Explicit bearer requests do not fall back to cookie identity."
+      }
+    },
+    "responses": {
+      "400": {
+        "description": "Invalid contract, selectors, body or TLS requirement.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Authentication absent, invalid, expired or revoked.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "403": {
+        "description": "Permission, browser origin or CSRF refusal.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "Resource or current scoped authority unavailable.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "409": {
+        "description": "Changed request meaning, endpoint revision or file-policy state.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "413": {
+        "description": "Configured admission or evidence bound exceeded.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "503": {
+        "description": "Adapter configuration, dependency or request capacity unavailable.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "ID": {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+      },
+      "SHA256": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      },
+      "Participant": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "tenant_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "partner_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "actor_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "authority_revision": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1,
+            "maximum": 9223372036854775807
+          },
+          "root_policy_digest": {
+            "$ref": "#/components/schemas/SHA256"
+          }
+        },
+        "required": [
+          "tenant_id",
+          "partner_id",
+          "actor_id",
+          "authority_revision",
+          "root_policy_digest"
+        ]
+      },
+      "EndpointDefinition": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "type": "integer",
+            "const": 1
+          },
+          "profile": {
+            "type": "string",
+            "const": "custody-https-poll-v1"
+          },
+          "recipient": {
+            "$ref": "#/components/schemas/Participant"
+          },
+          "senders": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 128,
+            "items": {
+              "$ref": "#/components/schemas/Participant"
+            },
+            "description": "Unique actors in the same tenant/partner. Deployment admission limits and the 16 KiB canonical definition bound also apply."
+          }
+        },
+        "required": [
+          "schema_version",
+          "profile",
+          "recipient",
+          "senders"
+        ]
+      },
+      "EndpointReference": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "revision": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1,
+            "maximum": 9223372036854775807
+          },
+          "hash": {
+            "$ref": "#/components/schemas/SHA256"
+          }
+        },
+        "required": [
+          "id",
+          "revision",
+          "hash"
+        ]
+      },
+      "EndpointCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "operation": {
+            "enum": [
+              "create",
+              "replace",
+              "revoke"
+            ]
+          },
+          "endpoint_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "expected_revision": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0,
+            "maximum": 9223372036854775806
+          },
+          "definition": {
+            "$ref": "#/components/schemas/EndpointDefinition"
+          }
+        },
+        "required": [
+          "operation",
+          "endpoint_id",
+          "expected_revision"
+        ],
+        "oneOf": [
+          {
+            "properties": {
+              "operation": {
+                "const": "create"
+              },
+              "expected_revision": {
+                "const": 0
+              }
+            },
+            "required": [
+              "definition"
+            ]
+          },
+          {
+            "properties": {
+              "operation": {
+                "const": "replace"
+              },
+              "expected_revision": {
+                "minimum": 1
+              }
+            },
+            "required": [
+              "definition"
+            ]
+          },
+          {
+            "properties": {
+              "operation": {
+                "const": "revoke"
+              },
+              "expected_revision": {
+                "minimum": 1
+              }
+            },
+            "not": {
+              "required": [
+                "definition"
+              ]
+            }
+          }
+        ]
+      },
+      "EndpointVersion": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "revision": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1,
+            "maximum": 9223372036854775807
+          },
+          "definition": {
+            "$ref": "#/components/schemas/EndpointDefinition"
+          },
+          "definition_hash": {
+            "$ref": "#/components/schemas/SHA256"
+          },
+          "state": {
+            "enum": [
+              "active",
+              "revoked"
+            ]
+          },
+          "recorded_by": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "event_id": {
+            "$ref": "#/components/schemas/ID"
+          }
+        },
+        "required": [
+          "id",
+          "revision",
+          "definition",
+          "definition_hash",
+          "state",
+          "recorded_by",
+          "event_id"
+        ]
+      },
+      "EndpointResult": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "endpoint": {
+            "$ref": "#/components/schemas/EndpointVersion"
+          },
+          "replayed": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "endpoint",
+          "replayed"
+        ]
+      },
+      "Artifact": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "file_revision_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "size_bytes": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0,
+            "maximum": 9223372036854775807
+          },
+          "sha256": {
+            "$ref": "#/components/schemas/SHA256"
+          },
+          "acceptance_policy": {
+            "type": "string",
+            "pattern": "^(integrity-only-v1|intake-csv-v1:[0-9a-f]{64})$"
+          }
+        },
+        "required": [
+          "file_revision_id",
+          "size_bytes",
+          "sha256",
+          "acceptance_policy"
+        ]
+      },
+      "ExchangeRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "type": "integer",
+            "const": 1
+          },
+          "artifact": {
+            "$ref": "#/components/schemas/Artifact"
+          },
+          "endpoint": {
+            "$ref": "#/components/schemas/EndpointReference"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]{1,6}0*)?(?:Z|[+-](?:[01][0-9]|2[0-3]):[0-5][0-9])$",
+            "description": "Exact microsecond instant; harmless trailing fractional zeroes and equivalent offsets normalize to UTC. Admission uses database time and configured lifetime."
+          },
+          "receipt": {
+            "type": "string",
+            "const": "availability-only-v1"
+          },
+          "reply_to": {
+            "$ref": "#/components/schemas/ID"
+          }
+        },
+        "required": [
+          "schema_version",
+          "artifact",
+          "endpoint",
+          "expires_at",
+          "receipt"
+        ]
+      },
+      "ExchangeRecord": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "sender_actor_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "recipient_actor_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "request": {
+            "$ref": "#/components/schemas/ExchangeRequest"
+          },
+          "request_hash": {
+            "$ref": "#/components/schemas/SHA256"
+          },
+          "event_id": {
+            "$ref": "#/components/schemas/ID"
+          }
+        },
+        "required": [
+          "id",
+          "sender_actor_id",
+          "recipient_actor_id",
+          "request",
+          "request_hash",
+          "event_id"
+        ]
+      },
+      "ExchangeResult": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "exchange": {
+            "$ref": "#/components/schemas/ExchangeRecord"
+          },
+          "replayed": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "exchange",
+          "replayed"
+        ]
+      },
+      "IncomingExchange": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "state": {
+            "enum": [
+              "offered",
+              "held"
+            ]
+          },
+          "exchange": {
+            "$ref": "#/components/schemas/ExchangeRecord"
+          }
+        },
+        "required": [
+          "id",
+          "state"
+        ],
+        "oneOf": [
+          {
+            "properties": {
+              "state": {
+                "const": "offered"
+              }
+            },
+            "required": [
+              "exchange"
+            ]
+          },
+          {
+            "properties": {
+              "state": {
+                "const": "held"
+              }
+            },
+            "not": {
+              "required": [
+                "exchange"
+              ]
+            }
+          }
+        ]
+      },
+      "IncomingPage": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "exchanges": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "$ref": "#/components/schemas/IncomingExchange"
+            }
+          },
+          "next": {
+            "$ref": "#/components/schemas/ID",
+            "description": "Pagination within this polling cycle only. Start every new cycle without a cursor."
+          }
+        },
+        "required": [
+          "exchanges"
+        ]
+      },
+      "Error": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "error": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "error"
+        ]
+      }
+    }
+  }
+}

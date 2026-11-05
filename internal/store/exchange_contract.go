@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
+	"regexp"
 	"slices"
 	"strings"
 	"time"
@@ -13,6 +14,10 @@ import (
 )
 
 var ErrExchangeInput = errors.New("invalid artifact exchange contract")
+
+// Parse exact microsecond instants, permitting harmless trailing zeroes but
+// never Go's truncation of nonzero fractional digits beyond nanoseconds.
+var exchangeTimestamp = regexp.MustCompile(`^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]{1,6}0*)?(?:Z|[+-](?:[01][0-9]|2[0-3]):[0-5][0-9])$`)
 
 // These are explicit request bindings, never authentication proofs or grants.
 // The exchange service must authenticate and recheck all referenced live state.
@@ -122,6 +127,11 @@ func DecodeExchangeRequest(raw []byte, limits ExchangeLimits) (*ExchangeRequest,
 	if err := decodeExchangeJSON(raw, &request); err != nil {
 		return nil, nil, "", err
 	}
+	var fields map[string]json.RawMessage
+	var expiry string
+	if json.Unmarshal(raw, &fields) != nil || json.Unmarshal(fields["expires_at"], &expiry) != nil || !exchangeTimestamp.MatchString(expiry) {
+		return nil, nil, "", ErrExchangeInput
+	}
 	canonical, hash, err := CanonicalExchangeRequest(request, limits)
 	if err != nil {
 		return nil, nil, "", err
@@ -147,7 +157,11 @@ func DecodeExchangeEndpoint(raw []byte, limits ExchangeLimits) (*ExchangeEndpoin
 }
 
 func decodeExchangeJSON(raw []byte, target any) error {
-	if len(raw) == 0 || len(raw) > 16<<10 {
+	return decodeExchangeJSONBound(raw, target, 16<<10)
+}
+
+func decodeExchangeJSONBound(raw []byte, target any, maximum int) error {
+	if len(raw) == 0 || len(raw) > maximum || maximum < 1 || maximum > 24<<10 {
 		return ErrExchangeInput
 	}
 	d := json.NewDecoder(bytes.NewReader(raw))

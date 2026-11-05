@@ -32,6 +32,18 @@ type ExchangeEndpointResult struct {
 	Replayed bool                    `json:"replayed"`
 }
 
+func DecodeExchangeEndpointCommand(raw []byte, limits ExchangeLimits) (*ExchangeEndpointCommand, error) {
+	var command ExchangeEndpointCommand
+	if err := decodeExchangeJSONBound(raw, &command, 24<<10); err != nil {
+		return nil, err
+	}
+	normalized, _, err := canonicalExchangeEndpointCommand(command, limits)
+	if err != nil {
+		return nil, err
+	}
+	return &normalized, nil
+}
+
 func canonicalExchangeEndpointCommand(c ExchangeEndpointCommand, limits ExchangeLimits) (ExchangeEndpointCommand, string, error) {
 	if !limits.valid() || !ValidID(c.ID) || c.ExpectedRevision < 0 || c.ExpectedRevision == 1<<63-1 {
 		return c, "", ErrExchangeInput

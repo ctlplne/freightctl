@@ -145,6 +145,11 @@ func run(args []string) error {
 	contextHash := f.String("context-hash", "", "exact reviewed disclosure context SHA-256")
 	aiEnabled := f.Bool("ai-enabled", false, "opt in to requests to explicitly registered inference endpoints; disabled by default")
 	browserSessionSeconds := f.Int("browser-session-seconds", 600, "browser session lifetime in seconds, 1 to 600; new login required after expiry")
+	exchangeEnabled := f.Bool("exchange-enabled", true, "enable registered artifact receive views; permissions are still required")
+	exchangeLifetime := f.Duration("exchange-max-lifetime", 24*time.Hour, "maximum new receive-view lifetime; positive whole seconds")
+	exchangeSenders := f.Int("exchange-max-senders", 16, "maximum explicit senders per receive endpoint, 1 to 128")
+	exchangeViews := f.Int("exchange-max-open-views", 128, "maximum unexpired receive views per sender, 1 to 10000")
+	exchangeEndpoints := f.Int("exchange-max-endpoints", 1000, "maximum registered receive endpoint IDs per partner, 1 to 10000")
 	sshHost := f.String("ssh-host-key-file", ".private/ssh-host.key", "protected Ed25519 SSH host identity reference")
 	sshPublic := f.String("ssh-public-file", "", "public SSH key reference; host-keygen defaults to host reference plus .pub")
 	sshKeyID := f.String("ssh-key-id", "", "registered key UUID to revoke")
@@ -171,6 +176,15 @@ func run(args []string) error {
 		}
 	}
 	ctx := context.Background()
+	exchangeSettings := custody.ExchangeSettings{}
+	if *exchangeEnabled {
+		exchangeSettings = custody.ExchangeSettings{MaxLifetime: *exchangeLifetime, MaxSenders: *exchangeSenders, MaxOpenViews: *exchangeViews, MaxEndpoints: *exchangeEndpoints}
+		if args[0] == "serve" {
+			if _, _, err := (&custody.Service{MaxFile: *maxFile, Exchanges: exchangeSettings}).ExchangeLimits(); err != nil {
+				return err
+			}
+		}
+	}
 	if args[0] == "serve" && (*browserSessionSeconds < 1 || *browserSessionSeconds > 600) {
 		return errors.New("browser session lifetime must be 1 to 600 seconds")
 	}
@@ -595,7 +609,7 @@ func run(args []string) error {
 		}
 		secret.Close()
 		audits := &audit.Service{DB: db, KeyFile: *auditKey, MaxEvents: *auditMaxEvents, MaxBytes: *auditMaxBytes}
-		server := &http.Server{Addr: *listen, Handler: api.NewWithBrowserLifetime(&custody.Service{DB: db, Disk: disk, MaxFile: *maxFile, MaxStored: *maxStored, ReconcileMaxBytes: *reconcileBytes, NamespaceMaxEntries: *namespaceMax, UploadCheckpointBytes: *checkpointBytes}, audits, *aiEnabled, time.Duration(*browserSessionSeconds)*time.Second), TLSConfig: secure.TLSConfig(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 90 * time.Second, WriteTimeout: 90 * time.Second, IdleTimeout: 30 * time.Second, MaxHeaderBytes: 16 * 1024}
+		server := &http.Server{Addr: *listen, Handler: api.NewWithBrowserLifetime(&custody.Service{DB: db, Disk: disk, MaxFile: *maxFile, MaxStored: *maxStored, ReconcileMaxBytes: *reconcileBytes, NamespaceMaxEntries: *namespaceMax, UploadCheckpointBytes: *checkpointBytes, Exchanges: exchangeSettings}, audits, *aiEnabled, time.Duration(*browserSessionSeconds)*time.Second), TLSConfig: secure.TLSConfig(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 90 * time.Second, WriteTimeout: 90 * time.Second, IdleTimeout: 30 * time.Second, MaxHeaderBytes: 16 * 1024}
 		stop, cancel := signal.NotifyContext(ctx, os.Interrupt, syscall.SIGTERM)
 		defer cancel()
 		go func() {

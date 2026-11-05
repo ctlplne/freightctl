@@ -53,6 +53,11 @@ func NewWithBrowserLifetime(service *custody.Service, audits *audit.Service, ena
 	})
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/files", s.upload)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/files/{file}", s.download)
+	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/exchange-endpoints/commands", s.exchangeEndpointCommand)
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/exchange-endpoints/{endpoint}/incoming", s.incomingExchanges)
+	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/exchanges", s.offerExchange)
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/exchanges/{exchange}", s.inspectExchange)
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/exchanges/{exchange}/file", s.downloadExchange)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/events", s.events)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/onboarding-plans", s.onboarding)
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/onboarding-plans", s.onboarding)
@@ -326,7 +331,7 @@ func failure(w http.ResponseWriter, err error) {
 // Native browser download navigation receives a readable refusal page. API
 // callers retain the exact JSON status contract and no error becomes a file.
 func requestFailure(w http.ResponseWriter, r *http.Request, err error) {
-	if r.Method == http.MethodGet && strings.Contains(r.Header.Get("Accept"), "text/html") && (strings.HasSuffix(r.URL.Path, "/namespace/file") || strings.Contains(r.URL.Path, "/files/")) {
+	if r.Method == http.MethodGet && strings.Contains(r.Header.Get("Accept"), "text/html") && (strings.HasSuffix(r.URL.Path, "/namespace/file") || strings.Contains(r.URL.Path, "/files/") || strings.Contains(r.URL.Path, "/exchanges/") && strings.HasSuffix(r.URL.Path, "/file")) {
 		code, message := errorStatus(err)
 		browser.DownloadError(w, code, message)
 		return
@@ -336,6 +341,10 @@ func requestFailure(w http.ResponseWriter, r *http.Request, err error) {
 
 func errorStatus(err error) (int, string) {
 	switch {
+	case errors.Is(err, store.ErrExchangeInput):
+		return 400, "invalid_artifact_exchange_contract"
+	case errors.Is(err, custody.ErrExchangeConfiguration):
+		return 503, "artifact_exchange_unavailable"
 	case errors.Is(err, store.ErrOnboardingInput):
 		return 400, "invalid_onboarding_command"
 	case errors.Is(err, store.ErrPartnerInput):

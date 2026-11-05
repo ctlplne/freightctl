@@ -23,7 +23,7 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-func browserAPI(t *testing.T, lifetime time.Duration) (*custody.Service, store.Scope, *secure.Secret, *httptest.Server) {
+func browserAPI(t *testing.T, lifetime time.Duration, exchangeSettings ...custody.ExchangeSettings) (*custody.Service, store.Scope, *secure.Secret, *httptest.Server) {
 	t.Helper()
 	ctx := context.Background()
 	adminRef, runtimeRef := os.Getenv("FREIGHTCTL_TEST_ADMIN_FILE"), os.Getenv("FREIGHTCTL_TEST_RUNTIME_FILE")
@@ -96,6 +96,12 @@ func browserAPI(t *testing.T, lifetime time.Duration) (*custody.Service, store.S
 		t.Fatal(err)
 	}
 	s := &custody.Service{DB: db, Disk: disk, MaxFile: 8 << 20, MaxStored: 64 << 20, NamespaceMaxEntries: 1000}
+	if len(exchangeSettings) > 1 {
+		t.Fatal("fixture accepts at most one explicit exchange configuration")
+	}
+	if len(exchangeSettings) == 1 {
+		s.Exchanges = exchangeSettings[0]
+	}
 	server := httptest.NewTLSServer(NewWithBrowserLifetime(s, nil, false, lifetime))
 	t.Cleanup(server.Close)
 	server.Client().Timeout = 10 * time.Second

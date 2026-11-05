@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "id": "F083",
+  "observed_at": "2026-11-05",
+  "starting_commit": "410c4f2a29f61d1fae5689deeea5a28f9f6345f0",
+  "state": "Five API paths and serve controls implemented; actual native/served qualification owed.",
+  "qualification_claim": false,
+  "change": "Shared endpoint registration, exact-revision offers, bounded recipient discovery/inspection and range downloads over existing TLS/bearer/cookie/CSRF controls. Trusted serve limits refuse before opening references. Strict command/expiry wire decoding and live source permission on receipt redisclosure.",
+  "red": [
+    {
+      "test": "TestArtifactExchangeAPIRefusesInventedAuthorityBeforeDatabase",
+      "result": "404 missing route; expected400 refusing invented payload authority before database access"
+    },
+    {
+      "test": "TestServeRefusesExchangeBoundsBeforeOpeningReferences",
+      "result": "unknown -exchange-max-lifetime flag; typed configuration-refusal assertion failed",
+      "original_log_reference": ".private/freightctl-exchange-serve-red.log",
+      "original_log_sha256": "10f20cf16d3d9d12eb1b8e932839caed7c13d025b5e96fa7775cb0ac9fe4e276"
+    },
+    {
+      "test": "TestExchangeRequestRejectsLostTimestampPrecision",
+      "result": "Accepted nonzero precision at 0.1ns because time decoder truncated it; now refuses before canonicalization"
+    }
+  ],
+  "green": {
+    "api_refusal_methods": 4,
+    "serve_configuration_method": 1,
+    "exact_expiry_method": 1,
+    "endpoint_command_wire_method": 1,
+    "integration_compile": [
+      "internal/api",
+      "internal/custody"
+    ],
+    "integration_vet": [
+      "internal/api",
+      "cmd/freightctl",
+      "internal/custody",
+      "internal/store"
+    ],
+    "architecture": "TestCoreImportBoundaries pass",
+    "openapi": "stdlib JSON parse and all 109 local references resolve; independent schema validation owed",
+    "diff_check": "pass"
+  },
+  "source_files": [
+    {
+      "path": "cmd/freightctl/main.go",
+      "sha256": "122fc91845ce513490f51d88a647439b49d97ff880c2819f748b2eec9be10ffd"
+    },
+    {
+      "path": "cmd/freightctl/exchange_serve_test.go",
+      "sha256": "cd0be9852a9c4eec57bdeebada89ef741ed975cec49b9c8e0bf9d44b63abe11d"
+    },
+    {
+      "path": "internal/api/api.go",
+      "sha256": "f9e54e9cca2f48a44d5d58872cf6f494af87061b36c176990dbd75894445252b"
+    },
+    {
+      "path": "internal/api/artifact_exchanges.go",
+      "sha256": "884a4dd3b838e95a10d11b09ae883817eff301a37caba0d0a6646582973bf59e"
+    },
+    {
+      "path": "internal/api/artifact_exchanges_test.go",
+      "sha256": "e91cce3836393f4a1e7da8f1863beb28aeb57f446b5f2002efe45097a09545e7"
+    },
+    {
+      "path": "internal/api/artifact_exchanges_integration_test.go",
+      "sha256": "5cb3e05677f9319093edc94cc1c6e8d71447988ca5515702cb1a3451bd62edb3"
+    },
+    {
+      "path": "internal/api/browser_sessions_integration_test.go",
+      "sha256": "310d8e415d5c735ae6cdbd9b4c27bc3b58850244586f0e504937a66c6491f0f9"
+    },
+    {
+      "path": "internal/custody/exchanges.go",
+      "sha256": "26514bfe558444e8d4538f4dfd91b73bbd9230b90c819243e95050db9bae5dae"
+    },
+    {
+      "path": "internal/custody/exchanges_test.go",
+      "sha256": "c90ba9ed704773ea20cd5bb7c31425ce828242f96d8a5218c4d636259e9ce0fe"
+    },
+    {
+      "path": "internal/custody/exchanges_integration_test.go",
+      "sha256": "990b6dcce9e032c764f41690649b1dc478565c6d7391f37874f3899872148be0"
+    },
+    {
+      "path": "internal/store/artifact_exchanges.go",
+      "sha256": "e1dd82ffcdf5ac4cd6d6e384d58fe1f4e6d544d5772493e3eb861a2f3855b9c8"
+    },
+    {
+      "path": "internal/store/exchange_contract.go",
+      "sha256": "de5599a51fc14bd28eda4d51941fa26616485d42a37d0edc0ca7d004c153cbb7"
+    },
+    {
+      "path": "internal/store/exchange_contract_test.go",
+      "sha256": "9ea59267431517955c0a28bb135bcd50c9d3470ce12bf24f75df9e8d9b67aa27"
+    },
+    {
+      "path": "internal/store/exchange_endpoints.go",
+      "sha256": "f0a36ac5dd453729ee2411f6ee8e413a68a11c55e1e2ea6fe02514e8fb40080f"
+    },
+    {
+      "path": "internal/store/exchange_endpoints_test.go",
+      "sha256": "e0abdf387f91cde2640546b6fdbb44efa224abb96179dd496befa57015b3815d"
+    },
+    {
+      "path": "docs/api/artifact-exchange.openapi.json",
+      "sha256": "c81cb9eaffaba47953dc044a232c4d283ee3bdc39572ff31b2b83a242c24b2f1"
+    },
+    {
+      "path": "docs/protocols/artifact-exchange.md",
+      "sha256": "900e6182e857b43053fdcf741ea9c840276c6a650cf6a1a189a4d922dcab84d2"
+    }
+  ],
+  "local_manifest": {
+    "reference": ".private/freightctl-f083-api-20261105/manifest.json",
+    "sha256": "43d557d2a070e265d6c570f417eebebb722801d13da7ae87c42df975db04552a"
+  },
+  "native_tests_owed": [
+    "TestArtifactExchangeHTTPSUsesSameCookieAndBearerAuthorityAndSeparateReply, plus four F081 and eight F082 domain cases; no runtime tests executed locally"
+  ],
+  "prepared_served_profile": "Actual Go HTTPS client/server, real PostgreSQL/storage, ordinary participant bearer credentials and browser cookies; upload/registration/offer/replay/conflict/discovery/exact bytes/ranges/no fallback/no inherited access/live credential change/new-source separately authorized reply/endpoint revoke. Prepared and compiled only.",
+  "limits": "In-memory handler refusal tests and compilation do not qualify actual HTTP authentication, PostgreSQL triggers or peer interoperability. Fresh42 target only; retained35 untouched. No model/scanner runtime.",
+  "owed": [
+    "Native runtime of all13 F081/F082/F083 cases and metadata restore",
+    "Independent OpenAPI schema validation and complete product API",
+    "CLI/UI/agent tools, outgoing history, per-view cancellation and remaining exchange controls",
+    "AX-J01/J02/J03 stock-client/independent-receiver/process-death/response-loss/recovery and all baseline GOAL gates",
+    "Mandatory FINISH includes deferred broad/native/nonsecurity failures; F026 remains manual/owner-deferred"
+  ]
+}

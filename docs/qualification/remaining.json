@@ -856,7 +856,8 @@
       "evidence": [
         "docs/qualification/evidence/F080-artifact-exchange-contract.json",
         "docs/qualification/evidence/F081-artifact-exchange-endpoints.json",
-        "docs/qualification/evidence/F082-artifact-receive-views.json"
+        "docs/qualification/evidence/F082-artifact-receive-views.json",
+        "docs/qualification/evidence/F083-artifact-exchange-api.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -864,19 +865,18 @@
       ],
       "remaining_details": [
         "Implement and qualify AX01-AX08 and the three engineering profiles using existing custody, identity, workflow, approval, intent and receipt services.",
-        "Freeze request/receive/receipt and adapter-role contracts before implementation. Qualify a two-agent exact-byte exchange and separately authorized reply with ordinary credentials and inference disabled.",
+        "Canonical request/receive/receipt and initial custody-poll adapter contracts are implemented. Qualify a two-agent exact-byte exchange and separately authorized reply with ordinary credentials and inference disabled.",
         "Qualify human/system ingress, governed source collection and independently verified agent-to-system onward delivery. Every handoff requires current permission; notification never grants retrieval or forwarding.",
         "Resolve X07 and qualify actual optional Trust Control integration before compatibility claims; fixture evidence is scoped and ordinary core operation remains independent.",
         "Retain all original parity rows, full customer journeys, red gates and evidence. The first customer workflow/buyer/wedge remains unselected.",
-        "S003 resumes the full product and authorizes guarded source/CI batches after previous required runs are terminal. Contract validators are implemented with focused red/green proof; durable services, all public surfaces and actual AX profiles remain owed. Broad/deferred qualification is mandatory at FINISH.",
-        "F081 prepares append-only endpoint registration/current heads and transactional command receipts, with exact current participant bindings and forced RLS in new fresh schema41. Focused command/metadata checks pass; four actual PostgreSQL tests, migration/restore and public surfaces remain owed. Retained35 unchanged. Continue durable exchange/retrieval/reply while submitted fc577d5 required runs are pending; no successor push until terminal."
+        "S003 resumes the full product and authorizes guarded source/CI batches after previous required runs are terminal. Contract validators are implemented with focused red/green proof; durable services and five API paths are implemented; remaining surfaces and actual AX profiles remain owed. Broad/deferred qualification is mandatory at FINISH."
       ],
       "current_item": {
-        "id": "F082",
-        "state": "core implemented;native/public proof owed",
-        "proof": "3 pure binding/policy/privacy methods,1 configuration regression,7 metadata contracts,compile/vet and architecture pass",
-        "native": "8 receive-view and4 endpoint PostgreSQL cases owed;fresh42 target only,retained35 untouched",
-        "next": "Expose shared API/CLI/UI/agent surfaces and actual AX reference profiles while current CI remains pending."
+        "id": "F083",
+        "state": "API and serve controls implemented; native/served proof owed",
+        "proof": "4 API refusal methods,1 serve configuration regression,1 exact expiry regression,1 strict command wire method; integration compile/vet and architecture pass",
+        "native": "Four F081,eight F082 and one served F083 cases prepared/owed; fresh42 only,retained35 untouched",
+        "next": "Guarded source push now that all fc577d5 runs are terminal; implement CLI/UI/agent surfaces and remaining exchange controls. Native proofs run on GitHub."
       }
     }
   ],

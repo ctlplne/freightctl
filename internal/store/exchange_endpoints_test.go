@@ -1,8 +1,10 @@
 package store
 
 import (
+	"encoding/json"
 	"errors"
 	"math"
+	"strings"
 	"testing"
 )
 
@@ -38,5 +40,38 @@ func TestExchangeEndpointCommandsBindMeaningAndRefuseUnsafeRevisions(t *testing.
 	}
 	if _, _, err := canonicalExchangeEndpointCommand(ExchangeEndpointCommand{Operation: "revoke", ID: create.ID, ExpectedRevision: 1}, ExchangeLimits{}); !errors.Is(err, ErrExchangeInput) {
 		t.Fatal("unconfigured limits accepted")
+	}
+}
+
+func TestExchangeEndpointCommandWireIsStrictAndKeepsCanonicalMeaning(t *testing.T) {
+	definition, _, limits := exchangeContractFixture()
+	command := ExchangeEndpointCommand{Operation: "create", ID: "99999999-9999-4999-8999-999999999999", Definition: &definition}
+	wire, err := json.Marshal(command)
+	if err != nil {
+		t.Fatal(err)
+	}
+	decoded, err := DecodeExchangeEndpointCommand(wire, limits)
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, before, err := canonicalExchangeEndpointCommand(command, limits)
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, after, err := canonicalExchangeEndpointCommand(*decoded, limits)
+	if err != nil || before != after {
+		t.Fatal("wire decoding changed command meaning")
+	}
+	for _, raw := range []string{
+		strings.Replace(string(wire), `"operation":"create"`, `"operation":"create","operation":"revoke"`, 1),
+		strings.Replace(string(wire), `"operation":"create"`, `"Operation":"create"`, 1),
+		strings.Replace(string(wire), `"operation":"create"`, `"operation":"create","approved":true`, 1),
+		string(wire) + `{}`,
+		`null`,
+		strings.Repeat(" ", 24<<10) + string(wire),
+	} {
+		if _, err := DecodeExchangeEndpointCommand([]byte(raw), limits); !errors.Is(err, ErrExchangeInput) {
+			t.Fatal("ambiguous or oversized command wire was accepted")
+		}
 	}
 }

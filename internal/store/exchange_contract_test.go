@@ -108,6 +108,24 @@ func TestExchangeContractRejectsChangedArtifactEndpointAndReceiptClaims(t *testi
 	}
 }
 
+func TestExchangeRequestRejectsLostTimestampPrecision(t *testing.T) {
+	_, request, limits := exchangeContractFixture()
+	data, _, _ := CanonicalExchangeRequest(request, limits)
+	for _, stamp := range []string{"2026-11-05T12:00:00.0000000001Z", "2026-11-05T12:00:00,000001Z", "2026-11-05T12:00:00+24:00"} {
+		raw := bytes.Replace(data, []byte("2026-11-05T12:00:00Z"), []byte(stamp), 1)
+		if _, _, _, err := DecodeExchangeRequest(raw, limits); !errors.Is(err, ErrExchangeInput) {
+			t.Fatalf("noncanonical or lossy timestamp accepted: %s", stamp)
+		}
+	}
+	for _, stamp := range []string{"2026-11-05T12:00:00.000000000000Z", "2026-11-05T13:00:00+01:00"} {
+		raw := bytes.Replace(data, []byte("2026-11-05T12:00:00Z"), []byte(stamp), 1)
+		decoded, canonical, _, err := DecodeExchangeRequest(raw, limits)
+		if err != nil || !decoded.ExpiresAt.Equal(request.ExpiresAt) || !bytes.Equal(data, canonical) {
+			t.Fatal("equivalent exact expiry lost canonical meaning", err)
+		}
+	}
+}
+
 func TestExchangeEndpointScopesSendersWithoutGrantingAuthority(t *testing.T) {
 	valid, _, limits := exchangeContractFixture()
 	second := valid.Senders[0]

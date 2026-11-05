@@ -27,7 +27,8 @@
       "evidence": [
         "docs/qualification/evidence/F080-artifact-exchange-contract.json",
         "docs/qualification/evidence/F081-artifact-exchange-endpoints.json",
-        "docs/qualification/evidence/F082-artifact-receive-views.json"
+        "docs/qualification/evidence/F082-artifact-receive-views.json",
+        "docs/qualification/evidence/F083-artifact-exchange-api.json"
       ]
     },
     {
@@ -45,7 +46,8 @@
       ],
       "evidence": [
         "docs/qualification/evidence/F080-artifact-exchange-contract.json",
-        "docs/qualification/evidence/F082-artifact-receive-views.json"
+        "docs/qualification/evidence/F082-artifact-receive-views.json",
+        "docs/qualification/evidence/F083-artifact-exchange-api.json"
       ]
     },
     {
@@ -64,7 +66,8 @@
       "evidence": [
         "docs/qualification/evidence/F080-artifact-exchange-contract.json",
         "docs/qualification/evidence/F081-artifact-exchange-endpoints.json",
-        "docs/qualification/evidence/F082-artifact-receive-views.json"
+        "docs/qualification/evidence/F082-artifact-receive-views.json",
+        "docs/qualification/evidence/F083-artifact-exchange-api.json"
       ]
     },
     {
@@ -84,7 +87,8 @@
       "evidence": [
         "docs/qualification/evidence/F080-artifact-exchange-contract.json",
         "docs/qualification/evidence/F081-artifact-exchange-endpoints.json",
-        "docs/qualification/evidence/F082-artifact-receive-views.json"
+        "docs/qualification/evidence/F082-artifact-receive-views.json",
+        "docs/qualification/evidence/F083-artifact-exchange-api.json"
       ]
     },
     {
@@ -102,7 +106,8 @@
       ],
       "evidence": [
         "docs/qualification/evidence/F080-artifact-exchange-contract.json",
-        "docs/qualification/evidence/F082-artifact-receive-views.json"
+        "docs/qualification/evidence/F082-artifact-receive-views.json",
+        "docs/qualification/evidence/F083-artifact-exchange-api.json"
       ]
     },
     {
@@ -122,7 +127,8 @@
       "evidence": [
         "docs/qualification/evidence/F080-artifact-exchange-contract.json",
         "docs/qualification/evidence/F081-artifact-exchange-endpoints.json",
-        "docs/qualification/evidence/F082-artifact-receive-views.json"
+        "docs/qualification/evidence/F082-artifact-receive-views.json",
+        "docs/qualification/evidence/F083-artifact-exchange-api.json"
       ]
     },
     {
@@ -140,7 +146,8 @@
         "AX-J03"
       ],
       "evidence": [
-        "docs/qualification/evidence/F082-artifact-receive-views.json"
+        "docs/qualification/evidence/F082-artifact-receive-views.json",
+        "docs/qualification/evidence/F083-artifact-exchange-api.json"
       ]
     },
     {
@@ -188,7 +195,8 @@
       "artifact_digests": [],
       "environment": null,
       "evidence": [
-        "docs/qualification/evidence/F082-artifact-receive-views.json"
+        "docs/qualification/evidence/F082-artifact-receive-views.json",
+        "docs/qualification/evidence/F083-artifact-exchange-api.json"
       ]
     },
     {
