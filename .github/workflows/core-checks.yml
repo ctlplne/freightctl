@@ -55,6 +55,7 @@ jobs:
           python3 scripts/test-repro-builds.py
           python3 scripts/test-core-component-inventory.py
           python3 scripts/test-core-bom-schema.py
+          python3 scripts/test-windows-fs-probe.py
           python3 scripts/test-ci-setup-summary.py
           python3 scripts/test-records.py
           python3 scripts/test-native-evidence.py

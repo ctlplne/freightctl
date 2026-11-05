@@ -79,6 +79,9 @@ stock bounded-metadata passes and both x86 filter failures;native ARM filtering
 is unavailable and active FTP stays disabled. Full independent typed collection
 is open. [F074](docs/qualification/evidence/F074-ftps-recipient-encryption.json)
 retains independent encryption/revocation evidence;readback is distinct from
-receiver fsync and business acceptance. WindowsD103,full protocol/processing/
+receiver fsync and business acceptance. [F078](docs/qualification/evidence/F078-windows-filesystem-observation.json)
+prepares a native Windows permission/flush probe while preserving D103's original
+66 failed records. Nine local stand-in contracts and target compile/vet pass;
+no Windows executable ran locally. WindowsD103,full protocol/processing/
 operator/recovery/capacity/upgrade/packaging/adoption gates and X05's authorized
 inference endpoint remain open. Exact evidence and remaining work govern the next action.

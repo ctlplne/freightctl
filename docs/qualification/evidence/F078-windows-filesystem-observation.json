@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "id": "F078",
+  "observed_at": "2026-11-05",
+  "starting_commit": "182f05579be2e2a3b33497423321d40cea024d65",
+  "state": "Prepared for actual Windows GitHub execution; no native API result yet.",
+  "defect": "D103",
+  "scope": "Measure Go and explicit Win32 file/directory handle behavior using public synthetic bytes. API success is not crash/power-loss, permission-isolation, server, scanner-transport or complete Windows-platform qualification.",
+  "qualification_claim": false,
+  "original_failure": {
+    "candidate": "7c163a834a7a95cb6482730fbb3e486b1b8aa879",
+    "run_id": 41939612395,
+    "job_id": 126956735814,
+    "failed_records_including_children": 66,
+    "manifest_reference": ".private/freightctl-f078-windows-first-m5o2yvid/manifest.json",
+    "manifest_sha256": "b97a25fa2e30cc757aaec95f878c3c1ec202060ba1eb66ce71a7008df47eb5e0",
+    "first_failure": "Setup reference parent fails existing private-mode0700 check. Four AccessDenied mentions and six custody private-root refusals remain visible. Mac sibling passes separately."
+  },
+  "implementation": {
+    "workflow": ".github/workflows/native-platforms.yml",
+    "probe": "scripts/peers/windowsfs/main_windows.go",
+    "runner": "scripts/qualify-windows-fs.py",
+    "contracts": "scripts/test-windows-fs-probe.py",
+    "native_environment": "Actual GitHub Windows amd64, native host/target go1.26.10; local/foreign/cross-target invocation refuses before creating task resources.",
+    "cases": [
+      "go-file",
+      "go-directory",
+      "win-directory-read",
+      "win-directory-read-write",
+      "win-directory-write-through",
+      "reopened-directory-read-write",
+      "win-file-write-through"
+    ],
+    "mechanism": "Create an exact task-owned temporary root and protected child DACL for current token owner and SYSTEM. Write512public synthetic bytes per file. Inspect actual handle owner/protected/null-DACL/ACE-count facts without publishing SIDs or SDDL. Compare Go Sync with read, read-write, write-through and same-object ReOpenFile directory handles. Preserve each numeric error, reopen file bytes, close owned handles and remove only exact root.",
+    "limits": "Original25minute native job/unit command unchanged. Observation step5minutes; compiler120seconds; probe45seconds; identity commands10seconds each. Per-command stdout/stderr1MiB, executable32MiB, one Go worker/192MiB soft heap. Output sizes polled/rechecked, not kernel disk quotas. No model/scanner/database/network server/privilege grant/volume flush.",
+    "process_ownership": "Timeout kills only exact live Popen PID and descendants using taskkill /PID /T /F, never an image name; timeout remains failure.",
+    "closure": "Clean exact committed source and native Go identity; filter credential/database/model/Go target+flag variables. Reopen binary,four exact source inputs and every original output. Refuse duplicate/float/constant JSON, extra fields, missing/reordered cases, invalid types/counts, identity changes, incomplete cleanup and qualification claims. Emit only validated fixed fields/numeric errors/hashes; raw output private/ephemeral.",
+    "failure_preservation": "Probe runs after original unit failure only if checkout/Go setup succeeded and job not cancelled. Original failure still makes job red. No continue-on-error, product permission/durability change, assertion weakening, upload/release/deployment."
+  },
+  "local_checks": {
+    "manifest_reference": ".private/freightctl-f078-local-7e1j62sk/manifest.json",
+    "manifest_sha256": "5b5bae494ff1fbe6c164976c3ce84600c62d0c2340ca93d86b06e95fdee1ef95",
+    "methods": 9,
+    "checks": [
+      "Retain AccessDenied without qualification; require original native identity/case closure/cleanup/nonclaim/numeric types.",
+      "Reject account/path/unknown fields, duplicate keys,floats/constants,oversized input.",
+      "Refuse local/foreign hosts before resources; filter credentials/model/database/cross-target variables.",
+      "Real wrapper/process/compiler stand-ins verify final original source/binary/output closure and cleanup.",
+      "Exact owned-tree timeout, output overflow and private-error refusal.",
+      "Windows target compile/vet, workflow lint and diff pass. No Windows executable ran locally."
+    ],
+    "first_finding": "Initial target compile caught syscall.ERROR_WRITE_FAULT undefined. Correct pinned windows.ERROR_WRITE_FAULT succeeds; no product/runtime pass inferred."
+  },
+  "primary_sources": [
+    "https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-flushfilebuffers",
+    "https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilew",
+    "https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-reopenfile",
+    "https://learn.microsoft.com/en-us/windows/win32/secauthz/security-descriptor-string-format"
+  ],
+  "next_action": "Push only after current97required originals start; observe exact probe on actual Windows and implement smallest justified repair. Independently test access isolation,reparse/race behavior,durability and protected scanner transport,then replay original D103unit/service journeys. Windows server/agent and broader GOAL.md gates remain open."
+}

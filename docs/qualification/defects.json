@@ -1661,11 +1661,12 @@
         "Synthetic scanner clean/infected/limit/encrypted cases returned scanner unavailable or unverified."
       ],
       "cause": "Native Windows does not provide Unix private-directory/socket permission semantics through os.Chmod, and current directory Sync handles return Access is denied. Byte-preserving checkout repairs the browser source hash. Native job 125495209312 on b1ca6c1 reports is_socket=true and permission_bits=0666 after the fixture requests 0600, so the existing private-socket guard necessarily refuses that metadata; later scanner transport remains unqualified.",
-      "resolution": "Commits a82fec1/a7aae47 preserve committed bytes with .gitattributes; repeated native Windows runs pass internal/browser. Job 125495209312 narrows the scanner refusal to its private-socket metadata boundary (0666 despite requested 0600), without weakening the check. Private-directory ACL, protected socket access and directory durability remain red. Implement and independently test native Windows access-control and durable metadata behavior, then rerun the original unit/service journeys. Cross-builds cannot close this defect.",
+      "resolution": "Commits a82fec1/a7aae47 preserve committed bytes with .gitattributes; repeated native Windows runs pass internal/browser. Job 125495209312 narrows the scanner refusal to its private-socket metadata boundary (0666 despite requested 0600), without weakening the check. Private-directory ACL, protected socket access and directory durability remain red. Implement and independently test native Windows access-control and durable metadata behavior, then rerun the original unit/service journeys. Cross-builds cannot close this defect. F078 retains the original7c native Windows66failed records and prepares a bounded actual-runner API observation step. Nine local parser/process/orchestration stand-in methods and Windows target compile/vet pass; no Windows executable ran locally. Original unit failure remains enforcing; no production permission/durability guard changes or native qualification.",
       "regression_evidence": [
         "https://github.com/ctlplne/freightctl/actions/runs/41496634781",
         "https://github.com/ctlplne/freightctl/actions/runs/41499894396",
-        "https://github.com/ctlplne/freightctl/actions/runs/41508880233"
+        "https://github.com/ctlplne/freightctl/actions/runs/41508880233",
+        "docs/qualification/evidence/F078-windows-filesystem-observation.json"
       ]
     },
     {
