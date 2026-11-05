@@ -67,6 +67,13 @@ new-definition quota/read coupling is repaired while new admission bounds remain
 enforced. Native scope/mode/authority/hold/closure/quota/API/CLI and eleven-state
 Chrome proofs are prepared and owed. Migration44 adds only the sender-page index.
 
+F098 adds reviewed root-manager browser endpoint creation,replacement and terminal
+revocation with active role-bound account selection. One exact command/key survives
+an uncertain response; typed receipts pin revision/hash/state/manager. Nineteen
+adapter methods and the shared Go canonical fixture pass. The original native
+Chrome profile now requires15accessibility states plus3immutable endpoint versions,
+3command receipts and one revoked revision3 head;actual runtime proof remains owed.
+
 Focused local parser/client/filesystem/summary regressions and affected static,
 frontend build, native compilation/vet and architecture checks pass. They establish
 no PostgreSQL, served browser, stock-peer or complete AX profile qualification.
@@ -81,7 +88,7 @@ isolation, exact inputs and finding/evidence checks remain. Local shared-machine
 limits and no-inference constraint stay unchanged. No local database, Chrome,
 scanner, peer, image or model runtime was started by this work.
 
-Next: complete sending/admin/history/agent surfaces and exchange controls, bridge
+Next: complete agent surfaces and and exchange controls, bridge
 ingress/onward delivery, qualify AX-J01/J02/J03 and finish every applicable baseline
 gate. Trust Control X07 blocks only its real provider profile; no API is invented.
 F026 stays manual/owner-deferred. Source/CI push authority grants no release,

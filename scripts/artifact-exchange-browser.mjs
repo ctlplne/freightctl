@@ -23,6 +23,7 @@ for (const value of [
   c.file,
   c.sender_actor,
   c.recipient_actor,
+  c.manager_actor,
 ])
   assert.match(value, /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/);
 assert.match(c.sha256, /^[0-9a-f]{64}$/);
@@ -50,6 +51,7 @@ let browser,
   offers = 0,
   cancels = 0,
   recoveryRoundtrips = 0,
+  endpointCommands = 0,
   offerRequests = 0,
   exchangeRequests = 0,
   failureHash;
@@ -224,6 +226,12 @@ try {
   );
   phase = "sender-login";
   const sender = await login(c.sender_token);
+  assert.equal(
+    await sender.page
+      .getByRole("button", { name: "Receive endpoints", exact: true })
+      .count(),
+    0,
+  );
   await sender.page
     .getByRole("button", { name: "Send artifacts", exact: true })
     .click();
@@ -633,6 +641,135 @@ try {
   );
   await accessibility(unrelated.page, "unrelated-accessibility");
   await unrelated.context.close();
+
+  phase = "manager-login";
+  const manager = await login(c.manager_token);
+  await manager.page
+    .getByRole("button", { name: "Receive endpoints", exact: true })
+    .click();
+  phase = "manager-accounts";
+  const accountPage = manager.page.waitForResponse((r) =>
+    new URL(r.url()).pathname.endsWith("/accounts"),
+  );
+  await manager.page
+    .getByRole("button", { name: "Check participant accounts", exact: true })
+    .click();
+  assert.equal((await accountPage).status(), 200);
+  await manager.page
+    .getByRole("button", {
+      name: "Receive as " + c.recipient_actor.slice(0, 8),
+      exact: true,
+    })
+    .click();
+  await manager.page
+    .getByLabel("Allow sender " + c.sender_actor.slice(0, 8), { exact: true })
+    .check();
+  phase = "manager-review";
+  await manager.page
+    .getByRole("button", { name: "Review endpoint creation", exact: true })
+    .click();
+  await manager.page
+    .getByRole("heading", { name: "Review exact endpoint change", exact: true })
+    .waitFor();
+  await accessibility(manager.page, "manager-review-accessibility");
+  const managerCommand = async () => {
+    const result = manager.page.waitForResponse(
+      (r) =>
+        new URL(r.url()).pathname.endsWith("/exchange-endpoints/commands") &&
+        r.request().method() === "POST",
+    );
+    await manager.page
+      .getByRole("button", {
+        name: "Confirm or recover endpoint command",
+        exact: true,
+      })
+      .click();
+    const response = await result;
+    assert.equal(response.status(), 200);
+    const data = await response.json();
+    await manager.page
+      .getByRole("heading", { name: "Confirmed endpoint command", exact: true })
+      .waitFor();
+    return { response, data };
+  };
+  phase = "manager-create";
+  const created = await managerCommand();
+  assert.equal(created.data.endpoint.revision, 1);
+  assert.equal(created.data.endpoint.state, "active");
+  assert.equal(created.data.endpoint.recorded_by, c.manager_actor);
+  assert.equal(
+    created.data.endpoint.definition.recipient.actor_id,
+    c.recipient_actor,
+  );
+  assert.deepEqual(
+    created.data.endpoint.definition.senders.map((s) => s.actor_id),
+    [c.sender_actor],
+  );
+  endpointCommands++;
+  await accessibility(manager.page, "manager-create-accessibility");
+  phase = "manager-replay";
+  const replayed = await managerCommand();
+  assert.equal(
+    replayed.response.request().headers()["idempotency-key"],
+    created.response.request().headers()["idempotency-key"],
+  );
+  assert.equal(
+    replayed.response.request().postData(),
+    created.response.request().postData(),
+  );
+  assert.deepEqual(replayed.data.endpoint, created.data.endpoint);
+  assert.equal(replayed.data.replayed, true);
+  await manager.page
+    .getByRole("button", {
+      name: "Use confirmed endpoint version",
+      exact: true,
+    })
+    .click();
+  await manager.page
+    .getByRole("button", {
+      name: "Receive as " + c.manager_actor.slice(0, 8),
+      exact: true,
+    })
+    .click();
+  await manager.page
+    .getByRole("button", { name: "Review endpoint replacement", exact: true })
+    .click();
+  phase = "manager-replace";
+  const replaced = await managerCommand();
+  assert.equal(replaced.data.endpoint.id, created.data.endpoint.id);
+  assert.equal(replaced.data.endpoint.revision, 2);
+  assert.equal(replaced.data.endpoint.state, "active");
+  assert.equal(
+    replaced.data.endpoint.definition.recipient.actor_id,
+    c.manager_actor,
+  );
+  assert.notEqual(
+    replaced.data.endpoint.definition_hash,
+    created.data.endpoint.definition_hash,
+  );
+  endpointCommands++;
+  await accessibility(manager.page, "manager-replace-accessibility");
+  await manager.page
+    .getByRole("button", {
+      name: "Use confirmed endpoint version",
+      exact: true,
+    })
+    .click();
+  await manager.page
+    .getByRole("button", { name: "Review endpoint revocation", exact: true })
+    .click();
+  phase = "manager-revoke";
+  const removed = await managerCommand();
+  assert.equal(removed.data.endpoint.id, created.data.endpoint.id);
+  assert.equal(removed.data.endpoint.revision, 3);
+  assert.equal(removed.data.endpoint.state, "revoked");
+  assert.equal(
+    removed.data.endpoint.definition_hash,
+    replaced.data.endpoint.definition_hash,
+  );
+  endpointCommands++;
+  await accessibility(manager.page, "manager-revoke-accessibility");
+  await manager.context.close();
   phase = "revocation-barrier";
   await writeFile(c.ready, "ready\n", { mode: 0o600, flag: "wx" });
   const deadline = Date.now() + 15000;
@@ -685,6 +822,7 @@ try {
     committed_offers: offers,
     sender_cancellations: cancels,
     recovery_roundtrips: recoveryRoundtrips,
+    endpoint_commands: endpointCommands,
     model_started: false,
     browser_sandbox: true,
     accessibility_checks: accessibilityChecks,

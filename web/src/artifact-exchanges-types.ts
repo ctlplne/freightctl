@@ -1,4 +1,4 @@
-import { ApiError, object, uuid } from "./types";
+import { ApiError, asAccount, object, uuid } from "./types";
 import { digestBytes } from "./crypto";
 
 export interface ExchangeRequest {
@@ -160,6 +160,108 @@ export interface DirectoryContext extends ExchangeIdentity {
 export interface EndpointPage {
   endpoints: EndpointRecord[];
   next: string;
+}
+
+export interface EndpointCommand {
+  operation: "create" | "replace" | "revoke";
+  endpoint_id: string;
+  expected_revision: number;
+  definition?: EndpointDefinition;
+}
+export function endpointParticipantFromAccount(
+  value: unknown,
+  context: ExchangeIdentity,
+  role: "sender" | "recipient",
+): ExchangeBinding {
+  const account = asAccount(value);
+  const required = role === "sender" ? ["read", "deliver"] : ["read", "list"];
+  if (
+    account.state !== "active" ||
+    !required.every((p) => account.permissions.includes(p)) ||
+    !account.namespace_root.startsWith("/") ||
+    account.namespace_root.includes("\u0000")
+  )
+    refuse();
+  return binding(
+    {
+      tenant_id: context.tenant,
+      partner_id: context.partner,
+      actor_id: account.id,
+      authority_revision: account.authority_revision,
+      root_policy_digest: digestBytes(
+        new TextEncoder().encode(account.namespace_root),
+      ),
+    },
+    context,
+  );
+}
+export function endpointCommandBytes(
+  value: unknown,
+  context: ExchangeIdentity,
+): Uint8Array {
+  const o = fields(
+    value,
+    ["operation", "endpoint_id", "expected_revision"],
+    ["definition"],
+  );
+  const operation = o.operation,
+    revision = integer(o.expected_revision, 0);
+  if (
+    revision >= Number.MAX_SAFE_INTEGER ||
+    (operation !== "create" &&
+      operation !== "replace" &&
+      operation !== "revoke") ||
+    (operation === "create" ? revision !== 0 : revision < 1) ||
+    (operation === "revoke"
+      ? Object.hasOwn(o, "definition")
+      : !Object.hasOwn(o, "definition"))
+  )
+    refuse();
+  const command: EndpointCommand = {
+    operation,
+    endpoint_id: identifier(o.endpoint_id),
+    expected_revision: revision,
+  };
+  if (operation !== "revoke") {
+    command.definition = asEndpointDefinition(o.definition, context);
+    if (
+      new TextEncoder().encode(JSON.stringify(command.definition)).byteLength >
+      16 * 1024
+    )
+      refuse();
+  }
+  const bytes = new TextEncoder().encode(JSON.stringify(command));
+  if (bytes.byteLength > 24 * 1024) refuse();
+  return bytes;
+}
+export function asEndpointCommandResult(
+  value: unknown,
+  command: EndpointCommand,
+  context: DirectoryContext,
+  previous?: EndpointRecord,
+): { endpoint: EndpointRecord; replayed: boolean } {
+  endpointCommandBytes(command, context);
+  const o = fields(value, ["endpoint", "replayed"]),
+    endpoint = asEndpointRecord(o.endpoint, context, command.endpoint_id);
+  let expectedHash: string;
+  if (command.operation === "revoke") {
+    if (!previous) refuse();
+    const base = asEndpointRecord(previous, context, command.endpoint_id);
+    if (base.revision !== command.expected_revision || base.state !== "active")
+      refuse();
+    expectedHash = base.definition_hash;
+  } else expectedHash = endpointDefinitionHash(command.definition, context);
+  if (
+    !context.manager ||
+    endpoint.revision !== command.expected_revision + 1 ||
+    endpoint.state !==
+      (command.operation === "revoke" ? "revoked" : "active") ||
+    endpoint.definition_hash !== expectedHash ||
+    endpoint.recorded_by !== context.actor ||
+    typeof o.replayed !== "boolean"
+  )
+    refuse();
+  return { endpoint, replayed: o.replayed };
 }
 
 function binding(value: unknown, context: ExchangeIdentity): ExchangeBinding {

@@ -46,5 +46,74 @@
     "operation": "decline"
   },
   "closure_canonical": "{\"schema_version\":1,\"exchange_id\":\"0000000a-1111-4111-8111-111111111111\",\"request_hash\":\"69609c67b176b1c7a893e00d6649b36585d7abd77dad0cab4923ba2ab2c64ecc\",\"operation\":\"decline\"}",
-  "closure_sha256": "4e55cffa412ce70bae4fdadc558c8642a4c379255175eedf747cd28d21be5e90"
+  "closure_sha256": "4e55cffa412ce70bae4fdadc558c8642a4c379255175eedf747cd28d21be5e90",
+  "endpoint_commands": [
+    {
+      "command": {
+        "operation": "create",
+        "endpoint_id": "99999999-9999-4999-8999-999999999999",
+        "expected_revision": 0,
+        "definition": {
+          "schema_version": 1,
+          "profile": "custody-https-poll-v1",
+          "recipient": {
+            "tenant_id": "00000001-1111-4111-8111-111111111111",
+            "partner_id": "00000002-1111-4111-8111-111111111111",
+            "actor_id": "00000003-1111-4111-8111-111111111111",
+            "authority_revision": 1,
+            "root_policy_digest": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+          },
+          "senders": [
+            {
+              "tenant_id": "00000001-1111-4111-8111-111111111111",
+              "partner_id": "00000002-1111-4111-8111-111111111111",
+              "actor_id": "00000006-1111-4111-8111-111111111111",
+              "authority_revision": 1,
+              "root_policy_digest": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+            }
+          ]
+        }
+      },
+      "canonical": "{\"operation\":\"create\",\"endpoint_id\":\"99999999-9999-4999-8999-999999999999\",\"expected_revision\":0,\"definition\":{\"schema_version\":1,\"profile\":\"custody-https-poll-v1\",\"recipient\":{\"tenant_id\":\"00000001-1111-4111-8111-111111111111\",\"partner_id\":\"00000002-1111-4111-8111-111111111111\",\"actor_id\":\"00000003-1111-4111-8111-111111111111\",\"authority_revision\":1,\"root_policy_digest\":\"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\"},\"senders\":[{\"tenant_id\":\"00000001-1111-4111-8111-111111111111\",\"partner_id\":\"00000002-1111-4111-8111-111111111111\",\"actor_id\":\"00000006-1111-4111-8111-111111111111\",\"authority_revision\":1,\"root_policy_digest\":\"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\"}]}}",
+      "sha256": "aa4a7e5051ee7c606ac9e29ba1a23e747835dd13b66a8e525fbede140c414ef3"
+    },
+    {
+      "command": {
+        "operation": "replace",
+        "endpoint_id": "99999999-9999-4999-8999-999999999999",
+        "expected_revision": 1,
+        "definition": {
+          "schema_version": 1,
+          "profile": "custody-https-poll-v1",
+          "recipient": {
+            "tenant_id": "00000001-1111-4111-8111-111111111111",
+            "partner_id": "00000002-1111-4111-8111-111111111111",
+            "actor_id": "00000003-1111-4111-8111-111111111111",
+            "authority_revision": 1,
+            "root_policy_digest": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+          },
+          "senders": [
+            {
+              "tenant_id": "00000001-1111-4111-8111-111111111111",
+              "partner_id": "00000002-1111-4111-8111-111111111111",
+              "actor_id": "00000006-1111-4111-8111-111111111111",
+              "authority_revision": 1,
+              "root_policy_digest": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+            }
+          ]
+        }
+      },
+      "canonical": "{\"operation\":\"replace\",\"endpoint_id\":\"99999999-9999-4999-8999-999999999999\",\"expected_revision\":1,\"definition\":{\"schema_version\":1,\"profile\":\"custody-https-poll-v1\",\"recipient\":{\"tenant_id\":\"00000001-1111-4111-8111-111111111111\",\"partner_id\":\"00000002-1111-4111-8111-111111111111\",\"actor_id\":\"00000003-1111-4111-8111-111111111111\",\"authority_revision\":1,\"root_policy_digest\":\"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\"},\"senders\":[{\"tenant_id\":\"00000001-1111-4111-8111-111111111111\",\"partner_id\":\"00000002-1111-4111-8111-111111111111\",\"actor_id\":\"00000006-1111-4111-8111-111111111111\",\"authority_revision\":1,\"root_policy_digest\":\"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\"}]}}",
+      "sha256": "200691748de0086c3eba4a0a89b3ab673a56dd0d9dde262d03a636153b6bfb12"
+    },
+    {
+      "command": {
+        "operation": "revoke",
+        "endpoint_id": "99999999-9999-4999-8999-999999999999",
+        "expected_revision": 2
+      },
+      "canonical": "{\"operation\":\"revoke\",\"endpoint_id\":\"99999999-9999-4999-8999-999999999999\",\"expected_revision\":2}",
+      "sha256": "c7db1b349bd63ea074c1d92b9232099db9d497c8fe8ff1d2c93f00e05a1b9483"
+    }
+  ]
 }

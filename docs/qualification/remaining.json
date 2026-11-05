@@ -864,7 +864,8 @@
         "docs/qualification/evidence/F091-exchange-closures.json",
         "docs/qualification/evidence/F093-browser-artifact-offer.json",
         "docs/qualification/evidence/F094-browser-offer-recovery.json",
-        "docs/qualification/evidence/F096-outgoing-exchange-history.json"
+        "docs/qualification/evidence/F096-outgoing-exchange-history.json",
+        "docs/qualification/evidence/F098-browser-endpoint-administration.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -879,11 +880,11 @@
         "S003 authorizes guarded source/CI batches after prior required runs are terminal. Eleven exchange API paths and eleven CLI commands plus receive/send/recovery/history browser surfaces are implemented;actual AX profiles remain owed. Broad/deferred qualification is mandatory at FINISH."
       ],
       "current_item": {
-        "id": "F096",
-        "state": "Sender-private outgoing history implemented;actual native qualification owed",
-        "proof": "Three observed regression failures repaired;5focused Go,15adapter,1summary,7metadata methods and affected static/build/compile/vet/architecture checks pass",
-        "native": "Three new PG cases plus original API/CLI and eleven-state Chrome proofs prepared;not runtime-qualified",
-        "next": "Endpoint administration/agent surfaces,ingress/onward bridges and exchange recovery/capacity,then mandatory FINISH"
+        "id": "F098",
+        "state": "Reviewed root-manager endpoint editor implemented;actual native qualification owed",
+        "proof": "Missing manager mutation path red repaired;19adapter,1Go fixture,1summary methods and affected static/build checks pass",
+        "native": "Original actual Chrome profile extended to15accessibility states and3version/receipt SQL-count proof;runtime owed",
+        "next": "Agent surfaces,ingress/onward bridges,recovery/capacity and mandatory FINISH"
       }
     }
   ],

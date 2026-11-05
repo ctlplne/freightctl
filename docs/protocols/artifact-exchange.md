@@ -7,7 +7,7 @@ bounded read. Registering an endpoint and publishing a view are separate actions
 
 This describes implemented API code. Actual native/served qualification is owed
 in F081–F083. The [wire contract](../api/artifact-exchange.openapi.json) describes
-these seven paths using [OpenAPI 3.1.0](https://spec.openapis.org/oas/v3.1.0.html).
+these eleven paths using [OpenAPI 3.1.0](https://spec.openapis.org/oas/v3.1.0.html).
 It is a subset of the product API; independent schema validation remains owed.
 
 ## Configure and authenticate
@@ -88,7 +88,9 @@ An offer returns 201 when its view and command receipt commit together. An
 identical-key replay returns 200 with the original result. Changed meaning under
 that key refuses. A historical receipt cannot reactivate a revoked view. Senders
 recover publication receipts through their original submission key; the current
-inspection route is recipient-only and does not provide outgoing history.
+inspection route is recipient-only. Sender-only outgoing history is available
+through `outgoing-exchanges` and `outgoing-exchanges/{exchange}` under current
+original participant/source permission; enumeration also requires list.
 
 Discovery returns offered metadata only under current authority. Held entries
 contain only a view ID and fixed state. A byte response identifies the immutable
@@ -115,7 +117,8 @@ event identity and exact payload digest, keeping its operation key and private
 participant bindings in the protected journal.
 
 API/CLI closure, offered-view browser decline,reviewed browser sending and
-[sender history](artifact-exchange-outgoing.md) are implemented. Agent tools,
-browser endpoint administration and the complete OpenAPI surface remain
-implementation work. Actual stock-client,
+[sender history](artifact-exchange-outgoing.md) are implemented.
+[Browser endpoint administration](artifact-exchange-admin-browser.md) is implemented.
+Agent tools remain implementation work; the exchange OpenAPI contract is a subset
+of the overall product API. Actual stock-client,
 independent-receiver, crash/recovery, capacity and AX profile proofs remain owed.

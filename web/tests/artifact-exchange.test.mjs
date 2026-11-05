@@ -710,3 +710,312 @@ test("history discovery requires list while a known own receipt remains inspecta
   );
   assert.equal(calls.length, 1);
 });
+
+test("endpoint administration preserves an exact retry and binds the manager's receipt", async () => {
+  const { createHash } = await import("node:crypto");
+  const fixture = JSON.parse(
+    await readFile(
+      new URL("fixtures/artifact-exchange.json", import.meta.url),
+      "utf8",
+    ),
+  );
+  const manager = {
+    tenant: fixture.endpoint.recipient.tenant_id,
+    partner: fixture.endpoint.recipient.partner_id,
+    actor: id(30),
+    authority_revision: 1,
+    root_policy_digest: createHash("sha256").update("/").digest("hex"),
+    manager: true,
+    can_send: false,
+    can_receive: false,
+  };
+  const command = {
+    operation: "create",
+    endpoint_id: id(31),
+    expected_revision: 0,
+    definition: fixture.endpoint,
+  };
+  const endpoint = {
+    id: command.endpoint_id,
+    revision: 1,
+    definition: fixture.endpoint,
+    definition_hash: fixture.endpoint_sha256,
+    state: "active",
+    recorded_by: manager.actor,
+    event_id: id(32),
+  };
+  const session = {
+    session: { id: id(33) },
+    identity: {
+      tenant_id: manager.tenant,
+      partner_id: manager.partner,
+      actor_id: manager.actor,
+      authority_revision: 1,
+      root_policy_digest: manager.root_policy_digest,
+      permissions: ["admin", "accounts_manage"],
+    },
+  };
+  const calls = [];
+  let fail = true;
+  const transport = {
+    session,
+    request: async (path, options, decode) => {
+      calls.push({ path, options });
+      if (fail) {
+        fail = false;
+        throw new Error("lost response");
+      }
+      return decode({ endpoint, replayed: true });
+    },
+  };
+  const client = new a.ExchangeReceiveApi(transport);
+  assert.equal(
+    typeof client.endpointCommand,
+    "function",
+    "no manager endpoint command path exists",
+  );
+  const key = id(34);
+  await assert.rejects(() => client.endpointCommand(command, key));
+  assert.deepEqual(
+    (await client.endpointCommand(command, key)).endpoint,
+    endpoint,
+  );
+  assert.equal(calls.length, 2);
+  assert.equal(
+    calls[0].path,
+    `/v1/tenants/${manager.tenant}/partners/${manager.partner}/exchange-endpoints/commands`,
+  );
+  assert.equal(calls[0].options.method, "POST");
+  assert.equal(calls[0].options.headers["Idempotency-Key"], key);
+  assert.equal(calls[0].options.body, calls[1].options.body);
+  for (const patch of [
+    { revision: 2 },
+    { recorded_by: id(99) },
+    { state: "revoked" },
+    { definition_hash: "f".repeat(64) },
+    {
+      definition: {
+        ...fixture.endpoint,
+        recipient: { ...fixture.endpoint.recipient, actor_id: id(99) },
+      },
+    },
+  ])
+    assert.throws(() =>
+      p.asEndpointCommandResult(
+        { endpoint: { ...endpoint, ...patch }, replayed: false },
+        command,
+        manager,
+      ),
+    );
+  session.identity.authority_revision++;
+  await assert.rejects(() => client.endpointCommand(command, key));
+  assert.equal(calls.length, 2, "stale manager contacted the server");
+  const restricted = {
+    ...session,
+    identity: { ...session.identity, root_policy_digest: "a".repeat(64) },
+  };
+  transport.session = restricted;
+  await assert.rejects(() =>
+    new a.ExchangeReceiveApi(transport).endpointCommand(command, key),
+  );
+  assert.equal(
+    calls.length,
+    2,
+    "non-root manager contacted endpoint mutation route",
+  );
+});
+
+test("endpoint changes share canonical Go meaning and cannot substitute a revoke definition", async () => {
+  const f = JSON.parse(
+    await readFile(
+      new URL("fixtures/artifact-exchange.json", import.meta.url),
+      "utf8",
+    ),
+  );
+  const ctx = {
+    tenant: f.endpoint.recipient.tenant_id,
+    partner: f.endpoint.recipient.partner_id,
+    actor: id(30),
+    manager: true,
+    can_send: false,
+    can_receive: false,
+    authority_revision: 1,
+    root_policy_digest: "a".repeat(64),
+  };
+  for (const sample of f.endpoint_commands) {
+    assert.equal(
+      new TextDecoder().decode(p.endpointCommandBytes(sample.command, ctx)),
+      sample.canonical,
+    );
+  }
+  const create = f.endpoint_commands[0].command;
+  for (const patch of [
+    { expected_revision: 1 },
+    { expected_revision: 0.5 },
+    { expected_revision: Number.MAX_SAFE_INTEGER },
+    { endpoint_id: "bad" },
+    { definition: null },
+    { execute: true },
+    {
+      definition: {
+        ...f.endpoint,
+        recipient: { ...f.endpoint.recipient, partner_id: id(99) },
+      },
+    },
+  ])
+    assert.throws(() => p.endpointCommandBytes({ ...create, ...patch }, ctx));
+  const base = {
+    id: create.endpoint_id,
+    revision: 2,
+    state: "active",
+    definition: f.endpoint,
+    definition_hash: f.endpoint_sha256,
+    recorded_by: ctx.actor,
+    event_id: id(32),
+  };
+  const revoke = f.endpoint_commands[2].command;
+  const receipt = {
+    endpoint: { ...base, revision: 3, state: "revoked", event_id: id(33) },
+    replayed: false,
+  };
+  assert.equal(
+    p.asEndpointCommandResult(receipt, revoke, ctx, base).endpoint.state,
+    "revoked",
+  );
+  assert.throws(() => p.asEndpointCommandResult(receipt, revoke, ctx));
+  assert.throws(() =>
+    p.asEndpointCommandResult(receipt, revoke, ctx, { ...base, revision: 1 }),
+  );
+  assert.throws(() =>
+    p.asEndpointCommandResult(
+      receipt,
+      revoke,
+      { ...ctx, manager: false },
+      base,
+    ),
+  );
+  assert.throws(() =>
+    p.endpointCommandBytes({ ...revoke, definition: f.endpoint }, ctx),
+  );
+});
+
+test("endpoint participant selection uses current account role and exact namespace bytes", async () => {
+  const { createHash } = await import("node:crypto");
+  const account = {
+    id: id(35),
+    label: "Partner",
+    permissions: ["read", "list"],
+    namespace_root: "/déposé",
+    expires_at: null,
+    revision: 3,
+    authority_revision: 2,
+    state: "active",
+    changed_event_id: id(36),
+    observed_at: "2026-11-05T20:00:00Z",
+  };
+  const receiver = p.endpointParticipantFromAccount(
+    account,
+    context,
+    "recipient",
+  );
+  assert.equal(
+    receiver.root_policy_digest,
+    createHash("sha256").update(account.namespace_root).digest("hex"),
+  );
+  assert.equal(receiver.authority_revision, 2);
+  assert.equal(receiver.tenant_id, context.tenant);
+  assert.throws(() =>
+    p.endpointParticipantFromAccount(account, context, "sender"),
+  );
+  for (const patch of [
+    { state: "expired" },
+    { state: "revoked" },
+    { permissions: ["list"] },
+    { authority_revision: 0 },
+    { namespace_root: "relative" },
+  ])
+    assert.throws(() =>
+      p.endpointParticipantFromAccount(
+        { ...account, ...patch },
+        context,
+        "recipient",
+      ),
+    );
+  assert.equal(
+    p.endpointParticipantFromAccount(
+      { ...account, permissions: ["read", "deliver"] },
+      context,
+      "sender",
+    ).actor_id,
+    account.id,
+  );
+});
+
+test("manager account selection rejects dishonest pages and post-response authority changes", async () => {
+  const { createHash } = await import("node:crypto");
+  const root = createHash("sha256").update("/").digest("hex");
+  const account = {
+    id: id(35),
+    label: "Partner",
+    permissions: ["read", "list"],
+    namespace_root: "/",
+    expires_at: null,
+    revision: 1,
+    authority_revision: 1,
+    state: "active",
+    changed_event_id: id(36),
+    observed_at: "2026-11-05T20:00:00Z",
+  };
+  const transport = {
+    session: {
+      session: { id: id(37) },
+      identity: {
+        tenant_id: context.tenant,
+        partner_id: context.partner,
+        actor_id: context.actor,
+        authority_revision: 1,
+        root_policy_digest: root,
+        permissions: ["admin", "accounts_manage"],
+      },
+    },
+  };
+  let response = { accounts: [account] },
+    calls = 0,
+    rotate = false;
+  transport.request = async (path, options, decode) => {
+    calls++;
+    assert.equal(
+      path,
+      `/v1/tenants/${context.tenant}/partners/${context.partner}/accounts?limit=50&after=`,
+    );
+    if (rotate) transport.session.identity.authority_revision++;
+    return decode(response);
+  };
+  const client = new a.ExchangeReceiveApi(transport);
+  assert.equal((await client.endpointAccounts()).accounts[0].id, account.id);
+  for (const page of [
+    { accounts: [account, account] },
+    { accounts: [account], next: account.id },
+    {
+      accounts: Array.from({ length: 51 }, (_, i) => ({
+        ...account,
+        id: id(100 + i),
+      })),
+    },
+  ]) {
+    response = page;
+    await assert.rejects(() => client.endpointAccounts());
+  }
+  response = { accounts: [account] };
+  rotate = true;
+  await assert.rejects(() => client.endpointAccounts());
+  const previous = calls;
+  await assert.rejects(() => client.endpointAccounts());
+  assert.equal(calls, previous);
+  transport.session.identity.permissions = ["admin"];
+  rotate = false;
+  await assert.rejects(() =>
+    new a.ExchangeReceiveApi(transport).endpointAccounts(),
+  );
+  assert.equal(calls, previous);
+});

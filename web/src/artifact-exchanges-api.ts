@@ -1,5 +1,6 @@
 import { Api } from "./api";
-import { ApiError, uuid } from "./types";
+import { ApiError, asAccountPage, uuid } from "./types";
+import { digestBytes } from "./crypto";
 import {
   decodeOfferRecovery,
   encodeOfferRecovery,
@@ -16,6 +17,9 @@ import {
   asExchangeOfferResult,
   asOutgoingExchange,
   asOutgoingPage,
+  endpointCommandBytes,
+  asEndpointCommandResult,
+  type EndpointCommand,
   type ExchangeRequest,
   type ArtifactExchange,
   type ExchangeClosureCommand,
@@ -82,6 +86,84 @@ export class ExchangeReceiveApi {
   readRecovery(origin: string, text: string) {
     this.current();
     return decodeOfferRecovery(text, this.directory, origin);
+  }
+  private requireEndpointManager() {
+    this.current();
+    if (
+      !this.directory.manager ||
+      this.directory.root_policy_digest !==
+        digestBytes(new TextEncoder().encode("/"))
+    )
+      throw new ApiError("permission_denied", 403);
+  }
+  async endpointAccounts(after = "", signal?: AbortSignal) {
+    this.requireEndpointManager();
+    if (after !== "" && !uuid(after))
+      throw new ApiError("invalid_artifact_exchange_contract", 400);
+    const result = await this.api.request(
+      `${this.prefix}/accounts?${new URLSearchParams({ limit: "50", after })}`,
+      signal ? { signal } : {},
+      (value) => {
+        this.requireEndpointManager();
+        const page = asAccountPage(value);
+        if (
+          page.accounts.length > 50 ||
+          page.accounts.some(
+            (a, i) =>
+              a.id <= after || (i > 0 && a.id <= page.accounts[i - 1]!.id),
+          ) ||
+          (page.next &&
+            (page.accounts.length !== 50 ||
+              page.next !== page.accounts.at(-1)?.id))
+        )
+          throw new ApiError("invalid_server_response", 502);
+        return page;
+      },
+    );
+    this.requireEndpointManager();
+    return result;
+  }
+  async endpointCommand(
+    command: EndpointCommand,
+    key: string,
+    previous?: EndpointRecord,
+    signal?: AbortSignal,
+  ) {
+    this.requireEndpointManager();
+    if (!uuid(key))
+      throw new ApiError("invalid_artifact_exchange_contract", 400);
+    // Copy the exact review before awaiting transport. Caller mutation cannot
+    // change either the sent body or the receipt's expected meaning.
+    const body = new TextDecoder().decode(
+      endpointCommandBytes(command, this.directory),
+    );
+    const pinned = JSON.parse(body) as EndpointCommand;
+    const base = previous
+      ? asEndpointRecord(previous, this.directory)
+      : undefined;
+    if (
+      pinned.operation === "revoke" &&
+      (!base ||
+        base.id !== pinned.endpoint_id ||
+        base.revision !== pinned.expected_revision ||
+        base.state !== "active")
+    )
+      throw new ApiError("invalid_artifact_exchange_contract", 400);
+    const result = await this.api.request(
+      `${this.prefix}/exchange-endpoints/commands`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Idempotency-Key": key },
+        body,
+        ...(signal ? { signal } : {}),
+      },
+      (value) => {
+        this.requireEndpointManager();
+        return asEndpointCommandResult(value, pinned, this.directory, base);
+      },
+    );
+    this.requireEndpointManager();
+    return result;
   }
   async endpoints(after = "", signal?: AbortSignal) {
     this.current();

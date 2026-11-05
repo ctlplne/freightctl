@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "id": "F098",
+  "observed_at": "2026-11-05",
+  "starting_commit": "345e139fae84ff56b8272c2b80047bd7fc7a68db",
+  "state": "Reviewed root-manager endpoint editor implemented;actual native qualification owed",
+  "qualification_claim": false,
+  "change": [
+    "Root admin/accounts_manage manager selects active current account bindings for recipient read/list and explicit sender read/deliver roles. Exact authority revision/root-byte digest is pinned without credentials or implicit role grants.",
+    "Creation,replacement and terminal revocation share the existing endpoint command service/forced-RLS transaction through same-origin CSRF session. Exact expected revision prevents lost updates.",
+    "Retain one exact review/body/key through response loss;only display a typed receipt matching endpoint,next revision,state,definition hash and original recording manager. Revocation must preserve the selected prior definition. Session changes refuse before contact and before disclosure.",
+    "Native original profile adds independent root-manager account selection,creation,exact same-key replay,changed-recipient replacement and revocation;all original journeys preserved. It now requires15accessibility states and independent SQL counts of3versions/3command receipts/one revoked revision3 head."
+  ],
+  "red": {
+    "observed": "No browser manager endpoint command path existed;lost-response retry and bound receipt test failed",
+    "reference": ".private/freightctl-f098-admin-red.log",
+    "sha256": "96aef4d30f51903dddbfaf72dff263d25ea48f189f04a175add95bbaf08239a6"
+  },
+  "green": {
+    "affected_adapter_methods": 19,
+    "shared_go_canonical_fixture_methods": 1,
+    "native_summary_pure_methods": 1,
+    "frontend_typecheck": "pass",
+    "frontend_build": "pass;app.js741012bytes,measurement only",
+    "affected_tagged_compilation_vet_architecture_format_driver_syntax": "pass,no runtime claim"
+  },
+  "native_profile": {
+    "state": "prepared,not qualified",
+    "required": "Actual Chrome/HTTPS/PostgreSQL manager creation,replay,replacement,revocation,15accessibility states and durable SQL counts plus all original exact-byte/role/revocation/send/recovery/history proofs"
+  },
+  "source_files": [
+    {
+      "path": "docs/protocols/artifact-exchange-admin-browser.md",
+      "sha256": "83bec0b4ea235b21a9e20e62a58e29acc0fa40c21430b3031f3b10eafe45e36b"
+    },
+    {
+      "path": "docs/protocols/artifact-exchange.md",
+      "sha256": "696907113b5f196f9fabea4c2b073cbb72372dfb9a3818658210c81a02b6cb60"
+    },
+    {
+      "path": "internal/api/artifact_exchange_browser_integration_test.go",
+      "sha256": "4e116df91c44c623cbe009b329384bb1a78cdfde1852e6d140b7d7422190469e"
+    },
+    {
+      "path": "internal/browser/assets/app.js",
+      "sha256": "a313c88f7ef991ce51c1d4b438f859d456fd9ff5c70fc0ad461153ef622bed5b"
+    },
+    {
+      "path": "internal/browser/assets/manifest.json",
+      "sha256": "c4634b853f1c0c652f09db3f69ac75bcc6ba3d6998a314b2da4db884589bca68"
+    },
+    {
+      "path": "internal/store/exchange_browser_contract_test.go",
+      "sha256": "9656cd74c8d8f612b1cc1b9ba10da1f0fed6d871b4f745a36cccfa9584c43d05"
+    },
+    {
+      "path": "scripts/artifact-exchange-browser.mjs",
+      "sha256": "ef06c29f77a752437fb225720c3ba16f486ef9fa0b7be6070e3d3c80a957bc83"
+    },
+    {
+      "path": "web/src/app.tsx",
+      "sha256": "ebc18ce5e3b86eefb439accb86ab5eec00fbe904102ad76de925042d0c70b997"
+    },
+    {
+      "path": "web/src/artifact-endpoint-admin.tsx",
+      "sha256": "98c09afc08a38d7247b41f469109ad8db772218023d4420a143e240031ea3347"
+    },
+    {
+      "path": "web/src/artifact-exchanges-api.ts",
+      "sha256": "6273748d300f5975e46348f20a4acf399966f7caa81339f04ebbe3f3a3412f2f"
+    },
+    {
+      "path": "web/src/artifact-exchanges-types.ts",
+      "sha256": "d1f53ddc22aa1bb020d5472bcfb5a129838ab0f88dfecf120fc83a8c1d8d6ef6"
+    },
+    {
+      "path": "web/tests/artifact-exchange.test.mjs",
+      "sha256": "06101be6c4bc5452674f9d2ca7b4cdb2b4172a73820e0a2233c64ab915394385"
+    },
+    {
+      "path": "web/tests/fixtures/artifact-exchange.json",
+      "sha256": "76f80715b358213a206256f38df0b3d4309e5c748cdaf26532c27aadeb6b8525"
+    }
+  ],
+  "local_manifest": {
+    "reference": ".private/freightctl-f098/manifest.json",
+    "sha256": "47061822e455866fdf6c11df8140fc6fb31cedbe8581df4ee340295ec29f9a8c"
+  },
+  "owed": [
+    "Actual current-source manager/browser/native original profile and complete API schema validation",
+    "Endpoint-management reload/actual response-loss/crash/restore proof;clearing review does not undo a possible commit",
+    "Agent surfaces,ingress/onward bridges,remaining exchange capacity/recovery and all mandatory baseline/AX/FINISH gates",
+    "Compatible patched image inputs and replay;all recorded nonsecurity CI failures remain deferred to FINISH"
+  ]
+}
