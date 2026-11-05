@@ -1160,5 +1160,35 @@
       "https://playwright.dev/docs/api/class-cdpsession"
     ],
     "next_action": "Retain97session-wire-fetch-site failures;replay the native response-stage observer without relaxing that assertion. Missing native protocol data remains failure;never fall back to invented headers or an easier journey."
+  },
+  "source_97_native_terminal": {
+    "candidate": "97c739c69625b12e98966c75aa2ea18281ec29ed",
+    "run_id": 41944580495,
+    "arm_job": 126979507277,
+    "amd_job": 126979507687,
+    "each_application_pass": 880,
+    "each_application_fail": 3,
+    "each_application_skip": 0,
+    "first_failure": "ftps_collection_mixed_integration_test.go:47:unsupported or incomplete step",
+    "mechanism": "D173registration-key correction passes. New D176fixture uses stock-ssh/encrypted-ftp IDs;existing step grammar requires lowercase letters,digits,underscores. Both original mixed child cases stop before source capture/consent/sending. Product guard correct.",
+    "manifest_reference": ".private/freightctl-97-native-terminal-fUEV6x/manifest.json",
+    "manifest_sha256": "229c0f89d527c084b47f6ac191a4a936d255a91254c9545320aaa875180c020d",
+    "metadata": "both success",
+    "fuzz": "success",
+    "scope": "Original native first failure retained;no full mixed/output/whole-journey pass. Separate image failure stays red."
+  },
+  "mixed_step_grammar_repair_prepared": {
+    "defect": "D176",
+    "implementation": "internal/workflow/ftps_collection_mixed_contract_test.go",
+    "mechanism": "Share exact mixed native step builder with a pure typed Normalize contract. Use stock_ssh/encrypted_ftp;preserve receiver order,exact references,plaintext SFTP and independently recipient-encrypted FTPS. Original hyphen IDs must still return ErrInput. Production grammar/source untouched.",
+    "first_parser_exit": 1,
+    "final_parser_exit": 0,
+    "integration_race_compile_exit": 0,
+    "integration_vet_exit": 0,
+    "integration_binary_executed": false,
+    "local_manifest_reference": ".private/freightctl-mixed-step-first-pwqyvhzw/manifest.json",
+    "local_manifest_sha256": "295b607b7cb044d0747532c2475e60782f435e91c31bd6215b1e4bdbc317939b",
+    "runtime_qualification": false,
+    "next_action": "Replay exact original ARM/x86 native mixed journey through both actual receiver transports and independent decryption/readback. Do not infer any source capture/approval/sending pass from parser or compile checks."
   }
 }

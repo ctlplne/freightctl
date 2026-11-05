@@ -2842,6 +2842,21 @@
         "state": "Native Chrome request/final-header and bounded original response capture prepared;actual replay pending.",
         "scope": "Original bad header exact value/missing status is still unexposed. The request-route bridge is a demonstrated observation-design limitation,not proof of a production auth defect. Preserve every assertion.8native protocol/144frontend/102Python contracts pass;no real local Chrome."
       }
+    },
+    {
+      "id": "D176",
+      "severity": "native mixed-collection fixture qualification blocker",
+      "state": "open;local fixture repaired,original native runtime replay pending",
+      "observed_on": "2026-11-05",
+      "candidate": "97c739c69625b12e98966c75aa2ea18281ec29ed",
+      "journey": "Mixed stock SFTP and recipient-encrypted FTPS outputs from collected FTPS source",
+      "title": "Mixed fixture step IDs violate the existing typed grammar",
+      "reproduction": "Native run41944580495 ARM126979507277 and x86126979507687;880pass/3fail/0skip each,first failure line47before capture.",
+      "cause": "stock-ssh/encrypted-ftp violate ^[a-z][a-z0-9_]{0,63}$. Product Normalize correctly refuses incomplete/unsupported steps. Prior registration key correction now reaches this next fixture boundary.",
+      "resolution": "Use shared exact fixture builder with stock_ssh/encrypted_ftp. Original parser reproduction fails before repair and passes after;old hyphen names still ErrInput. Race integration binary compile/vet pass without execution. Preserve all source,order,receiver,encryption,consent,byte and cleanup checks.",
+      "evidence": "docs/qualification/evidence/F076-ftps-collection.json",
+      "original_manifest_sha256": "229c0f89d527c084b47f6ac191a4a936d255a91254c9545320aaa875180c020d",
+      "local_manifest_sha256": "295b607b7cb044d0747532c2475e60782f435e91c31bd6215b1e4bdbc317939b"
     }
   ]
 }

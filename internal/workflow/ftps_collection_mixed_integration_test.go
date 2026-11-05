@@ -39,10 +39,7 @@ func TestFTPSCollectionRoutesStockSFTPAndEncryptedFTPSWithSeparateConsent(t *tes
 			source := collectionTestSource()
 			source.Kind, source.Directory, source.Connection = "ftps.collect", "/", ref(sourceConnection)
 			policy := &store.EncryptionPolicy{Key: store.PGPReference{ID: key.ID, Version: key.Version, Hash: key.Hash}, Profile: secure.PGPEncryptMDC}
-			steps := []Step{
-				{ID: "stock-ssh", Kind: "sftp.deliver", Connection: ref(ssh.connection), Filename: "collected.csv"},
-				{ID: "encrypted-ftp", Kind: "ftps.deliver", Connection: ref(receiverConnection), Filename: "collected.pgp", Encryption: policy},
-			}
+			steps := mixedFTPSCollectionSteps(ref(ssh.connection), ref(receiverConnection), policy)
 			definition := Definition{Schema: 1, Name: "Collected FTPS settlement with two separately governed receivers", Source: &source, Steps: steps}
 			configuration := f.approved(t, definition)
 			tx, err := f.s.Custody.DB.Begin(f.ctx, f.scope)
