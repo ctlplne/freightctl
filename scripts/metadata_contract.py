@@ -1,7 +1,8 @@
 """Explicit fresh-CI and retained metadata profiles; no database lifecycle."""
 import hashlib
 
-CURRENT_PROFILE = {"schema": 43, "metadata_tables": 71, "forced_rls_tables": 70}
+CURRENT_PROFILE = {"schema": 44, "metadata_tables": 71, "forced_rls_tables": 70}
+CLOSURE_PROFILE = {"schema": 43, "metadata_tables": 71, "forced_rls_tables": 70}
 RECEIVE_VIEW_PROFILE = {"schema": 42, "metadata_tables": 69, "forced_rls_tables": 68}
 PREVIOUS_PROFILE = {"schema": 41, "metadata_tables": 67, "forced_rls_tables": 66}
 COLLECTION_FTPS_PROFILE = {"schema": 40, "metadata_tables": 64, "forced_rls_tables": 63}
@@ -15,7 +16,7 @@ RETAINED_PROFILE = {"schema": 35, "metadata_tables": 64, "forced_rls_tables": 63
 def profile(version):
     if type(version) is not int:
         raise ValueError("metadata schema profile differs")
-    for value in (CURRENT_PROFILE, RECEIVE_VIEW_PROFILE, PREVIOUS_PROFILE, COLLECTION_FTPS_PROFILE, ENCRYPTION_FTPS_PROFILE, PROGRAM_FTPS_PROFILE, LEGACY_PROFILE, DIRECT_FTPS_PROFILE, RETAINED_PROFILE):
+    for value in (CURRENT_PROFILE, CLOSURE_PROFILE, RECEIVE_VIEW_PROFILE, PREVIOUS_PROFILE, COLLECTION_FTPS_PROFILE, ENCRYPTION_FTPS_PROFILE, PROGRAM_FTPS_PROFILE, LEGACY_PROFILE, DIRECT_FTPS_PROFILE, RETAINED_PROFILE):
         if version == value["schema"]:
             return value
     raise ValueError("metadata schema profile differs")

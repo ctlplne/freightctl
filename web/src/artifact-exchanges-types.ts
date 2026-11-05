@@ -19,6 +19,22 @@ export interface ExchangeOfferResult {
   exchange: ArtifactExchange;
   replayed: boolean;
 }
+export interface OutgoingExchange {
+  tenant_id: string;
+  partner_id: string;
+  exchange: ArtifactExchange;
+  state:
+    "offered" | "held" | "unavailable" | "expired" | "canceled" | "declined";
+  checked_at: string;
+  closure_event_id?: string;
+  retrieval: "unknown";
+  receiver_persistence: "unknown";
+  business_processing: "unknown";
+}
+export interface OutgoingPage {
+  exchanges: OutgoingExchange[];
+  next: string;
+}
 export interface ArtifactExchange {
   id: string;
   sender_actor_id: string;
@@ -400,6 +416,106 @@ export function asExchangeOfferResult(
   )
     refuse();
   return { exchange: row.exchange, replayed: o.replayed };
+}
+
+function exactInstantKey(value: string): string {
+  const [base, fraction = ""] = canonicalTimestamp(value)
+    .slice(0, -1)
+    .split(".");
+  return `${base}.${fraction.padEnd(6, "0")}Z`;
+}
+export function asOutgoingExchange(
+  value: unknown,
+  context: ExchangeIdentity,
+  id?: string,
+): OutgoingExchange {
+  const o = fields(
+    value,
+    [
+      "tenant_id",
+      "partner_id",
+      "exchange",
+      "state",
+      "checked_at",
+      "retrieval",
+      "receiver_persistence",
+      "business_processing",
+    ],
+    ["closure_event_id"],
+  );
+  if (
+    identifier(o.tenant_id) !== context.tenant ||
+    identifier(o.partner_id) !== context.partner ||
+    o.retrieval !== "unknown" ||
+    o.receiver_persistence !== "unknown" ||
+    o.business_processing !== "unknown"
+  )
+    refuse();
+  const raw = object(o.exchange),
+    request = asExchangeRequest(raw.request);
+  const exchange = asExchangeOfferResult(
+    { exchange: raw, replayed: false },
+    request,
+    context,
+    identifier(raw.recipient_actor_id),
+  ).exchange;
+  if (id !== undefined && exchange.id !== id) refuse();
+  if (
+    o.state !== "offered" &&
+    o.state !== "held" &&
+    o.state !== "unavailable" &&
+    o.state !== "expired" &&
+    o.state !== "canceled" &&
+    o.state !== "declined"
+  )
+    refuse();
+  const checked = canonicalTimestamp(o.checked_at),
+    terminal = o.state === "canceled" || o.state === "declined";
+  if (terminal !== Object.hasOwn(o, "closure_event_id")) refuse();
+  if (
+    !terminal &&
+    exactInstantKey(request.expires_at) <= exactInstantKey(checked) !==
+      (o.state === "expired")
+  )
+    refuse();
+  return {
+    tenant_id: context.tenant,
+    partner_id: context.partner,
+    exchange,
+    state: o.state,
+    checked_at: checked,
+    ...(terminal ? { closure_event_id: identifier(o.closure_event_id) } : {}),
+    retrieval: "unknown",
+    receiver_persistence: "unknown",
+    business_processing: "unknown",
+  };
+}
+export function asOutgoingPage(
+  value: unknown,
+  context: ExchangeIdentity,
+  after: string,
+  limit: number,
+): OutgoingPage {
+  if (after !== "") identifier(after);
+  if (!Number.isSafeInteger(limit) || limit < 1 || limit > 100) refuse();
+  const o = fields(value, ["exchanges"], ["next"]);
+  if (!Array.isArray(o.exchanges) || o.exchanges.length > limit) refuse();
+  const exchanges = o.exchanges.map((v) => asOutgoingExchange(v, context));
+  if (
+    exchanges.some(
+      (e, i) =>
+        e.exchange.id <= after ||
+        (i > 0 && e.exchange.id <= exchanges[i - 1]!.exchange.id),
+    )
+  )
+    refuse();
+  const next = Object.hasOwn(o, "next") ? identifier(o.next) : "";
+  if (
+    next &&
+    (exchanges.length !== limit || next !== exchanges.at(-1)?.exchange.id)
+  )
+    refuse();
+  return { exchanges, next };
 }
 export function asIncomingView(
   value: unknown,

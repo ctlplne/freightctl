@@ -570,3 +570,143 @@ test("sender adapter reuses exact offer/cancel keys and rechecks current partici
   );
   assert.equal(client.isCurrent(), false);
 });
+
+function outgoing(n = 10) {
+  return {
+    tenant_id: context.tenant,
+    partner_id: context.partner,
+    exchange: offered(n).exchange,
+    state: "offered",
+    checked_at: "2026-11-05T20:00:00Z",
+    retrieval: "unknown",
+    receiver_persistence: "unknown",
+    business_processing: "unknown",
+  };
+}
+test("outgoing history keeps current scope,exact microsecond expiry and unknown receiver outcomes", () => {
+  const row = outgoing(),
+    who = { ...context, actor: row.exchange.sender_actor_id };
+  assert.deepEqual(p.asOutgoingExchange(row, who, row.exchange.id), row);
+  assert.equal(
+    p.asOutgoingExchange(
+      { ...row, state: "expired", checked_at: row.exchange.request.expires_at },
+      who,
+    ).state,
+    "expired",
+  );
+  for (const patch of [
+    { tenant_id: id(99) },
+    { partner_id: id(99) },
+    { retrieval: "verified" },
+    { receiver_persistence: "durable" },
+    { business_processing: "complete" },
+    { state: "processed" },
+    { state: "expired" },
+    { checked_at: row.exchange.request.expires_at },
+    { state: "canceled" },
+    { closure_event_id: id(55) },
+    { storage_id: id(99) },
+  ])
+    assert.throws(() => p.asOutgoingExchange({ ...row, ...patch }, who));
+  const closed = { ...row, state: "declined", closure_event_id: id(55) };
+  assert.deepEqual(p.asOutgoingExchange(closed, who), closed);
+  const wrong = structuredClone(row);
+  wrong.exchange.sender_actor_id = id(99);
+  assert.throws(() => p.asOutgoingExchange(wrong, who));
+});
+test("outgoing history cursors cannot include duplicate,reordered,skipped or foreign records", () => {
+  const who = { ...context, actor: id(6) };
+  for (const page of [
+    { exchanges: [outgoing(), outgoing()] },
+    { exchanges: [outgoing(11), outgoing(10)] },
+    { exchanges: [outgoing()], next: id(99) },
+    { exchanges: [], next: id(10) },
+    { exchanges: [{ ...outgoing(), partner_id: id(99) }] },
+  ])
+    assert.throws(() => p.asOutgoingPage(page, who, "", 20));
+  assert.throws(() =>
+    p.asOutgoingPage({ exchanges: [outgoing()] }, who, id(10), 20),
+  );
+  assert.deepEqual(
+    p.asOutgoingPage({ exchanges: [outgoing()], next: id(10) }, who, "", 1),
+    { exchanges: [outgoing()], next: id(10) },
+  );
+});
+test("outgoing adapter uses scoped read-only routes and rejects context changes before disclosure", async () => {
+  const row = outgoing(),
+    calls = [];
+  let during = () => {},
+    response = { exchanges: [row] };
+  const api = {
+    session: {
+      identity: {
+        tenant_id: context.tenant,
+        partner_id: context.partner,
+        actor_id: id(6),
+        authority_revision: 1,
+        root_policy_digest: "d".repeat(64),
+        permissions: ["read", "deliver", "list"],
+      },
+      session: { id: id(99) },
+    },
+    request: async (path, options, decode) => {
+      calls.push({ path, options });
+      during();
+      return decode(response);
+    },
+  };
+  const client = new a.ExchangeReceiveApi(api);
+  assert.equal(
+    (await client.outgoing()).exchanges[0].exchange.id,
+    row.exchange.id,
+  );
+  assert.match(calls[0].path, /outgoing-exchanges\?limit=20&after=$/);
+  assert.equal(calls[0].options.method, undefined);
+  response = row;
+  assert.equal(
+    (await client.outgoingExchange(row.exchange.id)).state,
+    "offered",
+  );
+  await assert.rejects(() => client.outgoing("not-a-cursor"));
+  await assert.rejects(() => client.outgoingExchange("not-a-view"));
+  assert.equal(calls.length, 2);
+  during = () => api.session.identity.authority_revision++;
+  await assert.rejects(
+    () => client.outgoingExchange(row.exchange.id),
+    (e) => e.code === "context_changed",
+  );
+  assert.equal(client.isCurrent(), false);
+});
+
+test("history discovery requires list while a known own receipt remains inspectable", async () => {
+  const row = outgoing(),
+    calls = [];
+  const api = {
+    session: {
+      identity: {
+        tenant_id: context.tenant,
+        partner_id: context.partner,
+        actor_id: id(6),
+        authority_revision: 1,
+        root_policy_digest: "d".repeat(64),
+        permissions: ["read", "deliver"],
+      },
+      session: { id: id(99) },
+    },
+    request: async (path, options, decode) => {
+      calls.push(path);
+      return decode(path.includes("?") ? { exchanges: [row] } : row);
+    },
+  };
+  const client = new a.ExchangeReceiveApi(api);
+  await assert.rejects(
+    () => client.outgoing(),
+    (e) => e.code === "permission_denied",
+  );
+  assert.equal(calls.length, 0);
+  assert.equal(
+    (await client.outgoingExchange(row.exchange.id)).exchange.id,
+    row.exchange.id,
+  );
+  assert.equal(calls.length, 1);
+});

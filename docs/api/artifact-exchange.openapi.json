@@ -653,6 +653,124 @@
           }
         }
       }
+    },
+    "/v1/tenants/{tenant}/partners/{partner}/outgoing-exchanges": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/tenant"
+        },
+        {
+          "$ref": "#/components/parameters/partner"
+        }
+      ],
+      "get": {
+        "operationId": "listOutgoingArtifactExchanges",
+        "summary": "Original sender-authorized offers and current metadata states",
+        "description": "Enumeration requires list as well as current read/deliver,original sender authority/root and current source permission. Filter before choosing IDs/cursors and recheck all selected rows,including the extra row,under locks. Known-ID inspection does not require list. Current metadata is not verified physical bytes or receiver evidence;retrieval,persistence and processing remain unknown.",
+        "parameters": [
+          {
+            "name": "after",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "413": {
+            "$ref": "#/components/responses/413"
+          },
+          "503": {
+            "$ref": "#/components/responses/503"
+          },
+          "200": {
+            "description": "Bounded sender history page; terminal decision event appears only for canceled/declined records. Original requests remain historical.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OutgoingPage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/tenants/{tenant}/partners/{partner}/outgoing-exchanges/{exchange}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/tenant"
+        },
+        {
+          "$ref": "#/components/parameters/partner"
+        },
+        {
+          "$ref": "#/components/parameters/exchange"
+        }
+      ],
+      "get": {
+        "operationId": "inspectOutgoingArtifactExchange",
+        "summary": "Inspect one original offer and current metadata state",
+        "description": "Original sender binding and current source permission are required even for historical expired/revoked/closed views. This reveals no replacement recipient,private operation key,storage identity or contents. It grants no retrieval/forwarding authority or stronger receiver outcome.",
+        "responses": {
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "413": {
+            "$ref": "#/components/responses/413"
+          },
+          "503": {
+            "$ref": "#/components/responses/503"
+          },
+          "200": {
+            "description": "Original offer,exact terminal decision if present,and current metadata check.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OutgoingExchange"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1298,6 +1416,109 @@
           "command_hash",
           "event_id",
           "replayed"
+        ]
+      },
+      "OutgoingExchange": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "tenant_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "partner_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "exchange": {
+            "$ref": "#/components/schemas/ExchangeRecord"
+          },
+          "state": {
+            "enum": [
+              "offered",
+              "held",
+              "unavailable",
+              "expired",
+              "canceled",
+              "declined"
+            ]
+          },
+          "checked_at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]{0,5}[1-9])?Z$"
+          },
+          "closure_event_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "retrieval": {
+            "const": "unknown"
+          },
+          "receiver_persistence": {
+            "const": "unknown"
+          },
+          "business_processing": {
+            "const": "unknown"
+          }
+        },
+        "required": [
+          "tenant_id",
+          "partner_id",
+          "exchange",
+          "state",
+          "checked_at",
+          "retrieval",
+          "receiver_persistence",
+          "business_processing"
+        ],
+        "oneOf": [
+          {
+            "properties": {
+              "state": {
+                "enum": [
+                  "canceled",
+                  "declined"
+                ]
+              }
+            },
+            "required": [
+              "closure_event_id"
+            ]
+          },
+          {
+            "properties": {
+              "state": {
+                "enum": [
+                  "offered",
+                  "held",
+                  "unavailable",
+                  "expired"
+                ]
+              }
+            },
+            "not": {
+              "required": [
+                "closure_event_id"
+              ]
+            }
+          }
+        ]
+      },
+      "OutgoingPage": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "exchanges": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "$ref": "#/components/schemas/OutgoingExchange"
+            }
+          },
+          "next": {
+            "$ref": "#/components/schemas/ID"
+          }
+        },
+        "required": [
+          "exchanges"
         ]
       }
     }

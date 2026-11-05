@@ -47,7 +47,9 @@ parser rejects duplicate/case-folded/escaped field aliases, nulls, unknown field
 unsafe or nonliteral integers, trailing input, foreign origins and mismatched
 canonical hashes/bindings. The24KiB envelope covers saved metadata; artifact bytes
 use the deployment's configured capacity. The format grants no authority or signature
-claim. Outgoing history and complete process-death/restore qualification remain
+claim. [Sent artifacts](artifact-exchange-outgoing.md) independently rechecks
+original sender/source authority and shows historical receipts with current
+metadata state. Complete process-death/restore qualification remains
 work. Canonical JSON integers must fit exactly
 in the browser's safe integer range; API/CLI retain their explicit integer64
 contract. No file is silently rounded.

@@ -14,6 +14,8 @@ import {
   asExchangeArtifact,
   asExchangeRequest,
   asExchangeOfferResult,
+  asOutgoingExchange,
+  asOutgoingPage,
   type ExchangeRequest,
   type ArtifactExchange,
   type ExchangeClosureCommand,
@@ -29,6 +31,7 @@ export class ExchangeReceiveApi {
   private prefix: string;
   private who: string;
   private directory: DirectoryContext;
+  private canList: boolean;
   constructor(private api: Api) {
     const s = api.session;
     if (!s) throw new ApiError("unauthorized", 401);
@@ -39,6 +42,7 @@ export class ExchangeReceiveApi {
     };
     this.prefix = `/v1/tenants/${this.identity.tenant}/partners/${this.identity.partner}`;
     const permissions = s.identity.permissions;
+    this.canList = permissions.includes("list");
     this.directory = {
       ...this.identity,
       authority_revision: s.identity.authority_revision,
@@ -139,6 +143,39 @@ export class ExchangeReceiveApi {
       (value) => {
         this.current();
         return asExchangeArtifact(value, id);
+      },
+    );
+    this.current();
+    return result;
+  }
+  async outgoing(after = "", signal?: AbortSignal) {
+    this.current();
+    if (!this.directory.can_send || !this.canList)
+      throw new ApiError("permission_denied", 403);
+    if (after !== "" && !uuid(after))
+      throw new ApiError("invalid_artifact_exchange_contract", 400);
+    const result = await this.api.request(
+      `${this.prefix}/outgoing-exchanges?${new URLSearchParams({ limit: "20", after })}`,
+      signal ? { signal } : {},
+      (value) => {
+        this.current();
+        return asOutgoingPage(value, this.identity, after, 20);
+      },
+    );
+    this.current();
+    return result;
+  }
+  async outgoingExchange(id: string, signal?: AbortSignal) {
+    this.current();
+    if (!this.directory.can_send) throw new ApiError("permission_denied", 403);
+    if (!uuid(id))
+      throw new ApiError("invalid_artifact_exchange_contract", 400);
+    const result = await this.api.request(
+      `${this.prefix}/outgoing-exchanges/${id}`,
+      signal ? { signal } : {},
+      (value) => {
+        this.current();
+        return asOutgoingExchange(value, this.identity, id);
       },
     );
     this.current();

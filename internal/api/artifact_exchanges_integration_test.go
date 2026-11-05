@@ -128,6 +128,13 @@ func TestArtifactExchangeHTTPSUsesSameCookieAndBearerAuthorityAndSeparateReply(t
 	if json.Unmarshal(data, &offer) != nil || offer.Replayed || bytes.Contains(data, []byte(service.Disk.Identity())) {
 		t.Fatal("invalid or overdisclosing offer receipt")
 	}
+	_, data = exchangeAPIRequest(t, server, "GET", prefix+"/outgoing-exchanges?limit=1", nil, bearerA, nil, 200)
+	var sentPage store.OutgoingExchangePage
+	if json.Unmarshal(data, &sentPage) != nil || len(sentPage.Exchanges) != 1 || sentPage.Exchanges[0].Exchange.ID != offer.Exchange.ID || sentPage.Exchanges[0].State != "offered" || sentPage.Exchanges[0].Retrieval != "unknown" {
+		t.Fatal("served sender history changed original receipt or receiver evidence")
+	}
+	exchangeAPIRequest(t, server, "GET", prefix+"/outgoing-exchanges", nil, bearerB, nil, 403)
+	exchangeAPIRequest(t, server, "GET", prefix+"/outgoing-exchanges/"+offer.Exchange.ID, nil, bearerB, nil, 404)
 	_, data = exchangeAPIRequest(t, server, "POST", prefix+"/exchanges", nil, offerHeaders, exchangeAPIJSON(t, r), 200)
 	var replay store.ArtifactExchangeResult
 	if json.Unmarshal(data, &replay) != nil || !replay.Replayed || replay.Exchange.ID != offer.Exchange.ID {
@@ -232,6 +239,11 @@ func TestArtifactExchangeHTTPSUsesSameCookieAndBearerAuthorityAndSeparateReply(t
 	exchangeAPIRequest(t, server, "POST", prefix+"/exchange-closures", nil, map[string]string{"Authorization": bearerA["Authorization"], "Idempotency-Key": "wrong-cancel-role"}, exchangeAPIJSON(t, closure), 404)
 	exchangeAPIRequest(t, server, "POST", prefix+"/exchange-closures", nil, map[string]string{"Authorization": bearerB["Authorization"], "Idempotency-Key": "sender-cancel"}, exchangeAPIJSON(t, closure), 200)
 	exchangeAPIRequest(t, server, "GET", prefix+"/exchanges/"+cancelOffer.Exchange.ID+"/file", nil, bearerA, nil, 404)
+	_, data = exchangeAPIRequest(t, server, "GET", prefix+"/outgoing-exchanges/"+cancelOffer.Exchange.ID, nil, bearerB, nil, 200)
+	var canceledHistory store.OutgoingExchange
+	if json.Unmarshal(data, &canceledHistory) != nil || canceledHistory.State != "canceled" || canceledHistory.ClosureEvent == "" || canceledHistory.Retrieval != "unknown" || canceledHistory.ReceiverPersistence != "unknown" || canceledHistory.BusinessProcessing != "unknown" {
+		t.Fatal("served closed history fabricated receiver outcome or lost decision")
+	}
 	_, data = exchangeAPIRequest(t, server, "GET", prefix+"/files/"+replyFile.File.ID, nil, bearerB, nil, 200)
 	if !bytes.Equal(data, replyBytes) {
 		t.Fatal("closing a view removed its source bytes")

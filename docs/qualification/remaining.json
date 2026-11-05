@@ -863,7 +863,8 @@
         "docs/qualification/evidence/F089-exchange-endpoint-directory.json",
         "docs/qualification/evidence/F091-exchange-closures.json",
         "docs/qualification/evidence/F093-browser-artifact-offer.json",
-        "docs/qualification/evidence/F094-browser-offer-recovery.json"
+        "docs/qualification/evidence/F094-browser-offer-recovery.json",
+        "docs/qualification/evidence/F096-outgoing-exchange-history.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -875,14 +876,14 @@
         "Qualify human/system ingress, governed source collection and independently verified agent-to-system onward delivery. Every handoff requires current permission; notification never grants retrieval or forwarding.",
         "Resolve X07 and qualify actual optional Trust Control integration before compatibility claims; fixture evidence is scoped and ordinary core operation remains independent.",
         "Retain all original parity rows, full customer journeys, red gates and evidence. The first customer workflow/buyer/wedge remains unselected.",
-        "S003 resumes the full product and authorizes guarded source/CI batches after previous required runs are terminal. Contract validators are implemented with focused red/green proof; durable services and five API paths are implemented; remaining surfaces and actual AX profiles remain owed. Broad/deferred qualification is mandatory at FINISH."
+        "S003 authorizes guarded source/CI batches after prior required runs are terminal. Eleven exchange API paths and eleven CLI commands plus receive/send/recovery/history browser surfaces are implemented;actual AX profiles remain owed. Broad/deferred qualification is mandatory at FINISH."
       ],
       "current_item": {
-        "id": "F094",
-        "state": "Exact saved offer/withdrawal review across reload implemented;actual native replay/SQL-count proof owed",
-        "proof": "Observed missing recovery capability red repaired;4recovery+11affected adapter+1summary methods and affected type/build/compile/vet/architecture checks pass",
-        "native": "Actual recovery download/reload/no-contact import/exact replays/nine accessibility states and durable counts prepared;not locally run",
-        "next": "Outgoing lifecycle/admin/agent surfaces and ingress/onward bridges;actual response-loss/crash/restore,then mandatory FINISH."
+        "id": "F096",
+        "state": "Sender-private outgoing history implemented;actual native qualification owed",
+        "proof": "Three observed regression failures repaired;5focused Go,15adapter,1summary,7metadata methods and affected static/build/compile/vet/architecture checks pass",
+        "native": "Three new PG cases plus original API/CLI and eleven-state Chrome proofs prepared;not runtime-qualified",
+        "next": "Endpoint administration/agent surfaces,ingress/onward bridges and exchange recovery/capacity,then mandatory FINISH"
       }
     }
   ],

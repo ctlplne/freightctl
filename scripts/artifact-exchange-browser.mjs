@@ -451,6 +451,57 @@ try {
     .waitFor();
   assert.equal(offerRequests, 2);
   recoveryRoundtrips++;
+  phase = "sender-history";
+  const sentHistory = sender.page.waitForResponse((r) =>
+    new URL(r.url()).pathname.endsWith("/outgoing-exchanges"),
+  );
+  await sender.page
+    .getByRole("button", { name: "Sent artifacts", exact: true })
+    .click();
+  assert.equal((await sentHistory).status(), 200);
+  await sender.page
+    .getByRole("table", {
+      name: "Currently authorized outgoing history",
+      exact: true,
+    })
+    .waitFor();
+  const withdrawnRow = sender.page
+    .getByRole("row")
+    .filter({ hasText: sent.exchange.id });
+  await withdrawnRow
+    .getByText("Withdrawn by sender", { exact: true })
+    .waitFor();
+  await accessibility(sender.page, "sender-history-accessibility");
+  phase = "sender-history-details";
+  await sender.page
+    .getByRole("button", {
+      name: "Inspect sent " + sent.exchange.id.slice(0, 8),
+      exact: true,
+    })
+    .click();
+  await sender.page
+    .getByRole("heading", {
+      name: "Original offer and current state",
+      exact: true,
+    })
+    .waitFor();
+  const historyText = await sender.page.locator("body").innerText();
+  assert.ok(historyText.includes(sent.exchange.request_hash));
+  assert.ok(historyText.includes(withdrawn.event_id));
+  for (const label of [
+    "Byte retrieval",
+    "Receiver persistence",
+    "Business processing",
+  ]) {
+    assert.equal(
+      await sender.page
+        .locator("dt")
+        .filter({ hasText: label })
+        .evaluate((dt) => dt.nextElementSibling?.textContent),
+      "Unknown",
+    );
+  }
+  await accessibility(sender.page, "sender-history-detail-accessibility");
   await sender.context.close();
   phase = "recipient-decline-review";
   await recipient.page

@@ -1,0 +1,194 @@
+{
+  "schema_version": 1,
+  "id": "F096",
+  "observed_at": "2026-11-05",
+  "starting_commit": "7e4134b6212fa4c209762677ce6e784112652258",
+  "state": "Sender-private outgoing history implemented;actual native qualification owed",
+  "qualification_claim": false,
+  "change": [
+    "Read-only own historical offers plus separately checked current metadata through11total exchange API paths/CLI commands and Sent artifacts. Current original sender stamp,source path permission and forced RLS govern disclosure. Enumeration additionally requires list. No operation keys,storage references,replacement endpoints or artifact contents.",
+    "Exact immutable request/revision/digest/policy/recipient/endpoint/event facts remain historical. Current offered/held/unavailable/expired/canceled/declined state is checked under locks;retrieval,receiver persistence and business processing stay unknown. History does not append retrieval events or grant byte access.",
+    "Filter actual sender and current original source/participant permission before IDs/cursors,then lock and reauthorize every selected row including the extra row. Source/authority races refuse the affected whole page.",
+    "Separate already admitted endpoint parsing from new-definition sender quotas. Lowering an admission quota does not silently revoke an unchanged definition;new definitions still obey the configured quota and all current permission,head,hash,stamp,policy and expiry checks remain.",
+    "Append-only migration44 adds only a tenant/partner/sender/exchange seek index;71tables/70forced-RLS target unchanged. Retained35 is untouched."
+  ],
+  "red": [
+    {
+      "observed": "Outgoing route absent:404 instead of malformed-selector400 before database",
+      "evidence": {
+        "reference": ".private/freightctl-f096-outgoing-red.log",
+        "sha256": "3a68e3b9b1b0dd11eba6d431175fa8023aba5a0fe04b56c01876b2e71fe79abe"
+      }
+    },
+    {
+      "observed": "An approved two-sender endpoint became unreadable after only the new-definition limit fell to one",
+      "evidence": {
+        "reference": ".private/freightctl-f096-admission-red.log",
+        "sha256": "6bde7df8e6d7e8575f44eda66d736972d108eb6a7783b64ded4b9f1610efc7b5"
+      }
+    },
+    {
+      "observed": "History discovery accepted an account lacking list permission",
+      "evidence": {
+        "reference": ".private/freightctl-f096-list-permission-red.log",
+        "sha256": "5b51efca6ff0dd88e257dcb79b0fd89b4cf9f1b32071caab77429f6a08a1b4df"
+      }
+    }
+  ],
+  "green": {
+    "focused_go_methods": 5,
+    "browser_adapter_methods": 15,
+    "pure_browser_summary_methods": 1,
+    "metadata_summary_methods": 7,
+    "schema_version": 44,
+    "frontend_typecheck": "pass",
+    "frontend_build": "pass;app.js728640bytes,measurement only",
+    "affected_native_tagged_compilation_and_vet": "pass,no runtime claim",
+    "architecture_format_driver_syntax_diff": "pass",
+    "original_new_definition_quota": "still refuses two senders under configured one"
+  },
+  "native_profile": {
+    "state": "prepared,not executed locally or qualified",
+    "required": [
+      "Three new actual PostgreSQL cases for lifecycle,pages,roles,holds,closures,source modes,authority rebinding and list-vs-known-ID permission",
+      "Original served HTTPS and protected-reference CLI own-history/other-role/closed-event proof",
+      "Actual Chrome eleven accessibility states including sender history/list/detail with exact terminal event and three unknown receiver facts",
+      "Fresh44 upgrade/restore and index/query-plan/capacity proof"
+    ]
+  },
+  "source_files": [
+    {
+      "path": "cmd/freightctl/exchanges.go",
+      "sha256": "7ce9e9bd794f1697dc6b790e8f72d4d50bcfaa67d360b3dfe4a2dac950ec9da8"
+    },
+    {
+      "path": "cmd/freightctl/exchanges_integration_test.go",
+      "sha256": "e7a06fb37506a4e1b04dffe654563b6f4021da3b314bf4aa7320c9653ec1cd52"
+    },
+    {
+      "path": "cmd/freightctl/exchanges_test.go",
+      "sha256": "20aa84205207522396f011abb128e02bacc53a32aa9439b6a49f469171da7124"
+    },
+    {
+      "path": "cmd/freightctl/main.go",
+      "sha256": "a6b6234fe5a11c634ccb0549b8680b8248d917f615e9ff4e80524c425ec7206a"
+    },
+    {
+      "path": "docs/api/artifact-exchange.openapi.json",
+      "sha256": "540a3bf8b093a9b762756c53dad86e278123045c786b24ba5655f29330e7dbba"
+    },
+    {
+      "path": "docs/protocols/artifact-exchange-cli.md",
+      "sha256": "c34a2cc19f094e39c52d7c05ed05c2735fc801a4a99eae5eb32000ba6ea8f16f"
+    },
+    {
+      "path": "docs/protocols/artifact-exchange-outgoing.md",
+      "sha256": "9849452fefe325e182e4205a94b263a90bac13b8fa3de55da572502ce6cba837"
+    },
+    {
+      "path": "docs/protocols/artifact-exchange-send-browser.md",
+      "sha256": "d8b04abfca79225dec6b7bf6e2e36e91f5fdf97afb5fdf27f955fbb5dcb72e67"
+    },
+    {
+      "path": "docs/protocols/artifact-exchange.md",
+      "sha256": "c9883b0e51bd95122c00a78bc2330131beab47bdd91eea4dfd040994d5ee2aaf"
+    },
+    {
+      "path": "internal/api/api.go",
+      "sha256": "81e45d080282608af3542e5bb8de56215badca1576f9cc6aeae7ef5180f70a5e"
+    },
+    {
+      "path": "internal/api/artifact_exchange_browser_integration_test.go",
+      "sha256": "4a3d2cf3e8e2383601bafe774bdefee6bc13b6fcc9f265aafd8462d47847f8ec"
+    },
+    {
+      "path": "internal/api/artifact_exchanges.go",
+      "sha256": "f3fa8296d5178327b11915ecef8a02440389c730f234bd36904145652272489a"
+    },
+    {
+      "path": "internal/api/artifact_exchanges_integration_test.go",
+      "sha256": "58d4cb7fff1931bd72123477e405181ed4e75f58371ba465df4eebf983209660"
+    },
+    {
+      "path": "internal/api/artifact_exchanges_test.go",
+      "sha256": "dfe534308e5e78805887c9058e9777bef7fc1943a32f4644d1bcf127040fcb99"
+    },
+    {
+      "path": "internal/browser/assets/app.js",
+      "sha256": "46d8432517540e426ebf830cf48858f5970b6e26efc80d4e1f242e8b5ee1fcec"
+    },
+    {
+      "path": "internal/browser/assets/manifest.json",
+      "sha256": "6d9e54bad8c9b6366c0fa0d7b582044cc7e387bda2d0f3959554bc12ca30b150"
+    },
+    {
+      "path": "internal/custody/outgoing_exchanges_integration_test.go",
+      "sha256": "163b8757c57adf4e7f86464d67c9ab4cedfc68fc9cd9aa3a049b0e775d66972f"
+    },
+    {
+      "path": "internal/store/044_outgoing_exchange_history.sql",
+      "sha256": "dd56b1835aa3f6209b4f43da51bd1eb4ebb836df0edee63d8c550c2f163c0e1a"
+    },
+    {
+      "path": "internal/store/artifact_exchanges.go",
+      "sha256": "f8f571ce9db0e97f4f08ec64eae427879a2e858ed0c75b406cabc83016c37682"
+    },
+    {
+      "path": "internal/store/artifact_exchanges_test.go",
+      "sha256": "0239a0968f40867cfdc75befafe66793ff60aa7028026a6345cf9033c4df4a00"
+    },
+    {
+      "path": "internal/store/outgoing_exchanges.go",
+      "sha256": "955f08a7c46c2b452546734c201f0d4f4f0d0b63db29d317a196b56f0da27029"
+    },
+    {
+      "path": "internal/store/outgoing_exchanges_test.go",
+      "sha256": "b7bafa8cdb64a478e0d5a459ec3649b68949b184037122349f5f11168cfd63e2"
+    },
+    {
+      "path": "internal/store/store.go",
+      "sha256": "9e219084ecea496567896189e9f318339db2e81eefbfd4062e9fa5fb5fecd4dc"
+    },
+    {
+      "path": "scripts/artifact-exchange-browser.mjs",
+      "sha256": "fe8578beae6e3491cc15eb83588195080a342d59f5be4a4557509e244626b7df"
+    },
+    {
+      "path": "scripts/metadata_contract.py",
+      "sha256": "c2701b8c4b82e63272525d9ed14868922048686a3ad688fe896f917b24bc0092"
+    },
+    {
+      "path": "scripts/test-ci-metadata-summary.py",
+      "sha256": "8a1962ab8034f8c98cf2c35023c7535691be2104123cc577e487bda90d19145a"
+    },
+    {
+      "path": "web/src/app.tsx",
+      "sha256": "259deec0e065b8f1a60abd301d9b9d1190b034f69a9bda4d5474feccc81a794d"
+    },
+    {
+      "path": "web/src/artifact-exchanges-api.ts",
+      "sha256": "35a1c0e0f16f1fcc2f0d7accbfa3a69a8a74c20f3df367497111d68c10383910"
+    },
+    {
+      "path": "web/src/artifact-exchanges-types.ts",
+      "sha256": "1f283fcbb2caf29adcf098a431c6943cfd02499b62b14f7db62fa131b7fa71ea"
+    },
+    {
+      "path": "web/src/artifact-outgoing.tsx",
+      "sha256": "97df0c9bb6f566cc56673d1f69a91b34e22fda75c8e8e5582fa02046622b7b19"
+    },
+    {
+      "path": "web/tests/artifact-exchange.test.mjs",
+      "sha256": "3a5c19f7d07ac133b2641a495d2f09ed3eb43bb96687bf70c184b7bc931f4917"
+    }
+  ],
+  "local_manifest": {
+    "reference": ".private/freightctl-f096/manifest.json",
+    "sha256": "b75a9c586736dca5dcdea93f2a325848a30d9ea6b4b0ed4af33645a1173b92fb"
+  },
+  "owed": [
+    "All listed native proofs and affected original journeys on actual final source",
+    "Endpoint administration/agent surfaces,ingress/onward bridges,retention/fairness,actual crash/restore and all mandatory baseline/AX/FINISH gates",
+    "F075 patched compatible inputs and full clean replay;nonsecurity CI failure repair remains deferred to FINISH"
+  ]
+}

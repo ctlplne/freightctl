@@ -200,6 +200,14 @@ func TestArtifactExchangeCLIUsesOrdinaryAuthorityAndPublishesVerifiedDownload(t 
 	if err != nil || json.Unmarshal(body, &offered) != nil || !offered.Replayed {
 		t.Fatal("CLI original-key recovery failed", err)
 	}
+	body, err = command(a, "exchange-outgoing", "-exchange-limit", "1")
+	var sentPage store.OutgoingExchangePage
+	if err != nil || json.Unmarshal(body, &sentPage) != nil || len(sentPage.Exchanges) != 1 || sentPage.Exchanges[0].Exchange.ID != offered.Exchange.ID || sentPage.Exchanges[0].State != "offered" {
+		t.Fatal("CLI sender history", err)
+	}
+	if _, err = command(b, "exchange-outgoing-inspect", "-exchange-id", offered.Exchange.ID); !errors.Is(err, store.ErrNotFound) {
+		t.Fatal("recipient read sender history", err)
+	}
 	changed := request
 	changed.Artifact.Size++
 	if _, err = command(a, "exchange-offer", "-request-file", requestFile(changed), "-idempotency-key", "offer"); !errors.Is(err, store.ErrConflict) {
@@ -257,6 +265,11 @@ func TestArtifactExchangeCLIUsesOrdinaryAuthorityAndPublishesVerifiedDownload(t 
 	var recovered store.ExchangeClosureResult
 	if err != nil || json.Unmarshal(body, &recovered) != nil || !recovered.Replayed || recovered.EventID != closed.EventID {
 		t.Fatal("CLI cancellation response recovery", err)
+	}
+	body, err = command(a, "exchange-outgoing-inspect", "-exchange-id", offered.Exchange.ID)
+	var history store.OutgoingExchange
+	if err != nil || json.Unmarshal(body, &history) != nil || history.State != "canceled" || history.ClosureEvent != closed.EventID || history.Retrieval != "unknown" {
+		t.Fatal("CLI historical closure evidence", err)
 	}
 	if _, err = command(b, "exchange-download", "-exchange-id", offered.Exchange.ID, "-output", filepath.Join(outputDirectory, "must-not-exist")); !errors.Is(err, store.ErrNotFound) {
 		t.Fatal("CLI cancellation failed to stop retrieval", err)

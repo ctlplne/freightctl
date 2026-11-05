@@ -49,6 +49,27 @@ func TestArtifactExchangeBindsLiveEndpointAndExactActor(t *testing.T) {
 	}
 }
 
+func TestExistingExchangeEndpointReadDoesNotApplyNewDefinitionAdmissionLimit(t *testing.T) {
+	d, r, limits := exchangeContractFixture()
+	other := d.Senders[0]
+	other.Actor = "99999999-9999-4999-8999-999999999999"
+	d.Senders = append(d.Senders, other)
+	wire, hash, err := CanonicalExchangeEndpoint(d, limits)
+	if err != nil {
+		t.Fatal(err)
+	}
+	v := &ExchangeEndpointVersion{ID: r.Endpoint.ID, Revision: 1, Definition: wire, Hash: hash, State: "active"}
+	ref := ExchangeEndpointReference{ID: v.ID, Revision: v.Revision, Hash: v.Hash}
+	lower := limits
+	lower.MaxSenders = 1
+	if _, _, err = CanonicalExchangeEndpoint(d, lower); !errors.Is(err, ErrExchangeInput) {
+		t.Fatal("new endpoint admission cap was weakened", err)
+	}
+	if _, err = bindExchangeEndpoint(v, ref, lower); err != nil {
+		t.Fatal("lowering new-definition admission hid an unchanged approved endpoint", err)
+	}
+}
+
 func TestArtifactExchangePublicResultsExcludeStorageAndWithheldMetadata(t *testing.T) {
 	_, request, _ := exchangeContractFixture()
 	private := "private-custody-identity-must-not-appear"

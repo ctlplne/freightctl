@@ -193,6 +193,49 @@ func (s *Server) exchangeSource(w http.ResponseWriter, r *http.Request) {
 	respond(w, 200, result)
 }
 
+func (s *Server) outgoingExchanges(w http.ResponseWriter, r *http.Request) {
+	identity, err := scope(r)
+	if err != nil {
+		failure(w, err)
+		return
+	}
+	if _, _, err = s.Service.ExchangeLimits(); err != nil {
+		failure(w, err)
+		return
+	}
+	limit := 20
+	if raw := r.URL.Query().Get("limit"); raw != "" {
+		limit, err = strconv.Atoi(raw)
+	}
+	if err != nil {
+		failure(w, store.ErrExchangeInput)
+		return
+	}
+	result, err := s.Service.DB.OutgoingExchanges(r.Context(), identity, r.URL.Query().Get("after"), limit)
+	if err != nil {
+		failure(w, err)
+		return
+	}
+	respond(w, 200, result)
+}
+func (s *Server) outgoingExchange(w http.ResponseWriter, r *http.Request) {
+	identity, err := scope(r)
+	if err != nil {
+		failure(w, err)
+		return
+	}
+	if _, _, err = s.Service.ExchangeLimits(); err != nil {
+		failure(w, err)
+		return
+	}
+	result, err := s.Service.DB.OutgoingExchange(r.Context(), identity, r.PathValue("exchange"))
+	if err != nil {
+		failure(w, err)
+		return
+	}
+	respond(w, 200, result)
+}
+
 func (s *Server) inspectExchange(w http.ResponseWriter, r *http.Request) {
 	identity, err := scope(r)
 	if err != nil {

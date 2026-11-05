@@ -61,7 +61,12 @@ func bindExchangeEndpoint(v *ExchangeEndpointVersion, ref ExchangeEndpointRefere
 	if v == nil || v.State != "active" || v.ID != ref.ID || v.Revision != ref.Revision || v.Hash != ref.Hash {
 		return nil, ErrRevision
 	}
-	d, _, hash, err := DecodeExchangeEndpoint(v.Definition, limits)
+	if !limits.valid() {
+		return nil, ErrIsolation
+	}
+	// This exact definition was already admitted. New-definition quotas cannot
+	// revoke it; current head/stamps/policy still decide every consequential use.
+	d, _, hash, err := DecodeExchangeEndpoint(v.Definition, ExchangeLimits{MaxLifetime: time.Second, MaxSenders: 128})
 	if err != nil || hash != v.Hash {
 		return nil, ErrIsolation
 	}
@@ -111,32 +116,50 @@ func (t *Transaction) ArtifactExchangeReplay(ctx context.Context, key, meaning s
 	}
 	// A historical receipt is no retrieval grant. Preserve the original result
 	// after endpoint revocation/expiry, but never after sender authority changes.
-	var wire string
-	err = t.Tx.QueryRow(ctx, `SELECT definition_wire FROM exchange_endpoint_versions WHERE endpoint_id=$1 AND revision=$2 AND definition_hash=$3`, e.Request.Endpoint.ID, e.Request.Endpoint.Revision, e.Request.Endpoint.Hash).Scan(&wire)
-	if errors.Is(err, pgx.ErrNoRows) {
-		return nil, ErrNotFound
-	}
-	if err != nil {
+	if err = t.authorizeExchangeSenderRecord(ctx, e, limits); err != nil {
 		return nil, err
 	}
-	d, _, _, err := DecodeExchangeEndpoint([]byte(wire), limits)
+	return e, nil
+}
+
+func (t *Transaction) authorizeExchangeSenderRecord(ctx context.Context, e *ArtifactExchange, limits ExchangeLimits) error {
+	if !limits.valid() {
+		return ErrIsolation
+	}
+	if e == nil || e.Sender != t.Actor {
+		return ErrNotFound
+	}
+	for _, permission := range []string{"read", "deliver"} {
+		if err := t.Require(permission); err != nil {
+			return err
+		}
+	}
+	var wire string
+	err := t.Tx.QueryRow(ctx, `SELECT definition_wire FROM exchange_endpoint_versions WHERE endpoint_id=$1 AND revision=$2 AND definition_hash=$3`, e.Request.Endpoint.ID, e.Request.Endpoint.Revision, e.Request.Endpoint.Hash).Scan(&wire)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return ErrNotFound
+	}
 	if err != nil {
-		return nil, ErrIsolation
+		return err
+	}
+	d, _, hash, err := DecodeExchangeEndpoint([]byte(wire), ExchangeLimits{MaxLifetime: time.Second, MaxSenders: 128})
+	if err != nil || hash != e.Request.Endpoint.Hash || d.Recipient.Tenant != t.Scope.Tenant || d.Recipient.Partner != t.Scope.Partner || d.Recipient.Actor != e.Recipient {
+		return ErrIsolation
 	}
 	if _, err = exchangeSender(*d, t.exchangeParticipant()); err != nil || e.Sender != t.Actor {
-		return nil, ErrNotFound
+		return ErrNotFound
 	}
 	if err = t.exchangeNamespaceReadLock(ctx); err != nil {
-		return nil, err
+		return err
 	}
 	var sourceAllowed bool
 	if err = t.Tx.QueryRow(ctx, `SELECT freightctl_exchange_actor_source_readable($1,$2,$3,$4)`, t.Scope.Tenant, t.Scope.Partner, e.Request.Artifact.ID, t.Actor).Scan(&sourceAllowed); err != nil {
-		return nil, err
+		return err
 	}
 	if !sourceAllowed {
-		return nil, ErrNotFound
+		return ErrNotFound
 	}
-	return e, nil
+	return nil
 }
 
 // PrepareArtifactExchange runs under the sender's real authentication. The

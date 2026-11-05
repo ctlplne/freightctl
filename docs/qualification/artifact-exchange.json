@@ -105,7 +105,8 @@
         "docs/qualification/evidence/F089-exchange-endpoint-directory.json",
         "docs/qualification/evidence/F091-exchange-closures.json",
         "docs/qualification/evidence/F093-browser-artifact-offer.json",
-        "docs/qualification/evidence/F094-browser-offer-recovery.json"
+        "docs/qualification/evidence/F094-browser-offer-recovery.json",
+        "docs/qualification/evidence/F096-outgoing-exchange-history.json"
       ]
     },
     {
@@ -129,7 +130,8 @@
         "docs/qualification/evidence/F087-artifact-receive-browser.json",
         "docs/qualification/evidence/F091-exchange-closures.json",
         "docs/qualification/evidence/F093-browser-artifact-offer.json",
-        "docs/qualification/evidence/F094-browser-offer-recovery.json"
+        "docs/qualification/evidence/F094-browser-offer-recovery.json",
+        "docs/qualification/evidence/F096-outgoing-exchange-history.json"
       ]
     },
     {
@@ -155,7 +157,8 @@
         "docs/qualification/evidence/F087-artifact-receive-browser.json",
         "docs/qualification/evidence/F091-exchange-closures.json",
         "docs/qualification/evidence/F093-browser-artifact-offer.json",
-        "docs/qualification/evidence/F094-browser-offer-recovery.json"
+        "docs/qualification/evidence/F094-browser-offer-recovery.json",
+        "docs/qualification/evidence/F096-outgoing-exchange-history.json"
       ]
     },
     {
@@ -180,7 +183,8 @@
         "docs/qualification/evidence/F089-exchange-endpoint-directory.json",
         "docs/qualification/evidence/F091-exchange-closures.json",
         "docs/qualification/evidence/F093-browser-artifact-offer.json",
-        "docs/qualification/evidence/F094-browser-offer-recovery.json"
+        "docs/qualification/evidence/F094-browser-offer-recovery.json",
+        "docs/qualification/evidence/F096-outgoing-exchange-history.json"
       ]
     },
     {
@@ -235,7 +239,8 @@
         "docs/qualification/evidence/F089-exchange-endpoint-directory.json",
         "docs/qualification/evidence/F091-exchange-closures.json",
         "docs/qualification/evidence/F093-browser-artifact-offer.json",
-        "docs/qualification/evidence/F094-browser-offer-recovery.json"
+        "docs/qualification/evidence/F094-browser-offer-recovery.json",
+        "docs/qualification/evidence/F096-outgoing-exchange-history.json"
       ]
     },
     {

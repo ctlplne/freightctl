@@ -114,7 +114,8 @@ under their own permissions. Ordinary event feeds/audit exports retain the closu
 event identity and exact payload digest, keeping its operation key and private
 participant bindings in the protected journal.
 
-API/CLI closure, offered-view browser decline and reviewed browser sending are
-implemented. Agent tools,outgoing history,browser endpoint administration and the complete OpenAPI surface remain
+API/CLI closure, offered-view browser decline,reviewed browser sending and
+[sender history](artifact-exchange-outgoing.md) are implemented. Agent tools,
+browser endpoint administration and the complete OpenAPI surface remain
 implementation work. Actual stock-client,
 independent-receiver, crash/recovery, capacity and AX profile proofs remain owed.

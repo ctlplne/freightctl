@@ -17,6 +17,8 @@ participant authentication, row-level security or current exchange permissions.
 | `exchange-download` | `--exchange-id` and explicit new `--output`; verify and sync a local file before returning its JSON result. |
 | `exchange-close` | Protected closure command plus original key; the sender cancels or recipient declines one exact offer. No storage reference is needed. |
 | `exchange-source-inspect` | `--exchange-id` selects an immutable file ID; ordinary read/deliver, source path and current policy checks return exact source metadata. No storage reference is needed. |
+| `exchange-outgoing` | Optional `--exchange-after`/`--exchange-limit`; current sender-authorized historical offers and metadata states. |
+| `exchange-outgoing-inspect` | `--exchange-id`; original offer, current metadata state and exact terminal decision, with receiver outcomes explicitly unknown. |
 
 All commands take the ordinary `--dsn-file`, `--token-file`, `--tenant` and
 `--partner` references. Offer/download also take `--storage`. They accept the

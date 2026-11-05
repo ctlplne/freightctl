@@ -102,3 +102,17 @@ func TestExchangeSourceRejectsMalformedRevisionBeforeDatabase(t *testing.T) {
 		t.Fatal("source selector reached storage or missing handler", w.Code)
 	}
 }
+
+func TestOutgoingExchangeHistoryRejectsMalformedSelectorsBeforeDatabase(t *testing.T) {
+	h := New(&custody.Service{MaxFile: 1024, Exchanges: custody.ExchangeSettings{MaxLifetime: time.Hour, MaxSenders: 16, MaxOpenViews: 128, MaxEndpoints: 16}}, nil)
+	prefix := "https://freightctl.invalid/v1/tenants/11111111-1111-4111-8111-111111111111/partners/22222222-2222-4222-8222-222222222222/"
+	for _, path := range []string{"outgoing-exchanges?limit=101", "outgoing-exchanges?after=not-a-cursor", "outgoing-exchanges/not-a-view"} {
+		r := httptest.NewRequest(http.MethodGet, prefix+path, nil)
+		r.Header.Set("Authorization", "Bearer "+strings.Repeat("0", 64))
+		w := httptest.NewRecorder()
+		h.ServeHTTP(w, r)
+		if w.Code != 400 {
+			t.Fatal("outgoing history selector reached storage or missing handler", w.Code)
+		}
+	}
+}

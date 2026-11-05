@@ -41,7 +41,7 @@ type exchangeBrowserSummary struct {
 }
 
 func TestExchangeBrowserSummaryRefusesAmbiguousEvidence(t *testing.T) {
-	valid := `{"state":"passed","phase":"complete","external_egress":0,"exact_downloads":1,"terminal_declines":1,"committed_offers":1,"sender_cancellations":1,"recovery_roundtrips":1,"model_started":false,"browser_sandbox":true,"accessibility_checks":9,"browser_version":"142.0.1","node_version":"v26.13.0","axe_version":"4.14.0"}`
+	valid := `{"state":"passed","phase":"complete","external_egress":0,"exact_downloads":1,"terminal_declines":1,"committed_offers":1,"sender_cancellations":1,"recovery_roundtrips":1,"model_started":false,"browser_sandbox":true,"accessibility_checks":11,"browser_version":"142.0.1","node_version":"v26.13.0","axe_version":"4.14.0"}`
 	for _, raw := range []string{
 		strings.Replace(valid, `"external_egress":0`, `"external_egress":1,"external_egress":0`, 1),
 		strings.Replace(valid, `"model_started":false`, `"model_started":true,"MODEL_STARTED":false`, 1),
@@ -110,11 +110,11 @@ func readExchangeBrowserSummary(path string) (*exchangeBrowserSummary, string) {
 	d.DisallowUnknownFields()
 	var s exchangeBrowserSummary
 	var tail any
-	if d.Decode(&s) != nil || d.Decode(&tail) != io.EOF || s.Egress == nil || s.Downloads == nil || s.Declines == nil || s.Offers == nil || s.Cancels == nil || s.Recovery == nil || s.Model == nil || s.Sandbox == nil || s.Accessibility == nil || *s.Egress < 0 || *s.Downloads < 0 || *s.Downloads > 1 || *s.Declines < 0 || *s.Declines > 1 || *s.Accessibility < 0 || *s.Accessibility > 9 || *s.Recovery < 0 || *s.Recovery > 1 || *s.Offers < 0 || *s.Offers > 1 || *s.Cancels < 0 || *s.Cancels > 1 {
+	if d.Decode(&s) != nil || d.Decode(&tail) != io.EOF || s.Egress == nil || s.Downloads == nil || s.Declines == nil || s.Offers == nil || s.Cancels == nil || s.Recovery == nil || s.Model == nil || s.Sandbox == nil || s.Accessibility == nil || *s.Egress < 0 || *s.Downloads < 0 || *s.Downloads > 1 || *s.Declines < 0 || *s.Declines > 1 || *s.Accessibility < 0 || *s.Accessibility > 11 || *s.Recovery < 0 || *s.Recovery > 1 || *s.Offers < 0 || *s.Offers > 1 || *s.Cancels < 0 || *s.Cancels > 1 {
 		return nil, hash
 	}
 	switch s.Phase {
-	case "launch", "recipient-login", "recipient-directory", "recipient-discovery", "receive-accessibility", "recipient-details", "details-accessibility", "exact-download", "sender-login", "sender-directory", "sender-review", "sender-review-accessibility", "sender-offer", "sender-receipt-accessibility", "sender-cancel", "sender-save-recovery", "sender-reload-recovery", "sender-recovery-accessibility", "sender-recover-offer", "sender-recover-cancel", "recipient-decline-review", "decline-review-accessibility", "recipient-decline", "declined-retrieval", "declined-discovery", "declined-accessibility", "unrelated-directory", "unrelated-discovery", "unrelated-accessibility", "revocation-barrier", "revoked-discovery", "revoked-accessibility", "complete":
+	case "launch", "recipient-login", "recipient-directory", "recipient-discovery", "receive-accessibility", "recipient-details", "details-accessibility", "exact-download", "sender-login", "sender-directory", "sender-review", "sender-review-accessibility", "sender-offer", "sender-receipt-accessibility", "sender-cancel", "sender-save-recovery", "sender-reload-recovery", "sender-recovery-accessibility", "sender-recover-offer", "sender-recover-cancel", "sender-history", "sender-history-accessibility", "sender-history-details", "sender-history-detail-accessibility", "recipient-decline-review", "decline-review-accessibility", "recipient-decline", "declined-retrieval", "declined-discovery", "declined-accessibility", "unrelated-directory", "unrelated-discovery", "unrelated-accessibility", "revocation-barrier", "revoked-discovery", "revoked-accessibility", "complete":
 	default:
 		return nil, hash
 	}
@@ -244,7 +244,7 @@ func TestArtifactExchangeNativeBrowserReceiptWrongActorAndRevocation(t *testing.
 		t.Fatal("browser did not finish after exact endpoint revocation")
 	}
 	summary, hash := readExchangeBrowserSummary(result)
-	if err != nil || summary == nil || summary.State != "passed" || summary.Phase != "complete" || *summary.Egress != 0 || *summary.Downloads != 1 || *summary.Declines != 1 || *summary.Offers != 1 || *summary.Cancels != 1 || *summary.Recovery != 1 || *summary.Model || !*summary.Sandbox || *summary.Accessibility != 9 || summary.Browser == "" || summary.FailureHash != "" {
+	if err != nil || summary == nil || summary.State != "passed" || summary.Phase != "complete" || *summary.Egress != 0 || *summary.Downloads != 1 || *summary.Declines != 1 || *summary.Offers != 1 || *summary.Cancels != 1 || *summary.Recovery != 1 || *summary.Model || !*summary.Sandbox || *summary.Accessibility != 11 || summary.Browser == "" || summary.FailureHash != "" {
 		t.Fatalf("native receive browser proof failed; safe result SHA256=%s", hash)
 	}
 	proof, err := s.DB.Begin(ctx, sender)
