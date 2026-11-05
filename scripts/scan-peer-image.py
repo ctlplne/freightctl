@@ -317,7 +317,7 @@ def main():
         phase = 'feed-files'
         feed_files = {'database': feed_file_observation(feed_database), 'metadata': feed_file_observation(feed_metadata)}
         gate.require(all(v['regular'] and not v['symlink'] for v in feed_files.values()))
-        gate.require(feed_database.is_file() and 0 < feed_database.stat().st_size <= 1 << 30)
+        gate.require(feed_database.is_file() and 0 < feed_database.stat().st_size <= 1792 << 20)
         gate.require(feed_metadata.is_file() and 0 < feed_metadata.stat().st_size <= 1 << 20)
         feed_sha, metadata_sha = digest(feed_database), digest(feed_metadata)
         phase = 'scanner-version'

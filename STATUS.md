@@ -55,8 +55,9 @@ D145/D151/D152/D167 causes remain open.
 [F075](docs/qualification/evidence/F075-peer-image-security.json) stays red. Both97
 image gates observe regular1,691,381,760-byte databases above the original1 GiB
 file cap,153-byte metadata and exact scratch unmount. Earlier ARM/x86 exact OOMs
-remain separately proven;GOGC25 is not a remedy. The1792 MiB file-only proposal
-remains unapplied and awaits the existing owner decision; it cannot remedy OOM.
+remain separately proven;GOGC25 is not a remedy. The owner approved only the
+1792 MiB database-file cap. Its exact reviewed patch is applied and21stand-in
+methods pass; it cannot remedy OOM and real image scanning remains unqualified.
 Hard1 GiB/no swap,soft768 MiB,one CPU,2 GiB scratch and all security/time guards
 remain unchanged. No image scan is qualified.
 

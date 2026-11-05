@@ -78,9 +78,10 @@ throughput or capacity evidence.
 
 F075 retains hard1 GiB RAM/no swap, soft768 MiB, one CPU,128 processes and the exact
 bounded2 GiB ext4 cache/TMPDIR disk with verified mount/loop ownership and cleanup.
-Feed-onlyGOGC25 is an experiment, not an OOM remedy. The original database-file
-cap remains1 GiB; the1792 MiB file-only proposal is unapplied and awaits the owner.
-No permission to enlarge RAM/disk/time or omit coverage follows from that proposal.
+Feed-onlyGOGC25 is an experiment, not an OOM remedy. The database-file
+cap is1792 MiB after the owner's explicit2026-11-05 file-only approval;the exact
+reviewed patch and21stand-in methods are recorded inF075. No RAM,CPU,scratch,time
+or security/inventory allowance follows from that approval.
 Keep actual file-budget and exact stopped-container OOM failures separate.
 
 Download the complete feed in its own bounded container. Scan an immutable

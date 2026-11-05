@@ -110,7 +110,7 @@ class ScanOrchestration(unittest.TestCase):
                         if mode == 'feed-oversize':
                             # Sparse stand-in: no database is generated/read.
                             with (cache/'db/trivy.db').open('wb') as stream:
-                                stream.truncate((1 << 30)+1)
+                                stream.truncate((1792 << 20)+1)
                         elif mode == 'feed-missing':
                             (cache/'db/trivy.db').unlink()
                         elif mode == 'feed-symlink':
@@ -220,7 +220,7 @@ class ScanOrchestration(unittest.TestCase):
             database = output['feed_files']['database']
             self.assertEqual(set(database), {'present', 'regular', 'symlink', 'bytes', 'size_capped'})
             if mode == 'feed-oversize':
-                self.assertEqual(database['bytes'], (1 << 30)+1)
+                self.assertEqual(database['bytes'], (1792 << 20)+1)
                 self.assertTrue(database['regular'])
                 self.assertFalse(database['size_capped'])
             elif mode == 'feed-missing':

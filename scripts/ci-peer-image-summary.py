@@ -147,7 +147,7 @@ def main():
         image, image_sha = load(args.image, 1 << 20)
         result = summarize(report, version, image, args.commit, args.architecture, datetime.now(timezone.utc))
         result.update(report_sha256=report_sha, scanner_version_report_sha256=version_sha, image_inspect_sha256=image_sha)
-        for name, filename, limit in (('feed_database', args.feed_database, 1 << 30), ('image_archive', args.archive, 2 << 30)):
+        for name, filename, limit in (('feed_database', args.feed_database, 1792 << 20), ('image_archive', args.archive, 2 << 30)):
             path = Path(filename)
             require(path.is_file() and 0 < path.stat().st_size <= limit)
             with path.open('rb') as stream:

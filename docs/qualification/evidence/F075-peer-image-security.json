@@ -513,5 +513,18 @@
     "manifest_reference": ".private/freightctl-97-native-terminal-fUEV6x/manifest.json",
     "manifest_sha256": "229c0f89d527c084b47f6ac191a4a936d255a91254c9545320aaa875180c020d",
     "scope": "Changed upstream DB size still exceeds original1GiB file cap. No qualified image scan;earlier exact ARM/x86 OOM remains separately proven. File-only proposal unchanged/unapplied/pending."
+  },
+  "owner_file_cap_application": {
+    "observed_at": "2026-11-05",
+    "authority": "Owner explicitly answered Approve GitHub file cap only to the exact prepared1GiB-to1792MiB database-file proposal.",
+    "state": "applied exact reviewed patch;runtime qualification pending",
+    "database_max_bytes": 1879048192,
+    "database_max_mib": 1792,
+    "patch_sha256": "376d15bbe4b98f639982cf5393c2498b74b84ae2b054feece8f9905bd6d411fc",
+    "manifest_reference": ".private/freightctl-f075-owner-applied-zqhtg4hw/manifest.json",
+    "manifest_sha256": "2b387b7363e47e49b66334f2cfe1698436adbc1ab2f3502f1439bca467c206f4",
+    "standin_methods": 21,
+    "unchanged": "hard1GiB/no swap,soft768MiB,oneCPU,2GiBscratch,128pids,metadata1MiB,feed300s,scan660s,job50m;full feed/inventory/severity/freshness/archive/source/isolation/cleanup guards. Local inference and scanners stay off.",
+    "scope": "Changes only the feed database file-size guard and its sparse refusal boundary. Earlier exact ARM/x86 hard-memory OOMs are not repaired by file allowance. No real image scan or security qualification follows."
   }
 }
