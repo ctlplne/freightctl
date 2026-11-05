@@ -4,14 +4,15 @@ Updated 2026-11-05. The full GOAL.md baseline and AX01–AX08 remain active unde
 S003. All83 whole parity rows and twelve complete customer journeys remain open.
 Assisted deployment, independent adoption and enterprise readiness are unqualified.
 
-Latest completed CI candidate isafaf60acfd498c32fd8b15140e054852b7f02b98.
+Latest completed CI candidate is96e22f5ca18e6ea67b128d3fcc3f2f6f31e47d91.
 All12triggered runs are terminal. Three native source-vulnerability configurations,
-reproducibility and fuzz pass;core Go reachability,JavaScript audit and source/history
-secret scans pass. Core/native integration,metadata,platform and public/peer/browser
-outcomes remain red;nonsecurity logs/repair stay deferred to mandatory FINISH.
-Both image scans complete with unchanged blocking findings. F104 preserves every
-exact run/job handle and safe image summary. No run canceled;the pre-push guard
-stays enabled. Actual exchange/onward/AI/product qualification remains owed.
+reproducibility,Mac units and fuzz pass;core Go reachability,JavaScript audit and
+source/history secret scans pass. Core/native integration,metadata,Windows and
+public/peer/browser outcomes remain red;nonsecurity logs/repair stay deferred to
+mandatory FINISH. Both image scans complete with unchanged blocking findings.
+F106 preserves exact run/job handles and safe summaries. No cancellation action;
+the pre-push guard stays enabled. Actual exchange/onward/AI/product qualification
+remains owed. F105 is committed locally;its native UI proof remains owed.
 
 F075 actual Debian13.7 ARM/x86 scans complete with80OS+2language packages each:
 0CRITICAL/45HIGH/6UNKNOWN,61LOW/77MEDIUM,zero suppressed. The immutable Node26.13.0
