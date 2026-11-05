@@ -181,3 +181,11 @@ stand-in methods pass. Actual native execution,independent schema interoperabili
 complete deployment/build-tool/standard-library inventory,license review,signing and
 offline installation remain required. The safe result exposes only inventory format/hash;
 raw BOM and executable stay on the disposable runner.
+
+D173 retains both e2 native first failures:880pass/3fail/0skip on each architecture.
+The new mixed source/receiver fixture reused a fixed registration operation key;
+product idempotency correctly refused changed meaning before acquisition. A local
+fixture repair gives the receiver its own saved key and explicitly proves the old
+source key still rejects that receiver. Compile/vet pass only. Preserve source7c's
+required original jobs,which still contain that fixture error,and require original
+ARM/x86 journey replay after the next eligible source submission.

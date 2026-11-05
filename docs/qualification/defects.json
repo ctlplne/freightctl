@@ -2754,6 +2754,21 @@
       "regression_evidence": [
         "docs/qualification/evidence/F077-native-reproducible-core.json"
       ]
+    },
+    {
+      "id": "D173",
+      "severity": "native journey fixture",
+      "state": "Both actual native first failures retained; distinct registration operation keys compile/vet; runtime replay pending",
+      "observed_on": "2026-11-05",
+      "candidate": "e2a2b592371dd6c3aea8fe363b9eac38bc9b0968",
+      "journey": "F076FTPS source to ordered stock-SFTP and recipient-encrypted FTPS",
+      "title": "Two different FTPS registrations reuse the same fixture operation key",
+      "first_failure": "ARMjob126940773930 and x86job126940774543 each pass880records/fail3/skip0; new mixed parent/two source-mode leaves stop at line30 with idempotency key has different meaning. Workflow494.840ARM/542.851x86seconds.",
+      "cause": "registeredFTPSConnection hardcodes registered-ftps; new test calls it for both source and different receiver in the same actor estate. Product correctly refuses changed idempotency meaning before source capture.",
+      "resolution": "Helper accepts an explicit operation key; all existing callers retain their original key/replay checks. Mixed receiver uses a separate key and first explicitly requires the original source key with different receiver to fail ErrConflict. Exact final integration race binary compiles and Go vet passes; no assertions,protocol/security guards or budgets weakened. Native original journey replay remains mandatory.",
+      "regression_evidence": [
+        "docs/qualification/evidence/F076-ftps-collection.json"
+      ]
     }
   ]
 }

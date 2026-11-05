@@ -435,5 +435,38 @@
       "state_sha256": "1e9ca5d77a13f64ce311b3df2c6c831bfd13816b11e339bfe8f8cd3c4428de7c",
       "runner_failure_manifest_sha256": "49f1e2126951e2d0f2c0d20248d3c63fa83b488895acc4b874d946dbaa513648"
     }
+  },
+  "source_e2_terminal": {
+    "candidate": "e2a2b592371dd6c3aea8fe363b9eac38bc9b0968",
+    "run_id": 41932617128,
+    "records": [
+      {
+        "architecture": "arm64",
+        "job_id": 126940773930,
+        "application_pass": 880,
+        "application_fail": 3,
+        "application_skip": 0,
+        "workflow_seconds": 494.84,
+        "manifest_reference": ".private/freightctl-f076-e2-arm-mixed-first-frQohN/manifest.json",
+        "manifest_sha256": "d9f564a1b95444a82368024484eaab9ffed51c26ae928f9b00a6765758f47516",
+        "image_runner_failure_manifest_sha256": "eac5cf962765a161132daf4a92b0b0b91fb857fc38330804d24ee91e0539c416"
+      },
+      {
+        "architecture": "x86_64",
+        "job_id": 126940774543,
+        "application_pass": 880,
+        "application_fail": 3,
+        "application_skip": 0,
+        "workflow_seconds": 542.851,
+        "manifest_reference": ".private/freightctl-f076-e2-x86-mixed-first-lQJuCB/manifest.json",
+        "manifest_sha256": "d87fc779a183fdfc14ed21e5e3b5262f6581b8dcfe130132e0ad0dd002f4607b",
+        "image_runner_failure_manifest_sha256": "8c961be092a1dc519371047793b5d46db4c14ba23b1ae707e37b768dc58a0241"
+      }
+    ],
+    "image_phase_both": "feed-files",
+    "database_bytes_both": 1692762112,
+    "metadata_bytes_both": 153,
+    "scratch_cleanup_both": "unmounted",
+    "scope": "Both feeds return before original1GiBfile postcondition refuses the regular DB. No image scan/report pass or memory-cause repair inferred. Earlier exact d6/source28 x86OOM facts remain; file-only owner proposal stays unapplied."
   }
 }

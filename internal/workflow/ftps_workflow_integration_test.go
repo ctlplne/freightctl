@@ -17,12 +17,17 @@ import (
 
 func registeredFTPSConnection(t *testing.T, f *fixture, spec delivery.FTPSDefinition) ConnectionView {
 	t.Helper()
+	return registeredFTPSConnectionForOperation(t, f, spec, "registered-ftps")
+}
+
+func registeredFTPSConnectionForOperation(t *testing.T, f *fixture, spec delivery.FTPSDefinition, key string) ConnectionView {
+	t.Helper()
 	request := ConnectionRequest{Directory: "/inbox", FTPS: &spec}
-	first, err := f.s.RegisterConnection(f.ctx, f.scope, "registered-ftps", request)
+	first, err := f.s.RegisterConnection(f.ctx, f.scope, key, request)
 	if err != nil {
 		t.Fatal(err)
 	}
-	again, err := f.s.RegisterConnection(f.ctx, f.scope, "registered-ftps", request)
+	again, err := f.s.RegisterConnection(f.ctx, f.scope, key, request)
 	if err != nil || !again.Replayed {
 		t.Fatal("connection receipt not recovered", err)
 	}

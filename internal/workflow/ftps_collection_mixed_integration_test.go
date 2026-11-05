@@ -27,7 +27,12 @@ func TestFTPSCollectionRoutesStockSFTPAndEncryptedFTPSWithSeparateConsent(t *tes
 			producer, sourceSpec, sourceListener := governedFTPSReceiver(t, implicit)
 			sourceConnection := registeredFTPSConnection(t, f, sourceSpec)
 			receiver, receiverSpec, receiverListener := governedFTPSReceiver(t, !implicit)
-			receiverConnection := registeredFTPSConnection(t, f, receiverSpec)
+			// The source registration key may only recover its original source;
+			// it cannot register this different receiver in the same estate.
+			if _, err := f.s.RegisterConnection(f.ctx, f.scope, "registered-ftps", ConnectionRequest{Directory: "/inbox", FTPS: &receiverSpec}); !errors.Is(err, store.ErrConflict) {
+				t.Fatal("source registration key accepted a different receiver", err)
+			}
+			receiverConnection := registeredFTPSConnectionForOperation(t, f, receiverSpec, "registered-mixed-ftps-receiver")
 			ssh := newMixedStockReceiver(t, f)
 			key, peer, keyDirectory := ftpsRecipient(t, f, binary, "recipient")
 			ref := func(c ConnectionView) Reference { return Reference{ID: c.ID, Version: c.Version, Hash: c.Hash} }

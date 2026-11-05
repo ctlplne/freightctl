@@ -3,7 +3,7 @@
   "id": "F076",
   "observed_at": "2026-11-04",
   "starting_commit": "4d771b2e6a961a70b764681fd578ff175d064db7",
-  "state": "Both f08/d6 native application sections pass880/0/0 on ARM/x86;image jobs remain red. E2 public diagnostics identify D170at original browser http-identity:verifier expects bearer while UI uses secure cookie/CSRF. Cookie/session-bound repair passes local contracts only;native replay,operator,mixed runtime and whole goal remain open.",
+  "state": "Both e2 native application sections pass 880 records and fail the new mixed parent/two leaves, with zero skips. D173 is a fixture registration-key collision before collection; distinct-key repair compiles/vets only. Both image gates repeat D168. Source7c public/core/reproduction/native jobs remain pending or running; no whole goal qualification.",
   "scope": "Read/copy input stage of ordinary immutable workflows, using exact registered FTPS revisions and the existing bounded producer-manifest, custody, intake, lease and event machinery. Transport metadata reading alone does not qualify collection.",
   "qualification_claim": false,
   "frozen_cases": [
@@ -982,5 +982,50 @@
     "manifest_reference": ".private/freightctl-source-7c-submission-iuwcod1p/manifest.json",
     "manifest_sha256": "6924432622e48796e648b3d4c97565d61390f1265b648dee2618f6b0560eb364",
     "authority": "Owner source/CI authorization;all original e2required jobs started before source push,no cancellation/restart or artifacts/deployment. Hold another relevant candidate until current required native/public/reproduction jobs start."
+  },
+  "source_e2_native_terminal": {
+    "candidate": "e2a2b592371dd6c3aea8fe363b9eac38bc9b0968",
+    "run_id": 41932617128,
+    "records": [
+      {
+        "architecture": "arm64",
+        "job_id": 126940773930,
+        "application_pass": 880,
+        "application_fail": 3,
+        "application_skip": 0,
+        "workflow_seconds": 494.84,
+        "manifest_reference": ".private/freightctl-f076-e2-arm-mixed-first-frQohN/manifest.json",
+        "manifest_sha256": "d9f564a1b95444a82368024484eaab9ffed51c26ae928f9b00a6765758f47516",
+        "image_runner_failure_manifest_sha256": "eac5cf962765a161132daf4a92b0b0b91fb857fc38330804d24ee91e0539c416"
+      },
+      {
+        "architecture": "x86_64",
+        "job_id": 126940774543,
+        "application_pass": 880,
+        "application_fail": 3,
+        "application_skip": 0,
+        "workflow_seconds": 542.851,
+        "manifest_reference": ".private/freightctl-f076-e2-x86-mixed-first-lQJuCB/manifest.json",
+        "manifest_sha256": "d87fc779a183fdfc14ed21e5e3b5262f6581b8dcfe130132e0ad0dd002f4607b",
+        "image_runner_failure_manifest_sha256": "8c961be092a1dc519371047793b5d46db4c14ba23b1ae707e37b768dc58a0241"
+      }
+    ],
+    "metadata_restore_both": "success",
+    "bounded_fuzz": "success",
+    "first_failure": "Both source-mode leaves stop at line30: idempotency key has different meaning. Fixed-key helper attempts a second different FTPS registration in one consumer estate. No new mixed capture,consent,sending or receiver byte phase reached.",
+    "scope": "Previous880application pass records remain exact-source evidence; three new failure records are parent and two children,not three independent failing scenarios. All full jobs remain red."
+  },
+  "mixed_registration_key_repair_prepared": {
+    "defect": "D173",
+    "mechanism": "Parameterize the fixture helper operation key while retaining exact saved-key replay,version/view equality and protected-reference checks. Existing callers retain registered-ftps. Mixed source uses that original key; explicitly require receiver registration with that same key to fail ErrConflict,then register receiver with registered-mixed-ftps-receiver. No product idempotency or protocol guard changes.",
+    "local_manifest_reference": ".private/freightctl-f076-mixed-key-final-l9ve7b8r/manifest.json",
+    "local_manifest_sha256": "704a405b587d75d45264012db690c50960048604f7dddc3bc377b702e403a0d2",
+    "checks": [
+      "Exact final integration race binary compile",
+      "Go vet with integration tags",
+      "Original native failure logs retained on both architectures"
+    ],
+    "runtime_qualification": false,
+    "scope": "Compile/vet only; no local product/test binary,PostgreSQL,source,receiver,Chrome,scanner or inference execution. Source7c contains the original fixture error and does not inherit this local repair."
   }
 }
