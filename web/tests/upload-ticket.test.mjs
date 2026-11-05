@@ -78,3 +78,90 @@ test("status cannot substitute the inspected upload identity or frozen intent", 
   ])
     assert.throws(() => asUpload({ ...base, ...changed }, expected));
 });
+
+const ui = await build({
+  entryPoints: ["src/upload-ticket.tsx"],
+  absWorkingDir: new URL("..", import.meta.url).pathname,
+  bundle: true,
+  write: false,
+  format: "esm",
+  target: "es2022",
+});
+const { UploadTicket } = await import(
+  "data:text/javascript;base64," +
+    Buffer.from(ui.outputFiles[0].contents).toString("base64")
+);
+const { createElement } = await import("react");
+const { renderToStaticMarkup } = await import("react-dom/server");
+test("accepted upload enters artifact review with its exact saved identity and integrity", () => {
+  const complete = {
+    ...base,
+    state: "completed",
+    committed_offset: base.expected_size,
+    file_id: "22222222-2222-4222-8222-222222222222",
+    acceptance: "durable-local-integrity-only",
+  };
+  const calls = [];
+  const tree = UploadTicket({
+    upload: complete,
+    onReview: (hint) => calls.push(hint),
+  });
+  assert.match(
+    renderToStaticMarkup(
+      createElement(UploadTicket, { upload: complete, onReview: () => {} }),
+    ),
+    /Review accepted artifact/,
+  );
+  assert.equal(calls.length, 0, "rendering published an offer");
+  const find = (node) => {
+    if (!node || typeof node !== "object") return null;
+    if (
+      node.type === "button" &&
+      node.props.children === "Review accepted artifact"
+    )
+      return node;
+    for (const child of [node.props?.children].flat(3)) {
+      const found = find(child);
+      if (found) return found;
+    }
+    return null;
+  };
+  const action = find(tree);
+  assert.ok(action);
+  action.props.onClick();
+  assert.deepEqual(calls, [
+    {
+      file_revision_id: complete.file_id,
+      size_bytes: complete.expected_size,
+      sha256: complete.expected_sha256,
+    },
+  ]);
+  for (const upload of [
+    base,
+    { ...complete, committed_offset: 1 },
+    { ...complete, file_id: undefined },
+    { ...complete, state: "aborted" },
+  ])
+    assert.doesNotMatch(
+      renderToStaticMarkup(
+        createElement(UploadTicket, { upload, onReview: () => {} }),
+      ),
+      /Review accepted artifact/,
+    );
+  assert.doesNotMatch(
+    renderToStaticMarkup(createElement(UploadTicket, { upload: complete })),
+    /Review accepted artifact/,
+  );
+  assert.match(
+    renderToStaticMarkup(
+      createElement(UploadTicket, {
+        upload: {
+          ...complete,
+          acceptance: "durable-held-pending-checks-and-release",
+        },
+        onReview: () => {},
+      }),
+    ),
+    /Review accepted artifact/,
+  );
+});

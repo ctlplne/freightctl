@@ -12,6 +12,7 @@ import {
   type EndpointPage,
   type ExchangeRequest,
   type ExchangeOfferResult,
+  type ExchangeSourceExpectation,
 } from "./artifact-exchanges-types";
 
 function defaultExpiry() {
@@ -26,11 +27,13 @@ export function ArtifactSend({
   api,
   session,
   initialFileID = "",
+  initialSourceExpectation,
   onError,
 }: {
   api: Api;
   session: Session;
   initialFileID?: string;
+  initialSourceExpectation?: ExchangeSourceExpectation | undefined;
   onError: (error: unknown) => void;
 }) {
   const client = useMemo(() => new ExchangeReceiveApi(api), [api, session]);
@@ -117,7 +120,11 @@ export function ArtifactSend({
     setCancelKey("");
     try {
       const [source, endpoint] = await Promise.all([
-        client.source(fileID, controller.signal),
+        client.source(
+          fileID,
+          controller.signal,
+          fileID === initialFileID ? initialSourceExpectation : undefined,
+        ),
         client.endpoint(endpointID, controller.signal),
       ]);
       if (!current(serial, controller)) return;

@@ -15,6 +15,10 @@ export interface ExchangeRequest {
   reply_to?: string;
 }
 export type ExchangeArtifact = ExchangeRequest["artifact"];
+export type ExchangeSourceExpectation = Pick<
+  ExchangeArtifact,
+  "file_revision_id" | "size_bytes" | "sha256"
+>;
 export interface ExchangeOfferResult {
   exchange: ArtifactExchange;
   replayed: boolean;

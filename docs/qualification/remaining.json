@@ -866,7 +866,8 @@
         "docs/qualification/evidence/F094-browser-offer-recovery.json",
         "docs/qualification/evidence/F096-outgoing-exchange-history.json",
         "docs/qualification/evidence/F098-browser-endpoint-administration.json",
-        "docs/qualification/evidence/F099-governed-mcp-exchange-tools.json"
+        "docs/qualification/evidence/F099-governed-mcp-exchange-tools.json",
+        "docs/qualification/evidence/F101-upload-to-exchange-review.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -881,11 +882,11 @@
         "S003 authorizes guarded source/CI batches after prior required runs are terminal. Eleven exchange API paths and eleven CLI commands plus receive/send/recovery/history browser surfaces are implemented;actual AX profiles remain owed. Broad/deferred qualification is mandatory at FINISH."
       ],
       "current_item": {
-        "id": "F099",
-        "state": "Twelve governed MCP exchange tools implemented;actual native/independent conformance owed",
-        "proof": "Missing route red repaired;5focused MCP methods,12resolved schemas and affected compile/vet/architecture checks pass",
-        "native": "Actual PG zero-effect preview and official SDK HTTPS bidirectional/replay/refusal/terminal proofs prepared;runtime owed",
-        "next": "Ingress/onward bridges,remaining exchange controls/agent tools,recovery/capacity and mandatory FINISH"
+        "id": "F101",
+        "state": "Completed-ticket artifact review bridge implemented;actual human-ingress native proof owed",
+        "proof": "Missing upload-to-review action red repaired;20exchange+4ticket+1summary methods and affected type/build/compile/vet/architecture checks pass",
+        "native": "Initial HTTPS-browser -> custody-poll pair frozen;actual17-state native upload/download/SQL proof prepared,not qualified",
+        "next": "System push/collection and independently authorized onward bridge,remaining exchange/agent controls,recovery/capacity and mandatory FINISH"
       }
     }
   ],

@@ -21,6 +21,7 @@ import {
   asEndpointCommandResult,
   type EndpointCommand,
   type ExchangeRequest,
+  type ExchangeSourceExpectation,
   type ArtifactExchange,
   type ExchangeClosureCommand,
   bindingIsCurrent,
@@ -215,8 +216,19 @@ export class ExchangeReceiveApi {
       )
     );
   }
-  async source(id: string, signal?: AbortSignal) {
+  async source(
+    id: string,
+    signal?: AbortSignal,
+    expected?: ExchangeSourceExpectation,
+  ) {
     this.current();
+    const pinned = expected
+      ? {
+          file_revision_id: expected.file_revision_id,
+          size_bytes: expected.size_bytes,
+          sha256: expected.sha256,
+        }
+      : undefined;
     if (!uuid(id))
       throw new ApiError("invalid_artifact_exchange_contract", 400);
     const result = await this.api.request(
@@ -224,7 +236,15 @@ export class ExchangeReceiveApi {
       signal ? { signal } : {},
       (value) => {
         this.current();
-        return asExchangeArtifact(value, id);
+        const source = asExchangeArtifact(value, id);
+        if (
+          pinned &&
+          (pinned.file_revision_id !== id ||
+            pinned.size_bytes !== source.size_bytes ||
+            pinned.sha256 !== source.sha256)
+        )
+          throw new ApiError("revision_conflict", 409);
+        return source;
       },
     );
     this.current();

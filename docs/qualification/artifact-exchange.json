@@ -56,7 +56,8 @@
         "docs/qualification/evidence/F085-artifact-exchange-cli.json",
         "docs/qualification/evidence/F087-artifact-receive-browser.json",
         "docs/qualification/evidence/F093-browser-artifact-offer.json",
-        "docs/qualification/evidence/F099-governed-mcp-exchange-tools.json"
+        "docs/qualification/evidence/F099-governed-mcp-exchange-tools.json",
+        "docs/qualification/evidence/F101-upload-to-exchange-review.json"
       ]
     },
     {
@@ -82,7 +83,8 @@
         "docs/qualification/evidence/F089-exchange-endpoint-directory.json",
         "docs/qualification/evidence/F093-browser-artifact-offer.json",
         "docs/qualification/evidence/F098-browser-endpoint-administration.json",
-        "docs/qualification/evidence/F099-governed-mcp-exchange-tools.json"
+        "docs/qualification/evidence/F099-governed-mcp-exchange-tools.json",
+        "docs/qualification/evidence/F101-upload-to-exchange-review.json"
       ]
     },
     {
@@ -112,7 +114,8 @@
         "docs/qualification/evidence/F094-browser-offer-recovery.json",
         "docs/qualification/evidence/F096-outgoing-exchange-history.json",
         "docs/qualification/evidence/F098-browser-endpoint-administration.json",
-        "docs/qualification/evidence/F099-governed-mcp-exchange-tools.json"
+        "docs/qualification/evidence/F099-governed-mcp-exchange-tools.json",
+        "docs/qualification/evidence/F101-upload-to-exchange-review.json"
       ]
     },
     {
@@ -138,7 +141,8 @@
         "docs/qualification/evidence/F093-browser-artifact-offer.json",
         "docs/qualification/evidence/F094-browser-offer-recovery.json",
         "docs/qualification/evidence/F096-outgoing-exchange-history.json",
-        "docs/qualification/evidence/F099-governed-mcp-exchange-tools.json"
+        "docs/qualification/evidence/F099-governed-mcp-exchange-tools.json",
+        "docs/qualification/evidence/F101-upload-to-exchange-review.json"
       ]
     },
     {
@@ -167,7 +171,8 @@
         "docs/qualification/evidence/F094-browser-offer-recovery.json",
         "docs/qualification/evidence/F096-outgoing-exchange-history.json",
         "docs/qualification/evidence/F098-browser-endpoint-administration.json",
-        "docs/qualification/evidence/F099-governed-mcp-exchange-tools.json"
+        "docs/qualification/evidence/F099-governed-mcp-exchange-tools.json",
+        "docs/qualification/evidence/F101-upload-to-exchange-review.json"
       ]
     },
     {
@@ -195,7 +200,8 @@
         "docs/qualification/evidence/F094-browser-offer-recovery.json",
         "docs/qualification/evidence/F096-outgoing-exchange-history.json",
         "docs/qualification/evidence/F098-browser-endpoint-administration.json",
-        "docs/qualification/evidence/F099-governed-mcp-exchange-tools.json"
+        "docs/qualification/evidence/F099-governed-mcp-exchange-tools.json",
+        "docs/qualification/evidence/F101-upload-to-exchange-review.json"
       ]
     },
     {
@@ -253,14 +259,15 @@
         "docs/qualification/evidence/F094-browser-offer-recovery.json",
         "docs/qualification/evidence/F096-outgoing-exchange-history.json",
         "docs/qualification/evidence/F098-browser-endpoint-administration.json",
-        "docs/qualification/evidence/F099-governed-mcp-exchange-tools.json"
+        "docs/qualification/evidence/F099-governed-mcp-exchange-tools.json",
+        "docs/qualification/evidence/F101-upload-to-exchange-review.json"
       ]
     },
     {
       "id": "AX-J02",
       "name": "Human/system ingress and agent onward exchange",
       "kind": "engineering qualification profile; exact adapter pairs must be frozen",
-      "state": "planned",
+      "state": "implementing",
       "participants": [
         "Human using browser or ordinary client",
         "External system using a stock protocol client or source",
@@ -268,7 +275,7 @@
         "Independent destination receiver"
       ],
       "steps": [
-        "Freeze selected HTTPS/browser, SFTP and FTPS push/collection adapter-role profiles against the existing protocol contracts.",
+        "Initial pair frozen:verified HTTPS resumable browser upload -> registered custody-https-poll-v1 receive view -> native authenticated download. Freeze remaining stock SFTP/FTPS push and governed collection/onward adapter-role pairs against existing protocol contracts;all remain mandatory.",
         "A human and a system separately provide known artifacts to an agent receive endpoint, including a governed collection case.",
         "The agent retrieves only approved revisions, then prepares a separately authorized onward exchange to a system endpoint.",
         "Independently verify exact received bytes, current-policy refusals, per-hop evidence and inference-disabled behavior.",
@@ -284,7 +291,9 @@
       "candidate": null,
       "artifact_digests": [],
       "environment": null,
-      "evidence": []
+      "evidence": [
+        "docs/qualification/evidence/F101-upload-to-exchange-review.json"
+      ]
     },
     {
       "id": "AX-J03",

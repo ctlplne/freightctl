@@ -74,3 +74,11 @@ The selected native ARM stand-in journey passes both FTPS modes with real Postgr
 This engineering profile has a 1 GiB file ceiling, 4,096 chunks per upload, 128 open tickets per actor, existing file/storage quotas, one-frame SFTP admission, eight handles/session and bounded writers/time. These are operational development budgets, not edition limits. Assembly temporarily needs another full-file allocation on disk. Chunks remain retained and charged after completion, abort or rejection. Configurable larger estates, 100 GiB/1 TiB gates, cleanup/recovery, storage compaction, fairness, distributed backends and endurance remain open.
 
 `python3 scripts/qualify-uploads.py` uses real PostgreSQL, stock curl and OpenSSH. It verifies private checkpoint receipts, exact retries, wrong offsets/digests, foreign actors, raw-chunk download denial, wrong-store rejection, a killed SFTP server, restart of both protocol services, CLI status and stock reput, independently matched final bytes, complete-prefix recovery, bound-destination denial, replay, CLI creation and abort. The broader foundation command also runs real database/storage isolation, conflict/corruption/revocation tests, race checks, bounded fuzzing and the previous HTTPS/SFTP journeys. No complete customer journey or enterprise qualification is inferred.
+
+An account with read/deliver can choose **Review accepted artifact** from a
+completed browser ticket. The review pins its saved file ID,length and SHA256,
+then rereads current ordinary source/endpoint authorization. It sends no offer
+or implicit forwarding permission. Held acceptance still needs current checks/
+release;partial progress is never an accepted source. This also applies to a
+completed ticket whose bytes arrived through its stock SFTP/FTPS transfer path;
+actual combined stock-client exchange/collection/onward qualification remains owed.

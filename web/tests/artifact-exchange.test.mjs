@@ -1019,3 +1019,43 @@ test("manager account selection rejects dishonest pages and post-response author
   );
   assert.equal(calls, previous);
 });
+
+test("upload-to-exchange review refuses source metadata different from the saved acceptance", async () => {
+  const fixture = JSON.parse(
+    await readFile(
+      new URL("fixtures/artifact-exchange.json", import.meta.url),
+      "utf8",
+    ),
+  );
+  const expected = {
+    file_revision_id: fixture.request.artifact.file_revision_id,
+    size_bytes: fixture.request.artifact.size_bytes,
+    sha256: fixture.request.artifact.sha256,
+  };
+  const binding = fixture.endpoint.senders[0];
+  const transport = {
+    session: {
+      session: { id: id(80) },
+      identity: { ...binding, permissions: ["read", "deliver"] },
+    },
+    request: async (path, options, decode) => decode(fixture.request.artifact),
+  };
+  const client = new a.ExchangeReceiveApi(transport);
+  assert.deepEqual(
+    await client.source(expected.file_revision_id, undefined, expected),
+    fixture.request.artifact,
+  );
+  for (const patch of [
+    { file_revision_id: id(99) },
+    { size_bytes: expected.size_bytes + 1 },
+    { sha256: "f".repeat(64) },
+  ])
+    await assert.rejects(
+      () =>
+        client.source(expected.file_revision_id, undefined, {
+          ...expected,
+          ...patch,
+        }),
+      (error) => error.code === "revision_conflict",
+    );
+});

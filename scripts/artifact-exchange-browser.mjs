@@ -52,6 +52,7 @@ let browser,
   cancels = 0,
   recoveryRoundtrips = 0,
   endpointCommands = 0,
+  humanIngress = 0,
   offerRequests = 0,
   exchangeRequests = 0,
   failureHash;
@@ -232,9 +233,48 @@ try {
       .count(),
     0,
   );
+
+  phase = "sender-upload";
+  await sender.page.getByRole("button", { name: "Files", exact: true }).click();
   await sender.page
-    .getByRole("button", { name: "Send artifacts", exact: true })
+    .getByRole("button", { name: "Upload file", exact: true })
     .click();
+  await sender.page
+    .getByLabel("File to send", { exact: true })
+    .setInputFiles(c.upload_source);
+  await sender.page
+    .getByLabel("Destination path", { exact: true })
+    .fill("/human-upload-artifact.json");
+  const uploadReceipt = sender.page.waitForResponse(
+    (r) =>
+      new URL(r.url()).pathname.endsWith("/complete") &&
+      r.request().method() === "POST",
+  );
+  await sender.page
+    .getByRole("button", { name: "Start upload", exact: true })
+    .click();
+  const acceptedUpload = await uploadReceipt;
+  assert.equal(acceptedUpload.status(), 200);
+  const uploaded = await acceptedUpload.json();
+  assert.equal(uploaded.upload.state, "completed");
+  assert.equal(uploaded.upload.committed_offset, c.size);
+  assert.equal(uploaded.upload.expected_sha256, c.sha256);
+  const uploadedFile = uploaded.upload.file_id;
+  assert.match(uploadedFile, /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/);
+  assert.notEqual(uploadedFile, c.file);
+  await sender.page
+    .getByRole("heading", { name: "Upload receipt", exact: true })
+    .waitFor();
+  await accessibility(sender.page, "sender-upload-accessibility");
+  await sender.page
+    .getByRole("button", { name: "Review accepted artifact", exact: true })
+    .click();
+  assert.equal(
+    await sender.page
+      .getByLabel("Source file revision ID", { exact: true })
+      .inputValue(),
+    uploadedFile,
+  );
   phase = "sender-directory";
   const recipients = sender.page.waitForResponse((r) =>
     new URL(r.url()).pathname.endsWith("/exchange-endpoints"),
@@ -249,9 +289,6 @@ try {
       exact: true,
     })
     .click();
-  await sender.page
-    .getByLabel("Source file revision ID", { exact: true })
-    .fill(c.file);
   phase = "sender-review";
   await sender.page
     .getByRole("button", { name: "Review artifact offer", exact: true })
@@ -279,7 +316,7 @@ try {
   assert.equal(sent.replayed, false);
   assert.equal(sent.exchange.sender_actor_id, c.sender_actor);
   assert.equal(sent.exchange.recipient_actor_id, c.recipient_actor);
-  assert.equal(sent.exchange.request.artifact.file_revision_id, c.file);
+  assert.equal(sent.exchange.request.artifact.file_revision_id, uploadedFile);
   assert.equal(sent.exchange.request.artifact.size_bytes, c.size);
   assert.equal(sent.exchange.request.artifact.sha256, c.sha256);
   assert.equal(sent.exchange.request.receipt, "availability-only-v1");
@@ -297,6 +334,45 @@ try {
     .waitFor();
   offers++;
   await accessibility(sender.page, "sender-receipt-accessibility");
+
+  phase = "sender-human-receive";
+  assert.equal((await open(recipient.page)).status(), 200);
+  await recipient.page
+    .getByRole("button", {
+      name: "Inspect " + sent.exchange.id.slice(0, 8),
+      exact: true,
+    })
+    .click();
+  await recipient.page
+    .getByRole("row")
+    .filter({ hasText: sent.exchange.id })
+    .getByRole("link", { name: "Download artifact", exact: true })
+    .waitFor();
+  await recipient.page
+    .locator('section[aria-labelledby="artifact-detail-title"]')
+    .getByText(uploadedFile, { exact: true })
+    .waitFor();
+  const humanDownload = recipient.page.waitForEvent("download");
+  await recipient.page
+    .getByRole("row")
+    .filter({ hasText: sent.exchange.id })
+    .getByRole("link", { name: "Download artifact", exact: true })
+    .click();
+  const receivedHuman = await humanDownload;
+  assert.equal(receivedHuman.suggestedFilename(), "artifact");
+  assert.equal(await receivedHuman.failure(), null);
+  await receivedHuman.saveAs(c.human_download);
+  await chmod(c.human_download, 0o600);
+  const humanBytes = await readFile(c.human_download);
+  assert.equal(humanBytes.length, c.size);
+  assert.equal(createHash("sha256").update(humanBytes).digest("hex"), c.sha256);
+  assert.equal(
+    await recipient.page.evaluate(() => globalThis.freightctlArtifactExecuted),
+    undefined,
+  );
+  downloads++;
+  humanIngress++;
+  await accessibility(recipient.page, "sender-human-receive-accessibility");
   phase = "sender-cancel";
   const withdrawal = sender.page.waitForResponse(
     (r) =>
@@ -823,6 +899,7 @@ try {
     sender_cancellations: cancels,
     recovery_roundtrips: recoveryRoundtrips,
     endpoint_commands: endpointCommands,
+    human_ingress: humanIngress,
     model_started: false,
     browser_sandbox: true,
     accessibility_checks: accessibilityChecks,

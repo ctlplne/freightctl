@@ -1,6 +1,33 @@
-import type { Upload } from "./types";
+import { asUpload, type Upload } from "./types";
+import type { ExchangeSourceExpectation } from "./artifact-exchanges-types";
 
-export function UploadTicket({ upload }: { upload: Upload }) {
+export function UploadTicket({
+  upload,
+  onReview,
+}: {
+  upload: Upload;
+  onReview?: ((source: ExchangeSourceExpectation) => void) | undefined;
+}) {
+  let source: ExchangeSourceExpectation | null = null;
+  try {
+    const checked = asUpload(upload);
+    if (
+      checked.state === "completed" &&
+      checked.file_id &&
+      checked.committed_offset === checked.expected_size &&
+      [
+        "durable-local-integrity-only",
+        "durable-held-pending-checks-and-release",
+      ].includes(checked.acceptance ?? "")
+    )
+      source = {
+        file_revision_id: checked.file_id,
+        size_bytes: checked.expected_size,
+        sha256: checked.expected_sha256,
+      };
+  } catch {
+    /* Never turn an inconsistent ticket into a source selector. */
+  }
   return (
     <section aria-label="Saved upload details">
       <dl className="facts">
@@ -65,6 +92,15 @@ export function UploadTicket({ upload }: { upload: Upload }) {
           sending again. Required checks and release still control retrieval;
           acceptance does not prove delivery to a recipient.
         </p>
+      )}
+      {source && onReview && (
+        <button
+          type="button"
+          className="secondary"
+          onClick={() => onReview({ ...source! })}
+        >
+          Review accepted artifact
+        </button>
       )}
     </section>
   );

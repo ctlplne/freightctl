@@ -1,5 +1,6 @@
 import { ArtifactExchanges } from "./artifact-exchanges";
 import { ArtifactSend } from "./artifact-send";
+import type { ExchangeSourceExpectation } from "./artifact-exchanges-types";
 import { ArtifactEndpointAdmin } from "./artifact-endpoint-admin";
 import { ArtifactOutgoing } from "./artifact-outgoing";
 import { FileRechecks } from "./rechecks";
@@ -168,6 +169,7 @@ function App() {
   const [sendSource, setSendSource] = useState<{
     id: string;
     context: string;
+    expected?: ExchangeSourceExpectation;
   } | null>(null);
   const sendContext = session
     ? JSON.stringify([
@@ -1006,6 +1008,11 @@ function App() {
                 api={api}
                 session={session}
                 initialFileID={initialSendFile}
+                initialSourceExpectation={
+                  sendSource?.context === sendContext
+                    ? sendSource.expected
+                    : undefined
+                }
                 onError={reportError}
               />
             )}
@@ -1331,7 +1338,26 @@ function App() {
                           them later.
                         </p>
                       )}
-                      {selected && <UploadTicket upload={selected} />}
+                      {selected && (
+                        <UploadTicket
+                          upload={selected}
+                          onReview={
+                            allowed("read") &&
+                            allowed("deliver") &&
+                            !busy &&
+                            !acting
+                              ? (expected) => {
+                                  setSendSource({
+                                    id: expected.file_revision_id,
+                                    context: sendContext,
+                                    expected,
+                                  });
+                                  setTab("send");
+                                }
+                              : undefined
+                          }
+                        />
+                      )}
                       {(busy || selected) && (
                         <div className="progress-box">
                           <p className="progress-label">

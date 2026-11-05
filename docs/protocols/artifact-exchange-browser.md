@@ -36,16 +36,17 @@ from them. A participant retaining an earlier exact receipt can use API/CLI.
 Availability at the last check, retrieval, receiver persistence and business
 processing are separate facts. A received artifact grants no forwarding or
 execution right. [Send artifacts](artifact-exchange-send-browser.md), the ordinary
-API or CLI can prepare a separately authorized reply. Endpoint administration and
-outgoing history remain work.
+API or CLI can prepare a separately authorized reply. Root managers use
+[Receive endpoints](artifact-exchange-admin-browser.md);senders use
+[Sent artifacts](artifact-exchange-outgoing.md).
 
 The dedicated GitHub browser profile uses actual loopback HTTPS, PostgreSQL,
-custody, ordinary participant cookies and sandboxed Chrome. It prepares exact
-malicious-but-inert byte retrieval, unrelated-user metadata denial, actual manager
-revocation, stale-screen removal, a separate offer's decline and six automated
-accessibility states. The extended sender review/offer/withdrawal profile adds two
-states,for eight total. The decline/sending proofs do not replace the original
-revocation proof.
+custody,ordinary participant cookies and sandboxed Chrome. Its current source
+requires17accessibility states,two independently verified downloads and one
+actual upload-to-exchange handoff,alongside exact sender retries/history,
+recipient decline,unrelated-user denial and manager create/replay/replace/revoke.
+The original live-grant revocation proof remains mandatory. These are prepared
+profiles;they have not passed actual runtime qualification.
 Only
 parser/client stand-ins, canonical Go/JavaScript bytes, syntax/build checks and
 integration compilation have run locally. Actual served/browser and complete AX

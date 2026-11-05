@@ -27,7 +27,7 @@
     },
     {
       "path": "web/src/app.tsx",
-      "sha256": "ebc18ce5e3b86eefb439accb86ab5eec00fbe904102ad76de925042d0c70b997"
+      "sha256": "378c1f8f8447332bed894941b05d8629a11e42f75094fac7a8b78362ad69a9ae"
     },
     {
       "path": "web/src/arrivals-types.ts",
@@ -39,11 +39,11 @@
     },
     {
       "path": "web/src/artifact-exchanges-api.ts",
-      "sha256": "6273748d300f5975e46348f20a4acf399966f7caa81339f04ebbe3f3a3412f2f"
+      "sha256": "103c097738e6b58309c99aeb24647f0d948f81fcb662903464fdc22efec440d1"
     },
     {
       "path": "web/src/artifact-exchanges-types.ts",
-      "sha256": "d1f53ddc22aa1bb020d5472bcfb5a129838ab0f88dfecf120fc83a8c1d8d6ef6"
+      "sha256": "65a3d67248b893c32cdcdfa6b4069e207522db872cace28b24f72dd1aa32f23e"
     },
     {
       "path": "web/src/artifact-exchanges.tsx",
@@ -59,7 +59,7 @@
     },
     {
       "path": "web/src/artifact-send.tsx",
-      "sha256": "bd6d80b526d53c48d99d6ee05ff2912efc7c20da1bea9be8829377d30c36e06f"
+      "sha256": "fd903477e7d99ce07272d5784ae8141c8179fe15f8253467ad1da28ae40440dd"
     },
     {
       "path": "web/src/assets.d.ts",
@@ -243,7 +243,7 @@
     },
     {
       "path": "web/src/upload-ticket.tsx",
-      "sha256": "301286865063de40749caffb7bb3a25fe9ca194d1d16216e2825a75bf228f647"
+      "sha256": "f045be5f0974dfa6327c929c90073108017251c2952380bafe2a8af7fc7e85ce"
     },
     {
       "path": "web/src/workspace-reference.tsx",
@@ -262,8 +262,8 @@
     },
     {
       "name": "app.js",
-      "sha256": "a313c88f7ef991ce51c1d4b438f859d456fd9ff5c70fc0ad461153ef622bed5b",
-      "size": 741012
+      "sha256": "0498f6fbc261dca65dc8e0ded0262947eb2972fbd585ff1bc19e911c93c486b6",
+      "size": 741900
     },
     {
       "name": "app.js.LEGAL.txt",

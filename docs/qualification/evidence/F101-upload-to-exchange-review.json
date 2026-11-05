@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "id": "F101",
+  "observed_at": "2026-11-05",
+  "starting_commit": "15faee6164e2e34de653e020579ce4e48e72d789",
+  "state": "Completed-ticket artifact review bridge implemented;actual human-ingress native proof owed",
+  "qualification_claim": false,
+  "change": [
+    "Completed consistent owned upload receipts expose Review accepted artifact only when the current UI caller has read/deliver. It carries immutable file ID,length and SHA256 into source review,without creating an offer or choosing a recipient. Partial/open/aborted/receipt-less or inconsistent tickets supply no action.",
+    "Fresh source metadata must match a copied original receipt expectation before request preparation. Ordinary source/path/intake/endpoint/participant checks and explicit offer confirmation remain. Historical held acceptance does not become a current release claim;incoming retrieval still grants no onward authority.",
+    "Freeze initial AX-J02 pair:ordinary verified-HTTPS resumable browser upload by authorized sender -> registered custody-https-poll-v1 recipient with read/list -> native attachment download and independent length/SHA verification. Remaining stock SFTP/FTPS ingress,governed collection and onward delivery profiles remain mandatory.",
+    "Original native Chrome fixture now uploads actual known inert script text to a new file revision,uses the receipt action,offers that exact new ID and independently downloads it as the separate recipient. Require2exact downloads,1human-ingress exchange,17accessibility states and SQL binding to exactly1completed upload;all original recovery/history/closure/endpoint counts and live revocation proof stay enforced."
+  ],
+  "red": {
+    "observed": "Completed upload receipt had no action entering artifact review;rendered receipt failed the expected handoff action",
+    "reference": ".private/freightctl-f101-upload-bridge-red.log",
+    "sha256": "5f7093bd4ddb37690e40c156924c2e642908c16faee25523f71d17e2c061b878"
+  },
+  "green": {
+    "exchange_adapter_methods": 20,
+    "upload_ticket_methods": 4,
+    "pure_native_summary_methods": 1,
+    "frontend_typecheck": "pass;strict optional-property check retained",
+    "frontend_build": "pass;app.js741900bytes,measured only",
+    "affected_tagged_compilation_vet_architecture_format_driver_syntax_diff": "pass,no runtime claim"
+  },
+  "native_profile": {
+    "state": "prepared,not qualified",
+    "required": "Actual browser resumable upload -> exact source receipt review -> registered recipient offer -> independently verified native download;17a11y states;original three views/receipts,two closure decisions,three endpoint versions/commands and completed-upload join counts"
+  },
+  "source_files": [
+    {
+      "path": "docs/protocols/artifact-exchange-admin-browser.md",
+      "sha256": "4709ac220cdc5cfd711158cf73cb02ff0a13ea949a1f520541b32faafaab60f6"
+    },
+    {
+      "path": "docs/protocols/artifact-exchange-browser.md",
+      "sha256": "cb87433974b439860d860abb0f7d7ed861259cd8b17e80e1e05de82823eb9300"
+    },
+    {
+      "path": "docs/protocols/artifact-exchange-outgoing.md",
+      "sha256": "057fc0decf41a00555f79e86a36827c3ff531b1fbae7801b823817159331366a"
+    },
+    {
+      "path": "docs/protocols/artifact-exchange-send-browser.md",
+      "sha256": "ab47ba2be2167bded053010c9ce31cbfdd821caacd9de65ca9b8b3e0f5689e4d"
+    },
+    {
+      "path": "docs/protocols/resumable-uploads.md",
+      "sha256": "24704585144beb58841e753b589e50cf2d340923bec67e1922eefa23e10847db"
+    },
+    {
+      "path": "internal/api/artifact_exchange_browser_integration_test.go",
+      "sha256": "26006ddf7a407734e2e5e15b3034f473156b9e20be8132e9860bea24ca2505d5"
+    },
+    {
+      "path": "internal/browser/assets/app.js",
+      "sha256": "0498f6fbc261dca65dc8e0ded0262947eb2972fbd585ff1bc19e911c93c486b6"
+    },
+    {
+      "path": "internal/browser/assets/manifest.json",
+      "sha256": "a1646934a47ee5338dea774e7833fbab9233c077eaacf36233ac26bbb0744c9a"
+    },
+    {
+      "path": "scripts/artifact-exchange-browser.mjs",
+      "sha256": "6f6dfd1ae02384357599ba76620bd5f2ee11f7ecde4500b22f1c4e6726f280f2"
+    },
+    {
+      "path": "web/src/app.tsx",
+      "sha256": "378c1f8f8447332bed894941b05d8629a11e42f75094fac7a8b78362ad69a9ae"
+    },
+    {
+      "path": "web/src/artifact-exchanges-api.ts",
+      "sha256": "103c097738e6b58309c99aeb24647f0d948f81fcb662903464fdc22efec440d1"
+    },
+    {
+      "path": "web/src/artifact-exchanges-types.ts",
+      "sha256": "65a3d67248b893c32cdcdfa6b4069e207522db872cace28b24f72dd1aa32f23e"
+    },
+    {
+      "path": "web/src/artifact-send.tsx",
+      "sha256": "fd903477e7d99ce07272d5784ae8141c8179fe15f8253467ad1da28ae40440dd"
+    },
+    {
+      "path": "web/src/upload-ticket.tsx",
+      "sha256": "f045be5f0974dfa6327c929c90073108017251c2952380bafe2a8af7fc7e85ce"
+    },
+    {
+      "path": "web/tests/artifact-exchange.test.mjs",
+      "sha256": "9a2fa4f7346a389c24fae0fd5ae22beac6b5931e996624c519d7596135c3c0a9"
+    },
+    {
+      "path": "web/tests/upload-ticket.test.mjs",
+      "sha256": "50c75073119b88b920b0ac822662d95a88b313aa5c45705c0555f8bbb50d4ef2"
+    }
+  ],
+  "local_manifest": {
+    "reference": ".private/freightctl-f101/manifest.json",
+    "sha256": "1e4f377e9b1d81ae9fd57b220cebb33a3979e4a4920984ea98a66e8b20526655"
+  },
+  "owed": [
+    "Actual current-source Chrome/HTTPS/PostgreSQL upload bridge and every affected original proof",
+    "Stock SFTP/FTPS ticket ingress,governed collection,agent-to-system onward delivery and all remaining AX-J02 outcomes",
+    "Actual response-loss/process-death/restore,capacity/fairness,all remaining agent/AI/baseline/FINISH gates",
+    "Compatible patched image inputs and complete security replay;original nonsecurity failures remain deferred to FINISH"
+  ]
+}

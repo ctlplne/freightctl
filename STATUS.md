@@ -84,6 +84,13 @@ compile/vet/architecture checks pass. Actual PG zero-effect preview and stock SD
 HTTPS separate-reply/role/replay/terminal proofs are prepared and owed. Additional
 agent tools,AI governance/evaluations and every complete AX profile remain open.
 
+F101 connects completed browser upload receipts to exact artifact review without
+an offer or implicit recipient. Fresh metadata must match saved ID,length and SHA.
+Twenty exchange/four ticket methods pass;the native profile now requires an actual
+browser upload,new-revision offer and independent recipient download,17a11y states
+and exact completed-upload SQL binding. Initial AX-J02 HTTPS-browser/custody-poll
+pair is frozen;actual runtime,stock ingress/collection/onward outcomes remain owed.
+
 Focused local parser/client/filesystem/summary regressions and affected static,
 frontend build, native compilation/vet and architecture checks pass. They establish
 no PostgreSQL, served browser, stock-peer or complete AX profile qualification.

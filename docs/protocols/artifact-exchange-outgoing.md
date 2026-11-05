@@ -53,7 +53,7 @@ retrieval or forwarding permission.
 
 Focused handler/domain/client checks and static/native compilation are local
 proof only. Real PostgreSQL pagination/role/scope/mode/authority/hold/closure and
-admission-change cases, original HTTPS/CLI profiles and eleven-state actual Chrome
+admission-change cases, original HTTPS/CLI profiles and seventeen-state actual Chrome
 proof are prepared. Runtime qualification and all affected original journeys
 remain owed. No local PostgreSQL, browser, scanner or inference runtime is started.
 Append-only migration44 adds a tenant/partner/sender/UUID seek index for the page

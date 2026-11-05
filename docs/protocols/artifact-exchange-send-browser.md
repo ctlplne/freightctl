@@ -2,8 +2,14 @@
 
 An account with read and deliver permission can choose **Send artifacts**. From
 **Files**, **Send artifact** fills the exact file revision. A sender can also use
-the immutable file ID in its own upload receipt. An incoming view is not a source
-permission; a separately authorized reply needs its own readable source.
+**Review accepted artifact** in its completed upload receipt. That action carries
+the saved immutable file ID,length and SHA256 into the review;fresh source metadata
+must match before a request is prepared. It sends no offer. Open,incomplete,
+aborted or receipt-less tickets cannot supply that action. Accounts without
+read/deliver cannot use it. Original held acceptance remains a historical fact;
+current source checks and release still decide whether an offer can be reviewed.
+An incoming view is not a source permission;a separately authorized reply needs
+its own readable source.
 
 Use **Find approved recipients**, select an active endpoint and review its
 recipient account. Only a current explicit sender binding appears as eligible.
@@ -54,10 +60,14 @@ work. Canonical JSON integers must fit exactly
 in the browser's safe integer range; API/CLI retain their explicit integer64
 contract. No file is silently rounded.
 
-The native GitHub Chrome profile prepares actual sender review/offer/withdrawal,
-independent recipient404 after withdrawal, source and endpoint review, exact
-existing byte retrieval, recipient decline and manager revocation. Eight
-automated accessibility states plus a saved-review state are required,for nine.
+The native GitHub Chrome profile prepares actual sender upload/review/offer,
+a separate recipient's independently verified download,withdrawal and source/
+endpoint review. It preserves the original received-byte,recipient decline,
+manager revocation,recovery,history and endpoint-management proofs. Seventeen
+automated accessibility states,two exact downloads,one human-ingress exchange
+and the original durable view/receipt/decision plus endpoint command counts are
+required. SQL also binds the human offer to exactly one actual completed upload
+with a new file ID. None of this prepared proof is yet runtime-qualified.
 It saves the actual recovery download,reloads the page,imports without a POST,
 and requires exact original offer/withdrawal keys,bodies and server receipts on
 replay. PostgreSQL view/receipt/decision counts must not increase. Original

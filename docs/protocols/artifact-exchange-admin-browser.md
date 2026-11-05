@@ -39,9 +39,9 @@ refuse. No credential values, private operation receipts, raw artifact bytes or
 model context are displayed or created by this editor.
 
 The original native Chrome profile is extended with a separate root-manager
-session, actual account selection, reviewed create, exact same-key replay,
+session, actual human ingress plus account selection, reviewed create, exact same-key replay,
 changed-recipient replacement and revocation. It preserves all earlier proof and
-requires fifteen accessibility states plus exactly three immutable versions,
+requires seventeen accessibility states plus exactly three immutable versions,
 three command receipts and one revoked revision3 head. Local adapter/canonical
 checks and compilation do not establish that runtime proof. Actual Chrome/HTTPS/
 PostgreSQL qualification, response-loss/reload recovery and all affected original
