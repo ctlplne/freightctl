@@ -468,5 +468,32 @@
     "metadata_bytes_both": 153,
     "scratch_cleanup_both": "unmounted",
     "scope": "Both feeds return before original1GiBfile postcondition refuses the regular DB. No image scan/report pass or memory-cause repair inferred. Earlier exact d6/source28 x86OOM facts remain; file-only owner proposal stays unapplied."
+  },
+  "source_7c_terminal": {
+    "candidate": "7c163a834a7a95cb6482730fbb3e486b1b8aa879",
+    "run_id": 41939612321,
+    "manifest_reference": ".private/freightctl-f076-7c-native-terminal-xgZEQi/image-manifest.json",
+    "manifest_sha256": "435c0efb05a348566d4b188f01fb8124489d12932bdf06f2a1ac9e6192624916",
+    "arm64": {
+      "job_id": 126963223620,
+      "phase": "feed-download",
+      "exit_code": 137,
+      "category": "container-oom",
+      "oom_killed": true,
+      "running": false,
+      "container_state_sha256": "5d047b91a7a0dcc3d6b17db3986a28a85158b8031928f543de9a8e746049c374",
+      "failure_manifest_sha256": "7f9319c34c2a041381785565fc21579a5b4977e2fc87a1585dc54fc07b570720"
+    },
+    "amd64": {
+      "job_id": 126963223955,
+      "phase": "feed-files",
+      "database_bytes": 1692762112,
+      "metadata_bytes": 153,
+      "both_regular": true,
+      "both_symlinks": false,
+      "failure_manifest_sha256": "a0639c68e616da10174ba2e6276a89e47b194925c4084f1a5c83fdd39f8a5e27"
+    },
+    "scratch_cleanup": "both unmounted",
+    "scope": "ARM now independently proves hard-budget OOM during pinned feed preparation. This does not identify the allocation or prove an image scan. File-only1792MiB proposal remains unapplied/pending; it cannot resolve either architecture OOM. Every original guard/budget unchanged."
   }
 }

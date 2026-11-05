@@ -1089,5 +1089,31 @@
     "manifest_sha256": "b95aa54b68002ca18c9eb26fc85b345da96aebfcb3eaea1de23dcedae5fc3055",
     "preserved_prior_native_run_id": 41939612321,
     "authority": "Owner source/CI authorization;all five prior native jobs actually started before push;no cancellation request or restart. Hold another relevant source push until current required native/public/reproduction jobs start."
+  },
+  "source_7c_native_terminal": {
+    "candidate": "7c163a834a7a95cb6482730fbb3e486b1b8aa879",
+    "run_id": 41939612321,
+    "manifest_reference": ".private/freightctl-f076-7c-native-terminal-xgZEQi/manifest.json",
+    "manifest_sha256": "5a77e0951cc27245d11f17bdf3e4c6208ea2329c23307489dfe3ec44211805e0",
+    "jobs": [
+      {
+        "job_id": 126963223620,
+        "architecture": "arm64",
+        "application_pass": 880,
+        "application_fail": 3,
+        "application_skip": 0
+      },
+      {
+        "job_id": 126963223955,
+        "architecture": "amd64",
+        "application_pass": 880,
+        "application_fail": 3,
+        "application_skip": 0
+      }
+    ],
+    "first_failure": "Both retain D173: mixed collection parent/two children stop at source/receiver registration key collision before source capture. Native97repair is queued; no replay pass.",
+    "metadata": "both success",
+    "fuzz": "success",
+    "scope": "Original native failures are preserved. Separate image failures remain red; no later-source/whole-journey pass."
   }
 }

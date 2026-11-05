@@ -15,8 +15,9 @@ are queued/pending;no earlier pass is inherited. Five outgoing commits passed
 exact owner-identity and full-range secret checks. Hold another relevant push
 until current required native/public/reproduction jobs start.
 
-All five prior 7c native jobs started before this push;that original41939612321
-remains preserved. A proposed known-bad unstarted-successor cancellation was
+All five prior 7c native jobs finished: both application sections retain
+880 pass/3 fail/0 skip at D173; metadata and fuzz pass. Separate image gates fail.
+That original41939612321 remains preserved. A proposed unstarted-successor cancellation was
 refused by the fresh action-time guard when a metadata job started. No cancel
 request or restart occurred. The [durable CI plan](docs/qualification/github-actions-plan.md)
 now separates stable execution rules from immutable dated histories and exact evidence.
@@ -34,7 +35,7 @@ and d6 native application880 pass/0 fail/0 skip on each architecture. All17 orig
 FTPS collection leaves pass at f08,including SQL positive/six forgery controls,
 frozen schedules,CSV hold/release,batch/revocation and real CLI SIGKILL sealed
 recovery. These component passes do not qualify later source/operator/mixed journeys.
-Both e2 native application sections pass880/fail 3/skip 0:the new mixed parent/two
+Both e2 and7c native application sections pass880/fail 3/skip 0:the new mixed parent/two
 leaves stop before capture because a helper reuses one operation key for source
 and different receiver registrations. D173's local repair gives the receiver a
 separate saved key and explicitly requires source-key reuse to fail ErrConflict.
@@ -54,7 +55,9 @@ D167 browser failures and unexplained causes remain visible.
 [F075](docs/qualification/evidence/F075-peer-image-security.json) keeps image
 security red. Both e2 image gates observe a regular1,692,762,112-byte DB over the
 original1 GiB file cap,153-byte metadata and exact disk unmount. Earlier d6/source 28
-x86 exact stopped-container OOM remains proven;GOGC25 is not a memory remedy.
+x86 exact stopped-container OOM remains proven. New7c ARM independently proves
+feed-download OOMKilled=true/running=false/exit137;7c x86 hits the same file cap.
+Both exact scratch mounts are removed. GOGC25 is not a memory remedy on either architecture.
 No image report is qualified. The1792 MiB database-file-only proposal is unapplied
 and awaits the owner's existing decision;all four active source files still match
 its original hashes. Hard1 GiB RAM/no swap,soft768 MiB,one CPU,2 GiB scratch and every

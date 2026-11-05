@@ -2664,7 +2664,18 @@
       "resolution": "Try feed-onlyGOGC25 with all hard/soft,disk,CPU,time,security/feed/inventory/severity gates unchanged.20local stand-in/report contracts pass; actualfeed/scanremain unqualified. Bothf08downloads return under unchanged hard/soft/CPU limits and GOGC25,then D168file guard stops scan. This does not attribute original allocation cause or qualify actual scanning. D6x86job126926515789 repeats feed-download exit137 with exact stopped OOMKilledtrue/runningfalse/exit137,stateSHA1e9ca5d77a13f64ce311b3df2c6c831bfd13816b11e339bfe8f8cd3c4428de7c. GOGC25 is not a proven repair; retain all budgets and investigate supported bounded feed preparation. D6ARM independently reaches the file guard;do not infer ARM OOM. File-cap-only pending proposal does not address x86memory.",
       "regression_evidence": [
         "docs/qualification/evidence/F075-peer-image-security.json"
-      ]
+      ],
+      "source_7c_arm_native": {
+        "run_id": 41939612321,
+        "job_id": 126963223620,
+        "phase": "feed-download",
+        "oom_killed": true,
+        "running": false,
+        "exit_code": 137,
+        "container_state_sha256": "5d047b91a7a0dcc3d6b17db3986a28a85158b8031928f543de9a8e746049c374",
+        "evidence": "docs/qualification/evidence/F075-peer-image-security.json",
+        "meaning": "Actual ARM independently repeats hard1GiB feed OOM. No allocation attribution,scan pass or remedy established. File-cap-only proposal stays unapplied."
+      }
     },
     {
       "id": "D167",
@@ -2769,7 +2780,17 @@
       "resolution": "Helper accepts an explicit operation key; all existing callers retain their original key/replay checks. Mixed receiver uses a separate key and first explicitly requires the original source key with different receiver to fail ErrConflict. Exact final integration race binary compiles and Go vet passes; no assertions,protocol/security guards or budgets weakened. Native original journey replay remains mandatory.",
       "regression_evidence": [
         "docs/qualification/evidence/F076-ftps-collection.json"
-      ]
+      ],
+      "source_7c_original_native": {
+        "run_id": 41939612321,
+        "arm_job": 126963223620,
+        "amd_job": 126963223955,
+        "each_application_pass": 880,
+        "each_application_fail": 3,
+        "each_application_skip": 0,
+        "first_failure": "Same original mixed registration key collision before capture; exact97repair runtime pending.",
+        "manifest_sha256": "5a77e0951cc27245d11f17bdf3e4c6208ea2329c23307489dfe3ec44211805e0"
+      }
     },
     {
       "id": "D174",
