@@ -526,5 +526,19 @@
     "standin_methods": 21,
     "unchanged": "hard1GiB/no swap,soft768MiB,oneCPU,2GiBscratch,128pids,metadata1MiB,feed300s,scan660s,job50m;full feed/inventory/severity/freshness/archive/source/isolation/cleanup guards. Local inference and scanners stay off.",
     "scope": "Changes only the feed database file-size guard and its sparse refusal boundary. Earlier exact ARM/x86 hard-memory OOMs are not repaired by file allowance. No real image scan or security qualification follows."
+  },
+  "source_ba_x86_oom_before_approved_file_patch": {
+    "run_id": 41954863336,
+    "job_id": 127007225597,
+    "phase": "feed-download",
+    "oom_killed": true,
+    "running": false,
+    "exit_code": 137,
+    "state_sha256": "e8a7fe8f8ce3f96d60b8cffdd08fd5ae613de4e528834409575439ae2ca7ba3a",
+    "failure_manifest_sha256": "57e368357e12616ef00a69d739412120ee8cb8d12a2871684d05dc729d7da89a",
+    "scratch_cleanup": "unmounted",
+    "evidence_reference": ".private/freightctl-pause-handoff-DiqCKw/manifest.json",
+    "evidence_sha256": "73e94716ee286a33605ac8efec647838a49a0f1962042419e624ed9ca242ab81",
+    "scope": "Reconfirms independent memory gate. Owner file-only1792MiB allowance does not grant a RAM change or image qualification."
   }
 }

@@ -1,16 +1,26 @@
 # freightctl status
 
-Updated 2026-11-05. GOAL.md is active and incomplete. All **83 whole baseline rows
+Updated 2026-11-05. Execution is **paused at the owner's request**;GOAL.md remains
+incomplete. All **83 whole baseline rows
 and 12 full customer journeys remain open**. Assisted deployment, independent
 adoption and enterprise readiness remain separately unqualified. Work stays on
 local main; both author and committer are exactly
 `imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>`.
 Owner source/CI push authority does not authorize artifacts, releases or deployment.
 
-Latest pushed source **ba011f5** submits native Chrome wire observation and D176's
-mixed-fixture repair. New native41954863336,public41954863432,reproduction41954863422,
-core41954863426,Windows41954863401 and stock41954863411 are queued;no later-source
-pass is inherited. Hold the next relevant push until required new jobs start.
+Current work is finalized in **99e57b1** (approved Trivy file-only allowance) and
+**ecb3427** ([F079](docs/qualification/evidence/F079-handle-bound-directory-sync.json)
+handle-bound directory flushing). This handoff accompanies the requested commit/
+source push/pause. Native checks for those changes remain pending. On resume,
+inspect current origin/main and its exact jobs before continuing;preserve originals.
+
+Prior submitted **ba011f5** has x86 native127007225597 application884 pass/0 fail/
+0 skip;its separate image feed is OOM-killed under hard1GiB. ARM127007225840 remains
+live at the snapshot. Metadata/fuzz and both reproduction jobs pass. Both public
+profiles finish and verify first explicit metadata Chrome,then fail
+cli-explicit-collection-source before operator Chrome;underlying source-helper
+startup cause remains unexposed. Exact evidence is retained inF076. Windows stays
+red;Mac passes. These results do not qualify later source or the full goal.
 
 Exact prior **6ddcb30** passes core41951088073 and both native
 reproduction41951088070 jobs. Native-platform41951088055 records the Windows
@@ -20,12 +30,10 @@ exit, with zero unexpected HTTP statuses, failed browser reports or cleanup fail
 Its exact command/cause is unexposed and remains red. All required prior jobs
 started or finished before this push;original failures and scoped passes are retained.
 
-Original97native41944580495 finishes at880 pass/3 fail/0 skip on each architecture.
-D173's registration-key repair advances to D176: the mixed fixture's hyphenated
-step IDs violate the correct typed grammar before capture. Both metadata restores
-and fuzz pass. Public41944580530 both profiles fail session-wire-fetch-site after
-first metadata Chrome completes. Reproduction41944580545 fails build-id-a/command-status;
-its exit-versus-timeout cause stays unknown. No failed job becomes a pass.
+Original97native41944580495 retains880 pass/3 fail/0 skip on each architecture at
+D176's invalid fixture step IDs. Exact ba x86 now passes the original mixed case;
+ARM/full public completion remains required. Original97public fetch-site and
+reproduction build-id command failures stay retained;unexposed causes are not invented.
 
 The retained database remains at approved schema35:64,339 rows,64 tables and
 63 forced-RLS tables ([F056](docs/qualification/evidence/F056-retained-handoff-upgrade-applied.json)).
@@ -39,16 +47,16 @@ ran here. F026 remains manual and owner-deferred.
 880/0/0 native component results and17 FTPS leaves, including frozen SQL/schedule,
 CSV/batch/revocation and sealed CLI recovery. Later mixed/operator journeys remain
 unqualified. D176's shared exact step builder now passes the real Normalize parser;
-old hyphen IDs still return ErrInput. Integration race compile/vet pass without
-executing the binary. Original native mixed receivers/consent/decryption replay is required.
+old hyphen IDs still return ErrInput. Original ba x86 mixed receivers/consent/
+decryption passes within884application records;exact ARM/full public replay is required.
 
 D175's prepared observer lets Chrome send original HTTPS requests and binds final
 network headers to the original bounded response. It preserves cookie/session,
 CLI authority,CSRF,expiry,fetch-site,body,key,byte,source-contact,cleanup and audit
 assertions. Response loss drops only the first completed response; original-key
 recovery remains mandatory. Eight native-protocol stand-in methods,144 frontend
-contracts and102 Python contracts pass locally. Actual original plaintext/encrypted
-public matrices remain required; byte operator has not passed. Native freightctl
+contracts and102 Python contracts pass locally. First explicit metadata/verification
+now passes in both ba public profiles. Full matrices and byte operator remain open. Native freightctl
 is a named source stand-in. Independent typed collection and earlier intermittent
 D145/D151/D152/D167 causes remain open.
 
@@ -75,7 +83,11 @@ review,owner grant,signing and disconnected installation remain mandatory.
 elevated NTFS API facts:explicit protected owner/SYSTEM descriptors match;read-write
 directory handles flush successfully while read-only handles/reopen upgrades fail5.
 Go modes remain0666/0777. This does not qualify access isolation,reparse/race safety,
-power-loss durability or Windows server/agents;D103 stays open. [F068](docs/qualification/evidence/F068-ftps-client-transport.json)
+power-loss durability or Windows server/agents;D103 stays open. F079 adds pinned
+descriptor/full128bit identity checks before a writable directory flush in custody.
+Two local own-file and seven custody contracts pass;Windows tests compile/vet only.
+Actual Windows rename/reparse races,private ACL/root/key creation and full runtime
+qualification remain required. [F068](docs/qualification/evidence/F068-ftps-client-transport.json)
 retains ARM stock metadata passes and x86 filter failures;native ARM filtering is
 unavailable and active FTP remains disabled. [F074](docs/qualification/evidence/F074-ftps-recipient-encryption.json)
 retains independent encryption evidence;readback differs from receiver fsync/business

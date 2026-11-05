@@ -1203,5 +1203,35 @@
     "review_reference": ".private/freightctl-ba-submission-review-ekophodd/manifest.json",
     "review_sha256": "10f14a0cc628a248d954452fbd455aab8227ea7d60637fc8d7bef1427b468425",
     "scope": "Four exact-owner commits passed full-range secret scan;all prior required jobs started/terminal and originals retained. No cancellation,restart,artifact/release/deployment or scanner-cap change. No current-source pass inherited."
+  },
+  "owner_pause_handoff": {
+    "request": "complete current task, commit, push, and pause",
+    "implementation_commits": {
+      "approved_database_file_cap": "99e57b1d8827bddb16e41fa139f6658d381d56ce",
+      "handle_bound_directory_flush": "ecb3427037a8e6eb4a7edf93d1fc01783f95072b"
+    },
+    "manifest_reference": ".private/freightctl-pause-handoff-DiqCKw/manifest.json",
+    "manifest_sha256": "73e94716ee286a33605ac8efec647838a49a0f1962042419e624ed9ca242ab81",
+    "source_ba_x86": {
+      "run_id": 41954863336,
+      "job_id": 127007225597,
+      "application_pass": 884,
+      "application_fail": 0,
+      "application_skip": 0,
+      "mixed_case": "original parent/two children pass;full ARM still live at snapshot",
+      "image": "separate exact stopped-container OOMKilled=true/exit137 under unchanged hard1GiB;not a scan pass"
+    },
+    "source_ba_public": {
+      "run_id": 41954863432,
+      "jobs": [
+        127007226298,
+        127007226578
+      ],
+      "explicit_metadata_chrome_and_verifier": "pass at original first metadata boundary",
+      "next_failure": "cli-explicit-collection-source;helper exits before readiness,underlying phase/cause unexposed",
+      "operator_browser": "not reached",
+      "cleanup": "retained metadata/roles unchanged;isolated DB removed;original resources restored;0failures"
+    },
+    "scope": "All whole rows/journeys remain open. New F079 native and approved F075 real image replay pending. No running original cancelled/retried;no retained schema upgrade,model or local service/scanner startup. Pause after verifying requested source push."
   }
 }
