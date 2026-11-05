@@ -37,6 +37,12 @@ commits, changes visibility or rewrites owner history.
 
 ## Gate inventory
 
+Path filters follow actual consumers. Windows-only F078 probe/runner/contracts
+trigger the native-platform workflow and core refusal checks; they do not queue
+five unrelated Linux stock-peer/browser estates. Changes to shared product,
+dependency or browser inputs still trigger their existing consumers. Excluding
+an unused diagnostic never turns a missing platform/runtime result into a pass.
+
 | Gate | Actual environment and workflow | Required proof |
 | --- | --- | --- |
 | Source, frontend and supply chain | Linux x86; [core-checks.yml](../../.github/workflows/core-checks.yml) | Formatting/static checks, frontend contracts/type/build/embedded closure, npm audit, Gitleaks history/change scans and source govulncheck through its actual enforcing converter. A parser pass cannot approve a vulnerability finding. |

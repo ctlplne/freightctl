@@ -18,6 +18,10 @@ on:
       - '!scripts/ci-peer-image-summary.py'
       - '!scripts/test-scan-peer-image.py'
       - '!scripts/test-ci-peer-image-summary.py'
+      # Windows-only observations have their own native gate and core contracts.
+      - '!scripts/peers/windowsfs/**'
+      - '!scripts/qualify-windows-fs.py'
+      - '!scripts/test-windows-fs-probe.py'
       - '.github/workflows/stock-peers.yml'
   pull_request:
     paths:
@@ -35,6 +39,9 @@ on:
       - '!scripts/ci-peer-image-summary.py'
       - '!scripts/test-scan-peer-image.py'
       - '!scripts/test-ci-peer-image-summary.py'
+      - '!scripts/peers/windowsfs/**'
+      - '!scripts/qualify-windows-fs.py'
+      - '!scripts/test-windows-fs-probe.py'
       - '.github/workflows/stock-peers.yml'
   workflow_dispatch:
 
