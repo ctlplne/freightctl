@@ -27,16 +27,41 @@ that view; previous copies cannot be recalled and other offers are unchanged.
 
 An unconfirmed attempt keeps the original request and operation key for exact
 retry. A withdrawal gets its own stable key. A timeout cannot prove failure.
-The current review is kept only in memory: navigating away, reloading or changing
-the account loses it. Keep the page open to recover an uncertain result. Durable
-review export/import and outgoing history remain work; do not treat this UI as a
-complete crash/recovery qualification. Canonical JSON integers must fit exactly
+**Save offer recovery file** preserves the exact request, approved endpoint
+snapshot, source/account bindings and retry keys as compact JSON. Save it in a
+protected location before leaving or reloading. After reconnecting to the same
+HTTPS origin with the same account authority/root, choose **Saved offer recovery
+file (optional)**. Import only fills an explicitly labeled saved review; it
+contacts no endpoint, executes no action and confirms no result. Review it before
+retrying. The server still checks ordinary authority and same-key request meaning.
+
+The file's expected exchange ID is a selector, not proof of acceptance. A receipt
+is displayed only after the actual server returns the matching canonical request
+and expected ID. A saved withdrawal key can recover the original terminal receipt
+after the offer receipt is recovered. Endpoint changes, expiry or holds do not
+turn a historical publication receipt into new byte permission. Credentials or
+scope that no longer match the original participant cannot adopt the review.
+
+Recovery files are untrusted control input at most24KiB,depth8,tokens4096. The
+parser rejects duplicate/case-folded/escaped field aliases, nulls, unknown fields,
+unsafe or nonliteral integers, trailing input, foreign origins and mismatched
+canonical hashes/bindings. The24KiB envelope covers saved metadata; artifact bytes
+use the deployment's configured capacity. The format grants no authority or signature
+claim. Outgoing history and complete process-death/restore qualification remain
+work. Canonical JSON integers must fit exactly
 in the browser's safe integer range; API/CLI retain their explicit integer64
 contract. No file is silently rounded.
 
 The native GitHub Chrome profile prepares actual sender review/offer/withdrawal,
 independent recipient404 after withdrawal, source and endpoint review, exact
 existing byte retrieval, recipient decline and manager revocation. Eight
-automated accessibility states are required. Local parser/adapter, type/build and
+automated accessibility states plus a saved-review state are required,for nine.
+It saves the actual recovery download,reloads the page,imports without a POST,
+and requires exact original offer/withdrawal keys,bodies and server receipts on
+replay. PostgreSQL view/receipt/decision counts must not increase. Original
+revocation proof checks a live grant immediately before revoking,so expiry cannot
+produce a false pass. S004 leaves aggregate runtime to GitHub's platform lifetime;
+individual API/DB/read/browser-interaction deadlines remain bounded.
+Local parser/adapter, type/build and
 compilation results are stand-in/static proof only. Actual served browser and
 complete AX qualification remain owed; local inference stays off.

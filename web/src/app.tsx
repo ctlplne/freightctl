@@ -44,6 +44,8 @@ const name = (path: string) => path.split("/").at(-1) || "/";
 const aborted = (error: unknown) =>
   error instanceof DOMException && error.name === "AbortError";
 const messages: Record<string, string> = {
+  invalid_exchange_recovery:
+    "Choose the saved offer recovery JSON from this server and account, at most 24 KiB. Changed credentials, scope, fields or request meaning cannot adopt the old review.",
   invalid_artifact_exchange_contract:
     "Review the exact registered endpoint and exchange identifiers, revision, fingerprint and expiry.",
   artifact_exchange_unavailable:

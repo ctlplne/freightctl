@@ -1,6 +1,11 @@
 import { Api } from "./api";
 import { ApiError, uuid } from "./types";
 import {
+  decodeOfferRecovery,
+  encodeOfferRecovery,
+  type OfferReviewInput,
+} from "./artifact-recovery";
+import {
   asIncomingPage,
   asIncomingView,
   asEndpointPage,
@@ -65,6 +70,14 @@ export class ExchangeReceiveApi {
   }
   isCurrent(): boolean {
     return this.context() === this.who;
+  }
+  recoveryBytes(origin: string, review: OfferReviewInput): Uint8Array {
+    this.current();
+    return encodeOfferRecovery(review, this.directory, origin);
+  }
+  readRecovery(origin: string, text: string) {
+    this.current();
+    return decodeOfferRecovery(text, this.directory, origin);
   }
   async endpoints(after = "", signal?: AbortSignal) {
     this.current();

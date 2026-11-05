@@ -49,6 +49,9 @@ let browser,
   declines = 0,
   offers = 0,
   cancels = 0,
+  recoveryRoundtrips = 0,
+  offerRequests = 0,
+  exchangeRequests = 0,
   failureHash;
 try {
   browser = await chromium.launch({
@@ -87,6 +90,18 @@ try {
         egress++;
         return route.abort();
       }
+      if (
+        target.pathname.startsWith(
+          `/v1/tenants/${c.tenant}/partners/${c.partner}/exchange`,
+        )
+      )
+        exchangeRequests++;
+      if (
+        target.pathname ===
+          `/v1/tenants/${c.tenant}/partners/${c.partner}/exchanges` &&
+        route.request().method() === "POST"
+      )
+        offerRequests++;
       return route.continue(); // Original requests and responses; no mock/replay.
     });
     const page = await context.newPage();
@@ -322,6 +337,120 @@ try {
     `/v1/tenants/${c.tenant}/partners/${c.partner}/exchanges/${sent.exchange.id}/file`,
   );
   assert.equal(canceledStatus, 404);
+  phase = "sender-save-recovery";
+  const savedDownload = sender.page.waitForEvent("download");
+  await sender.page
+    .getByRole("button", { name: "Save offer recovery file", exact: true })
+    .click();
+  const savedFile = await savedDownload;
+  assert.equal(savedFile.suggestedFilename(), "freightctl-offer-recovery.json");
+  assert.equal(await savedFile.failure(), null);
+  await savedFile.saveAs(c.recovery);
+  await chmod(c.recovery, 0o600);
+  const recoveryBytes = await readFile(c.recovery);
+  assert.ok(recoveryBytes.length > 0 && recoveryBytes.length <= 24576);
+  const saved = JSON.parse(recoveryBytes.toString("utf8"));
+  assert.equal(saved.server_origin, origin.origin);
+  assert.equal(
+    saved.request_key,
+    publicationResponse.request().headers()["idempotency-key"],
+  );
+  assert.equal(
+    saved.withdrawal_key,
+    withdrawalResponse.request().headers()["idempotency-key"],
+  );
+  assert.equal(saved.expected_exchange_id, sent.exchange.id);
+  assert.deepEqual(
+    saved.request,
+    JSON.parse(publicationResponse.request().postData()),
+  );
+  phase = "sender-reload-recovery";
+  await sender.page.reload();
+  await sender.page
+    .getByRole("button", { name: "Send artifacts", exact: true })
+    .click();
+  const beforeImport = offerRequests;
+  const exchangesBeforeImport = exchangeRequests;
+  await sender.page
+    .getByLabel("Saved offer recovery file (optional)", { exact: true })
+    .setInputFiles(c.recovery);
+  await sender.page
+    .getByRole("status")
+    .filter({ hasText: "Saved review loaded." })
+    .waitFor();
+  assert.equal(offerRequests, beforeImport);
+  assert.equal(exchangeRequests, exchangesBeforeImport);
+  assert.equal(
+    await sender.page
+      .getByRole("heading", {
+        name: "Committed availability receipt",
+        exact: true,
+      })
+      .count(),
+    0,
+  );
+  await accessibility(sender.page, "sender-recovery-accessibility");
+  phase = "sender-recover-offer";
+  const replayPublication = sender.page.waitForResponse(
+    (r) =>
+      new URL(r.url()).pathname.endsWith("/exchanges") &&
+      r.request().method() === "POST",
+  );
+  await sender.page
+    .getByRole("button", {
+      name: "Confirm artifact offer or recover result",
+      exact: true,
+    })
+    .click();
+  const replayPublicationResponse = await replayPublication;
+  assert.equal(replayPublicationResponse.status(), 200);
+  assert.equal(
+    replayPublicationResponse.request().headers()["idempotency-key"],
+    saved.request_key,
+  );
+  assert.equal(
+    replayPublicationResponse.request().postData(),
+    publicationResponse.request().postData(),
+  );
+  const recoveredOffer = await replayPublicationResponse.json();
+  assert.equal(recoveredOffer.replayed, true);
+  assert.deepEqual(recoveredOffer.exchange, sent.exchange);
+  await sender.page
+    .getByRole("heading", {
+      name: "Committed availability receipt",
+      exact: true,
+    })
+    .waitFor();
+  phase = "sender-recover-cancel";
+  const replayWithdrawal = sender.page.waitForResponse(
+    (r) =>
+      new URL(r.url()).pathname.endsWith("/exchange-closures") &&
+      r.request().method() === "POST",
+  );
+  await sender.page
+    .getByRole("button", {
+      name: "Withdraw this artifact offer or recover result",
+      exact: true,
+    })
+    .click();
+  const replayWithdrawalResponse = await replayWithdrawal;
+  assert.equal(replayWithdrawalResponse.status(), 200);
+  assert.equal(
+    replayWithdrawalResponse.request().headers()["idempotency-key"],
+    saved.withdrawal_key,
+  );
+  assert.equal(
+    replayWithdrawalResponse.request().postData(),
+    withdrawalResponse.request().postData(),
+  );
+  const recoveredWithdrawal = await replayWithdrawalResponse.json();
+  assert.deepEqual(recoveredWithdrawal, { ...withdrawn, replayed: true });
+  await sender.page
+    .getByRole("status")
+    .filter({ hasText: "This offer was withdrawn." })
+    .waitFor();
+  assert.equal(offerRequests, 2);
+  recoveryRoundtrips++;
   await sender.context.close();
   phase = "recipient-decline-review";
   await recipient.page
@@ -504,6 +633,7 @@ try {
     terminal_declines: declines,
     committed_offers: offers,
     sender_cancellations: cancels,
+    recovery_roundtrips: recoveryRoundtrips,
     model_started: false,
     browser_sandbox: true,
     accessibility_checks: accessibilityChecks,

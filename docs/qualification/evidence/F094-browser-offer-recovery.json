@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "id": "F094",
+  "observed_at": "2026-11-05",
+  "starting_commit": "6a836af6c6277cd3da0bf5ba43d6dbe36bb343d8",
+  "state": "Bounded saved offer/withdrawal review export/import implemented; actual reload/SQL-count runtime proof owed",
+  "qualification_claim": false,
+  "change": [
+    "Save exact source/request/hash,endpoint snapshot,HTTPS origin,original participant authority/root and stable offer/withdrawal keys as JSON. Import only restores an explicitly labeled untrusted review,with no exchange call or outcome claim.",
+    "Strict24KiB/depth8/token4096 control parser refuses duplicate/casefold/escaped aliases,null,unknown fields,nonliteral or unsafe integers,trailing/oversized input before JSON.parse can erase meaning. This bounds control metadata,not artifact throughput or builds.",
+    "Match current origin,tenant,partner,actor,authority revision/root and explicit current sender binding. Endpoint snapshots and expected exchange IDs supply selectors,not authority or acceptance proof. Manager visibility alone cannot adopt a review.",
+    "Display a receipt only after actual server confirmation matches the exact canonical request,recipient/sender and optional expected exchange ID. Recover the saved withdrawal key only after recovering the offer receipt.",
+    "Actual Chrome profile saves a real recovery download,reloads,imports with no exchange traffic,and replays both exact keys/bodies/server receipts. Native PostgreSQL must remain at3offered views/3offer receipts/2terminal decisions. All earlier byte,wrong-user,decline,revocation and accessibility proofs remain.",
+    "Original receive expiry fixture now outlasts ordinary interactions and the test explicitly verifies its live grant immediately before actual revocation. This prevents expiry from masquerading as revocation. S004 removes the GitHub-only3minute aggregate context clock; platform lifetime controls aggregation while all per-request/DB/read/interaction deadlines remain."
+  ],
+  "red": {
+    "test": "saved offer review survives a recreated client without sending or trusting file outcomes",
+    "observed": "No save/restore codec existed; recoveryBytes unavailable,so a fresh client could not restore original retry meaning",
+    "reference": ".private/freightctl-f094-recovery-red.log",
+    "sha256": "cca7825655704d23d8653cb07e0110faa1be28876a4d5f194b1dd293ade1342f"
+  },
+  "green": {
+    "focused_recovery_methods": 4,
+    "affected_exchange_adapter_methods": 11,
+    "native_summary_pure_method": 1,
+    "frontend_typecheck": "pass",
+    "frontend_build": "pass app.js719839bytes,measured only",
+    "affected_native_compilation_and_vet": "pass; no runtime claim",
+    "architecture": "pass",
+    "affected_format_driver_syntax_diff": "pass"
+  },
+  "native_profile": {
+    "state": "prepared,not qualified",
+    "required": "1exact download,1new offer,1sender cancellation,1recipient decline,1saved-recovery roundtrip,9accessibility states,0external egress,no inference;exact SQL counts after original endpoint revocation",
+    "fault_scope": "Reload with known server acknowledgments and exact subsequent replays is prepared. It is not a process-death,post-write socket-loss or complete restore qualification."
+  },
+  "source_files": [
+    {
+      "path": "docs/protocols/artifact-exchange-send-browser.md",
+      "sha256": "b87a9b39ec2fd062e369274e48df57920f2a7b836187e8c5cae24587af3a98ac"
+    },
+    {
+      "path": "internal/api/artifact_exchange_browser_integration_test.go",
+      "sha256": "d39fb214ad7ae14be31bfdd5309629c28ca007a63f57d8a1d3a0472fbdd6a613"
+    },
+    {
+      "path": "internal/browser/assets/app.js",
+      "sha256": "bf5583df0c00ca73c437c885d8a72eeb4e4f3e7a4e59780f2f5bfb14d7cd7334"
+    },
+    {
+      "path": "internal/browser/assets/manifest.json",
+      "sha256": "6b458523a1be136248c8ff3a590b80f58c391d9faa3c823f9635c881a6c9a709"
+    },
+    {
+      "path": "scripts/artifact-exchange-browser.mjs",
+      "sha256": "ff0c45a26724cb96120a58cd8647b16b03b0d2be0168bcbbad0216c859c78c83"
+    },
+    {
+      "path": "web/src/app.tsx",
+      "sha256": "b77f60e152025b80547ae1c1fe37d0d6ad2fde5662e89515d94afa754c9328bf"
+    },
+    {
+      "path": "web/src/artifact-exchanges-api.ts",
+      "sha256": "41698d8769a6cef507b905b375a641c290757486cb0a70d25e88d8ac07f8e99a"
+    },
+    {
+      "path": "web/src/artifact-recovery.ts",
+      "sha256": "bf46e590fea38cd250bedf1e246dc56ee1b8833cb648f7560c5584329ebfd54a"
+    },
+    {
+      "path": "web/src/artifact-send.tsx",
+      "sha256": "bd6d80b526d53c48d99d6ee05ff2912efc7c20da1bea9be8829377d30c36e06f"
+    },
+    {
+      "path": "web/tests/artifact-recovery.test.mjs",
+      "sha256": "94d96f701b89b2d0c84396669bcd416d49d4d9ed4b858de85f307ed09e3aa6ac"
+    }
+  ],
+  "local_manifest": {
+    "reference": ".private/freightctl-f094/manifest.json",
+    "sha256": "1778b52bb43f64d2c263496a3f2c7bf03be3d52d7577cc63ee6944020bd013da"
+  },
+  "owed": [
+    "Actual native current-source Chrome reload/import/exact replay/SQL-count proof and original affected journeys",
+    "Actual response-loss/process-death/restore outcomes,retention/fairness,outgoing history/admin/agent surfaces and ingress/onward bridges",
+    "All original mandatory baseline/AX/FINISH gates; scanner findings and native nonsecurity failures remain red"
+  ]
+}

@@ -30,6 +30,7 @@ type exchangeBrowserSummary struct {
 	Declines      *int   `json:"terminal_declines"`
 	Offers        *int   `json:"committed_offers"`
 	Cancels       *int   `json:"sender_cancellations"`
+	Recovery      *int   `json:"recovery_roundtrips"`
 	Model         *bool  `json:"model_started"`
 	Sandbox       *bool  `json:"browser_sandbox"`
 	Accessibility *int   `json:"accessibility_checks"`
@@ -40,7 +41,7 @@ type exchangeBrowserSummary struct {
 }
 
 func TestExchangeBrowserSummaryRefusesAmbiguousEvidence(t *testing.T) {
-	valid := `{"state":"passed","phase":"complete","external_egress":0,"exact_downloads":1,"terminal_declines":1,"committed_offers":1,"sender_cancellations":1,"model_started":false,"browser_sandbox":true,"accessibility_checks":8,"browser_version":"142.0.1","node_version":"v26.13.0","axe_version":"4.14.0"}`
+	valid := `{"state":"passed","phase":"complete","external_egress":0,"exact_downloads":1,"terminal_declines":1,"committed_offers":1,"sender_cancellations":1,"recovery_roundtrips":1,"model_started":false,"browser_sandbox":true,"accessibility_checks":9,"browser_version":"142.0.1","node_version":"v26.13.0","axe_version":"4.14.0"}`
 	for _, raw := range []string{
 		strings.Replace(valid, `"external_egress":0`, `"external_egress":1,"external_egress":0`, 1),
 		strings.Replace(valid, `"model_started":false`, `"model_started":true,"MODEL_STARTED":false`, 1),
@@ -48,6 +49,8 @@ func TestExchangeBrowserSummaryRefusesAmbiguousEvidence(t *testing.T) {
 		strings.Replace(valid, `"model_started":false`, `"model_started":null`, 1),
 		strings.Replace(valid, `"terminal_declines":1,`, "", 1),
 		strings.Replace(valid, `"committed_offers":1,`, "", 1),
+		strings.Replace(valid, `"recovery_roundtrips":1,`, "", 1),
+		strings.Replace(valid, `"recovery_roundtrips":1`, `"recovery_roundtrips":0,"RECOVERY_ROUNDTRIPS":1`, 1),
 		strings.Replace(valid, `"sender_cancellations":1`, `"sender_cancellations":0,"sender_cancellations":1`, 1),
 		strings.Replace(valid, `"terminal_declines":1`, `"terminal_declines":0,"terminal_declines":1`, 1),
 		strings.Replace(valid, `"phase":"complete"`, `"phase":"private-path-and-credential"`, 1),
@@ -90,7 +93,7 @@ func readExchangeBrowserSummary(path string) (*exchangeBrowserSummary, string) {
 		return nil, hash
 	}
 	seen := map[string]bool{}
-	allowed := map[string]bool{"state": true, "phase": true, "external_egress": true, "exact_downloads": true, "terminal_declines": true, "committed_offers": true, "sender_cancellations": true, "model_started": true, "browser_sandbox": true, "accessibility_checks": true, "browser_version": true, "node_version": true, "axe_version": true, "failure_sha256": true}
+	allowed := map[string]bool{"state": true, "phase": true, "external_egress": true, "exact_downloads": true, "terminal_declines": true, "committed_offers": true, "sender_cancellations": true, "recovery_roundtrips": true, "model_started": true, "browser_sandbox": true, "accessibility_checks": true, "browser_version": true, "node_version": true, "axe_version": true, "failure_sha256": true}
 	for keys.More() {
 		field, err := keys.Token()
 		name, ok := field.(string)
@@ -107,11 +110,11 @@ func readExchangeBrowserSummary(path string) (*exchangeBrowserSummary, string) {
 	d.DisallowUnknownFields()
 	var s exchangeBrowserSummary
 	var tail any
-	if d.Decode(&s) != nil || d.Decode(&tail) != io.EOF || s.Egress == nil || s.Downloads == nil || s.Declines == nil || s.Offers == nil || s.Cancels == nil || s.Model == nil || s.Sandbox == nil || s.Accessibility == nil || *s.Egress < 0 || *s.Downloads < 0 || *s.Downloads > 1 || *s.Declines < 0 || *s.Declines > 1 || *s.Accessibility < 0 || *s.Accessibility > 8 || *s.Offers < 0 || *s.Offers > 1 || *s.Cancels < 0 || *s.Cancels > 1 {
+	if d.Decode(&s) != nil || d.Decode(&tail) != io.EOF || s.Egress == nil || s.Downloads == nil || s.Declines == nil || s.Offers == nil || s.Cancels == nil || s.Recovery == nil || s.Model == nil || s.Sandbox == nil || s.Accessibility == nil || *s.Egress < 0 || *s.Downloads < 0 || *s.Downloads > 1 || *s.Declines < 0 || *s.Declines > 1 || *s.Accessibility < 0 || *s.Accessibility > 9 || *s.Recovery < 0 || *s.Recovery > 1 || *s.Offers < 0 || *s.Offers > 1 || *s.Cancels < 0 || *s.Cancels > 1 {
 		return nil, hash
 	}
 	switch s.Phase {
-	case "launch", "recipient-login", "recipient-directory", "recipient-discovery", "receive-accessibility", "recipient-details", "details-accessibility", "exact-download", "sender-login", "sender-directory", "sender-review", "sender-review-accessibility", "sender-offer", "sender-receipt-accessibility", "sender-cancel", "recipient-decline-review", "decline-review-accessibility", "recipient-decline", "declined-retrieval", "declined-discovery", "declined-accessibility", "unrelated-directory", "unrelated-discovery", "unrelated-accessibility", "revocation-barrier", "revoked-discovery", "revoked-accessibility", "complete":
+	case "launch", "recipient-login", "recipient-directory", "recipient-discovery", "receive-accessibility", "recipient-details", "details-accessibility", "exact-download", "sender-login", "sender-directory", "sender-review", "sender-review-accessibility", "sender-offer", "sender-receipt-accessibility", "sender-cancel", "sender-save-recovery", "sender-reload-recovery", "sender-recovery-accessibility", "sender-recover-offer", "sender-recover-cancel", "recipient-decline-review", "decline-review-accessibility", "recipient-decline", "declined-retrieval", "declined-discovery", "declined-accessibility", "unrelated-directory", "unrelated-discovery", "unrelated-accessibility", "revocation-barrier", "revoked-discovery", "revoked-accessibility", "complete":
 	default:
 		return nil, hash
 	}
@@ -125,7 +128,9 @@ func TestArtifactExchangeNativeBrowserReceiptWrongActorAndRevocation(t *testing.
 	if os.Getenv("GITHUB_ACTIONS") != "true" || runtime.GOOS != "linux" || runtime.GOARCH != "amd64" {
 		t.Fatal("this explicit Chrome/PostgreSQL profile requires its authorized native GitHub Linux x86_64 job")
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	// This GitHub-only aggregate uses the runner's platform lifetime (S004).
+	// Individual API/DB/read/interaction deadlines remain independently bounded.
+	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	settings := custody.ExchangeSettings{MaxLifetime: time.Hour, MaxSenders: 16, MaxOpenViews: 128, MaxEndpoints: 16}
 	s, administrator, _, server := browserAPI(t, 600*time.Second, settings)
@@ -153,7 +158,7 @@ func TestArtifactExchangeNativeBrowserReceiptWrongActorAndRevocation(t *testing.
 		return path, scope, store.ExchangeParticipant{Tenant: scope.Tenant, Partner: scope.Partner, Actor: identity.Actor, AuthorityRevision: identity.AuthorityRevision, RootPolicyDigest: identity.RootPolicyDigest}
 	}
 	a, sender, actorA := participant([]string{"read", "write", "list", "deliver"})
-	b, _, actorB := participant([]string{"read", "list"})
+	b, recipient, actorB := participant([]string{"read", "list"})
 	other, _, _ := participant([]string{"read", "list"})
 	limits, _, err := s.ExchangeLimits()
 	if err != nil {
@@ -168,7 +173,7 @@ func TestArtifactExchangeNativeBrowserReceiptWrongActorAndRevocation(t *testing.
 	if err != nil {
 		t.Fatal(err)
 	}
-	offer, err := s.OfferExchange(ctx, sender, "browser-offer", store.ExchangeRequest{Schema: 1, Artifact: store.ExchangeArtifact{ID: file.ID, Size: file.Size, SHA256: file.SHA256, Policy: file.Policy}, Endpoint: store.ExchangeEndpointReference{ID: endpoint.Endpoint.ID, Revision: endpoint.Endpoint.Revision, Hash: endpoint.Endpoint.Hash}, ExpiresAt: time.Now().UTC().Add(2 * time.Minute).Truncate(time.Microsecond), Receipt: "availability-only-v1"})
+	offer, err := s.OfferExchange(ctx, sender, "browser-offer", store.ExchangeRequest{Schema: 1, Artifact: store.ExchangeArtifact{ID: file.ID, Size: file.Size, SHA256: file.SHA256, Policy: file.Policy}, Endpoint: store.ExchangeEndpointReference{ID: endpoint.Endpoint.ID, Revision: endpoint.Endpoint.Revision, Hash: endpoint.Endpoint.Hash}, ExpiresAt: time.Now().UTC().Add(10 * time.Minute).Truncate(time.Microsecond), Receipt: "availability-only-v1"})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -181,7 +186,7 @@ func TestArtifactExchangeNativeBrowserReceiptWrongActorAndRevocation(t *testing.
 		t.Fatal(err)
 	}
 	ready, revoked, result := filepath.Join(private, "ready"), filepath.Join(private, "revoked"), filepath.Join(private, "result.json")
-	config := map[string]any{"url": server.URL, "tenant": administrator.Tenant, "partner": administrator.Partner, "endpoint": endpoint.Endpoint.ID, "exchange": offer.Exchange.ID, "closure_exchange": declineOffer.Exchange.ID, "closure_request_hash": declineOffer.Exchange.RequestHash, "file": file.ID, "size": file.Size, "sha256": file.SHA256, "recipient_token": b, "sender_token": a, "sender_actor": actorA.Actor, "recipient_actor": actorB.Actor, "unrelated_token": other, "certificate_der": base64.StdEncoding.EncodeToString(server.Certificate().Raw), "download": filepath.Join(private, "download"), "ready": ready, "revoked": revoked, "result": result, "failure": filepath.Join(private, "first-failure.log")}
+	config := map[string]any{"url": server.URL, "tenant": administrator.Tenant, "partner": administrator.Partner, "endpoint": endpoint.Endpoint.ID, "exchange": offer.Exchange.ID, "closure_exchange": declineOffer.Exchange.ID, "closure_request_hash": declineOffer.Exchange.RequestHash, "file": file.ID, "size": file.Size, "sha256": file.SHA256, "recipient_token": b, "sender_token": a, "sender_actor": actorA.Actor, "recipient_actor": actorB.Actor, "unrelated_token": other, "certificate_der": base64.StdEncoding.EncodeToString(server.Certificate().Raw), "download": filepath.Join(private, "download"), "recovery": filepath.Join(private, "recovery.json"), "ready": ready, "revoked": revoked, "result": result, "failure": filepath.Join(private, "first-failure.log")}
 	encoded, err := json.Marshal(config)
 	if err != nil {
 		t.Fatal(err)
@@ -223,6 +228,10 @@ func TestArtifactExchangeNativeBrowserReceiptWrongActorAndRevocation(t *testing.
 		case <-ticker.C:
 		}
 	}
+	live, err := s.InspectExchange(ctx, recipient, offer.Exchange.ID)
+	if err != nil || live.State != "offered" {
+		t.Fatal("original receive grant must remain live immediately before endpoint revocation", err)
+	}
 	if _, err = s.DB.RegisterExchangeEndpoint(ctx, administrator, "browser-endpoint-revoke", store.ExchangeEndpointCommand{Operation: "revoke", ID: endpoint.Endpoint.ID, ExpectedRevision: 1}, limits, 16); err != nil {
 		t.Fatal(err)
 	}
@@ -235,8 +244,20 @@ func TestArtifactExchangeNativeBrowserReceiptWrongActorAndRevocation(t *testing.
 		t.Fatal("browser did not finish after exact endpoint revocation")
 	}
 	summary, hash := readExchangeBrowserSummary(result)
-	if err != nil || summary == nil || summary.State != "passed" || summary.Phase != "complete" || *summary.Egress != 0 || *summary.Downloads != 1 || *summary.Declines != 1 || *summary.Offers != 1 || *summary.Cancels != 1 || *summary.Model || !*summary.Sandbox || *summary.Accessibility != 8 || summary.Browser == "" || summary.FailureHash != "" {
+	if err != nil || summary == nil || summary.State != "passed" || summary.Phase != "complete" || *summary.Egress != 0 || *summary.Downloads != 1 || *summary.Declines != 1 || *summary.Offers != 1 || *summary.Cancels != 1 || *summary.Recovery != 1 || *summary.Model || !*summary.Sandbox || *summary.Accessibility != 9 || summary.Browser == "" || summary.FailureHash != "" {
 		t.Fatalf("native receive browser proof failed; safe result SHA256=%s", hash)
+	}
+	proof, err := s.DB.Begin(ctx, sender)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer proof.Tx.Rollback(ctx)
+	var offers, receipts, closures int
+	if err = proof.Tx.QueryRow(ctx, `SELECT (SELECT count(*) FROM artifact_exchanges WHERE sender_actor_id=$1),(SELECT count(*) FROM artifact_exchange_commands WHERE actor_id=$1),(SELECT count(*) FROM artifact_exchange_closures)`, actorA.Actor).Scan(&offers, &receipts, &closures); err != nil || offers != 3 || receipts != 3 || closures != 2 {
+		t.Fatal("saved browser retries changed durable view/receipt/decision counts", offers, receipts, closures, err)
+	}
+	if err = proof.Tx.Commit(ctx); err != nil {
+		t.Fatal(err)
 	}
 	t.Logf("native receive browser proof passed; exact result SHA256=%s; bytes=%d; Chrome=%s; axe=%s", hash, file.Size, summary.Browser, summary.Axe)
 }

@@ -2,11 +2,14 @@ import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { Api } from "./api";
 import { ApiError, uuid, type Session } from "./types";
 import { operationKey } from "./crypto";
+import {
+  offerRecoveryMaximum,
+  type OfferReviewInput,
+} from "./artifact-recovery";
 import { ExchangeReceiveApi } from "./artifact-exchanges-api";
 import {
   asExchangeRequest,
   type EndpointPage,
-  type EndpointRecord,
   type ExchangeRequest,
   type ExchangeOfferResult,
 } from "./artifact-exchanges-types";
@@ -40,11 +43,9 @@ export function ArtifactSend({
       next: "",
     }),
     [directoryLoaded, setDirectoryLoaded] = useState(false);
-  const [review, setReview] = useState<{
-    request: ExchangeRequest;
-    endpoint: EndpointRecord;
-    key: string;
-  } | null>(null);
+  const [review, setReview] = useState<
+    (OfferReviewInput & { imported?: boolean }) | null
+  >(null);
   const [receipt, setReceipt] = useState<ExchangeOfferResult | null>(null),
     [closed, setClosed] = useState(false);
   const [busy, setBusy] = useState(false),
@@ -53,6 +54,7 @@ export function ArtifactSend({
   const active = useRef<AbortController | null>(null),
     generation = useRef(0),
     owner = useRef(client);
+  const exportURL = useRef<string | null>(null);
   function start() {
     active.current?.abort();
     const controller = new AbortController(),
@@ -83,6 +85,10 @@ export function ArtifactSend({
     return () => {
       generation.current++;
       active.current?.abort();
+      if (exportURL.current) {
+        URL.revokeObjectURL(exportURL.current);
+        exportURL.current = null;
+      }
     };
   }, [client]);
   async function find(after = "") {
@@ -153,6 +159,11 @@ export function ArtifactSend({
         controller.signal,
       );
       if (!current(serial, controller)) return;
+      if (
+        review.expected_exchange_id &&
+        result.exchange.id !== review.expected_exchange_id
+      )
+        throw new ApiError("invalid_server_response", 502);
       setReceipt(result);
       setUncertain(false);
     } catch (error) {
@@ -172,6 +183,62 @@ export function ArtifactSend({
       if (!current(serial, controller)) return;
       setClosed(true);
       setUncertain(false);
+    } catch (error) {
+      if (current(serial, controller)) onError(error);
+    } finally {
+      if (current(serial, controller)) setBusy(false);
+    }
+  }
+  function saveRecovery() {
+    if (!review) return;
+    try {
+      const expected = receipt?.exchange.id || review.expected_exchange_id;
+      const bytes = client.recoveryBytes(window.location.origin, {
+        ...review,
+        ...(expected ? { expected_exchange_id: expected } : {}),
+        ...(cancelKey ? { withdrawal_key: cancelKey } : {}),
+      });
+      if (exportURL.current) URL.revokeObjectURL(exportURL.current);
+      exportURL.current = URL.createObjectURL(
+        new Blob([bytes as BlobPart], { type: "application/json" }),
+      );
+      bytes.fill(0);
+      const link = document.createElement("a");
+      link.href = exportURL.current;
+      link.download = "freightctl-offer-recovery.json";
+      document.body.append(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      onError(error);
+    }
+  }
+  async function importRecovery(file: File) {
+    if (review || busy) return;
+    const { controller, serial } = start();
+    try {
+      if (file.size < 1 || file.size > offerRecoveryMaximum)
+        throw new ApiError("invalid_exchange_recovery", 400);
+      const text = await file.text();
+      if (!current(serial, controller)) return;
+      const saved = client.readRecovery(window.location.origin, text);
+      setReceipt(null);
+      setClosed(false);
+      setUncertain(false);
+      setCancelKey(saved.withdrawal_key || "");
+      setFileID(saved.request.artifact.file_revision_id);
+      setEndpointID(saved.request.endpoint.id);
+      setExpires(saved.request.expires_at);
+      setReplyTo(saved.request.reply_to || "");
+      setReview({
+        request: saved.request,
+        endpoint: saved.endpoint,
+        key: saved.request_key,
+        imported: true,
+        ...(saved.expected_exchange_id
+          ? { expected_exchange_id: saved.expected_exchange_id }
+          : {}),
+      });
     } catch (error) {
       if (current(serial, controller)) onError(error);
     } finally {
@@ -201,6 +268,26 @@ export function ArtifactSend({
         Choose a file you can read and deliver, then an approved receive
         endpoint. Review the exact bytes and recipient before offering access.
         Receiving someone else’s artifact grants no onward permission.
+      </p>
+      <label htmlFor="artifact-offer-recovery">
+        Saved offer recovery file (optional)
+      </label>
+      <input
+        id="artifact-offer-recovery"
+        type="file"
+        accept="application/json,.json"
+        disabled={locked}
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          e.target.value = "";
+          if (file) void importRecovery(file);
+        }}
+        aria-describedby="artifact-recovery-help"
+      />
+      <p id="artifact-recovery-help" className="help">
+        Load the exact saved request and retry keys from this server and
+        account. Import only fills a review; it sends nothing and confirms no
+        outcome. Review before retrying.
       </p>
       <form onSubmit={prepare}>
         <label htmlFor="send-file-revision">Source file revision ID</label>
@@ -315,6 +402,14 @@ export function ArtifactSend({
       {review && (
         <section aria-labelledby="send-review-title">
           <h3 id="send-review-title">Review exact artifact offer</h3>
+          {review.imported && (
+            <p role="status">
+              Saved review loaded. This file is untrusted input, not server
+              confirmation. Retrying may recover an existing receipt or create
+              the offer if it never committed. Current server permissions still
+              decide.
+            </p>
+          )}
           <dl className="facts">
             <dt>Immutable source revision</dt>
             <dd>
@@ -361,6 +456,9 @@ export function ArtifactSend({
               Confirm artifact offer or recover result
             </button>
           )}
+          <button type="button" onClick={saveRecovery}>
+            Save offer recovery file
+          </button>
           <button
             type="button"
             disabled={busy || uncertain}
@@ -378,9 +476,9 @@ export function ArtifactSend({
       {uncertain && (
         <p role="alert">
           The outcome is not confirmed. Retry the same operation to recover its
-          recorded result. Keep this page open; navigating away or reloading
-          loses this in-memory review. A timeout does not prove the operation
-          failed.
+          recorded result. Save the recovery file before leaving or reloading;
+          it preserves this exact review and retry keys. A timeout does not
+          prove the operation failed.
         </p>
       )}
       {receipt && (

@@ -862,7 +862,8 @@
         "docs/qualification/evidence/F087-artifact-receive-browser.json",
         "docs/qualification/evidence/F089-exchange-endpoint-directory.json",
         "docs/qualification/evidence/F091-exchange-closures.json",
-        "docs/qualification/evidence/F093-browser-artifact-offer.json"
+        "docs/qualification/evidence/F093-browser-artifact-offer.json",
+        "docs/qualification/evidence/F094-browser-offer-recovery.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -877,11 +878,11 @@
         "S003 resumes the full product and authorizes guarded source/CI batches after previous required runs are terminal. Contract validators are implemented with focused red/green proof; durable services and five API paths are implemented; remaining surfaces and actual AX profiles remain owed. Broad/deferred qualification is mandatory at FINISH."
       ],
       "current_item": {
-        "id": "F093",
-        "state": "Shared source review and browser offer/withdrawal implemented;native/durable recovery proof owed",
-        "proof": "Missing-route red repaired;2Go/11browser/1summary focused methods plus affected format/type/build/compile/vet/architecture pass",
-        "native": "Original API/CLI/Chrome and new source-policy case prepared;not locally run",
-        "next": "Durable review recovery,outgoing lifecycle/admin/agent surfaces,ingress/onward bridges;triage new security failures and finish all deferred qualification."
+        "id": "F094",
+        "state": "Exact saved offer/withdrawal review across reload implemented;actual native replay/SQL-count proof owed",
+        "proof": "Observed missing recovery capability red repaired;4recovery+11affected adapter+1summary methods and affected type/build/compile/vet/architecture checks pass",
+        "native": "Actual recovery download/reload/no-contact import/exact replays/nine accessibility states and durable counts prepared;not locally run",
+        "next": "Outgoing lifecycle/admin/agent surfaces and ingress/onward bridges;actual response-loss/crash/restore,then mandatory FINISH."
       }
     }
   ],

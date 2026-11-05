@@ -51,7 +51,12 @@ receipt validation. Source review and offer creation share ordinary source/path/
 policy authorization; an incoming view supplies no onward permission. Eleven
 browser adapter/parser methods and affected local checks pass. Native source/
 HTTPS/CLI and eight-state Chrome profiles are prepared,not qualified. Reviews are
-currently held in memory; durable review recovery/outgoing history remain work.
+protected by F094 saved recovery export/import across reloads; current origin,
+participant,authority and root must match. Import sends nothing and claims no
+receipt; actual server confirmation is still required. Four focused recovery
+methods and eleven affected adapter methods pass. A native nine-state Chrome
+reload/exact-offer-and-withdrawal replay plus durable SQL-count proof is prepared,
+not qualified. Outgoing history and full crash/restore work remain owed.
 
 Focused local parser/client/filesystem/summary regressions and affected static,
 frontend build, native compilation/vet and architecture checks pass. They establish
