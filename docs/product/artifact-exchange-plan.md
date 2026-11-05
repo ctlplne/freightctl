@@ -104,6 +104,32 @@ coordination. Do not introduce a second database or message broker by implicatio
 
 ## Reuse and compatibility
 
+The first versioned structures now live in
+[exchange_contract.go](../../internal/store/exchange_contract.go). The profile is
+`custody-https-poll-v1`: a registered, exact-revision custody view in one tenant
+and partner, discovered by bounded polling. It contains no arbitrary URL, host
+path or implicit forwarding grant. The ordinary credential profile is an existing
+freightctl account verified by the existing transport and PostgreSQL transaction.
+Trust Control's missing contract is not substituted with an invented credential.
+
+An endpoint definition pins recipient and allowed senders by tenant, partner,
+actor, authority revision and namespace-root digest. A request pins the immutable
+file ID, length, SHA256 and original acceptance policy; endpoint ID, revision and
+definition hash; exact expiry and `availability-only-v1` receipt contract. The
+authenticated sender and operation key come from the trusted transport, outside
+the payload. Optional `reply_to` is correlation only: a reply is a new exchange
+with its own endpoint and live authorization. Availability does not promise
+retrieval, receiver persistence or business processing.
+
+Canonical decoding refuses unknown fields, duplicate/case-folded field aliases,
+nulls, trailing JSON, unqualified profiles and stronger receipt assertions. Its
+16KiB envelope, depth8 and token4096 parsing bounds protect control operations.
+Configured artifact size, sender count and new-exchange lifetime impose admission
+bounds; expiry does not change the canonical meaning of a receipt replay. None of
+these structural checks authenticates a participant, opens a file or grants access.
+Registration, durable exchange records, polling, live checks, retrieval and public
+interface/runtime proof are the next implementation items and remain owed.
+
 | Existing foundation | Planned use |
 | --- | --- |
 | Tenant/partner accounts, grants and provider references | Bind participants and delegation; keep authentication separate from exchange permission. |

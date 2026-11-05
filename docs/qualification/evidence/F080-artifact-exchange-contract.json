@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "id": "F080",
+  "observed_at": "2026-11-05",
+  "starting_commit": "386ab9aa539a3d1597521ba0f9d55ce398786cb4",
+  "state": "Exchange canonical contracts implemented; domain services and runtime qualification owed.",
+  "qualification_claim": false,
+  "change": "Typed registered custody-HTTPS polling endpoint and immutable artifact/exact endpoint/expiry/receipt/reply bindings. Strict bounded decoder and canonical hashes; no authentication or access grant from a payload. No provider API invented.",
+  "original_red": [
+    {
+      "command": "env GOMAXPROCS=1 GOMEMLIMIT=192MiB sh scripts/go.sh test -p 1 ./internal/store -run '^TestExchange' -count=1",
+      "result": "exit1: undefined ExchangeEndpointDefinition,ExchangeRequest,ExchangeLimits and related types; contract absent"
+    },
+    {
+      "command": "env GOMAXPROCS=1 GOMEMLIMIT=192MiB sh scripts/go.sh test -p 1 ./internal/store -run '^TestExchangeContractRefusesAuthorityInPayloadAndAmbiguousJSON$' -count=1",
+      "result": "exit1: uppercase SCHEMA_VERSION alias accepted by encoding/json; real regression observed after initial implementation"
+    }
+  ],
+  "focused_green": {
+    "focused_contract_methods": 4,
+    "result": "pass; exact original parser alias refusal now enforced, including Unicode long-s alias",
+    "format": "gofmt pass",
+    "vet": "store pass",
+    "architecture": "TestCoreImportBoundaries pass"
+  },
+  "source_files": {
+    "internal/store/exchange_contract.go": "4d795f878101fa739c9ff964a8527aa7023d2138e17025c97a3c4c246a10a0be",
+    "internal/store/exchange_contract_test.go": "330979a650a095d0f37bbc2bfeca3a6b37067e4c77945765f9b410c0fdb6353e"
+  },
+  "local_manifest": {
+    "reference": ".private/freightctl-ax-contract-20261105/manifest.json",
+    "sha256": "e28831ae99a59a0b489dea319584d957d500c5fecb17ac1fe30df0d8c5dc8299"
+  },
+  "native_or_served_proof": "owed; no PostgreSQL,protocol,receiver or browser runtime ran here",
+  "owed": [
+    "Durable registration and exchange services",
+    "Bounded polling and exact-byte retrieval with live authorization",
+    "Public API/CLI/UI/agent tools",
+    "Real PostgreSQL/storage/HTTPS two-agent and separately authorized reply",
+    "AX-J01,AX-J02,AX-J03 and all remaining GOAL gates"
+  ]
+}

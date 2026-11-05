@@ -852,8 +852,10 @@
         16,
         25
       ],
-      "state": "planned",
-      "evidence": [],
+      "state": "implementing",
+      "evidence": [
+        "docs/qualification/evidence/F080-artifact-exchange-contract.json"
+      ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
         "docs/qualification/artifact-exchange.json"
@@ -864,7 +866,7 @@
         "Qualify human/system ingress, governed source collection and independently verified agent-to-system onward delivery. Every handoff requires current permission; notification never grants retrieval or forwarding.",
         "Resolve X07 and qualify actual optional Trust Control integration before compatibility claims; fixture evidence is scoped and ordinary core operation remains independent.",
         "Retain all original parity rows, full customer journeys, red gates and evidence. The first customer workflow/buyer/wedge remains unselected.",
-        "The current owner authorization covers product/plan/ledger edits and a local commit; application execution remains paused, with no push, services, inference or resource changes."
+        "S003 resumes the full product and authorizes guarded source/CI batches after previous required runs are terminal. Contract validators are implemented with focused red/green proof; durable services, all public surfaces and actual AX profiles remain owed. Broad/deferred qualification is mandatory at FINISH."
       ]
     }
   ],

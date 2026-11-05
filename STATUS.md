@@ -25,9 +25,11 @@ The repository-local pre-push guard is enabled: pinned Gitleaks, exact owner
 author/committer and existing-origin/main fast-forward checks. It never authorizes
 release/package/image/artifact publication, visibility changes or deployment.
 
-Next: implement the smallest registered receive endpoint and exact-revision
-exchange, authorized polling/retrieval and separately authorized reply on existing
-PostgreSQL/custody services. Keep per-item focused proof; native/served outcomes
+F080 implements bounded canonical endpoint/exchange contracts. Four focused
+methods, store vet and import architecture pass; the observed uppercase JSON alias
+regression is repaired. This grants no runtime or exchange qualification. Next:
+implement durable registered endpoints, polling/retrieval and separately authorized
+reply using existing PostgreSQL/custody services. Keep per-item focused proof; native/served outcomes
 stay owed until actual CI. Trust Control X07 blocks only its real provider profile.
 Retained schema35 and resources are unchanged. Local inference and heavy runtime
 qualification stay off; F026 remains manual/owner-deferred.
