@@ -4,13 +4,14 @@ Updated 2026-11-05. The full GOAL.md baseline and AX01–AX08 remain active unde
 S003. All83 whole parity rows and twelve complete customer journeys remain open.
 Assisted deployment, independent adoption and enterprise readiness are unqualified.
 
-Latest completed CI candidate is7e4134b6212fa4c209762677ce6e784112652258.
+Latest completed CI candidate is345e139fae84ff56b8272c2b80047bd7fc7a68db.
 All twelve runs are terminal. Three native source-vulnerability configurations,
-reproducibility,fuzz and macOS ARM units pass. Core/native integration,metadata,
-Windows and public/peer/browser journeys remain red; nonsecurity logs/repair stay
-deferred to mandatory FINISH. Both image scans completed with unchanged blocking
-findings. F097 retains every exact run/job handle and safe image summary. No run
-was canceled. The pre-push Gitleaks guard remains enabled.
+reproducibility and fuzz pass. Core/native integration,metadata,platform and
+public/peer/browser journeys remain red;nonsecurity logs/repair stay deferred to
+mandatory FINISH. Both image scans complete with unchanged blocking findings.
+F100 retains every exact run/job handle and safe image summary. No run canceled;
+the pre-push Gitleaks guard stays enabled. New F099 dependencies still need their
+own native source-security and final-source replay.
 
 F075 actual Debian13.7 ARM/x86 scans complete with80OS+2language packages each:
 0CRITICAL/45HIGH/6UNKNOWN,61LOW/77MEDIUM,zero suppressed. The immutable Node26.13.0
