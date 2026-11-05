@@ -57,5 +57,17 @@
     "https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-reopenfile",
     "https://learn.microsoft.com/en-us/windows/win32/secauthz/security-descriptor-string-format"
   ],
-  "next_action": "Push only after current97required originals start; observe exact probe on actual Windows and implement smallest justified repair. Independently test access isolation,reparse/race behavior,durability and protected scanner transport,then replay original D103unit/service journeys. Windows server/agent and broader GOAL.md gates remain open."
+  "next_action": "Push only after current97required originals start; observe exact probe on actual Windows and implement smallest justified repair. Independently test access isolation,reparse/race behavior,durability and protected scanner transport,then replay original D103unit/service journeys. Windows server/agent and broader GOAL.md gates remain open.",
+  "submission": {
+    "candidate": "6ddcb30ecbced590f5a9b0c45316c60f590f0a32",
+    "run_id": 41951088055,
+    "state": "queued;no native API observation yet",
+    "previous_97_windows": {
+      "job_id": 126973496104,
+      "state": "failure",
+      "failed_records_including_children": 66,
+      "manifest_reference": ".private/freightctl-97-terminal-followup-RjRoYF/manifest.json",
+      "manifest_sha256": "81d8d5ea6f29b47d4901012d5416b2e78510655b5f904d9dfb4413edf8f28c88"
+    }
+  }
 }

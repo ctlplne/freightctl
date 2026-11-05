@@ -7,14 +7,19 @@ local main;both author and committer are exactly
 `imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>`.
 Owner source/CI push authorization does not authorize releases,artifacts or deployment.
 
-Latest pushed source **97c739c** contains D173's distinct FTPS registration keys,
-D174's physical build-ID repair,pinned independent CycloneDX validation and
-D175's private-safe session subreasons. Exact GitHub runs are native41944580495,
-public41944580530,core41944580446 and reproduction41944580545. Required new jobs
-have begun: ARM application/metadata and both public/reproduction profiles started;
-x86 application/fuzz still queued. No earlier pass is inherited. Five outgoing commits passed
-exact owner-identity and full-range secret checks. Hold another relevant push
-until current required native/public/reproduction jobs start.
+Latest pushed source **6ddcb30** adds native Go package/source inventory,
+separate stock build-ID reader preparation and the Windows filesystem probe.
+New runs are reproduction41951088070,core41951088073,native platforms41951088055
+and stock41951088059;qualification is pending. Five exact-owner commits passed
+the full-range secret scan. Hold the next relevant push until required new jobs start.
+
+Every required prior97native/public/reproduction/Windows job started or finished
+before this push. Preserve original native41944580495:both actual PostgreSQL
+integration sections are running;both metadata profiles and fuzz pass. Core41944580446
+and Mac pass;Windows126973496104 retains66failed records. Public41944580530
+both profiles fail session-wire-fetch-site after metadata Chrome completes.
+Reproduction41944580545 both profiles fail build-id-a/command-status. None of
+these outcomes qualifies later source;no unchanged full/public workflow was restarted.
 
 All five prior 7c native jobs finished: both application sections retain
 880 pass/3 fail/0 skip at D173; metadata and fuzz pass. Separate image gates fail.

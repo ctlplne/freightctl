@@ -1128,5 +1128,15 @@
     "manifest_reference": ".private/freightctl-97-first-failures-tvVXpx/manifest.json",
     "manifest_sha256": "32b3a537ede85379dd68a72484056b7d8946536b2af3123feabe4f7f7dc8070e",
     "scope": "Actual reason narrows to recorded fetch-site header;its exact value/missing status and request name are not observed. Preserve assertion. Request-route observation before Chromium final network headers is a hypothesis to investigate,not a proven cause or product repair. Byte operator is not reached."
+  },
+  "source_97_encrypted_first": {
+    "run_id": 41944580530,
+    "job_id": 126973496744,
+    "category": "session-wire-fetch-site",
+    "metadata_chrome": "complete",
+    "byte_operator": "not reached",
+    "manifest_reference": ".private/freightctl-97-terminal-followup-RjRoYF/manifest.json",
+    "manifest_sha256": "81d8d5ea6f29b47d4901012d5416b2e78510655b5f904d9dfb4413edf8f28c88",
+    "scope": "Same narrow metadata evidence failure as plaintext;retain all checks and original cleanup. Core97success is separate. Both97native integrations remain live and preserved."
   }
 }

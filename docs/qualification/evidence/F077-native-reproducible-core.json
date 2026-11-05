@@ -220,5 +220,13 @@
       "https://pkg.go.dev/cmd/go@go1.26.10#hdr-List_packages_or_modules",
       "https://github.com/golang/go/blob/go1.26.10/src/cmd/go/internal/tool/tool.go"
     ]
+  },
+  "package_inventory_submission": {
+    "candidate": "6ddcb30ecbced590f5a9b0c45316c60f590f0a32",
+    "run_id": 41951088070,
+    "state": "queued;no qualification",
+    "review_reference": ".private/freightctl-6dd-submission-review-6sexv4z_/manifest.json",
+    "review_sha256": "a02d07aa94a4fd0e9e0ef78335939d5bd35b30de979456080beee593bb6cf230",
+    "scope": "Five exact-owner source commits/full-range secret scan;all required originals started/terminal,live97native retained. No artifact/release/image/package/deployment or changed F075file budget."
   }
 }
