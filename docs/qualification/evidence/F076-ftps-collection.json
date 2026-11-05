@@ -1190,5 +1190,18 @@
     "local_manifest_sha256": "295b607b7cb044d0747532c2475e60782f435e91c31bd6215b1e4bdbc317939b",
     "runtime_qualification": false,
     "next_action": "Replay exact original ARM/x86 native mixed journey through both actual receiver transports and independent decryption/readback. Do not infer any source capture/approval/sending pass from parser or compile checks."
+  },
+  "source_ba_submission": {
+    "candidate": "ba011f5da8a58f44fe26b6a6496ae7b4cde3d1e8",
+    "native_run_id": 41954863336,
+    "public_run_id": 41954863432,
+    "core_run_id": 41954863426,
+    "reproduction_run_id": 41954863422,
+    "windows_run_id": 41954863401,
+    "stock_run_id": 41954863411,
+    "state": "queued;original native mixed and public Chrome replay required",
+    "review_reference": ".private/freightctl-ba-submission-review-ekophodd/manifest.json",
+    "review_sha256": "10f14a0cc628a248d954452fbd455aab8227ea7d60637fc8d7bef1427b468425",
+    "scope": "Four exact-owner commits passed full-range secret scan;all prior required jobs started/terminal and originals retained. No cancellation,restart,artifact/release/deployment or scanner-cap change. No current-source pass inherited."
   }
 }

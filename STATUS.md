@@ -7,13 +7,18 @@ local main; both author and committer are exactly
 `imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>`.
 Owner source/CI push authority does not authorize artifacts, releases or deployment.
 
-Latest pushed source **6ddcb30** passes core41951088073 and both native
+Latest pushed source **ba011f5** submits native Chrome wire observation and D176's
+mixed-fixture repair. New native41954863336,public41954863432,reproduction41954863422,
+core41954863426,Windows41954863401 and stock41954863411 are queued;no later-source
+pass is inherited. Hold the next relevant push until required new jobs start.
+
+Exact prior **6ddcb30** passes core41951088073 and both native
 reproduction41951088070 jobs. Native-platform41951088055 records the Windows
 filesystem probe, but its original unit step still fails; Mac passes. Stock41951088059
 passes four profiles; arrivals-schedules126994935686 records one unexpected command
 exit, with zero unexpected HTTP statuses, failed browser reports or cleanup failures.
-Its exact command/cause is unexposed and remains red. All current required jobs
-started or finished; preserve originals before the next reviewed source push.
+Its exact command/cause is unexposed and remains red. All required prior jobs
+started or finished before this push;original failures and scoped passes are retained.
 
 Original97native41944580495 finishes at880 pass/3 fail/0 skip on each architecture.
 D173's registration-key repair advances to D176: the mixed fixture's hyphenated
