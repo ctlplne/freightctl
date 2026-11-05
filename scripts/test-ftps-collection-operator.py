@@ -2,6 +2,7 @@
 """Run the real fixture producer with process/HTTP/Page stand-ins only."""
 import copy
 import hashlib
+import importlib.util
 import json
 import os
 from pathlib import Path
@@ -14,6 +15,9 @@ import ftps_collection_operator as operator
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = json.loads((ROOT/'web/tests/fixtures/ftps-collections.json').read_text())
+spec = importlib.util.spec_from_file_location('session_fixture', ROOT/'scripts/test-browser-session-evidence.py')
+session_fixture = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(session_fixture)
 
 
 class OperatorContracts(unittest.TestCase):
@@ -95,6 +99,7 @@ class OperatorContracts(unittest.TestCase):
     def browser(self, mode, config_path):
         config = metadata.load(config_path)
         directory, raw = config_path.parent, config_path.parent/'raw'
+        session_headers, session_steps = session_fixture.fixture(directory, config, self.consumer)
         fixture = copy.deepcopy(FIXTURES['explicit-local'])
         d, c = config['definition'], config['source']
         draft = dict(fixture['workflow'], version=1, revision=1, state='draft', approval_authority=0,
@@ -129,7 +134,7 @@ class OperatorContracts(unittest.TestCase):
             name = observed['name']
             body = metadata.canonical(value)
             for suffix, data in (('body', body), ('json', body), ('request', metadata.canonical(observed['request']) if observed['request'] is not None else b''),
-                    ('headers', b'authorization: Bearer owner-private-canary\ncontent-type: application/json\n')):
+                    ('headers', session_headers[observed['method']])):
                 metadata.private_write(raw/(name+'.'+suffix), data)
             read_steps[name] = {'name': name+'-wire-response', 'request_method': observed['method'], 'response_status': 200,
                 'response_sha256': hashlib.sha256(body).hexdigest()}
@@ -150,13 +155,13 @@ class OperatorContracts(unittest.TestCase):
                 body = metadata.canonical({'resource': resource, 'replayed': bool(attempt)})
                 metadata.private_write(raw/(label+'.json'), body)
                 metadata.private_write(raw/(label+'.request'), metadata.canonical(request))
-                metadata.private_write(raw/(label+'.headers'), ('authorization: Bearer owner-private-canary\ncontent-type: application/json\nidempotency-key: '+key+'\n').encode())
+                metadata.private_write(raw/(label+'.headers'), session_headers['POST']+('idempotency-key: '+key+'\n').encode())
                 observed.append({'status': 200, 'body': body.decode(), 'selection': request, 'idempotency_key': key})
                 records.append({'name': label+'-wire-response', 'request_method': 'POST', 'response_status': 200,
                     'response_sha256': hashlib.sha256(body).hexdigest()})
             records.append({'name': 'ftps-operator-'+name+'-original-key-recovery'})
             responses.append({'route': route, 'label': 'ftps-operator-'+name, 'observed': observed})
-        records.extend([read_steps['captured-view'], {'name': 'ftps-operator-captured-axe'}])
+        records.extend([read_steps['captured-view'], {'name': 'ftps-operator-captured-axe'}, *session_steps])
         counter = lambda count: {'schema_version': 1, 'kind': 'freightctl-ftps-source-witness-v1', 'mode': mode,
             'port': 49151, 'accepted_connections': count, 'budget_exhausted': False, 'stopped': False}
         result = {'kind': 'ftps-collection-operator-v1', 'state': 'passed', 'mode': mode, 'preview': preview,
@@ -296,6 +301,25 @@ class OperatorContracts(unittest.TestCase):
         (self.private/'collection-operator-explicit/consumer.body').write_bytes(b'wrong')
         with self.assertRaisesRegex(ValueError, 'original evidence changed'):
             operator.validate(self.root, self.private, 'explicit', self.steps, inventory, self.database)
+
+    def test_rehashed_operator_session_or_mutation_authentication_substitution_is_refused(self):
+        self.run_fixture()
+        directory = self.private/'collection-operator-explicit'
+        path = directory/'raw/session-current.json'
+        original = path.read_bytes()
+        self.change(path, lambda v: v['identity'].update(authority_revision=4))
+        with self.assertRaisesRegex(ValueError, 'browser session evidence differs'):
+            self.check()
+        path.write_bytes(original)
+        for name in ('workflow-preview', 'ftps-operator-work-1'):
+            path = directory/('raw/'+name+'.headers')
+            original = path.read_bytes()
+            for changed in (original+b'authorization: Bearer owner-private-canary\n',
+                    original.replace(b'x-csrf-token:', b'other:')):
+                path.write_bytes(changed)
+                with self.assertRaisesRegex(ValueError, 'browser session evidence differs'):
+                    self.check()
+            path.write_bytes(original)
 
     def test_parent_database_and_protected_runtime_reference_must_agree_without_deriving_from_directory_uuid(self):
         self.run_fixture()

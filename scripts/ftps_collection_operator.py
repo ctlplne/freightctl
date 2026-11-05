@@ -11,6 +11,7 @@ import re
 import uuid
 from urllib.parse import urlsplit
 
+import browser_session_evidence as session
 import ftps_collection_metadata as metadata
 import ftps_collection_source as source
 from ftps_cli_governance import read, require
@@ -22,6 +23,7 @@ COMMANDS = ('producer-token', 'producer-enroll', 'identity', 'producer-identity'
     'source-before', 'ready-before', 'connection-register', 'connection-register-replay', 'browser', 'status',
     'consumer-readback', 'producer-readback', 'ready-readback', 'source-after', 'ready-after', 'source')
 FILES = frozenset(('producer.token', 'curl.conf', 'source.csv', 'operator.ready.json', 'connection.json',
+    *session.FILES,
     'producer.headers', 'owner.headers', 'consumer.body', 'producer.body', 'ready.body', 'config.json',
     'raw/ftps-operator-result.json', 'raw/onboarding-exchange-browser.json', 'raw/onboarding-exchange-review.png',
     *('raw/'+name+'-axe.json' for name in AUDITS), *('raw/'+name+'.body' for name in READS),
@@ -30,7 +32,7 @@ FILES = frozenset(('producer.token', 'curl.conf', 'source.csv', 'operator.ready.
         for name in DECISIONS for attempt in (0, 1) for suffix in ('headers', 'request', 'json'))))
 UUID = r'[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}'
 STAGES = frozenset(('certificate', 'browser-launch', 'context-create', 'login-navigation', 'login-identity',
-    'login-credential', 'login-submit', 'files-ready', 'runtime-checks', 'success-screenshot', 'failure-capture',
+    'login-credential', 'login-submit', 'files-ready', 'session-cookie', 'session-readbacks', 'runtime-checks', 'success-screenshot', 'failure-capture',
     'record-write', 'context-close', 'browser-close', 'complete', 'definition',
     *('operator-'+s for s in ('definition', 'counter-before', 'form', 'preview', 'draft', 'approval', 'queue',
         'counter-queued', 'work', 'inspect', 'counter-after', 'record'))))
@@ -278,6 +280,7 @@ def validate(root, private, mode, steps, observed, database):
 
 
 def validate_browser(private, directory, mode, identity, config, final):
+    proof = session.validate(directory, config, identity)
     result = metadata.load(directory/'raw/ftps-operator-result.json')
     require(set(result) == {'kind', 'state', 'mode', 'preview', 'draft', 'approved', 'job_preview', 'queued', 'worked',
         'view', 'visible', 'counters', 'responses', 'reads', 'audits', 'source_control_connections', 'original_key_replays', 'business_acceptance'}
@@ -341,8 +344,7 @@ def validate_browser(private, directory, mode, identity, config, final):
             key = key.lower()
             require(sep and key not in headers, 'operator original read header duplicated or invalid')
             headers[key] = value.strip()
-        require(headers.get('authorization') == 'Bearer '+read(private/'owner.token', 256).decode()
-            and (observed['method'] == 'GET' or headers.get('content-type') == 'application/json'), 'operator original read identity differs')
+        session.validate_headers(headers, proof, observed['method'], config['url'])
         read_steps[name] = {'name': name+'-wire-response', 'request_method': observed['method'], 'response_status': 200,
             'response_sha256': hashlib.sha256(body).hexdigest()}
     for name, value in (('workflow-preview', expected_preview), ('job-preview', p), ('captured-view', final)):
@@ -381,10 +383,9 @@ def validate_browser(private, directory, mode, identity, config, final):
                 require(sep and key not in parsed, 'operator duplicate or invalid original header')
                 parsed[key] = value.strip()
             key = observed['idempotency_key']
+            session.validate_headers(parsed, proof, 'POST', config['url'])
             require(type(key) is str and re.fullmatch('[A-Za-z0-9._:-]{8,128}', key)
-                and parsed.get('idempotency-key') == key
-                and parsed.get('authorization') == 'Bearer '+read(private/'owner.token', 256).decode()
-                and parsed.get('content-type') == 'application/json', 'operator original identity or saved key differs')
+                and parsed.get('idempotency-key') == key, 'operator original identity or saved key differs')
             pair_keys.append(key)
             wire_steps.append({'name': label+'-'+str(attempt)+'-wire-response', 'request_method': 'POST',
                 'response_status': 200, 'response_sha256': hashlib.sha256(body).hexdigest()})
@@ -404,7 +405,7 @@ def validate_browser(private, directory, mode, identity, config, final):
         expected_steps.append({'name': AUDITS[index+1]+'-axe'})
         expected_steps.extend(wire_steps[index*2:index*2+2])
         expected_steps.append({'name': 'ftps-operator-'+name+'-original-key-recovery'})
-    expected_steps.extend([read_steps['captured-view'], {'name': AUDITS[5]+'-axe'}])
+    expected_steps.extend([read_steps['captured-view'], {'name': AUDITS[5]+'-axe'}, *proof['steps']])
     summary = metadata.load(directory/'raw/onboarding-exchange-browser.json')
     require(summary.get('state') == 'passed' and not summary.get('failure')
         and metadata.same(summary.get('steps'), expected_steps) and summary.get('runtime_errors') == summary.get('external_egress') == []
@@ -419,6 +420,7 @@ def validate_browser(private, directory, mode, identity, config, final):
     screenshot = read(directory/'raw/onboarding-exchange-review.png', 6 << 20)
     require(len(screenshot) >= 100 and screenshot.startswith(b'\x89PNG\r\n\x1a\n'), 'operator actual screenshot missing')
     visible = result['visible']
+    require(not any(v in str(result)+str(summary) for v in proof['secrets']), 'operator browser session privacy differs')
     require(type(visible) is str and all(v in ' '.join(visible.split()) for v in (c['user']+'@'+c['address'], mode+' FTPS',
         c['ftps']['server_name'], c['ftps']['ca_sha256'], 'Local collection only', item['file_id']))
         and not any(v in visible for v in (str(private), 'password_reference', 'ca_reference',

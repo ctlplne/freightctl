@@ -2,25 +2,28 @@
 import hashlib
 import re
 
+import browser_session_evidence as session
 import ftps_collection_metadata as metadata
 from ftps_cli_governance import read, require
 
 AUDITS = ('ftps-collection-form', 'ftps-collection-preview', 'ftps-collection-selected')
 STEP = 'ftps-collection-exact-preview-inspection-without-source-contact'
 BROWSER_STAGES = frozenset(('certificate', 'browser-launch', 'context-create', 'login-navigation',
-    'login-identity', 'login-credential', 'login-submit', 'files-ready', 'runtime-checks',
+    'login-identity', 'login-credential', 'login-submit', 'files-ready', 'session-cookie', 'session-readbacks', 'runtime-checks',
     'success-screenshot', 'failure-capture', 'record-write', 'context-close', 'browser-close',
     'complete', 'definition', 'counter-before', 'navigation', 'form', 'form-audit', 'preview-wire',
     'preview-request', 'preview-definition', 'preview-effects', 'preview-source', 'preview-visible',
     'preview-audit', 'inspect-wire', 'inspect-definition', 'inspect-state', 'inspect-visible',
     'selected-audit', 'counter-after', 'response-records', 'result-write'))
 FILES = frozenset(('config.json', 'raw/ftps-collection-browser-result.json',
+    *session.FILES,
     'raw/onboarding-exchange-browser.json', 'raw/onboarding-exchange-review.png',
     'raw/workflow-preview.body', 'raw/collection-view.body',
     *('raw/'+name+'.'+suffix for name in ('workflow-preview', 'collection-view') for suffix in ('json', 'request', 'headers')),
     *(('raw/'+name+'-axe.json') for name in AUDITS)))
 
 FAILURE_CODES = {
+    session.ERROR: 'session-proof',
     'collection actual Chrome did not pass': 'chrome-record',
     'collection browser HTTPS address differs': 'url',
     'collection browser accessibility audit missing or failed': 'accessibility',
@@ -117,6 +120,7 @@ def validate(root, private, mode, steps, inventory):
         'source_counter': str(private/('collection-metadata-'+mode)/'source.json'),
         'workflow': approved['resource'], 'view': view}
     require(metadata.same(config, expected_config), 'collection browser fixture detached from original CLI evidence')
+    proof = session.validate(directory, config, identity)
     summary = metadata.load(directory/'raw/onboarding-exchange-browser.json')
     wire_steps = {}
     for name, method, request in (('workflow-preview', 'POST', {'definition': approved['resource']['definition']}),
@@ -131,12 +135,11 @@ def validate(root, private, mode, steps, inventory):
             key = key.lower()
             require(sep and key not in headers, 'collection browser original header duplicated or invalid')
             headers[key] = value.strip()
-        require(headers.get('authorization') == 'Bearer '+read(private/'owner.token', 256).decode()
-            and (method == 'GET' or headers.get('content-type') == 'application/json'), 'collection browser original HTTP identity differs')
+        session.validate_headers(headers, proof, method, url)
         wire_steps[name] = {'name': name+'-wire-response', 'request_method': method, 'response_status': 200,
             'response_sha256': hashlib.sha256(body).hexdigest()}
     expected_steps = [{'name': AUDITS[0]+'-axe'}, wire_steps['workflow-preview'], {'name': AUDITS[1]+'-axe'},
-        wire_steps['collection-view'], {'name': AUDITS[2]+'-axe'}, {'name': STEP}]
+        wire_steps['collection-view'], {'name': AUDITS[2]+'-axe'}, {'name': STEP}, *proof['steps']]
     require(summary.get('state') == 'passed' and not summary.get('failure')
         and summary.get('runtime_errors') == summary.get('external_egress') == []
         and summary.get('model_started') is False and summary.get('production_activated') is False
@@ -168,7 +171,7 @@ def validate(root, private, mode, steps, inventory):
             'collection browser original HTTP response differs')
     forbidden = [str(private), 'password_reference', 'ca_reference', 'Pinned source host',
         read(private/'owner.token', 256).decode(),
-        read(private/('collection-metadata-'+mode)/'source-password', 256).decode()]
+        read(private/('collection-metadata-'+mode)/'source-password', 256).decode(), *proof['secrets']]
     terms = (c['user']+'@'+c['address'], mode+' FTPS', c['ftps']['server_name'], c['ftps']['ca_sha256'],
         c['directory'], approved['resource']['definition']['source']['manifest'], 'Local collection only')
     for field in ('preview_text', 'selected_text'):

@@ -155,3 +155,17 @@ overall goal can be marked complete.
 Both current F075native post-download observations show a regular1692762112byte database,above the original1073741824byte database-file cap(D168),with153byte metadata and exact disk unmount. No scan report qualified. Preserve the file/RAM/disk/time limits and required inventory/severity/freshness checks; diagnose a supported complete path within those limits. Earlier source28x86OOM is a separate proven event,not an ARM allocation diagnosis.
 
 An exact database-file-only proposal raises1073741824bytes to1879048192bytes(1792MiB),while retaining every RAM/CPU/disk/time/isolation/inventory/severity/freshness gate. Its unapplied patch passes21stand-in methods; explicit owner decision is pending under AGENTS.md. No approved budget change or runtime scan success is inferred. F075 holds the protected proposal/patch/verification hashes and primary-source review.
+
+D170 now has an actual public diagnostic: both e2 metadata browser commands complete,
+then the verifier rejects cookie-authenticated headers because it expects bearer.
+The repair binds the captured secure cookie, two independent verified HTTPS identity/session
+readbacks, original CLI actor/authority, active expiry and independently derived mutation CSRF.
+All original key/body/byte/source/audit/privacy checks remain mandatory. Seven private artifacts
+and two probe response hashes extend the original closure; probes are evidence reads, not UI
+actions.144frontend/101focused Python stand-in methods pass locally; GitHub runtime replay
+remains required. All explicit helper consumers include both new proof scripts in push/PR filters.
+
+D6 native application sections also pass880/0/0 on each architecture. Its x86 feed
+container proves another exact OOM despiteGOGC25; ARM reaches the file cap. The
+pending file-only capacity proposal does not fix or authorize a RAM increase. Keep
+this memory failure visible and investigate a supported bounded full-feed path.

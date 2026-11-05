@@ -19,6 +19,8 @@ export const ftpsCollectionBrowserStages = [
   "login-credential",
   "login-submit",
   "files-ready",
+  "session-cookie",
+  "session-readbacks",
   "runtime-checks",
   "success-screenshot",
   "failure-capture",

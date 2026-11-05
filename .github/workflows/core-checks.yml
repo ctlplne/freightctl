@@ -46,6 +46,7 @@ jobs:
           python3 scripts/test-ftps-dispatch-qualification.py
           python3 scripts/test-ftps-collection-metadata.py
           python3 scripts/test-ftps-collection-browser.py
+          python3 scripts/test-browser-session-evidence.py
           python3 scripts/test-ftps-client-summary.py
           python3 scripts/test-ftps-stock-metadata.py
           sh scripts/go.sh test -p 1 -race ./scripts/peers/ftps-source

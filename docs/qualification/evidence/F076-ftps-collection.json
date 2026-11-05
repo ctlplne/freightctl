@@ -3,7 +3,7 @@
   "id": "F076",
   "observed_at": "2026-11-04",
   "starting_commit": "4d771b2e6a961a70b764681fd578ff175d064db7",
-  "state": "Both f08native application suites880/0/0/all17FTPSleaves pass;image jobs remainD168red. D6corepasses141frontend/source checks,but both public profiles stop after successful explicit metadata Chrome at unclassified evidence reopeningD170. Exact parent-DB repairD169 and private-safe verifier diagnostics pass local contracts only. Whole goal open.",
+  "state": "Both f08/d6 native application sections pass880/0/0 on ARM/x86;image jobs remain red. E2 public diagnostics identify D170at original browser http-identity:verifier expects bearer while UI uses secure cookie/CSRF. Cookie/session-bound repair passes local contracts only;native replay,operator,mixed runtime and whole goal remain open.",
   "scope": "Read/copy input stage of ordinary immutable workflows, using exact registered FTPS revisions and the existing bounded producer-manifest, custody, intake, lease and event machinery. Transport metadata reading alone does not qualify collection.",
   "qualification_claim": false,
   "frozen_cases": [
@@ -44,7 +44,7 @@
       "outcome": "Existing SFTP collection/arrival/schedules, FTPS/SFTP sending, ciphertext, intake, RLS, receipts and native regression gates remain enforced. No local PostgreSQL, model or scanner execution is needed."
     }
   ],
-  "next_action": "Retain exact f08 native/metadata/fuzz results. Submit the verified-curl body capture repair and required full UI create/approve/queue/work plus independent HTTPS readbacks after the current required candidate starts; require all original three fresh plaintext/encrypted estates. Keep independent full typed collection, mixed/encrypted routing and whole journeys open.",
+  "next_action": "Preserve current e2native run41932617128;hold next relevant push until its five required jobs start. Then submit D171missing-DSN,F077native reproduction and D170cookie/session evidence repairs. Require original public three-fresh-estate plaintext/encrypted matrices without relaxing identity,authority,CSRF,bytes,replay or resource assertions. Owner scanner file-cap proposal remains unapplied.",
   "first_failure": {
     "test": "TestFTPSCollectionSourceMissingContract",
     "result": "existing typed source refuses ftps.collect; no service contact",
@@ -820,11 +820,11 @@
       "manifest_reference": ".private/freightctl-f076-d6-core-6ula79/manifest.json",
       "manifest_sha256": "45894d307737491168e9ca72628aed03f9e3b40f38d9cabc0dce684b4350d31e"
     },
-    "native": "All five exact jobs started and are preserved; no terminal result inferred.",
+    "native": "Both terminal application880/0/0;later image failures recorded separately;metadata/fuzzsuccess.",
     "submission": {
       "candidate": "d6cedfb3a4497c33b90f34933e939ad229e3e157",
       "native_run_id": 41929132201,
-      "native_state": "queued/unqualified; five exact jobs now created",
+      "native_state": "completed;both application sections880/0/0,both later image gates red;both metadata/fuzz success",
       "public_workflow_operator_run_id": 41929132162,
       "public_state": "Both completed/failure:first explicit metadata Chrome command completes but original evidence validation refuses; no byte operator phase reached. D170cause unobserved; original logs retained.",
       "public_jobs": [
@@ -844,6 +844,34 @@
         126926515883,
         126926516008
       ]
+    },
+    "native_terminal": {
+      "candidate": "d6cedfb3a4497c33b90f34933e939ad229e3e157",
+      "run_id": 41929132201,
+      "manifest_reference": ".private/freightctl-f076-d6-native-terminal-ft0KZU/manifest.json",
+      "manifest_sha256": "60dca318f92af6ee05d97846342d769c0cd43e3896bef38b2598e1179451eaea",
+      "application": [
+        {
+          "architecture": "arm64",
+          "job_id": 126926515393,
+          "pass": 880,
+          "fail": 0,
+          "skip": 0,
+          "workflow_seconds": 498.759
+        },
+        {
+          "architecture": "x86_64",
+          "job_id": 126926515789,
+          "pass": 880,
+          "fail": 0,
+          "skip": 0,
+          "workflow_seconds": 541.737
+        }
+      ],
+      "image": "Both full jobs fail afterward:ARMfeed-files1692762112byte DB; x86feed-download exit137 with exact stopped OOMKilledtrue. Both scratch disks unmount.",
+      "metadata_restore_both": "success",
+      "bounded_fuzz": "success",
+      "scope": "Exact d6source only;no mixed cases,public operator or full image/whole-goal pass."
     }
   },
   "parent_database_repair_prepared": {
@@ -874,5 +902,35 @@
     "operator_methods": 7,
     "reporter_methods": 71,
     "runtime_qualification": false
+  },
+  "source_e2_public_first": {
+    "candidate": "e2a2b592371dd6c3aea8fe363b9eac38bc9b0968",
+    "run_id": 41932617234,
+    "jobs": [
+      126933057028,
+      126933057411
+    ],
+    "state": "both completed/failure",
+    "manifest_reference": ".private/freightctl-f076-e2-public-session-I8Jlc5/manifest.json",
+    "manifest_sha256": "b55ca4d4239624b1f4ebaf2080356e8854d7976abf682c47301ff3f531afe541",
+    "observation": "Both first explicit metadata Chrome commands complete;browser-reopen/http-identity refuses original headers. No failed CLI/native/lftp commands;exact retained metadata/resource/database cleanup passes. Byte operator not reached.",
+    "cause": "UI sends bearer only at session creation,then same-origin secure cookie and mutation CSRF. Metadata/operator checkers and old stand-in fixtures incorrectly required bearer on subsequent wire requests."
+  },
+  "session_evidence_repair_prepared": {
+    "defect": "D170",
+    "mechanism": "Capture exact host-only Secure,HttpOnly,SameSiteStrict cookie privately. While browser remains alive,perform two verified HTTPS GET probes with that observed cookie and no bearer;reopen identities against original CLI identity/authority,active session/expiry and independently derived CSRF. Bind every captured UI wire header to this exact cookie;mutations require exact CSRF/origin/JSON plus unchanged saved-key checks. Preserve all wire/body/DOM/source/no-contact/byte/audit/cleanup assertions. Seven new private artifacts and two probe output hashes are mandatory;old or claim-only closures cannot satisfy the gate.",
+    "privacy": "Cookie,session token and CSRF stay in protected ephemeral files,never public results or raw uploads. Probes are independent evidence reads,not additional UI actions or execution authority.",
+    "local_manifest_reference": ".private/freightctl-f076-session-local-zpcok1h7/manifest.json",
+    "local_manifest_sha256": "842b6b02cd9c939997feccea0e8856fe8aba15c9a9bdd554337cfa3454cdc7f9",
+    "python_methods": {
+      "session": 4,
+      "metadata": 9,
+      "browser": 9,
+      "operator": 8,
+      "reporter": 71
+    },
+    "frontend_methods": 144,
+    "runtime_qualification": false,
+    "scope": "Parser,Page,route,process and own-file stand-ins only;no local service,actual browser,source,scanner or inference. All original public/native journeys require GitHub replay."
   }
 }

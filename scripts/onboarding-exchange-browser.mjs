@@ -13,6 +13,10 @@ import { qualifySchedules } from "./schedules-browser.mjs";
 import { qualifyRouting } from "./routing-browser.mjs";
 import { qualifyCollections } from "./collections-browser.mjs";
 import {
+  recordBrowserSessionCookie,
+  recordBrowserSessionReadbacks,
+} from "./browser-session-proof.mjs";
+import {
   qualifyFTPSCollectionMetadata,
   ftpsCollectionBrowserObservation,
 } from "./ftps-collection-browser.mjs";
@@ -271,6 +275,10 @@ try {
   await page.getByRole("button", { name: "Connect", exact: true }).click();
   await page.getByRole("heading", { name: "Files", exact: true }).waitFor();
   dispatchLifecycle("files-ready");
+  if (["ftps-metadata", "ftps-operator"].includes(c.collection_phase)) {
+    dispatchLifecycle("session-cookie");
+    await recordBrowserSessionCookie(context, c);
+  }
   if (
     !c.routing_only &&
     !c.arrivals_only &&
@@ -387,6 +395,10 @@ try {
     await openPlan();
     await inspect(c.plain, c.plain_hash);
     record("reload-reads-same-durable-evidence-without-activation");
+  }
+  if (["ftps-metadata", "ftps-operator"].includes(c.collection_phase)) {
+    dispatchLifecycle("session-readbacks");
+    await recordBrowserSessionReadbacks(c, actualReview);
   }
   dispatchLifecycle("runtime-checks");
   assert.deepEqual(errors, []);

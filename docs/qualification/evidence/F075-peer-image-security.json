@@ -3,7 +3,7 @@
   "id": "F075",
   "observed_at": "2026-11-04",
   "starting_commit": "63e153f6511f6cb457dfa46f70d39f2548f200b6",
-  "state": "Both f08 native application suites880/0/0;both image gates fail at actual regular1692762112byte database over original1GiBfile cap,metadata153bytes,both exact disk cleanups pass. Expanded1792MiBfile-only proposal is unapplied/pending owner decision. Hard RAM/CPU and all scan policies unchanged; no feed/report/image qualification.",
+  "state": "Both f08 application880/0/0,image feed-files beyond original1GiB file cap. D6also application880/0/0 both;ARM repeats file failure,x86 exact stopped state proves feed OOM despite GOGC25. Both disk cleanups pass. File-only proposal unapplied/pending owner;hard RAM/CPU and all policies unchanged;no image qualification.",
   "scope": "Scan the exact disposable independent OpenPGP recipient image used by native Linux tests. This is test infrastructure, not a released server image or runtime security qualification.",
   "qualification_claim": false,
   "frozen_cases": [
@@ -391,5 +391,49 @@
       }
     ],
     "limit": "Pinned --light is ignored; upstream current pipeline compacts. This establishes no supported shrink remedy and does not independently attest the exact downloaded artifact."
+  },
+  "source_d6_terminal": {
+    "candidate": "d6cedfb3a4497c33b90f34933e939ad229e3e157",
+    "run_id": 41929132201,
+    "manifest_reference": ".private/freightctl-f076-d6-native-terminal-ft0KZU/manifest.json",
+    "manifest_sha256": "60dca318f92af6ee05d97846342d769c0cd43e3896bef38b2598e1179451eaea",
+    "application": [
+      {
+        "architecture": "arm64",
+        "job_id": 126926515393,
+        "pass": 880,
+        "fail": 0,
+        "skip": 0,
+        "workflow_seconds": 498.759
+      },
+      {
+        "architecture": "x86_64",
+        "job_id": 126926515789,
+        "pass": 880,
+        "fail": 0,
+        "skip": 0,
+        "workflow_seconds": 541.737
+      }
+    ],
+    "image": "Both full jobs fail afterward:ARMfeed-files1692762112byte DB; x86feed-download exit137 with exact stopped OOMKilledtrue. Both scratch disks unmount.",
+    "metadata_restore_both": "success",
+    "bounded_fuzz": "success",
+    "scope": "Feed-onlyGOGC25 does not guarantee avoidance of original hard1GiB OOM. Allocation source remains unproven. Pending file-only proposal does not fix or authorize a RAM increase. No image scan qualified.",
+    "arm_image": {
+      "phase": "feed-files",
+      "database_bytes": 1692762112,
+      "metadata_bytes": 153,
+      "runner_failure_manifest_sha256": "f415a16f07132739a79b95b90fb160bcfcc2ebb028efa396c5f6f9da3617a00c"
+    },
+    "x86_image": {
+      "phase": "feed-download",
+      "exit_code": 137,
+      "category": "container-oom",
+      "oom_killed": true,
+      "running": false,
+      "state_exit_code": 137,
+      "state_sha256": "1e9ca5d77a13f64ce311b3df2c6c831bfd13816b11e339bfe8f8cd3c4428de7c",
+      "runner_failure_manifest_sha256": "49f1e2126951e2d0f2c0d20248d3c63fa83b488895acc4b874d946dbaa513648"
+    }
   }
 }

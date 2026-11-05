@@ -4,7 +4,7 @@ import { ftpsCollectionBrowserStages } from "./ftps-collection-browser.mjs";
 import { wireResponse } from "./browser-wire.mjs";
 
 export const ftpsOperatorStages = [
-  ...ftpsCollectionBrowserStages.slice(0, 16),
+  ...ftpsCollectionBrowserStages.slice(0, 18),
   "operator-definition",
   "operator-counter-before",
   "operator-form",
