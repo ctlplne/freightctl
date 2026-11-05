@@ -6,6 +6,8 @@ The product target is complete paid-incumbent workflow parity, followed by measu
 
 Start with [GOAL.md](GOAL.md), [AGENTS.md](AGENTS.md), and [STATUS.md](STATUS.md).
 
+The trstctl feature suite is explicitly outside freightctl's scope. freightctl does not bundle trstctl or require its service or a dedicated integration. It retains the credential enrollment, protected secrets, certificate checks, encryption and safe key rotation needed for its own transfers. See the [product boundary](GOAL.md#4-product-boundaries-and-studio-integration).
+
 For the implemented local first tenant, partner and administrator path, see [first-run enrollment](docs/first-run.md). It includes protected setup plans, exact retry and browser sign-in; production installation and complete journeys remain unqualified.
 
 For explicit tenant directory authority and ordinary browser/API/CLI enrollment of another partner, see [partner enrollment](docs/partner-enrollment.md). Complete partner onboarding and production activation remain required work.

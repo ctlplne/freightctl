@@ -3387,6 +3387,13 @@
     {
       "observed_at": "2026-11-03",
       "change": "Link F071 native governed components and F072 browser implementation to both existing FTPS send rows;clarify UI surface already required by GOAL16. Preserve row count,state,original behavior and acceptance journeys;no whole-row verification or scope exclusion."
+    },
+    {
+      "observed_at": "2026-11-04",
+      "change": "Owner decision S001 explicitly excludes the trstctl suite and dedicated integration requirement under GOAL4/12. Transfer-scoped security remains mandatory. No existing baseline row or complete journey represented that suite, so all 83 row IDs, states, incumbent observations and acceptance journeys remain unchanged.",
+      "scope_changed": true,
+      "owner_authorization": "Owner instruction: we need to explicitly remove trstctl feature suite out of freightctl.",
+      "scope_decision": "docs/qualification/remaining.json#S001"
     }
   ]
 }

@@ -1,6 +1,6 @@
 # freightctl status
 
-Updated 2026-11-05. Execution is **paused at the owner's request**;GOAL.md remains
+Updated 2026-11-04. Application execution remains **paused at the owner's request**;GOAL.md remains
 incomplete. All **83 whole baseline rows
 and 12 full customer journeys remain open**. Assisted deployment, independent
 adoption and enterprise readiness remain separately unqualified. Work stays on
@@ -8,15 +8,27 @@ local main; both author and committer are exactly
 `imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>`.
 Owner source/CI push authority does not authorize artifacts, releases or deployment.
 
-Current work is finalized in **99e57b1** (approved Trivy file-only allowance) and
+The owner explicitly removed the trstctl feature suite from freightctl. GOAL4/12,
+README and ledger decision S001 exclude the bundled suite, general credential/trust
+control plane and dedicated trstctl integration requirement. Transfer-scoped
+credential custody, authentication, certificate validation, encryption and safe
+rotation/revocation remain required. No existing parity row or journey is removed
+or qualified by this boundary change. This scope-only update does not resume the
+application build, start services or authorize a push.
+
+The prior application handoff is **85695f6**, following **99e57b1** (approved Trivy file-only allowance) and
 **ecb3427** ([F079](docs/qualification/evidence/F079-handle-bound-directory-sync.json)
 handle-bound directory flushing). This handoff accompanies the requested commit/
 source push/pause. Native checks for those changes remain pending. On resume,
 inspect current origin/main and its exact jobs before continuing;preserve originals.
 
-Prior submitted **ba011f5** has x86 native127007225597 application884 pass/0 fail/
-0 skip;its separate image feed is OOM-killed under hard1GiB. ARM127007225840 remains
-live at the snapshot. Metadata/fuzz and both reproduction jobs pass. Both public
+Read-only CI refresh: all eleven workflows for submitted **85695f6** are queued
+at this snapshot; there is no completed result for F079 or the approved F075 patch.
+Prior submitted **ba011f5** now has both native application gates complete:
+x86 native127007225597 and ARM127007225840 each884 pass/0 fail/0 skip. Both jobs
+remain red at the separate image gate: x86 records OOM under hard1GiB; ARM records
+the1,691,381,760-byte database exceeding the old1GiB file cap. Metadata/fuzz and
+both reproduction jobs pass. Both public
 profiles finish and verify first explicit metadata Chrome,then fail
 cli-explicit-collection-source before operator Chrome;underlying source-helper
 startup cause remains unexposed. Exact evidence is retained inF076. Windows stays

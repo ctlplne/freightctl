@@ -564,10 +564,11 @@
     {
       "id": "R009",
       "priority_stage": 3,
-      "description": "Identity providers, granular delegation, lifecycle, governance and studio integration",
+      "description": "Transfer identity providers, delegation, credential lifecycle and governance; permitted observability/release integrations",
       "goal_sections": [
         4,
-        11
+        11,
+        12
       ],
       "state": "implementing",
       "evidence": [
@@ -601,6 +602,7 @@
         "docs/qualification/evidence/F037-scheduled-workflows.json"
       ],
       "remaining_details": [
+        "Owner decision S001 excludes the trstctl suite, general credential/trust control plane and dedicated trstctl integration requirement. Implement only freightctl transfer-scoped identity/credential controls and customer-managed provider interfaces required by GOAL4/11/12; all existing security, parity and journey gates remain open.",
         "Current account/key/mount and destination/parent checks gate transfer mutations. Complete delegated lifecycle, policy reapproval/rebinding, human identity/MFA/providers, complete denial/session auditing, approval UI and governance remain open.",
         "F009 separates ai_manage, ai_use and ai_disclose, actor-private forced row security and exact disclosure/proposal revisions. No implicit grant upgrade. Complete delegated lifecycle, providers, human approval UI, retention and content/disclosure governance remain open.",
         "F010 adds explicit intake_manage/check_run/check_release grants, actor-private check records and current release authority. Separate delegated reviewers, upload-only sender lifecycle, human approval UI and complete governance remain open.",
@@ -897,5 +899,39 @@
     "assisted_design_partner": "not qualified",
     "ordinary_operator": "not qualified",
     "enterprise_release": "not qualified"
-  }
+  },
+  "scope_decisions": [
+    {
+      "id": "S001",
+      "recorded_on": "2026-11-04",
+      "state": "owner-approved exclusion",
+      "owner_authorization": {
+        "source": "Owner instruction in the current chat",
+        "instruction": "we need to explicitly remove trstctl feature suite out of freightctl."
+      },
+      "starting_commit": "85695f62a0b40bdccca92e16aa6ffbb17543c0a1",
+      "goal_sections": [
+        4,
+        12
+      ],
+      "remaining_items": [
+        "R009"
+      ],
+      "excluded": [
+        "Bundling or rebuilding the trstctl feature suite or a general credential/trust management control plane.",
+        "A required trstctl installation, account, API, service or dedicated credential-lifecycle integration acceptance gate.",
+        "General-purpose certificate-authority infrastructure, organization-wide credential discovery and a standalone secrets-management product."
+      ],
+      "retained": [
+        "Transfer-scoped account and credential enrollment, authentication, partner/tenant authorization and audit.",
+        "Protected secret storage/references, SSH host verification, TLS certificate validation, OpenPGP operations and customer-managed KMS/HSM or ordinary secret-provider interfaces.",
+        "Safe rotation/revocation for freightctl partners, connections, gateways, agents and queued transfers."
+      ],
+      "repository_observation": "The explicit trstctl integration requirement was in GOAL.md. Inspection found no trstctl-named runtime module, command, dependency or integration to remove; no application source changed.",
+      "parity_rows_removed": [],
+      "customer_journeys_removed": [],
+      "qualification_state_changed": false,
+      "execution_state": "Application build remains paused; this authorization covers the scope update only."
+    }
+  ]
 }

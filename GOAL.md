@@ -71,7 +71,11 @@ Maintain docs/qualification/journeys.json, defects.json, ai-evaluations.json, an
 
 freightctl owns secure file exchange: connections, partner mailboxes, workflows, file processing, delivery verification, sharing, migration, and operations. It must run independently of every other ctlplne product.
 
-Integrate with trstctl for credential lifecycle where available, while supporting ordinary customer-managed keys, certificates, and secret providers. Integrate with probectl and standard observability systems for telemetry, and with ordinary paging services for escalation. Use cratectl for release distribution where useful. These integrations improve the studio without making another product a prerequisite or duplicating an unrelated control plane.
+Owner-approved scope change, 2026-11-04: the **trstctl feature suite is excluded from freightctl**. Do not bundle or rebuild that suite, add a general credential/trust management control plane, or require a trstctl installation, account, API or service. The former dedicated trstctl credential-lifecycle integration requirement is removed from this build and its acceptance gates. General-purpose certificate-authority infrastructure, organization-wide credential discovery and a standalone secrets-management product are outside freightctl's scope. This decision is recorded as S001 in [the remaining-work ledger](docs/qualification/remaining.json).
+
+freightctl still owns the security needed for its own file exchanges: scoped account and credential enrollment, protected secret storage and references, SSH host verification, TLS certificate validation, OpenPGP operations, and safe rotation/revocation for partners, connections, gateways, agents and queued transfers. Use customer-managed keys, certificates, KMS/HSM backends and ordinary secret providers where configured. These transfer controls remain required under sections 11 and 12; they do not authorize building a general identity, PKI or secrets-management product.
+
+Integrate with probectl and standard observability systems for telemetry, and with ordinary paging services for escalation. Use cratectl for release distribution where useful. These integrations must not make another studio product a prerequisite.
 
 Include the data validation, mapping, routing, and business acknowledgments needed for transfer workflows. Keep general ERP functionality, a universal application builder, an arbitrary autonomous agent platform, and a complete office collaboration suite outside this goal. A boundary must not erase a documented baseline transfer capability. Record unclear cases and resolve them against the actual customer job.
 
@@ -171,7 +175,9 @@ Support retention, deletion, legal holds, file ownership, data residency rules, 
 
 Keep secret values, payload contents, tokens, sensitive file names, and model prompts out of ordinary logs by default. Use references and selective redaction in evidence. Deliver vulnerability reporting, patching and upgrade procedures, SBOMs, signed release artifacts, and a documented security response process. A security setting or supported algorithm is not a certification.
 
-## 12 Cryptography keys and identity lifecycle
+## 12 Transfer cryptography keys and identity lifecycle
+
+This section covers credentials and cryptographic operations used by freightctl's own transfers and runtime identities. It does not reintroduce the trstctl suite or the general credential/trust management control plane excluded in section 4. For example, freightctl must validate a partner's certificate and safely use its replacement during queued work; operating a general certificate-issuance service is outside this goal.
 
 Put direct cryptographic operations behind internal/crypto with backend-agnostic interfaces and tested algorithm policy. Protocol libraries that internally use cryptography need a documented dependency boundary; do not copy code or invent cryptographic primitives to enforce an import rule. Keep raw private keys out of the control plane and UI, use a separate narrow key-operation service where custody requires it, and isolate file decryption and transformation in scoped workers.
 
