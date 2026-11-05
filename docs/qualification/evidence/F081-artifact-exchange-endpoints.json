@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "id": "F081",
+  "observed_at": "2026-11-05",
+  "starting_commit": "fc577d5745f873344b57d91153b27f21b0918314",
+  "state": "Endpoint registration and SQL guards prepared; native PostgreSQL qualification owed.",
+  "qualification_claim": false,
+  "change": "Append-only custody receive endpoint versions, exact participant bindings, current-head projection, actor-private retry receipts, atomic journal and deferred projection/receipt completeness guards. No artifact moved or public exchange route exposed.",
+  "proof": {
+    "original_red": [
+      {
+        "check": "TestExchangeEndpointCommandsBindMeaningAndRefuseUnsafeRevisions",
+        "result": "exit1: replace revision9223372036854775807 accepted and would overflow successor; original test retained"
+      },
+      {
+        "check": "MetadataSummaryContracts.test_exact_profile_has_one_safe_result_with_no_raw_records_or_paths",
+        "result": "exit1: metadata migration source profile differs after adding41; fresh profile updated explicitly, historical/retained profiles preserved"
+      }
+    ],
+    "focused_green": {
+      "new_command_method": 1,
+      "metadata_refusal_methods": 7,
+      "store_integration_binary": "compile only; never executed locally",
+      "store_integration_vet": "pass",
+      "import_architecture": "pass",
+      "historical_migrations": "all40 files match fc577d5 byte-for-byte",
+      "fresh_profile": {
+        "schema": 41,
+        "metadata_tables": 67,
+        "forced_rls_tables": 66
+      },
+      "retained_profile": {
+        "schema": 35,
+        "metadata_tables": 64,
+        "forced_rls_tables": 63
+      }
+    },
+    "native_tests_owed": [
+      "TestExchangeEndpointRegistrationCurrentHeadAndReceipts",
+      "TestExchangeEndpointRefusesStaleAndWrongScopeParticipants",
+      "TestExchangeEndpointSQLRequiresCompleteJournalReceiptAndCurrentHead",
+      "TestExchangeEndpointRLSAndForgedHeadRefuseRuntimeWriter"
+    ]
+  },
+  "local_manifest": {
+    "reference": ".private/freightctl-f081-endpoints-20261105/manifest.json",
+    "sha256": "7f51272c18e5d7178bedcf05e05db17db3f9a0caca47e5d67bbd2b09e8d254e4"
+  },
+  "source_files": {
+    "internal/store/041_exchange_endpoints.sql": "acad19ed4ae881512d3d652863a13bd6d70ee44f34f2ae6aea3b408125c22077",
+    "internal/store/exchange_endpoints.go": "5135f3d035560457a37a75960b94da18f5bab2985c3039f5314edce9a6317c86",
+    "internal/store/exchange_endpoints_test.go": "c76db34c168fda045f3f4b9f030acde8ad97faeb9f6e6fc0ac09bcd3b6fe097b",
+    "internal/store/exchange_endpoints_integration_test.go": "fed294c39c4aa5b9c257e335eb49a7fc789ad0b609102816c40bcb2271101057",
+    "internal/store/store.go": "4bb866f807dcae3a1853aa08c8a598599fa37c94661973cefe1e0f2dd7acb58f",
+    "scripts/metadata_contract.py": "c9cc3aeafa0895b76c16343f98a70a5878fed53a96e94516cc269b0303d96374",
+    "scripts/test-ci-metadata-summary.py": "1b37e2d670827289d79635d7cf7729d91fdeddb1195229f724c70f963d6bc689"
+  },
+  "owed": [
+    "Native fresh migration41/runtime/RLS/receipt tests and exact metadata restore",
+    "Public API/CLI/UI/agent endpoint registration",
+    "Durable artifact exchange, bounded polling, live exact-byte retrieval, separately authorized reply",
+    "Actual AX-J01/J02/J03, remaining baseline and mandatory FINISH qualification"
+  ]
+}

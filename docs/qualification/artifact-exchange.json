@@ -25,7 +25,8 @@
         "AX-J02"
       ],
       "evidence": [
-        "docs/qualification/evidence/F080-artifact-exchange-contract.json"
+        "docs/qualification/evidence/F080-artifact-exchange-contract.json",
+        "docs/qualification/evidence/F081-artifact-exchange-endpoints.json"
       ]
     },
     {
@@ -59,7 +60,8 @@
         "AX-J02"
       ],
       "evidence": [
-        "docs/qualification/evidence/F080-artifact-exchange-contract.json"
+        "docs/qualification/evidence/F080-artifact-exchange-contract.json",
+        "docs/qualification/evidence/F081-artifact-exchange-endpoints.json"
       ]
     },
     {
@@ -77,7 +79,8 @@
         "AX-J03"
       ],
       "evidence": [
-        "docs/qualification/evidence/F080-artifact-exchange-contract.json"
+        "docs/qualification/evidence/F080-artifact-exchange-contract.json",
+        "docs/qualification/evidence/F081-artifact-exchange-endpoints.json"
       ]
     },
     {
@@ -112,7 +115,8 @@
         "AX-J02"
       ],
       "evidence": [
-        "docs/qualification/evidence/F080-artifact-exchange-contract.json"
+        "docs/qualification/evidence/F080-artifact-exchange-contract.json",
+        "docs/qualification/evidence/F081-artifact-exchange-endpoints.json"
       ]
     },
     {

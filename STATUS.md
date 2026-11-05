@@ -7,9 +7,11 @@ rows and twelve full customer journeys remain open. Assisted deployment,
 independent adoption and enterprise readiness remain separately unqualified.
 
 Starting local main: dc74d8e33487dae53f18ebaa030a372e97770e9d; clean on resume.
-Origin/main: 85695f62a0b40bdccca92e16aa6ffbb17543c0a1. Its eleven runs are
-terminal. Exact run/job handles are retained; nonsecurity log investigation and
-repair are deferred to mandatory FINISH. No original run was canceled.
+Origin/main: fc577d5745f873344b57d91153b27f21b0918314, pushed through the
+enabled guard (five outgoing commits, no leaks). Its first-run job passes; other
+required runs remain queued in the current completion snapshot. Next source push
+waits for terminal runs; implementation continues locally. Exact handles retained.
+Nonsecurity log investigation/repair is deferred to FINISH; none canceled.
 
 Security triage: source/core/native vulnerability gates pass at 85695f6.
 Both native peer-image scans now reach enforcing-summary and refuse invalid
@@ -28,8 +30,12 @@ release/package/image/artifact publication, visibility changes or deployment.
 F080 implements bounded canonical endpoint/exchange contracts. Four focused
 methods, store vet and import architecture pass; the observed uppercase JSON alias
 regression is repaired. This grants no runtime or exchange qualification. Next:
-implement durable registered endpoints, polling/retrieval and separately authorized
-reply using existing PostgreSQL/custody services. Keep per-item focused proof; native/served outcomes
+F081 prepares durable endpoint registration/current heads and atomic events/retry
+receipts. New fresh target41 has three additional forced-RLS tables; retained35
+is untouched. One command regression, seven metadata checks, compile/vet and
+architecture pass. Four real PostgreSQL tests and restore remain owed. Next:
+implement exchange records, polling/retrieval and separately authorized reply on
+these services, then expose shared public interfaces. Keep per-item focused proof; native/served outcomes
 stay owed until actual CI. Trust Control X07 blocks only its real provider profile.
 Retained schema35 and resources are unchanged. Local inference and heavy runtime
 qualification stay off; F026 remains manual/owner-deferred.
