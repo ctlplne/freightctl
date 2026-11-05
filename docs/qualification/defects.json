@@ -1674,6 +1674,11 @@
         "state": "recorded;elevatedNTFSonly;unitjobstillred",
         "evidence": "docs/qualification/evidence/F078-windows-filesystem-observation.json",
         "meaning": "Protected explicit ACLs can be independently inspected;read-write directory handles flush0,read-only handles/reopen-upgrade fail5. Go mode bits do not represent private ACLs. No production guard change or platform qualification."
+      },
+      "handle_bound_flush_prepared": {
+        "evidence": "docs/qualification/evidence/F079-handle-bound-directory-sync.json",
+        "state": "implementation/custody integration prepared;native Windows pending",
+        "scope": "Full128bit identity guard and exact owned writable flush handle. Existing private-root modes stay enforcing;no ACL,crypto-key,scanner transport or platform pass."
       }
     },
     {

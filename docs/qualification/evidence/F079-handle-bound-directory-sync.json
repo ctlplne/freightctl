@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "id": "F079",
+  "observed_at": "2026-11-05",
+  "starting_commit": "90fcfcbd33144e580bd610223c9b40b221db1dbc",
+  "state": "Directory persistence implementation prepared;native Windows runtime and full custody replay pending.",
+  "qualification_claim": false,
+  "scope": "Handle-bound directory flush primitive and custody integration only. No private ACL/root/key creation,scanner transport,crash/power-loss,Windows server/agent,performance or whole-goal qualification.",
+  "frozen_cases": [
+    {
+      "id": "D01",
+      "outcome": "Require an open directory handle;refuse nil,regular or closed inputs. Keep caller ownership on success and refusal."
+    },
+    {
+      "id": "D02",
+      "outcome": "On Windows pin the original Go descriptor with RawConn.Control;resolve a bounded normalized volume path from the handle,not File.Name."
+    },
+    {
+      "id": "D03",
+      "outcome": "Open only an existing temporary read-write directory handle with backup/write-through/open-reparse flags. Require actual directory attributes and exact64bit volume plus128bit FileIdInfo equality with held original;reject zero/unsupported identity,reparse and replacement before flush."
+    },
+    {
+      "id": "D04",
+      "outcome": "Close only newly owned handle exactly once and propagate information,open,flush and close failures. No original-handle consumption or unsupported-filesystem fallback."
+    },
+    {
+      "id": "D05",
+      "outcome": "Execute actual native Windows renamed-directory and deterministic directory/reparse replacement races with real APIs. Fixture inability fails rather than skips;replacement never reaches flush."
+    },
+    {
+      "id": "D06",
+      "outcome": "Preserve native Unix File.Sync and existing custody privacy,exact revision,escape,identity and initialization guards. Original Windows ACL/socket/durability work remains required."
+    }
+  ],
+  "implementation": {
+    "package": "internal/durablefs",
+    "caller": "internal/custody/custody.go:Disk.sync",
+    "mechanism": "Windows uses existing pinned x/sys APIs. Hold original descriptor during identity checks;GetFinalPathNameByHandle normalized volume GUID path is bounded to32768UTF16units and two calls. A new existing-object read-write handle is hidden from callers;FileIdInfo uses the documented24byte64bit-volume/128bit-ID structure. Directory/reparse attributes and full identity must match before FlushFileBuffers. Preserve both flush and close errors;caller closes its original handle separately. Unix keeps File.Sync. No permission,role,privilege,metadata acceptance or publication exception.",
+    "boundaries": "Custody's existing private-root check stays enforcing. Key creation/crypto parent sync are not switched to an unsafe success path before native ACL-backed file creation is implemented. Native volume GUID/identity unavailable means failure;SMB/other filesystems are not inferred supported.",
+    "workflow": ".github/workflows/native-platforms.yml and native-linux.yml already consume internal/**;actual Windows tests compile/run through normal native unit step.",
+    "native_tests": "Eight parent methods across common/Windows files,including two actual replacement child cases;none skipped. Real directory identity,rename and reparse operations use only exact task-owned temporary directories. Restricted-token/unprivileged access isolation remains separate."
+  },
+  "local_checks": {
+    "manifest_reference": ".private/freightctl-f079-local-2nqeo281/manifest.json",
+    "manifest_sha256": "0d19f06e593f0f7108da949536ab179737547e2db110d4b024df9db86c2954d7",
+    "own_file_contracts": 2,
+    "selected_custody_contracts": 7,
+    "architecture": "pass",
+    "windows_test_binary_compile": "pass;never executed locally",
+    "windows_vet": "pass",
+    "go_workers": 1,
+    "go_soft_heap": "192MiB",
+    "runtime_qualification": false,
+    "scope": "Only bounded own-file/parser/compiler checks. No local PostgreSQL,Chrome,source/receiver,scanner,image,model or Windows executable."
+  },
+  "review_finding": "The initial uncommitted prototype used legacy64bit file index. Official Microsoft documentation identifies ReFS ambiguity;final code uses full128bit identity and upper-byte substitution controls. No actual native Windows runtime or qualified source used that prototype.",
+  "evidence_dependency": "F078 actual elevated NTFS probe shows initial read-write directory handles flush0;read-only handles/reopen upgrade fail5. It does not qualify this implementation.",
+  "primary_sources": [
+    "https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfinalpathnamebyhandlew",
+    "https://learn.microsoft.com/en-us/windows/win32/api/winbase/ns-winbase-file_id_info",
+    "https://learn.microsoft.com/en-us/windows/win32/api/fileapi/ns-fileapi-by_handle_file_information",
+    "https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilew",
+    "https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-flushfilebuffers"
+  ],
+  "next_action": "After owner resumes,retain original native Windows and Linux outputs for exact submitted source. Fix first failures without relaxing identity/reparse/privacy/durability checks. Complete atomic native private ACL/root/key custody and protected scanner transport,unprivileged/restricted-token and full D103 journeys before platform qualification."
+}

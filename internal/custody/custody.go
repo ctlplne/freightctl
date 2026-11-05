@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
+	"github.com/ctlplne/freightctl/internal/durablefs"
 )
 
 var ErrIntegrity = errors.New("file length or SHA-256 does not match")
@@ -108,8 +109,8 @@ func (d *Disk) sync() error {
 	if err != nil {
 		return err
 	}
-	defer f.Close()
-	return f.Sync()
+	err = durablefs.SyncDirectory(f)
+	return errors.Join(err, f.Close())
 }
 func Name(tenant, partner, id string) string { return tenant + "_" + partner + "_" + id }
 func validName(name string) bool {
