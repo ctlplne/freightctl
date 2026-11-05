@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "id": "F087",
+  "observed_at": "2026-11-05",
+  "starting_commit": "6d304760120cb4950727b915525d30c6955c051c",
+  "state": "Receive UI,strict current-context client and dedicated native profile implemented; actual served qualification owed.",
+  "qualification_claim": false,
+  "change": "Ordinary read/list receive surface through existing API services. Strict recipient/request-hash/endpoint/ID/cursor/held-metadata binding, Go/JavaScript canonical-byte fixture, context-change refusal, explicit bounded pagination and native attachment downloads. No payload execution or inherited onward authority.",
+  "red": [
+    {
+      "test": "artifact-exchange.test.mjs",
+      "result": "Build refuses missing exchange decoder entry point; receive client/UI absent",
+      "reference": ".private/freightctl-exchange-ui-contract-red.log",
+      "sha256": "0f18db9630680b25bbb8f74dfe3463421b93a50c37395e39f787fa60632bb5ac"
+    },
+    {
+      "test": "TestExchangeBrowserSummaryRefusesAmbiguousEvidence",
+      "result": "FAIL: repeated external_egress field erases earlier nonzero observation; then a separate actual FAIL for case-folded MODEL_STARTED overriding model_started. Fixed exact field whitelist and duplicate rejection; missing/null/foreign/tool-version/trailing evidence also refuses.",
+      "original_reference": ".private/freightctl-exchange-browser-summary-red.log",
+      "original_sha256": "54e8406c92af90ea05808b190b5cc8f88dbf41e0fee7546e15258f0486046fbc",
+      "alias_reference": ".private/freightctl-exchange-browser-summary-alias-red.log",
+      "alias_sha256": "56048d7a9d8cf2769723678c76f2aa5481b8690510c2af82bd0bfa4d3cc361e5"
+    }
+  ],
+  "green": {
+    "browser_contract_client_methods": 5,
+    "go_canonical_fixture_method": 1,
+    "summary_refusal_method": 1,
+    "frontend": "TypeScript and deterministic asset build pass; actual new app.js695526bytes measured, no size gate",
+    "native_profile": "compiled and vetted with integration,exchangebrowser tags; real browser case never executed locally",
+    "syntax": "Node browser driver,Go formatting,workflow actionlint and diff check pass",
+    "architecture": "TestCoreImportBoundaries pass"
+  },
+  "source_files": [
+    {
+      "path": "web/src/app.tsx",
+      "sha256": "0acde905144e403ac3d23fee467d43936aab6944deeec89d156dfce91b27df72"
+    },
+    {
+      "path": "web/src/artifact-exchanges-types.ts",
+      "sha256": "ec87d49450e64d9aee3527979d82ca70c66e845848d7a4c2b2f1fd9d8c7d227c"
+    },
+    {
+      "path": "web/src/artifact-exchanges-api.ts",
+      "sha256": "bc7a1f51126ae47e81f494d8bf2bac918f81d0536a10e0e34067675487a9425f"
+    },
+    {
+      "path": "web/src/artifact-exchanges.tsx",
+      "sha256": "ac2d3e62872b7e07932776d9ff8d2e2705c8b9645e1871d1ec634acf09c6860a"
+    },
+    {
+      "path": "web/tests/artifact-exchange.test.mjs",
+      "sha256": "f503dd64e02f6b98a04913d83d80af0389e3690c2c534d292d7a27a31884e901"
+    },
+    {
+      "path": "web/tests/fixtures/artifact-exchange.json",
+      "sha256": "5619f34679a7b32de9e452e073cd5425dd0ae8b5e05ac5e5e64f9cfa56fb3813"
+    },
+    {
+      "path": "internal/store/exchange_browser_contract_test.go",
+      "sha256": "eb83d6d7408149d2989f4973ab1c25ef61839921371541b64b50f835bc441d1f"
+    },
+    {
+      "path": "internal/api/artifact_exchange_browser_integration_test.go",
+      "sha256": "f62bf1af6e3f4f2c8ed830a0f132e113358857b9f357554ccf32225034ccea79"
+    },
+    {
+      "path": "scripts/artifact-exchange-browser.mjs",
+      "sha256": "f454358addba4f35eed00ffe56367ccaee11c7543e6df1b15b5365e932698b80"
+    },
+    {
+      "path": ".github/workflows/artifact-exchange.yml",
+      "sha256": "d16c670d70143f6bdb29c0b0cfe4e61d423d6074b1456be71d5a4d9555b3c610"
+    },
+    {
+      "path": "internal/browser/assets/app.js",
+      "sha256": "1b819e49b864009f9144594444e7baa2c624cab70b352c964f8ffc49e9b7adfb"
+    },
+    {
+      "path": "internal/browser/assets/manifest.json",
+      "sha256": "ed51b15ec55e6cc6111e8844150dbc842d47feb6e80d84458b52aa1bae4294a0"
+    },
+    {
+      "path": "docs/protocols/artifact-exchange-browser.md",
+      "sha256": "74a4b323775f435f4ad3a2b1a1b50b61f55707c06343f2c68e6f623f40c739c2"
+    }
+  ],
+  "local_manifest": {
+    "reference": ".private/freightctl-f087-receive-ui-20261105/manifest.json",
+    "sha256": "0b0cc0f0cea3e1a506b285ed6fae20a10f623699c3cc2e4f0afb92d09d255010"
+  },
+  "native_case_owed": "TestArtifactExchangeNativeBrowserReceiptWrongActorAndRevocation",
+  "prepared_native_profile": {
+    "workflow": ".github/workflows/artifact-exchange.yml",
+    "actual_environment": "GitHub Linux x86_64,Go1.26.10,Node26.13.0,locked Playwright/axe,installed sandboxed Chrome,real task-owned PostgreSQL/custody/verified SPKI HTTPS",
+    "scope": "Original browser cookie login/receive/inspect/attachment bytes and SHA; inert artifact script; unrelated account denial without metadata; filesystem barrier to a real separately authorized manager revocation; cleared stale metadata/links; four automated WCAG-tag states; exact tool versions/failure hashes. No mocked API responses or local execution."
+  },
+  "owed": [
+    "Actual dedicated native Chrome/PostgreSQL profile at final source; existing native integration/metadata failures remain red",
+    "Browser sending,endpoint administration,outgoing history,agent tools and all other exchange controls",
+    "Separate stock clients/independent receivers/process death/restore and complete AX-J01/J02/J03",
+    "Manual WCAG,all baseline GOAL gates and mandatory FINISH; no independent adoption or enterprise claim"
+  ]
+}

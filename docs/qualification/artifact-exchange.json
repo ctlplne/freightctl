@@ -29,7 +29,8 @@
         "docs/qualification/evidence/F081-artifact-exchange-endpoints.json",
         "docs/qualification/evidence/F082-artifact-receive-views.json",
         "docs/qualification/evidence/F083-artifact-exchange-api.json",
-        "docs/qualification/evidence/F085-artifact-exchange-cli.json"
+        "docs/qualification/evidence/F085-artifact-exchange-cli.json",
+        "docs/qualification/evidence/F087-artifact-receive-browser.json"
       ]
     },
     {
@@ -49,7 +50,8 @@
         "docs/qualification/evidence/F080-artifact-exchange-contract.json",
         "docs/qualification/evidence/F082-artifact-receive-views.json",
         "docs/qualification/evidence/F083-artifact-exchange-api.json",
-        "docs/qualification/evidence/F085-artifact-exchange-cli.json"
+        "docs/qualification/evidence/F085-artifact-exchange-cli.json",
+        "docs/qualification/evidence/F087-artifact-receive-browser.json"
       ]
     },
     {
@@ -70,7 +72,8 @@
         "docs/qualification/evidence/F081-artifact-exchange-endpoints.json",
         "docs/qualification/evidence/F082-artifact-receive-views.json",
         "docs/qualification/evidence/F083-artifact-exchange-api.json",
-        "docs/qualification/evidence/F085-artifact-exchange-cli.json"
+        "docs/qualification/evidence/F085-artifact-exchange-cli.json",
+        "docs/qualification/evidence/F087-artifact-receive-browser.json"
       ]
     },
     {
@@ -92,7 +95,8 @@
         "docs/qualification/evidence/F081-artifact-exchange-endpoints.json",
         "docs/qualification/evidence/F082-artifact-receive-views.json",
         "docs/qualification/evidence/F083-artifact-exchange-api.json",
-        "docs/qualification/evidence/F085-artifact-exchange-cli.json"
+        "docs/qualification/evidence/F085-artifact-exchange-cli.json",
+        "docs/qualification/evidence/F087-artifact-receive-browser.json"
       ]
     },
     {
@@ -112,7 +116,8 @@
         "docs/qualification/evidence/F080-artifact-exchange-contract.json",
         "docs/qualification/evidence/F082-artifact-receive-views.json",
         "docs/qualification/evidence/F083-artifact-exchange-api.json",
-        "docs/qualification/evidence/F085-artifact-exchange-cli.json"
+        "docs/qualification/evidence/F085-artifact-exchange-cli.json",
+        "docs/qualification/evidence/F087-artifact-receive-browser.json"
       ]
     },
     {
@@ -134,7 +139,8 @@
         "docs/qualification/evidence/F081-artifact-exchange-endpoints.json",
         "docs/qualification/evidence/F082-artifact-receive-views.json",
         "docs/qualification/evidence/F083-artifact-exchange-api.json",
-        "docs/qualification/evidence/F085-artifact-exchange-cli.json"
+        "docs/qualification/evidence/F085-artifact-exchange-cli.json",
+        "docs/qualification/evidence/F087-artifact-receive-browser.json"
       ]
     },
     {
@@ -154,7 +160,8 @@
       "evidence": [
         "docs/qualification/evidence/F082-artifact-receive-views.json",
         "docs/qualification/evidence/F083-artifact-exchange-api.json",
-        "docs/qualification/evidence/F085-artifact-exchange-cli.json"
+        "docs/qualification/evidence/F085-artifact-exchange-cli.json",
+        "docs/qualification/evidence/F087-artifact-receive-browser.json"
       ]
     },
     {
@@ -204,7 +211,8 @@
       "evidence": [
         "docs/qualification/evidence/F082-artifact-receive-views.json",
         "docs/qualification/evidence/F083-artifact-exchange-api.json",
-        "docs/qualification/evidence/F085-artifact-exchange-cli.json"
+        "docs/qualification/evidence/F085-artifact-exchange-cli.json",
+        "docs/qualification/evidence/F087-artifact-receive-browser.json"
       ]
     },
     {

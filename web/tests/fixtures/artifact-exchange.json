@@ -1,0 +1,20 @@
+{
+  "request": {
+    "schema_version": 1,
+    "artifact": {
+      "file_revision_id": "55555555-5555-4555-8555-555555555555",
+      "size_bytes": 8,
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "acceptance_policy": "integrity-only-v1"
+    },
+    "endpoint": {
+      "id": "44444444-4444-4444-8444-444444444444",
+      "revision": 1,
+      "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    },
+    "expires_at": "2026-11-05T20:00:00.000001Z",
+    "receipt": "availability-only-v1"
+  },
+  "canonical": "{\"schema_version\":1,\"artifact\":{\"file_revision_id\":\"55555555-5555-4555-8555-555555555555\",\"size_bytes\":8,\"sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"acceptance_policy\":\"integrity-only-v1\"},\"endpoint\":{\"id\":\"44444444-4444-4444-8444-444444444444\",\"revision\":1,\"hash\":\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"},\"expires_at\":\"2026-11-05T20:00:00.000001Z\",\"receipt\":\"availability-only-v1\"}",
+  "sha256": "69609c67b176b1c7a893e00d6649b36585d7abd77dad0cab4923ba2ab2c64ecc"
+}

@@ -1,3 +1,4 @@
+import { ArtifactExchanges } from "./artifact-exchanges";
 import { FileRechecks } from "./rechecks";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { createRoot } from "react-dom/client";
@@ -42,6 +43,12 @@ const name = (path: string) => path.split("/").at(-1) || "/";
 const aborted = (error: unknown) =>
   error instanceof DOMException && error.name === "AbortError";
 const messages: Record<string, string> = {
+  invalid_artifact_exchange_contract:
+    "Review the exact registered endpoint and exchange identifiers, revision, fingerprint and expiry.",
+  artifact_exchange_unavailable:
+    "Artifact exchange is disabled or its deployment settings are unavailable. Ask the operator to review the exchange configuration.",
+  context_changed:
+    "Your workspace or account authority changed. Reconnect and reopen the receive endpoint.",
   invalid_onboarding_command:
     "Review the draft name, responsible contacts and exchange requirements. Each requirement must name a contact in this draft; keep credentials out of notes.",
   invalid_partner_command:
@@ -134,6 +141,7 @@ function App() {
     [notice, setNotice] = useState(""),
     [signingIn, setSigningIn] = useState(false);
   const [tab, setTab] = useState<
+      | "receive"
       | "files"
       | "uploads"
       | "checks"
@@ -692,6 +700,14 @@ function App() {
                 Intake policy
               </button>
             )}
+            {allowed("read") && allowed("list") && (
+              <button
+                aria-current={tab === "receive" ? "page" : undefined}
+                onClick={() => setTab("receive")}
+              >
+                Receive artifacts
+              </button>
+            )}
             {allowed("admin") && allowed("accounts_manage") && (
               <button
                 aria-current={tab === "accounts" ? "page" : undefined}
@@ -853,46 +869,50 @@ function App() {
                     : "PARTNER WORKSPACE"}
                 </p>
                 <h1>
-                  {tab === "files"
-                    ? "Files"
-                    : tab === "uploads"
-                      ? "Uploads"
-                      : tab === "partners"
-                        ? "Partners"
-                        : tab === "collections"
-                          ? "Remote collection"
-                          : tab === "schedules"
-                            ? "Workflow schedules"
-                            : tab === "approvals"
-                              ? "Independent approvals"
-                              : tab === "onboarding"
-                                ? "Onboarding plans"
-                                : tab === "policy"
-                                  ? "Intake policy"
-                                  : tab === "accounts"
-                                    ? "Accounts"
-                                    : "Intake checks"}
+                  {tab === "receive"
+                    ? "Receive artifacts"
+                    : tab === "files"
+                      ? "Files"
+                      : tab === "uploads"
+                        ? "Uploads"
+                        : tab === "partners"
+                          ? "Partners"
+                          : tab === "collections"
+                            ? "Remote collection"
+                            : tab === "schedules"
+                              ? "Workflow schedules"
+                              : tab === "approvals"
+                                ? "Independent approvals"
+                                : tab === "onboarding"
+                                  ? "Onboarding plans"
+                                  : tab === "policy"
+                                    ? "Intake policy"
+                                    : tab === "accounts"
+                                      ? "Accounts"
+                                      : "Intake checks"}
                 </h1>
                 <p>
-                  {tab === "files"
-                    ? "Published paths. Retrieval checks your current access and intake policy."
-                    : tab === "uploads"
-                      ? "Send one exact file. Continue from the last server-confirmed checkpoint."
-                      : tab === "partners"
-                        ? "Enroll partners under explicit tenant authority; review each administrator credential and grants."
-                        : tab === "collections"
-                          ? "Review ready manifests, exact input receipts, intake holds and separate downstream decisions."
-                          : tab === "schedules"
-                            ? "Review calendar rules, complete source revisions, deadlines and ordinary transfer receipts."
-                            : tab === "approvals"
-                              ? "Review exact production effects under the partner’s approval policy."
-                              : tab === "onboarding"
-                                ? "Record responsible contacts and exact exchange requirements as versioned drafts."
-                                : tab === "policy"
-                                  ? "Review expected columns, processing limits and exact policy versions before activation or revocation."
-                                  : tab === "accounts"
-                                    ? "Review scoped access, credential rotation, expiry and revocation."
-                                    : "Held files need their required checks and a separate release decision."}
+                  {tab === "receive"
+                    ? "Discover and retrieve exact artifacts under current receive permissions."
+                    : tab === "files"
+                      ? "Published paths. Retrieval checks your current access and intake policy."
+                      : tab === "uploads"
+                        ? "Send one exact file. Continue from the last server-confirmed checkpoint."
+                        : tab === "partners"
+                          ? "Enroll partners under explicit tenant authority; review each administrator credential and grants."
+                          : tab === "collections"
+                            ? "Review ready manifests, exact input receipts, intake holds and separate downstream decisions."
+                            : tab === "schedules"
+                              ? "Review calendar rules, complete source revisions, deadlines and ordinary transfer receipts."
+                              : tab === "approvals"
+                                ? "Review exact production effects under the partner’s approval policy."
+                                : tab === "onboarding"
+                                  ? "Record responsible contacts and exact exchange requirements as versioned drafts."
+                                  : tab === "policy"
+                                    ? "Review expected columns, processing limits and exact policy versions before activation or revocation."
+                                    : tab === "accounts"
+                                      ? "Review scoped access, credential rotation, expiry and revocation."
+                                      : "Held files need their required checks and a separate release decision."}
                 </p>
               </div>
               <button
@@ -905,6 +925,17 @@ function App() {
                 Refresh
               </button>
             </div>
+            {tab === "receive" && allowed("read") && allowed("list") && (
+              <ArtifactExchanges
+                key={
+                  session.session.id + ":" + session.identity.authority_revision
+                }
+                api={api}
+                session={session}
+                refresh={refresh}
+                onError={reportError}
+              />
+            )}
             {tab === "partners" && session.identity.tenant_administration && (
               <Partners
                 api={api}
