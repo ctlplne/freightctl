@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "id": "F095",
+  "observed_at": "2026-11-05",
+  "state": "Native fix-field diagnostics exercised;complete image gate remains failed. Canceled macOS source job preserved and native retry succeeded.",
+  "qualification_claim": false,
+  "native_image_observation": {
+    "candidate": "e00191ac66ffdc2a26742498b8df4952d3b9ac56",
+    "run_id": 42108414628,
+    "jobs": [
+      {
+        "architecture": "amd64",
+        "source_commit": "e00191ac66ffdc2a26742498b8df4952d3b9ac56",
+        "image_id": "sha256:977e2854debb9e7202d368f978bc68d27f6ce3a30bc2c86745231c35b4a8c306",
+        "report_sha256": "8568586242c8777ce6b5b9383735aba48c46ed0e930892e0de682494b9453019",
+        "manifest_sha256": "5f461e74d1d517ff43b79dc2ebab0c713b5d4956a9ad794e6fd24372f1439c2f",
+        "feed_database_sha256": "2ce29bda5b2483d84da3f4365398addcf03a7decf5c79e29dc73db8f0fa454ed",
+        "package_counts": {
+          "lang-pkgs": 2,
+          "os-pkgs": 80
+        },
+        "os_version": "13.7",
+        "severities": {
+          "CRITICAL": 0,
+          "HIGH": 45,
+          "LOW": 61,
+          "MEDIUM": 77,
+          "UNKNOWN": 6
+        },
+        "suppressed_findings": 0,
+        "job_id": 127529283342,
+        "blocking_fix_metadata_totals": {
+          "absent": 51,
+          "empty": 0,
+          "nonempty": 0
+        }
+      },
+      {
+        "architecture": "arm64",
+        "source_commit": "e00191ac66ffdc2a26742498b8df4952d3b9ac56",
+        "image_id": "sha256:7053e29102689a59e4ef0a88a27e930e6453e03975e1930d58fcef7f54d39147",
+        "report_sha256": "2d4a052b952bf307fe6374eea1bb725fd8b1eef5fea3388c7ceb175bf5ff51e2",
+        "manifest_sha256": "076c6001364a7b2cac160b73b5baa2aaed102e451a33834bd58ebbed349aaf98",
+        "feed_database_sha256": "2ce29bda5b2483d84da3f4365398addcf03a7decf5c79e29dc73db8f0fa454ed",
+        "package_counts": {
+          "lang-pkgs": 2,
+          "os-pkgs": 80
+        },
+        "os_version": "13.7",
+        "severities": {
+          "CRITICAL": 0,
+          "HIGH": 45,
+          "LOW": 61,
+          "MEDIUM": 77,
+          "UNKNOWN": 6
+        },
+        "suppressed_findings": 0,
+        "job_id": 127529283820,
+        "blocking_fix_metadata_totals": {
+          "absent": 51,
+          "empty": 0,
+          "nonempty": 0
+        }
+      }
+    ],
+    "narrow_component_fact": "Both exact native reports contain all51blocking fix metadata fields as absent. Diagnostic presence/count behavior is observed on e001 only;no compatible-fix availability,reachability,clean-image,peer interoperability or product security qualification is inferred."
+  },
+  "triage": "Blocking IDs/counts are unchanged from F092. Preserve that primary-source assessment and all original failures. Missing feed fix fields do not prove no patch exists anywhere. Exact installed-version remediation and full replay on compatible patched inputs remain owed. No severity override,suppression,inventory deletion or scan narrowing.",
+  "source_security_retry": {
+    "run_id": 42108414277,
+    "original_attempt": 1,
+    "original_job_id": 127529281802,
+    "original_conclusion": "cancelled",
+    "original_steps": null,
+    "original_log": "not retrievable;cause unknown",
+    "request": "POST actions/jobs/127529281802/rerun",
+    "connector_result": "403 Resource not accessible by integration",
+    "fallback": "Existing GitHub CLI accepted the same requested job endpoint. No cancellation action was issued.",
+    "observed_attempt": 2,
+    "observed_jobs": [
+      {
+        "id": 127542454744,
+        "profile": "darwin/arm64",
+        "state": "success"
+      },
+      {
+        "id": 127542456311,
+        "profile": "windows/amd64",
+        "state": "success"
+      },
+      {
+        "id": 127542457077,
+        "profile": "linux/arm64",
+        "state": "success"
+      }
+    ],
+    "scope_note": "A single job retry was requested. Observed second attempt contains three new matrix job IDs,including the two previously passing siblings. Preserve original and replay handles;do not claim only one job executed."
+  },
+  "batching": {
+    "candidate": "e00191ac66ffdc2a26742498b8df4952d3b9ac56",
+    "all12_terminal_after_retry": true,
+    "source_vulnerability_workflow": "success,attempt2",
+    "reproducibility": "success",
+    "native_fuzz": "success",
+    "core_independent_security_steps": "npm audit,Go vulnerability reachability,and full committed-source/history Gitleaks succeeded despite prior record-contract failure",
+    "remaining_failures": "Core record contracts,native integration/metadata,public/browser/native-platform and peer journeys remain red. Their nonsecurity causes/logs remain deferred to mandatory FINISH."
+  },
+  "local_manifest": {
+    "reference": ".private/freightctl-f095-security/manifest.json",
+    "sha256": "20ce4c4e2d12a858bd5b4c32324ab4bba6b8a3e809d0e6c96853e662de5ed77f"
+  },
+  "evidence_refs": [
+    "docs/qualification/evidence/F092-peer-stable-security-triage.json"
+  ],
+  "owed": [
+    "Exact compatible patched peer input,complete ARM/x86 rescans and original independent OpenPGP journeys",
+    "All deferred original failures,mandatory final-source checks and full baseline/AX qualification;no overall completion claim"
+  ]
+}

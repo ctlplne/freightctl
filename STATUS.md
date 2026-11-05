@@ -4,14 +4,16 @@ Updated 2026-11-05. The full GOAL.md baseline and AX01–AX08 remain active unde
 S003. All83 whole parity rows and twelve complete customer journeys remain open.
 Assisted deployment, independent adoption and enterprise readiness are unqualified.
 
-Origin/main ise6a0d347a4b1c7713d52983e5e8a3562d6b7bae3. Its twelve original runs
-are terminal; source vulnerability configurations,reproducibility and native fuzz
-pass. Core record contracts still fail while independent npm/Go vulnerability
+Latest completed CI candidate ise00191ac66ffdc2a26742498b8df4952d3b9ac56. Its
+twelve runs are terminal; source vulnerability configurations,reproducibility
+and native fuzz pass. Core record contracts still fail while independent npm/Go vulnerability
 checks pass. Native integration,
 metadata and public/native journeys remain red. Their nonsecurity logs/repair are
-deferred to mandatory FINISH; no original runtime run was canceled. Exact handles
-and failures persist. The enabled pre-push Gitleaks guard scanned the owner-authored
-directory/Debian13 batch before its fast-forward push.
+deferred to mandatory FINISH. No cancellation action was issued. The original
+macOS source-security job was canceled with no step records/log; its cause remains
+unknown. The requested job retry was accepted through the CLI after a connector403.
+Attempt2 contains three new successful matrix jobs,including two previous green
+siblings; every original/replay handle is preserved. The pre-push guard stays enabled.
 
 F075 actual Debian13.7 ARM/x86 scans complete with80OS+2language packages each:
 0CRITICAL/45HIGH/6UNKNOWN,61LOW/77MEDIUM,zero suppressed. The immutable Node26.13.0
@@ -21,6 +23,8 @@ Debian source-package triage and stable patch dependencies. A new privacy-safe
 fix-field diagnostic passes13reporter/15orchestration stand-ins; native exercise
 and exact installed-version remediation remain owed. No suppression,unstable
 package swap or clean-image/interop/product-image claim is made.
+F095 observes the diagnostic on both nativee001 reports:all51blocking fix fields
+are absent on each architecture. This is not proof no patch exists elsewhere.
 
 F080–F083 implement canonical exchange contracts, append-only endpoint/current-head
 registration, exact-revision receive views and five ordinary-authority HTTPS paths.

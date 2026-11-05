@@ -676,5 +676,16 @@
     ],
     "result": "Each0CRITICAL/45HIGH/6UNKNOWN,61LOW/77MEDIUM;Debian13.7,80OS+2language packages;zero suppressed;gate failed",
     "evidence": "docs/qualification/evidence/F092-peer-stable-security-triage.json"
+  },
+  "fix_metadata_native_replay": {
+    "candidate": "e00191ac66ffdc2a26742498b8df4952d3b9ac56",
+    "run_id": 42108414628,
+    "jobs": [
+      127529283342,
+      127529283820
+    ],
+    "diagnostic_fields_observed": true,
+    "security_gate": "failed0CRITICAL/45HIGH/6UNKNOWN,zero suppressed;all51fix fields absent on each architecture",
+    "evidence": "docs/qualification/evidence/F095-native-security-replay.json"
   }
 }
