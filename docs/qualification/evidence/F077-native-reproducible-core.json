@@ -102,5 +102,16 @@
     "first_findings_sha256": "bf1ff37cc501b721644216793f88691d28d230f41175d93da702448a8b2d03bb",
     "reproduction": "Real original orchestrator with command/compiler stand-ins returns passed when final module-verify step replaces the earlier binary after its previous byte equality check. No actual binary executed.",
     "repair": "Reopen both exact binaries after the final external command;require original hashes before assembling component evidence. Same original stand-in journey now fails at binary-closure/binary-equality;all six orchestration methods pass."
+  },
+  "submission": {
+    "candidate": "7c163a834a7a95cb6482730fbb3e486b1b8aa879",
+    "run_id": 41939612495,
+    "jobs": [
+      126956736582,
+      126956737910
+    ],
+    "state": "both queued;no actual reproduction/component inventory pass",
+    "manifest_reference": ".private/freightctl-source-7c-submission-iuwcod1p/manifest.json",
+    "manifest_sha256": "6924432622e48796e648b3d4c97565d61390f1265b648dee2618f6b0560eb364"
   }
 }

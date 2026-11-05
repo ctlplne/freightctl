@@ -44,7 +44,7 @@
       "outcome": "Existing SFTP collection/arrival/schedules, FTPS/SFTP sending, ciphertext, intake, RLS, receipts and native regression gates remain enforced. No local PostgreSQL, model or scanner execution is needed."
     }
   ],
-  "next_action": "Preserve current e2native run41932617128;hold next relevant push until its five required jobs start. Then submit D171missing-DSN,F077native reproduction and D170cookie/session evidence repairs. Require original public three-fresh-estate plaintext/encrypted matrices without relaxing identity,authority,CSRF,bytes,replay or resource assertions. Owner scanner file-cap proposal remains unapplied.",
+  "next_action": "Follow preserved e2native run41932617128 for original mixed collection evidence. Follow exact7csource native41939612321,public41939612320,core41939612581 and reproduction41939612495. Retain first failures and require actual repair replays;hold another relevant push until required current native/public/reproduction jobs start. Owner scanner file-only proposal remains unapplied.",
   "first_failure": {
     "test": "TestFTPSCollectionSourceMissingContract",
     "result": "existing typed source refuses ftps.collect; no service contact",
@@ -971,5 +971,16 @@
     "manifest_reference": ".private/freightctl-f076-e2-started-ebxyenhh/manifest.json",
     "manifest_sha256": "cbaec8023f3ca5a7bc53fa081d7883dfcad95494407aab3746e2f779865aa00f",
     "application_qualified": false
+  },
+  "source_7c_submission": {
+    "candidate": "7c163a834a7a95cb6482730fbb3e486b1b8aa879",
+    "native_run_id": 41939612321,
+    "public_run_id": 41939612320,
+    "core_run_id": 41939612581,
+    "reproduction_run_id": 41939612495,
+    "state": "submitted;required runtime jobs queued/pending;no inherited pass",
+    "manifest_reference": ".private/freightctl-source-7c-submission-iuwcod1p/manifest.json",
+    "manifest_sha256": "6924432622e48796e648b3d4c97565d61390f1265b648dee2618f6b0560eb364",
+    "authority": "Owner source/CI authorization;all original e2required jobs started before source push,no cancellation/restart or artifacts/deployment. Hold another relevant candidate until current required native/public/reproduction jobs start."
   }
 }
