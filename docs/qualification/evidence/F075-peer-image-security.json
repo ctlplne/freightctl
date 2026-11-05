@@ -3,7 +3,7 @@
   "id": "F075",
   "observed_at": "2026-11-04",
   "starting_commit": "63e153f6511f6cb457dfa46f70d39f2548f200b6",
-  "state": "Scanner completes:actual4d ARM/x86 images each1CRITICAL/33HIGH/0UNKNOWN,83LOW/104MEDIUM,zero suppressed after Node patch/runtime-tool cleanup. F090 pins replacement Debian13 input with exact-major guard; actual complete remediation and interop remain owed. No clean-image or product-image claim.",
+  "state": "Complete actual Debian13 ARM/x86 scans each0CRITICAL/45HIGH/6UNKNOWN;gate failed,zero suppressed. Prior Bookworm/OOM/input failures retained. Primary-source triage records stable remediation dependencies; independent product implementation continues.",
   "scope": "Scan the exact disposable independent OpenPGP recipient image used by native Linux tests. This is test infrastructure, not a released server image or runtime security qualification.",
   "qualification_claim": false,
   "frozen_cases": [
@@ -666,5 +666,15 @@
     "base_index_digest": "sha256:5adad64f9a1fca2d51972caa65983634c8a774eb300d72b20f7f2a0f60368072",
     "evidence": "docs/qualification/evidence/F090-peer-debian13-profile.json",
     "scope": "Prepared new test-peer input; both actual old Bookworm failure sets remain recorded."
+  },
+  "debian13_native_replay": {
+    "candidate": "e6a0d347a4b1c7713d52983e5e8a3562d6b7bae3",
+    "run_id": 42105038208,
+    "jobs": [
+      127517479859,
+      127517480417
+    ],
+    "result": "Each0CRITICAL/45HIGH/6UNKNOWN,61LOW/77MEDIUM;Debian13.7,80OS+2language packages;zero suppressed;gate failed",
+    "evidence": "docs/qualification/evidence/F092-peer-stable-security-triage.json"
   }
 }

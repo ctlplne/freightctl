@@ -119,6 +119,7 @@ def summarize(report, version, image, commit, architecture, now):
     suppressed, inventory_openpgp, inventory_os = 0, False, False
     advisory_ids = set()
     blocking_ids = {s:set() for s in ('CRITICAL','HIGH','UNKNOWN')}
+    fix_metadata = {s:{} for s in blocking_ids}
     unrecognized_blocking = {s:0 for s in blocking_ids}
     for result in results:
         require(isinstance(result, dict) and result.get('Class') in ('os-pkgs', 'lang-pkgs'))
@@ -150,6 +151,16 @@ def summarize(report, version, image, commit, architecture, now):
                 advisory_ids.add(ident)
                 if finding['Severity'] in blocking_ids:
                     blocking_ids[finding['Severity']].add(ident)
+                    # Record only the shape/presence of Trivy's fix field. Raw
+                    # package names, versions, paths and advisory text remain
+                    # private. A nonempty field is not proof of an available,
+                    # compatible or installed patch and never changes severity.
+                    facts = fix_metadata[finding['Severity']].setdefault(ident, {'nonempty':0,'empty':0,'absent':0})
+                    if 'FixedVersion' not in finding:
+                        facts['absent'] += 1
+                    else:
+                        require(isinstance(finding['FixedVersion'],str))
+                        facts['nonempty' if finding['FixedVersion'] else 'empty'] += 1
             elif finding['Severity'] in blocking_ids:
                 unrecognized_blocking[finding['Severity']] += 1
     require(inventory_os and inventory_openpgp)
@@ -166,6 +177,7 @@ def summarize(report, version, image, commit, architecture, now):
         'additional_advisory_ids': max(0, len(advisory_ids) - 50),
         'blocking_advisory_ids': {s:sorted(ids)[:50] for s,ids in blocking_ids.items()},
         'additional_blocking_advisory_ids': {s:max(0,len(ids)-50) for s,ids in blocking_ids.items()},
+        'blocking_fix_metadata': {s:{ident:fix_metadata[s][ident] for ident in sorted(ids)[:50]} for s,ids in blocking_ids.items()},
         'unrecognized_blocking_advisories': unrecognized_blocking,
         'scope': 'exact test peer image; OS and discovered libraries; no reachability, protocol, released image or complete product claim',
     }

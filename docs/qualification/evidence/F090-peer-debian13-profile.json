@@ -3,7 +3,7 @@
   "id": "F090",
   "observed_at": "2026-11-05",
   "starting_commit": "c6bb55d6da7defc10545591bb903ac12c57470a8",
-  "state": "Actual remaining1critical/33high findings retained; pinned Debian13 replacement profile prepared,actual full scan and interop owed.",
+  "state": "Exact Debian13 input/profile exercised on both native architectures; full image gate remains red0critical/45high/6unknown each. Original Bookworm findings retained; all patched-input/interop proof owed.",
   "qualification_claim": false,
   "native_observation": {
     "candidate": "4d89fca7e518aed4cf508f54e01c38a2085e5c19",
@@ -320,5 +320,15 @@
     "Original independent OpenPGP recipient journeys and native compatibility on the replacement image",
     "Assess all remaining blocking IDs; no suppression,narrowed scan,resource excuse or clean-image claim",
     "Mandatory FINISH:all deferred integration/metadata/public/browser failures and every remaining GOAL gate; exact twelve4d runs are terminal before next push"
-  ]
+  ],
+  "debian13_native_replay": {
+    "candidate": "e6a0d347a4b1c7713d52983e5e8a3562d6b7bae3",
+    "run_id": 42105038208,
+    "jobs": [
+      127517479859,
+      127517480417
+    ],
+    "result": "Each0CRITICAL/45HIGH/6UNKNOWN,61LOW/77MEDIUM;Debian13.7,80OS+2language packages;zero suppressed;gate failed",
+    "evidence": "docs/qualification/evidence/F092-peer-stable-security-triage.json"
+  }
 }

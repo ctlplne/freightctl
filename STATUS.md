@@ -5,21 +5,22 @@ S003. All83 whole parity rows and twelve complete customer journeys remain open.
 Assisted deployment, independent adoption and enterprise readiness are unqualified.
 
 Origin/main ise6a0d347a4b1c7713d52983e5e8a3562d6b7bae3. Its twelve original runs
-include queued/active work. The preceding4d batch is entirely terminal; source
-vulnerability configurations and reproducibility passed. New core record contracts
-still fail while independent npm/Go vulnerability checks pass. Native integration,
+are terminal; source vulnerability configurations,reproducibility and native fuzz
+pass. Core record contracts still fail while independent npm/Go vulnerability
+checks pass. Native integration,
 metadata and public/native journeys remain red. Their nonsecurity logs/repair are
 deferred to mandatory FINISH; no original runtime run was canceled. Exact handles
 and failures persist. The enabled pre-push Gitleaks guard scanned the owner-authored
 directory/Debian13 batch before its fast-forward push.
 
-F075 now completes actual native ARM/x86 image scans with full OS/library inventory.
-F088's actual rebuilt image reports1CRITICAL/33HIGH/0UNKNOWN,83LOW/104MEDIUM on
-each architecture,zero suppressed; original6d7/58/5 counts remain recorded.
-Node26.13.0/runtime-tool removal is exercised, but the gate remains red. This is
-the independent test peer, not a freightctl server image. A supported newer Debian
-base is submitted as F090: immutable Node26.13.0/trixie,with an exact Debian13
-verifier profile and no advisory exceptions. Full scan/interop is owed.
+F075 actual Debian13.7 ARM/x86 scans complete with80OS+2language packages each:
+0CRITICAL/45HIGH/6UNKNOWN,61LOW/77MEDIUM,zero suppressed. The immutable Node26.13.0
+Trixie input and exact13 verifier are exercised; the gate remains red. Original
+Bookworm7/58/5 and1/33/0 findings and resource failures remain. F092 records primary
+Debian source-package triage and stable patch dependencies. A new privacy-safe
+fix-field diagnostic passes13reporter/15orchestration stand-ins; native exercise
+and exact installed-version remediation remain owed. No suppression,unstable
+package swap or clean-image/interop/product-image claim is made.
 
 F080–F083 implement canonical exchange contracts, append-only endpoint/current-head
 registration, exact-revision receive views and five ordinary-authority HTTPS paths.

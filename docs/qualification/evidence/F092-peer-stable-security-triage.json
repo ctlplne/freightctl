@@ -1,0 +1,412 @@
+{
+  "schema_version": 1,
+  "id": "F092",
+  "observed_at": "2026-11-05",
+  "starting_commit": "6ba255e03ebaf0f9e2fb2517cab88d9eac550a6a",
+  "state": "Actual Debian13 ARM/x86 complete scans remain red; primary-source triage and private fix-field diagnostics implemented",
+  "qualification_claim": false,
+  "native_observation": {
+    "candidate": "e6a0d347a4b1c7713d52983e5e8a3562d6b7bae3",
+    "run_id": 42105038208,
+    "jobs": [
+      {
+        "job_id": 127517479859,
+        "summary": {
+          "additional_advisory_ids": 32,
+          "additional_blocking_advisory_ids": {
+            "CRITICAL": 0,
+            "HIGH": 0,
+            "UNKNOWN": 0
+          },
+          "advisory_ids": [
+            "CVE-2005-2541",
+            "CVE-2007-5686",
+            "CVE-2010-4756",
+            "CVE-2011-3374",
+            "CVE-2011-4116",
+            "CVE-2013-4392",
+            "CVE-2017-18018",
+            "CVE-2018-20796",
+            "CVE-2019-1010022",
+            "CVE-2019-1010023",
+            "CVE-2019-1010024",
+            "CVE-2019-1010025",
+            "CVE-2019-9192",
+            "CVE-2021-45346",
+            "CVE-2022-0563",
+            "CVE-2023-31437",
+            "CVE-2023-31438",
+            "CVE-2023-31439",
+            "CVE-2024-56433",
+            "CVE-2025-5278",
+            "CVE-2025-6141",
+            "CVE-2025-69720",
+            "CVE-2025-70873",
+            "CVE-2026-102010",
+            "CVE-2026-102473",
+            "CVE-2026-102474",
+            "CVE-2026-114690",
+            "CVE-2026-114691",
+            "CVE-2026-115455",
+            "CVE-2026-119371",
+            "CVE-2026-119372",
+            "CVE-2026-119373",
+            "CVE-2026-119374",
+            "CVE-2026-119375",
+            "CVE-2026-119376",
+            "CVE-2026-119377",
+            "CVE-2026-119378",
+            "CVE-2026-119379",
+            "CVE-2026-119591",
+            "CVE-2026-15059",
+            "CVE-2026-15534",
+            "CVE-2026-16742",
+            "CVE-2026-18374",
+            "CVE-2026-18477",
+            "CVE-2026-18508",
+            "CVE-2026-19499",
+            "CVE-2026-19542",
+            "CVE-2026-27171",
+            "CVE-2026-3184",
+            "CVE-2026-40228"
+          ],
+          "architecture": "amd64",
+          "blocking_advisory_ids": {
+            "CRITICAL": [],
+            "HIGH": [
+              "CVE-2025-69720",
+              "CVE-2026-119373",
+              "CVE-2026-16742",
+              "CVE-2026-54369",
+              "CVE-2026-76642",
+              "CVE-2026-76844",
+              "CVE-2026-78408",
+              "CVE-2026-78409",
+              "CVE-2026-78410",
+              "CVE-2026-9538"
+            ],
+            "UNKNOWN": [
+              "CVE-2026-119371",
+              "CVE-2026-119372",
+              "CVE-2026-119374",
+              "CVE-2026-119375",
+              "CVE-2026-119376",
+              "CVE-2026-119379"
+            ]
+          },
+          "feed_database_sha256": "2ce29bda5b2483d84da3f4365398addcf03a7decf5c79e29dc73db8f0fa454ed",
+          "feed_next_update": "2026-11-06T19:01:45.286712+00:00",
+          "feed_updated_at": "2026-11-05T19:01:45.286712+00:00",
+          "image_archive_sha256": "80d62720769b1cc483704f9804f2a8c8dd96e003fe2723661c826f9b7d78e1d7",
+          "image_id": "sha256:6800578791f224d1e3a6e3656667735d942e25d96049b32432ffab6513f2553a",
+          "image_inspect_sha256": "0c950457bc89569ddaa7cbe5d6fb8a52ffdcf7d8fed248c3235df3439f58b0e0",
+          "kind": "native-peer-image-vulnerabilities",
+          "manifest_sha256": "28853b1f30af948510a29eb87818c8cffa9741555eb1d5080d3de888bba59971",
+          "os_family": "debian",
+          "os_version": "13.7",
+          "package_counts": {
+            "lang-pkgs": 2,
+            "os-pkgs": 80
+          },
+          "report_created_at": "2026-11-05T20:52:20.751212+00:00",
+          "report_sha256": "265920948595ed0600e5a5febf5834f743db4676075b9082b1cac419f6e0b9b0",
+          "resource_policy": "github-runner-capacity",
+          "result_classes": {
+            "lang-pkgs": 1,
+            "os-pkgs": 1
+          },
+          "scanner_image": "aquasec/trivy:0.76.1@sha256:790fd66d1697395d8693d1acaa1ea702406a20f109b6fc7bac8db623eca6c06c",
+          "scanner_version": "0.76.1",
+          "scanner_version_report_sha256": "f73c874342e3938a6f98f8e57cbe99836971704a311a3c2e3d9b6bebe59ce72e",
+          "scope": "exact test peer image; OS and discovered libraries; no reachability, protocol, released image or complete product claim",
+          "scratch_bytes": 90076590080,
+          "scratch_cleanup": "unmounted",
+          "severities": {
+            "CRITICAL": 0,
+            "HIGH": 45,
+            "LOW": 61,
+            "MEDIUM": 77,
+            "UNKNOWN": 6
+          },
+          "source_commit": "e6a0d347a4b1c7713d52983e5e8a3562d6b7bae3",
+          "state": "failed",
+          "suppressed_findings": 0,
+          "unrecognized_blocking_advisories": {
+            "CRITICAL": 0,
+            "HIGH": 0,
+            "UNKNOWN": 0
+          }
+        }
+      },
+      {
+        "job_id": 127517480417,
+        "summary": {
+          "additional_advisory_ids": 32,
+          "additional_blocking_advisory_ids": {
+            "CRITICAL": 0,
+            "HIGH": 0,
+            "UNKNOWN": 0
+          },
+          "advisory_ids": [
+            "CVE-2005-2541",
+            "CVE-2007-5686",
+            "CVE-2010-4756",
+            "CVE-2011-3374",
+            "CVE-2011-4116",
+            "CVE-2013-4392",
+            "CVE-2017-18018",
+            "CVE-2018-20796",
+            "CVE-2019-1010022",
+            "CVE-2019-1010023",
+            "CVE-2019-1010024",
+            "CVE-2019-1010025",
+            "CVE-2019-9192",
+            "CVE-2021-45346",
+            "CVE-2022-0563",
+            "CVE-2023-31437",
+            "CVE-2023-31438",
+            "CVE-2023-31439",
+            "CVE-2024-56433",
+            "CVE-2025-5278",
+            "CVE-2025-6141",
+            "CVE-2025-69720",
+            "CVE-2025-70873",
+            "CVE-2026-102010",
+            "CVE-2026-102473",
+            "CVE-2026-102474",
+            "CVE-2026-114690",
+            "CVE-2026-114691",
+            "CVE-2026-115455",
+            "CVE-2026-119371",
+            "CVE-2026-119372",
+            "CVE-2026-119373",
+            "CVE-2026-119374",
+            "CVE-2026-119375",
+            "CVE-2026-119376",
+            "CVE-2026-119377",
+            "CVE-2026-119378",
+            "CVE-2026-119379",
+            "CVE-2026-119591",
+            "CVE-2026-15059",
+            "CVE-2026-15534",
+            "CVE-2026-16742",
+            "CVE-2026-18374",
+            "CVE-2026-18477",
+            "CVE-2026-18508",
+            "CVE-2026-19499",
+            "CVE-2026-19542",
+            "CVE-2026-27171",
+            "CVE-2026-3184",
+            "CVE-2026-40228"
+          ],
+          "architecture": "arm64",
+          "blocking_advisory_ids": {
+            "CRITICAL": [],
+            "HIGH": [
+              "CVE-2025-69720",
+              "CVE-2026-119373",
+              "CVE-2026-16742",
+              "CVE-2026-54369",
+              "CVE-2026-76642",
+              "CVE-2026-76844",
+              "CVE-2026-78408",
+              "CVE-2026-78409",
+              "CVE-2026-78410",
+              "CVE-2026-9538"
+            ],
+            "UNKNOWN": [
+              "CVE-2026-119371",
+              "CVE-2026-119372",
+              "CVE-2026-119374",
+              "CVE-2026-119375",
+              "CVE-2026-119376",
+              "CVE-2026-119379"
+            ]
+          },
+          "feed_database_sha256": "2ce29bda5b2483d84da3f4365398addcf03a7decf5c79e29dc73db8f0fa454ed",
+          "feed_next_update": "2026-11-06T19:01:45.286712+00:00",
+          "feed_updated_at": "2026-11-05T19:01:45.286712+00:00",
+          "image_archive_sha256": "10e8f8ae565bf4bf96735182089a2f2cce9370aa68f4b533221473b01354f50c",
+          "image_id": "sha256:5d1e146357b6df7a7d50bf6d0127131febf58ff9b0d24bb2dcf30d96045c8d11",
+          "image_inspect_sha256": "ba8b73348b71eaa69e77f87aeb02a9b22c3da4dd57f1df00064f6b1667712628",
+          "kind": "native-peer-image-vulnerabilities",
+          "manifest_sha256": "3d23e1d001d16d200157b918b8f9bde9b870ff51efe344076f30599f8984a9f9",
+          "os_family": "debian",
+          "os_version": "13.7",
+          "package_counts": {
+            "lang-pkgs": 2,
+            "os-pkgs": 80
+          },
+          "report_created_at": "2026-11-05T20:55:14.052863+00:00",
+          "report_sha256": "eed9ce8ce0fcd61a4b2d057a5f4ec9310444ec6efff49a33d30e3bae43518917",
+          "resource_policy": "github-runner-capacity",
+          "result_classes": {
+            "lang-pkgs": 1,
+            "os-pkgs": 1
+          },
+          "scanner_image": "aquasec/trivy:0.76.1@sha256:790fd66d1697395d8693d1acaa1ea702406a20f109b6fc7bac8db623eca6c06c",
+          "scanner_version": "0.76.1",
+          "scanner_version_report_sha256": "730f602314ec954c46f6c9233af509d768ef06a54d6b7edca11790b5e0c71a96",
+          "scope": "exact test peer image; OS and discovered libraries; no reachability, protocol, released image or complete product claim",
+          "scratch_bytes": 112450686976,
+          "scratch_cleanup": "unmounted",
+          "severities": {
+            "CRITICAL": 0,
+            "HIGH": 45,
+            "LOW": 61,
+            "MEDIUM": 77,
+            "UNKNOWN": 6
+          },
+          "source_commit": "e6a0d347a4b1c7713d52983e5e8a3562d6b7bae3",
+          "state": "failed",
+          "suppressed_findings": 0,
+          "unrecognized_blocking_advisories": {
+            "CRITICAL": 0,
+            "HIGH": 0,
+            "UNKNOWN": 0
+          }
+        }
+      }
+    ]
+  },
+  "triage": [
+    {
+      "source_package": "ncurses",
+      "advisory_ids": [
+        "CVE-2025-69720"
+      ],
+      "primary_observation": "Trixie6.5+20250216-2 is vulnerable; fixed unstable6.6+20251231-1; stable no-dsa",
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2025-69720"
+      ],
+      "scope": "Primary Debian source-package assessment. Exact installed binary package/version and each compatible remediation remain owed; no finding reclassification,reachability exemption or suppression."
+    },
+    {
+      "source_package": "sqlite3",
+      "advisory_ids": [
+        "CVE-2026-119373",
+        "CVE-2026-119371",
+        "CVE-2026-119372",
+        "CVE-2026-119374",
+        "CVE-2026-119375",
+        "CVE-2026-119376",
+        "CVE-2026-119379"
+      ],
+      "primary_observation": "Trixie3.46.1-7+deb13u2 is vulnerable; fixed unstable3.54.1-1; stable no-dsa",
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2026-119373",
+        "https://security-tracker.debian.org/tracker/CVE-2026-119371",
+        "https://security-tracker.debian.org/tracker/CVE-2026-119372",
+        "https://security-tracker.debian.org/tracker/CVE-2026-119374",
+        "https://security-tracker.debian.org/tracker/CVE-2026-119375",
+        "https://security-tracker.debian.org/tracker/CVE-2026-119376",
+        "https://security-tracker.debian.org/tracker/CVE-2026-119379"
+      ],
+      "scope": "Primary Debian source-package assessment. Exact installed binary package/version and each compatible remediation remain owed; no finding reclassification,reachability exemption or suppression."
+    },
+    {
+      "source_package": "systemd",
+      "advisory_ids": [
+        "CVE-2026-16742"
+      ],
+      "primary_observation": "Trixie257.13-1~deb13u1 is vulnerable; fixed unstable261.2-1; stable no-dsa",
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2026-16742"
+      ],
+      "scope": "Primary Debian source-package assessment. Exact installed binary package/version and each compatible remediation remain owed; no finding reclassification,reachability exemption or suppression."
+    },
+    {
+      "source_package": "acl",
+      "advisory_ids": [
+        "CVE-2026-54369"
+      ],
+      "primary_observation": "Trixie2.3.2-2 is vulnerable; fixed unstable2.4.0-1; stable point-release work",
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2026-54369"
+      ],
+      "scope": "Primary Debian source-package assessment. Exact installed binary package/version and each compatible remediation remain owed; no finding reclassification,reachability exemption or suppression."
+    },
+    {
+      "source_package": "util-linux",
+      "advisory_ids": [
+        "CVE-2026-76642",
+        "CVE-2026-78408",
+        "CVE-2026-78409",
+        "CVE-2026-78410"
+      ],
+      "primary_observation": "Trixie2.41.5-0+deb13u1 is vulnerable; fixes unstable2.42.3-1/2.42.4-1; stable no-dsa",
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2026-76642",
+        "https://security-tracker.debian.org/tracker/CVE-2026-78408",
+        "https://security-tracker.debian.org/tracker/CVE-2026-78409",
+        "https://security-tracker.debian.org/tracker/CVE-2026-78410"
+      ],
+      "scope": "Primary Debian source-package assessment. Exact installed binary package/version and each compatible remediation remain owed; no finding reclassification,reachability exemption or suppression."
+    },
+    {
+      "source_package": "perl",
+      "advisory_ids": [
+        "CVE-2026-9538"
+      ],
+      "primary_observation": "Trixie5.40.1-6+deb13u1 is vulnerable; fixed unstable5.42.3-1; stable postponed",
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2026-9538"
+      ],
+      "scope": "Primary Debian source-package assessment. Exact installed binary package/version and each compatible remediation remain owed; no finding reclassification,reachability exemption or suppression."
+    },
+    {
+      "source_package": "zlib",
+      "advisory_ids": [
+        "CVE-2026-76844"
+      ],
+      "primary_observation": "Direct CVE/bug page unavailable through browser tool. Debian stable unresolved list and official multimedia bug inventory identify zlib/backport work; exact fixed/stable version remains unobserved.",
+      "references": [
+        "https://security-tracker.debian.org/tracker/status/release/stable",
+        "https://blends.debian.org/multimedia/bugs/devel.html"
+      ],
+      "scope": "Primary Debian source-package assessment. Exact installed binary package/version and each compatible remediation remain owed; no finding reclassification,reachability exemption or suppression."
+    }
+  ],
+  "decision": "Do not waive severity or feed/OS/library coverage,delete inventory,apply VEX/ignore rules,or assume packages from another Debian release are compatible. Stable-source patch availability is an open remediation dependency,not a pass. Continue independent product implementation. Preserve every original failure and replay actual patched inputs before security qualification.",
+  "change": "Emit only per-standard-ID/per-blocking-severity counts of nonempty,empty or absent FixedVersion fields. No raw package/version/path/text is exported; malformed structured fix fields refuse. Presence of a fix field proves neither an available compatible package nor installation. Existing all-finding severity,suppression,inventory,freshness,input/isolation gates remain enforced. Diagnostics share the existing50-per-severity ID visibility with explicit additional counts.",
+  "red": {
+    "test": "ImageReportContracts.test_fix_metadata_counts_do_not_disclose_versions_or_waive_findings",
+    "observed": "Missing blocking_fix_metadata key; repair records exact nonempty/empty/absent counts without leaking fixture-private strings or changing failure",
+    "reference": ".private/freightctl-f092-fix-metadata-red.log",
+    "sha256": "69add06175731343de6434699a985e97b2ca4ad39fc296b31372fd1d4c6037e0"
+  },
+  "green": {
+    "reporter_methods": 13,
+    "orchestration_methods": 15,
+    "diff_check": "pass"
+  },
+  "source_files": [
+    {
+      "path": "scripts/ci-peer-image-summary.py",
+      "sha256": "62149c437f0aa5e37f35876fd3e2e02a031b5284a4ca6f14ac5485ed6d1856bf"
+    },
+    {
+      "path": "scripts/test-ci-peer-image-summary.py",
+      "sha256": "122d778db4e0573bf8e3bf4fd50a969ecccee84f66ff9b077ee25fcffe64404f"
+    }
+  ],
+  "local_manifest": {
+    "reference": ".private/freightctl-f092-security/manifest.json",
+    "sha256": "2a749193f3f2eabc0bbcb58583051ea69cfa97a0bb1607309dfc5de1e394c93b"
+  },
+  "ci_batch": {
+    "candidate": "e6a0d347a4b1c7713d52983e5e8a3562d6b7bae3",
+    "all12terminal": true,
+    "handles_reference": ".private/freightctl-f092-security/run-handles.json",
+    "sha256": "fbf70edb6c0a31ee10365072250464d8e4ed1d1490896697dbb356e0ba7c2dc1",
+    "source_vulnerabilities": "success",
+    "reproducibility": "success",
+    "native_fuzz": "success",
+    "nonsecurity_failures": "Original record contracts,integration,metadata,public/browser and native-platform failures stay red; logs/repair deferred to mandatory FINISH."
+  },
+  "owed": [
+    "Actual next native scan exercises new diagnostic fields; no native diagnostic claim from stand-ins",
+    "Exact installed versions,all51blocking findings and compatible patches or rebuilt supported input,then full original ARM/x86 scans and independent OpenPGP interop",
+    "Full final-source security/architecture/protocol/product qualification; original failures retained."
+  ]
+}

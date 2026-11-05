@@ -139,6 +139,18 @@ class ImageReportContracts(unittest.TestCase):
         self.assertEqual(result['state'],'failed')
         self.assertNotIn(PRIVATE,json.dumps(result))
 
+    def test_fix_metadata_counts_do_not_disclose_versions_or_waive_findings(self):
+        r,v,i = inputs()
+        base = {'Severity':'HIGH','VulnerabilityID':'CVE-2026-20000','PkgName':PRIVATE,'InstalledVersion':PRIVATE}
+        r['Results'][0]['Vulnerabilities'] = [base,{**base,'FixedVersion':''},{**base,'FixedVersion':PRIVATE}]
+        result = self.check(r,v,i)
+        self.assertEqual(result['blocking_fix_metadata']['HIGH']['CVE-2026-20000'], {'nonempty':1,'empty':1,'absent':1})
+        self.assertEqual(result['severities']['HIGH'],3)
+        self.assertEqual(result['state'],'failed')
+        self.assertNotIn(PRIVATE,json.dumps(result))
+        r['Results'][0]['Vulnerabilities'][0]['FixedVersion'] = {'private':PRIVATE}
+        with self.assertRaises(gate.InvalidReport): self.check(r,v,i)
+
     def test_metadata_foreign_image_platform_scanner_and_source_refusals(self):
         mutations = [
             lambda r, v, i: r.update(SchemaVersion=True),
