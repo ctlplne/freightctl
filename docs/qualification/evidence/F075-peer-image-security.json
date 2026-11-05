@@ -688,5 +688,5 @@
     "security_gate": "failed0CRITICAL/45HIGH/6UNKNOWN,zero suppressed;all51fix fields absent on each architecture",
     "evidence": "docs/qualification/evidence/F095-native-security-replay.json"
   },
-  "latest_batch_reference": "docs/qualification/evidence/F102-native-batch-security.json"
+  "latest_batch_reference": "docs/qualification/evidence/F104-native-batch-security.json"
 }
