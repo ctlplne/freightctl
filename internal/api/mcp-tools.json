@@ -1591,7 +1591,7 @@
   },
   {
     "name": "freightctl.artifact_upload_start",
-    "description": "Create or recover an ordinary owned resumable upload ticket for a new virtual file. Expected revision is zero and mode0600;no overwrite. This records metadata,not durable file acceptance. Host appends bounded bytes separately through authenticated HTTPS;not in tool context.",
+    "description": "Create or recover an ordinary owned resumable upload ticket for a new virtual file. Replacement revision is omitted and mode0600;no overwrite. This records metadata,not durable file acceptance. Host appends bounded bytes separately through authenticated HTTPS;not in tool context.",
     "inputSchema": {
       "type": "object",
       "additionalProperties": false,

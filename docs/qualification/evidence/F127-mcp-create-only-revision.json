@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "id": "F127",
+  "observed_at": "2026-11-05",
+  "candidate_parent": "7925f346cb4f3d90e7ce3b82e8db869121c53fc3",
+  "state": "Correct ordinary create-only revision mapping for MCP resumable ingress;native original journey remains owed",
+  "qualification_claim": false,
+  "red": {
+    "reference": ".private/freightctl-f127-create-wire-red.log",
+    "observation": "New upload helper supplied nonnil revision0; focused regression failed: new upload was mapped to a replacement CAS. Ordinary prepareTarget rejects every explicit revision on an absent destination."
+  },
+  "repair": [
+    "Omit ExpectedRevision for a new destination. Preserve mode0600 and all ordinary namespace/authority/intake/idempotency checks. No replacement permission or namespace assertion changed.",
+    "Native original official SDK fixture now sends the same ordinary create-only API request; tool description and protocol documentation corrected. Historical F116 evidence is preserved."
+  ],
+  "green": {
+    "new_wire_and_projection_methods": 2,
+    "catalog_and_authority_schema_methods": 2,
+    "affected_tagged_API_compilation": "pass,no tests selected",
+    "affected_tagged_API_vet": "pass",
+    "format_diff": "pass"
+  },
+  "source_files": [
+    {
+      "path": "internal/api/mcp_uploads.go",
+      "sha256": "1730e1d3187bbd512c131065d632a30f812562c3aa64994d9067c35f161f36bf"
+    },
+    {
+      "path": "internal/api/mcp_uploads_test.go",
+      "sha256": "6e3ebc0b8d58eec6ff222af916660cfe08f1f959409dca33a6628db7937ada56"
+    },
+    {
+      "path": "internal/api/mcp_integration_test.go",
+      "sha256": "82ef571c60a76ca8859aa71845d9953750f5649fc072fd5740c9efd89bdf6756"
+    },
+    {
+      "path": "internal/api/mcp-tools.json",
+      "sha256": "74965251fd6dd169fbe863015cbe5ceed0d3e265ce4525404467652a109732e0"
+    },
+    {
+      "path": "docs/protocols/artifact-exchange-mcp.md",
+      "sha256": "3f612bffa18939835cd1f96ea0d3a3f2b7a1c724600bbaf8d6a19dfd08847c13"
+    }
+  ],
+  "local_manifest": {
+    "reference": ".private/freightctl-f127-manifest.json",
+    "sha256": "86801f4bb624a662d78b729bea452f9654752bd236d76e87f98717ed87d19dd8"
+  },
+  "previous_batch": "docs/qualification/evidence/F127-previous-batch-runs.json",
+  "owed": [
+    "Actual original native PostgreSQL/HTTPS/official-client new upload, byte continuation, complete, abort, original-key replay, existing destination and revoked-authority refusal at repaired source",
+    "Every unresolved original runtime job and full baseline/AX/final-source mandatory FINISH gate"
+  ]
+}

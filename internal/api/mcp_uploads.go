@@ -42,6 +42,11 @@ type mcpUploadDescriptor struct {
 
 var mcpUploadDigest = regexp.MustCompile(`^[0-9a-f]{64}$`)
 
+func newArtifactUploadRequest(args mcpToolArguments) custody.CreateUpload {
+	mode := uint32(0600)
+	return custody.CreateUpload{Path: args.Path, Size: args.Size, SHA256: args.SHA256, Mode: &mode}
+}
+
 func mcpArtifactUpload(scope store.Scope, u custody.UploadView, receipt, replayed bool) (*mcpUploadDescriptor, error) {
 	path, err := vpath.Canonical(u.Path)
 	if err != nil || path != u.Path || path == "/" || vpath.ControlPath(path) || !store.ValidID(scope.Tenant) || !store.ValidID(scope.Partner) || !store.ValidID(u.ID) || !store.ValidID(u.EventID) || !mcpUploadDigest.MatchString(u.ExpectedSHA256) || u.ExpectedSize < 0 || u.Offset < 0 || u.Offset > u.ExpectedSize || u.Chunks < 0 || u.Chunks > 4096 || u.Revision < 1 {
@@ -89,9 +94,7 @@ func (s *Server) mcpArtifactUploadControl(ctx context.Context, scope store.Scope
 	var err error
 	switch name {
 	case "freightctl.artifact_upload_start":
-		zero := int64(0)
-		mode := uint32(0600)
-		result, err = s.Service.CreateUpload(ctx, scope, args.Key, custody.CreateUpload{Path: args.Path, Size: args.Size, SHA256: args.SHA256, ExpectedRevision: &zero, Mode: &mode})
+		result, err = s.Service.CreateUpload(ctx, scope, args.Key, newArtifactUploadRequest(args))
 	case "freightctl.artifact_upload_complete":
 		result, err = s.Service.CompleteUpload(ctx, scope, args.Upload, args.Key)
 	case "freightctl.artifact_upload_abort":

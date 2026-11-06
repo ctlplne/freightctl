@@ -47,3 +47,26 @@ func TestMCPUploadProjectionSeparatesOriginalReceiptAndCurrentTicket(t *testing.
 		t.Fatal("held acceptance became availability", err)
 	}
 }
+
+func TestMCPNewUploadUsesOrdinaryCreateOnlyWireWithoutReplacementCAS(t *testing.T) {
+	request := newArtifactUploadRequest(mcpToolArguments{Path: "/new.dat", Size: 8, SHA256: strings.Repeat("a", 64)})
+	// Ordinary prepareTarget uses omitted CAS for an absent destination. An
+	// explicit0 is a replacement CAS against an impossible namespace revision.
+	if request.ExpectedRevision != nil {
+		t.Fatal("new upload was mapped to a replacement CAS")
+	}
+	encoded, err := json.Marshal(request)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var wire map[string]any
+	if json.Unmarshal(encoded, &wire) != nil {
+		t.Fatal("ordinary wire decode")
+	}
+	if _, ok := wire["expected_revision"]; ok {
+		t.Fatal("new-target wire acquired a replacement revision")
+	}
+	if wire["path"] != "/new.dat" || wire["expected_size"] != float64(8) || wire["expected_sha256"] != strings.Repeat("a", 64) || wire["mode"] != float64(0600) {
+		t.Fatal("MCP changed the ordinary new-upload contract")
+	}
+}

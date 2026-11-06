@@ -5,8 +5,8 @@ owner decision S003. All 83 whole parity rows and twelve complete customer
 journeys remain open. Assisted deployment, independent adoption and enterprise
 readiness are unqualified. The missing market wedge does not block engineering.
 
-Latest completed CI candidate: 6752a10c240fd28c835a548cfc10cbe8b1facd2a.
-All ten triggered runs are terminal. F126 preserves exact run/job handles and safe
+Latest completed CI candidate: 7925f346cb4f3d90e7ce3b82e8db869121c53fc3.
+All thirteen triggered runs are terminal. F127 preserves exact run/job handles and
 security reports. Both actual native ARM/x86 independent-peer runtime probes
 and complete immutable image security gates pass: each 0 CRITICAL/0 HIGH/0 UNKNOWN,
 8 LOW/34 MEDIUM, 11 OS+2 language packages, zero suppressed. This qualifies that
@@ -16,8 +16,9 @@ owed. Historical resource, input, probe and finding failures remain in F075/evid
 
 Three native source vulnerability configurations, core Go reachability, JavaScript
 audit, source/history Gitleaks, repro/BOM and fuzz pass at that candidate. Core,
-native PG, metadata, both platform unit jobs and public/browser/stock-peer outcomes
-remain red. S003 defers nonsecurity log investigation/repair to mandatory FINISH.
+native PG, metadata, Windows and public/browser/stock-peer outcomes remain red;
+native macOS unit checks pass at this candidate. S003 defers
+nonsecurity log investigation/repair to mandatory FINISH.
 New actionable security failures are triaged immediately; F125 repairs an observed
 direct-TLS import violation through the unchanged crypto architecture boundary.
 Actual replay of that repaired process fixture remains owed.
@@ -41,6 +42,11 @@ F121 prepares the actual product daemon/PG/storage/verified-TLS journey with
 committed-response loss, three selected process kills, original-key recovery,
 stock-curl byte observation and persisted revocation. Native outcomes remain owed.
 R016 and artifact-exchange.json retain item-level evidence and remaining work.
+
+F127 repairs the MCP new-upload mapping: omit replacement revision rather than
+send impossible revision0. Ordinary namespace guards and mode0600 remain intact.
+Observed red then four focused methods and affected tagged compilation/vet pass.
+Original native PostgreSQL/HTTPS/official-client upload proof remains owed.
 
 Latest fresh schema 44 targets 71 metadata tables/70 forced-RLS tables. Retained
 schema 35 is untouched. PostgreSQL/non-owner RLS, immutable custody, transactional

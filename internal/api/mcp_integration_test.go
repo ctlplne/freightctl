@@ -178,7 +178,7 @@ func TestMCPStockClientExchangeUsesOrdinaryAuthorityAndSeparateReply(t *testing.
 		t.Fatal("original creation receipt became current progress")
 	}
 	newFileMode := uint32(0600)
-	ordinaryCreate := custody.CreateUpload{Path: "/new.dat", Size: int64(len(payload)), SHA256: secure.Digest(payload), ExpectedRevision: new(int64), Mode: &newFileMode}
+	ordinaryCreate := custody.CreateUpload{Path: "/new.dat", Size: int64(len(payload)), SHA256: secure.Digest(payload), Mode: &newFileMode}
 	_, ordinaryRaw := exchangeAPIRequest(t, server, "POST", prefix+"/uploads", nil, map[string]string{"Authorization": "Bearer " + string(uploadToken.Bytes), "Idempotency-Key": "mcp-ticket-create"}, exchangeAPIJSON(t, ordinaryCreate), 200)
 	var ordinaryReplay custody.UploadResult
 	if json.Unmarshal(ordinaryRaw, &ordinaryReplay) != nil || !ordinaryReplay.Replayed || ordinaryReplay.Upload.ID != ticket.Upload.ID {

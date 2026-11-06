@@ -83,8 +83,9 @@ The four resumable controls use `ordinary-resumable-artifact-upload-v1` and the
 existing upload service. Start takes `virtual_path`, `size_bytes`, `sha256` and
 `request_key`; the path is relative to the authenticated account's virtual root.
 It cannot name a host path, change roots, overwrite a file, set modes or supply
-bytes. The service fixes expected revision0 and file mode0600. This is the same
-ordinary API/CLI create request with those explicit values. Status takes
+bytes. The service omits the replacement revision and fixes file mode0600. The
+ordinary service therefore requires a new destination; it never replaces a file.
+This is the same ordinary API/CLI create request. Status takes
 `upload_id`; complete/abort also require their original stable `request_key`.
 Every operation keeps the ordinary actor,root,authority revision and write checks.
 No receiving privilege supplies upload authority.
