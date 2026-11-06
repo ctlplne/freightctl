@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "id": "F153",
+  "observed_at": "2026-11-06",
+  "candidate_parent": "67133ff4f09ff23e23200cdc577d260f50bd1b16",
+  "qualification_claim": false,
+  "contract": "docs/protocols/xlsx-records.md",
+  "source_files": [
+    {
+      "reference": ".github/workflows/document-containers.yml",
+      "sha256": "d736d5eb4f35b145d139381086a297bcce573ef40f8723e8e0ad60fbed1fe074",
+      "bytes": 3054
+    },
+    {
+      "reference": ".github/workflows/native-linux.yml",
+      "sha256": "62c9d86169b6f48c8865b86347b35aa274f452d5688e80f2cca7bb8e7ab40c15",
+      "bytes": 10739
+    },
+    {
+      "reference": "internal/architecture/architecture_test.go",
+      "sha256": "6638043cef4fb4a0ee48fc78103576ab79541f42953ea7deb81d7535a4006ace",
+      "bytes": 2699
+    },
+    {
+      "reference": "docs/protocols/xlsx-records.md",
+      "sha256": "d6d84e6f5916486917a1836c83910bea8fe32457bd3be9ec3666451d7a222adc",
+      "bytes": 5615
+    },
+    {
+      "reference": "internal/zipcontainer/zip.go",
+      "sha256": "5f446555fd5477669987c678826637a552504df2cb2c2ce92ca73ebff23a1248",
+      "bytes": 12525
+    },
+    {
+      "reference": "internal/zipcontainer/zip_test.go",
+      "sha256": "786f58901314ff641fe45cebe3f5d62e73ce0bec90bf6e32d42d6371a0e052e2",
+      "bytes": 10097
+    },
+    {
+      "reference": "internal/zipcontainer/zip_native_test.go",
+      "sha256": "01a037ca92a67609ff6581e3c73dca0ac62f4768b1ecf91f69fb78f951d86dde",
+      "bytes": 3255
+    },
+    {
+      "reference": "scripts/zip-container-producer.py",
+      "sha256": "ef97165f05e5ecd8ca5cf475605487e515842cfc801e57b8ffb1ca2fd6723349",
+      "bytes": 2703
+    }
+  ],
+  "local_manifest": {
+    "reference": ".private/freightctl-f153-proof-manifest.json",
+    "sha256": "800becb69df0b0dc73e8e031808422acb4bd256e42431159292d8001a47069f0",
+    "bytes": 3428
+  },
+  "resources": "Existing lightweight GOMAXPROCS1/GOMEMLIMIT192MiB only. No local inference,PG,Chrome,GnuPG,scanner,image,stock producer installation/execution or fuzz campaign. No publication/deployment.",
+  "state": "ZIP32 document-container foundation implemented;native stock-producer proof owed",
+  "changes": [
+    "Preflight allocation-driving EOCD/central metadata before archive/zip. Explicit caller processing limits;regular stored/deflated members only;exact local/central headers,physical spans,descriptors and unique canonical part names. No extraction,process,network or recursion capability. Architecture enforces the boundary.",
+    "Drain every member through independent actual-length/CRC32 verification,including unread/unselected parts. Caller/parent context cancellation refuses. Immutable inventory copies;fixed errors contain no member names/values. Whole-source cryptographic binding remains the custody adapter obligation."
+  ],
+  "observed_red": [
+    {
+      "reference": ".private/freightctl-f153-zip-red.log",
+      "observation": "No container implementation exists for the new contract tests."
+    },
+    {
+      "reference": ".private/freightctl-f153-zero-crc-red.log",
+      "observation": "First reader delegated to Go ZIP integrity and incorrectly accepted descriptor-free nonempty data when stored CRC was zero. Independent CRC32 computation repairs the original hostile regression."
+    }
+  ],
+  "intermediate_failure": {
+    "reference": ".private/freightctl-f153-zip-first.log",
+    "observation": "Go fixture producer refused data for a directory entry. Corrected that fixture to an empty directory;the unsafe-path assertion stayed intact."
+  },
+  "focused_green": {
+    "contract_tests": 6,
+    "fuzz_seed_execution": "ordinary seed cases only;not a fuzz campaign",
+    "affected_architecture": "pass",
+    "tagged_native_compile": "pass;zero runtime tests selected",
+    "tagged_vet": "pass",
+    "changed_workflow_lint": "pass",
+    "producer_syntax": "pass;not executed"
+  },
+  "owed": [
+    "Actual ARM/x86 stock Python stored/deflated seekable/descriptor byte proofs and native race/fuzz at the pushed candidate.",
+    "Full spreadsheet intake integration,ordinary custody/release and complete product archive/extraction breadth;no whole-row or customer qualification."
+  ]
+}

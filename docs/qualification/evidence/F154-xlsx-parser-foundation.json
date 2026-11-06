@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "id": "F154",
+  "observed_at": "2026-11-06",
+  "candidate_parent": "67133ff4f09ff23e23200cdc577d260f50bd1b16",
+  "qualification_claim": false,
+  "contract": "docs/protocols/xlsx-records.md",
+  "source_files": [
+    {
+      "reference": ".github/workflows/document-containers.yml",
+      "sha256": "d736d5eb4f35b145d139381086a297bcce573ef40f8723e8e0ad60fbed1fe074",
+      "bytes": 3054
+    },
+    {
+      "reference": ".github/workflows/native-linux.yml",
+      "sha256": "62c9d86169b6f48c8865b86347b35aa274f452d5688e80f2cca7bb8e7ab40c15",
+      "bytes": 10739
+    },
+    {
+      "reference": "internal/architecture/architecture_test.go",
+      "sha256": "6638043cef4fb4a0ee48fc78103576ab79541f42953ea7deb81d7535a4006ace",
+      "bytes": 2699
+    },
+    {
+      "reference": "docs/protocols/xlsx-records.md",
+      "sha256": "d6d84e6f5916486917a1836c83910bea8fe32457bd3be9ec3666451d7a222adc",
+      "bytes": 5615
+    },
+    {
+      "reference": "internal/checks/xlsx_records.go",
+      "sha256": "0366dcdd605cdd1487501e3e7544fa384f76319a235b68baececaa498fa19284",
+      "bytes": 29745
+    },
+    {
+      "reference": "internal/checks/xlsx_records_test.go",
+      "sha256": "fb841cf9754f78c1037131ceef7cb3e91479ed24a84212ef65b313b1e83c154a",
+      "bytes": 14345
+    },
+    {
+      "reference": "internal/checks/xlsx_native_test.go",
+      "sha256": "1426294a9c14abbd8b17b63cf09d9683ca91eea1eb18b86c30e64ab591f56278",
+      "bytes": 2749
+    },
+    {
+      "reference": "scripts/xlsx-stock-producer.py",
+      "sha256": "618487497db8d949d146c36e8e296753ba9e14e4e12f8d18c7612230722c4bfa",
+      "bytes": 5882
+    },
+    {
+      "reference": "scripts/xlsxwriter-qualification.txt",
+      "sha256": "3688c5ef70342a8ae5892a11ba8fd803e0df19dff56b35c3626fe60b7a46ceb2",
+      "bytes": 228
+    }
+  ],
+  "local_manifest": {
+    "reference": ".private/freightctl-f154-proof-manifest.json",
+    "sha256": "c3a843c543c1254767cd2f5fa2d6e2be0d5abd743c6562729f0faa7fee897b9f",
+    "bytes": 4152
+  },
+  "resources": "Existing lightweight GOMAXPROCS1/GOMEMLIMIT192MiB only. No local inference,PG,Chrome,GnuPG,scanner,image,stock producer installation/execution or fuzz campaign. No publication/deployment.",
+  "state": "Deterministic XLSX table parser implemented;intake integration and actual native producer proof owed",
+  "changes": [
+    "Explicit exact worksheet/ordered headers/typed columns;streaming cell rows,shared and inline rich strings. No floating point conversion;bounded decimal-exponent expansion. Text identifiers cannot inherit numeric display padding. Explicit ISO/1900/1904 date interpretation,with false1900 leap-day/serial0 refused.",
+    "OOXML text escapes decode once per individual text node,with escaped underscores and paired UTF-16 meaning preserved. Mixed plain/rich alternatives,duplicate indices/cells/rows,invalid string tables and unsupported cell kinds refuse. Shared string count/decoded-byte and row/token limits remain separate.",
+    "Exact content types/internal relationships and scoped namespace paths;formulas on unselected sheets,external relationships,macros/unknown active parts,defined names,wrapping/alternate views and entity/DTD inputs refuse. All member integrity is verified;reports expose only fixed codes/counts/positions.",
+    "Native ARM/x86 stock XlsxWriter3.3.1/13 actual input profiles prepared. Qualification-only wheel hash is pinned;both live PyPI/OSV responses and complete dependency closure are enforced before production of inputs. Go independently binds each produced file SHA/length and asserts seven accepts/six refusals. No producer is installed or executed locally."
+  ],
+  "observed_red": [
+    {
+      "reference": ".private/freightctl-f154-xlsx-red.log",
+      "observation": "No XLSX contract/parser exists before this implementation."
+    },
+    {
+      "reference": ".private/freightctl-f154-xstring-red.log",
+      "observation": "First parser treated OOXML-escaped header text literally and refused the exact original header. Per-text-node one-pass ST_Xstring decoding repairs the original case."
+    }
+  ],
+  "focused_green": {
+    "contract_tests": 6,
+    "coverage": "selected/unselected sheets;relationships/entities/active parts;ordered scalar/header meaning;shared strings/indices/counts/bounds;OOXML escapes/rich alternatives;exact decimal/date helpers;cancellation",
+    "fuzz_seed_execution": "ordinary seeds only;no campaign",
+    "affected_architecture": "pass",
+    "tagged_native_compile": "pass;zero runtime tests selected",
+    "tagged_vet": "pass",
+    "changed_workflow_lint": "pass",
+    "producer_syntax": "pass;not installed/executed"
+  },
+  "owed": [
+    "Register an explicit immutable XLSX intake policy/profile and bind whole-source/report identity,SQL custody guards,recheck/copy,protected signatures/scanner and separately approved release. Current CSV/JSON/fixed/XML intake profiles are unchanged;XLSX is not yet advertised through API/CLI/MCP/browser.",
+    "Wire typed operator review and actual policy/hash/original-key held-check-release proofs across ordinary surfaces.",
+    "Actual native stock XlsxWriter dependency/security outcomes and13-input ARM/x86 runtime,race/fuzz proof at the candidate. Prepared jobs and compilation do not qualify runtime.",
+    "General spreadsheet/ODS/XLS formats,formula/export safety breadth,schemas/transforms,all83 parity rows/twelve complete journeys/AX01-AX08 and every deferred FINISH/final-source gate remain open."
+  ]
+}

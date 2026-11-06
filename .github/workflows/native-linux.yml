@@ -229,6 +229,8 @@ jobs:
         run: |
           test "$(uname -m)" = x86_64
           sh scripts/go.sh test -timeout=0 ./internal/vpath -fuzz=FuzzCanonicalPath -fuzztime=5s -parallel=2
+          sh scripts/go.sh test -timeout=0 ./internal/zipcontainer -fuzz=FuzzZIPContainer -fuzztime=5s -parallel=1
+          sh scripts/go.sh test -timeout=0 ./internal/checks -fuzz=FuzzXLSXRecords -fuzztime=5s -parallel=1
           sh scripts/go.sh test -timeout=0 ./internal/sftpd -fuzz=FuzzInspectPacket -fuzztime=5s -parallel=2
           sh scripts/go.sh test -timeout=0 ./internal/ftpsd -fuzz=FuzzActiveDestination -fuzztime=5s -parallel=1
           sh scripts/go.sh test -timeout=0 ./internal/ftpsclient -fuzz=FuzzPassiveReplyNeverEscapesPortBudget -fuzztime=5s -parallel=1

@@ -2779,12 +2779,14 @@
         "docs/qualification/evidence/F145-json-intake-interface-proofs.json",
         "docs/qualification/evidence/F146-public-json-policy-contract.json",
         "docs/qualification/evidence/F148-fixed-width-intake.json",
-        "docs/qualification/evidence/F151-xml-record-intake.json"
+        "docs/qualification/evidence/F151-xml-record-intake.json",
+        "docs/qualification/evidence/F153-document-container-foundation.json",
+        "docs/qualification/evidence/F154-xlsx-parser-foundation.json"
       ],
       "qualification_blockers": [
         "Authorized JSCAPE by Redwood installation and exact edition/version for observed comparison"
       ],
-      "current_limit": "F143 JSON,F148 fixed-width and F151 bounded scalar XML extend CSV through ordinary held custody and separate exact release.Focused local red/green/static checks pass;native guards/interfaces/crypto/scanner/recheck/copy/final-source proof remains owed.General schemas/XSD,spreadsheets/EDI,deterministic transformations and complete customer/parity qualification remain required.No whole-row pass."
+      "current_limit": "F143 JSON,F148 fixed-width and F151 bounded scalar XML extend CSV through ordinary held custody and separate exact release.Focused local red/green/static checks pass;native guards/interfaces/crypto/scanner/recheck/copy/final-source proof remains owed.General schemas/XSD,spreadsheets/EDI,deterministic transformations and complete customer/parity qualification remain required.No whole-row pass. F153/F154 implement internal ZIP32/XLSX table foundations only;XLSX intake policy/surfaces/native custody and stock-producer qualification are still owed."
     },
     {
       "id": "O-MONITOR",

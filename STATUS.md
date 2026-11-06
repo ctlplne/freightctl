@@ -5,22 +5,16 @@ baseline,all83 whole parity rows,twelve complete journeys and AX01–AX08 remain
 open. Assisted deployment,independent adoption and enterprise readiness remain
 unqualified. Missing market selection does not block engineering.
 
-Latest completed batch:b2a9dee898d0068d9c107400a23cb09fa1b4c354.
-All16 runs are terminal;F150 preserves exact run/job/security outcomes. Independent
-test-peer image gates,source vulnerability configurations,core Go/JavaScript/
-history-secret checks,reproducibility and fuzz pass. Core also runs the repaired
-13-schema/32-case JSON grammar step. Those exact passes do not qualify shipped
-images,complete customer outcomes or final source. PG/metadata/Windows/record/
-public/browser/stock-peer gates remain red. JSON custody explicitly stops at
-ordinary schema initialization;skipped security assertions remain owed. Original
-failures remain in F147/F149/F150. S003 defers nonsecurity log investigation/repair
-until mandatory FINISH;new security failures receive immediate triage.
-
-F148 fixed-width commit9450456 was pushed after all prior runs terminated. Its
-current16-run batch is in progress. Core's42-case grammar,fuzz and three native
-source configurations pass;independent image gates are still pending. Existing
-schema prerequisites block native custody/interfaces. No passing native format
-exchange or final-source result is inferred.
+Latest pushed batch:67133ff4f09ff23e23200cdc577d260f50bd1b16.
+Both its16 original runs and the prior9450456 batch are terminal;F152 preserves
+all32 exact run/job handles and failures. Independent test-peer image security,
+source vulnerability configurations,core dependency/reachability/history-secret
+checks,tus audits,reproducibility and bounded fuzz pass at those exact sources.
+These passes do not qualify shipped product images or complete customer outcomes.
+PG/schema initialization still blocks native custody and skipped security
+assertions. Existing metadata,Windows,record,public,browser and stock-peer failures
+remain red. S003 defers their nonsecurity logs/repair until mandatory FINISH;
+new security failures receive immediate triage. No original run was canceled.
 
 F151 implements schema4/xml_records beside CSV,flat JSON and fixed-width records.
 Explicit root/record/scalar names and one exact namespace binding prevent hidden
@@ -44,12 +38,25 @@ Scanner stand-ins do not qualify malware detection;actual native outcomes and
 final-source proof remain owed. Source49 targets71 metadata/70 forced-RLS tables;
 retained35 and all older migrations remain untouched.
 
-Continue exchange/recovery/per-hop lineage and remaining mandatory baseline work.
-AX-J01/J02 and independent stock receivers remain open. X07 blocks only real
-optional Trust Control qualification;no API is invented. Inference profiles,
-licensed peers,external access,multi-host/hardware and full processing breadth
-remain owed. F026 stays manual/owner-deferred. Spreadsheets/EDI,general schemas,
-transforms and the whole processing parity row remain required.
+F153/F154 add internal ZIP32 document-container and deterministic XLSX table
+parser foundations. Preflight metadata bounds index allocation;local/central
+headers,physical spans and descriptors agree;every part gets an independent
+actual-length/CRC check,including stored CRC zero. No extraction,process or
+network capability exists. Exact sheet/headers/typed cells preserve identifiers,
+decimal and date meaning,shared/rich strings and per-node OOXML escapes. Formulas
+on unselected sheets,external relationships,macros and unsupported active parts
+refuse. Six container and six spreadsheet contract tests,affected static checks
+and tagged native compilation pass. Actual ARM/x86 stock Python/XlsxWriter,
+security/race/fuzz outcomes are prepared in an independent native workflow,owed.
+XLSX policy/SQL/whole-source custody/recheck/copy/signature/scanner/release and
+API/CLI/MCP/browser wiring remain the next implementation work. It is not yet an
+advertised intake kind;existing four profiles and source49 are unchanged.
+
+Continue remaining exchange/recovery/baseline work. AX-J01/J02 and independent
+stock receivers remain open. X07 blocks only real optional Trust Control proof;
+no API is invented. Inference,licensed/external peers,multi-host/hardware,general
+spreadsheets/EDI/schemas/transforms and whole-row qualification remain owed.
+F026 stays manual/owner-deferred.
 
 FINISH must repair/replay every deferred original failure and run applicable broad
 unit/race/integration,architecture/security,frontend/accessibility,native platform,
