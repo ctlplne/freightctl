@@ -18,6 +18,41 @@ SEVERITIES = ('UNKNOWN', 'LOW', 'MEDIUM', 'HIGH', 'CRITICAL')
 ADVISORY = re.compile(r'(?:CVE-[0-9]{4}-[0-9]{4,12}|GHSA-[23456789cfghjmpqrvwx]{4}-[23456789cfghjmpqrvwx]{4}-[23456789cfghjmpqrvwx]{4})\Z')
 DIGEST = re.compile(r'sha256:[0-9a-f]{64}\Z')
 REFUSAL_FUNCTIONS = frozenset(('load', 'timestamp', 'summarize', 'main'))
+REMAINING_ADVISORY = 'CVE-2026-76844'
+
+
+def package_binding(result, finding, inventory_index):
+    """Closed classifications plus hashes only; never remediation authority.
+
+    The remaining advisory has conflicting public package descriptions. Bind its
+    actual report row to the exact scanned inventory without printing arbitrary
+    package names,versions,source fields,paths or advisory prose.
+    """
+    def digest(value):
+        if not isinstance(value,str) or not 0 < len(value) <= 4096:
+            return None
+        try:
+            return hashlib.sha256(value.encode()).hexdigest()
+        except UnicodeError:
+            return None
+    name,version = finding.get('PkgName'),finding.get('InstalledVersion')
+    matches,source = (inventory_index.get((name,version),(0,{}))
+                      if isinstance(name,str) and isinstance(version,str) else (0,{}))
+    source = source if matches == 1 else {}
+    package_class = {'zlib1g':'zlib-runtime','webpack-dev-middleware':'webpack-middleware',
+                     'openpgp':'openpgp-library','@openpgp/web-stream-tools':'web-stream-library'}.get(name,'other-or-missing') if isinstance(name,str) else 'other-or-missing'
+    data = finding.get('DataSource')
+    origin = data.get('ID') if isinstance(data,dict) else None
+    return {
+        'result_class':result['Class'],
+        'package_type':result['Type'] if result['Type'] in ('debian','npm','node-pkg') else 'other',
+        'package_class':package_class,
+        'package_name_sha256':digest(name),'installed_version_sha256':digest(version),
+        'inventory_match':matches == 1,'inventory_match_count':matches,
+        'source_name_sha256':digest(source.get('SrcName')),
+        'source_version_sha256':digest(source.get('SrcVersion')),
+        'data_source':origin if origin in ('debian','ghsa','nvd') else 'other-or-missing',
+    }
 
 
 class InvalidReport(ValueError):
@@ -127,6 +162,7 @@ def summarize(report, version, image, commit, architecture, now):
     advisory_ids = set()
     blocking_ids = {s:set() for s in ('CRITICAL','HIGH','UNKNOWN')}
     fix_metadata = {s:{} for s in blocking_ids}
+    remaining_bindings = Counter()
     unrecognized_blocking = {s:0 for s in blocking_ids}
     for result in results:
         require(isinstance(result, dict) and result.get('Class') in ('os-pkgs', 'lang-pkgs'))
@@ -137,9 +173,13 @@ def summarize(report, version, image, commit, architecture, now):
         inventory = result.get('Packages', [])
         require(isinstance(inventory, list) and len(inventory) <= 100000)
         packages[kind] += len(inventory)
+        inventory_index = {}
         for package in inventory:
             require(isinstance(package, dict) and isinstance(package.get('Name'), str)
                     and isinstance(package.get('Version'), str))
+            identity = (package['Name'],package['Version'])
+            count,_ = inventory_index.get(identity,(0,None))
+            inventory_index[identity] = (count+1,package)
             if kind == 'os-pkgs' and result['Type'] == 'debian':
                 inventory_os = True
             if kind == 'lang-pkgs' and result['Type'] in ('npm', 'node-pkg') and package['Name'] == 'openpgp' and package['Version'] == '6.3.2':
@@ -154,6 +194,9 @@ def summarize(report, version, image, commit, architecture, now):
             counts[finding['Severity']] += 1
             ident = finding.get('VulnerabilityID')
             require(isinstance(ident, str) and 0 < len(ident) <= 128)
+            if ident == REMAINING_ADVISORY and finding['Severity'] in blocking_ids:
+                facts = package_binding(result,finding,inventory_index)
+                remaining_bindings[json.dumps(facts,sort_keys=True)] += 1
             if ADVISORY.fullmatch(ident):
                 advisory_ids.add(ident)
                 if finding['Severity'] in blocking_ids:
@@ -186,6 +229,10 @@ def summarize(report, version, image, commit, architecture, now):
         'blocking_advisory_ids': {s:sorted(ids)[:50] for s,ids in blocking_ids.items()},
         'additional_blocking_advisory_ids': {s:max(0,len(ids)-50) for s,ids in blocking_ids.items()},
         'blocking_fix_metadata': {s:{ident:fix_metadata[s][ident] for ident in sorted(ids)[:50]} for s,ids in blocking_ids.items()},
+        'remaining_advisory_id':REMAINING_ADVISORY,
+        'remaining_advisory_package_bindings':[{**json.loads(key),'occurrences':remaining_bindings[key]} for key in sorted(remaining_bindings)[:50]],
+        'additional_remaining_advisory_package_bindings':max(0,len(remaining_bindings)-50),
+        'remaining_advisory_occurrences':sum(remaining_bindings.values()),
         'unrecognized_blocking_advisories': unrecognized_blocking,
         'scope': 'exact test peer image; OS and discovered libraries; no reachability, protocol, released image or complete product claim',
     }

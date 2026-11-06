@@ -698,5 +698,9 @@
     "reference": "docs/qualification/evidence/F109-minimal-runtime-native-security.json",
     "state": "Both real native probes pass;complete scans each0CRITICAL/1HIGH/0UNKNOWN,15OS+2language packages,zero suppressed. Gate red.",
     "remaining": "CVE-2026-76844 exact source/package mapping and compatible remediation owed"
+  },
+  "remaining_finding_identity_prepared": {
+    "reference": "docs/qualification/evidence/F110-private-peer-package-binding.json",
+    "state": "Prepared privacy-safe package/version/source hash correlation;actual native facts owed. Existing finding stays red."
   }
 }

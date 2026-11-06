@@ -33,6 +33,11 @@ exact source identity and compatible remediation remain owed. Original independe
 AEAD decryption/corruption/recovery qualification is still owed. No clean-image
 claim or local image/scanner/model runtime.
 
+F110 prepares privacy-safe exact package/version/source hash correlation for the
+sole remaining advisory. Seventeen reporter/fifteen orchestration contracts pass;
+missing/ambiguous inventory and overflow counts stay explicit. Actual native
+identity and compatible remediation are owed;the finding remains red.
+
 F080–F083 implement canonical exchange contracts, append-only endpoint/current-head
 registration, exact-revision receive views and five ordinary-authority HTTPS paths.
 F085 adds five CLI commands with protected exact-byte/digest verification and

@@ -45,6 +45,21 @@ def inputs(now=NOW, arch='amd64'):
 
 
 class ImageReportContracts(unittest.TestCase):
+    def test_remaining_advisory_package_binding_is_hash_bound_and_never_waives_the_finding(self):
+        r,v,i=inputs()
+        name,version='zlib1g','1:1.3.1-3'
+        r['Results'][0]['Packages']=[{'Name':name,'Version':version,'SrcName':'zlib','SrcVersion':version}]
+        r['Results'][0]['Vulnerabilities']=[{'Severity':'HIGH','VulnerabilityID':'CVE-2026-76844','PkgName':name,'InstalledVersion':version,'DataSource':{'ID':'debian'}}]
+        result=self.check(r,v,i)
+        facts=result.get('remaining_advisory_package_bindings')
+        self.assertIsInstance(facts,list)
+        self.assertEqual(len(facts),1)
+        self.assertEqual(facts[0]['package_class'],'zlib-runtime')
+        self.assertEqual(facts[0]['installed_version_sha256'],__import__('hashlib').sha256(version.encode()).hexdigest())
+        self.assertTrue(facts[0]['inventory_match'])
+        self.assertEqual(result['state'],'failed')
+        for raw in (name,version,'"zlib"'):self.assertNotIn(raw,json.dumps(facts))
+
     def test_minimal_runtime_identity_cannot_be_adopted_from_a_label_or_entrypoint_change(self):
         for change in (
             lambda c:c['Labels'].pop('freightctl.peer.runtime',None),
@@ -55,6 +70,34 @@ class ImageReportContracts(unittest.TestCase):
             change(image[0]['Config'])
             with self.assertRaises(gate.InvalidReport):
                 self.check(report,version,image)
+
+    def test_remaining_binding_omits_private_fields_and_handles_missing_or_ambiguous_inventory(self):
+        for mode in ('private','missing','ambiguous','invalid-unicode'):
+            r,v,i=inputs()
+            name = PRIVATE if mode != 'invalid-unicode' else '\ud800'
+            package={'Name':name,'Version':PRIVATE,'SrcName':PRIVATE,'SrcVersion':PRIVATE}
+            r['Results'][0]['Packages']=[package] if mode != 'missing' else []
+            # Retain complete independent OS inventory even for a missing match.
+            if mode=='missing':r['Results'][0]['Packages']=[{'Name':'other-package','Version':'1'}]
+            if mode=='ambiguous':r['Results'][0]['Packages'].append(dict(package))
+            r['Results'][0]['Vulnerabilities']=[{'Severity':'HIGH','VulnerabilityID':'CVE-2026-76844','PkgName':name,'InstalledVersion':PRIVATE,'DataSource':{'ID':PRIVATE},'Description':PRIVATE}]
+            result=self.check(r,v,i);fact=result['remaining_advisory_package_bindings'][0]
+            self.assertEqual(result['state'],'failed')
+            self.assertEqual(fact['package_class'],'other-or-missing')
+            self.assertEqual(fact['inventory_match'],mode in ('private','invalid-unicode'))
+            self.assertNotIn(PRIVATE,json.dumps(result))
+            if mode=='invalid-unicode':self.assertIsNone(fact['package_name_sha256'])
+
+    def test_remaining_binding_output_bound_never_erases_finding_or_extra_identity_counts(self):
+        r,v,i=inputs()
+        r['Results'][0]['Packages']=[{'Name':'zlib1g','Version':str(n)} for n in range(55)]
+        r['Results'][0]['Vulnerabilities']=[{'Severity':'HIGH','VulnerabilityID':'CVE-2026-76844','PkgName':'zlib1g','InstalledVersion':str(n)} for n in range(55)]
+        result=self.check(r,v,i)
+        self.assertEqual(result['state'],'failed')
+        self.assertEqual(result['severities']['HIGH'],55)
+        self.assertEqual(result['remaining_advisory_occurrences'],55)
+        self.assertEqual(len(result['remaining_advisory_package_bindings']),50)
+        self.assertEqual(result['additional_remaining_advisory_package_bindings'],5)
 
     def test_replacement_profile_requires_debian13_and_refuses_old_major(self):
         report,version,image=inputs()

@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "id": "F110",
+  "observed_at": "2026-11-05",
+  "starting_commit": "8cc49828b7090985edbda8321e44e7df5802d675",
+  "state": "Private remaining-finding identity diagnostic prepared;actual native observation/remediation owed",
+  "qualification_claim": false,
+  "problem": "F109 observes one blockingCVE-2026-76844 per native image. Public primary package descriptions conflict;the safe scan summary cannot yet bind the actual row to an exact package/version/source.",
+  "change": [
+    "For that advisory only,derive a closed package/source classification and SHA256 package,installed-version and inventory-source fields. No arbitrary raw name/version/path/prose is printed. Exact matching inventory count distinguishes absent and ambiguous bindings.",
+    "Index each complete result inventory once;diagnostic lookup is linear overall. Missing/invalid Unicode metadata stays explicitly unhashed. Bounded diagnostic output retains total occurrence and overflow identity counts.",
+    "Every existing finding,suppression,complete inventory,freshness,input/source/privacy check and critical/high/unknown failure rule is unchanged. Diagnostic classification/hash matches cannot waive a finding. Scan coverage is unchanged."
+  ],
+  "red": {
+    "observed": "Required exact privacy-safe package binding absent from the original safe report",
+    "reference": ".private/freightctl-f110-binding-red.log"
+  },
+  "green": {
+    "reporter_contract_methods": 17,
+    "orchestration_stand_in_methods": 15,
+    "proof": "Exact inventory match,unknown/private/missing/ambiguous/invalid-Unicode fields and55identity output accounting preserve red severity and privacy",
+    "actual_native_observation": "owed;no local runtime"
+  },
+  "source_files": [
+    {
+      "path": "scripts/ci-peer-image-summary.py",
+      "sha256": "a323d734bb5b51362deab85e88ea6d077b33ea16ed45c6905f27c17dc5629859"
+    },
+    {
+      "path": "scripts/test-ci-peer-image-summary.py",
+      "sha256": "a56175f2ac68bbe0b278033eee28c5b436af9b03312b5eb4764cd10643a1c263"
+    }
+  ],
+  "local_manifest": {
+    "reference": ".private/freightctl-f110/manifest.json",
+    "sha256": "d4391827a88a5b48ba22dfe1df4a754f2fcbe8345fd3f529c75868aee4aff7dc"
+  },
+  "owed": [
+    "Actual two-native remaining-finding identity,matching public source/version and compatible remediation,then original full scans and independent AEAD replay",
+    "All remaining product/baseline/AX and mandatory FINISH deferred/native/final-source gates"
+  ]
+}
