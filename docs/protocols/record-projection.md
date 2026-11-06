@@ -1,10 +1,70 @@
 # Deterministic record projection core
 
-This is an implemented internal processing primitive. It is not yet an advertised
-workflow task or application API/CLI/browser/MCP operation. Workflow authority,
-approved intents,leases/fencing,quota reservations,immutable output lineage,
-receipts,recovery and fresh output checks/release must be integrated and qualified.
+The internal processing primitive and governed metadata review are implemented.
+The review has an API and CLI; it cannot execute a transformation. The executable
+workflow task, approved intents, leases/fencing, quota reservations, immutable
+output lineage, receipts, recovery and fresh output checks/release still need
+implementation and qualification. Browser and MCP operation remain owed.
 Neither a valid row nor a completed projection grants execution or forwarding.
+
+## Governed metadata review
+
+`POST /v1/tenants/{tenant}/partners/{partner}/checks/{file}/projection-preview`
+accepts `ProjectionOptions`: `reason`, optional `target_path`, and the declarative
+`definition` described below. The [OpenAPI contract](../api/record-projection.openapi.json)
+contains the request rules and complete typed response. It uses ordinary bearer
+or browser session authentication. Control JSON has the existing 32 KiB, depth16
+and4096-token bounds. Unknown fields, duplicate/case-folded keys and trailing
+values refuse. The route accepts no approval, source override, credential,
+signature-reuse, shell, recipient or byte-content argument.
+
+The CLI uses the same service:
+
+```sh
+freightctl check-projection-preview \
+  --dsn-file .private/pg-runtime.dsn --token-file .private/token \
+  --tenant '<tenant-id>' --partner '<partner-id>' \
+  --storage .private/custody --file-id '<source-file-id>' \
+  --request-file .private/projection-options.json
+```
+
+Review requires root administration plus `read`, `write`, `intake_manage`,
+`check_run` and `check_release`. The caller must own the original acceptance.
+Receiving a view, or simply having a write credential, supplies none of this
+processing authority. The source needs a passed or released exact check, with no
+live worker or lease. Its original contract, format-specific engine/success code,
+full report hash, file identity/size/digest, storage identity, namespace root,
+authority revision and captured check revision must agree. Integrity-only,
+unchecked, rejected, partial and invented successful reports refuse.
+
+A retired source contract is usable only through this explicitly authorized
+processing review. Ordinary current-policy download and release checks stay
+unchanged. Mandatory original signatures must still bind the exact attachment,
+bytes and live key; mandatory scanner results must still be clean, fresh and bound
+to the exact bytes, profile, engine/feed and protected configuration. The preview
+reads bounded public/control metadata and protected scanner configuration; it
+does not open artifact contents, contact a scanner daemon or start inference.
+The earliest source proof expiry joins the immutable plan. Wall-clock observation
+alone does not change the hash while the same proof is still valid.
+
+The latest active output policy must have exactly the projection's derived data
+shape and explicit processing bounds. It cannot drop required signature/scanner
+controls or extend the original nonzero signature age. It may select separately
+registered output protections; those do not replace validation of the original
+source protections. Changing bytes always requires a new signature when required;
+`reuse_exact` refuses. An optional target is create-only: the source and every
+other existing destination remain protected from overwrite. Publication still
+needs the output's own successful checks and separate exact release.
+
+Schema1 profile `held-record-projection-v1` binds the entire captured source/check/
+signature context, original source-policy reference, current output-policy
+reference, storage/root/authority and target revisions, normalized mapping/engine/
+processing rules, derived data-contract hash, reason and source proof expiry.
+Returned pointers and mappings are independently owned, so editing a request
+cannot change a completed review. A preview saves no intent, event, receipt,
+artifact, check or release. A future approved durable intent must bind this whole
+plan and regenerate it before consequential effects; preview itself grants no
+execution permission.
 
 ## One parsing path
 
@@ -93,7 +153,15 @@ fixtures and actual pinned XlsxWriter bytes. Ten JSON/CSV outputs are checked by
 separate Python JSON/Decimal/CSV receiver for byte hashes,exact money and IDs,
 dates,order and duplicates. Stock XLSX row-stream assertions also cover rich
 strings,literal formula-looking strings,OOXML escapes and both explicit calendars.
-Prepared jobs and local compilation do not establish these native passes.
+At source `036fbd3d896b719f6dbf804ab3c0e73dd80b7e7d`, original run
+`42305585988`, jobs `128193962728` (x86) and `128193963340` (ARM), passed these
+native race/stock-input assertions and the separate ten-output Python receiver.
+F162 preserves exact handles and safe log manifests. These establish the record
+primitives at that source, not governed application acceptance or later changes.
+The metadata review's native PostgreSQL/source-key/scanner-configuration/grant/
+ownership/no-payload assertions are prepared and remain owed; local compilation
+does not establish a runtime pass. Served API/CLI/browser/MCP and full executable
+workflow, recovery and final-source acceptance also remain owed.
 
 The source handling follows [RFC8259](https://www.rfc-editor.org/rfc/rfc8259).
 CSV refusal accounts for [OWASP's formula-injection guidance](https://community.owasp.org/attacks/CSV_Injection).

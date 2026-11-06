@@ -1,72 +1,63 @@
 # freightctl status
 
-Updated 2026-11-06. Active under S006;S005 remains historical. The full GOAL.md
-baseline,all83 whole parity rows,twelve complete journeys and AX01–AX08 remain
-open. Assisted deployment,independent adoption and enterprise readiness remain
-unqualified. Missing market selection does not block engineering.
+Updated 2026-11-06. Active under S006; S005 remains historical. The full
+GOAL.md baseline, all 83 whole parity rows, twelve complete journeys and
+AX01–AX08 remain open. Assisted deployment, independent adoption and enterprise
+readiness are unqualified. Missing market selection does not block engineering.
 
-Latest completed pushed batch:f6be16ad9ef88ee4ec3ab0421391727311b9cfe1.
-All17 original workflows are terminal;F159 preserves exact run/job handles and
-original failures. ARM/x86 stock ZIP/XLSX parser/race/security,dependency closure,
-source vulnerabilities,peer image gates,tus audits,bounded fuzz and reproduction
-pass at that source. These do not qualify governed PostgreSQL/custody/served
-application outcomes or the later stream/projection changes.
+Latest completed pushed batch:036fbd3d896b719f6dbf804ab3c0e73dd80b7e7d.
+All 17 original workflows and 37 jobs are terminal; F162 retains exact handles,
+original failures and safe metadata/log manifests. ARM/x86 stock ZIP/XLSX typed
+parsing, native race/projection staging and the independent ten-output Python
+JSON/Decimal/CSV receiver pass at that source. Producer dependency closure,
+listed source/image/dependency/secret gates, bounded fuzz, reproducibility and
+macOS native units pass. These qualify their tested primitives, not governed
+PostgreSQL/application acceptance, later source or complete product outcomes.
 
-F155 implements schema5/xlsx_records beside CSV,JSON,fixed-width and scalar XML.
-Exact worksheet/date meaning and package/shared-string budgets join the reviewed
-policy hash. Complete immutable file size/SHA256 precedes bounded parsing;
-engine/code/custody identity remains format-specific. Numeric display padding
-cannot restore text identifiers. Decimal and date rules avoid floating point or
-calendar guessing. Formulas and external relationships refuse across all sheets.
-Required signatures/scanner verdicts and a separate exact release remain intact.
+F160/F161 add root-admin/original-owner projection metadata review through the
+ordinary API and CLI, with a complete typed OpenAPI contract. It binds exact
+source check/report/format/protected proof, original policy, current output shape
+and protections, storage/root/authority/target revisions and normalized mapping.
+Expired, partial, invented or changed proof refuses. Old source protections stay
+live even with separately registered output keys/scanners. Signature reuse,
+weaker protected requirements and overwrite refuse. Review opens no payload and
+writes no intent, event, artifact, receipt, release or forwarding effect.
 
-Browser review and a sixth actual Go golden preserve protected requirements;
-MCP26/v12,five OpenAPI documents and13 schema leaves share62 acceptance/refusal
-vectors. Embedded app.js is rebuilt. Empty-container parent cancellation and
-initial/late source-I/O retry semantics have observed red/green repairs. Focused
-Go,77 affected frontend contracts,12 metadata stand-ins,type/build,tagged native
-compilation/vet,architecture and changed workflow/script checks pass locally.
-No native or served application pass is inferred from compilation.
+Focused review/parser/OpenAPI refusal tests have observed red then green. Tagged
+compilation, vet and architecture checks pass locally. Four native PostgreSQL,
+custody, stock-GnuPG/scanner-protocol, ownership/live-grant/configuration/no-payload
+review tests are prepared and owed. Local handler tests establish no served HTTPS
+or database behavior; the CLI is compiled/vetted only. Browser/MCP review and all
+executable transformation interfaces remain owed. No heavy local runtime started.
 
-Actual stock-produced workbook bytes now feed prepared PG SQL/custody/API/CLI/
-GnuPG/scanner-protocol/recheck/received-copy and Chrome review/original-key/held/
-separate-release/five-accessibility-state proofs. Browser readback compares binary
-bytes. Those runtime outcomes and replay of changed parser inputs remain owed.
-Source50 targets71 metadata/70 forced-RLS tables;retained35 and all earlier
-migrations are untouched. No local database or heavy runtime was started.
+Next:implement durable separately approved transformation intents and typed
+workflow execution, transactional events/idempotency, isolated fair admission,
+leases/fencing, quota reservation, exact-source revalidation, deterministic
+staging/adoption, immutable lineage, fresh held output checks/signatures/scanning,
+separate exact release and crash recovery. Then prove ordinary API/CLI/browser/MCP
+and the original customer outcomes. Preview and pure projection are not a
+finished workflow task. Broader schemas/formats/EDI/transformations remain open.
 
-Original PostgreSQL initialization,metadata,Windows,record,public/browser and
-stock-peer failures remain red. F152 preserves both earlier16-run batches;F156
-the latest17. S003 defers nonsecurity logs/repair until mandatory FINISH;new
-security failures receive immediate triage. No original run was canceled.
+F155 implements governed XLSX alongside CSV/JSON/fixed/scalar XML, exact source
+hashing, signature/scanner controls, reviewed browser policy and fresh release.
+Prepared stock-byte PostgreSQL/API/CLI/Chrome/copy/recheck/crypto outcomes remain
+owed. Source50 targets71 metadata/70 forced-RLS tables; retained35 and all earlier
+migrations are untouched. Original schema initialization, metadata, Windows,
+qualification-refusal, public/browser and stock-peer failures stay red. S003
+requires their investigation/repair at mandatory FINISH; new security failures
+receive immediate triage. No original run was canceled or replaced.
 
-F157/F158 add a typed record stream through the same five validators and a
-versioned deterministic JSON/CSV projection core. Exact mappings/presence rules,
-engine/source-contract hashes,bounded processing,ordered duplicates and exact
-money/identifier/date values remain explicit. CSV formula-like text and implicit
-presence/newline loss refuse. Every incomplete result returns an error and no
-successful digest. Actual private staging removes failed partials and seals only
-complete read-only bytes. Focused parser/stream/projection and static checks pass;
-new native typed-XLSX/ten-output independent-receiver/race/fuzz proof is prepared,
-owed. This is not yet a governed workflow task or application interface.
-
-Next:integrate transformations with typed workflow authority,approved immutable
-intents,live permissions,leases/fencing,quota,lineage,transactional receipts and
-crash recovery;bind source protections and fresh output checks/separate release.
-Then qualify ordinary API/CLI/browser/MCP and original customer outcomes. Continue
-all remaining baseline/exchange work;broader schemas/formats/EDI/transforms,
-AX-J01/J02 and independent stock receivers remain open. X07 blocks only real
-optional Trust Control proof;no API is invented. Inference,licensed/external peers,
+Continue all baseline/exchange work and AX-J01/J02. X07 blocks only real optional
+Trust Control proof; no API is invented. Inference, licensed/external peers,
 multi-host/hardware and whole qualification remain owed. F026 stays manual.
+FINISH must repair and replay every deferred original failure and bind applicable
+broad unit/race/integration, architecture/security, frontend/accessibility,
+native/public/stock/independent-receiver, restore/recovery and reproducibility
+results to actual final source. Anything unproven remains owed.
 
-FINISH must repair/replay every deferred original failure and run applicable
-broad unit/race/integration,architecture/security,frontend/accessibility,native,
-public/stock/independent-receiver,restore/recovery,reproducibility and final-source
-gates. Anything unproven remains owed;the product is not complete.
-
-Work stays on local main with sole author/committer imfeelingtheagi. Authorized
-source/CI fast-forward pushes retain the Gitleaks guard and wait for previous
-required runs to finish. S004 uses runner capacity without arbitrary build/scan
-ceilings. Local lightweight limits,no inference and the separate4GiB/oneCPU real
-scanner allowance remain unchanged. No release,artifact/package/image publication,
+Work stays on local main with sole author/committer imfeelingtheagi. Source/CI
+fast-forward pushes retain the Gitleaks guard and require the previous batch's
+runs to be terminal. S004 uses GitHub runner capacity without arbitrary build/scan
+ceilings. Local lightweight limits, no inference and the separate4GiB/oneCPU real
+scanner allowance remain unchanged. No release, artifact/package/image publication,
 visibility change or external deployment is authorized.

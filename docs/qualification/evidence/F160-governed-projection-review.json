@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "observed_at": "2026-11-06",
+  "candidate_parent": "036fbd3d896b719f6dbf804ab3c0e73dd80b7e7d",
+  "qualification_claim": false,
+  "contract": "docs/protocols/record-projection.md",
+  "id": "F160",
+  "state": "Governed projection review implemented;focused local contracts pass;native PostgreSQL and executable workflow remain owed",
+  "source_files": [
+    {
+      "reference": "internal/checks/projection_review.go",
+      "sha256": "8b2df0b8fe26c6ee3e162b19314854ac05ac02d568e3affa31fae67b7a8f098e",
+      "bytes": 14281
+    },
+    {
+      "reference": "internal/checks/projection_review_test.go",
+      "sha256": "63255da8daab220604e814b634ec635c96b44b6a8b39121752a152b250e9aedc",
+      "bytes": 12204
+    },
+    {
+      "reference": "internal/checks/projection_review_integration_test.go",
+      "sha256": "ff8403fe9afaad3a0fffa33e342b137a573db6a455b0381074ef3a37c426745b",
+      "bytes": 10518
+    },
+    {
+      "reference": "docs/protocols/record-projection.md",
+      "sha256": "ff6765925d528eecba0dfbf40a41c69d79e21614a1c172f6b0761e5dd3957939",
+      "bytes": 10560
+    }
+  ],
+  "changed": [
+    "Root-admin/original-owner metadata review binds exact source file/check/report/format engine,source policy,current output data/protection policy,storage/root/authority,target and normalized mapping rules.",
+    "Passed or released proof required;source signature/scanner bindings and live original keys/configuration/freshness stay mandatory even when output uses separate registrations.",
+    "Output data shape must match the latest active policy;protected requirements cannot be dropped or signature age extended. Signature reuse and overwrite refuse. Earliest source proof expiry joins the independently owned immutable plan.",
+    "Preview touches control/protected configuration only;no payload read,intent,event,artifact,receipt,model,scanner daemon,release or forwarding effect. Ordinary retired-policy download checks remain unchanged."
+  ],
+  "red": {
+    "reference": ".private/freightctl-f160-review-red.log",
+    "observed": "Focused required review tests failed compilation because the review API/profile/capture contract did not exist."
+  },
+  "green": {
+    "reference": ".private/freightctl-f160-final-green.log",
+    "observed": "Four focused review functions including all five format-specific proof identities,independent snapshots,precise report/source/namespace/authority refusals,protected signature/scanner/expiry/byte bindings;two focused API/schema functions also pass."
+  },
+  "checks": [
+    {
+      "reference": ".private/freightctl-f160-review-red.log",
+      "sha256": "9f16b74c68d3a50701aec25d26da1e49d7b9a6e1dd8587ee598e46de3ea4dd18",
+      "bytes": 882
+    },
+    {
+      "reference": ".private/freightctl-f160-review-first.log",
+      "sha256": "fa1d71460ec471b84dcb2a9c5a8c7e1098a17326e39f33258fe6472b3567e715",
+      "bytes": 58
+    },
+    {
+      "reference": ".private/freightctl-f160-final-green.log",
+      "sha256": "db2272d2488384e47e3022952f31056eae5f29c2b414e5930d2c37148f955b06",
+      "bytes": 113
+    },
+    {
+      "reference": ".private/freightctl-f160-native-compile-final.log",
+      "sha256": "f0696d87f4ee184a8fdeaa2013d5bbec0e2967961ed1e33ad04776aad6057ae8",
+      "bytes": 226
+    },
+    {
+      "reference": ".private/freightctl-f160-final-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f160-final-architecture.log",
+      "sha256": "ba99c5123c5925fdadd7e0c99f894b7ba8467008432096f2e732646e1fa4ef16",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f160-records.log",
+      "sha256": "826009b37d6c8254924b7fd1ee12981059544175f2c890ad4186b88b41b583b4",
+      "bytes": 106
+    }
+  ],
+  "prepared_native": [
+    "TestProjectionPreviewActualRetiredSourceAndNoPayloadOrEffects:real PostgreSQL/held proof,separate output policy,retired source,create-only target,no events/files/checks/intents and no payload open.",
+    "TestProjectionPreviewActualLiveAuthorityAndOwnership:original owner only,live required grants,different processing operator and ordinary read/write refusals.",
+    "TestProjectionPreviewActualSignatureRequiresFreshOutputAndLiveSourceKey:stock GnuPG source proof,independently registered current output key,old source-key revocation still refuses.",
+    "TestProjectionPreviewActualScannerKeepsCurrentProtectedConfiguration:local scanner protocol fixture,distinct current output profile,protected configuration mutation and original source-profile revocation refuse;this does not qualify real ClamAV/malware detection."
+  ],
+  "owed": [
+    "Runtime execution of the four native PostgreSQL/custody/crypto/scanner-protocol tests;compilation/vet ran zero native assertions.",
+    "Durable approved intents,transactional events/idempotency,isolated worker admission,leases/fencing,quota reservation,exact-source live revalidation,deterministic staging/adoption,immutable lineage,fresh held output acceptance/checks/separate release and crash recovery.",
+    "Full typed workflow/API/CLI/browser/MCP execution and affected original customer journeys;all GOAL baseline/AX/FINISH gates remain open."
+  ],
+  "invariants": "No local heavy runtime or inference started. No migration or retained database changes;source50/71metadata/70forced-RLS and retained35 unchanged."
+}

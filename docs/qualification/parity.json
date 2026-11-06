@@ -2785,7 +2785,10 @@
         "docs/qualification/evidence/F155-governed-xlsx-intake.json",
         "docs/qualification/evidence/F156-native-document-containers.json",
         "docs/qualification/evidence/F157-typed-record-stream.json",
-        "docs/qualification/evidence/F158-record-projection-core.json"
+        "docs/qualification/evidence/F158-record-projection-core.json",
+        "docs/qualification/evidence/F160-governed-projection-review.json",
+        "docs/qualification/evidence/F161-projection-review-surfaces.json",
+        "docs/qualification/evidence/F162-projection-parent-terminal-ci.json"
       ],
       "qualification_blockers": [
         "Authorized JSCAPE by Redwood installation and exact edition/version for observed comparison"

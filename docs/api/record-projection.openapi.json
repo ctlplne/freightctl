@@ -1,0 +1,1278 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "freightctl governed record projection review",
+    "version": "1",
+    "description": "Metadata review only. Durable approval and execution are not implemented by this route. PostgreSQL and served client qualification remain owed. Schemas describe structure; live authority, exact source mappings, protected proofs and actual output acceptance require the ordinary services."
+  },
+  "paths": {
+    "/v1/tenants/{tenant}/partners/{partner}/checks/{file}/projection-preview": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "tenant",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ID"
+          }
+        },
+        {
+          "in": "path",
+          "name": "partner",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ID"
+          }
+        },
+        {
+          "in": "path",
+          "name": "file",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ID"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "previewRecordProjection",
+        "summary": "Review exact source proof and separate held output requirements",
+        "description": "Requires root admin, read, write, intake_manage, check_run, check_release and original acceptance ownership. Source must have passed or released checks with live mandatory protections. A retired source contract is usable only for explicitly authorized processing; ordinary download policy stays unchanged. No payload is opened, no intent or artifact is written, and no model or scanner daemon is contacted. 32 KiB strict JSON, depth 16, 4096 tokens; unknown, duplicate/case-folded fields and trailing values refuse. Receiving alone grants no processing, forwarding or release authority.",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "browserCookie": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjectionOptions"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Exact metadata review; not an approved execution or receipt.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectionPreview"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Malformed or incompatible mapping, output policy, reason or target."
+          },
+          "401": {
+            "description": "Authentication required."
+          },
+          "403": {
+            "description": "Processing authority or root scope missing."
+          },
+          "404": {
+            "description": "Source not visible to the authenticated owner."
+          },
+          "409": {
+            "description": "Source proof, policy, storage, namespace or authority is unavailable or stale."
+          },
+          "500": {
+            "description": "Internal operation failed without granting authority."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      },
+      "browserCookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "__Host-freightctl-session"
+      }
+    },
+    "schemas": {
+      "ID": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+      },
+      "ProjectionOptions": {
+        "type": "object",
+        "properties": {
+          "target_path": {
+            "type": "string",
+            "description": "Optional create-only logical path. No host path, URL, overwrite or implicit publication."
+          },
+          "reason": {
+            "type": "string",
+            "description": "NFC-normalized, trimmed reason: 3..1024 UTF-8 bytes, at most 240 Unicode scalar values, no control characters."
+          },
+          "definition": {
+            "type": "object",
+            "properties": {
+              "schema_version": {
+                "type": "integer",
+                "const": 1
+              },
+              "kind": {
+                "type": "string",
+                "const": "record_projection"
+              },
+              "engine": {
+                "type": "string",
+                "enum": [
+                  "",
+                  "freightctl-record-projection-v1"
+                ]
+              },
+              "source_policy_hash": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "output_kind": {
+                "type": "string",
+                "enum": [
+                  "csv",
+                  "json_records"
+                ]
+              },
+              "columns": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "source": {
+                      "type": "string"
+                    },
+                    "target": {
+                      "type": "string"
+                    },
+                    "conversion": {
+                      "type": "string",
+                      "enum": [
+                        "",
+                        "identity",
+                        "text",
+                        "normalize_lf"
+                      ]
+                    },
+                    "missing": {
+                      "type": "string",
+                      "enum": [
+                        "",
+                        "preserve",
+                        "empty",
+                        "null",
+                        "error"
+                      ]
+                    },
+                    "null": {
+                      "type": "string",
+                      "enum": [
+                        "",
+                        "preserve",
+                        "empty",
+                        "missing",
+                        "error"
+                      ]
+                    },
+                    "empty": {
+                      "type": "string",
+                      "enum": [
+                        "",
+                        "preserve",
+                        "missing",
+                        "null",
+                        "error"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "source",
+                    "target"
+                  ],
+                  "additionalProperties": false
+                },
+                "minItems": 1,
+                "maxItems": 128
+              },
+              "max_bytes": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1073741824
+              },
+              "max_record_bytes": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1048576,
+                "anyOf": [
+                  {
+                    "const": 0
+                  },
+                  {
+                    "minimum": 64
+                  }
+                ]
+              },
+              "max_rows": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000000
+              },
+              "timeout_seconds": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 60
+              }
+            },
+            "required": [
+              "schema_version",
+              "kind",
+              "source_policy_hash",
+              "output_kind",
+              "columns"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "reason",
+          "definition"
+        ],
+        "additionalProperties": false
+      },
+      "ProjectionPreview": {
+        "type": "object",
+        "properties": {
+          "plan": {
+            "type": "object",
+            "properties": {
+              "schema_version": {
+                "type": "integer"
+              },
+              "profile": {
+                "type": "string"
+              },
+              "context": {
+                "type": "object",
+                "properties": {
+                  "source": {
+                    "type": "object",
+                    "properties": {
+                      "file": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "size_bytes": {
+                            "type": "integer"
+                          },
+                          "sha256": {
+                            "type": "string"
+                          },
+                          "policy": {
+                            "type": "string"
+                          },
+                          "accepted_event_id": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "size_bytes",
+                          "sha256",
+                          "policy",
+                          "accepted_event_id"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "check": {
+                        "type": [
+                          "null",
+                          "object"
+                        ],
+                        "properties": {
+                          "policy_id": {
+                            "type": "string"
+                          },
+                          "policy_version": {
+                            "type": "integer"
+                          },
+                          "policy_hash": {
+                            "type": "string"
+                          },
+                          "state": {
+                            "type": "string"
+                          },
+                          "revision": {
+                            "type": "integer"
+                          },
+                          "attempts": {
+                            "type": "integer"
+                          },
+                          "code": {
+                            "type": "string"
+                          },
+                          "worker_id": {
+                            "type": "string"
+                          },
+                          "lease_until": {
+                            "type": [
+                              "null",
+                              "string"
+                            ]
+                          },
+                          "report_hash": {
+                            "type": "string"
+                          },
+                          "binding": {
+                            "type": "object",
+                            "properties": {
+                              "file": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string"
+                                  },
+                                  "size_bytes": {
+                                    "type": "integer"
+                                  },
+                                  "sha256": {
+                                    "type": "string"
+                                  },
+                                  "policy": {
+                                    "type": "string"
+                                  },
+                                  "accepted_event_id": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "size_bytes",
+                                  "sha256",
+                                  "policy",
+                                  "accepted_event_id"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "storage_id": {
+                                "type": "string"
+                              },
+                              "namespace_root": {
+                                "type": "string"
+                              },
+                              "authority_revision": {
+                                "type": "integer"
+                              },
+                              "parent_id": {
+                                "type": "string"
+                              },
+                              "parent_revision": {
+                                "type": "integer"
+                              },
+                              "target": {
+                                "type": [
+                                  "null",
+                                  "object"
+                                ],
+                                "properties": {
+                                  "operation": {
+                                    "type": "string"
+                                  },
+                                  "path": {
+                                    "type": "string"
+                                  },
+                                  "target": {
+                                    "type": "string"
+                                  },
+                                  "file_id": {
+                                    "type": "string"
+                                  },
+                                  "expected_revision": {
+                                    "type": [
+                                      "null",
+                                      "integer"
+                                    ]
+                                  },
+                                  "replace": {
+                                    "type": "boolean"
+                                  },
+                                  "target_revision": {
+                                    "type": [
+                                      "null",
+                                      "integer"
+                                    ]
+                                  },
+                                  "mode": {
+                                    "type": [
+                                      "null",
+                                      "integer"
+                                    ],
+                                    "minimum": 0,
+                                    "maximum": 4294967295
+                                  },
+                                  "modified_at": {
+                                    "type": [
+                                      "null",
+                                      "string"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "operation",
+                                  "path"
+                                ],
+                                "additionalProperties": false
+                              }
+                            },
+                            "required": [
+                              "file",
+                              "storage_id",
+                              "namespace_root",
+                              "authority_revision",
+                              "parent_id",
+                              "parent_revision",
+                              "target"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "policy_id",
+                          "policy_version",
+                          "policy_hash",
+                          "state",
+                          "revision",
+                          "attempts",
+                          "code",
+                          "report_hash",
+                          "binding"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "signature": {
+                        "type": [
+                          "null",
+                          "object"
+                        ],
+                        "properties": {
+                          "file_id": {
+                            "type": "string"
+                          },
+                          "object_id": {
+                            "type": "string"
+                          },
+                          "storage_id": {
+                            "type": "string"
+                          },
+                          "size_bytes": {
+                            "type": "integer"
+                          },
+                          "sha256": {
+                            "type": "string"
+                          },
+                          "data_sha256": {
+                            "type": "string"
+                          },
+                          "policy_hash": {
+                            "type": "string"
+                          },
+                          "key": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "version": {
+                                "type": "integer"
+                              },
+                              "hash": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "version",
+                              "hash"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "attached_event_id": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "file_id",
+                          "object_id",
+                          "storage_id",
+                          "size_bytes",
+                          "sha256",
+                          "data_sha256",
+                          "policy_hash",
+                          "key"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "file"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "policy": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "version": {
+                        "type": "integer"
+                      },
+                      "hash": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "version",
+                      "hash"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "namespace_root": {
+                    "type": "string"
+                  },
+                  "authority_revision": {
+                    "type": "integer"
+                  },
+                  "storage_id": {
+                    "type": "string"
+                  },
+                  "target": {
+                    "type": [
+                      "null",
+                      "object"
+                    ],
+                    "properties": {
+                      "command": {
+                        "type": "object",
+                        "properties": {
+                          "operation": {
+                            "type": "string"
+                          },
+                          "path": {
+                            "type": "string"
+                          },
+                          "target": {
+                            "type": "string"
+                          },
+                          "file_id": {
+                            "type": "string"
+                          },
+                          "expected_revision": {
+                            "type": [
+                              "null",
+                              "integer"
+                            ]
+                          },
+                          "replace": {
+                            "type": "boolean"
+                          },
+                          "target_revision": {
+                            "type": [
+                              "null",
+                              "integer"
+                            ]
+                          },
+                          "mode": {
+                            "type": [
+                              "null",
+                              "integer"
+                            ],
+                            "minimum": 0,
+                            "maximum": 4294967295
+                          },
+                          "modified_at": {
+                            "type": [
+                              "null",
+                              "string"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "operation",
+                          "path"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "parent_id": {
+                        "type": "string"
+                      },
+                      "parent_revision": {
+                        "type": "integer"
+                      },
+                      "entry_id": {
+                        "type": "string"
+                      },
+                      "entry_revision": {
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "command",
+                      "parent_id",
+                      "parent_revision",
+                      "entry_id",
+                      "entry_revision"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "signature_mode": {
+                    "type": "string"
+                  },
+                  "reason": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "source",
+                  "policy",
+                  "namespace_root",
+                  "authority_revision",
+                  "storage_id",
+                  "signature_mode",
+                  "reason"
+                ],
+                "additionalProperties": false
+              },
+              "source_policy": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "integer"
+                  },
+                  "hash": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "version",
+                  "hash"
+                ],
+                "additionalProperties": false
+              },
+              "projection": {
+                "type": "object",
+                "properties": {
+                  "schema_version": {
+                    "type": "integer"
+                  },
+                  "kind": {
+                    "type": "string"
+                  },
+                  "engine": {
+                    "type": "string"
+                  },
+                  "source_policy_hash": {
+                    "type": "string"
+                  },
+                  "output_kind": {
+                    "type": "string"
+                  },
+                  "columns": {
+                    "type": [
+                      "null",
+                      "array"
+                    ],
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "source": {
+                          "type": "string"
+                        },
+                        "target": {
+                          "type": "string"
+                        },
+                        "conversion": {
+                          "type": "string"
+                        },
+                        "missing": {
+                          "type": "string"
+                        },
+                        "null": {
+                          "type": "string"
+                        },
+                        "empty": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "source",
+                        "target",
+                        "conversion",
+                        "missing",
+                        "null",
+                        "empty"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "max_bytes": {
+                    "type": "integer"
+                  },
+                  "max_record_bytes": {
+                    "type": "integer"
+                  },
+                  "max_rows": {
+                    "type": "integer"
+                  },
+                  "timeout_seconds": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "schema_version",
+                  "kind",
+                  "engine",
+                  "source_policy_hash",
+                  "output_kind",
+                  "columns",
+                  "max_bytes",
+                  "max_record_bytes",
+                  "max_rows",
+                  "timeout_seconds"
+                ],
+                "additionalProperties": false
+              },
+              "output_contract_hash": {
+                "type": "string"
+              },
+              "source_proof_valid_until": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              }
+            },
+            "required": [
+              "schema_version",
+              "profile",
+              "context",
+              "source_policy",
+              "projection",
+              "output_contract_hash"
+            ],
+            "additionalProperties": false
+          },
+          "source_policy": {
+            "type": "object",
+            "properties": {
+              "reference": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "integer"
+                  },
+                  "hash": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "version",
+                  "hash"
+                ],
+                "additionalProperties": false
+              },
+              "state": {
+                "type": "string"
+              },
+              "definition": {
+                "type": "object",
+                "properties": {
+                  "schema_version": {
+                    "type": "integer"
+                  },
+                  "kind": {
+                    "type": "string"
+                  },
+                  "columns": {
+                    "type": [
+                      "null",
+                      "array"
+                    ],
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string"
+                        },
+                        "required": {
+                          "type": "boolean"
+                        },
+                        "max_bytes": {
+                          "type": "integer"
+                        },
+                        "precision": {
+                          "type": "integer"
+                        },
+                        "scale": {
+                          "type": "integer"
+                        },
+                        "width_bytes": {
+                          "type": "integer"
+                        },
+                        "padding": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "type",
+                        "required",
+                        "max_bytes"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "max_bytes": {
+                    "type": "integer"
+                  },
+                  "max_rows": {
+                    "type": "integer"
+                  },
+                  "max_record_bytes": {
+                    "type": "integer"
+                  },
+                  "timeout_seconds": {
+                    "type": "integer"
+                  },
+                  "signature": {
+                    "type": [
+                      "null",
+                      "object"
+                    ],
+                    "properties": {
+                      "key": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "version": {
+                            "type": "integer"
+                          },
+                          "hash": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "version",
+                          "hash"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "max_age_seconds": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 4294967295
+                      }
+                    },
+                    "required": [
+                      "key"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "scanner": {
+                    "type": [
+                      "null",
+                      "object"
+                    ],
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "version": {
+                        "type": "integer"
+                      },
+                      "hash": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "version",
+                      "hash"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "xml": {
+                    "type": [
+                      "null",
+                      "object"
+                    ],
+                    "properties": {
+                      "root": {
+                        "type": "string"
+                      },
+                      "record": {
+                        "type": "string"
+                      },
+                      "namespace": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "root",
+                      "record",
+                      "namespace"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "xlsx": {
+                    "type": [
+                      "null",
+                      "object"
+                    ],
+                    "properties": {
+                      "sheet": {
+                        "type": "string"
+                      },
+                      "date_mode": {
+                        "type": "string"
+                      },
+                      "max_parts": {
+                        "type": "integer"
+                      },
+                      "max_directory_bytes": {
+                        "type": "integer"
+                      },
+                      "max_part_bytes": {
+                        "type": "integer"
+                      },
+                      "max_expanded_bytes": {
+                        "type": "integer"
+                      },
+                      "max_expansion_ratio": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 4294967295
+                      },
+                      "max_shared_strings": {
+                        "type": "integer"
+                      },
+                      "max_shared_bytes": {
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "sheet",
+                      "date_mode",
+                      "max_parts",
+                      "max_directory_bytes",
+                      "max_part_bytes",
+                      "max_expanded_bytes",
+                      "max_expansion_ratio",
+                      "max_shared_strings",
+                      "max_shared_bytes"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "schema_version",
+                  "kind",
+                  "columns",
+                  "max_bytes",
+                  "max_rows",
+                  "max_record_bytes",
+                  "timeout_seconds"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "reference",
+              "state",
+              "definition"
+            ],
+            "additionalProperties": false
+          },
+          "output_policy": {
+            "type": "object",
+            "properties": {
+              "reference": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "integer"
+                  },
+                  "hash": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "version",
+                  "hash"
+                ],
+                "additionalProperties": false
+              },
+              "state": {
+                "type": "string"
+              },
+              "definition": {
+                "type": "object",
+                "properties": {
+                  "schema_version": {
+                    "type": "integer"
+                  },
+                  "kind": {
+                    "type": "string"
+                  },
+                  "columns": {
+                    "type": [
+                      "null",
+                      "array"
+                    ],
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string"
+                        },
+                        "required": {
+                          "type": "boolean"
+                        },
+                        "max_bytes": {
+                          "type": "integer"
+                        },
+                        "precision": {
+                          "type": "integer"
+                        },
+                        "scale": {
+                          "type": "integer"
+                        },
+                        "width_bytes": {
+                          "type": "integer"
+                        },
+                        "padding": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "type",
+                        "required",
+                        "max_bytes"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "max_bytes": {
+                    "type": "integer"
+                  },
+                  "max_rows": {
+                    "type": "integer"
+                  },
+                  "max_record_bytes": {
+                    "type": "integer"
+                  },
+                  "timeout_seconds": {
+                    "type": "integer"
+                  },
+                  "signature": {
+                    "type": [
+                      "null",
+                      "object"
+                    ],
+                    "properties": {
+                      "key": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "version": {
+                            "type": "integer"
+                          },
+                          "hash": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "version",
+                          "hash"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "max_age_seconds": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 4294967295
+                      }
+                    },
+                    "required": [
+                      "key"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "scanner": {
+                    "type": [
+                      "null",
+                      "object"
+                    ],
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "version": {
+                        "type": "integer"
+                      },
+                      "hash": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "version",
+                      "hash"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "xml": {
+                    "type": [
+                      "null",
+                      "object"
+                    ],
+                    "properties": {
+                      "root": {
+                        "type": "string"
+                      },
+                      "record": {
+                        "type": "string"
+                      },
+                      "namespace": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "root",
+                      "record",
+                      "namespace"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "xlsx": {
+                    "type": [
+                      "null",
+                      "object"
+                    ],
+                    "properties": {
+                      "sheet": {
+                        "type": "string"
+                      },
+                      "date_mode": {
+                        "type": "string"
+                      },
+                      "max_parts": {
+                        "type": "integer"
+                      },
+                      "max_directory_bytes": {
+                        "type": "integer"
+                      },
+                      "max_part_bytes": {
+                        "type": "integer"
+                      },
+                      "max_expanded_bytes": {
+                        "type": "integer"
+                      },
+                      "max_expansion_ratio": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 4294967295
+                      },
+                      "max_shared_strings": {
+                        "type": "integer"
+                      },
+                      "max_shared_bytes": {
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "sheet",
+                      "date_mode",
+                      "max_parts",
+                      "max_directory_bytes",
+                      "max_part_bytes",
+                      "max_expanded_bytes",
+                      "max_expansion_ratio",
+                      "max_shared_strings",
+                      "max_shared_bytes"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "schema_version",
+                  "kind",
+                  "columns",
+                  "max_bytes",
+                  "max_rows",
+                  "max_record_bytes",
+                  "timeout_seconds"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "reference",
+              "state",
+              "definition"
+            ],
+            "additionalProperties": false
+          },
+          "effects": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "plan",
+          "source_policy",
+          "output_policy",
+          "effects"
+        ],
+        "additionalProperties": false
+      }
+    }
+  }
+}

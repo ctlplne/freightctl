@@ -50,6 +50,11 @@ func runRechecks(ctx context.Context, command, dsn, token, tenant, partner, stor
 	}
 	var result any
 	switch command {
+	case "check-projection-preview":
+		var request checks.ProjectionOptions
+		if err = decode(&request); err == nil {
+			result, err = service.PreviewProjection(ctx, scope, fileID, request)
+		}
 	case "check-recheck-preview":
 		var request checks.RecheckOptions
 		if err = decode(&request); err == nil {

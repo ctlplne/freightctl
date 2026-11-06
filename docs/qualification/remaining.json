@@ -226,7 +226,10 @@
         "docs/qualification/evidence/F155-governed-xlsx-intake.json",
         "docs/qualification/evidence/F156-native-document-containers.json",
         "docs/qualification/evidence/F157-typed-record-stream.json",
-        "docs/qualification/evidence/F158-record-projection-core.json"
+        "docs/qualification/evidence/F158-record-projection-core.json",
+        "docs/qualification/evidence/F160-governed-projection-review.json",
+        "docs/qualification/evidence/F161-projection-review-surfaces.json",
+        "docs/qualification/evidence/F162-projection-parent-terminal-ci.json"
       ],
       "remaining_details": [
         "F007/F008 verify bounded leased/fenced SFTP intents and typed ordered workflow runs with registered connection versions, conservative ambiguity, same-step dispatch replay across restart, and queued cancellation. Finish unattended/fair scheduling, broader processing/conditions/loops/batches, active cancellation/rebinding, overlapping key rotations, receiver business contracts, remote quotas/retention/cleanup and distributed failures.",
@@ -274,7 +277,8 @@
         "F151 adds bounded schema4/xml_records with exact root/record/scalar names,one explicit namespace binding,strict declaration grammar and no DTD/entity/external resolver.Observed unsupported-format and malformed-declaration red then focused Go,71 frontend contracts and affected static/metadata stand-ins pass.Source49/current policy/report/custody bindings preserve cumulative controls;native PG/API/CLI/Chrome/Python-produced XML/GnuPG/scanner/recheck/copy proof remains owed.No general XSD/XML-signature/transform or whole-row/AX pass;retained35 untouched.",
         "F153/F154 add bounded ZIP32 and exact XLSX table parser foundations with observed zero-CRC and OOXML-text red/green. Native stock-producer/security/race/fuzz outcomes and XLSX policy/SQL/custody/API/CLI/MCP/browser integration are owed;existing four intake kinds and retained schema35 are unchanged. F152 preserves both prior terminal16-run batches;all deferred failures and final-source FINISH remain open.",
         "F155 implements governed XLSX policy/source/report/SQL/UI and prepares actual-stock ordinary custody/API/CLI/Chrome/crypto/copy/recheck proof. Source50 targets71/70 tables;retained35 unchanged. Focused local checks pass;application/native/final-source outcomes and existing schema-init/deferred failures remain owed. F156 proves only earlier-source native stock ZIP/XLSX parser/race/security inputs.",
-        "F157/F158 add one typed five-format row stream and hash-bound JSON/CSV projection core,with exact values/presence and private-stage red/green. Governed workflow authority/intents/quotas/lineage/recovery/output controls and ordinary surfaces are still required;new native receiver/race/fuzz outcomes owed. F159 preserves sourcef6be16a terminal17-run outcomes and every original failure."
+        "F157/F158 add one typed five-format row stream and hash-bound JSON/CSV projection core,with exact values/presence and private-stage red/green. Governed workflow authority/intents/quotas/lineage/recovery/output controls and ordinary surfaces are still required;new native receiver/race/fuzz outcomes owed. F159 preserves sourcef6be16a terminal17-run outcomes and every original failure.",
+        "F160/F161 implement governed exact-source/protection/output-contract metadata review through API/CLI;focused red/green/static checks pass. Native review is prepared,not passed;durable approved transformation execution,quota,lineage,recovery,fresh output controls and all surfaces remain owed. F162 proves only source036fbd3 ARM/x86 stock five-format projection/ten-output independent receiver primitives;all17 original CI runs are terminal and application failures remain red."
       ]
     },
     {
@@ -531,7 +535,10 @@
         "docs/qualification/evidence/F155-governed-xlsx-intake.json",
         "docs/qualification/evidence/F156-native-document-containers.json",
         "docs/qualification/evidence/F157-typed-record-stream.json",
-        "docs/qualification/evidence/F158-record-projection-core.json"
+        "docs/qualification/evidence/F158-record-projection-core.json",
+        "docs/qualification/evidence/F160-governed-projection-review.json",
+        "docs/qualification/evidence/F161-projection-review-surfaces.json",
+        "docs/qualification/evidence/F162-projection-parent-terminal-ci.json"
       ],
       "remaining_details": [
         "F010 verifies durable held intake for configured new revisions, exact CSV contracts, separate hash/revision-bound release and ordinary delivery of released bytes. Antivirus/ICAP/DLP, cryptographic signatures/encryption, other formats/transforms, re-scan/exception governance, retrospective policy and the complete business-file journey remain mandatory.",
@@ -605,7 +612,8 @@
         "F151 adds bounded schema4/xml_records with exact root/record/scalar names,one explicit namespace binding,strict declaration grammar and no DTD/entity/external resolver.Observed unsupported-format and malformed-declaration red then focused Go,71 frontend contracts and affected static/metadata stand-ins pass.Source49/current policy/report/custody bindings preserve cumulative controls;native PG/API/CLI/Chrome/Python-produced XML/GnuPG/scanner/recheck/copy proof remains owed.No general XSD/XML-signature/transform or whole-row/AX pass;retained35 untouched.",
         "F153/F154 add bounded ZIP32 and exact XLSX table parser foundations with observed zero-CRC and OOXML-text red/green. Native stock-producer/security/race/fuzz outcomes and XLSX policy/SQL/custody/API/CLI/MCP/browser integration are owed;existing four intake kinds and retained schema35 are unchanged. F152 preserves both prior terminal16-run batches;all deferred failures and final-source FINISH remain open.",
         "F155 implements governed XLSX policy/source/report/SQL/UI and prepares actual-stock ordinary custody/API/CLI/Chrome/crypto/copy/recheck proof. Source50 targets71/70 tables;retained35 unchanged. Focused local checks pass;application/native/final-source outcomes and existing schema-init/deferred failures remain owed. F156 proves only earlier-source native stock ZIP/XLSX parser/race/security inputs.",
-        "F157/F158 add one typed five-format row stream and hash-bound JSON/CSV projection core,with exact values/presence and private-stage red/green. Governed workflow authority/intents/quotas/lineage/recovery/output controls and ordinary surfaces are still required;new native receiver/race/fuzz outcomes owed. F159 preserves sourcef6be16a terminal17-run outcomes and every original failure."
+        "F157/F158 add one typed five-format row stream and hash-bound JSON/CSV projection core,with exact values/presence and private-stage red/green. Governed workflow authority/intents/quotas/lineage/recovery/output controls and ordinary surfaces are still required;new native receiver/race/fuzz outcomes owed. F159 preserves sourcef6be16a terminal17-run outcomes and every original failure.",
+        "F160/F161 implement governed exact-source/protection/output-contract metadata review through API/CLI;focused red/green/static checks pass. Native review is prepared,not passed;durable approved transformation execution,quota,lineage,recovery,fresh output controls and all surfaces remain owed. F162 proves only source036fbd3 ARM/x86 stock five-format projection/ten-output independent receiver primitives;all17 original CI runs are terminal and application failures remain red."
       ]
     },
     {
@@ -946,7 +954,8 @@
         "docs/qualification/evidence/F156-native-document-containers.json",
         "docs/qualification/evidence/F157-typed-record-stream.json",
         "docs/qualification/evidence/F158-record-projection-core.json",
-        "docs/qualification/evidence/F159-xlsx-parent-terminal-ci.json"
+        "docs/qualification/evidence/F159-xlsx-parent-terminal-ci.json",
+        "docs/qualification/evidence/F162-projection-parent-terminal-ci.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -967,7 +976,8 @@
         "F151 adds bounded schema4/xml_records with exact root/record/scalar names,one explicit namespace binding,strict declaration grammar and no DTD/entity/external resolver.Observed unsupported-format and malformed-declaration red then focused Go,71 frontend contracts and affected static/metadata stand-ins pass.Source49/current policy/report/custody bindings preserve cumulative controls;native PG/API/CLI/Chrome/Python-produced XML/GnuPG/scanner/recheck/copy proof remains owed.No general XSD/XML-signature/transform or whole-row/AX pass;retained35 untouched.",
         "F153/F154 add bounded ZIP32 and exact XLSX table parser foundations with observed zero-CRC and OOXML-text red/green. Native stock-producer/security/race/fuzz outcomes and XLSX policy/SQL/custody/API/CLI/MCP/browser integration are owed;existing four intake kinds and retained schema35 are unchanged. F152 preserves both prior terminal16-run batches;all deferred failures and final-source FINISH remain open.",
         "F155 implements governed XLSX policy/source/report/SQL/UI and prepares actual-stock ordinary custody/API/CLI/Chrome/crypto/copy/recheck proof. Source50 targets71/70 tables;retained35 unchanged. Focused local checks pass;application/native/final-source outcomes and existing schema-init/deferred failures remain owed. F156 proves only earlier-source native stock ZIP/XLSX parser/race/security inputs.",
-        "F157/F158 add one typed five-format row stream and hash-bound JSON/CSV projection core,with exact values/presence and private-stage red/green. Governed workflow authority/intents/quotas/lineage/recovery/output controls and ordinary surfaces are still required;new native receiver/race/fuzz outcomes owed. F159 preserves sourcef6be16a terminal17-run outcomes and every original failure."
+        "F157/F158 add one typed five-format row stream and hash-bound JSON/CSV projection core,with exact values/presence and private-stage red/green. Governed workflow authority/intents/quotas/lineage/recovery/output controls and ordinary surfaces are still required;new native receiver/race/fuzz outcomes owed. F159 preserves sourcef6be16a terminal17-run outcomes and every original failure.",
+        "F162 retains all17 source036fbd3 terminal runs and37 original jobs. Native document/projection primitives and listed security gates pass;all original failed/skipped application,Windows,metadata,public/stock/browser and FINISH outcomes remain owed. No full AX profile is qualified."
       ],
       "current_item": {
         "id": "F130",

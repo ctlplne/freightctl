@@ -102,6 +102,11 @@ func (s *Server) checks(w http.ResponseWriter, r *http.Request) {
 		if err = workflowInput(w, r, &request); err == nil {
 			result, err = s.Checks.Revoke(r.Context(), scope, key, request)
 		}
+	case "POST /v1/tenants/{tenant}/partners/{partner}/checks/{file}/projection-preview":
+		var request checks.ProjectionOptions
+		if err = workflowInput(w, r, &request); err == nil {
+			result, err = s.Checks.PreviewProjection(r.Context(), scope, r.PathValue("file"), request)
+		}
 	case "POST /v1/tenants/{tenant}/partners/{partner}/checks/{file}/recheck-preview":
 		var request checks.RecheckOptions
 		if err = workflowInput(w, r, &request); err == nil {

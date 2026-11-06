@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "observed_at": "2026-11-06",
+  "candidate_parent": "036fbd3d896b719f6dbf804ab3c0e73dd80b7e7d",
+  "qualification_claim": false,
+  "contract": "docs/protocols/record-projection.md",
+  "id": "F161",
+  "state": "API/CLI metadata review implemented;strict handler/schema contracts pass;served application/CLI native proof owed",
+  "source_files": [
+    {
+      "reference": "internal/api/api.go",
+      "sha256": "095ec93ebe38c4d44c44b6ad39e93e7b78f6111df4ca2279bb5a831edcf73243",
+      "bytes": 28139
+    },
+    {
+      "reference": "internal/api/checks.go",
+      "sha256": "9807f2e5a604c26c747aa6d2d3148e3cf9a320236e6c7d2a38a3958a942a8391",
+      "bytes": 7128
+    },
+    {
+      "reference": "internal/api/projection_review_test.go",
+      "sha256": "7c675cf10b75a8f580d4c106e69e75ce5127ffaccc5b0552e1efc7238f149c47",
+      "bytes": 5103
+    },
+    {
+      "reference": "cmd/freightctl/main.go",
+      "sha256": "eec048cb16e2559bb7ee91908272e42f04a090cbbb31bb2235446dfd96f43922",
+      "bytes": 45703
+    },
+    {
+      "reference": "cmd/freightctl/rechecks.go",
+      "sha256": "47f35aecea90dcd74b52579e50c9adb53560cf2585d534f97a6d455f937e4736",
+      "bytes": 2714
+    },
+    {
+      "reference": "docs/api/record-projection.openapi.json",
+      "sha256": "ce27cc6c877bc907521c4be661b3efebba98d8748a1c5ab05934063b587de879",
+      "bytes": 43128
+    },
+    {
+      "reference": "docs/protocols/record-projection.md",
+      "sha256": "ff6765925d528eecba0dfbf40a41c69d79e21614a1c172f6b0761e5dd3957939",
+      "bytes": 10560
+    }
+  ],
+  "surfaces": {
+    "api": "POST /v1/tenants/{tenant}/partners/{partner}/checks/{file}/projection-preview",
+    "cli": "check-projection-preview",
+    "service": "checks.Service.PreviewProjection",
+    "openapi": "docs/api/record-projection.openapi.json"
+  },
+  "red": {
+    "reference": ".private/freightctl-f161-api-route-red.log",
+    "observed": "Direct handler test observed404 because the projection preview route did not exist."
+  },
+  "preserved_original_failures": [
+    {
+      "reference": ".private/freightctl-f161-api-red.log",
+      "observed": "Initial local TLS listener failed under sandbox before reaching routing;corrected the local parser proof to direct handler requests without claiming served HTTPS."
+    },
+    {
+      "reference": ".private/freightctl-f161-api-first.log",
+      "observed": "After route implementation,a null/absent definition reached the uninitialized stand-in store. Added structural request validation before database access;retained original failure and assertions."
+    }
+  ],
+  "green": {
+    "reference": ".private/freightctl-f160-final-green.log",
+    "observed": "Unknown/injected approval,signature-reuse,shell,mapping execution and source overrides,duplicate/case-folded keys,null/absent definitions,trailing values and oversize input refuse. Otherwise-valid injected requests prove parser refusal rather than unrelated missing-field rejection. Closed OpenAPI schemas reject ambiguous/executable rules;the full response schema matches every actual typed review binding."
+  },
+  "checks": [
+    {
+      "reference": ".private/freightctl-f161-api-red.log",
+      "sha256": "03c8563079ca136b9c70be033202ffc0ffcaf6660c48addf032a196636a6c20c",
+      "bytes": 1991
+    },
+    {
+      "reference": ".private/freightctl-f161-api-route-red.log",
+      "sha256": "6a299d763df3cebaa7961415c089725c57c8fc5112c7e79704e75d2e93af2749",
+      "bytes": 227
+    },
+    {
+      "reference": ".private/freightctl-f161-api-first.log",
+      "sha256": "67d8a31827a5f036f7d1535e28bab3790bc60042c23d4806bb9f921802914fda",
+      "bytes": 4377
+    },
+    {
+      "reference": ".private/freightctl-f161-api-green.log",
+      "sha256": "ed4511046da9c0a1058577980048658ed64ca00a95419ae4be596050dfaac448",
+      "bytes": 55
+    },
+    {
+      "reference": ".private/freightctl-f160-final-green.log",
+      "sha256": "db2272d2488384e47e3022952f31056eae5f29c2b414e5930d2c37148f955b06",
+      "bytes": 113
+    },
+    {
+      "reference": ".private/freightctl-f160-final-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f160-native-compile-final.log",
+      "sha256": "f0696d87f4ee184a8fdeaa2013d5bbec0e2967961ed1e33ad04776aad6057ae8",
+      "bytes": 226
+    },
+    {
+      "reference": ".private/freightctl-f160-records.log",
+      "sha256": "826009b37d6c8254924b7fd1ee12981059544175f2c890ad4186b88b41b583b4",
+      "bytes": 106
+    }
+  ],
+  "owed": [
+    "Served verified HTTPS and actual CLI with real PostgreSQL/storage/credentials:current source/target/protection refusal,scope isolation,no payload/effect,canonical response equivalence and restart.",
+    "Browser/MCP review and executable approved transformation surfaces,receipt recovery and full native workflow acceptance."
+  ],
+  "limits": "Local parser checks use direct HTTP handlers,not a database/server substitute qualification. CLI is compiled/vetted only. No runtime or overall product pass is inferred."
+}
