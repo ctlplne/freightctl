@@ -13,6 +13,7 @@ import (
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/custody"
 	"github.com/ctlplne/freightctl/internal/store"
+	"github.com/ctlplne/freightctl/internal/workflow"
 )
 
 type exchangeOptions struct {
@@ -32,7 +33,18 @@ func runExchanges(ctx context.Context, command string, o exchangeOptions, output
 	var registration *store.ExchangeEndpointCommand
 	var offer *store.ExchangeRequest
 	var closure *store.ExchangeClosureCommand
+	var ingress custody.IngressDescriptorRequest
 	switch command {
+	case "exchange-ingress-descriptor":
+		input, err := secure.ReadSecret(o.Input, 16<<10)
+		if err != nil {
+			return errors.New("ingress metadata must be a protected bounded regular file")
+		}
+		err = workflow.Decode(input.Bytes, &ingress)
+		input.Close()
+		if err != nil {
+			return err
+		}
 	case "exchange-endpoint-command", "exchange-offer", "exchange-close":
 		if !store.ValidBrowserOperationKey(o.Key) {
 			return store.ErrExchangeInput
@@ -119,6 +131,8 @@ func runExchanges(ctx context.Context, command string, o exchangeOptions, output
 	}
 	var result any
 	switch command {
+	case "exchange-ingress-descriptor":
+		result, err = service.PrepareArtifactIngress(ctx, scope, ingress)
 	case "exchange-close":
 		result, err = db.CloseExchange(ctx, scope, o.Key, *closure)
 	case "exchange-endpoint-command":

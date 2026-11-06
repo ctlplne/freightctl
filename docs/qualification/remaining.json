@@ -870,7 +870,8 @@
         "docs/qualification/evidence/F101-upload-to-exchange-review.json",
         "docs/qualification/evidence/F103-reviewed-artifact-onward.json",
         "docs/qualification/evidence/F105-browser-artifact-onward.json",
-        "docs/qualification/evidence/F108-governed-collection-artifact-source.json"
+        "docs/qualification/evidence/F108-governed-collection-artifact-source.json",
+        "docs/qualification/evidence/F111-agent-artifact-ingress-descriptor.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -885,11 +886,11 @@
         "S003 authorizes guarded source/CI batches after prior required runs are terminal. Eleven exchange API paths and eleven CLI commands plus receive/send/recovery/history browser surfaces are implemented;actual AX profiles remain owed. Broad/deferred qualification is mandatory at FINISH."
       ],
       "current_item": {
-        "id": "F108",
-        "state": "Exact governed collection to ordinary artifact source review implemented across API/CLI/MCP/browser;actual native proof owed",
-        "proof": "Missing route404 and accepted mismatched input identity observed red;4browser+correlation/route/schema/architecture methods and affected compilation/vet/frontend pass",
-        "native": "Original PG incomplete/captured/private-input/no-effect case and stock SFTP API/CLI/modern-MCP/browser profile extended;not run locally",
-        "next": "Qualify complete ingress/agent/onward profiles,remaining recovery/lineage/capacity/agent/AI/baseline product work and mandatory FINISH"
+        "id": "F111",
+        "state": "Ordinary root-custody upload descriptor shared by API/CLI/MCP;actual native and complete agent profiles owed",
+        "proof": "Missing route404 repaired;input/route/schema/architecture methods and affected tagged native compilation/vet pass. Catalog18.",
+        "native": "Real PG/stored-byte no-effect,original CLI and official SDK/HTTPS source/role/receipt profiles extended;not run locally",
+        "next": "Complete remaining agent/recovery/lineage/capacity and baseline implementation;qualify all original/native/independent profiles and mandatory FINISH"
       }
     }
   ],

@@ -1554,5 +1554,39 @@
       "idempotentHint": true,
       "openWorldHint": false
     }
+  },
+  {
+    "name": "freightctl.artifact_ingress_descriptor",
+    "description": "Review metadata for an ordinary root-custody upload. Returns a relative authenticated HTTPS route and exact size/SHA/request-key headers. Host sends bytes separately,outside tool/model context. No upload,receive offer,capacity reservation,approval or persistence receipt is created. Actual upload rechecks ordinary authority,policy,capacity and complete integrity.",
+    "inputSchema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "size_bytes",
+        "sha256",
+        "request_key"
+      ],
+      "properties": {
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "request_key": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
   }
 ]

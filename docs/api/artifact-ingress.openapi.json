@@ -1,0 +1,190 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "freightctl ordinary custody upload descriptor",
+    "version": "1",
+    "description": "Metadata preparation only. Current root virtual namespace and write permission required. Actual native/schema/client qualification owed;actual upload independently checks all authority,policy,admission,integrity and persistence."
+  },
+  "paths": {
+    "/v1/tenants/{tenant}/partners/{partner}/artifact-ingress/previews": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "tenant",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ID"
+          }
+        },
+        {
+          "in": "path",
+          "name": "partner",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ID"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "prepareArtifactIngress",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "browserCookie": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IngressRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "No file,receipt,reservation,grant or receive offer created. Host supplies current ordinary authentication and bytes separately.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IngressDescriptor"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      },
+      "browserCookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "__Host-freightctl-session"
+      }
+    },
+    "schemas": {
+      "ID": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+      },
+      "SHA256": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      },
+      "Key": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+      },
+      "IngressRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "size_bytes",
+          "sha256",
+          "request_key"
+        ],
+        "properties": {
+          "size_bytes": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9223372036854775807
+          },
+          "sha256": {
+            "$ref": "#/components/schemas/SHA256"
+          },
+          "request_key": {
+            "$ref": "#/components/schemas/Key"
+          }
+        }
+      },
+      "IngressHeaders": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "Content-Type",
+          "X-File-Size",
+          "X-Content-SHA256",
+          "Idempotency-Key"
+        ],
+        "properties": {
+          "Content-Type": {
+            "const": "application/octet-stream"
+          },
+          "X-File-Size": {
+            "type": "string",
+            "pattern": "^(?:0|[1-9][0-9]{0,18})$"
+          },
+          "X-Content-SHA256": {
+            "$ref": "#/components/schemas/SHA256"
+          },
+          "Idempotency-Key": {
+            "$ref": "#/components/schemas/Key"
+          }
+        }
+      },
+      "IngressDescriptor": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "profile",
+          "request",
+          "method",
+          "relative_path",
+          "headers",
+          "authentication",
+          "state",
+          "availability",
+          "acceptance_policy",
+          "receiver_persistence",
+          "business_processing"
+        ],
+        "properties": {
+          "profile": {
+            "const": "ordinary-custody-upload-descriptor-v1"
+          },
+          "request": {
+            "$ref": "#/components/schemas/IngressRequest"
+          },
+          "method": {
+            "const": "POST"
+          },
+          "relative_path": {
+            "type": "string",
+            "pattern": "^/v1/tenants/[0-9a-f-]{36}/partners/[0-9a-f-]{36}/files$"
+          },
+          "headers": {
+            "$ref": "#/components/schemas/IngressHeaders"
+          },
+          "authentication": {
+            "const": "current-ordinary-https-auth"
+          },
+          "state": {
+            "const": "metadata-only"
+          },
+          "availability": {
+            "const": "not-checked"
+          },
+          "acceptance_policy": {
+            "const": "evaluated-by-upload-service"
+          },
+          "receiver_persistence": {
+            "const": "unknown"
+          },
+          "business_processing": {
+            "const": "unknown"
+          }
+        }
+      }
+    }
+  }
+}

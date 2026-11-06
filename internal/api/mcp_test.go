@@ -83,7 +83,7 @@ func TestMCPMediaOriginAndHeaderAmbiguityRefuseBeforeDatabase(t *testing.T) {
 
 func TestMCPToolSchemasBindOrdinaryRequestsAndExcludeAmbientAuthority(t *testing.T) {
 	var tools []*mcp.Tool
-	if err := json.Unmarshal(mcpCatalog, &tools); err != nil || len(tools) != 17 {
+	if err := json.Unmarshal(mcpCatalog, &tools); err != nil || len(tools) != 18 {
 		t.Fatal("missing fixed tool catalog", err)
 	}
 	raw, err := os.ReadFile("../../web/tests/fixtures/artifact-exchange.json")
@@ -115,6 +115,8 @@ func TestMCPToolSchemasBindOrdinaryRequestsAndExcludeAmbientAuthority(t *testing
 		}
 		var args map[string]any
 		switch tool.Name {
+		case "freightctl.artifact_ingress_descriptor":
+			args = map[string]any{"size_bytes": 8, "sha256": fixture.Hash, "request_key": "original-upload-key"}
 		case "freightctl.collection_source":
 			args = map[string]any{"collection_id": "44444444-4444-4444-8444-444444444444", "input_id": "55555555-5555-4555-8555-555555555555"}
 

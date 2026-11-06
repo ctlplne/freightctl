@@ -135,6 +135,17 @@ Stock SFTP collection/source-review/custody-poll offer is pinned;full native and
 remaining FTPS/agent/onward/derivation outcomes remain owed. Schema44/retained35
 stay unchanged.
 
+F111 adds metadata-only ordinary custody upload preparation through one shared
+API route,protected CLI command and read-only MCP tool (catalog18). Current write/
+root virtual namespace is required;the host supplies actual bytes and ordinary
+authentication separately. No artifact,grant,receipt,event,reservation or receive
+offer is created. Actual upload repeats ordinary integrity/intake/durability checks.
+Four focused guards/schema/architecture methods and affected native compile/vet
+pass. Original PG/stored-byte no-effect,CLI and official SDK/HTTPS/role/receipt
+profiles are extended,not qualified. Confined/resumable agent conveniences and
+all remaining actual native/AX/baseline outcomes stay owed. No frontend/schema/
+retained environment change or inference.
+
 Focused local parser/client/filesystem/summary regressions and affected static,
 frontend build, native compilation/vet and architecture checks pass. They establish
 no PostgreSQL, served browser, stock-peer or complete AX profile qualification.

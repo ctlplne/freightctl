@@ -34,6 +34,7 @@ same-origin CSRF protection. Tool-list results are private and immediately stale
 | Tool prefix `freightctl.` | Effect |
 | --- | --- |
 | `identity` | Inspect current scoped identity and grants. |
+| `artifact_ingress_descriptor` | Review metadata for the existing ordinary custody upload route. Host sends exact bytes separately with ordinary authentication;preparation records no file,grant or receipt. |
 | `exchange_source` | Review own authorized source revision metadata. |
 | `collection_source` | Review one exact captured actor-private input and current ordinary source permission,with manifest/input correlation;no collection,offer or onward execution. |
 | `exchange_endpoints`, `exchange_endpoint` | Read visible current endpoint heads. |

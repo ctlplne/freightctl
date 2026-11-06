@@ -38,7 +38,7 @@ The protected-reference CLI command is `workflow-collection-exchange-source`
 with `--collection-id` and `--collection-input-id`. The read-only MCP tool is
 `freightctl.collection_source` with those two IDs. It uses the same service and
 has no actor,scope,address,approval,content or execution argument. The modern
-catalog now has17tools;inference remains off.
+catalog now has18tools;inference remains off.
 
 For a published input,the browser's **Review collected artifact** action reads
 this fresh source/correlation,checks it against the selected exact input,then

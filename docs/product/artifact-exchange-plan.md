@@ -194,6 +194,12 @@ source permission through API,CLI,MCP and browser review. Stock SFTP collection
 to separately authorized custody-poll offer is the first pinned source pair;
 its native outcomes,FTPS pair and complete onward/derivation lineage remain owed.
 
+The [ordinary upload descriptor](../protocols/artifact-ingress-descriptor.md)
+lets an agent's trusted host discover exact upload metadata while keeping bytes
+outside model context. It reuses ordinary root-custody acceptance and supplies no
+receive/forwarding/execution grant. API/CLI/MCP preparation is implemented;native
+stored-byte/no-effect and original SDK/HTTPS/CLI outcomes remain owed.
+
 ## Build order and exit evidence
 
 1. **Freeze the contracts.** On application resume, inspect exact current source,

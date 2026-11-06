@@ -13,7 +13,7 @@ import (
 func TestArtifactExchangeAPIRefusesInventedAuthorityBeforeDatabase(t *testing.T) {
 	h := New(&custody.Service{MaxFile: 1024, Exchanges: custody.ExchangeSettings{MaxLifetime: time.Hour, MaxSenders: 16, MaxOpenViews: 128, MaxEndpoints: 16}}, nil)
 	prefix := "https://freightctl.invalid/v1/tenants/11111111-1111-4111-8111-111111111111/partners/22222222-2222-4222-8222-222222222222/"
-	for _, route := range []string{"exchange-endpoints/commands", "exchanges"} {
+	for _, route := range []string{"exchange-endpoints/commands", "exchanges", "artifact-ingress/previews"} {
 		for _, body := range []string{`{"approved":true}`, `{"sender_actor_id":"33333333-3333-4333-8333-333333333333"}`, `{"url":"https://unapproved.invalid"}`, `{"schema_version":1,"SCHEMA_VERSION":1}`, `null`, strings.Repeat(" ", (24<<10)+1)} {
 			r := httptest.NewRequest(http.MethodPost, prefix+route, strings.NewReader(body))
 			r.Header.Set("Authorization", "Bearer "+strings.Repeat("0", 64))

@@ -61,7 +61,7 @@ status and recovery commands operate on ordinary runs with unchanged policy,
 leases,fencing,receipt and ambiguity rules. Ordinary API/browser session mutations
 retain current same-origin CSRF protection.
 
-The MCP profile now exposes17tools. Its additional `freightctl.prepare_onward`,
+The MCP profile now exposes18tools. Its additional `freightctl.prepare_onward`,
 `start_onward`, `onward_status` and `work_onward` separate review,staging,inspection
 and one bounded work step. Status/work require the original typed `start`,its
 `receipt_key` and exact `run_id`;work also needs its stable `request_key`. The

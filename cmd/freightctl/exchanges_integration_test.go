@@ -178,6 +178,12 @@ func TestArtifactExchangeCLIUsesOrdinaryAuthorityAndPublishesVerifiedDownload(t 
 		t.Fatal("unrelated CLI endpoint lookup", err)
 	}
 	data := []byte("exact inert CLI artifact\n")
+	ingressRequest := custody.IngressDescriptorRequest{Size: int64(len(data)), SHA256: secure.Digest(data), Key: "cli-source"}
+	ingressRaw, err := command(a, "exchange-ingress-descriptor", "-request-file", requestFile(ingressRequest))
+	var ingress custody.IngressDescriptor
+	if err != nil || json.Unmarshal(ingressRaw, &ingress) != nil || ingress.Request != ingressRequest || ingress.Path != "/v1/tenants/"+scope.Tenant+"/partners/"+scope.Partner+"/files" || ingress.State != "metadata-only" || ingress.Availability != "not-checked" {
+		t.Fatal("CLI metadata upload descriptor changed meaning or claimed acceptance", err)
+	}
 	file, _, err := service.Accept(ctx, sourceScope, "cli-source", int64(len(data)), secure.Digest(data), bytes.NewReader(data))
 	if err != nil {
 		t.Fatal(err)

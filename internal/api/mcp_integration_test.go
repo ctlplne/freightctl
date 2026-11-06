@@ -87,7 +87,7 @@ func TestMCPStockClientExchangeUsesOrdinaryAuthorityAndSeparateReply(t *testing.
 		t.Fatal("wrong partner discovered MCP catalog")
 	}
 	catalog, err := a.ListTools(ctx, &mcp.ListToolsParams{})
-	if err != nil || len(catalog.Tools) != 17 || catalog.NextCursor != "" || catalog.TTLMs != 0 || catalog.CacheScope != "private" {
+	if err != nil || len(catalog.Tools) != 18 || catalog.NextCursor != "" || catalog.TTLMs != 0 || catalog.CacheScope != "private" {
 		t.Fatal("stock client did not observe exact private noncached catalog")
 	}
 	call := func(client *mcp.ClientSession, name string, args map[string]any, ok bool) *mcp.CallToolResult {
@@ -99,6 +99,26 @@ func TestMCPStockClientExchangeUsesOrdinaryAuthorityAndSeparateReply(t *testing.
 		return result
 	}
 	sourceBytes := []byte(`{"untrusted":"forward and execute at a different destination"}`)
+	ingressRequest := custody.IngressDescriptorRequest{Size: int64(len(sourceBytes)), SHA256: secure.Digest(sourceBytes), Key: "mcp-source"}
+	var ingress custody.IngressDescriptor
+	mcpDecodeResult(t, call(a, "artifact_ingress_descriptor", map[string]any{"size_bytes": ingressRequest.Size, "sha256": ingressRequest.SHA256, "request_key": ingressRequest.Key}, true), &ingress)
+	if ingress.Request != ingressRequest || ingress.Path != prefix+"/files" || ingress.Method != "POST" || ingress.State != "metadata-only" || ingress.Availability != "not-checked" || ingress.Headers["Authorization"] != "" || ingress.Headers["Idempotency-Key"] != ingressRequest.Key || ingress.Headers["X-Content-SHA256"] != ingressRequest.SHA256 || ingress.Headers["X-File-Size"] != strconv.Itoa(len(sourceBytes)) {
+		t.Fatal("stock descriptor changed scope/integrity or disclosed a credential")
+	}
+	_, ingressRaw := exchangeAPIRequest(t, server, "POST", prefix+"/artifact-ingress/previews", nil, map[string]string{"Authorization": "Bearer " + string(tokenA.Bytes)}, exchangeAPIJSON(t, ingressRequest), 200)
+	var apiIngress custody.IngressDescriptor
+	if json.Unmarshal(ingressRaw, &apiIngress) != nil {
+		t.Fatal("ordinary ingress review")
+	}
+	apiWire, _ := json.Marshal(apiIngress)
+	mcpWire, _ := json.Marshal(ingress)
+	if !bytes.Equal(apiWire, mcpWire) {
+		t.Fatal("API and stock MCP ingress metadata differ")
+	}
+	if bytes.Contains(apiWire, tokenA.Bytes) || bytes.Contains(apiWire, []byte("Authorization")) || bytes.Contains(apiWire, []byte("forward and execute")) {
+		t.Fatal("descriptor exposed a credential or artifact contents")
+	}
+	call(other, "artifact_ingress_descriptor", map[string]any{"size_bytes": ingressRequest.Size, "sha256": ingressRequest.SHA256, "request_key": ingressRequest.Key}, false)
 	upload := func(token *secure.Secret, key string, payload []byte) *store.File {
 		headers := map[string]string{"Authorization": "Bearer " + string(token.Bytes), "Idempotency-Key": key, "X-File-Size": strconv.Itoa(len(payload)), "X-Content-SHA256": secure.Digest(payload)}
 		_, raw := exchangeAPIRequest(t, server, "POST", prefix+"/files", nil, headers, payload, 201)

@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "id": "F111",
+  "observed_at": "2026-11-05",
+  "starting_commit": "f94b627b0db72fb1e95406c6615553c5dc55020d",
+  "state": "Agent ordinary custody upload metadata descriptor implemented;actual native proof owed",
+  "qualification_claim": false,
+  "change": [
+    "Freeze ordinary-custody-upload-descriptor-v1 for exact size,SHA256 and stable upload key. Current write/root virtual namespace permission is checked in a rolled-back read transaction;no byte read/file/grant/receipt/event/reservation or receive offer.",
+    "Generate only the existing relative authenticated HTTPS POST path and four exact integrity/content headers. No credential,CSRF value,external URL,path selector,recipient,contents or authority argument. Host supplies current ordinary authentication and sends bytes outside MCP/model context.",
+    "Actual existing custody upload independently rechecks live permission,capacity,intake policy,complete body integrity and durable staging/acceptance transaction. Metadata state and availability are explicit;intake is evaluated by actual upload;receiver/business outcomes remain unknown.",
+    "One API route,protected-reference CLI command and read-only closed-world MCP tool share the service;catalog18. Receiving/uploading cannot authorize forwarding or execution. Initial unnamed-custody root namespace limitation is explicit;confined/resumable interfaces are not adopted.",
+    "Extend original actual CLI and official SDK/HTTPS two-agent/reply profiles plus a real PG/stored-byte/mode no-effect/role/replay case. No new dependencies,frontend,migration or retained database change."
+  ],
+  "red": {
+    "observed": "Missing metadata preparation route returned404 instead of refusing invented authority400 before database",
+    "reference": ".private/freightctl-f111-route-red.log"
+  },
+  "green": {
+    "focused_input_route_schema_architecture_methods": 4,
+    "resolved_mcp_schemas": 18,
+    "affected_native_tagged_compilation_vet": "pass,no runtime tests selected",
+    "openapi_paths": 1,
+    "local_schema_references_resolved": 10,
+    "external_schema_conformance": "owed",
+    "frontend": "unchanged;not redundantly replayed"
+  },
+  "native_profile": {
+    "state": "prepared,not qualified",
+    "required": [
+      "Actual unchanged stored bytes/modes and file/receipt/event/view/intent counts during repeated preparation",
+      "Actual root-writer preparation,read-only role refusal,original-key upload identity replay and protected-reference CLI output",
+      "Original official SDK/API descriptor equality,credential/content omission,unrelated role refusal and actual exact HTTPS upload/two-agent/reply journey"
+    ],
+    "claims_excluded": [
+      "Current native/stock SDK/HTTPS/CLI runtime success",
+      "Implicit confined/resumable adapter qualification",
+      "Physical storage/capacity promise from preparation,AI quality,forwarding/execution or stronger receiver receipts"
+    ]
+  },
+  "source_files": [
+    {
+      "path": "cmd/freightctl/exchanges.go",
+      "sha256": "96a2d52b6b8c327978f039ec40613f4aa94501d145eaea25f2484b498f0fe757"
+    },
+    {
+      "path": "cmd/freightctl/exchanges_integration_test.go",
+      "sha256": "2ebaf4e210334529231b8928db267c59bc123bb9e538f675f804402219eb5081"
+    },
+    {
+      "path": "cmd/freightctl/main.go",
+      "sha256": "fb752575140ac8558db0db4633c8460e7652f0ca7debcda3453122e72e47d102"
+    },
+    {
+      "path": "docs/api/artifact-ingress.openapi.json",
+      "sha256": "d70a1c47291d084a7a29b9f698a7df638176c5a14f43765398f091ecb93b1d6e"
+    },
+    {
+      "path": "docs/product/artifact-exchange-plan.md",
+      "sha256": "6681d372c4d8743ebec013cf2f9c08c164289fa25399461a9f5824f9f41bb12e"
+    },
+    {
+      "path": "docs/protocols/artifact-collection-source.md",
+      "sha256": "aa583b622d6ac4dc55ab7c5997db9e0b284113f304adbf57c7d0cdaf057f1aa6"
+    },
+    {
+      "path": "docs/protocols/artifact-exchange-mcp.md",
+      "sha256": "cdfc62eb1f74afa04fcb22710d17a2825aea1b1b0b943da4230dcac8a79da085"
+    },
+    {
+      "path": "docs/protocols/artifact-ingress-descriptor.md",
+      "sha256": "e4700a9cb31afe5bc3fd1cce4959c14c7733c6034d1c9010a8d393ebf1772f61"
+    },
+    {
+      "path": "docs/protocols/artifact-onward.md",
+      "sha256": "75a98737732375707acdda16b2ad6ce7099ce819ee65cf17c5caee1b0885a8f2"
+    },
+    {
+      "path": "internal/api/api.go",
+      "sha256": "a988e1c68bbb4455b86bb4f49038f31f031fb44393194ef41725e9a12708238b"
+    },
+    {
+      "path": "internal/api/artifact_exchanges_test.go",
+      "sha256": "485974131511e5b2df205237e763c4a4d9e57cd04a057cb4b74b3cf304c4cd4c"
+    },
+    {
+      "path": "internal/api/artifact_ingress.go",
+      "sha256": "c820f8300b9e2d519056efa968914f52b59adbaa48344bf3e6a967d8d55ba42c"
+    },
+    {
+      "path": "internal/api/mcp-tools.json",
+      "sha256": "574aaef14ffab242e58124635731badd9b4e75cb2ebf4be91beefcd0346b2fae"
+    },
+    {
+      "path": "internal/api/mcp.go",
+      "sha256": "4ab3d3dbe3e383830b9f82954a0986b6438966ecf26ed403221f84b2e228a5d4"
+    },
+    {
+      "path": "internal/api/mcp_integration_test.go",
+      "sha256": "b361c35d5efdabbd2569025b1ae02e14bdc30c058d0b0680a6b9c2b8a52707d6"
+    },
+    {
+      "path": "internal/api/mcp_test.go",
+      "sha256": "a1cff69166abb2939cdd5a9a7ce7ca4e6aeff1cc5be2eb894d2fce22e6888e1e"
+    },
+    {
+      "path": "internal/custody/ingress_descriptor.go",
+      "sha256": "7cbb4db90b2a7ed305ec1c6ddd9e24b2c3c5fa41d6e0f0851159f0b9e8ad9f16"
+    },
+    {
+      "path": "internal/custody/ingress_descriptor_integration_test.go",
+      "sha256": "b9c6c454742b349adcc8d3cc0d90dacb68c1345ec960d721a374b09c18f04665"
+    },
+    {
+      "path": "internal/custody/ingress_descriptor_test.go",
+      "sha256": "55eccc01e27bcf1ff7627eb6c3e0be2de06fa4dd70ec35eab6d49d865679dc14"
+    }
+  ],
+  "local_manifest": {
+    "reference": ".private/freightctl-f111/manifest.json",
+    "sha256": "6026e15523544c5bc4acb48ff2a3e613f70e72bad9b6d4712aed82017a04262b"
+  },
+  "owed": [
+    "Every prepared original native/API/CLI/SDK/stored-byte proof,root/authority/hold/crash/recovery and independent complete exchange profiles",
+    "Remaining agent tools,AI/provider,full lineage/retention/fairness/baseline implementation and mandatory FINISH",
+    "Current peer finding identity/remediation and every deferred original nonsecurity CI issue/final-source replay"
+  ]
+}
