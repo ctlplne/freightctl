@@ -24,6 +24,8 @@ import (
 )
 
 type exchangeBrowserSummary struct {
+	OwnedCopies      *int   `json:"owned_copies"`
+	CopyRecoveries   *int   `json:"copy_recoveries"`
 	EvidenceReads    *int   `json:"evidence_reads"`
 	State            string `json:"state"`
 	Phase            string `json:"phase"`
@@ -48,8 +50,11 @@ type exchangeBrowserSummary struct {
 }
 
 func TestExchangeBrowserSummaryRefusesAmbiguousEvidence(t *testing.T) {
-	valid := `{"state":"passed","phase":"complete","external_egress":0,"exact_downloads":2,"terminal_declines":1,"committed_offers":1,"sender_cancellations":1,"recovery_roundtrips":1,"model_started":false,"browser_sandbox":true,"endpoint_commands":3,"human_ingress":1,"onward_runs":1,"onward_recoveries":1,"onward_refusals":1,"evidence_reads":2,"accessibility_checks":24,"browser_version":"142.0.1","node_version":"v26.13.0","axe_version":"4.14.0"}`
+	valid := `{"state":"passed","phase":"complete","external_egress":0,"exact_downloads":2,"terminal_declines":1,"committed_offers":1,"sender_cancellations":1,"recovery_roundtrips":1,"model_started":false,"browser_sandbox":true,"endpoint_commands":3,"human_ingress":1,"onward_runs":1,"onward_recoveries":1,"onward_refusals":1,"evidence_reads":2,"owned_copies":1,"copy_recoveries":1,"accessibility_checks":28,"browser_version":"142.0.1","node_version":"v26.13.0","axe_version":"4.14.0"}`
 	for _, raw := range []string{
+		strings.Replace(valid, `"owned_copies":1,`, "", 1),
+		strings.Replace(valid, `"copy_recoveries":1,`, "", 1),
+		strings.Replace(valid, `"owned_copies":1`, `"owned_copies":0,"OWNED_COPIES":1`, 1),
 		strings.Replace(valid, `"evidence_reads":2,`, "", 1),
 		strings.Replace(valid, `"evidence_reads":2`, `"evidence_reads":0,"EVIDENCE_READS":2`, 1),
 		strings.Replace(valid, `"external_egress":0`, `"external_egress":1,"external_egress":0`, 1),
@@ -110,7 +115,7 @@ func readExchangeBrowserSummary(path string) (*exchangeBrowserSummary, string) {
 		return nil, hash
 	}
 	seen := map[string]bool{}
-	allowed := map[string]bool{"state": true, "phase": true, "external_egress": true, "exact_downloads": true, "terminal_declines": true, "committed_offers": true, "sender_cancellations": true, "recovery_roundtrips": true, "endpoint_commands": true, "human_ingress": true, "onward_runs": true, "onward_recoveries": true, "onward_refusals": true, "model_started": true, "browser_sandbox": true, "evidence_reads": true, "accessibility_checks": true, "browser_version": true, "node_version": true, "axe_version": true, "failure_sha256": true}
+	allowed := map[string]bool{"state": true, "phase": true, "external_egress": true, "exact_downloads": true, "terminal_declines": true, "committed_offers": true, "sender_cancellations": true, "recovery_roundtrips": true, "endpoint_commands": true, "human_ingress": true, "onward_runs": true, "onward_recoveries": true, "onward_refusals": true, "model_started": true, "browser_sandbox": true, "evidence_reads": true, "owned_copies": true, "copy_recoveries": true, "accessibility_checks": true, "browser_version": true, "node_version": true, "axe_version": true, "failure_sha256": true}
 	for keys.More() {
 		field, err := keys.Token()
 		name, ok := field.(string)
@@ -127,11 +132,11 @@ func readExchangeBrowserSummary(path string) (*exchangeBrowserSummary, string) {
 	d.DisallowUnknownFields()
 	var s exchangeBrowserSummary
 	var tail any
-	if d.Decode(&s) != nil || d.Decode(&tail) != io.EOF || s.Egress == nil || s.Downloads == nil || s.Declines == nil || s.Offers == nil || s.Cancels == nil || s.Recovery == nil || s.EndpointCommands == nil || s.HumanIngress == nil || s.OnwardRuns == nil || s.OnwardRecoveries == nil || s.OnwardRefusals == nil || s.Model == nil || s.Sandbox == nil || s.EvidenceReads == nil || s.Accessibility == nil || *s.EvidenceReads < 0 || *s.EvidenceReads > 2 || *s.Egress < 0 || *s.Downloads < 0 || *s.Downloads > 2 || *s.Declines < 0 || *s.Declines > 1 || *s.Accessibility < 0 || *s.Accessibility > 24 || *s.HumanIngress < 0 || *s.HumanIngress > 1 || *s.OnwardRuns < 0 || *s.OnwardRuns > 1 || *s.OnwardRecoveries < 0 || *s.OnwardRecoveries > 1 || *s.OnwardRefusals < 0 || *s.OnwardRefusals > 1 || *s.EndpointCommands < 0 || *s.EndpointCommands > 3 || *s.Recovery < 0 || *s.Recovery > 1 || *s.Offers < 0 || *s.Offers > 1 || *s.Cancels < 0 || *s.Cancels > 1 {
+	if d.Decode(&s) != nil || d.Decode(&tail) != io.EOF || s.Egress == nil || s.Downloads == nil || s.Declines == nil || s.Offers == nil || s.Cancels == nil || s.Recovery == nil || s.EndpointCommands == nil || s.HumanIngress == nil || s.OnwardRuns == nil || s.OnwardRecoveries == nil || s.OnwardRefusals == nil || s.Model == nil || s.Sandbox == nil || s.EvidenceReads == nil || s.OwnedCopies == nil || s.CopyRecoveries == nil || s.Accessibility == nil || *s.EvidenceReads < 0 || *s.EvidenceReads > 2 || *s.Egress < 0 || *s.Downloads < 0 || *s.Downloads > 2 || *s.Declines < 0 || *s.Declines > 1 || *s.Accessibility < 0 || *s.Accessibility > 28 || *s.OwnedCopies < 0 || *s.OwnedCopies > 1 || *s.CopyRecoveries < 0 || *s.CopyRecoveries > 1 || *s.HumanIngress < 0 || *s.HumanIngress > 1 || *s.OnwardRuns < 0 || *s.OnwardRuns > 1 || *s.OnwardRecoveries < 0 || *s.OnwardRecoveries > 1 || *s.OnwardRefusals < 0 || *s.OnwardRefusals > 1 || *s.EndpointCommands < 0 || *s.EndpointCommands > 3 || *s.Recovery < 0 || *s.Recovery > 1 || *s.Offers < 0 || *s.Offers > 1 || *s.Cancels < 0 || *s.Cancels > 1 {
 		return nil, hash
 	}
 	switch s.Phase {
-	case "incoming-evidence", "incoming-evidence-accessibility", "outgoing-evidence", "outgoing-evidence-accessibility", "onward-verify-review", "onward-login", "onward-review", "onward-review-accessibility", "onward-save-recovery", "onward-lost-response", "onward-reload-recovery", "onward-recovery-accessibility", "onward-receipt", "onward-receipt-accessibility", "onward-status", "onward-status-accessibility", "onward-refusal", "onward-refusal-accessibility", "launch", "recipient-login", "recipient-directory", "recipient-discovery", "receive-accessibility", "recipient-details", "details-accessibility", "exact-download", "sender-login", "sender-upload", "sender-upload-accessibility", "sender-human-receive", "sender-human-receive-accessibility", "sender-directory", "sender-review", "sender-review-accessibility", "sender-offer", "sender-receipt-accessibility", "sender-cancel", "sender-save-recovery", "sender-reload-recovery", "sender-recovery-accessibility", "sender-recover-offer", "sender-recover-cancel", "sender-history", "sender-history-accessibility", "sender-history-details", "sender-history-detail-accessibility", "recipient-decline-review", "decline-review-accessibility", "recipient-decline", "declined-retrieval", "declined-discovery", "declined-accessibility", "unrelated-directory", "unrelated-discovery", "unrelated-accessibility", "manager-login", "manager-accounts", "manager-review", "manager-review-accessibility", "manager-create", "manager-create-accessibility", "manager-replay", "manager-replace", "manager-replace-accessibility", "manager-revoke", "manager-revoke-accessibility", "revocation-barrier", "revoked-discovery", "revoked-accessibility", "complete":
+	case "copy-login", "copy-review-accessibility", "copy-lost-response", "copy-uncertain-accessibility", "copy-import", "copy-import-accessibility", "copy-recover", "copy-receipt-accessibility", "incoming-evidence", "incoming-evidence-accessibility", "outgoing-evidence", "outgoing-evidence-accessibility", "onward-verify-review", "onward-login", "onward-review", "onward-review-accessibility", "onward-save-recovery", "onward-lost-response", "onward-reload-recovery", "onward-recovery-accessibility", "onward-receipt", "onward-receipt-accessibility", "onward-status", "onward-status-accessibility", "onward-refusal", "onward-refusal-accessibility", "launch", "recipient-login", "recipient-directory", "recipient-discovery", "receive-accessibility", "recipient-details", "details-accessibility", "exact-download", "sender-login", "sender-upload", "sender-upload-accessibility", "sender-human-receive", "sender-human-receive-accessibility", "sender-directory", "sender-review", "sender-review-accessibility", "sender-offer", "sender-receipt-accessibility", "sender-cancel", "sender-save-recovery", "sender-reload-recovery", "sender-recovery-accessibility", "sender-recover-offer", "sender-recover-cancel", "sender-history", "sender-history-accessibility", "sender-history-details", "sender-history-detail-accessibility", "recipient-decline-review", "decline-review-accessibility", "recipient-decline", "declined-retrieval", "declined-discovery", "declined-accessibility", "unrelated-directory", "unrelated-discovery", "unrelated-accessibility", "manager-login", "manager-accounts", "manager-review", "manager-review-accessibility", "manager-create", "manager-create-accessibility", "manager-replay", "manager-replace", "manager-replace-accessibility", "manager-revoke", "manager-revoke-accessibility", "revocation-barrier", "revoked-discovery", "revoked-accessibility", "complete":
 	default:
 		return nil, hash
 	}
@@ -176,6 +181,7 @@ func TestArtifactExchangeNativeBrowserReceiptWrongActorAndRevocation(t *testing.
 	}
 	a, sender, actorA := participant([]string{"read", "write", "list", "deliver"})
 	b, recipient, actorB := participant([]string{"read", "list"})
+	copyToken, copyScope, copyActor := participant([]string{"read", "write", "list"})
 	other, _, _ := participant([]string{"read", "list"})
 	managerToken, managerScope, managerActor := participant([]string{"read", "list", "admin", "accounts_manage"})
 	onwardToken, onwardScope, _ := participant([]string{"read", "write", "list", "deliver", "workflow_manage", "workflow_approve", "workflow_execute"})
@@ -197,6 +203,16 @@ func TestArtifactExchangeNativeBrowserReceiptWrongActorAndRevocation(t *testing.
 		t.Fatal(err)
 	}
 	declineOffer, err := s.OfferExchange(ctx, sender, "browser-decline-offer", offer.Exchange.Request)
+	if err != nil {
+		t.Fatal(err)
+	}
+	copyEndpoint, err := s.DB.RegisterExchangeEndpoint(ctx, administrator, "browser-copy-endpoint", store.ExchangeEndpointCommand{Operation: "create", ID: secure.NewID(), Definition: &store.ExchangeEndpointDefinition{Schema: 1, Profile: "custody-https-poll-v1", Recipient: copyActor, Senders: []store.ExchangeParticipant{actorA}}}, limits, 16)
+	if err != nil {
+		t.Fatal(err)
+	}
+	copyRequest := offer.Exchange.Request
+	copyRequest.Endpoint = store.ExchangeEndpointReference{ID: copyEndpoint.Endpoint.ID, Revision: copyEndpoint.Endpoint.Revision, Hash: copyEndpoint.Endpoint.Hash}
+	copyOffer, err := s.OfferExchange(ctx, sender, "browser-copy-offer", copyRequest)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -246,6 +262,7 @@ func TestArtifactExchangeNativeBrowserReceiptWrongActorAndRevocation(t *testing.
 	}
 	config := map[string]any{"url": server.URL, "tenant": administrator.Tenant, "partner": administrator.Partner, "endpoint": endpoint.Endpoint.ID, "exchange": offer.Exchange.ID, "closure_exchange": declineOffer.Exchange.ID, "closure_request_hash": declineOffer.Exchange.RequestHash, "file": file.ID, "size": file.Size, "sha256": file.SHA256, "recipient_token": b, "sender_token": a, "sender_actor": actorA.Actor, "recipient_actor": actorB.Actor, "unrelated_token": other, "manager_token": managerToken, "manager_actor": managerActor.Actor, "upload_source": uploadSource, "human_download": filepath.Join(private, "human-download"), "certificate_der": base64.StdEncoding.EncodeToString(server.Certificate().Raw), "download": filepath.Join(private, "download"), "recovery": filepath.Join(private, "recovery.json"), "ready": ready, "revoked": revoked, "result": result, "failure": filepath.Join(private, "first-failure.log")}
 	config["onward_token"], config["onward_file"], config["onward_workflow"], config["onward_hash"], config["onward_recovery"] = onwardToken, onwardFile.ID, configuration.ID, configuration.Hash, filepath.Join(private, "onward-recovery.json")
+	config["copy_token"], config["copy_actor"], config["copy_endpoint"], config["copy_exchange"], config["copy_request_hash"], config["copy_recovery"] = copyToken, copyActor.Actor, copyEndpoint.Endpoint.ID, copyOffer.Exchange.ID, copyOffer.Exchange.RequestHash, filepath.Join(private, "copy-recovery.json")
 	encoded, err := json.Marshal(config)
 	if err != nil {
 		t.Fatal(err)
@@ -310,7 +327,7 @@ func TestArtifactExchangeNativeBrowserReceiptWrongActorAndRevocation(t *testing.
 		t.Fatal("browser did not finish after exact endpoint revocation")
 	}
 	summary, hash := readExchangeBrowserSummary(result)
-	if err != nil || summary == nil || summary.State != "passed" || summary.Phase != "complete" || *summary.Egress != 0 || *summary.Downloads != 2 || *summary.Declines != 1 || *summary.Offers != 1 || *summary.Cancels != 1 || *summary.Recovery != 1 || *summary.Model || !*summary.Sandbox || *summary.EvidenceReads != 2 || *summary.Accessibility != 24 || *summary.OnwardRuns != 1 || *summary.OnwardRecoveries != 1 || *summary.OnwardRefusals != 1 || *summary.HumanIngress != 1 || *summary.EndpointCommands != 3 || summary.Browser == "" || summary.FailureHash != "" {
+	if err != nil || summary == nil || summary.State != "passed" || summary.Phase != "complete" || *summary.Egress != 0 || *summary.Downloads != 2 || *summary.Declines != 1 || *summary.Offers != 1 || *summary.Cancels != 1 || *summary.Recovery != 1 || *summary.Model || !*summary.Sandbox || *summary.EvidenceReads != 2 || *summary.Accessibility != 28 || *summary.OwnedCopies != 1 || *summary.CopyRecoveries != 1 || *summary.OnwardRuns != 1 || *summary.OnwardRecoveries != 1 || *summary.OnwardRefusals != 1 || *summary.HumanIngress != 1 || *summary.EndpointCommands != 3 || summary.Browser == "" || summary.FailureHash != "" {
 		t.Fatalf("native receive browser proof failed; safe result SHA256=%s", hash)
 	}
 	proof, err := s.DB.Begin(ctx, sender)
@@ -319,8 +336,18 @@ func TestArtifactExchangeNativeBrowserReceiptWrongActorAndRevocation(t *testing.
 	}
 	defer proof.Tx.Rollback(ctx)
 	var offers, receipts, closures int
-	if err = proof.Tx.QueryRow(ctx, `SELECT (SELECT count(*) FROM artifact_exchanges WHERE sender_actor_id=$1),(SELECT count(*) FROM artifact_exchange_commands WHERE actor_id=$1),(SELECT count(*) FROM artifact_exchange_closures)`, actorA.Actor).Scan(&offers, &receipts, &closures); err != nil || offers != 3 || receipts != 3 || closures != 2 {
+	if err = proof.Tx.QueryRow(ctx, `SELECT (SELECT count(*) FROM artifact_exchanges WHERE sender_actor_id=$1 AND exchange_id<>$2),(SELECT count(*) FROM artifact_exchange_commands WHERE actor_id=$1 AND exchange_id<>$2),(SELECT count(*) FROM artifact_exchange_closures)`, actorA.Actor, copyOffer.Exchange.ID).Scan(&offers, &receipts, &closures); err != nil || offers != 3 || receipts != 3 || closures != 2 {
 		t.Fatal("saved browser retries changed durable view/receipt/decision counts", offers, receipts, closures, err)
+	}
+	copyProof, err := s.DB.Begin(ctx, copyScope)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var copyFiles, copyReceipts, copyBindings, copyEvents int
+	err = copyProof.Tx.QueryRow(ctx, `SELECT (SELECT count(*) FROM files f JOIN events e ON e.event_id=f.accepted_event_id WHERE e.actor_id=$1),(SELECT count(*) FROM idempotency WHERE actor_id=$1),(SELECT count(*) FROM namespace_entries WHERE owner_actor_id=$1 AND path='/browser-owned-copy.dat' AND mode=384 AND NOT deleted),(SELECT count(*) FROM events WHERE actor_id=$1 AND kind='FileAccepted' AND payload->'schema_version'='4'::jsonb AND payload->'exchange_copy'->>'exchange_id'=$2)`, copyActor.Actor, copyOffer.Exchange.ID).Scan(&copyFiles, &copyReceipts, &copyBindings, &copyEvents)
+	copyProof.Tx.Rollback(ctx)
+	if err != nil || copyFiles != 1 || copyReceipts != 1 || copyBindings != 1 || copyEvents != 1 {
+		t.Fatal("browser copy replay changed custody/provenance cardinality", err, copyFiles, copyReceipts, copyBindings, copyEvents)
 	}
 
 	var uploadBindings int

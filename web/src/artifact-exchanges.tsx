@@ -3,6 +3,7 @@ import { Api } from "./api";
 import { ApiError, uuid, type Session } from "./types";
 import { ExchangeReceiveApi } from "./artifact-exchanges-api";
 import { ArtifactEvidence } from "./artifact-evidence";
+import { ArtifactCopy } from "./artifact-copy";
 import { operationKey } from "./crypto";
 import type {
   IncomingExchange,
@@ -190,6 +191,7 @@ export function ArtifactExchanges({
   return (
     <section aria-labelledby="artifact-receive-title">
       <h2 id="artifact-receive-title">Receive artifacts</h2>
+      <ArtifactCopy client={client} selected={selected} onError={onError} />
       {closed && (
         <p role="status">
           Exchange <code>{closed}</code> declined. Future retrieval through this

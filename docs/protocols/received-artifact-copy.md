@@ -39,9 +39,10 @@ permission. Recovery does not reopen the source. Changed meaning refuses.
 Results describe original durable acceptance, not current availability. They
 expose no storage identity, host path, credentials or new destination authority.
 Receiver persistence and business processing remain unknown. A later send or
-workflow execution requires its own permission and approval. Parent provenance
-is private to the actor performing this operation; downstream evidence must not
-traverse it without separate authorization.
+workflow execution requires its own permission and approval. Returned provenance
+uses the acting participant's receipt authority; ordinary privileged audit/export
+rules still apply. Downstream evidence does not traverse the parent without
+separate authorization.
 
 The CLI uses the same service with `freightctl exchange-copy -request-file
 <protected-json> -idempotency-key <stable-key>`, ordinary protected database and
@@ -52,8 +53,24 @@ custody receipt; it does not claim remote receiver persistence.
 The API/CLI and append-only schema45 acceptance guard are implemented. No new
 metadata table is added; all existing tenant/partner RLS boundaries remain. The
 retained database is not migrated by this work. MCP `copy_received_artifact`
-delegates to this same service with metadata only. Browser convenience controls
-remain implementation work; all native copy outcomes remain owed.
+delegates to this same service with metadata only.
+
+The browser's Receive artifacts workspace provides explicit source/new-path
+review and submission. It keeps the original request/key through an uncertain
+response and exports private recovery hints. Import binds the exact HTTPS origin,
+tenant/partner/actor,authority revision and root digest, rejects ambiguous or
+unknown controls, and sends no request before explicit review/submission. Hints
+grant no authority. Submitting retries the original operation and may create the
+copy if it never committed; the server rechecks every new-copy permission. A
+known accepted file identity is pinned on later retry. Historical acceptance
+never claims current availability or receiver processing. Changing account,
+session,root or authority hides old state and refuses stale callbacks.
+
+Original native Chrome proof retains24 existing accessibility states and adds
+four:copy review,uncertain response,imported hints and recovered receipt. Separate
+read-only and write-capable participants,real committed-response loss,reload,
+foreign-owner hint refusal,exact-key recovery,independent HTTPS bytes and exact
+SQL cardinality are prepared. All actual native copy outcomes remain owed.
 
 Native PostgreSQL, served HTTPS, byte, refusal, recovery and intake outcomes must
 be proved on actual runners. This contract alone qualifies none of them.

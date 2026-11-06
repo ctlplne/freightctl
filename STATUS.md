@@ -56,7 +56,10 @@ seven metadata-summary methods plus affected static checks pass. Actual native
 SQL/HTTPS/CLI/intake/reopen proofs remain owed. F129 adds the ordinary metadata-only
 MCP copy tool (catalog26),with observed missing-tool red then two focused methods
 and affected static checks passing. Original official-client copy/replay/API-byte/
-stale-source receipt proofs are prepared,not qualified. Browser copy remains owed.
+stale-source receipt proofs are prepared,not qualified. F130 adds browser copy
+review and private original-key recovery;five focused browser methods,one strict
+summary method and affected static checks pass. Original28-state Chrome response
+loss/reload/foreign-hint/byte/cardinality proof is prepared,not qualified.
 
 Latest fresh schema 45 targets 71 metadata tables/70 forced-RLS tables. Retained
 schema 35 is untouched. PostgreSQL/non-owner RLS, immutable custody, transactional

@@ -2,6 +2,14 @@ import { Api } from "./api";
 import { ApiError, asAccountPage, uuid } from "./types";
 import { digestBytes } from "./crypto";
 import {
+  asReceivedCopyRequest,
+  asReceivedCopyResult,
+  copyKey,
+  copyRecovery,
+  readCopyRecovery,
+  type CopyOperation,
+} from "./artifact-copy-types";
+import {
   asExchangeEvidence,
   evidenceExpectation,
   type EvidenceDirection,
@@ -47,6 +55,7 @@ export class ExchangeReceiveApi {
   private who: string;
   private directory: DirectoryContext;
   private canList: boolean;
+  private canWrite: boolean;
   constructor(private api: Api) {
     const s = api.session;
     if (!s) throw new ApiError("unauthorized", 401);
@@ -58,6 +67,7 @@ export class ExchangeReceiveApi {
     this.prefix = `/v1/tenants/${this.identity.tenant}/partners/${this.identity.partner}`;
     const permissions = s.identity.permissions;
     this.canList = permissions.includes("list");
+    this.canWrite = permissions.includes("write");
     this.directory = {
       ...this.identity,
       authority_revision: s.identity.authority_revision,
@@ -89,6 +99,46 @@ export class ExchangeReceiveApi {
   }
   isCurrent(): boolean {
     return this.context() === this.who;
+  }
+  canCopy(): boolean {
+    return this.isCurrent() && this.canWrite && this.directory.can_receive;
+  }
+  private requireCopy() {
+    this.current();
+    if (!this.canCopy()) throw new ApiError("permission_denied", 403);
+  }
+  async copyReceived(
+    request: unknown,
+    key: string,
+    signal?: AbortSignal,
+    expectedID?: string,
+  ) {
+    this.requireCopy();
+    copyKey(key);
+    const pinned = asReceivedCopyRequest(request);
+    const result = await this.api.request(
+      `${this.prefix}/exchange-copies`,
+      {
+        method: "POST",
+        headers: { "Idempotency-Key": key },
+        body: JSON.stringify(pinned),
+        ...(signal ? { signal } : {}),
+      },
+      (value) => {
+        this.requireCopy();
+        return asReceivedCopyResult(value, pinned, expectedID);
+      },
+    );
+    this.requireCopy();
+    return result;
+  }
+  copyRecovery(saved: CopyOperation, origin: string) {
+    this.requireCopy();
+    return copyRecovery(saved, this.directory, origin);
+  }
+  readCopyRecovery(text: string, origin: string) {
+    this.requireCopy();
+    return readCopyRecovery(text, this.directory, origin);
   }
   async evidence(
     id: string,

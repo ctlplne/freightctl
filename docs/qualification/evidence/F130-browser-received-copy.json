@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "id": "F130",
+  "observed_at": "2026-11-05",
+  "candidate_parent": "7b083e53f482b170473ee8c7f33cd7007bc93e75",
+  "state": "Browser separately authorized received-copy review and private original-key recovery implemented;actual native outcomes owed",
+  "qualification_claim": false,
+  "changes": [
+    "Receive workspace uses same ordinary API/custody service with explicit exact-source/new-path review. Separate write/read/list permission;no forward/execute grant. Request pinned before await;current actor/authority/root/session/permissions checked before,within and after response decoding.",
+    "Strict original receipt decoder binds exact source and copied bytes,new identity,acceptance policy,known result identity and unknown receiver outcomes;rejects private/extra fields and stronger invented claims.",
+    "Private recovery hints bind exact HTTPS origin,tenant/partner/actor,authority revision/root and original key/request. Strict bounded parser rejects duplicates,aliases,unknown authority,unsafe paths and foreign context. Import has no network effect;explicit review/submission required. UI explains original retry may create a copy if it never committed.",
+    "Pending original operation survives receive selection/refresh and uncertain responses in current workspace;export/import supports reload. Client/context change hides old state,aborts requests and revokes temporary download URLs.",
+    "Native Chrome original journey keeps read-only participant and adds separate write-capable recipient. Real copy201 is observed then socket response deliberately aborted;reload rejects foreign-owner hints,imports original without effects and recovers exact200receipt. Independent verified-HTTPS bytes and SQL1file/1receipt/1privatebinding/1exactsource event are required. Existing three-view/three-receipt/two-closure counts remain asserted separately from added copy view."
+  ],
+  "red": [
+    {
+      "reference": ".private/freightctl-f130-browser-red.log",
+      "observation": "Focused ordinary-copy client journey failed: copyReceived is not a function"
+    },
+    {
+      "reference": ".private/freightctl-f130-summary-red-selected.log",
+      "observation": "Exact new native summary refused by old strict known-field/count contract before its explicit extension"
+    }
+  ],
+  "green": {
+    "focused_browser_methods": 5,
+    "strict_native_summary_method": 1,
+    "frontend_typecheck_build_format": "pass",
+    "browser_bundle_bytes": 776757,
+    "affected_native_fixture_vet_compilation": "pass;only lightweight summary selected,no Chrome/PG runtime",
+    "unchanged_architecture": "pass",
+    "native_script_syntax": "pass",
+    "format_diff": "pass"
+  },
+  "native_profile": {
+    "existing_accessibility_states": 24,
+    "additional_copy_states": 4,
+    "required_total": 28,
+    "owned_copies": 1,
+    "copy_recoveries": 1,
+    "state": "prepared,not executed locally"
+  },
+  "source_files": [
+    {
+      "path": "docs/protocols/received-artifact-copy.md",
+      "sha256": "f043f73dee48b3d1f3d673bc4c182bc87e60017242fe5ecbabccc64f29534a38"
+    },
+    {
+      "path": "internal/api/artifact_exchange_browser_integration_test.go",
+      "sha256": "08680dd8130a176f8559a7f8934c7788323cd1a035459aa004a5db8c4d7193c5"
+    },
+    {
+      "path": "internal/browser/assets/app.js",
+      "sha256": "52adde39429eb38bf7d3a4c5616b39c735c9f2b2dd094af1020a42d7843f00b2"
+    },
+    {
+      "path": "internal/browser/assets/manifest.json",
+      "sha256": "bfa96df55dc222114298d559568b743816800b1b1ff611fcbe643c8b1d04ed7d"
+    },
+    {
+      "path": "scripts/artifact-exchange-browser.mjs",
+      "sha256": "4f397ef6d7d9affe81400a06dba91255039cc9434b61f7b8b6af086c52fd6cdf"
+    },
+    {
+      "path": "web/src/artifact-copy-types.ts",
+      "sha256": "d75300f5134ad68656c4664344b6679c1bf7612dd946c5348082fa79637a6c38"
+    },
+    {
+      "path": "web/src/artifact-copy.tsx",
+      "sha256": "976dd3045a94abe83adf01ae3e9e159f6456c15e1b15daa8eeaf22711619a150"
+    },
+    {
+      "path": "web/src/artifact-exchanges-api.ts",
+      "sha256": "f3a08f0e92c74ce5a09c14ca551243f63c19494faa447a31d9825cea340b422e"
+    },
+    {
+      "path": "web/src/artifact-exchanges.tsx",
+      "sha256": "4d7aeecf82691bbf331d62b90479485379729ac3b558df35b6a5c5d9215e404e"
+    },
+    {
+      "path": "web/tests/artifact-copy.test.mjs",
+      "sha256": "d7f3559522992ab41c70816eaf6c204c12fdd32de6b3b076f7dba051b80b89e6"
+    }
+  ],
+  "local_manifest": {
+    "reference": ".private/freightctl-f130-manifest.json",
+    "sha256": "1c532fd7f9ef1b15f8d0777dda538f28a5c9621dae86d4e7403bee88c65d92ec"
+  },
+  "owed": [
+    "Actual original Chrome/PG/API/CLI/official SDK copy,byte,intake,refusal,recovery,migration/restore and concurrent authority outcomes at actual source",
+    "Complete AX acceptance profiles,original failure repair and every mandatory full baseline/FINISH/final-source gate"
+  ],
+  "schema": 45,
+  "retained_schema": 35,
+  "retained_changed": false,
+  "local_heavy_runtimes_started": false,
+  "inference": "off"
+}

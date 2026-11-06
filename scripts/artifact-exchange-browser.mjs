@@ -26,10 +26,14 @@ for (const value of [
   c.manager_actor,
   c.onward_file,
   c.onward_workflow,
+  c.copy_actor,
+  c.copy_endpoint,
+  c.copy_exchange,
 ])
   assert.match(value, /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/);
 assert.match(c.sha256, /^[0-9a-f]{64}$/);
 assert.match(c.closure_request_hash, /^[0-9a-f]{64}$/);
+assert.match(c.copy_request_hash, /^[0-9a-f]{64}$/);
 assert.notEqual(c.closure_exchange, c.exchange);
 assert.ok(Number.isSafeInteger(c.size) && c.size > 0 && c.size < 16384);
 const spki = createHash("sha256")
@@ -49,6 +53,9 @@ let browser,
   egress = 0,
   accessibilityChecks = 0,
   evidenceReads = 0,
+  ownedCopies = 0,
+  copyRecoveries = 0,
+  copyRequests = 0,
   downloads = 0,
   declines = 0,
   offers = 0,
@@ -257,6 +264,206 @@ try {
   downloads++;
   assert.equal(
     await recipient.page.evaluate(() => globalThis.freightctlArtifactExecuted),
+    undefined,
+  );
+  assert.equal(
+    await recipient.page
+      .getByRole("button", { name: "Review new owned copy", exact: true })
+      .count(),
+    0,
+  );
+  phase = "copy-login";
+  const copyOwner = await login(c.copy_token);
+  assert.equal(
+    await copyOwner.page
+      .getByRole("button", { name: "Send artifacts", exact: true })
+      .count(),
+    0,
+  );
+  assert.equal(
+    await copyOwner.page
+      .getByRole("button", { name: "Onward delivery", exact: true })
+      .count(),
+    0,
+  );
+  assert.equal((await directory(copyOwner.page)).status(), 200);
+  const copyIncoming = copyOwner.page.waitForResponse((r) =>
+    r.url().includes("/exchange-endpoints/" + c.copy_endpoint + "/incoming?"),
+  );
+  await copyOwner.page
+    .getByRole("button", {
+      name: "Open " + c.copy_endpoint.slice(0, 8),
+      exact: true,
+    })
+    .click();
+  assert.equal((await copyIncoming).status(), 200);
+  await copyOwner.page
+    .getByRole("button", {
+      name: "Inspect " + c.copy_exchange.slice(0, 8),
+      exact: true,
+    })
+    .click();
+  const copyRegion = copyOwner.page.getByRole("region", {
+    name: "Copy received artifact",
+    exact: true,
+  });
+  await copyRegion
+    .getByLabel("New owned copy path", { exact: true })
+    .fill("/browser-owned-copy.dat");
+  await copyRegion
+    .getByRole("button", { name: "Review new owned copy", exact: true })
+    .click();
+  await copyRegion
+    .getByRole("heading", { name: "Review received copy", exact: true })
+    .waitFor();
+  phase = "copy-review-accessibility";
+  await accessibility(copyOwner.page, "copy-review-accessibility");
+  const copyDownload = copyOwner.page.waitForEvent("download");
+  await copyRegion
+    .getByRole("button", { name: "Save copy recovery file", exact: true })
+    .click();
+  const copyRecovery = await copyDownload;
+  assert.equal(await copyRecovery.failure(), null);
+  await copyRecovery.saveAs(c.copy_recovery);
+  await chmod(c.copy_recovery, 0o600);
+  const copySaved = JSON.parse(await readFile(c.copy_recovery, "utf8"));
+  assert.equal(copySaved.profile, "freightctl-received-copy-recovery-v1");
+  assert.equal(copySaved.server_origin, origin.origin);
+  assert.equal(copySaved.participant.actor_id, c.copy_actor);
+  assert.equal(copySaved.request.exchange_id, c.copy_exchange);
+  assert.equal(copySaved.request.request_hash, c.copy_request_hash);
+  assert.equal(copySaved.request.artifact.file_revision_id, c.file);
+  assert.equal(copySaved.request.virtual_path, "/browser-owned-copy.dat");
+  const wrongOwner = structuredClone(copySaved);
+  wrongOwner.participant.actor_id = c.recipient_actor;
+  await writeFile(
+    c.copy_recovery + ".wrong-actor.json",
+    JSON.stringify(wrongOwner) + "\n",
+    { mode: 0o600, flag: "wx" },
+  );
+  const copyURL =
+    origin.origin +
+    `/v1/tenants/${c.tenant}/partners/${c.partner}/exchange-copies`;
+  copyOwner.page.on("request", (r) => {
+    if (r.url() === copyURL && r.method() === "POST") copyRequests++;
+  });
+  let copiedID;
+  await copyOwner.page.route(copyURL, async (route) => {
+    assert.equal(
+      route.request().headers()["idempotency-key"],
+      copySaved.request_key,
+    );
+    assert.deepEqual(route.request().postDataJSON(), copySaved.request);
+    const real = await route.fetch();
+    assert.equal(real.status(), 201);
+    const receipt = await real.json();
+    assert.equal(receipt.replayed, false);
+    assert.equal(receipt.source.exchange_id, c.copy_exchange);
+    assert.equal(receipt.artifact.sha256, c.sha256);
+    copiedID = receipt.artifact.file_revision_id;
+    assert.notEqual(copiedID, c.file);
+    await real.dispose();
+    await route.abort("failed");
+  });
+  phase = "copy-lost-response";
+  await copyRegion
+    .getByRole("button", {
+      name: "Submit or recover original copy",
+      exact: true,
+    })
+    .click();
+  await copyOwner.page.getByRole("alert").waitFor();
+  await copyRegion
+    .getByRole("button", {
+      name: "Submit or recover original copy",
+      exact: true,
+    })
+    .waitFor();
+  assert.match(copiedID, /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/);
+  assert.equal(copyRequests, 1);
+  ownedCopies++;
+  phase = "copy-uncertain-accessibility";
+  await accessibility(copyOwner.page, "copy-uncertain-accessibility");
+  await copyOwner.page.unroute(copyURL);
+  await copyOwner.page.reload();
+  await copyOwner.page
+    .getByRole("button", { name: "Receive artifacts", exact: true })
+    .click();
+  phase = "copy-import";
+  const copyAfterReload = copyOwner.page.getByRole("region", {
+    name: "Copy received artifact",
+    exact: true,
+  });
+  await copyAfterReload
+    .getByLabel("Open copy recovery file", { exact: true })
+    .setInputFiles(c.copy_recovery + ".wrong-actor.json");
+  await copyOwner.page.getByRole("alert").waitFor();
+  assert.equal(copyRequests, 1);
+  assert.equal(
+    await copyAfterReload
+      .getByRole("heading", { name: "Review received copy", exact: true })
+      .count(),
+    0,
+  );
+  await copyAfterReload
+    .getByLabel("Open copy recovery file", { exact: true })
+    .setInputFiles(c.copy_recovery);
+  await copyAfterReload
+    .getByRole("heading", { name: "Review received copy", exact: true })
+    .waitFor();
+  assert.equal(
+    await copyAfterReload
+      .getByRole("button", {
+        name: "Submit or recover original copy",
+        exact: true,
+      })
+      .isDisabled(),
+    true,
+  );
+  assert.equal(copyRequests, 1);
+  phase = "copy-import-accessibility";
+  await accessibility(copyOwner.page, "copy-import-accessibility");
+  await copyAfterReload
+    .getByRole("button", { name: "I reviewed these copy details", exact: true })
+    .click();
+  phase = "copy-recover";
+  const copyReplayed = copyOwner.page.waitForResponse(
+    (r) => r.url() === copyURL && r.request().method() === "POST",
+  );
+  await copyAfterReload
+    .getByRole("button", {
+      name: "Submit or recover original copy",
+      exact: true,
+    })
+    .click();
+  const recoveredCopy = await copyReplayed;
+  assert.equal(recoveredCopy.status(), 200);
+  const recoveredReceipt = await recoveredCopy.json();
+  assert.equal(recoveredReceipt.replayed, true);
+  assert.equal(recoveredReceipt.artifact.file_revision_id, copiedID);
+  assert.equal(copyRequests, 2);
+  copyRecoveries++;
+  await copyAfterReload
+    .getByRole("status")
+    .filter({ hasText: "Original custody acceptance:" })
+    .waitFor();
+  phase = "copy-receipt-accessibility";
+  await accessibility(copyOwner.page, "copy-receipt-accessibility");
+  const copyBytes = await copyOwner.page.evaluate(async (path) => {
+    const r = await fetch(path, {
+      credentials: "same-origin",
+      redirect: "error",
+    });
+    if (r.status !== 200) throw new Error("copy byte read refused");
+    return Array.from(new Uint8Array(await r.arrayBuffer()));
+  }, `/v1/tenants/${c.tenant}/partners/${c.partner}/files/${copiedID}`);
+  assert.equal(copyBytes.length, c.size);
+  assert.equal(
+    createHash("sha256").update(Buffer.from(copyBytes)).digest("hex"),
+    c.sha256,
+  );
+  assert.equal(
+    await copyOwner.page.evaluate(() => globalThis.freightctlArtifactExecuted),
     undefined,
   );
   phase = "sender-login";
@@ -1181,6 +1388,8 @@ try {
     browser_sandbox: true,
     accessibility_checks: accessibilityChecks,
     evidence_reads: evidenceReads,
+    owned_copies: ownedCopies,
+    copy_recoveries: copyRecoveries,
     browser_version: browser?.version() ?? "",
     node_version: process.version,
     axe_version: axe.version,

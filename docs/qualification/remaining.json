@@ -879,7 +879,8 @@
         "docs/qualification/evidence/F123-authorized-exchange-evidence.json",
         "docs/qualification/evidence/F127-mcp-create-only-revision.json",
         "docs/qualification/evidence/F128-received-artifact-copy.json",
-        "docs/qualification/evidence/F129-mcp-received-copy.json"
+        "docs/qualification/evidence/F129-mcp-received-copy.json",
+        "docs/qualification/evidence/F130-browser-received-copy.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -894,11 +895,11 @@
         "S003 authorizes guarded source/CI batches after prior required runs are terminal. Shared exchange API/CLI and receive/send/recovery/history browser surfaces are implemented;actual AX profiles remain owed. Broad/deferred qualification is mandatory at FINISH."
       ],
       "current_item": {
-        "id": "F129",
-        "state": "Received copy API/CLI/MCP implemented;native and browser controls owed",
-        "proof": "Observed missing MCP tool red;two focused methods and affected tagged compile/vet/architecture pass",
-        "native": "Original official SDK/API byte/receipt/refusal/stale-source recovery proof prepared,not qualified",
-        "next": "Browser controlled copy/recovery;remaining exchange/baseline implementation and mandatory FINISH original/deferred/native/final-source gates"
+        "id": "F130",
+        "state": "Controlled received-copy API/CLI/MCP/browser implemented;native acceptance owed",
+        "proof": "Observed missing browser method/new-summary contract reds;five browser methods,one strict summary and affected static checks pass",
+        "native": "Original28-state Chrome/PG response-loss/reload/hint refusal/byte/cardinality profile prepared,not qualified",
+        "next": "Remaining full baseline/product work;mandatory FINISH original/deferred/native/final-source gates"
       }
     }
   ],

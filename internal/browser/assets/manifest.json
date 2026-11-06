@@ -34,6 +34,14 @@
       "sha256": "5e7f94fb06e7b33aca5499f08167e493e9e285c48bf5e81dc6b1fe965a034371"
     },
     {
+      "path": "web/src/artifact-copy-types.ts",
+      "sha256": "d75300f5134ad68656c4664344b6679c1bf7612dd946c5348082fa79637a6c38"
+    },
+    {
+      "path": "web/src/artifact-copy.tsx",
+      "sha256": "976dd3045a94abe83adf01ae3e9e159f6456c15e1b15daa8eeaf22711619a150"
+    },
+    {
       "path": "web/src/artifact-endpoint-admin.tsx",
       "sha256": "98c09afc08a38d7247b41f469109ad8db772218023d4420a143e240031ea3347"
     },
@@ -47,7 +55,7 @@
     },
     {
       "path": "web/src/artifact-exchanges-api.ts",
-      "sha256": "fee2d70f8c4ef7e32cae6abdc3f2c32b91f34f37173e364d750ea93b23897d5b"
+      "sha256": "f3a08f0e92c74ce5a09c14ca551243f63c19494faa447a31d9825cea340b422e"
     },
     {
       "path": "web/src/artifact-exchanges-types.ts",
@@ -55,7 +63,7 @@
     },
     {
       "path": "web/src/artifact-exchanges.tsx",
-      "sha256": "73708bc8b50d4759db6cab71c66a128c9bf3251c13085b9efee1bf8c3412cefb"
+      "sha256": "4d7aeecf82691bbf331d62b90479485379729ac3b558df35b6a5c5d9215e404e"
     },
     {
       "path": "web/src/artifact-onward-api.ts",
@@ -286,8 +294,8 @@
     },
     {
       "name": "app.js",
-      "sha256": "03d944e4c50efad8f4f2578f6023325413a4522058a1ddff2e23d64b8250120b",
-      "size": 767527
+      "sha256": "52adde39429eb38bf7d3a4c5616b39c735c9f2b2dd094af1020a42d7843f00b2",
+      "size": 776757
     },
     {
       "name": "app.js.LEGAL.txt",
