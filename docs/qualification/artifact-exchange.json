@@ -59,7 +59,8 @@
         "docs/qualification/evidence/F099-governed-mcp-exchange-tools.json",
         "docs/qualification/evidence/F101-upload-to-exchange-review.json",
         "docs/qualification/evidence/F103-reviewed-artifact-onward.json",
-        "docs/qualification/evidence/F105-browser-artifact-onward.json"
+        "docs/qualification/evidence/F105-browser-artifact-onward.json",
+        "docs/qualification/evidence/F108-governed-collection-artifact-source.json"
       ]
     },
     {
@@ -88,7 +89,8 @@
         "docs/qualification/evidence/F099-governed-mcp-exchange-tools.json",
         "docs/qualification/evidence/F101-upload-to-exchange-review.json",
         "docs/qualification/evidence/F103-reviewed-artifact-onward.json",
-        "docs/qualification/evidence/F105-browser-artifact-onward.json"
+        "docs/qualification/evidence/F105-browser-artifact-onward.json",
+        "docs/qualification/evidence/F108-governed-collection-artifact-source.json"
       ]
     },
     {
@@ -121,7 +123,8 @@
         "docs/qualification/evidence/F099-governed-mcp-exchange-tools.json",
         "docs/qualification/evidence/F101-upload-to-exchange-review.json",
         "docs/qualification/evidence/F103-reviewed-artifact-onward.json",
-        "docs/qualification/evidence/F105-browser-artifact-onward.json"
+        "docs/qualification/evidence/F105-browser-artifact-onward.json",
+        "docs/qualification/evidence/F108-governed-collection-artifact-source.json"
       ]
     },
     {
@@ -150,7 +153,8 @@
         "docs/qualification/evidence/F099-governed-mcp-exchange-tools.json",
         "docs/qualification/evidence/F101-upload-to-exchange-review.json",
         "docs/qualification/evidence/F103-reviewed-artifact-onward.json",
-        "docs/qualification/evidence/F105-browser-artifact-onward.json"
+        "docs/qualification/evidence/F105-browser-artifact-onward.json",
+        "docs/qualification/evidence/F108-governed-collection-artifact-source.json"
       ]
     },
     {
@@ -182,7 +186,8 @@
         "docs/qualification/evidence/F099-governed-mcp-exchange-tools.json",
         "docs/qualification/evidence/F101-upload-to-exchange-review.json",
         "docs/qualification/evidence/F103-reviewed-artifact-onward.json",
-        "docs/qualification/evidence/F105-browser-artifact-onward.json"
+        "docs/qualification/evidence/F105-browser-artifact-onward.json",
+        "docs/qualification/evidence/F108-governed-collection-artifact-source.json"
       ]
     },
     {
@@ -213,7 +218,8 @@
         "docs/qualification/evidence/F099-governed-mcp-exchange-tools.json",
         "docs/qualification/evidence/F101-upload-to-exchange-review.json",
         "docs/qualification/evidence/F103-reviewed-artifact-onward.json",
-        "docs/qualification/evidence/F105-browser-artifact-onward.json"
+        "docs/qualification/evidence/F105-browser-artifact-onward.json",
+        "docs/qualification/evidence/F108-governed-collection-artifact-source.json"
       ]
     },
     {
@@ -287,7 +293,7 @@
         "Independent destination receiver"
       ],
       "steps": [
-        "Initial pair frozen:verified HTTPS resumable browser upload -> registered custody-https-poll-v1 receive view -> native authenticated download. Freeze remaining stock SFTP/FTPS push and governed collection/onward adapter-role pairs against existing protocol contracts;all remain mandatory.",
+        "Initial pair frozen:verified HTTPS resumable browser upload -> registered custody-https-poll-v1 receive view -> native authenticated download. Freeze remaining stock SFTP/FTPS push and governed collection/onward adapter-role pairs against existing protocol contracts;all remain mandatory. Governed source pair pinned:stock SFTP immutable ready-manifest collection -> governed-collection-exchange-source-v1 -> separately authorized custody-https-poll-v1 offer;actual full pair and remaining FTPS/onward outcomes owed.",
         "A human and a system separately provide known artifacts to an agent receive endpoint, including a governed collection case.",
         "The agent retrieves only approved revisions, then prepares a separately authorized onward exchange to a system endpoint.",
         "Independently verify exact received bytes, current-policy refusals, per-hop evidence and inference-disabled behavior.",
@@ -306,7 +312,8 @@
       "evidence": [
         "docs/qualification/evidence/F101-upload-to-exchange-review.json",
         "docs/qualification/evidence/F103-reviewed-artifact-onward.json",
-        "docs/qualification/evidence/F105-browser-artifact-onward.json"
+        "docs/qualification/evidence/F105-browser-artifact-onward.json",
+        "docs/qualification/evidence/F108-governed-collection-artifact-source.json"
       ]
     },
     {

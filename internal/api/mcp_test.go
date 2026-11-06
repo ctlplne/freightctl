@@ -83,7 +83,7 @@ func TestMCPMediaOriginAndHeaderAmbiguityRefuseBeforeDatabase(t *testing.T) {
 
 func TestMCPToolSchemasBindOrdinaryRequestsAndExcludeAmbientAuthority(t *testing.T) {
 	var tools []*mcp.Tool
-	if err := json.Unmarshal(mcpCatalog, &tools); err != nil || len(tools) != 16 {
+	if err := json.Unmarshal(mcpCatalog, &tools); err != nil || len(tools) != 17 {
 		t.Fatal("missing fixed tool catalog", err)
 	}
 	raw, err := os.ReadFile("../../web/tests/fixtures/artifact-exchange.json")
@@ -115,6 +115,8 @@ func TestMCPToolSchemasBindOrdinaryRequestsAndExcludeAmbientAuthority(t *testing
 		}
 		var args map[string]any
 		switch tool.Name {
+		case "freightctl.collection_source":
+			args = map[string]any{"collection_id": "44444444-4444-4444-8444-444444444444", "input_id": "55555555-5555-4555-8555-555555555555"}
 
 		case "freightctl.prepare_onward", "freightctl.start_onward":
 			args = map[string]any{"request": map[string]any{"schema_version": 1, "profile": "ordered-workflow-onward-v1", "workflow": map[string]any{"id": "44444444-4444-4444-8444-444444444444", "version": 1, "hash": fixture.Hash}, "artifact": map[string]any{"file_revision_id": "55555555-5555-4555-8555-555555555555", "size_bytes": 8, "sha256": fixture.Hash, "acceptance_policy": "integrity-only-v1"}}}

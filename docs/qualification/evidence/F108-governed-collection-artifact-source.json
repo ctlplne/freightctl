@@ -1,0 +1,160 @@
+{
+  "schema_version": 1,
+  "id": "F108",
+  "observed_at": "2026-11-05",
+  "starting_commit": "e72be1e51b9d4563101424b648b9cb08cd3bcd69",
+  "state": "Governed collected source/correlation review implemented;actual native and complete AX-J02 owed",
+  "qualification_claim": false,
+  "change": [
+    "Freeze governed-collection-exchange-source-v1 for one already captured actor-private input. Same transaction verifies complete exact manifest,ordered input metadata,identity digests,object/file bindings and current ordinary source/path/intake permission. Roll back with no events,intents,receipts,reservation,peer contact or physical-byte claim.",
+    "Return exact artifact and original collection/definition/workflow/manifest/producer/input/first-job correlation. Omit private source names,host/path,storage/root/transport references and contents. Correlation is not derivation or receiving/forwarding/execution authority.",
+    "One shared HTTPS GET,protected CLI command and read-only closed-world MCP tool;catalog17. Current roles and immutable custody remain ordinary. Old collection stop/expiry cannot recall independently authorized captured bytes.",
+    "Browser shows review only for complete published input and current read/deliver. Fresh exact source/correlation must match snapshot before entering ordinary reviewed Send artifacts,whose approved recipient/offer checks remain separate.",
+    "Extend original PG incomplete/captured/foreign-admin/no-event/stop proof and actual stock SFTP/API/CLI/modern-MCP/browser capture profile. Preserve all original source/worker crash,receipts,downstream/independent-receiver assertions. No migration or retained environment mutation."
+  ],
+  "red": [
+    {
+      "observed": "Missing collected source GET returned404 instead of invalid-identity400 before storage",
+      "reference": ".private/freightctl-f108-route-red.log"
+    },
+    {
+      "observed": "A different well-formed input identity digest was accepted by the initial correlation projector;exact reconstruction now refuses",
+      "reference": ".private/freightctl-f108-correlation-red.log"
+    }
+  ],
+  "green": {
+    "browser_contract_methods": 4,
+    "go_correlation_route_schema_architecture_methods": 4,
+    "resolved_mcp_schemas": 17,
+    "native_tagged_api_workflow_cli_compilation_vet": "pass,no runtime selected",
+    "frontend_type_build_format": "pass",
+    "generated_app_bytes": 760968,
+    "openapi_paths": 1,
+    "local_openapi_references": 19,
+    "external_schema_conformance": "owed"
+  },
+  "native_profile": {
+    "state": "prepared,not qualified",
+    "scope": "Original real PG and stock SFTP source,HTTPS,CLI,modern MCP and browser source-review navigation. Exact bytes and contact counters retained;this does not itself create a new receive offer.",
+    "claims_excluded": [
+      "Actual current native/API/CLI/MCP/Chrome outcome",
+      "Complete independent agent-to-system onward or FTPS source-pair qualification",
+      "Content derivation,worker crash/restore/full lineage and final product readiness"
+    ]
+  },
+  "source_files": [
+    {
+      "path": "cmd/freightctl/collections.go",
+      "sha256": "5e2e1492f4351916f8c61166ef7d95bdb7ca31915489dede1bee61762d3c4bdd"
+    },
+    {
+      "path": "cmd/freightctl/main.go",
+      "sha256": "aebbe35b2da186e1807f9d8e297a84e30f38e164d38694cd0221499f4486c879"
+    },
+    {
+      "path": "docs/api/artifact-collection-source.openapi.json",
+      "sha256": "40c4d12c49c9c3618d4e0f373c226960a4a84ed59c023e8e55b3fdf56321ef4d"
+    },
+    {
+      "path": "docs/product/artifact-exchange-plan.md",
+      "sha256": "5a333e4084f51065a884f8a32b38291c805602e5d058d46c51d7aff8ddb5eb9a"
+    },
+    {
+      "path": "docs/protocols/artifact-collection-source.md",
+      "sha256": "54867685a104fe9e9e25ceef76dca203f4fbc297fdb8598f9959745a87870191"
+    },
+    {
+      "path": "docs/protocols/artifact-exchange-mcp.md",
+      "sha256": "05bfb5918fe304b7ba2e786c380f44c4b5caee2cf4d2d3ee6d1f35c175b5ce1c"
+    },
+    {
+      "path": "docs/protocols/artifact-onward.md",
+      "sha256": "ab07050953a73419ae77e3c4ee571d0012cfef8c3e589b8ca19b134bd1e0bfa8"
+    },
+    {
+      "path": "internal/api/api.go",
+      "sha256": "11bd5776be72b56826d450f045c3ca577df36e7c66648edbb27373bbedf6a2e1"
+    },
+    {
+      "path": "internal/api/collections.go",
+      "sha256": "db294e78b62d04a179506401722f4c9891b741f10825d60a305b10b477cb3e5f"
+    },
+    {
+      "path": "internal/api/collections_test.go",
+      "sha256": "409e718217ccda886bf8287327f8ea8129926b55eb7204884d699a802f143d22"
+    },
+    {
+      "path": "internal/api/mcp-tools.json",
+      "sha256": "6ea807d61c06c9837ab508de5cdd9065b438d9cd369e62eab660a6d316c34711"
+    },
+    {
+      "path": "internal/api/mcp.go",
+      "sha256": "db39486821845b74b90fbc5980a154ffb86f97e376ca95a7703de64de4e0de4a"
+    },
+    {
+      "path": "internal/api/mcp_integration_test.go",
+      "sha256": "d344b8882da026cecc832b7cfbd4f0823841a92b5b289ec005b57a0f4416bb00"
+    },
+    {
+      "path": "internal/api/mcp_test.go",
+      "sha256": "e4f12809ce4f54667b2cb7e86f01db9aa1bec3325dbd1b2d2f5c3f435df2ae0c"
+    },
+    {
+      "path": "internal/browser/assets/app.js",
+      "sha256": "9893dcba42b9a1d75a367c19c6af836bf95317eab301e9bc5cf081ef65861aac"
+    },
+    {
+      "path": "internal/browser/assets/manifest.json",
+      "sha256": "eb6aa6937c77f04dcdad01b74f7fc7c8a79ef8c2d626e82314b6f0185ce09f64"
+    },
+    {
+      "path": "internal/workflow/collection_exchange_source.go",
+      "sha256": "fb7ca471d61ea3b118746a9b7ff64b43c2dc1cf33d14544f8250817cc19affbc"
+    },
+    {
+      "path": "internal/workflow/collection_exchange_source_test.go",
+      "sha256": "58246d72f20adde9f6d24755ebfc798026eac1eab3619f3a9a0218c4d7687168"
+    },
+    {
+      "path": "internal/workflow/collections_integration_test.go",
+      "sha256": "1fe124d3ddb2e631be14192486286d09451262b2379b45f175a4e0b79519380c"
+    },
+    {
+      "path": "scripts/collections-browser.mjs",
+      "sha256": "7e7577d31529e88355d3db5f578b923ffd7ad510eb2ae74b9c05d460c1561ae2"
+    },
+    {
+      "path": "scripts/qualify-collections.py",
+      "sha256": "b97868392cb8c3ba85b4e66af294c5d9063c0ec00141e844da9fcb303c87ef96"
+    },
+    {
+      "path": "web/src/app.tsx",
+      "sha256": "9da6f6cc6e1f9026c8391962197a5b494bcc12322375036557455d2f9148a550"
+    },
+    {
+      "path": "web/src/artifact-exchanges-api.ts",
+      "sha256": "9430b9e6ba318cbf018057ed96a13e0d2d1181749d4648819fb0b89af93562d9"
+    },
+    {
+      "path": "web/src/collection-exchange-source-types.ts",
+      "sha256": "151413604170ed0355e2e268c623cfb0fc88dd8b5d3782c8b177ffcc23f774fd"
+    },
+    {
+      "path": "web/src/collections.tsx",
+      "sha256": "7424d775d3110b0d7a3a8dbe6934b77acaab490203556f3c4d77c177bfda456f"
+    },
+    {
+      "path": "web/tests/collection-exchange-source.test.mjs",
+      "sha256": "60b508abcf3fbc59625c580450fc42bf1a9b8fc9747a1fb5ccd56749f74e446b"
+    }
+  ],
+  "local_manifest": {
+    "reference": ".private/freightctl-f108/manifest.json",
+    "sha256": "19f4afc0bd4f841d3bfd54c5516f8baff056e3df0db60ee099d6f74b747f1f19"
+  },
+  "owed": [
+    "All prepared original native profiles and actual complete SFTP/FTPS ingress/agent/onward/independent-receiver pairs",
+    "Remaining recovery/retention/fairness,content derivation/lineage,agent/AI/provider/baseline requirements and mandatory FINISH",
+    "Current peer security finding remediation and all original nonsecurity CI failure investigation/repair at FINISH"
+  ]
+}

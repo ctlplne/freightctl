@@ -869,7 +869,8 @@
         "docs/qualification/evidence/F099-governed-mcp-exchange-tools.json",
         "docs/qualification/evidence/F101-upload-to-exchange-review.json",
         "docs/qualification/evidence/F103-reviewed-artifact-onward.json",
-        "docs/qualification/evidence/F105-browser-artifact-onward.json"
+        "docs/qualification/evidence/F105-browser-artifact-onward.json",
+        "docs/qualification/evidence/F108-governed-collection-artifact-source.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -884,11 +885,11 @@
         "S003 authorizes guarded source/CI batches after prior required runs are terminal. Eleven exchange API paths and eleven CLI commands plus receive/send/recovery/history browser surfaces are implemented;actual AX profiles remain owed. Broad/deferred qualification is mandatory at FINISH."
       ],
       "current_item": {
-        "id": "F105",
-        "state": "Browser reviewed onward review/queue/private recovery/status/one-step work implemented;actual native qualification owed",
-        "proof": "Missing route404 and missing saved-review refresh observed red;7browser+4affected recovery,shared Go receipt fixture,affected API/schema/summary/architecture/static checks pass",
-        "native": "Original Chrome profile extended:lost real queue response,reload/typed receipt lookup,tampered destination revalidation,revoked-work refusal,22a11y states and exact SQL counts;prepared not run locally",
-        "next": "Stock ingress/collection and full exchange lineage/recovery/capacity,remaining agent controls,compatible security remediation,then mandatory FINISH"
+        "id": "F108",
+        "state": "Exact governed collection to ordinary artifact source review implemented across API/CLI/MCP/browser;actual native proof owed",
+        "proof": "Missing route404 and accepted mismatched input identity observed red;4browser+correlation/route/schema/architecture methods and affected compilation/vet/frontend pass",
+        "native": "Original PG incomplete/captured/private-input/no-effect case and stock SFTP API/CLI/modern-MCP/browser profile extended;not run locally",
+        "next": "Qualify complete ingress/agent/onward profiles,remaining recovery/lineage/capacity/agent/AI/baseline product work and mandatory FINISH"
       }
     }
   ],

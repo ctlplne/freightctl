@@ -1,0 +1,209 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "freightctl governed collected artifact source review",
+    "version": "1",
+    "description": "Implemented metadata-only contract. Actual native/OpenAPI/independent-client qualification remains owed. No offer or implicit forwarding/execution grant."
+  },
+  "paths": {
+    "/v1/tenants/{tenant}/partners/{partner}/workflow-collections/{collection}/inputs/{input}/exchange-source": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "tenant",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ID"
+          }
+        },
+        {
+          "in": "path",
+          "name": "partner",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ID"
+          }
+        },
+        {
+          "in": "path",
+          "name": "collection",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ID"
+          }
+        },
+        {
+          "in": "path",
+          "name": "input",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ID"
+          }
+        }
+      ],
+      "get": {
+        "operationId": "inspectCollectedExchangeSource",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "browserCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Exact captured input correlation and current ordinary source metadata;physical bytes not checked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CollectedSource"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      },
+      "browserCookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "__Host-freightctl-session"
+      }
+    },
+    "schemas": {
+      "ID": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+      },
+      "SHA256": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      },
+      "Reference": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "version",
+          "hash"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2147483647
+          },
+          "hash": {
+            "$ref": "#/components/schemas/SHA256"
+          }
+        }
+      },
+      "Artifact": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "file_revision_id",
+          "size_bytes",
+          "sha256",
+          "acceptance_policy"
+        ],
+        "properties": {
+          "file_revision_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "size_bytes": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1073741824
+          },
+          "sha256": {
+            "$ref": "#/components/schemas/SHA256"
+          },
+          "acceptance_policy": {
+            "type": "string",
+            "pattern": "^(?:integrity-only-v1|intake-csv-v1:[0-9a-f]{64})$"
+          }
+        }
+      },
+      "CollectedOrigin": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "collection_id",
+          "definition_hash",
+          "workflow",
+          "manifest_sha256",
+          "producer_batch_id",
+          "input_id",
+          "input_identity",
+          "first_collection_id"
+        ],
+        "properties": {
+          "collection_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "definition_hash": {
+            "$ref": "#/components/schemas/SHA256"
+          },
+          "workflow": {
+            "$ref": "#/components/schemas/Reference"
+          },
+          "manifest_sha256": {
+            "$ref": "#/components/schemas/SHA256"
+          },
+          "producer_batch_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "input_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "input_identity": {
+            "$ref": "#/components/schemas/SHA256"
+          },
+          "first_collection_id": {
+            "$ref": "#/components/schemas/ID"
+          }
+        }
+      },
+      "CollectedSource": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "profile",
+          "artifact",
+          "origin",
+          "state",
+          "storage_verification"
+        ],
+        "properties": {
+          "profile": {
+            "const": "governed-collection-exchange-source-v1"
+          },
+          "artifact": {
+            "$ref": "#/components/schemas/Artifact"
+          },
+          "origin": {
+            "$ref": "#/components/schemas/CollectedOrigin"
+          },
+          "state": {
+            "const": "source-review-only"
+          },
+          "storage_verification": {
+            "const": "not-checked"
+          }
+        }
+      }
+    }
+  }
+}

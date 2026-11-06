@@ -1094,6 +1094,18 @@ function App() {
                 refresh={refresh}
                 onError={reportError}
                 onConfirmed={() => setError("")}
+                onArtifactReview={
+                  allowed("read") && allowed("deliver") && !busy && !acting
+                    ? (expected) => {
+                        setSendSource({
+                          id: expected.file_revision_id,
+                          context: sendContext,
+                          expected: { ...expected },
+                        });
+                        setTab("send");
+                      }
+                    : undefined
+                }
               />
             )}
             {tab === "schedules" && (

@@ -1,5 +1,8 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { Api } from "./api";
+import { ExchangeReceiveApi } from "./artifact-exchanges-api";
+import { collectedSourceExpectation } from "./collection-exchange-source-types";
+import type { ExchangeSourceExpectation } from "./artifact-exchanges-types";
 import { ApiError, object, uuid, type Session } from "./types";
 import { operationKey } from "./crypto";
 import { ProgramEditor, ProgramReview, PlanReview } from "./programs";
@@ -58,6 +61,7 @@ type Props = {
   onConfirmed: (message: string) => void;
   jobID?: string;
   jobHash?: string;
+  onArtifactReview?: ((source: ExchangeSourceExpectation) => void) | undefined;
 };
 type WorkflowPreview = ReturnType<typeof asCollectionWorkflowPreview>;
 type Form = {
@@ -317,6 +321,7 @@ export function Collections({
   onConfirmed,
   jobID,
   jobHash,
+  onArtifactReview,
 }: Props) {
   const has = (p: string) => session.identity.permissions.includes(p),
     authority = session.identity.authority_revision;
@@ -1677,6 +1682,37 @@ export function Collections({
                   Local path <code>{i.target_path}</code>; exact file{" "}
                   <code>{i.file_id ?? "not accepted"}</code>.
                 </p>
+                {has("read") &&
+                  has("deliver") &&
+                  onArtifactReview &&
+                  collectedSourceExpectation(selected, i.id, authority) && (
+                    <button
+                      disabled={busy}
+                      onClick={() =>
+                        void perform(async () => {
+                          if (api.session !== session)
+                            throw new ApiError("context_changed", 409);
+                          const expected = collectedSourceExpectation(
+                            selected,
+                            i.id,
+                            authority,
+                          );
+                          if (!expected)
+                            throw new ApiError("revision_conflict", 409);
+                          const source = await new ExchangeReceiveApi(
+                            api,
+                          ).collectedSource(expected);
+                          onArtifactReview({
+                            file_revision_id: source.artifact.file_revision_id,
+                            size_bytes: source.artifact.size_bytes,
+                            sha256: source.artifact.sha256,
+                          });
+                        })
+                      }
+                    >
+                      {"Review collected artifact " + i.source_name}
+                    </button>
+                  )}
                 {i.run_id && (
                   <>
                     <p>

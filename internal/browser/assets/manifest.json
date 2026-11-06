@@ -27,7 +27,7 @@
     },
     {
       "path": "web/src/app.tsx",
-      "sha256": "2053800f2a42bec6b46ebdf7d1a7c6eef9523ab6bf43e911f29cce041909768f"
+      "sha256": "9da6f6cc6e1f9026c8391962197a5b494bcc12322375036557455d2f9148a550"
     },
     {
       "path": "web/src/arrivals-types.ts",
@@ -39,7 +39,7 @@
     },
     {
       "path": "web/src/artifact-exchanges-api.ts",
-      "sha256": "103c097738e6b58309c99aeb24647f0d948f81fcb662903464fdc22efec440d1"
+      "sha256": "9430b9e6ba318cbf018057ed96a13e0d2d1181749d4648819fb0b89af93562d9"
     },
     {
       "path": "web/src/artifact-exchanges-types.ts",
@@ -86,6 +86,10 @@
       "sha256": "117ca33108669d166a889f57d3a22c7c36265dc92eb6c7637f335910dcd0ff11"
     },
     {
+      "path": "web/src/collection-exchange-source-types.ts",
+      "sha256": "151413604170ed0355e2e268c623cfb0fc88dd8b5d3782c8b177ffcc23f774fd"
+    },
+    {
       "path": "web/src/collection-handoffs-types.ts",
       "sha256": "b1d79896656c91b8c994017b1ccae923e9f7fe9df8edd9e4c44cd22a866e6cc4"
     },
@@ -111,7 +115,7 @@
     },
     {
       "path": "web/src/collections.tsx",
-      "sha256": "8e4b6c87d73f3014b0d557f776fa4dd8558f1550b48796172647011588ca282b"
+      "sha256": "7424d775d3110b0d7a3a8dbe6934b77acaab490203556f3c4d77c177bfda456f"
     },
     {
       "path": "web/src/crypto.ts",
@@ -274,8 +278,8 @@
     },
     {
       "name": "app.js",
-      "sha256": "9a7931723415cec7bbf491b82743d7e81125f6f9810c8e440057b88142d86c39",
-      "size": 758109
+      "sha256": "9893dcba42b9a1d75a367c19c6af836bf95317eab301e9bc5cf081ef65861aac",
+      "size": 760968
     },
     {
       "name": "app.js.LEGAL.txt",

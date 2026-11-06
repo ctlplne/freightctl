@@ -2,6 +2,10 @@ import { Api } from "./api";
 import { ApiError, asAccountPage, uuid } from "./types";
 import { digestBytes } from "./crypto";
 import {
+  asCollectedExchangeSource,
+  type CollectedSourceExpectation,
+} from "./collection-exchange-source-types";
+import {
   decodeOfferRecovery,
   encodeOfferRecovery,
   type OfferReviewInput,
@@ -245,6 +249,26 @@ export class ExchangeReceiveApi {
         )
           throw new ApiError("revision_conflict", 409);
         return source;
+      },
+    );
+    this.current();
+    return result;
+  }
+  async collectedSource(
+    expected: CollectedSourceExpectation,
+    signal?: AbortSignal,
+  ) {
+    this.current();
+    if (!this.directory.can_send) throw new ApiError("permission_denied", 403);
+    const pinned = structuredClone(expected);
+    if (!uuid(pinned.origin.collection_id) || !uuid(pinned.origin.input_id))
+      throw new ApiError("invalid_artifact_exchange_contract", 400);
+    const result = await this.api.request(
+      `${this.prefix}/workflow-collections/${pinned.origin.collection_id}/inputs/${pinned.origin.input_id}/exchange-source`,
+      signal ? { signal } : {},
+      (value) => {
+        this.current();
+        return asCollectedExchangeSource(value, pinned);
       },
     );
     this.current();

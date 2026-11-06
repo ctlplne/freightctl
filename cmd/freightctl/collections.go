@@ -67,6 +67,8 @@ func runCollection(ctx context.Context, command string, o testCLIOptions) error 
 	}
 	var out any
 	switch command {
+	case "workflow-collection-exchange-source":
+		out, e = service.InspectCollectedExchangeSource(ctx, scope, o.ID, o.Plan)
 	case "workflow-collection-handoff-list":
 		out, e = service.CollectionHandoffHistory(ctx, scope, o.ID, o.After, o.Limit)
 	case "workflow-collection-handoff-receipt":

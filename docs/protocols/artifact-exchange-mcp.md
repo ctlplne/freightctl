@@ -35,6 +35,7 @@ same-origin CSRF protection. Tool-list results are private and immediately stale
 | --- | --- |
 | `identity` | Inspect current scoped identity and grants. |
 | `exchange_source` | Review own authorized source revision metadata. |
+| `collection_source` | Review one exact captured actor-private input and current ordinary source permission,with manifest/input correlation;no collection,offer or onward execution. |
 | `exchange_endpoints`, `exchange_endpoint` | Read visible current endpoint heads. |
 | `prepare_exchange` | Check an exact proposed request against current sender/source/endpoint/participant/policy/expiry/admission metadata. |
 | `offer_exchange` | Commit the ordinary exact-byte offer and private idempotency receipt. Requires the exact canonical request hash and stable request key. |

@@ -187,6 +187,13 @@ require fresh server verification before new effects. Native UI proof is owed.
 No collection/routing adoption,implicit forwarding,content-derivation lineage or
 complete runtime qualification is inferred;remaining AX-J02 pairs remain owed.
 
+The governed-source bridge pins `governed-collection-exchange-source-v1` for
+already captured exact inputs. Its [contract](../protocols/artifact-collection-source.md)
+correlates original input/manifest custody and separately checks current ordinary
+source permission through API,CLI,MCP and browser review. Stock SFTP collection
+to separately authorized custody-poll offer is the first pinned source pair;
+its native outcomes,FTPS pair and complete onward/derivation lineage remain owed.
+
 ## Build order and exit evidence
 
 1. **Freeze the contracts.** On application resume, inspect exact current source,

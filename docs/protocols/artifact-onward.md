@@ -61,7 +61,7 @@ status and recovery commands operate on ordinary runs with unchanged policy,
 leases,fencing,receipt and ambiguity rules. Ordinary API/browser session mutations
 retain current same-origin CSRF protection.
 
-The MCP profile now exposes16tools. Its additional `freightctl.prepare_onward`,
+The MCP profile now exposes17tools. Its additional `freightctl.prepare_onward`,
 `start_onward`, `onward_status` and `work_onward` separate review,staging,inspection
 and one bounded work step. Status/work require the original typed `start`,its
 `receipt_key` and exact `run_id`;work also needs its stable `request_key`. The
@@ -122,3 +122,9 @@ tampered saved destination hints,current observation and revoked-work refusal,
 with22accessibility states and exact SQL run/intent/receipt/zero-attempt counts.
 Actual native/stock/client,UI,collection/cross-hop lineage,crash/restore and all final-source qualification
 remain owed. Local inference and heavy runtimes stay off.
+
+The separate [collected source review](artifact-collection-source.md) can identify
+an already captured exact source under its own current source permissions. It
+does not adopt the collection's existing run,routing plan,approval or permission.
+Its artifact tuple can enter a new ordinary offer or this reviewed onward profile
+only through the caller's separately authorized action.

@@ -23,3 +23,14 @@ func TestCollectionAPIRejectsInventedProofAndAuthorityBeforeStorage(t *testing.T
 		}
 	}
 }
+
+func TestCollectedExchangeSourceRejectsInvalidIdentityBeforeStorage(t *testing.T) {
+	h := New(&custody.Service{}, nil)
+	r := httptest.NewRequest(http.MethodGet, "https://freightctl.invalid/v1/tenants/00000000-0000-0000-0000-000000000001/partners/00000000-0000-0000-0000-000000000002/workflow-collections/not-a-job/inputs/not-an-input/exchange-source", nil)
+	r.Header.Set("Authorization", "Bearer "+strings.Repeat("0", 64))
+	w := httptest.NewRecorder()
+	h.ServeHTTP(w, r)
+	if w.Code != 400 {
+		t.Fatal("missing collected exchange source guard", w.Code)
+	}
+}

@@ -244,6 +244,52 @@ export async function qualifyCollections(page, c, audit, record, actual) {
     assert.equal(view.inputs.length, 2);
     assert.ok(view.local_states.every((s) => s.state === "published"));
     assert.deepEqual(await contacts(), [before[0] + 1, before[1]]);
+    // Review navigation uses a fresh real source/lineage read. It cannot create
+    // an exchange or replay collection/downstream work. Recipient selection and
+    // the ordinary exact offer confirmation remain separate actions.
+    const collected = view.inputs[0],
+      sourceRoute = `/workflow-collections/${c.job.id}/inputs/${collected.id}/exchange-source`;
+    const sourceReview = await response(sourceRoute, () =>
+      selected
+        .getByRole("button", {
+          name: "Review collected artifact " + collected.source_name,
+          exact: true,
+        })
+        .click(),
+    );
+    assert.equal(
+      sourceReview.profile,
+      "governed-collection-exchange-source-v1",
+    );
+    assert.equal(sourceReview.origin.collection_id, c.job.id);
+    assert.equal(sourceReview.origin.input_id, collected.id);
+    assert.equal(sourceReview.origin.manifest_sha256, view.job.manifest_hash);
+    assert.equal(sourceReview.artifact.file_revision_id, collected.file_id);
+    assert.equal(sourceReview.artifact.sha256, collected.sha256);
+    assert.equal(
+      await page
+        .getByLabel("Source file revision ID", { exact: true })
+        .inputValue(),
+      collected.file_id,
+    );
+    assert.equal(
+      await page
+        .getByRole("heading", {
+          name: "Committed availability receipt",
+          exact: true,
+        })
+        .count(),
+      0,
+    );
+    assert.deepEqual(await contacts(), [before[0] + 1, before[1]]);
+    await audit("collection-" + c.collection_phase + "-artifact-source-review");
+    record(
+      "collection-" +
+        c.collection_phase +
+        "-artifact-source-review-only-no-offer-or-contact",
+    );
+    await open();
+    await inspect(c.job.id);
     await selected
       .getByRole("button", {
         name: "Review queueing downstream work",

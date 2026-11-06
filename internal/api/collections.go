@@ -26,6 +26,8 @@ func (s *Server) collection(action string) http.HandlerFunc {
 			}
 		}
 		switch action {
+		case "exchange-source":
+			out, e = service.InspectCollectedExchangeSource(r.Context(), identity, r.PathValue("collection"), r.PathValue("input"))
 		case "preview":
 			var x workflow.CollectionSelection
 			if e = workflowInput(w, r, &x); e == nil {

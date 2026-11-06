@@ -119,6 +119,17 @@ response/reload recovery,tampered-hint revalidation and revoked-work refusal wit
 exact1run/1intent/1private receipt/0attempts. Runtime proof is prepared and owed.
 No new migration;fresh44/retained35 remain unchanged.
 
+F108 bridges already captured governed collection inputs to artifact source review
+across one shared API path,CLI command,MCP tool and browser action. Exact manifest,
+input digest/object-file bindings and fresh ordinary source permission are checked
+in one read-only transaction. Private paths/transport references stay out of the
+projection;review creates no offer,run,intent or event. Four browser plus focused
+correlation/route/schema/architecture and affected static checks pass. Catalog17.
+Original PG and stock SFTP API/CLI/modern-MCP/browser proof is extended,not qualified.
+Stock SFTP collection/source-review/custody-poll offer is pinned;full native and
+remaining FTPS/agent/onward/derivation outcomes remain owed. Schema44/retained35
+stay unchanged.
+
 Focused local parser/client/filesystem/summary regressions and affected static,
 frontend build, native compilation/vet and architecture checks pass. They establish
 no PostgreSQL, served browser, stock-peer or complete AX profile qualification.

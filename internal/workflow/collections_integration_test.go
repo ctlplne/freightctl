@@ -39,6 +39,9 @@ func TestCollectionUnfinishedBatchCannotExposeItsFirstAcceptedFile(t *testing.T)
 	if e = f.s.acceptCollectionInput(f.ctx, f.scope, j.ID, owner, j.Fence, &first); e != nil {
 		t.Fatal(e)
 	}
+	if _, err := f.s.InspectCollectedExchangeSource(f.ctx, f.scope, j.ID, first.ID); !errors.Is(err, store.ErrState) {
+		t.Fatal("unfinished siblings exposed an exchange source", err)
+	}
 	_, data, e := f.s.Custody.Download(f.ctx, f.scope, first.ObjectID)
 	if data != nil {
 		data.Close()
@@ -91,8 +94,35 @@ func TestCollectionUnfinishedBatchCannotExposeItsFirstAcceptedFile(t *testing.T)
 	if e != nil || !completed.Job.Captured {
 		t.Fatal(completed, e)
 	}
+	snapshot := func() [4]int {
+		t.Helper()
+		tx, err := f.s.Custody.DB.Begin(f.ctx, f.scope)
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer tx.Tx.Rollback(f.ctx)
+		var counts [4]int
+		if err = tx.Tx.QueryRow(f.ctx, `SELECT (SELECT count(*) FROM workflow_runs),(SELECT count(*) FROM delivery_intents),(SELECT count(*) FROM workflow_receipts),(SELECT count(*) FROM events)`).Scan(&counts[0], &counts[1], &counts[2], &counts[3]); err != nil {
+			t.Fatal(err)
+		}
+		return counts
+	}
+	before := snapshot()
+	source, err := f.s.InspectCollectedExchangeSource(f.ctx, f.scope, j.ID, completed.Inputs[0].ID)
+	if err != nil || source.Artifact.ID != *completed.Inputs[0].FileID || source.Artifact.Size != 3 || source.Artifact.SHA256 != secure.Digest([]byte("abc")) || source.StorageVerification != "not-checked" || source.Origin.InputID != completed.Inputs[0].ID {
+		t.Fatal("exact completed collection source refused or overstated", err)
+	}
+	if after := snapshot(); after != before {
+		t.Fatal("source review created events/intents/receipts", before, after)
+	}
+	if _, err = f.s.InspectCollectedExchangeSource(f.ctx, other, j.ID, completed.Inputs[0].ID); !errors.Is(err, store.ErrNotFound) {
+		t.Fatal("another administrator adopted actor-private collection source", err)
+	}
 	if _, e = f.s.CancelCollection(f.ctx, f.scope, j.ID, "cancel-after-capture", Decision{Hash: j.Hash, Revision: completed.Job.Revision}); e != nil {
 		t.Fatal(e)
+	}
+	if _, err = f.s.InspectCollectedExchangeSource(f.ctx, f.scope, j.ID, completed.Inputs[0].ID); err != nil {
+		t.Fatal("stopping collection recalled independently authorized captured source", err)
 	}
 	_, body, e := f.s.Custody.DownloadPath(f.ctx, f.scope, first.Target)
 	if e != nil {

@@ -1526,5 +1526,33 @@
       "idempotentHint": true,
       "openWorldHint": true
     }
+  },
+  {
+    "name": "freightctl.collection_source",
+    "description": "Review one exact captured actor-private collection input as a currently authorized ordinary artifact source. No collection,offer,forwarding,execution or physical-byte guarantee. Private source paths and transport references are omitted.",
+    "inputSchema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "collection_id",
+        "input_id"
+      ],
+      "properties": {
+        "collection_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+        },
+        "input_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
   }
 ]
