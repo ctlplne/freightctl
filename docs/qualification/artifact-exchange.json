@@ -75,7 +75,8 @@
         "docs/qualification/evidence/F129-mcp-received-copy.json",
         "docs/qualification/evidence/F130-browser-received-copy.json",
         "docs/qualification/evidence/F140-immutable-download-validators.json",
-        "docs/qualification/evidence/F143-json-record-intake-checkpoint.json"
+        "docs/qualification/evidence/F143-json-record-intake-checkpoint.json",
+        "docs/qualification/evidence/F145-json-intake-interface-proofs.json"
       ]
     },
     {
@@ -155,7 +156,8 @@
         "docs/qualification/evidence/F129-mcp-received-copy.json",
         "docs/qualification/evidence/F130-browser-received-copy.json",
         "docs/qualification/evidence/F140-immutable-download-validators.json",
-        "docs/qualification/evidence/F143-json-record-intake-checkpoint.json"
+        "docs/qualification/evidence/F143-json-record-intake-checkpoint.json",
+        "docs/qualification/evidence/F145-json-intake-interface-proofs.json"
       ]
     },
     {
@@ -273,7 +275,8 @@
         "docs/qualification/evidence/F118-mcp-workflow-review-proposals.json",
         "docs/qualification/evidence/F121-native-exchange-process-recovery.json",
         "docs/qualification/evidence/F123-authorized-exchange-evidence.json",
-        "docs/qualification/evidence/F143-json-record-intake-checkpoint.json"
+        "docs/qualification/evidence/F143-json-record-intake-checkpoint.json",
+        "docs/qualification/evidence/F145-json-intake-interface-proofs.json"
       ]
     },
     {
@@ -409,5 +412,5 @@
     "Fixtures, design documents, ledger checks, model answers and skips establish no runtime or real provider qualification.",
     "Preserve original parity/journey/defect/evaluation records and separate assisted deployment, independent adoption and enterprise readiness."
   ],
-  "execution": "Owner-paused under S005 after local JSON intake checkpoint;full S003 product/FINISH contract remains incomplete and all security,custody,isolation,resource and evidence requirements remain."
+  "execution": "Active under S006;full S003 baseline/AX01\u2013AX08/FINISH contract remains incomplete.F144 preserves terminal 300f51f CI and security metadata.F145 prepares additional JSON interface/custody proofs;runtime qualification remains owed.Local inference and heavy runtimes stay off."
 }

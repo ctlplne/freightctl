@@ -1,141 +1,59 @@
 # freightctl status
 
-Updated 2026-11-06. Owner-paused under S005 after a local checkpoint. The full
-GOAL.md baseline and AX01–AX08 remain incomplete under the S003 contract. All 83 whole parity rows and twelve complete customer
-journeys remain open. Assisted deployment, independent adoption and enterprise
-readiness are unqualified. The missing market wedge does not block engineering.
+Updated 2026-11-06. Active under S006; S005's pause remains historical.
+The full GOAL.md baseline, all 83 whole parity rows, twelve complete customer
+journeys and AX01–AX08 remain incomplete. Assisted deployment, independent
+adoption and enterprise readiness are unqualified. Engineering continues without
+a selected market wedge or an invented Trust Control API.
 
-Latest completed CI candidate: 8b3427683023be93fac4ed9e5ea267b11e1cd3ad.
-All fifteen triggered runs and isolated security replay are terminal. F141 preserves exact run/job handles and
-security outcomes. Both actual native ARM/x86 independent-peer runtime probes
-and complete immutable image security gates pass. Earlier exact F124/F126 reports
-record 0 CRITICAL/0 HIGH/0 UNKNOWN,8 LOW/34 MEDIUM,11 OS+2 language packages,
-zero suppressed; no later count is inferred from step completion. This qualifies that
-exact test-peer image gate only. Original independent AEAD/crypto/recovery,
-shipped product images, complete SBOM/licenses and final-source security remain
-owed. Historical resource, input, probe and finding failures remain in F075/evidence.
+Latest completed CI source: `300f51fb1c78e2cdd05808e5dfe36448d708d2c1`.
+All fifteen triggered workflows are terminal; exact run/job/step metadata is in
+F144. Native ARM/x86 independent OpenPGP test-peer image gates, source vulnerability
+configurations, core Go reachability, JavaScript audit, source/history Gitleaks,
+reproducibility, macOS units and native fuzz pass at that source. F142's original
+fuzz timeout and passing unchanged replay remain preserved. No vulnerability
+counts or broader product security qualification are inferred from step success.
 
-Three native source vulnerability configurations, core Go reachability, JavaScript
-audit, source/history Gitleaks and repro/BOM pass at that candidate. F142 retains
-the original fuzz timeout and successful unchanged isolated replay. Core,
-native PG, metadata, Windows and public/browser/stock-peer outcomes remain red;
-native macOS unit checks pass at this candidate. S003 defers
-nonsecurity log investigation/repair to mandatory FINISH.
-New actionable security failures are triaged immediately; F125 repairs an observed
-direct-TLS import violation through the unchanged crypto architecture boundary.
-Actual replay of that repaired process fixture remains owed.
+PostgreSQL initialization/integration, metadata restore, Windows, qualification
+record contracts and original public/browser/stock-peer journeys remain red.
+Tus, legacy SCP and immutable HTTPS profiles stop during ordinary initialization;
+skipped runtime proof is owed. S003 defers nonsecurity log investigation and repair
+until mandatory FINISH. Newly failing security gates must be triaged immediately.
+Original failures and exact evidence remain in F075/F141/F142/F144 and Git.
 
-Both locked stock tus dependency audits pass on actualARM/x86. Tus and legacySCP
-runtime jobs fail during PostgreSQL/ordinary initialization;transfer proofs are
-skipped,not passed. Original exact job handles remain in F141 for mandatory FINISH.
+F143 implements bounded schema2 JSON record intake with a distinct custody
+identity, exact report-format bindings and cumulative signature/scanner/separate
+release controls. Its original pure red/green and focused frontend/static checks
+remain in F143. Source schema47 has 71 metadata tables/70 forced-RLS tables;
+retained schema35 is untouched. Native schema47 qualification remains owed.
 
-Implemented exchange foundations include immutable endpoint revisions, offers,
-incoming views, separate replies, closure/history and private original-key recovery.
-Browser uploads and governed captured collection inputs feed separately authorized
-source review. Reviewed ordinary workflows provide onward delivery without an
-implicit forwarding or execution grant. Official MCP tools share ordinary
-services, including resumable ingress and unapproved workflow proposals. Source
-presence, stand-ins and compilation do not qualify complete AX profiles.
+F145 prepares JSON HTTPS cookie/bearer policy,held upload,parser refusal,original-key
+retry and exact release proofs; an ordinary resumable CLI extension; a CSV-to-JSON
+recheck preserving the original report; and JSON received-copy/SQL provenance
+coverage beside unchanged CSV assertions. A separate native Chrome profile reviews
+the Go hash,loses a real committed response,retries its original key,uploads held
+bytes,checks and separately releases them. Go independently checks final policy,
+bytes and durable cardinality. Native ARM/x86 and Chrome CI profiles are prepared.
+Affected compilation,vet,architecture,format and workflow/script static checks
+pass locally; no PG,Chrome,GnuPG,scanner or model ran locally. Runtime outcomes,
+native protected-reference/context-switch UI coverage and final-source proof are
+owed. Tests and compilation do not qualify customer outcomes.
 
-F123 adds authorized custody/offer/closure evidence through API,CLI,MCP and
-browser. Existing incoming/outgoing guards,held opacity,exact event bindings and
-unknown receiver outcomes stay explicit. Six focused Go methods,four browser
-adapter methods,one strict summary method and affected static checks pass.
-Original native PG/API/CLI/official SDK and24-state Chrome proofs are prepared,
-not qualified. Catalog25;no migration,retained change or inference.
+Continue exchange/recovery/per-hop lineage and the remaining mandatory baseline
+implementation. AX-J01/J02,real permitted stock peers and independent receivers
+remain open. X07 blocks only the actual optional Trust Control provider profile;
+inference hardware/endpoint authority,licensed peers and other external access
+remain explicit dependencies. F026 stays manual/owner-deferred.
 
-F121 prepares the actual product daemon/PG/storage/verified-TLS journey with
-committed-response loss, three selected process kills, original-key recovery,
-stock-curl byte observation and persisted revocation. Native outcomes remain owed.
-R016 and artifact-exchange.json retain item-level evidence and remaining work.
+FINISH must repair every deferred original failure and run applicable broad
+unit/race/integration,architecture/security,frontend/accessibility,native platform,
+stock-client/public journey,restore/recovery,reproducibility and final-source gates.
+Nothing unproven is passed. Detailed item evidence and remaining work live in the
+qualification ledgers; historical checkpoints remain intact.
 
-F127 repairs the MCP new-upload mapping: omit replacement revision rather than
-send impossible revision0. Ordinary namespace guards and mode0600 remain intact.
-Observed red then four focused methods and affected tagged compilation/vet pass.
-Original native PostgreSQL/HTTPS/official-client upload proof remains owed.
-
-F128 implements separately authorized received-copy custody through API/CLI.
-Current receive plus write permission,new private path,verified durable bytes,
-fresh intake and atomic private provenance are required. Three focused Go and
-seven metadata-summary methods plus affected static checks pass. Actual native
-SQL/HTTPS/CLI/intake/reopen proofs remain owed. F129 adds the ordinary metadata-only
-MCP copy tool (catalog26),with observed missing-tool red then two focused methods
-and affected static checks passing. Original official-client copy/replay/API-byte/
-stale-source receipt proofs are prepared,not qualified. F130 adds browser copy
-review and private original-key recovery;five focused browser methods,one strict
-summary method and affected static checks pass. Original28-state Chrome response
-loss/reload/foreign-hint/byte/cardinality proof is prepared,not qualified.
-
-F132 implements privileged root audit_read metadata history API/CLI,with copied
-strict filters,canonical context-bound keyset pages,no payloads and no writes.
-Four focused Go methods,seven metadata-summary methods and affected static checks
-pass. F133 adds browser root-audit search with strict shared cursor/response and
-stale-context guards. Five browser methods,one Go fixture,one strict summary and
-affected static checks pass. Actual PG/HTTPS/CLI and31-state Chrome pagination,
-privacy,role/refusal and exact file/event lookup outcomes remain owed.
-O-HISTORY is implementing;no whole-row or independent-operator qualification.
-
-F135 implements existing-ticket tus core checkpoints with strict locked offsets,
-bounded known/chunked framing,current authority and effective-method CSRF. Full
-offset never substitutes for explicit ordinary whole-file completion/intake.
-Two focused HTTP controls,one strict summary and affected static checks pass.
-Locked stock-client/native ARM+x86 GitHub TLS,response-loss/resume,expiry,revocation,
-concurrent-offset and independent-byte proofs are prepared,not qualified. H-TUS
-is implementing;no extensions,automatic upload TTL or whole-row claim.
-
-F138 adds explicit legacy SCP regular-file roles beside the unchanged SFTP-only
-default. Literal command/record parsing,current registered-key authority,shared
-writers and ordinary durable custody prevent premature acknowledgement. Three
-focused methods and affected tagged/static checks pass. Native ARM+x86 stock
-OpenSSH/PG/SSH/HTTPS/byte/abort/root/intake/revocation proofs are prepared,not
-qualified. Recursive/preservation/other-peer/full J02 and whole-row work stay owed.
-
-F140 adds strong immutable HTTP download validators across file/path/exchange
-views and preserves no-store on range errors. Both missing-tag/private-cache
-regressions were observed red,then2focused methods and affected static checks
-passed. Existing Go range/multipart behavior remains. Original exchange plus
-namespace/current-intake and actual native ARM+x86 stock-curl interrupted/resumed
-byte/revocation proofs are prepared,not qualified.
-
-F142 preserves a new native path-fuzz context deadline with no reported failing
-assertion/corpus. Immediate security triage replayed only its original unchanged
-job. All ten native targets pass on replay at the same candidate;original timeout
-and unconfirmed intermittent cause remain retained,with final-source proof owed.
-
-F143 is an owner-paused JSON record intake checkpoint. A distinct bounded format
-and custody identity bind engine/code to actual policy while preserving signature,
-scanner and separate-release requirements. Focused Go,50browser contracts,12
-metadata stand-ins and affected compile/vet/architecture/type/build/workflow checks
-pass. Source SQL47 and native PG/GnuPG/scanner-protocol cases are prepared,not
-qualified. Dedicated API/CLI/native browser/recheck/copy and final-source proofs
-remain unfinished. Catalog26/v9;embedded browser rebuilt. See F143 for exact
-red/green/source/evidence references. Existing CI runs remain untouched.
-
-Latest source schema 47 targets 71 metadata tables/70 forced-RLS tables. Retained
-schema 35 is untouched. PostgreSQL/non-owner RLS, immutable custody, transactional
-events/intents/idempotency, approvals, leases/fencing and protected secrets remain
-mandatory. Receipt, availability, retrieval, receiver persistence and processing
-are separate facts; receiving grants no forwarding or execution authority.
-
-S004's approved 50-file CI capacity batch uses GitHub runner capacity for builds
-and scans, without arbitrary generated-size or copied laptop compute/aggregate
-clock ceilings. Local limits remain unchanged; local inference stays off. No local
-PG, Chrome, scanner, peer, image or model runtime was started by this continuation.
-Real ClamAV allowance remains 4 GiB/one CPU; F026 remains manual/owner-deferred.
-
-When owner resumes: finish remaining exchange/recovery/per-hop lineage and applicable baseline
-implementation. Qualify AX-J01/J02; qualify real Trust Control only when X07 supplies
-an approved provider profile/access. No provider API is invented. Continue other
-work around provider, inference, licensed-peer and external-access blockers.
-
-FINISH must repair every deferred original failure and run the applicable broad
-unit/race/integration, architecture/security, frontend/accessibility, native platform,
-stock-client/independent-receiver, original public journey, restore/recovery and
-reproducibility gates against actual final source. Anything not proven is owed.
-The product is not complete while mandatory work remains.
-
-Work stays on local main with one implementation author. Commit author and
-committer are imfeelingtheagi. Source/CI pushes are fast-forward through the
-enabled pre-push Gitleaks guard after prior required runs become terminal.
-Authority grants no release, artifact/package/image publication, visibility change
-or external deployment. Detailed history stays in qualification records and Git.
+Work stays on local main with sole author and committer `imfeelingtheagi`.
+Fast-forward source/CI pushes use the enabled Gitleaks guard after prior required
+runs are terminal. S004 uses GitHub runner capacity without arbitrary build/scan
+ceilings. Local lightweight limits and no-inference instruction remain; the
+separate real ClamAV allowance is 4 GiB/one CPU. No release,artifact/package/image
+publication,visibility change or external deployment is authorized.

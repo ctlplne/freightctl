@@ -114,6 +114,12 @@ func TestReceivedCopyCreatesPrivateExactCustodyAndRecoversWithoutReopeningView(t
 }
 
 func TestReceivedCopyReappliesIntakeAndSQLRejectsForgedProvenance(t *testing.T) {
+	for _, format := range []string{"csv", "json_records"} {
+		t.Run(format, func(t *testing.T) { receivedCopyIntakeAndSQL(t, format) })
+	}
+}
+
+func receivedCopyIntakeAndSQL(t *testing.T, format string) {
 	f := newExchangeFixture(t)
 	f.service.NamespaceMaxEntries = 100
 	if _, err := f.db.ChangeAccount(f.ctx, f.fixture.a, "copy-check-authority", store.AccountCommand{Operation: "update", ID: f.actorA.Actor, ExpectedRevision: 1, Policy: &store.AccountPolicy{Label: "checked sender", Root: "/", Permissions: []string{"read", "write", "list", "deliver", "check_run", "check_release"}}}); err != nil {
@@ -129,16 +135,31 @@ func TestReceivedCopyReappliesIntakeAndSQLRejectsForgedProvenance(t *testing.T) 
 		t.Fatal(err)
 	}
 	checking := &checks.Service{Custody: f.service}
-	if _, err = checking.Register(f.ctx, f.fixture.a, "copy-intake", checks.PolicyRequest{Definition: checks.Policy{Schema: 1, Kind: "csv", Columns: []checks.Column{{Name: "record", Type: "text", Required: true}}}}); err != nil {
+	policy := checks.Policy{Schema: 1, Kind: "csv", Columns: []checks.Column{{Name: "record", Type: "text", Required: true}}}
+	body, prefix, engine, code := []byte("record\nvalue\n"), store.CSVIntakePrefix, checks.Engine, "valid_csv"
+	if format == "json_records" {
+		policy.Schema, policy.Kind = 2, format
+		body, prefix, engine, code = []byte(`[{"record":"value"}]`), store.JSONRecordsIntakePrefix, "freightctl-json-records-v1", "valid_json_records"
+	}
+	registered, err := checking.Register(f.ctx, f.fixture.a, "copy-intake", checks.PolicyRequest{Definition: policy})
+	if err != nil {
 		t.Fatal(err)
 	}
-	file := actorFile(t, f, f.a, "checked-copy-source", []byte("record\nvalue\n"))
+	var configuration store.Configuration
+	if json.Unmarshal(registered.Resource, &configuration) != nil {
+		t.Fatal("copy intake policy receipt")
+	}
+	file := actorFile(t, f, f.a, "checked-copy-source", body)
 	if _, err = checking.Run(f.ctx, f.a, file.ID, "source-check"); err != nil {
 		t.Fatal(err)
 	}
 	view, err := checking.Get(f.ctx, f.a, file.ID)
 	if err != nil {
 		t.Fatal(err)
+	}
+	var report checks.Report
+	if json.Unmarshal(view.Check.Report, &report) != nil || report.Engine != engine || report.Code != code || report.Bytes != file.Size || file.Policy != prefix+configuration.Hash {
+		t.Fatal("source intake has the wrong format or report")
 	}
 	if _, err = checking.Release(f.ctx, f.a, file.ID, "source-release", checks.ReleaseDecision{SHA256: file.SHA256, PolicyHash: view.Check.PolicyHash, ReportHash: view.Check.ReportHash, Revision: view.Check.Revision}); err != nil {
 		t.Fatal(err)
@@ -149,7 +170,7 @@ func TestReceivedCopyReappliesIntakeAndSQLRejectsForgedProvenance(t *testing.T) 
 	}
 	r := store.ExchangeCopyRequest{ExchangeCopyOrigin: store.ExchangeCopyOrigin{ExchangeID: offer.Exchange.ID, RequestHash: offer.Exchange.RequestHash, Artifact: offer.Exchange.Request.Artifact}, Path: "/new-held-copy.csv"}
 	result, err := f.service.CopyReceivedExchange(f.ctx, f.b, "held-copy", r)
-	if err != nil || result.Acceptance != "durable-held-pending-checks-and-release" {
+	if err != nil || result.Acceptance != "durable-held-pending-checks-and-release" || result.Artifact.Policy != prefix+configuration.Hash || result.Artifact.SHA256 != file.SHA256 || result.Artifact.ID == file.ID {
 		t.Fatal("copy inherited source release", err)
 	}
 	var state string

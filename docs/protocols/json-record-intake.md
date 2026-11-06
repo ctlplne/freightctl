@@ -32,3 +32,14 @@ does not grant forwarding or execution authority. Inference stays off.
 Focused pure parser checks are local evidence only. Real PostgreSQL/SQL-forgery,
 custody/CLI/API/browser,signature/scanner/refusal/recheck/release,independent byte
 and current final-source outcomes remain owed in their authorized environments.
+
+The dedicated `Native JSON intake and custody interfaces` GitHub workflow runs
+actual Linux ARM/x86 PostgreSQL/API/custody cases and the original CLI journey
+extended with JSON. Independent GnuPG signs the JSON fixture; the scanner-protocol
+stand-in establishes protocol behavior only. A separate native x86 Chrome job
+reviews the Go-normalized policy hash, discards one actual committed response,
+retries its original key, uploads through the ordinary resumable UI and proves
+that checks still need a separately reviewed release. Its Go observer verifies
+stored policy, exact received bytes and policy/acceptance/release cardinality.
+The browser runs five accessibility audits with its sandbox enabled. No native
+pass is implied by this workflow configuration; F145 tracks what remains owed.

@@ -421,4 +421,5 @@ func TestArtifactExchangeCLIUsesOrdinaryAuthorityAndPublishesVerifiedDownload(t 
 	if _, err = command(a, "audit-history", "-request-file", historyInput); !errors.Is(err, store.ErrForbidden) {
 		t.Fatal("ordinary sender gained audit authority", err)
 	}
+	qualifyJSONIntakeCLI(t, ctx, service, scope, adminToken, b, command, requestFile)
 }

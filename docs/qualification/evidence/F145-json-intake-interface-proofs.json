@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "id": "F145",
+  "observed_at": "2026-11-06",
+  "candidate_parent": "300f51fb1c78e2cdd05808e5dfe36448d708d2c1",
+  "state": "JSON intake interface proofs prepared;actual native qualification owed",
+  "qualification_claim": false,
+  "profile": "freightctl-json-records-v1",
+  "changes": [
+    "Verified-HTTPS ordinary cookie/bearer policy registration and original-key replay;held namespace upload;GET/HEAD hold;valid,duplicate and unknown-field reports;metadata-only evidence;read-only and wrong-digest release refusal;separate exact release and independent HTTPS bytes.",
+    "Original CLI journey extended with protected ordinary request/chunk files,JSON policy hash,resumable checkpoint versus completion,held reads,one parser attempt,read-only/wrong-revision refusals,separate release/replay and independent exact bytes. Existing exchange/recovery assertions remain.",
+    "Native CSV-to-JSON recheck proves a new approved held revision with identical bytes,new format/check/release,original-key copy recovery and unchanged original rejected CSV evidence. Existing received-copy SQL/provenance regression now exercises both CSV and JSON;neither format inherits the sender release or forwarding authority.",
+    "New GitHub ARM/x86 custody/API/CLI/signature/scanner-protocol profile and separate x86 Chrome policy review/committed-response-loss/original-key recovery/resumable upload/check/separate-release profile. Go independently verifies the reviewed definition,current policy,bytes and one policy receipt/acceptance/release. Five browser accessibility audits;Chrome sandbox and certificate pinning retained.",
+    "S006 records owner resume while retaining historical S005. F144 preserves all fifteen terminal workflow/job/step records at300f51f;no nonsecurity CI logs inspected."
+  ],
+  "red_green": {
+    "original_feature_regression": "F143 preserves observed pre-implementation JSON parser/browser/evidence failures and focused green repair. This batch extends proof coverage;it does not claim a new observed native red/green or native interface pass.",
+    "native_original_failures": "F144 retains original300f51f red jobs;new interface/profile outcomes remain owed until actual GitHub execution."
+  },
+  "local_verification": [
+    {
+      "check": "integration,jsonbrowser tagged compilation",
+      "exit_code": 0,
+      "runtime_tests_selected": 0
+    },
+    {
+      "check": "affected tagged vet",
+      "exit_code": 0
+    },
+    {
+      "check": "architecture",
+      "exit_code": 0
+    },
+    {
+      "check": "changed actionlint",
+      "exit_code": 0
+    },
+    {
+      "check": "Node syntax and affected formatting/diff",
+      "exit_code": 0
+    }
+  ],
+  "source_files": [
+    {
+      "reference": ".github/workflows/json-intake.yml",
+      "sha256": "149e79eb83b8d9bf170369e76685e5d48f7c9f9d868a4e6ba71c86afe5e9f0e4",
+      "bytes": 4245
+    },
+    {
+      "reference": "scripts/json-intake-browser.mjs",
+      "sha256": "2a0479d1d9f26dcee1dbd64d8f3d0888eda7a4e09d36532098760d16c34421ce",
+      "bytes": 10905
+    },
+    {
+      "reference": "cmd/freightctl/exchanges_integration_test.go",
+      "sha256": "0a44aa1d1c021080491b61461058102887f14999d792a21795ce36882f37ec7a",
+      "bytes": 22606
+    },
+    {
+      "reference": "cmd/freightctl/json_records_integration_test.go",
+      "sha256": "393085446b12fc9ee9df66c61961a47b8e70bd788d77ac4e3722dfc7a3f931ec",
+      "bytes": 6021
+    },
+    {
+      "reference": "internal/api/json_records_integration_test.go",
+      "sha256": "1f76b8d3c33ceb894d1e9a284bc3d43d13b23ed6bdb17bace74978f067420ae5",
+      "bytes": 7761
+    },
+    {
+      "reference": "internal/api/json_records_browser_integration_test.go",
+      "sha256": "9ce421e139df7ece301ffda42223edea28324c06226612f579c6c52e986715cf",
+      "bytes": 6458
+    },
+    {
+      "reference": "internal/checks/json_records_integration_test.go",
+      "sha256": "8454a5ddbf14fc5c61358ce1be4fa516c3b23aeb60f3f5cf0d2d4ddf1d1eb31d",
+      "bytes": 14087
+    },
+    {
+      "reference": "internal/custody/exchange_copy_integration_test.go",
+      "sha256": "8405222716cce57ea1ab7e9a555383d100b4ff21f4d029ba732da5c1be40aed0",
+      "bytes": 10957
+    },
+    {
+      "reference": "docs/protocols/json-record-intake.md",
+      "sha256": "fa8c18e801e1e0e46abea3aa59896056fe52e648581e4d5d4c359dcd78ef2ee6",
+      "bytes": 3015
+    }
+  ],
+  "safe_local_manifest": {
+    "reference": ".private/freightctl-f145-local-manifest.json",
+    "sha256": "744f43931c0b1cf2d1286dd8cade36f30fcda488d39738b665418076179ff859",
+    "bytes": 3327
+  },
+  "runtime_scope": [
+    "No local PostgreSQL,Chrome,GnuPG peer,scanner,image,model or inference started.",
+    "Real GnuPG fixture is prepared for authorized GitHub only;the synthetic scanner protocol fixture does not qualify malware detection.",
+    "No new source migration;source47 and retained35 unchanged. No test/assertion/isolation or operational budget weakened."
+  ],
+  "owed": [
+    "Actual schema47 SQL guards,JSON interface/recheck/received-copy,cumulative GnuPG/scanner-protocol and independent byte outcomes on native ARM/x86.",
+    "Actual native Chrome reviewed hash,uncertain-response retry,five accessibility states,held/check/release and independent Go cardinality/byte proof.",
+    "Native browser protected-reference preservation and stale-context/role refusal;pure policy tests are not browser runtime evidence.",
+    "Repair and replay every deferred original failure and final-source gates at FINISH. All83 parity rows,twelve full journeys,AX01\u2013AX08 and external prerequisites remain open."
+  ]
+}

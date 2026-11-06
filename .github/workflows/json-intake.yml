@@ -1,0 +1,115 @@
+name: Native JSON intake and custody interfaces
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "cmd/**"
+      - "internal/**"
+      - "web/**"
+      - "go.mod"
+      - "go.sum"
+      - "scripts/go.sh"
+      - "scripts/dev-db.py"
+      - "scripts/prepare-pgp-fixture.py"
+      - "scripts/json-intake-browser.mjs"
+      - ".github/workflows/json-intake.yml"
+  pull_request:
+    paths:
+      - "cmd/**"
+      - "internal/**"
+      - "web/**"
+      - "go.mod"
+      - "go.sum"
+      - "scripts/go.sh"
+      - "scripts/dev-db.py"
+      - "scripts/prepare-pgp-fixture.py"
+      - "scripts/json-intake-browser.mjs"
+      - ".github/workflows/json-intake.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: freightctl-json-intake-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  custody-interfaces:
+    name: Native JSON custody (${{ matrix.arch }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x86_64
+            runner: ubuntu-24.04
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    env:
+      FREIGHTCTL_TEST_ADMIN_FILE: ${{ github.workspace }}/.private/pg-admin.dsn
+      FREIGHTCTL_TEST_RUNTIME_FILE: ${{ github.workspace }}/.private/pg-runtime.dsn
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version: "1.26.10"
+          cache: false
+      - name: Native identity, task-owned PostgreSQL and offline GnuPG fixture
+        run: |
+          test "$(uname -s)" = Linux
+          if [ "${{ matrix.arch }}" = x86_64 ]; then
+            test "$(uname -m)" = x86_64
+          else
+            test "$(uname -m)" = aarch64
+          fi
+          curl --version
+          python3 scripts/dev-db.py
+          docker build --label "freightctl.workspace=$PWD" \
+            --label freightctl.purpose=pgp-interoperability \
+            --tag freightctl-pgp-peer:2.4.9-r1 - <<'DOCKERFILE'
+          FROM alpine@sha256:294b683cb724975bec92580e1e685676bd4b50bda910ddb8c51d4cabeaec77e6
+          RUN apk add --no-cache gnupg=2.4.9-r1
+          DOCKERFILE
+          python3 scripts/prepare-pgp-fixture.py
+          printf 'FREIGHTCTL_TEST_PGP_DIR=%s\n' "$(cat .private/pgp-fixture-current)" >> "$GITHUB_ENV"
+      - name: Actual JSON SQL, API, CLI, signature and scanner-protocol outcomes
+        run: |
+          sh scripts/go.sh test -race -timeout=0 -tags=integration \
+            -run '^(TestJSONRecords.*|TestReceivedCopyReappliesIntakeAndSQLRejectsForgedProvenance|TestArtifactExchangeCLIUsesOrdinaryAuthorityAndPublishesVerifiedDownload)$' \
+            -count=1 -v ./internal/checks ./internal/api ./internal/custody ./cmd/freightctl
+
+  browser:
+    name: Native Chrome JSON policy and held bytes
+    runs-on: ubuntu-24.04
+    env:
+      FREIGHTCTL_BROWSER_CHANNEL: chrome
+      FREIGHTCTL_TEST_ADMIN_FILE: ${{ github.workspace }}/.private/pg-admin.dsn
+      FREIGHTCTL_TEST_RUNTIME_FILE: ${{ github.workspace }}/.private/pg-runtime.dsn
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version: "1.26.10"
+          cache: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: "26.13.0"
+      - name: Actual native runner and locked browser
+        run: |
+          test "$(uname -s)" = Linux
+          test "$(uname -m)" = x86_64
+          google-chrome --version
+          curl --version
+          npm --prefix web --cache "$GITHUB_WORKSPACE/.cache/freightctl-npm" ci --ignore-scripts --no-fund
+          npm --prefix web run check-built
+          python3 scripts/dev-db.py
+      - name: Real browser review, committed-response loss, exact checks and separate release
+        run: |
+          sh scripts/go.sh test -race -timeout=0 -tags=integration,jsonbrowser \
+            -run '^TestJSONRecordsNativeBrowserReviewedHashAndReceipt$' -count=1 -v ./internal/api

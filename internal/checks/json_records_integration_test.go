@@ -20,6 +20,84 @@ import (
 
 const goodJSONRecords = "[{\"account\":\"0001\",\"amount\":1.01,\"day\":\"2026-10-28\"}]\n"
 
+func TestJSONRecordsRecheckChangesFormatWithoutRewritingOriginalEvidence(t *testing.T) {
+	f := setup(t)
+	s, _, source := policyAndFile(t, f, goodJSONRecords, false)
+	if _, err := s.Run(f.ctx, f.scope, source.ID, "original-csv-check"); err != nil {
+		t.Fatal(err)
+	}
+	original := getCheck(t, s, f, source.ID)
+	if original.State != "rejected" || !strings.HasPrefix(source.Policy, store.CSVIntakePrefix) {
+		t.Fatal("JSON source incorrectly passed the original CSV contract")
+	}
+	policy := testPolicy(t)
+	policy.Schema, policy.Kind = 2, "json_records"
+	registered, err := s.Register(f.ctx, f.scope, "json-recheck-policy", PolicyRequest{ExpectedVersion: 1, Definition: policy})
+	if err != nil {
+		t.Fatal(err)
+	}
+	var configuration store.Configuration
+	if json.Unmarshal(registered.Resource, &configuration) != nil {
+		t.Fatal("new JSON policy receipt")
+	}
+	// Approval authorizes a new held revision,not editing the original report.
+	preview, err := s.PreviewRecheck(f.ctx, f.scope, source.ID, RecheckOptions{TargetPath: "/rechecked.json", SignatureMode: "not_required", Reason: "Review the exact bytes against the separately approved JSON contract"})
+	if err != nil || preview.Plan.Source.File.Policy != source.Policy || preview.Plan.Policy.Hash != configuration.Hash || preview.PreviousPolicy == nil || preview.PreviousPolicy.Definition.Kind != "csv" || preview.CurrentPolicy.Definition.Kind != "json_records" {
+		t.Fatal("cross-format review lost original or current bindings", err)
+	}
+	saved, err := s.ProposeRecheck(f.ctx, f.scope, "json-recheck-proposal", preview.Plan)
+	if err != nil {
+		t.Fatal(err)
+	}
+	r := recheckRow(t, saved)
+	if _, err = s.CopyRecheck(f.ctx, f.scope, r.ID, "unapproved-json-copy"); !errors.Is(err, store.ErrState) {
+		t.Fatal("format choice granted copy authority", err)
+	}
+	if _, err = s.DecideRecheck(f.ctx, f.scope, r.ID, "json-recheck-approval", PolicyRecheckDecision{Operation: "approve", Hash: r.Hash, Revision: r.Revision}); err != nil {
+		t.Fatal(err)
+	}
+	copied, err := s.CopyRecheck(f.ctx, f.scope, r.ID, "json-recheck-copy")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var result RecheckCopyResult
+	if json.Unmarshal(recheckRow(t, copied).Result, &result) != nil || result.File.ID == source.ID || result.File.Size != source.Size || result.File.SHA256 != source.SHA256 || result.File.Policy != store.JSONRecordsIntakePrefix+configuration.Hash || result.Acceptance != "durable-held-pending-checks-and-release" {
+		t.Fatal("format recheck changed bytes or inherited release")
+	}
+	if _, _, err = s.Custody.Download(f.ctx, f.scope, result.File.ID); !errors.Is(err, store.ErrState) {
+		t.Fatal("recheck approval published unchecked JSON bytes", err)
+	}
+	replay, err := s.CopyRecheck(f.ctx, f.scope, r.ID, "json-recheck-copy")
+	if err != nil || !replay.Replayed || !sameJSON(copied.Resource, replay.Resource) {
+		t.Fatal("cross-format copy retry changed its effect", err)
+	}
+	if _, err = s.Run(f.ctx, f.scope, result.File.ID, "json-recheck-run"); err != nil {
+		t.Fatal(err)
+	}
+	child := getCheck(t, s, f, result.File.ID)
+	var report Report
+	if child.State != "passed" || json.Unmarshal(child.Report, &report) != nil || report.Engine != "freightctl-json-records-v1" || report.Code != "valid_json_records" {
+		t.Fatal("fresh copy did not use the approved JSON engine")
+	}
+	if _, err = s.Release(f.ctx, f.scope, result.File.ID, "json-recheck-release", releaseDecision(child)); err != nil {
+		t.Fatal(err)
+	}
+	actual, reader, err := s.Custody.DownloadPath(f.ctx, f.scope, "/rechecked.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	body, err := io.ReadAll(io.LimitReader(reader, source.Size+1))
+	reader.Close()
+	if err != nil || actual.ID != result.File.ID || !bytes.Equal(body, []byte(goodJSONRecords)) {
+		t.Fatal("cross-format recheck changed the exact source bytes", err)
+	}
+	before, _ := json.Marshal(original)
+	after, _ := json.Marshal(getCheck(t, s, f, source.ID))
+	if !sameJSON(before, after) {
+		t.Fatal("JSON recheck rewrote the original CSV report")
+	}
+}
+
 func TestJSONRecordsActualCustodyCheckAndSeparateExactRelease(t *testing.T) {
 	f := setup(t)
 	s := &Service{Custody: f.wf.Custody}
