@@ -4,15 +4,17 @@ Updated 2026-11-05. The full GOAL.md baseline and AX01–AX08 remain active unde
 S003. All83 whole parity rows and twelve complete customer journeys remain open.
 Assisted deployment, independent adoption and enterprise readiness are unqualified.
 
-Latest completed CI candidate is8cc49828b7090985edbda8321e44e7df5802d675.
+Latest completed CI candidate is9306c3780135a911675c1f56539844c351eab447.
 All12triggered runs are terminal. Three native source configurations,repro,Mac
 units and fuzz pass;core Go reachability,JavaScript audit and source/history
 Gitleaks pass. Both actual minimal-runtime probes pass;complete image scans each
-retain1HIGH/0CRITICAL/0UNKNOWN,zero suppressed and15OS+2language packages. F112
-preserves exact jobs and full safe evidence. The security gate remains red.
-Core/native PG,metadata,Windows and public/browser/stock-peer outcomes remain red;
-nonsecurity investigation/repair stay deferred to mandatory FINISH. No cancellation
-action;guard enabled. F110/F111 are local;actual exchange/onward/AI/product proof remains owed.
+retain1HIGH/0CRITICAL/0UNKNOWN,zero suppressed and15OS+2language packages. F114
+preserves exact jobs and safe evidence. Actual package/version hashes match the
+public Distroless zlib1g lock;direct inventory correlation remains unresolved.
+The security gate remains red. Core/native PG,metadata,Windows and public/browser/
+stock-peer outcomes remain red;nonsecurity investigation/repair stay deferred to
+mandatory FINISH. No cancellation action;guard enabled. Actual exchange/onward/
+AI/product proof remains owed.
 
 Original F075 full Trixie Debian13.7 ARM/x86 scans complete with80OS+2language packages each:
 0CRITICAL/45HIGH/6UNKNOWN,61LOW/77MEDIUM,zero suppressed. The immutable Node26.13.0
