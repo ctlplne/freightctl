@@ -2,7 +2,7 @@
 export function controlledArtifactPolicyHash(value: unknown): string | null {
   if (typeof value !== "string") return null;
   return (
-    /^intake-(?:csv-v1|json-records-v1|fixed-width-v1):([0-9a-f]{64})$/.exec(value)?.[1] ??
+    /^intake-(?:csv-v1|json-records-v1|fixed-width-v1|xml-records-v1):([0-9a-f]{64})$/.exec(value)?.[1] ??
     null
   );
 }

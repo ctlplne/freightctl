@@ -114,7 +114,7 @@ func TestReceivedCopyCreatesPrivateExactCustodyAndRecoversWithoutReopeningView(t
 }
 
 func TestReceivedCopyReappliesIntakeAndSQLRejectsForgedProvenance(t *testing.T) {
-	for _, format := range []string{"csv", "json_records", "fixed_width"} {
+	for _, format := range []string{"csv", "json_records", "fixed_width", "xml_records"} {
 		t.Run(format, func(t *testing.T) { receivedCopyIntakeAndSQL(t, format) })
 	}
 }
@@ -145,6 +145,11 @@ func receivedCopyIntakeAndSQL(t *testing.T, format string) {
 		policy.Schema, policy.Kind = 3, format
 		policy.Columns[0].Width, policy.Columns[0].Padding = 5, "none"
 		body, prefix, engine, code = []byte("value\n"), store.FixedWidthIntakePrefix, "freightctl-fixed-width-v1", "valid_fixed_width"
+	}
+	if format == "xml_records" {
+		policy.Schema, policy.Kind = 4, format
+		policy.XML = &checks.XMLRecordPolicy{Root: "records", Record: "record"}
+		body, prefix, engine, code = []byte("<records><record><record>value</record></record></records>"), store.XMLRecordsIntakePrefix, "freightctl-xml-records-v1", "valid_xml_records"
 	}
 	registered, err := checking.Register(f.ctx, f.fixture.a, "copy-intake", checks.PolicyRequest{Definition: policy})
 	if err != nil {

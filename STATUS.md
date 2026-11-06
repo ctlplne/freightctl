@@ -1,55 +1,60 @@
 # freightctl status
 
 Updated 2026-11-06. Active under S006;S005 remains historical. GOAL.md's full
-baseline,all83 whole parity rows,twelve complete customer journeys and AX01–AX08
-remain open. Assisted deployment,independent adoption and enterprise readiness
-are unqualified. Missing market selection does not block engineering.
+baseline,all83 whole parity rows,twelve complete journeys and AX01–AX08 remain
+open. Assisted deployment,independent adoption and enterprise readiness remain
+unqualified. Missing market selection does not block engineering.
 
-Latest completed batch:e65b59ca21e92c58050a04c86f57e979653b0cc5.
-All15 triggered runs are terminal;F149 preserves exact run/job/security outcomes.
-Independent test-peer image gates,source vulnerability configurations,core
-Go/JavaScript/history-secret checks,reproducibility and fuzz pass. This proves
-those exact gates,not shipped images,whole customer outcomes or final source.
-Native PG/metadata/Windows/record/public/browser/stock-peer gates remain red.
-Both new JSON security jobs stop before assertions at SQLSTATE42601;original
-logs and shared-fixture initialization repair are retained in F147/F149.
-Nonsecurity log investigation/repair remains deferred until mandatory FINISH.
-New security failures are triaged immediately;original failures stay preserved.
+Latest completed batch:b2a9dee898d0068d9c107400a23cb09fa1b4c354.
+All16 runs are terminal;F150 preserves exact run/job/security outcomes. Independent
+test-peer image gates,source vulnerability configurations,core Go/JavaScript/
+history-secret checks,reproducibility and fuzz pass. Core also runs the repaired
+13-schema/32-case JSON grammar step. Those exact passes do not qualify shipped
+images,complete customer outcomes or final source. PG/metadata/Windows/record/
+public/browser/stock-peer gates remain red. JSON custody explicitly stops at
+ordinary schema initialization;skipped security assertions remain owed. Original
+failures remain in F147/F149/F150. S003 defers nonsecurity log investigation/repair
+until mandatory FINISH;new security failures receive immediate triage.
 
-F146's public JSON policy grammar and F147's fixture initialization repair were
-pushed as b2a9dee after all prior required runs terminated. Its current16-run
-batch is still in progress. Core's new Go/ECMAScript schema step passes there;
-source scans,dependency/secret gates and fuzz pass. JSON custody now explicitly
-stops at ordinary schema initialization;skipped security tests remain owed.
+F148 fixed-width commit9450456 was pushed after all prior runs terminated. Its
+current16-run batch is in progress. Core's42-case grammar,fuzz and three native
+source configurations pass;independent image gates are still pending. Existing
+schema prerequisites block native custody/interfaces. No passing native format
+exchange or final-source result is inferred.
 
-F148 implements schema3/fixed_width beside CSV and flat JSON records. Ordered
-byte widths and explicit ASCII padding preserve identifiers/decimal meaning.
-One bounded record is checked at a time;success requires whole immutable length
-and SHA256. Distinct custody/report identities flow through policy/release,
-received-copy/recheck/exchange/onward grammar,API/CLI,MCP26/v10 and OpenAPI.
-Browser format/width/padding review binds the Go-normalized hash and preserves
-required signer/scanner references. Embedded assets are rebuilt.
+F151 implements schema4/xml_records beside CSV,flat JSON and fixed-width records.
+Explicit root/record/scalar names and one exact namespace binding prevent hidden
+wrappers or unbound-prefix substitution. XML1.0 UTF-8 declarations have explicit
+ordered/separated pseudo-attributes;DTD/entity declarations,external resolvers,
+other processing instructions,attributes and nested values refuse. Bounded token/
+record/cell/depth processing validates the complete immutable size/SHA256 without
+rewriting bytes or exposing raw values/errors. Namespace identifiers are compared
+as data and never fetched. No general XSD/XML-signature claim is made.
 
-Observed parser/browser red is retained. Focused Go,69 affected frontend contracts,
-12 metadata stand-ins,tagged compile/vet,architecture,type/build and changed
-workflow/script static checks pass. Native held-release/recheck/copy,cross-format
-SQL,HTTPS,resumable CLI,GnuPG plus scanner-protocol and Chrome hash/original-key/
-five-accessibility-state proofs are prepared,not qualified. Scanner stand-ins do
-not qualify malware detection. Native replay and final-source evidence are owed.
-Source schema48 targets71 metadata/70 forced-RLS tables;retained35 is untouched.
-Older migrations and original CSV/JSON identities/hashes remain unchanged.
+Distinct XML policy/report/custody identity uses ordinary signatures,scanning,
+idempotency,leases,recheck/copy and separate release. Browser root/record/namespace
+review preserves protected requirements and matches a fifth Go-normalized hash
+fixture. MCP26/v11 and five OpenAPI profiles share52 acceptance/refusal cases.
+Embedded browser is rebuilt. Unsupported-format and adjacent-declaration-attribute
+failures are retained;focused Go,71 affected frontend contracts,12 metadata
+stand-ins,tagged compile/vet,architecture,type/build and changed workflow/script
+checks pass locally. New native fuzz and ordinary PG/HTTPS/CLI/Chrome/recheck/copy/
+Python-produced XML/GnuPG plus scanner-protocol proofs are prepared,not qualified.
+Scanner stand-ins do not qualify malware detection;actual native outcomes and
+final-source proof remain owed. Source49 targets71 metadata/70 forced-RLS tables;
+retained35 and all older migrations remain untouched.
 
-Continue exchange/recovery/per-hop lineage and all remaining baseline work.
-AX-J01/J02 and independent stock receivers remain open. X07 blocks only actual
+Continue exchange/recovery/per-hop lineage and remaining mandatory baseline work.
+AX-J01/J02 and independent stock receivers remain open. X07 blocks only real
 optional Trust Control qualification;no API is invented. Inference profiles,
-licensed peers,external access and multi-host/hardware prerequisites remain owed.
-F026 stays manual/owner-deferred. XML,spreadsheets,EDI and deterministic transforms
-remain required;the new format does not close the whole processing parity row.
+licensed peers,external access,multi-host/hardware and full processing breadth
+remain owed. F026 stays manual/owner-deferred. Spreadsheets/EDI,general schemas,
+transforms and the whole processing parity row remain required.
 
-FINISH must repair every deferred original failure and run applicable broad
+FINISH must repair/replay every deferred original failure and run applicable broad
 unit/race/integration,architecture/security,frontend/accessibility,native platform,
-public/stock-client/independent-receiver,restore/recovery,reproducibility and final
-source gates. Nothing unproven is passed;the product is not complete.
+public/stock/independent-receiver,restore/recovery,reproducibility and final-source
+gates. Nothing unproven is passed;the product is not complete.
 
 Work stays on local main with sole author/committer imfeelingtheagi. Fast-forward
 source/CI pushes use the enabled Gitleaks guard after prior required runs terminate.

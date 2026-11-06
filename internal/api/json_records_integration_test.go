@@ -27,14 +27,22 @@ func jsonRecordsSameJSON(a, b []byte) bool {
 // Uses the ordinary verified HTTPS server and non-owner PostgreSQL role. The
 // parser's unit cases cannot establish these custody and permission outcomes.
 func TestJSONRecordsHTTPSCookieBearerHeldChecksAndSeparateRelease(t *testing.T) {
-	structuredIntakeHTTPS(t, false)
+	structuredIntakeHTTPS(t, "json_records")
 }
 
 func TestFixedWidthHTTPSCookieBearerHeldChecksAndSeparateRelease(t *testing.T) {
-	structuredIntakeHTTPS(t, true)
+	structuredIntakeHTTPS(t, "fixed_width")
 }
 
-func structuredIntakeHTTPS(t *testing.T, fixed bool) {
+func TestXMLRecordsHTTPSCookieBearerHeldChecksAndSeparateRelease(t *testing.T) {
+	structuredIntakeHTTPS(t, "xml_records")
+}
+
+const xmlRecordsHTTPBody = `<records><record><account>0001</account><amount>100.01</amount><day>2026-10-28</day></record></records>`
+
+func structuredIntakeHTTPS(t *testing.T, format string) {
+	fixed := format == "fixed_width"
+	xmlRecords := format == "xml_records"
 	service, scope, admin, server := browserAPI(t, 10*time.Minute)
 	t.Cleanup(func() { _ = service.Disk.Close() })
 	cookie, csrf := loginBrowser(t, server, scope, admin)
@@ -52,6 +60,11 @@ func structuredIntakeHTTPS(t *testing.T, fixed bool) {
 		}
 		policy.Columns[1].Padding = "space_left"
 		prefixPolicy, engine, success, extension = store.FixedWidthIntakePrefix, "freightctl-fixed-width-v1", "valid_fixed_width", "fixed"
+	}
+	if xmlRecords {
+		policy.Schema, policy.Kind = 4, "xml_records"
+		policy.XML = &checks.XMLRecordPolicy{Root: "records", Record: "record"}
+		prefixPolicy, engine, success, extension = store.XMLRecordsIntakePrefix, "freightctl-xml-records-v1", "valid_xml_records", "xml"
 	}
 	request := exchangeAPIJSON(t, checks.PolicyRequest{Definition: policy})
 	mutating := func(key string) map[string]string {
@@ -84,6 +97,9 @@ func structuredIntakeHTTPS(t *testing.T, fixed bool) {
 
 	if fixed {
 		fixtures = []struct{ name, body, code string }{{"valid", "00000001      100.012026-10-28\r\n", success}, {"wrong-width", "00000001      100.012026-10-28x\n", "invalid_record_width"}, {"wrong-cell", "00000001       1e+022026-10-28\n", "invalid_cell"}}
+	}
+	if xmlRecords {
+		fixtures = []struct{ name, body, code string }{{"valid", xmlRecordsHTTPBody, success}, {"duplicate", strings.Replace(xmlRecordsHTTPBody, "</account>", "</account><account>0002</account>", 1), "duplicate_field"}, {"entity", `<!DOCTYPE records [<!ENTITY external SYSTEM "file:///never-open">]>` + xmlRecordsHTTPBody, "unsupported_xml_construct"}}
 	}
 	for _, fixture := range fixtures {
 		t.Run(fixture.name, func(t *testing.T) {

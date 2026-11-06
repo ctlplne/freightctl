@@ -21,6 +21,7 @@ const fixtures = await Promise.all(
     "intake-policy-protected.json",
     "intake-policy-json-records.json",
     "intake-policy-fixed-width.json",
+    "intake-policy-xml-records.json",
   ].map(async (name) =>
     JSON.parse(
       await readFile(new URL("fixtures/" + name, import.meta.url), "utf8"),
@@ -34,6 +35,40 @@ const view = (f) => ({
   definition_hash: f.definition_hash,
   state: "active",
   revision: 1,
+});
+
+test("XML review binds root,record and literal namespace without losing protected controls", () => {
+  const d = structuredClone(fixtures[4].definition);
+  assert.deepEqual(p.intakeDefinition(d), d);
+  const hash = p.intakeHash(d);
+  d.xml.namespace = "urn:other";
+  assert.notEqual(p.intakeHash(d), hash);
+  for (const change of [
+    (v) => (v.xml.root = "prefix:records"),
+    (v) => (v.xml.record = ""),
+    (v) => (v.xml.namespace = "http://www.w3.org/2000/xmlns/"),
+    (v) => (v.xml.namespace = "urn:has space"),
+    (v) => (v.xml.fetch_schema = true),
+    (v) => (v.columns[0].name = "a:b"),
+    (v) => (v.columns[0].width_bytes = 1),
+    (v) => {
+      v.schema_version = 2;
+      v.kind = "json_records";
+    },
+  ]) {
+    const bad = structuredClone(d);
+    change(bad);
+    assert.throws(() => p.intakeDefinition(bad));
+  }
+  const csv = p.intakeFormat(d, "csv");
+  assert.equal(csv.xml, undefined);
+  assert.deepEqual(csv.signature, d.signature);
+  assert.deepEqual(csv.scanner, d.scanner);
+  assert.deepEqual(p.intakeFormat(csv, "xml_records").xml, {
+    root: "records",
+    record: "record",
+    namespace: "",
+  });
 });
 
 test("fixed-width reviews bind byte widths and explicit padding with protected requirements", () => {

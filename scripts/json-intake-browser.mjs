@@ -12,12 +12,29 @@ assert.equal(process.platform, "linux");
 assert.equal(process.arch, "x64");
 assert.equal(process.env.FREIGHTCTL_BROWSER_CHANNEL, "chrome");
 const c = JSON.parse(await readFile(process.argv[2], "utf8"));
-assert.ok(c.format === "json_records" || c.format === "fixed_width");
+assert.ok(
+  c.format === "json_records" ||
+    c.format === "fixed_width" ||
+    c.format === "xml_records",
+);
 const fixed = c.format === "fixed_width",
-  schema = fixed ? 3 : 2,
-  code = fixed ? "valid_fixed_width" : "valid_json_records",
-  engine = fixed ? "freightctl-fixed-width-v1" : "freightctl-json-records-v1",
-  policyPrefix = fixed ? "intake-fixed-width-v1:" : "intake-json-records-v1:";
+  xmlRecords = c.format === "xml_records",
+  schema = xmlRecords ? 4 : fixed ? 3 : 2,
+  code = xmlRecords
+    ? "valid_xml_records"
+    : fixed
+      ? "valid_fixed_width"
+      : "valid_json_records",
+  engine = xmlRecords
+    ? "freightctl-xml-records-v1"
+    : fixed
+      ? "freightctl-fixed-width-v1"
+      : "freightctl-json-records-v1",
+  policyPrefix = xmlRecords
+    ? "intake-xml-records-v1:"
+    : fixed
+      ? "intake-fixed-width-v1:"
+      : "intake-json-records-v1:";
 assert.equal(new URL(c.url).protocol, "https:");
 assert.equal(new URL(c.url).hostname, "127.0.0.1");
 const require = createRequire(import.meta.url);
@@ -123,9 +140,16 @@ try {
   await audit("json-editor");
   await button("Review intake policy", editor).click();
   await dialog()
-    .getByText(fixed ? "Fixed-width records" : "JSON record array", {
-      exact: false,
-    })
+    .getByText(
+      xmlRecords
+        ? "XML records"
+        : fixed
+          ? "Fixed-width records"
+          : "JSON record array",
+      {
+        exact: false,
+      },
+    )
     .waitFor();
   assert.ok(
     (await dialog().locator("code").allTextContents()).includes(c.hash),

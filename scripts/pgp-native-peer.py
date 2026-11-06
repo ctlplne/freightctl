@@ -131,6 +131,7 @@ class Peer:
             self.gpg("good", *(["--armor"] if armor else []), "--local-user", subkey + "!", "--digest-algo", "SHA256", "--output", work / name, "--detach-sign", work / "source.csv")
         self.gpg("good", "--local-user", subkey + "!", "--digest-algo", "SHA256", "--output", work / "good-json.sig", "--detach-sign", work / "source.json")
         self.gpg("good", "--local-user", subkey + "!", "--digest-algo", "SHA256", "--output", work / "good-fixed.sig", "--detach-sign", work / "source.fixed")
+        self.gpg("good", "--local-user", subkey + "!", "--digest-algo", "SHA256", "--output", work / "good-xml.sig", "--detach-sign", work / "source.xml")
         self.gpg("good", "--faked-system-time", aged, "--local-user", primary + "!", "--digest-algo", "SHA256", "--output", work / "aged.sig", "--detach-sign", work / "source.csv")
         self.gpg("good", "--output", work / "private-rejection.gpg", "--export-secret-keys", primary)
         (work / "good-verification.txt").write_bytes(self.gpg("good", "--status-fd", "1", "--verify", work / "good.sig", work / "source.csv"))

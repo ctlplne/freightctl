@@ -77,7 +77,8 @@
         "docs/qualification/evidence/F140-immutable-download-validators.json",
         "docs/qualification/evidence/F143-json-record-intake-checkpoint.json",
         "docs/qualification/evidence/F145-json-intake-interface-proofs.json",
-        "docs/qualification/evidence/F148-fixed-width-intake.json"
+        "docs/qualification/evidence/F148-fixed-width-intake.json",
+        "docs/qualification/evidence/F151-xml-record-intake.json"
       ]
     },
     {
@@ -159,7 +160,8 @@
         "docs/qualification/evidence/F140-immutable-download-validators.json",
         "docs/qualification/evidence/F143-json-record-intake-checkpoint.json",
         "docs/qualification/evidence/F145-json-intake-interface-proofs.json",
-        "docs/qualification/evidence/F148-fixed-width-intake.json"
+        "docs/qualification/evidence/F148-fixed-width-intake.json",
+        "docs/qualification/evidence/F151-xml-record-intake.json"
       ]
     },
     {
@@ -279,7 +281,8 @@
         "docs/qualification/evidence/F123-authorized-exchange-evidence.json",
         "docs/qualification/evidence/F143-json-record-intake-checkpoint.json",
         "docs/qualification/evidence/F145-json-intake-interface-proofs.json",
-        "docs/qualification/evidence/F148-fixed-width-intake.json"
+        "docs/qualification/evidence/F148-fixed-width-intake.json",
+        "docs/qualification/evidence/F151-xml-record-intake.json"
       ]
     },
     {
@@ -415,5 +418,5 @@
     "Fixtures, design documents, ledger checks, model answers and skips establish no runtime or real provider qualification.",
     "Preserve original parity/journey/defect/evaluation records and separate assisted deployment, independent adoption and enterprise readiness."
   ],
-  "execution": "Active under S006;full baseline/AX01\u2013AX08/FINISH contract incomplete.F149 retains all fifteen terminal e65b59c runs and immediate ARM/x86 JSON security prerequisite triage.F148 adds fixed-width intake/source48 and prepares ordinary native interface/custody proofs;actual runtime and final-source outcomes owed.Local inference/heavy runtimes remain off."
+  "execution": "Active under S006;full baseline/AX01\u2013AX08/FINISH contract incomplete.F150 retains all16 terminal b2a9dee runs;fixed-width9450456 pushed through unchanged guard.F151 adds bounded XML records/source49/shared format controls and prepares native interfaces/custody proof;actual runtime/final-source outcomes owed.Local inference/heavy runtimes remain off."
 }

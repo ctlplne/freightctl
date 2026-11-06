@@ -208,5 +208,55 @@
     "name": "fixed-bad-2",
     "policy": "intake-fixed-width-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
     "valid": false
+  },
+  {
+    "name": "xml-records",
+    "policy": "intake-xml-records-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "valid": true
+  },
+  {
+    "name": "xml-newline",
+    "policy": "intake-xml-records-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n",
+    "valid": false
+  },
+  {
+    "name": "xml-cr",
+    "policy": "intake-xml-records-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\r",
+    "valid": false
+  },
+  {
+    "name": "xml-crlf",
+    "policy": "intake-xml-records-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\r\n",
+    "valid": false
+  },
+  {
+    "name": "xml-separator",
+    "policy": "intake-xml-records-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\u2028",
+    "valid": false
+  },
+  {
+    "name": "xml-paragraph",
+    "policy": "intake-xml-records-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\u2029",
+    "valid": false
+  },
+  {
+    "name": "xml-extra",
+    "policy": "intake-xml-records-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaax",
+    "valid": false
+  },
+  {
+    "name": "xml-bad-0",
+    "policy": "intake-xml-records-v2:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "valid": false
+  },
+  {
+    "name": "xml-bad-1",
+    "policy": "intake-xml-records-v1:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "valid": false
+  },
+  {
+    "name": "xml-bad-2",
+    "policy": "intake-xml-records-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "valid": false
   }
 ]

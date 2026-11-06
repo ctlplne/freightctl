@@ -23,11 +23,14 @@ import (
 // PostgreSQL, protected references and ordinary command parser. No model runs.
 func qualifyJSONIntakeCLI(t *testing.T, ctx context.Context, service *custody.Service, scope store.Scope, admin, reader string, command func(string, string, ...string) ([]byte, error), requestFile func(any) string) {
 	t.Helper()
-	qualifyStructuredIntakeCLI(t, ctx, service, scope, admin, reader, command, requestFile, false)
-	qualifyStructuredIntakeCLI(t, ctx, service, scope, admin, reader, command, requestFile, true)
+	qualifyStructuredIntakeCLI(t, ctx, service, scope, admin, reader, command, requestFile, "json_records")
+	qualifyStructuredIntakeCLI(t, ctx, service, scope, admin, reader, command, requestFile, "fixed_width")
+	qualifyStructuredIntakeCLI(t, ctx, service, scope, admin, reader, command, requestFile, "xml_records")
 }
 
-func qualifyStructuredIntakeCLI(t *testing.T, ctx context.Context, service *custody.Service, scope store.Scope, admin, reader string, command func(string, string, ...string) ([]byte, error), requestFile func(any) string, fixed bool) {
+func qualifyStructuredIntakeCLI(t *testing.T, ctx context.Context, service *custody.Service, scope store.Scope, admin, reader string, command func(string, string, ...string) ([]byte, error), requestFile func(any) string, format string) {
+	fixed := format == "fixed_width"
+	xmlRecords := format == "xml_records"
 	t.Helper()
 	policy := checks.Policy{Schema: 2, Kind: "json_records", Columns: []checks.Column{
 		{Name: "account", Type: "text", Required: true},
@@ -42,6 +45,11 @@ func qualifyStructuredIntakeCLI(t *testing.T, ctx context.Context, service *cust
 		}
 		policy.Columns[1].Padding = "space_left"
 		keyPrefix, path, prefixPolicy, engine, success, expectedVersion = "cli-fixed-", "/cli-records.fixed", store.FixedWidthIntakePrefix, "freightctl-fixed-width-v1", "valid_fixed_width", 1
+	}
+	if xmlRecords {
+		policy.Schema, policy.Kind = 4, "xml_records"
+		policy.XML = &checks.XMLRecordPolicy{Root: "records", Record: "record"}
+		keyPrefix, path, prefixPolicy, engine, success, expectedVersion = "cli-xml-", "/cli-records.xml", store.XMLRecordsIntakePrefix, "freightctl-xml-records-v1", "valid_xml_records", 2
 	}
 	input := requestFile(checks.PolicyRequest{ExpectedVersion: expectedVersion, Definition: policy})
 	raw, err := command(admin, "intake-policy-register", "-request-file", input, "-idempotency-key", keyPrefix+"policy")
@@ -64,6 +72,9 @@ func qualifyStructuredIntakeCLI(t *testing.T, ctx context.Context, service *cust
 	body := []byte("[{\"account\":\"0001\",\"amount\":1.01,\"day\":\"2026-10-28\"}]\n")
 	if fixed {
 		body = []byte("00000001      100.012026-10-28\r\n")
+	}
+	if xmlRecords {
+		body = []byte(`<records><record><account>0001</account><amount>100.01</amount><day>2026-10-28</day></record></records>`)
 	}
 	chunk := filepath.Join(t.TempDir(), "records.json")
 	if err = os.WriteFile(chunk, body, 0600); err != nil {

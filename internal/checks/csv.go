@@ -31,6 +31,9 @@ var decimalPattern = regexp.MustCompile(`^[+-]?[0-9]+(?:\.[0-9]+)?$`)
 const Engine = "freightctl-csv-v1"
 
 func policyEngine(p Policy) string {
+	if p.Schema == 4 && p.Kind == "xml_records" {
+		return "freightctl-xml-records-v1"
+	}
 	if p.Schema == 3 && p.Kind == "fixed_width" {
 		return "freightctl-fixed-width-v1"
 	}
@@ -40,6 +43,9 @@ func policyEngine(p Policy) string {
 	return Engine
 }
 func policySuccess(p Policy) string {
+	if p.Schema == 4 && p.Kind == "xml_records" {
+		return "valid_xml_records"
+	}
 	if p.Schema == 3 && p.Kind == "fixed_width" {
 		return "valid_fixed_width"
 	}
@@ -69,6 +75,12 @@ type Policy struct {
 	TimeoutSeconds int                     `json:"timeout_seconds"`
 	Signature      *SignaturePolicy        `json:"signature,omitempty"`
 	Scanner        *store.ScannerReference `json:"scanner,omitempty"`
+	XML            *XMLRecordPolicy        `json:"xml,omitempty"`
+}
+type XMLRecordPolicy struct {
+	Root      string `json:"root"`
+	Record    string `json:"record"`
+	Namespace string `json:"namespace"`
 }
 type SignaturePolicy struct {
 	Key           store.PGPReference `json:"key"`
@@ -106,8 +118,16 @@ func Normalize(p Policy) (Policy, error) {
 		return p, ErrInput
 	}
 	fixed := p.Schema == 3 && p.Kind == "fixed_width"
-	if !(p.Schema == 1 && p.Kind == "csv" || p.Schema == 2 && p.Kind == "json_records" || fixed) || len(p.Columns) < 1 || len(p.Columns) > 128 {
+	xmlRecords := p.Schema == 4 && p.Kind == "xml_records"
+	if !(p.Schema == 1 && p.Kind == "csv" || p.Schema == 2 && p.Kind == "json_records" || fixed || xmlRecords) || len(p.Columns) < 1 || len(p.Columns) > 128 {
 		return p, ErrInput
+	}
+	if xmlRecords && !validXMLPolicy(p.XML) || !xmlRecords && p.XML != nil {
+		return p, ErrInput
+	}
+	if xmlRecords {
+		definition := *p.XML
+		p.XML = &definition
 	}
 	if p.MaxBytes == 0 {
 		p.MaxBytes = 16 << 20
@@ -137,6 +157,9 @@ func Normalize(p Policy) (Policy, error) {
 			}
 		}
 		seen[c.Name] = true
+		if xmlRecords && !xmlLocalName.MatchString(c.Name) {
+			return p, ErrInput
+		}
 		if fixed {
 			if c.Width < 1 || c.Width > p.MaxRecordBytes {
 				return p, ErrInput
@@ -270,6 +293,9 @@ func Validate(ctx context.Context, p Policy, f store.File, policyHash string, in
 	}
 	if p.Schema == 3 && p.Kind == "fixed_width" {
 		return validateFixedWidth(ctx, p, f, policyHash, input)
+	}
+	if p.Schema == 4 && p.Kind == "xml_records" {
+		return validateXMLRecords(ctx, p, f, policyHash, input)
 	}
 	h := secure.NewDigest()
 	b := &budgetReader{ctx: ctx, reader: io.LimitReader(input, p.MaxBytes+1), hash: h}

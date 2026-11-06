@@ -219,7 +219,8 @@
         "docs/qualification/evidence/F055-retained-handoff-upgrade-rehearsal.json",
         "docs/qualification/evidence/F056-retained-handoff-upgrade-applied.json",
         "docs/qualification/evidence/F145-json-intake-interface-proofs.json",
-        "docs/qualification/evidence/F148-fixed-width-intake.json"
+        "docs/qualification/evidence/F148-fixed-width-intake.json",
+        "docs/qualification/evidence/F151-xml-record-intake.json"
       ],
       "remaining_details": [
         "F007/F008 verify bounded leased/fenced SFTP intents and typed ordered workflow runs with registered connection versions, conservative ambiguity, same-step dispatch replay across restart, and queued cancellation. Finish unattended/fair scheduling, broader processing/conditions/loops/batches, active cancellation/rebinding, overlapping key rotations, receiver business contracts, remote quotas/retention/cleanup and distributed failures.",
@@ -263,7 +264,8 @@
         "Complete f08ARMapplication replay passes880/0/0,all17FTPSleaves including repairedD164SQL/sixforgeries andD165both frozen scheduled workers; x86stillrunning. Image then failsD168:actual regular1692762112byte DB exceeds original1GiBfile cap,metadata153bytes,diskunmounted. Keep all budgets,inventory/severity/freshness policies and red image gate; this is not ARM OOM or clean scan. Later d6operator and local mixed cases remain unqualified.",
         "Both f08 native application sections880/0/0,all17FTPSleaves each;D164/D165exact repairs pass both. Both image gates fail at actual1692762112byte DB beyond1GiBfilecap;metadata153bytes,diskunmounted. Unapplied1792MiBfile-only proposal passes21stand-in contracts and awaits explicit owner decision;no RAM/CPU/disk/time/scanner policy change. d6public operator running/queued,local mixed cases unqualified;all whole gates remain open.",
         "F145 prepares verified-HTTPS cookie/bearer JSON intake,ordinary resumable CLI,CSV-to-JSON recheck,received-copy SQL and native Chrome reviewed-hash/original-key/held/check/release proofs.Only affected compilation,vet,architecture and workflow/script static checks have run locally;actual native outcomes remain owed.New dedicated GitHub ARM/x86 and Chrome profiles preserve existing security/custody/product limits;no local heavy runtime.",
-        "F148 adds schema3/fixed_width with explicit byte widths/padding,bounded immutable-source parsing,distinct custody/report format,shared browser/API/CLI/MCP/OpenAPI grammar and source48 guards.Observed parser/browser red then focused Go,69 frontend contracts and affected static/metadata stand-ins pass.Native API/CLI/Chrome/GnuPG/scanner-protocol/recheck/copy/cross-format SQL cases are prepared,not qualified;retained35 untouched.No transform,whole-row,AX or readiness pass."
+        "F148 adds schema3/fixed_width with explicit byte widths/padding,bounded immutable-source parsing,distinct custody/report format,shared browser/API/CLI/MCP/OpenAPI grammar and source48 guards.Observed parser/browser red then focused Go,69 frontend contracts and affected static/metadata stand-ins pass.Native API/CLI/Chrome/GnuPG/scanner-protocol/recheck/copy/cross-format SQL cases are prepared,not qualified;retained35 untouched.No transform,whole-row,AX or readiness pass.",
+        "F151 adds bounded schema4/xml_records with exact root/record/scalar names,one explicit namespace binding,strict declaration grammar and no DTD/entity/external resolver.Observed unsupported-format and malformed-declaration red then focused Go,71 frontend contracts and affected static/metadata stand-ins pass.Source49/current policy/report/custody bindings preserve cumulative controls;native PG/API/CLI/Chrome/Python-produced XML/GnuPG/scanner/recheck/copy proof remains owed.No general XSD/XML-signature/transform or whole-row/AX pass;retained35 untouched."
       ]
     },
     {
@@ -513,7 +515,8 @@
         "docs/qualification/evidence/F145-json-intake-interface-proofs.json",
         "docs/qualification/evidence/F146-public-json-policy-contract.json",
         "docs/qualification/evidence/F147-native-json-prerequisites.json",
-        "docs/qualification/evidence/F148-fixed-width-intake.json"
+        "docs/qualification/evidence/F148-fixed-width-intake.json",
+        "docs/qualification/evidence/F151-xml-record-intake.json"
       ],
       "remaining_details": [
         "F010 verifies durable held intake for configured new revisions, exact CSV contracts, separate hash/revision-bound release and ordinary delivery of released bytes. Antivirus/ICAP/DLP, cryptographic signatures/encryption, other formats/transforms, re-scan/exception governance, retrospective policy and the complete business-file journey remain mandatory.",
@@ -583,7 +586,8 @@
         "F145 prepares verified-HTTPS cookie/bearer JSON intake,ordinary resumable CLI,CSV-to-JSON recheck,received-copy SQL and native Chrome reviewed-hash/original-key/held/check/release proofs.Only affected compilation,vet,architecture and workflow/script static checks have run locally;actual native outcomes remain owed.New dedicated GitHub ARM/x86 and Chrome profiles preserve existing security/custody/product limits;no local heavy runtime.",
         "F146 repairs five published OpenAPI acceptance-policy patterns to match actual JSON custody. Observed red then actual Go JSON Schema and ECMAScript checks pass across13 schemas/32 shared domain-bound cases. This qualifies only pattern conformance;native exchange and full-row/final-source proof remain owed.",
         "F147 immediately triages new native ARM JSON security-profile failure at e65b59c/run42284746630/job128122540244:SQLSTATE42601 during setup;security assertions not reached.Shared custody fixture also lacked ordinary init;workflow preparation repaired and lint passes.Native original replay and existing schema prerequisite remain owed;no security or interface pass.",
-        "F148 adds schema3/fixed_width with explicit byte widths/padding,bounded immutable-source parsing,distinct custody/report format,shared browser/API/CLI/MCP/OpenAPI grammar and source48 guards.Observed parser/browser red then focused Go,69 frontend contracts and affected static/metadata stand-ins pass.Native API/CLI/Chrome/GnuPG/scanner-protocol/recheck/copy/cross-format SQL cases are prepared,not qualified;retained35 untouched.No transform,whole-row,AX or readiness pass."
+        "F148 adds schema3/fixed_width with explicit byte widths/padding,bounded immutable-source parsing,distinct custody/report format,shared browser/API/CLI/MCP/OpenAPI grammar and source48 guards.Observed parser/browser red then focused Go,69 frontend contracts and affected static/metadata stand-ins pass.Native API/CLI/Chrome/GnuPG/scanner-protocol/recheck/copy/cross-format SQL cases are prepared,not qualified;retained35 untouched.No transform,whole-row,AX or readiness pass.",
+        "F151 adds bounded schema4/xml_records with exact root/record/scalar names,one explicit namespace binding,strict declaration grammar and no DTD/entity/external resolver.Observed unsupported-format and malformed-declaration red then focused Go,71 frontend contracts and affected static/metadata stand-ins pass.Source49/current policy/report/custody bindings preserve cumulative controls;native PG/API/CLI/Chrome/Python-produced XML/GnuPG/scanner/recheck/copy proof remains owed.No general XSD/XML-signature/transform or whole-row/AX pass;retained35 untouched."
       ]
     },
     {
@@ -914,7 +918,9 @@
         "docs/qualification/evidence/F146-public-json-policy-contract.json",
         "docs/qualification/evidence/F147-native-json-prerequisites.json",
         "docs/qualification/evidence/F148-fixed-width-intake.json",
-        "docs/qualification/evidence/F149-json-interface-terminal-ci.json"
+        "docs/qualification/evidence/F149-json-interface-terminal-ci.json",
+        "docs/qualification/evidence/F151-xml-record-intake.json",
+        "docs/qualification/evidence/F150-fixed-intake-parent-ci.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -931,7 +937,8 @@
         "F145 prepares verified-HTTPS cookie/bearer JSON intake,ordinary resumable CLI,CSV-to-JSON recheck,received-copy SQL and native Chrome reviewed-hash/original-key/held/check/release proofs.Only affected compilation,vet,architecture and workflow/script static checks have run locally;actual native outcomes remain owed.New dedicated GitHub ARM/x86 and Chrome profiles preserve existing security/custody/product limits;no local heavy runtime.",
         "F146 repairs five published OpenAPI acceptance-policy patterns to match actual JSON custody. Observed red then actual Go JSON Schema and ECMAScript checks pass across13 schemas/32 shared domain-bound cases. This qualifies only pattern conformance;native exchange and full-row/final-source proof remain owed.",
         "F147 immediately triages new native ARM JSON security-profile failure at e65b59c/run42284746630/job128122540244:SQLSTATE42601 during setup;security assertions not reached.Shared custody fixture also lacked ordinary init;workflow preparation repaired and lint passes.Native original replay and existing schema prerequisite remain owed;no security or interface pass.",
-        "F148 adds schema3/fixed_width with explicit byte widths/padding,bounded immutable-source parsing,distinct custody/report format,shared browser/API/CLI/MCP/OpenAPI grammar and source48 guards.Observed parser/browser red then focused Go,69 frontend contracts and affected static/metadata stand-ins pass.Native API/CLI/Chrome/GnuPG/scanner-protocol/recheck/copy/cross-format SQL cases are prepared,not qualified;retained35 untouched.No transform,whole-row,AX or readiness pass."
+        "F148 adds schema3/fixed_width with explicit byte widths/padding,bounded immutable-source parsing,distinct custody/report format,shared browser/API/CLI/MCP/OpenAPI grammar and source48 guards.Observed parser/browser red then focused Go,69 frontend contracts and affected static/metadata stand-ins pass.Native API/CLI/Chrome/GnuPG/scanner-protocol/recheck/copy/cross-format SQL cases are prepared,not qualified;retained35 untouched.No transform,whole-row,AX or readiness pass.",
+        "F151 adds bounded schema4/xml_records with exact root/record/scalar names,one explicit namespace binding,strict declaration grammar and no DTD/entity/external resolver.Observed unsupported-format and malformed-declaration red then focused Go,71 frontend contracts and affected static/metadata stand-ins pass.Source49/current policy/report/custody bindings preserve cumulative controls;native PG/API/CLI/Chrome/Python-produced XML/GnuPG/scanner/recheck/copy proof remains owed.No general XSD/XML-signature/transform or whole-row/AX pass;retained35 untouched."
       ],
       "current_item": {
         "id": "F130",

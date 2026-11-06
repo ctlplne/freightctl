@@ -514,30 +514,33 @@ export function asCheckView(value: unknown): CheckView {
       rows: number(report, "rows", Number.MAX_SAFE_INTEGER),
       bytes: number(report, "bytes_read", 1 << 30),
     };
-    const jsonRecords = validation.code === "valid_json_records",
-      fixedWidth = validation.code === "valid_fixed_width",
-      successful = jsonRecords || fixedWidth || validation.code === "valid_csv";
+    const formats = {
+      valid_csv: { engine: "freightctl-csv-v1", prefix: "intake-csv-v1:" },
+      valid_json_records: {
+        engine: "freightctl-json-records-v1",
+        prefix: "intake-json-records-v1:",
+      },
+      valid_fixed_width: {
+        engine: "freightctl-fixed-width-v1",
+        prefix: "intake-fixed-width-v1:",
+      },
+      valid_xml_records: {
+        engine: "freightctl-xml-records-v1",
+        prefix: "intake-xml-records-v1:",
+      },
+    } as const;
+    const format = Object.hasOwn(formats, validation.code)
+      ? formats[validation.code as keyof typeof formats]
+      : undefined;
     if (
-      successful &&
-      (validation.engine !==
-        (jsonRecords
-          ? "freightctl-json-records-v1"
-          : fixedWidth
-            ? "freightctl-fixed-width-v1"
-            : "freightctl-csv-v1") ||
-        text(file, "policy", 128) !==
-          (jsonRecords
-            ? "intake-json-records-v1:"
-            : fixedWidth
-              ? "intake-fixed-width-v1:"
-              : "intake-csv-v1:") +
-            policySHA ||
+      format &&
+      (validation.engine !== format.engine ||
+        text(file, "policy", 128) !== format.prefix + policySHA ||
         id(file, "id") !== fileID ||
         validation.bytes !== number(file, "size_bytes", 1 << 30))
     )
       invalid();
-    if ((c.state === "passed" || c.state === "released") && !successful)
-      invalid();
+    if ((c.state === "passed" || c.state === "released") && !format) invalid();
     if (report.signature !== undefined && report.signature !== null) {
       if (!attached) invalid();
       const proof = object(report.signature),

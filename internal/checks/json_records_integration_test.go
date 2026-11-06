@@ -155,7 +155,7 @@ func TestJSONRecordsActualCustodyCheckAndSeparateExactRelease(t *testing.T) {
 }
 
 func TestJSONRecordsSQLRejectsCrossFormatReportsWhileKeepingExactValidTransition(t *testing.T) {
-	for _, name := range []string{"csv", "json_records", "fixed_width"} {
+	for _, name := range []string{"csv", "json_records", "fixed_width", "xml_records"} {
 		t.Run(name, func(t *testing.T) {
 			f := setup(t)
 			s := &Service{Custody: f.wf.Custody}
@@ -166,6 +166,9 @@ func TestJSONRecordsSQLRejectsCrossFormatReportsWhileKeepingExactValidTransition
 			}
 			if name == "fixed_width" {
 				policy, body = fixedWidthPolicy(t), goodFixedWidth
+			}
+			if name == "xml_records" {
+				policy, body = xmlRecordsPolicy(t), goodXMLRecords
 			}
 			if _, err := s.Register(f.ctx, f.scope, "format-policy", PolicyRequest{Definition: policy}); err != nil {
 				t.Fatal(err)
@@ -238,6 +241,10 @@ func TestFixedWidthActualGnuPGAndScannerProtocolRemainCumulative(t *testing.T) {
 	actualStructuredSignatureScanner(t, "fixed_width")
 }
 
+func TestXMLRecordsActualGnuPGAndScannerProtocolRemainCumulative(t *testing.T) {
+	actualStructuredSignatureScanner(t, "xml_records")
+}
+
 func actualStructuredSignatureScanner(t *testing.T, format string) {
 	// GnuPG signs the actual structured bytes. The scanner is only its documented
 	// protocol stand-in;this test makes no ClamAV/malware-detection claim.
@@ -248,6 +255,9 @@ func actualStructuredSignatureScanner(t *testing.T, format string) {
 			sourceName, signatureName, target, expected := "source.json", "good-json.sig", "/both.json", goodJSONRecords
 			if format == "fixed_width" {
 				sourceName, signatureName, target, expected = "source.fixed", "good-fixed.sig", "/both.fixed", goodFixedWidth
+			}
+			if format == "xml_records" {
+				sourceName, signatureName, target, expected = "source.xml", "good-xml.sig", "/both.xml", goodXMLRecords
 			}
 			source := load(sourceName)
 			if !bytes.Equal(source, []byte(expected)) {
@@ -265,6 +275,9 @@ func actualStructuredSignatureScanner(t *testing.T, format string) {
 			policy.Schema, policy.Kind = 2, "json_records"
 			if format == "fixed_width" {
 				policy = fixedWidthPolicy(t)
+			}
+			if format == "xml_records" {
+				policy = xmlRecordsPolicy(t)
 			}
 			policy.Signature = &SignaturePolicy{Key: store.PGPReference{ID: signer.ID, Version: signer.Version, Hash: signer.Hash}, MaxAgeSeconds: 3600}
 			policy.Scanner = &store.ScannerReference{ID: scanner.ID, Version: scanner.Version, Hash: scanner.Hash}

@@ -62,7 +62,7 @@ func scanFixture(t *testing.T, mode string, valid time.Duration, format ...strin
 		t.Fatal(replay, err)
 	}
 	policy := testPolicy(t)
-	if len(format) > 1 || len(format) == 1 && format[0] != "json_records" && format[0] != "fixed_width" {
+	if len(format) > 1 || len(format) == 1 && format[0] != "json_records" && format[0] != "fixed_width" && format[0] != "xml_records" {
 		t.Fatal("unsupported explicit scanner fixture format")
 	}
 	body, target := goodCSV, "/scanned.csv"
@@ -71,6 +71,9 @@ func scanFixture(t *testing.T, mode string, valid time.Duration, format ...strin
 		if format[0] == "fixed_width" {
 			policy, body, target = fixedWidthPolicy(t), goodFixedWidth, "/scanned.fixed"
 		}
+	}
+	if len(format) == 1 && format[0] == "xml_records" {
+		policy, body, target = xmlRecordsPolicy(t), goodXMLRecords, "/scanned.xml"
 	}
 	policy.Scanner = &store.ScannerReference{ID: view.ID, Version: view.Version, Hash: view.Hash}
 	if _, err = s.Register(f.ctx, f.scope, "policy", PolicyRequest{Definition: policy}); err != nil {

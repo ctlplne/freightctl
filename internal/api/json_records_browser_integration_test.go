@@ -22,14 +22,20 @@ import (
 )
 
 func TestJSONRecordsNativeBrowserReviewedHashAndReceipt(t *testing.T) {
-	structuredNativeBrowser(t, false)
+	structuredNativeBrowser(t, "json_records")
 }
 
 func TestFixedWidthNativeBrowserReviewedHashAndReceipt(t *testing.T) {
-	structuredNativeBrowser(t, true)
+	structuredNativeBrowser(t, "fixed_width")
 }
 
-func structuredNativeBrowser(t *testing.T, fixed bool) {
+func TestXMLRecordsNativeBrowserReviewedHashAndReceipt(t *testing.T) {
+	structuredNativeBrowser(t, "xml_records")
+}
+
+func structuredNativeBrowser(t *testing.T, format string) {
+	fixed := format == "fixed_width"
+	xmlRecords := format == "xml_records"
 	if os.Getenv("GITHUB_ACTIONS") != "true" || runtime.GOOS != "linux" || runtime.GOARCH != "amd64" {
 		t.Fatal("explicit Chrome/PostgreSQL profile requires native GitHub Linux x86_64")
 	}
@@ -58,6 +64,10 @@ func structuredNativeBrowser(t *testing.T, fixed bool) {
 		}
 		policy.Columns[1].Padding = "space_left"
 	}
+	if xmlRecords {
+		policy.Schema, policy.Kind = 4, "xml_records"
+		policy.XML = &checks.XMLRecordPolicy{Root: "records", Record: "record"}
+	}
 	definition, err := checks.Normalize(policy)
 	if err != nil {
 		t.Fatal(err)
@@ -85,6 +95,12 @@ func structuredNativeBrowser(t *testing.T, fixed bool) {
 	}
 	if fixed {
 		body = []byte("00000001      100.012026-10-28\r\n")
+		if err = os.WriteFile(source, body, 0600); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if xmlRecords {
+		body = []byte(xmlRecordsHTTPBody)
 		if err = os.WriteFile(source, body, 0600); err != nil {
 			t.Fatal(err)
 		}
@@ -146,6 +162,9 @@ func structuredNativeBrowser(t *testing.T, fixed bool) {
 	if err != nil || file.ID != summary.File || file.Policy != func() string {
 		if fixed {
 			return store.FixedWidthIntakePrefix
+		}
+		if xmlRecords {
+			return store.XMLRecordsIntakePrefix
 		}
 		return store.JSONRecordsIntakePrefix
 	}()+expected || !bytes.Equal(received, body) {

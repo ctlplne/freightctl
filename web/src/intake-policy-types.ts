@@ -24,12 +24,14 @@ interface IntakeDefinitionFields {
   timeout_seconds: number;
   signature?: { key: Reference; max_age_seconds?: number };
   scanner?: Reference;
+  xml?: { root: string; record: string; namespace: string };
 }
 export type IntakeDefinition = IntakeDefinitionFields &
   (
     | { schema_version: 1; kind: "csv" }
     | { schema_version: 2; kind: "json_records" }
     | { schema_version: 3; kind: "fixed_width" }
+    | { schema_version: 4; kind: "xml_records" }
   );
 export interface IntakePolicy {
   id: string;
@@ -83,12 +85,14 @@ export function intakeDefinition(value: unknown): IntakeDefinition {
     "timeout_seconds",
     "signature",
     "scanner",
+    "xml",
   ]);
   if (
     !(
       (o.schema_version === 1 && o.kind === "csv") ||
       (o.schema_version === 2 && o.kind === "json_records") ||
-      (o.schema_version === 3 && o.kind === "fixed_width")
+      (o.schema_version === 3 && o.kind === "fixed_width") ||
+      (o.schema_version === 4 && o.kind === "xml_records")
     ) ||
     !Array.isArray(o.columns) ||
     o.columns.length < 1 ||
@@ -126,6 +130,11 @@ export function intakeDefinition(value: unknown): IntakeDefinition {
     )
       return fail();
     names.add(c.name);
+    if (
+      o.kind === "xml_records" &&
+      !/^[A-Za-z_][A-Za-z0-9_.-]{0,127}$/.test(c.name)
+    )
+      return fail();
     const column: IntakeColumn = {
       name: c.name,
       type: c.type as IntakeColumn["type"],
@@ -162,7 +171,9 @@ export function intakeDefinition(value: unknown): IntakeDefinition {
       ? { schema_version: 1 as const, kind: "csv" as const }
       : o.kind === "json_records"
         ? { schema_version: 2 as const, kind: "json_records" as const }
-        : { schema_version: 3 as const, kind: "fixed_width" as const }),
+        : o.kind === "fixed_width"
+          ? { schema_version: 3 as const, kind: "fixed_width" as const }
+          : { schema_version: 4 as const, kind: "xml_records" as const }),
     columns,
     max_bytes: integer(o.max_bytes, 1, 1073741824),
     max_rows: integer(o.max_rows, 1, 1000000),
@@ -177,6 +188,28 @@ export function intakeDefinition(value: unknown): IntakeDefinition {
     if (age) result.signature.max_age_seconds = age;
   }
   if (o.scanner !== undefined) result.scanner = reference(o.scanner);
+  if (o.kind === "xml_records") {
+    const x = object(o.xml);
+    keys(x, ["root", "record", "namespace"]);
+    if (
+      typeof x.root !== "string" ||
+      typeof x.record !== "string" ||
+      typeof x.namespace !== "string" ||
+      !/^[A-Za-z_][A-Za-z0-9_.-]{0,127}$/.test(x.root) ||
+      !/^[A-Za-z_][A-Za-z0-9_.-]{0,127}$/.test(x.record) ||
+      x.namespace.length > 512 ||
+      (x.namespace !== "" &&
+        !/^[A-Za-z][A-Za-z0-9+.-]*:[A-Za-z0-9._~:/?#@!$&'()*+,;=%\[\]-]+$/.test(
+          x.namespace,
+        )) ||
+      [
+        "http://www.w3.org/XML/1998/namespace",
+        "http://www.w3.org/2000/xmlns/",
+      ].includes(x.namespace)
+    )
+      return fail();
+    result.xml = { root: x.root, record: x.record, namespace: x.namespace };
+  } else if (o.xml !== undefined) return fail();
   if (new TextEncoder().encode(goJSON(result)).length > 12 * 1024)
     return fail();
   return result;
@@ -184,8 +217,9 @@ export function intakeDefinition(value: unknown): IntakeDefinition {
 
 export function intakeFormat(
   d: IntakeDefinition,
-  kind: "csv" | "json_records" | "fixed_width",
+  kind: "csv" | "json_records" | "fixed_width" | "xml_records",
 ): IntakeDefinition {
+  const { xml, ...plainDefinition } = d;
   const columns = d.columns.map((c) => {
     const { width_bytes: width, padding, ...plain } = c;
     return kind === "fixed_width"
@@ -197,14 +231,27 @@ export function intakeFormat(
       : plain;
   });
   return {
-    ...d,
+    ...plainDefinition,
     columns,
     ...(kind === "csv"
       ? ({ schema_version: 1, kind } as const)
       : kind === "json_records"
         ? ({ schema_version: 2, kind } as const)
-        : ({ schema_version: 3, kind } as const)),
+        : kind === "fixed_width"
+          ? ({ schema_version: 3, kind } as const)
+          : ({ schema_version: 4, kind } as const)),
+    ...(kind === "xml_records"
+      ? { xml: xml ?? { root: "records", record: "record", namespace: "" } }
+      : {}),
   };
+}
+export function intakeFormatLabel(kind: IntakeDefinition["kind"]): string {
+  return {
+    csv: "CSV columns",
+    json_records: "JSON record array",
+    fixed_width: "Fixed-width records",
+    xml_records: "XML records",
+  }[kind];
 }
 function goJSON(value: unknown): string {
   return JSON.stringify(value).replace(

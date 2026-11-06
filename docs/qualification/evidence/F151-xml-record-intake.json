@@ -1,0 +1,297 @@
+{
+  "schema_version": 1,
+  "id": "F151",
+  "observed_at": "2026-11-06",
+  "candidate_parent": "945045638798ee949761ba09d6b92bb85a689308",
+  "state": "Bounded XML record intake implemented with focused local red/green;native qualification owed",
+  "qualification_claim": false,
+  "profile": "freightctl-xml-records-v1",
+  "contract": "docs/protocols/xml-record-intake.md",
+  "references": [
+    "https://www.w3.org/TR/xml/",
+    "https://pkg.go.dev/encoding/xml"
+  ],
+  "implementation_toolchain": "repository-pinned Go1.26.10;local source inspected,not the differently versioned current web package",
+  "changes": [
+    "Schema4/xml_records declares bounded ASCII root/record/scalar names and one explicit default/prefixed namespace binding.Unbound/changed prefixes,duplicate/unknown fields,nested values,attributes,DTD/entity declarations,external resolvers and other processing instructions refuse.No general XSD/XML-signature claim.",
+    "UTF-8 XML1.0 declaration validation explicitly requires ordered pseudo-attributes,matching quotes,real whitespace separators and allowed values.Comments/CDATA are inert;XML text/character/newline semantics use the pinned decoder. Exact fixed-depth raw-name stack and one bounded record/cell/frame protect parsing;complete size/SHA256 binds success.Reports contain no raw values/names/errors.Namespace identifiers are never contacted.",
+    "Distinct XML custody/report identity reuses ordinary signatures,scanner,leases,idempotency,recheck/received-copy/exchange/onward and separate exact release.Source49 changes only the file-profile constraint,two shared format helpers and exact report-format guard.Older migrations unchanged;71metadata/70forcedRLS;retained35 untouched.",
+    "Browser root/record/namespace review and fifth Go-normalized hash fixture preserve protected references. Successful evidence binds exact engine/profile/file/bytes. All legacy hashes remain checked.MCP26/v11 and five OpenAPI profiles share52 actual domain/schema/ECMAScript acceptance/refusal cases.Embedded app.js793250bytes rebuilt.",
+    "Prepared actual native PG SQL/custody/release/recheck/received-copy,ordinary HTTPS,resumable CLI,and three-profile Chrome hash/original-key/held/release/five-accessibility-state proofs. Existing JSON/fixed assertions retained. Python ElementTree prepares synthetic XML with producer-version evidence and GnuPG signs exact bytes;scanner clean/offline/blocked remains a protocol stand-in.New native fuzz target;none of these heavy runtimes/campaigns executed locally."
+  ],
+  "observed_red": [
+    {
+      "reference": ".private/freightctl-f151-xml-red.log",
+      "observation": "Existing Normalize/Validate refuses schema4 XML record input before extension."
+    },
+    {
+      "reference": ".private/freightctl-f151-declaration-red.log",
+      "observation": "New hostile case shows the first XML implementation accepted adjacent declaration pseudo-attributes without required whitespace. Replaced generic element-based declaration parsing with a bounded explicit declaration grammar;original failure retained."
+    }
+  ],
+  "focused_green": {
+    "Go": "XML scalar/namespace/declaration/entity/refusal/bounds/source/cancellation;legacyCSV/JSON/fixed;five shared hashes;current-policy;MCP catalog/public grammar",
+    "frontend_contracts": {
+      "tests": 71,
+      "passed": 71,
+      "failed": 0,
+      "skipped": 0
+    },
+    "tagged_native_compile": "pass;zero runtime tests selected",
+    "affected_tagged_vet": "pass",
+    "architecture": "pass",
+    "frontend_type_build": "pass",
+    "metadata_stand_ins": {
+      "tests": 12,
+      "passed": 12,
+      "scope": "no PG lifecycle"
+    },
+    "changed_workflow_lint": "pass",
+    "changed_script_syntax": "pass;no producer/browser run",
+    "format_diff": "pass"
+  },
+  "source_files": [
+    {
+      "reference": ".github/workflows/json-intake.yml",
+      "sha256": "7aec58db66dd956fcff365b79775954b9cd2d3775af5b973393d86a9c120a9d2",
+      "bytes": 4513
+    },
+    {
+      "reference": ".github/workflows/native-linux.yml",
+      "sha256": "7af6ec8b38cba46aeb47ab301235c47c9868aa9c6997e772f99a88e8c28de2d7",
+      "bytes": 10516
+    },
+    {
+      "reference": "cmd/freightctl/json_records_integration_test.go",
+      "sha256": "9eb93e804ad03b09dddb2048c23c308732f315f03f2b55dc18ecbd20569e21f1",
+      "bytes": 7777
+    },
+    {
+      "reference": "docs/api/artifact-collection-source.openapi.json",
+      "sha256": "bbfb2cfef66359bff5dc40fcb1b66512786d5788c5af89a0c8726650ca144daa",
+      "bytes": 5418
+    },
+    {
+      "reference": "docs/api/artifact-evidence.openapi.json",
+      "sha256": "dd5df00cb9c69c0075df1a6d829acfe085875bf92651728a0293c9c4fe975743",
+      "bytes": 13080
+    },
+    {
+      "reference": "docs/api/artifact-exchange.openapi.json",
+      "sha256": "cc72b0266b8abc26ebff73b1f226f900d7f5cf8a64dc1ac17cddcfa5474c2e88",
+      "bytes": 43884
+    },
+    {
+      "reference": "docs/api/artifact-onward.openapi.json",
+      "sha256": "eedba798806075b1596dce4bb445cf66c1c159cf29cbb8f29fea5c9fc595ba93",
+      "bytes": 21315
+    },
+    {
+      "reference": "docs/api/received-artifact-copy.openapi.json",
+      "sha256": "6c5c447715d6155be22e674d550e934ba732e8f8f0c9668c27292e038f904330",
+      "bytes": 7843
+    },
+    {
+      "reference": "docs/intake.md",
+      "sha256": "419cb4b3da8d59f15b76b66fa1c83979c4a0a1737d90ef6e0e42344d64ef36d8",
+      "bytes": 13399
+    },
+    {
+      "reference": "docs/protocols/artifact-exchange-mcp.md",
+      "sha256": "97b5cec20aa2a18dee650ecaf3fd287b39b33ec5eaed49fbeb733e03b616b7bd",
+      "bytes": 13111
+    },
+    {
+      "reference": "internal/api/artifact_policy_schema_test.go",
+      "sha256": "ab7d8a957b3a30fe7e3c8a227293f1c132e527abf41661e0384baad93b0b6a04",
+      "bytes": 2411
+    },
+    {
+      "reference": "internal/api/json_records_browser_integration_test.go",
+      "sha256": "b0883b9652fd4919881961e979542463d8879492eb50fb560dfe1f4945f196bd",
+      "bytes": 7869
+    },
+    {
+      "reference": "internal/api/json_records_integration_test.go",
+      "sha256": "f5f2661b87bac637d416d69ca2b85be87a6973d6079d8d71c9bef01e6ab78703",
+      "bytes": 9767
+    },
+    {
+      "reference": "internal/api/mcp-tools.json",
+      "sha256": "38ddc2bc8a0b7347f0a40129867c5e76e0a442278cd4d700b815e342b0bb7631",
+      "bytes": 72185
+    },
+    {
+      "reference": "internal/api/mcp.go",
+      "sha256": "7d86d673850b7058e7b877a3d76a4e7b96aa40d6a493cbfd96d0b1d99e59aa45",
+      "bytes": 10965
+    },
+    {
+      "reference": "internal/browser/assets/app.js",
+      "sha256": "2fa07534461d6a87953c8d01550d4cc69865576e8bee8b4f5ce1afe0ad0f7f47",
+      "bytes": 793250
+    },
+    {
+      "reference": "internal/browser/assets/manifest.json",
+      "sha256": "9d55eeec2242aad4788f3781bd3f9ab9b9595952deb4203626998e406c54ae1d",
+      "bytes": 12100
+    },
+    {
+      "reference": "internal/checks/browser_policy_test.go",
+      "sha256": "b0d51c88a50800f64e262a2062b93fb8efb56b433bccaa5ca86317a0d890c37b",
+      "bytes": 1252
+    },
+    {
+      "reference": "internal/checks/csv.go",
+      "sha256": "b6f6e7974414040b77b3a9f1298625ebe31af908c8fd0219afb91cfdd392466e",
+      "bytes": 10734
+    },
+    {
+      "reference": "internal/checks/json_records_integration_test.go",
+      "sha256": "2d83fe0361847e0de488dcd8e1f7062b0f8f36b8fc3bbc6bac03dfe175cc0bba",
+      "bytes": 15207
+    },
+    {
+      "reference": "internal/checks/scanners_integration_test.go",
+      "sha256": "45b308696a1f332ca7381b52cd9442f59a4c8393c5e941f51d9db40cd88f5556",
+      "bytes": 16879
+    },
+    {
+      "reference": "internal/custody/exchange_copy_integration_test.go",
+      "sha256": "e19569d6ef7f3abb17f68b424b0984090bbf5c85ade4331ba07d69915e42de19",
+      "bytes": 11583
+    },
+    {
+      "reference": "internal/store/artifact_exchanges_test.go",
+      "sha256": "e520e8e1a719f8cd1c6937e547406b131970eb2e6da1fdeb238582bac6980674",
+      "bytes": 5839
+    },
+    {
+      "reference": "internal/store/intake_format.go",
+      "sha256": "8479e4728ea20faee873dc138c9b49160f24ec4291aaa77eb38b1f79a73da09a",
+      "bytes": 1948
+    },
+    {
+      "reference": "internal/store/intake_format_test.go",
+      "sha256": "cccc0355be5ddc76c9da5387c8ef220ea6946f6b1449d40fdf03e92241a4ba7e",
+      "bytes": 1749
+    },
+    {
+      "reference": "internal/store/store.go",
+      "sha256": "a24bc056ffe68653c7b32330f650e791dc9050e690663128df03749b71fc7e31",
+      "bytes": 26364
+    },
+    {
+      "reference": "scripts/json-intake-browser.mjs",
+      "sha256": "c46abe4301396dbedf2935eac11de732923431bd1bd1308193edd38396a69fa0",
+      "bytes": 11746
+    },
+    {
+      "reference": "scripts/metadata_contract.py",
+      "sha256": "ab2692aee3a8389fe000ff1fab0ff0a80c246a74da95c734ae9e5eba4f4b9a81",
+      "bytes": 2980
+    },
+    {
+      "reference": "scripts/pgp-native-peer.py",
+      "sha256": "d5cb142fdff8fbdaf39f59c0b5194c0a4ddf0969da866739a9e64ef19723f976",
+      "bytes": 21036
+    },
+    {
+      "reference": "scripts/prepare-pgp-fixture.py",
+      "sha256": "6ec81182d7bd61d9c98caf30b281253a1fbb9243586d91e5d2d0dbd4e98396f2",
+      "bytes": 11614
+    },
+    {
+      "reference": "scripts/test-ci-metadata-summary.py",
+      "sha256": "1fc5bdb3f83fa0b1117fdea0e128fad85ecbee231ffbcfe890f8bb40125a4ef4",
+      "bytes": 6240
+    },
+    {
+      "reference": "web/src/artifact-policy.ts",
+      "sha256": "3ed983b305bbbb5f48290eaf5fd5875289258efa558157a0f432d47275c46234",
+      "bytes": 514
+    },
+    {
+      "reference": "web/src/check-evidence.tsx",
+      "sha256": "7b8a67def6f84b7a2a32457ef7936c4eefd3f967783e05a03bbef34ae42fb319",
+      "bytes": 2675
+    },
+    {
+      "reference": "web/src/intake-policy-types.ts",
+      "sha256": "700b50f878e4dc042514f99c628e68811d91a06517b0aa104ed140370708ce20",
+      "bytes": 9864
+    },
+    {
+      "reference": "web/src/intake-policy.tsx",
+      "sha256": "383eb4bfa594a4ef5bb220363075326e050803b2edcf98ded3dfdafbf8b5a365",
+      "bytes": 23220
+    },
+    {
+      "reference": "web/src/types.ts",
+      "sha256": "66d7db319151a94e87eb512a672d20051f3de874cc00aaed5903d131a3a63825",
+      "bytes": 23619
+    },
+    {
+      "reference": "web/tests/artifact-policy-schema.test.mjs",
+      "sha256": "f8522192485dd6fe0bf492103fd4d1caf0c6c2f03f9466133f1e140f017a08e2",
+      "bytes": 1507
+    },
+    {
+      "reference": "web/tests/check-evidence.test.mjs",
+      "sha256": "cdafe913719dab139421c4e14ede72d2b7a7da428494e6c5cd9cda058ac49c69",
+      "bytes": 13396
+    },
+    {
+      "reference": "web/tests/fixtures/artifact-policy-cases.json",
+      "sha256": "68cfd99bb14a2c935004be8acb9e4e110ce7c83f83af2b61503f00f6f2be0883",
+      "bytes": 7661
+    },
+    {
+      "reference": "web/tests/intake-policy.test.mjs",
+      "sha256": "39223a5c29615c5a10a20c4ef8366aed14356fd54b0353e0776c75f8e45d0cb1",
+      "bytes": 6575
+    },
+    {
+      "reference": "docs/protocols/xml-record-intake.md",
+      "sha256": "66bb04e9d9a33aa47499abdafc30681e62a8b8dcb4535048a05eb043a8a22584",
+      "bytes": 3829
+    },
+    {
+      "reference": "internal/checks/xml_records.go",
+      "sha256": "82c005628611f86b3b28dedbc9b4811bf890ff3e9189b604230e91a6b28ea17b",
+      "bytes": 6613
+    },
+    {
+      "reference": "internal/checks/xml_records_integration_test.go",
+      "sha256": "699472877c12f58befba7824b4b9b00aa844c71960123c6f6a390f8e8bc171d7",
+      "bytes": 4632
+    },
+    {
+      "reference": "internal/checks/xml_records_test.go",
+      "sha256": "49976f190c2ac40596fb3be6f40a1c87619b7fc703adbaf5e5b7b063f5afae99",
+      "bytes": 8131
+    },
+    {
+      "reference": "internal/store/049_xml_record_intake.sql",
+      "sha256": "13df0960a0e40fe7d4f85c8943b0213388d206b2e97ac17c42c0b38f00755266",
+      "bytes": 6156
+    },
+    {
+      "reference": "web/tests/fixtures/intake-policy-xml-records.json",
+      "sha256": "9393c9b97ef5838b51d586a2e5063ad5bfc9313b9626536a0cc46a604383bf79",
+      "bytes": 840
+    }
+  ],
+  "safe_local_manifest": {
+    "reference": ".private/freightctl-f151-local-manifest.json",
+    "sha256": "d10f994867367d154a6144ecf2cc318a652e058970e1b225c2ba4b00f1bb5ce3",
+    "bytes": 12045
+  },
+  "owed": [
+    "Actual schema49 SQL guards,PG custody/recheck/copy/API/CLI/Python-produced XML/GnuPG/scanner-protocol outcomes on native ARM/x86.",
+    "Actual XML Chrome review/hash/original-key/held/check/separate-release,five accessibility states and independent Go policy/cardinality/byte proof.",
+    "Namespaced stock-producer/receiver variations,affected original public journeys and every final-source/deferred mandatory FINISH gate.",
+    "Real malware detection,full processing/schema/transform breadth,all83 parity rows/twelve full journeys/AX01\u2013AX08 and external prerequisites remain open."
+  ],
+  "resources": "Only existing lightweight Go/Node limits. No local inference,PG,Chrome,GnuPG,scanner,image,native peer or fuzz campaign.No release/publication/deployment."
+}

@@ -24,7 +24,7 @@ for (const [name, path, expected] of documents) {
   test(
     name + " policy grammar matches domain cases under ECMAScript patterns",
     () => {
-      assert.equal(cases.length, 42);
+      assert.equal(cases.length, 52);
       let count = 0;
       function walk(value) {
         if (!value || typeof value !== "object") return;

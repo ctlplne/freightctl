@@ -8,6 +8,7 @@ import {
   intakeDefinition,
   intakeHash,
   intakeFormat,
+  intakeFormatLabel,
   type IntakeColumn,
   type IntakeDefinition,
   type IntakePolicy,
@@ -223,13 +224,7 @@ export function IntakePolicyEditor({
             <code>{current.definition_hash}</code>
           </dd>
           <dt>Format</dt>
-          <dd>
-            {current.definition.kind === "csv"
-              ? "CSV columns"
-              : current.definition.kind === "json_records"
-                ? "JSON record array"
-                : "Fixed-width records"}
-          </dd>
+          <dd>{intakeFormatLabel(current.definition.kind)}</dd>
         </dl>
       ) : loaded ? (
         <p>
@@ -250,7 +245,8 @@ export function IntakePolicyEditor({
                 if (
                   kind === "csv" ||
                   kind === "json_records" ||
-                  kind === "fixed_width"
+                  kind === "fixed_width" ||
+                  kind === "xml_records"
                 )
                   setDraft((d) => intakeFormat(d, kind));
               }}
@@ -258,6 +254,7 @@ export function IntakePolicyEditor({
               <option value="csv">CSV columns</option>
               <option value="json_records">JSON record array</option>
               <option value="fixed_width">Fixed-width records</option>
+              <option value="xml_records">XML records</option>
             </select>
           </label>
           <p>
@@ -267,8 +264,74 @@ export function IntakePolicyEditor({
               ? "Column order and header names must match the file."
               : draft.kind === "json_records"
                 ? "Use an array of flat objects with these exact field names. Numeric fields require JSON numbers;duplicate,unknown or nested fields fail. No content is executed."
-                : "Every record has these ordered byte widths and no header. Only the selected side's ASCII spaces are padding. UTF-8 characters must fit inside each field. LF and CRLF are accepted; an exact final record may end at EOF. Bytes are validated without changing values."}
+                : draft.kind === "fixed_width"
+                  ? "Every record has these ordered byte widths and no header. Only the selected side's ASCII spaces are padding. UTF-8 characters must fit inside each field. LF and CRLF are accepted; an exact final record may end at EOF. Bytes are validated without changing values."
+                  : "One declared root contains record elements with these scalar fields. No attributes,DTD,external entities,includes or processing instructions are followed. Names and namespace must match;values are validated without implicit trimming."}
           </p>
+          {draft.kind === "xml_records" && (
+            <fieldset>
+              <legend>XML record structure</legend>
+              <label>
+                XML root element
+                <input
+                  required
+                  maxLength={128}
+                  value={draft.xml?.root ?? ""}
+                  onChange={(e) =>
+                    setDraft((d) => ({
+                      ...d,
+                      xml: {
+                        root: e.target.value,
+                        record: d.xml?.record ?? "record",
+                        namespace: d.xml?.namespace ?? "",
+                      },
+                    }))
+                  }
+                />
+              </label>
+              <label>
+                XML record element
+                <input
+                  required
+                  maxLength={128}
+                  value={draft.xml?.record ?? ""}
+                  onChange={(e) =>
+                    setDraft((d) => ({
+                      ...d,
+                      xml: {
+                        root: d.xml?.root ?? "records",
+                        record: e.target.value,
+                        namespace: d.xml?.namespace ?? "",
+                      },
+                    }))
+                  }
+                />
+              </label>
+              <label>
+                XML namespace URI
+                <input
+                  maxLength={512}
+                  value={draft.xml?.namespace ?? ""}
+                  onChange={(e) =>
+                    setDraft((d) => ({
+                      ...d,
+                      xml: {
+                        root: d.xml?.root ?? "records",
+                        record: d.xml?.record ?? "record",
+                        namespace: e.target.value,
+                      },
+                    }))
+                  }
+                />
+              </label>
+              <p>
+                Leave namespace empty for unprefixed records. A nonempty
+                namespace is compared literally and never contacted. Use one
+                default namespace or one consistent declared prefix on every
+                element.
+              </p>
+            </fieldset>
+          )}
           {draft.columns.map((c, i) => (
             <fieldset key={i}>
               <legend>Column {i + 1}</legend>
@@ -518,15 +581,17 @@ export function IntakePolicyEditor({
               held; existing files need their original checks and approval.
             </p>
             <p>
-              Format:{" "}
-              {pending.definition.kind === "csv"
-                ? "CSV columns"
-                : pending.definition.kind === "json_records"
-                  ? "JSON record array"
-                  : "Fixed-width records"}
-              . The definition hash binds this choice and every protected
-              requirement.
+              Format: {intakeFormatLabel(pending.definition.kind)}. The
+              definition hash binds this choice and every protected requirement.
             </p>
+            {pending.definition.kind === "xml_records" && (
+              <p>
+                XML root:{pending.definition.xml?.root};record:
+                {pending.definition.xml?.record};namespace:
+                {pending.definition.xml?.namespace || "empty"}. Every field is
+                scalar;external constructs are refused.
+              </p>
+            )}
             <ol>
               {pending.definition.columns.map((c, i) => (
                 <li key={i}>

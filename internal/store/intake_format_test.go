@@ -8,7 +8,7 @@ import (
 
 func TestIntakeFormatsBindDistinctPrefixesToExactSchemaAndKind(t *testing.T) {
 	hash := strings.Repeat("a", 64)
-	for _, tc := range []struct{ definition, prefix string }{{`{"schema_version":1,"kind":"csv"}`, CSVIntakePrefix}, {`{"schema_version":2,"kind":"json_records"}`, JSONRecordsIntakePrefix}, {`{"schema_version":3,"kind":"fixed_width"}`, FixedWidthIntakePrefix}} {
+	for _, tc := range []struct{ definition, prefix string }{{`{"schema_version":1,"kind":"csv"}`, CSVIntakePrefix}, {`{"schema_version":2,"kind":"json_records"}`, JSONRecordsIntakePrefix}, {`{"schema_version":3,"kind":"fixed_width"}`, FixedWidthIntakePrefix}, {`{"schema_version":4,"kind":"xml_records"}`, XMLRecordsIntakePrefix}} {
 		policy, err := IntakeFilePolicy(&Configuration{Hash: hash, Definition: json.RawMessage(tc.definition)})
 		got, controlled := IntakePolicyHash(policy)
 		if err != nil || policy != tc.prefix+hash || !controlled || got != hash || !ValidArtifactPolicy(policy) {
