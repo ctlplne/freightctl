@@ -1,0 +1,171 @@
+{
+  "schema_version": 1,
+  "id": "F123",
+  "observed_at": "2026-11-05",
+  "starting_commit": "924825618b2b0d6ba74fd7c093af9612c081f459",
+  "preceding_security_repair": "777b9c461f3a8e36c17781721069525969a69b4c",
+  "state": "Authorized custody/offer/closure evidence implemented across API,CLI,MCP and browser;actual native outcomes owed",
+  "qualification_claim": false,
+  "contract": "docs/protocols/artifact-exchange-evidence.md",
+  "change": [
+    "Freeze authorized-exchange-evidence-v1 as a read-only profile of existing facts. Explicit incoming/outgoing selectors delegate to the existing view/original-sender-receipt guards inside one ordinary tenant/partner transaction. No role fallback,raw event selector,parent traversal,grant,receipt,event,run,intent or byte read.",
+    "Incoming holds remain opaque,including source identity/acceptance time/offer time/reply reference. Recheck expiry at observation time even for opaque holds. Outgoing history retains its already authorized original facts and optional closure while distinguishing current metadata state.",
+    "Project only exact authorized artifact/request hash and existing acceptance/offer/closure event IDs,resource IDs and database timestamps. Causal ordering is distinct from monotonic-clock claims. Reply reference is not byte derivation. Physical verification is not-checked;retrieval,receiver persistence and business processing stay unknown.",
+    "One strict16KiB API control,one protected CLI command,one closed-schema read-only MCP tool and the incoming/sent browser panels share the service. Catalog25;exchange-tools-v7. Browser pins scope/direction/exchange/hash/artifact/expiry before await,retains exact microseconds,rejects mixed events/stronger claims and hides results from old contexts.",
+    "Extend original native CLI/official-SDK/API-cookie/CSRF/PG and Chrome journeys rather than replacing them. Every original22accessibility state remains and two evidence states plus exact evidence_reads2 are required. No migration,retained-environment change,inference or local native runtime."
+  ],
+  "red": [
+    {
+      "reference": ".private/freightctl-f123-api-red.log",
+      "observation": "Actual malformed authority/control request reached missing trace route404 before implementation;now400 before database"
+    },
+    {
+      "reference": ".private/freightctl-f123-browser-summary-first-red.log",
+      "observation": "Strict browser summary rejected its newly required evidence counter until the exact declared field was added;unknown/duplicate/aliased fields remain refused"
+    }
+  ],
+  "green": {
+    "focused_Go_methods": 6,
+    "browser_adapter_methods": 4,
+    "browser_summary_method": 1,
+    "affected_tagged_native_compilation": "pass,no actual native tests selected",
+    "affected_tagged_vet": "pass",
+    "frontend_typecheck_build": "pass;app.js767527bytes;no generated-size ceiling",
+    "affected_format_diff_and_script_syntax": "pass",
+    "OpenAPI": "one path,six local refs resolve;external conformance owed",
+    "actual_runtime": "prepared,not run locally;owed"
+  },
+  "native_prepared": [
+    "Real PG source/offer/closure timestamps match immutable event rows;source-sender snapshots see their own records and every trace leaves domain counts unchanged",
+    "Wrong actor,direction,tenant/partner,required-policy hold and revoked read refusals;held source/event/reply data remains absent while authorized sender history survives",
+    "Original CLI incoming evidence and outgoing closed history;official SDK and ordinary cookie/CSRF API share immutable event projections,with wrong CSRF refused and no content/credential/storage/payload leakage",
+    "Original native Chrome incoming two-event evidence and sender closed three-event evidence,exact resource/event IDs,unknown stronger outcomes,evidence_reads2 and all24a11y states"
+  ],
+  "source_files": [
+    {
+      "path": "internal/store/exchange_trace.go",
+      "sha256": "8985d076d6ecdb4375af3a76fffd64eb7b9600326e07e29b288aca19fd1eef28"
+    },
+    {
+      "path": "internal/store/exchange_trace_test.go",
+      "sha256": "110e399049f96f08eeece21f0425e6e7e23ba96cd0ae76112266f1e463370b9a"
+    },
+    {
+      "path": "internal/custody/exchanges.go",
+      "sha256": "f7a8753d988724aecf637655f6d3b0a4259bc7e02f121469da3f620cc0ba69f1"
+    },
+    {
+      "path": "internal/custody/exchange_trace_integration_test.go",
+      "sha256": "3b6c893b63ef8ae2ff8c9a59056df859b6e4f69a7269ec5b64d8ed44e744fa52"
+    },
+    {
+      "path": "internal/api/api.go",
+      "sha256": "bd532adf943b51901845c2b1bec79cbb2af4b75cd0a4b77c5214ce38d4af362c"
+    },
+    {
+      "path": "internal/api/artifact_exchanges.go",
+      "sha256": "e982f477cd5bc2bb5a67171cd2ab5ab4b9f54cc1e211a50d1742ac3a0a083e03"
+    },
+    {
+      "path": "internal/api/artifact_exchanges_test.go",
+      "sha256": "65b871f9c8fb069817591aee5a906b802b2fc60caf03a3c6ac2e6845112508fd"
+    },
+    {
+      "path": "internal/api/mcp.go",
+      "sha256": "8677d040f69d3c537d8050c396d751979fdad20661944254d0ba341d404b3a58"
+    },
+    {
+      "path": "internal/api/mcp-tools.json",
+      "sha256": "1d7b7c183ce682a915bccdd58e9f2d3b231de3b0cb89dcf4983f7535793c678d"
+    },
+    {
+      "path": "internal/api/mcp_test.go",
+      "sha256": "4e0794081b9a72f296336bdd49608fff64796aedce8164d6a6772bd617333677"
+    },
+    {
+      "path": "internal/api/mcp_integration_test.go",
+      "sha256": "816bd5c9e5d51e4e4acfbf14466a02b6d13cf6da8c543863f858a3ac41d5ec76"
+    },
+    {
+      "path": "internal/api/artifact_exchange_browser_integration_test.go",
+      "sha256": "d0b2adcfab3f9e307461259a9484cd4edd98986403498af7378c7cf7f7fc6d95"
+    },
+    {
+      "path": "cmd/freightctl/main.go",
+      "sha256": "5ff4ffa2ee6964885fb9e975970df399047c58b14094191d59fea0044f17d831"
+    },
+    {
+      "path": "cmd/freightctl/exchanges.go",
+      "sha256": "b01cbc1125ff724758351fb7a0c7deb72666a2de93999ca7c6eca403dea9d4c1"
+    },
+    {
+      "path": "cmd/freightctl/exchange_trace_test.go",
+      "sha256": "eaa201003ceeed16bc9f1914928941d173d38804583841031b51e474c3fa87ed"
+    },
+    {
+      "path": "cmd/freightctl/exchanges_integration_test.go",
+      "sha256": "97086ae98f1de475dd80625c1f2f36cbdb91b7d3f4d500a7f9b6db0fa3144009"
+    },
+    {
+      "path": "scripts/artifact-exchange-browser.mjs",
+      "sha256": "4b602991053735cbef1165cd1224263831d434e358588ab1b5b3a1903f9de2b1"
+    },
+    {
+      "path": "web/src/artifact-evidence-types.ts",
+      "sha256": "43c287dbb4fd6328e68b11f08398b7590374ebd033551bd702237bedb3e07480"
+    },
+    {
+      "path": "web/src/artifact-evidence.tsx",
+      "sha256": "b68a5af2cb7e05a12221b67c1778284ae6aac767cebebfc33eaf68b3e4b773d0"
+    },
+    {
+      "path": "web/src/artifact-exchanges-api.ts",
+      "sha256": "fee2d70f8c4ef7e32cae6abdc3f2c32b91f34f37173e364d750ea93b23897d5b"
+    },
+    {
+      "path": "web/src/artifact-exchanges.tsx",
+      "sha256": "73708bc8b50d4759db6cab71c66a128c9bf3251c13085b9efee1bf8c3412cefb"
+    },
+    {
+      "path": "web/src/artifact-outgoing.tsx",
+      "sha256": "b9d483aafec4fe02fbde4a7710802d78ab8af1b20b0a63921df5a16f1d4787de"
+    },
+    {
+      "path": "web/tests/artifact-evidence.test.mjs",
+      "sha256": "af2b52f54ca1fcced4be3cd5f075277477b0ae952556dd222d25ee2e7ff056a5"
+    },
+    {
+      "path": "internal/browser/assets/app.js",
+      "sha256": "03d944e4c50efad8f4f2578f6023325413a4522058a1ddff2e23d64b8250120b"
+    },
+    {
+      "path": "internal/browser/assets/manifest.json",
+      "sha256": "a2e8b0ce0c8ee952891c5f6cd11cb71627b32a2b0d080ed3416e17adbe5a4979"
+    },
+    {
+      "path": "docs/api/artifact-evidence.openapi.json",
+      "sha256": "f486f9a8951bfd4ba97dead00d0e745ddb7eb80937f8bc9bcd3f824c25b32f48"
+    },
+    {
+      "path": "docs/protocols/artifact-exchange-evidence.md",
+      "sha256": "45e39b66cc7429539406269365170a499f7d1ec3aad76cb34416563b078e66e9"
+    },
+    {
+      "path": "docs/protocols/artifact-exchange.md",
+      "sha256": "23419500f829976f5c8f9aa62c0bfa738f8324df5fa41f66900261ee582de51f"
+    },
+    {
+      "path": "docs/protocols/artifact-exchange-mcp.md",
+      "sha256": "83646407d0e7c216353d9428dcdb4d0ce61eaef66b122524485145fe7ca90d3d"
+    }
+  ],
+  "local_manifest": {
+    "reference": ".private/freightctl-f123-manifest.json",
+    "sha256": "f1743188530366657efbbb4cbd4dffec971dd949648e1cf2a740f9fb1f651876"
+  },
+  "owed": [
+    "Actual native original PG/API/CLI/official SDK/browser replay and first failure/repair/replay;local compilation and stand-ins are not those outcomes",
+    "Full per-hop collection/derivation/onward lineage,independent receiver contracts,protected audit/retention and all remaining baseline/AI/AX implementation",
+    "Mandatory FINISH broad/native/security/restore/repro/final-source gates,all original red jobs,F026 manual hold and missing external prerequisites"
+  ]
+}

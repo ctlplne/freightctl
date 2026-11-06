@@ -875,7 +875,8 @@
         "docs/qualification/evidence/F113-strict-upload-namespace-controls.json",
         "docs/qualification/evidence/F116-mcp-resumable-artifact-ingress.json",
         "docs/qualification/evidence/F118-mcp-workflow-review-proposals.json",
-        "docs/qualification/evidence/F121-native-exchange-process-recovery.json"
+        "docs/qualification/evidence/F121-native-exchange-process-recovery.json",
+        "docs/qualification/evidence/F123-authorized-exchange-evidence.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -890,11 +891,11 @@
         "S003 authorizes guarded source/CI batches after prior required runs are terminal. Eleven exchange API paths and eleven CLI commands plus receive/send/recovery/history browser surfaces are implemented;actual AX profiles remain owed. Broad/deferred qualification is mandatory at FINISH."
       ],
       "current_item": {
-        "id": "F121",
-        "state": "Original CLI actual daemon/response-loss/process-death recovery proof prepared;native outcomes owed",
-        "proof": "Affected tagged compilation/vet and format pass;no actual runtime red/green claimed",
-        "native": "Four actual daemon starts,three selected kills,real committed response loss,original receipt recovery,stock curl bytes and persisted revocation required on native CI",
-        "next": "Remaining secure product controls/recovery/lineage/baseline implementation;all mandatory FINISH/native/deferred gates"
+        "id": "F123",
+        "state": "Shared authorized exchange evidence read implemented;native outcomes owed",
+        "proof": "Missing API route and new summary-field failures repaired;six focused Go,four browser and one summary method plus affected static checks pass",
+        "native": "Original PG/API-cookie/CSRF/CLI/official SDK and24-state Chrome evidence/privacy/no-effect/refusal proofs prepared,not qualified",
+        "next": "Remaining per-hop derivation/recovery/product/baseline work;mandatory FINISH original/deferred/native/final-source gates"
       }
     }
   ],

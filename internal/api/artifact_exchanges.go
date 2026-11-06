@@ -124,6 +124,25 @@ func (s *Server) offerExchange(w http.ResponseWriter, r *http.Request) {
 	respond(w, code, result)
 }
 
+func (s *Server) exchangeTrace(w http.ResponseWriter, r *http.Request) {
+	identity, err := scope(r)
+	if err != nil {
+		failure(w, err)
+		return
+	}
+	var request store.ExchangeTraceRequest
+	if err = boundedControlInput(w, r, 16<<10, &request); err != nil {
+		fail(w, 400, "invalid_exchange_trace")
+		return
+	}
+	result, err := s.Service.TraceExchange(r.Context(), identity, request)
+	if err != nil {
+		failure(w, err)
+		return
+	}
+	respond(w, 200, result)
+}
+
 func (s *Server) incomingExchanges(w http.ResponseWriter, r *http.Request) {
 	identity, err := scope(r)
 	if err != nil {

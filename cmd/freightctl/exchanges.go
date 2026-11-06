@@ -34,7 +34,21 @@ func runExchanges(ctx context.Context, command string, o exchangeOptions, output
 	var offer *store.ExchangeRequest
 	var closure *store.ExchangeClosureCommand
 	var ingress custody.IngressDescriptorRequest
+	var trace store.ExchangeTraceRequest
 	switch command {
+	case "exchange-trace":
+		input, err := secure.ReadSecret(o.Input, 16<<10)
+		if err != nil {
+			return errors.New("exchange evidence request must be a protected bounded regular file")
+		}
+		err = workflow.Decode(input.Bytes, &trace)
+		input.Close()
+		if err != nil {
+			return err
+		}
+		if err = store.ValidateExchangeTraceRequest(trace); err != nil {
+			return err
+		}
 	case "exchange-ingress-descriptor":
 		input, err := secure.ReadSecret(o.Input, 16<<10)
 		if err != nil {
@@ -131,6 +145,8 @@ func runExchanges(ctx context.Context, command string, o exchangeOptions, output
 	}
 	var result any
 	switch command {
+	case "exchange-trace":
+		result, err = service.TraceExchange(ctx, scope, trace)
 	case "exchange-ingress-descriptor":
 		result, err = service.PrepareArtifactIngress(ctx, scope, ingress)
 	case "exchange-close":

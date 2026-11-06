@@ -2366,5 +2366,36 @@
       "idempotentHint": true,
       "openWorldHint": false
     }
+  },
+  {
+    "name": "freightctl.exchange_trace",
+    "description": "Inspect only already authorized recorded custody/offer/closure evidence under explicit incoming-view or original-sender-receipt authority. Held incoming views remain opaque. No parent traversal,raw event payload,physical verification,receipt/grant/effect or stronger receiver outcome.",
+    "inputSchema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "exchange_id",
+        "direction"
+      ],
+      "properties": {
+        "exchange_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+        },
+        "direction": {
+          "type": "string",
+          "enum": [
+            "incoming",
+            "outgoing"
+          ]
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
   }
 ]

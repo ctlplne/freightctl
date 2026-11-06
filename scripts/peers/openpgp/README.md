@@ -30,13 +30,17 @@ The exact embedded version comes from Node26.13.0's generated
 Its updater appends the imported source commit to the dependency header version.
 F120 preserves the first native failure caused by expecting only the header's
 shorter string. The corrected assertion still requires the exact full version;
-native green and complete scans remain owed.
+the corrected native probes and full image gates pass at02140e7. Original
+independent interoperability/recovery and final-source qualification remain owed.
 
 This changes the actual runtime dependencies. It does not waive the prior
 CVE-2026-76844 finding against the Debian zlib package: F114 preserves the
 original native failures. Registry metadata and stand-ins establish no runtime,
-scan or interoperability result. Both native candidate builds, complete scans
-and original independent AEAD decryption/corruption/recovery replay are owed.
+scan or interoperability result. Both native builds/probes and complete image gates pass at exact source02140e7
+([F124](../../../docs/qualification/evidence/F124-native-peer-image-gate-passed.json)):
+0CRITICAL/0HIGH/0UNKNOWN,8LOW/34MEDIUM,11OS+2language packages,zero suppressed.
+Original independent AEAD decryption/corruption/recovery and final-source replay
+remain owed.
 No peer artifact is published or included in a release bundle.
 
 GitHub builds the image and audits its JavaScript dependencies. Test execution

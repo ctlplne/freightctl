@@ -42,6 +42,7 @@ same-origin CSRF protection. Tool-list results are private and immediately stale
 | `offer_exchange` | Commit the ordinary exact-byte offer and private idempotency receipt. Requires the exact canonical request hash and stable request key. |
 | `incoming_exchanges`, `inspect_exchange` | Poll and inspect currently authorized incoming views; held rows stay opaque. |
 | `retrieval_descriptor` | Return exact integrity metadata and a relative authenticated HTTPS download path, without artifact bytes. |
+| `exchange_trace` | Read authorized custody/offer/closure records under an explicit incoming or outgoing selector;held incoming views stay opaque. |
 | `validate_workflow`, `propose_workflow` | Validate a typed ordinary workflow or record an unapproved draft with its original operation key. Current workflow permissions and registered connection/source checks apply. |
 | `artifact_upload_start`, `artifact_upload_status`, `artifact_upload_complete`, `artifact_upload_abort` | Create/recover a new confined virtual-file ticket,inspect committed progress or explicitly complete/abort through ordinary resumable custody. Host sends bytes outside MCP. |
 | `outgoing_exchanges`, `exchange_receipt` | Inspect own original offer receipts and separately checked current state. Enumeration also needs list. |

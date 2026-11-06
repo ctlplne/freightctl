@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Api } from "./api";
 import { ApiError, type Session } from "./types";
 import { ExchangeReceiveApi } from "./artifact-exchanges-api";
+import { ArtifactEvidence } from "./artifact-evidence";
 import type {
   OutgoingExchange,
   OutgoingPage,
@@ -177,6 +178,17 @@ export function ArtifactOutgoing({
       {selected && (
         <section aria-labelledby="sent-artifact-detail">
           <h3 id="sent-artifact-detail">Original offer and current state</h3>
+          <ArtifactEvidence
+            client={client}
+            id={selected.exchange.id}
+            direction="outgoing"
+            expected={{
+              request_hash: selected.exchange.request_hash,
+              artifact: selected.exchange.request.artifact,
+              expires_at: selected.exchange.request.expires_at,
+            }}
+            onError={onError}
+          />
           <dl className="facts">
             <dt>Exchange</dt>
             <dd>

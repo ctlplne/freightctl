@@ -65,7 +65,8 @@
         "docs/qualification/evidence/F108-governed-collection-artifact-source.json",
         "docs/qualification/evidence/F111-agent-artifact-ingress-descriptor.json",
         "docs/qualification/evidence/F116-mcp-resumable-artifact-ingress.json",
-        "docs/qualification/evidence/F121-native-exchange-process-recovery.json"
+        "docs/qualification/evidence/F121-native-exchange-process-recovery.json",
+        "docs/qualification/evidence/F123-authorized-exchange-evidence.json"
       ]
     },
     {
@@ -135,7 +136,8 @@
         "docs/qualification/evidence/F111-agent-artifact-ingress-descriptor.json",
         "docs/qualification/evidence/F116-mcp-resumable-artifact-ingress.json",
         "docs/qualification/evidence/F118-mcp-workflow-review-proposals.json",
-        "docs/qualification/evidence/F121-native-exchange-process-recovery.json"
+        "docs/qualification/evidence/F121-native-exchange-process-recovery.json",
+        "docs/qualification/evidence/F123-authorized-exchange-evidence.json"
       ]
     },
     {
@@ -168,7 +170,8 @@
         "docs/qualification/evidence/F108-governed-collection-artifact-source.json",
         "docs/qualification/evidence/F111-agent-artifact-ingress-descriptor.json",
         "docs/qualification/evidence/F116-mcp-resumable-artifact-ingress.json",
-        "docs/qualification/evidence/F121-native-exchange-process-recovery.json"
+        "docs/qualification/evidence/F121-native-exchange-process-recovery.json",
+        "docs/qualification/evidence/F123-authorized-exchange-evidence.json"
       ]
     },
     {
@@ -205,7 +208,8 @@
         "docs/qualification/evidence/F111-agent-artifact-ingress-descriptor.json",
         "docs/qualification/evidence/F116-mcp-resumable-artifact-ingress.json",
         "docs/qualification/evidence/F118-mcp-workflow-review-proposals.json",
-        "docs/qualification/evidence/F121-native-exchange-process-recovery.json"
+        "docs/qualification/evidence/F121-native-exchange-process-recovery.json",
+        "docs/qualification/evidence/F123-authorized-exchange-evidence.json"
       ]
     },
     {
@@ -241,7 +245,8 @@
         "docs/qualification/evidence/F111-agent-artifact-ingress-descriptor.json",
         "docs/qualification/evidence/F116-mcp-resumable-artifact-ingress.json",
         "docs/qualification/evidence/F118-mcp-workflow-review-proposals.json",
-        "docs/qualification/evidence/F121-native-exchange-process-recovery.json"
+        "docs/qualification/evidence/F121-native-exchange-process-recovery.json",
+        "docs/qualification/evidence/F123-authorized-exchange-evidence.json"
       ]
     },
     {
@@ -304,7 +309,8 @@
         "docs/qualification/evidence/F111-agent-artifact-ingress-descriptor.json",
         "docs/qualification/evidence/F116-mcp-resumable-artifact-ingress.json",
         "docs/qualification/evidence/F118-mcp-workflow-review-proposals.json",
-        "docs/qualification/evidence/F121-native-exchange-process-recovery.json"
+        "docs/qualification/evidence/F121-native-exchange-process-recovery.json",
+        "docs/qualification/evidence/F123-authorized-exchange-evidence.json"
       ]
     },
     {
@@ -342,7 +348,8 @@
         "docs/qualification/evidence/F108-governed-collection-artifact-source.json",
         "docs/qualification/evidence/F111-agent-artifact-ingress-descriptor.json",
         "docs/qualification/evidence/F116-mcp-resumable-artifact-ingress.json",
-        "docs/qualification/evidence/F118-mcp-workflow-review-proposals.json"
+        "docs/qualification/evidence/F118-mcp-workflow-review-proposals.json",
+        "docs/qualification/evidence/F123-authorized-exchange-evidence.json"
       ]
     },
     {

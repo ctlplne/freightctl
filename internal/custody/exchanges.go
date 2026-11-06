@@ -28,6 +28,17 @@ func (s *Service) ExchangeLimits() (store.ExchangeLimits, int, error) {
 	return store.ExchangeLimits{MaxArtifactBytes: s.MaxFile, MaxLifetime: settings.MaxLifetime, MaxSenders: settings.MaxSenders}, settings.MaxOpenViews, nil
 }
 
+func (s *Service) TraceExchange(ctx context.Context, scope store.Scope, r store.ExchangeTraceRequest) (*store.ExchangeTrace, error) {
+	if err := store.ValidateExchangeTraceRequest(r); err != nil {
+		return nil, err
+	}
+	limits, _, err := s.ExchangeLimits()
+	if err != nil {
+		return nil, err
+	}
+	return s.DB.TraceExchange(ctx, scope, r, limits)
+}
+
 func (s *Service) OfferExchange(ctx context.Context, scope store.Scope, key string, request store.ExchangeRequest) (*store.ArtifactExchangeResult, error) {
 	limits, maximum, err := s.ExchangeLimits()
 	if err != nil {

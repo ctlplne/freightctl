@@ -87,7 +87,7 @@ func TestMCPStockClientExchangeUsesOrdinaryAuthorityAndSeparateReply(t *testing.
 		t.Fatal("wrong partner discovered MCP catalog")
 	}
 	catalog, err := a.ListTools(ctx, &mcp.ListToolsParams{})
-	if err != nil || len(catalog.Tools) != 24 || catalog.NextCursor != "" || catalog.TTLMs != 0 || catalog.CacheScope != "private" {
+	if err != nil || len(catalog.Tools) != 25 || catalog.NextCursor != "" || catalog.TTLMs != 0 || catalog.CacheScope != "private" {
 		t.Fatal("stock client did not observe exact private noncached catalog")
 	}
 	call := func(client *mcp.ClientSession, name string, args map[string]any, ok bool) *mcp.CallToolResult {
@@ -282,6 +282,55 @@ func TestMCPStockClientExchangeUsesOrdinaryAuthorityAndSeparateReply(t *testing.
 	mcpDecodeResult(t, call(b, "incoming_exchanges", map[string]any{"endpoint_id": endpoint.ID}, true), &incoming)
 	if len(incoming.Exchanges) != 1 || incoming.Exchanges[0].ID != offer.Exchange.ID {
 		t.Fatal("MCP polling changed participant visibility")
+	}
+	// Ordinary cookie/CSRF and official SDK reads project the same immutable
+	// facts. The selected direction does not supply a role or sender fallback.
+	cookieB, csrfB := loginBrowser(t, server, scope, tokenB)
+	traceRequest := store.ExchangeTraceRequest{ID: offer.Exchange.ID, Direction: "incoming"}
+	exchangeAPIRequest(t, server, "POST", prefix+"/exchange-traces/previews", cookieB, map[string]string{"Origin": server.URL, "X-CSRF-Token": "incorrect"}, exchangeAPIJSON(t, traceRequest), 403)
+	traceScope := store.Scope{Tenant: scope.Tenant, Partner: scope.Partner, TokenHash: secure.Digest(tokenA.Bytes)}
+	traceSnapshot := func() [4]int {
+		t.Helper()
+		tx, err := service.DB.Begin(ctx, traceScope)
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer tx.Tx.Rollback(ctx)
+		var counts [4]int
+		if err = tx.Tx.QueryRow(ctx, `SELECT (SELECT count(*) FROM events),(SELECT count(*) FROM artifact_exchanges),(SELECT count(*) FROM artifact_exchange_commands),(SELECT count(*) FROM delivery_intents)`).Scan(&counts[0], &counts[1], &counts[2], &counts[3]); err != nil {
+			t.Fatal(err)
+		}
+		return counts
+	}
+	traceBefore := traceSnapshot()
+	if traceBefore[1] != 1 || traceBefore[2] != 1 {
+		t.Fatal("trace snapshot did not see sender owned records")
+	}
+	var agentTrace, apiTrace, senderTrace store.ExchangeTrace
+	mcpDecodeResult(t, call(b, "exchange_trace", map[string]any{"exchange_id": offer.Exchange.ID, "direction": "incoming"}, true), &agentTrace)
+	mcpDecodeResult(t, call(a, "exchange_trace", map[string]any{"exchange_id": offer.Exchange.ID, "direction": "outgoing"}, true), &senderTrace)
+	_, traceRaw := exchangeAPIRequest(t, server, "POST", prefix+"/exchange-traces/previews", cookieB, map[string]string{"Origin": server.URL, "X-CSRF-Token": csrfB}, exchangeAPIJSON(t, traceRequest), 200)
+	if json.Unmarshal(traceRaw, &apiTrace) != nil {
+		t.Fatal("ordinary cookie evidence decode")
+	}
+	for _, v := range []store.ExchangeTrace{agentTrace, apiTrace, senderTrace} {
+		if v.RequestHash != offer.Exchange.RequestHash || v.Artifact == nil || *v.Artifact != request.Artifact || len(v.Events) != 2 || v.CheckedAt.IsZero() || v.StorageVerification != "not-checked" || v.Retrieval != "unknown" || v.ReceiverPersistence != "unknown" || v.BusinessProcessing != "unknown" {
+			t.Fatal("API/MCP evidence changed authorized source/receipt")
+		}
+	}
+	apiEvents, _ := json.Marshal(apiTrace.Events)
+	agentEvents, _ := json.Marshal(agentTrace.Events)
+	senderEvents, _ := json.Marshal(senderTrace.Events)
+	if !bytes.Equal(apiEvents, agentEvents) || !bytes.Equal(apiEvents, senderEvents) {
+		t.Fatal("shared surfaces changed immutable evidence times or identities")
+	}
+	if bytes.Contains(traceRaw, tokenB.Bytes) || bytes.Contains(traceRaw, sourceBytes) || bytes.Contains(traceRaw, []byte(service.Disk.Identity())) || bytes.Contains(traceRaw, []byte("payload")) {
+		t.Fatal("evidence disclosed private content,credential,storage or raw event")
+	}
+	call(other, "exchange_trace", map[string]any{"exchange_id": offer.Exchange.ID, "direction": "incoming"}, false)
+	call(b, "exchange_trace", map[string]any{"exchange_id": offer.Exchange.ID, "direction": "outgoing"}, false)
+	if traceSnapshot() != traceBefore {
+		t.Fatal("evidence reads created domain events,views,receipts or intents")
 	}
 	call(other, "inspect_exchange", map[string]any{"exchange_id": offer.Exchange.ID}, false)
 	var descriptor struct {

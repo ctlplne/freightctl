@@ -26,6 +26,20 @@ func TestArtifactExchangeAPIRefusesInventedAuthorityBeforeDatabase(t *testing.T)
 	}
 }
 
+func TestExchangeEvidenceRefusesRawEventsScopeAndDirectionSwitchBeforeDatabase(t *testing.T) {
+	h := New(&custody.Service{MaxFile: 1024, Exchanges: custody.ExchangeSettings{MaxLifetime: time.Hour, MaxSenders: 16, MaxOpenViews: 128, MaxEndpoints: 16}}, nil)
+	url := "https://freightctl.invalid/v1/tenants/11111111-1111-4111-8111-111111111111/partners/22222222-2222-4222-8222-222222222222/exchange-traces/previews"
+	for _, body := range []string{`{"exchange_id":"33333333-3333-4333-8333-333333333333","direction":"incoming","raw_events":true}`, `{"exchange_id":"33333333-3333-4333-8333-333333333333","direction":"incoming","tenant_id":"invented"}`, `{"exchange_id":"33333333-3333-4333-8333-333333333333","direction":"admin"}`, `{"exchange_id":"33333333-3333-4333-8333-333333333333","direction":"incoming","DIRECTION":"outgoing"}`, `null`, strings.Repeat(" ", 16385)} {
+		r := httptest.NewRequest("POST", url, strings.NewReader(body))
+		r.Header.Set("Authorization", "Bearer "+strings.Repeat("0", 64))
+		w := httptest.NewRecorder()
+		h.ServeHTTP(w, r)
+		if w.Code != 400 {
+			t.Fatalf("trace control reached storage or missing route: %d", w.Code)
+		}
+	}
+}
+
 func TestArtifactExchangeAPIRejectsInvalidReceiveSelectorsBeforeDatabase(t *testing.T) {
 	h := New(&custody.Service{MaxFile: 1024, Exchanges: custody.ExchangeSettings{MaxLifetime: time.Hour, MaxSenders: 16, MaxOpenViews: 128, MaxEndpoints: 16}}, nil)
 	prefix := "https://freightctl.invalid/v1/tenants/11111111-1111-4111-8111-111111111111/partners/22222222-2222-4222-8222-222222222222/"

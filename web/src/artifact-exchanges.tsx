@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { Api } from "./api";
 import { ApiError, uuid, type Session } from "./types";
 import { ExchangeReceiveApi } from "./artifact-exchanges-api";
+import { ArtifactEvidence } from "./artifact-evidence";
 import { operationKey } from "./crypto";
 import type {
   IncomingExchange,
@@ -398,6 +399,21 @@ export function ArtifactExchanges({
       {selected && (
         <section aria-labelledby="artifact-detail-title">
           <h3 id="artifact-detail-title">Current exchange details</h3>
+          <ArtifactEvidence
+            client={client}
+            id={selected.id}
+            direction="incoming"
+            {...(selected.state === "offered"
+              ? {
+                  expected: {
+                    request_hash: selected.exchange.request_hash,
+                    artifact: selected.exchange.request.artifact,
+                    expires_at: selected.exchange.request.expires_at,
+                  },
+                }
+              : {})}
+            onError={onError}
+          />
           <p>
             Exchange <code>{selected.id}</code>
           </p>

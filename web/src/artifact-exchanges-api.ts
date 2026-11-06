@@ -2,6 +2,12 @@ import { Api } from "./api";
 import { ApiError, asAccountPage, uuid } from "./types";
 import { digestBytes } from "./crypto";
 import {
+  asExchangeEvidence,
+  evidenceExpectation,
+  type EvidenceDirection,
+  type EvidenceExpectation,
+} from "./artifact-evidence-types";
+import {
   asCollectedExchangeSource,
   type CollectedSourceExpectation,
 } from "./collection-exchange-source-types";
@@ -83,6 +89,42 @@ export class ExchangeReceiveApi {
   }
   isCurrent(): boolean {
     return this.context() === this.who;
+  }
+  async evidence(
+    id: string,
+    direction: EvidenceDirection,
+    expected?: EvidenceExpectation,
+    signal?: AbortSignal,
+  ) {
+    const permitted = () => {
+      this.current();
+      if (!uuid(id) || !["incoming", "outgoing"].includes(direction))
+        throw new ApiError("invalid_artifact_exchange_contract", 400);
+      if (
+        !(direction === "incoming"
+          ? this.directory.can_receive
+          : this.directory.can_send)
+      )
+        throw new ApiError("permission_denied", 403);
+    };
+    permitted();
+    const pinned = expected ? evidenceExpectation(expected) : undefined;
+    if (pinned && !/^[0-9a-f]{64}$/.test(pinned.request_hash))
+      throw new ApiError("invalid_artifact_exchange_contract", 400);
+    const result = await this.api.request(
+      `${this.prefix}/exchange-traces/previews`,
+      {
+        method: "POST",
+        body: JSON.stringify({ exchange_id: id, direction }),
+        ...(signal ? { signal } : {}),
+      },
+      (value) => {
+        permitted();
+        return asExchangeEvidence(value, this.identity, id, direction, pinned);
+      },
+    );
+    permitted();
+    return result;
   }
   recoveryBytes(origin: string, review: OfferReviewInput): Uint8Array {
     this.current();

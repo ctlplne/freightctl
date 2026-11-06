@@ -48,6 +48,7 @@ let browser,
   state = "failed",
   egress = 0,
   accessibilityChecks = 0,
+  evidenceReads = 0,
   downloads = 0,
   declines = 0,
   offers = 0,
@@ -217,6 +218,27 @@ try {
     (await recipient.page.locator("body").innerText()).includes(c.sha256),
   );
   await accessibility(recipient.page, "details-accessibility");
+  phase = "incoming-evidence";
+  const incomingEvidence = recipient.page.getByRole("region", {
+    name: "Recorded exchange evidence",
+    exact: true,
+  });
+  await incomingEvidence
+    .getByRole("button", { name: "Read recorded evidence", exact: true })
+    .click();
+  await incomingEvidence
+    .getByRole("listitem")
+    .filter({ hasText: "Source accepted into custody" })
+    .waitFor();
+  assert.equal(await incomingEvidence.getByRole("listitem").count(), 2);
+  const incomingEvidenceText = await incomingEvidence.innerText();
+  assert.ok(
+    incomingEvidenceText.includes(c.file) &&
+      incomingEvidenceText.includes(c.exchange) &&
+      incomingEvidenceText.includes("remain unknown"),
+  );
+  evidenceReads++;
+  await accessibility(recipient.page, "incoming-evidence-accessibility");
   phase = "exact-download";
   const attachment = recipient.page.waitForEvent("download");
   await recipient.page
@@ -598,6 +620,27 @@ try {
     );
   }
   await accessibility(sender.page, "sender-history-detail-accessibility");
+  phase = "outgoing-evidence";
+  const outgoingEvidence = sender.page.getByRole("region", {
+    name: "Recorded exchange evidence",
+    exact: true,
+  });
+  await outgoingEvidence
+    .getByRole("button", { name: "Read recorded evidence", exact: true })
+    .click();
+  await outgoingEvidence
+    .getByRole("listitem")
+    .filter({ hasText: "Sender withdrew the offer" })
+    .waitFor();
+  assert.equal(await outgoingEvidence.getByRole("listitem").count(), 3);
+  const outgoingEvidenceText = await outgoingEvidence.innerText();
+  assert.ok(
+    outgoingEvidenceText.includes(sent.exchange.id) &&
+      outgoingEvidenceText.includes(withdrawn.event_id) &&
+      outgoingEvidenceText.includes("remain unknown"),
+  );
+  evidenceReads++;
+  await accessibility(sender.page, "outgoing-evidence-accessibility");
   await sender.context.close();
   phase = "recipient-decline-review";
   await recipient.page
@@ -1137,6 +1180,7 @@ try {
     model_started: false,
     browser_sandbox: true,
     accessibility_checks: accessibilityChecks,
+    evidence_reads: evidenceReads,
     browser_version: browser?.version() ?? "",
     node_version: process.version,
     axe_version: axe.version,

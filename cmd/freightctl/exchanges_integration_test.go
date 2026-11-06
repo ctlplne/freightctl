@@ -233,6 +233,15 @@ func TestArtifactExchangeCLIUsesOrdinaryAuthorityAndPublishesVerifiedDownload(t 
 	if err != nil || json.Unmarshal(body, &incoming) != nil || incoming.State != "offered" {
 		t.Fatal("CLI inspection failed", err)
 	}
+	traceInput := requestFile(store.ExchangeTraceRequest{ID: offered.Exchange.ID, Direction: "incoming"})
+	traceRaw, err := command(b, "exchange-trace", "-request-file", traceInput)
+	var trace store.ExchangeTrace
+	if err != nil || json.Unmarshal(traceRaw, &trace) != nil || trace.Direction != "incoming" || trace.Artifact == nil || *trace.Artifact != request.Artifact || trace.RequestHash != offered.Exchange.RequestHash || len(trace.Events) != 2 || trace.Events[0].ID != file.EventID || trace.Events[1].ID != offered.Exchange.EventID || trace.ReceiverPersistence != "unknown" {
+		t.Fatal("CLI evidence changed source/offer/receipt meaning", err)
+	}
+	if _, err = command(other, "exchange-trace", "-request-file", traceInput); !errors.Is(err, store.ErrNotFound) {
+		t.Fatal("unrelated CLI caller read evidence", err)
+	}
 	outputDirectory := t.TempDir()
 	if err = os.Chmod(outputDirectory, 0700); err != nil {
 		t.Fatal(err)
@@ -272,6 +281,10 @@ func TestArtifactExchangeCLIUsesOrdinaryAuthorityAndPublishesVerifiedDownload(t 
 	var recovered store.ExchangeClosureResult
 	if err != nil || json.Unmarshal(body, &recovered) != nil || !recovered.Replayed || recovered.EventID != closed.EventID {
 		t.Fatal("CLI cancellation response recovery", err)
+	}
+	traceRaw, err = command(a, "exchange-trace", "-request-file", requestFile(store.ExchangeTraceRequest{ID: offered.Exchange.ID, Direction: "outgoing"}))
+	if err != nil || json.Unmarshal(traceRaw, &trace) != nil || trace.State != "canceled" || len(trace.Events) != 3 || trace.Events[2].ID != closed.EventID || trace.Events[2].Kind != "view-canceled" {
+		t.Fatal("CLI lost authorized historical closure evidence", err)
 	}
 	body, err = command(a, "exchange-outgoing-inspect", "-exchange-id", offered.Exchange.ID)
 	var history store.OutgoingExchange

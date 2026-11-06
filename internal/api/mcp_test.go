@@ -83,7 +83,7 @@ func TestMCPMediaOriginAndHeaderAmbiguityRefuseBeforeDatabase(t *testing.T) {
 
 func TestMCPToolSchemasBindOrdinaryRequestsAndExcludeAmbientAuthority(t *testing.T) {
 	var tools []*mcp.Tool
-	if err := json.Unmarshal(mcpCatalog, &tools); err != nil || len(tools) != 24 {
+	if err := json.Unmarshal(mcpCatalog, &tools); err != nil || len(tools) != 25 {
 		t.Fatal("missing fixed tool catalog", err)
 	}
 	raw, err := os.ReadFile("../../web/tests/fixtures/artifact-exchange.json")
@@ -115,6 +115,8 @@ func TestMCPToolSchemasBindOrdinaryRequestsAndExcludeAmbientAuthority(t *testing
 		}
 		var args map[string]any
 		switch tool.Name {
+		case "freightctl.exchange_trace":
+			args = map[string]any{"exchange_id": "55555555-5555-4555-8555-555555555555", "direction": "incoming"}
 		case "freightctl.validate_workflow", "freightctl.propose_workflow":
 			request := map[string]any{"definition": map[string]any{"schema_version": 1, "name": "Reviewed draft", "steps": []any{map[string]any{"id": "send", "kind": "sftp.deliver", "connection": map[string]any{"id": "55555555-5555-4555-8555-555555555555", "version": 1, "hash": fixture.Hash}, "filename": "new.dat"}}}}
 			args = map[string]any{"request": request}
@@ -325,6 +327,15 @@ func TestMCPOfferHashAndClosureMeaningRefuseBeforeDatabase(t *testing.T) {
 	_, err = server.callMCPTool(context.Background(), store.Scope{}, "freightctl.close_exchange", mcpToolArguments{Command: json.RawMessage(`{"operation":"cancel","approved":true}`), Key: "original-key"})
 	if !errors.Is(err, store.ErrExchangeInput) {
 		t.Fatal("invented closure authority reached database")
+	}
+}
+
+func TestMCPEvidenceRejectsDirectionAuthorityBeforeDatabase(t *testing.T) {
+	s := &Server{Service: &custody.Service{MaxFile: 1024, Exchanges: custody.ExchangeSettings{MaxLifetime: time.Hour, MaxSenders: 16, MaxOpenViews: 128, MaxEndpoints: 16}}}
+	for _, args := range []mcpToolArguments{{Exchange: "33333333-3333-4333-8333-333333333333", Direction: "admin"}, {Exchange: "not-an-id", Direction: "incoming"}, {Exchange: "33333333-3333-4333-8333-333333333333"}} {
+		if _, err := s.callMCPTool(context.Background(), store.Scope{}, "freightctl.exchange_trace", args); !errors.Is(err, store.ErrExchangeInput) {
+			t.Fatal("tool reached database with unapproved direction/identity", err)
+		}
 	}
 }
 

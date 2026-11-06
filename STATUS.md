@@ -30,6 +30,13 @@ implicit forwarding or execution grant. Official MCP tools share ordinary
 services, including resumable ingress and unapproved workflow proposals. Source
 presence, stand-ins and compilation do not qualify complete AX profiles.
 
+F123 adds authorized custody/offer/closure evidence through API,CLI,MCP and
+browser. Existing incoming/outgoing guards,held opacity,exact event bindings and
+unknown receiver outcomes stay explicit. Six focused Go methods,four browser
+adapter methods,one strict summary method and affected static checks pass.
+Original native PG/API/CLI/official SDK and24-state Chrome proofs are prepared,
+not qualified. Catalog25;no migration,retained change or inference.
+
 F121 prepares the actual product daemon/PG/storage/verified-TLS journey with
 committed-response loss, three selected process kills, original-key recovery,
 stock-curl byte observation and persisted revocation. Native outcomes remain owed.

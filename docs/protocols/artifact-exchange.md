@@ -33,6 +33,10 @@ exact same origin and CSRF token. An explicit bearer header never falls back to 
 cookie identity. The optional Trust Control profile remains unpinned under X07;
 these routes do not assume its API or credential format.
 
+Read [authorized exchange evidence](artifact-exchange-evidence.md) for the shared
+API/CLI/agent/browser view of existing custody,offer and closure facts. It grants
+no byte access or stronger receiver outcome.
+
 ## Perform an exchange
 
 All paths below start with `/v1/tenants/{tenant}/partners/{partner}`. Those

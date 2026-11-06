@@ -1,0 +1,454 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "freightctl authorized exchange evidence subset",
+    "version": "1",
+    "description": "Structural interface contract;actual native/conformance and full product qualification remain separate."
+  },
+  "paths": {
+    "/v1/tenants/{tenant}/partners/{partner}/exchange-traces/previews": {
+      "post": {
+        "operationId": "previewAuthorizedExchangeEvidence",
+        "summary": "Read original custody/offer/closure records under existing direction authority",
+        "description": "Incoming holds remain opaque;outgoing requires original sender-receipt authority. No raw event payload,arbitrary event ID,parent traversal,grant,receipt or effect. Cookie requests require ordinary same-origin/CSRF.",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "browserCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "tenant",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+            }
+          },
+          {
+            "name": "partner",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "x-max-body-bytes": 16384,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TraceRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Current authorized metadata and immutable recorded facts;all stronger receiver outcomes unknown",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExchangeEvidence"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid strict control body or selector"
+          },
+          "401": {
+            "description": "Current authentication required"
+          },
+          "403": {
+            "description": "Current permission or cookie origin/CSRF refusal"
+          },
+          "404": {
+            "description": "No authorized record;not a disclosure of existence"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      },
+      "browserCookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "__Host-freightctl-session"
+      }
+    },
+    "schemas": {
+      "TraceRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["exchange_id", "direction"],
+        "properties": {
+          "exchange_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+          },
+          "direction": {
+            "type": "string",
+            "enum": ["incoming", "outgoing"]
+          }
+        }
+      },
+      "Artifact": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "file_revision_id",
+          "size_bytes",
+          "sha256",
+          "acceptance_policy"
+        ],
+        "properties": {
+          "file_revision_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+          },
+          "size_bytes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "acceptance_policy": {
+            "type": "string",
+            "pattern": "^(integrity-only-v1|intake-csv-v1:[0-9a-f]{64})$"
+          }
+        }
+      },
+      "RecordedEvent": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "event_id", "resource_id", "recorded_at"],
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "custody-acceptance",
+              "availability-offer",
+              "view-canceled",
+              "view-declined"
+            ]
+          },
+          "event_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+          },
+          "resource_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+          },
+          "recorded_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ExchangeEvidence": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "profile",
+          "tenant_id",
+          "partner_id",
+          "exchange_id",
+          "direction",
+          "current_metadata_state",
+          "checked_at",
+          "details",
+          "recorded_events",
+          "storage_verification",
+          "retrieval",
+          "receiver_persistence",
+          "business_processing"
+        ],
+        "properties": {
+          "profile": {
+            "const": "authorized-exchange-evidence-v1"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+          },
+          "partner_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+          },
+          "exchange_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+          },
+          "direction": {
+            "type": "string",
+            "enum": ["incoming", "outgoing"]
+          },
+          "current_metadata_state": {
+            "type": "string",
+            "enum": [
+              "offered",
+              "held",
+              "unavailable",
+              "expired",
+              "canceled",
+              "declined"
+            ]
+          },
+          "checked_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "details": {
+            "type": "string",
+            "enum": ["opaque", "authorized-records"]
+          },
+          "request_hash": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "artifact": {
+            "$ref": "#/components/schemas/Artifact"
+          },
+          "reply_reference_only": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+          },
+          "recorded_events": {
+            "type": "array",
+            "maxItems": 3,
+            "items": {
+              "$ref": "#/components/schemas/RecordedEvent"
+            },
+            "prefixItems": [
+              {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/RecordedEvent"
+                  },
+                  {
+                    "properties": {
+                      "kind": {
+                        "const": "custody-acceptance"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/RecordedEvent"
+                  },
+                  {
+                    "properties": {
+                      "kind": {
+                        "const": "availability-offer"
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "storage_verification": {
+            "const": "not-checked"
+          },
+          "retrieval": {
+            "const": "unknown"
+          },
+          "receiver_persistence": {
+            "const": "unknown"
+          },
+          "business_processing": {
+            "const": "unknown"
+          }
+        },
+        "description": "An authorized read of existing records,not byte verification or a stronger receipt. Event IDs/resources/times must match actual immutable source/offer/closure rows;client and service enforce identity correlations beyond structural JSON Schema. Timestamps need not be monotonic. Reply reference is not followed.",
+        "oneOf": [
+          {
+            "properties": {
+              "direction": {
+                "const": "incoming"
+              },
+              "current_metadata_state": {
+                "const": "held"
+              },
+              "details": {
+                "const": "opaque"
+              },
+              "recorded_events": {
+                "maxItems": 0
+              }
+            },
+            "not": {
+              "anyOf": [
+                {
+                  "required": ["request_hash"]
+                },
+                {
+                  "required": ["artifact"]
+                },
+                {
+                  "required": ["reply_reference_only"]
+                }
+              ]
+            }
+          },
+          {
+            "properties": {
+              "details": {
+                "const": "authorized-records"
+              },
+              "recorded_events": {
+                "minItems": 2
+              }
+            },
+            "required": ["request_hash", "artifact"],
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "direction": {
+                      "const": "incoming"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "current_metadata_state": {
+                      "const": "offered"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "current_metadata_state": {
+                  "const": "canceled"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "recorded_events": {
+                  "minItems": 3,
+                  "maxItems": 3,
+                  "prefixItems": [
+                    {
+                      "properties": {
+                        "kind": {
+                          "const": "custody-acceptance"
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "kind": {
+                          "const": "availability-offer"
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "kind": {
+                          "const": "view-canceled"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "current_metadata_state": {
+                  "const": "declined"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "recorded_events": {
+                  "minItems": 3,
+                  "maxItems": 3,
+                  "prefixItems": [
+                    {
+                      "properties": {
+                        "kind": {
+                          "const": "custody-acceptance"
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "kind": {
+                          "const": "availability-offer"
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "kind": {
+                          "const": "view-declined"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "current_metadata_state": {
+                  "enum": ["offered", "held", "unavailable", "expired"]
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "recorded_events": {
+                  "maxItems": 2
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}
