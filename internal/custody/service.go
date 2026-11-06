@@ -37,10 +37,10 @@ type Service struct {
 }
 
 func (s *Service) Accept(ctx context.Context, scope store.Scope, key string, size int64, digest string, body io.Reader) (*store.File, bool, error) {
-	return s.accept(ctx, scope, key, size, digest, body, nil, nil)
+	return s.accept(ctx, scope, key, size, digest, body, nil, nil, nil)
 }
 
-func (s *Service) accept(ctx context.Context, scope store.Scope, key string, size int64, digest string, body io.Reader, target *UploadTarget, sealed *sealedAcceptance) (*store.File, bool, error) {
+func (s *Service) accept(ctx context.Context, scope store.Scope, key string, size int64, digest string, body io.Reader, target *UploadTarget, sealed *sealedAcceptance, copySource *receivedCopy) (*store.File, bool, error) {
 	if size < 0 || size > s.MaxFile || !digestPattern.MatchString(digest) || !keyPattern.MatchString(key) {
 		return nil, false, ErrInput
 	}
@@ -66,6 +66,9 @@ func (s *Service) accept(ctx context.Context, scope store.Scope, key string, siz
 		}
 		meaning = pathMeaning(size, digest, actual, target)
 	}
+	if copySource != nil {
+		meaning = store.ExchangeCopyMeaning(copySource.request, meaning)
+	}
 	prior, err := t.Replay(ctx, key, meaning)
 	if err != nil {
 		return nil, false, err
@@ -84,6 +87,14 @@ func (s *Service) accept(ctx context.Context, scope store.Scope, key string, siz
 			return nil, false, err
 		}
 		return prior, true, t.Tx.Commit(ctx)
+	}
+	if copySource != nil {
+		reader, openErr := copySource.open(ctx, t, s)
+		if openErr != nil {
+			return nil, false, openErr
+		}
+		defer reader.Close()
+		body = reader
 	}
 	if target != nil {
 		var used bool
@@ -121,7 +132,12 @@ func (s *Service) accept(ctx context.Context, scope store.Scope, key string, siz
 		}
 	}
 	// Once synced, retain bytes even if SQL commit is uncertain. A retry reconciles by request key.
-	if err = t.Accept(ctx, key, meaning, f); err != nil {
+	if copySource != nil {
+		err = t.AcceptExchangeCopy(ctx, key, meaning, f, s.Disk.Identity(), copySource.request.ExchangeCopyOrigin)
+	} else {
+		err = t.Accept(ctx, key, meaning, f)
+	}
+	if err != nil {
 		return nil, false, err
 	}
 	var command *store.PathCommand
@@ -145,6 +161,11 @@ func (s *Service) accept(ctx context.Context, scope store.Scope, key string, siz
 	}
 	if err = t.Reauthorize(ctx); err != nil {
 		return nil, false, err
+	}
+	if copySource != nil {
+		if err = copySource.check(ctx, t, s); err != nil {
+			return nil, false, err
+		}
 	}
 	return f, false, t.Tx.Commit(ctx)
 }

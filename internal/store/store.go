@@ -148,7 +148,10 @@ var exchangeClosuresSchema string
 //go:embed 044_outgoing_exchange_history.sql
 var outgoingExchangeHistorySchema string
 
-var migrations = []string{schema, eventBinding, eventBounds, namespaceSchema, uploadSchema, uploadStorageSchema, deliverySchema, workflowSchema, assistanceSchema, intakeSchema, pgpSchema, encryptionSchema, scannerSchema, browserSessionSchema, browserCommandSchema, accountSchema, installationSchema, partnerSchema, onboardingSchema, onboardingProbesSchema, rechecksSchema, onboardingTestsSchema, onboardingReleasesSchema, onboardingHandoffsSchema, prepublicationHandoffsSchema, onboardingObservationsSchema, onboardingApprovalsSchema, outboundDispatchApprovalsSchema, workflowSchedulesSchema, workflowCollectionsSchema, scheduledCollectionsSchema, boundedWorkflowProgramsSchema, collectionRoutingSchema, collectionHandoffsSchema, collectionSuccessorsSchema, ftpsDeliverySchema, ftpsWorkflowSchema, ftpsProgramSchema, ftpsEncryptionSchema, ftpsCollectionsSchema, exchangeEndpointsSchema, artifactExchangesSchema, exchangeClosuresSchema, outgoingExchangeHistorySchema}
+//go:embed 045_exchange_copy.sql
+var exchangeCopySchema string
+
+var migrations = []string{schema, eventBinding, eventBounds, namespaceSchema, uploadSchema, uploadStorageSchema, deliverySchema, workflowSchema, assistanceSchema, intakeSchema, pgpSchema, encryptionSchema, scannerSchema, browserSessionSchema, browserCommandSchema, accountSchema, installationSchema, partnerSchema, onboardingSchema, onboardingProbesSchema, rechecksSchema, onboardingTestsSchema, onboardingReleasesSchema, onboardingHandoffsSchema, prepublicationHandoffsSchema, onboardingObservationsSchema, onboardingApprovalsSchema, outboundDispatchApprovalsSchema, workflowSchedulesSchema, workflowCollectionsSchema, scheduledCollectionsSchema, boundedWorkflowProgramsSchema, collectionRoutingSchema, collectionHandoffsSchema, collectionSuccessorsSchema, ftpsDeliverySchema, ftpsWorkflowSchema, ftpsProgramSchema, ftpsEncryptionSchema, ftpsCollectionsSchema, exchangeEndpointsSchema, artifactExchangesSchema, exchangeClosuresSchema, outgoingExchangeHistorySchema, exchangeCopySchema}
 var domainTables = []string{"tenants", "partners", "credentials", "events", "files", "idempotency", "namespace_entries", "namespace_revisions", "namespace_commands", "ssh_keys", "upload_sessions", "upload_chunks", "upload_receipts", "delivery_intents", "delivery_receipts", "connection_revisions", "workflow_revisions", "workflow_runs", "workflow_steps", "workflow_receipts", "ai_profiles", "ai_jobs", "ai_receipts", "intake_policies", "file_checks", "check_receipts", "file_releases", "pgp_keys", "file_signatures", "delivery_ciphertexts", "scanner_profiles", "browser_sessions", "browser_commands", "account_revisions", "account_commands", "installation_enrollments", "tenant_administrators", "tenant_admin_commands", "partner_registrations", "onboarding_plans", "onboarding_commands", "onboarding_probes", "file_rechecks", "file_recheck_slots", "onboarding_tests", "onboarding_releases", "onboarding_dispatches", "onboarding_handoffs", "onboarding_observations", "onboarding_approval_policies", "onboarding_approval_reviews", "outbound_dispatch_policies", "outbound_dispatch_reviews", "workflow_schedules", "workflow_schedule_occurrences", "workflow_schedule_inputs", "workflow_collection_jobs", "workflow_collection_batches", "workflow_collection_inputs", "workflow_collection_file_gates", "workflow_schedule_arrivals", "workflow_collection_routing", "workflow_collection_handoffs", "exchange_endpoint_versions", "exchange_endpoint_commands", "exchange_endpoint_heads", "artifact_exchanges", "artifact_exchange_commands", "artifact_exchange_closures", "artifact_exchange_closure_commands"}
 
 // SchemaVersion lets maintenance compare a binary's target before connecting
@@ -538,22 +541,27 @@ func (t *Transaction) Append(ctx context.Context, kind, resource string, payload
 	return id, err
 }
 func (t *Transaction) Accept(ctx context.Context, key, meaning string, f *File) error {
-	return t.accept(ctx, key, meaning, f, "", "")
+	return t.accept(ctx, key, meaning, f, "", "", nil)
 }
 func (t *Transaction) AcceptUpload(ctx context.Context, key, meaning string, f *File, uploadID, storageID string) error {
 	if !ValidID(uploadID) || !ValidID(storageID) {
 		return ErrState
 	}
-	return t.accept(ctx, key, meaning, f, uploadID, storageID)
+	return t.accept(ctx, key, meaning, f, uploadID, storageID, nil)
 }
-func (t *Transaction) accept(ctx context.Context, key, meaning string, f *File, uploadID, storageID string) error {
+func (t *Transaction) accept(ctx context.Context, key, meaning string, f *File, uploadID, storageID string, origin *ExchangeCopyOrigin) error {
 	if err := t.Reauthorize(ctx); err != nil {
 		return err
 	}
 	if err := t.Require("write"); err != nil {
 		return err
 	}
-	id, err := t.Append(ctx, "FileAccepted", f.ID, map[string]any{"schema_version": 2, "size_bytes": f.Size, "sha256": f.SHA256, "policy": f.Policy, "request_key": key, "request_hash": meaning, "protocol_session_id": t.Scope.SessionID, "upload_session_id": uploadID, "storage_id": storageID})
+	payload := map[string]any{"schema_version": 2, "size_bytes": f.Size, "sha256": f.SHA256, "policy": f.Policy, "request_key": key, "request_hash": meaning, "protocol_session_id": t.Scope.SessionID, "upload_session_id": uploadID, "storage_id": storageID}
+	if origin != nil {
+		payload["schema_version"] = 4
+		payload["exchange_copy"] = origin
+	}
+	id, err := t.Append(ctx, "FileAccepted", f.ID, payload)
 	if err != nil {
 		return err
 	}

@@ -48,7 +48,13 @@ send impossible revision0. Ordinary namespace guards and mode0600 remain intact.
 Observed red then four focused methods and affected tagged compilation/vet pass.
 Original native PostgreSQL/HTTPS/official-client upload proof remains owed.
 
-Latest fresh schema 44 targets 71 metadata tables/70 forced-RLS tables. Retained
+F128 implements separately authorized received-copy custody through API/CLI.
+Current receive plus write permission,new private path,verified durable bytes,
+fresh intake and atomic private provenance are required. Three focused Go and
+seven metadata-summary methods plus affected static checks pass. Actual native
+SQL/HTTPS/CLI/intake/reopen proofs and browser/MCP copy controls remain owed.
+
+Latest fresh schema 45 targets 71 metadata tables/70 forced-RLS tables. Retained
 schema 35 is untouched. PostgreSQL/non-owner RLS, immutable custody, transactional
 events/intents/idempotency, approvals, leases/fencing and protected secrets remain
 mandatory. Receipt, availability, retrieval, receiver persistence and processing

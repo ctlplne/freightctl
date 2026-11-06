@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "id": "F128",
+  "observed_at": "2026-11-05",
+  "candidate_parent": "1681f43f1fa19d52ad08598734f280784f5808d0",
+  "state": "Received artifact copy into separately authorized owned custody implemented through ordinary API/CLI;native qualification and browser/MCP convenience controls owed",
+  "qualification_claim": false,
+  "profile": "received-artifact-copy-v1",
+  "changes": [
+    "Strict16KiB exact offer hash/artifact/new virtual path plus stable key. Separate current read/list/write,source recipient/endpoint/sender/expiry/closure/policy checks;mode0600/create-only,never overwrite.",
+    "Stream verified immutable source bytes through ordinary durable staging and rehash;reauthorize on bounded reads and before commit. New identity/current intake with no inherited verdict,release,delivery or execution grant.",
+    "FileAccepted schema4 contains exact private source provenance atomically with ordinary file/idempotency/intake/namespace effects. Append-only migration45 independently binds exact current source,bytes,storage,actor,intake and receipt at commit. No new metadata table or RLS exception.",
+    "Original-key recovery uses current owned-file receipt access without reopening a closed source. Different view/hash/artifact/destination/root meaning refuses. Parent provenance is not added to downstream evidence traversal."
+  ],
+  "red": {
+    "reference": ".private/freightctl-f128-api-red.log",
+    "observation": "New copy control regression observed404 before implementation;strict invalid/invented authority and unsafe destinations now400 before database."
+  },
+  "green": {
+    "focused_Go_methods": 3,
+    "metadata_summary_methods": 7,
+    "affected_native_fixture_compilation": "pass;no runtime tests selected",
+    "affected_vet": "pass",
+    "unchanged_architecture": "pass",
+    "format_diff": "pass",
+    "OpenAPI": "one path,20 local references resolve;external conformance owed"
+  },
+  "prepared_native": [
+    "Actual PG/storage private exact byte copy,wrong actor/scope,changed source hash,changed same-key destination,no overwrite,no ambient source access or forwarding,new identity/mode,exact acceptance/provenance/receipt/no-intent cardinality",
+    "Service pool/storage reopen after view closure recovers original receipt;fresh closed-view copy refuses;owned bytes remain independently readable. Not process/power-loss proof.",
+    "Released checked source produces fresh held copy with no inherited release or namespace publication;direct malformed source provenance rolls back file/event/idempotency",
+    "Served verified HTTPS API bearer/cookie original receipt parity,missing CSRF no effects,ordinary receiver byte comparison,read-only recipient lacks independent write;original CLI copy/byte/read-is-not-write/closure recovery extension"
+  ],
+  "schema": {
+    "fresh_target": 45,
+    "metadata_tables": 71,
+    "forced_RLS_tables": 70,
+    "retained": 35,
+    "retained_changed": false
+  },
+  "source_files": [
+    {
+      "path": "cmd/freightctl/exchange_copy_test.go",
+      "sha256": "f27356b2a6eb205222b8cfac2ccefe110022c3fc255ca1fa64261bc94f721a97"
+    },
+    {
+      "path": "cmd/freightctl/exchanges.go",
+      "sha256": "9c22839c3cbbbccc94d8f3185622b5147666e8af2e408d67653810a4580a16fc"
+    },
+    {
+      "path": "cmd/freightctl/exchanges_integration_test.go",
+      "sha256": "085a64f1e3523dd3792676817c312eb4ca9fd87c48d293579d8634789d8be044"
+    },
+    {
+      "path": "cmd/freightctl/main.go",
+      "sha256": "133fd2e2c2dbf807e261e21e665622669a28bd998d92d6cec88955bebb87bb17"
+    },
+    {
+      "path": "docs/api/received-artifact-copy.openapi.json",
+      "sha256": "757cd32d98a75d1b6143e0a4a13be4d0b4d532c718a94c3cc5b7edcc647e908a"
+    },
+    {
+      "path": "docs/protocols/received-artifact-copy.md",
+      "sha256": "a0f98ab3d287f5a76a13fcebce9c52ec2b20c70a2a0095190b0704b9afbc7e0b"
+    },
+    {
+      "path": "internal/api/api.go",
+      "sha256": "5626e1874818611b18a2a1157cb5231268e949a4694112c04387302bc3974855"
+    },
+    {
+      "path": "internal/api/exchange_copy.go",
+      "sha256": "e7176b597d8ebc38eaa21eefc9988ed579e5c15bc1b071bffbc398e40d2c27bc"
+    },
+    {
+      "path": "internal/api/exchange_copy_integration_test.go",
+      "sha256": "d9efeaf98e03e07ce2a5eb0be098e602251534ff82bebc0f3a4c81f1fc1410ff"
+    },
+    {
+      "path": "internal/api/exchange_copy_test.go",
+      "sha256": "1f3b6a4431312efa592cb9a8a7a29917985361df8389875f9e2b37030b920a68"
+    },
+    {
+      "path": "internal/custody/exchange_copy.go",
+      "sha256": "a59f00fcafab788db962a5f933e6b9ddb2b82b05aa97cd2167444a8eaab2ddf7"
+    },
+    {
+      "path": "internal/custody/exchange_copy_integration_test.go",
+      "sha256": "77258d2a72173dd416b631206f84faa5aed1ad1c6f5351156b15ac5c7131c5f7"
+    },
+    {
+      "path": "internal/custody/namespace.go",
+      "sha256": "ddcd6f130ff75e3f97b0a23dd457057a8c7dbf7f60956e70bd19f0f4afa1890b"
+    },
+    {
+      "path": "internal/custody/sealed.go",
+      "sha256": "143f6d5c35b8b62032a0ff547018c5001c34d8539ea8fe0b8fe9851278755d43"
+    },
+    {
+      "path": "internal/custody/service.go",
+      "sha256": "7e29afccb01412fc8232d5b62fd3841f72c8a23d7d8143198558c1e9f7dbd11c"
+    },
+    {
+      "path": "internal/store/045_exchange_copy.sql",
+      "sha256": "9b708dd52b4c46b63f411d1354c3a7a3087b8d6aaf6f7ed7ed70c5de79c26cf7"
+    },
+    {
+      "path": "internal/store/exchange_copy.go",
+      "sha256": "8ddfc4da38c4cef0feb235d61d0556db0f433887bb21b4e279b85b0af660c867"
+    },
+    {
+      "path": "internal/store/exchange_copy_test.go",
+      "sha256": "88bff9e534a2d2f79225a751ccf88172f9b82bb55cec04852f22bcc88fc75aba"
+    },
+    {
+      "path": "internal/store/store.go",
+      "sha256": "a351a9f533578bc6299935266ad31ef40cbf9f5418e3ef6412534e25c56df26b"
+    },
+    {
+      "path": "scripts/metadata_contract.py",
+      "sha256": "86212d2705a018c48b9cfce7f81fc9865aec14ccdd3f8f456c662948892ddf12"
+    },
+    {
+      "path": "scripts/test-ci-metadata-summary.py",
+      "sha256": "357e17f78f69f3bb9f8a0b56459e9cca09b729f37d55a4285ea87eb047fac014"
+    }
+  ],
+  "local_manifest": {
+    "reference": ".private/freightctl-f128-manifest.json",
+    "sha256": "21720fa8abfa1f01236619c3e77fdf91dd73c1930563e106c6a5cc5e592407c5"
+  },
+  "owed": [
+    "All actual native SQL/migration/restore/API/CLI byte/intake/refusal/recovery outcomes at this source",
+    "Browser and MCP controlled copy/recovery interfaces and original native proofs",
+    "Concurrent authority/revocation/failure and selected process-death/final-source qualification",
+    "Every unresolved original CI failure and mandatory full baseline/AX/FINISH gate"
+  ],
+  "local_heavy_runtimes_started": false,
+  "inference": "off"
+}

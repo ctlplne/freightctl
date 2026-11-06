@@ -20,12 +20,13 @@ type exchangeOptions struct {
 	DSN, Token, Tenant, Partner, Storage    string
 	Input, Key, ID, Endpoint, After, Output string
 	Limit                                   int
-	MaxFile                                 int64
+	MaxFile, MaxStored                      int64
+	NamespaceMax                            int
 	Settings                                custody.ExchangeSettings
 }
 
 func runExchanges(ctx context.Context, command string, o exchangeOptions, output io.Writer) error {
-	service := &custody.Service{MaxFile: o.MaxFile, Exchanges: o.Settings}
+	service := &custody.Service{MaxFile: o.MaxFile, MaxStored: o.MaxStored, NamespaceMaxEntries: o.NamespaceMax, Exchanges: o.Settings}
 	limits, _, err := service.ExchangeLimits()
 	if err != nil {
 		return err
@@ -35,7 +36,27 @@ func runExchanges(ctx context.Context, command string, o exchangeOptions, output
 	var closure *store.ExchangeClosureCommand
 	var ingress custody.IngressDescriptorRequest
 	var trace store.ExchangeTraceRequest
+	var copyRequest store.ExchangeCopyRequest
 	switch command {
+	case "exchange-copy":
+		if !store.ValidBrowserOperationKey(o.Key) {
+			return store.ErrExchangeInput
+		}
+		input, err := secure.ReadSecret(o.Input, 16<<10)
+		if err != nil {
+			return errors.New("exchange copy request must be a protected bounded regular file")
+		}
+		err = workflow.Decode(input.Bytes, &copyRequest)
+		input.Close()
+		if err != nil {
+			return store.ErrExchangeInput
+		}
+		if err = store.ValidateExchangeCopy(copyRequest, o.MaxFile); err != nil {
+			return err
+		}
+		if o.MaxStored < o.MaxFile || o.NamespaceMax < 1 {
+			return store.ErrExchangeInput
+		}
 	case "exchange-trace":
 		input, err := secure.ReadSecret(o.Input, 16<<10)
 		if err != nil {
@@ -135,7 +156,7 @@ func runExchanges(ctx context.Context, command string, o exchangeOptions, output
 	}
 	defer db.Pool.Close()
 	service.DB = db
-	if command == "exchange-offer" || command == "exchange-download" {
+	if command == "exchange-offer" || command == "exchange-download" || command == "exchange-copy" {
 		disk, err := custody.OpenExisting(o.Storage)
 		if err != nil {
 			return err
@@ -145,6 +166,8 @@ func runExchanges(ctx context.Context, command string, o exchangeOptions, output
 	}
 	var result any
 	switch command {
+	case "exchange-copy":
+		result, err = service.CopyReceivedExchange(ctx, scope, o.Key, copyRequest)
 	case "exchange-trace":
 		result, err = service.TraceExchange(ctx, scope, trace)
 	case "exchange-ingress-descriptor":

@@ -38,5 +38,5 @@ func (s *Service) AcceptSealedAt(ctx context.Context, scope store.Scope, key str
 	if e = data.Close(); e != nil {
 		return nil, false, e
 	}
-	return s.accept(ctx, scope, key, file.Size, file.SHA256, nil, &target, &sealedAcceptance{id: file.ID, bind: bind})
+	return s.accept(ctx, scope, key, file.Size, file.SHA256, nil, &target, &sealedAcceptance{id: file.ID, bind: bind}, nil)
 }

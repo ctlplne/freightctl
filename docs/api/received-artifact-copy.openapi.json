@@ -1,0 +1,279 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "freightctl received artifact copy subset",
+    "version": "1",
+    "description": "Structural contract;actual native/conformance qualification remains owed."
+  },
+  "paths": {
+    "/v1/tenants/{tenant}/partners/{partner}/exchange-copies": {
+      "post": {
+        "operationId": "copyReceivedArtifactToOwnedCustody",
+        "summary": "Create a separately authorized private copy of exact received bytes",
+        "description": "Current receive and independent write authority required;new target mode0600,current intake,no forwarding or execution grant. Stable-key recovery returns original receipt without reopening source.16KiB strict metadata;no byte payload.",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "browserCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/tenant"
+          },
+          {
+            "$ref": "#/components/parameters/partner"
+          },
+          {
+            "$ref": "#/components/parameters/OperationKey"
+          },
+          {
+            "$ref": "#/components/parameters/Origin"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CopyRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Original durable copy acceptance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CopyResult"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Original receipt recovered;current state not checked",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CopyResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or ambiguous control"
+          },
+          "401": {
+            "description": "Current authentication required"
+          },
+          "403": {
+            "description": "Independent permission or CSRF missing"
+          },
+          "404": {
+            "description": "Source or owned receipt unavailable to current actor"
+          },
+          "409": {
+            "description": "Changed meaning,destination revision or state conflict"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ID": {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+      },
+      "SHA256": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      },
+      "Artifact": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "file_revision_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "size_bytes": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0,
+            "maximum": 9223372036854775807
+          },
+          "sha256": {
+            "$ref": "#/components/schemas/SHA256"
+          },
+          "acceptance_policy": {
+            "type": "string",
+            "pattern": "^(integrity-only-v1|intake-csv-v1:[0-9a-f]{64})$"
+          }
+        },
+        "required": [
+          "file_revision_id",
+          "size_bytes",
+          "sha256",
+          "acceptance_policy"
+        ]
+      },
+      "Origin": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "exchange_id",
+          "request_hash",
+          "artifact"
+        ],
+        "properties": {
+          "exchange_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "request_hash": {
+            "$ref": "#/components/schemas/SHA256"
+          },
+          "artifact": {
+            "$ref": "#/components/schemas/Artifact"
+          }
+        }
+      },
+      "CopyRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "exchange_id",
+          "request_hash",
+          "artifact",
+          "virtual_path"
+        ],
+        "properties": {
+          "exchange_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "request_hash": {
+            "$ref": "#/components/schemas/SHA256"
+          },
+          "artifact": {
+            "$ref": "#/components/schemas/Artifact"
+          },
+          "virtual_path": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 1024,
+            "description": "Canonical new virtual path under current authenticated root;no replacement option."
+          }
+        }
+      },
+      "CopyResult": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "profile",
+          "source",
+          "artifact",
+          "event_id",
+          "acceptance",
+          "replayed",
+          "observation",
+          "current_state",
+          "receiver_persistence",
+          "business_processing"
+        ],
+        "properties": {
+          "profile": {
+            "const": "received-artifact-copy-v1"
+          },
+          "source": {
+            "$ref": "#/components/schemas/Origin"
+          },
+          "artifact": {
+            "$ref": "#/components/schemas/Artifact"
+          },
+          "event_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "acceptance": {
+            "enum": [
+              "durable-local-integrity-only",
+              "durable-held-pending-checks-and-release"
+            ]
+          },
+          "replayed": {
+            "type": "boolean"
+          },
+          "observation": {
+            "const": "original-command-receipt"
+          },
+          "current_state": {
+            "const": "not-checked"
+          },
+          "receiver_persistence": {
+            "const": "unknown"
+          },
+          "business_processing": {
+            "const": "unknown"
+          }
+        }
+      }
+    },
+    "parameters": {
+      "tenant": {
+        "name": "tenant",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "$ref": "#/components/schemas/ID"
+        }
+      },
+      "partner": {
+        "name": "partner",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "$ref": "#/components/schemas/ID"
+        }
+      },
+      "OperationKey": {
+        "name": "Idempotency-Key",
+        "in": "header",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "description": "Same actor/key and meaning recover the original receipt; changed meaning refuses. A replay never reactivates byte access."
+      },
+      "Origin": {
+        "name": "Origin",
+        "in": "header",
+        "required": false,
+        "schema": {
+          "type": "string"
+        },
+        "description": "Required for cookie mutations and must equal the HTTPS origin. Explicit bearer requests do not fall back to cookie identity."
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "64 lowercase hexadecimal characters; send the actual credential, never its digest"
+      },
+      "browserSession": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "__Host-freightctl-session"
+      },
+      "csrfToken": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-CSRF-Token"
+      }
+    }
+  }
+}

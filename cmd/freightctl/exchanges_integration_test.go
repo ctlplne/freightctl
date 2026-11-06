@@ -369,5 +369,47 @@ func TestArtifactExchangeCLIUsesOrdinaryAuthorityAndPublishesVerifiedDownload(t 
 	if json.Unmarshal(raw, &replayedOnward) != nil || !replayedOnward.Replayed || string(replayedOnward.Resource) != string(started.Resource) {
 		t.Fatal("CLI onward replay changed original run")
 	}
+	copyToken, copyScope, copyActor := participant([]string{"read", "write", "list"})
+	copyEndpointCommand := store.ExchangeEndpointCommand{Operation: "create", ID: secure.NewID(), Definition: &store.ExchangeEndpointDefinition{Schema: 1, Profile: "custody-https-poll-v1", Recipient: copyActor, Senders: []store.ExchangeParticipant{actorA}}}
+	raw, err = command(adminToken, "exchange-endpoint-command", "-request-file", requestFile(copyEndpointCommand), "-idempotency-key", "cli-copy-endpoint")
+	var copyEndpoint store.ExchangeEndpointResult
+	if err != nil || json.Unmarshal(raw, &copyEndpoint) != nil {
+		t.Fatal("CLI copy endpoint", err)
+	}
+	copyOfferRequest := request
+	copyOfferRequest.Endpoint = store.ExchangeEndpointReference{ID: copyEndpoint.Endpoint.ID, Revision: copyEndpoint.Endpoint.Revision, Hash: copyEndpoint.Endpoint.Hash}
+	copyOfferRequest.ExpiresAt = time.Now().UTC().Add(time.Minute).Truncate(time.Microsecond)
+	raw, err = command(a, "exchange-offer", "-request-file", requestFile(copyOfferRequest), "-idempotency-key", "cli-copy-offer")
+	var copyOffer store.ArtifactExchangeResult
+	if err != nil || json.Unmarshal(raw, &copyOffer) != nil {
+		t.Fatal("CLI copy offer", err)
+	}
+	copyRequest := store.ExchangeCopyRequest{ExchangeCopyOrigin: store.ExchangeCopyOrigin{ExchangeID: copyOffer.Exchange.ID, RequestHash: copyOffer.Exchange.RequestHash, Artifact: copyOfferRequest.Artifact}, Path: "/cli-owned-copy.dat"}
+	copyInput := requestFile(copyRequest)
+	if _, err = command(b, "exchange-copy", "-request-file", copyInput, "-idempotency-key", "read-is-not-write"); !errors.Is(err, store.ErrForbidden) {
+		t.Fatal("CLI receiving granted write", err)
+	}
+	raw, err = command(copyToken, "exchange-copy", "-request-file", copyInput, "-idempotency-key", "cli-copy-original")
+	var copied custody.ExchangeCopyResult
+	if err != nil || json.Unmarshal(raw, &copied) != nil || copied.Replayed || copied.Artifact.ID == file.ID || copied.Artifact.SHA256 != file.SHA256 || copied.Source != copyRequest.ExchangeCopyOrigin {
+		t.Fatal("CLI exact owned copy", err)
+	}
+	_, copyReader, err := service.OpenFileReader(ctx, copyScope, copied.Artifact.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	copyBytes, err := io.ReadAll(io.NewSectionReader(copyReader, 0, copied.Artifact.Size))
+	copyReader.Close()
+	if err != nil || !bytes.Equal(copyBytes, data) {
+		t.Fatal("CLI copy independently observed bytes differ", err)
+	}
+	if _, err = command(a, "exchange-close", "-request-file", requestFile(store.ExchangeClosureCommand{Schema: 1, ID: copyOffer.Exchange.ID, RequestHash: copyOffer.Exchange.RequestHash, Operation: "cancel"}), "-idempotency-key", "cli-copy-close"); err != nil {
+		t.Fatal(err)
+	}
+	raw, err = command(copyToken, "exchange-copy", "-request-file", copyInput, "-idempotency-key", "cli-copy-original")
+	var copiedReplay custody.ExchangeCopyResult
+	if err != nil || json.Unmarshal(raw, &copiedReplay) != nil || !copiedReplay.Replayed || copiedReplay.Artifact != copied.Artifact || copiedReplay.EventID != copied.EventID {
+		t.Fatal("CLI copy receipt recovery reopened source", err)
+	}
 	qualifyExchangeProcessRecovery(t, ctx, exchangeProcessFixture{DB: db, Administrator: scope, DSN: refs[1], Storage: storage, SenderToken: a, RecipientToken: b, OtherToken: other, AdminToken: adminToken, SenderActor: actorA.Actor, Recipient: actorB.Actor, Request: request, Payload: data})
 }
