@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "source": "https://github.com/GoogleContainerTools/distroless/blob/main/private/repos/deb/trixie.lock.json",
+  "packages": [
+    {
+      "arch": "amd64",
+      "name": "gcc-14-base",
+      "version": "14.2.0-19",
+      "sha256": "5b6825de4263824b78c4c51f6476414f3b4e89c2ab63e81dc8b9b5501e867cf6",
+      "urls": [
+        "https://snapshot.debian.org/archive/debian/20261030T204553Z/pool/main/g/gcc-14/gcc-14-base_14.2.0-19_amd64.deb",
+        "https://deb.debian.org/debian/pool/main/g/gcc-14/gcc-14-base_14.2.0-19_amd64.deb"
+      ]
+    },
+    {
+      "arch": "amd64",
+      "name": "libgcc-s1",
+      "version": "14.2.0-19",
+      "sha256": "3c71917b490d1a17aed43196a2787a256ecf060526cdb20216a74bedc061b150",
+      "urls": [
+        "https://snapshot.debian.org/archive/debian/20261030T204553Z/pool/main/g/gcc-14/libgcc-s1_14.2.0-19_amd64.deb",
+        "https://deb.debian.org/debian/pool/main/g/gcc-14/libgcc-s1_14.2.0-19_amd64.deb"
+      ]
+    },
+    {
+      "arch": "amd64",
+      "name": "libstdc++6",
+      "version": "14.2.0-19",
+      "sha256": "ab1fa05837aa7a92aae748fd07a18a35f7d18bb4a71c4724fe2bbf0e32089de0",
+      "urls": [
+        "https://snapshot.debian.org/archive/debian/20261030T204553Z/pool/main/g/gcc-14/libstdc++6_14.2.0-19_amd64.deb",
+        "https://deb.debian.org/debian/pool/main/g/gcc-14/libstdc++6_14.2.0-19_amd64.deb"
+      ]
+    },
+    {
+      "arch": "amd64",
+      "name": "libatomic1",
+      "version": "14.2.0-19",
+      "sha256": "212b399aae2f7299203d261a57e49372e09565a9a5ea971905f94a3960366c05",
+      "urls": [
+        "https://snapshot.debian.org/archive/debian/20261030T204553Z/pool/main/g/gcc-14/libatomic1_14.2.0-19_amd64.deb",
+        "https://deb.debian.org/debian/pool/main/g/gcc-14/libatomic1_14.2.0-19_amd64.deb"
+      ]
+    },
+    {
+      "arch": "arm64",
+      "name": "gcc-14-base",
+      "version": "14.2.0-19",
+      "sha256": "34ee90679b018c0e64234747a4c4c0ae6b7f63541115037465a8627c2dfbc594",
+      "urls": [
+        "https://snapshot.debian.org/archive/debian/20261030T204553Z/pool/main/g/gcc-14/gcc-14-base_14.2.0-19_arm64.deb",
+        "https://deb.debian.org/debian/pool/main/g/gcc-14/gcc-14-base_14.2.0-19_arm64.deb"
+      ]
+    },
+    {
+      "arch": "arm64",
+      "name": "libgcc-s1",
+      "version": "14.2.0-19",
+      "sha256": "1108bc87879833d6d9a145f22a4a15cddb34e065b4b5f4b97bee586adbac2851",
+      "urls": [
+        "https://snapshot.debian.org/archive/debian/20261030T204553Z/pool/main/g/gcc-14/libgcc-s1_14.2.0-19_arm64.deb",
+        "https://deb.debian.org/debian/pool/main/g/gcc-14/libgcc-s1_14.2.0-19_arm64.deb"
+      ]
+    },
+    {
+      "arch": "arm64",
+      "name": "libstdc++6",
+      "version": "14.2.0-19",
+      "sha256": "6669b0c52a2e7c6af9adfdabce3ff6e286065cdfbc7b85280862b5f799daebee",
+      "urls": [
+        "https://snapshot.debian.org/archive/debian/20261030T204553Z/pool/main/g/gcc-14/libstdc++6_14.2.0-19_arm64.deb",
+        "https://deb.debian.org/debian/pool/main/g/gcc-14/libstdc++6_14.2.0-19_arm64.deb"
+      ]
+    },
+    {
+      "arch": "arm64",
+      "name": "libatomic1",
+      "version": "14.2.0-19",
+      "sha256": "7ccff90234484bf21ae5ecb79d25b6a84b2f4038f65dd139085b2e3a937cd8dc",
+      "urls": [
+        "https://snapshot.debian.org/archive/debian/20261030T204553Z/pool/main/g/gcc-14/libatomic1_14.2.0-19_arm64.deb",
+        "https://deb.debian.org/debian/pool/main/g/gcc-14/libatomic1_14.2.0-19_arm64.deb"
+      ]
+    }
+  ]
+}

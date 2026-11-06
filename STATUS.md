@@ -35,6 +35,14 @@ exact source identity and compatible remediation remain owed. Original independe
 AEAD decryption/corruption/recovery qualification is still owed. No clean-image
 claim or local image/scanner/model runtime.
 
+F115 prepares a pinned no-SSL runtime with the complete Node input and four
+complete pinned Debian packages per architecture. Manifest/package hashes and
+identity precede extraction;control records,installed-file hashes and licenses
+stay present. Eighteen reporter,fifteen orchestration and two package-assembly
+stand-ins plus affected static/compile checks pass. Actual offline runtime,
+complete scans and original independent AEAD replay remain owed on GitHub.
+F114's sole HIGH finding is retained;no suppression or local image runtime.
+
 F110 prepares privacy-safe exact package/version/source hash correlation for the
 sole remaining advisory. Seventeen reporter/fifteen orchestration contracts pass;
 missing/ambiguous inventory and overflow counts stay explicit. Actual native

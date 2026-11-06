@@ -12,6 +12,9 @@ try {
   assert.equal(process.execPath, "/nodejs/bin/node");
   assert.equal(process.getuid(), 65532);
   assert.equal(process.getgid(), 65532);
+  assert.equal(process.config.variables.node_shared_openssl, false);
+  assert.equal(process.config.variables.node_shared_zlib, false);
+  assert.equal(process.versions.zlib, "1.3.2.1-motley");
   stage = "runtime-dependencies";
   assert.equal(
     JSON.parse(readFileSync("/peer/node_modules/openpgp/package.json", "utf8"))
@@ -35,6 +38,18 @@ try {
   ])
     assert.equal(existsSync(path), false);
   assert.equal(existsSync("/var/lib/dpkg/status.d"), true);
+  const triplet =
+    process.arch === "x64" ? "x86_64-linux-gnu" : "aarch64-linux-gnu";
+  for (const path of [
+    `/usr/lib/${triplet}/libz.so.1`,
+    `/usr/lib/${triplet}/libssl.so.3`,
+    `/usr/lib/${triplet}/libcrypto.so.3`,
+    "/var/lib/dpkg/status.d/zlib1g",
+    "/var/lib/dpkg/status.d/libssl3t64",
+  ])
+    assert.equal(existsSync(path), false);
+  for (const library of process.report.getReport().sharedObjects)
+    assert.equal(/\/lib(?:z|ssl|crypto|zstd|gomp)\./.test(library), false);
   console.log(
     JSON.stringify({
       kind: "independent-peer-runtime",
@@ -44,7 +59,10 @@ try {
       uid: process.getuid(),
       gid: process.getgid(),
       openpgp_version: "6.3.2",
-      profile: "distroless-node26-debian13-v1",
+      profile: "distroless-node26-nossl-debian13-v1",
+      embedded_zlib: process.versions.zlib,
+      shared_openssl: process.config.variables.node_shared_openssl,
+      shared_zlib: process.config.variables.node_shared_zlib,
     }),
   );
 } catch {

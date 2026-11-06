@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "id": "F115",
+  "observed_at": "2026-11-05",
+  "starting_commit": "2344cd611e381153ad8d2a010a99ad30459b7232",
+  "state": "Pinned no-SSL native independent peer runtime candidate prepared;native scan/runtime/interop owed",
+  "qualification_claim": false,
+  "change": [
+    "Use pinned Distroless base-nossl,complete separately pinned Node runtime tree and four complete pinned Debian packages per architecture. Unused dynamic SSL/zlib/zstd/gomp are absent from actual dependency selection;no inventory/report filtering.",
+    "Stream public exact-package downloads;verify SHA-256 before extraction,then package name/version/architecture. Preserve complete package data/licenses,original control and installed-file hashes. Execute no maintainer scripts. Bind actual manifest hash and both image inputs to scan provenance.",
+    "Prepare offline actual Node26.13.0,embedded-zlib1.3.2.1-motley,nonshared SSL/zlib,nonroot UID/GID65532,OpenPGP import and loaded-library probes. Retain all original AEAD/decryption/corruption/recovery assertions and complete image coverage/finding/freshness/isolation guards.",
+    "No local image/layer/deb download,build,container,scanner,PG,Chrome or inference. Public OCI JSON metadata only;actual qualification remains GitHub native."
+  ],
+  "red": {
+    "reference": ".private/freightctl-f115-provenance-red.log",
+    "observation": "New focused report assertion accepted missing/rebound secondary Node input provenance before guard repair"
+  },
+  "green": {
+    "reporter_methods": 18,
+    "orchestration_stand_ins": 15,
+    "package_assembly_stand_ins": 2,
+    "node_syntax_and_format": "pass",
+    "workflow_lint": "pass",
+    "affected_integration_go_compile": "pass,no tests selected",
+    "native_runtime_or_scan": "not run locally;owed"
+  },
+  "inputs": {
+    "base_index": "sha256:e6b0f82595aa1edde72c8054de7a9dca30f0f8f54820c37a167c0ddfc21c5c67",
+    "node_index": "sha256:9b945e92c1b5463a4b75f11e8417515e4bea7355f6adfd79ec220fbbe905dda8",
+    "package_manifest_sha256": "4524cf640952a468917a6df0e0fe426f0a85040b4fb6f7f12ddf6829c61b8627",
+    "packages": [
+      "gcc-14-base",
+      "libgcc-s1",
+      "libstdc++6",
+      "libatomic1"
+    ],
+    "version": "14.2.0-19",
+    "architectures": [
+      "amd64",
+      "arm64"
+    ]
+  },
+  "source_files": [
+    {
+      "path": ".github/workflows/native-linux.yml",
+      "sha256": "90b7db971005375073cbe57f8863388f54ac0e3612113fcde92e42ac85f8d44a"
+    },
+    {
+      "path": "internal/workflow/ftps_aead_integration_test.go",
+      "sha256": "2640f336dd80261c593f6adbcc5cd20cd6b30266329b5a20ee18136af1abcf81"
+    },
+    {
+      "path": "scripts/ci-peer-image-summary.py",
+      "sha256": "8d3de1c895daf893e720b8c2e5fd86633d595c5944e7c192fba58d8e86bb4038"
+    },
+    {
+      "path": "scripts/peers/openpgp/Dockerfile",
+      "sha256": "6da22e442234240a8f099e7aec7ac3b4c077ce9cc814b310d705fa68ef60c6bc"
+    },
+    {
+      "path": "scripts/peers/openpgp/README.md",
+      "sha256": "3bc4764d431d71a492eaff8ce69f0ca6c8794b2d7580661b25bdfb45579fa2a6"
+    },
+    {
+      "path": "scripts/peers/openpgp/runtime-proof.mjs",
+      "sha256": "85b95f936396ca843a84370de4dc9a5379a9ae4456cd7dae380c104a335fa80f"
+    },
+    {
+      "path": "scripts/peers/openpgp/runtime-dependencies.json",
+      "sha256": "4524cf640952a468917a6df0e0fe426f0a85040b4fb6f7f12ddf6829c61b8627"
+    },
+    {
+      "path": "scripts/peers/openpgp/assemble-runtime.mjs",
+      "sha256": "6f91dc5684eaacedbe9e22fd2153108130e98cb627032690ae32144c2c3bb727"
+    },
+    {
+      "path": "scripts/peers/openpgp/assemble-runtime.test.mjs",
+      "sha256": "3ffebe7a16daa86b15b0edcf27f41939211146aef58fe5292bb5d611a0664cd3"
+    },
+    {
+      "path": "scripts/scan-peer-image.py",
+      "sha256": "22c90343dacc43566b4714803968286e2b798ea8940f55b3a6eea183b1319043"
+    },
+    {
+      "path": "scripts/test-ci-peer-image-summary.py",
+      "sha256": "389993f6bfb5bb13d18dd6d0215d9b621fbf62d24ef6235ba9461778c68aec0c"
+    }
+  ],
+  "local_manifest": {
+    "reference": ".private/freightctl-f115-runtime/manifest.json",
+    "sha256": "54bf22d26b0bae5d7e597b73c3bf751aa761f2b1b809722104939c32833cf344"
+  },
+  "primary_sources": [
+    "https://github.com/GoogleContainerTools/distroless/blob/main/base/config.bzl",
+    "https://github.com/GoogleContainerTools/distroless/blob/main/cc/config.bzl",
+    "https://github.com/GoogleContainerTools/distroless/blob/main/nodejs/config.bzl",
+    "https://github.com/GoogleContainerTools/distroless/blob/main/private/repos/deb/trixie.lock.json",
+    "https://github.com/nodejs/node/blob/v26.13.0/deps/zlib/zlib.h",
+    "https://github.com/aquasecurity/trivy/blob/v0.76.1/pkg/fanal/analyzer/pkg/dpkg/dpkg.go"
+  ],
+  "owed": [
+    "Both native offline runtime probes,complete exact-image inventories/security scans and original independent AEAD interoperability/recovery profiles",
+    "Preserve and replay F114 sole HIGH failure;direct inventory source correlation unresolved,not waived",
+    "All remaining product/AX/baseline and mandatory FINISH gates;full shipped-image/SBOM/license claims remain separate"
+  ]
+}

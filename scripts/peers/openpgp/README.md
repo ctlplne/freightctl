@@ -3,20 +3,33 @@
 This is a test-only OpenPGP.js 6.3.2 peer. The server and browser do not import
 this package. Its npm lock binds the published package integrity and records
 LGPL-3.0+. Installation/audit use the pinned official Node26.13.0/trixie builder.
-The `6.3.2-r2` candidate pins Distroless Node26/Debian13;its ARM64/x86_64
-manifest annotations identify Node26.13.0,which actual native proof must verify. It copies only locked runtime dependencies
-and the fixture/proof scripts. Builder shells,package managers and unrelated
-general utilities are absent from this actual runtime. All base package metadata
-and every remaining OS/library package still participate in the full exact-image
-scan. No findings,inventory entries or severities are removed from reports.
+The `6.3.2-r3` candidate uses a pinned Distroless Debian13 no-SSL base and copies
+the complete `/nodejs` tree from the pinned Distroless Node26 input. It assembles
+four complete, SHA-256-pinned Debian packages per native architecture:
+`gcc-14-base`, `libgcc-s1`, `libstdc++6` and `libatomic1`. Package data, licenses,
+original control records and installed-file hashes stay in the final image.
+The build verifies package digests before extraction and checks package name,
+version and architecture before copying data. No maintainer scripts execute.
+The assembler checks the manifest hash required by the image provenance guard.
 
-The exact runtime index is
+The base index is
+`sha256:e6b0f82595aa1edde72c8054de7a9dca30f0f8f54820c37a167c0ddfc21c5c67`;
+the separate Node input index is
 `sha256:9b945e92c1b5463a4b75f11e8417515e4bea7355f6adfd79ec220fbbe905dda8`.
-Its two native manifest annotations name Node26.13.0. An offline native build
-probe independently checks the actual binary/version,UID/GID,OpenPGP import,
-retained Debian package metadata and absent unneeded programs. The scan verifier
-also pins profile/base provenance and absolute entrypoint. Registry metadata and
-stand-ins are not runtime,scan or interoperability qualification.
+The package manifest is [runtime-dependencies.json](runtime-dependencies.json),
+derived from the public Distroless Debian13 package lock. Its two architectures
+use exact package version14.2.0-19. The actual native build probe must verify
+Node26.13.0, embedded zlib1.3.2.1-motley, no shared SSL/zlib linkage, UID/GID65532,
+OpenPGP6.3.2 imports, retained package metadata and absent unneeded libraries/tools.
+The report guard pins both image inputs, the package manifest and absolute Node
+entrypoint. Every remaining OS/library package and finding participates in the
+complete final-image scan; no report inventory or severity is removed.
+
+This changes the actual runtime dependencies. It does not waive the prior
+CVE-2026-76844 finding against the Debian zlib package: F114 preserves the
+original native failures. Registry metadata and stand-ins establish no runtime,
+scan or interoperability result. Both native candidate builds, complete scans
+and original independent AEAD decryption/corruption/recovery replay are owed.
 No peer artifact is published or included in a release bundle.
 
 GitHub builds the image and audits its JavaScript dependencies. Test execution
@@ -36,15 +49,10 @@ the independent implementation's behavior is documented in the
 
 Code presence and syntax checks do not establish interoperability. Native
 results, image identity, exact fingerprints and source/ciphertext digests must
-be retained before this profile is called qualified. The native Linux job now
-prepares an exact-image vulnerability gate after runtime tests. Source6d30476
-completes both native scans and reports blocking findings; the Node patch/runtime
-cleanup leaves1critical/33high findings in source4d89fca. The full Debian13/trixie
-profile completes scans with45high/6unknown findings on each native architecture.
-The minimal Distroless replacement is prepared,not a clean-image claim. Actual
-runtime/scans and original independent AEAD decryption/corruption/recovery replay
-are owed. Trivy runs offline against an immutable image
-archive with OS and discovered-library inventory, a fresh hash-bound feed and
-strict evidence validation. Raw inputs remain private, and nothing is uploaded.
-Larger files, v6 keys, other peers, scanner coverage and finding assessment remain
-separate qualification work. See [F075](../../../docs/qualification/evidence/F075-peer-image-security.json).
+be retained before this profile is qualified. Trivy scans the complete immutable
+image archive offline using a fresh hash-bound feed and OS/discovered-library
+inventory. HIGH, CRITICAL, UNKNOWN, suppression and incomplete evidence fail.
+Raw inputs remain private; nothing is uploaded. All original scan/resource
+failures remain in [F075](../../../docs/qualification/evidence/F075-peer-image-security.json).
+Larger files, v6 keys, other peers, shipped product images and full SBOM/license
+qualification remain separate work.

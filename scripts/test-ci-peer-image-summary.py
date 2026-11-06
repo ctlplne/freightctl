@@ -39,12 +39,19 @@ def inputs(now=NOW, arch='amd64'):
                   'freightctl.peer.runtime':gate.PEER_RUNTIME,
                   'org.opencontainers.image.base.name':gate.PEER_BASE,
                   'org.opencontainers.image.base.digest':gate.PEER_BASE_DIGEST,
+                  'freightctl.peer.node-source':gate.PEER_NODE_SOURCE,
+                  'freightctl.peer.runtime-dependencies':gate.PEER_DEPS_DIGEST,
                   'freightctl.purpose': 'openpgp-interoperability', 'freightctl.source': COMMIT,
                   'freightctl.workspace': PRIVATE}}}]
     return report, version, image
 
 
 class ImageReportContracts(unittest.TestCase):
+    def test_separate_node_runtime_input_provenance_cannot_be_missing_or_rebound(self):
+        for change in (lambda labels:labels.pop('freightctl.peer.node-source',None),lambda labels:labels.__setitem__('freightctl.peer.node-source','sha256:'+'0'*64)):
+            r,v,i=inputs();change(i[0]['Config']['Labels'])
+            with self.assertRaises(gate.InvalidReport):self.check(r,v,i)
+
     def test_remaining_advisory_package_binding_is_hash_bound_and_never_waives_the_finding(self):
         r,v,i=inputs()
         name,version='zlib1g','1:1.3.1-3'

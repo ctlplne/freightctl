@@ -11,9 +11,11 @@ import sys
 
 SCANNER_VERSION = '0.76.1'
 SCANNER_IMAGE = 'aquasec/trivy:0.76.1@sha256:790fd66d1697395d8693d1acaa1ea702406a20f109b6fc7bac8db623eca6c06c'
-PEER_RUNTIME = 'distroless-node26-debian13-v1'
-PEER_BASE = 'gcr.io/distroless/nodejs26-debian13:nonroot'
-PEER_BASE_DIGEST = 'sha256:9b945e92c1b5463a4b75f11e8417515e4bea7355f6adfd79ec220fbbe905dda8'
+PEER_RUNTIME = 'distroless-node26-nossl-debian13-v1'
+PEER_BASE = 'gcr.io/distroless/base-nossl-debian13:nonroot'
+PEER_BASE_DIGEST = 'sha256:e6b0f82595aa1edde72c8054de7a9dca30f0f8f54820c37a167c0ddfc21c5c67'
+PEER_NODE_SOURCE = 'sha256:9b945e92c1b5463a4b75f11e8417515e4bea7355f6adfd79ec220fbbe905dda8'
+PEER_DEPS_DIGEST = 'sha256:4524cf640952a468917a6df0e0fe426f0a85040b4fb6f7f12ddf6829c61b8627'
 SEVERITIES = ('UNKNOWN', 'LOW', 'MEDIUM', 'HIGH', 'CRITICAL')
 ADVISORY = re.compile(r'(?:CVE-[0-9]{4}-[0-9]{4,12}|GHSA-[23456789cfghjmpqrvwx]{4}-[23456789cfghjmpqrvwx]{4}-[23456789cfghjmpqrvwx]{4})\Z')
 DIGEST = re.compile(r'sha256:[0-9a-f]{64}\Z')
@@ -130,6 +132,8 @@ def summarize(report, version, image, commit, architecture, now):
     require(labels.get('freightctl.peer.runtime') == PEER_RUNTIME
             and labels.get('org.opencontainers.image.base.name') == PEER_BASE
             and labels.get('org.opencontainers.image.base.digest') == PEER_BASE_DIGEST)
+    require(labels.get('freightctl.peer.node-source') == PEER_NODE_SOURCE
+            and labels.get('freightctl.peer.runtime-dependencies') == PEER_DEPS_DIGEST)
     require(config.get('Entrypoint') == ['/nodejs/bin/node', '/peer/peer.mjs'])
     require(isinstance(version, dict) and version.get('Version') == SCANNER_VERSION)
     database = version.get('VulnerabilityDB')
@@ -219,6 +223,7 @@ def summarize(report, version, image, commit, architecture, now):
         'state': 'failed' if blocked else 'passed', 'kind': 'native-peer-image-vulnerabilities',
         'source_commit': commit, 'architecture': architecture, 'image_id': image['Id'],
         'peer_runtime_profile': PEER_RUNTIME, 'peer_base': PEER_BASE, 'peer_base_digest': PEER_BASE_DIGEST,
+        'peer_node_source_digest':PEER_NODE_SOURCE,'peer_runtime_dependencies_sha256':PEER_DEPS_DIGEST[7:],
         'scanner_version': SCANNER_VERSION, 'scanner_image': SCANNER_IMAGE,
         'os_family': 'debian', 'os_version': os_info['Name'],
         'feed_updated_at': updated.isoformat(), 'feed_next_update': next_update.isoformat(),
