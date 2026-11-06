@@ -201,6 +201,12 @@ cardinality remain required. Tagged compilation/vet pass;actual native execution
 first failure/repair/replay and every full AX profile remain owed. No local daemon,
 PG,Chrome,peer,scanner or inference ran;no actual product outcome is inferred.
 
+F125 repairs F121's observed direct-TLS import architecture violation. The native
+fixture now consumes an integration-only internal/crypto constructor using the
+existing protected key loader,verified trust root and ordinary TLS1.3 policy.
+The unchanged architecture gate,tagged compilation and affected vet pass;actual
+native daemon/recovery proof remains owed. No test exception or policy relaxation.
+
 Focused local parser/client/filesystem/summary regressions and affected static,
 frontend build, native compilation/vet and architecture checks pass. They establish
 no PostgreSQL, served browser, stock-peer or complete AX profile qualification.

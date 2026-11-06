@@ -5,8 +5,6 @@ package main
 import (
 	"bytes"
 	"context"
-	"crypto/tls"
-	"crypto/x509"
 	"encoding/json"
 	"errors"
 	"io"
@@ -87,15 +85,11 @@ func qualifyExchangeProcessRecovery(t *testing.T, ctx context.Context, f exchang
 	}
 	cert, key := filepath.Join(work, "localhost.crt"), filepath.Join(work, "localhost.key")
 	loggedCommand("certificate", binary, "dev-cert", "--cert", cert, "--key", key)
-	publicCert, err := os.ReadFile(cert)
+	clientTLS, serverTLS, err := secure.NativeProofTLS(cert, key)
 	if err != nil {
-		t.Fatal(err)
+		t.Fatal("native TLS proof configuration", err)
 	}
-	pool := x509.NewCertPool()
-	if !pool.AppendCertsFromPEM(publicCert) {
-		t.Fatal("TLS trust fixture")
-	}
-	client := &http.Client{Timeout: 15 * time.Second, Transport: &http.Transport{TLSClientConfig: &tls.Config{RootCAs: pool, MinVersion: tls.VersionTLS13}, DisableKeepAlives: true}, CheckRedirect: func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }}
+	client := &http.Client{Timeout: 15 * time.Second, Transport: &http.Transport{TLSClientConfig: clientTLS, DisableKeepAlives: true}, CheckRedirect: func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }}
 	defer client.CloseIdleConnections()
 	listener, err := net.Listen("tcp", "127.0.0.1:0")
 	if err != nil {
@@ -258,7 +252,7 @@ func qualifyExchangeProcessRecovery(t *testing.T, ctx context.Context, f exchang
 	}
 	target, _ := url.Parse(origin)
 	proxy := httputil.NewSingleHostReverseProxy(target)
-	proxy.Transport = &http.Transport{TLSClientConfig: &tls.Config{RootCAs: pool, MinVersion: tls.VersionTLS13}, DisableKeepAlives: true}
+	proxy.Transport = &http.Transport{TLSClientConfig: clientTLS, DisableKeepAlives: true}
 	type upstreamReceipt struct {
 		Result store.ArtifactExchangeResult
 		Err    error
@@ -287,12 +281,8 @@ func qualifyExchangeProcessRecovery(t *testing.T, ctx context.Context, f exchang
 		}
 		http.Error(w, "task-owned transport failure", 502)
 	}
-	keypair, err := tls.LoadX509KeyPair(cert, key)
-	if err != nil {
-		t.Fatal(err)
-	}
 	fault := httptest.NewUnstartedServer(proxy)
-	fault.TLS = &tls.Config{Certificates: []tls.Certificate{keypair}, MinVersion: tls.VersionTLS13}
+	fault.TLS = serverTLS
 	fault.StartTLS()
 	defer fault.Close()
 	r, err = call("POST", fault.URL, "/exchanges", "process-original-offer", sender, encode(request), nil)

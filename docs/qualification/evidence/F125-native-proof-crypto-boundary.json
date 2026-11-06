@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "id": "F125",
+  "observed_at": "2026-11-05",
+  "candidate_repaired": "924825618b2b0d6ba74fd7c093af9612c081f459",
+  "state": "Native process fixture TLS setup moved into crypto boundary after observed architecture failure;actual process proof still owed",
+  "qualification_claim": false,
+  "red": {
+    "reference": ".private/freightctl-f125-architecture-red.log",
+    "observation": "Unchanged architecture gate rejected crypto/tls and crypto/x509 imports from the new CLI integration fixture;the rule applies to tests too"
+  },
+  "repair": [
+    "Remove direct TLS/x509 imports and parsing from CLI fixture. An integration-only internal/crypto constructor uses the existing protected certificate/key loader,ordinary TLS1.3 policy and exact generated trust root.",
+    "CLI fixture consumes immutable client/server configurations with certificate verification enabled and direct loopback transport. No architecture exception,allowlist,test-rule change,verification bypass or product-runtime helper is added."
+  ],
+  "green": {
+    "unchanged_architecture_gate": "pass",
+    "affected_tagged_CLI_compilation": "pass,no tests selected",
+    "affected_tagged_crypto_CLI_vet": "pass",
+    "format_diff": "pass",
+    "actual_TLS_daemon_recovery": "owed;not executed locally"
+  },
+  "source_files": [
+    {
+      "path": "internal/crypto/native_proof_tls.go",
+      "sha256": "e6e2166a42098c648602c6100c59fceeeb17ee11fd37f1c5827dc10393c7f2c6"
+    },
+    {
+      "path": "cmd/freightctl/exchange_process_integration_test.go",
+      "sha256": "dc8d5475ad20a8ccbd09899833047b13e4736cfa138f60af58196814459fbe0f"
+    }
+  ],
+  "local_manifest": {
+    "reference": ".private/freightctl-f125-manifest.json",
+    "sha256": "50d1edc1522f1c70b09390bec9ae74945cadf57f86a392e326c911eb5a3986df"
+  },
+  "owed": [
+    "Original actual native TLS/daemon/custody/response-loss/process-death/stock-curl/revocation profileF121 at repaired source",
+    "Every remaining original red job,full AX/baseline/product and mandatory FINISH/final-source gate"
+  ]
+}
