@@ -4,16 +4,43 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import * as openpgp from "openpgp";
 
-let stage = "runtime-identity";
+let stage = "runtime-version";
+// Only these public runtime scalars can leave the probe. Never print the error,
+// environment,process report,filesystem contents or private recipient material.
+const publicVersion = (value) =>
+  typeof value === "string" && /^[-a-zA-Z0-9.+]{1,64}$/.test(value)
+    ? value
+    : "unrecognized";
+const publicFlag = (value) =>
+  typeof value === "boolean" || value === 0 || value === 1
+    ? value
+    : "unrecognized";
+const identity = {
+  node_version: publicVersion(process.version),
+  architecture: ["arm64", "x64"].includes(process.arch)
+    ? process.arch
+    : "unrecognized",
+  embedded_zlib: publicVersion(process.versions.zlib),
+  shared_openssl: publicFlag(process.config.variables.node_shared_openssl),
+  shared_zlib: publicFlag(process.config.variables.node_shared_zlib),
+};
 try {
   assert.equal(process.version, "v26.13.0");
+  stage = "runtime-platform";
   assert.equal(process.platform, "linux");
+  stage = "runtime-architecture";
   assert.ok(["arm64", "x64"].includes(process.arch));
+  stage = "runtime-entrypoint";
   assert.equal(process.execPath, "/nodejs/bin/node");
+  stage = "runtime-uid";
   assert.equal(process.getuid(), 65532);
+  stage = "runtime-gid";
   assert.equal(process.getgid(), 65532);
+  stage = "runtime-shared-openssl";
   assert.equal(process.config.variables.node_shared_openssl, false);
+  stage = "runtime-shared-zlib";
   assert.equal(process.config.variables.node_shared_zlib, false);
+  stage = "runtime-embedded-zlib";
   assert.equal(process.versions.zlib, "1.3.2.1-motley");
   stage = "runtime-dependencies";
   assert.equal(
@@ -71,6 +98,7 @@ try {
       kind: "independent-peer-runtime",
       state: "failed",
       stage,
+      identity,
     }),
   );
   process.exitCode = 1;

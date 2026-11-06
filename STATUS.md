@@ -43,6 +43,12 @@ stand-ins plus affected static/compile checks pass. Actual offline runtime,
 complete scans and original independent AEAD replay remain owed on GitHub.
 F114's sole HIGH finding is retained;no suppression or local image runtime.
 
+F117 records650b's actual ARM assembly of all four pinned packages,followed by
+a strict runtime-identity probe failure before scanning. That grouped stage does
+not identify the assertion. Precise public-scalar/stage diagnostics are prepared;
+all original assertions stay enforced. The scan is skipped,no report is claimed.
+Other required650b runs remain active;exact native diagnosis/replay is owed.
+
 F110's privacy-safe exact package/version diagnostic is actually exercised in
 F114. Both architectures report Debian zlib1g and the public lock version hash;
 direct inventory source correlation is unresolved. The finding remains red.

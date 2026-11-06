@@ -710,5 +710,9 @@
   "nossl_runtime_prepared": {
     "reference": "docs/qualification/evidence/F115-peer-nossl-runtime.json",
     "state": "Prepared actual pinned no-SSL dependencies,not report filtering;actual native image/runtime/interop owed;original F114 finding stays red"
+  },
+  "nossl_runtime_first_observation": {
+    "reference": "docs/qualification/evidence/F117-native-runtime-identity-diagnostic.json",
+    "state": "ARM complete pinned package assembly passes;strict identity probe fails before scan,no new vulnerability report. Precise unchanged-assertion diagnostic prepared;actual replay owed."
   }
 }

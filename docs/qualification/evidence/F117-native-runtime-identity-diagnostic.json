@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "id": "F117",
+  "observed_at": "2026-11-05",
+  "candidate": "650b482bb1336278a279b8451a1e872f549bd5f2",
+  "run_id": 42140158266,
+  "job_id": 127638187702,
+  "state": "Actual ARM native package assembly passes;strict runtime identity probe fails before scan;precise safe diagnostics prepared",
+  "qualification_claim": false,
+  "observed": {
+    "architecture": "arm64",
+    "assembly": "Complete four pinned packages downloaded,SHA-256 verified,control name/version/architecture verified and extracted successfully in actual native GitHub build",
+    "runtime_probe": "failed at grouped runtime-identity stage;exact assertion not identified by original output",
+    "image_scan": "skipped;no vulnerability report for this candidate",
+    "original_failure_preserved": true
+  },
+  "repair_prepared": [
+    "Split identity probe into exact version/platform/architecture/entrypoint/UID/GID/shared-SSL/shared-zlib/embedded-zlib failure stages",
+    "On failure expose only fixed public runtime scalars with strict lexical/type filtering;never error text,environment,full process report,private files or key material",
+    "Every original identity,linkage,zlib,metadata,import,library and absence assertion remains enforced;no pass asserted or expectation relaxed"
+  ],
+  "proof": {
+    "original_native_red": {
+      "reference": ".private/freightctl-f117-job-127638187702.log",
+      "sha256": "f27ecd9f65460d8e2754af91b29214ff3dce7a70e6eb695379b3ffdd1a41f486"
+    },
+    "local_node_syntax": "pass",
+    "source_diff_check": "pass",
+    "actual_exact_stage_and_remediation": "owed;no runtime probe executed locally"
+  },
+  "source_files": [
+    {
+      "path": "scripts/peers/openpgp/runtime-proof.mjs",
+      "sha256": "1f77e633a9895ee0c7ae66342ea49da3eae30bb50249fc21c6c2ca4f31fe81fa"
+    }
+  ],
+  "owed": [
+    "Exact actual native failed assertion on both architectures and repair bound to actual supported input",
+    "Complete image scans and original AEAD interoperability/recovery;F114 prior HIGH remains retained and red",
+    "Other650b run completion metadata and security gates;nonsecurity logs deferred to mandatory FINISH",
+    "All remaining product/AX/baseline/final-source mandatory outcomes"
+  ]
+}
