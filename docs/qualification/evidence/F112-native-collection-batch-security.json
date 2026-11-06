@@ -1,0 +1,612 @@
+{
+  "schema_version": 1,
+  "id": "F112",
+  "observed_at": "2026-11-05",
+  "candidate": "8cc49828b7090985edbda8321e44e7df5802d675",
+  "state": "All12collection-source batch runs terminal;exact native runtime/security observations unchanged",
+  "qualification_claim": false,
+  "runs": [
+    {
+      "id": 42135417301,
+      "name": "Native first enrollment and browser exchange",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "id": 127622195433,
+          "name": "first-run",
+          "status": "completed",
+          "conclusion": "failure",
+          "security_steps": []
+        }
+      ]
+    },
+    {
+      "id": 42135417328,
+      "name": "Native FTPS stock clients and custody",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "id": 127622195223,
+          "name": "Native FTPS (x86_64)",
+          "status": "completed",
+          "conclusion": "failure",
+          "security_steps": []
+        },
+        {
+          "id": 127622195603,
+          "name": "Native FTPS (arm64)",
+          "status": "completed",
+          "conclusion": "failure",
+          "security_steps": []
+        }
+      ]
+    },
+    {
+      "id": 42135417270,
+      "name": "Native artifact receive browser",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "id": 127622194378,
+          "name": "receive-browser",
+          "status": "completed",
+          "conclusion": "failure",
+          "security_steps": []
+        }
+      ]
+    },
+    {
+      "id": 42135417316,
+      "name": "Native browser and FTPS operator qualification",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "id": 127622195123,
+          "name": "Native x86 browser and live FTPS governance",
+          "status": "completed",
+          "conclusion": "failure",
+          "security_steps": []
+        }
+      ]
+    },
+    {
+      "id": 42135417402,
+      "name": "Native FTPS dispatch approval qualification",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "id": 127622195401,
+          "name": "Native x86 public FTPS dispatch consent",
+          "status": "completed",
+          "conclusion": "failure",
+          "security_steps": []
+        }
+      ]
+    },
+    {
+      "id": 42135417357,
+      "name": "Native source vulnerability configurations",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 127622195108,
+          "name": "Native vulnerability source (darwin/arm64)",
+          "status": "completed",
+          "conclusion": "success",
+          "security_steps": [
+            {
+              "name": "Actual native source scan and enforcing original converter",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 127622195508,
+          "name": "Native vulnerability source (linux/arm64)",
+          "status": "completed",
+          "conclusion": "success",
+          "security_steps": [
+            {
+              "name": "Actual native source scan and enforcing original converter",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 127622195509,
+          "name": "Native vulnerability source (windows/amd64)",
+          "status": "completed",
+          "conclusion": "success",
+          "security_steps": [
+            {
+              "name": "Actual native source scan and enforcing original converter",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 42135417285,
+      "name": "Core correctness and security",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "id": 127622195879,
+          "name": "source-and-browser",
+          "status": "completed",
+          "conclusion": "failure",
+          "security_steps": [
+            {
+              "name": "JavaScript dependency audit",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Go vulnerability reachability",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Committed source and history secret scan",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 42135417163,
+      "name": "Native Linux Go, PostgreSQL and fuzz",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "id": 127622194211,
+          "name": "Native metadata restore (x86_64)",
+          "status": "completed",
+          "conclusion": "failure",
+          "security_steps": []
+        },
+        {
+          "id": 127622194396,
+          "name": "bounded-fuzz",
+          "status": "completed",
+          "conclusion": "success",
+          "security_steps": []
+        },
+        {
+          "id": 127622194425,
+          "name": "Native metadata restore (arm64)",
+          "status": "completed",
+          "conclusion": "failure",
+          "security_steps": []
+        },
+        {
+          "id": 127622194486,
+          "name": "Native Go and PostgreSQL (arm64)",
+          "status": "completed",
+          "conclusion": "failure",
+          "security_steps": [
+            {
+              "name": "Pinned independent AEAD recipient peer",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Scan the exact independent peer image and enforce complete evidence",
+              "status": "completed",
+              "conclusion": "failure"
+            }
+          ]
+        },
+        {
+          "id": 127622194503,
+          "name": "Native Go and PostgreSQL (x86_64)",
+          "status": "completed",
+          "conclusion": "failure",
+          "security_steps": [
+            {
+              "name": "Pinned independent AEAD recipient peer",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Scan the exact independent peer image and enforce complete evidence",
+              "status": "completed",
+              "conclusion": "failure"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 42135417141,
+      "name": "Native FTPS workflow consent qualification",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "id": 127622193444,
+          "name": "Native x86 registered FTPS workflow consent (plaintext)",
+          "status": "completed",
+          "conclusion": "failure",
+          "security_steps": []
+        },
+        {
+          "id": 127622193822,
+          "name": "Native x86 registered FTPS workflow consent (recipient-encrypted)",
+          "status": "completed",
+          "conclusion": "failure",
+          "security_steps": []
+        }
+      ]
+    },
+    {
+      "id": 42135417149,
+      "name": "Native reproducible core binaries",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 127622193761,
+          "name": "Native core reproduction (amd64)",
+          "status": "completed",
+          "conclusion": "success",
+          "security_steps": []
+        },
+        {
+          "id": 127622194161,
+          "name": "Native core reproduction (arm64)",
+          "status": "completed",
+          "conclusion": "success",
+          "security_steps": []
+        }
+      ]
+    },
+    {
+      "id": 42135417162,
+      "name": "Native Windows and macOS unit checks",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "id": 127622194040,
+          "name": "macos-arm64",
+          "status": "completed",
+          "conclusion": "success",
+          "security_steps": []
+        },
+        {
+          "id": 127622194874,
+          "name": "windows-amd64",
+          "status": "completed",
+          "conclusion": "failure",
+          "security_steps": []
+        }
+      ]
+    },
+    {
+      "id": 42135417166,
+      "name": "Stock peer and browser qualification",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "id": 127622194603,
+          "name": "Stock peers (arrivals-schedules)",
+          "status": "completed",
+          "conclusion": "failure",
+          "security_steps": []
+        },
+        {
+          "id": 127622194626,
+          "name": "Stock peers (handoff-routing)",
+          "status": "completed",
+          "conclusion": "failure",
+          "security_steps": []
+        },
+        {
+          "id": 127622194642,
+          "name": "Stock peers (intake-routing)",
+          "status": "completed",
+          "conclusion": "failure",
+          "security_steps": []
+        },
+        {
+          "id": 127622194695,
+          "name": "Stock peers (captured-routing)",
+          "status": "completed",
+          "conclusion": "failure",
+          "security_steps": []
+        },
+        {
+          "id": 127622194825,
+          "name": "Stock peers (routing)",
+          "status": "completed",
+          "conclusion": "failure",
+          "security_steps": []
+        }
+      ]
+    }
+  ],
+  "security_observations": [
+    {
+      "job_id": 127622194486,
+      "observations": [
+        {
+          "kind": "independent-peer-runtime",
+          "state": "passed",
+          "node_version": "v26.13.0",
+          "architecture": "arm64",
+          "uid": 65532,
+          "gid": 65532,
+          "openpgp_version": "6.3.2",
+          "profile": "distroless-node26-debian13-v1"
+        },
+        {
+          "additional_advisory_ids": 0,
+          "additional_blocking_advisory_ids": {
+            "CRITICAL": 0,
+            "HIGH": 0,
+            "UNKNOWN": 0
+          },
+          "advisory_ids": [
+            "CVE-2010-4756",
+            "CVE-2018-20796",
+            "CVE-2019-1010022",
+            "CVE-2019-1010023",
+            "CVE-2019-1010024",
+            "CVE-2019-1010025",
+            "CVE-2019-9192",
+            "CVE-2026-102010",
+            "CVE-2026-114690",
+            "CVE-2026-114691",
+            "CVE-2026-115455",
+            "CVE-2026-18374",
+            "CVE-2026-19499",
+            "CVE-2026-19542",
+            "CVE-2026-27171",
+            "CVE-2026-5435",
+            "CVE-2026-6238",
+            "CVE-2026-6368",
+            "CVE-2026-6791",
+            "CVE-2026-76844",
+            "CVE-2026-77117",
+            "CVE-2026-80489",
+            "CVE-2026-84243",
+            "CVE-2026-85091",
+            "CVE-2026-8674",
+            "CVE-2026-86805",
+            "CVE-2026-89092",
+            "CVE-2026-95619",
+            "CVE-2026-95818",
+            "CVE-2026-97399"
+          ],
+          "architecture": "arm64",
+          "blocking_advisory_ids": {
+            "CRITICAL": [],
+            "HIGH": [
+              "CVE-2026-76844"
+            ],
+            "UNKNOWN": []
+          },
+          "blocking_fix_metadata": {
+            "CRITICAL": {},
+            "HIGH": {
+              "CVE-2026-76844": {
+                "absent": 1,
+                "empty": 0,
+                "nonempty": 0
+              }
+            },
+            "UNKNOWN": {}
+          },
+          "feed_database_sha256": "2ce29bda5b2483d84da3f4365398addcf03a7decf5c79e29dc73db8f0fa454ed",
+          "feed_next_update": "2026-11-06T19:01:45.286712+00:00",
+          "feed_updated_at": "2026-11-05T19:01:45.286712+00:00",
+          "image_archive_sha256": "c9c354643f46686a242927a38c1566fdbf9253c6d1be7f91b6018147e1d30b70",
+          "image_id": "sha256:255ae2da581617c4aaf4918c239cd42fa68f29f920fdf1d12f8beb4c2dd9d051",
+          "image_inspect_sha256": "17c5b2789baf1707777efc785db84b8c60ecad22998fd459e50d877b49d51590",
+          "kind": "native-peer-image-vulnerabilities",
+          "manifest_sha256": "84da880ef026320ed2038b57481904ba85167848dfaa5f017aa6fc130bee3747",
+          "os_family": "debian",
+          "os_version": "13.7",
+          "package_counts": {
+            "lang-pkgs": 2,
+            "os-pkgs": 15
+          },
+          "peer_base": "gcr.io/distroless/nodejs26-debian13:nonroot",
+          "peer_base_digest": "sha256:9b945e92c1b5463a4b75f11e8417515e4bea7355f6adfd79ec220fbbe905dda8",
+          "peer_runtime_profile": "distroless-node26-debian13-v1",
+          "report_created_at": "2026-11-06T00:20:00.311463+00:00",
+          "report_sha256": "4a0eb53b4e1d55bd9ffa9201d96d0ab62b02d5dce794cad7dd042b1eadf68971",
+          "resource_policy": "github-runner-capacity",
+          "result_classes": {
+            "lang-pkgs": 1,
+            "os-pkgs": 1
+          },
+          "scanner_image": "aquasec/trivy:0.76.1@sha256:790fd66d1697395d8693d1acaa1ea702406a20f109b6fc7bac8db623eca6c06c",
+          "scanner_version": "0.76.1",
+          "scanner_version_report_sha256": "1a33f51d6c5be19e93c5eda2cdc12a87d11446f1d535e2cf958def8173d29bbd",
+          "scope": "exact test peer image; OS and discovered libraries; no reachability, protocol, released image or complete product claim",
+          "scratch_bytes": 112249454592,
+          "scratch_cleanup": "unmounted",
+          "severities": {
+            "CRITICAL": 0,
+            "HIGH": 1,
+            "LOW": 8,
+            "MEDIUM": 41,
+            "UNKNOWN": 0
+          },
+          "source_commit": "8cc49828b7090985edbda8321e44e7df5802d675",
+          "state": "failed",
+          "suppressed_findings": 0,
+          "unrecognized_blocking_advisories": {
+            "CRITICAL": 0,
+            "HIGH": 0,
+            "UNKNOWN": 0
+          }
+        }
+      ]
+    },
+    {
+      "job_id": 127622194503,
+      "observations": [
+        {
+          "kind": "independent-peer-runtime",
+          "state": "passed",
+          "node_version": "v26.13.0",
+          "architecture": "x64",
+          "uid": 65532,
+          "gid": 65532,
+          "openpgp_version": "6.3.2",
+          "profile": "distroless-node26-debian13-v1"
+        },
+        {
+          "additional_advisory_ids": 0,
+          "additional_blocking_advisory_ids": {
+            "CRITICAL": 0,
+            "HIGH": 0,
+            "UNKNOWN": 0
+          },
+          "advisory_ids": [
+            "CVE-2010-4756",
+            "CVE-2018-20796",
+            "CVE-2019-1010022",
+            "CVE-2019-1010023",
+            "CVE-2019-1010024",
+            "CVE-2019-1010025",
+            "CVE-2019-9192",
+            "CVE-2026-102010",
+            "CVE-2026-114690",
+            "CVE-2026-114691",
+            "CVE-2026-115455",
+            "CVE-2026-18374",
+            "CVE-2026-19499",
+            "CVE-2026-19542",
+            "CVE-2026-27171",
+            "CVE-2026-5435",
+            "CVE-2026-6238",
+            "CVE-2026-6368",
+            "CVE-2026-6791",
+            "CVE-2026-76844",
+            "CVE-2026-77117",
+            "CVE-2026-80489",
+            "CVE-2026-84243",
+            "CVE-2026-85091",
+            "CVE-2026-8674",
+            "CVE-2026-86805",
+            "CVE-2026-89092",
+            "CVE-2026-95619",
+            "CVE-2026-95818",
+            "CVE-2026-97399"
+          ],
+          "architecture": "amd64",
+          "blocking_advisory_ids": {
+            "CRITICAL": [],
+            "HIGH": [
+              "CVE-2026-76844"
+            ],
+            "UNKNOWN": []
+          },
+          "blocking_fix_metadata": {
+            "CRITICAL": {},
+            "HIGH": {
+              "CVE-2026-76844": {
+                "absent": 1,
+                "empty": 0,
+                "nonempty": 0
+              }
+            },
+            "UNKNOWN": {}
+          },
+          "feed_database_sha256": "2ce29bda5b2483d84da3f4365398addcf03a7decf5c79e29dc73db8f0fa454ed",
+          "feed_next_update": "2026-11-06T19:01:45.286712+00:00",
+          "feed_updated_at": "2026-11-05T19:01:45.286712+00:00",
+          "image_archive_sha256": "af4cda411ce8b9a2b3d67432f540f4e62375212da71eb0118e9ace239ea37ed8",
+          "image_id": "sha256:4534fa88c3b3275bdb0b2dcb3542490b9ed7a997aeb9c3ccf832f5fa4a791fea",
+          "image_inspect_sha256": "e3138390c305ac84d7456b920a6e191599bf95664263ab971edd5709cebc310e",
+          "kind": "native-peer-image-vulnerabilities",
+          "manifest_sha256": "1e926e04ce25488344fc6b893ed5d07d40da531c3b70a614dccb30f10be09d3d",
+          "os_family": "debian",
+          "os_version": "13.7",
+          "package_counts": {
+            "lang-pkgs": 2,
+            "os-pkgs": 15
+          },
+          "peer_base": "gcr.io/distroless/nodejs26-debian13:nonroot",
+          "peer_base_digest": "sha256:9b945e92c1b5463a4b75f11e8417515e4bea7355f6adfd79ec220fbbe905dda8",
+          "peer_runtime_profile": "distroless-node26-debian13-v1",
+          "report_created_at": "2026-11-06T00:20:21.314105+00:00",
+          "report_sha256": "362994e7203dbab749948c6ac7345173a4c062adaff4dccadce1f792eb7edc95",
+          "resource_policy": "github-runner-capacity",
+          "result_classes": {
+            "lang-pkgs": 1,
+            "os-pkgs": 1
+          },
+          "scanner_image": "aquasec/trivy:0.76.1@sha256:790fd66d1697395d8693d1acaa1ea702406a20f109b6fc7bac8db623eca6c06c",
+          "scanner_version": "0.76.1",
+          "scanner_version_report_sha256": "40e674261012169bed5642fb2170877487b733b62ba23cb1d339977d641134aa",
+          "scope": "exact test peer image; OS and discovered libraries; no reachability, protocol, released image or complete product claim",
+          "scratch_bytes": 89873289216,
+          "scratch_cleanup": "unmounted",
+          "severities": {
+            "CRITICAL": 0,
+            "HIGH": 1,
+            "LOW": 8,
+            "MEDIUM": 41,
+            "UNKNOWN": 0
+          },
+          "source_commit": "8cc49828b7090985edbda8321e44e7df5802d675",
+          "state": "failed",
+          "suppressed_findings": 0,
+          "unrecognized_blocking_advisories": {
+            "CRITICAL": 0,
+            "HIGH": 0,
+            "UNKNOWN": 0
+          }
+        }
+      ]
+    }
+  ],
+  "security_triage": "Both original complete scans retain1HIGH(CVE-2026-76844),0CRITICAL/0UNKNOWN,8LOW/41MEDIUM,15OS+2language packages,zero suppressed and absent fix metadata. Same sole remaining finding asF109;no new finding. F110 exact package/source hash diagnostic is local and not in this candidate. Existing red/remediation uncertainty remains;no suppression or coverage change.",
+  "source_security": "All3native source configurations and core Go reachability,JavaScript audit and Gitleaks pass on8cc. Repro,Mac unit job and fuzz pass. Both exact native offline runtime probes pass. No PG/protocol/browser/AX qualification inferred.",
+  "nonsecurity": "Only completion metadata inspected. Original core-record,native PG/metadata,Windows,public/stock-peer/browser failures remain red and deferred to mandatory FINISH. F108 actual collected-source runtime outcomes remain owed. F111 is not in this candidate. No cancellation action.",
+  "local_manifest": {
+    "reference": ".private/freightctl-f112-security/manifest.json",
+    "sha256": "4544914dd22471d25291dca6d2f84e2d9936d75defa6b4a7a6ea69225144a0ac"
+  },
+  "references": [
+    "docs/qualification/evidence/F109-minimal-runtime-native-security.json",
+    "docs/qualification/evidence/F110-private-peer-package-binding.json"
+  ],
+  "owed": [
+    "Exact remaining package/source identity and compatible remediation,complete native scans and original independent AEAD replay",
+    "All original deferred nonsecurity investigations/repairs and final-source native qualification at mandatory FINISH",
+    "Full baseline/AX/agent/AI/provider/independent outcomes;no assisted deployment/adoption/enterprise readiness claim"
+  ]
+}
