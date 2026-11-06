@@ -878,7 +878,8 @@
         "docs/qualification/evidence/F121-native-exchange-process-recovery.json",
         "docs/qualification/evidence/F123-authorized-exchange-evidence.json",
         "docs/qualification/evidence/F127-mcp-create-only-revision.json",
-        "docs/qualification/evidence/F128-received-artifact-copy.json"
+        "docs/qualification/evidence/F128-received-artifact-copy.json",
+        "docs/qualification/evidence/F129-mcp-received-copy.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -893,11 +894,11 @@
         "S003 authorizes guarded source/CI batches after prior required runs are terminal. Shared exchange API/CLI and receive/send/recovery/history browser surfaces are implemented;actual AX profiles remain owed. Broad/deferred qualification is mandatory at FINISH."
       ],
       "current_item": {
-        "id": "F128",
-        "state": "Received copy API/CLI and atomic custody/provenance implemented;native and browser/MCP controls owed",
-        "proof": "Observed missing-route red;three focused Go and seven metadata-summary methods,affected native compilation/vet/architecture pass",
-        "native": "Actual PG/HTTPS/CLI byte/privacy/no-effect/held/closure recovery/refusal proofs prepared,not qualified",
-        "next": "Browser/MCP copy controls;remaining exchange/baseline implementation and mandatory FINISH original/deferred/native/final-source gates"
+        "id": "F129",
+        "state": "Received copy API/CLI/MCP implemented;native and browser controls owed",
+        "proof": "Observed missing MCP tool red;two focused methods and affected tagged compile/vet/architecture pass",
+        "native": "Original official SDK/API byte/receipt/refusal/stale-source recovery proof prepared,not qualified",
+        "next": "Browser controlled copy/recovery;remaining exchange/baseline implementation and mandatory FINISH original/deferred/native/final-source gates"
       }
     }
   ],

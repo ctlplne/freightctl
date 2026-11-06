@@ -87,7 +87,7 @@ func TestMCPStockClientExchangeUsesOrdinaryAuthorityAndSeparateReply(t *testing.
 		t.Fatal("wrong partner discovered MCP catalog")
 	}
 	catalog, err := a.ListTools(ctx, &mcp.ListToolsParams{})
-	if err != nil || len(catalog.Tools) != 25 || catalog.NextCursor != "" || catalog.TTLMs != 0 || catalog.CacheScope != "private" {
+	if err != nil || len(catalog.Tools) != 26 || catalog.NextCursor != "" || catalog.TTLMs != 0 || catalog.CacheScope != "private" {
 		t.Fatal("stock client did not observe exact private noncached catalog")
 	}
 	call := func(client *mcp.ClientSession, name string, args map[string]any, ok bool) *mcp.CallToolResult {
@@ -332,6 +332,31 @@ func TestMCPStockClientExchangeUsesOrdinaryAuthorityAndSeparateReply(t *testing.
 	if traceSnapshot() != traceBefore {
 		t.Fatal("evidence reads created domain events,views,receipts or intents")
 	}
+	copyRequest := store.ExchangeCopyRequest{ExchangeCopyOrigin: store.ExchangeCopyOrigin{ExchangeID: offer.Exchange.ID, RequestHash: offer.Exchange.RequestHash, Artifact: request.Artifact}, Path: "/mcp-owned-copy.dat"}
+	copyArgs := map[string]any{"request": copyRequest, "request_key": "mcp-copy-original"}
+	call(a, "copy_received_artifact", copyArgs, false)
+	call(other, "copy_received_artifact", copyArgs, false)
+	var copied, copiedReplay custody.ExchangeCopyResult
+	mcpDecodeResult(t, call(b, "copy_received_artifact", copyArgs, true), &copied)
+	if copied.Replayed || copied.Artifact.ID == request.Artifact.ID || copied.Artifact.SHA256 != request.Artifact.SHA256 || copied.Artifact.Size != request.Artifact.Size || copied.Source != copyRequest.ExchangeCopyOrigin || copied.CurrentState != "not-checked" || copied.ReceiverPersistence != "unknown" || copied.BusinessProcessing != "unknown" {
+		t.Fatal("MCP copy changed custody or invented a stronger receipt")
+	}
+	_, copyRaw := exchangeAPIRequest(t, server, "POST", prefix+"/exchange-copies", cookieB, map[string]string{"Origin": server.URL, "X-CSRF-Token": csrfB, "Idempotency-Key": "mcp-copy-original"}, exchangeAPIJSON(t, copyRequest), 200)
+	if json.Unmarshal(copyRaw, &copiedReplay) != nil || !copiedReplay.Replayed || copiedReplay.EventID != copied.EventID || copiedReplay.Artifact != copied.Artifact || bytes.Contains(copyRaw, sourceBytes) || bytes.Contains(copyRaw, tokenB.Bytes) || bytes.Contains(copyRaw, []byte(service.Disk.Identity())) {
+		t.Fatal("API/MCP copy original receipt differs or discloses private bytes")
+	}
+	_, copyBytes := exchangeAPIRequest(t, server, "GET", prefix+"/files/"+copied.Artifact.ID, nil, map[string]string{"Authorization": "Bearer " + string(tokenB.Bytes)}, nil, 200)
+	if !bytes.Equal(copyBytes, sourceBytes) {
+		t.Fatal("independent HTTPS copy observer differs")
+	}
+	mcpDecodeResult(t, call(b, "copy_received_artifact", copyArgs, true), &copiedReplay)
+	if !copiedReplay.Replayed || copiedReplay.EventID != copied.EventID || copiedReplay.Artifact != copied.Artifact {
+		t.Fatal("MCP copy retry changed original identity")
+	}
+	changedCopy := copyRequest
+	changedCopy.Path = "/changed-target.dat"
+	call(b, "copy_received_artifact", map[string]any{"request": changedCopy, "request_key": "mcp-copy-original"}, false)
+	call(b, "copy_received_artifact", map[string]any{"request": copyRequest, "request_key": "mcp-copy-overwrite"}, false)
 	call(other, "inspect_exchange", map[string]any{"exchange_id": offer.Exchange.ID}, false)
 	var descriptor struct {
 		Path        string                 `json:"relative_download_path"`
@@ -360,6 +385,12 @@ func TestMCPStockClientExchangeUsesOrdinaryAuthorityAndSeparateReply(t *testing.
 		t.Fatal("independent reply authority update failed")
 	}
 	actorB.AuthorityRevision = updated.Account.AuthorityRevision
+	// The old view's recipient stamp is now stale. Own-copy receipt recovery
+	// still uses current ordinary write/owned-receipt access without reopening it.
+	mcpDecodeResult(t, call(b, "copy_received_artifact", copyArgs, true), &copiedReplay)
+	if !copiedReplay.Replayed || copiedReplay.Artifact != copied.Artifact || copiedReplay.EventID != copied.EventID {
+		t.Fatal("stale source view prevented owned copy receipt recovery")
+	}
 	replyEndpoint := register("mcp-b-to-a", actorA, actorB)
 	onward := request
 	onward.Endpoint = store.ExchangeEndpointReference{ID: replyEndpoint.ID, Revision: replyEndpoint.Revision, Hash: replyEndpoint.Hash}

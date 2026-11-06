@@ -51,8 +51,9 @@ custody receipt; it does not claim remote receiver persistence.
 
 The API/CLI and append-only schema45 acceptance guard are implemented. No new
 metadata table is added; all existing tenant/partner RLS boundaries remain. The
-retained database is not migrated by this work. Browser/MCP convenience controls
-and their own native proofs remain implementation work.
+retained database is not migrated by this work. MCP `copy_received_artifact`
+delegates to this same service with metadata only. Browser convenience controls
+remain implementation work; all native copy outcomes remain owed.
 
 Native PostgreSQL, served HTTPS, byte, refusal, recovery and intake outcomes must
 be proved on actual runners. This contract alone qualifies none of them.

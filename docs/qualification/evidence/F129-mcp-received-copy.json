@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "id": "F129",
+  "observed_at": "2026-11-05",
+  "candidate_parent": "f162efb69ca32e07d445da20370d6fe094c1119e",
+  "state": "Official MCP metadata-only received-copy control shares ordinary API/CLI custody service;native outcomes owed",
+  "qualification_claim": false,
+  "catalog": 26,
+  "implementation": "exchange-tools-v8",
+  "changes": [
+    "copy_received_artifact accepts exact ordinary copy request and stable request_key;same current receive/independent write/create-only0600/intake/durable provenance/idempotency service. No byte payload,overwrite,mode,actor,root,recipient,credential,arbitrary URL or execution argument.",
+    "Original acceptance,current-state unchecked and unknown receiver persistence/processing remain separate. Original-key owned receipt can recover without reopening stale receive view.",
+    "Original official SDK journey extended with exact new copy identity,ordinary cookie API receipt parity,independent HTTPS byte observation,foreign actor/overwrite/changed-meaning refusals and recovery after original receive authority stamp changes. Existing assertions retained."
+  ],
+  "red": {
+    "reference": ".private/freightctl-f129-mcp-red.log",
+    "observation": "Focused discovery/authority regression failed: missing separately authorized received-copy tool"
+  },
+  "green": {
+    "focused_MCP_methods": 2,
+    "affected_tagged_API_compile": "pass,no runtime selected",
+    "affected_tagged_API_vet": "pass",
+    "unchanged_architecture": "pass",
+    "format_diff": "pass"
+  },
+  "source_files": [
+    {
+      "path": "internal/api/mcp.go",
+      "sha256": "0898e3f42b925cfce5f719994aff0dbe1745956ce789bf74e726c974e5b23166"
+    },
+    {
+      "path": "internal/api/mcp-tools.json",
+      "sha256": "695cd41ff08f94bca5580db5afa8972f976124803474d3e6f1ada8957e3388e3"
+    },
+    {
+      "path": "internal/api/mcp_copy_test.go",
+      "sha256": "00caffdda9b129c6da670b78b4a4d10272219894678e3fb9a80547ad36f5f24a"
+    },
+    {
+      "path": "internal/api/mcp_test.go",
+      "sha256": "a32b77e1e910a68e5abb90b187adf5d486921f59f379846b6ef99e6a925ab7a4"
+    },
+    {
+      "path": "internal/api/mcp_integration_test.go",
+      "sha256": "6e6c98ffd4bc252c34fe998b1c59e76abcdecce87dd953b23a5a60bbd922c7e5"
+    },
+    {
+      "path": "docs/protocols/artifact-exchange-mcp.md",
+      "sha256": "3a876554529909698123b6d808a4f218d4707834d641752735136abba839d1b2"
+    },
+    {
+      "path": "docs/protocols/received-artifact-copy.md",
+      "sha256": "201a69561c5606eaee31d4b635473e50661c32f1cec51b273056172abd2793ed"
+    }
+  ],
+  "local_manifest": {
+    "reference": ".private/freightctl-f129-manifest.json",
+    "sha256": "6e0429180bfa71ac6af35c3ef3aa093db59134066dd8039eb63c198a6ca4fcf6"
+  },
+  "previous_batch": "docs/qualification/evidence/F129-previous-batch-runs.json",
+  "owed": [
+    "Actual original native PG/HTTPS/official SDK copy/byte/refusal/recovery outcomes at actual source",
+    "Browser separately authorized copy and original native proof",
+    "All F128 SQL/intake/storage/migration/restore/concurrency/process outcomes",
+    "Every unresolved original CI failure and mandatory full baseline/AX/FINISH gate"
+  ],
+  "inference": "off",
+  "local_heavy_runtimes_started": false
+}

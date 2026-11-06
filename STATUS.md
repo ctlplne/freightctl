@@ -5,11 +5,12 @@ owner decision S003. All 83 whole parity rows and twelve complete customer
 journeys remain open. Assisted deployment, independent adoption and enterprise
 readiness are unqualified. The missing market wedge does not block engineering.
 
-Latest completed CI candidate: 7925f346cb4f3d90e7ce3b82e8db869121c53fc3.
-All thirteen triggered runs are terminal. F127 preserves exact run/job handles and
-security reports. Both actual native ARM/x86 independent-peer runtime probes
-and complete immutable image security gates pass: each 0 CRITICAL/0 HIGH/0 UNKNOWN,
-8 LOW/34 MEDIUM, 11 OS+2 language packages, zero suppressed. This qualifies that
+Latest completed CI candidate: 1681f43f1fa19d52ad08598734f280784f5808d0.
+All twelve triggered runs are terminal. F129 preserves exact run/job handles and
+security outcomes. Both actual native ARM/x86 independent-peer runtime probes
+and complete immutable image security gates pass. Earlier exact F124/F126 reports
+record 0 CRITICAL/0 HIGH/0 UNKNOWN,8 LOW/34 MEDIUM,11 OS+2 language packages,
+zero suppressed; no later count is inferred from step completion. This qualifies that
 exact test-peer image gate only. Original independent AEAD/crypto/recovery,
 shipped product images, complete SBOM/licenses and final-source security remain
 owed. Historical resource, input, probe and finding failures remain in F075/evidence.
@@ -52,7 +53,10 @@ F128 implements separately authorized received-copy custody through API/CLI.
 Current receive plus write permission,new private path,verified durable bytes,
 fresh intake and atomic private provenance are required. Three focused Go and
 seven metadata-summary methods plus affected static checks pass. Actual native
-SQL/HTTPS/CLI/intake/reopen proofs and browser/MCP copy controls remain owed.
+SQL/HTTPS/CLI/intake/reopen proofs remain owed. F129 adds the ordinary metadata-only
+MCP copy tool (catalog26),with observed missing-tool red then two focused methods
+and affected static checks passing. Original official-client copy/replay/API-byte/
+stale-source receipt proofs are prepared,not qualified. Browser copy remains owed.
 
 Latest fresh schema 45 targets 71 metadata tables/70 forced-RLS tables. Retained
 schema 35 is untouched. PostgreSQL/non-owner RLS, immutable custody, transactional

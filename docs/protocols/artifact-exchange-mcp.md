@@ -79,6 +79,17 @@ exact draft cardinality, role refusals, redaction and unapproved-onward refusal.
 Those native outcomes remain owed. See
 [F118](../qualification/evidence/F118-mcp-workflow-review-proposals.json).
 
+`copy_received_artifact` takes a strict `request` matching
+[received-artifact-copy-v1](received-artifact-copy.md) and `request_key`. It invokes
+the same ordinary custody service as API/CLI. Current receive plus independent
+write permission is required for a new private destination; bytes stay in custody,
+are rehashed during staging, and get fresh intake checks. A received view does not
+grant forwarding or execution. Original-key recovery returns the owned copy's
+original acceptance without reopening a stale source view. Current availability,
+receiver persistence and processing are not inferred. No content,overwrite,mode,
+host path,actor,root,recipient or execution option enters this tool. Catalog26,
+implementation `exchange-tools-v8`; actual original SDK/HTTPS proof remains owed.
+
 The four resumable controls use `ordinary-resumable-artifact-upload-v1` and the
 existing upload service. Start takes `virtual_path`, `size_bytes`, `sha256` and
 `request_key`; the path is relative to the authenticated account's virtual root.

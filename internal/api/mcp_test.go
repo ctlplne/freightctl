@@ -83,7 +83,7 @@ func TestMCPMediaOriginAndHeaderAmbiguityRefuseBeforeDatabase(t *testing.T) {
 
 func TestMCPToolSchemasBindOrdinaryRequestsAndExcludeAmbientAuthority(t *testing.T) {
 	var tools []*mcp.Tool
-	if err := json.Unmarshal(mcpCatalog, &tools); err != nil || len(tools) != 25 {
+	if err := json.Unmarshal(mcpCatalog, &tools); err != nil || len(tools) != 26 {
 		t.Fatal("missing fixed tool catalog", err)
 	}
 	raw, err := os.ReadFile("../../web/tests/fixtures/artifact-exchange.json")
@@ -115,6 +115,8 @@ func TestMCPToolSchemasBindOrdinaryRequestsAndExcludeAmbientAuthority(t *testing
 		}
 		var args map[string]any
 		switch tool.Name {
+		case "freightctl.copy_received_artifact":
+			args = map[string]any{"request": map[string]any{"exchange_id": "44444444-4444-4444-8444-444444444444", "request_hash": fixture.Hash, "artifact": map[string]any{"file_revision_id": "55555555-5555-4555-8555-555555555555", "size_bytes": 8, "sha256": fixture.Hash, "acceptance_policy": "integrity-only-v1"}, "virtual_path": "/new.dat"}, "request_key": "original-copy"}
 		case "freightctl.exchange_trace":
 			args = map[string]any{"exchange_id": "55555555-5555-4555-8555-555555555555", "direction": "incoming"}
 		case "freightctl.validate_workflow", "freightctl.propose_workflow":

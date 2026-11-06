@@ -2397,5 +2397,87 @@
       "idempotentHint": true,
       "openWorldHint": false
     }
+  },
+  {
+    "name": "freightctl.copy_received_artifact",
+    "description": "Create or recover a new private owned copy of exact received bytes. Requires current receive plus separate write permission;new path mode0600,no overwrite. Source bytes stay in server custody;fresh intake applies. Original-key recovery returns original acceptance,current state unchecked. No forwarding,execution or stronger receiver outcome.",
+    "inputSchema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "request",
+        "request_key"
+      ],
+      "properties": {
+        "request": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "exchange_id",
+            "request_hash",
+            "artifact",
+            "virtual_path"
+          ],
+          "properties": {
+            "exchange_id": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            "request_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "artifact": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "file_revision_id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+                },
+                "size_bytes": {
+                  "type": "integer",
+                  "format": "int64",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "acceptance_policy": {
+                  "type": "string",
+                  "pattern": "^(integrity-only-v1|intake-csv-v1:[0-9a-f]{64})$"
+                }
+              },
+              "required": [
+                "file_revision_id",
+                "size_bytes",
+                "sha256",
+                "acceptance_policy"
+              ]
+            },
+            "virtual_path": {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 1024,
+              "description": "Canonical new virtual path under current authenticated root;no replacement option."
+            }
+          }
+        },
+        "request_key": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
   }
 ]
