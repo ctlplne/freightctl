@@ -78,6 +78,13 @@ Locked stock-client/native ARM+x86 GitHub TLS,response-loss/resume,expiry,revoca
 concurrent-offset and independent-byte proofs are prepared,not qualified. H-TUS
 is implementing;no extensions,automatic upload TTL or whole-row claim.
 
+F138 adds explicit legacy SCP regular-file roles beside the unchanged SFTP-only
+default. Literal command/record parsing,current registered-key authority,shared
+writers and ordinary durable custody prevent premature acknowledgement. Three
+focused methods and affected tagged/static checks pass. Native ARM+x86 stock
+OpenSSH/PG/SSH/HTTPS/byte/abort/root/intake/revocation proofs are prepared,not
+qualified. Recursive/preservation/other-peer/full J02 and whole-row work stay owed.
+
 Latest fresh schema 46 targets 71 metadata tables/70 forced-RLS tables. Retained
 schema 35 is untouched. PostgreSQL/non-owner RLS, immutable custody, transactional
 events/intents/idempotency, approvals, leases/fencing and protected secrets remain

@@ -32,9 +32,29 @@ type SSHOptions struct {
 	HostKeyFile             string
 	MaxConnections          int
 	SessionLimit, IdleLimit time.Duration
+	// Nil preserves the subsystem-only default. A configured selector parses
+	// one literal legacy protocol request;it must never launch a shell/process.
+	LegacySCP SSHCommandSelector
 }
 type SSHAuthorizer func(context.Context, string, SSHPublic) (SSHPrincipal, error)
 type SSHSubsystem func(context.Context, SSHPrincipal, io.ReadWriteCloser) error
+type SSHCommandSelector func(string) (SSHSubsystem, error)
+
+func selectSSHSession(kind string, payload []byte, subsystem SSHSubsystem, commands SSHCommandSelector) (SSHSubsystem, bool) {
+	var selected struct{ Name string }
+	switch kind {
+	case "subsystem":
+		if len(payload) <= 128 && ssh.Unmarshal(payload, &selected) == nil && selected.Name == "sftp" {
+			return subsystem, subsystem != nil
+		}
+	case "exec":
+		if commands != nil && len(payload) <= 2052 && ssh.Unmarshal(payload, &selected) == nil && len(selected.Name) <= 2048 {
+			handler, err := commands(selected.Name)
+			return handler, err == nil && handler != nil
+		}
+	}
+	return nil, false
+}
 
 func ValidateSSHPublic(public SSHPublic) (SSHPublic, error) {
 	if len(public.Wire) < 16 || len(public.Wire) > 16384 {
@@ -154,8 +174,9 @@ func (c *idleConn) Write(p []byte) (int, error) {
 	return c.Conn.Write(p)
 }
 
-// ServeSFTP owns SSH cryptography and allows exactly one SFTP subsystem per
-// connection. No shell, command, environment, forwarding or agent channel exists.
+// ServeSFTP owns SSH cryptography and allows exactly one artifact channel per
+// connection. Only SFTP is enabled by default;the optional legacy selector
+// supplies a typed protocol handler. No shell,environment,forwarding or agent.
 func ServeSFTP(ctx context.Context, listener net.Listener, options SSHOptions, authorize SSHAuthorizer, subsystem SSHSubsystem) error {
 	address, ok := listener.Addr().(*net.TCPAddr)
 	if !ok || !address.IP.IsLoopback() {
@@ -264,7 +285,7 @@ func ServeSFTP(ctx context.Context, listener net.Listener, options SSHOptions, a
 			used := false
 			for incoming := range channels {
 				if used || incoming.ChannelType() != "session" {
-					_ = incoming.Reject(ssh.Prohibited, "only one SFTP session is permitted")
+					_ = incoming.Reject(ssh.Prohibited, "only one artifact session is permitted")
 					continue
 				}
 				used = true
@@ -277,8 +298,8 @@ func ServeSFTP(ctx context.Context, listener net.Listener, options SSHOptions, a
 					defer children.Done()
 					defer channel.Close()
 					for request := range channelRequests {
-						var selected struct{ Name string }
-						if request.Type != "subsystem" || len(request.Payload) > 128 || ssh.Unmarshal(request.Payload, &selected) != nil || selected.Name != "sftp" {
+						selected, allowed := selectSSHSession(request.Type, request.Payload, subsystem, options.LegacySCP)
+						if !allowed {
 							_ = request.Reply(false, nil)
 							continue
 						}
@@ -288,7 +309,7 @@ func ServeSFTP(ctx context.Context, listener net.Listener, options SSHOptions, a
 								_ = extra.Reply(false, nil)
 							}
 						}()
-						err := subsystem(sessionCtx, principal, channel)
+						err := selected(sessionCtx, principal, channel)
 						status := uint32(0)
 						if err != nil && !errors.Is(err, io.EOF) {
 							status = 1

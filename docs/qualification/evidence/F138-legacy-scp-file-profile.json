@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "id": "F138",
+  "observed_at": "2026-11-05",
+  "candidate_parent": "b689d8ca8d1907e7d26059ae6787a17770e2f472",
+  "state": "Explicit legacy SCP regular-file transport implemented;native runtime owed",
+  "qualification_claim": false,
+  "profile": "scp-legacy-file-v1",
+  "wire_reference": "https://github.com/openssh/openssh-portable/blob/87f0cd1892e501f835dd210abea5461807c8deba/scp.c",
+  "changes": [
+    "Default SSH remains SFTP-only. Explicit serve-sftp --legacy-scp adds a bounded typed SCP selector after registered-key authentication. Literal send/receive regular-file roles,existing receive directories,sequential files and -v only;no shell/process/environment/forwarding/agent request,substitution,glob or home expansion. Recursive and timestamp-preservation roles reject before session start.",
+    "Canonical root-relative virtual paths;bounded records,numeric sizes,regular modes and basenames refuse traversal,protocol-control paths,special bits and unsupported records. Same PostgreSQL/RLS,live key/account/authority,ordinary namespace writer/verified reader and shared SFTP writer slots.",
+    "Only a successful durable Close,whole-file SHA256 and transactional custody/current intake binding precedes final zero acknowledgement. Partial bodies/nonzero or absent terminators fail writer before cleanup. SCP EOF failure is explicitly non-success rather than ordinary SFTP EOF shutdown. Held bytes stay unpublished.",
+    "Downloads pin exact verified immutable revision and ordinary current read/intake authority. Transport acknowledgement is not persistence/business evidence. Lost final response remains ambiguous;no legacy SCP idempotency or automatic retry claim.",
+    "Dedicated native GitHub ARM/x86 stock OpenSSH profile prepares modern/default compatibility,explicit legacy upload/download,independent HTTPS/stock receiver bytes,sequential directory files,partial and empty aborts,sender error,confined-root refusal,intake hold and in-flight/new-session revocation. Exact candidate and stock binary hashes bind safe output."
+  ],
+  "red": [
+    {
+      "reference": ".private/freightctl-f138-command-red.log",
+      "observation": "Extracted original selector rejected the explicitly selected typed legacy protocol;focused test failed before opt-in implementation"
+    }
+  ],
+  "green": {
+    "focused_selector_methods": 1,
+    "focused_literal_command_and_wire_record_methods": 2,
+    "affected_tagged_compilation": "pass;no runtime selected",
+    "affected_tagged_vet": "pass",
+    "unchanged_architecture": "pass",
+    "changed_workflow_actionlint": "pass",
+    "format_diff": "pass"
+  },
+  "source_files": [
+    {
+      "path": ".github/workflows/scp.yml",
+      "sha256": "85a2f8758d70781e87ce09e794572a85bc10d42340d49778590ef58298ddfa22",
+      "bytes": 2526
+    },
+    {
+      "path": "cmd/freightctl/main.go",
+      "sha256": "aee701427907f522d154889025b79e395cc14f5ff720cc41cb9bbdfd9894e61d",
+      "bytes": 45648
+    },
+    {
+      "path": "docs/protocols/scp-legacy.md",
+      "sha256": "38c5d56470556c912465ed518b6bb4c6bcc2a6c20a218ebb5b57f336d76b055f",
+      "bytes": 2743
+    },
+    {
+      "path": "docs/protocols/sftp.md",
+      "sha256": "96bb43c6e5408293ffe5cd78d7897164b8f494a8d0a246df1fa7dd9323cc129c",
+      "bytes": 10643
+    },
+    {
+      "path": "internal/crypto/ssh.go",
+      "sha256": "b0a0f2ee362a751d2d4447abb17d4024c39847dca8068e9be9b271ccef4a1d83",
+      "bytes": 9716
+    },
+    {
+      "path": "internal/crypto/ssh_command_test.go",
+      "sha256": "5cb3f5bdede25eac4878b2f31a7cd31465a4909fc9eef47561dee1f87f26cb2d",
+      "bytes": 1658
+    },
+    {
+      "path": "internal/sftpd/legacy_scp.go",
+      "sha256": "5acea7fdb335d11594aa5e2d40546a3d0cc9790b10a0ab59b94d25fab3df4dcf",
+      "bytes": 9877
+    },
+    {
+      "path": "internal/sftpd/legacy_scp_test.go",
+      "sha256": "0e8cead18cf1adeaf2a9e472265c9991f32716a3971e4e5c943e616e5c81bb88",
+      "bytes": 3186
+    },
+    {
+      "path": "internal/api/scp_legacy_integration_test.go",
+      "sha256": "545549651e0e5b0bb656372bd16c0fb886b03db819c1432707a403c2f0bfb876",
+      "bytes": 13359
+    }
+  ],
+  "local_manifest": {
+    "path": ".private/freightctl-f138-manifest.json",
+    "sha256": "2c2edf16b9c59898d238634d2e30ebe8a21c4911d66d77374a1c2ff1f6d282f1",
+    "bytes": 1517
+  },
+  "owed": [
+    "Actual dedicated native ARM/x86 OpenSSH/SSH/PG/intake/HTTPS/race/byte/abort/root/revocation proofs at source;compilation is not qualification",
+    "Recursive/preservation/other-peer roles,complete denied-login/session-end retention,host-key rotation and full legacy SCP/J02/incumbent edition/version comparison",
+    "Every unresolved original failure and mandatory baseline/AX/FINISH final-source gate"
+  ],
+  "limits": "No migration;fresh46/71metadata70forcedRLS and retained35 unchanged. Local inference and all local heavy runtimes off. Existing SSH session/idle/connections,shared writers,namespace/file/storage/stream bounds intact;GitHub uses runner capacity."
+}

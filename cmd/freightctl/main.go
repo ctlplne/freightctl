@@ -162,6 +162,7 @@ func run(args []string) error {
 	sshKeyID := f.String("ssh-key-id", "", "registered key UUID to revoke")
 	sshConnections := f.Int("ssh-max-connections", 16, "maximum concurrent SSH connections")
 	sshWriters := f.Int("ssh-max-writers", 2, "maximum open SFTP writers in the initial serialized profile")
+	legacySCP := f.Bool("legacy-scp", false, "enable the literal legacy SCP regular-file profile alongside SFTP;no shell,recursive or timestamp-preservation commands")
 	sshSession := f.Duration("ssh-session-limit", 5*time.Minute, "absolute SSH connection lifetime")
 	sshIdle := f.Duration("ssh-idle-limit", 30*time.Second, "maximum SSH inactivity")
 	ftpsImplicit := f.Bool("ftps-implicit", false, "begin TLS before the FTP greeting; default uses explicit AUTH TLS")
@@ -588,7 +589,11 @@ func run(args []string) error {
 		stop, cancel := signal.NotifyContext(ctx, os.Interrupt, syscall.SIGTERM)
 		defer cancel()
 		fmt.Println("freightctl SFTP custody listening on", *listen, "(integrity-only; not production qualified)")
-		return secure.ServeSFTP(stop, listener, secure.SSHOptions{HostKeyFile: *sshHost, MaxConnections: *sshConnections, SessionLimit: *sshSession, IdleLimit: *sshIdle}, db.AllowSSHKey, service.Session)
+		sshOptions := secure.SSHOptions{HostKeyFile: *sshHost, MaxConnections: *sshConnections, SessionLimit: *sshSession, IdleLimit: *sshIdle}
+		if *legacySCP {
+			sshOptions.LegacySCP = service.LegacySCP
+		}
+		return secure.ServeSFTP(stop, listener, sshOptions, db.AllowSSHKey, service.Session)
 	case "serve":
 		if *namespaceMax < 1 {
 			return errors.New("namespace entry budget must be positive")

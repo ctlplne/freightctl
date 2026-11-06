@@ -372,11 +372,14 @@
         "independent operator or receiver"
       ],
       "acceptance_journey": "J02",
-      "state": "planned",
-      "evidence": [],
+      "state": "implementing",
+      "evidence": [
+        "docs/qualification/evidence/F138-legacy-scp-file-profile.json"
+      ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
-      ]
+      ],
+      "current_limit": "Explicit scp-legacy-file-v1 regular-file roles implemented through ordinary custody;default subsystem-only preserved. Focused selector/parser/record checks and static compilation pass. Native ARM/x86 stock proofs prepared,not qualified. Recursive/preservation/other-peer/full J02/whole-row and incumbent comparison remain owed."
     },
     {
       "id": "P-FTP",

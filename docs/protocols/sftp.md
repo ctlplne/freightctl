@@ -71,4 +71,9 @@ The final native probe negotiated `mlkem768x25519-sha256`, an Ed25519 host key a
 
 Resumable tickets add a reserved private control path. Their stat size is the committed checkpoint offset, while get is denied; completed bytes appear only at the approved ordinary destination after any configured intake checks and release. Bound-target control rename explicitly completes an already checkpointed ticket. See the [ticket contract](resumable-uploads.md) for resume and completion semantics.
 
+Legacy SCP remains disabled in this default profile. The separate explicit
+`--legacy-scp` option selects the [legacy regular-file contract](scp-legacy.md);
+it never enables a shell or changes modern scp's SFTP path. Its native outcome
+is separately owed;older default-denial evidence does not qualify this option.
+
 The first local sender is documented in [approved outbound SFTP intents](outbound-sftp.md). It requires explicit approval, file-sync and atomic hardlink extensions, and handles uncertain publication through read-only reconciliation. This narrow profile does not qualify every outbound SFTP role or receiver.

@@ -502,7 +502,8 @@
         "docs/qualification/evidence/F071-governed-ftps-delivery.json",
         "docs/qualification/evidence/F072-ftps-browser-review.json",
         "docs/qualification/evidence/F073-ftps-workflow-connections.json",
-        "docs/qualification/evidence/F135-tus-core-checkpoints.json"
+        "docs/qualification/evidence/F135-tus-core-checkpoints.json",
+        "docs/qualification/evidence/F138-legacy-scp-file-profile.json"
       ],
       "remaining_details": [
         "F010 verifies durable held intake for configured new revisions, exact CSV contracts, separate hash/revision-bound release and ordinary delivery of released bytes. Antivirus/ICAP/DLP, cryptographic signatures/encryption, other formats/transforms, re-scan/exception governance, retrospective policy and the complete business-file journey remain mandatory.",
@@ -566,7 +567,8 @@
         "Complete f08ARMapplication replay passes880/0/0,all17FTPSleaves including repairedD164SQL/sixforgeries andD165both frozen scheduled workers; x86stillrunning. Image then failsD168:actual regular1692762112byte DB exceeds original1GiBfile cap,metadata153bytes,diskunmounted. Keep all budgets,inventory/severity/freshness policies and red image gate; this is not ARM OOM or clean scan. Later d6operator and local mixed cases remain unqualified.",
         "Both f08 native application sections880/0/0,all17FTPSleaves each;D164/D165exact repairs pass both. Both image gates fail at actual1692762112byte DB beyond1GiBfilecap;metadata153bytes,diskunmounted. Unapplied1792MiBfile-only proposal passes21stand-in contracts and awaits explicit owner decision;no RAM/CPU/disk/time/scanner policy change. d6public operator running/queued,local mixed cases unqualified;all whole gates remain open.",
         "D6corepasses141frontend/source checks;both public profiles complete explicit metadata Chrome then evidence reopener failsD170before byte operator,causeunobserved,originalscleanupretained. Independent UUIDs reproduce/fix separateD169operator verifier: exact parent database/protectedloopbackDSN nowbindhelperconfig.7operator/9metadata/8browser/71reporter stand-in methods pass;fixed privacy-safe reopener stages/reasons prepared. Native d6jobsqueued; runtime,mixed/source-independent/whole-goal gates remain open. D168filecapproposal stillunapplied/ownerdecisionpending.",
-        "F135 implements existing-ticket tus core checkpoint adapter;observed missing-route red then2HTTP controls/1strict peer summary and affected static checks pass. Native ARM/x86 stock client,response-loss/resume,PG,verified TLS,strict concurrent offsets,credential expiry/revocation and separate whole-file/independent byte proofs prepared,not qualified. Existing custody and local resource bounds preserved;all whole-row/J04/FINISH outcomes owed."
+        "F135 implements existing-ticket tus core checkpoint adapter;observed missing-route red then2HTTP controls/1strict peer summary and affected static checks pass. Native ARM/x86 stock client,response-loss/resume,PG,verified TLS,strict concurrent offsets,credential expiry/revocation and separate whole-file/independent byte proofs prepared,not qualified. Existing custody and local resource bounds preserved;all whole-row/J04/FINISH outcomes owed.",
+        "F138 adds explicit legacy SCP regular-file roles using registered SSH/current authority,ordinary custody and shared writers;default SFTP-only remains. Observed selector red then3focused methods and affected static checks pass. Actual native ARM/x86 stock/PG/SSH/HTTPS/bytes/abort/root/intake/revocation outcomes and recursive/preservation/whole-row/J02/FINISH gates remain owed."
       ]
     },
     {
