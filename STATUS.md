@@ -5,8 +5,8 @@ owner decision S003. All 83 whole parity rows and twelve complete customer
 journeys remain open. Assisted deployment, independent adoption and enterprise
 readiness are unqualified. The missing market wedge does not block engineering.
 
-Latest completed CI candidate: c89bbb2705549d7e90a4202039e29af6e12aaf41.
-All twelve triggered runs are terminal. F136 preserves exact run/job handles and
+Latest completed CI candidate: 081ef10e9edc078fcea169271bf29bc8fd0976a2.
+All twelve triggered runs are terminal. F137 preserves exact run/job handles and
 security outcomes. Both actual native ARM/x86 independent-peer runtime probes
 and complete immutable image security gates pass. Earlier exact F124/F126 reports
 record 0 CRITICAL/0 HIGH/0 UNKNOWN,8 LOW/34 MEDIUM,11 OS+2 language packages,
