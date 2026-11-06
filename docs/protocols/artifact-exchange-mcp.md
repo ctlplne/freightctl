@@ -88,7 +88,7 @@ grant forwarding or execution. Original-key recovery returns the owned copy's
 original acceptance without reopening a stale source view. Current availability,
 receiver persistence and processing are not inferred. No content,overwrite,mode,
 host path,actor,root,recipient or execution option enters this tool. Catalog26,
-implementation `exchange-tools-v9`; actual original SDK/HTTPS proof remains owed.
+implementation `exchange-tools-v10`; actual original SDK/HTTPS proof remains owed.
 
 The four resumable controls use `ordinary-resumable-artifact-upload-v1` and the
 existing upload service. Start takes `virtual_path`, `size_bytes`, `sha256` and

@@ -5,7 +5,8 @@ export function CheckEvidence({ view }: { view: CheckView }) {
   return (
     <>
       {(view.validation?.code === "valid_csv" ||
-        view.validation?.code === "valid_json_records") && (
+        view.validation?.code === "valid_json_records" ||
+        view.validation?.code === "valid_fixed_width") && (
         <dl className="facts" aria-label="Recorded validation result">
           <dt>Rows checked</dt>
           <dd>{view.validation.rows.toLocaleString()}</dd>

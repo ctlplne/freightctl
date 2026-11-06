@@ -157,6 +157,23 @@ function refuse(value) {
     (e) => e.code === "invalid_server_response" && e.status === 502,
   );
 }
+test("fixed-width evidence requires its exact engine,custody profile and bytes", () => {
+  const v = view();
+  v.check.binding.file.policy = "intake-fixed-width-v1:" + policy;
+  v.check.code = v.check.report.code = "valid_fixed_width";
+  v.check.report.engine = "freightctl-fixed-width-v1";
+  assert.equal(asCheckView(v).validation.code, "valid_fixed_width");
+  for (const change of [
+    (v) => (v.check.report.engine = "freightctl-json-records-v1"),
+    (v) => (v.check.report.code = "valid_csv"),
+    (v) => (v.check.binding.file.policy = "intake-csv-v1:" + policy),
+    (v) => v.check.report.bytes_read++,
+  ]) {
+    const bad = structuredClone(v);
+    change(bad);
+    refuse(bad);
+  }
+});
 test("successful JSON evidence binds its actual custody format,engine,code and exact byte count", () => {
   const value = view();
   value.check.binding.file = {

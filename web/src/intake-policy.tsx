@@ -7,6 +7,7 @@ import {
   defaultIntakeDefinition,
   intakeDefinition,
   intakeHash,
+  intakeFormat,
   type IntakeColumn,
   type IntakeDefinition,
   type IntakePolicy,
@@ -105,7 +106,7 @@ export function IntakePolicyEditor({
       });
     } catch {
       setNotice(
-        "Review unique column names, types, decimal precision and processing limits. Each column must fit inside the record limit.",
+        "Review unique column names, types, decimal precision and processing limits. Fixed-width fields need explicit byte widths and padding;the complete record plus its line ending must fit the record limit.",
       );
     }
   }
@@ -225,7 +226,9 @@ export function IntakePolicyEditor({
           <dd>
             {current.definition.kind === "csv"
               ? "CSV columns"
-              : "JSON record array"}
+              : current.definition.kind === "json_records"
+                ? "JSON record array"
+                : "Fixed-width records"}
           </dd>
         </dl>
       ) : loaded ? (
@@ -244,18 +247,17 @@ export function IntakePolicyEditor({
               value={draft.kind}
               onChange={(event) => {
                 const kind = event.target.value;
-                if (kind === "csv")
-                  setDraft((d) => ({ ...d, schema_version: 1, kind: "csv" }));
-                else if (kind === "json_records")
-                  setDraft((d) => ({
-                    ...d,
-                    schema_version: 2,
-                    kind: "json_records",
-                  }));
+                if (
+                  kind === "csv" ||
+                  kind === "json_records" ||
+                  kind === "fixed_width"
+                )
+                  setDraft((d) => intakeFormat(d, kind));
               }}
             >
               <option value="csv">CSV columns</option>
               <option value="json_records">JSON record array</option>
+              <option value="fixed_width">Fixed-width records</option>
             </select>
           </label>
           <p>
@@ -263,7 +265,9 @@ export function IntakePolicyEditor({
             contract.{" "}
             {draft.kind === "csv"
               ? "Column order and header names must match the file."
-              : "Use an array of flat objects with these exact field names. Numeric fields require JSON numbers;duplicate,unknown or nested fields fail. No content is executed."}
+              : draft.kind === "json_records"
+                ? "Use an array of flat objects with these exact field names. Numeric fields require JSON numbers;duplicate,unknown or nested fields fail. No content is executed."
+                : "Every record has these ordered byte widths and no header. Only the selected side's ASCII spaces are padding. UTF-8 characters must fit inside each field. LF and CRLF are accepted; an exact final record may end at EOF. Bytes are validated without changing values."}
           </p>
           {draft.columns.map((c, i) => (
             <fieldset key={i}>
@@ -356,6 +360,46 @@ export function IntakePolicyEditor({
                   </label>
                 </>
               )}
+              {draft.kind === "fixed_width" && (
+                <>
+                  <label>
+                    Column {i + 1} width in bytes
+                    <input
+                      required
+                      type="number"
+                      min={c.max_bytes}
+                      max={draft.max_record_bytes - 2}
+                      value={c.width_bytes ?? c.max_bytes}
+                      onChange={(e) =>
+                        column(i, { width_bytes: Number(e.target.value) })
+                      }
+                    />
+                  </label>
+                  <label>
+                    Column {i + 1} padding
+                    <select
+                      value={c.padding ?? "none"}
+                      onChange={(e) => {
+                        const padding = e.target.value;
+                        if (
+                          padding === "none" ||
+                          padding === "space_left" ||
+                          padding === "space_right"
+                        )
+                          column(i, { padding });
+                      }}
+                    >
+                      <option value="none">No padding</option>
+                      <option value="space_left">
+                        ASCII spaces on the left
+                      </option>
+                      <option value="space_right">
+                        ASCII spaces on the right
+                      </option>
+                    </select>
+                  </label>
+                </>
+              )}
               <button
                 type="button"
                 disabled={draft.columns.length === 1}
@@ -378,7 +422,15 @@ export function IntakePolicyEditor({
                 ...d,
                 columns: [
                   ...d.columns,
-                  { name: "", type: "text", required: true, max_bytes: 64 },
+                  {
+                    name: "",
+                    type: "text",
+                    required: true,
+                    max_bytes: 64,
+                    ...(d.kind === "fixed_width"
+                      ? { width_bytes: 64, padding: "none" as const }
+                      : {}),
+                  },
                 ],
               }))
             }
@@ -469,7 +521,9 @@ export function IntakePolicyEditor({
               Format:{" "}
               {pending.definition.kind === "csv"
                 ? "CSV columns"
-                : "JSON record array"}
+                : pending.definition.kind === "json_records"
+                  ? "JSON record array"
+                  : "Fixed-width records"}
               . The definition hash binds this choice and every protected
               requirement.
             </p>
@@ -480,6 +534,9 @@ export function IntakePolicyEditor({
                   most {c.max_bytes} bytes
                   {c.type === "decimal"
                     ? `, precision ${c.precision}, scale ${c.scale ?? 0}`
+                    : ""}
+                  {pending.definition.kind === "fixed_width"
+                    ? `; field ${c.width_bytes} bytes, padding ${c.padding}`
                     : ""}
                 </li>
               ))}

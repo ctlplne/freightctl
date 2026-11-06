@@ -17,7 +17,7 @@ func TestPublicArtifactPolicySchemasMatchActualDomain(t *testing.T) {
 		Valid  bool   `json:"valid"`
 	}
 	wire, err := os.ReadFile("../../web/tests/fixtures/artifact-policy-cases.json")
-	if err != nil || json.Unmarshal(wire, &cases) != nil || len(cases) != 32 {
+	if err != nil || json.Unmarshal(wire, &cases) != nil || len(cases) != 42 {
 		t.Fatal("shared artifact policy cases missing", err)
 	}
 	for _, c := range cases {

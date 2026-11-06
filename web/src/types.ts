@@ -515,13 +515,22 @@ export function asCheckView(value: unknown): CheckView {
       bytes: number(report, "bytes_read", 1 << 30),
     };
     const jsonRecords = validation.code === "valid_json_records",
-      successful = jsonRecords || validation.code === "valid_csv";
+      fixedWidth = validation.code === "valid_fixed_width",
+      successful = jsonRecords || fixedWidth || validation.code === "valid_csv";
     if (
       successful &&
       (validation.engine !==
-        (jsonRecords ? "freightctl-json-records-v1" : "freightctl-csv-v1") ||
+        (jsonRecords
+          ? "freightctl-json-records-v1"
+          : fixedWidth
+            ? "freightctl-fixed-width-v1"
+            : "freightctl-csv-v1") ||
         text(file, "policy", 128) !==
-          (jsonRecords ? "intake-json-records-v1:" : "intake-csv-v1:") +
+          (jsonRecords
+            ? "intake-json-records-v1:"
+            : fixedWidth
+              ? "intake-fixed-width-v1:"
+              : "intake-csv-v1:") +
             policySHA ||
         id(file, "id") !== fileID ||
         validation.bytes !== number(file, "size_bytes", 1 << 30))

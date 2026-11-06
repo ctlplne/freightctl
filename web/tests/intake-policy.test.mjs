@@ -20,6 +20,7 @@ const fixtures = await Promise.all(
     "intake-policy.json",
     "intake-policy-protected.json",
     "intake-policy-json-records.json",
+    "intake-policy-fixed-width.json",
   ].map(async (name) =>
     JSON.parse(
       await readFile(new URL("fixtures/" + name, import.meta.url), "utf8"),
@@ -33,6 +34,52 @@ const view = (f) => ({
   definition_hash: f.definition_hash,
   state: "active",
   revision: 1,
+});
+
+test("fixed-width reviews bind byte widths and explicit padding with protected requirements", () => {
+  const d = structuredClone(fixtures[1].definition);
+  d.schema_version = 3;
+  d.kind = "fixed_width";
+  d.columns = d.columns.map((c) => ({
+    ...c,
+    width_bytes: c.max_bytes,
+    padding: "none",
+  }));
+  assert.deepEqual(p.intakeDefinition(d), d);
+  const original = p.intakeHash(d);
+  d.columns[0].padding = "space_right";
+  assert.notEqual(p.intakeHash(d), original);
+  for (const change of [
+    (v) => (v.columns[0].width_bytes = 0),
+    (v) => (v.columns[0].width_bytes = v.max_record_bytes),
+    (v) => (v.columns[0].width_bytes = v.columns[0].max_bytes - 1),
+    (v) => (v.columns[0].padding = "trim"),
+    (v) => {
+      v.schema_version = 1;
+      v.kind = "csv";
+    },
+    (v) => {
+      v.schema_version = 2;
+      v.kind = "json_records";
+    },
+  ]) {
+    const invalid = structuredClone(d);
+    change(invalid);
+    assert.throws(() => p.intakeDefinition(invalid));
+  }
+  assert.deepEqual(d.signature, fixtures[1].definition.signature);
+  assert.deepEqual(d.scanner, fixtures[1].definition.scanner);
+  const csv = p.intakeFormat(d, "csv");
+  assert.deepEqual(csv, fixtures[1].definition);
+  assert.equal(p.intakeHash(csv), fixtures[1].definition_hash);
+  const fixed = p.intakeFormat(csv, "fixed_width");
+  assert.deepEqual(fixed.signature, csv.signature);
+  assert.deepEqual(fixed.scanner, csv.scanner);
+  assert.ok(
+    fixed.columns.every(
+      (c) => c.width_bytes === c.max_bytes && c.padding === "none",
+    ),
+  );
 });
 
 test("JSON record policies have a distinct schema/hash and preserve protected requirements", () => {

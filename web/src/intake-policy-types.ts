@@ -8,6 +8,8 @@ export interface IntakeColumn {
   max_bytes: number;
   precision?: number;
   scale?: number;
+  width_bytes?: number;
+  padding?: "none" | "space_left" | "space_right";
 }
 interface Reference {
   id: string;
@@ -27,6 +29,7 @@ export type IntakeDefinition = IntakeDefinitionFields &
   (
     | { schema_version: 1; kind: "csv" }
     | { schema_version: 2; kind: "json_records" }
+    | { schema_version: 3; kind: "fixed_width" }
   );
 export interface IntakePolicy {
   id: string;
@@ -84,7 +87,8 @@ export function intakeDefinition(value: unknown): IntakeDefinition {
   if (
     !(
       (o.schema_version === 1 && o.kind === "csv") ||
-      (o.schema_version === 2 && o.kind === "json_records")
+      (o.schema_version === 2 && o.kind === "json_records") ||
+      (o.schema_version === 3 && o.kind === "fixed_width")
     ) ||
     !Array.isArray(o.columns) ||
     o.columns.length < 1 ||
@@ -93,9 +97,19 @@ export function intakeDefinition(value: unknown): IntakeDefinition {
     return fail();
   const record = integer(o.max_record_bytes, 64, 1048576),
     names = new Set<string>();
+  let width = 0;
   const columns = o.columns.map((value): IntakeColumn => {
     const c = object(value);
-    keys(c, ["name", "type", "required", "max_bytes", "precision", "scale"]);
+    keys(c, [
+      "name",
+      "type",
+      "required",
+      "max_bytes",
+      "precision",
+      "scale",
+      "width_bytes",
+      "padding",
+    ]);
     if (
       typeof c.name !== "string" ||
       // Match Go strings.TrimSpace: ECMAScript trim also removes U+FEFF,
@@ -125,12 +139,30 @@ export function intakeDefinition(value: unknown): IntakeDefinition {
       column.precision = precision;
       if (scale) column.scale = scale;
     } else if (precision || scale) return fail();
+    if (o.kind === "fixed_width") {
+      column.width_bytes = integer(c.width_bytes, 1, record);
+      const padding = c.padding ?? "none";
+      if (
+        !["none", "space_left", "space_right"].includes(String(padding)) ||
+        column.max_bytes > column.width_bytes
+      )
+        return fail();
+      column.padding = padding as NonNullable<IntakeColumn["padding"]>;
+      width += column.width_bytes;
+      if (width + 2 > record) return fail();
+    } else if (
+      (c.width_bytes !== undefined && c.width_bytes !== 0) ||
+      (c.padding !== undefined && c.padding !== "")
+    )
+      return fail();
     return column;
   });
   const result: IntakeDefinition = {
     ...(o.kind === "csv"
       ? { schema_version: 1 as const, kind: "csv" as const }
-      : { schema_version: 2 as const, kind: "json_records" as const }),
+      : o.kind === "json_records"
+        ? { schema_version: 2 as const, kind: "json_records" as const }
+        : { schema_version: 3 as const, kind: "fixed_width" as const }),
     columns,
     max_bytes: integer(o.max_bytes, 1, 1073741824),
     max_rows: integer(o.max_rows, 1, 1000000),
@@ -148,6 +180,31 @@ export function intakeDefinition(value: unknown): IntakeDefinition {
   if (new TextEncoder().encode(goJSON(result)).length > 12 * 1024)
     return fail();
   return result;
+}
+
+export function intakeFormat(
+  d: IntakeDefinition,
+  kind: "csv" | "json_records" | "fixed_width",
+): IntakeDefinition {
+  const columns = d.columns.map((c) => {
+    const { width_bytes: width, padding, ...plain } = c;
+    return kind === "fixed_width"
+      ? {
+          ...plain,
+          width_bytes: width ?? c.max_bytes,
+          padding: padding ?? ("none" as const),
+        }
+      : plain;
+  });
+  return {
+    ...d,
+    columns,
+    ...(kind === "csv"
+      ? ({ schema_version: 1, kind } as const)
+      : kind === "json_records"
+        ? ({ schema_version: 2, kind } as const)
+        : ({ schema_version: 3, kind } as const)),
+  };
 }
 function goJSON(value: unknown): string {
   return JSON.stringify(value).replace(

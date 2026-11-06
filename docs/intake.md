@@ -1,10 +1,12 @@
-# Held intake and CSV checks
+# Held intake and record checks
 
 An intake policy applies to **newly accepted revisions** for one tenant and partner. The server chooses the policy; an uploader cannot request a weaker one. Bytes are synced into private custody, then the file, immutable policy binding, held check and upload receipt commit together. No destination path appears yet. Raw file IDs, namespace publication and delivery cannot bypass the hold, including for an administrator.
 
 Durable acceptance means the bytes were saved. It does not mean they passed a business contract, were published or reached a receiver. HTTP upload responses distinguish `durable-held-pending-checks-and-release` from the historical `durable-local-integrity-only` profile. Resumable upload `completed` means assembly finished; its file can still be held. An SFTP CLOSE can acknowledge durable held intake while the destination remains unavailable. Operators find that upload with the private check list.
 
 The first check engine validates a CSV contract. An optional [OpenPGP policy](openpgp.md) additionally requires a detached signature by an explicitly enrolled signer before a pass. Malware scanning, encryption, wider processing tasks and the complete payroll/settlement journey remain required. No model, scanner daemon, shell or network request runs inside the parser or signature verifier.
+
+The same held-file workflow also implements [flat JSON record arrays](protocols/json-record-intake.md) under schema2 and [fixed-width records](protocols/fixed-width-intake.md) under schema3. The format is an explicit policy choice, bound to the file identity and report engine. A filename extension never selects it. Fixed-width policies declare each field's byte width and padding; the browser reviews those choices and the exact definition hash before registration. Required signer/scanner controls and separate release still apply. Native format qualification remains owed; source presence is not proof of the complete customer journey.
 
 ```mermaid
 stateDiagram-v2
@@ -44,7 +46,7 @@ Run `intake-policy-register --request-file REQUEST --idempotency-key KEY` with t
 
 The CSV dialect uses UTF-8, comma separators and standard double-quote escaping. The header must match the configured names and order exactly. CRLF and quoted multiline cells are accepted by Go's CSV parser; blank physical lines are ignored. Validation never rewrites the stored file. Reports count logical data records, excluding the header, and identify a failing logical record/column without retaining its cell contents.
 
-`text` preserves identifiers and leading zeros. `integer` permits an optional sign and ASCII digits without converting the value. `decimal` permits an optional sign, digits and one decimal point; precision bounds significant digits and scale bounds fractional digits. It uses no floating-point conversion, rounding or scientific notation. `date` requires a real `YYYY-MM-DD` calendar date. Required empty cells, NULs, invalid UTF-8, excessive field lengths, wrong field counts and malformed quotes are rejected. Wider schemas, other encodings/dialects, XML/JSON/spreadsheets/EDI and deterministic transformations remain work.
+`text` preserves identifiers and leading zeros. `integer` permits an optional sign and ASCII digits without converting the value. `decimal` permits an optional sign, digits and one decimal point; precision bounds significant digits and scale bounds fractional digits. It uses no floating-point conversion, rounding or scientific notation. `date` requires a real `YYYY-MM-DD` calendar date. Required empty cells, NULs, invalid UTF-8, excessive field lengths, wrong field counts and malformed quotes are rejected. Wider schemas, other encodings/dialects, general nested JSON/JSON Schema, XML/spreadsheets/EDI and deterministic transformations remain work.
 
 There is one current intake policy per partner. Registering the next exact version retires its predecessor. Revocation requires `definition_hash`, `expected_version` and `expected_revision`; use `intake-policy-revoke --request-file DECISION --idempotency-key KEY`. A revoked policy blocks new acceptance. It cannot silently restore the unchecked profile. In-progress staging holds the selected policy until its acceptance transaction ends; a concurrent policy change can wait or time out and must be retried under its original key.
 

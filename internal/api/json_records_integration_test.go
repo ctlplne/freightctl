@@ -27,6 +27,14 @@ func jsonRecordsSameJSON(a, b []byte) bool {
 // Uses the ordinary verified HTTPS server and non-owner PostgreSQL role. The
 // parser's unit cases cannot establish these custody and permission outcomes.
 func TestJSONRecordsHTTPSCookieBearerHeldChecksAndSeparateRelease(t *testing.T) {
+	structuredIntakeHTTPS(t, false)
+}
+
+func TestFixedWidthHTTPSCookieBearerHeldChecksAndSeparateRelease(t *testing.T) {
+	structuredIntakeHTTPS(t, true)
+}
+
+func structuredIntakeHTTPS(t *testing.T, fixed bool) {
 	service, scope, admin, server := browserAPI(t, 10*time.Minute)
 	t.Cleanup(func() { _ = service.Disk.Close() })
 	cookie, csrf := loginBrowser(t, server, scope, admin)
@@ -36,6 +44,15 @@ func TestJSONRecordsHTTPSCookieBearerHeldChecksAndSeparateRelease(t *testing.T) 
 		{Name: "amount", Type: "decimal", Required: true, Precision: 12, Scale: 2},
 		{Name: "day", Type: "date", Required: true},
 	}}
+	prefixPolicy, engine, success, extension := store.JSONRecordsIntakePrefix, "freightctl-json-records-v1", "valid_json_records", "json"
+	if fixed {
+		policy.Schema, policy.Kind = 3, "fixed_width"
+		for i, w := range []int{8, 12, 10} {
+			policy.Columns[i].Width, policy.Columns[i].MaxBytes, policy.Columns[i].Padding = w, w, "none"
+		}
+		policy.Columns[1].Padding = "space_left"
+		prefixPolicy, engine, success, extension = store.FixedWidthIntakePrefix, "freightctl-fixed-width-v1", "valid_fixed_width", "fixed"
+	}
 	request := exchangeAPIJSON(t, checks.PolicyRequest{Definition: policy})
 	mutating := func(key string) map[string]string {
 		return map[string]string{"Origin": server.URL, "X-CSRF-Token": csrf, "Idempotency-Key": key}
@@ -59,21 +76,26 @@ func TestJSONRecordsHTTPSCookieBearerHeldChecksAndSeparateRelease(t *testing.T) 
 		t.Fatal("cookie and bearer lost the original policy receipt")
 	}
 	readOnly, _ := exchangeAPIParticipant(t, server, prefix, cookie, csrf, []string{"read", "list"})
-	for _, fixture := range []struct{ name, body, code string }{
+	fixtures := []struct{ name, body, code string }{
 		{"valid", `[{"account":"0001","amount":1.01,"day":"2026-10-28"}]`, "valid_json_records"},
 		{"duplicate", `[{"account":"0001","account":"0002","amount":1.01,"day":"2026-10-28"}]`, "duplicate_field"},
 		{"unknown", `[{"account":"0001","amount":1.01,"day":"2026-10-28","execute":"private sentinel"}]`, "unknown_field"},
-	} {
+	}
+
+	if fixed {
+		fixtures = []struct{ name, body, code string }{{"valid", "00000001      100.012026-10-28\r\n", success}, {"wrong-width", "00000001      100.012026-10-28x\n", "invalid_record_width"}, {"wrong-cell", "00000001       1e+022026-10-28\n", "invalid_cell"}}
+	}
+	for _, fixture := range fixtures {
 		t.Run(fixture.name, func(t *testing.T) {
 			headers := mutating("json-upload-" + fixture.name)
 			headers["X-File-Size"], headers["X-Content-SHA256"] = strconv.Itoa(len(fixture.body)), secure.Digest([]byte(fixture.body))
-			path := prefix + "/namespace/file?path=/" + fixture.name + ".json"
+			path := prefix + "/namespace/file?path=/" + fixture.name + "." + extension
 			_, raw := exchangeAPIRequest(t, server, "PUT", path, cookie, headers, []byte(fixture.body), 201)
 			var accepted struct {
 				File       store.File `json:"file"`
 				Acceptance string     `json:"acceptance"`
 			}
-			if json.Unmarshal(raw, &accepted) != nil || accepted.Acceptance != "durable-held-pending-checks-and-release" || accepted.File.Policy != store.JSONRecordsIntakePrefix+configured.Hash {
+			if json.Unmarshal(raw, &accepted) != nil || accepted.Acceptance != "durable-held-pending-checks-and-release" || accepted.File.Policy != prefixPolicy+configured.Hash {
 				t.Fatal("JSON upload did not retain its exact held identity")
 			}
 			fileURL := prefix + "/files/" + accepted.File.ID
@@ -93,15 +115,15 @@ func TestJSONRecordsHTTPSCookieBearerHeldChecksAndSeparateRelease(t *testing.T) 
 			_, raw = exchangeAPIRequest(t, server, "GET", checkURL, cookie, nil, nil, 200)
 			var view checks.View
 			var report checks.Report
-			if json.Unmarshal(raw, &view) != nil || view.Check == nil || !view.Current || view.Check.Attempts != 1 || json.Unmarshal(view.Check.Report, &report) != nil || report.Engine != "freightctl-json-records-v1" || report.Code != fixture.code || report.FileID != accepted.File.ID || report.PolicyHash != configured.Hash || report.SHA256 != accepted.File.SHA256 {
+			if json.Unmarshal(raw, &view) != nil || view.Check == nil || !view.Current || view.Check.Attempts != 1 || json.Unmarshal(view.Check.Report, &report) != nil || report.Engine != engine || report.Code != fixture.code || report.FileID != accepted.File.ID || report.PolicyHash != configured.Hash || report.SHA256 != accepted.File.SHA256 {
 				t.Fatal("HTTPS check report lost its format or immutable bindings")
 			}
-			if bytes.Contains(raw, []byte("private sentinel")) || bytes.Contains(raw, []byte(`"0001"`)) {
+			if bytes.Contains(raw, []byte("private sentinel")) || bytes.Contains(raw, []byte(`"0001"`)) || bytes.Contains(raw, []byte(`"00000001"`)) {
 				t.Fatal("check evidence disclosed raw record values")
 			}
 			decision := checks.ReleaseDecision{SHA256: accepted.File.SHA256, PolicyHash: configured.Hash, ReportHash: view.Check.ReportHash, Revision: view.Check.Revision}
 			exchangeAPIRequest(t, server, "POST", checkURL+"/release", nil, map[string]string{"Authorization": "Bearer " + string(readOnly.Bytes), "Idempotency-Key": "readonly-release"}, exchangeAPIJSON(t, decision), 403)
-			if fixture.code != "valid_json_records" {
+			if fixture.code != success {
 				if view.Check.State != "rejected" {
 					t.Fatal("invalid records were not rejected")
 				}

@@ -133,7 +133,7 @@
             },
             "acceptance_policy": {
               "type": "string",
-              "pattern": "^(integrity-only-v1|intake-(csv-v1|json-records-v1):[0-9a-f]{64})$"
+              "pattern": "^(integrity-only-v1|intake-(csv-v1|json-records-v1|fixed-width-v1):[0-9a-f]{64})$"
             }
           },
           "required": [
@@ -292,7 +292,7 @@
             },
             "acceptance_policy": {
               "type": "string",
-              "pattern": "^(integrity-only-v1|intake-(csv-v1|json-records-v1):[0-9a-f]{64})$"
+              "pattern": "^(integrity-only-v1|intake-(csv-v1|json-records-v1|fixed-width-v1):[0-9a-f]{64})$"
             }
           },
           "required": [
@@ -581,7 +581,7 @@
             },
             "acceptance_policy": {
               "type": "string",
-              "pattern": "^(integrity-only-v1|intake-(csv-v1|json-records-v1):[0-9a-f]{64})$"
+              "pattern": "^(integrity-only-v1|intake-(csv-v1|json-records-v1|fixed-width-v1):[0-9a-f]{64})$"
             }
           },
           "required": [
@@ -773,7 +773,7 @@
             },
             "acceptance_policy": {
               "type": "string",
-              "pattern": "^(integrity-only-v1|intake-(csv-v1|json-records-v1):[0-9a-f]{64})$"
+              "pattern": "^(integrity-only-v1|intake-(csv-v1|json-records-v1|fixed-width-v1):[0-9a-f]{64})$"
             }
           },
           "required": [
@@ -977,7 +977,7 @@
             },
             "acceptance_policy": {
               "type": "string",
-              "pattern": "^(integrity-only-v1|intake-(csv-v1|json-records-v1):[0-9a-f]{64})$"
+              "pattern": "^(integrity-only-v1|intake-(csv-v1|json-records-v1|fixed-width-v1):[0-9a-f]{64})$"
             }
           },
           "required": [
@@ -1196,7 +1196,7 @@
             },
             "acceptance_policy": {
               "type": "string",
-              "pattern": "^(integrity-only-v1|intake-(csv-v1|json-records-v1):[0-9a-f]{64})$"
+              "pattern": "^(integrity-only-v1|intake-(csv-v1|json-records-v1|fixed-width-v1):[0-9a-f]{64})$"
             }
           },
           "required": [
@@ -1422,7 +1422,7 @@
             },
             "acceptance_policy": {
               "type": "string",
-              "pattern": "^(integrity-only-v1|intake-(csv-v1|json-records-v1):[0-9a-f]{64})$"
+              "pattern": "^(integrity-only-v1|intake-(csv-v1|json-records-v1|fixed-width-v1):[0-9a-f]{64})$"
             }
           },
           "required": [
@@ -2449,7 +2449,7 @@
                 },
                 "acceptance_policy": {
                   "type": "string",
-                  "pattern": "^(integrity-only-v1|intake-(csv-v1|json-records-v1):[0-9a-f]{64})$"
+                  "pattern": "^(integrity-only-v1|intake-(csv-v1|json-records-v1|fixed-width-v1):[0-9a-f]{64})$"
                 }
               },
               "required": [

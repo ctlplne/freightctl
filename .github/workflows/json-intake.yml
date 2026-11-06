@@ -81,7 +81,7 @@ jobs:
       - name: Actual JSON SQL, API, CLI, signature and scanner-protocol outcomes
         run: |
           sh scripts/go.sh test -race -timeout=0 -tags=integration \
-            -run '^(TestJSONRecords.*|TestReceivedCopyReappliesIntakeAndSQLRejectsForgedProvenance|TestArtifactExchangeCLIUsesOrdinaryAuthorityAndPublishesVerifiedDownload)$' \
+            -run '^(TestJSONRecords.*|TestFixedWidth.*|TestReceivedCopyReappliesIntakeAndSQLRejectsForgedProvenance|TestArtifactExchangeCLIUsesOrdinaryAuthorityAndPublishesVerifiedDownload)$' \
             -count=1 -v ./internal/checks ./internal/api ./internal/custody ./cmd/freightctl
 
   browser:
@@ -114,4 +114,4 @@ jobs:
       - name: Real browser review, committed-response loss, exact checks and separate release
         run: |
           sh scripts/go.sh test -race -timeout=0 -tags=integration,jsonbrowser \
-            -run '^TestJSONRecordsNativeBrowserReviewedHashAndReceipt$' -count=1 -v ./internal/api
+            -run '^(TestJSONRecordsNativeBrowserReviewedHashAndReceipt|TestFixedWidthNativeBrowserReviewedHashAndReceipt)$' -count=1 -v ./internal/api

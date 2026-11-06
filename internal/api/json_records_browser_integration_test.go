@@ -22,6 +22,14 @@ import (
 )
 
 func TestJSONRecordsNativeBrowserReviewedHashAndReceipt(t *testing.T) {
+	structuredNativeBrowser(t, false)
+}
+
+func TestFixedWidthNativeBrowserReviewedHashAndReceipt(t *testing.T) {
+	structuredNativeBrowser(t, true)
+}
+
+func structuredNativeBrowser(t *testing.T, fixed bool) {
 	if os.Getenv("GITHUB_ACTIONS") != "true" || runtime.GOOS != "linux" || runtime.GOARCH != "amd64" {
 		t.Fatal("explicit Chrome/PostgreSQL profile requires native GitHub Linux x86_64")
 	}
@@ -33,10 +41,23 @@ func TestJSONRecordsNativeBrowserReviewedHashAndReceipt(t *testing.T) {
 		{Name: "amount", Type: "decimal", Required: true, Precision: 12, Scale: 2},
 		{Name: "day", Type: "date", Required: true},
 	}}
+	if fixed {
+		policy.MaxBytes, policy.MaxRows, policy.MaxRecordBytes, policy.TimeoutSeconds = 1024, 2, 64, 2
+		for i, w := range []int{8, 12, 10} {
+			policy.Columns[i].MaxBytes = w
+		}
+	}
 	if _, err := checking.Register(t.Context(), scope, "browser-original-csv-policy", checks.PolicyRequest{Definition: policy}); err != nil {
 		t.Fatal(err)
 	}
 	policy.Schema, policy.Kind = 2, "json_records"
+	if fixed {
+		policy.Schema, policy.Kind = 3, "fixed_width"
+		for i, w := range []int{8, 12, 10} {
+			policy.Columns[i].Width, policy.Columns[i].Padding = w, "none"
+		}
+		policy.Columns[1].Padding = "space_left"
+	}
 	definition, err := checks.Normalize(policy)
 	if err != nil {
 		t.Fatal(err)
@@ -62,7 +83,13 @@ func TestJSONRecordsNativeBrowserReviewedHashAndReceipt(t *testing.T) {
 	if err = os.WriteFile(source, body, 0600); err != nil {
 		t.Fatal(err)
 	}
-	settings := map[string]any{"url": server.URL, "tenant": scope.Tenant, "partner": scope.Partner, "token": token, "source": source, "private": private, "result": result, "hash": expected, "size": len(body), "sha256": secure.Digest(body), "certificate_der": base64.StdEncoding.EncodeToString(server.Certificate().Raw)}
+	if fixed {
+		body = []byte("00000001      100.012026-10-28\r\n")
+		if err = os.WriteFile(source, body, 0600); err != nil {
+			t.Fatal(err)
+		}
+	}
+	settings := map[string]any{"format": policy.Kind, "url": server.URL, "tenant": scope.Tenant, "partner": scope.Partner, "token": token, "source": source, "private": private, "result": result, "hash": expected, "size": len(body), "sha256": secure.Digest(body), "certificate_der": base64.StdEncoding.EncodeToString(server.Certificate().Raw)}
 	encoded, err := json.Marshal(settings)
 	if err != nil {
 		t.Fatal(err)
@@ -116,7 +143,12 @@ func TestJSONRecordsNativeBrowserReviewedHashAndReceipt(t *testing.T) {
 	}
 	received, err := io.ReadAll(io.LimitReader(reader, int64(len(body)+1)))
 	reader.Close()
-	if err != nil || file.ID != summary.File || file.Policy != store.JSONRecordsIntakePrefix+expected || !bytes.Equal(received, body) {
+	if err != nil || file.ID != summary.File || file.Policy != func() string {
+		if fixed {
+			return store.FixedWidthIntakePrefix
+		}
+		return store.JSONRecordsIntakePrefix
+	}()+expected || !bytes.Equal(received, body) {
 		t.Fatal("independent Go observer differs from browser-uploaded immutable bytes", err)
 	}
 	proof, err := s.DB.Begin(t.Context(), scope)

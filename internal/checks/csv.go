@@ -31,12 +31,18 @@ var decimalPattern = regexp.MustCompile(`^[+-]?[0-9]+(?:\.[0-9]+)?$`)
 const Engine = "freightctl-csv-v1"
 
 func policyEngine(p Policy) string {
+	if p.Schema == 3 && p.Kind == "fixed_width" {
+		return "freightctl-fixed-width-v1"
+	}
 	if p.Schema == 2 && p.Kind == "json_records" {
 		return "freightctl-json-records-v1"
 	}
 	return Engine
 }
 func policySuccess(p Policy) string {
+	if p.Schema == 3 && p.Kind == "fixed_width" {
+		return "valid_fixed_width"
+	}
 	if p.Schema == 2 && p.Kind == "json_records" {
 		return "valid_json_records"
 	}
@@ -50,6 +56,8 @@ type Column struct {
 	MaxBytes  int    `json:"max_bytes"`
 	Precision int    `json:"precision,omitempty"`
 	Scale     int    `json:"scale,omitempty"`
+	Width     int    `json:"width_bytes,omitempty"`
+	Padding   string `json:"padding,omitempty"`
 }
 type Policy struct {
 	Schema         int                     `json:"schema_version"`
@@ -97,7 +105,8 @@ func Normalize(p Policy) (Policy, error) {
 	if p.Signature != nil && (!store.ValidID(p.Signature.Key.ID) || p.Signature.Key.Version < 1 || !hashPattern.MatchString(p.Signature.Key.Hash)) {
 		return p, ErrInput
 	}
-	if !(p.Schema == 1 && p.Kind == "csv" || p.Schema == 2 && p.Kind == "json_records") || len(p.Columns) < 1 || len(p.Columns) > 128 {
+	fixed := p.Schema == 3 && p.Kind == "fixed_width"
+	if !(p.Schema == 1 && p.Kind == "csv" || p.Schema == 2 && p.Kind == "json_records" || fixed) || len(p.Columns) < 1 || len(p.Columns) > 128 {
 		return p, ErrInput
 	}
 	if p.MaxBytes == 0 {
@@ -116,6 +125,7 @@ func Normalize(p Policy) (Policy, error) {
 		return p, ErrInput
 	}
 	seen := map[string]bool{}
+	width := 0
 	p.Columns = slices.Clone(p.Columns)
 	for i, c := range p.Columns {
 		if !utf8.ValidString(c.Name) || len(c.Name) < 1 || len(c.Name) > 128 || strings.TrimSpace(c.Name) != c.Name || seen[c.Name] {
@@ -127,8 +137,28 @@ func Normalize(p Policy) (Policy, error) {
 			}
 		}
 		seen[c.Name] = true
+		if fixed {
+			if c.Width < 1 || c.Width > p.MaxRecordBytes {
+				return p, ErrInput
+			}
+			if c.Padding == "" {
+				c.Padding = "none"
+			}
+			if c.Padding != "none" && c.Padding != "space_left" && c.Padding != "space_right" {
+				return p, ErrInput
+			}
+			width += c.Width
+			if width+2 > p.MaxRecordBytes || c.MaxBytes > c.Width {
+				return p, ErrInput
+			}
+		} else if c.Width != 0 || c.Padding != "" {
+			return p, ErrInput
+		}
 		if c.MaxBytes == 0 {
 			c.MaxBytes = 4096
+			if fixed {
+				c.MaxBytes = min(c.MaxBytes, c.Width)
+			}
 		}
 		if c.MaxBytes < 1 || c.MaxBytes > 64<<10 || c.MaxBytes > p.MaxRecordBytes {
 			return p, ErrInput
@@ -237,6 +267,9 @@ func Validate(ctx context.Context, p Policy, f store.File, policyHash string, in
 	}
 	if p.Schema == 2 && p.Kind == "json_records" {
 		return validateJSONRecords(ctx, p, f, policyHash, input)
+	}
+	if p.Schema == 3 && p.Kind == "fixed_width" {
+		return validateFixedWidth(ctx, p, f, policyHash, input)
 	}
 	h := secure.NewDigest()
 	b := &budgetReader{ctx: ctx, reader: io.LimitReader(input, p.MaxBytes+1), hash: h}

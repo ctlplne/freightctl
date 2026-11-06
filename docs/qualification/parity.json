@@ -2777,12 +2777,13 @@
         "docs/qualification/evidence/F010-held-intake.json",
         "docs/qualification/evidence/F143-json-record-intake-checkpoint.json",
         "docs/qualification/evidence/F145-json-intake-interface-proofs.json",
-        "docs/qualification/evidence/F146-public-json-policy-contract.json"
+        "docs/qualification/evidence/F146-public-json-policy-contract.json",
+        "docs/qualification/evidence/F148-fixed-width-intake.json"
       ],
       "qualification_blockers": [
         "Authorized JSCAPE by Redwood installation and exact edition/version for observed comparison"
       ],
-      "current_limit": "F143 implements bounded JSON records beside CSV;F145 prepares native API/CLI/Chrome/recheck/copy proofs.F146 repairs published OpenAPI JSON custody grammar with observed red/green across13 schemas/32 domain-bound cases.Native SQL/PG/crypto/scanner/interfaces,remaining format/transform breadth and full-row/final-source qualification remain owed.No whole-row pass."
+      "current_limit": "F143 bounded JSON and F148 explicit-byte-width/padding fixed records extend CSV through ordinary held custody and separately authorized release.Local focused red/green/static checks pass;native SQL/interfaces/crypto/scanner/recheck/copy/final-source outcomes remain owed.XML/spreadsheets/EDI,broader schema/transform behavior and complete customer/parity qualification remain open.No whole-row pass."
     },
     {
       "id": "O-MONITOR",

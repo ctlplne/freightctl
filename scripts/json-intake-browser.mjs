@@ -12,6 +12,12 @@ assert.equal(process.platform, "linux");
 assert.equal(process.arch, "x64");
 assert.equal(process.env.FREIGHTCTL_BROWSER_CHANNEL, "chrome");
 const c = JSON.parse(await readFile(process.argv[2], "utf8"));
+assert.ok(c.format === "json_records" || c.format === "fixed_width");
+const fixed = c.format === "fixed_width",
+  schema = fixed ? 3 : 2,
+  code = fixed ? "valid_fixed_width" : "valid_json_records",
+  engine = fixed ? "freightctl-fixed-width-v1" : "freightctl-json-records-v1",
+  policyPrefix = fixed ? "intake-fixed-width-v1:" : "intake-json-records-v1:";
 assert.equal(new URL(c.url).protocol, "https:");
 assert.equal(new URL(c.url).hostname, "127.0.0.1");
 const require = createRequire(import.meta.url);
@@ -109,10 +115,18 @@ try {
   const editor = page.getByRole("region", { name: "Incoming file policy" });
   await editor
     .getByLabel("File format", { exact: true })
-    .selectOption("json_records");
+    .selectOption(c.format);
+  if (fixed)
+    await editor
+      .getByLabel("Column 2 padding", { exact: true })
+      .selectOption("space_left");
   await audit("json-editor");
   await button("Review intake policy", editor).click();
-  await dialog().getByText("JSON record array", { exact: false }).waitFor();
+  await dialog()
+    .getByText(fixed ? "Fixed-width records" : "JSON record array", {
+      exact: false,
+    })
+    .waitFor();
   assert.ok(
     (await dialog().locator("code").allTextContents()).includes(c.hash),
   );
@@ -199,8 +213,8 @@ try {
   assert.equal(policyRequests[0].key, policyRequests[1].key);
   assert.deepEqual(policyRequests[0].request, policyRequests[1].request);
   assert.equal(policyRequests[0].request.expected_version, 1);
-  assert.equal(policyRequests[0].request.definition.schema_version, 2);
-  assert.equal(policyRequests[0].request.definition.kind, "json_records");
+  assert.equal(policyRequests[0].request.definition.schema_version, schema);
+  assert.equal(policyRequests[0].request.definition.kind, c.format);
   const original = policyRequests[0].response;
   assert.equal(original.replayed, false);
   assert.deepEqual(policyRequests[1].response, { ...original, replayed: true });
@@ -226,7 +240,7 @@ try {
   assert.equal(response.status(), 200);
   const accepted = await response.json();
   assert.equal(accepted.acceptance, "durable-held-pending-checks-and-release");
-  assert.equal(accepted.file.policy, "intake-json-records-v1:" + c.hash);
+  assert.equal(accepted.file.policy, policyPrefix + c.hash);
   assert.equal(accepted.upload.expected_sha256, c.sha256);
   assert.equal(accepted.upload.committed_offset, c.size);
   file = accepted.file.id;
@@ -254,8 +268,8 @@ try {
   const detail = JSON.parse((await api("/checks/" + file)).body);
   assert.equal(detail.check.state, "passed");
   assert.equal(detail.check.attempts, 1);
-  assert.equal(detail.check.report.engine, "freightctl-json-records-v1");
-  assert.equal(detail.check.report.code, "valid_json_records");
+  assert.equal(detail.check.report.engine, engine);
+  assert.equal(detail.check.report.code, code);
   assert.equal(detail.check.report.rows, 1);
   assert.equal(detail.check.report.bytes_read, c.size);
   assert.equal((await api("/files/" + file)).status, 409);

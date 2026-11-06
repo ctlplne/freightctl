@@ -155,18 +155,17 @@ func TestJSONRecordsActualCustodyCheckAndSeparateExactRelease(t *testing.T) {
 }
 
 func TestJSONRecordsSQLRejectsCrossFormatReportsWhileKeepingExactValidTransition(t *testing.T) {
-	for _, jsonRecords := range []bool{false, true} {
-		name := "csv"
-		if jsonRecords {
-			name = "json_records"
-		}
+	for _, name := range []string{"csv", "json_records", "fixed_width"} {
 		t.Run(name, func(t *testing.T) {
 			f := setup(t)
 			s := &Service{Custody: f.wf.Custody}
 			policy := testPolicy(t)
 			body := goodCSV
-			if jsonRecords {
+			if name == "json_records" {
 				policy.Schema, policy.Kind, body = 2, "json_records", goodJSONRecords
+			}
+			if name == "fixed_width" {
+				policy, body = fixedWidthPolicy(t), goodFixedWidth
 			}
 			if _, err := s.Register(f.ctx, f.scope, "format-policy", PolicyRequest{Definition: policy}); err != nil {
 				t.Fatal(err)
@@ -205,7 +204,7 @@ func TestJSONRecordsSQLRejectsCrossFormatReportsWhileKeepingExactValidTransition
 				candidate.State, candidate.Revision = "passed", current.Revision+1
 				engine, code := policyEngine(policy), policySuccess(policy)
 				if forged {
-					if jsonRecords {
+					if name != "csv" {
 						engine, code = Engine, "valid_csv"
 					} else {
 						engine, code = "freightctl-json-records-v1", "valid_json_records"
@@ -232,15 +231,27 @@ func TestJSONRecordsSQLRejectsCrossFormatReportsWhileKeepingExactValidTransition
 }
 
 func TestJSONRecordsActualGnuPGAndScannerProtocolRemainCumulative(t *testing.T) {
-	// GnuPG signs the actual JSON bytes. The scanner is only its documented
+	actualStructuredSignatureScanner(t, "json_records")
+}
+
+func TestFixedWidthActualGnuPGAndScannerProtocolRemainCumulative(t *testing.T) {
+	actualStructuredSignatureScanner(t, "fixed_width")
+}
+
+func actualStructuredSignatureScanner(t *testing.T, format string) {
+	// GnuPG signs the actual structured bytes. The scanner is only its documented
 	// protocol stand-in;this test makes no ClamAV/malware-detection claim.
 	for _, mode := range []string{"clean", "offline", "blocked"} {
 		t.Run(mode, func(t *testing.T) {
-			f, s, scanner, _, _ := scanFixture(t, mode, time.Hour, "json_records")
+			f, s, scanner, _, _ := scanFixture(t, mode, time.Hour, format)
 			load, fingerprints := pgpBundle(t)
-			source := load("source.json")
-			if !bytes.Equal(source, []byte(goodJSONRecords)) {
-				t.Fatal("independent GnuPG fixture is not the exact JSON record source")
+			sourceName, signatureName, target, expected := "source.json", "good-json.sig", "/both.json", goodJSONRecords
+			if format == "fixed_width" {
+				sourceName, signatureName, target, expected = "source.fixed", "good-fixed.sig", "/both.fixed", goodFixedWidth
+			}
+			source := load(sourceName)
+			if !bytes.Equal(source, []byte(expected)) {
+				t.Fatal("independent GnuPG fixture is not the exact structured record source")
 			}
 			registered, err := s.RegisterPGPKey(f.ctx, f.scope, "json-signer", PGPKeyRequest{Fingerprint: fingerprints["good"], PublicKey: load("good-public.gpg")})
 			if err != nil {
@@ -252,20 +263,23 @@ func TestJSONRecordsActualGnuPGAndScannerProtocolRemainCumulative(t *testing.T) 
 			}
 			policy := testPolicy(t)
 			policy.Schema, policy.Kind = 2, "json_records"
+			if format == "fixed_width" {
+				policy = fixedWidthPolicy(t)
+			}
 			policy.Signature = &SignaturePolicy{Key: store.PGPReference{ID: signer.ID, Version: signer.Version, Hash: signer.Hash}, MaxAgeSeconds: 3600}
 			policy.Scanner = &store.ScannerReference{ID: scanner.ID, Version: scanner.Version, Hash: scanner.Hash}
 			if _, err = s.Register(f.ctx, f.scope, "json-both-required", PolicyRequest{ExpectedVersion: 1, Definition: policy}); err != nil {
 				t.Fatal(err)
 			}
-			file, _, err := s.Custody.AcceptAt(f.ctx, f.scope, "json-both-source", int64(len(source)), secure.Digest(source), bytes.NewReader(source), custody.UploadTarget{Path: "/both.json"})
+			file, _, err := s.Custody.AcceptAt(f.ctx, f.scope, "json-both-source", int64(len(source)), secure.Digest(source), bytes.NewReader(source), custody.UploadTarget{Path: target})
 			if err != nil {
 				t.Fatal(err)
 			}
 			if _, err = s.Run(f.ctx, f.scope, file.ID, "json-missing-signature"); !errors.Is(err, store.ErrState) || getCheck(t, s, f, file.ID).Attempts != 0 {
-				t.Fatal("JSON spent an attempt or skipped its missing signer prerequisite", err)
+				t.Fatal("Structured parser spent an attempt or skipped its missing signer prerequisite", err)
 			}
 			current := getCheck(t, s, f, file.ID)
-			if _, err = s.AttachSignature(f.ctx, f.scope, file.ID, "json-signature", file.SHA256, current.PolicyHash, current.Revision, load("good-json.sig")); err != nil {
+			if _, err = s.AttachSignature(f.ctx, f.scope, file.ID, "json-signature", file.SHA256, current.PolicyHash, current.Revision, load(signatureName)); err != nil {
 				t.Fatal(err)
 			}
 			if _, err = s.Run(f.ctx, f.scope, file.ID, "json-both-check"); err != nil {
@@ -281,13 +295,13 @@ func TestJSONRecordsActualGnuPGAndScannerProtocolRemainCumulative(t *testing.T) 
 					t.Fatal("valid signature bypassed required scanner outcome", current.State, current.Code)
 				}
 				if _, _, err = s.Custody.Download(f.ctx, f.scope, file.ID); !errors.Is(err, store.ErrState) {
-					t.Fatal("non-clean JSON bytes exposed", err)
+					t.Fatal("non-clean structured bytes exposed", err)
 				}
 				return
 			}
 			var report Report
 			if json.Unmarshal(current.Report, &report) != nil || current.State != "passed" || report.Engine != policyEngine(policy) || report.Code != policySuccess(policy) || report.Signature == nil || report.Signature.Verification.PrimaryFingerprint != signer.Fingerprint || report.Scanner == nil || report.Scanner.Result.Verdict != "clean" || report.Scanner.Result.SHA256 != file.SHA256 {
-				t.Fatal("combined JSON report omitted exact format,signer or scanner binding")
+				t.Fatal("combined structured report omitted exact format,signer or scanner binding")
 			}
 			if _, _, err = s.Custody.Download(f.ctx, f.scope, file.ID); !errors.Is(err, store.ErrState) {
 				t.Fatal("combined checks bypassed separate release", err)
@@ -295,7 +309,7 @@ func TestJSONRecordsActualGnuPGAndScannerProtocolRemainCumulative(t *testing.T) 
 			if _, err = s.Release(f.ctx, f.scope, file.ID, "json-both-release", releaseDecision(current)); err != nil {
 				t.Fatal(err)
 			}
-			_, reader, err := s.Custody.OpenPathReader(f.ctx, f.scope, "/both.json")
+			_, reader, err := s.Custody.OpenPathReader(f.ctx, f.scope, target)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -308,7 +322,7 @@ func TestJSONRecordsActualGnuPGAndScannerProtocolRemainCumulative(t *testing.T) 
 				t.Fatal(err)
 			}
 			if _, err = reader.ReadAt(make([]byte, 1), 0); !errors.Is(err, store.ErrState) {
-				t.Fatal("open JSON reader ignored current signer revocation", err)
+				t.Fatal("open structured reader ignored current signer revocation", err)
 			}
 		})
 	}

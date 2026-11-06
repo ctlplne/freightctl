@@ -158,5 +158,55 @@
     "name": "invalid-10",
     "policy": "intake-json-records-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\u0000",
     "valid": false
+  },
+  {
+    "name": "fixed-width",
+    "policy": "intake-fixed-width-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "valid": true
+  },
+  {
+    "name": "fixed-newline",
+    "policy": "intake-fixed-width-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n",
+    "valid": false
+  },
+  {
+    "name": "fixed-cr",
+    "policy": "intake-fixed-width-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\r",
+    "valid": false
+  },
+  {
+    "name": "fixed-crlf",
+    "policy": "intake-fixed-width-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\r\n",
+    "valid": false
+  },
+  {
+    "name": "fixed-separator",
+    "policy": "intake-fixed-width-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\u2028",
+    "valid": false
+  },
+  {
+    "name": "fixed-paragraph",
+    "policy": "intake-fixed-width-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\u2029",
+    "valid": false
+  },
+  {
+    "name": "fixed-extra",
+    "policy": "intake-fixed-width-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaax",
+    "valid": false
+  },
+  {
+    "name": "fixed-bad-0",
+    "policy": "intake-fixed-width-v2:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "valid": false
+  },
+  {
+    "name": "fixed-bad-1",
+    "policy": "intake-fixed-width-v1:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "valid": false
+  },
+  {
+    "name": "fixed-bad-2",
+    "policy": "intake-fixed-width-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "valid": false
   }
 ]
