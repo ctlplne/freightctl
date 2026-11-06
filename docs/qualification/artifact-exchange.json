@@ -34,7 +34,8 @@
         "docs/qualification/evidence/F089-exchange-endpoint-directory.json",
         "docs/qualification/evidence/F093-browser-artifact-offer.json",
         "docs/qualification/evidence/F099-governed-mcp-exchange-tools.json",
-        "docs/qualification/evidence/F111-agent-artifact-ingress-descriptor.json"
+        "docs/qualification/evidence/F111-agent-artifact-ingress-descriptor.json",
+        "docs/qualification/evidence/F116-mcp-resumable-artifact-ingress.json"
       ]
     },
     {
@@ -62,7 +63,8 @@
         "docs/qualification/evidence/F103-reviewed-artifact-onward.json",
         "docs/qualification/evidence/F105-browser-artifact-onward.json",
         "docs/qualification/evidence/F108-governed-collection-artifact-source.json",
-        "docs/qualification/evidence/F111-agent-artifact-ingress-descriptor.json"
+        "docs/qualification/evidence/F111-agent-artifact-ingress-descriptor.json",
+        "docs/qualification/evidence/F116-mcp-resumable-artifact-ingress.json"
       ]
     },
     {
@@ -93,7 +95,8 @@
         "docs/qualification/evidence/F103-reviewed-artifact-onward.json",
         "docs/qualification/evidence/F105-browser-artifact-onward.json",
         "docs/qualification/evidence/F108-governed-collection-artifact-source.json",
-        "docs/qualification/evidence/F111-agent-artifact-ingress-descriptor.json"
+        "docs/qualification/evidence/F111-agent-artifact-ingress-descriptor.json",
+        "docs/qualification/evidence/F116-mcp-resumable-artifact-ingress.json"
       ]
     },
     {
@@ -128,7 +131,8 @@
         "docs/qualification/evidence/F103-reviewed-artifact-onward.json",
         "docs/qualification/evidence/F105-browser-artifact-onward.json",
         "docs/qualification/evidence/F108-governed-collection-artifact-source.json",
-        "docs/qualification/evidence/F111-agent-artifact-ingress-descriptor.json"
+        "docs/qualification/evidence/F111-agent-artifact-ingress-descriptor.json",
+        "docs/qualification/evidence/F116-mcp-resumable-artifact-ingress.json"
       ]
     },
     {
@@ -159,7 +163,8 @@
         "docs/qualification/evidence/F103-reviewed-artifact-onward.json",
         "docs/qualification/evidence/F105-browser-artifact-onward.json",
         "docs/qualification/evidence/F108-governed-collection-artifact-source.json",
-        "docs/qualification/evidence/F111-agent-artifact-ingress-descriptor.json"
+        "docs/qualification/evidence/F111-agent-artifact-ingress-descriptor.json",
+        "docs/qualification/evidence/F116-mcp-resumable-artifact-ingress.json"
       ]
     },
     {
@@ -193,7 +198,8 @@
         "docs/qualification/evidence/F103-reviewed-artifact-onward.json",
         "docs/qualification/evidence/F105-browser-artifact-onward.json",
         "docs/qualification/evidence/F108-governed-collection-artifact-source.json",
-        "docs/qualification/evidence/F111-agent-artifact-ingress-descriptor.json"
+        "docs/qualification/evidence/F111-agent-artifact-ingress-descriptor.json",
+        "docs/qualification/evidence/F116-mcp-resumable-artifact-ingress.json"
       ]
     },
     {
@@ -226,7 +232,8 @@
         "docs/qualification/evidence/F103-reviewed-artifact-onward.json",
         "docs/qualification/evidence/F105-browser-artifact-onward.json",
         "docs/qualification/evidence/F108-governed-collection-artifact-source.json",
-        "docs/qualification/evidence/F111-agent-artifact-ingress-descriptor.json"
+        "docs/qualification/evidence/F111-agent-artifact-ingress-descriptor.json",
+        "docs/qualification/evidence/F116-mcp-resumable-artifact-ingress.json"
       ]
     },
     {
@@ -286,7 +293,8 @@
         "docs/qualification/evidence/F098-browser-endpoint-administration.json",
         "docs/qualification/evidence/F099-governed-mcp-exchange-tools.json",
         "docs/qualification/evidence/F101-upload-to-exchange-review.json",
-        "docs/qualification/evidence/F111-agent-artifact-ingress-descriptor.json"
+        "docs/qualification/evidence/F111-agent-artifact-ingress-descriptor.json",
+        "docs/qualification/evidence/F116-mcp-resumable-artifact-ingress.json"
       ]
     },
     {
@@ -322,7 +330,8 @@
         "docs/qualification/evidence/F103-reviewed-artifact-onward.json",
         "docs/qualification/evidence/F105-browser-artifact-onward.json",
         "docs/qualification/evidence/F108-governed-collection-artifact-source.json",
-        "docs/qualification/evidence/F111-agent-artifact-ingress-descriptor.json"
+        "docs/qualification/evidence/F111-agent-artifact-ingress-descriptor.json",
+        "docs/qualification/evidence/F116-mcp-resumable-artifact-ingress.json"
       ]
     },
     {

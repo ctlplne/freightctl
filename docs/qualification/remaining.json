@@ -872,7 +872,8 @@
         "docs/qualification/evidence/F105-browser-artifact-onward.json",
         "docs/qualification/evidence/F108-governed-collection-artifact-source.json",
         "docs/qualification/evidence/F111-agent-artifact-ingress-descriptor.json",
-        "docs/qualification/evidence/F113-strict-upload-namespace-controls.json"
+        "docs/qualification/evidence/F113-strict-upload-namespace-controls.json",
+        "docs/qualification/evidence/F116-mcp-resumable-artifact-ingress.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -887,11 +888,11 @@
         "S003 authorizes guarded source/CI batches after prior required runs are terminal. Eleven exchange API paths and eleven CLI commands plus receive/send/recovery/history browser surfaces are implemented;actual AX profiles remain owed. Broad/deferred qualification is mandatory at FINISH."
       ],
       "current_item": {
-        "id": "F113",
-        "state": "Namespace/upload control ambiguity repaired;actual native state/journey proof owed",
-        "proof": "Eight actual route cases reached resources before repair;focused guard/compatibility/architecture methods and tagged compilation/vet pass",
-        "native": "Real HTTPS/PG ambiguity/no-state and valid namespace/empty upload controls prepared;original browser/stock journeys still owed",
-        "next": "Remaining secure agent interfaces,recovery/lineage/capacity and baseline implementation;complete all mandatory FINISH/native/deferred gates"
+        "id": "F116",
+        "state": "Ordinary confined/resumable agent upload metadata controls implemented;native outcomes owed",
+        "proof": "Four missing-tool reds repaired;three focused API methods,architecture,affected tagged compilation/vet pass",
+        "native": "Original official SDK/HTTPS/PG confined chunk continuation,shared API receipt,replay/role/revocation/cardinality/independent-byte proofs extended,not qualified",
+        "next": "Remaining recovery/lineage/ingress/onward and baseline implementation;all mandatory FINISH/native/deferred gates"
       }
     }
   ],

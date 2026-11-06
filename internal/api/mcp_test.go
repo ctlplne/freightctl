@@ -83,7 +83,7 @@ func TestMCPMediaOriginAndHeaderAmbiguityRefuseBeforeDatabase(t *testing.T) {
 
 func TestMCPToolSchemasBindOrdinaryRequestsAndExcludeAmbientAuthority(t *testing.T) {
 	var tools []*mcp.Tool
-	if err := json.Unmarshal(mcpCatalog, &tools); err != nil || len(tools) != 18 {
+	if err := json.Unmarshal(mcpCatalog, &tools); err != nil || len(tools) != 22 {
 		t.Fatal("missing fixed tool catalog", err)
 	}
 	raw, err := os.ReadFile("../../web/tests/fixtures/artifact-exchange.json")
@@ -115,6 +115,13 @@ func TestMCPToolSchemasBindOrdinaryRequestsAndExcludeAmbientAuthority(t *testing
 		}
 		var args map[string]any
 		switch tool.Name {
+		case "freightctl.artifact_upload_start":
+			args = map[string]any{"virtual_path": "/new.dat", "size_bytes": 8, "sha256": fixture.Hash, "request_key": "stable-create"}
+		case "freightctl.artifact_upload_status", "freightctl.artifact_upload_complete", "freightctl.artifact_upload_abort":
+			args = map[string]any{"upload_id": "55555555-5555-4555-8555-555555555555"}
+			if tool.Name != "freightctl.artifact_upload_status" {
+				args["request_key"] = "stable-action"
+			}
 		case "freightctl.artifact_ingress_descriptor":
 			args = map[string]any{"size_bytes": 8, "sha256": fixture.Hash, "request_key": "original-upload-key"}
 		case "freightctl.collection_source":
@@ -160,6 +167,53 @@ func TestMCPToolSchemasBindOrdinaryRequestsAndExcludeAmbientAuthority(t *testing
 				t.Fatal("tool accepted ambient authority", tool.Name, field)
 			}
 			delete(args, field)
+		}
+	}
+}
+
+func TestMCPResumableArtifactControlsExposeOnlyOwnedMetadataOperations(t *testing.T) {
+	var tools []*mcp.Tool
+	if json.Unmarshal(mcpCatalog, &tools) != nil {
+		t.Fatal("catalog decode")
+	}
+	wanted := map[string]bool{"freightctl.artifact_upload_start": false, "freightctl.artifact_upload_status": false, "freightctl.artifact_upload_complete": false, "freightctl.artifact_upload_abort": false}
+	for _, tool := range tools {
+		if _, ok := wanted[tool.Name]; !ok {
+			continue
+		}
+		wanted[tool.Name] = true
+		if tool.Annotations == nil || tool.Annotations.ReadOnlyHint != (tool.Name == "freightctl.artifact_upload_status") || tool.Annotations.OpenWorldHint == nil || *tool.Annotations.OpenWorldHint {
+			t.Fatal("upload control misrepresented its effects", tool.Name)
+		}
+		wire, _ := json.Marshal(tool.InputSchema)
+		var schema jsonschema.Schema
+		if json.Unmarshal(wire, &schema) != nil {
+			t.Fatal("schema decode")
+		}
+		resolved, err := schema.Resolve(nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+		args := map[string]any{"upload_id": "55555555-5555-4555-8555-555555555555"}
+		if tool.Name == "freightctl.artifact_upload_start" {
+			args = map[string]any{"virtual_path": "/new.dat", "size_bytes": 8, "sha256": strings.Repeat("a", 64), "request_key": "stable-create"}
+		} else if tool.Name != "freightctl.artifact_upload_status" {
+			args["request_key"] = "stable-action"
+		}
+		if resolved.Validate(args) != nil {
+			t.Fatal("valid metadata refused", tool.Name)
+		}
+		for _, field := range []string{"bytes", "content", "host_path", "url", "expected_revision", "mode", "actor_id", "credentials", "root", "execute"} {
+			args[field] = "untrusted"
+			if resolved.Validate(args) == nil {
+				t.Fatal("upload accepted extra authority/content", tool.Name, field)
+			}
+			delete(args, field)
+		}
+	}
+	for name, found := range wanted {
+		if !found {
+			t.Error("missing resumable artifact metadata tool", name)
 		}
 	}
 }

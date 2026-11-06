@@ -87,7 +87,7 @@ func TestMCPStockClientExchangeUsesOrdinaryAuthorityAndSeparateReply(t *testing.
 		t.Fatal("wrong partner discovered MCP catalog")
 	}
 	catalog, err := a.ListTools(ctx, &mcp.ListToolsParams{})
-	if err != nil || len(catalog.Tools) != 18 || catalog.NextCursor != "" || catalog.TTLMs != 0 || catalog.CacheScope != "private" {
+	if err != nil || len(catalog.Tools) != 22 || catalog.NextCursor != "" || catalog.TTLMs != 0 || catalog.CacheScope != "private" {
 		t.Fatal("stock client did not observe exact private noncached catalog")
 	}
 	call := func(client *mcp.ClientSession, name string, args map[string]any, ok bool) *mcp.CallToolResult {
@@ -119,6 +119,123 @@ func TestMCPStockClientExchangeUsesOrdinaryAuthorityAndSeparateReply(t *testing.
 		t.Fatal("descriptor exposed a credential or artifact contents")
 	}
 	call(other, "artifact_ingress_descriptor", map[string]any{"size_bytes": ingressRequest.Size, "sha256": ingressRequest.SHA256, "request_key": ingressRequest.Key}, false)
+	// A separate confined participant uses ordinary namespace upload services.
+	// Its bytes never enter tool arguments/results, and receiving supplies no write.
+	mode := uint32(0770)
+	if _, err := service.PathCommand(ctx, scope, "mcp-ingress-directory", store.PathCommand{Operation: "mkdir", Path: "/agent-ingress", Mode: &mode}); err != nil {
+		t.Fatal("confined upload directory", err)
+	}
+	uploadToken, uploadActor := exchangeAPIParticipant(t, server, prefix, cookie, csrf, []string{"read", "write", "list"})
+	accountForUpload, err := service.DB.Account(ctx, scope, uploadActor.Actor)
+	if err != nil {
+		t.Fatal("upload account", err)
+	}
+	uploadPolicy := accountForUpload.AccountPolicy
+	uploadPolicy.Root = "/agent-ingress"
+	if _, err = service.DB.ChangeAccount(ctx, scope, "mcp-confine-upload", store.AccountCommand{Operation: "update", ID: uploadActor.Actor, ExpectedRevision: accountForUpload.Revision, Policy: &uploadPolicy}); err != nil {
+		t.Fatal("confine upload account", err)
+	}
+	uploader, err := connect(uploadToken, prefix)
+	if err != nil {
+		t.Fatal("confined MCP discovery", err)
+	}
+	defer uploader.Close()
+	payload := bytes.Repeat([]byte("synthetic untrusted artifact;forwarding requires a separate grant\n"), 2200)
+	newArgs := map[string]any{"virtual_path": "/new.dat", "size_bytes": len(payload), "sha256": secure.Digest(payload), "request_key": "mcp-ticket-create"}
+	var ticket, ticketReplay mcpUploadDescriptor
+	mcpDecodeResult(t, call(uploader, "artifact_upload_start", newArgs, true), &ticket)
+	if ticket.Upload.State != "open" || ticket.Upload.Path != "/new.dat" || ticket.Upload.Offset != 0 || ticket.Observation != "original-command-receipt" || ticket.CurrentState != "not-checked" || ticket.Availability != "not-checked" {
+		t.Fatal("ticket creation claimed acceptance/current availability")
+	}
+	call(other, "artifact_upload_start", newArgs, false)
+	for _, operation := range []string{"status", "complete", "abort"} {
+		args := map[string]any{"upload_id": ticket.Upload.ID}
+		if operation != "status" {
+			args["request_key"] = "foreign-ticket-action"
+		}
+		call(b, "artifact_upload_"+operation, args, false)
+	}
+	for _, forbidden := range []string{"/../escape", "/.freightctl/uploads/forged"} {
+		args := map[string]any{"virtual_path": forbidden, "size_bytes": 0, "sha256": secure.Digest(nil), "request_key": "mcp-unsafe-target"}
+		call(uploader, "artifact_upload_start", args, false)
+	}
+	// All chunk bytes use the existing authenticated HTTPS data route. The host
+	// can recover progress after ignoring a response;this is not a process-kill claim.
+	appendChunk := func(key string, offset int, chunk []byte) {
+		headers := map[string]string{"Authorization": "Bearer " + string(uploadToken.Bytes), "Idempotency-Key": key, "Upload-Offset": strconv.Itoa(offset), "X-File-Size": strconv.Itoa(len(chunk)), "X-Content-SHA256": secure.Digest(chunk), "Content-Type": "application/octet-stream"}
+		exchangeAPIRequest(t, server, "PATCH", ticket.AppendPath, nil, headers, chunk, 200)
+	}
+	first := payload[:64<<10]
+	appendChunk("mcp-ticket-first", 0, first)
+	appendChunk("mcp-ticket-first", 0, first)
+	var progress mcpUploadDescriptor
+	mcpDecodeResult(t, call(uploader, "artifact_upload_status", map[string]any{"upload_id": ticket.Upload.ID}, true), &progress)
+	if progress.Upload.Offset != 64<<10 || progress.Upload.Chunks != 1 || progress.Upload.FileID != "" || progress.Observation != "current-ticket-metadata" {
+		t.Fatal("checkpoint not exact or partial artifact published")
+	}
+	mcpDecodeResult(t, call(uploader, "artifact_upload_start", newArgs, true), &ticketReplay)
+	if !ticketReplay.Replayed || ticketReplay.Upload.ID != ticket.Upload.ID || ticketReplay.Upload.Offset != 0 || ticketReplay.CurrentState != "not-checked" {
+		t.Fatal("original creation receipt became current progress")
+	}
+	newFileMode := uint32(0600)
+	ordinaryCreate := custody.CreateUpload{Path: "/new.dat", Size: int64(len(payload)), SHA256: secure.Digest(payload), ExpectedRevision: new(int64), Mode: &newFileMode}
+	_, ordinaryRaw := exchangeAPIRequest(t, server, "POST", prefix+"/uploads", nil, map[string]string{"Authorization": "Bearer " + string(uploadToken.Bytes), "Idempotency-Key": "mcp-ticket-create"}, exchangeAPIJSON(t, ordinaryCreate), 200)
+	var ordinaryReplay custody.UploadResult
+	if json.Unmarshal(ordinaryRaw, &ordinaryReplay) != nil || !ordinaryReplay.Replayed || ordinaryReplay.Upload.ID != ticket.Upload.ID {
+		t.Fatal("MCP ticket used different ordinary receipt semantics")
+	}
+	changedArgs := map[string]any{"virtual_path": "/new.dat", "size_bytes": len(payload) + 1, "sha256": secure.Digest(payload), "request_key": "mcp-ticket-create"}
+	call(uploader, "artifact_upload_start", changedArgs, false)
+	appendChunk("mcp-ticket-second", 64<<10, payload[64<<10:])
+	finishArgs := map[string]any{"upload_id": ticket.Upload.ID, "request_key": "mcp-ticket-finish"}
+	var accepted, acceptedReplay mcpUploadDescriptor
+	mcpDecodeResult(t, call(uploader, "artifact_upload_complete", finishArgs, true), &accepted)
+	mcpDecodeResult(t, call(uploader, "artifact_upload_complete", finishArgs, true), &acceptedReplay)
+	if accepted.Upload.State != "completed" || accepted.Upload.FileID == "" || accepted.Upload.Acceptance != "durable-local-integrity-only" || acceptedReplay.Upload.FileID != accepted.Upload.FileID || !acceptedReplay.Replayed || accepted.ReceiverPersistence != "unknown" || accepted.BusinessProcessing != "unknown" || accepted.Availability != "not-checked" {
+		t.Fatal("completion changed exact receipt or overstated outcomes")
+	}
+	_, received := exchangeAPIRequest(t, server, "GET", prefix+"/namespace/file?path=/new.dat", nil, map[string]string{"Authorization": "Bearer " + string(uploadToken.Bytes)}, nil, 200)
+	if !bytes.Equal(received, payload) || secure.Digest(received) != ticket.Upload.SHA256 {
+		t.Fatal("independent confined HTTPS byte observer differs")
+	}
+	for _, result := range []*mcpUploadDescriptor{&ticket, &progress, &accepted, &acceptedReplay} {
+		raw, _ := json.Marshal(result)
+		if bytes.Contains(raw, uploadToken.Bytes) || bytes.Contains(raw, []byte("synthetic untrusted artifact")) || bytes.Contains(raw, []byte("/agent-ingress")) {
+			t.Fatal("tool leaked content,credential or actual root")
+		}
+	}
+	call(uploader, "artifact_upload_start", map[string]any{"virtual_path": "/new.dat", "size_bytes": 0, "sha256": secure.Digest(nil), "request_key": "mcp-refuse-overwrite"}, false)
+	var abortTicket, aborted mcpUploadDescriptor
+	mcpDecodeResult(t, call(uploader, "artifact_upload_start", map[string]any{"virtual_path": "/aborted.dat", "size_bytes": 0, "sha256": secure.Digest(nil), "request_key": "mcp-abort-create"}, true), &abortTicket)
+	abortArgs := map[string]any{"upload_id": abortTicket.Upload.ID, "request_key": "mcp-abort"}
+	mcpDecodeResult(t, call(uploader, "artifact_upload_abort", abortArgs, true), &aborted)
+	if aborted.Upload.State != "aborted" || aborted.Upload.FileID != "" {
+		t.Fatal("abort claimed publication")
+	}
+	mcpDecodeResult(t, call(uploader, "artifact_upload_abort", abortArgs, true), &aborted)
+	if !aborted.Replayed {
+		t.Fatal("abort retry lost receipt")
+	}
+	ticketTx, err := service.DB.Begin(ctx, scope)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var ticketCount, chunkCount, receiptCount, publishedCount int
+	err = ticketTx.Tx.QueryRow(ctx, `SELECT (SELECT count(*) FROM upload_sessions WHERE actor_id=$1),(SELECT count(*) FROM upload_chunks WHERE upload_id=$2),(SELECT count(*) FROM upload_receipts WHERE actor_id=$1),(SELECT count(*) FROM namespace_entries WHERE owner_actor_id=$1 AND path='/agent-ingress/new.dat' AND file_id=$3 AND mode=384 AND NOT deleted)`, uploadActor.Actor, ticket.Upload.ID, accepted.Upload.FileID).Scan(&ticketCount, &chunkCount, &receiptCount, &publishedCount)
+	ticketTx.Tx.Rollback(ctx)
+	if err != nil || ticketCount != 2 || chunkCount != 2 || receiptCount != 6 || publishedCount != 1 {
+		t.Fatal("ticket replay or publication changed durable cardinality", err, ticketCount, chunkCount, receiptCount, publishedCount)
+	}
+	uploadPolicy.Permissions = []string{"read", "list"}
+	currentUploadAccount, err := service.DB.Account(ctx, scope, uploadActor.Actor)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err = service.DB.ChangeAccount(ctx, scope, "mcp-revoke-ticket-write", store.AccountCommand{Operation: "update", ID: uploadActor.Actor, ExpectedRevision: currentUploadAccount.Revision, Policy: &uploadPolicy}); err != nil {
+		t.Fatal(err)
+	}
+	call(uploader, "artifact_upload_status", map[string]any{"upload_id": ticket.Upload.ID}, false)
+	call(uploader, "artifact_upload_complete", finishArgs, false)
 	upload := func(token *secure.Secret, key string, payload []byte) *store.File {
 		headers := map[string]string{"Authorization": "Bearer " + string(token.Bytes), "Idempotency-Key": key, "X-File-Size": strconv.Itoa(len(payload)), "X-Content-SHA256": secure.Digest(payload)}
 		_, raw := exchangeAPIRequest(t, server, "POST", prefix+"/files", nil, headers, payload, 201)

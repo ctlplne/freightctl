@@ -1588,5 +1588,123 @@
       "idempotentHint": true,
       "openWorldHint": false
     }
+  },
+  {
+    "name": "freightctl.artifact_upload_start",
+    "description": "Create or recover an ordinary owned resumable upload ticket for a new virtual file. Expected revision is zero and mode0600;no overwrite. This records metadata,not durable file acceptance. Host appends bounded bytes separately through authenticated HTTPS;not in tool context.",
+    "inputSchema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "virtual_path",
+        "size_bytes",
+        "sha256",
+        "request_key"
+      ],
+      "properties": {
+        "virtual_path": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "request_key": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": true,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "freightctl.artifact_upload_status",
+    "description": "Inspect current owned upload metadata. Committed offset is a durable checkpoint,not artifact availability. Ordinary actor/root/authority/write checks apply.",
+    "inputSchema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "upload_id"
+      ],
+      "properties": {
+        "upload_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "freightctl.artifact_upload_complete",
+    "description": "Complete an owned ordinary upload with a stable operation key. Ordinary service verifies every staged byte and current target authority,intake and durable publication. Original command receipt is not current availability.",
+    "inputSchema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "upload_id",
+        "request_key"
+      ],
+      "properties": {
+        "upload_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+        },
+        "request_key": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": true,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "freightctl.artifact_upload_abort",
+    "description": "Abort an owned ordinary upload with a stable operation key. This changes durable ticket state;it does not delete a completed artifact or recall an exchange.",
+    "inputSchema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "upload_id",
+        "request_key"
+      ],
+      "properties": {
+        "upload_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+        },
+        "request_key": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": true,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
   }
 ]

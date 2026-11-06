@@ -42,10 +42,43 @@ same-origin CSRF protection. Tool-list results are private and immediately stale
 | `offer_exchange` | Commit the ordinary exact-byte offer and private idempotency receipt. Requires the exact canonical request hash and stable request key. |
 | `incoming_exchanges`, `inspect_exchange` | Poll and inspect currently authorized incoming views; held rows stay opaque. |
 | `retrieval_descriptor` | Return exact integrity metadata and a relative authenticated HTTPS download path, without artifact bytes. |
+| `artifact_upload_start`, `artifact_upload_status`, `artifact_upload_complete`, `artifact_upload_abort` | Create/recover a new confined virtual-file ticket,inspect committed progress or explicitly complete/abort through ordinary resumable custody. Host sends bytes outside MCP. |
 | `outgoing_exchanges`, `exchange_receipt` | Inspect own original offer receipts and separately checked current state. Enumeration also needs list. |
 | `close_exchange` | Record one exact sender cancellation or recipient decline using its original request hash and stable operation key. |
 | `prepare_onward`, `start_onward` | Review an owned artifact/approved ordered workflow,then atomically record ordinary intents under the exact review. |
 | `onward_status`, `work_onward` | Inspect or execute one ordinary step only with the original reviewed-start receipt and exact run binding. |
+
+The four resumable controls use `ordinary-resumable-artifact-upload-v1` and the
+existing upload service. Start takes `virtual_path`, `size_bytes`, `sha256` and
+`request_key`; the path is relative to the authenticated account's virtual root.
+It cannot name a host path, change roots, overwrite a file, set modes or supply
+bytes. The service fixes expected revision0 and file mode0600. This is the same
+ordinary API/CLI create request with those explicit values. Status takes
+`upload_id`; complete/abort also require their original stable `request_key`.
+Every operation keeps the ordinary actor,root,authority revision and write checks.
+No receiving privilege supplies upload authority.
+
+The ticket is a durable checkpoint record, not accepted artifact bytes. The host
+resolves `relative_append_path` only against its configured freightctl HTTPS
+origin and sends authenticated `PATCH` chunks using the returned header names.
+Each chunk needs an exact offset,length,SHA256 and stable chunk key. Existing64KiB
+nonfinal minimum,8MiB maximum and4096-chunk bounds remain;new admission obeys the
+configured file/storage limits. Complete independently checks the exact staged
+bytes and current destination authority and intake policy. Configured checks can
+keep a completed artifact held. Receiving,forwarding and execution need their own
+permissions and operations.
+
+Mutation replies say `observation: original-command-receipt` and `current_state:
+not-checked`, including exact-key retries. A later status returns current ticket
+metadata; it does not turn the old creation receipt into current progress.
+`artifact_availability: not-checked`, receiver persistence and business processing
+stay separate from ticket completion. Use ordinary source review before offering
+an accepted revision. Uncertain calls must recover the original operation/key;
+these tools do not silently retry under a new key or start autonomous workers.
+Actual PostgreSQL/HTTPS/official-client confined byte continuation,replay,
+independent download,foreign actor/overwrite/revocation refusal and durable
+cardinality proofs are prepared,not qualified. See
+[F116](../qualification/evidence/F116-mcp-resumable-artifact-ingress.json).
 
 Preparation returns `state: metadata-review-only` and `storage_verification:
 not-checked`. It writes no event, view, receipt or reservation, and returns no

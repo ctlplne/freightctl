@@ -43,10 +43,9 @@ stand-ins plus affected static/compile checks pass. Actual offline runtime,
 complete scans and original independent AEAD replay remain owed on GitHub.
 F114's sole HIGH finding is retained;no suppression or local image runtime.
 
-F110 prepares privacy-safe exact package/version/source hash correlation for the
-sole remaining advisory. Seventeen reporter/fifteen orchestration contracts pass;
-missing/ambiguous inventory and overflow counts stay explicit. Actual native
-identity and compatible remediation are owed;the finding remains red.
+F110's privacy-safe exact package/version diagnostic is actually exercised in
+F114. Both architectures report Debian zlib1g and the public lock version hash;
+direct inventory source correlation is unresolved. The finding remains red.
 
 F080–F083 implement canonical exchange contracts, append-only endpoint/current-head
 registration, exact-revision receive views and five ordinary-authority HTTPS paths.
@@ -152,8 +151,8 @@ authentication separately. No artifact,grant,receipt,event,reservation or receiv
 offer is created. Actual upload repeats ordinary integrity/intake/durability checks.
 Four focused guards/schema/architecture methods and affected native compile/vet
 pass. Original PG/stored-byte no-effect,CLI and official SDK/HTTPS/role/receipt
-profiles are extended,not qualified. Confined/resumable agent conveniences and
-all remaining actual native/AX/baseline outcomes stay owed. No frontend/schema/
+profiles are extended,not qualified. The laterF116 supplies confined/resumable controls;all actual native/AX/baseline
+outcomes stay owed. No frontend/schema/
 retained environment change or inference.
 
 F113 repairs repeated/colliding alias and invalid-UTF8 acceptance in the two
@@ -163,6 +162,15 @@ reds are repaired;four focused guard/compatibility/architecture methods and
 affected tagged compilation/vet pass. Actual HTTPS/PG no-state/positive controls
 and original browser/stock journey replay are prepared and owed. No schema,
 frontend,resource allowance or retained environment change.
+
+F116 adds four metadata-only MCP controls for ordinary resumable uploads under
+the caller's virtual root. Start fixes new revision0/mode0600;host bytes remain
+on authenticated HTTPS. Current progress and historical command receipts stay
+distinct;completion makes no availability/receiver-processing claim. Three API
+methods,architecture and affected tagged compilation/vet pass. Original native
+SDK/HTTPS/PG confined continuation,replay/shared API receipt,foreign/overwrite/
+revocation refusals,exact SQL cardinality and independent byte proofs are prepared
+and owed. Catalog22;no schema,frontend,inference or retained environment change.
 
 Focused local parser/client/filesystem/summary regressions and affected static,
 frontend build, native compilation/vet and architecture checks pass. They establish

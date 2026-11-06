@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "id": "F116",
+  "observed_at": "2026-11-05",
+  "starting_commit": "650b482bb1336278a279b8451a1e872f549bd5f2",
+  "state": "Ordinary resumable artifact metadata controls implemented for agents;actual native confined-profile outcomes owed",
+  "qualification_claim": false,
+  "change": [
+    "Four closed-schema MCP controls start/status/complete/abort delegate to unchanged ordinary custody upload services. No new permission path,queue,identity,provider,model runtime,migration or retained-environment change. Catalog22;exchange-tools-v5.",
+    "Start supports the current virtual root and fixes new revision0/mode0600. No overwrite,mode override,host path,arbitrary origin,credential,recipient,content or actor-switch argument. Host sends actual chunks through existing authenticated HTTPS PATCH,not MCP/model context.",
+    "Redacted metadata pins ticket identity,size,SHA,committed progress,state,revision and event. Original command receipts explicitly leave current state unchecked;status is current ticket metadata only. Acceptance,availability,receiver persistence and processing remain distinct.",
+    "Original API/CLI upload controls remain the shared implementation. Same-key create/complete/abort recovery and live actor/root/authority/write/current destination checks are inherited;raw byte/checkpoint/publication and intake guards are unchanged."
+  ],
+  "red": {
+    "reference": ".private/freightctl-f116-mcp-red.log",
+    "observation": "Focused acceptance assertion found all four required resumable metadata controls missing"
+  },
+  "green": {
+    "focused_api_methods": 3,
+    "architecture_methods": 1,
+    "native_tagged_compilation": "pass,no tests selected",
+    "affected_native_tagged_vet": "pass",
+    "format_and_diff": "pass",
+    "actual_PG_HTTPS_SDK_byte_runtime": "prepared,not run locally;owed"
+  },
+  "native_prepared": [
+    "Extend original official SDK two-agent HTTPS profile without replacing existing exchange/reply/refusal/history assertions",
+    "Separate confined-root participant;read-only and foreign actor refusal;unsafe virtual/control path refusal;no overwrite",
+    "Actual HTTPS chunk bytes and duplicate first-chunk key,committed progress,unchanged original creation receipt and ordinary API same-key replay,changed meaning refusal",
+    "Complete/replay exact file,independent confined HTTPS byte comparison,redacted tool results,abort/replay and post-authority-change refusal",
+    "Exact two owned tickets,two immutable chunks,six original command receipts and one0600 published namespace binding;no crash/socket-loss claim from ignoring an ordinary response"
+  ],
+  "source_files": [
+    {
+      "path": "internal/api/mcp.go",
+      "sha256": "2af2a7579813f979c774c1a1b610f829ede574210cc096e449b2e39702d0baf6"
+    },
+    {
+      "path": "internal/api/mcp-tools.json",
+      "sha256": "67a3d092931367e664b7a9e1aaea4a12d0d2e9045727d82513c9d7e3532e5c95"
+    },
+    {
+      "path": "internal/api/mcp_uploads.go",
+      "sha256": "dbecf660c089fe645f456310aee863b02153fd0b059fe95ab71726169b3227ed"
+    },
+    {
+      "path": "internal/api/mcp_uploads_test.go",
+      "sha256": "6f89254e128ac77e7f90d53eac83dc21227ff618ecbfb4792c5b4e4e2a0762a7"
+    },
+    {
+      "path": "internal/api/mcp_test.go",
+      "sha256": "c8d1127e7fa2271ed398cbb9084ee92122527ccc2486e54958a8471ff2d40625"
+    },
+    {
+      "path": "internal/api/mcp_integration_test.go",
+      "sha256": "b2e2d3852aa10596f2312ddf7c9eb4150c07718a9394a28079a5ad2c725f0839"
+    },
+    {
+      "path": "docs/protocols/artifact-exchange-mcp.md",
+      "sha256": "fdec7e17923f7d2c458e438c28d6e59c01ac2ed0947a53baf14f6afb20fbd1fc"
+    }
+  ],
+  "local_manifest": {
+    "reference": ".private/freightctl-f116-manifest.json",
+    "sha256": "c62d506b737ffa296dc59139d7ac4fd7a660ba60ae6dd4f633b15b57daea9bd6"
+  },
+  "owed": [
+    "Actual native original-profile replay with real PG/storage/verified HTTPS/official SDK;stand-ins and compilation are not outcomes",
+    "Full process-death,response-loss,intake-held/release,stock protocol/independent receiver,recovery and remaining AX-J01/J02 acceptance",
+    "Remaining baseline/AI/provider/product work,all mandatory FINISH gates and current original CI failures;Trust Control X07 and F026 holds unchanged"
+  ]
+}
