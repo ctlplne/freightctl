@@ -1,5 +1,6 @@
 import { ApiError, asAccount, object, uuid } from "./types";
 import { digestBytes } from "./crypto";
+import { validArtifactPolicy } from "./artifact-policy";
 
 export interface ExchangeRequest {
   schema_version: 1;
@@ -482,10 +483,7 @@ export function asExchangeArtifact(
   if (
     (expectedID !== undefined &&
       identifier(a.file_revision_id) !== expectedID) ||
-    typeof a.acceptance_policy !== "string" ||
-    !/^(?:integrity-only-v1|intake-csv-v1:[0-9a-f]{64})$/.test(
-      a.acceptance_policy,
-    )
+    !validArtifactPolicy(a.acceptance_policy)
   )
     refuse();
   return {

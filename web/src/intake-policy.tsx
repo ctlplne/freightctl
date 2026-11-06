@@ -38,6 +38,9 @@ export function IntakePolicyEditor({
     [busy, setBusy] = useState(false),
     [failure, setFailure] = useState(""),
     [notice, setNotice] = useState("");
+  const currentApi = useRef(api),
+    [loadedApi, setLoadedApi] = useState(api);
+  currentApi.current = api;
   const dialog = useRef<HTMLDialogElement>(null),
     alive = useRef(true);
   useEffect(() => {
@@ -48,6 +51,18 @@ export function IntakePolicyEditor({
   }, []);
   useEffect(() => {
     const c = new AbortController();
+    // A context change clears old metadata and reviews. Same-context refresh
+    // keeps an uncertain original-key command available for receipt recovery.
+    if (loadedApi !== api) {
+      setLoadedApi(api);
+      setLoaded(false);
+      setCurrent(null);
+      setPending(null);
+      setBusy(false);
+      setNotice("");
+      setFailure("");
+      setDraft(defaultIntakeDefinition());
+    }
     api
       .request(
         api.prefix + "/intake-policy",
@@ -55,7 +70,7 @@ export function IntakePolicyEditor({
         asIntakePolicy,
       )
       .then((p) => {
-        if (!c.signal.aborted) {
+        if (!c.signal.aborted && currentApi.current === api) {
           setCurrent(p);
           setDraft(
             p ? structuredClone(p.definition) : defaultIntakeDefinition(),
@@ -64,7 +79,7 @@ export function IntakePolicyEditor({
         }
       })
       .catch((e) => {
-        if (!c.signal.aborted) {
+        if (!c.signal.aborted && currentApi.current === api) {
           setLoaded(false);
           onError(e);
         }
@@ -101,7 +116,8 @@ export function IntakePolicyEditor({
     }));
   }
   async function apply() {
-    if (!pending || busy) return;
+    if (!pending || busy || currentApi.current !== api || loadedApi !== api)
+      return;
     const reviewed = pending;
     setBusy(true);
     setFailure("");
@@ -132,6 +148,8 @@ export function IntakePolicyEditor({
           body: JSON.stringify(body),
         },
         (v) => {
+          if (currentApi.current !== api)
+            throw new ApiError("operation_context_changed", 409);
           const o = object(v),
             p = asIntakePolicy(o.resource);
           if (
@@ -152,7 +170,7 @@ export function IntakePolicyEditor({
           return p;
         },
       );
-      if (!alive.current) return;
+      if (!alive.current || currentApi.current !== api) return;
       setCurrent(p);
       setDraft(structuredClone(p.definition));
       setPending(null);
@@ -161,7 +179,7 @@ export function IntakePolicyEditor({
       );
       setReload((v) => v + 1);
     } catch (e) {
-      if (alive.current) {
+      if (alive.current && currentApi.current === api) {
         setFailure(
           e instanceof ApiError && e.status === 409
             ? "The policy changed. Cancel, refresh and review its current version before applying a new command."
@@ -170,11 +188,17 @@ export function IntakePolicyEditor({
         onError(e);
       }
     } finally {
-      if (alive.current) setBusy(false);
+      if (alive.current && currentApi.current === api) setBusy(false);
     }
   }
+  if (loadedApi !== api)
+    return (
+      <section className="panel" aria-label="Incoming file policy">
+        <p role="status">Reading policy for the current session…</p>
+      </section>
+    );
   return (
-    <section className="panel" aria-label="Incoming CSV policy">
+    <section className="panel" aria-label="Incoming file policy">
       <p>
         New uploads under this policy stay held until their exact bytes pass the
         required checks and a separate release is approved. This also applies to
@@ -197,6 +221,12 @@ export function IntakePolicyEditor({
           <dd>
             <code>{current.definition_hash}</code>
           </dd>
+          <dt>Format</dt>
+          <dd>
+            {current.definition.kind === "csv"
+              ? "CSV columns"
+              : "JSON record array"}
+          </dd>
         </dl>
       ) : loaded ? (
         <p>
@@ -207,10 +237,33 @@ export function IntakePolicyEditor({
       )}
       <form onSubmit={review}>
         <fieldset disabled={!loaded || busy || !!pending}>
-          <legend>Expected CSV columns</legend>
+          <legend>Expected file contract</legend>
+          <label>
+            File format
+            <select
+              value={draft.kind}
+              onChange={(event) => {
+                const kind = event.target.value;
+                if (kind === "csv")
+                  setDraft((d) => ({ ...d, schema_version: 1, kind: "csv" }));
+                else if (kind === "json_records")
+                  setDraft((d) => ({
+                    ...d,
+                    schema_version: 2,
+                    kind: "json_records",
+                  }));
+              }}
+            >
+              <option value="csv">CSV columns</option>
+              <option value="json_records">JSON record array</option>
+            </select>
+          </label>
           <p>
             Start with these example columns or replace them with your actual
-            contract. Column order and header names must match the file.
+            contract.{" "}
+            {draft.kind === "csv"
+              ? "Column order and header names must match the file."
+              : "Use an array of flat objects with these exact field names. Numeric fields require JSON numbers;duplicate,unknown or nested fields fail. No content is executed."}
           </p>
           {draft.columns.map((c, i) => (
             <fieldset key={i}>
@@ -411,6 +464,14 @@ export function IntakePolicyEditor({
               Activate version {(pending.prior?.version ?? 0) + 1} after
               expected version {pending.prior?.version ?? 0}. New uploads are
               held; existing files need their original checks and approval.
+            </p>
+            <p>
+              Format:{" "}
+              {pending.definition.kind === "csv"
+                ? "CSV columns"
+                : "JSON record array"}
+              . The definition hash binds this choice and every protected
+              requirement.
             </p>
             <ol>
               {pending.definition.columns.map((c, i) => (

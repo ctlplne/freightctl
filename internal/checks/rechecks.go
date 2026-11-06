@@ -583,7 +583,7 @@ func (s *Service) CopyRecheck(ctx context.Context, scope store.Scope, id, key st
 	if err != nil {
 		return nil, err
 	}
-	if file.Policy != "intake-csv-v1:"+d.Plan.Policy.Hash {
+	if hash, controlled := store.IntakePolicyHash(file.Policy); !controlled || hash != d.Plan.Policy.Hash {
 		return nil, store.ErrState
 	}
 	result, _, err := canonical(RecheckCopyResult{Kind: "file_recheck_copy", File: *file, Acceptance: "durable-held-pending-checks-and-release", Signature: attached})

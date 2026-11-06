@@ -26,7 +26,7 @@ import (
 
 // The scanner peer is a contract fixture. PostgreSQL, custody and authority are
 // real; no test here qualifies ClamAV, vendor definitions or malware detection.
-func scanFixture(t *testing.T, mode string, valid time.Duration) (*fixture, *Service, *ScannerView, *store.File, scanner.Definition) {
+func scanFixture(t *testing.T, mode string, valid time.Duration, format ...string) (*fixture, *Service, *ScannerView, *store.File, scanner.Definition) {
 	t.Helper()
 	f := setup(t)
 	s := &Service{Custody: f.wf.Custody}
@@ -62,15 +62,21 @@ func scanFixture(t *testing.T, mode string, valid time.Duration) (*fixture, *Ser
 		t.Fatal(replay, err)
 	}
 	policy := testPolicy(t)
+	if len(format) > 1 || len(format) == 1 && format[0] != "json_records" {
+		t.Fatal("unsupported explicit scanner fixture format")
+	}
+	body, target := goodCSV, "/scanned.csv"
+	if len(format) == 1 {
+		policy.Schema, policy.Kind, body, target = 2, "json_records", goodJSONRecords, "/scanned.json"
+	}
 	policy.Scanner = &store.ScannerReference{ID: view.ID, Version: view.Version, Hash: view.Hash}
 	if _, err = s.Register(f.ctx, f.scope, "policy", PolicyRequest{Definition: policy}); err != nil {
 		t.Fatal(err)
 	}
-	body := goodCSV
 	if mode == "detected_before_csv" {
 		body = "not a valid CSV contract"
 	}
-	file, _, err := f.wf.Custody.AcceptAt(f.ctx, f.scope, "held", int64(len(body)), secure.Digest([]byte(body)), strings.NewReader(body), custody.UploadTarget{Path: "/scanned.csv"})
+	file, _, err := f.wf.Custody.AcceptAt(f.ctx, f.scope, "held", int64(len(body)), secure.Digest([]byte(body)), strings.NewReader(body), custody.UploadTarget{Path: target})
 	if err != nil {
 		t.Fatal(err)
 	}

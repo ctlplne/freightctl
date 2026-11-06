@@ -94,6 +94,25 @@ test("received copy sends only pinned exact source and new path under independen
   );
   assert.equal(ro.calls.length, 0);
 });
+test("JSON received copies keep fresh held custody and cannot claim automatic release", async () => {
+  const t = transport(),
+    r = request(),
+    result = response();
+  r.artifact.acceptance_policy = "intake-json-records-v1:" + "d".repeat(64);
+  result.source.artifact = structuredClone(r.artifact);
+  result.artifact.acceptance_policy =
+    "intake-json-records-v1:" + "e".repeat(64);
+  result.acceptance = "durable-held-pending-checks-and-release";
+  t.result(result);
+  const accepted = await t.client.copyReceived(r, "json-copy");
+  assert.equal(accepted.acceptance, "durable-held-pending-checks-and-release");
+  assert.equal(
+    accepted.artifact.acceptance_policy,
+    result.artifact.acceptance_policy,
+  );
+  result.acceptance = "durable-local-integrity-only";
+  await assert.rejects(() => t.client.copyReceived(r, "json-copy"));
+});
 test("copy rejects changed identity,authority,root,session or permissions before exposing a response", async () => {
   for (const mutate of [
     (a) => (a.session.identity.tenant_id = id(9)),

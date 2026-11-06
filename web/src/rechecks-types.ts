@@ -1,5 +1,6 @@
 import { ApiError, object, uuid } from "./types";
 import { digestBytes } from "./crypto";
+import { controlledArtifactPolicyHash } from "./artifact-policy";
 
 type Obj = Record<string, unknown>;
 export type RecheckMode = "not_required" | "reuse_exact" | "require_new";
@@ -415,7 +416,7 @@ export function parseRecheck(value: unknown): Recheck {
       f.id !== r.new_file_id ||
       f.sha256 !== plan.source.file.sha256 ||
       f.size_bytes !== plan.source.file.size_bytes ||
-      f.policy !== "intake-csv-v1:" + plan.policy.hash ||
+      controlledArtifactPolicyHash(f.policy) !== plan.policy.hash ||
       !slots.some((s) => s.file_id === f.id)
     )
       bad();

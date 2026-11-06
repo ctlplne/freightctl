@@ -1,7 +1,7 @@
 # freightctl status
 
-Updated 2026-11-06. The full GOAL.md baseline and AX01–AX08 remain active under
-owner decision S003. All 83 whole parity rows and twelve complete customer
+Updated 2026-11-06. Owner-paused under S005 after a local checkpoint. The full
+GOAL.md baseline and AX01–AX08 remain incomplete under the S003 contract. All 83 whole parity rows and twelve complete customer
 journeys remain open. Assisted deployment, independent adoption and enterprise
 readiness are unqualified. The missing market wedge does not block engineering.
 
@@ -102,7 +102,16 @@ assertion/corpus. Immediate security triage replayed only its original unchanged
 job. All ten native targets pass on replay at the same candidate;original timeout
 and unconfirmed intermittent cause remain retained,with final-source proof owed.
 
-Latest fresh schema 46 targets 71 metadata tables/70 forced-RLS tables. Retained
+F143 is an owner-paused JSON record intake checkpoint. A distinct bounded format
+and custody identity bind engine/code to actual policy while preserving signature,
+scanner and separate-release requirements. Focused Go,50browser contracts,12
+metadata stand-ins and affected compile/vet/architecture/type/build/workflow checks
+pass. Source SQL47 and native PG/GnuPG/scanner-protocol cases are prepared,not
+qualified. Dedicated API/CLI/native browser/recheck/copy and final-source proofs
+remain unfinished. Catalog26/v9;embedded browser rebuilt. See F143 for exact
+red/green/source/evidence references. Existing CI runs remain untouched.
+
+Latest source schema 47 targets 71 metadata tables/70 forced-RLS tables. Retained
 schema 35 is untouched. PostgreSQL/non-owner RLS, immutable custody, transactional
 events/intents/idempotency, approvals, leases/fencing and protected secrets remain
 mandatory. Receipt, availability, retrieval, receiver persistence and processing
@@ -114,7 +123,7 @@ clock ceilings. Local limits remain unchanged; local inference stays off. No loc
 PG, Chrome, scanner, peer, image or model runtime was started by this continuation.
 Real ClamAV allowance remains 4 GiB/one CPU; F026 remains manual/owner-deferred.
 
-Next: finish remaining exchange/recovery/per-hop lineage and applicable baseline
+When owner resumes: finish remaining exchange/recovery/per-hop lineage and applicable baseline
 implementation. Qualify AX-J01/J02; qualify real Trust Control only when X07 supplies
 an approved provider profile/access. No provider API is invented. Continue other
 work around provider, inference, licensed-peer and external-access blockers.

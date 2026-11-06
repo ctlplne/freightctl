@@ -235,6 +235,7 @@ jobs:
           sh scripts/go.sh test -timeout=0 ./internal/custody -fuzz=FuzzCustodyName -fuzztime=5s -parallel=2
           sh scripts/go.sh test -timeout=0 ./internal/workflow -fuzz=FuzzTypedWorkflow -fuzztime=5s -parallel=2
           sh scripts/go.sh test -timeout=0 ./internal/checks -fuzz=FuzzCSVContract -fuzztime=5s -parallel=1
+          sh scripts/go.sh test -timeout=0 ./internal/checks -fuzz=FuzzJSONRecordsContract -fuzztime=5s -parallel=1
           sh scripts/go.sh test -timeout=0 ./internal/scanner -fuzz=FuzzClamdRecordAndVersion -fuzztime=5s -parallel=1
           sh scripts/go.sh test -timeout=0 ./internal/crypto -fuzz=FuzzPGPAdmission -fuzztime=5s -parallel=1
           sh scripts/go.sh test -timeout=0 ./internal/assistance -fuzz=FuzzUntrustedModelOutput -fuzztime=5s -parallel=1

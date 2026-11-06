@@ -509,7 +509,8 @@ func (s *Service) run(ctx context.Context, scope store.Scope, id, key string, re
 	}()
 	var parseErr error
 	var scanFailed bool
-	report := Report{Engine: Engine, FileID: id, SHA256: b.File.SHA256, PolicyHash: c.PolicyHash, Bytes: b.File.Size, Code: "valid_csv"}
+	validCode := policySuccess(policy)
+	report := Report{Engine: policyEngine(policy), FileID: id, SHA256: b.File.SHA256, PolicyHash: c.PolicyHash, Bytes: b.File.Size, Code: validCode}
 	if policy.Signature != nil {
 		report.Signature, parseErr = s.verifySignature(ctx, scope, c, b, policy, "check_run")
 		if errors.Is(parseErr, secure.ErrPGPInput) || errors.Is(parseErr, secure.ErrPGPVerification) {
@@ -517,14 +518,14 @@ func (s *Service) run(ctx context.Context, scope store.Scope, id, key string, re
 			parseErr = nil
 		}
 	}
-	if parseErr == nil && report.Code == "valid_csv" && policy.Scanner != nil {
+	if parseErr == nil && report.Code == validCode && policy.Scanner != nil {
 		report.Scanner, parseErr = s.scan(ctx, scope, c, b, *policy.Scanner, a)
 		scanFailed = parseErr != nil
 		if parseErr == nil && report.Scanner.Result.Verdict != "clean" {
 			report.Code = "scanner_" + report.Scanner.Result.Verdict
 		}
 	}
-	if parseErr == nil && report.Code == "valid_csv" {
+	if parseErr == nil && report.Code == validCode {
 		data, err := s.Custody.Disk.VerifiedContext(ctx, custody.Name(scope.Tenant, scope.Partner, id), b.File.Size, b.File.SHA256)
 		if err != nil {
 			parseErr = err
@@ -599,7 +600,7 @@ func (s *Service) run(ctx context.Context, scope store.Scope, id, key string, re
 		} else if report.Scanner != nil && !now.Before(report.Scanner.ValidUntil) {
 			current.State = "failed"
 			current.Code = "scan_expired"
-		} else if report.Code == "valid_csv" {
+		} else if report.Code == validCode {
 			current.State = "passed"
 			current.ReportHash = hash
 		} else {

@@ -1,4 +1,5 @@
 import { ApiError, object, uuid } from "./types";
+import { controlledArtifactPolicyHash } from "./artifact-policy";
 import { ftpsMetadataPath } from "./ftps-metadata";
 import { strictRecoveryJSON } from "./artifact-recovery";
 import {
@@ -112,7 +113,7 @@ export function asReceivedCopyResult(
     o.receiver_persistence !== "unknown" ||
     o.business_processing !== "unknown" ||
     o.acceptance !==
-      (artifact.acceptance_policy.startsWith("intake-csv-v1:")
+      (controlledArtifactPolicyHash(artifact.acceptance_policy) !== null
         ? "durable-held-pending-checks-and-release"
         : "durable-local-integrity-only")
   )
@@ -126,9 +127,10 @@ export function asReceivedCopyResult(
     },
     artifact,
     event_id: identifier(o.event_id),
-    acceptance: artifact.acceptance_policy.startsWith("intake-csv-v1:")
-      ? "durable-held-pending-checks-and-release"
-      : "durable-local-integrity-only",
+    acceptance:
+      controlledArtifactPolicyHash(artifact.acceptance_policy) !== null
+        ? "durable-held-pending-checks-and-release"
+        : "durable-local-integrity-only",
     replayed: o.replayed,
     observation: "original-command-receipt",
     current_state: "not-checked",

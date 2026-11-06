@@ -6,7 +6,6 @@ import (
 	"io"
 	"os"
 	"regexp"
-	"strings"
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/store"
@@ -20,7 +19,7 @@ var ErrInput = errors.New("invalid upload length, digest or idempotency key")
 // Acceptance describes what the original upload committed, not a later check
 // verdict. A replay retains this meaning even after the file is released.
 func Acceptance(file *store.File) string {
-	if strings.HasPrefix(file.Policy, "intake-csv-v1:") {
+	if _, controlled := store.IntakePolicyHash(file.Policy); controlled {
 		return "durable-held-pending-checks-and-release"
 	}
 	return "durable-local-integrity-only"

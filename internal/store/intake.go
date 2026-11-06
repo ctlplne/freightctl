@@ -92,8 +92,8 @@ func (t *Transaction) ConfigureIntakeFile(ctx context.Context, f *File) error {
 	if count >= 128 {
 		return ErrLimit
 	}
-	f.Policy = "intake-csv-v1:" + p.Hash
-	return nil
+	f.Policy, err = IntakeFilePolicy(p)
+	return err
 }
 func (t *Transaction) BindIntake(ctx context.Context, f *File, storageID string, target *PathCommand) (bool, error) {
 	p, err := t.IntakePolicy(ctx, false)
@@ -106,7 +106,8 @@ func (t *Transaction) BindIntake(ctx context.Context, f *File, storageID string,
 		}
 		return false, nil
 	}
-	if p.State != "active" || f.Policy != "intake-csv-v1:"+p.Hash || !ValidID(storageID) {
+	expected, formatErr := IntakeFilePolicy(p)
+	if p.State != "active" || formatErr != nil || f.Policy != expected || !ValidID(storageID) {
 		return false, ErrState
 	}
 	b := CheckBinding{File: *f, StorageID: storageID, Root: t.Root, Authority: t.AuthorityRevision, Target: target}

@@ -514,6 +514,21 @@ export function asCheckView(value: unknown): CheckView {
       rows: number(report, "rows", Number.MAX_SAFE_INTEGER),
       bytes: number(report, "bytes_read", 1 << 30),
     };
+    const jsonRecords = validation.code === "valid_json_records",
+      successful = jsonRecords || validation.code === "valid_csv";
+    if (
+      successful &&
+      (validation.engine !==
+        (jsonRecords ? "freightctl-json-records-v1" : "freightctl-csv-v1") ||
+        text(file, "policy", 128) !==
+          (jsonRecords ? "intake-json-records-v1:" : "intake-csv-v1:") +
+            policySHA ||
+        id(file, "id") !== fileID ||
+        validation.bytes !== number(file, "size_bytes", 1 << 30))
+    )
+      invalid();
+    if ((c.state === "passed" || c.state === "released") && !successful)
+      invalid();
     if (report.signature !== undefined && report.signature !== null) {
       if (!attached) invalid();
       const proof = object(report.signature),

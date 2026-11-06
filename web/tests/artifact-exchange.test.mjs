@@ -37,6 +37,25 @@ const context = {
   limit: 20,
 };
 
+test("JSON artifact metadata accepts only its exact known custody namespace", () => {
+  const artifact = {
+    file_revision_id: id(5),
+    size_bytes: 8,
+    sha256: "a".repeat(64),
+    acceptance_policy: "intake-json-records-v1:" + "b".repeat(64),
+  };
+  assert.deepEqual(p.asExchangeArtifact(artifact), artifact);
+  for (const policy of [
+    "intake-json-v1:" + "b".repeat(64),
+    "intake-json-records-v2:" + "b".repeat(64),
+    "intake-json-records-v1:" + "B".repeat(64),
+    artifact.acceptance_policy + "x",
+  ]) {
+    assert.throws(() =>
+      p.asExchangeArtifact({ ...artifact, acceptance_policy: policy }),
+    );
+  }
+});
 test("terminal receipts bind the exact offer, operation and canonical Go bytes", async () => {
   const fixture = JSON.parse(
     await readFile(

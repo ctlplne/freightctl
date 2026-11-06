@@ -19,6 +19,7 @@ if not args.native_config:
  image_id=metadata['Id'];peer_platform=metadata['Os']+'/'+metadata['Architecture']
 data=b'account,amount,day\n'+b'00000001,100.01,2026-10-28\n'*args.rows
 (private/'source.csv').write_bytes(data)
+(private/'source.json').write_bytes(b'[{"account":"0001","amount":1.01,"day":"2026-10-28"}]\n')
 program=r'''#!/bin/sh
 set -eu
 umask 077
@@ -43,6 +44,7 @@ printf '%s\n' "$task_pgp_sub" > /work/subkey-fingerprint.txt
 gpg_good --output /work/good-public.gpg --export "$task_pgp_good"
 gpg_good --armor --output /work/good-public.asc --export "$task_pgp_good"
 gpg_good --local-user "$task_pgp_sub!" --digest-algo SHA256 --output /work/good.sig --detach-sign /work/source.csv
+gpg_good --local-user "$task_pgp_sub!" --digest-algo SHA256 --output /work/good-json.sig --detach-sign /work/source.json
 gpg_good --local-user "$task_pgp_sub!" --digest-algo SHA256 --armor --output /work/good.sig.asc --detach-sign /work/source.csv
 gpg_good --faked-system-time "$task_pgp_aged" --local-user "$task_pgp_good!" --digest-algo SHA256 --output /work/aged.sig --detach-sign /work/source.csv
 gpg_good --output /work/private-rejection.gpg --export-secret-keys "$task_pgp_good"
@@ -84,7 +86,7 @@ start=time.monotonic()
 with (raw/'peer.log').open('wb') as out:result=subprocess.run(command,stdout=out,stderr=subprocess.STDOUT,timeout=120)
 if result.returncode:
  print((raw/'peer.log').read_text()[-2500:]);raise SystemExit(result.returncode)
-files=['source.csv','good-public.gpg','good-public.asc','good.sig','good.sig.asc','aged.sig','other-public.gpg','other.sig','rsa-public.gpg','rsa.sig','weak.sig','expired-public.gpg','revoked-public.gpg','recipient-public.gpg','recipient-rsa-public.gpg','gpg-version.txt','packages.txt','good-verification.txt']
+files=['source.csv','source.json','good-json.sig','good-public.gpg','good-public.asc','good.sig','good.sig.asc','aged.sig','other-public.gpg','other.sig','rsa-public.gpg','rsa.sig','weak.sig','expired-public.gpg','revoked-public.gpg','recipient-public.gpg','recipient-rsa-public.gpg','gpg-version.txt','packages.txt','good-verification.txt']
 manifest={'schema_version':1,'state':'passed','observed_at':datetime.now(timezone.utc).isoformat(),'fixture_path':str(private.relative_to(root)),'peer_image':image_id,'peer_platform':peer_platform,'host_platform':platform.system().lower()+'/'+platform.machine(),'peer_base':'alpine@sha256:294b683cb724975bec92580e1e685676bd4b50bda910ddb8c51d4cabeaec77e6','command':command,'duration_seconds':round(time.monotonic()-start,3),'gpg_version':(private/'gpg-version.txt').read_text().splitlines()[0],'fingerprints':{n:(private/(n+'-fingerprint.txt')).read_text().strip().lower() for n in ('good','subkey','other','rsa','expired','recipient','recipient-rsa')},'files':[{'path':str((private/n).relative_to(root)),'sha256':hashlib.sha256((private/n).read_bytes()).hexdigest()} for n in files],'private_rejection_fixture':'protected synthetic private packet in the fixture directory; never a production key or Git artifact','inference_performed':False,'resource_limits':{'memory_bytes':128<<20,'cpus':1,'pids':64,'network':'none'},'limits':['Independent GnuPG 2.4.9 '+str(peer_platform)+' container peer on '+platform.system().lower()+'/'+platform.machine()+' host; this does not by itself qualify native application runtime.','Synthetic keys and data only. GnuPG time overrides apply to its process; the host clock is unchanged.','V4 Ed25519 primary/signing subkey and RSA3072/SHA256 peer profiles; full algorithm/peer/platform coverage remains open.']}
 manifest['peer_backend']='native-macos' if args.native_config else 'docker'
 if args.native_config:

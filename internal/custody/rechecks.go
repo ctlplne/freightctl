@@ -179,7 +179,11 @@ func (s *Service) MaterializeRecheck(ctx context.Context, t *store.Transaction, 
 		}
 		var attached *store.FileSignature
 		if reuse != nil {
-			attached = &store.FileSignature{FileID: file.ID, ObjectID: slot.SignatureID, StorageID: s.Disk.Identity(), Size: reuse.Size, SHA256: reuse.SHA256, DataSHA256: file.SHA256, PolicyHash: file.Policy[len("intake-csv-v1:"):], Key: reuse.Key}
+			policyHash, controlled := store.IntakePolicyHash(file.Policy)
+			if !controlled {
+				return nil, nil, store.ErrState
+			}
+			attached = &store.FileSignature{FileID: file.ID, ObjectID: slot.SignatureID, StorageID: s.Disk.Identity(), Size: reuse.Size, SHA256: reuse.SHA256, DataSHA256: file.SHA256, PolicyHash: policyHash, Key: reuse.Key}
 			if err = t.SaveFileSignature(ctx, attached); err != nil {
 				return nil, nil, err
 			}

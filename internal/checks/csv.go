@@ -11,6 +11,7 @@ import (
 	"errors"
 	"io"
 	"regexp"
+	"slices"
 	"strings"
 	"time"
 	"unicode"
@@ -28,6 +29,19 @@ var integerPattern = regexp.MustCompile(`^[+-]?[0-9]+$`)
 var decimalPattern = regexp.MustCompile(`^[+-]?[0-9]+(?:\.[0-9]+)?$`)
 
 const Engine = "freightctl-csv-v1"
+
+func policyEngine(p Policy) string {
+	if p.Schema == 2 && p.Kind == "json_records" {
+		return "freightctl-json-records-v1"
+	}
+	return Engine
+}
+func policySuccess(p Policy) string {
+	if p.Schema == 2 && p.Kind == "json_records" {
+		return "valid_json_records"
+	}
+	return "valid_csv"
+}
 
 type Column struct {
 	Name      string `json:"name"`
@@ -83,7 +97,7 @@ func Normalize(p Policy) (Policy, error) {
 	if p.Signature != nil && (!store.ValidID(p.Signature.Key.ID) || p.Signature.Key.Version < 1 || !hashPattern.MatchString(p.Signature.Key.Hash)) {
 		return p, ErrInput
 	}
-	if p.Schema != 1 || p.Kind != "csv" || len(p.Columns) < 1 || len(p.Columns) > 128 {
+	if !(p.Schema == 1 && p.Kind == "csv" || p.Schema == 2 && p.Kind == "json_records") || len(p.Columns) < 1 || len(p.Columns) > 128 {
 		return p, ErrInput
 	}
 	if p.MaxBytes == 0 {
@@ -102,6 +116,7 @@ func Normalize(p Policy) (Policy, error) {
 		return p, ErrInput
 	}
 	seen := map[string]bool{}
+	p.Columns = slices.Clone(p.Columns)
 	for i, c := range p.Columns {
 		if !utf8.ValidString(c.Name) || len(c.Name) < 1 || len(c.Name) > 128 || strings.TrimSpace(c.Name) != c.Name || seen[c.Name] {
 			return p, ErrInput
@@ -210,6 +225,7 @@ func Validate(ctx context.Context, p Policy, f store.File, policyHash string, in
 	if err != nil {
 		return report, err
 	}
+	report.Engine = policyEngine(p)
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(p.TimeoutSeconds)*time.Second)
 	defer cancel()
 	if err = ctx.Err(); err != nil {
@@ -218,6 +234,9 @@ func Validate(ctx context.Context, p Policy, f store.File, policyHash string, in
 	if f.Size > p.MaxBytes {
 		report.Code = "file_byte_limit"
 		return report, nil
+	}
+	if p.Schema == 2 && p.Kind == "json_records" {
+		return validateJSONRecords(ctx, p, f, policyHash, input)
 	}
 	h := secure.NewDigest()
 	b := &budgetReader{ctx: ctx, reader: io.LimitReader(input, p.MaxBytes+1), hash: h}

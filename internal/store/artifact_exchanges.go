@@ -393,8 +393,14 @@ func (t *Transaction) authorizeIncomingExchange(ctx context.Context, e *Artifact
 }
 
 func exchangePolicyCurrent(f *File, policy *Configuration) error {
-	if f == nil || policy == nil && f.Policy != "integrity-only-v1" || policy != nil && (policy.State != "active" || f.Policy != "intake-csv-v1:"+policy.Hash) {
+	if f == nil || policy == nil && f.Policy != "integrity-only-v1" {
 		return ErrState
+	}
+	if policy != nil {
+		expected, err := IntakeFilePolicy(policy)
+		if err != nil || policy.State != "active" || f.Policy != expected {
+			return ErrState
+		}
 	}
 	return nil
 }

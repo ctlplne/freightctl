@@ -11,7 +11,7 @@ import (
 // golden test green. The protected fixture includes literal Unicode and exact
 // signer/scanner references; no real credentials or inference are involved.
 func TestBrowserIntakePolicyGoldenMatchesCurrentGoNormalization(t *testing.T) {
-	for _, name := range []string{"intake-policy.json", "intake-policy-protected.json"} {
+	for _, name := range []string{"intake-policy.json", "intake-policy-protected.json", "intake-policy-json-records.json"} {
 		t.Run(name, func(t *testing.T) {
 			wire, err := os.ReadFile("../../web/tests/fixtures/" + name)
 			if err != nil {

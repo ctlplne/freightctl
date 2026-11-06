@@ -2774,12 +2774,13 @@
       "acceptance_journey": "J02",
       "state": "implementing",
       "evidence": [
-        "docs/qualification/evidence/F010-held-intake.json"
+        "docs/qualification/evidence/F010-held-intake.json",
+        "docs/qualification/evidence/F143-json-record-intake-checkpoint.json"
       ],
       "qualification_blockers": [
         "Authorized JSCAPE by Redwood installation and exact edition/version for observed comparison"
       ],
-      "current_limit": "F010 adds configured held intake across HTTPS/SFTP/resume, exact CSV contracts, current hash/revision-bound release and actor/tenant/partner gates. No antivirus/signature/encryption, other-format/processing breadth, delegated UI, full journey, native/enterprise peer or production qualification is implied."
+      "current_limit": "Owner-paused F143 checkpoint adds bounded JSON record parsing and format-bound custody/report/browser/MCP integration beside CSV. Focused local/static checks pass;native SQL/PG/crypto/scanner/interface and full-row/format breadth/final-source qualification remain owed. No whole-row pass."
     },
     {
       "id": "O-MONITOR",

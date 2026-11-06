@@ -87,7 +87,8 @@ func TestArtifactExchangePublicResultsExcludeStorageAndWithheldMetadata(t *testi
 }
 
 func TestArtifactExchangeNeverFallsBackToOldIntakePolicy(t *testing.T) {
-	policy := &Configuration{State: "active", Hash: strings.Repeat("a", 64)}
+	policy := &Configuration{State: "active", Hash: strings.Repeat("a", 64), Definition: json.RawMessage(`{"schema_version":1,"kind":"csv"}`)}
+	jsonPolicy := &Configuration{State: "active", Hash: strings.Repeat("b", 64), Definition: json.RawMessage(`{"schema_version":2,"kind":"json_records"}`)}
 	for _, pair := range []struct {
 		file    *File
 		policy  *Configuration
@@ -98,7 +99,10 @@ func TestArtifactExchangeNeverFallsBackToOldIntakePolicy(t *testing.T) {
 		{&File{Policy: "integrity-only-v1"}, policy, false},
 		{&File{Policy: "intake-csv-v1:" + strings.Repeat("b", 64)}, policy, false},
 		{&File{Policy: "intake-csv-v1:" + policy.Hash}, nil, false},
-		{&File{Policy: "intake-csv-v1:" + policy.Hash}, &Configuration{State: "revoked", Hash: policy.Hash}, false},
+		{&File{Policy: "intake-csv-v1:" + policy.Hash}, &Configuration{State: "revoked", Hash: policy.Hash, Definition: policy.Definition}, false},
+		{&File{Policy: JSONRecordsIntakePrefix + jsonPolicy.Hash}, jsonPolicy, true},
+		{&File{Policy: CSVIntakePrefix + jsonPolicy.Hash}, jsonPolicy, false},
+		{&File{Policy: JSONRecordsIntakePrefix + policy.Hash}, policy, false},
 		{nil, policy, false},
 	} {
 		if (exchangePolicyCurrent(pair.file, pair.policy) == nil) != pair.allowed {

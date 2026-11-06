@@ -93,7 +93,7 @@ func CanonicalExchangeEndpoint(d ExchangeEndpointDefinition, limits ExchangeLimi
 }
 
 func CanonicalExchangeRequest(r ExchangeRequest, limits ExchangeLimits) ([]byte, string, error) {
-	policy := r.Artifact.Policy == "integrity-only-v1" || strings.HasPrefix(r.Artifact.Policy, "intake-csv-v1:") && browserSecretHash.MatchString(strings.TrimPrefix(r.Artifact.Policy, "intake-csv-v1:"))
+	policy := ValidArtifactPolicy(r.Artifact.Policy)
 	if !limits.valid() || r.Schema != 1 || !ValidID(r.Artifact.ID) || r.Artifact.Size < 0 || r.Artifact.Size > limits.MaxArtifactBytes || !browserSecretHash.MatchString(r.Artifact.SHA256) || !policy || !ValidID(r.Endpoint.ID) || r.Endpoint.Revision < 1 || !browserSecretHash.MatchString(r.Endpoint.Hash) || r.ExpiresAt.IsZero() || r.ExpiresAt.Nanosecond()%1000 != 0 || r.Receipt != "availability-only-v1" || r.ReplyTo != "" && !ValidID(r.ReplyTo) {
 		return nil, "", ErrExchangeInput
 	}

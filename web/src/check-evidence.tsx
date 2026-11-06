@@ -4,7 +4,8 @@ export function CheckEvidence({ view }: { view: CheckView }) {
   const proof = view.signatureProof;
   return (
     <>
-      {view.validation?.code === "valid_csv" && (
+      {(view.validation?.code === "valid_csv" ||
+        view.validation?.code === "valid_json_records") && (
         <dl className="facts" aria-label="Recorded validation result">
           <dt>Rows checked</dt>
           <dd>{view.validation.rows.toLocaleString()}</dd>

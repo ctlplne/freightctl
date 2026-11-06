@@ -74,7 +74,8 @@
         "docs/qualification/evidence/F128-received-artifact-copy.json",
         "docs/qualification/evidence/F129-mcp-received-copy.json",
         "docs/qualification/evidence/F130-browser-received-copy.json",
-        "docs/qualification/evidence/F140-immutable-download-validators.json"
+        "docs/qualification/evidence/F140-immutable-download-validators.json",
+        "docs/qualification/evidence/F143-json-record-intake-checkpoint.json"
       ]
     },
     {
@@ -153,7 +154,8 @@
         "docs/qualification/evidence/F128-received-artifact-copy.json",
         "docs/qualification/evidence/F129-mcp-received-copy.json",
         "docs/qualification/evidence/F130-browser-received-copy.json",
-        "docs/qualification/evidence/F140-immutable-download-validators.json"
+        "docs/qualification/evidence/F140-immutable-download-validators.json",
+        "docs/qualification/evidence/F143-json-record-intake-checkpoint.json"
       ]
     },
     {
@@ -270,7 +272,8 @@
         "docs/qualification/evidence/F116-mcp-resumable-artifact-ingress.json",
         "docs/qualification/evidence/F118-mcp-workflow-review-proposals.json",
         "docs/qualification/evidence/F121-native-exchange-process-recovery.json",
-        "docs/qualification/evidence/F123-authorized-exchange-evidence.json"
+        "docs/qualification/evidence/F123-authorized-exchange-evidence.json",
+        "docs/qualification/evidence/F143-json-record-intake-checkpoint.json"
       ]
     },
     {
@@ -406,5 +409,5 @@
     "Fixtures, design documents, ledger checks, model answers and skips establish no runtime or real provider qualification.",
     "Preserve original parity/journey/defect/evaluation records and separate assisted deployment, independent adoption and enterprise readiness."
   ],
-  "execution": "Active application implementation under S003; focused per-item proof, broad deferred qualification at FINISH. Resource and security limits unchanged."
+  "execution": "Owner-paused under S005 after local JSON intake checkpoint;full S003 product/FINISH contract remains incomplete and all security,custody,isolation,resource and evidence requirements remain."
 }

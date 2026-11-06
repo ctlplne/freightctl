@@ -1,0 +1,297 @@
+{
+  "schema_version": 1,
+  "id": "F143",
+  "observed_at": "2026-11-06",
+  "candidate_parent": "e34d4d0d7c2fe22362c8e874eb0a0773fd9d63d4",
+  "state": "Owner-paused checkpoint of JSON record intake implementation;mandatory qualification and remaining product work incomplete",
+  "qualification_claim": false,
+  "profile": "freightctl-json-records-v1",
+  "owner_pause": "Commit current task and pause",
+  "changes": [
+    "Policy schema2/json_records validates a complete bounded UTF-8 array of flat objects with exact declared names and scalar types. Duplicate/unknown/nested fields,coercion,exponents,invalid Unicode,trailing values and changed whole-file length/SHA256 refuse. Reports contain counters/positions/codes,not raw values. Schema1/CSV keeps its existing rules;normalization clones shared columns.",
+    "Distinct intake-json-records-v1 custody identity. Current policy selection,held acceptance,received exchanges/copies,onward request grammar and signature reuse recognize only exact known profiles/hashes. Required signer/scanner gates remain cumulative and separate release remains mandatory.",
+    "Source migration47 extends seven existing guards without editing older migration files;active actual format binds exact report engine/success code and controlled-file prefix. Existing event,binding,lease,signature/scanner,current-policy,recheck,captured-input and copy checks retained. No tables added;71metadata/70forcedRLS. SQL runtime proof owed;retained35 untouched.",
+    "Browser typed policy choice and exact format/hash review preserve protected references. Known JSON custody grammar shared across exchange/copy/rechecks;successful evidence checks format/engine/source ID/byte count. Editor clears old-context state and ignores old API callbacks while preserving same-context original-key recovery. Native UI proof owed.",
+    "MCP catalog remains26tools,implementationv9,with exact additional known custody grammar;no new execution or policy-management authority. Shared Go/browser JSON policy hash fixture;rebuilt embedded browser assets.",
+    "Prepared actual PG/custody/separate-release/cross-format SQL-forgery tests and combined real GnuPG plus synthetic scanner-protocol cases. Fixture producers prepare a separate exact JSON signature without changing peer budgets. New native fuzz target added;no local native peer,PG,Chrome,scanner,model or fuzz campaign executed."
+  ],
+  "observed_red": [
+    {
+      "reference": ".private/freightctl-f143-json-red.log",
+      "observation": "Existing Normalize/Validate rejects requested JSON record policy as unsupported"
+    },
+    {
+      "reference": ".private/freightctl-f143-browser-red.log",
+      "observation": "Browser policy parser rejects JSON policy before format extension"
+    },
+    {
+      "reference": ".private/freightctl-f143-browser-evidence-red.log",
+      "observation": "Browser evidence accepted a mismatched successful format/engine before binding guard"
+    }
+  ],
+  "preserved_intermediate_failures": [
+    {
+      "reference": ".private/freightctl-f143-format-compile-initial.log",
+      "repair": "Removed an unused import after custody-prefix refactor"
+    },
+    {
+      "reference": ".private/freightctl-f143-format-fixture-red.log",
+      "repair": "Provided actual schema/kind metadata in the legacy current-policy fixture;added cross-format refusals without weakening its assertions"
+    },
+    {
+      "reference": ".private/freightctl-f143-final-metadata-initial.log",
+      "repair": "Updated explicit current schema expectation46 to prepared47;old46 remains separately recognized and all metadata/privacy/refusal assertions retained"
+    }
+  ],
+  "local_verification": {
+    "focused_Go": "pass;format/parser,legacyCSV,current-policy,shared Go/browser fixture and MCP grammar",
+    "affected_browser_contracts": {
+      "tests": 50,
+      "passed": 50,
+      "failed": 0,
+      "skipped": 0
+    },
+    "tagged_native_fixture_compilation": "pass;zero runtime tests selected",
+    "affected_tagged_vet": "pass",
+    "unchanged_architecture": "pass",
+    "frontend_typecheck_build": "pass;embedded app.js788263bytes",
+    "metadata_contracts": {
+      "tests": 12,
+      "passed": 12,
+      "scope": "stand-ins only,no PostgreSQL lifecycle"
+    },
+    "changed_workflow_actionlint": "pass",
+    "modified_Python_syntax": "pass;no fixture producer executed",
+    "format_diff": "pass"
+  },
+  "source_files": [
+    {
+      "path": ".github/workflows/native-linux.yml",
+      "sha256": "de20fe3f845799ae0b6300c2f3f1bf5d88f4617b0bf78e643c848f79f73ff19a",
+      "bytes": 10286
+    },
+    {
+      "path": "docs/protocols/artifact-exchange-mcp.md",
+      "sha256": "41e0fc22a503a375d0dea5c48caa68e95693200b63eb0906f5ab8cbdca989ecf",
+      "bytes": 13110
+    },
+    {
+      "path": "docs/protocols/json-record-intake.md",
+      "sha256": "a14abf57b0d893be65aca01b56b84e9cddb62e32dd6ac6e50ae8ea8e2ed115ab",
+      "bytes": 2221
+    },
+    {
+      "path": "internal/api/mcp-tools.json",
+      "sha256": "bcdc9a5ba4574b66d19ba5cd97263d3a5f467e93bd6b108641ccc52bb4c6a645",
+      "bytes": 71945
+    },
+    {
+      "path": "internal/api/mcp.go",
+      "sha256": "e4d8c6f3b163ed41bc0491fdb691b2f8bb3cebfd82b59c2b71cdbb2c9a65fa57",
+      "bytes": 10964
+    },
+    {
+      "path": "internal/browser/assets/app.js",
+      "sha256": "7449aaed8781d7f5d2f8986c7d935389fee61fe71456f1c0058c6455679de29c",
+      "bytes": 788263
+    },
+    {
+      "path": "internal/browser/assets/manifest.json",
+      "sha256": "5e1f1fea1af3021220b70f3586487ba710c2ba95b4ee5182c03f606b32dfd232",
+      "bytes": 12100
+    },
+    {
+      "path": "internal/checks/browser_policy_test.go",
+      "sha256": "4008233bf950063c0bd9a8d618fe8513814ef427d8899e9476a3841cdfee332e",
+      "bytes": 1184
+    },
+    {
+      "path": "internal/checks/csv.go",
+      "sha256": "40a9b3d9e5f3f32ce8fc0429920f2c8114bb828b86123304d7a0e26d7d5a9183",
+      "bytes": 9010
+    },
+    {
+      "path": "internal/checks/json_records.go",
+      "sha256": "00fddb9ca2d607265c5ff6ddccaf7748d2eca59781daeb5316ae6811f4b720f0",
+      "bytes": 4886
+    },
+    {
+      "path": "internal/checks/json_records_integration_test.go",
+      "sha256": "9b7e604e1afe9e673d92e5045d52651a359c7fb5c953b358891b3beabc3559e5",
+      "bytes": 10105
+    },
+    {
+      "path": "internal/checks/json_records_test.go",
+      "sha256": "daa2bfd48ac6173da57a56276402ddee141ae067fcd9f05ded3f5934da2ab7e3",
+      "bytes": 6417
+    },
+    {
+      "path": "internal/checks/rechecks.go",
+      "sha256": "7a5f263c31e87cadf3449195385923c30f9f525c5307fab93f976f795a974758",
+      "bytes": 22629
+    },
+    {
+      "path": "internal/checks/scanners_integration_test.go",
+      "sha256": "5460f20fe821177bc7bafc3cf9fc20787199c5302a20b96be1adad31ad7e2c88",
+      "bytes": 16568
+    },
+    {
+      "path": "internal/checks/service.go",
+      "sha256": "d9c367142abcd5c8e463119cd7d10606c140c1fdfd6e4d7c92e291659e0a3c08",
+      "bytes": 21778
+    },
+    {
+      "path": "internal/custody/rechecks.go",
+      "sha256": "c5aed2f9d7b5d1471c5c5df18cfd7c0ae11a601957086f0d157d8d6c6ea944b1",
+      "bytes": 6028
+    },
+    {
+      "path": "internal/custody/service.go",
+      "sha256": "42d2313eca3a85e4e4a036f5ba11866816a877848442753f709f0785739aeaa3",
+      "bytes": 5595
+    },
+    {
+      "path": "internal/store/047_json_record_intake.sql",
+      "sha256": "43c31ec222a0d2f69aa9e32eef7fb852c3b93efa7ab457d2416729e03062a637",
+      "bytes": 25785
+    },
+    {
+      "path": "internal/store/artifact_exchanges.go",
+      "sha256": "908cf284c4ef519efa3c406d0a42cb554781a9bc51329330f5f49519552eb747",
+      "bytes": 17122
+    },
+    {
+      "path": "internal/store/artifact_exchanges_test.go",
+      "sha256": "4513379bf13f15301def19ceacd15eb67f31f4f26677111b08d83b2f0d1289b4",
+      "bytes": 4900
+    },
+    {
+      "path": "internal/store/exchange_contract.go",
+      "sha256": "9a9865d3f95d5fc9abc0afe177b35649ab763e5b7d6b0b7fe111a5e95d6bece8",
+      "bytes": 8391
+    },
+    {
+      "path": "internal/store/intake.go",
+      "sha256": "427b4cb31765f7237118b8dc0567c1d15b4cfaff90c6ba1f39f22af4a4443a2e",
+      "bytes": 12130
+    },
+    {
+      "path": "internal/store/intake_format.go",
+      "sha256": "aa5f9762c5b52705b3820fc756f4929bca2ba00f5d5f39109554230393d1c9b7",
+      "bytes": 1602
+    },
+    {
+      "path": "internal/store/intake_format_test.go",
+      "sha256": "b6b6d2eaf9e962da01509b8749c53c9239f37e3e7f11206977b6b6b08b325691",
+      "bytes": 1607
+    },
+    {
+      "path": "internal/store/store.go",
+      "sha256": "d32bb254f16e3f1debd0e353b27e7808292ebd3dda08cbdaa4156f98c0968ed2",
+      "bytes": 26173
+    },
+    {
+      "path": "internal/workflow/artifact_onward.go",
+      "sha256": "b01d103b2488869b8d8cd88b05c854c3a9f7f366f597716dfa64f0ffe96ecb55",
+      "bytes": 11020
+    },
+    {
+      "path": "scripts/metadata_contract.py",
+      "sha256": "748391cc816a697ccf8feaac0b0be42f6d8545ce4b9a2fd7cf4e953105391704",
+      "bytes": 2766
+    },
+    {
+      "path": "scripts/pgp-native-peer.py",
+      "sha256": "c5b609ae0090ba21d76004d6135fca2897d3680d811b23698b151b8eae0edf6a",
+      "bytes": 20722
+    },
+    {
+      "path": "scripts/prepare-pgp-fixture.py",
+      "sha256": "4399c8f3d89a39b8107af9e38d267a709c7fecd1529b0a20b03274c3c39ca1f1",
+      "bytes": 10566
+    },
+    {
+      "path": "scripts/test-ci-metadata-summary.py",
+      "sha256": "a1730de5d99eb223ddfe2794299dbfc603139553177db796a6b167d4b0d55144",
+      "bytes": 6240
+    },
+    {
+      "path": "web/src/artifact-copy-types.ts",
+      "sha256": "fa3a89b62bc8baeb67151f28193237d5df78ff372a1161db2496e58155b2a940",
+      "bytes": 6254
+    },
+    {
+      "path": "web/src/artifact-exchanges-types.ts",
+      "sha256": "6f13a6cb2b1f4bd9c73a86fc9aa482a93cef95f108e30ede80253496e7a6dd6d",
+      "bytes": 19379
+    },
+    {
+      "path": "web/src/artifact-policy.ts",
+      "sha256": "82a5d40dc6e41d7692b093ebded7bd1be3f2b56c4eec0336685f6f0cc3808a0d",
+      "bytes": 484
+    },
+    {
+      "path": "web/src/check-evidence.tsx",
+      "sha256": "ccafdd8fe93967bfdaed823b32a5b8917ee05d67ded951f9d8e6f5acdbb3e0e5",
+      "bytes": 2561
+    },
+    {
+      "path": "web/src/intake-policy-types.ts",
+      "sha256": "7536312e08508c570ff5011dd35fd7ba6ac2566894a9dec13c04d288028d5d35",
+      "bytes": 6462
+    },
+    {
+      "path": "web/src/intake-policy.tsx",
+      "sha256": "d5ab6ed6677bc0a8ba7d8f3e3887637fa8e4786baec097afbafd2f088d9ecb74",
+      "bytes": 18037
+    },
+    {
+      "path": "web/src/rechecks-types.ts",
+      "sha256": "cab76eaffeb3fcd4523a93dce96016a0b33284f2a9dc8fc534ff803187da27f1",
+      "bytes": 17951
+    },
+    {
+      "path": "web/src/types.ts",
+      "sha256": "0145ee3a5094fa192be2a7c400a4240e271628ff2ce95a30b3b59f76cb61b45c",
+      "bytes": 23275
+    },
+    {
+      "path": "web/tests/artifact-copy.test.mjs",
+      "sha256": "46b9150012af6cef6d04853e9f0a7cb7d52196c2bdaa1df78ed4a8769015d6da",
+      "bytes": 7668
+    },
+    {
+      "path": "web/tests/artifact-exchange.test.mjs",
+      "sha256": "b5715890a02c6a7a30629a37cb212ad70d9c299fa48056a9601b07267d4c1dc0",
+      "bytes": 33797
+    },
+    {
+      "path": "web/tests/check-evidence.test.mjs",
+      "sha256": "4ea4e12eecbe25a81d21e0ab6118253edcec461f1df9f58bab5027da17b98969",
+      "bytes": 12009
+    },
+    {
+      "path": "web/tests/fixtures/intake-policy-json-records.json",
+      "sha256": "142bc1547b37564b7c0084806d4fd276c2ba9f7ceb2d0aa80ccdc46044f089c6",
+      "bytes": 792
+    },
+    {
+      "path": "web/tests/intake-policy.test.mjs",
+      "sha256": "1406d6b5ada21bd5a4e2f37a48077260fdbc310b123e375591b99e79142149de",
+      "bytes": 3809
+    }
+  ],
+  "local_manifest": {
+    "path": ".private/freightctl-f143-pause-manifest.json",
+    "sha256": "49599b606427fc688aa4327cfa1026697c434f901717f703645d35d729ff2c1a",
+    "bytes": 2818
+  },
+  "owed": [
+    "Actual schema47 PostgreSQL/forced-RLS/upgrade/restore and cross-format forgery,check/release/recheck/copy/custody outcomes;compilation does not qualify SQL",
+    "Actual combined GnuPG and scanner-protocol test cases and new fixture production;synthetic scanner never qualifies real malware detection",
+    "Prepare and execute dedicated JSON API/CLI/native browser format-review/recovery/privacy/held-release and independent receiver journeys;these additional interface profiles were not finished before pause",
+    "Native11target fuzz campaign,all affected original flows/security/native platforms and actual final-source evidence",
+    "Every remaining full GOAL baseline,AX01-AX08,12full journeys,83whole parity rows and mandatory FINISH gate;existing external blockers and F026 hold remain unchanged"
+  ],
+  "pause_invariants": "Local commit checkpoint only;no push or deployment by this pause request. Existing CI runs left untouched. Local inference/heavy runtimes remain off and all local/peer/product resource allowances preserved."
+}

@@ -35,7 +35,7 @@
     },
     {
       "path": "web/src/artifact-copy-types.ts",
-      "sha256": "d75300f5134ad68656c4664344b6679c1bf7612dd946c5348082fa79637a6c38"
+      "sha256": "fa3a89b62bc8baeb67151f28193237d5df78ff372a1161db2496e58155b2a940"
     },
     {
       "path": "web/src/artifact-copy.tsx",
@@ -59,7 +59,7 @@
     },
     {
       "path": "web/src/artifact-exchanges-types.ts",
-      "sha256": "65a3d67248b893c32cdcdfa6b4069e207522db872cace28b24f72dd1aa32f23e"
+      "sha256": "6f13a6cb2b1f4bd9c73a86fc9aa482a93cef95f108e30ede80253496e7a6dd6d"
     },
     {
       "path": "web/src/artifact-exchanges.tsx",
@@ -80,6 +80,10 @@
     {
       "path": "web/src/artifact-outgoing.tsx",
       "sha256": "b9d483aafec4fe02fbde4a7710802d78ab8af1b20b0a63921df5a16f1d4787de"
+    },
+    {
+      "path": "web/src/artifact-policy.ts",
+      "sha256": "82a5d40dc6e41d7692b093ebded7bd1be3f2b56c4eec0336685f6f0cc3808a0d"
     },
     {
       "path": "web/src/artifact-recovery.ts",
@@ -103,7 +107,7 @@
     },
     {
       "path": "web/src/check-evidence.tsx",
-      "sha256": "29fb79be1a6f445d6f863a79156b5e4bd8cf31e91c544ab3091a689058f1a5fe"
+      "sha256": "ccafdd8fe93967bfdaed823b32a5b8917ee05d67ded951f9d8e6f5acdbb3e0e5"
     },
     {
       "path": "web/src/check-recovery.tsx",
@@ -159,11 +163,11 @@
     },
     {
       "path": "web/src/intake-policy-types.ts",
-      "sha256": "5e1f8c2bd4ea26893ef221abbc2998bffddae9169db26439313a2bb578647b01"
+      "sha256": "7536312e08508c570ff5011dd35fd7ba6ac2566894a9dec13c04d288028d5d35"
     },
     {
       "path": "web/src/intake-policy.tsx",
-      "sha256": "e535906557498cfe00efb012e23c9cb92612dd684ea285542a4b060e40a0f8e7"
+      "sha256": "d5ab6ed6677bc0a8ba7d8f3e3887637fa8e4786baec097afbafd2f088d9ecb74"
     },
     {
       "path": "web/src/onboarding-approvals-types.ts",
@@ -255,7 +259,7 @@
     },
     {
       "path": "web/src/rechecks-types.ts",
-      "sha256": "c259d73eef95b87f796eae0a7dee505ed67cb773a994ea018298bbf91c4fe4a0"
+      "sha256": "cab76eaffeb3fcd4523a93dce96016a0b33284f2a9dc8fc534ff803187da27f1"
     },
     {
       "path": "web/src/rechecks.tsx",
@@ -279,7 +283,7 @@
     },
     {
       "path": "web/src/types.ts",
-      "sha256": "1a57d571cd564a2b8f59a707a94e24ecacdfe80df07989d5be080f9ac825390e"
+      "sha256": "0145ee3a5094fa192be2a7c400a4240e271628ff2ce95a30b3b59f76cb61b45c"
     },
     {
       "path": "web/src/upload-ticket.tsx",
@@ -302,8 +306,8 @@
     },
     {
       "name": "app.js",
-      "sha256": "eb343150d83f49a3ddceddd3420e7d9b6e5f3094397e2b1bc7637a9f7144d6aa",
-      "size": 786390
+      "sha256": "7449aaed8781d7f5d2f8986c7d935389fee61fe71456f1c0058c6455679de29c",
+      "size": 788263
     },
     {
       "name": "app.js.LEGAL.txt",

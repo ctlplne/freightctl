@@ -14,9 +14,7 @@ interface Reference {
   version: number;
   hash: string;
 }
-export interface IntakeDefinition {
-  schema_version: 1;
-  kind: "csv";
+interface IntakeDefinitionFields {
   columns: IntakeColumn[];
   max_bytes: number;
   max_rows: number;
@@ -25,6 +23,11 @@ export interface IntakeDefinition {
   signature?: { key: Reference; max_age_seconds?: number };
   scanner?: Reference;
 }
+export type IntakeDefinition = IntakeDefinitionFields &
+  (
+    | { schema_version: 1; kind: "csv" }
+    | { schema_version: 2; kind: "json_records" }
+  );
 export interface IntakePolicy {
   id: string;
   version: number;
@@ -79,8 +82,10 @@ export function intakeDefinition(value: unknown): IntakeDefinition {
     "scanner",
   ]);
   if (
-    o.schema_version !== 1 ||
-    o.kind !== "csv" ||
+    !(
+      (o.schema_version === 1 && o.kind === "csv") ||
+      (o.schema_version === 2 && o.kind === "json_records")
+    ) ||
     !Array.isArray(o.columns) ||
     o.columns.length < 1 ||
     o.columns.length > 128
@@ -123,8 +128,9 @@ export function intakeDefinition(value: unknown): IntakeDefinition {
     return column;
   });
   const result: IntakeDefinition = {
-    schema_version: 1,
-    kind: "csv",
+    ...(o.kind === "csv"
+      ? { schema_version: 1 as const, kind: "csv" as const }
+      : { schema_version: 2 as const, kind: "json_records" as const }),
     columns,
     max_bytes: integer(o.max_bytes, 1, 1073741824),
     max_rows: integer(o.max_rows, 1, 1000000),

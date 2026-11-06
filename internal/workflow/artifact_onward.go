@@ -63,7 +63,7 @@ type onwardBinding struct {
 }
 
 func validateOnwardRequest(r OnwardRequest, maxFile int64) error {
-	policy := r.Artifact.Policy == "integrity-only-v1" || strings.HasPrefix(r.Artifact.Policy, "intake-csv-v1:") && hashPattern.MatchString(strings.TrimPrefix(r.Artifact.Policy, "intake-csv-v1:"))
+	policy := store.ValidArtifactPolicy(r.Artifact.Policy)
 	if r.Schema != 1 || r.Profile != OnwardProfile || !store.ValidID(r.Workflow.ID) || r.Workflow.Version < 1 || r.Workflow.Version > 2147483647 || !hashPattern.MatchString(r.Workflow.Hash) || !store.ValidID(r.Artifact.ID) || r.Artifact.Size < 0 || maxFile < 0 || r.Artifact.Size > maxFile || !hashPattern.MatchString(r.Artifact.SHA256) || !policy {
 		return ErrInput
 	}

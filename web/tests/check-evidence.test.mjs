@@ -115,7 +115,15 @@ function view() {
       code: "valid_csv",
       policy_hash: policy,
       report_hash: reportHash,
-      binding: { file: { sha256: source }, target: { path: "/signed.csv" } },
+      binding: {
+        file: {
+          id,
+          sha256: source,
+          size_bytes: 70,
+          policy: "intake-csv-v1:" + policy,
+        },
+        target: { path: "/signed.csv" },
+      },
       report: {
         engine: "freightctl-csv-v1",
         file_id: id,
@@ -149,6 +157,32 @@ function refuse(value) {
     (e) => e.code === "invalid_server_response" && e.status === 502,
   );
 }
+test("successful JSON evidence binds its actual custody format,engine,code and exact byte count", () => {
+  const value = view();
+  value.check.binding.file = {
+    id,
+    sha256: source,
+    size_bytes: 70,
+    policy: "intake-json-records-v1:" + policy,
+  };
+  value.check.code = "valid_json_records";
+  value.check.report.engine = "freightctl-json-records-v1";
+  value.check.report.code = "valid_json_records";
+  assert.equal(asCheckView(value).validation.code, "valid_json_records");
+  for (const mutate of [
+    (v) => (v.check.report.engine = "freightctl-csv-v1"),
+    (v) => (v.check.report.code = "valid_csv"),
+    (v) => (v.check.binding.file.policy = "intake-csv-v1:" + policy),
+    (v) =>
+      (v.check.binding.file.policy =
+        "intake-json-records-v1:" + "f".repeat(64)),
+    (v) => (v.check.report.bytes_read = 69),
+  ]) {
+    const changed = structuredClone(value);
+    mutate(changed);
+    refuse(changed);
+  }
+});
 test("recorded signer proof stays bound to exact file, policy, attachment and key", () => {
   const v = asCheckView(view());
   assert.equal(v.signatureProof.primary, "f".repeat(40));

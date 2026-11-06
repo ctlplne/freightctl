@@ -16,7 +16,11 @@ const p = await import(
     Buffer.from(bundle.outputFiles[0].contents).toString("base64")
 );
 const fixtures = await Promise.all(
-  ["intake-policy.json", "intake-policy-protected.json"].map(async (name) =>
+  [
+    "intake-policy.json",
+    "intake-policy-protected.json",
+    "intake-policy-json-records.json",
+  ].map(async (name) =>
     JSON.parse(
       await readFile(new URL("fixtures/" + name, import.meta.url), "utf8"),
     ),
@@ -29,6 +33,26 @@ const view = (f) => ({
   definition_hash: f.definition_hash,
   state: "active",
   revision: 1,
+});
+
+test("JSON record policies have a distinct schema/hash and preserve protected requirements", () => {
+  const csv = structuredClone(fixtures[1].definition);
+  const json = { ...csv, schema_version: 2, kind: "json_records" };
+  assert.deepEqual(p.intakeDefinition(json), json);
+  assert.notEqual(p.intakeHash(json), p.intakeHash(csv));
+  assert.deepEqual(
+    p.asIntakePolicy(
+      view({ definition: json, definition_hash: p.intakeHash(json) }),
+    ).definition,
+    json,
+  );
+  for (const invalid of [
+    { ...json, schema_version: 1 },
+    { ...json, kind: "csv" },
+    { ...json, kind: "json" },
+    { ...json, schema_version: "2" },
+  ])
+    assert.throws(() => p.intakeDefinition(invalid));
 });
 
 test("CSV definitions match actual Go normalized hashes including escaped names and protected requirements", () => {
