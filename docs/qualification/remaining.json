@@ -873,7 +873,8 @@
         "docs/qualification/evidence/F108-governed-collection-artifact-source.json",
         "docs/qualification/evidence/F111-agent-artifact-ingress-descriptor.json",
         "docs/qualification/evidence/F113-strict-upload-namespace-controls.json",
-        "docs/qualification/evidence/F116-mcp-resumable-artifact-ingress.json"
+        "docs/qualification/evidence/F116-mcp-resumable-artifact-ingress.json",
+        "docs/qualification/evidence/F118-mcp-workflow-review-proposals.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -888,11 +889,11 @@
         "S003 authorizes guarded source/CI batches after prior required runs are terminal. Eleven exchange API paths and eleven CLI commands plus receive/send/recovery/history browser surfaces are implemented;actual AX profiles remain owed. Broad/deferred qualification is mandatory at FINISH."
       ],
       "current_item": {
-        "id": "F116",
-        "state": "Ordinary confined/resumable agent upload metadata controls implemented;native outcomes owed",
-        "proof": "Four missing-tool reds repaired;three focused API methods,architecture,affected tagged compilation/vet pass",
-        "native": "Original official SDK/HTTPS/PG confined chunk continuation,shared API receipt,replay/role/revocation/cardinality/independent-byte proofs extended,not qualified",
-        "next": "Remaining recovery/lineage/ingress/onward and baseline implementation;all mandatory FINISH/native/deferred gates"
+        "id": "F118",
+        "state": "Ordinary workflow validation/unapproved draft proposal tools implemented;native outcomes owed",
+        "proof": "Missing-tool,stored JSON ordering and recursive condition wire failures repaired;three API methods,architecture,tagged compile/vet pass",
+        "native": "Original SDK/HTTPS/PG hash/receipt/no-effect/cardinality,role/redaction and unapproved-onward refusals prepared,not qualified",
+        "next": "Remaining product controls/recovery/lineage/baseline implementation;all mandatory FINISH/native/deferred gates"
       }
     }
   ],

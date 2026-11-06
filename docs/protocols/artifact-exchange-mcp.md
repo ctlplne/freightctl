@@ -42,11 +42,41 @@ same-origin CSRF protection. Tool-list results are private and immediately stale
 | `offer_exchange` | Commit the ordinary exact-byte offer and private idempotency receipt. Requires the exact canonical request hash and stable request key. |
 | `incoming_exchanges`, `inspect_exchange` | Poll and inspect currently authorized incoming views; held rows stay opaque. |
 | `retrieval_descriptor` | Return exact integrity metadata and a relative authenticated HTTPS download path, without artifact bytes. |
+| `validate_workflow`, `propose_workflow` | Validate a typed ordinary workflow or record an unapproved draft with its original operation key. Current workflow permissions and registered connection/source checks apply. |
 | `artifact_upload_start`, `artifact_upload_status`, `artifact_upload_complete`, `artifact_upload_abort` | Create/recover a new confined virtual-file ticket,inspect committed progress or explicitly complete/abort through ordinary resumable custody. Host sends bytes outside MCP. |
 | `outgoing_exchanges`, `exchange_receipt` | Inspect own original offer receipts and separately checked current state. Enumeration also needs list. |
 | `close_exchange` | Record one exact sender cancellation or recipient decline using its original request hash and stable operation key. |
 | `prepare_onward`, `start_onward` | Review an owned artifact/approved ordered workflow,then atomically record ordinary intents under the exact review. |
 | `onward_status`, `work_onward` | Inspect or execute one ordinary step only with the original reviewed-start receipt and exact run binding. |
+
+`validate_workflow` takes `request` in the ordinary `PreviewRequest` shape:
+`definition` and optional `file_id`. `propose_workflow` takes the ordinary draft
+`request`: `definition`, `expected_version`, optional `workflow_id`, plus the
+stable outer `request_key`. The closed schemas preserve the typed source,
+encryption-reference and finite program shapes; recursive conditions use the
+ordinary quoted integer format, including `"0"`. Existing wire depth/token/body
+bounds and domain normalization remain enforced. No shell, credentials, host key
+paths, arbitrary connection address, approval or execution flag is accepted.
+Typed filenames/directories retain their ordinary namespace/connection meaning.
+
+Validation uses the same current workflow roles, registered connection versions
+and optional ordinary file access as the API/CLI. It creates no durable objects,
+contact or reservation and checks no physical bytes. Results contain the
+normalized definition hash, schema/counts and requested authorized source identity;
+names, filenames, remote addresses/directories, credential references and raw
+effect descriptions are omitted. Hashes describe the plan, not approval.
+
+Proposal requires ordinary root `workflow_manage`, records one immutable draft
+revision and command receipt, and returns its identity/hash/revision. Separate
+ordinary approval remains necessary before any run or onward intent. Exact-key
+retries return the original draft with current state explicitly unchecked, even
+when the database represents JSON keys in another order. Hash verification
+normalizes the typed definition rather than hashing stored JSON formatting.
+Changed meaning under the same key refuses. The original native official-client
+profile now includes API/MCP hash/receipt parity, real PostgreSQL no-effect and
+exact draft cardinality, role refusals, redaction and unapproved-onward refusal.
+Those native outcomes remain owed. See
+[F118](../qualification/evidence/F118-mcp-workflow-review-proposals.json).
 
 The four resumable controls use `ordinary-resumable-artifact-upload-v1` and the
 existing upload service. Start takes `virtual_path`, `size_bytes`, `sha256` and

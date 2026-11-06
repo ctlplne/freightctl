@@ -87,7 +87,7 @@ func TestMCPStockClientExchangeUsesOrdinaryAuthorityAndSeparateReply(t *testing.
 		t.Fatal("wrong partner discovered MCP catalog")
 	}
 	catalog, err := a.ListTools(ctx, &mcp.ListToolsParams{})
-	if err != nil || len(catalog.Tools) != 22 || catalog.NextCursor != "" || catalog.TTLMs != 0 || catalog.CacheScope != "private" {
+	if err != nil || len(catalog.Tools) != 24 || catalog.NextCursor != "" || catalog.TTLMs != 0 || catalog.CacheScope != "private" {
 		t.Fatal("stock client did not observe exact private noncached catalog")
 	}
 	call := func(client *mcp.ClientSession, name string, args map[string]any, ok bool) *mcp.CallToolResult {
@@ -334,8 +334,8 @@ func TestMCPStockClientExchangeUsesOrdinaryAuthorityAndSeparateReply(t *testing.
 	if history.State != "canceled" || history.ClosureEvent == "" || history.ReceiverPersistence != "unknown" || history.BusinessProcessing != "unknown" {
 		t.Fatal("MCP history overstated receiver facts")
 	}
-	// The operator provisions/approves the ordinary workflow outside MCP. The
-	// stock client can only review/stage its exact permitted immutable source.
+	// The operator provisions connections and separately approves the onward
+	// workflow. A tool proposal creates only an ordinary unapproved draft.
 	operator, err := connect(admin, prefix)
 	if err != nil {
 		t.Fatal("stock MCP operator discovery failed")
@@ -359,6 +359,66 @@ func TestMCPStockClientExchangeUsesOrdinaryAuthorityAndSeparateReply(t *testing.
 	if json.Unmarshal(registered.Resource, &connection) != nil {
 		t.Fatal("connection response")
 	}
+	reviewDefinition := workflow.Definition{Schema: 1, Name: "MCP draft proposal", Steps: []workflow.Step{{ID: "send", Kind: "sftp.deliver", Connection: workflow.Reference{ID: connection.ID, Version: connection.Version, Hash: connection.Hash}, Filename: "proposal.bin"}}}
+	workflowSnapshot := func() [5]int {
+		t.Helper()
+		tx, err := service.DB.Begin(ctx, scope)
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer tx.Tx.Rollback(ctx)
+		var counts [5]int
+		if err = tx.Tx.QueryRow(ctx, `SELECT (SELECT count(*) FROM workflow_revisions),(SELECT count(*) FROM workflow_receipts),(SELECT count(*) FROM events),(SELECT count(*) FROM workflow_runs),(SELECT count(*) FROM delivery_intents)`).Scan(&counts[0], &counts[1], &counts[2], &counts[3], &counts[4]); err != nil {
+			t.Fatal(err)
+		}
+		return counts
+	}
+	beforeValidation := workflowSnapshot()
+	previewRequest := workflow.PreviewRequest{Definition: reviewDefinition}
+	var reviewMetadata map[string]any
+	mcpDecodeResult(t, call(operator, "validate_workflow", map[string]any{"request": previewRequest}, true), &reviewMetadata)
+	_, previewRaw := exchangeAPIRequest(t, server, "POST", prefix+"/workflows/validate", cookie, map[string]string{"Origin": server.URL, "X-CSRF-Token": csrf}, exchangeAPIJSON(t, previewRequest), 200)
+	var ordinaryPreview workflow.Preview
+	if json.Unmarshal(previewRaw, &ordinaryPreview) != nil || reviewMetadata["definition_hash"] != ordinaryPreview.Hash || reviewMetadata["durable_effects"] != "none" || reviewMetadata["storage_verification"] != "not-checked" || reviewMetadata["approval_required"] != true {
+		t.Fatal("MCP validation changed ordinary plan or claimed effects")
+	}
+	call(a, "validate_workflow", map[string]any{"request": previewRequest}, false)
+	if workflowSnapshot() != beforeValidation {
+		t.Fatal("validation created durable state")
+	}
+	draftRequest := workflow.DraftRequest{Definition: reviewDefinition}
+	draftArgs := map[string]any{"request": draftRequest, "request_key": "mcp-proposal-original"}
+	var proposed, replayedProposal map[string]any
+	mcpDecodeResult(t, call(operator, "propose_workflow", draftArgs, true), &proposed)
+	mcpDecodeResult(t, call(operator, "propose_workflow", draftArgs, true), &replayedProposal)
+	if proposed["definition_hash"] != ordinaryPreview.Hash || proposed["accepted_state"] != "draft" || proposed["current_state"] != "not-checked" || proposed["approval_required"] != true || proposed["external_contact"] != false || proposed["replayed"] != false || replayedProposal["workflow_id"] != proposed["workflow_id"] || replayedProposal["replayed"] != true {
+		t.Fatal("proposal replay changed identity or supplied approval")
+	}
+	call(a, "propose_workflow", draftArgs, false)
+	changedDraft := draftRequest
+	changedDraft.Definition.Name = "Changed draft meaning"
+	call(operator, "propose_workflow", map[string]any{"request": changedDraft, "request_key": "mcp-proposal-original"}, false)
+	_, draftRaw := exchangeAPIRequest(t, server, "POST", prefix+"/workflows/drafts", cookie, map[string]string{"Origin": server.URL, "X-CSRF-Token": csrf, "Idempotency-Key": "mcp-proposal-original"}, exchangeAPIJSON(t, draftRequest), 200)
+	var ordinaryDraft workflow.Result
+	if json.Unmarshal(draftRaw, &ordinaryDraft) != nil || !ordinaryDraft.Replayed {
+		t.Fatal("ordinary API lost same proposal receipt")
+	}
+	var originalDraft store.Configuration
+	if json.Unmarshal(ordinaryDraft.Resource, &originalDraft) != nil || originalDraft.ID != proposed["workflow_id"] || originalDraft.State != "draft" || originalDraft.Hash != ordinaryPreview.Hash || originalDraft.ApprovalAuthority != 0 {
+		t.Fatal("proposal was approved or changed original configuration")
+	}
+	afterProposal := workflowSnapshot()
+	if afterProposal != [5]int{beforeValidation[0] + 1, beforeValidation[1] + 1, beforeValidation[2] + 2, beforeValidation[3], beforeValidation[4]} {
+		t.Fatal("draft retries created extra configuration/receipt/event/run/intent state")
+	}
+	for _, metadata := range []map[string]any{reviewMetadata, proposed, replayedProposal} {
+		wire, _ := json.Marshal(metadata)
+		for _, hidden := range []string{connection.ID, "proposal.bin", "MCP draft proposal", "127.0.0.1", "/inbox", key, keyPub, hostPub, string(admin.Bytes)} {
+			if bytes.Contains(wire, []byte(hidden)) {
+				t.Fatal("workflow tool disclosed private plan/transport material")
+			}
+		}
+	}
 	draft, err := workflows.Draft(ctx, scope, "mcp-onward-draft", workflow.DraftRequest{Definition: workflow.Definition{Schema: 1, Name: "Preapproved MCP onward", Steps: []workflow.Step{{ID: "send", Kind: "sftp.deliver", Connection: workflow.Reference{ID: connection.ID, Version: connection.Version, Hash: connection.Hash}, Filename: "onward.bin"}}}})
 	if err != nil {
 		t.Fatal(err)
@@ -372,6 +432,14 @@ func TestMCPStockClientExchangeUsesOrdinaryAuthorityAndSeparateReply(t *testing.
 	}
 	owned := upload(admin, "mcp-owned-onward-source", []byte("explicit new onward source"))
 	onwardRequest := workflow.OnwardRequest{Schema: 1, Profile: workflow.OnwardProfile, Workflow: workflow.Reference{ID: config.ID, Version: config.Version, Hash: config.Hash}, Artifact: store.ExchangeArtifact{ID: owned.ID, Size: owned.Size, SHA256: owned.SHA256, Policy: owned.Policy}}
+	unapproved := onwardRequest
+	unapproved.Workflow = workflow.Reference{ID: originalDraft.ID, Version: originalDraft.Version, Hash: originalDraft.Hash}
+	beforeUnapproved := workflowSnapshot()
+	call(operator, "prepare_onward", map[string]any{"request": unapproved}, false)
+	call(operator, "start_onward", map[string]any{"request": unapproved, "review_hash": secure.Digest([]byte("invented approval")), "request_key": "mcp-unapproved-no-run"}, false)
+	if workflowSnapshot() != beforeUnapproved {
+		t.Fatal("tool draft became executable or created an intent without approval")
+	}
 	var onwardReview workflow.OnwardReview
 	mcpDecodeResult(t, call(operator, "prepare_onward", map[string]any{"request": onwardRequest}, true), &onwardReview)
 	call(b, "prepare_onward", map[string]any{"request": onwardRequest}, false)

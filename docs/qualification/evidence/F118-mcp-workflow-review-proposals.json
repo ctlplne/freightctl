@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "id": "F118",
+  "observed_at": "2026-11-05",
+  "starting_commit": "a6c4d069aab8d676b0a36f08d20a88bc56e18321",
+  "preceding_metadata_commit": "2b3924e10ac99680c96fb4726aafd3188b4eb4b1",
+  "state": "Ordinary typed workflow validation/draft proposal tools implemented;native effect/authority/replay outcomes owed",
+  "qualification_claim": false,
+  "change": [
+    "Add validate_workflow/propose_workflow via existing ordinary Validate/Draft services. Validation retains current workflow roles,registered connection/source gates and no durable effect. Proposal requires ordinary root workflow_manage and creates only an immutable unapproved draft/receipt;approval/execution is separate. Catalog24;exchange-tools-v6.",
+    "Closed schemas cover the existing typed source,encryption reference and finite routing program. Explicit recursive condition/node references preserve actual object types and quoted integer format,including zero. Whole-wire JSON/depth/token/body bounds and domain normalization stay unchanged.",
+    "Return normalized definition hashes/counts and requested authorized source identity,or original draft identity/hash/revision/receipt state. Omit names,filenames,raw definitions/effects,remote addresses/directories and secret/key references. Historical draft receipt leaves current approval/state unchecked.",
+    "Repair newly observed raw-JSON hash coupling by typed normalization before verifying stored draft hash. PostgreSQL JSON object ordering/spacing does not change canonical workflow meaning. No inference,provider API,new domain queue,permission bypass,migration or retained-environment change."
+  ],
+  "red": [
+    {
+      "reference": ".private/freightctl-f118-mcp-red.log",
+      "observation": "Focused contract found both ordinary workflow tools missing"
+    },
+    {
+      "reference": ".private/freightctl-f118-stored-json-red.log",
+      "observation": "Valid original draft receipt represented with reordered JSON failed isolation because new projection hashed raw JSON"
+    },
+    {
+      "reference": ".private/freightctl-f118-recursive-schema-red.log",
+      "observation": "Generated recursive pointer schema constrained when to null and refused valid ordinary recursive condition;explicit object reference repairs it"
+    }
+  ],
+  "preparation_corrections": [
+    "Initial type inference reported a recursive-type cycle;explicit recursive schema definitions retained the complete typed fields without IgnoreInvalidTypes.",
+    "First focused log also contained a test fixture false positive:substring effects matched sanctioned durable_effects. The intended no-raw-effects assertion now inspects the exact top-level key;original log remains protected."
+  ],
+  "green": {
+    "focused_api_methods": 3,
+    "architecture_methods": 1,
+    "affected_native_tagged_compilation": "pass,no tests selected",
+    "affected_native_tagged_vet": "pass",
+    "format_and_diff": "pass",
+    "actual_PG_HTTPS_SDK": "prepared,not run locally;owed"
+  },
+  "native_prepared": [
+    "Extend original official SDK two-agent HTTPS profile without replacing existing exchange/reply/ingress/onward assertions",
+    "API/MCP validation hash parity,ordinary role refusal and unchanged workflow revisions/receipts/events/runs/intents",
+    "One unapproved draft,one original receipt,two events,zero new run/intent across exact retry,ordinary API replay,wrong role and changed-meaning refusal",
+    "Redacted results exclude private names/filenames,connection IDs/addresses/directories,key paths and credentials",
+    "Actual unapproved proposal cannot prepare onward or record a run/intent even for the operator;separate ordinary approval remains required"
+  ],
+  "source_files": [
+    {
+      "path": "internal/api/mcp.go",
+      "sha256": "6e6b19908b8d8ee7704eb2488e70f2e48ceec9ba599bc8a789020809d1e21b7f"
+    },
+    {
+      "path": "internal/api/mcp-tools.json",
+      "sha256": "9305c639ac29ccd37eddf07fb849e9020ed85685d1c218fb8a7561ce6febd5e9"
+    },
+    {
+      "path": "internal/api/mcp_workflows.go",
+      "sha256": "b4639c7c27e5962dbf87b6109f32162054276bfa852d8426e317bc9992cbe1c0"
+    },
+    {
+      "path": "internal/api/mcp_workflows_test.go",
+      "sha256": "293a2fafebc96d82f67533acac6bbab94264e683a7e9359db0f5a285a65af0e3"
+    },
+    {
+      "path": "internal/api/mcp_test.go",
+      "sha256": "6238ea933d093da627f442383021ac2087c67a8a9c82926468e4b5dcfc41edf8"
+    },
+    {
+      "path": "internal/api/mcp_integration_test.go",
+      "sha256": "7ef749acf50c2f133f114960ee988827e43407b021f80aa9712671b18ff442bc"
+    },
+    {
+      "path": "docs/protocols/artifact-exchange-mcp.md",
+      "sha256": "44a8720c705ea8910929435d442d1d5d411e53a1ea87a5cd1a17e8be2573455d"
+    }
+  ],
+  "local_manifest": {
+    "reference": ".private/freightctl-f118-manifest.json",
+    "sha256": "aab6b1d66626ba7996f9497f2bc3d67c91347b62b82f2e830193b3ec6889188f"
+  },
+  "owed": [
+    "Actual native original-profile PG/storage/verified HTTPS/official SDK and external conformance;compilation/stand-ins are not qualification",
+    "Remaining participant/partner/diagnostic/recovery tools and all baseline/AI/AX outcomes;no actual model quality/provider claim",
+    "All original red jobs and mandatory FINISH broad/native/security/restore/reproduction/final-source gates"
+  ]
+}

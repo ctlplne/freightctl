@@ -83,7 +83,7 @@ func TestMCPMediaOriginAndHeaderAmbiguityRefuseBeforeDatabase(t *testing.T) {
 
 func TestMCPToolSchemasBindOrdinaryRequestsAndExcludeAmbientAuthority(t *testing.T) {
 	var tools []*mcp.Tool
-	if err := json.Unmarshal(mcpCatalog, &tools); err != nil || len(tools) != 22 {
+	if err := json.Unmarshal(mcpCatalog, &tools); err != nil || len(tools) != 24 {
 		t.Fatal("missing fixed tool catalog", err)
 	}
 	raw, err := os.ReadFile("../../web/tests/fixtures/artifact-exchange.json")
@@ -115,6 +115,13 @@ func TestMCPToolSchemasBindOrdinaryRequestsAndExcludeAmbientAuthority(t *testing
 		}
 		var args map[string]any
 		switch tool.Name {
+		case "freightctl.validate_workflow", "freightctl.propose_workflow":
+			request := map[string]any{"definition": map[string]any{"schema_version": 1, "name": "Reviewed draft", "steps": []any{map[string]any{"id": "send", "kind": "sftp.deliver", "connection": map[string]any{"id": "55555555-5555-4555-8555-555555555555", "version": 1, "hash": fixture.Hash}, "filename": "new.dat"}}}}
+			args = map[string]any{"request": request}
+			if tool.Name == "freightctl.propose_workflow" {
+				request["expected_version"] = 0
+				args["request_key"] = "original-draft"
+			}
 		case "freightctl.artifact_upload_start":
 			args = map[string]any{"virtual_path": "/new.dat", "size_bytes": 8, "sha256": fixture.Hash, "request_key": "stable-create"}
 		case "freightctl.artifact_upload_status", "freightctl.artifact_upload_complete", "freightctl.artifact_upload_abort":
@@ -214,6 +221,82 @@ func TestMCPResumableArtifactControlsExposeOnlyOwnedMetadataOperations(t *testin
 	for name, found := range wanted {
 		if !found {
 			t.Error("missing resumable artifact metadata tool", name)
+		}
+	}
+}
+
+func TestMCPWorkflowReviewAndProposalDoNotSupplyApprovalOrExecution(t *testing.T) {
+	var tools []*mcp.Tool
+	if json.Unmarshal(mcpCatalog, &tools) != nil {
+		t.Fatal("catalog decode")
+	}
+	for _, name := range []string{"freightctl.validate_workflow", "freightctl.propose_workflow"} {
+		found := false
+		for _, tool := range tools {
+			if tool.Name != name {
+				continue
+			}
+			found = true
+			if tool.Annotations == nil || tool.Annotations.ReadOnlyHint != (name == "freightctl.validate_workflow") || tool.Annotations.OpenWorldHint == nil || *tool.Annotations.OpenWorldHint {
+				t.Fatal("proposal/validation overstated safety", name)
+			}
+			wire, _ := json.Marshal(tool.InputSchema)
+			var schema jsonschema.Schema
+			if json.Unmarshal(wire, &schema) != nil {
+				t.Fatal("schema decode")
+			}
+			resolved, err := schema.Resolve(nil)
+			if err != nil {
+				t.Fatal(err)
+			}
+			definition := map[string]any{"schema_version": 1, "name": "Reviewed draft", "steps": []any{map[string]any{"id": "send", "kind": "sftp.deliver", "connection": map[string]any{"id": "55555555-5555-4555-8555-555555555555", "version": 1, "hash": strings.Repeat("a", 64)}, "filename": "new.dat"}}}
+			request := map[string]any{"definition": definition}
+			args := map[string]any{"request": request}
+			if name == "freightctl.propose_workflow" {
+				request["expected_version"] = 0
+				args["request_key"] = "original-draft"
+			}
+			encoded, _ := json.Marshal(args)
+			if _, err := decodeMCPToolArguments(encoded, resolved); err != nil {
+				t.Fatal("ordinary typed workflow refused", name, err)
+			}
+			for _, field := range []string{"approved", "execute", "actor_id", "credentials", "tenant_id"} {
+				request[field] = "untrusted"
+				encoded, _ = json.Marshal(args)
+				if _, err := decodeMCPToolArguments(encoded, resolved); err == nil {
+					t.Fatal("proposal accepted authority", name, field)
+				}
+				delete(request, field)
+			}
+			definition["shell"] = "untrusted"
+			encoded, _ = json.Marshal(args)
+			if _, err := decodeMCPToolArguments(encoded, resolved); err == nil {
+				t.Fatal("definition accepted executable extension", name)
+			}
+			delete(definition, "shell")
+			definition["schema_version"] = 2
+			number := map[string]any{"op": "ge", "field": "file.size_bytes", "number": "0"}
+			definition["program"] = map[string]any{"nodes": []any{map[string]any{"kind": "if", "when": map[string]any{"op": "all", "all": []any{number}}, "then": []any{map[string]any{"kind": "deliver", "step": "send"}}, "else": []any{map[string]any{"kind": "keep_local", "reason": "unmatched"}}}}}
+			encoded, _ = json.Marshal(args)
+			if _, err := decodeMCPToolArguments(encoded, resolved); err != nil {
+				t.Fatal("recursive typed condition or exact quoted zero refused", name, err, resolved.Validate(args), strictMCPJSON(encoded))
+			}
+			definitionRaw, _ := json.Marshal(definition)
+			var typed workflow.Definition
+			if workflow.Decode(definitionRaw, &typed) != nil {
+				t.Fatal("typed condition decode")
+			}
+			if _, err := workflow.Normalize(typed); err != nil {
+				t.Fatal("positive recursive condition was not a valid ordinary workflow", err)
+			}
+			number["number"] = 0
+			encoded, _ = json.Marshal(args)
+			if _, err := decodeMCPToolArguments(encoded, resolved); err == nil {
+				t.Fatal("quoted integer contract weakened", name)
+			}
+		}
+		if !found {
+			t.Error("missing ordinary workflow tool", name)
 		}
 	}
 }

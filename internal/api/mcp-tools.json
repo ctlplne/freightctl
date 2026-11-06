@@ -1706,5 +1706,665 @@
       "idempotentHint": true,
       "openWorldHint": false
     }
+  },
+  {
+    "name": "freightctl.validate_workflow",
+    "description": "Validate an ordinary typed workflow under current workflow permission and registered connection/source checks. Returns only definition hash,counts and authorized source identity;no destination names/addresses/secret references. No approval,run,contact,reservation or durable effect.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "request": {
+          "type": "object",
+          "properties": {
+            "definition": {
+              "type": "object",
+              "properties": {
+                "schema_version": {
+                  "type": "integer"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "steps": {
+                  "type": [
+                    "null",
+                    "array"
+                  ],
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "kind": {
+                        "type": "string"
+                      },
+                      "connection": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "version": {
+                            "type": "integer"
+                          },
+                          "hash": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "version",
+                          "hash"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "filename": {
+                        "type": "string"
+                      },
+                      "encryption": {
+                        "type": [
+                          "null",
+                          "object"
+                        ],
+                        "properties": {
+                          "key": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "version": {
+                                "type": "integer"
+                              },
+                              "hash": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "version",
+                              "hash"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "profile": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "key",
+                          "profile"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "kind",
+                      "connection",
+                      "filename"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "source": {
+                  "type": [
+                    "null",
+                    "object"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "connection": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "version": {
+                          "type": "integer"
+                        },
+                        "hash": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "version",
+                        "hash"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "manifest": {
+                      "type": "string"
+                    },
+                    "target_directory": {
+                      "type": "string"
+                    },
+                    "completion_contract": {
+                      "type": "string"
+                    },
+                    "max_files": {
+                      "type": "integer"
+                    },
+                    "max_file_bytes": {
+                      "type": "integer"
+                    },
+                    "max_total_bytes": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "connection",
+                    "manifest",
+                    "target_directory",
+                    "completion_contract",
+                    "max_files",
+                    "max_file_bytes",
+                    "max_total_bytes"
+                  ],
+                  "additionalProperties": false
+                },
+                "program": {
+                  "type": [
+                    "null",
+                    "object"
+                  ],
+                  "properties": {
+                    "nodes": {
+                      "type": [
+                        "null",
+                        "array"
+                      ],
+                      "items": {
+                        "$ref": "#/$defs/node"
+                      }
+                    }
+                  },
+                  "required": [
+                    "nodes"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "schema_version",
+                "name",
+                "steps"
+              ],
+              "additionalProperties": false
+            },
+            "file_id": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "definition"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "$defs": {
+        "condition": {
+          "type": "object",
+          "properties": {
+            "op": {
+              "type": "string"
+            },
+            "field": {
+              "type": "string"
+            },
+            "variable": {
+              "type": "string"
+            },
+            "text": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "number": {
+              "type": "string",
+              "pattern": "^-?(0|[1-9][0-9]*)$"
+            },
+            "all": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "$ref": "#/$defs/condition"
+              }
+            },
+            "any": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "$ref": "#/$defs/condition"
+              }
+            },
+            "not": {
+              "$ref": "#/$defs/condition"
+            }
+          },
+          "required": [
+            "op"
+          ],
+          "additionalProperties": false
+        },
+        "node": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string"
+            },
+            "step": {
+              "type": "string"
+            },
+            "step_variable": {
+              "type": "string"
+            },
+            "when": {
+              "$ref": "#/$defs/condition"
+            },
+            "then": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "$ref": "#/$defs/node"
+              }
+            },
+            "else": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "$ref": "#/$defs/node"
+              }
+            },
+            "variable": {
+              "type": "string"
+            },
+            "steps": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "body": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "$ref": "#/$defs/node"
+              }
+            },
+            "reason": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "request"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "freightctl.propose_workflow",
+    "description": "Record an ordinary versioned workflow draft proposal using a stable key and exact expected version. Requires ordinary workflow_manage/root authority. It does not approve,activate,queue or execute. Original draft receipt is not current approval state.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "request": {
+          "type": "object",
+          "properties": {
+            "workflow_id": {
+              "type": "string"
+            },
+            "expected_version": {
+              "type": "integer"
+            },
+            "definition": {
+              "type": "object",
+              "properties": {
+                "schema_version": {
+                  "type": "integer"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "steps": {
+                  "type": [
+                    "null",
+                    "array"
+                  ],
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "kind": {
+                        "type": "string"
+                      },
+                      "connection": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "version": {
+                            "type": "integer"
+                          },
+                          "hash": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "version",
+                          "hash"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "filename": {
+                        "type": "string"
+                      },
+                      "encryption": {
+                        "type": [
+                          "null",
+                          "object"
+                        ],
+                        "properties": {
+                          "key": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "version": {
+                                "type": "integer"
+                              },
+                              "hash": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "version",
+                              "hash"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "profile": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "key",
+                          "profile"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "kind",
+                      "connection",
+                      "filename"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "source": {
+                  "type": [
+                    "null",
+                    "object"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "connection": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "version": {
+                          "type": "integer"
+                        },
+                        "hash": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "version",
+                        "hash"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "manifest": {
+                      "type": "string"
+                    },
+                    "target_directory": {
+                      "type": "string"
+                    },
+                    "completion_contract": {
+                      "type": "string"
+                    },
+                    "max_files": {
+                      "type": "integer"
+                    },
+                    "max_file_bytes": {
+                      "type": "integer"
+                    },
+                    "max_total_bytes": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "connection",
+                    "manifest",
+                    "target_directory",
+                    "completion_contract",
+                    "max_files",
+                    "max_file_bytes",
+                    "max_total_bytes"
+                  ],
+                  "additionalProperties": false
+                },
+                "program": {
+                  "type": [
+                    "null",
+                    "object"
+                  ],
+                  "properties": {
+                    "nodes": {
+                      "type": [
+                        "null",
+                        "array"
+                      ],
+                      "items": {
+                        "$ref": "#/$defs/node"
+                      }
+                    }
+                  },
+                  "required": [
+                    "nodes"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "schema_version",
+                "name",
+                "steps"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "expected_version",
+            "definition"
+          ],
+          "additionalProperties": false
+        },
+        "request_key": {
+          "type": "string"
+        }
+      },
+      "$defs": {
+        "condition": {
+          "type": "object",
+          "properties": {
+            "op": {
+              "type": "string"
+            },
+            "field": {
+              "type": "string"
+            },
+            "variable": {
+              "type": "string"
+            },
+            "text": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "number": {
+              "type": "string",
+              "pattern": "^-?(0|[1-9][0-9]*)$"
+            },
+            "all": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "$ref": "#/$defs/condition"
+              }
+            },
+            "any": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "$ref": "#/$defs/condition"
+              }
+            },
+            "not": {
+              "$ref": "#/$defs/condition"
+            }
+          },
+          "required": [
+            "op"
+          ],
+          "additionalProperties": false
+        },
+        "node": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string"
+            },
+            "step": {
+              "type": "string"
+            },
+            "step_variable": {
+              "type": "string"
+            },
+            "when": {
+              "$ref": "#/$defs/condition"
+            },
+            "then": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "$ref": "#/$defs/node"
+              }
+            },
+            "else": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "$ref": "#/$defs/node"
+              }
+            },
+            "variable": {
+              "type": "string"
+            },
+            "steps": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "body": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "$ref": "#/$defs/node"
+              }
+            },
+            "reason": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "request",
+        "request_key"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": true,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
   }
 ]

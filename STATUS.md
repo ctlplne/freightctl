@@ -178,6 +178,15 @@ SDK/HTTPS/PG confined continuation,replay/shared API receipt,foreign/overwrite/
 revocation refusals,exact SQL cardinality and independent byte proofs are prepared
 and owed. Catalog22;no schema,frontend,inference or retained environment change.
 
+F118 adds ordinary typed workflow validation and unapproved draft proposals to
+MCP,using unchanged workflow services and current roles/registered connections.
+Results expose normalized hashes/counts or original draft identity;private plan
+and transport fields stay out. Stored JSON ordering and recursive/quoted-zero
+wire regressions are repaired. Three API methods,architecture,tagged compile/vet
+pass;original native SDK/HTTPS/PG no-effect/exact draft cardinality,shared receipt,
+role/redaction and unapproved-onward refusals are prepared and owed. Catalog24;
+no inference,provider,migration or retained environment change.
+
 Focused local parser/client/filesystem/summary regressions and affected static,
 frontend build, native compilation/vet and architecture checks pass. They establish
 no PostgreSQL, served browser, stock-peer or complete AX profile qualification.
