@@ -5,6 +5,8 @@ package api
 import (
 	"bytes"
 	"encoding/json"
+	"os"
+	"path/filepath"
 	"reflect"
 	"strconv"
 	"strings"
@@ -38,6 +40,23 @@ func TestXMLRecordsHTTPSCookieBearerHeldChecksAndSeparateRelease(t *testing.T) {
 	structuredIntakeHTTPS(t, "xml_records")
 }
 
+func TestXLSXRecordsHTTPSCookieBearerHeldChecksAndSeparateRelease(t *testing.T) {
+	structuredIntakeHTTPS(t, "xlsx_records")
+}
+
+func stockXLSXBody(t testing.TB, name string) string {
+	t.Helper()
+	root := os.Getenv("FREIGHTCTL_TEST_XLSX_DIR")
+	if root == "" {
+		t.Fatal("actual stock XLSX sources required")
+	}
+	b, e := os.ReadFile(filepath.Join(root, name))
+	if e != nil {
+		t.Fatal(e)
+	}
+	return string(b)
+}
+
 const xmlRecordsHTTPBody = `<records><record><account>0001</account><amount>100.01</amount><day>2026-10-28</day></record></records>`
 
 func structuredIntakeHTTPS(t *testing.T, format string) {
@@ -65,6 +84,11 @@ func structuredIntakeHTTPS(t *testing.T, format string) {
 		policy.Schema, policy.Kind = 4, "xml_records"
 		policy.XML = &checks.XMLRecordPolicy{Root: "records", Record: "record"}
 		prefixPolicy, engine, success, extension = store.XMLRecordsIntakePrefix, "freightctl-xml-records-v1", "valid_xml_records", "xml"
+	}
+	if format == "xlsx_records" {
+		policy.Schema, policy.Kind = 5, format
+		policy.XLSX = &checks.XLSXPolicy{Sheet: "Records", DateMode: "iso_text"}
+		prefixPolicy, engine, success, extension = store.XLSXRecordsIntakePrefix, "freightctl-xlsx-records-v1", "valid_xlsx_records", "xlsx"
 	}
 	request := exchangeAPIJSON(t, checks.PolicyRequest{Definition: policy})
 	mutating := func(key string) map[string]string {
@@ -100,6 +124,9 @@ func structuredIntakeHTTPS(t *testing.T, format string) {
 	}
 	if xmlRecords {
 		fixtures = []struct{ name, body, code string }{{"valid", xmlRecordsHTTPBody, success}, {"duplicate", strings.Replace(xmlRecordsHTTPBody, "</account>", "</account><account>0002</account>", 1), "duplicate_field"}, {"entity", `<!DOCTYPE records [<!ENTITY external SYSTEM "file:///never-open">]>` + xmlRecordsHTTPBody, "unsupported_xml_construct"}}
+	}
+	if format == "xlsx_records" {
+		fixtures = []struct{ name, body, code string }{{"valid", stockXLSXBody(t, "shared.xlsx"), success}, {"numeric-id", stockXLSXBody(t, "numeric_identifier.xlsx"), "invalid_cell"}, {"formula", stockXLSXBody(t, "formula.xlsx"), "unsupported_xlsx_active_content"}}
 	}
 	for _, fixture := range fixtures {
 		t.Run(fixture.name, func(t *testing.T) {

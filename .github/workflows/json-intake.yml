@@ -12,6 +12,8 @@ on:
       - "scripts/go.sh"
       - "scripts/dev-db.py"
       - "scripts/prepare-pgp-fixture.py"
+      - "scripts/xlsx-stock-producer.py"
+      - "scripts/xlsxwriter-qualification.txt"
       - "scripts/json-intake-browser.mjs"
       - ".github/workflows/json-intake.yml"
   pull_request:
@@ -24,6 +26,8 @@ on:
       - "scripts/go.sh"
       - "scripts/dev-db.py"
       - "scripts/prepare-pgp-fixture.py"
+      - "scripts/xlsx-stock-producer.py"
+      - "scripts/xlsxwriter-qualification.txt"
       - "scripts/json-intake-browser.mjs"
       - ".github/workflows/json-intake.yml"
   workflow_dispatch:
@@ -58,6 +62,14 @@ jobs:
         with:
           go-version: "1.26.10"
           cache: false
+      - name: Security - stock XLSX producer and complete dependency closure
+        run: |
+          umask 077
+          mkdir -p .private
+          python3 -m venv .private/xlsx-producer
+          .private/xlsx-producer/bin/python -m pip install --no-cache-dir --no-deps --no-compile --only-binary=:all: --require-hashes -r scripts/xlsxwriter-qualification.txt
+          .private/xlsx-producer/bin/python scripts/xlsx-stock-producer.py .private/xlsx-stock-producer
+          printf 'FREIGHTCTL_TEST_XLSX_DIR=%s\n' "$GITHUB_WORKSPACE/.private/xlsx-stock-producer" >> "$GITHUB_ENV"
       - name: Native identity, task-owned PostgreSQL and offline GnuPG fixture
         run: |
           test "$(uname -s)" = Linux
@@ -81,7 +93,7 @@ jobs:
       - name: Actual JSON SQL, API, CLI, signature and scanner-protocol outcomes
         run: |
           sh scripts/go.sh test -race -timeout=0 -tags=integration \
-            -run '^(TestJSONRecords.*|TestFixedWidth.*|TestXMLRecords.*|TestReceivedCopyReappliesIntakeAndSQLRejectsForgedProvenance|TestArtifactExchangeCLIUsesOrdinaryAuthorityAndPublishesVerifiedDownload)$' \
+            -run '^(TestJSONRecords.*|TestFixedWidth.*|TestXMLRecords.*|TestXLSXRecords.*|TestReceivedCopyReappliesIntakeAndSQLRejectsForgedProvenance|TestArtifactExchangeCLIUsesOrdinaryAuthorityAndPublishesVerifiedDownload)$' \
             -count=1 -v ./internal/checks ./internal/api ./internal/custody ./cmd/freightctl
 
   browser:
@@ -102,6 +114,14 @@ jobs:
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: "26.13.0"
+      - name: Security - stock XLSX producer and complete dependency closure
+        run: |
+          umask 077
+          mkdir -p .private
+          python3 -m venv .private/xlsx-producer
+          .private/xlsx-producer/bin/python -m pip install --no-cache-dir --no-deps --no-compile --only-binary=:all: --require-hashes -r scripts/xlsxwriter-qualification.txt
+          .private/xlsx-producer/bin/python scripts/xlsx-stock-producer.py .private/xlsx-stock-producer
+          printf 'FREIGHTCTL_TEST_XLSX_DIR=%s\n' "$GITHUB_WORKSPACE/.private/xlsx-stock-producer" >> "$GITHUB_ENV"
       - name: Actual native runner and locked browser
         run: |
           test "$(uname -s)" = Linux
@@ -114,4 +134,4 @@ jobs:
       - name: Real browser review, committed-response loss, exact checks and separate release
         run: |
           sh scripts/go.sh test -race -timeout=0 -tags=integration,jsonbrowser \
-            -run '^(TestJSONRecordsNativeBrowserReviewedHashAndReceipt|TestFixedWidthNativeBrowserReviewedHashAndReceipt|TestXMLRecordsNativeBrowserReviewedHashAndReceipt)$' -count=1 -v ./internal/api
+            -run '^(TestJSONRecordsNativeBrowserReviewedHashAndReceipt|TestFixedWidthNativeBrowserReviewedHashAndReceipt|TestXMLRecordsNativeBrowserReviewedHashAndReceipt|TestXLSXRecordsNativeBrowserReviewedHashAndReceipt)$' -count=1 -v ./internal/api

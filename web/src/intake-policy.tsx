@@ -246,7 +246,8 @@ export function IntakePolicyEditor({
                   kind === "csv" ||
                   kind === "json_records" ||
                   kind === "fixed_width" ||
-                  kind === "xml_records"
+                  kind === "xml_records" ||
+                  kind === "xlsx_records"
                 )
                   setDraft((d) => intakeFormat(d, kind));
               }}
@@ -255,6 +256,7 @@ export function IntakePolicyEditor({
               <option value="json_records">JSON record array</option>
               <option value="fixed_width">Fixed-width records</option>
               <option value="xml_records">XML records</option>
+              <option value="xlsx_records">XLSX worksheet records</option>
             </select>
           </label>
           <p>
@@ -266,7 +268,9 @@ export function IntakePolicyEditor({
                 ? "Use an array of flat objects with these exact field names. Numeric fields require JSON numbers;duplicate,unknown or nested fields fail. No content is executed."
                 : draft.kind === "fixed_width"
                   ? "Every record has these ordered byte widths and no header. Only the selected side's ASCII spaces are padding. UTF-8 characters must fit inside each field. LF and CRLF are accepted; an exact final record may end at EOF. Bytes are validated without changing values."
-                  : "One declared root contains record elements with these scalar fields. No attributes,DTD,external entities,includes or processing instructions are followed. Names and namespace must match;values are validated without implicit trimming."}
+                  : draft.kind === "xlsx_records"
+                    ? "Choose an exact worksheet and date meaning. The first row is the column header;formulas and external links are refused. Numeric cells cannot supply text identifiers."
+                    : "One declared root contains record elements with these scalar fields. No attributes,DTD,external entities,includes or processing instructions are followed. Names and namespace must match;values are validated without implicit trimming."}
           </p>
           {draft.kind === "xml_records" && (
             <fieldset>
@@ -329,6 +333,96 @@ export function IntakePolicyEditor({
                 namespace is compared literally and never contacted. Use one
                 default namespace or one consistent declared prefix on every
                 element.
+              </p>
+            </fieldset>
+          )}
+          {draft.kind === "xlsx_records" && draft.xlsx && (
+            <fieldset>
+              <legend>XLSX workbook contract</legend>
+              <label>
+                Exact worksheet name
+                <input
+                  required
+                  maxLength={62}
+                  value={draft.xlsx.sheet}
+                  onChange={(e) =>
+                    setDraft((d) =>
+                      d.xlsx
+                        ? { ...d, xlsx: { ...d.xlsx, sheet: e.target.value } }
+                        : d,
+                    )
+                  }
+                />
+              </label>
+              <label>
+                Date meaning
+                <select
+                  value={draft.xlsx.date_mode}
+                  onChange={(e) => {
+                    const mode = e.target.value;
+                    if (
+                      mode === "iso_text" ||
+                      mode === "serial_1900" ||
+                      mode === "serial_1904"
+                    )
+                      setDraft((d) =>
+                        d.xlsx
+                          ? { ...d, xlsx: { ...d.xlsx, date_mode: mode } }
+                          : d,
+                      );
+                  }}
+                >
+                  <option value="iso_text">Exact ISO date text</option>
+                  <option value="serial_1900">
+                    Numeric serial,1900 calendar
+                  </option>
+                  <option value="serial_1904">
+                    Numeric serial,1904 calendar
+                  </option>
+                </select>
+              </label>
+              {(
+                [
+                  ["max_parts", "Maximum package parts", 4096],
+                  ["max_directory_bytes", "Package directory bytes", 16777216],
+                  ["max_part_bytes", "Expanded bytes per part", 1073741824],
+                  ["max_expanded_bytes", "Total expanded bytes", 1073741824],
+                  ["max_expansion_ratio", "Maximum expansion ratio", 10000],
+                  ["max_shared_strings", "Shared string count", 1000000],
+                  ["max_shared_bytes", "Shared text bytes", 67108864],
+                ] as const
+              ).map(([key, label, maximum]) => (
+                <label key={key}>
+                  {label}
+                  <input
+                    type="number"
+                    required
+                    min={1}
+                    max={maximum}
+                    step={1}
+                    value={draft.xlsx?.[key] ?? 0}
+                    onChange={(e) =>
+                      setDraft((d) =>
+                        d.xlsx
+                          ? {
+                              ...d,
+                              xlsx: {
+                                ...d.xlsx,
+                                [key]: Number(e.target.value),
+                              },
+                            }
+                          : d,
+                      )
+                    }
+                  />
+                </label>
+              ))}
+              <p>
+                The first row must match these column headers. Text identifiers
+                stay text;numeric display padding cannot restore leading zeros.
+                Date serials require the selected calendar. Formulas,external
+                links and active workbook parts are refused on every sheet. Part
+                and shared-text bytes must fit the total expanded limit.
               </p>
             </fieldset>
           )}
@@ -592,6 +686,21 @@ export function IntakePolicyEditor({
                 scalar;external constructs are refused.
               </p>
             )}
+            {pending.definition.kind === "xlsx_records" &&
+              pending.definition.xlsx && (
+                <p>
+                  Worksheet:{pending.definition.xlsx.sheet};date meaning:
+                  {pending.definition.xlsx.date_mode}. Parts:
+                  {pending.definition.xlsx.max_parts};directory:
+                  {pending.definition.xlsx.max_directory_bytes} bytes;part:
+                  {pending.definition.xlsx.max_part_bytes} bytes;expanded:
+                  {pending.definition.xlsx.max_expanded_bytes} bytes;ratio:
+                  {pending.definition.xlsx.max_expansion_ratio};shared strings:
+                  {pending.definition.xlsx.max_shared_strings}/
+                  {pending.definition.xlsx.max_shared_bytes} bytes. Formula and
+                  external-link refusal applies to every sheet.
+                </p>
+              )}
             <ol>
               {pending.definition.columns.map((c, i) => (
                 <li key={i}>

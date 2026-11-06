@@ -1,10 +1,16 @@
 # Bounded spreadsheet record parsing
 
-This is the internal parser contract,not an advertised intake format. The parser
-does not create custody records or release bytes. XLSX policy registration,
-immutable source/report binding,SQL guards,API/CLI/browser review,protected
-signature/scanner requirements and ordinary held-check-separate-release proofs
-must be connected and qualified before XLSX intake is available.
+Schema5/`xlsx_records` is an explicit implemented intake profile,with engine
+`freightctl-xlsx-records-v1` and immutable custody prefix `intake-xlsx-records-v1:`.
+The ordinary register/check/release API and CLI,operator browser and artifact
+metadata contracts share its normalized definition. Native application custody,
+SQL,signature/scanner/recheck/copy and interface qualification remain owed.
+
+Whole-source length/SHA256 verification precedes package parsing. Successful
+reports retain the exact file ID,bytes,digest and policy hash. Required signatures
+and scanner verdicts remain cumulative;parser success still requires a separate
+current release approval. Existing intake kinds retain their hashes. Source50
+adds only the fifth format's file/profile/report guards;retained35 is untouched.
 
 `checks.ValidateXLSX` reads a supplied immutable `io.ReaderAt`;it cannot open a
 host path,contact a destination,launch Excel,execute a formula or extract a part.
@@ -26,7 +32,7 @@ No nested archive is interpreted and no part is written to the filesystem.
 Every part is read to EOF,including unselected parts. Actual expanded length and
 CRC32 are checked even when the stored CRC is zero and a standard ZIP reader
 would omit that comparison. CRC establishes ZIP member integrity only. The
-future custody adapter must independently bind the complete file length and
+custody adapter independently binds the complete file length and
 cryptographic digest before any check or release claim.
 
 The XML decoder has bounded tokens,depth and attribute count,with explicit
@@ -69,7 +75,7 @@ No locale,timezone,display format or time-of-day meaning is guessed.
 
 This profile does not establish every Excel/ODS/legacy-XLS feature,arbitrary
 formulas,XSD/general schema or deterministic transformation breadth. Required
-spreadsheet/product parity remains open. Native stock-producer proof,application
+spreadsheet/product parity remains open. Native stock-producer parser proof and application
 custody and actual final-source customer outcomes are separately owed.
 
 ## Sources and qualification
@@ -86,3 +92,23 @@ ARM/x86. The producer is qualification-only,hash pinned and checked against PyPI
 and OSV with its full dependency closure before use. A prepared workflow or local
 tagged compilation is not an observed native result. Excel itself,licensed peers,
 independent business adoption and enterprise readiness remain unqualified.
+
+
+## Typed policy review
+
+The `xlsx` object binds an exact `sheet`,explicit `date_mode` and these processing
+budgets: `max_parts`,`max_directory_bytes`,`max_part_bytes`,
+`max_expanded_bytes`,`max_expansion_ratio`,`max_shared_strings`,`max_shared_bytes`.
+All values appear in the browser review and definition hash;protected signer and
+scanner references survive format changes. Unknown format controls cannot migrate
+into another kind. Per-part/shared bytes must fit the total expanded budget.
+Shared text budgets measure decoded text;record/token limits also bound transient
+parsing. Operational ceilings protect worker pools;they do not impose CI build or
+scan capacity limits. General Excel/XLS/ODS and transform breadth remain required.
+
+Native parser-only proof at source1b89447 is recorded in F156. Its actual Python
+ZIP and XlsxWriter13-input ARM/x86 passes do not qualify the later governed-intake
+adapter or ordinary application custody. The intake workflow prepares actual
+stock-produced bytes for native SQL/API/CLI/Chrome/signature/scanner-protocol/
+recheck/received-copy proof. Those results,including five browser accessibility
+states and original-key recovery,remain owed until executed at the final source.

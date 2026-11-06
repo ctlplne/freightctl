@@ -83,7 +83,7 @@
     },
     {
       "path": "web/src/artifact-policy.ts",
-      "sha256": "3ed983b305bbbb5f48290eaf5fd5875289258efa558157a0f432d47275c46234"
+      "sha256": "29aad4555541523c961263d7570b18941d5b2324c3a947098d8bdded667cbab2"
     },
     {
       "path": "web/src/artifact-recovery.ts",
@@ -107,7 +107,7 @@
     },
     {
       "path": "web/src/check-evidence.tsx",
-      "sha256": "7b8a67def6f84b7a2a32457ef7936c4eefd3f967783e05a03bbef34ae42fb319"
+      "sha256": "b3a3fcf9cc947d2b066542d2d6f08f579f48c832353ec64689a8c204353d323a"
     },
     {
       "path": "web/src/check-recovery.tsx",
@@ -163,11 +163,11 @@
     },
     {
       "path": "web/src/intake-policy-types.ts",
-      "sha256": "700b50f878e4dc042514f99c628e68811d91a06517b0aa104ed140370708ce20"
+      "sha256": "c0de52ab7e57efff93cde322b78f95c69180c5a318ade10b6fe7c544c75f9418"
     },
     {
       "path": "web/src/intake-policy.tsx",
-      "sha256": "383eb4bfa594a4ef5bb220363075326e050803b2edcf98ded3dfdafbf8b5a365"
+      "sha256": "b035c57ce0ce4c80a698c1bd3044d8706cbf40a1a5b1a10b24c9975e455cc6e1"
     },
     {
       "path": "web/src/onboarding-approvals-types.ts",
@@ -283,7 +283,7 @@
     },
     {
       "path": "web/src/types.ts",
-      "sha256": "66d7db319151a94e87eb512a672d20051f3de874cc00aaed5903d131a3a63825"
+      "sha256": "d469bacae41a9f0aaf486f481b23f9db8c564a5a569c8b7e36ab9917b38713ae"
     },
     {
       "path": "web/src/upload-ticket.tsx",
@@ -306,8 +306,8 @@
     },
     {
       "name": "app.js",
-      "sha256": "2fa07534461d6a87953c8d01550d4cc69865576e8bee8b4f5ce1afe0ad0f7f47",
-      "size": 793250
+      "sha256": "12528177a356b0461c88288fcbfb38c5bbc1be132d23bfe6d3d89d441ecf1769",
+      "size": 797362
     },
     {
       "name": "app.js.LEGAL.txt",

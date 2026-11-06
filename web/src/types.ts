@@ -528,6 +528,10 @@ export function asCheckView(value: unknown): CheckView {
         engine: "freightctl-xml-records-v1",
         prefix: "intake-xml-records-v1:",
       },
+      valid_xlsx_records: {
+        engine: "freightctl-xlsx-records-v1",
+        prefix: "intake-xlsx-records-v1:",
+      },
     } as const;
     const format = Object.hasOwn(formats, validation.code)
       ? formats[validation.code as keyof typeof formats]

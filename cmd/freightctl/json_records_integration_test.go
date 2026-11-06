@@ -26,6 +26,7 @@ func qualifyJSONIntakeCLI(t *testing.T, ctx context.Context, service *custody.Se
 	qualifyStructuredIntakeCLI(t, ctx, service, scope, admin, reader, command, requestFile, "json_records")
 	qualifyStructuredIntakeCLI(t, ctx, service, scope, admin, reader, command, requestFile, "fixed_width")
 	qualifyStructuredIntakeCLI(t, ctx, service, scope, admin, reader, command, requestFile, "xml_records")
+	qualifyStructuredIntakeCLI(t, ctx, service, scope, admin, reader, command, requestFile, "xlsx_records")
 }
 
 func qualifyStructuredIntakeCLI(t *testing.T, ctx context.Context, service *custody.Service, scope store.Scope, admin, reader string, command func(string, string, ...string) ([]byte, error), requestFile func(any) string, format string) {
@@ -51,6 +52,11 @@ func qualifyStructuredIntakeCLI(t *testing.T, ctx context.Context, service *cust
 		policy.XML = &checks.XMLRecordPolicy{Root: "records", Record: "record"}
 		keyPrefix, path, prefixPolicy, engine, success, expectedVersion = "cli-xml-", "/cli-records.xml", store.XMLRecordsIntakePrefix, "freightctl-xml-records-v1", "valid_xml_records", 2
 	}
+	if format == "xlsx_records" {
+		policy.Schema, policy.Kind = 5, format
+		policy.XLSX = &checks.XLSXPolicy{Sheet: "Records", DateMode: "iso_text"}
+		keyPrefix, path, prefixPolicy, engine, success, expectedVersion = "cli-xlsx-", "/cli-records.xlsx", store.XLSXRecordsIntakePrefix, "freightctl-xlsx-records-v1", "valid_xlsx_records", 3
+	}
 	input := requestFile(checks.PolicyRequest{ExpectedVersion: expectedVersion, Definition: policy})
 	raw, err := command(admin, "intake-policy-register", "-request-file", input, "-idempotency-key", keyPrefix+"policy")
 	var result checks.Result
@@ -75,6 +81,16 @@ func qualifyStructuredIntakeCLI(t *testing.T, ctx context.Context, service *cust
 	}
 	if xmlRecords {
 		body = []byte(`<records><record><account>0001</account><amount>100.01</amount><day>2026-10-28</day></record></records>`)
+	}
+	if format == "xlsx_records" {
+		root := os.Getenv("FREIGHTCTL_TEST_XLSX_DIR")
+		if root == "" {
+			t.Fatal("actual stock XLSX sources required")
+		}
+		body, err = os.ReadFile(filepath.Join(root, "shared.xlsx"))
+		if err != nil {
+			t.Fatal(err)
+		}
 	}
 	chunk := filepath.Join(t.TempDir(), "records.json")
 	if err = os.WriteFile(chunk, body, 0600); err != nil {

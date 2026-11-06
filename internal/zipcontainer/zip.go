@@ -15,14 +15,16 @@ import (
 	"path"
 	"slices"
 	"strings"
+	"sync/atomic"
 )
 
 var (
-	ErrInput     = errors.New("invalid container policy")
-	ErrFormat    = errors.New("unsupported or ambiguous container")
-	ErrLimit     = errors.New("container processing limit")
-	ErrIntegrity = errors.New("container member integrity failure")
-	ErrNotFound  = errors.New("container part not found")
+	ErrInput       = errors.New("invalid container policy")
+	ErrFormat      = errors.New("unsupported or ambiguous container")
+	ErrLimit       = errors.New("container processing limit")
+	ErrIntegrity   = errors.New("container member integrity failure")
+	ErrNotFound    = errors.New("container part not found")
+	ErrUnavailable = errors.New("container source unavailable")
 )
 
 // Limits are product input-processing limits selected by the calling policy.
@@ -57,14 +59,16 @@ type member struct {
 // parent context must remain valid throughout use. Callers separately bind the
 // whole source length/digest and obtain release authority through ordinary custody.
 type ZIP struct {
-	entries []member
-	ctx     context.Context
+	entries     []member
+	ctx         context.Context
+	unavailable *atomic.Bool
 }
 
 type contextSource struct {
-	ctx    context.Context
-	source io.ReaderAt
-	size   int64
+	ctx         context.Context
+	source      io.ReaderAt
+	size        int64
+	unavailable *atomic.Bool
 }
 
 func (r contextSource) ReadAt(p []byte, off int64) (int, error) {
@@ -74,7 +78,12 @@ func (r contextSource) ReadAt(p []byte, off int64) (int, error) {
 	if off < 0 || off > r.size || int64(len(p)) > r.size-off {
 		return 0, io.EOF
 	}
-	return r.source.ReadAt(p, off)
+	n, err := r.source.ReadAt(p, off)
+	if err != nil && !errors.Is(err, io.EOF) && !errors.Is(err, io.ErrUnexpectedEOF) {
+		r.unavailable.Store(true)
+		return n, ErrUnavailable
+	}
+	return n, err
 }
 
 func policyOK(l Limits) bool {
@@ -145,8 +154,15 @@ func Open(ctx context.Context, input io.ReaderAt, size int64, l Limits) (*ZIP, e
 	if size < 22 {
 		return nil, ErrFormat
 	}
-	r := contextSource{ctx, input, size}
+	fault := &atomic.Bool{}
+	r := contextSource{ctx: ctx, source: input, size: size, unavailable: fault}
 	entries, err := inspect(r, size, l)
+	if ctx.Err() != nil {
+		return nil, ctx.Err()
+	}
+	if fault.Load() {
+		return nil, ErrUnavailable
+	}
 	if err != nil {
 		if ctx.Err() != nil {
 			return nil, ctx.Err()
@@ -154,6 +170,12 @@ func Open(ctx context.Context, input io.ReaderAt, size int64, l Limits) (*ZIP, e
 		return nil, err
 	}
 	z, err := zip.NewReader(r, size)
+	if ctx.Err() != nil {
+		return nil, ctx.Err()
+	}
+	if fault.Load() {
+		return nil, ErrUnavailable
+	}
 	if err != nil || len(z.File) != len(entries) {
 		if ctx.Err() != nil {
 			return nil, ctx.Err()
@@ -163,6 +185,12 @@ func Open(ctx context.Context, input io.ReaderAt, size int64, l Limits) (*ZIP, e
 	for i, f := range z.File {
 		m := &entries[i]
 		offset, e := f.DataOffset()
+		if ctx.Err() != nil {
+			return nil, ctx.Err()
+		}
+		if fault.Load() {
+			return nil, ErrUnavailable
+		}
 		if e != nil || f.Name != m.Name || f.Flags != m.flags || f.Method != m.Method || f.CRC32 != m.crc ||
 			f.CompressedSize64 != uint64(m.CompressedBytes) || f.UncompressedSize64 != uint64(m.ExpandedBytes) || offset != m.data || !f.Mode().IsRegular() {
 			if ctx.Err() != nil {
@@ -172,7 +200,7 @@ func Open(ctx context.Context, input io.ReaderAt, size int64, l Limits) (*ZIP, e
 		}
 		m.file = f
 	}
-	return &ZIP{entries: entries, ctx: ctx}, nil
+	return &ZIP{entries: entries, ctx: ctx, unavailable: fault}, nil
 }
 
 func inspect(r io.ReaderAt, size int64, l Limits) ([]member, error) {
@@ -369,6 +397,9 @@ func (z *ZIP) Read(ctx context.Context, name string, consume func(io.Reader) err
 	if err := z.ctx.Err(); err != nil {
 		return err
 	}
+	if z.unavailable.Load() {
+		return ErrUnavailable
+	}
 	if consume == nil {
 		return ErrInput
 	}
@@ -377,9 +408,21 @@ func (z *ZIP) Read(ctx context.Context, name string, consume func(io.Reader) err
 			continue
 		}
 		r, err := m.file.Open()
+		if ctx.Err() != nil {
+			return ctx.Err()
+		}
+		if z.ctx.Err() != nil {
+			return z.ctx.Err()
+		}
+		if z.unavailable.Load() {
+			return ErrUnavailable
+		}
 		if err != nil {
 			if z.ctx.Err() != nil {
 				return z.ctx.Err()
+			}
+			if z.unavailable.Load() {
+				return ErrUnavailable
 			}
 			return ErrIntegrity
 		}
@@ -404,6 +447,9 @@ func (z *ZIP) Read(ctx context.Context, name string, consume func(io.Reader) err
 		if z.ctx.Err() != nil {
 			return z.ctx.Err()
 		}
+		if z.unavailable.Load() {
+			return ErrUnavailable
+		}
 		if err != nil || stream.err != nil || stream.n != m.ExpandedBytes || stream.hash.Sum32() != m.crc {
 			return ErrIntegrity
 		}
@@ -415,10 +461,19 @@ func (z *ZIP) Read(ctx context.Context, name string, consume func(io.Reader) err
 // Verify fully reads every member,including parts that a worksheet parser does
 // not select. It does not recursively interpret member contents.
 func (z *ZIP) Verify(ctx context.Context) error {
+	if err := ctx.Err(); err != nil {
+		return err
+	}
+	if err := z.ctx.Err(); err != nil {
+		return err
+	}
 	for _, m := range z.entries {
 		if err := z.Read(ctx, m.Name, func(io.Reader) error { return nil }); err != nil {
 			return err
 		}
 	}
-	return ctx.Err()
+	if err := ctx.Err(); err != nil {
+		return err
+	}
+	return z.ctx.Err()
 }

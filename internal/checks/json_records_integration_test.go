@@ -155,7 +155,7 @@ func TestJSONRecordsActualCustodyCheckAndSeparateExactRelease(t *testing.T) {
 }
 
 func TestJSONRecordsSQLRejectsCrossFormatReportsWhileKeepingExactValidTransition(t *testing.T) {
-	for _, name := range []string{"csv", "json_records", "fixed_width", "xml_records"} {
+	for _, name := range []string{"csv", "json_records", "fixed_width", "xml_records", "xlsx_records"} {
 		t.Run(name, func(t *testing.T) {
 			f := setup(t)
 			s := &Service{Custody: f.wf.Custody}
@@ -169,6 +169,9 @@ func TestJSONRecordsSQLRejectsCrossFormatReportsWhileKeepingExactValidTransition
 			}
 			if name == "xml_records" {
 				policy, body = xmlRecordsPolicy(t), goodXMLRecords
+			}
+			if name == "xlsx_records" {
+				policy, body = xlsxIntakePolicy(t), string(xlsxStockBytes(t, "shared.xlsx"))
 			}
 			if _, err := s.Register(f.ctx, f.scope, "format-policy", PolicyRequest{Definition: policy}); err != nil {
 				t.Fatal(err)
@@ -245,6 +248,10 @@ func TestXMLRecordsActualGnuPGAndScannerProtocolRemainCumulative(t *testing.T) {
 	actualStructuredSignatureScanner(t, "xml_records")
 }
 
+func TestXLSXRecordsActualGnuPGAndScannerProtocolRemainCumulative(t *testing.T) {
+	actualStructuredSignatureScanner(t, "xlsx_records")
+}
+
 func actualStructuredSignatureScanner(t *testing.T, format string) {
 	// GnuPG signs the actual structured bytes. The scanner is only its documented
 	// protocol stand-in;this test makes no ClamAV/malware-detection claim.
@@ -258,6 +265,9 @@ func actualStructuredSignatureScanner(t *testing.T, format string) {
 			}
 			if format == "xml_records" {
 				sourceName, signatureName, target, expected = "source.xml", "good-xml.sig", "/both.xml", goodXMLRecords
+			}
+			if format == "xlsx_records" {
+				sourceName, signatureName, target, expected = "source.xlsx", "good-xlsx.sig", "/both.xlsx", string(xlsxStockBytes(t, "shared.xlsx"))
 			}
 			source := load(sourceName)
 			if !bytes.Equal(source, []byte(expected)) {
@@ -278,6 +288,9 @@ func actualStructuredSignatureScanner(t *testing.T, format string) {
 			}
 			if format == "xml_records" {
 				policy = xmlRecordsPolicy(t)
+			}
+			if format == "xlsx_records" {
+				policy = xlsxIntakePolicy(t)
 			}
 			policy.Signature = &SignaturePolicy{Key: store.PGPReference{ID: signer.ID, Version: signer.Version, Hash: signer.Hash}, MaxAgeSeconds: 3600}
 			policy.Scanner = &store.ScannerReference{ID: scanner.ID, Version: scanner.Version, Hash: scanner.Hash}

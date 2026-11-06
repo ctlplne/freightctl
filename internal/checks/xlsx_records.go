@@ -17,8 +17,8 @@ import (
 )
 
 // XLSXContract is the deterministic workbook parser contract. It does not grant
-// custody acceptance,release,forwarding or execution. The intake policy/API/UI
-// binding must be completed before this parser becomes a supported intake kind.
+// custody acceptance,release,forwarding or execution. XLSXPolicy supplies the
+// normalized intake binding;ordinary custody separately governs checks/release.
 type XLSXContract struct {
 	Sheet            string
 	DateMode         string // iso_text,serial_1900 or serial_1904;never inferred from a style
@@ -225,6 +225,8 @@ func ValidateXLSX(ctx context.Context, c XLSXContract, input io.ReaderAt, size i
 			w.report.Code, w.report.Row, w.report.Column = failure.code, failure.row, failure.column
 		case errors.Is(err, zipcontainer.ErrInput):
 			return w.report, ErrInput
+		case errors.Is(err, zipcontainer.ErrUnavailable):
+			return w.report, zipcontainer.ErrUnavailable
 		case errors.Is(err, zipcontainer.ErrLimit):
 			w.report.Code = "xlsx_container_limit"
 		case errors.Is(err, zipcontainer.ErrIntegrity):

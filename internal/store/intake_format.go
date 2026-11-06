@@ -9,11 +9,12 @@ const CSVIntakePrefix = "intake-csv-v1:"
 const JSONRecordsIntakePrefix = "intake-json-records-v1:"
 const FixedWidthIntakePrefix = "intake-fixed-width-v1:"
 const XMLRecordsIntakePrefix = "intake-xml-records-v1:"
+const XLSXRecordsIntakePrefix = "intake-xlsx-records-v1:"
 
 // IntakePolicyHash recognizes only the exact controlled-custody profiles.
 // A hash is metadata,not read,release,forwarding or execution authority.
 func IntakePolicyHash(policy string) (string, bool) {
-	for _, prefix := range []string{CSVIntakePrefix, JSONRecordsIntakePrefix, FixedWidthIntakePrefix, XMLRecordsIntakePrefix} {
+	for _, prefix := range []string{CSVIntakePrefix, JSONRecordsIntakePrefix, FixedWidthIntakePrefix, XMLRecordsIntakePrefix, XLSXRecordsIntakePrefix} {
 		if hash, found := strings.CutPrefix(policy, prefix); found && browserSecretHash.MatchString(hash) {
 			return hash, true
 		}
@@ -50,6 +51,8 @@ func IntakeFilePolicy(policy *Configuration) (string, error) {
 		return FixedWidthIntakePrefix + policy.Hash, nil
 	case schema == 4 && kind == "xml_records":
 		return XMLRecordsIntakePrefix + policy.Hash, nil
+	case schema == 5 && kind == "xlsx_records":
+		return XLSXRecordsIntakePrefix + policy.Hash, nil
 	default:
 		return "", ErrState
 	}

@@ -157,6 +157,23 @@ function refuse(value) {
     (e) => e.code === "invalid_server_response" && e.status === 502,
   );
 }
+test("XLSX evidence cannot borrow another format's successful report", () => {
+  const v = view();
+  v.check.binding.file.policy = "intake-xlsx-records-v1:" + policy;
+  v.check.code = v.check.report.code = "valid_xlsx_records";
+  v.check.report.engine = "freightctl-xlsx-records-v1";
+  assert.equal(asCheckView(v).validation.code, "valid_xlsx_records");
+  for (const change of [
+    (v) => (v.check.report.engine = "freightctl-json-records-v1"),
+    (v) => (v.check.report.code = "valid_fixed_width"),
+    (v) => (v.check.binding.file.policy = "intake-csv-v1:" + policy),
+    (v) => v.check.report.bytes_read++,
+  ]) {
+    const bad = structuredClone(v);
+    change(bad);
+    refuse(bad);
+  }
+});
 test("XML evidence cannot borrow another format's successful report", () => {
   const v = view();
   v.check.binding.file.policy = "intake-xml-records-v1:" + policy;

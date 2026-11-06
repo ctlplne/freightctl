@@ -1,6 +1,6 @@
 # GitHub Actions qualification plan
 
-Updated 2026-11-05. [GOAL.md](../../GOAL.md) defines the complete product contract.
+Updated 2026-11-06. [GOAL.md](../../GOAL.md) defines the complete product contract.
 [STATUS.md](../../STATUS.md), [remaining.json](remaining.json) and the exact
 [evidence records](evidence/) hold candidate identities and current results.
 All 83 whole baseline rows and 12 full customer journeys remain open. Passing a
@@ -59,6 +59,8 @@ an unused diagnostic never turns a missing platform/runtime result into a pass.
 | Receiving browser | Actual HTTPS/storage/PostgreSQL and sandboxed Chrome; [ftps-browser.yml](../../.github/workflows/ftps-browser.yml) | [F067](evidence/F067-ftps-browser-tickets.json): ticket controls, exact owned-process kills, receipt recovery, HTTP/DOM/byte closure and WCAG audits. Keep intermittent D145/D151/D152 causes unproven until reproduced and explained. |
 | FTPS consent and collection operator | Linux x86; [ftps-dispatch.yml](../../.github/workflows/ftps-dispatch.yml), [ftps-workflows.yml](../../.github/workflows/ftps-workflows.yml) | Original three fresh plaintext/encrypted estates, six consent phases/18audits, CLI/API metadata replay/cancel/revocation, two metadata Chrome phases/six audits and two byte-operator phases/12audits. Require four original-key recoveries per operator mode, one source acquisition, unchanged producer revisions and independent HTTPS readbacks. [F076](evidence/F076-ftps-collection.json). Previews must prove zero source contact. Native freightctl source is a named stand-in; independent typed FTPS collection remains required. |
 | Independent outbound FTPS | Native ARM/x86 stock vsftpd/OpenSSL/PAM; [ftps-client.yml](../../.github/workflows/ftps-client.yml) | [F068](evidence/F068-ftps-client-transport.json): original transport/readback/isolation and independent0400source metadata cases. Preserve x86 filter failures and unavailable native ARM filtering. Active FTP stays disabled. Partial stock metadata passes do not qualify full typed collection. |
+| Document containers and stock spreadsheet parser | Native ARM/x86; [document-containers.yml](../../.github/workflows/document-containers.yml) | Independent stock Python stored/deflated seekable/descriptor ZIPs; every member's CRC/length; actual pinned XlsxWriter13-input scalar/formula/link/rich-text/date profiles,source hashes,complete producer dependency closure,PyPI/OSV outcomes and race checks. Independent of PostgreSQL setup. F156 qualifies this parser scope at its recorded source only. |
+| Governed record intake | Native ARM/x86 PostgreSQL/API/CLI/GnuPG and x86 sandboxed Chrome; [json-intake.yml](../../.github/workflows/json-intake.yml) | JSON/fixed/XML/XLSX exact policy hashes,format-specific SQL report guards,held checks,separate release,recheck/copy,protected signatures/scanner-protocol outcomes,original-key recovery and five browser accessibility states per format. Use actual stock XLSX bytes;scanner protocol stands in for malware detection. Parser-only results cannot replace these still-owed application outcomes or final-source replay. |
 | Full foundation aggregate | [full-foundation.yml](../../.github/workflows/full-foundation.yml), manual only | F026 is owner-deferred. Do not automatically run it or recreate the same aggregate under another name. |
 
 ## Resource, privacy and receipt rules

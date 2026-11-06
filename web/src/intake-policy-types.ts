@@ -25,6 +25,17 @@ interface IntakeDefinitionFields {
   signature?: { key: Reference; max_age_seconds?: number };
   scanner?: Reference;
   xml?: { root: string; record: string; namespace: string };
+  xlsx?: {
+    sheet: string;
+    date_mode: "iso_text" | "serial_1900" | "serial_1904";
+    max_parts: number;
+    max_directory_bytes: number;
+    max_part_bytes: number;
+    max_expanded_bytes: number;
+    max_expansion_ratio: number;
+    max_shared_strings: number;
+    max_shared_bytes: number;
+  };
 }
 export type IntakeDefinition = IntakeDefinitionFields &
   (
@@ -32,6 +43,7 @@ export type IntakeDefinition = IntakeDefinitionFields &
     | { schema_version: 2; kind: "json_records" }
     | { schema_version: 3; kind: "fixed_width" }
     | { schema_version: 4; kind: "xml_records" }
+    | { schema_version: 5; kind: "xlsx_records" }
   );
 export interface IntakePolicy {
   id: string;
@@ -86,13 +98,15 @@ export function intakeDefinition(value: unknown): IntakeDefinition {
     "signature",
     "scanner",
     "xml",
+    "xlsx",
   ]);
   if (
     !(
       (o.schema_version === 1 && o.kind === "csv") ||
       (o.schema_version === 2 && o.kind === "json_records") ||
       (o.schema_version === 3 && o.kind === "fixed_width") ||
-      (o.schema_version === 4 && o.kind === "xml_records")
+      (o.schema_version === 4 && o.kind === "xml_records") ||
+      (o.schema_version === 5 && o.kind === "xlsx_records")
     ) ||
     !Array.isArray(o.columns) ||
     o.columns.length < 1 ||
@@ -173,7 +187,9 @@ export function intakeDefinition(value: unknown): IntakeDefinition {
         ? { schema_version: 2 as const, kind: "json_records" as const }
         : o.kind === "fixed_width"
           ? { schema_version: 3 as const, kind: "fixed_width" as const }
-          : { schema_version: 4 as const, kind: "xml_records" as const }),
+          : o.kind === "xml_records"
+            ? { schema_version: 4 as const, kind: "xml_records" as const }
+            : { schema_version: 5 as const, kind: "xlsx_records" as const }),
     columns,
     max_bytes: integer(o.max_bytes, 1, 1073741824),
     max_rows: integer(o.max_rows, 1, 1000000),
@@ -210,6 +226,48 @@ export function intakeDefinition(value: unknown): IntakeDefinition {
       return fail();
     result.xml = { root: x.root, record: x.record, namespace: x.namespace };
   } else if (o.xml !== undefined) return fail();
+  if (o.kind === "xlsx_records") {
+    const x = object(o.xlsx);
+    keys(x, [
+      "sheet",
+      "date_mode",
+      "max_parts",
+      "max_directory_bytes",
+      "max_part_bytes",
+      "max_expanded_bytes",
+      "max_expansion_ratio",
+      "max_shared_strings",
+      "max_shared_bytes",
+    ]);
+    if (
+      typeof x.sheet !== "string" ||
+      !x.sheet ||
+      Array.from(x.sheet).length > 31 ||
+      /[\u0000-\u001f\u007f\p{Cs}\[\]:*?/\\]/u.test(x.sheet) ||
+      x.sheet.startsWith("'") ||
+      x.sheet.endsWith("'") ||
+      !["iso_text", "serial_1900", "serial_1904"].includes(String(x.date_mode))
+    )
+      return fail();
+    const expanded = integer(x.max_expanded_bytes, 1, 1073741824);
+    result.xlsx = {
+      sheet: x.sheet,
+      date_mode: x.date_mode as NonNullable<
+        IntakeDefinition["xlsx"]
+      >["date_mode"],
+      max_parts: integer(x.max_parts, 1, 4096),
+      max_directory_bytes: integer(x.max_directory_bytes, 1, 16777216),
+      max_part_bytes: integer(x.max_part_bytes, 1, expanded),
+      max_expanded_bytes: expanded,
+      max_expansion_ratio: integer(x.max_expansion_ratio, 1, 10000),
+      max_shared_strings: integer(x.max_shared_strings, 1, 1000000),
+      max_shared_bytes: integer(
+        x.max_shared_bytes,
+        1,
+        Math.min(expanded, 67108864),
+      ),
+    };
+  } else if (o.xlsx !== undefined) return fail();
   if (new TextEncoder().encode(goJSON(result)).length > 12 * 1024)
     return fail();
   return result;
@@ -217,9 +275,9 @@ export function intakeDefinition(value: unknown): IntakeDefinition {
 
 export function intakeFormat(
   d: IntakeDefinition,
-  kind: "csv" | "json_records" | "fixed_width" | "xml_records",
+  kind: IntakeDefinition["kind"],
 ): IntakeDefinition {
-  const { xml, ...plainDefinition } = d;
+  const { xml, xlsx, ...plainDefinition } = d;
   const columns = d.columns.map((c) => {
     const { width_bytes: width, padding, ...plain } = c;
     return kind === "fixed_width"
@@ -239,9 +297,26 @@ export function intakeFormat(
         ? ({ schema_version: 2, kind } as const)
         : kind === "fixed_width"
           ? ({ schema_version: 3, kind } as const)
-          : ({ schema_version: 4, kind } as const)),
+          : kind === "xml_records"
+            ? ({ schema_version: 4, kind } as const)
+            : ({ schema_version: 5, kind } as const)),
     ...(kind === "xml_records"
       ? { xml: xml ?? { root: "records", record: "record", namespace: "" } }
+      : {}),
+    ...(kind === "xlsx_records"
+      ? {
+          xlsx: xlsx ?? {
+            sheet: "Records",
+            date_mode: "iso_text" as const,
+            max_parts: 256,
+            max_directory_bytes: 1048576,
+            max_part_bytes: 33554432,
+            max_expanded_bytes: 67108864,
+            max_expansion_ratio: 100,
+            max_shared_strings: 100000,
+            max_shared_bytes: 8388608,
+          },
+        }
       : {}),
   };
 }
@@ -251,6 +326,7 @@ export function intakeFormatLabel(kind: IntakeDefinition["kind"]): string {
     json_records: "JSON record array",
     fixed_width: "Fixed-width records",
     xml_records: "XML records",
+    xlsx_records: "XLSX worksheet records",
   }[kind];
 }
 function goJSON(value: unknown): string {

@@ -114,7 +114,7 @@ func TestReceivedCopyCreatesPrivateExactCustodyAndRecoversWithoutReopeningView(t
 }
 
 func TestReceivedCopyReappliesIntakeAndSQLRejectsForgedProvenance(t *testing.T) {
-	for _, format := range []string{"csv", "json_records", "fixed_width", "xml_records"} {
+	for _, format := range []string{"csv", "json_records", "fixed_width", "xml_records", "xlsx_records"} {
 		t.Run(format, func(t *testing.T) { receivedCopyIntakeAndSQL(t, format) })
 	}
 }
@@ -150,6 +150,20 @@ func receivedCopyIntakeAndSQL(t *testing.T, format string) {
 		policy.Schema, policy.Kind = 4, format
 		policy.XML = &checks.XMLRecordPolicy{Root: "records", Record: "record"}
 		body, prefix, engine, code = []byte("<records><record><record>value</record></record></records>"), store.XMLRecordsIntakePrefix, "freightctl-xml-records-v1", "valid_xml_records"
+	}
+	if format == "xlsx_records" {
+		policy.Schema, policy.Kind = 5, format
+		policy.Columns = []checks.Column{{Name: "account", Type: "text", Required: true}, {Name: "amount", Type: "decimal", Required: true, Precision: 12, Scale: 2}, {Name: "day", Type: "date", Required: true}}
+		policy.XLSX = &checks.XLSXPolicy{Sheet: "Records", DateMode: "iso_text"}
+		root := os.Getenv("FREIGHTCTL_TEST_XLSX_DIR")
+		if root == "" {
+			t.Fatal("actual stock XLSX sources required")
+		}
+		body, err = os.ReadFile(filepath.Join(root, "shared.xlsx"))
+		if err != nil {
+			t.Fatal(err)
+		}
+		prefix, engine, code = store.XLSXRecordsIntakePrefix, "freightctl-xlsx-records-v1", "valid_xlsx_records"
 	}
 	registered, err := checking.Register(f.ctx, f.fixture.a, "copy-intake", checks.PolicyRequest{Definition: policy})
 	if err != nil {

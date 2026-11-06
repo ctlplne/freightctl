@@ -15,26 +15,34 @@ const c = JSON.parse(await readFile(process.argv[2], "utf8"));
 assert.ok(
   c.format === "json_records" ||
     c.format === "fixed_width" ||
-    c.format === "xml_records",
+    c.format === "xml_records" ||
+    c.format === "xlsx_records",
 );
 const fixed = c.format === "fixed_width",
   xmlRecords = c.format === "xml_records",
-  schema = xmlRecords ? 4 : fixed ? 3 : 2,
-  code = xmlRecords
-    ? "valid_xml_records"
-    : fixed
-      ? "valid_fixed_width"
-      : "valid_json_records",
-  engine = xmlRecords
-    ? "freightctl-xml-records-v1"
-    : fixed
-      ? "freightctl-fixed-width-v1"
-      : "freightctl-json-records-v1",
-  policyPrefix = xmlRecords
-    ? "intake-xml-records-v1:"
-    : fixed
-      ? "intake-fixed-width-v1:"
-      : "intake-json-records-v1:";
+  xlsxRecords = c.format === "xlsx_records",
+  schema = xlsxRecords ? 5 : xmlRecords ? 4 : fixed ? 3 : 2,
+  code = xlsxRecords
+    ? "valid_xlsx_records"
+    : xmlRecords
+      ? "valid_xml_records"
+      : fixed
+        ? "valid_fixed_width"
+        : "valid_json_records",
+  engine = xlsxRecords
+    ? "freightctl-xlsx-records-v1"
+    : xmlRecords
+      ? "freightctl-xml-records-v1"
+      : fixed
+        ? "freightctl-fixed-width-v1"
+        : "freightctl-json-records-v1",
+  policyPrefix = xlsxRecords
+    ? "intake-xlsx-records-v1:"
+    : xmlRecords
+      ? "intake-xml-records-v1:"
+      : fixed
+        ? "intake-fixed-width-v1:"
+        : "intake-json-records-v1:";
 assert.equal(new URL(c.url).protocol, "https:");
 assert.equal(new URL(c.url).hostname, "127.0.0.1");
 const require = createRequire(import.meta.url);
@@ -108,16 +116,21 @@ try {
     assert.ok(report.passes > 0);
     accessibility++;
   }
-  async function api(path, method = "GET") {
+  async function api(path, method = "GET", binary = false) {
     return page.evaluate(
-      async ({ path, method }) => {
+      async ({ path, method, binary }) => {
         const response = await fetch(path, {
           method,
           credentials: "same-origin",
         });
-        return { status: response.status, body: await response.text() };
+        return {
+          status: response.status,
+          body: binary
+            ? Array.from(new Uint8Array(await response.arrayBuffer()))
+            : await response.text(),
+        };
       },
-      { path: prefix + path, method },
+      { path: prefix + path, method, binary },
     );
   }
   await page.goto(c.url);
@@ -141,11 +154,13 @@ try {
   await button("Review intake policy", editor).click();
   await dialog()
     .getByText(
-      xmlRecords
-        ? "XML records"
-        : fixed
-          ? "Fixed-width records"
-          : "JSON record array",
+      xlsxRecords
+        ? "XLSX worksheet records"
+        : xmlRecords
+          ? "XML records"
+          : fixed
+            ? "Fixed-width records"
+            : "JSON record array",
       {
         exact: false,
       },
@@ -313,7 +328,11 @@ try {
   await button("Release file", dialog()).click();
   assert.equal((await release).status(), 200);
   await dialog().waitFor({ state: "hidden" });
-  const download = await api("/namespace/file?path=/browser-records.json");
+  const download = await api(
+    "/namespace/file?path=/browser-records.json",
+    "GET",
+    true,
+  );
   assert.equal(download.status, 200);
   assert.equal(sha(Buffer.from(download.body)), c.sha256);
   assert.equal(errors, 0);

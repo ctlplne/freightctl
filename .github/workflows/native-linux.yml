@@ -31,6 +31,8 @@ on:
       - 'scripts/ci-ftps-summary.py'
       - 'scripts/dev-db.py'
       - 'scripts/prepare-pgp-fixture.py'
+      - 'scripts/xlsx-stock-producer.py'
+      - 'scripts/xlsxwriter-qualification.txt'
       - 'scripts/peers/openpgp/**'
       - 'scripts/scan-peer-image.py'
       - 'scripts/ci-peer-image-summary.py'
@@ -71,6 +73,8 @@ on:
       - 'scripts/ci-ftps-summary.py'
       - 'scripts/dev-db.py'
       - 'scripts/prepare-pgp-fixture.py'
+      - 'scripts/xlsx-stock-producer.py'
+      - 'scripts/xlsxwriter-qualification.txt'
       - 'scripts/peers/openpgp/**'
       - 'scripts/scan-peer-image.py'
       - 'scripts/ci-peer-image-summary.py'
@@ -127,6 +131,14 @@ jobs:
           sudo apt-get install --yes --no-install-recommends openssh-server
           sudo install -d -m 755 /run/sshd
           dpkg-query --show --showformat='${Package} ${Version} ${Architecture}\n' openssh-server openssh-client
+      - name: Security - stock XLSX producer and complete dependency closure
+        run: |
+          umask 077
+          mkdir -p .private
+          python3 -m venv .private/xlsx-producer
+          .private/xlsx-producer/bin/python -m pip install --no-cache-dir --no-deps --no-compile --only-binary=:all: --require-hashes -r scripts/xlsxwriter-qualification.txt
+          .private/xlsx-producer/bin/python scripts/xlsx-stock-producer.py .private/xlsx-stock-producer
+          printf 'FREIGHTCTL_TEST_XLSX_DIR=%s\n' "$GITHUB_WORKSPACE/.private/xlsx-stock-producer" >> "$GITHUB_ENV"
       - name: Task-owned PostgreSQL and offline GnuPG peer
         run: |
           python3 scripts/dev-db.py

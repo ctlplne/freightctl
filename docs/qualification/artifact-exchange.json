@@ -78,7 +78,8 @@
         "docs/qualification/evidence/F143-json-record-intake-checkpoint.json",
         "docs/qualification/evidence/F145-json-intake-interface-proofs.json",
         "docs/qualification/evidence/F148-fixed-width-intake.json",
-        "docs/qualification/evidence/F151-xml-record-intake.json"
+        "docs/qualification/evidence/F151-xml-record-intake.json",
+        "docs/qualification/evidence/F155-governed-xlsx-intake.json"
       ]
     },
     {
@@ -161,7 +162,8 @@
         "docs/qualification/evidence/F143-json-record-intake-checkpoint.json",
         "docs/qualification/evidence/F145-json-intake-interface-proofs.json",
         "docs/qualification/evidence/F148-fixed-width-intake.json",
-        "docs/qualification/evidence/F151-xml-record-intake.json"
+        "docs/qualification/evidence/F151-xml-record-intake.json",
+        "docs/qualification/evidence/F155-governed-xlsx-intake.json"
       ]
     },
     {
@@ -282,7 +284,8 @@
         "docs/qualification/evidence/F143-json-record-intake-checkpoint.json",
         "docs/qualification/evidence/F145-json-intake-interface-proofs.json",
         "docs/qualification/evidence/F148-fixed-width-intake.json",
-        "docs/qualification/evidence/F151-xml-record-intake.json"
+        "docs/qualification/evidence/F151-xml-record-intake.json",
+        "docs/qualification/evidence/F155-governed-xlsx-intake.json"
       ]
     },
     {

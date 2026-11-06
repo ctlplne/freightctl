@@ -22,6 +22,7 @@ const fixtures = await Promise.all(
     "intake-policy-json-records.json",
     "intake-policy-fixed-width.json",
     "intake-policy-xml-records.json",
+    "intake-policy-xlsx-records.json",
   ].map(async (name) =>
     JSON.parse(
       await readFile(new URL("fixtures/" + name, import.meta.url), "utf8"),
@@ -35,6 +36,61 @@ const view = (f) => ({
   definition_hash: f.definition_hash,
   state: "active",
   revision: 1,
+});
+
+test("XLSX review binds worksheet,date meaning and processing bounds with protected requirements", () => {
+  const d = structuredClone(fixtures[5].definition);
+  assert.deepEqual(p.intakeDefinition(d), d);
+  const hash = p.intakeHash(d);
+  for (const key of [
+    "sheet",
+    "date_mode",
+    "max_parts",
+    "max_directory_bytes",
+    "max_part_bytes",
+    "max_expanded_bytes",
+    "max_expansion_ratio",
+    "max_shared_strings",
+    "max_shared_bytes",
+  ]) {
+    const changed = structuredClone(d);
+    changed.xlsx[key] =
+      key === "sheet"
+        ? "Other"
+        : key === "date_mode"
+          ? "serial_1900"
+          : changed.xlsx[key] - 1;
+    assert.notEqual(p.intakeHash(changed), hash);
+  }
+  for (const change of [
+    (v) => (v.xlsx.sheet = "bad/name"),
+    (v) => (v.xlsx.sheet = "'quoted"),
+    (v) => (v.xlsx.date_mode = "guess"),
+    (v) => (v.xlsx.max_parts = 4097),
+    (v) => (v.xlsx.max_directory_bytes = 0),
+    (v) => (v.xlsx.max_part_bytes = v.xlsx.max_expanded_bytes + 1),
+    (v) => (v.xlsx.max_shared_bytes = v.xlsx.max_expanded_bytes + 1),
+    (v) => (v.xlsx.max_expansion_ratio = 10001),
+    (v) => (v.xlsx.execute = true),
+    (v) => (v.xml = { root: "r", record: "r", namespace: "" }),
+    (v) => {
+      v.kind = "csv";
+      v.schema_version = 1;
+    },
+  ]) {
+    const bad = structuredClone(d);
+    change(bad);
+    assert.throws(() => p.intakeDefinition(bad));
+  }
+  const csv = p.intakeFormat(d, "csv");
+  assert.equal(csv.xlsx, undefined);
+  assert.deepEqual(csv.signature, d.signature);
+  assert.deepEqual(csv.scanner, d.scanner);
+  const fresh = p.intakeFormat(csv, "xlsx_records");
+  assert.equal(fresh.xlsx.sheet, "Records");
+  assert.equal(fresh.xlsx.date_mode, "iso_text");
+  assert.deepEqual(fresh.xlsx, d.xlsx);
+  assert.deepEqual(p.intakeDefinition(fresh), fresh);
 });
 
 test("XML review binds root,record and literal namespace without losing protected controls", () => {

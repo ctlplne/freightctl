@@ -33,6 +33,10 @@ func TestXMLRecordsNativeBrowserReviewedHashAndReceipt(t *testing.T) {
 	structuredNativeBrowser(t, "xml_records")
 }
 
+func TestXLSXRecordsNativeBrowserReviewedHashAndReceipt(t *testing.T) {
+	structuredNativeBrowser(t, "xlsx_records")
+}
+
 func structuredNativeBrowser(t *testing.T, format string) {
 	fixed := format == "fixed_width"
 	xmlRecords := format == "xml_records"
@@ -68,6 +72,10 @@ func structuredNativeBrowser(t *testing.T, format string) {
 		policy.Schema, policy.Kind = 4, "xml_records"
 		policy.XML = &checks.XMLRecordPolicy{Root: "records", Record: "record"}
 	}
+	if format == "xlsx_records" {
+		policy.Schema, policy.Kind = 5, format
+		policy.XLSX = &checks.XLSXPolicy{Sheet: "Records", DateMode: "iso_text"}
+	}
 	definition, err := checks.Normalize(policy)
 	if err != nil {
 		t.Fatal(err)
@@ -101,6 +109,13 @@ func structuredNativeBrowser(t *testing.T, format string) {
 	}
 	if xmlRecords {
 		body = []byte(xmlRecordsHTTPBody)
+		if err = os.WriteFile(source, body, 0600); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if format == "xlsx_records" {
+		body = []byte(stockXLSXBody(t, "shared.xlsx"))
+		source = filepath.Join(private, "records.xlsx")
 		if err = os.WriteFile(source, body, 0600); err != nil {
 			t.Fatal(err)
 		}

@@ -10,6 +10,8 @@ The same held-file workflow also implements [flat JSON record arrays](protocols/
 
 [XML record intake](protocols/xml-record-intake.md) uses schema4 with explicit root,record and namespace controls. The browser reviews those controls and the definition hash. Scalar fields use the same exact typed rules; DTDs,external entities,attributes and processing instructions are refused. Namespace URIs are compared as data and never fetched. This is a bounded record profile,not general XSD validation or XML-signature verification. The original XML byte revision still needs its required detached signature,scanner result and separate release.
 
+[XLSX worksheet records](protocols/xlsx-records.md) use schema5 with an exact worksheet,explicit ISO/1900/1904 date meaning and bounded package/shared-string processing. Ordered headers and typed cells preserve identifiers and decimal precision;formulas and external links are refused across every sheet. The browser reviews the exact normalized hash and keeps signer/scanner requirements. Native parser-only stock-producer evidence is separate from the still-owed governed custody/API/CLI/browser and final-source outcomes.
+
 ```mermaid
 stateDiagram-v2
   [*] --> held: durable bytes and bound policy

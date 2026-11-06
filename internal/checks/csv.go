@@ -31,6 +31,9 @@ var decimalPattern = regexp.MustCompile(`^[+-]?[0-9]+(?:\.[0-9]+)?$`)
 const Engine = "freightctl-csv-v1"
 
 func policyEngine(p Policy) string {
+	if p.Schema == 5 && p.Kind == "xlsx_records" {
+		return "freightctl-xlsx-records-v1"
+	}
 	if p.Schema == 4 && p.Kind == "xml_records" {
 		return "freightctl-xml-records-v1"
 	}
@@ -43,6 +46,9 @@ func policyEngine(p Policy) string {
 	return Engine
 }
 func policySuccess(p Policy) string {
+	if p.Schema == 5 && p.Kind == "xlsx_records" {
+		return "valid_xlsx_records"
+	}
 	if p.Schema == 4 && p.Kind == "xml_records" {
 		return "valid_xml_records"
 	}
@@ -76,6 +82,7 @@ type Policy struct {
 	Signature      *SignaturePolicy        `json:"signature,omitempty"`
 	Scanner        *store.ScannerReference `json:"scanner,omitempty"`
 	XML            *XMLRecordPolicy        `json:"xml,omitempty"`
+	XLSX           *XLSXPolicy             `json:"xlsx,omitempty"`
 }
 type XMLRecordPolicy struct {
 	Root      string `json:"root"`
@@ -119,7 +126,8 @@ func Normalize(p Policy) (Policy, error) {
 	}
 	fixed := p.Schema == 3 && p.Kind == "fixed_width"
 	xmlRecords := p.Schema == 4 && p.Kind == "xml_records"
-	if !(p.Schema == 1 && p.Kind == "csv" || p.Schema == 2 && p.Kind == "json_records" || fixed || xmlRecords) || len(p.Columns) < 1 || len(p.Columns) > 128 {
+	xlsxRecords := p.Schema == 5 && p.Kind == "xlsx_records"
+	if !(p.Schema == 1 && p.Kind == "csv" || p.Schema == 2 && p.Kind == "json_records" || fixed || xmlRecords || xlsxRecords) || len(p.Columns) < 1 || len(p.Columns) > 128 {
 		return p, ErrInput
 	}
 	if xmlRecords && !validXMLPolicy(p.XML) || !xmlRecords && p.XML != nil {
@@ -128,6 +136,15 @@ func Normalize(p Policy) (Policy, error) {
 	if xmlRecords {
 		definition := *p.XML
 		p.XML = &definition
+	}
+	if xlsxRecords {
+		var err error
+		p.XLSX, err = normalizeXLSXPolicy(p.XLSX)
+		if err != nil {
+			return p, err
+		}
+	} else if p.XLSX != nil {
+		return p, ErrInput
 	}
 	if p.MaxBytes == 0 {
 		p.MaxBytes = 16 << 20
@@ -296,6 +313,9 @@ func Validate(ctx context.Context, p Policy, f store.File, policyHash string, in
 	}
 	if p.Schema == 4 && p.Kind == "xml_records" {
 		return validateXMLRecords(ctx, p, f, policyHash, input)
+	}
+	if p.Schema == 5 && p.Kind == "xlsx_records" {
+		return validateXLSXIntake(ctx, p, f, policyHash, input)
 	}
 	h := secure.NewDigest()
 	b := &budgetReader{ctx: ctx, reader: io.LimitReader(input, p.MaxBytes+1), hash: h}

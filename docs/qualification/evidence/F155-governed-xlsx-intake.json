@@ -1,0 +1,310 @@
+{
+  "schema_version": 1,
+  "id": "F155",
+  "observed_at": "2026-11-06",
+  "candidate_parent": "1b8944730f3be663e2074c21f9a51f314dc79f40",
+  "state": "Governed XLSX intake implemented;native application and final-source qualification owed",
+  "qualification_claim": false,
+  "contract": "docs/protocols/xlsx-records.md",
+  "profile": "freightctl-xlsx-records-v1",
+  "changes": [
+    "Schema5/xlsx_records normalizes explicit sheet/date meaning and package/shared-string processing budgets,clones settings and preserves signer/scanner requirements. Complete original size/SHA256 is verified before random-access parsing without whole-file buffering/spooling. Distinct engine,code and custody prefix bind the ordinary report and separate release.",
+    "Source50 appends fifth-format file constraints,prefix/hash helpers and exact report engine/code guards. Older migrations unchanged;71metadata/70forcedRLS targets,retained35 untouched. Existing events,intents,leases,idempotency,current authority,quarantine,recheck/copy and independent release remain in use.",
+    "Browser exact worksheet/date/budget review and sixth actual Go-normalized golden retain protected references. Successful evidence cannot borrow another format engine/profile/source. MCP26/v12 and five OpenAPI documents use62 actual shared acceptance/refusal vectors across13 schema leaves. Embedded app.js797362bytes rebuilt;measurement only.",
+    "Prepared actual stock-XlsxWriter bytes for native PG SQL/report forgery,custody/recheck/received-copy,ordinary HTTPS/CLI/GnuPG plus scanner-protocol and Chrome review/hash/original-key/held/check/separate-release/five-accessibility-state proofs. Native/browser fixtures do not silently fall back when stock bytes are absent. Existing public tests/assertions are retained. Browser byte readback uses arrayBuffer,avoiding binary UTF-8 substitution.",
+    "Fixed empty-container parent-context cancellation and retry classification of source I/O errors,including late random reads. Container I/O failures retain a fixed non-sensitive unavailable error and cannot taint an attempt into a success or permanent business rejection. Service records failed with no releasable report hash."
+  ],
+  "observed_red": [
+    {
+      "reference": ".private/freightctl-f155-intake-red.log",
+      "observation": "Actual Validate/Normalize refuses governed schema5 intake before adapter implementation."
+    },
+    {
+      "reference": ".private/freightctl-f155-empty-context-red.log",
+      "observation": "An empty ZIP bypasses its canceled parent during Verify;explicit parent/child context checks repair it."
+    },
+    {
+      "reference": ".private/freightctl-f155-source-io-red.log",
+      "observation": "A source read error returns nil and becomes a permanent business rejection. Fixed unavailable errors now preserve failed/retryable semantics;both initial hashing and later directory reads are covered."
+    }
+  ],
+  "intermediate_failure": {
+    "reference": ".private/freightctl-f155-public-count-red.log",
+    "observation": "Adding ten XLSX vectors exposed the old52-case cardinality assertion. Both Go/ECMAScript assertions were increased to62;all prior vectors and per-schema checks remain enforced."
+  },
+  "focused_green": {
+    "Go": "XLSX parser/whole-source report,changed bytes/policies,initial/late I/O,safe unavailable classification;seven ZIP container contracts including canceled empty parent;distinct format identity;six legacy/protected normalized hashes;MCP/public grammar",
+    "frontend_contracts": {
+      "tests": 77,
+      "passed": 77,
+      "failed": 0,
+      "skipped": 0
+    },
+    "metadata_stand_ins": {
+      "tests": 12,
+      "passed": 12,
+      "database_lifecycle": false
+    },
+    "tagged_native_compile": "integration/jsonbrowser/xlsxnative/zipnative;zero runtime tests selected",
+    "affected_tagged_vet": "pass",
+    "architecture": "pass",
+    "frontend_type_build": "pass",
+    "changed_workflow_lint": "pass",
+    "changed_script_syntax": "pass;no runtime executed"
+  },
+  "prior_native_evidence": "F156 records actual narrower parser-only stock-producer/race/security passes at earlier source1b89447. It does not qualify this adapter,cancellation/I/O repair,SQL or application interfaces. All17 prior workflows terminal;original nonsecurity failures remain open.",
+  "source_files": [
+    {
+      "reference": ".github/workflows/json-intake.yml",
+      "sha256": "fa2229ef66bf6a7321efcced76afcea217cd86775c04f1342d9bf11be02ef416",
+      "bytes": 5922
+    },
+    {
+      "reference": ".github/workflows/native-linux.yml",
+      "sha256": "94b3568518a03bcdf3736f16d1c8a4cfc2340f5b8dfabececdc458a7010a68c6",
+      "bytes": 11497
+    },
+    {
+      "reference": "cmd/freightctl/json_records_integration_test.go",
+      "sha256": "ebf2f6299cf3acc13fd080aaba61b1eb68fb5f94a1cdcdbf33c466cbd05e7039",
+      "bytes": 8472
+    },
+    {
+      "reference": "docs/api/artifact-collection-source.openapi.json",
+      "sha256": "54b1a2ff864b1cbcf1b188dd04ccab6c905b848033d9477ef4a96670b3b7111b",
+      "bytes": 5434
+    },
+    {
+      "reference": "docs/api/artifact-evidence.openapi.json",
+      "sha256": "5ad7238cc388dba3a17890cc301dac4e4bc7fabf42d3f98d70e6696bb8be042b",
+      "bytes": 13096
+    },
+    {
+      "reference": "docs/api/artifact-exchange.openapi.json",
+      "sha256": "f6e0f02953367e2a67eeb3e3619e9b9b704ce1ebb82c8eba7d4aa8a61697d6eb",
+      "bytes": 43900
+    },
+    {
+      "reference": "docs/api/artifact-onward.openapi.json",
+      "sha256": "5265d463f1e7484760949e8b07b96db0e2400be0754612345e75d9b6079fbd4e",
+      "bytes": 21331
+    },
+    {
+      "reference": "docs/api/received-artifact-copy.openapi.json",
+      "sha256": "1b777d47e1d1d0fd4fc565866b6d49b8d94ec1823233645ed65939ea27d322e8",
+      "bytes": 7859
+    },
+    {
+      "reference": "docs/intake.md",
+      "sha256": "8af68d3101a0af4ec3d0aad8fcd9a78438aa47f51d5ad8e2abf2e0725f05a66d",
+      "bytes": 13925
+    },
+    {
+      "reference": "docs/protocols/artifact-exchange-mcp.md",
+      "sha256": "25ea0d3aeedd9c11922cc9b7cccbdca91c8ba009f32673babf3b60f0ddb558b0",
+      "bytes": 13111
+    },
+    {
+      "reference": "docs/protocols/xlsx-records.md",
+      "sha256": "c642c43fcf4567d40c05d8cc6fea72d9878a2c1abcb60b37650a60800e22268b",
+      "bytes": 7257
+    },
+    {
+      "reference": "internal/api/artifact_policy_schema_test.go",
+      "sha256": "c9a4fb4c908ebf67ffaffa257d9d1efd6dda57cf92908befdbef04acebbf687e",
+      "bytes": 2411
+    },
+    {
+      "reference": "internal/api/json_records_browser_integration_test.go",
+      "sha256": "f2e3a3e351cc8937d7c6160f3e807495c89e75da119e72307cd8d6a8182d31ba",
+      "bytes": 8349
+    },
+    {
+      "reference": "internal/api/json_records_integration_test.go",
+      "sha256": "7e215a4f200ffff28801c0fcd31a19cb25e29d716eae2fdcfa37433fb3f2cc3b",
+      "bytes": 10779
+    },
+    {
+      "reference": "internal/api/mcp-tools.json",
+      "sha256": "33fbd5a51f0f5d7da6d4b7a82bbab1a8f6566d8b3feac85c77233716f9f204fa",
+      "bytes": 72313
+    },
+    {
+      "reference": "internal/api/mcp.go",
+      "sha256": "730aa085cca3af01eca114ae42d14a847c5b2e72d242c27150c2c97f08514302",
+      "bytes": 10965
+    },
+    {
+      "reference": "internal/browser/assets/app.js",
+      "sha256": "12528177a356b0461c88288fcbfb38c5bbc1be132d23bfe6d3d89d441ecf1769",
+      "bytes": 797362
+    },
+    {
+      "reference": "internal/browser/assets/manifest.json",
+      "sha256": "a321fe940fead491d107096532702d06c42e4a23e4188f422185d91c6d155c51",
+      "bytes": 12100
+    },
+    {
+      "reference": "internal/checks/browser_policy_test.go",
+      "sha256": "d7d11a3812f937461f80837542ccabe7d061ee631daae4feb5732d5351d8731a",
+      "bytes": 1287
+    },
+    {
+      "reference": "internal/checks/csv.go",
+      "sha256": "d25f50e5dfd20399f3a24525950d4d63da673daacad5c4ed186b4d6ef8392600",
+      "bytes": 11318
+    },
+    {
+      "reference": "internal/checks/json_records_integration_test.go",
+      "sha256": "4ec7b243efd382f7ba080f0186b7b6b8b68bdaaacbeedcbf0379849ee88be884",
+      "bytes": 15724
+    },
+    {
+      "reference": "internal/checks/scanners_integration_test.go",
+      "sha256": "8c0d0b8fe350c3109f5e3ddacb32e645a28c018c413ea62f0e0d392b32ea2c21",
+      "bytes": 17071
+    },
+    {
+      "reference": "internal/checks/xlsx_intake.go",
+      "sha256": "3cedbc017b5474f251ef3159bdcb26891a042a14de264b0b692adc3cb8532cea",
+      "bytes": 3590
+    },
+    {
+      "reference": "internal/checks/xlsx_intake_test.go",
+      "sha256": "6df5dfdd3e77efc13b52c2543c95c680cf524188a58893b5182da8496d40f663",
+      "bytes": 4123
+    },
+    {
+      "reference": "internal/checks/xlsx_records.go",
+      "sha256": "4e743490f40416a81c66fe3048418cd90e124d72bb8c8d5425bd3776d4a2b0f2",
+      "bytes": 29844
+    },
+    {
+      "reference": "internal/checks/xlsx_records_integration_test.go",
+      "sha256": "1173c80e2e92fec9fb508b19f7a694416b3e6db4470f697d11069c4fefaab401",
+      "bytes": 4844
+    },
+    {
+      "reference": "internal/custody/exchange_copy_integration_test.go",
+      "sha256": "177960400ae8fca4db3a13d07118b4c5c9886f0aaf8082edf15a03f57593cfff",
+      "bytes": 12280
+    },
+    {
+      "reference": "internal/store/050_xlsx_record_intake.sql",
+      "sha256": "e1e5210b8e3055acad9ba0ef71f1c8a69822de29731c3d46caeef63cf5e20463",
+      "bytes": 6525
+    },
+    {
+      "reference": "internal/store/intake_format.go",
+      "sha256": "7721e2bea8c465c686fec4b55bb4a829ca4bf93a265f9e278d0caf31bab35731",
+      "bytes": 2128
+    },
+    {
+      "reference": "internal/store/intake_format_test.go",
+      "sha256": "91f57a3835e5b45a20c9d29af7d177de93df5c5f817dbc6c829d6921dbe973d1",
+      "bytes": 1822
+    },
+    {
+      "reference": "internal/store/store.go",
+      "sha256": "b31c647f9094743ab938c29eb7d44381312e4f65575368c6c0b589dc2184956a",
+      "bytes": 26461
+    },
+    {
+      "reference": "internal/zipcontainer/zip.go",
+      "sha256": "92b8ac5e2a1b9404610c05ed180bb4e056b4127577380d3cde09e0a6b9b24e81",
+      "bytes": 13724
+    },
+    {
+      "reference": "internal/zipcontainer/zip_test.go",
+      "sha256": "a36c982c6063826bed72422209af9c4e029ef2555b0e3787741caa746ff57b74",
+      "bytes": 10510
+    },
+    {
+      "reference": "scripts/json-intake-browser.mjs",
+      "sha256": "22261c35b1ec2b7e855f77dea9dec409b2ccd02c7da48a508c1248757f0393c5",
+      "bytes": 12264
+    },
+    {
+      "reference": "scripts/metadata_contract.py",
+      "sha256": "1021e2545aa182edf5da67f9c509e6a6d330fc7240689570b5598d786bf4feab",
+      "bytes": 3086
+    },
+    {
+      "reference": "scripts/pgp-native-peer.py",
+      "sha256": "c38e484f89b616246864a68ae050d0b8096d8edffffefa3d6dfc1626e6967bce",
+      "bytes": 21241
+    },
+    {
+      "reference": "scripts/prepare-pgp-fixture.py",
+      "sha256": "9f4f1695b7df467b87a8f7e16bf60a049a799754e772d941219d446446263332",
+      "bytes": 12007
+    },
+    {
+      "reference": "scripts/test-ci-metadata-summary.py",
+      "sha256": "8255b0bc9b7639fe3a0a35548c4680ffab9d240ea064f02e7347452e99dbeb09",
+      "bytes": 6240
+    },
+    {
+      "reference": "web/src/artifact-policy.ts",
+      "sha256": "29aad4555541523c961263d7570b18941d5b2324c3a947098d8bdded667cbab2",
+      "bytes": 530
+    },
+    {
+      "reference": "web/src/check-evidence.tsx",
+      "sha256": "b3a3fcf9cc947d2b066542d2d6f08f579f48c832353ec64689a8c204353d323a",
+      "bytes": 2733
+    },
+    {
+      "reference": "web/src/intake-policy-types.ts",
+      "sha256": "c0de52ab7e57efff93cde322b78f95c69180c5a318ade10b6fe7c544c75f9418",
+      "bytes": 12349
+    },
+    {
+      "reference": "web/src/intake-policy.tsx",
+      "sha256": "b035c57ce0ce4c80a698c1bd3044d8706cbf40a1a5b1a10b24c9975e455cc6e1",
+      "bytes": 27981
+    },
+    {
+      "reference": "web/src/types.ts",
+      "sha256": "d469bacae41a9f0aaf486f481b23f9db8c564a5a569c8b7e36ab9917b38713ae",
+      "bytes": 23745
+    },
+    {
+      "reference": "web/tests/artifact-policy-schema.test.mjs",
+      "sha256": "9d545d3b8d7304a9509f7cbe7fce6638baa57d3ec908d8694b53659209f05ab1",
+      "bytes": 1507
+    },
+    {
+      "reference": "web/tests/check-evidence.test.mjs",
+      "sha256": "7699e2b1080ccaba88a4dd8d2a48fbd208a9fa068c2f369448d2fb618f853b66",
+      "bytes": 14093
+    },
+    {
+      "reference": "web/tests/fixtures/artifact-policy-cases.json",
+      "sha256": "0a2d9d2161c55d4704a00dc1a3038f1f32c813dd7192dffee17155997220fd4a",
+      "bytes": 9318
+    },
+    {
+      "reference": "web/tests/fixtures/intake-policy-xlsx-records.json",
+      "sha256": "1dd2bdf90d897f882fa9e371333c067fecd2de947e5604bce051499ee96f2ec6",
+      "bytes": 1025
+    },
+    {
+      "reference": "web/tests/intake-policy.test.mjs",
+      "sha256": "80d4401d6b7ee1aa936b8c738369c5902412a18db147ffeb019a3eaad4b04bc8",
+      "bytes": 8444
+    }
+  ],
+  "safe_local_manifest": {
+    "reference": ".private/freightctl-f155-local-manifest.json",
+    "sha256": "d26b7b097d8531559892c06461f2dd9d286aea7aca3f3524e152d91153fc4175",
+    "bytes": 14839
+  },
+  "owed": [
+    "Actual source50 SQL/non-owner RLS/custody/recheck/received-copy and wrong-format/report guards. Existing ordinary schema initialization failure remains an original blocker to these tests;skipped assertions are owed,not passed.",
+    "Actual stock-produced workbook HTTPS/CLI/Chrome/GnuPG/scanner-protocol,original-key recovery,separate release and exact byte outcomes at this candidate. Scanner protocol stand-ins do not qualify malware detection.",
+    "Replay F156 stock-producer/race/native/fuzz at the changed source,plus all affected original public journeys and mandatory FINISH/final-source gates.",
+    "Strict OOXML/ODS/legacy-XLS and wider spreadsheet/formula/export/schema/EDI/transform breadth,all83 parity rows/twelve full journeys/AX01-AX08 and external prerequisites remain open. Assisted deployment,independent adoption and enterprise readiness remain unqualified."
+  ],
+  "resources": "Existing lightweight local Go/Node limits only. No local inference,PG,Chrome,GnuPG,scanner,image,stock producer install/execution or fuzz campaign. CI uses available runner capacity;new limits govern document input,not arbitrary build/scan ceilings. No publication/deployment."
+}

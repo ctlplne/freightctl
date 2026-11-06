@@ -253,6 +253,19 @@ func TestZIPContainerRequiresCRCCheckEvenWhenStoredCRCIsZero(t *testing.T) {
 	}
 }
 
+func TestZIPContainerEmptyArchiveStillHonorsRevokedParentContext(t *testing.T) {
+	b := fixture(t)
+	ctx, cancel := context.WithCancel(context.Background())
+	z, err := Open(ctx, bytes.NewReader(b), int64(len(b)), limits())
+	if err != nil {
+		t.Fatal(err)
+	}
+	cancel()
+	if err = z.Verify(context.Background()); !errors.Is(err, context.Canceled) {
+		t.Fatal("empty container bypassed its canceled parent", err)
+	}
+}
+
 func FuzzZIPContainer(f *testing.F) {
 	f.Add(fixture(f, part{name: "a.xml", body: "<a/>", method: zip.Deflate}))
 	f.Add([]byte("PK\x05\x06"))
