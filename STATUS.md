@@ -5,8 +5,8 @@ owner decision S003. All 83 whole parity rows and twelve complete customer
 journeys remain open. Assisted deployment, independent adoption and enterprise
 readiness are unqualified. The missing market wedge does not block engineering.
 
-Latest completed CI candidate: 081ef10e9edc078fcea169271bf29bc8fd0976a2.
-All twelve triggered runs are terminal. F137 preserves exact run/job handles and
+Latest completed CI candidate: b689d8ca8d1907e7d26059ae6787a17770e2f472.
+All thirteen triggered runs are terminal. F139 preserves exact run/job handles and
 security outcomes. Both actual native ARM/x86 independent-peer runtime probes
 and complete immutable image security gates pass. Earlier exact F124/F126 reports
 record 0 CRITICAL/0 HIGH/0 UNKNOWN,8 LOW/34 MEDIUM,11 OS+2 language packages,
@@ -23,6 +23,10 @@ nonsecurity log investigation/repair to mandatory FINISH.
 New actionable security failures are triaged immediately; F125 repairs an observed
 direct-TLS import violation through the unchanged crypto architecture boundary.
 Actual replay of that repaired process fixture remains owed.
+
+Both locked stock tus dependency audits pass on actualARM/x86. Both new runtime
+jobs fail during PostgreSQL/ordinary initialization;transfer proofs are skipped,
+not passed. Their original exact job handles remain in F139 for mandatory FINISH.
 
 Implemented exchange foundations include immutable endpoint revisions, offers,
 incoming views, separate replies, closure/history and private original-key recovery.
