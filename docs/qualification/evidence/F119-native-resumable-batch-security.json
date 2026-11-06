@@ -1,0 +1,395 @@
+{
+  "schema_version": 1,
+  "id": "F119",
+  "observed_at": "2026-11-05",
+  "candidate": "650b482bb1336278a279b8451a1e872f549bd5f2",
+  "state": "All12 strict-parser/no-SSL candidate runs terminal;both real package assemblies pass;both strict grouped runtime identity probes fail before scanning",
+  "qualification_claim": false,
+  "runs": [
+    {
+      "id": 42140158128,
+      "name": "Native browser and FTPS operator qualification",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "id": 127638186448,
+          "name": "Native x86 browser and live FTPS governance",
+          "status": "completed",
+          "conclusion": "failure",
+          "security_steps": []
+        }
+      ]
+    },
+    {
+      "id": 42140158170,
+      "name": "Native source vulnerability configurations",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 127638186697,
+          "name": "Native vulnerability source (windows/amd64)",
+          "status": "completed",
+          "conclusion": "success",
+          "security_steps": [
+            {
+              "name": "Actual native source scan and enforcing original converter",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 127638186706,
+          "name": "Native vulnerability source (linux/arm64)",
+          "status": "completed",
+          "conclusion": "success",
+          "security_steps": [
+            {
+              "name": "Actual native source scan and enforcing original converter",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 127638186813,
+          "name": "Native vulnerability source (darwin/arm64)",
+          "status": "completed",
+          "conclusion": "success",
+          "security_steps": [
+            {
+              "name": "Actual native source scan and enforcing original converter",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 42140158158,
+      "name": "Native reproducible core binaries",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 127638186217,
+          "name": "Native core reproduction (arm64)",
+          "status": "completed",
+          "conclusion": "success",
+          "security_steps": [
+            {
+              "name": "Pinned independent BOM validator in an isolated disposable environment",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 127638186549,
+          "name": "Native core reproduction (amd64)",
+          "status": "completed",
+          "conclusion": "success",
+          "security_steps": [
+            {
+              "name": "Pinned independent BOM validator in an isolated disposable environment",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 42140158207,
+      "name": "Native FTPS workflow consent qualification",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "id": 127638186442,
+          "name": "Native x86 registered FTPS workflow consent (plaintext)",
+          "status": "completed",
+          "conclusion": "failure",
+          "security_steps": []
+        },
+        {
+          "id": 127638186734,
+          "name": "Native x86 registered FTPS workflow consent (recipient-encrypted)",
+          "status": "completed",
+          "conclusion": "failure",
+          "security_steps": []
+        }
+      ]
+    },
+    {
+      "id": 42140158243,
+      "name": "Core correctness and security",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "id": 127638187074,
+          "name": "source-and-browser",
+          "status": "completed",
+          "conclusion": "failure",
+          "security_steps": [
+            {
+              "name": "JavaScript dependency audit",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Go vulnerability reachability",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Committed source and history secret scan",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 42140158164,
+      "name": "Native first enrollment and browser exchange",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "id": 127638187270,
+          "name": "first-run",
+          "status": "completed",
+          "conclusion": "failure",
+          "security_steps": []
+        }
+      ]
+    },
+    {
+      "id": 42140158217,
+      "name": "Native FTPS stock clients and custody",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "id": 127638187211,
+          "name": "Native FTPS (arm64)",
+          "status": "completed",
+          "conclusion": "failure",
+          "security_steps": []
+        },
+        {
+          "id": 127638187443,
+          "name": "Native FTPS (x86_64)",
+          "status": "completed",
+          "conclusion": "failure",
+          "security_steps": []
+        }
+      ]
+    },
+    {
+      "id": 42140158174,
+      "name": "Native Windows and macOS unit checks",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "id": 127638186906,
+          "name": "macos-arm64",
+          "status": "completed",
+          "conclusion": "success",
+          "security_steps": []
+        },
+        {
+          "id": 127638187193,
+          "name": "windows-amd64",
+          "status": "completed",
+          "conclusion": "failure",
+          "security_steps": []
+        }
+      ]
+    },
+    {
+      "id": 42140158122,
+      "name": "Native artifact receive browser",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "id": 127638187292,
+          "name": "receive-browser",
+          "status": "completed",
+          "conclusion": "failure",
+          "security_steps": []
+        }
+      ]
+    },
+    {
+      "id": 42140158266,
+      "name": "Native Linux Go, PostgreSQL and fuzz",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "id": 127638187536,
+          "name": "Native metadata restore (arm64)",
+          "status": "completed",
+          "conclusion": "failure",
+          "security_steps": []
+        },
+        {
+          "id": 127638187668,
+          "name": "bounded-fuzz",
+          "status": "completed",
+          "conclusion": "success",
+          "security_steps": []
+        },
+        {
+          "id": 127638187702,
+          "name": "Native Go and PostgreSQL (arm64)",
+          "status": "completed",
+          "conclusion": "failure",
+          "security_steps": [
+            {
+              "name": "Pinned independent AEAD recipient peer",
+              "status": "completed",
+              "conclusion": "failure"
+            },
+            {
+              "name": "Scan the exact independent peer image and enforce complete evidence",
+              "status": "completed",
+              "conclusion": "skipped"
+            }
+          ]
+        },
+        {
+          "id": 127638187744,
+          "name": "Native metadata restore (x86_64)",
+          "status": "completed",
+          "conclusion": "failure",
+          "security_steps": []
+        },
+        {
+          "id": 127638187773,
+          "name": "Native Go and PostgreSQL (x86_64)",
+          "status": "completed",
+          "conclusion": "failure",
+          "security_steps": [
+            {
+              "name": "Pinned independent AEAD recipient peer",
+              "status": "completed",
+              "conclusion": "failure"
+            },
+            {
+              "name": "Scan the exact independent peer image and enforce complete evidence",
+              "status": "completed",
+              "conclusion": "skipped"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 42140158084,
+      "name": "Stock peer and browser qualification",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "id": 127638187368,
+          "name": "Stock peers (arrivals-schedules)",
+          "status": "completed",
+          "conclusion": "failure",
+          "security_steps": []
+        },
+        {
+          "id": 127638187422,
+          "name": "Stock peers (intake-routing)",
+          "status": "completed",
+          "conclusion": "failure",
+          "security_steps": []
+        },
+        {
+          "id": 127638187454,
+          "name": "Stock peers (handoff-routing)",
+          "status": "completed",
+          "conclusion": "failure",
+          "security_steps": []
+        },
+        {
+          "id": 127638187582,
+          "name": "Stock peers (routing)",
+          "status": "completed",
+          "conclusion": "failure",
+          "security_steps": []
+        },
+        {
+          "id": 127638187603,
+          "name": "Stock peers (captured-routing)",
+          "status": "completed",
+          "conclusion": "failure",
+          "security_steps": []
+        }
+      ]
+    },
+    {
+      "id": 42140158096,
+      "name": "Native FTPS dispatch approval qualification",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "id": 127638185892,
+          "name": "Native x86 public FTPS dispatch consent",
+          "status": "completed",
+          "conclusion": "failure",
+          "security_steps": []
+        }
+      ]
+    }
+  ],
+  "security": {
+    "runtime_failure_jobs": [
+      127638187702,
+      127638187773
+    ],
+    "observations": "Both native package assemblies independently fetch,hash-verify and extract exact four architecture packages. Both strict offline probes fail at grouped runtime-identity;exact failed assertion unknown. Image scans skipped;no new vulnerability reports.",
+    "source": "All3native vulnerability configurations,core Go reachability,JavaScript audit and source/history Gitleaks succeed.",
+    "disposition": "F117 retains strict expectations and prepares exact stage/public-scalar diagnostics. Native diagnosis/repair/replay owed;F114 prior one-HIGH report remains red,not erased."
+  },
+  "boundaries": [
+    "Only completion/security metadata and security build log sections inspected;other original failures retained for mandatory FINISH",
+    "No cancellation,retry,history rewrite,release,publication,visibility change,deployment or local runtime"
+  ],
+  "owed": [
+    "Exact native runtime assertion/remediation,complete exact-image scans and original independent AEAD interoperability/recovery",
+    "Every original failed nonsecurity CI job and all actual exchange/AX/baseline/final-source gates"
+  ],
+  "private_evidence": [
+    {
+      "reference": ".private/freightctl-f117-job-127638187702.log",
+      "sha256": "f27ecd9f65460d8e2754af91b29214ff3dce7a70e6eb695379b3ffdd1a41f486"
+    },
+    {
+      "reference": ".private/freightctl-f119-job-127638187773.log",
+      "sha256": "19e2f91e97d65b2ef1e4e3d16edef219722db6aad8c526f2d567719d5908a6e2"
+    }
+  ]
+}
