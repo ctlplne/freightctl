@@ -23,7 +23,7 @@ type ProjectionOptions struct {
 }
 
 // ProjectionPlan is an immutable REVIEW binding, not execution authority. The
-// future durable intent must compare this whole plan again at every effect.
+// durable intent compares this whole plan again before consequential effects.
 type ProjectionPlan struct {
 	Schema             int                       `json:"schema_version"`
 	Profile            string                    `json:"profile"`
@@ -251,6 +251,14 @@ func projectionOptionsInput(options ProjectionOptions) (ProjectionOptions, error
 // only for this explicitly authorized processing review. Ordinary availability
 // and downloads keep their current-policy requirement unchanged.
 func (s *Service) projectionPlan(ctx context.Context, t *store.Transaction, id string, options ProjectionOptions, lockSource bool) (*ProjectionPreview, error) {
+	// Match release/recheck ordering: namespace, source check, then policy/key
+	// locks. Holding policy first while waiting for a check can deadlock a
+	// concurrent release behind a policy activation.
+	if lockSource {
+		if _, err := t.FileCheck(ctx, id, true); err != nil {
+			return nil, err
+		}
+	}
 	selected, err := t.IntakePolicy(ctx, false)
 	if err != nil {
 		return nil, err

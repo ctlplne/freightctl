@@ -14,7 +14,7 @@ import (
 	"github.com/ctlplne/freightctl/internal/workflow"
 )
 
-func runRechecks(ctx context.Context, command, dsn, token, tenant, partner, storage, input, key, fileID, recheckID, after string, limit, maxEntries int, maxFile, maxStored int64) error {
+func runRechecks(ctx context.Context, command, dsn, token, tenant, partner, storage, input, key, fileID, recheckID, projectionID, after string, limit, maxEntries int, maxFile, maxStored int64) error {
 	secret, err := secure.ReadSecret(token, 64)
 	if err != nil {
 		return err
@@ -54,6 +54,36 @@ func runRechecks(ctx context.Context, command, dsn, token, tenant, partner, stor
 		var request checks.ProjectionOptions
 		if err = decode(&request); err == nil {
 			result, err = service.PreviewProjection(ctx, scope, fileID, request)
+		}
+	case "check-projection-propose":
+		var request struct {
+			Plan checks.ProjectionPlan `json:"plan"`
+		}
+		if err = decode(&request); err == nil {
+			if request.Plan.Context.Source.File.ID != fileID {
+				return checks.ErrInput
+			}
+			result, err = service.ProposeProjection(ctx, scope, key, request.Plan)
+		}
+	case "check-projection-status":
+		result, err = service.GetProjection(ctx, scope, projectionID)
+	case "check-projection-decide":
+		var request checks.PolicyRecheckDecision
+		if err = decode(&request); err == nil {
+			result, err = service.DecideProjection(ctx, scope, projectionID, key, request)
+		}
+	case "check-projection-start":
+		var request checks.ProjectionStartDecision
+		if err = decode(&request); err == nil {
+			result, err = service.StartProjection(ctx, scope, projectionID, key, request)
+		}
+	case "check-projection-work":
+		var request checks.ProjectionAttempt
+		if err = decode(&request); err == nil {
+			if request.ID != projectionID {
+				return checks.ErrInput
+			}
+			result, err = service.WorkProjection(ctx, scope, key, request)
 		}
 	case "check-recheck-preview":
 		var request checks.RecheckOptions

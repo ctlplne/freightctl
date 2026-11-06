@@ -1,0 +1,281 @@
+{
+  "schema_version": 1,
+  "id": "F163",
+  "observed_at": "2026-11-06",
+  "candidate_parent": "5f6fcc913249aff59ff26d5adca7c279bf5612c9",
+  "qualification_claim": false,
+  "contract": "docs/protocols/record-projection.md",
+  "state": "Standalone durable projection lifecycle implemented;focused local contracts pass;native SQL/application/worker recovery and full typed workflow remain owed",
+  "source_files": [
+    {
+      "reference": ".github/workflows/document-containers.yml",
+      "sha256": "d300b462a8189b363ecb4adf319c17d8eed1efdfc661ad1a1214a438c6546dce",
+      "bytes": 3862
+    },
+    {
+      "reference": "STATUS.md",
+      "sha256": "f8093562d0fc20a653b17bef2e133331040b29681525886b517aaf1cfe95176e",
+      "bytes": 4649
+    },
+    {
+      "reference": "cmd/freightctl/main.go",
+      "sha256": "e3b3d75200cde05e3a3c5792947d03833d10507f23e89840f1af239afa98cb86",
+      "bytes": 46075
+    },
+    {
+      "reference": "cmd/freightctl/rechecks.go",
+      "sha256": "d2cd884014dd3b6ec834c596ee5b1546fc0208ac41a358bdcfab02fe18c41cad",
+      "bytes": 3793
+    },
+    {
+      "reference": "docs/api/record-projection.openapi.json",
+      "sha256": "eee52f5602a7503eeafe99a32b1a88ab160aeb56cf96409e04547df3e9dd571e",
+      "bytes": 110026
+    },
+    {
+      "reference": "docs/protocols/record-projection.md",
+      "sha256": "6bacb244ca64d1e494bd532f3e284d72050182b88dda69f0b904637f3c663011",
+      "bytes": 15678
+    },
+    {
+      "reference": "internal/api/api.go",
+      "sha256": "fc6b125e2eef92f29be0c9b37d13e43185da4224d346251092f15c8f00cbf5f0",
+      "bytes": 28532
+    },
+    {
+      "reference": "internal/api/checks.go",
+      "sha256": "2cae61c35623fddd21b6763e1252ef700f64474f8bbf8364d171d92084cf8cb9",
+      "bytes": 8629
+    },
+    {
+      "reference": "internal/api/projection_intents_test.go",
+      "sha256": "84621331f16e04f10d2cb283ffb040e2224e32292faccce2139e8464c98802b4",
+      "bytes": 1311
+    },
+    {
+      "reference": "internal/checks/projection_intents.go",
+      "sha256": "eee2eacae654d2a4da473653b260c4c171b1ab80fc6032fca0a4efde7d36de15",
+      "bytes": 9780
+    },
+    {
+      "reference": "internal/checks/projection_intents_integration_test.go",
+      "sha256": "a6c30d7c274c551aeca4e1387e7dbc806b18efb3de1942a941ea0065aba8d791",
+      "bytes": 10978
+    },
+    {
+      "reference": "internal/checks/projection_intents_test.go",
+      "sha256": "5bea3cd3607d89aab592cdf8b5cd18b34354c730e7972c27089c3d31730f0324",
+      "bytes": 3997
+    },
+    {
+      "reference": "internal/checks/projection_review.go",
+      "sha256": "bb0d17be69b27e0a0f179b0dd74f871b312613b94c19a936bb13e52473bdec02",
+      "bytes": 14583
+    },
+    {
+      "reference": "internal/checks/projection_stage_test.go",
+      "sha256": "ae153826905c3ef350b6d23cf5b80ffaa4a2d1d23cc887eb8efabbe53af9788b",
+      "bytes": 3945
+    },
+    {
+      "reference": "internal/checks/projection_worker.go",
+      "sha256": "1b2d207f44021f580b73a1db87d4e267173bcdae0057fba8bfe5ff7719a9c8f4",
+      "bytes": 10074
+    },
+    {
+      "reference": "internal/custody/generated.go",
+      "sha256": "ce1dcbafb07bf4bd9d42895446a3adf312da9ab4d86a68359e556b67cb1727be",
+      "bytes": 3031
+    },
+    {
+      "reference": "internal/store/051_record_projections.sql",
+      "sha256": "e6dffbf0778181c28008c1ad87a175de9719a8596c4a50ea26e97598bafa9d8e",
+      "bytes": 24757
+    },
+    {
+      "reference": "internal/store/projections.go",
+      "sha256": "39e60764015068b3002fb3689bf1857286aada6b3c341299b7dfe01cadb89661",
+      "bytes": 4115
+    },
+    {
+      "reference": "internal/store/store.go",
+      "sha256": "49009e7948d4008c4ee6653c666f10003be3e408c2d398f28be0248b6153b44e",
+      "bytes": 26609
+    },
+    {
+      "reference": "scripts/metadata_contract.py",
+      "sha256": "12ced385dd5e7d55285e6bd8380d4b8ad25f96c064c372963d5ec33587327f89",
+      "bytes": 3194
+    },
+    {
+      "reference": "scripts/test-ci-metadata-summary.py",
+      "sha256": "d704d99add29c0e7c91aeeadb47ec26ade330792b780246e611e7fc1397f1d0a",
+      "bytes": 6240
+    }
+  ],
+  "changed": [
+    "Immutable proposed/approved/cancelled intents,server-owned staging slots,three bounded leased attempts,separate work,owned observation,transactional original command receipts and fixed failure results through the shared API/CLI service.",
+    "Exact current source/check/report/protection and output/root/authority/storage/target/rule revalidation before consequential effects. New held bytes bind immutable source/intent/attempt/report lineage with fresh checks and separate release;no signature,release,execution or forwarding inheritance.",
+    "Dedicated processing admission plus existing custody reservation;bounded guarded Reader/ReaderAt/writes;partial crash slots retained,sealed candidates recomputed,verified/synced and adopted without overwrite;tampered candidates refuse rather than selecting another slot.",
+    "Append-only schema51 adds two actor/partner/tenant forced-RLS tables,exact event/transition/slot/acceptance/deferred-completion guards and indexed admission. Current metadata profile73/72 preserves schema50 and all historical profiles;retained35 and earlier migrations untouched.",
+    "API/CLI request/response schemas and lifecycle documentation;native document race job includes focused stage/intent/lease/review cases without new runner caps or runtime substitution."
+  ],
+  "red": [
+    {
+      "reference": ".private/freightctl-f163-intent-red.log",
+      "observed": "Required immutable intent/lease tests could not compile because durable projection types and operations did not exist."
+    },
+    {
+      "reference": ".private/freightctl-f163-api-red.log",
+      "observed": "New lifecycle route refusal test observed404 before route implementation."
+    },
+    {
+      "reference": ".private/freightctl-f163-stage-green.log",
+      "observed": "Guard cancellation was returned as output_unavailable by the projection core instead of retaining cancellation classification at the custody boundary. The stage cancellation assertion failed;it was preserved and passed after rechecking the guard on processing failure."
+    }
+  ],
+  "preserved_preparation_failures": [
+    ".private/freightctl-f163-core-first.log:private reader name conflicted with an existing test input constant;renamed reader without changing fixtures/assertions.",
+    ".private/freightctl-f163-native-compile.log:native helper name conflicted with existing projectionRow and used the wrong Download tuple order;fixed caller/helper names;no native pass inferred."
+  ],
+  "green": [
+    {
+      "reference": ".private/freightctl-f163-final-green.log",
+      "observed": "Focused new/existing projection review,intent/lease,actual private staging and API/OpenAPI/injection contracts pass. Partial slots remain unchanged;exact sealed retry preserves inode/mtime;tampering/cancellation/quota produce no successful output digest;old/wrong/exhausted worker bindings refuse."
+    },
+    {
+      "reference": ".private/freightctl-f163-tagged-final-compile.log",
+      "observed": "integration+projectionnative compilation of checks/API/store/CLI selected zero runtime tests."
+    },
+    {
+      "reference": ".private/freightctl-f163-final-vet.log",
+      "observed": "Affected tagged vet passed."
+    },
+    {
+      "reference": ".private/freightctl-f163-architecture.log",
+      "observed": "Architecture boundaries passed."
+    },
+    {
+      "reference": ".private/freightctl-f163-actionlint.log",
+      "observed": "Changed native workflow lint passed."
+    },
+    {
+      "reference": ".private/freightctl-f163-metadata-contracts.log",
+      "observed": "Five affected metadata contract stand-ins passed."
+    },
+    {
+      "reference": ".private/freightctl-f163-metadata-summary.log",
+      "observed": "Seven affected metadata summary stand-ins passed;source51 inventory assertions now73/72,not relaxed."
+    }
+  ],
+  "checks": [
+    {
+      "reference": ".private/freightctl-f163-intent-red.log",
+      "sha256": "30f09d778b1c4eb046ca44fe8ce6226a0d6ff22f0f5510f516fb1c876cd2d53a",
+      "bytes": 1057
+    },
+    {
+      "reference": ".private/freightctl-f163-intent-first.log",
+      "sha256": "6eaf2a949f272d87a5124cced57ff6ed76a61ef9e6f18d716516380073a78243",
+      "bytes": 58
+    },
+    {
+      "reference": ".private/freightctl-f163-core-first.log",
+      "sha256": "263ae0db2926b8d770a3117fbc3625ad8ff57636d6c6f31a547c4e2a48750e36",
+      "bytes": 1189
+    },
+    {
+      "reference": ".private/freightctl-f163-stage-first.log",
+      "sha256": "e93b8e1c508faea969fbe2c5badb4627f78a90be31c24259bdb9b870871f6f60",
+      "bytes": 1199
+    },
+    {
+      "reference": ".private/freightctl-f163-stage-green.log",
+      "sha256": "32396fa97d8546fc3d4b5d07a0d314a8a91d1d465ee7e8a5065abc76d2c4f2ed",
+      "bytes": 240
+    },
+    {
+      "reference": ".private/freightctl-f163-stage-final-green.log",
+      "sha256": "500914b09be0fe149fbb7ad6d83c2b92371814026ac408aef28c2dd716216523",
+      "bytes": 58
+    },
+    {
+      "reference": ".private/freightctl-f163-api-red.log",
+      "sha256": "734a40d6a398aa8d182706678dac70aa3dd6fc7f308d4838b1e24b5d4b81748d",
+      "bytes": 240
+    },
+    {
+      "reference": ".private/freightctl-f163-api-green.log",
+      "sha256": "9eac085bd03e9ba8dad2ae6d17c11f7fccc226d1cc5b51cfb9c8c43dad766a95",
+      "bytes": 55
+    },
+    {
+      "reference": ".private/freightctl-f163-native-compile.log",
+      "sha256": "82b62ad84e63e3ecd5aecd2ab4b70c12c7ec0ff1d4def89e45030e34e2a8f1e4",
+      "bytes": 1788
+    },
+    {
+      "reference": ".private/freightctl-f163-native-compile-fixed.log",
+      "sha256": "06e9016a1f433342a8ff93ebb57c31bd82df1ad2e81a53aac2683407db9fd5e5",
+      "bytes": 76
+    },
+    {
+      "reference": ".private/freightctl-f163-native-final-compile.log",
+      "sha256": "b8f1de6ad3043312556b61b553a1304d6a1d77d207d06089ae016d58864ff020",
+      "bytes": 305
+    },
+    {
+      "reference": ".private/freightctl-f163-final-green.log",
+      "sha256": "6e499f0fe2d219a0b622b6d0a14ce860a030e3735ded518097da53dfe8e37e9f",
+      "bytes": 113
+    },
+    {
+      "reference": ".private/freightctl-f163-tagged-final-compile.log",
+      "sha256": "203fdb714e52c29b9090adb35cf3d490a01e16e98cdf4fc87eb6ea0df5cfda11",
+      "bytes": 299
+    },
+    {
+      "reference": ".private/freightctl-f163-final-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f163-architecture.log",
+      "sha256": "1410d26a410336b05ab1502defdd72d1dce077531305a031b3c8637db55403fb",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f163-actionlint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f163-metadata-contracts.log",
+      "sha256": "2d014bb427120fb1a5014d7499096989061fd0fdf40acb471c2e2667de60e71e",
+      "bytes": 103
+    },
+    {
+      "reference": ".private/freightctl-f163-metadata-summary.log",
+      "sha256": "89381c0c2673863d48ec9ea84019ed4c9753e0ede57e9512330899ed0a0c60af",
+      "bytes": 105
+    },
+    {
+      "reference": ".private/freightctl-f163-records.log",
+      "sha256": "826009b37d6c8254924b7fd1ee12981059544175f2c890ad4186b88b41b583b4",
+      "bytes": 106
+    }
+  ],
+  "prepared_native": [
+    "TestProjectionActualDurableApprovalHeldOutputAndOriginalReceipts:real PostgreSQL/custody,approval,worker substitution refusal,new held check,original receipts,fresh validation,separate release,exact independent Go JSON/number/identifier readback and one immutable lineage acceptance.",
+    "TestProjectionActualReceiptRollbackAdoptsSealedOutputWithoutDuplicateAcceptance:SQL receipt fault rolls back metadata,retains sealed bytes,retry adopts same inode/mtime and commits one acceptance. This is not a process-kill proof.",
+    "TestProjectionActualFailureReceiptRetryAndOldWorkerFence:physical quota failure is an original typed failure receipt;new attempt/new worker succeeds;old worker and receipt reinterpretation refuse.",
+    "TestProjectionActualRuntimeRejectsDefinitionAndTransitionForgery:runtime cannot forge completion/rewrite approved bindings;cancelled intent cannot start."
+  ],
+  "owed": [
+    "All new schema51 SQL syntax/runtime/forced-RLS/event/slot/deferred constraints and retained-copy upgrade/restore qualification. Local compilation and metadata stand-ins do not parse or run PostgreSQL.",
+    "All four prepared native lifecycle tests,original F160/F161 review/protected-source tests,actual process death/live/expired leases/three-attempt and queue exhaustion,scope isolation,protected XLSX/XML/fixed/CSV/JSON work,custody-capacity contention/fairness/latency and output signature/scanner controls.",
+    "Actual served HTTPS/CLI/stock receiver/no-effect/error/restart journeys. Typed workflow representation/processor integration,least-privilege scoped runtime profile,browser/MCP,discovery/retention/operator recovery and complete original customer/exchange profiles.",
+    "Every original deferred CI failure and broad/race/integration/security/frontend/native/recovery/reproducibility/final-source FINISH gate;F026 stays manual and external prerequisites remain owed."
+  ],
+  "invariants": "No local database,scanner,model/inference or heavy runtime was started. No retained database migration,release,package/image/artifact publication,visibility change,external deployment,delegation,branch or history rewrite."
+}

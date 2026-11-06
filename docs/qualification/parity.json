@@ -2788,7 +2788,9 @@
         "docs/qualification/evidence/F158-record-projection-core.json",
         "docs/qualification/evidence/F160-governed-projection-review.json",
         "docs/qualification/evidence/F161-projection-review-surfaces.json",
-        "docs/qualification/evidence/F162-projection-parent-terminal-ci.json"
+        "docs/qualification/evidence/F162-projection-parent-terminal-ci.json",
+        "docs/qualification/evidence/F163-durable-record-projections.json",
+        "docs/qualification/evidence/F164-review-parent-terminal-ci.json"
       ],
       "qualification_blockers": [
         "Authorized JSCAPE by Redwood installation and exact edition/version for observed comparison"

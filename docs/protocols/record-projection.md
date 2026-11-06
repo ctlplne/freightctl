@@ -1,10 +1,10 @@
 # Deterministic record projection core
 
-The internal processing primitive and governed metadata review are implemented.
-The review has an API and CLI; it cannot execute a transformation. The executable
-workflow task, approved intents, leases/fencing, quota reservations, immutable
-output lineage, receipts, recovery and fresh output checks/release still need
-implementation and qualification. Browser and MCP operation remain owed.
+The internal primitive, governed metadata review and standalone durable processing
+lifecycle are implemented through API and CLI. Preview alone cannot execute.
+Execution requires a separately approved immutable intent and a current fenced
+attempt. The typed workflow adapter, scoped processor profile, browser/MCP,
+fairness/performance and native application/recovery qualification remain owed.
 Neither a valid row nor a completed projection grants execution or forwarding.
 
 ## Governed metadata review
@@ -62,9 +62,75 @@ reference, storage/root/authority and target revisions, normalized mapping/engin
 processing rules, derived data-contract hash, reason and source proof expiry.
 Returned pointers and mappings are independently owned, so editing a request
 cannot change a completed review. A preview saves no intent, event, receipt,
-artifact, check or release. A future approved durable intent must bind this whole
-plan and regenerate it before consequential effects; preview itself grants no
+artifact, check or release. An approved durable intent binds this whole
+plan and regenerates it before consequential effects; preview itself grants no
 execution permission.
+
+## Durable intent and held output
+
+The same API prefix exposes:
+
+| Operation | Request and meaning |
+| --- | --- |
+| `POST /checks/{file}/projections` | `{plan}` from review; creates a proposed intent and three server-generated private staging IDs. |
+| `GET /projections/{projection}` | Owned durable state and a separate current-review observation. Historical receipts do not change when current conditions change. |
+| `POST /projections/{projection}/decide` | `operation:approve\|cancel`, exact `definition_hash` and `expected_revision`. Approval revalidates; cancellation can retire stale or expired work without restoring obsolete source proof. |
+| `POST /projections/{projection}/start` | Exact `definition_hash` and `expected_revision`; creates a durable attempt with a new worker ID and 71-second lease. |
+| `POST /projections/{projection}/work` | Exact `projection_id`, `attempt` and `worker_id` returned by start; processes under the live lease. |
+
+All mutations require an ordinary `Idempotency-Key`. The CLI equivalents are
+`check-projection-propose`, `check-projection-status`, `check-projection-decide`,
+`check-projection-start` and `check-projection-work`. They use `--projection-id`
+after proposal, `--file-id` for proposal, and bounded `--request-file` metadata;
+mutation keys use `--idempotency-key`. The API and CLI return the normal
+`{resource,replayed}` command envelope; the resource contains the intent and its
+observed state. Get returns the separate `ProjectionView`. These are processing
+outcomes, not receiver acceptance or business receipts.
+
+An actor can retain at most 16 proposed/approved/running/failed intents. Cancel
+unneeded failed work to free admission. Three attempts and three immutable
+staging slots bound retries after interruption. A live worker cannot be replaced
+or cancelled; expiry or a recorded failure permits a new explicit start. Every
+attempt gets a distinct worker ID. A prior start key returns its original start
+receipt even after completion; use status for current state. A prior work key
+returns its original completion or recorded failure. New attempts use new keys.
+Changing command meaning under an existing key refuses.
+
+Processing uses a separate two-slot pool and the existing single custody capacity
+reservation. The output's reviewed byte bound must fit the deployment's existing
+maximum file allowance; physical capacity includes all retained objects. Processing
+does not increase any local allowance. The existing reservation excludes concurrent
+custody admission while held; independent fairness/latency and isolated worker
+qualification remain mandatory. No general shell, network or model capability is
+added. The request deadline is 65 seconds; the deterministic engine keeps its own
+reviewed deadline of at most 60 seconds. The live lease is checked from PostgreSQL
+before each bounded sequential/random read and output write, and before acceptance.
+
+Graceful generation failure removes only its newly created partial object. A
+0600 object surviving process death stays in place; another approved slot is used.
+A sealed 0400 object is never overwritten. Recovery recomputes the entire transform
+from the exact source, compares its size/digest, verifies and syncs the existing
+object, then adopts its original ID. A mismatching sealed object refuses; the
+worker cannot hide tampering by choosing a new slot. Slot exhaustion stays visible.
+No failed staging result carries a successful output digest.
+
+Schema 51 adds `record_projections` and `record_projection_slots`, with forced
+tenant/partner/actor RLS, immutable definitions/slots, exact event guards, bounded
+transitions, lease/attempt fencing and deferred atomic-completion constraints.
+Acceptance uses a distinct `FileAccepted` schema5 with the intent/definition,
+source ID, attempt and projection report. The fresh file, held check, lineage,
+completion event and command receipt commit together. A SQL rollback retains the
+sealed object for verified adoption. Original source/recheck/received-copy
+identities and all earlier migrations stay intact. Retained schema 35 is not upgraded.
+
+The new artifact has its own policy/check and no inherited signature or release.
+Run its ordinary fresh check, attach a new signature when required, and make a
+separate exact release decision before publication or delivery. A committed
+processing failure returns `state:failed` and a fixed code, with no output file or
+qualified digest. Lost authority or an expired lease can prevent failure recording;
+status then retains the original attempt until explicit recovery. Actual process
+death, final-source SQL/restore/lease/protection/ordinary-client proofs and the
+broader workflow/exchange journeys remain owed.
 
 ## One parsing path
 
@@ -161,7 +227,12 @@ primitives at that source, not governed application acceptance or later changes.
 The metadata review's native PostgreSQL/source-key/scanner-configuration/grant/
 ownership/no-payload assertions are prepared and remain owed; local compilation
 does not establish a runtime pass. Served API/CLI/browser/MCP and full executable
-workflow, recovery and final-source acceptance also remain owed.
+workflow, recovery and final-source acceptance also remain owed. F163 adds the
+durable service and real local private-slot adoption/refusal checks. Four prepared
+native PostgreSQL tests cover held output/separate release, SQL receipt rollback
+and adoption, failure-retry fencing and runtime forgery. Their compilation is not
+runtime qualification. The standalone native document job now includes the new
+focused stage/intent/lease/review contracts on ARM and x86.
 
 The source handling follows [RFC8259](https://www.rfc-editor.org/rfc/rfc8259).
 CSV refusal accounts for [OWASP's formula-injection guidance](https://community.owasp.org/attacks/CSV_Injection).

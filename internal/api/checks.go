@@ -107,6 +107,38 @@ func (s *Server) checks(w http.ResponseWriter, r *http.Request) {
 		if err = workflowInput(w, r, &request); err == nil {
 			result, err = s.Checks.PreviewProjection(r.Context(), scope, r.PathValue("file"), request)
 		}
+	case "POST /v1/tenants/{tenant}/partners/{partner}/checks/{file}/projections":
+		var request struct {
+			Plan checks.ProjectionPlan `json:"plan"`
+		}
+		if err = workflowInput(w, r, &request); err == nil {
+			if request.Plan.Context.Source.File.ID != r.PathValue("file") {
+				err = checks.ErrInput
+			} else {
+				result, err = s.Checks.ProposeProjection(r.Context(), scope, key, request.Plan)
+			}
+		}
+	case "GET /v1/tenants/{tenant}/partners/{partner}/projections/{projection}":
+		result, err = s.Checks.GetProjection(r.Context(), scope, r.PathValue("projection"))
+	case "POST /v1/tenants/{tenant}/partners/{partner}/projections/{projection}/decide":
+		var request checks.PolicyRecheckDecision
+		if err = workflowInput(w, r, &request); err == nil {
+			result, err = s.Checks.DecideProjection(r.Context(), scope, r.PathValue("projection"), key, request)
+		}
+	case "POST /v1/tenants/{tenant}/partners/{partner}/projections/{projection}/start":
+		var request checks.ProjectionStartDecision
+		if err = workflowInput(w, r, &request); err == nil {
+			result, err = s.Checks.StartProjection(r.Context(), scope, r.PathValue("projection"), key, request)
+		}
+	case "POST /v1/tenants/{tenant}/partners/{partner}/projections/{projection}/work":
+		var request checks.ProjectionAttempt
+		if err = workflowInput(w, r, &request); err == nil {
+			if request.ID != r.PathValue("projection") {
+				err = checks.ErrInput
+			} else {
+				result, err = s.Checks.WorkProjection(r.Context(), scope, key, request)
+			}
+		}
 	case "POST /v1/tenants/{tenant}/partners/{partner}/checks/{file}/recheck-preview":
 		var request checks.RecheckOptions
 		if err = workflowInput(w, r, &request); err == nil {

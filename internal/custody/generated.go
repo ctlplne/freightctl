@@ -3,11 +3,59 @@ package custody
 import (
 	"context"
 	"encoding/hex"
+	"errors"
 	"io"
 	"os"
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 )
+
+// GeneratedSlotState observes only an intent-owned flat object name. Partial
+// objects from process death are retained; retries use another approved slot.
+func (d *Disk) GeneratedSlotState(ctx context.Context, name string) (string, error) {
+	if !validName(name) {
+		return "", ErrInput
+	}
+	if err := ctx.Err(); err != nil {
+		return "", err
+	}
+	if err := d.CheckIdentity(); err != nil {
+		return "", err
+	}
+	st, err := d.root.Lstat(name)
+	if errors.Is(err, os.ErrNotExist) {
+		return "absent", nil
+	}
+	if err != nil {
+		return "", err
+	}
+	if !st.Mode().IsRegular() {
+		return "", ErrIntegrity
+	}
+	switch st.Mode().Perm() {
+	case 0600:
+		return "partial", nil
+	case 0400:
+		return "sealed", nil
+	}
+	return "", ErrIntegrity
+}
+
+// VerifyGenerated re-establishes exact bytes and persistence after uncertainty.
+// This never modifies or deletes an existing private object.
+func (d *Disk) VerifyGenerated(ctx context.Context, name string, size int64, hash string) error {
+	if !validName(name) {
+		return ErrInput
+	}
+	exists, partial, err := d.recheckObject(ctx, name, size, hash)
+	if err != nil {
+		return err
+	}
+	if !exists || partial {
+		return ErrIntegrity
+	}
+	return nil
+}
 
 type generatedWriter struct {
 	ctx            context.Context

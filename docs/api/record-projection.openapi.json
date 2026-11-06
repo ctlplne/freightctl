@@ -3,7 +3,7 @@
   "info": {
     "title": "freightctl governed record projection review",
     "version": "1",
-    "description": "Metadata review only. Durable approval and execution are not implemented by this route. PostgreSQL and served client qualification remain owed. Schemas describe structure; live authority, exact source mappings, protected proofs and actual output acceptance require the ordinary services."
+    "description": "Governed root-admin record processing review and durable intent/attempt/held-output lifecycle. Runtime PostgreSQL,served clients,process-death recovery and full typed-workflow/browser/MCP acceptance remain owed. Structural schemas do not establish live authority or byte acceptance."
   },
   "paths": {
     "/v1/tenants/{tenant}/partners/{partner}/checks/{file}/projection-preview": {
@@ -83,6 +83,455 @@
           },
           "500": {
             "description": "Internal operation failed without granting authority."
+          }
+        }
+      }
+    },
+    "/v1/tenants/{tenant}/partners/{partner}/checks/{file}/projections": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "tenant",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ID"
+          }
+        },
+        {
+          "in": "path",
+          "name": "partner",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ID"
+          }
+        },
+        {
+          "in": "path",
+          "name": "file",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ID"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "proposeRecordProjection",
+        "description": "Revalidate the exact preview and store a proposed immutable intent,three server-generated slots,event and command receipt. Does not execute.",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "browserCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Observed intent or original command result. Inspect state; a committed failure is not an output.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectionReceipt"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid typed request or resource mismatch."
+          },
+          "401": {
+            "description": "Authentication required."
+          },
+          "403": {
+            "description": "Processing authority required."
+          },
+          "404": {
+            "description": "Unknown owned intent."
+          },
+          "409": {
+            "description": "Stale revision,changed command meaning,unavailable proof or attempt."
+          },
+          "413": {
+            "description": "Bounded queue or processing capacity unavailable."
+          },
+          "503": {
+            "description": "Isolation or protected dependency unavailable."
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjectionProposal"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/tenants/{tenant}/partners/{partner}/projections/{projection}": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "tenant",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ID"
+          }
+        },
+        {
+          "in": "path",
+          "name": "partner",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ID"
+          }
+        },
+        {
+          "in": "path",
+          "name": "projection",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ID"
+          }
+        }
+      ],
+      "get": {
+        "operationId": "inspectRecordProjection",
+        "description": "Inspect the owned durable intent separately from historical receipts. Current=false does not erase original outcomes.",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "browserCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Observed intent or original command result. Inspect state; a committed failure is not an output.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectionView"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid typed request or resource mismatch."
+          },
+          "401": {
+            "description": "Authentication required."
+          },
+          "403": {
+            "description": "Processing authority required."
+          },
+          "404": {
+            "description": "Unknown owned intent."
+          },
+          "409": {
+            "description": "Stale revision,changed command meaning,unavailable proof or attempt."
+          },
+          "413": {
+            "description": "Bounded queue or processing capacity unavailable."
+          },
+          "503": {
+            "description": "Isolation or protected dependency unavailable."
+          }
+        }
+      }
+    },
+    "/v1/tenants/{tenant}/partners/{partner}/projections/{projection}/decide": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "tenant",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ID"
+          }
+        },
+        {
+          "in": "path",
+          "name": "partner",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ID"
+          }
+        },
+        {
+          "in": "path",
+          "name": "projection",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ID"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "decideRecordProjection",
+        "description": "Explicitly approve the exact current definition/revision,or cancel proposed/approved/failed/expired-running work. Live workers cannot be cancelled through this transition.",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "browserCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Observed intent or original command result. Inspect state; a committed failure is not an output.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectionReceipt"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid typed request or resource mismatch."
+          },
+          "401": {
+            "description": "Authentication required."
+          },
+          "403": {
+            "description": "Processing authority required."
+          },
+          "404": {
+            "description": "Unknown owned intent."
+          },
+          "409": {
+            "description": "Stale revision,changed command meaning,unavailable proof or attempt."
+          },
+          "413": {
+            "description": "Bounded queue or processing capacity unavailable."
+          },
+          "503": {
+            "description": "Isolation or protected dependency unavailable."
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjectionDecision"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/tenants/{tenant}/partners/{partner}/projections/{projection}/start": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "tenant",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ID"
+          }
+        },
+        {
+          "in": "path",
+          "name": "partner",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ID"
+          }
+        },
+        {
+          "in": "path",
+          "name": "projection",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ID"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "startRecordProjection",
+        "description": "After approval and fresh proof,create a durable attempt with a server-generated worker ID and a71-second lease. At most three attempts. Same-key replay returns that historical start,not current state. Work must start promptly.",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "browserCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Observed intent or original command result. Inspect state; a committed failure is not an output.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectionReceipt"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid typed request or resource mismatch."
+          },
+          "401": {
+            "description": "Authentication required."
+          },
+          "403": {
+            "description": "Processing authority required."
+          },
+          "404": {
+            "description": "Unknown owned intent."
+          },
+          "409": {
+            "description": "Stale revision,changed command meaning,unavailable proof or attempt."
+          },
+          "413": {
+            "description": "Bounded queue or processing capacity unavailable."
+          },
+          "503": {
+            "description": "Isolation or protected dependency unavailable."
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjectionStart"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/tenants/{tenant}/partners/{partner}/projections/{projection}/work": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "tenant",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ID"
+          }
+        },
+        {
+          "in": "path",
+          "name": "partner",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ID"
+          }
+        },
+        {
+          "in": "path",
+          "name": "projection",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ID"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "workRecordProjection",
+        "description": "Execute only the exact live attempt under separate processing/custody admission. Regenerate current bindings,check each bounded read/write,recompute before sealed-object adoption,and atomically commit new held custody,fresh checks,lineage,completion and receipt. No signature,release,forwarding or receiver acceptance is inherited. A recorded failure is a typed failure result. Changed attempts require a new work key;replay preserves the original result.",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "browserCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Observed intent or original command result. Inspect state; a committed failure is not an output.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectionReceipt"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid typed request or resource mismatch."
+          },
+          "401": {
+            "description": "Authentication required."
+          },
+          "403": {
+            "description": "Processing authority required."
+          },
+          "404": {
+            "description": "Unknown owned intent."
+          },
+          "409": {
+            "description": "Stale revision,changed command meaning,unavailable proof or attempt."
+          },
+          "413": {
+            "description": "Bounded queue or processing capacity unavailable."
+          },
+          "503": {
+            "description": "Isolation or protected dependency unavailable."
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjectionAttempt"
+              }
+            }
           }
         }
       }
@@ -1270,6 +1719,1662 @@
           "source_policy",
           "output_policy",
           "effects"
+        ],
+        "additionalProperties": false
+      },
+      "ProjectionAttempt": {
+        "type": "object",
+        "properties": {
+          "projection_id": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+          },
+          "attempt": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3
+          },
+          "worker_id": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+          }
+        },
+        "required": [
+          "projection_id",
+          "attempt",
+          "worker_id"
+        ],
+        "additionalProperties": false
+      },
+      "ProjectionDecision": {
+        "type": "object",
+        "properties": {
+          "operation": {
+            "type": "string",
+            "enum": [
+              "approve",
+              "cancel"
+            ]
+          },
+          "definition_hash": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "operation",
+          "definition_hash",
+          "expected_revision"
+        ],
+        "additionalProperties": false
+      },
+      "ProjectionDefinition": {
+        "type": "object",
+        "properties": {
+          "schema_version": {
+            "type": "integer"
+          },
+          "plan": {
+            "type": "object",
+            "properties": {
+              "schema_version": {
+                "type": "integer"
+              },
+              "profile": {
+                "type": "string"
+              },
+              "context": {
+                "type": "object",
+                "properties": {
+                  "source": {
+                    "type": "object",
+                    "properties": {
+                      "file": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "size_bytes": {
+                            "type": "integer"
+                          },
+                          "sha256": {
+                            "type": "string"
+                          },
+                          "policy": {
+                            "type": "string"
+                          },
+                          "accepted_event_id": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "size_bytes",
+                          "sha256",
+                          "policy",
+                          "accepted_event_id"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "check": {
+                        "type": [
+                          "null",
+                          "object"
+                        ],
+                        "properties": {
+                          "policy_id": {
+                            "type": "string"
+                          },
+                          "policy_version": {
+                            "type": "integer"
+                          },
+                          "policy_hash": {
+                            "type": "string"
+                          },
+                          "state": {
+                            "type": "string"
+                          },
+                          "revision": {
+                            "type": "integer"
+                          },
+                          "attempts": {
+                            "type": "integer"
+                          },
+                          "code": {
+                            "type": "string"
+                          },
+                          "worker_id": {
+                            "type": "string"
+                          },
+                          "lease_until": {
+                            "type": [
+                              "null",
+                              "string"
+                            ]
+                          },
+                          "report_hash": {
+                            "type": "string"
+                          },
+                          "binding": {
+                            "type": "object",
+                            "properties": {
+                              "file": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string"
+                                  },
+                                  "size_bytes": {
+                                    "type": "integer"
+                                  },
+                                  "sha256": {
+                                    "type": "string"
+                                  },
+                                  "policy": {
+                                    "type": "string"
+                                  },
+                                  "accepted_event_id": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "size_bytes",
+                                  "sha256",
+                                  "policy",
+                                  "accepted_event_id"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "storage_id": {
+                                "type": "string"
+                              },
+                              "namespace_root": {
+                                "type": "string"
+                              },
+                              "authority_revision": {
+                                "type": "integer"
+                              },
+                              "parent_id": {
+                                "type": "string"
+                              },
+                              "parent_revision": {
+                                "type": "integer"
+                              },
+                              "target": {
+                                "type": [
+                                  "null",
+                                  "object"
+                                ],
+                                "properties": {
+                                  "operation": {
+                                    "type": "string"
+                                  },
+                                  "path": {
+                                    "type": "string"
+                                  },
+                                  "target": {
+                                    "type": "string"
+                                  },
+                                  "file_id": {
+                                    "type": "string"
+                                  },
+                                  "expected_revision": {
+                                    "type": [
+                                      "null",
+                                      "integer"
+                                    ]
+                                  },
+                                  "replace": {
+                                    "type": "boolean"
+                                  },
+                                  "target_revision": {
+                                    "type": [
+                                      "null",
+                                      "integer"
+                                    ]
+                                  },
+                                  "mode": {
+                                    "type": [
+                                      "null",
+                                      "integer"
+                                    ],
+                                    "minimum": 0,
+                                    "maximum": 4294967295
+                                  },
+                                  "modified_at": {
+                                    "type": [
+                                      "null",
+                                      "string"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "operation",
+                                  "path"
+                                ],
+                                "additionalProperties": false
+                              }
+                            },
+                            "required": [
+                              "file",
+                              "storage_id",
+                              "namespace_root",
+                              "authority_revision",
+                              "parent_id",
+                              "parent_revision",
+                              "target"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "policy_id",
+                          "policy_version",
+                          "policy_hash",
+                          "state",
+                          "revision",
+                          "attempts",
+                          "code",
+                          "report_hash",
+                          "binding"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "signature": {
+                        "type": [
+                          "null",
+                          "object"
+                        ],
+                        "properties": {
+                          "file_id": {
+                            "type": "string"
+                          },
+                          "object_id": {
+                            "type": "string"
+                          },
+                          "storage_id": {
+                            "type": "string"
+                          },
+                          "size_bytes": {
+                            "type": "integer"
+                          },
+                          "sha256": {
+                            "type": "string"
+                          },
+                          "data_sha256": {
+                            "type": "string"
+                          },
+                          "policy_hash": {
+                            "type": "string"
+                          },
+                          "key": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "version": {
+                                "type": "integer"
+                              },
+                              "hash": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "version",
+                              "hash"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "attached_event_id": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "file_id",
+                          "object_id",
+                          "storage_id",
+                          "size_bytes",
+                          "sha256",
+                          "data_sha256",
+                          "policy_hash",
+                          "key"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "file"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "policy": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "version": {
+                        "type": "integer"
+                      },
+                      "hash": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "version",
+                      "hash"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "namespace_root": {
+                    "type": "string"
+                  },
+                  "authority_revision": {
+                    "type": "integer"
+                  },
+                  "storage_id": {
+                    "type": "string"
+                  },
+                  "target": {
+                    "type": [
+                      "null",
+                      "object"
+                    ],
+                    "properties": {
+                      "command": {
+                        "type": "object",
+                        "properties": {
+                          "operation": {
+                            "type": "string"
+                          },
+                          "path": {
+                            "type": "string"
+                          },
+                          "target": {
+                            "type": "string"
+                          },
+                          "file_id": {
+                            "type": "string"
+                          },
+                          "expected_revision": {
+                            "type": [
+                              "null",
+                              "integer"
+                            ]
+                          },
+                          "replace": {
+                            "type": "boolean"
+                          },
+                          "target_revision": {
+                            "type": [
+                              "null",
+                              "integer"
+                            ]
+                          },
+                          "mode": {
+                            "type": [
+                              "null",
+                              "integer"
+                            ],
+                            "minimum": 0,
+                            "maximum": 4294967295
+                          },
+                          "modified_at": {
+                            "type": [
+                              "null",
+                              "string"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "operation",
+                          "path"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "parent_id": {
+                        "type": "string"
+                      },
+                      "parent_revision": {
+                        "type": "integer"
+                      },
+                      "entry_id": {
+                        "type": "string"
+                      },
+                      "entry_revision": {
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "command",
+                      "parent_id",
+                      "parent_revision",
+                      "entry_id",
+                      "entry_revision"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "signature_mode": {
+                    "type": "string"
+                  },
+                  "reason": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "source",
+                  "policy",
+                  "namespace_root",
+                  "authority_revision",
+                  "storage_id",
+                  "signature_mode",
+                  "reason"
+                ],
+                "additionalProperties": false
+              },
+              "source_policy": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "integer"
+                  },
+                  "hash": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "version",
+                  "hash"
+                ],
+                "additionalProperties": false
+              },
+              "projection": {
+                "type": "object",
+                "properties": {
+                  "schema_version": {
+                    "type": "integer"
+                  },
+                  "kind": {
+                    "type": "string"
+                  },
+                  "engine": {
+                    "type": "string"
+                  },
+                  "source_policy_hash": {
+                    "type": "string"
+                  },
+                  "output_kind": {
+                    "type": "string"
+                  },
+                  "columns": {
+                    "type": [
+                      "null",
+                      "array"
+                    ],
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "source": {
+                          "type": "string"
+                        },
+                        "target": {
+                          "type": "string"
+                        },
+                        "conversion": {
+                          "type": "string"
+                        },
+                        "missing": {
+                          "type": "string"
+                        },
+                        "null": {
+                          "type": "string"
+                        },
+                        "empty": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "source",
+                        "target",
+                        "conversion",
+                        "missing",
+                        "null",
+                        "empty"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "max_bytes": {
+                    "type": "integer"
+                  },
+                  "max_record_bytes": {
+                    "type": "integer"
+                  },
+                  "max_rows": {
+                    "type": "integer"
+                  },
+                  "timeout_seconds": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "schema_version",
+                  "kind",
+                  "engine",
+                  "source_policy_hash",
+                  "output_kind",
+                  "columns",
+                  "max_bytes",
+                  "max_record_bytes",
+                  "max_rows",
+                  "timeout_seconds"
+                ],
+                "additionalProperties": false
+              },
+              "output_contract_hash": {
+                "type": "string"
+              },
+              "source_proof_valid_until": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              }
+            },
+            "required": [
+              "schema_version",
+              "profile",
+              "context",
+              "source_policy",
+              "projection",
+              "output_contract_hash"
+            ],
+            "additionalProperties": false
+          },
+          "staging_slots": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 3,
+            "maxItems": 3,
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "schema_version",
+          "plan",
+          "staging_slots"
+        ],
+        "additionalProperties": false
+      },
+      "ProjectionOutput": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "attempt": {
+            "type": "object",
+            "properties": {
+              "projection_id": {
+                "type": "string"
+              },
+              "attempt": {
+                "type": "integer"
+              },
+              "worker_id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "projection_id",
+              "attempt",
+              "worker_id"
+            ],
+            "additionalProperties": false
+          },
+          "file": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "size_bytes": {
+                "type": "integer"
+              },
+              "sha256": {
+                "type": "string"
+              },
+              "policy": {
+                "type": "string"
+              },
+              "accepted_event_id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "size_bytes",
+              "sha256",
+              "policy",
+              "accepted_event_id"
+            ],
+            "additionalProperties": false
+          },
+          "acceptance": {
+            "type": "string"
+          },
+          "report": {
+            "type": "object",
+            "properties": {
+              "engine": {
+                "type": "string"
+              },
+              "definition_hash": {
+                "type": "string"
+              },
+              "source": {
+                "type": "object",
+                "properties": {
+                  "engine": {
+                    "type": "string"
+                  },
+                  "file_id": {
+                    "type": "string"
+                  },
+                  "sha256": {
+                    "type": "string"
+                  },
+                  "policy_hash": {
+                    "type": "string"
+                  },
+                  "code": {
+                    "type": "string"
+                  },
+                  "rows": {
+                    "type": "integer"
+                  },
+                  "bytes_read": {
+                    "type": "integer"
+                  },
+                  "row": {
+                    "type": "integer"
+                  },
+                  "column": {
+                    "type": "integer"
+                  },
+                  "signature": {
+                    "type": [
+                      "null",
+                      "object"
+                    ],
+                    "properties": {
+                      "key": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "version": {
+                            "type": "integer"
+                          },
+                          "hash": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "version",
+                          "hash"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "object_id": {
+                        "type": "string"
+                      },
+                      "sha256": {
+                        "type": "string"
+                      },
+                      "verification": {
+                        "type": [
+                          "null",
+                          "object"
+                        ],
+                        "properties": {
+                          "backend": {
+                            "type": "string"
+                          },
+                          "primary_fingerprint": {
+                            "type": "string"
+                          },
+                          "signer_fingerprint": {
+                            "type": "string"
+                          },
+                          "signature_sha256": {
+                            "type": "string"
+                          },
+                          "hash_algorithm": {
+                            "type": "string"
+                          },
+                          "signature_version": {
+                            "type": "integer"
+                          },
+                          "created_at": {
+                            "type": "string"
+                          },
+                          "verified_at": {
+                            "type": "string"
+                          },
+                          "valid_until": {
+                            "type": [
+                              "null",
+                              "string"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "backend",
+                          "primary_fingerprint",
+                          "signer_fingerprint",
+                          "signature_sha256",
+                          "hash_algorithm",
+                          "signature_version",
+                          "created_at",
+                          "verified_at"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "key",
+                      "object_id",
+                      "sha256",
+                      "verification"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "scanner": {
+                    "type": [
+                      "null",
+                      "object"
+                    ],
+                    "properties": {
+                      "profile": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "version": {
+                            "type": "integer"
+                          },
+                          "hash": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "version",
+                          "hash"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "result": {
+                        "type": [
+                          "null",
+                          "object"
+                        ],
+                        "properties": {
+                          "backend": {
+                            "type": "string"
+                          },
+                          "version": {
+                            "type": "object",
+                            "properties": {
+                              "engine_version": {
+                                "type": "string"
+                              },
+                              "database_version": {
+                                "type": "integer"
+                              },
+                              "database_date": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "engine_version",
+                              "database_version",
+                              "database_date"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "version_sha256": {
+                            "type": "string"
+                          },
+                          "configuration_sha256": {
+                            "type": "string"
+                          },
+                          "verdict": {
+                            "type": "string"
+                          },
+                          "detection_sha256": {
+                            "type": "string"
+                          },
+                          "response_sha256": {
+                            "type": "string"
+                          },
+                          "bytes_scanned": {
+                            "type": "integer"
+                          },
+                          "sha256": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "backend",
+                          "version",
+                          "version_sha256",
+                          "configuration_sha256",
+                          "verdict",
+                          "response_sha256",
+                          "bytes_scanned",
+                          "sha256"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "started_at": {
+                        "type": "string"
+                      },
+                      "completed_at": {
+                        "type": "string"
+                      },
+                      "valid_until": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "profile",
+                      "result",
+                      "started_at",
+                      "completed_at",
+                      "valid_until"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "engine",
+                  "file_id",
+                  "sha256",
+                  "policy_hash",
+                  "code",
+                  "rows",
+                  "bytes_read"
+                ],
+                "additionalProperties": false
+              },
+              "output_kind": {
+                "type": "string"
+              },
+              "output_contract_hash": {
+                "type": "string"
+              },
+              "code": {
+                "type": "string"
+              },
+              "rows": {
+                "type": "integer"
+              },
+              "row": {
+                "type": "integer"
+              },
+              "column": {
+                "type": "integer"
+              },
+              "output_bytes": {
+                "type": "integer"
+              },
+              "output_sha256": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "engine",
+              "definition_hash",
+              "source",
+              "output_kind",
+              "output_contract_hash",
+              "code",
+              "rows",
+              "output_bytes"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "kind",
+          "attempt",
+          "file",
+          "acceptance",
+          "report"
+        ],
+        "additionalProperties": false
+      },
+      "ProjectionPlan": {
+        "type": "object",
+        "properties": {
+          "schema_version": {
+            "type": "integer",
+            "const": 1
+          },
+          "profile": {
+            "type": "string",
+            "const": "held-record-projection-v1"
+          },
+          "context": {
+            "type": "object",
+            "properties": {
+              "source": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "size_bytes": {
+                        "type": "integer"
+                      },
+                      "sha256": {
+                        "type": "string"
+                      },
+                      "policy": {
+                        "type": "string"
+                      },
+                      "accepted_event_id": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "size_bytes",
+                      "sha256",
+                      "policy",
+                      "accepted_event_id"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "check": {
+                    "type": [
+                      "null",
+                      "object"
+                    ],
+                    "properties": {
+                      "policy_id": {
+                        "type": "string"
+                      },
+                      "policy_version": {
+                        "type": "integer"
+                      },
+                      "policy_hash": {
+                        "type": "string"
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "revision": {
+                        "type": "integer"
+                      },
+                      "attempts": {
+                        "type": "integer"
+                      },
+                      "code": {
+                        "type": "string"
+                      },
+                      "worker_id": {
+                        "type": "string"
+                      },
+                      "lease_until": {
+                        "type": [
+                          "null",
+                          "string"
+                        ]
+                      },
+                      "report_hash": {
+                        "type": "string"
+                      },
+                      "binding": {
+                        "type": "object",
+                        "properties": {
+                          "file": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "size_bytes": {
+                                "type": "integer"
+                              },
+                              "sha256": {
+                                "type": "string"
+                              },
+                              "policy": {
+                                "type": "string"
+                              },
+                              "accepted_event_id": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "size_bytes",
+                              "sha256",
+                              "policy",
+                              "accepted_event_id"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "storage_id": {
+                            "type": "string"
+                          },
+                          "namespace_root": {
+                            "type": "string"
+                          },
+                          "authority_revision": {
+                            "type": "integer"
+                          },
+                          "parent_id": {
+                            "type": "string"
+                          },
+                          "parent_revision": {
+                            "type": "integer"
+                          },
+                          "target": {
+                            "type": [
+                              "null",
+                              "object"
+                            ],
+                            "properties": {
+                              "operation": {
+                                "type": "string"
+                              },
+                              "path": {
+                                "type": "string"
+                              },
+                              "target": {
+                                "type": "string"
+                              },
+                              "file_id": {
+                                "type": "string"
+                              },
+                              "expected_revision": {
+                                "type": [
+                                  "null",
+                                  "integer"
+                                ]
+                              },
+                              "replace": {
+                                "type": "boolean"
+                              },
+                              "target_revision": {
+                                "type": [
+                                  "null",
+                                  "integer"
+                                ]
+                              },
+                              "mode": {
+                                "type": [
+                                  "null",
+                                  "integer"
+                                ],
+                                "minimum": 0,
+                                "maximum": 4294967295
+                              },
+                              "modified_at": {
+                                "type": [
+                                  "null",
+                                  "string"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "operation",
+                              "path"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "file",
+                          "storage_id",
+                          "namespace_root",
+                          "authority_revision",
+                          "parent_id",
+                          "parent_revision",
+                          "target"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "policy_id",
+                      "policy_version",
+                      "policy_hash",
+                      "state",
+                      "revision",
+                      "attempts",
+                      "code",
+                      "report_hash",
+                      "binding"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "signature": {
+                    "type": [
+                      "null",
+                      "object"
+                    ],
+                    "properties": {
+                      "file_id": {
+                        "type": "string"
+                      },
+                      "object_id": {
+                        "type": "string"
+                      },
+                      "storage_id": {
+                        "type": "string"
+                      },
+                      "size_bytes": {
+                        "type": "integer"
+                      },
+                      "sha256": {
+                        "type": "string"
+                      },
+                      "data_sha256": {
+                        "type": "string"
+                      },
+                      "policy_hash": {
+                        "type": "string"
+                      },
+                      "key": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "version": {
+                            "type": "integer"
+                          },
+                          "hash": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "version",
+                          "hash"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "attached_event_id": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "file_id",
+                      "object_id",
+                      "storage_id",
+                      "size_bytes",
+                      "sha256",
+                      "data_sha256",
+                      "policy_hash",
+                      "key"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "file"
+                ],
+                "additionalProperties": false
+              },
+              "policy": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "integer"
+                  },
+                  "hash": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "version",
+                  "hash"
+                ],
+                "additionalProperties": false
+              },
+              "namespace_root": {
+                "type": "string"
+              },
+              "authority_revision": {
+                "type": "integer"
+              },
+              "storage_id": {
+                "type": "string"
+              },
+              "target": {
+                "type": [
+                  "null",
+                  "object"
+                ],
+                "properties": {
+                  "command": {
+                    "type": "object",
+                    "properties": {
+                      "operation": {
+                        "type": "string"
+                      },
+                      "path": {
+                        "type": "string"
+                      },
+                      "target": {
+                        "type": "string"
+                      },
+                      "file_id": {
+                        "type": "string"
+                      },
+                      "expected_revision": {
+                        "type": [
+                          "null",
+                          "integer"
+                        ]
+                      },
+                      "replace": {
+                        "type": "boolean"
+                      },
+                      "target_revision": {
+                        "type": [
+                          "null",
+                          "integer"
+                        ]
+                      },
+                      "mode": {
+                        "type": [
+                          "null",
+                          "integer"
+                        ],
+                        "minimum": 0,
+                        "maximum": 4294967295
+                      },
+                      "modified_at": {
+                        "type": [
+                          "null",
+                          "string"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "operation",
+                      "path"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "parent_id": {
+                    "type": "string"
+                  },
+                  "parent_revision": {
+                    "type": "integer"
+                  },
+                  "entry_id": {
+                    "type": "string"
+                  },
+                  "entry_revision": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "command",
+                  "parent_id",
+                  "parent_revision",
+                  "entry_id",
+                  "entry_revision"
+                ],
+                "additionalProperties": false
+              },
+              "signature_mode": {
+                "type": "string"
+              },
+              "reason": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "source",
+              "policy",
+              "namespace_root",
+              "authority_revision",
+              "storage_id",
+              "signature_mode",
+              "reason"
+            ],
+            "additionalProperties": false
+          },
+          "source_policy": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "version": {
+                "type": "integer"
+              },
+              "hash": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "version",
+              "hash"
+            ],
+            "additionalProperties": false
+          },
+          "projection": {
+            "type": "object",
+            "properties": {
+              "schema_version": {
+                "type": "integer"
+              },
+              "kind": {
+                "type": "string"
+              },
+              "engine": {
+                "type": "string"
+              },
+              "source_policy_hash": {
+                "type": "string"
+              },
+              "output_kind": {
+                "type": "string"
+              },
+              "columns": {
+                "type": [
+                  "null",
+                  "array"
+                ],
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "source": {
+                      "type": "string"
+                    },
+                    "target": {
+                      "type": "string"
+                    },
+                    "conversion": {
+                      "type": "string"
+                    },
+                    "missing": {
+                      "type": "string"
+                    },
+                    "null": {
+                      "type": "string"
+                    },
+                    "empty": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "source",
+                    "target",
+                    "conversion",
+                    "missing",
+                    "null",
+                    "empty"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "max_bytes": {
+                "type": "integer"
+              },
+              "max_record_bytes": {
+                "type": "integer"
+              },
+              "max_rows": {
+                "type": "integer"
+              },
+              "timeout_seconds": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "schema_version",
+              "kind",
+              "engine",
+              "source_policy_hash",
+              "output_kind",
+              "columns",
+              "max_bytes",
+              "max_record_bytes",
+              "max_rows",
+              "timeout_seconds"
+            ],
+            "additionalProperties": false
+          },
+          "output_contract_hash": {
+            "type": "string"
+          },
+          "source_proof_valid_until": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        },
+        "required": [
+          "schema_version",
+          "profile",
+          "context",
+          "source_policy",
+          "projection",
+          "output_contract_hash"
+        ],
+        "additionalProperties": false
+      },
+      "ProjectionStart": {
+        "type": "object",
+        "properties": {
+          "definition_hash": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "definition_hash",
+          "expected_revision"
+        ],
+        "additionalProperties": false
+      },
+      "ProjectionView": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "projection": {
+            "$ref": "#/components/schemas/RecordProjection"
+          },
+          "current": {
+            "type": "boolean"
+          },
+          "code": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "projection",
+          "current",
+          "code"
+        ],
+        "additionalProperties": false
+      },
+      "RecordProjection": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "source_file_id": {
+            "type": "string"
+          },
+          "definition": {
+            "$ref": "#/components/schemas/ProjectionDefinition"
+          },
+          "definition_hash": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "revision": {
+            "type": "integer"
+          },
+          "attempts": {
+            "type": "integer"
+          },
+          "worker_id": {
+            "type": "string"
+          },
+          "lease_until": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "new_file_id": {
+            "type": "string"
+          },
+          "result": {
+            "anyOf": [
+              {
+                "type": "object",
+                "maxProperties": 0
+              },
+              {
+                "$ref": "#/components/schemas/ProjectionOutput"
+              },
+              {
+                "$ref": "#/components/schemas/ProjectionFailure"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "source_file_id",
+          "definition",
+          "definition_hash",
+          "state",
+          "revision",
+          "attempts",
+          "worker_id",
+          "lease_until",
+          "new_file_id",
+          "result"
+        ],
+        "additionalProperties": false
+      },
+      "ProjectionProposal": {
+        "type": "object",
+        "properties": {
+          "plan": {
+            "$ref": "#/components/schemas/ProjectionPlan"
+          }
+        },
+        "required": [
+          "plan"
+        ],
+        "additionalProperties": false
+      },
+      "ProjectionFailure": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "const": "record_projection_failure"
+          },
+          "attempt": {
+            "$ref": "#/components/schemas/ProjectionAttempt"
+          },
+          "code": {
+            "enum": [
+              "processing_unavailable",
+              "processing_cancelled",
+              "processing_deadline",
+              "review_stale",
+              "integrity_mismatch",
+              "capacity_unavailable"
+            ]
+          }
+        },
+        "required": [
+          "kind",
+          "attempt",
+          "code"
+        ],
+        "additionalProperties": false
+      },
+      "ProjectionReceipt": {
+        "type": "object",
+        "properties": {
+          "resource": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "const": "record_projection"
+              },
+              "projection": {
+                "$ref": "#/components/schemas/RecordProjection"
+              }
+            },
+            "required": [
+              "kind",
+              "projection"
+            ],
+            "additionalProperties": false
+          },
+          "replayed": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "resource",
+          "replayed"
         ],
         "additionalProperties": false
       }
