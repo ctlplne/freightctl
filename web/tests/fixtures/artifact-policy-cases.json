@@ -1,0 +1,162 @@
+[
+  {
+    "name": "integrity-only-v1",
+    "policy": "integrity-only-v1",
+    "valid": true
+  },
+  {
+    "name": "intake-csv-v1",
+    "policy": "intake-csv-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "valid": true
+  },
+  {
+    "name": "intake-json-records-v1",
+    "policy": "intake-json-records-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "valid": true
+  },
+  {
+    "name": "0-newline",
+    "policy": "integrity-only-v1\n",
+    "valid": false
+  },
+  {
+    "name": "0-carriage-return",
+    "policy": "integrity-only-v1\r",
+    "valid": false
+  },
+  {
+    "name": "0-crlf",
+    "policy": "integrity-only-v1\r\n",
+    "valid": false
+  },
+  {
+    "name": "0-line-separator",
+    "policy": "integrity-only-v1\u2028",
+    "valid": false
+  },
+  {
+    "name": "0-paragraph-separator",
+    "policy": "integrity-only-v1\u2029",
+    "valid": false
+  },
+  {
+    "name": "0-extra-byte",
+    "policy": "integrity-only-v1x",
+    "valid": false
+  },
+  {
+    "name": "1-newline",
+    "policy": "intake-csv-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n",
+    "valid": false
+  },
+  {
+    "name": "1-carriage-return",
+    "policy": "intake-csv-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\r",
+    "valid": false
+  },
+  {
+    "name": "1-crlf",
+    "policy": "intake-csv-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\r\n",
+    "valid": false
+  },
+  {
+    "name": "1-line-separator",
+    "policy": "intake-csv-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\u2028",
+    "valid": false
+  },
+  {
+    "name": "1-paragraph-separator",
+    "policy": "intake-csv-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\u2029",
+    "valid": false
+  },
+  {
+    "name": "1-extra-byte",
+    "policy": "intake-csv-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaax",
+    "valid": false
+  },
+  {
+    "name": "2-newline",
+    "policy": "intake-json-records-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n",
+    "valid": false
+  },
+  {
+    "name": "2-carriage-return",
+    "policy": "intake-json-records-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\r",
+    "valid": false
+  },
+  {
+    "name": "2-crlf",
+    "policy": "intake-json-records-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\r\n",
+    "valid": false
+  },
+  {
+    "name": "2-line-separator",
+    "policy": "intake-json-records-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\u2028",
+    "valid": false
+  },
+  {
+    "name": "2-paragraph-separator",
+    "policy": "intake-json-records-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\u2029",
+    "valid": false
+  },
+  {
+    "name": "2-extra-byte",
+    "policy": "intake-json-records-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaax",
+    "valid": false
+  },
+  {
+    "name": "invalid-0",
+    "policy": "",
+    "valid": false
+  },
+  {
+    "name": "invalid-1",
+    "policy": "integrity-only-v1:extra",
+    "valid": false
+  },
+  {
+    "name": "invalid-2",
+    "policy": "intake-json-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "valid": false
+  },
+  {
+    "name": "invalid-3",
+    "policy": "intake-json-records-v2:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "valid": false
+  },
+  {
+    "name": "invalid-4",
+    "policy": "intake-json-records-v1:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "valid": false
+  },
+  {
+    "name": "invalid-5",
+    "policy": "intake-json-records-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "valid": false
+  },
+  {
+    "name": "invalid-6",
+    "policy": "intake-json-records-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa0",
+    "valid": false
+  },
+  {
+    "name": "invalid-7",
+    "policy": "intake-csv-v1:",
+    "valid": false
+  },
+  {
+    "name": "invalid-8",
+    "policy": " intake-json-records-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "valid": false
+  },
+  {
+    "name": "invalid-9",
+    "policy": "intake-json-records-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa ",
+    "valid": false
+  },
+  {
+    "name": "invalid-10",
+    "policy": "intake-json-records-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\u0000",
+    "valid": false
+  }
+]

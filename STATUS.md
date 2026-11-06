@@ -39,6 +39,12 @@ pass locally; no PG,Chrome,GnuPG,scanner or model ran locally. Runtime outcomes,
 native protected-reference/context-switch UI coverage and final-source proof are
 owed. Tests and compilation do not qualify customer outcomes.
 
+F146 repairs five published OpenAPI JSON custody patterns after observed Go/JS
+failures. Focused Go and JavaScript checks now pass across thirteen schemas and
+32 shared domain-bound cases;affected vet and workflow lint pass. This proves
+pattern conformance only. Native e65b59c runs are queued/running;the next push
+waits for their required terminal outcomes.
+
 Continue exchange/recovery/per-hop lineage and the remaining mandatory baseline
 implementation. AX-J01/J02,real permitted stock peers and independent receivers
 remain open. X07 blocks only the actual optional Trust Control provider profile;

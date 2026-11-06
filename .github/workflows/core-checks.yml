@@ -33,6 +33,10 @@ jobs:
           cat "$RUNNER_TEMP/freightctl-gofmt"
           test ! -s "$RUNNER_TEMP/freightctl-gofmt"
           sh scripts/go.sh run -p 1 github.com/rhysd/actionlint/cmd/actionlint@v1.7.12 .github/workflows/*.yml
+      - name: Published artifact policy grammar against actual domain cases
+        run: |
+          sh scripts/go.sh test -timeout=0 -run '^TestPublicArtifactPolicySchemasMatchActualDomain$' ./internal/api
+          node --test --test-concurrency=1 web/tests/artifact-policy-schema.test.mjs
       - name: Qualification record refusal contracts
         run: |
           python3 scripts/test-ci-resources.py

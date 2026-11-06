@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "id": "F146",
+  "observed_at": "2026-11-06",
+  "candidate_parent": "e65b59ca21e92c58050a04c86f57e979653b0cc5",
+  "state": "Published artifact policy grammar repaired with focused local red/green;native exchange qualification still owed",
+  "qualification_claim": false,
+  "changes": [
+    "Five published OpenAPI Artifact.acceptance_policy patterns now include the exact JSON controlled-custody identity already accepted by the ordinary domain and MCP catalog. Unknown profiles,wrong-case/length hashes,suffixes and line terminators remain refused.",
+    "32 shared acceptance/refusal cases are checked against actual store.ValidArtifactPolicy and all13 public artifact schema definitions using the actual Go JSON Schema validator and ECMAScript pattern engine. No MCP tool,effect,grant or implementation version changes.",
+    "Focused Go and JavaScript checks run as a separate core CI step before unrelated qualification-record checks,so the existing nonsecurity failure cannot skip this contract regression."
+  ],
+  "observed_red": [
+    {
+      "reference": ".private/freightctl-f146-go-red.log",
+      "observation": "The actual domain accepts the JSON custody identity but all five OpenAPI schemas reject it."
+    },
+    {
+      "reference": ".private/freightctl-f146-js-red.log",
+      "observation": "All five OpenAPI ECMAScript contract cases fail on JSON;the existing MCP schema cases already pass."
+    }
+  ],
+  "focused_green": {
+    "Go": "one contract method passes across six subcases,13 schemas and32 shared domain-bound cases",
+    "JavaScript": {
+      "tests": 6,
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0
+    },
+    "affected_vet": "pass",
+    "changed_workflow_actionlint": "pass",
+    "format_diff": "pass",
+    "affected_architecture": "pass",
+    "record_references": "pass;no runtime claim inferred"
+  },
+  "sources": [
+    {
+      "reference": ".github/workflows/core-checks.yml",
+      "sha256": "b361d66f0cdeacff2daac95f2fceb657c7816fd8ecd4ba86796afdf848b9f055",
+      "bytes": 4661
+    },
+    {
+      "reference": "internal/api/artifact_policy_schema_test.go",
+      "sha256": "e155b0876f8d8878651dad485d0632c7b27ad59094339a7276d93a929fb144d1",
+      "bytes": 2411
+    },
+    {
+      "reference": "web/tests/artifact-policy-schema.test.mjs",
+      "sha256": "400121f07638db4bf2b3d03f120dfbcb96e44c2c2f41eb9f3d1a9a9e4b10b9fe",
+      "bytes": 1507
+    },
+    {
+      "reference": "web/tests/fixtures/artifact-policy-cases.json",
+      "sha256": "3e32f7eb11b676096fe9190e8135ae7580efc36e9c6ef33af410d6dc2e3d4c2a",
+      "bytes": 4449
+    },
+    {
+      "reference": "docs/api/artifact-exchange.openapi.json",
+      "sha256": "092264ccfde16d9fd445abaecc5616261a3fbd7a42b052115ce454af3f2240de",
+      "bytes": 43854
+    },
+    {
+      "reference": "docs/api/artifact-onward.openapi.json",
+      "sha256": "4a9597e3b16f7240bd30f84dcf2cd727c1293bda09fe2fc2e4253d48283cfcdb",
+      "bytes": 21285
+    },
+    {
+      "reference": "docs/api/artifact-collection-source.openapi.json",
+      "sha256": "d6c04e1b7bcfb33873576aa61f75db888b54a0580445bc4014d6b1c47bb2ef83",
+      "bytes": 5388
+    },
+    {
+      "reference": "docs/api/received-artifact-copy.openapi.json",
+      "sha256": "12f84f3cb30752e8506a618838f9b565e0e656187f6a281a887534058d734ac7",
+      "bytes": 7813
+    },
+    {
+      "reference": "docs/api/artifact-evidence.openapi.json",
+      "sha256": "fc2a650e56b57d9b5a243435d40a5452a6c2484b5033039745eef40635a606b8",
+      "bytes": 13050
+    }
+  ],
+  "evidence": [
+    {
+      "reference": ".private/freightctl-f146-go-red.log",
+      "sha256": "b2bdf7747113872382745d269bebb74747fec7441adc1b375ead14c82caea369",
+      "bytes": 1189
+    },
+    {
+      "reference": ".private/freightctl-f146-js-red.log",
+      "sha256": "34fa31aee1daedfcc6fc5183f00f70963ef4ffabd22c00aeeeccb88d9b15469e",
+      "bytes": 7051
+    },
+    {
+      "reference": ".private/freightctl-f146-go-green.log",
+      "sha256": "2d4b57d66aa2c56a6bfd6c3497b6517eaf699384295e4453ed17dac9113c47f4",
+      "bytes": 55
+    },
+    {
+      "reference": ".private/freightctl-f146-js-green.log",
+      "sha256": "a0364b587e6c3537b5b57b2998ef111c8c7e0ddb8a25ba844788da2f0e23f9da",
+      "bytes": 695
+    },
+    {
+      "reference": ".private/freightctl-f146-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f146-actionlint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f146-records.log",
+      "sha256": "826009b37d6c8254924b7fd1ee12981059544175f2c890ad4186b88b41b583b4",
+      "bytes": 106
+    },
+    {
+      "reference": ".private/freightctl-f146-architecture.log",
+      "sha256": "0c0078de2000ee4ce3c1a4cbd7aba3881b434739c865317a8978a7d2e596841b",
+      "bytes": 64
+    }
+  ],
+  "owed": [
+    "Actual JSON native PG/API/CLI/browser/custody/recheck/copy and full exchange profiles remain owed under F145. Pattern conformance is not runtime or whole OpenAPI endpoint conformance.",
+    "Final-source replay and every deferred baseline/AX/security/native/customer/restore gate remain mandatory.No whole parity row or readiness verdict passes."
+  ],
+  "scope": "Local lightweight checks only;no inference,PG,Chrome,peer,scanner or deployment. Previous e65b59c runs still queued/running;next push must wait for their required terminal metadata."
+}
