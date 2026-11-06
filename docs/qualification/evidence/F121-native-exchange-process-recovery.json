@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "id": "F121",
+  "observed_at": "2026-11-05",
+  "starting_commit": "e9be9b5f308869b8d0662d19ba7e3230bbf69152",
+  "state": "Original CLI journey gains actual daemon/committed-response-loss/process-death recovery profile;native execution owed",
+  "qualification_claim": false,
+  "change": [
+    "Extend the original tagged CLI exchange journey after all existing assertions;build the actual product executable from the checked-out source and bind emitted proof to its SHA-256 and actual Git commit. No test daemon substitutes for the application.",
+    "Use real existing isolated PG/storage,protected ordinary credentials and verified loopback TLS. Four distinct daemon starts and three selected actual process kills cover acknowledged custody acceptance,committed offer response loss and persisted recipient revocation.",
+    "A one-purpose trusted loopback proxy reads the real upstream201 receipt,then drops the downstream connection before an HTTP response reaches the host. It supplies no application state or receipt. Exact-key retry after actual daemon death must recover the original exchange/event/hash;changed meaning refuses.",
+    "A stock curl receiver uses a protected header file,verified certificate,direct loopback and no redirect/proxy to independently compare exact bytes. Receiving cannot forward;wrong actor cannot inspect;revoked read cannot inspect/retrieve after another restart. Original sender receipt remains historical,not renewed recipient authority.",
+    "Require unchanged storage identity,one exact new file/offer/original command receipt and no extra onward intents. Stronger receiver persistence/business processing remain unknown. Clean only exact task-owned child processes;credentials,raw bodies and daemon logs stay private.",
+    "Native builder uses runner capacity without copied Go CPU/memory/build-size caps. Existing synthetic file/storage and network/control bounds stay unchanged. No new aggregate suite deadline,publication,deployment,inference,scanner or local native runtime."
+  ],
+  "proof": {
+    "local_affected_tagged_compilation": "pass,no tests selected",
+    "local_affected_tagged_vet": "pass",
+    "format_and_diff": "pass",
+    "actual_Done_when_runtime": "owed;new mandatory qualification profile,not an observed product red/green pair yet",
+    "original_failure_policy": "Preserve the first actual native failure and replay this original journey after repair;do not substitute local compilation or a stand-in"
+  },
+  "native_output_kind": "native-artifact-exchange-process-recovery",
+  "source_files": [
+    {
+      "path": "cmd/freightctl/exchange_process_integration_test.go",
+      "sha256": "ca217a8224b017ba8a196c4ff0eefdbecce8398b2ae599b7993bed2a7187fd3e"
+    },
+    {
+      "path": "cmd/freightctl/exchanges_integration_test.go",
+      "sha256": "863613cfc9ffb8bbfea9fb1924de3abacdda71a23c2a384fbe7b258f476855b2"
+    }
+  ],
+  "local_manifest": {
+    "reference": ".private/freightctl-f121-manifest.json",
+    "sha256": "b3915fed1bf0b26541fe16a04449709696a20d775ddf75b1afd9b8d921137376"
+  },
+  "owed": [
+    "Actual original native CLI journey including these process/HTTPS/curl/PG boundaries on both Linux architectures",
+    "Full two-agent separately authorized reply/intake/collection/onward/protocol/restore/ambiguity/final-source AX acceptance;this tiny poll-profile fixture is not an enterprise/durability/power-loss claim",
+    "All remaining baseline/AI/provider/scale/product implementation and mandatory FINISH deferred/broad/native gates"
+  ]
+}

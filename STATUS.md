@@ -193,6 +193,15 @@ pass;original native SDK/HTTPS/PG no-effect/exact draft cardinality,shared recei
 role/redaction and unapproved-onward refusals are prepared and owed. Catalog24;
 no inference,provider,migration or retained environment change.
 
+F121 extends the original CLI exchange journey with the actual built daemon,
+verified loopback TLS/real PG/storage,four starts and three selected process kills.
+A fault proxy drops a real committed offer response;original-key recovery must
+preserve identity. Stock curl independently checks bytes;foreign/forwarding and
+persisted revocation guards,unchanged storage identity and exact receipt/file/view
+cardinality remain required. Tagged compilation/vet pass;actual native execution,
+first failure/repair/replay and every full AX profile remain owed. No local daemon,
+PG,Chrome,peer,scanner or inference ran;no actual product outcome is inferred.
+
 Focused local parser/client/filesystem/summary regressions and affected static,
 frontend build, native compilation/vet and architecture checks pass. They establish
 no PostgreSQL, served browser, stock-peer or complete AX profile qualification.

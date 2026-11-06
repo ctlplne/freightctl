@@ -356,5 +356,5 @@ func TestArtifactExchangeCLIUsesOrdinaryAuthorityAndPublishesVerifiedDownload(t 
 	if json.Unmarshal(raw, &replayedOnward) != nil || !replayedOnward.Replayed || string(replayedOnward.Resource) != string(started.Resource) {
 		t.Fatal("CLI onward replay changed original run")
 	}
-
+	qualifyExchangeProcessRecovery(t, ctx, exchangeProcessFixture{DB: db, Administrator: scope, DSN: refs[1], Storage: storage, SenderToken: a, RecipientToken: b, OtherToken: other, AdminToken: adminToken, SenderActor: actorA.Actor, Recipient: actorB.Actor, Request: request, Payload: data})
 }
