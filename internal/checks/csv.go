@@ -289,6 +289,10 @@ func validCell(c Column, value string) bool {
 // Validate returns only counters, positions and codes, never original cell data.
 // A pass requires parsing every byte and matching the accepted length and hash.
 func Validate(ctx context.Context, p Policy, f store.File, policyHash string, input io.Reader) (Report, error) {
+	return validateRecords(ctx, p, f, policyHash, input, nil)
+}
+
+func validateRecords(ctx context.Context, p Policy, f store.File, policyHash string, input io.Reader, visit RecordVisitor) (Report, error) {
 	report := Report{Engine: Engine, FileID: f.ID, SHA256: f.SHA256, PolicyHash: policyHash}
 	var err error
 	p, err = Normalize(p)
@@ -306,16 +310,16 @@ func Validate(ctx context.Context, p Policy, f store.File, policyHash string, in
 		return report, nil
 	}
 	if p.Schema == 2 && p.Kind == "json_records" {
-		return validateJSONRecords(ctx, p, f, policyHash, input)
+		return validateJSONRecords(ctx, p, f, policyHash, input, visit)
 	}
 	if p.Schema == 3 && p.Kind == "fixed_width" {
-		return validateFixedWidth(ctx, p, f, policyHash, input)
+		return validateFixedWidth(ctx, p, f, policyHash, input, visit)
 	}
 	if p.Schema == 4 && p.Kind == "xml_records" {
-		return validateXMLRecords(ctx, p, f, policyHash, input)
+		return validateXMLRecords(ctx, p, f, policyHash, input, visit)
 	}
 	if p.Schema == 5 && p.Kind == "xlsx_records" {
-		return validateXLSXIntake(ctx, p, f, policyHash, input)
+		return validateXLSXIntake(ctx, p, f, policyHash, input, visit)
 	}
 	h := secure.NewDigest()
 	b := &budgetReader{ctx: ctx, reader: io.LimitReader(input, p.MaxBytes+1), hash: h}
@@ -377,6 +381,16 @@ func Validate(ctx context.Context, p Policy, f store.File, policyHash string, in
 				report.Row = report.Rows + 1
 				report.Column = i + 1
 				return report, nil
+			}
+		}
+		if visit != nil {
+			values := make([]RecordCell, len(cells))
+			for i, value := range cells {
+				values[i] = RecordCell{Presence: CellValue, Value: value}
+			}
+			if err = emitRecord(visit, report.Rows, values); err != nil {
+				report.Code = "record_consumer_failed"
+				return report, err
 			}
 		}
 	}

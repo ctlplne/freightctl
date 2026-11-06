@@ -5,13 +5,12 @@ baseline,all83 whole parity rows,twelve complete journeys and AX01–AX08 remain
 open. Assisted deployment,independent adoption and enterprise readiness remain
 unqualified. Missing market selection does not block engineering.
 
-Latest completed pushed batch:1b8944730f3be663e2074c21f9a51f314dc79f40.
-Its17 original workflows are terminal;F156 preserves exact run/job outcomes and
-original failures. Native ARM/x86 Python3.12.3/zlib1.3 stock ZIP and XlsxWriter3.3.1
-parser/race/security profiles pass:four ZIP forms and13 workbooks/seven accepts/
-six refusals on each architecture. The producer's full dependency closure and
-live PyPI/OSV checks pass. These are parser-only results at that earlier source.
-They do not qualify the later governed adapter,ordinary custody or final product.
+Latest completed pushed batch:f6be16ad9ef88ee4ec3ab0421391727311b9cfe1.
+All17 original workflows are terminal;F159 preserves exact run/job handles and
+original failures. ARM/x86 stock ZIP/XLSX parser/race/security,dependency closure,
+source vulnerabilities,peer image gates,tus audits,bounded fuzz and reproduction
+pass at that source. These do not qualify governed PostgreSQL/custody/served
+application outcomes or the later stream/projection changes.
 
 F155 implements schema5/xlsx_records beside CSV,JSON,fixed-width and scalar XML.
 Exact worksheet/date meaning and package/shared-string budgets join the reviewed
@@ -41,12 +40,24 @@ stock-peer failures remain red. F152 preserves both earlier16-run batches;F156
 the latest17. S003 defers nonsecurity logs/repair until mandatory FINISH;new
 security failures receive immediate triage. No original run was canceled.
 
-Continue remaining mandatory baseline and exchange implementation,including
-broader schemas/spreadsheets/EDI and deterministic transformations. AX-J01/J02
-and independent stock receivers remain open. X07 blocks only real optional
-Trust Control qualification;no API is invented. Inference,licensed/external peers,
-multi-host/hardware and whole customer qualification remain owed. F026 stays
-manual/owner-deferred.
+F157/F158 add a typed record stream through the same five validators and a
+versioned deterministic JSON/CSV projection core. Exact mappings/presence rules,
+engine/source-contract hashes,bounded processing,ordered duplicates and exact
+money/identifier/date values remain explicit. CSV formula-like text and implicit
+presence/newline loss refuse. Every incomplete result returns an error and no
+successful digest. Actual private staging removes failed partials and seals only
+complete read-only bytes. Focused parser/stream/projection and static checks pass;
+new native typed-XLSX/ten-output independent-receiver/race/fuzz proof is prepared,
+owed. This is not yet a governed workflow task or application interface.
+
+Next:integrate transformations with typed workflow authority,approved immutable
+intents,live permissions,leases/fencing,quota,lineage,transactional receipts and
+crash recovery;bind source protections and fresh output checks/separate release.
+Then qualify ordinary API/CLI/browser/MCP and original customer outcomes. Continue
+all remaining baseline/exchange work;broader schemas/formats/EDI/transforms,
+AX-J01/J02 and independent stock receivers remain open. X07 blocks only real
+optional Trust Control proof;no API is invented. Inference,licensed/external peers,
+multi-host/hardware and whole qualification remain owed. F026 stays manual.
 
 FINISH must repair/replay every deferred original failure and run applicable
 broad unit/race/integration,architecture/security,frontend/accessibility,native,

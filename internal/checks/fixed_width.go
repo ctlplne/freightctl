@@ -13,7 +13,7 @@ import (
 	"github.com/ctlplne/freightctl/internal/store"
 )
 
-func validateFixedWidth(ctx context.Context, p Policy, file store.File, policyHash string, input io.Reader) (Report, error) {
+func validateFixedWidth(ctx context.Context, p Policy, file store.File, policyHash string, input io.Reader, visit RecordVisitor) (Report, error) {
 	report := Report{Engine: policyEngine(p), FileID: file.ID, SHA256: file.SHA256, PolicyHash: policyHash}
 	hash := secure.NewDigest()
 	bounded := &budgetReader{ctx: ctx, reader: io.LimitReader(input, p.MaxBytes+1), hash: hash}
@@ -73,6 +73,10 @@ func validateFixedWidth(ctx context.Context, p Policy, file store.File, policyHa
 			return report, nil
 		}
 		offset := 0
+		var values []RecordCell
+		if visit != nil {
+			values = make([]RecordCell, len(p.Columns))
+		}
 		for i, c := range p.Columns {
 			value := string(record[offset : offset+c.Width])
 			offset += c.Width
@@ -86,6 +90,13 @@ func validateFixedWidth(ctx context.Context, p Policy, file store.File, policyHa
 				report.Code, report.Row, report.Column = "invalid_cell", report.Rows, i+1
 				return report, nil
 			}
+			if visit != nil {
+				values[i] = RecordCell{Presence: CellValue, Value: value}
+			}
+		}
+		if err = emitRecord(visit, report.Rows, values); err != nil {
+			report.Code = "record_consumer_failed"
+			return report, err
 		}
 	}
 	if bounded.total != file.Size || hex.EncodeToString(hash.Sum(nil)) != file.SHA256 {

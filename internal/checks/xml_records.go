@@ -77,7 +77,7 @@ func xmlRootMatches(s xml.StartElement, p *XMLRecordPolicy) bool {
 	return p.Namespace != "" && a.Name.Space == "xmlns" && a.Name.Local == s.Name.Space
 }
 
-func validateXMLRecords(ctx context.Context, p Policy, file store.File, policyHash string, input io.Reader) (Report, error) {
+func validateXMLRecords(ctx context.Context, p Policy, file store.File, policyHash string, input io.Reader, visit RecordVisitor) (Report, error) {
 	report := Report{Engine: policyEngine(p), FileID: file.ID, SHA256: file.SHA256, PolicyHash: policyHash}
 	hash := secure.NewDigest()
 	bounded := &budgetReader{ctx: ctx, reader: io.LimitReader(input, p.MaxBytes+1), hash: hash, remaining: p.MaxRecordBytes + 4096}
@@ -87,6 +87,7 @@ func validateXMLRecords(ctx context.Context, p Policy, file store.File, policyHa
 	depth, column := 0, -1
 	var root, record, field xml.Name
 	var seen []bool
+	var values []RecordCell
 	var cell []byte
 	closed, declared := false, false
 	span := int64(0)
@@ -170,6 +171,12 @@ func validateXMLRecords(ctx context.Context, p Policy, file store.File, policyHa
 				record = v.Name
 				depth = 2
 				seen = make([]bool, len(p.Columns))
+				if visit != nil {
+					values = make([]RecordCell, len(p.Columns))
+					for i := range values {
+						values[i].Presence = CellMissing
+					}
+				}
 				report.Rows++
 				if report.Rows > p.MaxRows {
 					return fail("row_limit")
@@ -207,6 +214,9 @@ func validateXMLRecords(ctx context.Context, p Policy, file store.File, policyHa
 				if !validCell(p.Columns[column], string(cell)) {
 					return fail("invalid_cell")
 				}
+				if visit != nil {
+					values[column] = RecordCell{Presence: CellValue, Value: string(cell)}
+				}
 				depth = 2
 				column = -1
 			case 2:
@@ -218,6 +228,10 @@ func validateXMLRecords(ctx context.Context, p Policy, file store.File, policyHa
 						column = i
 						return fail("missing_field")
 					}
+				}
+				if err = emitRecord(visit, report.Rows, values); err != nil {
+					report.Code = "record_consumer_failed"
+					return report, err
 				}
 				depth = 1
 				reset()

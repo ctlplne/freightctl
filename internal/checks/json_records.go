@@ -53,39 +53,49 @@ func validJSONRecordUnicode(raw []byte) bool {
 	return true
 }
 
-func checkJSONRecord(raw []byte, columns []Column, indices map[string]int) (string, int) {
+func checkJSONRecord(raw []byte, columns []Column, indices map[string]int, collect bool) (string, int, []RecordCell) {
 	if !validJSONRecordUnicode(raw) {
-		return "malformed_json", 0
+		return "malformed_json", 0, nil
 	}
 	decoder := json.NewDecoder(bytes.NewReader(raw))
 	decoder.UseNumber()
 	start, err := decoder.Token()
 	if err != nil || start != json.Delim('{') {
-		return "non_object_record", 0
+		return "non_object_record", 0, nil
 	}
 	seen := make([]bool, len(columns))
+	var cells []RecordCell
+	if collect {
+		cells = make([]RecordCell, len(columns))
+		for i := range cells {
+			cells[i].Presence = CellMissing
+		}
+	}
 	for decoder.More() {
 		key, err := decoder.Token()
 		name, stringKey := key.(string)
 		if err != nil || !stringKey {
-			return "malformed_json", 0
+			return "malformed_json", 0, nil
 		}
 		index, found := indices[name]
 		if !found {
-			return "unknown_field", 0
+			return "unknown_field", 0, nil
 		}
 		if seen[index] {
-			return "duplicate_field", index + 1
+			return "duplicate_field", index + 1, nil
 		}
 		seen[index] = true
 		value, err := decoder.Token()
 		if err != nil {
-			return "malformed_json", index + 1
+			return "malformed_json", index + 1, nil
 		}
 		column := columns[index]
 		if value == nil {
+			if collect {
+				cells[index].Presence = CellNull
+			}
 			if column.Required {
-				return "invalid_cell", index + 1
+				return "invalid_cell", index + 1, nil
 			}
 			continue
 		}
@@ -94,34 +104,37 @@ func checkJSONRecord(raw []byte, columns []Column, indices map[string]int) (stri
 		case "text", "date":
 			text, ok := value.(string)
 			if !ok {
-				return "invalid_cell", index + 1
+				return "invalid_cell", index + 1, nil
 			}
 			cell = text
 		case "integer", "decimal":
 			number, ok := value.(json.Number)
 			if !ok {
-				return "invalid_cell", index + 1
+				return "invalid_cell", index + 1, nil
 			}
 			cell = string(number)
 		default:
-			return "invalid_cell", index + 1
+			return "invalid_cell", index + 1, nil
 		}
 		if !validCell(column, cell) {
-			return "invalid_cell", index + 1
+			return "invalid_cell", index + 1, nil
+		}
+		if collect {
+			cells[index] = RecordCell{Presence: CellValue, Value: cell}
 		}
 	}
 	if end, err := decoder.Token(); err != nil || end != json.Delim('}') {
-		return "malformed_json", 0
+		return "malformed_json", 0, nil
 	}
 	for i, column := range columns {
 		if column.Required && !seen[i] {
-			return "missing_field", i + 1
+			return "missing_field", i + 1, nil
 		}
 	}
-	return "", 0
+	return "", 0, cells
 }
 
-func validateJSONRecords(ctx context.Context, p Policy, file store.File, policyHash string, input io.Reader) (Report, error) {
+func validateJSONRecords(ctx context.Context, p Policy, file store.File, policyHash string, input io.Reader, visit RecordVisitor) (Report, error) {
 	report := Report{Engine: policyEngine(p), FileID: file.ID, SHA256: file.SHA256, PolicyHash: policyHash}
 	hash := secure.NewDigest()
 	bounded := &budgetReader{ctx: ctx, reader: io.LimitReader(input, p.MaxBytes+1), hash: hash, remaining: p.MaxRecordBytes + 4096}
@@ -166,9 +179,14 @@ func validateJSONRecords(ctx context.Context, p Policy, file store.File, policyH
 			report.Code, report.Row = "row_limit", report.Rows
 			return report, nil
 		}
-		if code, column := checkJSONRecord(raw, p.Columns, indices); code != "" {
+		code, column, cells := checkJSONRecord(raw, p.Columns, indices, visit != nil)
+		if code != "" {
 			report.Code, report.Row, report.Column = code, report.Rows, column
 			return report, nil
+		}
+		if err = emitRecord(visit, report.Rows, cells); err != nil {
+			report.Code = "record_consumer_failed"
+			return report, err
 		}
 		if err = ctx.Err(); err != nil {
 			return report, err

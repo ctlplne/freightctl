@@ -177,6 +177,7 @@ type xlsxWorkbook struct {
 	stringRefs   int64
 	declaredRefs int64
 	report       XLSXReport
+	visit        RecordVisitor
 }
 
 func validSheetName(s string) bool {
@@ -195,6 +196,10 @@ func validSheetName(s string) bool {
 // workbook. Formula caches,external links,macros and unsupported active parts
 // cannot become data. It never uses a floating point number or evaluates a cell.
 func ValidateXLSX(ctx context.Context, c XLSXContract, input io.ReaderAt, size int64) (XLSXReport, error) {
+	return validateXLSXRecords(ctx, c, input, size, nil)
+}
+
+func validateXLSXRecords(ctx context.Context, c XLSXContract, input io.ReaderAt, size int64, visit RecordVisitor) (XLSXReport, error) {
 	r := XLSXReport{}
 	if ctx.Err() != nil {
 		return r, ctx.Err()
@@ -207,7 +212,7 @@ func ValidateXLSX(ctx context.Context, c XLSXContract, input io.ReaderAt, size i
 		return r, err
 	}
 	c.Columns, c.MaxRows, c.MaxRecordBytes = p.Columns, p.MaxRows, p.MaxRecordBytes
-	w := &xlsxWorkbook{c: c, types: map[string]string{}, parts: map[string]bool{}, rels: map[string]map[string]xlsxRelationship{}, declaredRefs: -1}
+	w := &xlsxWorkbook{c: c, types: map[string]string{}, parts: map[string]bool{}, rels: map[string]map[string]xlsxRelationship{}, declaredRefs: -1, visit: visit}
 	w.z, err = zipcontainer.Open(ctx, input, size, c.Container)
 	if err == nil {
 		for _, e := range w.z.Entries() {
@@ -220,7 +225,11 @@ func ValidateXLSX(ctx context.Context, c XLSXContract, input io.ReaderAt, size i
 			return w.report, ctx.Err()
 		}
 		var failure *xlsxFailure
+		var consumer *recordConsumerError
 		switch {
+		case errors.As(err, &consumer):
+			w.report.Code = "record_consumer_failed"
+			return w.report, consumer
 		case errors.As(err, &failure):
 			w.report.Code, w.report.Row, w.report.Column = failure.code, failure.row, failure.column
 		case errors.Is(err, zipcontainer.ErrInput):
@@ -822,6 +831,7 @@ func (w *xlsxWorkbook) worksheet(ctx context.Context, name string, selected bool
 	seenValues, seenInline := false, false
 	rowValues := make([]string, len(w.c.Columns))
 	rowText := make([]string, len(w.c.Columns))
+	rowCells := make([]RecordCell, len(w.c.Columns))
 	seenSheetData := false
 	err := w.xml(ctx, name, xml.Name{Space: xlsxMain, Local: "worksheet"}, func(e xlsxEvent) error {
 		fail := func(code string) error { return &xlsxFailure{code: code, row: row, column: column + 1} }
@@ -853,6 +863,9 @@ func (w *xlsxWorkbook) worksheet(ctx context.Context, name string, selected bool
 				row, rowStart, lastColumn = n, e.Before, -1
 				clear(rowValues)
 				clear(rowText)
+				for i := range rowCells {
+					rowCells[i] = RecordCell{Presence: CellMissing}
+				}
 			case "c":
 				if len(e.Path) != 4 || e.Path[2].Local != "row" {
 					return fail("invalid_xlsx_cell")
@@ -934,6 +947,11 @@ func (w *xlsxWorkbook) worksheet(ctx context.Context, name string, selected bool
 				}
 				if selected {
 					rowValues[column], rowText[column] = value, textual
+					presence := CellValue
+					if !seenValues && !seenInline || (kind == "" || kind == "n") && raw.Len() == 0 {
+						presence = CellNull
+					}
+					rowCells[column] = RecordCell{Presence: presence, Value: value}
 				}
 			}
 			if s.Name.Local == "row" {
@@ -952,6 +970,28 @@ func (w *xlsxWorkbook) worksheet(ctx context.Context, name string, selected bool
 					}
 					if row > 1 {
 						w.report.Rows++
+						if w.visit != nil {
+							for i, c := range w.c.Columns {
+								if rowCells[i].Presence != CellValue || rowCells[i].Value == "" {
+									continue
+								}
+								var err error
+								switch c.Type {
+								case "integer", "decimal":
+									rowCells[i].Value, err = xlsxNumber(rowCells[i].Value, c.MaxBytes)
+								case "date":
+									if w.c.DateMode != "iso_text" {
+										rowCells[i].Value, err = xlsxSerialDate(w.c.DateMode, rowCells[i].Value)
+									}
+								}
+								if err != nil {
+									return err
+								}
+							}
+							if err := emitRecord(w.visit, w.report.Rows, rowCells); err != nil {
+								return err
+							}
+						}
 					}
 				}
 				lastRow = row

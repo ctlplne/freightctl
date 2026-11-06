@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "id": "F158",
+  "observed_at": "2026-11-06",
+  "candidate_parent": "f6be16ad9ef88ee4ec3ab0421391727311b9cfe1",
+  "qualification_claim": false,
+  "contract": "docs/protocols/record-projection.md",
+  "source_files": [
+    {
+      "reference": ".github/workflows/document-containers.yml",
+      "sha256": "886ec211329b13e4ebacf5424768aacb98924a377f0daeaba8ec7ba9993308be",
+      "bytes": 3792
+    },
+    {
+      "reference": ".github/workflows/native-linux.yml",
+      "sha256": "edd34e61b2bc7712c31db0c09ac587f987887d600b1aca0535eeb2d727ad5a73",
+      "bytes": 11739
+    },
+    {
+      "reference": "docs/protocols/record-projection.md",
+      "sha256": "735a44803824ef82937cb9b79f58392e81c5adb53abff8f2a6b44940798ed86a",
+      "bytes": 6296
+    },
+    {
+      "reference": "internal/checks/csv.go",
+      "sha256": "d66ca3652e506f6d1f3655517b6ec708efa45c2f47c80e51cecddae83c85937e",
+      "bytes": 11853
+    },
+    {
+      "reference": "internal/checks/fixed_width.go",
+      "sha256": "c786f3cada5323b6625cdfd06e9dc0ab8be3cee897ff2e03dfe96357daf38070",
+      "bytes": 3008
+    },
+    {
+      "reference": "internal/checks/json_records.go",
+      "sha256": "513cb00dadf1147aaf99c4101d727d62fa8b9ed22c792c8d98c448c9693131c5",
+      "bytes": 5448
+    },
+    {
+      "reference": "internal/checks/projection.go",
+      "sha256": "f8d2ce5a4d1d057dc88449cd924b72399b727d7227a6df42b5ac0eacbf06b765",
+      "bytes": 13400
+    },
+    {
+      "reference": "internal/checks/projection_native_test.go",
+      "sha256": "5e97f79c525ae3c1ee53621413c1eb29b4dea3d57d9b9d4984e317e70737031a",
+      "bytes": 4399
+    },
+    {
+      "reference": "internal/checks/projection_test.go",
+      "sha256": "50f01aa7b787183a3e5cec7ab5a5202352ed0b27e14be9379a663d1a8caaeab5",
+      "bytes": 13608
+    },
+    {
+      "reference": "internal/checks/records.go",
+      "sha256": "3475fcccdda4d38d4a0f866881b6cf591e5690842329e386c6d42a2a76b45177",
+      "bytes": 1997
+    },
+    {
+      "reference": "internal/checks/records_test.go",
+      "sha256": "83bb497b2891ff0486751647861734d0b1cf72ba9917b75992a085b9b329cdd7",
+      "bytes": 7940
+    },
+    {
+      "reference": "internal/checks/xlsx_intake.go",
+      "sha256": "4fa3b084e62e66ddaca93252750d0b0ac177f625fe1ed038fcb778e87f616fec",
+      "bytes": 3625
+    },
+    {
+      "reference": "internal/checks/xlsx_native_test.go",
+      "sha256": "ab24a9656c35637f5932c4d4ddc342a3d67f90e01c005413bcddca763efde84e",
+      "bytes": 3669
+    },
+    {
+      "reference": "internal/checks/xlsx_records.go",
+      "sha256": "e8dea56fad72427c7f43a20af641ede8b914f8a86bf6edffd02f644f9f2fe86d",
+      "bytes": 31241
+    },
+    {
+      "reference": "internal/checks/xml_records.go",
+      "sha256": "97cb8f3519653227b1de8acfc4ce625258ca28960a90f948ffa599e0fc9efaeb",
+      "bytes": 7054
+    },
+    {
+      "reference": "scripts/record-projection-native.py",
+      "sha256": "87d5d0d29f469b1689a5b8c45491a5d3a6d2dfca7feb65a79263dd23cfdced35",
+      "bytes": 4303
+    }
+  ],
+  "local_manifest": {
+    "reference": ".private/freightctl-f158-manifest.json",
+    "sha256": "ba9b5aa268db8de9014c89ccdcafa8cc117b0630719097cffc036b36c2a92d91",
+    "bytes": 4997
+  },
+  "resources": "Existing lightweight local Go limits only. No local inference,PG,Chrome,GnuPG,scanner,image,stock producer/receiver or fuzz campaign. No publication/deployment.",
+  "state": "Deterministic JSON/CSV projection core implemented;not yet a governed application task",
+  "engine": "freightctl-record-projection-v1",
+  "changes": [
+    "Versioned declarative source-policy/engine binding;exact ordered source/target mapping;explicit identity/text/LF conversions and independent original-state missing/null/empty rules. Unknown engine/sources/operations,duplicate targets and mutable review storage refuse. Every rule/budget binds the definition hash.",
+    "JSON serialization preserves exact values without binary floating point,nullable presence,empty text,record order and duplicates. CSV structural quoting preserves machine-readable fields;missing/null require an explicit conversion,CRLF text requires an explicit LF mapping and formula-like text/header prefixes refuse instead of modifying content.",
+    "Output source/byte/record/row/time failures always return non-nil errors and no successful output digest. Actual existing StageGenerated filesystem proof removes failed private partials;complete output is synced,sealed0400 and independently read back with matching size/SHA. This does not qualify database acceptance/quotas or application authority.",
+    "Prepared native ARM/x86 stock Python CSV/JSON/ElementTree/fixed plus actual stock-XLSX inputs,ten JSON/CSV outputs and an independent Python JSON/Decimal/CSV receiver for exact hashes,values,ordering and duplicates. Tagged compile and script syntax are not native runtime qualification."
+  ],
+  "observed_red": [
+    {
+      "reference": ".private/freightctl-f158-projection-red.log",
+      "observation": "No versioned deterministic projection engine exists for the new contract."
+    }
+  ],
+  "focused_green": {
+    "contract_tests": 6,
+    "scope": "exact repeated output/hashes;reviewed mapping/rule drift;JSON independent interpretation;CSV independent interpretation/formula refusal;presence/newline rules;numeric canonicalization;all output/source budgets;fixed I/O failures;actual private-stage cleanup/read-only seal/readback",
+    "ordinary_fuzz_seeds": "pass;not a campaign",
+    "affected_parser_regressions": "pass",
+    "tagged_native_compile": "pass;zero runtime tests selected",
+    "affected_tagged_vet": "pass",
+    "architecture": "pass",
+    "workflow_lint": "pass",
+    "native_receiver_script_syntax": "pass;not executed"
+  },
+  "owed": [
+    "Bind this engine to ordinary typed workflow authority,approved immutable intents,live source/target permissions,leases/fencing,quota reservations,new child lineage,transactional events/idempotency/receipts and crash/reconciliation recovery. Receiving an artifact grants no processing or forwarding.",
+    "Bind current source protections and output intake policy;require new held output checks/signatures/scanning and separate exact release. No inheritance of source approvals or successful checks.",
+    "Actual ordinary API/CLI/browser/MCP/operator review and execution/recovery proof;actual new native producer/independent receiver/race/fuzz outcomes at the candidate.",
+    "Broader transforms,additional output formats/general schemas/EDI/database exchange,all83 whole rows/twelve full journeys/AX01-AX08 and every deferred mandatory FINISH/final-source gate remain open. Assisted deployment,independent adoption and enterprise readiness unqualified."
+  ]
+}

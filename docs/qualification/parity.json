@@ -2783,12 +2783,14 @@
         "docs/qualification/evidence/F153-document-container-foundation.json",
         "docs/qualification/evidence/F154-xlsx-parser-foundation.json",
         "docs/qualification/evidence/F155-governed-xlsx-intake.json",
-        "docs/qualification/evidence/F156-native-document-containers.json"
+        "docs/qualification/evidence/F156-native-document-containers.json",
+        "docs/qualification/evidence/F157-typed-record-stream.json",
+        "docs/qualification/evidence/F158-record-projection-core.json"
       ],
       "qualification_blockers": [
         "Authorized JSCAPE by Redwood installation and exact edition/version for observed comparison"
       ],
-      "current_limit": "CSV,JSON,fixed-width,scalar XML and governed XLSX table intake are implemented in bounded explicit profiles. F155 local contracts/static checks pass and actual-stock application proofs are prepared. F156 qualifies only earlier-source native parser inputs. Ordinary XLSX SQL/custody/API/CLI/browser/crypto/copy/recheck and final-source outcomes remain owed;strict OOXML/ODS/XLS,EDI,general schemas/transforms and whole-row/customer qualification remain open."
+      "current_limit": "CSV,JSON,fixed-width,scalar XML and governed XLSX table intake are implemented in bounded explicit profiles. F155 local contracts/static checks pass and actual-stock application proofs are prepared. F156 qualifies only earlier-source native parser inputs. Ordinary XLSX SQL/custody/API/CLI/browser/crypto/copy/recheck and final-source outcomes remain owed;strict OOXML/ODS/XLS,EDI,general schemas/transforms and whole-row/customer qualification remain open. F157/F158 add internal typed-stream/projection primitives,not a completed governed transformation task. Native receiver and application authority/recovery/interface outcomes remain owed."
     },
     {
       "id": "O-MONITOR",

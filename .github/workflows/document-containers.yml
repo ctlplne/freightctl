@@ -9,6 +9,7 @@ on:
       - "scripts/zip-container-producer.py"
       - "scripts/xlsx-stock-producer.py"
       - "scripts/xlsxwriter-qualification.txt"
+      - "scripts/record-projection-native.py"
       - "scripts/go.sh"
       - "go.mod"
       - "go.sum"
@@ -20,6 +21,7 @@ on:
       - "scripts/zip-container-producer.py"
       - "scripts/xlsx-stock-producer.py"
       - "scripts/xlsxwriter-qualification.txt"
+      - "scripts/record-projection-native.py"
       - "scripts/go.sh"
       - "go.mod"
       - "go.sum"
@@ -79,3 +81,12 @@ jobs:
         run: |
           sh scripts/go.sh test -race -timeout=0 -tags=xlsxnative -run '^TestXLSXRecords' -count=1 -v ./internal/checks
           sh scripts/go.sh vet -tags=xlsxnative ./internal/checks
+      - name: Independent native record-processing producers
+        run: |
+          umask 077
+          python3 scripts/record-projection-native.py prepare .private/record-projection-native
+          printf 'FREIGHTCTL_TEST_PROJECTION_DIR=%s\n' "$GITHUB_WORKSPACE/.private/record-projection-native" >> "$GITHUB_ENV"
+      - name: Security - native transformation byte and independent receiver contracts
+        run: |
+          sh scripts/go.sh test -race -timeout=0 -tags=projectionnative -run '^TestRecordProjection' -count=1 -v ./internal/checks
+          python3 scripts/record-projection-native.py verify .private/record-projection-native

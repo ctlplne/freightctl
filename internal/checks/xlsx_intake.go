@@ -62,7 +62,7 @@ func xlsxContract(p Policy) XLSXContract {
 	return XLSXContract{Sheet: x.Sheet, DateMode: x.DateMode, Columns: p.Columns, MaxRows: p.MaxRows, MaxRecordBytes: p.MaxRecordBytes, MaxSharedStrings: x.MaxSharedStrings, MaxSharedBytes: x.MaxSharedBytes, Container: zipcontainer.Limits{MaxBytes: p.MaxBytes, MaxEntries: x.MaxParts, MaxDirectoryBytes: x.MaxDirectoryBytes, MaxEntryBytes: x.MaxPartBytes, MaxExpandedBytes: x.MaxExpandedBytes, MaxRatio: x.MaxExpansionRatio, MaxNameBytes: 256, MaxDepth: 8}}
 }
 
-func validateXLSXIntake(ctx context.Context, p Policy, file store.File, policyHash string, input io.Reader) (Report, error) {
+func validateXLSXIntake(ctx context.Context, p Policy, file store.File, policyHash string, input io.Reader, visit RecordVisitor) (Report, error) {
 	report := Report{Engine: policyEngine(p), FileID: file.ID, SHA256: file.SHA256, PolicyHash: policyHash}
 	source, ok := input.(io.ReaderAt)
 	if !ok {
@@ -89,7 +89,7 @@ func validateXLSXIntake(ctx context.Context, p Policy, file store.File, policyHa
 		report.Code = "source_integrity_changed"
 		return report, nil
 	}
-	r, err := ValidateXLSX(ctx, xlsxContract(p), source, n)
+	r, err := validateXLSXRecords(ctx, xlsxContract(p), source, n, visit)
 	report.Code, report.Rows, report.Row, report.Column = r.Code, r.Rows, r.Row, r.Column
 	return report, err
 }

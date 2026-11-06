@@ -3,12 +3,14 @@
 package checks
 
 import (
+	"bytes"
 	"encoding/json"
 	"os"
 	"path/filepath"
 	"testing"
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
+	"github.com/ctlplne/freightctl/internal/store"
 )
 
 func TestXLSXRecordsActualStockXlsxWriter(t *testing.T) {
@@ -57,6 +59,27 @@ func TestXLSXRecordsActualStockXlsxWriter(t *testing.T) {
 		f.Close()
 		if e != nil || r.Code != code || code == "valid_xlsx_records" && r.Rows != 1 {
 			t.Fatalf("stock %s:want %s,got %s/%d: %v", c.Name, code, r.Code, r.Rows, e)
+		}
+		if code == "valid_xlsx_records" {
+			p := xlsxIntakePolicy(t)
+			p.XLSX.DateMode = contract.DateMode
+			var rows []Record
+			stream, e := StreamRecords(t.Context(), p, store.File{Size: c.Bytes, SHA256: c.SHA256}, "", bytes.NewReader(body), func(row Record) error { rows = append(rows, row); return nil })
+			id := "0001"
+			if c.Name == "literal_formula.xlsx" {
+				id = "=SUM(1,2)"
+			}
+			if c.Name == "literal_escape.xlsx" {
+				id = "_x0041_"
+			}
+			if e != nil || stream.Code != code || len(rows) != 1 || rows[0].Number != 1 || len(rows[0].Cells) != 3 {
+				t.Fatal("actual stock typed record stream differs", e)
+			}
+			for i, want := range []string{id, "100.01", "2026-10-28"} {
+				if rows[0].Cells[i].Presence != CellValue || rows[0].Cells[i].Value != want {
+					t.Fatal("actual stock scalar,rich text,escape or date meaning changed")
+				}
+			}
 		}
 	}
 	if len(want) != 0 {
