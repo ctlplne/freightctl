@@ -412,4 +412,13 @@ func TestArtifactExchangeCLIUsesOrdinaryAuthorityAndPublishesVerifiedDownload(t 
 		t.Fatal("CLI copy receipt recovery reopened source", err)
 	}
 	qualifyExchangeProcessRecovery(t, ctx, exchangeProcessFixture{DB: db, Administrator: scope, DSN: refs[1], Storage: storage, SenderToken: a, RecipientToken: b, OtherToken: other, AdminToken: adminToken, SenderActor: actorA.Actor, Recipient: actorB.Actor, Request: request, Payload: data})
+	historyInput := requestFile(store.AuditHistoryRequest{Resource: file.ID, Kinds: []string{"FileAccepted"}, Limit: 1})
+	raw, err = command(adminToken, "audit-history", "-request-file", historyInput)
+	var auditPage store.AuditHistoryPage
+	if err != nil || json.Unmarshal(raw, &auditPage) != nil || len(auditPage.Events) != 1 || auditPage.Events[0].ID != file.EventID || auditPage.Events[0].Resource != file.ID || auditPage.Payloads != "omitted" || auditPage.Next != "" {
+		t.Fatal("CLI audit metadata changed original accepted revision", err)
+	}
+	if _, err = command(a, "audit-history", "-request-file", historyInput); !errors.Is(err, store.ErrForbidden) {
+		t.Fatal("ordinary sender gained audit authority", err)
+	}
 }

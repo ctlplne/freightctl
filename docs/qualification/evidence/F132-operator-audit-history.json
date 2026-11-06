@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "id": "F132",
+  "observed_at": "2026-11-05",
+  "candidate_parent": "8198101b0b4c163a17223e429477d6c7a067bc7d",
+  "state": "Root audit_read metadata history API/CLI implemented;browser and actual native outcomes owed",
+  "qualification_claim": false,
+  "profile": "event-metadata-history-v1",
+  "changes": [
+    "Strict8KiB exact actor/resource/kind/UTC microsecond selectors and limit1..100;no raw event payload,path,content,credential,original key,SQL or authority field. Literal kinds max16,normalized copied/sorted/deduplicated.",
+    "Existing non-owner scope/RLS plus root audit_read before query and before disclosure. Read-only metadata query selects only ID/actor/kind/resource/time. No domain event,receipt,intent,file or browser command write. Shared ordinary audit admission remains purposeful product control.",
+    "Canonical bounded base64url keyset cursor binds normalized filters and current tenant/partner/actor,authority revision/root digest. Page size may change;scope/filter/stamp changes refuse. Cursor grants no authority. Pages are independent observations,not a fixed snapshot,causal ordering promise or notification checkpoint. Existing signed snapshot export stays separate.",
+    "Append-only migration46 adds scoped actor/resource/kind/time indexes,no new metadata table or RLS exception. CLI reads a protected8KiB regular request and ordinary credential/DB references. OpenAPI subset published as source contract,not runtime qualification."
+  ],
+  "red": [
+    {
+      "reference": ".private/freightctl-f132-api-red.log",
+      "observation": "New metadata-search control observed404 before route implementation;malformed/excessive/raw-payload authority now400 before database"
+    },
+    {
+      "reference": ".private/freightctl-f132-cursor-red.log",
+      "observation": "Focused cursor regression caught Go base64 Strict decoder accepting a trailing newline;exact canonical encoding comparison repairs it"
+    }
+  ],
+  "green": {
+    "focused_Go_methods": 4,
+    "metadata_summary_methods": 7,
+    "affected_tagged_compile": "pass,no native runtime selected",
+    "affected_tagged_vet": "pass",
+    "unchanged_architecture": "pass",
+    "format_diff": "pass",
+    "OpenAPI": "one path,20 local refs resolve;external conformance owed"
+  },
+  "prepared_native": [
+    "Actual non-owner PG6same-time events paginate by exact UUID without gaps/duplicates;literal actor/resource/kind/half-open time filters,changed-filter/scope cursor refusal and payload/no-effects proof",
+    "Explicit root audit reader works;confined audit_read and later revoked role refuse. In-flight concurrent revocation/large-estate/restore outcomes remain owed",
+    "Verified HTTPS ordinary cookie/CSRF/bearer parity,no payload/credential exposure,no domain/browser command writes and ordinary reader refusal",
+    "Original CLI/public journey exact accepted-file metadata search and ordinary sender refusal"
+  ],
+  "schema": {
+    "fresh_target": 46,
+    "metadata_tables": 71,
+    "forced_RLS_tables": 70,
+    "retained": 35,
+    "retained_changed": false
+  },
+  "source_files": [
+    {
+      "path": "cmd/freightctl/audit_history.go",
+      "sha256": "d9ea4146bc4a30f511c1642744624792062ec2f8e26418814cfeb30dbf25c42b"
+    },
+    {
+      "path": "cmd/freightctl/audit_history_test.go",
+      "sha256": "a3bb33694971004792804f9c95a65036d488712891b043b4687755541afdd2cb"
+    },
+    {
+      "path": "cmd/freightctl/exchanges_integration_test.go",
+      "sha256": "5f549b50c23339a1e7cb491ff47f3be1d1e73c6521611631f131cdd78f93ab86"
+    },
+    {
+      "path": "cmd/freightctl/main.go",
+      "sha256": "4a88c47a08c96e5ccbc2c31d251407348aac342ba9056163379cd823662f927d"
+    },
+    {
+      "path": "docs/api/audit-history.openapi.json",
+      "sha256": "459eb781a60bbea071c8bd6316287c031317c826d9d3cfd0b45efd8131b71f99"
+    },
+    {
+      "path": "docs/protocols/audit-history.md",
+      "sha256": "35438399a9cad88a5f616754239948ab419be240bc435e322423843f84a64a5a"
+    },
+    {
+      "path": "internal/api/api.go",
+      "sha256": "62b357e5263c70c2d54eabf504ef39d304e42b62600e4e5bcffda4629c49f480"
+    },
+    {
+      "path": "internal/api/audit_history.go",
+      "sha256": "73ac1ae0d47b773020a336ed1863c3edf387b81a241e38549b890e3d61ce446c"
+    },
+    {
+      "path": "internal/api/audit_history_integration_test.go",
+      "sha256": "3a56dbf4531e7acae6ab2b6f36bbd74ed7a7c9468606a8894d1f3f131f124851"
+    },
+    {
+      "path": "internal/api/audit_history_test.go",
+      "sha256": "e761b1844cd3db6bb3070c827c4ec80617bc07fa29dc794a66a97ec84b3a4ec6"
+    },
+    {
+      "path": "internal/audit/history_integration_test.go",
+      "sha256": "a6af923e7814d098ab2b08d8ec19178eb375271675bdc8e274f83751bc332f5b"
+    },
+    {
+      "path": "internal/store/046_audit_history.sql",
+      "sha256": "f4413f4b37237f0ed5d2178e571cea7249bab025d61ffe6191a35b0f2807bbc4"
+    },
+    {
+      "path": "internal/store/audit_history.go",
+      "sha256": "5c805a153b3e084463b858439d8d0681887ec52ca81605ce2ceae4bebe101097"
+    },
+    {
+      "path": "internal/store/audit_history_test.go",
+      "sha256": "be62eb83676c9bf4cc1eda718e0a7b878eda8bc39f099ab646ba107661d46e8a"
+    },
+    {
+      "path": "internal/store/store.go",
+      "sha256": "c294c2889193a017646377b3fce1c0495f46aabd13d0d06c0360ef30cfda6813"
+    },
+    {
+      "path": "scripts/metadata_contract.py",
+      "sha256": "e5c9959bc336702ee5b091139659ce04f140145dbaa69b2aba37de362d36f3cd"
+    },
+    {
+      "path": "scripts/test-ci-metadata-summary.py",
+      "sha256": "b949d275d351a9c70e645408e9df19a84c506b012800ba7394d6c37ef911a734"
+    }
+  ],
+  "local_manifest": {
+    "reference": ".private/freightctl-f132-manifest.json",
+    "sha256": "24ea8563c25464df9e075ffceaec103eae969b07c39cbc29ac68234a7465dc1e"
+  },
+  "owed": [
+    "Browser operator search and actual native API/CLI/PG/CSRF/pagination/privacy/refusal outcomes",
+    "Concurrent authority changes,large histories/index migration and restore qualification at actual final source",
+    "O-HISTORY whole customer outcome,independent operator and permitted incumbent comparison",
+    "Every remaining full baseline/AX and mandatory FINISH original/deferred/native/final-source gate"
+  ],
+  "local_heavy_runtimes_started": false,
+  "inference": "off"
+}

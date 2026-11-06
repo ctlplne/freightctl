@@ -1,0 +1,277 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "freightctl operator audit history subset",
+    "version": "1",
+    "description": "Structural interface;native/conformance and complete product qualification remain separate."
+  },
+  "paths": {
+    "/v1/tenants/{tenant}/partners/{partner}/audit/history/search": {
+      "post": {
+        "operationId": "searchOperatorAuditHistory",
+        "summary": "Search authorized action metadata under existing root audit_read permission",
+        "description": "Strict8KiB selectors. No event payload,path,content,credential,request key,arbitrary SQL or new authority. Every page reauthenticates. Keyset time/UUID order is not causal order,a fixed snapshot or a notification cursor. Existing signed snapshot export remains separate. Cookie requests require same-origin/CSRF.",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "browserCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/tenant"
+          },
+          {
+            "$ref": "#/components/parameters/partner"
+          },
+          {
+            "$ref": "#/components/parameters/Origin"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HistorySearch"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "One metadata-only observation page",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HistoryPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid,ambiguous or excessive selectors"
+          },
+          "401": {
+            "description": "Current authentication required"
+          },
+          "403": {
+            "description": "Root audit_read or browser CSRF missing"
+          },
+          "409": {
+            "description": "Cursor filters or authority changed;start a new search"
+          },
+          "503": {
+            "description": "Audit operation admission busy"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ID": {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+      },
+      "UTCInstant": {
+        "type": "string",
+        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]{1,6})?Z$"
+      },
+      "HistorySearch": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "limit"
+        ],
+        "properties": {
+          "actor_id": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ID"
+              },
+              {
+                "const": ""
+              }
+            ]
+          },
+          "resource_id": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ID"
+              },
+              {
+                "const": ""
+              }
+            ]
+          },
+          "kinds": {
+            "type": "array",
+            "maxItems": 16,
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$"
+            }
+          },
+          "from": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/UTCInstant"
+              },
+              {
+                "const": ""
+              }
+            ]
+          },
+          "until": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/UTCInstant"
+              },
+              {
+                "const": ""
+              }
+            ]
+          },
+          "after": {
+            "type": "string",
+            "maxLength": 1024,
+            "pattern": "^[A-Za-z0-9_-]*$"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          }
+        }
+      },
+      "RecordedAction": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "event_id",
+          "actor_id",
+          "kind",
+          "resource_id",
+          "recorded_at"
+        ],
+        "properties": {
+          "event_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "actor_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "kind": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "resource_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "recorded_at": {
+            "$ref": "#/components/schemas/UTCInstant"
+          }
+        }
+      },
+      "HistoryPage": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "profile",
+          "tenant_id",
+          "partner_id",
+          "reader_actor_id",
+          "observed_at",
+          "observation",
+          "payloads",
+          "events"
+        ],
+        "properties": {
+          "profile": {
+            "const": "event-metadata-history-v1"
+          },
+          "tenant_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "partner_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "reader_actor_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "observed_at": {
+            "$ref": "#/components/schemas/UTCInstant"
+          },
+          "observation": {
+            "const": "independent-page-observation"
+          },
+          "payloads": {
+            "const": "omitted"
+          },
+          "events": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "$ref": "#/components/schemas/RecordedAction"
+            }
+          },
+          "next": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024,
+            "pattern": "^[A-Za-z0-9_-]+$"
+          }
+        }
+      }
+    },
+    "parameters": {
+      "tenant": {
+        "name": "tenant",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "$ref": "#/components/schemas/ID"
+        }
+      },
+      "partner": {
+        "name": "partner",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "$ref": "#/components/schemas/ID"
+        }
+      },
+      "Origin": {
+        "name": "Origin",
+        "in": "header",
+        "required": false,
+        "schema": {
+          "type": "string"
+        },
+        "description": "Required for cookie mutations and must equal the HTTPS origin. Explicit bearer requests do not fall back to cookie identity."
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "64 lowercase hexadecimal characters; send the actual credential, never its digest"
+      },
+      "browserSession": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "__Host-freightctl-session"
+      },
+      "csrfToken": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-CSRF-Token"
+      }
+    }
+  }
+}

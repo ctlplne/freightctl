@@ -61,7 +61,13 @@ review and private original-key recovery;five focused browser methods,one strict
 summary method and affected static checks pass. Original28-state Chrome response
 loss/reload/foreign-hint/byte/cardinality proof is prepared,not qualified.
 
-Latest fresh schema 45 targets 71 metadata tables/70 forced-RLS tables. Retained
+F132 implements privileged root audit_read metadata history API/CLI,with copied
+strict filters,canonical context-bound keyset pages,no payloads and no writes.
+Four focused Go methods,seven metadata-summary methods and affected static checks
+pass. Actual PG/HTTPS/CLI pagination/privacy/refusal and browser search remain owed.
+O-HISTORY is implementing;no whole-row or independent-operator qualification.
+
+Latest fresh schema 46 targets 71 metadata tables/70 forced-RLS tables. Retained
 schema 35 is untouched. PostgreSQL/non-owner RLS, immutable custody, transactional
 events/intents/idempotency, approvals, leases/fencing and protected secrets remain
 mandatory. Receipt, availability, retrieval, receiver persistence and processing
