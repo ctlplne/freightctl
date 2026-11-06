@@ -49,6 +49,12 @@ not identify the assertion. Precise public-scalar/stage diagnostics are prepared
 all original assertions stay enforced. The scan is skipped,no report is claimed.
 F119 records both architectures and terminal650b runs;exact native diagnosis/replay is owed.
 
+F120 identifies2b's actual ARM failure:embedded zlib reports the full Node build
+version1.3.2.1-motley-456ae73,matching pinned Node26.13.0's generated version header.
+The prior assertion used only the dependency header string. It now requires the
+exact full value;all other assertions stay enforced. Syntax/format pass;corrected
+native probes,complete scans and original independent AEAD replay remain owed.
+
 F110's privacy-safe exact package/version diagnostic is actually exercised in
 F114. Both architectures report Debian zlib1g and the public lock version hash;
 direct inventory source correlation is unresolved. The finding remains red.

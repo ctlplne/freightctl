@@ -19,11 +19,18 @@ the separate Node input index is
 The package manifest is [runtime-dependencies.json](runtime-dependencies.json),
 derived from the public Distroless Debian13 package lock. Its two architectures
 use exact package version14.2.0-19. The actual native build probe must verify
-Node26.13.0, embedded zlib1.3.2.1-motley, no shared SSL/zlib linkage, UID/GID65532,
+Node26.13.0, embedded zlib1.3.2.1-motley-456ae73, no shared SSL/zlib linkage, UID/GID65532,
 OpenPGP6.3.2 imports, retained package metadata and absent unneeded libraries/tools.
 The report guard pins both image inputs, the package manifest and absolute Node
 entrypoint. Every remaining OS/library package and finding participates in the
 complete final-image scan; no report inventory or severity is removed.
+
+The exact embedded version comes from Node26.13.0's generated
+[`src/zlib_version.h`](https://github.com/nodejs/node/blob/v26.13.0/src/zlib_version.h).
+Its updater appends the imported source commit to the dependency header version.
+F120 preserves the first native failure caused by expecting only the header's
+shorter string. The corrected assertion still requires the exact full version;
+native green and complete scans remain owed.
 
 This changes the actual runtime dependencies. It does not waive the prior
 CVE-2026-76844 finding against the Debian zlib package: F114 preserves the

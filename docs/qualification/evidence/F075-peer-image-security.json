@@ -718,5 +718,9 @@
   "nossl_runtime_native_failure": {
     "reference": "docs/qualification/evidence/F119-native-resumable-batch-security.json",
     "state": "Both complete native pinned assemblies pass;both strict grouped identity probes fail before scan,no new vulnerability report. Exact unchanged-assertion diagnosticF117 awaits native replay;original HIGH remains."
+  },
+  "embedded_zlib_version_correction": {
+    "reference": "docs/qualification/evidence/F120-native-zlib-version-pin.json",
+    "state": "ActualARM2b full version equals pinned Node generated src/zlib_version.h;exact assertion corrected,all subsequent native/security/runtime outcomes owed"
   }
 }

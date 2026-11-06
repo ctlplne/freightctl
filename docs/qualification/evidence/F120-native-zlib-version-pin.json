@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "id": "F120",
+  "observed_at": "2026-11-05",
+  "candidate_observed": "2b3924e10ac99680c96fb4726aafd3188b4eb4b1",
+  "run_id": 42142345032,
+  "job_id": 127645469854,
+  "state": "Exact native embedded-zlib version identified;incorrect header-only expectation corrected to pinned Node generated source version;native green owed",
+  "qualification_claim": false,
+  "native_red": {
+    "assembly": "passed,all four exact ARM packages",
+    "probe": "failed at runtime-embedded-zlib",
+    "identity": {
+      "node_version": "v26.13.0",
+      "architecture": "arm64",
+      "embedded_zlib": "1.3.2.1-motley-456ae73",
+      "shared_openssl": false,
+      "shared_zlib": false
+    },
+    "preceding_assertions": "Node version/Linux/native architecture/absolute entrypoint/UID/GID/shared-SSL/shared-zlib checks precede the reported failure and passed",
+    "scan": "skipped;no new vulnerability report"
+  },
+  "root_cause": "F115 expected only deps/zlib/zlib.h version. Node runtime metadata uses generated src/zlib_version.h,whose pinned update script appends the imported source commit. Actual observed full string equals that generated Node26.13.0 source exactly.",
+  "repair": "Require exact1.3.2.1-motley-456ae73 instead of exact shorter header string. No wildcard,range,missing-value allowance,assertion removal,inventory filtering,suppression or severity change. All subsequent dependency/library/isolation/scan/AEAD checks remain mandatory.",
+  "local_proof": {
+    "node_syntax": "pass",
+    "format": "pass",
+    "diff": "pass",
+    "native_green": "owed;no runtime executed locally"
+  },
+  "primary_sources": [
+    "https://github.com/nodejs/node/blob/v26.13.0/src/zlib_version.h",
+    "https://github.com/nodejs/node/blob/v26.13.0/tools/dep_updaters/update-zlib.sh",
+    "https://github.com/nodejs/node/blob/v26.13.0/src/node_metadata.cc"
+  ],
+  "source_files": [
+    {
+      "path": "scripts/peers/openpgp/runtime-proof.mjs",
+      "sha256": "36867fb45a3bc6ee7d89ba1fe0c817e8ec76e5a712dba35171f2631f0aeb2074"
+    },
+    {
+      "path": "scripts/peers/openpgp/README.md",
+      "sha256": "7ef47826316170e7cc3e30fe07aad9b490e02b106eb20cef3c7bd061bbe82682"
+    }
+  ],
+  "local_manifest": {
+    "reference": ".private/freightctl-f120-manifest.json",
+    "sha256": "3c72f90aea615b6950731b1d2369b23b7181dc8073f55a5e2afdee1ba04b8f00"
+  },
+  "owed": [
+    "Native corrected probe on both architectures,subsequent library/content checks,complete exact-image scans and original independent AEAD/recovery",
+    "Original ARM red preserved;other2b run completion/security observations and all nonsecurity/deferred/AX/baseline/final-source gates",
+    "PriorF114 one-HIGH remains retained;no clean-image or overall completion claim"
+  ]
+}

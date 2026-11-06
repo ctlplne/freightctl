@@ -41,7 +41,7 @@ try {
   stage = "runtime-shared-zlib";
   assert.equal(process.config.variables.node_shared_zlib, false);
   stage = "runtime-embedded-zlib";
-  assert.equal(process.versions.zlib, "1.3.2.1-motley");
+  assert.equal(process.versions.zlib, "1.3.2.1-motley-456ae73");
   stage = "runtime-dependencies";
   assert.equal(
     JSON.parse(readFileSync("/peer/node_modules/openpgp/package.json", "utf8"))
