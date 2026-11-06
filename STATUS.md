@@ -4,17 +4,17 @@ Updated 2026-11-05. The full GOAL.md baseline and AX01–AX08 remain active unde
 S003. All83 whole parity rows and twelve complete customer journeys remain open.
 Assisted deployment, independent adoption and enterprise readiness are unqualified.
 
-Latest completed CI candidate is650b482bb1336278a279b8451a1e872f549bd5f2.
+Latest completed CI candidate is2b3924e10ac99680c96fb4726aafd3188b4eb4b1.
 All12triggered runs are terminal. Three native source configurations,repro,Mac
 units and fuzz pass;core Go reachability,JavaScript audit and source/history
-Gitleaks pass. Both native no-SSL package assemblies pass;both strict offline
-identity probes fail at a grouped stage. Scans are skipped,no new vulnerability
-report exists. F119 preserves exact jobs and protected evidence references;F117
-prepares exact-stage/public-scalar diagnostics without relaxing assertions.
-F114's prior one-HIGH package finding stays red. Core/native PG,metadata,Windows
-and public/browser/stock-peer outcomes remain red;nonsecurity repair is deferred
-to mandatory FINISH. No cancellation;guard enabled. Actual full exchange/onward/
-AI/product proof remains owed.
+Gitleaks pass. Both native no-SSL assemblies pass;both exact diagnostic probes
+identify the incorrect shorter zlib expectation. Actual1.3.2.1-motley-456ae73
+matches pinned Node's generated header. F120 corrects that exact assertion;
+corrected native probe,subsequent checks and complete scans remain owed. Scans
+are skipped,no new vulnerability reports. F122 preserves exact jobs and evidence.
+F114's prior one-HIGH remains red. Core/native PG,metadata,Windows and public/
+browser/stock-peer outcomes remain red;nonsecurity repair stays deferred to
+mandatory FINISH. No cancellation;guard enabled. Full product proof remains owed.
 
 Original F075 full Trixie Debian13.7 ARM/x86 scans complete with80OS+2language packages each:
 0CRITICAL/45HIGH/6UNKNOWN,61LOW/77MEDIUM,zero suppressed. The immutable Node26.13.0
