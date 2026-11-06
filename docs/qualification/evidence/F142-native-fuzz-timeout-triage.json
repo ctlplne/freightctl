@@ -3,7 +3,7 @@
   "id": "F142",
   "observed_at": "2026-11-06",
   "candidate": "8b3427683023be93fac4ed9e5ea267b11e1cd3ad",
-  "state": "New native fuzz timeout triaged;isolated unchanged job replay requested,not yet qualified",
+  "state": "Original native path-fuzz timeout preserved;isolated unchanged replay passes all10targets at same candidate,intermittent cause unconfirmed",
   "qualification_claim": false,
   "original": {
     "run_id": 42165878174,
@@ -23,19 +23,23 @@
     "scope": "Replay only original failed bounded-fuzz job;no original runtime cancellation or other job replay",
     "connector": "403 Resource not accessible by integration;no Actions write permission",
     "fallback": "Authorized repository CLI POST actions/jobs/127722117867/rerun returned success",
-    "state": "Replay in progress;not yet qualified",
+    "state": "Replay completed successfully;original timeout remains retained",
     "replay": {
       "run_id": 42165878174,
       "attempt": 2,
       "job_id": 127723873952,
-      "status": "in_progress",
-      "conclusion": null
+      "status": "completed",
+      "conclusion": "success",
+      "passed_targets": 10,
+      "evidence": {
+        "reference": ".private/freightctl-f142-fuzz-replay.log",
+        "sha256": "a2d3620e1bd7588e6f9b925c25375a6d22d31608d11f2d914e1bb442b245f020"
+      }
     }
   },
   "owed": [
-    "Exact native replay handle,outcome and any actionable original input/assertion repair",
-    "Preserve original timeout even if replay passes;resolve intermittent concern and final-source fuzz at mandatory FINISH",
-    "All remaining baseline/AX/native/product/FINISH gates"
+    "Preserve original timeout;no stable failing input or cause established,intermittent concern remains and must be investigated if repeated",
+    "Final-source full applicable fuzz/security and every remaining baseline/AX/native/product/FINISH gate"
   ],
   "invariants": "No finding/assertion/protocol/coverage/isolation weakening or budget change;no local fuzz/PG/Chrome/scanner/model runtime."
 }

@@ -5,8 +5,8 @@ owner decision S003. All 83 whole parity rows and twelve complete customer
 journeys remain open. Assisted deployment, independent adoption and enterprise
 readiness are unqualified. The missing market wedge does not block engineering.
 
-Latest completed CI candidate: b689d8ca8d1907e7d26059ae6787a17770e2f472.
-All thirteen triggered runs are terminal. F139 preserves exact run/job handles and
+Latest completed CI candidate: 8b3427683023be93fac4ed9e5ea267b11e1cd3ad.
+All fifteen triggered runs and isolated security replay are terminal. F141 preserves exact run/job handles and
 security outcomes. Both actual native ARM/x86 independent-peer runtime probes
 and complete immutable image security gates pass. Earlier exact F124/F126 reports
 record 0 CRITICAL/0 HIGH/0 UNKNOWN,8 LOW/34 MEDIUM,11 OS+2 language packages,
@@ -16,7 +16,8 @@ shipped product images, complete SBOM/licenses and final-source security remain
 owed. Historical resource, input, probe and finding failures remain in F075/evidence.
 
 Three native source vulnerability configurations, core Go reachability, JavaScript
-audit, source/history Gitleaks, repro/BOM and fuzz pass at that candidate. Core,
+audit, source/history Gitleaks and repro/BOM pass at that candidate. F142 retains
+the original fuzz timeout and successful unchanged isolated replay. Core,
 native PG, metadata, Windows and public/browser/stock-peer outcomes remain red;
 native macOS unit checks pass at this candidate. S003 defers
 nonsecurity log investigation/repair to mandatory FINISH.
@@ -24,9 +25,9 @@ New actionable security failures are triaged immediately; F125 repairs an observ
 direct-TLS import violation through the unchanged crypto architecture boundary.
 Actual replay of that repaired process fixture remains owed.
 
-Both locked stock tus dependency audits pass on actualARM/x86. Both new runtime
-jobs fail during PostgreSQL/ordinary initialization;transfer proofs are skipped,
-not passed. Their original exact job handles remain in F139 for mandatory FINISH.
+Both locked stock tus dependency audits pass on actualARM/x86. Tus and legacySCP
+runtime jobs fail during PostgreSQL/ordinary initialization;transfer proofs are
+skipped,not passed. Original exact job handles remain in F141 for mandatory FINISH.
 
 Implemented exchange foundations include immutable endpoint revisions, offers,
 incoming views, separate replies, closure/history and private original-key recovery.
@@ -97,8 +98,9 @@ namespace/current-intake and actual native ARM+x86 stock-curl interrupted/resume
 byte/revocation proofs are prepared,not qualified.
 
 F142 preserves a new native path-fuzz context deadline with no reported failing
-assertion/corpus. Immediate security triage requested only its original unchanged
-job replay;actual result remains pending and the original failure is retained.
+assertion/corpus. Immediate security triage replayed only its original unchanged
+job. All ten native targets pass on replay at the same candidate;original timeout
+and unconfirmed intermittent cause remain retained,with final-source proof owed.
 
 Latest fresh schema 46 targets 71 metadata tables/70 forced-RLS tables. Retained
 schema 35 is untouched. PostgreSQL/non-owner RLS, immutable custody, transactional
