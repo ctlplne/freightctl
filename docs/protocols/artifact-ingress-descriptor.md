@@ -17,6 +17,11 @@ original upload's stable idempotency key. Unknown authority,body,host/path,addre
 recipient and content arguments are refused. Existing strict control-body
 bounds and configured artifact admission limits apply.
 
+Ordinary namespace commands and resumable-upload creation also use the shared
+strict control decoder with their original16KiB body bounds. Repeated keys,
+colliding case/escaped-key aliases,invalid UTF8,unknown fields and trailing data
+refuse before application resources. Binary upload/chunk bodies are unchanged.
+
 This initial profile is the existing unnamed-custody upload:current write
 permission and the root virtual namespace `/` are required. This is a tenant/
 partner namespace,not access to the operating-system filesystem. Confined

@@ -146,6 +146,14 @@ profiles are extended,not qualified. Confined/resumable agent conveniences and
 all remaining actual native/AX/baseline outcomes stay owed. No frontend/schema/
 retained environment change or inference.
 
+F113 repairs repeated/colliding alias and invalid-UTF8 acceptance in the two
+remaining ordinary namespace/upload JSON control decoders. Original16KiB bounds,
+valid zero/optional fields and byte-stream handlers are preserved. Eight route
+reds are repaired;four focused guard/compatibility/architecture methods and
+affected tagged compilation/vet pass. Actual HTTPS/PG no-state/positive controls
+and original browser/stock journey replay are prepared and owed. No schema,
+frontend,resource allowance or retained environment change.
+
 Focused local parser/client/filesystem/summary regressions and affected static,
 frontend build, native compilation/vet and architecture checks pass. They establish
 no PostgreSQL, served browser, stock-peer or complete AX profile qualification.

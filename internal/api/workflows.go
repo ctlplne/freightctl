@@ -10,7 +10,14 @@ import (
 )
 
 func workflowInput(w http.ResponseWriter, r *http.Request, target any) error {
-	r.Body = http.MaxBytesReader(w, r.Body, 32<<10)
+	return boundedControlInput(w, r, 32<<10, target)
+}
+
+func boundedControlInput(w http.ResponseWriter, r *http.Request, maximum int64, target any) error {
+	if maximum < 1 || maximum > 32<<10 {
+		return workflow.ErrInput
+	}
+	r.Body = http.MaxBytesReader(w, r.Body, maximum)
 	data, err := io.ReadAll(r.Body)
 	if err != nil {
 		return workflow.ErrInput

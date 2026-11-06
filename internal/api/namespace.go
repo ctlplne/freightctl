@@ -1,7 +1,6 @@
 package api
 
 import (
-	"encoding/json"
 	"io"
 	"mime"
 	"net/http"
@@ -32,16 +31,8 @@ func (s *Server) pathCommand(w http.ResponseWriter, r *http.Request) {
 		failure(w, err)
 		return
 	}
-	r.Body = http.MaxBytesReader(w, r.Body, 16<<10)
-	decoder := json.NewDecoder(r.Body)
-	decoder.DisallowUnknownFields()
 	var command store.PathCommand
-	if err = decoder.Decode(&command); err != nil {
-		fail(w, 400, "invalid_path_command")
-		return
-	}
-	var extra any
-	if err = decoder.Decode(&extra); err != io.EOF {
+	if err = boundedControlInput(w, r, 16<<10, &command); err != nil {
 		fail(w, 400, "invalid_path_command")
 		return
 	}

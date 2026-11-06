@@ -1,7 +1,6 @@
 package api
 
 import (
-	"encoding/json"
 	"io"
 	"net/http"
 	"strconv"
@@ -37,16 +36,8 @@ func (s *Server) createUpload(w http.ResponseWriter, r *http.Request) {
 		failure(w, err)
 		return
 	}
-	r.Body = http.MaxBytesReader(w, r.Body, 16<<10)
-	decoder := json.NewDecoder(r.Body)
-	decoder.DisallowUnknownFields()
 	var input custody.CreateUpload
-	if err = decoder.Decode(&input); err != nil {
-		fail(w, 400, "invalid_upload_session")
-		return
-	}
-	var trailing any
-	if err = decoder.Decode(&trailing); err != io.EOF {
+	if err = boundedControlInput(w, r, 16<<10, &input); err != nil {
 		fail(w, 400, "invalid_upload_session")
 		return
 	}

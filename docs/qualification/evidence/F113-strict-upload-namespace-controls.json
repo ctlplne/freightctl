@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "id": "F113",
+  "observed_at": "2026-11-05",
+  "starting_commit": "9306c3780135a911675c1f56539844c351eab447",
+  "state": "Ambiguous ordinary namespace/resumable-upload JSON controls repaired;actual native proof owed",
+  "qualification_claim": false,
+  "change": [
+    "Audit remaining request-body JSON decoders:namespace commands and upload-session creation still allowed repeated/colliding case or escaped aliases and replacement of invalid UTF8. MCP direct JSON decoders already have their own strict envelope/schema guard.",
+    "Use the existing strict typed workflow decoder through a bounded helper. Preserve original16KiB limits for both repaired paths and unchanged32KiB workflow limits. Unknown/trailing/deep controls refuse;valid zero/optional fields survive. No binary upload/chunk change or admission/isolation relaxation.",
+    "Add actual-route pre-resource guards and real HTTPS/PG no-durable-state plus valid namespace/empty upload controls. All original upload/namespace/browser/stock journeys remain required at FINISH. No migration,frontend or retained database change."
+  ],
+  "red": {
+    "observed": "Four namespace variants reached nil application storage;four actual /uploads variants reached storage identity validation409 rather than input-boundary400. Initial wrong-route fixture output retained separately.",
+    "reference": ".private/freightctl-f113-control-route-corrected-red.log"
+  },
+  "green": {
+    "focused_guard_compatibility_existing_route_architecture_methods": 4,
+    "repaired_real_route_subcases": 8,
+    "affected_tagged_native_compilation_vet": "pass,no runtime selected",
+    "frontend": "unchanged;not redundantly replayed"
+  },
+  "native_profile": {
+    "state": "prepared,not qualified",
+    "required": "Actual cookie/CSRF HTTPS ambiguity refusal with unchanged namespace/upload/receipt/event counts,then valid directory and zero-byte ticket creation;original public journeys/final source replay owed"
+  },
+  "source_files": [
+    {
+      "path": "docs/protocols/artifact-ingress-descriptor.md",
+      "sha256": "093cbb3aaa9dd56a15f3575583a2e742c05c4dcd67d099fcb8c2305f9b475a84"
+    },
+    {
+      "path": "internal/api/control_input_integration_test.go",
+      "sha256": "a37ff1041b995d117f8c1c0464d13af46d7469c75261343c3971714308748483"
+    },
+    {
+      "path": "internal/api/control_input_test.go",
+      "sha256": "8477690713a8128329945d8eaa3c398d0dcec7272e87c941f854a8773335c62b"
+    },
+    {
+      "path": "internal/api/namespace.go",
+      "sha256": "27650d12cccec620dd1a1cb286420a3a0d4f51c31682bf558f9a8d1a091fc557"
+    },
+    {
+      "path": "internal/api/uploads.go",
+      "sha256": "77678c63c5fabc38a670f8a1834497e43e18f87280a4fe978caa89181537107c"
+    },
+    {
+      "path": "internal/api/workflows.go",
+      "sha256": "a43876b2e3faf4e2afacb54b1c06a0ac240c19cabccfc6098daa1cbb6b092a4d"
+    }
+  ],
+  "local_manifest": {
+    "reference": ".private/freightctl-f113/manifest.json",
+    "sha256": "1f71d1355ac257ef7f8ce6bbaa4d71f1d2df338e67d780a3a941821b37c7fc18"
+  },
+  "owed": [
+    "Actual native state/positive controls and original affected browser/stock/API journeys",
+    "Remaining secure agent/recovery/lineage/capacity/baseline/AX work and mandatory FINISH",
+    "Remaining exact peer package/version remediation and full native security/independent proof"
+  ]
+}

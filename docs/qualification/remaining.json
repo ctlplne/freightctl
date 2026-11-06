@@ -871,7 +871,8 @@
         "docs/qualification/evidence/F103-reviewed-artifact-onward.json",
         "docs/qualification/evidence/F105-browser-artifact-onward.json",
         "docs/qualification/evidence/F108-governed-collection-artifact-source.json",
-        "docs/qualification/evidence/F111-agent-artifact-ingress-descriptor.json"
+        "docs/qualification/evidence/F111-agent-artifact-ingress-descriptor.json",
+        "docs/qualification/evidence/F113-strict-upload-namespace-controls.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -886,11 +887,11 @@
         "S003 authorizes guarded source/CI batches after prior required runs are terminal. Eleven exchange API paths and eleven CLI commands plus receive/send/recovery/history browser surfaces are implemented;actual AX profiles remain owed. Broad/deferred qualification is mandatory at FINISH."
       ],
       "current_item": {
-        "id": "F111",
-        "state": "Ordinary root-custody upload descriptor shared by API/CLI/MCP;actual native and complete agent profiles owed",
-        "proof": "Missing route404 repaired;input/route/schema/architecture methods and affected tagged native compilation/vet pass. Catalog18.",
-        "native": "Real PG/stored-byte no-effect,original CLI and official SDK/HTTPS source/role/receipt profiles extended;not run locally",
-        "next": "Complete remaining agent/recovery/lineage/capacity and baseline implementation;qualify all original/native/independent profiles and mandatory FINISH"
+        "id": "F113",
+        "state": "Namespace/upload control ambiguity repaired;actual native state/journey proof owed",
+        "proof": "Eight actual route cases reached resources before repair;focused guard/compatibility/architecture methods and tagged compilation/vet pass",
+        "native": "Real HTTPS/PG ambiguity/no-state and valid namespace/empty upload controls prepared;original browser/stock journeys still owed",
+        "next": "Remaining secure agent interfaces,recovery/lineage/capacity and baseline implementation;complete all mandatory FINISH/native/deferred gates"
       }
     }
   ],
