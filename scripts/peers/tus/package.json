@@ -1,0 +1,9 @@
+{
+  "name": "freightctl-tus-native-peer",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "tus-js-client": "4.3.1"
+  }
+}

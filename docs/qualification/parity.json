@@ -3275,11 +3275,14 @@
         "independent operator or receiver"
       ],
       "acceptance_journey": "J04",
-      "state": "planned",
-      "evidence": [],
+      "state": "implementing",
+      "evidence": [
+        "docs/qualification/evidence/F135-tus-core-checkpoints.json"
+      ],
       "qualification_blockers": [
         "Authorized SFTPGo installation and exact edition/version for observed comparison"
-      ]
+      ],
+      "current_limit": "Existing-ticket tus-core-checkpoint-v1 implemented with current authority,strict locked offsets,bounded framing and explicit separate whole-file completion. Locked stock client/native ARM+x86/PG/TLS/expiry/revocation proofs prepared,not qualified. No optional extensions,automatic TTL,whole-row/J04 or incumbent comparison claim."
     },
     {
       "id": "B-IBM-PARTNER",

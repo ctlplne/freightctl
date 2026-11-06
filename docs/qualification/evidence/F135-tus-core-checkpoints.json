@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "id": "F135",
+  "observed_at": "2026-11-05",
+  "candidate_parent": "081ef10e9edc078fcea169271bf29bc8fd0976a2",
+  "state": "Existing-ticket tus core checkpoint adapter implemented;native stock/PG/TLS outcomes owed",
+  "qualification_claim": false,
+  "profile": "tus-core-checkpoint-v1",
+  "changes": [
+    "Core1.0 HEAD/PATCH/OPTIONS and effective method override precede ordinary cookie CSRF. Exact original actor/root/authority/write and current credential required;URL conveys no authority. Strict version/media/offset/duplicate/extension/query controls;known-length and chunked bodies share the existing custody bound.",
+    "Strict current offset is checked under the ordinary upload lock before receipt replay;ordinary AppendUpload replay semantics remain unchanged. Checkpoints use durable SHA256 staging;full offset is not whole-file acceptance. Explicit ordinary completion and current intake still required.",
+    "No creation/checksum/expiry/termination/deferred-length/concatenation extension advertised. Existing64KiB nonfinal minimum,8MiB chunk maximum,4096 checkpoints and file/storage policies preserved. Credential expiry/revocation is not upload TTL/automatic cleanup.",
+    "Locked unmodified tus-js-client4.3.1,MIT direct package,Node26.13.0,actual native ARM/x86 GitHub profile;complete dependency audit,no suppressions. Verified TLS1.3,real committed response loss,HEAD resume,PATCH and stock method override,then separate ordinary completion and independent HTTPS bytes. Commit/client/lock/result hashes bind safe proof. No local peer/PG/scanner/model runtime."
+  ],
+  "red": [
+    {
+      "reference": ".private/freightctl-f135-api-red.log",
+      "observation": "Focused version-control regression wanted412 but actual old route returned404 before adapter"
+    }
+  ],
+  "green": {
+    "focused_HTTP_control_methods": 2,
+    "strict_peer_summary_method": 1,
+    "affected_integration_tuspeer_compilation": "pass;no runtime selected",
+    "affected_vet": "pass",
+    "unchanged_architecture": "pass",
+    "native_peer_script_syntax": "pass;no client installed or executed locally",
+    "changed_workflow_actionlint": "pass",
+    "format_diff": "pass"
+  },
+  "native_prepared": [
+    "HTTPS current authority,foreign actor,strict duplicate offsets,actual chunked method override/CSRF,checkpoint-only visibility,explicit completion and independent exact bytes",
+    "Actual credential clock expiry and ordinary revocation prevent HEAD/PATCH/completion even with still-valid root cookie;unchanged checkpoint and zero accepted file verified in SQL",
+    "Concurrent identical current offset creates exactly one checkpoint;ordinary original-key replay remains unchanged",
+    "Actual stock client both wire modes on nativeARM/x86,committed response loss/resume,verifiedTLS and separate ordinary whole-file acceptance"
+  ],
+  "source_files": [
+    {
+      "path": ".github/workflows/tus.yml",
+      "sha256": "9f6b0263781cafa39370f92a47cf099b51db3f3c02b258ca3de2862c1cfdac24",
+      "bytes": 2674
+    },
+    {
+      "path": "docs/protocols/tus-core-checkpoints.md",
+      "sha256": "b3ef7e6d4a8443c0aeed1051fc2f733e19459b77efb4a36184b127ed2127ffab",
+      "bytes": 3040
+    },
+    {
+      "path": "internal/api/api.go",
+      "sha256": "0a73a3bd61574065331332c85cb8bd1063222088ca7e9660100d20f572564e5a",
+      "bytes": 28245
+    },
+    {
+      "path": "internal/api/tus.go",
+      "sha256": "09c03e5abda0ac52ba1820f7a6f30a677eaa8c47247b688c092625e1c38f3363",
+      "bytes": 6166
+    },
+    {
+      "path": "internal/api/tus_test.go",
+      "sha256": "061f698ceb5ec8a65188fc883a5a157a1651928fa0dc1ffcb91a1e3e8bd55698",
+      "bytes": 3408
+    },
+    {
+      "path": "internal/api/tus_integration_test.go",
+      "sha256": "9d243488d6168a9f3859b45ccca752aa4df6dfc9fc0158edd8575103109bd375",
+      "bytes": 10087
+    },
+    {
+      "path": "internal/api/tus_peer_summary_integration_test.go",
+      "sha256": "9014a98a69ec8d48100b8f6e127e1e40751d89ca94fec7616c6f93556947b760",
+      "bytes": 4230
+    },
+    {
+      "path": "internal/api/tus_stock_integration_test.go",
+      "sha256": "125feb30554e4c9b8393cf61447f37b8baa6d6daab2d4d8c9dc7d8727a9c84bf",
+      "bytes": 6659
+    },
+    {
+      "path": "internal/custody/uploads.go",
+      "sha256": "ec51215118f5a5a99de0a369639fdbf0050ad7bf46de476bd83e57fc734c62b7",
+      "bytes": 18170
+    },
+    {
+      "path": "internal/custody/tus_offsets_integration_test.go",
+      "sha256": "647c691164fde9e9d7fcac2f84349ac23653acd0b082d4c7c78ee238a9ddb1a4",
+      "bytes": 3504
+    },
+    {
+      "path": "scripts/peers/tus/package.json",
+      "sha256": "7be5b2ca24e5246859cab18e2a609791e1da8502320d83e56c8b1bd5ded034df",
+      "bytes": 158
+    },
+    {
+      "path": "scripts/peers/tus/package-lock.json",
+      "sha256": "482796a9efa571b2558281068e54becac29aaad10ea8d41ee143b27427f0adec",
+      "bytes": 7786
+    },
+    {
+      "path": "scripts/peers/tus/client.mjs",
+      "sha256": "c36c37b73f8331b20796b308747abab8b8b1ffeb836fa9d612ab661bfa3ed81a",
+      "bytes": 5618
+    },
+    {
+      "path": "scripts/peers/tus/README.md",
+      "sha256": "e86e76eb49d4da8c295c1293e29495f1ffd17b126337f00fb1c117d9dd8654a0",
+      "bytes": 832
+    }
+  ],
+  "local_manifest": {
+    "path": ".private/freightctl-f135-manifest.json",
+    "sha256": "0f6d66a0622ae8aef301b90a367f3001292a196a7a6e210dd73f6afa48cee124",
+    "bytes": 1168
+  },
+  "owed": [
+    "Actual new workflow native PG/verifiedTLS/stock-client/race/expiry/revocation/offset/custody/independent-receiver outcomes at candidate",
+    "Direct client/transitive package inventory and full complete dependency audit outcomes;no installed peer locally",
+    "Complete H-TUS/J04,incumbent observed edition/version comparison and all remaining baseline/AX/FINISH gates"
+  ],
+  "limits": "No migration;fresh46/71metadata70forcedRLS and retained35 unchanged. Local inference off;all local allowances unchanged;GitHub uses runner capacity with product/security/isolation controls intact."
+}

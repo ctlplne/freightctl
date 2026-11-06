@@ -70,6 +70,14 @@ affected static checks pass. Actual PG/HTTPS/CLI and31-state Chrome pagination,
 privacy,role/refusal and exact file/event lookup outcomes remain owed.
 O-HISTORY is implementing;no whole-row or independent-operator qualification.
 
+F135 implements existing-ticket tus core checkpoints with strict locked offsets,
+bounded known/chunked framing,current authority and effective-method CSRF. Full
+offset never substitutes for explicit ordinary whole-file completion/intake.
+Two focused HTTP controls,one strict summary and affected static checks pass.
+Locked stock-client/native ARM+x86 GitHub TLS,response-loss/resume,expiry,revocation,
+concurrent-offset and independent-byte proofs are prepared,not qualified. H-TUS
+is implementing;no extensions,automatic upload TTL or whole-row claim.
+
 Latest fresh schema 46 targets 71 metadata tables/70 forced-RLS tables. Retained
 schema 35 is untouched. PostgreSQL/non-owner RLS, immutable custody, transactional
 events/intents/idempotency, approvals, leases/fencing and protected secrets remain

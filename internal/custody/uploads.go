@@ -317,6 +317,16 @@ func (s *Service) UploadStatus(ctx context.Context, scope store.Scope, id string
 	return &view, nil
 }
 func (s *Service) AppendUpload(ctx context.Context, scope store.Scope, id, key string, offset, size int64, digest string, body io.Reader) (*UploadResult, error) {
+	return s.appendUpload(ctx, scope, id, key, offset, size, digest, body, false)
+}
+
+// TUS recovers progress with HEAD. Its offset precondition must hold under the
+// same lock as acceptance,even when an ordinary idempotency receipt exists.
+func (s *Service) AppendUploadAtCurrentOffset(ctx context.Context, scope store.Scope, id, key string, offset, size int64, digest string, body io.Reader) (*UploadResult, error) {
+	return s.appendUpload(ctx, scope, id, key, offset, size, digest, body, true)
+}
+
+func (s *Service) appendUpload(ctx context.Context, scope store.Scope, id, key string, offset, size int64, digest string, body io.Reader, strictOffset bool) (*UploadResult, error) {
 	ctx, cancel := context.WithTimeout(ctx, 90*time.Second)
 	defer cancel()
 	if offset < 0 || size < 1 || size > MaxUploadChunk || !digestPattern.MatchString(digest) {
@@ -336,6 +346,9 @@ func (s *Service) AppendUpload(ctx context.Context, scope store.Scope, id, key s
 	}
 	if err = s.checkUploadStorage(u); err != nil {
 		return nil, err
+	}
+	if strictOffset && offset != u.Offset {
+		return nil, store.ErrRevision
 	}
 	meaning := store.UploadMeaning(struct {
 		Operation, ID string

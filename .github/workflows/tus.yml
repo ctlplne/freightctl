@@ -1,0 +1,79 @@
+name: Native tus stock client and custody checkpoints
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "cmd/**"
+      - "internal/**"
+      - "go.mod"
+      - "go.sum"
+      - "scripts/go.sh"
+      - "scripts/dev-db.py"
+      - "scripts/peers/tus/**"
+      - ".github/workflows/tus.yml"
+  pull_request:
+    paths:
+      - "cmd/**"
+      - "internal/**"
+      - "go.mod"
+      - "go.sum"
+      - "scripts/go.sh"
+      - "scripts/dev-db.py"
+      - "scripts/peers/tus/**"
+      - ".github/workflows/tus.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: freightctl-native-tus-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  native-stock-tus:
+    name: Native tus resume (${{ matrix.arch }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x86_64
+            runner: ubuntu-24.04
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    env:
+      FREIGHTCTL_TEST_ADMIN_FILE: ${{ github.workspace }}/.private/pg-admin.dsn
+      FREIGHTCTL_TEST_RUNTIME_FILE: ${{ github.workspace }}/.private/pg-runtime.dsn
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version: "1.26.10"
+          cache: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: "26.13.0"
+      - name: Actual native runner and pinned unmodified stock client
+        run: |
+          test "$(uname -s)" = Linux
+          if [ "${{ matrix.arch }}" = x86_64 ]; then
+            test "$(uname -m)" = x86_64
+          else
+            test "${{ matrix.arch }}" = arm64
+            test "$(uname -m)" = aarch64
+          fi
+          npm --prefix scripts/peers/tus --cache "$GITHUB_WORKSPACE/.cache/freightctl-tus-npm" ci --ignore-scripts --no-fund
+      - name: Complete stock tus dependency security audit
+        if: ${{ !cancelled() }}
+        run: npm --prefix scripts/peers/tus --cache "$GITHUB_WORKSPACE/.cache/freightctl-tus-npm" audit
+      - name: Task-owned loopback PostgreSQL and ordinary schema initialization
+        run: |
+          python3 scripts/dev-db.py
+          sh scripts/go.sh run ./cmd/freightctl init
+      - name: Actual TLS response loss, strict offsets, expiry, revocation and separate verified acceptance
+        run: |
+          sh scripts/go.sh test -race -timeout=0 -tags=integration,tuspeer -run '^(TestTusCore|TestTusStrictOffset|TestTusPeerSummary)' -count=1 -v ./internal/api ./internal/custody

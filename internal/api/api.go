@@ -254,6 +254,9 @@ func NewWithBrowserLifetime(service *custody.Service, audits *audit.Service, ena
 	m.HandleFunc("PATCH /v1/tenants/{tenant}/partners/{partner}/uploads/{upload}", s.appendUpload)
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/uploads/{upload}/complete", s.completeUpload)
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/uploads/{upload}/abort", s.abortUpload)
+	for _, method := range []string{"HEAD", "PATCH", "OPTIONS"} {
+		m.HandleFunc(method+" /v1/tenants/{tenant}/partners/{partner}/tus/uploads/{upload}", s.tusCheckpoint)
+	}
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("X-Content-Type-Options", "nosniff")
 		w.Header().Set("Cache-Control", "no-store")
@@ -269,7 +272,11 @@ func NewWithBrowserLifetime(service *custody.Service, audits *audit.Service, ena
 			fail(w, http.StatusServiceUnavailable, "capacity_busy")
 			return
 		}
-		request, ok := s.authenticateBrowser(w, r)
+		effective, ok := prepareTusRequest(w, r)
+		if !ok {
+			return
+		}
+		request, ok := s.authenticateBrowser(w, effective)
 		if ok {
 			m.ServeHTTP(w, request)
 		}
