@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "F147",
+  "observed_at": "2026-11-06",
+  "candidate": "e65b59ca21e92c58050a04c86f57e979653b0cc5",
+  "state": "New native JSON security profile failed before assertions;missing shared-fixture initialization repaired in configuration;native replay owed",
+  "qualification_claim": false,
+  "original": {
+    "run_id": 42284746630,
+    "job_id": 128122540244,
+    "architecture": "native Linux ARM64",
+    "conclusion": "failure",
+    "url": "https://github.com/ctlplne/freightctl/actions/runs/42284746630/job/128122540244",
+    "private_log": {
+      "reference": ".private/freightctl-f147-json-arm-security.log",
+      "sha256": "b00546291d8b5648ba877948e66dacdb02fbff95d2b31e8a2365d8cfee02a79d",
+      "bytes": 33820
+    }
+  },
+  "triage": "Immediately inspected only the newly failing JSON security-profile log under S003 exception.Schema/SQL guard,release,recheck,signature/scanner and HTTPS/CLI cases fail during setup with PostgreSQL SQLSTATE42601 before their security assertions.Received-copy cases fail opening the ordinary shared runtime database;their fixture requires the initialization omitted by this new workflow. No passing security/custody outcome is inferred.",
+  "repair": "Add the existing ordinary freightctl init command before the dedicated custody interface tests.It creates the runtime role/schema required by the shared custody fixture;no SQL migration,test,assertion,security condition or resource change.This configuration repair cannot resolve or pass the existing schema syntax prerequisite.",
+  "local_verification": {
+    "changed_workflow_actionlint": "pass",
+    "diff": "pass",
+    "heavy_runtime_started": false
+  },
+  "source": {
+    "reference": ".github/workflows/json-intake.yml",
+    "sha256": "f2a67d9fb395564df005100914454a2822833c1e703aabdea885e8fa7497efdf"
+  },
+  "observed_narrow_passes": [
+    "The two pure JSON parser test methods pass on actual ARM in the original failed job.They do not establish native SQL,transport,release or whole exchange behavior."
+  ],
+  "owed": [
+    "Replay the original ARM job/profile at the repaired source after previous required batch runs are terminal;retain original failure.",
+    "Existing schema syntax prerequisite remains red and deferred under S003 FINISH;the newly failing security assertions have not been reached.No actionable security assertion finding has yet been observed.",
+    "Complete x86/Chrome outcomes,final-source proof and all mandatory baseline/AX work."
+  ]
+}

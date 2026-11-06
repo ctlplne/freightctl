@@ -42,7 +42,11 @@ owed. Tests and compilation do not qualify customer outcomes.
 F146 repairs five published OpenAPI JSON custody patterns after observed Go/JS
 failures. Focused Go and JavaScript checks now pass across thirteen schemas and
 32 shared domain-bound cases;affected vet and workflow lint pass. This proves
-pattern conformance only. Native e65b59c runs are queued/running;the next push
+pattern conformance only. F147 retains the new ARM JSON
+job failure before security assertions:SQLSTATE42601 and unavailable shared
+runtime DB. The new profile now includes its omitted ordinary initialization;
+workflow lint passes,native replay remains owed. Existing schema prerequisite
+repair stays under FINISH. Other e65b59c runs are queued/running;the next push
 waits for their required terminal outcomes.
 
 Continue exchange/recovery/per-hop lineage and the remaining mandatory baseline

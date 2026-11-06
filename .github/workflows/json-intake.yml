@@ -76,6 +76,8 @@ jobs:
           DOCKERFILE
           python3 scripts/prepare-pgp-fixture.py
           printf 'FREIGHTCTL_TEST_PGP_DIR=%s\n' "$(cat .private/pgp-fixture-current)" >> "$GITHUB_ENV"
+      - name: Ordinary schema initialization for the shared custody fixture
+        run: sh scripts/go.sh run ./cmd/freightctl init
       - name: Actual JSON SQL, API, CLI, signature and scanner-protocol outcomes
         run: |
           sh scripts/go.sh test -race -timeout=0 -tags=integration \

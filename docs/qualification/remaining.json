@@ -509,7 +509,8 @@
         "docs/qualification/evidence/F138-legacy-scp-file-profile.json",
         "docs/qualification/evidence/F143-json-record-intake-checkpoint.json",
         "docs/qualification/evidence/F145-json-intake-interface-proofs.json",
-        "docs/qualification/evidence/F146-public-json-policy-contract.json"
+        "docs/qualification/evidence/F146-public-json-policy-contract.json",
+        "docs/qualification/evidence/F147-native-json-prerequisites.json"
       ],
       "remaining_details": [
         "F010 verifies durable held intake for configured new revisions, exact CSV contracts, separate hash/revision-bound release and ordinary delivery of released bytes. Antivirus/ICAP/DLP, cryptographic signatures/encryption, other formats/transforms, re-scan/exception governance, retrospective policy and the complete business-file journey remain mandatory.",
@@ -577,7 +578,8 @@
         "F138 adds explicit legacy SCP regular-file roles using registered SSH/current authority,ordinary custody and shared writers;default SFTP-only remains. Observed selector red then3focused methods and affected static checks pass. Actual native ARM/x86 stock/PG/SSH/HTTPS/bytes/abort/root/intake/revocation outcomes and recursive/preservation/whole-row/J02/FINISH gates remain owed.",
         "F143 owner-paused JSON record intake checkpoint. Focused Go,50browser contracts,12metadata stand-ins and affected compile/vet/architecture/type/build/workflow checks pass. Source47 guarded format/report/custody integration and native PG/GnuPG/scanner-protocol cases prepared;actual SQL/runtime and additional dedicated API/CLI/browser/recheck/copy/final-source proof remain owed. Retained35 and local resource allowances unchanged;no local inference/heavy runtime.",
         "F145 prepares verified-HTTPS cookie/bearer JSON intake,ordinary resumable CLI,CSV-to-JSON recheck,received-copy SQL and native Chrome reviewed-hash/original-key/held/check/release proofs.Only affected compilation,vet,architecture and workflow/script static checks have run locally;actual native outcomes remain owed.New dedicated GitHub ARM/x86 and Chrome profiles preserve existing security/custody/product limits;no local heavy runtime.",
-        "F146 repairs five published OpenAPI acceptance-policy patterns to match actual JSON custody. Observed red then actual Go JSON Schema and ECMAScript checks pass across13 schemas/32 shared domain-bound cases. This qualifies only pattern conformance;native exchange and full-row/final-source proof remain owed."
+        "F146 repairs five published OpenAPI acceptance-policy patterns to match actual JSON custody. Observed red then actual Go JSON Schema and ECMAScript checks pass across13 schemas/32 shared domain-bound cases. This qualifies only pattern conformance;native exchange and full-row/final-source proof remain owed.",
+        "F147 immediately triages new native ARM JSON security-profile failure at e65b59c/run42284746630/job128122540244:SQLSTATE42601 during setup;security assertions not reached.Shared custody fixture also lacked ordinary init;workflow preparation repaired and lint passes.Native original replay and existing schema prerequisite remain owed;no security or interface pass."
       ]
     },
     {
@@ -905,7 +907,8 @@
         "docs/qualification/evidence/F140-immutable-download-validators.json",
         "docs/qualification/evidence/F143-json-record-intake-checkpoint.json",
         "docs/qualification/evidence/F145-json-intake-interface-proofs.json",
-        "docs/qualification/evidence/F146-public-json-policy-contract.json"
+        "docs/qualification/evidence/F146-public-json-policy-contract.json",
+        "docs/qualification/evidence/F147-native-json-prerequisites.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -920,7 +923,8 @@
         "S003 authorizes guarded source/CI batches after prior required runs are terminal. Shared exchange API/CLI and receive/send/recovery/history browser surfaces are implemented;actual AX profiles remain owed. Broad/deferred qualification is mandatory at FINISH.",
         "F140 adds strong immutable download validators and repairs private no-store on standard range refusals;2observed-red/focused-green HTTP methods and affected static checks pass. Original exchange/current-authority,namespace/CAS/intake and actual native ARM/x86 stock-curl interruption/resume/byte/revocation proofs prepared,not qualified.",
         "F145 prepares verified-HTTPS cookie/bearer JSON intake,ordinary resumable CLI,CSV-to-JSON recheck,received-copy SQL and native Chrome reviewed-hash/original-key/held/check/release proofs.Only affected compilation,vet,architecture and workflow/script static checks have run locally;actual native outcomes remain owed.New dedicated GitHub ARM/x86 and Chrome profiles preserve existing security/custody/product limits;no local heavy runtime.",
-        "F146 repairs five published OpenAPI acceptance-policy patterns to match actual JSON custody. Observed red then actual Go JSON Schema and ECMAScript checks pass across13 schemas/32 shared domain-bound cases. This qualifies only pattern conformance;native exchange and full-row/final-source proof remain owed."
+        "F146 repairs five published OpenAPI acceptance-policy patterns to match actual JSON custody. Observed red then actual Go JSON Schema and ECMAScript checks pass across13 schemas/32 shared domain-bound cases. This qualifies only pattern conformance;native exchange and full-row/final-source proof remain owed.",
+        "F147 immediately triages new native ARM JSON security-profile failure at e65b59c/run42284746630/job128122540244:SQLSTATE42601 during setup;security assertions not reached.Shared custody fixture also lacked ordinary init;workflow preparation repaired and lint passes.Native original replay and existing schema prerequisite remain owed;no security or interface pass."
       ],
       "current_item": {
         "id": "F130",
