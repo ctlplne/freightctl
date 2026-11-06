@@ -144,7 +144,8 @@
         "docs/qualification/evidence/F068-ftps-client-transport.json",
         "docs/qualification/evidence/F069-native-first-run-gate.json",
         "docs/qualification/evidence/F071-governed-ftps-delivery.json",
-        "docs/qualification/evidence/F072-ftps-browser-review.json"
+        "docs/qualification/evidence/F072-ftps-browser-review.json",
+        "docs/qualification/evidence/F140-immutable-download-validators.json"
       ],
       "remaining_details": [
         "F005/F006 verify bounded inbound and durable ticket resume. F007 adds a local-only approved outbound SFTP profile against a stock receiver. Finish ordinary-operator onboarding, API/browser parity, production network policy, broader protocols/clients/enterprise peers, larger files and independent business receipts. No complete journey is qualified.",
@@ -768,7 +769,8 @@
         "docs/qualification/evidence/F070-govulncheck-enforcement.json",
         "docs/qualification/evidence/F071-governed-ftps-delivery.json",
         "docs/qualification/evidence/F072-ftps-browser-review.json",
-        "docs/qualification/evidence/F077-native-reproducible-core.json"
+        "docs/qualification/evidence/F077-native-reproducible-core.json",
+        "docs/qualification/evidence/F142-native-fuzz-timeout-triage.json"
       ],
       "remaining_details": [
         "F015 restores fresh independent native GnuPG verification and a complete 27/27 implemented-core run on unchanged source. Parent-death, sandbox, runtime-pin and resource refusal gates pass. Historical Docker/aged-fixture failures remain recorded; default Docker startup on this host is unresolved. No model or scanner engine started. CI is wired and structure-linted but GitHub execution and native Linux qualification remain unverified. Complete product requirements stay open.",
@@ -822,7 +824,8 @@
         "Original7c image gate independently proves ARM feed OOMKilled=true/running=false/exit137 under unchanged hard1GiB; x86 reaches regular1692762112byte DB file cap. Both scratch mounts removed. No allocation attribution or scan pass; pending file-only proposal remains unapplied and cannot remedy OOM. Repaired97 native reproduction/physical build-ID/stock-schema replay remains queued; later-source qualification cannot inherit earlier passes.",
         "F077 retains97original ARM/x86 build-id-a/command-status failures with exit-versus-timeout unknown. Prepare separate pinned stock-reader compilation/resolution without enlarging10second reads. Add both native readonly package graphs, selected standard/compiler-provided/vendor package source hashes, final reopening and CycloneDX import edges.22local contracts pass;actual compiler/schema/reproduction,implicit/generated inputs,complete build-tool/deployment SBOM,license/signing/offline gates remain mandatory.",
         "F077exact6dd passes original same-runner native ARM/x86 two-build18command/final-closure and stock CycloneDX schema gate:14Go modules,4runtime UI packages,214ARM/215x86toolchain input packages. Preserve original failed candidates;no inherited later-source pass. Independent-host same-target repeat,complete implicit/generated/build-tool/deployment inventory,upstream licenses,owner grant,signing and disconnected installation remain mandatory.",
-        "Owner approved only GitHub Trivy1792MiB database-file guard;exact prepared patch applied and21stand-in methods pass. Hard1GiB/no swap,soft768MiB,oneCPU,2GiBscratch and all checks/time caps unchanged. BA x86again exact OOM exit137 before this patch. New real image scan remains unqualified;owner requests commit,push,pause."
+        "Owner approved only GitHub Trivy1792MiB database-file guard;exact prepared patch applied and21stand-in methods pass. Hard1GiB/no swap,soft768MiB,oneCPU,2GiBscratch and all checks/time caps unchanged. BA x86again exact OOM exit137 before this patch. New real image scan remains unqualified;owner requests commit,push,pause.",
+        "F142 preserves newly failing native FuzzCanonicalPath context-deadline error with no reported assertion/corpus. Immediate security triage requests only unchanged original job replay;original failure and final-source concern remain explicit until actual outcomes are observed."
       ]
     },
     {
@@ -890,7 +893,8 @@
         "docs/qualification/evidence/F127-mcp-create-only-revision.json",
         "docs/qualification/evidence/F128-received-artifact-copy.json",
         "docs/qualification/evidence/F129-mcp-received-copy.json",
-        "docs/qualification/evidence/F130-browser-received-copy.json"
+        "docs/qualification/evidence/F130-browser-received-copy.json",
+        "docs/qualification/evidence/F140-immutable-download-validators.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -902,7 +906,8 @@
         "Qualify human/system ingress, governed source collection and independently verified agent-to-system onward delivery. Every handoff requires current permission; notification never grants retrieval or forwarding.",
         "Resolve X07 and qualify actual optional Trust Control integration before compatibility claims; fixture evidence is scoped and ordinary core operation remains independent.",
         "Retain all original parity rows, full customer journeys, red gates and evidence. The first customer workflow/buyer/wedge remains unselected.",
-        "S003 authorizes guarded source/CI batches after prior required runs are terminal. Shared exchange API/CLI and receive/send/recovery/history browser surfaces are implemented;actual AX profiles remain owed. Broad/deferred qualification is mandatory at FINISH."
+        "S003 authorizes guarded source/CI batches after prior required runs are terminal. Shared exchange API/CLI and receive/send/recovery/history browser surfaces are implemented;actual AX profiles remain owed. Broad/deferred qualification is mandatory at FINISH.",
+        "F140 adds strong immutable download validators and repairs private no-store on standard range refusals;2observed-red/focused-green HTTP methods and affected static checks pass. Original exchange/current-authority,namespace/CAS/intake and actual native ARM/x86 stock-curl interruption/resume/byte/revocation proofs prepared,not qualified."
       ],
       "current_item": {
         "id": "F130",

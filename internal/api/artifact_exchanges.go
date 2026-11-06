@@ -4,7 +4,6 @@ import (
 	"io"
 	"net/http"
 	"strconv"
-	"time"
 
 	"github.com/ctlplne/freightctl/internal/store"
 )
@@ -281,12 +280,8 @@ func (s *Server) downloadExchange(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer reader.Close()
-	w.Header().Set("Content-Type", "application/octet-stream")
-	w.Header().Set("Content-Disposition", `attachment; filename="artifact"`)
-	w.Header().Set("X-Content-SHA256", file.SHA256)
-	w.Header().Set("X-File-Revision-ID", file.ID)
 	w.Header().Set("X-Artifact-Exchange-ID", r.PathValue("exchange"))
 	// No mutable filename or file path enters serving or content disposition.
 	// Range reads use the same bounded, live-authorized revision reader.
-	http.ServeContent(w, r, file.ID, time.Time{}, io.NewSectionReader(reader, 0, file.Size))
+	serveArtifactRevision(w, r, file, reader, `attachment; filename="artifact"`)
 }

@@ -503,12 +503,13 @@
         "docs/qualification/evidence/F001-custody-foundation.json",
         "docs/qualification/evidence/F004-virtual-namespace.json",
         "docs/qualification/evidence/F005-sftp-exchange.json",
-        "docs/qualification/evidence/F006-upload-checkpoints.json"
+        "docs/qualification/evidence/F006-upload-checkpoints.json",
+        "docs/qualification/evidence/F140-immutable-download-validators.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
       ],
-      "current_limit": "F006 verifies explicit private tickets and bounded local restart resume using CLI/HTTPS/stock SFTP. Browser UX, larger/native/enterprise/client profiles and full row/customer acceptance remain open."
+      "current_limit": "F140 adds strong immutable revision/SHA256 validators across file/path/exchange downloads and preserves no-store on standard range errors. Existing Go range/multipart behavior remains;current authorization precedes304/HEAD/partial responses. Two observed-red/focused-green HTTP methods and affected static checks pass. Actual PG/TLS/stock-curl interruption/resume/CAS/intake/revocation profiles and whole-row/native/enterprise/customer outcomes remain owed."
     },
     {
       "id": "P-HTTP-RESUME",

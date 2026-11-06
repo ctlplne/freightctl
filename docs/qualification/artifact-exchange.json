@@ -73,7 +73,8 @@
         "docs/qualification/evidence/F127-mcp-create-only-revision.json",
         "docs/qualification/evidence/F128-received-artifact-copy.json",
         "docs/qualification/evidence/F129-mcp-received-copy.json",
-        "docs/qualification/evidence/F130-browser-received-copy.json"
+        "docs/qualification/evidence/F130-browser-received-copy.json",
+        "docs/qualification/evidence/F140-immutable-download-validators.json"
       ]
     },
     {
@@ -151,7 +152,8 @@
         "docs/qualification/evidence/F127-mcp-create-only-revision.json",
         "docs/qualification/evidence/F128-received-artifact-copy.json",
         "docs/qualification/evidence/F129-mcp-received-copy.json",
-        "docs/qualification/evidence/F130-browser-received-copy.json"
+        "docs/qualification/evidence/F130-browser-received-copy.json",
+        "docs/qualification/evidence/F140-immutable-download-validators.json"
       ]
     },
     {
@@ -230,7 +232,8 @@
         "docs/qualification/evidence/F127-mcp-create-only-revision.json",
         "docs/qualification/evidence/F128-received-artifact-copy.json",
         "docs/qualification/evidence/F129-mcp-received-copy.json",
-        "docs/qualification/evidence/F130-browser-received-copy.json"
+        "docs/qualification/evidence/F130-browser-received-copy.json",
+        "docs/qualification/evidence/F140-immutable-download-validators.json"
       ]
     },
     {

@@ -1,12 +1,10 @@
 package api
 
 import (
-	"io"
 	"mime"
 	"net/http"
 	"path"
 	"strconv"
-	"time"
 
 	"github.com/ctlplne/freightctl/internal/custody"
 	"github.com/ctlplne/freightctl/internal/store"
@@ -89,11 +87,7 @@ func (s *Server) downloadPath(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer data.Close()
-	w.Header().Set("Content-Type", "application/octet-stream")
-	w.Header().Set("Content-Disposition", mime.FormatMediaType("attachment", map[string]string{"filename": path.Base(r.URL.Query().Get("path"))}))
-	w.Header().Set("X-Content-SHA256", file.SHA256)
-	w.Header().Set("X-File-Revision-ID", file.ID)
-	http.ServeContent(w, r, file.ID, time.Time{}, io.NewSectionReader(data, 0, file.Size))
+	serveArtifactRevision(w, r, file, data, mime.FormatMediaType("attachment", map[string]string{"filename": path.Base(r.URL.Query().Get("path"))}))
 }
 func (s *Server) uploadPath(w http.ResponseWriter, r *http.Request) {
 	identity, err := scope(r)

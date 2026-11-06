@@ -1,6 +1,6 @@
 # freightctl status
 
-Updated 2026-11-05. The full GOAL.md baseline and AX01–AX08 remain active under
+Updated 2026-11-06. The full GOAL.md baseline and AX01–AX08 remain active under
 owner decision S003. All 83 whole parity rows and twelve complete customer
 journeys remain open. Assisted deployment, independent adoption and enterprise
 readiness are unqualified. The missing market wedge does not block engineering.
@@ -88,6 +88,17 @@ writers and ordinary durable custody prevent premature acknowledgement. Three
 focused methods and affected tagged/static checks pass. Native ARM+x86 stock
 OpenSSH/PG/SSH/HTTPS/byte/abort/root/intake/revocation proofs are prepared,not
 qualified. Recursive/preservation/other-peer/full J02 and whole-row work stay owed.
+
+F140 adds strong immutable HTTP download validators across file/path/exchange
+views and preserves no-store on range errors. Both missing-tag/private-cache
+regressions were observed red,then2focused methods and affected static checks
+passed. Existing Go range/multipart behavior remains. Original exchange plus
+namespace/current-intake and actual native ARM+x86 stock-curl interrupted/resumed
+byte/revocation proofs are prepared,not qualified.
+
+F142 preserves a new native path-fuzz context deadline with no reported failing
+assertion/corpus. Immediate security triage requested only its original unchanged
+job replay;actual result remains pending and the original failure is retained.
 
 Latest fresh schema 46 targets 71 metadata tables/70 forced-RLS tables. Retained
 schema 35 is untouched. PostgreSQL/non-owner RLS, immutable custody, transactional

@@ -164,6 +164,24 @@ func TestArtifactExchangeHTTPSUsesSameCookieAndBearerAuthorityAndSeparateReply(t
 	if !bytes.Equal(partial, bytesA[1:4]) {
 		t.Fatal("range returned different bytes")
 	}
+	etag := response.Header.Get("ETag")
+	if etag == "" || etag[0] != '"' {
+		t.Fatal("authorized exchange has no strong immutable validator")
+	}
+	for _, method := range []string{"GET", "HEAD"} {
+		response, conditional := exchangeAPIRequest(t, server, method, filePath, nil, map[string]string{"Authorization": bearerB["Authorization"], "If-None-Match": etag}, nil, 304)
+		if len(conditional) != 0 || response.Header.Get("Cache-Control") != "no-store" || response.Header.Get("ETag") != etag {
+			t.Fatal("conditional exchange changed privacy or validator")
+		}
+	}
+	_, resumed := exchangeAPIRequest(t, server, "GET", filePath, nil, map[string]string{"Authorization": bearerB["Authorization"], "Range": "bytes=1-3", "If-Range": etag}, nil, 206)
+	if !bytes.Equal(resumed, bytesA[1:4]) {
+		t.Fatal("exact exchange validator resumed different bytes")
+	}
+	_, stale := exchangeAPIRequest(t, server, "GET", filePath, nil, map[string]string{"Authorization": bearerB["Authorization"], "Range": "bytes=1-3", "If-Range": "W/" + etag}, nil, 200)
+	if !bytes.Equal(stale, bytesA) {
+		t.Fatal("weak exchange validator permitted unchecked partial bytes")
+	}
 	bScope := store.Scope{Tenant: scope.Tenant, Partner: scope.Partner}
 	bCookie, _ := loginBrowser(t, server, bScope, b)
 	exchangeAPIRequest(t, server, "GET", filePath, bCookie, map[string]string{"Authorization": "Bearer " + string(other.Bytes)}, nil, 404)
@@ -173,6 +191,12 @@ func TestArtifactExchangeHTTPSUsesSameCookieAndBearerAuthorityAndSeparateReply(t
 	exchangeAPIRequest(t, server, "POST", prefix+"/accounts/commands", cookie, adminHeaders, exchangeAPIJSON(t, update), 200)
 	exchangeAPIRequest(t, server, "GET", filePath, bCookie, nil, nil, 401)
 	exchangeAPIRequest(t, server, "GET", filePath, nil, bearerB, nil, 404)
+	for _, method := range []string{"GET", "HEAD"} {
+		response, _ := exchangeAPIRequest(t, server, method, filePath, nil, map[string]string{"Authorization": bearerB["Authorization"], "If-None-Match": etag, "If-Range": etag, "Range": "bytes=1-3"}, nil, 404)
+		if response.Header.Get("ETag") != "" || response.Header.Get("Content-Range") != "" {
+			t.Fatal("old validator bypassed current exchange authority")
+		}
+	}
 	_, data = exchangeAPIRequest(t, server, "GET", prefix+"/identity", nil, bearerB, nil, 200)
 	var newIdentity store.Identity
 	if json.Unmarshal(data, &newIdentity) != nil || newIdentity.AuthorityRevision <= actorB.AuthorityRevision {

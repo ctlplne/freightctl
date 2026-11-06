@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "id": "F140",
+  "observed_at": "2026-11-06",
+  "candidate_parent": "8b3427683023be93fac4ed9e5ea267b11e1cd3ad",
+  "state": "Strong immutable HTTPS download validators and private range-error cache policy implemented;native outcomes owed",
+  "qualification_claim": false,
+  "profile": "immutable-download-validator-v1",
+  "wire_semantics_reference": "https://www.rfc-editor.org/rfc/rfc9110.html#name-if-range",
+  "changes": [
+    "Shared serving helper for ordinary file-ID,namespace-path and exchange-view downloads adds strong ETag bound to immutable UUID plus whole-file SHA256. Same bytes in another revision still differ. Existing Go ServeContent range,multipart,conditional and HEAD behavior remains;no new restricted range parser.",
+    "Current ordinary file/path/exchange/intake and verified storage authorization occurs before all serving,including304/HEAD/206/416. The same revision reader rechecks current authority on bounded reads. ETag is never authority;whole SHA256 describes the complete artifact,not a selected range.",
+    "Observed standard range errors removed no-store;the response wrapper restores private cache policy at actual WriteHeader while preserving standard serving. Existing response-controller unwrapping remains available. No new writes,receipt/business claims or forwarding/execution grants.",
+    "Original two-agent HTTPS journey adds exact If-Range,weak-validator full fallback,private304/HEAD and conditional refusal after authority changes. New namespace journey prepares file/path tag parity,actual replacement CAS,stale-path full fallback,foreign explicit-bearer no-cookie fallback and current-intake refusal.",
+    "Dedicated actual native ARM/x86 GitHub profile uses stock curl with protected credential/CA references,verified TLS1.3 and no ambient curlrc,proxy,redirect or insecure trust. It cuts a real200 response after65536original bytes,requires failed first transfer,resumes the receiver file with current tag,compares complete independent bytes/SHA256,and refuses revoked credentials despite old validators. Source commit and stock binary hash bind safe proof."
+  ],
+  "red": [
+    {
+      "reference": ".private/freightctl-f140-http-red.log",
+      "observation": "Both focused regressions failed before repair:missing strong artifact validator and lost no-store on416"
+    }
+  ],
+  "green": {
+    "focused_HTTP_methods": 2,
+    "affected_tagged_compilation": "pass;no runtime selected",
+    "affected_tagged_vet": "pass",
+    "unchanged_architecture": "pass",
+    "changed_workflow_actionlint": "pass",
+    "exact_native_method_selection": "5methods listed;not runtime evidence",
+    "format_diff": "pass"
+  },
+  "source_files": [
+    {
+      "path": ".github/workflows/http-downloads.yml",
+      "sha256": "81ab9b001b407e9069a22da0dc1d40f695b9187ad7f4c2246aa9d9d5080a7fe6",
+      "bytes": 2342
+    },
+    {
+      "path": "docs/protocols/https-download-validators.md",
+      "sha256": "7d8756d7eec351dd3a4ca7ef6ce79ccd06ff64d77e2fcb8a412969a9e12a5c50",
+      "bytes": 1969
+    },
+    {
+      "path": "internal/api/api.go",
+      "sha256": "29c9ca6e192de91f1f7b7ce314199e2f0560311418421d9f5e2853f415e70ce7",
+      "bytes": 28056
+    },
+    {
+      "path": "internal/api/artifact_http.go",
+      "sha256": "7dcdaa6720ce7822a431f1b9caeaab1e63b3d5357ebe695a025500c73f95b84f",
+      "bytes": 1246
+    },
+    {
+      "path": "internal/api/artifact_http_test.go",
+      "sha256": "6842433a0c52edafb4a88614512e47f9f8e0499fc9f5ef741743774662543fe2",
+      "bytes": 2355
+    },
+    {
+      "path": "internal/api/artifact_http_integration_test.go",
+      "sha256": "0b5e5ec99a76185ed92f158db7326001a6a8e53373ad938134c9d9492bd0333b",
+      "bytes": 4459
+    },
+    {
+      "path": "internal/api/artifact_http_stock_integration_test.go",
+      "sha256": "f2806b83978134934fdc722a8d3f93a5922ee567c9741c1777cd651266a5b07e",
+      "bytes": 7792
+    },
+    {
+      "path": "internal/api/artifact_exchanges.go",
+      "sha256": "01c2c9a40c2aec67034fbc36a654d0d7f8196630f3cc3170a4f373851a916deb",
+      "bytes": 6639
+    },
+    {
+      "path": "internal/api/artifact_exchanges_integration_test.go",
+      "sha256": "695820874b1bb64b17cf000ba943aa311dd89142d03a32694ffea2771fa3ea43",
+      "bytes": 19634
+    },
+    {
+      "path": "internal/api/namespace.go",
+      "sha256": "db8970085e40c80a89f9ba622aece22438490d499c116176559651de08e9082d",
+      "bytes": 3293
+    },
+    {
+      "path": "internal/crypto/native_proof_tls.go",
+      "sha256": "46dcadf254536449b456bec2da9cb909456629074d3f478fc0c7aa2061d4f160",
+      "bytes": 1666
+    }
+  ],
+  "local_manifest": {
+    "path": ".private/freightctl-f140-manifest.json",
+    "sha256": "42632bd6e5934cedd5e2101635c3e4424ce756646aa8d815be08edf6d3e1f025",
+    "bytes": 1170
+  },
+  "owed": [
+    "Actual original exchange plus namespace PG/HTTPS/cookie/bearer/CAS/intake/conditional outcomes at source",
+    "Actual native ARM/x86 stock-curl interrupted/resumed receiver bytes,TLS,credential revocation and original failure replay",
+    "Full P-HTTPS-SEND/AX/customer/native/final-source and mandatory FINISH gates;no overall product qualification"
+  ],
+  "limits": "No migration or retained-state change;fresh46/71metadata70forcedRLS,retained35. Local heavy runtimes/inference off and existing local allowances preserved;GitHub uses runner capacity with current security/isolation/product controls."
+}

@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "id": "F142",
+  "observed_at": "2026-11-06",
+  "candidate": "8b3427683023be93fac4ed9e5ea267b11e1cd3ad",
+  "state": "New native fuzz timeout triaged;isolated unchanged job replay requested,not yet qualified",
+  "qualification_claim": false,
+  "original": {
+    "run_id": 42165878174,
+    "attempt": 1,
+    "job_id": 127722117867,
+    "job": "bounded-fuzz",
+    "result": "failure",
+    "target": "FuzzCanonicalPath",
+    "observation": "After34887executions,2workers and6.02seconds,Go reported context deadline exceeded;no assertion violation or failing corpus/input was reported. Cause remains unconfirmed.",
+    "settings": "Original native x86 Go1.26.10,-timeout=0,-fuzztime=5s,-parallel=2;unchanged. Later original fuzz targets were not reached."
+  },
+  "private_evidence": {
+    "reference": ".private/freightctl-f141-fuzz.log",
+    "sha256": "0d4e4682992d755de05b4f150aafb9c9f806a9b1e0a39b76fe40c783a7ab69b2"
+  },
+  "action": {
+    "scope": "Replay only original failed bounded-fuzz job;no original runtime cancellation or other job replay",
+    "connector": "403 Resource not accessible by integration;no Actions write permission",
+    "fallback": "Authorized repository CLI POST actions/jobs/127722117867/rerun returned success",
+    "state": "Replay in progress;not yet qualified",
+    "replay": {
+      "run_id": 42165878174,
+      "attempt": 2,
+      "job_id": 127723873952,
+      "status": "in_progress",
+      "conclusion": null
+    }
+  },
+  "owed": [
+    "Exact native replay handle,outcome and any actionable original input/assertion repair",
+    "Preserve original timeout even if replay passes;resolve intermittent concern and final-source fuzz at mandatory FINISH",
+    "All remaining baseline/AX/native/product/FINISH gates"
+  ],
+  "invariants": "No finding/assertion/protocol/coverage/isolation weakening or budget change;no local fuzz/PG/Chrome/scanner/model runtime."
+}

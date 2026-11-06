@@ -460,12 +460,9 @@ func (s *Server) download(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer data.Close()
-	w.Header().Set("Content-Type", "application/octet-stream")
-	w.Header().Set("Content-Disposition", `attachment; filename="`+f.ID+`"`)
-	w.Header().Set("X-Content-SHA256", f.SHA256)
 	// Ranges use the same verified descriptor, with current authority and intake
 	// release checks before each bounded read, including during a long response.
-	http.ServeContent(w, r, f.ID, time.Time{}, io.NewSectionReader(data, 0, f.Size))
+	serveArtifactRevision(w, r, f, data, `attachment; filename="`+f.ID+`"`)
 }
 func (s *Server) events(w http.ResponseWriter, r *http.Request) {
 	identity, err := scope(r)
