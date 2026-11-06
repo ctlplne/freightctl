@@ -688,10 +688,15 @@
     "security_gate": "failed0CRITICAL/45HIGH/6UNKNOWN,zero suppressed;all51fix fields absent on each architecture",
     "evidence": "docs/qualification/evidence/F095-native-security-replay.json"
   },
-  "latest_batch_reference": "docs/qualification/evidence/F106-native-batch-security.json",
+  "latest_batch_reference": "docs/qualification/evidence/F109-minimal-runtime-native-security.json",
   "minimal_runtime_prepared": {
     "reference": "docs/qualification/evidence/F107-minimal-peer-runtime.json",
     "state": "Prepared;no clean-image/native runtime qualification",
     "original_findings": "Retained unchanged;latest actual candidate96e22inF106"
+  },
+  "minimal_runtime_native_replay": {
+    "reference": "docs/qualification/evidence/F109-minimal-runtime-native-security.json",
+    "state": "Both real native probes pass;complete scans each0CRITICAL/1HIGH/0UNKNOWN,15OS+2language packages,zero suppressed. Gate red.",
+    "remaining": "CVE-2026-76844 exact source/package mapping and compatible remediation owed"
   }
 }

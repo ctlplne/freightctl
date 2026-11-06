@@ -4,17 +4,17 @@ Updated 2026-11-05. The full GOAL.md baseline and AX01–AX08 remain active unde
 S003. All83 whole parity rows and twelve complete customer journeys remain open.
 Assisted deployment, independent adoption and enterprise readiness are unqualified.
 
-Latest completed CI candidate is96e22f5ca18e6ea67b128d3fcc3f2f6f31e47d91.
-All12triggered runs are terminal. Three native source-vulnerability configurations,
-reproducibility,Mac units and fuzz pass;core Go reachability,JavaScript audit and
-source/history secret scans pass. Core/native integration,metadata,Windows and
-public/peer/browser outcomes remain red;nonsecurity logs/repair stay deferred to
-mandatory FINISH. Both image scans complete with unchanged blocking findings.
-F106 preserves exact run/job handles and safe summaries. No cancellation action;
-the pre-push guard stays enabled. Actual exchange/onward/AI/product qualification
-remains owed. F105 is committed locally;its native UI proof remains owed.
+Latest completed CI candidate ise72be1e51b9d4563101424b648b9cb08cd3bcd69.
+All12triggered runs are terminal. Three native source configurations,repro,Mac
+units and fuzz pass;core Go reachability,JavaScript audit and source/history
+Gitleaks pass. Both actual minimal-runtime probes pass;complete image scans each
+retain1HIGH/0CRITICAL/0UNKNOWN,zero suppressed and15OS+2language packages. F109
+preserves exact jobs and full safe evidence. The security gate remains red.
+Core/native PG,metadata,Windows and public/browser/stock-peer outcomes remain red;
+nonsecurity investigation/repair stay deferred to mandatory FINISH. No cancellation
+action;guard enabled. F108 is local;actual exchange/onward/AI/product proof remains owed.
 
-F075 actual Debian13.7 ARM/x86 scans complete with80OS+2language packages each:
+Original F075 full Trixie Debian13.7 ARM/x86 scans complete with80OS+2language packages each:
 0CRITICAL/45HIGH/6UNKNOWN,61LOW/77MEDIUM,zero suppressed. The immutable Node26.13.0
 Trixie input and exact13 verifier are exercised; the gate remains red. Original
 Bookworm7/58/5 and1/33/0 findings and resource failures remain. F092 records primary
@@ -25,12 +25,12 @@ package swap or clean-image/interop/product-image claim is made.
 F095 observes the diagnostic on both nativee001 reports:all51blocking fix fields
 are absent on each architecture. This is not proof no patch exists elsewhere.
 
-F107 prepares a pinned Distroless Node26/Debian13 independent peer candidate,
-retaining actual Node26.13.0/OpenPGP6.3.2 requirements,full base package metadata,
-complete inventory/finding scans and all isolation controls. Public OCI metadata
-hashes match;14reporter/15orchestration contracts,workflow lint and native
-compilation pass. Actual offline runtime probe,both full scans and original
-independent AEAD decryption/corruption/recovery replay are owed. No clean-image
+F107's pinned Distroless Node26/Debian13 candidate actually builds and passes its
+offline runtime probe on native ARM/x86 (F109). Full base inventory,finding and
+isolation checks remain enforced. Complete scans reduce45HIGH/6UNKNOWN to1HIGH
+per architecture. CVE-2026-76844 remains red;public package mappings conflict,so
+exact source identity and compatible remediation remain owed. Original independent
+AEAD decryption/corruption/recovery qualification is still owed. No clean-image
 claim or local image/scanner/model runtime.
 
 F080–F083 implement canonical exchange contracts, append-only endpoint/current-head
