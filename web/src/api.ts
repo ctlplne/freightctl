@@ -1,5 +1,12 @@
 import { operationKey, digestBytes } from "./crypto";
 import {
+  auditHistorySessionStamp,
+  auditHistoryAllowed,
+  normalizeAuditHistory,
+  validateHistoryCursor,
+  asAuditHistoryPage,
+} from "./audit-history-types";
+import {
   ApiError,
   asSession,
   asUpload,
@@ -19,6 +26,38 @@ import {
 
 export class Api {
   session: Session | null = null;
+  async auditHistory(input: unknown, signal?: AbortSignal) {
+    const session = this.session;
+    if (!session) throw new ApiError("unauthorized", 401);
+    const stamp = () => auditHistorySessionStamp(this.session);
+    const original = stamp(),
+      identity = {
+        ...session.identity,
+        permissions: [...session.identity.permissions],
+      };
+    const current = () => {
+      if (stamp() !== original) throw new ApiError("context_changed", 409);
+      if (!auditHistoryAllowed(identity))
+        throw new ApiError("permission_denied", 403);
+    };
+    current();
+    const pinned = normalizeAuditHistory(input);
+    validateHistoryCursor(identity, pinned);
+    const result = await this.request(
+      `/v1/tenants/${identity.tenant_id}/partners/${identity.partner_id}/audit/history/search`,
+      {
+        method: "POST",
+        body: JSON.stringify(pinned),
+        ...(signal ? { signal } : {}),
+      },
+      (value) => {
+        current();
+        return asAuditHistoryPage(value, identity, pinned);
+      },
+    );
+    current();
+    return result;
+  }
   private controllers = new Set<AbortController>();
   private loginAttempt: {
     tenant: string;

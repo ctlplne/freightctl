@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "id": "F133",
+  "observed_at": "2026-11-05",
+  "candidate_parent": "c89bbb2705549d7e90a4202039e29af6e12aaf41",
+  "state": "Browser root-audit metadata search with strict Go-compatible page/cursor validation implemented;actual native outcomes owed",
+  "qualification_claim": false,
+  "changes": [
+    "Explicit root audit_read browser workspace;admin/read/receive/write alone grants no history control. Actor/resource/literal-kind/UTC filters and bounded next-page navigation share ordinary read-only service. No payload/content/request key/credential/arbitrary SQL or byte permission.",
+    "Request filters cloned and normalized before await. Current API instance,tenant/partner/actor,authority/root/permissions/session guard stale callbacks and display;context change aborts and clears old rows. No automatic search on entry.",
+    "Strict response validation binds scope/reader,exact filters,microsecond half-open ranges,unique ordered time/UUID identities,no private/unknown fields,metadata-only observation and exact last-row canonical cursor. Shared Go/browser fixture verifies real filter-hash and cursor serialization rather than approximate JSON.",
+    "Original native Chrome journey adds separately authorized audit reader,ordinary-recipient refusal,explicit actor/event search,next page over the original two sender acceptances,and exact original file/event lookup. All previous28 accessibility states remain;three new states require31total and3actual searches. Unknown/duplicate/alias/missing summary fields still refuse."
+  ],
+  "red": [
+    {
+      "reference": ".private/freightctl-f133-browser-red.log",
+      "observation": "Focused operator history request failed: auditHistory is not a function"
+    },
+    {
+      "reference": ".private/freightctl-f133-summary-red.log",
+      "observation": "Old strict native summary refused new history field/count profile before explicit extension"
+    }
+  ],
+  "green": {
+    "focused_browser_methods": 5,
+    "shared_Go_cursor_fixture_method": 1,
+    "strict_native_summary_method": 1,
+    "affected_frontend_typecheck_build_format": "pass",
+    "browser_bundle_bytes": 786390,
+    "affected_tagged_fixture_compilation_vet": "pass;only lightweight summary selected,no PG/Chrome runtime",
+    "unchanged_architecture": "pass",
+    "native_script_syntax": "pass",
+    "format_diff": "pass"
+  },
+  "native_profile": {
+    "previous_accessibility_states": 28,
+    "additional_history_states": 3,
+    "required_total": 31,
+    "history_searches": 3,
+    "state": "prepared,not run locally"
+  },
+  "source_files": [
+    {
+      "path": "docs/protocols/audit-history.md",
+      "sha256": "74ef2b504b6b01188c111e76efa608fed166190dd82eef207711645e397d120f"
+    },
+    {
+      "path": "internal/api/artifact_exchange_browser_integration_test.go",
+      "sha256": "ccf339324010f9e552db15a3cd8a12305f0f45c38cea237b97982b61addbd981"
+    },
+    {
+      "path": "internal/browser/assets/app.js",
+      "sha256": "eb343150d83f49a3ddceddd3420e7d9b6e5f3094397e2b1bc7637a9f7144d6aa"
+    },
+    {
+      "path": "internal/browser/assets/manifest.json",
+      "sha256": "716d1cfd4d3ddbd7515b132e0a4247200bc19b657129fe81b307a68a1035ce97"
+    },
+    {
+      "path": "internal/store/audit_history_test.go",
+      "sha256": "177f96922a5c12b1c663ab7af5c6983aa6b8a7c11d95f991cbe375213761fe83"
+    },
+    {
+      "path": "scripts/artifact-exchange-browser.mjs",
+      "sha256": "7d1eb235082c961f2f3bdc604c7313634b6ec4c5ab08de65eca3014477ceb03b"
+    },
+    {
+      "path": "web/src/api.ts",
+      "sha256": "354c158eb9b0c3199b9854659c714095ef0e8bd3a0859cbf3a5cd22c05bf76aa"
+    },
+    {
+      "path": "web/src/app.tsx",
+      "sha256": "6717eca0e439f64933992134148e1620eb51ef6bf419c7ddf5714292ea7b88ff"
+    },
+    {
+      "path": "web/src/audit-history-types.ts",
+      "sha256": "b4cf1a5851554178fc34f8a2d3caf7f08a43b17a7c97a269edb7e447ea10e120"
+    },
+    {
+      "path": "web/src/audit-history.tsx",
+      "sha256": "3d3016f4a2f8ac7dabd365b150f71767d7b64b439b69a6d850547f0d2afb434c"
+    },
+    {
+      "path": "web/tests/audit-history.test.mjs",
+      "sha256": "728041f5f5e61dc035254dfdbb65be26b4adaea6af6873720fb1d7a2983dbc3b"
+    },
+    {
+      "path": "web/tests/fixtures/audit-history.json",
+      "sha256": "29f753c73acc67e1967212908963ad336955ea89982c384761836ae87b4e1f4a"
+    }
+  ],
+  "local_manifest": {
+    "reference": ".private/freightctl-f133-manifest.json",
+    "sha256": "db830c7e80e90d6e62f8a8effbbf17bc92461dae9108020deab287991cddf4aa"
+  },
+  "owed": [
+    "Actual original PG/verified HTTPS/CLI/Chrome root-history role,privacy,microsecond,filter,pagination,refusal and exact resource outcomes at actual source",
+    "Concurrent authority,large histories/index migration/restore and independent-operator/whole O-HISTORY customer qualification",
+    "All remaining full baseline/AX and mandatory FINISH original/deferred/native/final-source gates"
+  ],
+  "schema": 46,
+  "retained_schema": 35,
+  "retained_changed": false,
+  "local_heavy_runtimes_started": false,
+  "inference": "off"
+}

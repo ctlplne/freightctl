@@ -23,5 +23,23 @@ Every page reauthenticates. Pages are independent observations, not one fixed
 snapshot; refresh starts again. Recorded time is not a promise of causal order or
 a monotonic clock. Full repeatable evidence uses the existing snapshot export.
 
+`freightctl audit-history -request-file <protected-json>` uses ordinary protected
+credential/database references and the same service. The browser's Audit history
+workspace is visible only under explicit root `audit_read`; administrator,read,
+receive or write permission alone does not imply it. Search is explicit,with
+actor,event-type,resource and UTC range fields plus next-page navigation.
+
+The browser pins copied normalized filters,checks scope/reader/filter/time/order
+and exact last-row cursor bindings,and rejects raw payload or unknown stronger
+outcome fields. It verifies the same canonical cursor format as Go using a shared
+fixture. Current actor,authority,root,permissions and session are checked before,
+inside and after the request. Context change hides stale rows and aborts reads.
+
+The native operator profile adds three search states to the existing28-state
+artifact/copy journey:actor/event search,next page and exact file lookup. A
+separately granted audit reader must see the two original sender acceptances and
+the exact original file/event binding. Ordinary recipients have no history
+control. All31 accessibility states and actual PG/Chrome outcomes remain owed.
+
 Use actual PostgreSQL and served public-interface proofs for native claims.
 Parsing,source presence and compilation do not qualify operator outcomes.

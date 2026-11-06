@@ -2887,12 +2887,13 @@
       "acceptance_journey": "J06",
       "state": "implementing",
       "evidence": [
-        "docs/qualification/evidence/F132-operator-audit-history.json"
+        "docs/qualification/evidence/F132-operator-audit-history.json",
+        "docs/qualification/evidence/F133-browser-audit-history.json"
       ],
       "qualification_blockers": [
         "Authorized Cerberus FTP Server installation and exact edition/version for observed comparison"
       ],
-      "current_limit": "Root audit_read metadata API/CLI implemented with focused/static proof only. Browser and actual native PG/public-interface/privacy/isolation/revocation/migration/restore/independent-operator outcomes remain owed;no whole-row or comparison qualification."
+      "current_limit": "Root audit_read metadata API/CLI/browser implemented with focused/static and shared serialization proof only. Actual native PG/public-interface/privacy/isolation/revocation/pagination/migration/restore/independent-operator outcomes remain owed;no whole-row or comparison qualification."
     },
     {
       "id": "O-NETWORK",

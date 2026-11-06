@@ -3,9 +3,48 @@ package store
 import (
 	"encoding/base64"
 	"encoding/json"
+	"os"
 	"strings"
 	"testing"
 )
+
+func TestAuditHistoryBrowserFixtureKeepsOrdinaryFilterAndCursorBinding(t *testing.T) {
+	raw, err := os.ReadFile("../../web/tests/fixtures/audit-history.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var fixture struct {
+		Reader     Identity            `json:"reader"`
+		Request    AuditHistoryRequest `json:"request"`
+		Normalized AuditHistoryRequest `json:"normalized"`
+		Binding    string              `json:"binding"`
+		Cursor     string              `json:"cursor"`
+	}
+	if json.Unmarshal(raw, &fixture) != nil {
+		t.Fatal("fixture decode")
+	}
+	r, err := NormalizeAuditHistory(fixture.Request)
+	if err != nil {
+		t.Fatal(err)
+	}
+	actual, _ := json.Marshal(r)
+	expected, _ := json.Marshal(fixture.Normalized)
+	if string(actual) != string(expected) {
+		t.Fatal("browser/go normalization differs")
+	}
+	tx := &Transaction{Scope: Scope{Tenant: fixture.Reader.Tenant, Partner: fixture.Reader.Partner}, Actor: fixture.Reader.Actor, AuthorityRevision: fixture.Reader.AuthorityRevision, Root: "/"}
+	if auditHistoryBinding(tx, r) != fixture.Binding {
+		t.Fatal("browser/go filter binding differs")
+	}
+	c, err := decodeAuditHistoryCursor(fixture.Cursor)
+	if err != nil || c.Binding != fixture.Binding {
+		t.Fatal("browser cursor refused", err)
+	}
+	wire, _ := json.Marshal(c)
+	if base64.RawURLEncoding.EncodeToString(wire) != fixture.Cursor {
+		t.Fatal("browser/go canonical cursor differs")
+	}
+}
 
 func TestAuditHistoryCanonicalControlsRefusePayloadRoundingAndUnboundedSelectors(t *testing.T) {
 	r, err := DecodeAuditHistory([]byte(`{"limit":2,"kinds":["Zulu","Alpha","Zulu"],"from":"2026-11-05T00:00:00.100000Z","until":"2026-11-06T00:00:00Z"}`))

@@ -64,7 +64,10 @@ loss/reload/foreign-hint/byte/cardinality proof is prepared,not qualified.
 F132 implements privileged root audit_read metadata history API/CLI,with copied
 strict filters,canonical context-bound keyset pages,no payloads and no writes.
 Four focused Go methods,seven metadata-summary methods and affected static checks
-pass. Actual PG/HTTPS/CLI pagination/privacy/refusal and browser search remain owed.
+pass. F133 adds browser root-audit search with strict shared cursor/response and
+stale-context guards. Five browser methods,one Go fixture,one strict summary and
+affected static checks pass. Actual PG/HTTPS/CLI and31-state Chrome pagination,
+privacy,role/refusal and exact file/event lookup outcomes remain owed.
 O-HISTORY is implementing;no whole-row or independent-operator qualification.
 
 Latest fresh schema 46 targets 71 metadata tables/70 forced-RLS tables. Retained

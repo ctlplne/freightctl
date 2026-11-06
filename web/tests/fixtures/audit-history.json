@@ -1,0 +1,28 @@
+{
+  "reader": {
+    "tenant_id": "00000001-1111-4111-8111-111111111111",
+    "partner_id": "00000002-1111-4111-8111-111111111111",
+    "actor_id": "00000003-1111-4111-8111-111111111111",
+    "authority_revision": 1,
+    "root_policy_digest": "8a5edab282632443219e051e4ade2d1d5bbc671c781051bf1437897cbdfea0f1",
+    "permissions": ["read", "list", "audit_read"]
+  },
+  "request": {
+    "actor_id": "00000006-1111-4111-8111-111111111111",
+    "resource_id": "00000007-1111-4111-8111-111111111111",
+    "kinds": ["FileAccepted", "AccountChanged", "FileAccepted"],
+    "from": "2026-11-05T00:00:00.100000Z",
+    "until": "2026-11-06T00:00:00Z",
+    "limit": 1
+  },
+  "normalized": {
+    "actor_id": "00000006-1111-4111-8111-111111111111",
+    "resource_id": "00000007-1111-4111-8111-111111111111",
+    "kinds": ["AccountChanged", "FileAccepted"],
+    "from": "2026-11-05T00:00:00.1Z",
+    "until": "2026-11-06T00:00:00Z",
+    "limit": 1
+  },
+  "binding": "cf22f011b57bc3702a9898031be8c3c3f4e26e4cd4bdff2aedbebad72924191e",
+  "cursor": "eyJhdCI6IjIwMjYtMTEtMDVUMDA6MDA6MDAuMTAwMDAxWiIsImlkIjoiMDAwMDAwMDUtMTExMS00MTExLTgxMTEtMTExMTExMTExMTExIiwiYmluZGluZyI6ImNmMjJmMDExYjU3YmMzNzAyYTk4OTgwMzFiZThjM2MzZjRlMjZlNGNkNGJkZmYyYWVkYmViYWQ3MjkyNDE5MWUifQ"
+}

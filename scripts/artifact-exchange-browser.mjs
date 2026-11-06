@@ -29,6 +29,8 @@ for (const value of [
   c.copy_actor,
   c.copy_endpoint,
   c.copy_exchange,
+  c.audit_actor,
+  c.audit_event,
 ])
   assert.match(value, /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/);
 assert.match(c.sha256, /^[0-9a-f]{64}$/);
@@ -56,6 +58,7 @@ let browser,
   ownedCopies = 0,
   copyRecoveries = 0,
   copyRequests = 0,
+  historySearches = 0,
   downloads = 0,
   declines = 0,
   offers = 0,
@@ -194,6 +197,12 @@ try {
   }
   phase = "recipient-login";
   const recipient = await login(c.recipient_token);
+  assert.equal(
+    await recipient.page
+      .getByRole("button", { name: "Audit history", exact: true })
+      .count(),
+    0,
+  );
   phase = "recipient-directory";
   assert.equal((await directory(recipient.page)).status(), 200);
   const incoming = recipient.page.waitForResponse((r) =>
@@ -274,6 +283,12 @@ try {
   );
   phase = "copy-login";
   const copyOwner = await login(c.copy_token);
+  assert.equal(
+    await copyOwner.page
+      .getByRole("button", { name: "Audit history", exact: true })
+      .count(),
+    0,
+  );
   assert.equal(
     await copyOwner.page
       .getByRole("button", { name: "Send artifacts", exact: true })
@@ -1309,6 +1324,118 @@ try {
   assert.ok(observedOnward.includes("Observed state: queued"));
   assert.ok(observedOnward.includes("Receiver persistence: unknown"));
   await accessibility(operator.page, "onward-status-accessibility");
+  phase = "audit-login";
+  const auditor = await login(c.audit_token);
+  const historyURL =
+    origin.origin +
+    `/v1/tenants/${c.tenant}/partners/${c.partner}/audit/history/search`;
+  auditor.page.on("request", (r) => {
+    if (r.url() === historyURL && r.method() === "POST") historySearches++;
+  });
+  await auditor.page
+    .getByRole("button", { name: "Audit history", exact: true })
+    .click();
+  const auditRegion = auditor.page.getByRole("region", {
+    name: "Operator audit history",
+    exact: true,
+  });
+  await auditRegion
+    .getByLabel("Actor ID (optional)", { exact: true })
+    .fill(c.sender_actor);
+  await auditRegion
+    .getByLabel("Event type (optional)", { exact: true })
+    .fill("FileAccepted");
+  await auditRegion
+    .getByLabel("Actions per page", { exact: true })
+    .selectOption("1");
+  assert.equal(historySearches, 0);
+  phase = "audit-first-page";
+  const firstHistory = auditor.page.waitForResponse(
+    (r) => r.url() === historyURL && r.request().method() === "POST",
+  );
+  await auditRegion
+    .getByRole("button", { name: "Search recorded actions", exact: true })
+    .click();
+  const firstHistoryResponse = await firstHistory;
+  assert.equal(firstHistoryResponse.status(), 200);
+  const firstPage = await firstHistoryResponse.json();
+  assert.equal(firstPage.reader_actor_id, c.audit_actor);
+  assert.equal(firstPage.payloads, "omitted");
+  assert.equal(firstPage.events.length, 1);
+  assert.ok(firstPage.next);
+  assert.equal(firstPage.events[0].actor_id, c.sender_actor);
+  assert.equal(firstPage.events[0].kind, "FileAccepted");
+  assert.deepEqual(Object.keys(firstPage.events[0]).sort(), [
+    "actor_id",
+    "event_id",
+    "kind",
+    "recorded_at",
+    "resource_id",
+  ]);
+  const historyTable = auditRegion.getByRole("table", {
+    name: "Recorded action metadata",
+    exact: true,
+  });
+  await historyTable.waitFor();
+  assert.ok(
+    (await historyTable.innerText()).includes(firstPage.events[0].event_id),
+  );
+  phase = "audit-first-accessibility";
+  await accessibility(auditor.page, "audit-first-accessibility");
+  phase = "audit-next-page";
+  const secondHistory = auditor.page.waitForResponse(
+    (r) => r.url() === historyURL && r.request().method() === "POST",
+  );
+  await auditRegion
+    .getByRole("button", { name: "Next action page", exact: true })
+    .click();
+  const secondHistoryResponse = await secondHistory;
+  assert.equal(secondHistoryResponse.status(), 200);
+  const secondPage = await secondHistoryResponse.json();
+  assert.equal(secondPage.events.length, 1);
+  assert.equal(secondPage.next, undefined);
+  assert.notEqual(secondPage.events[0].event_id, firstPage.events[0].event_id);
+  assert.deepEqual(
+    new Set([
+      firstPage.events[0].resource_id,
+      secondPage.events[0].resource_id,
+    ]),
+    new Set([c.file, uploadedFile]),
+  );
+  await historyTable.waitFor();
+  assert.ok(
+    (await historyTable.innerText()).includes(secondPage.events[0].event_id),
+  );
+  assert.equal(
+    await auditRegion
+      .getByRole("button", { name: "Next action page", exact: true })
+      .count(),
+    0,
+  );
+  phase = "audit-next-accessibility";
+  await accessibility(auditor.page, "audit-next-accessibility");
+  phase = "audit-resource-search";
+  await auditRegion
+    .getByLabel("File or resource ID (optional)", { exact: true })
+    .fill(c.file);
+  const resourceHistory = auditor.page.waitForResponse(
+    (r) => r.url() === historyURL && r.request().method() === "POST",
+  );
+  await auditRegion
+    .getByRole("button", { name: "Search recorded actions", exact: true })
+    .click();
+  const resourceHistoryResponse = await resourceHistory;
+  assert.equal(resourceHistoryResponse.status(), 200);
+  const resourcePage = await resourceHistoryResponse.json();
+  assert.equal(resourcePage.events.length, 1);
+  assert.equal(resourcePage.events[0].resource_id, c.file);
+  assert.equal(resourcePage.events[0].event_id, c.audit_event);
+  assert.equal(resourcePage.next, undefined);
+  assert.equal(historySearches, 3);
+  await historyTable.waitFor();
+  assert.ok((await historyTable.innerText()).includes(c.audit_event));
+  phase = "audit-resource-accessibility";
+  await accessibility(auditor.page, "audit-resource-accessibility");
   phase = "revocation-barrier";
   await writeFile(c.ready, "ready\n", { mode: 0o600, flag: "wx" });
   const deadline = Date.now() + 15000;
@@ -1390,6 +1517,7 @@ try {
     evidence_reads: evidenceReads,
     owned_copies: ownedCopies,
     copy_recoveries: copyRecoveries,
+    history_searches: historySearches,
     browser_version: browser?.version() ?? "",
     node_version: process.version,
     axe_version: axe.version,
