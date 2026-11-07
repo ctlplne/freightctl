@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "id": "F281",
+  "observed_at": "2026-11-07",
+  "base_candidate": "aeaad6058d811abca657eb455760cbd1654fc091",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Verified-stage/publication boundary factored;native adverse runtime proof owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "950626afd74029baa65518fc8039e236ddfcecdcfec3056fd8790859fd66cd9a",
+      "bytes": 6179
+    },
+    {
+      "reference": "cmd/freightctl/exchanges.go",
+      "sha256": "92c7b6351aed50be943d3ec96751719b36bbddf33a3170635c17fc4c671249df",
+      "bytes": 12208
+    },
+    {
+      "reference": "cmd/freightctl/exchanges_other_test.go",
+      "sha256": "4eb999ca381ac4f29c56395fc7cce92da1a8b575d632315190b666ad822f97e3",
+      "bytes": 202
+    },
+    {
+      "reference": "cmd/freightctl/exchanges_test.go",
+      "sha256": "22f1f50c203217f3633f6fa5704cca933f6530c94c1958dc468049b2759265d9",
+      "bytes": 9089
+    },
+    {
+      "reference": "cmd/freightctl/protected_reference_windows_test.go",
+      "sha256": "8d63f772b1b9ac34619fac0fb56aae8ef89655ccee4c2d08340cb5fb19f4230f",
+      "bytes": 3128
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "8c90fbe3f2be8671d35cac20505316d5c1566f4d3199115c4a96e1bac70756ca",
+      "bytes": 387298
+    },
+    {
+      "reference": "docs/security/protected-files.md",
+      "sha256": "a9b91b3ae7f8ae655d08114c6fa71ba328df9c9a654a19a26e2807a7955d61ec",
+      "bytes": 10979
+    }
+  ],
+  "red": {
+    "candidate": "33ad447564cb0be33bc04fa8d60e9f0adaf0c2b4",
+    "run": 42361009318,
+    "job": 128369207103,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128369207103",
+    "test": "TestExchangeDownloadDirectoryReplacementCannotSubstituteVerifiedOutput",
+    "observation": "exchanges_test.go:175 parent rename fails Access denied while the production private child is open;no actual substitution reached. This is native filesystem prevention,not proof that the publication guard passed."
+  },
+  "changed": [
+    "Factor actual existing verified staging into a private stage object and actual publication into its method. Preserve exact count/EOF/hash/context,private root/creation,sealing/Sync/Close,current physical parent,non-overwrite link,owned cleanup,held-directory sync and ambiguous post-link error semantics. No hooks or fake filesystem are introduced.",
+    "On every platform substitute the parent after the actual stage closes,immediately before actual publication. Keep every original exact isolation/no-publication/foreign-byte-preservation/owned-stage-cleanup assertion;also independently require exact sealed staging bytes before substitution.",
+    "Retain the original Unix during-write replacement case in full. Windows adds exact AccessDenied active-private-child prevention with unchanged parent,exact sealed output and no stage remnants. Existing exact public root SharingViolation name-pin case remains unchanged. Do not broaden production sharing or ACLs to make the fixture possible."
+  ],
+  "green": [
+    "Focused local original complete/private/no-overwrite and short/long/digest/EOF/context/unprotected-parent/no-partial cases pass. Both during-write and post-close parent replacement cases pass with strict original refusal/cleanup assertions.",
+    "Affected format/local and Windows vet,Windows CLI compilation,integration compilation and architecture pass."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f281-architecture.log",
+      "sha256": "127fcbb6e0f45b83cdb458ed64a613cd1042dbfce65960c65b28569751228caf",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f281-download-green.log",
+      "sha256": "1a1bc40cd8f3b98dfc2f77f512addfc28f39f8d65280af6c1ef1aae1676881bd",
+      "bytes": 57
+    },
+    {
+      "reference": ".private/freightctl-f281-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f281-integration-compile.log",
+      "sha256": "e65d5355bdcf63a8d19a7fbccb9e999752e540e0fb959953a5364d64b19a7434",
+      "bytes": 75
+    },
+    {
+      "reference": ".private/freightctl-f281-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f281-windows-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f281-windows-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "owed": [
+    "Actual original Windows active-child prevention and post-close parent substitution/isolation/cleanup.",
+    "Actual existing Windows public root name pin and full CLI byte/persistence journey.",
+    "All remaining native/browser/stock/product/final-source baseline/AX/FINISH outcomes."
+  ],
+  "resources": "OneCPU/192MiB local lightweight filesystem/byte units/static/cross-compilation only;no inference,PostgreSQL,Chrome,scanner or heavy peer. Resource limits,retained35/source60 unchanged."
+}

@@ -255,59 +255,95 @@ func writeExchangeBytesAt(ctx context.Context, path string, size int64, digest s
 	if root == nil || path == "" || size < 0 || len(digest) != 64 || source == nil {
 		return store.ErrExchangeInput
 	}
-	directory := filepath.Dir(path)
+	stage, err := stageExchangeBytesAt(ctx, size, digest, source, root)
+	if err != nil {
+		return err
+	}
+	return stage.publish(path)
+}
+
+// A stage is private,verified,sealed,synced and closed. It grants no publication
+// permission. The destination name must still belong to the original directory
+// immediately before the non-overwriting link operation.
+type exchangeByteStage struct {
+	root   *os.Root
+	parent os.FileInfo
+	name   string
+}
+
+func stageExchangeBytesAt(ctx context.Context, size int64, digest string, source io.Reader, root *os.Root) (*exchangeByteStage, error) {
+	if root == nil || size < 0 || len(digest) != 64 || source == nil {
+		return nil, store.ErrExchangeInput
+	}
 	directoryHandle, err := root.Open(".")
 	if err != nil {
-		return fmt.Errorf("cannot inspect held output directory: %w", store.ErrIsolation)
+		return nil, fmt.Errorf("cannot inspect held output directory: %w", store.ErrIsolation)
 	}
 	parent, statErr := directoryHandle.Stat()
 	if err = errors.Join(statErr, protectedfs.ValidateDirectory(directoryHandle), directoryHandle.Close()); err != nil {
-		return fmt.Errorf("output directory must be private: %w", store.ErrIsolation)
+		return nil, fmt.Errorf("output directory must be private: %w", store.ErrIsolation)
 	}
 	stageName := ".freightctl-exchange-" + secure.NewID()
 	stage, err := protectedfs.CreateAt(root, stageName)
 	if err != nil {
-		return errors.New("cannot stage exchange bytes in output directory")
+		return nil, errors.New("cannot stage exchange bytes in output directory")
 	}
-	defer root.Remove(stageName)
-	defer stage.Close()
+	complete := false
+	defer func() {
+		_ = stage.Close()
+		if !complete {
+			_ = root.Remove(stageName)
+		}
+	}()
 	if err = protectedfs.ValidateFile(stage); err != nil {
-		return fmt.Errorf("private output staging unavailable: %w", store.ErrIsolation)
+		return nil, fmt.Errorf("private output staging unavailable: %w", store.ErrIsolation)
 	}
 	hash := secure.NewDigest()
 	reader := exchangeContextReader{ctx, source}
 	count, err := io.CopyBuffer(io.MultiWriter(stage, hash), io.LimitReader(reader, size), make([]byte, 256<<10))
 	if err != nil {
-		return err
+		return nil, err
 	}
 	var probe [1]byte
 	n, end := reader.Read(probe[:])
 	if count != size || n != 0 || end != io.EOF || fmt.Sprintf("%x", hash.Sum(nil)) != digest {
-		return custody.ErrIntegrity
+		return nil, custody.ErrIntegrity
 	}
 	if err = ctx.Err(); err != nil {
-		return err
+		return nil, err
 	}
 	if err = protectedfs.SealReadOnly(stage); err != nil {
-		return err
+		return nil, err
 	}
 	if err = stage.Sync(); err != nil {
-		return err
+		return nil, err
 	}
 	if err = stage.Close(); err != nil {
-		return err
+		return nil, err
 	}
-	currentParent, err := os.Stat(directory)
-	if err != nil || !os.SameFile(parent, currentParent) {
+	complete = true
+	return &exchangeByteStage{root: root, parent: parent, name: stageName}, nil
+}
+
+func (s *exchangeByteStage) publish(path string) error {
+	if s == nil || s.root == nil || s.parent == nil || s.name == "" {
+		return store.ErrExchangeInput
+	}
+	defer s.root.Remove(s.name)
+	if path == "" {
+		return store.ErrExchangeInput
+	}
+	currentParent, err := os.Stat(filepath.Dir(path))
+	if err != nil || !os.SameFile(s.parent, currentParent) {
 		return fmt.Errorf("output directory changed: %w", store.ErrIsolation)
 	}
-	if err = root.Link(stageName, filepath.Base(path)); err != nil {
+	if err = s.root.Link(s.name, filepath.Base(path)); err != nil {
 		return errors.New("cannot publish exchange output without overwriting; verify new path and hard-link support")
 	}
-	if err = root.Remove(stageName); err != nil {
+	if err = s.root.Remove(s.name); err != nil {
 		return errors.New("verified exchange file exists; staging cleanup failed, inspect before retry")
 	}
-	dir, err := root.Open(".")
+	dir, err := s.root.Open(".")
 	if err != nil {
 		return errors.New("verified exchange file exists; output directory sync unproven, inspect before retry")
 	}

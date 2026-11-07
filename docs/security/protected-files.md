@@ -150,3 +150,19 @@ scanner-protocol stand-ins pass. Actual Windows socket/ACL/name-pin/protocol
 execution and real engine deployment/detection remain owed. F279 records the
 original native failure and precise local proof;it makes no malware-detection or
 whole-Windows-support claim.
+
+CLI exchange download separates verified staging from final publication. The
+same held-root stage operation still enforces exact length,EOF,digest,private
+creation,sealing,real file sync and close. Publication still checks that the
+requested parent is the original physical directory,links without overwrite,
+removes only the owned stage and syncs the held directory. Failure after linking
+still reports that a complete file may exist with persistence unproved.
+
+The original Windows adverse fixture tried to rename a parent while its private
+child was still open and stopped at Access denied. The active-write Windows case
+now requires that exact refusal and unchanged parent,sealed bytes and cleanup.
+The original substitution/no-publication/no-foreign-cleanup assertions execute
+after the production stage-close boundary,on every platform,before publication.
+Unix additionally retains the original during-write replacement case. No data
+sharing,ACL or isolation rule is relaxed to enable an attack fixture. Focused
+local download cases and Windows compilation pass;actual Windows cases are owed.

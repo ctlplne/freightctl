@@ -69,6 +69,12 @@ retains socket/inode/permission checks. Broad sockets receive zero source bytes.
 Local privacy/replacement/protocol stand-ins and affected static/Windows compile
 checks pass;actual Windows protocol and real-engine outcomes remain owed.
 
+Local F281 retains exact CLI stage verification,persistence and publication.
+The original Windows active-child rename refusal gets an exact prevention case;
+all platforms must refuse substitution after stage-close and preserve foreign
+bytes while cleaning only the owned stage. Unix also keeps during-write attack
+coverage. Local focused checks pass;actual Windows outcomes remain owed.
+
 FINISH repair is active and remaining implementation is mandatory. Next:repair
 newly reached browser/protocol failures,complete remaining product work,and replay
 all affected original native/security/browser/stock/recovery/reproducibility gates

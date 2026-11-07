@@ -163,6 +163,59 @@ func TestExchangeDownloadDirectoryReplacementCannotSubstituteVerifiedOutput(t *t
 		t.Fatal(err)
 	}
 	defer heldRoot.Close()
+	// Use the production stage/close boundary. Windows forbids the rename while
+	// the writable stage is open;the final publication guard is still necessary
+	// after close and must never follow a replacement directory name.
+	stage, err := stageExchangeBytesAt(t.Context(), 5, secure.Digest([]byte("exact")), bytes.NewBufferString("exact"), heldRoot)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer heldRoot.Remove(stage.name)
+	requireSealedCLIOutput(t, filepath.Join(directory, stage.name))
+	if body, err := os.ReadFile(filepath.Join(directory, stage.name)); err != nil || string(body) != "exact" {
+		t.Fatal("stage lost exact original bytes before substitution", err)
+	}
+	if err = os.Rename(directory, moved); err != nil {
+		t.Fatal(err)
+	}
+	if err = protectedfs.EnsureDirectory(directory); err != nil {
+		t.Fatal(err)
+	}
+	foreign := filepath.Join(directory, stage.name)
+	if err = os.WriteFile(foreign, []byte("unverified substitution"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	if err = stage.publish(filepath.Join(directory, "received")); !errors.Is(err, store.ErrIsolation) {
+		t.Fatal("replaced output directory did not fail closed", err)
+	}
+	if _, err = os.Lstat(filepath.Join(directory, "received")); !errors.Is(err, os.ErrNotExist) {
+		t.Fatal("unverified replacement was published", err)
+	}
+	if body, err := os.ReadFile(foreign); err != nil || string(body) != "unverified substitution" {
+		t.Fatal("cleanup touched a foreign replacement", err)
+	}
+	if entries, err := os.ReadDir(moved); err != nil || len(entries) != 0 {
+		t.Fatal("owned partial stage not cleaned", err)
+	}
+}
+
+func exchangeDownloadDirectoryReplacementDuringWrite(t *testing.T) {
+	t.Helper()
+	parent := t.TempDir()
+	directory, moved := filepath.Join(parent, "output"), filepath.Join(parent, "moved")
+	if err := protectedfs.EnsureDirectory(directory); err != nil {
+		t.Fatal(err)
+	}
+	parentRoot, err := os.OpenRoot(parent)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer parentRoot.Close()
+	heldRoot, err := parentRoot.OpenRoot("output")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer heldRoot.Close()
 	var foreign string
 	reader := &exchangeDirectorySwapReader{source: bytes.NewBufferString("exact")}
 	reader.swap = func() {
