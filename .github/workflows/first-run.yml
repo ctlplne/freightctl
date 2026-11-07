@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - 'scripts/ci_resources.py'
+      - 'scripts/ci_capacity_file.py'
+      - 'scripts/test-ci-capacity-file.py'
       - 'scripts/test-ci-resources.py'
       - 'cmd/**'
       - '!cmd/**/*_test.go'
@@ -24,6 +26,8 @@ on:
   pull_request:
     paths:
       - 'scripts/ci_resources.py'
+      - 'scripts/ci_capacity_file.py'
+      - 'scripts/test-ci-capacity-file.py'
       - 'scripts/test-ci-resources.py'
       - 'cmd/**'
       - '!cmd/**/*_test.go'

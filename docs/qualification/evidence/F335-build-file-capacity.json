@@ -1,0 +1,170 @@
+{
+  "schema_version": 1,
+  "id": "F335",
+  "observed_at": "2026-11-07",
+  "base_candidate": "b8be4ab779d525089c49d75bde71911ff83a16dc",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "authority": "S004 owner product-first GitHub capacity policy;local allowances and every purposeful security/product boundary unchanged.",
+  "changed": "F335 follows S004 through four remaining/new CI artifact consumers:FTPS helper binary,first-run binary/source hashes,selected Go compiler source byte inventory,and independent receiver compiled libraries. Replace arbitrary GitHub generated-file/source byte caps with one streaming measured-file helper;retain local allowances and constant read chunks. Bind file descriptor/path identity,mode,length,mtime/ctime and whole SHA256 before/after read;refuse growth/replacement. Preserve complete source/package/library inventories,untrusted JSON/archive/log bounds,protocol/TLS/seccomp/findings and original-output checks. Real sparse files above old16/64MiB caps and native-graph stand-ins first fail,then pass only under GitHub policy;local equivalents still refuse. All76 affected capacity/lifecycle/evidence/privacy/receiver/graph tests,workflow lint and architecture pass. Native consumers and original receiver failures remain owed;no runtime compatibility is inferred from size acceptance.",
+  "reds": [
+    {
+      "proof": ".private/freightctl-f335-helper-cap-red.log",
+      "observation": "Actual sparse65MiB+1 helper rejected by old64MiB generated-binary cap under GitHub policy."
+    },
+    {
+      "proof": ".private/freightctl-f335-source-first-run-cap-red.log",
+      "observation": "Native-graph stand-in trusted source rejected by patched byte cap despite GitHub policy;actual65MiB+1 first-run binary rejected by old64MiB read ceiling."
+    },
+    {
+      "proof": ".private/freightctl-f335-library-size-cap-red.log",
+      "observation": "Actual sparse65MiB+1 compiled-library stand-in rejected by old64MiB artifact read ceiling."
+    }
+  ],
+  "green": [
+    "76 focused methods pass,including real sparse >16MiB source and >64MiB helper/binary/library full streamed hashes,exact measured bytes and unchanged local refusals.",
+    "Common final-name symlink/type/open-identity and after-open replacement refusal;all existing source/dependency/receiver original-output/TLS/passive/seccomp/private-audit contracts remain enforced.",
+    "Workflow lint and architecture checks observed terminal exit0;all consuming workflows include shared helper path and core executes its tests."
+  ],
+  "verification_note": "Initial library test attempt failed from a missing test import;preserve that setup log separately. The meaningful actual old-cap red is library-size-cap-red,not that setup failure.",
+  "source_files": [
+    {
+      "reference": ".github/workflows/core-checks.yml",
+      "sha256": "42db40b32d0fd354843190b15abe5998d5cf96a2c9d1f1c17a044ab8ee04bfd8",
+      "bytes": 4712
+    },
+    {
+      "reference": ".github/workflows/first-run.yml",
+      "sha256": "6fe2cf2bf11b1415089c9188230306970409e94850db046bc2db9e3d5b367f9b",
+      "bytes": 2970
+    },
+    {
+      "reference": ".github/workflows/ftps-client.yml",
+      "sha256": "abdf43ce7a35eb9b2d10e3c25eab89901d702930ac030525c9de7426d2305c59",
+      "bytes": 3917
+    },
+    {
+      "reference": ".github/workflows/ftps-workflows.yml",
+      "sha256": "b3899a2ce371c3740dbd33d561b90a059f658ef191d416860e99e0f793289940",
+      "bytes": 8793
+    },
+    {
+      "reference": ".github/workflows/reproducible-builds.yml",
+      "sha256": "73f80140067a1995e7b462d991277a0b8df3576b5e2d24963d1c0c4093309d96",
+      "bytes": 3638
+    },
+    {
+      "reference": "scripts/ci_capacity_file.py",
+      "sha256": "1fc7867dc8cb636671754810b25ca3f37567e7b2dc5dba1a0b024026eeaead74",
+      "bytes": 1599
+    },
+    {
+      "reference": "scripts/test-ci-capacity-file.py",
+      "sha256": "e078ae68dc8770bcc389cc67fa23747d3b43f764204ee87cd02e62b2517c8496",
+      "bytes": 2434
+    },
+    {
+      "reference": "scripts/ftps_collection_operator.py",
+      "sha256": "1419aa84284d40c232dd678dfd4f9d30d62e190b052f98092bb8457a9c743054",
+      "bytes": 33443
+    },
+    {
+      "reference": "scripts/test-ftps-collection-operator.py",
+      "sha256": "0ed49279b3743d5f98ae88df3ce1fb6fbed0115689013bbf5fb2d2a986fbe81e",
+      "bytes": 24145
+    },
+    {
+      "reference": "scripts/core_go_packages.py",
+      "sha256": "117d2e56280ca8ffacc1ff3172973f34694d011686439e9bb8bf310f14ca654e",
+      "bytes": 8127
+    },
+    {
+      "reference": "scripts/test-core-go-packages.py",
+      "sha256": "efd2e4a9167b54ff4e6a8e661d4d73f8e1461b183fcc5b11d41a002b6419e162",
+      "bytes": 6555
+    },
+    {
+      "reference": "scripts/ci-setup-summary.py",
+      "sha256": "cec90bb67876b1ff6065f2e62a0244fe46142d374326be1b5bd5a48449f8c7b3",
+      "bytes": 10326
+    },
+    {
+      "reference": "scripts/test-ci-setup-summary.py",
+      "sha256": "71ffeb662e71c80b1eb57041cbe6bcf43fff5c0b83646070777f55440a8e627e",
+      "bytes": 10445
+    },
+    {
+      "reference": "scripts/ci-ftps-client-summary.py",
+      "sha256": "d0465916e0ea0516cb19e9ee445e9673bf938d2614646f9ace3ecf434c7796dd",
+      "bytes": 24249
+    },
+    {
+      "reference": "scripts/test-ftps-client-summary.py",
+      "sha256": "6b596e6b253d9f1a7a879b9f8d7154423926171e5749802ba2dd91df5ce21365",
+      "bytes": 27072
+    },
+    {
+      "reference": "docs/qualification/github-actions-plan.md",
+      "sha256": "12e0582b6ff69458b3115a82ff9b15b690fc030ac19dabe814c46a9217190daf",
+      "bytes": 22778
+    },
+    {
+      "reference": "docs/qualification/evidence/F334-original-native-batch.json",
+      "sha256": "aca69214f4408f542c899f6621629720ba6993b001fed11714e238b0907b39c2",
+      "bytes": 7679
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "f97bcf85adc03331ab709ed235b9a3b0bb6e3e571497e0a2705b1b5674e7f887",
+      "bytes": 439573
+    },
+    {
+      "reference": "STATUS.md",
+      "sha256": "56592be12c2b4e1216bd8ddb9f8a892712f233ede6013e3bc45f9b3bd65e4f34",
+      "bytes": 14551
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f335-helper-cap-red.log",
+      "sha256": "01922a90ab7175150839cff7f30a16256d58b9e4c1b419327b64b13cfdbbdad0",
+      "bytes": 1630
+    },
+    {
+      "reference": ".private/freightctl-f335-source-first-run-cap-red.log",
+      "sha256": "6307b8a9ca0fdb1dc07bf849774766688dedd342b9f2bdede91abefc81ea582e",
+      "bytes": 3238
+    },
+    {
+      "reference": ".private/freightctl-f335-library-cap-red.log",
+      "sha256": "7fc5d13c9966c57b7ddbea695fd360c2f09aba826769851add71a0406fde6ecf",
+      "bytes": 809
+    },
+    {
+      "reference": ".private/freightctl-f335-library-size-cap-red.log",
+      "sha256": "21e86f37b13fd06142677016dfb7447b4e8cb5e7fe9fa24283b400a0b7ddecab",
+      "bytes": 1842
+    },
+    {
+      "reference": ".private/freightctl-f335-capacity-final-green.log",
+      "sha256": "eec5e33a062af84157a963e68ea400811c3394ce25204c6c18290daec6dd29ab",
+      "bytes": 175
+    },
+    {
+      "reference": ".private/freightctl-f335-workflow-lint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f335-architecture.log",
+      "sha256": "8a160b7973f6e89831ebefb3889ed9007f72de3c44b042642f877b51cf5b8547",
+      "bytes": 64
+    }
+  ],
+  "owed": [
+    "Actual native first-run,reproducibility,FTPS source/independent receiver and complete artifact-inventory replay on final source.",
+    "Original x86 FTPS receiver security/protocol failure remains red;no filter,passive/TLS/EOF/reuse/identity exception.",
+    "All F334 pending outcomes and remaining baseline/AX/FINISH work."
+  ],
+  "resources": "Sparse task-owned temporary files and streaming1MiB reads;no builds,PostgreSQL,Chrome,scanner or inference locally. Local file/aggregate/compute allowances unchanged."
+}

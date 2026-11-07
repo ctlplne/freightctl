@@ -40,6 +40,7 @@ jobs:
       - name: Qualification record refusal contracts
         run: |
           python3 scripts/test-ci-resources.py
+          python3 scripts/test-ci-capacity-file.py
           python3 scripts/check-ftp-engine.py
           python3 scripts/test-ftp-engine.py
           python3 scripts/test-ci-ftps-summary.py

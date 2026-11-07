@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 import re
 import subprocess
+from ci_capacity_file import measure as measure_build_file
 
 ROOT=Path(__file__).resolve().parents[1]
 COMMANDS=('build','initialize-empty-database','save-first-run-plan','refuse-plan-overwrite','commit-first-run','recover-first-run-response','refuse-changed-plan','refuse-runtime-bootstrap','certificate','native-first-run-exchange','stock-curl-first-exchange','stock-curl-after-restart','replay-after-ordinary-work')
@@ -15,11 +16,16 @@ FILES={'raw/setup-result.json','raw/setup-login-axe.json','raw/setup-published-f
 PAYLOAD=b'account,amount\n00000001,100.01\n00000002,200.02\n'
 
 
-def read(root,path,bound=8<<20):
+def checked_path(root,path):
     relative=path.relative_to(root)
     if any(v in {'.','..'} for v in relative.parts):raise ValueError('unsafe first-run evidence path')
     if not path.resolve().is_relative_to(root.resolve()) or any((root/Path(*relative.parts[:i])).is_symlink() for i in range(1,len(relative.parts)+1)):raise ValueError('unsafe first-run evidence path')
-    if not path.is_file() or path.stat().st_size>bound:raise ValueError('missing or oversized first-run evidence')
+    if not path.is_file():raise ValueError('missing first-run evidence')
+
+
+def read(root,path,bound=8<<20):
+    checked_path(root,path)
+    if path.stat().st_size>bound:raise ValueError('oversized first-run evidence')
     return path.read_bytes()
 
 
@@ -43,9 +49,14 @@ def summarize(root,path,commit,expected_sources):
     if m.get('fixture_reference')!=str(fixture.relative_to(root)) or m.get('database')!='freightctl_'+run.replace('-','_'):raise ValueError('first-run fixture identity differs')
     sources=m.get('source_sha256')
     if not expected_sources or not isinstance(sources,dict) or set(sources)!=set(expected_sources):raise ValueError('first-run source closure differs')
+    source_bytes=0
     for name,digest in sources.items():
-        if sha(read(root,root/name,16<<20))!=digest:raise ValueError('first-run source changed')
-    if sha(read(root,fixture/'freightctl',64<<20))!=m.get('binary_sha256'):raise ValueError('first-run binary changed')
+        checked_path(root,root/name)
+        measured=measure_build_file(root/name,16<<20);source_bytes+=measured['bytes']
+        if measured['sha256']!=digest:raise ValueError('first-run source changed')
+    checked_path(root,fixture/'freightctl')
+    binary=measure_build_file(fixture/'freightctl',64<<20)
+    if binary['sha256']!=m.get('binary_sha256'):raise ValueError('first-run binary changed')
     steps=m.get('steps')
     if not isinstance(steps,list) or [s.get('name') for s in steps]!=list(COMMANDS):raise ValueError('first-run original command sequence differs')
     for step in steps:
@@ -76,7 +87,7 @@ def summarize(root,path,commit,expected_sources):
         audit=json.loads(originals['raw/'+name+'-axe.json'])
         if audit.get('violations')!=[] or type(audit.get('passes')) is not int or audit['passes']<=0:raise ValueError('first-run accessibility failed')
         if next(s for s in browser['steps'] if s['name']==name+'-axe').get('passes')!=audit['passes']:raise ValueError('first-run accessibility report differs')
-    return {'state':'passed','source_commit':commit,'manifest_sha256':sha(raw),'system':'Linux','architecture':'x86_64','browser_version':browser['browser_version'],'node_version':browser['node'],'source_inputs':len(sources),'original_commands':len(steps),'browser_records':len(BROWSER),'accessibility_audits':2,'independent_exact_readbacks':3,'payload_bytes':len(PAYLOAD),'original_receipt_replays':2,'exact_fixture_database_removed':True,'inference_performed':False,'scanner_engine_started':False,'whole_journey_qualified':False,'scope':'assisted first enrollment,original receipt recovery,sandboxed browser exchange and stock curl readback after process restart;disconnected installation and independent adoption remain open'}
+    return {'state':'passed','source_commit':commit,'manifest_sha256':sha(raw),'system':'Linux','architecture':'x86_64','browser_version':browser['browser_version'],'node_version':browser['node'],'source_inputs':len(sources),'build_measurements':{'binary_bytes':binary['bytes'],'source_bytes':source_bytes},'original_commands':len(steps),'browser_records':len(BROWSER),'accessibility_audits':2,'independent_exact_readbacks':3,'payload_bytes':len(PAYLOAD),'original_receipt_replays':2,'exact_fixture_database_removed':True,'inference_performed':False,'scanner_engine_started':False,'whole_journey_qualified':False,'scope':'assisted first enrollment,original receipt recovery,sandboxed browser exchange and stock curl readback after process restart;disconnected installation and independent adoption remain open'}
 
 
 def diagnostics(root,path,commit):

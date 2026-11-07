@@ -1,6 +1,6 @@
 # GitHub Actions qualification plan
 
-Updated 2026-11-06. [GOAL.md](../../GOAL.md) defines the complete product contract.
+Updated 2026-11-07. [GOAL.md](../../GOAL.md) defines the complete product contract.
 [STATUS.md](../../STATUS.md), [remaining.json](remaining.json) and the exact
 [evidence records](evidence/) hold candidate identities and current results.
 All 83 whole baseline rows and 12 full customer journeys remain open. Passing a
@@ -88,6 +88,18 @@ reference-fixture cap needs explicit CI-versus-local classification rather than
 becoming an engineering hold. Schema templates still need isolated actual databases,
 exact migration checksums and runtime/RLS checks. Fixture speed is not product
 throughput or capacity evidence.
+
+[F335](evidence/F335-build-file-capacity.json) applies the same rule to newly
+added qualification consumers: generated FTPS helper and receiver libraries,
+first-enrollment binary/source hashing and selected compiler sources. Use the
+shared streaming file measurement for trusted build files. GitHub records the
+full byte count and SHA-256; local file/aggregate allowances remain. A file that
+changes identity, length, contents or permissions while read is refused. Keep
+root confinement, complete source/dependency closure, untrusted JSON/archive
+bounds, TLS/seccomp, findings and original-output checks. Shared measurement
+changes trigger every consuming workflow. The local retained-handoff upgrade
+fixture keeps its separate local binary allowance. Measurements establish file
+identity and size; only native runtime proof qualifies product behavior.
 
 F075 removes scanner RAM/CPU/process and feed/archive-size ceilings. Its task-owned
 ext4 scratch uses actual free runner disk, with the same exact mount/loop ownership,

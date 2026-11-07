@@ -2,6 +2,7 @@
 """Original-file and native graph stand-ins only; no compiler or executable."""
 import copy
 import json
+import os
 from pathlib import Path
 import tempfile
 import unittest
@@ -40,6 +41,12 @@ def raw(packages):
 
 
 class GoPackageContracts(unittest.TestCase):
+    def test_github_source_bytes_are_measured_without_local_size_ceilings(self):
+        with patch.dict(os.environ,{'GITHUB_ACTIONS':'true'}), patch.object(gate,'MAX_FILE',1), patch.object(gate,'MAX_SOURCE',1):
+            result=self.capture()
+            self.assertGreater(result['toolchain_source_bytes'],1)
+            gate.reopen(result,self.root)
+
     def setUp(self):
         directory = tempfile.TemporaryDirectory(prefix='freightctl-go-package-contract-')
         self.addCleanup(directory.cleanup); self.root = Path(directory.name).resolve()
@@ -96,9 +103,9 @@ class GoPackageContracts(unittest.TestCase):
             with self.assertRaises(ValueError): gate.documents(data)
         with patch.object(gate, 'MAX_JSON', 1):
             with self.assertRaises(ValueError): self.capture()
-        with patch.object(gate, 'MAX_SOURCE', 1):
+        with patch.dict(os.environ,{'GITHUB_ACTIONS':'false'}), patch.object(gate, 'MAX_SOURCE', 1):
             with self.assertRaises(ValueError): self.capture()
-        with patch.object(gate, 'MAX_FILE', 1):
+        with patch.dict(os.environ,{'GITHUB_ACTIONS':'false'}), patch.object(gate, 'MAX_FILE', 1):
             with self.assertRaises(ValueError): self.capture()
 
 

@@ -9,6 +9,7 @@ import json
 from pathlib import Path
 import re
 import uuid
+from ci_capacity_file import measure as measure_build_file
 from urllib.parse import urlsplit
 
 import browser_session_evidence as session
@@ -103,10 +104,13 @@ def definition(c):
 
 def inventory(private, mode):
     directory, helper = private/('collection-operator-'+mode), private/('source-helper-'+mode)
+    binary=private/'source-ftps'
+    require(not any(p.is_symlink() for p in (binary,*binary.parents)), 'operator helper path is linked')
+    measured=measure_build_file(binary,64<<20)
     return {'operator': {str(p.relative_to(directory)): digest(p, 6 << 20)
             for p in sorted(directory.rglob('*')) if p.is_file()},
         'source': {p.name: digest(p) for p in sorted(helper.iterdir()) if p.is_file()},
-        'helper_sha256': digest(private/'source-ftps', 64 << 20)}
+        'helper_sha256': measured['sha256'],'helper_bytes':measured['bytes']}
 
 
 def exercise(root, private, mode, database, http_port, cert, binary, tenant, partner, owner, steps, command, bounded_output):
@@ -203,7 +207,7 @@ def validate(root, private, mode, steps, observed, database):
         and type(uri.port) is int and 1 <= uri.port <= 65535 and uri.path == '/'+database,
         'operator runtime database differs from original parent estate')
     directory, helper = private/('collection-operator-'+mode), private/('source-helper-'+mode)
-    require(type(observed) is dict and set(observed) == {'operator', 'source', 'helper_sha256'}
+    require(type(observed) is dict and set(observed) == {'operator', 'source', 'helper_sha256','helper_bytes'}
         and set(observed['operator']) == FILES and set(observed['source']) == {'config.json', 'counter.json'},
         'operator original file closure differs')
     require(metadata.same(observed, inventory(private, mode)), 'operator original evidence changed')

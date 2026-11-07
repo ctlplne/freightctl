@@ -3,17 +3,39 @@
 import hashlib
 import importlib.util
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 spec=importlib.util.spec_from_file_location('setup_summary',Path(__file__).with_name('ci-setup-summary.py'))
 summary=importlib.util.module_from_spec(spec);spec.loader.exec_module(summary)
 
 
 class FirstRunEvidence(unittest.TestCase):
+    def test_github_source_input_is_streamed_without_local_size_ceiling(self):
+        path=self.root/'source.go'
+        with path.open('r+b') as stream:stream.truncate((16<<20)+1)
+        with path.open('rb') as stream:self.m['source_sha256']['source.go']=hashlib.file_digest(stream,'sha256').hexdigest()
+        with patch.dict(os.environ,{'GITHUB_ACTIONS':'true'}):
+            result=self.check()
+        self.assertEqual(result['build_measurements']['source_bytes'],(16<<20)+1)
+        with patch.dict(os.environ,{'GITHUB_ACTIONS':'false'}):
+            with self.assertRaises(ValueError):self.check()
+
+    def test_github_generated_binary_is_streamed_and_measured_without_local_size_ceiling(self):
+        binary=self.fixture/'freightctl'
+        with binary.open('r+b') as stream:stream.truncate((64<<20)+1)
+        with binary.open('rb') as stream:self.m['binary_sha256']=hashlib.file_digest(stream,'sha256').hexdigest()
+        with patch.dict(os.environ,{'GITHUB_ACTIONS':'true'}):
+            result=self.check()
+        self.assertEqual(result['build_measurements']['binary_bytes'],(64<<20)+1)
+        with patch.dict(os.environ,{'GITHUB_ACTIONS':'false'}):
+            with self.assertRaises(ValueError):self.check()
+
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory(prefix='freightctl-setup-summary-');self.addCleanup(self.temp.cleanup)
         self.root=Path(self.temp.name);self.run='setup-'+'a'*32

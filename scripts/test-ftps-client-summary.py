@@ -3,11 +3,12 @@
 import hashlib
 import importlib.util
 import json
+import os
 from pathlib import Path
 import tempfile
 import unittest
-import os
 import shutil
+from unittest.mock import patch
 from ftps_receiver_witness import FilterWitness,seal_transfer_logs
 
 spec=importlib.util.spec_from_file_location("summary",Path(__file__).with_name("ci-ftps-client-summary.py"))
@@ -19,6 +20,17 @@ library_builder=importlib.util.module_from_spec(spec);spec.loader.exec_module(li
 
 
 class ReceiverEvidence(unittest.TestCase):
+    def test_github_compiled_receiver_library_is_measured_without_local_size_ceiling(self):
+        self.library_fixture()
+        name='prefix/lib/libssl.so.3';path=self.lib_base/name
+        with path.open('r+b') as stream:stream.truncate((64<<20)+1)
+        with path.open('rb') as stream:self.lib['files_sha256'][name]=hashlib.file_digest(stream,'sha256').hexdigest()
+        with patch.dict(os.environ,{'GITHUB_ACTIONS':'true'}):
+            result=self.library_check()
+        self.assertEqual(result['receiver_library']['artifact_measurements'][name],(64<<20)+1)
+        with patch.dict(os.environ,{'GITHUB_ACTIONS':'false'}):
+            with self.assertRaises(ValueError):self.library_check()
+
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory(prefix="freightctl-client-summary-")
         self.addCleanup(self.temp.cleanup);self.root=Path(self.temp.name)

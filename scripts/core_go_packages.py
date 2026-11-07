@@ -1,12 +1,14 @@
-"""Bound native go-list package closure to selected toolchain sources.
+"""Bind native go-list package closure to selected toolchain sources.
 
 These are compiler inputs, not proof that every function survives linker pruning.
 No source bodies, absolute GOROOT paths or account data enter the public result.
 """
 import hashlib
 import json
+import os
 from pathlib import Path, PurePosixPath
 import re
+from ci_capacity_file import measure as measure_build_file
 
 MAX_JSON = 32 << 20
 MAX_SOURCE = 64 << 20
@@ -53,20 +55,11 @@ def package_name(value):
 
 
 def file_hash(path):
-    size = path.stat().st_size
-    require(path.is_file() and not path.is_symlink() and size <= MAX_FILE)
-    checksum, count = hashlib.sha256(), 0
-    with path.open('rb') as stream:
-        while count <= MAX_FILE:
-            part = stream.read(min(1 << 20, MAX_FILE+1-count))
-            if not part: break
-            count += len(part); checksum.update(part)
-    require(count == size and count <= MAX_FILE and path.stat().st_size == size)
-    return checksum.hexdigest()
+    return measure_build_file(path,MAX_FILE)['sha256']
 
 
 def capture(raw, goroot, info):
-    """Read a complete native graph and hash only bounded selected source files."""
+    """Read a complete native graph and stream the exact selected source files."""
     root = Path(goroot).resolve(strict=True)
     require(root.is_dir() and info['GoVersion'] == 'go1.26.10')
     packages = {}
@@ -133,11 +126,11 @@ def capture(raw, goroot, info):
         for parent in (target, *target.parents):
             if parent == root: break
             require(not parent.is_symlink())
-        require(target.resolve(strict=True).is_relative_to(root) and target.is_file() and target.stat().st_size <= MAX_FILE)
+        require(target.resolve(strict=True).is_relative_to(root) and target.is_file())
         if name not in files:
             require(len(files) < 8192)
             size = target.stat().st_size; total += size
-            require(total <= MAX_SOURCE)
+            require(os.environ.get('GITHUB_ACTIONS')=='true' or total <= MAX_SOURCE)
             checksum = file_hash(target)
             require(target.stat().st_size == size)
             files[name] = checksum
@@ -172,7 +165,7 @@ def reopen(value, goroot):
     root = Path(goroot).resolve(strict=True)
     for name, checksum in value['toolchain_files'].items():
         path = root/name
-        require(path.is_file() and not path.is_symlink() and path.stat().st_size <= MAX_FILE)
+        require(path.is_file() and not path.is_symlink())
         for parent in path.parents:
             if parent == root: break
             require(not parent.is_symlink())

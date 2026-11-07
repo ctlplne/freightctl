@@ -21,6 +21,19 @@ spec.loader.exec_module(session_fixture)
 
 
 class OperatorContracts(unittest.TestCase):
+    def test_github_helper_binary_is_measured_without_a_generated_size_ceiling(self):
+        self.run_fixture()
+        binary=self.private/'source-ftps'
+        with binary.open('r+b') as out:
+            out.truncate((64<<20)+1)
+        with patch.dict(os.environ,{'GITHUB_ACTIONS':'true'}):
+            observed=operator.inventory(self.private,'explicit')
+        self.assertEqual(observed['helper_bytes'],(64<<20)+1)
+        with binary.open('rb') as stream:
+            self.assertEqual(observed['helper_sha256'],hashlib.file_digest(stream,'sha256').hexdigest())
+        with patch.dict(os.environ,{'GITHUB_ACTIONS':'false'}):
+            with self.assertRaises(ValueError):operator.inventory(self.private,'explicit')
+
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory(prefix='freightctl-operator-contract-')
         self.addCleanup(self.temporary.cleanup)

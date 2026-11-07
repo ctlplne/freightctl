@@ -7,6 +7,7 @@ import os
 from pathlib import Path
 import re
 import subprocess
+from ci_capacity_file import measure as measure_build_file
 import ftps_stock_metadata as stock_metadata
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -36,8 +37,10 @@ def verify_library(root,architecture):
         if m.get(flag) is not False:raise ValueError("receiver library scope differs")
     files=m.get("files_sha256",{})
     if set(files)!=LIBRARY_FILES:raise ValueError("receiver library artifact closure differs")
+    measurements={}
     for name,sha in files.items():
-        if hashlib.sha256(read(base/name,64<<20)).hexdigest()!=sha:raise ValueError("receiver library artifact changed")
+        measured=measure_build_file(base/name,64<<20);measurements[name]=measured['bytes']
+        if measured['sha256']!=sha:raise ValueError("receiver library artifact changed")
     if not re.search(rb"^\s*#\s*define\s+OPENSSL_NO_KTLS\b",read(base/"prefix/include/openssl/configuration.h"),re.MULTILINE):raise ValueError("receiver library kernel TLS profile differs")
     ref=m.get("original_output_reference","")
     if not re.fullmatch(r"\.private/ftps-library-[0-9a-f]{32}",ref):raise ValueError("receiver library output reference differs")
@@ -54,7 +57,7 @@ def verify_library(root,architecture):
     if "OpenSSL 3.5.9" not in read(directory/"installed-version.stdout").decode():raise ValueError("receiver library native version differs")
     machine=read(directory/"native-compiler.stdout").decode().strip()
     if not machine.startswith("aarch64-" if architecture=="aarch64" else "x86_64-"):raise ValueError("receiver library compiler architecture differs")
-    return {"manifest_sha256":hashlib.sha256(raw).hexdigest(),"version":"3.5.9","source_sha256":LIBRARY_SOURCE_SHA,"selected_upstream_recipes":3,"upstream_skip_lines":skips,"kernel_tls_compiled_out":True}
+    return {"manifest_sha256":hashlib.sha256(raw).hexdigest(),"artifact_measurements":measurements,"version":"3.5.9","source_sha256":LIBRARY_SOURCE_SHA,"selected_upstream_recipes":3,"upstream_skip_lines":skips,"kernel_tls_compiled_out":True}
 
 
 def summarize(root,result,commit,library_profile="system",require_collection_metadata=False):
