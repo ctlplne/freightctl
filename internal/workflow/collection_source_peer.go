@@ -19,18 +19,32 @@ func openCollectionSourcePeer(ctx context.Context, connection *ConnectionDefinit
 	if connection == nil || check == nil {
 		return nil, ErrInput
 	}
+	// A nil concrete pointer inside an interface is not a nil interface. On
+	// refusal return no reader,so ordinary worker cleanup cannot dereference one.
 	switch kind {
 	case "sftp.collect":
 		if connection.Schema == 1 && connection.FTPS == nil && connection.Local == nil {
-			return delivery.OpenCollectionPeer(ctx, connection.Destination, connection.Directory, check)
+			peer, err := delivery.OpenCollectionPeer(ctx, connection.Destination, connection.Directory, check)
+			if err != nil {
+				return nil, err
+			}
+			return peer, nil
 		}
 	case "ftps.collect":
 		if connection.Schema == 2 && connection.Local == nil && reflect.DeepEqual(connection.Destination, secure.SSHDestination{}) && connection.FTPS.Valid(connection.Directory) {
-			return delivery.OpenFTPSCollectionPeer(ctx, connection.FTPS.Destination, connection.Directory, check)
+			peer, err := delivery.OpenFTPSCollectionPeer(ctx, connection.FTPS.Destination, connection.Directory, check)
+			if err != nil {
+				return nil, err
+			}
+			return peer, nil
 		}
 	case "local.collect":
 		if connection.Schema == 3 && connection.FTPS == nil && reflect.DeepEqual(connection.Destination, secure.SSHDestination{}) && connection.Directory == "/" && connection.Local.Valid() {
-			return delivery.OpenConfiguredLocalCollectionPeer(ctx, connection.Local, check)
+			peer, err := delivery.OpenConfiguredLocalCollectionPeer(ctx, connection.Local, check)
+			if err != nil {
+				return nil, err
+			}
+			return peer, nil
 		}
 	}
 	return nil, ErrInput

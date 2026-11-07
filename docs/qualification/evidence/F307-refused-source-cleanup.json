@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "id": "F307",
+  "observed_at": "2026-11-07",
+  "base_candidate": "18d938e05743adee908f2fb715ca20bf22056f45",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Actual refusal cleanup panic reproduced and fixed;original native stock replay owed",
+  "changed": "F307 reproduces source-open refusal cleanup:Go interface wrapping a nil concrete SFTP/FTPS reader is nonnil,and the worker deferred Close panics;local refusal also leaks a nonnil interface. All3 cases observed red without DB/network,then green after factory explicitly returns nil interface on constructor error. Preserve the exact error,current authority checks and all transport/custody/lease/retry guards. Original9439074 stock wrong-pin worker exit2/unclassified with empty stdout and exact stderr hash remains recorded;this matches the reproduced mechanism,but native causal attribution and original retry/zero-input/zero-receiver replay remain owed. Focused unit/static/integration/Windows compilation pass only.",
+  "red": {
+    "test": "TestRefusedCollectionSourceDoesNotReturnACleanupHandleOrPanic",
+    "observation": "Real factory with denied current-authority callback returns nonnil interface for all3 source profiles;ordinary deferred Close panics for SFTP and FTPS. Local Close is nil-safe but refused interface is still nonnil. No socket/file/model/runtime started."
+  },
+  "green": [
+    "All3 actual source-factory refusal cases return nil interface and retain error/current-check behavior without cleanup panic;network reinterpretation guard also passes.",
+    "Affected vet/architecture/format/tagged integration compilation and Windows test compilation pass only."
+  ],
+  "source_files": [
+    {
+      "reference": "internal/workflow/collection_source_peer.go",
+      "sha256": "bad05c06a49fb53d144612255ceede184ed17df61aa3551c0edad0fb5c529b2e",
+      "bytes": 1799
+    },
+    {
+      "reference": "internal/workflow/collection_source_failure_test.go",
+      "sha256": "fce4ba49bb6aa48f28d58b11c56ac2147eb1d2b49a0b9f86eaf2b1c68756c2e1",
+      "bytes": 1222
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "ddcc227dffc9216142e1ef781af049128f1aefd7c7973f6ac753ae8216c7d8b0",
+      "bytes": 405893
+    },
+    {
+      "reference": "STATUS.md",
+      "sha256": "2d295fba746410e8485eb8f115d8aab7beaa0126a5e6b6d2df05f5e9a8582c50",
+      "bytes": 8379
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f307-refused-source-red.log",
+      "sha256": "eedffa08d16997259ac019dcd21b76ef27a8d7a2c3ab69f84228783216315f9d",
+      "bytes": 758
+    },
+    {
+      "reference": ".private/freightctl-f307-refused-source-green.log",
+      "sha256": "364446b331f514d2330a2309557456dfc23b2d199dc4176945de1bff6c790846",
+      "bytes": 60
+    },
+    {
+      "reference": ".private/freightctl-f307-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f307-integration-compile.log",
+      "sha256": "f9a1567cb813944894624cdcd0a49c36ea6237eb661e15fb52ea06f8dcb4bb35",
+      "bytes": 78
+    },
+    {
+      "reference": ".private/freightctl-f307-architecture.log",
+      "sha256": "9c0303c77c1f197a87256e08170ec652c77f2f115009d88723afdc2f9c8efd07",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f307-windows-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f307-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "original_native_failure": {
+    "candidate": "9439074aae173afe5305373cee87307898f24459",
+    "run": 42366950453,
+    "job": 128386899988,
+    "command": "wrong-source-pin-real-worker",
+    "exit_code": 2,
+    "expected_exit_code": 0,
+    "category": "unclassified",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "6def387a6ae1281cf140a6cbafa09263a06cd396e471c93c84815de77db70cfa",
+    "causal_limit": "Consistent with reproduced cleanup panic;underlying original stack unavailable in safe summary. No native repaired outcome inferred."
+  },
+  "owed": [
+    "Actual original stock wrong-host-key source retry,no inputs/no bytes/no source/receiver contact proof;all original source-failure native paths.",
+    "Final-source security/runtime/recovery and every mandatory baseline/AX/FINISH gate."
+  ],
+  "resources": "OneCPU/192MiB pure authority-refusal/cleanup units,static and cross-compilation only;inference/heavy runtimes off."
+}

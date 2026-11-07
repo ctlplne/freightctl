@@ -107,6 +107,12 @@ F305 repairs actual FTPS operator CLI selector and typed connection hashing;two
 new focused regressions turn red to green,all10 stand-in methods pass. Original
 actual operator/source failures and full native replay remain owed.
 
+F307 reproduces actual source-refusal cleanup panics for SFTP/FTPS:typed nil
+readers became nonnil interfaces. Explicit nil-on-error factory branches turn
+all3 source refusal regressions green,without opening sockets or changing an
+authority/protocol check. Original stock wrong-pin exit2/hash is retained;its
+actual native causal attribution and original retry/zero-input proof stay owed.
+
 FINISH repair and remaining implementation are mandatory. Next:repair original
 browser/stock/protocol failures and complete all affected original runtime,
 security,recovery,reproducibility and baseline/AX gates on the final source.
