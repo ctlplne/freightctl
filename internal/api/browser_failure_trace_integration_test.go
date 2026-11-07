@@ -23,6 +23,21 @@ type browserFailureTrace struct {
 	SHA256 string
 }
 
+func TestBrowserRuntimeErrorKeepsSafeBoundedAssetLocation(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "runtime-error.log")
+	raw := []byte("TypeError: PRIVATE_RUNTIME_CANARY\n    at https://127.0.0.1:54321/assets/app.js:1:256842\n")
+	if err := os.WriteFile(path, raw, 0600); err != nil {
+		t.Fatal(err)
+	}
+	trace := safeBrowserFailureTrace(path, "app.js")
+	if trace.Class != "type" || trace.Line != 1 || trace.Column != 256842 || trace.SHA256 != secure.Digest(raw) {
+		t.Fatal("runtime asset failure lost its safe class,large minified column or exact digest")
+	}
+	if got := safeBrowserFailureTrace(path, "PRIVATE_RUNTIME_CANARY"); got.Class != "unavailable" {
+		t.Fatal("untrusted runtime asset name entered diagnostics")
+	}
+}
+
 func safeExchangeBrowserFailure(private string) browserFailureTrace {
 	// The receive script catches its error into this exclusive private file;
 	// stdout can contain only a summary. Use the original stack first. A failure
@@ -68,7 +83,7 @@ func TestExchangeBrowserFailureUsesTheProtectedOriginalFailure(t *testing.T) {
 func safeBrowserFailureTrace(path, script string) browserFailureTrace {
 	unavailable := browserFailureTrace{Class: "unavailable", SHA256: "unavailable"}
 	switch script {
-	case "artifact-exchange-browser.mjs", "json-intake-browser.mjs", "processing-review-browser.mjs", "processing-browser.mjs", "local-collection-browser.mjs", "local-calendar-browser.mjs":
+	case "artifact-exchange-browser.mjs", "json-intake-browser.mjs", "processing-review-browser.mjs", "processing-browser.mjs", "local-collection-browser.mjs", "local-calendar-browser.mjs", "app.js":
 	default:
 		return unavailable
 	}
@@ -83,6 +98,7 @@ func safeBrowserFailureTrace(path, script string) browserFailureTrace {
 		{"ERR_MODULE_NOT_FOUND", "dependency"}, {"Cannot find module", "dependency"},
 		{"ERR_PACKAGE_PATH_NOT_EXPORTED", "dependency"}, {"SyntaxError", "syntax"},
 		{"ReferenceError", "reference"}, {"AssertionError", "assertion"},
+		{"TypeError", "type"},
 		{"TimeoutError", "timeout"}, {"Timeout ", "timeout"},
 		{"EEXIST", "evidence-exists"}, {"ENOENT", "evidence-path"},
 		{"Failed to launch", "browser-launch"},
@@ -92,7 +108,7 @@ func safeBrowserFailureTrace(path, script string) browserFailureTrace {
 			break
 		}
 	}
-	pattern := regexp.MustCompile(`(?m)^\s*at [^\r\n]*[/\\]` + regexp.QuoteMeta(script) + `:([0-9]{1,5}):([0-9]{1,5})\)?\s*$`)
+	pattern := regexp.MustCompile(`(?m)^\s*at [^\r\n]*[/\\]` + regexp.QuoteMeta(script) + `:([0-9]{1,5}):([0-9]{1,8})\)?\s*$`)
 	if match := pattern.FindSubmatch(raw); len(match) == 3 {
 		line, e1 := strconv.Atoi(string(match[1]))
 		column, e2 := strconv.Atoi(string(match[2]))

@@ -14,7 +14,7 @@ func safeNativeBrowserStage(value string) string {
 		"list-tasks", "open-task", "load-task", "review-request",
 		"commit-review-loss", "save-recovery", "reload-review", "restore-review-panel", "reject-foreign-review-recovery", "import-review-recovery",
 		"login-reviewer", "approve-review", "adopt-review", "withdraw-review",
-		"recover-approval":
+		"recover-approval", "editor", "preview", "draft-replay", "activate", "tick-replay", "probe-replay", "admit-replay", "work-replay", "reload-captured", "complete":
 		return value
 	default:
 		return "unavailable"

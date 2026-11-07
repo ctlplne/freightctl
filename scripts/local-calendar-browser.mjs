@@ -33,6 +33,10 @@ let browser,
   job = "",
   egress = 0,
   errors = 0,
+  navigationStatus = 0,
+  assetStatus = 0,
+  documentHTML = false,
+  firstRuntimeError,
   accessibility = 0,
   routeFailed = false,
   routeFailure,
@@ -71,7 +75,14 @@ try {
       parent.getByRole("button", { name, exact: true }),
     dialog = () => page.getByRole("dialog");
   page.setDefaultTimeout(15000);
-  page.on("pageerror", () => errors++);
+  page.on("pageerror", (error) => {
+    errors++;
+    firstRuntimeError ??= error;
+  });
+  page.on("response", (response) => {
+    if (response.url() === origin.origin + "/assets/app.js")
+      assetStatus = response.status();
+  });
   await context.route("**/*", async (route) => {
     if (new URL(route.request().url()).origin !== origin.origin) {
       egress++;
@@ -161,7 +172,13 @@ try {
     }
   }
   phase = "login";
-  await page.goto(c.url);
+  const navigation = await page.goto(c.url);
+  navigationStatus = navigation?.status() ?? 0;
+  documentHTML = /^text\/html(?:;|$)/i.test(
+    navigation?.headers()["content-type"] ?? "",
+  );
+  assert.equal(navigationStatus, 200);
+  assert.equal(documentHTML, true);
   await page.getByLabel("Tenant ID", { exact: true }).fill(c.tenant);
   await page.getByLabel("Partner ID", { exact: true }).fill(c.partner);
   await page
@@ -384,6 +401,14 @@ try {
 } finally {
   const version = browser?.version() ?? "";
   await browser?.close();
+  if (firstRuntimeError)
+    await writeFile(
+      c.private + "/runtime-error.log",
+      Buffer.from(
+        String(firstRuntimeError.stack ?? firstRuntimeError),
+      ).subarray(0, 65536),
+      { flag: "wx", mode: 0o600 },
+    );
   await writeFile(c.private + "/commands.json", JSON.stringify(commands), {
     flag: "wx",
     mode: 0o600,
@@ -402,6 +427,9 @@ try {
       accessibility_checks: accessibility,
       external_egress: egress,
       runtime_errors: errors,
+      navigation_status: navigationStatus,
+      asset_status: assetStatus,
+      document_html: documentHTML,
       browser_sandbox: true,
       inference_performed: false,
       browser_version: version,

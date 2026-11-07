@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "id": "F341",
+  "observed_at": "2026-11-07",
+  "base_candidate": "afc174f221ec5e942b0ceba6829688d802e954d0",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F341 preserves the first page runtime error and actual HTTPS document/app-asset statuses for the failed local-calendar browser startup. A focused privacy regression first refuses the previously unsupported fixed app.js/large minified column,then passes with closed TypeError classification,numeric location and exact protected-log digest;arbitrary asset names stay refused. Require actual document200/HTML and app-asset200 as well as every existing calendar capture/replay/audit assertion. Print only allowlisted phase,bounded counts/statuses and protected hashes;raw runtime error stays in exclusive private64KiB evidence. Pure privacy/static/tagged compile/vet/architecture/workflow checks pass;actual startup cause and full native served replay remain owed.",
+  "original_failure": {
+    "candidate": "b8be4ab779d525089c49d75bde71911ff83a16dc",
+    "run_id": 42377328234,
+    "job_id": 128417501904,
+    "test": "TestLocalCalendarNativeBrowserExactManifestCaptureAndOriginalKeyRecovery",
+    "class": "timeout",
+    "source_line": 165,
+    "source_column": 55,
+    "safe_result_sha256": "fe330a51315b27c1b7e57287ba23832037ceba3b0f6e5c5173c1802762097b9d",
+    "private_first_failure_sha256": "fa8ad7fa7678cd11437d60581c217baa25cea022a770a098beb907ccf02acea7",
+    "observation": "Actual startup fails before tenant-label fill;the original safe report does not identify document/asset status or an earlier page runtime error. Cause remains unresolved."
+  },
+  "red": {
+    "proof": ".private/freightctl-f341-runtime-facts-red.log",
+    "observation": "Protected fixed app.js TypeError with minified column256842 loses safe class/location/digest under old diagnostic allowlist/bound."
+  },
+  "green": [
+    "Fixed reviewed app.js runtime error yields only closed type class,bounded line/column and exact whole protected-file hash;untrusted asset name refuses.",
+    "Existing protected first-failure/oversize/closed-stage/privacy tests remain passing.",
+    "Final tagged native-profile compilation,vet,architecture,workflow lint,script syntax and format observed terminal exit0."
+  ],
+  "preserved": [
+    "Every original five lost-response/same-key recovery,exact source/root/custody/no-delivery,zero-egress/runtime-error and seven accessibility requirements remains.",
+    "Successful native proof additionally requires actual HTTPS HTML200 and app-asset200;missing fields cannot pass.",
+    "Private first-runtime stack is exclusive0600,bounded64KiB;no raw stack,DOM,URL,credential or message enters public CI.",
+    "STATUS is condensed to current facts and immutable manifest links;historical failures and owner decisions are preserved unchanged."
+  ],
+  "source_files": [
+    {
+      "reference": ".github/workflows/json-intake.yml",
+      "sha256": "9177748b3be92ae6c7da9b290f7222544681c2daf2659764ed8a084405e7549e",
+      "bytes": 7288
+    },
+    {
+      "reference": "internal/api/browser_failure_stage_integration_test.go",
+      "sha256": "24e6551fa49a6ab55962eb3b6bc6a730c404117fbd8df1fc3431aafea2c2c489",
+      "bytes": 1415
+    },
+    {
+      "reference": "internal/api/browser_failure_trace_integration_test.go",
+      "sha256": "5809cba9174afbb35eac86a6f2275dc88aed85fad6f0b1b5d6eaa0a94f959322",
+      "bytes": 6584
+    },
+    {
+      "reference": "internal/api/local_calendar_browser_integration_test.go",
+      "sha256": "62641fda1ab566f282fb59f88ff63d73a2951925925b407a6db70fcaa1905ec4",
+      "bytes": 12840
+    },
+    {
+      "reference": "scripts/local-calendar-browser.mjs",
+      "sha256": "e516516cd07ac6f3ef98a834cd827c28ea1b534b3b3b80cf254690866f9e4d73",
+      "bytes": 15332
+    },
+    {
+      "reference": "docs/qualification/evidence/F340-native-terminal-ci.json",
+      "sha256": "06463dc4a1d35b30b11f4e3a59a9da483a1c9702b539e84b2cc6b8ff8f2a4f7f",
+      "bytes": 97508
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "866bce41969439cd9693d479ccc1b6d7450ba2c1c38631cacae963c900f15d06",
+      "bytes": 446721
+    },
+    {
+      "reference": "docs/qualification/artifact-exchange.json",
+      "sha256": "0ebfcb2a79b37409fd09fa3a2536be4c7be1d99f3843de2af284840c3c16eb95",
+      "bytes": 33358
+    },
+    {
+      "reference": "STATUS.md",
+      "sha256": "73e42032eb1afccb49489ab1e9ce3c3f87267fc5aa3d94882f5efbf2364bfb31",
+      "bytes": 3814
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f341-runtime-facts-red.log",
+      "sha256": "fd8c68825765668de5d315a0e245b3bd1ee801f34115bb32bc485b5de26266c8",
+      "bytes": 266
+    },
+    {
+      "reference": ".private/freightctl-f341-runtime-facts-green.log",
+      "sha256": "933c3bb21b414ab8c9b77539ecf5a94f976d7f71748ba0fe184348bc36c62f7f",
+      "bytes": 55
+    },
+    {
+      "reference": ".private/freightctl-f341-native-compile.log",
+      "sha256": "2137f74728638c13577ec2132fa27dcea66a579b1b01af75fac3e20eec95a158",
+      "bytes": 73
+    },
+    {
+      "reference": ".private/freightctl-f341-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f341-architecture.log",
+      "sha256": "d39bc0500d585e58f1c56761e2a2f2deaa162e0783a037d02c7425fcfe139ed1",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f341-workflow-lint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f341-browser-syntax.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f341-format-check.log",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    }
+  ],
+  "owed": [
+    "Actual next original calendar browser run must identify/fix startup and complete the full served local UTC calendar/capture/recovery acceptance profile.",
+    "F340 four failed jobs,all final-source native consumers and remaining mandatory baseline/AX/FINISH outcomes."
+  ],
+  "resources": "OneCPU/192MiB Go/static and pinned Node syntax/format only;no local Chrome,PostgreSQL,scanner or inference."
+}

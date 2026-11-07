@@ -149,6 +149,9 @@ func TestLocalCalendarNativeBrowserExactManifestCaptureAndOriginalKeyRecovery(t 
 		Accessibility *int           `json:"accessibility_checks"`
 		Egress        *int           `json:"external_egress"`
 		Errors        *int           `json:"runtime_errors"`
+		Navigation    *int           `json:"navigation_status"`
+		Asset         *int           `json:"asset_status"`
+		HTML          *bool          `json:"document_html"`
 		Sandbox       *bool          `json:"browser_sandbox"`
 		Inference     *bool          `json:"inference_performed"`
 		Browser       string         `json:"browser_version"`
@@ -156,9 +159,23 @@ func TestLocalCalendarNativeBrowserExactManifestCaptureAndOriginalKeyRecovery(t 
 		Axe           string         `json:"axe_version"`
 	}
 	decodeErr := workflow.Decode(raw.Bytes, &summary)
-	if runErr != nil || decodeErr != nil || summary.State != "passed" || summary.Phase != "complete" || !store.ValidID(summary.Schedule) || !store.ValidID(summary.Occurrence) || !store.ValidID(summary.Job) || len(summary.Commands) != 5 || summary.Accessibility == nil || *summary.Accessibility != 7 || summary.Egress == nil || *summary.Egress != 0 || summary.Errors == nil || *summary.Errors != 0 || summary.Sandbox == nil || !*summary.Sandbox || summary.Inference == nil || *summary.Inference || !regexp.MustCompile(`^[0-9]+(?:\.[0-9]+){1,3}$`).MatchString(summary.Browser) || summary.Node != "v26.13.0" || summary.Axe != "4.14.0" {
+	if runErr != nil || decodeErr != nil || summary.State != "passed" || summary.Phase != "complete" || !store.ValidID(summary.Schedule) || !store.ValidID(summary.Occurrence) || !store.ValidID(summary.Job) || len(summary.Commands) != 5 || summary.Accessibility == nil || *summary.Accessibility != 7 || summary.Egress == nil || *summary.Egress != 0 || summary.Errors == nil || *summary.Errors != 0 || summary.Navigation == nil || *summary.Navigation != 200 || summary.Asset == nil || *summary.Asset != 200 || summary.HTML == nil || !*summary.HTML || summary.Sandbox == nil || !*summary.Sandbox || summary.Inference == nil || *summary.Inference || !regexp.MustCompile(`^[0-9]+(?:\.[0-9]+){1,3}$`).MatchString(summary.Browser) || summary.Node != "v26.13.0" || summary.Axe != "4.14.0" {
 		trace := safeBrowserFailureTrace(failure, "local-calendar-browser.mjs")
-		t.Fatalf("native local calendar browser failed;safe result SHA256=%s;class=%s;source=%d:%d;private log SHA256=%s", secure.Digest(raw.Bytes), trace.Class, trace.Line, trace.Column, trace.SHA256)
+		runtimeTrace := safeBrowserFailureTrace(filepath.Join(private, "runtime-error.log"), "app.js")
+		phase, errors, navigation, asset := "unavailable", -1, -1, -1
+		if decodeErr == nil {
+			phase = safeNativeBrowserStage(summary.Phase)
+			if summary.Errors != nil && *summary.Errors >= 0 && *summary.Errors <= 1000 {
+				errors = *summary.Errors
+			}
+			if summary.Navigation != nil && *summary.Navigation >= 0 && *summary.Navigation <= 599 {
+				navigation = *summary.Navigation
+			}
+			if summary.Asset != nil && *summary.Asset >= 0 && *summary.Asset <= 599 {
+				asset = *summary.Asset
+			}
+		}
+		t.Fatalf("native local calendar browser failed;phase=%s;navigation=%d;asset=%d;runtime_errors=%d;runtime_class=%s;runtime_source=%d:%d;runtime_log_sha256=%s;safe result SHA256=%s;class=%s;source=%d:%d;private log SHA256=%s", phase, navigation, asset, errors, runtimeTrace.Class, runtimeTrace.Line, runtimeTrace.Column, runtimeTrace.SHA256, secure.Digest(raw.Bytes), trace.Class, trace.Line, trace.Column, trace.SHA256)
 	}
 	for _, name := range []string{"draft", "tick", "probe", "admit", "work"} {
 		if summary.Commands[name] != 2 {
