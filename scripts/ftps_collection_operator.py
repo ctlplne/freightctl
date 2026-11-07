@@ -38,7 +38,8 @@ STAGES = frozenset(('certificate', 'browser-launch', 'context-create', 'login-na
     'login-credential', 'login-submit', 'files-ready', 'session-cookie', 'session-readbacks', 'runtime-checks', 'success-screenshot', 'failure-capture',
     'record-write', 'context-close', 'browser-close', 'complete', 'definition',
     *('operator-'+s for s in ('definition', 'counter-before', 'form', 'preview', 'draft', 'approval', 'queue',
-        'counter-queued', 'work', 'inspect', 'counter-after', 'record'))))
+        'counter-queued', 'work', 'inspect', 'counter-after', 'record',
+        'form-name', 'form-manifest', 'form-target', 'form-file-count', 'form-file-bytes', 'form-total-bytes', 'form-source'))))
 
 
 def command_suffix(name):

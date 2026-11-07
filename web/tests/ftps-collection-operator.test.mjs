@@ -325,6 +325,23 @@ test("operator diagnostics carry only fixed stages and bounded source locations"
     source_line: 200,
   });
   assert.equal(ftpsOperatorObservation(config, "private-canary", error), null);
+  for (const stage of [
+    "operator-form-name",
+    "operator-form-manifest",
+    "operator-form-target",
+    "operator-form-file-count",
+    "operator-form-file-bytes",
+    "operator-form-total-bytes",
+    "operator-form-source",
+  ]) {
+    const observed = ftpsOperatorObservation(config, stage, error);
+    assert.ok(
+      observed,
+      "the exact closed field stage must survive the original timeout",
+    );
+    assert.equal(observed.stage, stage);
+    assert.equal(JSON.stringify(observed).includes("private-canary"), false);
+  }
   assert.equal(
     ftpsOperatorObservation(
       { ...config, collection_phase: "ftps-metadata" },

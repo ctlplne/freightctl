@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "id": "F359",
+  "observed_at": "2026-11-07",
+  "base_candidate": "1cbe82cc4258a6eef567c9d09ff14e20be1ada42",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "Identify an actual operator form timeout with one of seven fixed field stages. No labels,values,role requirements,DOM actions,assertions,contact or resource bounds change.",
+  "original_failures": [
+    {
+      "candidate": "03cd5fd0e46e60d0417b40122e94fd31a2920c35",
+      "run_id": 42383538021,
+      "job_id": 128436006380,
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42383538021/job/128436006380",
+      "stage": "operator-form",
+      "class": "timeout",
+      "source_file": "driver",
+      "source_line": 242
+    },
+    {
+      "candidate": "03cd5fd0e46e60d0417b40122e94fd31a2920c35",
+      "run_id": 42383538021,
+      "job_id": 128436006678,
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42383538021/job/128436006678",
+      "stage": "operator-form",
+      "class": "timeout",
+      "source_file": "driver",
+      "source_line": 242
+    }
+  ],
+  "red_green": "New closed-field observation test first gets null from the coarse stage allowlist;after matching fixed Node/Python stage schemas it survives without form contents,raw message or host path.",
+  "green": [
+    "4 actual driver/stand-in/privacy tests",
+    "12 Python lifecycle/original-evidence/forgery/privacy tests",
+    "Affected Node syntax and format"
+  ],
+  "owed": [
+    "Exact actual native field observation and underlying form repair",
+    "Full original operator source/capture/recovery proof and remaining GOAL/AX gates"
+  ],
+  "source_files": [
+    {
+      "reference": "scripts/ftps-collection-operator-browser.mjs",
+      "sha256": "60b62e089410f92f785337e80ae6862c91834e26a55eb85b9dace780c148c397",
+      "bytes": 15012
+    },
+    {
+      "reference": "scripts/ftps_collection_operator.py",
+      "sha256": "cfce44c2ab60a281eaca8a7727adcff8c4bef3e90545db68f67277df93bbea1e",
+      "bytes": 34678
+    },
+    {
+      "reference": "scripts/test-ftps-collection-operator.py",
+      "sha256": "47bc676f35a96f444a3c810371fc2c0b47cc10b6cb3ba7c792be88e37781ba24",
+      "bytes": 25706
+    },
+    {
+      "reference": "web/tests/ftps-collection-operator.test.mjs",
+      "sha256": "f94cbac1f4a6444695a913f9da5b6436cdf844eb1c61f5d33633824b3ead88fd",
+      "bytes": 11222
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "ba958798c23c847c87cd2848024e52c22343f73d601146073b64efed1a21e34f",
+      "bytes": 468298
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f359-field-red.log",
+      "sha256": "aa6c5565141927d01a2d9a2aa9c95c5df6c39b9b1a83bd1982bddde301048162",
+      "bytes": 1002
+    },
+    {
+      "reference": ".private/freightctl-f359-format-write.log",
+      "sha256": "30d91f62bddf28bfd222585589737ad2eaee08477bf378675f811816a6cadce1",
+      "bytes": 99
+    },
+    {
+      "reference": ".private/freightctl-f359-field-green.log",
+      "sha256": "4b9df49eb8c4c32c2da3c2e5e080c755a57cc19a78caf5231cbfb2160b260046",
+      "bytes": 525
+    },
+    {
+      "reference": ".private/freightctl-f359-python-green.log",
+      "sha256": "9a40e51e914517ae65e4bafb43c3d587690692b248e3907dff47aaff1da97024",
+      "bytes": 2335
+    },
+    {
+      "reference": ".private/freightctl-f359-syntax.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f359-format.log",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    }
+  ]
+}

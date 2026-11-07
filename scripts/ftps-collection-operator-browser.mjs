@@ -8,6 +8,13 @@ export const ftpsOperatorStages = [
   "operator-definition",
   "operator-counter-before",
   "operator-form",
+  "operator-form-name",
+  "operator-form-manifest",
+  "operator-form-target",
+  "operator-form-file-count",
+  "operator-form-file-bytes",
+  "operator-form-total-bytes",
+  "operator-form-source",
   "operator-preview",
   "operator-draft",
   "operator-approval",
@@ -227,16 +234,35 @@ async function runOperator(page, c, audit, record, actual, mark, transport) {
     })
     .waitFor();
   const source = c.definition.source;
-  const fields = {
-    "Collection workflow name": c.definition.name,
-    "Ready manifest filename": source.manifest,
-    "Virtual local target folder": source.target_directory,
-    "Maximum files per batch": String(source.max_files),
-    "Maximum bytes per file": String(source.max_file_bytes),
-    "Maximum bytes per batch": String(source.max_total_bytes),
-  };
-  for (const [name, value] of Object.entries(fields))
+  const fields = [
+    ["operator-form-name", "Collection workflow name", c.definition.name],
+    ["operator-form-manifest", "Ready manifest filename", source.manifest],
+    [
+      "operator-form-target",
+      "Virtual local target folder",
+      source.target_directory,
+    ],
+    [
+      "operator-form-file-count",
+      "Maximum files per batch",
+      String(source.max_files),
+    ],
+    [
+      "operator-form-file-bytes",
+      "Maximum bytes per file",
+      String(source.max_file_bytes),
+    ],
+    [
+      "operator-form-total-bytes",
+      "Maximum bytes per batch",
+      String(source.max_total_bytes),
+    ],
+  ];
+  for (const [field, name, value] of fields) {
+    mark(field);
     await region.getByLabel(name, { exact: true }).fill(value);
+  }
+  mark("operator-form-source");
   await region
     .getByLabel("Registered source connection", { exact: true })
     .selectOption(c.source.id + ":" + c.source.version);

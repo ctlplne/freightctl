@@ -402,6 +402,9 @@ class OperatorContracts(unittest.TestCase):
         value = {'kind': 'ftps-operator-browser-failure', 'mode': 'implicit', 'stage': 'operator-work',
             'error_kind': 'assertion', 'source_file': 'driver', 'source_line': 200}
         self.assertEqual(operator.safe_observation(value), value)
+        for field in ('name','manifest','target','file-count','file-bytes','total-bytes','source'):
+            observed=dict(value,stage='operator-form-'+field)
+            self.assertEqual(operator.safe_observation(observed),observed)
         for changed in (dict(value, secret='private-canary'), dict(value, source_line=True), dict(value, stage='private-canary'),
                 dict(value, error_kind='constructor'), dict(value, source_file='/private/canary')):
             self.assertIsNone(operator.safe_observation(changed))
