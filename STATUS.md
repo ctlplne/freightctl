@@ -126,6 +126,12 @@ read-data access to the exact AF_UNIX reparse object without reading payload or
 granting mutation. Windows compile/vet pass;unchanged native name-pin and
 scanner protocol replay remain owed. All ACL/type/identity/assertions stay.
 
+F319 corrects the F311 final TypeScript claim:the final check failed TS18048
+after its earlier passing check,but was committed locally. The failure remains
+recorded. An explicit missing-collection refusal now passes final typecheck,8
+affected contracts,format and exact assets with observed exit0. No history is
+rewritten;all native/calendar outcomes remain owed.
+
 F311 wires local calendar editor/review/arrival metadata and requires the frozen
 child to match the reviewed workflow,source,connection,effects and storage. Both
 local parser and independently rehashed cross-snapshot regressions turn red to

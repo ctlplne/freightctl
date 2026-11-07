@@ -5,7 +5,7 @@
   "base_candidate": "0b313651a53761929b3a206a21a90752ff1766ce",
   "candidate_binding": "This commit and exact source hashes below",
   "qualification_claim": false,
-  "state": "Local calendar editor/metadata and stronger parent-child binding implemented;served proof owed",
+  "state": "Historical implementation checkpoint;final-source TypeScript claim corrected by F319",
   "changed": "F311 completes local calendar editor/review/arrival metadata wiring. Local scheduled sources use the existing exact UTC token,arrival window,explicit approval and read-only/root/configuration fingerprints;source-only connections stay excluded from outgoing receivers. Synthetic Go canonical waiting/ready/admitted/captured snapshots first fail browser parsing,then pass. A second meaningful red independently rehashes parent calendar and child links while substituting parent root/configuration/storage;the browser incorrectly accepts it. Strengthen all scheduled collection profiles to require exact workflow/source/connection/effects/storage equality between reviewed calendar and frozen child. All23 affected local/legacy calendar/arrival contract methods and Go golden/type/build/static checks pass. Existing invalid UTC and local delivery refusals remain;the old unsupported-local-calendar assertion becomes the implemented feature positive plus exact-token negatives. Actual served local calendar browser/PG/CLI/runtime remains owed;synthetic snapshots are not runtime evidence.",
   "red": [
     {
@@ -180,5 +180,10 @@
     "Actual served local calendar editor/review/approval/arrival UI and original real source62 PG/CLI/custody/replay/refusal/matching-event forgery/restore outcomes.",
     "Every original failed current native/browser/stock/security profile and final baseline/AX/FINISH gate;no synthetic fixture or build replaces runtime."
   ],
-  "resources": "OneCPU/192MiB frontend/static/pure synthetic fixture generation only;no local heavy runtime,Chrome or inference;retained35 untouched."
+  "resources": "OneCPU/192MiB frontend/static/pure synthetic fixture generation only;no local heavy runtime,Chrome or inference;retained35 untouched.",
+  "verification_correction": {
+    "recorded_on": "2026-11-07",
+    "evidence": "docs/qualification/evidence/F319-calendar-typecheck-correction.json",
+    "observation": "Final F311 TypeScript verification failed TS18048 at arrivals-types.ts329/330 after its earlier passing check. The orchestration continued after nonzero verification and committed a2286aa locally. The F311 final-source typecheck-pass claim is withdrawn;all original failed logs remain referenced. F319 adds the explicit local nonnull guard and requires observed terminal-zero checks before commit. No history is rewritten."
+  }
 }

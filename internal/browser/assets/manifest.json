@@ -31,7 +31,7 @@
     },
     {
       "path": "web/src/arrivals-types.ts",
-      "sha256": "ae7a4c08151b82144f383c56d6f647dd1c6b93812c8f60bbc403de5efe768c58"
+      "sha256": "026dd6f1afac3b0a69f8900cb25fa8b70ed0f08b5fc1e85c8e8f3e936e13b115"
     },
     {
       "path": "web/src/artifact-copy-types.ts",
@@ -354,8 +354,8 @@
     },
     {
       "name": "app.js",
-      "sha256": "498443b19ef7e1a02d054955de295adc4f9a78f44ec9c94cfc1cf8bf095df641",
-      "size": 905435
+      "sha256": "e7d845b67d6dc3786368d7901e66c285b438bb5fb64ec05fc1c013f04f98babc",
+      "size": 905439
     },
     {
       "name": "app.js.LEGAL.txt",

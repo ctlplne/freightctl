@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "id": "F319",
+  "observed_at": "2026-11-07",
+  "base_candidate": "a2286aa1317ccd93ca7749b71e4f470e02a9ec94",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "F311 verification error corrected with observed passing final checks",
+  "changed": "F319 corrects F311 final-source verification:the last TypeScript check failed TS18048 for possibly undefined calendar collection c,and orchestration still committed a2286aa locally. Preserve that exact failure and withdraw only the false final typecheck claim. Add an explicit !c refusal before parent/child comparisons;all binding checks remain. Final typecheck,8 affected arrival/local-calendar contract methods,format,build/exact assets now complete with observed exit0. No history rewrite or runtime qualification claim;native outcomes remain owed.",
+  "red": {
+    "candidate": "a2286aa1317ccd93ca7749b71e4f470e02a9ec94",
+    "proof": ".private/freightctl-f311-final2-typecheck.log",
+    "observation": "Final TypeScript check failed TS18048:c possibly undefined at329/330. Hash verification does not establish a passing check;orchestration erroneously continued after failed read-only assertion and committed locally."
+  },
+  "green": [
+    "Explicit !c refusal makes the frozen-child guard type safe without weakening any binding.",
+    "Observed terminal exit0 for final TypeScript,all8 affected arrival/local-calendar contract cases,format,build and exact asset verification."
+  ],
+  "source_files": [
+    {
+      "reference": "web/src/arrivals-types.ts",
+      "sha256": "026dd6f1afac3b0a69f8900cb25fa8b70ed0f08b5fc1e85c8e8f3e936e13b115",
+      "bytes": 11904
+    },
+    {
+      "reference": "internal/browser/assets/app.js",
+      "sha256": "e7d845b67d6dc3786368d7901e66c285b438bb5fb64ec05fc1c013f04f98babc",
+      "bytes": 905439
+    },
+    {
+      "reference": "internal/browser/assets/manifest.json",
+      "sha256": "bbe167054cfb2e599a1fe6a3d24bfe8f447be2892039aa96a39693a48abb2011",
+      "bytes": 13828
+    },
+    {
+      "reference": "docs/qualification/evidence/F311-local-calendar-browser-binding.json",
+      "sha256": "90e45f135959a1420f08540b80e0f4ca5feb939257d198ade2d1d4bd5c85d6bd",
+      "bytes": 8946
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "ffb4388e98bcf0daf43350c133ba6c8db6fcf12c89da04cdac32afdbc7bf2f47",
+      "bytes": 413683
+    },
+    {
+      "reference": "STATUS.md",
+      "sha256": "a06539cf4fccb46caa9c90898a04ca98a8d6b96ad6778e48aa9de131acc6458b",
+      "bytes": 10052
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f311-final2-typecheck.log",
+      "sha256": "6e36e22a8e9c89703960399967794249ddb2e73c5460c3271fda89d5e2e145c3",
+      "bytes": 204
+    },
+    {
+      "reference": ".private/freightctl-f319-typecheck-green.log",
+      "sha256": "17e00418398dd65e49bed86df28efee896dcae70d7e6258050a2746181f558d5",
+      "bytes": 54
+    },
+    {
+      "reference": ".private/freightctl-f319-binding-green.log",
+      "sha256": "8520f0d80990b585ba18c7a99fce8430988b15ab6db4c40f03078b0645fd0f3a",
+      "bytes": 1006
+    },
+    {
+      "reference": ".private/freightctl-f319-build.log",
+      "sha256": "fa6b4c04c00bd256a4f80c05fdae9f867fd2f7b5298ad68dc56af9c3d131947b",
+      "bytes": 232
+    },
+    {
+      "reference": ".private/freightctl-f319-exact-built.log",
+      "sha256": "bfef1c008bb079bb75cbfc376d98bb93a7f8373c2a43e39e1faf08b7f1e131b0",
+      "bytes": 249
+    },
+    {
+      "reference": ".private/freightctl-f319-final-format.log",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    }
+  ],
+  "owed": [
+    "Actual final-source native/served calendar/PG/CLI/custody/security/restore and every remaining baseline/AX/FINISH outcome."
+  ],
+  "history": "No commit rewritten;F311 original failures and source/evidence hashes remain preserved. This correction withdraws its false final typecheck claim only.",
+  "resources": "OneCPU/192MiB static/frontend contract checks only;no heavy runtime or inference."
+}
