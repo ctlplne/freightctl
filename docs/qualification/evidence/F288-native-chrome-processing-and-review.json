@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "id": "F288",
+  "observed_at": "2026-11-07",
+  "candidate": "49eefe1d4877962aec7c92cb6b6f26485fa83a11",
+  "state": "Original native Chrome profiles partially pass;XLSX observer and independent review remain red",
+  "run": 42363733807,
+  "job": 128377278298,
+  "url": "https://github.com/ctlplne/freightctl/actions/jobs/128377278298",
+  "job_conclusion": "failure",
+  "cases": [
+    {
+      "name": "TestJSONRecordsNativeBrowserReviewedHashAndReceipt",
+      "state": "passed",
+      "seconds": 11.23
+    },
+    {
+      "name": "TestFixedWidthNativeBrowserReviewedHashAndReceipt",
+      "state": "passed",
+      "seconds": 4.72
+    },
+    {
+      "name": "TestXMLRecordsNativeBrowserReviewedHashAndReceipt",
+      "state": "passed",
+      "seconds": 4.71
+    },
+    {
+      "name": "TestXLSXRecordsNativeBrowserReviewedHashAndReceipt",
+      "state": "failed",
+      "seconds": 4.78
+    },
+    {
+      "name": "TestOutputPolicyNativeBrowserAdministratorRecoveryAndRevocationKeepsIngress",
+      "state": "passed",
+      "seconds": 4.08
+    },
+    {
+      "name": "TestProcessingWorkflowNativeBrowserReviewRecoveryAndHeldOutput",
+      "state": "passed",
+      "seconds": 6.32
+    },
+    {
+      "name": "TestProducerProcessingNativeBrowserSelectsOutputContractAndKeepsIngress",
+      "state": "passed",
+      "seconds": 6.78
+    },
+    {
+      "name": "TestComposedProducerProcessingNativeBrowserCheckedSourceNewApprovalAndHeldOutput",
+      "state": "passed",
+      "seconds": 7.6
+    },
+    {
+      "name": "TestProcessingCalendarNativeBrowserReviewRecoveryQueuesOwnedInputAndKeepsOutputHeld",
+      "state": "passed",
+      "seconds": 93.08
+    },
+    {
+      "name": "TestProcessingProposalNativeBrowserAuthorDisclosureDraftAdoptionAndRecovery",
+      "state": "passed",
+      "seconds": 5.86
+    },
+    {
+      "name": "TestProcessingReviewNativeBrowserIndependentDecisionRecoveryAndAdoption",
+      "state": "failed",
+      "seconds": 19.17
+    }
+  ],
+  "independent_review_failure": {
+    "phase": "reject-foreign-review-recovery",
+    "class": "timeout",
+    "line": 232,
+    "column": 6,
+    "private_log_sha256": "d5c143ccd5af65d4cd0b056b0c989b720e8b37f1069f9b460adeb3f5e3c4608d",
+    "safe_result_sha256": "86d56bd3f436d0534aa5dbcc6ec51dccd99ecc4ad01817d69f38963014c44fc4",
+    "observation": "Exact source location waits for the original foreign-recovery refusal message. No DOM/message/private values printed. Source inspection identifies disabled-file-input event timing as an inference to qualify,not a proved root cause."
+  },
+  "xlsx_failure": {
+    "observation": "Original browser strict result completes,but independent Go observer expects a JSON prefix for XLSX. F277 local repair not included."
+  },
+  "native_json_jobs": [
+    {
+      "id": 128377278154,
+      "name": "x86_64",
+      "state": "passed"
+    },
+    {
+      "id": 128377278328,
+      "name": "arm64",
+      "state": "passed"
+    }
+  ],
+  "limits": [
+    "Actual listed native profiles pass only on this source;failed job,fulljourneys and final source stay unqualified.",
+    "F289 waits for enabled recovery inputs without changing any original rejection,request-key,approval,byte,evidence or security assertions;native original replay owed.",
+    "No original run cancelled,rerun or substituted."
+  ]
+}

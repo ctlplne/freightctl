@@ -223,6 +223,7 @@ try {
   stage = "reject-foreign-review-recovery";
   await owner
     .getByLabel("Import independent review recovery JSON", { exact: true })
+    .and(owner.locator('input[type="file"]:enabled'))
     .setInputFiles(invalidPath);
   await owner
     .getByText(
@@ -235,6 +236,7 @@ try {
   stage = "import-review-recovery";
   await owner
     .getByLabel("Import independent review recovery JSON", { exact: true })
+    .and(owner.locator('input[type="file"]:enabled'))
     .setInputFiles(recovery);
   await owner.getByRole("dialog").waitFor();
   await button(
@@ -322,6 +324,7 @@ try {
   await audit(reviewer, "review-withdrawn");
   await reviewer
     .getByLabel("Import independent review recovery JSON", { exact: true })
+    .and(reviewer.locator('input[type="file"]:enabled'))
     .setInputFiles(approvalRecovery);
   await reviewer.getByRole("dialog").waitFor();
   await button(

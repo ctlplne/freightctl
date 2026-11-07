@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "id": "F289",
+  "observed_at": "2026-11-07",
+  "base_candidate": "893fd5003b671d99fa57496e4e8afee319dd69a4",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Exact enabled recovery input selection prepared;native replay owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "374b539e652e34b0f6d79b93f1b02f8b012969099f9ea031cccd647976bf0770",
+      "bytes": 4795
+    },
+    {
+      "reference": "docs/qualification/evidence/F288-native-chrome-processing-and-review.json",
+      "sha256": "c42f7e507f53d3c6d2d991a529d207eafac3dd38cc1d69c131c5c4d60b716a8a",
+      "bytes": 3317
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "de84f7fe48f96d01f3e41797de9106964f1a8bf670d7fb0cfb5b889c20ba43d8",
+      "bytes": 391074
+    },
+    {
+      "reference": "scripts/processing-browser.mjs",
+      "sha256": "e837d9e66ad42977dd20de2c47a417b09d89e8461450e94e06391ee1970d37da",
+      "bytes": 12463
+    },
+    {
+      "reference": "scripts/processing-review-browser.mjs",
+      "sha256": "9bddf57b680f1190572824291ff766a9cb954bfc026202d73899ae708a4e8064",
+      "bytes": 13178
+    }
+  ],
+  "red": {
+    "evidence": "docs/qualification/evidence/F288-native-chrome-processing-and-review.json",
+    "candidate": "49eefe1d4877962aec7c92cb6b6f26485fa83a11",
+    "run": 42363733807,
+    "job": 128377278298,
+    "test": "TestProcessingReviewNativeBrowserIndependentDecisionRecoveryAndAdoption",
+    "phase": "reject-foreign-review-recovery",
+    "class": "timeout",
+    "source_line": 232,
+    "source_column": 6,
+    "observation": "Waits for exact foreign-recovery refusal after file import. Underlying browser DOM was not exposed.",
+    "source_inference": "Playwright setInputFiles does not wait for enabled;opening the panel starts async list work,disables the import input,and drops concurrent perform calls. This is a source-confirmed possible fixture race;not yet a proved native root cause."
+  },
+  "changed": [
+    "Keep exact accessible label and intersect with input[type=file]:enabled for each review recovery import and the ordinary processing recovery import. Let existing locator timeout wait for a possible user action.",
+    "Preserve original foreign-origin refusal,zero new proposal,no dialog,same saved request key/body,original/replayed receipt,separate reviewer/adoption,exact bytes and all security/evidence/time assertions. No product permission/busy control changes."
+  ],
+  "green": [
+    "Both affected scripts pass formatting and Node syntax checks.",
+    "Eleven existing pure review/workflow recovery parsing,foreign-origin/authority rejection,same-key response loss and current-context contracts pass. No actual browser or UI race proof is claimed."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f289-format.log",
+      "sha256": "6d4e97e2f0f9a6a7a2ccf722130219361f33e57c97f2fb4208ed7b5ac76a54f3",
+      "bytes": 91
+    },
+    {
+      "reference": ".private/freightctl-f289-processing-syntax.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f289-recovery-contracts-green.log",
+      "sha256": "a8ff23347e691eea61f782af92ca7d25902ab3ec7400cd6ab2a43f401185bcb1",
+      "bytes": 1290
+    },
+    {
+      "reference": ".private/freightctl-f289-review-syntax.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "primary_references": [
+    "https://playwright.dev/docs/actionability",
+    "https://playwright.dev/docs/api/class-locator#locator-and"
+  ],
+  "owed": [
+    "Actual original independent review foreign-origin/no-proposal refusal and complete browser recovery/adoption replay.",
+    "Actual ordinary processing response-loss recovery and all affected original Chrome profiles on final source.",
+    "Remaining native/stock/product/security/final baseline/AX/FINISH outcomes."
+  ],
+  "resources": "192MiB Node/oneCPU lightweight parsing and existing pure browser API stand-ins only;no Chrome,PostgreSQL,inference,scanner or heavy peer. Local limits,retained35/source60 unchanged."
+}

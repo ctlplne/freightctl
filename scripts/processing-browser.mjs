@@ -106,12 +106,18 @@ try {
     .fill(c.source);
   if (c.producer_output) {
     await button("Find my output contracts").click();
-    const contracts = page.getByRole("region", {name:"Available output contracts"});
+    const contracts = page.getByRole("region", {
+      name: "Available output contracts",
+    });
     await contracts.waitFor();
-    const row = contracts.getByRole("row").filter({hasText:c.output_policy_id});
+    const row = contracts
+      .getByRole("row")
+      .filter({ hasText: c.output_policy_id });
     await row.waitFor();
     await audit("producer-output-contract-selection");
-    await row.getByRole("button", {name:"Use this output contract",exact:true}).click();
+    await row
+      .getByRole("button", { name: "Use this output contract", exact: true })
+      .click();
   } else {
     await button("Load processing contracts").click();
   }
@@ -119,7 +125,7 @@ try {
     .getByRole("heading", { name: "Exact input and output contracts" })
     .waitFor();
   if (c.composed_source) {
-    await page.getByText("Owned generated source", {exact:true}).waitFor();
+    await page.getByText("Owned generated source", { exact: true }).waitFor();
     await audit("composed-source-lineage");
   }
   await page
@@ -221,6 +227,7 @@ try {
   await button("Record processing").click();
   await page
     .getByLabel("Open processing recovery JSON", { exact: true })
+    .and(page.locator('input[type="file"]:enabled'))
     .setInputFiles(recovery);
   await dialog().waitFor();
   await button("Confirm this exact action", dialog()).click();

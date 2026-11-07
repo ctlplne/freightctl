@@ -46,6 +46,13 @@ Verified local batch:
   hashing. Reordered receipt regression turns red to green;all10 metadata
   contracts and Go four-profile wire checks pass. Native FTPS replay owed.
 
+F288 records original native Chrome9 profiles passing and2 failing. Basic,
+producer/composed processing,calendar,proposal/output-policy and three record
+formats pass;XLSX observer and independent review remain red. F289 waits for the
+exact recovery file input to become enabled before import. All original refusal,
+no-new-proposal and receipt assertions stay. Eleven pure recovery/authority
+contracts pass;actual native race cause and original replay remain owed.
+
 F287 uses the receive script's actual protected first-failure.log before console
 fallback. Focused original-vs-console regression turns red to green;native
 underlying cause,repair and full browser acceptance remain owed.
