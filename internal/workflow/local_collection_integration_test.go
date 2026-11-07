@@ -115,6 +115,48 @@ func localCollectionCounts(t *testing.T, f *fixture) [5]int {
 	return counts
 }
 
+func TestLocalCollectionDiscoveryKeepsExactSourceAndActorBoundaries(t *testing.T) {
+	x := newLocalCollection(t)
+	other, _ := approvalPeer(t, x.f, "Other local collection reader", []string{"list", "read", "workflow_manage"})
+	before := localCollectionCounts(t, x.f)
+	choices, err := x.f.s.CollectionWorkflows(x.f.ctx, x.f.scope, "", 20)
+	if err != nil || len(choices.Workflows) != 1 || choices.Next != "" {
+		t.Fatal("local collection workflow missing from ordinary discovery", err)
+	}
+	w := choices.Workflows[0]
+	if w.ID != x.selection.Workflow.ID || w.Version != x.selection.Workflow.Version || w.Hash != x.selection.Workflow.Hash {
+		t.Fatal("local collection discovery changed immutable workflow reference")
+	}
+	connections, err := x.f.s.CollectionConnections(x.f.ctx, x.f.scope, "", 20)
+	if err != nil {
+		t.Fatal(err)
+	}
+	found := false
+	for _, c := range connections.Connections {
+		if c.ID == x.connection.ID {
+			found = c.Protocol == "local" && c.Local != nil && c.Local.ReadOnly && c.Local.RootFingerprint == x.connection.Local.RootFingerprint && c.Hash == x.connection.Hash
+		}
+	}
+	if !found {
+		t.Fatal("discovered local source lost exact read-only root binding")
+	}
+	wire, err := json.Marshal([]any{choices, connections})
+	if err != nil || bytes.Contains(wire, []byte(x.directory)) || bytes.Contains(wire, []byte(x.configuration)) {
+		t.Fatal("local source discovery exposed host references", err)
+	}
+	foreign, err := x.f.s.CollectionWorkflows(x.f.ctx, other, "", 20)
+	if err != nil || len(foreign.Workflows) != 0 || foreign.Next != "" {
+		t.Fatal("another actor discovered private local workflows", err)
+	}
+	foreignConnections, err := x.f.s.CollectionConnections(x.f.ctx, other, "", 20)
+	if err != nil || len(foreignConnections.Connections) != 0 || foreignConnections.Next != "" {
+		t.Fatal("another actor discovered private local connections", err)
+	}
+	if localCollectionCounts(t, x.f) != before {
+		t.Fatal("metadata discovery created events,custody or transfer work")
+	}
+}
+
 func TestLocalCollectionCapturesExactCustodyWithoutProducerMutationOrSendAuthority(t *testing.T) {
 	x := newLocalCollection(t)
 	job, first := startCollection(t, x.f, x.selection, "local-source-admit")

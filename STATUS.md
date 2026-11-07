@@ -171,6 +171,14 @@ the active XLSX intake policy and prepares actual check/separate-release proof
 before readback. Compile/vet/focused profile/static checks pass;original native
 CLI replay and causal attribution stay owed.
 
+F327 fixes the backend chooser query that omitted local.collect. Original native
+Chrome1b745e1 times out selecting that exact workflow at source114:6. The same
+bounded actor-filtered query now includes local sources;native exact-reference,
+private-path,other-actor and zero-side-effect proof is prepared. Local contracts,
+compile/vet/architecture pass;actual SQL/browser replay remains owed. Native
+1b745e1 full x86 parser/authority fuzz now passes;the earlier harness deadline
+failure stays preserved and is not relabelled.
+
 FINISH repair and remaining implementation are mandatory. Next:repair original
 browser/stock/protocol failures and complete all affected original runtime,
 security,recovery,reproducibility and baseline/AX gates on the final source.

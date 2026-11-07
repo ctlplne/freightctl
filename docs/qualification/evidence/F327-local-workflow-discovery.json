@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "id": "F327",
+  "observed_at": "2026-11-07",
+  "base_candidate": "714981c95df3eb49c223745041f690e2867b61a5",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F327 repairs the actual local-source browser chooser path:CollectionWorkflows query omitted local.collect although registration,workflow approval and public parsers accept it. Add local.collect to the same bounded latest-version actor-filtered query;all existing tenant/partner/actor RLS and state semantics remain. Prepare a real PostgreSQL regression requiring exact own local workflow/connection/root,zero private host-reference disclosure,zero other-actor results and zero discovery side effects. Original 1b745e1 Chrome timed out at selectOption source114:6. Focused local source/calendar contracts,tagged compilation,vet and architecture pass;actual new SQL regression and unchanged original browser replay remain owed.",
+  "original_red": {
+    "candidate": "1b745e16d53bf3b20ed07c2242c53bb71a5d3619",
+    "run_id": 42374627267,
+    "job_id": 128409585084,
+    "phase": "review",
+    "source_line": 114,
+    "source_column": 6,
+    "safe_result_sha256": "8e888e2a7d8ce2274e743df0a55775b690bc2d71a03db663da4e8a608f0d415a",
+    "private_log_sha256": "3a9d9b964f4885dbc7a90cf78ea70f34bdfa76c712628a26fa3331da5722dcd6",
+    "observation": "Actual native local browser times out selecting own local workflow;inspected SQL enumerates only SFTP/FTPS."
+  },
+  "local_checks": "Observed terminal exit0 for focused local source/calendar contracts,tagged workflow compilation,vet and architecture;no PostgreSQL runtime claim.",
+  "prepared_native_test": "TestLocalCollectionDiscoveryKeepsExactSourceAndActorBoundaries",
+  "source_files": [
+    {
+      "reference": "internal/workflow/collection_choices.go",
+      "sha256": "c93098e957eccc009dbe21fa1c41794cf62691152f19ac506aa6e0b476134561",
+      "bytes": 3045
+    },
+    {
+      "reference": "internal/workflow/local_collection_integration_test.go",
+      "sha256": "bc1fa2327ec5d4edea5e15cb0882e02e4747459c01bb275654b2da45ea0c11f5",
+      "bytes": 15078
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "b76b6ab4b392db5560bc855e05b3aea673b390141b6cd0505e36a8ae47ec94de",
+      "bytes": 428255
+    },
+    {
+      "reference": "STATUS.md",
+      "sha256": "608242e0937bb4b08e0dcf9d34ed81628bd04360ce4b4cfe10ae3a5c4612db64",
+      "bytes": 12733
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f327-discovery-compile.log",
+      "sha256": "f5a769878d408ee10ec0fa30ca8aaf878be717e604d3c1f7b6141b9eb0ca61cf",
+      "bytes": 78
+    },
+    {
+      "reference": ".private/freightctl-f327-discovery-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f327-discovery-contracts.log",
+      "sha256": "546a17c446b0fd560c00c80365fe678cef5eea9007894a572cb9403830f25b60",
+      "bytes": 60
+    },
+    {
+      "reference": ".private/freightctl-f327-discovery-architecture.log",
+      "sha256": "019b2100d11ddf8dea8ee94a96dc7d42775a045486746f999293d80d9ec7c1ae",
+      "bytes": 64
+    }
+  ],
+  "owed": [
+    "Original local native Chrome exact workflow selection/capture/original-key recovery and new PostgreSQL discovery privacy regression on final source.",
+    "All remaining local/calendar/CLI/native/stock/receive/FINISH and baseline/AX outcomes."
+  ],
+  "security_observation": {
+    "candidate": "1b745e16d53bf3b20ed07c2242c53bb71a5d3619",
+    "run_id": 42374627274,
+    "job_id": 128409585355,
+    "state": "success",
+    "scope": "Original full native x86 parser/authority fuzz job,unchanged five-second target durations,coverage and assertions;no inference. Prior failed harness remains in F316."
+  },
+  "resources": "OneCPU/192MiB focused pure/static checks only;local inference/heavy runtimes remain off."
+}
