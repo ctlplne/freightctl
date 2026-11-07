@@ -73,6 +73,22 @@ first-byte and leaf-refusal tests pass. Windows compilation/vet pass;actual
 native execution,hostile parent/reparse/race/other-token cases and custody/setup
 wiring remain owed. These primitives alone do not qualify Windows custody.
 
+Private staging and sealed bytes have separate protection states. Unix retains
+exact0600 staging and0400 sealing. Windows sealed descriptors grant the runtime
+owner read access and FILE_WRITE_ATTRIBUTES,the metadata right required by Go's
+handle-relative hard-link publication. They grant no data/append/EA write,
+execution,deletion or explicit ACL/owner mutation rights;other principals remain
+excluded. Generic public-read trust profiles cannot qualify sealed private data.
+
+Sealing checks the held object before and after changing its descriptor. It is
+idempotent for an already sealed file and refuses unsupported/nonprivate states.
+Changing permissions cannot revoke an existing writable handle on either
+platform. The owner must sync and close that handle before acknowledging or
+publishing anything. A new Windows native case requires that reopening for byte
+writes fails after close and independently checks the original bytes. Local
+sealing/same-object hard-link/idempotency and descriptor mutation cases pass;
+actual Windows execution and custody/setup integration remain owed.
+
 The implementation uses the platform APIs described by Microsoft's
 [file security documentation](https://learn.microsoft.com/en-us/windows/win32/fileio/file-security-and-access-rights)
 and the pinned Go

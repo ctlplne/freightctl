@@ -18,21 +18,13 @@ credential read fences,original receipt serialization and invalid fixture inputs
 Actual final-source native replays remain owed. Source60 targets78 metadata and
 77 forced-RLS tables. Prior migration sources and retained35 remain unchanged.
 
-Current local work:F235 private directory/held-root creation passes small local
-filesystem checks and Windows compilation;custody/setup integration and actual
-Windows races remain owed. F237 fixes failed-browser summary decoding;F239 adds
-public ErrClosed classification while preserving the raw Windows closing error.
-Both still require original native replay. F241 corrects the restart observer:
-root must see no private offers/commands;the actual sender must still see exactly
-one offer/command/file after three kills/four process instances. Compilation/vet
-pass only. Exact source,red/green and owed references are in the short item
-manifests and docs/qualification/remaining.json.
-
-F243 corrects trusted connection provisioning in the receive-browser fixture.
-Explicit operator roles exist only during local fixture setup;ordinary account
-commands remove them before task approval,source acceptance or browser login.
-The exact final actor/root/revision/permission set is asserted. Compile/vet pass;
-the original native receive/onward browser journey remains owed.
+Current local work:F235/F245 add private held-root creation and explicit sealed
+byte protection. Small local filesystem/policy checks and Windows compilation
+pass;custody/setup wiring and actual Windows cases remain owed. F237/F239/F241/
+F243 prepare failed-browser decoding,Windows closed-error classification,exact
+sender restart observation and trusted-setup/restricted-runtime browser repair.
+Their original native replays remain owed. Detailed source/proof/owed bindings
+stay in the item manifests and docs/qualification/remaining.json.
 
 Next:wire immutable Windows custody/setup,repair the newly reached native browser
 and protocol failures,then complete all remaining baseline/AX/FINISH outcomes.

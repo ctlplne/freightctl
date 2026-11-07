@@ -73,13 +73,15 @@ func createRelative(parent *os.File, name, displayName string, directory bool) (
 		var status windows.IO_STATUS_BLOCK
 		options := uint32(windows.FILE_NON_DIRECTORY_FILE | windows.FILE_OPEN_REPARSE_POINT | windows.FILE_SYNCHRONOUS_IO_NONALERT)
 		share := uint32(windows.FILE_SHARE_READ)
+		fileAttributes := uint32(windows.FILE_ATTRIBUTE_NORMAL)
 		if directory {
 			options = windows.FILE_DIRECTORY_FILE | windows.FILE_OPEN_REPARSE_POINT | windows.FILE_SYNCHRONOUS_IO_NONALERT
 			share |= windows.FILE_SHARE_WRITE | windows.FILE_SHARE_DELETE
+			fileAttributes = windows.FILE_ATTRIBUTE_DIRECTORY
 		}
 		createErr = windows.NtCreateFile(&handle,
 			windows.FILE_GENERIC_READ|windows.FILE_GENERIC_WRITE|windows.WRITE_DAC,
-			&attributes, &status, nil, windows.FILE_ATTRIBUTE_NORMAL,
+			&attributes, &status, nil, fileAttributes,
 			share, windows.FILE_CREATE, options,
 			0, 0)
 		var native windows.NTStatus

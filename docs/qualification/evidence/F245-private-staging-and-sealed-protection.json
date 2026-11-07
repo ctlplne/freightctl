@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "id": "F245",
+  "observed_at": "2026-11-07",
+  "base_candidate": "be62d1be7992a62ef578d34d040192be72f0846d",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Private byte-protection seam implemented;native Windows and product wiring owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "8e669187225c98dbb69f99f87babac27a51ae9faba19b9956538d2ee99450636",
+      "bytes": 11557
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "c8471e682d563e50173aa25d7cb55c3414493612f5afef3fd3c6f0e5fcf0dbf8",
+      "bytes": 372391
+    },
+    {
+      "reference": "docs/security/protected-files.md",
+      "sha256": "4054211e32fcab67b638b3436b947df6d9f212357b4d7df1c43dbcfca057e13a",
+      "bytes": 6095
+    },
+    {
+      "reference": "internal/protectedfs/create_windows.go",
+      "sha256": "35cb23347debf7eda56ca52698bb5df413c941e9b96523237b887628df9c4182",
+      "bytes": 3237
+    },
+    {
+      "reference": "internal/protectedfs/handles_windows.go",
+      "sha256": "10e345fd021c93432df4054b723832bce6a30f2458a99b280bccd700578d64b0",
+      "bytes": 4397
+    },
+    {
+      "reference": "internal/protectedfs/policy.go",
+      "sha256": "268a4e99230b6d19e1aafbc620bbe1acc77b14282d36c26c2b6903e08ffc0a8d",
+      "bytes": 2290
+    },
+    {
+      "reference": "internal/protectedfs/seal.go",
+      "sha256": "e2abc7e88de919353851d5c07581d723af1ac4ceedc74dd72b316700a54b76ae",
+      "bytes": 1113
+    },
+    {
+      "reference": "internal/protectedfs/seal_other.go",
+      "sha256": "caf70f73035482ff82ff1cbe83a4e059274b40fe95e1c29940f9afdd704e3d98",
+      "bytes": 347
+    },
+    {
+      "reference": "internal/protectedfs/seal_test.go",
+      "sha256": "77c2ff9bb19fe7a1c339881d5f475929e72c3733e742cdf9636918a150deaa93",
+      "bytes": 3177
+    },
+    {
+      "reference": "internal/protectedfs/seal_windows.go",
+      "sha256": "e6eb1ed691b554f3c0515a4c6609747bdd3eabba35f47655c55962eea40ba5d4",
+      "bytes": 2198
+    },
+    {
+      "reference": "internal/protectedfs/seal_windows_test.go",
+      "sha256": "96e6897d8c30363eb43a138c4647a31baec3399907e89a1a503edf58cd584ec2",
+      "bytes": 846
+    }
+  ],
+  "original_context": {
+    "candidate": "e87483babb4e32f8a3aaf78d13f8374d842fa78b",
+    "run": 42354252248,
+    "job": 128348737979,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128348737979",
+    "observation": "Original Windows custody/setup remain red at Unix-mode assumptions. Actual private creation/sealed byte protection is a prerequisite;this component alone does not repair the complete original product path."
+  },
+  "changed": [
+    "Add exact private writable/sealed states and idempotent held-object SealReadOnly. Unix0600/0400 behavior remains. Windows uses one pinned descriptor snapshot for classification and an explicit owner-only protected sealed DACL. Broad/unsupported/nonprivate states are refused,not silently repaired.",
+    "Sealed Windows rights are FILE_GENERIC_READ|FILE_WRITE_ATTRIBUTES. The metadata right is required by pinned Go Root.Link for atomic identity publication;no data/append/EA write,execute,delete or explicit ACL/owner mutation grant exists. Private-file creation requests the creator's existing WRITE_DAC capability so it can seal its own new object. Other principals remain excluded.",
+    "Keep the caller-owned writable handle until its required sync/close. Document that permission changes do not revoke existing handles. New Windows native test must refuse a new write handle after close and independently verify unchanged bytes.",
+    "Private/public descriptor parsing shares the same held-handle owner/type/reparse/ACE checks. Directory native creation sends matching directory attributes. No custody acceptance,persistence,workflow approval,release,forwarding or execution authority is added."
+  ],
+  "green": [
+    "Actual small local filesystem staging/sealing/idempotency/same-object hard-link/exact byte and descriptor mutation tests pass. Existing protected-file policy/handle/creation tests pass.",
+    "Architecture and native Windows test compilation/vet pass. Windows binary not executed locally."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f245-architecture.log",
+      "sha256": "6db89f504d04cbf3f7d87242699a25586583e8f698e73d6e5ce131136de655e3",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f245-final-private-seal.log",
+      "sha256": "aab51d201d4f68dd0b16d771c8495eaf97f03af9c0975a8ee79d84da6dbf5dcb",
+      "bytes": 63
+    },
+    {
+      "reference": ".private/freightctl-f245-final-windows-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f245-final-windows-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f245-private-seal.log",
+      "sha256": "02b2004379d5a704aab1a80a831df36c0506c12cb65bc8aedef46f5654842b64",
+      "bytes": 63
+    },
+    {
+      "reference": ".private/freightctl-f245-windows-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f245-windows-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "mechanism_reference": "Pinned Go1.26.10 internal/syscall/windows/at_windows.go:514 Linkat opens source with SYNCHRONIZE|FILE_WRITE_ATTRIBUTES.",
+  "primary_references": [
+    "https://learn.microsoft.com/en-us/windows/win32/fileio/file-security-and-access-rights",
+    "https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nf-wdm-zwcreatefile"
+  ],
+  "owed": [
+    "Actual Windows state/DACL/new-write-handle refusal,sealed hard-link,idempotency/bytes and adverse owner/reparse/race/restricted-token/filesystem profiles.",
+    "Wire custody roots/identity/staging/sealed verification and setup references,then replay the original Windows product failures.",
+    "All actual final-source native/browser/stock/security/race/restore/reproducibility and remaining baseline/AX/FINISH gates."
+  ],
+  "resources": "OneCPU/192MiB local small filesystem units/static/cross-compilation only;no PostgreSQL,Chrome,inference,scanner or heavy peer. Retained35/source60 unchanged."
+}

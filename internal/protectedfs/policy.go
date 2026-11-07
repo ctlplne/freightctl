@@ -46,3 +46,28 @@ func publicDescriptor(owner, runtimeUser string, present, protected bool, entrie
 	}
 	return ownerGrant
 }
+
+func sealedDescriptor(owner, runtimeUser string, present, protected bool, entries []accessEntry, allowed, readable uint32) bool {
+	if !privateDescriptor(owner, runtimeUser, present, protected, entries) {
+		return false
+	}
+	read := false
+	for _, e := range entries {
+		if e.mask & ^allowed != 0 {
+			return false
+		}
+		read = read || e.mask&readable != 0
+	}
+	return read
+}
+
+func writableDescriptor(owner, runtimeUser string, present, protected bool, entries []accessEntry, readable, writable uint32) bool {
+	if !privateDescriptor(owner, runtimeUser, present, protected, entries) {
+		return false
+	}
+	var granted uint32
+	for _, e := range entries {
+		granted |= e.mask
+	}
+	return granted&readable != 0 && granted&writable != 0
+}

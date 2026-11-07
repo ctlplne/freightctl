@@ -38,7 +38,7 @@ func platformCreate(path string) (*os.File, error) {
 		return nil, err
 	}
 	sa := windows.SecurityAttributes{Length: uint32(unsafe.Sizeof(windows.SecurityAttributes{})), SecurityDescriptor: sd}
-	h, err := windows.CreateFile(name, windows.GENERIC_READ|windows.GENERIC_WRITE|windows.READ_CONTROL, windows.FILE_SHARE_READ, &sa, windows.CREATE_NEW, windows.FILE_ATTRIBUTE_NORMAL|windows.FILE_FLAG_OPEN_REPARSE_POINT, 0)
+	h, err := windows.CreateFile(name, windows.GENERIC_READ|windows.GENERIC_WRITE|windows.READ_CONTROL|windows.WRITE_DAC, windows.FILE_SHARE_READ, &sa, windows.CREATE_NEW, windows.FILE_ATTRIBUTE_NORMAL|windows.FILE_FLAG_OPEN_REPARSE_POINT, 0)
 	runtime.KeepAlive(sd)
 	if err != nil {
 		return nil, err
@@ -74,6 +74,16 @@ func privateHandle(h windows.Handle, directory bool) error {
 }
 
 func accessHandle(h windows.Handle, directory, public bool) error {
+	return inspectHandle(h, directory, func(owner, user string, present, protected bool, entries []accessEntry) bool {
+		if public {
+			readMask := uint32(windows.GENERIC_READ | windows.GENERIC_EXECUTE | windows.FILE_GENERIC_READ | windows.FILE_GENERIC_EXECUTE)
+			return publicDescriptor(owner, user, present, protected, entries, readMask)
+		}
+		return privateDescriptor(owner, user, present, protected, entries)
+	})
+}
+
+func inspectHandle(h windows.Handle, directory bool, accept func(string, string, bool, bool, []accessEntry) bool) error {
 	kind, err := windows.GetFileType(h)
 	if err != nil {
 		return err
@@ -128,12 +138,7 @@ func accessHandle(h windows.Handle, directory, public bool) error {
 		entries = append(entries, accessEntry{principal: sid.String(), allow: true, mask: uint32(ace.Mask)})
 	}
 	present, protected := control&windows.SE_DACL_PRESENT != 0, control&windows.SE_DACL_PROTECTED != 0
-	accepted := privateDescriptor(owner.String(), user.String(), present, protected, entries)
-	if public {
-		readMask := uint32(windows.GENERIC_READ | windows.GENERIC_EXECUTE | windows.FILE_GENERIC_READ | windows.FILE_GENERIC_EXECUTE)
-		accepted = publicDescriptor(owner.String(), user.String(), present, protected, entries, readMask)
-	}
-	if !accepted {
+	if !accept(owner.String(), user.String(), present, protected, entries) {
 		return ErrPrivacy
 	}
 	return nil
