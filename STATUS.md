@@ -19,6 +19,13 @@ checks59 migrations/343 functions;this does not qualify PostgreSQL behavior.
 Migration sources1–35 and retained database35 are unchanged. Actual native repair
 replays,race/restore/public/accessibility and every mandatory final gate are owed.
 
+F203 replays all27 original Core Python record commands and8 native-wire stand-in
+cases;all pass after the dispatch contact-spy suite receives loopback permission.
+Original Windows audit identity creation failed at a bare directory.Sync;it now
+uses the existing handle-bound durablefs seam. Focused audit/architecture/vet and
+Windows compilation pass;actual Windows persistence and private ACL qualification
+remain red/owed. No permission check or original test assertion was relaxed.
+
 Schema3 records.project binds an owned checked input,approved exact task,one
 durable processing intent,slots and events/receipt. Stable work keys select one
 historical attempt;current status is separate. New artifacts stay held for fresh

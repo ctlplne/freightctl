@@ -8,6 +8,8 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+
+	"github.com/ctlplne/freightctl/internal/durablefs"
 )
 
 const AuditFormat = "freightctl-audit-snapshot-v1"
@@ -42,7 +44,7 @@ func writeExclusive(path string, data []byte) error {
 		return err
 	}
 	defer directory.Close()
-	return directory.Sync()
+	return durablefs.SyncDirectory(directory)
 }
 
 // GenerateAuditIdentity creates a local signing identity; publication is a separate action.

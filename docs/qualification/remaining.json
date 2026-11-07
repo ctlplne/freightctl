@@ -873,7 +873,8 @@
         "docs/qualification/evidence/F062-ftps-cli-governance.json",
         "docs/qualification/evidence/F063-ftps-browser-governance.json",
         "docs/qualification/evidence/F078-windows-filesystem-observation.json",
-        "docs/qualification/evidence/F079-handle-bound-directory-sync.json"
+        "docs/qualification/evidence/F079-handle-bound-directory-sync.json",
+        "docs/qualification/evidence/F203-finish-reporters-audit-persistence.json"
       ],
       "remaining_details": [
         "F015 restores fresh independent native GnuPG verification and a complete 27/27 implemented-core run on unchanged source. Parent-death, sandbox, runtime-pin and resource refusal gates pass. Historical Docker/aged-fixture failures remain recorded; default Docker startup on this host is unresolved. No model or scanner engine started. CI is wired and structure-linted but GitHub execution and native Linux qualification remain unverified. Complete product requirements stay open.",
@@ -892,7 +893,8 @@
         "F062 adds bounded public namespace-stat/list using shared scoped custody and drives live FTPS credential/intake changes through CLI. Final native ARM stand-in replay passes44 governance commands/nine strict expected refusals per listener mode, all nine service records and exact retained-data/role/resource preservation. New b115b31 native stock replay passes15 FTPS records/129commands each, including12 CLI governance cases/18 exact refusals;both full Linux suites pass578 PostgreSQL records,metadata/fuzz/stock/Mac pass and WindowsD103 remains red. F063 at6634b3a passes both native x86 browser/FTPS modes:12browser cases/two exact API refusals/14axe audits/six saved-receipt recoveries,independent byte/revision/output closure and exact cleanup. Same-source ARM/x86 stock FTPS and source/security pass;all five stock entries pass. Preceding8c89bc9 full Go/PostgreSQL suites pass581 records each with matching application/native inputs;the exact6634b3a full replay is running/queued. Broader API/browser recovery, upload tickets, sending/collection and all whole rows/journeys remain open.",
         "F078 retains7c Windows66failed records and prepares seven bounded actual native permission/flush observations after the original failed unit step. Nine local stand-in methods and target compile/vet pass without Windows execution. Actual Win32 observations, secure ACL/reparse/race handling,durability,protected scanner transport and original native unit/service replay remain mandatory; no Windows qualification.",
         "F078actual6dd elevated NTFS probe records explicit protected owner/SYSTEM ACLs and successful initial read-write directory flushes;read-only flush/reopen-upgrade fail5. Go modes0666/0777 unsuitable for private ACL checks. Original Windows unit job stays red. Implement anchored writable handles/private ACLs,restricted-token access and reparse/race tests,then replay original runtime;no platform/durability claim.",
-        "F079prepares handle-bound directory flushing in custody:Windows pins original descriptor,opens existing writable directory and compares64bit volume/128bit file ID before flush;reject replacements/reparse/unsupported identity and propagate close errors.2own-file/7selected custody contracts and architecture pass locally;Windows test-binary compile/vet only. Native rename/reparse races,private ACL/root/key creation,restricted-token isolation and full D103/runtime/power-loss qualification remain open. Owner requested finish current work,commit,push and pause."
+        "F079prepares handle-bound directory flushing in custody:Windows pins original descriptor,opens existing writable directory and compares64bit volume/128bit file ID before flush;reject replacements/reparse/unsupported identity and propagate close errors.2own-file/7selected custody contracts and architecture pass locally;Windows test-binary compile/vet only. Native rename/reparse races,private ACL/root/key creation,restricted-token isolation and full D103/runtime/power-loss qualification remain open. Owner requested finish current work,commit,push and pause.",
+        "F203 inspects the preserved1102224 Windows original:bare directory.Sync in crypto identity creation fails Access is denied,and existing POSIX permission checks refuse Windows fixtures. Identity publication now uses existing durablefs.SyncDirectory;no permission assertion or ACL boundary relaxed. Local focused checks and Windows compile only pass;native ACL/directory/power-loss/runtime qualification remains open."
       ]
     },
     {
@@ -1136,7 +1138,8 @@
         "docs/qualification/evidence/F198-definition-proposals-terminal-ci.json",
         "docs/qualification/evidence/F199-processing-calendar-browser-profile.json",
         "docs/qualification/evidence/F200-browser-proposals-terminal-ci.json",
-        "docs/qualification/evidence/F201-finish-original-failure-repairs.json"
+        "docs/qualification/evidence/F201-finish-original-failure-repairs.json",
+        "docs/qualification/evidence/F203-finish-reporters-audit-persistence.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -1177,14 +1180,15 @@
         "F195 adds named third-party definition authorship and executor-owned draft adoption through API/CLI/Catalog43-v18 MCP;no byte,approval or execution authority transfers. Focused red/green,whole receipt/private audit/schema/authentication and metadata/static checks pass;PostgreSQL/verified HTTPS/stock SDK prepared/compiled only. Browser/recovery,actual CLI/Chrome/SQL race/crash/restore/final-source and full baseline/AX/FINISH stay owed. F196 retains7599978 original terminal17/37,listed security passes and red application failures.",
         "F197 implements browser definition disclosure,executor draft adoption and exact-key recovery with complete session/meaning binding;focused frontend/canonical/static checks pass. Dedicated six-audit Chrome submit/adoption committed-reply-loss/reload/recovery/no-effect and protected-file CLI profiles are prepared/compiled only. Actual runtime,automatic chains,scoped calendars,protected/restore/final-source and full baseline/AX/FINISH remain owed.",
         "F199 prepares the previously owed served processing-calendar Chrome profile:complete task/calendar review,committed draft/tick response loss and exact-key replay,private reload,owned occurrence navigation,no-delivery execution,held fresh-check output and six WCAG audits. Only compilation/vet/Node syntax/workflow lint pass locally;actual behavioral red/green and native proof remain owed. F198 retains47242c2 original terminal17/37,listed security passes and red application failures.",
-        "FINISH audit/repair started without claiming implementation complete. F201 reproduces and repairs the original typed OpenAPI unit failure,71-method FTPS reporter stale-schema failure and invalid PL/pgSQL CASE comparisons in unapplied post35 migration sources;also fixes two missing lateral definition selections. Full local lightweight Go unit suite,241 frontend and71 reporter tests pass;standalone parser accepts59 migration files/343 function definitions. No actual PostgreSQL migration,CI/native/accessibility/race/restore acceptance pass inferred. All original failure handles remain;actual repair replays and remaining implementation/full GOAL gates owed. F200 preserves1102224 original terminal17/37 with listed security passes."
+        "FINISH audit/repair started without claiming implementation complete. F201 reproduces and repairs the original typed OpenAPI unit failure,71-method FTPS reporter stale-schema failure and invalid PL/pgSQL CASE comparisons in unapplied post35 migration sources;also fixes two missing lateral definition selections. Full local lightweight Go unit suite,241 frontend and71 reporter tests pass;standalone parser accepts59 migration files/343 function definitions. No actual PostgreSQL migration,CI/native/accessibility/race/restore acceptance pass inferred. All original failure handles remain;actual repair replays and remaining implementation/full GOAL gates owed. F200 preserves1102224 original terminal17/37 with listed security passes.",
+        "F203 replays all27 original Core Python record commands plus8 native-wire stand-in tests;all pass after replaying only the dispatch contact-spy suite with authorized loopback. Windows original audit identity failure at directory.Sync is routed through existing handle-bound durablefs;focused audit/architecture/vet and Windows cross-compilation pass. Actual Windows directory persistence/private ACL and all native/final-source outcomes remain red/owed."
       ],
       "current_item": {
-        "id": "F201",
-        "state": "FINISH original-failure repairs prepared;native replay and remaining mandatory implementation/qualification owed",
-        "proof": "Original native and local reporter8errors/1failure and exact typed OpenAPI unit red;full local Go units,241 frontend,71 reporter green. Standalone parser reproduces CASE syntax red and accepts parenthesized form;two missing lateral columns repaired",
-        "native": "Original source-bound PostgreSQL initialization and all public/platform/race/restore/native jobs require replay on the repair candidate;no native pass claimed",
-        "next": "Commit/push verified repairs,inspect and repair actual native originals during FINISH;complete automatic chains,scoped calendars,protected proof and all remaining baseline/AX gates"
+        "id": "F203",
+        "state": "FINISH original reporter replay green;Windows audit persistence correction prepared",
+        "proof": "27 original Python record commands and8 browser-wire stand-ins pass;original Windows audit directory flush failure retained;focused audit/architecture/vet and Windows compile only green",
+        "native": "Original Windows audit and private-file failures remain owed to native replay. Original91ed18d workflows remain queued;no replacement or cancellation",
+        "next": "Continue native original failure repair and remaining implementation/full baseline/AX/FINISH"
       }
     }
   ],

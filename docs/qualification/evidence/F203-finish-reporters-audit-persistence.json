@@ -1,0 +1,388 @@
+{
+  "schema_version": 1,
+  "id": "F203",
+  "observed_at": "2026-11-07",
+  "base_candidate": "91ed18d4aa2bb8900f684035c241f5b8d30a37b1",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Original Core reporters replayed;Windows audit publication correction prepared,actual native outcome owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "b3146c739d0ff3757285a628e4abaf169a2762a281ae477c4ef0887aa32917bc",
+      "bytes": 11406
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "df2f770aaf067c1b667d94cafe2e4d2b47250cf3ae93a8c2b3f3a051a8cc907f",
+      "bytes": 359595
+    },
+    {
+      "reference": "internal/crypto/audit.go",
+      "sha256": "bc6f39ee29399f0264f5d1e5d2a224db66852a7db30b209e84cead29972e630f",
+      "bytes": 3248
+    }
+  ],
+  "original_failure": {
+    "commit": "1102224828a64e18245e4932578e8d46f0a115b1",
+    "run": 42347828405,
+    "job": 128329307343,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128329307343",
+    "tests": [
+      "TestAuditIdentityAndSignaturePolicy",
+      "TestAuditSignerRejectsOtherAlgorithmsAndTrailingData"
+    ],
+    "observation": "Audit identity creation fails sync on original task-owned directory:Access is denied. Other Windows private-file/permission failures remain."
+  },
+  "changed": [
+    "Replace bare directory.Sync in crypto identity publication with existing durablefs.SyncDirectory. File sync,exclusive creation,held directory ownership,handle/identity/reparse checks and error propagation remain. No POSIX check suppressed or Windows ACL permission inferred."
+  ],
+  "green": [
+    "All27 Python commands from the original Core qualification-record step pass. First attempt failed only three sandbox-denied loopback contact-spy cases;only that unchanged13-case suite replayed with authorized loopback and passed.",
+    "All8 browser-native-wire stand-in cases pass. Neither bookkeeping nor wire stand-ins qualify actual public exchanges.",
+    "Focused existing audit regressions,architecture and vet pass on native local ARM;Windows test binary compiles only. Native durablefs behavior and ACL qualification remain owed."
+  ],
+  "record_replay": [
+    {
+      "script": "scripts/test-ci-resources.py",
+      "exit_code": 0,
+      "log": ".private/freightctl-f203-test-ci-resources.log",
+      "final_exit_code": 0
+    },
+    {
+      "script": "scripts/check-ftp-engine.py",
+      "exit_code": 0,
+      "log": ".private/freightctl-f203-check-ftp-engine.log",
+      "final_exit_code": 0
+    },
+    {
+      "script": "scripts/test-ftp-engine.py",
+      "exit_code": 0,
+      "log": ".private/freightctl-f203-test-ftp-engine.log",
+      "final_exit_code": 0
+    },
+    {
+      "script": "scripts/test-ci-ftps-summary.py",
+      "exit_code": 0,
+      "log": ".private/freightctl-f203-test-ci-ftps-summary.log",
+      "final_exit_code": 0
+    },
+    {
+      "script": "scripts/test-ftps-dispatch-qualification.py",
+      "exit_code": 1,
+      "log": ".private/freightctl-f203-test-ftps-dispatch-qualification.log",
+      "replay_log": ".private/freightctl-f203-dispatch-authorized-loopback.log",
+      "final_exit_code": 0
+    },
+    {
+      "script": "scripts/test-ftps-collection-metadata.py",
+      "exit_code": 0,
+      "log": ".private/freightctl-f203-test-ftps-collection-metadata.log",
+      "final_exit_code": 0
+    },
+    {
+      "script": "scripts/test-ftps-collection-browser.py",
+      "exit_code": 0,
+      "log": ".private/freightctl-f203-test-ftps-collection-browser.log",
+      "final_exit_code": 0
+    },
+    {
+      "script": "scripts/test-browser-session-evidence.py",
+      "exit_code": 0,
+      "log": ".private/freightctl-f203-test-browser-session-evidence.log",
+      "final_exit_code": 0
+    },
+    {
+      "script": "scripts/test-ftps-client-summary.py",
+      "exit_code": 0,
+      "log": ".private/freightctl-f203-test-ftps-client-summary.log",
+      "final_exit_code": 0
+    },
+    {
+      "script": "scripts/test-ftps-stock-metadata.py",
+      "exit_code": 0,
+      "log": ".private/freightctl-f203-test-ftps-stock-metadata.log",
+      "final_exit_code": 0
+    },
+    {
+      "script": "scripts/test-ftps-collection-source.py",
+      "exit_code": 0,
+      "log": ".private/freightctl-f203-test-ftps-collection-source.log",
+      "final_exit_code": 0
+    },
+    {
+      "script": "scripts/test-ftps-collection-operator.py",
+      "exit_code": 0,
+      "log": ".private/freightctl-f203-test-ftps-collection-operator.log",
+      "final_exit_code": 0
+    },
+    {
+      "script": "scripts/test-repro-builds.py",
+      "exit_code": 0,
+      "log": ".private/freightctl-f203-test-repro-builds.log",
+      "final_exit_code": 0
+    },
+    {
+      "script": "scripts/test-core-component-inventory.py",
+      "exit_code": 0,
+      "log": ".private/freightctl-f203-test-core-component-inventory.log",
+      "final_exit_code": 0
+    },
+    {
+      "script": "scripts/test-core-go-packages.py",
+      "exit_code": 0,
+      "log": ".private/freightctl-f203-test-core-go-packages.log",
+      "final_exit_code": 0
+    },
+    {
+      "script": "scripts/test-core-bom-schema.py",
+      "exit_code": 0,
+      "log": ".private/freightctl-f203-test-core-bom-schema.log",
+      "final_exit_code": 0
+    },
+    {
+      "script": "scripts/test-windows-fs-probe.py",
+      "exit_code": 0,
+      "log": ".private/freightctl-f203-test-windows-fs-probe.log",
+      "final_exit_code": 0
+    },
+    {
+      "script": "scripts/test-ci-setup-summary.py",
+      "exit_code": 0,
+      "log": ".private/freightctl-f203-test-ci-setup-summary.log",
+      "final_exit_code": 0
+    },
+    {
+      "script": "scripts/test-records.py",
+      "exit_code": 0,
+      "log": ".private/freightctl-f203-test-records.log",
+      "final_exit_code": 0
+    },
+    {
+      "script": "scripts/test-native-evidence.py",
+      "exit_code": 0,
+      "log": ".private/freightctl-f203-test-native-evidence.log",
+      "final_exit_code": 0
+    },
+    {
+      "script": "scripts/test-ci-summary.py",
+      "exit_code": 0,
+      "log": ".private/freightctl-f203-test-ci-summary.log",
+      "final_exit_code": 0
+    },
+    {
+      "script": "scripts/test-retained-metadata.py",
+      "exit_code": 0,
+      "log": ".private/freightctl-f203-test-retained-metadata.log",
+      "final_exit_code": 0
+    },
+    {
+      "script": "scripts/test-retained-handoff-upgrade.py",
+      "exit_code": 0,
+      "log": ".private/freightctl-f203-test-retained-handoff-upgrade.log",
+      "final_exit_code": 0
+    },
+    {
+      "script": "scripts/test-ci-metadata-summary.py",
+      "exit_code": 0,
+      "log": ".private/freightctl-f203-test-ci-metadata-summary.log",
+      "final_exit_code": 0
+    },
+    {
+      "script": "scripts/test-ci-peer-image-summary.py",
+      "exit_code": 0,
+      "log": ".private/freightctl-f203-test-ci-peer-image-summary.log",
+      "final_exit_code": 0
+    },
+    {
+      "script": "scripts/test-scan-peer-image.py",
+      "exit_code": 0,
+      "log": ".private/freightctl-f203-test-scan-peer-image.log",
+      "final_exit_code": 0
+    },
+    {
+      "script": "scripts/check-records.py",
+      "exit_code": 0,
+      "log": ".private/freightctl-f203-check-records.log",
+      "final_exit_code": 0
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f203-architecture.log",
+      "sha256": "18fee18172bc110fcfc84938ab3bab405f41dfa1e8d9f23d319ef03a58325395",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f203-audit-focused.log",
+      "sha256": "a0e095262218c44a1f2f3634e3d3d921f80add0cfc82c87721ea64942c28cbbe",
+      "bytes": 201
+    },
+    {
+      "reference": ".private/freightctl-f203-audit-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f203-browser-wire.log",
+      "sha256": "11b370fcb29fef02e1c695f8b6bd20663af2a1c254b61ca2bda9c51ef15e40f8",
+      "bytes": 937
+    },
+    {
+      "reference": ".private/freightctl-f203-check-ftp-engine.log",
+      "sha256": "859681fe58982a43686c02b723282c06c6115a0a7194fd627ed68a7e868a5ea7",
+      "bytes": 118
+    },
+    {
+      "reference": ".private/freightctl-f203-check-records.log",
+      "sha256": "826009b37d6c8254924b7fd1ee12981059544175f2c890ad4186b88b41b583b4",
+      "bytes": 106
+    },
+    {
+      "reference": ".private/freightctl-f203-dispatch-authorized-loopback.log",
+      "sha256": "d6dd229f0e1ec233f813ea447eb980b87cbe807137485f639c99be9e10d02e34",
+      "bytes": 2444
+    },
+    {
+      "reference": ".private/freightctl-f203-reporter-replay.log",
+      "sha256": "155fb16f55feef2691799911cd23ae5791e9e52d77845e568a822d7ceb5a605f",
+      "bytes": 978
+    },
+    {
+      "reference": ".private/freightctl-f203-test-browser-session-evidence.log",
+      "sha256": "a2e97b7515932007aa3d038fcfa41fdd107cb2467ff84d182512ff3c7e24f045",
+      "bytes": 103
+    },
+    {
+      "reference": ".private/freightctl-f203-test-ci-ftps-summary.log",
+      "sha256": "491819360b8645bd09f8f0ab7fc6805ca8f1029993bf5ee046cd9a92369644da",
+      "bytes": 11886
+    },
+    {
+      "reference": ".private/freightctl-f203-test-ci-metadata-summary.log",
+      "sha256": "6264184abb033fe3ae2ff26474640ffc5fb5bba58919be127bc72374876b649d",
+      "bytes": 105
+    },
+    {
+      "reference": ".private/freightctl-f203-test-ci-peer-image-summary.log",
+      "sha256": "e29e0651c5adc05247116b1d9a2f2491dcbc41cd51935db4535cfba1b40a0e02",
+      "bytes": 117
+    },
+    {
+      "reference": ".private/freightctl-f203-test-ci-resources.log",
+      "sha256": "33060fd73862c5e1af97335504d5b45211fce6d229657f556d8deceeadc52ce4",
+      "bytes": 101
+    },
+    {
+      "reference": ".private/freightctl-f203-test-ci-setup-summary.log",
+      "sha256": "1ed631a0aa2b29ce692093909899b91e77c4de36d10bbd099307e960225b36aa",
+      "bytes": 113
+    },
+    {
+      "reference": ".private/freightctl-f203-test-ci-summary.log",
+      "sha256": "4190e6532da5d52050bd5ea71ff40310f4ffe0846610b4b159650675a5a9c2b2",
+      "bytes": 105
+    },
+    {
+      "reference": ".private/freightctl-f203-test-core-bom-schema.log",
+      "sha256": "7a559f5f3b288fe7710f7d08453f712cd2e9ce60025f248acc51ca1c2ff5db00",
+      "bytes": 102
+    },
+    {
+      "reference": ".private/freightctl-f203-test-core-component-inventory.log",
+      "sha256": "e953b76b93474ce3b380d27070d22d5ff990a94288e5c6ed4d45b5b967b4677d",
+      "bytes": 105
+    },
+    {
+      "reference": ".private/freightctl-f203-test-core-go-packages.log",
+      "sha256": "c1dffb70dba98c39f6d3160dd8d69611f73e43edb30cec9880171bd2fc48adf8",
+      "bytes": 103
+    },
+    {
+      "reference": ".private/freightctl-f203-test-ftp-engine.log",
+      "sha256": "9e33c1b49668eeafe6ec6892fd46f2d67db01d4eb90af66f25557a2710057ae1",
+      "bytes": 644
+    },
+    {
+      "reference": ".private/freightctl-f203-test-ftps-client-summary.log",
+      "sha256": "c4231ae384f43d062630cd35558e3eab6b2e5ac6749126a918de841ef0cd8cb0",
+      "bytes": 135
+    },
+    {
+      "reference": ".private/freightctl-f203-test-ftps-collection-browser.log",
+      "sha256": "8869199a0a276b46b8ab3efcb7b93bdc9f6854d24e0ac11cd32d6ea89700d038",
+      "bytes": 107
+    },
+    {
+      "reference": ".private/freightctl-f203-test-ftps-collection-metadata.log",
+      "sha256": "507497e01ec4c3c941eeedb089d4b9c2df68a2c21f7814518265f2b9a402cd9b",
+      "bytes": 107
+    },
+    {
+      "reference": ".private/freightctl-f203-test-ftps-collection-operator.log",
+      "sha256": "7d1224de949563fee5dfe95cfed72d277a144954ea79867846129adc590107f2",
+      "bytes": 1642
+    },
+    {
+      "reference": ".private/freightctl-f203-test-ftps-collection-source.log",
+      "sha256": "ba7ccc824660f99f10c5378a4598ede6de9cccb44d4230bf847998033f779998",
+      "bytes": 104
+    },
+    {
+      "reference": ".private/freightctl-f203-test-ftps-dispatch-qualification.log",
+      "sha256": "e5ce56e21a89248d65aff7cca644e17bd4a1b81dcb4660ca6a3d468a69b5aa3b",
+      "bytes": 4865
+    },
+    {
+      "reference": ".private/freightctl-f203-test-ftps-stock-metadata.log",
+      "sha256": "f20d691b1693d98d85eb0da2ac3abb6b01a3118a998adcb437b0923ba38e7413",
+      "bytes": 104
+    },
+    {
+      "reference": ".private/freightctl-f203-test-native-evidence.log",
+      "sha256": "3bde0a1304ac36550056f7453902e3664ab7ce837b067116d20f7e409566d678",
+      "bytes": 1474
+    },
+    {
+      "reference": ".private/freightctl-f203-test-records.log",
+      "sha256": "4886294e76912fdffed9efeb857f8ee89534cef7faf14f98bfcc0a29636fd17e",
+      "bytes": 1889
+    },
+    {
+      "reference": ".private/freightctl-f203-test-repro-builds.log",
+      "sha256": "0887a7eeec2935244486b2bc607d1eaf8b7868250d208bc512e6582e0b124bd0",
+      "bytes": 1614
+    },
+    {
+      "reference": ".private/freightctl-f203-test-retained-handoff-upgrade.log",
+      "sha256": "0f7e4b97443e54aca647179972594d13bb587afcbf151fab8228148587ea844a",
+      "bytes": 103
+    },
+    {
+      "reference": ".private/freightctl-f203-test-retained-metadata.log",
+      "sha256": "2d014bb427120fb1a5014d7499096989061fd0fdf40acb471c2e2667de60e71e",
+      "bytes": 103
+    },
+    {
+      "reference": ".private/freightctl-f203-test-scan-peer-image.log",
+      "sha256": "c7b0c994882954bd95b6d24b6bcdb742a764fb0dceef9225db53fa854c7cef8f",
+      "bytes": 114
+    },
+    {
+      "reference": ".private/freightctl-f203-test-windows-fs-probe.log",
+      "sha256": "f9fd52ad1ff09651c49285b6e7e5150e81914830dccc08a31e4bc415681bbcbb",
+      "bytes": 107
+    },
+    {
+      "reference": ".private/freightctl-f203-windows-audit-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "owed": [
+    "Actual original Windows audit/ACL/crypto/custody/FTPS/platform tests and exact durable persistence/reparse races/restricted-token/power-loss proof.",
+    "Original91ed18d CI repair replays,race/integration/public/browser/stock/restore/reproducibility and remaining mandatory baseline/AX implementation and FINISH."
+  ],
+  "local_resources": "OneCPU/192MiB Go/Node and lightweight reporter stand-ins. No local PostgreSQL,Chrome,model,scanner or heavy peer. Retained35 unchanged.",
+  "readiness": "No whole parity row,journey,AX,deployment,independent adoption or enterprise qualification granted."
+}
