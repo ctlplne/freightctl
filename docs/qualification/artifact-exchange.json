@@ -79,7 +79,8 @@
         "docs/qualification/evidence/F145-json-intake-interface-proofs.json",
         "docs/qualification/evidence/F148-fixed-width-intake.json",
         "docs/qualification/evidence/F151-xml-record-intake.json",
-        "docs/qualification/evidence/F155-governed-xlsx-intake.json"
+        "docs/qualification/evidence/F155-governed-xlsx-intake.json",
+        "docs/qualification/evidence/F181-producer-output-policies.json"
       ]
     },
     {
@@ -251,7 +252,8 @@
         "docs/qualification/evidence/F172-processing-contracts-mcp.json",
         "docs/qualification/evidence/F173-processing-browser.json",
         "docs/qualification/evidence/F175-independent-processing-reviews.json",
-        "docs/qualification/evidence/F177-independent-review-browser.json"
+        "docs/qualification/evidence/F177-independent-review-browser.json",
+        "docs/qualification/evidence/F181-producer-output-policies.json"
       ]
     },
     {
@@ -300,7 +302,8 @@
         "docs/qualification/evidence/F173-processing-browser.json",
         "docs/qualification/evidence/F175-independent-processing-reviews.json",
         "docs/qualification/evidence/F177-independent-review-browser.json",
-        "docs/qualification/evidence/F179-processing-task-catalog.json"
+        "docs/qualification/evidence/F179-processing-task-catalog.json",
+        "docs/qualification/evidence/F181-producer-output-policies.json"
       ]
     },
     {
@@ -316,7 +319,9 @@
       "required_profiles": [
         "AX-J03"
       ],
-      "evidence": []
+      "evidence": [
+        "docs/qualification/evidence/F181-producer-output-policies.json"
+      ]
     }
   ],
   "profiles": [
@@ -436,5 +441,5 @@
     "Fixtures, design documents, ledger checks, model answers and skips establish no runtime or real provider qualification.",
     "Preserve original parity/journey/defect/evaluation records and separate assisted deployment, independent adoption and enterprise readiness."
   ],
-  "execution": "Active under S006;full baseline/AX01\u2013AX08/FINISH incomplete. F170 implements typed approved processing/SQL53/ordinary API-CLI with held outputs,separate release and stable attempt history. Native PostgreSQL/API/CLI/runtime and browser/MCP/delegation/full profiles remain owed. F169/F171 retain original terminal source batches and red failures. Local inference/heavy runtimes remain off;retained35 untouched."
+  "execution": "Active under owner resume;full baseline/AX01\u2013AX08/FINISH incomplete. F181 adds registry-only producer-bound output contracts without changing ingress. Actual processing consumption/native proof remain owed. F182 preserves75209b1 terminal17/37 with listed security gates passed and original application failures red. Local inference/heavy runtimes off;retained35 unchanged."
 }

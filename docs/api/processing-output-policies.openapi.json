@@ -1,0 +1,891 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Producer-bound processing output registry",
+    "version": "producer-processing-output-policy-v1",
+    "description": "Registration only; processing consumption and native qualification owed. Default ingress unchanged. Existing checks.Normalize applies additional cross-field constraints."
+  },
+  "paths": {
+    "/v1/tenants/{tenant}/partners/{partner}/processing-output-policies": {
+      "post": {
+        "operationId": "registerProcessingOutputPolicy",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "browserCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "tenant",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "partner",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+            }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Required for browser-cookie mutation.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Original receipt or separate current metadata; no byte or execution authority.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Receipt"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Ordinary scope/role/state/CSRF/revision refusal; invalid shape is invalid_processing_output_policy.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Request"
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "listProcessingOutputPolicies",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "browserCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "tenant",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "partner",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "after",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 25
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Original receipt or separate current metadata; no byte or execution authority.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Ordinary scope/role/state/CSRF/revision refusal; invalid shape is invalid_processing_output_policy.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/tenants/{tenant}/partners/{partner}/processing-output-policies/{policy}/{version}": {
+      "get": {
+        "operationId": "getProcessingOutputPolicy",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "browserCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "tenant",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "partner",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "policy",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Original receipt or separate current metadata; no byte or execution authority.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/View"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Ordinary scope/role/state/CSRF/revision refusal; invalid shape is invalid_processing_output_policy.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/tenants/{tenant}/partners/{partner}/processing-output-policies/{policy}/{version}/revoke": {
+      "post": {
+        "operationId": "revokeProcessingOutputPolicy",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "browserCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "tenant",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "partner",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "policy",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+            }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Required for browser-cookie mutation.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Original receipt or separate current metadata; no byte or execution authority.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Receipt"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Ordinary scope/role/state/CSRF/revision refusal; invalid shape is invalid_processing_output_policy.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Decision"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Reference": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "hash": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        },
+        "required": [
+          "id",
+          "version",
+          "hash"
+        ],
+        "additionalProperties": false
+      },
+      "Participant": {
+        "type": "object",
+        "properties": {
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "partner_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "actor_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "authority_revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "root_policy_digest": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        },
+        "required": [
+          "tenant_id",
+          "partner_id",
+          "actor_id",
+          "authority_revision",
+          "root_policy_digest"
+        ],
+        "additionalProperties": false
+      },
+      "Binding": {
+        "type": "object",
+        "properties": {
+          "profile": {
+            "const": "producer-processing-output-policy-v1"
+          },
+          "policy_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "policy_version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "policy_hash": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "publisher_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "producer": {
+            "$ref": "#/components/schemas/Participant"
+          }
+        },
+        "required": [
+          "profile",
+          "policy_id",
+          "policy_version",
+          "policy_hash",
+          "publisher_id",
+          "producer"
+        ],
+        "additionalProperties": false
+      },
+      "Column": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "max_bytes": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "precision": {
+            "type": "integer"
+          },
+          "scale": {
+            "type": "integer"
+          },
+          "width_bytes": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "padding": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "type",
+          "required",
+          "max_bytes"
+        ],
+        "additionalProperties": false
+      },
+      "Policy": {
+        "type": "object",
+        "properties": {
+          "schema_version": {
+            "type": "integer",
+            "enum": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "kind": {
+            "enum": [
+              "csv",
+              "json_records",
+              "fixed_width",
+              "xml_records",
+              "xlsx_records"
+            ]
+          },
+          "columns": {
+            "type": "array",
+            "maxItems": 128,
+            "items": {
+              "$ref": "#/components/schemas/Column"
+            }
+          },
+          "max_bytes": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "max_rows": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "max_record_bytes": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "timeout_seconds": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "signature": {
+            "type": "object",
+            "properties": {
+              "key": {
+                "$ref": "#/components/schemas/Reference"
+              },
+              "max_age_seconds": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "key"
+            ],
+            "additionalProperties": false
+          },
+          "scanner": {
+            "$ref": "#/components/schemas/Reference"
+          },
+          "xml": {
+            "type": "object",
+            "properties": {
+              "root": {
+                "type": "string"
+              },
+              "record": {
+                "type": "string"
+              },
+              "namespace": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "root",
+              "record",
+              "namespace"
+            ],
+            "additionalProperties": false
+          },
+          "xlsx": {
+            "type": "object",
+            "properties": {
+              "sheet": {
+                "type": "string"
+              },
+              "date_mode": {
+                "type": "string"
+              },
+              "max_parts": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "max_directory_bytes": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "max_part_bytes": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "max_expanded_bytes": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "max_expansion_ratio": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "max_shared_strings": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "max_shared_bytes": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "required": [
+              "sheet",
+              "date_mode",
+              "max_parts",
+              "max_directory_bytes",
+              "max_part_bytes",
+              "max_expanded_bytes",
+              "max_expansion_ratio",
+              "max_shared_strings",
+              "max_shared_bytes"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "schema_version",
+          "kind",
+          "columns",
+          "max_bytes",
+          "max_rows",
+          "max_record_bytes",
+          "timeout_seconds"
+        ],
+        "additionalProperties": false
+      },
+      "Request": {
+        "type": "object",
+        "properties": {
+          "policy_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "expected_version": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "producer_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "definition": {
+            "$ref": "#/components/schemas/Policy"
+          }
+        },
+        "required": [
+          "expected_version",
+          "producer_id",
+          "definition"
+        ],
+        "additionalProperties": false
+      },
+      "Decision": {
+        "type": "object",
+        "properties": {
+          "definition_hash": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "expected_version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "definition_hash",
+          "expected_version",
+          "expected_revision"
+        ],
+        "additionalProperties": false
+      },
+      "Configuration": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "definition": {
+            "$ref": "#/components/schemas/Policy"
+          },
+          "definition_hash": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "state": {
+            "enum": [
+              "output_active",
+              "output_retired",
+              "output_revoked"
+            ]
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "approval_authority": {
+            "type": "integer",
+            "const": 0
+          }
+        },
+        "required": [
+          "id",
+          "version",
+          "definition",
+          "definition_hash",
+          "state",
+          "revision",
+          "approval_authority"
+        ],
+        "additionalProperties": false
+      },
+      "Record": {
+        "type": "object",
+        "properties": {
+          "profile": {
+            "const": "producer-processing-output-policy-v1"
+          },
+          "policy": {
+            "$ref": "#/components/schemas/Configuration"
+          },
+          "binding": {
+            "$ref": "#/components/schemas/Binding"
+          },
+          "observation": {
+            "type": "string"
+          },
+          "ingress_changed": {
+            "const": false
+          },
+          "usage": {
+            "const": "contract-registration-only"
+          }
+        },
+        "required": [
+          "profile",
+          "policy",
+          "binding",
+          "observation",
+          "ingress_changed",
+          "usage"
+        ],
+        "additionalProperties": false
+      },
+      "View": {
+        "type": "object",
+        "properties": {
+          "profile": {
+            "const": "producer-processing-output-policy-v1"
+          },
+          "policy": {
+            "$ref": "#/components/schemas/Configuration"
+          },
+          "binding": {
+            "$ref": "#/components/schemas/Binding"
+          },
+          "observation": {
+            "type": "string"
+          },
+          "ingress_changed": {
+            "const": false
+          },
+          "usage": {
+            "const": "contract-registration-only"
+          },
+          "producer_binding_current_at_observation": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "profile",
+          "policy",
+          "binding",
+          "observation",
+          "ingress_changed",
+          "usage",
+          "producer_binding_current_at_observation"
+        ],
+        "additionalProperties": false
+      },
+      "Receipt": {
+        "type": "object",
+        "properties": {
+          "resource": {
+            "$ref": "#/components/schemas/Record"
+          },
+          "replayed": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "resource"
+        ],
+        "additionalProperties": false
+      },
+      "Summary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "definition_hash": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "state": {
+            "const": "output_active"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "producer_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "producer_binding_current_at_observation": {
+            "type": "boolean"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "column_count": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "id",
+          "version",
+          "definition_hash",
+          "state",
+          "revision",
+          "producer_id",
+          "producer_binding_current_at_observation",
+          "kind",
+          "column_count"
+        ],
+        "additionalProperties": false
+      },
+      "Page": {
+        "type": "object",
+        "properties": {
+          "profile": {
+            "const": "producer-processing-output-policy-v1"
+          },
+          "policies": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "$ref": "#/components/schemas/Summary"
+            }
+          },
+          "next": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "profile",
+          "policies"
+        ],
+        "additionalProperties": false
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "error"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      },
+      "browserCookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "__Host-freightctl-session"
+      }
+    }
+  }
+}

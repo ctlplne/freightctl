@@ -53,6 +53,14 @@ func NewWithBrowserLifetime(service *custody.Service, audits *audit.Service, ena
 	})
 	m.Handle("POST /v1/tenants/{tenant}/partners/{partner}/mcp", s.mcpHandler())
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/checks/{file}/processing-contracts", s.checks)
+	for _, pattern := range []string{
+		"POST /v1/tenants/{tenant}/partners/{partner}/processing-output-policies",
+		"GET /v1/tenants/{tenant}/partners/{partner}/processing-output-policies",
+		"GET /v1/tenants/{tenant}/partners/{partner}/processing-output-policies/{policy}/{version}",
+		"POST /v1/tenants/{tenant}/partners/{partner}/processing-output-policies/{policy}/{version}/revoke",
+	} {
+		m.HandleFunc(pattern, s.outputPolicies)
+	}
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/onward/previews", s.onward)
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/onward/runs", s.onward)
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/onward/receipts", s.onward)

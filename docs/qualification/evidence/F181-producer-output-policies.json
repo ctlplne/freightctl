@@ -1,0 +1,281 @@
+{
+  "schema_version": 1,
+  "id": "F181",
+  "observed_at": "2026-11-06",
+  "base_candidate": "75209b1e971b26ea2329bd715c8fc364d5995a94",
+  "candidate_binding": "This commit plus exact source-file hashes below",
+  "qualification_claim": false,
+  "state": "Producer-bound output contract registry implemented;consumption/native proof owed",
+  "profile": "producer-processing-output-policy-v1",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "1221fb135a337ede8c92fd52e47cf7d73304f0ddb3712757f82431d6594297e5",
+      "bytes": 4704
+    },
+    {
+      "reference": "cmd/freightctl/main.go",
+      "sha256": "6216e9822a8b9a90e470e70fba5fac081741a67386d4e8dae5c5c9676c5ca376",
+      "bytes": 48457
+    },
+    {
+      "reference": "cmd/freightctl/output_policies.go",
+      "sha256": "490ccceb886ef2b3ed0726c3525fc90161aefab15c61100d36b404fd42a34ca4",
+      "bytes": 1783
+    },
+    {
+      "reference": "cmd/freightctl/workflow_processing_integration_test.go",
+      "sha256": "118d56f29a4a50a564c00ba20532ce44d6c4f94896822c2dad7ed9f917ee58dc",
+      "bytes": 14793
+    },
+    {
+      "reference": "docs/api/processing-output-policies.openapi.json",
+      "sha256": "c665409f507fa7d35ffac839e56b761b53e01a0177c3b6f061cf3ded0ca5f9cb",
+      "bytes": 22360
+    },
+    {
+      "reference": "docs/protocols/processing-output-policies.md",
+      "sha256": "4a6c5075f9e78a8e6e84c3325bd4c553145a66eb8bd5c65cb395a6247db1dc44",
+      "bytes": 4320
+    },
+    {
+      "reference": "docs/qualification/artifact-exchange.json",
+      "sha256": "91125a5568f32c7916a11ac029dec6d307d7405ef9a71609e24b26f2476b3e36",
+      "bytes": 27332
+    },
+    {
+      "reference": "docs/qualification/evidence/F182-catalog-terminal-ci.json",
+      "sha256": "44f80ff21338f70262c5ef3d684d42b07a2561d796d678e05f89736764524b34",
+      "bytes": 20291
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "2fda0fbc42ad55a6a232d3b2fa1c834ec6b4c966c6ef2d655b1a61e7699cbc9e",
+      "bytes": 338542
+    },
+    {
+      "reference": "internal/api/api.go",
+      "sha256": "06d60985364fee58d016314d8a8622e5f13eb16394afa1de8c0f107f5ad6cbad",
+      "bytes": 29788
+    },
+    {
+      "reference": "internal/api/output_policies.go",
+      "sha256": "ee1f05368f7b4126114fa300bad4ce90fed36c39a881d040e2604c0861b56665",
+      "bytes": 1790
+    },
+    {
+      "reference": "internal/api/output_policies_integration_test.go",
+      "sha256": "a2af9d01f01cbb78b3cbaa4b8aca6d261675b15d50b29cc42389f4bca71a66b2",
+      "bytes": 3836
+    },
+    {
+      "reference": "internal/api/output_policies_test.go",
+      "sha256": "4df6047fd971cd37b44a8d7ac8a2516f3c39ddb943bc7bd230e6a424bf68925e",
+      "bytes": 1307
+    },
+    {
+      "reference": "internal/checks/output_policies.go",
+      "sha256": "582fef657766407734f50803145e8edb946a2696366276690908ad00d8a8481b",
+      "bytes": 10490
+    },
+    {
+      "reference": "internal/checks/output_policies_integration_test.go",
+      "sha256": "25f62b3ee04fa01c288323d98d05a3aae194eb7af4af779905b588fad865b6b3",
+      "bytes": 10858
+    },
+    {
+      "reference": "internal/checks/output_policies_test.go",
+      "sha256": "71e85e9b78ac37a9ee430f4226c38f2df570c3f8f5f497a91c015b963d5c3694",
+      "bytes": 2668
+    },
+    {
+      "reference": "internal/store/055_processing_output_policies.sql",
+      "sha256": "e480207c30e8337a5c5b9736ce9357153993351794fb92f14e3b84252a4405ba",
+      "bytes": 32942
+    },
+    {
+      "reference": "internal/store/intake.go",
+      "sha256": "e36b823fa89529efe12695734acbfdb4e3f7c0d8f47deab84c67fdf53ba83782",
+      "bytes": 12176
+    },
+    {
+      "reference": "internal/store/output_policies.go",
+      "sha256": "e9fc643b0792487f563a3e9561180bf2b32814154cd45066ffbf9632183ed02d",
+      "bytes": 5450
+    },
+    {
+      "reference": "internal/store/store.go",
+      "sha256": "5fbb8e85d345dca8bcb96c3edd16812ba9e602c81989c817623aeda2c2d74de0",
+      "bytes": 27117
+    },
+    {
+      "reference": "scripts/metadata_contract.py",
+      "sha256": "447e14a47b24310bb682750af0384ca66b3d0eba9dc6498770205b375420d8a2",
+      "bytes": 3638
+    },
+    {
+      "reference": "scripts/test-ci-metadata-summary.py",
+      "sha256": "95d02b2f9b1c704a5212524ec997c75c7841994dc839aa5f49ff54940bc1ff02",
+      "bytes": 6240
+    }
+  ],
+  "changed": [
+    "Root policy administrator registers separate immutable producer-bound output-policy versions without replacing or advancing default ingress. Caller cannot supply producer authority or gain file/worker/release/forwarding grants.",
+    "One forced-RLS journalled binding commits with exact output contract and original receipt;current producer visibility requires live authority/root snapshot. Version changes retire only the preceding output version;root administrator can revoke independently of producer revocation.",
+    "Five latest SQL default selectors retain all prior custody/authority/lease/format clauses and add only the legacy-state filter. Registry-only deployment does not configure ordinary ingress.",
+    "Ordinary API and CLI expose register/list/exact status/revoke with strict decoding,scope,CSRF,stable keys and exact decision revisions. No processor consumes these registry rows yet."
+  ],
+  "red": {
+    "reference": ".private/freightctl-f181-output-contract-red.log",
+    "observed": "Required outputPolicyBinding contract did not exist;focused test failed compilation."
+  },
+  "green": {
+    "reference": ".private/freightctl-f181-final-source-focused.log",
+    "observed": "Producer/scope/exact-policy meaning and unsafe legacy/stale binding refusals;API unauthenticated/authority-injection controls and core architecture pass."
+  },
+  "checks": [
+    {
+      "reference": ".private/freightctl-f181-architecture.log",
+      "sha256": "09742351eb6e1665b6406626bd6db52dde212c624f91215edc7bac2d2d389172",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f181-final-focused.log",
+      "sha256": "37d27680023e9f9cf9ba757d5ade9db014a2c5b64559979cfef6dd1e1b3c0ccb",
+      "bytes": 195
+    },
+    {
+      "reference": ".private/freightctl-f181-final-metadata.log",
+      "sha256": "403f61d26307c1a64b36ce3112375f9472e1a979bdc62259ba93b42810f819a7",
+      "bytes": 105
+    },
+    {
+      "reference": ".private/freightctl-f181-final-native-compile.log",
+      "sha256": "061aa45fbfefb653a4ee4073b62048a06daccb334bc9a6ff60b7568a58279ef3",
+      "bytes": 224
+    },
+    {
+      "reference": ".private/freightctl-f181-final-retained-green.log",
+      "sha256": "1f11b6e880045ee35de832b81b45d06257342e13b5c79bbf0034379d4ca220b9",
+      "bytes": 103
+    },
+    {
+      "reference": ".private/freightctl-f181-final-retained.log",
+      "sha256": "191463b0b29799904e72500bf188528f49c831a9e8dd4bce92acf2c4c039acb1",
+      "bytes": 260
+    },
+    {
+      "reference": ".private/freightctl-f181-final-source-focused.log",
+      "sha256": "67cb2fb8b48b654b1e39845328a0b751f0df31fe3ccbf6ccebb14cea617ef76e",
+      "bytes": 177
+    },
+    {
+      "reference": ".private/freightctl-f181-final-source-native-compile.log",
+      "sha256": "b4046a2ec5387c0c4f539be8869f0426c2bef95de32bf6b3e777c987db7b6fc9",
+      "bytes": 230
+    },
+    {
+      "reference": ".private/freightctl-f181-final-source-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f181-final-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f181-interface-compile-first.log",
+      "sha256": "38754385823f98db58f22552d8c733159d5506f5199c73e33a805d149d74d057",
+      "bytes": 270
+    },
+    {
+      "reference": ".private/freightctl-f181-interface-focused-green.log",
+      "sha256": "6ce507572ff02503f7fa52c2cc05dca29f862106987e66e2dc16356015caefe2",
+      "bytes": 113
+    },
+    {
+      "reference": ".private/freightctl-f181-metadata-green.log",
+      "sha256": "aeb8eab8eeb87c97d150804b54d470279b25d480780ccf79e9464381ccfc401a",
+      "bytes": 105
+    },
+    {
+      "reference": ".private/freightctl-f181-native-compile-first.log",
+      "sha256": "9271ae40325d4fb406ee9c09f2b7f4fc0dee80a31bfc29f111e634afa9330481",
+      "bytes": 224
+    },
+    {
+      "reference": ".private/freightctl-f181-native-compile-second.log",
+      "sha256": "3d3333c99a85d1d6a408e4f0903ea4a798a884eb5311720400a743346cdcb7a3",
+      "bytes": 224
+    },
+    {
+      "reference": ".private/freightctl-f181-openapi-refs.log",
+      "sha256": "d74cb9722097e2960caf686d83e7a03cc05e3b252684b11d79f753e131a4d022",
+      "bytes": 88
+    },
+    {
+      "reference": ".private/freightctl-f181-output-contract-first-green.log",
+      "sha256": "14c0cf2b4b9a213983107153bbf0d6cf257d9417b8dce013f297695807fcfae5",
+      "bytes": 58
+    },
+    {
+      "reference": ".private/freightctl-f181-output-contract-red.log",
+      "sha256": "502dd3eefdfc6928372cad0d67af7485c149b94a06521009cbb8edfc73249229",
+      "bytes": 328
+    },
+    {
+      "reference": ".private/freightctl-f181-output-service-first.log",
+      "sha256": "916174b31c16ca8e7961ff85f4c0be0738bef4555cc4054cdbe00cdb669010da",
+      "bytes": 58
+    },
+    {
+      "reference": ".private/freightctl-f181-output-service-second.log",
+      "sha256": "5c2bc2d69fb492763d13c17fd1d836de47ac9055d6df9fed69dad810a8bce250",
+      "bytes": 58
+    },
+    {
+      "reference": ".private/freightctl-f181-retained-profile-green.log",
+      "sha256": "2d014bb427120fb1a5014d7499096989061fd0fdf40acb471c2e2667de60e71e",
+      "bytes": 103
+    },
+    {
+      "reference": ".private/freightctl-f181-record-refs.log",
+      "sha256": "826009b37d6c8254924b7fd1ee12981059544175f2c890ad4186b88b41b583b4",
+      "bytes": 106
+    },
+    {
+      "reference": ".private/freightctl-f181-openapi-refs.log",
+      "sha256": "d74cb9722097e2960caf686d83e7a03cc05e3b252684b11d79f753e131a4d022",
+      "bytes": 88
+    }
+  ],
+  "guard_preservation": [
+    {
+      "reference": ".private/freightctl-f181-default-guard-preservation.json",
+      "sha256": "8d36914ba0daf9bed66df8b23a7a39cabcab506312dd9530ca7898a5be55f9a6",
+      "bytes": 2089
+    }
+  ],
+  "preparation_failures": [
+    "Final retained-profile command initially named a nonexistent script;original command-error log retained. Correct existing test-retained-metadata.py replay is separately recorded. No runtime gate was replaced."
+  ],
+  "prepared_native": [
+    "TestProcessingOutputPolicyActualRegistrationPreservesRepeatedCSVIngress",
+    "TestProcessingOutputPolicyActualRegistryAloneDoesNotConfigureIngress",
+    "TestProcessingOutputPolicyActualVersionsAndOtherProducersCannotAlterIngress",
+    "TestProcessingOutputPolicyActualCredentialRevocationAndPolicyRevocationStaySeparate",
+    "TestProcessingOutputPolicyActualSQLRejectsMissingBindingDefaultConversionAndProducerWrite",
+    "TestProcessingOutputPolicyHTTPSScopesRegistryAndPreservesDefaultIngress",
+    "TestProcessingWorkflowCLIUsesApprovedTaskAndSeparateOutputRelease/producer_output_contract_registry"
+  ],
+  "verification_limits": [
+    "Native tagged compilation selected zero cases;no PostgreSQL,Chrome,scanner,model or heavy peer ran locally. Schema55 syntax/RLS/transaction behavior and actual interface cases remain owed to authorized GitHub environments.",
+    "Registry-only:usage contract-registration-only explicitly exposes that generated acceptance,selected-policy checking/release and repeat CSV-to-JSON processing are not implemented by this increment.",
+    "Source55 targets76 metadata/75 forced-RLS tables. Historical migrations and retained35 unchanged. No resource/security gate relaxed."
+  ],
+  "owed": [
+    "Wire producer-bound output consumption through versioned projection,generated acceptance,fresh signature/scanner checks,separate release and availability while preserving legacy profiles.",
+    "Prepared native cases,original failures,final-source and mandatory FINISH full baseline/AX01\u2013AX08 qualification;delegation/composition/scheduling and remaining product work remain open."
+  ]
+}

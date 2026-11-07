@@ -46,7 +46,7 @@ func (t *Transaction) IntakePolicy(ctx context.Context, exclusive bool) (*Config
 		return nil, err
 	}
 	p := &Configuration{}
-	err := t.Tx.QueryRow(ctx, `SELECT policy_id::text,version,definition,definition_hash,state,revision FROM intake_policies ORDER BY version DESC LIMIT 1`+suffix).Scan(&p.ID, &p.Version, &p.Definition, &p.Hash, &p.State, &p.Revision)
+	err := t.Tx.QueryRow(ctx, `SELECT policy_id::text,version,definition,definition_hash,state,revision FROM intake_policies WHERE state IN ('active','retired','revoked') ORDER BY version DESC LIMIT 1`+suffix).Scan(&p.ID, &p.Version, &p.Definition, &p.Hash, &p.State, &p.Revision)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, nil
 	}

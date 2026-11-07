@@ -284,4 +284,38 @@ func TestProcessingWorkflowCLIUsesApprovedTaskAndSeparateOutputRelease(t *testin
 			t.Fatal("CLI withdrawal", err)
 		}
 	})
+	t.Run("producer output contract registry", func(t *testing.T) {
+		identity, err := db.Identity(ctx, scope)
+		if err != nil {
+			t.Fatal(err)
+		}
+		before, err := control.Policy(ctx, scope)
+		if err != nil {
+			t.Fatal(err)
+		}
+		request := checks.OutputPolicyRequest{Producer: identity.Actor, Definition: output}
+		raw, err := command("processing-output-policy-register", "-request-file", requestFile(request), "-idempotency-key", "cli-register-output-contract")
+		var accepted checks.Result
+		var record checks.OutputPolicyRecord
+		if err != nil || json.Unmarshal(raw, &accepted) != nil || json.Unmarshal(accepted.Resource, &record) != nil || record.Policy.State != "output_active" || record.Binding.Producer.Actor != identity.Actor || record.IngressChanged {
+			t.Fatal("CLI output contract registration", err)
+		}
+		raw, err = command("processing-output-policy-list", "-output-policy-limit", "25")
+		var page checks.OutputPolicyPage
+		if err != nil || json.Unmarshal(raw, &page) != nil || len(page.Policies) != 1 || page.Policies[0].ID != record.Policy.ID {
+			t.Fatal("CLI output registry listing", err)
+		}
+		raw, err = command("processing-output-policy-status", "-output-policy-id", record.Policy.ID, "-version", "1")
+		var view checks.OutputPolicyView
+		if err != nil || json.Unmarshal(raw, &view) != nil || !view.ProducerCurrent {
+			t.Fatal("CLI output binding inspection", err)
+		}
+		if _, err = command("processing-output-policy-revoke", "-output-policy-id", record.Policy.ID, "-version", "1", "-request-file", requestFile(checks.PolicyDecision{Hash: record.Policy.Hash, Version: 1, Revision: 1}), "-idempotency-key", "cli-revoke-output-contract"); err != nil {
+			t.Fatal("CLI output revocation", err)
+		}
+		after, err := control.Policy(ctx, scope)
+		if err != nil || after.ID != before.ID || after.Version != before.Version || after.Hash != before.Hash || after.State != before.State {
+			t.Fatal("CLI output registry altered ingress", err)
+		}
+	})
 }
