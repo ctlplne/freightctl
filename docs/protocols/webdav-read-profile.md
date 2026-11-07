@@ -12,6 +12,11 @@ The prefix selects a tenant and partner; the ordinary PostgreSQL/RLS identity,
 mount root,path modes and current intake policy decide what can be discovered
 or read. A URL never refers to a host filesystem path.
 
+`X-Freightctl-Namespace-Revision` applies only to PROPPATCH and collection MOVE.
+PUT,MKCOL,file MOVE,COPY and DELETE reject that header with400 instead of silently
+ignoring it. Use their byte/absence conditions below. A refused namespace
+condition is not an evaluated metadata revision or a successful transfer.
+
 - `OPTIONS` authenticates and checks read/list access to the addressed entry.
   It returns `Allow: OPTIONS, PROPFIND, GET, HEAD, PUT, MKCOL, PROPPATCH, MOVE, DELETE, COPY`
   and no DAV compliance class. Refused collection mutation responses omit

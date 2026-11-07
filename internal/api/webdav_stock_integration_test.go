@@ -413,6 +413,15 @@ func TestWebDAVNativeStockCurlDiscoveryInterruptedReadAndExactResume(t *testing.
 	if status != 412 || collectionRetry != 22 {
 		t.Fatal("stock stale collection condition performed another move")
 	}
+	currentMember := collectionTarget + strings.TrimPrefix(copyOverwriteTarget, collectionPath)
+	status, _, _, unsupportedConditionExit := run("unsupported-namespace-condition", currentMember, []string{"--request", "DELETE", "--header", "Idempotency-Key: dav-stock-unsupported-namespace", "--header", "If-Match: " + artifactRevisionETag(&replaced.File), "--header", "X-Freightctl-Namespace-Revision: " + identity.ID + ":" + strconv.FormatInt(identity.Revision, 10)}, false)
+	if status != 400 || unsupportedConditionExit != 22 {
+		t.Fatal("stock file mutation silently ignored a namespace condition")
+	}
+	status, headers, unchangedMember, _ := run("unsupported-condition-unchanged", currentMember, nil, true)
+	if status != 200 || !bytes.Equal(unchangedMember, replacement) || headers.Get("X-File-Revision-ID") != replaced.File.ID {
+		t.Fatal("unsupported namespace condition removed or changed the stock member")
+	}
 	binaryPath, err := exec.LookPath("curl")
 	if err != nil {
 		t.Fatal(err)

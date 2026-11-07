@@ -142,8 +142,13 @@ survive;one private receipt covers every member event. Existing processing and
 quota bounds stay enforced. Focused red-green/static checks pass;actual native
 API/CLI/curl/rollback/history proof is prepared and owed.
 
-Next:push the next verified owner-only batch after preserving these terminal
-originals,then continue independent mandatory implementation while CI runs.
+F412 refuses the recognized namespace-revision header on file PUT/MOVE/COPY/
+DELETE and MKCOL. Five observed admission reds become400;the supported property
+and collection MOVE profiles stay enforced. Native no-effect/stock-client proof
+is prepared and owed. All83 parity IDs/states and prior evidence remain intact.
+
+Next:continue independent mandatory implementation while the16 original
+b11ab76 workflows run. Preserve their exact job/security outcomes for batching.
 
 Push the next verified owner-only batch only after all required originals are terminal. Repair original
 failures and finish every mandatory final-source baseline/AX gate. F026 stays

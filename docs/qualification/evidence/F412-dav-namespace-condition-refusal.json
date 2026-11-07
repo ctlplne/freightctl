@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "id": "F412",
+  "observed_at": "2026-11-07",
+  "base_candidate": "dac774b4ac98a6f8db3f932389dd130f7cb61fe5",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F412 closes a recognized-condition ambiguity introduced by namespace metadata conditions. PUT,MKCOL,file MOVE,COPY and DELETE previously admitted X-Freightctl-Namespace-Revision while ignoring it;all five observed guard regressions return admitted200. The common DAV boundary now refuses400 before their service admission. PROPPATCH and complete collection MOVE retain the supported namespace condition;file methods retain their explicit byte/absence contracts and cannot pretend to enforce a metadata revision. Focused DAV guard green,tagged native API/stock-curl compilation,vet,format and architecture pass. Prepared actual HTTPS matrix requires unchanged source ID/revision/bytes,no new target/directory,zero actor namespace transitions/receipts/acceptance/intents/runs,and stock curl refusal/readback. Native outcomes remain owed. No resource,permission,custody or schema budget changes;whole-product qualification remains open.",
+  "contract": {
+    "supported_namespace_condition": [
+      "PROPPATCH",
+      "Collection MOVE with canonical collection href and exact root condition"
+    ],
+    "unsupported_namespace_condition": [
+      "PUT",
+      "MKCOL",
+      "File MOVE",
+      "COPY",
+      "DELETE"
+    ],
+    "refusal": "400 unsupported_dav_namespace_condition before their service admission;never silently ignore a recognized condition",
+    "existing_byte_and_absence_conditions": "Remain required and unchanged",
+    "native_claim": "Prepared and compiled only;no actual native no-effect outcome claimed locally"
+  },
+  "red_green": [
+    {
+      "proof": "All five actual old guards admit ignored namespace condition200",
+      "exit_code": 1,
+      "reference": ".private/freightctl-f412-namespace-condition-red.log"
+    },
+    {
+      "proof": "Affected DAV guards reject400 and supported profiles remain admitted",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f412-namespace-condition-focused.log"
+    },
+    {
+      "proof": "Native HTTPS API and stock-curl compile only",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f412-native-compile.log"
+    },
+    {
+      "proof": "Affected tagged vet",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f412-vet.log"
+    },
+    {
+      "proof": "Architecture",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f412-architecture.log"
+    },
+    {
+      "proof": "Four changed/new Go files formatted",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f412-format.log"
+    }
+  ],
+  "owed": [
+    "Actual native five-method HTTPS unchanged namespace/custody and zero actor transition/receipt/acceptance/execution outcomes",
+    "Actual stock curl unsupported-condition400 and unchanged moved member bytes/ID",
+    "All affected original/final-source runtime/security and remaining mandatory baseline/AX/readiness gates"
+  ],
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "aac1f13ccd38f1d38c919f6b15dd943dfa4772f4f4f8b5bd3b8add77c905b4ac",
+      "bytes": 10336
+    },
+    {
+      "reference": "docs/protocols/webdav-read-profile.md",
+      "sha256": "8d7e8daa996b301bf8242c99723f49ac66ac8b305c3578eae4368fa491e4efdd",
+      "bytes": 21882
+    },
+    {
+      "reference": "docs/qualification/parity.json",
+      "sha256": "5f78af8ef46f28a7b0b2f329032a45e1570ef51331a3221667ce1cdd5476aa25",
+      "bytes": 153442
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "624efa6517f21700f1f73d22af3d409734fad72977f7c7d117abdb57b1a4ffd5",
+      "bytes": 620155
+    },
+    {
+      "reference": "internal/api/webdav.go",
+      "sha256": "69caf93638398925112eefaf8b5356540690505a0f543dcce29f8d274b45c3b7",
+      "bytes": 10927
+    },
+    {
+      "reference": "internal/api/webdav_namespace_conflict_integration_test.go",
+      "sha256": "5ac1c7f807cf768b5b25ddf7d791174ea1afc1a635f90d4c9035cae87c82d778",
+      "bytes": 3782
+    },
+    {
+      "reference": "internal/api/webdav_namespace_conflict_test.go",
+      "sha256": "7d7465838aa9eb70f0bd83c4403c913c2649c3b8930d03203ffdcb59734b21d8",
+      "bytes": 1362
+    },
+    {
+      "reference": "internal/api/webdav_stock_integration_test.go",
+      "sha256": "61804652020a034ccdef82b375d9f0d9ea649a9ab1ca0a5a976de0126a6a5d30",
+      "bytes": 26887
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f412-namespace-condition-red.log",
+      "sha256": "c1b0401fac6a4d37aba3bdb7969d4dd574cbc42fc25bf652aabc55ee8d1bed58",
+      "bytes": 1174
+    },
+    {
+      "reference": ".private/freightctl-f412-namespace-condition-focused.log",
+      "sha256": "f4668439dbd2d6eb6b50f5e658429b36fadc8a56451ebcd266959f2f6e354019",
+      "bytes": 55
+    },
+    {
+      "reference": ".private/freightctl-f412-native-compile.log",
+      "sha256": "d66002f932168b4881e64f6d941350dcb49d2b4f600595225d96694e7ce4b32e",
+      "bytes": 73
+    },
+    {
+      "reference": ".private/freightctl-f412-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f412-architecture.log",
+      "sha256": "3bf795794d09efe9962702776304da6368f4c33d4212eeb5145b77f2c0398e9c",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f412-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f412-parity-preservation.json",
+      "sha256": "8af327ea66fdb536ea47411c32f5b8540b0ca9e41a6e962228bbddabc00ff19c",
+      "bytes": 225
+    }
+  ],
+  "safety": {
+    "all_83_parity_ids_states_preserved": true,
+    "local_inference": false,
+    "local_postgresql_or_chrome": false,
+    "local_scanner": false,
+    "retained_database_changed": false,
+    "resource_or_permission_budgets_changed": false,
+    "publication_or_deployment": false,
+    "original_runtime_runs_cancelled_or_rerun": false
+  }
+}

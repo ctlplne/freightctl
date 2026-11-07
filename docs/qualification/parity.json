@@ -1148,7 +1148,11 @@
         "docs/qualification/evidence/F381-dav-file-copy.json",
         "docs/qualification/evidence/F392-dav-conditional-file-replacement.json",
         "docs/qualification/evidence/F397-dav-file-move-overwrite.json",
-        "docs/qualification/evidence/F400-dav-copy-overwrite.json"
+        "docs/qualification/evidence/F400-dav-copy-overwrite.json",
+        "docs/qualification/evidence/F405-dav-namespace-properties.json",
+        "docs/qualification/evidence/F408-explicit-namespace-property-read.json",
+        "docs/qualification/evidence/F409-dav-collection-move.json",
+        "docs/qualification/evidence/F412-dav-namespace-condition-refusal.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison",
@@ -1157,7 +1161,8 @@
         "F381 exact-revision file COPY and shared API/CLI typed command are implemented;native role/path-mode,verified custody,capacity,independent mapping,original-key history,stock curl and CLI runtime proofs are prepared/owed. Collections,replacement,properties,locking,outbound stock server and full parity remain open.",
         "F392 conditional file PUT replacement is implemented with old custody ID/hash,namespace revision and held-intake guards. Prepared original ARM/x86 PostgreSQL/race/stock curl/release/current-policy/no-effects outcomes remain owed. Collection mutations,properties,locks,outbound and independent DAV application profiles remain unqualified.",
         "F397 explicit file MOVE overwrite is implemented through current target authority/availability and atomic ordinary rename. Prepared original ARM/x86 PostgreSQL/stock curl and exact custody/receipt/no-effect runtime remains owed. COPY overwrite,collections,properties,locks,outbound and independent DAV application/full-row qualification remain open.",
-        "F400 explicit file COPY overwrite and shared API/CLI replace+target-revision command are implemented with additional management/current target authority,verified source,atomic removal/publication and preserved quota. Original native API/CLI/stock curl/rollback/history/current-policy/no-effect outcomes remain owed. Collections,properties,locks,outbound,independent DAV applications and full parity remain open."
+        "F400 explicit file COPY overwrite and shared API/CLI replace+target-revision command are implemented with additional management/current target authority,verified source,atomic removal/publication and preserved quota. Original native API/CLI/stock curl/rollback/history/current-policy/no-effect outcomes remain owed. Collections,properties,locks,outbound,independent DAV applications and full parity remain open.",
+        "F405/F408 inert properties and explicit API/CLI read,F409 complete non-overwriting collection MOVE and F412 recognized-condition refusal extend the declared partial profile. Focused/static proof is retained;new original/final-source native interface,transaction/rollback/stock-client/CLI outcomes remain owed. Collection DELETE/COPY/overwrite,locks,outbound stock DAV server,independent applications,licensed comparison and whole-row qualification remain open."
       ]
     },
     {

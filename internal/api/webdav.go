@@ -34,6 +34,17 @@ func prepareDAVRequest(w http.ResponseWriter, r *http.Request) bool {
 		fail(w, 400, "invalid_dav_virtual_path")
 		return false
 	}
+	// A known metadata condition must never be silently discarded by an
+	// adapter that implements only byte or absence conditions.
+	switch r.Method {
+	case http.MethodPut, "MKCOL", "MOVE", "COPY", http.MethodDelete:
+		if r.Method != "MOVE" || !strings.HasSuffix(r.URL.Path, "/") {
+			if _, present, _ := tusHeader(r, "X-Freightctl-Namespace-Revision"); present {
+				fail(w, 400, "unsupported_dav_namespace_condition")
+				return false
+			}
+		}
+	}
 	if r.Method == http.MethodPut {
 		return davCreateInput(w, r)
 	}
