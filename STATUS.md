@@ -40,7 +40,8 @@ The four failed jobs remain mandatory:
 
 Local verified/prepared batch after the pushed source:
 
-- F335 uses measured streamed build-file hashes/bytes on GitHub while preserving
+- F335/F343 use measured streamed build-file hashes/bytes and platform aggregate
+  lifetime on GitHub while preserving
   local allowances,complete inventories,exact-input/tamper and security checks.
   The durable [CI plan](docs/qualification/github-actions-plan.md) records it.
 - F337 protected-DSN reference contract,F339 exact copy JSON media type and F341

@@ -101,6 +101,13 @@ changes trigger every consuming workflow. The local retained-handoff upgrade
 fixture keeps its separate local binary allowance. Measurements establish file
 identity and size; only native runtime proof qualifies product behavior.
 
+[F343](evidence/F343-source-ci-lifetime.json) removes the new GitHub source
+fixture's whole-journey three-minute timer. Its owning parent still stops only
+its exact child;per-session/idle/contact limits and stop/kill deadlines remain.
+Local lifetime allowances and explicit parent operation deadlines/cancellation
+are preserved. An aggregate wrapper cannot turn slow runner preparation into a
+product failure or turn a cancelled original run into qualifying evidence.
+
 F075 removes scanner RAM/CPU/process and feed/archive-size ceilings. Its task-owned
 ext4 scratch uses actual free runner disk, with the same exact mount/loop ownership,
 non-execution options and cleanup checks. An actual runner exhaustion stays visible

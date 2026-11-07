@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "id": "F343",
+  "observed_at": "2026-11-07",
+  "base_candidate": "28d74d948051c6750c6a0a2622419c8e0e4b4946",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "authority": "S004 removes arbitrary GitHub aggregate deadlines;all purposeful local/product/security/child lifecycle bounds remain.",
+  "changed": "F343 applies S004 to the new GitHub-only FTPS source aggregate context:remove its arbitrary three-minute whole-journey timer on GitHub only. Keep local three-minute allowance,explicit owner/parent cancellation and inherited parent operation deadlines. Existing session30s/idle5s,connection/writer/contact16 bounds and exact-child stop8s/kill5s remain. Actual context deadline/cancellation regression is red under the old constructor and green after policy separation;source configuration/database/shutdown guards,nine Python policy/lifecycle cases,vet,architecture and Linux compilation pass. No source/FTPS runtime or security pass is inferred;original native qualification remains owed.",
+  "red": {
+    "proofs": [
+      ".private/freightctl-f343-context-red.log",
+      ".private/freightctl-f343-context-final-test-red.log"
+    ],
+    "observation": "Actual extracted old constructor creates its own GitHub whole-journey deadline. Final exact test also fails under a private old-source overlay;real working source/history is not rewritten."
+  },
+  "green": [
+    "GitHub child has no additional deadline,explicit stop cancels it,and an actual parent operation deadline/cancellation remains exact.",
+    "Local three-minute allowance remains;all source database/configuration/shutdown guards and nine Python policy/owned-child lifecycle cases pass.",
+    "Go vet,architecture and Linux x86 compilation observed terminal exit0."
+  ],
+  "preserved": [
+    "Run still refuses outside exact GitHub Linux workspace/fresh private estate.",
+    "No session/idle/connection/writer/contact16 or exact-child stop/kill bound changes.",
+    "No original runtime cancelled,rerun,substituted or relabelled;no security finding/protocol/receipt assertion waived."
+  ],
+  "source_files": [
+    {
+      "reference": "scripts/peers/ftps-source/context.go",
+      "sha256": "7aa22c1443a928eb242b49d5cd2002bd6b77ddc7af62bb93f7b892cce4c0bce1",
+      "bytes": 429
+    },
+    {
+      "reference": "scripts/peers/ftps-source/context_test.go",
+      "sha256": "b6705f2224560d77ed2cc913f9cfa5cb3079697ff26e6831b459b281c57699ce",
+      "bytes": 1369
+    },
+    {
+      "reference": "scripts/peers/ftps-source/main.go",
+      "sha256": "523834cc8a78e3d3f45ed2fbc128e76c13b3677f8acf6c500ef05f6ec2e33f9f",
+      "bytes": 7857
+    },
+    {
+      "reference": "docs/qualification/github-actions-plan.md",
+      "sha256": "fd3a9c0232600b4275f057f49ca938976e8d8f712a6302b4d71611fbcf0ed1aa",
+      "bytes": 23247
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "ebe50e3ecf8eb37f5085af37e09d27bc4e902854b27f0fbe9d2f0c038c2c3308",
+      "bytes": 447875
+    },
+    {
+      "reference": "STATUS.md",
+      "sha256": "caf40a5a707358a85ff03c753aabf8836f7c78f019804b489949c06626d54a2e",
+      "bytes": 3852
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f343-context-red.log",
+      "sha256": "537cd20ea1147120be7b6f5134dd641cd9f63f05b734e26dd2e6f31de9eb004a",
+      "bytes": 244
+    },
+    {
+      "reference": ".private/freightctl-f343-context-final-test-red.log",
+      "sha256": "b26bd2fb821758fe831212ee5f4e9f1318b3e49a01a4543c362046fe8a3520e8",
+      "bytes": 244
+    },
+    {
+      "reference": ".private/freightctl-f343-context-green.log",
+      "sha256": "62beea9aee358a28f70486fd103e7a80b3d8e88fbbc315f5bf61abd59b068ccd",
+      "bytes": 68
+    },
+    {
+      "reference": ".private/freightctl-f343-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f343-linux-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f343-policy-lifecycle.log",
+      "sha256": "c9f2c1b54e73f254402bb1a5b42d7d0ba1341d1dcb01aa3cc77c43238566aaf5",
+      "bytes": 107
+    },
+    {
+      "reference": ".private/freightctl-f343-architecture.log",
+      "sha256": "fa99a7467914775b6e6fb50c5b0a2c85b3211135c3486cec28c42811919aeece",
+      "bytes": 66
+    }
+  ],
+  "owed": [
+    "Original native source/operator/FTPS consent replay on final source and every remaining F340 failure.",
+    "All final-source baseline/AX/FINISH outcomes."
+  ],
+  "resources": "Pure context/protected-file/static tests only,oneCPU/192MiB;no local runtime server,PostgreSQL,Chrome,scanner or inference."
+}
