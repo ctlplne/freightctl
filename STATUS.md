@@ -7,13 +7,16 @@ Current decisions and exact evidence are in
 [remaining.json](docs/qualification/remaining.json) and
 [artifact-exchange.json](docs/qualification/artifact-exchange.json).
 
-Current pushed candidate: `e6084081e986c04ea19e204b79908decdcdbd09c`.
-F380 records 17 original workflows,including independent FTPS receiver profiles.
-Current source/security checks and declared FTPS/JSON profiles have passed;full
-terminal binding remains owed. F382 preserves the unresolved parser fuzz deadline;receive audit-login,
-stock intake-routing and DAV DELETE test-contract failures remain red. Independent
-receiver selected-seccomp failures remain red. Preserve original handles;repair
-without weakening gates or budgets. Earlier terminal9b3ba92 remains in F379.
+Current pushed/terminal candidate: `e6084081e986c04ea19e204b79908decdcdbd09c`.
+F385 records all17 original workflows/39 terminal jobs:30pass,9fail. No original
+run was cancelled,rerun or substituted. Canonical participant SFTP with independent
+readback,JSON/Chrome and both FTPS workflow variants pass at this source. Core/
+source/history security and both image scans pass. Four jobs fail the new DELETE
+proof's403-versus-established404 expectation;receive audit pagination,stock
+intake-routing,fuzz deadline and both x86 receiver SIGSYS profiles remain red.
+Official Go75804 confirms the relevant coordinator race and corrected1.27.3 code;
+it can hide crash reports. A consistent toolchain update and original native
+replay remain owed. F383/F384 repairs and later COPY also await actual replay.
 
 Earlier FTPS operator jobs failed while choosing the source connection. F369 fixes
 the browser's rejection of the actual 73-byte participant name by matching the
@@ -68,9 +71,9 @@ commands. It verifies custody,requires source read and destination write,and
 publishes an independent mapping. Focused/static checks pass;prepared native
 API/CLI/stock curl and security proofs remain owed.
 
-Next: triage the new security failure immediately and repair original native
-failures,continuing independent implementation while current originals run.
-Push the next verified batch only after required originals are terminal. Repair original failures
+Next: push the verified owner-only batch now that required originals are
+terminal. Apply the corrected official toolchain consistently,repair original
+native failures and continue implementation while new CI runs. Repair original failures
 and finish every mandatory final-source baseline/AX gate. F026 stays manual/
 owner-deferred. Trust Control, inference, provider/licensed peers, reference
 estate, owner license text and adoption inputs remain owed.
