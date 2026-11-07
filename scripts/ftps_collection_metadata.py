@@ -165,8 +165,9 @@ def validate(private, mode, steps, inventory):
         and destination['ca_sha256'] == hashlib.sha256(read(private/'cert.pem', 1 << 20)).hexdigest()
         and destination['password_sha256'] == hashlib.sha256(read(directory/'source-password', 256)).hexdigest(),
         'collection metadata original credential references differ')
+    typed_connection = dispatch.expected_connection_rotation(c, request, 1)
     require(type(request['expected_version']) is int and request['expected_version'] == 0
-        and same(c, dispatch.expected_connection_rotation(c, request, 1))
+        and same(c, typed_connection)
         and c['ftps']['mode'] == mode, 'collection metadata original connection differs')
     expected = definition(c)
     require(same(load(directory/'workflow-preview.json'), {'definition': expected})
@@ -196,7 +197,10 @@ def validate(private, mode, steps, inventory):
         +b'\nIdempotency-Key: '+(prefix+'start').encode()+b'\nContent-Type: application/json\n',
         'collection metadata HTTPS original identity/key differs')
     d = p['definition']
-    wanted = {'schema_version': 1, 'workflow': ref(approved), 'source': expected['source'], 'source_connection': c,
+    # Registration/replay receipts pass through JSONB,which can reorder keys.
+    # Reconstruct the independently checked Go field order before hashing the
+    # collection definition;never hash an arbitrary receipt serialization.
+    wanted = {'schema_version': 1, 'workflow': ref(approved), 'source': expected['source'], 'source_connection': typed_connection,
         'source_identity': hashlib.sha256((c['id']+':'+c['directory']).encode()).hexdigest(),
         'authority_revision': identity['authority_revision'], 'storage_id': d.get('storage_id'),
         'namespace_root': '/', 'timeout_seconds': 120, 'effects': []}

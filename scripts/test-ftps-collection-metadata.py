@@ -129,6 +129,27 @@ class CollectionMetadataContracts(unittest.TestCase):
             self.assertNotIn('private-evidence-canary', json.dumps(result))
             self.assertNotIn(str(self.private), json.dumps(result))
 
+    def test_reordered_jsonb_receipts_keep_the_original_typed_definition_hash(self):
+        def reorder(value):
+            if type(value) is dict:
+                return {key: reorder(value[key]) for key in reversed(value)}
+            if type(value) is list:
+                return [reorder(item) for item in value]
+            return value
+        for mode in ('explicit', 'implicit'):
+            self.fixture(mode)
+            original_hash = self.values['collection-preview']['definition_hash']
+            self.values = reorder(self.values)
+            self.inputs = reorder(self.inputs)
+            result = self.validate()
+            self.assertEqual(self.values['collection-preview']['definition_hash'], original_hash)
+            self.assertEqual(result['state'], 'passed')
+            self.assertEqual(result['commands'], 16)
+            self.assertEqual(result['saved_key_replays'], 5)
+            self.assertEqual(result['source_contacts'], 0)
+            self.assertFalse(result['bytes_qualified'])
+            self.assertFalse(result['browser_qualified'])
+
     def test_rehashed_detached_source_and_unknown_effect_authority_are_refused(self):
         self.fixture()
         original = copy.deepcopy(self.values)

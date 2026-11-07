@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "id": "F285",
+  "observed_at": "2026-11-07",
+  "base_candidate": "75556d4ba564321f26ab90ac902eb435bb0807b0",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Typed collection evidence hash repaired;original native replay owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "0e0b149f1098fbb96f856493da8bb6babe47837269c14f0ca225a710ee147664",
+      "bytes": 3850
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "2041ca0e88d87e11a56338dc1a08769a64fafd62578714da6d4183f24bc40996",
+      "bytes": 389018
+    },
+    {
+      "reference": "scripts/ftps_collection_metadata.py",
+      "sha256": "937a409abe770ac30b7626b749b4e1080db1c66bcc1a325a9eafefb54f9b02f5",
+      "bytes": 20520
+    },
+    {
+      "reference": "scripts/test-ftps-collection-metadata.py",
+      "sha256": "0ac3ae642ebc02a0c732eeeeda4dbbfab1238602e60e6ca0661d234db270fe54",
+      "bytes": 17866
+    }
+  ],
+  "red": {
+    "candidate": "33ad447564cb0be33bc04fa8d60e9f0adaf0c2b4",
+    "run": 42361009342,
+    "job": 128369206942,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128369206942",
+    "observation": "Original recipient-encrypted FTPS consent metadata exercise reports source-preview/original-output-contract after its collection browser reached complete. New recursively reordered receipt/input regression fails at the exact source-preview hash guard locally.",
+    "cause": "Receipt resources use stored JSONB serialization;collection digest uses Go typed struct order. Hashing a raw connection receipt preserves its unrelated JSON key order."
+  },
+  "changed": [
+    "Reuse existing independent expected_connection_rotation reconstruction,already checked against every original connection field,as the source_connection in exact collection hash reconstruction.",
+    "Keep original exact semantic equality,full canonical definition hash,16 command closure,input/output digests,5 saved-key replays,zero-contact spy and all no-acquisition/no-byte/browser-qualification assertions. Never sort/hash arbitrary raw receipt JSON as if it were typed Go meaning.",
+    "Shorten STATUS only;all original records and historical failures remain in ledgers/manifests/commits."
+  ],
+  "green": [
+    "New both-mode recursively reordered receipt/input regression turns observed source-preview red to green with the original definition hash unchanged.",
+    "All10 focused collection metadata synthetic methods pass,including all prior detached/rehashed/unknown-effect/receipt/credential/privacy refusals.",
+    "Existing actual Go canonical four-profile FTPS metadata unit passes;affected Python syntax/diff checks pass. No PostgreSQL/TLS/browser runtime performed."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f285-go-wire-green.log",
+      "sha256": "f983974526c1707eabbfe88fad2d343b5e3b2ecb01cabd207b8988432bd85cdd",
+      "bytes": 60
+    },
+    {
+      "reference": ".private/freightctl-f285-jsonb-red.log",
+      "sha256": "927f22ca506950012dfe67d17fcb40a3b292d8db073a0a3458e8dab55a458a79",
+      "bytes": 1958
+    },
+    {
+      "reference": ".private/freightctl-f285-metadata-green.log",
+      "sha256": "abb1a47a4f44302a25663b7dcbc27d76504bee0a20fc4c4b0db24bec527deb08",
+      "bytes": 109
+    },
+    {
+      "reference": ".private/freightctl-f285-syntax.log",
+      "sha256": "23b9f0900302aed0810080dedfaddb7f6db24fef3d0a46a329325ba3e5d3669f",
+      "bytes": 42
+    }
+  ],
+  "owed": [
+    "Actual original registered FTPS consent metadata,operator/browser,stock receiver and full journey replay.",
+    "All remaining original native/browser/product and final baseline/AX/FINISH outcomes."
+  ],
+  "resources": "OneCPU/192MiB pure Go wire and lightweight Python file/synthetic tests only. No model,PostgreSQL,Chrome,scanner or heavy peer. Local limits,retained35/source60 unchanged."
+}
