@@ -3,7 +3,7 @@
   "info": {
     "title": "freightctl governed record projection review",
     "version": "1",
-    "description": "Governed root-admin record processing review and durable intent/attempt/held-output lifecycle. Runtime PostgreSQL,served clients,process-death recovery and full typed-workflow/browser/MCP acceptance remain owed. Structural schemas do not establish live authority or byte acceptance."
+    "description": "Governed root-admin record processing review and durable intent/attempt/held-output lifecycle. Runtime PostgreSQL,served clients,process-death recovery and full typed-workflow/browser/MCP acceptance remain owed. Structural schemas do not establish live authority or byte acceptance. Schema2 scoped-record-projection-v1 requires read/write/check_run and the appropriate workflow action grant;it supplies no root administration,policy-change,release or delivery grant."
   },
   "paths": {
     "/v1/tenants/{tenant}/partners/{partner}/checks/{file}/projection-preview": {
@@ -691,6 +691,14 @@
               "columns"
             ],
             "additionalProperties": false
+          },
+          "profile": {
+            "type": "string",
+            "enum": [
+              "held-record-projection-v1",
+              "scoped-record-projection-v1"
+            ],
+            "description": "Omitted selects historical root administration. Scoped processing uses the existing manage/approve/execute workflow grants and the current actor namespace."
           }
         },
         "required": [
@@ -2679,11 +2687,17 @@
         "properties": {
           "schema_version": {
             "type": "integer",
-            "const": 1
+            "enum": [
+              1,
+              2
+            ]
           },
           "profile": {
             "type": "string",
-            "const": "held-record-projection-v1"
+            "enum": [
+              "held-record-projection-v1",
+              "scoped-record-projection-v1"
+            ]
           },
           "context": {
             "type": "object",
@@ -3200,7 +3214,29 @@
           "projection",
           "output_contract_hash"
         ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "oneOf": [
+          {
+            "properties": {
+              "schema_version": {
+                "const": 1
+              },
+              "profile": {
+                "const": "held-record-projection-v1"
+              }
+            }
+          },
+          {
+            "properties": {
+              "schema_version": {
+                "const": 2
+              },
+              "profile": {
+                "const": "scoped-record-projection-v1"
+              }
+            }
+          }
+        ]
       },
       "ProjectionStart": {
         "type": "object",

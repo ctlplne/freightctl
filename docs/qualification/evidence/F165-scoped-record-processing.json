@@ -1,0 +1,181 @@
+{
+  "schema_version": 1,
+  "observed_at": "2026-11-06",
+  "candidate_parent": "3bbd07cd6da1ea16c8d996cfd6bd7cdac26e2034",
+  "qualification_claim": false,
+  "contract": "docs/protocols/record-projection.md",
+  "id": "F165",
+  "state": "Scoped workflow-role processing profile implemented;focused contracts pass;native SQL/namespace/action/replay proof remains owed",
+  "source_files": [
+    {
+      "reference": ".github/workflows/document-containers.yml",
+      "sha256": "70f950481b6e40129dd76a00659f9b98b17e530d513249cd71c465406bd2ca91",
+      "bytes": 3879
+    },
+    {
+      "reference": "STATUS.md",
+      "sha256": "12c48cd4abd88e93e02519fa4f5ca091deb9bcedd4627f41672fafd60ce024c7",
+      "bytes": 4244
+    },
+    {
+      "reference": "docs/api/record-projection.openapi.json",
+      "sha256": "f1a893d8896d7d52a7c410ba4963ee561723582d554dab2dbf4a2c5d472d4000",
+      "bytes": 111218
+    },
+    {
+      "reference": "docs/protocols/artifact-exchange-mcp.md",
+      "sha256": "9ce5d8d34a5bfbbf3e3557ca719b2e267f84a0de992482b6b0f02bc4032b6927",
+      "bytes": 13883
+    },
+    {
+      "reference": "docs/protocols/record-projection.md",
+      "sha256": "aaa66736b3f68f3c98f336b948e5bf6f57dc421dacc0da2f9364a6ed8fb58bc0",
+      "bytes": 19316
+    },
+    {
+      "reference": "internal/checks/projection_intents.go",
+      "sha256": "9fb8749b0e0f4ecf0ece15419ee45e828b82a451cd2de32b3a6d404447c52bb0",
+      "bytes": 12016
+    },
+    {
+      "reference": "internal/checks/projection_review.go",
+      "sha256": "8d3809b848ddf9514dbc7a42332bf9c581e48ea1add8eb07e3c1b02e0f20f869",
+      "bytes": 15365
+    },
+    {
+      "reference": "internal/checks/projection_scope.go",
+      "sha256": "e040d5c9daed899ec47c5d4dc817ae674e7e53f4a3d85f32e3f3a57651ac9081",
+      "bytes": 3917
+    },
+    {
+      "reference": "internal/checks/projection_scope_integration_test.go",
+      "sha256": "49dad7e0951df0dd21f380e870600bdccead5fa449f0f5197e8765286f08e44a",
+      "bytes": 5460
+    },
+    {
+      "reference": "internal/checks/projection_scope_test.go",
+      "sha256": "bf9a6b2c221d44875f51475b99e96037a1dd777ba8e0982143ddd6cdaa4c1b1e",
+      "bytes": 3640
+    },
+    {
+      "reference": "internal/checks/projection_worker.go",
+      "sha256": "0f3854c5e6a221c0ff9314ab6fd2a8c6b909a718124d9dc7eecb9327c41d60e5",
+      "bytes": 10194
+    },
+    {
+      "reference": "internal/checks/rechecks.go",
+      "sha256": "e271b8e34f2163591547eef27313a99641a9a9030138221c915ee4339694f2d2",
+      "bytes": 22751
+    },
+    {
+      "reference": "internal/store/052_scoped_projections.sql",
+      "sha256": "f9582fbd7a627ad0cb5887ae3f49d986980d00432b5c6e91c29a68547f5896c7",
+      "bytes": 17899
+    },
+    {
+      "reference": "internal/store/store.go",
+      "sha256": "af7ea3497804c2d05483aa95f299e99e01c2d0af8842328ebbeafca387341b0c",
+      "bytes": 26708
+    },
+    {
+      "reference": "scripts/metadata_contract.py",
+      "sha256": "9c23aaa7fc6ca0f66105aae0f4c87a5a0b525b913606eb7b519b5118ab41ed41",
+      "bytes": 3298
+    },
+    {
+      "reference": "scripts/test-ci-metadata-summary.py",
+      "sha256": "2db8c4af8178d74d9b936458b5ccf1a1fcdd38ea6125df73a378543aed41b40b",
+      "bytes": 6240
+    }
+  ],
+  "changed": [
+    "Schema2 scoped-record-projection-v1 uses existing read/write/check_run and per-action workflow_manage/approve/execute grants. No new permission,automatic grant,root administration,policy change,release or forwarding authority.",
+    "Owned exact source/protection/output bindings stay mandatory. Target parent/entry checks resolve logical paths inside the actor root;held output keeps logical target and namespace binding.",
+    "Original root profile schema1/hashes/full requirements remain intact. Existing-operation and original receipt reads enforce stored profile/current namespace before disclosing private plans;current source proof is not falsely inferred from old receipts.",
+    "Append-only52 changes scoped actor/action guards,including cancellation/failure,and preserves51/earlier migrations. Inventory73/72 and all historical profiles remain explicit;retained35 unchanged."
+  ],
+  "red": {
+    "reference": ".private/freightctl-f165-scope-red.log",
+    "observed": "Required scoped authority/profile/revalidation tests failed compilation because no scoped profile existed."
+  },
+  "green": {
+    "reference": ".private/freightctl-f165-replay-green.log",
+    "observed": "Scoped action rights,missing grant/unknown profile/legacy root refusal,root/schema pinning,durable decoding and changed-namespace receipt refusal pass alongside affected projection/MCP contracts."
+  },
+  "checks": [
+    {
+      "reference": ".private/freightctl-f165-scope-red.log",
+      "sha256": "7b14026dabe9cbf84a228e833f431c8256df503d36f53bcb3af938e038a655c1",
+      "bytes": 1120
+    },
+    {
+      "reference": ".private/freightctl-f165-scope-first.log",
+      "sha256": "9ea42f08592903cd8ad7482fcb2384d51fb68168f1431632882cefbeb8c1eebb",
+      "bytes": 58
+    },
+    {
+      "reference": ".private/freightctl-f165-scope-green.log",
+      "sha256": "55ba6f6bfbfae0ec5320f720ec2a232193eda5cc31607e6e21610c63ff91782f",
+      "bytes": 58
+    },
+    {
+      "reference": ".private/freightctl-f165-native-compile.log",
+      "sha256": "e66629dc9362aa16d3a20c9e4e62cdb704aa507779d9f6c3c1adec8b4b48df50",
+      "bytes": 529
+    },
+    {
+      "reference": ".private/freightctl-f165-native-compile-fixed.log",
+      "sha256": "295d2e55ee04c91f4b27add370cc36206138b15acdc960bb31853482d5166074",
+      "bytes": 303
+    },
+    {
+      "reference": ".private/freightctl-f165-final-green.log",
+      "sha256": "357b4c79c0f9fd702e5e58d359b321633312033f8a3c3e90894167574b99e012",
+      "bytes": 113
+    },
+    {
+      "reference": ".private/freightctl-f165-replay-green.log",
+      "sha256": "c587913e0ca89946d38c4a8615411842774948e97c7a2c6ebfd944e35e6a4a76",
+      "bytes": 113
+    },
+    {
+      "reference": ".private/freightctl-f165-final-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f165-final-architecture.log",
+      "sha256": "0e7475af0f7d12441d02f0d834ce8f915c8f6ef30b6a1ea63f909d84cbce4145",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f165-metadata-contract.log",
+      "sha256": "2d014bb427120fb1a5014d7499096989061fd0fdf40acb471c2e2667de60e71e",
+      "bytes": 103
+    },
+    {
+      "reference": ".private/freightctl-f165-metadata-summary.log",
+      "sha256": "aeb8eab8eeb87c97d150804b54d470279b25d480780ccf79e9464381ccfc401a",
+      "bytes": 105
+    },
+    {
+      "reference": ".private/freightctl-f165-actionlint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f165-records.log",
+      "sha256": "826009b37d6c8254924b7fd1ee12981059544175f2c890ad4186b88b41b583b4",
+      "bytes": 106
+    }
+  ],
+  "preserved_preparation_failure": "Native compile found a fixture mode pointer with int instead of uint32;fixed the fixture type without weakening assertions. This was not a runtime failure or pass.",
+  "prepared_native": [
+    "TestScopedProjectionActualOwnedInputNamespaceHeldOutputAndNoRelease:real PostgreSQL/storage,confined actor without admin/intake_manage/check_release/deliver,owned input/foreign-owner and legacy-root refusal,logical target resolves to its actual parent,held output has no release/read grant,revoked execute blocks original work receipt."
+  ],
+  "owed": [
+    "Schema52 SQL syntax/runtime/actor/action/namespace/forced-RLS and stale namespace/role/policy/lease/exhaustion/restore proofs. Local compilation/metadata stand-ins do not run PostgreSQL.",
+    "Prepared confined-actor runtime and all original review/protected-format/ordinary-client/process-death/fairness/isolation evidence.",
+    "Shared typed workflow adapter,independent approver/worker delegation,browser,discovery/operator recovery and all full baseline/AX/FINISH work."
+  ]
+}

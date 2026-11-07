@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "observed_at": "2026-11-06",
+  "candidate_parent": "3bbd07cd6da1ea16c8d996cfd6bd7cdac26e2034",
+  "qualification_claim": false,
+  "contract": "docs/protocols/record-projection.md",
+  "id": "F167",
+  "state": "Five scoped metadata MCP processing controls implemented;fixed catalog/privacy/schema checks pass;stock SDK/HTTPS/runtime owed",
+  "source_files": [
+    {
+      "reference": "docs/api/record-projection.openapi.json",
+      "sha256": "f1a893d8896d7d52a7c410ba4963ee561723582d554dab2dbf4a2c5d472d4000",
+      "bytes": 111218
+    },
+    {
+      "reference": "docs/protocols/artifact-exchange-mcp.md",
+      "sha256": "9ce5d8d34a5bfbbf3e3557ca719b2e267f84a0de992482b6b0f02bc4032b6927",
+      "bytes": 13883
+    },
+    {
+      "reference": "internal/api/mcp-tools.json",
+      "sha256": "beb7101507fa26281d1403572a1b9c85ab96f3a9ae99837dfb3f75051d2ad45e",
+      "bytes": 87062
+    },
+    {
+      "reference": "internal/api/mcp.go",
+      "sha256": "9d29fcd9ca04e5f79a8e009144f8b3ee9614094eaafa71d72d3b776a71393680",
+      "bytes": 11291
+    },
+    {
+      "reference": "internal/api/mcp_integration_test.go",
+      "sha256": "c91fc7ac7da8f13f55a9c5832ca0faa2025f88a952c2003069df776aa8d25025",
+      "bytes": 36325
+    },
+    {
+      "reference": "internal/api/mcp_projections.go",
+      "sha256": "8f0d6ee1da24c6691cb3b1950e3de5ab3f4b4694a5c4127527d791790f02257f",
+      "bytes": 6640
+    },
+    {
+      "reference": "internal/api/mcp_projections_integration_test.go",
+      "sha256": "6edc89a9610292101f3cf8243f4c7fac00711b09d743a14f23296ff1668284e3",
+      "bytes": 6917
+    },
+    {
+      "reference": "internal/api/mcp_projections_test.go",
+      "sha256": "83f0dcb9d8bbf1239928b66b28ddb4e6150015af676964bebdcadae845ea9681",
+      "bytes": 5694
+    },
+    {
+      "reference": "internal/api/mcp_test.go",
+      "sha256": "05573092897661d7044cc6867424b88ffe5520fa3e97ca8a090396a26b8d9d57",
+      "bytes": 19539
+    },
+    {
+      "reference": "internal/checks/projection_intents.go",
+      "sha256": "9fb8749b0e0f4ecf0ece15419ee45e828b82a451cd2de32b3a6d404447c52bb0",
+      "bytes": 12016
+    }
+  ],
+  "tools": [
+    "preview_record_projection",
+    "propose_record_projection",
+    "inspect_record_projection",
+    "start_record_projection",
+    "work_record_projection"
+  ],
+  "catalog": {
+    "tools": 31,
+    "implementation": "exchange-tools-v13",
+    "protocol": "2026-07-28",
+    "deadline_seconds": 10
+  },
+  "changed": [
+    "Tools require explicit scoped profile and ordinary workflow action rights. No approval/release/recipient/shell/bytes/content/root/actor override enters the fixed schemas.",
+    "Preview exposes exact artifact/policy/mapping facts and opaque complete-review hash. Propose binds the same source/options/hash,uses the normal durable staging transaction,and recovers an original key before revalidating stale source.",
+    "Replies strip source/namespace paths,reasons,full definitions,staging IDs and payloads;historical command receipts say current:not-checked. Held acceptance never implies release,forwarding or receiver processing.",
+    "MCP reuses ordinary service action/namespace/idempotency/fencing;independent operation does not require configuring an exchange receive adapter. Existing deadline/cancellation and transport defenses stay enforced."
+  ],
+  "red": {
+    "reference": ".private/freightctl-f167-mcp-red.log",
+    "observed": "Required five scoped tool contracts failed because the fixed catalog contained none."
+  },
+  "green": {
+    "reference": ".private/freightctl-f165-replay-green.log",
+    "observed": "Fixed catalog cardinality31,existing/new schema vectors,unknown authority/payload/legacy-profile refusal,operation hints,private sentinel redaction,corrupt definition refusal and historical/current separation pass."
+  },
+  "checks": [
+    {
+      "reference": ".private/freightctl-f167-mcp-red.log",
+      "sha256": "ec77e823f1addd9349012c633f4faf5566203cc061b401e751fe83aaace1c4e5",
+      "bytes": 227
+    },
+    {
+      "reference": ".private/freightctl-f167-mcp-first.log",
+      "sha256": "cc336fb6305f078263fa7b387089516d4bb62b0ec5f974848cd812ecc415be10",
+      "bytes": 327
+    },
+    {
+      "reference": ".private/freightctl-f167-mcp-green.log",
+      "sha256": "ca5e36c470df932805aec944898d50f3d2fbb99dcf38c96cbfca4bdbf69a6e13",
+      "bytes": 113
+    },
+    {
+      "reference": ".private/freightctl-f167-privacy-green.log",
+      "sha256": "d1b5ab03756cc6a370bf8682559cb2756598f983a9fa5b28ee61c1f6d26ca208",
+      "bytes": 113
+    },
+    {
+      "reference": ".private/freightctl-f165-replay-green.log",
+      "sha256": "c587913e0ca89946d38c4a8615411842774948e97c7a2c6ebfd944e35e6a4a76",
+      "bytes": 113
+    },
+    {
+      "reference": ".private/freightctl-f165-native-compile-fixed.log",
+      "sha256": "295d2e55ee04c91f4b27add370cc36206138b15acdc960bb31853482d5166074",
+      "bytes": 303
+    },
+    {
+      "reference": ".private/freightctl-f165-final-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f165-final-architecture.log",
+      "sha256": "0e7475af0f7d12441d02f0d834ce8f915c8f6ef30b6a1ea63f909d84cbce4145",
+      "bytes": 64
+    }
+  ],
+  "prepared_native": [
+    "TestMCPStockClientScopedProcessingKeepsApprovalAndHeldBytesOutsideTools:real PostgreSQL/storage,stock SDK over verified TLS,ordinary explicit approval outside tools,opaque review/proposal/attempt/work,private reason/payload/path exclusion,held-byte denial,work recovery and proposal-key recovery after policy change."
+  ],
+  "owed": [
+    "Actual stock SDK/TLS/PostgreSQL run;compilation selected zero native tests.",
+    "Actual MCP cancellation/deadline,changed namespace/roles,scope/refusal/exhaustion/protected formats and original customer acceptance at final source.",
+    "All mandatory product/AI/exchange/FINISH requirements remain open. No model runtime/evaluation was started."
+  ]
+}

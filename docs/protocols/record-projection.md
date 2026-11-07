@@ -3,14 +3,15 @@
 The internal primitive, governed metadata review and standalone durable processing
 lifecycle are implemented through API and CLI. Preview alone cannot execute.
 Execution requires a separately approved immutable intent and a current fenced
-attempt. The typed workflow adapter, scoped processor profile, browser/MCP,
+attempt. A versioned scoped profile and five metadata-only MCP controls are also
+implemented. The typed workflow adapter, browser,
 fairness/performance and native application/recovery qualification remain owed.
 Neither a valid row nor a completed projection grants execution or forwarding.
 
 ## Governed metadata review
 
 `POST /v1/tenants/{tenant}/partners/{partner}/checks/{file}/projection-preview`
-accepts `ProjectionOptions`: `reason`, optional `target_path`, and the declarative
+accepts `ProjectionOptions`: `reason`, optional `target_path`/`profile`, and the declarative
 `definition` described below. The [OpenAPI contract](../api/record-projection.openapi.json)
 contains the request rules and complete typed response. It uses ordinary bearer
 or browser session authentication. Control JSON has the existing 32 KiB, depth16
@@ -28,7 +29,7 @@ freightctl check-projection-preview \
   --request-file .private/projection-options.json
 ```
 
-Review requires root administration plus `read`, `write`, `intake_manage`,
+The historical default profile requires root administration plus `read`, `write`, `intake_manage`,
 `check_run` and `check_release`. The caller must own the original acceptance.
 Receiving a view, or simply having a write credential, supplies none of this
 processing authority. The source needs a passed or released exact check, with no
@@ -65,6 +66,58 @@ cannot change a completed review. A preview saves no intent, event, receipt,
 artifact, check or release. An approved durable intent binds this whole
 plan and regenerates it before consequential effects; preview itself grants no
 execution permission.
+
+## Scoped processing and model tools
+
+Explicit `profile:scoped-record-projection-v1` selects plan schema2. It requires
+`read`, `write`, `check_run` and the appropriate existing workflow grant:
+`workflow_manage` for preview/proposal/cancellation, `workflow_approve` for approval,
+and `workflow_execute` for starting/working an attempt. Inspection requires one
+of these workflow grants. This adds no permission name or implicit grant. The
+ordinary account service can delegate these roles within its existing authority.
+Administration, policy changes, release and delivery remain separately authorized.
+
+Source ownership, exact successful proof and current protections remain mandatory.
+The source binding must match the current actor root and authority. Output targets
+are logical paths: `/derived.json` for an actor rooted at `/payroll` means
+`/payroll/derived.json`. Parent access and revision are checked at the resolved
+location; the held output keeps the logical path plus root binding. Existing
+destinations and unsafe paths refuse. Profile/schema pairs are exact: old schema1
+`held-record-projection-v1` retains its full root requirements and original hashes.
+The scoped grant cannot reinterpret an old root job. Original-key receipt reads
+also recheck the stored profile and namespace before disclosing their private plan.
+
+Schema52 appends the scoped actor/action guards without changing earlier migrations
+or adding tables. Every transition checks current actor, namespace and the applicable
+workflow role, including cancellation and failure recording. Stale source proof
+does not have to be made valid merely to cancel an otherwise authorized own job.
+Fresh-CI inventory remains73 metadata/72 forced-RLS tables; schema51 stays a
+historical profile. Retained schema35 is untouched.
+
+Catalog31, `exchange-tools-v13`, adds `preview_record_projection`,
+`propose_record_projection`, `inspect_record_projection`, `start_record_projection`
+and `work_record_projection`. They accept only the scoped profile. Preview returns
+exact artifact/policy/mapping metadata and a hash binding the complete private
+server review. Propose supplies the same options and `review_hash`, then creates
+an unapproved intent. Its original key recovers the original proposal before
+reopening a changed source. Approval remains a separate ordinary API/CLI action;
+there is no model approval or release tool. An approved attempt can then be started
+and worked under execution authority. There is no recipient or shell argument.
+
+Model replies omit source/namespace paths, reasons, full definitions, staging IDs
+and bytes. They distinguish current observation from an original command receipt
+whose current authority has not been checked by that observation. Completed work
+reports only exact artifact metadata and held acceptance; failed work reports a
+fixed code. Byte retrieval still uses ordinary authorized HTTPS routes after
+fresh checks and release. The existing ten-second MCP deadline remains enforced;
+it may cancel processing and produce a recorded failure instead of an output.
+
+Focused scoped-role/profile/replay/schema/redaction tests pass locally. Prepared
+native tests use real PostgreSQL/storage, a confined actor and the stock MCP SDK
+over verified HTTPS, with a separate ordinary approval, held-byte refusal and
+original-key recovery after policy change. Compilation is not a native pass.
+Delegated independent approvers/workers, the typed workflow adapter, browser,
+all protected formats, fairness and complete runtime/recovery profiles remain owed.
 
 ## Durable intent and held output
 

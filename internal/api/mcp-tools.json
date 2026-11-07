@@ -2479,5 +2479,486 @@
       "idempotentHint": true,
       "openWorldHint": false
     }
+  },
+  {
+    "name": "freightctl.preview_record_projection",
+    "description": "Review scoped owned-input processing without effects. Returns exact artifact/policy/mapping metadata and an opaque full-review hash;no payload,private source path or approval.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "file_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+        },
+        "request": {
+          "type": "object",
+          "properties": {
+            "target_path": {
+              "type": "string",
+              "description": "Optional create-only logical path. No host path, URL, overwrite or implicit publication."
+            },
+            "reason": {
+              "type": "string",
+              "description": "NFC-normalized, trimmed reason: 3..1024 UTF-8 bytes, at most 240 Unicode scalar values, no control characters."
+            },
+            "definition": {
+              "type": "object",
+              "properties": {
+                "schema_version": {
+                  "type": "integer",
+                  "const": 1
+                },
+                "kind": {
+                  "type": "string",
+                  "const": "record_projection"
+                },
+                "engine": {
+                  "type": "string",
+                  "enum": [
+                    "",
+                    "freightctl-record-projection-v1"
+                  ]
+                },
+                "source_policy_hash": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "output_kind": {
+                  "type": "string",
+                  "enum": [
+                    "csv",
+                    "json_records"
+                  ]
+                },
+                "columns": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "source": {
+                        "type": "string"
+                      },
+                      "target": {
+                        "type": "string"
+                      },
+                      "conversion": {
+                        "type": "string",
+                        "enum": [
+                          "",
+                          "identity",
+                          "text",
+                          "normalize_lf"
+                        ]
+                      },
+                      "missing": {
+                        "type": "string",
+                        "enum": [
+                          "",
+                          "preserve",
+                          "empty",
+                          "null",
+                          "error"
+                        ]
+                      },
+                      "null": {
+                        "type": "string",
+                        "enum": [
+                          "",
+                          "preserve",
+                          "empty",
+                          "missing",
+                          "error"
+                        ]
+                      },
+                      "empty": {
+                        "type": "string",
+                        "enum": [
+                          "",
+                          "preserve",
+                          "missing",
+                          "null",
+                          "error"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "source",
+                      "target"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "minItems": 1,
+                  "maxItems": 128
+                },
+                "max_bytes": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 1073741824
+                },
+                "max_record_bytes": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 1048576,
+                  "anyOf": [
+                    {
+                      "const": 0
+                    },
+                    {
+                      "minimum": 64
+                    }
+                  ]
+                },
+                "max_rows": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 1000000
+                },
+                "timeout_seconds": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 60
+                }
+              },
+              "required": [
+                "schema_version",
+                "kind",
+                "source_policy_hash",
+                "output_kind",
+                "columns"
+              ],
+              "additionalProperties": false
+            },
+            "profile": {
+              "type": "string",
+              "const": "scoped-record-projection-v1"
+            }
+          },
+          "required": [
+            "reason",
+            "definition",
+            "profile"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "file_id",
+        "request"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "freightctl.propose_record_projection",
+    "description": "Propose the exact scoped review with a stable key. No execution or approval. Recovery preserves the original proposal without reinterpreting its source.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "file_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+        },
+        "request": {
+          "type": "object",
+          "properties": {
+            "target_path": {
+              "type": "string",
+              "description": "Optional create-only logical path. No host path, URL, overwrite or implicit publication."
+            },
+            "reason": {
+              "type": "string",
+              "description": "NFC-normalized, trimmed reason: 3..1024 UTF-8 bytes, at most 240 Unicode scalar values, no control characters."
+            },
+            "definition": {
+              "type": "object",
+              "properties": {
+                "schema_version": {
+                  "type": "integer",
+                  "const": 1
+                },
+                "kind": {
+                  "type": "string",
+                  "const": "record_projection"
+                },
+                "engine": {
+                  "type": "string",
+                  "enum": [
+                    "",
+                    "freightctl-record-projection-v1"
+                  ]
+                },
+                "source_policy_hash": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "output_kind": {
+                  "type": "string",
+                  "enum": [
+                    "csv",
+                    "json_records"
+                  ]
+                },
+                "columns": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "source": {
+                        "type": "string"
+                      },
+                      "target": {
+                        "type": "string"
+                      },
+                      "conversion": {
+                        "type": "string",
+                        "enum": [
+                          "",
+                          "identity",
+                          "text",
+                          "normalize_lf"
+                        ]
+                      },
+                      "missing": {
+                        "type": "string",
+                        "enum": [
+                          "",
+                          "preserve",
+                          "empty",
+                          "null",
+                          "error"
+                        ]
+                      },
+                      "null": {
+                        "type": "string",
+                        "enum": [
+                          "",
+                          "preserve",
+                          "empty",
+                          "missing",
+                          "error"
+                        ]
+                      },
+                      "empty": {
+                        "type": "string",
+                        "enum": [
+                          "",
+                          "preserve",
+                          "missing",
+                          "null",
+                          "error"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "source",
+                      "target"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "minItems": 1,
+                  "maxItems": 128
+                },
+                "max_bytes": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 1073741824
+                },
+                "max_record_bytes": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 1048576,
+                  "anyOf": [
+                    {
+                      "const": 0
+                    },
+                    {
+                      "minimum": 64
+                    }
+                  ]
+                },
+                "max_rows": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 1000000
+                },
+                "timeout_seconds": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 60
+                }
+              },
+              "required": [
+                "schema_version",
+                "kind",
+                "source_policy_hash",
+                "output_kind",
+                "columns"
+              ],
+              "additionalProperties": false
+            },
+            "profile": {
+              "type": "string",
+              "const": "scoped-record-projection-v1"
+            }
+          },
+          "required": [
+            "reason",
+            "definition",
+            "profile"
+          ],
+          "additionalProperties": false
+        },
+        "review_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "request_key": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        }
+      },
+      "required": [
+        "file_id",
+        "request",
+        "review_hash",
+        "request_key"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "freightctl.inspect_record_projection",
+    "description": "Observe owned scoped processing metadata. No payload,private path,full definition,release or forwarding grant.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "projection_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+        }
+      },
+      "required": [
+        "projection_id"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "freightctl.start_record_projection",
+    "description": "Start a separately approved exact scoped intent under its current revision and lease. Returns the original attempt receipt;approval stays outside this tool.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "projection_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+        },
+        "request": {
+          "type": "object",
+          "properties": {
+            "definition_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "expected_revision": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "required": [
+            "definition_hash",
+            "expected_revision"
+          ],
+          "additionalProperties": false
+        },
+        "request_key": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        }
+      },
+      "required": [
+        "projection_id",
+        "request",
+        "request_key"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "freightctl.work_record_projection",
+    "description": "Work the exact live scoped attempt or recover its original receipt. Output stays held with fresh checks and separate release. The existing10-second MCP deadline applies;no network recipient or model runtime.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "projection_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+        },
+        "request": {
+          "type": "object",
+          "properties": {
+            "projection_id": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            "attempt": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 3
+            },
+            "worker_id": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            }
+          },
+          "required": [
+            "projection_id",
+            "attempt",
+            "worker_id"
+          ],
+          "additionalProperties": false
+        },
+        "request_key": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        }
+      },
+      "required": [
+        "projection_id",
+        "request",
+        "request_key"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
   }
 ]

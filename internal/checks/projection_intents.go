@@ -40,7 +40,7 @@ type ProjectionOutput struct {
 
 func decodeProjection(r *store.RecordProjection) (ProjectionDefinition, error) {
 	var d ProjectionDefinition
-	if r == nil || len(r.Definition) > 32768 || workflow.Decode(r.Definition, &d) != nil || d.Schema != 1 || d.Plan.Schema != 1 || d.Plan.Profile != ProjectionReviewProfile || len(d.Slots) != 3 || d.Plan.Context.Source.File.ID != r.SourceID {
+	if r == nil || len(r.Definition) > 32768 || workflow.Decode(r.Definition, &d) != nil || d.Schema != 1 || !validProjectionProfile(d.Plan) || len(d.Slots) != 3 || d.Plan.Context.Source.File.ID != r.SourceID {
 		return d, store.ErrState
 	}
 	_, hash, err := canonical(d)
@@ -67,7 +67,7 @@ func projectionOptionsFor(plan ProjectionPlan) ProjectionOptions {
 	if plan.Context.Target != nil {
 		path = plan.Context.Target.Command.Path
 	}
-	return ProjectionOptions{TargetPath: path, Reason: plan.Context.Reason, Definition: plan.Projection}
+	return ProjectionOptions{Profile: plan.Profile, TargetPath: path, Reason: plan.Context.Reason, Definition: plan.Projection}
 }
 func (s *Service) projectionCurrent(ctx context.Context, t *store.Transaction, d ProjectionDefinition, lock bool) (*ProjectionPreview, error) {
 	fresh, err := s.projectionPlan(ctx, t, d.Plan.Context.Source.File.ID, projectionOptionsFor(d.Plan), lock)
@@ -92,12 +92,12 @@ func finishProjection(ctx context.Context, t *store.Transaction, key, meaning st
 }
 
 func (s *Service) ProposeProjection(ctx context.Context, scope store.Scope, key string, plan ProjectionPlan) (*Result, error) {
-	if !keyPattern.MatchString(key) || plan.Schema != 1 || plan.Profile != ProjectionReviewProfile {
+	if !keyPattern.MatchString(key) || !validProjectionProfile(plan) {
 		return nil, ErrInput
 	}
 	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()
-	t, err := s.recheckBegin(ctx, scope)
+	t, err := s.projectionBegin(ctx, scope, plan.Profile)
 	if err != nil {
 		return nil, err
 	}
@@ -112,17 +112,30 @@ func (s *Service) ProposeProjection(ctx context.Context, scope store.Scope, key 
 	if prior, e := t.CheckReplay(ctx, key, meaning); e != nil {
 		return nil, e
 	} else if prior != nil {
-		return recheckReplayed(ctx, t, prior)
+		return projectionReplayed(ctx, t, prior)
 	}
+	return s.stageProjectionProposal(ctx, t, key, meaning, plan)
+}
+
+func (s *Service) projectionProposalAdmission(ctx context.Context, t *store.Transaction) error {
+	scope := t.Scope
+	var err error
 	if _, err = t.Tx.Exec(ctx, `SELECT pg_advisory_xact_lock(hashtextextended($1,0))`, scope.Tenant+":"+scope.Partner+":"+t.Actor+":record-projections"); err != nil {
-		return nil, err
+		return err
 	}
 	var count int
 	if err = t.Tx.QueryRow(ctx, `SELECT count(*) FROM record_projections WHERE actor_id=$1 AND state IN ('proposed','approved','running','failed')`, t.Actor).Scan(&count); err != nil {
-		return nil, err
+		return err
 	}
 	if count >= 16 {
-		return nil, store.ErrLimit
+		return store.ErrLimit
+	}
+	return nil
+}
+func (s *Service) stageProjectionProposal(ctx context.Context, t *store.Transaction, key, meaning string, plan ProjectionPlan) (*Result, error) {
+	var err error
+	if err = s.projectionProposalAdmission(ctx, t); err != nil {
+		return nil, err
 	}
 	if err = t.NamespaceLock(ctx); err != nil {
 		return nil, err
@@ -149,13 +162,67 @@ func (s *Service) ProposeProjection(ctx context.Context, scope store.Scope, key 
 	}
 	return finishProjection(ctx, t, key, meaning, r)
 }
+
+// ProposeReviewedProjection lets a metadata-only client pin the complete private
+// review by hash without disclosing source paths or full bindings to a model.
+// Original-key replay precedes source revalidation and preserves its receipt.
+func (s *Service) ProposeReviewedProjection(ctx context.Context, scope store.Scope, key, source, reviewHash string, options ProjectionOptions) (*Result, error) {
+	if !keyPattern.MatchString(key) || !store.ValidID(source) || !hashPattern.MatchString(reviewHash) {
+		return nil, ErrInput
+	}
+	options, err := projectionOptionsInput(options)
+	if err != nil {
+		return nil, err
+	}
+	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
+	t, err := s.projectionBegin(ctx, scope, options.Profile)
+	if err != nil {
+		return nil, err
+	}
+	defer t.Tx.Rollback(ctx)
+	_, meaning, err := canonical(struct {
+		Kind, Source, Review string
+		Options              ProjectionOptions
+	}{"propose_reviewed_record_projection", source, reviewHash, options})
+	if err != nil {
+		return nil, err
+	}
+	if prior, e := t.CheckReplay(ctx, key, meaning); e != nil {
+		return nil, e
+	} else if prior != nil {
+		return projectionReplayed(ctx, t, prior)
+	}
+	if err = s.projectionProposalAdmission(ctx, t); err != nil {
+		return nil, err
+	}
+	if err = t.NamespaceLock(ctx); err != nil {
+		return nil, err
+	}
+	view, err := s.projectionPlan(ctx, t, source, options, true)
+	if err != nil {
+		return nil, err
+	}
+	_, hash, err := canonical(view.Plan)
+	if err != nil {
+		return nil, err
+	}
+	if hash != reviewHash {
+		return nil, store.ErrRevision
+	}
+	return s.stageProjectionProposal(ctx, t, key, meaning, view.Plan)
+}
 func (s *Service) DecideProjection(ctx context.Context, scope store.Scope, id, key string, decision PolicyRecheckDecision) (*Result, error) {
 	if !keyPattern.MatchString(key) || !hashPattern.MatchString(decision.Hash) || decision.Revision < 1 || (decision.Operation != "approve" && decision.Operation != "cancel") {
 		return nil, ErrInput
 	}
 	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()
-	t, err := s.recheckBegin(ctx, scope)
+	action := "workflow_manage"
+	if decision.Operation == "approve" {
+		action = "workflow_approve"
+	}
+	t, err := s.projectionExistingBegin(ctx, scope, id, action)
 	if err != nil {
 		return nil, err
 	}
@@ -167,7 +234,7 @@ func (s *Service) DecideProjection(ctx context.Context, scope store.Scope, id, k
 	if prior, e := t.CheckReplay(ctx, key, meaning); e != nil {
 		return nil, e
 	} else if prior != nil {
-		return recheckReplayed(ctx, t, prior)
+		return projectionReplayed(ctx, t, prior)
 	}
 	r, err := t.RecordProjection(ctx, id, true)
 	if err != nil {
@@ -217,7 +284,7 @@ func (s *Service) StartProjection(ctx context.Context, scope store.Scope, id, ke
 	}
 	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()
-	t, err := s.recheckBegin(ctx, scope)
+	t, err := s.projectionExistingBegin(ctx, scope, id, "workflow_execute")
 	if err != nil {
 		return nil, err
 	}
@@ -229,7 +296,7 @@ func (s *Service) StartProjection(ctx context.Context, scope store.Scope, id, ke
 	if prior, e := t.CheckReplay(ctx, key, meaning); e != nil {
 		return nil, e
 	} else if prior != nil {
-		return recheckReplayed(ctx, t, prior)
+		return projectionReplayed(ctx, t, prior)
 	}
 	r, err := t.RecordProjection(ctx, id, true)
 	if err != nil {
@@ -276,7 +343,7 @@ func (s *Service) StartProjection(ctx context.Context, scope store.Scope, id, ke
 func (s *Service) GetProjection(ctx context.Context, scope store.Scope, id string) (*ProjectionView, error) {
 	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()
-	t, err := s.recheckBegin(ctx, scope)
+	t, err := s.projectionExistingBegin(ctx, scope, id, "")
 	if err != nil {
 		return nil, err
 	}

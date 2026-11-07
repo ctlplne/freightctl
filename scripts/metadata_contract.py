@@ -1,7 +1,8 @@
 """Explicit fresh-CI and retained metadata profiles; no database lifecycle."""
 import hashlib
 
-CURRENT_PROFILE = {"schema": 51, "metadata_tables": 73, "forced_rls_tables": 72}
+CURRENT_PROFILE = {"schema": 52, "metadata_tables": 73, "forced_rls_tables": 72}
+PROJECTION_PROFILE = {"schema": 51, "metadata_tables": 73, "forced_rls_tables": 72}
 XLSX_RECORDS_PROFILE = {"schema": 50, "metadata_tables": 71, "forced_rls_tables": 70}
 XML_RECORDS_PROFILE = {"schema": 49, "metadata_tables": 71, "forced_rls_tables": 70}
 FIXED_WIDTH_PROFILE = {"schema": 48, "metadata_tables": 71, "forced_rls_tables": 70}
@@ -23,7 +24,7 @@ RETAINED_PROFILE = {"schema": 35, "metadata_tables": 64, "forced_rls_tables": 63
 def profile(version):
     if type(version) is not int:
         raise ValueError("metadata schema profile differs")
-    for value in (CURRENT_PROFILE, XLSX_RECORDS_PROFILE, XML_RECORDS_PROFILE, FIXED_WIDTH_PROFILE, JSON_RECORDS_PROFILE, AUDIT_PROFILE, COPY_PROFILE, HISTORY_PROFILE, CLOSURE_PROFILE, RECEIVE_VIEW_PROFILE, PREVIOUS_PROFILE, COLLECTION_FTPS_PROFILE, ENCRYPTION_FTPS_PROFILE, PROGRAM_FTPS_PROFILE, LEGACY_PROFILE, DIRECT_FTPS_PROFILE, RETAINED_PROFILE):
+    for value in (CURRENT_PROFILE, PROJECTION_PROFILE, XLSX_RECORDS_PROFILE, XML_RECORDS_PROFILE, FIXED_WIDTH_PROFILE, JSON_RECORDS_PROFILE, AUDIT_PROFILE, COPY_PROFILE, HISTORY_PROFILE, CLOSURE_PROFILE, RECEIVE_VIEW_PROFILE, PREVIOUS_PROFILE, COLLECTION_FTPS_PROFILE, ENCRYPTION_FTPS_PROFILE, PROGRAM_FTPS_PROFILE, LEGACY_PROFILE, DIRECT_FTPS_PROFILE, RETAINED_PROFILE):
         if version == value["schema"]:
             return value
     raise ValueError("metadata schema profile differs")

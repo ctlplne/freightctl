@@ -231,7 +231,10 @@
         "docs/qualification/evidence/F161-projection-review-surfaces.json",
         "docs/qualification/evidence/F162-projection-parent-terminal-ci.json",
         "docs/qualification/evidence/F163-durable-record-projections.json",
-        "docs/qualification/evidence/F164-review-parent-terminal-ci.json"
+        "docs/qualification/evidence/F164-review-parent-terminal-ci.json",
+        "docs/qualification/evidence/F165-scoped-record-processing.json",
+        "docs/qualification/evidence/F166-projection-parent-terminal-ci.json",
+        "docs/qualification/evidence/F167-scoped-mcp-processing.json"
       ],
       "remaining_details": [
         "F007/F008 verify bounded leased/fenced SFTP intents and typed ordered workflow runs with registered connection versions, conservative ambiguity, same-step dispatch replay across restart, and queued cancellation. Finish unattended/fair scheduling, broader processing/conditions/loops/batches, active cancellation/rebinding, overlapping key rotations, receiver business contracts, remote quotas/retention/cleanup and distributed failures.",
@@ -281,7 +284,8 @@
         "F155 implements governed XLSX policy/source/report/SQL/UI and prepares actual-stock ordinary custody/API/CLI/Chrome/crypto/copy/recheck proof. Source50 targets71/70 tables;retained35 unchanged. Focused local checks pass;application/native/final-source outcomes and existing schema-init/deferred failures remain owed. F156 proves only earlier-source native stock ZIP/XLSX parser/race/security inputs.",
         "F157/F158 add one typed five-format row stream and hash-bound JSON/CSV projection core,with exact values/presence and private-stage red/green. Governed workflow authority/intents/quotas/lineage/recovery/output controls and ordinary surfaces are still required;new native receiver/race/fuzz outcomes owed. F159 preserves sourcef6be16a terminal17-run outcomes and every original failure.",
         "F160/F161 implement governed exact-source/protection/output-contract metadata review through API/CLI;focused red/green/static checks pass. Native review is prepared,not passed;durable approved transformation execution,quota,lineage,recovery,fresh output controls and all surfaces remain owed. F162 proves only source036fbd3 ARM/x86 stock five-format projection/ten-output independent receiver primitives;all17 original CI runs are terminal and application failures remain red.",
-        "F163 adds standalone durable approved/fenced projection intents and API/CLI held-output materialization with immutable lineage,failure/original receipts and verified sealed adoption. Focused local red/green/static checks and12 metadata stand-ins pass. Source51 targets73/72;retained35 unchanged. Native SQL/application/recovery/protected-format proof,typed workflow/scoped processor,browser/MCP/fairness and full customer outcomes remain owed. F164 preserves all17 terminal5f6fcc9 runs;original failures remain red."
+        "F163 adds standalone durable approved/fenced projection intents and API/CLI held-output materialization with immutable lineage,failure/original receipts and verified sealed adoption. Focused local red/green/static checks and12 metadata stand-ins pass. Source51 targets73/72;retained35 unchanged. Native SQL/application/recovery/protected-format proof,typed workflow/scoped processor,browser/MCP/fairness and full customer outcomes remain owed. F164 preserves all17 terminal5f6fcc9 runs;original failures remain red.",
+        "F165 adds explicit scoped processing with existing per-action workflow grants,namespace target/receipt binding and append-only52;retained35 unchanged. F167 adds five redacted metadata MCP tools,Catalog31/v13,opaque review and original-key recovery,with approval outside tools. Focused local contracts/static/12 metadata stand-ins pass. Confined-actor/stock-SDK/native SQL/runtime and full typed workflow/browser/delegation/customer acceptance remain owed. F166 records all17 terminal3bbd07c workflows and scoped native document primitive passes;original failures remain red."
       ]
     },
     {
@@ -543,7 +547,10 @@
         "docs/qualification/evidence/F161-projection-review-surfaces.json",
         "docs/qualification/evidence/F162-projection-parent-terminal-ci.json",
         "docs/qualification/evidence/F163-durable-record-projections.json",
-        "docs/qualification/evidence/F164-review-parent-terminal-ci.json"
+        "docs/qualification/evidence/F164-review-parent-terminal-ci.json",
+        "docs/qualification/evidence/F165-scoped-record-processing.json",
+        "docs/qualification/evidence/F166-projection-parent-terminal-ci.json",
+        "docs/qualification/evidence/F167-scoped-mcp-processing.json"
       ],
       "remaining_details": [
         "F010 verifies durable held intake for configured new revisions, exact CSV contracts, separate hash/revision-bound release and ordinary delivery of released bytes. Antivirus/ICAP/DLP, cryptographic signatures/encryption, other formats/transforms, re-scan/exception governance, retrospective policy and the complete business-file journey remain mandatory.",
@@ -619,7 +626,8 @@
         "F155 implements governed XLSX policy/source/report/SQL/UI and prepares actual-stock ordinary custody/API/CLI/Chrome/crypto/copy/recheck proof. Source50 targets71/70 tables;retained35 unchanged. Focused local checks pass;application/native/final-source outcomes and existing schema-init/deferred failures remain owed. F156 proves only earlier-source native stock ZIP/XLSX parser/race/security inputs.",
         "F157/F158 add one typed five-format row stream and hash-bound JSON/CSV projection core,with exact values/presence and private-stage red/green. Governed workflow authority/intents/quotas/lineage/recovery/output controls and ordinary surfaces are still required;new native receiver/race/fuzz outcomes owed. F159 preserves sourcef6be16a terminal17-run outcomes and every original failure.",
         "F160/F161 implement governed exact-source/protection/output-contract metadata review through API/CLI;focused red/green/static checks pass. Native review is prepared,not passed;durable approved transformation execution,quota,lineage,recovery,fresh output controls and all surfaces remain owed. F162 proves only source036fbd3 ARM/x86 stock five-format projection/ten-output independent receiver primitives;all17 original CI runs are terminal and application failures remain red.",
-        "F163 adds standalone durable approved/fenced projection intents and API/CLI held-output materialization with immutable lineage,failure/original receipts and verified sealed adoption. Focused local red/green/static checks and12 metadata stand-ins pass. Source51 targets73/72;retained35 unchanged. Native SQL/application/recovery/protected-format proof,typed workflow/scoped processor,browser/MCP/fairness and full customer outcomes remain owed. F164 preserves all17 terminal5f6fcc9 runs;original failures remain red."
+        "F163 adds standalone durable approved/fenced projection intents and API/CLI held-output materialization with immutable lineage,failure/original receipts and verified sealed adoption. Focused local red/green/static checks and12 metadata stand-ins pass. Source51 targets73/72;retained35 unchanged. Native SQL/application/recovery/protected-format proof,typed workflow/scoped processor,browser/MCP/fairness and full customer outcomes remain owed. F164 preserves all17 terminal5f6fcc9 runs;original failures remain red.",
+        "F165 adds explicit scoped processing with existing per-action workflow grants,namespace target/receipt binding and append-only52;retained35 unchanged. F167 adds five redacted metadata MCP tools,Catalog31/v13,opaque review and original-key recovery,with approval outside tools. Focused local contracts/static/12 metadata stand-ins pass. Confined-actor/stock-SDK/native SQL/runtime and full typed workflow/browser/delegation/customer acceptance remain owed. F166 records all17 terminal3bbd07c workflows and scoped native document primitive passes;original failures remain red."
       ]
     },
     {
@@ -962,7 +970,10 @@
         "docs/qualification/evidence/F158-record-projection-core.json",
         "docs/qualification/evidence/F159-xlsx-parent-terminal-ci.json",
         "docs/qualification/evidence/F162-projection-parent-terminal-ci.json",
-        "docs/qualification/evidence/F164-review-parent-terminal-ci.json"
+        "docs/qualification/evidence/F164-review-parent-terminal-ci.json",
+        "docs/qualification/evidence/F165-scoped-record-processing.json",
+        "docs/qualification/evidence/F166-projection-parent-terminal-ci.json",
+        "docs/qualification/evidence/F167-scoped-mcp-processing.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -985,7 +996,8 @@
         "F155 implements governed XLSX policy/source/report/SQL/UI and prepares actual-stock ordinary custody/API/CLI/Chrome/crypto/copy/recheck proof. Source50 targets71/70 tables;retained35 unchanged. Focused local checks pass;application/native/final-source outcomes and existing schema-init/deferred failures remain owed. F156 proves only earlier-source native stock ZIP/XLSX parser/race/security inputs.",
         "F157/F158 add one typed five-format row stream and hash-bound JSON/CSV projection core,with exact values/presence and private-stage red/green. Governed workflow authority/intents/quotas/lineage/recovery/output controls and ordinary surfaces are still required;new native receiver/race/fuzz outcomes owed. F159 preserves sourcef6be16a terminal17-run outcomes and every original failure.",
         "F162 retains all17 source036fbd3 terminal runs and37 original jobs. Native document/projection primitives and listed security gates pass;all original failed/skipped application,Windows,metadata,public/stock/browser and FINISH outcomes remain owed. No full AX profile is qualified.",
-        "F164 retains all17 source5f6fcc9 original runs/37 jobs terminal with listed security gates passing. New durable processing is later source and unqualified;no AX profile or complete workflow outcome is inferred. Every deferred original failure remains owed."
+        "F164 retains all17 source5f6fcc9 original runs/37 jobs terminal with listed security gates passing. New durable processing is later source and unqualified;no AX profile or complete workflow outcome is inferred. Every deferred original failure remains owed.",
+        "Scoped processing/MCP preparation does not qualify a complete artifact exchange or grant forwarding/release. F166 retains exact17-run/37-job prior-source outcomes. Full AX profiles,ordinary interfaces,protected formats,source52 native SQL and all FINISH gates remain owed."
       ],
       "current_item": {
         "id": "F130",

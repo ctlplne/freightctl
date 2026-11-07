@@ -10,6 +10,7 @@ import (
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/scanner"
 	"github.com/ctlplne/freightctl/internal/store"
+	"github.com/ctlplne/freightctl/internal/vpath"
 )
 
 const ProjectionReviewProfile = "held-record-projection-v1"
@@ -17,6 +18,7 @@ const ProjectionReviewProfile = "held-record-projection-v1"
 // ProjectionOptions contains only declarative rules and a logical output path.
 // It cannot select a host file, executable, recipient, model or scanner socket.
 type ProjectionOptions struct {
+	Profile    string           `json:"profile,omitempty"`
 	TargetPath string           `json:"target_path"`
 	Reason     string           `json:"reason"`
 	Definition RecordProjection `json:"definition"`
@@ -60,7 +62,8 @@ func projectionSourceReport(view *RecheckPreview, c *store.FileCheck, now time.T
 	}
 	p := view.Plan
 	old := view.PreviousPolicy
-	if p.Root != "/" || p.Authority < 1 || !store.ValidID(p.StorageID) || !store.ValidID(c.FileID) || !store.ValidID(c.PolicyID) || c.PolicyVersion < 1 || c.FileID != p.Source.File.ID || p.Source.File.Size < 0 || p.Source.File.Size > old.Definition.MaxBytes || !hashPattern.MatchString(p.Source.File.SHA256) || c.Revision < 1 || c.Attempts < 1 || c.WorkerID != "" || c.LeaseUntil != nil || !hashPattern.MatchString(c.ReportHash) {
+	root, rootErr := vpath.Canonical(p.Root)
+	if rootErr != nil || root != p.Root || p.Authority < 1 || !store.ValidID(p.StorageID) || !store.ValidID(c.FileID) || !store.ValidID(c.PolicyID) || c.PolicyVersion < 1 || c.FileID != p.Source.File.ID || p.Source.File.Size < 0 || p.Source.File.Size > old.Definition.MaxBytes || !hashPattern.MatchString(p.Source.File.SHA256) || c.Revision < 1 || c.Attempts < 1 || c.WorkerID != "" || c.LeaseUntil != nil || !hashPattern.MatchString(c.ReportHash) {
 		return fail()
 	}
 	if !(c.State == "passed" && c.Code == policySuccess(old.Definition) || c.State == "released" && c.Code == "approved_for_publication") {
@@ -147,6 +150,16 @@ func projectionSourceReport(view *RecheckPreview, c *store.FileCheck, now time.T
 // projectionReview binds an already authorized metadata snapshot. Keeping this
 // pure lets the same contract be exercised without opening payloads or runtimes.
 func projectionReview(base *RecheckPreview, row *store.FileCheck, definition RecordProjection, now time.Time) (*ProjectionPreview, error) {
+	return projectionReviewProfile(base, row, definition, now, ProjectionReviewProfile)
+}
+func projectionReviewProfile(base *RecheckPreview, row *store.FileCheck, definition RecordProjection, now time.Time, profile string) (*ProjectionPreview, error) {
+	profile, schema, err := projectionProfile(profile)
+	if err != nil {
+		return nil, err
+	}
+	if base != nil && profile == ProjectionReviewProfile && base.Plan.Root != "/" {
+		return nil, store.ErrState
+	}
 	_, until, err := projectionSourceReport(base, row, now)
 	if err != nil {
 		return nil, err
@@ -201,7 +214,7 @@ func projectionReview(base *RecheckPreview, row *store.FileCheck, definition Rec
 	if selectedHash != contractHash {
 		return nil, ErrInput
 	}
-	return &ProjectionPreview{Plan: ProjectionPlan{Schema: 1, Profile: ProjectionReviewProfile, Context: snapshot.Plan, SourcePolicy: snapshot.PreviousPolicy.Reference, Projection: definition, OutputContractHash: contractHash, ProofValidUntil: until}, SourcePolicy: *snapshot.PreviousPolicy, OutputPolicy: snapshot.CurrentPolicy, Effects: "Review only. Execution needs a separately approved durable intent. The transformed output will be a new held artifact with fresh checks, a new signature when required and a separate exact release. No forwarding or execution permission is inherited."}, nil
+	return &ProjectionPreview{Plan: ProjectionPlan{Schema: schema, Profile: profile, Context: snapshot.Plan, SourcePolicy: snapshot.PreviousPolicy.Reference, Projection: definition, OutputContractHash: contractHash, ProofValidUntil: until}, SourcePolicy: *snapshot.PreviousPolicy, OutputPolicy: snapshot.CurrentPolicy, Effects: "Review only. Execution needs a separately approved durable intent. The transformed output will be a new held artifact with fresh checks, a new signature when required and a separate exact release. No forwarding or execution permission is inherited."}, nil
 }
 
 func projectionProtectionCurrent(ctx context.Context, t *store.Transaction, policy Policy, report Report) error {
@@ -234,6 +247,11 @@ func projectionProtectionCurrent(ctx context.Context, t *store.Transaction, poli
 // Reject absent/null or structurally unqualified requests before any database
 // access. Mapping and budget normalization still require the actual source.
 func projectionOptionsInput(options ProjectionOptions) (ProjectionOptions, error) {
+	profile, _, err := projectionProfile(options.Profile)
+	if err != nil {
+		return options, err
+	}
+	options.Profile = profile
 	reason, err := recheckReason(options.Reason)
 	if err != nil {
 		return options, err
@@ -246,11 +264,13 @@ func projectionOptionsInput(options ProjectionOptions) (ProjectionOptions, error
 	return options, nil
 }
 
-// projectionPlan is restricted to root administrators with the existing read,
-// write, intake, check and release grants. A retired source contract may be used
-// only for this explicitly authorized processing review. Ordinary availability
-// and downloads keep their current-policy requirement unchanged.
+// projectionPlan uses the selected explicit root or scoped workflow profile.
+// A retired source contract is usable only for authorized processing;ordinary
+// availability and downloads retain their current-policy requirement.
 func (s *Service) projectionPlan(ctx context.Context, t *store.Transaction, id string, options ProjectionOptions, lockSource bool) (*ProjectionPreview, error) {
+	if err := projectionAuthority(t, options.Profile); err != nil {
+		return nil, err
+	}
 	// Match release/recheck ordering: namespace, source check, then policy/key
 	// locks. Holding policy first while waiting for a check can deadlock a
 	// concurrent release behind a policy activation.
@@ -286,7 +306,7 @@ func (s *Service) projectionPlan(ctx context.Context, t *store.Transaction, id s
 	if err != nil {
 		return nil, err
 	}
-	view, err := projectionReview(base, row, options.Definition, now)
+	view, err := projectionReviewProfile(base, row, options.Definition, now, options.Profile)
 	if err != nil {
 		return nil, err
 	}
@@ -309,7 +329,7 @@ func (s *Service) PreviewProjection(ctx context.Context, scope store.Scope, id s
 	}
 	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()
-	t, err := s.recheckBegin(ctx, scope)
+	t, err := s.projectionBegin(ctx, scope, options.Profile)
 	if err != nil {
 		return nil, err
 	}

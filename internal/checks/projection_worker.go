@@ -184,7 +184,7 @@ func (s *Service) WorkProjection(ctx context.Context, scope store.Scope, key str
 	}
 	record, cancel := context.WithTimeout(context.WithoutCancel(ctx), 5*time.Second)
 	defer cancel()
-	t, e := s.recheckBegin(record, scope)
+	t, e := s.projectionExistingBegin(record, scope, a.ID, "workflow_execute")
 	if e != nil {
 		return nil, err
 	}
@@ -193,7 +193,7 @@ func (s *Service) WorkProjection(ctx context.Context, scope store.Scope, key str
 	if prior, e := t.CheckReplay(record, key, meaning); e != nil {
 		return nil, e
 	} else if prior != nil {
-		return recheckReplayed(record, t, prior)
+		return projectionReplayed(record, t, prior)
 	}
 	r, e := t.RecordProjection(record, a.ID, true)
 	if e != nil {
@@ -226,7 +226,7 @@ func (s *Service) workProjection(ctx context.Context, scope store.Scope, key str
 	ctx, cancel := context.WithTimeout(ctx, 65*time.Second)
 	defer cancel()
 	meaning := projectionWorkMeaning(a)
-	pre, err := s.recheckBegin(ctx, scope)
+	pre, err := s.projectionExistingBegin(ctx, scope, a.ID, "workflow_execute")
 	if err != nil {
 		return nil, err
 	}
@@ -234,7 +234,7 @@ func (s *Service) workProjection(ctx context.Context, scope store.Scope, key str
 		pre.Tx.Rollback(ctx)
 		return nil, e
 	} else if prior != nil {
-		return recheckReplayed(ctx, pre, prior)
+		return projectionReplayed(ctx, pre, prior)
 	}
 	if err = pre.Tx.Rollback(ctx); err != nil {
 		return nil, err
@@ -249,7 +249,7 @@ func (s *Service) workProjection(ctx context.Context, scope store.Scope, key str
 		return nil, err
 	}
 	defer releaseCapacity()
-	t, err := s.recheckBegin(ctx, scope)
+	t, err := s.projectionExistingBegin(ctx, scope, a.ID, "workflow_execute")
 	if err != nil {
 		return nil, err
 	}
@@ -257,7 +257,7 @@ func (s *Service) workProjection(ctx context.Context, scope store.Scope, key str
 	if prior, e := t.CheckReplay(ctx, key, meaning); e != nil {
 		return nil, e
 	} else if prior != nil {
-		return recheckReplayed(ctx, t, prior)
+		return projectionReplayed(ctx, t, prior)
 	}
 	r, err := t.RecordProjection(ctx, a.ID, true)
 	if err != nil {

@@ -87,8 +87,20 @@ are rehashed during staging, and get fresh intake checks. A received view does n
 grant forwarding or execution. Original-key recovery returns the owned copy's
 original acceptance without reopening a stale source view. Current availability,
 receiver persistence and processing are not inferred. No content,overwrite,mode,
-host path,actor,root,recipient or execution option enters this tool. Catalog26,
-implementation `exchange-tools-v12`; actual original SDK/HTTPS proof remains owed.
+host path,actor,root,recipient or execution option enters this tool. The current
+catalog has31 tools, implementation `exchange-tools-v13`; actual original
+SDK/HTTPS proof remains owed.
+
+Five scoped record-processing controls share the ordinary governed service:
+`preview_record_projection`, `propose_record_projection`,
+`inspect_record_projection`, `start_record_projection` and `work_record_projection`.
+They require explicit workflow action rights, owned exact input and the actor's
+namespace. Model results omit private paths, reasons, full definitions, staging
+IDs and bytes. A review hash binds the complete private plan. There is no approval
+or release tool; ordinary approval and fresh held-output checks/release remain
+separate. The existing ten-second deadline is unchanged. The
+[projection contract](record-projection.md) states the role, receipt and output
+boundaries; stock-SDK/HTTPS/PostgreSQL runtime proof remains owed.
 
 The four resumable controls use `ordinary-resumable-artifact-upload-v1` and the
 existing upload service. Start takes `virtual_path`, `size_bytes`, `sha256` and

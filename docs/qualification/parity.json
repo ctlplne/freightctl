@@ -2790,7 +2790,10 @@
         "docs/qualification/evidence/F161-projection-review-surfaces.json",
         "docs/qualification/evidence/F162-projection-parent-terminal-ci.json",
         "docs/qualification/evidence/F163-durable-record-projections.json",
-        "docs/qualification/evidence/F164-review-parent-terminal-ci.json"
+        "docs/qualification/evidence/F164-review-parent-terminal-ci.json",
+        "docs/qualification/evidence/F165-scoped-record-processing.json",
+        "docs/qualification/evidence/F166-projection-parent-terminal-ci.json",
+        "docs/qualification/evidence/F167-scoped-mcp-processing.json"
       ],
       "qualification_blockers": [
         "Authorized JSCAPE by Redwood installation and exact edition/version for observed comparison"

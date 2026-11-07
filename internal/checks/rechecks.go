@@ -238,15 +238,19 @@ func (s *Service) recheckPlan(ctx context.Context, t *store.Transaction, id stri
 		if e != nil || path == "/" || vpath.ControlPath(path) {
 			return nil, ErrInput
 		}
-		if err = t.ParentWritable(ctx, path); err != nil {
+		actual, e := vpath.Resolve(t.Root, path)
+		if e != nil || vpath.ControlPath(actual) {
+			return nil, ErrInput
+		}
+		if err = t.ParentWritable(ctx, actual); err != nil {
 			return nil, err
 		}
-		parent, e := t.Entry(ctx, vpath.Parent(path))
+		parent, e := t.Entry(ctx, vpath.Parent(actual))
 		if e != nil {
 			return nil, e
 		}
 		target := &RecheckTarget{Command: store.PathCommand{Operation: "publish", Path: path}, ParentID: parent.ID, ParentRevision: parent.Revision}
-		entry, e := t.Entry(ctx, path)
+		entry, e := t.Entry(ctx, actual)
 		if e != nil && !errors.Is(e, store.ErrNotFound) {
 			return nil, e
 		}
