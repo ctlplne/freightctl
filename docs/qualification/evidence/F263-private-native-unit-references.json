@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "id": "F263",
+  "observed_at": "2026-11-07",
+  "base_candidate": "d0d9585a48be31789a6d1624c9b53d5603d51e51",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Native private test inputs corrected;actual Windows and stock proof owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "d2072a33197b3e723619dce694a2693f2d5b172520a464aa7b5aee028ac4ed9e",
+      "bytes": 3164
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "d72edbc781aad1b16e2967d2a4d878aa1f5a2fd6b439e643c2efaa683fc77648",
+      "bytes": 378723
+    },
+    {
+      "reference": "internal/checks/projection_access_other_test.go",
+      "sha256": "2148cd36b618120c2db2b592d734bcd7f24d86da741c52c7f021e97647a3e193",
+      "bytes": 360
+    },
+    {
+      "reference": "internal/checks/projection_access_windows_test.go",
+      "sha256": "b8f390937d5a136c6ad3375be1d7a46740bb42799b3387f8841c4be50aacc102",
+      "bytes": 1845
+    },
+    {
+      "reference": "internal/checks/projection_stage_test.go",
+      "sha256": "15005f1eddbb66f7216cb0bd9f4f11c516aff5883d07f4c29b17f5bf3b028652",
+      "bytes": 4553
+    },
+    {
+      "reference": "internal/ftpsclient/client_stock_test.go",
+      "sha256": "226541224e66cadd0679e137f1bdd7ee5027d33d27650cfba31da21f743d7a04",
+      "bytes": 6427
+    },
+    {
+      "reference": "internal/ftpsclient/client_test.go",
+      "sha256": "91c4390ff2d8cc96abbbc2bd9c6fb4438ebb11049da08965650d60caf4c15b8d",
+      "bytes": 14547
+    },
+    {
+      "reference": "internal/workflow/peer_directory_test.go",
+      "sha256": "cdfdb811b47596c0257e40ab9c25e491b63ca4fbeb78dbe88486f16ac807186f",
+      "bytes": 1922
+    }
+  ],
+  "red": {
+    "candidate": "638d156cf16820b165cc8e6310f62daddf2d8458",
+    "run": 42357772683,
+    "job": 128359540193,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128359540193",
+    "observed": [
+      "FTPS protocol tests fail at credential-reference before intended protocol controls. Password fixture used ordinary mode0600,which did not establish a private Windows ACL.",
+      "Independent peer directory test fails at mode-only privacy. Projection stage tests fail at the original custody mode-only root;later partial/corruption native steps remain unobserved."
+    ]
+  },
+  "changed": [
+    "Create synthetic FTPS passwords privately before bytes,including the stock wrong-password input. Keep identity/TLS shutdown/resumption/ambiguous completion/integrity/live-guard assertions unchanged.",
+    "Create exact separate peer directories and files using native private creation and held-profile checks. Independent peer scripts and non-symlink/Unix0700 controls are unchanged.",
+    "Create projection partials privately and retain them unchanged. Corrupt and reseal the same physical object using actual host-owner permissions;require actual sealed protection and original integrity/no-other-slot refusal. No production permission rule changes.",
+    "Compact STATUS to current source/outcomes/owed/authority;all historical qualification manifests and failures remain."
+  ],
+  "green": [
+    "Focused local projection partial/adoption/tamper/guard/quota and independent private peer cases pass.",
+    "Four small loopback Go TLS FTPS unit stand-ins pass after the original sandbox bind refusal. They are not stock receiver or native Windows qualification.",
+    "Affected formatting/vet,architecture and Windows compilation/vet pass."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f263-architecture.log",
+      "sha256": "4d6b9f4282850c564e8b9ddba2c2ec16a6292cd7249a7f840df16d7a6f43e399",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f263-filesystem-fixtures.log",
+      "sha256": "fa5c006e57d13ecfdfc889f96d0b4e93ef30d3ff4974d924d9de31205dbb5ebe",
+      "bytes": 118
+    },
+    {
+      "reference": ".private/freightctl-f263-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f263-ftps-unit-standins-green.log",
+      "sha256": "b633636b22f19cc2b9deacf18e5d747103c0ef5ae7da08bfe754cd979ccc3ec2",
+      "bytes": 62
+    },
+    {
+      "reference": ".private/freightctl-f263-ftps-unit-standins.log",
+      "sha256": "a045cefc4ebcfd733dec1a406390cec3625b7541761f1fd2194a31194b4fd829",
+      "bytes": 1687
+    },
+    {
+      "reference": ".private/freightctl-f263-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f263-windows-checks-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f263-windows-ftpsclient-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f263-windows-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f263-windows-workflow-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "owed": [
+    "Actual Windows original FTPS protocol/private-peer/projection partial/recovery/corruption cases.",
+    "Actual stock client/independent receiver/full platform profiles;scanner failures remain red and are not hidden by these fixture fixes.",
+    "All remaining actual final-source product/security/AX/FINISH outcomes."
+  ],
+  "resources": "OneCPU/192MiB local small filesystem and bounded loopback Go unit stand-ins/static/compilation only;no PostgreSQL,Chrome,model,scanner or stock/native peer. Retained35/source60 unchanged."
+}

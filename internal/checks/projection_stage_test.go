@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/ctlplne/freightctl/internal/custody"
+	"github.com/ctlplne/freightctl/internal/protectedfs"
 	"github.com/ctlplne/freightctl/internal/store"
 )
 
@@ -27,7 +28,15 @@ func TestProjectionStageRetainsPartialAdoptsExactSealedAndRefusesTampering(t *te
 		t.Fatal(err)
 	}
 	partial := filepath.Join(root, custody.Name(scope.Tenant, scope.Partner, d.Slots[0]))
-	if err = os.WriteFile(partial, []byte("interrupted task-owned output"), 0600); err != nil {
+	partialFile, err := protectedfs.CreateExclusive(partial)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err = partialFile.Write([]byte("interrupted task-owned output")); err != nil {
+		partialFile.Close()
+		t.Fatal(err)
+	}
+	if err = partialFile.Close(); err != nil {
 		t.Fatal(err)
 	}
 	guard := func() error { return nil }
@@ -45,20 +54,18 @@ func TestProjectionStageRetainsPartialAdoptsExactSealedAndRefusesTampering(t *te
 		t.Fatal("exact uncertain-commit object not adopted", err)
 	}
 	after, err := os.Stat(name)
-	if err != nil || !os.SameFile(before, after) || !before.ModTime().Equal(after.ModTime()) || after.Mode().Perm() != 0400 {
+	if err != nil || !os.SameFile(before, after) || !before.ModTime().Equal(after.ModTime()) {
 		t.Fatal("adoption replaced or unsealed original", err)
 	}
 	if data, err := os.ReadFile(partial); err != nil || string(data) != "interrupted task-owned output" {
 		t.Fatal("partial slot was erased or reused", err)
 	}
-	if err = os.Chmod(name, 0600); err != nil {
-		t.Fatal(err)
-	}
-	if err = os.WriteFile(name, []byte("tampered"), 0600); err != nil {
-		t.Fatal(err)
-	}
-	if err = os.Chmod(name, 0400); err != nil {
-		t.Fatal(err)
+	requireSealedProjectionForTest(t, name)
+	rewriteSealedProjectionForTest(t, name, []byte("tampered"))
+	requireSealedProjectionForTest(t, name)
+	tampered, err := os.Stat(name)
+	if err != nil || !os.SameFile(after, tampered) {
+		t.Fatal("tamper fixture replaced the original physical object", err)
 	}
 	if file, r, err := stageProjection(t.Context(), disk, scope, source, d, 8192, 1<<20, guard); !errors.Is(err, custody.ErrIntegrity) || file != nil || r.OutputSHA256 != "" {
 		t.Fatal("tampering was hidden by choosing another slot", err)
@@ -97,5 +104,18 @@ func TestProjectionStageGuardAndQuotaCannotQualifyOrRetainNewPartial(t *testing.
 	}
 	if file, r, err := stageProjection(t.Context(), disk, scope, source, d, 8192, 1, func() error { return nil }); !errors.Is(err, custody.ErrCapacity) || file != nil || r.OutputSHA256 != "" {
 		t.Fatal("storage quota bypassed", err)
+	}
+}
+
+func requireSealedProjectionForTest(t testing.TB, path string) {
+	t.Helper()
+	f, err := os.Open(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer f.Close()
+	state, err := protectedfs.Protection(f)
+	if err != nil || state != protectedfs.PrivateSealed {
+		t.Fatal("original projection object is not private sealed bytes", err)
 	}
 }

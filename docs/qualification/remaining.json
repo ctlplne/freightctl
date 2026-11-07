@@ -1175,7 +1175,8 @@
         "docs/qualification/evidence/F255-actual-inherited-access-refusal.json",
         "docs/qualification/evidence/F257-readonly-browser-session-fence.json",
         "docs/qualification/evidence/F259-native-held-root-rename-proof.json",
-        "docs/qualification/evidence/F261-independent-receiver-and-rotation-fixtures.json"
+        "docs/qualification/evidence/F261-independent-receiver-and-rotation-fixtures.json",
+        "docs/qualification/evidence/F263-private-native-unit-references.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -1246,13 +1247,14 @@
         "F254 records actual Windows flags0x00 after the old inherited-bit setter on638d156. F255 prepares natural parent-to-child inheritance,requires actual inherited ACE readback before the unchanged held-file refusal,and separately exercises the actual production descriptor parser with protected owner-only inherited versus explicit entries. Only a read-only parser extraction changes production;its rules are unchanged. Compile/vet only;actual native inherited refusal remains red/owed. The new root-rename sharing failure is separately preserved.",
         "F257 repairs the source-confirmed invalid FOR SHARE inside read-only browser audit history,whose original HTTPS request returned503. Browser authentication takes its existing row fence first,then SET TRANSACTION READ ONLY before returning the transaction to services. Reauthorization reuses only the held row lock and still queries all live credential/session/root/authority/expiry predicates. New native regression requires read-only mode,55P03 concurrent row-writer refusal,25006 domain-write refusal,ordinary logout after release,captured-session refusal and unchanged bearer access. Local audit controls/architecture and integration compilation/vet pass;actual PostgreSQL/HTTPS red-to-green replay owed. No schema change or retained DB action.",
         "F259 fixes the native adverse-test precondition:Go os.OpenRoot omits delete sharing on Windows,so the original rename was blocked before confinement could be tested. The fixture uses parent.Root.OpenRoot to permit actual rename;all original held-destination,exact-byte,no-overwrite and replacement-absence assertions remain. CLI byte verification/publication is factored into the same held-root helper;the substitution case exercises it with a movable root. A separate Windows public-entry case requires exact sharing violation,unchanged physical directory and sealed exact bytes. Local adverse cases/static/Windows compilation pass;all actual Windows proofs remain owed.",
-        "F261 repairs two source-confirmed fixture errors reached by original native CI:the complete receiver query found77 tables but asserted obsolete63;the onward owner attempted its own credential rotation,which is explicitly forbidden. Require all77 current non-event tables while preserving every table/event hash and read-only snapshot assertion. Preserve self-rotation refusal/unchanged authority,and use a separate ordinary account-only manager for actual rotation;the old-receipt Unauthorized assertion is unchanged. Integration compilation/vet only;native receiver/rotation replays owed."
+        "F261 repairs two source-confirmed fixture errors reached by original native CI:the complete receiver query found77 tables but asserted obsolete63;the onward owner attempted its own credential rotation,which is explicitly forbidden. Require all77 current non-event tables while preserving every table/event hash and read-only snapshot assertion. Preserve self-rotation refusal/unchanged authority,and use a separate ordinary account-only manager for actual rotation;the old-receipt Unauthorized assertion is unchanged. Integration compilation/vet only;native receiver/rotation replays owed.",
+        "F263 makes FTPS stand-in/stock-negative passwords,independent-peer directories and projection partial/corruption fixtures use actual private OS profiles. Windows tamper fixture changes only the same owned object ACL,writes corruption and re-seals;physical identity and original digest/no-other-slot refusals remain. Independent peer scripts/non-symlink/Unix permissions remain untouched. Focused local filesystem and four loopback FTPS protocol stand-ins pass;the first sandbox socket refusal is preserved and the authorized bounded replay passes. Architecture,affected vet and Windows compilation/vet pass. Actual Windows/stock/scanner and final-source runtime proofs remain owed. STATUS is compacted;historical evidence remains in exact manifests and commits."
       ],
       "current_item": {
-        "id": "F261",
-        "state": "Independent receiver and account rotation fixtures corrected;native replay owed",
-        "proof": "Actual original77-table/self-rotation failures retained;integration compilation/vet only",
-        "next": "Repair protected native unit references,then remaining API/browser/protocol and implementation gates"
+        "id": "F263",
+        "state": "Protected native unit inputs corrected;actual Windows replay owed",
+        "proof": "Focused local filesystem/protocol stand-ins pass;original sandbox bind failure retained;Windows compile/vet only",
+        "next": "Repair actual format/review/receive browser and remaining protocol/product gates;push verified batch after previous runs terminal"
       }
     }
   ],

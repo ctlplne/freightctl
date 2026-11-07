@@ -18,6 +18,7 @@ import (
 	"time"
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
+	"github.com/ctlplne/freightctl/internal/protectedfs"
 )
 
 type fixture struct {
@@ -46,9 +47,7 @@ func newFixture(t *testing.T, implicit bool) *fixture {
 	if err := secure.DevCertificate(cert, key); err != nil {
 		t.Fatal(err)
 	}
-	if err := os.WriteFile(pw, []byte("fixture-password"), 0600); err != nil {
-		t.Fatal(err)
-	}
+	writeCredentialFixture(t, pw, []byte("fixture-password"))
 	identity, err := secure.LoadFTPSIdentity(cert, key)
 	if err != nil {
 		t.Fatal(err)
@@ -537,4 +536,19 @@ func FuzzPassiveReplyNeverEscapesPortBudget(f *testing.F) {
 			}
 		}
 	})
+}
+
+func writeCredentialFixture(t testing.TB, path string, body []byte) {
+	t.Helper()
+	f, err := protectedfs.CreateExclusive(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer f.Close()
+	if _, err = f.Write(body); err != nil {
+		t.Fatal(err)
+	}
+	if err = f.Close(); err != nil {
+		t.Fatal(err)
+	}
 }

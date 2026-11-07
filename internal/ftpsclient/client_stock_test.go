@@ -103,9 +103,7 @@ func TestNativeStockReceiver(t *testing.T) {
 				t.Fatal("stock wrong identity accepted")
 			}
 			bad := filepath.Join(t.TempDir(), "wrong-password")
-			if err = os.WriteFile(bad, []byte("not-the-enrolled-password"), 0600); err != nil {
-				t.Fatal(err)
-			}
+			writeCredentialFixture(t, bad, []byte("not-the-enrolled-password"))
 			wrong = entry.destination
 			wrong.PasswordFile = bad
 			wrong.PasswordSHA256 = secure.Digest([]byte("not-the-enrolled-password"))
