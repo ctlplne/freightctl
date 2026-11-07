@@ -84,6 +84,11 @@ focused green;exact root/public-view binding is added in migration61. Prepared
 real PostgreSQL capture/replay/revocation/forgery tests compile only;actual
 native execution,operator profile creation and browser support remain owed.
 
+F301 adds authorized local CLI profile preparation without host paths in stdout.
+Exact private profile/no-overwrite/revocation/root-substitution tests pass. The
+original real PostgreSQL CLI parser journey has new source/capture/replay/readback
+checks compiled only;actual native execution and browser review remain owed.
+
 Local F295 binds protected source configuration bytes to the reviewed physical
 root through a strict four-scalar profile. Valid-profile regression turns red
 to green;rehashed ambiguous/unknown meaning and changed bytes/root/authority

@@ -43,8 +43,18 @@ A `local.collect` source selects that registered ID/version/hash with the existi
 manual immutable-files manifest contract and ordinary target/bounds. Local source
 connections cannot be delivery steps. SQL migration61 binds the exact public
 view,physical-root source identity and current permission/approval snapshot.
-Calendar admission,operator profile preparation,browser support and native
-PostgreSQL/custody/refusal/restore proof remain owed.
+F301 adds local `connection-local-profile --local-source-directory ABSOLUTE_ROOT
+--output ABSOLUTE_PROFILE` with the ordinary tenant/partner/token/DSN selectors.
+It requires current root-mounted admin and connections_manage grants,inspects the
+actual private root,stages/verifies/seals/syncs the exact profile bytes,then
+rechecks authority and physical root before non-overwriting publication in a
+private output folder outside the producer. Stdout contains only the profile,
+fingerprints and read-only flag. Use those fingerprints and the known profile
+output path in the protected registration request above. On any post-publication
+sync error,inspect the exact existing profile before retry;never overwrite it.
+Prepared ordinary-parser PostgreSQL CLI capture/replay/refusal proof remains
+unexecuted. Calendar admission,browser support and native PostgreSQL/custody/
+refusal/restore proof remain owed.
 
 The first workflow executor sends one immutable accepted file through an ordered list of `sftp.deliver` steps. CLI and HTTPS use the same typed definition, validation, permissions, approval and execution services. It uses the [outbound SFTP profile](protocols/outbound-sftp.md), including its loopback-only development network, required extensions, bounded workers and uncertain-receipt rules. This is a foundation for the full workflow engine; schedules, conditions, collection, processing, visual editing and AI proposals remain required work.
 

@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "id": "F301",
+  "observed_at": "2026-11-07",
+  "base_candidate": "0be5ad6649ddabde68f2d37aceb8709724132743",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Protected operator profile CLI implemented;actual CLI/PostgreSQL replay owed",
+  "changed": "F301 implements connection-local-profile under current root-mounted admin/connections_manage authority. Pin the actual private source root,write verified sealed/synced configuration outside the producer through the held-directory non-overwriting publisher,and recheck authority/root before publication. Stdout shows fingerprints only. Actual local profile regression turns red to green;existing output preservation,revoked/staged/root-substitution/producer-write refusals pass. Original parser/real PostgreSQL CLI journey now includes profile,registration,approval,capture,missing-profile replay and independent custody readback;prepared and compiled only. Actual native CLI/browser,calendar/mounted-storage/recovery and whole product qualification remain owed.",
+  "red": {
+    "test": "TestLocalSourceProfilePublishesExactProtectedConfigurationWithoutHostPathDisclosure",
+    "observation": "After correcting initial stub compilation,actual valid protected profile preparation fails unavailable before implementation;both original outputs preserved."
+  },
+  "green": [
+    "Actual profile bytes open the existing strict read-only peer;no host reference in stdout metadata,no producer writes,no staging left.",
+    "Same path never overwrites;authority revoked after staging and a replaced physical root refuse publication;producer-relative/nested and nonabsolute outputs refuse.",
+    "Affected formatting,vet,architecture,tagged integration compilation and Windows test compilation pass only."
+  ],
+  "prepared_native_proof": "qualifyLocalCollectionCLI extends TestArtifactExchangeCLIUsesOrdinaryAuthorityAndPublishesVerifiedDownload using real ordinary parser,PG/private root/profile/registration/approval/capture/missing-profile exact-key replay and independent custody readback;unexecuted",
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f301-cli-initial-compile-refusal.log",
+      "sha256": "07bdc08b5d15f0747ab8b5312e0bb83a28e7d09420c3c20cbc2f945006e47647",
+      "bytes": 241
+    },
+    {
+      "reference": ".private/freightctl-f301-cli-red.log",
+      "sha256": "ec0822cdf597c31b35a312bcede02eb10a24d0b66089db1a1d30a8b96cb75006",
+      "bytes": 300
+    },
+    {
+      "reference": ".private/freightctl-f301-cli-final-green.log",
+      "sha256": "871b0c967716f88972fe06a1b5990d4631c6d834159f8f85099a863b2d6290e9",
+      "bytes": 57
+    },
+    {
+      "reference": ".private/freightctl-f301-final-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f301-architecture.log",
+      "sha256": "cc962d42b377f2d891630cbfba9c1ae0026b6fbf42b901f0b1eaccc0a287cc8d",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f301-integration-compile.log",
+      "sha256": "6ccd1bb861acabc53d39271f2960d0d16cb56600c7b8e6457cf4a9ded590bcb4",
+      "bytes": 75
+    },
+    {
+      "reference": ".private/freightctl-f301-final-windows-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f301-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "source_files": [
+    {
+      "reference": "cmd/freightctl/main.go",
+      "sha256": "fc92e9f3f5ecb58d74f7fbbdda9f74f49d3550f527871a3bb20d5b4429f591ef",
+      "bytes": 50021
+    },
+    {
+      "reference": "cmd/freightctl/exchanges_integration_test.go",
+      "sha256": "16b3aa924852293de73537551939a9a3003d4884284ba173bfbdd448f96daada",
+      "bytes": 22694
+    },
+    {
+      "reference": "cmd/freightctl/local_source_profile.go",
+      "sha256": "dafacdd5fbe8d49e43d1e94b2126de6562e0b912b93324c8792efa677c12a446",
+      "bytes": 3811
+    },
+    {
+      "reference": "cmd/freightctl/local_source_profile_test.go",
+      "sha256": "f8d75a93e1d319a8200dbd480c18e69c0b4490edcbe3fb0007e8e833e5a184fd",
+      "bytes": 4888
+    },
+    {
+      "reference": "cmd/freightctl/local_source_profile_integration_test.go",
+      "sha256": "b0b735126522ccaa1a202aa7c7243e4239c7452ee15f36e7802537c5e6b8dbdc",
+      "bytes": 7214
+    },
+    {
+      "reference": "docs/workflows.md",
+      "sha256": "95fe2d3f613f4ea2de42cea72f8da0a61340d842a2f365a474d3288af27ee06f",
+      "bytes": 17827
+    },
+    {
+      "reference": "STATUS.md",
+      "sha256": "f9266f6f9e422fdbe3e86c16f86353144c9faa1e90cde9f8c06d39084beb25ac",
+      "bytes": 7146
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "fd1d9353a4b1dae510bb1d718e849428bfbe441d71544ee89a7bc6d2d3972384",
+      "bytes": 399709
+    }
+  ],
+  "owed": [
+    "Actual original native CLI parser/PG/custody/profile refusal execution and all final-source baseline/AX/FINISH gates.",
+    "Browser metadata/operator path,native Windows filesystem,mounted storage,calendar,crash/recovery/restore and performance."
+  ],
+  "resources": "OneCPU/192MiB local small actual private filesystem/pure/static/cross-compilation;no heavy runtime or inference.",
+  "security": "No producer contents read for profile creation;current admin+connections_manage required;protected exact configuration grants no approval,forwarding or execution authority;existing custody and SQL guards unchanged."
+}

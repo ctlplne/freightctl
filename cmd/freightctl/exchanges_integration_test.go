@@ -422,4 +422,5 @@ func TestArtifactExchangeCLIUsesOrdinaryAuthorityAndPublishesVerifiedDownload(t 
 		t.Fatal("ordinary sender gained audit authority", err)
 	}
 	qualifyJSONIntakeCLI(t, ctx, service, scope, adminToken, b, command, requestFile)
+	qualifyLocalCollectionCLI(t, ctx, service, scope, adminToken, b, command, requestFile)
 }
