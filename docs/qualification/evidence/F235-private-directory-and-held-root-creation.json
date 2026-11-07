@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "id": "F235",
+  "observed_at": "2026-11-07",
+  "base_candidate": "e87483babb4e32f8a3aaf78d13f8374d842fa78b",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Private creation primitives implemented;native Windows and product wiring owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "682e573396759e3b30dfcc2c7353d380c0d16e8c0c6443ed0513420f0cdab1fb",
+      "bytes": 18877
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "79ee013db700b0d3e78b4bc4f03afeef9db60e35be156f1523fd81de4adc5345",
+      "bytes": 369549
+    },
+    {
+      "reference": "docs/security/protected-files.md",
+      "sha256": "877ab39953d0cb6d72cfd79daa4ac9908b5808b7197d586c1d51020d17213bc6",
+      "bytes": 5006
+    },
+    {
+      "reference": "internal/protectedfs/create.go",
+      "sha256": "24350f2f9c48488c950af522e9b12cfa48c4f71d3f11ce23a586244670981950",
+      "bytes": 1610
+    },
+    {
+      "reference": "internal/protectedfs/create_other.go",
+      "sha256": "8cb8ab6f4749cb832e002f7fbe99d1d1fda7a6c9868cfb608b9cddb521888777",
+      "bytes": 778
+    },
+    {
+      "reference": "internal/protectedfs/create_test.go",
+      "sha256": "cf5b2f62a66cc35db41d6fe03f7f067fb09c6575f9b9e8c2547c0f5ddd830769",
+      "bytes": 2799
+    },
+    {
+      "reference": "internal/protectedfs/create_windows.go",
+      "sha256": "cd796e29cd58680b6376334479497987183e3cc376e90299b2d5dbcd731ae538",
+      "bytes": 3141
+    }
+  ],
+  "original_context": {
+    "candidate": "71e8166d0bc96c574055e00f749d387e0f0b0460",
+    "run": 42352071943,
+    "job": 128342141717,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128342141717",
+    "observation": "Original Windows custody/setup fail at Unix-mode private roots. Actual descriptor creation and relative private writers are prerequisites;this item alone does not repair the complete original path."
+  },
+  "changed": [
+    "Exclusive directory creation:Windows atomically receives a created handle with explicit owner-only protected DACL;Unix0700 creation validates directory identity before use. Existing objects are never adopted or permissions changed.",
+    "Private flat creation under os.Root validates private held parent,uses native handle-relative FILE_CREATE with non-directory/no-reparse/synchronous semantics and owner-only descriptor on Windows;Unix uses Root.OpenFile O_EXCL0600. No root pathname reconstruction,overwrite,privilege escalation or external lifecycle authority.",
+    "Refuse flat separators,traversal,ADS,device aliases and unsupported leaf spellings. Keep ordinary owner directory spaces/Unicode. NT failures map to ordinary filesystem errors;exact held resources are closed on failure."
+  ],
+  "green": [
+    "Actual small local filesystem case preserves original held root across rename/replacement,keeps private access before first byte,refuses existing directory/file and independently verifies unchanged bytes and absent replacement output.",
+    "Closed leaf parser/owner path and existing protected-file policy/handle tests pass. Windows compilation/vet and architecture pass."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f235-architecture.log",
+      "sha256": "b3a4ce4c52f07ddbde79b66ca1a43c4ef576d2faf19fee2108ba504c0acbf836",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f235-final-owner-paths.log",
+      "sha256": "5640f8f07cec92d57ffa577ba53a44162a0e66d441c39f41a78cab8427ffe113",
+      "bytes": 63
+    },
+    {
+      "reference": ".private/freightctl-f235-final-private-create.log",
+      "sha256": "ea6c96fd43f8a63105149e78dc6aac165941a4e9e1ab948cca803ce6d6569cef",
+      "bytes": 63
+    },
+    {
+      "reference": ".private/freightctl-f235-final-windows-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f235-private-create.log",
+      "sha256": "50d6468e730ffab8b2b8b0df68d7cdcb4f9f474f0ec490d760173e0a7c8b4ffc",
+      "bytes": 63
+    },
+    {
+      "reference": ".private/freightctl-f235-windows-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f235-windows-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "primary_references": [
+    "https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nf-wdm-zwcreatefile"
+  ],
+  "owed": [
+    "Actual Windows creation/rename/replacement/no-overwrite/descriptor/leaf cases;hostile parent/reparse/closed-handle/race/restricted-token and filesystem profiles.",
+    "Wire custody roots/staging/identity/sealing and setup private references,then replay original Windows failures.",
+    "All actual final-source native/browser/stock/security/race/restore/reproducibility and remaining baseline/AX/FINISH gates."
+  ],
+  "resources": "OneCPU/192MiB local small filesystem units/static/cross-compilation only;no PostgreSQL,Chrome,inference,scanner or heavy peer. Retained35/source60 unchanged."
+}

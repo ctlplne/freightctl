@@ -133,6 +133,12 @@ client CA write refusal is added. Focused policy/identity/trust/architecture/vet
 and Windows compilation pass. Actual Windows ACL/TLS/full-platform replay and
 storage/setup/private writers remain owed.
 
+F235 adds exclusive private directory and held-root flat-file creation. Windows
+attaches the owner descriptor in NtCreateFile and never reconstructs the root
+pathname. Local rename/replacement/no-overwrite/private-before-write and leaf
+refusal cases pass;Windows compile/vet and architecture pass. Native Windows
+race/token/reparse proof,custody sealing and custody/setup wiring remain owed.
+
 Schema3 records.project binds an owned checked input,approved exact task,one
 durable processing intent,slots and events/receipt. Stable work keys select one
 historical attempt;current status is separate. New artifacts stay held for fresh

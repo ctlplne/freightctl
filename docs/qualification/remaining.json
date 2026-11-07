@@ -1159,7 +1159,8 @@
         "docs/qualification/evidence/F229-safe-native-browser-failure-stages.json",
         "docs/qualification/evidence/F231-processing-fixture-budget-and-held-release.json",
         "docs/qualification/evidence/F214-native-repair-batch-terminal-ci.json",
-        "docs/qualification/evidence/F233-public-trust-file-integrity-profile.json"
+        "docs/qualification/evidence/F233-public-trust-file-integrity-profile.json",
+        "docs/qualification/evidence/F235-private-directory-and-held-root-creation.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -1216,13 +1217,14 @@
         "F227 repairs the original Windows closed-file directory assertion by moving type validation into platform adapters:Unix preserves Stat/is-directory/Sync;Windows reaches its existing RawConn.Control pinned-handle validation before touching the handle. Original closed/regular/nil/native identity/rename/swap assertions unchanged. Local directory/audit/static and Windows compile/vet pass;actual Windows native replay owed.",
         "F229 instruments original failing JSON-intake/independent-review Chrome journeys with closed literal stages beside their existing safe result digest. Arbitrary stage text is refused;raw browser logs remain private. Existing operations/assertions/sandbox/egress/timeouts remain. Privacy refusal,syntax/format and compile/vet pass;actual stage replay and browser fixes owed.",
         "F231 corrects producer fixture output contracts/tasks to explicit8192bytes within existing8MiB custody file capacity;inherited16MiB allowance could not stage. Product/source-policy/quota controls remain unchanged. Shared forged-release helper requires actual held/zero-attempt/no-report and exact file/policy bindings,correcting F215's unpushed queued-state assertion and reaching independent-review role refusal. Compile/vet/source conformance pass;actual original native replay owed.",
-        "F233 implements held-handle public certificate/CA integrity:Unix0022 write refusal remains;Windows accepts explicit public read/execute while refusing other-principal mutation/deletion/ACL/owner rights. Secret/private-key owner-only rules remain. Original FTPS permission assertions use actual DACL grants and client CA write refusal is added. Focused local policy/identity/trust/architecture/vet and Windows compile pass;native Windows/runtime proof owed. F214 preserves71e8166 terminal18/41:27pass/14fail,listed security/image scans passed,SCP/tus workflows and six processing Chrome component cases pass;all remaining originals stay red."
+        "F233 implements held-handle public certificate/CA integrity:Unix0022 write refusal remains;Windows accepts explicit public read/execute while refusing other-principal mutation/deletion/ACL/owner rights. Secret/private-key owner-only rules remain. Original FTPS permission assertions use actual DACL grants and client CA write refusal is added. Focused local policy/identity/trust/architecture/vet and Windows compile pass;native Windows/runtime proof owed. F214 preserves71e8166 terminal18/41:27pass/14fail,listed security/image scans passed,SCP/tus workflows and six processing Chrome component cases pass;all remaining originals stay red.",
+        "F235 adds private exclusive directory and held-root flat-file creation primitives. Windows NtCreateFile binds the exact pinned parent and explicit owner DACL at creation;Unix retains relative exclusive0600. Local owned-root rename/replacement,byte/no-overwrite/private-before-write and leaf/path cases pass;Windows compile/vet and architecture pass. Actual Windows race/token/reparse proof,custody sealing and custody/setup wiring remain owed;no Windows product qualification."
       ],
       "current_item": {
-        "id": "F233",
-        "state": "FTPS trust material uses held-handle public integrity profile;native Windows owed",
-        "proof": "Original71e8166 Windows identity/CA reference failures retained;local mutation/private/public and original identity/trust assertions plus static/Windows compile pass",
-        "next": "Push verified batch after F214 terminal security evidence;replay original failures and complete Windows storage/setup,browser,remaining implementation/baseline/AX/FINISH work"
+        "id": "F235",
+        "state": "Private directory and held-root creation seam implemented;product wiring owed",
+        "proof": "Local actual filesystem rename/replacement,no-overwrite and private-before-first-byte assertions pass;Windows cross-compilation/vet only",
+        "next": "Implement exact sealed-file protection and wire custody/setup;run original native Windows/platform and all remaining product/baseline/AX/FINISH work"
       }
     }
   ],

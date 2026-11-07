@@ -57,6 +57,22 @@ client CA test now also requires refusal of other-user write and acceptance of
 public read. Focused local checks and Windows compilation pass;actual Windows
 ACL/TLS/profile execution remains owed.
 
+Private directory creation is exclusive. Windows passes the owner-only
+descriptor to native creation and receives the newly created directory handle
+from that operation. New private flat objects are created relative to a held
+`os.Root`,using a pinned parent handle and `NtCreateFile(FILE_CREATE)` on Windows.
+The parent must satisfy the private-directory profile;the new object has its
+explicit private descriptor before any data is written. Unix retains relative
+exclusive0600 creation. Creation never reconstructs a root pathname after its
+handle has been opened. Service-owned leaf names exclude separators,alternate
+streams,parent traversal and Windows device aliases. Owner directory paths may
+contain spaces and Unicode.
+
+The local owned-root rename/replacement,exclusive no-overwrite,private-before-
+first-byte and leaf-refusal tests pass. Windows compilation/vet pass;actual
+native execution,hostile parent/reparse/race/other-token cases and custody/setup
+wiring remain owed. These primitives alone do not qualify Windows custody.
+
 The implementation uses the platform APIs described by Microsoft's
 [file security documentation](https://learn.microsoft.com/en-us/windows/win32/fileio/file-security-and-access-rights)
 and the pinned Go
