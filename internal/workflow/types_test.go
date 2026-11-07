@@ -30,6 +30,8 @@ func FuzzTypedWorkflow(f *testing.F) {
 	f.Add([]byte(`{"schema_version":1,"name":"settlement","steps":[{"id":"send","kind":"sftp.deliver","connection":{"id":"00000000-0000-0000-0000-000000000001","version":1,"hash":"0000000000000000000000000000000000000000000000000000000000000000"},"filename":"settlement.csv"}]}`))
 	f.Add([]byte(`{"schema_version":1,"name":"settlement","steps":[]}`))
 	f.Add([]byte(`{"name":"a","name":"b"}`))
+	f.Add([]byte(`null`))
+	f.Add([]byte(`{"schema_version":1,"ſchema_version":2,"steps":[]}`))
 	f.Fuzz(func(t *testing.T, data []byte) {
 		var d Definition
 		if Decode(data, &d) != nil {

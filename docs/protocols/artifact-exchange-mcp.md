@@ -186,7 +186,9 @@ receiver evidence stays `unknown`.
 
 Control envelopes are at most32KiB, depth16 and8192 inspected tokens. They refuse
 batches, repeated/case-folded aliases, null values, lossy IDs, trailing data and
-unknown argument fields. Ordinary16KiB request/24KiB endpoint/4KiB closure and
+unknown argument fields. Unicode letters that Go folds into ASCII field names
+are refused before SDK decoding. Defined camel-case protocol metadata and
+ordinary Unicode data keep their forms. Ordinary16KiB request/24KiB endpoint/4KiB closure and
 existing queue/read/admission controls keep their meanings. The shared API admits
 at most eight concurrent requests; each tool runs under the originating HTTP
 cancellation and a10second action deadline, inside a15second request deadline.

@@ -50,6 +50,10 @@ func TestMCPStockClientExchangeUsesOrdinaryAuthorityAndSeparateReply(t *testing.
 	service, scope, admin, server := browserAPI(t, 600*time.Second, settings)
 	cookie, csrf := loginBrowser(t, server, scope, admin)
 	prefix := "/v1/tenants/" + scope.Tenant + "/partners/" + scope.Partner
+	// The raw Unicode alias must fail at the HTTP boundary before the stock
+	// SDK can erase its spelling or dispatch a tool. The ordinary stock-client
+	// discovery/exchange/reply journey below stays intact.
+	exchangeAPIRequest(t, server, "POST", prefix+"/mcp", nil, map[string]string{"Authorization": "Bearer " + string(admin.Bytes), "Origin": server.URL, "Content-Type": "application/json", "Accept": "application/json, text/event-stream", "MCP-Protocol-Version": mcpProtocolVersion, "Mcp-Method": "tools/call", "Mcp-Name": "guard-probe"}, []byte(mcpAliasEnvelope), 400)
 	tokenA, actorA := exchangeAPIParticipant(t, server, prefix, cookie, csrf, []string{"read", "write", "list", "deliver"})
 	tokenB, actorB := exchangeAPIParticipant(t, server, prefix, cookie, csrf, []string{"read", "write", "list"})
 	tokenOther, _ := exchangeAPIParticipant(t, server, prefix, cookie, csrf, []string{"read", "list"})

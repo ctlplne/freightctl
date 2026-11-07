@@ -112,6 +112,9 @@ func Decode(data []byte, target any) error {
 		if err != nil {
 			return ErrInput
 		}
+		if depth == 0 && token != json.Delim('{') {
+			return ErrInput
+		}
 		delimiter, ok := token.(json.Delim)
 		if !ok {
 			return nil
@@ -124,7 +127,7 @@ func Decode(data []byte, target any) error {
 					return ErrInput
 				}
 				name, ok := key.(string)
-				if !ok || name != strings.ToLower(name) || keys[name] {
+				if !ok || name != strings.ToLower(name) || HasASCIIFieldAlias(name) || keys[name] {
 					return ErrInput
 				}
 				keys[name] = true
@@ -163,6 +166,23 @@ func Decode(data []byte, target any) error {
 		return ErrInput
 	}
 	return nil
+}
+
+// HasASCIIFieldAlias identifies Unicode spellings that Go folds into ASCII
+// JSON fields,such as long-s into S. It allows ordinary Unicode data and
+// unrelated Unicode dictionary keys.
+func HasASCIIFieldAlias(name string) bool {
+	for _, character := range name {
+		if character <= unicode.MaxASCII {
+			continue
+		}
+		for folded := unicode.SimpleFold(character); folded != character; folded = unicode.SimpleFold(folded) {
+			if folded <= unicode.MaxASCII {
+				return true
+			}
+		}
+	}
+	return false
 }
 func Normalize(d Definition) (Definition, error) {
 	if (d.Schema != 1 && d.Schema != 2 && d.Schema != 3) || (d.Schema == 1 && len(d.Steps) < 1 && d.Source == nil) || len(d.Steps) > 16 || !utf8.ValidString(d.Name) {

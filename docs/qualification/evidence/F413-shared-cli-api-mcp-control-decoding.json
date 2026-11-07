@@ -1,0 +1,256 @@
+{
+  "schema_version": 1,
+  "id": "F413",
+  "observed_at": "2026-11-07",
+  "base_candidate": "67dbe859b5b3bbd5a33e07c4b7a3c31d612dade9",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F413 unifies namespace/upload-create CLI JSON decoding with the existing API typed-object boundary. The extracted actual old CLI decoder admits duplicate/aliased fields,invalid UTF8 and an oversized stream prefix;all observed reds are retained. The shared API decoder also admits root null and Unicode long-s aliases for ASCII revision fields;MCP first-guard literal/escaped aliases are separately observed red. Read one extra byte without raising the existing16KiB CLI limit,require object controls and reject Unicode-to-ASCII field aliases before typed/SDK decoding. Preserve existing32KiB/16depth/4096token workflow and32KiB/16depth/8192token MCP bounds,valid Unicode data,camel-case MCP metadata and explicit zero options. Focused guards,fuzz seeds,tagged compilation,vet,format and architecture pass. The original JSON transport stand-in first cannot bind loopback under sandbox;the exact test passes with permitted loopback and one CPU/192MiB Go limit. It loads no model and establishes no inference qualification. Prepared native API/CLI/MCP no-effect and stock-client compatibility remain owed;all authority/custody/execution checks stay enforced.",
+  "contract": {
+    "controls": "Single JSON object;one exact field spelling,no duplicate/case/Unicode-to-ASCII aliases,lossy UTF8 or trailing/truncated control",
+    "CLI": "Namespace and upload-create retain regular16KiB command-file bounds and use shared workflow.Decode after bounded read;credential/database opening order is unchanged",
+    "API": "Null roots and Unicode ASCII field aliases are refused before domain command execution",
+    "MCP": "First JSON guard rejects Unicode ASCII aliases before SDK/typed decoding;existing exact argument schemas and permissions remain. No prior actual tool-execution vulnerability is claimed by the first-guard red",
+    "compatibility": "Unicode values/unrelated Unicode dictionary keys,defined camel-case MCP metadata and meaningful zero options retain their forms",
+    "bounds_changed": false,
+    "existing_workflow_bounds": {
+      "bytes": 32768,
+      "depth": 16,
+      "tokens": 4096
+    },
+    "existing_MCP_bounds": {
+      "bytes": 32768,
+      "depth": 16,
+      "tokens": 8192
+    },
+    "library": "No new dependency or inference runtime"
+  },
+  "red_green": [
+    {
+      "proof": "Actual extracted CLI decoder admits eight duplicate/alias/lossy cases and an oversized prefix",
+      "exit_code": 1,
+      "reference": ".private/freightctl-f413-cli-control-red.log"
+    },
+    {
+      "proof": "Original shared API decoder admits root null and both Unicode ASCII aliases",
+      "exit_code": 1,
+      "reference": ".private/freightctl-f413-api-alias-red.log"
+    },
+    {
+      "proof": "Original MCP first guard admits literal/escaped Unicode ASCII aliases;no actual tool exploit claimed",
+      "exit_code": 1,
+      "reference": ".private/freightctl-f413-mcp-alias-red.log"
+    },
+    {
+      "proof": "Focused CLI/API/workflow/MCP guards and valid data/zero/camel-case compatibility",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f413-control-final.log"
+    },
+    {
+      "proof": "Existing transport stand-in sandbox loopback bind denial,not an inference or assertion result",
+      "exit_code": 1,
+      "reference": ".private/freightctl-f413-backend-standin.log"
+    },
+    {
+      "proof": "Exact bounded loopback JSON transport stand-in replay;no model",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f413-backend-standin-allowed.log"
+    },
+    {
+      "proof": "Typed workflow existing/new fuzz seeds only;no local fuzz campaign",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f413-fuzz-seeds.log"
+    },
+    {
+      "proof": "Native API/CLI/MCP/workflow/backend compile only",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f413-native-final-compile.log"
+    },
+    {
+      "proof": "Affected final tagged vet",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f413-vet-final.log"
+    },
+    {
+      "proof": "Final architecture",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f413-architecture-final.log"
+    },
+    {
+      "proof": "Fourteen changed/new Go files formatted",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f413-format-final.log"
+    }
+  ],
+  "owed": [
+    "Actual native API root-null/Unicode refusal with zero durable state and exact existing-file false-revision/mode/custody preservation",
+    "Actual fresh-actor namespace/upload CLI malformed-control refusal,zero private receipts/mutations/sessions and unchanged source",
+    "Actual raw MCP boundary refusal and unchanged original official SDK exchange/processing/approval/reply journeys",
+    "All affected original/final-source runtime/security/fuzz and remaining mandatory baseline/AX/readiness gates"
+  ],
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "a525771ed05155f5bed30f78de8a9ce061be38f641c7d4f9165135b6ac732b97",
+      "bytes": 10725
+    },
+    {
+      "reference": "cmd/freightctl/control_input.go",
+      "sha256": "a3601c355b4648ce9855c05d930c2f803610aa5e145129bc86995f9c63e38ab0",
+      "bytes": 560
+    },
+    {
+      "reference": "cmd/freightctl/control_input_integration_test.go",
+      "sha256": "2f27530d35eb5cc6c706a7d089cd7af772d5a8cd38e39263476c48ba2de9e602",
+      "bytes": 3472
+    },
+    {
+      "reference": "cmd/freightctl/control_input_test.go",
+      "sha256": "abad136960a87cb9d79f31a6601884cb7d290517df7462581d665db7810b1506",
+      "bytes": 2882
+    },
+    {
+      "reference": "cmd/freightctl/exchanges_integration_test.go",
+      "sha256": "bf0e16dbb315e5804fdaac4c585df2921d8f9b9f4a0284ca9bda1364f23ee979",
+      "bytes": 23706
+    },
+    {
+      "reference": "cmd/freightctl/main.go",
+      "sha256": "311b81b5a2d47b12c183aabb6cadd56891055006b05a54c6dc2c13669131949f",
+      "bytes": 50169
+    },
+    {
+      "reference": "docs/development.md",
+      "sha256": "91b6f148830ca30460f4987aa98d601e2e588be69b56391bcd763291225ae081",
+      "bytes": 42383
+    },
+    {
+      "reference": "docs/protocols/artifact-exchange-mcp.md",
+      "sha256": "be133039a358e7e2a8cd1844ef1c6df25960d684880dd1adc45b1e0a264cbfcc",
+      "bytes": 16966
+    },
+    {
+      "reference": "docs/protocols/webdav-read-profile.md",
+      "sha256": "0b0113d9fa34ed2c717bbcd0e1350399514bad9d28835bf6253199b730262c3f",
+      "bytes": 22569
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "909e411b59292ed1a688a701d7efcf3bab9860d5cdb80819345717bb81a255e1",
+      "bytes": 625295
+    },
+    {
+      "reference": "internal/api/control_alias_integration_test.go",
+      "sha256": "735be8143d2911f4554765184b17bf136b9caec2237f6ad805a481d9d7d04db5",
+      "bytes": 2218
+    },
+    {
+      "reference": "internal/api/control_alias_test.go",
+      "sha256": "48bb20052f044dd7d65cabfe2475cab7ff20b61303cecef36ae7f62d35237c68",
+      "bytes": 714
+    },
+    {
+      "reference": "internal/api/control_input_integration_test.go",
+      "sha256": "20dce1920d3a15cce7f1291b019ec3df2acfb500c1d3cbc237b3195ab4ff0519",
+      "bytes": 2776
+    },
+    {
+      "reference": "internal/api/mcp_control_alias_test.go",
+      "sha256": "47fb94efa55cbeb437bc9f064ef428b34883520bed9a8b82ea6b775e4029364a",
+      "bytes": 2258
+    },
+    {
+      "reference": "internal/api/mcp_integration_test.go",
+      "sha256": "b4ecaef608d4fd616769aba7b74d68f5c52d83127e9d804928bc5937578d6ba0",
+      "bytes": 37173
+    },
+    {
+      "reference": "internal/api/mcp_wire.go",
+      "sha256": "a842f3621743f5bade087341743385aa7d200a4b932e6bd01b6f8b3d4919dcae",
+      "bytes": 4690
+    },
+    {
+      "reference": "internal/workflow/control_alias_test.go",
+      "sha256": "36a48962f6da397951b929d8af58c61cebcc9f45528068d9d60e7a1c327f2bda",
+      "bytes": 792
+    },
+    {
+      "reference": "internal/workflow/types.go",
+      "sha256": "8c40599ca08d6a4ec3574b13433c655cdc51af1bff1bc8667903b5b7ca1c1bfd",
+      "bytes": 7676
+    },
+    {
+      "reference": "internal/workflow/types_test.go",
+      "sha256": "60eec9f2066e2af7e7f91a66fa850bdb9d32c8530b9741871ed7d9e0084e571b",
+      "bytes": 2308
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f413-cli-control-red.log",
+      "sha256": "171d4e2b4b25e1011b3f1a130d1d0eb268e2f8c000957f744527886443334124",
+      "bytes": 1057
+    },
+    {
+      "reference": ".private/freightctl-f413-api-alias-red.log",
+      "sha256": "77ea27ab1df8a07d7210bc432d5df2013d26e1c089e9ad346254db68a6f4bf49",
+      "bytes": 468
+    },
+    {
+      "reference": ".private/freightctl-f413-mcp-alias-red.log",
+      "sha256": "16907ce1cb155cc0f00049b045434b93d24f8577abfa170e9e53c36cc34d51d8",
+      "bytes": 352
+    },
+    {
+      "reference": ".private/freightctl-f413-control-final.log",
+      "sha256": "36b1ff0ae999ed6676435438a8ec76d654846b22f8ec5e9208eff37dedab7ff1",
+      "bytes": 172
+    },
+    {
+      "reference": ".private/freightctl-f413-backend-standin.log",
+      "sha256": "c4bc1476f5ec8ec2c0b27317ff17da129cfeafeda4f17a5c0886fbaa168613ad",
+      "bytes": 2073
+    },
+    {
+      "reference": ".private/freightctl-f413-backend-standin-allowed.log",
+      "sha256": "328846281155f1eb11ca69e701b4659e71d6fe05fcec0394f1cec82a507868e4",
+      "bytes": 62
+    },
+    {
+      "reference": ".private/freightctl-f413-fuzz-seeds.log",
+      "sha256": "8da89c184dbe520e136a78de69c350c7d04a8460ae4895c7efd4285fc7b49a37",
+      "bytes": 60
+    },
+    {
+      "reference": ".private/freightctl-f413-native-final-compile.log",
+      "sha256": "af7a14ad43c9e8e56e0d836b22d38b1f118159ba514434babf3939144f63af41",
+      "bytes": 310
+    },
+    {
+      "reference": ".private/freightctl-f413-vet-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f413-architecture-final.log",
+      "sha256": "b3b1637a0222fe435c969850588fff05888e2a9b2e2c39661ae6d148ff70e145",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f413-format-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "safety": {
+    "local_inference": false,
+    "model_weights_loaded": false,
+    "standin_only_backend_test": true,
+    "local_postgresql_or_chrome": false,
+    "local_scanner": false,
+    "retained_database_changed": false,
+    "resource_or_permission_budgets_changed": false,
+    "publication_or_deployment": false,
+    "original_runtime_runs_cancelled_or_rerun": false
+  }
+}

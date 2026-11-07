@@ -32,7 +32,13 @@ func TestNamespaceAndUploadControlAmbiguityCreatesNoDurableState(t *testing.T) {
 	for _, body := range []string{`{"operation":"mkdir","path":"/first","path":"/second"}`, `{"operation":"mkdir","path":"/first","PATH":"/second"}`, "{\"operation\":\"mkdir\",\"path\":\"/a\xff\"}"} {
 		exchangeAPIRequest(t, server, "POST", prefix+"/namespace/commands", cookie, headers, []byte(body), 400)
 	}
+	for _, body := range []string{`null`, `{"operation":"setstat","path":"/first","expected_revision":0,"expected_reviſion":1,"mode":0}`} {
+		exchangeAPIRequest(t, server, "POST", prefix+"/namespace/commands", cookie, headers, []byte(body), 400)
+	}
 	for _, body := range []string{`{"path":"/first","path":"/second","expected_size":0,"expected_sha256":"` + secure.Digest(nil) + `"}`, `{"path":"/first","PATH":"/second","expected_size":0,"expected_sha256":"` + secure.Digest(nil) + `"}`, strings.Repeat(" ", 16<<10) + `{}`} {
+		exchangeAPIRequest(t, server, "POST", prefix+"/uploads", cookie, headers, []byte(body), 400)
+	}
+	for _, body := range []string{`null`, `{"path":"/first","expected_size":0,"expected_ſize":1,"expected_sha256":"` + secure.Digest(nil) + `"}`} {
 		exchangeAPIRequest(t, server, "POST", prefix+"/uploads", cookie, headers, []byte(body), 400)
 	}
 	if snapshot() != before {

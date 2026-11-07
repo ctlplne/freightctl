@@ -17,6 +17,16 @@ PUT,MKCOL,file MOVE,COPY and DELETE reject that header with400 instead of silent
 ignoring it. Use their byte/absence conditions below. A refused namespace
 condition is not an evaluated metadata revision or a successful transfer.
 
+The namespace and upload-create CLI command files use the same typed JSON
+object parser as their API requests. Keep each file within the existing16KiB
+limit and give every field one exact spelling. Duplicate keys,case aliases,
+Unicode spellings that Go folds into ASCII fields,invalid UTF8,trailing data
+and whole-body null are refused. One extra byte is read to detect an oversized
+stream instead of accepting its truncated prefix. Valid Unicode values and
+explicit zero-valued options keep their original meanings. Parsing a file does
+not grant permissions or make a reviewed state current;ordinary transaction,
+revision,mode,intake and idempotency checks still run before execution.
+
 - `OPTIONS` authenticates and checks read/list access to the addressed entry.
   It returns `Allow: OPTIONS, PROPFIND, GET, HEAD, PUT, MKCOL, PROPPATCH, MOVE, DELETE, COPY`
   and no DAV compliance class. Refused collection mutation responses omit

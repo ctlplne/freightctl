@@ -428,6 +428,8 @@ func TestArtifactExchangeCLIUsesOrdinaryAuthorityAndPublishesVerifiedDownload(t 
 	qualifyNamespaceCopyOverwriteCLI(t, ctx, service, scope, namespaceManagerScope, namespaceCopyManager, namespaceCopyWriter, command, requestFile)
 	qualifyNamespacePropertiesCLI(t, ctx, service, namespaceManagerScope, namespaceCopyManager, namespaceCopyWriter, command, requestFile)
 	qualifyNamespaceTreeMoveCLI(t, ctx, service, scope, namespaceManagerScope, namespaceCopyManager, namespaceCopyWriter, command, requestFile)
+	controlToken, controlScope, _ := participant([]string{"read", "write", "list", "manage_paths"})
+	qualifyCLIControlBoundaries(t, ctx, service, controlScope, controlToken, command)
 	qualifyJSONIntakeCLI(t, ctx, service, scope, adminToken, b, command, requestFile)
 	qualifyLocalCollectionCLI(t, ctx, service, scope, adminToken, b, command, requestFile)
 }

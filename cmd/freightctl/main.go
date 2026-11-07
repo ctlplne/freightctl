@@ -347,15 +347,9 @@ func run(args []string) error {
 			if err != nil || !st.Mode().IsRegular() || st.Size() > 16<<10 {
 				return errors.New("upload request must be bounded regular JSON")
 			}
-			decoder := json.NewDecoder(io.LimitReader(input, 16<<10))
-			decoder.DisallowUnknownFields()
 			var request custody.CreateUpload
-			if err = decoder.Decode(&request); err != nil {
+			if err = decodeCLIControl(input, &request, 16<<10); err != nil {
 				return errors.New("invalid upload request JSON")
-			}
-			var extra any
-			if err = decoder.Decode(&extra); err != io.EOF {
-				return errors.New("upload request has trailing data")
 			}
 			result, err = service.CreateUpload(ctx, scope, *idempotencyKey, request)
 		case "upload-append":
@@ -446,15 +440,9 @@ func run(args []string) error {
 		if err != nil || !st.Mode().IsRegular() || st.Size() > 16<<10 {
 			return errors.New("command must be a bounded regular JSON file")
 		}
-		decoder := json.NewDecoder(io.LimitReader(input, 16<<10))
-		decoder.DisallowUnknownFields()
 		var command store.PathCommand
-		if err = decoder.Decode(&command); err != nil {
+		if err = decodeCLIControl(input, &command, 16<<10); err != nil {
 			return errors.New("invalid namespace command JSON")
-		}
-		var extra any
-		if err = decoder.Decode(&extra); err != io.EOF {
-			return errors.New("namespace command contains trailing data")
 		}
 		service := &custody.Service{DB: db, NamespaceMaxEntries: *namespaceMax, UploadCheckpointBytes: *checkpointBytes}
 		if command.Operation == "publish" || command.Operation == "copy" {

@@ -147,8 +147,14 @@ DELETE and MKCOL. Five observed admission reds become400;the supported property
 and collection MOVE profiles stay enforced. Native no-effect/stock-client proof
 is prepared and owed. All83 parity IDs/states and prior evidence remain intact.
 
-Next:continue independent mandatory implementation while the16 original
-b11ab76 workflows run. Preserve their exact job/security outcomes for batching.
+F413 shares strict object decoding across namespace/upload CLI,API and MCP
+control boundaries. Duplicate/Unicode aliases,null roots,invalid UTF8 and
+truncated-prefix admission have observed reds and focused greens. Valid Unicode
+data and zero options remain. Bounded JSON transport stand-in passes without
+loading a model;native no-effect and final-source compatibility proof is owed.
+
+Next:preserve the terminal16 original b11ab76 workflows and security outcomes,
+then push the next verified owner-only batch and continue independent work.
 
 Push the next verified owner-only batch only after all required originals are terminal. Repair original
 failures and finish every mandatory final-source baseline/AX gate. F026 stays

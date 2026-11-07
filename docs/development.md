@@ -112,8 +112,9 @@ Namespace HTTPS routes use the same bearer token and tenant/partner URL prefix a
 
 | Route | Contract |
 | --- | --- |
-| `POST .../namespace/commands` | Strict JSON command, `Idempotency-Key`; mkdir, publish, rename, remove, rmdir, setstat. |
+| `POST .../namespace/commands` | Strict JSON command, `Idempotency-Key`; mkdir, publish, file copy, rename, remove, rmdir, setstat, properties and non-overwriting move_tree. |
 | `GET .../namespace/stat?path=...` | Inspect one virtual entry and its current revision. |
+| `GET .../namespace/properties?path=...` | Explicit authorized single-entry property-content snapshot; ordinary stat/list omit XML values. |
 | `GET .../namespace/entries?path=...&limit=100&after=...` | Keyset page of immediate children; maximum 1,000 per page. |
 | `PUT .../namespace/file?path=...` | Same size/digest/key upload contract; `If-Match-Revision` required to replace an existing file. |
 | `GET .../namespace/file?path=...` | Verified immutable contents, with HTTP ranges. |

@@ -9,6 +9,8 @@ import (
 	"net/http"
 	"strings"
 	"unicode/utf8"
+
+	"github.com/ctlplne/freightctl/internal/workflow"
 )
 
 const mcpProtocolVersion = "2026-07-28"
@@ -47,7 +49,7 @@ func strictMCPJSON(raw []byte) error {
 				name, ok := key.(string)
 				tokens++
 				fold := strings.ToLower(name)
-				if err != nil || !ok || tokens > 8192 || seen[fold] {
+				if err != nil || !ok || tokens > 8192 || workflow.HasASCIIFieldAlias(name) || seen[fold] {
 					return errMCPInput
 				}
 				seen[fold] = true
