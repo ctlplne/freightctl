@@ -270,6 +270,16 @@ func NewWithBrowserLifetime(service *custody.Service, audits *audit.Service, ena
 	} {
 		m.HandleFunc(pattern, s.processingReviews)
 	}
+	for _, pattern := range []string{
+		"POST /v1/tenants/{tenant}/partners/{partner}/processing-proposals",
+		"GET /v1/tenants/{tenant}/partners/{partner}/processing-proposals",
+		"GET /v1/tenants/{tenant}/partners/{partner}/processing-proposals/{proposal}",
+		"POST /v1/tenants/{tenant}/partners/{partner}/processing-proposals/{proposal}/adopt",
+		"POST /v1/tenants/{tenant}/partners/{partner}/processing-proposals/{proposal}/reject",
+		"POST /v1/tenants/{tenant}/partners/{partner}/processing-proposals/{proposal}/withdraw",
+	} {
+		m.HandleFunc(pattern, s.processingProposals)
+	}
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/namespace/commands", s.pathCommand)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/namespace/stat", s.statPath)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/namespace/entries", s.listPath)

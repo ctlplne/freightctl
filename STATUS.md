@@ -4,8 +4,8 @@ Updated 2026-11-07. Active under owner resume. All83 whole parity rows,twelve
 complete journeys and AX01–AX08 remain open. Assisted deployment,independent
 adoption and enterprise readiness remain unqualified.
 
-Latest pushed source before this batch:39301e4d508fa638ee525105dea9083c48f73693.
-F194 preserves its17 original triggered terminal workflows/37 jobs. Listed
+Latest pushed source before this batch:7599978cf1027b6f4a9c82fb0ff219bfcc7c1bf4.
+F196 preserves its17 original triggered terminal workflows/37 jobs. Listed
 source,dependency,history-secret,producer-closure and peer-image security gates
 passed;module verification passed in both failed Linux unit jobs. Document-
 producer,fuzz and native reproduction jobs passed on that candidate. Original
@@ -48,7 +48,7 @@ Focused contract/authentication checks,compilation/vet/architecture and metadata
 stand-ins pass. Five PostgreSQL cases,verified HTTPS and public CLI controls are
 prepared/compiled only.
 
-Source58 targets77 metadata/76 forced-RLS tables.
+Source59 targets78 metadata/77 forced-RLS tables.
 F183 adds exact output-contract selection for typed task draft/approval metadata
 and catalog observations. Root administration cannot substitute for producer
 ownership. Focused selection/catalog refusal checks pass;actual PostgreSQL and
@@ -95,11 +95,23 @@ plus affected static checks pass. PostgreSQL/HTTPS/actual CLI profiles are
 prepared/compiled only;served Chrome schedule/recovery/accessibility,protected/
 crash/restore/final-source qualification and automatic chains/delegation remain
 owed.
+F195 lets a different author with workflow_manage propose a bounded processing
+definition to a named executor in the same tenant/partner. The author needs no
+file access. Adoption validates the executor's output contract and commits an
+executor-owned draft,proposal transition,event and receipt together. Approval,
+input access,execution,fresh checks and release stay separate. Author withdrawal
+and executor rejection close only pending proposals;historical authorship never
+substitutes for a live independent reviewer. API/CLI and Catalog43-v18 MCP use the
+same controls;MCP hides full rules unless explicitly requested. Focused contracts,
+whole historical receipt validation,private audit,authentication/schema and
+metadata stand-ins plus affected static checks pass. PostgreSQL and verified
+HTTPS/stock-SDK profiles are prepared/compiled only. Browser authoring/recovery,
+actual CLI/Chrome/SQL race/crash/restore/final-source proof remain owed.
 Historical profiles and retained schema35 are untouched. No local PostgreSQL,
 Chrome,model,scanner or heavy peer ran. Native compilation/stand-ins establish
 no runtime qualification. F026 stays manual/owner-deferred.
 
-Next:third-party delegation,automatic multi-task composition and remaining scoped scheduling,protected processing,independent
+Next:browser definition proposals/recovery,automatic multi-task composition and remaining scoped scheduling,protected processing,independent
 receivers and all remaining baseline/exchange implementation. Continue AX-J01/J02
 and every mandatory GOAL.md capability. X07 blocks only real optional Trust
 Control proof;no API is invented. Inference,licensed peers,cloud/multi-host/

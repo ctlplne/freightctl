@@ -38,7 +38,9 @@
         "docs/qualification/evidence/F116-mcp-resumable-artifact-ingress.json",
         "docs/qualification/evidence/F127-mcp-create-only-revision.json",
         "docs/qualification/evidence/F129-mcp-received-copy.json",
-        "docs/qualification/evidence/F130-browser-received-copy.json"
+        "docs/qualification/evidence/F130-browser-received-copy.json",
+        "docs/qualification/evidence/F195-third-party-processing-proposals.json",
+        "docs/qualification/evidence/F196-processing-calendar-terminal-ci.json"
       ]
     },
     {
@@ -88,7 +90,9 @@
         "docs/qualification/evidence/F191-produced-source-composition.json",
         "docs/qualification/evidence/F192-output-admin-terminal-ci.json",
         "docs/qualification/evidence/F193-owned-processing-calendars.json",
-        "docs/qualification/evidence/F194-composition-terminal-ci.json"
+        "docs/qualification/evidence/F194-composition-terminal-ci.json",
+        "docs/qualification/evidence/F195-third-party-processing-proposals.json",
+        "docs/qualification/evidence/F196-processing-calendar-terminal-ci.json"
       ]
     },
     {
@@ -180,7 +184,9 @@
         "docs/qualification/evidence/F191-produced-source-composition.json",
         "docs/qualification/evidence/F192-output-admin-terminal-ci.json",
         "docs/qualification/evidence/F193-owned-processing-calendars.json",
-        "docs/qualification/evidence/F194-composition-terminal-ci.json"
+        "docs/qualification/evidence/F194-composition-terminal-ci.json",
+        "docs/qualification/evidence/F195-third-party-processing-proposals.json",
+        "docs/qualification/evidence/F196-processing-calendar-terminal-ci.json"
       ]
     },
     {
@@ -274,7 +280,9 @@
         "docs/qualification/evidence/F191-produced-source-composition.json",
         "docs/qualification/evidence/F192-output-admin-terminal-ci.json",
         "docs/qualification/evidence/F193-owned-processing-calendars.json",
-        "docs/qualification/evidence/F194-composition-terminal-ci.json"
+        "docs/qualification/evidence/F194-composition-terminal-ci.json",
+        "docs/qualification/evidence/F195-third-party-processing-proposals.json",
+        "docs/qualification/evidence/F196-processing-calendar-terminal-ci.json"
       ]
     },
     {
@@ -331,7 +339,9 @@
         "docs/qualification/evidence/F191-produced-source-composition.json",
         "docs/qualification/evidence/F192-output-admin-terminal-ci.json",
         "docs/qualification/evidence/F193-owned-processing-calendars.json",
-        "docs/qualification/evidence/F194-composition-terminal-ci.json"
+        "docs/qualification/evidence/F194-composition-terminal-ci.json",
+        "docs/qualification/evidence/F195-third-party-processing-proposals.json",
+        "docs/qualification/evidence/F196-processing-calendar-terminal-ci.json"
       ]
     },
     {
@@ -473,5 +483,5 @@
     "Fixtures, design documents, ledger checks, model answers and skips establish no runtime or real provider qualification.",
     "Preserve original parity/journey/defect/evaluation records and separate assisted deployment, independent adoption and enterprise readiness."
   ],
-  "execution": "Active under owner resume;full baseline/AX01\u2013AX08/FINISH incomplete. F193 implements explicit owned released-record processing calendars;native/Chrome/protected/crash/restore/final-source,scoped calendars,automatic chains and third-party delegation remain owed. F194 preserves39301e4 original terminal17/37,listed security passes and original red application failures. Local inference/heavy runtimes off;retained35 unchanged."
+  "execution": "Active under owner resume;full baseline/AX01\u2013AX08/FINISH incomplete. F195 implements third-party definition-only proposals and executor-owned draft adoption;browser/actual native/CLI/Chrome/races/protected/crash/restore/final-source,scoped calendars and automatic chains remain owed. F196 preserves7599978 original terminal17/37,listed security passes and original red application failures. Local inference/heavy runtimes off;retained35 unchanged."
 }

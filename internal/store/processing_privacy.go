@@ -4,7 +4,7 @@ import "encoding/json"
 
 func privateProcessingEvent(e Event) bool {
 	switch e.Kind {
-	case "ProcessingOutputPolicyBound", "ProcessingWorkflowReviewChanged", "WorkflowProcessingBound", "RecordProjectionChanged":
+	case "ProcessingOutputPolicyBound", "ProcessingWorkflowReviewChanged", "ProcessingWorkflowProposalChanged", "WorkflowProcessingBound", "RecordProjectionChanged":
 		return true
 	}
 	type definition struct {
@@ -38,7 +38,7 @@ func privateProcessingEvent(e Event) bool {
 		return true
 	}
 	if e.Kind == "CheckCommandCompleted" || e.Kind == "WorkflowCommandCompleted" {
-		return p.Result.Profile == "producer-processing-output-policy-v1" || p.Result.Profile == "independent-processing-workflow-review-v1" || p.Result.Profile == "owned-record-processing-schedule-v1" || p.Result.Kind == "record_projection" || present(p.Result.Processing) || present(p.Result.ProcessingAttempt) || present(p.Result.Projection) || present(p.Result.Review)
+		return p.Result.Profile == "producer-processing-output-policy-v1" || p.Result.Profile == "independent-processing-workflow-review-v1" || p.Result.Profile == "processing-workflow-proposal-v1" || p.Result.Profile == "owned-record-processing-schedule-v1" || p.Result.Kind == "record_projection" || present(p.Result.Processing) || present(p.Result.ProcessingAttempt) || present(p.Result.Projection) || present(p.Result.Review)
 	}
 	return false
 }

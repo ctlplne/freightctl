@@ -1129,7 +1129,9 @@
         "docs/qualification/evidence/F191-produced-source-composition.json",
         "docs/qualification/evidence/F192-output-admin-terminal-ci.json",
         "docs/qualification/evidence/F193-owned-processing-calendars.json",
-        "docs/qualification/evidence/F194-composition-terminal-ci.json"
+        "docs/qualification/evidence/F194-composition-terminal-ci.json",
+        "docs/qualification/evidence/F195-third-party-processing-proposals.json",
+        "docs/qualification/evidence/F196-processing-calendar-terminal-ci.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -1166,14 +1168,15 @@
         "F187 adds explicit producer-output selection through browser/API/CLI/Catalog38-v16 read-only MCP. Focused source/query/schema and11 frontend contracts plus affected static/type/build/workflow checks pass. Actual PostgreSQL,verified HTTPS,public CLI,stock SDK and separate six-audit Chrome producer profile are prepared/compiled only;the original five-audit/default profile remains. F188 retains0391ae8 original terminal17 workflows/37 jobs;listed security checks pass,application failures stay red for FINISH. Browser registration,composition/scheduling/delegation,protected output and full native/final-source/baseline/AX remain owed.",
         "F189 adds root-only browser output-contract registration/version/revocation,complete rule review,exact-key recovery and original/current separation. Three command/receipt and two affected metadata cases plus type/build/workflow checks pass. Real Chrome administrator without workflow/byte roles,stock-curl committed reply loss,reload/recovery/revocation,four WCAG audits and exact no-byte/effect counts are prepared/compiled only. F190 retains5c8aa2b original terminal17/37 with listed security passes and original application failures red. Composition/scheduling/delegation,protected/independent receiver and full native/final-source/baseline/AX/FINISH remain owed.",
         "F191 implements explicit checked-output composition;see its exact red/green/native-owed manifest. Automatic chains/scheduling,delegation,protected/CLI/native/final-source and full baseline/AX/FINISH remain owed. F192 retains259645e terminal16/35;listed security passed,original application failures red.",
-        "F193 adds explicit owned released-record processing calendars;see exact red/green/native-owed manifest. Root calendar controls remain;automatic chains,third-party delegation,confined-root scheduling,protected/native/Chrome/restore/final-source and full baseline/AX/FINISH stay owed. F194 retains39301e4 terminal17/37,listed security passes and red application failures."
+        "F193 adds explicit owned released-record processing calendars;see exact red/green/native-owed manifest. Root calendar controls remain;automatic chains,third-party delegation,confined-root scheduling,protected/native/Chrome/restore/final-source and full baseline/AX/FINISH stay owed. F194 retains39301e4 terminal17/37,listed security passes and red application failures.",
+        "F195 adds named third-party definition authorship and executor-owned draft adoption through API/CLI/Catalog43-v18 MCP;no byte,approval or execution authority transfers. Focused red/green,whole receipt/private audit/schema/authentication and metadata/static checks pass;PostgreSQL/verified HTTPS/stock SDK prepared/compiled only. Browser/recovery,actual CLI/Chrome/SQL race/crash/restore/final-source and full baseline/AX/FINISH stay owed. F196 retains7599978 original terminal17/37,listed security passes and red application failures."
       ],
       "current_item": {
-        "id": "F193",
-        "state": "Owned released inputs can queue exact approved processing tasks under reviewed calendars;native outcomes owed",
-        "proof": "Observed missing schedule/worker contract,private-receipt disclosure and unsupported browser schema red;focused Go/20 frontend/canonical/metadata and static checks green",
-        "native": "No-delivery PostgreSQL atomic/replay/unchanged-input/suspension/deadline,verified HTTPS and actual CLI profiles prepared/compiled only;served Chrome schedule proof owed",
-        "next": "Third-party delegation,automatic multi-task chains,scoped calendars,protected processing and full baseline/AX/FINISH"
+        "id": "F195",
+        "state": "Definition-only third-party proposals commit an executor-owned draft;runtime outcomes owed",
+        "proof": "Observed missing typed constructor/MCP controls/private audit and whole receipt contract red;focused Go/authentication/schema/audit/metadata and static checks green",
+        "native": "PostgreSQL author-without-bytes,unapproved adoption,independent review,revoked author and held output plus verified HTTPS/stock MCP profiles prepared/compiled only",
+        "next": "Browser proposal review/recovery,actual CLI/Chrome/SQL concurrency/crash and remaining baseline/AX/FINISH"
       }
     }
   ],

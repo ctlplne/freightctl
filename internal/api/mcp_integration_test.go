@@ -87,7 +87,7 @@ func TestMCPStockClientExchangeUsesOrdinaryAuthorityAndSeparateReply(t *testing.
 		t.Fatal("wrong partner discovered MCP catalog")
 	}
 	catalog, err := a.ListTools(ctx, &mcp.ListToolsParams{})
-	if err != nil || len(catalog.Tools) != 38 || catalog.NextCursor != "" || catalog.TTLMs != 0 || catalog.CacheScope != "private" {
+	if err != nil || len(catalog.Tools) != 43 || catalog.NextCursor != "" || catalog.TTLMs != 0 || catalog.CacheScope != "private" {
 		t.Fatal("stock client did not observe exact private noncached catalog")
 	}
 	call := func(client *mcp.ClientSession, name string, args map[string]any, ok bool) *mcp.CallToolResult {

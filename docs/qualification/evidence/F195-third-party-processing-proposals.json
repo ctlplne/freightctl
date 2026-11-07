@@ -1,0 +1,321 @@
+{
+  "schema_version": 1,
+  "id": "F195",
+  "observed_at": "2026-11-07",
+  "base_candidate": "7599978cf1027b6f4a9c82fb0ff219bfcc7c1bf4",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Third-party definition-only proposals and executor-owned draft adoption;native outcomes owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "6d13feb1f29b61e18dc771e2c1647047eaba7a7189cd6daa77533625c9397b3f",
+      "bytes": 9182
+    },
+    {
+      "reference": "cmd/freightctl/main.go",
+      "sha256": "c900d1f9dbfa606de81a4d53202d0945c85c07a8cb5fe28b7df0da5ca1666744",
+      "bytes": 49535
+    },
+    {
+      "reference": "cmd/freightctl/processing_proposals.go",
+      "sha256": "5e5c17e596ba430715c1cca9c9b141a217eea3a63493fe5894b42e453f0b87a3",
+      "bytes": 1832
+    },
+    {
+      "reference": "docs/qualification/artifact-exchange.json",
+      "sha256": "2d04bb467c38694930469c5c9de7d7edb65834885edf6b6c8e67eccabd4994bb",
+      "bytes": 30718
+    },
+    {
+      "reference": "docs/qualification/evidence/F196-processing-calendar-terminal-ci.json",
+      "sha256": "121082c60aa7478c705493d3c5fe9ea381c19ed04f805a53ebb949af2cd40098",
+      "bytes": 20084
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "f4ef44648d1bb69d4cca48507740bb4764cfb4caf88c76173796cafd8b25f6c1",
+      "bytes": 356439
+    },
+    {
+      "reference": "internal/api/api.go",
+      "sha256": "b2d714dd0f048a8968b8bf58925809dd098128b0f0e2315b959fbf497ffcdca0",
+      "bytes": 30368
+    },
+    {
+      "reference": "internal/api/mcp-tools.json",
+      "sha256": "6aeccaa9ab5376b6d5db94d90874d56f7b06935764cdc2b1559fb65cebee271c",
+      "bytes": 125623
+    },
+    {
+      "reference": "internal/api/mcp.go",
+      "sha256": "777bab5899ebc5c1c2d0ab2df8ba5151c279f5361a2fba78f18be8fa5a275129",
+      "bytes": 12696
+    },
+    {
+      "reference": "internal/api/mcp_integration_test.go",
+      "sha256": "2dbe42532ef179bb2dc3baa6947c6e2e4701526b4d4894911f65b6c95ec3486b",
+      "bytes": 36325
+    },
+    {
+      "reference": "internal/api/mcp_processing_proposals.go",
+      "sha256": "4cf5bb28a87e5d1c14eee615a51ff6e24778a2f516b38006975e719e7f19b11a",
+      "bytes": 5521
+    },
+    {
+      "reference": "internal/api/mcp_processing_proposals_test.go",
+      "sha256": "8ef24b706307ddccd8848c6e6c3f0b442da0e1df7776c499e1429e8dab7f781f",
+      "bytes": 3017
+    },
+    {
+      "reference": "internal/api/mcp_test.go",
+      "sha256": "d2b37c3f6bb422d5726d483b2463023457739e92104b9ab88c6e282f1f855e1a",
+      "bytes": 20174
+    },
+    {
+      "reference": "internal/api/processing_proposals.go",
+      "sha256": "f8bdf178908c7e4100fab3012d5adc8becbdb139b730a14c01a28a203ea717ba",
+      "bytes": 2045
+    },
+    {
+      "reference": "internal/api/processing_proposals_integration_test.go",
+      "sha256": "3e674e0555631d1429b545b0344c019847ea76bd56a44507ba2ee706db3b4e2c",
+      "bytes": 7746
+    },
+    {
+      "reference": "internal/api/processing_proposals_test.go",
+      "sha256": "f80173918822adebdbc7796d6f0f19a37ffe23affa165d44ebdaad3d8a070c21",
+      "bytes": 2274
+    },
+    {
+      "reference": "internal/checks/processing_proposals_integration_test.go",
+      "sha256": "94383086382c19af876d2b58342049fe6ef85842aa6f10f876f8fe357493a0aa",
+      "bytes": 10826
+    },
+    {
+      "reference": "internal/store/059_processing_proposals.sql",
+      "sha256": "7a62e801f88477f0307a2962b6adb1a5d6c468c32940a7d10d0ed47770e63ab0",
+      "bytes": 11767
+    },
+    {
+      "reference": "internal/store/processing_privacy.go",
+      "sha256": "41713f7c4f783565ae301cef06ee8f120acf9e7e42345e133b6d6545debba157",
+      "bytes": 1979
+    },
+    {
+      "reference": "internal/store/processing_privacy_test.go",
+      "sha256": "cb77771c05e4eff07a44a2060e0582a50fcf465bece76037d17e61482e9e3369",
+      "bytes": 2880
+    },
+    {
+      "reference": "internal/store/processing_proposals.go",
+      "sha256": "4aabd8ea0e585bfc92e74ed76e8e2636dde045e0f58a8ae78ed17ba66d3b82c8",
+      "bytes": 7650
+    },
+    {
+      "reference": "internal/store/store.go",
+      "sha256": "c37ffabb6962c50ac8c03bed329773de4ef485cbde70210e65f0ddc2be304b20",
+      "bytes": 27630
+    },
+    {
+      "reference": "internal/workflow/processing_proposals.go",
+      "sha256": "876770d173587dfefc5f58cbec9597794f922e6bd529dcd672d36a821f2d6acb",
+      "bytes": 14055
+    },
+    {
+      "reference": "internal/workflow/processing_proposals_test.go",
+      "sha256": "aa9596f1333caece014beea8b020ede54149a1c40949b7e8291cfaf6ee4b5c6e",
+      "bytes": 8108
+    },
+    {
+      "reference": "scripts/metadata_contract.py",
+      "sha256": "e931f0fe307521a1dc7712213a46bef484eac6c6a7c95b6617b31e366796bf68",
+      "bytes": 4110
+    },
+    {
+      "reference": "scripts/test-ci-metadata-summary.py",
+      "sha256": "406774aab6aa7dc6f4ccc87f88fb909a8d4bd314bc6cd68975cc24b52607c0cb",
+      "bytes": 6240
+    }
+  ],
+  "changed": [
+    "workflow_manage-only author proposes normalized typed processing rules to a different named executor in the same tenant/partner. Trusted credential lookups bind both authority/root snapshots and expiry;no claimed actor scope or file permission is accepted. At most16 current pending proposals per author;pagination bounded25/100. Recipient-wide capacity/retention qualification remains owed.",
+    "Executor adoption rechecks live unexpired participants,ordinary output-contract selection and permissions,then commits ordinary owned draft,proposal transition,event and original receipt atomically. Approval0 means unapproved. Author withdrawal/executor rejection close only pending proposals. Adopted authorship is historical;the separate independent reviewer remains live approval authority.",
+    "API and protected-file CLI share the service;Catalog43-v18 MCP uses closed metadata tools and explicit full-definition disclosure. Original receipt replay validates the complete historical proposal and exact unapproved draft;current observation remains separate. Private journal payloads and receipts expose only complete original digests in shared audit.",
+    "Source59 adds one forced-RLS relation and guarded read models;78metadata/77forced RLS. No PostgreSQL migration executed locally;retained35 and prior migration bytes unchanged."
+  ],
+  "red": [
+    {
+      "reference": ".private/freightctl-f195-proposal-contract-red.log",
+      "observation": "No distinct author/executor typed proposal constructor."
+    },
+    {
+      "reference": ".private/freightctl-f195-mcp-proposal-red.log",
+      "observation": "No ordinary metadata proposal tools."
+    },
+    {
+      "reference": ".private/freightctl-f195-proposal-audit-red.log",
+      "observation": "Private proposal payload and receipt exposed through shared audit."
+    },
+    {
+      "reference": ".private/freightctl-f195-metadata-profile-red.log",
+      "observation": "Old current metadata profile refused new migration."
+    },
+    {
+      "reference": ".private/freightctl-f195-replay-integrity-red.log",
+      "observation": "No whole historical receipt validator;earlier replay checked only hash and revision."
+    }
+  ],
+  "green": [
+    "Focused typed scope/definition/expiry/immutable copy/refusal,author-without-byte grants,whole receipt and audit privacy regressions pass.",
+    "Affected API authentication/closed request/role controls and MCP schema/authority tests pass;7 metadata and5 retained-metadata stand-ins pass.",
+    "Affected formatting,compilation,vet and architecture checks pass. Integration-tag local compilation uses -run ^$ and proves no runtime outcome."
+  ],
+  "prepared_native": [
+    "Real PostgreSQL author with workflow_manage only,unrelated admin isolation,executor-owned unapproved draft,original-key replay and refusal to run before approval.",
+    "Separate independent reviewer approval;revoking original author after adoption does not replace or revoke the reviewer;ordinary processing output remains held.",
+    "Withdrawal and author revocation before adoption refuse draft creation without partial state.",
+    "Verified HTTPS actor without byte/approve grants and stock MCP SDK proposal/inspect/default redaction/explicit definition disclosure/adopt controls."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f195-architecture.log",
+      "sha256": "d39b87fdbf007eb5bef34963966b6d4e70f582c97b329e4f74da3a293cca0c62",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f195-contract-and-audit-green.log",
+      "sha256": "1822bd3f91a0aa499e77de8444112d2908d07545f419a5423f01b1950afafdc9",
+      "bytes": 172
+    },
+    {
+      "reference": ".private/freightctl-f195-final-api-green.log",
+      "sha256": "e0ba22ef0bfcf85df72d6a01ae32e88ad5d6a462d2dc0815486ea08f403a0153",
+      "bytes": 55
+    },
+    {
+      "reference": ".private/freightctl-f195-mcp-proposal-green.log",
+      "sha256": "4d1ac83b4498e8e41bd84028836cd387675be47b0438c64e6c5909eb7ee064b1",
+      "bytes": 55
+    },
+    {
+      "reference": ".private/freightctl-f195-mcp-proposal-red.log",
+      "sha256": "55eefd517d558cc233002114a5acb97de22bb8d0b6151a966f188cdd4eeb637a",
+      "bytes": 245
+    },
+    {
+      "reference": ".private/freightctl-f195-metadata-profile-green.log",
+      "sha256": "3db2846aaaf0233767914f87f6cc5e07d159b00ab8b8f8516b2cece4e69d8d6d",
+      "bytes": 105
+    },
+    {
+      "reference": ".private/freightctl-f195-metadata-profile-red.log",
+      "sha256": "290fbe1fa39d302d32bfe391b038571cb25077754e54d562b240d8b217787cb9",
+      "bytes": 6676
+    },
+    {
+      "reference": ".private/freightctl-f195-native-api-cli-compile.log",
+      "sha256": "fafe1aa6ba8b2efd2db7c9ba862e7eb90e3c5d1e8a547bd103640cbe513d684e",
+      "bytes": 305
+    },
+    {
+      "reference": ".private/freightctl-f195-native-authoring-compile.log",
+      "sha256": "142922f5d3e97c7963bd652d4ad1ab50172efa2983fcc07eaae13d3baddd5107",
+      "bytes": 379
+    },
+    {
+      "reference": ".private/freightctl-f195-native-https-sdk-compile-after.log",
+      "sha256": "7b8eea08847b421321b0e55a3d1223416ec56acbb581db02e0696c30b89042b1",
+      "bytes": 385
+    },
+    {
+      "reference": ".private/freightctl-f195-native-https-sdk-compile.log",
+      "sha256": "2604185689d9cbdf36adf67e042573b64420af66d6077745d9c57b60da7affd1",
+      "bytes": 377
+    },
+    {
+      "reference": ".private/freightctl-f195-native-initial-compile.log",
+      "sha256": "ee129fd1d5cf9ff6d82322f94d1e50cb11244ece8be830dfdd92ad27e05f6696",
+      "bytes": 301
+    },
+    {
+      "reference": ".private/freightctl-f195-proposal-api-green.log",
+      "sha256": "1098f9b73cf06f358182cc50c1f9290de98963bb81f79c68c0baf76bf152c4c6",
+      "bytes": 117
+    },
+    {
+      "reference": ".private/freightctl-f195-proposal-audit-red.log",
+      "sha256": "cdb7b752b5974174c844623cc48a2035fea8f1a00a4965a6e1eaad06119efa4d",
+      "bytes": 309
+    },
+    {
+      "reference": ".private/freightctl-f195-proposal-contract-after-admission.log",
+      "sha256": "faa1ef297606b2a70bed28389c7795781cbf55a4d44ac10fd40508d8856204e2",
+      "bytes": 135
+    },
+    {
+      "reference": ".private/freightctl-f195-proposal-contract-green.log",
+      "sha256": "9595bf9f35cb18d02bc67c5e6e67e8b6fa535af8fcb755df089844406e539432",
+      "bytes": 60
+    },
+    {
+      "reference": ".private/freightctl-f195-proposal-contract-red.log",
+      "sha256": "f16305f71b89600e3a514a5b76f915d80bca44b41c47dc0538c94de8588d4c3e",
+      "bytes": 366
+    },
+    {
+      "reference": ".private/freightctl-f195-proposal-ownership-green.log",
+      "sha256": "ce194894b43314c0f0ab80f29b90705ef2c62622aa24c785a01fb5f1a6792c73",
+      "bytes": 135
+    },
+    {
+      "reference": ".private/freightctl-f195-proposal-postgres-contract-green.log",
+      "sha256": "adcff91421c166eb2e53534515146333e58c990ff6f54521a6fdbf40d8f08ff4",
+      "bytes": 139
+    },
+    {
+      "reference": ".private/freightctl-f195-proposal-service-contract-green.log",
+      "sha256": "100d5ebb4ba1ae014c7cb949633b7fd0b87aa0ec08f20541451a57969e9a6308",
+      "bytes": 137
+    },
+    {
+      "reference": ".private/freightctl-f195-proposal-store-contract-green.log",
+      "sha256": "38d1cab44c91c950a7781459d31613139ec1ed0cd5dba718a79fa2cfc660e31e",
+      "bytes": 60
+    },
+    {
+      "reference": ".private/freightctl-f195-replay-integrity-green.log",
+      "sha256": "91bcb10c3d242a4916e7852955d60f0ec0d5d74b65da5f5624376f14663016f4",
+      "bytes": 60
+    },
+    {
+      "reference": ".private/freightctl-f195-replay-integrity-red.log",
+      "sha256": "994d5d37b3741dfdf81dd77ecfdaff6af896aed005a28720094acb517a34e839",
+      "bytes": 370
+    },
+    {
+      "reference": ".private/freightctl-f195-replay-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f195-retained-metadata-standin.log",
+      "sha256": "1f11b6e880045ee35de832b81b45d06257342e13b5c79bbf0034379d4ca220b9",
+      "bytes": 103
+    },
+    {
+      "reference": ".private/freightctl-f195-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "owed": [
+    "Actual prepared PostgreSQL/RLS/SQL/atomicity/current authority/byte outcomes;explicit expiry,races,process-death,SQL-forgery and cross-tenant runtime proofs.",
+    "Browser authoring/review/exact-key recovery,actual CLI and served Chrome/accessibility profiles are not yet qualified.",
+    "Automatic multi-task chains,confined-root calendars,protected processing,independent receiver,restore/upgrade and final-source qualification.",
+    "Every deferred original nonsecurity CI failure investigation/repair/replay,broad tests/security/frontend/native/public/stock/reproducibility and full GOAL baseline/AX/FINISH."
+  ],
+  "previous_ci": "docs/qualification/evidence/F196-processing-calendar-terminal-ci.json",
+  "local_resources": "Inference,PostgreSQL,Chrome,scanner,native peers and heavy runtimes off. Go oneCPU/192MiB;Node192MiB unchanged.",
+  "readiness": "All83 whole parity rows,twelve whole journeys andAX01\u2013AX08 open. Assisted deployment,independent adoption and enterprise qualification unproven. F026 owner-deferred;external prerequisites owed."
+}

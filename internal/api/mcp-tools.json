@@ -3629,5 +3629,400 @@
       "idempotentHint": true,
       "openWorldHint": false
     }
+  },
+  {
+    "name": "freightctl.propose_processing_definition",
+    "description": "Offer bounded definition-only rules to a named executor. Creates no workflow approval,run,file access or effect.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "request_key": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "request": {
+          "type": "object",
+          "properties": {
+            "executor_id": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+            },
+            "definition": {
+              "type": "object",
+              "properties": {
+                "schema_version": {
+                  "type": "integer",
+                  "const": 3
+                },
+                "name": {
+                  "type": "string"
+                },
+                "steps": {
+                  "type": "array",
+                  "maxItems": 0
+                },
+                "processing": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9_]{0,63}$"
+                    },
+                    "kind": {
+                      "type": "string",
+                      "const": "records.project"
+                    },
+                    "definition": {
+                      "type": "object",
+                      "properties": {
+                        "schema_version": {
+                          "type": "integer",
+                          "const": 1
+                        },
+                        "kind": {
+                          "type": "string",
+                          "const": "record_projection"
+                        },
+                        "engine": {
+                          "type": "string",
+                          "const": "freightctl-record-projection-v1"
+                        },
+                        "source_policy_hash": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{64}$"
+                        },
+                        "output_kind": {
+                          "type": "string",
+                          "enum": [
+                            "csv",
+                            "json_records"
+                          ]
+                        },
+                        "columns": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "source": {
+                                "type": "string"
+                              },
+                              "target": {
+                                "type": "string"
+                              },
+                              "conversion": {
+                                "type": "string",
+                                "enum": [
+                                  "identity",
+                                  "text",
+                                  "normalize_lf"
+                                ]
+                              },
+                              "missing": {
+                                "type": "string",
+                                "enum": [
+                                  "preserve",
+                                  "empty",
+                                  "null",
+                                  "error"
+                                ]
+                              },
+                              "null": {
+                                "type": "string",
+                                "enum": [
+                                  "preserve",
+                                  "empty",
+                                  "missing",
+                                  "error"
+                                ]
+                              },
+                              "empty": {
+                                "type": "string",
+                                "enum": [
+                                  "preserve",
+                                  "missing",
+                                  "null",
+                                  "error"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "source",
+                              "target",
+                              "conversion",
+                              "missing",
+                              "null",
+                              "empty"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "minItems": 1,
+                          "maxItems": 128
+                        },
+                        "max_bytes": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 1073741824
+                        },
+                        "max_record_bytes": {
+                          "type": "integer",
+                          "minimum": 64,
+                          "maximum": 1048576
+                        },
+                        "max_rows": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 1000000
+                        },
+                        "timeout_seconds": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 60
+                        }
+                      },
+                      "required": [
+                        "schema_version",
+                        "kind",
+                        "engine",
+                        "source_policy_hash",
+                        "output_kind",
+                        "columns",
+                        "max_bytes",
+                        "max_record_bytes",
+                        "max_rows",
+                        "timeout_seconds"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "output_policy": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+                        },
+                        "version": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 2147483647
+                        },
+                        "hash": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{64}$"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "version",
+                        "hash"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "target_path": {
+                      "type": "string"
+                    },
+                    "reason": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "kind",
+                    "definition",
+                    "output_policy",
+                    "target_path",
+                    "reason"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "schema_version",
+                "name",
+                "steps",
+                "processing"
+              ],
+              "additionalProperties": false
+            },
+            "expires_at": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": [
+            "executor_id",
+            "definition",
+            "expires_at"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "request_key",
+        "request"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "freightctl.list_processing_proposals",
+    "description": "List private authored/received proposal metadata. No task contents,approval or execution.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "after": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "freightctl.inspect_processing_proposal",
+    "description": "Inspect named-party proposal metadata. Full definition requires explicit disclose_definition;receiving grants no effect.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "proposal_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+        },
+        "disclose_definition": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "proposal_id"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "freightctl.adopt_processing_proposal",
+    "description": "Named executor records an owned draft under current output-policy authority. Approval,input validation and execution remain separate.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "proposal_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+        },
+        "request_key": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "request": {
+          "type": "object",
+          "properties": {
+            "definition_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "expected_revision": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9223372036854775807
+            }
+          },
+          "required": [
+            "definition_hash",
+            "expected_revision"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "proposal_id",
+        "request_key",
+        "request"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "freightctl.close_processing_proposal",
+    "description": "Reject a received pending proposal or withdraw an authored pending proposal. Cannot approve or change an adopted workflow.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "proposal_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+        },
+        "request_key": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "request": {
+          "type": "object",
+          "properties": {
+            "definition_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "expected_revision": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9223372036854775807
+            }
+          },
+          "required": [
+            "definition_hash",
+            "expected_revision"
+          ],
+          "additionalProperties": false
+        },
+        "action": {
+          "type": "string",
+          "enum": [
+            "reject",
+            "withdraw"
+          ]
+        }
+      },
+      "required": [
+        "proposal_id",
+        "request_key",
+        "request",
+        "action"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
   }
 ]
