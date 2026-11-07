@@ -459,7 +459,10 @@ export function asCollectionConnection(v: unknown): CollectionConnection {
     state: o.state as CollectionConnection["state"],
     revision: num(o, "revision"),
     address: o.protocol === "local" ? "" : str(o, "address", 300),
-    user: o.protocol === "local" ? "" : str(o, "user", 64),
+    user:
+      o.protocol === "local"
+        ? ""
+        : str(o, "user", o.protocol === "ftps" ? 256 : 64),
     directory,
     host_fingerprint:
       o.protocol === "ftps" || o.protocol === "local"

@@ -200,7 +200,7 @@ function effects(v: unknown, w: WorkflowConfiguration): HandoffEffect[] {
   );
   return base.map((effect, index) => {
     const o = raw[index]!;
-    const user = text(o, "user", effect.protocol === "ftps" ? 64 : 128);
+    const user = text(o, "user", effect.protocol === "ftps" ? 256 : 128);
     let key = "";
     if (effect.protocol === "ftps") {
       if (o.key_fingerprint !== "" || user !== effect.user) bad();

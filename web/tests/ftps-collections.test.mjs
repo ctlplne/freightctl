@@ -25,6 +25,26 @@ const fresh = (name = "explicit-local") => structuredClone(fixtures[name]);
 const view = (f) =>
   p.asCollectionView(f.view, f.view.job.id, 3, f.preview.definition_hash);
 
+test("FTPS collection discovery retains an actual compound participant username", () => {
+  const connection = fresh().workflow_preview.collection.connection;
+  connection.user =
+    "10000000-1111-4111-8111-111111111111/10000001-1111-4111-8111-111111111111";
+  assert.equal(new TextEncoder().encode(connection.user).length, 73);
+  const page = p.asCollectionConnections({ connections: [connection] });
+  assert.equal(page.connections[0].user, connection.user);
+  assert.equal(
+    p.asCollectionConnection({ ...connection, user: "u".repeat(256) }).user
+      .length,
+    256,
+  );
+  assert.throws(() =>
+    p.asCollectionConnection({ ...connection, user: "u".repeat(257) }),
+  );
+  assert.throws(() =>
+    p.asCollectionConnection({ ...connection, user: "é".repeat(129) }),
+  );
+});
+
 test("Go FTPS source, mixed sender and encrypted sender metadata keeps exact canonical hashes", () => {
   for (const f of Object.values(fixtures)) {
     const workflow = p.asCollectionConfiguration(f.workflow);

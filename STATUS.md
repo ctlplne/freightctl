@@ -8,7 +8,7 @@ Current decisions and exact evidence are in
 [artifact-exchange.json](docs/qualification/artifact-exchange.json).
 
 Current pushed candidate: `d960c40fe1d4d7facf11862c331b52fc93dcc0b6`.
-F366 records its ongoing originals;F368 qualifies declared PUT/MKCOL on both
+All 16 original workflows are now terminal; F368 qualifies declared PUT/MKCOL on both
 native architectures. New FTPS field evidence identifies source-option selection.
 
 Previous terminal candidate: `03cd5fd0e46e60d0417b40122e94fd31a2920c35`.
@@ -53,7 +53,12 @@ checks;its prepared native proofs remain owed. C-WEBDAV
 also requires remaining mutations, properties, locks, outbound server and
 independent DAV application interoperability.
 
-Next: continue implementation while current original CI runs;push the next
+F369 aligns the FTPS browser username decoders with the existing 256-byte
+contract. The native source-option failure used a 73-byte participant name.
+Focused regressions and affected static checks pass; the actual operator
+collection and recovery replay remains owed.
+
+Next: continue implementation and push the next
 verified owner-only batch after required originals are terminal. Repair
 original failures and finish every mandatory final-source baseline/AX gate.
 F026 stays manual/owner-deferred. Trust Control, inference, provider/licensed

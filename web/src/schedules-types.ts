@@ -447,7 +447,7 @@ function effect(v: unknown): ScheduleEffect {
     ...(ftps
       ? {
           protocol: "ftps" as const,
-          user: str(o, "user", 64),
+          user: str(o, "user", 256),
           ftps: asFTPSConnectionProof(
             o.ftps,
             canonicalPath(str(o, "directory", 4096)),

@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "id": "F369",
+  "observed_at": "2026-11-07",
+  "base_candidate": "0402da69c164e9dacf4f3401733c400d73bd64ad",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F369 fixes the actual FTPS source-option rejection at original d960c40 jobs128445908482/128445908752: the server emits tenant/participant usernames of73 bytes,while three browser decoders incorrectly use64. Match the existing FTPS256-byte contract in collection discovery,schedule effects and handoff effects;retain existing SSH bounds,UTF-8 byte counting,NFC,control-character,TLS/reference and immutable-meaning checks. Both meaningful regressions first fail;all30 affected collection/schedule/handoff tests,typecheck,build/check-built,format and architecture pass. Actual native original operator collection and four-key recovery remain owed.",
+  "original_failure": {
+    "candidate": "d960c40fe1d4d7facf11862c331b52fc93dcc0b6",
+    "run_id": 42386838457,
+    "jobs": [
+      128445908482,
+      128445908752
+    ],
+    "stage": "operator-form-source",
+    "source_line": 268
+  },
+  "red_green": "The actual collection-page decoder and actual schedule/handoff parsers reject a73-byte compound participant name before the fix. Both regressions observed terminal1;focused affected suite observed terminal0,30passed. Also accept256-byte ASCII and256-byte UTF-8 names and refuse257-byte,258-byte UTF-8,empty and control-bearing effect names.",
+  "owed": [
+    "Original native FTPS operator collection,immutable source capture and independently recovered four original keys",
+    "Final-source full baseline/AX/readiness qualification"
+  ],
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "4ba440578572bda0efbe70da396ef7897133159b8a3cb6b8819b35a8ed86c5ff",
+      "bytes": 4520
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "00d64cad17657fa4882156607bbecbe12d65b93633d5b21c0b4cad4ae854a1e4",
+      "bytes": 483396
+    },
+    {
+      "reference": "internal/browser/assets/app.js",
+      "sha256": "6f5ff89db421b76914ac4bd97d5c4487546ebb8d32a9c203610e1976cf9439de",
+      "bytes": 906577
+    },
+    {
+      "reference": "internal/browser/assets/manifest.json",
+      "sha256": "69a5b9a6d7a8f41c994a60d4f2b7304305384c5482b34c3dd9a23fe11c4fb588",
+      "bytes": 13977
+    },
+    {
+      "reference": "web/src/collection-handoffs-types.ts",
+      "sha256": "eda762968ca1db9e9acf7a1211ea59624293bae35be6e6d5ad140c3fb5c313c6",
+      "bytes": 16371
+    },
+    {
+      "reference": "web/src/collections-types.ts",
+      "sha256": "36b2b5c75dff1dde351171238886bf461b903ebc1fdffb78f306321a3db096b9",
+      "bytes": 47352
+    },
+    {
+      "reference": "web/src/schedules-types.ts",
+      "sha256": "6ef162d71ada201ccc82f241a1bfdef1dcf39753cb3b50ab70afcda67e071526",
+      "bytes": 33685
+    },
+    {
+      "reference": "web/tests/ftps-collections.test.mjs",
+      "sha256": "442eaef7b53e817bed6037b819477ed14978cf980b3a1503cd8505e536789208",
+      "bytes": 6157
+    },
+    {
+      "reference": "web/tests/ftps-handoff-effects.test.mjs",
+      "sha256": "5d99991e10dbfdaa77591cb7b4fcfe4c09e3b5a3097e90425a5db0001970dad9",
+      "bytes": 5855
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f369-username-red.log",
+      "sha256": "3576f8613e9d1dcaccec7d63b7363f2c44da14977ee6a4284780c45e68e8a053",
+      "bytes": 461319
+    },
+    {
+      "reference": ".private/freightctl-f369-effects-red.log",
+      "sha256": "c0e0852ca314c19657a112b2d68d193dcc2c20af0186be74eab8f07f352486a0",
+      "bytes": 189823
+    },
+    {
+      "reference": ".private/freightctl-f369-focused.log",
+      "sha256": "c9f3a08425980e0ebdae9850b57abeada5068d7cdca0e594c2c46768085ce1b4",
+      "bytes": 3403
+    },
+    {
+      "reference": ".private/freightctl-f369-types.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f369-build.log",
+      "sha256": "72f01d77f8bb30c48064a698a0476a9c943d2f1c3160b862d17723cc57965ba7",
+      "bytes": 180
+    },
+    {
+      "reference": ".private/freightctl-f369-built.log",
+      "sha256": "8a1ccd61cd7c2aa6c3236fa3b99cf54b7b867e462074005cbd7e6e53927b8d90",
+      "bytes": 183
+    },
+    {
+      "reference": ".private/freightctl-f369-format.log",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    },
+    {
+      "reference": ".private/freightctl-f369-architecture.log",
+      "sha256": "fa99a7467914775b6e6fb50c5b0a2c85b3211135c3486cec28c42811919aeece",
+      "bytes": 66
+    }
+  ]
+}

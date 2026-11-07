@@ -15,7 +15,7 @@ const bundle = await build({
   stdin: {
     contents:
       source +
-      "\nexport { effects as observedEffects, asCollectionConfiguration };",
+      '\nexport { effects as observedEffects, asCollectionConfiguration }; export { asWorkflowEffect } from "./schedules-types";',
     resolveDir: new URL("../src", import.meta.url).pathname,
     loader: "ts",
   },
@@ -83,6 +83,44 @@ test("FTPS handoff wire metadata retains exact public TLS identity without inven
     assert.deepEqual(result, f.handoff_effects);
     assert.equal(result[0].key_fingerprint, "");
     assert.equal(result[0].user, f.base_effects[0].user);
+  }
+});
+test("FTPS schedule and handoff effects retain compound participant usernames within the FTPS byte bound", () => {
+  for (const fixture of fixtures.cases) {
+    for (const user of [
+      "10000000-1111-4111-8111-111111111111/10000001-1111-4111-8111-111111111111",
+      "u".repeat(256),
+      "é".repeat(128),
+    ]) {
+      const f = structuredClone(fixture);
+      f.base_effects[0].user = user;
+      f.handoff_effects[0].user = user;
+      assert.equal(p.asWorkflowEffect(f.base_effects[0]).user, user);
+      assert.equal(
+        p.observedEffects(
+          f.handoff_effects,
+          p.asCollectionConfiguration(f.workflow),
+        )[0].user,
+        user,
+      );
+    }
+    for (const user of [
+      "",
+      "u".repeat(257),
+      "é".repeat(129),
+      "u\r\nPASS secret",
+    ]) {
+      const f = structuredClone(fixture);
+      f.base_effects[0].user = user;
+      f.handoff_effects[0].user = user;
+      assert.throws(() => p.asWorkflowEffect(f.base_effects[0]));
+      assert.throws(() =>
+        p.observedEffects(
+          f.handoff_effects,
+          p.asCollectionConfiguration(f.workflow),
+        ),
+      );
+    }
   }
 });
 test("routing review renders actual FTPS identity and receiver terms", () => {

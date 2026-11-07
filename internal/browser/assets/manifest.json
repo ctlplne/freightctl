@@ -119,7 +119,7 @@
     },
     {
       "path": "web/src/collection-handoffs-types.ts",
-      "sha256": "b1d79896656c91b8c994017b1ccae923e9f7fe9df8edd9e4c44cd22a866e6cc4"
+      "sha256": "eda762968ca1db9e9acf7a1211ea59624293bae35be6e6d5ad140c3fb5c313c6"
     },
     {
       "path": "web/src/collection-handoffs.tsx",
@@ -139,7 +139,7 @@
     },
     {
       "path": "web/src/collections-types.ts",
-      "sha256": "8a015550a9db82ddd154fdfb61574f0ae56ec853f7cbc9d318dc63a086437708"
+      "sha256": "36b2b5c75dff1dde351171238886bf461b903ebc1fdffb78f306321a3db096b9"
     },
     {
       "path": "web/src/collections.tsx",
@@ -323,7 +323,7 @@
     },
     {
       "path": "web/src/schedules-types.ts",
-      "sha256": "be4483c446d650557cab37dec34cc499a3698814d5e3b07ff42654873e49d7d6"
+      "sha256": "6ef162d71ada201ccc82f241a1bfdef1dcf39753cb3b50ab70afcda67e071526"
     },
     {
       "path": "web/src/schedules.tsx",
@@ -358,8 +358,8 @@
     },
     {
       "name": "app.js",
-      "sha256": "0aa49c52e5f93702bb818806afbf82d3cf71d752f6e432f329cc7a73cbfc4934",
-      "size": 906551
+      "sha256": "6f5ff89db421b76914ac4bd97d5c4487546ebb8d32a9c203610e1976cf9439de",
+      "size": 906577
     },
     {
       "name": "app.js.LEGAL.txt",
