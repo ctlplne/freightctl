@@ -1,5 +1,31 @@
 # Versioned workflows and registered connections
 
+## Local collection adapter under implementation
+
+F293 implements a read-only adapter for private ordinary local directories.
+It is not yet admitted as a workflow or registered connection:the original
+`local.collect` normalization regression remains red until the durable connection,
+SQL,CLI/API/browser review and custody integration are complete. Do not advertise
+this primitive as a qualified local/network-storage connector.
+
+Metadata inspection returns a physical root fingerprint from the held OS
+directory identity,not from its path spelling. An opener must supply that exact
+reviewed fingerprint. Unix uses device/inode identity;Windows uses the full
+native128-bit file ID and64-bit volume identity. Every read checks the current
+root,path identity and actual private permissions again. This narrow profile
+refuses symlink roots/files,unsafe flat names,changed physical files,unbounded
+manifests and wrong lengths/digests. It does not write producer files or create a
+marker in the producer directory.
+
+An authority callback must pass before opening and around each bounded read.
+Copy output must be unpublished private staging:an error can leave partial
+staged bytes,and only ordinary custody acceptance may publish verified bytes.
+No local read grants forwarding or execution. Connection revocation,leases,
+idempotency,events,intake and batch admission still need their existing ordinary
+workflow integration. Local macOS filesystem positive/adverse cases pass;
+Linux/Windows compilation is not native runtime qualification. Mounted network
+storage,crash/restore and performance profiles remain separately owed.
+
 The first workflow executor sends one immutable accepted file through an ordered list of `sftp.deliver` steps. CLI and HTTPS use the same typed definition, validation, permissions, approval and execution services. It uses the [outbound SFTP profile](protocols/outbound-sftp.md), including its loopback-only development network, required extensions, bounded workers and uncertain-receipt rules. This is a foundation for the full workflow engine; schedules, conditions, collection, processing, visual editing and AI proposals remain required work.
 
 ## Register the receiver once

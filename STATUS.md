@@ -7,13 +7,12 @@ source hashes,qualification and owed work are in
 [remaining work](docs/qualification/remaining.json) and its safe item manifests.
 
 Pushed candidate:49eefe1d4877962aec7c92cb6b6f26485fa83a11.
-Original18 workflows are running/queued or terminal. Core/source vulnerability,
-document/stock-FTPS/SCP checks and macOS units pass;receive-browser is red.
-F286 records native Windows custody/checks/ftpsclient/crypto/protectedfs/durablefs
-package passes,including source-bound F275 cases under the full untagged command.
-Whole Windows remains red for active-child rename/scanner;other native outcomes
-remain pending. No original run is
-cancelled/rerun/substituted,and no pass is inherited by later source.
+Its original18 workflows/41 jobs are terminal:31 pass,10 fail. F292 preserves
+exact handles;both complete image scans and every listed scan gate pass. Native
+x86 producer/composed MCP stock-client cases pass;selected Windows custody/checks/
+FTPS privacy and9 Chrome profiles pass at their recorded scope. Windows scanner/
+active-child rename,XLSX observer,independent review,receive,onward rotation,
+stock arrivals and x86 receiver failures remain red. No pass is inherited.
 
 Previous33ad447 original18 workflows/41 jobs are terminal:31 pass,10 fail.
 F274 preserves all run/job/step handles;both complete image scans and listed
@@ -62,6 +61,13 @@ receiver failures;four other stock browser/routing profiles pass on49eefe1.
 F291 prepares a closed-category,original-hash-verified diagnostic for that exact
 worker command. Eleven focused evidence/privacy tests pass;native backend cause
 and original journey remain owed. Seccomp and all failure assertions stay.
+
+F293 advances remaining local-filesystem source implementation with a read-only
+adapter pinned to the actual reviewed directory identity. Real local private-file,
+replacement,symlink,revocation and byte/bound checks pass;Linux/Windows compile
+only. local.collect workflow admission is still red:operator-provisioned
+connection,SQL,CLI/API/browser/custody integration and native proof remain owed.
+No connector or whole-goal qualification is claimed.
 
 FINISH repair and remaining implementation are mandatory. Next:repair original
 browser/stock/protocol failures and complete all affected original runtime,

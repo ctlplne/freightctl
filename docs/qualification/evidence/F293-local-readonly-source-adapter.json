@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "id": "F293",
+  "observed_at": "2026-11-07",
+  "base_candidate": "493a0baa8a6a8a2a3c24f72242ef9f3361f4e86e",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Read-only local source adapter implemented;workflow admission/wiring still red and owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "9b9002239b05e7b3860a8c36e332f36e4d5ad82ef45b86733030c3b50b17e7ee",
+      "bytes": 5606
+    },
+    {
+      "reference": "docs/qualification/evidence/F292-native-terminal-ci.json",
+      "sha256": "741d49cd631e78c1b43df948d509c27ba133d5d3544bcc376ed1167425627ef4",
+      "bytes": 107450
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "54dc8839258d5fc3eb41ca0c89c6dd284c608989b384c7b6409553826ecbc32c",
+      "bytes": 393792
+    },
+    {
+      "reference": "docs/workflows.md",
+      "sha256": "94ebce848bcfda5950cc2e9a646ea559adf2a7c0535e512a619a60a1c23f07a0",
+      "bytes": 15619
+    },
+    {
+      "reference": "internal/delivery/local_collection_identity_other.go",
+      "sha256": "81b7994d8e0ad2b9d2d699f470ecaaf307970fa60e3a1a6bfb4a8ec95fdd0092",
+      "bytes": 164
+    },
+    {
+      "reference": "internal/delivery/local_collection_identity_unix.go",
+      "sha256": "e008bbfcf6bfd3eba95be470847a6204eb97e49eddbc9621ee5bdee6836b814e",
+      "bytes": 880
+    },
+    {
+      "reference": "internal/delivery/local_collection_identity_windows.go",
+      "sha256": "97af56cc3aad54e22b8d498c5aaa2f35d943653c4657a293706710b397e8e12b",
+      "bytes": 1272
+    },
+    {
+      "reference": "internal/delivery/local_collection_peer.go",
+      "sha256": "ce499d826dbe58456dc639ece41fc549b400e91886ac6ce2f81196f6a7d7b1d7",
+      "bytes": 7728
+    },
+    {
+      "reference": "internal/delivery/local_collection_peer_test.go",
+      "sha256": "20c650ad51a8f7392ac290865639e3008417afc5eaa565182314d3b1dbe1ed88",
+      "bytes": 6076
+    },
+    {
+      "reference": "internal/delivery/local_collection_peer_unix_test.go",
+      "sha256": "6e924d858f7bd33058088b5e170ab49a83552e3f26dd5ec4a588e6ba45347d07",
+      "bytes": 2497
+    }
+  ],
+  "red": {
+    "proof": ".private/freightctl-f293-workflow-contract-red.log",
+    "test": "TestLocalSourceWorkflowAcceptanceOwedF293",
+    "observation": "Actual existing Normalize rejects local.collect as invalid typed workflow request. The private test overlay is not a second checkout or source mutation. This acceptance regression remains red until ordinary durable connection/workflow integration is implemented.",
+    "baseline": "GOAL local-filesystem/mounted-storage connector requirement remains unimplemented as a product profile."
+  },
+  "changed": [
+    "Read-only local collection peer requires an explicit reviewed actual-root fingerprint and a current authority callback. Unix pins device/inode;Windows full128-bit file ID/64-bit volume identity. Actual private held-root and exact file identity/protection are rechecked around each bounded read.",
+    "Refuse root/file symlinks,unsafe flat/alternate-stream/device names,wrong roots/physical replacements,length/digest/EOF mismatches,unbounded manifests,cancelled/revoked work. No producer write/delete/rename/execute API or marker creation.",
+    "Copy only to unpublished private staging;partial bytes on error grant no acceptance/publication/forwarding/execution. Operator connection/SQL/ordinary custody/CLI/API/browser integration remains explicitly owed.",
+    "F292 records exact original terminal18/41 native/security outcomes and all remaining red gates."
+  ],
+  "green": [
+    "Real local macOS private filesystem positive/adverse unit cases pass:exact manifest/copy and unchanged producer inventory,wrong native root,per-chunk revocation/replacement,symlink/root replacement,unsafe names,bounds/digest and cancellation.",
+    "Affected formatting,local/Windows vet,Linux and Windows test compilation and architecture checks pass. No cross-compilation is treated as native runtime proof."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f293-local-source-green.log",
+      "sha256": "ce868a6af6b9b5d6e03f3d8e8c7fc40ef088f792f06feaf8992c852a635822c2",
+      "bytes": 60
+    },
+    {
+      "reference": ".private/freightctl-f293-workflow-contract-red.log",
+      "sha256": "576f81b1046c94548b3a868b78ac2f965549aec3017e88f83f23ea81fb5af035",
+      "bytes": 246
+    },
+    {
+      "reference": ".private/freightctl-f293-workflow-profile-red_test.go",
+      "sha256": "7f61ab1ebf5d933a2a4f74bb9d10ac6935cdd6bcc0e11e80f1e8d39e234fe199",
+      "bytes": 331
+    },
+    {
+      "reference": ".private/freightctl-f293-workflow-overlay.json",
+      "sha256": "fd1edc536b593f6165d0dcc80997cf8d6c3dfd8f6adbae64cd70f17320530385",
+      "bytes": 200
+    },
+    {
+      "reference": ".private/freightctl-f293-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f293-final-architecture.log",
+      "sha256": "c911c8eaf0fe454583e14a5d8207486815ff7066a00a9577b362119b662854d5",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f293-final-linux-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f293-final-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f293-final-windows-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f293-final-windows-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "owed": [
+    "Turn the actual local.collect workflow acceptance regression green through explicit operator-provisioned connection versions,SQL/current authority,CLI/API/browser review,ordinary batch/custody/events/idempotency/intake/leases and separate onward permission.",
+    "Actual native Linux/Windows local source profiles and original full journeys;network-mounted storage,recovery/restore/process death/performance remain separate.",
+    "Repair all original red native/browser/stock/security/product outcomes and complete final-source baseline/AX/FINISH gates."
+  ],
+  "resources": "OneCPU/192MiB lightweight real local filesystem/pure workflow/static/cross-compilation only;no inference,PostgreSQL,Chrome,scanner or heavy peer. Source60/retained35 and local allowances unchanged."
+}
