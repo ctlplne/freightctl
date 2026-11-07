@@ -421,6 +421,9 @@ func TestArtifactExchangeCLIUsesOrdinaryAuthorityAndPublishesVerifiedDownload(t 
 	if _, err = command(a, "audit-history", "-request-file", historyInput); !errors.Is(err, store.ErrForbidden) {
 		t.Fatal("ordinary sender gained audit authority", err)
 	}
+	namespaceCopyWriter, namespaceCopyScope, _ := participant([]string{"read", "write", "list"})
+	namespaceCopyReader, _, _ := participant([]string{"read", "list"})
+	qualifyNamespaceCopyCLI(t, ctx, service, scope, namespaceCopyScope, namespaceCopyWriter, namespaceCopyReader, command, requestFile)
 	qualifyJSONIntakeCLI(t, ctx, service, scope, adminToken, b, command, requestFile)
 	qualifyLocalCollectionCLI(t, ctx, service, scope, adminToken, b, command, requestFile)
 }

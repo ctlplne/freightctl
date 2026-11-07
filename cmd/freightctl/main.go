@@ -448,7 +448,7 @@ func run(args []string) error {
 			return errors.New("namespace command contains trailing data")
 		}
 		service := &custody.Service{DB: db, NamespaceMaxEntries: *namespaceMax, UploadCheckpointBytes: *checkpointBytes}
-		if command.Operation == "publish" {
+		if command.Operation == "publish" || command.Operation == "copy" {
 			disk, err := custody.OpenExisting(*storage)
 			if err != nil {
 				return err

@@ -25,12 +25,18 @@ func (s *Service) RemoveFileIfCurrent(ctx context.Context, scope store.Scope, ke
 	return s.changeFileIfCurrent(ctx, scope, key, "remove", source, "", fileID, digest)
 }
 
+// CopyFileIfCurrent verifies the exact immutable bytes before publishing a
+// distinct mapping. The original mapping and immutable custody do not change.
+func (s *Service) CopyFileIfCurrent(ctx context.Context, scope store.Scope, key, source, target, fileID, digest string) (*store.PathResult, error) {
+	return s.changeFileIfCurrent(ctx, scope, key, "copy", source, target, fileID, digest)
+}
+
 func (s *Service) changeFileIfCurrent(ctx context.Context, scope store.Scope, key, operation, source, target, fileID, digest string) (*store.PathResult, error) {
 	if !keyPattern.MatchString(key) || !store.ValidID(fileID) || !digestPattern.MatchString(digest) {
 		return nil, ErrInput
 	}
 	names := []string{source}
-	if operation == "rename" {
+	if operation == "rename" || operation == "copy" {
 		names = append(names, target)
 	}
 	for _, name := range names {
@@ -49,7 +55,11 @@ func (s *Service) changeFileIfCurrent(ctx context.Context, scope store.Scope, ke
 		return nil, err
 	}
 	defer t.Tx.Rollback(ctx)
-	for _, permission := range []string{"manage_paths", "read"} {
+	permission := "manage_paths"
+	if operation == "copy" {
+		permission = "write"
+	}
+	for _, permission := range []string{permission, "read"} {
 		if err = t.Require(permission); err != nil {
 			return nil, err
 		}
@@ -88,7 +98,7 @@ func (s *Service) changeFileIfCurrent(ctx context.Context, scope store.Scope, ke
 	if file.ID != fileID || file.SHA256 != digest {
 		return nil, store.ErrRevision
 	}
-	if operation == "rename" {
+	if operation == "rename" || operation == "copy" {
 		destination, err := vpath.Resolve(t.Root, target)
 		if err != nil {
 			return nil, err
@@ -97,6 +107,18 @@ func (s *Service) changeFileIfCurrent(ctx context.Context, scope store.Scope, ke
 			if errors.Is(err, store.ErrNotFound) {
 				return nil, ErrNamespaceParent
 			}
+			return nil, err
+		}
+		if operation == "copy" {
+			if _, err = t.Entry(ctx, destination); err == nil {
+				return nil, store.ErrExists
+			} else if !errors.Is(err, store.ErrNotFound) {
+				return nil, err
+			}
+		}
+	}
+	if operation == "copy" {
+		if err = s.verifyNamespacePublication(ctx, scope, file); err != nil {
 			return nil, err
 		}
 	}

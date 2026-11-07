@@ -175,6 +175,20 @@ func TestWebDAVNativeStockCurlDiscoveryInterruptedReadAndExactResume(t *testing.
 	if status != 200 || !bytes.Equal(readback, data) || headers.Get("X-File-Revision-ID") != receipt.File.ID || headers.Get("ETag") != artifactRevisionETag(&receipt.File) {
 		t.Fatal("independent stock client could not verify its exact created revision")
 	}
+	copiedPath := prefix + "/dav/curl-created/copied.dat"
+	copyArgs := []string{"--request", "COPY", "--header", "If-Match: " + artifactRevisionETag(&receipt.File), "--header", "Overwrite: F", "--header", "Idempotency-Key: dav-stock-copy", "--header", "Destination: " + front.URL + copiedPath}
+	status, headers, _, _ = run("copy", createdPath, copyArgs, true)
+	if status != 201 || headers.Get("Location") != copiedPath {
+		t.Fatal("stock DAV COPY did not publish its exact independent mapping")
+	}
+	status, _, _, copyRefused := run("copy-existing", createdPath, copyArgs, false)
+	if status != 412 || copyRefused != 22 {
+		t.Fatal("stock DAV COPY overwrote an existing destination even with its original key")
+	}
+	status, headers, copiedBytes, _ := run("copy-readback", copiedPath, nil, true)
+	if status != 200 || !bytes.Equal(copiedBytes, data) || headers.Get("X-File-Revision-ID") != receipt.File.ID {
+		t.Fatal("independent stock copy readback changed custody")
+	}
 	movedPath := prefix + "/dav/curl-created/moved.dat"
 	moveArgs := []string{"--request", "MOVE", "--header", "If-Match: " + artifactRevisionETag(&receipt.File), "--header", "Overwrite: F", "--header", "Idempotency-Key: dav-stock-move", "--header", "Destination: " + front.URL + movedPath}
 	status, headers, _, _ = run("move", createdPath, moveArgs, true)
@@ -205,6 +219,10 @@ func TestWebDAVNativeStockCurlDiscoveryInterruptedReadAndExactResume(t *testing.
 	status, headers, retainedBytes, _ := run("retained-custody", prefix+"/files/"+receipt.File.ID, nil, true)
 	if status != 200 || !bytes.Equal(retainedBytes, data) || headers.Get("X-File-Revision-ID") != receipt.File.ID {
 		t.Fatal("independent authorized stock readback lost immutable custody after path removal")
+	}
+	status, headers, independentBytes, _ := run("copy-survives-source-move-remove", copiedPath, nil, true)
+	if status != 200 || !bytes.Equal(independentBytes, data) || headers.Get("X-File-Revision-ID") != receipt.File.ID {
+		t.Fatal("moving/removing the source mapping changed the copied resource")
 	}
 	binaryPath, err := exec.LookPath("curl")
 	if err != nil {

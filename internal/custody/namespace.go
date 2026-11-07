@@ -74,7 +74,7 @@ func (s *Service) pathCommand(ctx context.Context, scope store.Scope, key string
 			return nil, err
 		}
 	}
-	if command.Operation == "publish" {
+	if command.Operation == "publish" || command.Operation == "copy" {
 		if err = t.Require("write"); err != nil {
 			return nil, err
 		}
@@ -88,14 +88,9 @@ func (s *Service) pathCommand(ctx context.Context, scope store.Scope, key string
 		if err != nil {
 			return nil, err
 		}
-		if s.Disk == nil {
-			return nil, store.ErrState
-		}
-		data, err := s.Disk.VerifiedContext(ctx, Name(scope.Tenant, scope.Partner, file.ID), file.Size, file.SHA256)
-		if err != nil {
+		if err = s.verifyNamespacePublication(ctx, scope, file); err != nil {
 			return nil, err
 		}
-		data.Close()
 	}
 	result, err := t.ApplyPathCommand(ctx, key, command, s.NamespaceMaxEntries)
 	if err != nil {
@@ -108,6 +103,18 @@ func (s *Service) pathCommand(ctx context.Context, scope store.Scope, key string
 		return nil, err
 	}
 	return result, nil
+}
+
+func (s *Service) verifyNamespacePublication(ctx context.Context, scope store.Scope, file *store.File) error {
+	if s.Disk == nil {
+		return store.ErrState
+	}
+	data, err := s.Disk.VerifiedContext(ctx, Name(scope.Tenant, scope.Partner, file.ID), file.Size, file.SHA256)
+	if err != nil {
+		return err
+	}
+	data.Close()
+	return nil
 }
 func (s *Service) StatPath(ctx context.Context, scope store.Scope, virtual string) (*store.PathEntry, error) {
 	t, err := s.DB.Begin(ctx, scope)

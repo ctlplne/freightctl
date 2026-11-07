@@ -3,7 +3,6 @@ package api
 import (
 	"errors"
 	"net/http"
-	"strings"
 
 	"github.com/ctlplne/freightctl/internal/custody"
 	"github.com/ctlplne/freightctl/internal/store"
@@ -53,7 +52,7 @@ func (s *Server) davDelete(w http.ResponseWriter, r *http.Request, scope store.S
 		fail(w, 412, "dav_delete_condition_failed")
 		return
 	case errors.Is(err, custody.ErrNamespaceFileProfile):
-		w.Header().Set("Allow", strings.Replace(strings.Replace(davReadMethods, ", DELETE", "", 1), ", MOVE", "", 1))
+		w.Header().Set("Allow", davDirectoryMethods)
 		fail(w, 405, "dav_file_delete_profile_only")
 		return
 	case err != nil:

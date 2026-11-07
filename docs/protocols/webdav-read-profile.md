@@ -93,6 +93,23 @@ or read. A URL never refers to a host filesystem path.
   semantics in [RFC4918 section9.6](https://www.rfc-editor.org/rfc/inline-errata/rfc4918.html#s-9.6).
   Depth may be absent or infinity;other values,unsupported conditions,bodies,
   Destination and Overwrite headers are refused.
+- `COPY` currently publishes one file into an absent destination in this same
+  scope. It requires an original key,exact strong source If-Match,Overwrite:F
+  and an empty body. Destination uses the same confined URI rules as MOVE.
+  Current source read and destination write authority are both required;
+  read-only access or manage_paths alone does not grant copying. Verify the
+  exact custody bytes before the ordinary atomic PathPublished event/receipt.
+  The new mapping has its own ID,current actor ownership and ordinary0640 mode;
+  it references the same immutable custody file. Replacing or removing either
+  mapping does not change the other. No new artifact acceptance,external transfer
+  or execution is implied. Existing targets return412 even for the original key.
+  Fresh201 names Location;read the authorized target separately for its bytes.
+  If the original target was removed,200 can recover only its historical receipt
+  without recreating it. Changed source revisions cannot reuse the old key.
+  Missing parents return409;collection copy remains405 and unqualified.
+  The ordinary namespace API/CLI accepts the same typed copy command with source
+  path,target,file_id and expected source mapping revision. It requires the same
+  read/write,protected custody verification and namespace capacity checks.
 - Other mutating DAV methods return405 after authenticating the credential.
   Discovery and unknown properties grant no forwarding or execution authority.
   Requests with traversal,encoded separators,control names,noncanonical Unicode

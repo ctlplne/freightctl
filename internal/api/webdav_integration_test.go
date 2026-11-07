@@ -75,7 +75,7 @@ func TestWebDAVReadsUsePublishedNamespaceModesIntakeAndCurrentAuthority(t *testi
 	if response.Header.Get("Allow") != davReadMethods || response.Header.Get("DAV") != "" {
 		t.Fatal("partial DAV profile advertised unimplemented compliance or methods")
 	}
-	for _, method := range []string{"COPY", "PROPPATCH", "LOCK", "UNLOCK"} {
+	for _, method := range []string{"PROPPATCH", "LOCK", "UNLOCK"} {
 		exchangeAPIRequest(t, server, method, fileURL, nil, readerHeaders, []byte("untrusted write"), 405)
 	}
 	readerHeaders["Depth"] = "infinity"

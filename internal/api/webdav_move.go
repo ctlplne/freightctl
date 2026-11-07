@@ -24,42 +24,46 @@ func davFileTag(value string) (string, string, bool) {
 }
 
 func davMoveInput(w http.ResponseWriter, r *http.Request) bool {
+	return davFileMappingInput(w, r, "move")
+}
+
+func davFileMappingInput(w http.ResponseWriter, r *http.Request, operation string) bool {
 	tag, present, valid := tusHeader(r, "If-Match")
 	if !present {
-		fail(w, 428, "dav_move_requires_exact_source_revision")
+		fail(w, 428, "dav_"+operation+"_requires_exact_source_revision")
 		return false
 	}
 	if _, _, ok := davFileTag(tag); !valid || !ok {
-		fail(w, 400, "invalid_dav_move_revision")
+		fail(w, 400, "invalid_dav_"+operation+"_revision")
 		return false
 	}
 	overwrite, _, valid := tusHeader(r, "Overwrite")
 	if !valid || overwrite != "F" {
-		fail(w, 428, "dav_move_requires_no_overwrite")
+		fail(w, 428, "dav_"+operation+"_requires_no_overwrite")
 		return false
 	}
 	key, _, valid := tusHeader(r, "Idempotency-Key")
 	if !valid || key == "" {
-		fail(w, 400, "dav_move_requires_original_key")
+		fail(w, 400, "dav_"+operation+"_requires_original_key")
 		return false
 	}
 	if r.ContentLength != 0 {
-		fail(w, 415, "dav_move_body_unsupported")
+		fail(w, 415, "dav_"+operation+"_body_unsupported")
 		return false
 	}
 	for _, name := range []string{"If-None-Match", "If-Unmodified-Since", "If-Modified-Since", "If", "Content-Range"} {
 		if _, present, _ := tusHeader(r, name); present {
-			fail(w, 400, "unsupported_dav_move_condition")
+			fail(w, 400, "unsupported_dav_"+operation+"_condition")
 			return false
 		}
 	}
 	if depth, present, valid := tusHeader(r, "Depth"); present && (!valid || depth != "0" && depth != "1" && depth != "infinity") {
-		fail(w, 400, "invalid_dav_move_depth")
+		fail(w, 400, "invalid_dav_"+operation+"_depth")
 		return false
 	}
 	base := "/v1/tenants/" + url.PathEscape(strings.Split(r.URL.Path, "/")[3]) + "/partners/" + url.PathEscape(strings.Split(r.URL.Path, "/")[5]) + "/dav/"
 	if _, err := davMoveDestination(r, base); err != nil {
-		fail(w, 400, "invalid_dav_move_destination")
+		fail(w, 400, "invalid_dav_"+operation+"_destination")
 		return false
 	}
 	return true
@@ -107,7 +111,7 @@ func (s *Server) davMove(w http.ResponseWriter, r *http.Request, scope store.Sco
 		fail(w, 409, "dav_parent_collection_required")
 		return
 	case errors.Is(err, custody.ErrNamespaceFileProfile):
-		w.Header().Set("Allow", strings.Replace(strings.Replace(davReadMethods, ", MOVE", "", 1), ", DELETE", "", 1))
+		w.Header().Set("Allow", davDirectoryMethods)
 		fail(w, 405, "dav_file_move_profile_only")
 		return
 	case err != nil:

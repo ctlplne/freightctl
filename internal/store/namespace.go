@@ -161,7 +161,7 @@ func (t *Transaction) ApplyPathCommand(ctx context.Context, key string, command 
 	}
 	var permission string
 	switch command.Operation {
-	case "mkdir", "publish":
+	case "mkdir", "publish", "copy":
 		permission = "write"
 	case "rename", "remove", "rmdir", "setstat":
 		permission = "manage_paths"
@@ -170,6 +170,14 @@ func (t *Transaction) ApplyPathCommand(ctx context.Context, key string, command 
 	}
 	if err := t.Require(permission); err != nil {
 		return nil, err
+	}
+	if command.Operation == "copy" {
+		if err := t.Require("read"); err != nil {
+			return nil, err
+		}
+		if !ValidID(command.FileID) || command.Replace || command.TargetRevision != nil || command.Mode != nil || command.Modified != nil {
+			return nil, ErrState
+		}
 	}
 	virtual, err := vpath.Canonical(command.Path)
 	if err != nil {
@@ -238,6 +246,26 @@ func (t *Transaction) ApplyPathCommand(ctx context.Context, key string, command 
 	old, lookupErr := t.Entry(ctx, actual)
 	if lookupErr != nil && !errors.Is(lookupErr, ErrNotFound) {
 		return nil, lookupErr
+	}
+	// A copy reads the declared source. Check its actual path and modes before
+	// comparing revision conditions,even when another mapping exposes the file.
+	if command.Operation == "copy" && old != nil {
+		if err = t.CheckAncestors(ctx, actual); err != nil {
+			return nil, err
+		}
+		mask := uint32(4)
+		if old.Kind == "dir" {
+			mask = 5
+		}
+		if err = t.EntryMode(old, mask); err != nil {
+			return nil, err
+		}
+		if old.Kind != "file" {
+			return nil, ErrState
+		}
+		if err = t.FileAccessible(ctx, old.FileID); err != nil {
+			return nil, err
+		}
 	}
 	commandID := secure.NewID()
 	changed := 1
@@ -320,7 +348,7 @@ func (t *Transaction) ApplyPathCommand(ctx context.Context, key string, command 
 		}
 		// Optional immutable source identity is part of the existing command
 		// meaning. A changed file cannot reuse a rename/remove key for another revision.
-		if (command.Operation == "rename" || command.Operation == "remove") && command.FileID != "" && (old.Kind != "file" || old.FileID != command.FileID) {
+		if (command.Operation == "rename" || command.Operation == "remove" || command.Operation == "copy") && command.FileID != "" && (old.Kind != "file" || old.FileID != command.FileID) {
 			return nil, ErrRevision
 		}
 		if err = t.CheckAncestors(ctx, actual); err != nil {
@@ -329,6 +357,36 @@ func (t *Transaction) ApplyPathCommand(ctx context.Context, key string, command 
 		next = *old
 		next.Revision++
 		switch command.Operation {
+		case "copy":
+			if command.Target == "" || command.Target == "/" || old.Kind != "file" {
+				return nil, ErrState
+			}
+			target, err := vpath.Resolve(t.Root, command.Target)
+			if err != nil {
+				return nil, err
+			}
+			if err = t.ParentWritable(ctx, target); err != nil {
+				return nil, err
+			}
+			if _, err = t.Entry(ctx, target); err == nil {
+				return nil, ErrExists
+			} else if !errors.Is(err, ErrNotFound) {
+				return nil, err
+			}
+			if maxEntries < 1 {
+				maxEntries = 10000
+			}
+			var total int
+			if err = t.Tx.QueryRow(ctx, `SELECT count(*) FROM namespace_entries WHERE NOT deleted`).Scan(&total); err != nil {
+				return nil, err
+			}
+			if total >= maxEntries {
+				return nil, ErrLimit
+			}
+			next = PathEntry{ID: secure.NewID(), Path: target, Owner: t.Actor, Revision: 1, Modified: time.Now().UTC(), Kind: "file", Mode: 0640, FileID: old.FileID, Size: old.Size}
+			if err = t.SaveEntry(ctx, nil, &next, "PathPublished", commandID); err != nil {
+				return nil, err
+			}
 		case "setstat":
 			if !t.Has("admin") && old.Owner != t.Actor {
 				return nil, ErrForbidden
