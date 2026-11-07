@@ -62,12 +62,9 @@ test("re-check immutable hash matches Go/Python including Unicode, HTML escapes,
 });
 test("re-check preserves an exact previous-file replacement guard in source and destination metadata", () => {
   const plan = structuredClone(fixture.plan);
-  for (const target of [
-    plan.source.check.binding.target,
-    plan.target.command,
-  ]) {
-    target.expected_file_id = "00000041-1111-4111-8111-111111111111";
-  }
+  plan.source.check.binding.target.expected_file_id =
+    "00000041-1111-4111-8111-111111111111";
+  plan.target.command.expected_file_id = plan.source.file.id;
   assert.deepEqual(parseRecheckPlan(plan), plan);
   for (const mutate of [
     (t) => {
@@ -116,7 +113,7 @@ test("conditional re-check approval matches the independent Go and Python canoni
   );
   assert.equal(
     parsed.definition.plan.target.command.expected_file_id,
-    "00000041-1111-4111-8111-111111111111",
+    parsed.definition.plan.source.file.id,
   );
   for (const targetName of ["source", "destination"]) {
     const changed = structuredClone(current);
@@ -150,6 +147,11 @@ test("re-check review rejects changed source, policy, signature, slots and injec
     mutate(r);
     assert.throws(() => parseRecheck(r));
   }
+});
+test("re-check destination cannot substitute another previous custody identity", () => {
+  const plan = structuredClone(fixture.plan);
+  plan.target.command.expected_file_id = "00000041-1111-4111-8111-111111111111";
+  assert.throws(() => parseRecheckPlan(plan));
 });
 test("copied receipt binds held child, exact signature metadata and preserved source meaning", () => {
   const r = row(),

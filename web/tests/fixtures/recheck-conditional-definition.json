@@ -73,7 +73,7 @@
         "operation": "publish",
         "path": "/été.csv",
         "expected_revision": 1,
-        "expected_file_id": "00000041-1111-4111-8111-111111111111",
+        "expected_file_id": "00000001-1111-4111-8111-111111111111",
         "replace": true,
         "mode": 0
       },

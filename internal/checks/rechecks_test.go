@@ -39,7 +39,7 @@ func TestConditionalRecheckCanonicalDefinitionRetainsPreviousFileGuard(t *testin
 	if err = json.Unmarshal(raw, &definition); err != nil {
 		t.Fatal(err)
 	}
-	if definition.Plan.Source.Check.Binding.Target.ExpectedFileID != "00000041-1111-4111-8111-111111111111" || definition.Plan.Target.Command.ExpectedFileID != "00000041-1111-4111-8111-111111111111" {
+	if definition.Plan.Source.Check.Binding.Target.ExpectedFileID != "00000041-1111-4111-8111-111111111111" || definition.Plan.Target.Command.ExpectedFileID != definition.Plan.Source.File.ID {
 		t.Fatal("conditional fixture lost its previous file guard")
 	}
 	_, hash, err := canonical(definition)

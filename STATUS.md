@@ -48,6 +48,12 @@ mutations,properties,locks,outbound and independent DAV application profiles are
 still mandatory. Earlier partial DAV read/create/MKCOL/MOVE and scoped FTPS/SFTP
 proofs stay bound to their original candidates,not these later changes.
 
+F396 locally carries the old file identity into recheck held-child publication,
+and binds browser destination identity to its source. Focused serialization/
+metadata red-green,Go/Python/browser goldens and affected static/build checks pass.
+Prepared equal-revision identity-change/refused-release and positive native
+release proofs remain owed;the current pushed candidate does not include F396.
+
 Next:continue independent implementation while these original CI runs finish.
 Push the next verified owner-only batch only after all required originals are terminal. Repair original
 failures and finish every mandatory final-source baseline/AX gate. F026 stays

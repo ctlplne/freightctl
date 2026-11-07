@@ -258,7 +258,6 @@ func (s *Service) recheckPlanPolicy(ctx context.Context, t *store.Transaction, i
 		if e != nil {
 			return nil, e
 		}
-		target := &RecheckTarget{Command: store.PathCommand{Operation: "publish", Path: path}, ParentID: parent.ID, ParentRevision: parent.Revision}
 		entry, e := t.Entry(ctx, actual)
 		if e != nil && !errors.Is(e, store.ErrNotFound) {
 			return nil, e
@@ -270,15 +269,8 @@ func (s *Service) recheckPlanPolicy(ctx context.Context, t *store.Transaction, i
 			if e = t.EntryMode(entry, 2); e != nil {
 				return nil, e
 			}
-			rev := entry.Revision
-			mode := entry.Mode
-			target.Command.ExpectedRevision = &rev
-			target.Command.Replace = true
-			target.Command.Mode = &mode
-			target.EntryID = entry.ID
-			target.EntryRevision = rev
 		}
-		plan.Target = target
+		plan.Target = recheckPublicationTarget(path, parent, entry)
 	}
 	view.Plan = plan
 	view.CurrentPolicy = RecheckPolicy{Reference: plan.Policy, State: p.State, Definition: policy}

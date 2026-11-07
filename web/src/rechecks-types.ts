@@ -292,6 +292,12 @@ export function parseRecheckPlan(
       entry_id: id(t, "entry_id", true),
       entry_revision: integer(t, "entry_revision"),
     };
+    const command = object(plan.target.command);
+    if (
+      command.expected_file_id !== undefined &&
+      command.expected_file_id !== source.file.id
+    )
+      bad();
   }
   plan.signature_mode = mode;
   plan.reason = text(o, "reason", 1024);

@@ -1,0 +1,164 @@
+{
+  "schema_version": 1,
+  "id": "F396",
+  "observed_at": "2026-11-07",
+  "base_candidate": "8b727617d8b470e3b61a17075d9b141bc014162c",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F396 carries the exact old file ID from recheck target preview into the ordinary publication command retained by its held child. Existing preview EntryID does not survive in CheckBinding.Target;an equal-revision delete/recreate must not authorize delayed release. Extract actual existing target assembly unchanged,observe its serialized pending command missing the ID,then bind it alongside unchanged revision/mode/entry/parent snapshot. Actual strict browser plan initially accepts another old destination identity;require optional destination expected_file_id to equal the rechecked source file ID. Refine F393's inert conditional destination fixture to that actual server constraint;source historical previous ID remains independent. Recompute only this new conditional Go/Python/browser golden;original baseline fixtures/hashes and saved evidence remain unchanged. Three focused Go and24 affected browser tests,type/build/check-built,tagged compilation,vet,format and architecture pass. New native PostgreSQL profile requires held child guard,old unguarded plan refusal,fresh exact approval,passed check preservation,changed identity at equal revision refusal,independent current bytes,successful unchanged-target release and zero external/run effects. Actual native outcome remains owed. Existing stored approvals are not rewritten;stale replacement plans require fresh review. No schema/local runtime/resource/authority changes.",
+  "red_green": "Refactor existing actual production target assembly without behavior change;its exact later CheckBinding serialization first loses the old file ID. Bind the ID,then roundtrip guard/frozen snapshot passes. Actual browser plan also first accepts a substituted destination identity,then refuses it. Three Go/24 browser checks pass;PostgreSQL exploit/refusal/positive outcomes are prepared and compiled only,not run locally.",
+  "owed": [
+    "Actual original native PostgreSQL recheck copy\u2192held\u2192check\u2192equal-revision changed identity\u2192refused release,with unchanged passed report and exact independent current readback",
+    "Actual unchanged-target separately checked release and old unguarded-plan fresh-review refusal",
+    "Affected original API/CLI/served browser and every mandatory final-source baseline/AX/security/readiness gate"
+  ],
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "35e7a813c4d30980e3ee8c459d36df5633164e314ce5e6f93e5edf588f6d08c2",
+      "bytes": 4144
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "15818ac6bed3d0b051aaac53a96ffc2a0ffa559cdc96fade2281cdf17294df02",
+      "bytes": 549682
+    },
+    {
+      "reference": "internal/checks/rechecks.go",
+      "sha256": "a2c78bd24008b0a87b49efbf721507791e9e524b6dd7129a145f6483efd4a67c",
+      "bytes": 22962
+    },
+    {
+      "reference": "internal/checks/recheck_target.go",
+      "sha256": "6e36468722982ecf4ee2375b5c65e6ad5cbbea82cbf9ba615c20a2dbe3f71e12",
+      "bytes": 780
+    },
+    {
+      "reference": "internal/checks/recheck_target_test.go",
+      "sha256": "dece55eb7c854529d4f8cebb3a4d702ea18ddb27595a4693a37b8ae0a160a5d1",
+      "bytes": 1630
+    },
+    {
+      "reference": "internal/checks/recheck_target_integration_test.go",
+      "sha256": "ec2810033f68c6dd2377af88b409351ee68a2ed8e9217ec53155a2c06bfe42f7",
+      "bytes": 5149
+    },
+    {
+      "reference": "internal/checks/rechecks_test.go",
+      "sha256": "653e84cb1b7d009486ab117dbc2bb68bf1a2bef71b5947c3792d4fe6e0764bb8",
+      "bytes": 1567
+    },
+    {
+      "reference": "web/src/rechecks-types.ts",
+      "sha256": "8490336ff1c63f415ab6c36781558eded3abb339c4951d606ea25af37fc0b186",
+      "bytes": 18443
+    },
+    {
+      "reference": "web/tests/rechecks.test.mjs",
+      "sha256": "ef639d9dfd438e5db23d3cf7435e138bdc6ecdcacabf98f808505fe4f431cf23",
+      "bytes": 7057
+    },
+    {
+      "reference": "web/tests/fixtures/recheck-conditional-definition.json",
+      "sha256": "6f94a2ed11c568e2212fc04986ce80a74ba39c2e8fe665899442ebf8f52e2f4a",
+      "bytes": 3916
+    },
+    {
+      "reference": "web/tests/fixtures/recheck-conditional-golden.sha256",
+      "sha256": "70eb0c86bfae598fdc023ebca970fea189babe9631e8ef16bf9ede325e99ac8a",
+      "bytes": 65
+    },
+    {
+      "reference": "internal/browser/assets/app.js",
+      "sha256": "e4d863b9b930d742dd145ebff1ba3b3f864d4e54f8115710ac81681e900275eb",
+      "bytes": 907115
+    },
+    {
+      "reference": "internal/browser/assets/manifest.json",
+      "sha256": "5e6adfbac72dc50d4c673655b871aa99c2f5859c43e71234f8674058716e861a",
+      "bytes": 14114
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f396-release-guard-red.log",
+      "sha256": "b830b3c3c2b85bfadb04589dbd50a65a2501df76ce95ef0535716d9f5c234642",
+      "bytes": 239
+    },
+    {
+      "reference": ".private/freightctl-f396-browser-guard-red.log",
+      "sha256": "46203a37f9b266a4fc0811336f4fef3075827b1a5966ec2ca1831f4fed8394b3",
+      "bytes": 946
+    },
+    {
+      "reference": ".private/freightctl-f396-go-focused.log",
+      "sha256": "5fa461476e7a35cdc46d01f999763c99621c943a959efd97da508bc708a26c09",
+      "bytes": 58
+    },
+    {
+      "reference": ".private/freightctl-f396-browser-focused.log",
+      "sha256": "bff23e5c0a5ed795dd8b198ebc62600322d57a8f317aa3e95db634211d02aeae",
+      "bytes": 2453
+    },
+    {
+      "reference": ".private/freightctl-f396-python-golden.log",
+      "sha256": "519c761ac91e898f1d0d6a8406166348995902c4a651c9015b4668cc41278019",
+      "bytes": 81
+    },
+    {
+      "reference": ".private/freightctl-f396-original-goldens.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f396-native-compile.log",
+      "sha256": "88f60e2a552e581e73932ea62f4d659057511bd757ba5fffb47a65c15d50b6d1",
+      "bytes": 224
+    },
+    {
+      "reference": ".private/freightctl-f396-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f396-typecheck.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f396-build.log",
+      "sha256": "13b37fd24445667d0a5fb9508f7b6f0a37cf1f43c943209e1d1f077c2e63657b",
+      "bytes": 180
+    },
+    {
+      "reference": ".private/freightctl-f396-check-built.log",
+      "sha256": "e308f12c2c172f204edcf868582008499c327db649fbb1d76cb9d170d4bb64ca",
+      "bytes": 183
+    },
+    {
+      "reference": ".private/freightctl-f396-format.log",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    },
+    {
+      "reference": ".private/freightctl-f396-go-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f396-architecture.log",
+      "sha256": "335ab49f434e6b88ad40357c25e8fd0b70029ce223a61b738dffde550dc70431",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f396-golden/main.go",
+      "sha256": "4c023f32c8f0acd558a89d661eb8af3e92a7d71b431da266ea3b76754430fbe4",
+      "bytes": 716
+    },
+    {
+      "reference": ".private/freightctl-f396-golden.json",
+      "sha256": "ffede97fab7f3f140557df8a5553c065603519519ec6890e7ca2eb4a34f9fadd",
+      "bytes": 3108
+    }
+  ]
+}
