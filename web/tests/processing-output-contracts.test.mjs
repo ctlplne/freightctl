@@ -144,3 +144,53 @@ test("selected metadata transport binds the complete reference and rejects chang
   );
   assert.equal(calls.length, count);
 });
+
+test("composed source metadata pins immutable acceptance and producer without reinterpreting old profiles", () => {
+  const value = structuredClone(selected),
+    ref = value.source_policy.reference;
+  value.profile = "record-processing-contracts-v3";
+  value.source_policy.state = "output_active";
+  value.source_origin = {
+    profile: "owned-produced-source-v1",
+    file: {
+      id: value.source.file_revision_id,
+      size_bytes: value.source.size_bytes,
+      sha256: value.source.sha256,
+      policy: value.source.acceptance_policy,
+      accepted_event_id: "77777777-7777-4777-8777-777777777777",
+    },
+    projection_id: "88888888-8888-4888-8888-888888888888",
+    projection_hash: "d".repeat(64),
+    producer_binding: {
+      ...structuredClone(selected.output_binding),
+      policy_id: ref.id,
+      policy_version: ref.version,
+      policy_hash: ref.hash,
+    },
+  };
+  assert.deepEqual(
+    p.processingContracts(value, session).source_origin,
+    value.source_origin,
+  );
+  for (const change of [
+    (x) => (x.profile = "record-processing-contracts-v2"),
+    (x) => delete x.source_origin,
+    (x) => (x.source_policy.state = "output_revoked"),
+    (x) => (x.source_origin.file.id = "99999999-9999-4999-8999-999999999999"),
+    (x) => (x.source_origin.file.sha256 = "e".repeat(64)),
+    (x) => (x.source_origin.file.accepted_event_id = ""),
+    (x) => x.source_origin.producer_binding.policy_version++,
+    (x) => x.source_origin.producer_binding.producer.authority_revision++,
+    (x) =>
+      (x.source_origin.producer_binding.producer.root_policy_digest =
+        "e".repeat(64)),
+    (x) => (x.source_origin.execution_allowed = true),
+  ]) {
+    const bad = structuredClone(value);
+    change(bad);
+    assert.throws(() => p.processingContracts(bad, session));
+  }
+  const old = structuredClone(selected);
+  old.source_origin = value.source_origin;
+  assert.throws(() => p.processingContracts(old, session));
+});

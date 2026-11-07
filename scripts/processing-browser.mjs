@@ -118,6 +118,10 @@ try {
   await page
     .getByRole("heading", { name: "Exact input and output contracts" })
     .waitFor();
+  if (c.composed_source) {
+    await page.getByText("Owned generated source", {exact:true}).waitFor();
+    await audit("composed-source-lineage");
+  }
   await page
     .getByLabel("Task name", { exact: true })
     .fill("Browser settlement processing");

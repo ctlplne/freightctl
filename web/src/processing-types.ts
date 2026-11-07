@@ -52,8 +52,12 @@ export interface ProcessingDefinition {
   };
 }
 export interface Contracts {
-  profile: "record-processing-contracts-v1" | "record-processing-contracts-v2";
+  profile:
+    | "record-processing-contracts-v1"
+    | "record-processing-contracts-v2"
+    | "record-processing-contracts-v3";
   output_binding?: ReturnType<typeof processingOutputBinding>;
+  source_origin?: ReturnType<typeof processingSourceOrigin>;
   source: ExchangeArtifact;
   source_policy: {
     reference: Reference;
@@ -261,21 +265,83 @@ export function processingOutputBinding(
   };
 }
 
+export function processingSourceOrigin(
+  value: unknown,
+  source: ExchangeArtifact,
+  policy: Reference,
+  session: Session,
+  acceptedEvent?: unknown,
+) {
+  const o = exact(value, [
+      "profile",
+      "file",
+      "projection_id",
+      "projection_hash",
+      "producer_binding",
+    ]),
+    f = exact(o.file, [
+      "id",
+      "size_bytes",
+      "sha256",
+      "policy",
+      "accepted_event_id",
+    ]),
+    file = {
+      id: identifier(f.id),
+      size_bytes: integer(f.size_bytes),
+      sha256: hash(f.sha256),
+      policy: text(f.policy, 128),
+      accepted_event_id: identifier(f.accepted_event_id),
+    };
+  if (
+    o.profile !== "owned-produced-source-v1" ||
+    file.id !== source.file_revision_id ||
+    file.size_bytes !== source.size_bytes ||
+    file.sha256 !== source.sha256 ||
+    file.policy !== source.acceptance_policy ||
+    !file.policy.endsWith(":" + policy.hash) ||
+    (acceptedEvent !== undefined && file.accepted_event_id !== acceptedEvent)
+  )
+    bad();
+  return {
+    profile: "owned-produced-source-v1",
+    file,
+    projection_id: identifier(o.projection_id),
+    projection_hash: hash(o.projection_hash),
+    producer_binding: processingOutputBinding(
+      o.producer_binding,
+      policy,
+      session,
+    ),
+  };
+}
+
 export function processingPlanProfile(
   value: unknown,
   context: ReturnType<typeof parseRecheckPlan>,
   session: Session,
-) {
+): {
+  schema_version: number;
+  profile: string;
+  output_binding?: ReturnType<typeof processingOutputBinding>;
+  source_origin?: ReturnType<typeof processingSourceOrigin>;
+} {
   const plan = object(value);
   if (
     plan.schema_version === 2 &&
     plan.profile === "scoped-record-projection-v1" &&
-    plan.output_binding === undefined
+    plan.output_binding === undefined &&
+    plan.source_origin === undefined
   )
     return { schema_version: 2, profile: "scoped-record-projection-v1" };
+  const composed =
+    plan.schema_version === 4 &&
+    plan.profile === "composed-producer-record-projection-v1";
   if (
-    plan.schema_version !== 3 ||
-    plan.profile !== "producer-record-projection-v1"
+    (!composed &&
+      (plan.schema_version !== 3 ||
+        plan.profile !== "producer-record-projection-v1")) ||
+    composed !== (plan.source_origin !== undefined)
   )
     bad();
   const binding = processingOutputBinding(
@@ -284,15 +350,39 @@ export function processingPlanProfile(
     session,
   );
   if (
+    composed &&
+    object(plan.projection).source_policy_hash !==
+      reference(plan.source_policy).hash
+  )
+    bad();
+  if (
     binding.producer.authority_revision !== context.authority_revision ||
     binding.producer.root_policy_digest !==
       digestBytes(new TextEncoder().encode(context.namespace_root))
   )
     bad();
   return {
-    schema_version: 3,
-    profile: "producer-record-projection-v1",
+    schema_version: composed ? 4 : 3,
+    profile: composed
+      ? "composed-producer-record-projection-v1"
+      : "producer-record-projection-v1",
     output_binding: binding,
+    ...(composed
+      ? {
+          source_origin: processingSourceOrigin(
+            plan.source_origin,
+            {
+              file_revision_id: context.source.file.id,
+              size_bytes: context.source.file.size_bytes,
+              sha256: context.source.file.sha256,
+              acceptance_policy: context.source.file.policy,
+            },
+            reference(plan.source_policy),
+            session,
+            context.source.file.accepted_event_id,
+          ),
+        }
+      : {}),
   };
 }
 export function projection(value: unknown): Projection {
@@ -422,12 +512,14 @@ export function processingContracts(
       "namespace_root_digest",
       "effects",
     ],
-    ["source_proof_valid_until", "output_binding"],
+    ["source_proof_valid_until", "output_binding", "source_origin"],
   );
-  const selected = o.profile === "record-processing-contracts-v2";
+  const composed = o.profile === "record-processing-contracts-v3";
+  const selected = composed || o.profile === "record-processing-contracts-v2";
   if (
     (!selected && o.profile !== "record-processing-contracts-v1") ||
     selected !== (o.output_binding !== undefined) ||
+    composed !== (o.source_origin !== undefined) ||
     (selected && !session)
   )
     bad();
@@ -438,7 +530,9 @@ export function processingContracts(
       state = option(
         p.state,
         source
-          ? ["active", "retired"]
+          ? composed
+            ? ["output_active"]
+            : ["active", "retired"]
           : selected
             ? ["output_active"]
             : ["active"],
@@ -458,9 +552,11 @@ export function processingContracts(
   }[source_policy.definition.kind];
   if (source.acceptance_policy !== prefix + source_policy.reference.hash) bad();
   const result: Contracts = {
-    profile: selected
-      ? "record-processing-contracts-v2"
-      : "record-processing-contracts-v1",
+    profile: composed
+      ? "record-processing-contracts-v3"
+      : selected
+        ? "record-processing-contracts-v2"
+        : "record-processing-contracts-v1",
     source,
     source_policy,
     output_policy,
@@ -482,6 +578,13 @@ export function processingContracts(
     )
       bad();
   }
+  if (composed)
+    result.source_origin = processingSourceOrigin(
+      o.source_origin,
+      source,
+      source_policy.reference,
+      session!,
+    );
   if (o.source_proof_valid_until !== undefined) {
     const t = text(o.source_proof_valid_until, 40);
     if (!Number.isFinite(Date.parse(t))) bad();
@@ -751,7 +854,7 @@ export function processingWork(value: unknown, session: Session): WorkView {
           "projection",
           "output_contract_hash",
         ],
-        ["source_proof_valid_until", "output_binding"],
+        ["source_proof_valid_until", "output_binding", "source_origin"],
       ),
       context = parseRecheckPlan(plan.context, status.run.namespace_root),
       mode = processingPlanProfile(plan, context, session),
@@ -795,6 +898,9 @@ export function processingWork(value: unknown, session: Session): WorkView {
         ...(mode.output_binding === undefined
           ? {}
           : { output_binding: mode.output_binding }),
+        ...(mode.source_origin === undefined
+          ? {}
+          : { source_origin: mode.source_origin }),
       },
       staging_slots: slots,
       workflow: {

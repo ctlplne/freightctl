@@ -329,7 +329,7 @@ func (s *Service) workProjection(ctx context.Context, scope store.Scope, key str
 	if err = guard(); err != nil {
 		return nil, err
 	}
-	if d.Plan.Profile == ProducerProjectionProfile {
+	if producerProjectionProfile(d.Plan.Profile) {
 		err = t.ConfigureProducerFile(ctx, file, d.Plan.Context.Policy)
 	} else {
 		err = t.ConfigureIntakeFile(ctx, file)
@@ -347,7 +347,7 @@ func (s *Service) workProjection(ctx context.Context, scope store.Scope, key str
 		target = &copy
 	}
 	var held bool
-	if d.Plan.Profile == ProducerProjectionProfile {
+	if producerProjectionProfile(d.Plan.Profile) {
 		held, err = t.BindProducerFile(ctx, file, s.Custody.Disk.Identity(), target, d.Plan.Context.Policy)
 	} else {
 		held, err = t.BindIntake(ctx, file, s.Custody.Disk.Identity(), target)

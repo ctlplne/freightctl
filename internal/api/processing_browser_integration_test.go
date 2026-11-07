@@ -27,7 +27,15 @@ func TestProducerProcessingNativeBrowserSelectsOutputContractAndKeepsIngress(t *
 	processingWorkflowNativeBrowser(t, true)
 }
 
+func TestComposedProducerProcessingNativeBrowserCheckedSourceNewApprovalAndHeldOutput(t *testing.T) {
+	processingWorkflowNativeBrowserProfile(t, true, true)
+}
+
 func processingWorkflowNativeBrowser(t *testing.T, producerBound bool) {
+	processingWorkflowNativeBrowserProfile(t, producerBound, false)
+}
+
+func processingWorkflowNativeBrowserProfile(t *testing.T, producerBound, composed bool) {
 	if os.Getenv("GITHUB_ACTIONS") != "true" || runtime.GOOS != "linux" || runtime.GOARCH != "amd64" {
 		t.Fatal("actual Chrome profile requires native GitHub Linux x86_64")
 	}
@@ -78,7 +86,64 @@ func processingWorkflowNativeBrowser(t *testing.T, producerBound bool) {
 			t.Fatal("default output contract")
 		}
 	}
-	rules, err := checks.NormalizeRecordProjection(policy, checks.RecordProjection{Schema: 1, Kind: "record_projection", SourcePolicyHash: input.Hash, OutputKind: "json_records", Columns: []checks.ProjectionColumn{{Source: "account", Target: "account"}, {Source: "amount", Target: "amount"}, {Source: "day", Target: "day"}}})
+	rulesSource, rulesHash := policy, input.Hash
+	if composed {
+		rules, err := checks.NormalizeRecordProjection(policy, checks.RecordProjection{Schema: 1, Kind: "record_projection", SourcePolicyHash: input.Hash, OutputKind: "json_records", Columns: []checks.ProjectionColumn{{Source: "account", Target: "account"}, {Source: "amount", Target: "amount"}, {Source: "day", Target: "day"}}})
+		if err != nil {
+			t.Fatal(err)
+		}
+		wf := &workflow.Service{Custody: s, Processor: control}
+		registered, err := wf.Draft(t.Context(), scope, "browser-composed-first-draft", workflow.DraftRequest{Definition: workflow.Definition{Schema: 3, Name: "First producer task", Processing: &workflow.ProcessingTask{ID: "project", Kind: "records.project", Definition: rules, OutputPolicy: workflow.Reference{ID: out.ID, Version: out.Version, Hash: out.Hash}, Reason: "Prepare an owned checked JSON input for separate browser approval"}}})
+		if err != nil {
+			t.Fatal(err)
+		}
+		var cfg store.Configuration
+		if json.Unmarshal(registered.Resource, &cfg) != nil {
+			t.Fatal("first task")
+		}
+		if _, err := wf.Decide(t.Context(), scope, cfg.ID, cfg.Version, "browser-composed-first-approve", "approve", workflow.Decision{Hash: cfg.Hash, Revision: cfg.Revision}); err != nil {
+			t.Fatal(err)
+		}
+		accepted, err := wf.Run(t.Context(), scope, "browser-composed-first-run", workflow.RunRequest{Workflow: workflow.Reference{ID: cfg.ID, Version: cfg.Version, Hash: cfg.Hash}, FileID: source.ID})
+		if err != nil {
+			t.Fatal(err)
+		}
+		var run store.WorkflowRun
+		if json.Unmarshal(accepted.Resource, &run) != nil {
+			t.Fatal("first run")
+		}
+		worked, err := wf.Work(t.Context(), scope, run.ID, "browser-composed-first-work")
+		if err != nil || worked.Processing == nil {
+			t.Fatal("first held producer output", err)
+		}
+		tx, err := s.DB.Begin(t.Context(), scope)
+		if err != nil {
+			t.Fatal(err)
+		}
+		source, err = tx.File(t.Context(), worked.Processing.FileID)
+		tx.Tx.Rollback(t.Context())
+		if err != nil {
+			t.Fatal(err)
+		}
+		if _, err := control.Run(t.Context(), scope, source.ID, "browser-composed-source-check"); err != nil {
+			t.Fatal(err)
+		}
+		rulesSource, rulesHash = output, out.Hash
+		identity, err := s.DB.Identity(t.Context(), scope)
+		if err != nil {
+			t.Fatal(err)
+		}
+		registeredOutput, err := control.RegisterOutputPolicy(t.Context(), scope, "browser-composed-final-policy", checks.OutputPolicyRequest{Producer: identity.Actor, Definition: output})
+		if err != nil {
+			t.Fatal(err)
+		}
+		var record checks.OutputPolicyRecord
+		if json.Unmarshal(registeredOutput.Resource, &record) != nil || record.Policy == nil {
+			t.Fatal("final output policy")
+		}
+		out = *record.Policy
+	}
+	rules, err := checks.NormalizeRecordProjection(rulesSource, checks.RecordProjection{Schema: 1, Kind: "record_projection", SourcePolicyHash: rulesHash, OutputKind: "json_records", Columns: []checks.ProjectionColumn{{Source: "account", Target: "account"}, {Source: "amount", Target: "amount"}, {Source: "day", Target: "day"}}})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -100,7 +165,7 @@ func processingWorkflowNativeBrowser(t *testing.T, producerBound bool) {
 	if err = os.WriteFile(token, credential.Bytes, 0600); err != nil {
 		t.Fatal(err)
 	}
-	encoded, _ := json.Marshal(map[string]any{"url": server.URL, "tenant": scope.Tenant, "partner": scope.Partner, "token": token, "source": source.ID, "private": private, "result": result, "hash": expected, "producer_output": producerBound, "output_policy_id": out.ID, "certificate_der": base64.StdEncoding.EncodeToString(server.Certificate().Raw)})
+	encoded, _ := json.Marshal(map[string]any{"url": server.URL, "tenant": scope.Tenant, "partner": scope.Partner, "token": token, "source": source.ID, "private": private, "result": result, "hash": expected, "producer_output": producerBound, "composed_source": composed, "output_policy_id": out.ID, "certificate_der": base64.StdEncoding.EncodeToString(server.Certificate().Raw)})
 	if err = os.WriteFile(config, encoded, 0600); err != nil {
 		t.Fatal(err)
 	}
@@ -134,6 +199,9 @@ func processingWorkflowNativeBrowser(t *testing.T, producerBound bool) {
 	expectedAccessibility := 5
 	if producerBound {
 		expectedAccessibility = 6
+	}
+	if composed {
+		expectedAccessibility++
 	}
 	if runErr != nil || workflow.Decode(raw, &summary) != nil || summary.State != "passed" || !store.ValidID(summary.File) || !store.ValidID(summary.Run) || summary.Hash != expected || summary.DraftRequests != 2 || summary.Accessibility != expectedAccessibility || summary.Egress != 0 || summary.Errors != 0 || !summary.Sandbox || summary.Inference || summary.Failure != "" {
 		t.Fatalf("native processing browser failed;safe result SHA256=%s", secure.Digest(raw))

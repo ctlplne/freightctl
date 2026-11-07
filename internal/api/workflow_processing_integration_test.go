@@ -25,7 +25,15 @@ func TestProducerProjectionHTTPSApprovalRunAndHeldOutputKeepDefaultIngress(t *te
 	processingWorkflowHTTPS(t, true)
 }
 
+func TestComposedProducerProjectionHTTPSRequiresFreshChecksAndNewApprovalWithoutRelease(t *testing.T) {
+	processingWorkflowHTTPSProfile(t, true, true)
+}
+
 func processingWorkflowHTTPS(t *testing.T, producerBound bool) {
+	processingWorkflowHTTPSProfile(t, producerBound, false)
+}
+
+func processingWorkflowHTTPSProfile(t *testing.T, producerBound, composed bool) {
 	service, manager, admin, server := browserAPI(t, 600*time.Second, custody.ExchangeSettings{MaxLifetime: time.Hour, MaxSenders: 16, MaxOpenViews: 128, MaxEndpoints: 16})
 	cookie, csrf := loginBrowser(t, server, manager, admin)
 	prefix := "/v1/tenants/" + manager.Tenant + "/partners/" + manager.Partner
@@ -126,6 +134,61 @@ func processingWorkflowHTTPS(t *testing.T, producerBound bool) {
 	var replay workflow.WorkResult
 	if json.Unmarshal(call("/workflow-runs/"+run.ID+"/work", "wf-work", nil), &replay) != nil || !replay.Replayed || replay.Processing.ID != result.Processing.ID || replay.Processing.Attempts != 1 {
 		t.Fatal("public replay selected a new attempt")
+	}
+	if composed {
+		if _, err = control.Run(ctx, actor, result.Processing.FileID, "composed-source-check"); err != nil {
+			t.Fatal(err)
+		}
+		registered, err := control.RegisterOutputPolicy(ctx, manager, "composed-output-policy", checks.OutputPolicyRequest{Producer: participant.Actor, Definition: policy})
+		if err != nil {
+			t.Fatal(err)
+		}
+		var contract checks.OutputPolicyRecord
+		if json.Unmarshal(registered.Resource, &contract) != nil || contract.Policy == nil {
+			t.Fatal("composed output contract")
+		}
+		ref := contract.Policy
+		query := "?output_policy_id=" + ref.ID + "&output_policy_version=1&output_policy_hash=" + ref.Hash
+		_, raw := exchangeAPIRequest(t, server, "GET", prefix+"/checks/"+result.Processing.FileID+"/processing-contracts"+query, nil, map[string]string{"Authorization": "Bearer " + string(token.Bytes)}, nil, 200)
+		var described checks.ProcessingContracts
+		if json.Unmarshal(raw, &described) != nil || described.Profile != "record-processing-contracts-v3" || described.SourceOrigin == nil || described.SourceOrigin.ProjectionID != result.Processing.ID {
+			t.Fatal("served composed lineage metadata")
+		}
+		rules, err := checks.NormalizeRecordProjection(output, checks.RecordProjection{Schema: 1, Kind: "record_projection", SourcePolicyHash: outputPolicy.Hash, OutputKind: "csv", Columns: []checks.ProjectionColumn{{Source: "account", Target: "account"}}})
+		if err != nil {
+			t.Fatal(err)
+		}
+		definition := workflow.Definition{Schema: 3, Name: "Second separately approved task", Processing: &workflow.ProcessingTask{ID: "project", Kind: "records.project", Definition: rules, OutputPolicy: workflow.Reference{ID: ref.ID, Version: ref.Version, Hash: ref.Hash}, Reason: "Consume one exact checked owned producer output"}}
+		var second workflow.Result
+		if json.Unmarshal(call("/workflows/drafts", "composed-draft", workflow.DraftRequest{Definition: definition}), &second) != nil {
+			t.Fatal("second draft envelope")
+		}
+		var cfg store.Configuration
+		if json.Unmarshal(second.Resource, &cfg) != nil {
+			t.Fatal("second draft")
+		}
+		request := workflow.RunRequest{Workflow: workflow.Reference{ID: cfg.ID, Version: cfg.Version, Hash: cfg.Hash}, FileID: result.Processing.FileID}
+		_, _ = exchangeAPIRequest(t, server, "POST", prefix+"/workflow-runs", nil, map[string]string{"Authorization": "Bearer " + string(token.Bytes), "Idempotency-Key": "composed-unapproved"}, exchangeAPIJSON(t, request), 409)
+		call("/workflows/"+cfg.ID+"/1/approve", "composed-approve", workflow.Decision{Hash: cfg.Hash, Revision: cfg.Revision})
+		var created workflow.Result
+		if json.Unmarshal(call("/workflow-runs", "composed-run", request), &created) != nil {
+			t.Fatal("second run envelope")
+		}
+		var secondRun store.WorkflowRun
+		if json.Unmarshal(created.Resource, &secondRun) != nil {
+			t.Fatal("second run")
+		}
+		var worked workflow.WorkResult
+		if json.Unmarshal(call("/workflow-runs/"+secondRun.ID+"/work", "composed-work", nil), &worked) != nil || worked.Processing == nil || worked.Processing.State != "completed" || worked.Status.Processing.Released || worked.Processing.FileID == result.Processing.FileID {
+			t.Fatal("served composed task did not produce separately held bytes")
+		}
+		var d checks.ProjectionDefinition
+		if json.Unmarshal(worked.Processing.Definition, &d) != nil || d.Schema != 4 || d.Plan.SourceOrigin == nil || *d.Plan.SourceOrigin != *described.SourceOrigin {
+			t.Fatal("served source lineage changed")
+		}
+		if _, _, err := service.Download(ctx, actor, worked.Processing.FileID); !errors.Is(err, store.ErrState) {
+			t.Fatal("composition granted release", err)
+		}
 	}
 	if producerBound {
 		current, err := control.Policy(ctx, manager)

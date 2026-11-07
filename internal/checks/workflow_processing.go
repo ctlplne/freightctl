@@ -102,8 +102,8 @@ func (s *Service) StageProcessing(ctx context.Context, t *store.Transaction, run
 		return nil, err
 	}
 	d := ProjectionDefinition{Schema: 2, Plan: view.Plan, Slots: make([]string, 3), Workflow: &store.ProcessingWorkflowBinding{WorkflowID: run.WorkflowID, Version: run.WorkflowVersion, Hash: run.WorkflowHash, RunID: run.ID, StepID: task.ID}}
-	if view.Plan.Profile == ProducerProjectionProfile {
-		d.Schema = 3
+	if producerProjectionProfile(view.Plan.Profile) {
+		d.Schema = view.Plan.Schema
 	}
 	if err = projectionWorkflowCurrent(ctx, t, d, true); err != nil {
 		return nil, err

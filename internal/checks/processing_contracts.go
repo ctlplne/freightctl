@@ -21,6 +21,7 @@ type ProcessingContracts struct {
 	ProofUntil    *time.Time                     `json:"source_proof_valid_until,omitempty"`
 	Effects       string                         `json:"effects"`
 	OutputBinding *store.ProcessingOutputBinding `json:"output_binding,omitempty"`
+	SourceOrigin  *store.ProducedSource          `json:"source_origin,omitempty"`
 }
 
 func processingContracts(base *RecheckPreview, row *store.FileCheck, now time.Time) (*ProcessingContracts, error) {
@@ -35,7 +36,14 @@ func processingContractsForProducer(base *RecheckPreview, row *store.FileCheck, 
 }
 
 func processingContractsBound(base *RecheckPreview, row *store.FileCheck, now time.Time, binding *store.ProcessingOutputBinding) (*ProcessingContracts, error) {
-	_, until, err := projectionSourceReport(base, row, now)
+	return processingContractsSource(base, row, now, binding, nil)
+}
+
+func processingContractsSource(base *RecheckPreview, row *store.FileCheck, now time.Time, binding *store.ProcessingOutputBinding, origin *store.ProducedSource) (*ProcessingContracts, error) {
+	if origin != nil && (binding == nil || origin.Producer.Producer != binding.Producer) {
+		return nil, store.ErrRevision
+	}
+	_, until, err := projectionSourceReportBound(base, row, now, origin)
 	if err != nil {
 		return nil, err
 	}
@@ -62,8 +70,14 @@ func processingContractsBound(base *RecheckPreview, row *store.FileCheck, now ti
 	if owned.CurrentPolicy.State != state || owned.CurrentPolicy.Reference != owned.Plan.Policy || hash != owned.Plan.Policy.Hash {
 		return nil, store.ErrRevision
 	}
+	var sourceOrigin *store.ProducedSource
+	if origin != nil {
+		profile = "record-processing-contracts-v3"
+		copy := *origin
+		sourceOrigin = &copy
+	}
 	f := owned.Plan.Source.File
-	return &ProcessingContracts{Profile: profile, Source: store.ExchangeArtifact{ID: f.ID, Size: f.Size, SHA256: f.SHA256, Policy: f.Policy}, SourcePolicy: *owned.PreviousPolicy, OutputPolicy: owned.CurrentPolicy, Authority: owned.Plan.Authority, RootDigest: secure.Digest([]byte(owned.Plan.Root)), ProofUntil: until, Effects: "Metadata only. No approval,run,bytes,release or delivery.", OutputBinding: outputBinding}, nil
+	return &ProcessingContracts{Profile: profile, Source: store.ExchangeArtifact{ID: f.ID, Size: f.Size, SHA256: f.SHA256, Policy: f.Policy}, SourcePolicy: *owned.PreviousPolicy, OutputPolicy: owned.CurrentPolicy, Authority: owned.Plan.Authority, RootDigest: secure.Digest([]byte(owned.Plan.Root)), ProofUntil: until, Effects: "Metadata only. No approval,run,bytes,release or delivery.", OutputBinding: outputBinding, SourceOrigin: sourceOrigin}, nil
 }
 func (s *Service) DescribeProcessing(ctx context.Context, scope store.Scope, id string) (*ProcessingContracts, error) {
 	return s.describeProcessing(ctx, scope, id, nil)
@@ -133,7 +147,14 @@ func (s *Service) describeProcessing(ctx context.Context, scope store.Scope, id 
 	if err != nil {
 		return nil, err
 	}
-	report, _, err := projectionSourceReport(base, row, now)
+	var origin *store.ProducedSource
+	if binding != nil && base.PreviousPolicy != nil && base.PreviousPolicy.State == "output_active" {
+		origin, err = t.ProducedSource(ctx, &base.Plan.Source.File)
+		if err != nil {
+			return nil, err
+		}
+	}
+	report, _, err := projectionSourceReportBound(base, row, now, origin)
 	if err != nil {
 		return nil, err
 	}
@@ -143,7 +164,9 @@ func (s *Service) describeProcessing(ctx context.Context, scope store.Scope, id 
 	var view *ProcessingContracts
 	if binding != nil {
 		producer := store.ExchangeParticipant{Tenant: t.Scope.Tenant, Partner: t.Scope.Partner, Actor: t.Actor, AuthorityRevision: t.AuthorityRevision, RootPolicyDigest: secure.Digest([]byte(t.Root))}
-		view, err = processingContractsForProducer(base, row, now, binding, producer)
+		if err = validateProducerOutput(base, binding, producer); err == nil {
+			view, err = processingContractsSource(base, row, now, binding, origin)
+		}
 	} else {
 		view, err = processingContracts(base, row, now)
 	}

@@ -26,7 +26,15 @@ func TestMCPStockClientProducerOutputSelectionKeepsDefaultIngressAndApprovalOuts
 	mcpStockClientTypedProcessing(t, true)
 }
 
+func TestMCPStockClientComposedSourceNeedsFreshChecksAndSeparateApprovalWithReceiveDisabled(t *testing.T) {
+	mcpStockClientTypedProcessingProfile(t, true, true)
+}
+
 func mcpStockClientTypedProcessing(t *testing.T, producerBound bool) {
+	mcpStockClientTypedProcessingProfile(t, producerBound, false)
+}
+
+func mcpStockClientTypedProcessingProfile(t *testing.T, producerBound, composed bool) {
 	service, manager, admin, server := browserAPI(t, 600*time.Second)
 	if _, _, err := service.ExchangeLimits(); err == nil {
 		t.Fatal("fixture unexpectedly enabled receive adapter")
@@ -166,4 +174,43 @@ func mcpStockClientTypedProcessing(t *testing.T, producerBound bool) {
 		t.Fatal("old key reinterpreted current work")
 	}
 	call("inspect_processing_workflow", map[string]any{"run_id": run})
+	if composed {
+		if _, err := control.Run(ctx, actor, file, "tools-composed-source-check"); err != nil {
+			t.Fatal(err)
+		}
+		registered, err := control.RegisterOutputPolicy(ctx, manager, "tools-composed-output", checks.OutputPolicyRequest{Producer: participant.Actor, Definition: policy})
+		if err != nil {
+			t.Fatal(err)
+		}
+		var record checks.OutputPolicyRecord
+		if json.Unmarshal(registered.Resource, &record) != nil || record.Policy == nil {
+			t.Fatal("composed output contract")
+		}
+		ref := record.Policy
+		metadata := call("processing_contracts", map[string]any{"file_id": file, "output_policy": store.OnboardingReference{ID: ref.ID, Version: ref.Version, Hash: ref.Hash}})
+		if metadata["profile"] != "record-processing-contracts-v3" || metadata["source_origin"] == nil {
+			t.Fatal("stock client lost composed source provenance")
+		}
+		rules, err := checks.NormalizeRecordProjection(output, checks.RecordProjection{Schema: 1, Kind: "record_projection", SourcePolicyHash: outputPolicy.Hash, OutputKind: "csv", Columns: []checks.ProjectionColumn{{Source: "account", Target: "account"}}})
+		if err != nil {
+			t.Fatal(err)
+		}
+		definition := workflow.Definition{Schema: 3, Name: "PRIVATE_COMPOSED_TASK", Processing: &workflow.ProcessingTask{ID: "project", Kind: "records.project", Definition: rules, OutputPolicy: workflow.Reference{ID: ref.ID, Version: ref.Version, Hash: ref.Hash}, Reason: "PRIVATE_COMPOSED_REASON"}}
+		call("validate_workflow", map[string]any{"request": workflow.PreviewRequest{Definition: definition, FileID: file}})
+		proposed := call("propose_workflow", map[string]any{"request": workflow.DraftRequest{Definition: definition}, "request_key": "composed-proposal"})
+		id, hash := proposed["workflow_id"].(string), proposed["definition_hash"].(string)
+		request := workflow.RunRequest{Workflow: workflow.Reference{ID: id, Version: 1, Hash: hash}, FileID: file}
+		unapproved, err := session.CallTool(ctx, &mcp.CallToolParams{Name: "freightctl.start_processing_workflow", Arguments: map[string]any{"request": request, "request_key": "composed-not-approved"}})
+		if err != nil || !unapproved.IsError {
+			t.Fatal("first task supplied second approval", err)
+		}
+		_, _ = exchangeAPIRequest(t, server, "POST", prefix+"/workflows/"+id+"/1/approve", nil, map[string]string{"Authorization": "Bearer " + string(token.Bytes), "Idempotency-Key": "composed-separate-approval"}, exchangeAPIJSON(t, workflow.Decision{Hash: hash, Revision: 1}), 200)
+		accepted := call("start_processing_workflow", map[string]any{"request": request, "request_key": "composed-run"})
+		worked := call("work_processing_workflow", map[string]any{"run_id": accepted["run_id"], "request_key": "composed-work"})
+		status := worked["status"].(map[string]any)
+		output := status["processing"].(map[string]any)
+		if status["observed_reason"] != "output_held" || output["output_released_at_observation"] != false || output["output_file_id"] == file {
+			t.Fatal("composed tools inherited release or reused input")
+		}
+	}
 }

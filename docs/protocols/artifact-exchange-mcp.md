@@ -210,3 +210,11 @@ Protocol references: [versioning](https://modelcontextprotocol.io/specification/
 The pinned SDK's original licensing-transition notice is retained in
 [third_party/mcp-go-sdk](../../third_party/mcp-go-sdk/UPSTREAM.json). Full final-source
 SBOM, dependency security, redistribution and disconnected-bundle proof remain owed.
+
+
+F191 implementation is Catalog38/`exchange-tools-v17`:the unchanged closed
+`output_policy` reference may select v3 composed-source metadata. It names an
+exact owned completed producer acceptance and does not inherit approval or
+execution. A second task requires its own ordinary human approval;no approval
+tool is added. Stock-client runtime proof with the receive adapter disabled is
+prepared/compiled only. F187's original v16 evidence remains historical.

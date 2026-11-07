@@ -1,16 +1,16 @@
 # freightctl status
 
-Updated 2026-11-06. Active under owner resume. All83 whole parity rows,twelve
+Updated 2026-11-07. Active under owner resume. All83 whole parity rows,twelve
 complete journeys and AX01–AX08 remain open. Assisted deployment,independent
 adoption and enterprise readiness remain unqualified.
 
-Latest pushed source before this batch:5c8aa2b292dbf16ea77278faec8e3ce13f6f7ea8.
-F190 preserves its17 original triggered terminal workflows/37 jobs. Listed source,
-dependency,history-secret and image security gates pass. Original PostgreSQL/
-metadata,Windows,qualification-record and public/browser/stock-peer failures stay
-red. No original run was cancelled,restarted or substituted. F178 preserves the
-preceding17/37 batch. Nonsecurity logs/repairs remain deferred to FINISH;triage
-new security failures immediately.
+Latest pushed source before this batch:259645ee532aa9272de46a27339ff0c4c3846dfc.
+F192 preserves its16 original triggered terminal workflows/35 jobs. Listed
+source,dependency,history-secret and native peer-image security gates passed;
+module verification passed in both failed Linux unit jobs. Original application,
+platform,metadata,qualification-record and public/browser/stock failures remain
+red. No originals were cancelled,restarted or substituted. Nonsecurity logs and
+repairs remain deferred to FINISH;new security failures are triaged immediately.
 
 Schema3 records.project binds an owned checked input,approved exact task,one
 durable processing intent,slots and events/receipt. Stable work keys select one
@@ -47,7 +47,7 @@ Focused contract/authentication checks,compilation/vet/architecture and metadata
 stand-ins pass. Five PostgreSQL cases,verified HTTPS and public CLI controls are
 prepared/compiled only.
 
-Source56 targets77 metadata/76 forced-RLS tables.
+Source57 targets77 metadata/76 forced-RLS tables.
 F183 adds exact output-contract selection for typed task draft/approval metadata
 and catalog observations. Root administration cannot substitute for producer
 ownership. Focused selection/catalog refusal checks pass;actual PostgreSQL and
@@ -74,6 +74,15 @@ and two affected metadata cases plus type/build/workflow checks pass. A separate
 native Chrome administrator/stock-curl reply-loss/reload/recovery/revocation/four-
 audit/no-byte-effect profile is prepared/compiled only. All original profiles
 remain;actual runtime/accessibility/final-source outcomes stay owed.
+F191 adds explicit checked-output composition under a new schema4 task intent
+and schema7 held acceptance. Exact owned completed producer/file/acceptance
+lineage and current source/output bindings are rechecked;every next task needs
+separate approval,fresh output checks and separate release. V3 metadata and the
+browser show source lineage without inheriting effect rights. Focused Go,11
+affected frontend and metadata stand-ins plus affected static checks pass.
+PostgreSQL two-task bytes/replay/revocation/SQL refusals,verified HTTPS,stock MCP
+and separate seven-audit Chrome profiles are prepared/compiled only. Automatic
+chain scheduling,delegation,protected/CLI/restore/final-source proof remain owed.
 Historical profiles and retained schema35 are untouched. No local PostgreSQL,
 Chrome,model,scanner or heavy peer ran. Native compilation/stand-ins establish
 no runtime qualification. F026 stays manual/owner-deferred.

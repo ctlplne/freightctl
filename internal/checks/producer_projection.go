@@ -16,6 +16,16 @@ func producerProjectionReview(base *RecheckPreview, row *store.FileCheck, rules 
 	return projectionReviewBound(base, row, rules, now, ProducerProjectionProfile, binding)
 }
 
+func composedProducerProjectionReview(base *RecheckPreview, row *store.FileCheck, rules RecordProjection, now time.Time, binding *store.ProcessingOutputBinding, producer store.ExchangeParticipant, origin *store.ProducedSource) (*ProjectionPreview, error) {
+	if origin == nil || origin.Producer.Producer != producer {
+		return nil, store.ErrRevision
+	}
+	if err := validateProducerOutput(base, binding, producer); err != nil {
+		return nil, err
+	}
+	return projectionReviewSource(base, row, rules, now, ComposedProducerProjectionProfile, binding, origin)
+}
+
 func validateProducerOutput(base *RecheckPreview, binding *store.ProcessingOutputBinding, producer store.ExchangeParticipant) error {
 	if base == nil || binding == nil || binding.Producer != producer || producer.AuthorityRevision != base.Plan.Authority || producer.RootPolicyDigest != secure.Digest([]byte(base.Plan.Root)) {
 		return store.ErrRevision

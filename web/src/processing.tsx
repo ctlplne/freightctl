@@ -714,6 +714,15 @@ export function ProcessingWorkflows({
             {contracts.output_policy.reference.version} (
             {contracts.output_policy.definition.kind}).
           </p>
+          {contracts.source_origin && (
+            <p>
+              <strong>Owned generated source</strong> · producing intent{" "}
+              <code>{contracts.source_origin.projection_id}</code> · definition
+              SHA256 <code>{contracts.source_origin.projection_hash}</code>.
+              This task needs its own approval. Its output stays held for fresh
+              checks and separate release.
+            </p>
+          )}
           {contracts.output_binding && (
             <p>
               This output contract is pinned to your current identity,

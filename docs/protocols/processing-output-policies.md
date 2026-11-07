@@ -160,3 +160,39 @@ administrator-without-workflow profile is prepared and compiled only. That
 profile uses stock curl for committed reply loss, reload/saved-request recovery,
 four WCAG audits, exact registration/receipt checks, unchanged
 ingress and zero file/workflow effects. No local Chrome or database is started.
+
+
+F191 adds explicit consumption of one checked **owned generated output** by a
+second separately approved typed task. Plan/intent schema4 uses
+`composed-producer-record-projection-v1`;its `source_origin` records
+`owned-produced-source-v1`,the complete immutable file/acceptance event,the
+completed producing intent ID/hash,and the exact registered producer binding.
+The service resolves these facts from forced-RLS PostgreSQL rows and checks them
+again under the policy-family lock. A policy string,receipt or format match
+cannot supply provenance. The source contract must remain current/output_active;
+revocation or a producer authority/root change stops queued consumption.
+Existing plan schemas1–3 and canonical hashes retain their meanings and refuse
+additive composition authority. Only the ordinary approved workflow path creates
+schema4 intents;direct projection proposals cannot acquire this authority.
+
+The source still needs its own exact successful report,current signer/scanner
+proof when required,and actual byte validation during processing. Each task has
+its own approved definition,owned run,intent,idempotency key,lease/fence and three
+private slots. Output acceptance schema7 commits a new held file,fresh empty check
+and events/receipt in the same transaction. The first task's approval/report or
+release does not approve,check,release,forward or execute the second output.
+Default ingress remains independent. This supports explicit step-by-step task
+composition;automatic chain scheduling and third-party author delegation remain
+open.
+
+Read-only contract discovery returns `record-processing-contracts-v3` for this
+source only when an exact producer output reference is selected. API,protected
+CLI request files and Catalog38/`exchange-tools-v17` MCP use the same service.
+The browser validates current session/input acceptance/both producer bindings,
+shows the producing intent/hash,and reviews a separately approved task. Saved
+exact-key recovery still fixes the whole task and command;import grants no effect.
+Native PostgreSQL/two-task bytes/revocation/SQL refusal,verified HTTPS,stock MCP
+and a separate seven-audit Chrome profile are prepared/compiled only. Original
+profiles remain. Actual runtime/accessibility,protected outputs,CLI composition,
+restore/upgrade and final-source evidence remain owed. Source57 changes functions
+only;77 metadata/76 forced-RLS tables and retained35 remain unchanged.

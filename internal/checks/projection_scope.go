@@ -35,6 +35,11 @@ func projectionReplayed(ctx context.Context, t *store.Transaction, data json.Raw
 
 const ScopedProjectionProfile = "scoped-record-projection-v1"
 const ProducerProjectionProfile = "producer-record-projection-v1"
+const ComposedProducerProjectionProfile = "composed-producer-record-projection-v1"
+
+func producerProjectionProfile(profile string) bool {
+	return profile == ProducerProjectionProfile || profile == ComposedProducerProjectionProfile
+}
 
 func projectionProfile(profile string) (string, int, error) {
 	if profile == "" {
@@ -47,13 +52,21 @@ func projectionProfile(profile string) (string, int, error) {
 		return profile, 2, nil
 	case ProducerProjectionProfile:
 		return profile, 3, nil
+	case ComposedProducerProjectionProfile:
+		return profile, 4, nil
 	}
 	return "", 0, ErrInput
 }
 func validProjectionProfile(plan ProjectionPlan) bool {
 	profile, schema, err := projectionProfile(plan.Profile)
-	if err != nil || plan.Profile != profile || plan.Schema != schema || ((profile == ProducerProjectionProfile) != (plan.OutputBinding != nil)) {
+	if err != nil || plan.Profile != profile || plan.Schema != schema || (producerProjectionProfile(profile) != (plan.OutputBinding != nil)) || ((profile == ComposedProducerProjectionProfile) != (plan.SourceOrigin != nil)) {
 		return false
+	}
+	if origin := plan.SourceOrigin; origin != nil {
+		b := origin.Producer
+		if origin.Profile != "owned-produced-source-v1" || origin.File != plan.Context.Source.File || !store.ValidID(origin.File.EventID) || !store.ValidID(origin.ProjectionID) || !hashPattern.MatchString(origin.ProjectionHash) || b.Profile != "producer-processing-output-policy-v1" || !store.ValidID(b.Publisher) || (store.OnboardingReference{ID: b.PolicyID, Version: b.Version, Hash: b.Hash}) != plan.SourcePolicy || b.Producer != plan.OutputBinding.Producer {
+			return false
+		}
 	}
 	if b := plan.OutputBinding; b != nil {
 		return b.Profile == "producer-processing-output-policy-v1" && store.ValidID(b.Publisher) && store.ValidID(b.Producer.Tenant) && store.ValidID(b.Producer.Partner) && store.ValidID(b.Producer.Actor) && b.Producer.AuthorityRevision == plan.Context.Authority && b.Producer.AuthorityRevision > 0 && b.Producer.RootPolicyDigest == secure.Digest([]byte(plan.Context.Root)) && b.PolicyID == plan.Context.Policy.ID && b.Version == plan.Context.Policy.Version && b.Hash == plan.Context.Policy.Hash
@@ -84,7 +97,7 @@ func projectionAuthority(t *store.Transaction, profile string) error {
 			return err
 		}
 	}
-	if (profile == ScopedProjectionProfile || profile == ProducerProjectionProfile) && !t.Has("workflow_manage") && !t.Has("workflow_approve") && !t.Has("workflow_execute") {
+	if (profile == ScopedProjectionProfile || producerProjectionProfile(profile)) && !t.Has("workflow_manage") && !t.Has("workflow_approve") && !t.Has("workflow_execute") {
 		return store.ErrForbidden
 	}
 	return nil
@@ -94,7 +107,7 @@ func projectionActionAuthority(t *store.Transaction, profile, action string) err
 		return err
 	}
 	profile, _, _ = projectionProfile(profile)
-	if (profile == ScopedProjectionProfile || profile == ProducerProjectionProfile) && action != "" {
+	if (profile == ScopedProjectionProfile || producerProjectionProfile(profile)) && action != "" {
 		return t.Require(action)
 	}
 	return nil

@@ -41,13 +41,13 @@ type ProjectionOutput struct {
 
 func decodeProjection(r *store.RecordProjection) (ProjectionDefinition, error) {
 	var d ProjectionDefinition
-	if r == nil || len(r.Definition) > 32768 || workflow.Decode(r.Definition, &d) != nil || (d.Schema != 1 && d.Schema != 2 && d.Schema != 3) || (d.Schema != 1) != (d.Workflow != nil) || !validProjectionProfile(d.Plan) || len(d.Slots) != 3 || d.Plan.Context.Source.File.ID != r.SourceID {
+	if r == nil || len(r.Definition) > 32768 || workflow.Decode(r.Definition, &d) != nil || (d.Schema != 1 && d.Schema != 2 && d.Schema != 3 && d.Schema != 4) || (d.Schema != 1) != (d.Workflow != nil) || !validProjectionProfile(d.Plan) || len(d.Slots) != 3 || d.Plan.Context.Source.File.ID != r.SourceID {
 		return d, store.ErrState
 	}
-	if (d.Schema == 3) != (d.Plan.Profile == ProducerProjectionProfile) {
+	if (d.Schema == 3) != (d.Plan.Profile == ProducerProjectionProfile) || (d.Schema == 4) != (d.Plan.Profile == ComposedProducerProjectionProfile) {
 		return d, store.ErrState
 	}
-	if b := d.Workflow; b != nil && (!store.ValidID(b.WorkflowID) || !store.ValidID(b.RunID) || b.Version < 1 || !hashPattern.MatchString(b.Hash) || !keyPattern.MatchString(b.StepID) || (d.Plan.Profile != ScopedProjectionProfile && d.Plan.Profile != ProducerProjectionProfile)) {
+	if b := d.Workflow; b != nil && (!store.ValidID(b.WorkflowID) || !store.ValidID(b.RunID) || b.Version < 1 || !hashPattern.MatchString(b.Hash) || !keyPattern.MatchString(b.StepID) || (d.Plan.Profile != ScopedProjectionProfile && !producerProjectionProfile(d.Plan.Profile))) {
 		return d, store.ErrState
 	}
 	_, hash, err := canonical(d)
@@ -81,7 +81,7 @@ func (s *Service) projectionCurrent(ctx context.Context, t *store.Transaction, d
 		return nil, err
 	}
 	var ref *store.OnboardingReference
-	if d.Plan.Profile == ProducerProjectionProfile {
+	if producerProjectionProfile(d.Plan.Profile) {
 		ref = &d.Plan.Context.Policy
 	}
 	fresh, err := s.projectionPlanOutput(ctx, t, d.Plan.Context.Source.File.ID, projectionOptionsFor(d.Plan), lock, ref)
@@ -106,7 +106,7 @@ func finishProjection(ctx context.Context, t *store.Transaction, key, meaning st
 }
 
 func (s *Service) ProposeProjection(ctx context.Context, scope store.Scope, key string, plan ProjectionPlan) (*Result, error) {
-	if !keyPattern.MatchString(key) || !validProjectionProfile(plan) || plan.Profile == ProducerProjectionProfile {
+	if !keyPattern.MatchString(key) || !validProjectionProfile(plan) || producerProjectionProfile(plan.Profile) {
 		return nil, ErrInput
 	}
 	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)

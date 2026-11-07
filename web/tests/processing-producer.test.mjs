@@ -70,3 +70,53 @@ test("browser pins the selected producer policy and current participant without 
     assert.throws(() => p.processingPlanProfile(changed, context, session));
   }
 });
+
+test("composed plan binds the original acceptance and separate input contract;old profiles cannot inherit it", () => {
+  const input = { id: id(6), version: 1, hash: "b".repeat(64) };
+  const file = {
+    id: id(7),
+    size_bytes: 14,
+    sha256: "c".repeat(64),
+    policy: "intake-json-records-v1:" + input.hash,
+    accepted_event_id: id(8),
+  };
+  const c = { ...context, source: { file } };
+  const origin = {
+    profile: "owned-produced-source-v1",
+    file,
+    projection_id: id(9),
+    projection_hash: "d".repeat(64),
+    producer_binding: {
+      ...binding,
+      policy_id: input.id,
+      policy_version: input.version,
+      policy_hash: input.hash,
+    },
+  };
+  const composed = {
+    ...plan,
+    schema_version: 4,
+    profile: "composed-producer-record-projection-v1",
+    source_policy: input,
+    projection: { source_policy_hash: input.hash },
+    source_origin: origin,
+  };
+  const decoded = p.processingPlanProfile(composed, c, session);
+  assert.deepEqual(decoded.source_origin, origin);
+  assert.equal(decoded.schema_version, 4);
+  assert.deepEqual(decoded.output_binding, binding);
+  for (const change of [
+    (x) => (x.schema_version = 3),
+    (x) => (x.profile = "producer-record-projection-v1"),
+    (x) => delete x.source_origin,
+    (x) => (x.source_origin.file.accepted_event_id = id(5)),
+    (x) => (x.source_origin.producer_binding.producer.actor_id = id(5)),
+    (x) => (x.source_origin.producer_binding.policy_hash = "e".repeat(64)),
+    (x) => (x.projection.source_policy_hash = "e".repeat(64)),
+    (x) => (x.source_origin.workflow_approved = true),
+  ]) {
+    const bad = structuredClone(composed);
+    change(bad);
+    assert.throws(() => p.processingPlanProfile(bad, c, session));
+  }
+});
