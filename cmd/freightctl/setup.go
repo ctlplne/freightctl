@@ -12,6 +12,8 @@ import (
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/custody"
+	"github.com/ctlplne/freightctl/internal/durablefs"
+	"github.com/ctlplne/freightctl/internal/protectedfs"
 	"github.com/ctlplne/freightctl/internal/store"
 )
 
@@ -22,11 +24,11 @@ type setupPlan struct {
 }
 
 func privateParent(path string) error {
-	st, err := os.Stat(filepath.Dir(path))
-	if err != nil || !st.IsDir() || st.Mode().Perm()&0077 != 0 {
-		return errors.New("setup reference parent must already be a private mode-0700 directory")
+	directory, err := os.Open(filepath.Dir(path))
+	if err != nil {
+		return errors.New("setup reference parent must already be private to the runtime identity")
 	}
-	return nil
+	return errors.Join(protectedfs.ValidateDirectory(directory), directory.Close())
 }
 func setupToken(path string, create bool) (*secure.Secret, error) {
 	if create {
@@ -96,8 +98,7 @@ func prepareSetup(output, tokenPath, storagePath, tenantLabel, partnerLabel, adm
 	if err != nil {
 		return err
 	}
-	err = directory.Sync()
-	directory.Close()
+	err = errors.Join(durablefs.SyncDirectory(directory), directory.Close())
 	if err != nil {
 		return err
 	}

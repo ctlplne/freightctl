@@ -35,7 +35,12 @@ held-object protection. Writable staging with an exact digest is now refused by
 verified reads;the observed local red turns green. Existing focused lifecycle
 checks pass;native Windows flush/link/recovery and setup integration remain owed.
 
-Next:wire Windows setup,repair the newly reached native browser
+F253 wires setup parent checks and CLI review/download creation,sealing and
+directory sync to native protection. Unix focused interface cases pass. Windows
+now owes identical byte/refusal/replacement cases rather than an unsupported-OS
+shortcut;actual native proof remains owed.
+
+Next:repair the newly reached native browser
 and protocol failures,then complete all remaining baseline/AX/FINISH outcomes.
 Local inference remains off;local resource constraints and F026 hold remain.
 

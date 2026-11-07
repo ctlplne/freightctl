@@ -12,6 +12,8 @@ import (
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/custody"
+	"github.com/ctlplne/freightctl/internal/durablefs"
+	"github.com/ctlplne/freightctl/internal/protectedfs"
 	"github.com/ctlplne/freightctl/internal/store"
 	"github.com/ctlplne/freightctl/internal/workflow"
 )
@@ -243,21 +245,22 @@ func writeExchangeBytes(ctx context.Context, path string, size int64, digest str
 		return fmt.Errorf("cannot pin output directory: %w", store.ErrIsolation)
 	}
 	defer root.Close()
-	parent, err := root.Stat(".")
-	if err != nil || !parent.IsDir() || parent.Mode().Perm()&0077 != 0 {
+	directoryHandle, err := root.Open(".")
+	if err != nil {
+		return fmt.Errorf("cannot inspect held output directory: %w", store.ErrIsolation)
+	}
+	parent, statErr := directoryHandle.Stat()
+	if err = errors.Join(statErr, protectedfs.ValidateDirectory(directoryHandle), directoryHandle.Close()); err != nil {
 		return fmt.Errorf("output directory must be private: %w", store.ErrIsolation)
 	}
 	stageName := ".freightctl-exchange-" + secure.NewID()
-	stage, err := root.OpenFile(stageName, os.O_CREATE|os.O_EXCL|os.O_RDWR, 0600)
+	stage, err := protectedfs.CreateAt(root, stageName)
 	if err != nil {
 		return errors.New("cannot stage exchange bytes in output directory")
 	}
 	defer root.Remove(stageName)
 	defer stage.Close()
-	info, err := stage.Stat()
-	if err != nil || !info.Mode().IsRegular() || info.Mode().Perm()&0077 != 0 {
-		// A platform/filesystem that cannot establish private staging must fail
-		// before receiving bytes. POSIX mode support does not qualify Windows ACLs.
+	if err = protectedfs.ValidateFile(stage); err != nil {
 		return fmt.Errorf("private output staging unavailable: %w", store.ErrIsolation)
 	}
 	hash := secure.NewDigest()
@@ -274,7 +277,7 @@ func writeExchangeBytes(ctx context.Context, path string, size int64, digest str
 	if err = ctx.Err(); err != nil {
 		return err
 	}
-	if err = stage.Chmod(0400); err != nil {
+	if err = protectedfs.SealReadOnly(stage); err != nil {
 		return err
 	}
 	if err = stage.Sync(); err != nil {
@@ -298,7 +301,7 @@ func writeExchangeBytes(ctx context.Context, path string, size int64, digest str
 		return errors.New("verified exchange file exists; output directory sync unproven, inspect before retry")
 	}
 	defer dir.Close()
-	if err = dir.Sync(); err != nil {
+	if err = durablefs.SyncDirectory(dir); err != nil {
 		return errors.New("verified exchange file exists; output directory sync unproven, inspect before retry")
 	}
 	return nil

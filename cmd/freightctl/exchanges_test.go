@@ -7,12 +7,12 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"runtime"
 	"testing"
 	"time"
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/custody"
+	"github.com/ctlplne/freightctl/internal/protectedfs"
 	"github.com/ctlplne/freightctl/internal/store"
 )
 
@@ -38,19 +38,11 @@ func TestExchangeCLIRefusesInvalidSelectorsBeforeOpeningReferences(t *testing.T)
 
 func TestExchangeCLIRefusesPayloadAuthorityBeforeCredentialAndDatabase(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "request.json")
-	if err := os.WriteFile(path, []byte(`{"approved":true,"url":"https://unapproved.invalid"}`), 0600); err != nil {
-		t.Fatal(err)
-	}
+	writeProtectedCLIReference(t, path, []byte(`{"approved":true,"url":"https://unapproved.invalid"}`))
 	o := exchangeOptions{Input: path, Key: "original-key", MaxFile: 1024, Settings: custody.ExchangeSettings{MaxLifetime: time.Hour, MaxSenders: 16, MaxOpenViews: 128, MaxEndpoints: 16}}
 	for _, command := range []string{"exchange-offer", "exchange-endpoint-command", "exchange-close"} {
 		err := runExchanges(context.Background(), command, o, io.Discard)
-		if runtime.GOOS == "windows" {
-			// Windows protected-reference qualification is owed. Its regular-file
-			// mode refusal must still happen before any credential or DB access.
-			if err == nil || err.Error() != "exchange request must be a protected bounded regular file" {
-				t.Fatal("Windows request reference did not fail closed", err)
-			}
-		} else if !errors.Is(err, store.ErrExchangeInput) {
+		if !errors.Is(err, store.ErrExchangeInput) {
 			t.Fatal("payload authority reached credentials or database", err)
 		}
 	}
@@ -67,19 +59,10 @@ func (r *exchangeInterruptedReader) Read(p []byte) (int, error) {
 }
 
 func TestExchangeDownloadPublishesOnlyCompleteVerifiedPrivateBytes(t *testing.T) {
-	directory := t.TempDir()
-	if err := os.Chmod(directory, 0700); err != nil {
-		t.Fatal(err)
-	}
+	directory := privateCLIDirectory(t)
 	data := bytes.Repeat([]byte("inert artifact bytes\n"), 16000)
 	path := filepath.Join(directory, "received")
 	err := writeExchangeBytes(context.Background(), path, int64(len(data)), secure.Digest(data), bytes.NewReader(data))
-	if runtime.GOOS == "windows" {
-		if !errors.Is(err, store.ErrIsolation) {
-			t.Fatal("unsupported private staging did not refuse", err)
-		}
-		return
-	}
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -87,10 +70,7 @@ func TestExchangeDownloadPublishesOnlyCompleteVerifiedPrivateBytes(t *testing.T)
 	if err != nil || !bytes.Equal(got, data) {
 		t.Fatal("published bytes differ", err)
 	}
-	info, err := os.Stat(path)
-	if err != nil || info.Mode().Perm() != 0400 {
-		t.Fatal("output is not private and read-only", err)
-	}
+	requireSealedCLIOutput(t, path)
 	if err = writeExchangeBytes(context.Background(), path, 7, secure.Digest([]byte("changed")), bytes.NewBufferString("changed")); err == nil {
 		t.Fatal("existing output was replaced")
 	}
@@ -107,10 +87,7 @@ func TestExchangeDownloadPublishesOnlyCompleteVerifiedPrivateBytes(t *testing.T)
 func TestExchangeDownloadFailureNeverPublishesPartialBytes(t *testing.T) {
 	for _, scenario := range []string{"short", "extra", "digest", "interrupt", "canceled"} {
 		t.Run(scenario, func(t *testing.T) {
-			directory := t.TempDir()
-			if err := os.Chmod(directory, 0700); err != nil {
-				t.Fatal(err)
-			}
+			directory := privateCLIDirectory(t)
 			path := filepath.Join(directory, "must-not-exist")
 			ctx, cancel := context.WithCancel(context.Background())
 			defer cancel()
@@ -130,9 +107,6 @@ func TestExchangeDownloadFailureNeverPublishesPartialBytes(t *testing.T) {
 			case "canceled":
 				cancel()
 				expected = context.Canceled
-			}
-			if runtime.GOOS == "windows" {
-				expected = store.ErrIsolation
 			}
 			if err := writeExchangeBytes(ctx, path, size, digest, reader); !errors.Is(err, expected) {
 				t.Fatal("did not observe the expected refusal before publication", err)
@@ -174,16 +148,9 @@ func (r *exchangeDirectorySwapReader) Read(p []byte) (int, error) {
 }
 
 func TestExchangeDownloadDirectoryReplacementCannotSubstituteVerifiedOutput(t *testing.T) {
-	if runtime.GOOS == "windows" {
-		err := writeExchangeBytes(context.Background(), filepath.Join(t.TempDir(), "received"), 5, secure.Digest([]byte("exact")), bytes.NewBufferString("exact"))
-		if !errors.Is(err, store.ErrIsolation) {
-			t.Fatal("Windows private staging did not fail closed", err)
-		}
-		return // Directory substitution on Windows remains owed with native ACL support.
-	}
 	parent := t.TempDir()
 	directory, moved := filepath.Join(parent, "output"), filepath.Join(parent, "moved")
-	if err := os.Mkdir(directory, 0700); err != nil {
+	if err := protectedfs.EnsureDirectory(directory); err != nil {
 		t.Fatal(err)
 	}
 	var foreign string
@@ -197,7 +164,7 @@ func TestExchangeDownloadDirectoryReplacementCannotSubstituteVerifiedOutput(t *t
 		if err = os.Rename(directory, moved); err != nil {
 			t.Fatal(err)
 		}
-		if err = os.Mkdir(directory, 0700); err != nil {
+		if err = protectedfs.EnsureDirectory(directory); err != nil {
 			t.Fatal(err)
 		}
 		foreign = filepath.Join(directory, name)

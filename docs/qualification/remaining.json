@@ -1169,7 +1169,8 @@
         "docs/qualification/evidence/F236-native-security-and-runtime-terminal-ci.json",
         "docs/qualification/evidence/F247-exchange-authority-fixture.json",
         "docs/qualification/evidence/F249-held-inherited-ace-precondition.json",
-        "docs/qualification/evidence/F251-held-private-custody.json"
+        "docs/qualification/evidence/F251-held-private-custody.json",
+        "docs/qualification/evidence/F253-private-cli-setup-and-output.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -1235,13 +1236,14 @@
         "F245 adds explicit private staging/sealed protection. Unix exact0600/0400 remains;Windows sealed owner read plus link-required WRITE_ATTRIBUTES excludes data/append/EA writes,execution,deletion and explicit ACL/owner grants. Held descriptor checks precede/follow sealing;already-sealed is idempotent. Local same-object hard-link/exact-byte/policy cases and Windows compile/vet pass. A new actual Windows reopen-for-write refusal case is prepared only. Custody/setup wiring and full native proof remain owed.",
         "F247 repairs two original native authority-negative fixtures:label changes preserve exact historical receipts;removing only write while retaining read/list/deliver advances actual authority and must conceal old receipts/commands. Original ErrNotFound/zero-row assertions remain. Compile/vet pass only;native proof owed. F236 records original e874 terminal18/41 with29 pass/12 fail and the open Windows inherited-ACE security refusal.",
         "F249 triages the original Windows inherited-ACE security refusal by requiring one actual applied DACL entry with INHERITED_ACE before the unchanged ValidateFile refusal. Only numeric flags are reported;no descriptor/SID/path contents are emitted. If Windows normalizes the flag,the test fails at the precondition;no skip or inferred security pass. Native Windows readback/refusal remain owed;compilation/vet pass only.",
-        "F251 wires private missing-root creation,held-root exclusive staging,storage identity,writers,generated state,sealing and verified acceptance to actual protection profiles. Identity/objects bind Lstat to the opened physical object. New local regression observed exact-hash writable staging incorrectly readable,then rejects it until sealed. Focused original lifecycle/corruption/concurrent initialization/partial retention/projection tests,architecture,vet,integration compilation and Windows compilation/vet pass. Recovery data Sync and all directory-sync/hard-link obligations remain unchanged;actual Windows flush/link/recovery and full source runtime replay owed. Setup integration remains open."
+        "F251 wires private missing-root creation,held-root exclusive staging,storage identity,writers,generated state,sealing and verified acceptance to actual protection profiles. Identity/objects bind Lstat to the opened physical object. New local regression observed exact-hash writable staging incorrectly readable,then rejects it until sealed. Focused original lifecycle/corruption/concurrent initialization/partial retention/projection tests,architecture,vet,integration compilation and Windows compilation/vet pass. Recovery data Sync and all directory-sync/hard-link obligations remain unchanged;actual Windows flush/link/recovery and full source runtime replay owed. Setup integration remains open.",
+        "F253 wires setup parents,review artifacts and exchange download staging/sealing/directory sync to actual platform protection. Setup reference fixtures are private at creation and still fail changed credential/storage before SQL. Windows unsupported early-return tests are replaced by identical full byte,refusal,no-overwrite,partial cleanup and directory-substitution assertions. Focused local CLI cases,architecture,vet,integration compile and Windows compile/vet pass;actual original Windows behavior and native final-source replay owed."
       ],
       "current_item": {
-        "id": "F251",
-        "state": "Custody protection wired;Windows runtime/setup remain owed",
-        "proof": "Observed writable-staging red/focused local green;native Windows compilation/vet only",
-        "next": "Wire setup references;repair reached native failures and finish remaining implementation/qualification"
+        "id": "F253",
+        "state": "CLI/setup native protection wired;Windows runtime owed",
+        "proof": "Original native setup/private-reference failures preserved;focused local interfaces pass,Windows compile/vet only",
+        "next": "Repair read-only browser audit authentication and remaining native/product gates"
       }
     }
   ],

@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "id": "F253",
+  "observed_at": "2026-11-07",
+  "base_candidate": "6c45db5e41cf6dfabdb112e05c792dd97de72620",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Private CLI/setup integration implemented;actual Windows proof owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "b846f58a082bedf89e874b90f06a182e4b42da69998f5566b82a428897e48ce8",
+      "bytes": 12436
+    },
+    {
+      "reference": "cmd/freightctl/exchange_trace_test.go",
+      "sha256": "c1892fcd4ab1011d32c18cacc2eaa79a016279eceaa897d4cd2b3d2d181667a5",
+      "bytes": 1316
+    },
+    {
+      "reference": "cmd/freightctl/exchanges.go",
+      "sha256": "3d101a92944b70e02507f4402ac3132cbe579edc078d5d1cc16e487cbcb2934f",
+      "bytes": 10511
+    },
+    {
+      "reference": "cmd/freightctl/exchanges_test.go",
+      "sha256": "49c5b19a155f835c39eca2bb1f1e9647fcba0563c96be9f8fd2a1aa4774932bd",
+      "bytes": 6814
+    },
+    {
+      "reference": "cmd/freightctl/main.go",
+      "sha256": "e80cba2a48ea168a4fc573e4600a2759f9d97b29a8f6c64eb314ffca1e0a5850",
+      "bytes": 49716
+    },
+    {
+      "reference": "cmd/freightctl/protected_reference_test.go",
+      "sha256": "82df30c6a9082c66cfc71ab530b07419f109b9c30b436fe81f67aae8aff3429d",
+      "bytes": 1804
+    },
+    {
+      "reference": "cmd/freightctl/setup.go",
+      "sha256": "9f79c00f9f6664c48f86940577cf2964430526dd6af48208fa09da23c256cc9a",
+      "bytes": 4664
+    },
+    {
+      "reference": "cmd/freightctl/setup_test.go",
+      "sha256": "1ba6904e1a7219870f1439abe2561c4b9a78cbb2f5d75e86dcb850534c3c7b3e",
+      "bytes": 2233
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "3d2366a4ae87e085f7fb96a905b79dd8f50ab6a4a00f73aa289660e984d455e7",
+      "bytes": 374793
+    }
+  ],
+  "red": {
+    "candidate": "e87483babb4e32f8a3aaf78d13f8374d842fa78b",
+    "run": 42354252248,
+    "job": 128348737979,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128348737979",
+    "observed": [
+      "TestSetupPlanPreservesCredentialAndRefusesChangedReferences fails at mode-only parent precondition.",
+      "TestExchangeEvidenceCLIRefusesUnrequestedDataBeforeOpeningIdentityOrDatabase fails at ordinary-mode reference privacy before intended control validation."
+    ],
+    "scope": "Actual original Windows failures. No invented local Windows red/green;later link/flush stages remain unobserved."
+  },
+  "changed": [
+    "Setup validates an opened private parent and uses held-directory native sync. Artifact creation attaches actual private permissions before JSON writes,seals,syncs/closes and publishes with no-overwrite hard linking.",
+    "Exchange download keeps its held root,digest/length/EOF/cancellation,no-overwrite,current-parent identity and cleanup controls. Directory/staging/sealing use actual protection;directory sync uses the existing native adapter.",
+    "Setup/control fixtures use private creation. Changed references still fail before SQL. Replace Windows unsupported shortcuts with the same complete byte/refusal/partial/namespace-substitution requirements as Unix;no original byte/protocol assertion is weakened."
+  ],
+  "green": [
+    "Focused local setup token/plan preservation,changed credential/storage pre-SQL refusal,strict payload/evidence selectors,exact/empty download,no overwrite,all five partial failures and directory-substitution cleanup pass.",
+    "New local review artifact requires private sealed readback,immutable original after failed publication and no staging leak.",
+    "Affected architecture/vet,integration compilation and native Windows compilation/vet pass."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f253-architecture.log",
+      "sha256": "333d56fc052322ad7290dd97d05fc6285ea9f492e5a16d136bfc7ec88c058c3f",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f253-focused-cli.log",
+      "sha256": "5cd2b518c3f433f49a31bfa8b57597f895b51410ee99bb9b3d45f012e3bac709",
+      "bytes": 57
+    },
+    {
+      "reference": ".private/freightctl-f253-format.log",
+      "sha256": "f2b6cf36f214d0e66e52a4a984f16e810ce5f3de3f75a8a57e7ac11cb585c684",
+      "bytes": 23
+    },
+    {
+      "reference": ".private/freightctl-f253-integration-compile.log",
+      "sha256": "bc81c27932f99116aa9ea5c491768e9be4ca89b56680b330293250e12206e25c",
+      "bytes": 75
+    },
+    {
+      "reference": ".private/freightctl-f253-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f253-windows-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f253-windows-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "owed": [
+    "Actual original Windows setup/reference/JSON review/download/ACL/hard-link/directory-sync and directory-replacement behavior.",
+    "Open inherited-ACE security refusal readback and all remaining native final-source baseline/AX/FINISH gates."
+  ],
+  "resources": "OneCPU/192MiB local filesystem/interface/static/compilation only;inference and heavy runtimes off. Retained35/source60 unchanged."
+}

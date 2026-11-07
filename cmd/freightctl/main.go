@@ -20,7 +20,9 @@ import (
 	"github.com/ctlplne/freightctl/internal/audit"
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/custody"
+	"github.com/ctlplne/freightctl/internal/durablefs"
 	"github.com/ctlplne/freightctl/internal/ftpsd"
+	"github.com/ctlplne/freightctl/internal/protectedfs"
 	"github.com/ctlplne/freightctl/internal/sftpd"
 	"github.com/ctlplne/freightctl/internal/store"
 )
@@ -667,7 +669,7 @@ func run(args []string) error {
 
 func writeArtifact(path string, value any) error {
 	directory := filepath.Dir(path)
-	f, err := os.CreateTemp(directory, ".freightctl-artifact-*")
+	f, err := protectedfs.CreateExclusive(filepath.Join(directory, ".freightctl-artifact-"+secure.NewID()))
 	if err != nil {
 		return errors.New("cannot stage artifact in output directory")
 	}
@@ -676,7 +678,7 @@ func writeArtifact(path string, value any) error {
 	if err = json.NewEncoder(f).Encode(value); err != nil {
 		return err
 	}
-	if err = f.Chmod(0400); err != nil {
+	if err = protectedfs.SealReadOnly(f); err != nil {
 		return err
 	}
 	if err = f.Sync(); err != nil {
@@ -696,5 +698,5 @@ func writeArtifact(path string, value any) error {
 		return err
 	}
 	defer d.Close()
-	return d.Sync()
+	return durablefs.SyncDirectory(d)
 }
