@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "id": "F351",
+  "observed_at": "2026-11-07",
+  "base_candidate": "e62a39373167bc3635e371a995d1ff9ce5219ce9",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "Use an ordinary producer-created isolated source directory so the actual FTPS operator request satisfies unchanged staging/final tree separation. Bind directory creation and all original source identity/readback evidence to that exact tree.",
+  "original_failures": [
+    {
+      "candidate": "3f32758aaa848065d7a2bf8ede787d729bbef166",
+      "run_id": 42380575895,
+      "job_id": 128427129920,
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42380575895/job/128427129920",
+      "command": "cli-explicit-collection-operator-connection-register",
+      "category": "original-output-contract"
+    },
+    {
+      "candidate": "3f32758aaa848065d7a2bf8ede787d729bbef166",
+      "run_id": 42380575895,
+      "job_id": 128427130269,
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42380575895/job/128427130269",
+      "command": "cli-explicit-collection-operator-connection-register",
+      "category": "original-output-contract"
+    }
+  ],
+  "red_green": "The real Go immutable connection validator rejects the actual Python factory root/ request. With the dedicated source directory the same factory/decoder/validator passes explicit and implicit;root/staging overlap remains explicitly refused.",
+  "setup_failures_preserved": [
+    "Initial local test setup used a macOS temporary path with a symlinked ancestor;resolve that test path before invoking the unchanged strict Python factory. That setup failure is not the semantic red.",
+    "First new rehashed-receipt test did not rehash its process step and correctly stopped at original output integrity. Correct the adversarial test setup so all hashes are recomputed before asserting semantic directory refusal. Product checks/assertions are unchanged."
+  ],
+  "green": [
+    "Actual factory and typed source contract focused tests",
+    "12 actual producer lifecycle/evidence/privacy/process/browser stand-in tests",
+    "Affected format,vet,architecture and workflow lint"
+  ],
+  "owed": [
+    "Original native source/curl producer/Chrome operator/consent replay in both protected profiles",
+    "Complete final-source GOAL/AX and prior original failures"
+  ],
+  "source_files": [
+    {
+      "reference": "scripts/ftps_collection_operator.py",
+      "sha256": "99392b5992b65b060f79ccc6d242faef0b6693465d59ce0d609e0bdaae4ac9ed",
+      "bytes": 34552
+    },
+    {
+      "reference": "scripts/test-ftps-collection-operator.py",
+      "sha256": "1b97921926be92188a31f813dc386938fec77cf252095f0b610402242c411c27",
+      "bytes": 25469
+    },
+    {
+      "reference": "internal/workflow/ftps_operator_fixture_test.go",
+      "sha256": "3c68633c0bab6bab76b334f0620a42416ac8c50f5e10337a4696dd63b2ce95fa",
+      "bytes": 1714
+    },
+    {
+      "reference": ".github/workflows/ftps-workflows.yml",
+      "sha256": "bd2e84dbb97409443585455f0e4676f0a42a18e1609c806397502de70d7e1d0f",
+      "bytes": 9057
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "616932924de0fa84fc20b1d85d15e4f2cfc991f2e74bbda77d80168359a99ea7",
+      "bytes": 454967
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f351-factory-red.log",
+      "sha256": "f22e97258a9d145a25a98617b9f8342e747c652f313233a5aad53817dfec6be3",
+      "bytes": 232
+    },
+    {
+      "reference": ".private/freightctl-f351-factory-valid-shape-red.log",
+      "sha256": "65e90fba2760e7275861c6c92ccb4627a7761bfe3caec988e420d9193ceb9bc9",
+      "bytes": 280
+    },
+    {
+      "reference": ".private/freightctl-f351-final-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f351-final-factory-green.log",
+      "sha256": "e81c3fd16e737e30a06ad502808fc884639c54aa1cee3717bc1b6ab8346255cf",
+      "bytes": 60
+    },
+    {
+      "reference": ".private/freightctl-f351-final-operator-standin.log",
+      "sha256": "3ea50c75beba0477c2ac766d127f75794b7bcbcd9efdfc409b52dddd6e47f5b2",
+      "bytes": 3273
+    },
+    {
+      "reference": ".private/freightctl-f351-final-operator-standin-corrected.log",
+      "sha256": "2c6194d0020b77baacabf73361ca2be491ea0f7449b2f7b573eea9f424a4fc7e",
+      "bytes": 2335
+    },
+    {
+      "reference": ".private/freightctl-f351-final-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f351-final-architecture.log",
+      "sha256": "d55570a3d4984783ecacae19671085861857c1e5386f904a81ada12c0d4d0607",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f351-final-actionlint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ]
+}

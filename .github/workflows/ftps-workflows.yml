@@ -175,6 +175,9 @@ jobs:
               process.exitCode = 1;
             });
           NODE
+      - name: Actual operator request factory and ordinary connection validator
+        run: |
+          sh scripts/go.sh test -timeout=0 -tags=ftpsfixture -run '^TestActualFTPSOperatorFactoryPassesTheUnchangedConnectionValidator$' -count=1 -v ./internal/workflow
       - name: Task-owned PostgreSQL
         run: |
           python3 scripts/dev-db.py

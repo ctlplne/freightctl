@@ -17,13 +17,15 @@ import ftps_collection_metadata as metadata
 import ftps_collection_source as source
 from ftps_cli_governance import read, require
 
+SOURCE_DIRECTORY = '/operator-source'
+
 AUDITS = tuple('ftps-operator-'+name for name in ('form', 'draft', 'approval', 'queue', 'work', 'captured'))
 DECISIONS = ('draft', 'approve', 'queue', 'work')
 READS = ('workflow-preview', 'job-preview', 'queued-view', 'captured-view')
-COMMANDS = ('producer-token', 'producer-enroll', 'identity', 'producer-identity', 'upload-source', 'upload-ready',
+COMMANDS = ('producer-token', 'producer-enroll', 'producer-directory', 'identity', 'producer-identity', 'upload-source', 'upload-ready',
     'source-before', 'ready-before', 'connection-register', 'connection-register-replay', 'browser', 'status',
     'consumer-readback', 'producer-readback', 'ready-readback', 'source-after', 'ready-after', 'source')
-FILES = frozenset(('producer.token', 'curl.conf', 'source.csv', 'operator.ready.json', 'connection.json',
+FILES = frozenset(('producer-directory.json', 'producer.token', 'curl.conf', 'source.csv', 'operator.ready.json', 'connection.json',
     *session.FILES,
     'producer.headers', 'owner.headers', 'consumer.body', 'producer.body', 'ready.body', 'config.json',
     'raw/ftps-operator-result.json', 'raw/onboarding-exchange-browser.json', 'raw/onboarding-exchange-review.png',
@@ -84,7 +86,7 @@ def curl_config(private, token, producer):
 
 
 def connection(private, directory, mode, port, producer):
-    return {'expected_version': 0, 'directory': '/', 'ftps': {
+    return {'expected_version': 0, 'directory': SOURCE_DIRECTORY, 'ftps': {
         'destination': {'address': '127.0.0.1:'+str(port), 'server_name': 'localhost', 'mode': mode,
             'user': producer['tenant_id']+'/'+producer['partner_id'], 'ca_reference': str(private/'cert.pem'),
             'ca_sha256': digest(private/'cert.pem'), 'password_reference': str(directory/'producer.token'),
@@ -130,6 +132,9 @@ def exercise(root, private, mode, database, http_port, cert, binary, tenant, par
             '--tenant', producer_tenant if producer else tenant, '--partner', producer_partner if producer else partner,
             '--storage', private/'custody', *extra], 20))
     identity, producer = invoke('identity', 'identity'), invoke('producer-identity', 'identity', producer=True)
+    metadata.private_write(directory/'producer-directory.json', metadata.canonical({'operation': 'mkdir', 'path': SOURCE_DIRECTORY}))
+    invoke('producer-directory', 'namespace', '--request-file', directory/'producer-directory.json',
+        '--idempotency-key', prefix+'producer-directory', producer=True)
     metadata.private_write(directory/'source.csv', payload(mode))
     manifest = {'schema_version': 1, 'batch_id': str(uuid.uuid4()), 'files': [{'name': 'source.csv',
         'size_bytes': len(payload(mode)), 'sha256': hashlib.sha256(payload(mode)).hexdigest()}]}
@@ -146,10 +151,10 @@ def exercise(root, private, mode, database, http_port, cert, binary, tenant, par
         for label, name in (('source', 'source.csv'), ('ready', 'operator.ready.json')):
             command(prefix+'upload-'+label, ['curl', '-q', '--config', directory/'curl.conf',
                 '--upload-file', directory/name, ('ftps' if mode == 'implicit' else 'ftp')
-                +'://127.0.0.1:'+str(active['port'])+'/'+name], 15)
+                +'://127.0.0.1:'+str(active['port'])+SOURCE_DIRECTORY+'/'+name], 15)
         require(witness.snapshot()['accepted_connections'] == 2, 'operator producer contact count differs')
-        entry = invoke('source-before', 'namespace-stat', '--path', '/source.csv', producer=True)
-        invoke('ready-before', 'namespace-stat', '--path', '/operator.ready.json', producer=True)
+        entry = invoke('source-before', 'namespace-stat', '--path', SOURCE_DIRECTORY+'/source.csv', producer=True)
+        invoke('ready-before', 'namespace-stat', '--path', SOURCE_DIRECTORY+'/operator.ready.json', producer=True)
         metadata.private_write(directory/'connection.json', metadata.canonical(
             connection(private, directory, mode, active['port'], producer)))
         args = ('--request-file', directory/'connection.json', '--idempotency-key', prefix+'connection')
@@ -172,7 +177,7 @@ def exercise(root, private, mode, database, http_port, cert, binary, tenant, par
             metadata.private_write(directory/(label+'.headers'), b'Authorization: Bearer '+read(token, 256)+b'\n')
         for label, name, who, file_id in (('consumer', 'consumer', 'owner', view['inputs'][0]['file_id']),
                 ('producer', 'producer', 'producer', entry['file_id']),
-                ('ready', 'ready', 'producer', invoke('ready-after', 'namespace-stat', '--path', '/operator.ready.json', producer=True)['file_id'])):
+                ('ready', 'ready', 'producer', invoke('ready-after', 'namespace-stat', '--path', SOURCE_DIRECTORY+'/operator.ready.json', producer=True)['file_id'])):
             base = ('/v1/tenants/'+(producer_tenant if who == 'producer' else tenant)
                 +'/partners/'+(producer_partner if who == 'producer' else partner))
             status = command(prefix+label+'-readback', ['curl', '-q', '--silent', '--show-error', '--noproxy', '*',
@@ -180,7 +185,7 @@ def exercise(root, private, mode, database, http_port, cert, binary, tenant, par
                 '--max-filesize', '65536', '--header', '@'+str(directory/(who+'.headers')),
                 '--output', directory/(name+'.body'), '--write-out', '%{http_code}', config['url']+base+'/files/'+file_id], 15)
             require(status == b'200', 'operator independent HTTPS readback failed')
-        invoke('source-after', 'namespace-stat', '--path', '/source.csv', producer=True)
+        invoke('source-after', 'namespace-stat', '--path', SOURCE_DIRECTORY+'/source.csv', producer=True)
         require(read(directory/'consumer.body') == read(directory/'producer.body') == payload(mode)
             and read(directory/'ready.body') == read(directory/'operator.ready.json'), 'operator independent bytes differ')
         require(witness.snapshot()['accepted_connections'] == 3, 'operator replay reacquired source')
@@ -235,6 +240,13 @@ def validate(root, private, mode, steps, observed, database):
     require(all(type(v.get('authority_revision')) is int and v['authority_revision'] > 0
         and all(type(v.get(k)) is str and re.fullmatch(UUID, v[k]) for k in ('tenant_id', 'partner_id', 'actor_id'))
         for v in (identity, producer)) and identity['tenant_id'] != producer['tenant_id'], 'operator separate identities differ')
+    created = output('producer-directory')
+    require(metadata.same(metadata.load(directory/'producer-directory.json'), {'operation': 'mkdir', 'path': SOURCE_DIRECTORY})
+        and metadata.same(created.get('changed'), 1) and created.get('replayed') is False
+        and created['entry']['path'] == SOURCE_DIRECTORY and created['entry']['kind'] == 'dir'
+        and created['entry']['owner_actor_id'] == producer['actor_id']
+        and metadata.same(created['entry']['revision'], 1) and created['entry']['deleted'] is False,
+        'operator producer source directory differs')
     require(read(directory/'curl.conf', 4096) == curl_config(private, directory/'producer.token', producer),
         'operator stock producer credentials or TLS configuration changed')
     stopped = source.counter(helper/'counter.json', mode, True)
@@ -257,7 +269,7 @@ def validate(root, private, mode, steps, observed, database):
     for name in ('source', 'ready'):
         before, after = output(name+'-before'), output(name+'-after')
         require(metadata.same(before, after) and type(before.get('file_id')) is str and re.fullmatch(UUID, before['file_id'])
-            and before['path'] == ('/source.csv' if name == 'source' else '/operator.ready.json')
+            and before['path'] == SOURCE_DIRECTORY+('/source.csv' if name == 'source' else '/operator.ready.json')
             and before['deleted'] is False and before['kind'] == 'file'
             and before['size_bytes'] == len(read(directory/('source.csv' if name == 'source' else 'operator.ready.json'))),
             'operator producer source revision changed')
@@ -310,7 +322,7 @@ def validate_browser(private, directory, mode, identity, config, final):
     typed_connection = metadata.dispatch.expected_connection_rotation(c, metadata.load(directory/'connection.json'), 1)
     require(metadata.same(c, typed_connection), 'operator exact typed source connection differs')
     expected_job = {'schema_version': 1, 'workflow': metadata.ref(approved), 'source': d['source'],
-        'source_connection': typed_connection, 'source_identity': hashlib.sha256((c['id']+':/').encode()).hexdigest(),
+        'source_connection': typed_connection, 'source_identity': hashlib.sha256((c['id']+':'+SOURCE_DIRECTORY).encode()).hexdigest(),
         'authority_revision': identity['authority_revision'], 'storage_id': p['definition'].get('storage_id'),
         'namespace_root': '/', 'timeout_seconds': 300, 'effects': []}
     require(type(expected_job['storage_id']) is str and re.fullmatch(UUID, expected_job['storage_id'])

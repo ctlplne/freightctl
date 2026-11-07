@@ -21,6 +21,23 @@ spec.loader.exec_module(session_fixture)
 
 
 class OperatorContracts(unittest.TestCase):
+    def test_rehashed_producer_directory_receipt_cannot_change_the_approved_source(self):
+        self.run_fixture()
+        path=self.private/'cli-explicit-collection-operator-producer-directory.stdout'
+        original=path.read_bytes()
+        step=next(v for v in self.steps if v['name']=='cli-explicit-collection-operator-producer-directory')
+        for mutate in (lambda v:v['entry'].update(path='/'),
+                lambda v:v['entry'].update(kind='file'),
+                lambda v:v['entry'].update(owner_actor_id=self.consumer['actor_id']),
+                lambda v:v.update(changed=0)):
+            path.write_bytes(original)
+            self.change(path,mutate)
+            step['stdout_sha256']=hashlib.sha256(path.read_bytes()).hexdigest()
+            with self.assertRaisesRegex(ValueError,'producer source directory differs'):
+                self.check()
+        path.write_bytes(original)
+        step['stdout_sha256']=hashlib.sha256(original).hexdigest()
+
     def test_github_helper_binary_is_measured_without_a_generated_size_ceiling(self):
         self.run_fixture()
         binary=self.private/'source-ftps'
@@ -105,7 +122,7 @@ class OperatorContracts(unittest.TestCase):
         return data
 
     def entry(self, mode, name):
-        return {'id': '30000000-1111-4111-8111-111111111111', 'path': '/'+name, 'parent': '/', 'kind': 'file',
+        return {'id': '30000000-1111-4111-8111-111111111111', 'path': operator.SOURCE_DIRECTORY+'/'+name, 'parent': operator.SOURCE_DIRECTORY, 'kind': 'file',
             'file_id': ('30000001' if name == 'source.csv' else '30000002')+'-1111-4111-8111-111111111111',
             'owner_actor_id': self.producer['actor_id'], 'mode': 384, 'revision': 1, 'deleted': False,
             'size_bytes': len((self.private/('collection-operator-'+mode)/name).read_bytes())}
@@ -125,7 +142,7 @@ class OperatorContracts(unittest.TestCase):
         preview = {'definition': d, 'definition_hash': config['definition_hash'], 'effects': [],
             'collection': {'kind': 'ftps.collect', 'source': d['source'], 'connection': c}, 'external_contact': False, 'approval_required': True}
         definition = {'schema_version': 1, 'workflow': metadata.ref(approved), 'source': d['source'], 'source_connection': c,
-            'source_identity': hashlib.sha256((c['id']+':/').encode()).hexdigest(), 'authority_revision': 3,
+            'source_identity': hashlib.sha256((c['id']+':'+operator.SOURCE_DIRECTORY).encode()).hexdigest(), 'authority_revision': 3,
             'storage_id': '40000000-1111-4111-8111-111111111111', 'namespace_root': '/', 'timeout_seconds': 300, 'effects': []}
         fingerprint = hashlib.sha256(metadata.canonical(definition)).hexdigest()
         p = {'definition': definition, 'definition_hash': fingerprint, 'external_contact': False, 'approval_required': True}
@@ -212,6 +229,9 @@ class OperatorContracts(unittest.TestCase):
         elif suffix == 'producer-enroll':
             self.producer['tenant_id'] = argv[argv.index('--tenant')+1]
             self.producer['partner_id'] = argv[argv.index('--partner')+1]
+        elif suffix == 'producer-directory':
+            result = metadata.canonical({'entry': {'path': operator.SOURCE_DIRECTORY, 'kind': 'dir',
+                'owner_actor_id': self.producer['actor_id'], 'revision': 1, 'deleted': False}, 'changed': 1, 'replayed': False})
         elif suffix in ('identity', 'producer-identity'):
             result = metadata.canonical(self.consumer if suffix == 'identity' else self.producer)
         elif suffix.startswith('upload-'):
