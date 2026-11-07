@@ -204,7 +204,8 @@ func processingWorkflowNativeBrowserProfile(t *testing.T, producerBound, compose
 		expectedAccessibility++
 	}
 	if runErr != nil || workflow.Decode(raw, &summary) != nil || summary.State != "passed" || !store.ValidID(summary.File) || !store.ValidID(summary.Run) || summary.Hash != expected || summary.DraftRequests != 2 || summary.Accessibility != expectedAccessibility || summary.Egress != 0 || summary.Errors != 0 || !summary.Sandbox || summary.Inference || summary.Failure != "" {
-		t.Fatalf("native processing browser failed;safe result SHA256=%s", secure.Digest(raw))
+		trace := safeBrowserFailureTrace(filepath.Join(private, "failure.log"), "processing-browser.mjs")
+		t.Fatalf("native processing browser failed;safe result SHA256=%s;class=%s;source=%d:%d;private log SHA256=%s", secure.Digest(raw), trace.Class, trace.Line, trace.Column, trace.SHA256)
 	}
 	wf := &workflow.Service{Custody: s, Processor: control}
 	view, err := wf.Status(t.Context(), scope, summary.Run)

@@ -27,7 +27,7 @@ type browserFailureTrace struct {
 func safeBrowserFailureTrace(path, script string) browserFailureTrace {
 	unavailable := browserFailureTrace{Class: "unavailable", SHA256: "unavailable"}
 	switch script {
-	case "artifact-exchange-browser.mjs", "json-intake-browser.mjs", "processing-review-browser.mjs":
+	case "artifact-exchange-browser.mjs", "json-intake-browser.mjs", "processing-review-browser.mjs", "processing-browser.mjs":
 	default:
 		return unavailable
 	}
@@ -63,7 +63,7 @@ func safeBrowserFailureTrace(path, script string) browserFailureTrace {
 }
 
 func TestBrowserFailureTraceKeepsOnlyClosedClassLocationAndBoundedDigest(t *testing.T) {
-	for _, script := range []string{"artifact-exchange-browser.mjs", "json-intake-browser.mjs", "processing-review-browser.mjs"} {
+	for _, script := range []string{"artifact-exchange-browser.mjs", "json-intake-browser.mjs", "processing-review-browser.mjs", "processing-browser.mjs"} {
 		body := []byte("AssertionError: PRIVATE_CREDENTIAL DOM_AND_PAYLOAD\n    at file:///PRIVATE_PATH/scripts/" + script + ":123:7\n")
 		path := filepath.Join(t.TempDir(), "failure.log")
 		f, err := protectedfs.CreateExclusive(path)

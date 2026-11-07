@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "id": "F283",
+  "observed_at": "2026-11-07",
+  "base_candidate": "ca8e3a41ec5bc606452ae05843ea1ed2b931c97f",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Safe processing-browser private trace implemented;native cause owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "835a32f599c87bce3376f3de0829f251a79263e7b5420abac8f1016c892b9b5a",
+      "bytes": 6393
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "aa6377196ee639b01966c036783ea05a46d83d1321ac7656adc705410865825d",
+      "bytes": 387927
+    },
+    {
+      "reference": "internal/api/browser_failure_trace_integration_test.go",
+      "sha256": "700461c84bd8951a1c465c164cb6eaf4168cce55c4195095d85e587ef9ce67cd",
+      "bytes": 3946
+    },
+    {
+      "reference": "internal/api/processing_browser_integration_test.go",
+      "sha256": "acbc656f0fa942be33b13eea75feca49290f60a0ee896c6c29394ed0f5d2e91b",
+      "bytes": 10235
+    }
+  ],
+  "red": {
+    "candidate": "33ad447564cb0be33bc04fa8d60e9f0adaf0c2b4",
+    "run": 42361009356,
+    "job": 128369207235,
+    "test": "TestProcessingWorkflowNativeBrowserReviewRecoveryAndHeldOutput",
+    "observation": "Existing failure summary SHA256=d86dbd65fc2e60a682a7d444f0c125d20d5021eefe875c2d97a33391c404434c;no source location. New exact processing-script trace regression fails on the prior three-script allowlist."
+  },
+  "changed": [
+    "Add only processing-browser.mjs as the fourth fixed candidate script;reuse existing64KiB protected-buffer privacy/identity checks and clearing.",
+    "Existing processing failure branch emits only closed class,numeric source line/column and whole bounded private-file digest. Never print raw stack,message,path,DOM,credentials or payload;no original assertion changes."
+  ],
+  "green": [
+    "Focused four-script private sentinel/source-location/digest and oversize/untrusted-script refusals pass after observed local red.",
+    "Affected formatting,tagged API/browser compilation and vet pass;no browser/PostgreSQL runtime."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f283-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f283-trace-green.log",
+      "sha256": "9fbc384cecaa7d5024c7745277e0092b49253d3d92f6f59d2d4e13c2f682f97c",
+      "bytes": 55
+    },
+    {
+      "reference": ".private/freightctl-f283-trace-red.log",
+      "sha256": "3df6ccd72163acc52fd28a0daefbaff3257440de73e213a860992f373dd37aa1",
+      "bytes": 243
+    },
+    {
+      "reference": ".private/freightctl-f283-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "owed": [
+    "Actual original processing-browser safe source location,cause,repair and full Chrome replay.",
+    "All original failed native/browser/protocol and final baseline/AX/FINISH outcomes."
+  ],
+  "resources": "OneCPU/192MiB protected-file/pure privacy/static checks only;models and heavy runtimes off. Retained35/source60 unchanged."
+}

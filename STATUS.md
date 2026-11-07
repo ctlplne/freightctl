@@ -75,6 +75,10 @@ all platforms must refuse substitution after stage-close and preserve foreign
 bytes while cleaning only the owned stage. Unix also keeps during-write attack
 coverage. Local focused checks pass;actual Windows outcomes remain owed.
 
+Local F283 extends safe private failure location diagnosis to the fixed processing
+browser script. Focused regression turns red to green;native underlying cause
+and actual original processing journey remain owed.
+
 FINISH repair is active and remaining implementation is mandatory. Next:repair
 newly reached browser/protocol failures,complete remaining product work,and replay
 all affected original native/security/browser/stock/recovery/reproducibility gates
