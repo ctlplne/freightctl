@@ -277,6 +277,38 @@ func TestWebDAVNativeStockCurlDiscoveryInterruptedReadAndExactResume(t *testing.
 	if status != 412 || overwriteRetry != 22 {
 		t.Fatal("stock overwrite repeated after its source was moved")
 	}
+	copyOverwriteTarget := prefix + "/dav/curl-created/copy-overwrite.dat"
+	copySeedArgs := []string{"--upload-file", sourcePath, "--header", "If-None-Match: *", "--header", "Idempotency-Key: dav-stock-copy-overwrite-seed", "--header", "X-Content-SHA256: " + secure.Digest(data)}
+	status, _, body, _ = run("copy-overwrite-seed", copyOverwriteTarget, copySeedArgs, true)
+	var copyPrevious struct {
+		File store.File `json:"file"`
+	}
+	if status != 201 || json.Unmarshal(body, &copyPrevious) != nil {
+		t.Fatal("stock copy overwrite destination was not created")
+	}
+	copyOverwriteArgs := []string{"--request", "COPY", "--header", "If-Match: " + artifactRevisionETag(&replaced.File), "--header", "Overwrite: T", "--header", "Idempotency-Key: dav-stock-copy-overwrite", "--header", "Destination: " + front.URL + copyOverwriteTarget}
+	status, headers, copyOverwriteBody, _ := run("copy-overwrite", overwriteTarget, copyOverwriteArgs, true)
+	if status != 204 || len(copyOverwriteBody) != 0 || headers.Get("X-Freightctl-Namespace-State") != "replaced-at-commit" || !store.ValidID(headers.Get("X-Freightctl-Event-ID")) || headers.Get("ETag") != "" {
+		t.Fatal("stock copy overwrite lost its exact atomic publication")
+	}
+	for index, target := range []string{overwriteTarget, copyOverwriteTarget} {
+		status, headers, actualCopy, _ := run("copy-overwrite-readback-"+strconv.Itoa(index), target, nil, true)
+		if status != 200 || !bytes.Equal(actualCopy, replacement) || headers.Get("X-File-Revision-ID") != replaced.File.ID {
+			t.Fatal("stock copy overwrite changed source or target custody")
+		}
+	}
+	status, headers, body, _ = run("copy-overwrite-replay", overwriteTarget, copyOverwriteArgs, true)
+	var copyHistory struct {
+		Result    store.PathResult `json:"result"`
+		Namespace string           `json:"namespace_state"`
+	}
+	if status != 200 || json.Unmarshal(body, &copyHistory) != nil || !copyHistory.Result.Replayed || copyHistory.Namespace != "not-asserted-original-receipt" || headers.Get("Location") != "" {
+		t.Fatal("stock copy overwrite repeated its original receipt")
+	}
+	status, _, oldCopyBytes, _ := run("copy-overwrite-old-custody", prefix+"/files/"+copyPrevious.File.ID, nil, true)
+	if status != 200 || !bytes.Equal(oldCopyBytes, data) {
+		t.Fatal("stock copy overwrite destroyed previous custody")
+	}
 	binaryPath, err := exec.LookPath("curl")
 	if err != nil {
 		t.Fatal(err)
@@ -285,5 +317,5 @@ func TestWebDAVNativeStockCurlDiscoveryInterruptedReadAndExactResume(t *testing.
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Logf("native conditional-create/file-replace/file-move/file-remove/read DAV proof;candidate=%s;architecture=%s;curl-SHA256=%s;lost-exit=%d;prefix=65536;bytes=%d;SHA256=%s;XML=independently-parsed;receiver=independently-compared;conditional-retry=412;stale-replace=412;stale-move=412;overwrite-move=204;stale-overwrite=412;removed-path=404;stale-delete=412;retained-custody=independently-compared;other-writes-locks-full-DAV=owed", commit, runtime.GOARCH, secure.Digest(binary), lostExit, len(received), secure.Digest(received))
+	t.Logf("native conditional-create/file-replace/file-move/file-remove/read DAV proof;candidate=%s;architecture=%s;curl-SHA256=%s;lost-exit=%d;prefix=65536;bytes=%d;SHA256=%s;XML=independently-parsed;receiver=independently-compared;conditional-retry=412;stale-replace=412;stale-move=412;overwrite-move=204;stale-overwrite=412;overwrite-copy=204;copy-replay=historical200;removed-path=404;stale-delete=412;retained-custody=independently-compared;other-writes-locks-full-DAV=owed", commit, runtime.GOARCH, secure.Digest(binary), lostExit, len(received), secure.Digest(received))
 }

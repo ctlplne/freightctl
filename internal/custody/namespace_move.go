@@ -37,11 +37,17 @@ func (s *Service) CopyFileIfCurrent(ctx context.Context, scope store.Scope, key,
 	return s.changeFileIfCurrent(ctx, scope, key, "copy", source, target, fileID, digest, false)
 }
 
+// Replacing a copied mapping is an explicit path-management operation as well
+// as a read/write operation. Neither receipt can grant external delivery.
+func (s *Service) CopyFileOverwritingIfCurrent(ctx context.Context, scope store.Scope, key, source, target, fileID, digest string) (*store.PathResult, error) {
+	return s.changeFileIfCurrent(ctx, scope, key, "copy", source, target, fileID, digest, true)
+}
+
 func (s *Service) changeFileIfCurrent(ctx context.Context, scope store.Scope, key, operation, source, target, fileID, digest string, overwrite bool) (*store.PathResult, error) {
 	if !keyPattern.MatchString(key) || !store.ValidID(fileID) || !digestPattern.MatchString(digest) {
 		return nil, ErrInput
 	}
-	if overwrite && operation != "rename" {
+	if overwrite && operation != "rename" && operation != "copy" {
 		return nil, ErrInput
 	}
 	names := []string{source}
@@ -70,6 +76,11 @@ func (s *Service) changeFileIfCurrent(ctx context.Context, scope store.Scope, ke
 	}
 	for _, permission := range []string{permission, "read"} {
 		if err = t.Require(permission); err != nil {
+			return nil, err
+		}
+	}
+	if overwrite && operation == "copy" {
+		if err = t.Require("manage_paths"); err != nil {
 			return nil, err
 		}
 	}
@@ -119,7 +130,7 @@ func (s *Service) changeFileIfCurrent(ctx context.Context, scope store.Scope, ke
 			}
 			return nil, err
 		}
-		if operation == "copy" {
+		if operation == "copy" && !overwrite {
 			if _, err = t.Entry(ctx, destination); err == nil {
 				return nil, store.ErrExists
 			} else if !errors.Is(err, store.ErrNotFound) {

@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestDAVFileMoveAcceptsAnExplicitOverwriteDecisionWithoutRelaxingCopy(t *testing.T) {
+func TestDAVFileMoveAndCopyRequireAnExplicitOverwriteDecision(t *testing.T) {
 	for _, method := range []string{"MOVE", "COPY"} {
 		r := httptest.NewRequest(method, "https://localhost/v1/tenants/t/partners/p/dav/source.dat", nil)
 		r.Header.Set("Authorization", "Bearer "+strings.Repeat("a", 64))
@@ -16,7 +16,7 @@ func TestDAVFileMoveAcceptsAnExplicitOverwriteDecisionWithoutRelaxingCopy(t *tes
 		r.Header.Set("Idempotency-Key", "dav-explicit-overwrite")
 		w := httptest.NewRecorder()
 		accepted := prepareDAVRequest(w, r)
-		if accepted != (method == "MOVE") {
+		if !accepted {
 			t.Fatalf("explicit file move/copy profile differs;method=%s;accepted=%t;status=%d", method, accepted, w.Code)
 		}
 	}

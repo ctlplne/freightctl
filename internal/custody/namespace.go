@@ -88,6 +88,11 @@ func (s *Service) pathCommand(ctx context.Context, scope store.Scope, key string
 		if err = t.Require("read"); err != nil {
 			return nil, err
 		}
+		if command.Operation == "copy" && command.Replace {
+			if err = t.Require("manage_paths"); err != nil {
+				return nil, err
+			}
+		}
 		if err = t.FileAccessible(ctx, command.FileID); err != nil {
 			return nil, err
 		}

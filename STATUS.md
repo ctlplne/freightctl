@@ -68,6 +68,12 @@ availability and one atomic ordinary remove/rename receipt. F remains412 for
 occupied targets. Focused red/green and static checks pass;prepared original
 PostgreSQL/stock curl/receipt/history/current-policy proofs remain owed.
 
+F400 locally adds explicit COPY overwrite with read/write/manage_paths,verified
+source and current destination authority. Atomic remove/publication preserves
+old custody and quota;focused checks pass and native API/CLI/stock proofs remain
+owed. F401 separately repairs the typed response-schema security guard exposed
+by original unit outcomes;that assertion remains enforced.
+
 Next:continue independent implementation while these original CI runs finish.
 Push the next verified owner-only batch only after all required originals are terminal. Repair original
 failures and finish every mandatory final-source baseline/AX gate. F026 stays

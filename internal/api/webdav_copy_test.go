@@ -19,7 +19,7 @@ func TestDAVFileCopyRequiresExactSourceRevisionBeforeCustody(t *testing.T) {
 	}
 }
 
-func TestDAVFileCopyConfinesDestinationAndRefusesOverwriteOrAmbiguousConditions(t *testing.T) {
+func TestDAVFileCopyConfinesDestinationAndRefusesAmbiguousConditions(t *testing.T) {
 	makeRequest := func() *http.Request {
 		r := httptest.NewRequest("COPY", "https://localhost/v1/tenants/t/partners/p/dav/source.dat", nil)
 		r.Header.Set("Authorization", "Bearer "+strings.Repeat("a", 64))
@@ -37,7 +37,9 @@ func TestDAVFileCopyConfinesDestinationAndRefusesOverwriteOrAmbiguousConditions(
 		"other scope":         func(r *http.Request) { r.Header.Set("Destination", "/v1/tenants/other/partners/p/dav/copy.dat") },
 		"selector":            func(r *http.Request) { r.Header.Set("Destination", r.Header.Get("Destination")+"?path=/another") },
 		"separator":           func(r *http.Request) { r.Header.Set("Destination", "/v1/tenants/t/partners/p/dav/a%2fb") },
-		"overwrite":           func(r *http.Request) { r.Header.Set("Overwrite", "T") },
+		"invalid overwrite":   func(r *http.Request) { r.Header.Set("Overwrite", "X") },
+		"missing overwrite":   func(r *http.Request) { r.Header.Del("Overwrite") },
+		"duplicate overwrite": func(r *http.Request) { r.Header.Add("Overwrite", "T") },
 		"body":                func(r *http.Request) { r.ContentLength = 1 },
 		"weak revision":       func(r *http.Request) { r.Header.Set("If-Match", "W/"+r.Header.Get("If-Match")) },
 		"duplicate revision":  func(r *http.Request) { r.Header.Add("If-Match", r.Header.Get("If-Match")) },

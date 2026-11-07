@@ -184,8 +184,13 @@ func (t *Transaction) ApplyPathCommand(ctx context.Context, key string, command 
 		if err := t.Require("read"); err != nil {
 			return nil, err
 		}
-		if !ValidID(command.FileID) || command.Replace || command.TargetRevision != nil || command.Mode != nil || command.Modified != nil {
+		if !ValidID(command.FileID) || !command.Replace && command.TargetRevision != nil || command.Mode != nil || command.Modified != nil {
 			return nil, ErrState
+		}
+		if command.Replace {
+			if err := t.Require("manage_paths"); err != nil {
+				return nil, err
+			}
 		}
 	}
 	virtual, err := vpath.Canonical(command.Path)
@@ -394,10 +399,32 @@ func (t *Transaction) ApplyPathCommand(ctx context.Context, key string, command 
 			if err = t.ParentWritable(ctx, target); err != nil {
 				return nil, err
 			}
-			if _, err = t.Entry(ctx, target); err == nil {
-				return nil, ErrExists
-			} else if !errors.Is(err, ErrNotFound) {
+			existing, err := t.Entry(ctx, target)
+			if err != nil && !errors.Is(err, ErrNotFound) {
 				return nil, err
+			}
+			if existing != nil {
+				if !command.Replace {
+					return nil, ErrExists
+				}
+				if err = t.EntryMode(existing, 2); err != nil {
+					return nil, err
+				}
+				if existing.Kind != "file" || command.TargetRevision == nil || *command.TargetRevision != existing.Revision {
+					return nil, ErrRevision
+				}
+				if err = t.FileAvailable(ctx, existing.FileID); err != nil {
+					return nil, err
+				}
+				removed := *existing
+				removed.Revision++
+				removed.Deleted = true
+				if err = t.SaveEntry(ctx, existing, &removed, "PathRemoved", commandID); err != nil {
+					return nil, err
+				}
+				changed++
+			} else if command.TargetRevision != nil {
+				return nil, ErrRevision
 			}
 			if maxEntries < 1 {
 				maxEntries = 10000

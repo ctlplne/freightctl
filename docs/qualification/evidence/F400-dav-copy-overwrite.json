@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "id": "F400",
+  "observed_at": "2026-11-07",
+  "base_candidate": "b89a295c1cd06c43e6d5f5c343969a1fcdf04cc8",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F400 adds explicit file COPY Overwrite:T through the shared API/CLI namespace command. Require read/write/manage_paths plus current actual source/read and destination/write modes/intake;verify exact custody bytes before mutation. Capture target revision under lock;atomically remove old mapping,publish distinct current-actor0640 mapping to the same source file,and commit one receipt. Retain source and both immutable custody records;no new acceptance or external/run effects. Check entry quota after removal so replacement at the configured limit preserves its bound;failure507 rolls the whole transaction back. F-only copy keeps read/write and existing-target412;unknown/missing/duplicate overwrite,source/tag/body/URI ambiguity remain refused. Fresh replacement204 has exact publication event/no body/Location/ETag;historical200 asserts no current publication. Changed flags/target revisions cannot reuse a key. Actual COPY:T guard first fails428,then focused guards,tagged native API/CLI compilation,vet,format and architecture pass. Prepared native PostgreSQL covers extra management authority,private/collection target refusal,missing verification,post-removal capacity rollback,full-limit success,independent source/new/old bytes,one saved receipt,current target-policy refusal,two actor publications/one removal/one receipt/zero new acceptance/effects. Existing actual CLI journey adds original-key and changed-target-revision proof;stock curl adds overwrite204/independent bytes/historical200 with distinct seed keys. Native runtime remains owed. Security response-schema omission discovered in previous original unit outcomes is being repaired separately(F401);no assertion is waived.",
+  "normative_reference": "https://www.rfc-editor.org/rfc/rfc4918.html#section-9.8.5",
+  "red_green": "Original exact COPY:T request first refused428. Updated focused guards accept explicit T/F with unchanged exact source/key/URI/body boundaries. Real SQL/role/verification/quota rollback/full-limit/receipt/CLI/stock outcomes are prepared and compiled only;not run locally.",
+  "owed": [
+    "Original native ARM/x86 PostgreSQL explicit copy authority,verification,current policy,atomic quota rollback/full-limit and exact actor receipt/no-effect outcomes",
+    "Existing ordinary CLI journey with explicit replace+target revision,original receipt and changed-meaning refusal",
+    "Stock curl COPY overwrite204,source/target/old custody independent readback and historical200",
+    "F401 exact typed projection schema security repair and original all-platform/unit replay",
+    "Every mandatory baseline/AX/final-source/security/readiness gate"
+  ],
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "e27f0e94fe054bd4d14c0cc9aaa348fe8c39e8199c3fb4f93eda2ca065630f4e",
+      "bytes": 5372
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "7f76bf0106a95f086ad2a296acd1773d0e99cdb96e61a4404c62b3b82f1262bd",
+      "bytes": 566302
+    },
+    {
+      "reference": "docs/qualification/parity.json",
+      "sha256": "8bf3aeb798633f7ba4f07d3043c3c36236b198800bde5450f895a7e3a8881f98",
+      "bytes": 152664
+    },
+    {
+      "reference": "docs/protocols/webdav-read-profile.md",
+      "sha256": "89acd1c3dd0e2fe206314e88e9ff80d68a34b2bd88baa0a5b1ffc47df111ba1e",
+      "bytes": 13909
+    },
+    {
+      "reference": "internal/custody/namespace_move.go",
+      "sha256": "30f9f6079bf065aef0c947604e9af897c2aafd5cb819dfdb88d76031ba0c602f",
+      "bytes": 6284
+    },
+    {
+      "reference": "internal/custody/namespace.go",
+      "sha256": "0e7c2b3939aec26a2516ab1991d86d3de622a3e2e18270e74718fef2ad01f6ad",
+      "bytes": 10078
+    },
+    {
+      "reference": "internal/store/namespace.go",
+      "sha256": "4d047964cd49981cce99aa143d773ab8fca341185854e1268b7d1475f3514102",
+      "bytes": 21046
+    },
+    {
+      "reference": "internal/api/webdav_move.go",
+      "sha256": "9dea9fe55e0f30756233d1e49226d9e8b88d4426d1be95ea0534a284e96edc2a",
+      "bytes": 4629
+    },
+    {
+      "reference": "internal/api/webdav_copy.go",
+      "sha256": "5813029fecbec184b90b54c8a85f6991addeece054fecf560e7ec7188d3840b9",
+      "bytes": 1929
+    },
+    {
+      "reference": "internal/api/webdav_copy_test.go",
+      "sha256": "50ba50902116be3ed8f018e219e17aecf453ed16a87cf6ac3a65d1bbaf8e99b1",
+      "bytes": 2814
+    },
+    {
+      "reference": "internal/api/webdav_overwrite_test.go",
+      "sha256": "b4ffa0d6e2b108823d591fe3608ce19d25e31d114ed249af5868f1904a7a3f06",
+      "bytes": 845
+    },
+    {
+      "reference": "internal/api/webdav_copy_overwrite_test.go",
+      "sha256": "0d002a91a397d1ac989559dba161ac53d2d1e4ff44bbe4c27494697b3a4a81c0",
+      "bytes": 732
+    },
+    {
+      "reference": "internal/api/webdav_copy_overwrite_integration_test.go",
+      "sha256": "637acef6bd4b4f302703f223aa73400b0e79fbeb9f15383ac7fac4ba2e7e9bed",
+      "bytes": 9193
+    },
+    {
+      "reference": "internal/api/webdav_stock_integration_test.go",
+      "sha256": "1a6ba5933a715afa5f1b6b56e8af2ea450f4c7942908edb05ba9e0c8a970f7c7",
+      "bytes": 18825
+    },
+    {
+      "reference": "cmd/freightctl/namespace_copy_overwrite_integration_test.go",
+      "sha256": "5af1c3f074ed1f99022e8d5355ca64e912aa3e7499e3feda292bf21be44bc480",
+      "bytes": 3900
+    },
+    {
+      "reference": "cmd/freightctl/exchanges_integration_test.go",
+      "sha256": "fc8ce4af967da4f76a00efbbd207cf7191e098bb0ac764e0eff4582f9d3a0be3",
+      "bytes": 23249
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f400-copy-overwrite-red.log",
+      "sha256": "0ddc001d693d4c7b849557df4f67cc190f3e841bdc9940955eeb030d8a935205",
+      "bytes": 251
+    },
+    {
+      "reference": ".private/freightctl-f400-api-focused.log",
+      "sha256": "5d7bc77c972b600cbbbf93a77308b85e417f7bc9ef1eac8e3722306d1d51cbed",
+      "bytes": 55
+    },
+    {
+      "reference": ".private/freightctl-f400-native-compile.log",
+      "sha256": "54471a0c1169c73b775c0603de45b40323292058e8a17d83a2cfa80914bafad9",
+      "bytes": 300
+    },
+    {
+      "reference": ".private/freightctl-f400-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f400-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f400-architecture.log",
+      "sha256": "b69da6935cc9b00df00e6d7f827eecaee328a898b8d4051a4caa8642afdf8103",
+      "bytes": 64
+    }
+  ]
+}

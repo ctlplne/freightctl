@@ -38,12 +38,8 @@ func davFileMappingInput(w http.ResponseWriter, r *http.Request, operation strin
 		return false
 	}
 	overwrite, _, valid := tusHeader(r, "Overwrite")
-	if !valid || overwrite != "F" && (operation != "move" || overwrite != "T") {
-		problem := "dav_" + operation + "_requires_no_overwrite"
-		if operation == "move" {
-			problem = "dav_move_requires_explicit_overwrite_mode"
-		}
-		fail(w, 428, problem)
+	if !valid || overwrite != "F" && overwrite != "T" {
+		fail(w, 428, "dav_"+operation+"_requires_explicit_overwrite_mode")
 		return false
 	}
 	key, _, valid := tusHeader(r, "Idempotency-Key")

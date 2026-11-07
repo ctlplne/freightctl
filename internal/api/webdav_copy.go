@@ -20,8 +20,15 @@ func (s *Server) davCopy(w http.ResponseWriter, r *http.Request, scope store.Sco
 		fail(w, 400, "invalid_dav_copy_revision")
 		return
 	}
-	result, err := s.Service.CopyFileIfCurrent(r.Context(), scope, r.Header.Get("Idempotency-Key"), source, target, fileID, digest)
+	copyFile := s.Service.CopyFileIfCurrent
+	if r.Header.Get("Overwrite") == "T" {
+		copyFile = s.Service.CopyFileOverwritingIfCurrent
+	}
+	result, err := copyFile(r.Context(), scope, r.Header.Get("Idempotency-Key"), source, target, fileID, digest)
 	switch {
+	case errors.Is(err, store.ErrLimit):
+		fail(w, 507, "dav_namespace_capacity_required")
+		return
 	case errors.Is(err, store.ErrExists), errors.Is(err, store.ErrRevision), errors.Is(err, store.ErrNotFound):
 		fail(w, 412, "dav_copy_condition_failed")
 		return
@@ -41,6 +48,12 @@ func (s *Server) davCopy(w http.ResponseWriter, r *http.Request, scope store.Sco
 	if result.Replayed {
 		status, state = 200, "not-asserted-original-receipt"
 	} else {
+		if result.Changed == 2 {
+			w.Header().Set("X-Freightctl-Namespace-State", "replaced-at-commit")
+			w.Header().Set("X-Freightctl-Event-ID", result.Entry.EventID)
+			w.WriteHeader(204)
+			return
+		}
 		w.Header().Set("Location", webdav.Href(base, webdav.Resource{Path: result.Entry.Path}))
 	}
 	respond(w, status, map[string]any{"result": result, "namespace_state": state})
