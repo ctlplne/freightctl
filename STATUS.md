@@ -1,72 +1,61 @@
 # freightctl status
 
-Updated 2026-11-07. The full [GOAL.md](GOAL.md) is active. All83 whole parity
-rows,twelve full journeys and AX01–AX08 remain open. Assisted deployment,
+Updated 2026-11-07. The full [GOAL.md](GOAL.md) remains active. All 83 whole
+parity rows, twelve full journeys and AX01–AX08 remain open. Assisted deployment,
 independent adoption and enterprise readiness remain separately unqualified.
-Current item decisions and exact proof references are in
+Current decisions and exact evidence are in
 [remaining.json](docs/qualification/remaining.json) and
 [artifact-exchange.json](docs/qualification/artifact-exchange.json).
 
-Pushed origin/main:3f32758aaa848065d7a2bf8ede787d729bbef166.
-Its17 original workflows are still finishing;new Windows fixture-permission and
-served browser failures remain open. The prior completed candidate follows.
-[F340](docs/qualification/evidence/F340-native-terminal-ci.json) preserves all16
-original terminal workflows/35 jobs:31 passed,4 failed. No original run was
-cancelled,rerun or substituted. Earlier failures remain in their original safe
-manifests and Git history,including F316 and F332.
+Pushed candidate: `3f32758aaa848065d7a2bf8ede787d729bbef166`.
+[F346](docs/qualification/evidence/F346-native-terminal-ci.json) preserves all 17
+original terminal workflows and 39 jobs: 32 passed, 7 failed. No original run was
+cancelled, rerun or substituted. Earlier failures remain in their original safe
+manifests and Git history, including F340.
 
-Actually qualified at that exact source/profile scope:
+Actually qualified at that exact source and profile scope:
 
-- Native ARM/x86 Go/race/PostgreSQL/source62 and metadata restore jobs pass.
-  Original local source discovery,active-XLSX CLI check/separate-release/readback,
-  calendar capture/recovery and changed-root refusal pass on both architectures.
-  Each native engine run retains one visible upstream privileged-port20 skip;
-  that privileged-port behavior is not qualified.
-- Windows/macOS unit jobs and listed source/dependency/history/image/fuzz security
-  gates pass. Scanner protocol units do not qualify a real malware engine.
-- All five stock entries,first-enrollment,HTTPS,tus,SCP,FTPS stock/browser/dispatch
-  and reproducibility pass at their exact recorded scope. Manual local Chrome
-  capture/replay and independent review recovery/adoption pass inside a failing
-  served job. These are component results,not whole product qualification.
+- Native ARM/x86 full Go, race, PostgreSQL/source62, metadata restore and exact
+  image security jobs pass. Original changed-root refusal, local discovery and
+  CLI immutable-XLSX checks, separate release and readback pass. Each native engine
+  run retains one visible upstream privileged-port20 skip; that behavior is owed.
+- Listed core/source/history/dependency/fuzz gates, stock entries, HTTPS/tus/SCP,
+  FTPS stock/browser/dispatch, first enrollment and reproducibility pass. Both ARM
+  independent receiver variants pass at their declared scope. Scanner protocol
+  tests do not qualify a real malware engine or every receiver security feature.
+- Native JSON interfaces and eleven named Chrome profiles pass inside a failing
+  served job, including manual local capture/recovery and processing calendars.
+  These component results do not qualify whole product journeys.
 
-The four failed jobs remain mandatory:
+The seven failed jobs remain mandatory:
 
-- Receive browser copy-lost-response. F339 fixes its typed client media type with
-  real Web Request red/green proof;original Chrome copy/recovery/onward/revocation
-  still needs replay.
-- New local-calendar Chrome login503. F341 identified the actual HTTP refusal;
-  F349 fixes a20minute fixture setting that exceeded the unchanged10minute
-  production maximum. Real constructor/document503→200 passes locally;full
-  served capture/recovery/accessibility replay remains owed.
-- Both FTPS workflow-consent jobs fail source startup. F337 fixes the concrete
-  protected-reference API mismatch;actual operator/source/consent replay is owed.
+- Receive browser upload: F355 permits the exact ordinary same-participant
+  checkpoint PATCH that the fixture previously aborted. Full upload/copy/onward/
+  revocation proof remains owed; F339 copy media-type repair is still unreached.
+- Windows source test fixture: F347 uses protected filesystem creation instead
+  of POSIX mode bits alone. Actual Windows replay remains owed.
+- Calendar/review Chrome: F349 fixes an unsupported fixture session lifetime;
+  F353 waits for the separately fetched exact current review revision without
+  changing the assertion. Both full native journeys remain owed.
+- Two FTPS consent jobs: F351 places producer files in a dedicated source tree
+  accepted by the unchanged staging-separation rule. Original operator replay is
+  owed. Both independent x86 receiver variants still fail upstream seccomp;
+  neither filter nor any protocol/security check is weakened.
 
-Verified repairs pushed at 3f32758;native qualification remains owed:
+F345 adds a partial bearer DAV namespace read adapter with focused red/green and
+static proof. Real PostgreSQL/stock curl discovery, interrupted read and exact
+resume are prepared for ARM/x86 CI. C-WEBDAV stays implementing: writes, locks,
+full properties, outbound server and independent DAV application proof are owed.
 
-- F335/F343 use measured streamed build-file hashes/bytes and platform aggregate
-  lifetime on GitHub while preserving
-  local allowances,complete inventories,exact-input/tamper and security checks.
-  The durable [CI plan](docs/qualification/github-actions-plan.md) records it.
-- F337 protected-DSN reference contract,F339 exact copy JSON media type and F341
-  private startup evidence retain their focused source/proof manifests. Static
-  or stand-in checks never replace owed native/served outcomes.
+Next: push the verified owner-only fast-forward batch now that prior required
+runs are terminal, then continue implementation while original CI runs. Replay
+original failures and finish every mandatory final-source baseline/AX gate.
+F026 stays manual/owner-deferred. Trust Control, inference, provider/licensed
+peers, reference estate, owner license text and adoption inputs remain owed.
 
-F345 adds a partial read-only DAV namespace adapter with focused local red/green
-and static proof. Real PostgreSQL/stock curl discovery,interrupted read and exact
-resume are prepared for native ARM/x86 CI. C-WEBDAV stays implementing;writes,
-locks,outbound server and independent DAV application interoperability remain owed.
-
-Next:continue baseline/AX implementation and repair original failures while CI
-finishes;push the next verified owner-only batch after required runs are terminal. Replay all original failures and final-source FINISH
-checks,and complete remaining mandatory baseline/AX engineering. The unchanged
-independent x86 FTPS receiver remains failed/owed;F026 stays manual/owner-deferred.
-Real Trust Control API/profile,inference endpoint/hardware,licensed peers,cloud/
-reference estate,owner license text and independent adoption inputs remain owed.
-
-Both author and committer must be imfeelingtheagi. Keep the pre-push Gitleaks guard
-enabled. S003 authorizes source/CI fast-forward pushes only after previous required
-original runs are terminal. S004 removes arbitrary GitHub build/scan ceilings;
-findings,isolation and purposeful product/local bounds remain. No release,
-publication,visibility change or deployment is authorized. Local inference and
-heavy runtimes stay off;retained35 is untouched. Source62 has78 metadata tables
-and77 forced-RLS domain tables.
+Both author and committer must be imfeelingtheagi. Keep the pre-push Gitleaks
+hook enabled. S003 authorizes source/CI fast-forward pushes; S004 removes arbitrary
+GitHub build/scan ceilings. Findings, isolation and purposeful product/local
+bounds remain. No publication, visibility change or deployment is authorized.
+Local inference and heavy runtimes stay off; retained35 is untouched. Source62
+has 78 metadata tables and 77 forced-RLS domain tables.
