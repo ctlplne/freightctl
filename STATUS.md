@@ -8,7 +8,13 @@ Exact original failures,owner decisions and remaining work are preserved in
 [artifact-exchange.json](docs/qualification/artifact-exchange.json) and the
 linked safe manifests. Raw private proof remains outside Git.
 
-Current pushed candidate: `6eec25037bf9d335d01b7635e39cde64276823d9`.
+Current pushed candidate: `781dfdc94f7e73595979f2c77a17bc80cd914e12`.
+[F404](docs/qualification/evidence/F404-native-push.json) binds five verified
+owner-only commits and16 first original workflows. Windows/macOS passes in
+completion metadata;other runtime/security outcomes remain owed and receive is
+already red. Pre-push Gitleaks stays enabled with no leaks.
+
+Previous terminal candidate: `6eec25037bf9d335d01b7635e39cde64276823d9`.
 [F403](docs/qualification/evidence/F403-native-terminal.json) binds all17
 original workflows/37 terminal jobs:31pass,6fail. Core/source/history/native source
 vulnerability and both peer-image scans pass. Four platform/Linux unit jobs fail
@@ -72,7 +78,7 @@ availability and one atomic ordinary remove/rename receipt. F remains412 for
 occupied targets. Focused red/green and static checks pass;prepared original
 PostgreSQL/stock curl/receipt/history/current-policy proofs remain owed.
 
-F400 locally adds explicit COPY overwrite with read/write/manage_paths,verified
+F400 adds explicit COPY overwrite with read/write/manage_paths,verified
 source and current destination authority. Atomic remove/publication preserves
 old custody and quota;focused checks pass and native API/CLI/stock proofs remain
 owed. F401 separately repairs the typed response-schema security guard exposed
@@ -85,7 +91,7 @@ are unchanged,and every prior schema constraint is preserved. Focused red/green
 and static checks pass;original all-platform/unit-race and skipped full PostgreSQL
 replay remain owed. Receive nonsecurity investigation stays deferred for FINISH.
 
-F402 locally refuses same-resource COPY in the shared API/CLI service and store.
+F402 refuses same-resource COPY in the shared API/CLI service and store.
 Focused early-control red/green and static checks pass;valid-scope native proof
 that mapping,bytes and receipts remain unchanged is prepared and owed.
 
