@@ -93,3 +93,17 @@ The implementation uses the platform APIs described by Microsoft's
 [file security documentation](https://learn.microsoft.com/en-us/windows/win32/fileio/file-security-and-access-rights)
 and the pinned Go
 [Windows security bindings](https://go.dev/src/cmd/vendor/golang.org/x/sys/windows/security_windows.go).
+
+Custody now uses these profiles for the configured root,storage identity,
+staging,writers,generated slots and sealed acceptance. Missing directories are
+created private;existing permissions are validated and never silently changed.
+Identity reads and object reads bind `Lstat` to the opened physical file before
+using its protection state. Matching a byte digest alone cannot make a writable
+partial object readable as immutable custody. Partial reserved slots remain in
+place and cannot be adopted as sealed artifacts.
+
+The original data sync,close,directory sync and recovery re-sync remain required.
+In particular,reopening sealed bytes does not waive the original recovery flush.
+Actual Windows flush/link/ACL/restart behavior remains unqualified until native
+CI executes these paths. Local compilation establishes no Windows persistence
+claim. Setup references are the next integration item.

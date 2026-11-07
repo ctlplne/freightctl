@@ -3,6 +3,7 @@ package custody
 import (
 	"context"
 
+	"github.com/ctlplne/freightctl/internal/protectedfs"
 	"github.com/ctlplne/freightctl/internal/store"
 	"github.com/ctlplne/freightctl/internal/vpath"
 )
@@ -30,8 +31,8 @@ func (s *Service) AcceptSealedAt(ctx context.Context, scope store.Scope, key str
 	if e != nil {
 		return nil, false, e
 	}
-	st, e := data.Stat()
-	if e != nil || st.Mode().Perm() != 0400 {
+	state, e := protectedfs.Protection(data)
+	if e != nil || state != protectedfs.PrivateSealed {
 		data.Close()
 		return nil, false, ErrIntegrity
 	}

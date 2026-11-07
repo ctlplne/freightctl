@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
+	"github.com/ctlplne/freightctl/internal/protectedfs"
 )
 
 func TestGeneratedArtifactRefusesOverflowCancellationAndIncompleteGeneration(t *testing.T) {
@@ -47,10 +48,7 @@ func TestGeneratedArtifactRefusesOverflowCancellationAndIncompleteGeneration(t *
 	if err != nil || size != 4 || hash != secure.Digest([]byte("1234")) {
 		t.Fatal(size, hash, err)
 	}
-	st, err := os.Stat(filepath.Join(path, name))
-	if err != nil || st.Mode().Perm() != 0400 {
-		t.Fatal(st, err)
-	}
+	requireObjectProtectionForTest(t, filepath.Join(path, name), protectedfs.PrivateSealed)
 	if err = disk.Capacity(1, 4); !errors.Is(err, ErrCapacity) {
 		t.Fatal("unaccepted sealed artifact escaped quota", err)
 	}

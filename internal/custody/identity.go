@@ -6,6 +6,7 @@ import (
 	"os"
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
+	"github.com/ctlplne/freightctl/internal/protectedfs"
 	"github.com/ctlplne/freightctl/internal/store"
 )
 
@@ -15,7 +16,7 @@ var ErrStorageIdentity = errors.New("storage identity is missing or differs from
 
 func readIdentity(root *os.Root) (string, error) {
 	st, err := root.Lstat(StorageIdentityName)
-	if err != nil || !st.Mode().IsRegular() || st.Size() != 36 || st.Mode().Perm() != 0400 {
+	if err != nil || !st.Mode().IsRegular() || st.Size() != 36 {
 		return "", ErrStorageIdentity
 	}
 	f, err := root.Open(StorageIdentityName)
@@ -23,6 +24,14 @@ func readIdentity(root *os.Root) (string, error) {
 		return "", ErrStorageIdentity
 	}
 	defer f.Close()
+	opened, err := f.Stat()
+	if err != nil || !os.SameFile(st, opened) || opened.Size() != 36 {
+		return "", ErrStorageIdentity
+	}
+	state, err := protectedfs.Protection(f)
+	if err != nil || state != protectedfs.PrivateSealed {
+		return "", ErrStorageIdentity
+	}
 	data, err := io.ReadAll(io.LimitReader(f, 37))
 	if err != nil || !store.ValidID(string(data)) {
 		return "", ErrStorageIdentity
@@ -37,7 +46,7 @@ func initializeIdentity(root *os.Root) (string, error) {
 	}
 	name := ".freightctl-storage-pending-" + secure.NewID()
 	id := secure.NewID()
-	f, err := root.OpenFile(name, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0600)
+	f, err := protectedfs.CreateAt(root, name)
 	if err != nil {
 		return "", err
 	}
@@ -46,7 +55,7 @@ func initializeIdentity(root *os.Root) (string, error) {
 	if _, err = f.Write([]byte(id)); err != nil {
 		return "", err
 	}
-	if err = f.Chmod(0400); err != nil {
+	if err = protectedfs.SealReadOnly(f); err != nil {
 		return "", err
 	}
 	if err = f.Sync(); err != nil {

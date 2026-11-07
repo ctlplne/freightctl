@@ -11,6 +11,7 @@ import (
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/durablefs"
+	"github.com/ctlplne/freightctl/internal/protectedfs"
 )
 
 var ErrIntegrity = errors.New("file length or SHA-256 does not match")
@@ -22,7 +23,7 @@ type Disk struct {
 }
 
 func Open(path string) (*Disk, error) {
-	if err := os.MkdirAll(path, 0700); err != nil {
+	if err := protectedfs.EnsureDirectory(path); err != nil {
 		return nil, err
 	}
 	return openDisk(path, true)
@@ -40,10 +41,9 @@ func openDisk(path string, initialize bool) (*Disk, error) {
 		return nil, err
 	}
 	defer f.Close()
-	st, err := f.Stat()
-	if err != nil || st.Mode().Perm()&0077 != 0 {
+	if err = protectedfs.ValidateDirectory(f); err != nil {
 		r.Close()
-		return nil, errors.New("storage root must have mode 0700")
+		return nil, errors.Join(errors.New("storage root must be private to the runtime identity"), err)
 	}
 	var id string
 	if initialize {
@@ -144,7 +144,7 @@ func (d *Disk) stage(name string, src io.Reader, size int64, digest string, reta
 	if !validName(name) || size < 0 || size == int64(^uint64(0)>>1) {
 		return errors.New("invalid custody identity or length")
 	}
-	f, err := d.root.OpenFile(name, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0600)
+	f, err := protectedfs.CreateAt(d.root, name)
 	if err != nil {
 		return err
 	}
@@ -165,7 +165,7 @@ func (d *Disk) stage(name string, src io.Reader, size int64, digest string, reta
 	if n != size || hex.EncodeToString(h.Sum(nil)) != digest {
 		return ErrIntegrity
 	}
-	if err = f.Chmod(0400); err != nil {
+	if err = protectedfs.SealReadOnly(f); err != nil {
 		return err
 	}
 	if err = f.Sync(); err != nil {
@@ -200,7 +200,7 @@ func (d *Disk) VerifiedContext(ctx context.Context, name string, size int64, dig
 	if !validName(name) || size < 0 || size == int64(^uint64(0)>>1) {
 		return nil, errors.New("invalid custody identity")
 	}
-	f, err := d.root.Open(name)
+	f, err := d.openObject(name)
 	if err != nil {
 		return nil, err
 	}
@@ -217,6 +217,10 @@ func (d *Disk) VerifiedContext(ctx context.Context, name string, size int64, dig
 	if !st.Mode().IsRegular() || st.Size() != size {
 		return nil, ErrIntegrity
 	}
+	state, err := protectedfs.Protection(f)
+	if err != nil || state != protectedfs.PrivateSealed {
+		return nil, ErrIntegrity
+	}
 	h := secure.NewDigest()
 	n, err := io.CopyBuffer(h, contextReader{ctx: ctx, reader: io.LimitReader(f, size+1)}, make([]byte, 32*1024))
 	if err != nil {
@@ -229,5 +233,27 @@ func (d *Disk) VerifiedContext(ctx context.Context, name string, size int64, dig
 		return nil, err
 	}
 	ok = true
+	return f, nil
+}
+
+// openObject binds regular-file metadata to the exact opened revision. A flat
+// custody name may not be a symlink/reparse point or change during opening.
+func (d *Disk) openObject(name string) (*os.File, error) {
+	before, err := d.root.Lstat(name)
+	if err != nil {
+		return nil, err
+	}
+	if !before.Mode().IsRegular() {
+		return nil, ErrIntegrity
+	}
+	f, err := d.root.Open(name)
+	if err != nil {
+		return nil, err
+	}
+	after, err := f.Stat()
+	if err != nil || !os.SameFile(before, after) {
+		f.Close()
+		return nil, ErrIntegrity
+	}
 	return f, nil
 }

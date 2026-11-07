@@ -11,10 +11,11 @@ import (
 	"testing"
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
+	"github.com/ctlplne/freightctl/internal/protectedfs"
 )
 
 func TestDurableExactRevision(t *testing.T) {
-	root := filepath.Join(t.TempDir(), "custody")
+	root := filepath.Join(t.TempDir(), "nested", "custody")
 	d, err := Open(root)
 	if err != nil {
 		t.Fatal(err)
@@ -29,10 +30,7 @@ func TestDurableExactRevision(t *testing.T) {
 	if err = d.Stage(name, bytes.NewReader(data), int64(len(data)), hash); err == nil {
 		t.Fatal("immutable revision overwritten")
 	}
-	st, err := os.Stat(filepath.Join(root, name))
-	if err != nil || st.Mode().Perm() != 0400 {
-		t.Fatal("sealed mode", st, err)
-	}
+	requireObjectProtectionForTest(t, filepath.Join(root, name), protectedfs.PrivateSealed)
 	f, err := d.Verified(name, int64(len(data)), hash)
 	if err != nil {
 		t.Fatal(err)
@@ -42,9 +40,7 @@ func TestDurableExactRevision(t *testing.T) {
 	if err != nil || !bytes.Equal(got, data) {
 		t.Fatal("wrong bytes")
 	}
-	if err = os.Chmod(filepath.Join(root, name), 0600); err != nil {
-		t.Fatal(err)
-	}
+	setCustodyAccessForTest(t, filepath.Join(root, name), true)
 	if err = os.WriteFile(filepath.Join(root, name), bytes.Repeat([]byte("x"), len(data)), 0600); err != nil {
 		t.Fatal(err)
 	}
@@ -100,16 +96,14 @@ func TestRejectIncompleteAndEscape(t *testing.T) {
 }
 func TestPrivateRootRequired(t *testing.T) {
 	root := t.TempDir()
-	if err := os.Chmod(root, 0755); err != nil {
-		t.Fatal(err)
-	}
+	makeBroadRootForTest(t, root)
+	before := rootProtectionSnapshotForTest(t, root)
 	if d, err := Open(root); err == nil {
 		d.Close()
 		t.Fatal("insecure existing root accepted")
 	}
-	st, err := os.Stat(root)
-	if err != nil || st.Mode().Perm() != 0755 {
-		t.Fatal("existing permissions were silently changed", err)
+	if rootProtectionSnapshotForTest(t, root) != before {
+		t.Fatal("existing permissions were silently changed")
 	}
 }
 func TestObservationDoesNotCreateRoot(t *testing.T) {
@@ -156,15 +150,11 @@ func TestStableStorageIdentityAndCorruption(t *testing.T) {
 		t.Fatal("different stores share identity")
 	}
 	marker := filepath.Join(root, StorageIdentityName)
-	if err = os.Chmod(marker, 0600); err != nil {
-		t.Fatal(err)
-	}
+	setCustodyAccessForTest(t, marker, true)
 	if err = os.WriteFile(marker, []byte("invalid"), 0600); err != nil {
 		t.Fatal(err)
 	}
-	if err = os.Chmod(marker, 0400); err != nil {
-		t.Fatal(err)
-	}
+	setCustodyAccessForTest(t, marker, false)
 	if !errors.Is(d.CheckIdentity(), ErrStorageIdentity) {
 		t.Fatal("changed storage identity accepted")
 	}

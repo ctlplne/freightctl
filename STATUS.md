@@ -30,7 +30,12 @@ native replays remain owed. F249 requires actual Windows inherited-ACE readback
 before the unchanged refusal assertion;no native pass is claimed. Detailed bindings
 stay in the item manifests and docs/qualification/remaining.json.
 
-Next:wire immutable Windows custody/setup,repair the newly reached native browser
+F251 wires custody roots,identity,staging,writers and generated/sealed paths to
+held-object protection. Writable staging with an exact digest is now refused by
+verified reads;the observed local red turns green. Existing focused lifecycle
+checks pass;native Windows flush/link/recovery and setup integration remain owed.
+
+Next:wire Windows setup,repair the newly reached native browser
 and protocol failures,then complete all remaining baseline/AX/FINISH outcomes.
 Local inference remains off;local resource constraints and F026 hold remain.
 

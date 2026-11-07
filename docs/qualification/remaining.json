@@ -1168,7 +1168,8 @@
         "docs/qualification/evidence/F245-private-staging-and-sealed-protection.json",
         "docs/qualification/evidence/F236-native-security-and-runtime-terminal-ci.json",
         "docs/qualification/evidence/F247-exchange-authority-fixture.json",
-        "docs/qualification/evidence/F249-held-inherited-ace-precondition.json"
+        "docs/qualification/evidence/F249-held-inherited-ace-precondition.json",
+        "docs/qualification/evidence/F251-held-private-custody.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -1233,13 +1234,14 @@
         "F243 repairs original receive-browser setup permission failure:the fixture actor receives explicit temporary operator grants only to register its owned connection;ordinary account commands remove them before workflow draft/approval,source acceptance and browser login. Exact same actor/root,advanced authority and final seven restricted permissions are asserted. Production registration requirements and recipient/no-forward assertions remain. Compile/vet pass only;actual original native browser replay owed.",
         "F245 adds explicit private staging/sealed protection. Unix exact0600/0400 remains;Windows sealed owner read plus link-required WRITE_ATTRIBUTES excludes data/append/EA writes,execution,deletion and explicit ACL/owner grants. Held descriptor checks precede/follow sealing;already-sealed is idempotent. Local same-object hard-link/exact-byte/policy cases and Windows compile/vet pass. A new actual Windows reopen-for-write refusal case is prepared only. Custody/setup wiring and full native proof remain owed.",
         "F247 repairs two original native authority-negative fixtures:label changes preserve exact historical receipts;removing only write while retaining read/list/deliver advances actual authority and must conceal old receipts/commands. Original ErrNotFound/zero-row assertions remain. Compile/vet pass only;native proof owed. F236 records original e874 terminal18/41 with29 pass/12 fail and the open Windows inherited-ACE security refusal.",
-        "F249 triages the original Windows inherited-ACE security refusal by requiring one actual applied DACL entry with INHERITED_ACE before the unchanged ValidateFile refusal. Only numeric flags are reported;no descriptor/SID/path contents are emitted. If Windows normalizes the flag,the test fails at the precondition;no skip or inferred security pass. Native Windows readback/refusal remain owed;compilation/vet pass only."
+        "F249 triages the original Windows inherited-ACE security refusal by requiring one actual applied DACL entry with INHERITED_ACE before the unchanged ValidateFile refusal. Only numeric flags are reported;no descriptor/SID/path contents are emitted. If Windows normalizes the flag,the test fails at the precondition;no skip or inferred security pass. Native Windows readback/refusal remain owed;compilation/vet pass only.",
+        "F251 wires private missing-root creation,held-root exclusive staging,storage identity,writers,generated state,sealing and verified acceptance to actual protection profiles. Identity/objects bind Lstat to the opened physical object. New local regression observed exact-hash writable staging incorrectly readable,then rejects it until sealed. Focused original lifecycle/corruption/concurrent initialization/partial retention/projection tests,architecture,vet,integration compilation and Windows compilation/vet pass. Recovery data Sync and all directory-sync/hard-link obligations remain unchanged;actual Windows flush/link/recovery and full source runtime replay owed. Setup integration remains open."
       ],
       "current_item": {
-        "id": "F249",
-        "state": "Open Windows security failure instrumented;actual applied descriptor/refusal owed",
-        "proof": "Original e874 security failure preserved;native test compilation/vet only",
-        "next": "Push verified native batch;continue Windows custody/setup wiring and full remaining implementation/qualification"
+        "id": "F251",
+        "state": "Custody protection wired;Windows runtime/setup remain owed",
+        "proof": "Observed writable-staging red/focused local green;native Windows compilation/vet only",
+        "next": "Wire setup references;repair reached native failures and finish remaining implementation/qualification"
       }
     }
   ],

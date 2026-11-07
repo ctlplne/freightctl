@@ -8,6 +8,7 @@ import (
 	"os"
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
+	"github.com/ctlplne/freightctl/internal/protectedfs"
 )
 
 // GeneratedSlotState observes only an intent-owned flat object name. Partial
@@ -22,20 +23,22 @@ func (d *Disk) GeneratedSlotState(ctx context.Context, name string) (string, err
 	if err := d.CheckIdentity(); err != nil {
 		return "", err
 	}
-	st, err := d.root.Lstat(name)
+	file, err := d.openObject(name)
 	if errors.Is(err, os.ErrNotExist) {
 		return "absent", nil
 	}
 	if err != nil {
 		return "", err
 	}
-	if !st.Mode().IsRegular() {
+	defer file.Close()
+	state, err := protectedfs.Protection(file)
+	if err != nil {
 		return "", ErrIntegrity
 	}
-	switch st.Mode().Perm() {
-	case 0600:
+	switch state {
+	case protectedfs.PrivateWritable:
 		return "partial", nil
-	case 0400:
+	case protectedfs.PrivateSealed:
 		return "sealed", nil
 	}
 	return "", ErrIntegrity
@@ -86,7 +89,7 @@ func (d *Disk) StageGenerated(ctx context.Context, name string, maximum int64, g
 	if err := d.CheckIdentity(); err != nil {
 		return 0, "", err
 	}
-	f, err := d.root.OpenFile(name, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0600)
+	f, err := protectedfs.CreateAt(d.root, name)
 	if err != nil {
 		return 0, "", err
 	}
@@ -106,7 +109,7 @@ func (d *Disk) StageGenerated(ctx context.Context, name string, maximum int64, g
 	if err = ctx.Err(); err != nil {
 		return 0, "", err
 	}
-	if err = f.Chmod(0400); err == nil {
+	if err = protectedfs.SealReadOnly(f); err == nil {
 		err = f.Sync()
 	}
 	if err != nil {

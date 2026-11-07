@@ -3,6 +3,7 @@ package protectedfs
 import (
 	"errors"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -17,6 +18,46 @@ func CreateDirectoryExclusive(path string) (*os.File, error) {
 		return nil, errors.Join(err, f.Close())
 	}
 	return f, nil
+}
+
+// EnsureDirectory creates missing private directories without changing an
+// existing object's permissions. Only the final configured directory must be
+// private;an existing shared ancestor is never adopted as private storage.
+func EnsureDirectory(path string) error {
+	path = filepath.Clean(path)
+	f, err := os.Open(path)
+	if err == nil {
+		return errors.Join(ValidateDirectory(f), f.Close())
+	}
+	if !errors.Is(err, os.ErrNotExist) {
+		return err
+	}
+	parent := filepath.Dir(path)
+	if parent == path {
+		return ErrPrivacy
+	}
+	info, err := os.Stat(parent)
+	if errors.Is(err, os.ErrNotExist) {
+		if err = EnsureDirectory(parent); err != nil {
+			return err
+		}
+	} else if err != nil {
+		return err
+	} else if !info.IsDir() {
+		return ErrPrivacy
+	}
+	f, err = CreateDirectoryExclusive(path)
+	if errors.Is(err, os.ErrExist) {
+		// A concurrent initializer may have created it;validate the winner.
+		f, err = os.Open(path)
+		if err == nil {
+			return errors.Join(ValidateDirectory(f), f.Close())
+		}
+	}
+	if err != nil {
+		return err
+	}
+	return f.Close()
 }
 
 func privateLeaf(name string) bool {

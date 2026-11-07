@@ -1,0 +1,211 @@
+{
+  "schema_version": 1,
+  "id": "F251",
+  "observed_at": "2026-11-07",
+  "base_candidate": "638d156cf16820b165cc8e6310f62daddf2d8458",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Custody platform protection wired;native Windows persistence qualification owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "a2c21795847271027cb61545153d543e5795e53b54ed37bd493b9408f2b8cf7d",
+      "bytes": 12175
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "2636582486f17bbdb7aaaf178cddfdc6976c63e6d7de6ec897c50f1d92aa23b9",
+      "bytes": 374162
+    },
+    {
+      "reference": "docs/security/protected-files.md",
+      "sha256": "bc98366eb6b2d5c13e78fad76a8d4fb1daab2cac7afc9adcf78afaca6aa809ba",
+      "bytes": 6993
+    },
+    {
+      "reference": "internal/checks/projection_test.go",
+      "sha256": "032d59dbc71ca2cbc2d8bc715df4cc31afa3daba45904bb45cd2324903d5ae2d",
+      "bytes": 13699
+    },
+    {
+      "reference": "internal/custody/custody.go",
+      "sha256": "c72fa799f7e1ec1013bf4fe468913779e06534089b9abb1ff8eb1be5d217bfa0",
+      "bytes": 6059
+    },
+    {
+      "reference": "internal/custody/custody_test.go",
+      "sha256": "a1cc850a8bbb9fb3be163c9bdfc62aca315a8efc71d75c60337017e5f9faeede",
+      "bytes": 6191
+    },
+    {
+      "reference": "internal/custody/generated.go",
+      "sha256": "8ffb27355fe306de4f544e24f8116fb72f13bcdaec6ea7c357c6dac9c4c262d6",
+      "bytes": 3158
+    },
+    {
+      "reference": "internal/custody/generated_test.go",
+      "sha256": "566612e973119421f29760f422744801d1f25a29c7ff08cd1bbc5f9fe68e575a",
+      "bytes": 1658
+    },
+    {
+      "reference": "internal/custody/identity.go",
+      "sha256": "feb125517dce598f73df9a51cd9464cea37fbc352db7f9d794fdc1c3f691d485",
+      "bytes": 2667
+    },
+    {
+      "reference": "internal/custody/protection_test.go",
+      "sha256": "087a38183c8b5e10c2804653d262bb73b7d0cb4c70be57e30d177508f20baf03",
+      "bytes": 2447
+    },
+    {
+      "reference": "internal/custody/rechecks.go",
+      "sha256": "ec97541b4375b754f320b67ccb0b6c474302b9e5b3232c36c45864fe620951c8",
+      "bytes": 6246
+    },
+    {
+      "reference": "internal/custody/rechecks_test.go",
+      "sha256": "f9f561e235ff68ad44fecf0425752e9b787435c21285bc5fdadcdaa2c4924fe9",
+      "bytes": 1401
+    },
+    {
+      "reference": "internal/custody/reference_access_other_test.go",
+      "sha256": "26effee49ed9baec553a2514a6494197c7eb35da14d0d7110cf243eaa83eede9",
+      "bytes": 585
+    },
+    {
+      "reference": "internal/custody/reference_access_windows_test.go",
+      "sha256": "e25f5077ac4b696f4193db29619b1e8ca43e495cda86666011ef69977cac0eb3",
+      "bytes": 2176
+    },
+    {
+      "reference": "internal/custody/sealed.go",
+      "sha256": "0d9f18c174f985f37cfc06bb969366105d5ccab5bcaf4b429e79a7273f698ae3",
+      "bytes": 1876
+    },
+    {
+      "reference": "internal/custody/writer.go",
+      "sha256": "732ee77ee45a63e8c5860d789e8772823521e0c52997f669247e263a6a7e636e",
+      "bytes": 12526
+    },
+    {
+      "reference": "internal/protectedfs/create.go",
+      "sha256": "869cebebd87eee7f6b1719e68649aad4c9b78900b7ec1283785b8d3f94666d2b",
+      "bytes": 2680
+    }
+  ],
+  "red": [
+    {
+      "reference": ".private/freightctl-f251-writable-staging-red.log",
+      "test": "TestExactDigestDoesNotMakeWritableStagingReadableAsImmutableCustody",
+      "observed": "exact hash admitted writable staging as immutable custody <nil>",
+      "candidate": "638d156cf16820b165cc8e6310f62daddf2d8458 plus new regression only"
+    },
+    {
+      "candidate": "e87483babb4e32f8a3aaf78d13f8374d842fa78b",
+      "run": 42354252248,
+      "job": 128348737979,
+      "url": "https://github.com/ctlplne/freightctl/actions/jobs/128348737979",
+      "observed": "Original native custody/checks roots fail Unix-mode privacy assumptions"
+    }
+  ],
+  "changed": [
+    "EnsureDirectory creates missing private directories and validates existing final directories without changing permissions. Held configured root is validated again before identity initialization.",
+    "All ordinary/generated/revision/identity staging uses private exclusive held-root creation;sealing uses explicit platform protection. Sync,close,directory sync,atomic identity link,quota,intents and SQL acceptance ordering remain.",
+    "Identity and regular object reads bind Lstat to opened-file identity. Verified reads require actual private sealed protection as well as exact length/hash. Generated/recheck paths distinguish private writable partials from sealed objects.",
+    "Original recovery re-sync remains required,including process death after sealing before original sync. No Windows flush success or alternative durability semantics are assumed.",
+    "Original local corruption/privacy/partial tests use actual platform ACLs or Unix modes;exact privacy and unchanged-existing-root assertions remain. Projection tests inspect held-object sealed protection."
+  ],
+  "green": [
+    "New writable-staging regression red before and focused green after,including complete sealing,independent exact-byte readback and unchanged recovery re-sync.",
+    "Focused existing exact revision,overflow/cancel/incomplete generation,private root refusal/no mutation,identity corruption/no recreation,concurrent initialization,partial retention/no overwrite and projection cases pass.",
+    "Affected formatting/vet,architecture,integration compilation and Windows custody/checks compilation/vet pass."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f251-architecture.log",
+      "sha256": "3e3869f8ebe14b03cbc8822e2f970349253b7bc617cd333421d32b27cafe6803",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f251-custody-green.log",
+      "sha256": "657bc5eb296dd56997ba285589dfef0af48cad12f2e0a51640aaa964cd73e1be",
+      "bytes": 59
+    },
+    {
+      "reference": ".private/freightctl-f251-final-custody-green.log",
+      "sha256": "82cc1225076e1b38d91654495cfb0ccf336df2bbdb53489247c09af92419e350",
+      "bytes": 117
+    },
+    {
+      "reference": ".private/freightctl-f251-final-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f251-final-nested-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f251-final-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f251-final-windows-custody-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f251-final-windows-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f251-format.log",
+      "sha256": "e2bdbb2ec9586816cb17b3393eca9d7c3da9e16286f4a42bd9ec5cc18fb5880c",
+      "bytes": 112
+    },
+    {
+      "reference": ".private/freightctl-f251-integration-compile.log",
+      "sha256": "916ea4244d3ba8e1c315c26965bcc738196ad5b6cc98668a3ae4fa42789a57e9",
+      "bytes": 153
+    },
+    {
+      "reference": ".private/freightctl-f251-nested-root-green.log",
+      "sha256": "6410a15c7acfa9aa4e0485c784c18aed7ef502f892bfd24eb67356c76c80a2be",
+      "bytes": 59
+    },
+    {
+      "reference": ".private/freightctl-f251-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f251-windows-checks-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f251-windows-custody-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f251-windows-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f251-writable-staging-red.log",
+      "sha256": "de3d30524611959f0555c5274f1812fd400d1c67db3e1c890b25b2b4e1afb1ec",
+      "bytes": 246
+    }
+  ],
+  "owed": [
+    "Actual original Windows root/identity/staging/sealing/hard-link/flush/recovery/corruption/reparse/restricted-token paths. Windows compilation is not runtime proof.",
+    "Wire setup reference parents/artifact creation and remaining protected reference fixtures.",
+    "The separate inherited-ACE security failure remains red until actual readback/refusal;all final-source baseline/AX/FINISH work remains owed."
+  ],
+  "resources": "OneCPU/192MiB local small filesystem/regression/static/compilation only;no local inference,PostgreSQL,Chrome,scanner or heavy peer. Retained35/source60 unchanged."
+}

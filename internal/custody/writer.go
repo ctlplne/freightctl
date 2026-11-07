@@ -11,6 +11,7 @@ import (
 	"time"
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
+	"github.com/ctlplne/freightctl/internal/protectedfs"
 	"github.com/ctlplne/freightctl/internal/store"
 	"github.com/ctlplne/freightctl/internal/vpath"
 )
@@ -109,7 +110,7 @@ func (s *Service) OpenRevisionWriter(ctx context.Context, scope store.Scope, vir
 	}
 	id := secure.NewID()
 	name := Name(scope.Tenant, scope.Partner, id)
-	data, err := s.Disk.root.OpenFile(name, os.O_RDWR|os.O_CREATE|os.O_EXCL, 0600)
+	data, err := protectedfs.CreateAt(s.Disk.root, name)
 	if err != nil {
 		return nil, err
 	}
@@ -348,7 +349,7 @@ func (w *RevisionWriter) Close() error {
 	}
 	w.file.Size = w.end
 	w.file.SHA256 = hex.EncodeToString(h.Sum(nil))
-	if err = w.data.Chmod(0400); err != nil {
+	if err = protectedfs.SealReadOnly(w.data); err != nil {
 		return w.fail(err)
 	}
 	if err = w.data.Sync(); err != nil {

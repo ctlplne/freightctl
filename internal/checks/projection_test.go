@@ -14,6 +14,7 @@ import (
 	"testing"
 
 	"github.com/ctlplne/freightctl/internal/custody"
+	"github.com/ctlplne/freightctl/internal/protectedfs"
 )
 
 func projectionContract(t testing.TB) (Policy, RecordProjection) {
@@ -62,13 +63,14 @@ func TestRecordProjectionPrivateStageSealsOnlyCompleteOutputs(t *testing.T) {
 		if e != nil || report.Code != "transformed" || size != report.OutputBytes || hash != report.OutputSHA256 {
 			t.Fatal("sealed custody bytes differ from complete projection", e)
 		}
-		st, e := os.Stat(filepath.Join(path, name))
-		if e != nil || st.Mode().Perm() != 0400 {
-			t.Fatal("generated source is mutable", e)
-		}
 		reader, e := disk.VerifiedContext(t.Context(), name, size, hash)
 		if e != nil {
 			t.Fatal(e)
+		}
+		protection, e := protectedfs.Protection(reader)
+		if e != nil || protection != protectedfs.PrivateSealed {
+			reader.Close()
+			t.Fatal("generated source is mutable", e)
 		}
 		actual, e := io.ReadAll(reader)
 		reader.Close()

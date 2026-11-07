@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
+	"github.com/ctlplne/freightctl/internal/protectedfs"
 )
 
 func TestRecheckInterruptedReadRetainsItsReservedPartialObject(t *testing.T) {
@@ -31,9 +32,10 @@ func TestRecheckInterruptedReadRetainsItsReservedPartialObject(t *testing.T) {
 		t.Fatal(err)
 	}
 	st, err := d.root.Stat(name)
-	if err != nil || st.Size() != 32768 || st.Mode().Perm() != 0600 {
+	if err != nil || st.Size() != 32768 {
 		t.Fatal(st, err)
 	}
+	requireObjectProtectionForTest(t, filepath.Join(d.root.Name(), name), protectedfs.PrivateWritable)
 	f, err := d.root.Open(name)
 	if err != nil {
 		t.Fatal(err)

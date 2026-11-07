@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 
+	"github.com/ctlplne/freightctl/internal/protectedfs"
 	"github.com/ctlplne/freightctl/internal/store"
 )
 
@@ -29,20 +30,22 @@ func (r recheckReader) Read(p []byte) (int, error) {
 // intent-owned objects. Incomplete objects stay in place; they are never erased
 // to obtain a pass. Three pre-approved slot pairs bound interrupted staging.
 func (d *Disk) recheckObject(ctx context.Context, name string, size int64, digest string) (exists, partial bool, err error) {
-	st, err := d.root.Lstat(name)
+	observed, err := d.openObject(name)
 	if errors.Is(err, os.ErrNotExist) {
 		return false, false, nil
 	}
 	if err != nil {
 		return false, false, err
 	}
-	if !st.Mode().IsRegular() {
-		return false, false, ErrIntegrity
+	state, inspectErr := protectedfs.Protection(observed)
+	closeErr := observed.Close()
+	if inspectErr != nil || closeErr != nil {
+		return false, false, errors.Join(ErrIntegrity, inspectErr, closeErr)
 	}
-	if st.Mode().Perm() == 0600 {
+	if state == protectedfs.PrivateWritable {
 		return true, true, nil
 	}
-	if st.Mode().Perm() != 0400 {
+	if state != protectedfs.PrivateSealed {
 		return false, false, ErrIntegrity
 	}
 	file, err := d.VerifiedContext(ctx, name, size, digest)
@@ -51,7 +54,7 @@ func (d *Disk) recheckObject(ctx context.Context, name string, size int64, diges
 	}
 	defer file.Close()
 	// Verification after an uncertain commit must establish persistence now,
-	// including a process death after chmod but before the original sync.
+	// including a process death after sealing but before the original sync.
 	if err = file.Sync(); err != nil {
 		return false, false, err
 	}
