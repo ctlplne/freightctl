@@ -208,6 +208,10 @@ func TestJSONRecordsSQLRejectsCrossFormatReportsWhileKeepingExactValidTransition
 				}
 				candidate := *current
 				candidate.State, candidate.Revision = "passed", current.Revision+1
+				// Complete the lease lifecycle in both candidates. Keeping the
+				// worker would make a generic state/worker constraint reject even
+				// the correct report and hide the cross-format guard under test.
+				candidate.WorkerID, candidate.LeaseUntil = "", nil
 				engine, code := policyEngine(policy), policySuccess(policy)
 				if forged {
 					if name != "csv" {
@@ -225,7 +229,7 @@ func TestJSONRecordsSQLRejectsCrossFormatReportsWhileKeepingExactValidTransition
 				transaction.Tx.Rollback(f.ctx)
 				if forged {
 					var constraint *pgconn.PgError
-					if !errors.As(err, &constraint) || constraint.Code != "23514" {
+					if !errors.As(err, &constraint) || constraint.Code != "23514" || constraint.ConstraintName != "" || constraint.Message != "invalid file check transition" {
 						t.Fatal("cross-format report bypassed actual SQL guard", err)
 					}
 				} else if err != nil {

@@ -52,6 +52,12 @@ migration bytes and retained35 are unchanged. Focused/full Go,metadata/retained
 stand-ins,architecture/vet and syntax checks pass. Actual role-write refusal,
 fence/scope/registration and original native replays remain compiled-only/owed.
 
+F211 fixes original security-test preconditions while retaining/tightening their
+assertions:HTTP negative read uses an explicitly owner-only namespace entry;
+rejected release sends a well-formed forged hash;completed SQL report candidates
+clear worker/lease and require the intended guard error. Production rules are
+unchanged. Integration compile/vet pass;actual original native replays stay owed.
+
 Schema3 records.project binds an owned checked input,approved exact task,one
 durable processing intent,slots and events/receipt. Stable work keys select one
 historical attempt;current status is separate. New artifacts stay held for fresh

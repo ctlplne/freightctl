@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "id": "F211",
+  "observed_at": "2026-11-07",
+  "base_candidate": "7e6ca731c2b393ea8e2a677dbef417657951abb3",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Original native security fixtures corrected to exercise intended controls;actual replay owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "f799333b754ab2424403bdd445a0a48bff080638c199f1000fea64d43f7b1809",
+      "bytes": 13619
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "a02276b4c0fdadcfe3cdfc52123c0b5a020911aee06e810925011069c8fdd7ed",
+      "bytes": 363146
+    },
+    {
+      "reference": "internal/api/artifact_http_integration_test.go",
+      "sha256": "bd130766c66770ab3e36bec37321b7fa0f8d27e5d3e73149950e4722bf0e0cec",
+      "bytes": 5391
+    },
+    {
+      "reference": "internal/api/json_records_integration_test.go",
+      "sha256": "b788581d61b564fefb501239e4f02029ac50b5b51e7d3673b9d70f53d81bff7c",
+      "bytes": 11255
+    },
+    {
+      "reference": "internal/checks/json_records_integration_test.go",
+      "sha256": "d0d441f0ad1f5c79355be12a683b52d250a580d28a08e36b6614db1d494a101b",
+      "bytes": 16080
+    }
+  ],
+  "original_failures": [
+    {
+      "candidate": "91ed18d4aa2bb8900f684035c241f5b8d30a37b1",
+      "run": 42348791162,
+      "job": 128332262307,
+      "url": "https://github.com/ctlplne/freightctl/actions/jobs/128332262307",
+      "test": "TestArtifactHTTPNamespaceValidatorReplacementAndCurrentIntake",
+      "observation": "Expected unauthorized404,but current same-partner read/list actor receives304. Fixture used default0640 publication mode,which grants that actor partner-group read."
+    },
+    {
+      "candidate": "91ed18d4aa2bb8900f684035c241f5b8d30a37b1",
+      "run": 42348791146,
+      "job": 128332262245,
+      "url": "https://github.com/ctlplne/freightctl/actions/jobs/128332262245",
+      "tests": [
+        "JSON/fixed/XML/XLSX HTTPS rejected-release cases",
+        "TestJSONRecordsSQLRejectsCrossFormatReportsWhileKeepingExactValidTransition"
+      ],
+      "observation": "Rejected release supplied empty report_hash and stopped at400 input validation before403 role/409 state checks. SQL candidates retained running worker/lease while setting passed,so generic file_checks_check rejected even the correct format."
+    }
+  ],
+  "changed": [
+    "Through ordinary versioned setstat API,HTTP fixture records mode0600 and verifies exact file/revision/mode before testing unauthorized conditional access. Expected404,header redaction,range,byte and intake assertions remain. No production default mode or authorization is changed.",
+    "Rejected-release fixture supplies a well-formed forged hash of its rejected report. Successful cases must still have their actual successful proof hash. Original readonly403,rejected409,held-byte and exact report assertions remain;public malformed-input checks remain unchanged.",
+    "Both SQL candidates clear worker/lease as ordinary completion does. Wrong-format refusal now requires23514 with the actual invalid-file-check-transition guard message and no unrelated constraint name;the correct bound format must still succeed. No SQL constraint,lease rule,engine assertion or byte binding is relaxed."
+  ],
+  "review_corrections": [
+    "Use the actual namespace command setstat;an initial unexecuted draft called it chmod. Corrected before native execution."
+  ],
+  "green": [
+    "Affected integration-tag compilation with -run ^$ only and vet pass. No actual PostgreSQL/HTTP/native profile executed locally."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f211-final-native-compile.log",
+      "sha256": "87d32433fb44eabff53bcd56f21d392007f6859fa0ab062e53389b72bbe06cdd",
+      "bytes": 153
+    },
+    {
+      "reference": ".private/freightctl-f211-final-native-fixture-compile.log",
+      "sha256": "bae0709780723243b8def7677af75de30a9b720ed4b32c64e688a675d71d9115",
+      "bytes": 149
+    },
+    {
+      "reference": ".private/freightctl-f211-final-revision-compile.log",
+      "sha256": "b65712e1c3d538b55754c0edc11a1e8bf526c9c05820933ce4b08be7892da27d",
+      "bytes": 151
+    },
+    {
+      "reference": ".private/freightctl-f211-final-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f211-fixture-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f211-native-fixture-compile.log",
+      "sha256": "41182c7852f7de578f3e223d17cd261e5ac5d6062dbb17bd4bcab06d62a8b9e3",
+      "bytes": 73
+    },
+    {
+      "reference": ".private/freightctl-f211-records.log",
+      "sha256": "826009b37d6c8254924b7fd1ee12981059544175f2c890ad4186b88b41b583b4",
+      "bytes": 106
+    }
+  ],
+  "owed": [
+    "Original exact native conditional HTTP,format release and five-format SQL negative/positive replays on the repair source.",
+    "All actual final-source native/browser/stock/security/race/restore/reproducibility and remaining baseline/AX/FINISH gates."
+  ],
+  "resources": "OneCPU/192MiB compilation only;no local PostgreSQL,Chrome,model,scanner or heavy peer. Retained35/source60 unchanged.",
+  "readiness": "No whole row,journey,AX,deployment,independent adoption or enterprise qualification granted."
+}

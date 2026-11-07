@@ -33,6 +33,16 @@ func TestArtifactHTTPNamespaceValidatorReplacementAndCurrentIntake(t *testing.T)
 	if json.Unmarshal(raw, &entry) != nil || entry.FileID != accepted.File.ID {
 		t.Fatal("ordinary exact replacement revision missing")
 	}
+	// The default published0640 mode grants partner-group read. Make this
+	// negative-authority fixture owner-only through the ordinary versioned API;
+	// an explicitly authorized group reader must not be called unauthorized.
+	privateMode := uint32(0600)
+	previousRevision := entry.Revision
+	exchangeAPIRequest(t, server, "POST", prefix+"/namespace/commands", cookie, map[string]string{"Origin": server.URL, "X-CSRF-Token": csrf, "Idempotency-Key": "validator-owner-only"}, exchangeAPIJSON(t, store.PathCommand{Operation: "setstat", Path: "/validator.dat", ExpectedRevision: &entry.Revision, Mode: &privateMode}), 200)
+	_, raw = exchangeAPIRequest(t, server, "GET", prefix+"/namespace/stat?path=/validator.dat", cookie, nil, nil, 200)
+	if json.Unmarshal(raw, &entry) != nil || entry.FileID != accepted.File.ID || entry.Mode != privateMode || entry.Revision != previousRevision+1 {
+		t.Fatal("owner-only fixture was not recorded")
+	}
 	var etag string
 	for _, target := range []string{path, prefix + "/files/" + accepted.File.ID} {
 		response, head := exchangeAPIRequest(t, server, "HEAD", target, cookie, nil, nil, 200)

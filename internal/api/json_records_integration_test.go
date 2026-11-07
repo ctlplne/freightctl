@@ -164,7 +164,17 @@ func structuredIntakeHTTPS(t *testing.T, format string) {
 			if bytes.Contains(raw, []byte("private sentinel")) || bytes.Contains(raw, []byte(`"0001"`)) || bytes.Contains(raw, []byte(`"00000001"`)) {
 				t.Fatal("check evidence disclosed raw record values")
 			}
-			decision := checks.ReleaseDecision{SHA256: accepted.File.SHA256, PolicyHash: configured.Hash, ReportHash: view.Check.ReportHash, Revision: view.Check.Revision}
+			reportHash := view.Check.ReportHash
+			if reportHash == "" {
+				if fixture.code == success || view.Check.State != "rejected" {
+					t.Fatal("successful validation lost its proof hash or rejection state differs")
+				}
+				// Rejection deliberately records no successful proof hash. Send a
+				// well-formed forged candidate so role/state gates are exercised;
+				// an empty hash would stop at public input validation instead.
+				reportHash = secure.Digest(view.Check.Report)
+			}
+			decision := checks.ReleaseDecision{SHA256: accepted.File.SHA256, PolicyHash: configured.Hash, ReportHash: reportHash, Revision: view.Check.Revision}
 			exchangeAPIRequest(t, server, "POST", checkURL+"/release", nil, map[string]string{"Authorization": "Bearer " + string(readOnly.Bytes), "Idempotency-Key": "readonly-release"}, exchangeAPIJSON(t, decision), 403)
 			if fixture.code != success {
 				if view.Check.State != "rejected" {
