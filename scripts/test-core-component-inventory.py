@@ -42,7 +42,7 @@ class ComponentContracts(unittest.TestCase):
         libraries = {v['name']:v for v in result['components'] if any(p['name'] == 'freightctl:ecosystem'
             and p['value'] == 'go-toolchain-package' for p in v.get('properties', []))}
         self.assertEqual(set(libraries), {'go/fmt', 'go/unsafe', 'go/vendor/example.test/leaf'})
-        self.assertTrue(all(v['version'] == 'go1.26.10' and 'hashes' not in v for v in libraries.values()))
+        self.assertTrue(all(v['version'] == 'go1.27.3' and 'hashes' not in v for v in libraries.values()))
         self.assertEqual(next(v['dependsOn'] for v in result['dependencies'] if v['ref'] == libraries['go/fmt']['bom-ref']),
             sorted(libraries[v]['bom-ref'] for v in ('go/unsafe','go/vendor/example.test/leaf')))
         properties = {v['name']:v['value'] for v in result['metadata']['component']['properties']}

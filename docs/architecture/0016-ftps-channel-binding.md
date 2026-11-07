@@ -19,3 +19,8 @@ The original reviewed candidate [ftpserverlib v0.32.7](https://github.com/fclair
 The receiving adapter now uses an auditable MIT-licensed pinned copy under `third_party/ftpserverlib`, with original/local file hashes and preserved upstream tests. Its explicit passive IP is validated before listening; port multiplexing is unavailable with that setting. Refusal-only command policy and active-socket wrappers let the adapter enforce TLS sequencing, numeric same-peer/unprivileged active destinations and cancellation. Numeric PORT/EPRT parsing does no DNS work, and EPRT accepts RFC2428 delimiters with matching address families. A socket EOF without TLS close notification remains an error instead of becoming apparent completion. Upstream test identities are generated at runtime instead of committing reusable private keys.
 
 Native ARM service and public CLI journeys exercise both TLS modes, passive/active sockets, opaque bytes, text mode, append/REST, namespace operations and interruption/foreign-ticket refusals against actual PostgreSQL/storage. They use an explicitly resumed Python TLS client stand-in. The Mac's curl/LibreSSL pairing remains refused because it does not resume the control ticket for data. The native GitHub stock-client and full engine gates remain pending. Receiving rows are implementing; sending rows remain planned. No whole FTPS row or customer journey is qualified.
+
+Compiler follow-up,2026-11-07(F387): the current application/build/CI pin is
+Go1.27.3. The original Go1.26.10 decision and qualified evidence above remain
+historical. The new official SDK includes the Go75804 fuzz coordinator fix;
+all affected native/runtime and final-source qualification remains owed.

@@ -83,7 +83,7 @@ def validate(raw, source):
     require(type(value['schema_version']) is int and value['schema_version'] == 1)
     require(value['kind'] == 'freightctl-windows-fs-api-observation-v1' and value['state'] == 'recorded')
     require(value['source_commit'] == source and re.fullmatch('[0-9a-f]{40}', source))
-    require(value['system'] == 'Windows' and value['architecture'] == 'amd64' and value['go_version'] == 'go1.26.10')
+    require(value['system'] == 'Windows' and value['architecture'] == 'amd64' and value['go_version'] == 'go1.27.3')
     require(value['phase'] == 'complete' and value['qualification_claim'] is False)
     boolean(value['elevated']); boolean(value['cleanup_absent'])
     require(value['filesystem'] in ('NTFS', 'ReFS', 'FAT', 'FAT32', 'exFAT', 'other', 'unobserved'))
@@ -179,7 +179,7 @@ def run():
         sources = {name:digest(ROOT/name) for name in SOURCES}
         phase = 'native-go'
         commands.append(command(ROOT, work, phase, ['go', 'env', '-json', 'GOOS', 'GOARCH', 'GOHOSTOS', 'GOHOSTARCH', 'GOVERSION'], 10, env))
-        require(load((work/'native-go.out').read_bytes()) == dict(GOOS='windows', GOARCH='amd64', GOHOSTOS='windows', GOHOSTARCH='amd64', GOVERSION='go1.26.10'))
+        require(load((work/'native-go.out').read_bytes()) == dict(GOOS='windows', GOARCH='amd64', GOHOSTOS='windows', GOHOSTARCH='amd64', GOVERSION='go1.27.3'))
         phase = 'build'
         binary = work/'windows-fs.exe'
         commands.append(command(ROOT, work, phase, ['go', 'build', '-p', '1', '-mod=readonly', '-trimpath', '-buildvcs=false', '-o', str(binary), './scripts/peers/windowsfs'], 120, env))

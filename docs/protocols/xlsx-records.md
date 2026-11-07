@@ -84,7 +84,7 @@ The package interpretation follows [ECMA-376](https://ecma-international.org/pub
 [Microsoft's SpreadsheetML structure](https://learn.microsoft.com/en-us/office/open-xml/spreadsheet/structure-of-a-spreadsheetml-document),
 [shared-string structure](https://learn.microsoft.com/en-us/office/open-xml/spreadsheet/working-with-the-shared-string-table)
 and [PKWARE APPNOTE6.3.10](https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT).
-The implementation uses the repository-pinned Go1.26.10 decoder and ZIP reader.
+The implementation uses the repository-pinned Go1.27.3 decoder and ZIP reader.
 
 GitHub's document-container workflow prepares stock Python ZIP inputs and pinned
 [XlsxWriter3.3.1](https://pypi.org/project/xlsxwriter/3.3.1/) workbooks on native

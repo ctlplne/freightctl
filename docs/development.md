@@ -2,7 +2,7 @@
 
 For the one-time first tenant, partner and administrator commands, start with [first-run enrollment](first-run.md). The low-level enrollment commands below remain available to explicit deployment administrators for development and maintenance.
 
-This is an assisted development profile, not a production installer. It needs Docker, Python 3, stock curl and Go; `scripts/go.sh` selects Go 1.26.10 and keeps downloads/build caches in ignored `.cache/`. Initial dependency acquisition needs internet access. It does not claim a disconnected installation bundle.
+This is an assisted development profile, not a production installer. It needs Docker, Python 3, stock curl and Go; `scripts/go.sh` selects Go 1.27.3 and keeps downloads/build caches in ignored `.cache/`. Initial dependency acquisition needs internet access. It does not claim a disconnected installation bundle.
 
 Run at the repository root on local main:
 

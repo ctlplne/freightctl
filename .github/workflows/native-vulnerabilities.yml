@@ -68,7 +68,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
         with:
-          go-version: "1.26.10"
+          go-version: "1.27.3"
           cache: false
       - name: Actual native source scan and enforcing original converter
         shell: python
@@ -80,9 +80,9 @@ jobs:
           os.chdir(root);os.umask(0o077)
           private=root/'.private';private.mkdir(mode=0o700,exist_ok=True)
           prefix=root/'.cache/freightctl-govulncheck-1.9.0';prefix.mkdir(mode=0o700,parents=True,exist_ok=True)
-          env=dict(os.environ,GOCACHE=str(root/'.cache/go-build'),GOMODCACHE=str(root/'.cache/go-mod'),GOPATH=str(root/'.cache/go'),GOTOOLCHAIN='go1.26.10',GOBIN=str(prefix))
+          env=dict(os.environ,GOCACHE=str(root/'.cache/go-build'),GOMODCACHE=str(root/'.cache/go-mod'),GOPATH=str(root/'.cache/go'),GOTOOLCHAIN='go1.27.3',GOBIN=str(prefix))
           native=json.loads(subprocess.check_output(['go','env','-json','GOHOSTOS','GOHOSTARCH','GOOS','GOARCH','GOVERSION'],env=env,timeout=None))
-          expected={'GOHOSTOS':env['FREIGHTCTL_EXPECTED_GOOS'],'GOOS':env['FREIGHTCTL_EXPECTED_GOOS'],'GOHOSTARCH':env['FREIGHTCTL_EXPECTED_GOARCH'],'GOARCH':env['FREIGHTCTL_EXPECTED_GOARCH'],'GOVERSION':'go1.26.10'}
+          expected={'GOHOSTOS':env['FREIGHTCTL_EXPECTED_GOOS'],'GOOS':env['FREIGHTCTL_EXPECTED_GOOS'],'GOHOSTARCH':env['FREIGHTCTL_EXPECTED_GOARCH'],'GOARCH':env['FREIGHTCTL_EXPECTED_GOARCH'],'GOVERSION':'go1.27.3'}
           if native!=expected:raise RuntimeError('native host and source configuration differ')
           print(json.dumps({'native_source_configuration':native,'runtime_platform_qualified':False}),flush=True)
           subprocess.run(['go','install','golang.org/x/vuln/cmd/govulncheck@v1.9.0'],env=env,check=True,timeout=None)

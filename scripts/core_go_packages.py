@@ -61,7 +61,7 @@ def file_hash(path):
 def capture(raw, goroot, info):
     """Read a complete native graph and stream the exact selected source files."""
     root = Path(goroot).resolve(strict=True)
-    require(root.is_dir() and info['GoVersion'] == 'go1.26.10')
+    require(root.is_dir() and info['GoVersion'] == 'go1.27.3')
     packages = {}
     module_info = {v['Path']:v for v in info['Deps']}
     expected_modules = {info['Main']['Path'], *module_info}

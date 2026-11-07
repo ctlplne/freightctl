@@ -7,7 +7,10 @@ Current decisions and exact evidence are in
 [remaining.json](docs/qualification/remaining.json) and
 [artifact-exchange.json](docs/qualification/artifact-exchange.json).
 
-Current pushed/terminal candidate: `e6084081e986c04ea19e204b79908decdcdbd09c`.
+Current pushed candidate: `4d2d9ab3062e7b10bc44cc0629b42d5ed570f6ca`.
+F386 records its16 first queued original workflows;runtime outcomes remain owed.
+
+Previous terminal candidate: `e6084081e986c04ea19e204b79908decdcdbd09c`.
 F385 records all17 original workflows/39 terminal jobs:30pass,9fail. No original
 run was cancelled,rerun or substituted. Canonical participant SFTP with independent
 readback,JSON/Chrome and both FTPS workflow variants pass at this source. Core/
@@ -71,9 +74,14 @@ commands. It verifies custody,requires source read and destination write,and
 publishes an independent mapping. Focused/static checks pass;prepared native
 API/CLI/stock curl and security proofs remain owed.
 
-Next: push the verified owner-only batch now that required originals are
-terminal. Apply the corrected official toolchain consistently,repair original
-native failures and continue implementation while new CI runs. Repair original failures
+F387 consistently pins the official Go1.27.3 compiler across application,CI,
+reproduction,inventory and Windows evidence. Exact corrected coordinator source
+is required;all18 original fuzz commands remain unchanged. Focused local ARM/
+stand-in checks pass;every affected native and final-source outcome is owed.
+
+Next: continue independent implementation and original failure repair while
+current originals run. Push the next verified owner-only batch after required
+originals are terminal,then qualify the corrected toolchain and full product. Repair original failures
 and finish every mandatory final-source baseline/AX gate. F026 stays manual/
 owner-deferred. Trust Control, inference, provider/licensed peers, reference
 estate, owner license text and adoption inputs remain owed.

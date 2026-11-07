@@ -2,7 +2,7 @@ module github.com/ctlplne/freightctl
 
 go 1.26.0
 
-toolchain go1.26.10
+toolchain go1.27.3
 
 require (
 	github.com/ProtonMail/go-crypto v1.5.2

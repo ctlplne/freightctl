@@ -19,3 +19,8 @@ Direct randomness, digest, TLS configuration and secret handling belong under `i
 Core imports no `ee/` packages. No commercial portal or entitlement dependency is introduced. Offline packaging, signed artifacts and the full React/TypeScript operator interface remain mandatory later gates.
 
 Rejected: SQLite development mode, Redis coordination, filesystem paths supplied by clients, a shared unrelated database, success based on mocks, and treating a localhost copy as independent enterprise qualification.
+
+Compiler follow-up,2026-11-07(F387): the current application/build/CI pin is
+Go1.27.3. The original Go1.26.10 decision and qualified evidence above remain
+historical. The new official SDK includes the Go75804 fuzz coordinator fix;
+all affected native/runtime and final-source qualification remains owed.

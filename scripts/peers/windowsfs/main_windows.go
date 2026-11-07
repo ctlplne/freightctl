@@ -202,7 +202,7 @@ func directoryCase(name, directory string, access, flags uint32, useGo, reopen b
 func run(r *report) {
 	r.Phase = "preflight"
 	source := os.Getenv("GITHUB_SHA")
-	if os.Getenv("GITHUB_ACTIONS") != "true" || runtime.GOOS != "windows" || runtime.GOARCH != "amd64" || runtime.Version() != "go1.26.10" || !regexp.MustCompile(`^[0-9a-f]{40}$`).MatchString(source) {
+	if os.Getenv("GITHUB_ACTIONS") != "true" || runtime.GOOS != "windows" || runtime.GOARCH != "amd64" || runtime.Version() != "go1.27.3" || !regexp.MustCompile(`^[0-9a-f]{40}$`).MatchString(source) {
 		r.Error = operation{true, unknown}
 		return
 	}

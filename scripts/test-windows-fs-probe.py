@@ -31,7 +31,7 @@ def observation():
             close=op(True), parent_close=op(name == 'reopened-directory-read-write'), readback=file,
             mode_bits=0o600 if file else 0, acl=acl()))
     return dict(schema_version=1, kind='freightctl-windows-fs-api-observation-v1', state='recorded',
-        source_commit=SOURCE, system='Windows', architecture='amd64', go_version='go1.26.10',
+        source_commit=SOURCE, system='Windows', architecture='amd64', go_version='go1.27.3',
         phase='complete', error=op(), elevated=False, filesystem='NTFS', directory_acl=acl(),
         cases=cases, cleanup=op(True), cleanup_absent=True, qualification_claim=False)
 
@@ -100,7 +100,7 @@ class WindowsObservationContracts(unittest.TestCase):
                 self.assertEqual(cwd, root)
                 body = b''
                 if name == 'source': body = (SOURCE+'\n').encode()
-                if name == 'native-go': body = json.dumps(dict(GOOS='windows', GOARCH='amd64', GOHOSTOS='windows', GOHOSTARCH='amd64', GOVERSION='go1.26.10')).encode()
+                if name == 'native-go': body = json.dumps(dict(GOOS='windows', GOARCH='amd64', GOHOSTOS='windows', GOHOSTARCH='amd64', GOVERSION='go1.27.3')).encode()
                 if name == 'build':
                     self.assertEqual(timeout, 120)
                     self.assertIn('-mod=readonly', argv); self.assertIn('-trimpath', argv)

@@ -1,0 +1,330 @@
+{
+  "schema_version": 1,
+  "id": "F387",
+  "observed_at": "2026-11-07",
+  "base_candidate": "4d2d9ab3062e7b10bc44cc0629b42d5ed570f6ca",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "Pin official Go1.27.3 consistently in module toolchain,wrapper,all23 CI selections,native source scans,reproducibility/package inventories and Windows peer/evidence. Preserve source language minimumGo1.26.0,module dependencies,action commit pins,all18 original fuzz commands,seeds/assertions,durations/workers,security coverage,local allowances and no-inference policy. Require exact native x86 SDK and whole corrected coordinator source hash before fuzzing. No context error is ignored by project code and no original finding is waived. Historical Go1.26.10 evidence/defects remain unchanged;active documentation identifies the new pin.",
+  "original_security_failure": {
+    "candidate": "e6084081e986c04ea19e204b79908decdcdbd09c",
+    "run_id": 42392977071,
+    "job_id": 128464256024,
+    "target": "FuzzFixedWidthContract",
+    "preserved_evidence": "F382-native-fuzz-deadline-triage.json"
+  },
+  "primary_sources": [
+    "https://github.com/golang/go/issues/75804",
+    "https://github.com/golang/go/commit/5a957dc",
+    "https://raw.githubusercontent.com/golang/go/go1.27.3/src/internal/fuzz/fuzz.go",
+    "https://go.dev/dl/?mode=json",
+    "https://go.dev/doc/devel/release#go1.27"
+  ],
+  "upstream_scope": "The official issue and corrected source confirm the parent/child cancellation window. It can also hide a crash report;the original missing input is not treated as evidence of harmlessness. The corrected toolchain must rerun the original application targets and all unreached targets.",
+  "red_green": "Actual e608408 native fuzz failure remains preserved. A native-package graph stand-in carrying the corrected SDK version first fails the old exact-version gate;updated exact-version gates pass and explicitly reject previous/unqualified versions. Complete selected-source/license/module/import graph,SBOM/reproduction/Windows contracts retain their original negative assertions. All18 original fuzz command lines are byte-identical.",
+  "local_proof_counts": {
+    "graph": 7,
+    "inventory": 7,
+    "reproduction": 8,
+    "windows_evidence": 9
+  },
+  "local_actual_sdk": {
+    "kind": "freightctl-toolchain-source-inspection-v1",
+    "GOARCH": "arm64",
+    "GOOS": "darwin",
+    "GOVERSION": "go1.27.3",
+    "coordinator_sha256": "db5a9c6f3b26220eb9fb1c144caf012a555c6adef785cb9d185426e508d9d2aa",
+    "coordinator_bytes": 35105,
+    "upstream_issue": 75804,
+    "fuzz_or_model_started": false
+  },
+  "local_actual_scope": [
+    "Official ARM SDK startup and common corrected coordinator fingerprint",
+    "Native ARM architecture checks and focused canonical SSH/DAV input guards only",
+    "Real pinned govulncheck converter consumes synthetic new-version reports with an offline fixture database;no source scan"
+  ],
+  "not_qualified": [
+    "New-compiler native fuzz and potential hidden original counterexample",
+    "Actual PostgreSQL/race/integration,stock/native peers,Windows/macOS,served browser,restore/recovery,image/security/reproducibility and every final-source baseline/AX/readiness outcome"
+  ],
+  "owed": [
+    "Replay original fixed-width and every other original fuzz target on native x86 with the corrected compiler and unchanged commands",
+    "Qualify all changed compiler/inventory/platform/native/security/reproducibility inputs against final source",
+    "Repair all remaining original failures and complete all mandatory baseline/AX/readiness gates;F026 remains manual/owner-deferred"
+  ],
+  "source_files": [
+    {
+      "reference": ".github/workflows/artifact-exchange.yml",
+      "sha256": "3f72898e956162937d28d39d8f88aac7c0d2f4eeaffd0b22f1dcddd96025e44c",
+      "bytes": 3148
+    },
+    {
+      "reference": ".github/workflows/core-checks.yml",
+      "sha256": "7d24fc8df1798129c83e201729a7972d9f6f32738d19dafae737d54dc9942316",
+      "bytes": 4711
+    },
+    {
+      "reference": ".github/workflows/document-containers.yml",
+      "sha256": "bcae84551e0df7debc13c2d914a6dc07fe88eacaedc076774ee0c82843cd05c7",
+      "bytes": 3878
+    },
+    {
+      "reference": ".github/workflows/first-run.yml",
+      "sha256": "06bbc2ca8a00fb5b8161fb5036e8676f641081bebdf02a1262e93dce373ee0f6",
+      "bytes": 2969
+    },
+    {
+      "reference": ".github/workflows/ftps-browser.yml",
+      "sha256": "5119eb83dd0dcd8c2557e8685187cddf6ae6d88e8dc786179725d20d0b566a93",
+      "bytes": 5768
+    },
+    {
+      "reference": ".github/workflows/ftps-client.yml",
+      "sha256": "8bfe0f4aec2f364d83ee944d7a440326a39804423ea20d755dd775285db215e4",
+      "bytes": 3916
+    },
+    {
+      "reference": ".github/workflows/ftps-dispatch.yml",
+      "sha256": "49719a25add935c1b2cce1c8e57fbf5592be9145b91196f9517649bf4723d418",
+      "bytes": 6416
+    },
+    {
+      "reference": ".github/workflows/ftps-workflows.yml",
+      "sha256": "66580c65e9c65ab1c6f818683c24998b237c030dc77f10da6c3c4a97c1c1fd5a",
+      "bytes": 9056
+    },
+    {
+      "reference": ".github/workflows/ftps.yml",
+      "sha256": "d830c9cca2a245a8d03180ec5015b418aa50503053e258846279e639b5961b69",
+      "bytes": 5030
+    },
+    {
+      "reference": ".github/workflows/full-foundation.yml",
+      "sha256": "24c97765d62047c448c4a40dcfa8fd5ca066beccf3b7ea76fc475f88969939ee",
+      "bytes": 1468
+    },
+    {
+      "reference": ".github/workflows/http-downloads.yml",
+      "sha256": "4c610cd90579df40219d4dc303a133841236c01a872394cdf3a5afe0c77bebeb",
+      "bytes": 2358
+    },
+    {
+      "reference": ".github/workflows/json-intake.yml",
+      "sha256": "bca1d7f7f2d15415f5b4feb3ea984d237e0dccfa5bb37fad1944f18703855de2",
+      "bytes": 7815
+    },
+    {
+      "reference": ".github/workflows/native-linux.yml",
+      "sha256": "5bd1d54d243cfc992f736b5d25b62eee4717e764536e89a699f2b610f43fd7bf",
+      "bytes": 12734
+    },
+    {
+      "reference": ".github/workflows/native-platforms.yml",
+      "sha256": "f435ef37cbbdc72ca9a8e47d10041544d09ccadc25deb908a3faa58ff13ec6c2",
+      "bytes": 3064
+    },
+    {
+      "reference": ".github/workflows/native-vulnerabilities.yml",
+      "sha256": "2105d1c0488c75e7150ec8dea45e5296b058a297437560c0d42e6d203e999987",
+      "bytes": 4470
+    },
+    {
+      "reference": ".github/workflows/reproducible-builds.yml",
+      "sha256": "73d61ab3da29483b2448a64ac207fca3b2e2f738a522c8e59c8e2fcaf600e699",
+      "bytes": 3637
+    },
+    {
+      "reference": ".github/workflows/scp.yml",
+      "sha256": "3b5ae2ed1a9905de149277411d4cba81f4c82071220e74c350f91c390cffbee0",
+      "bytes": 2525
+    },
+    {
+      "reference": ".github/workflows/stock-peers.yml",
+      "sha256": "4370bc56af8ecde42477ed75ec214583142d2d62706cde0f3f311e7e5df9feec",
+      "bytes": 6144
+    },
+    {
+      "reference": ".github/workflows/tus.yml",
+      "sha256": "1d3889f89e058edff864be66097d3742c4cfe4fbec310c92e81bc2d788db0bc2",
+      "bytes": 2673
+    },
+    {
+      "reference": "STATUS.md",
+      "sha256": "9e9a2c1b2fc0fdc1e0a88c59c1b70bedaed807fea5e6d35095369b32a0a61a9f",
+      "bytes": 5814
+    },
+    {
+      "reference": "docs/architecture/0001-foundation.md",
+      "sha256": "f5caf276617556c6dbae911bc1cc772945f1803bde0e93406ab3e1014df4adf4",
+      "bytes": 4522
+    },
+    {
+      "reference": "docs/architecture/0016-ftps-channel-binding.md",
+      "sha256": "808485eb37ca77690b49b96d25e4889bb8499a3313c6252ea27f27cc467ce981",
+      "bytes": 5491
+    },
+    {
+      "reference": "docs/development.md",
+      "sha256": "271472a9519ca34a3cfe5f5d0d9ece4f3bd426fad15a5b4aa1499172b1c9ecb1",
+      "bytes": 42188
+    },
+    {
+      "reference": "docs/protocols/xlsx-records.md",
+      "sha256": "a864ab97e323ec03ac156a2718f15f3ec16d59ebde6a683c4cf786a642810d93",
+      "bytes": 7256
+    },
+    {
+      "reference": "docs/qualification/ci.md",
+      "sha256": "fe943aeea8b67d4ea37e0f913e1ca7426bcbbf79c6ffd76f20136559c04c1b6b",
+      "bytes": 23668
+    },
+    {
+      "reference": "docs/qualification/evidence/F386-native-push.json",
+      "sha256": "42c41bd638cd92f3306ee21a42cfe244385b8c508d36199ca779bcbb617d8209",
+      "bytes": 5659
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "a3a368ef871f4d712cc6b52cf11bccf061046e82a3352e5555dde8bdac5030de",
+      "bytes": 521656
+    },
+    {
+      "reference": "go.mod",
+      "sha256": "57d419e76f1fc359d2f6fd473bdad996e5dd8057815a76e143587fe2f833aaf0",
+      "bytes": 1139
+    },
+    {
+      "reference": "scripts/core_go_packages.py",
+      "sha256": "94d51a2c76ed0d3fc24ba7d9c637379eef738c44d9a311254fd402248c52c226",
+      "bytes": 8126
+    },
+    {
+      "reference": "scripts/go.sh",
+      "sha256": "1c36defcedb4fdc413d013098b415346f79d1c73a09b46e25d87cbbae2b083eb",
+      "bytes": 191
+    },
+    {
+      "reference": "scripts/peers/windowsfs/main_windows.go",
+      "sha256": "5333bb093a2e74a9ed6e3d957f43ad1bbd97c38de30fc0d59f3614217e72c231",
+      "bytes": 10274
+    },
+    {
+      "reference": "scripts/qualify-repro-builds.py",
+      "sha256": "af17fe8c0589e476d5f8a5faa44245ffc0247a56ff4b4db085007535116c9f28",
+      "bytes": 20771
+    },
+    {
+      "reference": "scripts/qualify-windows-fs.py",
+      "sha256": "85c5376869e34265ad09a45761ea076043fd042dd46965e968b7f576cb915afa",
+      "bytes": 10341
+    },
+    {
+      "reference": "scripts/test-core-component-inventory.py",
+      "sha256": "9d11a00331057922325dcdbfe9931674a14dfa9f2d6dbad4aa581fbdfee9923e",
+      "bytes": 9128
+    },
+    {
+      "reference": "scripts/test-core-go-packages.py",
+      "sha256": "f5f9cb56864562d43045f74c936fb570a26cd95f738958d0cd769aae4cdb5bcf",
+      "bytes": 6918
+    },
+    {
+      "reference": "scripts/test-govulncheck-gate.py",
+      "sha256": "51dbd6936fcafc51828f9559bdea68143278e65d46d823e0cda3d84bb2394ee2",
+      "bytes": 3805
+    },
+    {
+      "reference": "scripts/test-windows-fs-probe.py",
+      "sha256": "f026ab4e74cfcb17e507ac6983997749fc1b9d7acc795a23b4b7bf30bb0c1e56",
+      "bytes": 10157
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f387-toolchain-red.log",
+      "sha256": "256ff9c87473fa37beca3f820720d55378c049ae5206df9764323765c36f963c",
+      "bytes": 1436
+    },
+    {
+      "reference": ".private/freightctl-f387-final-graph-focused.log",
+      "sha256": "371404efbea0e5bbe27729b5afb0973c5fa907a30f4f06716e1cfda4572cb83a",
+      "bytes": 105
+    },
+    {
+      "reference": ".private/freightctl-f387-inventory-focused.log",
+      "sha256": "3db2846aaaf0233767914f87f6cc5e07d159b00ab8b8f8516b2cece4e69d8d6d",
+      "bytes": 105
+    },
+    {
+      "reference": ".private/freightctl-f387-repro-focused.log",
+      "sha256": "3577c7629f2c686f4ba5b6ade0cafbca0fb62b5a9535931674c39ca1ebeb7053",
+      "bytes": 1614
+    },
+    {
+      "reference": ".private/freightctl-f387-windows-focused.log",
+      "sha256": "88e99df14c79b2b8b54e19bfe748593fc04331b4abf62e48aa612a926eb90bb4",
+      "bytes": 107
+    },
+    {
+      "reference": ".private/freightctl-f387-final-converter-focused.log",
+      "sha256": "346e34fa3195f9ac3e1761edf74c54449a6130e049a110532b48a656528325ca",
+      "bytes": 323
+    },
+    {
+      "reference": ".private/freightctl-f387-final-workflows.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f387-final2-native-workflow.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f387-original-fuzz-arguments.log",
+      "sha256": "7ea75cf74d4b5991cb6c8c2cb6948dc2214fd6fb67e30afdfcdfe07a5585f479",
+      "bytes": 89
+    },
+    {
+      "reference": ".private/freightctl-f387-syntax-final.log",
+      "sha256": "197843a7618ba55d8602f7627400b045d21ff6b9b5e62c7d0455f0469c97c666",
+      "bytes": 30
+    },
+    {
+      "reference": ".private/freightctl-f387-native-arm-version-final.log",
+      "sha256": "c14fe1cf7e9bdec37fd92e4d07564361530486d34ebbf0718fc8768685cf9c2a",
+      "bytes": 73
+    },
+    {
+      "reference": ".private/freightctl-f387-native-arm-architecture.log",
+      "sha256": "25909970d13cefb5dea7896c5b7b95e82c51218600c3236ddd8d348d2075a755",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f387-native-arm-focused.log",
+      "sha256": "037a1193875a1ffb0ed388432f0457119f73735258a94aac8336a862dec651e1",
+      "bytes": 131
+    },
+    {
+      "reference": ".private/freightctl-f387-native-arm-dav-focused.log",
+      "sha256": "f95a7a5940841fda4daecf99d696c4dfe4f305d8b4208d453068b18dab4cd12e",
+      "bytes": 55
+    },
+    {
+      "reference": ".private/freightctl-f387-final-pin-consistency.log",
+      "sha256": "ed7b6487707e0df84f233a018f53c879c1ce328ef3690a84c8d51489b5f714e1",
+      "bytes": 130
+    },
+    {
+      "reference": ".private/freightctl-f387-native-arm-coordinator.json",
+      "sha256": "8901a8dc5e92133a9e979ee77258b35a67070473c0e2810a85b4d7913bd699ef",
+      "bytes": 291
+    },
+    {
+      "reference": ".private/freightctl-f387-native-arm-sdk-inventory.json",
+      "sha256": "7d1b48f3c29c34596529c397a8cc428b5320da35b7f18f7872f7b3dcbcab623c",
+      "bytes": 733
+    }
+  ],
+  "active_workflow_compiler_selections": 23
+}

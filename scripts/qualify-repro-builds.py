@@ -22,7 +22,7 @@ import core_bom_schema as schema_gate
 import core_go_packages as go_packages
 
 ROOT = Path(__file__).resolve().parents[1]
-GO_VERSION = 'go1.26.10'
+GO_VERSION = 'go1.27.3'
 MODULE = 'github.com/ctlplne/freightctl'
 COMMANDS = ('source-identity', 'source-clean', 'native-go', 'source-archive', 'module-download', 'module-verify-before', 'prepare-build-id-tool',
     'build-a', 'build-id-a', 'inventory-a', 'packages-a', 'help-a', 'build-b', 'build-id-b', 'inventory-b', 'packages-b', 'help-b', 'module-verify-after')

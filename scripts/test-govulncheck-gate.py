@@ -20,7 +20,7 @@ def main():
     (database/'index/db.json').write_text('{"modified":"2026-01-01T00:00:00Z"}\n')
     (database/'index/modules.json').write_text('[]\n')
     env=dict(os.environ,GOMAXPROCS='1',GOMEMLIMIT='192MiB',GOTELEMETRY='off')
-    config={'config':{'protocol_version':'v1.0.0','scanner_name':'govulncheck','scanner_version':'v1.9.0','go_version':'go1.26.10','scan_level':'symbol','scan_mode':'source'}}
+    config={'config':{'protocol_version':'v1.0.0','scanner_name':'govulncheck','scanner_version':'v1.9.0','go_version':'go1.27.3','scan_level':'symbol','scan_mode':'source'}}
     osv={'osv':{'id':'GO-9999-0001','modified':'2026-01-01T00:00:00Z','details':'Synthetic converter contract; not an application finding.','affected':[{'package':{'name':'example.invalid/stand-in','ecosystem':'Go'}}],'database_specific':{'url':'https://example.invalid/stand-in'}}}
     module={'module':'example.invalid/stand-in','version':'v1.0.0'}
     def report(frame):return ('\n'.join(json.dumps(v) for v in (config,osv,{'finding':{'osv':'GO-9999-0001','trace':[frame]}}))+'\n').encode()

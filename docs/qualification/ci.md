@@ -17,7 +17,7 @@ The automatic workflows separate the work:
 
 Native Go/platform workflows select application, dependency and own-workflow changes plus manual dispatch. Linux also selects its PostgreSQL/GnuPG provisioning and metadata-restore utility/refusal inputs. Stock peers additionally select qualification scripts but exclude changes confined to Go `_test.go` files under `cmd/` and `internal/`, since those files are absent from the server build. Native Go tests still execute them. Application Go/SQL, browser/dependency, provisioning/qualification scripts and the stock workflow remain included. Manual dispatch can replay another candidate. A filtered stock job retains the last actual tested candidate; it does not become a new pass.
 
-Action commit IDs, Go 1.26.10, Node 26.13.0, lockfiles, source scanners and peer image inputs are pinned. Job logs record actual tools and runner/peer versions. Ubuntu AppArmor refused Playwright's downloaded Chromium shell (D101); selecting installed Chrome preserves `chromiumSandbox:true` without disabling host isolation. Protected GnuPG mounts run as their fixture-owning uid/gid (D100/D102), with original permissions and resource limits intact.
+Action commit IDs, Go 1.27.3, Node 26.13.0, lockfiles, source scanners and peer image inputs are pinned. Job logs record actual tools and runner/peer versions. Ubuntu AppArmor refused Playwright's downloaded Chromium shell (D101); selecting installed Chrome preserves `chromiumSandbox:true` without disabling host isolation. Protected GnuPG mounts run as their fixture-owning uid/gid (D100/D102), with original permissions and resource limits intact.
 
 Every workflow uses read-only contents access and checkout without persisted credentials. Pull requests use `pull_request`, receive no repository secrets and own fresh loopback fixtures. No workflow authors commits, uploads raw artifacts, publishes packages/images or deploys. No job starts inference or downloads weights. Real scanner work retains its separate 4 GiB/one-CPU allowance and is outside these jobs; scanner protocol fixtures and CSV checks start no engine.
 
@@ -82,3 +82,12 @@ image; the stopped malware scanner and owner-deferred F026 remain unchanged.
 At exact6ddcb30, [F077](evidence/F077-native-reproducible-core.json) passes both original native [ARM/x86 reproduction jobs](https://github.com/ctlplne/freightctl/actions/runs/41951088070):18commands,two source copies/empty caches,physical build-ID/final closures,14Go modules,exact UI/four runtime packages and214ARM/215x86toolchain package inputs. Pinned stock CycloneDX validation passes. This qualifies the frozen same-runner component gate only;independent-host repeats,complete build-tool/deployment inventory,license/signing/offline/platform gates remain open.
 
 [F078](evidence/F078-windows-filesystem-observation.json) records actual elevated NTFS API behavior while its unit job stays red:initial read-write directory handles flush0,read-only handles/reopen upgrades fail5,explicit protected ACLs match and Go mode bits stay0666/0777. No access-isolation or durability qualification. Core/Mac pass;four stock profiles pass,but arrivals-schedules has one unattributed command exit with0HTTP/browser/cleanup failures. Original97native application880/3/0 now exposes mixed fixture step grammarD176;the shared-parser repair and native Chrome final-header/response observer are prepared for original replay.
+
+F387 moves all active application,CI,reproduction,inventory and Windows peer
+compiler pins to Go1.27.3. [Go75804](https://github.com/golang/go/issues/75804)
+confirms the coordinator cancellation window;the corrected official SDK also
+preserves crash reporting. All18 original fuzz commands,seeds,assertions,durations
+and worker counts remain unchanged. CI records and requires the exact corrected
+coordinator source. Original failures remain retained;new native qualification
+and all final-source gates are owed. Historical Go1.26.10 results are not carried
+forward as qualification of this SDK.

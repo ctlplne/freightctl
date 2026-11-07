@@ -114,7 +114,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
         with:
-          go-version: "1.26.10"
+          go-version: "1.27.3"
           cache: false
       - name: Verify native runner architecture
         run: |
@@ -194,7 +194,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
         with:
-          go-version: "1.26.10"
+          go-version: "1.27.3"
           cache: false
       - name: Seed actual PostgreSQL through first-run commands
         run: |
@@ -235,11 +235,23 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
         with:
-          go-version: "1.26.10"
+          go-version: "1.27.3"
           cache: false
       - name: Bounded parser and authority fuzz checks on native x86_64
         run: |
           test "$(uname -m)" = x86_64
+          python3 - <<'PY'
+          import hashlib,json,subprocess
+          from pathlib import Path
+          call=lambda *args: subprocess.check_output(['sh','scripts/go.sh',*args],text=True).strip()
+          native=json.loads(call('env','-json','GOVERSION','GOOS','GOARCH'))
+          assert native==dict(GOVERSION='go1.27.3',GOOS='linux',GOARCH='amd64')
+          source=Path(call('env','GOROOT'))/'src/internal/fuzz/fuzz.go'
+          body=source.read_bytes()
+          assert b'err == ctx.Err() || err == fuzzCtx.Err() || isInterruptError(err)' in body
+          assert hashlib.sha256(body).hexdigest()=='db5a9c6f3b26220eb9fb1c144caf012a555c6adef785cb9d185426e508d9d2aa'
+          print(json.dumps(dict(kind='freightctl-native-fuzz-toolchain-v1',**native,coordinator_sha256=hashlib.sha256(body).hexdigest(),coordinator_bytes=len(body),upstream_issue=75804)))
+          PY
           sh scripts/go.sh test -timeout=0 ./internal/vpath -fuzz=FuzzCanonicalPath -fuzztime=5s -parallel=2
           sh scripts/go.sh test -timeout=0 ./internal/webdav -fuzz=FuzzDAVPropertySelection -fuzztime=5s -parallel=1
           sh scripts/go.sh test -timeout=0 ./internal/zipcontainer -fuzz=FuzzZIPContainer -fuzztime=5s -parallel=1

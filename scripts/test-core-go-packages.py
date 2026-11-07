@@ -32,7 +32,7 @@ def fixture(root, info):
 
 
 def info():
-    return dict(GoVersion='go1.26.10', Path='example.test/freightctl/cmd/freightctl',
+    return dict(GoVersion='go1.27.3', Path='example.test/freightctl/cmd/freightctl',
         Main={'Path':'example.test/freightctl'}, Deps=[{'Path':'example.test/dependency', 'Version':'v1.0.0'}])
 
 
@@ -64,6 +64,13 @@ class GoPackageContracts(unittest.TestCase):
         self.assertEqual(len(result['toolchain_files']), 5)
         self.assertNotIn(str(self.root), json.dumps(result))
         gate.reopen(result, self.root)
+
+    def test_previous_or_unqualified_toolchain_inventory_is_not_current_evidence(self):
+        for version in ('go1.26.10', 'go1.27.2', 'go1.27.3+unqualified'):
+            wrong = copy.deepcopy(self.info)
+            wrong['GoVersion'] = version
+            with self.assertRaises(ValueError):
+                gate.capture(raw(self.packages), self.root, wrong)
 
     def test_missing_extra_duplicate_cyclic_unresolved_or_wrong_module_graph_refuses(self):
         changes = [lambda p:p.pop(), lambda p:p.append(copy.deepcopy(p[0])),
