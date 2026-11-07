@@ -5,6 +5,7 @@ Only the exact child it starts can receive a stop signal. Not a stock peer.
 """
 from ci_resources import environment as ci_environment
 import hashlib
+import json
 import os
 from pathlib import Path
 import re
@@ -14,6 +15,28 @@ import time
 
 import ftps_collection_metadata as metadata
 from ftps_cli_governance import require
+
+
+def safe_failure_observation(name, code, diagnostic):
+    """Closed categories only;caller first verifies original process hashes."""
+    if (type(name) is not str or not re.fullmatch('cli-(explicit|implicit)-collection-source',name)
+            or type(code) is not int or code != 1 or type(diagnostic) is not bytes or len(diagnostic)>512):
+        return None
+    marker=b'freightctl: FTPS source fixture failed\n'
+    if not diagnostic.endswith(marker):
+        return None
+    try:
+        raw=diagnostic[:-len(marker)]
+        value=json.loads(raw)
+        if (type(value) is not dict or set(value)!={'kind','stage'}
+                or value['kind']!='freightctl-ftps-source-failure-v1'
+                or type(value['stage']) is not str
+                or value['stage'] not in {'serve','listener-close','witness-save','contact-budget','lifetime-expired','unclassified'}
+                or json.dumps(value,separators=(',',':')).encode()+b'\n' != raw):
+            return None
+        return value
+    except (ValueError,UnicodeError):
+        return None
 
 
 def counter(path, mode, stopped):

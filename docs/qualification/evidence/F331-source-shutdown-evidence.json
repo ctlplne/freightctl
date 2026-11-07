@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "id": "F331",
+  "observed_at": "2026-11-07",
+  "base_candidate": "48c6cee066d9f7a0cdbc65565230bee57868c498",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F331 preserves the original FTPS source exit failures and adds closed,original-output-bound shutdown diagnostics. Extract the existing final shutdown decision:observed red shows an expired fixture lifetime could be reported as clean requested stop,and all distinct failures collapse to a generic error. Refuse that unrequested expiry;retain serve/listener-close/witness-save/contact-budget/lifetime categories without private error strings. Exact hash-verified original stderr must match the closed two-field JSON plus fixed failure marker;forged categories,duplicates,extra fields,success/bool exit codes and tampered bytes cannot enter public diagnostics. Nine affected lifecycle/evidence methods and Go shutdown/drain guards pass;actual small loopback zero/queued-accept close preserves exact counts. Linux x86 compilation only;original native FTPS cause and full replay remain owed. No resource/contact/session/protocol/evidence boundary or assertion relaxed.",
+  "original_red": {
+    "candidate": "1b745e16d53bf3b20ed07c2242c53bb71a5d3619",
+    "run_id": 42374627349,
+    "job_ids": [
+      128409585361,
+      128409585498
+    ],
+    "observation": "Both original FTPS consent matrices fail cli-explicit-collection-source and original-output-contract;metadata browser reaches complete,cleanup state restored. Native source failure cause not classified yet."
+  },
+  "reds": [
+    {
+      "proof": ".private/freightctl-f331-shutdown-red.log",
+      "observation": "Extracted old shutdown decision accepts unrequested lifetime expiry and collapses distinct shutdown failures."
+    },
+    {
+      "proof": ".private/freightctl-f331-source-summary-red.log",
+      "observation": "Hash-bound valid source failure record is absent from public safe summary."
+    }
+  ],
+  "greens": [
+    "Closed shutdown categories and explicit lifetime-expiry refusal,without treating raw error text as authority or diagnostic data.",
+    "Nine affected source lifecycle/complete-evidence/privacy methods pass,including positive original-output binding and tampered stderr/duplicate/private-category refusals.",
+    "Actual tiny Darwin/ARM loopback listener closes zero and one queued accepts exactly;repeat close idempotent. This does not qualify native Linux FTPS shutdown.",
+    "Go vet,architecture and Linux x86 compilation pass;existing core CI already executes source peer unit/race tests."
+  ],
+  "source_files": [
+    {
+      "reference": "scripts/ci-ftps-summary.py",
+      "sha256": "efb025c6afaafe43fe8760d5ebac515a0d02a26b59c4d4e18d11322e78baa750",
+      "bytes": 33045
+    },
+    {
+      "reference": "scripts/ftps_collection_source.py",
+      "sha256": "4f781eefb22439c0e7d322facb55035ef7c2d2d98612b35bb8b1f14f56d37d2d",
+      "bytes": 7085
+    },
+    {
+      "reference": "scripts/test-ci-ftps-summary.py",
+      "sha256": "7fa958c719beac3202046a281a446d35c40b0766ba8845c122a569278ff815a6",
+      "bytes": 66583
+    },
+    {
+      "reference": "scripts/peers/ftps-source/main.go",
+      "sha256": "5868b52166b41de748cc7ed48ccc504c9ed34f4eb1f80ee665707da61ff77f77",
+      "bytes": 8393
+    },
+    {
+      "reference": "scripts/peers/ftps-source/main_unix_test.go",
+      "sha256": "e8519f7093cb09297542cf20ab35591f8eaa8dac31f83fd10e52b6b821a05ba1",
+      "bytes": 7227
+    },
+    {
+      "reference": "scripts/peers/ftps-source/shutdown.go",
+      "sha256": "879526cdcdd146418ace6123ae7294612d0f83cb754a60335c497bcfde49c32d",
+      "bytes": 1323
+    },
+    {
+      "reference": "scripts/peers/ftps-source/shutdown_test.go",
+      "sha256": "f75ab90d92d5c2592a83417c1c123cab4d29b949b4116ce9592ddc3e88741d13",
+      "bytes": 1677
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "277dce78504fa828a5e5cae59bb886da0064d54814c74fd03be8d20c6c9cc080",
+      "bytes": 433074
+    },
+    {
+      "reference": "STATUS.md",
+      "sha256": "f3aeee039afb0799007521a3c9c5eab329a7feb1eb43ce51602556bf13d5ef78",
+      "bytes": 13516
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f331-shutdown-red.log",
+      "sha256": "64179ca21fb0d035b9014ee45d4c15d0a5c26d61e21f184c1015b32a771d579b",
+      "bytes": 425
+    },
+    {
+      "reference": ".private/freightctl-f331-source-summary-red.log",
+      "sha256": "cc80701a602d4fe79ad90d094714da648b2453cdef47b7af51541d5512c15a03",
+      "bytes": 880
+    },
+    {
+      "reference": ".private/freightctl-f331-final-source-summary-green.log",
+      "sha256": "212d7f3f8085850412f7dd751ef30309fa2a5c6cfc44fe45b2db05bc1c185736",
+      "bytes": 107
+    },
+    {
+      "reference": ".private/freightctl-f331-final-shutdown-green.log",
+      "sha256": "72ae2e478740e55e14a7e895ac03ed0e7ff70aa39eae5fc3c8ea60882ccedd35",
+      "bytes": 68
+    },
+    {
+      "reference": ".private/freightctl-f331-actual-listener-green.log",
+      "sha256": "a2cbdcab80bbbe63b2a1f50b73ce53a055e4808b5679d4ed5e6d953b20f47fb1",
+      "bytes": 68
+    },
+    {
+      "reference": ".private/freightctl-f331-final-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f331-architecture.log",
+      "sha256": "fa99a7467914775b6e6fb50c5b0a2c85b3211135c3486cec28c42811919aeece",
+      "bytes": 66
+    },
+    {
+      "reference": ".private/freightctl-f331-linux-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "owed": [
+    "Actual native Linux source shutdown diagnostic and original full FTPS collection-consent/independent readback replay.",
+    "All original failures and final-source baseline/AX gates."
+  ],
+  "resources": "OneCPU/192MiB and tiny task-owned local TCP sockets only;no FTPS protocol service,PostgreSQL,Chrome,scanner or inference locally. No existing bound raised or suppressed."
+}

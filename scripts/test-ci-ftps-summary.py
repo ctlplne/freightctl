@@ -64,6 +64,33 @@ def synthetic_governance_outputs():
 
 
 class SummaryContracts(unittest.TestCase):
+    def test_collection_source_failure_categories_require_exact_original_failed_stderr(self):
+        name = 'cli-explicit-collection-source'
+        marker = b'freightctl: FTPS source fixture failed\n'
+        def report(raw, code=1):
+            (self.directory/(name+'.stdout')).write_bytes(b'')
+            (self.directory/(name+'.stderr')).write_bytes(raw)
+            self.manifest['steps'] = [s for s in self.manifest['steps'] if s['name'] != name]+[{
+                'name': name, 'exit_code': code, 'stdout_sha256': hashlib.sha256(b'').hexdigest(),
+                'stderr_sha256': hashlib.sha256(raw).hexdigest()}]
+            self.write()
+            return summary.failure_diagnostics(self.root, self.result, 'a'*40)
+        def wire(value):
+            return json.dumps(value,separators=(',',':')).encode()+b'\n'+marker
+        value = {'kind':'freightctl-ftps-source-failure-v1','stage':'listener-close'}
+        self.assertEqual(report(wire(value))['collection_source_failures'],[{'command':name,**value}])
+        for change in ({'stage':'private-evidence-canary'}, {'stage':True}, {'kind':'private-evidence-canary'},
+                {'error':'private-evidence-canary'}):
+            observed=report(wire(dict(value,**change)))
+            self.assertNotIn('collection_source_failures',observed)
+            self.assertNotIn('private-evidence-canary',json.dumps(observed))
+        for raw,code in ((wire(value),0),(wire(value),True),(wire(value)+b'private-evidence-canary',1),
+                (b'{"kind":"private-evidence-canary","kind":"freightctl-ftps-source-failure-v1","stage":"listener-close"}\n'+marker,1)):
+            self.assertNotIn('collection_source_failures',report(raw,code))
+        report(wire(value))
+        (self.directory/(name+'.stderr')).write_bytes(b'changed-private-evidence-canary')
+        self.assertEqual(summary.failure_diagnostics(self.root,self.result,'a'*40),{})
+
     def use_metadata_profile(self, selected):
         self.manifest["retained_schema"] = selected["schema"]
         before = self.manifest["retained_before"]

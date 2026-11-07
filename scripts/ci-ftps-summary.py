@@ -18,6 +18,7 @@ import ftps_dispatch_qualification as dispatch
 import ftps_collection_metadata as collection_metadata
 import ftps_collection_browser as collection_browser
 import ftps_collection_operator as collection_operator
+import ftps_collection_source as collection_source
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -47,6 +48,7 @@ def failure_diagnostics(root, result, commit):
         dispatch_progress, dispatch_outcomes, dispatch_lifecycle = {}, [], {}
         collection_progress, collection_failures = {}, {}
         operator_progress, operator_failures = {}, {}
+        source_failures = []
         allowed = {"native-ftps-integration", "cli-explicit-lftp-probe", "cli-implicit-lftp-probe", "browser-explicit-operator", "browser-implicit-operator"}
         for step in manifest.get("steps", []):
             name = step.get("name")
@@ -59,6 +61,9 @@ def failure_diagnostics(root, result, commit):
                 diagnostic = read(path.parent / (name + ".stderr"), 1 << 20)
                 if hashlib.sha256(diagnostic).hexdigest() != step.get("stderr_sha256"):
                     return {}
+                source_failure = collection_source.safe_failure_observation(name, step.get('exit_code'), diagnostic)
+                if source_failure is not None:
+                    source_failures.append({'command':name,**source_failure})
                 try:
                     dispatch.verify_outcome(name, step.get("exit_code"), diagnostic, data)
                 except ValueError:
@@ -113,6 +118,8 @@ def failure_diagnostics(root, result, commit):
                     if isinstance(ids,list) and 0 < len(ids) <= 100 and all(isinstance(i,str) and i in browser_evidence.ACCESSIBILITY_RULES for i in ids):
                         accessibility.append({"command":name,"audit":probe["audit"],"rule_ids":sorted(set(ids))})
         outcome = {"failed_native_tests": sorted(failed), "lftp_failures": [{"stage": s, "code": c, **({"action": a} if a else {})} for s, c, a in sorted(categories)], "failed_cli_commands": sorted(cli_failures)}
+        if source_failures:
+            outcome['collection_source_failures'] = source_failures
         if collection_failures:
             outcome['collection_browser_failures'] = [collection_failures[n] for n in sorted(collection_failures)]
         if collection_progress:

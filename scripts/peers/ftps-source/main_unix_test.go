@@ -5,6 +5,7 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"net"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -12,6 +13,42 @@ import (
 	"syscall"
 	"testing"
 )
+
+func TestSourceWitnessedListenerClosePreservesActualAcceptedCount(t *testing.T) {
+	for _, queued := range []bool{false, true} {
+		listener, err := net.ListenTCP("tcp", &net.TCPAddr{IP: net.ParseIP("127.0.0.1"), Port: 0})
+		if err != nil {
+			t.Fatal(err)
+		}
+		w := &witness{path: filepath.Join(t.TempDir(), "counter.json"), value: snapshot{Schema: 1, Kind: "freightctl-ftps-source-witness-v1", Mode: "explicit", Port: listener.Addr().(*net.TCPAddr).Port}}
+		if err = w.save(); err != nil {
+			listener.Close()
+			t.Fatal(err)
+		}
+		observed := &witnessedListener{TCPListener: listener, witness: w}
+		defer observed.Close()
+		if queued {
+			peer, err := net.Dial("tcp", listener.Addr().String())
+			if err != nil {
+				t.Fatal(err)
+			}
+			defer peer.Close()
+		}
+		if err = observed.Close(); err != nil {
+			t.Fatalf("actual source close failed;queued=%t;failure=%v", queued, err)
+		}
+		if err = observed.Close(); err != nil {
+			t.Fatal("same source close not idempotent")
+		}
+		want := 0
+		if queued {
+			want = 1
+		}
+		if w.value.Accepted != want || w.value.Exhausted {
+			t.Fatal("actual source shutdown lost a queued accepted connection")
+		}
+	}
+}
 
 func TestSourceWitnessIsPrivateBoundedAndDoesNotResetAfterExhaustion(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "counter.json")

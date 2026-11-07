@@ -260,16 +260,14 @@ func run() error {
 	saved := w.save()
 	exhausted := w.value.Exhausted
 	w.mu.Unlock()
-	if err != nil || closeErr != nil || saved != nil || exhausted {
-		return errFixture
-	}
-	return nil
+	return sourceShutdownFailure(err, closeErr, saved, exhausted, ctx.Err())
 }
 
 func main() {
-	if run() != nil {
+	if err := run(); err != nil {
 		// Exception text may contain private references; only this fixed label
 		// leaves the fixture. The caller retains private process evidence.
+		_, _ = os.Stderr.Write(sourceFailureDiagnostic(err))
 		_, _ = os.Stderr.WriteString("freightctl: FTPS source fixture failed\n")
 		os.Exit(1)
 	}

@@ -185,6 +185,12 @@ the Go summary branch omitted its protected first error. A valid-summary
 regression turns red to green without exposing private text or forged phases;
 affected pure/static checks pass. Original copy failure and full replay stay red.
 
+F331 binds closed FTPS source shutdown categories to exact original stderr.
+Expiry and opaque-category regressions turn red to green;9 affected lifecycle/
+evidence methods and real small zero/queued socket-close checks pass. Native
+Linux compilation only;original source exit cause/replay stay owed. Existing
+resource/contact/session/protocol bounds and complete evidence remain enforced.
+
 FINISH repair and remaining implementation are mandatory. Next:repair original
 browser/stock/protocol failures and complete all affected original runtime,
 security,recovery,reproducibility and baseline/AX gates on the final source.
