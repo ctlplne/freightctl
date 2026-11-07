@@ -113,7 +113,12 @@ def failure_diagnostics(root, result, commit):
                     if probe["phase"] in {"check-bad", "check-good"} and check is not None:
                         failure["check"] = check
                     browser_failures.append(failure)
-                if name in {"browser-explicit-operator", "browser-implicit-operator"} and probe.get("state") == "failed" and probe.get("audit") in browser_evidence.AUDITS:
+                suffix = dispatch.command_suffix(name)
+                dispatch_phase = suffix[len("browser-"):] if suffix in {"browser-request", "browser-approve", "browser-withdraw"} else None
+                dispatch_audits = {"dispatch-" + dispatch_phase + "-" + stage for stage in (("source", "disclosure", "history") if dispatch_phase == "request" else ("reviewer", "confirmation", "decision-history"))} if dispatch_phase is not None else set()
+                audit = probe.get("audit")
+                known_audit = type(audit) is str and ((name in {"browser-explicit-operator", "browser-implicit-operator"} and audit in browser_evidence.AUDITS) or audit in dispatch_audits)
+                if known_audit and probe.get("state") == "failed":
                     ids = probe.get("accessibility_rule_ids")
                     if isinstance(ids,list) and 0 < len(ids) <= 100 and all(isinstance(i,str) and i in browser_evidence.ACCESSIBILITY_RULES for i in ids):
                         accessibility.append({"command":name,"audit":probe["audit"],"rule_ids":sorted(set(ids))})

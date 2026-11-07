@@ -24,7 +24,10 @@ Both FTPS operator jobs failed while choosing the source connection. F369 fixes
 the browser's rejection of the actual 73-byte participant name by matching the
 existing 256-byte FTPS contract. Existing SSH bounds and all TLS, identity and
 immutable-meaning checks remain. Focused regressions and affected static checks
-pass; actual operator capture and four-key recovery replay remain owed.
+pass. F377 binds actual explicit/implicit operator capture and eight saved-key
+replays per plaintext/encrypted record at9b3ba92. The encrypted workflow job
+passed; plaintext later failed at the reviewer accessibility audit. F377 retains
+only matching audit names/public rule IDs; actual finding and repair remain owed.
 
 The receive browser now passes cancellation and recovery save/import,then fails
 at cancellation replay through a second removed response-variable reference.

@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "id": "F377",
+  "observed_at": "2026-11-07",
+  "qualification_claim": false,
+  "base_candidate": "d07c1da049ca12772bc1d2f0ef060649820cabf7",
+  "candidate_binding": "This commit and exact source hashes below",
+  "original_failure": {
+    "candidate": "9b3ba92a9746e4af5edd40a27e440429b0dc6f5b",
+    "run_id": 42390494443,
+    "job_id": 128456855426,
+    "command": "cli-explicit-workflow-dispatch-browser-approve",
+    "phase": "approve",
+    "stage": "reviewer-audit",
+    "wire": "idle",
+    "response_count": 0,
+    "elapsed_seconds": 1.428,
+    "underlying_accessibility_finding": "Not available in the original safe summary;not repaired or passed."
+  },
+  "native_source_observations": [
+    {
+      "job_id": 128456855426,
+      "observed_positive_before_whole_job_conclusion": true,
+      "state": "passed",
+      "source_commit": "9b3ba92a9746e4af5edd40a27e440429b0dc6f5b",
+      "manifest_sha256": "7fb3e987871a26c9ab35e1e27c3ae60ead40155a1c1531a374b4500f2a30bb8d",
+      "ftps_collection_operator_phases": 2,
+      "ftps_collection_operator_accessibility_audits": 12,
+      "ftps_collection_operator_saved_key_replays": 8,
+      "ftps_collection_operator_source_connections": 2,
+      "ftps_collection_operator_captured_files": 2,
+      "ftps_collection_operator_source": "native-freightctl",
+      "ftps_collection_operator_business_acceptance": "unknown"
+    },
+    {
+      "job_id": 128456855628,
+      "observed_positive_before_whole_job_conclusion": true,
+      "state": "passed",
+      "source_commit": "9b3ba92a9746e4af5edd40a27e440429b0dc6f5b",
+      "manifest_sha256": "a5361663798d6fc142d93764f9f6ba7e243ac78928befe3ff0c4a6b4cee64035",
+      "ftps_collection_operator_phases": 2,
+      "ftps_collection_operator_accessibility_audits": 12,
+      "ftps_collection_operator_saved_key_replays": 8,
+      "ftps_collection_operator_source_connections": 2,
+      "ftps_collection_operator_captured_files": 2,
+      "ftps_collection_operator_source": "native-freightctl",
+      "ftps_collection_operator_business_acceptance": "unknown"
+    }
+  ],
+  "native_scope": "F369 original source selection/actual operator capture and saved-key replay now pass in explicit/implicit profiles at9b3ba92. Whole plaintext workflow job remains failed in later reviewer accessibility audit;encrypted workflow job passed. No independent-receiver,encrypted payload/business acceptance or whole-row readiness claim.",
+  "changed": "F377 preserves original9b3ba92 plaintext FTPS workflow failure run42390494443/job128456855426:approve reviewer-audit,wire idle,zero response captures. The original safe summary dropped dispatch accessibility audit output. Retain only audit names matching the exact known command phase and pinned public rule IDs;refuse foreign phase/stage,private rules,wrong types and raw DOM. The actual original consumer with complete hashed stdout/stderr first drops the expected safe record;three focused metadata/privacy tests,syntax and architecture pass after repair. Initial incomplete test fixtures remain private failures. No audit or accessibility assertion is changed;underlying native finding/repair/replay remains owed. Both plaintext/encrypted original records now prove F369 explicit/implicit native source capture:2connections,2files,8saved-key replays,12accessibility audits each. Plaintext whole job remains failed later;encrypted whole job passed;business acceptance unknown.",
+  "red_green": "The new privacy regression uses original complete-hash stdout/stderr. Running the actual unchanged HEAD summary snapshot first reports the failed command but drops its known audit;the current implementation retains only its phase-matching audit/public IDs. Three focused tests pass,including prior operator compatibility and malformed/private data refusals. Initial incomplete fixtures and failed attempts are preserved separately;they do not establish the contract red.",
+  "owed": [
+    "Actual native original plaintext dispatch reviewer accessibility finding and repair;all audit assertions remain enforced",
+    "Original complete receive-browser,independent x86 receiver,final-source baseline/AX and separate readiness gates"
+  ],
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "d39a36e26119e5dc546af462f31865bad60b6f152ae64ff560d096a4c34d8d0b",
+      "bytes": 4257
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "efa84bd9cace7519086090f26d332e69821bb6507ac67aec2334a97b2f981d7b",
+      "bytes": 499451
+    },
+    {
+      "reference": "scripts/ci-ftps-summary.py",
+      "sha256": "abb929af05c7009ef69c1180e8e63343a0526cb1a14d6c30c1685b88f5750642",
+      "bytes": 33623
+    },
+    {
+      "reference": "scripts/test-ci-ftps-summary.py",
+      "sha256": "f4e1063b69358a7b12acc538e33f9a2c3a8eedd5987c47ba06f0df9d542a6f4c",
+      "bytes": 69490
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f377-original-summary.py",
+      "sha256": "efb025c6afaafe43fe8760d5ebac515a0d02a26b59c4d4e18d11322e78baa750",
+      "bytes": 33045
+    },
+    {
+      "reference": ".private/freightctl-f377-final-original-red.log",
+      "sha256": "622f0ac4590d165b1d9f5a87453b064e2acd58769e8430c60ede174e20b40234",
+      "bytes": 1248
+    },
+    {
+      "reference": ".private/freightctl-f377-final-focused.log",
+      "sha256": "842847f774d48e17315dec41c541cd9684be84434ae598f3bc7d27dcad4ec307",
+      "bytes": 679
+    },
+    {
+      "reference": ".private/freightctl-f377-syntax.log",
+      "sha256": "197843a7618ba55d8602f7627400b045d21ff6b9b5e62c7d0455f0469c97c666",
+      "bytes": 30
+    },
+    {
+      "reference": ".private/freightctl-f377-architecture.log",
+      "sha256": "fa99a7467914775b6e6fb50c5b0a2c85b3211135c3486cec28c42811919aeece",
+      "bytes": 66
+    }
+  ]
+}

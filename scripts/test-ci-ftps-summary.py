@@ -603,6 +603,33 @@ class SummaryContracts(unittest.TestCase):
         self.assertNotIn("browser_failures",summary.failure_diagnostics(self.root,self.result,"a" * 40))
         self.assertNotIn("accessibility_failures",summary.failure_diagnostics(self.root,self.result,"a" * 40))
 
+    def test_dispatch_accessibility_failure_keeps_only_actual_phase_audit_and_public_rules(self):
+        name = "cli-explicit-workflow-dispatch-browser-approve"
+        probe = {"state":"failed","audit":"dispatch-approve-reviewer","accessibility_rule_ids":["color-contrast"],"selector":"private DOM or credential"}
+        data = json.dumps(probe).encode()
+        (self.directory / (name + ".stdout")).write_bytes(data)
+        (self.directory / (name + ".stderr")).write_bytes(b"")
+        self.manifest["steps"].append({"name":name,"exit_code":1,"stdout_sha256":hashlib.sha256(data).hexdigest(),"stderr_sha256":hashlib.sha256(b"").hexdigest()})
+        self.write()
+        report = summary.failure_diagnostics(self.root, self.result, "a" * 40)
+        self.assertIn(name, report.get("failed_cli_commands", []))
+        self.assertEqual(report.get("accessibility_failures"), [{"command":name,"audit":"dispatch-approve-reviewer","rule_ids":["color-contrast"]}])
+        self.assertNotIn("private DOM or credential", json.dumps(report))
+
+    def test_dispatch_accessibility_failure_refuses_foreign_phase_audit_and_private_rules(self):
+        name = "cli-explicit-workflow-dispatch-browser-approve"
+        (self.directory / (name + ".stderr")).write_bytes(b"")
+        self.manifest["steps"].append({"name":name,"exit_code":1,"stdout_sha256":"","stderr_sha256":hashlib.sha256(b"").hexdigest()})
+        for audit, rules in [("dispatch-withdraw-reviewer", ["color-contrast"]), ("dispatch-approve-source", ["color-contrast"]), ("private DOM or credential", ["color-contrast"]), ("dispatch-approve-reviewer", ["private DOM or credential"]), ("dispatch-approve-reviewer", []), ("dispatch-approve-reviewer", [True]), ([], ["color-contrast"]), ({}, ["color-contrast"]), (None, ["color-contrast"])]:
+            data = json.dumps({"state":"failed","audit":audit,"accessibility_rule_ids":rules}).encode()
+            (self.directory / (name + ".stdout")).write_bytes(data)
+            self.manifest["steps"][-1]["stdout_sha256"] = hashlib.sha256(data).hexdigest()
+            self.write()
+            report = summary.failure_diagnostics(self.root, self.result, "a" * 40)
+            self.assertIn(name, report.get("failed_cli_commands", []))
+            self.assertNotIn("accessibility_failures", report)
+            self.assertNotIn("private DOM or credential", json.dumps(report))
+
     def test_missing_or_skipped_tests_refuse(self):
         original = copy.deepcopy(self.manifest)
         for field, value in (("required", []), ("skipped_records", 1), ("pass_records", 0)):
