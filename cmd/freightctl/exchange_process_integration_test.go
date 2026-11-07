@@ -358,7 +358,29 @@ func qualifyExchangeProcessRecovery(t *testing.T, ctx context.Context, f exchang
 		t.Fatal(err)
 	}
 	var offers, commands, files int
-	err = tx.Tx.QueryRow(ctx, `SELECT (SELECT count(*) FROM artifact_exchanges WHERE request_hash=$1),(SELECT count(*) FROM artifact_exchange_commands WHERE request_key='process-original-offer' AND exchange_id=$2),(SELECT count(*) FROM files WHERE file_id=$3)`, original.Exchange.RequestHash, original.Exchange.ID, accepted.File.ID).Scan(&offers, &commands, &files)
+	const cardinality = `SELECT (SELECT count(*) FROM artifact_exchanges WHERE request_hash=$1),(SELECT count(*) FROM artifact_exchange_commands WHERE request_key='process-original-offer' AND exchange_id=$2),(SELECT count(*) FROM files WHERE file_id=$3)`
+	err = tx.Tx.QueryRow(ctx, cardinality, original.Exchange.RequestHash, original.Exchange.ID, accepted.File.ID).Scan(&offers, &commands, &files)
+	tx.Tx.Rollback(ctx)
+	if err != nil || offers != 0 || commands != 0 || files != 1 {
+		t.Fatal("administrator bypassed actor-private exchange journals", err)
+	}
+	// Count private offers/commands as the actual sender. Root metadata access
+	// does not supply another actor's exchange-journal authority.
+	senderCredential, err := secure.ReadSecret(f.SenderToken, 64)
+	if err != nil {
+		t.Fatal("restart sender observation credential unavailable")
+	}
+	senderScope := store.Scope{Tenant: f.Administrator.Tenant, Partner: f.Administrator.Partner, TokenHash: secure.Digest(senderCredential.Bytes)}
+	senderCredential.Close()
+	tx, err = f.DB.Begin(ctx, senderScope)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if tx.Actor != f.SenderActor {
+		tx.Tx.Rollback(ctx)
+		t.Fatal("restart observer changed the actual sender")
+	}
+	err = tx.Tx.QueryRow(ctx, cardinality, original.Exchange.RequestHash, original.Exchange.ID, accepted.File.ID).Scan(&offers, &commands, &files)
 	tx.Tx.Rollback(ctx)
 	if err != nil || offers != 1 || commands != 1 || files != 1 || kills != 3 || len(pids) != 4 {
 		t.Fatal("native restart acceptance/offer/receipt cardinality", err, offers, commands, files, kills, len(pids))

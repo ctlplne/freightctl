@@ -1162,7 +1162,8 @@
         "docs/qualification/evidence/F233-public-trust-file-integrity-profile.json",
         "docs/qualification/evidence/F235-private-directory-and-held-root-creation.json",
         "docs/qualification/evidence/F237-decode-failed-native-browser-summary.json",
-        "docs/qualification/evidence/F239-windows-raw-control-closed-classification.json"
+        "docs/qualification/evidence/F239-windows-raw-control-closed-classification.json",
+        "docs/qualification/evidence/F241-restart-cardinality-owner-observer.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -1222,13 +1223,14 @@
         "F233 implements held-handle public certificate/CA integrity:Unix0022 write refusal remains;Windows accepts explicit public read/execute while refusing other-principal mutation/deletion/ACL/owner rights. Secret/private-key owner-only rules remain. Original FTPS permission assertions use actual DACL grants and client CA write refusal is added. Focused local policy/identity/trust/architecture/vet and Windows compile pass;native Windows/runtime proof owed. F214 preserves71e8166 terminal18/41:27pass/14fail,listed security/image scans passed,SCP/tus workflows and six processing Chrome component cases pass;all remaining originals stay red.",
         "F235 adds private exclusive directory and held-root flat-file creation primitives. Windows NtCreateFile binds the exact pinned parent and explicit owner DACL at creation;Unix retains relative exclusive0600. Local owned-root rename/replacement,byte/no-overwrite/private-before-write and leaf/path cases pass;Windows compile/vet and architecture pass. Actual Windows race/token/reparse proof,custody sealing and custody/setup wiring remain owed;no Windows product qualification.",
         "F237 repairs F229 diagnostic short-circuit observed at e87483b:runErr stopped summary decoding,so failed browsers still logged stage unavailable. Saved bounded summaries are now decoded before checking process failure;only valid closed summaries supply an allowlisted stage. Original pass/fail/privacy assertions remain. Privacy regression/compilation/vet pass;actual original stage capture/browser repair owed.",
-        "F239 completes the missing Windows RawConn closing classification after F227's native replay remained red. Pinned Go RawControl returns internal poll.ErrFileClosing directly;the adapter preserves it and adds public os.ErrClosed. Native operation/identity/flush/close errors and the exact assertion remain. Windows compile/vet pass only;actual original native replay owed."
+        "F239 completes the missing Windows RawConn closing classification after F227's native replay remained red. Pinned Go RawControl returns internal poll.ErrFileClosing directly;the adapter preserves it and adds public os.ErrClosed. Native operation/identity/flush/close errors and the exact assertion remain. Windows compile/vet pass only;actual original native replay owed.",
+        "F241 repairs the original native restart observer:root runtime must see zero actor-private offers/commands while retaining its file metadata view;the exact authenticated sender must see one offer/command/file after unchanged three kills/four process instances. Original byte/revocation/receipt/no-onward assertions remain. A variable-name compile collision was corrected before commit;final compilation/vet pass only. Actual original native replay owed. STATUS repair history is compacted to current work and preserved item references."
       ],
       "current_item": {
-        "id": "F239",
-        "state": "Windows directory RawControl closing error exposes public ErrClosed",
-        "proof": "Originale87483b/run42354252248/job128348737979 exact ErrClosed assertion still fails;Go1.26.10 RawControl source bypasses File.wrapErr;Windows compile/vet pass only",
-        "next": "Replay original Windows directory case;continue immutable file protection/custody/setup,browser and all remaining baseline/AX/FINISH work"
+        "id": "F241",
+        "state": "Restart cardinality observes private journals as actual sender",
+        "proof": "Originale87483b/run42354252231/job128348737983 counts0/0/1 after3kills/4instances;explicit root privacy refusal plus exact sender cardinality added;final compile/vet pass only",
+        "next": "Replay original native CLI process recovery;continue Windows custody/setup,browser/protocol and full remaining implementation/baseline/AX/FINISH work"
       }
     }
   ],

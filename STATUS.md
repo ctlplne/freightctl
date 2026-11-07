@@ -5,152 +5,32 @@ complete journeys and AX01–AX08 remain open. Assisted deployment,independent
 adoption and enterprise readiness remain unqualified.
 
 Latest pushed source:e87483babb4e32f8a3aaf78d13f8374d842fa78b.
-Its original runtime batch is still in progress. F214 preserves the previous
-71e8166 source18 terminal workflows/41 jobs:27 pass,14 fail. Listed security
-checks and both complete image scans pass. Original SCP/tus workflows now pass.
-Six output-policy/processing/producer/composition/calendar/proposal Chrome cases
-pass inside a still-red job. Core,macOS,metadata restores and several stock/public
-jobs pass;PostgreSQL integration,Windows and remaining original failures stay
-red. Results apply only to exact source71e8166;later repair source is owed.
-F202 retains the previous91ed18d originals. No originals were cancelled,restarted
-or substituted.
-FINISH audit/repair has started;remaining implementation requirements stay open.
-F201 preserves exact original reporter/OpenAPI/schema failure handles,repairs
-stale synthetic schema fixtures and the complete typed response schema,and wraps
-bare CASE comparisons in unapplied post35 PL/pgSQL guards. Two lateral policy
-queries now select the definition they already inspect. Full local lightweight
-Go units,241 frontend tests and71 reporter tests pass. Standalone parser syntax
-checks59 migrations/343 functions;this does not qualify PostgreSQL behavior.
-Migration sources1–35 and retained database35 are unchanged. Actual native repair
-replays,race/restore/public/accessibility and every mandatory final gate are owed.
+Its original runtime batch is still in progress. Listed completed security gates
+have passed;remaining native application/platform/browser/stock failures stay red.
+F214 retains the previous71e8166 original18 terminal workflows/41 jobs:27 pass,
+14 fail,including both full image scans. SCP/tus workflows and six processing
+Chrome cases passed on that exact older source;no later-source result is inferred.
+Original runs and first failures remain in their exact qualification manifests.
 
-F203 replays all27 original Core Python record commands and8 native-wire stand-in
-cases;all pass after the dispatch contact-spy suite receives loopback permission.
-Original Windows audit identity creation failed at a bare directory.Sync;it now
-uses the existing handle-bound durablefs seam. Focused audit/architecture/vet and
-Windows compilation pass;actual Windows persistence and private ACL qualification
-remain red/owed. No permission check or original test assertion was relaxed.
+FINISH repair is active;remaining implementation is still mandatory. F201–F233
+repair migration syntax/reporters/typed schemas,private file and trust profiles,
+credential read fences,original receipt serialization and invalid fixture inputs.
+Actual final-source native replays remain owed. Source60 targets78 metadata and
+77 forced-RLS tables. Prior migration sources and retained35 remain unchanged.
 
-F205 adds a held-handle protected-file seam. Unix permission checks stay exact;
-Windows token/certificate/audit creation attaches an explicit owner-only protected
-DACL before writing. Secret reads refuse unsupported,broad,null or inherited
-Windows descriptors. The broad-permission audit assertion changes the real DACL
-on Windows instead of relying on chmod. Full local Go units and affected
-policy/handle/audit/architecture/vet checks pass;Windows cases compile only.
-Actual native ACL/restricted-token/reparse races,storage/setup/private writers and
-whole Windows/runtime/final-source outcomes remain owed.
+Current local work:F235 private directory/held-root creation passes small local
+filesystem checks and Windows compilation;custody/setup integration and actual
+Windows races remain owed. F237 fixes failed-browser summary decoding;F239 adds
+public ErrClosed classification while preserving the raw Windows closing error.
+Both still require original native replay. F241 corrects the restart observer:
+root must see no private offers/commands;the actual sender must still see exactly
+one offer/command/file after three kills/four process instances. Compilation/vet
+pass only. Exact source,red/green and owed references are in the short item
+manifests and docs/qualification/remaining.json.
 
-On91ed18d,native PostgreSQL initialization passes in both tus architectures.
-Their lifecycle tests then fail at the old wrong-actor SQL observer after the401
-controls pass. F207 asserts root-runtime RLS refusal and separately compares the
-same exact checkpoints before/after through a read-only/read-committed observer
-in the exact task-owned database. All denial/offset/chunk/open/no-file assertions
-remain. Compile/vet only pass locally;original native repair replay remains owed.
-Other newly reached protocol/authorization failures remain under FINISH repair.
-
-F209 repairs native credentials42501 failures while preserving read-only runtime
-credentials. Endpoint validation requires the existing account fence;processing
-review/output/proposal guards use its shared transaction fence before authority
-reads. Late conflicts fail40001;current scope,revision,expiry,permissions and all
-journal/approval checks stay enforced. Source60 adds functions only;prior59
-migration bytes and retained35 are unchanged. Focused/full Go,metadata/retained
-stand-ins,architecture/vet and syntax checks pass. Actual role-write refusal,
-fence/scope/registration and original native replays remain compiled-only/owed.
-
-F211 fixes original security-test preconditions while retaining/tightening their
-assertions:HTTP negative read uses an explicitly owner-only namespace entry;
-rejected release sends a well-formed forged hash;completed SQL report candidates
-clear worker/lease and require the intended guard error. Production rules are
-unchanged. Integration compile/vet pass;actual original native replays stay owed.
-
-F213 binds SCP key enrollment/revocation to the served fixture's exact isolated
-database through a protected administrative reference. The previous reference
-addressed the maintenance database,so enrollment failed before protocol proof.
-No global environment or production authentication changes. Integration compile
-and vet pass;original native byte,abort,revocation and modern-SFTP replay is owed.
-
-F215 repairs original native fixture preconditions:workflow template requires the
-current78/77 table/RLS profile;MCP ticket counts run as their actual owner;
-processing release denials use a well-formed forged report hash and assert output
-is still queued;output-policy cookie mutations supply Origin. All original
-security assertions remain. Compile/vet and profile conformance pass only;native
-repair replays remain owed.
-
-F217 reproduces typed processing preview/draft rejection on the strict MCP wire:
-a nil Go step slice emitted null. Definition serialization now emits the same
-empty array as normalization,without changing nonempty steps or validation.
-The two-case red/green,affected canonical/schema/security,architecture/vet and
-integration compilation pass. Actual stock-client/native replay remains owed.
-
-F219 routes first workflow responses through the existing stored-receipt path.
-The original onward exact-replay comparison failed because Go and PostgreSQL
-JSONB encoded the same receipt differently. Event/receipt/intent atomicity and
-current authorization remain. Focused contract/fixture,architecture/vet and
-integration compilation pass;the original exact native replay remains owed.
-
-F221 repairs two original native observers:the audit test creates the confined
-account root through the ordinary namespace command;the onward FTPS test reads
-the actual delivery-ID-prefixed destination and checks its recorded path,size
-and digest first. Read-only cardinality,scope refusals,byte checks and original
-receipt comparisons remain. Compile/vet pass only;actual native replay is owed.
-
-F223 repairs a regression introduced by F209:ordinary send/receive validation
-was incorrectly rejected without the account-manager lock. Participant reads
-now acquire schema60's real shared authority fence;registration reuses its
-exclusive fence. No credential writes are granted. Focused contracts,static
-checks and native compilation pass;new ordinary-reader/concurrent-writer and
-original exchange/CLI/copy repair replays remain owed.
-
-F225 makes the conditional HTTP intake fixture use an actual controlled release.
-It creates a fresh policy-bound revision,checks and separately releases it,
-verifies its exact bytes/validator,then revokes that policy. GET/HEAD must still
-return409 with no ETag/range metadata. Historical integrity-only receipts are
-unchanged. Compile/vet pass only;original native repair replay remains owed.
-
-F227 moves directory type checking into the platform adapter. Windows reaches
-its existing RawConn.Control validation,which pins the held handle and preserves
-closed-file refusal;Unix keeps its exact type check before Sync. Original
-assertions remain. Local directory/audit/static and Windows compile/vet pass;
-actual Windows closed/native persistence/race replay remains owed.
-
-F229 adds closed literal stage diagnostics to the still-failing JSON-intake and
-independent-review native browser profiles. Only allowlisted labels accompany
-the existing safe result digest;raw failures stay private. Original behavior,
-assertions,sandbox,egress and timeouts remain. Privacy refusal,syntax/format and
-compile/vet pass;actual failure-stage replay and browser repair remain owed.
-
-F231 binds producer test contracts/tasks to8192 output bytes within the fixture
-8MiB file limit;their inherited16MiB allowance could not stage. Source policy
-and product/quota controls remain. Negative release inputs now require the real
-initial held state,zero attempts,no report hash and exact file/policy bindings.
-This corrects F215's unpushed queued-state assertion and covers independent
-review too. Compile/vet/source conformance pass;actual native replay is owed.
-
-F233 separates public certificate/CA integrity from secret privacy. Unix keeps
-0022 write refusal;Windows checks the held descriptor and allows other users
-read/execute only,refusing file/deletion/ACL/owner mutation. Private keys stay
-owner-only. Original FTPS permission assertions use real Windows DACL changes;
-client CA write refusal is added. Focused policy/identity/trust/architecture/vet
-and Windows compilation pass. Actual Windows ACL/TLS/full-platform replay and
-storage/setup/private writers remain owed.
-
-F235 adds exclusive private directory and held-root flat-file creation. Windows
-attaches the owner descriptor in NtCreateFile and never reconstructs the root
-pathname. Local rename/replacement/no-overwrite/private-before-write and leaf
-refusal cases pass;Windows compile/vet and architecture pass. Native Windows
-race/token/reparse proof,custody sealing and custody/setup wiring remain owed.
-
-F237 corrects F229's failed-process diagnostic short circuit. Saved browser
-summaries are decoded even when the process exits with failure;only a valid
-closed summary can supply an allowlisted stage. All original failure/success
-assertions remain. Privacy regression/compilation/vet pass;actual original stage
-capture and JSON/intake/independent-review browser repairs remain owed.
-
-F239 adds the missing Windows RawConn closing-error translation. The original
-raw poller error remains joined with public os.ErrClosed;native operation errors
-and every identity/flush/close refusal stay unchanged. Original exact closed-
-file assertion is retained. Windows compile/vet pass;native repair replay is
-owed. F227 alone did not satisfy this public error classification.
+Next:wire immutable Windows custody/setup,repair the newly reached native browser
+and protocol failures,then complete all remaining baseline/AX/FINISH outcomes.
+Local inference remains off;local resource constraints and F026 hold remain.
 
 Schema3 records.project binds an owned checked input,approved exact task,one
 durable processing intent,slots and events/receipt. Stable work keys select one

@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "id": "F241",
+  "observed_at": "2026-11-07",
+  "base_candidate": "0b375ca8eaf4a1f63b3153807167fb95caac2c9e",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Native restart journal observer corrected;actual original replay owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "d853182d4ccd597c30664c2c5ba2256768cf0c1f03e24975a73913e2330948b7",
+      "bytes": 11701
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "57aa4970f67d4317a3c123acde67230e0ac418daedf7100b81d94b08c8081da6",
+      "bytes": 371188
+    },
+    {
+      "reference": "cmd/freightctl/exchange_process_integration_test.go",
+      "sha256": "90db9d9869a8b0b114d2b4bc31d7313b48934888fea968c103890ab0f3dfaacf",
+      "bytes": 15836
+    }
+  ],
+  "original_failure": {
+    "candidate": "e87483babb4e32f8a3aaf78d13f8374d842fa78b",
+    "run": 42354252231,
+    "job": 128348737983,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128348737983",
+    "test": "TestArtifactExchangeCLIUsesOrdinaryAuthorityAndPublishesVerifiedDownload",
+    "observation": "Final native process-recovery count reports offers0,commands0,files1,kills3,instances4. Root runtime cannot see another actor's private exchange journals."
+  },
+  "changed": [
+    "Keep the administrator query and require explicit0 private offers/commands plus1 file metadata row. Then derive a protected sender scope from the exact fixture credential,require its authenticated actor ID and run the same count query as the sender.",
+    "Retain exact1 offer/1 command/1 file,3 kills/4 distinct process instances,independent bytes,revocation,stable custody identity,exact receipt/no-onward and all original controls. No production grant,RLS,identity or process fixture lifecycle changed.",
+    "Compact STATUS repair chronology to current work and evidence references;all original manifests/failures remain."
+  ],
+  "review_correction": "Initial local compilation found a new variable colliding with an existing credential helper. Renamed before commit;failed and final logs retained.",
+  "green": [
+    "Final affected integration-tag compilation -run ^$ and vet pass. No local PostgreSQL,daemon kill/restart or stock curl runtime executed."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f241-final-process-observer-compile.log",
+      "sha256": "f5bf5feba27c31424a572952036528edce79179c053021a81d8f34ded497c971",
+      "bytes": 75
+    },
+    {
+      "reference": ".private/freightctl-f241-final-process-observer-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f241-process-observer-compile.log",
+      "sha256": "813cb4ee35afc6db0704e587b4d67c508ec19a25ab79d51a226772498e6f96ff",
+      "bytes": 934
+    },
+    {
+      "reference": ".private/freightctl-f241-process-observer-vet.log",
+      "sha256": "cf3eb6b0701eb8a480f21f62865f0f3f76192730248b0ecd1724fe280f226095",
+      "bytes": 377
+    }
+  ],
+  "owed": [
+    "Original actual native executable/PostgreSQL/TLS/curl committed-response-loss/process-kill/restart/final owner-cardinality replay on both architectures.",
+    "All actual final-source native/browser/stock/security/race/restore/reproducibility and remaining baseline/AX/FINISH gates."
+  ],
+  "resources": "OneCPU/192MiB local compilation/static only;no PostgreSQL,Chrome,inference,scanner or heavy peer. Retained35/source60 unchanged."
+}
