@@ -11,8 +11,15 @@ linked safe manifests. Raw private proof remains outside Git.
 Current pushed candidate: `f22d0d41428f0019f5a872336c892f9893c2cc2e`.
 [F420](docs/qualification/evidence/F420-native-push.json) binds five owner-only
 commits,enabled Gitleaks(no leaks) and16 first original attempt1 workflows.
-F416/F417 collection DELETE/COPY and F418 full-tree CLI custody opening await
-actual original native outcomes.
+[F422](docs/qualification/evidence/F422-native-terminal.json) records all16
+original workflows/35 terminal jobs:32pass,three browser journeys red. All named
+security gates pass. Both Linux unit-race/PostgreSQL/restore and actual stock
+HTTPS/curl steps succeed at this source,including F416/F417/F418. Both JSON
+API/CLI/signature/scanner-protocol steps succeed. Detailed scoped/final-source
+proof remains owed. Receive and live browser/FTPS remain failed;local-collection
+browser preview fails with closed browser-response-body class at95:14. Original
+logs/diagnostic hashes are preserved;no safety is inferred. Local F421/F423
+are not included. Detailed diagnosis/repair stays mandatory at FINISH.
 
 Previous terminal candidate: `23c752add5ee77f47d8280f7c629c803058e3b7c`.
 [F415](docs/qualification/evidence/F415-native-push.json) binds four owner-only
@@ -222,7 +229,7 @@ The current f22d0d4 live browser/FTPS policy/credential journey is failed again
 Limited security classification identifies no actionable assertion or cause;
 this establishes no safety. Receive remains red. Both journeys remain
 unqualified;detailed original diagnosis/repair and final-source replay stay
-mandatory at FINISH. The original PostgreSQL/image jobs are still running.
+mandatory at FINISH. F422 now records their terminal success;the three browser journeys remain failed/unqualified.
 
 F423 exposes F421 original private namespace receipt recovery to MCP agents
 through one metadata-only read operation. Catalog v19 has44 tools;all43 original
