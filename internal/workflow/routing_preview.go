@@ -2,6 +2,7 @@ package workflow
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/ctlplne/freightctl/internal/store"
 )
@@ -10,20 +11,21 @@ import (
 // recording a run or touching file bytes or a peer. Potential effects are the
 // approved catalog; selected effects follow the exact compiled plan order.
 type RunPreview struct {
-	Workflow        Reference      `json:"workflow"`
-	Source          store.File     `json:"source"`
-	Potential       []Effect       `json:"potential_effects"`
-	Selected        []Effect       `json:"selected_effects"`
-	Plan            *ExecutionPlan `json:"execution_plan,omitempty"`
-	PlanHash        string         `json:"execution_plan_hash,omitempty"`
-	ExternalContact bool           `json:"external_contact"`
+	Workflow        Reference       `json:"workflow"`
+	Source          store.File      `json:"source"`
+	Potential       []Effect        `json:"potential_effects"`
+	Selected        []Effect        `json:"selected_effects"`
+	Plan            *ExecutionPlan  `json:"execution_plan,omitempty"`
+	PlanHash        string          `json:"execution_plan_hash,omitempty"`
+	ExternalContact bool            `json:"external_contact"`
+	Processing      json.RawMessage `json:"processing,omitempty"`
 }
 
 func (s *Service) PreviewRun(ctx context.Context, scope store.Scope, r RunRequest) (*RunPreview, error) {
 	if !store.ValidID(r.FileID) {
 		return nil, ErrInput
 	}
-	t, err := s.begin(ctx, scope, "workflow_execute", "read")
+	t, err := s.beginWorkflow(ctx, scope, "workflow_execute", "read")
 	if err != nil {
 		return nil, err
 	}
@@ -32,7 +34,22 @@ func (s *Service) PreviewRun(ctx context.Context, scope store.Scope, r RunReques
 	if err != nil {
 		return nil, err
 	}
-	if err = t.FileAccessible(ctx, r.FileID); err != nil {
+	if err = workflowDefinitionScope(t, *definition); err != nil {
+		return nil, err
+	}
+	var processing json.RawMessage
+	if definition.Schema == 3 {
+		if s.Processor == nil {
+			return nil, store.ErrState
+		}
+		if err = t.NamespaceLock(ctx); err != nil {
+			return nil, err
+		}
+		processing, err = s.Processor.ValidateProcessing(ctx, t, *definition.Processing, r.FileID)
+		if err != nil {
+			return nil, err
+		}
+	} else if err = t.FileAccessible(ctx, r.FileID); err != nil {
 		return nil, err
 	}
 	source, err := t.File(ctx, r.FileID)
@@ -47,6 +64,7 @@ func (s *Service) PreviewRun(ctx context.Context, scope store.Scope, r RunReques
 		return nil, err
 	}
 	preview := &RunPreview{Workflow: r.Workflow, Source: *source, Potential: effects, Selected: []Effect{}}
+	preview.Processing = processing
 	selected := definition.Steps
 	if definition.Schema == 2 {
 		preview.Plan, selected, err = s.planRun(ctx, t, r, definition, source)

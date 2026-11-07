@@ -74,7 +74,7 @@ func projectionOptionsFor(plan ProjectionPlan) ProjectionOptions {
 	return ProjectionOptions{Profile: plan.Profile, TargetPath: path, Reason: plan.Context.Reason, Definition: plan.Projection}
 }
 func (s *Service) projectionCurrent(ctx context.Context, t *store.Transaction, d ProjectionDefinition, lock bool) (*ProjectionPreview, error) {
-	if err := projectionWorkflowCurrent(ctx, t, d); err != nil {
+	if err := projectionWorkflowCurrent(ctx, t, d, lock); err != nil {
 		return nil, err
 	}
 	fresh, err := s.projectionPlan(ctx, t, d.Plan.Context.Source.File.ID, projectionOptionsFor(d.Plan), lock)

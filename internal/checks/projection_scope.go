@@ -127,7 +127,7 @@ func (s *Service) projectionExistingBegin(ctx context.Context, scope store.Scope
 		return fail(store.ErrForbidden)
 	}
 	if action == "workflow_execute" {
-		if err = projectionWorkflowCurrent(ctx, t, d); err != nil {
+		if err = projectionWorkflowCurrent(ctx, t, d, false); err != nil {
 			return fail(err)
 		}
 	}

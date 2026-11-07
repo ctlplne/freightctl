@@ -9,24 +9,25 @@ import (
 )
 
 type Difference struct {
-	WorkflowID     string     `json:"workflow_id"`
-	FromVersion    int        `json:"from_version"`
-	ToVersion      int        `json:"to_version"`
-	FromHash       string     `json:"from_hash"`
-	ToHash         string     `json:"to_hash"`
-	Before         Definition `json:"before"`
-	After          Definition `json:"after"`
-	NameChanged    bool       `json:"name_changed"`
-	OrderChanged   bool       `json:"order_changed"`
-	SourceChanged  bool       `json:"source_changed,omitempty"`
-	ProgramChanged bool       `json:"program_changed,omitempty"`
-	Added          []string   `json:"added_steps"`
-	Removed        []string   `json:"removed_steps"`
-	Changed        []string   `json:"changed_steps"`
+	WorkflowID        string     `json:"workflow_id"`
+	FromVersion       int        `json:"from_version"`
+	ToVersion         int        `json:"to_version"`
+	FromHash          string     `json:"from_hash"`
+	ToHash            string     `json:"to_hash"`
+	Before            Definition `json:"before"`
+	After             Definition `json:"after"`
+	NameChanged       bool       `json:"name_changed"`
+	OrderChanged      bool       `json:"order_changed"`
+	SourceChanged     bool       `json:"source_changed,omitempty"`
+	ProgramChanged    bool       `json:"program_changed,omitempty"`
+	ProcessingChanged bool       `json:"processing_changed,omitempty"`
+	Added             []string   `json:"added_steps"`
+	Removed           []string   `json:"removed_steps"`
+	Changed           []string   `json:"changed_steps"`
 }
 
 func (s *Service) Diff(ctx context.Context, scope store.Scope, id string, from, to int) (*Difference, error) {
-	t, err := s.begin(ctx, scope)
+	t, err := s.beginWorkflow(ctx, scope)
 	if err != nil {
 		return nil, err
 	}
@@ -42,6 +43,12 @@ func (s *Service) Diff(ctx context.Context, scope store.Scope, id string, from, 
 	if err != nil {
 		return nil, err
 	}
+	if err = workflowConfigurationScope(t, before); err != nil {
+		return nil, err
+	}
+	if err = workflowConfigurationScope(t, after); err != nil {
+		return nil, err
+	}
 	d := &Difference{WorkflowID: id, FromVersion: from, ToVersion: to, FromHash: before.Hash, ToHash: after.Hash, Added: []string{}, Removed: []string{}, Changed: []string{}}
 	if err = json.Unmarshal(before.Definition, &d.Before); err != nil {
 		return nil, store.ErrState
@@ -52,6 +59,7 @@ func (s *Service) Diff(ctx context.Context, scope store.Scope, id string, from, 
 	d.NameChanged = d.Before.Name != d.After.Name
 	d.SourceChanged = !reflect.DeepEqual(d.Before.Source, d.After.Source)
 	d.ProgramChanged = !reflect.DeepEqual(d.Before.Program, d.After.Program)
+	d.ProcessingChanged = !reflect.DeepEqual(d.Before.Processing, d.After.Processing)
 	old, new := map[string]Step{}, map[string]Step{}
 	for _, step := range d.Before.Steps {
 		old[step.ID] = step
@@ -87,7 +95,7 @@ func (s *Service) Cancel(ctx context.Context, scope store.Scope, id, key string,
 	if !keyPattern.MatchString(key) || !hashPattern.MatchString(decision.Hash) || decision.Revision < 1 {
 		return nil, ErrInput
 	}
-	t, err := s.begin(ctx, scope, "workflow_execute", "read")
+	t, err := s.beginWorkflow(ctx, scope, "workflow_execute", "read")
 	if err != nil {
 		return nil, err
 	}
@@ -106,6 +114,35 @@ func (s *Service) Cancel(ctx context.Context, scope store.Scope, id, key string,
 	}
 	if r.Authority != t.AuthorityRevision || r.Root != t.Root {
 		return nil, store.ErrUnauthorized
+	}
+	binding, err := s.processingBinding(ctx, t, r)
+	if err != nil {
+		return nil, err
+	}
+	if binding != nil {
+		if _, err = s.Processor.ObserveProcessing(ctx, t, r, *binding); err != nil {
+			return nil, err
+		}
+		if data != nil {
+			return &Result{Resource: data, Replayed: true}, t.Tx.Commit(ctx)
+		}
+		if r.Revision != decision.Revision || r.WorkflowHash != decision.Hash {
+			return nil, store.ErrRevision
+		}
+		if r.State == "succeeded" || r.State == "cancelled" {
+			return nil, store.ErrState
+		}
+		if err = s.Processor.CancelProcessing(ctx, t, *binding); err != nil {
+			return nil, err
+		}
+		if err = setProjection(ctx, t, r, "cancelled", "operator_cancelled"); err != nil {
+			return nil, err
+		}
+		view, _, _, err := s.runSnapshot(ctx, t, r)
+		if err != nil {
+			return nil, err
+		}
+		return result(t, ctx, key, meaning, id, view)
 	}
 	if err = t.FileAccessible(ctx, r.FileID); err != nil {
 		return nil, err

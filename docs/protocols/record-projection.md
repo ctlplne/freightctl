@@ -267,15 +267,63 @@ authority and mandatory source protections also remain the caller's obligations.
 
 ## Evidence boundary
 
-F168 checkpoints a proposed typed `records.project` task in workflow schema3.
-It pins explicit mapping rules and a separate output-policy revision and permits
-no delivery steps,source collection,program or arbitrary execution. The shared
-record-rule types preserve existing JSON field order and hashes. This is an
-incomplete adapter: schema3 draft persistence refuses with invalid state until
-transactional run dispatch,binding and matching SQL guards are implemented.
-The dependency port and store scaffolding are not registered by API or CLI.
-No migration,executable workflow or native qualification is claimed by this
-checkpoint. Existing standalone schema1/2 projection profiles remain available.
+F168 checkpointed the typed contract with draft persistence disabled. F170 adds
+the transactional run/dispatch path,SQL53 and ordinary API/CLI wiring described
+below. Native outcomes remain owed;compilation does not qualify PostgreSQL or
+served execution. Existing standalone schema1/2 projection profiles remain.
+
+### Typed processing workflow
+
+Workflow schema3 contains `name`,empty `steps` and exactly one `processing` task.
+The task contains `id`,kind `records.project`,the complete normalized projection
+`definition`,exact `output_policy` (`id`,`version`,`hash`),`target_path` and
+`reason`. Every engine/output/row/byte/deadline/presence rule is explicit before
+approval. Source collection,programs,delivery steps and arbitrary code refuse.
+The approval pins the task and source contract;the executor selects an owned
+input that satisfies that contract. Run creation binds the actual immutable input,
+successful original checks,namespace,authority,storage and current output policy.
+An input may be held with successful checks or use its explicitly retired source
+contract. Ordinary downloads still require their ordinary release policy.
+
+Use ordinary workflow validate,draft,approve,run,run-preview,status,work,refresh,
+cancel and diff interfaces. The CLI command names are `workflow-validate`,
+`workflow-draft`,`workflow-approve`,`workflow-run`,`workflow-run-preview`,
+`workflow-run-status`,`workflow-work`,`workflow-refresh`,`workflow-cancel` and
+`workflow-diff`. Processing validation/execution/observation needs the configured
+storage root. Draft management requires `workflow_manage`;approval or revocation
+requires `workflow_approve`;execution requires `workflow_execute`,read,write and
+check_run. Confined processing is allowed in the actor's own namespace. Legacy
+workflow/connection operations retain their root requirements. No admin,
+intake-policy change,release or delivery grant follows from processing approval.
+
+Creation atomically commits the run,event/receipt,one already-approved exact task
+intent,three private staging slots and immutable `workflow_processing` binding.
+Both directions have deferred SQL membership checks. No delivery intent is made.
+Before work,a stable workflow key commits the selected intent hash and revision.
+Internal start/work keys recover that exact attempt. An original failed key never
+advances to a newer retry;`processing_attempt` is its historical result while
+`status.processing` is the current observation. A fresh key can retry within the
+ordinary three-attempt/lease/fencing limits. A completed task is never executed
+again;new observation work only refreshes its status.
+
+Completion creates a separate held artifact with ordinary immutable provenance.
+The run observes `attention`/`output_held`,with no delivery steps. Fresh ordinary
+output checks and a separately authorized release are required. Refresh can then
+record `succeeded`/`transformed_output_released`. That means processing and release,
+with no recipient,transfer or receiver-processing promise. SQL refuses success
+based only on an empty delivery list. Onward sending needs a separately approved
+workflow and current delivery authority for the newly released artifact.
+
+Workflow revocation blocks direct projection start/work as well as workflow work.
+Cancellation retires pending or expired processing in the same transaction;it
+refuses an active lease. An already completed held artifact remains ordinary
+custody and does not inherit a release. Cancellation never claims to erase it.
+Authority,namespace or storage changes refuse private run/receipt access.
+SQL53 preserves the existing collection-routing/handoff guards and adds forced
+tenant/partner/actor RLS for the new binding. Earlier migrations and retained35
+are unchanged. Native SQL,API/CLI,protected formats,process death,restore,
+fairness and complete customer outcomes remain owed. Browser editing and the
+workflow MCP catalog do not yet advertise schema3.
 
 Native ARM/x86 qualification prepares stock Python CSV/JSON/ElementTree/fixed
 fixtures and actual pinned XlsxWriter bytes. Ten JSON/CSV outputs are checked by a

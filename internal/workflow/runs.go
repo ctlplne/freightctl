@@ -53,11 +53,25 @@ func (s *Service) Run(ctx context.Context, scope store.Scope, key string, r RunR
 	if !keyPattern.MatchString(key) || !store.ValidID(r.FileID) {
 		return nil, ErrInput
 	}
-	t, err := s.begin(ctx, scope, "workflow_execute", "read")
+	t, err := s.beginWorkflow(ctx, scope, "workflow_execute", "read")
 	if err != nil {
 		return nil, err
 	}
 	defer t.Tx.Rollback(ctx)
+	cfg, err := t.Configuration(ctx, false, r.Workflow.ID, r.Workflow.Version, false)
+	if err != nil {
+		return nil, err
+	}
+	if err = workflowConfigurationScope(t, cfg); err != nil {
+		return nil, err
+	}
+	var declared Definition
+	if Decode(cfg.Definition, &declared) != nil {
+		return nil, store.ErrState
+	}
+	if declared.Schema == 3 {
+		return s.runProcessing(ctx, t, key, r)
+	}
 	_, definition, err := approved(ctx, t, r.Workflow)
 	if err != nil {
 		return nil, err
@@ -341,7 +355,7 @@ func snapshot(ctx context.Context, t *store.Transaction, r *store.WorkflowRun) (
 	return view, state, reason, nil
 }
 func (s *Service) Status(ctx context.Context, scope store.Scope, id string) (*RunView, error) {
-	t, err := s.begin(ctx, scope)
+	t, err := s.beginWorkflow(ctx, scope)
 	if err != nil {
 		return nil, err
 	}
@@ -356,10 +370,7 @@ func (s *Service) Status(ctx context.Context, scope store.Scope, id string) (*Ru
 	if err = t.Require("read"); err != nil {
 		return nil, err
 	}
-	if err = t.FileAccessible(ctx, r.FileID); err != nil {
-		return nil, err
-	}
-	view, _, _, err := snapshot(ctx, t, r)
+	view, _, _, err := s.runSnapshot(ctx, t, r)
 	if err != nil {
 		return nil, err
 	}
@@ -380,21 +391,26 @@ func setProjection(ctx context.Context, t *store.Transaction, r *store.WorkflowR
 }
 
 type Dispatch struct {
-	RunID      string `json:"run_id"`
-	DeliveryID string `json:"delivery_id"`
-	StepID     string `json:"step_id"`
+	RunID              string `json:"run_id"`
+	DeliveryID         string `json:"delivery_id"`
+	StepID             string `json:"step_id"`
+	ProjectionID       string `json:"projection_id,omitempty"`
+	ProjectionHash     string `json:"projection_hash,omitempty"`
+	ProjectionRevision int64  `json:"projection_revision,omitempty"`
+	ObserveOnly        bool   `json:"observe_only,omitempty"`
 }
 type WorkResult struct {
-	Dispatch Dispatch `json:"dispatch"`
-	Replayed bool     `json:"replayed"`
-	Status   *RunView `json:"status"`
+	Dispatch   Dispatch                `json:"dispatch"`
+	Replayed   bool                    `json:"replayed"`
+	Status     *RunView                `json:"status"`
+	Processing *store.RecordProjection `json:"processing_attempt,omitempty"`
 }
 
 func (s *Service) prepare(ctx context.Context, scope store.Scope, id, key string) (*Dispatch, bool, error) {
 	if !keyPattern.MatchString(key) {
 		return nil, false, ErrInput
 	}
-	t, err := s.begin(ctx, scope, "workflow_execute", "read", "deliver")
+	t, err := s.beginWorkflow(ctx, scope, "workflow_execute", "read")
 	if err != nil {
 		return nil, false, err
 	}
@@ -412,6 +428,16 @@ func (s *Service) prepare(ctx context.Context, scope store.Scope, id, key string
 		return nil, false, store.ErrUnauthorized
 	}
 	if err = s.checkStorage(r.StorageID); err != nil {
+		return nil, false, err
+	}
+	binding, err := s.processingBinding(ctx, t, r)
+	if err != nil {
+		return nil, false, err
+	}
+	if binding != nil {
+		return s.prepareProcessing(ctx, t, r, *binding, key, meaning, data)
+	}
+	if err = t.Require("deliver"); err != nil {
 		return nil, false, err
 	}
 	if err = t.FileAccessible(ctx, r.FileID); err != nil {
@@ -432,7 +458,7 @@ func (s *Service) prepare(ctx context.Context, scope store.Scope, id, key string
 		if err = json.Unmarshal(data, &dispatch); err != nil {
 			return nil, false, err
 		}
-		if dispatch.RunID != id {
+		if dispatch.RunID != id || !store.ValidID(dispatch.DeliveryID) || !stepPattern.MatchString(dispatch.StepID) || dispatch.ProjectionID != "" || dispatch.ProjectionHash != "" || dispatch.ProjectionRevision != 0 || dispatch.ObserveOnly {
 			return nil, false, store.ErrConflict
 		}
 		return &dispatch, true, t.Tx.Commit(ctx)
@@ -473,7 +499,7 @@ func (s *Service) prepare(ctx context.Context, scope store.Scope, id, key string
 	return dispatch, false, t.Tx.Commit(ctx)
 }
 func (s *Service) refresh(ctx context.Context, scope store.Scope, id string) (*RunView, error) {
-	t, err := s.begin(ctx, scope, "workflow_execute", "read")
+	t, err := s.beginWorkflow(ctx, scope, "workflow_execute", "read")
 	if err != nil {
 		return nil, err
 	}
@@ -485,10 +511,7 @@ func (s *Service) refresh(ctx context.Context, scope store.Scope, id string) (*R
 	if r.Authority != t.AuthorityRevision || r.Root != t.Root {
 		return nil, store.ErrUnauthorized
 	}
-	if err = t.FileAccessible(ctx, r.FileID); err != nil {
-		return nil, err
-	}
-	view, state, reason, err := snapshot(ctx, t, r)
+	view, state, reason, err := s.runSnapshot(ctx, t, r)
 	if err != nil {
 		return nil, err
 	}
@@ -504,6 +527,21 @@ func (s *Service) Work(ctx context.Context, scope store.Scope, id, key string) (
 	dispatch, replayed, err := s.prepare(ctx, scope, id, key)
 	if err != nil {
 		return nil, err
+	}
+	if dispatch.ProjectionID != "" {
+		var processing *store.RecordProjection
+		if !dispatch.ObserveOnly {
+			_, command, _ := digest(struct{ Kind, Run, Key string }{"processing_work", id, key})
+			processing, err = s.Processor.WorkProcessing(ctx, scope, store.WorkflowProcessing{RunID: id, ProjectionID: dispatch.ProjectionID, Hash: dispatch.ProjectionHash}, dispatch.ProjectionRevision, command)
+			if err != nil {
+				return nil, err
+			}
+		}
+		view, err := s.refresh(ctx, scope, id)
+		if err != nil {
+			return nil, err
+		}
+		return &WorkResult{Dispatch: *dispatch, Replayed: replayed, Status: view, Processing: processing}, nil
 	}
 	sender := &delivery.Service{Custody: s.Custody}
 	d, err := sender.Status(ctx, scope, dispatch.DeliveryID)
@@ -531,7 +569,7 @@ func (s *Service) RefreshRun(ctx context.Context, scope store.Scope, id, key str
 	if !store.ValidID(id) || !keyPattern.MatchString(key) {
 		return nil, ErrInput
 	}
-	t, e := s.begin(ctx, scope, "workflow_execute", "read")
+	t, e := s.beginWorkflow(ctx, scope, "workflow_execute", "read")
 	if e != nil {
 		return nil, e
 	}
@@ -539,6 +577,19 @@ func (s *Service) RefreshRun(ctx context.Context, scope store.Scope, id, key str
 	_, meaning, e := digest(struct{ Kind, ID string }{"refresh_run", id})
 	if e != nil {
 		return nil, e
+	}
+	boundRun, e := t.WorkflowRun(ctx, id, false)
+	if e != nil {
+		return nil, e
+	}
+	binding, e := s.processingBinding(ctx, t, boundRun)
+	if e != nil {
+		return nil, e
+	}
+	if binding != nil {
+		if _, e = s.Processor.ObserveProcessing(ctx, t, boundRun, *binding); e != nil {
+			return nil, e
+		}
 	}
 	if prior, e := replay(t, ctx, key, meaning); e != nil || prior != nil {
 		return prior, e
@@ -550,10 +601,7 @@ func (s *Service) RefreshRun(ctx context.Context, scope store.Scope, id, key str
 	if r.Authority != t.AuthorityRevision || r.Root != t.Root {
 		return nil, store.ErrUnauthorized
 	}
-	if e = t.FileAccessible(ctx, r.FileID); e != nil {
-		return nil, e
-	}
-	view, state, reason, e := snapshot(ctx, t, r)
+	view, state, reason, e := s.runSnapshot(ctx, t, r)
 	if e != nil {
 		return nil, e
 	}

@@ -37,7 +37,7 @@ func (s *Server) workflow(w http.ResponseWriter, r *http.Request) {
 		failure(w, err)
 		return
 	}
-	service := &workflow.Service{Custody: s.Service}
+	service := &workflow.Service{Custody: s.Service, Processor: s.Checks}
 	var result any
 	switch r.Pattern {
 	case "POST /v1/tenants/{tenant}/partners/{partner}/workflows/validate":

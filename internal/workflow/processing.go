@@ -30,12 +30,14 @@ type ProcessingObservation struct {
 	Attempts int    `json:"attempts"`
 	FileID   string `json:"output_file_id,omitempty"`
 	Current  bool   `json:"current"`
+	Released bool   `json:"released"`
 }
 type ProcessingPort interface {
 	ValidateProcessing(context.Context, *store.Transaction, ProcessingTask, string) (json.RawMessage, error)
 	StageProcessing(context.Context, *store.Transaction, *store.WorkflowRun, ProcessingTask) (*store.RecordProjection, error)
 	WorkProcessing(context.Context, store.Scope, store.WorkflowProcessing, int64, string) (*store.RecordProjection, error)
 	ObserveProcessing(context.Context, *store.Transaction, *store.WorkflowRun, store.WorkflowProcessing) (*ProcessingObservation, error)
+	CancelProcessing(context.Context, *store.Transaction, store.WorkflowProcessing) error
 }
 
 func normalizeProcessing(t ProcessingTask) (ProcessingTask, error) {

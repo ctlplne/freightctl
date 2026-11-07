@@ -3,22 +3,23 @@ package checks
 import (
 	"context"
 	"encoding/json"
+	"errors"
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
+	"github.com/ctlplne/freightctl/internal/custody"
 	"github.com/ctlplne/freightctl/internal/store"
 	"github.com/ctlplne/freightctl/internal/workflow"
 )
 
-// The workflow adapter is a checkpoint, not a registered runtime. Schema-3
-// drafts remain disabled until transactional run dispatch and SQL guards exist.
+// Workflow approval supplies a pinned task intent, without release or delivery.
 var _ workflow.ProcessingPort = (*Service)(nil)
 
-func projectionWorkflowCurrent(ctx context.Context, t *store.Transaction, d ProjectionDefinition) error {
+func projectionWorkflowCurrent(ctx context.Context, t *store.Transaction, d ProjectionDefinition, lock bool) error {
 	if d.Workflow == nil {
 		return nil
 	}
 	b := d.Workflow
-	c, err := t.Configuration(ctx, false, b.WorkflowID, b.Version, false)
+	c, err := t.Configuration(ctx, false, b.WorkflowID, b.Version, lock)
 	if err != nil {
 		return err
 	}
@@ -84,7 +85,7 @@ func (s *Service) StageProcessing(ctx context.Context, t *store.Transaction, run
 		return nil, err
 	}
 	d := ProjectionDefinition{Schema: 2, Plan: view.Plan, Slots: make([]string, 3), Workflow: &store.ProcessingWorkflowBinding{WorkflowID: run.WorkflowID, Version: run.WorkflowVersion, Hash: run.WorkflowHash, RunID: run.ID, StepID: task.ID}}
-	if err = projectionWorkflowCurrent(ctx, t, d); err != nil {
+	if err = projectionWorkflowCurrent(ctx, t, d, true); err != nil {
 		return nil, err
 	}
 	for i := range d.Slots {
@@ -104,6 +105,12 @@ func (s *Service) ObserveProcessing(ctx context.Context, t *store.Transaction, r
 	if err := projectionActionAuthority(t, ScopedProjectionProfile, ""); err != nil {
 		return nil, err
 	}
+	if s.Custody == nil || s.Custody.Disk == nil {
+		return nil, custody.ErrStorageIdentity
+	}
+	if err := s.Custody.Disk.CheckIdentity(); err != nil {
+		return nil, err
+	}
 	if run.Root != t.Root || run.Authority != t.AuthorityRevision || run.StorageID != s.Custody.Disk.Identity() {
 		return nil, store.ErrUnauthorized
 	}
@@ -121,9 +128,64 @@ func (s *Service) ObserveProcessing(ctx context.Context, t *store.Transaction, r
 	v := &workflow.ProcessingObservation{ID: r.ID, Hash: r.Hash, State: r.State, Revision: r.Revision, Attempts: r.Attempts, FileID: r.FileID}
 	_, err = s.projectionCurrent(ctx, t, d, false)
 	v.Current = err == nil
+	if r.State == "completed" {
+		c, e := t.FileCheck(ctx, r.FileID, false)
+		if e != nil {
+			return nil, e
+		}
+		if c.State == "released" {
+			e = t.FileAccessible(ctx, r.FileID)
+			if e != nil && !errors.Is(e, store.ErrState) && !errors.Is(e, store.ErrForbidden) && !errors.Is(e, store.ErrNotFound) {
+				return nil, e
+			}
+			v.Released = e == nil
+		}
+	}
 	return v, nil
 }
+
+func (s *Service) CancelProcessing(ctx context.Context, t *store.Transaction, b store.WorkflowProcessing) error {
+	if err := projectionActionAuthority(t, ScopedProjectionProfile, "workflow_execute"); err != nil {
+		return err
+	}
+	r, err := t.RecordProjection(ctx, b.ProjectionID, true)
+	if err != nil {
+		return err
+	}
+	d, err := decodeProjection(r)
+	if err != nil {
+		return err
+	}
+	if r.Hash != b.Hash || d.Workflow == nil || d.Workflow.RunID != b.RunID || d.Plan.Context.Root != t.Root || d.Plan.Context.Authority != t.AuthorityRevision {
+		return store.ErrRevision
+	}
+	if r.State == "completed" || r.State == "cancelled" {
+		return nil
+	}
+	now, err := t.DatabaseTime(ctx)
+	if err != nil {
+		return err
+	}
+	if r.State == "running" && (r.LeaseUntil == nil || now.Before(*r.LeaseUntil)) {
+		return store.ErrState
+	}
+	previous := r.Revision
+	r.Revision++
+	r.State, r.WorkerID, r.LeaseUntil, r.Result = "cancelled", "", nil, json.RawMessage(`{}`)
+	return t.SaveRecordProjection(ctx, r, previous)
+}
 func (s *Service) WorkProcessing(ctx context.Context, scope store.Scope, b store.WorkflowProcessing, revision int64, command string) (*store.RecordProjection, error) {
+	view, err := s.GetProjection(ctx, scope, b.ProjectionID)
+	if err != nil {
+		return nil, err
+	}
+	definition, err := decodeProjection(view.Projection)
+	if err != nil {
+		return nil, err
+	}
+	if view.Projection.Hash != b.Hash || definition.Workflow == nil || definition.Workflow.RunID != b.RunID {
+		return nil, store.ErrRevision
+	}
 	start, err := s.StartProjection(ctx, scope, b.ProjectionID, "wf-projection-start-"+command, ProjectionStartDecision{Hash: b.Hash, Revision: revision})
 	if err != nil {
 		return nil, err

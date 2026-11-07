@@ -336,11 +336,14 @@ func (s *Service) Draft(ctx context.Context, scope store.Scope, key string, r Dr
 		return nil, err
 	}
 	r.Definition = d
-	t, err := s.begin(ctx, scope, "workflow_manage")
+	t, err := s.beginWorkflow(ctx, scope, "workflow_manage")
 	if err != nil {
 		return nil, err
 	}
 	defer t.Tx.Rollback(ctx)
+	if err = workflowDefinitionScope(t, d); err != nil {
+		return nil, err
+	}
 	if _, err = connections(ctx, t, d); err != nil {
 		return nil, err
 	}
@@ -362,12 +365,7 @@ func (s *Service) Draft(ctx context.Context, scope store.Scope, key string, r Dr
 // only draft creation, with exactly the same normalization and permission gates.
 // It never approves a definition, creates a run or executes an external effect.
 func StageDraft(ctx context.Context, t *store.Transaction, r DraftRequest) (*store.Configuration, error) {
-	// Schema 3 is a contract checkpoint only. Keep it out of persisted workflows
-	// until its transactional SQL guards, run binding and dispatch are installed.
-	if r.Definition.Schema == 3 {
-		return nil, store.ErrState
-	}
-	if t.Root != "/" {
+	if t.Root != "/" && r.Definition.Schema != 3 {
 		return nil, store.ErrForbidden
 	}
 	if err := t.Require("workflow_manage"); err != nil {
@@ -405,7 +403,7 @@ func StageDraft(ctx context.Context, t *store.Transaction, r DraftRequest) (*sto
 	return c, nil
 }
 func (s *Service) Configuration(ctx context.Context, scope store.Scope, id string, version int) (*store.Configuration, error) {
-	t, err := s.begin(ctx, scope)
+	t, err := s.beginWorkflow(ctx, scope)
 	if err != nil {
 		return nil, err
 	}
@@ -417,17 +415,27 @@ func (s *Service) Configuration(ctx context.Context, scope store.Scope, id strin
 	if err != nil {
 		return nil, err
 	}
+	if err = workflowConfigurationScope(t, c); err != nil {
+		return nil, err
+	}
 	return c, t.Tx.Commit(ctx)
 }
 func (s *Service) Decide(ctx context.Context, scope store.Scope, id string, version int, key, action string, decision Decision) (*Result, error) {
 	if !keyPattern.MatchString(key) || !hashPattern.MatchString(decision.Hash) || decision.Revision < 1 || (action != "approve" && action != "revoke") {
 		return nil, ErrInput
 	}
-	t, err := s.begin(ctx, scope, "workflow_approve")
+	t, err := s.beginWorkflow(ctx, scope, "workflow_approve")
 	if err != nil {
 		return nil, err
 	}
 	defer t.Tx.Rollback(ctx)
+	current, err := t.Configuration(ctx, false, id, version, false)
+	if err != nil {
+		return nil, err
+	}
+	if err = workflowConfigurationScope(t, current); err != nil {
+		return nil, err
+	}
 	_, meaning, _ := digest(struct {
 		Kind, ID string
 		Version  int
@@ -500,11 +508,14 @@ func (s *Service) Validate(ctx context.Context, scope store.Scope, r PreviewRequ
 	if err != nil {
 		return nil, err
 	}
-	t, err := s.begin(ctx, scope)
+	t, err := s.beginWorkflow(ctx, scope)
 	if err != nil {
 		return nil, err
 	}
 	defer t.Tx.Rollback(ctx)
+	if err = workflowDefinitionScope(t, d); err != nil {
+		return nil, err
+	}
 	if !t.Has("workflow_manage") && !t.Has("workflow_approve") && !t.Has("workflow_execute") {
 		return nil, store.ErrForbidden
 	}

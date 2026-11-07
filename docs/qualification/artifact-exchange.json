@@ -243,7 +243,8 @@
         "docs/qualification/evidence/F128-received-artifact-copy.json",
         "docs/qualification/evidence/F129-mcp-received-copy.json",
         "docs/qualification/evidence/F130-browser-received-copy.json",
-        "docs/qualification/evidence/F140-immutable-download-validators.json"
+        "docs/qualification/evidence/F140-immutable-download-validators.json",
+        "docs/qualification/evidence/F170-typed-processing-workflows.json"
       ]
     },
     {
@@ -286,7 +287,8 @@
         "docs/qualification/evidence/F148-fixed-width-intake.json",
         "docs/qualification/evidence/F151-xml-record-intake.json",
         "docs/qualification/evidence/F155-governed-xlsx-intake.json",
-        "docs/qualification/evidence/F168-typed-processing-checkpoint.json"
+        "docs/qualification/evidence/F168-typed-processing-checkpoint.json",
+        "docs/qualification/evidence/F170-typed-processing-workflows.json"
       ]
     },
     {
@@ -422,5 +424,5 @@
     "Fixtures, design documents, ledger checks, model answers and skips establish no runtime or real provider qualification.",
     "Preserve original parity/journey/defect/evaluation records and separate assisted deployment, independent adoption and enterprise readiness."
   ],
-  "execution": "Active under S006;full baseline/AX01\u2013AX08/FINISH contract incomplete.F150 retains all16 terminal b2a9dee runs;fixed-width9450456 pushed through unchanged guard.F151 adds bounded XML records/source49/shared format controls and prepares native interfaces/custody proof;actual runtime/final-source outcomes owed.Local inference/heavy runtimes remain off."
+  "execution": "Active under S006;full baseline/AX01\u2013AX08/FINISH incomplete. F170 implements typed approved processing/SQL53/ordinary API-CLI with held outputs,separate release and stable attempt history. Native PostgreSQL/API/CLI/runtime and browser/MCP/delegation/full profiles remain owed. F169/F171 retain original terminal source batches and red failures. Local inference/heavy runtimes remain off;retained35 untouched."
 }

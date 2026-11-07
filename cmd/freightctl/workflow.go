@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 
+	"github.com/ctlplne/freightctl/internal/checks"
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/custody"
 	"github.com/ctlplne/freightctl/internal/store"
@@ -29,15 +30,20 @@ func runWorkflow(ctx context.Context, command, dsn, token, tenant, partner, stor
 	}
 	defer db.Pool.Close()
 	custodyService := &custody.Service{DB: db, MaxFile: maxFile, MaxStored: maxStored}
-	if command == "workflow-run" || command == "workflow-work" || command == "onward-preview" || command == "onward-start" {
+	requiredStorage := command == "workflow-run" || command == "workflow-work" || command == "onward-preview" || command == "onward-start"
+	inspectStorage := command == "workflow-run-status" || command == "workflow-refresh" || command == "workflow-cancel" || command == "workflow-validate" || command == "workflow-run-preview"
+	if requiredStorage || (inspectStorage && storage != "") {
 		disk, err := custody.OpenExisting(storage)
-		if err != nil {
+		if err != nil && requiredStorage {
 			return err
 		}
-		defer disk.Close()
-		custodyService.Disk = disk
+		if err == nil {
+			defer disk.Close()
+			custodyService.Disk = disk
+		}
 	}
-	service := &workflow.Service{Custody: custodyService}
+
+	service := &workflow.Service{Custody: custodyService, Processor: &checks.Service{Custody: custodyService}}
 	decode := func(v any) error {
 		if command == "onward-preview" || command == "onward-start" || command == "onward-receipt" {
 			request, err := secure.ReadSecret(input, 32<<10)

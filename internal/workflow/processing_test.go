@@ -17,14 +17,14 @@ func processingWorkflow(t testing.TB) Definition {
 	return Definition{Schema: 3, Name: "Receive settlement and create held validated output", Processing: &ProcessingTask{ID: "project", Kind: "records.project", OutputPolicy: Reference{ID: "11111111-1111-4111-8111-111111111111", Version: 2, Hash: strings.Repeat("b", 64)}, Reason: "Map reviewed settlement records", Definition: recordplan.Projection{Schema: 1, Kind: "record_projection", Engine: "freightctl-record-projection-v1", SourcePolicyHash: h, OutputKind: "json_records", Columns: []recordplan.Column{{Source: "account", Target: "account"}}, MaxBytes: 8192, MaxRows: 100, MaxRecordBytes: 1024, TimeoutSeconds: 2}}}
 }
 
-func TestProcessingWorkflowDraftRefusesUntilTransactionalRuntimeIsInstalled(t *testing.T) {
-	// No schema-3 configuration may be saved before the matching SQL guards,
-	// run binding and dispatch path exist. This check runs before any SQL.
-	_, err := StageDraft(context.Background(), &store.Transaction{}, DraftRequest{Definition: processingWorkflow(t)})
-	if !errors.Is(err, store.ErrState) {
-		t.Fatalf("unfinished processing runtime admitted a draft: %v", err)
+func TestProcessingWorkflowDraftRequiresManagementBeforeAnySQL(t *testing.T) {
+	tx := &store.Transaction{Root: "/processor", Permissions: []string{"read", "write", "check_run", "workflow_execute"}}
+	_, err := StageDraft(context.Background(), tx, DraftRequest{Definition: processingWorkflow(t)})
+	if !errors.Is(err, store.ErrForbidden) {
+		t.Fatalf("execution rights acquired workflow management: %v", err)
 	}
 }
+
 func TestProcessingWorkflowTypedDefinitionBindsExplicitRulesAndSeparateOutputPolicy(t *testing.T) {
 	d := processingWorkflow(t)
 	normalized, err := Normalize(d)

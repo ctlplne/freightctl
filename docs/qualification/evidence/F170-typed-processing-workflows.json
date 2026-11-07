@@ -1,0 +1,201 @@
+{
+  "schema_version": 1,
+  "id": "F170",
+  "observed_at": "2026-11-06",
+  "candidate_parent": "b8d3fdc3a45d1f0343fbb9a2f20af04941c77d56",
+  "qualification_claim": false,
+  "state": "Typed workflow processing implementation and ordinary API/CLI wiring;focused red/green/static proof passes;native SQL/API/CLI/runtime and full customer outcomes owed",
+  "contract": "docs/protocols/record-projection.md",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "327ca719c979b4363c66a10aa68a5d76183db157927b3c77a1100972f2bbeee1",
+      "bytes": 4113
+    },
+    {
+      "reference": "cmd/freightctl/workflow.go",
+      "sha256": "c249926e3a3cda5c7f2cfb06cf9f7a98b20454fc4c768c9e5e98776ba13e3532",
+      "bytes": 4960
+    },
+    {
+      "reference": "cmd/freightctl/workflow_processing_integration_test.go",
+      "sha256": "7a9258f0e8250bacb0bc46d8356fb9134c1f31f81a2df9388f7709105a7f8adc",
+      "bytes": 8841
+    },
+    {
+      "reference": "docs/protocols/record-projection.md",
+      "sha256": "913f8768d0cf5f5e8fbb988f0e33265c01f9c5c368d07fe531922590241139a6",
+      "bytes": 23264
+    },
+    {
+      "reference": "internal/api/workflow_processing_integration_test.go",
+      "sha256": "649dfc1d0637d1087e9d61b84435e15d3cde5e6c9d59a46e4e6789c03653a9a4",
+      "bytes": 5086
+    },
+    {
+      "reference": "internal/api/workflows.go",
+      "sha256": "4ec622904cb1e2adb9a11bdc4130e7d5f716f74bfb9ded738a797672ceb0c105",
+      "bytes": 4840
+    },
+    {
+      "reference": "internal/checks/projection_intents.go",
+      "sha256": "78adef3c2c56f79736e05c89985507822f6a399dc783cfc0d45f71307a05d0a4",
+      "bytes": 12555
+    },
+    {
+      "reference": "internal/checks/projection_scope.go",
+      "sha256": "5ec3b6c2514358fee0f44c943afae29b0ff29f937532b26ce791d10f73d352b1",
+      "bytes": 4048
+    },
+    {
+      "reference": "internal/checks/workflow_processing.go",
+      "sha256": "2e055572dca2225b5ec528eaa98f7490f9b1b387bcf0a958e2cb70d8a0afe904",
+      "bytes": 7867
+    },
+    {
+      "reference": "internal/checks/workflow_processing_integration_test.go",
+      "sha256": "3ac42db580a82bd2d59993544f0d6b8dae23e1a2ad0c9aaeb47ed6367434dec1",
+      "bytes": 13563
+    },
+    {
+      "reference": "internal/store/053_processing_workflows.sql",
+      "sha256": "532dd14c8c061346243e2bd0a76b187c0ec20bce829efdeb79f29ac6da22e52c",
+      "bytes": 24320
+    },
+    {
+      "reference": "internal/store/store.go",
+      "sha256": "2ffb25575a2ec8658bc430def6d5da463d5ebe8fb3fa4dab38ef06baf61dae6b",
+      "bytes": 26836
+    },
+    {
+      "reference": "internal/workflow/configuration.go",
+      "sha256": "2029dce37e413e217477b1a30b968affe6fb4a8a9b1ebdbc70bcc9ce7d05d422",
+      "bytes": 19345
+    },
+    {
+      "reference": "internal/workflow/processing.go",
+      "sha256": "9f09dbf2f827a5bbb5eece642643873d58e50c20e550bafaea3b8df2d83f0fa8",
+      "bytes": 3785
+    },
+    {
+      "reference": "internal/workflow/processing_runs.go",
+      "sha256": "186225db4163dd8803fdcb7b792107c064673598f08b5744b3eaf0e15238b4c9",
+      "bytes": 8358
+    },
+    {
+      "reference": "internal/workflow/processing_runs_test.go",
+      "sha256": "814b9f08662e7906223b20d08f232e66faab6bad147d644f1236e5735242059d",
+      "bytes": 2682
+    },
+    {
+      "reference": "internal/workflow/processing_test.go",
+      "sha256": "71e188f08c7a6a645e0997ed946160536d6a3ac1a434f42784e8022d6b40c285",
+      "bytes": 3304
+    },
+    {
+      "reference": "internal/workflow/review.go",
+      "sha256": "ca0de400bf62405bcb4f330f3c801556575b1fbb2a04dce35328e13dc9aa81a5",
+      "bytes": 5932
+    },
+    {
+      "reference": "internal/workflow/routing_preview.go",
+      "sha256": "4c07cbc43c3b97077388a8f2e5c3a7f00f1a8845b18a2b3e8952281319c337e4",
+      "bytes": 3075
+    },
+    {
+      "reference": "internal/workflow/runs.go",
+      "sha256": "f745cd57ed87bedf462d7420d44165b5da13be2b84bfb7b628bb70a9e0152825",
+      "bytes": 19458
+    },
+    {
+      "reference": "scripts/metadata_contract.py",
+      "sha256": "d7a9cd7b1c065e95eade7408f7acd3bc95414ab90296ee0ffbb21ca44860c76a",
+      "bytes": 3416
+    },
+    {
+      "reference": "scripts/test-ci-metadata-summary.py",
+      "sha256": "af6eb7bcf09dc4b43915292a9f3fb949fa82272d225543ccf225da61b35478bb",
+      "bytes": 6240
+    }
+  ],
+  "changed": [
+    "Schema3 approved records.project task creates an atomically bound run,one already-approved exact intent,private slots,events and command receipt;no delivery intent. Existing read/write/check_run/workflow_execute grants govern execution;manage/approve remain separate. Scoped roots are supported only for processing;legacy workflow/connection root gates remain.",
+    "Stable work keys commit exact intent/hash/revision before effects. Internal start/work keys recover the selected attempt;historical failure and current observation stay separate. Completed work only observes;there is no repeated processing under a new key.",
+    "Workflow revocation gates direct projection start/work as well as workflow work. Pending/expired cancellation retires the intent transactionally;live leases are not stolen. Completed artifacts remain custody with no inherited release.",
+    "Output is held for fresh ordinary checks and separate release;only then can a processing run succeed as transformed_output_released. Source/protection/authority/storage/custody/lease/fencing and original receipts remain bound.",
+    "Append-only53 adds actor-forced-RLS workflow_processing,immutable event/binding guards,two-way deferred membership,zero-delivery and fresh-release success guards. The latest schema34 collection-routing/handoff/run guard is retained verbatim outside explicit schema3 additions. Standalone projection guards and approved slots extend only for exact workflow-bound definitions.",
+    "Ordinary API and CLI wire the existing checks adapter for validation,run/preview,status,work,refresh,cancel and diff. Browser and workflow MCP schema3 surfaces,delegation and composition remain owed. Existing standalone MCP tools are unchanged.",
+    "Source53 targets74 metadata/73 forced-RLS tables. Explicit historical52/51 and retained35 profiles remain;earlier migrations and retained database are unchanged."
+  ],
+  "red": {
+    "reference": ".private/freightctl-f170-processing-red.log",
+    "observed": "Required held-success/dispatch tests failed compilation because ProcessingObservation.Released,processingSnapshotResult and exact projection dispatch fields/validation did not exist."
+  },
+  "green": {
+    "reference": ".private/freightctl-f170-final-focused.log",
+    "observed": "Held output is not delivery or success;fresh separate release is distinct;cancelled outcomes stay cancelled;missing output refuses;dispatch cannot select another intent/hash/step/delivery or lose its positive original revision. Scoped processing keeps legacy root denial and management rights separate. Affected legacy normalization/projection/scoped/lease and architecture checks pass."
+  },
+  "checks": [
+    {
+      "reference": ".private/freightctl-f170-processing-red.log",
+      "sha256": "c4ab4185cd38ee485ed0b6e5ac15981e7d887dad91bcc8ac086bf4fe15562b5f",
+      "bytes": 1229
+    },
+    {
+      "reference": ".private/freightctl-f170-final-focused.log",
+      "sha256": "ab5624799e1e70724f0fb4d126c27ec1100acf5056c26b5a4e3508e6ea7b5d6a",
+      "bytes": 182
+    },
+    {
+      "reference": ".private/freightctl-f170-final-compile.log",
+      "sha256": "66c5e6028c7322a4082830e63a7a6e97c4399e2d50ac5cd2735829cf73aeb483",
+      "bytes": 377
+    },
+    {
+      "reference": ".private/freightctl-f170-final-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f170-final-metadata-summary.log",
+      "sha256": "354de7570f516bdda12860a1269a022f464a034a487154a644d46000b5cd6c09",
+      "bytes": 105
+    },
+    {
+      "reference": ".private/freightctl-f170-final-metadata-contract.log",
+      "sha256": "2d014bb427120fb1a5014d7499096989061fd0fdf40acb471c2e2667de60e71e",
+      "bytes": 103
+    },
+    {
+      "reference": ".private/freightctl-f170-legacy-run-guard.log",
+      "sha256": "c0a45f31b8a561d2d8d8f7322f51c325b22bf3e369d61948ef3abdfc637d2bde",
+      "bytes": 155
+    },
+    {
+      "reference": ".private/freightctl-f170-schema-version.log",
+      "sha256": "638e147f2d85e894e828c1e91267accf7e281afa26888d22ebd6a1197a24b8c7",
+      "bytes": 22
+    }
+  ],
+  "prepared_native": [
+    "TestProcessingWorkflowActualApprovedTaskHoldsOutputUntilFreshSeparateRelease",
+    "TestProcessingWorkflowActualConfinedActorHasNoAdministrationReleaseOrDelivery",
+    "TestProcessingWorkflowActualFailureKeyNeverAdvancesToLaterRetry",
+    "TestProcessingWorkflowActualSQLRejectsHeldSuccessAndMissingAtomicMembership",
+    "TestProcessingWorkflowActualRevocationStopsDirectWorkerAndAllowsSafeCancellation",
+    "TestProcessingWorkflowHTTPSOrdinaryApprovalRunAndHeldOutput",
+    "TestProcessingWorkflowCLIUsesApprovedTaskAndSeparateOutputRelease"
+  ],
+  "verification_limits": [
+    "Tagged compilation selected zero native tests. No PostgreSQL,Chrome,stock peer,scanner or model was run locally.",
+    "Twelve Python metadata stand-ins and native ARM CLI schema-version=53 are metadata/static proof only,not migration execution or restore qualification.",
+    "During source review an initial run-guard copy was found older than schema34. The latest captured-routing/handoff clauses were restored before verification;the exact static preservation check is retained. No earlier migration changed.",
+    "F168 temporary draft-unavailability test was replaced by the permanent missing-management refusal after transactional runtime/SQL implementation;native real draft/run acceptance and fail-closed guards are asserted by the prepared cases,not claimed passed."
+  ],
+  "owed": [
+    "Run all seven prepared native PostgreSQL/storage/API/CLI cases and replay affected original failures;prove actual SQL syntax,forced RLS,atomic guards,source protection and output release at candidate/final source.",
+    "Complete browser/workflow MCP schema3,independent approval/worker delegation,processing task composition/scheduling/discovery/operator recovery and required transformation breadth.",
+    "Prove stock producers/independent receivers,protected signatures/scanners,role/root/revision expiry,queue/isolation/fairness/capacity,process-death/lease/restore/recovery and every original public customer outcome.",
+    "FINISH broad/native/security/frontend/accessibility/reproducibility and all deferred original CI repairs remain mandatory. Full83 parity rows,12 journeys,AX01-AX08 and assisted/adoption/enterprise qualification remain open;F026 and external prerequisites stay explicit."
+  ]
+}
