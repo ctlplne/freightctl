@@ -16,12 +16,5 @@ func SyncDirectory(directory *os.File) error {
 	if directory == nil {
 		return os.ErrInvalid
 	}
-	info, err := directory.Stat()
-	if err != nil {
-		return err
-	}
-	if !info.IsDir() {
-		return ErrDirectoryIdentity
-	}
 	return syncDirectory(directory)
 }

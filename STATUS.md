@@ -105,6 +105,12 @@ verifies its exact bytes/validator,then revokes that policy. GET/HEAD must still
 return409 with no ETag/range metadata. Historical integrity-only receipts are
 unchanged. Compile/vet pass only;original native repair replay remains owed.
 
+F227 moves directory type checking into the platform adapter. Windows reaches
+its existing RawConn.Control validation,which pins the held handle and preserves
+closed-file refusal;Unix keeps its exact type check before Sync. Original
+assertions remain. Local directory/audit/static and Windows compile/vet pass;
+actual Windows closed/native persistence/race replay remains owed.
+
 Schema3 records.project binds an owned checked input,approved exact task,one
 durable processing intent,slots and events/receipt. Stable work keys select one
 historical attempt;current status is separate. New artifacts stay held for fresh

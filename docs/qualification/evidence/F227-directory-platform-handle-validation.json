@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "id": "F227",
+  "observed_at": "2026-11-07",
+  "base_candidate": "44045fec5e88f50d73a0acae5a1e63c694269550",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Platform-specific directory handle validation repaired;Windows runtime owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "65b74cef061a5731f5b5358d2e41767fd7c2fc110d9738b5f21deac987b4235e",
+      "bytes": 16982
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "8facc4fabde73ca77ebcce785ef326d0b5cb34e5dcdfcb880db4a9bbc716358c",
+      "bytes": 367045
+    },
+    {
+      "reference": "internal/durablefs/directory.go",
+      "sha256": "f13ed8fe89c439adc97b0975a4545c66c7caa1cd1114eaa15850722880bd3a69",
+      "bytes": 663
+    },
+    {
+      "reference": "internal/durablefs/directory_other.go",
+      "sha256": "8a0eb493eeefdda507fc5263f524dcde4b07faf3267f018c2d836825ee92d0db",
+      "bytes": 244
+    }
+  ],
+  "original_failure": {
+    "candidate": "71e8166d0bc96c574055e00f749d387e0f0b0460",
+    "run": 42352071943,
+    "job": 128342141717,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128342141717",
+    "test": "TestSyncDirectoryRefusesNilRegularAndClosedInputs",
+    "observation": "Closed-file os.ErrClosed assertion fails at directory_test.go:47. Shared File.Stat precedes the Windows RawConn.Control adapter. Pinned Go1.26.10 Windows File.Stat directly calls statHandle with Sysfd."
+  },
+  "changed": [
+    "Move existing Stat/is-directory/Sync sequence to the Unix adapter. Shared entry point still refuses nil. Windows now enters its existing RawConn.Control adapter directly,which pins the original descriptor and checks native file type,identity,reparse state,path/open/identity/flush/close.",
+    "No test assertion,write access,identity check,flush error,unsupported-filesystem refusal or durability claim is weakened. Existing native rename/swap/adversarial cases remain."
+  ],
+  "green": [
+    "Local exact directory and affected audit identity/signature unit contracts,architecture and Windows compile/vet pass. Windows binary was not executed locally."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f227-architecture.log",
+      "sha256": "2c3b2c9d1602fc1e6a5d77939bc03c9072f34036a60e055259c8b8dd866c7b72",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f227-audit-directory.log",
+      "sha256": "e3a844c23bf5085d9b912fea7e49ac63d87555e9e0d1c1fea1c3f56367e2f52f",
+      "bytes": 119
+    },
+    {
+      "reference": ".private/freightctl-f227-directory-contracts.log",
+      "sha256": "d46efa7ab85e3ebfb8a02b9fbb2ae4f066c8c4b75ec73f1229e40fbc92a6398f",
+      "bytes": 61
+    },
+    {
+      "reference": ".private/freightctl-f227-windows-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f227-windows-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "owed": [
+    "Original native Windows closed/regular/nil,rename/swap,flush/close and audit persistence repair replay.",
+    "Windows protected-directory/custody/setup/private writer implementation and full final-source/platform/runtime/baseline/AX/FINISH gates."
+  ],
+  "resources": "OneCPU/192MiB local unit/static/cross-compilation only;no PostgreSQL,Chrome,inference,scanner or heavy peer. Retained35/source60 unchanged."
+}

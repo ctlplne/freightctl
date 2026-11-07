@@ -1154,7 +1154,8 @@
         "docs/qualification/evidence/F219-first-response-stored-workflow-receipt.json",
         "docs/qualification/evidence/F221-native-observer-root-and-delivery-path.json",
         "docs/qualification/evidence/F223-ordinary-exchange-authority-read-fence.json",
-        "docs/qualification/evidence/F225-http-current-intake-validator-fixture.json"
+        "docs/qualification/evidence/F225-http-current-intake-validator-fixture.json",
+        "docs/qualification/evidence/F227-directory-platform-handle-validation.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -1207,13 +1208,14 @@
         "F219 fixes the original onward exact-receipt comparison by using the existing schedule stored-receipt path for first workflow responses as well as retries;an absent freshly written receipt fails isolation. No event/receipt/intent transaction,authority or original exact comparison is weakened. Focused pure contract/fixture,architecture/vet and integration compile pass;actual original native serialization/replay remains owed.",
         "F221 corrects original audit/onward native fixture observations:ordinary namespace creation precedes assigning the confined audit reader;FTPS receiver reads the actual delivery-ID-prefixed destination and verifies its recorded path/size/digest. Existing search immutability,confined refusal,byte checks and exact receipts remain. Compile/vet only pass;original native replays owed.",
         "F223 repairs F209's overstrict lock marker:ordinary exchange send/receive must acquire a real shared account authority fence,not require account-management lock state. Registration reuses its existing exclusive fence;runtime credentials remain read-only. Original71e8166 native offer/copy/CLI isolation failures retained. Focused contracts,architecture/vet and integration compile pass;native reader/writer serialization and original repair replay owed.",
-        "F225 repairs the newly reached71e8166 conditional HTTP fixture:policy registration does not retroactively change an integrity-only receipt. The test now creates/checks/separately releases an exact controlled replacement,verifies its bytes/ETag,then revokes that exact policy. Original GET/HEAD409 and metadata-redaction assertions remain;production availability semantics unchanged. Compile/vet pass only;native replay owed."
+        "F225 repairs the newly reached71e8166 conditional HTTP fixture:policy registration does not retroactively change an integrity-only receipt. The test now creates/checks/separately releases an exact controlled replacement,verifies its bytes/ETag,then revokes that exact policy. Original GET/HEAD409 and metadata-redaction assertions remain;production availability semantics unchanged. Compile/vet pass only;native replay owed.",
+        "F227 repairs the original Windows closed-file directory assertion by moving type validation into platform adapters:Unix preserves Stat/is-directory/Sync;Windows reaches its existing RawConn.Control pinned-handle validation before touching the handle. Original closed/regular/nil/native identity/rename/swap assertions unchanged. Local directory/audit/static and Windows compile/vet pass;actual Windows native replay owed."
       ],
       "current_item": {
-        "id": "F225",
-        "state": "Conditional HTTP current-policy refusal uses an actual controlled release",
-        "proof": "Original71e8166/run42352071911/job128342141307 expected409 got304 on historical integrity-only revision;controlled release/revocation preconditions corrected",
-        "next": "Native original replay,Windows closed-handle/privacy and safe browser failure diagnostics;all remaining implementation/baseline/AX/FINISH work"
+        "id": "F227",
+        "state": "Windows directory validation starts at the pinned handle",
+        "proof": "Original71e8166/run42352071943/job128342141717 closed-file assertion retained;local contracts and Windows compile/vet pass only",
+        "next": "Continue Windows protected-directory/custody/setup and safe native browser diagnostics;all baseline/AX/FINISH gates remain owed"
       }
     }
   ],

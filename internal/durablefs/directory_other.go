@@ -4,4 +4,13 @@ package durablefs
 
 import "os"
 
-func syncDirectory(directory *os.File) error { return directory.Sync() }
+func syncDirectory(directory *os.File) error {
+	info, err := directory.Stat()
+	if err != nil {
+		return err
+	}
+	if !info.IsDir() {
+		return ErrDirectoryIdentity
+	}
+	return directory.Sync()
+}
