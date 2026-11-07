@@ -22,6 +22,8 @@ type UploadTarget struct {
 	ExpectedRevision *int64
 	Mode             *uint32
 	Modified         *time.Time
+	// Omit false so historical ordinary upload request meanings stay identical.
+	RequireAbsent bool `json:"require_absent,omitempty"`
 }
 
 func (s *Service) PathCommand(ctx context.Context, scope store.Scope, key string, command store.PathCommand) (*store.PathResult, error) {
@@ -206,6 +208,9 @@ func (s *Service) openAuthorized(ctx context.Context, t *store.Transaction, id s
 	return f, data, nil
 }
 func (s *Service) AcceptAt(ctx context.Context, scope store.Scope, key string, size int64, digest string, body io.Reader, target UploadTarget) (*store.File, bool, error) {
+	if target.RequireAbsent && target.ExpectedRevision != nil {
+		return nil, false, ErrInput
+	}
 	canonical, err := vpath.Canonical(target.Path)
 	if err != nil || canonical == "/" || vpath.ControlPath(canonical) {
 		return nil, false, vpath.ErrPath

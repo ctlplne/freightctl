@@ -9,11 +9,12 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/ctlplne/freightctl/internal/custody"
 	"github.com/ctlplne/freightctl/internal/store"
 	"github.com/ctlplne/freightctl/internal/webdav"
 )
 
-const davReadMethods = "OPTIONS, PROPFIND, GET, HEAD"
+const davReadMethods = "OPTIONS, PROPFIND, GET, HEAD, PUT"
 
 // Validate before ServeMux can clean a path into a different namespace name or
 // redirect it. This initial profile uses explicit bearer credentials only.
@@ -32,6 +33,35 @@ func prepareDAVRequest(w http.ResponseWriter, r *http.Request) bool {
 		fail(w, 400, "invalid_dav_virtual_path")
 		return false
 	}
+	if r.Method == http.MethodPut {
+		return davCreateInput(w, r)
+	}
+	return true
+}
+
+func davCreateInput(w http.ResponseWriter, r *http.Request) bool {
+	condition, present, valid := tusHeader(r, "If-None-Match")
+	if !present {
+		fail(w, 428, "dav_create_requires_if_none_match_star")
+		return false
+	}
+	_, hasMatch, _ := tusHeader(r, "If-Match")
+	_, hasDAVIf, _ := tusHeader(r, "If")
+	_, hasRange, _ := tusHeader(r, "Content-Range")
+	if !valid || condition != "*" || hasMatch || hasDAVIf || hasRange {
+		fail(w, 400, "invalid_dav_create_condition")
+		return false
+	}
+	if r.ContentLength < 0 {
+		fail(w, 411, "dav_create_requires_content_length")
+		return false
+	}
+	key, _, keyValid := tusHeader(r, "Idempotency-Key")
+	digest, _, digestValid := tusHeader(r, "X-Content-SHA256")
+	if !keyValid || key == "" || !digestValid || len(digest) != 64 || strings.Trim(digest, "0123456789abcdef") != "" {
+		fail(w, 400, "invalid_dav_create_contract")
+		return false
+	}
 	return true
 }
 
@@ -46,6 +76,42 @@ func (s *Server) davRead(w http.ResponseWriter, r *http.Request) {
 	virtual, err := webdav.VirtualPath(r.URL.EscapedPath(), base)
 	if err != nil {
 		fail(w, 400, "invalid_dav_virtual_path")
+		return
+	}
+	if r.Method == http.MethodPut {
+		if virtual == "/" || strings.HasSuffix(r.URL.Path, "/") {
+			fail(w, 400, "dav_create_requires_file_name")
+			return
+		}
+		r.Body = http.MaxBytesReader(w, r.Body, s.Service.MaxFile+1)
+		file, replayed, err := s.Service.AcceptAt(r.Context(), identity, r.Header.Get("Idempotency-Key"), r.ContentLength, r.Header.Get("X-Content-SHA256"), r.Body, custody.UploadTarget{Path: virtual, RequireAbsent: true})
+		if errors.Is(err, store.ErrExists) {
+			fail(w, 412, "dav_resource_already_exists")
+			return
+		}
+		if err != nil {
+			failure(w, err)
+			return
+		}
+		acceptance := custody.Acceptance(file)
+		status := 201
+		if acceptance == "durable-held-pending-checks-and-release" {
+			status = 202
+		}
+		namespaceState := "published-at-commit"
+		if status == 202 {
+			namespaceState = "not-published-at-acceptance"
+		}
+		if replayed {
+			status = 200
+			namespaceState = "not-asserted-original-receipt"
+		}
+		// A held receipt is not a DAV publication or current-resource validator.
+		if status == 201 && !replayed {
+			w.Header().Set("ETag", artifactRevisionETag(file))
+		}
+		w.Header().Set("X-Freightctl-Acceptance", acceptance)
+		respond(w, status, map[string]any{"file": file, "replayed": replayed, "acceptance": acceptance, "namespace_state": namespaceState})
 		return
 	}
 	if r.Method == http.MethodGet || r.Method == http.MethodHead {

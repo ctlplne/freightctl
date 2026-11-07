@@ -72,6 +72,17 @@ func (s *Service) accept(ctx context.Context, scope store.Scope, key string, siz
 	if err != nil {
 		return nil, false, err
 	}
+	if target != nil && target.RequireAbsent {
+		// Preserve the ordinary idempotency-before-namespace lock order. Read
+		// replay metadata first,but evaluate HTTP's condition before returning
+		// a receipt or staging bytes,under the same lock as publication.
+		if _, err = prepareTarget(ctx, t, target); err != nil {
+			if errors.Is(err, store.ErrRevision) {
+				return nil, false, store.ErrExists
+			}
+			return nil, false, err
+		}
+	}
 	if prior != nil {
 		if sealed != nil && prior.ID != sealed.id {
 			return nil, false, store.ErrConflict

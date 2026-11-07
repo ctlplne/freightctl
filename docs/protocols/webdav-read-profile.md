@@ -1,7 +1,7 @@
-# DAV namespace read profile
+# DAV namespace read and conditional-create profile
 
-This is a partial read adapter, not a claim of RFC4918 class1,2 or3 compliance.
-The full C-WEBDAV contract remains open: writes,properties,locks,outbound server
+This is a partial read/conditional-create adapter, not a claim of RFC4918 class1,2 or3 compliance.
+The full C-WEBDAV contract remains open: replacement and other namespace writes,properties,locks,outbound server
 connections and independent DAV application interoperability still need work.
 
 Use the existing HTTPS listener and an enrolled bearer credential:
@@ -13,7 +13,7 @@ mount root,path modes and current intake policy decide what can be discovered
 or read. A URL never refers to a host filesystem path.
 
 - `OPTIONS` authenticates and checks read/list access to the addressed entry.
-  It returns `Allow: OPTIONS, PROPFIND, GET, HEAD` and no DAV compliance class.
+  It returns `Allow: OPTIONS, PROPFIND, GET, HEAD, PUT` and no DAV compliance class.
 - `PROPFIND` supports explicit Depth0 or1. Missing Depth means infinity and is
   refused with403 and `DAV:propfind-finite-depth`. Other depth values are400.
   The complete collection is limited to1000 immediate children; larger scopes
@@ -38,7 +38,23 @@ or read. A URL never refers to a host filesystem path.
   conditionals run only after authorization and storage integrity checks;
   bounded reads recheck current authority. Replies retain no-store. A previous
   listing or validator cannot rescue a revoked credential or held file.
-- Mutating DAV methods return405 after authenticating the current credential.
+- `PUT` creates an absent file using ordinary write authority. It requires
+  `If-None-Match: *`,a known Content-Length,an original Idempotency-Key and the
+  whole X-Content-SHA256. Missing conditions return428;ambiguous/unsupported
+  conditions return400 and unknown lengths return411. The ordinary namespace
+  transaction checks absence under its publication lock,before staging bytes or
+  recovering a prior command. An existing entry returns412,including a retry
+  after successful publication. It is never overwritten. The caller can read
+  the current authorized revision to resolve a lost response;412 alone does not
+  prove which command created that revision.
+- Fresh integrity-only publication returns201 with its exact revision ETag.
+  Controlled intake returns202 and its durable held receipt,without an ETag or
+  namespace publication. An absent-path retry can recover the original receipt
+  with200 and no assertion of current namespace state. Passing checks still
+  does not publish:the ordinary separately authorized exact release is required.
+  Default-false conditional fields are omitted from historical upload request
+  meanings,so existing ordinary upload retries retain their original hashes.
+- Other mutating DAV methods return405 after authenticating the credential.
   Discovery and unknown properties grant no forwarding or execution authority.
   Requests with traversal,encoded separators,control names,noncanonical Unicode
   or query selectors fail before router path cleaning can redirect them.
@@ -46,10 +62,14 @@ or read. A URL never refers to a host filesystem path.
 The prepared native ARM/x86 profile uses real PostgreSQL and stock curl over
 verified TLS. It parses discovery XML independently,interrupts an actual file
 response,then reconstructs the exact revision using a range and its ETag. The
-API profile also tests modes,held intake,tenant/partner refusal,credential
+API profile also tests concurrent non-overwriting create transactions,original
+receipt recovery,held acceptance and separate release,modes,tenant/partner refusal,credential
 revocation,unknown properties and zero delivery/workflow effects. Until their
 original GitHub jobs pass at an exact candidate,these runtime outcomes are owed.
-Stock curl proves the declared HTTP methods; it does not qualify a desktop DAV
+The stock profile also creates through PUT,observes its412 retry and independently
+compares readback. Stock curl proves the declared HTTP methods; it does not qualify a desktop DAV
 mount,locking client or independent upstream DAV server.
 
-Protocol references: [RFC4918 sections8,9.1,13,14 and18](https://www.rfc-editor.org/rfc/rfc4918.html).
+Protocol references: [RFC4918](https://www.rfc-editor.org/rfc/rfc4918.html),
+[HTTP conditions](https://www.rfc-editor.org/rfc/rfc9110.html#section-13.1.2) and
+[428 Precondition Required](https://www.rfc-editor.org/rfc/rfc6585.html#section-3).

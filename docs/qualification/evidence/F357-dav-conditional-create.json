@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "id": "F357",
+  "observed_at": "2026-11-07",
+  "base_candidate": "03cd5fd0e46e60d0417b40122e94fd31a2920c35",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F357 extends the partial DAV adapter with conditional create-only PUT. Require If-None-Match:*,known length,whole SHA256 and original key;reject unsupported/ambiguous conditions before bytes. Keep ordinary idempotency-before-namespace lock order,then evaluate absence before returning a receipt or staging under the publication lock. Existing names return412,including published-key retries;no overwrite. Fresh publication201 binds exact ETag,controlled acceptance202 stays held without one,and receipt-only replay200 asserts no current namespace state. Omit default-false conditional fields so old upload meanings remain identical. Focused real input-boundary red/green,legacy wire/hash and static checks pass. Native real concurrent one-winner/create conflict,read-only refusal,held/check/separate-release/zero-effects and stock curl PUT/412/readback proofs are prepared;runtime remains owed.",
+  "red_green": "The actual pre-router DAV boundary first admitted a PUT without an absent-resource condition;the same test now gets428. Exact/duplicate/foreign condition,digest,length and key cases plus historical target-wire/request-meaning tests pass. This is focused input proof,not PostgreSQL transaction qualification.",
+  "setup_failure_preserved": "Initial test incorrectly exercised an authenticated route with a nil database stand-in and panicked before the intended boundary assertion. It is not counted as the meaningful red;the corrected test targets the actual no-database pre-router boundary.",
+  "green": [
+    "Focused actual boundary and legacy-upload-meaning tests",
+    "Affected formatting,vet,architecture and integration/downloadpeer compilation only"
+  ],
+  "prepared_native_proofs": [
+    "TestWebDAVConditionalCreateIsAtomicAndKeepsHeldAcceptanceSeparate",
+    "TestWebDAVNativeStockCurlDiscoveryInterruptedReadAndExactResume now also performs actual curl conditional PUT,412 retry and independent exact readback"
+  ],
+  "owed": [
+    "Native real PostgreSQL concurrent create,held checks/separate release,permissions and zero-effect outcomes",
+    "Actual stock curl conditional write/readback and original read/interruption profiles on ARM/x86",
+    "Other DAV mutations,properties,locks,outbound server and independent DAV applications",
+    "All original failure repairs,final-source gates and full GOAL/AX acceptance"
+  ],
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "79f504b0387266012654f1c0c21e89df89410b000425984fea803fd54f18cf20",
+      "bytes": 4362
+    },
+    {
+      "reference": "docs/protocols/webdav-read-profile.md",
+      "sha256": "edccfe36b792127950562ad5d56f9cfab484e52b2084c49997e3827db0c1bab5",
+      "bytes": 5409
+    },
+    {
+      "reference": "docs/qualification/evidence/F356-native-push.json",
+      "sha256": "75ca81183de006f47c885054443ec30189992a725ab6c50b8fe84bb6e2d5c109",
+      "bytes": 6076
+    },
+    {
+      "reference": "docs/qualification/parity.json",
+      "sha256": "a2aeaf890304b2f3b26062eb04ee5d8d895ed81646347de8725af890cd80df7b",
+      "bytes": 150195
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "e492ccce478e1ce3587e4ff862e70d76a46d33492d3d3576426950e927930419",
+      "bytes": 466678
+    },
+    {
+      "reference": "internal/api/webdav.go",
+      "sha256": "a6ec85647da033a05d3040793024523e3c08b835b73435eed125164428b5dc34",
+      "bytes": 6790
+    },
+    {
+      "reference": "internal/api/webdav_create_integration_test.go",
+      "sha256": "56d38e651a27f4e1911d8d04bda47d7f1f8057b9bb09113dfc6e66bcf685e7d5",
+      "bytes": 6910
+    },
+    {
+      "reference": "internal/api/webdav_create_test.go",
+      "sha256": "539135bc04b758aadcdc58a45fd61a96dd5f90535e7f385f26c3c1738993b69c",
+      "bytes": 2431
+    },
+    {
+      "reference": "internal/api/webdav_integration_test.go",
+      "sha256": "306d277e5cddd00644d8270b70ccfa33252dbd1227902d33120734b8a63babc1",
+      "bytes": 8078
+    },
+    {
+      "reference": "internal/api/webdav_stock_integration_test.go",
+      "sha256": "610a4aa62f14e00f320e71076c044654e5329b5e0fb88ffb137f839192ddfab3",
+      "bytes": 8459
+    },
+    {
+      "reference": "internal/custody/namespace.go",
+      "sha256": "7df977bd1edd7dbab344f97886da719a05c2f7a306ca7194f458666656341005",
+      "bytes": 7119
+    },
+    {
+      "reference": "internal/custody/namespace_condition_test.go",
+      "sha256": "6a3ea7819e63c51765d3cec3812fe6d26ae16f588e2b63ad7bf46f913fe57418",
+      "bytes": 770
+    },
+    {
+      "reference": "internal/custody/service.go",
+      "sha256": "5615469899957af04f3e9d6aeb2398dfcba93cdbe65853b89eaa7d4afe3e82f7",
+      "bytes": 6031
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f357-create-policy-red.log",
+      "sha256": "6d2db56bf842d52585e76a1fc51f4eb15a4d790f82641fe4f0cd99c149d480e3",
+      "bytes": 261
+    },
+    {
+      "reference": ".private/freightctl-f357-create-boundary-red.log",
+      "sha256": "34fca66c04d1bd8d22f943c80b041e4c55a16a0c8f9acd806bd8ea7d3b801589",
+      "bytes": 275
+    },
+    {
+      "reference": ".private/freightctl-f357-final2-format.log",
+      "sha256": "e0b51792e1e6cd241e5b2df9c80b71337ccff5d1e143ee660c069a6bc3d8fde2",
+      "bytes": 28
+    },
+    {
+      "reference": ".private/freightctl-f357-final2-focused.log",
+      "sha256": "e855823302e75518d44faacfd5e45a18703579bd29fe027ecb8ee25260704cdb",
+      "bytes": 114
+    },
+    {
+      "reference": ".private/freightctl-f357-final2-native-compile.log",
+      "sha256": "480b38100780d582a74cbc2c850e20abb57f0ad6188cd0fd385fa3bd18a87583",
+      "bytes": 150
+    },
+    {
+      "reference": ".private/freightctl-f357-final2-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f357-final2-architecture.log",
+      "sha256": "37330e957e905f2c93fa11635e6766dfbfa6197153126743d013682f8bdc3ff4",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f356-push.log",
+      "sha256": "caa61ddc7532a5d3b95bae3f3631d250e76993f69f2943480b1407c8fd8dc2d5",
+      "bytes": 189
+    }
+  ]
+}

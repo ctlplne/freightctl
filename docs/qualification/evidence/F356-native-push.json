@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "id": "F356",
+  "candidate": "03cd5fd0e46e60d0417b40122e94fd31a2920c35",
+  "observed_at": "2026-11-07",
+  "qualification_claim": false,
+  "prior_original_candidate": "3f32758aaa848065d7a2bf8ede787d729bbef166",
+  "prior_required_original_runs": "all17 terminal;F346 preserves32pass/7fail",
+  "push": {
+    "fast_forward": true,
+    "source_ci_only": true,
+    "author_and_committer": "imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>",
+    "outgoing_commits": 7,
+    "gitleaks_guard_enabled": true,
+    "bytes_scanned": 132944,
+    "leaks": 0
+  },
+  "original_runs": [
+    {
+      "id": 42383538034,
+      "name": "Native FTPS stock clients and custody",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42383538034",
+      "status_at_initial_observation": "queued",
+      "conclusion_at_initial_observation": null
+    },
+    {
+      "id": 42383538063,
+      "name": "Native artifact receive browser",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42383538063",
+      "status_at_initial_observation": "queued",
+      "conclusion_at_initial_observation": null
+    },
+    {
+      "id": 42383538016,
+      "name": "Native tus stock client and custody checkpoints",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42383538016",
+      "status_at_initial_observation": "queued",
+      "conclusion_at_initial_observation": null
+    },
+    {
+      "id": 42383537922,
+      "name": "Native FTPS dispatch approval qualification",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42383537922",
+      "status_at_initial_observation": "queued",
+      "conclusion_at_initial_observation": null
+    },
+    {
+      "id": 42383537896,
+      "name": "Native JSON intake and custody interfaces",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42383537896",
+      "status_at_initial_observation": "queued",
+      "conclusion_at_initial_observation": null
+    },
+    {
+      "id": 42383537901,
+      "name": "Native reproducible core binaries",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42383537901",
+      "status_at_initial_observation": "queued",
+      "conclusion_at_initial_observation": null
+    },
+    {
+      "id": 42383537976,
+      "name": "Native immutable HTTPS stock resume",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42383537976",
+      "status_at_initial_observation": "queued",
+      "conclusion_at_initial_observation": null
+    },
+    {
+      "id": 42383537984,
+      "name": "Native source vulnerability configurations",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42383537984",
+      "status_at_initial_observation": "queued",
+      "conclusion_at_initial_observation": null
+    },
+    {
+      "id": 42383538021,
+      "name": "Native FTPS workflow consent qualification",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42383538021",
+      "status_at_initial_observation": "queued",
+      "conclusion_at_initial_observation": null
+    },
+    {
+      "id": 42383537913,
+      "name": "Native Linux Go, PostgreSQL and fuzz",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42383537913",
+      "status_at_initial_observation": "queued",
+      "conclusion_at_initial_observation": null
+    },
+    {
+      "id": 42383537974,
+      "name": "Native legacy SCP regular-file custody",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42383537974",
+      "status_at_initial_observation": "queued",
+      "conclusion_at_initial_observation": null
+    },
+    {
+      "id": 42383537990,
+      "name": "Core correctness and security",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42383537990",
+      "status_at_initial_observation": "queued",
+      "conclusion_at_initial_observation": null
+    },
+    {
+      "id": 42383537981,
+      "name": "Native browser and FTPS operator qualification",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42383537981",
+      "status_at_initial_observation": "queued",
+      "conclusion_at_initial_observation": null
+    },
+    {
+      "id": 42383537941,
+      "name": "Stock peer and browser qualification",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42383537941",
+      "status_at_initial_observation": "queued",
+      "conclusion_at_initial_observation": null
+    },
+    {
+      "id": 42383538002,
+      "name": "Native Windows and macOS unit checks",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42383538002",
+      "status_at_initial_observation": "queued",
+      "conclusion_at_initial_observation": null
+    },
+    {
+      "id": 42383537996,
+      "name": "Native first enrollment and browser exchange",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42383537996",
+      "status_at_initial_observation": "queued",
+      "conclusion_at_initial_observation": null
+    }
+  ],
+  "scoped_updates": [
+    {
+      "run_id": 42383538002,
+      "jobs": [
+        {
+          "id": 128436006282,
+          "name": "windows-amd64",
+          "conclusion": "success"
+        },
+        {
+          "id": 128436006567,
+          "name": "macos-arm64",
+          "conclusion": "success"
+        }
+      ],
+      "observation": "Both native unit jobs complete successfully;F347 original Windows fixture repair is now covered at this exact candidate."
+    },
+    {
+      "run_id": 42383538021,
+      "jobs": [
+        128436006380,
+        128436006678
+      ],
+      "conclusion": "failure",
+      "command": "cli-explicit-collection-operator-browser",
+      "stage": "operator-form",
+      "error_kind": "timeout",
+      "source_file": "driver",
+      "source_line": 242,
+      "observation": "The original source connection registration now reaches the actual operator browser,then fails at the form. Full operator consent and immutable capture still owed."
+    }
+  ],
+  "state": "Other original required runs are ongoing;do not push another batch before all are terminal. Do not cancel or substitute originals."
+}

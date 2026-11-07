@@ -5,6 +5,7 @@ package api
 import (
 	"bufio"
 	"bytes"
+	"encoding/json"
 	"encoding/xml"
 	"errors"
 	"io"
@@ -24,6 +25,7 @@ import (
 	"time"
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
+	"github.com/ctlplne/freightctl/internal/store"
 )
 
 func TestWebDAVNativeStockCurlDiscoveryInterruptedReadAndExactResume(t *testing.T) {
@@ -140,6 +142,29 @@ func TestWebDAVNativeStockCurlDiscoveryInterruptedReadAndExactResume(t *testing.
 	if status != 206 || headers.Get("ETag") != etag || !bytes.Equal(received, data) || secure.Digest(received) != secure.Digest(data) {
 		t.Fatal("independent stock client did not reconstruct the exact DAV revision")
 	}
+	sourcePath := filepath.Join(private, "upload.dat")
+	if err = os.WriteFile(sourcePath, data, 0600); err != nil {
+		t.Fatal(err)
+	}
+	createdPath := prefix + "/dav/curl-created.dat"
+	createArgs := []string{"--upload-file", sourcePath, "--header", "If-None-Match: *", "--header", "Idempotency-Key: dav-stock-conditional-create", "--header", "X-Content-SHA256: " + secure.Digest(data)}
+	status, headers, body, _ = run("conditional-create", createdPath, createArgs, true)
+	var receipt struct {
+		File      store.File `json:"file"`
+		Namespace string     `json:"namespace_state"`
+		Replayed  bool       `json:"replayed"`
+	}
+	if status != 201 || json.Unmarshal(body, &receipt) != nil || receipt.Replayed || receipt.Namespace != "published-at-commit" || receipt.File.SHA256 != secure.Digest(data) || headers.Get("ETag") != artifactRevisionETag(&receipt.File) {
+		t.Fatal("stock DAV conditional write did not bind exact published bytes")
+	}
+	status, headers, _, refusedExit := run("conditional-retry", createdPath, createArgs, false)
+	if status != 412 || refusedExit != 22 || headers.Get("ETag") != "" {
+		t.Fatal("stock DAV conditional retry overwrote or invented a validator")
+	}
+	status, headers, readback, _ := run("conditional-readback", createdPath, nil, true)
+	if status != 200 || !bytes.Equal(readback, data) || headers.Get("X-File-Revision-ID") != receipt.File.ID || headers.Get("ETag") != artifactRevisionETag(&receipt.File) {
+		t.Fatal("independent stock client could not verify its exact created revision")
+	}
 	binaryPath, err := exec.LookPath("curl")
 	if err != nil {
 		t.Fatal(err)
@@ -148,5 +173,5 @@ func TestWebDAVNativeStockCurlDiscoveryInterruptedReadAndExactResume(t *testing.
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Logf("native read-only DAV proof;candidate=%s;architecture=%s;curl-SHA256=%s;lost-exit=%d;prefix=65536;bytes=%d;SHA256=%s;XML=independently-parsed;receiver=independently-compared;writes-locks-full-DAV=owed", commit, runtime.GOARCH, secure.Digest(binary), lostExit, len(received), secure.Digest(received))
+	t.Logf("native conditional-create/read DAV proof;candidate=%s;architecture=%s;curl-SHA256=%s;lost-exit=%d;prefix=65536;bytes=%d;SHA256=%s;XML=independently-parsed;receiver=independently-compared;conditional-retry=412;other-writes-locks-full-DAV=owed", commit, runtime.GOARCH, secure.Digest(binary), lostExit, len(received), secure.Digest(received))
 }
