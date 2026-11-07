@@ -58,6 +58,22 @@ func releaseDecision(c *store.FileCheck) ReleaseDecision {
 	_ = json.Unmarshal(c.Binding, &b)
 	return ReleaseDecision{SHA256: b.File.SHA256, PolicyHash: c.PolicyHash, ReportHash: c.ReportHash, Revision: c.Revision}
 }
+
+// A syntactically valid forged proof reaches the missing-release-authority
+// check. It never claims that processing completed fresh checks or a release.
+func heldReleaseAttempt(t *testing.T, c *store.FileCheck) ReleaseDecision {
+	t.Helper()
+	if c == nil || c.State != "held" || c.Attempts != 0 || c.ReportHash != "" {
+		t.Fatal("processing supplied checks or release authority")
+	}
+	d := releaseDecision(c)
+	if !hashPattern.MatchString(d.SHA256) || !hashPattern.MatchString(d.PolicyHash) || d.Revision < 1 {
+		t.Fatal("held check lost its exact file or policy binding")
+	}
+	d.ReportHash = secure.Digest([]byte("not a completed check report"))
+	return d
+}
+
 func sameJSON(a, b []byte) bool {
 	var left, right any
 	x := json.NewDecoder(bytes.NewReader(a))

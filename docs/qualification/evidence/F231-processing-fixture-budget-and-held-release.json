@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "id": "F231",
+  "observed_at": "2026-11-07",
+  "base_candidate": "ebabd75f9d57eca0b3da301dfbe9bccd1444dee2",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Processing fixture budget/held inputs corrected;runtime repair replay owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "de6ced422df6b68ecee02d7a685ad93315b15c3e0f643e64bad69deef9994d59",
+      "bytes": 17850
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "5fd9c792f5fc37033cbe9b76e1662a168567b5c0aa09c492f65d85365b4fb989",
+      "bytes": 368235
+    },
+    {
+      "reference": "internal/checks/output_policies_integration_test.go",
+      "sha256": "88eb87c71b06cba40c1c9b6e41807013652a0735ebe1602d9dbb626d20bdb2b3",
+      "bytes": 10881
+    },
+    {
+      "reference": "internal/checks/producer_projection_integration_test.go",
+      "sha256": "4a5a79ed829de74cb6d3817caa7cc018d2395413af0c186cbf6b0a3896b4d1f0",
+      "bytes": 9431
+    },
+    {
+      "reference": "internal/checks/processing_schedules_integration_test.go",
+      "sha256": "6b6422aac7aee9b3c595b52997a7bbcc7e7ab63c8093430a5c6faa7a973489c9",
+      "bytes": 14056
+    },
+    {
+      "reference": "internal/checks/processing_proposals_integration_test.go",
+      "sha256": "697bdcca4cd74019501413b5a90bd05672d85ff91a8f0e0a527c8af28df7ba5a",
+      "bytes": 15415
+    },
+    {
+      "reference": "internal/checks/projection_scope_integration_test.go",
+      "sha256": "873b135b21cab6e451f45ca0f0dc47843ee01188b51cd18c9280774605385fcc",
+      "bytes": 5498
+    },
+    {
+      "reference": "internal/checks/workflow_processing_integration_test.go",
+      "sha256": "750eb3a8f4722bb7fcd3394cd532345abca353df975a0a09effc737ada65b2ef",
+      "bytes": 13601
+    },
+    {
+      "reference": "internal/checks/processing_reviews_integration_test.go",
+      "sha256": "f851a250fcafc3a217b667e0c3745b73a043d7013413f65727678714714be07a",
+      "bytes": 13854
+    },
+    {
+      "reference": "internal/checks/integration_test.go",
+      "sha256": "f71f1b772acb1ae43905af5c5f8133e327d1aba2e4b0b666035e8e5324b0aa70",
+      "bytes": 14313
+    }
+  ],
+  "original_failure": {
+    "candidate": "71e8166d0bc96c574055e00f749d387e0f0b0460",
+    "run": 42352071951,
+    "job": 128342141652,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128342141652",
+    "observations": [
+      "Producer/proposal/calendar work does not reach completed output;dependent composition sees empty output ID and22P02.",
+      "Independent-review negative release stops at invalid-input instead of forbidden."
+    ],
+    "causal_limit": "Source proves producer fixtures inherit16MiB output allowance while their custody MaxFile is8MiB;stageProjection refuses that configuration before I/O. Original logs do not expose the underlying work failure code,so actual repaired runtime diagnosis remains owed."
+  },
+  "changed": [
+    "Select explicit8192byte output bounds in the common output contract and producer/proposal/calendar task definitions. Source intake rules,mapping columns,conversions,permissions,engine limits,custody MaxFile/MaxStored and all quota/oversize refusal controls remain.",
+    "Centralize a syntactically valid forged held-release attempt:require held state,zero attempts,no report hash,exact SHA/policy/revision;then supply a forged report hash and keep the original forbidden assertion. Applies to scoped projection,workflow and independent-review tests.",
+    "Review correction:F215 added a queued-state assertion to two unpushed fixtures;actual initial SQL file-check state is held. Corrected before the next push;no existing production transition or original refusal assertion removed."
+  ],
+  "green": [
+    "Affected integration-tag compilation -run ^$,vet and exact source-budget/initial-state conformance pass. No local PostgreSQL/processing runtime executed."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f231-configuration-conformance.log",
+      "sha256": "7310b65eced12fa5a139a40a2d21de67311dc9f9e901c2834547e257e197634a",
+      "bytes": 392
+    },
+    {
+      "reference": ".private/freightctl-f231-fixture-compile.log",
+      "sha256": "a14f9306422e9de4ebc43640425070e3a51f2355600afe3fe4e019a17e78837a",
+      "bytes": 76
+    },
+    {
+      "reference": ".private/freightctl-f231-fixture-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "owed": [
+    "Original actual native producer/proposal/calendar/CLI/composed-output and three held-release positive/negative repair replays.",
+    "All actual final-source native/browser/stock/security/race/restore/reproducibility and remaining baseline/AX/FINISH gates."
+  ],
+  "resources": "OneCPU/192MiB local compilation/static only;no PostgreSQL,Chrome,inference,scanner or heavy peer. Product/local resource controls and retained35/source60 unchanged."
+}

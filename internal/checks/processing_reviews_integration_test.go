@@ -184,7 +184,7 @@ func TestProcessingReviewActualIndependentReviewerAndConfinedWorkerKeepBytesAndR
 	if err != nil || checked.Check.State != "held" || checked.Check.Attempts != 0 {
 		t.Fatal("approval inherited output checks or release", err)
 	}
-	if _, err = x.checks.Release(x.f.ctx, x.worker, worked.Processing.FileID, "worker-cannot-release", releaseDecision(checked.Check)); !errors.Is(err, store.ErrForbidden) {
+	if _, err = x.checks.Release(x.f.ctx, x.worker, worked.Processing.FileID, "worker-cannot-release", heldReleaseAttempt(t, checked.Check)); !errors.Is(err, store.ErrForbidden) {
 		t.Fatal("review granted release", err)
 	}
 	if _, err = x.workflows.Work(x.f.ctx, x.reviewer, run.ID, "reviewer-cannot-work"); err == nil {

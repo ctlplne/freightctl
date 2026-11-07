@@ -92,11 +92,7 @@ func TestScopedProjectionActualOwnedInputNamespaceHeldOutputAndNoRelease(t *test
 	if err = f.admin.QueryRow(f.ctx, `SELECT entry_id::text FROM namespace_entries WHERE tenant_id=$1 AND partner_id=$2 AND path='/processor' AND NOT deleted`, actor.Tenant, actor.Partner).Scan(&actualParent); err != nil || parent != actualParent || root != "/processor" || target != "/derived.json" {
 		t.Fatal("output escaped logical root", err)
 	}
-	if check.State != "queued" || check.ReportHash != "" {
-		t.Fatal("processing supplied a completed check report")
-	}
-	deniedRelease := releaseDecision(check)
-	deniedRelease.ReportHash = secure.Digest([]byte("not a completed check report"))
+	deniedRelease := heldReleaseAttempt(t, check)
 	if _, err = s.Release(f.ctx, actor, completed.FileID, "not-a-release-grant", deniedRelease); !errors.Is(err, store.ErrForbidden) {
 		t.Fatal("processing implied release", err)
 	}

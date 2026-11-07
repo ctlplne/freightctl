@@ -117,6 +117,13 @@ the existing safe result digest;raw failures stay private. Original behavior,
 assertions,sandbox,egress and timeouts remain. Privacy refusal,syntax/format and
 compile/vet pass;actual failure-stage replay and browser repair remain owed.
 
+F231 binds producer test contracts/tasks to8192 output bytes within the fixture
+8MiB file limit;their inherited16MiB allowance could not stage. Source policy
+and product/quota controls remain. Negative release inputs now require the real
+initial held state,zero attempts,no report hash and exact file/policy bindings.
+This corrects F215's unpushed queued-state assertion and covers independent
+review too. Compile/vet/source conformance pass;actual native replay is owed.
+
 Schema3 records.project binds an owned checked input,approved exact task,one
 durable processing intent,slots and events/receipt. Stable work keys select one
 historical attempt;current status is separate. New artifacts stay held for fresh

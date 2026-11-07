@@ -38,7 +38,7 @@ func outputProducerFixture(t *testing.T) (*fixture, *Service, store.Scope, store
 }
 func registerOutputFixture(t *testing.T, f *fixture, s *Service, account store.AccountCommand, input store.Configuration) (OutputPolicyRequest, OutputPolicyRecord) {
 	t.Helper()
-	rules, err := NormalizeRecordProjection(testPolicy(t), RecordProjection{Schema: 1, Kind: "record_projection", SourcePolicyHash: input.Hash, OutputKind: "json_records", Columns: []ProjectionColumn{{Source: "account", Target: "account"}, {Source: "amount", Target: "total"}, {Source: "day", Target: "day"}}})
+	rules, err := NormalizeRecordProjection(testPolicy(t), RecordProjection{Schema: 1, Kind: "record_projection", SourcePolicyHash: input.Hash, OutputKind: "json_records", MaxBytes: 8192, Columns: []ProjectionColumn{{Source: "account", Target: "account"}, {Source: "amount", Target: "total"}, {Source: "day", Target: "day"}}})
 	if err != nil {
 		t.Fatal(err)
 	}
