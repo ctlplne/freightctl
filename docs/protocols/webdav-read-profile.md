@@ -13,7 +13,7 @@ mount root,path modes and current intake policy decide what can be discovered
 or read. A URL never refers to a host filesystem path.
 
 - `OPTIONS` authenticates and checks read/list access to the addressed entry.
-  It returns `Allow: OPTIONS, PROPFIND, GET, HEAD, PUT, MKCOL` and no DAV compliance class.
+  It returns `Allow: OPTIONS, PROPFIND, GET, HEAD, PUT, MKCOL, MOVE` and no DAV compliance class.
 - `PROPFIND` supports explicit Depth0 or1. Missing Depth means infinity and is
   refused with403 and `DAV:propfind-finite-depth`. Other depth values are400.
   The complete collection is limited to1000 immediate children; larger scopes
@@ -62,6 +62,21 @@ or read. A URL never refers to a host filesystem path.
   A fresh201 returns the exact encoded collection Location. If the collection
   was later removed,an original-key200 recovers history without recreating it or
   asserting a current Location. Other conditions are explicitly refused.
+- `MOVE` currently handles one file into an absent destination. It requires
+  an original key,the exact strong source If-Match tag,Overwrite:F and zero body.
+  Destination may be an absolute HTTPS URI with the current authority or an
+  absolute URI path;it must name a canonical file in this tenant/partner's DAV
+  namespace. Other hosts/scopes,queries,fragments,traversal and control paths
+  are refused. No network contact is made to a Destination header.
+  The ordinary manage_paths/read authority,path modes,current intake and source
+  file ID/SHA256 are checked under the rename lock. File ID is included in the
+  existing typed command meaning,so a changed file cannot reuse the old key.
+  Fresh201 acknowledges a mapping change with Location;bytes and custody ID do
+  not change. GET verifies the resulting revision separately. A stale source or
+  existing destination returns412,missing parents409,and directory moves405.
+  After a lost reply,the caller must inspect the authorized destination;412 alone
+  does not establish which command performed an earlier move. Same-key history
+  never authorizes another effect. Replacement and directory MOVE remain owed.
 - Other mutating DAV methods return405 after authenticating the credential.
   Discovery and unknown properties grant no forwarding or execution authority.
   Requests with traversal,encoded separators,control names,noncanonical Unicode
@@ -76,10 +91,12 @@ receipt recovery,held acceptance and separate release,modes,tenant/partner refus
 revocation,unknown properties and zero delivery/workflow effects. The initial read-only profile passed both native architectures at
 `03cd5fd0e46e60d0417b40122e94fd31a2920c35`;
 [F358](../qualification/evidence/F358-dav-native-read.json) binds the exact jobs,
-client hashes and independent comparisons. Later conditional PUT and MKCOL
-source changes still need their original native runtime proofs.
+client hashes and independent comparisons. F368 binds subsequent conditional PUT and MKCOL qualification on both
+architectures at`d960c40fe1d4d7facf11862c331b52fc93dcc0b6`. Later file MOVE
+source still needs its original native runtime proof.
 The extended stock profile also creates an empty collection through MKCOL,
-creates its child through PUT,observes conflict refusals and independently
+creates its child through PUT,moves that exact file without overwrite,observes
+conflict/stale-source refusals and independently
 compares readback. Stock curl proves the declared HTTP methods; it does not qualify a desktop DAV
 mount,locking client or independent upstream DAV server.
 

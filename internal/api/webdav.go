@@ -14,7 +14,7 @@ import (
 	"github.com/ctlplne/freightctl/internal/webdav"
 )
 
-const davReadMethods = "OPTIONS, PROPFIND, GET, HEAD, PUT, MKCOL"
+const davReadMethods = "OPTIONS, PROPFIND, GET, HEAD, PUT, MKCOL, MOVE"
 
 // Validate before ServeMux can clean a path into a different namespace name or
 // redirect it. This initial profile uses explicit bearer credentials only.
@@ -38,6 +38,9 @@ func prepareDAVRequest(w http.ResponseWriter, r *http.Request) bool {
 	}
 	if r.Method == "MKCOL" {
 		return davCollectionInput(w, r)
+	}
+	if r.Method == "MOVE" {
+		return davMoveInput(w, r)
 	}
 	return true
 }
@@ -103,6 +106,10 @@ func (s *Server) davRead(w http.ResponseWriter, r *http.Request) {
 	virtual, err := webdav.VirtualPath(r.URL.EscapedPath(), base)
 	if err != nil {
 		fail(w, 400, "invalid_dav_virtual_path")
+		return
+	}
+	if r.Method == "MOVE" {
+		s.davMove(w, r, identity, virtual, base)
 		return
 	}
 	if r.Method == "MKCOL" {

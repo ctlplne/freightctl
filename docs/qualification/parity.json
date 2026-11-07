@@ -1140,11 +1140,13 @@
         "docs/protocols/webdav-read-profile.md",
         "docs/qualification/evidence/F357-dav-conditional-create.json",
         "docs/qualification/evidence/F358-dav-native-read.json",
-        "docs/qualification/evidence/F361-dav-collection-create.json"
+        "docs/qualification/evidence/F361-dav-collection-create.json",
+        "docs/qualification/evidence/F368-dav-native-create.json",
+        "docs/qualification/evidence/F367-dav-file-move.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison",
-        "Initial read-only bearer profile passed real PostgreSQL/stock curl ARM/x86 at03cd5fd (F358). Later conditional PUT/MKCOL,additional mutations,locks,full properties,independent DAV applications and outbound stock server profile remain mandatory and unqualified."
+        "Declared read/conditional PUT/empty MKCOL profiles passed real PostgreSQL/stock curl ARM/x86 atd960c40 (F368). Later file MOVE,remaining mutations,locks,full properties,independent DAV applications and outbound stock server remain mandatory/unqualified."
       ]
     },
     {

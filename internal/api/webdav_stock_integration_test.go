@@ -175,6 +175,20 @@ func TestWebDAVNativeStockCurlDiscoveryInterruptedReadAndExactResume(t *testing.
 	if status != 200 || !bytes.Equal(readback, data) || headers.Get("X-File-Revision-ID") != receipt.File.ID || headers.Get("ETag") != artifactRevisionETag(&receipt.File) {
 		t.Fatal("independent stock client could not verify its exact created revision")
 	}
+	movedPath := prefix + "/dav/curl-created/moved.dat"
+	moveArgs := []string{"--request", "MOVE", "--header", "If-Match: " + artifactRevisionETag(&receipt.File), "--header", "Overwrite: F", "--header", "Idempotency-Key: dav-stock-move", "--header", "Destination: " + front.URL + movedPath}
+	status, headers, _, _ = run("move", createdPath, moveArgs, true)
+	if status != 201 || headers.Get("Location") != movedPath {
+		t.Fatal("stock DAV MOVE did not acknowledge its exact new virtual mapping")
+	}
+	status, _, _, moveRefused := run("move-retry", createdPath, moveArgs, false)
+	if status != 412 || moveRefused != 22 {
+		t.Fatal("stock DAV stale source condition created another move")
+	}
+	status, headers, movedBytes, _ := run("move-readback", movedPath, nil, true)
+	if status != 200 || !bytes.Equal(movedBytes, data) || headers.Get("ETag") != artifactRevisionETag(&receipt.File) || headers.Get("X-File-Revision-ID") != receipt.File.ID {
+		t.Fatal("independent stock client did not verify the moved immutable revision")
+	}
 	binaryPath, err := exec.LookPath("curl")
 	if err != nil {
 		t.Fatal(err)
@@ -183,5 +197,5 @@ func TestWebDAVNativeStockCurlDiscoveryInterruptedReadAndExactResume(t *testing.
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Logf("native conditional-create/read DAV proof;candidate=%s;architecture=%s;curl-SHA256=%s;lost-exit=%d;prefix=65536;bytes=%d;SHA256=%s;XML=independently-parsed;receiver=independently-compared;conditional-retry=412;other-writes-locks-full-DAV=owed", commit, runtime.GOARCH, secure.Digest(binary), lostExit, len(received), secure.Digest(received))
+	t.Logf("native conditional-create/file-move/read DAV proof;candidate=%s;architecture=%s;curl-SHA256=%s;lost-exit=%d;prefix=65536;bytes=%d;SHA256=%s;XML=independently-parsed;receiver=independently-compared;conditional-retry=412;stale-move=412;other-writes-locks-full-DAV=owed", commit, runtime.GOARCH, secure.Digest(binary), lostExit, len(received), secure.Digest(received))
 }

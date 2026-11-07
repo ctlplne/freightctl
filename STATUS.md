@@ -7,7 +7,11 @@ Current decisions and exact evidence are in
 [remaining.json](docs/qualification/remaining.json) and
 [artifact-exchange.json](docs/qualification/artifact-exchange.json).
 
-Pushed candidate: `03cd5fd0e46e60d0417b40122e94fd31a2920c35`.
+Current pushed candidate: `d960c40fe1d4d7facf11862c331b52fc93dcc0b6`.
+F366 records its ongoing originals;F368 qualifies declared PUT/MKCOL on both
+native architectures. New FTPS field evidence identifies source-option selection.
+
+Previous terminal candidate: `03cd5fd0e46e60d0417b40122e94fd31a2920c35`.
 [F362](docs/qualification/evidence/F362-native-terminal-ci.json) preserves all 16
 original terminal workflows and 35 jobs: 30 passed, 5 failed. No original run was
 cancelled, rerun or substituted. Earlier failures, including both independent
@@ -43,12 +47,14 @@ Local committed F357/F361 adds conditional create-only DAV PUT and empty MKCOL
 through existing custody and namespace transactions. Publication, held acceptance
 and historical receipts remain distinct. Prepared native proofs cover concurrent
 non-overwrite, permissions, separate release, non-recreating directory recovery,
-stock curl writes and independent readback. These outcomes remain owed. C-WEBDAV
+stock curl writes and independent readback. F368 now qualifies these initial create/read outcomes atd960c40 on both native
+architectures. Local F367 adds file MOVE with exact revision and non-overwrite
+checks;its prepared native proofs remain owed. C-WEBDAV
 also requires remaining mutations, properties, locks, outbound server and
 independent DAV application interoperability.
 
-Next: push the verified owner-only fast-forward batch now that prior required
-runs are terminal, then continue implementation while original CI runs. Repair
+Next: continue implementation while current original CI runs;push the next
+verified owner-only batch after required originals are terminal. Repair
 original failures and finish every mandatory final-source baseline/AX gate.
 F026 stays manual/owner-deferred. Trust Control, inference, provider/licensed
 peers, reference estate, owner license text and adoption inputs remain owed.

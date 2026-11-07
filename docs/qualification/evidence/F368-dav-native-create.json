@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "id": "F368",
+  "observed_at": "2026-11-07",
+  "candidate": "d960c40fe1d4d7facf11862c331b52fc93dcc0b6",
+  "qualification_claim": false,
+  "qualified_scope": "Declared initial DAV reads,conditional absent-file PUT and empty MKCOL profiles only. Not later file MOVE,full C-WEBDAV/AX/product readiness.",
+  "run_id": 42386838456,
+  "run_url": "https://github.com/ctlplne/freightctl/actions/runs/42386838456",
+  "profiles": [
+    {
+      "architecture": "linux/amd64",
+      "job_id": 128445908593,
+      "job_url": "https://github.com/ctlplne/freightctl/actions/runs/42386838456/job/128445908593",
+      "state": "passed",
+      "curl_sha256": "1ccbd3dae948374ba8eef1ebda26c64b783ede50b463196e53666e0880bdac60",
+      "tests": [
+        "TestWebDAVConditionalCreateIsAtomicAndKeepsHeldAcceptanceSeparate",
+        "TestWebDAVCollectionCreationUsesOrdinaryNamespaceAuthorityAndOriginalReceipts",
+        "TestWebDAVReadsUsePublishedNamespaceModesIntakeAndCurrentAuthority",
+        "TestWebDAVNativeStockCurlDiscoveryInterruptedReadAndExactResume"
+      ]
+    },
+    {
+      "architecture": "linux/arm64",
+      "job_id": 128445908885,
+      "job_url": "https://github.com/ctlplne/freightctl/actions/runs/42386838456/job/128445908885",
+      "state": "passed",
+      "curl_sha256": "e54699c60c2fe0936dbfab15934d3b6a097385c505d0b5cb4c9c8aa36df8b5f3",
+      "tests": [
+        "TestWebDAVConditionalCreateIsAtomicAndKeepsHeldAcceptanceSeparate",
+        "TestWebDAVCollectionCreationUsesOrdinaryNamespaceAuthorityAndOriginalReceipts",
+        "TestWebDAVReadsUsePublishedNamespaceModesIntakeAndCurrentAuthority",
+        "TestWebDAVNativeStockCurlDiscoveryInterruptedReadAndExactResume"
+      ]
+    }
+  ],
+  "actual_proof": [
+    "Real PostgreSQL concurrent conditional writers have exactly one namespace winner;published-key retry refuses412 without overwrite.",
+    "Current read-only permission refuses writes;held acceptance has no DAV publication/ETag;original receipt replay200 is distinct;passing checks still requires separate release. No duplicate file,delivery or workflow effects.",
+    "MKCOL uses real ordinary namespace authority;existing target405/conditional412;missing parent409;removed original directory receipt recovery does not recreate it or claim current Location.",
+    "Stock curl over pinned fixture TLS creates an actual collection and child,observes conflict refusals,and independently compares the exact accepted revision. Read interruption still cuts after65536 of168000 bytes,exits18,and reconstructs exact SHA25629480044db4ab28da69fd21adc5746d7d412a4fff962b11ce024f3d6f88588dd."
+  ],
+  "source_files_at_original_candidate": [
+    {
+      "reference": "internal/api/webdav.go",
+      "candidate": "d960c40fe1d4d7facf11862c331b52fc93dcc0b6",
+      "sha256": "e4bcf2a5e9ab117066555ca98c4b2dcf1416bd1ad9f02602238686eb4b7a095f",
+      "bytes": 8469
+    },
+    {
+      "reference": "internal/api/webdav_create_integration_test.go",
+      "candidate": "d960c40fe1d4d7facf11862c331b52fc93dcc0b6",
+      "sha256": "56d38e651a27f4e1911d8d04bda47d7f1f8057b9bb09113dfc6e66bcf685e7d5",
+      "bytes": 6910
+    },
+    {
+      "reference": "internal/api/webdav_mkcol_integration_test.go",
+      "candidate": "d960c40fe1d4d7facf11862c331b52fc93dcc0b6",
+      "sha256": "89b454090bfdc2744b2108d2658e0e3b5674b3449a87e9452d2d1ff5fd696edd",
+      "bytes": 3527
+    },
+    {
+      "reference": "internal/api/webdav_stock_integration_test.go",
+      "candidate": "d960c40fe1d4d7facf11862c331b52fc93dcc0b6",
+      "sha256": "646626fb997d86780541ec0e6a887bcc8d161a1a480ecc573ea0e62da076c192",
+      "bytes": 9049
+    },
+    {
+      "reference": "internal/custody/service.go",
+      "candidate": "d960c40fe1d4d7facf11862c331b52fc93dcc0b6",
+      "sha256": "5615469899957af04f3e9d6aeb2398dfcba93cdbe65853b89eaa7d4afe3e82f7",
+      "bytes": 6031
+    },
+    {
+      "reference": "internal/custody/namespace.go",
+      "candidate": "d960c40fe1d4d7facf11862c331b52fc93dcc0b6",
+      "sha256": "56e9689af232dd962ae112ee2b3812bf6635558b897bd8287acf37f1c6f7ca2c",
+      "bytes": 8485
+    },
+    {
+      "reference": ".github/workflows/http-downloads.yml",
+      "candidate": "d960c40fe1d4d7facf11862c331b52fc93dcc0b6",
+      "sha256": "8ac38a21230134d401f28164b474b38927e58d6bfebb2fd1df66ed2006390351",
+      "bytes": 2359
+    }
+  ],
+  "owed": [
+    "Later file MOVE has not run in these original profiles",
+    "Remaining replacement/deletion/copy/directory moves/properties/locks/outbound server/independent DAV application interoperability",
+    "Every final-source baseline/AX gate and separate readiness qualification"
+  ]
+}

@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "id": "F367",
+  "observed_at": "2026-11-07",
+  "base_candidate": "d960c40fe1d4d7facf11862c331b52fc93dcc0b6",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "File-only DAV MOVE requires exact strong source revision,original command key,no overwrite,empty body and same-authority/scope destination. Reuse ordinary read/manage_paths,parent modes,current intake,namespace lock and atomic rename events/receipts. Bind immutable source FileID into the existing typed rename command meaning;keep absent legacy FileID unchanged. Source/destination/revision conditions cannot grant forwarding/execution.",
+  "red_green": "Actual pre-router MOVE boundary first admits a request without exact source condition;after implementation it rejects428. Strong/weak/ambiguous tags,canonical same-scope URI and wrong host/scope/path/body/condition cases pass focused checks. This is input proof,not native transaction qualification.",
+  "green": [
+    "Focused actual tag/URI/request and legacy upload-meaning tests",
+    "Affected format,vet,architecture and integration/downloadpeer compilation only"
+  ],
+  "prepared_native_proofs": [
+    "TestWebDAVFileMovePinsRevisionPermissionsAndCurrentIntakeWithoutForwarding",
+    "Extended original stock curl profile now moves its actual created file,refuses stale retry and independently compares unchanged custody ID/ETag/bytes"
+  ],
+  "owed": [
+    "Actual native move permissions,stale/equal-content revision,same-key meaning conflict,current policy and zero-effect proof",
+    "Actual stock curl move/readback on ARM/x86",
+    "Remaining DAV operations,full baseline/AX and final-source readiness gates"
+  ],
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "7ab8d895caecaeca441e3014dafc2dc06729d7de4da681e043e3a5f7c6439240",
+      "bytes": 4269
+    },
+    {
+      "reference": "docs/protocols/webdav-read-profile.md",
+      "sha256": "392ca828625c0c5c135b9469d8932958c3f7b9d53fb7e3457a89aeb1ebc26e0d",
+      "bytes": 7775
+    },
+    {
+      "reference": "docs/qualification/evidence/F366-native-push.json",
+      "sha256": "b0a5337a0972fef1921ad7bd77b5938eb9ee8eb1d9df3138a70e462e799e2b05",
+      "bytes": 5174
+    },
+    {
+      "reference": "docs/qualification/evidence/F368-dav-native-create.json",
+      "sha256": "b5c8004dc226e4108bbe3422dae6ebe8c1e1c2e06710c099cc7a0330aec553d8",
+      "bytes": 4650
+    },
+    {
+      "reference": "docs/qualification/parity.json",
+      "sha256": "51c71b1aeb649dcf497b52cbc7dd6c01c0143192a8e4085d74158698d0f55049",
+      "bytes": 150462
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "92d415720f7839af0be339ed2cfa4b4e3e2d3b723b3387229d3a2ecdd70241bf",
+      "bytes": 481932
+    },
+    {
+      "reference": "internal/api/webdav.go",
+      "sha256": "2341ecd4894c46d396432b158feac2df8601c5dece13fa91241ffa78bf342a89",
+      "bytes": 8611
+    },
+    {
+      "reference": "internal/api/webdav_integration_test.go",
+      "sha256": "bfea20c5402c2550cc3d2909dff8a0ea72ffa58402c44c2e94a392786832a992",
+      "bytes": 8061
+    },
+    {
+      "reference": "internal/api/webdav_move.go",
+      "sha256": "b8be3b24b72284256d654ef2069f9939ba909afea87d02bb941ae44c60fd3997",
+      "bytes": 4116
+    },
+    {
+      "reference": "internal/api/webdav_move_integration_test.go",
+      "sha256": "d3da73a607402d2858c1816b0702a9d2b9a0ee85e3431cefa85437f06e1efdd3",
+      "bytes": 7692
+    },
+    {
+      "reference": "internal/api/webdav_move_test.go",
+      "sha256": "0214c707eb0498fa8c62488a19cf7407f8e73b0789daafa55718c06d6a26397e",
+      "bytes": 3760
+    },
+    {
+      "reference": "internal/api/webdav_stock_integration_test.go",
+      "sha256": "e3204b4208100e125fd136543da8fceb50dadfadf401eae1474775b7fd51ccaa",
+      "bytes": 10093
+    },
+    {
+      "reference": "internal/custody/namespace_move.go",
+      "sha256": "33dc538864978d5dd110e30cb46443aa4540dda3079425aa77d2deddd966b631",
+      "bytes": 2832
+    },
+    {
+      "reference": "internal/store/namespace.go",
+      "sha256": "991eda4a176700aa6921b8adaa6636528b4d81a870f89809a7b749982955bc47",
+      "bytes": 17646
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f367-move-red.log",
+      "sha256": "3f8f3118f2a0a75e5f6f8e0b05b6ecd1c14937dc6559cc52237e132aef44295d",
+      "bytes": 237
+    },
+    {
+      "reference": ".private/freightctl-f367-final2-format.log",
+      "sha256": "fd04520f69d6cf9705ec7837f5884d98a0c82065e6c0c911e6448f0374aca64d",
+      "bytes": 108
+    },
+    {
+      "reference": ".private/freightctl-f367-final2-focused.log",
+      "sha256": "be903e7c2d0c2d7f3a5c428e78e1fa21c3e0a000e535d91b5518c36d99b97ed7",
+      "bytes": 114
+    },
+    {
+      "reference": ".private/freightctl-f367-final2-native-compile.log",
+      "sha256": "b546a98917e3e66cd76ff710240a3f1c1c1d17dcd6f49051fe2a62932cdc22c1",
+      "bytes": 225
+    },
+    {
+      "reference": ".private/freightctl-f367-final2-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f367-final2-architecture.log",
+      "sha256": "8a1c740674182c37033f41f9e50363f52a7cfc8aafe3e96db3f99aedf68fcf33",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f366-push.log",
+      "sha256": "3bdabb28a05b8c2c723659197858b28676d60222bf156ca221f0a010bd39b706",
+      "bytes": 192
+    }
+  ]
+}
