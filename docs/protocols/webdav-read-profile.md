@@ -204,6 +204,20 @@ or read. A URL never refers to a host filesystem path.
   bounded to8MiB while being built;overflow returns507 before207 headers.
   Native API/CLI/stock-curl PostgreSQL and TLS outcomes remain owed for this
   extension;local parser/static checks do not establish RFC4918 compliance.
+- To read property contents explicitly outside DAV,use
+  `GET /v1/tenants/{tenant}/partners/{partner}/namespace/properties?path=/data`
+  or `freightctl namespace-properties -path /data` with the ordinary protected
+  credential/database references. Only one canonical path is accepted;duplicate,
+  extra,control-path or malformed selectors fail400 before storage access.
+  The response is a `namespace-properties-v1` snapshot with entry identity and
+  revision plus a map from expanded `{namespace}name` to standalone XML. The
+  observation says authorized-snapshot-at-read:later edits do not change that
+  saved answer. This explicit content read shares DAV's read/list,path modes,
+  current file policy and shared namespace lock. It does not require management
+  permission and grants no write,forwarding,execution or AI disclosure authority.
+  Ordinary stat/list still omit values. Native exact API/DAV and actual CLI
+  comparisons,read-only access and private-path refusal remain owed for this
+  additional surface.
 - Other mutating DAV methods return405 after authenticating the credential.
   Discovery and unknown properties grant no forwarding or execution authority.
   Requests with traversal,encoded separators,control names,noncanonical Unicode

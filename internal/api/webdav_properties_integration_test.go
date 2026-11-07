@@ -8,12 +8,14 @@ import (
 	"encoding/xml"
 	"errors"
 	"fmt"
+	"net/url"
 	"strconv"
 	"strings"
 	"testing"
 	"time"
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
+	"github.com/ctlplne/freightctl/internal/custody"
 	"github.com/ctlplne/freightctl/internal/namespaceprops"
 	"github.com/ctlplne/freightctl/internal/store"
 )
@@ -87,9 +89,16 @@ func TestWebDAVPropertiesAreAtomicRevisionBoundPrivateAndPreservedAcrossMappings
 		if p.Label.Text != "été  tail q:Label" || p.Label.Value != "data & only" || p.Execute != "never grants authority" || !store.ValidID(p.EntryID) || p.Revision < 1 || !bytes.Contains(body, []byte(`xml:lang="fr"`)) || !bytes.Contains(body, []byte(`xmlns:q="urn:types"`)) {
 			t.Fatal("property XML or explicit namespace identity changed")
 		}
+		_, explicit := exchangeAPIRequest(t, server, "GET", prefix+"/namespace/properties?path="+url.QueryEscape(path), nil, map[string]string{"Authorization": "Bearer " + string(token.Bytes)}, nil, 200)
+		var snapshot custody.NamespacePropertySnapshot
+		if json.Unmarshal(explicit, &snapshot) != nil || snapshot.Profile != "namespace-properties-v1" || snapshot.Observation != "authorized-snapshot-at-read" || snapshot.Entry.ID != p.EntryID || snapshot.Entry.Revision != p.Revision || snapshot.Entry.Path != path || len(snapshot.Properties) != 2 || !strings.Contains(snapshot.Properties["{urn:example}label"], "q:Label") || !strings.Contains(snapshot.Properties["{urn:example}execute"], "never grants authority") {
+			t.Fatal("explicit API snapshot differs from independently parsed DAV view")
+		}
 		return body
 	}
 	read(entry.Path, operator)
+	read(entry.Path, reader)
+	exchangeAPIRequest(t, server, "GET", prefix+"/namespace/properties?path=/properties.dat", nil, map[string]string{"Authorization": "Bearer " + string(writer.Bytes)}, nil, 403)
 	// Another equally privileged actor cannot recover this actor's receipt.
 	exchangeAPIRequest(t, server, "PROPPATCH", target, nil, headers(otherManager, "properties-original", condition), update, 412)
 	_, raw = exchangeAPIRequest(t, server, "PROPPATCH", target, nil, headers(operator, "properties-original", condition), update, 200)
@@ -174,6 +183,7 @@ func TestWebDAVPropertiesAreAtomicRevisionBoundPrivateAndPreservedAcrossMappings
 	// The readable independent copy cannot rescue the declared private path.
 	exchangeAPIRequest(t, server, "PROPPATCH", prefix+"/dav/moved.dat", nil, headers(operator, "properties-private-refused", private.Entry.ID+":"+strconv.FormatInt(private.Entry.Revision, 10)), update, 403)
 	exchangeAPIRequest(t, server, "PROPFIND", prefix+"/dav/moved.dat", nil, map[string]string{"Authorization": "Bearer " + string(operator.Bytes), "Depth": "0"}, nil, 403)
+	exchangeAPIRequest(t, server, "GET", prefix+"/namespace/properties?path=/moved.dat", nil, map[string]string{"Authorization": "Bearer " + string(operator.Bytes)}, nil, 403)
 	forged := private.Entry
 	forged.Mode = 0666
 	readTx, err := service.DB.Begin(t.Context(), operatorScope)

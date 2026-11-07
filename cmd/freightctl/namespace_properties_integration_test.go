@@ -40,6 +40,13 @@ func qualifyNamespacePropertiesCLI(t *testing.T, ctx context.Context, service *c
 	if err != nil || len(properties) != 1 || properties[0].Properties["{urn:example}label"] != changes[0].Property {
 		t.Fatal("independent CLI property readback differs", err)
 	}
+	for _, token := range []string{manager, ordinaryWriter} {
+		raw, err = command(token, "namespace-properties", "-path", selection.Path)
+		var snapshot custody.NamespacePropertySnapshot
+		if err != nil || json.Unmarshal(raw, &snapshot) != nil || snapshot.Profile != "namespace-properties-v1" || snapshot.Observation != "authorized-snapshot-at-read" || snapshot.Entry != result.Entry || len(snapshot.Properties) != 1 || snapshot.Properties["{urn:example}label"] != changes[0].Property {
+			t.Fatal("actual explicit CLI read lost authorized content,exact entry or observation", err)
+		}
+	}
 	raw, err = command(manager, "namespace", "-request-file", input, "-idempotency-key", "cli-property-original")
 	var replay store.PathResult
 	if err != nil || json.Unmarshal(raw, &replay) != nil || !replay.Replayed || replay.Entry != result.Entry {

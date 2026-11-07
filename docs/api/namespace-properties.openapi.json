@@ -1,0 +1,188 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "freightctl explicit namespace property content read",
+    "version": "1",
+    "description": "One authorized read snapshot. Ordinary metadata views omit values;native and complete product qualification remain separate."
+  },
+  "paths": {
+    "/v1/tenants/{tenant}/partners/{partner}/namespace/properties": {
+      "get": {
+        "operationId": "readNamespacePropertySnapshot",
+        "summary": "Read inert property contents for one canonical namespace path",
+        "description": "Requires current read/list permissions,mount traversal,actual path read modes and file availability. Uses the same shared namespace snapshot as DAV. Exactly one path query parameter;maximum4KiB encoded query and1024 UTF8 path bytes. No writes,forwarding,execution,model disclosure or current-state assertion beyond the observation. Browser requests retain ordinary session/origin checks. No-store and nosniff apply.",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "browserSession": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "tenant",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            }
+          },
+          {
+            "name": "partner",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            }
+          },
+          {
+            "name": "path",
+            "in": "query",
+            "required": true,
+            "description": "Exactly one canonical virtual path;no control paths,duplicate selectors or normalization aliases.",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1024
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "One authorized-snapshot-at-read;later edits do not alter this saved response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NamespacePropertySnapshot"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Malformed,duplicate,unknown or excessive selector"
+          },
+          "401": {
+            "description": "Current authentication required"
+          },
+          "403": {
+            "description": "Read/list,mount traversal or actual path modes deny this content"
+          },
+          "404": {
+            "description": "No authorized namespace resource"
+          },
+          "409": {
+            "description": "Current resource or intake state does not permit this observation"
+          },
+          "503": {
+            "description": "Admission busy or service unavailable"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "NamespacePropertySnapshot": {
+        "type": "object",
+        "properties": {
+          "profile": {
+            "type": "string",
+            "const": "namespace-properties-v1"
+          },
+          "observation": {
+            "type": "string",
+            "const": "authorized-snapshot-at-read"
+          },
+          "entry": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "path": {
+                "type": "string"
+              },
+              "parent": {
+                "type": "string"
+              },
+              "kind": {
+                "type": "string"
+              },
+              "file_id": {
+                "type": "string"
+              },
+              "owner_actor_id": {
+                "type": "string"
+              },
+              "mode": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 4294967295
+              },
+              "modified_at": {
+                "type": "string"
+              },
+              "revision": {
+                "type": "integer"
+              },
+              "deleted": {
+                "type": "boolean"
+              },
+              "changed_event_id": {
+                "type": "string"
+              },
+              "size_bytes": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "id",
+              "path",
+              "parent",
+              "kind",
+              "owner_actor_id",
+              "mode",
+              "modified_at",
+              "revision",
+              "deleted",
+              "changed_event_id",
+              "size_bytes"
+            ],
+            "additionalProperties": false
+          },
+          "properties": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "maxLength": 32768
+            },
+            "maxProperties": 32,
+            "description": "Validated standalone XML,maximum32 stored expanded names and32KiB combined encoded snapshot;content is untrusted data and never execution or disclosure authority."
+          }
+        },
+        "required": [
+          "profile",
+          "observation",
+          "entry",
+          "properties"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "64 lowercase hexadecimal characters; send the actual credential, never its digest"
+      },
+      "browserSession": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "__Host-freightctl-session"
+      }
+    }
+  }
+}

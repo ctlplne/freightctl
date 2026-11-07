@@ -115,8 +115,14 @@ PostgreSQL/API/CLI/stock curl and schema63/restore proof remain owed;retained
 local schema35 stays unchanged. The partial DAV profile still makes no full
 compliance claim.
 
-Next:continue independent implementation. All16 original781dfdc workflows are
-terminal (15success,receive failure);preserve their exact job/security metadata.
+F408 adds an explicit authorized property-content read to API and CLI. Ordinary
+stat/list omit values. Exact canonical selectors fail before storage access;the
+typed snapshot says authorized-at-read and grants no execution/disclosure right.
+Focused missing-interface red-green,typed schema and static checks pass. Actual
+API/DAV/CLI comparisons and read-only/private-mode outcomes remain owed.
+
+Next:continue independent mandatory implementation while the16 original
+a6c4aac workflows finish;preserve their exact job/security metadata.
 
 Push the next verified owner-only batch only after all required originals are terminal. Repair original
 failures and finish every mandatory final-source baseline/AX gate. F026 stays

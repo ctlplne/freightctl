@@ -1,0 +1,199 @@
+{
+  "schema_version": 1,
+  "id": "F408",
+  "observed_at": "2026-11-07",
+  "base_candidate": "6a684dc7082c72a8594d20f1d9e8ec57b870365d",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F408 adds an explicit single-resource namespace property content read to API and CLI. GET namespace/properties accepts exactly one canonical path with a4KiB encoded query bound;namespace-properties validates the path before credential/database access. Both reuse the existing read/list,mount/mode,current-intake and shared-lock snapshot. Ordinary stat/list remain content-free;the new typed response states authorized-snapshot-at-read and grants no mutation,forwarding,execution or AI disclosure authority. Initial API404 and CLI unknown-command reds become focused selector/credential-boundary greens. Published OpenAPI preserves every typed entry/content field,finite bounds and exact observation;injected authority,false observations and malformed content are rejected. Tagged native API/DAV/CLI comparisons and private-mode/read-only permission proofs compile only locally. Affected vet,format and architecture pass. Real native outcomes and all final-source gates remain owed.",
+  "contract": {
+    "API": "GET /v1/tenants/{tenant}/partners/{partner}/namespace/properties?path=/data",
+    "CLI": "namespace-properties -path /data using protected ordinary credential/database references",
+    "profile": "namespace-properties-v1",
+    "observation": "authorized-snapshot-at-read",
+    "permission": "Existing read/list plus mount traversal,actual modes and current file availability;no management right implied",
+    "contents": "Finite untrusted standalone XML;not model disclosure,forwarding,approval or execution authority",
+    "ordinary_stat_list": "Contents remain omitted",
+    "schema": "docs/api/namespace-properties.openapi.json"
+  },
+  "red_green": [
+    {
+      "proof": "API missing route red",
+      "exit_code": 1,
+      "reference": ".private/freightctl-f408-api-read-red.log"
+    },
+    {
+      "proof": "CLI unknown command red",
+      "exit_code": 1,
+      "reference": ".private/freightctl-f408-cli-read-red.log"
+    },
+    {
+      "proof": "API strict selector green",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f408-api-read-final.log"
+    },
+    {
+      "proof": "CLI before credential/database green",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f408-cli-read-focused.log"
+    },
+    {
+      "proof": "Typed schema,injection and selector green",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f408-api-contract-focused.log"
+    },
+    {
+      "proof": "Native compile only;no runtime qualification",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f408-native-compile.log"
+    },
+    {
+      "proof": "Affected tagged vet",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f408-vet-final.log"
+    },
+    {
+      "proof": "Architecture",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f408-architecture.log"
+    },
+    {
+      "proof": "Nine changed/new Go files formatted",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f408-format-final.log"
+    }
+  ],
+  "owed": [
+    "Actual native API/DAV and CLI content identity/revision/XML comparisons",
+    "Actual read-only authorized content,write-only refusal,private actual mode despite readable alias,revocation/isolation and no-effect outcomes",
+    "Exact final-source required runtime/security/reproducibility,all baseline/AX and readiness outcomes"
+  ],
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "d7942762f3210eb51016855f37ee0f00e4ad788a30ad87285bfb1e2c299128fb",
+      "bytes": 8552
+    },
+    {
+      "reference": "cmd/freightctl/main.go",
+      "sha256": "599cff955d856ec866d6e1e45cee70aeba7326c78c9dceb799f80cd9caa92d67",
+      "bytes": 50593
+    },
+    {
+      "reference": "cmd/freightctl/namespace_properties_integration_test.go",
+      "sha256": "ca460bbf7f511ce60ca0fa24874f50269192f0e47c022b9d00d28695d6e9e2b2",
+      "bytes": 3726
+    },
+    {
+      "reference": "cmd/freightctl/namespace_properties_test.go",
+      "sha256": "00bfb709f12ab382347cbde69041788e15a38ede7f2130f7f9a632367df76b2a",
+      "bytes": 656
+    },
+    {
+      "reference": "docs/api/namespace-properties.openapi.json",
+      "sha256": "456276a29db01fbf16e946ca1b082a7df37ebc81a4e57bff28d5c2864e4b7d92",
+      "bytes": 5885
+    },
+    {
+      "reference": "docs/protocols/webdav-read-profile.md",
+      "sha256": "c60fa58ab546c127e8de21f01b25e19f118eace093af8b45793490984496c985",
+      "bytes": 18672
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "c304c135e50ca2d65600c1a4eafd6a9e5865ba57f35dc136f99315f32fc560bd",
+      "bytes": 602868
+    },
+    {
+      "reference": "internal/api/api.go",
+      "sha256": "70d39c93c98fdaf451c01dc7161cf4176b6afd95589ad6c5e4b07654bfac0417",
+      "bytes": 30601
+    },
+    {
+      "reference": "internal/api/namespace_properties.go",
+      "sha256": "5cc17ca99f1862958c59b4f11cdc9647c465223204b3e532e5b145f5b9f63144",
+      "bytes": 741
+    },
+    {
+      "reference": "internal/api/namespace_properties_schema_test.go",
+      "sha256": "d1f640d1881329fda7e878c239ad367c1ea4ff40792ecc8a7627dd3b4f1c28d7",
+      "bytes": 3127
+    },
+    {
+      "reference": "internal/api/namespace_properties_test.go",
+      "sha256": "c226f1d3f700e3d5ed53b6da8dd47a2c22b42468adeba7a08ea212c3861cd9db",
+      "bytes": 892
+    },
+    {
+      "reference": "internal/api/webdav_properties_integration_test.go",
+      "sha256": "9f740f1f677dea6f8f888cacfdec694b49d9d9f87ecf399a06f2fd260988c3d6",
+      "bytes": 15466
+    },
+    {
+      "reference": "internal/custody/namespace_property_snapshot.go",
+      "sha256": "5120e10e18519e1b6a3228b2bfd6c250882b751237ac13c804330ddae0453f9b",
+      "bytes": 1260
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f408-api-read-red.log",
+      "sha256": "47d745361e6ab34889f8a0939c1786cf2e1873b5e1f735197ce2ace2ed4b8992",
+      "bytes": 258
+    },
+    {
+      "reference": ".private/freightctl-f408-cli-read-red.log",
+      "sha256": "135e64f134f4c82c05f842420dba684fd2217a59e434f433ac8af670f98f64ec",
+      "bytes": 308
+    },
+    {
+      "reference": ".private/freightctl-f408-api-read-final.log",
+      "sha256": "03722c1e2b26bd0087e35493660e45d4c26e43b3a4648d2d662d1a0dd83fe4e2",
+      "bytes": 55
+    },
+    {
+      "reference": ".private/freightctl-f408-cli-read-focused.log",
+      "sha256": "b972bc95f8b5021b33a25248b274825fdf8a963f3f29cccb64a8a598daa0140d",
+      "bytes": 57
+    },
+    {
+      "reference": ".private/freightctl-f408-api-contract-focused.log",
+      "sha256": "d2f038673981fa247c25be1393ce0d748723669adca0f4e150caf0543efdfe6d",
+      "bytes": 55
+    },
+    {
+      "reference": ".private/freightctl-f408-native-compile.log",
+      "sha256": "9d02594c05e365b1d6a6192ea38356dee9b8d17d53a185e163d0db2311381f8c",
+      "bytes": 225
+    },
+    {
+      "reference": ".private/freightctl-f408-vet-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f408-architecture.log",
+      "sha256": "e4528a62d5409eb7f93784bdf112ad0b3903fe202b703534510a7c5e65ba502c",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f408-format-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f408-snapshot-schema.json",
+      "sha256": "5aa3d4d9e11135fb894863e481ed46c932900a13ce69b3f83340cb8f97373d4e",
+      "bytes": 836
+    }
+  ],
+  "safety": {
+    "local_inference": false,
+    "local_postgresql_or_chrome": false,
+    "local_scanner": false,
+    "retained_database_changed": false,
+    "resource_allowances_changed": false,
+    "publication_or_deployment": false,
+    "original_runtime_runs_cancelled_or_rerun": false
+  }
+}
