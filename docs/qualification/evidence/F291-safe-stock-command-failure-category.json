@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "id": "F291",
+  "observed_at": "2026-11-07",
+  "base_candidate": "10abac50240129cda6b7f2bf3cc04f87cff3f338",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Safe original stock-worker failure classification implemented;native cause owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "44604fe179b5e8b2e1d8a95c0f17a94b93a01dc14bbd6e7bd857469b561f95b5",
+      "bytes": 5186
+    },
+    {
+      "reference": "docs/qualification/evidence/F290-original-stock-worker-and-receiver-failures.json",
+      "sha256": "22f758275ac2f3592eb6d574a3546f1ebc9301fe418c14021823e78c058a888f",
+      "bytes": 2066
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "ec90cb93d1bfd1c3458413a736c0f1acfd3a0bde16ba83c0364680504bb53f4f",
+      "bytes": 392158
+    },
+    {
+      "reference": "scripts/native_evidence.py",
+      "sha256": "6f68f08a4cef0b6c860c86ac48b77a891b0eda83348d6a749324f2e91135f812",
+      "bytes": 6058
+    },
+    {
+      "reference": "scripts/qualify-collections.py",
+      "sha256": "d7d7fab52ff387725e64548bcbcf39af1e493d8ca84d9cc37e9beb2081ba5bee",
+      "bytes": 44366
+    },
+    {
+      "reference": "scripts/test-native-evidence.py",
+      "sha256": "35bf1f05b8614a864012b2b2ef84aaa6589d28c4638a070896e425e6931b251f",
+      "bytes": 8989
+    }
+  ],
+  "red": {
+    "evidence": "docs/qualification/evidence/F290-original-stock-worker-and-receiver-failures.json",
+    "candidate": "49eefe1d4877962aec7c92cb6b6f26485fa83a11",
+    "run": 42363733825,
+    "job": 128377278452,
+    "observation": "Exact wrong-source-pin-real-worker command exits unexpectedly before original retry assertion. Raw backend failure is private;existing public evidence has no closed category."
+  },
+  "changed": [
+    "For the exact fixed failed worker command,reopen regular private outputs without following symlinks,bound parsing to64KiB,verify entire bytes against original step hashes and reject partial/changed/broad/aliased/duplicate/boolean metadata.",
+    "Emit only fixed full-message or whitelisted SQLSTATE category,numeric actual/expected exit codes and complete original stdout/stderr digests. Unknown codes/text stay unclassified;missing/ineligible evidence returns unavailable with no partial digest. Never emit exception text,paths,SQL,credentials or artifact bytes.",
+    "The driver still raises its original failure;all original command outcomes,worker assertions,raw evidence and closure checks remain mandatory. No backend state/permission/lease/security check changes."
+  ],
+  "green": [
+    "Eleven focused real-temporary-output NativeEvidence methods pass,including new private-sentinel/known-and-unknown-category,original hashes and broad/oversize/changed/symlink/duplicate/boolean refusals.",
+    "Affected Python AST syntax and diff checks pass. No PostgreSQL/SSH/FTPS/browser runtime."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f291-failure-evidence-green.log",
+      "sha256": "808f5955d9f693b1d489d7ffa5ed51a3661169db3ed03fe7175aafbb4e2a2c19",
+      "bytes": 1871
+    },
+    {
+      "reference": ".private/freightctl-f291-syntax.log",
+      "sha256": "23b9f0900302aed0810080dedfaddb7f6db24fef3d0a46a329325ba3e5d3669f",
+      "bytes": 42
+    }
+  ],
+  "owed": [
+    "Actual exact native stock worker category and underlying repair,then original wrong-host/zero-capture/zero-authenticated-contact retry journey.",
+    "Actual x86 independent stock receiver repair with seccomp/protocol/isolation and original evidence unchanged.",
+    "All remaining native/browser/product/security/final baseline/AX/FINISH outcomes."
+  ],
+  "resources": "Lightweight sequential Python private-file/short subprocess proof only;no inference,PostgreSQL,Chrome,scanner or heavy peer. Local allowances,retained35/source60 unchanged."
+}

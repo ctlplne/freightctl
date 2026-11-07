@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "id": "F290",
+  "observed_at": "2026-11-07",
+  "candidate": "49eefe1d4877962aec7c92cb6b6f26485fa83a11",
+  "state": "Original stock arrivals and x86 receiver failures preserved;root cause/repair owed",
+  "stock_arrivals": {
+    "run": 42363733825,
+    "job": 128377278452,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128377278452",
+    "observation": "qualify-collections.py line242 wrong-source-pin-real-worker returns unexpected command exit before expected retry receipt;raw output retained privately. No backend cause inferred.",
+    "other_stock_jobs": {
+      "handoff-routing": 128377278242,
+      "captured-routing": 128377278380,
+      "routing": 128377278404,
+      "intake-routing": 128377278458
+    },
+    "other_stock_jobs_state": "passed only on this candidate"
+  },
+  "x86_receiver": {
+    "run": 42363733756,
+    "job": 128377277863,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128377277863",
+    "profile": "no-ktls",
+    "state": "failed",
+    "observed_native_pass_records": 0,
+    "stage": "store",
+    "category": "reply",
+    "tls_probes": [
+      "explicit:version-alert",
+      "implicit:version-alert"
+    ],
+    "trace_categories": [
+      "explicit:SIGSYS",
+      "explicit:last-setsockopt-before-SIGSYS:level=1,option=2,size=4",
+      "explicit:last-syscall-before-SIGSYS:54",
+      "implicit:SIGSYS",
+      "implicit:last-setsockopt-before-SIGSYS:level=1,option=2,size=4",
+      "implicit:last-syscall-before-SIGSYS:54"
+    ],
+    "limits": "Trace categories identify observations,not a proved root cause. Seccomp remains enabled;no filter/protocol/receiver assertion is weakened. Native independent receiver qualification remains red."
+  },
+  "owed": [
+    "Actual original stock wrong-host worker diagnosis/repair and entire arrivals/schedules journey.",
+    "Actual x86 stock receiver repair with isolation/protocol/evidence unchanged.",
+    "All final-source product/native/security/baseline/AX/FINISH outcomes."
+  ],
+  "no_runs_cancelled_rerun_or_substituted": true
+}

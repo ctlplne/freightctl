@@ -11,6 +11,57 @@ from native_evidence import NativeEvidence
 
 
 class NativeOutputContracts(unittest.TestCase):
+    def failed_output(self, error):
+        tmp = tempfile.TemporaryDirectory(prefix='freightctl-failure-evidence-')
+        self.addCleanup(tmp.cleanup)
+        root = Path(tmp.name)
+        steps = []
+        proof = NativeEvidence(root, steps)
+        proof.reserve('wrong-source-pin-real-worker')
+        step = {'name': 'wrong-source-pin-real-worker', 'exit_code': 1, 'expected_exit_code': 0}
+        for extension, body in [('stdout', b''), ('stderr', error)]:
+            path = root / ('wrong-source-pin-real-worker.'+extension)
+            path.write_bytes(body)
+            path.chmod(0o600)
+            step[extension+'_sha256'] = hashlib.sha256(body).hexdigest()
+        steps.append(step)
+        return root, steps, proof
+
+    def test_failed_command_diagnosis_emits_only_closed_categories_and_exact_hashes(self):
+        for body, category in [(b'freightctl: permission denied\n', 'permission-denied'),
+                (b'freightctl: current collection authority, exact input and live execution lease required\n', 'collection-authority-input-lease'),
+                (b'freightctl: ERROR: PRIVATE_CREDENTIAL PATH PAYLOAD (SQLSTATE 23514)\n', 'postgres-check'),
+                (b'PRIVATE_CREDENTIAL PATH PAYLOAD (SQLSTATE ABCDE)\n', 'unclassified'),
+                (b'PRIVATE (SQLSTATE 23514) OTHER (SQLSTATE 42501)', 'ambiguous-postgres-error')]:
+            root, steps, proof = self.failed_output(body)
+            result = proof.failure_summary('wrong-source-pin-real-worker')
+            self.assertEqual(result['category'], category)
+            self.assertEqual(result['stderr_sha256'], hashlib.sha256(body).hexdigest())
+            self.assertEqual(result['exit_code'], 1)
+            self.assertEqual(result['expected_exit_code'], 0)
+            self.assertNotIn('PRIVATE', json.dumps(result))
+            self.assertNotIn(str(root), json.dumps(result))
+            self.assertEqual(proof.verify(), 2)
+
+    def test_failed_command_diagnosis_refuses_changed_broad_oversized_or_aliased_evidence(self):
+        for change in ('changed', 'broad', 'oversized', 'symlink', 'duplicate', 'boolean-exit'):
+            root, steps, proof = self.failed_output(b'private original failure')
+            path = root/'wrong-source-pin-real-worker.stderr'
+            if change == 'changed': path.write_bytes(b'changed evidence')
+            elif change == 'broad': path.chmod(0o644)
+            elif change == 'oversized':
+                body = b'x'*((64 << 10)+1)
+                path.write_bytes(body)
+                steps[0]['stderr_sha256'] = hashlib.sha256(body).hexdigest()
+            elif change == 'symlink':
+                retained = root/'retained'
+                path.rename(retained)
+                path.symlink_to(retained)
+            elif change == 'duplicate': steps.append(dict(steps[0]))
+            elif change == 'boolean-exit': steps[0]['exit_code'] = True
+            self.assertEqual(proof.failure_summary('wrong-source-pin-real-worker'),
+                {'kind': 'native-command-failure', 'category': 'unavailable'})
+
     def fixture(self):
         tmp = tempfile.TemporaryDirectory(prefix='freightctl-native-evidence-')
         self.addCleanup(tmp.cleanup)

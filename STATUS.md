@@ -57,6 +57,12 @@ F287 uses the receive script's actual protected first-failure.log before console
 fallback. Focused original-vs-console regression turns red to green;native
 underlying cause,repair and full browser acceptance remain owed.
 
+F290 preserves stock arrivals wrong-host worker unexpected exit and x86 stock
+receiver failures;four other stock browser/routing profiles pass on49eefe1.
+F291 prepares a closed-category,original-hash-verified diagnostic for that exact
+worker command. Eleven focused evidence/privacy tests pass;native backend cause
+and original journey remain owed. Seccomp and all failure assertions stay.
+
 FINISH repair and remaining implementation are mandatory. Next:repair original
 browser/stock/protocol failures and complete all affected original runtime,
 security,recovery,reproducibility and baseline/AX gates on the final source.

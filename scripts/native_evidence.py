@@ -2,7 +2,9 @@
 from pathlib import Path
 import hashlib
 import json
+import os
 import re
+import stat
 
 
 class NativeEvidence:
@@ -10,6 +12,60 @@ class NativeEvidence:
         self.directory = Path(directory)
         self.steps = steps
         self.reserved = set()
+
+    def failure_summary(self, name):
+        """Closed diagnosis only; never publish raw command output or paths."""
+        unavailable = {'kind': 'native-command-failure', 'category': 'unavailable'}
+        matches = [step for step in self.steps if step.get('name') == name]
+        if name not in self.reserved or len(matches) != 1:
+            return unavailable
+        step = matches[0]
+        if any(type(step.get(k)) is not int or not -255 <= step[k] <= 255
+               for k in ('exit_code', 'expected_exit_code')):
+            return unavailable
+        bodies, digests = {}, {}
+        try:
+            for extension in ('stdout', 'stderr'):
+                path = self.directory / (name+'.'+extension)
+                flags = os.O_RDONLY | getattr(os, 'O_NOFOLLOW', 0) | getattr(os, 'O_NONBLOCK', 0)
+                if path.is_symlink():
+                    return unavailable
+                with os.fdopen(os.open(path, flags), 'rb') as source:
+                    info = os.fstat(source.fileno())
+                    if not stat.S_ISREG(info.st_mode) or info.st_mode & 0o077 or info.st_size > 64 << 10:
+                        return unavailable
+                    body = source.read((64 << 10)+1)
+                    if len(body) != info.st_size:
+                        return unavailable
+                    digest = hashlib.sha256(body).hexdigest()
+                    if digest != step.get(extension+'_sha256'):
+                        return unavailable
+                    bodies[extension] = body
+                    digests[extension+'_sha256'] = digest
+        except (OSError, ValueError):
+            return unavailable
+        exact = {
+            b'': 'empty-stderr',
+            b'freightctl: permission denied\n': 'permission-denied',
+            b'freightctl: unauthorized\n': 'unauthorized',
+            b'freightctl: required database isolation is not active\n': 'database-isolation',
+            b'freightctl: resource revision changed\n': 'revision-changed',
+            b'freightctl: operation does not match the current resource state\n': 'state-conflict',
+            b'freightctl: current collection authority, exact input and live execution lease required\n': 'collection-authority-input-lease',
+        }
+        error = bodies['stderr']
+        category = exact.get(error, 'unclassified')
+        sql = {b'23514': 'postgres-check', b'23503': 'postgres-reference',
+               b'23505': 'postgres-unique', b'42501': 'postgres-permission',
+               b'40001': 'postgres-serialization', b'40P01': 'postgres-deadlock',
+               b'57014': 'postgres-cancelled', b'22023': 'postgres-input'}
+        codes = [code for code in sql if b'(SQLSTATE '+code+b')' in error]
+        if len(codes) == 1:
+            category = sql[codes[0]]
+        elif len(codes) > 1:
+            category = 'ambiguous-postgres-error'
+        return {'kind': 'native-command-failure', 'category': category,
+                'exit_code': step['exit_code'], 'expected_exit_code': step['expected_exit_code'], **digests}
 
     def reserve(self, name):
         if not isinstance(name, str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._-]{0,127}', name):

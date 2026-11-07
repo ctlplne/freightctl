@@ -38,7 +38,9 @@ def command(label,args,expected=0,timeout=100):
   steps[-1]['browser_configuration_reference']=str(config.relative_to(root))
   steps[-1]['browser_configuration_sha256']=sha(config)
   output_proof.capture_browser(label,Path(settings['raw'])/'onboarding-exchange-browser.json')
- if r.returncode!=expected:raise RuntimeError(label+' failed; inspect protected native output')
+ if r.returncode!=expected:
+  if label=='wrong-source-pin-real-worker':print(json.dumps(dict(output_proof.failure_summary(label),command='wrong-source-pin-real-worker')),flush=True)
+  raise RuntimeError(label+' failed; inspect protected native output')
  return out.read_bytes()
 def sql(text,db=None):return subprocess.check_output(['docker','exec',pg,'psql','-X','-v','ON_ERROR_STOP=1','-U','postgres','-d',db or database,'-At','-c',text],env=env,timeout=30).decode().strip()
 def port():
