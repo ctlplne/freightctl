@@ -11,9 +11,17 @@ import (
 )
 
 func davCollectionMoveInput(w http.ResponseWriter, r *http.Request) bool {
+	return davCollectionMappingInput(w, r, "move")
+}
+
+func davCollectionCopyInput(w http.ResponseWriter, r *http.Request) bool {
+	return davCollectionMappingInput(w, r, "copy")
+}
+
+func davCollectionMappingInput(w http.ResponseWriter, r *http.Request, operation string) bool {
 	condition, present, valid := tusHeader(r, "X-Freightctl-Namespace-Revision")
 	if !present {
-		fail(w, 428, "dav_collection_move_requires_namespace_revision")
+		fail(w, 428, "dav_collection_"+operation+"_requires_namespace_revision")
 		return false
 	}
 	if _, _, exact := davNamespaceCondition(condition); !valid || !exact {
@@ -22,37 +30,37 @@ func davCollectionMoveInput(w http.ResponseWriter, r *http.Request) bool {
 	}
 	key, _, valid := tusHeader(r, "Idempotency-Key")
 	if !valid || key == "" {
-		fail(w, 400, "dav_collection_move_requires_original_key")
+		fail(w, 400, "dav_collection_"+operation+"_requires_original_key")
 		return false
 	}
 	overwrite, _, valid := tusHeader(r, "Overwrite")
 	if !valid || overwrite != "F" {
-		fail(w, 428, "dav_collection_move_requires_non_overwrite")
+		fail(w, 428, "dav_collection_"+operation+"_requires_non_overwrite")
 		return false
 	}
 	if r.ContentLength != 0 {
-		fail(w, 415, "dav_collection_move_body_unsupported")
+		fail(w, 415, "dav_collection_"+operation+"_body_unsupported")
 		return false
 	}
 	for _, name := range []string{"If-Match", "If-None-Match", "If-Unmodified-Since", "If-Modified-Since", "If", "Content-Range"} {
 		if _, present, _ := tusHeader(r, name); present {
-			fail(w, 400, "unsupported_dav_collection_move_condition")
+			fail(w, 400, "unsupported_dav_collection_"+operation+"_condition")
 			return false
 		}
 	}
-	if depth, present, valid := tusHeader(r, "Depth"); present && (!valid || depth != "infinity") {
-		fail(w, 400, "invalid_dav_collection_move_depth")
+	if depth, present, valid := tusHeader(r, "Depth"); present && (!valid || depth != "infinity" && (operation != "copy" || depth != "0")) {
+		fail(w, 400, "invalid_dav_collection_"+operation+"_depth")
 		return false
 	}
 	parts := strings.Split(r.URL.Path, "/")
 	base := "/v1/tenants/" + url.PathEscape(parts[3]) + "/partners/" + url.PathEscape(parts[5]) + "/dav/"
 	source, err := webdav.VirtualPath(r.URL.EscapedPath(), base)
 	if err != nil || source == "/" {
-		fail(w, 400, "invalid_dav_collection_move_source")
+		fail(w, 400, "invalid_dav_collection_"+operation+"_source")
 		return false
 	}
 	if _, err := davCollectionDestination(r, base); err != nil {
-		fail(w, 400, "invalid_dav_collection_move_destination")
+		fail(w, 400, "invalid_dav_collection_"+operation+"_destination")
 		return false
 	}
 	return true

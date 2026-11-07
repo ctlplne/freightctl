@@ -140,8 +140,8 @@ func TestWebDAVFileCopyRequiresReadWriteVerifiedCustodyAndIndependentMappings(t 
 		t.Fatal("declared namespace-conditioned collection MOVE missing")
 	}
 	for _, method := range []string{"COPY", "DELETE"} {
-		if strings.Contains(response.Header.Get("Allow"), method) {
-			t.Fatal("directory advertised file-only mutation")
+		if !strings.Contains(response.Header.Get("Allow"), method) {
+			t.Fatal("directory lost its namespace-conditioned collection mutation")
 		}
 	}
 	checking := &checks.Service{Custody: service}

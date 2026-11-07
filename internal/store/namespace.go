@@ -181,7 +181,7 @@ func (t *Transaction) ApplyPathCommand(ctx context.Context, key string, command 
 	}
 	var permission string
 	switch command.Operation {
-	case "mkdir", "publish", "copy":
+	case "mkdir", "publish", "copy", "copy_tree", "copy_dir":
 		permission = "write"
 	case "rename", "remove", "rmdir", "setstat", "properties", "move_tree", "remove_tree":
 		permission = "manage_paths"
@@ -209,6 +209,15 @@ func (t *Transaction) ApplyPathCommand(ctx context.Context, key string, command 
 			validate = validateTreeRemoval
 		}
 		if err := validate(command); err != nil {
+			return nil, err
+		}
+	} else if command.Operation == "copy_tree" || command.Operation == "copy_dir" {
+		for _, permission := range []string{"read", "list"} {
+			if err := t.Require(permission); err != nil {
+				return nil, err
+			}
+		}
+		if err := validateTreeMove(command); err != nil {
 			return nil, err
 		}
 	} else if command.ExpectedEntryID != "" || len(command.PropertyChanges) != 0 {
@@ -289,6 +298,11 @@ func (t *Transaction) ApplyPathCommand(ctx context.Context, key string, command 
 	var preparedTree []PathEntry
 	if command.Operation == "move_tree" || command.Operation == "remove_tree" {
 		preparedTree, err = t.prepareTreeMutation(ctx, actual, command)
+		if err != nil {
+			return nil, err
+		}
+	} else if command.Operation == "copy_tree" || command.Operation == "copy_dir" {
+		preparedTree, err = t.PrepareTreeCopy(ctx, command)
 		if err != nil {
 			return nil, err
 		}
@@ -447,6 +461,13 @@ func (t *Transaction) ApplyPathCommand(ctx context.Context, key string, command 
 		next = *old
 		next.Revision++
 		switch command.Operation {
+		case "copy_tree", "copy_dir":
+			copied, err := t.copyPreparedTree(ctx, actual, command, preparedTree, commandID, maxEntries)
+			if err != nil {
+				return nil, err
+			}
+			next = *copied
+			changed = len(preparedTree)
 		case "copy":
 			if command.Target == "" || command.Target == "/" || old.Kind != "file" {
 				return nil, ErrState

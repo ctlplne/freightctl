@@ -422,6 +422,56 @@ func TestWebDAVNativeStockCurlDiscoveryInterruptedReadAndExactResume(t *testing.
 	if status != 200 || !bytes.Equal(unchangedMember, replacement) || headers.Get("X-File-Revision-ID") != replaced.File.ID {
 		t.Fatal("unsupported namespace condition removed or changed the stock member")
 	}
+	copyCollectionTarget := prefix + "/dav/curl-collection-copy/"
+	copyCollectionArgs := []string{"--request", "COPY", "--header", "Depth: infinity", "--header", "Overwrite: F", "--header", "Idempotency-Key: dav-stock-collection-copy", "--header", "X-Freightctl-Namespace-Revision: " + movedCollection.Result.Entry.ID + ":" + strconv.FormatInt(movedCollection.Result.Entry.Revision, 10), "--header", "Destination: " + front.URL + copyCollectionTarget}
+	status, headers, body, _ = run("collection-copy", collectionTarget, copyCollectionArgs, true)
+	var copiedCollection struct {
+		Result store.PathResult `json:"result"`
+		State  string           `json:"namespace_state"`
+		Depth  string           `json:"depth"`
+	}
+	if status != 201 || json.Unmarshal(body, &copiedCollection) != nil || copiedCollection.Result.Replayed || copiedCollection.Result.Changed != 3 || copiedCollection.Result.Entry.ID == movedCollection.Result.Entry.ID || copiedCollection.State != "collection-copied-at-commit" || copiedCollection.Depth != "infinity" || headers.Get("Location") != copyCollectionTarget || headers.Get("ETag") != "" {
+		t.Fatal("stock full collection COPY lost complete independent result")
+	}
+	for index, original := range []string{overwriteTarget, copyOverwriteTarget} {
+		status, headers, copiedBytes, _ := run("collection-copied-member-"+strconv.Itoa(index), copyCollectionTarget+strings.TrimPrefix(original, collectionPath), nil, true)
+		if status != 200 || !bytes.Equal(copiedBytes, replacement) || headers.Get("X-File-Revision-ID") != replaced.File.ID {
+			t.Fatal("stock collection COPY changed immutable member bytes")
+		}
+	}
+	status, _, body, _ = run("collection-copied-property", copyCollectionTarget+strings.TrimPrefix(copyOverwriteTarget, collectionPath), []string{"--request", "PROPFIND", "--header", "Depth: 0"}, true)
+	propertyReadback.Responses = nil
+	if status != 207 || xml.Unmarshal(body, &propertyReadback) != nil || len(propertyReadback.Responses) != 1 || len(propertyReadback.Responses[0].Groups) != 1 || propertyReadback.Responses[0].Groups[0].Prop.Label.Text != "stock  q:Label" || propertyReadback.Responses[0].Groups[0].Prop.Label.Part != "été & data" || !bytes.Contains(body, []byte(`xmlns:q="urn:types"`)) || !bytes.Contains(body, []byte(`xml:lang="fr"`)) {
+		t.Fatal("stock collection COPY lost inert mixed XML context")
+	}
+	status, headers, body, _ = run("collection-copy-retry", collectionTarget, copyCollectionArgs, true)
+	if status != 200 || json.Unmarshal(body, &copiedCollection) != nil || !copiedCollection.Result.Replayed || copiedCollection.State != "not-asserted-original-receipt" || headers.Get("Location") != "" {
+		t.Fatal("stock collection copy retry repeated publication or asserted current destination")
+	}
+	shallowTarget := prefix + "/dav/curl-collection-shallow/"
+	shallowArgs := append([]string{}, copyCollectionArgs...)
+	for i, value := range shallowArgs {
+		switch value {
+		case "Depth: infinity":
+			shallowArgs[i] = "Depth: 0"
+		case "Idempotency-Key: dav-stock-collection-copy":
+			shallowArgs[i] = "Idempotency-Key: dav-stock-collection-shallow"
+		case "Destination: " + front.URL + copyCollectionTarget:
+			shallowArgs[i] = "Destination: " + front.URL + shallowTarget
+		}
+	}
+	status, headers, body, _ = run("collection-shallow-copy", collectionTarget, shallowArgs, true)
+	var shallowCollection struct {
+		Result store.PathResult `json:"result"`
+		Depth  string           `json:"depth"`
+	}
+	if status != 201 || json.Unmarshal(body, &shallowCollection) != nil || shallowCollection.Result.Changed != 1 || shallowCollection.Depth != "0" || headers.Get("Location") != shallowTarget {
+		t.Fatal("stock shallow collection COPY lost depth0 semantics")
+	}
+	status, _, _, missingShallowChild := run("collection-shallow-no-child", shallowTarget+strings.TrimPrefix(copyOverwriteTarget, collectionPath), nil, false)
+	if status != 404 || missingShallowChild != 22 {
+		t.Fatal("stock shallow collection COPY included a child")
+	}
 	deleteCollectionArgs := []string{"--request", "DELETE", "--header", "Depth: infinity", "--header", "Idempotency-Key: dav-stock-collection-delete", "--header", "X-Freightctl-Namespace-Revision: " + movedCollection.Result.Entry.ID + ":" + strconv.FormatInt(movedCollection.Result.Entry.Revision, 10)}
 	status, headers, body, _ = run("collection-delete", collectionTarget, deleteCollectionArgs, true)
 	if status != 204 || len(body) != 0 || headers.Get("X-Freightctl-Namespace-State") != "collection-removed-at-commit" || headers.Get("X-Freightctl-Removed-Entries") != "3" || !store.ValidID(headers.Get("X-Freightctl-Event-ID")) || headers.Get("ETag") != "" || headers.Get("Location") != "" {
@@ -446,6 +496,10 @@ func TestWebDAVNativeStockCurlDiscoveryInterruptedReadAndExactResume(t *testing.
 	status, headers, retainedCollectionBytes, _ := run("collection-delete-retained-custody", prefix+"/files/"+replaced.File.ID, nil, true)
 	if status != 200 || !bytes.Equal(retainedCollectionBytes, replacement) || headers.Get("X-File-Revision-ID") != replaced.File.ID {
 		t.Fatal("stock recursive DELETE erased immutable custody")
+	}
+	status, headers, independentCopy, _ := run("collection-copy-survives-source-removal", copyCollectionTarget+strings.TrimPrefix(copyOverwriteTarget, collectionPath), nil, true)
+	if status != 200 || !bytes.Equal(independentCopy, replacement) || headers.Get("X-File-Revision-ID") != replaced.File.ID {
+		t.Fatal("stock copied mapping depended on removed source collection")
 	}
 	binaryPath, err := exec.LookPath("curl")
 	if err != nil {

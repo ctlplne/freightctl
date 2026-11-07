@@ -1,9 +1,9 @@
 # DAV namespace read and conditional-mutation profile
 
 This is a partial read/conditional-mutation adapter, not a claim of RFC4918 class1,2 or3 compliance.
-The full C-WEBDAV contract remains open: collection COPY/overwrite,locks,outbound server
+The full C-WEBDAV contract remains open: collection overwrite,locks,outbound server
 connections and independent DAV application interoperability still need work. Implemented
-read,property,MOVE and DELETE profiles also require actual final-source qualification.
+read,property,MOVE,DELETE and COPY profiles also require actual final-source qualification.
 
 Use the existing HTTPS listener and an enrolled bearer credential:
 `/v1/tenants/{tenant}/partners/{partner}/dav/` followed by an encoded virtual
@@ -13,8 +13,8 @@ The prefix selects a tenant and partner; the ordinary PostgreSQL/RLS identity,
 mount root,path modes and current intake policy decide what can be discovered
 or read. A URL never refers to a host filesystem path.
 
-`X-Freightctl-Namespace-Revision` applies only to PROPPATCH and collection MOVE/DELETE.
-PUT,MKCOL,file MOVE,COPY and file DELETE reject that header with400 instead of silently
+`X-Freightctl-Namespace-Revision` applies only to PROPPATCH and collection MOVE/DELETE/COPY.
+PUT,MKCOL,file MOVE/COPY and file DELETE reject that header with400 instead of silently
 ignoring it. Use their byte/absence conditions below. A refused namespace
 condition is not an evaluated metadata revision or a successful transfer.
 
@@ -30,9 +30,9 @@ revision,mode,intake and idempotency checks still run before execution.
 
 - `OPTIONS` authenticates and checks read/list access to the addressed entry.
   It returns `Allow: OPTIONS, PROPFIND, GET, HEAD, PUT, MKCOL, PROPPATCH, MOVE, DELETE, COPY`
-  and no DAV compliance class. Refused collection mutation responses omit
-  the file-only COPY operation;collection MOVE/DELETE use the separate
-  namespace condition below.
+  and no DAV compliance class. Byte-conditioned file methods on directories
+  return405 and advertise the separate namespace-conditioned collection
+  MOVE/DELETE/COPY profiles below;this is not permission to skip their guards.
 - `PROPFIND` supports explicit Depth0 or1. Missing Depth means infinity and is
   refused with403 and `DAV:propfind-finite-depth`. Other depth values are400.
   The complete collection is limited to1000 immediate children; larger scopes
@@ -161,7 +161,7 @@ revision,mode,intake and idempotency checks still run before execution.
   proofs include nested members,properties,independent bytes,denied private and
   no-longer-released members,unchanged quotas,oversized retained-state refusal,
   ABA identity,replay and exact no-extra-effect counts;runtime outcomes remain
-  owed for the new source. Locks,collection COPY/overwrite and outbound
+  owed for the new source. Locks,collection overwrite and outbound
   DAV server interoperability remain open.
 - File `DELETE` removes one mapping with an exact strong If-Match,
   the original Idempotency-Key and an empty body. Ordinary read/manage_paths,
@@ -221,7 +221,8 @@ revision,mode,intake and idempotency checks still run before execution.
   Fresh201 names Location;read the authorized target separately for its bytes.
   For an originally absent target later removed,200 can recover only its historical receipt
   without recreating it. Changed source revisions cannot reuse the old key.
-  Missing parents return409;collection copy remains405 and unqualified.
+  Missing parents return409;applying this byte-conditioned file profile to a
+  directory returns405. Use its namespace-conditioned collection href below.
   The ordinary namespace API/CLI accepts the same typed copy command with source
   path,target,file_id and expected source mapping revision. It requires the same
   read/write,protected custody verification and namespace capacity checks.
@@ -241,6 +242,45 @@ revision,mode,intake and idempotency checks still run before execution.
   The shared namespace API/CLI also refuses a copy whose canonical source and
   destination are the same. Neither create nor replace may recreate its own
   source mapping;the store independently enforces that boundary.
+- Collection `COPY` uses the trailing-slash href,original Idempotency-Key,
+  exact root `X-Freightctl-Namespace-Revision`,Overwrite:F,empty body and a
+  same-scope/same-HTTPS-authority collection Destination. No URI is contacted.
+  Depth0 copies only the collection and its inert properties;absent Depth or
+  infinity copies every current member. Depth1 and ambiguous headers are400.
+  See [RFC4918 sections9.8.2–3](https://www.rfc-editor.org/rfc/rfc4918.html#section-9.8.2).
+  The typed API/CLI uses copy_dir for depth0 and copy_tree for full depth,with
+  path,target,expected_entry_id and expected_revision. Both require read,list
+  and write;manage_paths grants no substitute for reading or writing. The
+  root condition identifies the current source mapping,not a frozen hash of
+  its earlier descendants. Under the exclusive namespace lock,require actual
+  source path/ancestor modes and current policy for each copied member,plus
+  destination-parent write/traverse. An outside alias cannot authorize a
+  hidden member. Depth0 does not read,copy or disclose children. Reject root,
+  control,self,descendant and noncanonical targets;allow only an absent target,
+  with no merge/overwrite. Preserve the existing1000-member operation and live
+  namespace quota;failure rolls back all mappings,events and receipts.
+  Verify each distinct immutable file against its actual protected storage,
+  size and SHA256 before publishing any mapping,then repeat the current store
+  preflight. New mappings have new IDs,the acting owner's ordinary0750/0640
+  directory/file modes and the copy's modified time. Their independent property
+  snapshots preserve inert XML;files reference the same exact immutable custody.
+  Keep both existing SQL guards:initialize a directory with PathCreated,then
+  its exact PathAttrsChanged only when properties exist,in this same atomic
+  transaction. Its initial final revision is2 when properties were copied,1
+  otherwise;each new file is revision1 with its PathPublished snapshot. Changed
+  counts mappings,including the root,not events. No FileAccepted,forwarding or
+  execution authority is created. Recheck current file access/availability and
+  authority before commit. Fresh201 names the new collection Location and
+  collection-copied-at-commit,depth and complete result,without a byte ETag.
+  Current source/copy names and properties can change independently. Exact
+  original-key200 recovers only its private historical result without new
+  Location,publication or current-state assertion;changed depth,target or
+  command meaning conflicts409. Occupied targets,stale/different source or an
+  absent source fail412,missing parents409,permissions403 and capacity507.
+  Native API/CLI/stock-curl,whole-tree/shallow,property,mode,mount,corrupt-custody,
+  current-policy,capacity,no-extra-effects and retry proof remains owed.
+  Collection overwrite,locks,outbound server and independent DAV applications
+  remain open;this adapter still claims no complete DAV compliance class.
 - `PROPPATCH` changes inert user properties on a file or collection. Discover
   the live `urn:freightctl:namespace` properties `entry-id` and `revision` with
   PROPFIND,then send their exact `UUID:positive-revision` pair as

@@ -1,0 +1,297 @@
+{
+  "schema_version": 1,
+  "id": "F417",
+  "observed_at": "2026-11-07",
+  "base_candidate": "ef8596d9cfde4b2f14ffa903832802edd3ce50ff",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F417 implements non-overwriting full collection COPY/copy_tree and shallow COPY/copy_dir with exact root identity/revision,read/list/write,current actual member modes/policy,confined writable destination and verified immutable custody. Fresh mappings have new IDs/ownership/ordinary modes and independent inert properties. Existing SQL guards stay intact:directory creation and exact property attrs initialize atomically. Observed old HTTP guard400 becomes focused green;affected native compilation,vet and architecture pass. Native API/CLI/stock-curl,mount,corrupt-custody,policy,capacity and no-extra-effects proof remains owed;no schema,permission/resource budget or full-DAV qualification change.",
+  "contract": {
+    "operations": {
+      "copy_tree": "All current members,including root;HTTP Depth absent/infinity",
+      "copy_dir": "Only root and its inert properties;HTTP Depth0 does not inspect children"
+    },
+    "inputs": "Exact root ID/positive revision,canonical source/target,original key,empty body,Overwrite:F,same-scope/same-HTTPS-authority collection destination",
+    "root_condition_scope": "Current root mapping identity/revision,not frozen descendant inventory",
+    "authority": "read/list/write;actual member read/traverse/current policy and destination-parent write;manage_paths grants no substitute,readable aliases cannot rescue hidden members",
+    "custody": "Prepare under namespace lock,verify each distinct immutable file in actual protected storage/size/SHA256 before any mapping,repeat current store preflight;file references remain exact immutable originals",
+    "atomicity": "Parent-first new mappings,independent property snapshots,domain events and one actor-private receipt in same transaction;current file access/availability and authority rechecked before commit",
+    "new_mapping": "New ID,current actor owner,ordinary0750 directory/0640 file modes,copy timestamp;no source transition or FileAccepted/external intent",
+    "properties": "Keep SQL guard unchanged:directory PathCreated followed by exact PathAttrsChanged only for nonempty properties,in same transaction;final initial revision2 with properties/1 without;files revision1 PathPublished with exact properties",
+    "outcomes": "Fresh201,new collection Location,complete result/depth,collection-copied-at-commit,no byte ETag;exact historical200 has no new Location/publication/current-state assertion",
+    "refusals": "Self/descendant/control/root/noncanonical forbidden;occupied/wrong source ID/revision412,changed key meaning409,permissions403,missing parents409,tree/live-entry capacity507",
+    "bounds": "Existing1000-member operation/live namespace quota,10s transaction and all local limits unchanged",
+    "no_full_DAV_claim": true,
+    "specifications": [
+      "https://www.rfc-editor.org/rfc/rfc4918.html#section-9.8.2",
+      "https://www.rfc-editor.org/rfc/rfc4918.html#section-9.8.3"
+    ]
+  },
+  "red_green": [
+    {
+      "proof": "Actual old prepareDAVRequest refuses valid exact namespace-conditioned full collection COPY400",
+      "exit_code": 1,
+      "reference": ".private/freightctl-f417-collection-copy-red.log"
+    },
+    {
+      "proof": "Focused new/existing COPY/MOVE/DELETE,input,identity and independent authority guards",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f417-copy-final-focused.log"
+    },
+    {
+      "proof": "Affected tagged API/custody/store/CLI/stock-curl compilation only",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f417-native-final-compile.log"
+    },
+    {
+      "proof": "Affected tagged vet",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f417-vet.log"
+    },
+    {
+      "proof": "Architecture",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f417-architecture.log"
+    },
+    {
+      "proof": "Eighteen changed Go files formatted",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f417-format.log"
+    },
+    {
+      "proof": "Record references only,not runtime",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f417-records.log"
+    },
+    {
+      "proof": "Added exact equal-revision/different-ID API ABA native fixture compiles only",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f417-native-ABA-compile.log"
+    },
+    {
+      "proof": "Affected API vet after added ABA fixture",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f417-vet-ABA.log"
+    },
+    {
+      "proof": "CLI copied mapping after original recursive removal compile only",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f417-cli-independent-compile.log"
+    },
+    {
+      "proof": "Affected CLI vet after independent-copy fixture",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f417-cli-independent-vet.log"
+    }
+  ],
+  "prepared_native_proofs": [
+    "API minimal read/list/write actor:shallow root/properties copy despite unreadable child,no nested mapping;full4-member copy with new IDs/owner/modes and exact independent XML/custody;source unchanged",
+    "Actual member private mode despite outside readable alias,missing each grant,parent write,stale root,ABA identity,self/descendant,missing parent and live-entry capacity refusals;no partial effects",
+    "Exact private original-key history,other-actor target refusal and changed destination/depth conflicts;source/copy property changes independent;exact creation/property/publication/receipt counters and no new acceptance/intents/runs",
+    "Current released-then-revoked policy on one child refuses full tree with unchanged source/no target",
+    "Custody fixture:sealed equal-length wrong bytes refuse without target;repair exact bytes/protection and replay exact key commits once,independent source/copy bytes match;virtual mount confines new target",
+    "Existing1001-member retained fixture reused without raising namespace quota;copy507,zero creation/property events/receipts and no partial destination",
+    "Actual CLI ordinary writer without management executes both depth modes with independent ownership/properties/exact bytes/history;source later removed without destroying copies",
+    "Original stock curl full3-member/shallow1-member201,independently parsed mixed XML/byte comparison,exact original historical200,shallow missing child404 and copied member survives source DELETE"
+  ],
+  "owed": [
+    "Every prepared native outcome;compilation does not qualify SQL/stock clients/CLI/corruption/mount behavior",
+    "Actual final-source runtime/security plus all remaining applicable baseline/AX/readiness gates",
+    "Collection overwrite,locks,outbound stock server and independent DAV applications/licensed comparison/full parity"
+  ],
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "3cae2913f214ffeebba2940e53f409d186e7aee820cb320829cb8454deab0c8e",
+      "bytes": 12716
+    },
+    {
+      "reference": "cmd/freightctl/namespace_tree_move_integration_test.go",
+      "sha256": "fb70acadb8a9d97495a632d949b6969d259343ba3002bf66e4a79071809de0d9",
+      "bytes": 8722
+    },
+    {
+      "reference": "docs/development.md",
+      "sha256": "2721a511abd2454a80a0c22dc375df44c02d4f0320847b820f2017122b99fd5c",
+      "bytes": 42623
+    },
+    {
+      "reference": "docs/protocols/webdav-read-profile.md",
+      "sha256": "60050f691190dd93edccb7dd1509445bb9b185fd0556566b6266ed46070eaeb1",
+      "bytes": 28008
+    },
+    {
+      "reference": "docs/qualification/parity.json",
+      "sha256": "c943db0f965f9e411400c59025b6afcd8f6e9480c371232d14abbf8488bbdaac",
+      "bytes": 154494
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "fb82ad324b15438a63004b07c6639cf9154e0404cd26846b8b068bf1074c0cd1",
+      "bytes": 638656
+    },
+    {
+      "reference": "internal/api/webdav.go",
+      "sha256": "dee2921f2060ee485f1f500da05713258cdf27f93ded0eb78b6e12b71984e841",
+      "bytes": 11109
+    },
+    {
+      "reference": "internal/api/webdav_collection_copy.go",
+      "sha256": "9d7d059bf4ef078dcbc7dd54ec7b0866d7ada0f71216c66c9abb7bbc3f126787",
+      "bytes": 1616
+    },
+    {
+      "reference": "internal/api/webdav_collection_copy_integration_test.go",
+      "sha256": "a5e8e1321cd7c74342ee596838bd82c816dd238c32d0e576a6cae2bc8eb9bee7",
+      "bytes": 15409
+    },
+    {
+      "reference": "internal/api/webdav_collection_copy_test.go",
+      "sha256": "6919af52846c026507330cbb91578eec087e12c6ff9febb71c1b53e3fa00f63f",
+      "bytes": 2650
+    },
+    {
+      "reference": "internal/api/webdav_collection_move.go",
+      "sha256": "8f5c326973bfbba9ffa0124d7cfeae685bd129d4602c0424215c60171caacdaf",
+      "bytes": 4414
+    },
+    {
+      "reference": "internal/api/webdav_collection_move_integration_test.go",
+      "sha256": "120d33286fb287b995539445888b83f066dd8b52dd988409e91c22be3759815a",
+      "bytes": 15648
+    },
+    {
+      "reference": "internal/api/webdav_copy.go",
+      "sha256": "06ef58f987559294be458bba3c93ea5743a58d38438163fa546087f28ba2bdf0",
+      "bytes": 2042
+    },
+    {
+      "reference": "internal/api/webdav_copy_integration_test.go",
+      "sha256": "8464dbde73255af9559c9ec2811bb4a35e998d4c2a61e91e4589dbfd6a9d801b",
+      "bytes": 12386
+    },
+    {
+      "reference": "internal/api/webdav_delete_integration_test.go",
+      "sha256": "45b64d75133d57b319bf96d4ab9a580159c8ed0062ef64c7ced202812984606c",
+      "bytes": 10007
+    },
+    {
+      "reference": "internal/api/webdav_move_integration_test.go",
+      "sha256": "e99eda74d14d5994b0a216986758c59afb7fd7bd0c5b338b003ace53c44d1e43",
+      "bytes": 7840
+    },
+    {
+      "reference": "internal/api/webdav_stock_integration_test.go",
+      "sha256": "cc2814585e16449366de5ada224fc64b5d3ffe1c15a0816a0eed6d325d02b65e",
+      "bytes": 33265
+    },
+    {
+      "reference": "internal/custody/namespace.go",
+      "sha256": "dad1eacc5ba3f8886b9ab9cb9ef5344ffdeecdf6877222754a6aecd1762bb265",
+      "bytes": 10881
+    },
+    {
+      "reference": "internal/custody/namespace_tree_copy_integration_test.go",
+      "sha256": "f68b4f62b371809ffa25c17a2eaa7f27d2a648716ed16127e29f27e3aa646b8a",
+      "bytes": 3619
+    },
+    {
+      "reference": "internal/store/namespace.go",
+      "sha256": "4e6fc65bd9d3ccff3f131fb1c56d4f52aaa7d44a6be8df627ba60e66c4bef29c",
+      "bytes": 26254
+    },
+    {
+      "reference": "internal/store/namespace_tree_copy.go",
+      "sha256": "32a8f5c520f5795290723799a0693977a8c9130264db552ab66eeece68ef22d8",
+      "bytes": 3740
+    },
+    {
+      "reference": "internal/store/namespace_tree_copy_test.go",
+      "sha256": "02485cd7db5d705cdf2dcbbe13cc77e03e6476ab3845d2344be83eb336dbe52e",
+      "bytes": 1994
+    },
+    {
+      "reference": "internal/store/namespace_tree_move.go",
+      "sha256": "e85c174e6a775d6435231bc4a4e199a5e513fede6db2e72c2100bf21c07412cf",
+      "bytes": 3051
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f417-collection-copy-red.log",
+      "sha256": "e03a462c8a4105974efdc31a15126f56b223ccf679140596c04ee2b4e57b0d77",
+      "bytes": 237
+    },
+    {
+      "reference": ".private/freightctl-f417-copy-final-focused.log",
+      "sha256": "6d188893ea7a0f1b9a9218b0ee337655edc8717f1fa06ae2ee1ff0f434c20d81",
+      "bytes": 112
+    },
+    {
+      "reference": ".private/freightctl-f417-native-final-compile.log",
+      "sha256": "d1d12f94ba22a6910c3d79b95eeff783e15f42b96093bfd523e2bd0460921c10",
+      "bytes": 306
+    },
+    {
+      "reference": ".private/freightctl-f417-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f417-architecture.log",
+      "sha256": "94db382e84b0b473ae715514b358918297615f0acb378f24832d6d8d37c7d772",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f417-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f417-records.log",
+      "sha256": "826009b37d6c8254924b7fd1ee12981059544175f2c890ad4186b88b41b583b4",
+      "bytes": 106
+    },
+    {
+      "reference": ".private/freightctl-f417-parity-preservation.json",
+      "sha256": "ff232a3d7a6d8ece264c2578d4472a516b606b47fb781ff560ce4417b79f4e6a",
+      "bytes": 153
+    },
+    {
+      "reference": ".private/freightctl-f417-sql-guard-preservation.json",
+      "sha256": "3e6f0d2734b06408777eef482ae32dbbb24effc988ff794c40378ccf8168d193",
+      "bytes": 474
+    },
+    {
+      "reference": ".private/freightctl-f417-native-ABA-compile.log",
+      "sha256": "74970c28747ed08fde8c94855f88c7b5e2ed1fb05c7410dc88a5a3c1b8af2b9d",
+      "bytes": 73
+    },
+    {
+      "reference": ".private/freightctl-f417-vet-ABA.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f417-cli-independent-compile.log",
+      "sha256": "4c7abbadec249ce39829ae11bf29c725d4072e3bd753d4e114c2e5ec4072d0fc",
+      "bytes": 75
+    },
+    {
+      "reference": ".private/freightctl-f417-cli-independent-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "safety": {
+    "local_inference": false,
+    "local_postgresql_or_chrome": false,
+    "local_scanner": false,
+    "retained_database_changed": false,
+    "schema_or_permission_budgets_changed": false,
+    "local_or_CI_capacity_changed": false,
+    "publication_or_deployment": false,
+    "original_runtime_runs_cancelled_or_rerun": false
+  },
+  "overall_goal_complete": false
+}

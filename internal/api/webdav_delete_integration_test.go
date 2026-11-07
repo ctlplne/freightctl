@@ -110,8 +110,8 @@ func TestWebDAVFileDeletePinsAuthorityRevisionHistoryAndCurrentIntake(t *testing
 		t.Fatal(err)
 	}
 	response, _ = exchangeAPIRequest(t, server, "DELETE", prefix+"/dav/directory", nil, headers("dav-delete-dir-refused", tag, operator), nil, 405)
-	if !strings.Contains(response.Header.Get("Allow"), "DELETE") || strings.Contains(response.Header.Get("Allow"), "COPY") || !strings.Contains(response.Header.Get("Allow"), "MOVE") {
-		t.Fatal("collection Allow lost namespace-conditioned MOVE/DELETE or advertised unimplemented copy")
+	if !strings.Contains(response.Header.Get("Allow"), "DELETE") || !strings.Contains(response.Header.Get("Allow"), "COPY") || !strings.Contains(response.Header.Get("Allow"), "MOVE") {
+		t.Fatal("collection Allow lost namespace-conditioned MOVE/DELETE or COPY")
 	}
 	checking := &checks.Service{Custody: service}
 	if _, err := checking.Register(t.Context(), scope, "dav-delete-policy", checks.PolicyRequest{Definition: checks.Policy{Schema: 1, Kind: "csv", Columns: []checks.Column{{Name: "record", Type: "text", Required: true}}}}); err != nil {

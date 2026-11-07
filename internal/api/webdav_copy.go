@@ -3,6 +3,7 @@ package api
 import (
 	"errors"
 	"net/http"
+	"strings"
 
 	"github.com/ctlplne/freightctl/internal/custody"
 	"github.com/ctlplne/freightctl/internal/store"
@@ -10,6 +11,10 @@ import (
 )
 
 func (s *Server) davCopy(w http.ResponseWriter, r *http.Request, scope store.Scope, source, base string) {
+	if strings.HasSuffix(r.URL.Path, "/") {
+		s.davCollectionCopy(w, r, scope, source, base)
+		return
+	}
 	target, err := davMoveDestination(r, base)
 	if err != nil {
 		fail(w, 400, "invalid_dav_copy_destination")

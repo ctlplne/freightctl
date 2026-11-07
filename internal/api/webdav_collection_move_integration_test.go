@@ -229,6 +229,23 @@ func TestWebDAVCollectionMoveIsCompleteAtomicAuthorizedAndPreservesCustody(t *te
 	if current, err := service.StatPath(t.Context(), scope, "/large"); err != nil || !sameEntry(*current, large.Entry) {
 		t.Fatal("bounded removal changed its root", err)
 	}
+	copyOperator, copyParticipant := exchangeAPIParticipant(t, server, prefix, cookie, csrf, []string{"read", "list", "write"})
+	exchangeAPIRequest(t, server, "COPY", prefix+"/dav/large/", nil, headers(copyOperator, "tree-copy-capacity-refused", "/large-copy", large.Entry), nil, 507)
+	if _, err = service.StatPath(t.Context(), scope, "/large-copy"); !errors.Is(err, store.ErrNotFound) {
+		t.Fatal("oversized copy published a prefix", err)
+	}
+	copyScope := store.Scope{Tenant: scope.Tenant, Partner: scope.Partner, TokenHash: secure.Digest(copyOperator.Bytes)}
+	copyTx, err := service.DB.Begin(t.Context(), copyScope)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var copied, copyCommands int
+	if err = copyTx.Tx.QueryRow(t.Context(), `SELECT (SELECT count(*) FROM events WHERE actor_id=$1 AND kind IN ('PathCreated','PathPublished','PathAttrsChanged')),(SELECT count(*) FROM namespace_commands)`, copyParticipant.Actor).Scan(&copied, &copyCommands); err != nil || copied != 0 || copyCommands != 0 {
+		t.Fatal("oversized copy retained events or private receipts", copied, copyCommands, err)
+	}
+	if err = copyTx.Tx.Rollback(t.Context()); err != nil {
+		t.Fatal(err)
+	}
 	operatorScope := store.Scope{Tenant: scope.Tenant, Partner: scope.Partner, TokenHash: secure.Digest(operator.Bytes)}
 	tx, err = service.DB.Begin(t.Context(), operatorScope)
 	if err != nil {

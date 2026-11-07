@@ -14,8 +14,8 @@ import (
 	"github.com/ctlplne/freightctl/internal/webdav"
 )
 
-const davDirectoryMethods = "OPTIONS, PROPFIND, GET, HEAD, PUT, MKCOL, PROPPATCH, MOVE, DELETE"
-const davReadMethods = davDirectoryMethods + ", COPY"
+const davDirectoryMethods = "OPTIONS, PROPFIND, GET, HEAD, PUT, MKCOL, PROPPATCH, MOVE, DELETE, COPY"
+const davReadMethods = davDirectoryMethods
 
 // Validate before ServeMux can clean a path into a different namespace name or
 // redirect it. This initial profile uses explicit bearer credentials only.
@@ -38,7 +38,7 @@ func prepareDAVRequest(w http.ResponseWriter, r *http.Request) bool {
 	// adapter that implements only byte or absence conditions.
 	switch r.Method {
 	case http.MethodPut, "MKCOL", "MOVE", "COPY", http.MethodDelete:
-		collectionCondition := (r.Method == "MOVE" || r.Method == http.MethodDelete) && strings.HasSuffix(r.URL.Path, "/")
+		collectionCondition := (r.Method == "MOVE" || r.Method == "COPY" || r.Method == http.MethodDelete) && strings.HasSuffix(r.URL.Path, "/")
 		if !collectionCondition {
 			if _, present, _ := tusHeader(r, "X-Freightctl-Namespace-Revision"); present {
 				fail(w, 400, "unsupported_dav_namespace_condition")
@@ -56,6 +56,9 @@ func prepareDAVRequest(w http.ResponseWriter, r *http.Request) bool {
 		return davMoveInput(w, r)
 	}
 	if r.Method == "COPY" {
+		if strings.HasSuffix(r.URL.Path, "/") {
+			return davCollectionCopyInput(w, r)
+		}
 		return davFileMappingInput(w, r, "copy")
 	}
 	if r.Method == http.MethodDelete {

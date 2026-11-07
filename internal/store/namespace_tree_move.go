@@ -49,6 +49,9 @@ func (t *Transaction) prepareTreeMutation(ctx context.Context, actual string, co
 	if root.ID != command.ExpectedEntryID {
 		return nil, ErrRevision
 	}
+	if command.Operation == "copy_dir" {
+		return []PathEntry{*root}, nil
+	}
 	rows, err := t.Tx.Query(ctx, "SELECT "+entryColumns+entryJoin+` WHERE NOT n.deleted AND (n.path=$1 OR left(n.path,length($1)+1)=$1||'/') ORDER BY length(n.path),n.path LIMIT 1001`, actual)
 	if err != nil {
 		return nil, err

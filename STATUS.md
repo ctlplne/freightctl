@@ -180,3 +180,13 @@ Affected native API/store/CLI/curl compilation,vet and architecture pass. Actual
 whole-tree/refusal/no-extra-effects/custody/tombstone/retry native proof remains
 owed. Collection COPY/overwrite,locks,outbound and independent DAV applications
 remain open. No schema or local resource/runtime changes.
+
+F417 adds non-overwriting full/shallow collection COPY and shared API/CLI
+copy_tree/copy_dir. Exact root identity/revision,read/list/write,current actual
+member modes/policy,confined destination,verified immutable bytes,new mapping
+identities and independent inert properties use the existing transaction and
+SQL guards. The old HTTP input400 becomes focused green;affected tagged native
+compilation,vet and architecture pass. Native API/CLI/curl,mount,corrupt custody,
+capacity,policy and no-extra-effects outcomes remain owed. Collection overwrite,
+locks,outbound and independent DAV applications remain open. No schema,budget,
+local runtime or full-DAV qualification change.

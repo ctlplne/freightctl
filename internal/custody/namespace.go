@@ -117,6 +117,26 @@ func (s *Service) pathCommand(ctx context.Context, scope store.Scope, key string
 			return nil, err
 		}
 	}
+	if command.Operation == "copy_tree" || command.Operation == "copy_dir" {
+		tree, err := t.PrepareTreeCopy(ctx, command)
+		if err != nil {
+			return nil, err
+		}
+		verified := make(map[string]bool)
+		for _, entry := range tree {
+			if entry.Kind != "file" || verified[entry.FileID] {
+				continue
+			}
+			file, err := t.File(ctx, entry.FileID)
+			if err != nil {
+				return nil, err
+			}
+			if err = s.verifyNamespacePublication(ctx, scope, file); err != nil {
+				return nil, err
+			}
+			verified[entry.FileID] = true
+		}
+	}
 	result, err := t.ApplyPathCommand(ctx, key, command, s.NamespaceMaxEntries)
 	if err != nil {
 		return nil, err
