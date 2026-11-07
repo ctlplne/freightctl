@@ -11,7 +11,13 @@ linked safe manifests. Raw private proof remains outside Git.
 Current pushed candidate: `94745e3b262832852eff24c3780f417d0d55cea5`.
 [F424](docs/qualification/evidence/F424-native-push.json) binds four owner-only
 commits,enabled Gitleaks(no leaks) and16 original attempt1 workflows. F421
-API/CLI and F423 metadata-only MCP historical receipts await native outcomes.
+API/CLI and F423 metadata-only MCP historical receipt proofs are included in
+[F426](docs/qualification/evidence/F426-native-terminal.json):16 original
+workflows/35 terminal jobs,34pass/receive-browser red. All named security gates
+pass. Both PostgreSQL/unit-race/restore/HTTPS-curl and JSON API/CLI/browser
+workflows succeed at this source. Detailed scoped/final-source evidence remains
+owed. Live FTPS/local-collection browser succeed without an identified repair;
+their earlier failures stay preserved/unresolved. Local F425 is not included.
 
 Previous terminal candidate: `f22d0d41428f0019f5a872336c892f9893c2cc2e`.
 [F420](docs/qualification/evidence/F420-native-push.json) binds five owner-only
