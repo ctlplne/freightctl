@@ -158,8 +158,13 @@ func structuredNativeBrowser(t *testing.T, format string) {
 		FailureHash    string `json:"failure_sha256"`
 		Stage          string `json:"failed_stage"`
 	}
-	if runErr != nil || workflow.Decode(raw, &summary) != nil || summary.State != "passed" || !store.ValidID(summary.File) || summary.PolicyHash != expected || summary.PolicyRequests == nil || *summary.PolicyRequests != 2 || summary.Accessibility == nil || *summary.Accessibility != 5 || summary.Egress == nil || *summary.Egress != 0 || summary.Errors == nil || *summary.Errors != 0 || summary.Sandbox == nil || !*summary.Sandbox || summary.Inference == nil || *summary.Inference || len(summary.Browser) > 80 || !regexp.MustCompile(`^[0-9]+(?:\.[0-9]+){1,3}$`).MatchString(summary.Browser) || summary.Node != "v26.13.0" || summary.Axe != "4.14.0" || summary.FailureHash != "" || summary.Stage != "" {
-		t.Fatalf("native JSON browser failed;stage=%s;safe result SHA256=%s", safeNativeBrowserStage(summary.Stage), secure.Digest(raw))
+	decodeErr := workflow.Decode(raw, &summary)
+	if runErr != nil || decodeErr != nil || summary.State != "passed" || !store.ValidID(summary.File) || summary.PolicyHash != expected || summary.PolicyRequests == nil || *summary.PolicyRequests != 2 || summary.Accessibility == nil || *summary.Accessibility != 5 || summary.Egress == nil || *summary.Egress != 0 || summary.Errors == nil || *summary.Errors != 0 || summary.Sandbox == nil || !*summary.Sandbox || summary.Inference == nil || *summary.Inference || len(summary.Browser) > 80 || !regexp.MustCompile(`^[0-9]+(?:\.[0-9]+){1,3}$`).MatchString(summary.Browser) || summary.Node != "v26.13.0" || summary.Axe != "4.14.0" || summary.FailureHash != "" || summary.Stage != "" {
+		stage := ""
+		if decodeErr == nil {
+			stage = summary.Stage
+		}
+		t.Fatalf("native JSON browser failed;stage=%s;safe result SHA256=%s", safeNativeBrowserStage(stage), secure.Digest(raw))
 	}
 	current, err := checking.Policy(t.Context(), scope)
 	if err != nil || current == nil || current.Version != 2 || current.Hash != expected || !bytes.Equal(current.Definition, wire) && !jsonRecordsSameJSON(current.Definition, wire) {

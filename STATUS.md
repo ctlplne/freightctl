@@ -4,8 +4,9 @@ Updated 2026-11-07. Active under owner resume. All83 whole parity rows,twelve
 complete journeys and AX01–AX08 remain open. Assisted deployment,independent
 adoption and enterprise readiness remain unqualified.
 
-Latest pushed source:71e8166d0bc96c574055e00f749d387e0f0b0460.
-F214 preserves its18 terminal workflows/41 jobs:27 pass,14 fail. Listed security
+Latest pushed source:e87483babb4e32f8a3aaf78d13f8374d842fa78b.
+Its original runtime batch is still in progress. F214 preserves the previous
+71e8166 source18 terminal workflows/41 jobs:27 pass,14 fail. Listed security
 checks and both complete image scans pass. Original SCP/tus workflows now pass.
 Six output-policy/processing/producer/composition/calendar/proposal Chrome cases
 pass inside a still-red job. Core,macOS,metadata restores and several stock/public
@@ -138,6 +139,12 @@ attaches the owner descriptor in NtCreateFile and never reconstructs the root
 pathname. Local rename/replacement/no-overwrite/private-before-write and leaf
 refusal cases pass;Windows compile/vet and architecture pass. Native Windows
 race/token/reparse proof,custody sealing and custody/setup wiring remain owed.
+
+F237 corrects F229's failed-process diagnostic short circuit. Saved browser
+summaries are decoded even when the process exits with failure;only a valid
+closed summary can supply an allowlisted stage. All original failure/success
+assertions remain. Privacy regression/compilation/vet pass;actual original stage
+capture and JSON/intake/independent-review browser repairs remain owed.
 
 Schema3 records.project binds an owned checked input,approved exact task,one
 durable processing intent,slots and events/receipt. Stable work keys select one

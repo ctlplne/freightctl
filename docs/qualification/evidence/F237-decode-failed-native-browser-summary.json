@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "id": "F237",
+  "observed_at": "2026-11-07",
+  "base_candidate": "3cf27b8bce9c9538f4191397801c25b96d84dca2",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Failed-browser summary decoding corrected;native diagnostic/behavioral replay owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "f5b91d43a1767ef0f8db52d54a1efc0ecd13c0e11f9674b7a182d6b24eb4de0c",
+      "bytes": 19333
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "e7a21850d3d3172d661a2eee3b33cc4281c6008ed4f4c65d9ac3a40bc9000593",
+      "bytes": 370067
+    },
+    {
+      "reference": "internal/api/json_records_browser_integration_test.go",
+      "sha256": "8e3d2422fbfd864bd2e87458aa50edb2b1f8c8ed2d00ef6affa8ca236a8fd6ab",
+      "bytes": 8549
+    },
+    {
+      "reference": "internal/api/processing_review_browser_integration_test.go",
+      "sha256": "6f49b095ecd2056627f1d26fc911d50a6c743748e0f8c6bd1a0196defa13a85c",
+      "bytes": 7573
+    }
+  ],
+  "original_failure": {
+    "candidate": "e87483babb4e32f8a3aaf78d13f8374d842fa78b",
+    "run": 42354252231,
+    "job": 128348737719,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128348737719",
+    "observations": [
+      "Four format browser failures log stage unavailable with safe result digest b90310fcf33eab1b6c38628a0776e31609c7a6b480bd50134123b2948f3bb808.",
+      "Independent review failure logs unavailable with digest26bea415c6a961717386761b18b15c4f7a453b3bb677aa4383dc776218dfeb4e.",
+      "The condition runErr!=nil || workflow.Decode(...) short-circuits before decoding when the native command fails."
+    ]
+  },
+  "changed": [
+    "Decode the already bounded saved summary before evaluating the process outcome. On decoding failure,report unavailable;on valid decoding,apply the existing closed stage allowlist. Retain every original process/state/field/counter/security/accessibility assertion and the safe result digest.",
+    "This is a diagnostic repair,not a pass or behavioral repair of the original browser failures. Raw logs remain private."
+  ],
+  "green": [
+    "Existing closed diagnostic disclosure regression plus integration/jsonbrowser compilation and vet pass without browser/database services."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f237-failed-summary-compile.log",
+      "sha256": "7668ac4daf85892698e137e9bdbe40d2d41f87638ae3b207e7f2faa20b774751",
+      "bytes": 55
+    },
+    {
+      "reference": ".private/freightctl-f237-failed-summary-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f237-final-failed-summary-compile.log",
+      "sha256": "bb82de04ff1ad1f0ef0007814b19d2b468e5ca219852af7ba461d459ac5364cb",
+      "bytes": 55
+    }
+  ],
+  "owed": [
+    "Actual original JSON/fixed/XML/XLSX/independent-review stage capture,diagnosis,repair and full native journey replay.",
+    "All actual final-source native/browser/stock/security/race/restore/reproducibility and remaining baseline/AX/FINISH gates."
+  ],
+  "resources": "OneCPU/192MiB local pure/static only;no PostgreSQL,Chrome,inference,scanner or heavy peer. Retained35/source60 unchanged."
+}
