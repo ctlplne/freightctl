@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "id": "F239",
+  "observed_at": "2026-11-07",
+  "base_candidate": "8404759bb134fec99ee85f05d62c4300102c8ec3",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Windows public closed-error classification repaired;native replay owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "46d4cfe32a66cdb64a7aa37dd28e4fc77fed1eaff5d5be942bfeb654ac7bc5c7",
+      "bytes": 19715
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "0aa7cf401207f745487712861e1917672393e2590b49e3e85f9f5faa79717dbb",
+      "bytes": 370539
+    },
+    {
+      "reference": "internal/durablefs/directory_windows.go",
+      "sha256": "53965c83f983064bb3f5182442ec8e3420a017e1e3e38255f6829a71a169bbe8",
+      "bytes": 5254
+    }
+  ],
+  "original_failure": {
+    "candidate": "e87483babb4e32f8a3aaf78d13f8374d842fa78b",
+    "run": 42354252248,
+    "job": 128348737979,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128348737979",
+    "test": "TestSyncDirectoryRefusesNilRegularAndClosedInputs",
+    "observation": "The unchanged errors.Is(err,os.ErrClosed) assertion remains red at directory_test.go:47 after F227."
+  },
+  "mechanism": "Pinned Go1.26.10 os.rawConn.Control calls poll.FD.RawControl directly. For an otherwise valid File,its error path is incref refusing a closing descriptor;the internal ErrFileClosing is not File.wrapErr-translated to public fs.ErrClosed. SyscallConn/checkValid errors still return unchanged before Control.",
+  "changed": [
+    "On RawConn.Control error,join public os.ErrClosed with the original error. Preserve the original sentinel and all failed-operation errors. No extra syscall,handle probe,descriptor consumption,identity relaxation or successful result is introduced.",
+    "The original exact closed-file assertion and native nil/regular/rename/swap/flush/close tests remain unchanged."
+  ],
+  "green": [
+    "Windows existing native test binary cross-compilation and vet pass. Windows binary not executed locally."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f239-windows-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f239-windows-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "owed": [
+    "Original exact Windows closed-file and all affected handle-identity/native persistence/race repair replays.",
+    "Windows custody/setup/private writers and full actual final-source/runtime/security/baseline/AX/FINISH gates."
+  ],
+  "resources": "OneCPU/192MiB local cross-compilation/static only;no PostgreSQL,Chrome,inference,scanner or heavy peer. Retained35/source60 unchanged."
+}

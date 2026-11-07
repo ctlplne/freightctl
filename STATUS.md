@@ -146,6 +146,12 @@ closed summary can supply an allowlisted stage. All original failure/success
 assertions remain. Privacy regression/compilation/vet pass;actual original stage
 capture and JSON/intake/independent-review browser repairs remain owed.
 
+F239 adds the missing Windows RawConn closing-error translation. The original
+raw poller error remains joined with public os.ErrClosed;native operation errors
+and every identity/flush/close refusal stay unchanged. Original exact closed-
+file assertion is retained. Windows compile/vet pass;native repair replay is
+owed. F227 alone did not satisfy this public error classification.
+
 Schema3 records.project binds an owned checked input,approved exact task,one
 durable processing intent,slots and events/receipt. Stable work keys select one
 historical attempt;current status is separate. New artifacts stay held for fresh

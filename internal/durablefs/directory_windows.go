@@ -73,7 +73,13 @@ func syncDirectoryWithOperations(directory *os.File, operations directoryOperati
 	err = connection.Control(func(fd uintptr) {
 		operationErr = syncDirectoryHandle(windows.Handle(fd), operations)
 	})
-	return errors.Join(err, operationErr)
+	if err != nil {
+		// For a valid os.File,the pinned Go RawControl error path is closing.
+		// RawConn bypasses File.wrapErr,so preserve its internal sentinel while
+		// also returning the public classification used by os.File methods.
+		return errors.Join(os.ErrClosed, err)
+	}
+	return operationErr
 }
 
 func directoryIdentity(info directoryInformation) bool {

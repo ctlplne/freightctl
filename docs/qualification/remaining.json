@@ -1161,7 +1161,8 @@
         "docs/qualification/evidence/F214-native-repair-batch-terminal-ci.json",
         "docs/qualification/evidence/F233-public-trust-file-integrity-profile.json",
         "docs/qualification/evidence/F235-private-directory-and-held-root-creation.json",
-        "docs/qualification/evidence/F237-decode-failed-native-browser-summary.json"
+        "docs/qualification/evidence/F237-decode-failed-native-browser-summary.json",
+        "docs/qualification/evidence/F239-windows-raw-control-closed-classification.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -1220,13 +1221,14 @@
         "F231 corrects producer fixture output contracts/tasks to explicit8192bytes within existing8MiB custody file capacity;inherited16MiB allowance could not stage. Product/source-policy/quota controls remain unchanged. Shared forged-release helper requires actual held/zero-attempt/no-report and exact file/policy bindings,correcting F215's unpushed queued-state assertion and reaching independent-review role refusal. Compile/vet/source conformance pass;actual original native replay owed.",
         "F233 implements held-handle public certificate/CA integrity:Unix0022 write refusal remains;Windows accepts explicit public read/execute while refusing other-principal mutation/deletion/ACL/owner rights. Secret/private-key owner-only rules remain. Original FTPS permission assertions use actual DACL grants and client CA write refusal is added. Focused local policy/identity/trust/architecture/vet and Windows compile pass;native Windows/runtime proof owed. F214 preserves71e8166 terminal18/41:27pass/14fail,listed security/image scans passed,SCP/tus workflows and six processing Chrome component cases pass;all remaining originals stay red.",
         "F235 adds private exclusive directory and held-root flat-file creation primitives. Windows NtCreateFile binds the exact pinned parent and explicit owner DACL at creation;Unix retains relative exclusive0600. Local owned-root rename/replacement,byte/no-overwrite/private-before-write and leaf/path cases pass;Windows compile/vet and architecture pass. Actual Windows race/token/reparse proof,custody sealing and custody/setup wiring remain owed;no Windows product qualification.",
-        "F237 repairs F229 diagnostic short-circuit observed at e87483b:runErr stopped summary decoding,so failed browsers still logged stage unavailable. Saved bounded summaries are now decoded before checking process failure;only valid closed summaries supply an allowlisted stage. Original pass/fail/privacy assertions remain. Privacy regression/compilation/vet pass;actual original stage capture/browser repair owed."
+        "F237 repairs F229 diagnostic short-circuit observed at e87483b:runErr stopped summary decoding,so failed browsers still logged stage unavailable. Saved bounded summaries are now decoded before checking process failure;only valid closed summaries supply an allowlisted stage. Original pass/fail/privacy assertions remain. Privacy regression/compilation/vet pass;actual original stage capture/browser repair owed.",
+        "F239 completes the missing Windows RawConn closing classification after F227's native replay remained red. Pinned Go RawControl returns internal poll.ErrFileClosing directly;the adapter preserves it and adds public os.ErrClosed. Native operation/identity/flush/close errors and the exact assertion remain. Windows compile/vet pass only;actual original native replay owed."
       ],
       "current_item": {
-        "id": "F237",
-        "state": "Failed native browser summaries are decoded before process outcome checks",
-        "proof": "e87483b/run42354252231/job128348737719 still logs stage unavailable because runErr short-circuited decoding;privacy regression and compilation/vet pass only",
-        "next": "Capture original browser stages and repair journeys;continue Windows sealing/custody/setup and all remaining product/baseline/AX/FINISH gates"
+        "id": "F239",
+        "state": "Windows directory RawControl closing error exposes public ErrClosed",
+        "proof": "Originale87483b/run42354252248/job128348737979 exact ErrClosed assertion still fails;Go1.26.10 RawControl source bypasses File.wrapErr;Windows compile/vet pass only",
+        "next": "Replay original Windows directory case;continue immutable file protection/custody/setup,browser and all remaining baseline/AX/FINISH work"
       }
     }
   ],
