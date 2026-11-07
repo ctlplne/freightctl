@@ -57,8 +57,16 @@ folder fingerprint,uses the same manual ready-manifest workflow,and excludes
 read-only sources from outgoing receiver choices. It never accepts a host path.
 Source and configuration identity remain bound into the reviewed canonical job.
 Prepared ordinary-parser PostgreSQL CLI and native Chrome capture/replay/refusal
-proof remain unexecuted. Calendar admission and native PostgreSQL/custody/
-refusal/restore proof remain owed.
+proof remain unexecuted. F309 adds backend calendar admission through the existing UTC ready-manifest
+contract and reviewed arrival window. Each occurrence freezes its exact manifest
+and physical-root source identity;admission creates no payload or send. A byte
+worker must still recheck the root,authority,lease and every file. Removed producer
+manifests do not change saved original probe/admission/capture receipts.
+Migration62 also repairs the older connection trigger to accept only the exact
+read-only local schema3 shape while keeping every SSH/FTPS guard. Prepared
+matching-event SQL forgery and actual calendar/custody/refusal cases compile
+only. Browser calendar wiring and all native source62/refusal/restore proof
+remain owed.
 
 The first workflow executor sends one immutable accepted file through an ordered list of `sftp.deliver` steps. CLI and HTTPS use the same typed definition, validation, permissions, approval and execution services. It uses the [outbound SFTP profile](protocols/outbound-sftp.md), including its loopback-only development network, required extensions, bounded workers and uncertain-receipt rules. This is a foundation for the full workflow engine; schedules, conditions, collection, processing, visual editing and AI proposals remain required work.
 

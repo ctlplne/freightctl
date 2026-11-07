@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "id": "F308",
+  "observed_at": "2026-11-07",
+  "candidate": "fb578f12f73315911bf0117a293d0b32a465bdc8",
+  "state": "Selected new original native failures triaged;remaining runs pending;no whole qualification",
+  "windows": {
+    "run": 42370336275,
+    "job": 128396961684,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128396961684",
+    "conclusion": "failure",
+    "passed_packages": {
+      "cmd/freightctl": 0.555,
+      "internal/checks": 0.514,
+      "internal/custody": 0.484,
+      "internal/delivery": 0.082,
+      "internal/scanner": 0.153
+    },
+    "limit": "Nonverbose untagged package outcomes only. Scanner protocol stand-ins now pass;no real-engine claim. Original private-socket positive descriptor cases no longer fail.",
+    "remaining_case": "TestWindowsPrivateSocketPinsTheExactNativeName",
+    "source": "socket_windows_test.go:69",
+    "observation": "Held native socket os.Rename succeeds with nil error;name-pinning assertion remains red. Attribute-only handle does not prove delete-share exclusion."
+  },
+  "parser_fuzz": {
+    "run": 42370336209,
+    "job": 128396961772,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128396961772",
+    "conclusion": "failure",
+    "target": "FuzzUntrustedModelOutput",
+    "observation": "Two baseline seeds complete;30,579 executions and75 new interesting inputs,77total;at6.01s harness reports context deadline exceeded. No failing input/assertion/crash case is reported in original job log.",
+    "security_triage": "No vulnerability conclusion or pass inferred. Preserve original red;keep all fuzz assertions,coverage and budgets;investigate exact target and replay in native x86. Local parser-only observation may inform diagnosis but cannot replace original native proof. No model runtime runs.",
+    "local_observation": {
+      "platform": "darwin/arm64",
+      "state": "passed local parser-only observation;native x86 original remains red",
+      "baseline_inputs": 153,
+      "executions": 1608,
+      "seconds": 6.334,
+      "model_started": false,
+      "proof": {
+        "reference": ".private/freightctl-f308-local-parser-fuzz-observation.log",
+        "sha256": "87b01ee7d49ba41a8069d29fa5210c6779655e76506dd94258632ee67edf97b9",
+        "bytes": 443
+      }
+    }
+  },
+  "local_sql_registration": {
+    "run": 42370336290,
+    "job": 128396961945,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128396961945",
+    "case": "TestArtifactExchangeCLIUsesOrdinaryAuthorityAndPublishesVerifiedDownload",
+    "source": "exchanges_integration_test.go:425",
+    "error": "unsupported delivery protocol definition",
+    "sqlstate": "23514",
+    "observation": "New local CLI registration hits the older schema1/2-only freightctl_ftps_connection_guard. Original security guard correctly refuses an unadmitted schema3. Append a strict local-only branch in new migration62;do not rewrite61 or relax SSH/FTPS validation. Actual native repaired outcome remains owed."
+  },
+  "no_runs_cancelled_rerun_or_substituted": true,
+  "security": "Other required original security/native runs remain pending on this source;previous-candidate passes are not inherited.",
+  "owed": [
+    "Actual native source62 strict local registry/collection/calendar/CLI/browser/restore qualification.",
+    "Actual Windows name pin,original native parser fuzz and all remaining original security/runtime/baseline/AX outcomes."
+  ]
+}

@@ -113,11 +113,18 @@ all3 source refusal regressions green,without opening sockets or changing an
 authority/protocol check. Original stock wrong-pin exit2/hash is retained;its
 actual native causal attribution and original retry/zero-input proof stay owed.
 
+F308 preserves new originalfb578f1 Windows socket-name,source61 registry and
+native x86 fuzz-harness failures. Windows scanner protocol units now pass;no
+real-engine claim. Local parser-only ARM fuzz passes and does not replace the
+failed native target. F309 adds backend local calendars and strict source62
+registry admission;UTC contract red/green and static checks pass. Actual native
+PG/CLI/calendar/browser/forgery/restore and frontend calendar work remain owed.
+
 FINISH repair and remaining implementation are mandatory. Next:repair original
 browser/stock/protocol failures and complete all affected original runtime,
 security,recovery,reproducibility and baseline/AX gates on the final source.
 Broad passed gates repeat only for changed inputs or a specific concern.
-Source61 targets78 metadata/77 forced-RLS tables;retained35 is untouched.
+Source62 targets78 metadata/77 forced-RLS tables;retained35 is untouched.
 
 S003 authorizes owner-only fast-forward source/CI pushes to existing origin/main
 after previous required runs are terminal. Both commit identities must be

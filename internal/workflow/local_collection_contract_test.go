@@ -108,7 +108,7 @@ func TestLocalCollectionConnectionBindsReadOnlyRoleAndRedactsHostReferences(t *t
 	}
 	source.Contract = ScheduledCollectionContract
 	if err := normalizeCollectionSource(source); !errors.Is(err, ErrInput) {
-		t.Fatal("unimplemented local calendar contract admitted", err)
+		t.Fatal("local calendar without an exact UTC manifest token admitted", err)
 	}
 }
 

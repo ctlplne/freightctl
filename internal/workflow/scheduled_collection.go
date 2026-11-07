@@ -88,7 +88,7 @@ func (s *Service) admitScheduleArrival(ctx context.Context, t *store.Transaction
 		return nil, err
 	}
 	source := d.Collection.Source
-	frozen := CollectionDefinition{Schema: 1, Workflow: d.Workflow, Source: source, Connection: d.Collection.Connection, SourceIdentity: secure.Digest([]byte(source.Connection.ID + ":" + d.Collection.Connection.Directory)), Authority: d.Authority, StorageID: d.StorageID, Root: d.Root, Timeout: d.Deadline, Effects: d.Effects, Schedule: &CollectionScheduleBinding{Schedule: binding.Schedule, OccurrenceID: a.ID, Due: binding.Due, ArrivalDeadline: binding.ArrivalDeadline, Deadline: binding.Deadline, ManifestName: binding.Manifest, ManifestHash: *a.ManifestHash}}
+	frozen := CollectionDefinition{Schema: 1, Workflow: d.Workflow, Source: source, Connection: d.Collection.Connection, SourceIdentity: collectionSourceIdentity(d.Collection.Connection), Authority: d.Authority, StorageID: d.StorageID, Root: d.Root, Timeout: d.Deadline, Effects: d.Effects, Schedule: &CollectionScheduleBinding{Schedule: binding.Schedule, OccurrenceID: a.ID, Due: binding.Due, ArrivalDeadline: binding.ArrivalDeadline, Deadline: binding.Deadline, ManifestName: binding.Manifest, ManifestHash: *a.ManifestHash}}
 	encoded, hash, err := digest(frozen)
 	if err != nil {
 		return nil, err

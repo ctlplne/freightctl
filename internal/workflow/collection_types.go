@@ -44,11 +44,6 @@ func collectionSourceKind(kind string) bool {
 }
 
 func normalizeCollectionSource(s CollectionSource) error {
-	// Local files start with the ordinary explicitly admitted manifest profile.
-	// Calendar/mounted-storage behavior needs its own complete qualified contract.
-	if s.Kind == "local.collect" && s.Contract != CollectionContract {
-		return ErrInput
-	}
 	dir, e := vpath.Canonical(s.Directory)
 	if e != nil || dir != s.Directory || vpath.ControlPath(dir) || !collectionSourceKind(s.Kind) || (s.Contract != CollectionContract && s.Contract != ScheduledCollectionContract) || !store.ValidID(s.Connection.ID) || s.Connection.Version < 1 || s.Connection.Version > 2147483647 || !hashPattern.MatchString(s.Connection.Hash) || !collectionManifestPattern(s.Contract, s.Manifest) || s.MaxFiles < 1 || s.MaxFiles > 64 || s.MaxFile < 1 || s.MaxFile > 1<<30 || s.MaxTotal < 1 || s.MaxTotal > int64(s.MaxFiles)*s.MaxFile {
 		return ErrInput

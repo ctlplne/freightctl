@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "id": "F309",
+  "observed_at": "2026-11-07",
+  "base_candidate": "3eac910ead5d9bb9724ad7b42924ccc063eac937",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Local calendar backend and exact registry admission implemented;actual native proof owed",
+  "changed": "F309 adds ordinary approved calendar/arrival handling for local read-only sources:exact UTC manifest token,arrival window,frozen manifest,current physical-root source identity and separate guarded byte capture. The local scheduled contract is red before and focused green after;legacy UTC/canonical cases stay green. Append-only migration62 extends only exact local source protocol/calendar shapes and keeps the latest processing dispatch;it also admits validated schema3 in the unchanged older SSH/FTPS connection trigger after actual source61 CLI registration failed23514. Prepared native real PostgreSQL calendar/probe/removed-manifest/admission/capture/replay/readback/no-send/root-replacement/matching-event connection-forgery cases compile only. All original assertion,role,RLS,event,approval,lease/fencing/cutoff/bounds guards remain. F308 preserves original native socket-name/SQL registration/fuzz-harness failures;local parser-only5s fuzz observation passes on ARM but cannot replace failed native x86. Frontend calendar and actual final-source62 native proof remain owed;retained35 untouched.",
+  "red": {
+    "test": "TestLocalCollectionCalendarUsesExactUTCManifestAndKeepsReadOnlyRoot",
+    "observation": "Exact reviewed local UTC source contract refuses before implementation;new migration count also refuses old metadata profile. Actual native source61 CLI registration separately fails unsupported protocol SQLSTATE23514 in F308."
+  },
+  "green": [
+    "Local UTC workflow contract/repeated-clock exact distinct naming/unsafe token rejection and legacy source/canonical cases pass.",
+    "Affected static/vet/architecture,tagged native test compilation,Windows workflow compilation and7 CI/5 retained metadata verifier cases pass only."
+  ],
+  "native_cases_prepared": [
+    "TestLocalCalendarCapturesFrozenDueManifestWithoutForwardingOrRereading",
+    "TestLocalCalendarChangedPhysicalRootCannotAdoptFrozenReadyManifest",
+    "TestLocalConnectionRuntimeSQLAdmitsOnlyExactReadOnlySourceShape"
+  ],
+  "source_files": [
+    {
+      "reference": "internal/store/store.go",
+      "sha256": "b14b51ddb28a710c90c4ebb3bdfbf278fcec95695ac6656c57ecfbb34981401a",
+      "bytes": 28676
+    },
+    {
+      "reference": "internal/store/062_local_collection_calendar.sql",
+      "sha256": "2285b82f5c9e97bf0708ff49cbfefce96dfb8d256f139abcd21869f59ae7e172",
+      "bytes": 7279
+    },
+    {
+      "reference": "internal/workflow/collection_types.go",
+      "sha256": "670a47b5d561a9cbe1e6a9eaa76f61e13b1ba7e3e2c2bb4acfb7131e38f8f5b8",
+      "bytes": 4565
+    },
+    {
+      "reference": "internal/workflow/local_collection_contract_test.go",
+      "sha256": "06ef198346c8e979fc86ac37b37c4136abbafd318083ea4f001f404ebb47f024",
+      "bytes": 6105
+    },
+    {
+      "reference": "internal/workflow/scheduled_collection.go",
+      "sha256": "83c82e9ee5185bcbd4a5999a7b8f0dc759bb0ccb73f2f1b89fbf795a99382b71",
+      "bytes": 11657
+    },
+    {
+      "reference": "internal/workflow/local_collection_schedule_integration_test.go",
+      "sha256": "eaa1e0a2dccb3dbff26888c6c02f143c01a533202ca2d32f6ddcb0352f518bc4",
+      "bytes": 11545
+    },
+    {
+      "reference": "internal/workflow/local_collection_schedule_test.go",
+      "sha256": "ddf5a228d64772a98e05d031c5a54a638f7274b4c6e9a68390c1db110096b116",
+      "bytes": 1454
+    },
+    {
+      "reference": "scripts/metadata_contract.py",
+      "sha256": "3bd5205e34e074eaed1c06b9a84ed6461ca0d1d250924b670a4da916fd20c515",
+      "bytes": 4462
+    },
+    {
+      "reference": "scripts/test-ci-metadata-summary.py",
+      "sha256": "709cc4ecb146fca10c9ae4b47345827f4581ac46f7a75187c4687a33e79eb51d",
+      "bytes": 6240
+    },
+    {
+      "reference": "docs/workflows.md",
+      "sha256": "62ab3952e0143bf260500c36aeaf25c8da8e3f41d000002b8459e6823a17e85e",
+      "bytes": 18771
+    },
+    {
+      "reference": "docs/qualification/evidence/F308-native-security-and-local-registry-failures.json",
+      "sha256": "abf2fac4b9f30c50bbda344744eb86b2c02491410bd613d47bec8e307cfd0bf8",
+      "bytes": 3452
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "9e0a70b64cef0d42707beef72ee169a40b609a9ab12840f3c72932c3fd540244",
+      "bytes": 408445
+    },
+    {
+      "reference": "STATUS.md",
+      "sha256": "4b7548ff0195a0d32d6e7a17478e39ecb1867bf6e17428bb7da746cb205a865c",
+      "bytes": 8848
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f309-local-calendar-red.log",
+      "sha256": "fa2a89a5589df788c1d019ab7a7ff1e8672ab0863497f18897e2613e3f47e290",
+      "bytes": 278
+    },
+    {
+      "reference": ".private/freightctl-f309-local-calendar-green.log",
+      "sha256": "f2266e1af59e4e462a785a6d6278e39652188bdf39e97bf1f373c6e81ecd1751",
+      "bytes": 60
+    },
+    {
+      "reference": ".private/freightctl-f309-metadata-red.log",
+      "sha256": "e4927b12f82426d2f7773cb6950bf4b2de2c41df5ea85ff7d8b5d2c3d7e4ab8f",
+      "bytes": 6676
+    },
+    {
+      "reference": ".private/freightctl-f309-native-final2-compile.log",
+      "sha256": "2dd84b46f26ad68af411e1cc5d62facc5d08422495112d246fa30c2e7ce5edca",
+      "bytes": 155
+    },
+    {
+      "reference": ".private/freightctl-f309-final2-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f309-final-architecture.log",
+      "sha256": "2c3b2c9d1602fc1e6a5d77939bc03c9072f34036a60e055259c8b8dd866c7b72",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f309-final-metadata.log",
+      "sha256": "d24762a962687845ee7880c945c84829223c6ff3fe4f3a2063f4bfd3d9c17af8",
+      "bytes": 105
+    },
+    {
+      "reference": ".private/freightctl-f309-final-retained-metadata.log",
+      "sha256": "2d014bb427120fb1a5014d7499096989061fd0fdf40acb471c2e2667de60e71e",
+      "bytes": 103
+    },
+    {
+      "reference": ".private/freightctl-f309-windows-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f308-local-parser-fuzz-observation.log",
+      "sha256": "87b01ee7d49ba41a8069d29fa5210c6779655e76506dd94258632ee67edf97b9",
+      "bytes": 443
+    },
+    {
+      "reference": ".private/freightctl-f309-final-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "owed": [
+    "Actual original source62 registry/schema/matching-event forgery,calendar/arrival/capture/replay/independent custody/no-effect/root-replacement and source61 CLI/browser failures repaired natively.",
+    "Browser local calendar editing/metadata/UTC binding,final-source runtime/security/restore/reproducibility and all baseline/AX/FINISH outcomes.",
+    "Original Windows name-pinning and native x86 parser fuzz gate remain red;local observation or compilation is not their qualification."
+  ],
+  "metadata": {
+    "source_schema": 62,
+    "metadata_tables": 78,
+    "forced_rls_tables": 77,
+    "retained_schema": 35
+  },
+  "resources": "OneCPU/192MiB local parser/pure/static/cross-compilation only;no local PG/Chrome/scanner/inference;local protectedfs Windows work excluded."
+}
