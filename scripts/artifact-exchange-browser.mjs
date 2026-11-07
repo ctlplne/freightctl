@@ -4,6 +4,10 @@ import { createHash, X509Certificate } from "node:crypto";
 import { readFile, writeFile, lstat, chmod } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { setTimeout as delay } from "node:timers/promises";
+import {
+  fetchPinnedBrowserRequest,
+  guardBrowserCommandRoute,
+} from "./browser-pinned-https.mjs";
 
 assert.equal(process.env.GITHUB_ACTIONS, "true");
 assert.equal(process.platform, "linux");
@@ -37,7 +41,18 @@ let browser,
   onwardRequests = 0,
   offerRequests = 0,
   exchangeRequests = 0,
-  failureHash;
+  failureHash,
+  routeFailure,
+  routeFailurePhase,
+  routeFailed = false;
+const guardRoute = (handler) =>
+  guardBrowserCommandRoute(handler, (error) => {
+    if (!routeFailed) {
+      routeFailed = true;
+      routeFailure = error;
+      routeFailurePhase = phase;
+    }
+  });
 try {
   const origin = new URL(c.url);
   assert.equal(origin.protocol, "https:");
@@ -366,23 +381,29 @@ try {
     if (r.url() === copyURL && r.method() === "POST") copyRequests++;
   });
   let copiedID;
-  await copyOwner.page.route(copyURL, async (route) => {
-    assert.equal(
-      route.request().headers()["idempotency-key"],
-      copySaved.request_key,
-    );
-    assert.deepEqual(route.request().postDataJSON(), copySaved.request);
-    const real = await route.fetch();
-    assert.equal(real.status(), 201);
-    const receipt = await real.json();
-    assert.equal(receipt.replayed, false);
-    assert.equal(receipt.source.exchange_id, c.copy_exchange);
-    assert.equal(receipt.artifact.sha256, c.sha256);
-    copiedID = receipt.artifact.file_revision_id;
-    assert.notEqual(copiedID, c.file);
-    await real.dispose();
-    await route.abort("failed");
-  });
+  await copyOwner.page.route(
+    copyURL,
+    guardRoute(async (route) => {
+      assert.equal(
+        route.request().headers()["idempotency-key"],
+        copySaved.request_key,
+      );
+      assert.deepEqual(route.request().postDataJSON(), copySaved.request);
+      const real = await fetchPinnedBrowserRequest(
+        route.request(),
+        origin.origin,
+        Buffer.from(c.certificate_der, "base64"),
+      );
+      assert.equal(real.status, 201);
+      const receipt = JSON.parse(real.body);
+      assert.equal(receipt.replayed, false);
+      assert.equal(receipt.source.exchange_id, c.copy_exchange);
+      assert.equal(receipt.artifact.sha256, c.sha256);
+      copiedID = receipt.artifact.file_revision_id;
+      assert.notEqual(copiedID, c.file);
+      await route.abort("failed");
+    }),
+  );
   phase = "copy-lost-response";
   await copyRegion
     .getByRole("button", {
@@ -1187,24 +1208,30 @@ try {
   const startURL = `${origin.origin}/v1/tenants/${c.tenant}/partners/${c.partner}/onward/runs`;
   // Send the original request to the actual server, then deliberately lose its
   // real response. No fabricated acceptance or replay response is supplied.
-  await operator.page.route(startURL, async (route) => {
-    assert.equal(route.request().method(), "POST");
-    assert.equal(
-      route.request().headers()["idempotency-key"],
-      onwardSaved.request_key,
-    );
-    const response = await route.fetch();
-    assert.equal(response.status(), 200);
-    const actual = await response.json();
-    assert.equal(actual.replayed, false);
-    acceptedRun = actual.resource.id;
-    assert.equal(
-      actual.resource.onward_review_hash,
-      onwardSaved.review.review_hash,
-    );
-    await response.dispose();
-    await route.abort("failed");
-  });
+  await operator.page.route(
+    startURL,
+    guardRoute(async (route) => {
+      assert.equal(route.request().method(), "POST");
+      assert.equal(
+        route.request().headers()["idempotency-key"],
+        onwardSaved.request_key,
+      );
+      const response = await fetchPinnedBrowserRequest(
+        route.request(),
+        origin.origin,
+        Buffer.from(c.certificate_der, "base64"),
+      );
+      assert.equal(response.status, 200);
+      const actual = JSON.parse(response.body);
+      assert.equal(actual.replayed, false);
+      acceptedRun = actual.resource.id;
+      assert.equal(
+        actual.resource.onward_review_hash,
+        onwardSaved.review.review_hash,
+      );
+      await route.abort("failed");
+    }),
+  );
   phase = "onward-lost-response";
   await operator.page
     .getByRole("button", {
@@ -1491,10 +1518,13 @@ try {
   await accessibility(recipient.page, "revoked-accessibility");
   assert.equal(egress, 0);
   await recipient.context.close();
+  if (routeFailed) throw routeFailure;
   state = "passed";
   phase = "complete";
 } catch (error) {
-  const raw = String(error?.stack ?? error);
+  const original = routeFailed ? routeFailure : error;
+  if (routeFailed) phase = routeFailurePhase;
+  const raw = String(original?.stack ?? original);
   await writeFile(c.failure, raw, { mode: 0o600, flag: "wx" });
   failureHash = createHash("sha256").update(raw).digest("hex");
   process.exitCode = 1;

@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "id": "F317",
+  "observed_at": "2026-11-07",
+  "base_candidate": "33b628a4bb761b7edb31b64c9cda78486f4aae9f",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F317 preserves original fb578f1 receive exit1/unclassified/no-summary and repairs its candidate lost-response transport:use the exact fixture CA plus peer certificate,ordinary hostname checks and unchanged browser cookie/CSRF/key/body. Default-trust actual loopback TLS command fails before HTTP,then exact fixture CA succeeds once with exact bytes;wrong CA,scope,credentials and oversized request refuse with zero HTTP commands. Guard async route failures so original error/phase survives secondary abort and produces protected evidence. All receipt/cardinality/replay/revocation/zero-egress assertions remain. Focused native Node/TLS tests,syntax,vet,tag compilation,architecture,format and workflow lint pass;no Chrome/PG/inference locally. Native causal attribution and original full receive/local/browser replay remain owed.",
+  "original_failure": {
+    "candidate": "fb578f12f73315911bf0117a293d0b32a465bdc8",
+    "run_id": 42370336277,
+    "job_id": 128396961944,
+    "state": "Original failed;cause remains inference pending native replay",
+    "private_log_sha256": "7a45459fd72ac23da694710ef6a293de778ce9010157dea19b9d9471ebfec7ce",
+    "observation": "Browser exits1 before revocation barrier,safe result unavailable,class unclassified,source0:0"
+  },
+  "red": {
+    "proof": ".private/freightctl-f317-loopback-tls-red.log",
+    "observation": "Actual native Node default-trust HTTPS command fails TLS before HTTP;zero commands reached independent loopback handler."
+  },
+  "green": [
+    "Actual exact fixture CA command reaches actual loopback peer once with exact body,cookie,CSRF,key and origin;non-whitelisted authorization header absent.",
+    "Wrong real CA,scope,credentials,method,fragment,URL userinfo,oversized body and malformed certificate refuse with zero HTTP commands.",
+    "Guard retains the original route exception even if abort also fails.",
+    "Final syntax,format,workflow lint,Go vet,tagged native profile compilation and architecture checks observed terminal exit0."
+  ],
+  "verification_correction": "First final formatter found existing single-quote workflow formatting;preserve failed log,format file and observe second final check exit0.",
+  "source_files": [
+    {
+      "reference": ".github/workflows/artifact-exchange.yml",
+      "sha256": "15a345e5cba5e19cda04970aacc187bb33dccf9b581a8b64d761c75ea325b4d6",
+      "bytes": 2285
+    },
+    {
+      "reference": ".github/workflows/json-intake.yml",
+      "sha256": "6f2da42bc4eae859fdf7f5d4b4aee8e6c7bbc8e6aa2848ec48fa6203a7f9ed3f",
+      "bytes": 7072
+    },
+    {
+      "reference": "scripts/artifact-exchange-browser.mjs",
+      "sha256": "055ab596a8c06bae37df116dc9b4db9329172ef5e86f42a5638b3f2169d96166",
+      "bytes": 53223
+    },
+    {
+      "reference": "scripts/local-collection-browser.mjs",
+      "sha256": "4ce2b434b45478ae6a0f209f8c26054b8b960309ef744fb8a450d4fba35083f5",
+      "bytes": 8479
+    },
+    {
+      "reference": "scripts/browser-pinned-https.mjs",
+      "sha256": "b40b85b735f30b0e23227457457a2083ab0332ac30934639784afcb985c3650f",
+      "bytes": 3504
+    },
+    {
+      "reference": "internal/api/browser_pinned_transport_integration_test.go",
+      "sha256": "221c34e39f0fe7655ad2bbfffa092b26208ea0c0951459e8864af5735f88bc37",
+      "bytes": 6718
+    },
+    {
+      "reference": "docs/qualification/evidence/F316-native-terminal-ci.json",
+      "sha256": "53bd6058c2548c6cc884c5fa9bc63238d0ab1e753fce0b75fbbd9f0b66213186",
+      "bytes": 96233
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "52b2cf916f594c4385e285c90955312b92ea35c98591f18033a44ab802f7127a",
+      "bytes": 415729
+    },
+    {
+      "reference": "STATUS.md",
+      "sha256": "25894b5c9acdf517c41382f74aed3f62076c387e1e07deb4fa826361d3df0b98",
+      "bytes": 10665
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f317-loopback-tls-red.log",
+      "sha256": "c2e43a5f1f2d6d85518c5f8a26c197c0f940a555104a42a4e6e57e73ad3211cd",
+      "bytes": 366
+    },
+    {
+      "reference": ".private/freightctl-f317-pinned-final-green.log",
+      "sha256": "a58227ee55390100dd9546bae2e8604e4a12c5d22aa0e82b6c407b3e190f9e78",
+      "bytes": 55
+    },
+    {
+      "reference": ".private/freightctl-f317-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f317-native-compile.log",
+      "sha256": "71251ab78685f21919373e6ad659b0e0e33cbbbe886805fbf3be7d4a66b25cb9",
+      "bytes": 73
+    },
+    {
+      "reference": ".private/freightctl-f317-architecture.log",
+      "sha256": "854ed22a32331921665eb61674ea741c5b172f3838c5edb680d0964636aceff4",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f317-helper-syntax.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f317-exchange-syntax.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f317-local-syntax.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f317-final-format-check.log",
+      "sha256": "9b2183acc63b5b3084e44cdb544ed712d2048a400d892373450907ebb19edb99",
+      "bytes": 154
+    },
+    {
+      "reference": ".private/freightctl-f317-final2-format-check.log",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    },
+    {
+      "reference": ".private/freightctl-f317-final-workflow-lint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "owed": [
+    "Original receive-browser Chrome/PostgreSQL/receipt/copy/onward/revocation replay on final source.",
+    "Actual local manual/calendar CLI/API/browser/native PostgreSQL capture,recovery,forgery and restore outcomes.",
+    "F316 twelve original failed jobs and every remaining baseline/AX/FINISH gate."
+  ],
+  "resources": "One CPU/192MiB for local Go/Node and small actual loopback TLS only;no Chrome,PostgreSQL,scanner or inference started. GitHub capacity controls unchanged.",
+  "sources": [
+    "https://playwright.dev/docs/api/class-route",
+    "https://playwright.dev/docs/api/class-apirequestcontext"
+  ]
+}

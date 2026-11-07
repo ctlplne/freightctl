@@ -3,8 +3,11 @@
 import assert from "node:assert/strict";
 import { createHash, X509Certificate } from "node:crypto";
 import { readFile, writeFile } from "node:fs/promises";
-import { request as httpsRequest } from "node:https";
 import { createRequire } from "node:module";
+import {
+  fetchPinnedBrowserRequest,
+  guardBrowserCommandRoute,
+} from "./browser-pinned-https.mjs";
 
 process.umask(0o077);
 assert.equal(process.env.GITHUB_ACTIONS, "true");
@@ -31,7 +34,18 @@ let browser,
   errors = 0,
   accessibility = 0,
   job = "",
-  work = [];
+  work = [],
+  routeFailed = false,
+  routeFailure,
+  routeFailurePhase;
+const guardRoute = (handler) =>
+  guardBrowserCommandRoute(handler, (error) => {
+    if (!routeFailed) {
+      routeFailed = true;
+      routeFailure = error;
+      routeFailurePhase = phase;
+    }
+  });
 try {
   const pin = createHash("sha256")
     .update(certificate.publicKey.export({ type: "spki", format: "der" }))
@@ -137,70 +151,37 @@ try {
   await audit();
   phase = "capture-replay";
   const target = prefix + "/workflow-collections/" + job + "/work";
-  await page.route(target, async (route) => {
-    const r = route.request(),
-      body = r.postDataBuffer(),
-      headers = await r.allHeaders();
-    assert.equal(r.method(), "POST");
-    assert.ok(body && body.length <= 32768);
-    assert.ok(headers["idempotency-key"]);
-    const allowed = Object.fromEntries(
-      Object.entries(headers).filter(([k]) =>
-        [
-          "content-type",
-          "idempotency-key",
-          "cookie",
-          "origin",
-          "x-csrf-token",
-        ].includes(k),
-      ),
-    );
-    // Per-request exact fixture CA,ordinary hostname verification and no proxy.
-    // This sends the browser's real unchanged cookie/CSRF/key/body to the service.
-    const reply = await new Promise((resolve, reject) => {
-      const req = httpsRequest(
-        target,
-        {
-          method: "POST",
-          headers: { ...allowed, "content-length": String(body.length) },
-          ca: certificate.toString(),
-          agent: false,
-        },
-        (res) => {
-          const parts = [];
-          let count = 0;
-          res.on("data", (b) => {
-            count += b.length;
-            if (count > 32768)
-              res.destroy(new Error("bounded work receipt exceeded"));
-            else parts.push(b);
-          });
-          res.once("error", reject);
-          res.once("end", () =>
-            resolve({
-              status: res.statusCode,
-              body: Buffer.concat(parts).toString("utf8"),
-            }),
-          );
-        },
+  await page.route(
+    target,
+    guardRoute(async (route) => {
+      const r = route.request(),
+        body = r.postDataBuffer(),
+        headers = await r.allHeaders();
+      assert.equal(r.method(), "POST");
+      assert.ok(body && body.length <= 32768);
+      assert.ok(headers["idempotency-key"]);
+      // Original browser cookie/CSRF/key/body,exact fixture CA and hostname checks.
+      const reply = await fetchPinnedBrowserRequest(
+        r,
+        origin.origin,
+        certificate.raw,
       );
-      req.setTimeout(30000, () =>
-        req.destroy(new Error("ordinary command deadline")),
-      );
-      req.once("error", reject);
-      req.end(body);
-    });
-    assert.equal(reply.status, 200);
-    const receipt = JSON.parse(reply.body);
-    work.push({ key: headers["idempotency-key"], request: sha(body), receipt });
-    if (work.length === 1) await route.abort("failed");
-    else
-      await route.fulfill({
-        status: reply.status,
-        contentType: "application/json",
-        body: reply.body,
+      assert.equal(reply.status, 200);
+      const receipt = JSON.parse(reply.body);
+      work.push({
+        key: headers["idempotency-key"],
+        request: sha(body),
+        receipt,
       });
-  });
+      if (work.length === 1) await route.abort("failed");
+      else
+        await route.fulfill({
+          status: reply.status,
+          contentType: "application/json",
+          body: reply.body,
+        });
+    }),
+  );
   await button(page, "Confirm exact decision").click();
   await page.getByText(/^The result was not confirmed\./).waitFor();
   await button(page, "Confirm exact decision").click();
@@ -228,11 +209,14 @@ try {
   await audit();
   assert.equal(egress, 0);
   assert.equal(errors, 0);
+  if (routeFailed) throw routeFailure;
   state = "passed";
   phase = "complete";
   await context.close();
 } catch (error) {
-  const raw = String(error?.stack ?? error);
+  const original = routeFailed ? routeFailure : error;
+  if (routeFailed) phase = routeFailurePhase;
+  const raw = String(original?.stack ?? original);
   await writeFile(c.failure, raw, { flag: "wx", mode: 0o600 });
   process.exitCode = 1;
 } finally {

@@ -6,9 +6,11 @@ adoption and enterprise readiness remain unqualified. Exact original failures,
 source hashes,qualification and owed work are in
 [remaining work](docs/qualification/remaining.json) and its safe item manifests.
 
-Pushed candidate:9439074aae173afe5305373cee87307898f24459.
-F294 preserves the original16 triggered workflow handles,queued/running at
-observation. Completion/security/native outcomes remain pending;no pass inherited.
+Pushed candidate:fb578f12f73315911bf0117a293d0b32a465bdc8.
+F316 preserves all16 original terminal workflows/35 jobs:23 pass,12 fail.
+Both exact image scans and listed source/dependency security checks pass;native
+untrusted-model parser fuzz remains red after a harness deadline failure. No
+model ran. Original native/browser/SQL/stock failures and skipped work stay owed.
 
 Previous49eefe1 original18 workflows/41 jobs are terminal:31 pass,10 fail.
 F292 preserves exact handles;both complete image scans and listed security gates
@@ -138,6 +140,13 @@ local parser and independently rehashed cross-snapshot regressions turn red to
 green;23 affected frontend contracts and Go synthetic golden/static checks pass.
 Actual served calendar/runtime proof remains owed;synthetic snapshots do not
 establish PostgreSQL,Chrome or source/custody outcomes.
+
+F317 replaces receive lost-response API transport with exact fixture CA and peer
+certificate checks while preserving the real browser credentials,key and bytes.
+Real loopback TLS default-trust red turns green;wrong CA/scope/credentials refuse
+with zero HTTP commands. Async route failures now reach protected first-failure
+evidence. No TLS bypass or fabricated receipt;actual Chrome cause/replay and
+local manual/calendar runtime qualification remain owed.
 
 FINISH repair and remaining implementation are mandatory. Next:repair original
 browser/stock/protocol failures and complete all affected original runtime,
