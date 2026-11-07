@@ -28,6 +28,12 @@ one offer/command/file after three kills/four process instances. Compilation/vet
 pass only. Exact source,red/green and owed references are in the short item
 manifests and docs/qualification/remaining.json.
 
+F243 corrects trusted connection provisioning in the receive-browser fixture.
+Explicit operator roles exist only during local fixture setup;ordinary account
+commands remove them before task approval,source acceptance or browser login.
+The exact final actor/root/revision/permission set is asserted. Compile/vet pass;
+the original native receive/onward browser journey remains owed.
+
 Next:wire immutable Windows custody/setup,repair the newly reached native browser
 and protocol failures,then complete all remaining baseline/AX/FINISH outcomes.
 Local inference remains off;local resource constraints and F026 hold remain.

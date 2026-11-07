@@ -13,6 +13,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"runtime"
+	"slices"
 	"strings"
 	"testing"
 	"time"
@@ -188,7 +189,8 @@ func TestArtifactExchangeNativeBrowserReceiptWrongActorAndRevocation(t *testing.
 	auditToken, _, auditActor := participant([]string{"read", "list", "audit_read"})
 	other, _, _ := participant([]string{"read", "list"})
 	managerToken, managerScope, managerActor := participant([]string{"read", "list", "admin", "accounts_manage"})
-	onwardToken, onwardScope, _ := participant([]string{"read", "write", "list", "deliver", "workflow_manage", "workflow_approve", "workflow_execute"})
+	onwardPermissions := []string{"read", "write", "list", "deliver", "workflow_manage", "workflow_approve", "workflow_execute"}
+	onwardToken, onwardScope, onwardActor := participant(append(slices.Clone(onwardPermissions), "admin", "connections_manage"))
 	limits, _, err := s.ExchangeLimits()
 	if err != nil {
 		t.Fatal(err)
@@ -243,6 +245,24 @@ func TestArtifactExchangeNativeBrowserReceiptWrongActorAndRevocation(t *testing.
 	var connection workflow.ConnectionView
 	if json.Unmarshal(registered.Resource, &connection) != nil {
 		t.Fatal("onward connection")
+	}
+	// Trusted operator provisioning is complete. Remove its explicit bootstrap
+	// grants before task approval,source acceptance or any browser login. The
+	// runtime journey must use only its separately granted onward permissions.
+	onwardAccount, err := s.DB.Account(ctx, administrator, onwardActor.Actor)
+	if err != nil {
+		t.Fatal(err)
+	}
+	onwardPolicy := onwardAccount.AccountPolicy
+	onwardPolicy.Permissions = slices.Clone(onwardPermissions)
+	if _, err = s.DB.ChangeAccount(ctx, administrator, "browser-finish-onward-provisioning", store.AccountCommand{Operation: "update", ID: onwardActor.Actor, ExpectedRevision: onwardAccount.Revision, Policy: &onwardPolicy}); err != nil {
+		t.Fatal(err)
+	}
+	onwardIdentity, err := s.DB.Identity(ctx, onwardScope)
+	wantPermissions := slices.Clone(onwardPermissions)
+	slices.Sort(wantPermissions)
+	if err != nil || onwardIdentity.Actor != onwardActor.Actor || onwardIdentity.RootPolicyDigest != onwardActor.RootPolicyDigest || onwardIdentity.AuthorityRevision != onwardActor.AuthorityRevision+1 || !slices.Equal(onwardIdentity.Permissions, wantPermissions) {
+		t.Fatal("browser onward actor retained operator authority or changed identity", err)
 	}
 	drafted, err := wf.Draft(ctx, onwardScope, "browser-onward-draft", workflow.DraftRequest{Definition: workflow.Definition{Schema: 1, Name: "Browser reviewed onward", Steps: []workflow.Step{{ID: "send", Kind: "sftp.deliver", Connection: workflow.Reference{ID: connection.ID, Version: connection.Version, Hash: connection.Hash}, Filename: "onward.bin"}}}})
 	if err != nil {

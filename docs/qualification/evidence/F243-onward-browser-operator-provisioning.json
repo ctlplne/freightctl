@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "id": "F243",
+  "observed_at": "2026-11-07",
+  "base_candidate": "3379725881fb3c343138f06160215c735a5d6831",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Trusted onward fixture provisioning corrected;actual native browser replay owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "b8996f327d3cdd5c0f84a7d3a96cbe946d94b91d653098ed879e5c0b85852b2c",
+      "bytes": 12084
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "321deee048dd64d1ad905d0f86ddb1eb5c8317aece10effdf9ab9aa70d23cadc",
+      "bytes": 371830
+    },
+    {
+      "reference": "internal/api/artifact_exchange_browser_integration_test.go",
+      "sha256": "1854e666682a0b81f2e996931566e344888f5b4c59a484ab0aaf0a940ac78b4e",
+      "bytes": 27365
+    }
+  ],
+  "original_failure": {
+    "candidate": "e87483babb4e32f8a3aaf78d13f8374d842fa78b",
+    "run": 42354252289,
+    "job": 128348737880,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128348737880",
+    "test": "TestArtifactExchangeNativeBrowserReceiptWrongActorAndRevocation",
+    "observation": "Fixture RegisterConnection returns permission denied before starting Chrome. That trusted operator operation requires admin+connections_manage,but the actor was created with runtime workflow/delivery roles only."
+  },
+  "changed": [
+    "Provision the owned connection with explicit temporary admin+connections_manage fixture roles. Use ordinary administrator ChangeAccount to replace them with exactly read/write/list/deliver/workflow_manage/workflow_approve/workflow_execute. No browser session or workflow approval/source acceptance occurs before removal.",
+    "Assert the same actor and root digest,authority revision advanced exactly once,and exact final sorted permission set before drafting/approving under current authority. Production registration roles,private ownership and all original recipient/no-forward/execution/recovery/byte/endpoint/audit assertions remain.",
+    "This is explicit trusted fixture provisioning;it adds no production grant or receiving-derived authority and does not claim general cross-actor configuration delegation."
+  ],
+  "green": [
+    "Affected integration/exchangebrowser compilation -run ^$ and vet pass;no local Chrome/PostgreSQL runtime."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f243-final-onward-provision-compile.log",
+      "sha256": "147094777c4a984ac9bebbd90b095ec8c9fb090155f6ab1a43677cf551eb5b54",
+      "bytes": 73
+    },
+    {
+      "reference": ".private/freightctl-f243-final-onward-provision-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f243-onward-provision-compile.log",
+      "sha256": "0c39b442a4f9fde5fdc21ae2e871cdd21d80bc02632322fd0c422ed27451c3b1",
+      "bytes": 73
+    },
+    {
+      "reference": ".private/freightctl-f243-onward-provision-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "owed": [
+    "Original actual native receive/onward browser full journey,final restricted runtime identity,approval/recovery/byte/privacy/no-forward and endpoint revocation outcomes.",
+    "All actual final-source native/browser/stock/security/race/restore/reproducibility and remaining baseline/AX/FINISH gates."
+  ],
+  "resources": "OneCPU/192MiB local compilation/static only;no PostgreSQL,Chrome,inference,scanner or heavy peer. Retained35/source60 unchanged."
+}
