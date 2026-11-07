@@ -285,6 +285,7 @@ func NewWithBrowserLifetime(service *custody.Service, audits *audit.Service, ena
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/namespace/entries", s.listPath)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/namespace/file", s.downloadPath)
 	m.HandleFunc("PUT /v1/tenants/{tenant}/partners/{partner}/namespace/file", s.uploadPath)
+	m.HandleFunc("/v1/tenants/{tenant}/partners/{partner}/dav/{path...}", s.davRead)
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/uploads", s.createUpload)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/uploads", s.listUploads)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/uploads/{upload}", s.uploadStatus)
@@ -307,6 +308,9 @@ func NewWithBrowserLifetime(service *custody.Service, audits *audit.Service, ena
 			defer func() { <-s.slots }()
 		default:
 			fail(w, http.StatusServiceUnavailable, "capacity_busy")
+			return
+		}
+		if !prepareDAVRequest(w, r) {
 			return
 		}
 		effective, ok := prepareTusRequest(w, r)

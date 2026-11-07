@@ -18,6 +18,10 @@ func (w privateArtifactResponse) WriteHeader(code int) {
 }
 func (w privateArtifactResponse) Unwrap() http.ResponseWriter { return w.ResponseWriter }
 
+func artifactRevisionETag(file *store.File) string {
+	return `"freightctl-` + file.ID + `-` + file.SHA256 + `"`
+}
+
 // Call only after ordinary authorization,intake and immutable storage checks.
 // The ReaderAt rechecks live authority on each bounded read.
 func serveArtifactRevision(w http.ResponseWriter, r *http.Request, file *store.File, data io.ReaderAt, disposition string) {
@@ -25,7 +29,7 @@ func serveArtifactRevision(w http.ResponseWriter, r *http.Request, file *store.F
 	w.Header().Set("Content-Disposition", disposition)
 	w.Header().Set("X-Content-SHA256", file.SHA256)
 	w.Header().Set("X-File-Revision-ID", file.ID)
-	w.Header().Set("ETag", `"freightctl-`+file.ID+`-`+file.SHA256+`"`)
+	w.Header().Set("ETag", artifactRevisionETag(file))
 	w.Header().Set("Cache-Control", "no-store")
 	http.ServeContent(privateArtifactResponse{w}, r, file.ID, time.Time{}, io.NewSectionReader(data, 0, file.Size))
 }

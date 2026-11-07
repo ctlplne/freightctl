@@ -7,7 +7,9 @@ Current item decisions and exact proof references are in
 [remaining.json](docs/qualification/remaining.json) and
 [artifact-exchange.json](docs/qualification/artifact-exchange.json).
 
-Pushed origin/main:b8be4ab779d525089c49d75bde71911ff83a16dc.
+Pushed origin/main:3f32758aaa848065d7a2bf8ede787d729bbef166.
+Its17 original workflows are still finishing;new Windows fixture-permission and
+served browser failures remain open. The prior completed candidate follows.
 [F340](docs/qualification/evidence/F340-native-terminal-ci.json) preserves all16
 original terminal workflows/35 jobs:31 passed,4 failed. No original run was
 cancelled,rerun or substituted. Earlier failures remain in their original safe
@@ -38,7 +40,7 @@ The four failed jobs remain mandatory:
 - Both FTPS workflow-consent jobs fail source startup. F337 fixes the concrete
   protected-reference API mismatch;actual operator/source/consent replay is owed.
 
-Local verified/prepared batch after the pushed source:
+Verified repairs pushed at 3f32758;native qualification remains owed:
 
 - F335/F343 use measured streamed build-file hashes/bytes and platform aggregate
   lifetime on GitHub while preserving
@@ -48,8 +50,13 @@ Local verified/prepared batch after the pushed source:
   private startup evidence retain their focused source/proof manifests. Static
   or stand-in checks never replace owed native/served outcomes.
 
-Next:push the verified owner-only fast-forward batch,then continue implementation
-while original CI runs. Replay all original failures and final-source FINISH
+F345 adds a partial read-only DAV namespace adapter with focused local red/green
+and static proof. Real PostgreSQL/stock curl discovery,interrupted read and exact
+resume are prepared for native ARM/x86 CI. C-WEBDAV stays implementing;writes,
+locks,outbound server and independent DAV application interoperability remain owed.
+
+Next:continue baseline/AX implementation and repair original failures while CI
+finishes;push the next verified owner-only batch after required runs are terminal. Replay all original failures and final-source FINISH
 checks,and complete remaining mandatory baseline/AX engineering. The unchanged
 independent x86 FTPS receiver remains failed/owed;F026 stays manual/owner-deferred.
 Real Trust Control API/profile,inference endpoint/hardware,licensed peers,cloud/

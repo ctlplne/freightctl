@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "id": "F345",
+  "observed_at": "2026-11-07",
+  "base_candidate": "3f32758aaa848065d7a2bf8ede787d729bbef166",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "Partial bearer DAV namespace read adapter reuses ordinary PostgreSQL/RLS,root/mode/intake authority and immutable verified readers. Finite XML discovery preserves unknown-property status and encoded virtual hrefs;unsupported writes never grant effects. No DAV class compliance claim.",
+  "red": {
+    "reference": ".private/freightctl-f345-route-red.log",
+    "actual": "OPTIONS expected401 but missing route returned404 at original3f32758 source;the same regression passes after implementing the route."
+  },
+  "green": [
+    "Focused DAV finite XML/path/unknown-property/router and unchanged HTTP validator/range tests plus fuzz seeds pass.",
+    "Integration/downloadpeer-tag compilation only;no local PostgreSQL,Chrome,scanner,model or stock runtime started.",
+    "Affected vet,architecture,format and workflow lint pass."
+  ],
+  "prepared_native_proofs": {
+    "workflow": ".github/workflows/http-downloads.yml",
+    "architectures": [
+      "linux/arm64",
+      "linux/amd64"
+    ],
+    "tests": [
+      "TestWebDAVReadsUsePublishedNamespaceModesIntakeAndCurrentAuthority",
+      "TestWebDAVNativeStockCurlDiscoveryInterruptedReadAndExactResume"
+    ],
+    "actual_runtime_result": "owed until original exact-candidate CI execution"
+  },
+  "owed": [
+    "Native real PostgreSQL authorization,intake,revocation and zero-effect proof",
+    "Stock curl TLS discovery,actual interrupted read and independent exact reconstruction on both architectures",
+    "All remaining C-WEBDAV operations,full properties,locks,outbound server and independent DAV application interoperability",
+    "Existing original CI failures and all full GOAL/AX acceptance gates remain open"
+  ],
+  "source_files": [
+    {
+      "reference": ".github/workflows/http-downloads.yml",
+      "sha256": "8ac38a21230134d401f28164b474b38927e58d6bfebb2fd1df66ed2006390351",
+      "bytes": 2359
+    },
+    {
+      "reference": ".github/workflows/native-linux.yml",
+      "sha256": "15ddf77afe23110dff533c75b30685cc1b4ab7adcabafa7d05016068ffd21962",
+      "bytes": 11856
+    },
+    {
+      "reference": "STATUS.md",
+      "sha256": "7a34a8193701f87d6fe6546c8d4ca8bf244fd77b31dc294ad76373e369d5fd3d",
+      "bytes": 4406
+    },
+    {
+      "reference": "docs/protocols/webdav-read-profile.md",
+      "sha256": "509410199bb239248d31e9235326fb2c976150e3b7c17d3bb4f933dc44ddc016",
+      "bytes": 3778
+    },
+    {
+      "reference": "docs/qualification/parity.json",
+      "sha256": "8b01109df728a4792a25f83a142e19af7a91286532fdd008d3b2ca4e5675943c",
+      "bytes": 150081
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "6d549ce1da07a4132cd39402e20334eaab0d2979b7c240634eb421757af3eaff",
+      "bytes": 450053
+    },
+    {
+      "reference": "internal/api/api.go",
+      "sha256": "0616bc6ddd4ee40534c40510832c487411fe005675aa172ba017f8596cee6b63",
+      "bytes": 30496
+    },
+    {
+      "reference": "internal/api/artifact_http.go",
+      "sha256": "28abe534d95b86f68c5de368e83d5646ef719e006a7108402fd9026eb6c62293",
+      "bytes": 1345
+    },
+    {
+      "reference": "internal/api/webdav.go",
+      "sha256": "907f0164090c02c069198bf6efca561fa65d694f3cb5838f880e2f2d37009b5a",
+      "bytes": 4479
+    },
+    {
+      "reference": "internal/api/webdav_integration_test.go",
+      "sha256": "563048f543c4e898d055c5378847fb91d092b6d86d104d54b91e167b94374758",
+      "bytes": 8085
+    },
+    {
+      "reference": "internal/api/webdav_stock_integration_test.go",
+      "sha256": "213798c60c0dcf267849e5276c0f92a69ca946e2f28d7dd8643eab15200b54bc",
+      "bytes": 6839
+    },
+    {
+      "reference": "internal/api/webdav_test.go",
+      "sha256": "95a52e07788d33618d0cab1216c0d6c377e8b38654ac4688d81f204df3cc12b6",
+      "bytes": 1364
+    },
+    {
+      "reference": "internal/custody/namespace_properties.go",
+      "sha256": "8a46471998333620e23c6a2891a87a917830c13c64fca9e455ee6ce78786aaa6",
+      "bytes": 2810
+    },
+    {
+      "reference": "internal/webdav/properties.go",
+      "sha256": "ccad578120b36e5b598ccb2ffe5e5855c221f3dee1408eda7d5696cb49670d68",
+      "bytes": 7654
+    },
+    {
+      "reference": "internal/webdav/properties_test.go",
+      "sha256": "c2cf67d8afee8e5bbe02c58560461617d5345ece506d2290a8415374fbec301e",
+      "bytes": 5569
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f345-route-red.log",
+      "sha256": "fa38fdfeeb8b1b212cfcd1af50acd18bbee400b612ae34948f696dd979d264c6",
+      "bytes": 238
+    },
+    {
+      "reference": ".private/freightctl-f345-final-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f345-final-focused.log",
+      "sha256": "8f0658863510ca5497c2b478c374cd72cc9e7d45226eacb0c50435ae49264b33",
+      "bytes": 113
+    },
+    {
+      "reference": ".private/freightctl-f345-final-native-compile.log",
+      "sha256": "0490c2242cb3f82090fd6edc9b5981f6221b16d0220ba4ecf4deba3198da8cef",
+      "bytes": 73
+    },
+    {
+      "reference": ".private/freightctl-f345-final-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f345-final-architecture.log",
+      "sha256": "333d56fc052322ad7290dd97d05fc6285ea9f492e5a16d136bfc7ec88c058c3f",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f345-final-actionlint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ]
+}

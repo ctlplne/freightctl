@@ -1134,10 +1134,14 @@
         "independent operator or receiver"
       ],
       "acceptance_journey": "J02",
-      "state": "planned",
-      "evidence": [],
+      "state": "implementing",
+      "evidence": [
+        "docs/qualification/evidence/F345-webdav-read-profile.json",
+        "docs/protocols/webdav-read-profile.md"
+      ],
       "qualification_blockers": [
-        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison"
+        "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison",
+        "Read-only bearer profile native PostgreSQL/stock curl ARM and x86 proofs prepared,not yet run. Mutating DAV,locks,full properties,independent DAV applications and outbound stock server profile remain mandatory."
       ]
     },
     {

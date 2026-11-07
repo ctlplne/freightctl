@@ -68,6 +68,6 @@ jobs:
         run: |
           python3 scripts/dev-db.py
           sh scripts/go.sh run ./cmd/freightctl init
-      - name: Actual TLS interruption,curl continuation,exact bytes,namespace and exchange authority
+      - name: Actual TLS interruption,curl continuation,DAV discovery,exact bytes and ordinary authority
         run: |
-          sh scripts/go.sh test -race -timeout=0 -tags=integration,downloadpeer -run '^(TestArtifactHTTP.*|TestArtifactExchangeHTTPSUsesSameCookieAndBearerAuthorityAndSeparateReply)$' -count=1 -v ./internal/api
+          sh scripts/go.sh test -race -timeout=0 -tags=integration,downloadpeer -run '^(TestArtifactHTTP.*|TestWebDAV.*|TestArtifactExchangeHTTPSUsesSameCookieAndBearerAuthorityAndSeparateReply)$' -count=1 -v ./internal/api

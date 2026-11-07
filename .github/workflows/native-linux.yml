@@ -241,6 +241,7 @@ jobs:
         run: |
           test "$(uname -m)" = x86_64
           sh scripts/go.sh test -timeout=0 ./internal/vpath -fuzz=FuzzCanonicalPath -fuzztime=5s -parallel=2
+          sh scripts/go.sh test -timeout=0 ./internal/webdav -fuzz=FuzzDAVPropertySelection -fuzztime=5s -parallel=1
           sh scripts/go.sh test -timeout=0 ./internal/zipcontainer -fuzz=FuzzZIPContainer -fuzztime=5s -parallel=1
           sh scripts/go.sh test -timeout=0 ./internal/checks -fuzz=FuzzXLSXRecords -fuzztime=5s -parallel=1
           sh scripts/go.sh test -timeout=0 ./internal/checks -run '^$' -fuzz=FuzzRecordStream -fuzztime=5s -parallel=1
