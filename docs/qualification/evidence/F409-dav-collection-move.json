@@ -1,0 +1,253 @@
+{
+  "schema_version": 1,
+  "id": "F409",
+  "observed_at": "2026-11-07",
+  "base_candidate": "a104f66a78e24ea86e4beb1ea4215cd673f014b6",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F409 implements non-overwriting full collection MOVE through one typed move_tree namespace transaction and the partial DAV adapter. Require exact root entry ID/revision,read/list/manage_paths,actual readable/traversable members,current file availability and writable parents. Lock and validate the entire current tree before mutation;preserve the existing1000-member processing bound,all identities/owners/modes/times/properties/custody,and each PathMoved event with one actor-private receipt. Recheck files after movement and authority before commit. Fresh201 has exact collection Location;missing/stale/occupied conditions412,missing parent409,oversized tree507;private or unavailable children roll back all effects. Historical200 requires the same currently readable restored source and never repeats movement. Overwrite:T,finite depths,self/descendant/control targets and ambiguous conditions stay refused. Original collection request428 becomes focused green. A separate actual file-destination red exposes an empty URI fragment;both file/collection parsers now refuse it while encoded%23 remains a filename. Affected guards,schema/security checks,tagged native compilation,vet,format and architecture pass. Native API/CLI/stock-curl runtime remains owed;no local heavy runtime or budget change.",
+  "contract": {
+    "operation": "move_tree",
+    "root_condition": "expected_entry_id and expected_revision;DAV X-Freightctl-Namespace-Revision",
+    "scope": "The condition identifies the root;the complete current descendant set is checked under lock,not represented as a frozen preview digest",
+    "permissions": [
+      "read",
+      "list",
+      "manage_paths"
+    ],
+    "members": "Actual path modes and traversal,current file availability;no readable-alias rescue of private children",
+    "destination": "Same mounted namespace,writable parent,absent target;no overwrite,no network contact",
+    "depth": "Absent or infinity only;full tree,never a moved prefix",
+    "preservation": "Member IDs,owners,modes,modified instants,immutable custody and inert XML snapshots retained",
+    "events": "Each exact PathMoved and one actor-private command receipt in the same transaction",
+    "history": "Original-key200 only for the same currently readable restored collection;no repeated mutation/current assertion",
+    "existing_processing_bound": 1000,
+    "existing_fixture_namespace_quota": 1000,
+    "oversized_native_fixture": "Low-level exact journal guards populate an oversized retained state to test failure507;the application quota is not raised and ordinary creation bypass is not qualified",
+    "standard": "https://www.rfc-editor.org/rfc/rfc4918.html#section-9.9.2",
+    "source_schema": 63,
+    "retained_local_schema": 35
+  },
+  "feature_state_assertions": {
+    "collection_Allow": "Three original file-profile tests still require405 for byte-conditioned directory operations and refuse unimplemented collection COPY/DELETE;they now require advertised namespace-conditioned MOVE,with a separate full native positive/negative profile",
+    "full_DAV_claim": false
+  },
+  "red_green": [
+    {
+      "proof": "Original complete collection guard red428",
+      "exit_code": 1,
+      "reference": ".private/freightctl-f409-collection-move-red.log"
+    },
+    {
+      "proof": "Original file destination accepts an empty URI fragment",
+      "exit_code": 1,
+      "reference": ".private/freightctl-f409-empty-fragment-red.log"
+    },
+    {
+      "proof": "Initial collection/property/mode guard green",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f409-guards-first.log"
+    },
+    {
+      "proof": "Typed tree authority/target and DAV guard green",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f409-focused.log"
+    },
+    {
+      "proof": "Final affected DAV,fragment,property,strict-schema and explicit-read guards",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f409-guards-final.log"
+    },
+    {
+      "proof": "Native API/store/CLI/stock-curl compile only",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f409-native-final-compile.log"
+    },
+    {
+      "proof": "Affected final tagged vet",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f409-vet-final.log"
+    },
+    {
+      "proof": "Architecture",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f409-architecture.log"
+    },
+    {
+      "proof": "Sixteen changed/new Go files formatted",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f409-format.log"
+    },
+    {
+      "proof": "Final API native compilation after URI and alias proof additions;no runtime",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f409-native-bound-compile.log"
+    }
+  ],
+  "owed": [
+    "Actual native API/PostgreSQL complete nested movement,private-child despite readable alias,unavailable release,oversized retained-state atomic refusal,ABA,private history and exact4member/1receipt/zero extra-effect outcomes",
+    "Actual namespace CLI3member move,independent bytes/properties,restored original receipt and changed-target refusal",
+    "Actual stock curl complete3member collection move,independent member bytes/mixed XML and stale-source412",
+    "All original affected and final-source runtime/security/restore/reproducibility and mandatory baseline/AX/readiness gates"
+  ],
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "fdf0acf884e5662dce881a69e76ff79a5d21731778eb4ad6f77a8e2c9c34c3bd",
+      "bytes": 9005
+    },
+    {
+      "reference": "cmd/freightctl/exchanges_integration_test.go",
+      "sha256": "2696145eebe37128f52474c94ea38372d4ef4283e93f7baf54862a6ca024a703",
+      "bytes": 23526
+    },
+    {
+      "reference": "cmd/freightctl/namespace_tree_move_integration_test.go",
+      "sha256": "117fdfdbc2bb6977edc92ce2698fb0c2973c0a8943e3543a456b0f980203b35d",
+      "bytes": 4528
+    },
+    {
+      "reference": "docs/protocols/webdav-read-profile.md",
+      "sha256": "f029cadd0dd98c61b3e7d1e16aa9d0690edd1c431fcbbfc3f74e14f9339d7e44",
+      "bytes": 21569
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "589ef05fc86a5a9ca3e302938570d60461a4d0191ebe607663c3c63b5db9f73a",
+      "bytes": 608260
+    },
+    {
+      "reference": "internal/api/webdav.go",
+      "sha256": "19f3929d95bf4e3c95e8560154a93a8e975dfa5a330374350b2629002bf7c84f",
+      "bytes": 10479
+    },
+    {
+      "reference": "internal/api/webdav_collection_move.go",
+      "sha256": "45269f12797b29933395ff5039b594cbb7faf900a75ce7959feef39f3bf560a6",
+      "bytes": 4028
+    },
+    {
+      "reference": "internal/api/webdav_collection_move_integration_test.go",
+      "sha256": "e4da27a4969740c09e925af1ff4c193c87264a39b61d8a11ad8e5deda7673ec9",
+      "bytes": 13774
+    },
+    {
+      "reference": "internal/api/webdav_collection_move_test.go",
+      "sha256": "5f41f46422f17f99ecbb368d6684eea24b6cb0013c1c3533446cddcfcd4bac93",
+      "bytes": 3529
+    },
+    {
+      "reference": "internal/api/webdav_copy_integration_test.go",
+      "sha256": "12f2fde63529f634f2be0876f5d1a3189ef8c81161a315b50c34f9deb8644326",
+      "bytes": 12364
+    },
+    {
+      "reference": "internal/api/webdav_delete_integration_test.go",
+      "sha256": "adf945eaff666cef24471b39b877a1f859efec0741bad325ed4b8b593d067cc0",
+      "bytes": 10022
+    },
+    {
+      "reference": "internal/api/webdav_move.go",
+      "sha256": "653e63fa8e2e1584d43d295904be2aa032c8e609789909a17323f7141f77525f",
+      "bytes": 4845
+    },
+    {
+      "reference": "internal/api/webdav_move_integration_test.go",
+      "sha256": "c3c48fc1342c7ee00d858db99906c8d96a269454c30d545ba0b9593629447bff",
+      "bytes": 7848
+    },
+    {
+      "reference": "internal/api/webdav_namespace_condition.go",
+      "sha256": "f310f14636f8180edaaa288127218bef9eae3e8697c668a39b985404e47d8704",
+      "bytes": 465
+    },
+    {
+      "reference": "internal/api/webdav_properties.go",
+      "sha256": "e4a2f2b711f3b24daa859de245f2b11ceae73b933d9e3d8598e3fb5e5c174752",
+      "bytes": 3926
+    },
+    {
+      "reference": "internal/api/webdav_stock_integration_test.go",
+      "sha256": "ed1005a0802f456a05cfa83e962bb3ab91df62b2bfc988e319c71025b4c1b4b8",
+      "bytes": 25975
+    },
+    {
+      "reference": "internal/store/namespace.go",
+      "sha256": "12df5d1b368846b989537450fbc9b9eedca1f6b05301c0e9027a0a2d922bc060",
+      "bytes": 24431
+    },
+    {
+      "reference": "internal/store/namespace_tree_move.go",
+      "sha256": "867d8e510931fd6f79e5e2781a92abd72bfe74a7c205606ffdda19a8f33d9b9f",
+      "bytes": 2787
+    },
+    {
+      "reference": "internal/store/namespace_tree_move_test.go",
+      "sha256": "df6ae59daa0316da10aedbce33d6b52ef686c21e243316122b87a550a22b4aa4",
+      "bytes": 1770
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f409-collection-move-red.log",
+      "sha256": "fcfcade2e84a305b0e4501b9efed332b6e0b99f67bf1a1812aca35db7c9c9e47",
+      "bytes": 255
+    },
+    {
+      "reference": ".private/freightctl-f409-empty-fragment-red.log",
+      "sha256": "54c2b55f1694e2113d3bc2df8bc2c892ab5548979a4f4f32fe297566c2e5beee",
+      "bytes": 238
+    },
+    {
+      "reference": ".private/freightctl-f409-guards-first.log",
+      "sha256": "dca18710d883488af188bf71a691a5dd55ba97c83f41a5a071a41d50fe1ba179",
+      "bytes": 55
+    },
+    {
+      "reference": ".private/freightctl-f409-focused.log",
+      "sha256": "e317d44dc755ef732c595233dd8150b523b452b154dba57365c6b374b4164828",
+      "bytes": 112
+    },
+    {
+      "reference": ".private/freightctl-f409-guards-final.log",
+      "sha256": "c8d8764b278828f54be5e917b108487b4cfe3a8c16f6c46bd4e76ec1ba5f2fca",
+      "bytes": 114
+    },
+    {
+      "reference": ".private/freightctl-f409-native-final-compile.log",
+      "sha256": "95a94b7d893b23705b2be6cac860d5402b53bebe19f9eb58a14f91769cfe0d5e",
+      "bytes": 304
+    },
+    {
+      "reference": ".private/freightctl-f409-vet-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f409-architecture.log",
+      "sha256": "dbf5f5f843e3baaff072e4b0b7b21096aaeadd459308ab98f4c87f482c9cd9c5",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f409-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f409-native-bound-compile.log",
+      "sha256": "f09b0939881ddac2dd1d39931cf1e77bb0d187a8b13e9b2210e41f263c27ec1b",
+      "bytes": 73
+    }
+  ],
+  "safety": {
+    "local_inference": false,
+    "local_postgresql_or_chrome": false,
+    "local_scanner": false,
+    "retained_database_changed": false,
+    "resource_allowances_changed": false,
+    "product_quota_or_processing_bounds_weakened": false,
+    "github_capacity_caps_added": false,
+    "publication_or_deployment": false,
+    "original_runtime_runs_cancelled_or_rerun": false
+  }
+}

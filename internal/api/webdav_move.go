@@ -24,6 +24,9 @@ func davFileTag(value string) (string, string, bool) {
 }
 
 func davMoveInput(w http.ResponseWriter, r *http.Request) bool {
+	if strings.HasSuffix(r.URL.Path, "/") {
+		return davCollectionMoveInput(w, r)
+	}
 	return davFileMappingInput(w, r, "move")
 }
 
@@ -71,7 +74,7 @@ func davFileMappingInput(w http.ResponseWriter, r *http.Request, operation strin
 
 func davMoveDestination(r *http.Request, base string) (string, error) {
 	value, present, valid := tusHeader(r, "Destination")
-	if !present || !valid || len(value) > 8192 {
+	if !present || !valid || len(value) > 8192 || strings.Contains(value, "#") {
 		return "", webdav.ErrRequest
 	}
 	u, err := url.Parse(value)
@@ -92,6 +95,10 @@ func davMoveDestination(r *http.Request, base string) (string, error) {
 }
 
 func (s *Server) davMove(w http.ResponseWriter, r *http.Request, scope store.Scope, source, base string) {
+	if strings.HasSuffix(r.URL.Path, "/") {
+		s.davCollectionMove(w, r, scope, source, base)
+		return
+	}
 	target, err := davMoveDestination(r, base)
 	if err != nil {
 		fail(w, 400, "invalid_dav_move_destination")

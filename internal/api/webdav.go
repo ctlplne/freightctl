@@ -14,8 +14,8 @@ import (
 	"github.com/ctlplne/freightctl/internal/webdav"
 )
 
-const davDirectoryMethods = "OPTIONS, PROPFIND, GET, HEAD, PUT, MKCOL, PROPPATCH"
-const davReadMethods = davDirectoryMethods + ", MOVE, DELETE, COPY"
+const davDirectoryMethods = "OPTIONS, PROPFIND, GET, HEAD, PUT, MKCOL, PROPPATCH, MOVE"
+const davReadMethods = davDirectoryMethods + ", DELETE, COPY"
 
 // Validate before ServeMux can clean a path into a different namespace name or
 // redirect it. This initial profile uses explicit bearer credentials only.

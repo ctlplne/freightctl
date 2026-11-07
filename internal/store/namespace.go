@@ -183,7 +183,7 @@ func (t *Transaction) ApplyPathCommand(ctx context.Context, key string, command 
 	switch command.Operation {
 	case "mkdir", "publish", "copy":
 		permission = "write"
-	case "rename", "remove", "rmdir", "setstat", "properties":
+	case "rename", "remove", "rmdir", "setstat", "properties", "move_tree":
 		permission = "manage_paths"
 	default:
 		return nil, ErrState
@@ -196,6 +196,15 @@ func (t *Transaction) ApplyPathCommand(ctx context.Context, key string, command 
 			return nil, ErrState
 		}
 		if err := propertyError(namespaceprops.ValidateChanges(command.PropertyChanges)); err != nil {
+			return nil, err
+		}
+	} else if command.Operation == "move_tree" {
+		for _, permission := range []string{"read", "list"} {
+			if err := t.Require(permission); err != nil {
+				return nil, err
+			}
+		}
+		if err := validateTreeMove(command); err != nil {
 			return nil, err
 		}
 	} else if command.ExpectedEntryID != "" || len(command.PropertyChanges) != 0 {
@@ -270,6 +279,13 @@ func (t *Transaction) ApplyPathCommand(ctx context.Context, key string, command 
 		// Recovering a private old receipt still needs current path authority,
 		// the same resource identity and current file availability.
 		if _, err = t.propertyTarget(ctx, actual, command); err != nil {
+			return nil, err
+		}
+	}
+	var preparedTree []PathEntry
+	if command.Operation == "move_tree" {
+		preparedTree, err = t.prepareTreeMove(ctx, actual, command)
+		if err != nil {
 			return nil, err
 		}
 	}
@@ -534,7 +550,7 @@ func (t *Transaction) ApplyPathCommand(ctx context.Context, key string, command 
 			if err = t.SaveEntry(ctx, old, &next, "PathRemoved", commandID); err != nil {
 				return nil, err
 			}
-		case "rename":
+		case "rename", "move_tree":
 			if command.Target == "" || command.Target == "/" {
 				return nil, ErrForbidden
 			}
@@ -554,6 +570,9 @@ func (t *Transaction) ApplyPathCommand(ctx context.Context, key string, command 
 				return nil, err
 			}
 			if err = t.ParentWritable(ctx, target); err != nil {
+				if command.Operation == "move_tree" && errors.Is(err, ErrNotFound) {
+					return nil, ErrState
+				}
 				return nil, err
 			}
 			existing, err := t.Entry(ctx, target)
@@ -584,25 +603,28 @@ func (t *Transaction) ApplyPathCommand(ctx context.Context, key string, command 
 				}
 				changed++
 			}
-			rows, err := t.Tx.Query(ctx, "SELECT "+entryColumns+entryJoin+` WHERE NOT n.deleted AND (n.path=$1 OR left(n.path,length($1)+1)=$1||'/') ORDER BY length(n.path),n.path LIMIT 1001`, actual)
-			if err != nil {
-				return nil, err
-			}
-			tree := make([]PathEntry, 0)
-			for rows.Next() {
-				e, err := scanEntry(rows)
+			tree := preparedTree
+			if command.Operation != "move_tree" {
+				rows, err := t.Tx.Query(ctx, "SELECT "+entryColumns+entryJoin+` WHERE NOT n.deleted AND (n.path=$1 OR left(n.path,length($1)+1)=$1||'/') ORDER BY length(n.path),n.path LIMIT 1001`, actual)
 				if err != nil {
-					rows.Close()
 					return nil, err
 				}
-				tree = append(tree, *e)
-			}
-			rows.Close()
-			if err = rows.Err(); err != nil {
-				return nil, err
-			}
-			if len(tree) > 1000 {
-				return nil, ErrLimit
+				tree = make([]PathEntry, 0)
+				for rows.Next() {
+					e, err := scanEntry(rows)
+					if err != nil {
+						rows.Close()
+						return nil, err
+					}
+					tree = append(tree, *e)
+				}
+				rows.Close()
+				if err = rows.Err(); err != nil {
+					return nil, err
+				}
+				if len(tree) > 1000 {
+					return nil, ErrLimit
+				}
 			}
 			changed += len(tree) - 1
 			for _, entry := range tree {
@@ -614,6 +636,15 @@ func (t *Transaction) ApplyPathCommand(ctx context.Context, key string, command 
 				}
 				if entry.ID == old.ID {
 					next = moved
+				}
+			}
+			if command.Operation == "move_tree" {
+				for _, entry := range tree {
+					if entry.Kind == "file" {
+						if err = t.FileAccessible(ctx, entry.FileID); err != nil {
+							return nil, err
+						}
+					}
 				}
 			}
 		}

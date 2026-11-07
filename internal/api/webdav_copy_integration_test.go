@@ -136,7 +136,10 @@ func TestWebDAVFileCopyRequiresReadWriteVerifiedCustodyAndIndependentMappings(t 
 		t.Fatal(err)
 	}
 	response, _ = exchangeAPIRequest(t, server, "COPY", prefix+"/dav/directory", nil, headers("dav-copy-dir-refused", tag, prefix+"/dav/another-dir", operator), nil, 405)
-	for _, method := range []string{"COPY", "MOVE", "DELETE"} {
+	if !strings.Contains(response.Header.Get("Allow"), "MOVE") {
+		t.Fatal("declared namespace-conditioned collection MOVE missing")
+	}
+	for _, method := range []string{"COPY", "DELETE"} {
 		if strings.Contains(response.Header.Get("Allow"), method) {
 			t.Fatal("directory advertised file-only mutation")
 		}

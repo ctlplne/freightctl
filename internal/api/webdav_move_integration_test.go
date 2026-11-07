@@ -89,8 +89,8 @@ func TestWebDAVFileMovePinsRevisionPermissionsAndCurrentIntakeWithoutForwarding(
 		t.Fatal(err)
 	}
 	response, _ = exchangeAPIRequest(t, server, "MOVE", prefix+"/dav/directory", nil, headers("dav-move-dir-refused", tag, prefix+"/dav/other-directory", operator), nil, 405)
-	if strings.Contains(response.Header.Get("Allow"), "MOVE") {
-		t.Fatal("file-only profile advertised moving the directory")
+	if !strings.Contains(response.Header.Get("Allow"), "MOVE") || strings.Contains(response.Header.Get("Allow"), "COPY") || strings.Contains(response.Header.Get("Allow"), "DELETE") {
+		t.Fatal("collection profile must advertise namespace-conditioned MOVE and retain other refusals")
 	}
 	checking := &checks.Service{Custody: service}
 	if _, err := checking.Register(t.Context(), scope, "dav-move-policy", checks.PolicyRequest{Definition: checks.Policy{Schema: 1, Kind: "csv", Columns: []checks.Column{{Name: "record", Type: "text", Required: true}}}}); err != nil {

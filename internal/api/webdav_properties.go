@@ -50,13 +50,8 @@ func davPropertyMutationInput(w http.ResponseWriter, r *http.Request) bool {
 		fail(w, 428, "dav_properties_require_namespace_revision")
 		return false
 	}
-	parts := strings.Split(condition, ":")
-	if !valid || len(parts) != 2 || !store.ValidID(parts[0]) {
-		fail(w, 400, "invalid_dav_namespace_revision")
-		return false
-	}
-	revision, err := strconv.ParseInt(parts[1], 10, 64)
-	if err != nil || revision < 1 || strconv.FormatInt(revision, 10) != parts[1] {
+	entry, revision, exact := davNamespaceCondition(condition)
+	if !valid || !exact {
 		fail(w, 400, "invalid_dav_namespace_revision")
 		return false
 	}
@@ -66,7 +61,7 @@ func davPropertyMutationInput(w http.ResponseWriter, r *http.Request) bool {
 			return false
 		}
 	}
-	*r = *r.WithContext(context.WithValue(r.Context(), davPropertyContext{}, davPropertyInput{Entry: parts[0], Revision: revision, Changes: changes}))
+	*r = *r.WithContext(context.WithValue(r.Context(), davPropertyContext{}, davPropertyInput{Entry: entry, Revision: revision, Changes: changes}))
 	return true
 }
 

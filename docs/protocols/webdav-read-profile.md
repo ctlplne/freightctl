@@ -15,7 +15,8 @@ or read. A URL never refers to a host filesystem path.
 - `OPTIONS` authenticates and checks read/list access to the addressed entry.
   It returns `Allow: OPTIONS, PROPFIND, GET, HEAD, PUT, MKCOL, PROPPATCH, MOVE, DELETE, COPY`
   and no DAV compliance class. Refused collection mutation responses omit
-  the file-only MOVE, DELETE and COPY operations from their Allow field.
+  the file-only DELETE and COPY operations;collection MOVE uses the separate
+  namespace condition below.
 - `PROPFIND` supports explicit Depth0 or1. Missing Depth means infinity and is
   refused with403 and `DAV:propfind-finite-depth`. Other depth values are400.
   The complete collection is limited to1000 immediate children; larger scopes
@@ -95,7 +96,7 @@ or read. A URL never refers to a host filesystem path.
   occupied destination with Overwrite:F returns412,missing parents409,and directory moves405.
   After a lost reply,the caller must inspect the authorized destination;412 alone
   does not establish which command performed an earlier move. Same-key history
-  never authorizes another effect. Directory MOVE remains owed.
+  never authorizes another effect. The collection profile below is separate.
   `Overwrite:F` keeps its non-overwrite412 behavior. Explicit `Overwrite:T`
   can replace a file only when its actual destination mode permits writing and
   its current intake remains available. Capture its mapping revision under the
@@ -109,6 +110,43 @@ or read. A URL never refers to a host filesystem path.
   a restored source or recreates a removed target again. Changed overwrite
   decisions or captured target revisions cannot reuse an old command key.
   Receiving a source file does not grant destination overwrite authority.
+- Collection `MOVE` addresses the canonical collection href with a trailing
+  slash. Supply X-Freightctl-Namespace-Revision from authorized discovery,
+  an original Idempotency-Key,Overwrite:F,and a same-authority collection
+  Destination ending in a slash. It accepts absent Depth or Depth:infinity
+  only;finite depths are400 and no prefix is moved. This follows the complete
+  collection scope in [RFC4918 section9.9.2](https://www.rfc-editor.org/rfc/rfc4918.html#section-9.9.2).
+  This partial profile refuses collection overwrites with428;it never silently
+  substitutes an empty-only replacement for recursive destination removal.
+  The typed namespace API/CLI uses operation:move_tree,path,target,
+  expected_entry_id and expected_revision;other mutation fields are refused.
+  Require read,list and manage_paths,actual root/member read/traversal modes,
+  current file availability and writable source/destination parents. An alias
+  cannot rescue a private member. The root condition identifies the collection;
+  it is not a preview digest of all descendants. Under the exclusive namespace
+  lock,check the complete current tree before changing any member. Keep the
+  existing1000-member processing bound;overflow returns507 without moving a
+  prefix. A private member,unavailable release,occupied target or missing parent
+  rolls everything back. Missing/changed source identity or revision returns412,
+  occupied target412 and missing destination parent409. Self/descendant/control
+  targets are forbidden. No Destination URI is contacted;even an empty literal
+  fragment is refused. An encoded%23 remains a literal filename character.
+  Move every mapping in one transaction,retain IDs,owners,modes,modified times,
+  file custody and property snapshots,and commit each exact PathMoved event
+  with one actor-private command receipt. Recheck file access/availability after
+  the move and authority before commit. Fresh201 names the complete new
+  collection Location and collection-moved-at-commit,with no byte ETag. A missing
+  original source fails412;inspect the authorized destination after a lost
+  response. If the same collection was restored,original-key200 can recover
+  only its historical receipt without moving it again or asserting a current
+  Location. Another actor cannot recover that receipt,and changed request
+  meanings cannot reuse its key. Namespace movement grants no external
+  delivery,forwarding or execution authority. Prepared native API/CLI/stock-curl
+  proofs include nested members,properties,independent bytes,denied private and
+  no-longer-released members,unchanged quotas,oversized retained-state refusal,
+  ABA identity,replay and exact no-extra-effect counts;runtime outcomes remain
+  owed for the new source. Locks,collection COPY/DELETE/overwrite and outbound
+  DAV server interoperability remain open.
 - `DELETE` currently removes one file mapping with an exact strong If-Match,
   the original Idempotency-Key and an empty body. Ordinary read/manage_paths,
   parent modes,current intake and immutable file ID/hash are checked under the

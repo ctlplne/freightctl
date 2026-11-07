@@ -374,6 +374,45 @@ func TestWebDAVNativeStockCurlDiscoveryInterruptedReadAndExactResume(t *testing.
 	if status != 200 || !bytes.Equal(propertyBytes, replacement) {
 		t.Fatal("stock property update changed file bytes")
 	}
+	status, _, body, _ = run("collection-move-identity", collectionPath, []string{"--request", "PROPFIND", "--header", "Depth: 0"}, true)
+	metadata.Responses = nil
+	if status != 207 || xml.Unmarshal(body, &metadata) != nil || len(metadata.Responses) != 1 || len(metadata.Responses[0].Groups) != 1 {
+		t.Fatal("stock collection namespace identity missing")
+	}
+	collectionIdentity := metadata.Responses[0].Groups[0].Prop
+	if !store.ValidID(collectionIdentity.ID) || collectionIdentity.Revision < 1 {
+		t.Fatal("stock collection namespace condition not exact")
+	}
+	collectionTarget := prefix + "/dav/curl-moved/"
+	collectionMoveArgs := []string{"--request", "MOVE", "--header", "Overwrite: F", "--header", "Depth: infinity", "--header", "Idempotency-Key: dav-stock-collection-move", "--header", "X-Freightctl-Namespace-Revision: " + collectionIdentity.ID + ":" + strconv.FormatInt(collectionIdentity.Revision, 10), "--header", "Destination: " + front.URL + collectionTarget}
+	status, headers, body, _ = run("collection-move", collectionPath, collectionMoveArgs, true)
+	var movedCollection struct {
+		Result store.PathResult `json:"result"`
+		State  string           `json:"namespace_state"`
+	}
+	if status != 201 || json.Unmarshal(body, &movedCollection) != nil || movedCollection.Result.Replayed || movedCollection.Result.Changed != 3 || movedCollection.Result.Entry.ID != collectionIdentity.ID || movedCollection.Result.Entry.Revision != collectionIdentity.Revision+1 || movedCollection.State != "collection-moved-at-commit" || headers.Get("Location") != collectionTarget || headers.Get("ETag") != "" {
+		t.Fatal("stock collection MOVE lost its complete atomic namespace result")
+	}
+	for index, oldPath := range []string{overwriteTarget, copyOverwriteTarget} {
+		newPath := collectionTarget + strings.TrimPrefix(oldPath, collectionPath)
+		status, headers, movedMember, _ := run("collection-member-"+strconv.Itoa(index), newPath, nil, true)
+		if status != 200 || !bytes.Equal(movedMember, replacement) || headers.Get("X-File-Revision-ID") != replaced.File.ID {
+			t.Fatal("independent stock moved member custody differs")
+		}
+		status, _, _, oldMemberExit := run("collection-old-member-"+strconv.Itoa(index), oldPath, nil, false)
+		if status != 404 || oldMemberExit != 22 {
+			t.Fatal("stock collection MOVE retained an original member mapping")
+		}
+	}
+	status, _, body, _ = run("collection-property-readback", collectionTarget+strings.TrimPrefix(copyOverwriteTarget, collectionPath), []string{"--request", "PROPFIND", "--header", "Depth: 0"}, true)
+	propertyReadback.Responses = nil
+	if status != 207 || xml.Unmarshal(body, &propertyReadback) != nil || len(propertyReadback.Responses) != 1 || len(propertyReadback.Responses[0].Groups) != 1 || propertyReadback.Responses[0].Groups[0].Prop.Label.Text != "stock  q:Label" || propertyReadback.Responses[0].Groups[0].Prop.Label.Part != "été & data" || !bytes.Contains(body, []byte(`xmlns:q="urn:types"`)) || !bytes.Contains(body, []byte(`xml:lang="fr"`)) {
+		t.Fatal("stock collection MOVE lost mixed XML property context")
+	}
+	status, _, _, collectionRetry := run("collection-move-retry", collectionPath, collectionMoveArgs, false)
+	if status != 412 || collectionRetry != 22 {
+		t.Fatal("stock stale collection condition performed another move")
+	}
 	binaryPath, err := exec.LookPath("curl")
 	if err != nil {
 		t.Fatal(err)

@@ -121,6 +121,13 @@ typed snapshot says authorized-at-read and grants no execution/disclosure right.
 Focused missing-interface red-green,typed schema and static checks pass. Actual
 API/DAV/CLI comparisons and read-only/private-mode outcomes remain owed.
 
+F409 adds a non-overwriting full collection MOVE through the shared typed
+namespace transaction. Exact root identity/revision,full current-tree authority,
+policy and parent checks precede any movement. Identities,custody and properties
+survive;one private receipt covers every member event. Existing processing and
+quota bounds stay enforced. Focused red-green/static checks pass;actual native
+API/CLI/curl/rollback/history proof is prepared and owed.
+
 Next:continue independent mandatory implementation while the16 original
 a6c4aac workflows finish;preserve their exact job/security metadata.
 
