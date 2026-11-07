@@ -4,49 +4,49 @@ on:
   push:
     branches: [main]
     paths:
-      - 'scripts/ci_resources.py'
-      - 'scripts/test-ci-resources.py'
-      - 'cmd/**'
-      - '!cmd/**/*_test.go'
-      - 'internal/**'
-      - 'third_party/**'
-      - '!internal/**/*_test.go'
-      - 'web/**'
-      - 'go.mod'
-      - 'go.sum'
-      - '.gitattributes'
-      - 'scripts/**'
-      - '!scripts/scan-peer-image.py'
-      - '!scripts/ci-peer-image-summary.py'
-      - '!scripts/test-scan-peer-image.py'
-      - '!scripts/test-ci-peer-image-summary.py'
+      - "scripts/ci_resources.py"
+      - "scripts/test-ci-resources.py"
+      - "cmd/**"
+      - "!cmd/**/*_test.go"
+      - "internal/**"
+      - "third_party/**"
+      - "!internal/**/*_test.go"
+      - "web/**"
+      - "go.mod"
+      - "go.sum"
+      - ".gitattributes"
+      - "scripts/**"
+      - "!scripts/scan-peer-image.py"
+      - "!scripts/ci-peer-image-summary.py"
+      - "!scripts/test-scan-peer-image.py"
+      - "!scripts/test-ci-peer-image-summary.py"
       # Windows-only observations have their own native gate and core contracts.
-      - '!scripts/peers/windowsfs/**'
-      - '!scripts/qualify-windows-fs.py'
-      - '!scripts/test-windows-fs-probe.py'
-      - '.github/workflows/stock-peers.yml'
+      - "!scripts/peers/windowsfs/**"
+      - "!scripts/qualify-windows-fs.py"
+      - "!scripts/test-windows-fs-probe.py"
+      - ".github/workflows/stock-peers.yml"
   pull_request:
     paths:
-      - 'scripts/ci_resources.py'
-      - 'scripts/test-ci-resources.py'
-      - 'cmd/**'
-      - '!cmd/**/*_test.go'
-      - 'internal/**'
-      - 'third_party/**'
-      - '!internal/**/*_test.go'
-      - 'web/**'
-      - 'go.mod'
-      - 'go.sum'
-      - '.gitattributes'
-      - 'scripts/**'
-      - '!scripts/scan-peer-image.py'
-      - '!scripts/ci-peer-image-summary.py'
-      - '!scripts/test-scan-peer-image.py'
-      - '!scripts/test-ci-peer-image-summary.py'
-      - '!scripts/peers/windowsfs/**'
-      - '!scripts/qualify-windows-fs.py'
-      - '!scripts/test-windows-fs-probe.py'
-      - '.github/workflows/stock-peers.yml'
+      - "scripts/ci_resources.py"
+      - "scripts/test-ci-resources.py"
+      - "cmd/**"
+      - "!cmd/**/*_test.go"
+      - "internal/**"
+      - "third_party/**"
+      - "!internal/**/*_test.go"
+      - "web/**"
+      - "go.mod"
+      - "go.sum"
+      - ".gitattributes"
+      - "scripts/**"
+      - "!scripts/scan-peer-image.py"
+      - "!scripts/ci-peer-image-summary.py"
+      - "!scripts/test-scan-peer-image.py"
+      - "!scripts/test-ci-peer-image-summary.py"
+      - "!scripts/peers/windowsfs/**"
+      - "!scripts/qualify-windows-fs.py"
+      - "!scripts/test-windows-fs-probe.py"
+      - ".github/workflows/stock-peers.yml"
   workflow_dispatch:
 
 permissions:
@@ -64,7 +64,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        journey: [arrivals-schedules, routing, captured-routing, intake-routing, handoff-routing]
+        journey:
+          [
+            arrivals-schedules,
+            routing,
+            captured-routing,
+            intake-routing,
+            handoff-routing,
+          ]
     runs-on: ubuntu-24.04
     env:
       PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.cache/freightctl-playwright
@@ -88,6 +95,8 @@ jobs:
           sudo install -d -m 755 /run/sshd
           npm --prefix web --cache "$GITHUB_WORKSPACE/.cache/freightctl-npm" ci --ignore-scripts --no-fund
           node web/node_modules/playwright/cli.js install --with-deps chromium --only-shell
+      - name: Downstream inspection binds the rendered run before checking controls
+        run: node --test scripts/test-routing-current-run.mjs
       - name: Task-owned PostgreSQL
         run: python3 scripts/dev-db.py
       - name: Offline independent encryption peer for handoff replay

@@ -324,6 +324,17 @@ export async function qualifyRouting(page, c, audit, record, actual) {
         assert.equal(r.run.workflow_version, c.routing_target.version);
         assert.equal(r.run.workflow_hash, c.routing_target.definition_hash);
       }
+      const displayed = region.getByRole("region", {
+        name: "Collected input downstream run",
+        exact: true,
+      });
+      await displayed
+        .getByRole("heading", {
+          name: "Downstream run: " + r.observed_state,
+          exact: true,
+        })
+        .waitFor();
+      await displayed.getByText(r.run.id, { exact: true }).waitFor();
       runs.push(r);
       if (r.observed_state === "kept_local") {
         await audit("routing-local-outcome");

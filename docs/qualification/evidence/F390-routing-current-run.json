@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "id": "F390",
+  "observed_at": "2026-11-07",
+  "base_candidate": "8117f102be0601343aa16c316044e3f6686956e1",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F390 preserves original e608408 stock intake-routing run42392977121/job128464256088 count assertion at routing-browser.mjs:330:16. The driver reads the workflow response before inspectRun completes two routing-context reads and commits the new screen. Bind each inspected result to its displayed exact run ID and observed-state heading before the unchanged zero-transfer-control assertion. Actual original loop with delayed UI commit first fails1!=0;updated loop passes while refusing stale ID/state,retained transfer control or changed plan. Two focused stand-in tests,syntax,format,workflow lint and architecture pass. No additional request,retry or production permission change. Later4d2d9ab stock workflow passes without this change;do not infer a causal repair or erase the earlier failure. Final-source original runtime proof remains owed.",
+  "original_failure": {
+    "candidate": "e6084081e986c04ea19e204b79908decdcdbd09c",
+    "run_id": 42392977121,
+    "job_id": 128464256088,
+    "source_line": 330,
+    "source_column": 16,
+    "category": "kept-local transfer-control count1 expected0"
+  },
+  "red_green": "Actual original inspection loop reaches unchanged count assertion before delayed render and fails1!=0. Updated loop waits for exact ID/state;negative stale ID/state,retained control and changed plan still fail. Stand-ins only.",
+  "owed": [
+    "Full original native routing/intake-revocation proof at actual final source",
+    "Every mandatory baseline/AX/security/readiness gate"
+  ],
+  "source_files": [
+    {
+      "reference": ".github/workflows/stock-peers.yml",
+      "sha256": "fbaf73837218dbbb425a4061718ee37b89bcabf874f316e4cca36bb54882c24e",
+      "bytes": 6373
+    },
+    {
+      "reference": "STATUS.md",
+      "sha256": "0388041c8f5c5a3559382f7ea4c5190d253ffeef117bdd3772981f474dd0f930",
+      "bytes": 6499
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "060890581f16c8ee42cdcdb99e379bcec2efec4203b528729020c86466675215",
+      "bytes": 527040
+    },
+    {
+      "reference": "scripts/routing-browser.mjs",
+      "sha256": "2b3814c91b4abc9f3fbef39fa26472df7c78727055e9ddcd6dda7e58c9e6463d",
+      "bytes": 14896
+    },
+    {
+      "reference": "scripts/test-routing-current-run.mjs",
+      "sha256": "7361f9fa8e881f77bae03ea3d2d9a7ffcc0d5e12fae094dbb258c08152d2f8c3",
+      "bytes": 4745
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f390-routing-red.log",
+      "sha256": "a1f961e2da423b8710251c17d4968205b1c22b63178fb69c0e0d6f5e87253322",
+      "bytes": 1175
+    },
+    {
+      "reference": ".private/freightctl-f390-focused.log",
+      "sha256": "8bae7f787c5b7910b05ed12d1e0d6725db84391e83d1f203471632037c4eba2a",
+      "bytes": 328
+    },
+    {
+      "reference": ".private/freightctl-f390-syntax.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f390-workflow.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f390-format.log",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    },
+    {
+      "reference": ".private/freightctl-f390-architecture.log",
+      "sha256": "fa99a7467914775b6e6fb50c5b0a2c85b3211135c3486cec28c42811919aeece",
+      "bytes": 66
+    }
+  ]
+}

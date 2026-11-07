@@ -87,6 +87,10 @@ F389 observes the recipient decline receipt at the original wire boundary,
 keeping the exact command/status/receipt and refusal assertions. Focused checks
 pass;full original native receive/decline/audit/revocation remains owed.
 
+F390 binds each routing inspection to the displayed exact run and state before
+checking retained-local controls. Delayed-render red/green and refusal checks
+pass;original final-source routing/browser proof remains owed.
+
 Next: continue independent implementation and original failure repair while
 current originals run. Push the next verified owner-only batch after required
 originals are terminal,then qualify the corrected toolchain and full product. Repair original failures
