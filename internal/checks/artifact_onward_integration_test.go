@@ -69,7 +69,20 @@ func TestReviewedOnwardKeepsIntakeHoldsAndOriginalReceiptAfterPolicyChange(t *te
 	if err != nil || work.Status.ObservedState != "succeeded" || listener.contacts.Load() == 0 {
 		t.Fatal("actual FTPS work did not produce ordinary evidence", err)
 	}
-	actual, body, err := receiver.wf.Custody.DownloadPath(receiver.ctx, receiver.scope, "/inbox/onward.csv")
+	if len(work.Status.Steps) != 1 || !store.ValidID(work.Status.Steps[0].DeliveryID) {
+		t.Fatal("onward run lost its exact delivery binding")
+	}
+	finalPath := "/inbox/" + work.Status.Steps[0].DeliveryID + "-onward.csv"
+	var observed struct {
+		Protocol string `json:"protocol"`
+		Path     string `json:"path"`
+		Size     int64  `json:"size_bytes"`
+		SHA256   string `json:"sha256"`
+	}
+	if json.Unmarshal(work.Status.Steps[0].Observation, &observed) != nil || observed.Protocol != "ftps" || observed.Path != finalPath || observed.Size != file.Size || observed.SHA256 != file.SHA256 {
+		t.Fatal("onward evidence differs from exact delivery destination or source")
+	}
+	actual, body, err := receiver.wf.Custody.DownloadPath(receiver.ctx, receiver.scope, finalPath)
 	if err != nil {
 		t.Fatal("actual receiver lacks new onward bytes", err)
 	}

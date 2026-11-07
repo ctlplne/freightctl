@@ -86,6 +86,12 @@ JSONB encoded the same receipt differently. Event/receipt/intent atomicity and
 current authorization remain. Focused contract/fixture,architecture/vet and
 integration compilation pass;the original exact native replay remains owed.
 
+F221 repairs two original native observers:the audit test creates the confined
+account root through the ordinary namespace command;the onward FTPS test reads
+the actual delivery-ID-prefixed destination and checks its recorded path,size
+and digest first. Read-only cardinality,scope refusals,byte checks and original
+receipt comparisons remain. Compile/vet pass only;actual native replay is owed.
+
 Schema3 records.project binds an owned checked input,approved exact task,one
 durable processing intent,slots and events/receipt. Stable work keys select one
 historical attempt;current status is separate. New artifacts stay held for fresh

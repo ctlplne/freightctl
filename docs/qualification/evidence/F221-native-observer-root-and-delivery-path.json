@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "id": "F221",
+  "observed_at": "2026-11-07",
+  "base_candidate": "629fce6fc26642c3c51d0ff23dd4a6663d344e9c",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Native observer fixture inputs corrected;actual repair replay owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "94564314f1dc0163431113bcfbbea6a9eac4aeb50cf3bcce12e6ab941c86cad3",
+      "bytes": 15770
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "d249034ae08fa491b5358c5bb8e104307b3aae982f3fecedecfc9164d26af70c",
+      "bytes": 365467
+    },
+    {
+      "reference": "internal/audit/history_integration_test.go",
+      "sha256": "4d2f24c5edb98d1ee62a5f1b13f1c4d63441e12cee59dc8a60486ee6964b94dd",
+      "bytes": 6052
+    },
+    {
+      "reference": "internal/checks/artifact_onward_integration_test.go",
+      "sha256": "5144738861fb695cc655a8cd460082c6dc51e6b43fa5e78a6419b7c4ca32a8e7",
+      "bytes": 5436
+    }
+  ],
+  "original_failures": [
+    {
+      "candidate": "91ed18d4aa2bb8900f684035c241f5b8d30a37b1",
+      "run": 42348791097,
+      "job": 128332262484,
+      "url": "https://github.com/ctlplne/freightctl/actions/jobs/128332262484",
+      "tests": [
+        "TestAuditHistoryNativeTiePaginationFiltersPrivacyAndCurrentAuthority",
+        "TestReviewedOnwardKeepsIntakeHoldsAndOriginalReceiptAfterPolicyChange"
+      ],
+      "observations": [
+        "ChangeAccount root=/confined fails not found because the directory was never created.",
+        "Succeeded FTPS delivery independently verifies bytes,but fixture reads /inbox/onward.csv instead of the deliberately delivery-ID-prefixed destination."
+      ]
+    }
+  ],
+  "changed": [
+    "Create /confined through runtime ApplyPathCommand after the search read-only cardinality assertion. Retain domain event/receipt transaction,account root validation and confined audit refusal.",
+    "Require exactly one valid delivery ID,bind observed FTPS path/size/digest to that ID and exact source,then independently download that destination. Preserve byte/digest,policy-hold,exact receipt and no-extra-contact assertions. Production naming/transport/authorization are unchanged."
+  ],
+  "green": [
+    "Affected integration-tag compilation -run ^$ and vet pass. No actual PostgreSQL or FTPS execution locally."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f221-observer-compile.log",
+      "sha256": "ed1fd4bbee36669fd455699ce142e5bbc27bce38410edb68dc7d22946a89cb9e",
+      "bytes": 151
+    },
+    {
+      "reference": ".private/freightctl-f221-observer-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "owed": [
+    "Original native audit-history current-authority and real FTPS onward receiver/hold/replay journeys.",
+    "All actual final-source native/browser/stock/security/race/restore/reproducibility and remaining baseline/AX/FINISH gates."
+  ],
+  "resources": "OneCPU/192MiB local compilation/static only;no PostgreSQL,Chrome,inference,scanner or heavy peer. Retained35/source60 unchanged."
+}

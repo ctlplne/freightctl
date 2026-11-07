@@ -111,6 +111,20 @@ func TestAuditHistoryNativeTiePaginationFiltersPrivacyAndCurrentAuthority(t *tes
 	if counts() != before {
 		t.Fatal("history search wrote events,files,receipts or intents")
 	}
+	// A confined account root must already exist in the ordinary namespace.
+	// Create it after the read-only search cardinality assertion above.
+	directory, err := f.db.Begin(f.ctx, f.scope)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer directory.Tx.Rollback(f.ctx)
+	created, err := directory.ApplyPathCommand(f.ctx, "history-reader-directory", store.PathCommand{Operation: "mkdir", Path: "/confined"}, 1000)
+	if err != nil || created.Entry.Kind != "dir" || created.Entry.Path != "/confined" {
+		t.Fatal("confined reader namespace unavailable", err)
+	}
+	if err = directory.Tx.Commit(f.ctx); err != nil {
+		t.Fatal(err)
+	}
 	for _, root := range []string{"/confined", "/"} {
 		actor, hash := secure.NewID(), secure.Digest([]byte(secure.NewID()))
 		policy := store.AccountPolicy{Label: "explicit audit reader", Root: root, Permissions: []string{"read", "list", "audit_read"}}
