@@ -9,9 +9,13 @@ Exact original failures,owner decisions and remaining work are preserved in
 linked safe manifests. Raw private proof remains outside Git.
 
 Current pushed candidate: `6eec25037bf9d335d01b7635e39cde64276823d9`.
-[F399](docs/qualification/evidence/F399-native-push.json) binds four verified
-owner-only commits and17 first original workflows,queued. Pre-push Gitleaks
-remains enabled and found no leaks. Native outcomes remain owed.
+[F403](docs/qualification/evidence/F403-native-terminal.json) binds all17
+original workflows/37 terminal jobs:31pass,6fail. Core/source/history/native source
+vulnerability and both peer-image scans pass. Four platform/Linux unit jobs fail
+the strict schema guard now repaired locally by F401;full PostgreSQL/pinned engine
+steps were skipped. Receive sender-upload body lookup and processing-calendar
+browser failures remain deferred for FINISH. Detailed final-source outcomes are
+owed;F399 preserves the verified push and enabled pre-push Gitleaks proof.
 
 Previous terminal candidate: `acd82da46a31ae96581ed6660345ecd89113fae4`.
 [F398](docs/qualification/evidence/F398-native-terminal.json) binds all18
