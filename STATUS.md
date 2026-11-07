@@ -111,6 +111,12 @@ closed-file refusal;Unix keeps its exact type check before Sync. Original
 assertions remain. Local directory/audit/static and Windows compile/vet pass;
 actual Windows closed/native persistence/race replay remains owed.
 
+F229 adds closed literal stage diagnostics to the still-failing JSON-intake and
+independent-review native browser profiles. Only allowlisted labels accompany
+the existing safe result digest;raw failures stay private. Original behavior,
+assertions,sandbox,egress and timeouts remain. Privacy refusal,syntax/format and
+compile/vet pass;actual failure-stage replay and browser repair remain owed.
+
 Schema3 records.project binds an owned checked input,approved exact task,one
 durable processing intent,slots and events/receipt. Stable work keys select one
 historical attempt;current status is separate. New artifacts stay held for fresh

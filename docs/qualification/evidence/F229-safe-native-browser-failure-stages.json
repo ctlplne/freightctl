@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "id": "F229",
+  "observed_at": "2026-11-07",
+  "base_candidate": "5649984bc45b05f79329257e00889c6d1e6d4cb5",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Closed diagnostics added to original failing browser journeys;behavioral repair owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "ef55ed074216013b4a2af560ff9ed2a16216660bc8c9abc72903eb627f541eee",
+      "bytes": 17377
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "4ebeb9bd90ae7ed141ba681962a36e991737ee4737e6fca77c5231e479831d64",
+      "bytes": 367564
+    },
+    {
+      "reference": "internal/api/browser_failure_stage_integration_test.go",
+      "sha256": "98d730cb14a1d2ff7ec0aa1c129ebd9bd25bba9b309ce6cfd7590716b541aaec",
+      "bytes": 1189
+    },
+    {
+      "reference": "internal/api/json_records_browser_integration_test.go",
+      "sha256": "71452bc3ba293c719c3895ee5db3bd021aea02589fa1d2a5bb7cd12c8afd6a15",
+      "bytes": 8466
+    },
+    {
+      "reference": "internal/api/processing_review_browser_integration_test.go",
+      "sha256": "06f28940ea21d4284e7b61bcd0adf26b65bcee53181fa2d1e2ff67ee389fbe67",
+      "bytes": 7490
+    },
+    {
+      "reference": "scripts/json-intake-browser.mjs",
+      "sha256": "9bf4a60598b40678c9359614d9b5a6847a6a1934b564ff48b14594bea255652e",
+      "bytes": 12630
+    },
+    {
+      "reference": "scripts/processing-review-browser.mjs",
+      "sha256": "3165abf434569c1197369c2ba761ceb9936a1162fb9b18fdd274fbf3ad90e2a3",
+      "bytes": 12899
+    }
+  ],
+  "original_failure": {
+    "candidate": "71e8166d0bc96c574055e00f749d387e0f0b0460",
+    "run": 42352071925,
+    "job": 128342141280,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128342141280",
+    "observations": [
+      "Four JSON/fixed/XML/XLSX intake browser failures expose only safe result digest a9f7290e97c14f5a553750293444873cc12474ebd5a5b366b6ac313efdd088aa.",
+      "Independent review browser failure exposes only safe result digest f6a4b1d717285c7031336b2d0bdcd14f62266d42082764095386a46314c095e3."
+    ],
+    "private_artifacts": "Original workflow artifact inventory is empty;raw runner browser logs cannot be retrieved through the existing evidence interface."
+  },
+  "changed": [
+    "Scripts record only literal journey stage labels. Successful summaries require an empty failed_stage. Go logs only a closed allowlisted label beside the original result digest;unknown,private-path,URI,credential-like and newline text becomes unavailable.",
+    "All original browser actions,assertions,accessibility counts,committed-response-loss checks,TLS/sandbox/egress/inference and timeouts remain. This change does not repair or pass the original browser failures."
+  ],
+  "green": [
+    "Focused diagnostic disclosure refusal test passes without services. Node syntax/Prettier and integration/jsonbrowser compilation/vet pass."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f229-browser-format.log",
+      "sha256": "f86ec11de52c93c7a5a348581e238880abd288f0b224dfef56adf26b85974baa",
+      "bytes": 105
+    },
+    {
+      "reference": ".private/freightctl-f229-browser-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f229-json-syntax.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f229-review-syntax.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f229-safe-stage.log",
+      "sha256": "7e36185ef798fe6a368d79f2ab426840ceb78d2d3f447f0cae8e2f90a8b13fe9",
+      "bytes": 55
+    }
+  ],
+  "owed": [
+    "Actual native original stage capture,diagnosis,repair and full original JSON/fixed/XML/XLSX and independent-review browser replays.",
+    "All actual final-source native/browser/stock/security/race/restore/reproducibility and remaining baseline/AX/FINISH gates."
+  ],
+  "resources": "OneCPU/192MiB local unit/static only;no PostgreSQL,Chrome,inference,scanner or heavy peer. Retained35/source60 unchanged."
+}

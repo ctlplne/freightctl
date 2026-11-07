@@ -22,6 +22,7 @@ const sha = (b) => createHash("sha256").update(b).digest("hex"),
   prefix = `/v1/tenants/${c.tenant}/partners/${c.partner}`;
 await writeFile(ca, cert.toString());
 let browser,
+  stage = "launch",
   state = "failed",
   failure = "",
   review = "",
@@ -72,6 +73,7 @@ try {
     return page;
   }
   async function audit(page, label) {
+    stage = "accessibility";
     await page.evaluate(
       await readFile(
         new URL("../web/node_modules/axe-core/axe.min.js", import.meta.url),
@@ -100,20 +102,25 @@ try {
     await button(page.getByRole("dialog"), "Save exact review request").click();
     await (await download).saveAs(path);
   }
+  stage = "login-owner";
   const owner = await login(c.worker_token);
+  stage = "list-tasks";
   await button(owner, "List my processing tasks").click();
   await button(owner, "Open task " + c.workflow).waitFor();
   await audit(owner, "processing-catalog");
+  stage = "open-task";
   await button(owner, "Open task " + c.workflow).click();
   await owner
     .getByRole("region", { name: "Processing task revision", exact: true })
     .waitFor();
+  stage = "load-task";
   await owner.getByLabel("Workflow ID", { exact: true }).fill(c.workflow);
   await owner.getByLabel("Version", { exact: true }).fill("1");
   await button(owner, "Load task revision").click();
   await owner
     .getByRole("region", { name: "Processing task revision", exact: true })
     .waitFor();
+  stage = "review-request";
   await owner
     .getByLabel("Reviewer actor ID", { exact: true })
     .fill(c.reviewer_id);
@@ -190,18 +197,21 @@ try {
         body: raw,
       });
   };
+  stage = "commit-review-loss";
   await owner.route(proposalURL, responseLoss);
   await button(
     owner.getByRole("dialog"),
     "Confirm exact review command",
   ).click();
   await owner.getByRole("dialog").getByRole("alert").waitFor();
+  stage = "save-recovery";
   const recovery = c.private + "/proposal-recovery.json";
   await save(owner, recovery);
   const saved = JSON.parse(await readFile(recovery, "utf8"));
   assert.equal(saved.request.key, proposals[0].key);
   assert.equal(JSON.stringify(saved).includes("csrf_token"), false);
   assert.equal(saved.request.kind, "request");
+  stage = "reload-review";
   await owner.reload();
   await owner.getByRole("heading", { name: "Files", exact: true }).waitFor();
   await button(owner, "Record processing").click();
@@ -245,6 +255,7 @@ try {
   assert.match(await ownCurrent.innerText(), /pending,\s*revision 1/);
   assert.equal(await button(owner, "Review independent approval").count(), 0);
   await audit(owner, "review-recovered-proposal");
+  stage = "login-reviewer";
   const reviewer = await login(c.reviewer_token);
   await reviewer
     .getByLabel("Independent review ID", { exact: true })
@@ -261,6 +272,7 @@ try {
     prefix + "/workflows/" + c.workflow + "/1",
   );
   assert.equal(access, 404);
+  stage = "approve-review";
   await button(reviewer, "Review independent approval").click();
   await reviewer.getByRole("dialog").waitFor();
   await audit(reviewer, "review-independent-approval");
@@ -272,6 +284,7 @@ try {
   ).click();
   await reviewer.getByRole("dialog").waitFor({ state: "hidden" });
   await button(owner, "Inspect independent review").click();
+  stage = "adopt-review";
   await button(owner, "Review adoption into my workflow").waitFor();
   await button(owner, "Review adoption into my workflow").click();
   await owner.getByRole("dialog").waitFor();
@@ -290,6 +303,7 @@ try {
   assert.ok((await configured.innerText()).includes("approved"));
   assert.ok((await configured.innerText()).includes(c.workflow_hash));
   await button(reviewer, "Inspect independent review").click();
+  stage = "withdraw-review";
   await button(reviewer, "Review withdrawal").click();
   await reviewer.getByRole("dialog").waitFor();
   await button(
@@ -313,6 +327,7 @@ try {
   ).click();
   await reviewer.getByRole("dialog").waitFor({ state: "hidden" });
   assert.match(await reviewCurrent.innerText(), /withdrawn,\s*revision 4/);
+  stage = "recover-approval";
   await reviewer
     .getByText(/Original command receipt: review.*state approved,\s*revision 2/)
     .waitFor();
@@ -339,6 +354,7 @@ try {
       browser_sandbox: true,
       inference_performed: false,
       failure_sha256: failure,
+      failed_stage: state === "passed" ? "" : stage,
     }) + "\n",
   );
 }

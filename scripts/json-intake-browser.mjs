@@ -60,7 +60,8 @@ let browser,
   file = "",
   policyHash = "",
   state = "failed",
-  failureHash = "";
+  failureHash = "",
+  stage = "launch";
 let accessibility = 0,
   egress = 0,
   errors = 0;
@@ -93,6 +94,7 @@ try {
     parent.getByRole("button", { name, exact: true });
   const dialog = () => page.getByRole("dialog");
   async function audit(label) {
+    stage = "accessibility";
     await page.evaluate(
       await readFile(
         new URL("../web/node_modules/axe-core/axe.min.js", import.meta.url),
@@ -133,6 +135,7 @@ try {
       { path: prefix + path, method, binary },
     );
   }
+  stage = "login";
   await page.goto(c.url);
   await page.getByLabel("Tenant ID", { exact: true }).fill(c.tenant);
   await page.getByLabel("Partner ID", { exact: true }).fill(c.partner);
@@ -141,8 +144,10 @@ try {
     .setInputFiles(c.token);
   await button("Connect").click();
   await page.getByRole("heading", { name: "Files", exact: true }).waitFor();
+  stage = "open-policy";
   await button("Intake policy").click();
   const editor = page.getByRole("region", { name: "Incoming file policy" });
+  stage = "edit-policy";
   await editor
     .getByLabel("File format", { exact: true })
     .selectOption(c.format);
@@ -151,6 +156,7 @@ try {
       .getByLabel("Column 2 padding", { exact: true })
       .selectOption("space_left");
   await audit("json-editor");
+  stage = "review-policy";
   await button("Review intake policy", editor).click();
   await dialog()
     .getByText(
@@ -240,10 +246,12 @@ try {
         body: reply,
       });
   };
+  stage = "commit-policy-loss";
   await page.route(policyURL, loseFirst);
   await button("Apply reviewed policy", dialog()).click();
   await dialog().getByRole("alert").waitFor();
   await audit("json-uncertain-policy");
+  stage = "retry-policy";
   await button("Apply reviewed policy", dialog()).click();
   await dialog().waitFor({ state: "hidden" });
   await page.unroute(policyURL, loseFirst);
@@ -261,6 +269,7 @@ try {
   assert.equal(original.resource.definition_hash, c.hash);
   policyHash = original.resource.definition_hash;
 
+  stage = "upload";
   await button("Files").click();
   await button("Upload file").click();
   await page
@@ -285,6 +294,7 @@ try {
   file = accepted.file.id;
   assert.equal((await api("/files/" + file)).status, 409);
   assert.equal((await api("/files/" + file, "HEAD")).status, 409);
+  stage = "check";
   await button("Intake checks").click();
   await page
     .getByRole("row")
@@ -313,6 +323,7 @@ try {
   assert.equal(detail.check.report.bytes_read, c.size);
   assert.equal((await api("/files/" + file)).status, 409);
   await audit("json-passed-held");
+  stage = "review-release";
   await button("Review release").click();
   assert.ok(
     (await dialog().locator("code").allTextContents()).includes(
@@ -320,6 +331,7 @@ try {
     ),
   );
   await audit("json-release-review");
+  stage = "release";
   const release = page.waitForResponse(
     (r) =>
       r.url() === c.url + prefix + "/checks/" + file + "/release" &&
@@ -328,6 +340,7 @@ try {
   await button("Release file", dialog()).click();
   assert.equal((await release).status(), 200);
   await dialog().waitFor({ state: "hidden" });
+  stage = "download";
   const download = await api(
     "/namespace/file?path=/browser-records.json",
     "GET",
@@ -362,6 +375,7 @@ try {
       node_version: process.version,
       axe_version: axe.version,
       failure_sha256: failureHash,
+      failed_stage: state === "passed" ? "" : stage,
     }) + "\n",
   );
 }

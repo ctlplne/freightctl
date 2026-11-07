@@ -118,9 +118,10 @@ func TestProcessingReviewNativeBrowserIndependentDecisionRecoveryAndAdoption(t *
 		Sandbox       bool   `json:"browser_sandbox"`
 		Inference     bool   `json:"inference_performed"`
 		Failure       string `json:"failure_sha256"`
+		Stage         string `json:"failed_stage"`
 	}
-	if runErr != nil || workflow.Decode(raw, &summary) != nil || summary.State != "passed" || !store.ValidID(summary.Review) || summary.Hash != cfg.Hash || summary.Requests != 2 || summary.Accessibility != 7 || summary.Egress != 0 || summary.Errors != 0 || !summary.Sandbox || summary.Inference || summary.Failure != "" {
-		t.Fatalf("native independent review browser failed;safe result SHA256=%s", secure.Digest(raw))
+	if runErr != nil || workflow.Decode(raw, &summary) != nil || summary.State != "passed" || !store.ValidID(summary.Review) || summary.Hash != cfg.Hash || summary.Requests != 2 || summary.Accessibility != 7 || summary.Egress != 0 || summary.Errors != 0 || !summary.Sandbox || summary.Inference || summary.Failure != "" || summary.Stage != "" {
+		t.Fatalf("native independent review browser failed;stage=%s;safe result SHA256=%s", safeNativeBrowserStage(summary.Stage), secure.Digest(raw))
 	}
 	current, err := wf.ProcessingReview(t.Context(), worker, summary.Review)
 	if err != nil || current.State != "withdrawn" || current.Revision != 4 || current.AdoptedRevision != 3 || current.Definition.Workflow.Hash != cfg.Hash || current.Definition.Reviewer.Actor != reviewerID {
