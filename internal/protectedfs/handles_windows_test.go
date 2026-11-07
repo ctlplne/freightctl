@@ -77,6 +77,28 @@ func TestWindowsHeldFilePrivacyRefusesBroadNullInheritedAndUnprotectedDACL(t *te
 			if err != nil {
 				t.Fatal(err)
 			}
+			if c.name == "inherited-ace" {
+				// A successful setter call does not establish that Windows kept
+				// the supplied inheritance flag. Read the held object's actual
+				// DACL before drawing any conclusion about the refusal check.
+				applied, readErr := windows.GetSecurityInfo(h, windows.SE_FILE_OBJECT, windows.DACL_SECURITY_INFORMATION)
+				if readErr != nil || applied == nil {
+					t.Fatal("cannot read actual inherited-ACE precondition", readErr)
+				}
+				appliedACL, _, readErr := applied.DACL()
+				if readErr != nil || appliedACL == nil || appliedACL.AceCount != 1 {
+					t.Fatal("actual inherited-ACE fixture has no exact one-entry DACL", readErr)
+				}
+				var appliedACE *windows.ACCESS_ALLOWED_ACE
+				if readErr = windows.GetAce(appliedACL, 0, &appliedACE); readErr != nil || appliedACE == nil {
+					t.Fatal("cannot read actual inherited ACE", readErr)
+				}
+				flags := appliedACE.Header.AceFlags
+				runtime.KeepAlive(applied)
+				if flags&windows.INHERITED_ACE == 0 {
+					t.Fatalf("inherited-ACE precondition absent on actual held object: ACE flags=0x%02x;refusal remains unqualified", flags)
+				}
+			}
 			if ValidateFile(f) == nil {
 				t.Fatal("changed actual DACL accepted on original held handle")
 			}

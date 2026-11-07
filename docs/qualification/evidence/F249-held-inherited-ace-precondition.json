@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "id": "F249",
+  "observed_at": "2026-11-07",
+  "base_candidate": "f090e3f031d62ebc95114c3b8b6fa0da0ce16b76",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Open original security refusal instrumented;no security pass claimed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "f1fc00dd7aea2c5f0f6aeb15c5622394927cbfbd873bf0f5f3ece816c24cda74",
+      "bytes": 11872
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "c08f59b989b1f8e2c63439f61b7de46033d874bee913cdbd48c9a817032d6b97",
+      "bytes": 373402
+    },
+    {
+      "reference": "internal/protectedfs/handles_windows_test.go",
+      "sha256": "aaf1b88aa63eb017e9052d112785d02202da6d72ed9cf87967893703004c4d77",
+      "bytes": 3581
+    }
+  ],
+  "red": {
+    "candidate": "e87483babb4e32f8a3aaf78d13f8374d842fa78b",
+    "run": 42354252248,
+    "job": 128348737979,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128348737979",
+    "test": "TestWindowsHeldFilePrivacyRefusesBroadNullInheritedAndUnprotectedDACL/inherited-ace",
+    "observed": "changed actual DACL accepted on original held handle"
+  },
+  "changed": [
+    "Read back actual held-object DACL after SetSecurityInfo. Require exact one-entry DACL and INHERITED_ACE before testing refusal. Preserve original production check and refusal assertion.",
+    "Report only numeric ACE flags when the mutation is absent. Fail,never skip or infer a pass. Setter normalization remains a hypothesis pending actual native readback.",
+    "Microsoft explicitly advises against SetKernelObjectSecurity on filesystem objects;no such setter substitution was made."
+  ],
+  "green": [
+    "Native Windows test compilation/vet pass under oneCPU/192MiB. Actual Windows not run locally."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f249-final-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f249-final-windows-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f249-final-windows-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f249-format.log",
+      "sha256": "43cb7e915d64dcc7fa7fac2bf4c7ae595fdfdadf37e6ad2f717763375484528f",
+      "bytes": 45
+    },
+    {
+      "reference": ".private/freightctl-f249-windows-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "primary_references": [
+    "https://learn.microsoft.com/en-us/windows/win32/api/aclapi/nf-aclapi-setsecurityinfo",
+    "https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-setkernelobjectsecurity"
+  ],
+  "owed": [
+    "Actual applied descriptor,original refusal,and any needed fixture/production repair on native Windows. Gate remains red.",
+    "All remaining final-source product baseline/AX/FINISH proofs."
+  ],
+  "resources": "Local formatting/compilation/vet only;local inference/heavy runtime off. Retained35/source60 unchanged."
+}

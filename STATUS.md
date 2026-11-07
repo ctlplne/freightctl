@@ -26,7 +26,8 @@ F243 prepare failed-browser decoding,Windows closed-error classification,exact
 sender restart observation and trusted-setup/restricted-runtime browser repair.
 F247 corrects two label-only authority fixtures with an actual permission change,
 exact authority snapshots and unchanged old-receipt refusals. Their original
-native replays remain owed. Detailed source/proof/owed bindings
+native replays remain owed. F249 requires actual Windows inherited-ACE readback
+before the unchanged refusal assertion;no native pass is claimed. Detailed bindings
 stay in the item manifests and docs/qualification/remaining.json.
 
 Next:wire immutable Windows custody/setup,repair the newly reached native browser
