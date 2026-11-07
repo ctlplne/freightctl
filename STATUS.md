@@ -6,11 +6,11 @@ adoption and enterprise readiness remain unqualified. Exact original failures,
 source hashes,qualification and owed work are in
 [remaining work](docs/qualification/remaining.json) and its safe item manifests.
 
-Pushed candidate:fb578f12f73315911bf0117a293d0b32a465bdc8.
-F316 preserves all16 original terminal workflows/35 jobs:23 pass,12 fail.
-Both exact image scans and listed source/dependency security checks pass;native
-untrusted-model parser fuzz remains red after a harness deadline failure. No
-model ran. Original native/browser/SQL/stock failures and skipped work stay owed.
+Pushed candidate:1b745e16d53bf3b20ed07c2242c53bb71a5d3619.
+F318 preserves all16 original triggered workflow handles;outcomes remain owed.
+Seven outgoing commits have both owner identities and passed the enabled full
+outgoing Gitleaks guard. F316 records previousfb578f1 terminal16/35:23 pass,12
+fail. Its image/source/dependency checks pass;native parser fuzz remains red.
 
 Previous49eefe1 original18 workflows/41 jobs are terminal:31 pass,10 fail.
 F292 preserves exact handles;both complete image scans and listed security gates
@@ -147,6 +147,13 @@ Real loopback TLS default-trust red turns green;wrong CA/scope/credentials refus
 with zero HTTP commands. Async route failures now reach protected first-failure
 evidence. No TLS bypass or fabricated receipt;actual Chrome cause/replay and
 local manual/calendar runtime qualification remain owed.
+
+F321 validates independent-review recovery before the inspection busy gate.
+Foreign/oversized files now refuse even during background work;valid busy files
+get an explicit same-file retry instruction. Import grants no execution or
+receipt and never replaces the original key/body. Four silent-discard reds and
+11 affected importer/review contracts pass after repair;final static checks
+pass. The original Chrome foreign-file refusal and full native replay are owed.
 
 FINISH repair and remaining implementation are mandatory. Next:repair original
 browser/stock/protocol failures and complete all affected original runtime,

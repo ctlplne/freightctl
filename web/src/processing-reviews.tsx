@@ -14,11 +14,11 @@ import {
   reviewAllowed,
   reviewMutation,
   reviewRecovery,
-  parseReviewRecovery,
   type Review,
   type ReviewSummary,
   type ReviewMutation,
 } from "./processing-review-api";
+import { importReviewRecoveryFile } from "./processing-review-import";
 
 type Confirmation = {
   mutation: ReviewMutation;
@@ -83,6 +83,18 @@ export function ProcessingReviews({
       returnFocus.current?.focus();
     }
   }, [confirmation, active]);
+  const reportFailure = (e: unknown) => {
+    if (current()) {
+      setFailure(
+        pendingRef.current
+          ? "This command is not confirmed. Keep its original key and inspect current state before a new action."
+          : e instanceof ApiError && e.code === "review_inspection_busy"
+            ? "Wait for the current inspection to finish, then import the same recovery file again."
+            : "The command or current inspection was refused. A historical receipt is not current approval.",
+      );
+      onError(e);
+    }
+  };
   const perform = async (fn: () => Promise<void>) => {
     if (running.current) return;
     running.current = true;
@@ -91,14 +103,7 @@ export function ProcessingReviews({
     try {
       await fn();
     } catch (e) {
-      if (current()) {
-        setFailure(
-          pendingRef.current
-            ? "This command is not confirmed. Keep its original key and inspect current state before a new action."
-            : "The command or current inspection was refused. A historical receipt is not current approval.",
-        );
-        onError(e);
-      }
+      reportFailure(e);
     } finally {
       running.current = false;
       if (current()) setBusy(false);
@@ -259,15 +264,21 @@ export function ProcessingReviews({
       onError(e);
     }
   };
-  const importRecovery = (file: File) =>
-    perform(async () => {
-      if (file.size > 32 * 1024)
-        throw new ApiError("invalid_processing_review", 400);
-      const text = await file.text();
-      if (!current()) return;
-      const m = parseReviewRecovery(text, session, location.origin);
-      await prepare(m, true);
-    });
+  const importRecovery = async (file: File) => {
+    try {
+      await importReviewRecoveryFile({
+        file,
+        session,
+        origin: location.origin,
+        current,
+        busy: () => running.current,
+        prepare: (m) => perform(() => prepare(m, true)),
+      });
+    } catch (e) {
+      // Do not clear the running/busy state owned by an existing inspection.
+      reportFailure(e);
+    }
+  };
   return (
     <section aria-label="Independent processing review">
       <h2>Independent processing review</h2>

@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "id": "F321",
+  "observed_at": "2026-11-07",
+  "base_candidate": "1b745e16d53bf3b20ed07c2242c53bb71a5d3619",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F321 moves independent-review recovery-file validation outside the background inspection busy gate. Four meaningful regressions against the old extracted gate fail by silently resolving:foreign origin while busy,valid file while busy,scope change while reading and oversized busy file. Validate bounded file/origin/participant/hash first,recheck live context,then explicitly refuse busy preparation with a same-file retry instruction. Valid idle recovery preserves original key/body and still opens ordinary explicit confirmation;no queue,mutation,execution or receipt is created by import. Five new importer and six existing review contract cases pass;final typecheck,format,build/exact assets and architecture pass with observed exit0. Original native reject-foreign-review-recovery timeout and whole served acceptance remain owed.",
+  "original_failure": {
+    "candidate": "fb578f12f73315911bf0117a293d0b32a465bdc8",
+    "run_id": 42370336290,
+    "job_id": 128396961824,
+    "stage": "reject-foreign-review-recovery",
+    "source_line": 233,
+    "source_column": 6,
+    "safe_result_sha256": "d1c2330c9e1ee0ba396c5b7fc445d360f001b1d0be028c54e2899373cf39156c",
+    "private_log_sha256": "85731a1f79407768fcd92ee410189a4e97bfe16619084c5edef33f96d3fcc366",
+    "causal_attribution": "Busy-discard mechanism proved locally;attribution to this original native timeout awaits unchanged native replay."
+  },
+  "red": {
+    "proof": ".private/freightctl-f321-import-red.log",
+    "observation": "All four cases fail Missing expected rejection under the extracted old early-return gate."
+  },
+  "green": [
+    "All five new importer and six existing review contract methods pass. Includes inspection starting during file read,exact idle key/body recovery,foreign refusal,scope-change refusal and oversize zero-read.",
+    "Final TypeScript,format,build/exact served assets and architecture checks observed terminal exit0."
+  ],
+  "source_files": [
+    {
+      "reference": "web/src/processing-review-import.ts",
+      "sha256": "62d38997336ebbe9e3ac38eee02d9cc8a5291032ee533a12094b5653f44158ff",
+      "bytes": 1160
+    },
+    {
+      "reference": "web/src/processing-reviews.tsx",
+      "sha256": "41dce5954becf1b14eac0be2e5b7400caa9ec1429c94ef5416191892e44bde4e",
+      "bytes": 18913
+    },
+    {
+      "reference": "web/tests/processing-review-import.test.mjs",
+      "sha256": "5d574eefac4420ba6d7af1295f2d5379eecbc6907d9c1a8c7f7ae77028e2e0af",
+      "bytes": 4420
+    },
+    {
+      "reference": "internal/browser/assets/app.js",
+      "sha256": "6a673b71c269b3852ee41f41954eaa840ba10f8d0eccca9893af6467c6e63da4",
+      "bytes": 905944
+    },
+    {
+      "reference": "internal/browser/assets/manifest.json",
+      "sha256": "731718cf0d0be1465f147d173c38a38b9fb6033039ed96021fad4ea14884e18f",
+      "bytes": 13977
+    },
+    {
+      "reference": "docs/qualification/evidence/F318-original-native-batch.json",
+      "sha256": "cce7d16878b331db55f401d5398bc06aac3a343710bc3e95881a993ab6253c8e",
+      "bytes": 7667
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "8e13ea61172c04c1b6a5b901b3a85cc54d24489b285273f696d00fac6bcdf7ec",
+      "bytes": 418673
+    },
+    {
+      "reference": "STATUS.md",
+      "sha256": "283b9812433e8550f345a550ffa903320ebf2e3c9caeaa79f8466626555ece79",
+      "bytes": 11133
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f321-import-red.log",
+      "sha256": "ab69338df2e9a37822fc23f1854c1f51a2a1354a8a901dfe9f921a4099f5500b",
+      "bytes": 3104
+    },
+    {
+      "reference": ".private/freightctl-f321-import-final-green.log",
+      "sha256": "555965156a8baa25b9acdf9ff488cb47a36fcfbfbe98cc3d4ef535dba9eb1422",
+      "bytes": 1241
+    },
+    {
+      "reference": ".private/freightctl-f321-typecheck.log",
+      "sha256": "17e00418398dd65e49bed86df28efee896dcae70d7e6258050a2746181f558d5",
+      "bytes": 54
+    },
+    {
+      "reference": ".private/freightctl-f321-build.log",
+      "sha256": "cbf7afc5289ed2e02fe936463b28008d1ff5de706acdcde5854acff4b42e6128",
+      "bytes": 232
+    },
+    {
+      "reference": ".private/freightctl-f321-exact-built.log",
+      "sha256": "e05f3a475514846b57050875942b11ee999d6d83b945c9ef2f3da42efa55c1d3",
+      "bytes": 249
+    },
+    {
+      "reference": ".private/freightctl-f321-format-check.log",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    },
+    {
+      "reference": ".private/freightctl-f321-architecture.log",
+      "sha256": "cd7c1a3a13a83ac7515c2d23c19801dc586d042bb55a594a9dd55da948433591",
+      "bytes": 64
+    }
+  ],
+  "owed": [
+    "Original independent-review actual Chrome/PostgreSQL foreign refusal,loss/reload/same-key receipt/reviewer decision/adoption replay on final source.",
+    "All final-source native and remaining baseline/AX/FINISH outcomes."
+  ],
+  "resources": "OneCPU/192MiB frontend contract/static checks only;no Chrome,PostgreSQL,scanner or model started. Local inference remains off."
+}
