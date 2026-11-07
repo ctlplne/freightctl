@@ -18,6 +18,8 @@ import (
 	"os"
 	"runtime"
 	"time"
+
+	"github.com/ctlplne/freightctl/internal/protectedfs"
 )
 
 func Digest(b []byte) string { sum := sha256.Sum256(b); return hex.EncodeToString(sum[:]) }
@@ -64,8 +66,8 @@ func ReadSecret(path string, max int64) (*Secret, error) {
 	}
 	defer f.Close()
 	st, err := f.Stat()
-	if err != nil || !os.SameFile(lst, st) || !st.Mode().IsRegular() || st.Mode().Perm()&0077 != 0 || st.Size() < 1 || st.Size() > max {
-		return nil, errors.New("secret must be a bounded regular file with mode 0600 or stricter")
+	if err != nil || !os.SameFile(lst, st) || !st.Mode().IsRegular() || st.Size() < 1 || st.Size() > max || protectedfs.ValidateFile(f) != nil {
+		return nil, errors.New("secret must be a bounded regular file with protected access permissions")
 	}
 	b := make([]byte, st.Size())
 	if _, err = f.ReadAt(b, 0); err != nil {
@@ -92,7 +94,7 @@ func WriteToken(path string) error {
 	out := make([]byte, 64)
 	defer Clear(out)
 	hex.Encode(out, b)
-	f, err := os.OpenFile(path, os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0600)
+	f, err := protectedfs.CreateExclusive(path)
 	if err != nil {
 		return errors.New("cannot create token reference")
 	}
@@ -128,7 +130,7 @@ func DevCertificate(certPath, keyPath string) error {
 		path, kind string
 		data       []byte
 	}{{keyPath, "PRIVATE KEY", k}, {certPath, "CERTIFICATE", der}} {
-		f, e := os.OpenFile(v.path, os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0600)
+		f, e := protectedfs.CreateExclusive(v.path)
 		if e != nil {
 			return errors.New("certificate target already exists or cannot be created")
 		}

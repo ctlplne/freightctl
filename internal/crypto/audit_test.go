@@ -55,9 +55,7 @@ func TestAuditIdentityAndSignaturePolicy(t *testing.T) {
 	if ed25519.Verify(public, changed, envelope.Signature) {
 		t.Fatal("modified export verified")
 	}
-	if err = os.Chmod(privatePath, 0644); err != nil {
-		t.Fatal(err)
-	}
+	broadenPrivateFileForTest(t, privatePath)
 	if _, err = SignAuditPayload(privatePath, payload); err == nil {
 		t.Fatal("broad signing-key permissions accepted")
 	}

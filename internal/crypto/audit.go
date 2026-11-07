@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 
 	"github.com/ctlplne/freightctl/internal/durablefs"
+	"github.com/ctlplne/freightctl/internal/protectedfs"
 )
 
 const AuditFormat = "freightctl-audit-snapshot-v1"
@@ -25,7 +26,7 @@ type SignedAudit struct {
 }
 
 func writeExclusive(path string, data []byte) error {
-	f, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0600)
+	f, err := protectedfs.CreateExclusive(path)
 	if err != nil {
 		return errors.New("identity target already exists or cannot be created")
 	}

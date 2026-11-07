@@ -26,6 +26,15 @@ uses the existing handle-bound durablefs seam. Focused audit/architecture/vet an
 Windows compilation pass;actual Windows persistence and private ACL qualification
 remain red/owed. No permission check or original test assertion was relaxed.
 
+F205 adds a held-handle protected-file seam. Unix permission checks stay exact;
+Windows token/certificate/audit creation attaches an explicit owner-only protected
+DACL before writing. Secret reads refuse unsupported,broad,null or inherited
+Windows descriptors. The broad-permission audit assertion changes the real DACL
+on Windows instead of relying on chmod. Full local Go units and affected
+policy/handle/audit/architecture/vet checks pass;Windows cases compile only.
+Actual native ACL/restricted-token/reparse races,storage/setup/private writers and
+whole Windows/runtime/final-source outcomes remain owed.
+
 Schema3 records.project binds an owned checked input,approved exact task,one
 durable processing intent,slots and events/receipt. Stable work keys select one
 historical attempt;current status is separate. New artifacts stay held for fresh
