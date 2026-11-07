@@ -28,3 +28,21 @@ func privateDescriptor(owner, runtimeUser string, present, protected bool, entri
 	}
 	return granted
 }
+
+func publicDescriptor(owner, runtimeUser string, present, protected bool, entries []accessEntry, readMask uint32) bool {
+	if owner == "" || owner != runtimeUser || !present || !protected || len(entries) == 0 || len(entries) > 256 || readMask == 0 {
+		return false
+	}
+	ownerGrant := false
+	for _, e := range entries {
+		if e.principal == "" || !e.allow || e.mask == 0 {
+			return false
+		}
+		if e.principal == runtimeUser {
+			ownerGrant = true
+		} else if e.mask & ^readMask != 0 {
+			return false
+		}
+	}
+	return ownerGrant
+}

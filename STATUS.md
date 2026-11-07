@@ -5,12 +5,13 @@ complete journeys and AX01–AX08 remain open. Assisted deployment,independent
 adoption and enterprise readiness remain unqualified.
 
 Latest pushed source:71e8166d0bc96c574055e00f749d387e0f0b0460.
-Its native runs are pending. F202 preserves the previous91ed18d source
-original16 terminal workflows/35 jobs:19 pass,16 fail.
-Listed security checks pass. Core,macOS unit/race,both metadata restores and
-several original stock/browser/public jobs pass;both Linux unit/race steps pass.
-PostgreSQL integration,Windows and remaining original runtime failures stay red.
-These results apply to this source only. No originals were cancelled,restarted
+F214 preserves its18 terminal workflows/41 jobs:27 pass,14 fail. Listed security
+checks and both complete image scans pass. Original SCP/tus workflows now pass.
+Six output-policy/processing/producer/composition/calendar/proposal Chrome cases
+pass inside a still-red job. Core,macOS,metadata restores and several stock/public
+jobs pass;PostgreSQL integration,Windows and remaining original failures stay
+red. Results apply only to exact source71e8166;later repair source is owed.
+F202 retains the previous91ed18d originals. No originals were cancelled,restarted
 or substituted.
 FINISH audit/repair has started;remaining implementation requirements stay open.
 F201 preserves exact original reporter/OpenAPI/schema failure handles,repairs
@@ -123,6 +124,14 @@ and product/quota controls remain. Negative release inputs now require the real
 initial held state,zero attempts,no report hash and exact file/policy bindings.
 This corrects F215's unpushed queued-state assertion and covers independent
 review too. Compile/vet/source conformance pass;actual native replay is owed.
+
+F233 separates public certificate/CA integrity from secret privacy. Unix keeps
+0022 write refusal;Windows checks the held descriptor and allows other users
+read/execute only,refusing file/deletion/ACL/owner mutation. Private keys stay
+owner-only. Original FTPS permission assertions use real Windows DACL changes;
+client CA write refusal is added. Focused policy/identity/trust/architecture/vet
+and Windows compilation pass. Actual Windows ACL/TLS/full-platform replay and
+storage/setup/private writers remain owed.
 
 Schema3 records.project binds an owned checked input,approved exact task,one
 durable processing intent,slots and events/receipt. Stable work keys select one

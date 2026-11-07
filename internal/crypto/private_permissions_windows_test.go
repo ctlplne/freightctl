@@ -3,6 +3,7 @@
 package crypto
 
 import (
+	"os"
 	"path/filepath"
 	"runtime"
 	"testing"
@@ -13,13 +14,27 @@ import (
 // chmod does not add a Windows read ACE. Change the actual task-owned DACL;
 // the same assertion must refuse an actual grant to Everyone on Windows.
 func broadenPrivateFileForTest(t *testing.T, path string) {
+	setReferenceAccessForTest(t, path, 0644)
+}
+
+func setReferenceAccessForTest(t *testing.T, path string, mode os.FileMode) {
 	t.Helper()
+	grant := ""
+	switch mode {
+	case 0600:
+	case 0644:
+		grant = "(A;;FR;;;WD)"
+	case 0666:
+		grant = "(A;;FRFW;;;WD)"
+	default:
+		t.Fatal("unsupported reference permission fixture")
+	}
 	user, err := windows.GetCurrentProcessToken().GetTokenUser()
 	if err != nil {
 		t.Fatal(err)
 	}
 	sid := user.User.Sid.String()
-	sd, err := windows.SecurityDescriptorFromString("O:" + sid + "D:P(A;;FA;;;" + sid + ")(A;;FR;;;WD)")
+	sd, err := windows.SecurityDescriptorFromString("O:" + sid + "D:P(A;;FA;;;" + sid + ")" + grant)
 	if err != nil {
 		t.Fatal(err)
 	}

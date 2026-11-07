@@ -52,16 +52,28 @@ func platformCreate(path string) (*os.File, error) {
 }
 
 func platformPrivacy(f *os.File, _ os.FileInfo, directory bool) error {
+	return platformAccess(f, directory, false)
+}
+
+func platformPublic(f *os.File, _ os.FileInfo) error {
+	return platformAccess(f, false, true)
+}
+
+func platformAccess(f *os.File, directory, public bool) error {
 	connection, err := f.SyscallConn()
 	if err != nil {
 		return err
 	}
 	var result error
-	err = connection.Control(func(fd uintptr) { result = privateHandle(windows.Handle(fd), directory) })
+	err = connection.Control(func(fd uintptr) { result = accessHandle(windows.Handle(fd), directory, public) })
 	return errors.Join(err, result)
 }
 
 func privateHandle(h windows.Handle, directory bool) error {
+	return accessHandle(h, directory, false)
+}
+
+func accessHandle(h windows.Handle, directory, public bool) error {
 	kind, err := windows.GetFileType(h)
 	if err != nil {
 		return err
@@ -115,7 +127,13 @@ func privateHandle(h windows.Handle, directory bool) error {
 		}
 		entries = append(entries, accessEntry{principal: sid.String(), allow: true, mask: uint32(ace.Mask)})
 	}
-	if !privateDescriptor(owner.String(), user.String(), control&windows.SE_DACL_PRESENT != 0, control&windows.SE_DACL_PROTECTED != 0, entries) {
+	present, protected := control&windows.SE_DACL_PRESENT != 0, control&windows.SE_DACL_PROTECTED != 0
+	accepted := privateDescriptor(owner.String(), user.String(), present, protected, entries)
+	if public {
+		readMask := uint32(windows.GENERIC_READ | windows.GENERIC_EXECUTE | windows.FILE_GENERIC_READ | windows.FILE_GENERIC_EXECUTE)
+		accepted = publicDescriptor(owner.String(), user.String(), present, protected, entries, readMask)
+	}
+	if !accepted {
 		return ErrPrivacy
 	}
 	return nil

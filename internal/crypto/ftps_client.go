@@ -15,6 +15,8 @@ import (
 	"time"
 	"unicode"
 	"unicode/utf8"
+
+	"github.com/ctlplne/freightctl/internal/protectedfs"
 )
 
 var ErrFTPSClient = errors.New("FTPS receiver identity, credential or channel policy failed")
@@ -76,7 +78,7 @@ func ftpsTrust(d FTPSDestination) (*tls.Config, error) {
 		return nil, err
 	}
 	st, err := os.Lstat(d.CAFile)
-	if err != nil || !st.Mode().IsRegular() || st.Mode().Perm()&0022 != 0 || st.Size() < 1 || st.Size() > 128<<10 {
+	if err != nil || !st.Mode().IsRegular() || st.Size() < 1 || st.Size() > 128<<10 {
 		return nil, ErrFTPSClient
 	}
 	f, err := os.Open(d.CAFile)
@@ -86,6 +88,9 @@ func ftpsTrust(d FTPSDestination) (*tls.Config, error) {
 	defer f.Close()
 	opened, err := f.Stat()
 	if err != nil || !os.SameFile(st, opened) || opened.Size() != st.Size() {
+		return nil, ErrFTPSClient
+	}
+	if err = protectedfs.ValidatePublicFile(f); err != nil {
 		return nil, ErrFTPSClient
 	}
 	b, err := io.ReadAll(io.LimitReader(f, (128<<10)+1))

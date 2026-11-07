@@ -8,6 +8,8 @@ import (
 	"net"
 	"os"
 	"sync/atomic"
+
+	"github.com/ctlplne/freightctl/internal/protectedfs"
 )
 
 // TLSConfiguration keeps protocol adapters inside the cryptographic boundary.
@@ -26,7 +28,7 @@ var errFTPSBinding = errors.New("FTPS data connection is not bound to an authent
 // key reference. Neither pathname nor library parsing error reaches the peer.
 func LoadFTPSIdentity(certFile, keyFile string) (*FTPSIdentity, error) {
 	info, err := os.Lstat(certFile)
-	if err != nil || !info.Mode().IsRegular() || info.Mode().Perm()&0022 != 0 || info.Size() < 1 || info.Size() > 128<<10 {
+	if err != nil || !info.Mode().IsRegular() || info.Size() < 1 || info.Size() > 128<<10 {
 		return nil, errFTPSIdentity
 	}
 	f, err := os.Open(certFile)
@@ -36,6 +38,9 @@ func LoadFTPSIdentity(certFile, keyFile string) (*FTPSIdentity, error) {
 	defer f.Close()
 	opened, err := f.Stat()
 	if err != nil || !os.SameFile(info, opened) || !opened.Mode().IsRegular() || opened.Size() != info.Size() {
+		return nil, errFTPSIdentity
+	}
+	if err = protectedfs.ValidatePublicFile(f); err != nil {
 		return nil, errFTPSIdentity
 	}
 	cert, err := io.ReadAll(io.LimitReader(f, (128<<10)+1))

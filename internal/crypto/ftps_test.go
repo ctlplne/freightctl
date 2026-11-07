@@ -238,24 +238,16 @@ func TestFTPSIdentityRejectsUnsafeOrMismatchedFiles(t *testing.T) {
 			t.Fatal("invalid control address accepted")
 		}
 	}
-	if err := os.Chmod(key, 0644); err != nil {
-		t.Fatal(err)
-	}
+	setReferenceAccessForTest(t, key, 0644)
 	if _, err := LoadFTPSIdentity(cert, key); err == nil {
 		t.Fatal("world-readable private key accepted")
 	}
-	if err := os.Chmod(key, 0600); err != nil {
-		t.Fatal(err)
-	}
-	if err := os.Chmod(cert, 0666); err != nil {
-		t.Fatal(err)
-	}
+	setReferenceAccessForTest(t, key, 0600)
+	setReferenceAccessForTest(t, cert, 0666)
 	if _, err := LoadFTPSIdentity(cert, key); err == nil {
 		t.Fatal("certificate writable by another user accepted")
 	}
-	if err := os.Chmod(cert, 0644); err != nil {
-		t.Fatal(err)
-	}
+	setReferenceAccessForTest(t, cert, 0644)
 	if _, err := LoadFTPSIdentity(cert, key); err != nil {
 		t.Fatal("public read-only certificate refused", err)
 	}

@@ -6,6 +6,8 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/ctlplne/freightctl/internal/protectedfs"
 )
 
 func TestFTPSClientReferencesAndSessionCacheAreBounded(t *testing.T) {
@@ -15,12 +17,28 @@ func TestFTPSClientReferencesAndSessionCacheAreBounded(t *testing.T) {
 		t.Fatal(err)
 	}
 	data, _ := os.ReadFile(cert)
-	if err := os.WriteFile(pw, []byte("fixture-password"), 0600); err != nil {
+	f, err := protectedfs.CreateExclusive(pw)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer f.Close()
+	if _, err = f.WriteString("fixture-password"); err != nil {
+		t.Fatal(err)
+	}
+	if err = f.Close(); err != nil {
 		t.Fatal(err)
 	}
 	d := FTPSDestination{Address: "127.0.0.1:21000", ServerName: "localhost", Mode: "explicit", User: "fixture", CAFile: cert, CASHA256: Digest(data), PasswordFile: pw, PasswordSHA256: Digest([]byte("fixture-password"))}
 	if _, err := ftpsTrust(d); err != nil {
 		t.Fatal(err)
+	}
+	setReferenceAccessForTest(t, cert, 0666)
+	if _, err := ftpsTrust(d); err == nil {
+		t.Fatal("CA writable by another user accepted")
+	}
+	setReferenceAccessForTest(t, cert, 0644)
+	if _, err := ftpsTrust(d); err != nil {
+		t.Fatal("public read-only CA refused", err)
 	}
 	for _, change := range []func(*FTPSDestination){func(v *FTPSDestination) { v.Address = "198.51.100.1:21000" }, func(v *FTPSDestination) { v.Address = "localhost:21000" }, func(v *FTPSDestination) { v.Address = "127.0.0.1:+21000" }, func(v *FTPSDestination) { v.User = "injected\r\nPASS" }, func(v *FTPSDestination) { v.Mode = "plain" }, func(v *FTPSDestination) { v.CASHA256 = strings.Repeat("0", 64) }, func(v *FTPSDestination) { v.PasswordFile = "relative" }} {
 		v := d

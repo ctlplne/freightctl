@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "id": "F233",
+  "observed_at": "2026-11-07",
+  "base_candidate": "7107c58a48ef85aa020fea726115ad1e3be1db57",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Public trust-file integrity profile implemented;native Windows repair replay owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "de41a0d7ffbb3cc404ac767068d0af27f435c701e027fa4b4440680bc5e766b5",
+      "bytes": 18484
+    },
+    {
+      "reference": "docs/qualification/evidence/F214-native-repair-batch-terminal-ci.json",
+      "sha256": "6d69dcedf856a9e822b48a4ceb11f5c25b5a3b7088b06af713bf622fe2594899",
+      "bytes": 45146
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "0efda2568ded0a3ac06866ec9c30fffefc058553a2365d1ad0700f01f2e48d1f",
+      "bytes": 369030
+    },
+    {
+      "reference": "docs/security/protected-files.md",
+      "sha256": "b3731755bc41c332f83606d73843f0a308ec9e0f3e93648610abab9eb31bc0b4",
+      "bytes": 3966
+    },
+    {
+      "reference": "internal/crypto/ftps.go",
+      "sha256": "2adec6ef3560dba49cb894f353683d6164b5ecb6e3e592452258b3b1209fa5b3",
+      "bytes": 5542
+    },
+    {
+      "reference": "internal/crypto/ftps_client.go",
+      "sha256": "9b8a7e386cb7d35600416c4e05accd81e7fd9571eeda61622391165c7e3a9b28",
+      "bytes": 11295
+    },
+    {
+      "reference": "internal/crypto/ftps_client_test.go",
+      "sha256": "9981c2875391b42e302bcf3913223452d16790f21ab1d2c32a7ba95ad3af72ba",
+      "bytes": 2800
+    },
+    {
+      "reference": "internal/crypto/ftps_test.go",
+      "sha256": "31420465892e7679f664a0d177ce0733ee7bb78b4afd0fccc18a42e022640bfc",
+      "bytes": 9682
+    },
+    {
+      "reference": "internal/crypto/private_permissions_other_test.go",
+      "sha256": "e394f2515d0ebe0ac3f2958434452c217a0be66c57ea3f7df416b1a613dcea40",
+      "bytes": 327
+    },
+    {
+      "reference": "internal/crypto/private_permissions_windows_test.go",
+      "sha256": "519164fe2f2eebcd572d74c53807c057244fe23e1527369da33554fcd6677df9",
+      "bytes": 2155
+    },
+    {
+      "reference": "internal/protectedfs/handles.go",
+      "sha256": "bdb2b3a98a26751a14424748c3dbcef78635521c4274ed4c9189e76e29859c4e",
+      "bytes": 1393
+    },
+    {
+      "reference": "internal/protectedfs/handles_other.go",
+      "sha256": "e6c96b0d23162c3df1e66e5a020e68c568b842338b8ddb618708c665312eeaa6",
+      "bytes": 444
+    },
+    {
+      "reference": "internal/protectedfs/handles_windows.go",
+      "sha256": "eb8b9fb10bfb2fcdd1dfe9ed29da35a81e17e0195d8ba43f0d83aa214287da44",
+      "bytes": 4116
+    },
+    {
+      "reference": "internal/protectedfs/policy.go",
+      "sha256": "ae2442ffa0217277ba28b96a13485aacd5d643a059f897eb41af554384f6030b",
+      "bytes": 1562
+    },
+    {
+      "reference": "internal/protectedfs/policy_test.go",
+      "sha256": "6070f2d82c27e67fc5917acd16cb50fccc4c83d00c29fa003396bd15b96d0059",
+      "bytes": 2541
+    }
+  ],
+  "original_failure": {
+    "candidate": "71e8166d0bc96c574055e00f749d387e0f0b0460",
+    "run": 42352071943,
+    "job": 128342141717,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128342141717",
+    "observations": [
+      "FTPS TLS/identity tests fail loading the newly created certificate. Existing certificate/CA permission tests interpret Windows attributes as Unix0022 permission bits.",
+      "Client reference fixture uses ordinary0600 creation without a protected Windows descriptor."
+    ]
+  },
+  "changed": [
+    "Add held-handle public regular-file integrity validation. Unix keeps0022 other-user write refusal. Windows keeps runtime owner,protected/present bounded simple explicit DACL,no reparse/disk/type checks;non-owner grants may contain only generic/mapped file read/execute rights. Writes,append,attributes,deletion,ACL/owner changes and generic-all are refused.",
+    "FTPS certificate and CA reads validate the opened object before bytes. Preserve exact path identity,size,CA SHA256,private-key protected buffer,key-pair,host,TLS1.3/control/data binding and errors. Secret reads never use public validation.",
+    "Original server permission assertions now change actual Windows owner/public-read/other-write DACLs,keeping Unix chmod states. Add client CA write refusal/public-read acceptance. Create the exact synthetic password through protected exclusive creation;no production secret value or assertion changed."
+  ],
+  "green": [
+    "Focused public/private descriptor mutation policy,exclusive/protected/audit,original FTPS identity/trust tests pass locally.",
+    "Affected architecture/vet and native Windows crypto/protectedfs compilation/vet pass. Windows binary not executed locally."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f233-architecture.log",
+      "sha256": "5058a69aaf5a8c4408a90c38618eefbe8a5b6cf00727670ff08f271c28102b86",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f233-final-trust-contracts.log",
+      "sha256": "3765709ceca10f1e00f88e71fe2fa2fe72f8548a165fc21aec051b0644343ef6",
+      "bytes": 123
+    },
+    {
+      "reference": ".private/freightctl-f233-native-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f233-trust-contracts.log",
+      "sha256": "5ac40ade026b261d4eec44598297e31d4b00beca6de045d3058f2ba739ff0305",
+      "bytes": 121
+    },
+    {
+      "reference": ".private/freightctl-f233-windows-acl-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f233-windows-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f233-windows-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "terminal_batch_evidence": "docs/qualification/evidence/F214-native-repair-batch-terminal-ci.json",
+  "primary_references": [
+    "https://learn.microsoft.com/en-us/windows/win32/fileio/file-security-and-access-rights",
+    "https://learn.microsoft.com/en-us/windows/win32/secauthz/generic-access-rights"
+  ],
+  "owed": [
+    "Original native Windows FTPS identity/CA positive and actual DACL private-read/public-read/other-write refusals,all TLS/client/channel cases.",
+    "Windows storage/setup/private writers and actual final-source native/browser/stock/security/race/restore/reproducibility plus remaining baseline/AX/FINISH work."
+  ],
+  "resources": "OneCPU/192MiB local unit/static/cross-compilation only;no PostgreSQL,Chrome,inference,scanner or heavy peer. Retained35/source60 unchanged.",
+  "readiness": "Narrow runtime-owner/explicit protected DACL profile only;no whole Windows,parity/AX,deployment,independent adoption or enterprise qualification granted."
+}

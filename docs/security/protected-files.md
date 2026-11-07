@@ -40,6 +40,23 @@ their platform fixtures still need their own implementation and qualification.
 This change does not establish Windows product support,power-loss durability or
 whole-platform acceptance.
 
+Public certificate and CA references use a separate integrity profile. Unix
+retains its existing group/other write refusal (mode0022). On Windows,the same
+held-handle descriptor checks remain,including the runtime owner,protected DACL,
+simple explicit ACEs and no reparse point. Other principals may receive generic
+or mapped file read/execute rights only;data/append/attribute writes,deletion,
+ACL/owner changes and all-access grants are refused. The runtime owner must
+have an explicit grant. Private keys and credentials always use the stricter
+owner-only profile;public-read permission cannot qualify a secret.
+
+FTPS server certificate and client CA reads validate this profile before loading
+bytes. Existing identity/size/CA digest/key-pair/host/TLS/channel checks remain.
+The original FTPS permission test changes actual Windows DACLs for public read,
+other-user write and owner-only access;Unix retains the same chmod states. The
+client CA test now also requires refusal of other-user write and acceptance of
+public read. Focused local checks and Windows compilation pass;actual Windows
+ACL/TLS/profile execution remains owed.
+
 The implementation uses the platform APIs described by Microsoft's
 [file security documentation](https://learn.microsoft.com/en-us/windows/win32/fileio/file-security-and-access-rights)
 and the pinned Go

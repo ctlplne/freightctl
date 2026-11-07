@@ -1,0 +1,1085 @@
+{
+  "schema_version": 1,
+  "id": "F214",
+  "observed_at": "2026-11-07",
+  "candidate": "71e8166d0bc96c574055e00f749d387e0f0b0460",
+  "qualification_claim": false,
+  "state": "Original18 triggered workflows/41 jobs terminal;listed security passed;27 jobs passed and14 failed;whole product unqualified",
+  "runs": [
+    {
+      "run": 42352071895,
+      "name": "Native source vulnerability configurations",
+      "jobs": [
+        {
+          "id": 128342141353,
+          "name": "Native vulnerability source (windows/amd64)",
+          "status": "completed",
+          "conclusion": "success",
+          "failed": [],
+          "security": [],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Actual native source scan and enforcing original converter",
+            "Post Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        },
+        {
+          "id": 128342141618,
+          "name": "Native vulnerability source (linux/arm64)",
+          "status": "completed",
+          "conclusion": "success",
+          "failed": [],
+          "security": [],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Actual native source scan and enforcing original converter",
+            "Post Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        },
+        {
+          "id": 128342141620,
+          "name": "Native vulnerability source (darwin/arm64)",
+          "status": "completed",
+          "conclusion": "success",
+          "failed": [],
+          "security": [],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Actual native source scan and enforcing original converter",
+            "Post Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        }
+      ],
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "run": 42352071943,
+      "name": "Native Windows and macOS unit checks",
+      "jobs": [
+        {
+          "id": 128342141582,
+          "name": "macos-arm64",
+          "status": "completed",
+          "conclusion": "success",
+          "failed": [],
+          "security": [],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Native macOS ARM architecture and Go unit race checks",
+            "Post Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        },
+        {
+          "id": 128342141717,
+          "name": "windows-amd64",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed": [
+            "Native Windows architecture and Go unit checks"
+          ],
+          "security": [],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Observe native Windows filesystem APIs without qualifying custody",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        }
+      ],
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "run": 42352071911,
+      "name": "Native immutable HTTPS stock resume",
+      "jobs": [
+        {
+          "id": 128342141307,
+          "name": "Native immutable HTTPS resume (arm64)",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed": [
+            "Actual TLS interruption,curl continuation,exact bytes,namespace and exchange authority"
+          ],
+          "security": [],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Actual native stock receiver identity",
+            "Task-owned loopback PostgreSQL and ordinary initialization",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        },
+        {
+          "id": 128342141506,
+          "name": "Native immutable HTTPS resume (x86_64)",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed": [
+            "Actual TLS interruption,curl continuation,exact bytes,namespace and exchange authority"
+          ],
+          "security": [],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Actual native stock receiver identity",
+            "Task-owned loopback PostgreSQL and ordinary initialization",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        }
+      ],
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "run": 42352071969,
+      "name": "Native document container contracts",
+      "jobs": [
+        {
+          "id": 128342141421,
+          "name": "Native ZIP stock producer (x86_64)",
+          "status": "completed",
+          "conclusion": "success",
+          "failed": [],
+          "security": [
+            {
+              "name": "Security - actual native XLSX scalar,formula and relationship contracts",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Security - native transformation byte and independent receiver contracts",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Actual runner and stock ZIP producer",
+            "Native parser race and independent producer byte proof",
+            "Stock XLSX producer with exact dependency closure",
+            "Security - actual native XLSX scalar,formula and relationship contracts",
+            "Independent native record-processing producers",
+            "Security - native transformation byte and independent receiver contracts",
+            "Post Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        },
+        {
+          "id": 128342141607,
+          "name": "Native ZIP stock producer (arm64)",
+          "status": "completed",
+          "conclusion": "success",
+          "failed": [],
+          "security": [
+            {
+              "name": "Security - actual native XLSX scalar,formula and relationship contracts",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Security - native transformation byte and independent receiver contracts",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Actual runner and stock ZIP producer",
+            "Native parser race and independent producer byte proof",
+            "Stock XLSX producer with exact dependency closure",
+            "Security - actual native XLSX scalar,formula and relationship contracts",
+            "Independent native record-processing producers",
+            "Security - native transformation byte and independent receiver contracts",
+            "Post Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        }
+      ],
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "run": 42352071918,
+      "name": "Native FTPS dispatch approval qualification",
+      "jobs": [
+        {
+          "id": 128342141255,
+          "name": "Native x86 public FTPS dispatch consent",
+          "status": "completed",
+          "conclusion": "success",
+          "failed": [],
+          "security": [],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+            "Native x86 stock peers and exact browser dependencies",
+            "Chromium sandbox preflight",
+            "Task-owned PostgreSQL",
+            "Three fresh public FTPS dispatch consent journeys",
+            "Post Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+            "Post Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        }
+      ],
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "run": 42352071955,
+      "name": "Native legacy SCP regular-file custody",
+      "jobs": [
+        {
+          "id": 128342141443,
+          "name": "Native legacy SCP (x86_64)",
+          "status": "completed",
+          "conclusion": "success",
+          "failed": [],
+          "security": [],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Actual native OpenSSH client and package identity",
+            "Task-owned loopback PostgreSQL and ordinary initialization",
+            "Actual stock legacy and modern scp,exact bytes,aborts,current authority and intake",
+            "Post Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        },
+        {
+          "id": 128342141671,
+          "name": "Native legacy SCP (arm64)",
+          "status": "completed",
+          "conclusion": "success",
+          "failed": [],
+          "security": [],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Actual native OpenSSH client and package identity",
+            "Task-owned loopback PostgreSQL and ordinary initialization",
+            "Actual stock legacy and modern scp,exact bytes,aborts,current authority and intake",
+            "Post Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        }
+      ],
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "run": 42352071921,
+      "name": "Native tus stock client and custody checkpoints",
+      "jobs": [
+        {
+          "id": 128342141076,
+          "name": "Native tus resume (arm64)",
+          "status": "completed",
+          "conclusion": "success",
+          "failed": [],
+          "security": [
+            {
+              "name": "Complete stock tus dependency security audit",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+            "Actual native runner and pinned unmodified stock client",
+            "Complete stock tus dependency security audit",
+            "Task-owned loopback PostgreSQL and ordinary schema initialization",
+            "Actual TLS response loss, strict offsets, expiry, revocation and separate verified acceptance",
+            "Post Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+            "Post Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        },
+        {
+          "id": 128342141361,
+          "name": "Native tus resume (x86_64)",
+          "status": "completed",
+          "conclusion": "success",
+          "failed": [],
+          "security": [
+            {
+              "name": "Complete stock tus dependency security audit",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+            "Actual native runner and pinned unmodified stock client",
+            "Complete stock tus dependency security audit",
+            "Task-owned loopback PostgreSQL and ordinary schema initialization",
+            "Actual TLS response loss, strict offsets, expiry, revocation and separate verified acceptance",
+            "Post Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+            "Post Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        }
+      ],
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "run": 42352071886,
+      "name": "Native first enrollment and browser exchange",
+      "jobs": [
+        {
+          "id": 128342141337,
+          "name": "first-run",
+          "status": "completed",
+          "conclusion": "success",
+          "failed": [],
+          "security": [],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+            "Native runner and exact browser dependencies",
+            "Bounded task-owned PostgreSQL",
+            "Original first-run CLI, browser and stock curl journey",
+            "Post Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+            "Post Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        }
+      ],
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "run": 42352071919,
+      "name": "Native FTPS stock clients and custody",
+      "jobs": [
+        {
+          "id": 128342141342,
+          "name": "Native FTPS (x86_64)",
+          "status": "completed",
+          "conclusion": "success",
+          "failed": [],
+          "security": [],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Verify native architecture and stock client TLS",
+            "Pinned stock FTPS client",
+            "Task-owned PostgreSQL",
+            "Real FTPS service and CLI qualification",
+            "Post Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        },
+        {
+          "id": 128342141542,
+          "name": "Native FTPS (arm64)",
+          "status": "completed",
+          "conclusion": "success",
+          "failed": [],
+          "security": [],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Verify native architecture and stock client TLS",
+            "Pinned stock FTPS client",
+            "Task-owned PostgreSQL",
+            "Real FTPS service and CLI qualification",
+            "Post Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        }
+      ],
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "run": 42352071944,
+      "name": "Native FTPS workflow consent qualification",
+      "jobs": [
+        {
+          "id": 128342141120,
+          "name": "Native x86 registered FTPS workflow consent (plaintext)",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed": [
+            "Three fresh registered FTPS consent, metadata and operator capture journeys"
+          ],
+          "security": [],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+            "Native x86 stock peers and exact browser dependencies",
+            "Chromium sandbox preflight",
+            "Task-owned PostgreSQL",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        },
+        {
+          "id": 128342141315,
+          "name": "Native x86 registered FTPS workflow consent (recipient-encrypted)",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed": [
+            "Three fresh registered FTPS consent, metadata and operator capture journeys"
+          ],
+          "security": [],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+            "Native x86 stock peers and exact browser dependencies",
+            "Chromium sandbox preflight",
+            "Task-owned PostgreSQL",
+            "Pinned task-owned independent recipient fixture",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        }
+      ],
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "run": 42352071932,
+      "name": "Native FTPS client and independent stock receiver",
+      "jobs": [
+        {
+          "id": 128342141219,
+          "name": "Native FTPS client (x86_64, no-ktls)",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed": [
+            "Actual client with two loopback TLS receivers and independent files",
+            "Failed receiver process diagnostic (never qualification)"
+          ],
+          "security": [],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Native runner and stock receiver package",
+            "Native pinned TLS library without optional kernel offload",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        },
+        {
+          "id": 128342141324,
+          "name": "Native FTPS client (aarch64, system)",
+          "status": "completed",
+          "conclusion": "success",
+          "failed": [],
+          "security": [],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Native runner and stock receiver package",
+            "Actual client with two loopback TLS receivers and independent files",
+            "Post Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        },
+        {
+          "id": 128342141430,
+          "name": "Native FTPS client (x86_64, system)",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed": [
+            "Actual client with two loopback TLS receivers and independent files",
+            "Failed receiver process diagnostic (never qualification)"
+          ],
+          "security": [],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Native runner and stock receiver package",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        },
+        {
+          "id": 128342141448,
+          "name": "Native FTPS client (aarch64, no-ktls)",
+          "status": "completed",
+          "conclusion": "success",
+          "failed": [],
+          "security": [],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Native runner and stock receiver package",
+            "Native pinned TLS library without optional kernel offload",
+            "Actual client with two loopback TLS receivers and independent files",
+            "Post Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        }
+      ],
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "run": 42352071954,
+      "name": "Native browser and FTPS operator qualification",
+      "jobs": [
+        {
+          "id": 128342141322,
+          "name": "Native x86 browser and live FTPS governance",
+          "status": "completed",
+          "conclusion": "success",
+          "failed": [],
+          "security": [],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+            "Native x86 stock peers and exact browser dependencies",
+            "Chromium sandbox preflight",
+            "Task-owned PostgreSQL",
+            "Real browser policy and credential commands during FTPS transfers",
+            "Post Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+            "Post Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        }
+      ],
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "run": 42352071925,
+      "name": "Native JSON intake and custody interfaces",
+      "jobs": [
+        {
+          "id": 128342141280,
+          "name": "Native Chrome JSON policy and held bytes",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed": [
+            "Real browser review, committed-response loss, exact checks and separate release"
+          ],
+          "security": [
+            {
+              "name": "Security - stock XLSX producer and complete dependency closure",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+            "Security - stock XLSX producer and complete dependency closure",
+            "Actual native runner and locked browser",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        },
+        {
+          "id": 128342141400,
+          "name": "Native JSON custody (arm64)",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed": [
+            "Actual JSON SQL, API, CLI, signature and scanner-protocol outcomes"
+          ],
+          "security": [
+            {
+              "name": "Security - stock XLSX producer and complete dependency closure",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Security - stock XLSX producer and complete dependency closure",
+            "Native identity, task-owned PostgreSQL and offline GnuPG fixture",
+            "Ordinary schema initialization for the shared custody fixture",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        },
+        {
+          "id": 128342141469,
+          "name": "Native JSON custody (x86_64)",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed": [
+            "Actual JSON SQL, API, CLI, signature and scanner-protocol outcomes"
+          ],
+          "security": [
+            {
+              "name": "Security - stock XLSX producer and complete dependency closure",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Security - stock XLSX producer and complete dependency closure",
+            "Native identity, task-owned PostgreSQL and offline GnuPG fixture",
+            "Ordinary schema initialization for the shared custody fixture",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        }
+      ],
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "run": 42352071935,
+      "name": "Native artifact receive browser",
+      "jobs": [
+        {
+          "id": 128342141397,
+          "name": "receive-browser",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed": [
+            "Actual recipient UI, exact bytes, unrelated user and endpoint revocation"
+          ],
+          "security": [],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+            "Actual native runner and locked browser client",
+            "Task-owned loopback PostgreSQL",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        }
+      ],
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "run": 42352071872,
+      "name": "Native reproducible core binaries",
+      "jobs": [
+        {
+          "id": 128342141172,
+          "name": "Native core reproduction (amd64)",
+          "status": "completed",
+          "conclusion": "success",
+          "failed": [],
+          "security": [],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Pinned independent BOM validator in an isolated disposable environment",
+            "Fresh source copies, caches and exact native binary comparison",
+            "Post Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        },
+        {
+          "id": 128342141485,
+          "name": "Native core reproduction (arm64)",
+          "status": "completed",
+          "conclusion": "success",
+          "failed": [],
+          "security": [],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Pinned independent BOM validator in an isolated disposable environment",
+            "Fresh source copies, caches and exact native binary comparison",
+            "Post Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        }
+      ],
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "run": 42352071951,
+      "name": "Native Linux Go, PostgreSQL and fuzz",
+      "jobs": [
+        {
+          "id": 128342141547,
+          "name": "Native metadata restore (x86_64)",
+          "status": "completed",
+          "conclusion": "success",
+          "failed": [],
+          "security": [],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Seed actual PostgreSQL through first-run commands",
+            "Back up, restore and verify exact metadata and access controls",
+            "Post Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        },
+        {
+          "id": 128342141652,
+          "name": "Native Go and PostgreSQL (arm64)",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed": [
+            "All implemented real PostgreSQL integration and migration tests"
+          ],
+          "security": [
+            {
+              "name": "Security - stock XLSX producer and complete dependency closure",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Scan the exact independent peer image and enforce complete evidence",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Verify native runner architecture",
+            "Pinned stock FTPS client",
+            "Security - stock XLSX producer and complete dependency closure",
+            "Task-owned PostgreSQL and offline GnuPG peer",
+            "Pinned independent AEAD recipient peer",
+            "Module integrity, vet and unit race checks",
+            "Pinned FTP engine upstream protocol and race checks",
+            "Scan the exact independent peer image and enforce complete evidence",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        },
+        {
+          "id": 128342141662,
+          "name": "bounded-fuzz",
+          "status": "completed",
+          "conclusion": "success",
+          "failed": [],
+          "security": [],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Bounded parser and authority fuzz checks on native x86_64",
+            "Post Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        },
+        {
+          "id": 128342141673,
+          "name": "Native metadata restore (arm64)",
+          "status": "completed",
+          "conclusion": "success",
+          "failed": [],
+          "security": [],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Seed actual PostgreSQL through first-run commands",
+            "Back up, restore and verify exact metadata and access controls",
+            "Post Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        },
+        {
+          "id": 128342141825,
+          "name": "Native Go and PostgreSQL (x86_64)",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed": [
+            "All implemented real PostgreSQL integration and migration tests"
+          ],
+          "security": [
+            {
+              "name": "Security - stock XLSX producer and complete dependency closure",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Scan the exact independent peer image and enforce complete evidence",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Verify native runner architecture",
+            "Pinned stock FTPS client",
+            "Security - stock XLSX producer and complete dependency closure",
+            "Task-owned PostgreSQL and offline GnuPG peer",
+            "Pinned independent AEAD recipient peer",
+            "Module integrity, vet and unit race checks",
+            "Pinned FTP engine upstream protocol and race checks",
+            "Scan the exact independent peer image and enforce complete evidence",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        }
+      ],
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "run": 42352071904,
+      "name": "Core correctness and security",
+      "jobs": [
+        {
+          "id": 128342141277,
+          "name": "source-and-browser",
+          "status": "completed",
+          "conclusion": "success",
+          "failed": [],
+          "security": [
+            {
+              "name": "Go vulnerability reachability",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+            "Go formatting and workflow syntax",
+            "Published artifact policy grammar against actual domain cases",
+            "Qualification record refusal contracts",
+            "Exact frontend dependencies, contracts and browser build",
+            "JavaScript dependency audit",
+            "Go vulnerability reachability",
+            "Committed source and history secret scan",
+            "Post Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+            "Post Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        }
+      ],
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "run": 42352071966,
+      "name": "Stock peer and browser qualification",
+      "jobs": [
+        {
+          "id": 128342141493,
+          "name": "Stock peers (captured-routing)",
+          "status": "completed",
+          "conclusion": "success",
+          "failed": [],
+          "security": [],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+            "Stock SSH and exact browser dependencies",
+            "Task-owned PostgreSQL",
+            "Chromium sandbox preflight",
+            "Real loopback SFTP and browser journey",
+            "Safe qualification outcomes and evidence closure",
+            "Post Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+            "Post Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        },
+        {
+          "id": 128342141604,
+          "name": "Stock peers (intake-routing)",
+          "status": "completed",
+          "conclusion": "success",
+          "failed": [],
+          "security": [],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+            "Stock SSH and exact browser dependencies",
+            "Task-owned PostgreSQL",
+            "Chromium sandbox preflight",
+            "Real loopback SFTP and browser journey",
+            "Safe qualification outcomes and evidence closure",
+            "Post Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+            "Post Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        },
+        {
+          "id": 128342141617,
+          "name": "Stock peers (arrivals-schedules)",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed": [
+            "Real loopback SFTP and browser journey",
+            "Safe qualification outcomes and evidence closure"
+          ],
+          "security": [],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+            "Stock SSH and exact browser dependencies",
+            "Task-owned PostgreSQL",
+            "Chromium sandbox preflight",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        },
+        {
+          "id": 128342141631,
+          "name": "Stock peers (routing)",
+          "status": "completed",
+          "conclusion": "success",
+          "failed": [],
+          "security": [],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+            "Stock SSH and exact browser dependencies",
+            "Task-owned PostgreSQL",
+            "Chromium sandbox preflight",
+            "Real loopback SFTP and browser journey",
+            "Safe qualification outcomes and evidence closure",
+            "Post Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+            "Post Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        },
+        {
+          "id": 128342141646,
+          "name": "Stock peers (handoff-routing)",
+          "status": "completed",
+          "conclusion": "success",
+          "failed": [],
+          "security": [],
+          "qualified_steps": [
+            "Set up job",
+            "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+            "Stock SSH and exact browser dependencies",
+            "Task-owned PostgreSQL",
+            "Offline independent encryption peer for handoff replay",
+            "Chromium sandbox preflight",
+            "Real loopback SFTP and browser journey",
+            "Safe qualification outcomes and evidence closure",
+            "Post Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+            "Post Run actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16",
+            "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+            "Complete job"
+          ]
+        }
+      ],
+      "status": "completed",
+      "conclusion": "failure"
+    }
+  ],
+  "qualified_scope": "Actual original SCP and tus native workflows now pass. Core,first enrollment,native document containers,reproducibility,FTPS stock/browser/dispatch,source vulnerability,metadata restore and macOS units/race pass on this candidate. Both complete peer-image scans pass. These component/job results do not qualify whole parity/journey/AX/adoption or later source.",
+  "qualified_browser_cases": {
+    "run": 42352071925,
+    "job": 128342141280,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128342141280",
+    "passed": [
+      "TestOutputPolicyNativeBrowserAdministratorRecoveryAndRevocationKeepsIngress",
+      "TestProcessingWorkflowNativeBrowserReviewRecoveryAndHeldOutput",
+      "TestProducerProcessingNativeBrowserSelectsOutputContractAndKeepsIngress",
+      "TestComposedProducerProcessingNativeBrowserCheckedSourceNewApprovalAndHeldOutput",
+      "TestProcessingCalendarNativeBrowserReviewRecoveryQueuesOwnedInputAndKeepsOutputHeld",
+      "TestProcessingProposalNativeBrowserAuthorDisclosureDraftAdoptionAndRecovery"
+    ],
+    "limit": "Original real Chrome cases pass;the containing job remains failed at four format-intake cases and independent review. No later-source or whole journey inference."
+  },
+  "remaining": "Native PostgreSQL integration,Windows,artifact receive/HTTPS/JSON/processing review Chrome,arrivals/registered-FTPS and other original failures remain red. Exact original run/job references retained for repair/replay;no original cancelled,restarted or substituted.",
+  "observation": "An earlier workflow-jobs wrapper snapshot was stale for the final x86 image scan. Fresh ordinary jobs endpoint and run-list metadata establish final completion;both image scans actually succeeded.",
+  "resources": "Original scans use authorized GitHub runner capacity. No local inference or heavy runtime. F026 remains owner-only deferred."
+}

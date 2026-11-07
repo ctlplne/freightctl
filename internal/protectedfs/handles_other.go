@@ -10,6 +10,12 @@ func platformPrivacy(_ *os.File, info os.FileInfo, _ bool) error {
 	}
 	return nil
 }
+func platformPublic(_ *os.File, info os.FileInfo) error {
+	if info.Mode().Perm()&0022 != 0 {
+		return ErrPrivacy
+	}
+	return nil
+}
 func platformCreate(path string) (*os.File, error) {
 	return os.OpenFile(path, os.O_CREATE|os.O_EXCL|os.O_RDWR, 0600)
 }
