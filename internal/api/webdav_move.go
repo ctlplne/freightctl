@@ -38,8 +38,12 @@ func davFileMappingInput(w http.ResponseWriter, r *http.Request, operation strin
 		return false
 	}
 	overwrite, _, valid := tusHeader(r, "Overwrite")
-	if !valid || overwrite != "F" {
-		fail(w, 428, "dav_"+operation+"_requires_no_overwrite")
+	if !valid || overwrite != "F" && (operation != "move" || overwrite != "T") {
+		problem := "dav_" + operation + "_requires_no_overwrite"
+		if operation == "move" {
+			problem = "dav_move_requires_explicit_overwrite_mode"
+		}
+		fail(w, 428, problem)
 		return false
 	}
 	key, _, valid := tusHeader(r, "Idempotency-Key")
@@ -102,7 +106,11 @@ func (s *Server) davMove(w http.ResponseWriter, r *http.Request, scope store.Sco
 		fail(w, 400, "invalid_dav_move_revision")
 		return
 	}
-	result, err := s.Service.MoveFileIfCurrent(r.Context(), scope, r.Header.Get("Idempotency-Key"), source, target, fileID, digest)
+	move := s.Service.MoveFileIfCurrent
+	if r.Header.Get("Overwrite") == "T" {
+		move = s.Service.MoveFileOverwritingIfCurrent
+	}
+	result, err := move(r.Context(), scope, r.Header.Get("Idempotency-Key"), source, target, fileID, digest)
 	switch {
 	case errors.Is(err, store.ErrExists), errors.Is(err, store.ErrRevision), errors.Is(err, store.ErrNotFound):
 		fail(w, 412, "dav_move_condition_failed")
@@ -122,6 +130,12 @@ func (s *Server) davMove(w http.ResponseWriter, r *http.Request, scope store.Sco
 	if result.Replayed {
 		status, state = 200, "not-asserted-original-receipt"
 	} else {
+		if result.Changed == 2 {
+			w.Header().Set("X-Freightctl-Namespace-State", "replaced-at-commit")
+			w.Header().Set("X-Freightctl-Event-ID", result.Entry.EventID)
+			w.WriteHeader(204)
+			return
+		}
 		w.Header().Set("Location", webdav.Href(base, webdav.Resource{Path: result.Entry.Path}))
 	}
 	respond(w, status, map[string]any{"result": result, "namespace_state": state})

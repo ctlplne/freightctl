@@ -61,7 +61,9 @@ func TestDAVFileMovePinsStrongRevisionAndConfinesDestinationURIs(t *testing.T) {
 	}
 	for name, change := range map[string]func(*http.Request){
 		"body":                  func(r *http.Request) { r.ContentLength = 1 },
-		"overwrite":             func(r *http.Request) { r.Header.Set("Overwrite", "T") },
+		"invalid overwrite":     func(r *http.Request) { r.Header.Set("Overwrite", "X") },
+		"missing overwrite":     func(r *http.Request) { r.Header.Del("Overwrite") },
+		"duplicate overwrite":   func(r *http.Request) { r.Header.Add("Overwrite", "T") },
 		"missing key":           func(r *http.Request) { r.Header.Del("Idempotency-Key") },
 		"duplicate destination": func(r *http.Request) { r.Header.Add("Destination", "/another") },
 		"duplicate match":       func(r *http.Request) { r.Header.Add("If-Match", tag) },

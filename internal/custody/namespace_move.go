@@ -16,23 +16,32 @@ var ErrNamespaceFileProfile = errors.New("namespace operation requires a file")
 // bytes or their custody identity. Conditions and the ordinary rename command
 // share the namespace lock and commit their event/receipt together.
 func (s *Service) MoveFileIfCurrent(ctx context.Context, scope store.Scope, key, source, target, fileID, digest string) (*store.PathResult, error) {
-	return s.changeFileIfCurrent(ctx, scope, key, "rename", source, target, fileID, digest)
+	return s.changeFileIfCurrent(ctx, scope, key, "rename", source, target, fileID, digest, false)
+}
+
+// Overwriting is a separate explicit decision. Destination mode,availability
+// and mapping revision are checked under the same lock as removal and rename.
+func (s *Service) MoveFileOverwritingIfCurrent(ctx context.Context, scope store.Scope, key, source, target, fileID, digest string) (*store.PathResult, error) {
+	return s.changeFileIfCurrent(ctx, scope, key, "rename", source, target, fileID, digest, true)
 }
 
 // RemoveFileIfCurrent removes one published mapping, never the immutable file
 // or custody history. Receiving or reading a file grants no removal authority.
 func (s *Service) RemoveFileIfCurrent(ctx context.Context, scope store.Scope, key, source, fileID, digest string) (*store.PathResult, error) {
-	return s.changeFileIfCurrent(ctx, scope, key, "remove", source, "", fileID, digest)
+	return s.changeFileIfCurrent(ctx, scope, key, "remove", source, "", fileID, digest, false)
 }
 
 // CopyFileIfCurrent verifies the exact immutable bytes before publishing a
 // distinct mapping. The original mapping and immutable custody do not change.
 func (s *Service) CopyFileIfCurrent(ctx context.Context, scope store.Scope, key, source, target, fileID, digest string) (*store.PathResult, error) {
-	return s.changeFileIfCurrent(ctx, scope, key, "copy", source, target, fileID, digest)
+	return s.changeFileIfCurrent(ctx, scope, key, "copy", source, target, fileID, digest, false)
 }
 
-func (s *Service) changeFileIfCurrent(ctx context.Context, scope store.Scope, key, operation, source, target, fileID, digest string) (*store.PathResult, error) {
+func (s *Service) changeFileIfCurrent(ctx context.Context, scope store.Scope, key, operation, source, target, fileID, digest string, overwrite bool) (*store.PathResult, error) {
 	if !keyPattern.MatchString(key) || !store.ValidID(fileID) || !digestPattern.MatchString(digest) {
+		return nil, ErrInput
+	}
+	if overwrite && operation != "rename" {
 		return nil, ErrInput
 	}
 	names := []string{source}
@@ -98,6 +107,7 @@ func (s *Service) changeFileIfCurrent(ctx context.Context, scope store.Scope, ke
 	if file.ID != fileID || file.SHA256 != digest {
 		return nil, store.ErrRevision
 	}
+	command := store.PathCommand{Operation: operation, Path: source, Target: target, FileID: file.ID, ExpectedRevision: &entry.Revision}
 	if operation == "rename" || operation == "copy" {
 		destination, err := vpath.Resolve(t.Root, target)
 		if err != nil {
@@ -116,13 +126,33 @@ func (s *Service) changeFileIfCurrent(ctx context.Context, scope store.Scope, ke
 				return nil, err
 			}
 		}
+		if overwrite {
+			command.Replace = true
+			existing, err := t.Entry(ctx, destination)
+			if err != nil && !errors.Is(err, store.ErrNotFound) {
+				return nil, err
+			}
+			if existing != nil {
+				if err = t.EntryMode(existing, 2); err != nil {
+					return nil, err
+				}
+				if existing.Kind != "file" {
+					return nil, ErrNamespaceFileProfile
+				}
+				if err = t.FileAvailable(ctx, existing.FileID); err != nil {
+					return nil, err
+				}
+				revision := existing.Revision
+				command.TargetRevision = &revision
+			}
+		}
 	}
 	if operation == "copy" {
 		if err = s.verifyNamespacePublication(ctx, scope, file); err != nil {
 			return nil, err
 		}
 	}
-	result, err := t.ApplyPathCommand(ctx, key, store.PathCommand{Operation: operation, Path: source, Target: target, FileID: file.ID, ExpectedRevision: &entry.Revision}, s.NamespaceMaxEntries)
+	result, err := t.ApplyPathCommand(ctx, key, command, s.NamespaceMaxEntries)
 	if err != nil {
 		return nil, err
 	}

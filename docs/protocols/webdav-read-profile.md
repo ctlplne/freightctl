@@ -81,8 +81,8 @@ or read. A URL never refers to a host filesystem path.
   A fresh201 returns the exact encoded collection Location. If the collection
   was later removed,an original-key200 recovers history without recreating it or
   asserting a current Location. Other conditions are explicitly refused.
-- `MOVE` currently handles one file into an absent destination. It requires
-  an original key,the exact strong source If-Match tag,Overwrite:F and zero body.
+- `MOVE` handles one file with an explicit destination decision. It requires
+  an original key,the exact strong source If-Match tag,Overwrite:F or T and zero body.
   Destination may be an absolute HTTPS URI with the current authority or an
   absolute URI path;it must name a canonical file in this tenant/partner's DAV
   namespace. Other hosts/scopes,queries,fragments,traversal and control paths
@@ -92,10 +92,23 @@ or read. A URL never refers to a host filesystem path.
   existing typed command meaning,so a changed file cannot reuse the old key.
   Fresh201 acknowledges a mapping change with Location;bytes and custody ID do
   not change. GET verifies the resulting revision separately. A stale source or
-  existing destination returns412,missing parents409,and directory moves405.
+  occupied destination with Overwrite:F returns412,missing parents409,and directory moves405.
   After a lost reply,the caller must inspect the authorized destination;412 alone
   does not establish which command performed an earlier move. Same-key history
-  never authorizes another effect. Replacement and directory MOVE remain owed.
+  never authorizes another effect. Directory MOVE remains owed.
+  `Overwrite:F` keeps its non-overwrite412 behavior. Explicit `Overwrite:T`
+  can replace a file only when its actual destination mode permits writing and
+  its current intake remains available. Capture its mapping revision under the
+  same lock,then commit target PathRemoved,source PathMoved and one command
+  receipt atomically. The old target's immutable custody and separately
+  authorized history survive. Fresh overwrite returns204 with no body,Location
+  or byte validator;X-Freightctl-Namespace-State is replaced-at-commit and
+  X-Freightctl-Event-ID names the move event. This matches the overwrite success
+  status in [RFC4918 section9.9.4](https://www.rfc-editor.org/rfc/rfc4918.html#section-9.9.4).
+  An absent target still returns201 with Location. A saved receipt never moves
+  a restored source or recreates a removed target again. Changed overwrite
+  decisions or captured target revisions cannot reuse an old command key.
+  Receiving a source file does not grant destination overwrite authority.
 - `DELETE` currently removes one file mapping with an exact strong If-Match,
   the original Idempotency-Key and an empty body. Ordinary read/manage_paths,
   parent modes,current intake and immutable file ID/hash are checked under the

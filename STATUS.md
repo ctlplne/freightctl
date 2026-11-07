@@ -54,6 +54,11 @@ metadata red-green,Go/Python/browser goldens and affected static/build checks pa
 Prepared equal-revision identity-change/refused-release and positive native
 release proofs remain owed;the current pushed candidate does not include F396.
 
+F397 locally adds explicit file MOVE overwrite with current target write mode/
+availability and one atomic ordinary remove/rename receipt. F remains412 for
+occupied targets. Focused red/green and static checks pass;prepared original
+PostgreSQL/stock curl/receipt/history/current-policy proofs remain owed.
+
 Next:continue independent implementation while these original CI runs finish.
 Push the next verified owner-only batch only after all required originals are terminal. Repair original
 failures and finish every mandatory final-source baseline/AX gate. F026 stays

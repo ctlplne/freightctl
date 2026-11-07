@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "id": "F397",
+  "observed_at": "2026-11-07",
+  "base_candidate": "e2eeee804dc7af80db13c792c9f3d1a2c5ac90a5",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F397 adds explicit file-only MOVE Overwrite:T through the existing ordinary rename transaction. Overwrite:F retains occupied-target412;COPY remains F-only. Keep exact strong source tag,key,zero body,scope/URI confinement,read/manage_paths,path modes and current source intake. T additionally requires actual destination write mode,current destination availability and a captured target mapping revision under the namespace lock. Atomic ordinary PathRemoved+PathMoved/one receipt retains both immutable custody records. Fresh replaced URL returns204/empty body,exact move event and replaced-at-commit state;absent destination returns201/Location. Historical200 asserts no current mapping or repeated effect;changed overwrite flag/target revision cannot reuse a key. Actual pre-router T regression fails428 before repair,then focused guards pass;invalid/missing/duplicate overwrite and COPY:T still refuse. Tagged compilation,vet,format and architecture pass. Prepared ARM/x86 PostgreSQL and stock curl require nonadmin roles,private target403,collection405,F412,T204/independent exact new+old bytes,stale412,changed meaning409,non-recreating history,current target-policy409,two actor moves/one removal/two receipts/zero new acceptance or external/run effects. Shared-write fixture is explicit;private target refusal remains. Stock seed uses a distinct key. Native runtime remains owed;no full DAV/whole-row qualification inferred.",
+  "normative_reference": "https://www.rfc-editor.org/rfc/rfc4918.html#section-9.9.4",
+  "red_green": "Original actual explicit MOVE:T pre-router request rejected428;updated focused guards accept only explicit T/F for file MOVE and retain COPY:F,tag/key/URI/body and invalid/duplicate/missing mode refusals. Real SQL/actor/atomicity/receipt/stock peers compiled only locally;all actual runtime outcomes remain owed.",
+  "owed": [
+    "Original real ARM/x86 PostgreSQL exact target mode/current-policy,atomic remove+move,receipt/history/changed-meaning and zero-effect proofs",
+    "Original stock curl explicit overwrite204,independent current+old custody and stale412 replay",
+    "Every affected final-source native/security/recovery/reproducibility and all baseline/AX/readiness gates"
+  ],
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "82914516df67efcc166ad4d6a88f915bcced16c10112c71a87f3c3fffd3073f3",
+      "bytes": 4451
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "e747ee0d8f5b2d0d185365b18603eee146a10a0f4fda5266fee8f589d6f041f5",
+      "bytes": 554227
+    },
+    {
+      "reference": "docs/qualification/parity.json",
+      "sha256": "630fdc664f8f1b9e4241c9a0eba85ad3bae32d920ea2a6349160b2408ce17000",
+      "bytes": 152173
+    },
+    {
+      "reference": "docs/protocols/webdav-read-profile.md",
+      "sha256": "eb5112a9dd736d937c6c21715dc4ff4272afbfa7e6c859d7ba6c109492076ee3",
+      "bytes": 12838
+    },
+    {
+      "reference": "internal/custody/namespace_move.go",
+      "sha256": "00ed96fa6acc1035149b55ca29823d771015c50b9bf992216e42d71af0efdda2",
+      "bytes": 5721
+    },
+    {
+      "reference": "internal/api/webdav_move.go",
+      "sha256": "d4d4855d3e1429761e68e56877a10fc08105e42fc62ac563fc33e854c4b4255a",
+      "bytes": 4756
+    },
+    {
+      "reference": "internal/api/webdav_move_test.go",
+      "sha256": "16c06ae5083a7a8d7d407c5e4dfaaf1f3e57a21af24e0da8194ef761ab241fea",
+      "bytes": 3925
+    },
+    {
+      "reference": "internal/api/webdav_overwrite_test.go",
+      "sha256": "39aacd4081a47332552158a90834d38a6256b8dd55683ae5aa612998aacb09c8",
+      "bytes": 878
+    },
+    {
+      "reference": "internal/api/webdav_overwrite_integration_test.go",
+      "sha256": "ce0315b8c7cc78b50c7ef3c14e88e735777e473e0199af76f8dc0397ee5eb711",
+      "bytes": 9752
+    },
+    {
+      "reference": "internal/api/webdav_stock_integration_test.go",
+      "sha256": "1b1af5504673594d0e1535bf04a5f82ab0acb476de980c470bc64aa529f49f03",
+      "bytes": 16474
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f397-overwrite-red.log",
+      "sha256": "31a23f05d32e7b690784991772595aa9dec038762c87a0cd3f494392d3f084c4",
+      "bytes": 263
+    },
+    {
+      "reference": ".private/freightctl-f397-api-focused.log",
+      "sha256": "28083f3913de6f36d8b461d0420e7f82e6e2fe597c4aa269d5d753c6d000c045",
+      "bytes": 55
+    },
+    {
+      "reference": ".private/freightctl-f397-final-api-focused.log",
+      "sha256": "c2599e7a130d92c8d0bcf1a786173aee716a3ab5b8e47b9713cc9dd13a2538eb",
+      "bytes": 55
+    },
+    {
+      "reference": ".private/freightctl-f397-custody-focused.log",
+      "sha256": "b6a39de21a6e16786f097168c20a499682386313ff60502b471594cb177855f8",
+      "bytes": 61
+    },
+    {
+      "reference": ".private/freightctl-f397-native-compile.log",
+      "sha256": "d1670f59eb42ab525aba5dc8d2f9cef3f7cec671195795774db881dee8762a3f",
+      "bytes": 303
+    },
+    {
+      "reference": ".private/freightctl-f397-final-native-compile.log",
+      "sha256": "056afc0dd8f89a050971af9c7933c4dbc8e6aafd47309216804dde3bd839fb68",
+      "bytes": 73
+    },
+    {
+      "reference": ".private/freightctl-f397-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f397-final-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f397-final-input-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f397-final-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f397-final-architecture.log",
+      "sha256": "ee4629553cf58fc61bc875d50107356d7e8eb2beeafa601f06f8cc23a5f4e7f9",
+      "bytes": 64
+    }
+  ]
+}
