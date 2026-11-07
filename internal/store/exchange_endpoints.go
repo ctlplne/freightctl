@@ -241,6 +241,9 @@ func (t *Transaction) exchangeEndpointVersion(ctx context.Context, id string) (*
 }
 
 func (t *Transaction) validateExchangeEndpointParticipants(ctx context.Context, d ExchangeEndpointDefinition) error {
+	if !t.accountManagementLocked {
+		return ErrIsolation
+	}
 	bindings := append([]ExchangeParticipant{d.Recipient}, d.Senders...)
 	// Account-management serialization already precedes all credential reads.
 	for i, p := range bindings {
@@ -252,7 +255,7 @@ func (t *Transaction) validateExchangeEndpointParticipants(ctx context.Context, 
 			permissions = []string{"read", "list"}
 		}
 		var current bool
-		err := t.Tx.QueryRow(ctx, `SELECT authority_revision=$2 AND encode(sha256(convert_to(namespace_root,'UTF8')),'hex')=$3 AND permissions @> $4::text[] AND revoked_at IS NULL AND (expires_at IS NULL OR expires_at>clock_timestamp()) FROM credentials WHERE actor_id=$1 FOR SHARE`, p.Actor, p.AuthorityRevision, p.RootPolicyDigest, permissions).Scan(&current)
+		err := t.Tx.QueryRow(ctx, `SELECT authority_revision=$2 AND encode(sha256(convert_to(namespace_root,'UTF8')),'hex')=$3 AND permissions @> $4::text[] AND revoked_at IS NULL AND (expires_at IS NULL OR expires_at>clock_timestamp()) FROM credentials WHERE tenant_id=$5 AND partner_id=$6 AND actor_id=$1`, p.Actor, p.AuthorityRevision, p.RootPolicyDigest, permissions, t.Scope.Tenant, t.Scope.Partner).Scan(&current)
 		if errors.Is(err, pgx.ErrNoRows) || err == nil && !current {
 			return ErrNotFound
 		}

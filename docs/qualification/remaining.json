@@ -789,7 +789,8 @@
         "docs/qualification/evidence/F191-produced-source-composition.json",
         "docs/qualification/evidence/F192-output-admin-terminal-ci.json",
         "docs/qualification/evidence/F193-owned-processing-calendars.json",
-        "docs/qualification/evidence/F194-composition-terminal-ci.json"
+        "docs/qualification/evidence/F194-composition-terminal-ci.json",
+        "docs/qualification/evidence/F209-runtime-credential-read-fence.json"
       ],
       "remaining_details": [
         "S002 clarifies S001: the trstctl suite and general credential/trust control plane remain excluded, while an optional real Trust Control provider integration is planned alongside customer-managed credentials. Pin and qualify the actual provider contract under X07/AX08; preserve independent core operation and all transfer-scoped security gates.",
@@ -1143,7 +1144,8 @@
         "docs/qualification/evidence/F201-finish-original-failure-repairs.json",
         "docs/qualification/evidence/F203-finish-reporters-audit-persistence.json",
         "docs/qualification/evidence/F205-protected-secret-file-handles.json",
-        "docs/qualification/evidence/F207-tus-denial-checkpoint-observer.json"
+        "docs/qualification/evidence/F207-tus-denial-checkpoint-observer.json",
+        "docs/qualification/evidence/F209-runtime-credential-read-fence.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -1187,14 +1189,15 @@
         "FINISH audit/repair started without claiming implementation complete. F201 reproduces and repairs the original typed OpenAPI unit failure,71-method FTPS reporter stale-schema failure and invalid PL/pgSQL CASE comparisons in unapplied post35 migration sources;also fixes two missing lateral definition selections. Full local lightweight Go unit suite,241 frontend and71 reporter tests pass;standalone parser accepts59 migration files/343 function definitions. No actual PostgreSQL migration,CI/native/accessibility/race/restore acceptance pass inferred. All original failure handles remain;actual repair replays and remaining implementation/full GOAL gates owed. F200 preserves1102224 original terminal17/37 with listed security passes.",
         "F203 replays all27 original Core Python record commands plus8 native-wire stand-in tests;all pass after replaying only the dispatch contact-spy suite with authorized loopback. Windows original audit identity failure at directory.Sync is routed through existing handle-bound durablefs;focused audit/architecture/vet and Windows cross-compilation pass. Actual Windows directory persistence/private ACL and all native/final-source outcomes remain red/owed.",
         "F205 implements held-handle protected secret-file checks and owner-only Windows DACL creation for tokens,development certificates and audit identities;Unix0077 refusal stays enforced. The original broad-permission assertion uses a real Everyone-read DACL on Windows. Full local Go units,focused policy/handle/audit,architecture/vet and Windows compile pass;actual Windows positive/adversarial/races/restricted-token/directory/custody/setup/FTPS and final-source proof remain owed. No whole Windows qualification or POSIX fallback granted.",
-        "F207 preserves91ed18d native tus failures on both architectures:401 HEAD/PATCH/complete controls pass,but the old root-runtime checkpoint observer sees no row because upload RLS is actor-private. The test now explicitly asserts that root runtime cannot see the row and separately compares exact before/after checkpoints through a read-only/read-committed administrative connection to the exact task-owned database. Offset/chunk/open/no-file and all denial assertions remain. Compile/vet only pass locally;actual original native replay owed. Both91ed18d tus jobs independently pass ordinary schema initialization;whole journeys remain red."
+        "F207 preserves91ed18d native tus failures on both architectures:401 HEAD/PATCH/complete controls pass,but the old root-runtime checkpoint observer sees no row because upload RLS is actor-private. The test now explicitly asserts that root runtime cannot see the row and separately compares exact before/after checkpoints through a read-only/read-committed administrative connection to the exact task-owned database. Offset/chunk/open/no-file and all denial assertions remain. Compile/vet only pass locally;actual original native replay owed. Both91ed18d tus jobs independently pass ordinary schema initialization;whole journeys remain red.",
+        "F209 repairs native credentials42501 failures:registration requires the existing pre-authentication account fence and reads metadata without a forbidden credential row-lock. New migration60 reuses the same shared account fence in processing-review/output-binding/proposal guards;late conflict fails40001 before reading authority. No credential write grant,definer role or predicate removed. Prior59 migration bytes/retained35 unchanged;78metadata/77forced RLS. Focused/full Go,7metadata/5retained stand-ins,architecture/vet and syntax pass;real role-write refusal/scope/lock conflict/registration and original runtime replay remain prepared/compiled only."
       ],
       "current_item": {
-        "id": "F207",
-        "state": "Original tus denial checkpoint observer repaired without changing runtime privacy;native replay owed",
-        "proof": "Both native architectures observe no-row at old wrong-actor observer after all401 controls. New read-only independent before/after observation and explicit root RLS refusal compile/vet only",
-        "native": "91ed18d native ordinary schema initialization passes both architectures;actual tus lifecycle repair replay and whole profile remain owed",
-        "next": "Original native credentials-permission,HTTP current-revocation,authorization-order and other CI failures;Windows storage/setup;remaining baseline/AX/FINISH"
+        "id": "F209",
+        "state": "Runtime credential write privileges stay denied;proper account read fencing implemented,native outcome owed",
+        "proof": "Original91ed18d exchange registration/copy credentials42501 red;focused/full Go,current60 metadata/retained/architecture/vet and standalone syntax green",
+        "native": "Direct credential mutation refusal,scope rejection,late fence40001,reentrant owned fence and ordinary registration prepared/compiled only. Original protocol/processing/native replay owed",
+        "next": "Complete required91ed18d runs,then push verified batch;repair remaining actual authorization/HTTP/format/peer/platform originals and remaining mandatory baseline/AX/FINISH"
       }
     }
   ],

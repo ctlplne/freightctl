@@ -43,6 +43,15 @@ in the exact task-owned database. All denial/offset/chunk/open/no-file assertion
 remain. Compile/vet only pass locally;original native repair replay remains owed.
 Other newly reached protocol/authorization failures remain under FINISH repair.
 
+F209 repairs native credentials42501 failures while preserving read-only runtime
+credentials. Endpoint validation requires the existing account fence;processing
+review/output/proposal guards use its shared transaction fence before authority
+reads. Late conflicts fail40001;current scope,revision,expiry,permissions and all
+journal/approval checks stay enforced. Source60 adds functions only;prior59
+migration bytes and retained35 are unchanged. Focused/full Go,metadata/retained
+stand-ins,architecture/vet and syntax checks pass. Actual role-write refusal,
+fence/scope/registration and original native replays remain compiled-only/owed.
+
 Schema3 records.project binds an owned checked input,approved exact task,one
 durable processing intent,slots and events/receipt. Stable work keys select one
 historical attempt;current status is separate. New artifacts stay held for fresh
@@ -78,7 +87,7 @@ Focused contract/authentication checks,compilation/vet/architecture and metadata
 stand-ins pass. Five PostgreSQL cases,verified HTTPS and public CLI controls are
 prepared/compiled only.
 
-Source59 targets78 metadata/77 forced-RLS tables.
+Source60 targets78 metadata/77 forced-RLS tables.
 F183 adds exact output-contract selection for typed task draft/approval metadata
 and catalog observations. Root administration cannot substitute for producer
 ownership. Focused selection/catalog refusal checks pass;actual PostgreSQL and

@@ -1,12 +1,22 @@
 package store
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"math"
 	"strings"
 	"testing"
+
+	secure "github.com/ctlplne/freightctl/internal/crypto"
 )
+
+func TestExchangeParticipantsRequireAccountFenceBeforeCredentialReads(t *testing.T) {
+	tx := &Transaction{Scope: Scope{Tenant: secure.NewID(), Partner: secure.NewID()}}
+	if err := tx.validateExchangeEndpointParticipants(context.Background(), ExchangeEndpointDefinition{}); !errors.Is(err, ErrIsolation) {
+		t.Fatal("unfenced validation reached credential metadata", err)
+	}
+}
 
 func TestExchangeEndpointCommandsBindMeaningAndRefuseUnsafeRevisions(t *testing.T) {
 	definition, _, limits := exchangeContractFixture()

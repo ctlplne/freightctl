@@ -45,7 +45,8 @@
         "docs/qualification/evidence/F198-definition-proposals-terminal-ci.json",
         "docs/qualification/evidence/F199-processing-calendar-browser-profile.json",
         "docs/qualification/evidence/F200-browser-proposals-terminal-ci.json",
-        "docs/qualification/evidence/F201-finish-original-failure-repairs.json"
+        "docs/qualification/evidence/F201-finish-original-failure-repairs.json",
+        "docs/qualification/evidence/F209-runtime-credential-read-fence.json"
       ]
     },
     {
@@ -102,7 +103,8 @@
         "docs/qualification/evidence/F198-definition-proposals-terminal-ci.json",
         "docs/qualification/evidence/F199-processing-calendar-browser-profile.json",
         "docs/qualification/evidence/F200-browser-proposals-terminal-ci.json",
-        "docs/qualification/evidence/F201-finish-original-failure-repairs.json"
+        "docs/qualification/evidence/F201-finish-original-failure-repairs.json",
+        "docs/qualification/evidence/F209-runtime-credential-read-fence.json"
       ]
     },
     {
@@ -201,7 +203,8 @@
         "docs/qualification/evidence/F198-definition-proposals-terminal-ci.json",
         "docs/qualification/evidence/F199-processing-calendar-browser-profile.json",
         "docs/qualification/evidence/F200-browser-proposals-terminal-ci.json",
-        "docs/qualification/evidence/F201-finish-original-failure-repairs.json"
+        "docs/qualification/evidence/F201-finish-original-failure-repairs.json",
+        "docs/qualification/evidence/F209-runtime-credential-read-fence.json"
       ]
     },
     {
@@ -302,7 +305,8 @@
         "docs/qualification/evidence/F198-definition-proposals-terminal-ci.json",
         "docs/qualification/evidence/F199-processing-calendar-browser-profile.json",
         "docs/qualification/evidence/F200-browser-proposals-terminal-ci.json",
-        "docs/qualification/evidence/F201-finish-original-failure-repairs.json"
+        "docs/qualification/evidence/F201-finish-original-failure-repairs.json",
+        "docs/qualification/evidence/F209-runtime-credential-read-fence.json"
       ]
     },
     {
@@ -366,7 +370,8 @@
         "docs/qualification/evidence/F198-definition-proposals-terminal-ci.json",
         "docs/qualification/evidence/F199-processing-calendar-browser-profile.json",
         "docs/qualification/evidence/F200-browser-proposals-terminal-ci.json",
-        "docs/qualification/evidence/F201-finish-original-failure-repairs.json"
+        "docs/qualification/evidence/F201-finish-original-failure-repairs.json",
+        "docs/qualification/evidence/F209-runtime-credential-read-fence.json"
       ]
     },
     {
@@ -508,5 +513,5 @@
     "Fixtures, design documents, ledger checks, model answers and skips establish no runtime or real provider qualification.",
     "Preserve original parity/journey/defect/evaluation records and separate assisted deployment, independent adoption and enterprise readiness."
   ],
-  "execution": "FINISH audit/repair active;remaining implementation and full baseline/AX01\u2013AX08 acceptance remain open. F201 repairs original reporter/OpenAPI/migration syntax failures with local focused/broad stand-in passes;actual native repair replay remains owed. F200 preserves1102224 original terminal17/37 and listed security passes. Automatic chains,scoped calendars,protected/restore/final-source/full mandatory work remain owed. Local inference/heavy runtimes off;retained35 unchanged."
+  "execution": "FINISH implementation/repair and qualification active. F209 repairs runtime credential-row-lock privilege failures with existing account fencing and new source60,without credential write grants. Local focused/broad/static checks pass;actual native repair replays remain owed.91ed18d native ordinary schema initialization passes both tus architectures;whole journeys remain red. Remaining platform,authorization,HTTP,format,protected/restore/final-source and full baseline/AX gates open. Local inference/heavy runtimes off;retained35 unchanged."
 }

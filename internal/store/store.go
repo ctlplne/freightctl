@@ -193,7 +193,10 @@ var processingSchedulesSchema string
 //go:embed 059_processing_proposals.sql
 var processingProposalsSchema string
 
-var migrations = []string{schema, eventBinding, eventBounds, namespaceSchema, uploadSchema, uploadStorageSchema, deliverySchema, workflowSchema, assistanceSchema, intakeSchema, pgpSchema, encryptionSchema, scannerSchema, browserSessionSchema, browserCommandSchema, accountSchema, installationSchema, partnerSchema, onboardingSchema, onboardingProbesSchema, rechecksSchema, onboardingTestsSchema, onboardingReleasesSchema, onboardingHandoffsSchema, prepublicationHandoffsSchema, onboardingObservationsSchema, onboardingApprovalsSchema, outboundDispatchApprovalsSchema, workflowSchedulesSchema, workflowCollectionsSchema, scheduledCollectionsSchema, boundedWorkflowProgramsSchema, collectionRoutingSchema, collectionHandoffsSchema, collectionSuccessorsSchema, ftpsDeliverySchema, ftpsWorkflowSchema, ftpsProgramSchema, ftpsEncryptionSchema, ftpsCollectionsSchema, exchangeEndpointsSchema, artifactExchangesSchema, exchangeClosuresSchema, outgoingExchangeHistorySchema, exchangeCopySchema, auditHistorySchema, jsonRecordIntakeSchema, fixedWidthIntakeSchema, xmlRecordIntakeSchema, xlsxRecordIntakeSchema, recordProjectionsSchema, scopedProjectionsSchema, processingWorkflowsSchema, processingReviewsSchema, processingOutputPoliciesSchema, producerProjectionOutputsSchema, composedProducerSourcesSchema, processingSchedulesSchema, processingProposalsSchema}
+//go:embed 060_authority_read_fence.sql
+var authorityReadFenceSchema string
+
+var migrations = []string{schema, eventBinding, eventBounds, namespaceSchema, uploadSchema, uploadStorageSchema, deliverySchema, workflowSchema, assistanceSchema, intakeSchema, pgpSchema, encryptionSchema, scannerSchema, browserSessionSchema, browserCommandSchema, accountSchema, installationSchema, partnerSchema, onboardingSchema, onboardingProbesSchema, rechecksSchema, onboardingTestsSchema, onboardingReleasesSchema, onboardingHandoffsSchema, prepublicationHandoffsSchema, onboardingObservationsSchema, onboardingApprovalsSchema, outboundDispatchApprovalsSchema, workflowSchedulesSchema, workflowCollectionsSchema, scheduledCollectionsSchema, boundedWorkflowProgramsSchema, collectionRoutingSchema, collectionHandoffsSchema, collectionSuccessorsSchema, ftpsDeliverySchema, ftpsWorkflowSchema, ftpsProgramSchema, ftpsEncryptionSchema, ftpsCollectionsSchema, exchangeEndpointsSchema, artifactExchangesSchema, exchangeClosuresSchema, outgoingExchangeHistorySchema, exchangeCopySchema, auditHistorySchema, jsonRecordIntakeSchema, fixedWidthIntakeSchema, xmlRecordIntakeSchema, xlsxRecordIntakeSchema, recordProjectionsSchema, scopedProjectionsSchema, processingWorkflowsSchema, processingReviewsSchema, processingOutputPoliciesSchema, producerProjectionOutputsSchema, composedProducerSourcesSchema, processingSchedulesSchema, processingProposalsSchema, authorityReadFenceSchema}
 var domainTables = []string{"tenants", "partners", "credentials", "events", "files", "idempotency", "namespace_entries", "namespace_revisions", "namespace_commands", "ssh_keys", "upload_sessions", "upload_chunks", "upload_receipts", "delivery_intents", "delivery_receipts", "connection_revisions", "workflow_revisions", "workflow_runs", "workflow_steps", "workflow_receipts", "ai_profiles", "ai_jobs", "ai_receipts", "intake_policies", "file_checks", "check_receipts", "file_releases", "pgp_keys", "file_signatures", "delivery_ciphertexts", "scanner_profiles", "browser_sessions", "browser_commands", "account_revisions", "account_commands", "installation_enrollments", "tenant_administrators", "tenant_admin_commands", "partner_registrations", "onboarding_plans", "onboarding_commands", "onboarding_probes", "file_rechecks", "file_recheck_slots", "onboarding_tests", "onboarding_releases", "onboarding_dispatches", "onboarding_handoffs", "onboarding_observations", "onboarding_approval_policies", "onboarding_approval_reviews", "outbound_dispatch_policies", "outbound_dispatch_reviews", "workflow_schedules", "workflow_schedule_occurrences", "workflow_schedule_inputs", "workflow_collection_jobs", "workflow_collection_batches", "workflow_collection_inputs", "workflow_collection_file_gates", "workflow_schedule_arrivals", "workflow_collection_routing", "workflow_collection_handoffs", "exchange_endpoint_versions", "exchange_endpoint_commands", "exchange_endpoint_heads", "artifact_exchanges", "artifact_exchange_commands", "artifact_exchange_closures", "artifact_exchange_closure_commands", "record_projections", "record_projection_slots", "workflow_processing", "processing_workflow_reviews", "processing_output_policies", "processing_output_status", "processing_workflow_proposals"}
 
 // SchemaVersion lets maintenance compare a binary's target before connecting
@@ -242,14 +245,15 @@ type Event struct {
 	At         time.Time       `json:"happened_at"`
 }
 type Transaction struct {
-	Tx                pgx.Tx
-	Scope             Scope
-	Actor             string
-	Permissions       []string
-	Root              string
-	AuthorityRevision int64
-	ExpiresAt         *time.Time
-	PendingFiles      map[string]bool
+	Tx                      pgx.Tx
+	Scope                   Scope
+	Actor                   string
+	Permissions             []string
+	Root                    string
+	AuthorityRevision       int64
+	ExpiresAt               *time.Time
+	PendingFiles            map[string]bool
+	accountManagementLocked bool
 }
 
 // Connection strings are read from bounded protected references. pgx requires a string copy.
@@ -487,7 +491,7 @@ func (s *Store) beginAuthenticated(ctx context.Context, scope Scope, options pgx
 			return nil, err
 		}
 	}
-	t := &Transaction{Tx: tx, Scope: scope}
+	t := &Transaction{Tx: tx, Scope: scope, accountManagementLocked: accountLock}
 	if err = t.authenticate(ctx); err != nil {
 		return nil, err
 	}
