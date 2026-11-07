@@ -5,16 +5,20 @@ package api
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"io"
 	"net/http"
+	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"testing"
 	"time"
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/custody"
 	"github.com/ctlplne/freightctl/internal/store"
+	"github.com/jackc/pgx/v5"
 )
 
 func TestTusCoreHTTPSUsesCurrentAuthorityStrictOffsetsAndSeparateAcceptance(t *testing.T) {
@@ -94,6 +98,32 @@ func TestTusCoreHTTPSUsesCurrentAuthorityStrictOffsetsAndSeparateAcceptance(t *t
 
 func TestTusCoreHTTPSCredentialExpiryAndRevocationCannotResumeOrPublish(t *testing.T) {
 	service, scope, admin, server := browserAPI(t, time.Minute)
+	// A root runtime actor cannot read another actor's private upload. Observe
+	// exact test-owned state through a separate administrative read-only tx;
+	// neither request authority nor the production RLS policy is changed.
+	secret, err := secure.ReadSecret(os.Getenv("FREIGHTCTL_TEST_ADMIN_FILE"), 4096)
+	if err != nil {
+		t.Fatal(err)
+	}
+	config, err := pgx.ParseConfig(string(secret.Bytes))
+	secret.Close()
+	if err != nil {
+		t.Fatal("fixture observer configuration refused")
+	}
+	config.Database = service.DB.Pool.Config().ConnConfig.Database
+	if !strings.HasPrefix(config.Database, "freightctl_browser_") {
+		t.Fatal("observer requires exact task-owned database")
+	}
+	observer, err := pgx.ConnectConfig(t.Context(), config)
+	if err != nil {
+		t.Fatal("fixture observer connection failed")
+	}
+	defer observer.Close(t.Context())
+	observation, err := observer.BeginTx(t.Context(), pgx.TxOptions{IsoLevel: pgx.ReadCommitted, AccessMode: pgx.ReadOnly})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer observation.Rollback(t.Context())
 	cookie, csrf := loginBrowser(t, server, scope, admin)
 	prefix := "/v1/tenants/" + scope.Tenant + "/partners/" + scope.Partner
 	for _, expiry := range []bool{false, true} {
@@ -140,6 +170,23 @@ func TestTusCoreHTTPSCredentialExpiryAndRevocationCannotResumeOrPublish(t *testi
 			path := prefix + "/tus/uploads/" + ticket.Upload.ID
 			headers := map[string]string{"Authorization": bearer, "Tus-Resumable": "1.0.0", "Content-Type": "application/offset+octet-stream", "Upload-Offset": "0"}
 			exchangeAPIRequest(t, server, "PATCH", path, nil, headers, data[:custody.MinUploadChunk], 204)
+			type checkpoint struct {
+				offset           int64
+				chunks, accepted int
+				state            string
+			}
+			observe := func() checkpoint {
+				t.Helper()
+				var value checkpoint
+				if err := observation.QueryRow(t.Context(), `SELECT committed_offset,chunk_count,state,(SELECT count(*) FROM files f JOIN events e ON (e.tenant_id,e.partner_id,e.event_id)=(f.tenant_id,f.partner_id,f.accepted_event_id) WHERE f.tenant_id=$1 AND f.partner_id=$2 AND e.actor_id=$4) FROM upload_sessions WHERE tenant_id=$1 AND partner_id=$2 AND upload_id=$3 AND actor_id=$4 AND file_id IS NULL`, scope.Tenant, scope.Partner, ticket.Upload.ID, actor).Scan(&value.offset, &value.chunks, &value.state, &value.accepted); err != nil {
+					t.Fatal("independent exact checkpoint observation failed", err)
+				}
+				return value
+			}
+			before := observe()
+			if before.offset != custody.MinUploadChunk || before.chunks != 1 || before.state != "open" || before.accepted != 0 {
+				t.Fatal("initial durable checkpoint differs")
+			}
 			if expiry {
 				// Observe the real database clock;do not synthesize an expired
 				// response or edit the credential/upload behind ordinary services.
@@ -173,11 +220,12 @@ func TestTusCoreHTTPSCredentialExpiryAndRevocationCannotResumeOrPublish(t *testi
 				t.Fatal(err)
 			}
 			defer transaction.Tx.Rollback(t.Context())
-			var offset int64
-			var chunks, accepted int
-			var state string
-			if err = transaction.Tx.QueryRow(t.Context(), `SELECT committed_offset,chunk_count,state,(SELECT count(*) FROM files f JOIN events e ON (e.tenant_id,e.partner_id,e.event_id)=(f.tenant_id,f.partner_id,f.accepted_event_id) WHERE e.actor_id=$2) FROM upload_sessions WHERE upload_id=$1 AND actor_id=$2 AND file_id IS NULL`, ticket.Upload.ID, actor).Scan(&offset, &chunks, &state, &accepted); err != nil || offset != custody.MinUploadChunk || chunks != 1 || state != "open" || accepted != 0 {
-				t.Fatal("denied lifecycle request changed checkpoints or accepted bytes", err)
+			var hidden string
+			if err = transaction.Tx.QueryRow(t.Context(), `SELECT upload_id::text FROM upload_sessions WHERE tenant_id=$1 AND partner_id=$2 AND upload_id=$3 AND actor_id=$4`, scope.Tenant, scope.Partner, ticket.Upload.ID, actor).Scan(&hidden); !errors.Is(err, pgx.ErrNoRows) {
+				t.Fatal("runtime root actor acquired another actor's private upload", err)
+			}
+			if after := observe(); after != before {
+				t.Fatal("denied lifecycle request changed checkpoints or accepted bytes")
 			}
 		})
 	}

@@ -35,6 +35,14 @@ policy/handle/audit/architecture/vet checks pass;Windows cases compile only.
 Actual native ACL/restricted-token/reparse races,storage/setup/private writers and
 whole Windows/runtime/final-source outcomes remain owed.
 
+On91ed18d,native PostgreSQL initialization passes in both tus architectures.
+Their lifecycle tests then fail at the old wrong-actor SQL observer after the401
+controls pass. F207 asserts root-runtime RLS refusal and separately compares the
+same exact checkpoints before/after through a read-only/read-committed observer
+in the exact task-owned database. All denial/offset/chunk/open/no-file assertions
+remain. Compile/vet only pass locally;original native repair replay remains owed.
+Other newly reached protocol/authorization failures remain under FINISH repair.
+
 Schema3 records.project binds an owned checked input,approved exact task,one
 durable processing intent,slots and events/receipt. Stable work keys select one
 historical attempt;current status is separate. New artifacts stay held for fresh

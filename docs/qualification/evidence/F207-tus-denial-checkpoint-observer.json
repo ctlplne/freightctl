@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "id": "F207",
+  "observed_at": "2026-11-07",
+  "base_candidate": "f35cb0ab19c4484e3c4f18f96190c68eecf7db0b",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Original tus lifecycle observer repaired;actual original native replay owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "1c2e50f2df96bc0cd3a093ae4619a6addbadc4f3699c060418e1dd34755ff0a6",
+      "bytes": 12581
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "416fb86668c8d12c3b68b9b0509470779036e490ca44fe2d97986cafe163578f",
+      "bytes": 361654
+    },
+    {
+      "reference": "internal/api/tus_integration_test.go",
+      "sha256": "2124a97061863b8b2a65f995f8e916ae274b073b706a2c31ef7a69fe33c716df",
+      "bytes": 12034
+    }
+  ],
+  "original_failure": {
+    "candidate": "91ed18d4aa2bb8900f684035c241f5b8d30a37b1",
+    "run": 42348791160,
+    "jobs": [
+      128332262150,
+      128332262244
+    ],
+    "tests": [
+      "TestTusCoreHTTPSCredentialExpiryAndRevocationCannotResumeOrPublish/revoked",
+      "TestTusCoreHTTPSCredentialExpiryAndRevocationCannotResumeOrPublish/expired"
+    ],
+    "observation": "Each actual HEAD/PATCH/ordinary-complete401 denial passes;old root-runtime checkpoint query fails no rows in result set because upload_sessions has restrictive actor RLS.",
+    "log_urls": [
+      "https://github.com/ctlplne/freightctl/actions/jobs/128332262150",
+      "https://github.com/ctlplne/freightctl/actions/jobs/128332262244"
+    ]
+  },
+  "changed": [
+    "Keep every actual HTTPS denial and original exact offset/chunk/open/no-file assertion. Explicitly assert that root runtime cannot read another actor's private upload. No production query,role,grant,RLS rule or authority is changed.",
+    "A separate existing fixture administrative reference opens only the exact task-owned browser database and begins READ ONLY,READ COMMITTED. Fully tenant/partner/upload/actor-bound queries assert the initial checkpoint and exact unchanged final state,including no accepted file. No privileged mutation or hidden source replacement occurs."
+  ],
+  "local_green": [
+    "Integration-tag compilation with -run ^$ only and affected vet pass. No PostgreSQL,Chrome,model,scanner or heavy peer ran locally."
+  ],
+  "native_observation": {
+    "candidate": "91ed18d4aa2bb8900f684035c241f5b8d30a37b1",
+    "run": 42348791160,
+    "jobs": [
+      128332262150,
+      128332262244
+    ],
+    "step": "Task-owned loopback PostgreSQL and ordinary schema initialization",
+    "conclusion": "success",
+    "scope": "Both actual x86_64/arm64 initialization steps pass after F201;whole tus execution jobs fail and no later candidate inherits this result."
+  },
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f207-final-native-tus-compile.log",
+      "sha256": "0ce7aeac37ce73fb8a740f1a7a0c7d972d1d51445ba8186d90066d9603fe1526",
+      "bytes": 73
+    },
+    {
+      "reference": ".private/freightctl-f207-native-tus-compile.log",
+      "sha256": "6f8c835ee53ddc652c46bc06ba92296f4158ddffa45bb82b3e293bd1be4924e1",
+      "bytes": 73
+    },
+    {
+      "reference": ".private/freightctl-f207-tus-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "owed": [
+    "Actual original lifecycle native replay on both architectures and final-source whole tus profile.",
+    "All newly reached native credentials-permission,HTTP validator/current authority,format-policy/reporting,public journeys,Windows and remaining baseline/AX/FINISH work."
+  ],
+  "resources": "Only bounded local compilation/vet. Retained35/source59 unchanged;inference and local heavy runtimes off.",
+  "readiness": "No whole row,journey,AX,assisted deployment,independent adoption or enterprise qualification granted."
+}
