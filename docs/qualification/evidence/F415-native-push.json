@@ -1,0 +1,201 @@
+{
+  "schema_version": 1,
+  "id": "F415",
+  "observed_at": "2026-11-07",
+  "qualification_claim": false,
+  "candidate": "23c752add5ee77f47d8280f7c629c803058e3b7c",
+  "previous_candidate": "b11ab7621e148fd7060375636d362ede1af49a83",
+  "summary": "F415:four owner-only commits pushed fast-forward b11ab762\u219223c752add5ee77f47d8280f7c629c803058e3b7c after prior originals terminal(F414). Enabled Gitleaks8.30.1:4 commits,reported116941 bytes,no leaks;push0,remote main verified. Sixteen first original attempt1 workflows preserved. F412 ignored-condition refusal/F413 strict CLI/API/MCP controls now await actual native outcomes. Previous receive/live browser and independent x86 receiver failures remain owed;F026 held. No local heavy runtime,publication or deployment.",
+  "commits": [
+    {
+      "sha": "dac774b4ac98a6f8db3f932389dd130f7cb61fe5",
+      "author": "imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>",
+      "committer": "imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>"
+    },
+    {
+      "sha": "67dbe859b5b3bbd5a33e07c4b7a3c31d612dade9",
+      "author": "imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>",
+      "committer": "imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>"
+    },
+    {
+      "sha": "2a9b6a3f7025ef2307de0ad776aa74295a97d7cf",
+      "author": "imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>",
+      "committer": "imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>"
+    },
+    {
+      "sha": "23c752add5ee77f47d8280f7c629c803058e3b7c",
+      "author": "imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>",
+      "committer": "imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>"
+    }
+  ],
+  "pre_push": {
+    "enabled": true,
+    "version": "8.30.1",
+    "commits": 4,
+    "reported_bytes": 116941,
+    "no_leaks": true
+  },
+  "push_exit_code": 0,
+  "remote_main_verified": true,
+  "original_runs": [
+    {
+      "run_id": 42417902556,
+      "name": "Native FTPS dispatch approval qualification",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42417902556",
+      "head_sha": "23c752add5ee77f47d8280f7c629c803058e3b7c",
+      "attempt": 1,
+      "status_at_observation": "in_progress"
+    },
+    {
+      "run_id": 42417902594,
+      "name": "Native FTPS workflow consent qualification",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42417902594",
+      "head_sha": "23c752add5ee77f47d8280f7c629c803058e3b7c",
+      "attempt": 1,
+      "status_at_observation": "in_progress"
+    },
+    {
+      "run_id": 42417902607,
+      "name": "Native browser and FTPS operator qualification",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42417902607",
+      "head_sha": "23c752add5ee77f47d8280f7c629c803058e3b7c",
+      "attempt": 1,
+      "status_at_observation": "in_progress"
+    },
+    {
+      "run_id": 42417902515,
+      "name": "Stock peer and browser qualification",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42417902515",
+      "head_sha": "23c752add5ee77f47d8280f7c629c803058e3b7c",
+      "attempt": 1,
+      "status_at_observation": "queued"
+    },
+    {
+      "run_id": 42417902545,
+      "name": "Native tus stock client and custody checkpoints",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42417902545",
+      "head_sha": "23c752add5ee77f47d8280f7c629c803058e3b7c",
+      "attempt": 1,
+      "status_at_observation": "queued"
+    },
+    {
+      "run_id": 42417902627,
+      "name": "Native immutable HTTPS stock resume",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42417902627",
+      "head_sha": "23c752add5ee77f47d8280f7c629c803058e3b7c",
+      "attempt": 1,
+      "status_at_observation": "queued"
+    },
+    {
+      "run_id": 42417902626,
+      "name": "Native legacy SCP regular-file custody",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42417902626",
+      "head_sha": "23c752add5ee77f47d8280f7c629c803058e3b7c",
+      "attempt": 1,
+      "status_at_observation": "queued"
+    },
+    {
+      "run_id": 42417902622,
+      "name": "Native JSON intake and custody interfaces",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42417902622",
+      "head_sha": "23c752add5ee77f47d8280f7c629c803058e3b7c",
+      "attempt": 1,
+      "status_at_observation": "queued"
+    },
+    {
+      "run_id": 42417902640,
+      "name": "Native Linux Go, PostgreSQL and fuzz",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42417902640",
+      "head_sha": "23c752add5ee77f47d8280f7c629c803058e3b7c",
+      "attempt": 1,
+      "status_at_observation": "queued"
+    },
+    {
+      "run_id": 42417902718,
+      "name": "Native first enrollment and browser exchange",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42417902718",
+      "head_sha": "23c752add5ee77f47d8280f7c629c803058e3b7c",
+      "attempt": 1,
+      "status_at_observation": "queued"
+    },
+    {
+      "run_id": 42417902591,
+      "name": "Native source vulnerability configurations",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42417902591",
+      "head_sha": "23c752add5ee77f47d8280f7c629c803058e3b7c",
+      "attempt": 1,
+      "status_at_observation": "queued"
+    },
+    {
+      "run_id": 42417902690,
+      "name": "Core correctness and security",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42417902690",
+      "head_sha": "23c752add5ee77f47d8280f7c629c803058e3b7c",
+      "attempt": 1,
+      "status_at_observation": "queued"
+    },
+    {
+      "run_id": 42417902669,
+      "name": "Native reproducible core binaries",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42417902669",
+      "head_sha": "23c752add5ee77f47d8280f7c629c803058e3b7c",
+      "attempt": 1,
+      "status_at_observation": "queued"
+    },
+    {
+      "run_id": 42417902583,
+      "name": "Native FTPS stock clients and custody",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42417902583",
+      "head_sha": "23c752add5ee77f47d8280f7c629c803058e3b7c",
+      "attempt": 1,
+      "status_at_observation": "in_progress"
+    },
+    {
+      "run_id": 42417902572,
+      "name": "Native Windows and macOS unit checks",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42417902572",
+      "head_sha": "23c752add5ee77f47d8280f7c629c803058e3b7c",
+      "attempt": 1,
+      "status_at_observation": "in_progress"
+    },
+    {
+      "run_id": 42417902584,
+      "name": "Native artifact receive browser",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42417902584",
+      "head_sha": "23c752add5ee77f47d8280f7c629c803058e3b7c",
+      "attempt": 1,
+      "status_at_observation": "in_progress"
+    }
+  ],
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "a42ef1e8581cd7644949cb952680d7d00e1844199a2076e547d1c260ee5af7be",
+      "bytes": 11359
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "debb0b441085e2d4eb12f7d7dde9c3a44d455284064931071e4f6f5ae8fa8199",
+      "bytes": 633604
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f415-push.log",
+      "sha256": "aa54e46520bfb4df43ca6a1085bb05c0e598e1436ff128be1444fb598fa575c6",
+      "bytes": 189
+    },
+    {
+      "reference": ".private/freightctl-f415-original-runs.json",
+      "sha256": "d172c94b63f3c260670ae2e3efd91afaaaaf80464e05261ddf3d6b9fbbdf1436",
+      "bytes": 4841
+    }
+  ],
+  "owed": [
+    "Original F412/F413 native and actual final-source proofs",
+    "Original browser and independent x86 receiver failures plus all remaining mandatory baseline/AX gates"
+  ],
+  "local_heavy_runtime_started": false,
+  "publication_or_deployment": false,
+  "overall_goal_complete": false
+}
