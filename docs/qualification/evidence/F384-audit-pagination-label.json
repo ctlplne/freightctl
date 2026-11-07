@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "id": "F384",
+  "observed_at": "2026-11-07",
+  "base_candidate": "e5d0ea69b10ab45192b2c7010d3536ac1a779465",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F384 addresses the e608408 receive-browser timeout at original run42392977136/job128464255843:phase audit-login,source1404 selectOption(1). The option exists,but its implicit label includes option text;exact label matching is a plausible cause,not yet native-proven. Give the actual select a stable Actions per page aria-label while preserving options1/10/25/50/100,default25,root audit permission,explicit submit and every original one-item paging/receipt assertion. Actual authorized component SSR plus a static DOM-label stand-in first finds no exact control,then finds exactly one. All6 affected label/API privacy tests,typecheck,build/check-built,format and architecture pass. Real original full receive/audit/revocation journey remains failed and owed;no local Chrome runs.",
+  "original_failure": {
+    "candidate": "e6084081e986c04ea19e204b79908decdcdbd09c",
+    "run_id": 42392977136,
+    "job_id": 128464255843,
+    "phase": "audit-login",
+    "class": "timeout",
+    "source_line": 1404,
+    "source_column": 6,
+    "safe_result_sha256": "90ba82d6eabfe0ebc955ab5961dccc4d10aa5b68c71d9fe290a6c53a4171ffbe",
+    "protected_first_failure_sha256": "ffd37683d54cdd5a588692968e169abada4342518932b1927f37649be07a3fb6"
+  },
+  "red_green": "Render the actual authorized AuditHistory component. A static DOM-label stand-in considers explicit aria-label,associated label or enclosing label text. Originally enclosing text includes options and does not match Actions per page exactly;with the stable explicit name exactly one select matches and retains both1/100 choices. This is stand-in proof,not actual Chrome causality or runtime qualification.",
+  "primary_reference": "https://playwright.dev/docs/locators#locate-by-label",
+  "owed": [
+    "Original native complete receive/copy/onward/audit-history one-item pagination and revocation journey",
+    "All mandatory final-source baseline/AX/security and separate readiness gates"
+  ],
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "7a1ec815ee5f3f7909eb3f46ccabdd0ea9821469b5d30f39399dbd05b950cc2e",
+      "bytes": 5125
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "e8699fe8a1a5c60f250eafe18965525276d4ac2ed06f23dfbc58dc041ca5820d",
+      "bytes": 514780
+    },
+    {
+      "reference": "internal/browser/assets/app.js",
+      "sha256": "dcd74f68d70f9f2834153cc7efce9a70f5f6a6c16cb0614a78677f1aa60b66de",
+      "bytes": 906822
+    },
+    {
+      "reference": "internal/browser/assets/manifest.json",
+      "sha256": "cf0c66cea0aef2c3e3cb47e705f7ace70946c146634d9c769affe58e99d38dda",
+      "bytes": 14114
+    },
+    {
+      "reference": "web/src/audit-history.tsx",
+      "sha256": "a6cc2457b11c8b77c3066069e490184959a7345c8afd68af1e7afbfa95241452",
+      "bytes": 7690
+    },
+    {
+      "reference": "web/tests/audit-history-label.test.mjs",
+      "sha256": "9c8432101e89119598802430680040aafd47ced101ab417f618d653a477b1d9f",
+      "bytes": 2729
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f384-label-red.log",
+      "sha256": "27a3b824242791d5215edf0948b5d4c3bf79ff1aeede09fa2283035234899571",
+      "bytes": 1037
+    },
+    {
+      "reference": ".private/freightctl-f384-focused.log",
+      "sha256": "7d047f7d06465369b5b2c9d0bd305f71ac732631903ee88e69dcc8a0de2b5d98",
+      "bytes": 712
+    },
+    {
+      "reference": ".private/freightctl-f384-types.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f384-build.log",
+      "sha256": "b3d1a04b9979ce9d502a23ba57a74c3a135fdeebae12651fe9a04fa200e56941",
+      "bytes": 180
+    },
+    {
+      "reference": ".private/freightctl-f384-built.log",
+      "sha256": "e17b5b7a42d6e7f8bf062b4a784b3451ae10a5763a0733030cfd56c159649455",
+      "bytes": 183
+    },
+    {
+      "reference": ".private/freightctl-f384-format.log",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    },
+    {
+      "reference": ".private/freightctl-f384-architecture.log",
+      "sha256": "f43585d1eff59aaf34c079e982a65830bb356a6c7c678ee7abaedcd488c324a7",
+      "bytes": 64
+    }
+  ]
+}

@@ -174,6 +174,7 @@ export function AuditHistory({
         <label>
           Actions per page
           <select
+            aria-label="Actions per page"
             value={limit}
             onChange={(e) => changed(() => setLimit(e.target.value))}
             disabled={busy}

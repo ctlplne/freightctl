@@ -103,7 +103,7 @@
     },
     {
       "path": "web/src/audit-history.tsx",
-      "sha256": "3d3016f4a2f8ac7dabd365b150f71767d7b64b439b69a6d850547f0d2afb434c"
+      "sha256": "a6cc2457b11c8b77c3066069e490184959a7345c8afd68af1e7afbfa95241452"
     },
     {
       "path": "web/src/check-evidence.tsx",
@@ -362,8 +362,8 @@
     },
     {
       "name": "app.js",
-      "sha256": "4c1bf9eab3810ae6e6bb301c5e9bfebef9ae19fb0e24f8fbb9e0bc8a03765963",
-      "size": 906790
+      "sha256": "dcd74f68d70f9f2834153cc7efce9a70f5f6a6c16cb0614a78677f1aa60b66de",
+      "size": 906822
     },
     {
       "name": "app.js.LEGAL.txt",

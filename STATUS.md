@@ -55,6 +55,10 @@ checkpoint and unchanged200 response; ordinary JSON workflow checks stay intact.
 Focused tests/static checks pass; original native upload/check/release replay
 remains owed.
 
+F384 gives audit pagination a stable exact label while keeping the original
+one-item paging proof. Focused component/API checks pass;the full native receive/
+audit/revocation journey remains failed and owed.
+
 F383 strengthens the DELETE privacy proof to the existing exact404 contract and
 compares it with an unknown ID,including absent byte validators. Native replay
 remains owed; production authorization is unchanged.
