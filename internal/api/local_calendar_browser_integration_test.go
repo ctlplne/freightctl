@@ -28,7 +28,7 @@ func TestLocalCalendarNativeBrowserExactManifestCaptureAndOriginalKeyRecovery(t 
 	if os.Getenv("GITHUB_ACTIONS") != "true" || runtime.GOOS != "linux" || runtime.GOARCH != "amd64" {
 		t.Fatal("actual local calendar Chrome profile requires native GitHub Linux x86_64")
 	}
-	s, manager, _, server := browserAPI(t, 1200*time.Second)
+	s, manager, _, server := browserAPI(t, localCalendarBrowserSessionLifetime)
 	t.Cleanup(func() { _ = s.Disk.Close() })
 	private, err := os.MkdirTemp("../../.private", "freightctl-local-calendar-browser-")
 	if err != nil {

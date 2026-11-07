@@ -34,9 +34,10 @@ The four failed jobs remain mandatory:
 - Receive browser copy-lost-response. F339 fixes its typed client media type with
   real Web Request red/green proof;original Chrome copy/recovery/onward/revocation
   still needs replay.
-- New local-calendar Chrome startup,before tenant-label fill. F341 preserves its
-  first page error and actual document/asset statuses;underlying repair and full
-  served capture/recovery/accessibility proof remain owed.
+- New local-calendar Chrome login503. F341 identified the actual HTTP refusal;
+  F349 fixes a20minute fixture setting that exceeded the unchanged10minute
+  production maximum. Real constructor/document503→200 passes locally;full
+  served capture/recovery/accessibility replay remains owed.
 - Both FTPS workflow-consent jobs fail source startup. F337 fixes the concrete
   protected-reference API mismatch;actual operator/source/consent replay is owed.
 

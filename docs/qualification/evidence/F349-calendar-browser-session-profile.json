@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "id": "F349",
+  "observed_at": "2026-11-07",
+  "base_candidate": "e2fb9a6f67f6cf1cb0b51ab70fbb750137611876",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "The native local calendar browser fixture now uses the supported10minute session lifetime;the production maximum and every journey assertion stay unchanged.",
+  "original_failure": {
+    "candidate": "3f32758aaa848065d7a2bf8ede787d729bbef166",
+    "run_id": 42380575918,
+    "job_id": 128427130040,
+    "url": "https://github.com/ctlplne/freightctl/actions/runs/42380575918/job/128427130040",
+    "phase": "login",
+    "navigation_status": 503,
+    "asset_status": 0,
+    "runtime_errors": 0,
+    "safe_result_sha256": "c5890efdbafccc4ad0d0a328d861e9fbc89b6b11f402a766d79aa5d1f86b302b",
+    "protected_first_failure_sha256": "94198f2f3880d138a94147b7e69ef938e6e45673ebc376d539a611c1bb3b8ad4"
+  },
+  "red_green": "Same actual fixture setting and production constructor first refuse login503 at1200seconds;600seconds serve real embedded HTML200. Unsupported20minute assertion still refuses503.",
+  "green": [
+    "Focused actual constructor/document regression",
+    "Chrome-tag compilation only;not served Chrome qualification",
+    "Affected format,vet and architecture"
+  ],
+  "owed": [
+    "Original native full calendar browser capture/recovery/accessibility replay",
+    "Other original CI failures and mandatory GOAL/AX work"
+  ],
+  "source_files": [
+    {
+      "reference": "internal/api/local_calendar_browser_profile_test.go",
+      "sha256": "a2bc9b5a3877fba56f66a166b334c98d5a665e251d76b48baa928e7c37437c81",
+      "bytes": 1134
+    },
+    {
+      "reference": "internal/api/local_calendar_browser_integration_test.go",
+      "sha256": "f77c5b4f2a5240735d7905c49a930e4323444d7485ba84d40fe756e2e7f590de",
+      "bytes": 12859
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "8cb5b95ce13085b84ecb80cd7e1db31fcd3400fcde8ce3ac128d20f19f30f76c",
+      "bytes": 452801
+    },
+    {
+      "reference": "STATUS.md",
+      "sha256": "ed7c9a27af355ab1aed5b0606c8605fdce935d60a23ec491303acba94444e46f",
+      "bytes": 4477
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f349-login-red.log",
+      "sha256": "d94f4dcd4f47469a318029a7a36cb4c6adb1314b9fad9e1936fe87fe81337bf0",
+      "bytes": 243
+    },
+    {
+      "reference": ".private/freightctl-f349-format.log",
+      "sha256": "eecd78ef7feffe900d5dadbdb2d8ba684daba02ab8535eb8b54363358afa3e2d",
+      "bytes": 52
+    },
+    {
+      "reference": ".private/freightctl-f349-login-green.log",
+      "sha256": "516e61724e676dd84d27f4a7d0695470c34889e6d10eb4741b2627fdb0550250",
+      "bytes": 55
+    },
+    {
+      "reference": ".private/freightctl-f349-native-compile.log",
+      "sha256": "be4bcc23b6ee536fa07f4827fb4286f8cf064e5318cffbcc07b89d61f762ed54",
+      "bytes": 73
+    },
+    {
+      "reference": ".private/freightctl-f349-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f349-architecture.log",
+      "sha256": "8b268affd63fa95d965ab0fbe3185cf4bb9ed7c7a7ce8c34af38f32b4aafd193",
+      "bytes": 64
+    }
+  ]
+}
