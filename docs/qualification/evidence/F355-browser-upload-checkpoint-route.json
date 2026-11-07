@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "id": "F355",
+  "observed_at": "2026-11-07",
+  "base_candidate": "8232024c20781015ba2181f138b000924bc418ed",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "The actual receive browser fixture permits the ordinary same-origin same-participant UUID checkpoint PATCH required by its existing upload journey. All other method/path/scope/egress refusals and actual server authorization,byte and zero-egress checks stay enforced.",
+  "original_failure": {
+    "candidate": "3f32758aaa848065d7a2bf8ede787d729bbef166",
+    "run_id": 42380575787,
+    "job_id": 128427129559,
+    "url": "https://github.com/ctlplne/freightctl/actions/runs/42380575787/job/128427129559",
+    "phase": "sender-upload",
+    "class": "timeout",
+    "source_line": 528,
+    "source_column": 37,
+    "safe_result_sha256": "d5161716343bab5083e831bd03bd8b6ad23579eb8bf62a8e96a1342c4273e2eb",
+    "protected_first_failure_sha256": "16d438dae797403697df8e93e7f6e09d01a7c68a1b75ce91561d3edd0423a923"
+  },
+  "red_green": "Actual fixture predicate first denies the ordinary upload checkpoint PATCH;after exact participant/path method support it passes with all cross-scope/path/query/method/egress negatives still refused.",
+  "green": [
+    "Actual fixture predicate positive and negative Node26.13 tests",
+    "Affected browser syntax,format and workflow lint"
+  ],
+  "owed": [
+    "Original full native Chrome upload/copy/original-key recovery/onward/revocation replay",
+    "Other original failures and all mandatory GOAL/AX work"
+  ],
+  "source_files": [
+    {
+      "reference": "scripts/artifact-exchange-network.mjs",
+      "sha256": "82afce81a6f5ae364aa2d236c669de01251f227668f5aa095c8a041203dde6d8",
+      "bytes": 785
+    },
+    {
+      "reference": "scripts/test-artifact-exchange-network.mjs",
+      "sha256": "b610c9b16c54690680aedaa959868042833d111490682de64f36c9c49e18c392",
+      "bytes": 1784
+    },
+    {
+      "reference": "scripts/artifact-exchange-browser.mjs",
+      "sha256": "0241d254b1bace7d3baf70d7f6b57761292d354191ae2994e86cc3b2b3604411",
+      "bytes": 53373
+    },
+    {
+      "reference": ".github/workflows/artifact-exchange.yml",
+      "sha256": "419845ec5ce9fdac8b7456bb14ca0d03cd63bbebdadad018abd8c8acddba3499",
+      "bytes": 2764
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "e1d17999a5f5793dae41262eb3d8f39d5140288b3552cbe8f94ae7196daa8090",
+      "bytes": 459412
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f355-upload-network-red.log",
+      "sha256": "421b84bdbc2a2e0637ed9087a9bb40ad635d7453218f63a1a9b42cf865d1b2a8",
+      "bytes": 1102
+    },
+    {
+      "reference": ".private/freightctl-f355-format-write.log",
+      "sha256": "2a766ce996ad6df62e29cf31db0a2ed77a8a42368548ebf1e56ff4b8eec0086b",
+      "bytes": 133
+    },
+    {
+      "reference": ".private/freightctl-f355-upload-network-green.log",
+      "sha256": "c9d90c2a3d800dc95ebb2e01ec052df7d58066fa005108b68639423b8f1c9b62",
+      "bytes": 300
+    },
+    {
+      "reference": ".private/freightctl-f355-syntax.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f355-format.log",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    },
+    {
+      "reference": ".private/freightctl-f355-actionlint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ]
+}

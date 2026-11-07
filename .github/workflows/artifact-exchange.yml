@@ -12,6 +12,8 @@ on:
       - "scripts/ci_resources.py"
       - "scripts/dev-db.py"
       - "scripts/artifact-exchange-browser.mjs"
+      - "scripts/artifact-exchange-network.mjs"
+      - "scripts/test-artifact-exchange-network.mjs"
       - "scripts/browser-pinned-https.mjs"
       - ".github/workflows/artifact-exchange.yml"
   pull_request:
@@ -24,6 +26,8 @@ on:
       - "scripts/ci_resources.py"
       - "scripts/dev-db.py"
       - "scripts/artifact-exchange-browser.mjs"
+      - "scripts/artifact-exchange-network.mjs"
+      - "scripts/test-artifact-exchange-network.mjs"
       - "scripts/browser-pinned-https.mjs"
       - ".github/workflows/artifact-exchange.yml"
   workflow_dispatch:
@@ -60,6 +64,8 @@ jobs:
           google-chrome --version
           npm --prefix web --cache "$GITHUB_WORKSPACE/.cache/freightctl-npm" ci --ignore-scripts --no-fund
           npm --prefix web run check-built
+      - name: Exact browser-fixture upload route and egress boundary
+        run: node --test scripts/test-artifact-exchange-network.mjs
       - name: Task-owned loopback PostgreSQL
         run: python3 scripts/dev-db.py
       - name: Actual recipient UI, exact bytes, unrelated user and endpoint revocation

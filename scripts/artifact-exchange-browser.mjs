@@ -4,6 +4,7 @@ import { createHash, X509Certificate } from "node:crypto";
 import { readFile, writeFile, lstat, chmod } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { setTimeout as delay } from "node:timers/promises";
+import { artifactExchangeRequestAllowed } from "./artifact-exchange-network.mjs";
 import {
   fetchPinnedBrowserRequest,
   guardBrowserCommandRoute,
@@ -122,8 +123,13 @@ try {
     await context.route("**/*", (route) => {
       const target = new URL(route.request().url());
       if (
-        target.origin !== origin.origin ||
-        !["GET", "POST"].includes(route.request().method())
+        !artifactExchangeRequestAllowed(
+          target,
+          route.request().method(),
+          origin.origin,
+          c.tenant,
+          c.partner,
+        )
       ) {
         egress++;
         return route.abort();
