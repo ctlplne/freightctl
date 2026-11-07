@@ -1180,7 +1180,8 @@
         "docs/qualification/evidence/F264-native-json-restart-and-browser-failures.json",
         "docs/qualification/evidence/F265-exact-browser-selectors-and-safe-prelaunch.json",
         "docs/qualification/evidence/F267-scoped-held-output-refusal.json",
-        "docs/qualification/evidence/F268-native-terminal-ci.json"
+        "docs/qualification/evidence/F268-native-terminal-ci.json",
+        "docs/qualification/evidence/F269-producer-mcp-attempt-metadata.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -1255,13 +1256,14 @@
         "F263 makes FTPS stand-in/stock-negative passwords,independent-peer directories and projection partial/corruption fixtures use actual private OS profiles. Windows tamper fixture changes only the same owned object ACL,writes corruption and re-seals;physical identity and original digest/no-other-slot refusals remain. Independent peer scripts/non-symlink/Unix permissions remain untouched. Focused local filesystem and four loopback FTPS protocol stand-ins pass;the first sandbox socket refusal is preserved and the authorized bounded replay passes. Architecture,affected vet and Windows compilation/vet pass. Actual Windows/stock/scanner and final-source runtime proofs remain owed. STATUS is compacted;historical evidence remains in exact manifests and commits.",
         "F264 records exact638d156 native ARM/x86 JSON custody/restart successes and original browser red stages. F265 changes format/padding selectors from nested label-text matching to exact combobox roles/names;all selected values/review/hash/protocol assertions stay. Receive-browser configuration checks move inside the original private-failure/final-summary boundary with three closed phases;independent-review reload/import substeps gain closed stages without changing assertions. New local prelaunch-summary regression observed red then green;old ambiguity/privacy cases,script formatting/parse and affected compilation/vet pass. Exact initial Go CSV policy also passes the actual frontend decoder in a lightweight stand-in. Actual original Chrome outcomes remain owed;review/receive causes are not guessed.",
         "F267 corrects two scoped held-output assertions. Nonroot users have no published namespace entry,so the original FileAccessible guard conceals metadata with exact ErrNotFound;the separately authorized root administrator reaches exact FileAvailable ErrState for held bytes. Both paths must return nil file and reader. This preserves the original hold refusal and adds strict metadata concealment;no production permission/availability rule changes or alternative-code acceptance. Integration compilation/vet only;actual original native authored/scoped cases remain owed.",
-        "F268 preserves original638d156 terminal16 workflows/35 jobs:26 pass/9 fail. Both complete image scans and listed scan gates pass;Windows inherited case remains unqualified. Actual ARM/x86 native JSON custody/restart and x86 authority-label/rebinding cases pass only on this candidate. Exact original failures remain;F251\u2013F267 prepare repairs,not final-source qualification. No original run cancelled/rerun/substituted."
+        "F268 preserves original638d156 terminal16 workflows/35 jobs:26 pass/9 fail. Both complete image scans and listed scan gates pass;Windows inherited case remains unqualified. Actual ARM/x86 native JSON custody/restart and x86 authority-label/rebinding cases pass only on this candidate. Exact original failures remain;F251\u2013F267 prepare repairs,not final-source qualification. No original run cancelled/rerun/substituted.",
+        "F269 repairs a production MCP response bug:work completed producer/composed attempts but the adapter accepted only old plan2/definition2,so it returned an error instead of the original held-output metadata. Reuse the exact core immutable-definition decoder,closed schema2/3/4 run mapping and actual profile while retaining direct-tool scoped-only restrictions. Local observed producer3 refusal turns green for2/3/4;rehashed producer/lineage/workflow/slot substitutions and private-context disclosure are refused. Core guards,architecture,affected vet and integration compilation pass. Backend authority/approval/leases/acceptance unchanged;actual stock MCP work/same-key replay/final-source bytes owed."
       ],
       "current_item": {
-        "id": "F267",
-        "state": "Strict scoped concealment and administrator held-state proofs prepared;native replay owed",
-        "proof": "Actual original ErrNotFound failures retained;integration compilation/vet only",
-        "next": "Repair stale MCP producer/composed response conversion and remaining native/product outcomes"
+        "id": "F269",
+        "state": "MCP producer/composed response adapter repaired;actual stock runtime owed",
+        "proof": "Observed local supported-producer refusal red,then focused profile/privacy/substitution green;native stock proof owed",
+        "next": "Triage new native Windows/security/receive/browser results;continue remaining product implementation and final qualification"
       }
     }
   ],

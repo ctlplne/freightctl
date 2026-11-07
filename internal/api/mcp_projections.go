@@ -42,26 +42,22 @@ func mcpProjectionProfileFacts(r *store.RecordProjection, replayed, current bool
 	if r == nil || !store.ValidID(r.ID) || !mcpUploadDigest.MatchString(r.Hash) {
 		return nil, store.ErrIsolation
 	}
-	var d checks.ProjectionDefinition
-	if workflow.Decode(r.Definition, &d) != nil || d.Plan.Schema != 2 || d.Plan.Profile != checks.ScopedProjectionProfile {
-		return nil, store.ErrForbidden
-	}
-	wire, err := json.Marshal(d)
-	profile := d.Schema == 1 && d.Workflow == nil && run == ""
-	if run != "" {
-		profile = d.Schema == 2 && d.Workflow != nil && d.Workflow.RunID == run
-	}
-	if err != nil || secure.Digest(wire) != r.Hash || !profile || len(d.Slots) != 3 || d.Plan.Context.Source.File.ID != r.SourceID {
+	d, err := checks.DecodeProjectionDefinition(r)
+	if err != nil {
 		return nil, store.ErrIsolation
 	}
-	seen := map[string]bool{}
-	for _, id := range d.Slots {
-		if !store.ValidID(id) || id == r.SourceID || seen[id] {
-			return nil, store.ErrIsolation
-		}
-		seen[id] = true
+	// Direct projection tools remain scoped-only. Producer/composed attempts
+	// may be described only for their exact separately governed workflow run.
+	profile := d.Schema == 1 && d.Plan.Schema == 2 && d.Plan.Profile == checks.ScopedProjectionProfile && d.Workflow == nil && run == ""
+	if run != "" {
+		profile = d.Workflow != nil && d.Workflow.RunID == run && (d.Schema == 2 && d.Plan.Profile == checks.ScopedProjectionProfile ||
+			d.Schema == 3 && d.Plan.Profile == checks.ProducerProjectionProfile ||
+			d.Schema == 4 && d.Plan.Profile == checks.ComposedProducerProjectionProfile)
 	}
-	result := map[string]any{"profile": checks.ScopedProjectionProfile, "projection_id": r.ID, "definition_hash": r.Hash, "state": r.State, "revision": r.Revision, "attempts": r.Attempts, "observation": observation, "current": current, "replayed": replayed, "external_contact": false, "release_inherited": false}
+	if !profile {
+		return nil, store.ErrForbidden
+	}
+	result := map[string]any{"profile": d.Plan.Profile, "projection_id": r.ID, "definition_hash": r.Hash, "state": r.State, "revision": r.Revision, "attempts": r.Attempts, "observation": observation, "current": current, "replayed": replayed, "external_contact": false, "release_inherited": false}
 	if observation == "original-command-receipt" {
 		result["current"] = "not-checked"
 	}

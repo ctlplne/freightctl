@@ -6,25 +6,33 @@ adoption and enterprise readiness remain unqualified. Exact implementation,
 original failures,source hashes and owed proofs are in
 [remaining work](docs/qualification/remaining.json) and its item manifests.
 
-Latest pushed source:638d156cf16820b165cc8e6310f62daddf2d8458.
+Latest pushed source:33ad447564cb0be33bc04fa8d60e9f0adaf0c2b4.
+Its original18 triggered workflows are running;new outcomes remain owed.
+
+Previous source:638d156cf16820b165cc8e6310f62daddf2d8458.
 Its original16 triggered workflows/35 jobs are terminal:26 pass,9 fail. Both
 complete image scans and listed scan gates pass. F268 preserves exact run/job/
 step handles and component qualifications;Windows inherited-access refusal and
 all failed native/browser/stock journeys remain red or unqualified. No result is
 inherited by later source. F236 preserves the previous e87483b18/41 outcomes.
 
-Current verified local batches are F251 custody protection,F253 setup/CLI private
+The latest pushed batch contains F251 custody protection,F253 setup/CLI private
 outputs,F255 actual inherited-access refusal fixtures,F257 read-only browser
 session fencing,F259 movable-root confinement/public name-pin cases,F261 full
 receiver inventory/independent rotation,and F263 protected native test references.
 Focused local checks and affected compilation/vet pass. Actual native replay on
-the next pushed candidate remains owed;compilation does not qualify Windows.
+the pushed candidate remains owed;compilation does not qualify Windows.
 F264 records exact638d156 native JSON/restart successes and browser failures.
 F265 prepares exact-role format selectors and closed prelaunch/review diagnostic
 phases. Its new bounded-failure regression turns red to green locally;actual
 original Chrome journeys remain red pending native replay. F267 requires exact
 scoped-user404 plus administrator409 refusals for unpublished held outputs,with
 no returned file/reader. Actual PostgreSQL replay remains owed.
+
+Current local F269 repairs stale MCP producer/composed attempt conversion using
+the existing core definition validator. Focused observed red turns green;exact
+run,binding/lineage/slot and private-context refusal checks pass. Actual stock
+MCP work/replay and final-source byte outcomes remain owed.
 
 Custody requires private creation,sealed protection,exact physical object/length/
 hash,sync/close/directory persistence and ordinary SQL acceptance. Writable staging

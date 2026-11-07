@@ -39,6 +39,13 @@ type ProjectionOutput struct {
 	Report     ProjectionReport  `json:"report"`
 }
 
+// DecodeProjectionDefinition verifies the bounded immutable definition,exact
+// hash,profile/workflow bindings,source lineage and reserved slots. It performs
+// no I/O and grants no current authority,approval,readiness or execution rights.
+func DecodeProjectionDefinition(r *store.RecordProjection) (ProjectionDefinition, error) {
+	return decodeProjection(r)
+}
+
 func decodeProjection(r *store.RecordProjection) (ProjectionDefinition, error) {
 	var d ProjectionDefinition
 	if r == nil || len(r.Definition) > 32768 || workflow.Decode(r.Definition, &d) != nil || (d.Schema != 1 && d.Schema != 2 && d.Schema != 3 && d.Schema != 4) || (d.Schema != 1) != (d.Workflow != nil) || !validProjectionProfile(d.Plan) || len(d.Slots) != 3 || d.Plan.Context.Source.File.ID != r.SourceID {

@@ -218,3 +218,14 @@ exact owned completed producer acceptance and does not inherit approval or
 execution. A second task requires its own ordinary human approval;no approval
 tool is added. Stock-client runtime proof with the receive adapter disabled is
 prepared/compiled only. F187's original v16 evidence remains historical.
+
+Workflow attempt replies recognize the exact scoped,producer and composed
+processing profiles under their own approved run. The response adapter reuses the
+core immutable-definition decoder:the definition hash,profile/schema pairing,
+producer/source lineage and three distinct reserved slots must still match.
+Direct projection tools remain scoped-only and cannot adopt a workflow attempt.
+Returned metadata names the actual processing profile and held acceptance;it
+contains no private plan,root,storage reference,slot list or producer credential.
+An original command receipt does not assert current approval or release.
+Actual stock-client producer/composed work and same-key recovery on final source
+remain owed;local converter checks establish no runtime byte outcome.

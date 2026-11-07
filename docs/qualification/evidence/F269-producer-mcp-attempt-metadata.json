@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "id": "F269",
+  "observed_at": "2026-11-07",
+  "base_candidate": "33ad447564cb0be33bc04fa8d60e9f0adaf0c2b4",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Producer/composed MCP reply conversion repaired;actual stock runtime proof owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "0f8eb87925e6198354ed91ab994ace2a38f5da1b0b420cc308137cc576aa1b79",
+      "bytes": 3868
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "7cd57ce05752508683964f29bcdd143db4e124ccc012dc7eae62eb61e10be101",
+      "bytes": 381683
+    },
+    {
+      "reference": "docs/protocols/artifact-exchange-mcp.md",
+      "sha256": "005378295713f0e3c307f05324b29ea4a3af3e34757161ba7b2f4bed3f8e41c7",
+      "bytes": 16799
+    },
+    {
+      "reference": "internal/api/mcp_projections.go",
+      "sha256": "f9c83b1d5015fb051da71d3fdc7357f1e98ca7afdf2e49d6ff07d2cbc5fb1624",
+      "bytes": 7005
+    },
+    {
+      "reference": "internal/checks/projection_intents.go",
+      "sha256": "0d2f0a153582b3230de203952eb26a67832b3bca023458f7f280f5407281ec9b",
+      "bytes": 13349
+    },
+    {
+      "reference": "internal/api/mcp_producer_attempt_test.go",
+      "sha256": "cce559bd123e28179867de6e06d25e1ca7629911937206c30d8b5d19e06153d8",
+      "bytes": 6129
+    }
+  ],
+  "red": [
+    {
+      "candidate": "638d156cf16820b165cc8e6310f62daddf2d8458",
+      "run": 42357772725,
+      "job": 128359540611,
+      "url": "https://github.com/ctlplne/freightctl/actions/jobs/128359540611",
+      "tests": [
+        "TestMCPStockClientProducerOutputSelectionKeepsDefaultIngressAndApprovalOutsideTools",
+        "TestMCPStockClientComposedSourceNeedsFreshChecksAndSeparateApprovalWithReceiveDisabled"
+      ],
+      "observed": "mcp_processing_workflows_integration_test.go:162 stock typed processing call failed work_processing_workflow <nil>",
+      "source_cause": "The response adapter required plan2/scoped and definition2 even after the governed backend completed producer plan/definition3 or composed4. Work results could commit before response conversion refused them."
+    },
+    {
+      "reference": ".private/freightctl-f269-producer-mcp-red.log",
+      "test": "TestMCPWorkflowAttemptMetadataAcceptsExactProducerProfilesWithoutDisclosingPrivatePlans",
+      "observed": "supported workflow attempt metadata was refused or implied release3 permission denied"
+    }
+  ],
+  "changed": [
+    "Expose the existing read-only core immutable-definition validator through an internal checks wrapper. No I/O,current authority,approval,execution or release is granted.",
+    "Response conversion reuses bounded strict decode,canonical hash,profile/schema/producer/source lineage,workflow binding and distinct reserved-slot checks instead of a stale duplicate partial validator.",
+    "Accept exactly scoped2,producer3 or composed4 only for the exact governed run. Direct projection tools remain scoped-only. Return the actual profile and existing minimal held-output metadata;private plans and original/current receipt semantics remain protected.",
+    "Backend current authority,approval,lease/fence,intent/acceptance,output checks and separate release remain unchanged."
+  ],
+  "green": [
+    "Observed local valid producer3 reply refusal before;focused green after for scoped2/producer3/composed4.",
+    "Rehashed profile,producer authority/root/output policy,workflow/run/step,duplicate/source slots and composed lineage substitutions are refused. Private roots/reasons/steps/storage/slots/bindings are absent from model replies.",
+    "Existing affected MCP metadata/schema/authority/refusal and core immutable definition/producer/composed guards pass. Architecture,affected vet and integration compilation pass."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f269-architecture.log",
+      "sha256": "e75413a122e27d2ffd7a7e235acb625783430b9429d8c5a2abb772b39e748e05",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f269-core-definition-green.log",
+      "sha256": "d919f66ae2b58409dcc726759437f3a4312cc368911d121c4a76e8e42acc8ab3",
+      "bytes": 58
+    },
+    {
+      "reference": ".private/freightctl-f269-format.log",
+      "sha256": "bf389e51a05f5500f5f53001bca0fcc8a57c01b5fa7195219c0561acadf53888",
+      "bytes": 74
+    },
+    {
+      "reference": ".private/freightctl-f269-integration-compile.log",
+      "sha256": "8ccef31747291414dab0e9f9db50acffdbe585c856b066cff9b12120f1da7820",
+      "bytes": 149
+    },
+    {
+      "reference": ".private/freightctl-f269-producer-mcp-green.log",
+      "sha256": "f26a515f75b19ffb501a9336fe2ad329cf7782f397952883a7d134bcf1043eb4",
+      "bytes": 55
+    },
+    {
+      "reference": ".private/freightctl-f269-producer-mcp-red.log",
+      "sha256": "07f0d567dd41daccd04f6612279bfc8709edf9f71736e5fdac7a78211d099949",
+      "bytes": 295
+    },
+    {
+      "reference": ".private/freightctl-f269-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "owed": [
+    "Actual original stock SDK producer and composed work,exact same-key recovery,held-output/no-release/receive-disabled/privacy journeys on ARM/x86.",
+    "All actual final-source native/browser/security/stock/restore/reproducibility and remaining baseline/AX/FINISH outcomes."
+  ],
+  "resources": "OneCPU/192MiB local focused pure units/static/compilation only;no inference,PostgreSQL,Chrome,scanner or heavy peer. Retained35/source60 unchanged."
+}
