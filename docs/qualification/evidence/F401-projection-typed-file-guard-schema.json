@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "id": "F401",
+  "observed_at": "2026-11-07",
+  "base_candidate": "1ab14eaffe9285c8d97be4cf6838028da8362638",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F401 immediately repairs the security-contract omission identified by classifying only failed test names in F398 originals:Windows128487856995,macOS128487857403,LinuxARM128487857901/Linuxx86128487857974 all fail TestProjectionPreviewOpenAPIRequiresDeclarativeRulesAndExactTypedResponse. F392 added optional PathCommand.expected_file_id,but the published projection preview omitted it. Add its exact string field at all six source/destination binding sites in preview,definition and plan. Preserve original complete generated-preview equality and injected-authority/declarative-rules assertions byte-for-byte. New derived guard checks full typed namespace field coverage at all six sites,malformed field types,unknown execution authority and historical absence. Preserve every prior published JSON constraint:structurally remove only the six new optional fields and the document equals HEAD. Focused original red plus additional derived red are retained;all three security methods then pass,with vet/format/architecture. An initial new whole-derived-schema equality oracle also compared intentionally stricter input constraints with plain Go reflection;its failure stays retained. Correct that new oracle to command-field coverage and retain all original constraints,not remove constraints to satisfy reflection. This is a schema/security-evidence repair;no runtime authorization,assertion,budget or scan is weakened. Original all-platform/unit-race/upstream/PostgreSQL replay and actual final-source outcomes remain owed. Receive nonsecurity failure remains deferred;receiver security dependency stays red.",
+  "original_failure": {
+    "candidate": "acd82da46a31ae96581ed6660345ecd89113fae4",
+    "test": "TestProjectionPreviewOpenAPIRequiresDeclarativeRulesAndExactTypedResponse",
+    "jobs": [
+      128487856995,
+      128487857403,
+      128487857901,
+      128487857974
+    ],
+    "run_ids": [
+      42400784395,
+      42400784420
+    ],
+    "scope": "Only failed test names classified for the S003 security exception;no deferred receive/browser nonsecurity cause investigated"
+  },
+  "red_green": "Existing original strict generated-preview test fails locally with unchanged document;add six optional exact typed fields. Original assertions remain byte-identical,all previous document constraints remain structurally identical,all three focused security tests pass. Additional full-derived reflection attempt failed because input schemas deliberately add constraints;retain that failure and use full namespace field coverage/string/unknown-execution guards while preserving constraints.",
+  "owed": [
+    "Original native Windows/macOS/Linux unit/race jobs and previously skipped pinned engine/full PostgreSQL integration",
+    "Original final-source security and every remaining baseline/AX/readiness outcome"
+  ],
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "014a84ebb2297ba9ba61fe03a1e1c166198be5baae640f093a8d32d3c8833341",
+      "bytes": 5855
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "8ba47c4860b9a7e5e8634483db322bab994633599d2e6aeff8a0f2c0b7b3bea5",
+      "bytes": 574812
+    },
+    {
+      "reference": "docs/api/record-projection.openapi.json",
+      "sha256": "3f93299a9d1e3d13e04a98425451bd1bef66ae83383075a377187e12f0349301",
+      "bytes": 117700
+    },
+    {
+      "reference": "internal/api/projection_review_test.go",
+      "sha256": "c43a414a2458606dcd5ca50d6c2c19874af4707a7c8aa86d3f134caecb69c102",
+      "bytes": 7990
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f401-schema-red.log",
+      "sha256": "f440b0e575f56700f4f8de1a7e9ec942edf4034defc63365471f92ab1a6cd1e6",
+      "bytes": 250
+    },
+    {
+      "reference": ".private/freightctl-f401-derived-red.log",
+      "sha256": "a07cd1dcf04732982c09cd169f3f30dc5b8d348874f54d921af35419e27032c5",
+      "bytes": 268
+    },
+    {
+      "reference": ".private/freightctl-f401-security-focused.log",
+      "sha256": "3a0e9db110d3e7c1903ff34ac07841c6a2b689b6296535f71ccbf7c652905729",
+      "bytes": 268
+    },
+    {
+      "reference": ".private/freightctl-f401-constraints.log",
+      "sha256": "3eabde52d111bb0ce793db5fbd5d8abefca246d6c1da00738f70891fc007f564",
+      "bytes": 260
+    },
+    {
+      "reference": ".private/freightctl-f401-original-assertions.log",
+      "sha256": "311b5845da11b9ba2ca3a9c8be3b0f923d214809e0fea2701ef6759c9e9869f1",
+      "bytes": 354
+    },
+    {
+      "reference": ".private/freightctl-f401-final-security-focused.log",
+      "sha256": "ca92f29252eb79f7dfbca2d1df28c273218e93d484b3ca3738e8ef9a750d33f6",
+      "bytes": 55
+    },
+    {
+      "reference": ".private/freightctl-f401-final-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f401-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f401-final-architecture.log",
+      "sha256": "e75413a122e27d2ffd7a7e235acb625783430b9429d8c5a2abb772b39e748e05",
+      "bytes": 64
+    }
+  ]
+}

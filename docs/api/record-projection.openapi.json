@@ -862,6 +862,9 @@
                                       "integer"
                                     ]
                                   },
+                                  "expected_file_id": {
+                                    "type": "string"
+                                  },
                                   "replace": {
                                     "type": "boolean"
                                   },
@@ -1042,6 +1045,9 @@
                               "null",
                               "integer"
                             ]
+                          },
+                          "expected_file_id": {
+                            "type": "string"
                           },
                           "replace": {
                             "type": "boolean"
@@ -2108,6 +2114,9 @@
                                       "integer"
                                     ]
                                   },
+                                  "expected_file_id": {
+                                    "type": "string"
+                                  },
                                   "replace": {
                                     "type": "boolean"
                                   },
@@ -2288,6 +2297,9 @@
                               "null",
                               "integer"
                             ]
+                          },
+                          "expected_file_id": {
+                            "type": "string"
                           },
                           "replace": {
                             "type": "boolean"
@@ -3012,6 +3024,9 @@
                                   "integer"
                                 ]
                               },
+                              "expected_file_id": {
+                                "type": "string"
+                              },
                               "replace": {
                                 "type": "boolean"
                               },
@@ -3192,6 +3207,9 @@
                           "null",
                           "integer"
                         ]
+                      },
+                      "expected_file_id": {
+                        "type": "string"
                       },
                       "replace": {
                         "type": "boolean"

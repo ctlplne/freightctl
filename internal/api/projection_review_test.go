@@ -11,6 +11,7 @@ import (
 
 	"github.com/ctlplne/freightctl/internal/checks"
 	"github.com/ctlplne/freightctl/internal/custody"
+	"github.com/ctlplne/freightctl/internal/store"
 	"github.com/google/jsonschema-go/jsonschema"
 )
 
@@ -119,5 +120,84 @@ func TestProjectionPreviewOpenAPIRequiresDeclarativeRulesAndExactTypedResponse(t
 	var got, want any
 	if json.Unmarshal(wire, &want) != nil || json.Unmarshal(document.Components.Schemas["ProjectionPreview"], &got) != nil || !reflect.DeepEqual(got, want) {
 		t.Fatal("published response lost or changed a typed review binding")
+	}
+}
+
+func TestProjectionDerivedOpenAPIPreservesEveryFrozenNamespaceBinding(t *testing.T) {
+	raw, err := os.ReadFile("../../docs/api/record-projection.openapi.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var document struct {
+		Components struct {
+			Schemas map[string]json.RawMessage `json:"schemas"`
+		} `json:"components"`
+	}
+	if json.Unmarshal(raw, &document) != nil {
+		t.Fatal("projection schema unavailable")
+	}
+	typed, err := jsonschema.For[store.PathCommand](nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	walk := func(root *jsonschema.Schema, path ...string) *jsonschema.Schema {
+		for _, field := range path {
+			if root == nil || root.Properties[field] == nil {
+				t.Fatalf("frozen schema path missing: %s", field)
+			}
+			root = root.Properties[field]
+		}
+		return root
+	}
+	// Derived input schemas also carry deliberate constraints beyond plain Go
+	// reflection. Keep those constraints;verify every command field at all six
+	// review sites,as well as the exact complete preview comparison above.
+	sites := 0
+	for _, name := range []string{"ProjectionPreview", "ProjectionDefinition", "ProjectionPlan"} {
+		var root jsonschema.Schema
+		if json.Unmarshal(document.Components.Schemas[name], &root) != nil {
+			t.Fatal("derived schema unavailable", name)
+		}
+		context := &root
+		if name != "ProjectionPlan" {
+			context = walk(context, "plan")
+		}
+		context = walk(context, "context")
+		for _, command := range []*jsonschema.Schema{walk(context, "source", "check", "binding", "target"), walk(context, "target", "command")} {
+			sites++
+			if len(command.Properties) != len(typed.Properties) {
+				t.Fatal("frozen command field coverage differs", name)
+			}
+			for field := range typed.Properties {
+				if command.Properties[field] == nil {
+					t.Fatal("frozen command field missing", name, field)
+				}
+			}
+			validator, err := command.Resolve(nil)
+			if err != nil {
+				t.Fatal(err)
+			}
+			value := map[string]any{"operation": "publish", "path": "/reviewed.csv", "expected_revision": float64(1), "expected_file_id": "00000041-1111-4111-8111-111111111111", "replace": true}
+			if validator.Validate(value) != nil {
+				t.Fatal("typed old-file review guard disappeared", name)
+			}
+			for _, invalid := range []any{nil, 42.0, true, []any{}, map[string]any{}} {
+				value["expected_file_id"] = invalid
+				if validator.Validate(value) == nil {
+					t.Fatal("old-file review guard lost its exact string type", name)
+				}
+			}
+			delete(value, "expected_file_id")
+			if validator.Validate(value) != nil {
+				t.Fatal("historical absent optional guard no longer represents the typed contract", name)
+			}
+			value["execute"] = true
+			if validator.Validate(value) == nil {
+				t.Fatal("schema admitted injected execution authority", name)
+			}
+		}
+	}
+	if sites != 6 {
+		t.Fatal("not all frozen namespace review sites were checked")
 	}
 }

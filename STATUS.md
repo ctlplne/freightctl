@@ -74,6 +74,13 @@ old custody and quota;focused checks pass and native API/CLI/stock proofs remain
 owed. F401 separately repairs the typed response-schema security guard exposed
 by original unit outcomes;that assertion remains enforced.
 
+F401 repairs the typed projection response-schema security guard. The four
+platform/Linux unit failures share that one omitted previous-file field. All six
+frozen binding sites now retain it;original exact-schema and injection assertions
+are unchanged,and every prior schema constraint is preserved. Focused red/green
+and static checks pass;original all-platform/unit-race and skipped full PostgreSQL
+replay remain owed. Receive nonsecurity investigation stays deferred for FINISH.
+
 Next:continue independent implementation while these original CI runs finish.
 Push the next verified owner-only batch only after all required originals are terminal. Repair original
 failures and finish every mandatory final-source baseline/AX gate. F026 stays
