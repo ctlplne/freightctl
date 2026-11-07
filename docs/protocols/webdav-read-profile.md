@@ -208,6 +208,13 @@ revision,mode,intake and idempotency checks still run before execution.
   receipt,and a changed request meaning conflicts409. Wrong kind/current policy
   fails409,permission403,and an excessive tree507. Native API/CLI/stock-curl
   whole-tree,refusal,tombstone,custody and retry outcomes remain owed until run.
+  To recover the original private commit after losing that204,use the ordinary
+  read-only namespace receipt endpoint/CLI with the exact original remove_tree
+  command and key. It reads historical evidence without needing the removed
+  source,opening custody or issuing DELETE again. Current read/list/manage_paths
+  and the unchanged original mount/authority meaning remain required. Its
+  original-commit-not-current-state observation never asserts current absence,
+  bytes or delivery;see [the receipt contract](../api/namespace-receipts.openapi.json).
 - `COPY` publishes one file into this same scope with an explicit destination
   decision. It requires an original key,exact strong source If-Match,Overwrite:F or T
   and an empty body. Destination uses the same confined URI rules as MOVE.

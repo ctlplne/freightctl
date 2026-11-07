@@ -281,6 +281,7 @@ func NewWithBrowserLifetime(service *custody.Service, audits *audit.Service, ena
 		m.HandleFunc(pattern, s.processingProposals)
 	}
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/namespace/commands", s.pathCommand)
+	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/namespace/receipts", s.namespaceReceipt)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/namespace/stat", s.statPath)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/namespace/entries", s.listPath)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/namespace/properties", s.namespaceProperties)

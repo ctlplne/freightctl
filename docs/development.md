@@ -113,6 +113,7 @@ Namespace HTTPS routes use the same bearer token and tenant/partner URL prefix a
 | Route | Contract |
 | --- | --- |
 | `POST .../namespace/commands` | Strict JSON command, `Idempotency-Key`; mkdir, publish, file copy, rename, remove, rmdir, setstat, properties, non-overwriting move_tree,complete remove_tree,full copy_tree and shallow copy_dir. Tree commands require exact expected_entry_id/revision;remove_tree uses read/list/manage_paths,copy_tree/copy_dir use read/list/write and every copied member's actual current authority. |
+| `POST .../namespace/receipts` | Read-only original typed command plus its exact original `Idempotency-Key`;recover actor-private historical commit metadata,including after removal,without executing or needing current paths/custody. Current read/list/original operation grants and the original mount/authority meaning are required. |
 | `GET .../namespace/stat?path=...` | Inspect one virtual entry and its current revision. |
 | `GET .../namespace/properties?path=...` | Explicit authorized single-entry property-content snapshot; ordinary stat/list omit XML values. |
 | `GET .../namespace/entries?path=...&limit=100&after=...` | Keyset page of immediate children; maximum 1,000 per page. |
@@ -122,6 +123,33 @@ Namespace HTTPS routes use the same bearer token and tenant/partner URL prefix a
 URL-encode query values. Paths are case-sensitive NFC Unicode, absolute within the mounted root, at most 1,024 bytes after combining mount and name, and at most 255 bytes per component. Traversal components, repeated/trailing separators, controls, backslashes, drive syntax, trailing dots/spaces and Windows device names are rejected. Names do not become host paths on any platform. This naming policy does not establish native Windows qualification.
 
 A command JSON file can be submitted through `namespace --request-file .private/command.json --idempotency-key stable-operation-id` with tenant, partner and token references. For example, `{"operation":"mkdir","path":"/inbox","mode":504}` creates a mode-0770 folder. Mutations of existing entries require `expected_revision` from stat. Rename replacement additionally requires `replace` and the target's `target_revision`. A retry returns the original actor-scoped receipt; changed meaning returns 409. Independent file and folder operations may use different keys. Unicode and timestamp normalization happen before retry hashing.
+
+For a lost response,use `namespace-receipt --request-file .private/command.json
+--idempotency-key stable-operation-id` with those same references and the exact
+original command meaning. This opens no custody storage and executes no command.
+The [typed receipt contract](api/namespace-receipts.openapi.json) returns
+`namespace-command-receipt-v1`, `original-commit-not-current-state`,the original
+result and its `NamespaceCommandCompleted` event. `result.replayed` stays false:
+it is the saved original result,not a new execution. The result's entry event is
+the original mapping transition;the completed event identifies its command
+receipt. An old created entry can be removed now;an old removed entry can have
+a new replacement now. Neither receipt asserts current names,byte availability,
+delivery,business acceptance,forwarding or execution authority. Read current
+state separately when authorized. The read emits no events,intents,commands or
+mapping transitions,and does not recreate a deleted path.
+
+The lookup requires current read/list plus the original operation's grants:
+write for mkdir/publish/copy/copy_tree/copy_dir;manage_paths for rename/remove/
+rmdir/setstat/move_tree/remove_tree;both write and manage_paths for properties
+or file-copy overwrite. Actor RLS and the existing request hash bind tenant,
+partner,identity,mount,authority revision and all normalized command options.
+Unknown keys,other actors or valid changed command/mount/authority meanings yield
+404 after current authorization. Malformed controls and invalid typed semantics
+remain refused. Missing current grants or invalid/revoked
+credentials fail normally. Keep the original command file,16KiB/key bounds and
+protected credential references;duplicate/aliased fields,trailing data,root null
+and ambiguous keys remain refused. Browser POST uses the ordinary session,
+same-origin and CSRF checks. This adds no schema or inference requirement.
 
 The active-entry default is 10,000 per partner (`--namespace-max-entries`); one subtree move is bounded to 1,000 entries, command JSON to 16 KiB and path-command duration to ten seconds. No sparse writes, links, mounts onto host directories, arbitrary ownership assignment, recursive unbounded mutation or automatic deletion is offered. Larger estates and configurable reservations remain open.
 

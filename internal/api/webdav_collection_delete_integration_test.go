@@ -134,6 +134,36 @@ func TestWebDAVCollectionDeleteIsWholeAtomicAndRetainsImmutableCustody(t *testin
 		t.Fatal("collection removal crossed its source boundary")
 	}
 	exchangeAPIRequest(t, server, "DELETE", source, nil, command, nil, 412)
+	// Recover the old transaction's private evidence without requiring a
+	// surviving path or dispatching the destructive command again.
+	originalCommand := store.PathCommand{Operation: "remove_tree", Path: root.Entry.Path, ExpectedEntryID: root.Entry.ID, ExpectedRevision: &root.Entry.Revision}
+	receiptHeaders := map[string]string{"Authorization": "Bearer " + string(operator.Bytes), "Idempotency-Key": "remove-original"}
+	response, raw = exchangeAPIRequest(t, server, "POST", prefix+"/namespace/receipts", nil, receiptHeaders, exchangeAPIJSON(t, originalCommand), 200)
+	var originalReceipt store.PathCommandReceipt
+	if json.Unmarshal(raw, &originalReceipt) != nil || originalReceipt.Profile != "namespace-command-receipt-v1" || originalReceipt.Observation != "original-commit-not-current-state" || originalReceipt.RequestKey != "remove-original" || len(originalReceipt.RequestHash) != 64 || !store.ValidID(originalReceipt.CompletedEventID) || originalReceipt.Result.Replayed || originalReceipt.Result.Changed != 4 || !originalReceipt.Result.Entry.Deleted || originalReceipt.Result.Entry.ID != root.Entry.ID || response.Header.Get("ETag") != "" || response.Header.Get("Location") != "" {
+		t.Fatal("lost DELETE response could not recover exact private historical evidence without current-state assertion")
+	}
+	otherReceiptHeaders := map[string]string{"Authorization": "Bearer " + string(other.Bytes), "Idempotency-Key": "remove-original"}
+	_, otherBody := exchangeAPIRequest(t, server, "POST", prefix+"/namespace/receipts", nil, otherReceiptHeaders, exchangeAPIJSON(t, originalCommand), 404)
+	unknownHeaders := map[string]string{"Authorization": "Bearer " + string(operator.Bytes), "Idempotency-Key": "remove-unknown"}
+	_, unknownBody := exchangeAPIRequest(t, server, "POST", prefix+"/namespace/receipts", nil, unknownHeaders, exchangeAPIJSON(t, originalCommand), 404)
+	changedCommand := originalCommand
+	changedCommand.Path = "/another"
+	_, changedBody := exchangeAPIRequest(t, server, "POST", prefix+"/namespace/receipts", nil, receiptHeaders, exchangeAPIJSON(t, changedCommand), 404)
+	if !bytes.Equal(otherBody, unknownBody) || !bytes.Equal(changedBody, unknownBody) {
+		t.Fatal("receipt selection disclosed another actor or a changed command meaning")
+	}
+	for _, token := range []*secure.Secret{noRead, noList, noManage} {
+		exchangeAPIRequest(t, server, "POST", prefix+"/namespace/receipts", nil, map[string]string{"Authorization": "Bearer " + string(token.Bytes), "Idempotency-Key": "remove-original"}, exchangeAPIJSON(t, originalCommand), 403)
+	}
+	browserCommand := store.PathCommand{Operation: "mkdir", Path: root.Entry.Path, Mode: &writable}
+	browserHeaders := map[string]string{"Origin": server.URL, "X-CSRF-Token": csrf, "Idempotency-Key": "remove-root"}
+	_, browserRaw := exchangeAPIRequest(t, server, "POST", prefix+"/namespace/receipts", cookie, browserHeaders, exchangeAPIJSON(t, browserCommand), 200)
+	var browserReceipt store.PathCommandReceipt
+	if json.Unmarshal(browserRaw, &browserReceipt) != nil || browserReceipt.Observation != "original-commit-not-current-state" || browserReceipt.Result.Entry.ID != root.Entry.ID || browserReceipt.Result.Entry.Deleted || browserReceipt.Result.Entry.Revision != 1 {
+		t.Fatal("browser receipt changed old creation evidence after current removal")
+	}
+	exchangeAPIRequest(t, server, "POST", prefix+"/namespace/receipts", cookie, map[string]string{"Origin": server.URL, "Idempotency-Key": "remove-root"}, exchangeAPIJSON(t, browserCommand), 403)
 	// Recreate the root at the same path and invoke the old key. Even a
 	// matching revision on another identity cannot recover the private receipt.
 	replacement := apply("remove-recreate", store.PathCommand{Operation: "mkdir", Path: root.Entry.Path, Mode: &writable})

@@ -88,7 +88,8 @@
         "docs/qualification/evidence/F417-dav-collection-copy.json",
         "docs/qualification/evidence/F418-cli-tree-copy-storage.json",
         "docs/qualification/evidence/F419-native-terminal.json",
-        "docs/qualification/evidence/F420-native-push.json"
+        "docs/qualification/evidence/F420-native-push.json",
+        "docs/qualification/evidence/F421-original-namespace-receipts.json"
       ],
       "remaining_details": [
         "F006 adds immutable checkpoints, exact receipts and persistent storage/parent/authority binding. Finish approved cleanup/recovery/rebinding, scalable reservations/fairness, protected retention, journal chaining/rebuild, larger exports and remaining crash/commit boundaries.",
@@ -144,14 +145,15 @@
         "F417 implements non-overwriting full collection COPY/copy_tree and shallow COPY/copy_dir with exact root identity/revision,read/list/write,current actual member modes/policy,confined writable destination and verified immutable custody. Fresh mappings have new IDs/ownership/ordinary modes and independent inert properties. Existing SQL guards stay intact:directory creation and exact property attrs initialize atomically. Observed old HTTP guard400 becomes focused green;affected native compilation,vet and architecture pass. Native API/CLI/stock-curl,mount,corrupt-custody,policy,capacity and no-extra-effects proof remains owed;no schema,permission/resource budget or full-DAV qualification change.",
         "F418 fixes full-tree CLI COPY custody wiring found by source review before pushing F417. Extracting the actual old publish/copy storage predicate preserves its behavior and observes copy_tree red;include copy_tree,retain metadata-only operations without disk opening,and focused green. Tagged CLI compilation,vet and architecture pass. Native missing-storage refusal/no namespace prefix,ordinary-writer full-copy and independent custody proofs remain owed;no prior real CLI pass is claimed.",
         "F419:23c752add5ee77f47d8280f7c629c803058e3b7c originals terminal:16 workflows,35 jobs,34 pass/one receive-browser failure(42417902584/128539849391). All named security gates pass. Both Linux PostgreSQL,restore,HTTPS/curl,CLI,platform,fuzz and live browser/FTPS workflows succeed in completion metadata,including F412/F413. Detailed scoped/final-source evidence remains owed. Local F416/F417/F418 collection mutations/CLI storage repair are not included. Prior original browser and independent x86 receiver failures remain preserved/unresolved;F026 held.",
-        "F420:five owner-only commits pushed fast-forward23c752ad\u2192f22d0d41428f0019f5a872336c892f9893c2cc2e after all prior originals terminal(F419). Enabled Gitleaks8.30.1:5 commits,reported182134 bytes,no leaks;push0,remote main verified. Sixteen first original attempt1 workflows preserved. F416 collection DELETE/F417 full-shallow COPY/F418 CLI custody opening await actual native API/CLI/curl/custody outcomes. Original receive/live-browser and independent x86 receiver failures remain owed;F026 held. No local heavy runtime,publication or deployment."
+        "F420:five owner-only commits pushed fast-forward23c752ad\u2192f22d0d41428f0019f5a872336c892f9893c2cc2e after all prior originals terminal(F419). Enabled Gitleaks8.30.1:5 commits,reported182134 bytes,no leaks;push0,remote main verified. Sixteen first original attempt1 workflows preserved. F416 collection DELETE/F417 full-shallow COPY/F418 CLI custody opening await actual native API/CLI/curl/custody outcomes. Original receive/live-browser and independent x86 receiver failures remain owed;F026 held. No local heavy runtime,publication or deployment.",
+        "F421 adds read-only API/CLI recovery of one exact original actor-private namespace receipt,including after deletion,without executing commands or opening custody. Reuse the exact original mount/authority/normalized-command hash and immutable completed-event record;require current read/list/original operation grants and reauthorize. Actual old route404/CLI unknown-command reds become focused green;two frozen hash fixtures and statement-for-statement original normalization preservation pass. Strict typed OpenAPI rejects false current-state/authority/replay. Tagged native compilation,vet and architecture pass;actual API/browser/CLI zero-effects,private/mount/authority/revocation and original mutation compatibility remain owed. No schema or budget change. Newly failed f22 live browser/FTPS job42420525516/128547750146 is preserved privately;limited security classification identifies no actionable assertion or cause and establishes no safety;outcome stays failed/unqualified."
       ],
       "current_item": {
-        "id": "F418",
-        "state": "Full-tree CLI custody opening fixed;native proof owed",
-        "proof": "Actual extracted old storage predicate rejects copy_tree coverage;focused green and affected static compile",
-        "evidence": "docs/qualification/evidence/F418-cli-tree-copy-storage.json",
-        "owed": "Actual native missing/protected storage refusal and complete CLI tree-copy/custody journey plus final-source outcomes"
+        "id": "F421",
+        "state": "Read-only original namespace receipts implemented;native proof owed",
+        "proof": "Actual old route404 and CLI unknown command to focused green;original hash statements/goldens,strict schema and affected static compile",
+        "evidence": "docs/qualification/evidence/F421-original-namespace-receipts.json",
+        "owed": "Native API/browser/CLI exact lost-response/zero-effects/privacy/root/authority/revocation and original final-source compatibility"
       }
     },
     {
@@ -218,7 +220,8 @@
         "docs/qualification/evidence/F417-dav-collection-copy.json",
         "docs/qualification/evidence/F418-cli-tree-copy-storage.json",
         "docs/qualification/evidence/F419-native-terminal.json",
-        "docs/qualification/evidence/F420-native-push.json"
+        "docs/qualification/evidence/F420-native-push.json",
+        "docs/qualification/evidence/F421-original-namespace-receipts.json"
       ],
       "remaining_details": [
         "F005/F006 verify bounded inbound and durable ticket resume. F007 adds a local-only approved outbound SFTP profile against a stock receiver. Finish ordinary-operator onboarding, API/browser parity, production network policy, broader protocols/clients/enterprise peers, larger files and independent business receipts. No complete journey is qualified.",
@@ -268,14 +271,15 @@
         "F417 implements non-overwriting full collection COPY/copy_tree and shallow COPY/copy_dir with exact root identity/revision,read/list/write,current actual member modes/policy,confined writable destination and verified immutable custody. Fresh mappings have new IDs/ownership/ordinary modes and independent inert properties. Existing SQL guards stay intact:directory creation and exact property attrs initialize atomically. Observed old HTTP guard400 becomes focused green;affected native compilation,vet and architecture pass. Native API/CLI/stock-curl,mount,corrupt-custody,policy,capacity and no-extra-effects proof remains owed;no schema,permission/resource budget or full-DAV qualification change.",
         "F418 fixes full-tree CLI COPY custody wiring found by source review before pushing F417. Extracting the actual old publish/copy storage predicate preserves its behavior and observes copy_tree red;include copy_tree,retain metadata-only operations without disk opening,and focused green. Tagged CLI compilation,vet and architecture pass. Native missing-storage refusal/no namespace prefix,ordinary-writer full-copy and independent custody proofs remain owed;no prior real CLI pass is claimed.",
         "F419:23c752add5ee77f47d8280f7c629c803058e3b7c originals terminal:16 workflows,35 jobs,34 pass/one receive-browser failure(42417902584/128539849391). All named security gates pass. Both Linux PostgreSQL,restore,HTTPS/curl,CLI,platform,fuzz and live browser/FTPS workflows succeed in completion metadata,including F412/F413. Detailed scoped/final-source evidence remains owed. Local F416/F417/F418 collection mutations/CLI storage repair are not included. Prior original browser and independent x86 receiver failures remain preserved/unresolved;F026 held.",
-        "F420:five owner-only commits pushed fast-forward23c752ad\u2192f22d0d41428f0019f5a872336c892f9893c2cc2e after all prior originals terminal(F419). Enabled Gitleaks8.30.1:5 commits,reported182134 bytes,no leaks;push0,remote main verified. Sixteen first original attempt1 workflows preserved. F416 collection DELETE/F417 full-shallow COPY/F418 CLI custody opening await actual native API/CLI/curl/custody outcomes. Original receive/live-browser and independent x86 receiver failures remain owed;F026 held. No local heavy runtime,publication or deployment."
+        "F420:five owner-only commits pushed fast-forward23c752ad\u2192f22d0d41428f0019f5a872336c892f9893c2cc2e after all prior originals terminal(F419). Enabled Gitleaks8.30.1:5 commits,reported182134 bytes,no leaks;push0,remote main verified. Sixteen first original attempt1 workflows preserved. F416 collection DELETE/F417 full-shallow COPY/F418 CLI custody opening await actual native API/CLI/curl/custody outcomes. Original receive/live-browser and independent x86 receiver failures remain owed;F026 held. No local heavy runtime,publication or deployment.",
+        "F421 adds read-only API/CLI recovery of one exact original actor-private namespace receipt,including after deletion,without executing commands or opening custody. Reuse the exact original mount/authority/normalized-command hash and immutable completed-event record;require current read/list/original operation grants and reauthorize. Actual old route404/CLI unknown-command reds become focused green;two frozen hash fixtures and statement-for-statement original normalization preservation pass. Strict typed OpenAPI rejects false current-state/authority/replay. Tagged native compilation,vet and architecture pass;actual API/browser/CLI zero-effects,private/mount/authority/revocation and original mutation compatibility remain owed. No schema or budget change. Newly failed f22 live browser/FTPS job42420525516/128547750146 is preserved privately;limited security classification identifies no actionable assertion or cause and establishes no safety;outcome stays failed/unqualified."
       ],
       "current_item": {
-        "id": "F418",
-        "state": "Full-tree CLI custody opening fixed;native proof owed",
-        "proof": "Actual extracted old storage predicate rejects copy_tree coverage;focused green and affected static compile",
-        "evidence": "docs/qualification/evidence/F418-cli-tree-copy-storage.json",
-        "owed": "Actual native missing/protected storage refusal and complete CLI tree-copy/custody journey plus final-source outcomes"
+        "id": "F421",
+        "state": "Read-only original namespace receipts implemented;native proof owed",
+        "proof": "Actual old route404 and CLI unknown command to focused green;original hash statements/goldens,strict schema and affected static compile",
+        "evidence": "docs/qualification/evidence/F421-original-namespace-receipts.json",
+        "owed": "Native API/browser/CLI exact lost-response/zero-effects/privacy/root/authority/revocation and original final-source compatibility"
       }
     },
     {
@@ -947,7 +951,8 @@
         "docs/qualification/evidence/F417-dav-collection-copy.json",
         "docs/qualification/evidence/F418-cli-tree-copy-storage.json",
         "docs/qualification/evidence/F419-native-terminal.json",
-        "docs/qualification/evidence/F420-native-push.json"
+        "docs/qualification/evidence/F420-native-push.json",
+        "docs/qualification/evidence/F421-original-namespace-receipts.json"
       ],
       "remaining_details": [
         "F010 verifies durable held intake for configured new revisions, exact CSV contracts, separate hash/revision-bound release and ordinary delivery of released bytes. Antivirus/ICAP/DLP, cryptographic signatures/encryption, other formats/transforms, re-scan/exception governance, retrospective policy and the complete business-file journey remain mandatory.",
@@ -1091,14 +1096,15 @@
         "F417 implements non-overwriting full collection COPY/copy_tree and shallow COPY/copy_dir with exact root identity/revision,read/list/write,current actual member modes/policy,confined writable destination and verified immutable custody. Fresh mappings have new IDs/ownership/ordinary modes and independent inert properties. Existing SQL guards stay intact:directory creation and exact property attrs initialize atomically. Observed old HTTP guard400 becomes focused green;affected native compilation,vet and architecture pass. Native API/CLI/stock-curl,mount,corrupt-custody,policy,capacity and no-extra-effects proof remains owed;no schema,permission/resource budget or full-DAV qualification change.",
         "F418 fixes full-tree CLI COPY custody wiring found by source review before pushing F417. Extracting the actual old publish/copy storage predicate preserves its behavior and observes copy_tree red;include copy_tree,retain metadata-only operations without disk opening,and focused green. Tagged CLI compilation,vet and architecture pass. Native missing-storage refusal/no namespace prefix,ordinary-writer full-copy and independent custody proofs remain owed;no prior real CLI pass is claimed.",
         "F419:23c752add5ee77f47d8280f7c629c803058e3b7c originals terminal:16 workflows,35 jobs,34 pass/one receive-browser failure(42417902584/128539849391). All named security gates pass. Both Linux PostgreSQL,restore,HTTPS/curl,CLI,platform,fuzz and live browser/FTPS workflows succeed in completion metadata,including F412/F413. Detailed scoped/final-source evidence remains owed. Local F416/F417/F418 collection mutations/CLI storage repair are not included. Prior original browser and independent x86 receiver failures remain preserved/unresolved;F026 held.",
-        "F420:five owner-only commits pushed fast-forward23c752ad\u2192f22d0d41428f0019f5a872336c892f9893c2cc2e after all prior originals terminal(F419). Enabled Gitleaks8.30.1:5 commits,reported182134 bytes,no leaks;push0,remote main verified. Sixteen first original attempt1 workflows preserved. F416 collection DELETE/F417 full-shallow COPY/F418 CLI custody opening await actual native API/CLI/curl/custody outcomes. Original receive/live-browser and independent x86 receiver failures remain owed;F026 held. No local heavy runtime,publication or deployment."
+        "F420:five owner-only commits pushed fast-forward23c752ad\u2192f22d0d41428f0019f5a872336c892f9893c2cc2e after all prior originals terminal(F419). Enabled Gitleaks8.30.1:5 commits,reported182134 bytes,no leaks;push0,remote main verified. Sixteen first original attempt1 workflows preserved. F416 collection DELETE/F417 full-shallow COPY/F418 CLI custody opening await actual native API/CLI/curl/custody outcomes. Original receive/live-browser and independent x86 receiver failures remain owed;F026 held. No local heavy runtime,publication or deployment.",
+        "F421 adds read-only API/CLI recovery of one exact original actor-private namespace receipt,including after deletion,without executing commands or opening custody. Reuse the exact original mount/authority/normalized-command hash and immutable completed-event record;require current read/list/original operation grants and reauthorize. Actual old route404/CLI unknown-command reds become focused green;two frozen hash fixtures and statement-for-statement original normalization preservation pass. Strict typed OpenAPI rejects false current-state/authority/replay. Tagged native compilation,vet and architecture pass;actual API/browser/CLI zero-effects,private/mount/authority/revocation and original mutation compatibility remain owed. No schema or budget change. Newly failed f22 live browser/FTPS job42420525516/128547750146 is preserved privately;limited security classification identifies no actionable assertion or cause and establishes no safety;outcome stays failed/unqualified."
       ],
       "current_item": {
-        "id": "F418",
-        "state": "Full-tree CLI custody opening fixed;native proof owed",
-        "proof": "Actual extracted old storage predicate rejects copy_tree coverage;focused green and affected static compile",
-        "evidence": "docs/qualification/evidence/F418-cli-tree-copy-storage.json",
-        "owed": "Actual native missing/protected storage refusal and complete CLI tree-copy/custody journey plus final-source outcomes"
+        "id": "F421",
+        "state": "Read-only original namespace receipts implemented;native proof owed",
+        "proof": "Actual old route404 and CLI unknown command to focused green;original hash statements/goldens,strict schema and affected static compile",
+        "evidence": "docs/qualification/evidence/F421-original-namespace-receipts.json",
+        "owed": "Native API/browser/CLI exact lost-response/zero-effects/privacy/root/authority/revocation and original final-source compatibility"
       }
     },
     {
@@ -1742,7 +1748,8 @@
         "docs/qualification/evidence/F417-dav-collection-copy.json",
         "docs/qualification/evidence/F418-cli-tree-copy-storage.json",
         "docs/qualification/evidence/F419-native-terminal.json",
-        "docs/qualification/evidence/F420-native-push.json"
+        "docs/qualification/evidence/F420-native-push.json",
+        "docs/qualification/evidence/F421-original-namespace-receipts.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -1899,14 +1906,15 @@
         "F417 implements non-overwriting full collection COPY/copy_tree and shallow COPY/copy_dir with exact root identity/revision,read/list/write,current actual member modes/policy,confined writable destination and verified immutable custody. Fresh mappings have new IDs/ownership/ordinary modes and independent inert properties. Existing SQL guards stay intact:directory creation and exact property attrs initialize atomically. Observed old HTTP guard400 becomes focused green;affected native compilation,vet and architecture pass. Native API/CLI/stock-curl,mount,corrupt-custody,policy,capacity and no-extra-effects proof remains owed;no schema,permission/resource budget or full-DAV qualification change.",
         "F418 fixes full-tree CLI COPY custody wiring found by source review before pushing F417. Extracting the actual old publish/copy storage predicate preserves its behavior and observes copy_tree red;include copy_tree,retain metadata-only operations without disk opening,and focused green. Tagged CLI compilation,vet and architecture pass. Native missing-storage refusal/no namespace prefix,ordinary-writer full-copy and independent custody proofs remain owed;no prior real CLI pass is claimed.",
         "F419:23c752add5ee77f47d8280f7c629c803058e3b7c originals terminal:16 workflows,35 jobs,34 pass/one receive-browser failure(42417902584/128539849391). All named security gates pass. Both Linux PostgreSQL,restore,HTTPS/curl,CLI,platform,fuzz and live browser/FTPS workflows succeed in completion metadata,including F412/F413. Detailed scoped/final-source evidence remains owed. Local F416/F417/F418 collection mutations/CLI storage repair are not included. Prior original browser and independent x86 receiver failures remain preserved/unresolved;F026 held.",
-        "F420:five owner-only commits pushed fast-forward23c752ad\u2192f22d0d41428f0019f5a872336c892f9893c2cc2e after all prior originals terminal(F419). Enabled Gitleaks8.30.1:5 commits,reported182134 bytes,no leaks;push0,remote main verified. Sixteen first original attempt1 workflows preserved. F416 collection DELETE/F417 full-shallow COPY/F418 CLI custody opening await actual native API/CLI/curl/custody outcomes. Original receive/live-browser and independent x86 receiver failures remain owed;F026 held. No local heavy runtime,publication or deployment."
+        "F420:five owner-only commits pushed fast-forward23c752ad\u2192f22d0d41428f0019f5a872336c892f9893c2cc2e after all prior originals terminal(F419). Enabled Gitleaks8.30.1:5 commits,reported182134 bytes,no leaks;push0,remote main verified. Sixteen first original attempt1 workflows preserved. F416 collection DELETE/F417 full-shallow COPY/F418 CLI custody opening await actual native API/CLI/curl/custody outcomes. Original receive/live-browser and independent x86 receiver failures remain owed;F026 held. No local heavy runtime,publication or deployment.",
+        "F421 adds read-only API/CLI recovery of one exact original actor-private namespace receipt,including after deletion,without executing commands or opening custody. Reuse the exact original mount/authority/normalized-command hash and immutable completed-event record;require current read/list/original operation grants and reauthorize. Actual old route404/CLI unknown-command reds become focused green;two frozen hash fixtures and statement-for-statement original normalization preservation pass. Strict typed OpenAPI rejects false current-state/authority/replay. Tagged native compilation,vet and architecture pass;actual API/browser/CLI zero-effects,private/mount/authority/revocation and original mutation compatibility remain owed. No schema or budget change. Newly failed f22 live browser/FTPS job42420525516/128547750146 is preserved privately;limited security classification identifies no actionable assertion or cause and establishes no safety;outcome stays failed/unqualified."
       ],
       "current_item": {
-        "id": "F418",
-        "state": "Full-tree CLI custody opening fixed;native proof owed",
-        "proof": "Actual extracted old storage predicate rejects copy_tree coverage;focused green and affected static compile",
-        "evidence": "docs/qualification/evidence/F418-cli-tree-copy-storage.json",
-        "owed": "Actual native missing/protected storage refusal and complete CLI tree-copy/custody journey plus final-source outcomes"
+        "id": "F421",
+        "state": "Read-only original namespace receipts implemented;native proof owed",
+        "proof": "Actual old route404 and CLI unknown command to focused green;original hash statements/goldens,strict schema and affected static compile",
+        "evidence": "docs/qualification/evidence/F421-original-namespace-receipts.json",
+        "owed": "Native API/browser/CLI exact lost-response/zero-effects/privacy/root/authority/revocation and original final-source compatibility"
       }
     }
   ],

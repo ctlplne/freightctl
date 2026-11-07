@@ -1,0 +1,305 @@
+{
+  "components": {
+    "schemas": {
+      "OriginalPathCommand": {
+        "additionalProperties": false,
+        "properties": {
+          "expected_entry_id": {
+            "type": "string"
+          },
+          "expected_file_id": {
+            "type": "string"
+          },
+          "expected_revision": {
+            "type": [
+              "null",
+              "integer"
+            ]
+          },
+          "file_id": {
+            "type": "string"
+          },
+          "mode": {
+            "maximum": 4294967295,
+            "minimum": 0,
+            "type": [
+              "null",
+              "integer"
+            ]
+          },
+          "modified_at": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "operation": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "property_changes": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "operation": {
+                  "type": "string"
+                },
+                "property_xml": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "operation",
+                "property_xml"
+              ],
+              "type": "object"
+            },
+            "type": [
+              "null",
+              "array"
+            ]
+          },
+          "replace": {
+            "type": "boolean"
+          },
+          "target": {
+            "type": "string"
+          },
+          "target_revision": {
+            "type": [
+              "null",
+              "integer"
+            ]
+          }
+        },
+        "required": [
+          "operation",
+          "path"
+        ],
+        "type": "object"
+      },
+      "PathCommandReceipt": {
+        "additionalProperties": false,
+        "properties": {
+          "completed_event_id": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "observation": {
+            "const": "original-commit-not-current-state",
+            "type": "string"
+          },
+          "profile": {
+            "const": "namespace-command-receipt-v1",
+            "type": "string"
+          },
+          "request_hash": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "request_key": {
+            "pattern": "^[A-Za-z0-9._:-]{1,128}$",
+            "type": "string"
+          },
+          "result": {
+            "additionalProperties": false,
+            "properties": {
+              "changed": {
+                "type": "integer"
+              },
+              "entry": {
+                "additionalProperties": false,
+                "properties": {
+                  "changed_event_id": {
+                    "type": "string"
+                  },
+                  "deleted": {
+                    "type": "boolean"
+                  },
+                  "file_id": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "kind": {
+                    "type": "string"
+                  },
+                  "mode": {
+                    "maximum": 4294967295,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "modified_at": {
+                    "type": "string"
+                  },
+                  "owner_actor_id": {
+                    "type": "string"
+                  },
+                  "parent": {
+                    "type": "string"
+                  },
+                  "path": {
+                    "type": "string"
+                  },
+                  "revision": {
+                    "type": "integer"
+                  },
+                  "size_bytes": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "id",
+                  "path",
+                  "parent",
+                  "kind",
+                  "owner_actor_id",
+                  "mode",
+                  "modified_at",
+                  "revision",
+                  "deleted",
+                  "changed_event_id",
+                  "size_bytes"
+                ],
+                "type": "object"
+              },
+              "replayed": {
+                "const": false,
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "entry",
+              "changed",
+              "replayed"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "profile",
+          "observation",
+          "request_key",
+          "request_hash",
+          "completed_event_id",
+          "result"
+        ],
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "bearerFormat": "64 lowercase hexadecimal characters; send the actual credential, never its digest",
+        "scheme": "bearer",
+        "type": "http"
+      },
+      "browserSession": {
+        "in": "cookie",
+        "name": "__Host-freightctl-session",
+        "type": "apiKey"
+      }
+    }
+  },
+  "info": {
+    "description": "Historical private commit evidence only. Actual native and whole-product qualification remain separate.",
+    "title": "freightctl original namespace command receipt",
+    "version": "1"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/v1/tenants/{tenant}/partners/{partner}/namespace/receipts": {
+      "post": {
+        "description": "Read-only POST accepts the original typed command and exact original key. Body maximum16KiB;duplicate/aliased/unknown fields,lossy UTF8,root null and trailing data are refused. Requires current read/list plus the original operation permissions. Actor RLS and exact unchanged request meaning bind tenant,partner,identity,mount,authority revision and every normalized command option. No current path,custody storage or current file availability is needed. Result is only historical commit metadata,never current namespace,bytes,delivery,forwarding or execution authority. No domain events,commands,intents or file transitions are written. No-store,nosniff and ordinary browser session/origin/CSRF checks remain enforced.",
+        "operationId": "readOriginalNamespaceCommandReceipt",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tenant",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "partner",
+            "required": true,
+            "schema": {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            }
+          },
+          {
+            "description": "One original namespace command key;this is a read selector and does not dispatch that command.",
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "pattern": "^[A-Za-z0-9._:-]{1,128}$",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Required with browserSession,along with the ordinary same-origin request.",
+            "in": "header",
+            "name": "X-CSRF-Token",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OriginalPathCommand"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PathCommandReceipt"
+                }
+              }
+            },
+            "description": "The exact actor-private original commit result and NamespaceCommandCompleted event;no current-state assertion or command replay."
+          },
+          "400": {
+            "description": "Malformed,duplicate,aliased,unknown or excessive command control;missing/ambiguous original key"
+          },
+          "401": {
+            "description": "Current authentication required"
+          },
+          "403": {
+            "description": "Current read/list/original operation permission or browser origin/CSRF refused"
+          },
+          "404": {
+            "description": "No exact original private receipt at this current actor,mount and authority;unknown key,changed command and other actor remain indistinguishable"
+          },
+          "409": {
+            "description": "Invalid typed command semantics"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "browserSession": []
+          }
+        ],
+        "summary": "Recover one original private commit receipt without executing a command"
+      }
+    }
+  }
+}

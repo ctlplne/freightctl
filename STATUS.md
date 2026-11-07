@@ -207,3 +207,19 @@ unchanged,observed red for copy_tree,then fixed to open existing protected
 custody. Metadata-only operations retain no disk opening. Focused regression,
 tagged CLI compile,vet and architecture pass. Native missing-storage/no-prefix
 and original complete CLI byte-verification outcomes remain owed.
+
+F421 adds read-only original namespace receipt recovery through API and CLI,
+including after deletion. Exact actor/mount/authority/command meaning,current
+read/list/original operation grants and reauthorization protect historical
+metadata. No command,storage opening or current-state assertion is implied.
+Actual old route404/CLI unknown command become focused green;original hash
+statements/goldens,typed schema,tagged compilation,vet and architecture pass.
+Native API/browser/CLI privacy,zero-effects,scope/revocation and original final-
+source compatibility remain owed. No schema or budget change.
+
+The current f22d0d4 live browser/FTPS policy/credential journey is failed again
+(run42420525516/job128547750146). Its original decoded log is retained privately.
+Limited security classification identifies no actionable assertion or cause;
+this establishes no safety. Receive remains red. Both journeys remain
+unqualified;detailed original diagnosis/repair and final-source replay stay
+mandatory at FINISH. The original PostgreSQL/image jobs are still running.

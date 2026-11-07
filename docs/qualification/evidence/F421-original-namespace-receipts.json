@@ -1,0 +1,256 @@
+{
+  "schema_version": 1,
+  "id": "F421",
+  "observed_at": "2026-11-07",
+  "base_candidate": "6934ebed196e7dac8d59b5ecb17268c95c85a9b8",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F421 adds read-only API/CLI recovery of one exact original actor-private namespace receipt,including after deletion,without executing commands or opening custody. Reuse the exact original mount/authority/normalized-command hash and immutable completed-event record;require current read/list/original operation grants and reauthorize. Actual old route404/CLI unknown-command reds become focused green;two frozen hash fixtures and statement-for-statement original normalization preservation pass. Strict typed OpenAPI rejects false current-state/authority/replay. Tagged native compilation,vet and architecture pass;actual API/browser/CLI zero-effects,private/mount/authority/revocation and original mutation compatibility remain owed. No schema or budget change. Newly failed f22 live browser/FTPS job42420525516/128547750146 is preserved privately;limited security classification identifies no actionable assertion or cause and establishes no safety;outcome stays failed/unqualified.",
+  "contract": {
+    "API": "Read-only POST .../namespace/receipts with exact original typed command and original Idempotency-Key",
+    "CLI": "namespace-receipt uses same bounded command file/protected credential references;opens no custody and dispatches no command",
+    "observation": "namespace-command-receipt-v1;original-commit-not-current-state;original result keeps replayed:false;completed_event_id names original NamespaceCommandCompleted",
+    "scope": "Actor RLS plus exact old normalized request hash bind tenant/partner/identity/mount/authority/all command options;current read/list and original operation grants plus reauthorization",
+    "content": "Historical committed metadata only;no current namespace/bytes/delivery/business-acceptance/forwarding/execution assertion or access grant",
+    "privacy": "Unknown key,other actor and valid changed command/root/authority meanings404 after authorization;current missing grants403 and invalid/revoked credential401",
+    "side_effects": "No namespace transitions,domain events,command receipts,intents or artifact acceptance emitted;no storage/path existence required",
+    "compatibility": "Actual original normalization/hash block extracted statement-for-statement except error return tuple;frozen Unicode/explicit-zero/UTC-microsecond/mount/authority hashes",
+    "bounds": "Existing16KiB control file/body and128-character original operation key;existing10s service transaction;no schema/budget change",
+    "typed_contract": "docs/api/namespace-receipts.openapi.json"
+  },
+  "red_green": [
+    {
+      "proof": "Actual old whole API route404 for strict read-only original-command selection",
+      "exit_code": 1,
+      "reference": ".private/freightctl-f421-receipt-route-red.log"
+    },
+    {
+      "proof": "Actual old CLI unknown command before credential/database access",
+      "exit_code": 1,
+      "reference": ".private/freightctl-f421-receipt-cli-red.log"
+    },
+    {
+      "proof": "API/CLI input/key,store authority/canonical hash and strict typed response controls",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f421-final-focused.log"
+    },
+    {
+      "proof": "Native API/browser/custody/CLI/interface compile only",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f421-final-native-compile.log"
+    },
+    {
+      "proof": "Affected tagged vet",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f421-final-vet.log"
+    },
+    {
+      "proof": "Architecture",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f421-final-architecture.log"
+    },
+    {
+      "proof": "Thirteen changed Go files formatted",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f421-format.log"
+    },
+    {
+      "proof": "Record references only",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f421-records.log"
+    }
+  ],
+  "prepared_native_proofs": [
+    "API recovers exact original4-member DELETE commit after every path is absent;other actor/unknown key/valid changed body indistinguishable404,current missing each original grant403;final original counters unchanged",
+    "Browser session with origin/CSRF recovers its exact original mkdir result after removal,without pretending entry is current;missing CSRF403",
+    "Actual CLI recovers original3-member deletion receipt while custody reference intentionally absent;original private result/event preserved,ordinary writer cannot bypass management",
+    "Native mounted fixture reads exact same old deleted-directory receipt repeatedly with unchanged global event/command counts;admin cannot recover foreign actor record",
+    "Actual existing SQL credential revision trigger advances original credential while preserving relevant grants;old meaning denied after authority/root change and revoked credential unauthorized;no receipt reads mutate domain records"
+  ],
+  "new_failed_security_journey": {
+    "candidate": "f22d0d41428f0019f5a872336c892f9893c2cc2e",
+    "run_id": 42420525516,
+    "job_id": 128547750146,
+    "url": "https://github.com/ctlplne/freightctl/actions/runs/42420525516/job/128547750146",
+    "failed_step": "Real browser policy and credential commands during FTPS transfers",
+    "state": "failed/unqualified",
+    "limited_classification": {
+      "failed_go_tests": [],
+      "closed_exception_classes": [],
+      "specific_actionable_assertion_or_cause_identified": false,
+      "absence_is_not_safety": true
+    },
+    "original_decoded_log": ".private/freightctl-f421-live-security-job.log",
+    "detailed_diagnosis_repair_original_final_source_replay": "mandatory at FINISH"
+  },
+  "owed": [
+    "Every prepared actual native receipt/privacy/current-authority/browser/CLI/zero-effects outcome;compile is not runtime qualification",
+    "Original existing namespace mutation/hash/retry,security and actual final-source compatibility gates",
+    "Both failed f22 browser journeys and all earlier original failures,independent x86 receiver isolation profiles and remaining baseline/AX/readiness gates;F026 held"
+  ],
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "abe11d20c1459084b8e1e7d3dadbb17fe80962a2d5227fef730afae6b40bc319",
+      "bytes": 14898
+    },
+    {
+      "reference": "cmd/freightctl/main.go",
+      "sha256": "ce6899f9473e17c0fba3929892fe529c6c028f285c4afab90b470beb41e68629",
+      "bytes": 50588
+    },
+    {
+      "reference": "cmd/freightctl/namespace_receipt_test.go",
+      "sha256": "de823672e8c663ba55725d7694d70f13c42c4f3fcaba1bb081ac1a61b66e464f",
+      "bytes": 618
+    },
+    {
+      "reference": "cmd/freightctl/namespace_tree_move_integration_test.go",
+      "sha256": "85d57ac200e47f9191d0b0637bc3c7baddbd6f23dde655a447ac7ef771928f7d",
+      "bytes": 10415
+    },
+    {
+      "reference": "docs/api/namespace-receipts.openapi.json",
+      "sha256": "b7b74043f84bfb2f2cd445378b07724fad8b5be647d1e8f2fdff6f208496b8c8",
+      "bytes": 9333
+    },
+    {
+      "reference": "docs/development.md",
+      "sha256": "64f65870ad63e03f7c7abdfbdf8fe4b2f0913c017bed2e77efe9728173974676",
+      "bytes": 44886
+    },
+    {
+      "reference": "docs/protocols/webdav-read-profile.md",
+      "sha256": "b8643c4727f0065d0d0784958b0ba3f64caa61a890eba550438f20762cd0dc45",
+      "bytes": 28564
+    },
+    {
+      "reference": "docs/qualification/parity.json",
+      "sha256": "3fe4dc363a2ec960177344c846e409d6f4ab0f840c98513ac89aae78524812f8",
+      "bytes": 155107
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "9b4edd6d31861648903e55915102c8a973d29ca04e2d52e07ec826cc0bf34377",
+      "bytes": 654178
+    },
+    {
+      "reference": "internal/api/api.go",
+      "sha256": "8370331f640ce3933f383ffb9d97498baa3456915f99015bd12283840c39ca77",
+      "bytes": 30702
+    },
+    {
+      "reference": "internal/api/namespace_receipts.go",
+      "sha256": "452b06a3ed9303dda94f350910bda799564d50cafdb2629c113d4ae92facc9c5",
+      "bytes": 714
+    },
+    {
+      "reference": "internal/api/namespace_receipts_schema_test.go",
+      "sha256": "3b5ecc1dad970c4b0373c1009e10d209ad5ea24289faddccf51824e1af7a927f",
+      "bytes": 3755
+    },
+    {
+      "reference": "internal/api/namespace_receipts_test.go",
+      "sha256": "bc7acf841ba945889d0c5b379b11cc960ff72c8e2cf3f6251fffd29be8bc9091",
+      "bytes": 1939
+    },
+    {
+      "reference": "internal/api/webdav_collection_delete_integration_test.go",
+      "sha256": "b105b8fd2e1f23aab507d8a03e0a377e58aca20be89533be9f17f337f9a1f7a9",
+      "bytes": 16761
+    },
+    {
+      "reference": "internal/custody/namespace_receipts.go",
+      "sha256": "8b97df961dcd960b8ce287ca06686747161ed5bf32fad71a01eb3e952412ecb2",
+      "bytes": 742
+    },
+    {
+      "reference": "internal/custody/namespace_receipts_integration_test.go",
+      "sha256": "75ab0a44d303b558082bb8ae6ecd1d8656becef512737375aa19d6b4399afad4",
+      "bytes": 4905
+    },
+    {
+      "reference": "internal/store/namespace.go",
+      "sha256": "13efd40b04728d63ddfbb4d25f3717a13e93c71225b8f0eaf7cd1478841110ad",
+      "bytes": 25336
+    },
+    {
+      "reference": "internal/store/namespace_receipts.go",
+      "sha256": "605045b02b82538d9ca0916966fcbad48c9c03d774c56109448d94433ca0f633",
+      "bytes": 3990
+    },
+    {
+      "reference": "internal/store/namespace_receipts_test.go",
+      "sha256": "962c54749f1ad0c00bb1543d952e0ef924609ad18a434e34080172d4e2c227ce",
+      "bytes": 3092
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f421-receipt-route-red.log",
+      "sha256": "0517039061597e8e1e6d4342a5ea5421df946242ac19ceb8373626dead6b9c30",
+      "bytes": 261
+    },
+    {
+      "reference": ".private/freightctl-f421-receipt-cli-red.log",
+      "sha256": "1acdac0aa005b131214281cdabf57c5e732ec2a08ec7c11d7078884fdc2f956d",
+      "bytes": 274
+    },
+    {
+      "reference": ".private/freightctl-f421-final-focused.log",
+      "sha256": "edc6f13d87c2479e35768796377b8208ef3cfcdef760cc1d33e563288f9fc295",
+      "bytes": 173
+    },
+    {
+      "reference": ".private/freightctl-f421-final-native-compile.log",
+      "sha256": "89371a2166f625801a43a8aa09f3095ffdfb692861dbe2ef5371b3029d9d88be",
+      "bytes": 304
+    },
+    {
+      "reference": ".private/freightctl-f421-final-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f421-final-architecture.log",
+      "sha256": "42d4131e6d9655eb7e473ad6f0fb745b2d9f22c57994e05e786e53b7cd8353ba",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f421-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f421-records.log",
+      "sha256": "826009b37d6c8254924b7fd1ee12981059544175f2c890ad4186b88b41b583b4",
+      "bytes": 106
+    },
+    {
+      "reference": ".private/freightctl-f421-meaning-preservation.json",
+      "sha256": "b236752d2aae886a4f2b70df3ea34eabf57bd7411ca82509b0955e47ce00c661",
+      "bytes": 355
+    },
+    {
+      "reference": ".private/freightctl-f421-parity-preservation.json",
+      "sha256": "39172985f41eca4d709a8aaac935ac1a7ff8647e4026aaf299a5b418564d63ea",
+      "bytes": 157
+    },
+    {
+      "reference": ".private/freightctl-f421-live-security-job.log",
+      "sha256": "1c4f783d8bb68010af13dae3ec50a8ab6762b608742a9328b9bafbb403108f9a",
+      "bytes": 52425
+    }
+  ],
+  "safety": {
+    "local_inference": false,
+    "local_postgresql_or_chrome": false,
+    "local_scanner": false,
+    "retained_database_changed": false,
+    "schema_or_permission_budgets_changed": false,
+    "local_or_CI_capacity_changed": false,
+    "publication_or_deployment": false,
+    "original_runtime_runs_cancelled_or_rerun": false
+  },
+  "overall_goal_complete": false
+}

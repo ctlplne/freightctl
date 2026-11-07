@@ -167,4 +167,12 @@ func qualifyNamespaceTreeMoveCLI(t *testing.T, ctx context.Context, service *cus
 	if _, err = command(manager, "namespace", "-request-file", removeInput, "-idempotency-key", "cli-tree-delete-original"); !errors.Is(err, store.ErrNotFound) {
 		t.Fatal("absent original collection was removed twice or asserted current", err)
 	}
+	raw, err = command(manager, "namespace-receipt", "-request-file", removeInput, "-idempotency-key", "cli-tree-delete-original", "-storage", filepath.Join(t.TempDir(), "UNOPENED_RECEIPT_CUSTODY"))
+	var privateReceipt store.PathCommandReceipt
+	if err != nil || json.Unmarshal(raw, &privateReceipt) != nil || privateReceipt.Profile != "namespace-command-receipt-v1" || privateReceipt.Observation != "original-commit-not-current-state" || privateReceipt.Result.Replayed || privateReceipt.Result.Entry != removed.Entry || privateReceipt.Result.Changed != 3 || !store.ValidID(privateReceipt.CompletedEventID) {
+		t.Fatal("CLI lost-response recovery required a path/storage or repeated deletion", err)
+	}
+	if _, err = command(ordinaryWriter, "namespace-receipt", "-request-file", removeInput, "-idempotency-key", "cli-tree-delete-original"); !errors.Is(err, store.ErrForbidden) {
+		t.Fatal("CLI read-only receipt bypassed original management authority", err)
+	}
 }

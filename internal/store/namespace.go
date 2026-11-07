@@ -244,47 +244,10 @@ func (t *Transaction) ApplyPathCommand(ctx context.Context, key string, command 
 			}
 		}
 	}
-	virtual, err := vpath.Canonical(command.Path)
+	command, actual, meaning, err := t.pathCommandMeaning(command)
 	if err != nil {
 		return nil, err
 	}
-	command.Path = virtual
-	if vpath.ControlPath(virtual) || vpath.ControlPath(command.Target) {
-		return nil, ErrForbidden
-	}
-	if virtual == "/" {
-		return nil, ErrForbidden
-	}
-	actual, err := vpath.Resolve(t.Root, virtual)
-	if err != nil {
-		return nil, err
-	}
-	if command.Target != "" {
-		target, err := vpath.Canonical(command.Target)
-		if err != nil {
-			return nil, err
-		}
-		command.Target = target
-		if command.Operation == "copy" && command.Target == virtual {
-			return nil, ErrForbidden
-		}
-	}
-	if command.Mode != nil && *command.Mode > 0777 {
-		return nil, ErrState
-	}
-	if command.Modified != nil {
-		normalized := command.Modified.UTC().Truncate(time.Microsecond)
-		command.Modified = &normalized
-	}
-	meaningBytes, err := json.Marshal(struct {
-		Root      string
-		Authority int64
-		Command   PathCommand
-	}{t.Root, t.AuthorityRevision, command})
-	if err != nil {
-		return nil, err
-	}
-	meaning := secure.Digest(meaningBytes)
 	if err = t.NamespaceLock(ctx); err != nil {
 		return nil, err
 	}
