@@ -1150,7 +1150,8 @@
         "docs/qualification/evidence/F202-finish-repair-terminal-ci.json",
         "docs/qualification/evidence/F213-scp-fixture-administrative-realm.json",
         "docs/qualification/evidence/F215-native-fixture-scope-and-preconditions.json",
-        "docs/qualification/evidence/F217-typed-processing-definition-wire.json"
+        "docs/qualification/evidence/F217-typed-processing-definition-wire.json",
+        "docs/qualification/evidence/F219-first-response-stored-workflow-receipt.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -1199,13 +1200,14 @@
         "F211 repairs three original native test preconditions while retaining/tightening all assertions:ordinary versioned setstat makes the unauthorized HTTP fixture0600 instead of partner-readable0640;rejected-release attempts use a syntactically valid forged hash so role/state gates execute;completed SQL format candidates clear their worker/lease and require the intended file-check guard error. No production authorization,parser,lease or SQL constraint changed. Integration compile/vet only pass;actual original native red/green replay owed.",
         "F213 corrects the original native SCP enrollment fixture:the protected administrative reference now resolves the exact served browser database,not the maintenance database. Enrollment/revocation/cross-actor controls and every protocol assertion remain. Integration compile/vet pass;actual native replay owed. F202 preserves91ed18d original16 terminal workflows/35 jobs:19 pass,16 fail;listed security checks pass,remaining originals stay red.",
         "F215 repairs original native fixture preconditions:workflow template exact table/RLS profile78/77,MCP ticket/receipt observation as actual owner,well-formed forged release hashes with queued-output assertions,and Origin on output-policy cookie mutations. Production RLS/CSRF/release rules and original denials remain. Compile/vet/profile conformance pass only;actual native replays owed.",
-        "F217 reproduces typed Go processing preview/draft rejection under strict MCP JSON because nil Steps emitted null. A nonmutating Definition serializer emits an empty array,matching existing normalized bytes. Focused two-case red/green,typed schema/injected-authority/canonical tests,architecture/vet and integration compile pass. Strict null/schema/authority rules unchanged;actual original stock-client/native replay owed."
+        "F217 reproduces typed Go processing preview/draft rejection under strict MCP JSON because nil Steps emitted null. A nonmutating Definition serializer emits an empty array,matching existing normalized bytes. Focused two-case red/green,typed schema/injected-authority/canonical tests,architecture/vet and integration compile pass. Strict null/schema/authority rules unchanged;actual original stock-client/native replay owed.",
+        "F219 fixes the original onward exact-receipt comparison by using the existing schedule stored-receipt path for first workflow responses as well as retries;an absent freshly written receipt fails isolation. No event/receipt/intent transaction,authority or original exact comparison is weakened. Focused pure contract/fixture,architecture/vet and integration compile pass;actual original native serialization/replay remains owed."
       ],
       "current_item": {
-        "id": "F217",
-        "state": "Typed processing requests use closed empty-step wire form",
-        "proof": "Both preview/draft strict-wire cases failed before serializer,pass after;affected canonical/security/static checks pass",
-        "next": "Repair original durable-receipt serialization and remaining actual native/Windows/product/baseline/AX/FINISH work"
+        "id": "F219",
+        "state": "First workflow response reads the exact stored receipt",
+        "proof": "Original91ed18d onward receipt exact comparison failed;first Go encoding replaced with existing JSONB readback path;focused static/pure checks pass only",
+        "next": "Replay original native receipt and repair remaining observation fixtures,Windows,implementation and all baseline/AX/FINISH gates"
       }
     }
   ],

@@ -606,6 +606,9 @@ func scheduleResult(t *store.Transaction, ctx context.Context, key, meaning, id 
 	if e != nil {
 		return nil, e
 	}
+	if len(data) == 0 {
+		return nil, store.ErrIsolation
+	}
 	if e = t.Reauthorize(ctx); e != nil {
 		return nil, e
 	}

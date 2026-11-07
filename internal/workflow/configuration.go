@@ -123,17 +123,9 @@ func digest(v any) (json.RawMessage, string, error) {
 	return b, secure.Digest(b), err
 }
 func result(t *store.Transaction, ctx context.Context, key, meaning, id string, value any) (*Result, error) {
-	data, _, err := digest(value)
-	if err != nil {
-		return nil, err
-	}
-	if err = t.WorkflowReceipt(ctx, key, meaning, id, value); err != nil {
-		return nil, err
-	}
-	if err = t.Reauthorize(ctx); err != nil {
-		return nil, err
-	}
-	return &Result{Resource: data}, t.Tx.Commit(ctx)
+	// All workflow controls use the existing stored-receipt path. A separate
+	// first-response Go encoding can differ from PostgreSQL JSONB on replay.
+	return scheduleResult(t, ctx, key, meaning, id, value)
 }
 func replay(t *store.Transaction, ctx context.Context, key, meaning string) (*Result, error) {
 	data, err := t.WorkflowReplay(ctx, key, meaning)

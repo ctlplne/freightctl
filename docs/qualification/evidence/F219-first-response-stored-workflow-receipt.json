@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "id": "F219",
+  "observed_at": "2026-11-07",
+  "base_candidate": "61062c89817d737d9e7c96e8ce06ae120b9a929a",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Stored workflow receipt used for first response;original native exact replay owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "54b516fec788b8bc3d3475ab3694f8b2c78722f1bca4789cd3a5f94763a1a79a",
+      "bytes": 15373
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "804b5dbf73dfe2e217a2943087caf9eac104e0c0190fb0a9a37ee5d22abd0564",
+      "bytes": 364993
+    },
+    {
+      "reference": "internal/workflow/configuration.go",
+      "sha256": "2db29f0dc868c714f918ca022232ec9df3660e73e66f652329a761a00f11ea3c",
+      "bytes": 19447
+    },
+    {
+      "reference": "internal/workflow/schedules.go",
+      "sha256": "2ed0109a2af416a4851b0d657caada758aff248246c2a762275810afe054c029",
+      "bytes": 25849
+    }
+  ],
+  "original_failure": {
+    "candidate": "91ed18d4aa2bb8900f684035c241f5b8d30a37b1",
+    "run": 42348791097,
+    "job": 128332262484,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128332262484",
+    "test": "TestOnwardHTTPSUsesOrdinaryReviewAtomicStartAndPrivateReceipt",
+    "observation": "Receipt lookup changed original run at onward_integration_test.go:76. First response used Go json.Marshal(value),retry read JSONB;object-key presentation differs."
+  },
+  "changed": [
+    "Common workflow result delegates to the existing stored schedule/collection receipt path:append immutable event,insert receipt,read exact receipt with the same key/meaning/actor,reauthorize,commit. First and retry responses now share the stored representation. Empty post-write readback fails isolation.",
+    "Existing exact original/retry comparisons remain unchanged. No history rewrite,JSONB schema change,replay-key rebinding,extra effect,authority transfer or transaction split."
+  ],
+  "green": [
+    "Focused onward/MCP-workflow/processing-review and canonical fixture contracts,architecture,vet and integration-tag compilation -run ^$ pass."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f219-architecture.log",
+      "sha256": "011730bca37d14c58113bb074554a49fa64dbc180e1083c42bd894874ae494e7",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f219-final-architecture.log",
+      "sha256": "333d56fc052322ad7290dd97d05fc6285ea9f492e5a16d136bfc7ec88c058c3f",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f219-final-native-compile.log",
+      "sha256": "250542a72d4981811822a41db5b4c64acd9a334ab1cc6a896168adc586ce2f77",
+      "bytes": 227
+    },
+    {
+      "reference": ".private/freightctl-f219-final-receipt-contracts.log",
+      "sha256": "6c138daee212277b4d71397b3b104a8cf16525788487e1cf01edd8384682310f",
+      "bytes": 115
+    },
+    {
+      "reference": ".private/freightctl-f219-final-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f219-native-compile.log",
+      "sha256": "3594b755969dac21f81fd33e0b821b23036090d905e6deecf4c29b9f23a71bcd",
+      "bytes": 227
+    },
+    {
+      "reference": ".private/freightctl-f219-receipt-contracts.log",
+      "sha256": "714796d9a6cc8359f58ebb168fa1425a6a4f1061312891899e0ab0ca8a2af47a",
+      "bytes": 115
+    },
+    {
+      "reference": ".private/freightctl-f219-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "owed": [
+    "Original exact HTTPS and native onward receipt/start retry after revocation;affected draft/review/proposal/run original/retry runtime paths.",
+    "All actual final-source native/browser/stock/security/race/restore/reproducibility and remaining baseline/AX/FINISH gates."
+  ],
+  "resources": "OneCPU/192MiB local pure/static only;no PostgreSQL,Chrome,inference,scanner or heavy peer. Retained35/source60 unchanged."
+}

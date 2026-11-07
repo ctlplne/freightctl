@@ -4,8 +4,9 @@ Updated 2026-11-07. Active under owner resume. All83 whole parity rows,twelve
 complete journeys and AX01–AX08 remain open. Assisted deployment,independent
 adoption and enterprise readiness remain unqualified.
 
-Latest pushed source:91ed18d4aa2bb8900f684035c241f5b8d30a37b1.
-F202 preserves its original16 terminal workflows/35 jobs:19 pass,16 fail.
+Latest pushed source:71e8166d0bc96c574055e00f749d387e0f0b0460.
+Its native runs are pending. F202 preserves the previous91ed18d source
+original16 terminal workflows/35 jobs:19 pass,16 fail.
 Listed security checks pass. Core,macOS unit/race,both metadata restores and
 several original stock/browser/public jobs pass;both Linux unit/race steps pass.
 PostgreSQL integration,Windows and remaining original runtime failures stay red.
@@ -78,6 +79,12 @@ a nil Go step slice emitted null. Definition serialization now emits the same
 empty array as normalization,without changing nonempty steps or validation.
 The two-case red/green,affected canonical/schema/security,architecture/vet and
 integration compilation pass. Actual stock-client/native replay remains owed.
+
+F219 routes first workflow responses through the existing stored-receipt path.
+The original onward exact-replay comparison failed because Go and PostgreSQL
+JSONB encoded the same receipt differently. Event/receipt/intent atomicity and
+current authorization remain. Focused contract/fixture,architecture/vet and
+integration compilation pass;the original exact native replay remains owed.
 
 Schema3 records.project binds an owned checked input,approved exact task,one
 durable processing intent,slots and events/receipt. Stable work keys select one
