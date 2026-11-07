@@ -7,13 +7,11 @@ original failures,source hashes and owed proofs are in
 [remaining work](docs/qualification/remaining.json) and its item manifests.
 
 Latest pushed source:638d156cf16820b165cc8e6310f62daddf2d8458.
-Its original16 triggered workflows are not all terminal. Native JSON custody and
-CLI restart profiles pass on ARM/x86;macOS,Core/source security,metadata restore,
-reproduction,SCP/tus,HTTPS and stock FTPS jobs pass. Windows,receive/format/review
-browser,registered FTPS and two stock-peer groups remain red. The original Linux
-integration/image-scan jobs are still running. No whole-product pass is inferred.
-F236 preserves previous e87483b original18/41 terminal outcomes:29 pass,12 fail.
-F254 preserves actual Windows inherited-bit normalization and the sharing failure.
+Its original16 triggered workflows/35 jobs are terminal:26 pass,9 fail. Both
+complete image scans and listed scan gates pass. F268 preserves exact run/job/
+step handles and component qualifications;Windows inherited-access refusal and
+all failed native/browser/stock journeys remain red or unqualified. No result is
+inherited by later source. F236 preserves the previous e87483b18/41 outcomes.
 
 Current verified local batches are F251 custody protection,F253 setup/CLI private
 outputs,F255 actual inherited-access refusal fixtures,F257 read-only browser
