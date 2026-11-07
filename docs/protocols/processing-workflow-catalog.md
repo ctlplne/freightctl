@@ -11,7 +11,9 @@ task kind, source-policy hash, output kind/column count and exact output-policy
 reference. `approval_current` independently observes the configuration's approved
 state, current owner authority and any adopted independent review. Withdrawal,
 expiry or reviewer revocation makes that fact false. `output_policy_current`
-independently observes the active exact output policy. Neither flag checks an
+independently observes the active exact default policy or current producer-bound
+output contract. A registered contract requires this actor's exact authority/root
+snapshot; administration alone cannot select another producer's contract. Neither flag checks an
 input file or promises execution readiness. Ordinary run review must still check
 the exact input, permissions, source protection, policy and durable effect bindings.
 

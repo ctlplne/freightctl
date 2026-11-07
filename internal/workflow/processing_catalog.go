@@ -51,7 +51,7 @@ func processingCatalogEntry(c, policy *store.Configuration, authority int64, rev
 		return empty, store.ErrState
 	}
 	task := d.Processing
-	currentPolicy := policy != nil && policy.State == "active" && task.OutputPolicy == (Reference{ID: policy.ID, Version: policy.Version, Hash: policy.Hash})
+	currentPolicy := policy != nil && (policy.State == "active" || policy.State == "output_active") && task.OutputPolicy == (Reference{ID: policy.ID, Version: policy.Version, Hash: policy.Hash})
 	return ProcessingCatalogEntry{Reference: Reference{ID: c.ID, Version: c.Version, Hash: c.Hash}, Name: d.Name, State: c.State, Revision: c.Revision, Kind: task.Kind, SourcePolicyHash: task.Definition.SourcePolicyHash, OutputKind: task.Definition.OutputKind, ColumnCount: len(task.Definition.Columns), OutputPolicy: task.OutputPolicy, ApprovalCurrent: c.State == "approved" && c.ApprovalAuthority == authority && reviewCurrent, OutputPolicyCurrent: currentPolicy}, nil
 }
 
@@ -96,10 +96,6 @@ func (s *Service) ProcessingWorkflows(ctx context.Context, scope store.Scope, af
 		out.Next = candidates[limit-1].ID
 		candidates = candidates[:limit]
 	}
-	policy, err := t.IntakePolicy(ctx, false)
-	if err != nil {
-		return nil, err
-	}
 	for _, c := range candidates {
 		reviewCurrent := false
 		if c.State == "approved" {
@@ -109,10 +105,15 @@ func (s *Service) ProcessingWorkflows(ctx context.Context, scope store.Scope, af
 			}
 			reviewCurrent = err == nil
 		}
-		entry, err := processingCatalogEntry(c, policy, t.AuthorityRevision, reviewCurrent)
+		entry, err := processingCatalogEntry(c, nil, t.AuthorityRevision, reviewCurrent)
 		if err != nil {
 			return nil, err
 		}
+		policy, err := t.ProcessingPolicy(ctx, store.OnboardingReference{ID: entry.OutputPolicy.ID, Version: entry.OutputPolicy.Version, Hash: entry.OutputPolicy.Hash})
+		if err != nil && !errors.Is(err, store.ErrRevision) {
+			return nil, err
+		}
+		entry.OutputPolicyCurrent = err == nil && policy != nil
 		out.Workflows = append(out.Workflows, entry)
 	}
 	if err = t.Reauthorize(ctx); err != nil {

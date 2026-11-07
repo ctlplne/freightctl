@@ -6,9 +6,15 @@ or forwarding permission. The default ingress policy continues to describe new
 incoming files. Registering a JSON output contract therefore leaves a CSV input
 policy in place. A registry without a default policy does not configure ingress.
 
-This increment implements **registration only**. Existing processing/check/release
-guards do not consume these contracts. An output contract cannot yet replace the
-ordinary active policy in a processing task. Producer-bound generated acceptance,
+F181 implements registration; F183 adds exact contract selection for typed task
+draft/approval metadata and catalog observations. The selector accepts the active
+default or one exact current output contract owned by this producer. A root
+administrator cannot select another producer's contract merely because it can
+inspect it. Stale versions, changed authority/root and revoked contracts refuse;
+catalog policy currency remains separate from historical task approval.
+
+Existing processing/check/release guards do not consume these contracts.
+Producer-bound generated acceptance,
 fresh checking and separate release remain owed; no repeat CSV-to-JSON processing
 outcome is claimed here.
 

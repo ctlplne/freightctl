@@ -49,6 +49,11 @@ prepared/compiled only. This increment is registry-only;processor consumption,
 fresh output checks/separate release and repeat CSV-to-JSON pipelines remain owed.
 
 Source55 targets76 metadata/75 forced-RLS tables.
+F183 adds exact output-contract selection for typed task draft/approval metadata
+and catalog observations. Root administration cannot substitute for producer
+ownership. Focused selection/catalog refusal checks pass;actual PostgreSQL and
+served HTTPS draft/approval/catalog/revocation proof remain prepared/compiled only.
+Execution still owes producer-bound generated acceptance,fresh checks and release.
 Historical profiles and retained schema35 are untouched. No local PostgreSQL,
 Chrome,model,scanner or heavy peer ran. Native compilation/stand-ins establish
 no runtime qualification. F026 stays manual/owner-deferred.

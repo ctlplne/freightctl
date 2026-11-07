@@ -249,7 +249,8 @@
         "docs/qualification/evidence/F179-processing-task-catalog.json",
         "docs/qualification/evidence/F180-review-browser-terminal-ci.json",
         "docs/qualification/evidence/F181-producer-output-policies.json",
-        "docs/qualification/evidence/F182-catalog-terminal-ci.json"
+        "docs/qualification/evidence/F182-catalog-terminal-ci.json",
+        "docs/qualification/evidence/F183-processing-output-selection.json"
       ],
       "remaining_details": [
         "F007/F008 verify bounded leased/fenced SFTP intents and typed ordered workflow runs with registered connection versions, conservative ambiguity, same-step dispatch replay across restart, and queued cancellation. Finish unattended/fair scheduling, broader processing/conditions/loops/batches, active cancellation/rebinding, overlapping key rotations, receiver business contracts, remote quotas/retention/cleanup and distributed failures.",
@@ -307,7 +308,8 @@
         "F175 implements named independent definition-only processing review and separate owner adoption, permanent live approval binding, compact original receipts and ordinary API/CLI controls. Focused red/green, affected static checks and12 metadata stand-ins pass. Four PostgreSQL cases and served HTTPS/CLI proof are prepared/compiled only. Source54 adds one forced-RLS relation;retained35 unchanged. Browser controls, third-party author delegation, composition and native/final-source/full baseline qualification remain owed. F176 retains original793f9dd terminal17-run/37-job outcomes;listed security gates pass and original application failures stay red for FINISH.",
         "F177 adds browser independent review and exact-key recovery;11 focused frontend contracts,canonical Go/Python/browser fixture and affected static/build checks pass. Prepared native Chrome two-role/reply-loss/adoption/withdrawal/historical-receipt/six-WCAG/cardinality proof is compiled only. F178 retains cc53524 original terminal17-run/37-job outcomes;listed security gates pass and original application failures remain red for FINISH. Third-party author delegation,composition and full native/final-source qualification remain owed.",
         "F179 implements actor-private latest processing-task discovery through API/CLI/browser/Catalog38-v15 MCP. Approval and output-policy observations do not assert input or execution readiness;model names/rules stay redacted. Focused Go/MCP,13 frontend cases and affected static/build checks pass;actual PostgreSQL/pagination/latest-profile/role/withdrawal,served stock-SDK/CLI and seventh catalog Chrome audit remain prepared/compiled only. F180 preserves9c6f836 original16-triggered-run/35-job outcomes;listed security gates pass,application failures remain red. Full native/final-source/baseline/AX/FINISH remains owed.",
-        "F181 registers producer-bound output contracts separately from default ingress through API/CLI/source55 forced RLS;focused red/green and affected static/metadata checks pass. Five PostgreSQL cases,verified HTTPS and CLI are prepared/compiled only. Registry only:producer-bound processing consumption,fresh output checking/release and repeat CSV-to-JSON pipelines remain owed. F182 preserves75209b1 original terminal17 workflows/37 jobs;listed security checks pass,application failures stay red for FINISH."
+        "F181 registers producer-bound output contracts separately from default ingress through API/CLI/source55 forced RLS;focused red/green and affected static/metadata checks pass. Five PostgreSQL cases,verified HTTPS and CLI are prepared/compiled only. Registry only:producer-bound processing consumption,fresh output checking/release and repeat CSV-to-JSON pipelines remain owed. F182 preserves75209b1 original terminal17 workflows/37 jobs;listed security checks pass,application failures stay red for FINISH.",
+        "F183 adds exact producer-bound output reference selection to typed task draft/approval and catalog metadata. Focused selection/catalog checks pass;actual PostgreSQL and served HTTPS metadata lifecycle are prepared/compiled only. Generated acceptance/fresh checking/release remain owed;no pipeline qualification inherited."
       ]
     },
     {
@@ -352,7 +354,8 @@
         "docs/qualification/evidence/F179-processing-task-catalog.json",
         "docs/qualification/evidence/F180-review-browser-terminal-ci.json",
         "docs/qualification/evidence/F181-producer-output-policies.json",
-        "docs/qualification/evidence/F182-catalog-terminal-ci.json"
+        "docs/qualification/evidence/F182-catalog-terminal-ci.json",
+        "docs/qualification/evidence/F183-processing-output-selection.json"
       ],
       "remaining_details": [
         "F008 supplies shared CLI/HTTPS typed workflow drafts, offline validation/preview, version diff, explicit approval/revocation and atomic ordered SFTP runs without any inference dependency. First real private-model proposal/diagnosis, model-disabled replay after that integration, other task types, visual UI, adversarial/disclosure evaluations and two qualified profiles remain mandatory.",
@@ -402,7 +405,8 @@
         "F175 implements named independent definition-only processing review and separate owner adoption, permanent live approval binding, compact original receipts and ordinary API/CLI controls. Focused red/green, affected static checks and12 metadata stand-ins pass. Four PostgreSQL cases and served HTTPS/CLI proof are prepared/compiled only. Source54 adds one forced-RLS relation;retained35 unchanged. Browser controls, third-party author delegation, composition and native/final-source/full baseline qualification remain owed. F176 retains original793f9dd terminal17-run/37-job outcomes;listed security gates pass and original application failures stay red for FINISH.",
         "F177 adds browser independent review and exact-key recovery;11 focused frontend contracts,canonical Go/Python/browser fixture and affected static/build checks pass. Prepared native Chrome two-role/reply-loss/adoption/withdrawal/historical-receipt/six-WCAG/cardinality proof is compiled only. F178 retains cc53524 original terminal17-run/37-job outcomes;listed security gates pass and original application failures remain red for FINISH. Third-party author delegation,composition and full native/final-source qualification remain owed.",
         "F179 implements actor-private latest processing-task discovery through API/CLI/browser/Catalog38-v15 MCP. Approval and output-policy observations do not assert input or execution readiness;model names/rules stay redacted. Focused Go/MCP,13 frontend cases and affected static/build checks pass;actual PostgreSQL/pagination/latest-profile/role/withdrawal,served stock-SDK/CLI and seventh catalog Chrome audit remain prepared/compiled only. F180 preserves9c6f836 original16-triggered-run/35-job outcomes;listed security gates pass,application failures remain red. Full native/final-source/baseline/AX/FINISH remains owed.",
-        "F181 registers producer-bound output contracts separately from default ingress through API/CLI/source55 forced RLS;focused red/green and affected static/metadata checks pass. Five PostgreSQL cases,verified HTTPS and CLI are prepared/compiled only. Registry only:producer-bound processing consumption,fresh output checking/release and repeat CSV-to-JSON pipelines remain owed. F182 preserves75209b1 original terminal17 workflows/37 jobs;listed security checks pass,application failures stay red for FINISH."
+        "F181 registers producer-bound output contracts separately from default ingress through API/CLI/source55 forced RLS;focused red/green and affected static/metadata checks pass. Five PostgreSQL cases,verified HTTPS and CLI are prepared/compiled only. Registry only:producer-bound processing consumption,fresh output checking/release and repeat CSV-to-JSON pipelines remain owed. F182 preserves75209b1 original terminal17 workflows/37 jobs;listed security checks pass,application failures stay red for FINISH.",
+        "F183 adds exact producer-bound output reference selection to typed task draft/approval and catalog metadata. Focused selection/catalog checks pass;actual PostgreSQL and served HTTPS metadata lifecycle are prepared/compiled only. Generated acceptance/fresh checking/release remain owed;no pipeline qualification inherited."
       ]
     },
     {
@@ -600,7 +604,8 @@
         "docs/qualification/evidence/F177-independent-review-browser.json",
         "docs/qualification/evidence/F178-independent-review-terminal-ci.json",
         "docs/qualification/evidence/F181-producer-output-policies.json",
-        "docs/qualification/evidence/F182-catalog-terminal-ci.json"
+        "docs/qualification/evidence/F182-catalog-terminal-ci.json",
+        "docs/qualification/evidence/F183-processing-output-selection.json"
       ],
       "remaining_details": [
         "F010 verifies durable held intake for configured new revisions, exact CSV contracts, separate hash/revision-bound release and ordinary delivery of released bytes. Antivirus/ICAP/DLP, cryptographic signatures/encryption, other formats/transforms, re-scan/exception governance, retrospective policy and the complete business-file journey remain mandatory.",
@@ -680,7 +685,8 @@
         "F165 adds explicit scoped processing with existing per-action workflow grants,namespace target/receipt binding and append-only52;retained35 unchanged. F167 adds five redacted metadata MCP tools,Catalog31/v13,opaque review and original-key recovery,with approval outside tools. Focused local contracts/static/12 metadata stand-ins pass. Confined-actor/stock-SDK/native SQL/runtime and full typed workflow/browser/delegation/customer acceptance remain owed. F166 records all17 terminal3bbd07c workflows and scoped native document primitive passes;original failures remain red.",
         "F175 implements named independent definition-only processing review and separate owner adoption, permanent live approval binding, compact original receipts and ordinary API/CLI controls. Focused red/green, affected static checks and12 metadata stand-ins pass. Four PostgreSQL cases and served HTTPS/CLI proof are prepared/compiled only. Source54 adds one forced-RLS relation;retained35 unchanged. Browser controls, third-party author delegation, composition and native/final-source/full baseline qualification remain owed. F176 retains original793f9dd terminal17-run/37-job outcomes;listed security gates pass and original application failures stay red for FINISH.",
         "F177 adds browser independent review and exact-key recovery;11 focused frontend contracts,canonical Go/Python/browser fixture and affected static/build checks pass. Prepared native Chrome two-role/reply-loss/adoption/withdrawal/historical-receipt/six-WCAG/cardinality proof is compiled only. F178 retains cc53524 original terminal17-run/37-job outcomes;listed security gates pass and original application failures remain red for FINISH. Third-party author delegation,composition and full native/final-source qualification remain owed.",
-        "F181 registers producer-bound output contracts separately from default ingress through API/CLI/source55 forced RLS;focused red/green and affected static/metadata checks pass. Five PostgreSQL cases,verified HTTPS and CLI are prepared/compiled only. Registry only:producer-bound processing consumption,fresh output checking/release and repeat CSV-to-JSON pipelines remain owed. F182 preserves75209b1 original terminal17 workflows/37 jobs;listed security checks pass,application failures stay red for FINISH."
+        "F181 registers producer-bound output contracts separately from default ingress through API/CLI/source55 forced RLS;focused red/green and affected static/metadata checks pass. Five PostgreSQL cases,verified HTTPS and CLI are prepared/compiled only. Registry only:producer-bound processing consumption,fresh output checking/release and repeat CSV-to-JSON pipelines remain owed. F182 preserves75209b1 original terminal17 workflows/37 jobs;listed security checks pass,application failures stay red for FINISH.",
+        "F183 adds exact producer-bound output reference selection to typed task draft/approval and catalog metadata. Focused selection/catalog checks pass;actual PostgreSQL and served HTTPS metadata lifecycle are prepared/compiled only. Generated acceptance/fresh checking/release remain owed;no pipeline qualification inherited."
       ]
     },
     {
@@ -729,7 +735,8 @@
         "docs/qualification/evidence/F179-processing-task-catalog.json",
         "docs/qualification/evidence/F180-review-browser-terminal-ci.json",
         "docs/qualification/evidence/F181-producer-output-policies.json",
-        "docs/qualification/evidence/F182-catalog-terminal-ci.json"
+        "docs/qualification/evidence/F182-catalog-terminal-ci.json",
+        "docs/qualification/evidence/F183-processing-output-selection.json"
       ],
       "remaining_details": [
         "S002 clarifies S001: the trstctl suite and general credential/trust control plane remain excluded, while an optional real Trust Control provider integration is planned alongside customer-managed credentials. Pin and qualify the actual provider contract under X07/AX08; preserve independent core operation and all transfer-scoped security gates.",
@@ -761,7 +768,8 @@
         "F175 implements named independent definition-only processing review and separate owner adoption, permanent live approval binding, compact original receipts and ordinary API/CLI controls. Focused red/green, affected static checks and12 metadata stand-ins pass. Four PostgreSQL cases and served HTTPS/CLI proof are prepared/compiled only. Source54 adds one forced-RLS relation;retained35 unchanged. Browser controls, third-party author delegation, composition and native/final-source/full baseline qualification remain owed. F176 retains original793f9dd terminal17-run/37-job outcomes;listed security gates pass and original application failures stay red for FINISH.",
         "F177 adds browser independent review and exact-key recovery;11 focused frontend contracts,canonical Go/Python/browser fixture and affected static/build checks pass. Prepared native Chrome two-role/reply-loss/adoption/withdrawal/historical-receipt/six-WCAG/cardinality proof is compiled only. F178 retains cc53524 original terminal17-run/37-job outcomes;listed security gates pass and original application failures remain red for FINISH. Third-party author delegation,composition and full native/final-source qualification remain owed.",
         "F179 implements actor-private latest processing-task discovery through API/CLI/browser/Catalog38-v15 MCP. Approval and output-policy observations do not assert input or execution readiness;model names/rules stay redacted. Focused Go/MCP,13 frontend cases and affected static/build checks pass;actual PostgreSQL/pagination/latest-profile/role/withdrawal,served stock-SDK/CLI and seventh catalog Chrome audit remain prepared/compiled only. F180 preserves9c6f836 original16-triggered-run/35-job outcomes;listed security gates pass,application failures remain red. Full native/final-source/baseline/AX/FINISH remains owed.",
-        "F181 registers producer-bound output contracts separately from default ingress through API/CLI/source55 forced RLS;focused red/green and affected static/metadata checks pass. Five PostgreSQL cases,verified HTTPS and CLI are prepared/compiled only. Registry only:producer-bound processing consumption,fresh output checking/release and repeat CSV-to-JSON pipelines remain owed. F182 preserves75209b1 original terminal17 workflows/37 jobs;listed security checks pass,application failures stay red for FINISH."
+        "F181 registers producer-bound output contracts separately from default ingress through API/CLI/source55 forced RLS;focused red/green and affected static/metadata checks pass. Five PostgreSQL cases,verified HTTPS and CLI are prepared/compiled only. Registry only:producer-bound processing consumption,fresh output checking/release and repeat CSV-to-JSON pipelines remain owed. F182 preserves75209b1 original terminal17 workflows/37 jobs;listed security checks pass,application failures stay red for FINISH.",
+        "F183 adds exact producer-bound output reference selection to typed task draft/approval and catalog metadata. Focused selection/catalog checks pass;actual PostgreSQL and served HTTPS metadata lifecycle are prepared/compiled only. Generated acceptance/fresh checking/release remain owed;no pipeline qualification inherited."
       ]
     },
     {
@@ -1053,7 +1061,8 @@
         "docs/qualification/evidence/F179-processing-task-catalog.json",
         "docs/qualification/evidence/F180-review-browser-terminal-ci.json",
         "docs/qualification/evidence/F181-producer-output-policies.json",
-        "docs/qualification/evidence/F182-catalog-terminal-ci.json"
+        "docs/qualification/evidence/F182-catalog-terminal-ci.json",
+        "docs/qualification/evidence/F183-processing-output-selection.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -1084,14 +1093,15 @@
         "F175 implements named independent definition-only processing review and separate owner adoption, permanent live approval binding, compact original receipts and ordinary API/CLI controls. Focused red/green, affected static checks and12 metadata stand-ins pass. Four PostgreSQL cases and served HTTPS/CLI proof are prepared/compiled only. Source54 adds one forced-RLS relation;retained35 unchanged. Browser controls, third-party author delegation, composition and native/final-source/full baseline qualification remain owed. F176 retains original793f9dd terminal17-run/37-job outcomes;listed security gates pass and original application failures stay red for FINISH.",
         "F177 adds browser independent review and exact-key recovery;11 focused frontend contracts,canonical Go/Python/browser fixture and affected static/build checks pass. Prepared native Chrome two-role/reply-loss/adoption/withdrawal/historical-receipt/six-WCAG/cardinality proof is compiled only. F178 retains cc53524 original terminal17-run/37-job outcomes;listed security gates pass and original application failures remain red for FINISH. Third-party author delegation,composition and full native/final-source qualification remain owed.",
         "F179 implements actor-private latest processing-task discovery through API/CLI/browser/Catalog38-v15 MCP. Approval and output-policy observations do not assert input or execution readiness;model names/rules stay redacted. Focused Go/MCP,13 frontend cases and affected static/build checks pass;actual PostgreSQL/pagination/latest-profile/role/withdrawal,served stock-SDK/CLI and seventh catalog Chrome audit remain prepared/compiled only. F180 preserves9c6f836 original16-triggered-run/35-job outcomes;listed security gates pass,application failures remain red. Full native/final-source/baseline/AX/FINISH remains owed.",
-        "F181 registers producer-bound output contracts separately from default ingress through API/CLI/source55 forced RLS;focused red/green and affected static/metadata checks pass. Five PostgreSQL cases,verified HTTPS and CLI are prepared/compiled only. Registry only:producer-bound processing consumption,fresh output checking/release and repeat CSV-to-JSON pipelines remain owed. F182 preserves75209b1 original terminal17 workflows/37 jobs;listed security checks pass,application failures stay red for FINISH."
+        "F181 registers producer-bound output contracts separately from default ingress through API/CLI/source55 forced RLS;focused red/green and affected static/metadata checks pass. Five PostgreSQL cases,verified HTTPS and CLI are prepared/compiled only. Registry only:producer-bound processing consumption,fresh output checking/release and repeat CSV-to-JSON pipelines remain owed. F182 preserves75209b1 original terminal17 workflows/37 jobs;listed security checks pass,application failures stay red for FINISH.",
+        "F183 adds exact producer-bound output reference selection to typed task draft/approval and catalog metadata. Focused selection/catalog checks pass;actual PostgreSQL and served HTTPS metadata lifecycle are prepared/compiled only. Generated acceptance/fresh checking/release remain owed;no pipeline qualification inherited."
       ],
       "current_item": {
-        "id": "F181",
-        "state": "Producer-bound output registry implemented;consumption/native qualification owed",
-        "proof": "Observed missing-contract red;focused green and affected static/metadata checks;safe manifest F181",
-        "native": "Five PostgreSQL cases,verified HTTPS and public CLI controls prepared/compiled only",
-        "next": "Producer-bound generated acceptance/check/release;composition/delegation and all mandatory baseline/AX/FINISH"
+        "id": "F183",
+        "state": "Exact producer contract selection implemented for typed task metadata;processing consumption owed",
+        "proof": "Observed missing-selector red and focused selection/catalog green;affected compilation/vet/architecture pass",
+        "native": "PostgreSQL producer/nonproducer/admin ownership and served HTTPS task/approval/catalog/revocation prepared/compiled only",
+        "next": "Producer-bound generated acceptance/check/release;full remaining baseline/AX/FINISH"
       }
     }
   ],

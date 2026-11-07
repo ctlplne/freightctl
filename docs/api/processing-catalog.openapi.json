@@ -166,7 +166,7 @@
           },
           "output_policy_current": {
             "type": "boolean",
-            "description": "Active policy equals the exact task output-policy reference."
+            "description": "Exact current default policy or current producer-bound output contract equals the task reference. No input or execution readiness claim."
           }
         },
         "required": [

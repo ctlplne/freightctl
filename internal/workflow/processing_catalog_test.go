@@ -36,6 +36,17 @@ func TestProcessingCatalogSeparatesApprovalPolicyAndExecutionFacts(t *testing.T)
 		t.Fatal("stale actor approval remains current", err)
 	}
 	old := *output
+	old.State = "output_active"
+	registered, err := processingCatalogEntry(c, &old, 7, true)
+	if err != nil || !registered.OutputPolicyCurrent || !registered.ApprovalCurrent {
+		t.Fatal("selected producer contract lost independent approval observation", err)
+	}
+	old.State = "output_revoked"
+	registered, err = processingCatalogEntry(c, &old, 7, true)
+	if err != nil || registered.OutputPolicyCurrent || !registered.ApprovalCurrent {
+		t.Fatal("revoked output contract rewrote task approval or remained current", err)
+	}
+	old = *output
 	old.Version++
 	changed, err = processingCatalogEntry(c, &old, 7, true)
 	if err != nil || changed.OutputPolicyCurrent || !changed.ApprovalCurrent {

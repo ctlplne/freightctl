@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "id": "F183",
+  "observed_at": "2026-11-06",
+  "base_candidate": "5d56bebd58bdc7923669a852f0ab32cacc94bee2",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Exact producer-bound output selection for task metadata implemented;execution consumption/native proof owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "07832b960841cc7b7865523385cc69691156478a12da9a39d9624514c12d4e0f",
+      "bytes": 5108
+    },
+    {
+      "reference": "docs/api/processing-catalog.openapi.json",
+      "sha256": "ceb3b4c61192c9f726a73a3b93434f81f185bbc9b5f5c710f265e738f9a7dd29",
+      "bytes": 6282
+    },
+    {
+      "reference": "docs/protocols/processing-output-policies.md",
+      "sha256": "200d135cc557c1c614ad179052048a850425307041ebae83c60857727e306e98",
+      "bytes": 4654
+    },
+    {
+      "reference": "docs/protocols/processing-workflow-catalog.md",
+      "sha256": "6d02082c90f249e6029f5688ba9247e680e806c220f280e2ff17a874de55c978",
+      "bytes": 3762
+    },
+    {
+      "reference": "docs/qualification/artifact-exchange.json",
+      "sha256": "41b79a5c4909343fa1cb8f0a9ae52e4a14ac55fcd71ea5144c2c3c9d9112bc1d",
+      "bytes": 27563
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "90af642edcd4f9f45af744cd3602fbb675abb95b609e314ae9f48200af50512f",
+      "bytes": 340630
+    },
+    {
+      "reference": "internal/api/output_policies_integration_test.go",
+      "sha256": "ca6c471f7c7dc69bb297908c7ae1810779242cae9229f1014a1e48747c451b83",
+      "bytes": 6046
+    },
+    {
+      "reference": "internal/checks/output_selection_integration_test.go",
+      "sha256": "3dde0d8344dfeb7c9e3c97ff0c25d069692c28d7d87448161c1dd6a56369d9b2",
+      "bytes": 3918
+    },
+    {
+      "reference": "internal/store/output_selection.go",
+      "sha256": "d6152422d88889e6dfcc98e064785a153424824f5d2683e0072bb81374145752",
+      "bytes": 2680
+    },
+    {
+      "reference": "internal/store/output_selection_test.go",
+      "sha256": "dc2c76aac6182a448fb55380da28d605270ea1495c08b5d5e57ae0472950b371",
+      "bytes": 2347
+    },
+    {
+      "reference": "internal/workflow/configuration.go",
+      "sha256": "98ac9e86fd24813dac1044185166d5d5698d7a296527b4ef131758ae1d449aef",
+      "bytes": 19517
+    },
+    {
+      "reference": "internal/workflow/processing_catalog.go",
+      "sha256": "68d7a8eec1a6776efb8a2c08a28bf902055c56afc8836fc5931ce561f39dc9dc",
+      "bytes": 5409
+    },
+    {
+      "reference": "internal/workflow/processing_catalog_test.go",
+      "sha256": "bd722a8c82e83f59a325bc6af12ad60963718a218ceae41c8f389144d449346f",
+      "bytes": 3100
+    }
+  ],
+  "red": {
+    "reference": ".private/freightctl-f183-selection-red.log",
+    "observed": "Required exact producer output selector missing;focused regression failed compilation."
+  },
+  "green": {
+    "reference": ".private/freightctl-f183-selection-focused.log",
+    "observed": "Exact producer authority/root/tenant/partner/contract and stale/legacy/changed-owner refusals pass. Catalog observes output contract currency separately from task approval. Core import boundaries pass."
+  },
+  "checks": [
+    {
+      "reference": ".private/freightctl-f183-final-native-compile.log",
+      "sha256": "68199894f9cbd046d830f4cf74a887932a93b4898acae72b0b3dc2032c4df08c",
+      "bytes": 228
+    },
+    {
+      "reference": ".private/freightctl-f183-final-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f183-native-compile.log",
+      "sha256": "80e1aaa146acc59ab09bf5b1c4501c6b8ba82aa5932ab95c1ff6bc9cb8d3783c",
+      "bytes": 224
+    },
+    {
+      "reference": ".private/freightctl-f183-selection-first-green.log",
+      "sha256": "dcb01f829b9698aaa9f6e3413880c3be2e47ec60ca751e53bca435d92218f9c2",
+      "bytes": 117
+    },
+    {
+      "reference": ".private/freightctl-f183-selection-focused.log",
+      "sha256": "829ea3d5ad61dde6b9c196b81338484de8a0f21ba710ab8d94b18c384621aa99",
+      "bytes": 181
+    },
+    {
+      "reference": ".private/freightctl-f183-selection-red.log",
+      "sha256": "38ce41593b6d3f3666d91f07965c5ac40f2733e0037ccf8d918b501e79bb6297",
+      "bytes": 419
+    },
+    {
+      "reference": ".private/freightctl-f183-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "changed": [
+    "One shared transaction selector resolves active exact default or current exact registered producer contract;there is no fallback for a stale explicit reference. Root administration cannot substitute for producer ownership.",
+    "Schema3 draft/approval metadata uses that selector. Catalog resolves every task exact reference,collapses ordinary stale selection to a false policy observation and preserves independent approval facts. Existing canonical workflow definitions and wire shapes remain unchanged.",
+    "Prepared actual PostgreSQL ownership/administrator refusal/draft/approval/catalog/revocation/default-preservation and served verified-HTTPS metadata lifecycle. No new migration,byte effect or resource allowance."
+  ],
+  "prepared_native": [
+    "TestProcessingOutputSelectionActualTypedTaskPinsProducerContractWithoutChangingIngress",
+    "TestProcessingOutputPolicyHTTPSScopesRegistryAndPreservesDefaultIngress (extended task metadata lifecycle)"
+  ],
+  "verification_limits": [
+    "Tagged compilation selects zero native cases. Native PostgreSQL/HTTPS/interface outcomes remain owed;no local heavy runtime started.",
+    "Only task metadata selects registered contracts here. Generated acceptance,fresh output checks and separate release still require implementation. No repeat processing or execution readiness claim.",
+    "Source55 and retained35 unchanged;original failures preserved. Previous push originals remain queued at last observation;no runs cancelled or replaced."
+  ],
+  "owed": [
+    "Producer-bound generated acceptance/fresh signature/scanner checks/separate release/availability through versioned custody profiles.",
+    "Prepared native proof and mandatory original/final-source/baseline/AX/FINISH gates;all whole rows/journeys/readiness remain open."
+  ]
+}

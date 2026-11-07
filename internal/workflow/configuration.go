@@ -282,11 +282,11 @@ func connections(ctx context.Context, t *store.Transaction, d Definition) ([]Con
 		if d.Processing == nil {
 			return nil, ErrInput
 		}
-		p, err := t.IntakePolicy(ctx, false)
+		p, err := t.ProcessingPolicy(ctx, store.OnboardingReference{ID: d.Processing.OutputPolicy.ID, Version: d.Processing.OutputPolicy.Version, Hash: d.Processing.OutputPolicy.Hash})
 		if err != nil {
 			return nil, err
 		}
-		if p == nil || p.State != "active" || d.Processing.OutputPolicy != (Reference{ID: p.ID, Version: p.Version, Hash: p.Hash}) {
+		if p == nil || (p.State != "active" && p.State != "output_active") || d.Processing.OutputPolicy != (Reference{ID: p.ID, Version: p.Version, Hash: p.Hash}) {
 			return nil, store.ErrRevision
 		}
 	}
