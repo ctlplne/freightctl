@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "id": "F299",
+  "observed_at": "2026-11-07",
+  "base_candidate": "90b8595f1349de708d3b42ebafb62db74430df62",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Native privacy failure preserved;task-owned actual-owner fixture and fixed-stage diagnosis prepared",
+  "red": {
+    "candidate": "9439074aae173afe5305373cee87307898f24459",
+    "run": 42366950552,
+    "job": 128386900005,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128386900005",
+    "cases": [
+      "TestPrivateSocketReferenceRequiresActualPrivacyAndRefusesRegularFiles",
+      "TestWindowsPrivateSocketPinsTheExactNativeName"
+    ],
+    "observation": "Actual native positive private-socket cases refuse with ErrPrivacy;scanner protocol cases also fail. Root cause is not yet proven."
+  },
+  "native_observations": {
+    "command": "go test -timeout=0 ./...",
+    "passed_packages": {
+      "cmd/freightctl": 0.493,
+      "internal/delivery": 0.053,
+      "internal/custody": 0.497,
+      "internal/checks": 0.3,
+      "internal/crypto": 2.083,
+      "internal/durablefs": 0.042,
+      "internal/ftpsclient": 0.774
+    },
+    "limit": "Nonverbose package outcomes only;no whole Windows/runtime/restore/real scanner claim. Original native socket privacy gate remains red."
+  },
+  "changed": [
+    "Fixtures explicitly set/read back actual current-user socket ownership in addition to unchanged protected DACL. Default ownership may be a group;actual socket cause is still an inference. Production descriptor rules stay unchanged.",
+    "Private positive precondition now precedes broadened-socket rejection;zero reads/callbacks/results assertions remain. Immediate owned listener cleanup covers setup failures.",
+    "Fixed privacy stages identify the failing check without printing SIDs,paths or descriptor data. Every native identity,reparse-tag,type,owner,DACL and name-pin rule remains."
+  ],
+  "green": [
+    "Actual local AF_UNIX socket/private/broadening and scanner protocol units pass;affected native vet passes.",
+    "Windows protectedfs/scanner test compilation and vet pass only."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f299-protectedfs-windows-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f299-scanner-windows-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f299-windows-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f299-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f299-local-socket-green.log",
+      "sha256": "641c0cfa100fe459a275f9a8710a44e98f7513f8da9401299a83be96b216bc13",
+      "bytes": 63
+    },
+    {
+      "reference": ".private/freightctl-f299-local-protocol-green.log",
+      "sha256": "858f5b34857875e047c74c46e730c08f173547a148461338355ed4d2a50f31ce",
+      "bytes": 59
+    },
+    {
+      "reference": ".private/freightctl-f299-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "source_files": [
+    {
+      "reference": "internal/protectedfs/socket_windows.go",
+      "sha256": "ac8e21a86416a89db99a4f0457179dd1caf368e86eedb15e9ac7adc05f512a06",
+      "bytes": 2917
+    },
+    {
+      "reference": "internal/protectedfs/socket_windows_test.go",
+      "sha256": "78ab3e3a57a824d2b8d5665907566e5cc3559d382ee395fcb0fa3fc17c8fbdac",
+      "bytes": 2120
+    },
+    {
+      "reference": "internal/scanner/socket_windows_test.go",
+      "sha256": "9c3f58d11cc281fe84489b384cbdb2e46f8461491dd8438ab80d6b030086f050",
+      "bytes": 1610
+    },
+    {
+      "reference": "internal/scanner/clamd_test.go",
+      "sha256": "2ff0a8115a749435c2246f6f970142861c4648e8afbff22866eaed34fc74c59e",
+      "bytes": 9110
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "3fae4a3ab0846340dfe7b11fbcba99361a259b8df4bf77cf00b0aa898928b66f",
+      "bytes": 396022
+    },
+    {
+      "reference": "STATUS.md",
+      "sha256": "7a34a854edfe47d548ba1a7d0f2c6ab637d592406b7880596f248ae44edf6e8d",
+      "bytes": 6432
+    }
+  ],
+  "owed": [
+    "Actual original Windows socket/scanner replay and actionable cause repair.",
+    "Native full scanner protocol,real authorized engine,final-source security/runtime/recovery and all mandatory baseline/AX outcomes."
+  ],
+  "primary_sources": [
+    "https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/ntifs/ns-ntifs-_token_owner",
+    "https://learn.microsoft.com/en-us/windows/win32/secauthz/owner-of-a-new-object"
+  ],
+  "resources": "OneCPU/192MiB local AF_UNIX stand-ins/static/Windows cross-compilation only;inference/heavy runtimes off;separate local-source integration WIP preserved."
+}

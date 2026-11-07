@@ -4,6 +4,7 @@ package protectedfs
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"runtime"
 	"unsafe"
@@ -15,6 +16,11 @@ import (
 // arbitrary reparse point. The pinned Go platform also uses this exact tag to
 // distinguish sockets from links and other filesystem extensions.
 const unixSocketReparseTag = 0x80000023
+
+func nativeSocketPrivacyFailure(stage string, err error) error {
+	// Fixed internal stages only;never expose a SID,path or descriptor contents.
+	return fmt.Errorf("native private socket %s: %w", stage, errors.Join(ErrPrivacy, err))
+}
 
 func platformSocket(path string, observed os.FileInfo) (*os.File, error) {
 	name, err := windows.UTF16PtrFromString(path)
@@ -33,7 +39,7 @@ func platformSocket(path string, observed os.FileInfo) (*os.File, error) {
 	}
 	current, err := f.Stat()
 	if err != nil || !os.SameFile(observed, current) {
-		return nil, errors.Join(ErrPrivacy, err, f.Close())
+		return nil, errors.Join(nativeSocketPrivacyFailure("physical-identity", err), f.Close())
 	}
 	if err = platformSocketPrivacy(f, current); err != nil {
 		return nil, errors.Join(err, f.Close())
@@ -47,7 +53,7 @@ func platformSocketPrivacy(f *os.File, observed os.FileInfo) error {
 	}
 	current, err := f.Stat()
 	if err != nil || !os.SameFile(current, observed) || current.Mode()&os.ModeSocket == 0 {
-		return errors.Join(ErrPrivacy, err)
+		return nativeSocketPrivacyFailure("held-object-identity", err)
 	}
 	connection, err := f.SyscallConn()
 	if err != nil {
@@ -58,13 +64,13 @@ func platformSocketPrivacy(f *os.File, observed os.FileInfo) error {
 		h := windows.Handle(fd)
 		kind, e := windows.GetFileType(h)
 		if e != nil || kind != windows.FILE_TYPE_DISK {
-			operationErr = errors.Join(ErrPrivacy, e)
+			operationErr = nativeSocketPrivacyFailure("file-type", e)
 			return
 		}
 		var tag struct{ Attributes, ReparseTag uint32 }
 		e = windows.GetFileInformationByHandleEx(h, windows.FileAttributeTagInfo, (*byte)(unsafe.Pointer(&tag)), uint32(unsafe.Sizeof(tag)))
 		if e != nil || tag.Attributes&windows.FILE_ATTRIBUTE_DIRECTORY != 0 || tag.Attributes&windows.FILE_ATTRIBUTE_REPARSE_POINT == 0 || tag.ReparseTag != unixSocketReparseTag {
-			operationErr = errors.Join(ErrPrivacy, e)
+			operationErr = nativeSocketPrivacyFailure("af-unix-tag", e)
 			return
 		}
 		sd, e := windows.GetSecurityInfo(h, windows.SE_FILE_OBJECT, windows.OWNER_SECURITY_INFORMATION|windows.DACL_SECURITY_INFORMATION)
@@ -72,7 +78,9 @@ func platformSocketPrivacy(f *os.File, observed os.FileInfo) error {
 			operationErr = e
 			return
 		}
-		operationErr = inspectDescriptor(sd, privateDescriptor)
+		if e = inspectDescriptor(sd, privateDescriptor); e != nil {
+			operationErr = nativeSocketPrivacyFailure("security-descriptor", e)
+		}
 		runtime.KeepAlive(sd)
 	})
 	return errors.Join(err, operationErr)

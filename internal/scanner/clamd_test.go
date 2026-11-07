@@ -61,6 +61,7 @@ func peer(t *testing.T, d Definition, mode string, source []byte) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	t.Cleanup(func() { _ = listener.Close() })
 	setScannerFixtureSocketPrivacy(t, d.Socket, false)
 	done := make(chan struct{})
 	t.Cleanup(func() {
@@ -171,6 +172,13 @@ func TestClamdRefusesBroadenedSocketBeforeReadingSource(t *testing.T) {
 	d, now := fixture(t)
 	body := []byte("synthetic private scanner source")
 	peer(t, d, "clean", body)
+	private, err := protectedfs.OpenPrivateSocket(d.Socket)
+	if err != nil {
+		t.Fatal("scanner fixture was not actually private before broadening", err)
+	}
+	if err = private.Close(); err != nil {
+		t.Fatal(err)
+	}
 	setScannerFixtureSocketPrivacy(t, d.Socket, true)
 	if held, err := protectedfs.OpenPrivateSocket(d.Socket); !errors.Is(err, protectedfs.ErrPrivacy) {
 		if held != nil {

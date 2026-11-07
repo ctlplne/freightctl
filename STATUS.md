@@ -72,6 +72,12 @@ only. local.collect workflow admission is still red:operator-provisioned
 connection,SQL,CLI/API/browser/custody integration and native proof remain owed.
 No connector or whole-goal qualification is claimed.
 
+F299 keeps the original9439074 Windows socket/privacy failure red. Task-owned
+socket fixtures now set and read back their actual current-user owner as well
+as their protected DACL,and require private success before broadening. Fixed
+stage diagnostics retain every production privacy check. Local protocol/socket
+checks and Windows compilation pass;actual native replay remains owed.
+
 Local F295 binds protected source configuration bytes to the reviewed physical
 root through a strict four-scalar profile. Valid-profile regression turns red
 to green;rehashed ambiguous/unknown meaning and changed bytes/root/authority
