@@ -379,7 +379,7 @@ func Migrate(ctx context.Context, adminPath, passwordPath string) error {
 		switch {
 		case errors.Is(err, pgx.ErrNoRows):
 			if _, err = tx.Exec(ctx, migration); err != nil {
-				return err
+				return fmt.Errorf("migration %d failed: %w", index+1, err)
 			}
 			if _, err = tx.Exec(ctx, `INSERT INTO freightctl_schema VALUES($1,$2)`, index+1, secure.Digest([]byte(migration))); err != nil {
 				return err

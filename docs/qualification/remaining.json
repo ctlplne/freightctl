@@ -1134,7 +1134,9 @@
         "docs/qualification/evidence/F196-processing-calendar-terminal-ci.json",
         "docs/qualification/evidence/F197-browser-definition-proposals.json",
         "docs/qualification/evidence/F198-definition-proposals-terminal-ci.json",
-        "docs/qualification/evidence/F199-processing-calendar-browser-profile.json"
+        "docs/qualification/evidence/F199-processing-calendar-browser-profile.json",
+        "docs/qualification/evidence/F200-browser-proposals-terminal-ci.json",
+        "docs/qualification/evidence/F201-finish-original-failure-repairs.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -1174,14 +1176,15 @@
         "F193 adds explicit owned released-record processing calendars;see exact red/green/native-owed manifest. Root calendar controls remain;automatic chains,third-party delegation,confined-root scheduling,protected/native/Chrome/restore/final-source and full baseline/AX/FINISH stay owed. F194 retains39301e4 terminal17/37,listed security passes and red application failures.",
         "F195 adds named third-party definition authorship and executor-owned draft adoption through API/CLI/Catalog43-v18 MCP;no byte,approval or execution authority transfers. Focused red/green,whole receipt/private audit/schema/authentication and metadata/static checks pass;PostgreSQL/verified HTTPS/stock SDK prepared/compiled only. Browser/recovery,actual CLI/Chrome/SQL race/crash/restore/final-source and full baseline/AX/FINISH stay owed. F196 retains7599978 original terminal17/37,listed security passes and red application failures.",
         "F197 implements browser definition disclosure,executor draft adoption and exact-key recovery with complete session/meaning binding;focused frontend/canonical/static checks pass. Dedicated six-audit Chrome submit/adoption committed-reply-loss/reload/recovery/no-effect and protected-file CLI profiles are prepared/compiled only. Actual runtime,automatic chains,scoped calendars,protected/restore/final-source and full baseline/AX/FINISH remain owed.",
-        "F199 prepares the previously owed served processing-calendar Chrome profile:complete task/calendar review,committed draft/tick response loss and exact-key replay,private reload,owned occurrence navigation,no-delivery execution,held fresh-check output and six WCAG audits. Only compilation/vet/Node syntax/workflow lint pass locally;actual behavioral red/green and native proof remain owed. F198 retains47242c2 original terminal17/37,listed security passes and red application failures."
+        "F199 prepares the previously owed served processing-calendar Chrome profile:complete task/calendar review,committed draft/tick response loss and exact-key replay,private reload,owned occurrence navigation,no-delivery execution,held fresh-check output and six WCAG audits. Only compilation/vet/Node syntax/workflow lint pass locally;actual behavioral red/green and native proof remain owed. F198 retains47242c2 original terminal17/37,listed security passes and red application failures.",
+        "FINISH audit/repair started without claiming implementation complete. F201 reproduces and repairs the original typed OpenAPI unit failure,71-method FTPS reporter stale-schema failure and invalid PL/pgSQL CASE comparisons in unapplied post35 migration sources;also fixes two missing lateral definition selections. Full local lightweight Go unit suite,241 frontend and71 reporter tests pass;standalone parser accepts59 migration files/343 function definitions. No actual PostgreSQL migration,CI/native/accessibility/race/restore acceptance pass inferred. All original failure handles remain;actual repair replays and remaining implementation/full GOAL gates owed. F200 preserves1102224 original terminal17/37 with listed security passes."
       ],
       "current_item": {
-        "id": "F199",
-        "state": "Served processing-calendar proof prepared;actual runtime red/green owed",
-        "proof": "Affected integration-tag compile/vet,Node syntax and workflow lint only;no behavioral or accessibility pass claimed",
-        "native": "Exact owned processing calendar draft/tick lost-response replay,private reload,ordinary run navigation,held output/no delivery and six accessibility audits prepared for original GitHub browser workflow",
-        "next": "Actual native/final-source proof,automatic chains,scoped calendars,protected processing and all remaining baseline/AX/FINISH"
+        "id": "F201",
+        "state": "FINISH original-failure repairs prepared;native replay and remaining mandatory implementation/qualification owed",
+        "proof": "Original native and local reporter8errors/1failure and exact typed OpenAPI unit red;full local Go units,241 frontend,71 reporter green. Standalone parser reproduces CASE syntax red and accepts parenthesized form;two missing lateral columns repaired",
+        "native": "Original source-bound PostgreSQL initialization and all public/platform/race/restore/native jobs require replay on the repair candidate;no native pass claimed",
+        "next": "Commit/push verified repairs,inspect and repair actual native originals during FINISH;complete automatic chains,scoped calendars,protected proof and all remaining baseline/AX gates"
       }
     }
   ],

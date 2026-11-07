@@ -5,7 +5,7 @@ import hashlib
 import importlib.util
 import json
 import shutil
-from metadata_contract import CURRENT_PROFILE, PREVIOUS_PROFILE, LEGACY_PROFILE, RETAINED_PROFILE, migration_ledger
+from metadata_contract import CURRENT_PROFILE, PREVIOUS_PROFILE, LEGACY_PROFILE, RETAINED_PROFILE, migration_ledger, profile as metadata_profile
 from pathlib import Path
 import subprocess
 import sys
@@ -64,6 +64,14 @@ def synthetic_governance_outputs():
 
 
 class SummaryContracts(unittest.TestCase):
+    def use_metadata_profile(self, selected):
+        self.manifest["retained_schema"] = selected["schema"]
+        before = self.manifest["retained_before"]
+        before["migration_ledger"] = migration_ledger(self.root, selected["schema"])
+        before["forced_rls_tables"] = selected["forced_rls_tables"]
+        before["tables"] = [{} for _ in range(selected["metadata_tables"])]
+        self.manifest["retained_after"] = copy.deepcopy(before)
+
     def test_collection_operator_requires_complete_metadata_profile_and_both_original_results(self):
         self.write()
         with self.assertRaises(ValueError):
@@ -313,34 +321,24 @@ class SummaryContracts(unittest.TestCase):
             self.check()
 
     def test_current_schema_cannot_be_rejected_by_stale_retained_profile(self):
-        self.manifest["retained_schema"] = CURRENT_PROFILE["schema"]
-        self.manifest["retained_before"]["migration_ledger"] = migration_ledger(self.root,CURRENT_PROFILE["schema"])
-        self.manifest["retained_after"] = copy.deepcopy(self.manifest["retained_before"])
+        self.use_metadata_profile(CURRENT_PROFILE)
         self.assertEqual(self.check()["state"], "passed")
 
-    def test_explicit_previous_schema38_remains_an_exact_read_only_profile(self):
-        self.manifest["retained_schema"] = PREVIOUS_PROFILE["schema"]
-        self.manifest["retained_before"]["migration_ledger"] = migration_ledger(self.root,PREVIOUS_PROFILE["schema"])
-        self.manifest["retained_after"] = copy.deepcopy(self.manifest["retained_before"])
+    def test_explicit_previous_schema41_remains_an_exact_read_only_profile(self):
+        self.use_metadata_profile(PREVIOUS_PROFILE)
         self.assertEqual(self.check()["state"], "passed")
 
     def test_explicit_legacy_schema37_remains_an_exact_read_only_profile(self):
-        self.manifest["retained_schema"] = LEGACY_PROFILE["schema"]
-        self.manifest["retained_before"]["migration_ledger"] = migration_ledger(self.root,LEGACY_PROFILE["schema"])
-        self.manifest["retained_after"] = copy.deepcopy(self.manifest["retained_before"])
+        self.use_metadata_profile(LEGACY_PROFILE)
         self.assertEqual(self.check()["state"], "passed")
 
     def test_explicit_direct_ftps_schema36_remains_an_exact_read_only_profile(self):
-        self.manifest["retained_schema"] = 36
-        self.manifest["retained_before"]["migration_ledger"] = migration_ledger(self.root,36)
-        self.manifest["retained_after"] = copy.deepcopy(self.manifest["retained_before"])
+        self.use_metadata_profile(metadata_profile(36))
         self.assertEqual(self.check()["state"], "passed")
 
     def test_explicit_unchanged_retained_schema35_is_a_separate_read_only_profile(self):
-        self.manifest["retained_schema"] = RETAINED_PROFILE["schema"]
-        self.manifest["retained_before"]["migration_ledger"] = migration_ledger(self.root,RETAINED_PROFILE["schema"])
-        self.manifest["retained_after"] = copy.deepcopy(self.manifest["retained_before"])
-        self.assertEqual(self.check()["state"],"passed")
+        self.use_metadata_profile(RETAINED_PROFILE)
+        self.assertEqual(self.check()["state"], "passed")
 
     def test_failed_profile_diagnostic_cannot_print_raw_snapshot_or_failure_text(self):
         self.manifest["retained_schema"]="private reference must not appear"
@@ -348,7 +346,7 @@ class SummaryContracts(unittest.TestCase):
         self.manifest["failure"]="private server failure text"
         self.write()
         result=summary.failure_diagnostics(self.root,self.result,"a"*40)
-        self.assertEqual(result["postgres_profile"],{"declared_schema":None,"migration_records":CURRENT_PROFILE["schema"],"metadata_tables":64,"forced_rls_tables":63,"matches_exact_source_profile":False})
+        self.assertEqual(result["postgres_profile"],{"declared_schema":None,"migration_records":CURRENT_PROFILE["schema"],"metadata_tables":CURRENT_PROFILE["metadata_tables"],"forced_rls_tables":CURRENT_PROFILE["forced_rls_tables"],"matches_exact_source_profile":False})
         self.assertNotIn("private",json.dumps(result))
 
     def test_declared_profile_cannot_substitute_missing_changed_or_unknown_migrations(self):
@@ -515,7 +513,7 @@ class SummaryContracts(unittest.TestCase):
             directory.mkdir()
             for name in LFTP_DOWNLOADS:
                 (directory / name).write_bytes(CLI_PAYLOAD)
-        before = {"runtime_role_safe": True, "migration_ledger": migration_ledger(self.root,CURRENT_PROFILE["schema"]), "forced_rls_tables": 63, "tables": [{} for _ in range(64)]}
+        before = {"runtime_role_safe": True, "migration_ledger": migration_ledger(self.root,CURRENT_PROFILE["schema"]), "forced_rls_tables": CURRENT_PROFILE["forced_rls_tables"], "tables": [{} for _ in range(CURRENT_PROFILE["metadata_tables"])]}
         self.manifest = {"schema_version": 1, "retained_schema":CURRENT_PROFILE["schema"], "kind": "stock-ftps-custody", "starting_commit": "a" * 40, "state": "passed",
                          "stock_curl_qualified": True, "stock_lftp_qualified": True, "retained_metadata_and_roles_unchanged": True,
                          "isolated_database_removed": True, "original_resource_state_restored": True, "sources_unchanged": True,

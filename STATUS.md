@@ -5,13 +5,19 @@ complete journeys and AX01–AX08 remain open. Assisted deployment,independent
 adoption and enterprise readiness remain unqualified.
 
 Latest pushed source:1102224828a64e18245e4932578e8d46f0a115b1.
-F198 preserves the previous47242c2 original17 terminal workflows/37 jobs. Listed
-source,dependency,history-secret,producer-closure and peer-image security gates
-passed;module verification passed in both failed Linux unit jobs. Document-
-producer,fuzz and native reproduction jobs passed on that candidate. Original
-application/platform/metadata/public/browser/stock failures remain red. No
-originals were cancelled,restarted or substituted. Nonsecurity logs/repairs and
-original/final-source replay remain owed at FINISH.
+F200 preserves its original17 terminal workflows/37 jobs. Listed dependency,
+vulnerability,history-secret,producer and image gates passed;both Linux module
+verifications passed. Original application/platform/metadata/public/browser/stock
+failures remain red. No originals were cancelled,restarted or substituted.
+FINISH audit/repair has started;remaining implementation requirements stay open.
+F201 preserves exact original reporter/OpenAPI/schema failure handles,repairs
+stale synthetic schema fixtures and the complete typed response schema,and wraps
+bare CASE comparisons in unapplied post35 PL/pgSQL guards. Two lateral policy
+queries now select the definition they already inspect. Full local lightweight
+Go units,241 frontend tests and71 reporter tests pass. Standalone parser syntax
+checks59 migrations/343 functions;this does not qualify PostgreSQL behavior.
+Migration sources1–35 and retained database35 are unchanged. Actual native repair
+replays,race/restore/public/accessibility and every mandatory final gate are owed.
 
 Schema3 records.project binds an owned checked input,approved exact task,one
 durable processing intent,slots and events/receipt. Stable work keys select one

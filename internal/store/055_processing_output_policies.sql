@@ -111,7 +111,7 @@ BEGIN
 END $$;
 
 CREATE OR REPLACE FUNCTION freightctl_artifact_exchange_policy_current(t uuid,p uuid,f uuid) RETURNS boolean LANGUAGE sql STABLE AS $$
- SELECT EXISTS(SELECT 1 FROM files v LEFT JOIN LATERAL (SELECT state,definition_hash FROM intake_policies WHERE (tenant_id,partner_id)=(t,p) AND state IN ('active','retired','revoked') ORDER BY version DESC LIMIT 1) i ON true
+ SELECT EXISTS(SELECT 1 FROM files v LEFT JOIN LATERAL (SELECT state,definition_hash,definition FROM intake_policies WHERE (tenant_id,partner_id)=(t,p) AND state IN ('active','retired','revoked') ORDER BY version DESC LIMIT 1) i ON true
  WHERE (v.tenant_id,v.partner_id,v.file_id)=(t,p,f) AND ((i.definition_hash IS NULL AND v.policy='integrity-only-v1') OR (i.state='active' AND v.policy=freightctl_intake_policy_prefix(i.definition)||i.definition_hash)))
  AND freightctl_file_available(t,p,f)
 $$;
@@ -194,10 +194,10 @@ BEGIN
  OR c.report->>'file_id' IS DISTINCT FROM source::text OR c.report->>'sha256' IS DISTINCT FROM f.sha256
  OR c.report->>'bytes_read' IS DISTINCT FROM f.size_bytes::text OR c.report->>'policy_hash' IS DISTINCT FROM c.policy_hash
  OR c.report_hash !~ '^[0-9a-f]{64}$'
- OR c.report->>'code' IS DISTINCT FROM CASE prior_policy.definition->>'kind' WHEN 'csv' THEN 'valid_csv' WHEN 'json_records' THEN 'valid_json_records' WHEN 'fixed_width' THEN 'valid_fixed_width' WHEN 'xml_records' THEN 'valid_xml_records' WHEN 'xlsx_records' THEN 'valid_xlsx_records' END
- OR c.report->>'engine' IS DISTINCT FROM CASE prior_policy.definition->>'kind' WHEN 'csv' THEN 'freightctl-csv-v1' WHEN 'json_records' THEN 'freightctl-json-records-v1' WHEN 'fixed_width' THEN 'freightctl-fixed-width-v1' WHEN 'xml_records' THEN 'freightctl-xml-records-v1' WHEN 'xlsx_records' THEN 'freightctl-xlsx-records-v1' END
+ OR c.report->>'code' IS DISTINCT FROM (CASE prior_policy.definition->>'kind' WHEN 'csv' THEN 'valid_csv' WHEN 'json_records' THEN 'valid_json_records' WHEN 'fixed_width' THEN 'valid_fixed_width' WHEN 'xml_records' THEN 'valid_xml_records' WHEN 'xlsx_records' THEN 'valid_xlsx_records' END)
+ OR c.report->>'engine' IS DISTINCT FROM (CASE prior_policy.definition->>'kind' WHEN 'csv' THEN 'freightctl-csv-v1' WHEN 'json_records' THEN 'freightctl-json-records-v1' WHEN 'fixed_width' THEN 'freightctl-fixed-width-v1' WHEN 'xml_records' THEN 'freightctl-xml-records-v1' WHEN 'xlsx_records' THEN 'freightctl-xlsx-records-v1' END)
  THEN RAISE EXCEPTION 'projection source or output policy differs' USING ERRCODE='23514'; END IF;
- IF b->>'signature_mode' IS DISTINCT FROM CASE WHEN output_policy.definition ? 'signature' THEN 'require_new' ELSE 'not_required' END
+ IF b->>'signature_mode' IS DISTINCT FROM (CASE WHEN output_policy.definition ? 'signature' THEN 'require_new' ELSE 'not_required' END)
  OR (prior_policy.definition ? 'scanner' AND NOT (output_policy.definition ? 'scanner'))
  OR (prior_policy.definition ? 'signature' AND NOT (output_policy.definition ? 'signature'))
  OR (coalesce((prior_policy.definition->'signature'->>'max_age_seconds')::bigint,0)>0 AND (coalesce((output_policy.definition->'signature'->>'max_age_seconds')::bigint,0)=0 OR (output_policy.definition->'signature'->>'max_age_seconds')::bigint>(prior_policy.definition->'signature'->>'max_age_seconds')::bigint))

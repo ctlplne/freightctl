@@ -136,10 +136,10 @@ BEGIN
  OR c.report->>'file_id' IS DISTINCT FROM source::text OR c.report->>'sha256' IS DISTINCT FROM f.sha256
  OR c.report->>'bytes_read' IS DISTINCT FROM f.size_bytes::text OR c.report->>'policy_hash' IS DISTINCT FROM c.policy_hash
  OR c.report_hash !~ '^[0-9a-f]{64}$'
- OR c.report->>'code' IS DISTINCT FROM CASE prior_policy.definition->>'kind' WHEN 'csv' THEN 'valid_csv' WHEN 'json_records' THEN 'valid_json_records' WHEN 'fixed_width' THEN 'valid_fixed_width' WHEN 'xml_records' THEN 'valid_xml_records' WHEN 'xlsx_records' THEN 'valid_xlsx_records' END
- OR c.report->>'engine' IS DISTINCT FROM CASE prior_policy.definition->>'kind' WHEN 'csv' THEN 'freightctl-csv-v1' WHEN 'json_records' THEN 'freightctl-json-records-v1' WHEN 'fixed_width' THEN 'freightctl-fixed-width-v1' WHEN 'xml_records' THEN 'freightctl-xml-records-v1' WHEN 'xlsx_records' THEN 'freightctl-xlsx-records-v1' END
+ OR c.report->>'code' IS DISTINCT FROM (CASE prior_policy.definition->>'kind' WHEN 'csv' THEN 'valid_csv' WHEN 'json_records' THEN 'valid_json_records' WHEN 'fixed_width' THEN 'valid_fixed_width' WHEN 'xml_records' THEN 'valid_xml_records' WHEN 'xlsx_records' THEN 'valid_xlsx_records' END)
+ OR c.report->>'engine' IS DISTINCT FROM (CASE prior_policy.definition->>'kind' WHEN 'csv' THEN 'freightctl-csv-v1' WHEN 'json_records' THEN 'freightctl-json-records-v1' WHEN 'fixed_width' THEN 'freightctl-fixed-width-v1' WHEN 'xml_records' THEN 'freightctl-xml-records-v1' WHEN 'xlsx_records' THEN 'freightctl-xlsx-records-v1' END)
  THEN RAISE EXCEPTION 'projection source or output policy differs' USING ERRCODE='23514'; END IF;
- IF b->>'signature_mode' IS DISTINCT FROM CASE WHEN output_policy.definition ? 'signature' THEN 'require_new' ELSE 'not_required' END
+ IF b->>'signature_mode' IS DISTINCT FROM (CASE WHEN output_policy.definition ? 'signature' THEN 'require_new' ELSE 'not_required' END)
  OR (prior_policy.definition ? 'scanner' AND NOT (output_policy.definition ? 'scanner'))
  OR (prior_policy.definition ? 'signature' AND NOT (output_policy.definition ? 'signature'))
  OR (coalesce((prior_policy.definition->'signature'->>'max_age_seconds')::bigint,0)>0 AND (coalesce((output_policy.definition->'signature'->>'max_age_seconds')::bigint,0)=0 OR (output_policy.definition->'signature'->>'max_age_seconds')::bigint>(prior_policy.definition->'signature'->>'max_age_seconds')::bigint))
@@ -230,10 +230,10 @@ BEGIN
  OR c.report->>'file_id' IS DISTINCT FROM source::text OR c.report->>'sha256' IS DISTINCT FROM f.sha256
  OR c.report->>'bytes_read' IS DISTINCT FROM f.size_bytes::text OR c.report->>'policy_hash' IS DISTINCT FROM c.policy_hash
  OR c.report_hash !~ '^[0-9a-f]{64}$'
- OR c.report->>'code' IS DISTINCT FROM CASE prior_policy.definition->>'kind' WHEN 'csv' THEN 'valid_csv' WHEN 'json_records' THEN 'valid_json_records' WHEN 'fixed_width' THEN 'valid_fixed_width' WHEN 'xml_records' THEN 'valid_xml_records' WHEN 'xlsx_records' THEN 'valid_xlsx_records' END
- OR c.report->>'engine' IS DISTINCT FROM CASE prior_policy.definition->>'kind' WHEN 'csv' THEN 'freightctl-csv-v1' WHEN 'json_records' THEN 'freightctl-json-records-v1' WHEN 'fixed_width' THEN 'freightctl-fixed-width-v1' WHEN 'xml_records' THEN 'freightctl-xml-records-v1' WHEN 'xlsx_records' THEN 'freightctl-xlsx-records-v1' END
+ OR c.report->>'code' IS DISTINCT FROM (CASE prior_policy.definition->>'kind' WHEN 'csv' THEN 'valid_csv' WHEN 'json_records' THEN 'valid_json_records' WHEN 'fixed_width' THEN 'valid_fixed_width' WHEN 'xml_records' THEN 'valid_xml_records' WHEN 'xlsx_records' THEN 'valid_xlsx_records' END)
+ OR c.report->>'engine' IS DISTINCT FROM (CASE prior_policy.definition->>'kind' WHEN 'csv' THEN 'freightctl-csv-v1' WHEN 'json_records' THEN 'freightctl-json-records-v1' WHEN 'fixed_width' THEN 'freightctl-fixed-width-v1' WHEN 'xml_records' THEN 'freightctl-xml-records-v1' WHEN 'xlsx_records' THEN 'freightctl-xlsx-records-v1' END)
  THEN RAISE EXCEPTION 'projection source or output policy differs' USING ERRCODE='23514'; END IF;
- IF b->>'signature_mode' IS DISTINCT FROM CASE WHEN output_policy.definition ? 'signature' THEN 'require_new' ELSE 'not_required' END
+ IF b->>'signature_mode' IS DISTINCT FROM (CASE WHEN output_policy.definition ? 'signature' THEN 'require_new' ELSE 'not_required' END)
  OR (prior_policy.definition ? 'scanner' AND NOT (output_policy.definition ? 'scanner'))
  OR (prior_policy.definition ? 'signature' AND NOT (output_policy.definition ? 'signature'))
  OR (coalesce((prior_policy.definition->'signature'->>'max_age_seconds')::bigint,0)>0 AND (coalesce((output_policy.definition->'signature'->>'max_age_seconds')::bigint,0)=0 OR (output_policy.definition->'signature'->>'max_age_seconds')::bigint>(prior_policy.definition->'signature'->>'max_age_seconds')::bigint))
@@ -371,7 +371,7 @@ BEGIN
    AND c.binding->>'storage_id'=NEW.definition->'plan'->'context'->>'storage_id'
    AND c.binding->>'namespace_root'=NEW.definition->'plan'->'context'->>'namespace_root'
    AND c.binding->>'authority_revision'=NEW.definition->'plan'->'context'->>'authority_revision'
-   AND c.binding->'target' IS NOT DISTINCT FROM CASE WHEN NEW.definition->'plan'->'context' ? 'target' THEN NEW.definition->'plan'->'context'->'target'->'command'||jsonb_build_object('file_id',f.file_id::text) ELSE 'null'::jsonb END
+   AND c.binding->'target' IS NOT DISTINCT FROM (CASE WHEN NEW.definition->'plan'->'context' ? 'target' THEN NEW.definition->'plan'->'context'->'target'->'command'||jsonb_build_object('file_id',f.file_id::text) ELSE 'null'::jsonb END)
    AND NOT EXISTS(SELECT 1 FROM file_signatures sig WHERE (sig.tenant_id,sig.partner_id,sig.file_id)=(f.tenant_id,f.partner_id,f.file_id)))
   THEN RAISE EXCEPTION 'projection completion requires atomic fresh held output' USING ERRCODE='23514'; END IF;
  END IF;
@@ -425,11 +425,11 @@ BEGIN
  END IF;
  proof:=e->'record_projection'->'report';
  IF r.state<>'running' OR r.lease_until<=clock_timestamp() OR r.actor_id IS DISTINCT FROM nullif(current_setting('freightctl.actor_id',true),'')::uuid
- OR e->'schema_version' IS DISTINCT FROM CASE WHEN r.definition->>'schema_version'='3' THEN '6'::jsonb ELSE '5'::jsonb END OR e->'record_projection'->>'id' IS DISTINCT FROM r.projection_id::text
+ OR e->'schema_version' IS DISTINCT FROM (CASE WHEN r.definition->>'schema_version'='3' THEN '6'::jsonb ELSE '5'::jsonb END) OR e->'record_projection'->>'id' IS DISTINCT FROM r.projection_id::text
  OR e->'record_projection'->>'definition_hash' IS DISTINCT FROM r.definition_hash OR e->'record_projection'->>'source_file_id' IS DISTINCT FROM r.source_file_id::text
  OR e->'record_projection'->'attempt' IS DISTINCT FROM jsonb_build_object('projection_id',r.projection_id::text,'attempt',r.attempts,'worker_id',r.worker_id::text)
  OR e->>'storage_id' IS DISTINCT FROM r.definition->'plan'->'context'->>'storage_id'
- OR NEW.policy IS DISTINCT FROM freightctl_intake_policy_prefix(policy.definition)||policy.definition_hash OR policy.state IS DISTINCT FROM CASE WHEN r.definition->>'schema_version'='3' THEN 'output_active' ELSE 'active' END
+ OR NEW.policy IS DISTINCT FROM freightctl_intake_policy_prefix(policy.definition)||policy.definition_hash OR policy.state IS DISTINCT FROM (CASE WHEN r.definition->>'schema_version'='3' THEN 'output_active' ELSE 'active' END)
  OR proof->>'code' IS DISTINCT FROM 'transformed' OR proof->>'engine' IS DISTINCT FROM 'freightctl-record-projection-v1'
  OR proof->>'output_sha256' IS DISTINCT FROM NEW.sha256 OR proof->>'output_bytes' IS DISTINCT FROM NEW.size_bytes::text
  OR proof->>'output_contract_hash' IS DISTINCT FROM r.definition->'plan'->>'output_contract_hash'

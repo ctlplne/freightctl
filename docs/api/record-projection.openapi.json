@@ -1224,6 +1224,176 @@
                   "null",
                   "string"
                 ]
+              },
+              "output_binding": {
+                "type": [
+                  "null",
+                  "object"
+                ],
+                "properties": {
+                  "profile": {
+                    "type": "string"
+                  },
+                  "policy_id": {
+                    "type": "string"
+                  },
+                  "policy_version": {
+                    "type": "integer"
+                  },
+                  "policy_hash": {
+                    "type": "string"
+                  },
+                  "publisher_id": {
+                    "type": "string"
+                  },
+                  "producer": {
+                    "type": "object",
+                    "properties": {
+                      "tenant_id": {
+                        "type": "string"
+                      },
+                      "partner_id": {
+                        "type": "string"
+                      },
+                      "actor_id": {
+                        "type": "string"
+                      },
+                      "authority_revision": {
+                        "type": "integer"
+                      },
+                      "root_policy_digest": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "tenant_id",
+                      "partner_id",
+                      "actor_id",
+                      "authority_revision",
+                      "root_policy_digest"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "profile",
+                  "policy_id",
+                  "policy_version",
+                  "policy_hash",
+                  "publisher_id",
+                  "producer"
+                ],
+                "additionalProperties": false
+              },
+              "source_origin": {
+                "type": [
+                  "null",
+                  "object"
+                ],
+                "properties": {
+                  "profile": {
+                    "type": "string"
+                  },
+                  "file": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "size_bytes": {
+                        "type": "integer"
+                      },
+                      "sha256": {
+                        "type": "string"
+                      },
+                      "policy": {
+                        "type": "string"
+                      },
+                      "accepted_event_id": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "size_bytes",
+                      "sha256",
+                      "policy",
+                      "accepted_event_id"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "projection_id": {
+                    "type": "string"
+                  },
+                  "projection_hash": {
+                    "type": "string"
+                  },
+                  "producer_binding": {
+                    "type": "object",
+                    "properties": {
+                      "profile": {
+                        "type": "string"
+                      },
+                      "policy_id": {
+                        "type": "string"
+                      },
+                      "policy_version": {
+                        "type": "integer"
+                      },
+                      "policy_hash": {
+                        "type": "string"
+                      },
+                      "publisher_id": {
+                        "type": "string"
+                      },
+                      "producer": {
+                        "type": "object",
+                        "properties": {
+                          "tenant_id": {
+                            "type": "string"
+                          },
+                          "partner_id": {
+                            "type": "string"
+                          },
+                          "actor_id": {
+                            "type": "string"
+                          },
+                          "authority_revision": {
+                            "type": "integer"
+                          },
+                          "root_policy_digest": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "tenant_id",
+                          "partner_id",
+                          "actor_id",
+                          "authority_revision",
+                          "root_policy_digest"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "profile",
+                      "policy_id",
+                      "policy_version",
+                      "policy_hash",
+                      "publisher_id",
+                      "producer"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "profile",
+                  "file",
+                  "projection_id",
+                  "projection_hash",
+                  "producer_binding"
+                ],
+                "additionalProperties": false
               }
             },
             "required": [

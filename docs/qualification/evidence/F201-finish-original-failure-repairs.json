@@ -1,0 +1,309 @@
+{
+  "schema_version": 1,
+  "id": "F201",
+  "observed_at": "2026-11-07",
+  "base_candidate": "336866a9b3c6a2b5cbd2a457ae48d2b1081c9470",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "FINISH original failures repaired locally;native replay and remaining implementation/acceptance owed",
+  "original_failures": {
+    "core": {
+      "commit": "1102224828a64e18245e4932578e8d46f0a115b1",
+      "run": 42347828326,
+      "job": 128329307055
+    },
+    "schema": {
+      "commit": "1102224828a64e18245e4932578e8d46f0a115b1",
+      "run": 42347828359,
+      "job": 128329307101
+    },
+    "unit": {
+      "commit": "47242c2d6552186391dbd1b99d8de6249703c4d9",
+      "run": 42346913040,
+      "job": 128326550221
+    }
+  },
+  "safe_original_observations": {
+    "core": [
+      "2026-11-07T06:38:15.8973193Z test_failure_diagnostics_only_emit_fixed_names_and_categories (__main__.SummaryContracts.test_failure_diagnostics_only_emit_fixed_names_and_categories) ... FAIL",
+      "2026-11-07T06:38:17.0821380Z ValueError: metadata schema/security profile differs",
+      "2026-11-07T06:38:17.0839088Z ValueError: metadata schema/security profile differs",
+      "2026-11-07T06:38:17.0855322Z ValueError: metadata schema/security profile differs",
+      "2026-11-07T06:38:17.0873736Z ValueError: metadata schema/security profile differs",
+      "2026-11-07T06:38:17.0893742Z ValueError: metadata schema/security profile differs",
+      "2026-11-07T06:38:17.0910088Z ValueError: metadata schema/security profile differs",
+      "2026-11-07T06:38:17.0927883Z ValueError: metadata schema/security profile differs",
+      "2026-11-07T06:38:17.0945565Z ValueError: metadata schema/security profile differs",
+      "2026-11-07T06:38:17.0948183Z FAIL: test_failure_diagnostics_only_emit_fixed_names_and_categories (__main__.SummaryContracts.test_failure_diagnostics_only_emit_fixed_names_and_categories)",
+      "2026-11-07T06:38:17.0951866Z   File \\\"/home/runner/work/freightctl/freightctl/scripts/test-ci-ftps-summary.py\\\", line 652, in test_failure_diagnostics_only_emit_fixed_names_and_categories",
+      "2026-11-07T06:38:17.0959771Z FAILED (failures=1, errors=8)"
+    ],
+    "schema": [
+      "2026-11-07T06:39:09.1240101Z freightctl: ERROR: syntax error at end of input (SQLSTATE 42601)"
+    ],
+    "unit": [
+      "2026-11-07T06:33:49.4966562Z --- FAIL: TestProjectionPreviewOpenAPIRequiresDeclarativeRulesAndExactTypedResponse (0.04s)"
+    ]
+  },
+  "changed": [
+    "Reporter stand-ins now build each declared historical/current metadata snapshot from that exact explicit profile. All strict assertions and refusal cases remain;no product evidence or old snapshots are relabelled.",
+    "Published ProjectionPreview response regenerated from the actual Go type;request and exact equality assertions unchanged. Complete producer/source lineage bindings no longer disappear from the contract.",
+    "Parenthesize CASE comparison expressions in post35 PL/pgSQL guards without deleting any conditions. Native initialization originally failed SQLSTATE42601;the standalone parser identifies42 as the earliest invalid function and additional invalid copied guards. Two lateral policy queries now select the definition they already read. Migration errors include their ordinal;strict applied-digest refusal remains.",
+    "No database operation or history rewrite. Original broken migration bytes and before/after digests retained;all1\u201335 source bytes unchanged. Failed42 could not be applied by ordinary migration with these bytes. Actual PostgreSQL creation,semantics,upgrade/restore and profile outcomes still require native replay."
+  ],
+  "red": [
+    {
+      "reference": ".private/freightctl-f201-ftps-summary-original-red.log",
+      "observation": "Original71-method suite:8 metadata profile errors and1 exact diagnostic failure."
+    },
+    {
+      "reference": ".private/freightctl-f201-local-unit-authorized-loopback.log",
+      "observation": "Original full local Go suite with loopback permission fails only the unchanged typed ProjectionPreview equality assertion;matches native original."
+    },
+    {
+      "reference": ".private/freightctl-f201-sql-parse-original-red.log",
+      "observation": "Standalone PL/pgSQL parser reproduces syntax error in9 function definitions across6 migration files;not native qualification."
+    },
+    {
+      "reference": ".private/freightctl-f201-lateral-original-red.log",
+      "observation": "SQL AST finds i.definition reads absent from both lateral target lists."
+    }
+  ],
+  "green": [
+    "Full local lightweight Go unit suite replay passes,including the original exact typed OpenAPI regression.",
+    "All241 frontend unit cases pass with0failures/0skips;all71 original FTPS reporter methods pass after exact profile fixture repair.",
+    "All59 outer migration SQL and343 function definitions pass standalone syntax parsing;affected lateral/SQL replay binds final changed source. PostgreSQL16 native semantics remain owed.",
+    "Full Go vet and source/reference/format checks pass."
+  ],
+  "environment_failures": [
+    {
+      "reference": ".private/freightctl-f201-local-unit-original.log",
+      "observation": "Sandbox denied loopback sockets. Same bounded suite replayed with authorized loopback;no test skipped or assertion weakened."
+    }
+  ],
+  "syntax_standin": {
+    "tool": "pglast8.7",
+    "parser_family": "PostgreSQL18 standalone parser",
+    "actual_runtime": "GitHub task-owned PostgreSQL16.15;not started locally",
+    "documentation": "https://pglast.readthedocs.io/en/latest/api.html",
+    "boundary": "Disposable ignored qualification tool only;not a runtime dependency. Syntax and a narrow lateral AST check cannot establish database execution,isolation or acceptance."
+  },
+  "previous_ci": "docs/qualification/evidence/F200-browser-proposals-terminal-ci.json",
+  "owed": [
+    "Actual original native initialization/OpenAPI/race/application/public/browser/platform/stock/restore failure replay on the repair candidate;new failures remain red until repaired.",
+    "Remaining automatic chains,scoped calendars,protected processing and every other mandatory baseline/AX capability and acceptance profile.",
+    "Final-source unit/race/integration,security/frontend/accessibility/native/public/stock/independent receiver/restore/reproducibility closure. F026 remains owner-deferred;missing external prerequisites remain owed."
+  ],
+  "local_resources": "OneCPU/192MiB lightweight Go/Node checks only. No local PostgreSQL,Chrome,inference,model,scanner or heavy peer. Retained35 untouched.",
+  "readiness": "All83 whole parity rows,twelve whole journeys andAX01\u2013AX08 open. Assisted deployment,independent adoption and enterprise qualification unproven.",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "644eab43f11a4b77c1a113b46831d428d23fbe3ab33c3b52d1a84ed87485f79c",
+      "bytes": 10920
+    },
+    {
+      "reference": "docs/api/record-projection.openapi.json",
+      "sha256": "7ba57c4442554371a1c5e4c4a746cc88d72d33e113bc68e7e4ba4aefb6f0395c",
+      "bytes": 116920
+    },
+    {
+      "reference": "docs/qualification/artifact-exchange.json",
+      "sha256": "2f73f250d59bf605a85569d9150f7dc570dec016921a34c11d4ac950b793bc2c",
+      "bytes": 32775
+    },
+    {
+      "reference": "docs/qualification/evidence/F200-browser-proposals-terminal-ci.json",
+      "sha256": "6146aa2c018d13b4001c227513e76c6af4987dfd96ed0e6bcb403a20abb42bb0",
+      "bytes": 20064
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "90c20c4890efd0fa934d0aa0ce1fc1adbb340a0fa43965bae2f528efe6231ee6",
+      "bytes": 358724
+    },
+    {
+      "reference": "internal/store/042_artifact_exchanges.sql",
+      "sha256": "a8db5ecfbc9783c462e03770ee11872b2c8f91c8c6f598fc3039075d416bdb86",
+      "bytes": 18412
+    },
+    {
+      "reference": "internal/store/047_json_record_intake.sql",
+      "sha256": "36ef75f965f023cc7c9a1af1dac5954e6556359f1a25efa0a70618be0339dccc",
+      "bytes": 25796
+    },
+    {
+      "reference": "internal/store/051_record_projections.sql",
+      "sha256": "ebe0eadcede8558c4643d510c5e3c75c6d3a98ef9fb5068ef27f3239da04957a",
+      "bytes": 24765
+    },
+    {
+      "reference": "internal/store/052_scoped_projections.sql",
+      "sha256": "9de01e60bec964ac4ea37659e204666e150b38b7042a0b93972153e0919200ca",
+      "bytes": 17907
+    },
+    {
+      "reference": "internal/store/055_processing_output_policies.sql",
+      "sha256": "babcbaa5665138bb447ff3d0006d74c82b2185f0b240ceb69008df7dd4cd334c",
+      "bytes": 32959
+    },
+    {
+      "reference": "internal/store/056_producer_projection_outputs.sql",
+      "sha256": "51bb9f33c8d632613fc10b068bb39acec9700cea3a2985e4cef608b04d83a08f",
+      "bytes": 61064
+    },
+    {
+      "reference": "internal/store/057_composed_producer_sources.sql",
+      "sha256": "2dadf7b874ebd660658959399e89fdbf0f9b488117a185e10c395521e405cd90",
+      "bytes": 35818
+    },
+    {
+      "reference": "internal/store/store.go",
+      "sha256": "a18df4d33dd3d430717ab3f9a47ed0831fc2261041f28545e9b8fab41cef2d4b",
+      "bytes": 27678
+    },
+    {
+      "reference": "scripts/test-ci-ftps-summary.py",
+      "sha256": "55584c67dc557170164767414d8fa8c33e0c790c0f9a259c7854298dc28d2f3d",
+      "bytes": 64670
+    }
+  ],
+  "migration_sources": [
+    {
+      "reference": "internal/store/042_artifact_exchanges.sql",
+      "original_sha256": "52128d9f7b42f763aa04487a1aaf83e7e21107df6c19d6e83e37200a95a1c7a0",
+      "candidate_sha256": "a8db5ecfbc9783c462e03770ee11872b2c8f91c8c6f598fc3039075d416bdb86",
+      "parenthesized_cases": 1,
+      "original_reference": ".private/freightctl-f201-original-042_artifact_exchanges.sql"
+    },
+    {
+      "reference": "internal/store/051_record_projections.sql",
+      "original_sha256": "e6dffbf0778181c28008c1ad87a175de9719a8596c4a50ea26e97598bafa9d8e",
+      "candidate_sha256": "ebe0eadcede8558c4643d510c5e3c75c6d3a98ef9fb5068ef27f3239da04957a",
+      "parenthesized_cases": 4,
+      "original_reference": ".private/freightctl-f201-original-051_record_projections.sql"
+    },
+    {
+      "reference": "internal/store/052_scoped_projections.sql",
+      "original_sha256": "f9582fbd7a627ad0cb5887ae3f49d986980d00432b5c6e91c29a68547f5896c7",
+      "candidate_sha256": "9de01e60bec964ac4ea37659e204666e150b38b7042a0b93972153e0919200ca",
+      "parenthesized_cases": 4,
+      "original_reference": ".private/freightctl-f201-original-052_scoped_projections.sql"
+    },
+    {
+      "reference": "internal/store/055_processing_output_policies.sql",
+      "original_sha256": "e480207c30e8337a5c5b9736ce9357153993351794fb92f14e3b84252a4405ba",
+      "candidate_sha256": "babcbaa5665138bb447ff3d0006d74c82b2185f0b240ceb69008df7dd4cd334c",
+      "parenthesized_cases": 3,
+      "original_reference": ".private/freightctl-f201-original-055_processing_output_policies.sql"
+    },
+    {
+      "reference": "internal/store/056_producer_projection_outputs.sql",
+      "original_sha256": "f4d851ef06aeb496917aad73692872570d7360859ec8590a03d14ae5dfa1990f",
+      "candidate_sha256": "51bb9f33c8d632613fc10b068bb39acec9700cea3a2985e4cef608b04d83a08f",
+      "parenthesized_cases": 9,
+      "original_reference": ".private/freightctl-f201-original-056_producer_projection_outputs.sql"
+    },
+    {
+      "reference": "internal/store/057_composed_producer_sources.sql",
+      "original_sha256": "af4c9691e32d256fd7dd38652025680f1d0d70337df0b87f1ba474985f966521",
+      "candidate_sha256": "2dadf7b874ebd660658959399e89fdbf0f9b488117a185e10c395521e405cd90",
+      "parenthesized_cases": 6,
+      "original_reference": ".private/freightctl-f201-original-057_composed_producer_sources.sql"
+    },
+    {
+      "reference": "internal/store/047_json_record_intake.sql",
+      "original_sha256": "43c31ec222a0d2f69aa9e32eef7fb852c3b93efa7ab457d2416729e03062a637",
+      "original_reference": ".private/freightctl-f201-original-047_json_record_intake.sql",
+      "parenthesized_cases": 0,
+      "candidate_sha256": "36ef75f965f023cc7c9a1af1dac5954e6556359f1a25efa0a70618be0339dccc"
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f201-affected-sql-replay.log",
+      "sha256": "535311054397f89e6434a3c7b52cf32e3801c19c990f64bb27293cda7a5cfeb9",
+      "bytes": 174
+    },
+    {
+      "reference": ".private/freightctl-f201-case-repair.log",
+      "sha256": "69f4baab173818f48efde7f2aee2c563cf5b77a2cff4158f1a8c18322262bd9f",
+      "bytes": 2289
+    },
+    {
+      "reference": ".private/freightctl-f201-frontend-broad.log",
+      "sha256": "4382c69e6fea1a3e56b68b6a0d11236126c7438798159452c1546abf9889b3a9",
+      "bytes": 25885
+    },
+    {
+      "reference": ".private/freightctl-f201-ftps-summary-after-migrations.log",
+      "sha256": "758f131d159a9de06a627d246da0e09a72c85c1bf6916e3da1094605658af91b",
+      "bytes": 11886
+    },
+    {
+      "reference": ".private/freightctl-f201-ftps-summary-green.log",
+      "sha256": "79bf4c32b5b8050cd0d66903ae85670dab313b17a86cf21af0f33df52774efe5",
+      "bytes": 11886
+    },
+    {
+      "reference": ".private/freightctl-f201-ftps-summary-original-red.log",
+      "sha256": "ead81c50bb69db111eef79b8711de788ebd26d283b3e511743c05665c190927b",
+      "bytes": 23493
+    },
+    {
+      "reference": ".private/freightctl-f201-lateral-green.log",
+      "sha256": "84902682721800acdb3b0600b45cf4f8b6925f614e2a5cee8a04fa2bc5a77da5",
+      "bytes": 188
+    },
+    {
+      "reference": ".private/freightctl-f201-lateral-original-red.log",
+      "sha256": "59e87974d91b33dd861df7f5c11cee9ed2a80f3d91995066c8764a0fe5d7125d",
+      "bytes": 334
+    },
+    {
+      "reference": ".private/freightctl-f201-local-unit-authorized-loopback.log",
+      "sha256": "ea0ff502c69a485aef82db06e1ce30ab46d8f3ef2f90c3bab9ac722c34ef52ee",
+      "bytes": 1556
+    },
+    {
+      "reference": ".private/freightctl-f201-local-unit-original.log",
+      "sha256": "95ecbc03aae5c1a438c7d0710c23c79efa3fcaaafc5c0a236cdd549fe747ad3c",
+      "bytes": 15925
+    },
+    {
+      "reference": ".private/freightctl-f201-local-unit-replay.log",
+      "sha256": "0ebd7908534d4add153ab8f69c9a9b82c6a2372b70c97e4d53b7c8bcdf7d1821",
+      "bytes": 1347
+    },
+    {
+      "reference": ".private/freightctl-f201-openapi-green.log",
+      "sha256": "ba04a4416644e1d7dc1c5817f0825a55effc2e65a3aaaf38654367e06e73f830",
+      "bytes": 55
+    },
+    {
+      "reference": ".private/freightctl-f201-parser-install.log",
+      "sha256": "38c919c7df4340fb34fc9ba2059788467df7bb9fc11f01ee4e2bf891b11ee61e",
+      "bytes": 391
+    },
+    {
+      "reference": ".private/freightctl-f201-retained35-source-proof.log",
+      "sha256": "06c2a004646382c13bc1577c6f4f5d21771013ca777104f55bdb266409f3ca60",
+      "bytes": 144
+    },
+    {
+      "reference": ".private/freightctl-f201-sql-parse-green.log",
+      "sha256": "178b3d3439af60b3f939ac287c35eab608b392616b8dcdbca35e73d30f9857d3",
+      "bytes": 102
+    },
+    {
+      "reference": ".private/freightctl-f201-sql-parse-original-red.log",
+      "sha256": "ad3059ed3a813ab1ea44fed578cd660b4145697af92868f1352b30cc197aeeb3",
+      "bytes": 1259
+    },
+    {
+      "reference": ".private/freightctl-f201-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ]
+}

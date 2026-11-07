@@ -101,7 +101,7 @@ END $$;
 
 -- Existing freightctl_artifact_exchange_policy_current from 042_artifact_exchanges.sql;other guards retained.
 CREATE OR REPLACE FUNCTION freightctl_artifact_exchange_policy_current(t uuid,p uuid,f uuid) RETURNS boolean LANGUAGE sql STABLE AS $$
- SELECT EXISTS(SELECT 1 FROM files v LEFT JOIN LATERAL (SELECT state,definition_hash FROM intake_policies WHERE (tenant_id,partner_id)=(t,p) ORDER BY version DESC LIMIT 1) i ON true
+ SELECT EXISTS(SELECT 1 FROM files v LEFT JOIN LATERAL (SELECT state,definition_hash,definition FROM intake_policies WHERE (tenant_id,partner_id)=(t,p) ORDER BY version DESC LIMIT 1) i ON true
  WHERE (v.tenant_id,v.partner_id,v.file_id)=(t,p,f) AND ((i.definition_hash IS NULL AND v.policy='integrity-only-v1') OR (i.state='active' AND v.policy=freightctl_intake_policy_prefix(i.definition)||i.definition_hash)))
  AND freightctl_file_available(t,p,f)
 $$;
