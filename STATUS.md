@@ -7,20 +7,17 @@ Current decisions and exact evidence are in
 [remaining.json](docs/qualification/remaining.json) and
 [artifact-exchange.json](docs/qualification/artifact-exchange.json).
 
-Current pushed candidate: `9b3ba92a9746e4af5edd40a27e440429b0dc6f5b`.
-F372 records its 16 queued original workflows and verified owner-only fast-forward.
-Their runtime outcomes remain owed.
-
-Previous terminal candidate: `d960c40fe1d4d7facf11862c331b52fc93dcc0b6`.
-[F370](docs/qualification/evidence/F370-native-terminal-ci.json) records all 16
+Current pushed/terminal candidate: `9b3ba92a9746e4af5edd40a27e440429b0dc6f5b`.
+[F379](docs/qualification/evidence/F379-native-terminal-ci.json) records all 16
 original terminal workflows and 35 jobs: 32 passed, 3 failed. No run was cancelled,
-rerun or substituted. Core/source/history security, Linux PostgreSQL/race/restore/
-fuzz, native Windows/macOS and declared protocol/component gates passed at this
-source. Skipped upstream active-transfer-port20 behavior remains unqualified.
-Earlier independent x86 receiver seccomp failures remain red. Fixed-width and
-FTPS governance passed unchanged on this replay; intermittent causes remain owed.
+rerun or substituted. Security, full native Linux PostgreSQL/race/restore/fuzz,
+Windows/macOS,reproducibility and declared stock/component profiles passed at
+this source. Receive cancellation replay,plaintext FTPS reviewer accessibility
+and fixed-width response-body lookup remain failed. Later focused repairs and
+safe evidence changes still need their new native original runs. Earlier
+independent x86 receiver selected-seccomp failures remain red.
 
-Both FTPS operator jobs failed while choosing the source connection. F369 fixes
+Earlier FTPS operator jobs failed while choosing the source connection. F369 fixes
 the browser's rejection of the actual 73-byte participant name by matching the
 existing 256-byte FTPS contract. Existing SSH bounds and all TLS, identity and
 immutable-meaning checks remain. Focused regressions and affected static checks
@@ -60,8 +57,8 @@ checkpoint and unchanged200 response; ordinary JSON workflow checks stay intact.
 Focused tests/static checks pass; original native upload/check/release replay
 remains owed.
 
-Next: continue implementation while current originals run, then push the next
-verified owner-only batch after required originals are terminal. Repair original failures
+Next: push the verified owner-only batch now that required originals are terminal,
+then continue implementation while its native CI runs. Repair original failures
 and finish every mandatory final-source baseline/AX gate. F026 stays manual/
 owner-deferred. Trust Control, inference, provider/licensed peers, reference
 estate, owner license text and adoption inputs remain owed.
