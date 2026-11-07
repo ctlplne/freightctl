@@ -1157,7 +1157,8 @@
         "docs/qualification/evidence/F417-dav-collection-copy.json",
         "docs/qualification/evidence/F418-cli-tree-copy-storage.json",
         "docs/qualification/evidence/F421-original-namespace-receipts.json",
-        "docs/qualification/evidence/F423-mcp-namespace-receipts.json"
+        "docs/qualification/evidence/F423-mcp-namespace-receipts.json",
+        "docs/qualification/evidence/F425-collection-overwrite-identities.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison",
@@ -1170,7 +1171,8 @@
         "F405/F408 inert properties and explicit API/CLI read,F409 complete non-overwriting collection MOVE and F412 recognized-condition refusal extend the declared partial profile. Focused/static proof is retained;new original/final-source native interface,transaction/rollback/stock-client/CLI outcomes remain owed. Collection DELETE/COPY/overwrite,locks,outbound stock DAV server,independent applications,licensed comparison and whole-row qualification remain open.",
         "F416 complete collection DELETE/remove_tree is implemented with exact root identity/revision,current whole-tree authority/policy,atomic irreversible tombstones and retained custody. Focused/static proof passes;original native API/CLI/stock-curl and actual final-source qualification remain owed. Full collection COPY/overwrite,locks,outbound,independent applications,licensed comparison and whole-row qualification stay open.",
         "F417 full/shallow collection COPY/copy_tree/copy_dir is implemented with exact identity/revision,current read/list/write,verified custody,new mappings and independent inert properties under unchanged SQL guards. Focused/static proof passes;native API/CLI/curl,corruption,mount,policy,capacity and actual final-source qualification remain owed. Collection overwrite,locks,outbound,independent applications,licensed comparison and whole-row qualification stay open.",
-        "F421 read-only original namespace receipt recovery can resolve a lost collection DELETE response without current source paths or executing again. Exact actor/root/authority/command meaning and current original grants remain enforced. Focused/static/hash/schema proof passes;actual native API/browser/CLI privacy,zero-effects,authority/revocation and final-source qualification remain owed. Whole-row and all remaining protocol/readiness gates stay open."
+        "F421 read-only original namespace receipt recovery can resolve a lost collection DELETE response without current source paths or executing again. Exact actor/root/authority/command meaning and current original grants remain enforced. Focused/static/hash/schema proof passes;actual native API/browser/CLI privacy,zero-effects,authority/revocation and final-source qualification remain owed. Whole-row and all remaining protocol/readiness gates stay open.",
+        "F425 complete identity-bound collection MOVE/COPY overwrite is implemented with source/destination root pairs,actual target read/write/current policy,disjoint trees,unchanged combined1000 work bound/projected quota and retained custody. Focused/static/schema proof passes;actual native API/CLI/curl replacement/no-merge/security/custody/receipt and final-source proof remain owed. Locks,outbound stock server,independent DAV applications,licensed comparison and whole-row qualification remain open."
       ]
     },
     {

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 
 	"github.com/ctlplne/freightctl/internal/store"
@@ -34,8 +35,22 @@ func davCollectionMappingInput(w http.ResponseWriter, r *http.Request, operation
 		return false
 	}
 	overwrite, _, valid := tusHeader(r, "Overwrite")
-	if !valid || overwrite != "F" {
-		fail(w, 428, "dav_collection_"+operation+"_requires_non_overwrite")
+	if !valid || overwrite != "F" && overwrite != "T" {
+		fail(w, 428, "dav_collection_"+operation+"_requires_explicit_overwrite")
+		return false
+	}
+	targetCondition, targetPresent, targetValid := tusHeader(r, "X-Freightctl-Destination-Revision")
+	if overwrite == "T" {
+		if !targetPresent {
+			fail(w, 428, "dav_collection_"+operation+"_requires_destination_revision")
+			return false
+		}
+		if _, _, exact := davNamespaceCondition(targetCondition); !targetValid || !exact {
+			fail(w, 400, "invalid_dav_destination_namespace_revision")
+			return false
+		}
+	} else if targetPresent {
+		fail(w, 400, "unexpected_dav_destination_namespace_revision")
 		return false
 	}
 	if r.ContentLength != 0 {
@@ -100,7 +115,12 @@ func (s *Server) davCollectionMove(w http.ResponseWriter, r *http.Request, scope
 		fail(w, 400, "invalid_dav_namespace_revision")
 		return
 	}
-	result, err := s.Service.PathCommand(r.Context(), scope, r.Header.Get("Idempotency-Key"), store.PathCommand{Operation: "move_tree", Path: source, Target: target, ExpectedEntryID: entry, ExpectedRevision: &revision})
+	command := store.PathCommand{Operation: "move_tree", Path: source, Target: target, ExpectedEntryID: entry, ExpectedRevision: &revision}
+	if !davCollectionReplacement(r, &command) {
+		fail(w, 400, "invalid_dav_destination_namespace_revision")
+		return
+	}
+	result, err := s.Service.PathCommand(r.Context(), scope, r.Header.Get("Idempotency-Key"), command)
 	if errors.Is(err, store.ErrRevision) || errors.Is(err, store.ErrNotFound) || errors.Is(err, store.ErrExists) {
 		fail(w, 412, "dav_collection_move_condition_failed")
 		return
@@ -117,6 +137,32 @@ func (s *Server) davCollectionMove(w http.ResponseWriter, r *http.Request, scope
 		respond(w, 200, map[string]any{"result": result, "namespace_state": "not-asserted-original-receipt"})
 		return
 	}
+	if command.Replace {
+		davCollectionReplaced(w, result)
+		return
+	}
 	w.Header().Set("Location", webdav.Href(base, webdav.Resource{Path: result.Entry.Path, Directory: true}))
 	respond(w, 201, map[string]any{"result": result, "namespace_state": "collection-moved-at-commit"})
+}
+
+func davCollectionReplacement(r *http.Request, command *store.PathCommand) bool {
+	if r.Header.Get("Overwrite") != "T" {
+		return true
+	}
+	entry, revision, valid := davNamespaceCondition(r.Header.Get("X-Freightctl-Destination-Revision"))
+	if !valid {
+		return false
+	}
+	command.Replace = true
+	command.TargetEntryID = entry
+	command.TargetRevision = &revision
+	return true
+}
+
+func davCollectionReplaced(w http.ResponseWriter, result *store.PathResult) {
+	w.Header().Set("Cache-Control", "no-store")
+	w.Header().Set("X-Freightctl-Namespace-State", "collection-replaced-at-commit")
+	w.Header().Set("X-Freightctl-Event-ID", result.Entry.EventID)
+	w.Header().Set("X-Freightctl-Changed-Entries", strconv.Itoa(result.Changed))
+	w.WriteHeader(http.StatusNoContent)
 }

@@ -1,0 +1,333 @@
+{
+  "schema_version": 1,
+  "id": "F425",
+  "observed_at": "2026-11-07",
+  "base_candidate": "f4375d91d65ddfdd781b93dcbe0b9fe3c6160968",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F425 implements complete collection MOVE/COPY overwrite with exact source and destination UUID/revision pairs,new target_entry_id,and explicit T. Current actual target directory7/file6 modes,availability,parents and management are checked before transitions;overlapping trees are forbidden. Preserve the1000-entry combined processing bound,projected namespace quota,old custody/immutable property tombstones and atomic events/one receipt. Original T428 refusal becomes input green;initial shape/permission ordering regression and new-field frozen-schema failures are preserved and repaired without changing assertions. All six nullable/concrete projection bindings,receipt input and metadata-only MCP v20 preserve prior constraints. Focused/static/tagged API/CLI/curl compilation passes;prepared actual native replacement/private-readonly-child/policy/combined-bound/quota/ABA/retained-byte/receipt outcomes remain owed. No SQL schema,guard,resource budget,inference or publication change.",
+  "contract": {
+    "input": "Explicit collection Overwrite:T and exact source/destination namespace UUID:revision pairs;typed replace:true,target_entry_id,target_revision plus source pair",
+    "destination_header": "X-Freightctl-Destination-Revision;missing T condition428,malformed/duplicate400,condition withF or unsupported method400",
+    "authority": "MOVE read/list/manage_paths;COPY adds management to read/list/write;actual target dirs7/files6,current availability and writable parents;no alias rescue",
+    "roots": "Both current root identities/revisions,not frozen descendant inventories;complete current membership authorized under exclusive lock;both directions of overlap forbidden",
+    "atomicity": "Preflight complete source/target,combined work and projected COPY quota before any transition;remove whole target leaf-first,then complete requested MOVE/COPY;all exact events/one private receipt/current policy/authority in same transaction",
+    "preserved": "Immutable custody/property tombstones and original SQL guards;MOVE source IDs/metadata;COPY fresh independent IDs/owner/modes/properties;Depth0 creates only source root/properties after whole target removal",
+    "bounds": "Same1000-entry operation bound for combined source+removed target,existing live quota and10s service deadline;no increases",
+    "fresh": "204,no body/ETag/Location;collection-replaced-at-commit,exact new root event,total changed mappings",
+    "retry": "Exact COPY original-key historical200;absent MOVE source412;F421 read-only API/CLI recovers exact original typed command/key without paths or reexecution",
+    "schemas": "Six nullable/concrete projection bindings,receipt input and metadata-only MCP v20 add only target identity;all prior constraints retained;no SQL schema migration"
+  },
+  "red_green": [
+    {
+      "proof": "Actual original collection MOVE/COPY with both root conditions refuses T428",
+      "exit_code": 1,
+      "reference": ".private/freightctl-f425-collection-overwrite-red.log"
+    },
+    {
+      "proof": "New typed field exposes omitted original receipt schema binding",
+      "exit_code": 1,
+      "reference": ".private/freightctl-f425-schema-binding-red.log"
+    },
+    {
+      "proof": "Unchanged exact six-site projection schema assertion fails new field coverage",
+      "exit_code": 1,
+      "reference": ".private/freightctl-f425-projection-binding-red.log"
+    },
+    {
+      "proof": "Initial copy-preflight changed incomplete-overwrite shape/permission ordering;source order repaired,assertions unchanged",
+      "exit_code": 1,
+      "reference": ".private/freightctl-f425-overwrite-focused.log"
+    },
+    {
+      "proof": "Affected original/new DAV,tree,receipt,projection and MCP schema/authority guards",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f425-final-focused.log"
+    },
+    {
+      "proof": "Affected CLI storage/key controls",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f425-cli-focused.log"
+    },
+    {
+      "proof": "Tagged API/store/custody/checks/CLI and stock curl compile only",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f425-final-native-compile.log"
+    },
+    {
+      "proof": "Affected tagged vet",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f425-final-vet.log"
+    },
+    {
+      "proof": "Architecture",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f425-final-architecture.log"
+    },
+    {
+      "proof": "Positive metadata-only MCP destination-ID selection plus original content/authority refusal",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f425-mcp-target-metadata-green.log"
+    },
+    {
+      "proof": "Affected MCP/API vet after positive fixture",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f425-mcp-target-vet.log"
+    },
+    {
+      "proof": "Eighteen changed Go files formatted",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f425-format.log"
+    },
+    {
+      "proof": "Record references only",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f425-records.log"
+    }
+  ],
+  "prepared_native_proofs": [
+    "Actual API MOVE/minimal3 grants,full COPY/shallow COPY4 grants:both exact roots,complete destination removal/no merge,exact events/one receipt/no external effects",
+    "Denied private target despite outside readable alias,read-only target file,missing management,stale/wrong/absent target,source/target overlap,ABA identity and capacity leave all members unchanged",
+    "Actual released-then-revoked target file blocks MOVE/COPY with file-free source,unchanged original mappings and zero acting-actor transitions/receipts",
+    "Reused retained fixture:each root fits individually but combined1+1000=1001 fails507 without source/target changes;original1000 quota never raised",
+    "Replacement COPY at lower full live quota succeeds when projected result fits;old target custody remains independently readable;properties preserved and source independent",
+    "Actual CLI full/shallow COPY and MOVE replacement,ordinary writer management refusal,complete no-merge/byte/property preservation and exact original receipt after source disappearance",
+    "Original stock curl full/shallow COPY/MOVE204,total changed count,no stale byte assertions,no target merges,independent source/mixed XML/retained old byte comparisons and exact receipt POST recovery"
+  ],
+  "owed": [
+    "Every prepared actual native API/CLI/curl/security/custody outcome;compilation does not qualify runtime",
+    "Affected original F416/F417/F421/F423/hash/receipt/mutation/browser/MCP and actual final-source gates",
+    "Locks,outbound stock DAV server,independent DAV applications/licensed comparison and all remaining baseline/AX/readiness gates"
+  ],
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "b7047abbaf479f164ddbcfe7c0e704734f708527b835c5a0c89b383f18c49b41",
+      "bytes": 17437
+    },
+    {
+      "reference": "cmd/freightctl/exchanges_integration_test.go",
+      "sha256": "c8d0e80eb90811d2cda9f764aba16fe02ec126b7ea5aa25822a71ffe781da68e",
+      "bytes": 23852
+    },
+    {
+      "reference": "cmd/freightctl/namespace_tree_overwrite_integration_test.go",
+      "sha256": "547c240759dbe9c7019c362283e8263ec42b150984a66df211364474181add40",
+      "bytes": 5788
+    },
+    {
+      "reference": "docs/api/namespace-receipts.openapi.json",
+      "sha256": "38d87a0a4816932d1b97d276a976a6c52894c73716d34e044292c7c9752d702e",
+      "bytes": 9406
+    },
+    {
+      "reference": "docs/api/record-projection.openapi.json",
+      "sha256": "fbae74ff917400a9a00bdfe6848782435d204b5adb0fd3ee2936742b62609032",
+      "bytes": 125102
+    },
+    {
+      "reference": "docs/development.md",
+      "sha256": "a499cf93bf31ce57624771dce909acebe92c0b3feb8e02b245739ae8249414bf",
+      "bytes": 44890
+    },
+    {
+      "reference": "docs/protocols/artifact-exchange-mcp.md",
+      "sha256": "aa29b7c97932589f7cfc729ed1f07fd2dea3a596595f2bc4f32a8d3dbb06ac3e",
+      "bytes": 19321
+    },
+    {
+      "reference": "docs/protocols/webdav-read-profile.md",
+      "sha256": "93ba1aca926591d2b69132e2c61a2eab1077a60aef6a7f66f9478e71b12397b7",
+      "bytes": 31737
+    },
+    {
+      "reference": "docs/qualification/parity.json",
+      "sha256": "144fef5191959094878a2ff37edcc829cb84456e6ba03fe71697247f440f0345",
+      "bytes": 155770
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "4d1316521f8263268682a9ab0ca0c5cbf3a9df3688a103ae4edc999ea55dd038",
+      "bytes": 673659
+    },
+    {
+      "reference": "internal/api/mcp-tools.json",
+      "sha256": "89f3663d50f66a0dd1cd9abb75c9b0fb55eeb6a39edf4a4e3c2e57c5c3448b42",
+      "bytes": 131211
+    },
+    {
+      "reference": "internal/api/mcp.go",
+      "sha256": "2509fa775f42a3be42703b4e8ddf8bf421af485e5b7fa43066c594284f59ad70",
+      "bytes": 12783
+    },
+    {
+      "reference": "internal/api/mcp_namespace_receipts_test.go",
+      "sha256": "d743f63f4cd67fd1e845e2c29308aba5a0baef13fec2136d840d97b08b1085d6",
+      "bytes": 5049
+    },
+    {
+      "reference": "internal/api/webdav.go",
+      "sha256": "af9f23bbeddbbd42c1c7d1664403ac2b26777ffa41aba38f8dcbfe0821f7a98d",
+      "bytes": 11362
+    },
+    {
+      "reference": "internal/api/webdav_collection_copy.go",
+      "sha256": "67e53b415b11c7fbe8d1629353a7bda922431006487706c2824d697947018495",
+      "bytes": 1823
+    },
+    {
+      "reference": "internal/api/webdav_collection_move.go",
+      "sha256": "4a8994725f9419bb40cb451fafab85b57c546b58d5232608dd12e5c266f3ef9a",
+      "bytes": 5935
+    },
+    {
+      "reference": "internal/api/webdav_collection_move_integration_test.go",
+      "sha256": "a2f2e96761ec0f606ae75432f6bf32a413e0fb624b4a0a0580d8703c8667163d",
+      "bytes": 17024
+    },
+    {
+      "reference": "internal/api/webdav_collection_overwrite_integration_test.go",
+      "sha256": "aaef333bef8c5387f8bc2c652db5974ad2c43875849d3076b2ab7432bc446e2d",
+      "bytes": 19228
+    },
+    {
+      "reference": "internal/api/webdav_collection_overwrite_test.go",
+      "sha256": "b596b962165a9afe81548a848d18838ce4c9687d86b48baab3a24453fbcdc5cd",
+      "bytes": 2793
+    },
+    {
+      "reference": "internal/api/webdav_stock_integration_test.go",
+      "sha256": "37e491bdae8422cab8e2c7375221d1c9648961c7f0ad19c03ce4f8a44eac4b2c",
+      "bytes": 39190
+    },
+    {
+      "reference": "internal/store/namespace.go",
+      "sha256": "9c5025f19338d452d86fdf1f1f17a105cc4e58e4b7811c95e22c8f7f4102018e",
+      "bytes": 25929
+    },
+    {
+      "reference": "internal/store/namespace_receipts.go",
+      "sha256": "5a2dd102928ea7c7a14282d8ec28de04d16b1223f031d0aab4639b37ba3df9ca",
+      "bytes": 4063
+    },
+    {
+      "reference": "internal/store/namespace_tree_copy.go",
+      "sha256": "3e0e46975aaef7e733e17211938e04be6b87eee3e7c03b85a8b7e4295c48ef12",
+      "bytes": 3659
+    },
+    {
+      "reference": "internal/store/namespace_tree_move.go",
+      "sha256": "a5a92da94c6262d3b82d5e385ffcd767623ba2ff0c233003d5016840571aa3f0",
+      "bytes": 3293
+    },
+    {
+      "reference": "internal/store/namespace_tree_remove.go",
+      "sha256": "f1d9f4ff9ee1edd9ac1290d1bc58774f143ca06a78218b740fe922fbef19e31e",
+      "bytes": 706
+    },
+    {
+      "reference": "internal/store/namespace_tree_replace.go",
+      "sha256": "143909cdd308e5e96a35c5504c1a75823a5103aef327b2c013859f4198b6f492",
+      "bytes": 2018
+    },
+    {
+      "reference": "internal/store/namespace_tree_replace_test.go",
+      "sha256": "29679d41885118162f4ab6df4734ed56eba6e5a4e510a1210ce52e7b9d55ee44",
+      "bytes": 2583
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f425-collection-overwrite-red.log",
+      "sha256": "f580870bb8c49e5881e1ce8aa7e0e6e1ee579718c5a6b90608cf9c791dddb98a",
+      "bytes": 597
+    },
+    {
+      "reference": ".private/freightctl-f425-schema-binding-red.log",
+      "sha256": "1057e57d52078449ed0c689833570f8bfbc17f2d15c1d50db1950bba9981122a",
+      "bytes": 254
+    },
+    {
+      "reference": ".private/freightctl-f425-projection-binding-red.log",
+      "sha256": "a5e8b2021bcc22356785e899eceaf1e510149a90c0bc5d351bb22ee004f5d06b",
+      "bytes": 239
+    },
+    {
+      "reference": ".private/freightctl-f425-overwrite-focused.log",
+      "sha256": "7b39b4d1cda034ea67aabca48d846335edc2cbbabf45130e8e8d693ee0654da6",
+      "bytes": 631
+    },
+    {
+      "reference": ".private/freightctl-f425-final-focused.log",
+      "sha256": "1aeb3901a1efab111b076956295f86ceba6f86a5cae3fe867d8ceef35a14e37d",
+      "bytes": 112
+    },
+    {
+      "reference": ".private/freightctl-f425-cli-focused.log",
+      "sha256": "f0dade4a75a4522a0a3db602719aa0baea45897a7e401ec633b4dc7d97ee9bcb",
+      "bytes": 57
+    },
+    {
+      "reference": ".private/freightctl-f425-final-native-compile.log",
+      "sha256": "a0239e8c29c9d0f1574e17333e26b4c0825a1acae5711fbad35117817a1f9407",
+      "bytes": 384
+    },
+    {
+      "reference": ".private/freightctl-f425-final-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f425-final-architecture.log",
+      "sha256": "f8bfad3ef2016b3b924380e65af5d270f1268e119ef6dc5f1a091c570f6be60d",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f425-mcp-target-metadata-green.log",
+      "sha256": "9fbc384cecaa7d5024c7745277e0092b49253d3d92f6f59d2d4e13c2f682f97c",
+      "bytes": 55
+    },
+    {
+      "reference": ".private/freightctl-f425-mcp-target-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f425-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f425-records.log",
+      "sha256": "826009b37d6c8254924b7fd1ee12981059544175f2c890ad4186b88b41b583b4",
+      "bytes": 106
+    },
+    {
+      "reference": ".private/freightctl-f425-schema-preservation.json",
+      "sha256": "f4a3fb0739bbb8afaa2090bde8031976178d4d705c22468622e4e924daf35c77",
+      "bytes": 571
+    },
+    {
+      "reference": ".private/freightctl-f425-parity-preservation.json",
+      "sha256": "ff232a3d7a6d8ece264c2578d4472a516b606b47fb781ff560ce4417b79f4e6a",
+      "bytes": 153
+    },
+    {
+      "reference": ".private/freightctl-f425-sql-preservation.json",
+      "sha256": "da0d3de0471be68fe803e88e526f6aeec59407a448ae6fcf98af2b5a4f28f9e7",
+      "bytes": 447
+    }
+  ],
+  "safety": {
+    "local_inference": false,
+    "local_postgresql_or_chrome": false,
+    "local_scanner": false,
+    "retained_database_changed": false,
+    "SQL_schema_or_guards_changed": false,
+    "existing_processing_quota_deadline_budgets_raised": false,
+    "local_or_CI_capacity_changed": false,
+    "publication_or_deployment": false,
+    "original_runtime_runs_cancelled_or_rerun": false
+  },
+  "overall_goal_complete": false
+}

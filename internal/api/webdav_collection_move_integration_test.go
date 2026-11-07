@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"maps"
 	"strconv"
+	"strings"
 	"testing"
 	"time"
 
@@ -245,6 +246,30 @@ func TestWebDAVCollectionMoveIsCompleteAtomicAuthorizedAndPreservesCustody(t *te
 	}
 	if err = copyTx.Tx.Rollback(t.Context()); err != nil {
 		t.Fatal(err)
+	}
+	// Each tree fits the old limit separately;their combined overwrite must
+	// still fit the same1000-entry operation bound. Reuse the retained fixture,
+	// reduce it by one entry and never raise the namespace quota.
+	one := int64(1)
+	apply("tree-budget-remove-one", store.PathCommand{Operation: "rmdir", Path: "/large/d0999", ExpectedRevision: &one})
+	budgetSource, err := service.StatPath(t.Context(), scope, "/occupied")
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, method := range []string{"MOVE", "COPY"} {
+		h := headers(admin, "tree-combined-"+strings.ToLower(method), "/large", *budgetSource)
+		h["Overwrite"] = "T"
+		h["X-Freightctl-Destination-Revision"] = large.Entry.ID + ":" + strconv.FormatInt(large.Entry.Revision, 10)
+		exchangeAPIRequest(t, server, method, prefix+"/dav/occupied/", nil, h, nil, 507)
+		if current, err := service.StatPath(t.Context(), scope, "/occupied"); err != nil || !sameEntry(*current, *budgetSource) {
+			t.Fatal("combined overwrite limit changed source", err)
+		}
+		if current, err := service.StatPath(t.Context(), scope, "/large"); err != nil || !sameEntry(*current, large.Entry) {
+			t.Fatal("combined overwrite limit changed target root", err)
+		}
+		if child, err := service.StatPath(t.Context(), scope, "/large/d0000"); err != nil || child.Revision != 1 {
+			t.Fatal("combined overwrite limit removed a prefix", err)
+		}
 	}
 	operatorScope := store.Scope{Tenant: scope.Tenant, Partner: scope.Partner, TokenHash: secure.Digest(operator.Bytes)}
 	tx, err = service.DB.Begin(t.Context(), operatorScope)

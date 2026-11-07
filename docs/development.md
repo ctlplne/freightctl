@@ -112,7 +112,7 @@ Namespace HTTPS routes use the same bearer token and tenant/partner URL prefix a
 
 | Route | Contract |
 | --- | --- |
-| `POST .../namespace/commands` | Strict JSON command, `Idempotency-Key`; mkdir, publish, file copy, rename, remove, rmdir, setstat, properties, non-overwriting move_tree,complete remove_tree,full copy_tree and shallow copy_dir. Tree commands require exact expected_entry_id/revision;remove_tree uses read/list/manage_paths,copy_tree/copy_dir use read/list/write and every copied member's actual current authority. |
+| `POST .../namespace/commands` | Strict JSON command, `Idempotency-Key`; mkdir, publish, file copy, rename, remove, rmdir, setstat, properties,move_tree,complete remove_tree,full copy_tree and shallow copy_dir. Tree commands require exact expected_entry_id/revision. Collection replacement additionally requires replace:true,target_entry_id/target_revision,current management and complete actual target-tree authority. |
 | `POST .../namespace/receipts` | Read-only original typed command plus its exact original `Idempotency-Key`;recover actor-private historical commit metadata,including after removal,without executing or needing current paths/custody. Current read/list/original operation grants and the original mount/authority meaning are required. |
 | `GET .../namespace/stat?path=...` | Inspect one virtual entry and its current revision. |
 | `GET .../namespace/properties?path=...` | Explicit authorized single-entry property-content snapshot; ordinary stat/list omit XML values. |
@@ -141,7 +141,7 @@ mapping transitions,and does not recreate a deleted path.
 The lookup requires current read/list plus the original operation's grants:
 write for mkdir/publish/copy/copy_tree/copy_dir;manage_paths for rename/remove/
 rmdir/setstat/move_tree/remove_tree;both write and manage_paths for properties
-or file-copy overwrite. Actor RLS and the existing request hash bind tenant,
+or any copy overwrite. Actor RLS and the existing request hash bind tenant,
 partner,identity,mount,authority revision and all normalized command options.
 Unknown keys,other actors or valid changed command/mount/authority meanings yield
 404 after current authorization. Malformed controls and invalid typed semantics

@@ -7,7 +7,14 @@ import (
 )
 
 func validateTreeMove(command PathCommand) error {
-	if !ValidID(command.ExpectedEntryID) || command.ExpectedRevision == nil || *command.ExpectedRevision < 1 || command.Target == "" || command.FileID != "" || command.ExpectedFileID != "" || command.Replace || command.TargetRevision != nil || command.Mode != nil || command.Modified != nil || len(command.PropertyChanges) != 0 {
+	if !ValidID(command.ExpectedEntryID) || command.ExpectedRevision == nil || *command.ExpectedRevision < 1 || command.Target == "" || command.FileID != "" || command.ExpectedFileID != "" || command.Mode != nil || command.Modified != nil || len(command.PropertyChanges) != 0 {
+		return ErrState
+	}
+	if command.Replace {
+		if !ValidID(command.TargetEntryID) || command.TargetRevision == nil || *command.TargetRevision < 1 {
+			return ErrState
+		}
+	} else if command.TargetRevision != nil || command.TargetEntryID != "" {
 		return ErrState
 	}
 	source, err := vpath.Canonical(command.Path)
@@ -18,7 +25,7 @@ func validateTreeMove(command PathCommand) error {
 	if err != nil || target != command.Target {
 		return vpath.ErrPath
 	}
-	if source == "/" || target == "/" || vpath.ControlPath(source) || vpath.ControlPath(target) || source == target || vpath.Within(source, target) {
+	if source == "/" || target == "/" || vpath.ControlPath(source) || vpath.ControlPath(target) || source == target || vpath.Within(source, target) || command.Replace && vpath.Within(target, source) {
 		return ErrForbidden
 	}
 	return nil

@@ -1,7 +1,7 @@
 # DAV namespace read and conditional-mutation profile
 
 This is a partial read/conditional-mutation adapter, not a claim of RFC4918 class1,2 or3 compliance.
-The full C-WEBDAV contract remains open: collection overwrite,locks,outbound server
+The full C-WEBDAV contract remains open: locks,outbound server
 connections and independent DAV application interoperability still need work. Implemented
 read,property,MOVE,DELETE and COPY profiles also require actual final-source qualification.
 
@@ -132,10 +132,12 @@ revision,mode,intake and idempotency checks still run before execution.
   Destination ending in a slash. It accepts absent Depth or Depth:infinity
   only;finite depths are400 and no prefix is moved. This follows the complete
   collection scope in [RFC4918 section9.9.2](https://www.rfc-editor.org/rfc/rfc4918.html#section-9.9.2).
-  This partial profile refuses collection overwrites with428;it never silently
-  substitutes an empty-only replacement for recursive destination removal.
+  Overwrite:T uses the separate destination identity condition below;missing
+  destination conditions return428. Replacement always removes the complete
+  authorized destination tree;it never substitutes empty-only removal.
   The typed namespace API/CLI uses operation:move_tree,path,target,
-  expected_entry_id and expected_revision;other mutation fields are refused.
+  expected_entry_id and expected_revision. Replacement additionally uses the
+  exact target_entry_id/target_revision pair and replace:true below.
   Require read,list and manage_paths,actual root/member read/traversal modes,
   current file availability and writable source/destination parents. An alias
   cannot rescue a private member. The root condition identifies the collection;
@@ -161,7 +163,7 @@ revision,mode,intake and idempotency checks still run before execution.
   proofs include nested members,properties,independent bytes,denied private and
   no-longer-released members,unchanged quotas,oversized retained-state refusal,
   ABA identity,replay and exact no-extra-effect counts;runtime outcomes remain
-  owed for the new source. Locks,collection overwrite and outbound
+  owed for the new source. Locks and outbound
   DAV server interoperability remain open.
 - File `DELETE` removes one mapping with an exact strong If-Match,
   the original Idempotency-Key and an empty body. Ordinary read/manage_paths,
@@ -263,8 +265,9 @@ revision,mode,intake and idempotency checks still run before execution.
   source path/ancestor modes and current policy for each copied member,plus
   destination-parent write/traverse. An outside alias cannot authorize a
   hidden member. Depth0 does not read,copy or disclose children. Reject root,
-  control,self,descendant and noncanonical targets;allow only an absent target,
-  with no merge/overwrite. Preserve the existing1000-member operation and live
+  control,self,descendant and noncanonical targets. Overwrite:F requires an
+  absent target;explicit T uses the separate identity-bound profile below.
+  Preserve the existing1000-member operation and live
   namespace quota;failure rolls back all mappings,events and receipts.
   Verify each distinct immutable file against its actual protected storage,
   size and SHA256 before publishing any mapping,then repeat the current store
@@ -286,8 +289,48 @@ revision,mode,intake and idempotency checks still run before execution.
   absent source fail412,missing parents409,permissions403 and capacity507.
   Native API/CLI/stock-curl,whole-tree/shallow,property,mode,mount,corrupt-custody,
   current-policy,capacity,no-extra-effects and retry proof remains owed.
-  Collection overwrite,locks,outbound server and independent DAV applications
+  Locks,outbound server and independent DAV applications
   remain open;this adapter still claims no complete DAV compliance class.
+- Collection `MOVE`/`COPY` overwrite requires `Overwrite:T` and both exact
+  namespace conditions:source `X-Freightctl-Namespace-Revision` and
+  `X-Freightctl-Destination-Revision`,each `entry-UUID:positive-revision` from
+  current authorized discovery. The typed API/CLI uses replace:true with
+  target_entry_id and target_revision as well as its source pair. Missing
+  destination condition is428,malformed/duplicate condition400,and supplying
+  it with Overwrite:F is400. Other methods,including byte-conditioned file
+  MOVE/COPY,reject this recognized destination condition rather than ignoring
+  it. The target must currently be a collection with the exact ID/revision;
+  absence,stale values and equal-revision replacement with another ID fail412.
+  Source and destination trees must be disjoint in both directions;no self,
+  descendant or ancestor replacement. Conditions identify the two roots,
+  not frozen hashes of their earlier children. The explicit operation acts
+  on their complete current authorized membership under the namespace lock.
+  Check every destination directory's read/write/traverse and every actual
+  destination file's read/write/current-policy availability,plus writable
+  parents,before any transition. Outside aliases cannot rescue a private or
+  read-only member. COPY additionally requires current manage_paths alongside
+  read/list/write;MOVE retains read/list/manage_paths and its source checks.
+  The source and removed destination together must fit the existing1000-entry
+  operation bound. COPY preflights projected live namespace capacity;replacing
+  at a full limit can succeed when the result fits. No quota or deadline rises.
+  Remove the complete destination leaf-first as irreversible tombstones,then
+  move or copy the complete requested source scope in the same transaction.
+  Depth0 COPY removes the complete destination and installs only the source
+  collection/properties;it never merges or copies source children. Preserve
+  old custody and property tombstones,MOVE source identities/metadata,and COPY
+  independent IDs/ownership/ordinary modes/properties. Commit all exact events
+  and one private command receipt together;recheck current file availability
+  and authority before commit. A failing child,condition,policy or capacity
+  check rolls everything back. Fresh204 has no body,ETag or Location;it names
+  collection-replaced-at-commit,the exact new root event and total changed
+  mappings(including removed mappings) in X-Freightctl-Changed-Entries.
+  An exact COPY retry can recover only historical200;an absent MOVE source
+  fails412. The read-only namespace receipt endpoint/CLI can recover the old
+  result after a lost204 using the exact original typed command/key,without
+  needing either old root or executing again. No response grants forwarding,
+  execution or access to removed custody. Native API/CLI/stock-curl complete/
+  shallow replacement,private/read-only child,policy,quota,combined-bound,ABA,
+  retained-byte and no-extra-effects outcomes remain owed at the new source.
 - `PROPPATCH` changes inert user properties on a file or collection. Discover
   the live `urn:freightctl:namespace` properties `entry-id` and `revision` with
   PROPFIND,then send their exact `UUID:positive-revision` pair as

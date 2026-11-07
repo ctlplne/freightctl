@@ -912,6 +912,9 @@
                                       ],
                                       "additionalProperties": false
                                     }
+                                  },
+                                  "target_entry_id": {
+                                    "type": "string"
                                   }
                                 },
                                 "required": [
@@ -1121,6 +1124,9 @@
                               ],
                               "additionalProperties": false
                             }
+                          },
+                          "target_entry_id": {
+                            "type": "string"
                           }
                         },
                         "required": [
@@ -2214,6 +2220,9 @@
                                       ],
                                       "additionalProperties": false
                                     }
+                                  },
+                                  "target_entry_id": {
+                                    "type": "string"
                                   }
                                 },
                                 "required": [
@@ -2423,6 +2432,9 @@
                               ],
                               "additionalProperties": false
                             }
+                          },
+                          "target_entry_id": {
+                            "type": "string"
                           }
                         },
                         "required": [
@@ -3174,6 +3186,9 @@
                                   ],
                                   "additionalProperties": false
                                 }
+                              },
+                              "target_entry_id": {
+                                "type": "string"
                               }
                             },
                             "required": [
@@ -3383,6 +3398,9 @@
                           ],
                           "additionalProperties": false
                         }
+                      },
+                      "target_entry_id": {
+                        "type": "string"
                       }
                     },
                     "required": [

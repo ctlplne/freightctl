@@ -68,6 +68,10 @@ func TestMCPNamespaceReceiptKeepsMetadataOnlyInputAndHistoricalOutput(t *testing
 	if _, err = decodeMCPToolArguments(valid, resolved); err != nil {
 		t.Fatal("original metadata selection refused", err)
 	}
+	overwrite := []byte(`{"request_key":"original-overwrite","command":{"operation":"copy_tree","path":"/source","target":"/target","expected_entry_id":"10000000-1111-4111-8111-111111111111","expected_revision":1,"replace":true,"target_entry_id":"20000000-1111-4111-8111-111111111111","target_revision":2}}`)
+	if _, err = decodeMCPToolArguments(overwrite, resolved); err != nil {
+		t.Fatal("original overwrite metadata lost destination identity binding", err)
+	}
 	for _, bad := range []string{
 		`{"request_key":"original-delete","command":{"operation":"remove_tree","path":"/source","property_changes":[]}}`,
 		`{"request_key":"original-delete","command":{"operation":"properties","path":"/source"}}`,

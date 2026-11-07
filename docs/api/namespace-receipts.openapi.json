@@ -72,6 +72,9 @@
               "null",
               "integer"
             ]
+          },
+          "target_entry_id": {
+            "type": "string"
           }
         },
         "required": [

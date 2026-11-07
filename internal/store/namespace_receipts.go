@@ -87,7 +87,7 @@ func (t *Transaction) ReadPathCommandReceipt(ctx context.Context, key string, co
 	default:
 		return nil, ErrState
 	}
-	if command.Operation == "copy" && command.Replace {
+	if (command.Operation == "copy" || command.Operation == "copy_tree" || command.Operation == "copy_dir") && command.Replace {
 		permissions = append(permissions, "manage_paths")
 	}
 	for _, permission := range permissions {

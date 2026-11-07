@@ -245,3 +245,16 @@ Catalog authority/schema checks,tagged stock-SDK compile,vet and architecture
 pass. Actual deleted-source/private/no-effects/content-canary SDK proof and
 original exchange/reply/final-source compatibility remain owed. No inference,
 resource budget,permission or schema change.
+
+F425 adds complete collection MOVE/COPY overwrite with explicit T and both
+root UUID/revision pairs(target_entry_id/target_revision in typed commands).
+Every actual destination member needs current authority/policy;trees must be
+disjoint and their combined work fits the existing1000-entry bound. Projected
+quota,old custody/irreversible property tombstones and atomic events/one receipt
+remain enforced. Original T428 becomes focused green. Initial guard-order and
+new-field frozen-schema failures are retained/repaired without weakening their
+assertions. All six projection bindings,receipt input and metadata-only MCP v20
+preserve prior constraints. Focused/static/tagged native API/CLI/curl compilation
+passes;actual replacement/no-merge/private-readonly/policy/quota/combined-bound/
+ABA/retained-byte/receipt and final-source runtime proof remain owed. No SQL
+schema/guard,resource budget,inference,publication or deployment change.

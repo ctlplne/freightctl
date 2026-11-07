@@ -501,6 +501,81 @@ func TestWebDAVNativeStockCurlDiscoveryInterruptedReadAndExactResume(t *testing.
 	if status != 200 || !bytes.Equal(independentCopy, replacement) || headers.Get("X-File-Revision-ID") != replaced.File.ID {
 		t.Fatal("stock copied mapping depended on removed source collection")
 	}
+	for _, profile := range []struct {
+		name, method, depth, operation string
+		copied                         int
+	}{{"full", "COPY", "infinity", "copy_tree", 3}, {"shallow", "COPY", "0", "copy_dir", 1}, {"move", "MOVE", "infinity", "move_tree", 3}} {
+		target := prefix + "/dav/curl-overwrite-" + profile.name + "/"
+		status, _, body, _ = run("overwrite-collection-create-"+profile.name, target, []string{"--request", "MKCOL", "--header", "If-None-Match: *", "--header", "Idempotency-Key: dav-stock-target-" + profile.name}, true)
+		var seededRoot struct {
+			Result store.PathResult `json:"result"`
+		}
+		if status != 201 || json.Unmarshal(body, &seededRoot) != nil || !store.ValidID(seededRoot.Result.Entry.ID) {
+			t.Fatal("stock overwrite target root not created")
+		}
+		status, _, body, _ = run("overwrite-collection-old-"+profile.name, target+"old.dat", []string{"--upload-file", sourcePath, "--header", "If-None-Match: *", "--header", "Idempotency-Key: dav-stock-old-" + profile.name, "--header", "X-Content-SHA256: " + secure.Digest(data)}, true)
+		var oldTarget struct {
+			File store.File `json:"file"`
+		}
+		if status != 201 || json.Unmarshal(body, &oldTarget) != nil || oldTarget.File.SHA256 != secure.Digest(data) {
+			t.Fatal("stock overwrite old custody fixture differs")
+		}
+		key := "dav-stock-collection-overwrite-" + profile.name
+		args := []string{"--request", profile.method, "--header", "Overwrite: T", "--header", "Depth: " + profile.depth, "--header", "Idempotency-Key: " + key, "--header", "X-Freightctl-Namespace-Revision: " + copiedCollection.Result.Entry.ID + ":" + strconv.FormatInt(copiedCollection.Result.Entry.Revision, 10), "--header", "X-Freightctl-Destination-Revision: " + seededRoot.Result.Entry.ID + ":" + strconv.FormatInt(seededRoot.Result.Entry.Revision, 10), "--header", "Destination: " + front.URL + target}
+		status, headers, body, _ = run("overwrite-collection-"+profile.name, copyCollectionTarget, args, true)
+		if status != 204 || len(body) != 0 || headers.Get("X-Freightctl-Namespace-State") != "collection-replaced-at-commit" || headers.Get("X-Freightctl-Changed-Entries") != strconv.Itoa(profile.copied+2) || !store.ValidID(headers.Get("X-Freightctl-Event-ID")) || headers.Get("ETag") != "" || headers.Get("Location") != "" {
+			t.Fatal("stock collection overwrite lost exact no-content complete result")
+		}
+		status, _, _, oldPathExit := run("overwrite-collection-no-merge-"+profile.name, target+"old.dat", nil, false)
+		if status != 404 || oldPathExit != 22 {
+			t.Fatal("stock collection overwrite merged an old target member")
+		}
+		for index, original := range []string{overwriteTarget, copyOverwriteTarget} {
+			member := target + strings.TrimPrefix(original, collectionPath)
+			if profile.copied == 1 {
+				status, _, _, noChild := run("overwrite-shallow-no-child-"+strconv.Itoa(index), member, nil, false)
+				if status != 404 || noChild != 22 {
+					t.Fatal("stock shallow overwrite copied a member")
+				}
+			} else {
+				status, headers, actual, _ := run("overwrite-collection-member-"+profile.name+"-"+strconv.Itoa(index), member, nil, true)
+				if status != 200 || !bytes.Equal(actual, replacement) || headers.Get("X-File-Revision-ID") != replaced.File.ID {
+					t.Fatal("stock overwritten member has different immutable custody")
+				}
+			}
+		}
+		if profile.copied > 1 {
+			status, _, body, _ = run("overwrite-collection-properties-"+profile.name, target+strings.TrimPrefix(copyOverwriteTarget, collectionPath), []string{"--request", "PROPFIND", "--header", "Depth: 0"}, true)
+			propertyReadback.Responses = nil
+			if status != 207 || xml.Unmarshal(body, &propertyReadback) != nil || len(propertyReadback.Responses) != 1 || len(propertyReadback.Responses[0].Groups) != 1 || propertyReadback.Responses[0].Groups[0].Prop.Label.Text != "stock  q:Label" || propertyReadback.Responses[0].Groups[0].Prop.Label.Part != "été & data" || !bytes.Contains(body, []byte(`xmlns:q="urn:types"`)) || !bytes.Contains(body, []byte(`xml:lang="fr"`)) {
+				t.Fatal("stock overwrite lost independent mixed XML context")
+			}
+		}
+		status, _, retainedOld, _ := run("overwrite-collection-retained-old-"+profile.name, prefix+"/files/"+oldTarget.File.ID, nil, true)
+		if status != 200 || !bytes.Equal(retainedOld, data) {
+			t.Fatal("stock collection overwrite erased old target custody")
+		}
+		if profile.method == "MOVE" {
+			status, _, _, gone := run("overwrite-collection-old-source", copyCollectionTarget, nil, false)
+			if status != 404 || gone != 22 {
+				t.Fatal("stock overwrite MOVE retained old source")
+			}
+		}
+		selection := store.PathCommand{Operation: profile.operation, Path: strings.TrimSuffix(strings.TrimPrefix(copyCollectionTarget, prefix+"/dav"), "/"), Target: strings.TrimSuffix(strings.TrimPrefix(target, prefix+"/dav"), "/"), ExpectedEntryID: copiedCollection.Result.Entry.ID, ExpectedRevision: &copiedCollection.Result.Entry.Revision, Replace: true, TargetEntryID: seededRoot.Result.Entry.ID, TargetRevision: &seededRoot.Result.Entry.Revision}
+		originalJSON, err := json.Marshal(selection)
+		if err != nil {
+			t.Fatal(err)
+		}
+		reference := filepath.Join(private, "original-overwrite-"+profile.name+".json")
+		if err = os.WriteFile(reference, originalJSON, 0600); err != nil {
+			t.Fatal(err)
+		}
+		status, headers, body, _ = run("overwrite-collection-original-receipt-"+profile.name, prefix+"/namespace/receipts", []string{"--request", "POST", "--header", "Content-Type: application/json", "--header", "Idempotency-Key: " + key, "--data-binary", "@" + reference}, true)
+		var originalReceipt store.PathCommandReceipt
+		if status != 200 || json.Unmarshal(body, &originalReceipt) != nil || originalReceipt.Observation != "original-commit-not-current-state" || originalReceipt.Result.Changed != profile.copied+2 || originalReceipt.Result.Replayed || headers.Get("Location") != "" {
+			t.Fatal("stock overwrite lost exact original commit recovery")
+		}
+	}
 	binaryPath, err := exec.LookPath("curl")
 	if err != nil {
 		t.Fatal(err)

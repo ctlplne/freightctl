@@ -51,12 +51,17 @@ same-origin CSRF protection. Tool-list results are private and immediately stale
 | `prepare_onward`, `start_onward` | Review an owned artifact/approved ordered workflow,then atomically record ordinary intents under the exact review. |
 | `onward_status`, `work_onward` | Inspect or execute one ordinary step only with the original reviewed-start receipt and exact run binding. |
 
-The current implementation is `exchange-tools-v19` with44 tools. The original43
+The current implementation is `exchange-tools-v20` with44 tools. The original43
 catalog entries keep their schemas,annotations and behavior. `namespace_receipt`
 adds one read-only,non-destructive,idempotent,closed-world tool with a strict
 historical output schema. Annotations describe effects;the server still checks
 current identity,tenant,partner,read/list/original operation grants,mount,
 authority revision and the exact original normalized command meaning.
+
+Original collection-overwrite metadata also carries target_entry_id and
+target_revision with replace:true. These remain original selection data;the
+read tool never performs that replacement. All earlier fields and constraints
+stay enforced,and property XML remains excluded.
 
 For example,retain the metadata for an original remove_tree command and its key:
 

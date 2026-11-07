@@ -25,6 +25,11 @@ func (t *Transaction) PrepareTreeCopy(ctx context.Context, command PathCommand) 
 	if err := validateTreeMove(command); err != nil {
 		return nil, err
 	}
+	if command.Replace {
+		if err := t.Require("manage_paths"); err != nil {
+			return nil, err
+		}
+	}
 	actual, err := vpath.Resolve(t.Root, command.Path)
 	if err != nil {
 		return nil, err
@@ -67,15 +72,8 @@ func (t *Transaction) copyPreparedTree(ctx context.Context, actual string, comma
 	if occupied {
 		return nil, ErrExists
 	}
-	if maxEntries < 1 {
-		maxEntries = 10000
-	}
-	var total int
-	if err = t.Tx.QueryRow(ctx, `SELECT count(*) FROM namespace_entries WHERE NOT deleted`).Scan(&total); err != nil {
+	if err = t.treeCopyCapacity(ctx, maxEntries, len(tree), 0); err != nil {
 		return nil, err
-	}
-	if len(tree) == 0 || total > maxEntries-len(tree) {
-		return nil, ErrLimit
 	}
 	var root *PathEntry
 	now := time.Now().UTC()

@@ -23,7 +23,12 @@ func (s *Server) davCollectionCopy(w http.ResponseWriter, r *http.Request, scope
 	if r.Header.Get("Depth") == "0" {
 		operation, depth = "copy_dir", "0"
 	}
-	result, err := s.Service.PathCommand(r.Context(), scope, r.Header.Get("Idempotency-Key"), store.PathCommand{Operation: operation, Path: source, Target: target, ExpectedEntryID: entry, ExpectedRevision: &revision})
+	command := store.PathCommand{Operation: operation, Path: source, Target: target, ExpectedEntryID: entry, ExpectedRevision: &revision}
+	if !davCollectionReplacement(r, &command) {
+		fail(w, 400, "invalid_dav_destination_namespace_revision")
+		return
+	}
+	result, err := s.Service.PathCommand(r.Context(), scope, r.Header.Get("Idempotency-Key"), command)
 	if errors.Is(err, store.ErrRevision) || errors.Is(err, store.ErrNotFound) || errors.Is(err, store.ErrExists) {
 		fail(w, 412, "dav_collection_copy_condition_failed")
 		return
@@ -38,6 +43,10 @@ func (s *Server) davCollectionCopy(w http.ResponseWriter, r *http.Request, scope
 	}
 	if result.Replayed {
 		respond(w, 200, map[string]any{"result": result, "namespace_state": "not-asserted-original-receipt", "depth": depth})
+		return
+	}
+	if command.Replace {
+		davCollectionReplaced(w, result)
 		return
 	}
 	w.Header().Set("Location", webdav.Href(base, webdav.Resource{Path: result.Entry.Path, Directory: true}))

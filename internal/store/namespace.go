@@ -167,6 +167,7 @@ type PathCommand struct {
 	Mode             *uint32                 `json:"mode,omitempty"`
 	Modified         *time.Time              `json:"modified_at,omitempty"`
 	ExpectedEntryID  string                  `json:"expected_entry_id,omitempty"`
+	TargetEntryID    string                  `json:"target_entry_id,omitempty"`
 	PropertyChanges  []namespaceprops.Change `json:"property_changes,omitempty"`
 }
 type PathResult struct {
@@ -192,7 +193,7 @@ func (t *Transaction) ApplyPathCommand(ctx context.Context, key string, command 
 		return nil, err
 	}
 	if command.Operation == "properties" {
-		if !ValidID(command.ExpectedEntryID) || command.ExpectedRevision == nil || *command.ExpectedRevision < 1 || command.Target != "" || command.FileID != "" || command.ExpectedFileID != "" || command.Replace || command.TargetRevision != nil || command.Mode != nil || command.Modified != nil {
+		if !ValidID(command.ExpectedEntryID) || command.ExpectedRevision == nil || *command.ExpectedRevision < 1 || command.Target != "" || command.FileID != "" || command.ExpectedFileID != "" || command.Replace || command.TargetRevision != nil || command.TargetEntryID != "" || command.Mode != nil || command.Modified != nil {
 			return nil, ErrState
 		}
 		if err := propertyError(namespaceprops.ValidateChanges(command.PropertyChanges)); err != nil {
@@ -220,7 +221,12 @@ func (t *Transaction) ApplyPathCommand(ctx context.Context, key string, command 
 		if err := validateTreeMove(command); err != nil {
 			return nil, err
 		}
-	} else if command.ExpectedEntryID != "" || len(command.PropertyChanges) != 0 {
+		if command.Replace {
+			if err := t.Require("manage_paths"); err != nil {
+				return nil, err
+			}
+		}
+	} else if command.ExpectedEntryID != "" || command.TargetEntryID != "" || len(command.PropertyChanges) != 0 {
 		return nil, ErrState
 	}
 	if command.ExpectedFileID != "" {
@@ -423,14 +429,34 @@ func (t *Transaction) ApplyPathCommand(ctx context.Context, key string, command 
 		}
 		next = *old
 		next.Revision++
+		var replacement []PathEntry
+		if command.Replace && (command.Operation == "move_tree" || command.Operation == "copy_tree" || command.Operation == "copy_dir") {
+			replacement, err = t.prepareTreeReplacement(ctx, command)
+			if err != nil {
+				return nil, err
+			}
+			if len(preparedTree)+len(replacement) > 1000 {
+				return nil, ErrLimit
+			}
+			if command.Operation != "move_tree" {
+				if err = t.treeCopyCapacity(ctx, maxEntries, len(preparedTree), len(replacement)); err != nil {
+					return nil, err
+				}
+			}
+		}
 		switch command.Operation {
 		case "copy_tree", "copy_dir":
+			if len(replacement) > 0 {
+				if _, err = t.removePreparedTree(ctx, replacement, commandID); err != nil {
+					return nil, err
+				}
+			}
 			copied, err := t.copyPreparedTree(ctx, actual, command, preparedTree, commandID, maxEntries)
 			if err != nil {
 				return nil, err
 			}
 			next = *copied
-			changed = len(preparedTree)
+			changed = len(preparedTree) + len(replacement)
 		case "copy":
 			if command.Target == "" || command.Target == "/" || old.Kind != "file" {
 				return nil, ErrState
@@ -523,27 +549,11 @@ func (t *Transaction) ApplyPathCommand(ctx context.Context, key string, command 
 			// Remove leaves first so no intermediate row or committed state can
 			// retain an active child below a removed parent. Custody is untouched.
 			changed = len(preparedTree)
-			for i := len(preparedTree) - 1; i >= 0; i-- {
-				entry := preparedTree[i]
-				removed := entry
-				removed.Revision++
-				removed.Deleted = true
-				if err = t.SaveEntry(ctx, &entry, &removed, "PathRemoved", commandID); err != nil {
-					return nil, err
-				}
-				if entry.ID == old.ID {
-					next = removed
-				}
+			removed, err := t.removePreparedTree(ctx, preparedTree, commandID)
+			if err != nil {
+				return nil, err
 			}
-			// FileAccessible would now require a surviving mapping; check current
-			// policy availability without granting new custody-read authority.
-			for _, entry := range preparedTree {
-				if entry.Kind == "file" {
-					if err = t.FileAvailable(ctx, entry.FileID); err != nil {
-						return nil, err
-					}
-				}
-			}
+			next = *removed
 		case "remove", "rmdir":
 			if err = t.ParentWritable(ctx, actual); err != nil {
 				return nil, err
@@ -588,6 +598,12 @@ func (t *Transaction) ApplyPathCommand(ctx context.Context, key string, command 
 					return nil, ErrState
 				}
 				return nil, err
+			}
+			if len(replacement) > 0 {
+				if _, err = t.removePreparedTree(ctx, replacement, commandID); err != nil {
+					return nil, err
+				}
+				changed += len(replacement)
 			}
 			existing, err := t.Entry(ctx, target)
 			if err != nil && !errors.Is(err, ErrNotFound) {

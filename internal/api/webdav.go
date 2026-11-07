@@ -34,6 +34,10 @@ func prepareDAVRequest(w http.ResponseWriter, r *http.Request) bool {
 		fail(w, 400, "invalid_dav_virtual_path")
 		return false
 	}
+	if _, present, _ := tusHeader(r, "X-Freightctl-Destination-Revision"); present && !((r.Method == "MOVE" || r.Method == "COPY") && strings.HasSuffix(r.URL.Path, "/")) {
+		fail(w, 400, "unsupported_dav_destination_namespace_condition")
+		return false
+	}
 	// A known metadata condition must never be silently discarded by an
 	// adapter that implements only byte or absence conditions.
 	switch r.Method {
