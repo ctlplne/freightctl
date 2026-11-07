@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "id": "F225",
+  "observed_at": "2026-11-07",
+  "base_candidate": "4560e52b9b2284b093e2bcd96edf27c6431304a9",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Conditional HTTP fixture binds actual controlled release/revocation;native replay owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "4c0568ead530708fa9a31aa3b7e17b83bc15a80a57b7a68def87ff703c729753",
+      "bytes": 16603
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "34ca3c1b4082aa07df2249ece8e58cbd5e1eef366efb09b2b878b18f7554519c",
+      "bytes": 366588
+    },
+    {
+      "reference": "internal/api/artifact_http_integration_test.go",
+      "sha256": "903dc891f15936e80aec1be210e12ec4493e36010342c8cc80e68b62262de1ed",
+      "bytes": 7679
+    }
+  ],
+  "original_failure": {
+    "candidate": "71e8166d0bc96c574055e00f749d387e0f0b0460",
+    "run": 42352071911,
+    "job": 128342141307,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128342141307",
+    "test": "TestArtifactHTTPNamespaceValidatorReplacementAndCurrentIntake",
+    "observation": "Expected409 got304 after configuring the first intake policy;the target remains a historical integrity-only revision,which deliberately retains its original acceptance semantics."
+  },
+  "changed": [
+    "Retain original conditional/range/owner-only/current-replacement checks. For current intake refusal,create a fresh CSV revision through actual PUT with expected namespace revision,require its exact policy binding,run checks,separately release and verify its bytes/revision/ETag. Revoke that exact policy before the unchanged conditional GET/HEAD409 and header-redaction assertions.",
+    "No production policy/availability/HTTP check changed. Registering a policy still does not rewrite a historical acceptance or grant new release authority."
+  ],
+  "green": [
+    "Affected integration-tag compilation -run ^$ and vet pass;no local PostgreSQL/HTTP runtime."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f225-http-compile.log",
+      "sha256": "bc856875b4479d0d0102340e6cfe91417678573799544f8ebab1de9f4a5b9aa9",
+      "bytes": 73
+    },
+    {
+      "reference": ".private/freightctl-f225-http-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "owed": [
+    "Original exact native conditional/range/replacement/current-intake GET/HEAD replay on both architectures.",
+    "All actual final-source native/browser/stock/security/race/restore/reproducibility and remaining baseline/AX/FINISH gates."
+  ],
+  "resources": "OneCPU/192MiB local compilation/static only;no PostgreSQL,Chrome,inference,scanner or heavy peer. Retained35/source60 unchanged."
+}

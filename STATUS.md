@@ -99,6 +99,12 @@ exclusive fence. No credential writes are granted. Focused contracts,static
 checks and native compilation pass;new ordinary-reader/concurrent-writer and
 original exchange/CLI/copy repair replays remain owed.
 
+F225 makes the conditional HTTP intake fixture use an actual controlled release.
+It creates a fresh policy-bound revision,checks and separately releases it,
+verifies its exact bytes/validator,then revokes that policy. GET/HEAD must still
+return409 with no ETag/range metadata. Historical integrity-only receipts are
+unchanged. Compile/vet pass only;original native repair replay remains owed.
+
 Schema3 records.project binds an owned checked input,approved exact task,one
 durable processing intent,slots and events/receipt. Stable work keys select one
 historical attempt;current status is separate. New artifacts stay held for fresh

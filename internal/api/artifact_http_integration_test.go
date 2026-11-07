@@ -77,9 +77,49 @@ func TestArtifactHTTPNamespaceValidatorReplacementAndCurrentIntake(t *testing.T)
 	if !bytes.Equal(full, changed) || response.Header.Get("ETag") == etag || response.Header.Get("Content-Range") != "" {
 		t.Fatal("replaced namespace path permitted mixed revision resume")
 	}
-	current := response.Header.Get("ETag")
 	checking := &checks.Service{Custody: service}
-	if _, err := checking.Register(t.Context(), scope, "validator-current-intake", checks.PolicyRequest{Definition: checks.Policy{Schema: 1, Kind: "csv", Columns: []checks.Column{{Name: "record", Type: "text", Required: true}}}}); err != nil {
+	registered, err := checking.Register(t.Context(), scope, "validator-current-intake", checks.PolicyRequest{Definition: checks.Policy{Schema: 1, Kind: "csv", Columns: []checks.Column{{Name: "record", Type: "text", Required: true}}}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	var policy store.Configuration
+	if json.Unmarshal(registered.Resource, &policy) != nil {
+		t.Fatal("controlled policy receipt")
+	}
+	// Policy registration does not retroactively change integrity-only receipts.
+	// Publish an actually checked/released revision, then revoke its exact policy.
+	_, raw = exchangeAPIRequest(t, server, "GET", prefix+"/namespace/stat?path=/validator.dat", cookie, nil, nil, 200)
+	if json.Unmarshal(raw, &entry) != nil {
+		t.Fatal("current replacement revision")
+	}
+	controlledBytes := []byte("record\nreleased controlled revision\n")
+	headers["If-Match-Revision"] = strconv.FormatInt(entry.Revision, 10)
+	headers["Idempotency-Key"] = "validator-controlled-replacement"
+	headers["X-File-Size"] = strconv.Itoa(len(controlledBytes))
+	headers["X-Content-SHA256"] = secure.Digest(controlledBytes)
+	_, raw = exchangeAPIRequest(t, server, "PUT", path, nil, headers, controlledBytes, 201)
+	var controlled struct {
+		File store.File `json:"file"`
+	}
+	if json.Unmarshal(raw, &controlled) != nil || controlled.File.ID == accepted.File.ID || controlled.File.Policy != "intake-csv-v1:"+policy.Hash {
+		t.Fatal("controlled revision did not bind exact intake")
+	}
+	if _, err = checking.Run(t.Context(), scope, controlled.File.ID, "validator-controlled-check"); err != nil {
+		t.Fatal(err)
+	}
+	checked, err := checking.Get(t.Context(), scope, controlled.File.ID)
+	if err != nil || checked.Check.State != "passed" {
+		t.Fatal("controlled revision did not pass checks", err)
+	}
+	if _, err = checking.Release(t.Context(), scope, controlled.File.ID, "validator-controlled-release", checks.ReleaseDecision{SHA256: controlled.File.SHA256, PolicyHash: checked.Check.PolicyHash, ReportHash: checked.Check.ReportHash, Revision: checked.Check.Revision}); err != nil {
+		t.Fatal(err)
+	}
+	response, full = exchangeAPIRequest(t, server, "GET", path, cookie, nil, nil, 200)
+	current := response.Header.Get("ETag")
+	if current == "" || !bytes.Equal(full, controlledBytes) || response.Header.Get("X-File-Revision-ID") != controlled.File.ID {
+		t.Fatal("released validator did not bind the controlled revision")
+	}
+	if _, err = checking.Revoke(t.Context(), scope, "validator-revoke-exact-policy", checks.PolicyDecision{Hash: policy.Hash, Version: policy.Version, Revision: policy.Revision}); err != nil {
 		t.Fatal(err)
 	}
 	for _, method := range []string{"GET", "HEAD"} {

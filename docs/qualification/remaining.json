@@ -1153,7 +1153,8 @@
         "docs/qualification/evidence/F217-typed-processing-definition-wire.json",
         "docs/qualification/evidence/F219-first-response-stored-workflow-receipt.json",
         "docs/qualification/evidence/F221-native-observer-root-and-delivery-path.json",
-        "docs/qualification/evidence/F223-ordinary-exchange-authority-read-fence.json"
+        "docs/qualification/evidence/F223-ordinary-exchange-authority-read-fence.json",
+        "docs/qualification/evidence/F225-http-current-intake-validator-fixture.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -1205,13 +1206,14 @@
         "F217 reproduces typed Go processing preview/draft rejection under strict MCP JSON because nil Steps emitted null. A nonmutating Definition serializer emits an empty array,matching existing normalized bytes. Focused two-case red/green,typed schema/injected-authority/canonical tests,architecture/vet and integration compile pass. Strict null/schema/authority rules unchanged;actual original stock-client/native replay owed.",
         "F219 fixes the original onward exact-receipt comparison by using the existing schedule stored-receipt path for first workflow responses as well as retries;an absent freshly written receipt fails isolation. No event/receipt/intent transaction,authority or original exact comparison is weakened. Focused pure contract/fixture,architecture/vet and integration compile pass;actual original native serialization/replay remains owed.",
         "F221 corrects original audit/onward native fixture observations:ordinary namespace creation precedes assigning the confined audit reader;FTPS receiver reads the actual delivery-ID-prefixed destination and verifies its recorded path/size/digest. Existing search immutability,confined refusal,byte checks and exact receipts remain. Compile/vet only pass;original native replays owed.",
-        "F223 repairs F209's overstrict lock marker:ordinary exchange send/receive must acquire a real shared account authority fence,not require account-management lock state. Registration reuses its existing exclusive fence;runtime credentials remain read-only. Original71e8166 native offer/copy/CLI isolation failures retained. Focused contracts,architecture/vet and integration compile pass;native reader/writer serialization and original repair replay owed."
+        "F223 repairs F209's overstrict lock marker:ordinary exchange send/receive must acquire a real shared account authority fence,not require account-management lock state. Registration reuses its existing exclusive fence;runtime credentials remain read-only. Original71e8166 native offer/copy/CLI isolation failures retained. Focused contracts,architecture/vet and integration compile pass;native reader/writer serialization and original repair replay owed.",
+        "F225 repairs the newly reached71e8166 conditional HTTP fixture:policy registration does not retroactively change an integrity-only receipt. The test now creates/checks/separately releases an exact controlled replacement,verifies its bytes/ETag,then revokes that exact policy. Original GET/HEAD409 and metadata-redaction assertions remain;production availability semantics unchanged. Compile/vet pass only;native replay owed."
       ],
       "current_item": {
-        "id": "F223",
-        "state": "Ordinary exchange participants acquire shared authority fence",
-        "proof": "Original71e8166 native offer/copy/CLI failures reached ErrIsolation at the F209 management marker;marker removed and actual SQL shared fence precedes reads;focused/static checks pass only",
-        "next": "Original native security/protocol replay,conditional intake fixture,Windows/browser diagnostic repair and remaining product/baseline/AX/FINISH work"
+        "id": "F225",
+        "state": "Conditional HTTP current-policy refusal uses an actual controlled release",
+        "proof": "Original71e8166/run42352071911/job128342141307 expected409 got304 on historical integrity-only revision;controlled release/revocation preconditions corrected",
+        "next": "Native original replay,Windows closed-handle/privacy and safe browser failure diagnostics;all remaining implementation/baseline/AX/FINISH work"
       }
     }
   ],
