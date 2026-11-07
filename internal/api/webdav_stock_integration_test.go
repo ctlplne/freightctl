@@ -309,6 +309,71 @@ func TestWebDAVNativeStockCurlDiscoveryInterruptedReadAndExactResume(t *testing.
 	if status != 200 || !bytes.Equal(oldCopyBytes, data) {
 		t.Fatal("stock copy overwrite destroyed previous custody")
 	}
+	status, _, body, _ = run("property-identity", copyOverwriteTarget, []string{"--request", "PROPFIND", "--header", "Depth: 0"}, true)
+	var metadata struct {
+		Responses []struct {
+			Groups []struct {
+				Prop struct {
+					ID       string `xml:"urn:freightctl:namespace entry-id"`
+					Revision int64  `xml:"urn:freightctl:namespace revision"`
+				} `xml:"DAV: prop"`
+			} `xml:"DAV: propstat"`
+		} `xml:"DAV: response"`
+	}
+	if status != 207 || xml.Unmarshal(body, &metadata) != nil || len(metadata.Responses) != 1 || len(metadata.Responses[0].Groups) != 1 {
+		t.Fatal("stock property condition not discovered")
+	}
+	identity := metadata.Responses[0].Groups[0].Prop
+	if !store.ValidID(identity.ID) || identity.Revision < 1 {
+		t.Fatal("stock property condition not exact")
+	}
+	propertyPath := filepath.Join(private, "property-update.xml")
+	if err = os.WriteFile(propertyPath, []byte(`<propertyupdate xmlns="DAV:" xmlns:x="urn:example" xmlns:q="urn:types" xml:lang="fr"><set><prop><x:label>stock <q:part q:type="q:Label">été &amp; data</q:part> q:Label</x:label></prop></set></propertyupdate>`), 0600); err != nil {
+		t.Fatal(err)
+	}
+	propertyArgs := []string{"--request", "PROPPATCH", "--header", "Content-Type: application/xml", "--header", "Idempotency-Key: dav-stock-properties", "--header", "X-Freightctl-Namespace-Revision: " + identity.ID + ":" + strconv.FormatInt(identity.Revision, 10), "--data-binary", "@" + propertyPath}
+	status, headers, body, _ = run("property-mutation", copyOverwriteTarget, propertyArgs, true)
+	if status != 207 || !bytes.Contains(body, []byte("HTTP/1.1 200 OK")) || headers.Get("ETag") != "" || headers.Get("X-Freightctl-Namespace-State") != "properties-changed-at-commit" || headers.Get("X-Freightctl-Namespace-Revision") != identity.ID+":"+strconv.FormatInt(identity.Revision+1, 10) {
+		t.Fatal("stock property mutation lost its atomic result")
+	}
+	status, _, body, _ = run("property-readback", copyOverwriteTarget, []string{"--request", "PROPFIND", "--header", "Depth: 0"}, true)
+	var propertyReadback struct {
+		Responses []struct {
+			Groups []struct {
+				Prop struct {
+					Label struct {
+						Text string `xml:",chardata"`
+						Part string `xml:"urn:types part"`
+					} `xml:"urn:example label"`
+				} `xml:"DAV: prop"`
+			} `xml:"DAV: propstat"`
+		} `xml:"DAV: response"`
+	}
+	if status != 207 || xml.Unmarshal(body, &propertyReadback) != nil || len(propertyReadback.Responses) != 1 || len(propertyReadback.Responses[0].Groups) != 1 || propertyReadback.Responses[0].Groups[0].Prop.Label.Text != "stock  q:Label" || propertyReadback.Responses[0].Groups[0].Prop.Label.Part != "été & data" || !bytes.Contains(body, []byte(`xmlns:q="urn:types"`)) || !bytes.Contains(body, []byte(`xml:lang="fr"`)) {
+		t.Fatal("stock property mixed XML readback differs")
+	}
+	status, _, body, _ = run("property-replay", copyOverwriteTarget, propertyArgs, true)
+	var propertyReceipt struct {
+		Result store.PathResult `json:"result"`
+		State  string           `json:"namespace_state"`
+	}
+	if status != 200 || json.Unmarshal(body, &propertyReceipt) != nil || !propertyReceipt.Result.Replayed || propertyReceipt.State != "not-asserted-original-receipt" {
+		t.Fatal("stock property retry repeated effects")
+	}
+	staleArgs := append([]string{}, propertyArgs...)
+	for i := range staleArgs {
+		if staleArgs[i] == "Idempotency-Key: dav-stock-properties" {
+			staleArgs[i] = "Idempotency-Key: dav-stock-properties-stale"
+		}
+	}
+	status, _, _, stalePropertyExit := run("property-stale", copyOverwriteTarget, staleArgs, false)
+	if status != 412 || stalePropertyExit != 22 {
+		t.Fatal("stock stale property revision accepted")
+	}
+	status, _, propertyBytes, _ := run("property-bytes-unchanged", copyOverwriteTarget, nil, true)
+	if status != 200 || !bytes.Equal(propertyBytes, replacement) {
+		t.Fatal("stock property update changed file bytes")
+	}
 	binaryPath, err := exec.LookPath("curl")
 	if err != nil {
 		t.Fatal(err)

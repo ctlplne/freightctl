@@ -10,8 +10,9 @@ import (
 )
 
 type NamespaceProperty struct {
-	Entry store.PathEntry
-	File  *store.File
+	Entry      store.PathEntry
+	File       *store.File
+	Properties map[string]string
 }
 
 // ReadNamespaceProperties returns one finite namespace snapshot. Unavailable or
@@ -66,6 +67,9 @@ func (s *Service) ReadNamespaceProperties(ctx context.Context, scope store.Scope
 				return NamespaceProperty{}, err
 			}
 			result.File, err = t.File(ctx, e.FileID)
+		}
+		if err == nil {
+			result.Properties, err = t.EntryProperties(ctx, &e)
 		}
 		return result, err
 	}

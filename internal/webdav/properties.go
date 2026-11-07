@@ -1,4 +1,4 @@
-// Package webdav encodes a declared read-only DAV profile. It owns no storage,
+// Package webdav encodes a declared finite DAV profile. It owns no storage,
 // credentials or authorization; callers must supply already authorized metadata.
 package webdav
 
@@ -10,14 +10,30 @@ import (
 	"net/http"
 	"net/url"
 	"path"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
 
+	"github.com/ctlplne/freightctl/internal/namespaceprops"
 	"github.com/ctlplne/freightctl/internal/vpath"
 )
 
 var ErrRequest = errors.New("invalid DAV read request")
+var ErrResponseLimit = errors.New("DAV response requires a smaller scope")
+
+// A complete finite answer is buffered before its status is sent. Enforce the
+// product's response bound on writes,rather than allocating then measuring it.
+const MaxResponseBytes = 8 << 20
+
+type responseBuffer struct{ bytes.Buffer }
+
+func (b *responseBuffer) Write(p []byte) (int, error) {
+	if len(p) > MaxResponseBytes-b.Len() {
+		return 0, ErrResponseLimit
+	}
+	return b.Buffer.Write(p)
+}
 
 const MaxRequestBytes = 16 << 10
 const MaxProperties = 32
@@ -151,11 +167,14 @@ func VirtualPath(escaped, base string) (string, error) {
 }
 
 type Resource struct {
-	Path      string
-	Directory bool
-	Size      int64
-	Modified  time.Time
-	ETag      string
+	Path       string
+	Directory  bool
+	Size       int64
+	Modified   time.Time
+	ETag       string
+	EntryID    string
+	Revision   int64
+	Properties map[string]string
 }
 
 func Href(base string, r Resource) string {
@@ -183,8 +202,8 @@ func Multistatus(base string, resources []Resource, selection Selection) ([]byte
 	if len(resources) == 0 || len(resources) > 1001 {
 		return nil, ErrRequest
 	}
-	var b bytes.Buffer
-	b.WriteString(xml.Header)
+	var b responseBuffer
+	_, _ = b.Write([]byte(xml.Header))
 	e := xml.NewEncoder(&b)
 	dav := func(local string) xml.Name { return xml.Name{Space: "DAV:", Local: local} }
 	var encodeErr error
@@ -197,6 +216,15 @@ func Multistatus(base string, resources []Resource, selection Selection) ([]byte
 	end := func(name string) { capture(e.EncodeToken(xml.EndElement{Name: dav(name)})) }
 	start("multistatus")
 	for _, r := range resources {
+		if err := namespaceprops.Validate(r.Properties); err != nil {
+			return nil, err
+		}
+		dead := map[xml.Name]string{}
+		keys := make([]string, 0, len(r.Properties))
+		for key := range r.Properties {
+			keys = append(keys, key)
+		}
+		sort.Strings(keys)
 		start("response")
 		capture(element(e, dav("href"), Href(base, r)))
 		names := []xml.Name{dav("displayname"), dav("resourcetype")}
@@ -205,6 +233,15 @@ func Multistatus(base string, resources []Resource, selection Selection) ([]byte
 		}
 		if !r.Directory {
 			names = append(names, dav("getcontentlength"), dav("getcontenttype"), dav("getetag"))
+		}
+		if r.EntryID != "" {
+			names = append(names, xml.Name{Space: namespaceprops.Namespace, Local: "entry-id"}, xml.Name{Space: namespaceprops.Namespace, Local: "revision"})
+		}
+		for _, key := range keys {
+			value := r.Properties[key]
+			name, _ := namespaceprops.Inspect(value, false)
+			names = append(names, name)
+			dead[name] = value
 		}
 		requested := selection.Names
 		if selection.All || selection.NamesOnly {
@@ -235,19 +272,34 @@ func Multistatus(base string, resources []Resource, selection Selection) ([]byte
 			start("propstat")
 			start("prop")
 			for _, name := range properties {
+				if value, ok := dead[name]; ok && group == 0 && !selection.NamesOnly {
+					capture(e.Flush())
+					_, err := b.Write([]byte(value))
+					capture(err)
+					continue
+				}
 				value := ""
 				if group == 0 && !selection.NamesOnly {
-					switch name.Local {
-					case "displayname":
-						value = path.Base(r.Path)
-					case "getcontentlength":
-						value = strconv.FormatInt(r.Size, 10)
-					case "getcontenttype":
-						value = "application/octet-stream"
-					case "getlastmodified":
-						value = r.Modified.UTC().Format(http.TimeFormat)
-					case "getetag":
-						value = r.ETag
+					if name.Space == namespaceprops.Namespace {
+						if name.Local == "entry-id" {
+							value = r.EntryID
+						} else if name.Local == "revision" {
+							value = strconv.FormatInt(r.Revision, 10)
+						}
+					}
+					if name.Space == "DAV:" {
+						switch name.Local {
+						case "displayname":
+							value = path.Base(r.Path)
+						case "getcontentlength":
+							value = strconv.FormatInt(r.Size, 10)
+						case "getcontenttype":
+							value = "application/octet-stream"
+						case "getlastmodified":
+							value = r.Modified.UTC().Format(http.TimeFormat)
+						case "getetag":
+							value = r.ETag
+						}
 					}
 				}
 				if name == dav("resourcetype") && r.Directory && group == 0 && !selection.NamesOnly {

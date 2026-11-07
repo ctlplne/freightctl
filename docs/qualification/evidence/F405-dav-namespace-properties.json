@@ -1,0 +1,380 @@
+{
+  "schema_version": 1,
+  "id": "F405",
+  "observed_at": "2026-11-07",
+  "base_candidate": "b8d99adb61439d56e2243a44fb5faad3f59cfd4d",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F405 implements inert namespace XML properties through one ordinary atomic path command and the partial DAV adapter. Exact entry identity/revision,read/write/manage_paths,actual modes and current file availability protect changes and receipt recovery. Mixed XML/prefix/inherited context is retained as data;protected names and malformed/oversized requests fail atomically. COPY clones,MOVE/PUT retain and DELETE tombstones snapshots. Ordinary metadata/model context omits content;event feeds/signed snapshots redact content with its original hash. Original API-control,schema-binding and audit-content reds are retained;focused green,tagged compilation,vet,format,architecture,workflow lint and metadata stand-ins pass. Source schema63 adds a column/supplementary event guard without changing old migrations/RLS or table counts. Local retained schema35 stays untouched. Real native PostgreSQL/API/CLI/stock-curl,raw-SQL refusal,migration/restore and final-source qualification remain owed.",
+  "contract": {
+    "condition": "X-Freightctl-Namespace-Revision: entryUUID:positiveRevision",
+    "protocol": "Partial bearer DAV PROPPATCH;custom namespace condition,not full RFC4918 qualification",
+    "fresh": "207 XML,exact committed namespace revision/event,no byte ETag",
+    "history": "Actor-private original-key200 JSON;no current-state assertion or new mutation",
+    "content": "Self-contained inert XML;no entity/URI lookup,forwarding,approval or execution authority",
+    "source_schema": 63,
+    "metadata_tables": 78,
+    "forced_rls_tables": 77,
+    "retained_local_schema": 35,
+    "retained_local_database_changed": false,
+    "original_namespace_migration": {
+      "reference": "internal/store/004_namespace.sql",
+      "sha256": "fd60652d7ebee14e7a39104d656599e5b8f9684eef293e3bb76951a2b5a895dc",
+      "bytes": 13613
+    },
+    "all_previous_schema_constraints_preserved": true,
+    "original_projection_security_assertions_unchanged": true
+  },
+  "red_green": [
+    {
+      "proof": "properties-input-red",
+      "exit_code": 1,
+      "meaning": "Malformed XML reached the original guard instead of400",
+      "reference": ".private/freightctl-f405-properties-input-red.log"
+    },
+    {
+      "proof": "expanded-schema-red",
+      "exit_code": 1,
+      "meaning": "Unchanged exact typed response assertion detects both new fields missing",
+      "reference": ".private/freightctl-f405-expanded-schema-red.log"
+    },
+    {
+      "proof": "audit-content-red",
+      "exit_code": 1,
+      "meaning": "Original audit renderer exposes content rather than source digest",
+      "reference": ".private/freightctl-f405-audit-content-red.log"
+    },
+    {
+      "proof": "new-fixture-first-failure",
+      "exit_code": 1,
+      "meaning": "Empty header was incorrectly used as absent fixture;retained400,and added actual deletion fixture requiring428",
+      "reference": ".private/freightctl-f405-input-schema-focused.log"
+    },
+    {
+      "proof": "xml-first-focused",
+      "exit_code": 0,
+      "meaning": "Initial mixed XML parser cases",
+      "reference": ".private/freightctl-f405-xml-first-focused.log"
+    },
+    {
+      "proof": "xml-output-focused",
+      "exit_code": 0,
+      "meaning": "Complete mixed XML/name-only/finite response and persisted markup checks",
+      "reference": ".private/freightctl-f405-xml-output-focused.log"
+    },
+    {
+      "proof": "input-schema-final",
+      "exit_code": 0,
+      "meaning": "Exact conditions and original complete schema/security assertions",
+      "reference": ".private/freightctl-f405-input-schema-final.log"
+    },
+    {
+      "proof": "focused-final",
+      "exit_code": 0,
+      "meaning": "Parser/atomic snapshot/response/audit/historical meaning and mutation fuzz seeds",
+      "reference": ".private/freightctl-f405-focused-final.log"
+    },
+    {
+      "proof": "dav-guards-final",
+      "exit_code": 0,
+      "meaning": "Affected DAV guards and exact published schemas",
+      "reference": ".private/freightctl-f405-dav-guards-final.log"
+    },
+    {
+      "proof": "native-final-compile",
+      "exit_code": 0,
+      "meaning": "Compile only;no PostgreSQL,Chrome or native peer execution",
+      "reference": ".private/freightctl-f405-native-final-compile.log"
+    },
+    {
+      "proof": "vet-final",
+      "exit_code": 0,
+      "meaning": "Affected packages including all native integration and stock-client code",
+      "reference": ".private/freightctl-f405-vet-final.log"
+    },
+    {
+      "proof": "architecture",
+      "exit_code": 0,
+      "meaning": "Includes XML package no host/process/network boundary;URI parsing only",
+      "reference": ".private/freightctl-f405-architecture.log"
+    },
+    {
+      "proof": "format",
+      "exit_code": 0,
+      "meaning": "22 changed/new Go files formatted",
+      "reference": ".private/freightctl-f405-format.log"
+    },
+    {
+      "proof": "workflow-lint",
+      "exit_code": 0,
+      "meaning": "Adds native property mutation fuzz target;all original fuzz commands retained",
+      "reference": ".private/freightctl-f405-actionlint.log"
+    },
+    {
+      "proof": "metadata-summary",
+      "exit_code": 0,
+      "meaning": "Seven current63/exact migration/security evidence stand-ins",
+      "reference": ".private/freightctl-f405-metadata-summary-focused.log"
+    },
+    {
+      "proof": "retained-standins",
+      "exit_code": 0,
+      "meaning": "Five restore/security stand-ins;no local database operation",
+      "reference": ".private/freightctl-f405-retained-standins.log"
+    }
+  ],
+  "owed": [
+    "Actual original native PostgreSQL and exact raw-SQL projection/event guard outcomes",
+    "Actual API/CLI and stock-curl TLS mixed XML,replay,stale identity/revision,permissions,modes,copy/move,byte custody and zero execution effects",
+    "Fresh source63 init/replay,upgrade preservation,restore and final-source runtime/security/reproducibility results",
+    "All remaining mandatory baseline/AX and independently evidenced readiness outcomes"
+  ],
+  "source_files": [
+    {
+      "reference": ".github/workflows/native-linux.yml",
+      "sha256": "63c3019c9e7710fef74973642aa474715813b20d029ad63f1893706693031a34",
+      "bytes": 12858
+    },
+    {
+      "reference": "STATUS.md",
+      "sha256": "2cc0bf1ebaf91d4b83713ab71dbe648f058b24791eaecaf187c3d8fb71bca814",
+      "bytes": 7423
+    },
+    {
+      "reference": "cmd/freightctl/exchanges_integration_test.go",
+      "sha256": "1c5b70d5eea63dd671ba5e5812e43ae9313fe427f37481812ee42520826bd1cb",
+      "bytes": 23385
+    },
+    {
+      "reference": "cmd/freightctl/namespace_properties_integration_test.go",
+      "sha256": "6d5ef184cf99940547afd0713fe9654512da5a6af1cf3c26b5500b26499a9b06",
+      "bytes": 3139
+    },
+    {
+      "reference": "docs/api/record-projection.openapi.json",
+      "sha256": "be479cee06dfdb50122401d150bd8ca3810556cedd6a7b39cb403f889309bae7",
+      "bytes": 124328
+    },
+    {
+      "reference": "docs/protocols/webdav-read-profile.md",
+      "sha256": "68bc5867dfbf3ff438e689eed70e8502803d6697f3619dc69e0a15e040900ebd",
+      "bytes": 17653
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "d562f51494c4ac6794d06ed9420e62e1ce9ab935e507be7d115dcee82b74de35",
+      "bytes": 591833
+    },
+    {
+      "reference": "internal/api/webdav.go",
+      "sha256": "9faeac4aa88af4b77502d76375692086525e1a4598b5d28a48975f58d843df04",
+      "bytes": 10479
+    },
+    {
+      "reference": "internal/api/webdav_integration_test.go",
+      "sha256": "35e081aa32eedb0adeef44d6d7d187459c4ea36a38753b40dff257a6bc6819f0",
+      "bytes": 8289
+    },
+    {
+      "reference": "internal/api/webdav_properties.go",
+      "sha256": "7ed33c1e6bf74452d6662ada81a2eb8d9c31cb60caaabd005ba92dccc23ae9f2",
+      "bytes": 4146
+    },
+    {
+      "reference": "internal/api/webdav_properties_input_test.go",
+      "sha256": "601c56b06f71fb1e6fc6ab10e7d646ee84a0203c3d3004566f016d4faaa16967",
+      "bytes": 3839
+    },
+    {
+      "reference": "internal/api/webdav_properties_integration_test.go",
+      "sha256": "df2c527f8ecde7dc2198d006c6adc9a8e5562e51fadad2c2df9ec512d92f05fb",
+      "bytes": 14238
+    },
+    {
+      "reference": "internal/api/webdav_stock_integration_test.go",
+      "sha256": "d7e848f803d15408da1f4ce635919021e4ad194ce8861452c16c7c6c62ec419e",
+      "bytes": 22683
+    },
+    {
+      "reference": "internal/architecture/architecture_test.go",
+      "sha256": "fdd95f5d29183453fc7e00ff145948b6b89a61c2052aefb4cdaa796354eb6bb5",
+      "bytes": 3076
+    },
+    {
+      "reference": "internal/custody/namespace_properties.go",
+      "sha256": "799ef474ffc2e96b5a1f274883e9db3350c17350887eecf9695ae179b0726c5a",
+      "bytes": 2927
+    },
+    {
+      "reference": "internal/namespaceprops/properties.go",
+      "sha256": "fa516beba4b3d702f2f9f012d4affc9a26fa3057ecbe0a5ef4906a4a233576ae",
+      "bytes": 2499
+    },
+    {
+      "reference": "internal/namespaceprops/properties_test.go",
+      "sha256": "03eb2a6ef0f15045e247bc4f873d1cb0e15884e2098473a06b53db8ff41be2ec",
+      "bytes": 2321
+    },
+    {
+      "reference": "internal/namespaceprops/xml.go",
+      "sha256": "3bbb98668e10cec389683facf2eca3732d508fe9b4a6b8033506992668854692",
+      "bytes": 10629
+    },
+    {
+      "reference": "internal/namespaceprops/xml_test.go",
+      "sha256": "37734d13bbe31cef345f1f4cbaadece60fdc74c263ad444a5a95de11446c0abc",
+      "bytes": 6496
+    },
+    {
+      "reference": "internal/store/063_namespace_properties.sql",
+      "sha256": "d04d36a6e7435fe3ecf9746557c67599873067225ae56d4cada4fbfaefcd0a71",
+      "bytes": 2445
+    },
+    {
+      "reference": "internal/store/namespace.go",
+      "sha256": "e6c90cdef3ec40cbde3b55b52458ecb5e0745a6625f467b39164823a58defc20",
+      "bytes": 23562
+    },
+    {
+      "reference": "internal/store/namespace_properties.go",
+      "sha256": "f286e3326b5bd6eeb0e6f6be990ff9a028afc623d1887f2145263cd175a1716c",
+      "bytes": 2510
+    },
+    {
+      "reference": "internal/store/namespace_properties_test.go",
+      "sha256": "74b83e58fb2d4c8837c331b652f30982802daae62db838aa2fd34bdfca0980e5",
+      "bytes": 1734
+    },
+    {
+      "reference": "internal/store/onboarding.go",
+      "sha256": "a569ef21ee194a790243bc4a5c9bbfa0437150170808ce36a76f067d5c6fb883",
+      "bytes": 17902
+    },
+    {
+      "reference": "internal/store/store.go",
+      "sha256": "db0db148775b6678a90d4de2c34174e5f95db7b2fd77b1bde12d6a8b4fa7ac61",
+      "bytes": 28781
+    },
+    {
+      "reference": "internal/webdav/properties.go",
+      "sha256": "9ca63e8d17a7c24eb926bf9b4f242cf3fa182dd020c1bbaaf9808571468a5596",
+      "bytes": 9306
+    },
+    {
+      "reference": "internal/webdav/property_update.go",
+      "sha256": "2e9b93cf0d4710493944a4a5a1656f42f81e73a56343884b77b78a704f63be1e",
+      "bytes": 1815
+    },
+    {
+      "reference": "internal/webdav/property_update_test.go",
+      "sha256": "1c34d73de43b6b448e03ac87c38d191894c9fa1cb2c996d49c41ac8e7da47744",
+      "bytes": 3046
+    },
+    {
+      "reference": "scripts/metadata_contract.py",
+      "sha256": "a54df6aa0caec2ad6944c57592a44e7645ea96f5727051c8341defd3731ef339",
+      "bytes": 4574
+    },
+    {
+      "reference": "scripts/test-ci-metadata-summary.py",
+      "sha256": "22f736876f711959fe72a23926dce0c57baa9efb3961816a7784abc42d304b6c",
+      "bytes": 6240
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f405-properties-input-red.log",
+      "sha256": "5c3649fdb4feeafde521422e76abdf0f6ceefd089e8f7628c9aa7d1b4a587d6c",
+      "bytes": 239
+    },
+    {
+      "reference": ".private/freightctl-f405-expanded-schema-red.log",
+      "sha256": "7417f01dfbf848ad02f583939a1f717f40a922a2be0a4b0907b82099974a5321",
+      "bytes": 250
+    },
+    {
+      "reference": ".private/freightctl-f405-audit-content-red.log",
+      "sha256": "4f17af5ca2300d55078f0e23854109c4e34a69e994f9b5026cfe035e3373d378",
+      "bytes": 257
+    },
+    {
+      "reference": ".private/freightctl-f405-input-schema-focused.log",
+      "sha256": "3d87fae31547ba51365ed7e378c910c2b8b2b302f6fb93b4923a54978bdba50b",
+      "bytes": 352
+    },
+    {
+      "reference": ".private/freightctl-f405-xml-first-focused.log",
+      "sha256": "a327b97e3b4b3f63d03f40e6147def404322d201d3931a63428d8b78cc0cd81c",
+      "bytes": 66
+    },
+    {
+      "reference": ".private/freightctl-f405-xml-output-focused.log",
+      "sha256": "20ece73cbf2e35a1cff055ae6f18435c25f77547990cc27dde2d7870e321cd7f",
+      "bytes": 124
+    },
+    {
+      "reference": ".private/freightctl-f405-input-schema-final.log",
+      "sha256": "f95a7a5940841fda4daecf99d696c4dfe4f305d8b4208d453068b18dab4cd12e",
+      "bytes": 55
+    },
+    {
+      "reference": ".private/freightctl-f405-focused-final.log",
+      "sha256": "c47edcac46d34c19d50c282fae3516a3b928d78aaf7d7d0a870c5044e610b1b3",
+      "bytes": 181
+    },
+    {
+      "reference": ".private/freightctl-f405-dav-guards-final.log",
+      "sha256": "3e8578c3bae56c1202619f1a9e55b5ab4be8fff5dc7b12c55ae2422adeb6373e",
+      "bytes": 55
+    },
+    {
+      "reference": ".private/freightctl-f405-native-final-compile.log",
+      "sha256": "ed72a8f228412efde7645fcaecfc4fb8d9fa408fff9ab9df87bebc3d21f396d1",
+      "bytes": 300
+    },
+    {
+      "reference": ".private/freightctl-f405-vet-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f405-architecture.log",
+      "sha256": "8efd4e156ec52117905a07b79183cfe4fc0f2cf8f9897c25cd840daadc185616",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f405-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f405-actionlint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f405-metadata-summary-focused.log",
+      "sha256": "9a711de0c0ca34728856fcbf974e22f88f9e8d1cc32eef51dee1c66fab3c9d35",
+      "bytes": 105
+    },
+    {
+      "reference": ".private/freightctl-f405-retained-standins.log",
+      "sha256": "1f11b6e880045ee35de832b81b45d06257342e13b5c79bbf0034379d4ca220b9",
+      "bytes": 103
+    },
+    {
+      "reference": ".private/freightctl-f405-schema-constraints.json",
+      "sha256": "cf0757accbabad85bd9fdd3618177db4577f6086b9da5a1b92bda6f6a0a8ebfb",
+      "bytes": 309
+    }
+  ],
+  "safety": {
+    "local_inference": false,
+    "local_postgresql_or_chrome": false,
+    "local_scanner": false,
+    "resource_allowances_changed": false,
+    "github_capacity_caps_added": false,
+    "publication_or_deployment": false,
+    "original_runtime_runs_cancelled_or_rerun": false
+  }
+}

@@ -13,7 +13,7 @@ mount root,path modes and current intake policy decide what can be discovered
 or read. A URL never refers to a host filesystem path.
 
 - `OPTIONS` authenticates and checks read/list access to the addressed entry.
-  It returns `Allow: OPTIONS, PROPFIND, GET, HEAD, PUT, MKCOL, MOVE, DELETE, COPY`
+  It returns `Allow: OPTIONS, PROPFIND, GET, HEAD, PUT, MKCOL, PROPPATCH, MOVE, DELETE, COPY`
   and no DAV compliance class. Refused collection mutation responses omit
   the file-only MOVE, DELETE and COPY operations from their Allow field.
 - `PROPFIND` supports explicit Depth0 or1. Missing Depth means infinity and is
@@ -158,6 +158,52 @@ or read. A URL never refers to a host filesystem path.
   The shared namespace API/CLI also refuses a copy whose canonical source and
   destination are the same. Neither create nor replace may recreate its own
   source mapping;the store independently enforces that boundary.
+- `PROPPATCH` changes inert user properties on a file or collection. Discover
+  the live `urn:freightctl:namespace` properties `entry-id` and `revision` with
+  PROPFIND,then send their exact `UUID:positive-revision` pair as
+  `X-Freightctl-Namespace-Revision`,the original Idempotency-Key and UTF8 XML.
+  This partial profile uses an explicit namespace condition. A byte ETag cannot
+  detect a concurrent metadata edit or a removed/recreated directory;ordinary
+  If-Match and DAV lock conditions are refused rather than silently ignored.
+  Missing namespace conditions return428,malformed conditions400,and stale or
+  replaced resources412. Synthetic root properties are not mutable.
+  The request supports ordered DAV set/remove operations. Nested/mixed XML,
+  namespace prefixes (including QName text),xml:lang/space and effective xml:base
+  survive as data. DTDs,entities,processing instructions inside values,unbound
+  prefixes,duplicate attributes and extra wrapper controls are refused. No URI
+  is fetched. The whole request is at most16KiB,32 changes,512 tokens and12 value
+  levels;expanded typed intents and final snapshots are at most32KiB with32
+  stored names. These are request-processing bounds,not GitHub build ceilings.
+  Protected DAV and urn:freightctl namespaces return403 and change nothing.
+  Remove of an absent name succeeds;repeated names execute in document order.
+  Current read/write/manage_paths rights,actual path read/write modes (plus
+  collection traversal),resource identity and file availability are required
+  under the namespace lock,including before recovering an original receipt.
+  The same typed namespace API and CLI use operation:properties,
+  expected_entry_id,expected_revision and ordered property_changes objects
+  containing operation:set/remove and standalone property_xml strings. Optional
+  fields are omitted from historical commands so their request hashes stay the
+  same. Prefix spelling and XML text are part of the explicit retry meaning;
+  semantically equivalent reserialization is not promised to share a key.
+  Commit one PathAttrsChanged event,one namespace revision and one actor-private
+  command receipt in one PostgreSQL transaction. Source schema63 adds only a
+  column and supplementary guard;the original transition guard and forced RLS
+  policies remain. Unjournaled or mismatched property edits are refused.
+  Fresh207 names each successful property and returns the committed namespace
+  revision/event headers,without a byte ETag. Original-key200 returns only its
+  historical JSON receipt and never re-applies values or asserts current state.
+  Changed request meanings cannot reuse a key. Stat/list/command receipts and
+  model context omit values;ordinary audit feeds and signed snapshots replace
+  content-bearing event payloads with their source hash. Receiving a property
+  grants no forwarding,approval or execution authority.
+  Authorized allprop,named prop and propname discovery include stored values or
+  names as requested. COPY clones a private snapshot into the distinct new
+  mapping;MOVE retains the snapshot and DELETE retains its tombstone history.
+  Normal file replacement retains mapping properties. XML responses have
+  no-store,nosniff and a restrictive CSP sandbox. The complete response is
+  bounded to8MiB while being built;overflow returns507 before207 headers.
+  Native API/CLI/stock-curl PostgreSQL and TLS outcomes remain owed for this
+  extension;local parser/static checks do not establish RFC4918 compliance.
 - Other mutating DAV methods return405 after authenticating the credential.
   Discovery and unknown properties grant no forwarding or execution authority.
   Requests with traversal,encoded separators,control names,noncanonical Unicode

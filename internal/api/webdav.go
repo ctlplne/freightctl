@@ -14,7 +14,7 @@ import (
 	"github.com/ctlplne/freightctl/internal/webdav"
 )
 
-const davDirectoryMethods = "OPTIONS, PROPFIND, GET, HEAD, PUT, MKCOL"
+const davDirectoryMethods = "OPTIONS, PROPFIND, GET, HEAD, PUT, MKCOL, PROPPATCH"
 const davReadMethods = davDirectoryMethods + ", MOVE, DELETE, COPY"
 
 // Validate before ServeMux can clean a path into a different namespace name or
@@ -48,6 +48,9 @@ func prepareDAVRequest(w http.ResponseWriter, r *http.Request) bool {
 	}
 	if r.Method == http.MethodDelete {
 		return davDeleteInput(w, r)
+	}
+	if r.Method == "PROPPATCH" {
+		return davPropertyMutationInput(w, r)
 	}
 	return true
 }
@@ -116,6 +119,10 @@ func (s *Server) davRead(w http.ResponseWriter, r *http.Request) {
 	virtual, err := webdav.VirtualPath(r.URL.EscapedPath(), base)
 	if err != nil {
 		fail(w, 400, "invalid_dav_virtual_path")
+		return
+	}
+	if r.Method == "PROPPATCH" {
+		s.davPropertyMutation(w, r, identity, virtual, base)
 		return
 	}
 	if r.Method == "MOVE" {
@@ -286,18 +293,23 @@ func (s *Server) davRead(w http.ResponseWriter, r *http.Request) {
 	}
 	resources := make([]webdav.Resource, 0, len(properties))
 	for _, p := range properties {
-		resource := webdav.Resource{Path: p.Entry.Path, Directory: p.Entry.Kind == "dir", Modified: p.Entry.Modified, Size: p.Entry.Size}
+		resource := webdav.Resource{Path: p.Entry.Path, Directory: p.Entry.Kind == "dir", Modified: p.Entry.Modified, Size: p.Entry.Size, EntryID: p.Entry.ID, Revision: p.Entry.Revision, Properties: p.Properties}
 		if p.File != nil {
 			resource.ETag = artifactRevisionETag(p.File)
 		}
 		resources = append(resources, resource)
 	}
 	body, err := webdav.Multistatus(base, resources, selection)
+	if errors.Is(err, webdav.ErrResponseLimit) {
+		fail(w, 507, "dav_properties_require_smaller_scope")
+		return
+	}
 	if err != nil {
 		fail(w, 503, "dav_properties_unavailable")
 		return
 	}
 	w.Header().Set("Content-Type", "application/xml; charset=utf-8")
+	w.Header().Set("Content-Security-Policy", "default-src 'none'; sandbox")
 	w.Header().Set("Content-Length", strconv.Itoa(len(body)))
 	w.WriteHeader(207)
 	_, _ = w.Write(body)

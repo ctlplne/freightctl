@@ -887,6 +887,31 @@
                                       "null",
                                       "string"
                                     ]
+                                  },
+                                  "expected_entry_id": {
+                                    "type": "string"
+                                  },
+                                  "property_changes": {
+                                    "type": [
+                                      "null",
+                                      "array"
+                                    ],
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "operation": {
+                                          "type": "string"
+                                        },
+                                        "property_xml": {
+                                          "type": "string"
+                                        }
+                                      },
+                                      "required": [
+                                        "operation",
+                                        "property_xml"
+                                      ],
+                                      "additionalProperties": false
+                                    }
                                   }
                                 },
                                 "required": [
@@ -1071,6 +1096,31 @@
                               "null",
                               "string"
                             ]
+                          },
+                          "expected_entry_id": {
+                            "type": "string"
+                          },
+                          "property_changes": {
+                            "type": [
+                              "null",
+                              "array"
+                            ],
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "operation": {
+                                  "type": "string"
+                                },
+                                "property_xml": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "operation",
+                                "property_xml"
+                              ],
+                              "additionalProperties": false
+                            }
                           }
                         },
                         "required": [
@@ -2139,6 +2189,31 @@
                                       "null",
                                       "string"
                                     ]
+                                  },
+                                  "expected_entry_id": {
+                                    "type": "string"
+                                  },
+                                  "property_changes": {
+                                    "type": [
+                                      "null",
+                                      "array"
+                                    ],
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "operation": {
+                                          "type": "string"
+                                        },
+                                        "property_xml": {
+                                          "type": "string"
+                                        }
+                                      },
+                                      "required": [
+                                        "operation",
+                                        "property_xml"
+                                      ],
+                                      "additionalProperties": false
+                                    }
                                   }
                                 },
                                 "required": [
@@ -2323,6 +2398,31 @@
                               "null",
                               "string"
                             ]
+                          },
+                          "expected_entry_id": {
+                            "type": "string"
+                          },
+                          "property_changes": {
+                            "type": [
+                              "null",
+                              "array"
+                            ],
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "operation": {
+                                  "type": "string"
+                                },
+                                "property_xml": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "operation",
+                                "property_xml"
+                              ],
+                              "additionalProperties": false
+                            }
                           }
                         },
                         "required": [
@@ -3049,6 +3149,31 @@
                                   "null",
                                   "string"
                                 ]
+                              },
+                              "expected_entry_id": {
+                                "type": "string"
+                              },
+                              "property_changes": {
+                                "type": [
+                                  "null",
+                                  "array"
+                                ],
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "operation": {
+                                      "type": "string"
+                                    },
+                                    "property_xml": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "operation",
+                                    "property_xml"
+                                  ],
+                                  "additionalProperties": false
+                                }
                               }
                             },
                             "required": [
@@ -3233,6 +3358,31 @@
                           "null",
                           "string"
                         ]
+                      },
+                      "expected_entry_id": {
+                        "type": "string"
+                      },
+                      "property_changes": {
+                        "type": [
+                          "null",
+                          "array"
+                        ],
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "operation": {
+                              "type": "string"
+                            },
+                            "property_xml": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "operation",
+                            "property_xml"
+                          ],
+                          "additionalProperties": false
+                        }
                       }
                     },
                     "required": [

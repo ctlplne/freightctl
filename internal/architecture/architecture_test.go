@@ -34,6 +34,9 @@ func TestCoreImportBoundaries(t *testing.T) {
 				if err != nil {
 					return err
 				}
+				if strings.HasPrefix(rel, "internal/namespaceprops/") && !strings.HasSuffix(rel, "_test.go") && (name == "os" || strings.HasPrefix(name, "os/") || name == "net" || strings.HasPrefix(name, "net/") && name != "net/url" || name == "path/filepath") {
+					t.Errorf("%s may validate supplied XML and inert URI references,not access host files,processes or networks", rel)
+				}
 				if strings.HasPrefix(rel, "internal/checks/") && !strings.HasSuffix(rel, "_test.go") && (name == "os/exec" || name == "net" || strings.HasPrefix(name, "net/")) {
 					t.Errorf("%s may not execute processes or contact a network while parsing payloads", rel)
 				}

@@ -95,7 +95,18 @@ F402 refuses same-resource COPY in the shared API/CLI service and store.
 Focused early-control red/green and static checks pass;valid-scope native proof
 that mapping,bytes and receipts remain unchanged is prepared and owed.
 
-Next:continue independent implementation while these original CI runs finish.
+F405 adds atomic namespace XML properties with exact entry/revision conditions,
+ordinary read/write/manage_paths authority and current path/intake checks. Mixed
+XML stays inert;protected properties fail atomically. Copy/move/replacement
+preserve the intended snapshots. Audit feeds redact content with its source hash.
+Focused API/schema/audit red-green and affected static checks pass. Native
+PostgreSQL/API/CLI/stock curl and schema63/restore proof remain owed;retained
+local schema35 stays unchanged. The partial DAV profile still makes no full
+compliance claim.
+
+Next:continue independent implementation. All16 original781dfdc workflows are
+terminal (15success,receive failure);preserve their exact job/security metadata.
+
 Push the next verified owner-only batch only after all required originals are terminal. Repair original
 failures and finish every mandatory final-source baseline/AX gate. F026 stays
 manual/owner-deferred. Local inference stays off and local resource limits stay

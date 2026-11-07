@@ -9,6 +9,7 @@ import (
 	"time"
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
+	"github.com/ctlplne/freightctl/internal/namespaceprops"
 	"github.com/ctlplne/freightctl/internal/vpath"
 	"github.com/jackc/pgx/v5"
 )
@@ -109,6 +110,10 @@ func (t *Transaction) ParentWritable(ctx context.Context, actual string) error {
 	return t.EntryMode(e, 3)
 }
 func (t *Transaction) SaveEntry(ctx context.Context, old *PathEntry, next *PathEntry, kind, commandID string) error {
+	return t.saveEntryProperties(ctx, old, next, kind, commandID, nil)
+}
+
+func (t *Transaction) saveEntryProperties(ctx context.Context, old *PathEntry, next *PathEntry, kind, commandID string, properties map[string]string) error {
 	p, err := vpath.Canonical(next.Path)
 	if err != nil || p != next.Path || p == "/" {
 		return vpath.ErrPath
@@ -119,16 +124,28 @@ func (t *Transaction) SaveEntry(ctx context.Context, old *PathEntry, next *PathE
 	if old != nil {
 		previous = old.Revision
 	}
-	id, err := t.Append(ctx, kind, next.ID, map[string]any{"path": next.Path, "kind": next.Kind, "file_id": next.FileID, "owner_actor_id": next.Owner, "mode": next.Mode, "revision": next.Revision, "previous_revision": previous, "deleted": next.Deleted, "modified_unix_us": next.Modified.UnixMicro(), "command_id": commandID, "protocol_session_id": t.Scope.SessionID})
+	payload := map[string]any{"path": next.Path, "kind": next.Kind, "file_id": next.FileID, "owner_actor_id": next.Owner, "mode": next.Mode, "revision": next.Revision, "previous_revision": previous, "deleted": next.Deleted, "modified_unix_us": next.Modified.UnixMicro(), "command_id": commandID, "protocol_session_id": t.Scope.SessionID}
+	var encoded []byte
+	if properties != nil {
+		if err = propertyError(namespaceprops.Validate(properties)); err != nil {
+			return err
+		}
+		encoded, err = json.Marshal(properties)
+		if err != nil {
+			return err
+		}
+		payload["namespace_properties"] = properties
+	}
+	id, err := t.Append(ctx, kind, next.ID, payload)
 	if err != nil {
 		return err
 	}
 	next.EventID = id
 	if old == nil {
-		_, err = t.Tx.Exec(ctx, `INSERT INTO namespace_entries(tenant_id,partner_id,entry_id,path,parent_path,kind,file_id,owner_actor_id,mode,modified_at,revision,deleted,changed_event_id) VALUES($1,$2,$3,$4,$5,$6,nullif($7,'')::uuid,$8,$9,$10,$11,$12,$13)`, t.Scope.Tenant, t.Scope.Partner, next.ID, next.Path, next.Parent, next.Kind, next.FileID, next.Owner, next.Mode, next.Modified, next.Revision, next.Deleted, next.EventID)
+		_, err = t.Tx.Exec(ctx, `INSERT INTO namespace_entries(tenant_id,partner_id,entry_id,path,parent_path,kind,file_id,owner_actor_id,mode,modified_at,revision,deleted,changed_event_id,namespace_properties) VALUES($1,$2,$3,$4,$5,$6,nullif($7,'')::uuid,$8,$9,$10,$11,$12,$13,coalesce($14::jsonb,'{}'::jsonb))`, t.Scope.Tenant, t.Scope.Partner, next.ID, next.Path, next.Parent, next.Kind, next.FileID, next.Owner, next.Mode, next.Modified, next.Revision, next.Deleted, next.EventID, encoded)
 		return err
 	}
-	tag, err := t.Tx.Exec(ctx, `UPDATE namespace_entries SET path=$1,parent_path=$2,kind=$3,file_id=nullif($4,'')::uuid,mode=$5,modified_at=$6,revision=$7,deleted=$8,changed_event_id=$9 WHERE entry_id=$10 AND revision=$11`, next.Path, next.Parent, next.Kind, next.FileID, next.Mode, next.Modified, next.Revision, next.Deleted, next.EventID, old.ID, old.Revision)
+	tag, err := t.Tx.Exec(ctx, `UPDATE namespace_entries SET path=$1,parent_path=$2,kind=$3,file_id=nullif($4,'')::uuid,mode=$5,modified_at=$6,revision=$7,deleted=$8,changed_event_id=$9,namespace_properties=coalesce($12::jsonb,namespace_properties) WHERE entry_id=$10 AND revision=$11`, next.Path, next.Parent, next.Kind, next.FileID, next.Mode, next.Modified, next.Revision, next.Deleted, next.EventID, old.ID, old.Revision, encoded)
 	if err != nil {
 		return err
 	}
@@ -139,16 +156,18 @@ func (t *Transaction) SaveEntry(ctx context.Context, old *PathEntry, next *PathE
 }
 
 type PathCommand struct {
-	Operation        string     `json:"operation"`
-	Path             string     `json:"path"`
-	Target           string     `json:"target,omitempty"`
-	FileID           string     `json:"file_id,omitempty"`
-	ExpectedRevision *int64     `json:"expected_revision,omitempty"`
-	ExpectedFileID   string     `json:"expected_file_id,omitempty"`
-	Replace          bool       `json:"replace,omitempty"`
-	TargetRevision   *int64     `json:"target_revision,omitempty"`
-	Mode             *uint32    `json:"mode,omitempty"`
-	Modified         *time.Time `json:"modified_at,omitempty"`
+	Operation        string                  `json:"operation"`
+	Path             string                  `json:"path"`
+	Target           string                  `json:"target,omitempty"`
+	FileID           string                  `json:"file_id,omitempty"`
+	ExpectedRevision *int64                  `json:"expected_revision,omitempty"`
+	ExpectedFileID   string                  `json:"expected_file_id,omitempty"`
+	Replace          bool                    `json:"replace,omitempty"`
+	TargetRevision   *int64                  `json:"target_revision,omitempty"`
+	Mode             *uint32                 `json:"mode,omitempty"`
+	Modified         *time.Time              `json:"modified_at,omitempty"`
+	ExpectedEntryID  string                  `json:"expected_entry_id,omitempty"`
+	PropertyChanges  []namespaceprops.Change `json:"property_changes,omitempty"`
 }
 type PathResult struct {
 	Entry    PathEntry `json:"entry"`
@@ -164,13 +183,23 @@ func (t *Transaction) ApplyPathCommand(ctx context.Context, key string, command 
 	switch command.Operation {
 	case "mkdir", "publish", "copy":
 		permission = "write"
-	case "rename", "remove", "rmdir", "setstat":
+	case "rename", "remove", "rmdir", "setstat", "properties":
 		permission = "manage_paths"
 	default:
 		return nil, ErrState
 	}
 	if err := t.Require(permission); err != nil {
 		return nil, err
+	}
+	if command.Operation == "properties" {
+		if !ValidID(command.ExpectedEntryID) || command.ExpectedRevision == nil || *command.ExpectedRevision < 1 || command.Target != "" || command.FileID != "" || command.ExpectedFileID != "" || command.Replace || command.TargetRevision != nil || command.Mode != nil || command.Modified != nil {
+			return nil, ErrState
+		}
+		if err := propertyError(namespaceprops.ValidateChanges(command.PropertyChanges)); err != nil {
+			return nil, err
+		}
+	} else if command.ExpectedEntryID != "" || len(command.PropertyChanges) != 0 {
+		return nil, ErrState
 	}
 	if command.ExpectedFileID != "" {
 		if command.Operation != "publish" || !command.Replace || command.ExpectedRevision == nil || !ValidID(command.ExpectedFileID) {
@@ -236,6 +265,13 @@ func (t *Transaction) ApplyPathCommand(ctx context.Context, key string, command 
 	meaning := secure.Digest(meaningBytes)
 	if err = t.NamespaceLock(ctx); err != nil {
 		return nil, err
+	}
+	if command.Operation == "properties" {
+		// Recovering a private old receipt still needs current path authority,
+		// the same resource identity and current file availability.
+		if _, err = t.propertyTarget(ctx, actual, command); err != nil {
+			return nil, err
+		}
 	}
 	var priorHash string
 	var prior []byte
@@ -440,7 +476,26 @@ func (t *Transaction) ApplyPathCommand(ctx context.Context, key string, command 
 				return nil, ErrLimit
 			}
 			next = PathEntry{ID: secure.NewID(), Path: target, Owner: t.Actor, Revision: 1, Modified: time.Now().UTC(), Kind: "file", Mode: 0640, FileID: old.FileID, Size: old.Size}
-			if err = t.SaveEntry(ctx, nil, &next, "PathPublished", commandID); err != nil {
+			properties, err := t.EntryProperties(ctx, old)
+			if err != nil {
+				return nil, err
+			}
+			if len(properties) == 0 {
+				properties = nil
+			}
+			if err = t.saveEntryProperties(ctx, nil, &next, "PathPublished", commandID, properties); err != nil {
+				return nil, err
+			}
+		case "properties":
+			properties, err := t.EntryProperties(ctx, old)
+			if err != nil {
+				return nil, err
+			}
+			properties, err = namespaceprops.Apply(properties, command.PropertyChanges)
+			if err != nil {
+				return nil, propertyError(err)
+			}
+			if err = t.saveEntryProperties(ctx, old, &next, "PathAttrsChanged", commandID, properties); err != nil {
 				return nil, err
 			}
 		case "setstat":

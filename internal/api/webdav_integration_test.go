@@ -75,7 +75,10 @@ func TestWebDAVReadsUsePublishedNamespaceModesIntakeAndCurrentAuthority(t *testi
 	if response.Header.Get("Allow") != davReadMethods || response.Header.Get("DAV") != "" {
 		t.Fatal("partial DAV profile advertised unimplemented compliance or methods")
 	}
-	for _, method := range []string{"PROPPATCH", "LOCK", "UNLOCK"} {
+	// Property mutation now has a finite XML contract;malformed content must
+	// fail before any service access. Locks remain unsupported and unadvertised.
+	exchangeAPIRequest(t, server, "PROPPATCH", fileURL, nil, readerHeaders, []byte("untrusted write"), 400)
+	for _, method := range []string{"LOCK", "UNLOCK"} {
 		exchangeAPIRequest(t, server, method, fileURL, nil, readerHeaders, []byte("untrusted write"), 405)
 	}
 	readerHeaders["Depth"] = "infinity"
