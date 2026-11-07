@@ -8,11 +8,18 @@ Exact original failures,owner decisions and remaining work are preserved in
 [artifact-exchange.json](docs/qualification/artifact-exchange.json) and the
 linked safe manifests. Raw private proof remains outside Git.
 
-Current pushed candidate: `a6c4aacbae8bc3d38eaebd45f20d0fe5ba7ee3fe`.
-[F407](docs/qualification/evidence/F407-native-push.json) binds three verified
-owner-only commits and16 first original workflows. Enabled pre-push Gitleaks
-reports no leaks. F405 property/schema63 runtime,security and restore outcomes
-remain owed;local compilation is not native qualification.
+Current terminal pushed candidate: `a6c4aacbae8bc3d38eaebd45f20d0fe5ba7ee3fe`.
+[F410](docs/qualification/evidence/F410-native-terminal.json) binds all16 original
+workflows/35 terminal jobs:33pass,two browser journey failures. Named source/history,
+native source/dependency,fuzz and peer-image security steps pass. Both Linux
+PostgreSQL/image,restore,Windows/macOS,HTTPS/stock curl and JSON browser jobs
+succeed in completion metadata at schema63. F405 is included;local F408/F409
+are not. Receive remains red;new live browser/FTPS policy/credential failure is
+also unqualified. Limited security classification identifies no actionable
+assertion or cause;its original decoded log is retained privately. This does
+not establish safety. Both failures and detailed final-source proof remain
+mandatory. F407 preserves the owner-only push and enabled Gitleaks evidence.
+F398 untriggered x86 receiver SIGSYS profiles remain red;F026 stays held.
 
 Previous terminal candidate: `781dfdc94f7e73595979f2c77a17bc80cd914e12`.
 [F406](docs/qualification/evidence/F406-native-terminal.json) binds all16 original
@@ -128,8 +135,8 @@ survive;one private receipt covers every member event. Existing processing and
 quota bounds stay enforced. Focused red-green/static checks pass;actual native
 API/CLI/curl/rollback/history proof is prepared and owed.
 
-Next:continue independent mandatory implementation while the16 original
-a6c4aac workflows finish;preserve their exact job/security metadata.
+Next:push the next verified owner-only batch after preserving these terminal
+originals,then continue independent mandatory implementation while CI runs.
 
 Push the next verified owner-only batch only after all required originals are terminal. Repair original
 failures and finish every mandatory final-source baseline/AX gate. F026 stays
