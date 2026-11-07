@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Api } from "./api";
 import type { Session } from "./types";
-import type { Occurrence } from "./schedules-types";
+import type { Occurrence, ScheduleCollection } from "./schedules-types";
 import { operationKey } from "./crypto";
 import { ApprovalConfirm } from "./onboarding-approvals";
 import {
@@ -23,6 +23,31 @@ type Pending = {
   view: ArrivalView;
   key: string;
 };
+export function ScheduledArrivalSource({ c }: { c: ScheduleCollection }) {
+  return (
+    <p>
+      {c.source_connection.local ? (
+        <>
+          Read-only local source <code>{c.source_connection.id}</code>. Reviewed
+          folder identity{" "}
+          <code>{c.source_connection.local.root_fingerprint}</code>; protected
+          configuration{" "}
+          <code>{c.source_connection.local.configuration_sha256}</code>.
+          Receiving these files grants no forwarding or execution authority.
+        </>
+      ) : (
+        <>
+          Read-only source <code>{c.source_connection.address}</code>, folder{" "}
+          <code>{c.source_connection.directory}</code>, pinned host{" "}
+          <code>{c.source_connection.host_fingerprint}</code>.
+        </>
+      )}{" "}
+      Local target <code>{c.source.target_directory}</code>.{" "}
+      {c.source.max_files} files, at most {c.source.max_file_bytes} bytes each
+      and {c.source.max_total_bytes} bytes in total.
+    </p>
+  );
+}
 export function ScheduleArrival({
   api,
   session,
@@ -118,14 +143,7 @@ export function ScheduleArrival({
         collection and sending cutoff{" "}
         <time dateTime={b.deadline_at}>{b.deadline_at}</time>.
       </p>
-      <p>
-        Read-only source <code>{c.source_connection.address}</code>, folder{" "}
-        <code>{c.source_connection.directory}</code>, pinned host{" "}
-        <code>{c.source_connection.host_fingerprint}</code>. Local target{" "}
-        <code>{c.source.target_directory}</code>. {c.source.max_files} files, at
-        most {c.source.max_file_bytes} bytes each and {c.source.max_total_bytes}{" "}
-        bytes in total.
-      </p>
+      <ScheduledArrivalSource c={c} />
       <p>
         Verified arrival: {view.arrival_timeliness.replaceAll("_", " ")}.{" "}
         {a.observed_at && <time dateTime={a.observed_at}>{a.observed_at}</time>}{" "}

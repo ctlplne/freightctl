@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "id": "F323",
+  "observed_at": "2026-11-07",
+  "base_candidate": "d3667a2c2d90790dd2cdade7622ae07a5ae2cd22",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F323 fixes the selected local-calendar arrival review:show the exact registered source ID,reviewed folder fingerprint and protected configuration fingerprint instead of empty remote host fields. Static real React rendering first fails the missing-root assertion,then passes;18 affected local/legacy arrival/schedule contracts and final type/build/exact-assets/format/architecture checks pass. Add a mandatory native GitHub Chrome/PostgreSQL local-calendar journey:read-only source fields,exact preview,real draft/tick/probe/admit/work commit-response loss and same-key replay,separate activation,reload and independent Go custody/cardinality observer. Collector explicitly lacks deliver permission;require one UTC occurrence,one manifest probe,one captured file,one byte-transfer attempt,zero workflow runs/intents,unchanged producer bytes,zero external egress and seven accessibility audits. Native journey compiles only locally and is added to the original served CI regex;all actual native runtime outcomes remain owed.",
+  "red": {
+    "proof": ".private/freightctl-f323-arrival-review-red.log",
+    "observation": "Actual React static selected-arrival source rendering lacks the exact local root fingerprint;assertion fails."
+  },
+  "green": [
+    "Actual static React local arrival displays exact registered ID,root/configuration fingerprints,no blank remote identity and explicit no-forwarding/no-execution meaning.",
+    "All18 affected local/legacy arrival/schedule contract methods pass;final TypeScript,build/exact assets,format,architecture,workflow lint,Go vet and safe diagnostic tests observed terminal exit0.",
+    "New native Chrome/PostgreSQL journey compiles only;this is not runtime qualification."
+  ],
+  "native_profile": {
+    "test": "TestLocalCalendarNativeBrowserExactManifestCaptureAndOriginalKeyRecovery",
+    "workflow": ".github/workflows/json-intake.yml",
+    "state": "Prepared and compiled;actual original execution owed",
+    "requirements": [
+      "Actual native Linux x86 Chrome with sandbox and fixture-specific TLS trust;no model or scanner.",
+      "Current account has no deliver permission before and after capture.",
+      "Exact read-only local source and UTC due manifest in approved calendar;separate activation.",
+      "Actual server commits then original response deliberately lost for draft,tick,probe,admit,work;each same-key/body retry receives original replay receipt.",
+      "Independent Go observer:one occurrence/job/FileAccepted,one probe/worker attempt/fence,exact source/UTC frozen binding,independent byte/hash readback,zero delivery intents/workflow runs,unchanged producer files.",
+      "Seven actual accessibility audits,zero runtime errors/egress,exact Node26.13.0/axe4.14.0 and actual Chrome version."
+    ]
+  },
+  "source_files": [
+    {
+      "reference": ".github/workflows/json-intake.yml",
+      "sha256": "91fab4fba395199bdd2bb206ce4a592e2d7d46a877392aafe19ef3723a9051ce",
+      "bytes": 7235
+    },
+    {
+      "reference": "web/src/schedule-arrivals.tsx",
+      "sha256": "309f835c50c1c6861894d5a2a1e74394192424103a1d8accc21d8ed7ac53803f",
+      "bytes": 9878
+    },
+    {
+      "reference": "web/src/schedules.tsx",
+      "sha256": "80c1b83a9ac21ebac8b8d9ff21e69aa5ad79c9ea68683d9a0ac6b506a1987ba3",
+      "bytes": 47271
+    },
+    {
+      "reference": "web/tests/local-calendar-arrival-review.test.mjs",
+      "sha256": "2aeabaa30c368bdb65d8caa752d4c20c106f0075e22dd175de339a8dec4be5d5",
+      "bytes": 1304
+    },
+    {
+      "reference": "internal/api/local_calendar_browser_integration_test.go",
+      "sha256": "a678ef2c3612ae0ebf74827d5aa015570eaad7a348ce225cdec4afe548eb0284",
+      "bytes": 11705
+    },
+    {
+      "reference": "internal/api/browser_failure_trace_integration_test.go",
+      "sha256": "e976c618652638334a932d78f6576b0254a5f9d94c11e8c7d2b454e1547c322e",
+      "bytes": 5814
+    },
+    {
+      "reference": "scripts/local-calendar-browser.mjs",
+      "sha256": "4a40c76ed9d1a9721706e837cfc7e813ebc6b0795e7bf3377509a7cdffa29f2b",
+      "bytes": 14462
+    },
+    {
+      "reference": "internal/browser/assets/app.js",
+      "sha256": "5a60147b633f6b7c5f44288987a1d7c030cbc6e3eb7f6b92bb9172d368d1f5b0",
+      "bytes": 906517
+    },
+    {
+      "reference": "internal/browser/assets/manifest.json",
+      "sha256": "d09e87ecd88714588b10d7d07b06808f816952e517a3a03e7e890cab283ebe18",
+      "bytes": 13977
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "38b582c43a644de30f9609978d5e3d105de5f7c837b1f6023f5aad66feed0735",
+      "bytes": 423221
+    },
+    {
+      "reference": "STATUS.md",
+      "sha256": "846c95ef22c349fdf1ee4eca58eb854d3fe0f04b74fa51352f8a8a7a6ac8b619",
+      "bytes": 11608
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f323-arrival-review-red.log",
+      "sha256": "666afef18515e84b8542ef60e9d10a08b36dd5f174390607eb5daf4e17e2c2a4",
+      "bytes": 1131
+    },
+    {
+      "reference": ".private/freightctl-f323-frontend-green.log",
+      "sha256": "e172da878fb41b7979341d45d59082ea4f499cebff23a7aa60e4bab13fbba291",
+      "bytes": 2164
+    },
+    {
+      "reference": ".private/freightctl-f323-typecheck.log",
+      "sha256": "17e00418398dd65e49bed86df28efee896dcae70d7e6258050a2746181f558d5",
+      "bytes": 54
+    },
+    {
+      "reference": ".private/freightctl-f323-build.log",
+      "sha256": "6919c980232ffff964def23becf069aab32aaa7ce3955006d3f0a11c64263407",
+      "bytes": 232
+    },
+    {
+      "reference": ".private/freightctl-f323-exact-built.log",
+      "sha256": "e2a7f56731c216676ce25835d9a41854fdecb51190bb7f591bf72b03d75e605b",
+      "bytes": 249
+    },
+    {
+      "reference": ".private/freightctl-f323-browser-syntax.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f323-native-compile.log",
+      "sha256": "98a9ecf4cc7c98321348f43831307e3feea041215d483d191a2b11ac254e6593",
+      "bytes": 73
+    },
+    {
+      "reference": ".private/freightctl-f323-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f323-safe-diagnostics.log",
+      "sha256": "b58733814ce80be3f2ff3d99eb6035490e710c9afe0c11cd8f28c03cdf2f342e",
+      "bytes": 55
+    },
+    {
+      "reference": ".private/freightctl-f323-architecture.log",
+      "sha256": "22daa6863850266a16e0c2e17bbe13102f226e3439196e3611b128a353027759",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f323-workflow-lint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f323-final-format-check.log",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    },
+    {
+      "reference": ".private/freightctl-f323-final-native-compile.log",
+      "sha256": "97b379026657f71805827fdd0e5754acf75a33aef732ff4e31b381c5247ff48f",
+      "bytes": 73
+    },
+    {
+      "reference": ".private/freightctl-f323-final-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "owed": [
+    "Actual native served profile and all original source61/62 local manual/calendar SQL/CLI/API/browser/capture/revocation/forgery/restore outcomes.",
+    "Final-source security/native/independent receiver and all remaining baseline/AX gates."
+  ],
+  "resources": "Static React/frontend contracts,Go compile/vet/architecture/safe-evidence checks only,oneCPU/192MiB. No local PostgreSQL,Chrome,scanner,inference or native peer launched."
+}

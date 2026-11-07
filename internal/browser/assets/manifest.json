@@ -319,7 +319,7 @@
     },
     {
       "path": "web/src/schedule-arrivals.tsx",
-      "sha256": "30110d621349e85657f339e83595bdfda8b66689c547ef4db9b66ec5d72a755b"
+      "sha256": "309f835c50c1c6861894d5a2a1e74394192424103a1d8accc21d8ed7ac53803f"
     },
     {
       "path": "web/src/schedules-types.ts",
@@ -327,7 +327,7 @@
     },
     {
       "path": "web/src/schedules.tsx",
-      "sha256": "8fc7442ac0dc17e832f97f64e2663d781ad726b71310c417d4c2bd5f7e189515"
+      "sha256": "80c1b83a9ac21ebac8b8d9ff21e69aa5ad79c9ea68683d9a0ac6b506a1987ba3"
     },
     {
       "path": "web/src/style.css",
@@ -358,8 +358,8 @@
     },
     {
       "name": "app.js",
-      "sha256": "6a673b71c269b3852ee41f41954eaa840ba10f8d0eccca9893af6467c6e63da4",
-      "size": 905944
+      "sha256": "5a60147b633f6b7c5f44288987a1d7c030cbc6e3eb7f6b92bb9172d368d1f5b0",
+      "size": 906517
     },
     {
       "name": "app.js.LEGAL.txt",

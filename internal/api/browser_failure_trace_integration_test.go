@@ -68,7 +68,7 @@ func TestExchangeBrowserFailureUsesTheProtectedOriginalFailure(t *testing.T) {
 func safeBrowserFailureTrace(path, script string) browserFailureTrace {
 	unavailable := browserFailureTrace{Class: "unavailable", SHA256: "unavailable"}
 	switch script {
-	case "artifact-exchange-browser.mjs", "json-intake-browser.mjs", "processing-review-browser.mjs", "processing-browser.mjs", "local-collection-browser.mjs":
+	case "artifact-exchange-browser.mjs", "json-intake-browser.mjs", "processing-review-browser.mjs", "processing-browser.mjs", "local-collection-browser.mjs", "local-calendar-browser.mjs":
 	default:
 		return unavailable
 	}

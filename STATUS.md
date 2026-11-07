@@ -155,6 +155,13 @@ receipt and never replaces the original key/body. Four silent-discard reds and
 11 affected importer/review contracts pass after repair;final static checks
 pass. The original Chrome foreign-file refusal and full native replay are owed.
 
+F323 shows the reviewed local source/root/configuration on expected arrivals.
+The real static React missing-root assertion turns red to green;18 affected
+contracts and final static checks pass. A full native calendar Chrome/PG journey
+now requires exact preview,separate activation,five actual lost-response/same-key
+replays,reload and independent custody/cardinality/zero-forwarding observation.
+It is compiled and wired to CI only;actual served/native proof remains owed.
+
 FINISH repair and remaining implementation are mandatory. Next:repair original
 browser/stock/protocol failures and complete all affected original runtime,
 security,recovery,reproducibility and baseline/AX gates on the final source.

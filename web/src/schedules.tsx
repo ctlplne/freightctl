@@ -759,7 +759,11 @@ export function Schedules({
             </label>
             {workflow?.source && (
               <fieldset>
-                <legend>Expected remote arrival</legend>
+                <legend>
+                  {workflow.source.kind === "local.collect"
+                    ? "Expected local arrival"
+                    : "Expected remote arrival"}
+                </legend>
                 <p>
                   The approved source and target are fixed by the workflow. Each
                   due time expects its own UTC manifest. Missing means no
