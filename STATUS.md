@@ -8,7 +8,12 @@ Exact original failures,owner decisions and remaining work are preserved in
 [artifact-exchange.json](docs/qualification/artifact-exchange.json) and the
 linked safe manifests. Raw private proof remains outside Git.
 
-Current pushed candidate: `4d2d9ab3062e7b10bc44cc0629b42d5ed570f6ca`.
+Current pushed candidate: `acd82da46a31ae96581ed6660345ecd89113fae4`.
+[F395](docs/qualification/evidence/F395-native-push.json) binds eight verified
+owner-only commits and18 first original workflows,queued/running. The enabled
+pinned pre-push Gitleaks guard found no leaks. Runtime outcomes remain owed.
+
+Previous terminal candidate: `4d2d9ab3062e7b10bc44cc0629b42d5ed570f6ca`.
 [F394](docs/qualification/evidence/F394-native-terminal.json) binds all16
 original workflows/35 terminal jobs:29pass,6fail. No original run was cancelled,
 rerun or substituted. Core/source/history security,both exact peer image scans,
@@ -18,7 +23,7 @@ recipient-decline response lookup and processing-work response lookup.
 F385 retains the preceding e608408 originals:39jobs,30pass/9fail. Its x86
 independent receiver SIGSYS profiles were not triggered at4d2d9ab and stay red.
 
-The next owner-authored batch contains these focused changes:
+The pushed owner-authored batch contains these focused changes:
 
 - F387 pins official Go1.27.3 consistently. Official issue75804 confirms a fuzz
   coordinator cancellation race that can also hide crash reports. The fixed
@@ -43,8 +48,8 @@ mutations,properties,locks,outbound and independent DAV application profiles are
 still mandatory. Earlier partial DAV read/create/MKCOL/MOVE and scoped FTPS/SFTP
 proofs stay bound to their original candidates,not these later changes.
 
-Next:push this verified batch after identity/fast-forward/pre-push checks,then
-continue independent implementation while original CI runs. Repair original
+Next:continue independent implementation while these original CI runs finish.
+Push the next verified owner-only batch only after all required originals are terminal. Repair original
 failures and finish every mandatory final-source baseline/AX gate. F026 stays
 manual/owner-deferred. Local inference stays off and local resource limits stay
 unchanged. Trust Control,inference,provider/licensed peers,reference estate,
