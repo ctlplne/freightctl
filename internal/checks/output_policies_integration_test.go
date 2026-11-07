@@ -52,7 +52,7 @@ func registerOutputFixture(t *testing.T, f *fixture, s *Service, account store.A
 		t.Fatal(err)
 	}
 	var record OutputPolicyRecord
-	if json.Unmarshal(result.Resource, &record) != nil || record.Policy.State != "output_active" || record.Usage != "contract-registration-only" || record.IngressChanged {
+	if json.Unmarshal(result.Resource, &record) != nil || record.Policy.State != "output_active" || record.Usage != "producer-workflow-output-contract" || record.IngressChanged {
 		t.Fatal("output registration receipt")
 	}
 	return request, record

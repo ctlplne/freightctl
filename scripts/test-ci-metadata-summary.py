@@ -34,10 +34,10 @@ class MetadataSummaryContracts(unittest.TestCase):
     def test_exact_profile_has_one_safe_result_with_no_raw_records_or_paths(self):
         summary = self.summary(self.fixture())
         self.assertEqual(summary["schema"], CURRENT_PROFILE["schema"])
-        self.assertEqual(summary["schema"], 55)
-        self.assertEqual(summary["metadata_tables"], 76)
-        self.assertEqual(summary["forced_rls_tables"], 75)
-        self.assertEqual(summary["restored_rows"], 76)
+        self.assertEqual(summary["schema"], 56)
+        self.assertEqual(summary["metadata_tables"], 77)
+        self.assertEqual(summary["forced_rls_tables"], 76)
+        self.assertEqual(summary["restored_rows"], 77)
         for value in ["protected-operation", "protected-sequence", "private-errors", "must-not-appear", "protected-0"]:
             self.assertNotIn(value, json.dumps(summary))
 

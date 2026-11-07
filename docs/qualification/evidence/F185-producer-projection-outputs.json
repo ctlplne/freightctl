@@ -1,0 +1,433 @@
+{
+  "schema_version": 1,
+  "id": "F185",
+  "observed_at": "2026-11-06",
+  "base_candidate": "6e8252032d450c4270adab43af1e1cd9edae984a",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Producer-bound output backend and strict browser profile validation implemented;native outcomes/full UI and final qualification owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "8ab0674d0c2339f508d90ff37dc13ccd4672f13282ebe2b907ab8de2243928ab",
+      "bytes": 5541
+    },
+    {
+      "reference": "docs/api/processing-output-policies.openapi.json",
+      "sha256": "f6b5ac0b2a9155b6b0e62d7d772aee1b807ce3f3e52fc3361ec017dca3c263a3",
+      "bytes": 22666
+    },
+    {
+      "reference": "docs/protocols/processing-output-policies.md",
+      "sha256": "49ad9a06010cc87fbde959dfc504c3068e0a8b9d9fb746e1b446b9f4bd49dc8d",
+      "bytes": 7079
+    },
+    {
+      "reference": "docs/qualification/artifact-exchange.json",
+      "sha256": "f2a38195e66587d642b8582c822f9193ee27835257dc6d145e930f890e12bf11",
+      "bytes": 28009
+    },
+    {
+      "reference": "docs/qualification/evidence/F184-output-registry-terminal-ci.json",
+      "sha256": "aff870deeddfc7621ef5d2ec4b519b246f13cb7332917a61f057f759516b663a",
+      "bytes": 20165
+    },
+    {
+      "reference": "docs/qualification/evidence/F186-output-selection-terminal-ci.json",
+      "sha256": "feb221516fc49ab5e0dca56222b85a7f05325b0c689456bd474c08e0a7d34cf8",
+      "bytes": 20110
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "8d1148cfae869f882fcb0cf5046d7de61e7f9e932add145f0a78f48daef3ca56",
+      "bytes": 345186
+    },
+    {
+      "reference": "internal/api/output_policies_integration_test.go",
+      "sha256": "2f48e5b48c40b5e91954c79999aef29718a8d8fda056920fdaf37d1588a39db2",
+      "bytes": 6053
+    },
+    {
+      "reference": "internal/api/workflow_processing_integration_test.go",
+      "sha256": "282d921eef713c1043b48b849cda95c31c985ac6fa3d021a1b20dcb9336409c1",
+      "bytes": 6074
+    },
+    {
+      "reference": "internal/browser/assets/app.js",
+      "sha256": "5529fa0f26d7b8e309bc96a5a2517eb5dbd361cbc9448897d46d95de84ab9ff6",
+      "bytes": 859172
+    },
+    {
+      "reference": "internal/browser/assets/manifest.json",
+      "sha256": "59e8accf231e22a73295b489127e1564e50b9903e0ce3ace9cbfbe85ce425405",
+      "bytes": 13103
+    },
+    {
+      "reference": "internal/checks/output_policies.go",
+      "sha256": "933fc1931c94a33fa295b852de7d6097f48cd51e97cafca29b79e9d1ac244e1c",
+      "bytes": 10504
+    },
+    {
+      "reference": "internal/checks/output_policies_integration_test.go",
+      "sha256": "3272b325e028c37047a7088dc44c6a3b9ab5ed644ea69d2b89209f652deefdfe",
+      "bytes": 10865
+    },
+    {
+      "reference": "internal/checks/producer_projection.go",
+      "sha256": "bfa37ce0e88d3079ab4bd41a837e05458ae70dad02b364aa731f549c270ee7bd",
+      "bytes": 1346
+    },
+    {
+      "reference": "internal/checks/producer_projection_integration_test.go",
+      "sha256": "822de7c5a619210d9fc6353d6f8fb6a031030b83cae402817b18777791b4755c",
+      "bytes": 9415
+    },
+    {
+      "reference": "internal/checks/producer_projection_test.go",
+      "sha256": "eff98c9cc904b134690821a25451aea55ff629eed09e843b7482d8b13a204c4e",
+      "bytes": 2443
+    },
+    {
+      "reference": "internal/checks/projection_intents.go",
+      "sha256": "47ed4b7c8355ad21b1cca8a174d402cd4bc2fc2254f09ad59b735909632ee5ac",
+      "bytes": 12898
+    },
+    {
+      "reference": "internal/checks/projection_review.go",
+      "sha256": "dc525d7b571a0f26ea7e1fd6daf272690243712c5b53a4a3ffe4daf4bc55d8a0",
+      "bytes": 17357
+    },
+    {
+      "reference": "internal/checks/projection_scope.go",
+      "sha256": "d6b7e9268fb0f3f1e81aab221d16315a577f9de8cdf779b5ea80d99dc4abd44f",
+      "bytes": 4949
+    },
+    {
+      "reference": "internal/checks/projection_worker.go",
+      "sha256": "409822bd1800159060b9d5ce1f57bb39f6493a26794dd6d4c914b655e37bd08a",
+      "bytes": 10504
+    },
+    {
+      "reference": "internal/checks/rechecks.go",
+      "sha256": "39da1197464f02cf4140e1a542c1363903c67c2e8329165db4c9a3c764cc531f",
+      "bytes": 23278
+    },
+    {
+      "reference": "internal/checks/service.go",
+      "sha256": "6f0658018f35ac49dfa975acbc4b680f13af67c730f4ba066cd38f3d8b42cf80",
+      "bytes": 21777
+    },
+    {
+      "reference": "internal/checks/workflow_processing.go",
+      "sha256": "77300c87737654996cfb88fbc2caded90914d9716e74f0be8251facb4c789479",
+      "bytes": 8537
+    },
+    {
+      "reference": "internal/store/056_producer_projection_outputs.sql",
+      "sha256": "f4d851ef06aeb496917aad73692872570d7360859ec8590a03d14ae5dfa1990f",
+      "bytes": 61046
+    },
+    {
+      "reference": "internal/store/artifact_exchanges.go",
+      "sha256": "66400efc071e05fff245a9b47df845bfefe8f828216d6722e63f233fb87ab107",
+      "bytes": 17144
+    },
+    {
+      "reference": "internal/store/intake.go",
+      "sha256": "a048e0a6ae3bf963eedbe6e231975137514d861d016fc7c5432b2f44d9f6d1e2",
+      "bytes": 12562
+    },
+    {
+      "reference": "internal/store/onboarding.go",
+      "sha256": "8ef9e28e98c59ce14c0929b753bb2b0c8729473b9d34b0590bfbdc5b8ab9292d",
+      "bytes": 17474
+    },
+    {
+      "reference": "internal/store/outgoing_exchanges.go",
+      "sha256": "28219d5feaaf04fbfedfc262d3dc8a143650313db3257a924a9bb33bf02ba29c",
+      "bytes": 6358
+    },
+    {
+      "reference": "internal/store/processing_privacy.go",
+      "sha256": "372ab19d6407f720acf8ce0849a5b89de9947f0796a0f19b6266144c4dbdf987",
+      "bytes": 1824
+    },
+    {
+      "reference": "internal/store/processing_privacy_test.go",
+      "sha256": "941b1525a6f7736f3ccb2ce917f6b93676a2eed68443b34193c9884f143bd69b",
+      "bytes": 2312
+    },
+    {
+      "reference": "internal/store/producer_files.go",
+      "sha256": "76c44b9c59ab667f91d4b72c08e514a90cf440a4c0d78346464397baee576535",
+      "bytes": 3491
+    },
+    {
+      "reference": "internal/store/projections.go",
+      "sha256": "7a3abdd28c207270db2a042220631f5887579e0649cb54d376bd0c0a95e6a689",
+      "bytes": 4319
+    },
+    {
+      "reference": "internal/store/store.go",
+      "sha256": "668e145bfc890ed39f91e7d8659affbbb0dfd5600df08bed561223ec35bdbf1f",
+      "bytes": 27269
+    },
+    {
+      "reference": "scripts/metadata_contract.py",
+      "sha256": "56f6e8a4ec92651c642d6d3b2875431753c8407cd6ffaa9c0bf0786b8d7cfdaa",
+      "bytes": 3752
+    },
+    {
+      "reference": "scripts/test-ci-metadata-summary.py",
+      "sha256": "4bc37a4b32cc7caf2abc1266d4550eee85fe71dc2ba09030dafd5e0b44075de5",
+      "bytes": 6240
+    },
+    {
+      "reference": "web/src/processing-api.ts",
+      "sha256": "96eb636515af8aab7f9530bebf256559898423a82ae0b8f76e2ebac4a04207de",
+      "bytes": 14615
+    },
+    {
+      "reference": "web/src/processing-types.ts",
+      "sha256": "19a3730d73c364ac8ac8bf707886c5f14de7f5f570e99a2eed6b342333223860",
+      "bytes": 22017
+    },
+    {
+      "reference": "web/tests/processing-producer.test.mjs",
+      "sha256": "accaff7dbb088b2f9c4bbcf2f416e6c0902e1bd19ac3ed8b6894ff5b296a09c9",
+      "bytes": 2388
+    }
+  ],
+  "changed": [
+    "Producer plan/intent schema3 and acceptance schema6 bind the complete current output contract and producer snapshot. Only an approved typed workflow creates this intent;legacy hashes/profiles and direct-proposal authority remain distinct.",
+    "Generated acceptance selects the exact output policy and creates a fresh held check atomically with fenced completion. Ordinary uploads cannot select this lane. Fresh signature/scanner checks and a separate exact release remain required. Default ingress remains independent.",
+    "One forced-RLS status read model exposes only references/state/protection requirements after release;private rules remain confined. Current release/exchange guards retain explicit file/namespace/read/delivery/recipient authority and current security proofs. No security-definer reader is introduced.",
+    "Public audit redaction preserves original journal hashes while hiding output bindings,rules,review/processing receipts and nested original work attempts. Browser preview and history parsing validate the new producer profile against session tenant/partner/actor/authority/root and exact policy reference.",
+    "Original default-policy HTTPS test retained;new producer case added. Native repeated CSV ingress/fresh held JSON/separate release,revocation and public-status/audit/byte-authorization cases are prepared."
+  ],
+  "red": [
+    {
+      "reference": ".private/freightctl-f185-producer-review-red.log",
+      "observed": "New producer review/profile contract missing;focused compilation red."
+    },
+    {
+      "reference": ".private/freightctl-f185-processing-privacy-red.log",
+      "observed": "Actual producer-binding event kind leaked protected payload through public redaction helper."
+    },
+    {
+      "reference": ".private/freightctl-f185-work-receipt-privacy-red.log",
+      "observed": "Actual processing_attempt receipt shape still leaked after initial redaction change;original failure retained."
+    },
+    {
+      "reference": ".private/freightctl-f185-browser-red.log",
+      "observed": "Strict producer-profile browser validator missing."
+    }
+  ],
+  "green": {
+    "references": [
+      ".private/freightctl-f185-final-focused.log",
+      ".private/freightctl-f185-final-receipt-privacy-green.log",
+      ".private/freightctl-f185-browser-formatted-green.log"
+    ],
+    "observed": "Producer/exact-policy substitution refusal,legacy profile isolation,audit digest privacy including actual nested work receipts,and six affected/new browser cases pass. Affected architecture/static/type/build and12 metadata stand-ins pass."
+  },
+  "checks": [
+    {
+      "reference": ".private/freightctl-f185-browser-build.log",
+      "sha256": "3c367b3310e77666053607e2335899977bac3d0bd1dde4f96d757751b2a9e83e",
+      "bytes": 232
+    },
+    {
+      "reference": ".private/freightctl-f185-browser-first-green.log",
+      "sha256": "75541931eebfd73f0aa065a94e7a822607cf572c64831cd2d6ea852999cb6868",
+      "bytes": 784
+    },
+    {
+      "reference": ".private/freightctl-f185-browser-format.log",
+      "sha256": "37c33f54ed45315b881ac49cab7ddfdd318493b947d168843dbbfdf27f59d2ef",
+      "bytes": 108
+    },
+    {
+      "reference": ".private/freightctl-f185-browser-formatted-green.log",
+      "sha256": "0898408868406436b170ffa78cb993f8be3c2cf3f32dcf60104a35233169e101",
+      "bytes": 781
+    },
+    {
+      "reference": ".private/freightctl-f185-browser-red.log",
+      "sha256": "bf7c47531a23297151a105495d0155a1fe67f6c77634866bb21c3dadbf869d5e",
+      "bytes": 947
+    },
+    {
+      "reference": ".private/freightctl-f185-built-consistency.log",
+      "sha256": "598a27f4cad32dcd80077da9e8e737d63a20832f0a94df5c175b3e5ed8297825",
+      "bytes": 249
+    },
+    {
+      "reference": ".private/freightctl-f185-consumer-compile-green.log",
+      "sha256": "28e0fda443446d4400d6be95868f990fd7ca35d71cfdb2c259b79a30e28c1461",
+      "bytes": 175
+    },
+    {
+      "reference": ".private/freightctl-f185-final-focused.log",
+      "sha256": "5e65870e8b4a897e638830539363028543c80f4e6e3c12a08737e461c913650c",
+      "bytes": 239
+    },
+    {
+      "reference": ".private/freightctl-f185-final-metadata.log",
+      "sha256": "d742cface778845b7cf7c11aad728b59daa23f895fba980d876a62c405868861",
+      "bytes": 105
+    },
+    {
+      "reference": ".private/freightctl-f185-final-native-compile.log",
+      "sha256": "9c6a639c40bb6b41e4bc5695ae395c3e6980fd8ee2123e6166341ea470636f88",
+      "bytes": 224
+    },
+    {
+      "reference": ".private/freightctl-f185-final-receipt-privacy-green.log",
+      "sha256": "537a6b95b231069e58f6e447310be70c5d8eb097440fd710297d7ffc369e6d89",
+      "bytes": 121
+    },
+    {
+      "reference": ".private/freightctl-f185-final-retained.log",
+      "sha256": "2d014bb427120fb1a5014d7499096989061fd0fdf40acb471c2e2667de60e71e",
+      "bytes": 103
+    },
+    {
+      "reference": ".private/freightctl-f185-final-review-focused.log",
+      "sha256": "8dd14a5736a8e58abe988a32067d06df78a460e2747a409192e2182a79eb2b91",
+      "bytes": 239
+    },
+    {
+      "reference": ".private/freightctl-f185-final-typecheck.log",
+      "sha256": "17e00418398dd65e49bed86df28efee896dcae70d7e6258050a2746181f558d5",
+      "bytes": 54
+    },
+    {
+      "reference": ".private/freightctl-f185-final-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f185-focused-security.log",
+      "sha256": "97615fb8154a3b7eeec151ff2f6185399a68510252dc5a9603132e3560522e14",
+      "bytes": 239
+    },
+    {
+      "reference": ".private/freightctl-f185-guard-generation.log",
+      "sha256": "4cf1008ba99cbeaa970a8e62a6dcd92c3b5deab0856dabc37bcda3040f919a3d",
+      "bytes": 98
+    },
+    {
+      "reference": ".private/freightctl-f185-metadata.log",
+      "sha256": "bc409cd51f031d7d923f20f4285145cd47162e121fd247778f2725953c8934e3",
+      "bytes": 105
+    },
+    {
+      "reference": ".private/freightctl-f185-native-compile-first.log",
+      "sha256": "abc40c5e1defb0256e7ab13a63825218e18bacc16b643a7883b496c168ddb923",
+      "bytes": 224
+    },
+    {
+      "reference": ".private/freightctl-f185-native-compile-second.log",
+      "sha256": "5123ae1ef3d85b5bd7bfac24d39c34479808d1c76eb3cd37f649cba7a8a3b20c",
+      "bytes": 224
+    },
+    {
+      "reference": ".private/freightctl-f185-policy-consumer-first.log",
+      "sha256": "309c16338a6536540c389df837932bd56ce529fa4d4d8b070502fbf27641c363",
+      "bytes": 175
+    },
+    {
+      "reference": ".private/freightctl-f185-processing-privacy-green.log",
+      "sha256": "9cdafc0978d3a68eece3739115c308578673a68cc8d71052a40af9fdc613754c",
+      "bytes": 57
+    },
+    {
+      "reference": ".private/freightctl-f185-processing-privacy-red.log",
+      "sha256": "da7f5abd0df78ba58477c43dd7e733f9122215751969d8ec30ccc6b8211dd876",
+      "bytes": 303
+    },
+    {
+      "reference": ".private/freightctl-f185-producer-plan-first-green.log",
+      "sha256": "25b1275a505e5701346f49d6ad471a961d97981f89182e87b6d938be097b53d6",
+      "bytes": 58
+    },
+    {
+      "reference": ".private/freightctl-f185-producer-review-first-green.log",
+      "sha256": "d5bf82f8a808ffb5d11b149248b529234c190809e17724abddc767d782f0fbcd",
+      "bytes": 58
+    },
+    {
+      "reference": ".private/freightctl-f185-producer-review-red.log",
+      "sha256": "5503ed106d8f6b2c4504378a820e6ffb4b88728b920f5c59ed9884d45ec50f84",
+      "bytes": 434
+    },
+    {
+      "reference": ".private/freightctl-f185-record-refs.log",
+      "sha256": "826009b37d6c8254924b7fd1ee12981059544175f2c890ad4186b88b41b583b4",
+      "bytes": 106
+    },
+    {
+      "reference": ".private/freightctl-f185-retained.log",
+      "sha256": "1f11b6e880045ee35de832b81b45d06257342e13b5c79bbf0034379d4ca220b9",
+      "bytes": 103
+    },
+    {
+      "reference": ".private/freightctl-f185-source-complete-native-compile.log",
+      "sha256": "3d296a911ebcd9149a425d8441a2469addeeda0213819868f9c508896feda9e6",
+      "bytes": 224
+    },
+    {
+      "reference": ".private/freightctl-f185-source-complete-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f185-typecheck.log",
+      "sha256": "17e00418398dd65e49bed86df28efee896dcae70d7e6258050a2746181f558d5",
+      "bytes": 54
+    },
+    {
+      "reference": ".private/freightctl-f185-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f185-work-receipt-privacy-red.log",
+      "sha256": "a75d2cf9458189e1d5a823723ba4e8983bfdf9025a9096741f916aa3d142729a",
+      "bytes": 300
+    }
+  ],
+  "guard_change_manifests": [
+    {
+      "reference": ".private/freightctl-f185-guard-changes.json",
+      "sha256": "e62c3b3dbd77b43da4e3355bbc7663e19fdfb63c0e6338bf9b0be720da5061a1",
+      "bytes": 3364
+    },
+    {
+      "reference": ".private/freightctl-f185-generate-guards.py",
+      "sha256": "76b9bc154deaa7b4b6cd574911097064db7fc722c45f26dacd4e5e7880c7d2a4",
+      "bytes": 7149
+    }
+  ],
+  "prepared_native": [
+    "TestProducerProjectionActualRepeatedCSVIngressCreatesSeparatelyCheckedReleasedJSON",
+    "TestProducerProjectionActualRevokedOutputStopsCheckWithoutChangingIngress",
+    "TestProducerProjectionActualPublicReleaseStatusDoesNotDiscloseRulesOrGrantBytes",
+    "TestProducerProjectionHTTPSApprovalRunAndHeldOutputKeepDefaultIngress"
+  ],
+  "verification_limits": [
+    "Tagged native compilation selected zero cases. No PostgreSQL,Chrome,model,scanner or heavy peer ran locally. SQL syntax/RLS/transaction,real repeated bytes and interface claims remain unqualified.",
+    "Schema56 targets77 metadata/76 forced-RLS relations. All earlier migrations and retained35 unchanged. Public status does not expose definitions or grant byte/forwarding/delivery authority.",
+    "F184/F186 preserve original terminal17/37 batches;listed security passes and existing application failures remain red. Nonsecurity logs/repairs remain deferred to FINISH."
+  ],
+  "source_review_findings": [
+    "Affected source review noticed the historical default exchange helper selects state/hash while later using definition in its lateral row. The new helper includes that field. Earlier migrations/original CI failures are unchanged;investigate and replay the original migration failures at mandatory FINISH before any native claim."
+  ],
+  "owed": [
+    "Actual prepared PostgreSQL/HTTPS cases and original journeys;protected signature/scanner generated-output proof,stock CLI/receiver/native Chrome and final-source qualification.",
+    "Browser contract registration/selection,output-to-input composition,scheduling,third-party author delegation and remaining mandatory baseline/AX implementation.",
+    "All deferred broad/native/security/accessibility/restore/recovery/reproducibility/original-failure/final-source gates and external prerequisites;all whole rows/journeys/readiness remain open.",
+    "Actual populated schema55-to56 status backfill and restored-copy upgrade/replay;stand-in inventories do not qualify migration behavior."
+  ]
+}

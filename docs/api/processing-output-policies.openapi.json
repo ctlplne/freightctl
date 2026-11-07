@@ -3,7 +3,7 @@
   "info": {
     "title": "Producer-bound processing output registry",
     "version": "producer-processing-output-policy-v1",
-    "description": "Registration only; processing consumption and native qualification owed. Default ingress unchanged. Existing checks.Normalize applies additional cross-field constraints."
+    "description": "Metadata-only output contract registration and observation. Typed producer-workflow consumption is implemented in F185;native qualification remains owed. Default ingress remains independent."
   },
   "paths": {
     "/v1/tenants/{tenant}/partners/{partner}/processing-output-policies": {
@@ -725,7 +725,12 @@
             "const": false
           },
           "usage": {
-            "const": "contract-registration-only"
+            "type": "string",
+            "enum": [
+              "contract-registration-only",
+              "producer-workflow-output-contract"
+            ],
+            "description": "Original receipts retain their historical value;current metadata describes producer workflow output contracts. Neither asserts execution."
           }
         },
         "required": [
@@ -757,7 +762,7 @@
             "const": false
           },
           "usage": {
-            "const": "contract-registration-only"
+            "const": "producer-workflow-output-contract"
           },
           "producer_binding_current_at_observation": {
             "type": "boolean"

@@ -81,7 +81,7 @@ func (t *Transaction) outgoingExchange(ctx context.Context, id string) (*Outgoin
 	if availableErr != nil && !errors.Is(availableErr, ErrState) {
 		return nil, availableErr
 	}
-	if err = exchangePolicyCurrent(f, policy); err != nil {
+	if err = t.exchangeFilePolicyCurrent(ctx, f, policy); err != nil {
 		availableErr = err
 	}
 	var operation, closureEvent string

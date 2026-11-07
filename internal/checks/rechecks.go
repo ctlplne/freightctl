@@ -134,6 +134,12 @@ func (t *Service) recheckPolicy(ctx context.Context, tx *store.Transaction, id s
 // authority for this operation: current root administration plus exact original
 // acceptance ownership authorizes only a held copy, never original downloads.
 func (s *Service) recheckPlan(ctx context.Context, t *store.Transaction, id string, options RecheckOptions, lockSource bool) (*RecheckPreview, error) {
+	return s.recheckPlanPolicy(ctx, t, id, options, lockSource, nil)
+}
+
+// Only the producer projection builder supplies a separately authorized policy.
+// Ordinary recheck requests keep selecting the current default ingress policy.
+func (s *Service) recheckPlanPolicy(ctx context.Context, t *store.Transaction, id string, options RecheckOptions, lockSource bool, selected *store.Configuration) (*RecheckPreview, error) {
 	if s.Custody.Disk == nil {
 		return nil, store.ErrState
 	}
@@ -193,11 +199,14 @@ func (s *Service) recheckPlan(ctx context.Context, t *store.Transaction, id stri
 		return nil, err
 	}
 	plan.Source.Signature = sig
-	p, err := t.IntakePolicy(ctx, false)
-	if err != nil {
-		return nil, err
+	p := selected
+	if p == nil {
+		p, err = t.IntakePolicy(ctx, false)
+		if err != nil {
+			return nil, err
+		}
 	}
-	if p == nil || p.State != "active" {
+	if p == nil || (selected == nil && p.State != "active") || (selected != nil && p.State != "output_active") {
 		return nil, store.ErrState
 	}
 	policy, err := decodePolicy(p)

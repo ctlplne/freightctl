@@ -14,6 +14,7 @@ import {
   processingWork,
   processingHash,
   processingPath,
+  processingPlanProfile,
   projection,
   reference,
   type Configuration,
@@ -257,9 +258,8 @@ export class ProcessingApi {
         )
           throw new ApiError("context_changed", 409);
         const context = parseRecheckPlan(rawContext, root);
+        processingPlanProfile(plan, context, s);
         if (
-          plan.profile !== "scoped-record-projection-v1" ||
-          plan.schema_version !== 2 ||
           context.authority_revision !== s.identity.authority_revision ||
           context.source.file.id !== source.id ||
           context.source.file.sha256 !== source.sha256 ||

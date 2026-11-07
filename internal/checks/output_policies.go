@@ -76,7 +76,7 @@ func outputRecord(ctx context.Context, t *store.Transaction, c *store.Configurat
 	if err != nil || *expected != *b {
 		return nil, store.ErrIsolation
 	}
-	return &OutputPolicyRecord{Profile: "producer-processing-output-policy-v1", Policy: c, Binding: b, Observation: "current-contract-metadata-only", IngressChanged: false, Usage: "contract-registration-only"}, nil
+	return &OutputPolicyRecord{Profile: "producer-processing-output-policy-v1", Policy: c, Binding: b, Observation: "current-contract-metadata-only", IngressChanged: false, Usage: "producer-workflow-output-contract"}, nil
 }
 func (s *Service) RegisterOutputPolicy(ctx context.Context, scope store.Scope, key string, r OutputPolicyRequest) (*Result, error) {
 	if !keyPattern.MatchString(key) || !store.ValidID(r.Producer) || r.ExpectedVersion < 0 || (r.ID == "" && r.ExpectedVersion != 0) || (r.ID != "" && (!store.ValidID(r.ID) || r.ExpectedVersion < 1)) {
@@ -160,7 +160,7 @@ func (s *Service) RegisterOutputPolicy(ctx context.Context, scope store.Scope, k
 	if err = t.SaveProcessingOutputBinding(ctx, b); err != nil {
 		return nil, err
 	}
-	return finish(ctx, t, key, meaning, id, &OutputPolicyRecord{Profile: b.Profile, Policy: c, Binding: b, Observation: "original-command-receipt;current-state-not-checked", IngressChanged: false, Usage: "contract-registration-only"})
+	return finish(ctx, t, key, meaning, id, &OutputPolicyRecord{Profile: b.Profile, Policy: c, Binding: b, Observation: "original-command-receipt;current-state-not-checked", IngressChanged: false, Usage: "producer-workflow-output-contract"})
 }
 func (s *Service) OutputPolicy(ctx context.Context, scope store.Scope, id string, version int) (*OutputPolicyView, error) {
 	if !store.ValidID(id) || version < 1 {

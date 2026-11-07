@@ -82,6 +82,11 @@ func (t *Transaction) ConfigureIntakeFile(ctx context.Context, f *File) error {
 	if p.State != "active" {
 		return ErrState
 	}
+	return t.configurePolicyFile(ctx, f, p)
+}
+
+func (t *Transaction) configurePolicyFile(ctx context.Context, f *File, p *Configuration) error {
+	var err error
 	if _, err = t.Tx.Exec(ctx, `SELECT pg_advisory_xact_lock(hashtextextended($1,0))`, t.Scope.Tenant+":"+t.Scope.Partner+":"+t.Actor+":check-admission"); err != nil {
 		return err
 	}
@@ -110,6 +115,10 @@ func (t *Transaction) BindIntake(ctx context.Context, f *File, storageID string,
 	if p.State != "active" || formatErr != nil || f.Policy != expected || !ValidID(storageID) {
 		return false, ErrState
 	}
+	return t.bindPolicyFile(ctx, f, storageID, target, p)
+}
+
+func (t *Transaction) bindPolicyFile(ctx context.Context, f *File, storageID string, target *PathCommand, p *Configuration) (bool, error) {
 	b := CheckBinding{File: *f, StorageID: storageID, Root: t.Root, Authority: t.AuthorityRevision, Target: target}
 	if target != nil {
 		actual, err := vpath.Resolve(t.Root, target.Path)
@@ -206,11 +215,11 @@ func (t *Transaction) CheckBindingCurrent(ctx context.Context, c *FileCheck, sto
 	if *f != b.File {
 		return nil, ErrState
 	}
-	p, err := t.IntakePolicy(ctx, false)
+	p, err := t.FileCheckPolicy(ctx, c)
 	if err != nil {
 		return nil, err
 	}
-	if p == nil || p.ID != c.PolicyID || p.Version != c.PolicyVersion || p.Hash != c.PolicyHash || p.State != "active" {
+	if p == nil || p.ID != c.PolicyID || p.Version != c.PolicyVersion || p.Hash != c.PolicyHash || (p.State != "active" && p.State != "output_active") {
 		return nil, ErrRevision
 	}
 	if b.Target != nil {

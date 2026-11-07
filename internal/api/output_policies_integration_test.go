@@ -38,7 +38,7 @@ func TestProcessingOutputPolicyHTTPSScopesRegistryAndPreservesDefaultIngress(t *
 	_, raw := exchangeAPIRequest(t, server, "POST", prefix+"/processing-output-policies", cookie, map[string]string{"X-CSRF-Token": csrf, "Idempotency-Key": "api-register-output-policy"}, body, 200)
 	var accepted checks.Result
 	var record checks.OutputPolicyRecord
-	if json.Unmarshal(raw, &accepted) != nil || json.Unmarshal(accepted.Resource, &record) != nil || record.Policy.State != "output_active" || record.Binding.Producer.Actor != actor.Actor || record.IngressChanged || record.Usage != "contract-registration-only" {
+	if json.Unmarshal(raw, &accepted) != nil || json.Unmarshal(accepted.Resource, &record) != nil || record.Policy.State != "output_active" || record.Binding.Producer.Actor != actor.Actor || record.IngressChanged || record.Usage != "producer-workflow-output-contract" {
 		t.Fatal("output registration incorrectly described its effect")
 	}
 	id := record.Policy.ID

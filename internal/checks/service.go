@@ -274,7 +274,7 @@ func (s *Service) current(ctx context.Context, t *store.Transaction, c *store.Fi
 	if err != nil {
 		return nil, nil, err
 	}
-	p, err := t.IntakePolicy(ctx, false)
+	p, err := t.FileCheckPolicy(ctx, c)
 	if err != nil {
 		return nil, nil, err
 	}

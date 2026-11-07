@@ -27,13 +27,14 @@ type ProjectionOptions struct {
 // ProjectionPlan is an immutable REVIEW binding, not execution authority. The
 // durable intent compares this whole plan again before consequential effects.
 type ProjectionPlan struct {
-	Schema             int                       `json:"schema_version"`
-	Profile            string                    `json:"profile"`
-	Context            RecheckPlan               `json:"context"`
-	SourcePolicy       store.OnboardingReference `json:"source_policy"`
-	Projection         RecordProjection          `json:"projection"`
-	OutputContractHash string                    `json:"output_contract_hash"`
-	ProofValidUntil    *time.Time                `json:"source_proof_valid_until,omitempty"`
+	Schema             int                            `json:"schema_version"`
+	Profile            string                         `json:"profile"`
+	Context            RecheckPlan                    `json:"context"`
+	SourcePolicy       store.OnboardingReference      `json:"source_policy"`
+	Projection         RecordProjection               `json:"projection"`
+	OutputContractHash string                         `json:"output_contract_hash"`
+	ProofValidUntil    *time.Time                     `json:"source_proof_valid_until,omitempty"`
+	OutputBinding      *store.ProcessingOutputBinding `json:"output_binding,omitempty"`
 }
 
 type ProjectionPreview struct {
@@ -153,9 +154,16 @@ func projectionReview(base *RecheckPreview, row *store.FileCheck, definition Rec
 	return projectionReviewProfile(base, row, definition, now, ProjectionReviewProfile)
 }
 func projectionReviewProfile(base *RecheckPreview, row *store.FileCheck, definition RecordProjection, now time.Time, profile string) (*ProjectionPreview, error) {
+	return projectionReviewBound(base, row, definition, now, profile, nil)
+}
+
+func projectionReviewBound(base *RecheckPreview, row *store.FileCheck, definition RecordProjection, now time.Time, profile string, binding *store.ProcessingOutputBinding) (*ProjectionPreview, error) {
 	profile, schema, err := projectionProfile(profile)
 	if err != nil {
 		return nil, err
+	}
+	if (profile == ProducerProjectionProfile) != (binding != nil) {
+		return nil, ErrInput
 	}
 	if base != nil && profile == ProjectionReviewProfile && base.Plan.Root != "/" {
 		return nil, store.ErrState
@@ -183,7 +191,11 @@ func projectionReviewProfile(base *RecheckPreview, row *store.FileCheck, definit
 		return nil, err
 	}
 	_, outputHash, _ := canonical(output)
-	if snapshot.CurrentPolicy.State != "active" || snapshot.Plan.Policy != snapshot.CurrentPolicy.Reference || snapshot.Plan.Policy.Hash != outputHash {
+	expectedState := "active"
+	if binding != nil {
+		expectedState = "output_active"
+	}
+	if snapshot.CurrentPolicy.State != expectedState || snapshot.Plan.Policy != snapshot.CurrentPolicy.Reference || snapshot.Plan.Policy.Hash != outputHash {
 		return nil, store.ErrRevision
 	}
 	if source.Signature != nil && (output.Signature == nil || source.Signature.MaxAgeSeconds > 0 && (output.Signature.MaxAgeSeconds == 0 || output.Signature.MaxAgeSeconds > source.Signature.MaxAgeSeconds)) || source.Scanner != nil && output.Scanner == nil {
@@ -214,7 +226,12 @@ func projectionReviewProfile(base *RecheckPreview, row *store.FileCheck, definit
 	if selectedHash != contractHash {
 		return nil, ErrInput
 	}
-	return &ProjectionPreview{Plan: ProjectionPlan{Schema: schema, Profile: profile, Context: snapshot.Plan, SourcePolicy: snapshot.PreviousPolicy.Reference, Projection: definition, OutputContractHash: contractHash, ProofValidUntil: until}, SourcePolicy: *snapshot.PreviousPolicy, OutputPolicy: snapshot.CurrentPolicy, Effects: "Review only. Execution needs a separately approved durable intent. The transformed output will be a new held artifact with fresh checks, a new signature when required and a separate exact release. No forwarding or execution permission is inherited."}, nil
+	var outputBinding *store.ProcessingOutputBinding
+	if binding != nil {
+		copy := *binding
+		outputBinding = &copy
+	}
+	return &ProjectionPreview{Plan: ProjectionPlan{Schema: schema, Profile: profile, Context: snapshot.Plan, SourcePolicy: snapshot.PreviousPolicy.Reference, Projection: definition, OutputContractHash: contractHash, ProofValidUntil: until, OutputBinding: outputBinding}, SourcePolicy: *snapshot.PreviousPolicy, OutputPolicy: snapshot.CurrentPolicy, Effects: "Review only. Execution needs a separately approved durable intent. The transformed output will be a new held artifact with fresh checks, a new signature when required and a separate exact release. No forwarding or execution permission is inherited."}, nil
 }
 
 func projectionProtectionCurrent(ctx context.Context, t *store.Transaction, policy Policy, report Report) error {
@@ -268,6 +285,10 @@ func projectionOptionsInput(options ProjectionOptions) (ProjectionOptions, error
 // A retired source contract is usable only for authorized processing;ordinary
 // availability and downloads retain their current-policy requirement.
 func (s *Service) projectionPlan(ctx context.Context, t *store.Transaction, id string, options ProjectionOptions, lockSource bool) (*ProjectionPreview, error) {
+	return s.projectionPlanOutput(ctx, t, id, options, lockSource, nil)
+}
+
+func (s *Service) projectionPlanOutput(ctx context.Context, t *store.Transaction, id string, options ProjectionOptions, lockSource bool, ref *store.OnboardingReference) (*ProjectionPreview, error) {
 	if err := projectionAuthority(t, options.Profile); err != nil {
 		return nil, err
 	}
@@ -279,11 +300,30 @@ func (s *Service) projectionPlan(ctx context.Context, t *store.Transaction, id s
 			return nil, err
 		}
 	}
-	selected, err := t.IntakePolicy(ctx, false)
+	var selected *store.Configuration
+	var err error
+	var outputBinding *store.ProcessingOutputBinding
+	if options.Profile == ProducerProjectionProfile {
+		if ref == nil {
+			return nil, ErrInput
+		}
+		selected, err = t.ProcessingPolicy(ctx, *ref)
+		if err == nil && selected.State != "output_active" {
+			return nil, store.ErrRevision
+		}
+		if err == nil {
+			outputBinding, err = t.ProcessingOutputBinding(ctx, selected.ID, selected.Version)
+		}
+	} else {
+		if ref != nil {
+			return nil, ErrInput
+		}
+		selected, err = t.IntakePolicy(ctx, false)
+	}
 	if err != nil {
 		return nil, err
 	}
-	if selected == nil || selected.State != "active" {
+	if selected == nil || (outputBinding == nil && selected.State != "active") {
 		return nil, store.ErrState
 	}
 	output, err := decodePolicy(selected)
@@ -294,7 +334,11 @@ func (s *Service) projectionPlan(ctx context.Context, t *store.Transaction, id s
 	if output.Signature != nil {
 		mode = "require_new"
 	}
-	base, err := s.recheckPlan(ctx, t, id, RecheckOptions{TargetPath: options.TargetPath, SignatureMode: mode, Reason: options.Reason}, lockSource)
+	var explicit *store.Configuration
+	if outputBinding != nil {
+		explicit = selected
+	}
+	base, err := s.recheckPlanPolicy(ctx, t, id, RecheckOptions{TargetPath: options.TargetPath, SignatureMode: mode, Reason: options.Reason}, lockSource, explicit)
 	if err != nil {
 		return nil, err
 	}
@@ -306,7 +350,13 @@ func (s *Service) projectionPlan(ctx context.Context, t *store.Transaction, id s
 	if err != nil {
 		return nil, err
 	}
-	view, err := projectionReviewProfile(base, row, options.Definition, now, options.Profile)
+	var view *ProjectionPreview
+	if outputBinding != nil {
+		producer := store.ExchangeParticipant{Tenant: t.Scope.Tenant, Partner: t.Scope.Partner, Actor: t.Actor, AuthorityRevision: t.AuthorityRevision, RootPolicyDigest: secure.Digest([]byte(t.Root))}
+		view, err = producerProjectionReview(base, row, options.Definition, now, outputBinding, producer)
+	} else {
+		view, err = projectionReviewProfile(base, row, options.Definition, now, options.Profile)
+	}
 	if err != nil {
 		return nil, err
 	}

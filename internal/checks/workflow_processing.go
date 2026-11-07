@@ -61,7 +61,7 @@ func projectionWorkflowCurrent(ctx context.Context, t *store.Transaction, d Proj
 	return nil
 }
 func (s *Service) ValidateProcessing(ctx context.Context, t *store.Transaction, task workflow.ProcessingTask, file string) (json.RawMessage, error) {
-	view, err := s.projectionPlan(ctx, t, file, ProjectionOptions{Profile: ScopedProjectionProfile, TargetPath: task.TargetPath, Reason: task.Reason, Definition: task.Definition}, false)
+	view, err := s.processingProjectionPlan(ctx, t, file, task, false)
 	if err != nil {
 		return nil, err
 	}
@@ -70,6 +70,20 @@ func (s *Service) ValidateProcessing(ctx context.Context, t *store.Transaction, 
 	}
 	data, _, err := canonical(view)
 	return data, err
+}
+
+func (s *Service) processingProjectionPlan(ctx context.Context, t *store.Transaction, file string, task workflow.ProcessingTask, lock bool) (*ProjectionPreview, error) {
+	ref := store.OnboardingReference{ID: task.OutputPolicy.ID, Version: task.OutputPolicy.Version, Hash: task.OutputPolicy.Hash}
+	selected, err := t.ProcessingPolicy(ctx, ref)
+	if err != nil {
+		return nil, err
+	}
+	options := ProjectionOptions{Profile: ScopedProjectionProfile, TargetPath: task.TargetPath, Reason: task.Reason, Definition: task.Definition}
+	if selected.State == "output_active" {
+		options.Profile = ProducerProjectionProfile
+		return s.projectionPlanOutput(ctx, t, file, options, lock, &ref)
+	}
+	return s.projectionPlan(ctx, t, file, options, lock)
 }
 func (s *Service) StageProcessing(ctx context.Context, t *store.Transaction, run *store.WorkflowRun, task workflow.ProcessingTask) (*store.RecordProjection, error) {
 	for _, grant := range []string{"read", "write", "check_run", "workflow_execute"} {
@@ -83,11 +97,14 @@ func (s *Service) StageProcessing(ctx context.Context, t *store.Transaction, run
 	if err := t.NamespaceLock(ctx); err != nil {
 		return nil, err
 	}
-	view, err := s.projectionPlan(ctx, t, run.FileID, ProjectionOptions{Profile: ScopedProjectionProfile, TargetPath: task.TargetPath, Reason: task.Reason, Definition: task.Definition}, true)
+	view, err := s.processingProjectionPlan(ctx, t, run.FileID, task, true)
 	if err != nil {
 		return nil, err
 	}
 	d := ProjectionDefinition{Schema: 2, Plan: view.Plan, Slots: make([]string, 3), Workflow: &store.ProcessingWorkflowBinding{WorkflowID: run.WorkflowID, Version: run.WorkflowVersion, Hash: run.WorkflowHash, RunID: run.ID, StepID: task.ID}}
+	if view.Plan.Profile == ProducerProjectionProfile {
+		d.Schema = 3
+	}
 	if err = projectionWorkflowCurrent(ctx, t, d, true); err != nil {
 		return nil, err
 	}

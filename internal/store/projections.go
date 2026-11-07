@@ -81,7 +81,17 @@ func (t *Transaction) AcceptProjectedFile(ctx context.Context, r *RecordProjecti
 	if err := t.Reauthorize(ctx); err != nil {
 		return err
 	}
-	event, err := t.Append(ctx, "FileAccepted", f.ID, map[string]any{"schema_version": 5, "size_bytes": f.Size, "sha256": f.SHA256, "policy": f.Policy, "storage_id": storage, "record_projection": map[string]any{"id": r.ID, "definition_hash": r.Hash, "source_file_id": r.SourceID, "attempt": attempt, "report": report}})
+	var definition struct {
+		Schema int `json:"schema_version"`
+	}
+	if json.Unmarshal(r.Definition, &definition) != nil {
+		return ErrState
+	}
+	schema := 5
+	if definition.Schema == 3 {
+		schema = 6
+	}
+	event, err := t.Append(ctx, "FileAccepted", f.ID, map[string]any{"schema_version": schema, "size_bytes": f.Size, "sha256": f.SHA256, "policy": f.Policy, "storage_id": storage, "record_projection": map[string]any{"id": r.ID, "definition_hash": r.Hash, "source_file_id": r.SourceID, "attempt": attempt, "report": report}})
 	if err != nil {
 		return err
 	}

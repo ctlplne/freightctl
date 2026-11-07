@@ -18,10 +18,18 @@ import (
 )
 
 func TestProcessingWorkflowHTTPSOrdinaryApprovalRunAndHeldOutput(t *testing.T) {
+	processingWorkflowHTTPS(t, false)
+}
+
+func TestProducerProjectionHTTPSApprovalRunAndHeldOutputKeepDefaultIngress(t *testing.T) {
+	processingWorkflowHTTPS(t, true)
+}
+
+func processingWorkflowHTTPS(t *testing.T, producerBound bool) {
 	service, manager, admin, server := browserAPI(t, 600*time.Second, custody.ExchangeSettings{MaxLifetime: time.Hour, MaxSenders: 16, MaxOpenViews: 128, MaxEndpoints: 16})
 	cookie, csrf := loginBrowser(t, server, manager, admin)
 	prefix := "/v1/tenants/" + manager.Tenant + "/partners/" + manager.Partner
-	token, _ := exchangeAPIParticipant(t, server, prefix, cookie, csrf, []string{"read", "write", "check_run", "workflow_manage", "workflow_approve", "workflow_execute"})
+	token, participant := exchangeAPIParticipant(t, server, prefix, cookie, csrf, []string{"read", "write", "check_run", "workflow_manage", "workflow_approve", "workflow_execute"})
 	actor := store.Scope{Tenant: manager.Tenant, Partner: manager.Partner, TokenHash: secure.Digest(token.Bytes)}
 	ctx := context.Background()
 	control := &checks.Service{Custody: service}
@@ -48,13 +56,25 @@ func TestProcessingWorkflowHTTPSOrdinaryApprovalRunAndHeldOutput(t *testing.T) {
 	output := policy
 	output.Schema = 2
 	output.Kind = "json_records"
-	registered, err := control.Register(ctx, manager, "wf-output-policy", checks.PolicyRequest{ExpectedVersion: 1, Definition: output})
-	if err != nil {
-		t.Fatal(err)
-	}
 	var outputPolicy store.Configuration
-	if json.Unmarshal(registered.Resource, &outputPolicy) != nil {
-		t.Fatal("output policy")
+	if producerBound {
+		registered, err := control.RegisterOutputPolicy(ctx, manager, "wf-producer-output-policy", checks.OutputPolicyRequest{Producer: participant.Actor, Definition: output})
+		if err != nil {
+			t.Fatal(err)
+		}
+		var contract checks.OutputPolicyRecord
+		if json.Unmarshal(registered.Resource, &contract) != nil || contract.Policy == nil {
+			t.Fatal("producer output policy")
+		}
+		outputPolicy = *contract.Policy
+	} else {
+		registered, err := control.Register(ctx, manager, "wf-output-policy", checks.PolicyRequest{ExpectedVersion: 1, Definition: output})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if json.Unmarshal(registered.Resource, &outputPolicy) != nil {
+			t.Fatal("output policy")
+		}
 	}
 	rules, err := checks.NormalizeRecordProjection(policy, checks.RecordProjection{Schema: 1, Kind: "record_projection", SourcePolicyHash: inputPolicy.Hash, OutputKind: "json_records", Columns: []checks.ProjectionColumn{{Source: "account", Target: "account"}}})
 	if err != nil {
@@ -100,5 +120,11 @@ func TestProcessingWorkflowHTTPSOrdinaryApprovalRunAndHeldOutput(t *testing.T) {
 	var replay workflow.WorkResult
 	if json.Unmarshal(call("/workflow-runs/"+run.ID+"/work", "wf-work", nil), &replay) != nil || !replay.Replayed || replay.Processing.ID != result.Processing.ID || replay.Processing.Attempts != 1 {
 		t.Fatal("public replay selected a new attempt")
+	}
+	if producerBound {
+		current, err := control.Policy(ctx, manager)
+		if err != nil || current.ID != inputPolicy.ID || current.Hash != inputPolicy.Hash || current.Version != inputPolicy.Version || current.State != "active" {
+			t.Fatal("served producer task replaced default ingress", err)
+		}
 	}
 }

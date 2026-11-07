@@ -251,7 +251,7 @@ func (t *Transaction) AuthorizeExchangeSource(ctx context.Context, id string) (*
 	if err != nil {
 		return nil, err
 	}
-	if err = exchangePolicyCurrent(f, policy); err != nil {
+	if err = t.exchangeFilePolicyCurrent(ctx, f, policy); err != nil {
 		return nil, err
 	}
 	if err = t.Reauthorize(ctx); err != nil {
@@ -372,7 +372,7 @@ func (t *Transaction) authorizeIncomingExchange(ctx context.Context, e *Artifact
 	if e.Request.Artifact != (ExchangeArtifact{ID: f.ID, Size: f.Size, SHA256: f.SHA256, Policy: f.Policy}) {
 		return nil, ErrIsolation
 	}
-	if err = exchangePolicyCurrent(f, policy); err != nil {
+	if err = t.exchangeFilePolicyCurrent(ctx, f, policy); err != nil {
 		availabilityErr = err
 	}
 	if err = t.Reauthorize(ctx); err != nil {

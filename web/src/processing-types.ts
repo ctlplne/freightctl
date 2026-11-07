@@ -207,6 +207,78 @@ export function reference(value: unknown): Reference {
     hash: hash(o.hash),
   };
 }
+
+// This is a bound review profile, not an approval or permission grant.
+export function processingPlanProfile(
+  value: unknown,
+  context: ReturnType<typeof parseRecheckPlan>,
+  session: Session,
+) {
+  const plan = object(value);
+  if (
+    plan.schema_version === 2 &&
+    plan.profile === "scoped-record-projection-v1" &&
+    plan.output_binding === undefined
+  ) {
+    return { schema_version: 2, profile: "scoped-record-projection-v1" };
+  }
+  if (
+    plan.schema_version !== 3 ||
+    plan.profile !== "producer-record-projection-v1"
+  )
+    bad();
+  const b = exact(plan.output_binding, [
+      "profile",
+      "policy_id",
+      "policy_version",
+      "policy_hash",
+      "publisher_id",
+      "producer",
+    ]),
+    actor = exact(b.producer, [
+      "tenant_id",
+      "partner_id",
+      "actor_id",
+      "authority_revision",
+      "root_policy_digest",
+    ]),
+    producer = {
+      tenant_id: identifier(actor.tenant_id),
+      partner_id: identifier(actor.partner_id),
+      actor_id: identifier(actor.actor_id),
+      authority_revision: integer(actor.authority_revision, 1),
+      root_policy_digest: hash(actor.root_policy_digest),
+    },
+    ref = reference(context.policy),
+    identity = session.identity;
+  if (
+    b.profile !== "producer-processing-output-policy-v1" ||
+    b.policy_id !== ref.id ||
+    b.policy_version !== ref.version ||
+    b.policy_hash !== ref.hash ||
+    producer.tenant_id !== identity.tenant_id ||
+    producer.partner_id !== identity.partner_id ||
+    producer.actor_id !== identity.actor_id ||
+    producer.authority_revision !== identity.authority_revision ||
+    producer.authority_revision !== context.authority_revision ||
+    producer.root_policy_digest !== identity.root_policy_digest ||
+    producer.root_policy_digest !==
+      digestBytes(new TextEncoder().encode(context.namespace_root))
+  )
+    bad();
+  return {
+    schema_version: 3,
+    profile: "producer-record-projection-v1",
+    output_binding: {
+      profile: "producer-processing-output-policy-v1",
+      policy_id: ref.id,
+      policy_version: ref.version,
+      policy_hash: ref.hash,
+      publisher_id: identifier(b.publisher_id),
+      producer,
+    },
+  };
+}
 export function projection(value: unknown): Projection {
   const o = exact(value, [
     "schema_version",
@@ -631,9 +703,10 @@ export function processingWork(value: unknown, session: Session): WorkView {
           "projection",
           "output_contract_hash",
         ],
-        ["source_proof_valid_until"],
+        ["source_proof_valid_until", "output_binding"],
       ),
       context = parseRecheckPlan(plan.context, status.run.namespace_root),
+      mode = processingPlanProfile(plan, context, session),
       binding = exact(definition.workflow, [
         "workflow_id",
         "workflow_version",
@@ -642,9 +715,7 @@ export function processingWork(value: unknown, session: Session): WorkView {
         "step_id",
       ]);
     if (
-      definition.schema_version !== 2 ||
-      plan.schema_version !== 2 ||
-      plan.profile !== "scoped-record-projection-v1" ||
+      definition.schema_version !== mode.schema_version ||
       context.authority_revision !== session.identity.authority_revision ||
       context.source.file.id !== status.run.file_id ||
       processingHash(context.source.file) !==
@@ -660,10 +731,10 @@ export function processingWork(value: unknown, session: Session): WorkView {
     const slots = (definition.staging_slots as unknown[]).map(identifier);
     if (new Set(slots).size !== 3 || slots.includes(status.run.file_id)) bad();
     const canonical = {
-      schema_version: 2,
+      schema_version: mode.schema_version,
       plan: {
-        schema_version: 2,
-        profile: "scoped-record-projection-v1",
+        schema_version: mode.schema_version,
+        profile: mode.profile,
         context,
         source_policy: reference(plan.source_policy),
         projection: projection(plan.projection),
@@ -673,6 +744,9 @@ export function processingWork(value: unknown, session: Session): WorkView {
           : {
               source_proof_valid_until: text(plan.source_proof_valid_until, 40),
             }),
+        ...(mode.output_binding === undefined
+          ? {}
+          : { output_binding: mode.output_binding }),
       },
       staging_slots: slots,
       workflow: {

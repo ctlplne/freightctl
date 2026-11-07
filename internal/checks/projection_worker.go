@@ -329,7 +329,12 @@ func (s *Service) workProjection(ctx context.Context, scope store.Scope, key str
 	if err = guard(); err != nil {
 		return nil, err
 	}
-	if err = t.ConfigureIntakeFile(ctx, file); err != nil {
+	if d.Plan.Profile == ProducerProjectionProfile {
+		err = t.ConfigureProducerFile(ctx, file, d.Plan.Context.Policy)
+	} else {
+		err = t.ConfigureIntakeFile(ctx, file)
+	}
+	if err != nil {
 		return nil, err
 	}
 	if err = t.AcceptProjectedFile(ctx, r, file, s.Custody.Disk.Identity(), report, a); err != nil {
@@ -341,7 +346,12 @@ func (s *Service) workProjection(ctx context.Context, scope store.Scope, key str
 		copy.FileID = file.ID
 		target = &copy
 	}
-	held, err := t.BindIntake(ctx, file, s.Custody.Disk.Identity(), target)
+	var held bool
+	if d.Plan.Profile == ProducerProjectionProfile {
+		held, err = t.BindProducerFile(ctx, file, s.Custody.Disk.Identity(), target, d.Plan.Context.Policy)
+	} else {
+		held, err = t.BindIntake(ctx, file, s.Custody.Disk.Identity(), target)
+	}
 	if err != nil {
 		return nil, err
 	}

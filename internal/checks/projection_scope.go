@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 
+	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/store"
 	"github.com/ctlplne/freightctl/internal/vpath"
 )
@@ -33,6 +34,7 @@ func projectionReplayed(ctx context.Context, t *store.Transaction, data json.Raw
 }
 
 const ScopedProjectionProfile = "scoped-record-projection-v1"
+const ProducerProjectionProfile = "producer-record-projection-v1"
 
 func projectionProfile(profile string) (string, int, error) {
 	if profile == "" {
@@ -43,12 +45,20 @@ func projectionProfile(profile string) (string, int, error) {
 		return profile, 1, nil
 	case ScopedProjectionProfile:
 		return profile, 2, nil
+	case ProducerProjectionProfile:
+		return profile, 3, nil
 	}
 	return "", 0, ErrInput
 }
 func validProjectionProfile(plan ProjectionPlan) bool {
 	profile, schema, err := projectionProfile(plan.Profile)
-	return err == nil && plan.Profile == profile && plan.Schema == schema
+	if err != nil || plan.Profile != profile || plan.Schema != schema || ((profile == ProducerProjectionProfile) != (plan.OutputBinding != nil)) {
+		return false
+	}
+	if b := plan.OutputBinding; b != nil {
+		return b.Profile == "producer-processing-output-policy-v1" && store.ValidID(b.Publisher) && store.ValidID(b.Producer.Tenant) && store.ValidID(b.Producer.Partner) && store.ValidID(b.Producer.Actor) && b.Producer.AuthorityRevision == plan.Context.Authority && b.Producer.AuthorityRevision > 0 && b.Producer.RootPolicyDigest == secure.Digest([]byte(plan.Context.Root)) && b.PolicyID == plan.Context.Policy.ID && b.Version == plan.Context.Policy.Version && b.Hash == plan.Context.Policy.Hash
+	}
+	return true
 }
 
 // Workflow grants govern processing over owned artifacts. They supply no
@@ -74,7 +84,7 @@ func projectionAuthority(t *store.Transaction, profile string) error {
 			return err
 		}
 	}
-	if profile == ScopedProjectionProfile && !t.Has("workflow_manage") && !t.Has("workflow_approve") && !t.Has("workflow_execute") {
+	if (profile == ScopedProjectionProfile || profile == ProducerProjectionProfile) && !t.Has("workflow_manage") && !t.Has("workflow_approve") && !t.Has("workflow_execute") {
 		return store.ErrForbidden
 	}
 	return nil
@@ -84,7 +94,7 @@ func projectionActionAuthority(t *store.Transaction, profile, action string) err
 		return err
 	}
 	profile, _, _ = projectionProfile(profile)
-	if profile == ScopedProjectionProfile && action != "" {
+	if (profile == ScopedProjectionProfile || profile == ProducerProjectionProfile) && action != "" {
 		return t.Require(action)
 	}
 	return nil

@@ -13,10 +13,10 @@ administrator cannot select another producer's contract merely because it can
 inspect it. Stale versions, changed authority/root and revoked contracts refuse;
 catalog policy currency remains separate from historical task approval.
 
-Existing processing/check/release guards do not consume these contracts.
-Producer-bound generated acceptance,
-fresh checking and separate release remain owed; no repeat CSV-to-JSON processing
-outcome is claimed here.
+F185 implements producer-bound task review and generated acceptance, fresh
+checking, separate release and current-policy availability. The backend path is
+implemented; its prepared native cases remain unqualified. A passing stand-in
+does not establish a repeated CSV-to-JSON runtime outcome.
 
 A root administrator with `admin` and `intake_manage` names an existing producer
 with `read`, `write`, `check_run` and `workflow_execute`. The database resolves its
@@ -54,7 +54,8 @@ Mutations return `{resource,replayed}` containing the original contract receipt.
 `observation` explicitly says current state was not checked. GET separately
 reports `producer_binding_current_at_observation`; this does not assert scanner,
 key, file or execution readiness. `ingress_changed` is false and `usage` is
-`contract-registration-only`. Lists contain policy and producer references,
+`producer-workflow-output-contract`. This describes the contract's purpose,
+not a claim that any bytes were processed. Lists contain policy and producer references,
 format and column count, not full rules or paths. No MCP approval tool is added.
 
 CLI commands are `processing-output-policy-register`,
@@ -69,5 +70,38 @@ Five latest database guards preserve all existing clauses while selecting only
 the legacy default states. Historical migrations and retained schema35 are
 unchanged. Fresh-CI target inventory is76 metadata/75 forced-RLS tables. F181
 records focused contract/security checks and prepared real PostgreSQL, HTTPS
-and CLI cases. Compilation selects zero native cases. Runtime qualification,
-processing consumption and final-source acceptance remain owed.
+and CLI cases. Compilation selects zero native cases.
+
+The F185 task path uses `producer-record-projection-v1`, plan/intent schema3 and
+generated-acceptance schema6. The full producer binding is inside the immutable
+plan hash. Existing root/scoped plans retain their old wire hashes and semantics.
+Only a bound approved typed workflow can create this producer intent; direct
+projection proposals cannot acquire the new profile. Every slot, lease, current
+source proof, mapping and security control remains checked before acceptance.
+The output check names the exact immutable generated acceptance and selected
+policy. A normal upload cannot select an output-only contract by changing a
+file policy string. Transformed bytes remain held; checks and release are new
+commands. Prior signatures cannot cover changed bytes.
+
+Schema56 adds a forced-RLS status read model: only policy reference/hash, state,
+format and required-protection flags. Before a release, only the administrator
+or producer can see it. A release makes these status facts visible within the
+ordinary tenant/partner scope; private column rules remain private. Download
+guards use the release, active status and current key/scanner proofs. Namespace,
+file-read, receiving, forwarding and delivery permissions remain separate.
+No security-definer reader or broad output-definition disclosure is introduced.
+
+Public audit feeds and signed exports redact producer bindings, output rules,
+projection definitions and original keys to the protected journal payload's exact
+digest. Redaction does not mutate that journal. Focused regressions retain the
+original producer-binding and nested work-receipt disclosures before the fix.
+
+Fresh-CI inventory now targets77 metadata/76 forced-RLS tables. Retained35 stays
+unchanged. Prepared PostgreSQL cases cover repeated CSV input, fresh held JSON
+checks, explicit release, revocation and public-status/audit privacy. The served
+HTTPS profile retains the original default-policy case and adds the producer
+case. Browser validation recognizes the pinned producer profile and refuses
+identity/root/authority/reference substitution. Runtime, native browser/stock CLI,
+protected output, final-source and full acceptance qualification remain owed.
+Browser contract registration/selection, output-to-input composition, scheduling
+and third-party author delegation remain separate outstanding product work.
