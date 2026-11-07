@@ -63,6 +63,12 @@ Rotation still refuses self-change and a lesser manager;actual rotation uses a
 distinct manager with the target exact permission set. Existing format units
 and tagged compilation/vet pass;original native replay remains owed.
 
+Local F279 gives scanner sockets a separate native private-object profile.
+Windows requires the exact AF_UNIX tag and held owner-only protected ACL;Unix
+retains socket/inode/permission checks. Broad sockets receive zero source bytes.
+Local privacy/replacement/protocol stand-ins and affected static/Windows compile
+checks pass;actual Windows protocol and real-engine outcomes remain owed.
+
 FINISH repair is active and remaining implementation is mandatory. Next:repair
 newly reached browser/protocol failures,complete remaining product work,and replay
 all affected original native/security/browser/stock/recovery/reproducibility gates

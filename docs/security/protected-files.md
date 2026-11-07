@@ -131,3 +131,22 @@ Actual Windows execution,unsupported-filesystem/restore/restricted-token and
 process-death/power-loss outcomes remain owed. F275 retains the original failure
 and prepares native failed-flush,read-only recovery and copied-identity cases;
 local compilation establishes no Windows persistence claim.
+
+Scanner pathname sockets have a separate private-object profile. Unix retains
+the socket-type,exact inode and group/other permission-bit checks. Windows opens
+the socket filesystem object with OPEN_REPARSE_POINT and only metadata/security
+read rights. It requires the exact native AF_UNIX reparse tag,not a symlink or
+another reparse kind,and uses the existing strict held-handle owner/protected
+DACL parser. It holds that object without delete sharing for the scan,rechecks
+the pathname identity and current ACL after connection and before returning a
+verdict,and never changes a deployed socket's permissions.
+
+Windows socket permission bits do not prove privacy. The task-owned synthetic
+listener fixture sets and reads an actual private DACL before use. Broad access
+must fail before reading a source byte;ordinary files cannot qualify as sockets.
+Scanner configuration,database,temp and socket-parent directories also use the
+actual private-directory profile. Local Unix socket/replacement/privacy and
+scanner-protocol stand-ins pass. Actual Windows socket/ACL/name-pin/protocol
+execution and real engine deployment/detection remain owed. F279 records the
+original native failure and precise local proof;it makes no malware-detection or
+whole-Windows-support claim.

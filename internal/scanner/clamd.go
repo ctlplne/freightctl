@@ -15,6 +15,7 @@ import (
 	"unicode/utf8"
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
+	"github.com/ctlplne/freightctl/internal/protectedfs"
 )
 
 var detectionPattern = regexp.MustCompile(`^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$`)
@@ -64,9 +65,14 @@ func Scan(ctx context.Context, d Definition, now time.Time, source io.Reader, si
 		return nil, err
 	}
 	before, err := os.Lstat(d.Socket)
-	if err != nil || before.Mode()&os.ModeSocket == 0 || before.Mode().Perm()&0077 != 0 {
+	if err != nil || before.Mode()&os.ModeSocket == 0 {
 		return nil, ErrUnavailable
 	}
+	socket, err := protectedfs.OpenPrivateSocket(d.Socket)
+	if err != nil {
+		return nil, ErrUnavailable
+	}
+	defer socket.Close()
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(d.TimeoutSeconds)*time.Second)
 	defer cancel()
 	dialer := net.Dialer{Timeout: 2 * time.Second}
@@ -76,7 +82,7 @@ func Scan(ctx context.Context, d Definition, now time.Time, source io.Reader, si
 	}
 	defer connection.Close()
 	after, err := os.Lstat(d.Socket)
-	if err != nil || !os.SameFile(before, after) {
+	if err != nil || !os.SameFile(before, after) || socket.Validate() != nil {
 		return nil, ErrUnavailable
 	}
 	deadline, _ := ctx.Deadline()
@@ -205,6 +211,9 @@ func Scan(ctx context.Context, d Definition, now time.Time, source io.Reader, si
 	}
 	if err = ConfigurationCurrent(ctx, d); err != nil {
 		return nil, err
+	}
+	if err = socket.Validate(); err != nil {
+		return nil, ErrUnavailable
 	}
 	return result, nil
 }

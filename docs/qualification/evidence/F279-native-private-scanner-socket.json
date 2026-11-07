@@ -1,0 +1,182 @@
+{
+  "schema_version": 1,
+  "id": "F279",
+  "observed_at": "2026-11-07",
+  "base_candidate": "310a983711fa7bf09d1579ebf0531646eb99f4a6",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Native private socket profile implemented;actual Windows and real engine proof owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "47e4c90dc13b625466e1e75106e1bb5db949cadde6bd88442af0da77b255ca96",
+      "bytes": 5791
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "26445e0106eec389ba4d616d6abbe42e5674483f532552dbb89de9bd38fb3504",
+      "bytes": 386221
+    },
+    {
+      "reference": "docs/scanners.md",
+      "sha256": "3e4050d59ee7bd60bbdb6d91759d01a63b8945a501913d1f86af37f00264abc1",
+      "bytes": 11391
+    },
+    {
+      "reference": "docs/security/protected-files.md",
+      "sha256": "217203bd22a9a4e47f7122a736e4ca01ef93144131b85d1182fa2047f6099ba3",
+      "bytes": 9879
+    },
+    {
+      "reference": "internal/protectedfs/socket.go",
+      "sha256": "f7eba0848b7f3ce67b4b31d4b88db1713706f3c3fcbe25e85b803625c0c302fb",
+      "bytes": 1556
+    },
+    {
+      "reference": "internal/protectedfs/socket_other.go",
+      "sha256": "e6b3878857829f15b223e81e83e3818b14e6c8964bb6a9c96ecc22ea0fdcd323",
+      "bytes": 343
+    },
+    {
+      "reference": "internal/protectedfs/socket_other_test.go",
+      "sha256": "c3ca9a21522cc670da6788dbbfed00c28935d62a1d5cd09892fa3586e7d45aa4",
+      "bytes": 772
+    },
+    {
+      "reference": "internal/protectedfs/socket_test.go",
+      "sha256": "47de4eec2a83b3f60169ebf7ee1a0f14e42d7a86eee63342b2319a92da20cec9",
+      "bytes": 1875
+    },
+    {
+      "reference": "internal/protectedfs/socket_windows.go",
+      "sha256": "0b58f61b570a698bafb99f893118413a1aa4c9207a2838cf37e0b4a5745f390c",
+      "bytes": 2498
+    },
+    {
+      "reference": "internal/protectedfs/socket_windows_test.go",
+      "sha256": "b7ca0de4ccb5ce89144bd34ba20c161940c528f500766a36a2b6159c6dd71185",
+      "bytes": 1702
+    },
+    {
+      "reference": "internal/scanner/clamd.go",
+      "sha256": "923b606384f29a2812f749a1e52a5db6dd444fce40aa8123d1342b3a7a53e92f",
+      "bytes": 5977
+    },
+    {
+      "reference": "internal/scanner/clamd_test.go",
+      "sha256": "733ab42bed1d084bea14d29816aa824b5175e5edbc4f7e5334963ba0c8e02ae4",
+      "bytes": 8854
+    },
+    {
+      "reference": "internal/scanner/configuration.go",
+      "sha256": "0b2f0d9bc3263260b9ef3e7cf0f1d1173922476a9300c46e7f806dee94cb8d1d",
+      "bytes": 4171
+    },
+    {
+      "reference": "internal/scanner/socket_other_test.go",
+      "sha256": "7dbc1dc008b7bdef59cf1a404d5c1264caba8eed92164383429aa7db23923dab",
+      "bytes": 278
+    },
+    {
+      "reference": "internal/scanner/socket_windows_test.go",
+      "sha256": "149df90239d608fde50060289fac44c85e41af08d59804b4a9d3f5716539ac59",
+      "bytes": 1152
+    }
+  ],
+  "red": {
+    "candidate": "33ad447564cb0be33bc04fa8d60e9f0adaf0c2b4",
+    "run": 42361009318,
+    "job": 128369207103,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128369207103",
+    "test": "TestClamdExactStreamAndAdversarialResults",
+    "observation": "Native clean/infected/limit/encrypted protocol stand-ins return scanner unavailable or unverified. Socket reports is_socket=true,permission_bits=0666;production uses Unix permission bits. This does not establish which precondition was first refused or any real ClamAV detection outcome."
+  },
+  "changed": [
+    "Distinct SocketReference checks real socket type and physical identity. Windows opens exact reparse object for READ_CONTROL/FILE_READ_ATTRIBUTES only,requires native AF_UNIX tag and existing strict held-handle owner/protected explicit DACL parser,and holds without delete sharing. Other reparse kinds/regular files/broad grants fail.",
+    "Unix retains exact socket/inode/group-other permission rules. Recheck current privacy/identity after connect and before verdict. Never mutate deployed ACLs. Scanner configured private directories validate the actual same held object.",
+    "Owned scanner fixtures create actual private configuration/directories and install actual native socket ACL before serving. Broad socket must be actually refused before original Scan call;assert no source read,no authorization callback,no result and exact ErrUnavailable. All prior protocol/version/hash/freshness/bounds/ambiguous-response assertions remain."
+  ],
+  "green": [
+    "Two local Unix socket actual privacy/regular-file/refused replacement cases pass.",
+    "All13 original protocol modes plus exact source/configuration/expiry/transport cases pass as Go stand-ins only. Added broad-socket zero-source-disclosure case passes.",
+    "Affected formatting/local and Windows vet,Windows protectedfs/scanner compilation,architecture and checks integration compilation pass."
+  ],
+  "local_failures_preserved": [
+    "First native-fixture path exceeded Unix socket path length;short task-owned paths fixed the fixture.",
+    "Sandbox refused bind;exact lightweight authorized escalation passed. Neither is treated as a product red/green or native Windows proof."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f279-socket-first.log",
+      "sha256": "195f9c41445a1e0bdf22c753ddc5e577bdb2b278bdfdb4efdc35dbb98dc4a5c2",
+      "bytes": 626
+    },
+    {
+      "reference": ".private/freightctl-f279-socket-second.log",
+      "sha256": "1a8546ed7545cb461e17d831bf34de17e2f00b915c98e8c21d3afb1324a2d142",
+      "bytes": 547
+    },
+    {
+      "reference": ".private/freightctl-f279-socket-green.log",
+      "sha256": "fdc1b4daf24c62631fd0d279852069e7490f22ecbd4a78c8c1421cf6104c4617",
+      "bytes": 63
+    },
+    {
+      "reference": ".private/freightctl-f279-protocol-green.log",
+      "sha256": "68e331eebd5a85611db1f71556449388eff01cda1d8ca66aca56d7e951a14a21",
+      "bytes": 59
+    },
+    {
+      "reference": ".private/freightctl-f279-no-disclosure-green.log",
+      "sha256": "225ecf26b7e4fcb183478eb76fa8e30791c6d436689eddad1e4aceb4c9ca3dd0",
+      "bytes": 59
+    },
+    {
+      "reference": ".private/freightctl-f279-final-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f279-protectedfs-windows-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f279-final-windows-scanner-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f279-final-windows-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f279-final-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f279-architecture.log",
+      "sha256": "8efd4e156ec52117905a07b79183cfe4fc0f2cf8f9897c25cd840daadc185616",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f279-checks-integration-compile.log",
+      "sha256": "d7a0e8185e32f93c235bce3b64dbe268d928cfa67cc9b2d58c3905dc4641da46",
+      "bytes": 76
+    }
+  ],
+  "primary_references": [
+    "https://devblogs.microsoft.com/commandline/af_unix-comes-to-windows/",
+    "https://learn.microsoft.com/windows/win32/api/winbase/ns-winbase-file_attribute_tag_info",
+    "Pinned Go1.26.10 os/types_windows.go AF_UNIX mode mapping and x/sys/windows v0.49.0 held security APIs"
+  ],
+  "owed": [
+    "Actual original Windows clean/infected/limit/encrypted and all adversarial socket protocol cases.",
+    "Actual Windows broad ACL no-source-disclosure,native name pin,wrong/restricted token and reparse/parent race cases.",
+    "Real authorized ClamAV deployment/detection/standard database and final-source scanner workflows remain separate from protocol stand-ins.",
+    "All remaining native/browser/stock/product and final baseline/AX/FINISH outcomes."
+  ],
+  "resources": "OneCPU/192MiB local lightweight task-owned Unix-socket Go stand-ins/static/cross-compilation only;no scanner engine,inference,PostgreSQL,Chrome or heavy peer. Local resource limits,retained35/source60 unchanged."
+}

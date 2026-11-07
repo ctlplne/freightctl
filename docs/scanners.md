@@ -31,6 +31,14 @@ Add `"scanner": {"id": "ID", "version": 1, "hash": "DEFINITION_HASH"}` to a new 
 
 The deployment operator owns the engine and signature updates. freightctl never launches a process or loads a database. Keep socket parent, database and temporary directories private (`0700`), the configuration `0600`, and the socket `0600`. Enroll only the exact reviewed configuration. Unknown directives, duplicate keys, includes, TCP listening and executable hooks are refused by this profile.
 
+Those modes describe Unix. The prepared Windows adapter uses actual owner-only
+protected ACLs for configuration and directories,and a held socket file with the
+exact native AF_UNIX reparse tag. It checks the socket's ACL and physical identity
+before sending bytes and again before returning a verdict. It does not follow
+arbitrary reparse points or alter an existing deployment's ACL. Windows native
+protocol and real-engine qualification are still owed;Unix protocol stand-ins
+and cross-compilation do not establish Windows malware-scanning support.
+
 The accepted configuration subset requires `Foreground`, `ScanArchive`, `AlertExceedsMax`, `AlertEncrypted`, `OfficialDatabaseOnly`, `Bytecode` and `EnableVersionCommand` to be `yes`. It requires `ConcurrentDatabaseReload`, `EnableReloadCommand`, `EnableShutdownCommand` and `EnableStatsCommand` to be `no`, `SelfCheck 0`, and `BytecodeSecurity TrustSigned`. Socket reference and mode must match the definition. Other optional accepted scan switches are explicit configuration choices; the hash records them, without establishing their detection coverage.
 
 | Engine bound | Accepted range |

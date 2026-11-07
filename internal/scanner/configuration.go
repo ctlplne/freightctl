@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
+	"github.com/ctlplne/freightctl/internal/protectedfs"
 )
 
 func privateDirectory(path string) error {
@@ -16,7 +17,16 @@ func privateDirectory(path string) error {
 		return ErrInput
 	}
 	st, err := os.Lstat(path)
-	if err != nil || !st.IsDir() || st.Mode().Perm()&0077 != 0 {
+	if err != nil || !st.IsDir() {
+		return ErrUnavailable
+	}
+	f, err := os.Open(path)
+	if err != nil {
+		return ErrUnavailable
+	}
+	defer f.Close()
+	actual, err := f.Stat()
+	if err != nil || !os.SameFile(st, actual) || protectedfs.ValidateDirectory(f) != nil {
 		return ErrUnavailable
 	}
 	return nil
