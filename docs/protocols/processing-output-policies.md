@@ -111,8 +111,7 @@ CSV/JSON output contract. Choosing it clears the old review, fetches the exact
 source/output metadata, and binds the current session identity, authority and
 namespace digest. Stale/other-producer contracts cannot be substituted, even by
 a root administrator. The default policy remains an explicit separate choice.
-Contract registration itself remains available through administrator API/CLI;
-a browser registration editor is still owed.
+Contract registration is also available through administrator API/CLI.
 
 `GET /checks/{file}/processing-contracts` retains its default v1 response. Supply
 all three `output_policy_id`, `output_policy_version` and `output_policy_hash`
@@ -135,3 +134,29 @@ Chrome selection/recovery/processing/release remain prepared and compiled only.
 The original Chrome profile retains all five audits; the separate producer
 profile adds a sixth selection audit. No local Chrome or PostgreSQL runs. All
 native outcomes and final-source acceptance remain owed.
+
+F189 adds the root policy administrator's browser editor under Intake policy.
+It imports a bounded typed checking definition, names one producer, shows the
+complete normalized rules/hash for review, and registers an independent contract
+or a new expected version. It does not change default ingress or grant worker
+permissions. This administrator needs `admin`/`intake_manage` at root, without
+requiring workflow or byte permissions. Registration still requires the named
+producer's existing four processing grants; the server resolves its current
+authority and namespace binding.
+
+The editor lists current contract summaries, privately inspects exact versions,
+and separately reviews exact hash/version/revision revocation. Mutation receipts
+are labelled original; current status is fetched and shown separately. An
+uncertain reply retains the exact command and key. A saved request includes
+origin/tenant/partner/publisher/authority/root binding and complete normalized
+meaning, with no credential or browser-session token. Import opens review and
+never submits automatically. Closing an uncertain review preserves its pending
+request. Changed authority, scope, body or key refuses saved-request recovery.
+
+The client refuses a receipt that substitutes producer/scope/rules, changes
+ingress, or claims a different version. Historical registration-only receipt
+usage remains readable. F189's focused contract/retry tests pass; the real Chrome
+administrator-without-workflow profile is prepared and compiled only. That
+profile uses stock curl for committed reply loss, reload/saved-request recovery,
+four WCAG audits, exact registration/receipt checks, unchanged
+ingress and zero file/workflow effects. No local Chrome or database is started.

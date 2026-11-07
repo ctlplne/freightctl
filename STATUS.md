@@ -4,8 +4,8 @@ Updated 2026-11-06. Active under owner resume. All83 whole parity rows,twelve
 complete journeys and AX01–AX08 remain open. Assisted deployment,independent
 adoption and enterprise readiness remain unqualified.
 
-Latest pushed source before this batch:0391ae822d65e775b33e61b346a4343ae8a7eb7b.
-F188 preserves its17 original triggered terminal workflows/37 jobs. Listed source,
+Latest pushed source before this batch:5c8aa2b292dbf16ea77278faec8e3ce13f6f7ea8.
+F190 preserves its17 original triggered terminal workflows/37 jobs. Listed source,
 dependency,history-secret and image security gates pass. Original PostgreSQL/
 metadata,Windows,qualification-record and public/browser/stock-peer failures stay
 red. No original run was cancelled,restarted or substituted. F178 preserves the
@@ -59,7 +59,7 @@ supports current release guards without exposing private rules or granting byte,
 forwarding or delivery access. Focused review/audit/privacy/browser checks pass;
 new repeated-input/revocation/public-status/privacy PostgreSQL and served HTTPS
 profiles are prepared/compiled only. Native byte/protected/CLI/Chrome/final-source
-proof is owed. Browser registration editor and output composition remain open.
+proof is owed. Output composition remains open.
 F187 adds browser discovery/explicit producer-output selection and v2 metadata
 through API/CLI/read-only Catalog38-v16 MCP. Closed reference/query schemas and
 session-bound decoding preserve the source policy and grant no effects. Focused
@@ -67,11 +67,18 @@ Go/MCP and11 frontend contracts plus affected static/type/build/workflow checks
 pass. PostgreSQL/HTTPS/public-CLI/stock-SDK and a separate Chrome producer profile
 are prepared/compiled only. Its six audits include the original five;the original
 default Chrome profile remains unchanged. Actual native/final-source proof is owed.
+F189 adds root administrator output-contract registration/version/revocation UI
+with complete rule review,exact-key recovery and separate original/current views.
+The administrator needs no workflow/byte grants. Three new command/receipt tests
+and two affected metadata cases plus type/build/workflow checks pass. A separate
+native Chrome administrator/stock-curl reply-loss/reload/recovery/revocation/four-
+audit/no-byte-effect profile is prepared/compiled only. All original profiles
+remain;actual runtime/accessibility/final-source outcomes stay owed.
 Historical profiles and retained schema35 are untouched. No local PostgreSQL,
 Chrome,model,scanner or heavy peer ran. Native compilation/stand-ins establish
 no runtime qualification. F026 stays manual/owner-deferred.
 
-Next:browser output-contract registration,third-party delegation,composition/scheduling,protected processing,independent
+Next:third-party delegation,composition/scheduling,protected processing,independent
 receivers and all remaining baseline/exchange implementation. Continue AX-J01/J02
 and every mandatory GOAL.md capability. X07 blocks only real optional Trust
 Control proof;no API is invented. Inference,licensed peers,cloud/multi-host/

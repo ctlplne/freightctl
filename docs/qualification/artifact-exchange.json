@@ -83,7 +83,8 @@
         "docs/qualification/evidence/F181-producer-output-policies.json",
         "docs/qualification/evidence/F183-processing-output-selection.json",
         "docs/qualification/evidence/F185-producer-projection-outputs.json",
-        "docs/qualification/evidence/F187-producer-output-selection-surfaces.json"
+        "docs/qualification/evidence/F187-producer-output-selection-surfaces.json",
+        "docs/qualification/evidence/F189-output-policy-browser-administration.json"
       ]
     },
     {
@@ -260,7 +261,8 @@
         "docs/qualification/evidence/F181-producer-output-policies.json",
         "docs/qualification/evidence/F183-processing-output-selection.json",
         "docs/qualification/evidence/F185-producer-projection-outputs.json",
-        "docs/qualification/evidence/F187-producer-output-selection-surfaces.json"
+        "docs/qualification/evidence/F187-producer-output-selection-surfaces.json",
+        "docs/qualification/evidence/F189-output-policy-browser-administration.json"
       ]
     },
     {
@@ -312,7 +314,8 @@
         "docs/qualification/evidence/F179-processing-task-catalog.json",
         "docs/qualification/evidence/F181-producer-output-policies.json",
         "docs/qualification/evidence/F185-producer-projection-outputs.json",
-        "docs/qualification/evidence/F187-producer-output-selection-surfaces.json"
+        "docs/qualification/evidence/F187-producer-output-selection-surfaces.json",
+        "docs/qualification/evidence/F189-output-policy-browser-administration.json"
       ]
     },
     {
@@ -332,7 +335,8 @@
         "docs/qualification/evidence/F181-producer-output-policies.json",
         "docs/qualification/evidence/F183-processing-output-selection.json",
         "docs/qualification/evidence/F185-producer-projection-outputs.json",
-        "docs/qualification/evidence/F187-producer-output-selection-surfaces.json"
+        "docs/qualification/evidence/F187-producer-output-selection-surfaces.json",
+        "docs/qualification/evidence/F189-output-policy-browser-administration.json"
       ]
     }
   ],
@@ -453,5 +457,5 @@
     "Fixtures, design documents, ledger checks, model answers and skips establish no runtime or real provider qualification.",
     "Preserve original parity/journey/defect/evaluation records and separate assisted deployment, independent adoption and enterprise readiness."
   ],
-  "execution": "Active under owner resume;full baseline/AX01\u2013AX08/FINISH incomplete. F187 adds explicit producer-output selection across browser/API/CLI/read-only MCP;all native and final-source proof remains owed. F188 preserves0391ae8 original terminal17/37,listed security passes and red application failures. No local heavy runtime/inference;retained35 unchanged."
+  "execution": "Active under owner resume;full baseline/AX01\u2013AX08/FINISH incomplete. F189 adds root-only output-contract browser administration/recovery;native runtime/accessibility and final-source proof remain owed. F190 preserves5c8aa2b original terminal17/37,listed security passes and red application failures. No local heavy runtime/inference;retained35 unchanged."
 }

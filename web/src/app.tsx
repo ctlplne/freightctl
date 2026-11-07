@@ -14,6 +14,8 @@ import { createRoot } from "react-dom/client";
 import { Api } from "./api";
 import { Accounts } from "./accounts";
 import { IntakePolicyEditor } from "./intake-policy";
+import { OutputPolicies } from "./output-policies";
+import { outputPolicyAllowed } from "./output-policy-api";
 import { Partners } from "./partners";
 import { Schedules } from "./schedules";
 import { Collections } from "./collections";
@@ -1196,11 +1198,21 @@ function App() {
             {tab === "policy" &&
               allowed("admin") &&
               allowed("intake_manage") && (
-                <IntakePolicyEditor
-                  api={api}
-                  refresh={refresh}
-                  onError={reportError}
-                />
+                <>
+                  <IntakePolicyEditor
+                    api={api}
+                    refresh={refresh}
+                    onError={reportError}
+                  />
+                  {outputPolicyAllowed(session) && (
+                    <OutputPolicies
+                      key={processingStamp(session)}
+                      api={api}
+                      session={session}
+                      onError={reportError}
+                    />
+                  )}
+                </>
               )}
             {tab === "endpoints" &&
               allowed("admin") &&

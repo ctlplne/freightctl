@@ -1,0 +1,273 @@
+{
+  "schema_version": 1,
+  "id": "F189",
+  "observed_at": "2026-11-06",
+  "base_candidate": "5c8aa2b292dbf16ea77278faec8e3ce13f6f7ea8",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Root policy administrator browser publication/version/revocation and exact recovery implemented;native qualification owed",
+  "source_files": [
+    {
+      "reference": ".github/workflows/json-intake.yml",
+      "sha256": "acd5de625b5b70e63554f6cf73bc5258719737787c9b45cefa8724d2a1d57874",
+      "bytes": 6383
+    },
+    {
+      "reference": "STATUS.md",
+      "sha256": "c8c30dfaa7da5acbb54416e015a46f245f154ec4a2d9c11f777cb67ea5e62ed4",
+      "bytes": 6595
+    },
+    {
+      "reference": "docs/protocols/processing-output-policies.md",
+      "sha256": "b33a2d62ff55b150232971a5cbcaee4255eb83f19ac4c9c7b2b695be40e1d172",
+      "bytes": 10715
+    },
+    {
+      "reference": "docs/qualification/artifact-exchange.json",
+      "sha256": "0ac12cdd8e0091ed3ceb00897eb989b6e9d82c76441c91643fa73a001eb5829f",
+      "bytes": 28610
+    },
+    {
+      "reference": "docs/qualification/evidence/F190-output-selection-terminal-ci.json",
+      "sha256": "318da1039cc49f0e8b13b618235c7777bb77cd5bdfa87482e1e9a5a43eb24373",
+      "bytes": 20240
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "6fa2ffe8667bc8b02f37f4626d96f36dcf0b750146e3a7cee557f3a719c9c3b9",
+      "bytes": 353453
+    },
+    {
+      "reference": "internal/api/output_policies_browser_integration_test.go",
+      "sha256": "faa75af843e997559efdc0ac65ac0730c8deea50addb939ebd5b12649314f5f8",
+      "bytes": 5789
+    },
+    {
+      "reference": "internal/browser/assets/app.js",
+      "sha256": "8d513b51ae94e4b90ea8d065e259b087596cefdb4233c567988bb37424df2bd2",
+      "bytes": 880653
+    },
+    {
+      "reference": "internal/browser/assets/manifest.json",
+      "sha256": "05cc6de90ffd0d7bda7c23369215568cb213254f2d7bec8d01258cd9f1abbd58",
+      "bytes": 13534
+    },
+    {
+      "reference": "scripts/output-policy-browser.mjs",
+      "sha256": "36aec1d6ae284a330eda9513f1dcb4274443d564e58e95cba07c316c4235e8c4",
+      "bytes": 8833
+    },
+    {
+      "reference": "web/src/app.tsx",
+      "sha256": "0c203cc681ae87e075a26c1437d84fa92ceb48b65761d9f51382f2720adcdd5a",
+      "bytes": 77946
+    },
+    {
+      "reference": "web/src/output-policies.tsx",
+      "sha256": "4bc1daf507b32646b7785e6714b08648e18094f7004aaef711b3aa43f515c5be",
+      "bytes": 17459
+    },
+    {
+      "reference": "web/src/output-policy-api.ts",
+      "sha256": "192258c9a6fcac8055fe751ab2f9815d78108b8f11fa054bdcab4fdfd8339c1b",
+      "bytes": 14089
+    },
+    {
+      "reference": "web/tests/output-policy-commands.test.mjs",
+      "sha256": "92d11556f41643fb57b62f6e5f4a0fa039ad7f8a1b0d6e25a7f629e45ba15d47",
+      "bytes": 8183
+    }
+  ],
+  "changed": [
+    "Root-only Intake policy page adds bounded typed definition import,explicit producer/full-rule review,new-family or expected-version registration,active summary discovery,exact private inspection and hash/version/revision revocation. Administrator requires admin/intake_manage/root but no workflow/byte grant.",
+    "Saved complete command is bound to origin/tenant/partner/publisher/authority/root and exact key/hash;no credential,CSRF or browser session token is saved. Import opens review only. Unknown replies preserve pending commands;closing review keeps the request. Original receipts and separately fetched current status remain distinct.",
+    "Client checks complete normalized policy meaning,producer/scope/publisher/version and ingress_changed=false. It refuses stale context before/after transport and keeps exact body/key on retry. Historical registration-only receipts remain readable.",
+    "New native Chrome fixture uses a distinct administrator with only admin/intake_manage,stock-curl committed reply loss,reload/saved retry,revocation,four accessibility audits,one immutable binding/two receipts and zero file/workflow effects. All previous CI/browser profiles remain."
+  ],
+  "red": [
+    {
+      "reference": ".private/freightctl-f189-admin-recovery-red.log",
+      "observed": "Required scoped output policy command/recovery module absent."
+    },
+    {
+      "reference": ".private/freightctl-f189-admin-context-order-first.log",
+      "observed": "Semantically identical participant JSON key ordering was incorrectly rejected;the whole typed participant is now compared field by field."
+    },
+    {
+      "reference": ".private/freightctl-f189-admin-transport-red.log",
+      "observed": "Required exact-retry administrator client absent."
+    }
+  ],
+  "green": {
+    "reference": ".private/freightctl-f189-final-focused.log",
+    "observed": "Three administrator recovery/transport/receipt refusal cases and two affected metadata cases pass. Exact body/key,scope/meaning,private-current separation and ingress/producer substitution remain guarded."
+  },
+  "checks": [
+    {
+      "reference": ".private/freightctl-f189-admin-client-typecheck.log",
+      "sha256": "a78d4f6fe9c8f0d509aea54a52536e947bc95834e283dfe9ae21160e386d95d2",
+      "bytes": 394
+    },
+    {
+      "reference": ".private/freightctl-f189-admin-context-order-first.log",
+      "sha256": "0b398fa929bf56a1738bb5d3594eb1fd0beaa9215ba0d935f0757ac99d802b9b",
+      "bytes": 60590
+    },
+    {
+      "reference": ".private/freightctl-f189-admin-context-order-green.log",
+      "sha256": "00cef4fdfba3e8ad4c8bc4a89c9bfcdc811ee4b0e7a304afbd78e1e46dba49fb",
+      "bytes": 242
+    },
+    {
+      "reference": ".private/freightctl-f189-admin-receipt-green.log",
+      "sha256": "6a8d08c2159eb89f4a8386d9bd2570b09d33f96b93e0edcc3545d68eb489d74e",
+      "bytes": 703
+    },
+    {
+      "reference": ".private/freightctl-f189-admin-recovery-first-green.log",
+      "sha256": "3532c668a571142df635dd09e4182219abff25654445323fefe89ed3210ad9a1",
+      "bytes": 242
+    },
+    {
+      "reference": ".private/freightctl-f189-admin-recovery-red.log",
+      "sha256": "8e1f1defd0425bd16bc354193baca22ea60d6e6ea1ab783d0af83c171741817b",
+      "bytes": 1726
+    },
+    {
+      "reference": ".private/freightctl-f189-admin-transport-first-green.log",
+      "sha256": "bc2646272e7af1c8939c26a23db390c7116418392ffa4dabe76e80c01bd8c232",
+      "bytes": 118015
+    },
+    {
+      "reference": ".private/freightctl-f189-admin-transport-green.log",
+      "sha256": "0995d335e79abc064ee624809f3b722ad1ca5e754a60db49953766d888b2a494",
+      "bytes": 367
+    },
+    {
+      "reference": ".private/freightctl-f189-admin-transport-red.log",
+      "sha256": "3a09b5a687714afdc2b8a583aa304e72c77aae7deabf4812aba896e583b0c407",
+      "bytes": 1144
+    },
+    {
+      "reference": ".private/freightctl-f189-admin-ui-typecheck.log",
+      "sha256": "17e00418398dd65e49bed86df28efee896dcae70d7e6258050a2746181f558d5",
+      "bytes": 54
+    },
+    {
+      "reference": ".private/freightctl-f189-browser-build.log",
+      "sha256": "38180571b7378e22390b3039f7663648704454b75f599a2ad2d410c8131763f9",
+      "bytes": 232
+    },
+    {
+      "reference": ".private/freightctl-f189-browser-format.log",
+      "sha256": "d3e71aa5d849812dbc8f40f547fa65c4102ef0547b50d32a2bfb885df26721b0",
+      "bytes": 161
+    },
+    {
+      "reference": ".private/freightctl-f189-built-consistency.log",
+      "sha256": "4620ff79a8ba9a0d5090d9fd1f499299dbc3125967180ca7c5373fbd6c60e95b",
+      "bytes": 249
+    },
+    {
+      "reference": ".private/freightctl-f189-dialog-status-format.log",
+      "sha256": "779cc7b3eeef0638aa5375c368e51c6115d692c738d9b18c9d54ff40c9af68a4",
+      "bytes": 95
+    },
+    {
+      "reference": ".private/freightctl-f189-final-browser-build.log",
+      "sha256": "713a6489b0b85d2475330e52749ff0501560a8c19ea254e7c887b4a2d8676a29",
+      "bytes": 232
+    },
+    {
+      "reference": ".private/freightctl-f189-final-built-consistency.log",
+      "sha256": "fac9037a9081f22a00e7fb1209c2f5703446196fbb1117cbfe7d69e4d799971e",
+      "bytes": 249
+    },
+    {
+      "reference": ".private/freightctl-f189-final-focused.log",
+      "sha256": "42ef66f1adf663a244573e4b2123e2f35f1964294e5dd190ab8d26205a5ecdab",
+      "bytes": 702
+    },
+    {
+      "reference": ".private/freightctl-f189-final-native-script-syntax.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f189-final-typecheck.log",
+      "sha256": "17e00418398dd65e49bed86df28efee896dcae70d7e6258050a2746181f558d5",
+      "bytes": 54
+    },
+    {
+      "reference": ".private/freightctl-f189-final-ui-typecheck.log",
+      "sha256": "17e00418398dd65e49bed86df28efee896dcae70d7e6258050a2746181f558d5",
+      "bytes": 54
+    },
+    {
+      "reference": ".private/freightctl-f189-first-typecheck.log",
+      "sha256": "17e00418398dd65e49bed86df28efee896dcae70d7e6258050a2746181f558d5",
+      "bytes": 54
+    },
+    {
+      "reference": ".private/freightctl-f189-native-compile.log",
+      "sha256": "147094777c4a984ac9bebbd90b095ec8c9fb090155f6ab1a43677cf551eb5b54",
+      "bytes": 73
+    },
+    {
+      "reference": ".private/freightctl-f189-native-script-syntax.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f189-native-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f189-pending-close-format.log",
+      "sha256": "0a11e073911b6a9e5f67bc0eb41cf0d5fbe8b2638ae99aa5f725c961649699b4",
+      "bytes": 41
+    },
+    {
+      "reference": ".private/freightctl-f189-record-refs.log",
+      "sha256": "826009b37d6c8254924b7fd1ee12981059544175f2c890ad4186b88b41b583b4",
+      "bytes": 106
+    },
+    {
+      "reference": ".private/freightctl-f189-source-complete-build.log",
+      "sha256": "003b34b2125d1440b4f509d99ecdba2042d5faa0af16c78f8867d0ec97dafdb5",
+      "bytes": 232
+    },
+    {
+      "reference": ".private/freightctl-f189-source-complete-built-check.log",
+      "sha256": "bd14124fd8030030ec26106cfd57f71c51c70557d0f5ce54516bd1c8abed9df5",
+      "bytes": 249
+    },
+    {
+      "reference": ".private/freightctl-f189-source-complete-typecheck.log",
+      "sha256": "17e00418398dd65e49bed86df28efee896dcae70d7e6258050a2746181f558d5",
+      "bytes": 54
+    },
+    {
+      "reference": ".private/freightctl-f189-workflow-lint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "preparation_failures": [
+    "Initial transport replay refused changed context synchronously;declared asynchronous client methods now return rejected promises without changing assertions or network-count refusal. First TypeScript check caught nullable API session;explicit missing-session refusal added. Original failures retained."
+  ],
+  "prepared_native": [
+    "TestOutputPolicyNativeBrowserAdministratorRecoveryAndRevocationKeepsIngress"
+  ],
+  "verification_limits": [
+    "Tagged native compilation selected zero cases. No local PostgreSQL,Chrome,scanner,model or heavy peer ran. Actual persisted/browser/stock-curl/accessibility outcomes remain unqualified.",
+    "No backend policy/security/permissions,default ingress,schema56/inventory77/76 or retained35 changes. New browser uses existing typed transactional services.",
+    "F190 preserves preceding5c8aa2b original terminal17 workflows/37 jobs,listed security passes and red application failures. Nonsecurity log investigation/repair remains deferred to FINISH."
+  ],
+  "owed": [
+    "Actual administrator-without-workflow Chrome/stock-curl reply loss,reload/recovery/revocation/four-WCAG/original-current/persisted-count profile and final-source proof.",
+    "Composition/scheduling,third-party delegation,protected output,independent receivers and remaining mandatory baseline/AX implementation.",
+    "Mandatory full FINISH deferred/broad/native/security/frontend/accessibility/recovery/restore/reproducibility/original-journey/final-source gates and external prerequisites;all whole rows/journeys/readiness remain open."
+  ]
+}
