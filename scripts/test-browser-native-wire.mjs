@@ -171,6 +171,71 @@ const uploadScope = {
   tenant: "10000000-1111-4111-8111-111111111111",
   partner: "10000001-1111-4111-8111-111111111111",
 };
+
+test("JSON workflow observation retains an authentic empty POST without asking for nonexistent body data", async () => {
+  const f = fixture({
+    change({ network, extra, paused }) {
+      delete network.request.postData;
+      delete network.request.hasPostData;
+      paused.request = { ...network.request };
+      extra.headers["Content-Length"] = "0";
+    },
+  });
+  let observations = 0;
+  await nativeWireResponse(
+    f.page,
+    target,
+    () => f.protocol.dispatch(),
+    async (observed) => {
+      observations++;
+      assert.equal(observed.request().postDataBuffer().length, 0);
+      return observed[nativeWireObservation];
+    },
+    "empty-json-work",
+  );
+  assert.equal(observations, 1);
+  assert.equal(
+    f.protocol.commands.some((c) => c.method === "Network.getRequestPostData"),
+    false,
+  );
+});
+
+test("JSON workflow observation refuses conflicting empty-body flags and framing", async () => {
+  for (const change of [
+    ({ paused }) => {
+      paused.request.hasPostData = true;
+    },
+    ({ extra }) => {
+      extra.headers["Content-Length"] = "3";
+    },
+  ]) {
+    const f = fixture({
+      change(events) {
+        delete events.network.request.postData;
+        delete events.network.request.hasPostData;
+        events.paused.request = { ...events.network.request };
+        events.extra.headers["Content-Length"] = "0";
+        change(events);
+      },
+    });
+    let records = 0;
+    await assert.rejects(
+      nativeWireResponse(
+        f.page,
+        target,
+        () => f.protocol.dispatch(),
+        async (observed) => {
+          records++;
+          return observed[nativeWireObservation];
+        },
+        "invalid-empty-json-work",
+      ),
+      /native browser wire/,
+    );
+    assert.equal(records, 0);
+    assert.equal(f.protocol.detached, true);
+  }
+});
 const checkpoint = "20000000-1111-4111-8111-111111111111";
 const uploadPrefix = `${uploadScope.origin}/v1/tenants/${uploadScope.tenant}/partners/${uploadScope.partner}/uploads/`;
 const uploadTarget = uploadPrefix + checkpoint + "/complete";

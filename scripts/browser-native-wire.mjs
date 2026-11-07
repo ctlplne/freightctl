@@ -355,10 +355,20 @@ async function observeNativeResponse(
           "browser-complete-" + selectedTarget.split("/").at(-2),
       );
       post = "";
-    } else if (request.method === "POST" && post === undefined)
-      post = (
-        await send("Network.getRequestPostData", { requestId: networkId })
-      ).postData;
+    } else if (request.method === "POST" && post === undefined) {
+      if (!request.hasPostData) {
+        check(
+          !event.request.hasPostData &&
+            (headers["content-length"] === undefined ||
+              headers["content-length"] === "0"),
+        );
+        post = "";
+      } else {
+        post = (
+          await send("Network.getRequestPostData", { requestId: networkId })
+        ).postData;
+      }
+    }
     check(
       request.method === "GET"
         ? !post && !request.hasPostData

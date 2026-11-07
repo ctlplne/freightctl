@@ -18,6 +18,7 @@ on:
       - "scripts/browser-native-wire.mjs"
       - "scripts/test-browser-native-wire.mjs"
       - "scripts/test-json-intake-completion.mjs"
+      - "scripts/test-processing-work-wire.mjs"
       - "scripts/local-collection-browser.mjs"
       - "scripts/local-calendar-browser.mjs"
       - "scripts/browser-pinned-https.mjs"
@@ -42,6 +43,7 @@ on:
       - "scripts/browser-native-wire.mjs"
       - "scripts/test-browser-native-wire.mjs"
       - "scripts/test-json-intake-completion.mjs"
+      - "scripts/test-processing-work-wire.mjs"
       - "scripts/local-collection-browser.mjs"
       - "scripts/local-calendar-browser.mjs"
       - "scripts/browser-pinned-https.mjs"
@@ -152,7 +154,7 @@ jobs:
           npm --prefix web run check-built
           python3 scripts/dev-db.py
       - name: Exact original empty completion and JSON workflow wire boundaries
-        run: node --test scripts/test-browser-native-wire.mjs scripts/test-json-intake-completion.mjs
+        run: node --test scripts/test-browser-native-wire.mjs scripts/test-json-intake-completion.mjs scripts/test-processing-work-wire.mjs
       - name: Real browser review, committed-response loss, exact checks and separate release
         run: |
           sh scripts/go.sh test -race -timeout=0 -tags=integration,jsonbrowser \

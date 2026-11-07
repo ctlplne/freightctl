@@ -5,6 +5,10 @@ import { createHash, X509Certificate } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { readFile, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
+import {
+  nativeWireObservation,
+  nativeWireResponse,
+} from "./browser-native-wire.mjs";
 process.umask(0o077);
 assert.equal(process.env.GITHUB_ACTIONS, "true");
 assert.equal(process.platform, "linux");
@@ -255,14 +259,30 @@ try {
   await dialog().waitFor({ state: "hidden" });
   const outcome = page.getByRole("region", { name: "Processing run outcome" });
   await outcome.waitFor();
+  const inspectedRun = await outcome
+    .getByRole("heading", { level: 2 })
+    .locator("code")
+    .textContent();
+  assert.match(inspectedRun, /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/);
   await button("Review working this run", outcome).click();
-  const worked = page.waitForResponse(
-    (r) => r.url().endsWith("/work") && r.request().method() === "POST",
+  const work = await nativeWireResponse(
+    page,
+    c.url + prefix + "/workflow-runs/" + inspectedRun + "/work",
+    () => button("Confirm this exact action", dialog()).click(),
+    async (observed, _label, target) => {
+      const request = observed.request();
+      assert.equal(request.url(), target);
+      assert.equal(request.method(), "POST");
+      const headers = await request.allHeaders();
+      assert.match(headers["idempotency-key"], /^[A-Za-z0-9._:-]{1,128}$/);
+      assert.equal(request.postDataBuffer().length, 0);
+      const original = observed[nativeWireObservation];
+      assert.equal(original.status, 200);
+      return original;
+    },
+    "processing-work",
   );
-  await button("Confirm this exact action", dialog()).click();
-  const response = await worked;
-  assert.equal(response.status(), 200);
-  const work = await response.json();
+  assert.equal(work.status.run.id, inspectedRun);
   run = work.status.run.id;
   file = work.status.processing.output_file_id;
   assert.equal(work.status.observed_reason, "output_held");

@@ -91,6 +91,10 @@ F390 binds each routing inspection to the displayed exact run and state before
 checking retained-local controls. Delayed-render red/green and refusal checks
 pass;original final-source routing/browser proof remains owed.
 
+F391 captures the original processing work response,bound to the displayed run
+and exact empty command. Both protocol events must agree on an absent body.
+Focused red/green checks pass;held-output/release/native proof remains owed.
+
 Next: continue independent implementation and original failure repair while
 current originals run. Push the next verified owner-only batch after required
 originals are terminal,then qualify the corrected toolchain and full product. Repair original failures

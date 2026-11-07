@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "id": "F391",
+  "observed_at": "2026-11-07",
+  "base_candidate": "7fafe10cd1e785977f06605385c1757d9f97043b",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F391 preserves original4d2d9ab JSON/Chrome run42396174501/job128473908417 processing work inspector-body failure(source265:31,result7b508a954daf1c5782e60ad0bec69a726f6e4a185713a668f5a4bb485146eb5f,first loga50213dc14514b791287f06066068b12ceee14f610019c5726c1c306b868016c). Observe the one original work response,bind its exact scoped URL to the displayed canonical run ID,and require original POST/key/empty body/status200 and unchanged held-output/no-delivery assertions. The shared JSON wire observer records an authentic absent POST body only when both original protocol events agree and framing is absent/zero;never asks Chrome for nonexistent post data. Conflicting flags/framing are refused. Preserve JSON Content-Type,cookies,Origin,CSRF,Sec-Fetch-Site,exact inputs,body/parser limits,stream cleanup and response bytes. Original actual block and empty-body stand-ins fail before repair;27 affected wire/intake/decline/recovery/processing tests pass after. Syntax,format,workflow lint and architecture pass. No replay/new HTTP request,release,permission change or runtime qualification inferred.",
+  "original_failure": {
+    "candidate": "4d2d9ab3062e7b10bc44cc0629b42d5ed570f6ca",
+    "run_id": 42396174501,
+    "job_id": 128473908417,
+    "class": "browser-response-body",
+    "source_line": 265,
+    "source_column": 31,
+    "safe_result_sha256": "7b508a954daf1c5782e60ad0bec69a726f6e4a185713a668f5a4bb485146eb5f",
+    "protected_first_failure_sha256": "a50213dc14514b791287f06066068b12ceee14f610019c5726c1c306b868016c"
+  },
+  "red_green": "Actual old work block fails controlled inspector-body lookup;shared observer incorrectly requests data for an absent body and accepts conflicting empty framing. Updated exact original observation passes all27 affected tests and refuses substituted commands,run,framing,status,released output or delivery steps. Stand-ins only.",
+  "owed": [
+    "Full original native processing task recovery,held-output,checks and separate release journey at final source",
+    "All affected original native wire journeys",
+    "Every mandatory baseline/AX/security/readiness gate"
+  ],
+  "source_files": [
+    {
+      "reference": ".github/workflows/json-intake.yml",
+      "sha256": "386eb67900e9ce440c94144fb22311e30decddbb618f4acefdae0fab503285e0",
+      "bytes": 7949
+    },
+    {
+      "reference": "STATUS.md",
+      "sha256": "cef7c1cb5096da5b67a8f991180cc10cd1be1bf16d041060fe58941624fecca5",
+      "bytes": 6732
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "8eaf125cb98e820e08a16502ba11e920eb4c52f5daad92ee51c60bd4aa4bb2b4",
+      "bytes": 529424
+    },
+    {
+      "reference": "scripts/browser-native-wire.mjs",
+      "sha256": "87e099d6d6e7e9db08917bdd880071f6a7a8d16205c992a4c5b8e7021c2eba72",
+      "bytes": 17298
+    },
+    {
+      "reference": "scripts/processing-browser.mjs",
+      "sha256": "8e81484bcc82066e3e5ce662c6453eb146a4c21be1f526669c47fc0e331dd642",
+      "bytes": 13203
+    },
+    {
+      "reference": "scripts/test-browser-native-wire.mjs",
+      "sha256": "46222103adc2a7440feee4fcf50e2b6ef9c8ca57c811596f8b7874b16e64acf9",
+      "bytes": 22309
+    },
+    {
+      "reference": "scripts/test-processing-work-wire.mjs",
+      "sha256": "19f126e197964e17a8443627aa5025dc6fafdeb469a2b85e1d8645c7bcf3e71c",
+      "bytes": 4809
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f391-empty-json-red.log",
+      "sha256": "777db18c15608eec624dc4b648dc042ee8fb62b9382b0b72a0bbc0695a0d07b8",
+      "bytes": 1650
+    },
+    {
+      "reference": ".private/freightctl-f391-processing-red.log",
+      "sha256": "8ee7adae1c1e392173bf506bd8223fcb967d179d50275dd390a567876c96c63e",
+      "bytes": 1130
+    },
+    {
+      "reference": ".private/freightctl-f391-focused.log",
+      "sha256": "a08921cbb94438b2d78138f8b26309604b36781e742e8e8834e7c73fbaa85846",
+      "bytes": 2908
+    },
+    {
+      "reference": ".private/freightctl-f391-syntax.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f391-workflow.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f391-format.log",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    },
+    {
+      "reference": ".private/freightctl-f391-architecture.log",
+      "sha256": "fa99a7467914775b6e6fb50c5b0a2c85b3211135c3486cec28c42811919aeece",
+      "bytes": 66
+    }
+  ]
+}
