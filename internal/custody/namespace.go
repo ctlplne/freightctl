@@ -34,6 +34,19 @@ type FileCondition struct {
 }
 
 func (s *Service) PathCommand(ctx context.Context, scope store.Scope, key string, command store.PathCommand) (*store.PathResult, error) {
+	if command.Operation == "copy" {
+		source, err := vpath.Canonical(command.Path)
+		if err != nil {
+			return nil, err
+		}
+		target, err := vpath.Canonical(command.Target)
+		if err != nil {
+			return nil, err
+		}
+		if source == target {
+			return nil, store.ErrForbidden
+		}
+	}
 	return s.pathCommand(ctx, scope, key, command, false)
 }
 

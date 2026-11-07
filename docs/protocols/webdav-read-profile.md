@@ -155,6 +155,9 @@ or read. A URL never refers to a host filesystem path.
   exceeded limit returns507 and rolls removal back. Failed source verification
   also leaves the target intact. A historical200 names only the original receipt,
   and a changed overwrite decision or target revision cannot reuse its key.
+  The shared namespace API/CLI also refuses a copy whose canonical source and
+  destination are the same. Neither create nor replace may recreate its own
+  source mapping;the store independently enforces that boundary.
 - Other mutating DAV methods return405 after authenticating the credential.
   Discovery and unknown properties grant no forwarding or execution authority.
   Requests with traversal,encoded separators,control names,noncanonical Unicode

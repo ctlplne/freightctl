@@ -214,6 +214,9 @@ func (t *Transaction) ApplyPathCommand(ctx context.Context, key string, command 
 			return nil, err
 		}
 		command.Target = target
+		if command.Operation == "copy" && command.Target == virtual {
+			return nil, ErrForbidden
+		}
 	}
 	if command.Mode != nil && *command.Mode > 0777 {
 		return nil, ErrState

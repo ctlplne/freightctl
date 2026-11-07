@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "id": "F402",
+  "observed_at": "2026-11-07",
+  "base_candidate": "bec15ddacfdc76516167b9d169140eca2dcfb609",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F402 closes the shared typed COPY same-resource boundary introduced by explicit replacement. DAV's file helper already refuses equal source/target;ordinary namespace API/CLI and direct store must also refuse instead of deleting/recreating their source mapping. Canonicalize copy names at the public service boundary and independently reject equality in store before namespace mutation. Preserve valid copy permissions,conditions,verification,quota and receipts. Actual public service regression first returns unauthorized through its authority path for an invalid-scope self-copy,then returns the intended same-resource forbidden before database/authority access for both create/replace. No actual SQL mutation is claimed by that stand-in. Prepared real API/store proof uses a valid administrative application scope,requires403 for both modes,unchanged mapping ID/revision/metadata/bytes,and zero receipt/removal. Focused self-copy and historical conditional-meaning checks,tagged compilation,vet,format and architecture pass;native no-mutation outcome remains owed. No new authority,history rewrite,resource change or full DAV qualification.",
+  "red_green": "Public copy with equal canonical source/target first reaches authority validation and returns unauthorized for the deliberately invalid scope;after repair both modes return same-resource forbidden before Begin. Native valid-scope API/store mutation proof is prepared and compiled only,not executed locally.",
+  "owed": [
+    "Original native valid-scope shared API/store self-copy403,unchanged mapping/bytes and zero receipt/removal proof",
+    "All affected final-source CLI/protocol/native/security and mandatory baseline/AX/readiness outcomes"
+  ],
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "1d805f49c7ae9381060d5067a5ce4b6ff54477e82c1b5396b9ac6366c31e944f",
+      "bytes": 6088
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "26cb48b9302060d67fe295b46c0c4a4bc5067c4fe8f70f08a79c97327da915e7",
+      "bytes": 578502
+    },
+    {
+      "reference": "docs/protocols/webdav-read-profile.md",
+      "sha256": "c5a74fbc364bc829f6d9f3758c75f4b2994ed19a87ea43b821adffa7db8c4a7b",
+      "bytes": 14128
+    },
+    {
+      "reference": "internal/custody/namespace.go",
+      "sha256": "0b45e62840fd8d72ef6648f70bfed31cc324aae4546d7940a528fe2fedb4b5ba",
+      "bytes": 10355
+    },
+    {
+      "reference": "internal/custody/namespace_copy_self_test.go",
+      "sha256": "818aa8d835ad5dfe57e8e977f0634631c4a797f4afc194e77022d84263bd213d",
+      "bytes": 892
+    },
+    {
+      "reference": "internal/store/namespace.go",
+      "sha256": "297fe62487d95900f5f2c8dbe05ff4bf25324d4001f7b03979fc573c9829a465",
+      "bytes": 21142
+    },
+    {
+      "reference": "internal/api/namespace_copy_self_integration_test.go",
+      "sha256": "d2aeff257705a9ad5f2dc194f397e5bb71779f714dc5d7363b9297ac44576f9e",
+      "bytes": 2715
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f402-self-copy-red.log",
+      "sha256": "84533aa556e17140d1e1503068df8bab0d35a3d574f348b44d33aa43e9c380f2",
+      "bytes": 533
+    },
+    {
+      "reference": ".private/freightctl-f402-focused.log",
+      "sha256": "646bf1df70d77ef4f2ad4e401c94d63584cc22c13550cd22aeb0358841e3cb84",
+      "bytes": 59
+    },
+    {
+      "reference": ".private/freightctl-f402-native-compile.log",
+      "sha256": "292f9c62ec1652263723e71efbf9dfd7e6e92cb81f6472cb24bde22c61441ef4",
+      "bytes": 300
+    },
+    {
+      "reference": ".private/freightctl-f402-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f402-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f402-architecture.log",
+      "sha256": "8b1b661bcd4ce48a5310d0b270d5d6d5c238c615c610d2055b1f76d9afcb467e",
+      "bytes": 64
+    }
+  ]
+}

@@ -81,6 +81,10 @@ are unchanged,and every prior schema constraint is preserved. Focused red/green
 and static checks pass;original all-platform/unit-race and skipped full PostgreSQL
 replay remain owed. Receive nonsecurity investigation stays deferred for FINISH.
 
+F402 locally refuses same-resource COPY in the shared API/CLI service and store.
+Focused early-control red/green and static checks pass;valid-scope native proof
+that mapping,bytes and receipts remain unchanged is prepared and owed.
+
 Next:continue independent implementation while these original CI runs finish.
 Push the next verified owner-only batch only after all required originals are terminal. Repair original
 failures and finish every mandatory final-source baseline/AX gate. F026 stays
