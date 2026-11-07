@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "id": "F277",
+  "observed_at": "2026-11-07",
+  "base_candidate": "49eefe1d4877962aec7c92cb6b6f26485fa83a11",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Exact format observer and rotation-authority fixtures repaired;native proof owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "09a738d31f41751ba38e9ca43a9341045b273962bb175dcfa1cac424d2dacd6e",
+      "bytes": 5401
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "45f9cb82f859fa5ab4eea44ef4ef9c46ee26adab1a759332eadb199a02f70ac3",
+      "bytes": 385190
+    },
+    {
+      "reference": "internal/api/json_records_browser_integration_test.go",
+      "sha256": "5124ab260442b79d3e9d74ba4a0471d06c4a0be10242e9f292a89299db38cf61",
+      "bytes": 8650
+    },
+    {
+      "reference": "internal/workflow/artifact_onward_integration_test.go",
+      "sha256": "4fc3623962c22d5fef692c0abee459270e59b75aad66f438e073e19d1c83a09e",
+      "bytes": 9447
+    }
+  ],
+  "red": [
+    {
+      "candidate": "33ad447564cb0be33bc04fa8d60e9f0adaf0c2b4",
+      "run": 42361009356,
+      "job": 128369207235,
+      "test": "TestXLSXRecordsNativeBrowserReviewedHashAndReceipt",
+      "observation": "json_records_browser_integration_test.go:192 independent Go observer differs from browser-uploaded immutable bytes;source switch lacks the XLSX prefix after original browser result passed strict validation."
+    },
+    {
+      "candidate": "33ad447564cb0be33bc04fa8d60e9f0adaf0c2b4",
+      "run": 42361009321,
+      "job": 128369207017,
+      "test": "TestReviewedOnwardReceiptCannotBeAdoptedAfterCredentialRotation",
+      "observation": "artifact_onward_integration_test.go:158 permission denied:ChangeAccount explicitly requires manager to hold every target permission."
+    }
+  ],
+  "changed": [
+    "Derive exact expected custody policy from the independently observed current normalized policy with the existing closed IntakeFilePolicy validator. Keep full exact bytes,artifact ID,review hash,released check and all cardinality assertions.",
+    "Keep self-rotation refusal and unchanged authority;add explicit lesser-manager superior-account refusal and unchanged authority. Create a separate manager with the target exact permission set,then perform ordinary rotation and retain old onward receipt Unauthorized assertion. No production authorization changes."
+  ],
+  "green": [
+    "Existing five-format/invalid-profile intake identity units pass.",
+    "Affected formatting,tagged API/browser/workflow integration compilation and vet pass;no browser/PostgreSQL runtime executed."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f277-final-workflow-compile.log",
+      "sha256": "f9cda4b699b4dfc9c93a613117a6c13717b0c129adf7d85a80c7baa8ab81006b",
+      "bytes": 78
+    },
+    {
+      "reference": ".private/freightctl-f277-final-workflow-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f277-format-policy-green.log",
+      "sha256": "a9244a4406089937a6bfdb5f2ff10a32ec9150e5bbafcf8c36636a3640f2cfec",
+      "bytes": 57
+    },
+    {
+      "reference": ".private/freightctl-f277-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f277-integration-compile.log",
+      "sha256": "7b1a362d9a0b67f4041edd39a62c1077f3cea8709d89aa5507c7f21545d9bf18",
+      "bytes": 151
+    },
+    {
+      "reference": ".private/freightctl-f277-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "owed": [
+    "Actual original native XLSX browser exact-byte/identity/cardinality replay.",
+    "Actual original PostgreSQL self/lesser-manager refusal,authorized independent rotation and stale receipt refusal.",
+    "Other original failed Windows/browser/stock/protocol and all final-source baseline/AX/FINISH outcomes."
+  ],
+  "resources": "OneCPU/192MiB local pure format units/static/compile only;no inference,PostgreSQL,Chrome,scanner or heavy peer. Retained35/source60 unchanged."
+}

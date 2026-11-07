@@ -6,7 +6,10 @@ adoption and enterprise readiness remain unqualified. Exact implementation,
 original failures,source hashes and owed proofs are in
 [remaining work](docs/qualification/remaining.json) and its item manifests.
 
-Latest pushed source:33ad447564cb0be33bc04fa8d60e9f0adaf0c2b4.
+Latest pushed source:49eefe1d4877962aec7c92cb6b6f26485fa83a11.
+Its original18 workflows are queued/running. No native result is inherited.
+
+Previous source:33ad447564cb0be33bc04fa8d60e9f0adaf0c2b4.
 Its original18 workflows/41 jobs are terminal:31 pass,10 fail. F274 preserves
 exact original run/job/step handles. Both complete image scans and all listed
 scan gates pass. F270 records native Windows protectedfs/crypto/durablefs passes;
@@ -35,7 +38,7 @@ original Chrome journeys remain red pending native replay. F267 requires exact
 scoped-user404 plus administrator409 refusals for unpublished held outputs,with
 no returned file/reader. Actual PostgreSQL replay remains owed.
 
-Current local F269 repairs stale MCP producer/composed attempt conversion using
+Pushed F269 repairs stale MCP producer/composed attempt conversion using
 the existing core definition validator. Focused observed red turns green;exact
 run,binding/lineage/slot and private-context refusal checks pass. Actual stock
 MCP work/replay and final-source byte outcomes remain owed. F271 replaces Unix
@@ -45,7 +48,7 @@ protected failure-trace diagnosis:only a closed class,numeric candidate source
 location and whole-file digest may leave private evidence. Original browser
 assertions stay intact;actual missing-result cause remains owed.
 
-F275 prepares Windows custody recovery without granting writes to sealed data.
+Pushed F275 prepares Windows custody recovery without granting writes to sealed data.
 The original writable handle must flush successfully before a bounded attached
 record is written,then flush again before close/directory sync and acceptance.
 Recovery checks that record against the exact native file/volume,storage,name,
@@ -54,6 +57,11 @@ leaves preserved incomplete progress;copied/invalid proof refuses recovery.
 Unix retains file re-sync. Portable lifecycle/wire/static checks and Windows
 compilation/vet pass;actual native failed-flush/adoption/copied-identity and
 restart/restore/filesystem outcomes remain owed. No persistence waiver is used.
+
+Local F277 uses the exact current intake-policy identity for the XLSX observer.
+Rotation still refuses self-change and a lesser manager;actual rotation uses a
+distinct manager with the target exact permission set. Existing format units
+and tagged compilation/vet pass;original native replay remains owed.
 
 FINISH repair is active and remaining implementation is mandatory. Next:repair
 newly reached browser/protocol failures,complete remaining product work,and replay

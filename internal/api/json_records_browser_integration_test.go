@@ -181,15 +181,8 @@ func structuredNativeBrowser(t *testing.T, format string) {
 	}
 	received, err := io.ReadAll(io.LimitReader(reader, int64(len(body)+1)))
 	reader.Close()
-	if err != nil || file.ID != summary.File || file.Policy != func() string {
-		if fixed {
-			return store.FixedWidthIntakePrefix
-		}
-		if xmlRecords {
-			return store.XMLRecordsIntakePrefix
-		}
-		return store.JSONRecordsIntakePrefix
-	}()+expected || !bytes.Equal(received, body) {
+	wantPolicy, policyErr := store.IntakeFilePolicy(current)
+	if err != nil || policyErr != nil || file.ID != summary.File || file.Policy != wantPolicy || !bytes.Equal(received, body) {
 		t.Fatal("independent Go observer differs from browser-uploaded immutable bytes", err)
 	}
 	proof, err := s.DB.Begin(t.Context(), scope)

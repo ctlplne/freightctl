@@ -154,7 +154,21 @@ func TestReviewedOnwardReceiptCannotBeAdoptedAfterCredentialRotation(t *testing.
 	if err != nil || managerIdentity.Actor != command.ID || managerIdentity.Actor == identity.Actor || len(managerIdentity.Permissions) != 2 || !slices.Contains(managerIdentity.Permissions, "admin") || !slices.Contains(managerIdentity.Permissions, "accounts_manage") {
 		t.Fatal("rotation fixture did not use a distinct account-only manager", err)
 	}
-	if _, err = f.s.Custody.DB.ChangeAccount(f.ctx, manager, "rotate-onward-credential", rotation); err != nil {
+	if _, err = f.s.Custody.DB.ChangeAccount(f.ctx, manager, "refuse-superior-onward-rotation", rotation); !errors.Is(err, store.ErrForbidden) {
+		t.Fatal("limited manager took over a more privileged onward participant", err)
+	}
+	unchanged, err = f.s.Custody.DB.Identity(f.ctx, f.scope)
+	if err != nil || unchanged.Actor != identity.Actor || unchanged.AuthorityRevision != identity.AuthorityRevision {
+		t.Fatal("refused superior rotation changed current authority", err)
+	}
+	expectedPermissions := slices.Clone(identity.Permissions)
+	slices.Sort(expectedPermissions)
+	qualifiedManager, qualifiedCommand := approvalPeer(t, f, "Qualified onward credential manager", expectedPermissions)
+	qualifiedIdentity, err := f.s.Custody.DB.Identity(f.ctx, qualifiedManager)
+	if err != nil || qualifiedIdentity.Actor != qualifiedCommand.ID || qualifiedIdentity.Actor == identity.Actor || !slices.Equal(qualifiedIdentity.Permissions, expectedPermissions) {
+		t.Fatal("rotation manager did not hold the target participant's exact permission set", err)
+	}
+	if _, err = f.s.Custody.DB.ChangeAccount(f.ctx, qualifiedManager, "rotate-onward-credential", rotation); err != nil {
 		t.Fatal(err)
 	}
 	next := f.scope
