@@ -120,6 +120,12 @@ failed native target. F309 adds backend local calendars and strict source62
 registry admission;UTC contract red/green and static checks pass. Actual native
 PG/CLI/calendar/browser/forgery/restore and frontend calendar work remain owed.
 
+F313 repairs native socket open access after the original held-name rename
+assertion fails onfb578f1. Attribute-only handles do not enforce sharing;add
+read-data access to the exact AF_UNIX reparse object without reading payload or
+granting mutation. Windows compile/vet pass;unchanged native name-pin and
+scanner protocol replay remain owed. All ACL/type/identity/assertions stay.
+
 FINISH repair and remaining implementation are mandatory. Next:repair original
 browser/stock/protocol failures and complete all affected original runtime,
 security,recovery,reproducibility and baseline/AX gates on the final source.

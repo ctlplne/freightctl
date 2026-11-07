@@ -27,7 +27,10 @@ func platformSocket(path string, observed os.FileInfo) (*os.File, error) {
 	if err != nil {
 		return nil, err
 	}
-	h, err := windows.CreateFile(name, windows.READ_CONTROL|windows.FILE_READ_ATTRIBUTES,
+	// Attribute-only handles do not participate in native share-access checks.
+	// Read-data access pins this exact reparse object against delete/rename;the
+	// object remains metadata-only here and is never read as a byte stream.
+	h, err := windows.CreateFile(name, windows.READ_CONTROL|windows.FILE_READ_ATTRIBUTES|windows.FILE_READ_DATA,
 		windows.FILE_SHARE_READ|windows.FILE_SHARE_WRITE, nil, windows.OPEN_EXISTING,
 		windows.FILE_FLAG_OPEN_REPARSE_POINT|windows.FILE_FLAG_BACKUP_SEMANTICS, 0)
 	if err != nil {

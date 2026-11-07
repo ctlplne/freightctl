@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "id": "F313",
+  "observed_at": "2026-11-07",
+  "base_candidate": "07cd2d173239cabfa58ce81ba7027e5cc662c0f7",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Native name-pin failure access repair prepared;actual Windows replay owed",
+  "changed": "F313 preserves actual fb578f1 Windows name-pin refusal failure:socket rename returns nil while held. Scanner protocol package now passes0.153s after F299 actual-owner fixture repair;no real engine claim. Microsoft documents attribute access is outside sharing checks. Request only additional FILE_READ_DATA on the exact OPEN_REPARSE_POINT AF_UNIX object so the unchanged no-delete-share requirement participates in native sharing;never read that object as bytes or request mutation rights. Keep exact sharing-violation/name-identity/privacy/zero-read assertions. Windows protectedfs/scanner compile and vet pass only;actual unchanged original name-pin and protocol replay remain owed. No test,ACL,protocol,budget or isolation waiver.",
+  "red": {
+    "candidate": "fb578f12f73315911bf0117a293d0b32a465bdc8",
+    "run": 42370336275,
+    "job": 128396961684,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128396961684",
+    "test": "TestWindowsPrivateSocketPinsTheExactNativeName",
+    "source": "socket_windows_test.go:69",
+    "observation": "Actual held socket rename returns nil instead of required ERROR_SHARING_VIOLATION;the original assertion remains unchanged."
+  },
+  "native_observation": {
+    "package": "internal/scanner",
+    "seconds": 0.153,
+    "state": "passed ordinary complete native unit package on fb578f1",
+    "limit": "Protocol/IPC stand-ins only;no actual ClamAV-engine or complete Windows job qualification."
+  },
+  "green": [
+    "Windows protectedfs/scanner test compilation and affected Windows vet/format pass only.",
+    "No native repaired name-pin result is available yet;exact original assertion and scanner replay are owed."
+  ],
+  "source_files": [
+    {
+      "reference": "internal/protectedfs/socket_windows.go",
+      "sha256": "62628a4f506297e2a4d2adf7400039e395b56f0f6ad0b59fbd410ed3013ec721",
+      "bytes": 3169
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "2dee92579d52d75b18b35ab82a62507352b683a0a38eeec78cb3206a92c6efa6",
+      "bytes": 410085
+    },
+    {
+      "reference": "STATUS.md",
+      "sha256": "8e3698f2a493d41efe9d32950ac6d028f8396d463c0151874c63f2da26aebf4f",
+      "bytes": 9231
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f313-protectedfs-windows-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f313-scanner-windows-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f313-windows-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f313-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "primary_source": "https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilew",
+  "mechanism": "Attribute-only access does not participate in native sharing;minimum read-data access is requested on the held AF_UNIX reparse object with no delete share. No data-read/write/delete operation is added;all type/tag/owner/DACL/identity/current-name checks remain.",
+  "owed": [
+    "Actual original Windows name-pin and complete private/broad-ACL/zero-disclosure/scanner protocol cases on this source.",
+    "Real authorized engine/native deployment/recovery and all final-source mandatory security/baseline/AX gates."
+  ],
+  "resources": "OneCPU/192MiB cross-compilation/static only;no native Windows claim,local heavy runtimes or inference."
+}
