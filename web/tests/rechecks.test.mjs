@@ -60,6 +60,74 @@ test("re-check immutable hash matches Go/Python including Unicode, HTML escapes,
     fixture.plan.reason,
   );
 });
+test("re-check preserves an exact previous-file replacement guard in source and destination metadata", () => {
+  const plan = structuredClone(fixture.plan);
+  for (const target of [
+    plan.source.check.binding.target,
+    plan.target.command,
+  ]) {
+    target.expected_file_id = "00000041-1111-4111-8111-111111111111";
+  }
+  assert.deepEqual(parseRecheckPlan(plan), plan);
+  for (const mutate of [
+    (t) => {
+      t.expected_file_id = "invalid-id";
+    },
+    (t) => {
+      delete t.expected_revision;
+    },
+    (t) => {
+      delete t.replace;
+    },
+    (t) => {
+      t.operation = "copy";
+    },
+  ]) {
+    for (const targetName of ["source", "destination"]) {
+      const changed = structuredClone(plan);
+      mutate(
+        targetName === "source"
+          ? changed.source.check.binding.target
+          : changed.target.command,
+      );
+      assert.throws(() => parseRecheckPlan(changed));
+    }
+  }
+});
+test("conditional re-check approval matches the independent Go and Python canonical hash", async () => {
+  const definition = JSON.parse(
+    await readFile(
+      new URL("fixtures/recheck-conditional-definition.json", import.meta.url),
+      "utf8",
+    ),
+  );
+  const hash = (
+    await readFile(
+      new URL("fixtures/recheck-conditional-golden.sha256", import.meta.url),
+      "utf8",
+    )
+  ).trim();
+  assert.equal(recheckFingerprint(definition), hash);
+  const current = { ...row(), definition, definition_hash: hash };
+  const parsed = parseRecheck(current);
+  assert.equal(
+    parsed.definition.plan.source.check.binding.target.expected_file_id,
+    "00000041-1111-4111-8111-111111111111",
+  );
+  assert.equal(
+    parsed.definition.plan.target.command.expected_file_id,
+    "00000041-1111-4111-8111-111111111111",
+  );
+  for (const targetName of ["source", "destination"]) {
+    const changed = structuredClone(current);
+    const target =
+      targetName === "source"
+        ? changed.definition.plan.source.check.binding.target
+        : changed.definition.plan.target.command;
+    target.expected_file_id = "00000042-1111-4111-8111-111111111111";
+    assert.throws(() => parseRecheck(changed));
+  }
+});
 test("re-check review rejects changed source, policy, signature, slots and injected execution fields", () => {
   for (const mutate of [
     (r) => (r.definition.plan.source.file.sha256 = "f".repeat(64)),

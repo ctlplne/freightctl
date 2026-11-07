@@ -311,7 +311,7 @@
     },
     {
       "path": "web/src/rechecks-types.ts",
-      "sha256": "7334ea99f52490f38194dbff7ff11c2d3026e1da2a95700d0f322be246be015c"
+      "sha256": "b20a0d210c51973c45e270f146ca682e0ee17d476a6b759c9e0a940c7f7eb8d7"
     },
     {
       "path": "web/src/rechecks.tsx",
@@ -362,8 +362,8 @@
     },
     {
       "name": "app.js",
-      "sha256": "dcd74f68d70f9f2834153cc7efce9a70f5f6a6c16cb0614a78677f1aa60b66de",
-      "size": 906822
+      "sha256": "8e26ee2ccf99e06bbfa9f01aa89f552158345cc1b58d99a65432a55a6587c74d",
+      "size": 907023
     },
     {
       "name": "app.js.LEGAL.txt",

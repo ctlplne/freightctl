@@ -100,6 +100,10 @@ held intake keeps the old mapping and separate release binds its file ID plus
 mapping revision. Focused red/green and static checks pass;prepared native
 PostgreSQL/race/stock curl/release/current-policy/no-effect proofs remain owed.
 
+F393 retains exact previous-file guards in browser recheck metadata and approval
+hashes. Go/Python/browser goldens,focused checks and affected static/build checks
+pass;actual served recheck/replacement and final-source runtime remain owed.
+
 Next: continue independent implementation and original failure repair while
 current originals run. Push the next verified owner-only batch after required
 originals are terminal,then qualify the corrected toolchain and full product. Repair original failures

@@ -122,6 +122,7 @@ function pathCommand(value: unknown) {
     "target",
     "file_id",
     "expected_revision",
+    "expected_file_id",
     "replace",
     "target_revision",
     "mode",
@@ -132,10 +133,19 @@ function pathCommand(value: unknown) {
   if (o.file_id !== undefined) r.file_id = id(o, "file_id");
   if (o.expected_revision !== undefined)
     r.expected_revision = integer(o, "expected_revision", 1);
+  if (o.expected_file_id !== undefined)
+    r.expected_file_id = id(o, "expected_file_id");
   if (o.replace !== undefined) {
     if (o.replace !== true) bad();
     r.replace = true;
   }
+  if (
+    r.expected_file_id !== undefined &&
+    (r.operation !== "publish" ||
+      r.replace !== true ||
+      r.expected_revision === undefined)
+  )
+    bad();
   if (o.target_revision !== undefined)
     r.target_revision = integer(o, "target_revision", 1);
   if (o.mode !== undefined) r.mode = integer(o, "mode", 0, 511);
