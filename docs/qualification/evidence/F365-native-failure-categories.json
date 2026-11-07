@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "id": "F365",
+  "observed_at": "2026-11-07",
+  "base_candidate": "1afc4432f286e0bc9a376c9ccb7b8ca3c5e378b7",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F365 triages current03cd5fd fixed-width upload response read(job128436006266,source289) and live FTPS bad-release-refusal(job128436006317) without relaxing their gates. Add a closed Network.getResponseBody category to bounded protected browser traces. Add only release-refusal action plus optional-for-legacy/required-for-this-action HTTP status0..599 to existing safe FTPS diagnostics,alongside original wire phase/error kind/counts. Preserve private messages/DOM/paths and exact original409 plus operation_state_conflict assertion. New trace/diagnostic contracts first fail,then pass with old record compatibility and malicious field/type/range refusals;affected static checks pass. The underlying original runtime failures remain failed and await actual diagnostics/repair;no success is inferred.",
+  "original_failures": [
+    {
+      "candidate": "03cd5fd0e46e60d0417b40122e94fd31a2920c35",
+      "run_id": 42383537896,
+      "job_id": 128436006266,
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42383537896/job/128436006266",
+      "test": "TestFixedWidthNativeBrowserReviewedHashAndReceipt",
+      "stage": "upload",
+      "class": "unclassified",
+      "source_line": 289,
+      "source_column": 35,
+      "safe_result_sha256": "5715124b6093c00fee3b762b7dbb1cd4cc2a35608fdb612ec1d776021a6ee9d1",
+      "protected_first_failure_sha256": "a294415bfea642dae6a1c419d12388e4cff8a39260bd7c8af1f3dfb44092265e"
+    },
+    {
+      "candidate": "03cd5fd0e46e60d0417b40122e94fd31a2920c35",
+      "run_id": 42383537981,
+      "job_id": 128436006317,
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42383537981/job/128436006317",
+      "command": "browser-explicit-operator",
+      "stage": "bad-release-refusal",
+      "source_line": 0,
+      "required_http_status": 409,
+      "required_exact_error": {
+        "error": "operation_state_conflict"
+      },
+      "actual_http_status": "not yet available;do not infer a security bypass or pass"
+    }
+  ],
+  "red_green": "New closed body category and release-refusal/status record tests first fail old coarse schemas,then pass while legacy records remain valid and raw/unknown/bool/out-of-range records refuse. Exact HTTP label/status/error guard is unchanged and passes its refusal negatives.",
+  "green": [
+    "Focused bounded protected trace/privacy tests",
+    "3 affected safe diagnostic/exact HTTP refusal guards",
+    "Affected Go/Node format,syntax,vet,architecture and workflow lint"
+  ],
+  "owed": [
+    "Actual native closed categories/statuses and underlying failure repairs",
+    "Unchanged exact FTPS rejected-file409/error proof and full receive/JSON/browser journeys",
+    "Final-source full baseline/AX gates and external prerequisites"
+  ],
+  "source_files": [
+    {
+      "reference": "internal/api/browser_failure_trace_integration_test.go",
+      "sha256": "eeae52a994f7b31bdaa5552710573ba02b9abb3c7c42cd17cf99da4984d1a0ea",
+      "bytes": 7680
+    },
+    {
+      "reference": "scripts/ftps-operator-browser.mjs",
+      "sha256": "bcde74eb618ed2070cbeb32171e7655391e532a809c4b9cf1b24211492107296",
+      "bytes": 22569
+    },
+    {
+      "reference": "scripts/ftps_browser_evidence.py",
+      "sha256": "3f8fcc37eeb7cd111ceba27c62f05b320f26f7245b1423507d9b55ea2d58ef11",
+      "bytes": 13328
+    },
+    {
+      "reference": "scripts/test-ci-ftps-summary.py",
+      "sha256": "f1419a71e32aa33bab57b258dbec83ed6ea9cc4f0f5e30094fe078b638b3f7f3",
+      "bytes": 67110
+    },
+    {
+      "reference": ".github/workflows/json-intake.yml",
+      "sha256": "386a5ff3d24faca4763160d79425e964267dac87525da83d0270e391768c5803",
+      "bytes": 7357
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "5e43d2e20e22b1269c04c86090f0fd09050c2f0006849da6fba4b52a78ebaa3f",
+      "bytes": 476510
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f365-body-category-red.log",
+      "sha256": "22d87d8bb0a6f11a93fae39bed2b0c23d91cc22602e4ebf5be15626fcff328a4",
+      "bytes": 278
+    },
+    {
+      "reference": ".private/freightctl-f365-refusal-diagnostic-red.log",
+      "sha256": "63ef47dbfa879493c1af245650c51cc384190a616c380a64075a3d99413415ea",
+      "bytes": 1090
+    },
+    {
+      "reference": ".private/freightctl-f365-go-format.log",
+      "sha256": "6469b39fa92896a0e1b86bb61e7d5a4e3c1f413a8c13b240d4425c1074e137cb",
+      "bytes": 55
+    },
+    {
+      "reference": ".private/freightctl-f365-trace-green.log",
+      "sha256": "f192ec5183cc105683f511b44ac9a45de4c744b584fbc5f69758f65b549666e0",
+      "bytes": 55
+    },
+    {
+      "reference": ".private/freightctl-f365-refusal-final-green.log",
+      "sha256": "313d9a51c3fd4736712637280de0b3a3378e36ea9142924153da591791cf5b02",
+      "bytes": 641
+    },
+    {
+      "reference": ".private/freightctl-f365-format-write.log",
+      "sha256": "ff9c1918d0a6249b27bf47121a317acbf4edb68414c3e04e5bf91d12c97eb012",
+      "bytes": 39
+    },
+    {
+      "reference": ".private/freightctl-f365-final-format.log",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    },
+    {
+      "reference": ".private/freightctl-f365-syntax.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f365-actionlint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f365-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f365-architecture.log",
+      "sha256": "15f11fbc912943fea470a4cfcb4562392b26641b7d790531f01b5345e026ee06",
+      "bytes": 64
+    }
+  ]
+}

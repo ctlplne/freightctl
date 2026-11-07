@@ -332,6 +332,12 @@ class SummaryContracts(unittest.TestCase):
                  "exact_file_visible": True, "exact_path_visible": True, "run_enabled": False,
                  "refresh_enabled": True, "original_responses": 12}
         self.assertEqual(browser.safe_check_diagnostic(check), check)
+        refusal=dict(check,action="release-refusal",http_status=409)
+        self.assertEqual(browser.safe_check_diagnostic(refusal),refusal)
+        self.assertIsNone(browser.safe_check_diagnostic(dict(check,http_status=409)))
+        self.assertIsNone(browser.safe_check_diagnostic(dict(check,action="release-refusal")))
+        for status in (True,-1,600,"private-server-error"):
+            self.assertIsNone(browser.safe_check_diagnostic(dict(refusal,http_status=status)))
         for changed in (dict(check, raw_path="private"), dict(check, action="private filename"),
                         dict(check, wire_phase="private server error"), dict(check, error_kind="private exception"),
                         dict(check, exact_file_visible="private ID"), dict(check, original_responses=101),

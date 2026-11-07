@@ -38,6 +38,30 @@ func TestBrowserRuntimeErrorKeepsSafeBoundedAssetLocation(t *testing.T) {
 	}
 }
 
+func TestBrowserFailureTraceKeepsClosedNetworkBodyCategoryWithoutMessages(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "failure.log")
+	raw := []byte("Error: response.json: Protocol error (Network.getResponseBody): PRIVATE_BODY_CREDENTIAL\n    at file:///PRIVATE_PATH/scripts/json-intake-browser.mjs:289:35\n")
+	f, err := protectedfs.CreateExclusive(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err = f.Write(raw); err != nil {
+		f.Close()
+		t.Fatal(err)
+	}
+	if err = f.Close(); err != nil {
+		t.Fatal(err)
+	}
+	trace := safeBrowserFailureTrace(path, "json-intake-browser.mjs")
+	if trace.Class != "browser-response-body" || trace.Line != 289 || trace.Column != 35 || trace.SHA256 != secure.Digest(raw) {
+		t.Fatal("native body failure lost its closed category,source or exact bounded digest")
+	}
+	wire, err := json.Marshal(trace)
+	if err != nil || strings.Contains(string(wire), "PRIVATE") || strings.Contains(string(wire), "Network.getResponseBody") {
+		t.Fatal("private browser protocol message entered public diagnostics")
+	}
+}
+
 func safeExchangeBrowserFailure(private string) browserFailureTrace {
 	// The receive script catches its error into this exclusive private file;
 	// stdout can contain only a summary. Use the original stack first. A failure
@@ -98,6 +122,7 @@ func safeBrowserFailureTrace(path, script string) browserFailureTrace {
 		{"ERR_MODULE_NOT_FOUND", "dependency"}, {"Cannot find module", "dependency"},
 		{"ERR_PACKAGE_PATH_NOT_EXPORTED", "dependency"}, {"SyntaxError", "syntax"},
 		{"ReferenceError", "reference"}, {"AssertionError", "assertion"},
+		{"Network.getResponseBody", "browser-response-body"},
 		{"TypeError", "type"},
 		{"TimeoutError", "timeout"}, {"Timeout ", "timeout"},
 		{"EEXIST", "evidence-exists"}, {"ENOENT", "evidence-path"},

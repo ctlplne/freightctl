@@ -32,7 +32,9 @@ const browser = await chromium.launch({
     "--ignore-certificate-errors-spki-list=" + spki,
     "--disable-background-networking",
     "--disable-component-update",
-    ...(process.env.GITHUB_ACTIONS === "true" ? [] : ["--renderer-process-limit=1", "--js-flags=--max-old-space-size=128"]),
+    ...(process.env.GITHUB_ACTIONS === "true"
+      ? []
+      : ["--renderer-process-limit=1", "--js-flags=--max-old-space-size=128"]),
   ],
 });
 let context,
@@ -616,9 +618,9 @@ try {
   failureLine = Number(
     failure.match(/ftps-operator-browser\.mjs:(\d+):\d+/)?.[1] ?? 0,
   );
-  if (["check-bad", "check-good"].includes(phase)) {
+  if (["check-bad", "check-good", "bad-release-refusal"].includes(phase)) {
     failureDiagnostic = {
-      action: checkAction,
+      action: phase === "bad-release-refusal" ? "release-refusal" : checkAction,
       wire_phase: ["waiting", "request", "fulfill"].includes(
         e?.freightctlWirePhase,
       )
@@ -647,6 +649,19 @@ try {
         .isEnabled()
         .catch(() => false),
       original_responses: responses.length,
+      ...(phase === "bad-release-refusal"
+        ? {
+            http_status:
+              Number.isInteger(
+                responses.findLast((r) => r.label === "bad-release")?.status,
+              ) &&
+              responses.findLast((r) => r.label === "bad-release").status >=
+                0 &&
+              responses.findLast((r) => r.label === "bad-release").status <= 599
+                ? responses.findLast((r) => r.label === "bad-release").status
+                : 0,
+          }
+        : {}),
     };
   }
   if (page) {
