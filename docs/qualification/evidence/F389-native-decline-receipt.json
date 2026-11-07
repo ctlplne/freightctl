@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "id": "F389",
+  "observed_at": "2026-11-07",
+  "base_candidate": "11760c5404262a3713501536a5028e03e1f8e472",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F389 preserves original4d2d9ab receive job128473908232 recipient-decline response-body failure(source937:33,result e9f402b2a9da7d4f6cdf1ca6da7dd3079166892f521480f09d2ce23b51d58892,first log93777f62ac641e1659ee658aa1fc001d47d337475b47af2c212dc2600a9fe19f). Observe that one ordinary decline through the existing bounded original Chrome wire stream. Pin exact scoped closure URL,POST,key,schema1/exchange/hash/decline body and original200;preserve state,event UUID,hash,replayed=false and disabled-retrieval assertions. Actual driver-block inspector-unavailability stand-in first fails,then21 affected wire/recovery/decline/egress tests pass,including substituted command/status/receipt refusals. Syntax,format,workflow lint and architecture pass. No extra request,retry,permission or fabricated response;full original native journey remains owed.",
+  "original_failure": {
+    "candidate": "4d2d9ab3062e7b10bc44cc0629b42d5ed570f6ca",
+    "run_id": 42396174443,
+    "job_id": 128473908232,
+    "phase": "recipient-decline",
+    "class": "browser-response-body",
+    "source_line": 937,
+    "source_column": 33,
+    "safe_result_sha256": "e9f402b2a9da7d4f6cdf1ca6da7dd3079166892f521480f09d2ce23b51d58892",
+    "protected_first_failure_sha256": "93777f62ac641e1659ee658aa1fc001d47d337475b47af2c212dc2600a9fe19f"
+  },
+  "red_green": "Execute the actual original decline/receipt block with a controlled unavailable inspector lookup:observed red. Updated block observes one original request/receipt;all original receipt assertions and additional exact request/status checks pass. Wrong exchange/hash/operation/key/status/state/replay/event/hash cases refuse. Stand-ins only;no native qualification inferred.",
+  "owed": [
+    "Full original native receive/copy/onward/decline/audit/revocation journey and exact final-source evidence",
+    "All mandatory baseline/AX/security/readiness gates"
+  ],
+  "source_files": [
+    {
+      "reference": ".github/workflows/artifact-exchange.yml",
+      "sha256": "ca590e44b4b481a2ddf8ef83b486b25fa3bb6773615cd5bf47f65e2bc00a7c70",
+      "bytes": 3297
+    },
+    {
+      "reference": "STATUS.md",
+      "sha256": "d9e05c0b4c42ef9e2c37a07bf2dd0f02d62cb62dfc23547b1857d0784dda42a0",
+      "bytes": 6278
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "324855453c68a4f18452069639176e2be16e396255b365151287eee4973e5522",
+      "bytes": 525188
+    },
+    {
+      "reference": "scripts/artifact-exchange-browser.mjs",
+      "sha256": "c41ffba8e42b730c752f57216c3c1646dacc25fb3c2b44cda22359fe78368075",
+      "bytes": 54610
+    },
+    {
+      "reference": "scripts/test-artifact-exchange-decline.mjs",
+      "sha256": "84f379744b440963b158c5300e4e16b65d1d2a61a3181913cf15564d2ee8b928",
+      "bytes": 4592
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f389-decline-red.log",
+      "sha256": "0457d2c7a690d0e680c7f468246592f9ee5adfd007277dffc28b60aea096ac06",
+      "bytes": 1181
+    },
+    {
+      "reference": ".private/freightctl-f389-focused.log",
+      "sha256": "5d52010b41042f75c47f2d485d1a95375fc24e34fcf0732e68252d8b45678f40",
+      "bytes": 2233
+    },
+    {
+      "reference": ".private/freightctl-f389-syntax.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f389-workflow.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f389-format.log",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    },
+    {
+      "reference": ".private/freightctl-f389-architecture.log",
+      "sha256": "4b208acb0604ef52606405d25893f9f85d2921f637addedd773e09d25ce31ca5",
+      "bytes": 64
+    }
+  ]
+}

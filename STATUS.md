@@ -83,6 +83,10 @@ F388 checks private namespace command rows as their acting participant and
 separately requires administrator-scope invisibility. Exact event/receipt counts
 and zero external/execution effects stay enforced;native replay remains owed.
 
+F389 observes the recipient decline receipt at the original wire boundary,
+keeping the exact command/status/receipt and refusal assertions. Focused checks
+pass;full original native receive/decline/audit/revocation remains owed.
+
 Next: continue independent implementation and original failure repair while
 current originals run. Push the next verified owner-only batch after required
 originals are terminal,then qualify the corrected toolchain and full product. Repair original failures

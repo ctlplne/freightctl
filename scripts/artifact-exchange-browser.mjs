@@ -921,20 +921,34 @@ try {
     .click();
   await accessibility(recipient.page, "decline-review-accessibility");
   phase = "recipient-decline";
-  const closureResponse = recipient.page.waitForResponse(
-    (r) =>
-      new URL(r.url()).pathname.endsWith("/exchange-closures") &&
-      r.request().method() === "POST",
+  const receipt = await nativeWireResponse(
+    recipient.page,
+    `${origin.origin}/v1/tenants/${c.tenant}/partners/${c.partner}/exchange-closures`,
+    () =>
+      recipient.page
+        .getByRole("button", {
+          name: "Confirm decline or recover result",
+          exact: true,
+        })
+        .click(),
+    async (observed, _label, target) => {
+      const request = observed.request();
+      assert.equal(request.url(), target);
+      assert.equal(request.method(), "POST");
+      const headers = await request.allHeaders();
+      assert.match(headers["idempotency-key"], /^[A-Za-z0-9._:-]{1,128}$/);
+      assert.deepEqual(JSON.parse(request.postDataBuffer()), {
+        schema_version: 1,
+        exchange_id: c.closure_exchange,
+        request_hash: c.closure_request_hash,
+        operation: "decline",
+      });
+      const original = observed[nativeWireObservation];
+      assert.equal(original.status, 200);
+      return original;
+    },
+    "recipient-decline",
   );
-  await recipient.page
-    .getByRole("button", {
-      name: "Confirm decline or recover result",
-      exact: true,
-    })
-    .click();
-  const closure = await closureResponse;
-  assert.equal(closure.status(), 200);
-  const receipt = await closure.json();
   assert.equal(receipt.exchange_id, c.closure_exchange);
   assert.equal(receipt.state, "declined");
   assert.equal(receipt.replayed, false);
