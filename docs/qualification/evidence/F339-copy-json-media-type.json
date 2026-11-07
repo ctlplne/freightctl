@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "id": "F339",
+  "observed_at": "2026-11-07",
+  "base_candidate": "6d34ac3c62a84cbc1253d2b32a782cb5940d4f57",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F339 repairs the received-copy client JSON media type without relaxing the recovery transport. The copy client serialized a typed JSON body but omitted Content-Type;an actual Web Request under pinned Node26.13.0 defaults it to text/plain;charset=UTF-8 and the new meaningful regression fails. Explicit application/json turns all7 copy contract cases green with the same key/body/authority/receipt semantics. Pinned native ARM Node26.13.0 also passes both actual loopback TLS/exact-request/refusal cases,so the local Node minor alone does not reproduce the native receive failure. Final frontend type/build/exact assets/format and architecture pass. Original native Chrome copy/lost-response/recovery/onward/revocation proof remains owed;causal attribution to its source392 transport failure needs replay.",
+  "original_failure": {
+    "candidate": "b8be4ab779d525089c49d75bde71911ff83a16dc",
+    "run_id": 42377328373,
+    "job_id": 128417501903,
+    "phase": "copy-lost-response",
+    "class": "unclassified",
+    "source_line": 392,
+    "source_column": 20,
+    "safe_result_sha256": "fc6e28987c1739f118d5a220ece0f85335033417b4f3f38f8050b96f7d7741d8",
+    "private_first_failure_sha256": "58ff32f40fc285dc24520a03bb10a304e45a9c21935d033c2ce8c3769d5083cf",
+    "causal_attribution": "Original await is exact fixture HTTPS transport. Actual typed request lacks JSON Content-Type and reproduces transport-incompatible text/plain;native causal qualification still owed."
+  },
+  "red": {
+    "proof": ".private/freightctl-f339-copy-media-type-red.log",
+    "observation": "Real Web Request built from actual copy client options has text/plain;charset=UTF-8,expected application/json. Six existing copy cases still pass."
+  },
+  "green": [
+    "All7 copy client/recovery/held-intake/current-authority/exact-receipt methods pass under native ARM Node26.13.0;original key/body unchanged.",
+    "Both actual loopback TLS/headers/body/wrong-CA/scope/abort tests pass using the official pinned minor on ARM;this is not Linux x86/browser qualification.",
+    "Final pinned-runtime frontend TypeScript/build/exact assets/format and Go architecture checks observed terminal exit0."
+  ],
+  "runtime": {
+    "archive_sha256": "6f5b3187d9df9fc007e881167905bc7d69ad26450ddc377c83d63256a2495b6e",
+    "archive_bytes": 30647096,
+    "member": "node-v26.13.0-darwin-arm64/bin/node",
+    "binary_bytes": 147346864,
+    "binary_sha256": "533bd644c5ae0e0ea3a80e433aad16b817447ccba1e1eea701875eac80cb75d4",
+    "system": "darwin/arm64",
+    "global_install": false,
+    "checksum_source": "https://nodejs.org/dist/v26.13.0/SHASUMS256.txt",
+    "archive_source": "https://nodejs.org/dist/v26.13.0/node-v26.13.0-darwin-arm64.tar.xz",
+    "version": "v26.13.0",
+    "scope": "Task-cache exact native ARM node executable only,no global installation or model runtime"
+  },
+  "observed_native_scopes": [
+    {
+      "candidate": "b8be4ab779d525089c49d75bde71911ff83a16dc",
+      "run_id": 42377328234,
+      "jobs": [
+        128417501638,
+        128417501984
+      ],
+      "state": "success",
+      "scope": "Original native JSON/CLI/signature/scanner-protocol custody job on ARM/x86,including F325 ordinary local-source XLSX checks and separate release;no real scanner-engine claim."
+    },
+    {
+      "run_id": 42377328234,
+      "job_id": 128417501904,
+      "scope": "Original manual local-source Chrome capture/replay5.73s and independent review recovery/adoption6.25s pass;new local-calendar profile fails at tenant-label fill source165:55. Whole job remains failed.",
+      "candidate": "b8be4ab779d525089c49d75bde71911ff83a16dc"
+    }
+  ],
+  "source_files": [
+    {
+      "reference": "web/src/artifact-exchanges-api.ts",
+      "sha256": "3a336af22643c9b03865ec5030fc5f873875d4df8e530603a2497d6e93779bfd",
+      "bytes": 17216
+    },
+    {
+      "reference": "web/tests/artifact-copy.test.mjs",
+      "sha256": "f27a486bcac1884f010df3eb1219cf7ca43cb4411eb822aed9c47fa91a9f00d4",
+      "bytes": 8171
+    },
+    {
+      "reference": "internal/browser/assets/app.js",
+      "sha256": "0aa49c52e5f93702bb818806afbf82d3cf71d752f6e432f329cc7a73cbfc4934",
+      "bytes": 906551
+    },
+    {
+      "reference": "internal/browser/assets/manifest.json",
+      "sha256": "1f36bf9dbc3bdebe108aa4221345f7e10bbe17a734df7201c4ff5dcafa6a94ad",
+      "bytes": 13977
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "84024babdda52dfc536521bafab2c44ff639f9df7a0731cac288b2f7369ba475",
+      "bytes": 443996
+    },
+    {
+      "reference": "STATUS.md",
+      "sha256": "c8784c50d93de2e9d64b0e5ec3e8eb5f3fa5e54ebff86c78d74500e25c0b4122",
+      "bytes": 15566
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f339-copy-media-type-red.log",
+      "sha256": "601581d45b1946082c9a3ccf6df38f8b617d53fc3f299771d3e796c8a1a1c48c",
+      "bytes": 1739
+    },
+    {
+      "reference": ".private/freightctl-f339-copy-media-type-green.log",
+      "sha256": "ae425eb00ea8f109d2678ed73cc3098d23d6ce97254de2a4c70b63d7de3978d9",
+      "bytes": 878
+    },
+    {
+      "reference": ".private/freightctl-f339-node26.13-loopback.log",
+      "sha256": "829c371d60fa00ea92148d3f14dc6e8215e75d770dff260d096d0ac837ef1ddd",
+      "bytes": 55
+    },
+    {
+      "reference": ".private/freightctl-f339-node-version.log",
+      "sha256": "d4b8a831ea4925f1c54be7746ec0b846cb04bbc35295b64ccdb2101bfcf5d70c",
+      "bytes": 9
+    },
+    {
+      "reference": ".private/freightctl-f339-node-runtime-inventory.json",
+      "sha256": "772fc9ce3d5f77a07f9b0efada175256c3ce3bbca34c21cf25b70be4427ed4fd",
+      "bytes": 342
+    },
+    {
+      "reference": ".private/freightctl-f339-node26.13-SHASUMS256.txt",
+      "sha256": "9b0d4aa4d20a4f1afaf2cdcf99175ad90d1856d24c7d31dc46f72369b73e2d35",
+      "bytes": 3171
+    },
+    {
+      "reference": ".private/freightctl-f339-typecheck.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f339-build.log",
+      "sha256": "2b89727a9185a9aecbfd0677eed60b9b9fc6dd3a51dcdfbd04e6eedc5e080ec7",
+      "bytes": 180
+    },
+    {
+      "reference": ".private/freightctl-f339-exact-built.log",
+      "sha256": "adb93d9bc4b784c9ae83a0cc4188dfac590a8099035ce4c84adc9e4bedef5617",
+      "bytes": 183
+    },
+    {
+      "reference": ".private/freightctl-f339-format-check.log",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    },
+    {
+      "reference": ".private/freightctl-f339-architecture.log",
+      "sha256": "d3adcad7e6dde69b98a70d9dad2b6042266c45a008e96ab02044deb3a8e0c054",
+      "bytes": 64
+    }
+  ],
+  "owed": [
+    "Actual original receive Chrome copy/recovery/receipt/onward/revocation replay on final source.",
+    "New local-calendar startup/served capture proof and all remaining original native failures.",
+    "Complete final-source baseline/AX/FINISH outcomes."
+  ],
+  "resources": "Node heap192MiB;Go loopback/architecture oneCPU/192MiB. No local Chrome/PostgreSQL/FTPS server/scanner/inference;runtime is an ignored disk-only task cache after short processes exit."
+}

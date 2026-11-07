@@ -55,7 +55,7 @@
     },
     {
       "path": "web/src/artifact-exchanges-api.ts",
-      "sha256": "f3a08f0e92c74ce5a09c14ca551243f63c19494faa447a31d9825cea340b422e"
+      "sha256": "3a336af22643c9b03865ec5030fc5f873875d4df8e530603a2497d6e93779bfd"
     },
     {
       "path": "web/src/artifact-exchanges-types.ts",
@@ -358,8 +358,8 @@
     },
     {
       "name": "app.js",
-      "sha256": "5a60147b633f6b7c5f44288987a1d7c030cbc6e3eb7f6b92bb9172d368d1f5b0",
-      "size": 906517
+      "sha256": "0aa49c52e5f93702bb818806afbf82d3cf71d752f6e432f329cc7a73cbfc4934",
+      "size": 906551
     },
     {
       "name": "app.js.LEGAL.txt",

@@ -72,6 +72,15 @@ function transport(permissions = ["read", "list", "write"]) {
     result: (v) => (result = v),
   };
 }
+test("copy command advertises exact JSON instead of the Web Request string default", async () => {
+  const t = transport();
+  await t.client.copyReceived(request(), "original-json-copy");
+  const sent = t.calls[0],
+    wire = new Request("https://freightctl.test" + sent.path, sent.options);
+  assert.equal(wire.headers.get("content-type"), "application/json");
+  assert.equal(wire.headers.get("idempotency-key"), "original-json-copy");
+  assert.deepEqual(JSON.parse(await wire.text()), request());
+});
 test("received copy sends only pinned exact source and new path under independent write authority", async () => {
   const t = transport(),
     r = request();

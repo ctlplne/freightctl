@@ -212,6 +212,15 @@ boundary with the protected filename;no network or PostgreSQL starts. Wrong
 estate/host/fallback settings still refuse. Focused source/evidence/static checks
 pass;actual native source startup/operator/consent replay remains owed.
 
+F339 labels the typed received-copy body application/json. Actual pinned-Node
+Web Request first reports text/plain by default,then7 copy contract cases pass
+after the header repair. Matching Node26.13 on native ARM also passes exact
+loopback TLS;it does not qualify Linux/Chrome. Final type/build/assets/format and
+architecture pass. Original native copy/recovery/onward/revocation remains owed.
+Nativeb8be4ab CLI/JSON custody now passes both architectures;manual local Chrome
+capture/replay and independent-review recovery/adoption also pass. New local
+calendar Chrome proof fails before tenant-field login and remains open.
+
 FINISH repair and remaining implementation are mandatory. Next:repair original
 browser/stock/protocol failures and complete all affected original runtime,
 security,recovery,reproducibility and baseline/AX gates on the final source.

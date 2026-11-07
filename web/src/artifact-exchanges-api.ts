@@ -120,7 +120,7 @@ export class ExchangeReceiveApi {
       `${this.prefix}/exchange-copies`,
       {
         method: "POST",
-        headers: { "Idempotency-Key": key },
+        headers: { "Content-Type": "application/json", "Idempotency-Key": key },
         body: JSON.stringify(pinned),
         ...(signal ? { signal } : {}),
       },
