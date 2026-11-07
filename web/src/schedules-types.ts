@@ -538,7 +538,7 @@ export function asScheduleDefinition(v: unknown): ScheduleDefinition {
       ...(processing
         ? { kind: "owned_released_records" as const }
         : remote
-          ? { kind: source.kind as CollectionSource["kind"] }
+          ? { kind: source.kind as "sftp.collect" | "ftps.collect" }
           : {}),
       filename_regex: regex,
     },

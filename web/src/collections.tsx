@@ -205,12 +205,21 @@ function SourceReview({
     <>
       <p>
         Read <code>{source.manifest}</code> from{" "}
-        <code>
-          {connection.user}@{connection.address}
-        </code>
-        , folder <code>{connection.directory}</code>. The producer must publish
-        its ready manifest after finishing the named immutable files. Each file
-        must match the manifest’s exact length and SHA-256 digest.
+        {connection.local ? (
+          <>
+            registered local source <code>{connection.id}</code>
+          </>
+        ) : (
+          <>
+            <code>
+              {connection.user}@{connection.address}
+            </code>
+            , folder <code>{connection.directory}</code>
+          </>
+        )}
+        . The producer must publish its ready manifest after finishing the named
+        immutable files. Each file must match the manifest’s exact length and
+        SHA-256 digest.
       </p>
       <p>
         Copy into virtual folder <code>{source.target_directory}</code> using{" "}
@@ -223,7 +232,14 @@ function SourceReview({
         At most {source.max_files} files,{" "}
         {source.max_file_bytes.toLocaleString()} bytes per file and{" "}
         {source.max_total_bytes.toLocaleString()} bytes per batch.{" "}
-        {connection.ftps ? (
+        {connection.local ? (
+          <>
+            Read-only source. Reviewed folder identity{" "}
+            <code>{connection.local.root_fingerprint}</code>; protected
+            configuration <code>{connection.local.configuration_sha256}</code>.
+            Receiving these files grants no forwarding or execution authority.
+          </>
+        ) : connection.ftps ? (
           <FTPSPeerIdentity proof={connection.ftps} />
         ) : (
           <>
@@ -533,18 +549,27 @@ export function Collections({
     return asCollectionWorkflow({
       schema_version: form.program ? 2 : 1,
       name: form.name.normalize("NFC"),
-      steps: form.steps.map((s) => ({
-        id: s.id,
-        kind:
-          selectedConnection(s.connection).protocol === "ftps"
-            ? "ftps.deliver"
-            : "sftp.deliver",
-        connection: reference(selectedConnection(s.connection)),
-        filename: s.filename,
-        ...(s.encryption ? { encryption: s.encryption } : {}),
-      })),
+      steps: form.steps.map((s) => {
+        if (selectedConnection(s.connection).local)
+          throw new ApiError("invalid_workflow_collection", 400);
+        return {
+          id: s.id,
+          kind:
+            selectedConnection(s.connection).protocol === "ftps"
+              ? "ftps.deliver"
+              : "sftp.deliver",
+          connection: reference(selectedConnection(s.connection)),
+          filename: s.filename,
+          ...(s.encryption ? { encryption: s.encryption } : {}),
+        };
+      }),
       source: {
-        kind: source.protocol === "ftps" ? "ftps.collect" : "sftp.collect",
+        kind:
+          source.protocol === "local"
+            ? "local.collect"
+            : source.protocol === "ftps"
+              ? "ftps.collect"
+              : "sftp.collect",
         connection: reference(source),
         manifest: form.manifest,
         target_directory: form.directory,
@@ -855,28 +880,32 @@ export function Collections({
       setBusy(false);
     }
   }
-  const connectionOptions = () => (
+  const connectionOptions = (receiver = false) => (
     <>
       <option value="">Choose a registered connection</option>
-      {connections.map((c) => (
-        <option
-          key={connectionKey(c)}
-          value={connectionKey(c)}
-          disabled={c.state !== "active"}
-        >
-          {(c.protocol === "ftps" ? "FTPS " + c.ftps!.mode : "SFTP") +
-            " · " +
-            c.user +
-            "@" +
-            c.address +
-            " · " +
-            c.directory +
-            " · v" +
-            c.version +
-            " · " +
-            c.id.slice(0, 8)}
-        </option>
-      ))}
+      {connections
+        .filter((c) => !receiver || !c.local)
+        .map((c) => (
+          <option
+            key={connectionKey(c)}
+            value={connectionKey(c)}
+            disabled={c.state !== "active"}
+          >
+            {(c.local
+              ? "Local read-only · " + c.local.root_fingerprint.slice(0, 12)
+              : (c.protocol === "ftps" ? "FTPS " + c.ftps!.mode : "SFTP") +
+                " · " +
+                c.user +
+                "@" +
+                c.address +
+                " · " +
+                c.directory) +
+              " · v" +
+              c.version +
+              " · " +
+              c.id.slice(0, 8)}
+          </option>
+        ))}
     </>
   );
   const activeChoice =
@@ -957,7 +986,21 @@ export function Collections({
                   value={form.source}
                   required
                   disabled={busy}
-                  onChange={(e) => edit({ source: e.target.value })}
+                  onChange={(e) =>
+                    edit({
+                      source: e.target.value,
+                      ...(connections.find(
+                        (c) => connectionKey(c) === e.target.value,
+                      )?.local
+                        ? {
+                            scheduled: false,
+                            manifest: form.scheduled
+                              ? "settlement.ready.json"
+                              : form.manifest,
+                          }
+                        : {}),
+                    })
+                  }
                 >
                   {connectionOptions()}
                 </select>
@@ -967,6 +1010,11 @@ export function Collections({
               <input
                 type="checkbox"
                 checked={form.scheduled}
+                disabled={
+                  busy ||
+                  !!connections.find((c) => connectionKey(c) === form.source)
+                    ?.local
+                }
                 onChange={(e) =>
                   edit({
                     scheduled: e.target.checked,
@@ -1082,7 +1130,7 @@ export function Collections({
                         stepEdit(index, { connection: e.target.value })
                       }
                     >
-                      {connectionOptions()}
+                      {connectionOptions(true)}
                     </select>
                   )}
                 </Field>

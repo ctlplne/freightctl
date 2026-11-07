@@ -94,6 +94,14 @@ root through a strict four-scalar profile. Valid-profile regression turns red
 to green;rehashed ambiguous/unknown meaning and changed bytes/root/authority
 refuse. Product connection/SQL/workflow/CLI/API/browser wiring remains owed.
 
+F302 preserves original9439074 terminal16 workflows/35 jobs:29 passed,6 failed.
+Both native Go/PostgreSQL/restore jobs and listed image/source/security gates
+pass. All four record-format Chrome cases now pass;independent review,receive,
+Windows sockets,FTPS operator and stock arrivals remain red. F303 adds local
+source browser review and exact canonical root metadata;4 new/17 affected
+legacy contracts pass. Actual native Chrome capture/replay/zero-intent/independent
+custody profile is prepared and compiled,not yet executed.
+
 FINISH repair and remaining implementation are mandatory. Next:repair original
 browser/stock/protocol failures and complete all affected original runtime,
 security,recovery,reproducibility and baseline/AX gates on the final source.

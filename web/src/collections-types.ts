@@ -40,7 +40,7 @@ export const collectionContract = "immutable-files-sha256-manifest-v1";
 export const scheduledCollectionContract =
   "immutable-files-sha256-scheduled-manifest-v1";
 export interface CollectionSource {
-  kind: "sftp.collect" | "ftps.collect";
+  kind: "sftp.collect" | "ftps.collect" | "local.collect";
   connection: Reference;
   manifest: string;
   target_directory: string;
@@ -90,8 +90,16 @@ export interface CollectionConnection {
   directory: string;
   host_fingerprint: string;
   key_fingerprint: string;
-  protocol?: "ftps";
+  protocol?: "ftps" | "local";
   ftps?: FTPSConnectionProof;
+  local?: LocalCollectionProof;
+}
+export interface LocalCollectionProof {
+  profile: "freightctl-local-collection-source-v1";
+  root_reference_sha256: string;
+  configuration_sha256: string;
+  root_fingerprint: string;
+  read_only: true;
 }
 export interface CollectionScheduleBinding {
   schedule: Reference;
@@ -337,7 +345,9 @@ export function asCollectionSource(v: unknown): CollectionSource {
     "max_total_bytes",
   ]);
   if (
-    (o.kind !== "sftp.collect" && o.kind !== "ftps.collect") ||
+    (o.kind !== "sftp.collect" &&
+      o.kind !== "ftps.collect" &&
+      o.kind !== "local.collect") ||
     ![collectionContract, scheduledCollectionContract].includes(
       String(o.completion_contract),
     )
@@ -345,6 +355,7 @@ export function asCollectionSource(v: unknown): CollectionSource {
     bad();
   const contract =
     o.completion_contract as CollectionSource["completion_contract"];
+  if (o.kind === "local.collect" && contract !== collectionContract) bad();
   const manifest = str(o, "manifest", 160),
     directory = path(str(o, "target_directory", 1024));
   const name =
@@ -373,6 +384,28 @@ export function asCollectionSource(v: unknown): CollectionSource {
     max_total_bytes: maxTotal,
   };
 }
+function asLocalCollectionProof(v: unknown): LocalCollectionProof {
+  const o = object(v);
+  keys(o, [
+    "profile",
+    "root_reference_sha256",
+    "configuration_sha256",
+    "root_fingerprint",
+    "read_only",
+  ]);
+  if (
+    o.profile !== "freightctl-local-collection-source-v1" ||
+    o.read_only !== true
+  )
+    bad();
+  return {
+    profile: "freightctl-local-collection-source-v1",
+    root_reference_sha256: hash(o, "root_reference_sha256"),
+    configuration_sha256: hash(o, "configuration_sha256"),
+    root_fingerprint: hash(o, "root_fingerprint"),
+    read_only: true,
+  };
+}
 export function asCollectionConnection(v: unknown): CollectionConnection {
   const o = object(v);
   keys(
@@ -389,16 +422,35 @@ export function asCollectionConnection(v: unknown): CollectionConnection {
       "host_fingerprint",
       "key_fingerprint",
     ],
-    o.protocol === "ftps" ? ["protocol", "ftps"] : [],
+    o.protocol === "ftps"
+      ? ["protocol", "ftps"]
+      : o.protocol === "local"
+        ? ["protocol", "local"]
+        : [],
   );
   if (o.state !== "active" && o.state !== "revoked") bad();
   const directory = path(str(o, "directory", 1024));
-  if (o.protocol !== undefined && o.protocol !== "ftps") bad();
+  if (
+    o.protocol !== undefined &&
+    o.protocol !== "ftps" &&
+    o.protocol !== "local"
+  )
+    bad();
   if (
     o.protocol === "ftps" &&
     (o.host_fingerprint !== "" ||
       o.key_fingerprint !== "" ||
       o.ftps === undefined)
+  )
+    bad();
+  if (
+    o.protocol === "local" &&
+    (o.address !== "" ||
+      o.user !== "" ||
+      directory !== "/" ||
+      o.host_fingerprint !== "" ||
+      o.key_fingerprint !== "" ||
+      o.local === undefined)
   )
     bad();
   return {
@@ -407,15 +459,15 @@ export function asCollectionConnection(v: unknown): CollectionConnection {
     definition_hash: hash(o, "definition_hash"),
     state: o.state as CollectionConnection["state"],
     revision: num(o, "revision"),
-    address: str(o, "address", 300),
-    user: str(o, "user", 64),
+    address: o.protocol === "local" ? "" : str(o, "address", 300),
+    user: o.protocol === "local" ? "" : str(o, "user", 64),
     directory,
     host_fingerprint:
-      o.protocol === "ftps"
+      o.protocol === "ftps" || o.protocol === "local"
         ? ""
         : sshFingerprint(str(o, "host_fingerprint", 100)),
     key_fingerprint:
-      o.protocol === "ftps"
+      o.protocol === "ftps" || o.protocol === "local"
         ? ""
         : sshFingerprint(str(o, "key_fingerprint", 100)),
     ...(o.protocol === "ftps"
@@ -423,7 +475,9 @@ export function asCollectionConnection(v: unknown): CollectionConnection {
           protocol: "ftps" as const,
           ftps: asFTPSConnectionProof(o.ftps, directory),
         }
-      : {}),
+      : o.protocol === "local"
+        ? { protocol: "local" as const, local: asLocalCollectionProof(o.local) }
+        : {}),
   };
 }
 export function asCollectionConnections(v: unknown): {
@@ -603,7 +657,8 @@ export function asCollectionWorkflowPreview(
       d.source.connection,
     ) ||
     connection.state !== "active" ||
-    (d.source.kind === "ftps.collect") !== (connection.protocol === "ftps")
+    (d.source.kind === "ftps.collect") !== (connection.protocol === "ftps") ||
+    (d.source.kind === "local.collect") !== (connection.protocol === "local")
   )
     bad();
   const effects = effectsForWorkflow(o.effects, d);
@@ -704,6 +759,7 @@ export function asCollectionDefinition(v: unknown): CollectionDefinition {
   if (
     connection.state !== "active" ||
     (source.kind === "ftps.collect") !== (connection.protocol === "ftps") ||
+    (source.kind === "local.collect") !== (connection.protocol === "local") ||
     !equal(
       {
         id: connection.id,
@@ -714,7 +770,14 @@ export function asCollectionDefinition(v: unknown): CollectionDefinition {
     ) ||
     identity !==
       digestBytes(
-        new TextEncoder().encode(connection.id + ":" + connection.directory),
+        new TextEncoder().encode(
+          connection.local
+            ? "local-root-v1:" +
+                connection.id +
+                ":" +
+                connection.local.root_fingerprint
+            : connection.id + ":" + connection.directory,
+        ),
       ) ||
     new Set(effects.map((e) => e.step_id)).size !== effects.length
   )

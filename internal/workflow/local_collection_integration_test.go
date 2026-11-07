@@ -77,6 +77,7 @@ func newLocalCollection(t *testing.T) localCollectionSetup {
 	}
 	source := collectionTestSource()
 	source.Kind = "local.collect"
+	source.Directory = "/"
 	source.Connection = Reference{ID: connection.ID, Version: connection.Version, Hash: connection.Hash}
 	d := Definition{Schema: 1, Name: "Approved private local collection", Steps: []Step{}, Source: &source}
 	preview, err := f.s.Validate(f.ctx, f.scope, PreviewRequest{Definition: d})

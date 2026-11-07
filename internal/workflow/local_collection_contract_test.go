@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"os"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -21,6 +22,42 @@ func localConnectionContract(t *testing.T) (ConnectionDefinition, *store.Configu
 		t.Fatal(err)
 	}
 	return d, &store.Configuration{ID: secure.NewID(), Version: 1, Definition: raw, Hash: hash, State: "active", Revision: 1}
+}
+
+func TestLocalCollectionGoBrowserCanonicalRootBoundFixture(t *testing.T) {
+	raw, err := os.ReadFile("../../web/tests/fixtures/local-collections.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var f struct {
+		Workflow  store.Configuration `json:"workflow"`
+		Preview   CollectionPreview   `json:"preview"`
+		Selection CollectionSelection `json:"selection"`
+		View      CollectionView      `json:"view"`
+	}
+	if err = json.Unmarshal(raw, &f); err != nil {
+		t.Fatal(err)
+	}
+	var d Definition
+	if err = Decode(f.Workflow.Definition, &d); err != nil {
+		t.Fatal(err)
+	}
+	d, err = Normalize(d)
+	if err != nil || d.Source == nil || d.Source.Kind != "local.collect" || len(d.Steps) != 0 {
+		t.Fatal("exact local-only fixture refused", err)
+	}
+	_, hash, err := digest(d)
+	if err != nil || hash != f.Workflow.Hash || f.Selection.Workflow.Hash != hash {
+		t.Fatal("ordinary canonical local workflow hash differs", err)
+	}
+	definition, err := collectionDefinition(f.View.Job)
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, hash, err = digest(f.Preview.Definition)
+	if err != nil || hash != f.Preview.Hash || hash != f.View.Job.Hash || definition.SourceIdentity != collectionSourceIdentity(definition.Connection) || definition.Connection.Protocol != "local" || definition.Connection.Local == nil || !definition.Connection.Local.ReadOnly || definition.Connection.Local.Profile != delivery.LocalCollectionProfile || len(definition.Effects) != 0 || len(f.View.Inputs) != 1 || f.View.Inputs[0].RunID != nil {
+		t.Fatal("canonical local root/view/no-forwarding binding differs", err)
+	}
 }
 
 func TestLocalCollectionConnectionBindsReadOnlyRoleAndRedactsHostReferences(t *testing.T) {

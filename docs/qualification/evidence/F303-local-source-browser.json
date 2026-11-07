@@ -1,0 +1,221 @@
+{
+  "schema_version": 1,
+  "id": "F303",
+  "observed_at": "2026-11-07",
+  "base_candidate": "784d33c56e2c33dd0411a560ae6aea83123f50d7",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Local source browser implemented;actual served native acceptance owed",
+  "changed": [
+    "Closed local profile and three-hash/read-only metadata parser;canonical root identity and exact Go/browser job/view fixture.",
+    "Ordinary Collections editor/review/capture path now supports registered local read-only sources;no host path or source-only receiver selection. Preserve all exact authority/hash/byte bounds/receipt assertions. Calendar stays refused until separately implemented.",
+    "Prepared GitHub-only original Chrome/HTTPS/PG local capture and real committed-response loss/replay with original key/body,current permissions/cookie/CSRF,per-request exact fixture CA and ordinary TLS hostname verification. Independent Go exact bytes/immutable ID/events/receipts/no-intent/no-producer-write observations required. No Chrome/PG ran locally.",
+    "Correct new native fixture target to existing writable virtual root without dropping any assertion. Add fixed safe trace script allowlist and affected original native CI selection/path trigger;no original tests removed.",
+    "F302 preserves exact terminal16 original9439074 workflows/35 jobs:29 success/6 failure;both image scans and listed security gates passed,original remaining Windows/receive/review/FTPS operator/stock failures remain red."
+  ],
+  "red": {
+    "test": "Go local source review and captured receipt retain exact canonical root-bound meaning",
+    "observation": "Actual-shaped local workflow metadata rejected by previous browser parser;first attempted wiring still rejected empty local address/user until explicit closed local handling. Initial type errors retained and corrected with explicit local-calendar refusal."
+  },
+  "green": [
+    "4 local-source metadata/canonical/rehash/authority/identity tests and17 affected legacy SFTP/FTPS/calendar browser contracts pass.",
+    "Independent Go canonical source/workflow/job fixture matches exact hashes and source identity;tagged API/workflow compilation and privacy trace unit pass only.",
+    "Affected formatting,typecheck,build and exact assets check,workflow lint,vet and architecture pass."
+  ],
+  "native_profile": {
+    "test": "TestLocalCollectionNativeBrowserReviewCaptureAndOriginalKeyRecovery",
+    "workflow": ".github/workflows/json-intake.yml",
+    "script": "scripts/local-collection-browser.mjs",
+    "state": "prepared;actual execution owed"
+  },
+  "source_files": [
+    {
+      "reference": ".github/workflows/json-intake.yml",
+      "sha256": "779e7c73723b051bd893e1cd2293f58a45ee1134d68b87a7a163aa6f80ab8428",
+      "bytes": 6986
+    },
+    {
+      "reference": "STATUS.md",
+      "sha256": "2947fa52a6cd41605395e7eb95cd4f0f6e2bc19b939ea35ceba160efd5a9a683",
+      "bytes": 7677
+    },
+    {
+      "reference": "docs/qualification/evidence/F302-native-terminal-ci.json",
+      "sha256": "a3c59a154be28dd07c036184a2075e21e1d88b6ab3e9b689ac6ffdf0c677248e",
+      "bytes": 90917
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "b80d061cb0f74656be876730d87551c7eb9dfaad0c71ee7c80f6e7ca4b69bf4e",
+      "bytes": 402419
+    },
+    {
+      "reference": "docs/workflows.md",
+      "sha256": "43791386132e4a67fd26967526d4c43047ff5258bec041276385871aa5926b15",
+      "bytes": 18142
+    },
+    {
+      "reference": "internal/api/browser_failure_trace_integration_test.go",
+      "sha256": "d28078cec959e1db3969194a37f6427bdf906120f961c6f9b8379d4202c0646f",
+      "bytes": 5784
+    },
+    {
+      "reference": "internal/api/local_collection_browser_integration_test.go",
+      "sha256": "c8901ca9dd9c4b6948e6569398e34a0cfa0831323ceaea6835bb739fec67e7e5",
+      "bytes": 8798
+    },
+    {
+      "reference": "internal/browser/assets/app.js",
+      "sha256": "6d568c70344f9072727e479557b478f92cd87a3dfff9be4852d62b8e8675ac9f",
+      "bytes": 904976
+    },
+    {
+      "reference": "internal/browser/assets/manifest.json",
+      "sha256": "7bbe98acc97569f52bb674f5e1eb502a3bfcf527caef729f01879dfe23a703cf",
+      "bytes": 13828
+    },
+    {
+      "reference": "internal/workflow/local_collection_contract_test.go",
+      "sha256": "6b4201ae1c01c2a992b0d96d92b702b3f080002059210a739972f62cc576a515",
+      "bytes": 6092
+    },
+    {
+      "reference": "internal/workflow/local_collection_integration_test.go",
+      "sha256": "ba3ac634859654350045a510ca7c0ca32a979aff5006a9da1137f47f8b095c44",
+      "bytes": 13087
+    },
+    {
+      "reference": "scripts/local-collection-browser.mjs",
+      "sha256": "eeacf5982b454c7086dd8657019428b138392bb8a6dbfb78d7e84310e91c1c93",
+      "bytes": 9123
+    },
+    {
+      "reference": "web/src/collections-types.ts",
+      "sha256": "8815f26985a0071789b4e486851e676b21b787bae1ba93944af3057abd2e0a6c",
+      "bytes": 47376
+    },
+    {
+      "reference": "web/src/collections.tsx",
+      "sha256": "f7e7515d915bd4ab408e3ae27eb4a938a8c6697ad1bd198bfe1dcc16d7632178",
+      "bytes": 75252
+    },
+    {
+      "reference": "web/src/schedules-types.ts",
+      "sha256": "f94d4028a12548bc30813f5733c80d701bc9d28c2f36889c6296f5664799c20c",
+      "bytes": 33522
+    },
+    {
+      "reference": "web/src/schedules.tsx",
+      "sha256": "f85efbc74568fb886c4b2b98dd4980dec20e7a413ed01f9bfe9c269385acb6c0",
+      "bytes": 46582
+    },
+    {
+      "reference": "web/tests/fixtures/local-collections.json",
+      "sha256": "86bd5ae8f781115bed4b2051bee37682c4ede2bfbec729c51358caf98bda7526",
+      "bytes": 9939
+    },
+    {
+      "reference": "web/tests/local-collections.test.mjs",
+      "sha256": "c8942edc054a8ec88c36b59b40bc41fd38076f32135d37e66717a5dec0889075",
+      "bytes": 4558
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f303-browser-contract-red.log",
+      "sha256": "556caf5de0db2406467a510d0f90d8b337734f53b9d1cb6deafccab37a74e6fc",
+      "bytes": 568052
+    },
+    {
+      "reference": ".private/freightctl-f303-browser-contract-green-first.log",
+      "sha256": "d94f0c38c22010cd12cc00e10356fe49e1e5200f42fdb5619e699b78b49264cc",
+      "bytes": 461683
+    },
+    {
+      "reference": ".private/freightctl-f303-browser-contract-green2.log",
+      "sha256": "0117ee738f48eab1669fd43557eb3a655564a4af0da8c4256466c1862e76efb7",
+      "bytes": 490
+    },
+    {
+      "reference": ".private/freightctl-f303-typecheck-first.log",
+      "sha256": "3c8dfbb72b55f04226199268b8d7bb95a69c6bf13708b77160b2888a0119a14f",
+      "bytes": 2010
+    },
+    {
+      "reference": ".private/freightctl-f303-typecheck-green.log",
+      "sha256": "17e00418398dd65e49bed86df28efee896dcae70d7e6258050a2746181f558d5",
+      "bytes": 54
+    },
+    {
+      "reference": ".private/freightctl-f303-go-golden-green.log",
+      "sha256": "4a045a48fa925f81c12f4c484b4b9aaa373085d7a6e5e1084915ffc6cf22a78f",
+      "bytes": 60
+    },
+    {
+      "reference": ".private/freightctl-f303-affected-legacy-browser.log",
+      "sha256": "cf292b2c20c158074549ac644ce3ebc58bdb8f8488a4289654b6e13e580d4d6c",
+      "bytes": 1984
+    },
+    {
+      "reference": ".private/freightctl-f303-native-script-syntax.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f303-native-compile.log",
+      "sha256": "ffa94d2dfc0f4cb5bce5b33aabf3faebcac0a138b1ddee110526f612eaca00a1",
+      "bytes": 151
+    },
+    {
+      "reference": ".private/freightctl-f303-safe-trace-green.log",
+      "sha256": "4e9447b9bd474dd470745b3b7bd8725ea2f21cf5c4a3d34f9954f52ca4f435ba",
+      "bytes": 55
+    },
+    {
+      "reference": ".private/freightctl-f303-browser-contract-final-green.log",
+      "sha256": "be49f9b9cb0c9febdf889870224e636222e116dd50f2fb0b5519a023ee706575",
+      "bytes": 493
+    },
+    {
+      "reference": ".private/freightctl-f303-built.log",
+      "sha256": "75813dd1fb3fa7e733bbcb259f3ad70828a279b543f1900b320c0e298f1930be",
+      "bytes": 232
+    },
+    {
+      "reference": ".private/freightctl-f303-built-exact.log",
+      "sha256": "182416cb7d1b7054b11bbc57fdc83d0c1e72f93487589434a4038c1e7bab508b",
+      "bytes": 249
+    },
+    {
+      "reference": ".private/freightctl-f303-workflow-lint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f303-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f303-architecture.log",
+      "sha256": "d39bc0500d585e58f1c56761e2a2f2deaa162e0783a037d02c7425fcfe139ed1",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f303-format-check.log",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    },
+    {
+      "reference": ".private/freightctl-f303-go-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "owed": [
+    "Actual new native source61 PostgreSQL integration,CLI and Chrome capture/replay/accessibility/refusal/custody/cardinality/producer proof;compilation and parser contracts do not qualify a connector.",
+    "Original failed Windows/socket,receive/review,FTPS operator/stock/independent receiver journeys and final-source security/restore/reproducibility/FINISH outcomes.",
+    "Local calendar,mounted storage,crash/recovery/performance,remaining baseline and AX01\u2013AX08;external prerequisites remain owed."
+  ],
+  "resources": "OneCPU/192MiB local frontend/static/pure/private filesystem only. Native heavy PostgreSQL/Chrome remain in authorized GitHub environments;inference off;retained35 untouched."
+}

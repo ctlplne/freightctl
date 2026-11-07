@@ -139,11 +139,11 @@
     },
     {
       "path": "web/src/collections-types.ts",
-      "sha256": "97e7e1e5fad3fa444ba7117b0c4fe82cce6dfc02e44ec2e14dc6e52e5b6350e2"
+      "sha256": "8815f26985a0071789b4e486851e676b21b787bae1ba93944af3057abd2e0a6c"
     },
     {
       "path": "web/src/collections.tsx",
-      "sha256": "7424d775d3110b0d7a3a8dbe6934b77acaab490203556f3c4d77c177bfda456f"
+      "sha256": "f7e7515d915bd4ab408e3ae27eb4a938a8c6697ad1bd198bfe1dcc16d7632178"
     },
     {
       "path": "web/src/crypto.ts",
@@ -319,11 +319,11 @@
     },
     {
       "path": "web/src/schedules-types.ts",
-      "sha256": "9e5ddf3c5c6132fa1721ad1adfef8e5ea819feea8d524ea8d0890af2bc04f998"
+      "sha256": "f94d4028a12548bc30813f5733c80d701bc9d28c2f36889c6296f5664799c20c"
     },
     {
       "path": "web/src/schedules.tsx",
-      "sha256": "102766ec9a1635cada4a4d6cb0319e64b402e77a9135cd1b0cac1f2ffa215c4d"
+      "sha256": "f85efbc74568fb886c4b2b98dd4980dec20e7a413ed01f9bfe9c269385acb6c0"
     },
     {
       "path": "web/src/style.css",
@@ -354,8 +354,8 @@
     },
     {
       "name": "app.js",
-      "sha256": "85f6e306cffd14fe223243945a7fbc425b694b0f82d0c79925ea6788bc0f8df9",
-      "size": 903065
+      "sha256": "6d568c70344f9072727e479557b478f92cd87a3dfff9be4852d62b8e8675ac9f",
+      "size": 904976
     },
     {
       "name": "app.js.LEGAL.txt",

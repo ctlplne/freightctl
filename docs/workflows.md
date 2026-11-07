@@ -52,8 +52,12 @@ private output folder outside the producer. Stdout contains only the profile,
 fingerprints and read-only flag. Use those fingerprints and the known profile
 output path in the protected registration request above. On any post-publication
 sync error,inspect the exact existing profile before retry;never overwrite it.
-Prepared ordinary-parser PostgreSQL CLI capture/replay/refusal proof remains
-unexecuted. Calendar admission,browser support and native PostgreSQL/custody/
+The Collections browser now shows registered local sources by their reviewed
+folder fingerprint,uses the same manual ready-manifest workflow,and excludes
+read-only sources from outgoing receiver choices. It never accepts a host path.
+Source and configuration identity remain bound into the reviewed canonical job.
+Prepared ordinary-parser PostgreSQL CLI and native Chrome capture/replay/refusal
+proof remain unexecuted. Calendar admission and native PostgreSQL/custody/
 refusal/restore proof remain owed.
 
 The first workflow executor sends one immutable accepted file through an ordered list of `sftp.deliver` steps. CLI and HTTPS use the same typed definition, validation, permissions, approval and execution services. It uses the [outbound SFTP profile](protocols/outbound-sftp.md), including its loopback-only development network, required extensions, bounded workers and uncertain-receipt rules. This is a foundation for the full workflow engine; schedules, conditions, collection, processing, visual editing and AI proposals remain required work.

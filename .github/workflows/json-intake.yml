@@ -15,6 +15,7 @@ on:
       - "scripts/xlsx-stock-producer.py"
       - "scripts/xlsxwriter-qualification.txt"
       - "scripts/json-intake-browser.mjs"
+      - "scripts/local-collection-browser.mjs"
       - "scripts/processing-browser.mjs"
       - "scripts/processing-review-browser.mjs"
       - "scripts/processing-proposal-browser.mjs"
@@ -33,6 +34,7 @@ on:
       - "scripts/xlsx-stock-producer.py"
       - "scripts/xlsxwriter-qualification.txt"
       - "scripts/json-intake-browser.mjs"
+      - "scripts/local-collection-browser.mjs"
       - "scripts/processing-browser.mjs"
       - "scripts/processing-review-browser.mjs"
       - "scripts/processing-proposal-browser.mjs"
@@ -142,4 +144,4 @@ jobs:
       - name: Real browser review, committed-response loss, exact checks and separate release
         run: |
           sh scripts/go.sh test -race -timeout=0 -tags=integration,jsonbrowser \
-            -run '^(TestJSONRecordsNativeBrowserReviewedHashAndReceipt|TestFixedWidthNativeBrowserReviewedHashAndReceipt|TestXMLRecordsNativeBrowserReviewedHashAndReceipt|TestXLSXRecordsNativeBrowserReviewedHashAndReceipt|TestProcessingWorkflowNativeBrowserReviewRecoveryAndHeldOutput|TestProducerProcessingNativeBrowserSelectsOutputContractAndKeepsIngress|TestComposedProducerProcessingNativeBrowserCheckedSourceNewApprovalAndHeldOutput|TestOutputPolicyNativeBrowserAdministratorRecoveryAndRevocationKeepsIngress|TestProcessingReviewNativeBrowserIndependentDecisionRecoveryAndAdoption|TestProcessingProposalNativeBrowserAuthorDisclosureDraftAdoptionAndRecovery|TestProcessingCalendarNativeBrowserReviewRecoveryQueuesOwnedInputAndKeepsOutputHeld)$' -count=1 -v ./internal/api
+            -run '^(TestLocalCollectionNativeBrowserReviewCaptureAndOriginalKeyRecovery|TestJSONRecordsNativeBrowserReviewedHashAndReceipt|TestFixedWidthNativeBrowserReviewedHashAndReceipt|TestXMLRecordsNativeBrowserReviewedHashAndReceipt|TestXLSXRecordsNativeBrowserReviewedHashAndReceipt|TestProcessingWorkflowNativeBrowserReviewRecoveryAndHeldOutput|TestProducerProcessingNativeBrowserSelectsOutputContractAndKeepsIngress|TestComposedProducerProcessingNativeBrowserCheckedSourceNewApprovalAndHeldOutput|TestOutputPolicyNativeBrowserAdministratorRecoveryAndRevocationKeepsIngress|TestProcessingReviewNativeBrowserIndependentDecisionRecoveryAndAdoption|TestProcessingProposalNativeBrowserAuthorDisclosureDraftAdoptionAndRecovery|TestProcessingCalendarNativeBrowserReviewRecoveryQueuesOwnedInputAndKeepsOutputHeld)$' -count=1 -v ./internal/api

@@ -356,6 +356,8 @@ export function Schedules({
   }
   function selection(): ScheduleSelection {
     if (!workflow) throw new ApiError("invalid_workflow_schedule", 400);
+    if (workflow.source?.kind === "local.collect")
+      throw new ApiError("invalid_workflow_schedule", 400);
     return {
       name: form.name,
       workflow: {

@@ -1,0 +1,272 @@
+{
+  "action": {
+    "resource": {
+      "kind": "workflow_collection",
+      "id": "00000007-1111-4111-8111-111111111111",
+      "definition_hash": "08cf7bc7ec439b01fcc7b35e1238bcf4a2072676c50b47f735d931e578c98b0f",
+      "state": "captured",
+      "revision": 4
+    },
+    "replayed": false
+  },
+  "preview": {
+    "definition": {
+      "schema_version": 1,
+      "workflow": {
+        "id": "00000004-1111-4111-8111-111111111111",
+        "version": 2,
+        "hash": "2c9de59e369038e92cd2ac67d56341b1126101e3ea916773d449831d1095dcf4"
+      },
+      "source": {
+        "kind": "local.collect",
+        "connection": {
+          "id": "00000001-1111-4111-8111-111111111111",
+          "version": 1,
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "manifest": "settlement.ready.json",
+        "target_directory": "/incoming",
+        "completion_contract": "immutable-files-sha256-manifest-v1",
+        "max_files": 4,
+        "max_file_bytes": 1048576,
+        "max_total_bytes": 2097152
+      },
+      "source_connection": {
+        "id": "00000001-1111-4111-8111-111111111111",
+        "version": 1,
+        "definition_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "state": "active",
+        "revision": 1,
+        "address": "",
+        "user": "",
+        "directory": "/",
+        "host_fingerprint": "",
+        "key_fingerprint": "",
+        "protocol": "local",
+        "local": {
+          "profile": "freightctl-local-collection-source-v1",
+          "root_reference_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "configuration_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "root_fingerprint": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+          "read_only": true
+        }
+      },
+      "source_identity": "2cd7887784c1ab97c65ec627ef90d5185c349fd638b08cad9095f135a0df96fb",
+      "authority_revision": 3,
+      "storage_id": "00000005-1111-4111-8111-111111111111",
+      "namespace_root": "/",
+      "timeout_seconds": 120,
+      "effects": []
+    },
+    "definition_hash": "08cf7bc7ec439b01fcc7b35e1238bcf4a2072676c50b47f735d931e578c98b0f",
+    "external_contact": false,
+    "approval_required": true
+  },
+  "selection": {
+    "workflow": {
+      "id": "00000004-1111-4111-8111-111111111111",
+      "version": 2,
+      "hash": "2c9de59e369038e92cd2ac67d56341b1126101e3ea916773d449831d1095dcf4"
+    },
+    "timeout_seconds": 120,
+    "expected_authority_revision": 3
+  },
+  "view": {
+    "job": {
+      "id": "00000007-1111-4111-8111-111111111111",
+      "workflow_id": "00000004-1111-4111-8111-111111111111",
+      "workflow_version": 2,
+      "workflow_hash": "2c9de59e369038e92cd2ac67d56341b1126101e3ea916773d449831d1095dcf4",
+      "definition": {
+        "schema_version": 1,
+        "workflow": {
+          "id": "00000004-1111-4111-8111-111111111111",
+          "version": 2,
+          "hash": "2c9de59e369038e92cd2ac67d56341b1126101e3ea916773d449831d1095dcf4"
+        },
+        "source": {
+          "kind": "local.collect",
+          "connection": {
+            "id": "00000001-1111-4111-8111-111111111111",
+            "version": 1,
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "manifest": "settlement.ready.json",
+          "target_directory": "/incoming",
+          "completion_contract": "immutable-files-sha256-manifest-v1",
+          "max_files": 4,
+          "max_file_bytes": 1048576,
+          "max_total_bytes": 2097152
+        },
+        "source_connection": {
+          "id": "00000001-1111-4111-8111-111111111111",
+          "version": 1,
+          "definition_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "state": "active",
+          "revision": 1,
+          "address": "",
+          "user": "",
+          "directory": "/",
+          "host_fingerprint": "",
+          "key_fingerprint": "",
+          "protocol": "local",
+          "local": {
+            "profile": "freightctl-local-collection-source-v1",
+            "root_reference_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "configuration_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "root_fingerprint": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "read_only": true
+          }
+        },
+        "source_identity": "2cd7887784c1ab97c65ec627ef90d5185c349fd638b08cad9095f135a0df96fb",
+        "authority_revision": 3,
+        "storage_id": "00000005-1111-4111-8111-111111111111",
+        "namespace_root": "/",
+        "timeout_seconds": 120,
+        "effects": []
+      },
+      "definition_hash": "08cf7bc7ec439b01fcc7b35e1238bcf4a2072676c50b47f735d931e578c98b0f",
+      "state": "captured",
+      "captured": true,
+      "revision": 4,
+      "fence": 1,
+      "attempts": 1,
+      "lease_owner": "",
+      "lease_until": null,
+      "next_at": "2026-10-31T12:00:00Z",
+      "created_at": "2026-10-31T12:00:00Z",
+      "deadline_at": "2026-10-31T12:02:00Z",
+      "manifest": {
+        "schema_version": 1,
+        "batch_id": "00000006-1111-4111-8111-111111111111",
+        "files": [
+          {
+            "name": "one.csv",
+            "size_bytes": 3,
+            "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+          }
+        ]
+      },
+      "manifest_hash": "4abd79ff6ac5c652dc2dc5427e63c0d0dbfac34dd856b7833668a073200bb595",
+      "reason": "batch_captured"
+    },
+    "inputs": [
+      {
+        "id": "00000008-1111-4111-8111-111111111111",
+        "first_job_id": "00000007-1111-4111-8111-111111111111",
+        "workflow_id": "00000004-1111-4111-8111-111111111111",
+        "source_identity": "2cd7887784c1ab97c65ec627ef90d5185c349fd638b08cad9095f135a0df96fb",
+        "input_identity": "54e1a742d88d0d6babd50d71b53318abff398a2ccfd411fa80b005a7e5367077",
+        "source_name": "one.csv",
+        "size_bytes": 3,
+        "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+        "target_path": "/incoming/ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad-one.csv",
+        "object_id": "00000009-1111-4111-8111-111111111111",
+        "state": "accepted",
+        "revision": 3,
+        "capture_fence": 1,
+        "capture_owner": "0000000a-1111-4111-8111-111111111111",
+        "file_id": "00000009-1111-4111-8111-111111111111",
+        "run_id": null
+      }
+    ],
+    "current_authority": true,
+    "observed_state": "captured",
+    "business_acceptance": "unknown",
+    "local_states": [
+      {
+        "input_id": "00000008-1111-4111-8111-111111111111",
+        "state": "published"
+      }
+    ]
+  },
+  "workflow": {
+    "id": "00000004-1111-4111-8111-111111111111",
+    "version": 2,
+    "definition": {
+      "schema_version": 1,
+      "name": "Private local root collection",
+      "steps": [],
+      "source": {
+        "kind": "local.collect",
+        "connection": {
+          "id": "00000001-1111-4111-8111-111111111111",
+          "version": 1,
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "manifest": "settlement.ready.json",
+        "target_directory": "/incoming",
+        "completion_contract": "immutable-files-sha256-manifest-v1",
+        "max_files": 4,
+        "max_file_bytes": 1048576,
+        "max_total_bytes": 2097152
+      }
+    },
+    "definition_hash": "2c9de59e369038e92cd2ac67d56341b1126101e3ea916773d449831d1095dcf4",
+    "state": "approved",
+    "revision": 2,
+    "approval_authority": 3
+  },
+  "workflow_preview": {
+    "definition": {
+      "schema_version": 1,
+      "name": "Private local root collection",
+      "steps": [],
+      "source": {
+        "kind": "local.collect",
+        "connection": {
+          "id": "00000001-1111-4111-8111-111111111111",
+          "version": 1,
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "manifest": "settlement.ready.json",
+        "target_directory": "/incoming",
+        "completion_contract": "immutable-files-sha256-manifest-v1",
+        "max_files": 4,
+        "max_file_bytes": 1048576,
+        "max_total_bytes": 2097152
+      }
+    },
+    "definition_hash": "2c9de59e369038e92cd2ac67d56341b1126101e3ea916773d449831d1095dcf4",
+    "effects": [],
+    "external_contact": false,
+    "approval_required": true,
+    "collection": {
+      "kind": "local.collect",
+      "connection": {
+        "id": "00000001-1111-4111-8111-111111111111",
+        "version": 1,
+        "definition_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "state": "active",
+        "revision": 1,
+        "address": "",
+        "user": "",
+        "directory": "/",
+        "host_fingerprint": "",
+        "key_fingerprint": "",
+        "protocol": "local",
+        "local": {
+          "profile": "freightctl-local-collection-source-v1",
+          "root_reference_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "configuration_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "root_fingerprint": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+          "read_only": true
+        }
+      },
+      "source": {
+        "kind": "local.collect",
+        "connection": {
+          "id": "00000001-1111-4111-8111-111111111111",
+          "version": 1,
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "manifest": "settlement.ready.json",
+        "target_directory": "/incoming",
+        "completion_contract": "immutable-files-sha256-manifest-v1",
+        "max_files": 4,
+        "max_file_bytes": 1048576,
+        "max_total_bytes": 2097152
+      }
+    }
+  }
+}
