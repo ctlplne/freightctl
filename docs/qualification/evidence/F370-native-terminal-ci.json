@@ -1,0 +1,510 @@
+{
+  "schema_version": 1,
+  "id": "F370",
+  "observed_at": "2026-11-07",
+  "qualification_claim": false,
+  "original_candidate": "d960c40fe1d4d7facf11862c331b52fc93dcc0b6",
+  "run_count": 16,
+  "job_counts": {
+    "success": 32,
+    "failure": 3
+  },
+  "original_runs_cancelled_rerun_or_substituted": false,
+  "qualification_scope": "Exact declared component/profile at the original source only;all whole parity rows,journeys,AX and readiness claims remain open. All16 original first-attempt workflows and35 jobs are terminal. No newly failing security gate.",
+  "workflows": [
+    {
+      "run_id": 42386838452,
+      "name": "Native Windows and macOS unit checks",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838452",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1,
+      "jobs": [
+        {
+          "id": 128445908462,
+          "name": "windows-amd64",
+          "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838452/job/128445908462",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": []
+        },
+        {
+          "id": 128445908719,
+          "name": "macos-arm64",
+          "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838452/job/128445908719",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": []
+        }
+      ]
+    },
+    {
+      "run_id": 42386838508,
+      "name": "Native first enrollment and browser exchange",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838508",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1,
+      "jobs": [
+        {
+          "id": 128445908773,
+          "name": "first-run",
+          "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838508/job/128445908773",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": []
+        }
+      ]
+    },
+    {
+      "run_id": 42386838456,
+      "name": "Native immutable HTTPS stock resume",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838456",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1,
+      "jobs": [
+        {
+          "id": 128445908593,
+          "name": "Native immutable HTTPS resume (x86_64)",
+          "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838456/job/128445908593",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": []
+        },
+        {
+          "id": 128445908885,
+          "name": "Native immutable HTTPS resume (arm64)",
+          "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838456/job/128445908885",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": []
+        }
+      ]
+    },
+    {
+      "run_id": 42386838490,
+      "name": "Native tus stock client and custody checkpoints",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838490",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1,
+      "jobs": [
+        {
+          "id": 128445908720,
+          "name": "Native tus resume (x86_64)",
+          "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838490/job/128445908720",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": []
+        },
+        {
+          "id": 128445908845,
+          "name": "Native tus resume (arm64)",
+          "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838490/job/128445908845",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": []
+        }
+      ]
+    },
+    {
+      "run_id": 42386838506,
+      "name": "Native artifact receive browser",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838506",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_attempt": 1,
+      "jobs": [
+        {
+          "id": 128445908818,
+          "name": "receive-browser",
+          "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838506/job/128445908818",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Actual recipient UI, exact bytes, unrelated user and endpoint revocation"
+          ]
+        }
+      ]
+    },
+    {
+      "run_id": 42386838441,
+      "name": "Native reproducible core binaries",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838441",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1,
+      "jobs": [
+        {
+          "id": 128445908485,
+          "name": "Native core reproduction (arm64)",
+          "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838441/job/128445908485",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": []
+        },
+        {
+          "id": 128445908656,
+          "name": "Native core reproduction (amd64)",
+          "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838441/job/128445908656",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": []
+        }
+      ]
+    },
+    {
+      "run_id": 42386838457,
+      "name": "Native FTPS workflow consent qualification",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838457",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_attempt": 1,
+      "jobs": [
+        {
+          "id": 128445908482,
+          "name": "Native x86 registered FTPS workflow consent (plaintext)",
+          "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838457/job/128445908482",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Three fresh registered FTPS consent, metadata and operator capture journeys"
+          ]
+        },
+        {
+          "id": 128445908752,
+          "name": "Native x86 registered FTPS workflow consent (recipient-encrypted)",
+          "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838457/job/128445908752",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Three fresh registered FTPS consent, metadata and operator capture journeys"
+          ]
+        }
+      ]
+    },
+    {
+      "run_id": 42386838530,
+      "name": "Native browser and FTPS operator qualification",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838530",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1,
+      "jobs": [
+        {
+          "id": 128445908751,
+          "name": "Native x86 browser and live FTPS governance",
+          "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838530/job/128445908751",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": []
+        }
+      ]
+    },
+    {
+      "run_id": 42386838479,
+      "name": "Native legacy SCP regular-file custody",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838479",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1,
+      "jobs": [
+        {
+          "id": 128445908443,
+          "name": "Native legacy SCP (x86_64)",
+          "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838479/job/128445908443",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": []
+        },
+        {
+          "id": 128445908628,
+          "name": "Native legacy SCP (arm64)",
+          "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838479/job/128445908628",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": []
+        }
+      ]
+    },
+    {
+      "run_id": 42386838505,
+      "name": "Native source vulnerability configurations",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838505",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1,
+      "jobs": [
+        {
+          "id": 128445908581,
+          "name": "Native vulnerability source (windows/amd64)",
+          "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838505/job/128445908581",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": []
+        },
+        {
+          "id": 128445908809,
+          "name": "Native vulnerability source (darwin/arm64)",
+          "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838505/job/128445908809",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": []
+        },
+        {
+          "id": 128445908961,
+          "name": "Native vulnerability source (linux/arm64)",
+          "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838505/job/128445908961",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": []
+        }
+      ]
+    },
+    {
+      "run_id": 42386838478,
+      "name": "Native FTPS stock clients and custody",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838478",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1,
+      "jobs": [
+        {
+          "id": 128445908785,
+          "name": "Native FTPS (arm64)",
+          "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838478/job/128445908785",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": []
+        },
+        {
+          "id": 128445909026,
+          "name": "Native FTPS (x86_64)",
+          "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838478/job/128445909026",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": []
+        }
+      ]
+    },
+    {
+      "run_id": 42386838520,
+      "name": "Native FTPS dispatch approval qualification",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838520",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1,
+      "jobs": [
+        {
+          "id": 128445909064,
+          "name": "Native x86 public FTPS dispatch consent",
+          "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838520/job/128445909064",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": []
+        }
+      ]
+    },
+    {
+      "run_id": 42386838439,
+      "name": "Core correctness and security",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838439",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1,
+      "jobs": [
+        {
+          "id": 128445908525,
+          "name": "source-and-browser",
+          "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838439/job/128445908525",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": []
+        }
+      ]
+    },
+    {
+      "run_id": 42386838504,
+      "name": "Native JSON intake and custody interfaces",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838504",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1,
+      "jobs": [
+        {
+          "id": 128445908735,
+          "name": "Native JSON custody (x86_64)",
+          "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838504/job/128445908735",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": []
+        },
+        {
+          "id": 128445908950,
+          "name": "Native JSON custody (arm64)",
+          "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838504/job/128445908950",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": []
+        },
+        {
+          "id": 128445909045,
+          "name": "Native Chrome JSON policy and held bytes",
+          "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838504/job/128445909045",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": []
+        }
+      ]
+    },
+    {
+      "run_id": 42386838485,
+      "name": "Stock peer and browser qualification",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838485",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1,
+      "jobs": [
+        {
+          "id": 128445908731,
+          "name": "Stock peers (handoff-routing)",
+          "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838485/job/128445908731",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": []
+        },
+        {
+          "id": 128445908836,
+          "name": "Stock peers (routing)",
+          "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838485/job/128445908836",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": []
+        },
+        {
+          "id": 128445908872,
+          "name": "Stock peers (intake-routing)",
+          "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838485/job/128445908872",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": []
+        },
+        {
+          "id": 128445908990,
+          "name": "Stock peers (captured-routing)",
+          "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838485/job/128445908990",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": []
+        },
+        {
+          "id": 128445909027,
+          "name": "Stock peers (arrivals-schedules)",
+          "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838485/job/128445909027",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": []
+        }
+      ]
+    },
+    {
+      "run_id": 42386838487,
+      "name": "Native Linux Go, PostgreSQL and fuzz",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838487",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1,
+      "jobs": [
+        {
+          "id": 128445908887,
+          "name": "bounded-fuzz",
+          "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838487/job/128445908887",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": []
+        },
+        {
+          "id": 128445908894,
+          "name": "Native Go and PostgreSQL (x86_64)",
+          "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838487/job/128445908894",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": []
+        },
+        {
+          "id": 128445908968,
+          "name": "Native metadata restore (x86_64)",
+          "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838487/job/128445908968",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": []
+        },
+        {
+          "id": 128445909022,
+          "name": "Native Go and PostgreSQL (arm64)",
+          "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838487/job/128445909022",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": []
+        },
+        {
+          "id": 128445909087,
+          "name": "Native metadata restore (arm64)",
+          "url": "https://github.com/ctlplne/freightctl/actions/runs/42386838487/job/128445909087",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": []
+        }
+      ]
+    }
+  ],
+  "positive_observations": [
+    "Native Linux PostgreSQL/unit/race,metadata restore,fuzz and both image gates pass on ARM/x86. Active-transfer-port20 upstream test remains skipped;not qualified.",
+    "Core/source/history Gitleaks and source vulnerability configurations pass;existing inventory/advisory dispositions remain enforced.",
+    "F368 binds real PostgreSQL/stock curl DAV conditional PUT,MKCOL and read profiles on both native architectures. Later F367 MOVE is not covered.",
+    "Windows/macOS,reproducibility,stock peers,first-run,tus,SCP,FTPS stock/dispatch and declared JSON/Chrome profiles pass at this candidate.",
+    "Previously failing fixed-width response read and live FTPS bad-release-refusal pass their unchanged original assertions on this replay. Their intermittent cause remains unresolved;no causal repair is claimed."
+  ],
+  "failures": [
+    {
+      "run_id": 42386838457,
+      "jobs": [
+        128445908482,
+        128445908752
+      ],
+      "phase": "operator-form-source",
+      "source_line": 268,
+      "category": "timeout",
+      "repair": "F369 aligns actual FTPS compound participant usernames with the existing256-byte contract;native original replay owed"
+    },
+    {
+      "run_id": 42386838506,
+      "job_id": 128445908818,
+      "phase": "sender-save-recovery",
+      "source_line": 748,
+      "source_column": 5,
+      "category": "reference",
+      "safe_result_sha256": "c20b06f414f23f25b6f9183702ac86858a9484be8a0c113726efc75ff695040e",
+      "protected_first_failure_sha256": "145a74cab579afcde0e461e9663c884d1cb55806bcb8278752d8653a7c6815d7",
+      "repair": "F371 retains original observed withdrawal key for recovery assertion;native replay owed",
+      "progress": "Original human ingress/download and cancellation progressed to recovery save;full receive remains failed."
+    }
+  ],
+  "carried_failures_not_rerun": [
+    {
+      "evidence": "F346-native-terminal-ci.json",
+      "jobs": [
+        128427131176,
+        128427131328
+      ],
+      "claim": "Both independent x86 receiver selected-seccomp profiles remain failed;not triggered or repaired by this candidate."
+    }
+  ],
+  "owed": [
+    "F367 native file MOVE transactions and actual curl move/readback",
+    "Repaired FTPS operator and receive-browser original complete journeys",
+    "Independent receiver x86 seccomp and intermittent earlier failure causes",
+    "All mandatory final-source baseline/AX profiles,external prerequisites,F026 manual hold and separate readiness outcomes"
+  ]
+}

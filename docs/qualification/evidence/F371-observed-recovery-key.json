@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "id": "F371",
+  "observed_at": "2026-11-07",
+  "base_candidate": "9d74dbce622a5633f8402231e6f271b88d268805",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F371 repairs an actual receiver-driver regression after cancellation: recovery save referred to removed withdrawalResponse. Retain the original request key from the exact native wire observation and compare the actual downloaded recovery file to it. Execute the original cancel-through-save driver block with Page/CDP stand-ins and a real protected download file:ReferenceError first red,then green;substituted/invalid keys refuse. All13 affected wire/egress/recovery tests,syntax,format and workflow lint pass. Ordinary200,response bytes,command/hash,revocation404 and saved recovery assertions remain unchanged. Full native original receive journey remains owed.",
+  "original_failure": {
+    "candidate": "d960c40fe1d4d7facf11862c331b52fc93dcc0b6",
+    "run_id": 42386838506,
+    "job_id": 128445908818,
+    "phase": "sender-save-recovery",
+    "source_line": 748,
+    "source_column": 5,
+    "category": "reference",
+    "safe_result_sha256": "c20b06f414f23f25b6f9183702ac86858a9484be8a0c113726efc75ff695040e",
+    "protected_first_failure_sha256": "145a74cab579afcde0e461e9663c884d1cb55806bcb8278752d8653a7c6815d7"
+  },
+  "red_green": "The actual original cancel-through-save block first raises withdrawalResponse is not defined;after retaining its exact observed request key,the same block passes. A substituted saved key and invalid wire key still fail. Thirteen focused tests pass;these are stand-ins,not native browser qualification.",
+  "owed": [
+    "Original complete native receive,cancellation,recovery,copy,onward and revocation journey",
+    "All final-source baseline/AX and separate readiness gates"
+  ],
+  "source_files": [
+    {
+      "reference": ".github/workflows/artifact-exchange.yml",
+      "sha256": "fdb44f6584d64bfdab155e827cfd33332d8830bf444609c6108e5664080f551f",
+      "bytes": 3149
+    },
+    {
+      "reference": "STATUS.md",
+      "sha256": "6ad3a2c2b852fc61816f8047487158c3fe9a2c3bb0191ad810b413c929796d92",
+      "bytes": 3024
+    },
+    {
+      "reference": "docs/qualification/evidence/F370-native-terminal-ci.json",
+      "sha256": "1f0672f2291e8715226022c4f9eb5142cc89f0bfe72ef35444b66b5209432d17",
+      "bytes": 18450
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "99bd7a82312c40926a9165924fbff6b11ba03ce15643b6a0fd78530ab5b94ec1",
+      "bytes": 489042
+    },
+    {
+      "reference": "scripts/artifact-exchange-browser.mjs",
+      "sha256": "7b19172bcc07a06b85b377877197f80c42169ae767ee855a194c064e0fc294ef",
+      "bytes": 54016
+    },
+    {
+      "reference": "scripts/test-artifact-exchange-offer-recovery.mjs",
+      "sha256": "8632711d9b73a3619bf1d5332be25c03dc62425c473c6cd81d1ca599f763a61e",
+      "bytes": 5656
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f371-recovery-red.log",
+      "sha256": "8d6a688fb5276db95fa4169a6597b4024bbf9213f358fe560634ab9160b46696",
+      "bytes": 1048
+    },
+    {
+      "reference": ".private/freightctl-f371-focused.log",
+      "sha256": "2f22c59ce4b8eb0ca9daa42871927710d31742e9afb31c9b1b0727659d8e46b2",
+      "bytes": 1394
+    },
+    {
+      "reference": ".private/freightctl-f371-syntax.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f371-workflow.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f371-format.log",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    }
+  ]
+}

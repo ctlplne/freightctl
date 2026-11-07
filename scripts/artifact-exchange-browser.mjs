@@ -664,6 +664,7 @@ try {
   humanIngress++;
   await accessibility(recipient.page, "sender-human-receive-accessibility");
   phase = "sender-cancel";
+  let withdrawalKey;
   const withdrawn = await nativeWireResponse(
     sender.page,
     `${origin.origin}/v1/tenants/${c.tenant}/partners/${c.partner}/exchange-closures`,
@@ -680,6 +681,7 @@ try {
       assert.equal(request.method(), "POST");
       const headers = await request.allHeaders();
       assert.match(headers["idempotency-key"], /^[A-Za-z0-9._:-]{1,128}$/);
+      withdrawalKey = headers["idempotency-key"];
       assert.deepEqual(JSON.parse(request.postDataBuffer()), {
         schema_version: 1,
         exchange_id: sent.exchange.id,
@@ -743,10 +745,7 @@ try {
     saved.request_key,
     publicationResponse.request().headers()["idempotency-key"],
   );
-  assert.equal(
-    saved.withdrawal_key,
-    withdrawalResponse.request().headers()["idempotency-key"],
-  );
+  assert.equal(saved.withdrawal_key, withdrawalKey);
   assert.equal(saved.expected_exchange_id, sent.exchange.id);
   assert.deepEqual(
     saved.request,
