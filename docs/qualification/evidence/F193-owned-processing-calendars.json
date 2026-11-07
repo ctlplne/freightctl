@@ -1,0 +1,516 @@
+{
+  "schema_version": 1,
+  "id": "F193",
+  "observed_at": "2026-11-07",
+  "base_candidate": "39301e4d508fa638ee525105dea9083c48f73693",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Explicit root calendars stage ordinary owned-record processing intents;native outcomes owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "6113be325ace5141a7a1cd39f140d89d7719fecb855b316c814f83d68c895ff8",
+      "bytes": 8218
+    },
+    {
+      "reference": "cmd/freightctl/processing_schedule_worker.go",
+      "sha256": "e3bdb2c0e3671d7ad915404e4f0383174e437ec0b588b799e4e6dbcbcc48a817",
+      "bytes": 1410
+    },
+    {
+      "reference": "cmd/freightctl/processing_schedule_worker_test.go",
+      "sha256": "caec0e5dba199d252bbb5cdec32e090ec9c65eb3313c86dc76e0da45e1a4bdf2",
+      "bytes": 1767
+    },
+    {
+      "reference": "cmd/freightctl/schedules.go",
+      "sha256": "f93281c418355b074d9331fe09eae799fb6e2024922df89ffcbfd4b75a3d7e1c",
+      "bytes": 7515
+    },
+    {
+      "reference": "docs/qualification/artifact-exchange.json",
+      "sha256": "458d4be343cfd9888b83b690302f1ff5c9d231ed43c44a706da5558179d6f31d",
+      "bytes": 29881
+    },
+    {
+      "reference": "docs/qualification/evidence/F194-composition-terminal-ci.json",
+      "sha256": "5b3a76c010fd4317511bb1cf7befb80d2d9e722c488f825a65cd1c642ff2102c",
+      "bytes": 20713
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "01f67f5e8b6d35f7ea671060c470086e653a1b9bf8c7b7fbf2e8f157fccd59f4",
+      "bytes": 355770
+    },
+    {
+      "reference": "docs/scheduled-workflows.md",
+      "sha256": "5498304c24d78e8f8cc24ce74b68dae2ca449f6ca49bfd2cc9c4c640b351da2c",
+      "bytes": 13644
+    },
+    {
+      "reference": "internal/api/schedules.go",
+      "sha256": "a4ea860c55d0c09365be4af623364735fd79d2ef000a0bf95602243870ba5c24",
+      "bytes": 2364
+    },
+    {
+      "reference": "internal/api/workflow_processing_integration_test.go",
+      "sha256": "cba2353ca499ef82953e4a3363b0c5188328fd49cc67bd4c4559958ad1093f27",
+      "bytes": 14675
+    },
+    {
+      "reference": "internal/browser/assets/app.js",
+      "sha256": "551a5338dab5759460b2975c2b13847ca46fff6559d28776305eb4c891960aa5",
+      "bytes": 884622
+    },
+    {
+      "reference": "internal/browser/assets/manifest.json",
+      "sha256": "3775de7c4d6027c60016e23215a6c3923ec6bd886f63827e1499f4ed8e8ac3f1",
+      "bytes": 13534
+    },
+    {
+      "reference": "internal/checks/fixture_integration_test.go",
+      "sha256": "c768681a7e02aaab59e6a880924ea2d4d64f49bdaf74d3f9234ff3ab9e93f988",
+      "bytes": 4285
+    },
+    {
+      "reference": "internal/checks/processing_schedules_integration_test.go",
+      "sha256": "3712285b9bb4a472f6edb63a63e89c1bc5282219807bdbeb4c6f027c7250c3d6",
+      "bytes": 14040
+    },
+    {
+      "reference": "internal/checks/projection_scope.go",
+      "sha256": "02e3a6d84dcdcc5d4c0edb8f029bbf0467555d0dcecb5a6243fc94faca10b4b0",
+      "bytes": 6133
+    },
+    {
+      "reference": "internal/checks/workflow_processing.go",
+      "sha256": "718d8277645425c80dc68a74f82cd013f76dc91906490ddf604dbeb3ff944351",
+      "bytes": 8653
+    },
+    {
+      "reference": "internal/store/058_processing_schedules.sql",
+      "sha256": "3309e792d2d2f65ebf2aea91257a0b0edd75a97c094443b6386e7b954d05ebbf",
+      "bytes": 25458
+    },
+    {
+      "reference": "internal/store/processing_privacy.go",
+      "sha256": "aa00136a26e8322da24be258429be2092a41fb19acb68a1f66abe5cc89fff42f",
+      "bytes": 1885
+    },
+    {
+      "reference": "internal/store/processing_privacy_test.go",
+      "sha256": "9d1d2e9a1d609d6ffe61aed670fe5a52869bb5b0fd993825e9fc191ab1f7426c",
+      "bytes": 2568
+    },
+    {
+      "reference": "internal/store/schedules.go",
+      "sha256": "0e9c95ddc22bfe00b503ccbc40d1543fd0e4d217a4bfed42547dbb04f45e2178",
+      "bytes": 15207
+    },
+    {
+      "reference": "internal/store/store.go",
+      "sha256": "9980a54ebc77c38f5b33af0860d6777a823e63f9c95219ecdcc462157369f447",
+      "bytes": 27492
+    },
+    {
+      "reference": "internal/workflow/processing_runs.go",
+      "sha256": "03c873d45084399e41ae15b0a3d3068cecd38c555943f3fbfcfcb50863d4b1e3",
+      "bytes": 8814
+    },
+    {
+      "reference": "internal/workflow/processing_schedules.go",
+      "sha256": "802b011bb0a85843e75d7123f06b92ead492074562e972e7f496538423239978",
+      "bytes": 2550
+    },
+    {
+      "reference": "internal/workflow/processing_schedules_test.go",
+      "sha256": "2961e579e349e1a1044935bebd012975abea1cda7b513df433cc70c0927149f4",
+      "bytes": 3196
+    },
+    {
+      "reference": "internal/workflow/schedule_tick.go",
+      "sha256": "505fc75eb95d596f548ad79aa37a462cc1b6844d31c7b86723442cee128e7c97",
+      "bytes": 9870
+    },
+    {
+      "reference": "internal/workflow/scheduled_collection.go",
+      "sha256": "7d18f76280ac1fa2fd11593bc81e38d1f4440e4db5d5ba0eefe510dfbfdc3524",
+      "bytes": 11693
+    },
+    {
+      "reference": "internal/workflow/schedules.go",
+      "sha256": "d160630224be776251b101b14e29ff70f982521760c4ee29fb3c7fa43e92aced",
+      "bytes": 25792
+    },
+    {
+      "reference": "scripts/metadata_contract.py",
+      "sha256": "79ea20d78689492b12584e0bffa0a157cd76dcf5dd584a03ab834ae971af77f0",
+      "bytes": 3988
+    },
+    {
+      "reference": "scripts/test-ci-metadata-summary.py",
+      "sha256": "bbf9f52ea47619a3d148c55e9b92d6129b71364ee42dca6b309a622a6c4d896c",
+      "bytes": 6240
+    },
+    {
+      "reference": "web/src/app.tsx",
+      "sha256": "39dbc232f1c764f91c6c96a8ccbb9a7fe6121d134b4886a10e000b131d67f7e3",
+      "bytes": 78411
+    },
+    {
+      "reference": "web/src/processing.tsx",
+      "sha256": "c8317e2a4b003a8dfc8f494452e666de45b51d01b50cde107a82d168acdb0aa9",
+      "bytes": 44874
+    },
+    {
+      "reference": "web/src/schedules-types.ts",
+      "sha256": "9e5ddf3c5c6132fa1721ad1adfef8e5ea819feea8d524ea8d0890af2bc04f998",
+      "bytes": 33515
+    },
+    {
+      "reference": "web/src/schedules.tsx",
+      "sha256": "102766ec9a1635cada4a4d6cb0319e64b402e77a9135cd1b0cac1f2ffa215c4d",
+      "bytes": 46471
+    },
+    {
+      "reference": "web/tests/fixtures/processing-schedule.json",
+      "sha256": "5929b1a38fd77c37b48fb03f9d16a97f433985c12a699ea1f7beeb942c86a872",
+      "bytes": 3280
+    },
+    {
+      "reference": "web/tests/processing-schedules.test.mjs",
+      "sha256": "f9755111359e08dc704fd4af1b101132988089990743a92792255dfc43e14149",
+      "bytes": 2816
+    }
+  ],
+  "changed": [
+    "Schedule schema2 binds owned-record-processing-schedule-v1 and the complete exact approved task. Source owned_released_records selects only current authorized released actor-owned revisions with the exact source-policy hash,accepted/published before due. Schema1 hashes and delivery/collection meaning remain unchanged.",
+    "Calendar admission stages ordinary run,processing intent,membership,input claim,events and receipt atomically. Processing uses the existing16-intent queue;delivery admission remains separate. Current task/independent review/output contract/credentials/calendar/deadline guards remain live. Native SQL defaults preserve legacy clauses;new intent-transition guards and Go current inspection enforce schedule authority with calendar-before-namespace lock ordering.",
+    "API and CLI wire the existing processor. CLI running attempts keep their original keys;only recorded failure advances within the existing three attempts. Completed outputs wait for separate checks/release. Browser reviews full task rules and opens occurrence runs in ordinary session-bound processing controls;pending exact-key commands are preserved. Processing calendar journal payloads/receipts remain private behind exact original digests.",
+    "Source58 adds functions and a trigger only;metadata77/forced-RLS76. Historical57/56/other explicit profiles and retained35 remain unchanged."
+  ],
+  "red": [
+    {
+      "reference": ".private/freightctl-f193-processing-schedule-red.log",
+      "observed": "No explicit owned processing schedule contract."
+    },
+    {
+      "reference": ".private/freightctl-f193-worker-red.log",
+      "observed": "No processing-aware attempt/restart/held-output worker dispatch."
+    },
+    {
+      "reference": ".private/freightctl-f193-private-schedule-red.log",
+      "observed": "Processing calendar command receipt disclosed private payload instead of exact digest."
+    },
+    {
+      "reference": ".private/freightctl-f193-browser-schedule-red.log",
+      "observed": "Existing browser schedule decoder rejected schema2 and lost explicit processing discovery metadata."
+    },
+    {
+      "reference": ".private/freightctl-f193-metadata-profile-red.log",
+      "observed": "Old explicit current profile refused the added migration."
+    }
+  ],
+  "green": [
+    "Focused workflow/schedule/worker/review/composition/audit Go regressions;existing calendar/typed workflow hashes retained.",
+    "20 affected frontend cases,including schema/profile/task refusal,discovery,legacy schedules,processing recovery and producer contracts. Independent Go/Python/browser complete processing-calendar hash fixture passes.",
+    "7 metadata-summary and5 retained-metadata stand-ins;affected formatting,compilation/type,vet,architecture/security,frontend build and built consistency pass. Native commands use -run ^$ and establish no runtime qualification."
+  ],
+  "intermediate_failures": [
+    {
+      "reference": ".private/freightctl-f193-schedule-contract-focused.log",
+      "repair": "Scoped local err declaration after extracting common staging;assertions unchanged."
+    },
+    {
+      "reference": ".private/freightctl-f193-schedule-ui-typecheck.log",
+      "repair": "Conditional requested-run prop preserves exact optional typing and current-session scope."
+    },
+    {
+      "reference": ".private/freightctl-f193-native-https-calendar-compile.log",
+      "repair": "Use actual release decision and whole-byte receipt comparison;invented test-helper names removed before execution."
+    }
+  ],
+  "prepared_native": [
+    "PostgreSQL actor without delivery permission:current task,atomic claim/run/intent,exact tick replay,held output,zero delivery intents and no repeat for unchanged input.",
+    "PostgreSQL suspension and occurrence deadline fence queued processing without accepted output.",
+    "Verified HTTPS ordinary schedule preview/draft/activation/tick replay and processing work;original manual/producer/composition cases retained.",
+    "Native GitHub Linux executable CLI worker executes one ordinary intent,keeps one attempt across restart,then waits for separate checks/release without a delivery intent. Build occurs before the isolated database fixture;all local native cases compiled only."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f193-architecture.log",
+      "sha256": "b6b0f59800b9781b5121fb60315e75d2b2ef11848950f39c172c68b641a868fe",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f193-browser-after-typecheck.log",
+      "sha256": "17e00418398dd65e49bed86df28efee896dcae70d7e6258050a2746181f558d5",
+      "bytes": 54
+    },
+    {
+      "reference": ".private/freightctl-f193-browser-format.log",
+      "sha256": "c55484fad4c8304c8e5e0df879576d7aa53ebcf6d5ea6c57b7c0ff896a408301",
+      "bytes": 146
+    },
+    {
+      "reference": ".private/freightctl-f193-browser-golden.log",
+      "sha256": "69b63fa90c3d63fc22d2681fb23fc386c9dbeed03a373f2a7c32ba3ec1e02b4a",
+      "bytes": 1478
+    },
+    {
+      "reference": ".private/freightctl-f193-browser-initial-typecheck.log",
+      "sha256": "17e00418398dd65e49bed86df28efee896dcae70d7e6258050a2746181f558d5",
+      "bytes": 54
+    },
+    {
+      "reference": ".private/freightctl-f193-browser-schedule-green.log",
+      "sha256": "73fa379de3ca18e076b75655eec4a578989602635664f6741b2c7585666a0fce",
+      "bytes": 1381
+    },
+    {
+      "reference": ".private/freightctl-f193-browser-schedule-red.log",
+      "sha256": "1258be0211e6242ff397f11032edc665bff1b2b49a081c256c4268843fc201b0",
+      "bytes": 154309
+    },
+    {
+      "reference": ".private/freightctl-f193-calendar-language-build.log",
+      "sha256": "678f30526db9f6a4e6503ff5f55916aac5cb3cce9d8e4f49d66cfe009a6531be",
+      "bytes": 232
+    },
+    {
+      "reference": ".private/freightctl-f193-calendar-language-consistency.log",
+      "sha256": "67b0b92e2adcc95a7f9f7d95e7041311897e8a08160df42c0b878edc4d12a849",
+      "bytes": 249
+    },
+    {
+      "reference": ".private/freightctl-f193-calendar-language-format.log",
+      "sha256": "4fdc6352d83a2d8acf146df136c614bc8fef5598c15c004a0a48e4a60cdb0ce4",
+      "bytes": 24
+    },
+    {
+      "reference": ".private/freightctl-f193-calendar-language-typecheck.log",
+      "sha256": "17e00418398dd65e49bed86df28efee896dcae70d7e6258050a2746181f558d5",
+      "bytes": 54
+    },
+    {
+      "reference": ".private/freightctl-f193-catalog-focused.log",
+      "sha256": "a78c32356a4e0d385764592663fc11d7e413d79a999319c6701a8f4122e9f05d",
+      "bytes": 60
+    },
+    {
+      "reference": ".private/freightctl-f193-current-contract-focused.log",
+      "sha256": "2bbba029d6a7141ac6f8677a216886e3969fd2beed08003a751fae4b089ce82d",
+      "bytes": 232
+    },
+    {
+      "reference": ".private/freightctl-f193-current-focused.log",
+      "sha256": "fc79b938c3537d20d4ba0ba51b9b0ef6a41b5519a141fb8c85627bb71b760bc5",
+      "bytes": 174
+    },
+    {
+      "reference": ".private/freightctl-f193-diff-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f193-final-architecture.log",
+      "sha256": "7e0e3364282347f75868b682cfac1e564ceea47aec851a435079540a4823c119",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f193-final-browser-build.log",
+      "sha256": "0d3f83ae47157dce73a3b1f78f38f92afc6791272d440f1f4a830e06be18f334",
+      "bytes": 232
+    },
+    {
+      "reference": ".private/freightctl-f193-final-browser-consistency.log",
+      "sha256": "667876e33b40bb9fd6aef882a3a4a523e5abde3bde3f4121091ce28244c32516",
+      "bytes": 249
+    },
+    {
+      "reference": ".private/freightctl-f193-final-browser-focused.log",
+      "sha256": "7b9eea67a5cf13b81b38e3bc45d833e5709ffdcda628796b169aa6d2d50dade6",
+      "bytes": 2379
+    },
+    {
+      "reference": ".private/freightctl-f193-final-browser-format.log",
+      "sha256": "666e59278dfb50c5d8d7d4b52ffccb420f70f88185d83c3435e402105ff3a4a7",
+      "bytes": 41
+    },
+    {
+      "reference": ".private/freightctl-f193-final-diff-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f193-final-focused.log",
+      "sha256": "3b5ebca144e1fe7cc85ba54ab515402b2b37b2b8d7f8ef98398c6e9de871f4e1",
+      "bytes": 238
+    },
+    {
+      "reference": ".private/freightctl-f193-final-native-compile.log",
+      "sha256": "be6dc45a59d010099222660ec5eb66d99fcdf780447fb37434128d2429d68b96",
+      "bytes": 302
+    },
+    {
+      "reference": ".private/freightctl-f193-final-source-architecture.log",
+      "sha256": "0acd251a859e2dad931414c4910d19e3107fbfc21d8d078b35c7818dc313af94",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f193-final-source-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f193-final-typecheck.log",
+      "sha256": "17e00418398dd65e49bed86df28efee896dcae70d7e6258050a2746181f558d5",
+      "bytes": 54
+    },
+    {
+      "reference": ".private/freightctl-f193-final-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f193-golden.log",
+      "sha256": "a86fb523ea6f42801f40f50016a359ee5b026510a7808b3884afac1e3977fa8b",
+      "bytes": 60
+    },
+    {
+      "reference": ".private/freightctl-f193-lock-order-focused.log",
+      "sha256": "8e9cae34bd0dae3e8f7c01593ea921dc029ebfde43adbe11b5295af44e728be3",
+      "bytes": 122
+    },
+    {
+      "reference": ".private/freightctl-f193-metadata-profile-green.log",
+      "sha256": "36023bcdc5f454aa634a752aba7fe3b0c9de99f28ed96a93221a45148ec0e46c",
+      "bytes": 105
+    },
+    {
+      "reference": ".private/freightctl-f193-metadata-profile-red.log",
+      "sha256": "c1a81212f881d348122e0cc000a635851e230c99e7eaafd9282e77da0d93005a",
+      "bytes": 6676
+    },
+    {
+      "reference": ".private/freightctl-f193-native-calendar-compile.log",
+      "sha256": "8fbf250201cb6b716efa63cc9ce97e556350b1c4d17522da4269ce423422b09c",
+      "bytes": 302
+    },
+    {
+      "reference": ".private/freightctl-f193-native-cli-calendar-compile.log",
+      "sha256": "1853c05c9030e77c9f1975326e1921eb41c5bc25a75d9cdf706b1da8c4a3fd8c",
+      "bytes": 308
+    },
+    {
+      "reference": ".private/freightctl-f193-native-final-compile.log",
+      "sha256": "872e6e168bc4452b7033cba133f3113c2bb660a0e9f51d9614cc3761dca6bcea",
+      "bytes": 302
+    },
+    {
+      "reference": ".private/freightctl-f193-native-https-calendar-compile-after.log",
+      "sha256": "4e7d97a6b297198a64821048968bca352712a4cb334adefb19f1e35b268f98c9",
+      "bytes": 308
+    },
+    {
+      "reference": ".private/freightctl-f193-native-https-calendar-compile.log",
+      "sha256": "2071d10a08afcd29b73fca3648ddddf0c17adff302189df97b56a445c1af8cf0",
+      "bytes": 348
+    },
+    {
+      "reference": ".private/freightctl-f193-native-initial-compile.log",
+      "sha256": "239d3d4f11937a874799857e0f8b0d9ddf583997f202a92a78a4ee51e4996b67",
+      "bytes": 377
+    },
+    {
+      "reference": ".private/freightctl-f193-private-schedule-red.log",
+      "sha256": "519282512d0e41df1b13138cc2ad7622f20136793a477d79f271ece18a4752ec",
+      "bytes": 300
+    },
+    {
+      "reference": ".private/freightctl-f193-processing-schedule-green.log",
+      "sha256": "1bd09b59b99d474b606b0eb9f2a9598a9e711cf3ceb93f605b0eeca32158910c",
+      "bytes": 60
+    },
+    {
+      "reference": ".private/freightctl-f193-processing-schedule-red.log",
+      "sha256": "41d6ce6953138762fc7d50e10276543d3ede02425a936904b19e8af174d9e18e",
+      "bytes": 450
+    },
+    {
+      "reference": ".private/freightctl-f193-records-check.log",
+      "sha256": "826009b37d6c8254924b7fd1ee12981059544175f2c890ad4186b88b41b583b4",
+      "bytes": 106
+    },
+    {
+      "reference": ".private/freightctl-f193-request-inspection-build.log",
+      "sha256": "399ca0b308b68edf753ca66536a8c5b01dd7577a20872b3426fb93f42cf5d75a",
+      "bytes": 232
+    },
+    {
+      "reference": ".private/freightctl-f193-request-inspection-consistency.log",
+      "sha256": "5d7d836cdbb984bb998d1774ecc7d5b82533cb144d6469bb00080a6d485fc31b",
+      "bytes": 249
+    },
+    {
+      "reference": ".private/freightctl-f193-request-inspection-format.log",
+      "sha256": "a8521fd3a38420c76ece9b037c544b2961b4a4ea54c575052381d9ec54a1d366",
+      "bytes": 25
+    },
+    {
+      "reference": ".private/freightctl-f193-request-inspection-typecheck.log",
+      "sha256": "17e00418398dd65e49bed86df28efee896dcae70d7e6258050a2746181f558d5",
+      "bytes": 54
+    },
+    {
+      "reference": ".private/freightctl-f193-retained-metadata-standin.log",
+      "sha256": "9f169aa04896ef0203477ff61d8d57406ec0dab00b71ec15cf38cdae22509147",
+      "bytes": 103
+    },
+    {
+      "reference": ".private/freightctl-f193-schedule-contract-focused.log",
+      "sha256": "b6d8c70e951c09526a885502722b2d801722992b6eeaf489b516bada54bd3ec8",
+      "bytes": 297
+    },
+    {
+      "reference": ".private/freightctl-f193-schedule-contract-green-after.log",
+      "sha256": "de27f1e127d63da1de9ab880eb181f1a2235f621fb8f9a4ae132e529ec68755c",
+      "bytes": 60
+    },
+    {
+      "reference": ".private/freightctl-f193-schedule-engine-focused.log",
+      "sha256": "f9ea7ab0706763be3bff657fda964d03d9bf69df558a62306a7a2c16cea8a263",
+      "bytes": 118
+    },
+    {
+      "reference": ".private/freightctl-f193-schedule-ui-typecheck.log",
+      "sha256": "97b78859e36482d7f3a4c38502f311e2de7d2ead9829e71cc1cb58486ddd8a43",
+      "bytes": 746
+    },
+    {
+      "reference": ".private/freightctl-f193-source-final-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f193-worker-green.log",
+      "sha256": "d4a4d3403a257bd3d46ebed860eaf10644e7aaf2da9f92392463a39cf3cbdf4a",
+      "bytes": 57
+    },
+    {
+      "reference": ".private/freightctl-f193-worker-red.log",
+      "sha256": "24a5d6c15ff4b4e9bd65e8abb59695cd8f6e424b36cb3265da5a34c21410749b",
+      "bytes": 806
+    }
+  ],
+  "owed": [
+    "Actual prepared PostgreSQL/RLS/atomicity/replay/current policy/deadline/suspension/CLI/HTTPS outcomes and original/final-source replay.",
+    "Dedicated served Chrome processing-calendar review/recovery/occurrence inspection/accessibility proof is not yet prepared or qualified;existing original Chrome profiles remain.",
+    "Protected outputs,crash/fencing races,independent receiver,restore/upgrade,calendar reference capacity and final-source qualification.",
+    "Third-party author delegation,automatic multi-task chains,confined-root calendars and all other mandatory baseline/AX work.",
+    "Every deferred nonsecurity CI log investigation/failure repair and replay,broad unit/race/integration/architecture/security/frontend/native/public/stock/reproducibility and full FINISH."
+  ],
+  "previous_ci": "docs/qualification/evidence/F194-composition-terminal-ci.json",
+  "local_resources": "Inference,PostgreSQL,Chrome,scanner,native peers and heavy runtimes stayed off. Lightweight checks retain GOMAXPROCS1/GOMEMLIMIT192MiB and Node heap192MiB.",
+  "readiness": "Assisted deployment,independent adoption and enterprise qualification unproven;all83 whole parity rows,twelve whole journeys andAX01\u2013AX08 open. F026 owner-deferred;external prerequisites remain owed."
+}

@@ -182,10 +182,21 @@ func (t *Transaction) ScheduleActiveRuns(ctx context.Context, id string) (int, e
 	return n, e
 }
 func (t *Transaction) ScheduleCandidates(ctx context.Context, id, directory, pattern string, recursive bool, due time.Time, limit int) ([]File, error) {
+	return t.scheduleCandidates(ctx, id, directory, pattern, recursive, due, limit, "")
+}
+
+func (t *Transaction) ScheduleProcessingCandidates(ctx context.Context, id, directory, pattern string, recursive bool, due time.Time, limit int, sourcePolicy string) ([]File, error) {
+	if !browserSecretHash.MatchString(sourcePolicy) {
+		return nil, ErrState
+	}
+	return t.scheduleCandidates(ctx, id, directory, pattern, recursive, due, limit, sourcePolicy)
+}
+
+func (t *Transaction) scheduleCandidates(ctx context.Context, id, directory, pattern string, recursive bool, due time.Time, limit int, ownedPolicy string) ([]File, error) {
 	if limit < 1 || limit > 64 {
 		return nil, ErrLimit
 	}
-	rows, e := t.Tx.Query(ctx, `SELECT DISTINCT f.file_id::text,f.size_bytes,f.sha256,f.policy,f.accepted_event_id::text FROM files f JOIN events e ON (e.tenant_id,e.partner_id,e.event_id)=(f.tenant_id,f.partner_id,f.accepted_event_id) JOIN namespace_entries n ON (n.tenant_id,n.partner_id,n.file_id)=(f.tenant_id,f.partner_id,f.file_id) WHERE n.kind='file' AND NOT n.deleted AND n.path !~ '(^|/)[.]freightctl-' AND (n.parent_path=$2 OR ($4 AND starts_with(n.path,rtrim($2,'/')||'/'))) AND regexp_replace(n.path,'^.*/','') ~ $3 AND e.happened_at<=$5 AND EXISTS(SELECT 1 FROM events publication WHERE (publication.tenant_id,publication.partner_id,publication.event_id)=(n.tenant_id,n.partner_id,n.changed_event_id) AND publication.happened_at<=$5) AND ($7 OR (((n.owner_actor_id=$8 AND (n.mode & 256)=256) OR (n.owner_actor_id<>$8 AND (n.mode & 32)=32)) AND NOT EXISTS(SELECT 1 FROM namespace_entries a WHERE NOT a.deleted AND a.kind='dir' AND (a.path='/' OR starts_with(n.path,a.path||'/')) AND ((a.owner_actor_id=$8 AND (a.mode & 320)<>320) OR (a.owner_actor_id<>$8 AND (a.mode & 40)<>40))))) AND freightctl_file_available(f.tenant_id,f.partner_id,f.file_id) AND NOT EXISTS(SELECT 1 FROM workflow_schedule_inputs i WHERE i.schedule_id=$1 AND i.file_id=f.file_id) ORDER BY 1 LIMIT $6`, id, directory, pattern, recursive, due, limit, t.Has("admin") && t.Root == "/", t.Actor)
+	rows, e := t.Tx.Query(ctx, `SELECT DISTINCT f.file_id::text,f.size_bytes,f.sha256,f.policy,f.accepted_event_id::text FROM files f JOIN events e ON (e.tenant_id,e.partner_id,e.event_id)=(f.tenant_id,f.partner_id,f.accepted_event_id) JOIN namespace_entries n ON (n.tenant_id,n.partner_id,n.file_id)=(f.tenant_id,f.partner_id,f.file_id) WHERE n.kind='file' AND NOT n.deleted AND n.path !~ '(^|/)[.]freightctl-' AND (n.parent_path=$2 OR ($4 AND starts_with(n.path,rtrim($2,'/')||'/'))) AND regexp_replace(n.path,'^.*/','') ~ $3 AND e.happened_at<=$5 AND EXISTS(SELECT 1 FROM events publication WHERE (publication.tenant_id,publication.partner_id,publication.event_id)=(n.tenant_id,n.partner_id,n.changed_event_id) AND publication.happened_at<=$5) AND ($7 OR (((n.owner_actor_id=$8 AND (n.mode & 256)=256) OR (n.owner_actor_id<>$8 AND (n.mode & 32)=32)) AND NOT EXISTS(SELECT 1 FROM namespace_entries a WHERE NOT a.deleted AND a.kind='dir' AND (a.path='/' OR starts_with(n.path,a.path||'/')) AND ((a.owner_actor_id=$8 AND (a.mode & 320)<>320) OR (a.owner_actor_id<>$8 AND (a.mode & 40)<>40))))) AND freightctl_file_available(f.tenant_id,f.partner_id,f.file_id) AND ($9='' OR (e.actor_id=$8 AND freightctl_controlled_policy_hash(f.policy)=$9)) AND NOT EXISTS(SELECT 1 FROM workflow_schedule_inputs i WHERE i.schedule_id=$1 AND i.file_id=f.file_id) ORDER BY 1 LIMIT $6`, id, directory, pattern, recursive, due, limit, t.Has("admin") && t.Root == "/", t.Actor, ownedPolicy)
 	if e != nil {
 		return nil, e
 	}

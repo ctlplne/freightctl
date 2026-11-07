@@ -1,0 +1,655 @@
+{
+  "schema_version": 1,
+  "id": "F194",
+  "observed_at": "2026-11-07",
+  "candidate": "39301e4d508fa638ee525105dea9083c48f73693",
+  "qualification_claim": false,
+  "state": "Original17 triggered workflows/37 jobs terminal;listed security gates passed;original application failures remain red",
+  "runs": [
+    {
+      "id": 42341853974,
+      "name": "Native Windows and macOS unit checks",
+      "commit": "39301e4d508fa638ee525105dea9083c48f73693",
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42341853974",
+      "jobs": [
+        {
+          "id": 128311050589,
+          "name": "macos-arm64",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Native macOS ARM architecture and Go unit race checks"
+          ],
+          "security_steps": []
+        },
+        {
+          "id": 128311050699,
+          "name": "windows-amd64",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Native Windows architecture and Go unit checks"
+          ],
+          "security_steps": []
+        }
+      ]
+    },
+    {
+      "id": 42341853987,
+      "name": "Native browser and FTPS operator qualification",
+      "commit": "39301e4d508fa638ee525105dea9083c48f73693",
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42341853987",
+      "jobs": [
+        {
+          "id": 128311050711,
+          "name": "Native x86 browser and live FTPS governance",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Task-owned PostgreSQL"
+          ],
+          "security_steps": []
+        }
+      ]
+    },
+    {
+      "id": 42341854078,
+      "name": "Native document container contracts",
+      "commit": "39301e4d508fa638ee525105dea9083c48f73693",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42341854078",
+      "jobs": [
+        {
+          "id": 128311051296,
+          "name": "Native ZIP stock producer (x86_64)",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": [],
+          "security_steps": [
+            {
+              "name": "Stock XLSX producer with exact dependency closure",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 128311051519,
+          "name": "Native ZIP stock producer (arm64)",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": [],
+          "security_steps": [
+            {
+              "name": "Stock XLSX producer with exact dependency closure",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 42341853989,
+      "name": "Native immutable HTTPS stock resume",
+      "commit": "39301e4d508fa638ee525105dea9083c48f73693",
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42341853989",
+      "jobs": [
+        {
+          "id": 128311050787,
+          "name": "Native immutable HTTPS resume (x86_64)",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Task-owned loopback PostgreSQL and ordinary initialization"
+          ],
+          "security_steps": []
+        },
+        {
+          "id": 128311051053,
+          "name": "Native immutable HTTPS resume (arm64)",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Task-owned loopback PostgreSQL and ordinary initialization"
+          ],
+          "security_steps": []
+        }
+      ]
+    },
+    {
+      "id": 42341853984,
+      "name": "Native legacy SCP regular-file custody",
+      "commit": "39301e4d508fa638ee525105dea9083c48f73693",
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42341853984",
+      "jobs": [
+        {
+          "id": 128311050718,
+          "name": "Native legacy SCP (x86_64)",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Task-owned loopback PostgreSQL and ordinary initialization"
+          ],
+          "security_steps": []
+        },
+        {
+          "id": 128311050900,
+          "name": "Native legacy SCP (arm64)",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Task-owned loopback PostgreSQL and ordinary initialization"
+          ],
+          "security_steps": []
+        }
+      ]
+    },
+    {
+      "id": 42341854065,
+      "name": "Native tus stock client and custody checkpoints",
+      "commit": "39301e4d508fa638ee525105dea9083c48f73693",
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42341854065",
+      "jobs": [
+        {
+          "id": 128311051067,
+          "name": "Native tus resume (arm64)",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Task-owned loopback PostgreSQL and ordinary schema initialization"
+          ],
+          "security_steps": [
+            {
+              "name": "Complete stock tus dependency security audit",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 128311051354,
+          "name": "Native tus resume (x86_64)",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Task-owned loopback PostgreSQL and ordinary schema initialization"
+          ],
+          "security_steps": [
+            {
+              "name": "Complete stock tus dependency security audit",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 42341854072,
+      "name": "Native FTPS workflow consent qualification",
+      "commit": "39301e4d508fa638ee525105dea9083c48f73693",
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42341854072",
+      "jobs": [
+        {
+          "id": 128311051241,
+          "name": "Native x86 registered FTPS workflow consent (plaintext)",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Task-owned PostgreSQL"
+          ],
+          "security_steps": []
+        },
+        {
+          "id": 128311051441,
+          "name": "Native x86 registered FTPS workflow consent (recipient-encrypted)",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Task-owned PostgreSQL"
+          ],
+          "security_steps": []
+        }
+      ]
+    },
+    {
+      "id": 42341853982,
+      "name": "Native JSON intake and custody interfaces",
+      "commit": "39301e4d508fa638ee525105dea9083c48f73693",
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42341853982",
+      "jobs": [
+        {
+          "id": 128311050700,
+          "name": "Native JSON custody (arm64)",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Ordinary schema initialization for the shared custody fixture"
+          ],
+          "security_steps": [
+            {
+              "name": "Security - stock XLSX producer and complete dependency closure",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 128311050870,
+          "name": "Native Chrome JSON policy and held bytes",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Real browser review, committed-response loss, exact checks and separate release"
+          ],
+          "security_steps": [
+            {
+              "name": "Security - stock XLSX producer and complete dependency closure",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 128311050907,
+          "name": "Native JSON custody (x86_64)",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Ordinary schema initialization for the shared custody fixture"
+          ],
+          "security_steps": [
+            {
+              "name": "Security - stock XLSX producer and complete dependency closure",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 42341854027,
+      "name": "Native source vulnerability configurations",
+      "commit": "39301e4d508fa638ee525105dea9083c48f73693",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42341854027",
+      "jobs": [
+        {
+          "id": 128311051014,
+          "name": "Native vulnerability source (windows/amd64)",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": [],
+          "security_steps": [
+            {
+              "name": "Actual native source scan and enforcing original converter",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 128311051180,
+          "name": "Native vulnerability source (darwin/arm64)",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": [],
+          "security_steps": [
+            {
+              "name": "Actual native source scan and enforcing original converter",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 128311051196,
+          "name": "Native vulnerability source (linux/arm64)",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": [],
+          "security_steps": [
+            {
+              "name": "Actual native source scan and enforcing original converter",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 42341854009,
+      "name": "Native first enrollment and browser exchange",
+      "commit": "39301e4d508fa638ee525105dea9083c48f73693",
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42341854009",
+      "jobs": [
+        {
+          "id": 128311051089,
+          "name": "first-run",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Original first-run CLI, browser and stock curl journey"
+          ],
+          "security_steps": []
+        }
+      ]
+    },
+    {
+      "id": 42341853994,
+      "name": "Native FTPS dispatch approval qualification",
+      "commit": "39301e4d508fa638ee525105dea9083c48f73693",
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42341853994",
+      "jobs": [
+        {
+          "id": 128311050803,
+          "name": "Native x86 public FTPS dispatch consent",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Task-owned PostgreSQL"
+          ],
+          "security_steps": []
+        }
+      ]
+    },
+    {
+      "id": 42341853991,
+      "name": "Core correctness and security",
+      "commit": "39301e4d508fa638ee525105dea9083c48f73693",
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42341853991",
+      "jobs": [
+        {
+          "id": 128311050839,
+          "name": "source-and-browser",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Qualification record refusal contracts"
+          ],
+          "security_steps": [
+            {
+              "name": "JavaScript dependency audit",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Go vulnerability reachability",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Committed source and history secret scan",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 42341853985,
+      "name": "Stock peer and browser qualification",
+      "commit": "39301e4d508fa638ee525105dea9083c48f73693",
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42341853985",
+      "jobs": [
+        {
+          "id": 128311051081,
+          "name": "Stock peers (intake-routing)",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Real loopback SFTP and browser journey",
+            "Safe qualification outcomes and evidence closure"
+          ],
+          "security_steps": []
+        },
+        {
+          "id": 128311051122,
+          "name": "Stock peers (routing)",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Real loopback SFTP and browser journey",
+            "Safe qualification outcomes and evidence closure"
+          ],
+          "security_steps": []
+        },
+        {
+          "id": 128311051130,
+          "name": "Stock peers (arrivals-schedules)",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Real loopback SFTP and browser journey",
+            "Safe qualification outcomes and evidence closure"
+          ],
+          "security_steps": []
+        },
+        {
+          "id": 128311051152,
+          "name": "Stock peers (handoff-routing)",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Real loopback SFTP and browser journey",
+            "Safe qualification outcomes and evidence closure"
+          ],
+          "security_steps": []
+        },
+        {
+          "id": 128311051169,
+          "name": "Stock peers (captured-routing)",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Real loopback SFTP and browser journey",
+            "Safe qualification outcomes and evidence closure"
+          ],
+          "security_steps": []
+        }
+      ]
+    },
+    {
+      "id": 42341853942,
+      "name": "Native artifact receive browser",
+      "commit": "39301e4d508fa638ee525105dea9083c48f73693",
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42341853942",
+      "jobs": [
+        {
+          "id": 128311050749,
+          "name": "receive-browser",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Actual recipient UI, exact bytes, unrelated user and endpoint revocation"
+          ],
+          "security_steps": []
+        }
+      ]
+    },
+    {
+      "id": 42341853948,
+      "name": "Native Linux Go, PostgreSQL and fuzz",
+      "commit": "39301e4d508fa638ee525105dea9083c48f73693",
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42341853948",
+      "jobs": [
+        {
+          "id": 128311050743,
+          "name": "Native Go and PostgreSQL (arm64)",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Module integrity, vet and unit race checks"
+          ],
+          "security_steps": [
+            {
+              "name": "Security - stock XLSX producer and complete dependency closure",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Scan the exact independent peer image and enforce complete evidence",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 128311050840,
+          "name": "Native Go and PostgreSQL (x86_64)",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Module integrity, vet and unit race checks"
+          ],
+          "security_steps": [
+            {
+              "name": "Security - stock XLSX producer and complete dependency closure",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Scan the exact independent peer image and enforce complete evidence",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 128311050845,
+          "name": "Native metadata restore (x86_64)",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Seed actual PostgreSQL through first-run commands"
+          ],
+          "security_steps": []
+        },
+        {
+          "id": 128311050849,
+          "name": "bounded-fuzz",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": [],
+          "security_steps": []
+        },
+        {
+          "id": 128311050919,
+          "name": "Native metadata restore (arm64)",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Seed actual PostgreSQL through first-run commands"
+          ],
+          "security_steps": []
+        }
+      ]
+    },
+    {
+      "id": 42341853967,
+      "name": "Native reproducible core binaries",
+      "commit": "39301e4d508fa638ee525105dea9083c48f73693",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42341853967",
+      "jobs": [
+        {
+          "id": 128311050715,
+          "name": "Native core reproduction (amd64)",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": [],
+          "security_steps": []
+        },
+        {
+          "id": 128311050925,
+          "name": "Native core reproduction (arm64)",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": [],
+          "security_steps": []
+        }
+      ]
+    },
+    {
+      "id": 42341853946,
+      "name": "Native FTPS stock clients and custody",
+      "commit": "39301e4d508fa638ee525105dea9083c48f73693",
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42341853946",
+      "jobs": [
+        {
+          "id": 128311051056,
+          "name": "Native FTPS (arm64)",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Task-owned PostgreSQL"
+          ],
+          "security_steps": []
+        },
+        {
+          "id": 128311051192,
+          "name": "Native FTPS (x86_64)",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Task-owned PostgreSQL"
+          ],
+          "security_steps": []
+        }
+      ]
+    }
+  ],
+  "module_integrity": [
+    {
+      "job": 128311050743,
+      "url": "https://github.com/ctlplne/freightctl/actions/jobs/128311050743",
+      "observation": [
+        "2026-11-07T05:17:47.1616426Z all modules verified"
+      ]
+    },
+    {
+      "job": 128311050840,
+      "url": "https://github.com/ctlplne/freightctl/actions/jobs/128311050840",
+      "observation": [
+        "2026-11-07T05:17:53.5188205Z all modules verified"
+      ]
+    }
+  ],
+  "scope": "Completion metadata and security outcomes only. Nonsecurity logs,repairs and original/final-source replay owed at FINISH. No originals cancelled,restarted or substituted.",
+  "runtime_claim": "Actual document producer,fuzz and reproduction jobs passed on this candidate;these do not qualify whole product profiles or future source."
+}

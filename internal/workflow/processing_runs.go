@@ -180,8 +180,18 @@ func (s *Service) runProcessing(ctx context.Context, t *store.Transaction, key s
 	if f.Size > s.Custody.MaxFile {
 		return nil, store.ErrLimit
 	}
+	r, err := s.stageProcessingRun(ctx, t, request, d, f, storage)
+	if err != nil {
+		return nil, err
+	}
+	return result(t, ctx, key, meaning, r.ID, r)
+}
+
+// Manual runs and calendars stage the same owned run,intent and membership in
+// their caller's transaction. The schedule receipt is committed by its caller.
+func (s *Service) stageProcessingRun(ctx context.Context, t *store.Transaction, request RunRequest, d *Definition, f *store.File, storage string) (*store.WorkflowRun, error) {
 	r := &store.WorkflowRun{ID: secure.NewID(), WorkflowID: request.Workflow.ID, WorkflowVersion: request.Workflow.Version, WorkflowHash: request.Workflow.Hash, FileID: f.ID, Source: *f, StorageID: storage, Root: t.Root, Authority: t.AuthorityRevision, State: "queued", Reason: "awaiting_worker", Revision: 1}
-	if err = t.SaveWorkflowRun(ctx, r, 0); err != nil {
+	if err := t.SaveWorkflowRun(ctx, r, 0); err != nil {
 		return nil, err
 	}
 	p, err := s.Processor.StageProcessing(ctx, t, r, *d.Processing)
@@ -191,7 +201,7 @@ func (s *Service) runProcessing(ctx context.Context, t *store.Transaction, key s
 	if err = t.BindWorkflowProcessing(ctx, &store.WorkflowProcessing{RunID: r.ID, ProjectionID: p.ID, Hash: p.Hash}); err != nil {
 		return nil, err
 	}
-	return result(t, ctx, key, meaning, r.ID, r)
+	return r, nil
 }
 func validateProcessingDispatch(d Dispatch, b store.WorkflowProcessing, step string) error {
 	if d.RunID != b.RunID || d.ProjectionID != b.ProjectionID || d.ProjectionHash != b.Hash || d.StepID != step || d.DeliveryID != "" || d.ProjectionRevision < 1 {

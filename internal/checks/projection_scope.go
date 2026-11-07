@@ -149,6 +149,13 @@ func (s *Service) projectionExistingBegin(ctx context.Context, scope store.Scope
 	if d.Plan.Context.Root != t.Root {
 		return fail(store.ErrForbidden)
 	}
+	// Calendar control takes this lock before namespace/source locks. Existing
+	// workflow intents use the same order even for read-only current inspection.
+	if d.Workflow != nil {
+		if err = t.ScheduleLock(ctx, false); err != nil {
+			return fail(err)
+		}
+	}
 	if action == "workflow_execute" {
 		if err = projectionWorkflowCurrent(ctx, t, d, false); err != nil {
 			return fail(err)

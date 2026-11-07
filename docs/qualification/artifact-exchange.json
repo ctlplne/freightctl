@@ -86,7 +86,9 @@
         "docs/qualification/evidence/F187-producer-output-selection-surfaces.json",
         "docs/qualification/evidence/F189-output-policy-browser-administration.json",
         "docs/qualification/evidence/F191-produced-source-composition.json",
-        "docs/qualification/evidence/F192-output-admin-terminal-ci.json"
+        "docs/qualification/evidence/F192-output-admin-terminal-ci.json",
+        "docs/qualification/evidence/F193-owned-processing-calendars.json",
+        "docs/qualification/evidence/F194-composition-terminal-ci.json"
       ]
     },
     {
@@ -176,7 +178,9 @@
         "docs/qualification/evidence/F177-independent-review-browser.json",
         "docs/qualification/evidence/F179-processing-task-catalog.json",
         "docs/qualification/evidence/F191-produced-source-composition.json",
-        "docs/qualification/evidence/F192-output-admin-terminal-ci.json"
+        "docs/qualification/evidence/F192-output-admin-terminal-ci.json",
+        "docs/qualification/evidence/F193-owned-processing-calendars.json",
+        "docs/qualification/evidence/F194-composition-terminal-ci.json"
       ]
     },
     {
@@ -268,7 +272,9 @@
         "docs/qualification/evidence/F187-producer-output-selection-surfaces.json",
         "docs/qualification/evidence/F189-output-policy-browser-administration.json",
         "docs/qualification/evidence/F191-produced-source-composition.json",
-        "docs/qualification/evidence/F192-output-admin-terminal-ci.json"
+        "docs/qualification/evidence/F192-output-admin-terminal-ci.json",
+        "docs/qualification/evidence/F193-owned-processing-calendars.json",
+        "docs/qualification/evidence/F194-composition-terminal-ci.json"
       ]
     },
     {
@@ -323,7 +329,9 @@
         "docs/qualification/evidence/F187-producer-output-selection-surfaces.json",
         "docs/qualification/evidence/F189-output-policy-browser-administration.json",
         "docs/qualification/evidence/F191-produced-source-composition.json",
-        "docs/qualification/evidence/F192-output-admin-terminal-ci.json"
+        "docs/qualification/evidence/F192-output-admin-terminal-ci.json",
+        "docs/qualification/evidence/F193-owned-processing-calendars.json",
+        "docs/qualification/evidence/F194-composition-terminal-ci.json"
       ]
     },
     {
@@ -465,5 +473,5 @@
     "Fixtures, design documents, ledger checks, model answers and skips establish no runtime or real provider qualification.",
     "Preserve original parity/journey/defect/evaluation records and separate assisted deployment, independent adoption and enterprise readiness."
   ],
-  "execution": "Active under owner resume;full baseline/AX01\u2013AX08/FINISH incomplete. F191 implements exact checked-output consumption by separately approved tasks;native/CLI/protected/restore/final-source proof and automatic chains/scheduling/delegation remain owed. F192 preserves259645e original terminal16/35,listed security passes and red application failures. Local inference/heavy runtimes off;retained35 unchanged."
+  "execution": "Active under owner resume;full baseline/AX01\u2013AX08/FINISH incomplete. F193 implements explicit owned released-record processing calendars;native/Chrome/protected/crash/restore/final-source,scoped calendars,automatic chains and third-party delegation remain owed. F194 preserves39301e4 original terminal17/37,listed security passes and original red application failures. Local inference/heavy runtimes off;retained35 unchanged."
 }

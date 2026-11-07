@@ -59,6 +59,7 @@ export function ProcessingWorkflows({
   refresh,
   onError,
   onOutput,
+  requestedRun,
 }: {
   api: Api;
   session: Session;
@@ -66,6 +67,7 @@ export function ProcessingWorkflows({
   refresh: number;
   onError: (e: unknown) => void;
   onOutput: (id: string) => void;
+  requestedRun?: string;
 }) {
   const stamp = processingStamp(session),
     client = useMemo(() => new ProcessingApi(api), [api, stamp]);
@@ -216,14 +218,26 @@ export function ProcessingWorkflows({
         setConfigurationCurrent(true);
       }
     });
-  const loadRun = () =>
+  const loadRun = (id = runID) =>
     perform(async () => {
-      const r = await client.status(runID);
+      const r = await client.status(id);
       if (current()) {
         setView(r);
         setViewCurrent(true);
       }
     });
+  useEffect(() => {
+    if (visible && requestedRun && uuid(requestedRun)) {
+      if (pendingRef.current || active.current) {
+        setNotice(
+          "Finish or save the current command before inspecting another scheduled run.",
+        );
+        return;
+      }
+      setRunID(requestedRun);
+      void loadRun(requestedRun);
+    }
+  }, [requestedRun, visible, stamp]);
   const propose = (m: Omit<Mutation, "key">) => {
     if (active.current || pendingRef.current) return;
     void perform(() => reviewRecovery(newProcessingMutation(m)));
@@ -1097,7 +1111,7 @@ export function ProcessingWorkflows({
         </label>
         <button
           disabled={!uuid(runID) || !allowed("inspect")}
-          onClick={loadRun}
+          onClick={() => void loadRun()}
         >
           Load processing run
         </button>

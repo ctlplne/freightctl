@@ -22,16 +22,17 @@ import (
 )
 
 type fixture struct {
-	diskPath   string
-	ctx        context.Context
-	admin      *pgxpool.Pool
-	adminPath  string
-	tokenPath  string
-	wf         *workflow.Service
-	scope      store.Scope
-	file       *store.File
-	connection workflow.ConnectionView
-	request    workflow.ConnectionRequest
+	diskPath    string
+	ctx         context.Context
+	admin       *pgxpool.Pool
+	adminPath   string
+	runtimePath string
+	tokenPath   string
+	wf          *workflow.Service
+	scope       store.Scope
+	file        *store.File
+	connection  workflow.ConnectionView
+	request     workflow.ConnectionRequest
 }
 
 func setup(t *testing.T) *fixture {
@@ -100,7 +101,7 @@ func setup(t *testing.T) *fixture {
 	t.Cleanup(func() { disk.Close() })
 	a := open(paths[0])
 	t.Cleanup(a.Close)
-	f := &fixture{diskPath: diskPath, ctx: ctx, admin: a, adminPath: paths[0], wf: &workflow.Service{Custody: &custody.Service{DB: db, Disk: disk, MaxFile: 8 << 20, MaxStored: 64 << 20, NamespaceMaxEntries: 1000}}, scope: store.Scope{Tenant: secure.NewID(), Partner: secure.NewID()}}
+	f := &fixture{diskPath: diskPath, ctx: ctx, admin: a, adminPath: paths[0], runtimePath: paths[1], wf: &workflow.Service{Custody: &custody.Service{DB: db, Disk: disk, MaxFile: 8 << 20, MaxStored: 64 << 20, NamespaceMaxEntries: 1000}}, scope: store.Scope{Tenant: secure.NewID(), Partner: secure.NewID()}}
 	tokenPath := filepath.Join(t.TempDir(), "token")
 	if err = secure.WriteToken(tokenPath); err != nil {
 		t.Fatal(err)

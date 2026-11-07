@@ -17,6 +17,7 @@ type ScheduleTickResult struct {
 	RunIDs          []string                   `json:"run_ids"`
 	Reason          string                     `json:"reason"`
 	ExternalContact bool                       `json:"external_contact"`
+	Profile         string                     `json:"profile,omitempty"`
 }
 
 func scheduleMissed(p *calendar.Plan, d *ScheduleDefinition, cursor, timeNow time.Time) (*time.Time, *time.Time) {
@@ -95,6 +96,9 @@ func (s *Service) TickSchedule(ctx context.Context, scope store.Scope, id string
 		return nil, e
 	}
 	out := ScheduleTickResult{Kind: "workflow_schedule_tick", Schedule: record.ScheduleSummary, Occurrences: []store.ScheduleOccurrence{}, RunIDs: []string{}, Reason: "not_due"}
+	if d.Processing != nil {
+		out.Profile = "owned-record-processing-schedule-v1"
+	}
 	previous := record.Revision
 	changed := false
 	for count := 0; count < x.Limit && record.NextDue != nil && !record.NextDue.After(now); count++ {
@@ -153,26 +157,48 @@ func (s *Service) TickSchedule(ctx context.Context, scope store.Scope, id string
 			if capacity > d.MaxFiles {
 				capacity = d.MaxFiles
 			}
-			if e = t.DeliveryAdmission(ctx, 1); e != nil {
-				if e == store.ErrLimit {
+			if d.Processing != nil {
+				var used int
+				if e = t.Tx.QueryRow(ctx, `SELECT count(*) FROM record_projections WHERE actor_id=$1 AND state IN ('proposed','approved','running','failed')`, t.Actor).Scan(&used); e != nil {
+					return nil, e
+				}
+				if free := 16 - used; free < capacity {
+					capacity = free
+				}
+				if capacity <= 0 {
+					out.Reason = "processing_capacity"
+					break
+				}
+			} else {
+				if e = t.DeliveryAdmission(ctx, 1); e != nil {
+					if e == store.ErrLimit {
+						out.Reason = "delivery_capacity"
+						break
+					}
+					return nil, e
+				}
+				var used int
+				if e = t.Tx.QueryRow(ctx, `SELECT count(*) FROM delivery_intents WHERE actor_id=$1 AND state NOT IN ('succeeded','blocked','cancelled')`, t.Actor).Scan(&used); e != nil {
+					return nil, e
+				}
+				if len(workflow.Steps) == 0 {
+					return nil, store.ErrSchedule
+				}
+				free := (128 - used) / len(workflow.Steps)
+				if free < capacity {
+					capacity = free
+				}
+				if capacity <= 0 {
 					out.Reason = "delivery_capacity"
 					break
 				}
-				return nil, e
 			}
-			var used int
-			if e = t.Tx.QueryRow(ctx, `SELECT count(*) FROM delivery_intents WHERE actor_id=$1 AND state NOT IN ('succeeded','blocked','cancelled')`, t.Actor).Scan(&used); e != nil {
-				return nil, e
+			var candidates []store.File
+			if d.Processing != nil {
+				candidates, e = t.ScheduleProcessingCandidates(ctx, id, d.Source.Directory, d.Source.Regex, d.Source.Recursive, due, capacity, d.Processing.Task.Definition.SourcePolicyHash)
+			} else {
+				candidates, e = t.ScheduleCandidates(ctx, id, d.Source.Directory, d.Source.Regex, d.Source.Recursive, due, capacity)
 			}
-			free := (128 - used) / len(workflow.Steps)
-			if free < capacity {
-				capacity = free
-			}
-			if capacity <= 0 {
-				out.Reason = "delivery_capacity"
-				break
-			}
-			candidates, e := t.ScheduleCandidates(ctx, id, d.Source.Directory, d.Source.Regex, d.Source.Recursive, due, capacity)
 			if e != nil {
 				return nil, e
 			}
@@ -188,7 +214,12 @@ func (s *Service) TickSchedule(ctx context.Context, scope store.Scope, id string
 				}
 				for i := range candidates {
 					source := &candidates[i]
-					run, e := s.stageRun(ctx, t, RunRequest{Workflow: d.Workflow, FileID: source.ID}, workflow, source, d.StorageID)
+					var run *store.WorkflowRun
+					if d.Processing != nil {
+						run, e = s.stageScheduledProcessing(ctx, t, RunRequest{Workflow: d.Workflow, FileID: source.ID}, workflow, source, d.StorageID)
+					} else {
+						run, e = s.stageRun(ctx, t, RunRequest{Workflow: d.Workflow, FileID: source.ID}, workflow, source, d.StorageID)
+					}
 					if e != nil {
 						return nil, e
 					}

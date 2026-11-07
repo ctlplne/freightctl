@@ -16,6 +16,8 @@ func TestProcessingAuditKeepsPrivateRulesBindingsAndOriginalKeysBehindExactDiges
 		{"RecordProjectionChanged", `{"definition":{"plan":{"context":{"namespace_root":"/private-root"}}}}`},
 		{"ProcessingWorkflowReviewChanged", `{"definition":{"reviewer":"private-reviewer"}}`},
 		{"WorkflowProcessingBound", `{"run_id":"private-run"}`},
+		{"WorkflowScheduleChanged", `{"definition":{"processing":{"task":{"name":"private-task"}}}}`},
+		{"WorkflowCommandCompleted", `{"request_key":"private-key","result":{"profile":"owned-record-processing-schedule-v1","schedule":{"name":"private-task"}}}`},
 		{"WorkflowCommandCompleted", `{"result":{"processing":{"definition":{"private-rule":true}}},"request_key":"private-key"}`},
 		{"WorkflowCommandCompleted", `{"result":{"processing_attempt":{"definition":{"plan":{"output_binding":{"private-rule":true}}}}},"request_key":"private-key"}`},
 		{"CheckCommandCompleted", `{"result":{"kind":"record_projection","projection":{"private-rule":true}}}`},

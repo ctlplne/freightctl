@@ -44,22 +44,23 @@ type ScheduleSelection struct {
 	Arrival           *ScheduleArrivalSelection `json:"arrival,omitempty"`
 }
 type ScheduleDefinition struct {
-	Schema     int                 `json:"schema_version"`
-	Name       string              `json:"name"`
-	Workflow   Reference           `json:"workflow"`
-	Source     ScheduleSource      `json:"source"`
-	Calendar   calendar.Definition `json:"calendar"`
-	Missed     string              `json:"missed_run_policy"`
-	CatchUp    int                 `json:"max_catch_up"`
-	MaxActive  int                 `json:"max_active_runs"`
-	MaxFiles   int                 `json:"max_files_per_occurrence"`
-	Deadline   int                 `json:"execution_deadline_seconds"`
-	Grace      int                 `json:"late_start_grace_seconds"`
-	Authority  int64               `json:"authority_revision"`
-	StorageID  string              `json:"storage_id"`
-	Root       string              `json:"namespace_root"`
-	Effects    []Effect            `json:"effects"`
-	Collection *ScheduleCollection `json:"collection,omitempty"`
+	Schema     int                  `json:"schema_version"`
+	Name       string               `json:"name"`
+	Workflow   Reference            `json:"workflow"`
+	Source     ScheduleSource       `json:"source"`
+	Calendar   calendar.Definition  `json:"calendar"`
+	Missed     string               `json:"missed_run_policy"`
+	CatchUp    int                  `json:"max_catch_up"`
+	MaxActive  int                  `json:"max_active_runs"`
+	MaxFiles   int                  `json:"max_files_per_occurrence"`
+	Deadline   int                  `json:"execution_deadline_seconds"`
+	Grace      int                  `json:"late_start_grace_seconds"`
+	Authority  int64                `json:"authority_revision"`
+	StorageID  string               `json:"storage_id"`
+	Root       string               `json:"namespace_root"`
+	Effects    []Effect             `json:"effects"`
+	Collection *ScheduleCollection  `json:"collection,omitempty"`
+	Processing *ScheduledProcessing `json:"processing,omitempty"`
 }
 type SchedulePreview struct {
 	Definition       ScheduleDefinition    `json:"definition"`
@@ -80,6 +81,7 @@ type ScheduleDraftRequest struct {
 type ScheduleResource struct {
 	Kind     string                `json:"kind"`
 	Schedule store.ScheduleSummary `json:"schedule"`
+	Profile  string                `json:"profile,omitempty"`
 }
 type ScheduleView struct {
 	Schedule         *store.Schedule       `json:"schedule"`
@@ -183,6 +185,13 @@ func (s *Service) schedulePreview(ctx context.Context, t *store.Transaction, x S
 	if e != nil {
 		return nil, e
 	}
+	processing, e := processingScheduleBinding(workflow, x.Source)
+	if e != nil {
+		return nil, e
+	}
+	if processing != nil && s.Processor == nil {
+		return nil, store.ErrState
+	}
 	collection, e := s.scheduleCollection(ctx, t, x, workflow)
 	if e != nil {
 		return nil, e
@@ -200,6 +209,9 @@ func (s *Service) schedulePreview(ctx context.Context, t *store.Transaction, x S
 	}
 	d := ScheduleDefinition{Schema: 1, Name: x.Name, Workflow: x.Workflow, Source: ScheduleSource{ScheduleSourceSelection: x.Source, Regex: scheduleRegex(x.Source.Pattern)}, Calendar: rules, Missed: x.Missed, CatchUp: x.CatchUp, MaxActive: x.MaxActive, MaxFiles: x.MaxFiles, Deadline: x.Deadline, Grace: x.Grace, Authority: t.AuthorityRevision, StorageID: storage, Root: t.Root}
 	d.Collection = collection
+	if processing != nil {
+		d.Schema, d.Processing = 2, processing
+	}
 	if collection != nil {
 		d.Source.Regex = ""
 	}
@@ -248,7 +260,7 @@ func (s *Service) PreviewSchedule(ctx context.Context, scope store.Scope, x Sche
 }
 func scheduleDefinition(s *store.Schedule) (*ScheduleDefinition, *calendar.Plan, error) {
 	var d ScheduleDefinition
-	if Decode(s.Definition, &d) != nil || d.Schema != 1 || d.Name != s.Name || d.Root != "/" || !store.ValidID(d.StorageID) || d.Authority < 1 {
+	if Decode(s.Definition, &d) != nil || (d.Schema != 1 && d.Schema != 2) || (d.Schema == 2) != (d.Processing != nil) || d.Name != s.Name || d.Root != "/" || !store.ValidID(d.StorageID) || d.Authority < 1 {
 		return nil, nil, store.ErrIsolation
 	}
 	_, h, e := digest(d)
@@ -263,6 +275,13 @@ func scheduleDefinition(s *store.Schedule) (*ScheduleDefinition, *calendar.Plan,
 		if d.Collection.Source.Contract != ScheduledCollectionContract || normalizeCollectionSource(d.Collection.Source) != nil || d.Source.Directory != d.Collection.Source.Directory || d.Source.Pattern != d.Collection.Source.Manifest || d.MaxFiles != d.Collection.Source.MaxFiles {
 			return nil, nil, store.ErrIsolation
 		}
+	}
+	if d.Processing != nil {
+		if checkProcessingSchedule(&d, &Definition{Schema: 3, Name: "Scheduled task shape", Processing: &d.Processing.Task}) != nil {
+			return nil, nil, store.ErrIsolation
+		}
+	} else if d.Source.Kind == ProcessingScheduleSource {
+		return nil, nil, store.ErrIsolation
 	}
 	if _, e = normalizeScheduleSelection(x); e != nil || d.Source.Regex != expectedRegex {
 		return nil, nil, store.ErrIsolation
@@ -334,7 +353,7 @@ func (s *Service) DraftSchedule(ctx context.Context, scope store.Scope, key stri
 	if e = t.SaveSchedule(ctx, record, 0); e != nil {
 		return nil, e
 	}
-	return scheduleResult(t, ctx, key, meaning, id, ScheduleResource{Kind: "workflow_schedule", Schedule: record.ScheduleSummary})
+	return scheduleResult(t, ctx, key, meaning, id, processingScheduleResource(record, preview.Definition.Processing))
 }
 func (s *Service) ControlSchedule(ctx context.Context, scope store.Scope, id string, version int, action, key string, x Decision) (*Result, error) {
 	if !store.ValidID(id) || version < 1 || !keyPattern.MatchString(key) || !hashPattern.MatchString(x.Hash) || x.Revision < 1 || (action != "activate" && action != "suspend" && action != "revoke") {
@@ -450,7 +469,7 @@ func (s *Service) ControlSchedule(ctx context.Context, scope store.Scope, id str
 	if e = t.SaveSchedule(ctx, record, previous); e != nil {
 		return nil, e
 	}
-	return scheduleResult(t, ctx, key, meaning, id, ScheduleResource{Kind: "workflow_schedule", Schedule: record.ScheduleSummary})
+	return scheduleResult(t, ctx, key, meaning, id, processingScheduleResource(record, d.Processing))
 }
 func (s *Service) ScheduleStatus(ctx context.Context, scope store.Scope, id string, version int) (*ScheduleView, error) {
 	if !store.ValidID(id) || version < 1 {
@@ -463,6 +482,9 @@ func (s *Service) ScheduleStatus(ctx context.Context, scope store.Scope, id stri
 		return nil, e
 	}
 	defer t.Tx.Rollback(ctx)
+	if e = t.ScheduleLock(ctx, false); e != nil {
+		return nil, e
+	}
 	record, e := t.Schedule(ctx, id, version, false)
 	if e != nil {
 		return nil, e
@@ -495,10 +517,26 @@ func (s *Service) ScheduleStatus(ctx context.Context, scope store.Scope, id stri
 	if e != nil {
 		return nil, e
 	}
+	current := record.State == "active" && record.ApprovalAuthority == t.AuthorityRevision && d.Authority == t.AuthorityRevision
+	if current && d.Processing != nil {
+		_, w, err := approved(ctx, t, d.Workflow)
+		if err == nil {
+			err = checkScheduleEffects(ctx, t, d, w)
+		}
+		if err == nil {
+			err = scheduleDirectory(ctx, t, d.Source.Directory)
+		}
+		if err != nil {
+			if !errors.Is(err, store.ErrState) && !errors.Is(err, store.ErrRevision) && !errors.Is(err, store.ErrNotFound) && !errors.Is(err, store.ErrForbidden) && !errors.Is(err, store.ErrSchedule) {
+				return nil, err
+			}
+			current = false
+		}
+	}
 	if e = t.Reauthorize(ctx); e != nil {
 		return nil, e
 	}
-	return &ScheduleView{Schedule: record, Upcoming: upcoming, Pending: pending, PendingArrivals: arrivals, ActiveRuns: active, CurrentAuthority: record.State == "active" && record.ApprovalAuthority == t.AuthorityRevision && d.Authority == t.AuthorityRevision}, t.Tx.Commit(ctx)
+	return &ScheduleView{Schedule: record, Upcoming: upcoming, Pending: pending, PendingArrivals: arrivals, ActiveRuns: active, CurrentAuthority: current}, t.Tx.Commit(ctx)
 }
 func (s *Service) Schedules(ctx context.Context, scope store.Scope, after string, limit int) (*store.SchedulePage, error) {
 	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
@@ -601,6 +639,15 @@ func workflowEffects(ctx context.Context, t *store.Transaction, workflow *Defini
 	return effects, nil
 }
 func checkScheduleEffects(ctx context.Context, t *store.Transaction, d *ScheduleDefinition, workflow *Definition) error {
+	if d.Processing != nil {
+		if err := checkProcessingSchedule(d, workflow); err != nil {
+			return err
+		}
+		return processingScheduleGrants(t)
+	}
+	if workflow.Schema == 3 {
+		return store.ErrSchedule
+	}
 	effects, e := workflowEffects(ctx, t, workflow)
 	if e != nil {
 		return e
@@ -637,8 +684,9 @@ func checkScheduleEffects(ctx context.Context, t *store.Transaction, d *Schedule
 
 type SchedulableWorkflow struct {
 	Reference
-	Name   string            `json:"name"`
-	Source *CollectionSource `json:"source,omitempty"`
+	Name       string               `json:"name"`
+	Source     *CollectionSource    `json:"source,omitempty"`
+	Processing *ScheduledProcessing `json:"processing,omitempty"`
 }
 type SchedulableWorkflowPage struct {
 	Workflows []SchedulableWorkflow `json:"workflows"`
@@ -656,15 +704,15 @@ func (s *Service) SchedulableWorkflows(ctx context.Context, scope store.Scope, a
 		return nil, e
 	}
 	defer t.Tx.Rollback(ctx)
-	rows, e := t.Tx.Query(ctx, `SELECT w.workflow_id::text,w.version,w.definition_hash,w.definition->>'name',w.definition->'source' FROM workflow_revisions w WHERE w.actor_id=$1 AND (NOT (w.definition ? 'source') OR w.definition->'source'->>'completion_contract'='immutable-files-sha256-scheduled-manifest-v1') AND w.state='approved' AND w.approval_authority=$2 AND ($3='' OR w.workflow_id>nullif($3,'')::uuid) AND w.version=(SELECT max(v.version) FROM workflow_revisions v WHERE v.actor_id=$1 AND v.workflow_id=w.workflow_id AND v.state='approved' AND v.approval_authority=$2) ORDER BY w.workflow_id LIMIT $4`, t.Actor, t.AuthorityRevision, after, limit+1)
+	rows, e := t.Tx.Query(ctx, `SELECT w.workflow_id::text,w.version,w.definition_hash,w.definition->>'name',w.definition->'source',w.definition FROM workflow_revisions w WHERE w.actor_id=$1 AND (NOT (w.definition ? 'source') OR w.definition->'source'->>'completion_contract'='immutable-files-sha256-scheduled-manifest-v1') AND w.state='approved' AND w.approval_authority=$2 AND ($3='' OR w.workflow_id>nullif($3,'')::uuid) AND w.version=(SELECT max(v.version) FROM workflow_revisions v WHERE v.actor_id=$1 AND v.workflow_id=w.workflow_id AND v.state='approved' AND v.approval_authority=$2) AND (w.definition->>'schema_version'<>'3' OR w.version=(SELECT max(latest.version) FROM workflow_revisions latest WHERE latest.actor_id=$1 AND latest.workflow_id=w.workflow_id)) ORDER BY w.workflow_id LIMIT $4`, t.Actor, t.AuthorityRevision, after, limit+1)
 	if e != nil {
 		return nil, e
 	}
 	out := &SchedulableWorkflowPage{Workflows: []SchedulableWorkflow{}}
 	for rows.Next() {
 		var w SchedulableWorkflow
-		var source []byte
-		if e = rows.Scan(&w.ID, &w.Version, &w.Hash, &w.Name, &source); e != nil {
+		var source, raw []byte
+		if e = rows.Scan(&w.ID, &w.Version, &w.Hash, &w.Name, &source, &raw); e != nil {
 			rows.Close()
 			return nil, e
 		}
@@ -673,6 +721,28 @@ func (s *Service) SchedulableWorkflows(ctx context.Context, scope store.Scope, a
 			if Decode(source, w.Source) != nil || normalizeCollectionSource(*w.Source) != nil || w.Source.Contract != ScheduledCollectionContract {
 				rows.Close()
 				return nil, store.ErrState
+			}
+		}
+		var declared Definition
+		if Decode(raw, &declared) != nil {
+			rows.Close()
+			return nil, store.ErrIsolation
+		}
+		if declared.Schema == 3 {
+			normalized, err := Normalize(declared)
+			if err != nil {
+				rows.Close()
+				return nil, err
+			}
+			_, hash, _ := digest(normalized)
+			if hash != w.Hash {
+				rows.Close()
+				return nil, store.ErrIsolation
+			}
+			w.Processing, e = processingScheduleBinding(&normalized, ScheduleSourceSelection{Kind: ProcessingScheduleSource, Directory: "/", Pattern: "*"})
+			if e != nil {
+				rows.Close()
+				return nil, e
 			}
 		}
 		if len(out.Workflows) == limit {

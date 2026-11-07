@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"github.com/ctlplne/freightctl/internal/checks"
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/custody"
 	"github.com/ctlplne/freightctl/internal/store"
@@ -47,7 +48,7 @@ func runSchedule(ctx context.Context, command string, o scheduleCLIOptions) erro
 		defer disk.Close()
 		c.Disk = disk
 	}
-	service := &workflow.Service{Custody: c}
+	service := &workflow.Service{Custody: c, Processor: &checks.Service{Custody: c}}
 	decode := func(target any) error {
 		f, e := os.Open(o.Input)
 		if e != nil {
@@ -180,10 +181,24 @@ func scheduleWorker(ctx context.Context, service *workflow.Service, scope store.
 					continue
 				}
 				stepID := ""
-				for _, step := range runStatus.Steps {
-					if step.State != "succeeded" {
-						stepID = step.ID
-						break
+				if runStatus.Processing != nil {
+					var wait string
+					stepID, wait, e = processingScheduleWork(runStatus.Processing)
+					if e != nil {
+						return e
+					}
+					if wait != "" {
+						if e = reportWait(wait); e != nil {
+							return e
+						}
+						continue
+					}
+				} else {
+					for _, step := range runStatus.Steps {
+						if step.State != "succeeded" {
+							stepID = step.ID
+							break
+						}
 					}
 				}
 				if stepID == "" {

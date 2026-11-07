@@ -58,7 +58,7 @@ func projectionWorkflowCurrent(ctx context.Context, t *store.Transaction, d Proj
 	if r.WorkflowID != b.WorkflowID || r.WorkflowVersion != b.Version || r.WorkflowHash != b.Hash || r.FileID != d.Plan.Context.Source.File.ID || r.Root != t.Root || r.Authority != t.AuthorityRevision || r.StorageID != d.Plan.Context.StorageID || r.State == "cancelled" {
 		return store.ErrRevision
 	}
-	return nil
+	return t.CheckScheduleBinding(ctx, r.ID)
 }
 func (s *Service) ValidateProcessing(ctx context.Context, t *store.Transaction, task workflow.ProcessingTask, file string) (json.RawMessage, error) {
 	view, err := s.processingProjectionPlan(ctx, t, file, task, false)
@@ -122,6 +122,9 @@ func (s *Service) StageProcessing(ctx context.Context, t *store.Transaction, run
 	return r, nil
 }
 func (s *Service) ObserveProcessing(ctx context.Context, t *store.Transaction, run *store.WorkflowRun, b store.WorkflowProcessing) (*workflow.ProcessingObservation, error) {
+	if err := t.ScheduleLock(ctx, false); err != nil {
+		return nil, err
+	}
 	if err := projectionActionAuthority(t, ScopedProjectionProfile, ""); err != nil {
 		return nil, err
 	}

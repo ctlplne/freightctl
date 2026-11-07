@@ -176,6 +176,10 @@ function App() {
   const [folder, setFolder] = useState("/"),
     [files, setFiles] = useState<EntryPage>({ entries: [] }),
     [fileAfter, setFileAfter] = useState("");
+  const [processingRequest, setProcessingRequest] = useState<{
+    id: string;
+    stamp: string;
+  } | null>(null);
   const [sendSource, setSendSource] = useState<{
     id: string;
     context: string;
@@ -1057,6 +1061,9 @@ function App() {
                   refresh={refresh}
                   onError={reportError}
                   onOutput={(id) => void inspect(id)}
+                  {...(processingRequest?.stamp === processingStamp(session)
+                    ? { requestedRun: processingRequest.id }
+                    : {})}
                 />
               </div>
             )}
@@ -1171,6 +1178,10 @@ function App() {
                 session={session}
                 refresh={refresh}
                 onError={reportError}
+                onProcessingRun={(id) => {
+                  setProcessingRequest({ id, stamp: processingStamp(session) });
+                  setTab("processing");
+                }}
               />
             )}
             {tab === "approvals" &&

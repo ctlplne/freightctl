@@ -259,7 +259,9 @@
         "docs/qualification/evidence/F189-output-policy-browser-administration.json",
         "docs/qualification/evidence/F190-output-selection-terminal-ci.json",
         "docs/qualification/evidence/F191-produced-source-composition.json",
-        "docs/qualification/evidence/F192-output-admin-terminal-ci.json"
+        "docs/qualification/evidence/F192-output-admin-terminal-ci.json",
+        "docs/qualification/evidence/F193-owned-processing-calendars.json",
+        "docs/qualification/evidence/F194-composition-terminal-ci.json"
       ],
       "remaining_details": [
         "F007/F008 verify bounded leased/fenced SFTP intents and typed ordered workflow runs with registered connection versions, conservative ambiguity, same-step dispatch replay across restart, and queued cancellation. Finish unattended/fair scheduling, broader processing/conditions/loops/batches, active cancellation/rebinding, overlapping key rotations, receiver business contracts, remote quotas/retention/cleanup and distributed failures.",
@@ -376,7 +378,9 @@
         "docs/qualification/evidence/F189-output-policy-browser-administration.json",
         "docs/qualification/evidence/F190-output-selection-terminal-ci.json",
         "docs/qualification/evidence/F191-produced-source-composition.json",
-        "docs/qualification/evidence/F192-output-admin-terminal-ci.json"
+        "docs/qualification/evidence/F192-output-admin-terminal-ci.json",
+        "docs/qualification/evidence/F193-owned-processing-calendars.json",
+        "docs/qualification/evidence/F194-composition-terminal-ci.json"
       ],
       "remaining_details": [
         "F008 supplies shared CLI/HTTPS typed workflow drafts, offline validation/preview, version diff, explicit approval/revocation and atomic ordered SFTP runs without any inference dependency. First real private-model proposal/diagnosis, model-disabled replay after that integration, other task types, visual UI, adversarial/disclosure evaluations and two qualified profiles remain mandatory.",
@@ -638,7 +642,9 @@
         "docs/qualification/evidence/F189-output-policy-browser-administration.json",
         "docs/qualification/evidence/F190-output-selection-terminal-ci.json",
         "docs/qualification/evidence/F191-produced-source-composition.json",
-        "docs/qualification/evidence/F192-output-admin-terminal-ci.json"
+        "docs/qualification/evidence/F192-output-admin-terminal-ci.json",
+        "docs/qualification/evidence/F193-owned-processing-calendars.json",
+        "docs/qualification/evidence/F194-composition-terminal-ci.json"
       ],
       "remaining_details": [
         "F010 verifies durable held intake for configured new revisions, exact CSV contracts, separate hash/revision-bound release and ordinary delivery of released bytes. Antivirus/ICAP/DLP, cryptographic signatures/encryption, other formats/transforms, re-scan/exception governance, retrospective policy and the complete business-file journey remain mandatory.",
@@ -781,7 +787,9 @@
         "docs/qualification/evidence/F189-output-policy-browser-administration.json",
         "docs/qualification/evidence/F190-output-selection-terminal-ci.json",
         "docs/qualification/evidence/F191-produced-source-composition.json",
-        "docs/qualification/evidence/F192-output-admin-terminal-ci.json"
+        "docs/qualification/evidence/F192-output-admin-terminal-ci.json",
+        "docs/qualification/evidence/F193-owned-processing-calendars.json",
+        "docs/qualification/evidence/F194-composition-terminal-ci.json"
       ],
       "remaining_details": [
         "S002 clarifies S001: the trstctl suite and general credential/trust control plane remain excluded, while an optional real Trust Control provider integration is planned alongside customer-managed credentials. Pin and qualify the actual provider contract under X07/AX08; preserve independent core operation and all transfer-scoped security gates.",
@@ -1119,7 +1127,9 @@
         "docs/qualification/evidence/F189-output-policy-browser-administration.json",
         "docs/qualification/evidence/F190-output-selection-terminal-ci.json",
         "docs/qualification/evidence/F191-produced-source-composition.json",
-        "docs/qualification/evidence/F192-output-admin-terminal-ci.json"
+        "docs/qualification/evidence/F192-output-admin-terminal-ci.json",
+        "docs/qualification/evidence/F193-owned-processing-calendars.json",
+        "docs/qualification/evidence/F194-composition-terminal-ci.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -1155,14 +1165,15 @@
         "F185 implements producer-bound plan/intent3 and generated-acceptance6 through held checking,separate release and private-rule-free current status. Focused review,public-audit privacy (observed producer/nested-receipt red),browser and affected static/build/metadata checks pass. Repeated CSV ingress/held JSON/release/revocation/public-status/privacy PostgreSQL and served HTTPS cases are prepared/compiled only. Native protected/CLI/Chrome/final-source proof and browser registration/selection,composition/scheduling/delegation remain owed. F184/F186 retain original terminal17/37 batches with listed security checks passed and application failures red for FINISH.",
         "F187 adds explicit producer-output selection through browser/API/CLI/Catalog38-v16 read-only MCP. Focused source/query/schema and11 frontend contracts plus affected static/type/build/workflow checks pass. Actual PostgreSQL,verified HTTPS,public CLI,stock SDK and separate six-audit Chrome producer profile are prepared/compiled only;the original five-audit/default profile remains. F188 retains0391ae8 original terminal17 workflows/37 jobs;listed security checks pass,application failures stay red for FINISH. Browser registration,composition/scheduling/delegation,protected output and full native/final-source/baseline/AX remain owed.",
         "F189 adds root-only browser output-contract registration/version/revocation,complete rule review,exact-key recovery and original/current separation. Three command/receipt and two affected metadata cases plus type/build/workflow checks pass. Real Chrome administrator without workflow/byte roles,stock-curl committed reply loss,reload/recovery/revocation,four WCAG audits and exact no-byte/effect counts are prepared/compiled only. F190 retains5c8aa2b original terminal17/37 with listed security passes and original application failures red. Composition/scheduling/delegation,protected/independent receiver and full native/final-source/baseline/AX/FINISH remain owed.",
-        "F191 implements explicit checked-output composition;see its exact red/green/native-owed manifest. Automatic chains/scheduling,delegation,protected/CLI/native/final-source and full baseline/AX/FINISH remain owed. F192 retains259645e terminal16/35;listed security passed,original application failures red."
+        "F191 implements explicit checked-output composition;see its exact red/green/native-owed manifest. Automatic chains/scheduling,delegation,protected/CLI/native/final-source and full baseline/AX/FINISH remain owed. F192 retains259645e terminal16/35;listed security passed,original application failures red.",
+        "F193 adds explicit owned released-record processing calendars;see exact red/green/native-owed manifest. Root calendar controls remain;automatic chains,third-party delegation,confined-root scheduling,protected/native/Chrome/restore/final-source and full baseline/AX/FINISH stay owed. F194 retains39301e4 terminal17/37,listed security passes and red application failures."
       ],
       "current_item": {
-        "id": "F191",
-        "state": "Exact checked producer output can feed a separately approved task;native outcomes owed",
-        "proof": "Observed missing lineage/review and unsupported v3 browser red;focused Go/11 frontend/metadata stand-ins and affected static checks green",
-        "native": "PostgreSQL two-task bytes/replay/revocation/SQL refusals,verified HTTPS,stock MCP and seven-audit Chrome prepared/compiled only",
-        "next": "Automatic composition/scheduling,third-party delegation,protected processing and all baseline/AX/FINISH"
+        "id": "F193",
+        "state": "Owned released inputs can queue exact approved processing tasks under reviewed calendars;native outcomes owed",
+        "proof": "Observed missing schedule/worker contract,private-receipt disclosure and unsupported browser schema red;focused Go/20 frontend/canonical/metadata and static checks green",
+        "native": "No-delivery PostgreSQL atomic/replay/unchanged-input/suspension/deadline,verified HTTPS and actual CLI profiles prepared/compiled only;served Chrome schedule proof owed",
+        "next": "Third-party delegation,automatic multi-task chains,scoped calendars,protected processing and full baseline/AX/FINISH"
       }
     }
   ],

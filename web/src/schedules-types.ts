@@ -16,6 +16,10 @@ import {
   type RoutingSource,
 } from "./programs-types";
 import { ApiError, object, uuid } from "./types";
+import {
+  processingDefinition,
+  type ProcessingDefinition,
+} from "./processing-types";
 import { digestBytes } from "./crypto";
 import {
   asFTPSConnectionProof,
@@ -55,7 +59,7 @@ export interface SourceSelection {
   directory: string;
   filename_pattern: string;
   recursive: boolean;
-  kind?: "sftp.collect" | "ftps.collect";
+  kind?: "sftp.collect" | "ftps.collect" | "owned_released_records";
 }
 export interface ArrivalSelection {
   late_after_seconds: number;
@@ -96,7 +100,7 @@ export interface ScheduleEffect {
   ftps?: FTPSConnectionProof;
 }
 export interface ScheduleDefinition {
-  schema_version: 1;
+  schema_version: 1 | 2;
   name: string;
   workflow: Reference;
   source: SourceSelection & { filename_regex: string };
@@ -112,6 +116,29 @@ export interface ScheduleDefinition {
   namespace_root: "/";
   effects: ScheduleEffect[];
   collection?: ScheduleCollection;
+  processing?: ScheduledProcessing;
+}
+export interface ScheduledProcessing {
+  profile: "owned-record-processing-schedule-v1";
+  task: ProcessingDefinition["processing"];
+}
+function scheduledProcessing(value: unknown): ScheduledProcessing {
+  const o = object(value);
+  if (
+    o.profile !== "owned-record-processing-schedule-v1" ||
+    Object.keys(o).sort().join(",") !== "profile,task"
+  )
+    bad();
+  const definition = processingDefinition({
+    schema_version: 3,
+    name: "Scheduled processing task",
+    steps: [],
+    processing: o.task,
+  });
+  return {
+    profile: "owned-record-processing-schedule-v1",
+    task: definition.processing,
+  };
 }
 export interface ScheduleSummary {
   id: string;
@@ -459,6 +486,7 @@ export function asArrivalSelection(
 }
 export function asScheduleDefinition(v: unknown): ScheduleDefinition {
   const o = object(v),
+    processing = o.schema_version === 2,
     source = object(o.source),
     pattern = str(source, "filename_pattern", 160),
     remote = source.kind === "sftp.collect" || source.kind === "ftps.collect",
@@ -470,11 +498,14 @@ export function asScheduleDefinition(v: unknown): ScheduleDefinition {
         ) +
         "$";
   if (
-    o.schema_version !== 1 ||
+    (!processing && o.schema_version !== 1) ||
+    processing !== (o.processing !== undefined) ||
     o.namespace_root !== "/" ||
     (remote
       ? source.recursive !== false
-      : source.kind !== undefined ||
+      : (processing
+          ? source.kind !== "owned_released_records"
+          : source.kind !== undefined) ||
         !/^[-A-Za-z0-9._*?]{1,128}$/.test(pattern)) ||
     source.filename_regex !== regex ||
     !["skip", "latest", "all"].includes(String(o.missed_run_policy))
@@ -482,7 +513,9 @@ export function asScheduleDefinition(v: unknown): ScheduleDefinition {
     bad();
   const effects = arr(o.effects, 16).map(effect);
   if (
-    (!remote && !effects.length) ||
+    (!remote && !processing && !effects.length) ||
+    (processing &&
+      (remote || effects.length !== 0 || o.collection !== undefined)) ||
     new Set(effects.map((e) => e.step_id)).size !== effects.length
   )
     bad();
@@ -495,14 +528,18 @@ export function asScheduleDefinition(v: unknown): ScheduleDefinition {
       bad();
   }
   const d: ScheduleDefinition = {
-    schema_version: 1,
+    schema_version: processing ? 2 : 1,
     name: str(o, "name"),
     workflow: reference(o.workflow),
     source: {
       directory: canonicalPath(str(source, "directory", 4096)),
       filename_pattern: pattern,
       recursive: bool(source, "recursive"),
-      ...(remote ? { kind: source.kind as CollectionSource["kind"] } : {}),
+      ...(processing
+        ? { kind: "owned_released_records" as const }
+        : remote
+          ? { kind: source.kind as CollectionSource["kind"] }
+          : {}),
       filename_regex: regex,
     },
     calendar: calendar(o.calendar),
@@ -540,6 +577,7 @@ export function asScheduleDefinition(v: unknown): ScheduleDefinition {
       bad();
     d.collection = { source: input, source_connection: connection, arrival };
   } else if (o.collection !== undefined) bad();
+  if (processing) d.processing = scheduledProcessing(o.processing);
   if (
     d.late_start_grace_seconds > d.execution_deadline_seconds ||
     canonicalWorkflowBytes(d).length > 24 * 1024
@@ -866,19 +904,28 @@ export function asScheduleTick(
     external_contact: false,
   };
 }
+export type SchedulableWorkflow = Reference & {
+  name: string;
+  source?: CollectionSource;
+  processing?: ScheduledProcessing;
+};
 export function asSchedulableWorkflows(v: unknown): {
-  workflows: (Reference & { name: string; source?: CollectionSource })[];
+  workflows: SchedulableWorkflow[];
   next?: string;
 } {
   const o = object(v),
     list = arr(o.workflows, 100).map((v) => {
       const r = object(v);
+      if (r.source !== undefined && r.processing !== undefined) bad();
       return {
         ...reference(r),
         name: str(r, "name"),
         ...(r.source === undefined
           ? {}
           : { source: asCollectionSource(r.source) }),
+        ...(r.processing === undefined
+          ? {}
+          : { processing: scheduledProcessing(r.processing) }),
       };
     });
   if (new Set(list.map((r) => r.id)).size !== list.length) bad();

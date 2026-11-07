@@ -3,6 +3,7 @@
 package api
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
@@ -10,6 +11,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/ctlplne/freightctl/internal/calendar"
 	"github.com/ctlplne/freightctl/internal/checks"
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/custody"
@@ -29,15 +31,27 @@ func TestComposedProducerProjectionHTTPSRequiresFreshChecksAndNewApprovalWithout
 	processingWorkflowHTTPSProfile(t, true, true)
 }
 
+func TestProcessingScheduleHTTPSNoDeliveryGrantQueuesOrdinaryHeldTaskWithExactReplay(t *testing.T) {
+	processingWorkflowHTTPSScenario(t, true, false, true)
+}
+
 func processingWorkflowHTTPS(t *testing.T, producerBound bool) {
 	processingWorkflowHTTPSProfile(t, producerBound, false)
 }
 
 func processingWorkflowHTTPSProfile(t *testing.T, producerBound, composed bool) {
+	processingWorkflowHTTPSScenario(t, producerBound, composed, false)
+}
+
+func processingWorkflowHTTPSScenario(t *testing.T, producerBound, composed, scheduled bool) {
 	service, manager, admin, server := browserAPI(t, 600*time.Second, custody.ExchangeSettings{MaxLifetime: time.Hour, MaxSenders: 16, MaxOpenViews: 128, MaxEndpoints: 16})
 	cookie, csrf := loginBrowser(t, server, manager, admin)
 	prefix := "/v1/tenants/" + manager.Tenant + "/partners/" + manager.Partner
-	token, participant := exchangeAPIParticipant(t, server, prefix, cookie, csrf, []string{"read", "write", "check_run", "workflow_manage", "workflow_approve", "workflow_execute"})
+	permissions := []string{"read", "write", "check_run", "workflow_manage", "workflow_approve", "workflow_execute"}
+	if scheduled {
+		permissions = append(permissions, "list", "check_release")
+	}
+	token, participant := exchangeAPIParticipant(t, server, prefix, cookie, csrf, permissions)
 	actor := store.Scope{Tenant: manager.Tenant, Partner: manager.Partner, TokenHash: secure.Digest(token.Bytes)}
 	ctx := context.Background()
 	control := &checks.Service{Custody: service}
@@ -54,12 +68,35 @@ func processingWorkflowHTTPSProfile(t *testing.T, producerBound, composed bool) 
 		t.Fatal("input policy")
 	}
 	body := "account\n0001\n"
-	source, _, err := service.Accept(ctx, actor, "wf-input", int64(len(body)), secure.Digest([]byte(body)), strings.NewReader(body))
+	var source *store.File
+	if scheduled {
+		mode := uint32(0777)
+		if _, err = service.PathCommand(ctx, manager, "served-calendar-folder", store.PathCommand{Operation: "mkdir", Path: "/incoming", Mode: &mode}); err != nil {
+			t.Fatal(err)
+		}
+		source, _, err = service.AcceptAt(ctx, actor, "wf-input", int64(len(body)), secure.Digest([]byte(body)), strings.NewReader(body), custody.UploadTarget{Path: "/incoming/settlement.csv"})
+	} else {
+		source, _, err = service.Accept(ctx, actor, "wf-input", int64(len(body)), secure.Digest([]byte(body)), strings.NewReader(body))
+	}
 	if err != nil {
 		t.Fatal(err)
 	}
 	if _, err = control.Run(ctx, actor, source.ID, "wf-check-input"); err != nil {
 		t.Fatal(err)
+	}
+	if scheduled {
+		tx, err := service.DB.Begin(ctx, actor)
+		if err != nil {
+			t.Fatal(err)
+		}
+		check, err := tx.FileCheck(ctx, source.ID, false)
+		tx.Tx.Rollback(ctx)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if _, err = control.Release(ctx, actor, source.ID, "served-calendar-source-release", checks.ReleaseDecision{SHA256: source.SHA256, PolicyHash: check.PolicyHash, ReportHash: check.ReportHash, Revision: check.Revision}); err != nil {
+			t.Fatal(err)
+		}
 	}
 	output := policy
 	output.Schema = 2
@@ -117,11 +154,53 @@ func processingWorkflowHTTPSProfile(t *testing.T, producerBound, composed bool) 
 	_, _ = exchangeAPIRequest(t, server, "POST", prefix+"/workflow-runs", nil, map[string]string{"Authorization": "Bearer " + string(token.Bytes), "Idempotency-Key": "wf-unapproved"}, exchangeAPIJSON(t, request), 409)
 	call("/workflows/"+cfg.ID+"/1/approve", "wf-approve", workflow.Decision{Hash: cfg.Hash, Revision: cfg.Revision})
 	var created workflow.Result
-	if json.Unmarshal(call("/workflow-runs", "wf-run", request), &created) != nil {
+	var run store.WorkflowRun
+	if scheduled {
+		due := time.Now().UTC().Truncate(time.Second).Add(2 * time.Second)
+		x := workflow.ScheduleSelection{Name: "HTTPS owned processing calendar", Workflow: request.Workflow, Source: workflow.ScheduleSourceSelection{Kind: workflow.ProcessingScheduleSource, Directory: "/incoming", Pattern: "*.csv"}, Calendar: calendar.Selection{Zone: "UTC", Start: due, End: due.Add(time.Minute), Times: []string{due.Format("15:04:05")}, Weekdays: []int{0, 1, 2, 3, 4, 5, 6}, Holidays: []string{}, Gap: "skip", Fold: "both"}, Missed: "all", CatchUp: 1, MaxActive: 1, MaxFiles: 1, Deadline: 30, Grace: 1, ExpectedAuthority: participant.AuthorityRevision}
+		var preview workflow.SchedulePreview
+		if json.Unmarshal(call("/workflow-schedules/preview", "served-calendar-preview", x), &preview) != nil || preview.Definition.Processing == nil || len(preview.Effects) != 0 {
+			t.Fatal("served calendar preview")
+		}
+		var drafted workflow.Result
+		if json.Unmarshal(call("/workflow-schedules/drafts", "served-calendar-draft", workflow.ScheduleDraftRequest{Selection: x, Hash: preview.Hash}), &drafted) != nil {
+			t.Fatal("served calendar draft envelope")
+		}
+		var record workflow.ScheduleResource
+		if json.Unmarshal(drafted.Resource, &record) != nil || record.Profile != "owned-record-processing-schedule-v1" {
+			t.Fatal("served calendar draft")
+		}
+		path := "/workflow-schedules/" + record.Schedule.ID + "/1"
+		call(path+"/activate", "served-calendar-activate", workflow.Decision{Hash: record.Schedule.Hash, Revision: record.Schedule.Revision})
+		timer := time.NewTimer(time.Until(due.Add(30 * time.Millisecond)))
+		defer timer.Stop()
+		select {
+		case <-timer.C:
+		case <-t.Context().Done():
+			t.Fatal(t.Context().Err())
+		}
+		first := call(path+"/tick", "served-calendar-tick", workflow.ScheduleTickRequest{Limit: 1})
+		var tick workflow.Result
+		if json.Unmarshal(first, &tick) != nil {
+			t.Fatal("served tick envelope")
+		}
+		var value workflow.ScheduleTickResult
+		if json.Unmarshal(tick.Resource, &value) != nil || len(value.RunIDs) != 1 || value.ExternalContact {
+			t.Fatal("served processing claim")
+		}
+		var replay workflow.Result
+		if json.Unmarshal(call(path+"/tick", "served-calendar-tick", workflow.ScheduleTickRequest{Limit: 1}), &replay) != nil || !bytes.Equal(tick.Resource, replay.Resource) {
+			t.Fatal("served tick replay changed claim")
+		}
+		view, err := (&workflow.Service{Custody: service, Processor: control}).Status(ctx, actor, value.RunIDs[0])
+		if err != nil {
+			t.Fatal(err)
+		}
+		run = *view.Run
+	} else if json.Unmarshal(call("/workflow-runs", "wf-run", request), &created) != nil {
 		t.Fatal("run envelope")
 	}
-	var run store.WorkflowRun
-	if json.Unmarshal(created.Resource, &run) != nil {
+	if !scheduled && json.Unmarshal(created.Resource, &run) != nil {
 		t.Fatal("run receipt")
 	}
 	var result workflow.WorkResult

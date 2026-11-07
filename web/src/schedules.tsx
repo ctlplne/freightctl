@@ -8,6 +8,7 @@ import {
 } from "./collections-types";
 import { PlanReview } from "./programs";
 import { ScheduleArrival } from "./schedule-arrivals";
+import { ProcessingTaskReview } from "./processing-task-review";
 import { Api } from "./api";
 import { ApiError, type Session } from "./types";
 import { operationKey } from "./crypto";
@@ -33,12 +34,14 @@ import {
   type ScheduleSummary,
   type ScheduleView,
   type ScheduledRun,
+  type SchedulableWorkflow,
 } from "./schedules-types";
 type Props = {
   api: Api;
   session: Session;
   refresh: number;
   onError: (e: unknown) => void;
+  onProcessingRun?: (id: string) => void;
 };
 type Form = {
   name: string;
@@ -132,6 +135,25 @@ function Field({
   );
 }
 function Effects({ d }: { d: ScheduleDefinition }) {
+  if (d.processing)
+    return (
+      <>
+        <p>
+          This calendar selects owned, released record inputs. Each occurrence
+          records a separate processing intent under this exact approved task.
+          Outputs remain held for fresh checks and a separate release. No
+          delivery permission is granted.
+        </p>
+        <ProcessingTaskReview
+          definition={{
+            schema_version: 3,
+            name: "Exact scheduled processing task",
+            steps: [],
+            processing: d.processing.task,
+          }}
+        />
+      </>
+    );
   return (
     <ul>
       {d.effects.map((e) => (
@@ -204,8 +226,8 @@ function Definition({ d }: { d: ScheduleDefinition }) {
         {d.execution_deadline_seconds}s after each due time. Up to{" "}
         {d.max_catch_up} due decisions per request, {d.max_active_runs} current
         active runs, {d.max_files_per_occurrence} files per occurrence. The
-        cutoff stops new sender authorization; it does not prove business
-        acceptance by a deadline.
+        cutoff stops new scheduled processing or delivery effects. Outcomes
+        retain the receipt contract of their exact task.
       </p>
       {d.collection && (
         <p>
@@ -232,7 +254,13 @@ function Definition({ d }: { d: ScheduleDefinition }) {
     </>
   );
 }
-export function Schedules({ api, session, refresh, onError }: Props) {
+export function Schedules({
+  api,
+  session,
+  refresh,
+  onError,
+  onProcessingRun,
+}: Props) {
   const grants = session.identity.permissions,
     has = (g: string) => grants.includes(g),
     canDraft = has("workflow_manage") && has("list") && has("read"),
@@ -243,9 +271,7 @@ export function Schedules({ api, session, refresh, onError }: Props) {
     [choices, setChoices] = useState<ReturnType<typeof asSchedulableWorkflows>>(
       { workflows: [] },
     ),
-    [workflow, setWorkflow] = useState<
-      (Reference & { name: string; source?: CollectionSource }) | null
-    >(null),
+    [workflow, setWorkflow] = useState<SchedulableWorkflow | null>(null),
     [family, setFamily] = useState<{ id: string; version: number } | null>(
       null,
     ),
@@ -341,7 +367,11 @@ export function Schedules({ api, session, refresh, onError }: Props) {
         directory: form.source,
         filename_pattern: form.pattern,
         recursive: workflow.source ? false : form.recursive,
-        ...(workflow.source ? { kind: workflow.source.kind } : {}),
+        ...(workflow.processing
+          ? { kind: "owned_released_records" as const }
+          : workflow.source
+            ? { kind: workflow.source.kind }
+            : {}),
       },
       calendar: {
         time_zone: form.zone,
@@ -397,6 +427,7 @@ export function Schedules({ api, session, refresh, onError }: Props) {
       ...d.workflow,
       name: "Previously selected workflow",
       ...(d.collection ? { source: d.collection.source } : {}),
+      ...(d.processing ? { processing: d.processing } : {}),
     });
     setForm({
       name: d.name,
@@ -564,6 +595,12 @@ export function Schedules({ api, session, refresh, onError }: Props) {
       d = v.schedule.definition;
       setSelected(v);
     }
+    if (d.processing) {
+      if (!onProcessingRun)
+        throw new ApiError("processing_inspection_unavailable", 409);
+      onProcessingRun(i.run_id);
+      return;
+    }
     const wf = await api.request(
       `${api.prefix}/workflows/${d.workflow.id}/${d.workflow.version}`,
       {},
@@ -589,9 +626,9 @@ export function Schedules({ api, session, refresh, onError }: Props) {
       <p>
         Queue complete published file revisions on a reviewed calendar. Each
         file revision is claimed once per schedule, including across
-        configuration versions. Previewing, saving and queuing metadata do not
-        contact the receiver. A separately started worker can execute approved
-        work through the normal transfer checks.
+        configuration versions. Previewing, saving and queuing record control
+        metadata. A separately started worker uses the exact approved task and
+        its ordinary processing or delivery guards.
       </p>
       {notice && <p role="status">{notice}</p>}
       {canDraft && (
@@ -1049,7 +1086,7 @@ export function Schedules({ api, session, refresh, onError }: Props) {
             runs: {selected.active_runs}.{" "}
             {selected.current_authority
               ? "Current schedule authority matches this account."
-              : "This revision is not current sending authority."}
+              : "Current authorization does not match this schedule revision."}
           </p>
           <Definition d={selected.schedule.definition} />
           <details className="schedule-references">
@@ -1274,9 +1311,13 @@ export function Schedules({ api, session, refresh, onError }: Props) {
           ) : pending.kind === "control" ? (
             <>
               <p>
-                {pending.action === "activate"
-                  ? "Activation allows a separately started worker to claim future matching published revisions under this exact definition. It suspends the previous active version. Existing claims and queued intent meanings remain unchanged; their old authority cannot authorize a new send."
-                  : "This stops future sending under this version. Existing bytes and receipts remain intact; it cannot recall receiver bytes."}
+                {pending.definition.processing
+                  ? pending.action === "activate"
+                    ? "Activation allows a separately started worker to select owned released inputs under this exact approved task. It suspends the previous active version. Each output needs fresh checks and separate release."
+                    : "This stops future processing under this calendar version. Existing artifacts remain in custody and receipts retain their recorded meaning."
+                  : pending.action === "activate"
+                    ? "Activation allows a separately started worker to claim future matching published revisions under this exact definition. It suspends the previous active version. Existing claims and queued intent meanings remain unchanged; their old authority cannot authorize a new send."
+                    : "This stops future sending under this version. Existing bytes and receipts remain intact; it cannot recall receiver bytes."}
               </p>
               <p>
                 Schedule <code>{pending.schedule.id}</code>, version{" "}

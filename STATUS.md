@@ -4,13 +4,14 @@ Updated 2026-11-07. Active under owner resume. All83 whole parity rows,twelve
 complete journeys and AX01–AX08 remain open. Assisted deployment,independent
 adoption and enterprise readiness remain unqualified.
 
-Latest pushed source before this batch:259645ee532aa9272de46a27339ff0c4c3846dfc.
-F192 preserves its16 original triggered terminal workflows/35 jobs. Listed
-source,dependency,history-secret and native peer-image security gates passed;
-module verification passed in both failed Linux unit jobs. Original application,
-platform,metadata,qualification-record and public/browser/stock failures remain
-red. No originals were cancelled,restarted or substituted. Nonsecurity logs and
-repairs remain deferred to FINISH;new security failures are triaged immediately.
+Latest pushed source before this batch:39301e4d508fa638ee525105dea9083c48f73693.
+F194 preserves its17 original triggered terminal workflows/37 jobs. Listed
+source,dependency,history-secret,producer-closure and peer-image security gates
+passed;module verification passed in both failed Linux unit jobs. Document-
+producer,fuzz and native reproduction jobs passed on that candidate. Original
+application/platform/metadata/public/browser/stock failures remain red. No
+originals were cancelled,restarted or substituted. Nonsecurity logs/repairs and
+original/final-source replay remain owed at FINISH.
 
 Schema3 records.project binds an owned checked input,approved exact task,one
 durable processing intent,slots and events/receipt. Stable work keys select one
@@ -47,7 +48,7 @@ Focused contract/authentication checks,compilation/vet/architecture and metadata
 stand-ins pass. Five PostgreSQL cases,verified HTTPS and public CLI controls are
 prepared/compiled only.
 
-Source57 targets77 metadata/76 forced-RLS tables.
+Source58 targets77 metadata/76 forced-RLS tables.
 F183 adds exact output-contract selection for typed task draft/approval metadata
 and catalog observations. Root administration cannot substitute for producer
 ownership. Focused selection/catalog refusal checks pass;actual PostgreSQL and
@@ -83,11 +84,22 @@ affected frontend and metadata stand-ins plus affected static checks pass.
 PostgreSQL two-task bytes/replay/revocation/SQL refusals,verified HTTPS,stock MCP
 and separate seven-audit Chrome profiles are prepared/compiled only. Automatic
 chain scheduling,delegation,protected/CLI/restore/final-source proof remain owed.
+F193 adds explicit schema2 owned released-record calendars over exact approved
+processing tasks,without a delivery grant. Ordinary run/intent/claim/events and
+receipt are atomic;deadlines,current task/output/review/authority checks and
+existing processing admission remain enforced. CLI restart keys retain each
+attempt and completed outputs wait for separate checks/release. Browser schedule
+review includes the whole task;occurrences open the current processing controls.
+Focused Go/audit/worker,20 frontend and independent canonical/metadata stand-ins
+plus affected static checks pass. PostgreSQL/HTTPS/actual CLI profiles are
+prepared/compiled only;served Chrome schedule/recovery/accessibility,protected/
+crash/restore/final-source qualification and automatic chains/delegation remain
+owed.
 Historical profiles and retained schema35 are untouched. No local PostgreSQL,
 Chrome,model,scanner or heavy peer ran. Native compilation/stand-ins establish
 no runtime qualification. F026 stays manual/owner-deferred.
 
-Next:third-party delegation,composition/scheduling,protected processing,independent
+Next:third-party delegation,automatic multi-task composition and remaining scoped scheduling,protected processing,independent
 receivers and all remaining baseline/exchange implementation. Continue AX-J01/J02
 and every mandatory GOAL.md capability. X07 blocks only real optional Trust
 Control proof;no API is invented. Inference,licensed peers,cloud/multi-host/

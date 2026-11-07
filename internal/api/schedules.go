@@ -14,7 +14,7 @@ func (s *Server) schedule(action string) http.HandlerFunc {
 			failure(w, e)
 			return
 		}
-		service := &workflow.Service{Custody: s.Service}
+		service := &workflow.Service{Custody: s.Service, Processor: s.Checks}
 		var out any
 		version := 1
 		if text := r.PathValue("version"); text != "" {

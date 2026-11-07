@@ -27,7 +27,7 @@
     },
     {
       "path": "web/src/app.tsx",
-      "sha256": "0c203cc681ae87e075a26c1437d84fa92ceb48b65761d9f51382f2720adcdd5a"
+      "sha256": "39dbc232f1c764f91c6c96a8ccbb9a7fe6121d134b4886a10e000b131d67f7e3"
     },
     {
       "path": "web/src/arrivals-types.ts",
@@ -283,7 +283,7 @@
     },
     {
       "path": "web/src/processing.tsx",
-      "sha256": "d2514e4a2b2942f6c00051525d747aa53935d182b28d217333288754c0c95544"
+      "sha256": "c8317e2a4b003a8dfc8f494452e666de45b51d01b50cde107a82d168acdb0aa9"
     },
     {
       "path": "web/src/programs-types.ts",
@@ -311,11 +311,11 @@
     },
     {
       "path": "web/src/schedules-types.ts",
-      "sha256": "41f0aa18585ac6010c23eade758c1460346bfdbd9a5ec57b34e2aa363073b025"
+      "sha256": "9e5ddf3c5c6132fa1721ad1adfef8e5ea819feea8d524ea8d0890af2bc04f998"
     },
     {
       "path": "web/src/schedules.tsx",
-      "sha256": "8e886bc3dd797f094a31273579f88d0f8ec441aefa951bbf0e03b9af50e9f925"
+      "sha256": "102766ec9a1635cada4a4d6cb0319e64b402e77a9135cd1b0cac1f2ffa215c4d"
     },
     {
       "path": "web/src/style.css",
@@ -346,8 +346,8 @@
     },
     {
       "name": "app.js",
-      "sha256": "254de34c568e7e232808e53504a4c150033fef567b84a3c3af62a37f600a1f05",
-      "size": 882519
+      "sha256": "551a5338dab5759460b2975c2b13847ca46fff6559d28776305eb4c891960aa5",
+      "size": 884622
     },
     {
       "name": "app.js.LEGAL.txt",

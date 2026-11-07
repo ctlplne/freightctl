@@ -71,3 +71,56 @@ History and configuration are private to the owning identity as well as tenant/p
 Migration 29 adds three forced-RLS relations. Occurrence decisions, input claims, ordinary workflow/delivery intents, cursor movement, events and retry receipts commit together. A failed receipt rolls the whole admission back. SQL guards check due times against the frozen calendar, current approval, exact source and receiver bindings, deadlines and capacity. A credential change joins the sending guard; ordinary status observes metadata without acquiring that effect lock.
 
 [F037 qualification](qualification/evidence/F037-scheduled-workflows.json) records the selected assisted local journey: 111 native steps, 285 verified operation files, three browser summaries and 15 accessibility states. Thirteen new real PostgreSQL cases pass within 82 workflow cases; 62 frontend contracts and six calendar cases also pass. An interrupted worker resumes under its original lease, and uncertain receipt recovery succeeds against a stock read-only receiver after cutoff without another sending attempt. Full scheduled remote collection, folder/event trigger breadth, independent operation, native platforms, scale/endurance and the complete customer journeys remain required. The owner-deferred full replay is separate. Local inference remains off; scheduling does not require a model or scanner.
+
+## Owned record-processing calendars
+
+F193 adds schedule definition schema2 with source kind `owned_released_records`
+and a `processing` binding containing profile `owned-record-processing-schedule-v1`
+and the complete normalized `records.project` task. The exact approved workflow
+ID/version/hash still identifies that task. Existing schema1 definitions and
+hashes retain their delivery/collection meaning;an empty delivery list cannot
+silently become processing authority.
+
+This profile uses the existing root calendar controls. The actor needs list,
+read,write,check_run and workflow_execute;drafting and activation retain their
+separate workflow_manage/workflow_approve controls. It needs no deliver grant.
+The task's independent approval,when adopted,and exact current output contract
+remain live dependencies. Receiving or releasing a file does not supply them.
+Third-party authors and confined-root calendar administration remain owed.
+
+Select **Schedules**,choose an approved processing task,then review its full
+rules alongside the calendar. The source kind is explicit. Only the actor's
+own released revisions with the task's exact source-policy hash are candidates.
+Both acceptance and publication must precede the occurrence. Ordinary namespace
+permissions,current availability,source reports and signer/scanner requirements
+still apply. A claim remains unique across schedule versions. Queuing commits
+one ordinary run,processing intent,membership,input claim,events and receipt in
+one PostgreSQL transaction;it performs no byte processing or delivery itself.
+
+Processing admission uses the existing sixteen-intent queue and the declared
+calendar concurrency/file bounds. Delivery admission remains a separate path.
+The original time-zone/offset snapshot,holidays,gap/fold rules,missed-run policy,
+catch-up cursor and occurrence deadline remain unchanged. Schedule suspension,
+replacement,revocation,expired occurrences,changed credentials/task approval or
+output contracts fence subsequent processing. Calendar locks precede namespace
+and source locks during current inspection and work. New SQL guards enforce the
+same current schedule at intent transitions;old receipts retain their meaning.
+
+The ordinary `workflow-schedule-worker --execute` handles these intents through
+the processing service. A restart keeps the original running attempt's key;
+a recorded failure may advance to the next of the engine's three attempts.
+Completed outputs produce `processing_output_awaiting_checks_and_release`.
+They stay held and need fresh checks and a separately authorized exact release.
+The calendar grants no release,forwarding,receiver or execution authority over
+the output. Browser occurrence inspection opens the existing processing controls
+under the current session;pending exact-key commands cannot be replaced.
+
+F193's focused Go/worker/audit checks,twenty affected frontend cases,independent
+Go/Python/browser canonical fixture and affected static/metadata stand-ins pass.
+Native PostgreSQL without delivery rights,atomic claims/replay/unchanged inputs,
+suspension/deadline refusals,verified HTTPS and actual CLI restart/held-output
+profiles are prepared/compiled only. Actual runtime evidence and the dedicated
+served Chrome schedule/recovery/accessibility profile remain owed. Protected
+processing,crash/restore,automatic multi-task chains,reference capacity and all
+final-source/GOAL.md qualification remain owed. Source58 adds functions and a
+trigger only;77 metadata/76 forced-RLS tables and retained35 are unchanged.

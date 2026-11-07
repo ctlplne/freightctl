@@ -1,0 +1,114 @@
+{
+  "definition": {
+    "schema_version": 2,
+    "name": "Payroll <review> & transfer",
+    "workflow": {
+      "id": "00000001-1111-4111-8111-111111111111",
+      "version": 2,
+      "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "source": {
+      "directory": "/incoming",
+      "filename_pattern": "*.csv",
+      "recursive": false,
+      "kind": "owned_released_records",
+      "filename_regex": "^.*[.]csv$"
+    },
+    "calendar": {
+      "time_zone": "America/New_York",
+      "starts_at": "2024-11-03T00:00:00Z",
+      "ends_at": "2024-11-04T00:00:00Z",
+      "local_times": [
+        "01:30:00"
+      ],
+      "weekdays": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "holidays": [],
+      "gap_policy": "skip",
+      "fold_policy": "both",
+      "offset_rules": [
+        {
+          "from": "2024-11-01T00:00:00Z",
+          "until": "2024-11-03T06:00:00Z",
+          "offset_seconds": -14400,
+          "abbreviation": "EDT"
+        },
+        {
+          "from": "2024-11-03T06:00:00Z",
+          "until": "2024-11-06T00:00:00Z",
+          "offset_seconds": -18000,
+          "abbreviation": "EST"
+        }
+      ]
+    },
+    "missed_run_policy": "latest",
+    "max_catch_up": 4,
+    "max_active_runs": 2,
+    "max_files_per_occurrence": 2,
+    "execution_deadline_seconds": 3600,
+    "late_start_grace_seconds": 30,
+    "authority_revision": 1,
+    "storage_id": "00000004-1111-4111-8111-111111111111",
+    "namespace_root": "/",
+    "effects": [],
+    "processing": {
+      "profile": "owned-record-processing-schedule-v1",
+      "task": {
+        "id": "project",
+        "kind": "records.project",
+        "definition": {
+          "schema_version": 1,
+          "kind": "record_projection",
+          "engine": "freightctl-record-projection-v1",
+          "source_policy_hash": "dec94a4a74c8a32b8210ed243b5ae80676e60ed95b731f01731d8e173bf7ecaa",
+          "output_kind": "json_records",
+          "columns": [
+            {
+              "source": "amount",
+              "target": "total",
+              "conversion": "identity",
+              "missing": "preserve",
+              "null": "preserve",
+              "empty": "preserve"
+            },
+            {
+              "source": "account",
+              "target": "account",
+              "conversion": "identity",
+              "missing": "preserve",
+              "null": "preserve",
+              "empty": "preserve"
+            },
+            {
+              "source": "day",
+              "target": "day",
+              "conversion": "identity",
+              "missing": "preserve",
+              "null": "preserve",
+              "empty": "preserve"
+            }
+          ],
+          "max_bytes": 8192,
+          "max_record_bytes": 1024,
+          "max_rows": 4,
+          "timeout_seconds": 2
+        },
+        "output_policy": {
+          "id": "33333333-3333-4333-8333-333333333333",
+          "version": 2,
+          "hash": "c216f2e266eff29284ff792e5b09c801181a1d98101df3ce03e4bed0b86b02ca"
+        },
+        "target_path": "/derived.json",
+        "reason": "Map exact records for review"
+      }
+    }
+  },
+  "definition_hash": "dc14021f97a91516d9402bd2df98eb13eb276c5be99f3117a22cb36e32a52310"
+}
