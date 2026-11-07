@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "id": "F223",
+  "observed_at": "2026-11-07",
+  "base_candidate": "46d2b32baa4a9a9d5d1cb5085f884a75c8b604a5",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Ordinary exchange authority fence regression repaired;native replay owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "91916311cb0840c0bc704a2ffba915a01a1979ef986fca16adf949173acdf07f",
+      "bytes": 16209
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "8f8d7849da0a69c13943656164794de08ca6afc4e06c3916be117cae329e325e",
+      "bytes": 366088
+    },
+    {
+      "reference": "internal/store/exchange_endpoints.go",
+      "sha256": "49ac6f931088d10b048dea73f98c65968b35812567cfad2f0a1a910e79b5acbc",
+      "bytes": 10330
+    },
+    {
+      "reference": "internal/store/store.go",
+      "sha256": "c1570eab41bab93e30cc4183fd9f72659f6f1ebc56519a56be30a7c2ff7f6648",
+      "bytes": 27781
+    },
+    {
+      "reference": "internal/store/authority_read_fence_integration_test.go",
+      "sha256": "e221c902ad1b80aad705fbd5d848b6aad918ebeb1e9397fa61fad2752d4e3b5d",
+      "bytes": 3381
+    }
+  ],
+  "original_failures": [
+    {
+      "candidate": "71e8166d0bc96c574055e00f749d387e0f0b0460",
+      "run": 42352071925,
+      "job": 128342141400,
+      "url": "https://github.com/ctlplne/freightctl/actions/jobs/128342141400",
+      "observations": [
+        "Five-format received-copy and public CLI offers fail ErrIsolation after endpoint registration succeeds."
+      ]
+    },
+    {
+      "candidate": "71e8166d0bc96c574055e00f749d387e0f0b0460",
+      "run": 42352071911,
+      "job": 128342141307,
+      "url": "https://github.com/ctlplne/freightctl/actions/jobs/128342141307",
+      "observation": "HTTPS offer at artifact_exchanges_integration_test.go:126 returns503 after registration succeeds."
+    }
+  ],
+  "changed": [
+    "Replace F209's overstrict administrative-lock boolean with a call to the existing freightctl_authority_read_lock before participant metadata reads. Nil transaction still refuses isolation before touching metadata. Shared lock conflicts fail40001;registration safely reuses the matching exclusive lock in its own transaction.",
+    "Remove the obsolete in-memory management-lock marker. Preserve all tenant/partner/actor/authority/root/permission/expiry checks,read-only credential grants,forced RLS,endpoint/read/namespace locks and immutable receipts. No migration source changes.",
+    "Extend the real PostgreSQL fence case:ordinary sender participant validation must succeed and a separate runtime transaction must fail to obtain an exclusive account lock while that reader lives. Existing direct credential write/scope/conflict/registration assertions remain."
+  ],
+  "green": [
+    "Focused exchange/authority unit contracts,architecture,vet and affected integration-tag compilation -run ^$ pass."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f223-architecture.log",
+      "sha256": "c52353460cbe9cd9473c11b563364c3366fa03a573f0c4355ce67be8c280e7e9",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f223-native-compile.log",
+      "sha256": "32778dc6f6385fcf7115d02971fba2ea38c4c31c0c22148af30d368f61aaae29",
+      "bytes": 300
+    },
+    {
+      "reference": ".private/freightctl-f223-participant-fence-contracts.log",
+      "sha256": "93db6793d8126c1f03af06c0a8b8fbf324cde74cf6e42cf7dbf418312898a068",
+      "bytes": 57
+    },
+    {
+      "reference": ".private/freightctl-f223-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "owed": [
+    "Actual ordinary-reader/concurrent-account-writer fencing and original offer/recipient read/copy/CLI/security runtime repair replays.",
+    "All actual final-source native/browser/stock/security/race/restore/reproducibility and remaining baseline/AX/FINISH gates."
+  ],
+  "resources": "OneCPU/192MiB local unit/static only;no PostgreSQL,Chrome,inference,scanner or heavy peer. All60 migration bytes and retained35 unchanged."
+}

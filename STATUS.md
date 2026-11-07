@@ -92,6 +92,13 @@ the actual delivery-ID-prefixed destination and checks its recorded path,size
 and digest first. Read-only cardinality,scope refusals,byte checks and original
 receipt comparisons remain. Compile/vet pass only;actual native replay is owed.
 
+F223 repairs a regression introduced by F209:ordinary send/receive validation
+was incorrectly rejected without the account-manager lock. Participant reads
+now acquire schema60's real shared authority fence;registration reuses its
+exclusive fence. No credential writes are granted. Focused contracts,static
+checks and native compilation pass;new ordinary-reader/concurrent-writer and
+original exchange/CLI/copy repair replays remain owed.
+
 Schema3 records.project binds an owned checked input,approved exact task,one
 durable processing intent,slots and events/receipt. Stable work keys select one
 historical attempt;current status is separate. New artifacts stay held for fresh

@@ -245,15 +245,14 @@ type Event struct {
 	At         time.Time       `json:"happened_at"`
 }
 type Transaction struct {
-	Tx                      pgx.Tx
-	Scope                   Scope
-	Actor                   string
-	Permissions             []string
-	Root                    string
-	AuthorityRevision       int64
-	ExpiresAt               *time.Time
-	PendingFiles            map[string]bool
-	accountManagementLocked bool
+	Tx                pgx.Tx
+	Scope             Scope
+	Actor             string
+	Permissions       []string
+	Root              string
+	AuthorityRevision int64
+	ExpiresAt         *time.Time
+	PendingFiles      map[string]bool
 }
 
 // Connection strings are read from bounded protected references. pgx requires a string copy.
@@ -491,7 +490,7 @@ func (s *Store) beginAuthenticated(ctx context.Context, scope Scope, options pgx
 			return nil, err
 		}
 	}
-	t := &Transaction{Tx: tx, Scope: scope, accountManagementLocked: accountLock}
+	t := &Transaction{Tx: tx, Scope: scope}
 	if err = t.authenticate(ctx); err != nil {
 		return nil, err
 	}

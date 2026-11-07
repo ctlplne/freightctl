@@ -57,11 +57,28 @@ func TestAuthorityReadFenceKeepsRuntimeCredentialsReadOnlyAndAccountChangesSeria
 	if !errors.As(err, &failure) || failure.Code != "42501" {
 		t.Fatal("runtime directly updated a credential", err)
 	}
-	a, _ := endpointParticipant(t, f, []string{"read", "deliver"})
+	a, sender := endpointParticipant(t, f, []string{"read", "deliver"})
 	b, _ := endpointParticipant(t, f, []string{"read", "list"})
 	d := ExchangeEndpointDefinition{Schema: 1, Profile: "custody-https-poll-v1", Recipient: b, Senders: []ExchangeParticipant{a}}
 	created, err := f.db.RegisterExchangeEndpoint(f.ctx, f.scope, "read-only-credentials-register", ExchangeEndpointCommand{Operation: "create", ID: secure.NewID(), Definition: &d}, ExchangeLimits{MaxArtifactBytes: 1 << 20, MaxLifetime: time.Hour, MaxSenders: 16}, 2)
 	if err != nil || created.Endpoint.Revision != 1 {
 		t.Fatal("ordinary registration required forbidden credential mutation", err)
+	}
+	reader, err := f.db.Begin(f.ctx, sender)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer reader.Tx.Rollback(f.ctx)
+	if err = reader.validateExchangeEndpointParticipants(f.ctx, d); err != nil {
+		t.Fatal("ordinary participant validation required account-management lock", err)
+	}
+	writer, err := f.db.Begin(f.ctx, f.scope)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer writer.Tx.Rollback(f.ctx)
+	var exclusive bool
+	if err = writer.Tx.QueryRow(f.ctx, `SELECT pg_try_advisory_xact_lock(hashtextextended($1,0))`, f.scope.Tenant+":"+f.scope.Partner+":accounts").Scan(&exclusive); err != nil || exclusive {
+		t.Fatal("participant read did not fence a concurrent account writer", err)
 	}
 }

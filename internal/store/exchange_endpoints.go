@@ -241,11 +241,17 @@ func (t *Transaction) exchangeEndpointVersion(ctx context.Context, id string) (*
 }
 
 func (t *Transaction) validateExchangeEndpointParticipants(ctx context.Context, d ExchangeEndpointDefinition) error {
-	if !t.accountManagementLocked {
+	if t.Tx == nil {
 		return ErrIsolation
 	}
+	// Ordinary send/receive transactions need a shared authority fence, not
+	// account-management authority. Registration already owns the matching
+	// exclusive fence; the SQL function safely reuses it in that transaction.
+	if _, err := t.Tx.Exec(ctx, `SELECT freightctl_authority_read_lock($1,$2)`, t.Scope.Tenant, t.Scope.Partner); err != nil {
+		return err
+	}
 	bindings := append([]ExchangeParticipant{d.Recipient}, d.Senders...)
-	// Account-management serialization already precedes all credential reads.
+	// Credential reads cannot interleave account changes while this fence lives.
 	for i, p := range bindings {
 		if p.Tenant != t.Scope.Tenant || p.Partner != t.Scope.Partner {
 			return ErrNotFound

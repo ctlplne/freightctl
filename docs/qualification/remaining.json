@@ -1152,7 +1152,8 @@
         "docs/qualification/evidence/F215-native-fixture-scope-and-preconditions.json",
         "docs/qualification/evidence/F217-typed-processing-definition-wire.json",
         "docs/qualification/evidence/F219-first-response-stored-workflow-receipt.json",
-        "docs/qualification/evidence/F221-native-observer-root-and-delivery-path.json"
+        "docs/qualification/evidence/F221-native-observer-root-and-delivery-path.json",
+        "docs/qualification/evidence/F223-ordinary-exchange-authority-read-fence.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -1203,13 +1204,14 @@
         "F215 repairs original native fixture preconditions:workflow template exact table/RLS profile78/77,MCP ticket/receipt observation as actual owner,well-formed forged release hashes with queued-output assertions,and Origin on output-policy cookie mutations. Production RLS/CSRF/release rules and original denials remain. Compile/vet/profile conformance pass only;actual native replays owed.",
         "F217 reproduces typed Go processing preview/draft rejection under strict MCP JSON because nil Steps emitted null. A nonmutating Definition serializer emits an empty array,matching existing normalized bytes. Focused two-case red/green,typed schema/injected-authority/canonical tests,architecture/vet and integration compile pass. Strict null/schema/authority rules unchanged;actual original stock-client/native replay owed.",
         "F219 fixes the original onward exact-receipt comparison by using the existing schedule stored-receipt path for first workflow responses as well as retries;an absent freshly written receipt fails isolation. No event/receipt/intent transaction,authority or original exact comparison is weakened. Focused pure contract/fixture,architecture/vet and integration compile pass;actual original native serialization/replay remains owed.",
-        "F221 corrects original audit/onward native fixture observations:ordinary namespace creation precedes assigning the confined audit reader;FTPS receiver reads the actual delivery-ID-prefixed destination and verifies its recorded path/size/digest. Existing search immutability,confined refusal,byte checks and exact receipts remain. Compile/vet only pass;original native replays owed."
+        "F221 corrects original audit/onward native fixture observations:ordinary namespace creation precedes assigning the confined audit reader;FTPS receiver reads the actual delivery-ID-prefixed destination and verifies its recorded path/size/digest. Existing search immutability,confined refusal,byte checks and exact receipts remain. Compile/vet only pass;original native replays owed.",
+        "F223 repairs F209's overstrict lock marker:ordinary exchange send/receive must acquire a real shared account authority fence,not require account-management lock state. Registration reuses its existing exclusive fence;runtime credentials remain read-only. Original71e8166 native offer/copy/CLI isolation failures retained. Focused contracts,architecture/vet and integration compile pass;native reader/writer serialization and original repair replay owed."
       ],
       "current_item": {
-        "id": "F221",
-        "state": "Original audit root and onward destination observations corrected",
-        "proof": "Original91ed18d/run42348791097/job128332262484 not-found failures preserved;ordinary namespace/delivery evidence preconditions corrected;compile/vet pass only",
-        "next": "Triage newly reached native security failures and finish Windows/runtime/product/baseline/AX/FINISH work"
+        "id": "F223",
+        "state": "Ordinary exchange participants acquire shared authority fence",
+        "proof": "Original71e8166 native offer/copy/CLI failures reached ErrIsolation at the F209 management marker;marker removed and actual SQL shared fence precedes reads;focused/static checks pass only",
+        "next": "Original native security/protocol replay,conditional intake fixture,Windows/browser diagnostic repair and remaining product/baseline/AX/FINISH work"
       }
     }
   ],
