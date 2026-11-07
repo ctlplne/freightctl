@@ -119,7 +119,7 @@ func TestProcessingReviewNativeBrowserIndependentDecisionRecoveryAndAdoption(t *
 		Inference     bool   `json:"inference_performed"`
 		Failure       string `json:"failure_sha256"`
 	}
-	if runErr != nil || workflow.Decode(raw, &summary) != nil || summary.State != "passed" || !store.ValidID(summary.Review) || summary.Hash != cfg.Hash || summary.Requests != 2 || summary.Accessibility != 6 || summary.Egress != 0 || summary.Errors != 0 || !summary.Sandbox || summary.Inference || summary.Failure != "" {
+	if runErr != nil || workflow.Decode(raw, &summary) != nil || summary.State != "passed" || !store.ValidID(summary.Review) || summary.Hash != cfg.Hash || summary.Requests != 2 || summary.Accessibility != 7 || summary.Egress != 0 || summary.Errors != 0 || !summary.Sandbox || summary.Inference || summary.Failure != "" {
 		t.Fatalf("native independent review browser failed;safe result SHA256=%s", secure.Digest(raw))
 	}
 	current, err := wf.ProcessingReview(t.Context(), worker, summary.Review)

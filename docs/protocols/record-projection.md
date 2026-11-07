@@ -339,7 +339,7 @@ credential. Import reviews the actual referenced task configuration and never
 executes automatically; explicit confirmation retries the original request.
 Session/scope changes reject in-flight results. Existing recheck parsing still
 defaults to the root namespace; processing explicitly supplies its authorized
-root. Catalog37/exchange-tools-v14 adds schema3 validation/proposal and six
+root. Catalog38/exchange-tools-v15 includes schema3 validation/proposal and six
 metadata/control tools, with ordinary approval/release kept separate.
 
 F172/F173 record focused contract, privacy, canonical-hash and response-loss

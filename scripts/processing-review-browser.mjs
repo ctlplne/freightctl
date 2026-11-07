@@ -101,6 +101,13 @@ try {
     await (await download).saveAs(path);
   }
   const owner = await login(c.worker_token);
+  await button(owner, "List my processing tasks").click();
+  await button(owner, "Open task " + c.workflow).waitFor();
+  await audit(owner, "processing-catalog");
+  await button(owner, "Open task " + c.workflow).click();
+  await owner
+    .getByRole("region", { name: "Processing task revision", exact: true })
+    .waitFor();
   await owner.getByLabel("Workflow ID", { exact: true }).fill(c.workflow);
   await owner.getByLabel("Version", { exact: true }).fill("1");
   await button(owner, "Load task revision").click();

@@ -1,0 +1,278 @@
+{
+  "schema_version": 1,
+  "id": "F179",
+  "observed_at": "2026-11-06",
+  "candidate_parent": "9c6f836076f279fe7003070a037cf32e02bf901d",
+  "qualification_claim": false,
+  "state": "Actor-private latest processing-task discovery implemented through API/CLI/browser/MCP;focused contracts/static/build green;native/runtime and full product owed",
+  "contract": "docs/protocols/processing-workflow-catalog.md",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "453aaf2e8610ad9214733b3290f7d9bf47d3edae686b64a12f3ce00df80e3842",
+      "bytes": 3982
+    },
+    {
+      "reference": "cmd/freightctl/main.go",
+      "sha256": "b802a201149dc163bb4395c869bfac96a4da2a21c29a8f621c5cf62c48fc1c1e",
+      "bytes": 47559
+    },
+    {
+      "reference": "cmd/freightctl/processing_reviews.go",
+      "sha256": "32d87fe2ae522d1d9ff15a5695d0427e1674dd4317303360e7d26b8d24f71263",
+      "bytes": 2199
+    },
+    {
+      "reference": "cmd/freightctl/workflow_processing_integration_test.go",
+      "sha256": "30db8838a12923322bf736bbd21748e1064ff121d451eeb8dcfe086bb2724a90",
+      "bytes": 12830
+    },
+    {
+      "reference": "docs/api/processing-catalog.openapi.json",
+      "sha256": "203f38a665c79ec6cb22c7ffc9c5fb1989776234690846c329155e8f8e2c9515",
+      "bytes": 6206
+    },
+    {
+      "reference": "docs/protocols/artifact-exchange-mcp.md",
+      "sha256": "5f82f9cfad61caa4f7dc910fa65216f44d3b38f5f322c24b125cdfbe31497d16",
+      "bytes": 15565
+    },
+    {
+      "reference": "docs/protocols/processing-workflow-catalog.md",
+      "sha256": "5ab7f5ebd6ef8db4b464107463116f8a18385813405a0141d42eec8119305797",
+      "bytes": 3580
+    },
+    {
+      "reference": "docs/protocols/record-projection.md",
+      "sha256": "dbfb6abc6bc2241cfbcabc81a6845f20d79429e6263c5d7a99e76a43331db05e",
+      "bytes": 24970
+    },
+    {
+      "reference": "docs/qualification/artifact-exchange.json",
+      "sha256": "1621fbdb93b6b45d296c2dd04fa8bcdfdb0e65584e40383d6e65d29187b0092a",
+      "bytes": 27066
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "1ed628898f4063e175449566642a52d34162be15190363f1b8de35157e5e2c12",
+      "bytes": 335373
+    },
+    {
+      "reference": "internal/api/api.go",
+      "sha256": "411b290532fddb777727bd5520872430e0dccaa5f2a1d2af751c4ffb8be1a98d",
+      "bytes": 29352
+    },
+    {
+      "reference": "internal/api/mcp-tools.json",
+      "sha256": "30339f6c132d682b935e7db386b30ba8ad1bcbb6d750dd5ac02eda56585f93a7",
+      "bytes": 112252
+    },
+    {
+      "reference": "internal/api/mcp.go",
+      "sha256": "dbe2dd70a9f5ac20a9b3e3312a175d7f4bc3944b466f1a8e14ebc440d8e79d9b",
+      "bytes": 11734
+    },
+    {
+      "reference": "internal/api/mcp_integration_test.go",
+      "sha256": "86f212bbcf9de8a55a6405d2c380da06eef771afbf4bb86aa8a5168d7c7d1f46",
+      "bytes": 36325
+    },
+    {
+      "reference": "internal/api/mcp_processing_catalog.go",
+      "sha256": "ab4b2fae6629d3c3307101c5bf7ca0b6e9311343525bb21eec075226af8f6593",
+      "bytes": 2357
+    },
+    {
+      "reference": "internal/api/mcp_processing_catalog_test.go",
+      "sha256": "8cd52ca1ef599f339e21c1193e24afbe39c55c5fdb7da2fe43fe5073342295e9",
+      "bytes": 1748
+    },
+    {
+      "reference": "internal/api/mcp_processing_workflows_integration_test.go",
+      "sha256": "19e584f31ae578c9afa34aa518d22715e21e73e1e4d1f280c3fc78e484f41d49",
+      "bytes": 7384
+    },
+    {
+      "reference": "internal/api/mcp_test.go",
+      "sha256": "17d1ba93d04a4aa2f87c3d6fbb0ca9664da3a20e58e0d8a92844128c9c11cba2",
+      "bytes": 19916
+    },
+    {
+      "reference": "internal/api/processing_review_browser_integration_test.go",
+      "sha256": "d2615622375d204467cf0941abbaa6bd0948a3576e5696ec6d299faac6a669e6",
+      "bytes": 7374
+    },
+    {
+      "reference": "internal/api/processing_reviews.go",
+      "sha256": "63dfc32e6623708d45a54f4f1dda548d92d9897c15f7e82a1aa3013eb8f37b74",
+      "bytes": 2559
+    },
+    {
+      "reference": "internal/api/processing_reviews_integration_test.go",
+      "sha256": "b06715295303367f3ea5d7cdebe0ce24172fd64e8e672bd6dad925af9889cc90",
+      "bytes": 5957
+    },
+    {
+      "reference": "internal/api/processing_reviews_test.go",
+      "sha256": "a95e26ff3f98b153e26a5b91f0d7e2201a7bcf72687eaa187f6f3a76904c9ccd",
+      "bytes": 1948
+    },
+    {
+      "reference": "internal/browser/assets/app.js",
+      "sha256": "d516e77596e85b8f2db01576909dc02630ead68f497e6d32a6f9006dfcf203c0",
+      "bytes": 857855
+    },
+    {
+      "reference": "internal/browser/assets/manifest.json",
+      "sha256": "5efa903308aff4eb275b69932b73c045c2ad729713580c0988563a58abc9428b",
+      "bytes": 13103
+    },
+    {
+      "reference": "internal/checks/processing_catalog_integration_test.go",
+      "sha256": "bf03c6b7ace759cfabd40fea80fa307934496f29dab34abfc6b78c5f874f55d0",
+      "bytes": 4308
+    },
+    {
+      "reference": "internal/workflow/processing_catalog.go",
+      "sha256": "e390617d98b8679d469caac74d5bd6b8e3f612c33d6d93d73ae46b001bfa424a",
+      "bytes": 5156
+    },
+    {
+      "reference": "internal/workflow/processing_catalog_test.go",
+      "sha256": "233e8189f5a7b48487240c9a2b4420536a8bc82f5d8eee165d56ead278eeabe6",
+      "bytes": 2567
+    },
+    {
+      "reference": "scripts/processing-review-browser.mjs",
+      "sha256": "9a7856f8f09fd01aa54314f46f3621bd617ac192fa55960bd73e74ca9acf382b",
+      "bytes": 12447
+    },
+    {
+      "reference": "web/src/processing-api.ts",
+      "sha256": "af716b9784bbd8c8fd0b8514d7898bf612068f2a1fdff11aae56185fb3137f13",
+      "bytes": 14640
+    },
+    {
+      "reference": "web/src/processing-catalog-types.ts",
+      "sha256": "5e4dbd73959bf8c81224e0825d929b3509ad0a222303ee0319cff0f14f11e2c9",
+      "bytes": 3676
+    },
+    {
+      "reference": "web/src/processing.tsx",
+      "sha256": "4af38ac8de842a9139ed0275afe9f0983dad292d6b3e62f86d116afa6338e117",
+      "bytes": 39890
+    },
+    {
+      "reference": "web/tests/processing-catalog.test.mjs",
+      "sha256": "66069cd7170672475c51b6b8857f604a4c612f919152aeeb077354d7946e8ebf",
+      "bytes": 3564
+    }
+  ],
+  "changed": [
+    "Catalog lists the latest version of each owned processing workflow family,including drafts;latest other-profile versions hide older processing entries. Actor-private RLS,current workflow roles and bounded pages remain;discovery grants no file or effect permission.",
+    "Current configuration/owner/independent approval and active exact output-policy facts are separate. Neither implies input/execution readiness. Withdrawn approval does not erase configuration history or substitute another revision.",
+    "Ordinary API/CLI/browser and Catalog38/exchange-tools-v15 MCP share one service. Browser opens an exact immutable version/hash. Model output omits names,reasons,paths and private rules;optional receiving need not be configured.",
+    "Prepared actual PostgreSQL/latest-profile/pagination/role/withdrawal,verified-HTTPS/stock-SDK/CLI and native Chrome catalog entry proof. Six original Chrome audits remain,with a seventh catalog audit added. No schema,migration,retained database,lease,custody or resource allowance changes."
+  ],
+  "red": [
+    {
+      "reference": ".private/freightctl-f179-catalog-red.log",
+      "observed": "Required catalog DTO/builder did not exist;focused regressions failed compilation."
+    },
+    {
+      "reference": ".private/freightctl-f179-browser-red.log",
+      "observed": "Required strict browser catalog module did not exist;focused bundling failed."
+    }
+  ],
+  "green": {
+    "reference": ".private/freightctl-f179-final-focused.log",
+    "observed": "Exact typed task metadata,independent approval/output-policy facts,corrupt/other-profile refusal,MCP redaction/no execution promise,optional-receiving independence,closed tool schemas and unauthenticated/invalid-pagination controls pass. Two new plus eleven affected browser cases pass;affected static/build checks pass."
+  },
+  "checks": [
+    {
+      "reference": ".private/freightctl-f179-catalog-red.log",
+      "sha256": "c44c13dc40eef2c244b751bfa6ef8e78def4611368c4086a9284d688e820b3f1",
+      "bytes": 608
+    },
+    {
+      "reference": ".private/freightctl-f179-browser-red.log",
+      "sha256": "941f1a42219365358fbbc2ea9aa905178b8c4df7e7b39aa3c1716319c9ea0c9a",
+      "bytes": 1728
+    },
+    {
+      "reference": ".private/freightctl-f179-final-focused.log",
+      "sha256": "fb8cac7edd980b6183e08f7b40b4c6673557ccc97b380c33e429ac371487b3d6",
+      "bytes": 179
+    },
+    {
+      "reference": ".private/freightctl-f179-browser-final-green.log",
+      "sha256": "6383e1651e985292afc60a18b2cd0b7744a992b8dafbfe2871c3bbc97fb616c5",
+      "bytes": 1511
+    },
+    {
+      "reference": ".private/freightctl-f179-typecheck-first.log",
+      "sha256": "079c770e278853bb59666fbf33c033b143b7bf94c8979d796e1ed2cef9d84bc8",
+      "bytes": 228
+    },
+    {
+      "reference": ".private/freightctl-f179-typecheck-green.log",
+      "sha256": "17e00418398dd65e49bed86df28efee896dcae70d7e6258050a2746181f558d5",
+      "bytes": 54
+    },
+    {
+      "reference": ".private/freightctl-f179-browser-async-assertion-first.log",
+      "sha256": "7b3d475381829d147bcb3869ac5dde56002926103b8b2b8d7dcd880d3ff9e3bb",
+      "bytes": 2613
+    },
+    {
+      "reference": ".private/freightctl-f179-build.log",
+      "sha256": "76c613939cb1d46878048dc8409659f08c054a5842d10562d328bc7c5ef48482",
+      "bytes": 232
+    },
+    {
+      "reference": ".private/freightctl-f179-built-consistency.log",
+      "sha256": "82aad7d970c4f86b7b4e270ec63038b759c3cfcbed076cc32e601ea9e9f217ac",
+      "bytes": 249
+    },
+    {
+      "reference": ".private/freightctl-f179-browser-format.log",
+      "sha256": "81a42686053c279b1a988fbbe60b6327943d506b14fff1d9e08dd77cf203e21b",
+      "bytes": 197
+    },
+    {
+      "reference": ".private/freightctl-f179-final-native-compile.log",
+      "sha256": "5341c1fc35f3e31200704ffcadc228add58700ee35d9c25ff60ecea2aaca3106",
+      "bytes": 226
+    },
+    {
+      "reference": ".private/freightctl-f179-final-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f179-native-script-syntax.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "preparation_failures": [
+    "First TypeScript index access needed bounds-backed non-null assertions. A new permission-refusal stand-in initially asserted a synchronous throw for an async rejection;the original failure is preserved and the same refusal is now awaited,with transport-count assertion unchanged."
+  ],
+  "prepared_native": [
+    "TestProcessingCatalogActualActorIsolationLatestRevisionAndWithdrawnApproval",
+    "TestProcessingReviewHTTPSIndependentDecisionAdoptionAndOriginalReceipt (catalog checks)",
+    "TestMCPStockClientTypedProcessingWorksWithoutReceiveAdapterAndKeepsApprovalOutsideTools (catalog checks)",
+    "TestProcessingWorkflowCLIUsesApprovedTaskAndSeparateOutputRelease/independent_review_controls (catalog checks)",
+    "TestProcessingReviewNativeBrowserIndependentDecisionRecoveryAndAdoption (all six original audits plus catalog audit)"
+  ],
+  "verification_limits": [
+    "Tagged compilation selected zero native cases. No PostgreSQL,Chrome,model,scanner or heavy peer ran locally.",
+    "Catalog flags are scoped metadata observations,not file authority,ready-to-run or receiver-processing evidence. Query performance and whole-estate concurrency remain unqualified.",
+    "F180 retains the preceding16 original triggered terminal workflows/35 jobs;listed security gates pass,original application failures remain red and deferred to FINISH."
+  ],
+  "owed": [
+    "Run the prepared actual PostgreSQL/latest-profile/pagination/role/withdrawal and original served SDK/CLI/browser profiles at candidate/final source.",
+    "Complete third-party author delegation,composition/scheduling,protected processing,independent receivers and remaining baseline/exchange implementation.",
+    "Mandatory FINISH original failure repair/replay,broad/native/security/accessibility/recovery/reproducibility and all full GOAL.md/AX/external requirements;all whole rows/journeys/readiness remain open."
+  ]
+}

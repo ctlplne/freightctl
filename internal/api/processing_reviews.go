@@ -22,7 +22,7 @@ func (s *Server) processingReviews(w http.ResponseWriter, r *http.Request) {
 		if err = workflowInput(w, r, &request); err == nil {
 			result, err = service.RequestProcessingReview(r.Context(), identity, r.Header.Get("Idempotency-Key"), request)
 		}
-	case "GET /v1/tenants/{tenant}/partners/{partner}/processing-reviews":
+	case "GET /v1/tenants/{tenant}/partners/{partner}/processing-reviews", "GET /v1/tenants/{tenant}/partners/{partner}/processing-workflows":
 		limit := 25
 		if r.URL.Query().Get("limit") != "" {
 			limit, err = strconv.Atoi(r.URL.Query().Get("limit"))
@@ -31,7 +31,11 @@ func (s *Server) processingReviews(w http.ResponseWriter, r *http.Request) {
 			err = workflow.ErrInput
 		}
 		if err == nil {
-			result, err = service.ProcessingReviews(r.Context(), identity, r.URL.Query().Get("after"), limit)
+			if r.Pattern == "GET /v1/tenants/{tenant}/partners/{partner}/processing-workflows" {
+				result, err = service.ProcessingWorkflows(r.Context(), identity, r.URL.Query().Get("after"), limit)
+			} else {
+				result, err = service.ProcessingReviews(r.Context(), identity, r.URL.Query().Get("after"), limit)
+			}
 		}
 	case "GET /v1/tenants/{tenant}/partners/{partner}/processing-reviews/{review}":
 		result, err = service.ProcessingReview(r.Context(), identity, r.PathValue("review"))
@@ -53,7 +57,11 @@ func (s *Server) processingReviews(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	if errors.Is(err, workflow.ErrInput) {
-		fail(w, 400, "invalid_processing_review")
+		code := "invalid_processing_review"
+		if r.Pattern == "GET /v1/tenants/{tenant}/partners/{partner}/processing-workflows" {
+			code = "invalid_processing_catalog"
+		}
+		fail(w, 400, code)
 		return
 	}
 	if err != nil {

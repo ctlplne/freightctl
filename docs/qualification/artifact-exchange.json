@@ -165,7 +165,8 @@
         "docs/qualification/evidence/F151-xml-record-intake.json",
         "docs/qualification/evidence/F155-governed-xlsx-intake.json",
         "docs/qualification/evidence/F175-independent-processing-reviews.json",
-        "docs/qualification/evidence/F177-independent-review-browser.json"
+        "docs/qualification/evidence/F177-independent-review-browser.json",
+        "docs/qualification/evidence/F179-processing-task-catalog.json"
       ]
     },
     {
@@ -298,7 +299,8 @@
         "docs/qualification/evidence/F172-processing-contracts-mcp.json",
         "docs/qualification/evidence/F173-processing-browser.json",
         "docs/qualification/evidence/F175-independent-processing-reviews.json",
-        "docs/qualification/evidence/F177-independent-review-browser.json"
+        "docs/qualification/evidence/F177-independent-review-browser.json",
+        "docs/qualification/evidence/F179-processing-task-catalog.json"
       ]
     },
     {

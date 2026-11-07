@@ -3580,5 +3580,31 @@
       "idempotentHint": true,
       "openWorldHint": false
     }
+  },
+  {
+    "name": "freightctl.list_processing_workflows",
+    "description": "List the authenticated actor's latest processing task revisions and separate current approval/output-policy facts. Metadata discovery supplies no input bytes,execution readiness,approval,release or forwarding rights. Names,reasons,paths and full definitions are omitted.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "after": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
   }
 ]

@@ -1,66 +1,62 @@
 # freightctl status
 
-Updated 2026-11-06. Active under the owner resume. All83 whole parity rows,
-twelve complete journeys and AX01–AX08 remain open. Assisted deployment,
-independent adoption and enterprise readiness remain unqualified.
+Updated 2026-11-06. Active under owner resume. All83 whole parity rows,twelve
+complete journeys and AX01–AX08 remain open. Assisted deployment,independent
+adoption and enterprise readiness remain unqualified.
 
-Latest pushed source before this batch:cc53524b0be1372ac1b15acf772de6bb36f061d4.
-F178 retains all17 original terminal workflows/37 jobs and exact outcomes.
-Listed source,dependency,history-secret and image security gates pass there.
-Original PostgreSQL/metadata,Windows,qualification-record and public/browser/
-stock-peer failures remain red. Their investigation/repair is deferred to FINISH;
-new security failures require immediate triage. No original run was cancelled,
-restarted or substituted. Prior source evidence remains in F169/F171/F174/F176.
+Latest pushed source before this batch:9c6f836076f279fe7003070a037cf32e02bf901d.
+F180 preserves its16 original triggered terminal workflows/35 jobs. Listed source,
+dependency,history-secret and image security gates pass. Original PostgreSQL/
+metadata,Windows,qualification-record and public/browser/stock-peer failures stay
+red. No original run was cancelled,restarted or substituted. F178 preserves the
+preceding17/37 batch. Nonsecurity logs/repairs remain deferred to FINISH;triage
+new security failures immediately.
 
-F170 implements approved schema3 records.project through ordinary API/CLI:
-atomic run/intent/slots/events/receipt,stable attempt dispatch,held outputs,fresh
-checks and separate release. F172/F173 add metadata-only contract discovery,
-Catalog37/v14 MCP controls and structured browser review/exact-key recovery.
-Historical receipts and attempts stay separate from current status. Their native
-PostgreSQL,verified-TLS/SDK,Chrome,accessibility and full customer proof is owed.
+Schema3 records.project binds an owned checked input,approved exact task,one
+durable processing intent,slots and events/receipt. Stable work keys select one
+historical attempt;current status is separate. New artifacts stay held for fresh
+checks and separate release. There is no inherited forwarding or delivery grant.
+API/CLI,metadata-only contract discovery,MCP controls and structured browser
+mapping/review/exact-key recovery are implemented. Native byte and full customer
+outcomes remain owed. F170/F172/F173 retain those implementation/proof records.
 
-F175 adds an explicit definition-only review for a distinct named reviewer.
-Both actors,authority/root revisions,exact draft and expiry are pinned. The
-reviewer has inspect/workflow_approve,without file access or execution. The
-creator separately adopts the decision into its own workflow transactionally.
-It gains no general approval right. A permanent adopted marker prevents fallback
-after withdrawal,expiry or reviewer revocation. Runtime source/permission checks,
-private configuration/run/projection RLS,leases,held outputs and release remain.
-This separates reviewer from creator/executor;third-party author delegation stays
-open. Compact original mutation receipts avoid copying private definitions.
+F175/F177 add a named independent definition-only reviewer and separate creator
+adoption. Both actors,authority/root snapshots,exact draft and expiry are pinned.
+The reviewer gains no file or execution access. Adoption commits its immutable
+marker,owned workflow transition,events and receipt together. Withdrawal,expiry
+or reviewer revocation cannot fall back to self-approval. Compact original
+receipts and current inspection stay separate. Browser recovery contains no
+credential and requires explicit review/retry. Third-party author delegation
+remains open;creator and executor may still be one actor.
 
-Focused missing-behavior red,typed/canonical-JSONB/privacy/receipt/interface
-contracts,affected compilation/vet/architecture and12 metadata stand-ins pass.
-Four native PostgreSQL cases,served HTTPS and the in-process public CLI dispatcher
-journey are prepared/compiled only. SQL54 adds one forced-RLS relation;source54
-targets75 metadata/74 forced-RLS tables. Historical profiles and retained schema35
-are untouched. Native runtime and actual final-source qualification remain owed.
+F179 adds latest actor-private processing-task discovery through API/CLI/browser/
+Catalog38-v15 MCP. Latest includes drafts and profile changes;older approvals are
+not substituted. Current approval and output-policy observations do not assert
+input or execution readiness. Model output omits names and full private rules.
+Focused Go/MCP,13 frontend cases,type/build consistency,compilation/vet and
+architecture pass. Actual PostgreSQL/isolation/latest-profile/pagination/live
+review,served HTTPS/stock-SDK/CLI and Chrome proof remain prepared/compiled only.
+The original six Chrome audits remain,with a seventh catalog audit added.
 
-F177 adds browser independent-review request/decision/adoption/withdrawal and
-explicit exact-key saved recovery. Actual task rules are inspected before
-confirmation;original receipts remain separate from current state. Six focused
-client contracts plus five affected processing contracts,type/build consistency,
-Go/Python/browser canonical fixture and affected static checks pass. Native Chrome
-two-login/committed-response-loss/old-receipt/current-withdrawal/six-WCAG/event-
-cardinality proof is prepared and compiled only. This metadata-only journey does
-not replace separate processing-byte/held-output/release qualification.
+Source54 targets75 metadata/74 forced-RLS tables. Catalog work adds no migration.
+Historical profiles and retained schema35 are untouched. No local PostgreSQL,
+Chrome,model,scanner or heavy peer ran. Native compilation/stand-ins establish
+no runtime qualification. F026 stays manual/owner-deferred.
 
-Next:third-party delegation,
-composition/discovery/scheduling,protected formats and independent receivers.
-Continue all remaining baseline/exchange implementation and AX-J01/J02. Prove
-fairness,isolation,latency,quota/lease/process-death/restore boundaries and original
-public outcomes. A processing task or service surface does not complete the goal.
+Next:third-party delegation,composition/scheduling,protected processing,independent
+receivers and all remaining baseline/exchange implementation. Continue AX-J01/J02
+and every mandatory GOAL.md capability. X07 blocks only real optional Trust
+Control proof;no API is invented. Inference,licensed peers,cloud/multi-host/
+hardware and independent adoption prerequisites remain owed.
 
-X07 blocks only real optional Trust Control proof;no API is invented. Inference,
-licensed/external peers,multi-host/hardware and whole qualification remain owed.
-F026 stays manual/owner-deferred. FINISH must repair/replay every deferred
-original failure and bind required broad unit/race/integration,architecture/
-security,frontend/accessibility,native/public/stock/independent-receiver,restore/
-recovery and reproducibility to final source. Anything unproven remains owed.
+FINISH must repair/replay every deferred original failure and bind broad unit/
+race/integration,architecture/security,frontend/accessibility,native/public/stock/
+independent-receiver,restore/recovery,reproducibility and all acceptance profiles
+to final source. Anything unproven remains owed;the overall product is incomplete.
 
-Work only on local main as sole author/committer imfeelingtheagi. Authorized
-source/CI fast-forward pushes retain the enabled Gitleaks guard and wait for prior
-required runs to be terminal. S004 uses available GitHub runner capacity;local
-lightweight limits,no inference and the separate4GiB/oneCPU scanner allowance
-remain unchanged. No local heavy runtime was started. No release,artifact/package/
-image publication,visibility change or external deployment is authorized.
+Sole author/committer imfeelingtheagi on local main. Authorized source/CI pushes
+are fast-forward through the enabled Gitleaks guard after previous required runs
+are terminal. S004 uses available GitHub capacity;local lightweight limits,no
+inference and the separate4GiB/oneCPU real-scanner allowance remain unchanged.
+No release,artifact/package/image publication,visibility change or external
+deployment is authorized.

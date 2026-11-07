@@ -1,4 +1,5 @@
 import { Api } from "./api";
+import { processingCatalog } from "./processing-catalog-types";
 import { ApiError, object, type Session } from "./types";
 import { operationKey, digestBytes } from "./crypto";
 import { parseRecheckPlan } from "./rechecks-types";
@@ -184,6 +185,24 @@ export class ProcessingApi {
           throw new ApiError("context_changed", 409);
         return c;
       },
+    );
+  }
+  catalog(after = "") {
+    if (after) reference({ id: after, version: 1, hash: "a".repeat(64) });
+    return this.request(
+      "/processing-workflows?limit=25" + (after ? "&after=" + after : ""),
+      {},
+      (v, s) => {
+        const page = processingCatalog(v);
+        if (
+          page.workflows.length > 25 ||
+          page.authority_revision !== s.identity.authority_revision ||
+          page.namespace_root_digest !== s.identity.root_policy_digest
+        )
+          throw new ApiError("context_changed", 409);
+        return page;
+      },
+      "configuration",
     );
   }
   configuration(id: string, version: number) {

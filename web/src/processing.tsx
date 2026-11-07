@@ -1,5 +1,6 @@
 import { ProcessingTaskReview } from "./processing-task-review";
 import { ProcessingReviews } from "./processing-reviews";
+import type { ProcessingCatalog } from "./processing-catalog-types";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Api } from "./api";
 import { ApiError, object, uuid, type Session } from "./types";
@@ -67,6 +68,7 @@ export function ProcessingWorkflows({
   const stamp = processingStamp(session),
     client = useMemo(() => new ProcessingApi(api), [api, stamp]);
   const [source, setSource] = useState(""),
+    [catalog, setCatalog] = useState<ProcessingCatalog | null>(null),
     [contracts, setContracts] = useState<Contracts | null>(null),
     [name, setName] = useState(""),
     [reason, setReason] = useState(""),
@@ -404,6 +406,95 @@ export function ProcessingWorkflows({
         stays held for fresh checks and a separate release. Receiving an
         artifact supplies no processing or onward delivery permission.
       </p>
+      <section aria-label="Find processing tasks">
+        <h2>Find processing tasks</h2>
+        <p>
+          Browse your latest task versions. Approval and output policy are
+          separate observations;an exact input still needs ordinary review
+          before execution.
+        </p>
+        <button
+          disabled={busy || !allowed("configuration")}
+          onClick={() =>
+            void perform(async () => {
+              const page = await client.catalog();
+              if (current()) setCatalog(page);
+            })
+          }
+        >
+          List my processing tasks
+        </button>
+        {catalog && (
+          <>
+            {catalog.workflows.length === 0 ? (
+              <p>No processing tasks were found for this account.</p>
+            ) : (
+              <table>
+                <caption>
+                  Observed task metadata;open an exact version before any action
+                </caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Task</th>
+                    <th scope="col">Version and state</th>
+                    <th scope="col">Approval current</th>
+                    <th scope="col">Output policy current</th>
+                    <th scope="col">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {catalog.workflows.map((task) => (
+                    <tr key={task.id}>
+                      <td>{task.name}</td>
+                      <td>
+                        {task.version} · {task.state}
+                      </td>
+                      <td>{task.approval_current ? "Yes" : "No"}</td>
+                      <td>{task.output_policy_current ? "Yes" : "No"}</td>
+                      <td>
+                        <button
+                          disabled={busy || !!pending}
+                          onClick={() =>
+                            void perform(async () => {
+                              const cfg = await client.configuration(
+                                task.id,
+                                task.version,
+                              );
+                              if (cfg.definition_hash !== task.hash)
+                                throw new ApiError("revision_conflict", 409);
+                              if (current()) {
+                                setWorkflowID(cfg.id);
+                                setVersion(String(cfg.version));
+                                setConfiguration(cfg);
+                                setConfigurationCurrent(true);
+                              }
+                            })
+                          }
+                        >
+                          Open task {task.id}
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+            {catalog.next && (
+              <button
+                disabled={busy}
+                onClick={() =>
+                  void perform(async () => {
+                    const page = await client.catalog(catalog.next);
+                    if (current()) setCatalog(page);
+                  })
+                }
+              >
+                Next processing task page
+              </button>
+            )}
+          </>
+        )}
+      </section>
       <ProcessingReviews
         api={api}
         session={session}

@@ -95,6 +95,19 @@ func TestMCPStockClientTypedProcessingWorksWithoutReceiveAdapterAndKeepsApproval
 	proposed := call("propose_workflow", map[string]any{"request": workflow.DraftRequest{Definition: definition}, "request_key": "typed-proposal"})
 	id := proposed["workflow_id"].(string)
 	hash := proposed["definition_hash"].(string)
+	listed := call("list_processing_workflows", map[string]any{"limit": 1})
+	rows, ok := listed["workflows"].([]any)
+	if !ok || len(rows) != 1 || listed["execution_readiness"] != "not-checked" {
+		t.Fatal("stock processing catalog missing bounded metadata")
+	}
+	row, ok := rows[0].(map[string]any)
+	if !ok || row["state"] != "draft" || row["approval_current"] != false {
+		t.Fatal("catalog claimed unapproved execution")
+	}
+	ref, ok := row["workflow"].(map[string]any)
+	if !ok || ref["id"] != id || ref["hash"] != hash {
+		t.Fatal("catalog selected a different task")
+	}
 	request := workflow.RunRequest{Workflow: workflow.Reference{ID: id, Version: 1, Hash: hash}, FileID: source.ID}
 	unapproved, err := session.CallTool(ctx, &mcp.CallToolParams{Name: "freightctl.start_processing_workflow", Arguments: map[string]any{"request": request, "request_key": "not-approved"}})
 	if err != nil || !unapproved.IsError {

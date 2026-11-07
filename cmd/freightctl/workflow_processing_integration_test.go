@@ -240,6 +240,23 @@ func TestProcessingWorkflowCLIUsesApprovedTaskAndSeparateOutputRelease(t *testin
 		if err != nil || json.Unmarshal(raw, &drafted) != nil || json.Unmarshal(drafted.Resource, &cfg) != nil {
 			t.Fatal("independent CLI draft", err)
 		}
+		raw, err = command("processing-workflow-list", "-processing-workflow-limit", "25")
+		var catalog workflow.ProcessingCatalog
+		if err != nil || json.Unmarshal(raw, &catalog) != nil || catalog.Profile != "processing-workflow-catalog-v1" {
+			t.Fatal("CLI task catalog", err)
+		}
+		found := false
+		for _, task := range catalog.Workflows {
+			if task.ID == cfg.ID {
+				found = true
+				if task.Version != cfg.Version || task.Hash != cfg.Hash || task.State != "draft" || task.ApprovalCurrent {
+					t.Fatal("CLI catalog changed draft facts")
+				}
+			}
+		}
+		if !found || strings.Contains(string(raw), `"definition":`) {
+			t.Fatal("CLI catalog lost own task or exposed complete rules")
+		}
 		request := workflow.ProcessingReviewRequest{Workflow: workflow.Reference{ID: cfg.ID, Version: cfg.Version, Hash: cfg.Hash}, Revision: 1, Reviewer: account.ID, ExpiresAt: time.Now().UTC().Add(time.Hour).Truncate(time.Microsecond)}
 		raw, err = command("processing-review-request", "-request-file", requestFile(request), "-idempotency-key", "cli-independent-request")
 		var proposed workflow.Result

@@ -39,6 +39,8 @@ func runProcessingReview(ctx context.Context, command string, options processing
 	}
 	var result any
 	switch command {
+	case "processing-workflow-list":
+		result, err = service.ProcessingWorkflows(ctx, scope, options.After, options.Limit)
 	case "processing-review-request":
 		var request workflow.ProcessingReviewRequest
 		if err = decode(&request); err == nil {

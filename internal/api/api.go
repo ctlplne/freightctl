@@ -251,6 +251,7 @@ func NewWithBrowserLifetime(service *custody.Service, audits *audit.Service, ena
 		m.HandleFunc(pattern, s.workflow)
 	}
 	for _, pattern := range []string{
+		"GET /v1/tenants/{tenant}/partners/{partner}/processing-workflows",
 		"POST /v1/tenants/{tenant}/partners/{partner}/processing-reviews",
 		"GET /v1/tenants/{tenant}/partners/{partner}/processing-reviews",
 		"GET /v1/tenants/{tenant}/partners/{partner}/processing-reviews/{review}",

@@ -247,7 +247,11 @@
     },
     {
       "path": "web/src/processing-api.ts",
-      "sha256": "dd38a040308089b713cf63f49a4b933b78e1e2da8aee6bdeaac1e8f4d82f73d6"
+      "sha256": "af716b9784bbd8c8fd0b8514d7898bf612068f2a1fdff11aae56185fb3137f13"
+    },
+    {
+      "path": "web/src/processing-catalog-types.ts",
+      "sha256": "5e4dbd73959bf8c81224e0825d929b3509ad0a222303ee0319cff0f14f11e2c9"
     },
     {
       "path": "web/src/processing-review-api.ts",
@@ -267,7 +271,7 @@
     },
     {
       "path": "web/src/processing.tsx",
-      "sha256": "f92399f5f9071af6e9fba8e3c2dfc1cbec2091b0574d38d209e2972da619364b"
+      "sha256": "4af38ac8de842a9139ed0275afe9f0983dad292d6b3e62f86d116afa6338e117"
     },
     {
       "path": "web/src/programs-types.ts",
@@ -330,8 +334,8 @@
     },
     {
       "name": "app.js",
-      "sha256": "1e4283f50f7b3cd2329183caf7016f82b4df0a9d4c2161f6245cd447f32add28",
-      "size": 853706
+      "sha256": "d516e77596e85b8f2db01576909dc02630ead68f497e6d32a6f9006dfcf203c0",
+      "size": 857855
     },
     {
       "name": "app.js.LEGAL.txt",

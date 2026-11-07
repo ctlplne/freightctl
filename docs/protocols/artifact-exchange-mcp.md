@@ -88,7 +88,7 @@ grant forwarding or execution. Original-key recovery returns the owned copy's
 original acceptance without reopening a stale source view. Current availability,
 receiver persistence and processing are not inferred. No content,overwrite,mode,
 host path,actor,root,recipient or execution option enters this tool. The current
-catalog has37 tools, implementation `exchange-tools-v14`; actual original
+catalog has38 tools, implementation `exchange-tools-v15`; actual original
 SDK/HTTPS proof remains owed.
 
 Five scoped record-processing controls share the ordinary governed service:
@@ -120,6 +120,12 @@ intent. Fresh ordinary checks and separately authorized release are required.
 No approval, release or arbitrary execution tool is added. Focused contract and
 redaction tests pass; the prepared stock-SDK verified-HTTPS/PostgreSQL case is
 compiled only and remains owed.
+
+`list_processing_workflows` discovers the actor's latest processing task versions
+without names, reasons, paths or full rules in model output. Current approval and
+output-policy facts remain separate; execution readiness is not checked. It uses
+ordinary workflow scope and the [processing catalog contract](processing-workflow-catalog.md),
+with no receive-adapter dependency, approval, file read or execution grant.
 
 The four resumable controls use `ordinary-resumable-artifact-upload-v1` and the
 existing upload service. Start takes `virtual_path`, `size_bytes`, `sha256` and

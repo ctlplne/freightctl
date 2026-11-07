@@ -51,6 +51,13 @@ func TestProcessingReviewHTTPSIndependentDecisionAdoptionAndOriginalReceipt(t *t
 	if json.Unmarshal(call(worker.Bytes, "POST", "/workflows/drafts", "independent-api-draft", workflow.DraftRequest{Definition: definition}, 200), &drafted) != nil || json.Unmarshal(drafted.Resource, &cfg) != nil {
 		t.Fatal("draft")
 	}
+	var catalog workflow.ProcessingCatalog
+	if json.Unmarshal(call(worker.Bytes, "GET", "/processing-workflows?limit=1", "", nil, 200), &catalog) != nil || len(catalog.Workflows) != 1 || catalog.Workflows[0].ID != cfg.ID || catalog.Workflows[0].ApprovalCurrent {
+		t.Fatal("served catalog lost exact owned draft facts")
+	}
+	if json.Unmarshal(call(reviewer.Bytes, "GET", "/processing-workflows?limit=1", "", nil, 200), &catalog) != nil || len(catalog.Workflows) != 0 {
+		t.Fatal("served catalog exposed another actor's workflow")
+	}
 	call(worker.Bytes, "POST", "/workflows/"+cfg.ID+"/1/approve", "no-self-approval", workflow.Decision{Hash: cfg.Hash, Revision: 1}, 403)
 	request := workflow.ProcessingReviewRequest{Workflow: workflow.Reference{ID: cfg.ID, Version: cfg.Version, Hash: cfg.Hash}, Revision: 1, Reviewer: reviewerAccount.Actor, ExpiresAt: time.Now().UTC().Add(time.Hour).Truncate(time.Microsecond)}
 	var proposed workflow.Result
