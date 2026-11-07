@@ -11,7 +11,11 @@ linked safe manifests. Raw private proof remains outside Git.
 Current pushed candidate: `23c752add5ee77f47d8280f7c629c803058e3b7c`.
 [F415](docs/qualification/evidence/F415-native-push.json) binds four owner-only
 commits,enabled Gitleaks(no leaks) and16 first original attempt1 workflows.
-F412 condition refusal/F413 CLI/API/MCP controls await native outcomes.
+[F419](docs/qualification/evidence/F419-native-terminal.json) records16 original
+workflows/35 terminal jobs:34pass,receive-browser red. All named security gates
+pass. Both Linux PostgreSQL,restore,HTTPS/curl,CLI,platform,fuzz and live
+browser/FTPS workflows succeed at this source,including F412/F413. Detailed
+scoped/final-source evidence remains owed. Local F416/F417/F418 are not included.
 
 Previous terminal candidate: `b11ab7621e148fd7060375636d362ede1af49a83`.
 [F411](docs/qualification/evidence/F411-native-push.json) binds four verified
