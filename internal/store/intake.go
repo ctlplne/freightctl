@@ -253,6 +253,9 @@ func (t *Transaction) CheckBindingCurrent(ctx context.Context, c *FileCheck, sto
 		} else if old == nil || old.Kind != "file" || old.Revision != *b.Target.ExpectedRevision {
 			return nil, ErrRevision
 		}
+		if c.State != "released" && b.Target.ExpectedFileID != "" && (old == nil || old.FileID != b.Target.ExpectedFileID) {
+			return nil, ErrRevision
+		}
 	}
 	return &b, t.Reauthorize(ctx)
 }

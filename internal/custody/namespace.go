@@ -23,7 +23,14 @@ type UploadTarget struct {
 	Mode             *uint32
 	Modified         *time.Time
 	// Omit false so historical ordinary upload request meanings stay identical.
-	RequireAbsent bool `json:"require_absent,omitempty"`
+	RequireAbsent bool           `json:"require_absent,omitempty"`
+	MatchFile     *FileCondition `json:"match_file,omitempty"`
+}
+
+// FileCondition names immutable custody,not just a reusable path revision.
+type FileCondition struct {
+	ID     string `json:"id"`
+	SHA256 string `json:"sha256"`
 }
 
 func (s *Service) PathCommand(ctx context.Context, scope store.Scope, key string, command store.PathCommand) (*store.PathResult, error) {
@@ -258,6 +265,9 @@ func (s *Service) AcceptAt(ctx context.Context, scope store.Scope, key string, s
 	if target.RequireAbsent && target.ExpectedRevision != nil {
 		return nil, false, ErrInput
 	}
+	if target.MatchFile != nil && (target.RequireAbsent || target.ExpectedRevision != nil || !store.ValidID(target.MatchFile.ID) || !digestPattern.MatchString(target.MatchFile.SHA256)) {
+		return nil, false, ErrInput
+	}
 	canonical, err := vpath.Canonical(target.Path)
 	if err != nil || canonical == "/" || vpath.ControlPath(canonical) {
 		return nil, false, vpath.ErrPath
@@ -277,7 +287,11 @@ func pathMeaning(size int64, digest, actual string, target *UploadTarget) string
 	return secure.Digest(b)
 }
 func targetCommand(target *UploadTarget, id string) store.PathCommand {
-	return store.PathCommand{Operation: "publish", Path: target.Path, FileID: id, ExpectedRevision: target.ExpectedRevision, Replace: target.ExpectedRevision != nil, Mode: target.Mode, Modified: target.Modified}
+	command := store.PathCommand{Operation: "publish", Path: target.Path, FileID: id, ExpectedRevision: target.ExpectedRevision, Replace: target.ExpectedRevision != nil, Mode: target.Mode, Modified: target.Modified}
+	if target.MatchFile != nil {
+		command.ExpectedFileID = target.MatchFile.ID
+	}
+	return command
 }
 func prepareTarget(ctx context.Context, t *store.Transaction, target *UploadTarget) (string, error) {
 	actual, err := vpath.Resolve(t.Root, target.Path)
@@ -293,6 +307,34 @@ func prepareTarget(ctx context.Context, t *store.Transaction, target *UploadTarg
 	old, err := t.Entry(ctx, actual)
 	if err != nil && !errors.Is(err, store.ErrNotFound) {
 		return "", err
+	}
+	if target.MatchFile != nil {
+		if err = t.Require("read"); err != nil {
+			return "", err
+		}
+		if old == nil {
+			return "", store.ErrRevision
+		}
+		if err = t.EntryMode(old, 6); err != nil {
+			return "", err
+		}
+		if old.Kind != "file" {
+			return "", ErrNamespaceFileProfile
+		}
+		if err = t.FileAccessible(ctx, old.FileID); err != nil {
+			return "", err
+		}
+		file, err := t.File(ctx, old.FileID)
+		if err != nil {
+			return "", err
+		}
+		if file.ID != target.MatchFile.ID || file.SHA256 != target.MatchFile.SHA256 {
+			return "", store.ErrRevision
+		}
+		if target.ExpectedRevision == nil {
+			revision := old.Revision
+			target.ExpectedRevision = &revision
+		}
 	}
 	if old == nil {
 		if target.ExpectedRevision != nil {

@@ -144,6 +144,7 @@ type PathCommand struct {
 	Target           string     `json:"target,omitempty"`
 	FileID           string     `json:"file_id,omitempty"`
 	ExpectedRevision *int64     `json:"expected_revision,omitempty"`
+	ExpectedFileID   string     `json:"expected_file_id,omitempty"`
 	Replace          bool       `json:"replace,omitempty"`
 	TargetRevision   *int64     `json:"target_revision,omitempty"`
 	Mode             *uint32    `json:"mode,omitempty"`
@@ -170,6 +171,14 @@ func (t *Transaction) ApplyPathCommand(ctx context.Context, key string, command 
 	}
 	if err := t.Require(permission); err != nil {
 		return nil, err
+	}
+	if command.ExpectedFileID != "" {
+		if command.Operation != "publish" || !command.Replace || command.ExpectedRevision == nil || !ValidID(command.ExpectedFileID) {
+			return nil, ErrState
+		}
+		if err := t.Require("read"); err != nil {
+			return nil, err
+		}
 	}
 	if command.Operation == "copy" {
 		if err := t.Require("read"); err != nil {
@@ -246,6 +255,23 @@ func (t *Transaction) ApplyPathCommand(ctx context.Context, key string, command 
 	old, lookupErr := t.Entry(ctx, actual)
 	if lookupErr != nil && !errors.Is(lookupErr, ErrNotFound) {
 		return nil, lookupErr
+	}
+	if command.ExpectedFileID != "" {
+		if old == nil {
+			return nil, ErrRevision
+		}
+		if err = t.CheckAncestors(ctx, actual); err != nil {
+			return nil, err
+		}
+		if err = t.EntryMode(old, 6); err != nil {
+			return nil, err
+		}
+		if old.Kind != "file" || old.FileID != command.ExpectedFileID {
+			return nil, ErrRevision
+		}
+		if err = t.FileAccessible(ctx, old.FileID); err != nil {
+			return nil, err
+		}
 	}
 	// A copy reads the declared source. Check its actual path and modes before
 	// comparing revision conditions,even when another mapping exposes the file.

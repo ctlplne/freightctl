@@ -1,7 +1,7 @@
 # DAV namespace read and conditional-mutation profile
 
 This is a partial read/conditional-mutation adapter, not a claim of RFC4918 class1,2 or3 compliance.
-The full C-WEBDAV contract remains open: replacement and other namespace writes,properties,locks,outbound server
+The full C-WEBDAV contract remains open: collection/overwrite mutations,properties,locks,outbound server
 connections and independent DAV application interoperability still need work.
 
 Use the existing HTTPS listener and an enrolled bearer credential:
@@ -13,7 +13,9 @@ mount root,path modes and current intake policy decide what can be discovered
 or read. A URL never refers to a host filesystem path.
 
 - `OPTIONS` authenticates and checks read/list access to the addressed entry.
-  It returns `Allow: OPTIONS, PROPFIND, GET, HEAD, PUT, MKCOL, MOVE` and no DAV compliance class.
+  It returns `Allow: OPTIONS, PROPFIND, GET, HEAD, PUT, MKCOL, MOVE, DELETE, COPY`
+  and no DAV compliance class. Refused collection mutation responses omit
+  the file-only MOVE, DELETE and COPY operations from their Allow field.
 - `PROPFIND` supports explicit Depth0 or1. Missing Depth means infinity and is
   refused with403 and `DAV:propfind-finite-depth`. Other depth values are400.
   The complete collection is limited to1000 immediate children; larger scopes
@@ -54,6 +56,23 @@ or read. A URL never refers to a host filesystem path.
   does not publish:the ordinary separately authorized exact release is required.
   Default-false conditional fields are omitted from historical upload request
   meanings,so existing ordinary upload retries retain their original hashes.
+- Conditional file replacement uses one exact strong `If-Match` instead of
+  `If-None-Match`. Length,digest and original-key requirements stay the same.
+  The ordinary write/read permissions,current path modes,intake availability,
+  immutable file ID and digest are checked before staging,under the publication
+  lock. A missing or changed current file returns412,including a retry after
+  successful replacement. Equal bytes under another custody ID do not match.
+  A fresh integrity-only replacement returns200 with `replaced-at-commit` and
+  the new revision ETag. Read that authorized revision to resolve a lost reply;
+  a precondition failure alone proves no earlier command's outcome.
+  The old file's custody bytes and history remain intact. Controlled replacements
+  return202 without an ETag and keep the old mapping until separate checked
+  release. Pending publication binds both the old file ID and namespace revision,
+  so deleting/recreating a path at the same revision cannot satisfy it. Original
+  held receipt recovery returns200 with no claim of current publication. The
+  optional typed namespace `expected_file_id` guard applies only to replacement
+  publication with an explicit expected mapping revision and read/write authority.
+  Other protocol upload and command meanings stay unchanged when it is absent.
 - `MKCOL` creates one empty collection with an original Idempotency-Key and
   zero body bytes. It uses the same namespace transaction,write permission,
   parent mode,immutable PathCreated event and command receipt as ordinary mkdir.

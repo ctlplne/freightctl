@@ -78,14 +78,17 @@ func davCollectionInput(w http.ResponseWriter, r *http.Request) bool {
 
 func davCreateInput(w http.ResponseWriter, r *http.Request) bool {
 	condition, present, valid := tusHeader(r, "If-None-Match")
-	if !present {
+	match, hasMatch, matchValid := tusHeader(r, "If-Match")
+	if !present && !hasMatch {
 		fail(w, 428, "dav_create_requires_if_none_match_star")
 		return false
 	}
-	_, hasMatch, _ := tusHeader(r, "If-Match")
 	_, hasDAVIf, _ := tusHeader(r, "If")
 	_, hasRange, _ := tusHeader(r, "Content-Range")
-	if !valid || condition != "*" || hasMatch || hasDAVIf || hasRange {
+	_, hasUnmodified, _ := tusHeader(r, "If-Unmodified-Since")
+	_, hasModified, _ := tusHeader(r, "If-Modified-Since")
+	_, _, exactMatch := davFileTag(match)
+	if present && (!valid || condition != "*" || hasMatch) || hasMatch && (!matchValid || !exactMatch || present) || hasDAVIf || hasRange || hasUnmodified || hasModified {
 		fail(w, 400, "invalid_dav_create_condition")
 		return false
 	}
@@ -161,7 +164,26 @@ func (s *Server) davRead(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		r.Body = http.MaxBytesReader(w, r.Body, s.Service.MaxFile+1)
-		file, replayed, err := s.Service.AcceptAt(r.Context(), identity, r.Header.Get("Idempotency-Key"), r.ContentLength, r.Header.Get("X-Content-SHA256"), r.Body, custody.UploadTarget{Path: virtual, RequireAbsent: true})
+		target := custody.UploadTarget{Path: virtual, RequireAbsent: true}
+		if match := r.Header.Get("If-Match"); match != "" {
+			id, digest, valid := davFileTag(match)
+			if !valid {
+				fail(w, 400, "invalid_dav_replace_revision")
+				return
+			}
+			target.RequireAbsent = false
+			target.MatchFile = &custody.FileCondition{ID: id, SHA256: digest}
+		}
+		file, replayed, err := s.Service.AcceptAt(r.Context(), identity, r.Header.Get("Idempotency-Key"), r.ContentLength, r.Header.Get("X-Content-SHA256"), r.Body, target)
+		if target.MatchFile != nil && (errors.Is(err, store.ErrRevision) || errors.Is(err, store.ErrNotFound)) {
+			fail(w, 412, "dav_replace_condition_failed")
+			return
+		}
+		if errors.Is(err, custody.ErrNamespaceFileProfile) {
+			w.Header().Set("Allow", davDirectoryMethods)
+			fail(w, 405, "dav_file_replace_profile_only")
+			return
+		}
 		if errors.Is(err, store.ErrExists) {
 			fail(w, 412, "dav_resource_already_exists")
 			return
@@ -172,10 +194,13 @@ func (s *Server) davRead(w http.ResponseWriter, r *http.Request) {
 		}
 		acceptance := custody.Acceptance(file)
 		status := 201
+		namespaceState := "published-at-commit"
+		if target.MatchFile != nil {
+			status, namespaceState = 200, "replaced-at-commit"
+		}
 		if acceptance == "durable-held-pending-checks-and-release" {
 			status = 202
 		}
-		namespaceState := "published-at-commit"
 		if status == 202 {
 			namespaceState = "not-published-at-acceptance"
 		}
@@ -184,7 +209,7 @@ func (s *Server) davRead(w http.ResponseWriter, r *http.Request) {
 			namespaceState = "not-asserted-original-receipt"
 		}
 		// A held receipt is not a DAV publication or current-resource validator.
-		if status == 201 && !replayed {
+		if (status == 201 || target.MatchFile != nil && status == 200) && !replayed {
 			w.Header().Set("ETag", artifactRevisionETag(file))
 		}
 		w.Header().Set("X-Freightctl-Acceptance", acceptance)

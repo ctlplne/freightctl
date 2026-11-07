@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "id": "F392",
+  "observed_at": "2026-11-07",
+  "base_candidate": "157151caeab9a07b35a16dfc6ab136b53ca060fb",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F392 adds exact strong-tag file PUT replacement through ordinary custody acceptance and namespace publication. Require one If-Match or create-only If-None-Match:*,known length,digest and original key;refuse weak/list/wildcard/duplicate/date/DAV/range ambiguity. Under the existing namespace lock,before bytes/replay,require read/write,current actual-path modes/intake and exact old immutable file ID/hash. New integrity publication returns200/replaced-at-commit/new ETag;old custody remains. Held intake returns202/no ETag and keeps the old mapping;historical receipt200 asserts no current publication. Persist optional expected_file_id plus derived mapping revision in the ordinary pending PathCommand;check current binding and publication so same-revision delete/recreate cannot authorize stale release. Absent optional fields preserve original upload/command meanings. API guard first fails428 then passes;focused DAV guards and target-meaning/release-binding tests pass,affected tagged compilation,vet,format and architecture pass. Prepared native ARM/x86 PostgreSQL and stock curl cover one race winner,stale/original key412,equal-content foreign identity,read-only/write-only refusal,independent new/old bytes,held recovery/separate release,current-policy refusal,same-revision changed-identity rejection,exact six acceptances/publications and zero external/run effects. Native outcomes remain owed;no runtime qualification inferred. No schema/local database/runtime/resource changes.",
+  "red_green": "Actual exact strong If-Match request first rejected428 by existing pre-router guard,then focused guard/custody tests pass. Historical default JSON meanings remain exact;different old ID or hash changes meaning and pending release serialization retains old ID+revision. Real transactional/race/held-release/stock peer tests are compiled only locally,not run.",
+  "owed": [
+    "Original native ARM/x86 real PostgreSQL replacement race,scope/mode/intake,exact identity and saved receipt outcomes",
+    "Original stock curl new revision/stale retry/old custody independent readbacks",
+    "Actual held replacement recovery,separate successful release,equal-revision changed-ID refusal and revoked current-policy refusal",
+    "Final-source broad/race/integration/security/native/reproducibility and all baseline/AX/readiness gates"
+  ],
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "e10890b9629d2889c1484714b09432fb421a05adcc9634ec61468f0de8629af2",
+      "bytes": 7041
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "b961a9adc28ba270260ef73c26ccfa1c7641b906efa5862a6544dcfeb7ebe6a5",
+      "bytes": 534176
+    },
+    {
+      "reference": "docs/qualification/parity.json",
+      "sha256": "94107363043738e0525bbbd698fbc088463c906f267d03cb408c9a6d6da2cb34",
+      "bytes": 151739
+    },
+    {
+      "reference": "docs/protocols/webdav-read-profile.md",
+      "sha256": "cafcdd6a51ec4e0f6f60a0524959be9653d100ebedf1c4b5a2c0fe5ab81e4409",
+      "bytes": 11816
+    },
+    {
+      "reference": "internal/api/webdav.go",
+      "sha256": "ea07f38318a439eafbff58ac3c558e3e626b3e2ed2fa87305c111c04e4a9cd4d",
+      "bytes": 10036
+    },
+    {
+      "reference": "internal/api/webdav_replace_test.go",
+      "sha256": "447fae7d8ee57916a7f89aafb72193bf8dc2e126cbc70ee595eb64ef7671ab10",
+      "bytes": 2057
+    },
+    {
+      "reference": "internal/api/webdav_replace_integration_test.go",
+      "sha256": "37e0b49bb6229a0e0a4dc3901e5f1c3420dd42b435b9769c6e8b1db562df4ef4",
+      "bytes": 10643
+    },
+    {
+      "reference": "internal/api/webdav_stock_integration_test.go",
+      "sha256": "34d6d1fec35fa856e4c4bf175e8c50db7fa54df09f11b32b6c1aa8aa0e898410",
+      "bytes": 14508
+    },
+    {
+      "reference": "internal/custody/namespace.go",
+      "sha256": "ee67d5c89510990d92e27ebe1aa61769b0109665d97b9c77a664472a1a5b17c7",
+      "bytes": 9943
+    },
+    {
+      "reference": "internal/custody/namespace_condition_test.go",
+      "sha256": "5c75e1b646368e404ea83d44c07345d0fab04ac9c877598d31003a3cd03e3fc1",
+      "bytes": 2619
+    },
+    {
+      "reference": "internal/custody/service.go",
+      "sha256": "43fd7ec27acdc75925b4ee06460c6f544b3f6e771999458bc0efb551a98f5486",
+      "bytes": 6084
+    },
+    {
+      "reference": "internal/store/namespace.go",
+      "sha256": "6bb6d9dc3e59ee1097697671d58fbfbd873a616ab263d60e05a768b5670ffa90",
+      "bytes": 20281
+    },
+    {
+      "reference": "internal/store/intake.go",
+      "sha256": "0e476e05fea3c98dc71a49f13ec537b8bb20ceeae886423ff381a9a79dbb7465",
+      "bytes": 12712
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f392-replacement-red.log",
+      "sha256": "7004b74e805ecbe4c7d5b3be4b9341e6c40e4f772e2e144918f437aa2c2facb4",
+      "bytes": 247
+    },
+    {
+      "reference": ".private/freightctl-f392-api-focused.log",
+      "sha256": "5d7bc77c972b600cbbbf93a77308b85e417f7bc9ef1eac8e3722306d1d51cbed",
+      "bytes": 55
+    },
+    {
+      "reference": ".private/freightctl-f392-custody-focused.log",
+      "sha256": "a07caaf66c8932ac5e397c1c3b23257f646ed59da14f26ccacc8e0ab75c7ad66",
+      "bytes": 59
+    },
+    {
+      "reference": ".private/freightctl-f392-native-compile.log",
+      "sha256": "cc48995a33ebab2e3fa6d1af879ae11e0d6a583b6bf4718a5fa56a868cd71011",
+      "bytes": 301
+    },
+    {
+      "reference": ".private/freightctl-f392-final-native-compile.log",
+      "sha256": "3761a8af5a288ec9d351e8a6786c83e6191846c57b533cc9c43b54874587833a",
+      "bytes": 301
+    },
+    {
+      "reference": ".private/freightctl-f392-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f392-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f392-architecture.log",
+      "sha256": "09742351eb6e1665b6406626bd6db52dde212c624f91215edc7bac2d2d389172",
+      "bytes": 64
+    }
+  ]
+}

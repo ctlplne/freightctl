@@ -224,6 +224,33 @@ func TestWebDAVNativeStockCurlDiscoveryInterruptedReadAndExactResume(t *testing.
 	if status != 200 || !bytes.Equal(independentBytes, data) || headers.Get("X-File-Revision-ID") != receipt.File.ID {
 		t.Fatal("moving/removing the source mapping changed the copied resource")
 	}
+	replacement := []byte("independent stock conditional replacement\n")
+	replacementPath := filepath.Join(private, "replacement.dat")
+	if err = os.WriteFile(replacementPath, replacement, 0600); err != nil {
+		t.Fatal(err)
+	}
+	replaceArgs := []string{"--upload-file", replacementPath, "--header", "If-Match: " + artifactRevisionETag(&receipt.File), "--header", "Idempotency-Key: dav-stock-replace", "--header", "X-Content-SHA256: " + secure.Digest(replacement)}
+	status, headers, body, _ = run("conditional-replace", copiedPath, replaceArgs, true)
+	var replaced struct {
+		File      store.File `json:"file"`
+		Replayed  bool       `json:"replayed"`
+		Namespace string     `json:"namespace_state"`
+	}
+	if status != 200 || json.Unmarshal(body, &replaced) != nil || replaced.Replayed || replaced.Namespace != "replaced-at-commit" || replaced.File.ID == receipt.File.ID || replaced.File.SHA256 != secure.Digest(replacement) || headers.Get("ETag") != artifactRevisionETag(&replaced.File) {
+		t.Fatal("stock replacement did not bind a new exact immutable revision")
+	}
+	status, headers, _, replaceRefused := run("conditional-replace-retry", copiedPath, replaceArgs, false)
+	if status != 412 || replaceRefused != 22 || headers.Get("ETag") != "" {
+		t.Fatal("stock stale replacement repeated an effect or invented a validator")
+	}
+	status, headers, replacedBytes, _ := run("conditional-replace-readback", copiedPath, nil, true)
+	if status != 200 || !bytes.Equal(replacedBytes, replacement) || headers.Get("X-File-Revision-ID") != replaced.File.ID {
+		t.Fatal("independent stock replacement readback differs")
+	}
+	status, _, previousBytes, _ := run("conditional-replace-old-custody", prefix+"/files/"+receipt.File.ID, nil, true)
+	if status != 200 || !bytes.Equal(previousBytes, data) {
+		t.Fatal("stock replacement destroyed original custody")
+	}
 	binaryPath, err := exec.LookPath("curl")
 	if err != nil {
 		t.Fatal(err)
@@ -232,5 +259,5 @@ func TestWebDAVNativeStockCurlDiscoveryInterruptedReadAndExactResume(t *testing.
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Logf("native conditional-create/file-move/file-remove/read DAV proof;candidate=%s;architecture=%s;curl-SHA256=%s;lost-exit=%d;prefix=65536;bytes=%d;SHA256=%s;XML=independently-parsed;receiver=independently-compared;conditional-retry=412;stale-move=412;removed-path=404;stale-delete=412;retained-custody=independently-compared;other-writes-locks-full-DAV=owed", commit, runtime.GOARCH, secure.Digest(binary), lostExit, len(received), secure.Digest(received))
+	t.Logf("native conditional-create/file-replace/file-move/file-remove/read DAV proof;candidate=%s;architecture=%s;curl-SHA256=%s;lost-exit=%d;prefix=65536;bytes=%d;SHA256=%s;XML=independently-parsed;receiver=independently-compared;conditional-retry=412;stale-replace=412;stale-move=412;removed-path=404;stale-delete=412;retained-custody=independently-compared;other-writes-locks-full-DAV=owed", commit, runtime.GOARCH, secure.Digest(binary), lostExit, len(received), secure.Digest(received))
 }
