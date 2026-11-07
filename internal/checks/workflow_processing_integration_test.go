@@ -128,7 +128,12 @@ func TestProcessingWorkflowActualConfinedActorHasNoAdministrationReleaseOrDelive
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err = s.Release(f.ctx, actor, worked.Processing.FileID, "cannot-release", releaseDecision(checked.Check)); !errors.Is(err, store.ErrForbidden) {
+	if checked.Check.State != "queued" || checked.Check.ReportHash != "" {
+		t.Fatal("workflow processing supplied a completed check report")
+	}
+	deniedRelease := releaseDecision(checked.Check)
+	deniedRelease.ReportHash = secure.Digest([]byte("not a completed check report"))
+	if _, err = s.Release(f.ctx, actor, worked.Processing.FileID, "cannot-release", deniedRelease); !errors.Is(err, store.ErrForbidden) {
 		t.Fatal("workflow execution granted release", err)
 	}
 	var root, target string

@@ -66,6 +66,13 @@ addressed the maintenance database,so enrollment failed before protocol proof.
 No global environment or production authentication changes. Integration compile
 and vet pass;original native byte,abort,revocation and modern-SFTP replay is owed.
 
+F215 repairs original native fixture preconditions:workflow template requires the
+current78/77 table/RLS profile;MCP ticket counts run as their actual owner;
+processing release denials use a well-formed forged report hash and assert output
+is still queued;output-policy cookie mutations supply Origin. All original
+security assertions remain. Compile/vet and profile conformance pass only;native
+repair replays remain owed.
+
 Schema3 records.project binds an owned checked input,approved exact task,one
 durable processing intent,slots and events/receipt. Stable work keys select one
 historical attempt;current status is separate. New artifacts stay held for fresh

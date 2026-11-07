@@ -35,7 +35,7 @@ func TestProcessingOutputPolicyHTTPSScopesRegistryAndPreservesDefaultIngress(t *
 	output.Schema = 2
 	output.Kind = "json_records"
 	body := exchangeAPIJSON(t, checks.OutputPolicyRequest{Producer: actor.Actor, Definition: output})
-	_, raw := exchangeAPIRequest(t, server, "POST", prefix+"/processing-output-policies", cookie, map[string]string{"X-CSRF-Token": csrf, "Idempotency-Key": "api-register-output-policy"}, body, 200)
+	_, raw := exchangeAPIRequest(t, server, "POST", prefix+"/processing-output-policies", cookie, map[string]string{"Origin": server.URL, "X-CSRF-Token": csrf, "Idempotency-Key": "api-register-output-policy"}, body, 200)
 	var accepted checks.Result
 	var record checks.OutputPolicyRecord
 	if json.Unmarshal(raw, &accepted) != nil || json.Unmarshal(accepted.Resource, &record) != nil || record.Policy.State != "output_active" || record.Binding.Producer.Actor != actor.Actor || record.IngressChanged || record.Usage != "producer-workflow-output-contract" {
@@ -68,12 +68,12 @@ func TestProcessingOutputPolicyHTTPSScopesRegistryAndPreservesDefaultIngress(t *
 	}
 	decision := exchangeAPIJSON(t, checks.PolicyDecision{Hash: record.Policy.Hash, Version: 1, Revision: 1})
 	_, _ = exchangeAPIRequest(t, server, "POST", prefix+"/processing-output-policies/"+id+"/1/revoke", nil, map[string]string{"Authorization": "Bearer " + string(producer.Bytes), "Idempotency-Key": "producer-cannot-revoke"}, decision, 403)
-	_, _ = exchangeAPIRequest(t, server, "POST", prefix+"/processing-output-policies/"+id+"/1/revoke", cookie, map[string]string{"X-CSRF-Token": csrf, "Idempotency-Key": "api-revoke-output-policy"}, decision, 200)
+	_, _ = exchangeAPIRequest(t, server, "POST", prefix+"/processing-output-policies/"+id+"/1/revoke", cookie, map[string]string{"Origin": server.URL, "X-CSRF-Token": csrf, "Idempotency-Key": "api-revoke-output-policy"}, decision, 200)
 	_, raw = exchangeAPIRequest(t, server, "GET", prefix+"/processing-workflows", nil, headers, nil, 200)
 	if json.Unmarshal(raw, &catalog) != nil || len(catalog.Workflows) != 1 || !catalog.Workflows[0].ApprovalCurrent || catalog.Workflows[0].OutputPolicyCurrent {
 		t.Fatal("served catalog confused old task approval with revoked output policy")
 	}
-	_, raw = exchangeAPIRequest(t, server, "POST", prefix+"/processing-output-policies", cookie, map[string]string{"X-CSRF-Token": csrf, "Idempotency-Key": "api-register-output-policy"}, body, 200)
+	_, raw = exchangeAPIRequest(t, server, "POST", prefix+"/processing-output-policies", cookie, map[string]string{"Origin": server.URL, "X-CSRF-Token": csrf, "Idempotency-Key": "api-register-output-policy"}, body, 200)
 	var replay checks.Result
 	if json.Unmarshal(raw, &replay) != nil || !replay.Replayed {
 		t.Fatal("output revocation erased original API registration")

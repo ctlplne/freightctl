@@ -216,7 +216,10 @@ func TestMCPStockClientExchangeUsesOrdinaryAuthorityAndSeparateReply(t *testing.
 	if !aborted.Replayed {
 		t.Fatal("abort retry lost receipt")
 	}
-	ticketTx, err := service.DB.Begin(ctx, scope)
+	// Upload tickets and receipts are actor-private even from a root runtime
+	// account. Inspect cardinality as their actual owner; do not bypass RLS.
+	uploadScope := store.Scope{Tenant: scope.Tenant, Partner: scope.Partner, TokenHash: secure.Digest(uploadToken.Bytes)}
+	ticketTx, err := service.DB.Begin(ctx, uploadScope)
 	if err != nil {
 		t.Fatal(err)
 	}

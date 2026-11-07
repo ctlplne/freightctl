@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "id": "F215",
+  "observed_at": "2026-11-07",
+  "base_candidate": "71e8166d0bc96c574055e00f749d387e0f0b0460",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Original native fixture controls now have valid inputs and observation scope;runtime replay owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "80cbd6f704494d5894a27d60fff3a101fc3fbf0d7fc33718252a9859084c327c",
+      "bytes": 14540
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "388055ee82bade5906624a2bab749e05f1e29a774beac68f391dfca50e161854",
+      "bytes": 363981
+    },
+    {
+      "reference": "internal/api/mcp_integration_test.go",
+      "sha256": "a02984c738af81d6bf5d2112acf926520dee7db76a9d203ce4bcb679ac7080f6",
+      "bytes": 36600
+    },
+    {
+      "reference": "internal/api/output_policies_integration_test.go",
+      "sha256": "9cf9c1aa17ff1550b285793247439dcff2f4a932b55ee94b8dfb7585a77b33b4",
+      "bytes": 6119
+    },
+    {
+      "reference": "internal/checks/projection_scope_integration_test.go",
+      "sha256": "b5958a4112b5fc6add0579594549714a9ab4a4323016a7d8a7de498189b641ac",
+      "bytes": 5691
+    },
+    {
+      "reference": "internal/checks/workflow_processing_integration_test.go",
+      "sha256": "81d58b4574b91d3a838796e61b5c23eaa09e18929c3698f9e698fff4db817f36",
+      "bytes": 13819
+    },
+    {
+      "reference": "internal/workflow/template_integration_test.go",
+      "sha256": "a3a1bddb2f050cde439f4ddb92492b679c7c8f423a686032e65caa6837f6ffe1",
+      "bytes": 6179
+    }
+  ],
+  "original_failure": {
+    "candidate": "91ed18d4aa2bb8900f684035c241f5b8d30a37b1",
+    "run": 42348791097,
+    "job": 128332262484,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128332262484",
+    "observations": [
+      "Workflow template rejects actual78/77 schema against stale64/63 before many native tests.",
+      "MCP ticket/receipt count0/0 under wrong root runtime actor;chunks2 and publication1 observed.",
+      "Scoped projection and processing workflow expect forbidden release,but empty queued report hash stops at invalid input.",
+      "Output-policy POST with cookie/CSRF but no Origin stops at403."
+    ]
+  },
+  "changed": [
+    "Require exact current78 metadata/77 forced-RLS tables;retain empty domain tables,checksum verification,isolated clones and protected template CONNECT assertion.",
+    "Observe private ticket/receipt cardinality under the real upload owner. Keep exact counts2 tickets/2 chunks/6 receipts/1 publication and all ordinary tool/HTTPS assertions.",
+    "Assert processing output check is queued with no report hash;send a well-formed forged hash to exercise missing release authority. Keep forbidden-release and held-byte assertions.",
+    "Supply exact served Origin on output-policy cookie mutations;keep CSRF requirements,producer refusal and revocation/replay/default-ingress assertions."
+  ],
+  "green": [
+    "Affected integration-tag compilation -run ^$ and vet pass;exact template profile matches metadata_contract. No local PostgreSQL or served runtime execution."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f215-fixture-compile.log",
+      "sha256": "275128ac2f057e58c1f90ead40444a3928f4d53eb57930673c0660cd28adf54c",
+      "bytes": 227
+    },
+    {
+      "reference": ".private/freightctl-f215-fixture-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f215-profile-conformance.log",
+      "sha256": "3a307bba6e440cb257b10306a0cd8eb5eb7b8f725402227b9c59ea40886c92b9",
+      "bytes": 152
+    }
+  ],
+  "owed": [
+    "Original exact native workflow-template/MCP/release/output-policy positive and negative replays on repaired source.",
+    "All actual final-source native/browser/stock/security/race/restore/reproducibility and remaining baseline/AX/FINISH work."
+  ],
+  "resources": "OneCPU/192MiB local compilation/static only;no PostgreSQL,Chrome,inference,scanner or native peer. Retained35/source60 unchanged."
+}

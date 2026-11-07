@@ -95,7 +95,7 @@ func initializeWorkflowTemplate(ctx context.Context, admin *pgxpool.Pool, adminR
 	if err = conn.QueryRow(ctx, `SELECT count(*),count(*) FILTER(WHERE c.relrowsecurity AND c.relforcerowsecurity) FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname='public' AND c.relkind='r'`).Scan(&tables, &rls); err != nil {
 		return err
 	}
-	if tables != 64 || rls != 63 {
+	if tables != 78 || rls != 77 {
 		return errors.New("empty workflow template schema or RLS profile differs")
 	}
 	rows, err := conn.Query(ctx, `SELECT c.relname FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname='public' AND c.relkind='r' AND c.relname<>'freightctl_schema' ORDER BY c.relname`)

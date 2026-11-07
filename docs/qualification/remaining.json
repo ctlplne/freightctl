@@ -1148,7 +1148,8 @@
         "docs/qualification/evidence/F209-runtime-credential-read-fence.json",
         "docs/qualification/evidence/F211-original-security-fixture-preconditions.json",
         "docs/qualification/evidence/F202-finish-repair-terminal-ci.json",
-        "docs/qualification/evidence/F213-scp-fixture-administrative-realm.json"
+        "docs/qualification/evidence/F213-scp-fixture-administrative-realm.json",
+        "docs/qualification/evidence/F215-native-fixture-scope-and-preconditions.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -1195,14 +1196,14 @@
         "F207 preserves91ed18d native tus failures on both architectures:401 HEAD/PATCH/complete controls pass,but the old root-runtime checkpoint observer sees no row because upload RLS is actor-private. The test now explicitly asserts that root runtime cannot see the row and separately compares exact before/after checkpoints through a read-only/read-committed administrative connection to the exact task-owned database. Offset/chunk/open/no-file and all denial assertions remain. Compile/vet only pass locally;actual original native replay owed. Both91ed18d tus jobs independently pass ordinary schema initialization;whole journeys remain red.",
         "F209 repairs native credentials42501 failures:registration requires the existing pre-authentication account fence and reads metadata without a forbidden credential row-lock. New migration60 reuses the same shared account fence in processing-review/output-binding/proposal guards;late conflict fails40001 before reading authority. No credential write grant,definer role or predicate removed. Prior59 migration bytes/retained35 unchanged;78metadata/77forced RLS. Focused/full Go,7metadata/5retained stand-ins,architecture/vet and syntax pass;real role-write refusal/scope/lock conflict/registration and original runtime replay remain prepared/compiled only.",
         "F211 repairs three original native test preconditions while retaining/tightening all assertions:ordinary versioned setstat makes the unauthorized HTTP fixture0600 instead of partner-readable0640;rejected-release attempts use a syntactically valid forged hash so role/state gates execute;completed SQL format candidates clear their worker/lease and require the intended file-check guard error. No production authorization,parser,lease or SQL constraint changed. Integration compile/vet only pass;actual original native red/green replay owed.",
-        "F213 corrects the original native SCP enrollment fixture:the protected administrative reference now resolves the exact served browser database,not the maintenance database. Enrollment/revocation/cross-actor controls and every protocol assertion remain. Integration compile/vet pass;actual native replay owed. F202 preserves91ed18d original16 terminal workflows/35 jobs:19 pass,16 fail;listed security checks pass,remaining originals stay red."
+        "F213 corrects the original native SCP enrollment fixture:the protected administrative reference now resolves the exact served browser database,not the maintenance database. Enrollment/revocation/cross-actor controls and every protocol assertion remain. Integration compile/vet pass;actual native replay owed. F202 preserves91ed18d original16 terminal workflows/35 jobs:19 pass,16 fail;listed security checks pass,remaining originals stay red.",
+        "F215 repairs original native fixture preconditions:workflow template exact table/RLS profile78/77,MCP ticket/receipt observation as actual owner,well-formed forged release hashes with queued-output assertions,and Origin on output-policy cookie mutations. Production RLS/CSRF/release rules and original denials remain. Compile/vet/profile conformance pass only;actual native replays owed."
       ],
       "current_item": {
-        "id": "F213",
-        "state": "SCP fixture administrative realm corrected;native replay owed",
-        "proof": "Original91ed18d/run42348791082/job128332262319 unauthorized enrollment preserved. Protected reference resolves the exact isolated served database;all three key controls use it. Compilation/vet pass only",
-        "native": "Original SCP byte,abort,revocation,host-trust,modern-SFTP and cross-actor runtime replay remains owed",
-        "next": "Push verified repair batch after terminal F202 security evidence;continue original PostgreSQL/CI failures and all remaining implementation/baseline/AX/FINISH work"
+        "id": "F215",
+        "state": "Original native fixture preconditions corrected;runtime replay owed",
+        "proof": "Original91ed18d/run42348791097/job128332262484 schema-profile,private-ticket counts,release-input and cookie403 failures retained;affected compilation/vet/current-profile conformance pass",
+        "next": "Continue actual native failures,typed MCP wire defect,Windows and full remaining implementation/AX/FINISH gates"
       }
     }
   ],
