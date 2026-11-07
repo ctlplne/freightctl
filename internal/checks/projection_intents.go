@@ -11,9 +11,10 @@ import (
 )
 
 type ProjectionDefinition struct {
-	Schema int            `json:"schema_version"`
-	Plan   ProjectionPlan `json:"plan"`
-	Slots  []string       `json:"staging_slots"`
+	Schema   int                              `json:"schema_version"`
+	Plan     ProjectionPlan                   `json:"plan"`
+	Slots    []string                         `json:"staging_slots"`
+	Workflow *store.ProcessingWorkflowBinding `json:"workflow,omitempty"`
 }
 type ProjectionAttempt struct {
 	ID       string `json:"projection_id"`
@@ -40,7 +41,10 @@ type ProjectionOutput struct {
 
 func decodeProjection(r *store.RecordProjection) (ProjectionDefinition, error) {
 	var d ProjectionDefinition
-	if r == nil || len(r.Definition) > 32768 || workflow.Decode(r.Definition, &d) != nil || d.Schema != 1 || !validProjectionProfile(d.Plan) || len(d.Slots) != 3 || d.Plan.Context.Source.File.ID != r.SourceID {
+	if r == nil || len(r.Definition) > 32768 || workflow.Decode(r.Definition, &d) != nil || (d.Schema != 1 && d.Schema != 2) || (d.Schema == 2) != (d.Workflow != nil) || !validProjectionProfile(d.Plan) || len(d.Slots) != 3 || d.Plan.Context.Source.File.ID != r.SourceID {
+		return d, store.ErrState
+	}
+	if b := d.Workflow; b != nil && (!store.ValidID(b.WorkflowID) || !store.ValidID(b.RunID) || b.Version < 1 || !hashPattern.MatchString(b.Hash) || !keyPattern.MatchString(b.StepID) || d.Plan.Profile != ScopedProjectionProfile) {
 		return d, store.ErrState
 	}
 	_, hash, err := canonical(d)
@@ -70,6 +74,9 @@ func projectionOptionsFor(plan ProjectionPlan) ProjectionOptions {
 	return ProjectionOptions{Profile: plan.Profile, TargetPath: path, Reason: plan.Context.Reason, Definition: plan.Projection}
 }
 func (s *Service) projectionCurrent(ctx context.Context, t *store.Transaction, d ProjectionDefinition, lock bool) (*ProjectionPreview, error) {
+	if err := projectionWorkflowCurrent(ctx, t, d); err != nil {
+		return nil, err
+	}
 	fresh, err := s.projectionPlan(ctx, t, d.Plan.Context.Source.File.ID, projectionOptionsFor(d.Plan), lock)
 	if err != nil {
 		return nil, err

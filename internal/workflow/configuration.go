@@ -15,7 +15,10 @@ import (
 	"github.com/ctlplne/freightctl/internal/vpath"
 )
 
-type Service struct{ Custody *custody.Service }
+type Service struct {
+	Custody   *custody.Service
+	Processor ProcessingPort
+}
 type ConnectionDefinition struct {
 	Schema      int                      `json:"schema_version"`
 	Destination secure.SSHDestination    `json:"destination"`
@@ -275,6 +278,18 @@ func (s *Service) RevokeConnection(ctx context.Context, scope store.Scope, id st
 	return result(t, ctx, key, meaning, id, view)
 }
 func connections(ctx context.Context, t *store.Transaction, d Definition) ([]ConnectionView, error) {
+	if d.Schema == 3 {
+		if d.Processing == nil {
+			return nil, ErrInput
+		}
+		p, err := t.IntakePolicy(ctx, false)
+		if err != nil {
+			return nil, err
+		}
+		if p == nil || p.State != "active" || d.Processing.OutputPolicy != (Reference{ID: p.ID, Version: p.Version, Hash: p.Hash}) {
+			return nil, store.ErrRevision
+		}
+	}
 	if d.Source != nil {
 		if _, _, err := collectionConnection(ctx, t, d.Source); err != nil {
 			return nil, err
@@ -347,6 +362,11 @@ func (s *Service) Draft(ctx context.Context, scope store.Scope, key string, r Dr
 // only draft creation, with exactly the same normalization and permission gates.
 // It never approves a definition, creates a run or executes an external effect.
 func StageDraft(ctx context.Context, t *store.Transaction, r DraftRequest) (*store.Configuration, error) {
+	// Schema 3 is a contract checkpoint only. Keep it out of persisted workflows
+	// until its transactional SQL guards, run binding and dispatch are installed.
+	if r.Definition.Schema == 3 {
+		return nil, store.ErrState
+	}
 	if t.Root != "/" {
 		return nil, store.ErrForbidden
 	}
@@ -472,6 +492,7 @@ type Preview struct {
 	ExternalContact  bool              `json:"external_contact"`
 	ApprovalRequired bool              `json:"approval_required"`
 	Collection       *CollectionEffect `json:"collection,omitempty"`
+	Processing       json.RawMessage   `json:"processing,omitempty"`
 }
 
 func (s *Service) Validate(ctx context.Context, scope store.Scope, r PreviewRequest) (*Preview, error) {
@@ -513,7 +534,18 @@ func (s *Service) Validate(ctx context.Context, scope store.Scope, r PreviewRequ
 		if err = t.Require("read"); err != nil {
 			return nil, err
 		}
-		if err = t.FileAccessible(ctx, r.FileID); err != nil {
+		if d.Schema == 3 {
+			if s.Processor == nil {
+				return nil, store.ErrState
+			}
+			if err = t.NamespaceLock(ctx); err != nil {
+				return nil, err
+			}
+			preview.Processing, err = s.Processor.ValidateProcessing(ctx, t, *d.Processing, r.FileID)
+			if err != nil {
+				return nil, err
+			}
+		} else if err = t.FileAccessible(ctx, r.FileID); err != nil {
 			return nil, err
 		}
 		preview.Source, err = t.File(ctx, r.FileID)

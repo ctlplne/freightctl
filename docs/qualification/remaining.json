@@ -234,7 +234,8 @@
         "docs/qualification/evidence/F164-review-parent-terminal-ci.json",
         "docs/qualification/evidence/F165-scoped-record-processing.json",
         "docs/qualification/evidence/F166-projection-parent-terminal-ci.json",
-        "docs/qualification/evidence/F167-scoped-mcp-processing.json"
+        "docs/qualification/evidence/F167-scoped-mcp-processing.json",
+        "docs/qualification/evidence/F168-typed-processing-checkpoint.json"
       ],
       "remaining_details": [
         "F007/F008 verify bounded leased/fenced SFTP intents and typed ordered workflow runs with registered connection versions, conservative ambiguity, same-step dispatch replay across restart, and queued cancellation. Finish unattended/fair scheduling, broader processing/conditions/loops/batches, active cancellation/rebinding, overlapping key rotations, receiver business contracts, remote quotas/retention/cleanup and distributed failures.",
@@ -285,7 +286,8 @@
         "F157/F158 add one typed five-format row stream and hash-bound JSON/CSV projection core,with exact values/presence and private-stage red/green. Governed workflow authority/intents/quotas/lineage/recovery/output controls and ordinary surfaces are still required;new native receiver/race/fuzz outcomes owed. F159 preserves sourcef6be16a terminal17-run outcomes and every original failure.",
         "F160/F161 implement governed exact-source/protection/output-contract metadata review through API/CLI;focused red/green/static checks pass. Native review is prepared,not passed;durable approved transformation execution,quota,lineage,recovery,fresh output controls and all surfaces remain owed. F162 proves only source036fbd3 ARM/x86 stock five-format projection/ten-output independent receiver primitives;all17 original CI runs are terminal and application failures remain red.",
         "F163 adds standalone durable approved/fenced projection intents and API/CLI held-output materialization with immutable lineage,failure/original receipts and verified sealed adoption. Focused local red/green/static checks and12 metadata stand-ins pass. Source51 targets73/72;retained35 unchanged. Native SQL/application/recovery/protected-format proof,typed workflow/scoped processor,browser/MCP/fairness and full customer outcomes remain owed. F164 preserves all17 terminal5f6fcc9 runs;original failures remain red.",
-        "F165 adds explicit scoped processing with existing per-action workflow grants,namespace target/receipt binding and append-only52;retained35 unchanged. F167 adds five redacted metadata MCP tools,Catalog31/v13,opaque review and original-key recovery,with approval outside tools. Focused local contracts/static/12 metadata stand-ins pass. Confined-actor/stock-SDK/native SQL/runtime and full typed workflow/browser/delegation/customer acceptance remain owed. F166 records all17 terminal3bbd07c workflows and scoped native document primitive passes;original failures remain red."
+        "F165 adds explicit scoped processing with existing per-action workflow grants,namespace target/receipt binding and append-only52;retained35 unchanged. F167 adds five redacted metadata MCP tools,Catalog31/v13,opaque review and original-key recovery,with approval outside tools. Focused local contracts/static/12 metadata stand-ins pass. Confined-actor/stock-SDK/native SQL/runtime and full typed workflow/browser/delegation/customer acceptance remain owed. F166 records all17 terminal3bbd07c workflows and scoped native document primitive passes;original failures remain red.",
+        "F168 checkpoints schema3 typed record-processing rules and an unregistered dependency adapter. Focused contract/draft-gate red/green and affected static checks pass. Schema3 draft persistence explicitly refuses until transactional run dispatch and SQL guards exist;no migration/runtime/whole-row qualification. Native API/CLI/browser,held-output release/recovery and all original FINISH outcomes remain owed."
       ]
     },
     {
@@ -315,7 +317,8 @@
         "docs/qualification/evidence/F055-retained-handoff-upgrade-rehearsal.json",
         "docs/qualification/evidence/F056-retained-handoff-upgrade-applied.json",
         "docs/qualification/evidence/F073-ftps-workflow-connections.json",
-        "docs/qualification/evidence/F074-ftps-recipient-encryption.json"
+        "docs/qualification/evidence/F074-ftps-recipient-encryption.json",
+        "docs/qualification/evidence/F168-typed-processing-checkpoint.json"
       ],
       "remaining_details": [
         "F008 supplies shared CLI/HTTPS typed workflow drafts, offline validation/preview, version diff, explicit approval/revocation and atomic ordered SFTP runs without any inference dependency. First real private-model proposal/diagnosis, model-disabled replay after that integration, other task types, visual UI, adversarial/disclosure evaluations and two qualified profiles remain mandatory.",
@@ -358,7 +361,8 @@
         "F076 follow-up compiles/vets15 prepared native leaves:2 added producer-batch duplicate/changed-meaning cases, matching-event runtime-role DML forgeries plus exact canonical positive control, and admitted immutable kept-local plans in schema2 source cases. Originalfb317e5 application jobs have started and retain their13-case/predicate-only scope. Both fresh40metadata restores pass64tables/63forced-RLS/45rows with exact cleanup. Actual new collection/runtime/scan/public/crash/mixed/encrypted/independent-peer and all whole-goal gates remain open.",
         "First F076source40 x86fb317e5 completes862pass/4failed records/0skip, workflow342.162seconds. Ten exact FTPS copy/replay, bad-digest batch isolation, revocation and CSV release leaves and all prior regressions pass. D160 empty fixture actor prevents SQL execution; D161 unrelated one-recipient helper stops zero-recipient schedule before draft. Exact authenticated-actor/separate strict source-only helper fixes compile/vet; no assertion/budget weakened. D162 FTPS handoff metadata/rendering defects have captured/corrected pure reproduction and local repair:130frontend contracts, Go wire/race and closure pass. Original ARM still running; pending de93native has same known fixture errors. Preserve originals and require native15-leaf/disk/scan/public/crash/mixed/encrypted/independent-peer replay. Retained35 and all whole-goal gates remain open.",
         "F076de93 both native suites862pass/7fail/0skip in404.811ARM/400.981x86 workflow seconds:10original FTPS leaves and prior regressions pass, including new schema2 kept-local plans. Added batch case stops at producer namespace mutation missing its expected revisionD163; keep CAS guard and use observed exact replacement/removal. Prepare required public CLI/API metadata gate:16commands/mode,5saved-key replays,stopped zero-contact spy,current/cancelled/revoked history and independent input/output validation.71synthetic verifier/reporter methods,syntax/lint/CAS compile/vet pass; no local services or runtime claim. Both bounded image disk cleanups pass but feed exits137 without OOM state. Pending2c retains knownD163; original15native/public/Chrome/crash/mixed/encrypted/independent-peer and whole-goal gates stay open.",
-        "F076 registration failure follow-up uses the real metadata producer with command/source-spy stand-ins: exact owned spy closes once on registration failure, raw credentials stay out of argv, owner token unchanged, request/password0600 and child0700 under022. Eight metadata methods pass; with unchanged64reporter methods,72local methods cover evidence/refusal only. No product subprocess/network/DB/Chrome/inference ran. Current28cdfcb native/public qualification remains queued/unqualified; hold relevant source push until required candidate starts."
+        "F076 registration failure follow-up uses the real metadata producer with command/source-spy stand-ins: exact owned spy closes once on registration failure, raw credentials stay out of argv, owner token unchanged, request/password0600 and child0700 under022. Eight metadata methods pass; with unchanged64reporter methods,72local methods cover evidence/refusal only. No product subprocess/network/DB/Chrome/inference ran. Current28cdfcb native/public qualification remains queued/unqualified; hold relevant source push until required candidate starts.",
+        "F168 checkpoints schema3 typed record-processing rules and an unregistered dependency adapter. Focused contract/draft-gate red/green and affected static checks pass. Schema3 draft persistence explicitly refuses until transactional run dispatch and SQL guards exist;no migration/runtime/whole-row qualification. Native API/CLI/browser,held-output release/recovery and all original FINISH outcomes remain owed."
       ]
     },
     {
@@ -973,7 +977,8 @@
         "docs/qualification/evidence/F164-review-parent-terminal-ci.json",
         "docs/qualification/evidence/F165-scoped-record-processing.json",
         "docs/qualification/evidence/F166-projection-parent-terminal-ci.json",
-        "docs/qualification/evidence/F167-scoped-mcp-processing.json"
+        "docs/qualification/evidence/F167-scoped-mcp-processing.json",
+        "docs/qualification/evidence/F168-typed-processing-checkpoint.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -997,7 +1002,8 @@
         "F157/F158 add one typed five-format row stream and hash-bound JSON/CSV projection core,with exact values/presence and private-stage red/green. Governed workflow authority/intents/quotas/lineage/recovery/output controls and ordinary surfaces are still required;new native receiver/race/fuzz outcomes owed. F159 preserves sourcef6be16a terminal17-run outcomes and every original failure.",
         "F162 retains all17 source036fbd3 terminal runs and37 original jobs. Native document/projection primitives and listed security gates pass;all original failed/skipped application,Windows,metadata,public/stock/browser and FINISH outcomes remain owed. No full AX profile is qualified.",
         "F164 retains all17 source5f6fcc9 original runs/37 jobs terminal with listed security gates passing. New durable processing is later source and unqualified;no AX profile or complete workflow outcome is inferred. Every deferred original failure remains owed.",
-        "Scoped processing/MCP preparation does not qualify a complete artifact exchange or grant forwarding/release. F166 retains exact17-run/37-job prior-source outcomes. Full AX profiles,ordinary interfaces,protected formats,source52 native SQL and all FINISH gates remain owed."
+        "Scoped processing/MCP preparation does not qualify a complete artifact exchange or grant forwarding/release. F166 retains exact17-run/37-job prior-source outcomes. Full AX profiles,ordinary interfaces,protected formats,source52 native SQL and all FINISH gates remain owed.",
+        "F168 checkpoints schema3 typed record-processing rules and an unregistered dependency adapter. Focused contract/draft-gate red/green and affected static checks pass. Schema3 draft persistence explicitly refuses until transactional run dispatch and SQL guards exist;no migration/runtime/whole-row qualification. Native API/CLI/browser,held-output release/recovery and all original FINISH outcomes remain owed."
       ],
       "current_item": {
         "id": "F130",

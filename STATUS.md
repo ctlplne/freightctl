@@ -5,8 +5,11 @@ GOAL.md baseline, all 83 whole parity rows, twelve complete journeys and
 AX01–AX08 remain open. Assisted deployment, independent adoption and enterprise
 readiness are unqualified. Missing market selection does not block engineering.
 
-Latest completed pushed batch:3bbd07cd6da1ea16c8d996cfd6bd7cdac26e2034.
-All17 original workflows and37 jobs are terminal;F166 preserves exact handles,
+Latest pushed batch:c5b46a20cb1b57eecd2124aad36b88374c0aa80e.
+Its original workflows are still finishing at this checkpoint;preserve their
+exact handles and outcomes before the next authorized push. At the earlier
+3bbd07cd6da1ea16c8d996cfd6bd7cdac26e2034 source,all17 original workflows and37
+jobs are terminal;F166 preserves exact handles,
 original failed/skipped outcomes and safe security log manifests. Both ARM/x86
 document jobs passed stock ZIP/XLSX,race/receiver and new stage/intent/lease/review
 contracts. Listed source/image/dependency/secret gates,fuzz,reproduction and macOS
@@ -36,8 +39,19 @@ policy-change replay tests are prepared,not run locally. Compilation/stand-ins d
 not establish schema52 SQL,PostgreSQL,served interfaces or recovery. No local
 heavy runtime,scanner,database or inference was started.
 
-Next:connect this scoped processing foundation to the shared typed workflow
-representation;complete browser,independent reviewer/worker delegation,discovery,
+F168 checkpoints the typed processing definition and dependency port. Shared
+record rules retain their JSON field order. The proposed schema3 binds explicit
+mapping rules,source-policy hash and a separate output-policy revision without
+delivery steps or code execution. Draft persistence explicitly refuses schema3:
+the transactional workflow run/dispatch path and matching SQL guards do not yet
+exist. Adapter/store scaffolding is unregistered;there is no new migration or
+runtime capability. Observed contract and draft-gate failures are preserved;
+focused pure checks,affected compilation,vet and architecture checks pass.
+Actual workflow API/CLI/browser,PostgreSQL,held-output release and recovery proof
+remain owed. Source52/retained35 and all whole qualification states are unchanged.
+
+Next:finish the transactional typed workflow adapter and its SQL guards,then
+prove its native interfaces;complete browser,independent reviewer/worker delegation,discovery,
 operator recovery and protected-format/ordinary-client qualification. Prove fair
 admission,isolation,latency,quota/lease/process-death/restore boundaries and affected
 original customer journeys. Full baseline/AX work remains mandatory. Standalone

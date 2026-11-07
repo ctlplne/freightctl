@@ -38,11 +38,12 @@ type Step struct {
 	Encryption *store.EncryptionPolicy `json:"encryption,omitempty"`
 }
 type Definition struct {
-	Schema  int               `json:"schema_version"`
-	Name    string            `json:"name"`
-	Steps   []Step            `json:"steps"`
-	Source  *CollectionSource `json:"source,omitempty"`
-	Program *Program          `json:"program,omitempty"`
+	Schema     int               `json:"schema_version"`
+	Name       string            `json:"name"`
+	Steps      []Step            `json:"steps"`
+	Source     *CollectionSource `json:"source,omitempty"`
+	Program    *Program          `json:"program,omitempty"`
+	Processing *ProcessingTask   `json:"processing,omitempty"`
 }
 type DraftRequest struct {
 	ID              string     `json:"workflow_id,omitempty"`
@@ -75,10 +76,11 @@ type RunStepView struct {
 	Ciphertext  *store.DeliveryCiphertext `json:"ciphertext,omitempty"`
 }
 type RunView struct {
-	Run            *store.WorkflowRun `json:"run"`
-	Steps          []RunStepView      `json:"steps"`
-	ObservedState  string             `json:"observed_state"`
-	ObservedReason string             `json:"observed_reason"`
+	Run            *store.WorkflowRun     `json:"run"`
+	Steps          []RunStepView          `json:"steps"`
+	ObservedState  string                 `json:"observed_state"`
+	ObservedReason string                 `json:"observed_reason"`
+	Processing     *ProcessingObservation `json:"processing,omitempty"`
 }
 
 // Decode rejects duplicate keys before typed decoding. Silently taking the last
@@ -152,7 +154,7 @@ func Decode(data []byte, target any) error {
 	return nil
 }
 func Normalize(d Definition) (Definition, error) {
-	if (d.Schema != 1 && d.Schema != 2) || (d.Schema == 1 && len(d.Steps) < 1 && d.Source == nil) || len(d.Steps) > 16 || !utf8.ValidString(d.Name) {
+	if (d.Schema != 1 && d.Schema != 2 && d.Schema != 3) || (d.Schema == 1 && len(d.Steps) < 1 && d.Source == nil) || len(d.Steps) > 16 || !utf8.ValidString(d.Name) {
 		return d, ErrInput
 	}
 	d.Name = norm.NFC.String(d.Name)
@@ -163,6 +165,21 @@ func Normalize(d Definition) (Definition, error) {
 		if unicode.IsControl(r) {
 			return d, ErrInput
 		}
+	}
+	if d.Schema == 3 {
+		if d.Processing == nil || len(d.Steps) != 0 || d.Program != nil || d.Source != nil {
+			return d, ErrInput
+		}
+		task, err := normalizeProcessing(*d.Processing)
+		if err != nil {
+			return d, err
+		}
+		d.Processing = &task
+		d.Steps = []Step{}
+		return d, nil
+	}
+	if d.Processing != nil {
+		return d, ErrInput
 	}
 	if d.Source != nil {
 		value := *d.Source

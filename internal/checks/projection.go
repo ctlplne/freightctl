@@ -15,34 +15,14 @@ import (
 	"unicode"
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
+	"github.com/ctlplne/freightctl/internal/recordplan"
 	"github.com/ctlplne/freightctl/internal/store"
 )
 
 const ProjectionEngine = "freightctl-record-projection-v1"
 
-type ProjectionColumn struct {
-	Source     string `json:"source"`
-	Target     string `json:"target"`
-	Conversion string `json:"conversion"`
-	Missing    string `json:"missing"`
-	Null       string `json:"null"`
-	Empty      string `json:"empty"`
-}
-
-// RecordProjection is declarative data mapping,never code or execution authority.
-// Names are exact;order is explicit;presence conversions require a changed hash.
-type RecordProjection struct {
-	Schema           int                `json:"schema_version"`
-	Kind             string             `json:"kind"`
-	Engine           string             `json:"engine"`
-	SourcePolicyHash string             `json:"source_policy_hash"`
-	OutputKind       string             `json:"output_kind"`
-	Columns          []ProjectionColumn `json:"columns"`
-	MaxBytes         int64              `json:"max_bytes"`
-	MaxRecordBytes   int                `json:"max_record_bytes"`
-	MaxRows          int64              `json:"max_rows"`
-	TimeoutSeconds   int                `json:"timeout_seconds"`
-}
+type ProjectionColumn = recordplan.Column
+type RecordProjection = recordplan.Projection
 
 type ProjectionReport struct {
 	Engine             string `json:"engine"`

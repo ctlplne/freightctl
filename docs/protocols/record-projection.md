@@ -267,6 +267,16 @@ authority and mandatory source protections also remain the caller's obligations.
 
 ## Evidence boundary
 
+F168 checkpoints a proposed typed `records.project` task in workflow schema3.
+It pins explicit mapping rules and a separate output-policy revision and permits
+no delivery steps,source collection,program or arbitrary execution. The shared
+record-rule types preserve existing JSON field order and hashes. This is an
+incomplete adapter: schema3 draft persistence refuses with invalid state until
+transactional run dispatch,binding and matching SQL guards are implemented.
+The dependency port and store scaffolding are not registered by API or CLI.
+No migration,executable workflow or native qualification is claimed by this
+checkpoint. Existing standalone schema1/2 projection profiles remain available.
+
 Native ARM/x86 qualification prepares stock Python CSV/JSON/ElementTree/fixed
 fixtures and actual pinned XlsxWriter bytes. Ten JSON/CSV outputs are checked by a
 separate Python JSON/Decimal/CSV receiver for byte hashes,exact money and IDs,

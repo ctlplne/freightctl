@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "id": "F168",
+  "observed_at": "2026-11-06",
+  "candidate_parent": "c5b46a20cb1b57eecd2124aad36b88374c0aa80e",
+  "qualification_claim": false,
+  "state": "Incomplete typed processing checkpoint;schema3 draft persistence explicitly disabled;focused pure/static checks pass;transactional runtime and native outcomes owed",
+  "source_files": [
+    {
+      "reference": "internal/recordplan/types.go",
+      "sha256": "3566da604cca31c79fa92903eac63c1b46a26028565c2cd39b7663770eb3141c",
+      "bytes": 1014
+    },
+    {
+      "reference": "internal/checks/projection.go",
+      "sha256": "397fef6759c86e557f199e073d9e9f2a3d5e764cae060ffdaa6db67ab3c041b8",
+      "bytes": 12519
+    },
+    {
+      "reference": "internal/checks/projection_intents.go",
+      "sha256": "d5fbb8c73a89511e7be40813d5e34551d096e824647c6b3c2b2e078b43cd21df",
+      "bytes": 12549
+    },
+    {
+      "reference": "internal/checks/projection_scope.go",
+      "sha256": "a7f92cf1889e6fe2f13656fa224ee1861c45d05f4510eea2de2caa6c9a9f1197",
+      "bytes": 4041
+    },
+    {
+      "reference": "internal/checks/workflow_processing.go",
+      "sha256": "a20f1ea38d9784714df551435cb0473e68701ff3146646e274bbcfcfef69eb04",
+      "bytes": 6014
+    },
+    {
+      "reference": "internal/store/workflow_processing.go",
+      "sha256": "27fec9ef5ea7e7c132b44657f4c6057bf51fcfd0fc8360f20d76d96bb0b4fa7f",
+      "bytes": 1273
+    },
+    {
+      "reference": "internal/workflow/configuration.go",
+      "sha256": "6718cc39ce2ece822bdc1f64ba64671393b16ecf681be589787834d83a9b93d1",
+      "bytes": 19092
+    },
+    {
+      "reference": "internal/workflow/types.go",
+      "sha256": "8f8068efecdd29c0a681ea721668f328c489a175321827890a75d48eb3302019",
+      "bytes": 6739
+    },
+    {
+      "reference": "internal/workflow/processing.go",
+      "sha256": "3bed7b6e096224c7aa7db9262475d28d8e619a72f066a2a5b96e37e0d368295f",
+      "bytes": 3663
+    },
+    {
+      "reference": "internal/workflow/processing_test.go",
+      "sha256": "72392bc0d76031c26e653ef688b6f8053388a3ad7c0d2220b2a79725dd36fcac",
+      "bytes": 3360
+    },
+    {
+      "reference": "docs/protocols/record-projection.md",
+      "sha256": "e17f70ebc195e0bbc29200f173c4f4d8d225ac63bd080f52396d425ad96a2f74",
+      "bytes": 20018
+    }
+  ],
+  "changed": [
+    "Moved unchanged ordered record rule structs into internal/recordplan and retained checks aliases so legacy JSON and review hashes keep their representation.",
+    "Added normalized schema3 records.project contract:explicit source-policy hash,mapping/output/bounds,exact independent output-policy revision;no delivery steps,source collection,program or arbitrary execution.",
+    "Checkpointed the dependency port,workflow binding types and checks adapter scaffolding. No API/CLI Processor is installed,no workflow run dispatch is implemented,no workflow_processing table/migration exists.",
+    "StageDraft refuses schema3 with invalid state before SQL. Existing schema1/2 workflow draft/root/permission behavior is retained. No executable processing workflow is advertised."
+  ],
+  "red": [
+    {
+      "reference": ".private/freightctl-f168-workflow-red.log",
+      "observed": "Initial required typed definition tests failed compilation because Processing and ProcessingTask did not exist."
+    },
+    {
+      "reference": ".private/freightctl-f168-draft-gate-red.log",
+      "observed": "The draft-gate regression received permission denied instead of the explicit unavailable-runtime invalid state;schema3 reached the legacy draft path without a dedicated runtime gate."
+    }
+  ],
+  "green": {
+    "reference": ".private/freightctl-f168-final-focused.log",
+    "observed": "Typed rule ownership/defaults/roundtrip,no implicit delivery/scripts/unknown authority,and explicit draft unavailability pass,with affected legacy normalization/projection/scoped/intent/lease and architecture contracts."
+  },
+  "checks": [
+    {
+      "reference": ".private/freightctl-f168-workflow-red.log",
+      "sha256": "efd79838ef94ad805dac2ed4d78ee66fbbae6c78943ee6f6bc6b5c09bc3e240e",
+      "bytes": 1201
+    },
+    {
+      "reference": ".private/freightctl-f168-draft-gate-red.log",
+      "sha256": "dff43bbbf148980b45db9b0b2787d1d3c2b0906f23d2e1a967808aad86d79aa8",
+      "bytes": 252
+    },
+    {
+      "reference": ".private/freightctl-f168-workflow-first.log",
+      "sha256": "86c1c97d389fe2f784fc45ecf71bd3d5339328b25204171c26cfb019b5579a51",
+      "bytes": 60
+    },
+    {
+      "reference": ".private/freightctl-f168-focused-green.log",
+      "sha256": "cb285e2946daffba62e7901d2c9ba55fe5fed88adcccfe3ac6c08d6c3e8d8168",
+      "bytes": 118
+    },
+    {
+      "reference": ".private/freightctl-f168-final-focused.log",
+      "sha256": "ed5d03c679cec4c71078df8f7f8fd697fcc4c183dcfb06b978f84e61a0482df1",
+      "bytes": 182
+    },
+    {
+      "reference": ".private/freightctl-f168-final-compile.log",
+      "sha256": "3a7a45e84bdc74415f1922b06316f46cfcfd928adc261c9b70137e289912774c",
+      "bytes": 381
+    },
+    {
+      "reference": ".private/freightctl-f168-final-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "verification_limits": [
+    "Tagged compilation used -run ^$ and executes no native tests. Vet and architecture are static proof only.",
+    "No real PostgreSQL,scanner,model,Chrome,native peer or external deployment was started. Source schema52 and retained schema35 remain unchanged.",
+    "No whole parity row,complete journey,AX profile,assisted deployment,independent adoption or enterprise readiness is promoted."
+  ],
+  "owed": [
+    "Implement append-only SQL transaction/event/RLS/binding/transition guards and actual workflow run/dispatch/status/cancellation wiring before removing the schema3 draft gate.",
+    "Bind stable workflow operation keys to exact projection attempt history;preserve revoked workflow/authority/source/output checks and output held/fresh-check/separate-release semantics.",
+    "Qualify ordinary API/CLI/browser/MCP and actual PostgreSQL/storage,protected formats,independent receiver,process death,restore,quota/fairness and final-source outcomes.",
+    "All original nonsecurity CI failures stay red and deferred to mandatory FINISH under S003;new security failures require immediate triage. Full baseline/AX and external prerequisites remain owed."
+  ]
+}
