@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "id": "F270",
+  "observed_at": "2026-11-07",
+  "candidate": "33ad447564cb0be33bc04fa8d60e9f0adaf0c2b4",
+  "qualification_claim": false,
+  "state": "Exact Windows job terminal failed;protectedfs/crypto/durablefs packages pass;reopened sealed persistence and other failures remain red",
+  "run": 42361009318,
+  "job": 128369207103,
+  "url": "https://github.com/ctlplne/freightctl/actions/jobs/128369207103",
+  "qualified_components": [
+    "Actual protectedfs package passes,including natural inherited-access/protected-parser refusal,private creation and held-root rename,sealed-state/new-write-handle refusal cases. No test skipped.",
+    "Actual crypto and durablefs packages pass. macOS job128369206862 passes."
+  ],
+  "red": [
+    {
+      "test": "TestExactDigestDoesNotMakeWritableStagingReadableAsImmutableCustody",
+      "observation": "original recovery cannot establish persistence;Sync on reopened sealed object returns access denied."
+    },
+    {
+      "test": "TestProjectionStageRetainsPartialAdoptsExactSealedAndRefusesTampering",
+      "observation": "exact uncertain-commit object not adopted;Sync returns access denied."
+    },
+    {
+      "test": "TestExchangeDownloadDirectoryReplacementCannotSubstituteVerifiedOutput",
+      "observation": "Native rename while stage file is open returns access denied;confinement assertions remain unqualified."
+    },
+    {
+      "test": "TestClientRequiresResumedDataAndTrustedControlBeforeCredentials/unsafe-secret",
+      "observation": "unsafe control/data accepted. Fixture used chmod0644 after private Windows creation;it did not broaden the actual ACL. F271 prepares actual broad ACL plus precondition;native refusal stays owed."
+    },
+    {
+      "test": "TestClamdExactStreamAndAdversarialResults clean/infected/limit/encrypted",
+      "observation": "Actual AF_UNIX socket reports mode0666;scanner refuses unavailable/unverified. No native scanner proof or relaxed privacy rule."
+    }
+  ],
+  "receive_browser": {
+    "run": 42361009326,
+    "job": 128369207137,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128369207137",
+    "observation": "Original receive browser still exits before barrier with safe result unavailable. No launch/phase/cause inferred;bounded private-log source-line diagnosis owed."
+  },
+  "remaining": "Candidate other runs remain running. Whole Windows/custody/recovery/scanner/native browser and product unqualified. Preserve original sync/adoption/byte/ACL assertions;do not grant writes or skip persistence to obtain green."
+}

@@ -1181,7 +1181,9 @@
         "docs/qualification/evidence/F265-exact-browser-selectors-and-safe-prelaunch.json",
         "docs/qualification/evidence/F267-scoped-held-output-refusal.json",
         "docs/qualification/evidence/F268-native-terminal-ci.json",
-        "docs/qualification/evidence/F269-producer-mcp-attempt-metadata.json"
+        "docs/qualification/evidence/F269-producer-mcp-attempt-metadata.json",
+        "docs/qualification/evidence/F270-native-windows-protection-and-recovery.json",
+        "docs/qualification/evidence/F271-native-broad-secret-refusal.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -1257,13 +1259,14 @@
         "F264 records exact638d156 native ARM/x86 JSON custody/restart successes and original browser red stages. F265 changes format/padding selectors from nested label-text matching to exact combobox roles/names;all selected values/review/hash/protocol assertions stay. Receive-browser configuration checks move inside the original private-failure/final-summary boundary with three closed phases;independent-review reload/import substeps gain closed stages without changing assertions. New local prelaunch-summary regression observed red then green;old ambiguity/privacy cases,script formatting/parse and affected compilation/vet pass. Exact initial Go CSV policy also passes the actual frontend decoder in a lightweight stand-in. Actual original Chrome outcomes remain owed;review/receive causes are not guessed.",
         "F267 corrects two scoped held-output assertions. Nonroot users have no published namespace entry,so the original FileAccessible guard conceals metadata with exact ErrNotFound;the separately authorized root administrator reaches exact FileAvailable ErrState for held bytes. Both paths must return nil file and reader. This preserves the original hold refusal and adds strict metadata concealment;no production permission/availability rule changes or alternative-code acceptance. Integration compilation/vet only;actual original native authored/scoped cases remain owed.",
         "F268 preserves original638d156 terminal16 workflows/35 jobs:26 pass/9 fail. Both complete image scans and listed scan gates pass;Windows inherited case remains unqualified. Actual ARM/x86 native JSON custody/restart and x86 authority-label/rebinding cases pass only on this candidate. Exact original failures remain;F251\u2013F267 prepare repairs,not final-source qualification. No original run cancelled/rerun/substituted.",
-        "F269 repairs a production MCP response bug:work completed producer/composed attempts but the adapter accepted only old plan2/definition2,so it returned an error instead of the original held-output metadata. Reuse the exact core immutable-definition decoder,closed schema2/3/4 run mapping and actual profile while retaining direct-tool scoped-only restrictions. Local observed producer3 refusal turns green for2/3/4;rehashed producer/lineage/workflow/slot substitutions and private-context disclosure are refused. Core guards,architecture,affected vet and integration compilation pass. Backend authority/approval/leases/acceptance unchanged;actual stock MCP work/same-key replay/final-source bytes owed."
+        "F269 repairs a production MCP response bug:work completed producer/composed attempts but the adapter accepted only old plan2/definition2,so it returned an error instead of the original held-output metadata. Reuse the exact core immutable-definition decoder,closed schema2/3/4 run mapping and actual profile while retaining direct-tool scoped-only restrictions. Local observed producer3 refusal turns green for2/3/4;rehashed producer/lineage/workflow/slot substitutions and private-context disclosure are refused. Core guards,architecture,affected vet and integration compilation pass. Backend authority/approval/leases/acceptance unchanged;actual stock MCP work/same-key replay/final-source bytes owed.",
+        "F270 records actual33ad447 protectedfs/crypto/durablefs package successes and red Windows reopened-sealed Sync/adoption,active-stage rename,unsafe-secret and scanner cases. F271 immediately triages unsafe-secret:chmod0644 changed no Windows DACL,so the fixture stayed private. Install owner-full/Everyone-read protected DACL on the exact held synthetic credential and require actual ErrPrivacy readback before unchanged connection refusal/no-credentials-before-trust assertions. Focused local bounded TLS refusals and Windows compile/vet pass;native secret refusal remains owed. Original recovery Sync is not waived."
       ],
       "current_item": {
-        "id": "F269",
-        "state": "MCP producer/composed response adapter repaired;actual stock runtime owed",
-        "proof": "Observed local supported-producer refusal red,then focused profile/privacy/substitution green;native stock proof owed",
-        "next": "Triage new native Windows/security/receive/browser results;continue remaining product implementation and final qualification"
+        "id": "F271",
+        "state": "Actual broad-secret refusal fixture prepared;native security refusal owed;Windows sealed recovery remains red",
+        "proof": "Original unsafe-secret/native recovery failures retained;local focused TLS/precondition green;Windows compile/vet only",
+        "next": "Capture safe prelaunch source-line cause;implement proved Windows sealed persistence recovery and remaining product gates"
       }
     }
   ],

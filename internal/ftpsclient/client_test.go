@@ -391,7 +391,16 @@ func TestClientRequiresResumedDataAndTrustedControlBeforeCredentials(t *testing.
 			case "changed-secret":
 				d.PasswordSHA256 = strings.Repeat("0", 64)
 			case "unsafe-secret":
-				os.Chmod(d.PasswordFile, 0644)
+				broadenCredentialForTest(t, d.PasswordFile)
+				opened, err := os.Open(d.PasswordFile)
+				if err != nil {
+					t.Fatal(err)
+				}
+				privacyErr := protectedfs.ValidateFile(opened)
+				closeErr := opened.Close()
+				if !errors.Is(privacyErr, protectedfs.ErrPrivacy) || closeErr != nil {
+					t.Fatal("unsafe-secret fixture did not establish actual broad access", privacyErr, closeErr)
+				}
 			case "fresh-data":
 				f.fresh = true
 			}

@@ -7,7 +7,10 @@ original failures,source hashes and owed proofs are in
 [remaining work](docs/qualification/remaining.json) and its item manifests.
 
 Latest pushed source:33ad447564cb0be33bc04fa8d60e9f0adaf0c2b4.
-Its original18 triggered workflows are running;new outcomes remain owed.
+Its original18 triggered workflows are running. F270 records the terminal
+Windows job:protectedfs/crypto/durablefs pass;reopened sealed-file recovery Sync,
+active-stage directory rename,unsafe-secret fixture and scanner socket cases
+remain red. The original receive-browser result is still unavailable.
 
 Previous source:638d156cf16820b165cc8e6310f62daddf2d8458.
 Its original16 triggered workflows/35 jobs are terminal:26 pass,9 fail. Both
@@ -32,7 +35,9 @@ no returned file/reader. Actual PostgreSQL replay remains owed.
 Current local F269 repairs stale MCP producer/composed attempt conversion using
 the existing core definition validator. Focused observed red turns green;exact
 run,binding/lineage/slot and private-context refusal checks pass. Actual stock
-MCP work/replay and final-source byte outcomes remain owed.
+MCP work/replay and final-source byte outcomes remain owed. F271 replaces Unix
+chmod in the Windows unsafe-secret fixture with actual broad ACL installation
+and readback;production privacy/refusal rules remain unchanged.
 
 Custody requires private creation,sealed protection,exact physical object/length/
 hash,sync/close/directory persistence and ordinary SQL acceptance. Writable staging
