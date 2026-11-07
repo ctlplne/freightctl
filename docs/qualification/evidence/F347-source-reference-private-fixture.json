@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "id": "F347",
+  "observed_at": "2026-11-07",
+  "base_candidate": "056cd34b9f775355ea9ca4f66771bf9d26c6a981",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "Create test DSN references through the real protected filesystem APIs with owner-only Windows ACLs;no production privacy check or assertion changed.",
+  "red": {
+    "candidate": "3f32758aaa848065d7a2bf8ede787d729bbef166",
+    "run_id": 42380575941,
+    "job_id": 128427130378,
+    "url": "https://github.com/ctlplne/freightctl/actions/runs/42380575941/job/128427130378",
+    "test": "TestSourceDatabaseUsesTheProtectedReferenceContractWithoutOpeningANetwork",
+    "actual": "Protected reference refused before the expected cancelled database boundary on native Windows."
+  },
+  "green": [
+    "Actual native ARM protected-directory/file creation and unchanged real store cancelled-context regression pass.",
+    "Affected vet and architecture pass. Windows compilation only;not Windows runtime qualification."
+  ],
+  "owed": [
+    "Original native Windows replay at final source",
+    "Full FTPS runtime consent/operator and unrelated mandatory product work"
+  ],
+  "source_files": [
+    {
+      "reference": "scripts/peers/ftps-source/database_test.go",
+      "sha256": "c8382abad5811a73858107fa29a623a8382c77d9db921c889ccd55845e764707",
+      "bytes": 2646
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "770d3476a4465bfe31c78fc0f3656a8bb467bd58cee61d5f4b690fcc78db5bde",
+      "bytes": 451373
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f347-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f347-focused.log",
+      "sha256": "4066da24862a16a6988f6ef34689a3c3febece0e573e61cd0f8a9227393bec91",
+      "bytes": 68
+    },
+    {
+      "reference": ".private/freightctl-f347-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f347-windows-compile.log",
+      "sha256": "dc2261e87b0b5a649437c13341d64dc15c2ea61796f222b0877f9909a81ccdc9",
+      "bytes": 68
+    },
+    {
+      "reference": ".private/freightctl-f347-architecture.log",
+      "sha256": "fa99a7467914775b6e6fb50c5b0a2c85b3211135c3486cec28c42811919aeece",
+      "bytes": 66
+    }
+  ]
+}

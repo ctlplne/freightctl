@@ -7,15 +7,42 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/ctlplne/freightctl/internal/protectedfs"
 )
 
-func TestSourceDatabaseUsesTheProtectedReferenceContractWithoutOpeningANetwork(t *testing.T) {
-	path := filepath.Join(t.TempDir(), "runtime.dsn")
-	database := "freightctl_ftps_" + strings.Repeat("b", 32)
-	raw := "postgresql://runtime:PRIVATE_DATABASE_CANARY@127.0.0.1:25432/" + database + "?sslmode=disable"
-	if err := os.WriteFile(path, []byte(raw), 0600); err != nil {
+func sourceDatabaseReference(t *testing.T, raw string) string {
+	t.Helper()
+	private := filepath.Join(t.TempDir(), "private")
+	directory, err := protectedfs.CreateDirectoryExclusive(private)
+	if err != nil {
 		t.Fatal(err)
 	}
+	if err = directory.Close(); err != nil {
+		t.Fatal(err)
+	}
+	path := filepath.Join(private, "runtime.dsn")
+	f, err := protectedfs.CreateExclusive(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer f.Close()
+	if _, err = f.Write([]byte(raw)); err != nil {
+		t.Fatal(err)
+	}
+	if err = f.Sync(); err != nil {
+		t.Fatal(err)
+	}
+	if err = f.Close(); err != nil {
+		t.Fatal(err)
+	}
+	return path
+}
+
+func TestSourceDatabaseUsesTheProtectedReferenceContractWithoutOpeningANetwork(t *testing.T) {
+	database := "freightctl_ftps_" + strings.Repeat("b", 32)
+	raw := "postgresql://runtime:PRIVATE_DATABASE_CANARY@127.0.0.1:25432/" + database + "?sslmode=disable"
+	path := sourceDatabaseReference(t, raw)
 	ctx, cancel := context.WithCancel(t.Context())
 	cancel()
 	// The real store API must read a protected file,parse it and reach its
@@ -27,7 +54,6 @@ func TestSourceDatabaseUsesTheProtectedReferenceContractWithoutOpeningANetwork(t
 }
 
 func TestSourceDatabaseRefusesWrongEstateNonloopbackAndFallbackBeforeStoreOpen(t *testing.T) {
-	path := filepath.Join(t.TempDir(), "runtime.dsn")
 	database := "freightctl_ftps_" + strings.Repeat("b", 32)
 	ctx, cancel := context.WithCancel(t.Context())
 	cancel()
@@ -37,9 +63,7 @@ func TestSourceDatabaseRefusesWrongEstateNonloopbackAndFallbackBeforeStoreOpen(t
 		"postgresql://runtime:PRIVATE_DATABASE_CANARY@127.0.0.1:25432/" + database + "?host=127.0.0.1,127.0.0.2&sslmode=disable",
 		"not a connection string",
 	} {
-		if err := os.WriteFile(path, []byte(raw), 0600); err != nil {
-			t.Fatal(err)
-		}
+		path := sourceDatabaseReference(t, raw)
 		if _, err := openSourceDatabase(ctx, &configuration{Database: database, DSN: path}); !errors.Is(err, errFixture) {
 			t.Fatal("source database scope failure reached store open")
 		}
