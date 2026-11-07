@@ -506,6 +506,14 @@ func (s *Service) WorkCollection(ctx context.Context, scope store.Scope, id, key
 		var manifest *CollectionManifest
 		var hash string
 		if d.Schedule != nil {
+			// A local calendar's frozen manifest cannot stand in for its reviewed
+			// physical root. Validate and hold that root before creating any input
+			// lineage. Remote scheduled sources retain their existing lazy contact.
+			if d.Source.Kind == "local.collect" {
+				if e = open(); e != nil {
+					return fail("source_connection_unavailable", false)
+				}
+			}
 			manifest, hash, e = s.scheduledCollectionManifest(ctx, scope, d)
 			if e != nil {
 				return fail("scheduled_manifest_binding_unavailable", true)

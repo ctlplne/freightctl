@@ -7,7 +7,11 @@ source hashes,qualification and owed work are in
 [remaining work](docs/qualification/remaining.json) and its safe item manifests.
 
 Pushed candidate:1b745e16d53bf3b20ed07c2242c53bb71a5d3619.
-F318 preserves all16 original triggered workflow handles;outcomes remain owed.
+F332 preserves all16 original terminal workflows/35 jobs:27 pass,8 fail.
+Both exact image scans,listed source/dependency/history checks and native fuzz
+pass. Full Windows/macOS units,all five stock entries and both metadata restores
+pass. Exact native local capture/revocation/SQL/calendar positives pass within
+failing packages;local CLI,changed-root calendar,browser and FTPS failures stay red.
 Seven outgoing commits have both owner identities and passed the enabled full
 outgoing Gitleaks guard. F316 records previousfb578f1 terminal16/35:23 pass,12
 fail. Its image/source/dependency checks pass;native parser fuzz remains red.
@@ -190,6 +194,12 @@ Expiry and opaque-category regressions turn red to green;9 affected lifecycle/
 evidence methods and real small zero/queued socket-close checks pass. Native
 Linux compilation only;original source exit cause/replay stay owed. Existing
 resource/contact/session/protocol bounds and complete evidence remain enforced.
+
+F333 opens and holds the reviewed local root before restoring a scheduled
+manifest into initial input lineage. The native changed-root negative is red on
+both Linux architectures;all original retry/zero-input/no-custody/no-send checks
+stay. Actual local root/factory refusal contracts and static checks pass only;
+the original repaired PostgreSQL regression and all final-source proof are owed.
 
 FINISH repair and remaining implementation are mandatory. Next:repair original
 browser/stock/protocol failures and complete all affected original runtime,

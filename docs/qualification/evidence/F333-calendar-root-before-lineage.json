@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "id": "F333",
+  "observed_at": "2026-11-07",
+  "base_candidate": "429a809a9cc92d84d6b022d67632594273745948",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F333 immediately triages the new native changed-root calendar refusal failure. Initial scheduled local worker path restored the frozen manifest and created input lineage before validating/opening the reviewed physical root;manual collection already opens first. Open and hold that exact protected local source before scheduled manifest input capture,using the same live lease/authority check. Remote scheduled contact stays lazy;captured original-key recovery still returns before source reopening. Keep the original native retry/zero-input/zero-file/zero-send assertions,adding only safe boolean/count failure diagnostics. Local actual root/refusal and factory contracts,tagged compilation,vet and architecture pass. The original changed-root PostgreSQL regression has not yet replayed on this repair and remains owed.",
+  "security_red": {
+    "candidate": "1b745e16d53bf3b20ed07c2242c53bb71a5d3619",
+    "run_id": 42374627274,
+    "jobs": [
+      {
+        "id": 128409585231,
+        "architecture": "arm64",
+        "failure_at": "2026-11-07T13:20:56Z"
+      },
+      {
+        "id": 128409585260,
+        "architecture": "x86_64",
+        "failure_at": "2026-11-07T13:21:50Z"
+      }
+    ],
+    "test": "TestLocalCalendarChangedPhysicalRootCannotAdoptFrozenReadyManifest",
+    "source_line": 173,
+    "observation": "Original compound replacement-root predicate fails and prints nil error. Original message does not enumerate state/capture/input predicate;source ordering exposes pending lineage before physical-root opening. No byte/custody/send outcome is inferred from the failed predicate.",
+    "triage": "Immediate actionable guard repair;no assertion,budget,isolation or contact rule relaxed."
+  },
+  "local_checks": [
+    "Actual existing local source/root replacement/revocation/configuration and factory refusal contracts pass. These do not replace the PostgreSQL worker regression.",
+    "Final tagged workflow compilation,vet and architecture observed terminal exit0."
+  ],
+  "preserved": [
+    "Original native retry state,zero inputs,custody/intents/runs cardinality assertions unchanged;failure message only adds safe booleans/count.",
+    "Remote scheduled no-contact manifest behavior,live authority/lease fencing and captured original-key no-source-reopen recovery unchanged.",
+    "All local no-inference/heavy-runtime constraints and GitHub evidence/security boundaries enforced."
+  ],
+  "source_files": [
+    {
+      "reference": "internal/workflow/collection_worker.go",
+      "sha256": "b22cccd461155331da05b04792ab6a26e0c16ab224e16c9472fe26d4d9b00987",
+      "bytes": 18271
+    },
+    {
+      "reference": "internal/workflow/local_collection_schedule_integration_test.go",
+      "sha256": "7a50fd5946e2a5d1301c740c69a7c7dab0cddc4c9a327e5fd4018606152d43da",
+      "bytes": 11702
+    },
+    {
+      "reference": "docs/qualification/evidence/F332-native-terminal-ci.json",
+      "sha256": "b17b47de85f8420d530bb8aa29b0895711f3e32ae28c8efa8d6764023ca777ad",
+      "bytes": 97554
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "8f7d1c7cf4bcfd9a65947453b2551c1809198f3d5a16db5b4f0e956301f98243",
+      "bytes": 436075
+    },
+    {
+      "reference": "STATUS.md",
+      "sha256": "2c5bbc247f2917d9c28bd4428095b7da4624d7637845321041345f074fe5b071",
+      "bytes": 14230
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f333-source-contracts.log",
+      "sha256": "0e1525e761b949a561dff49a935b1d1cfd291f4017e8761441020e03a7a79718",
+      "bytes": 60
+    },
+    {
+      "reference": ".private/freightctl-f333-actual-source-root.log",
+      "sha256": "32735d93928af6c098f561974315655ed5dd9572f00b9fd828371fcebd9e829e",
+      "bytes": 60
+    },
+    {
+      "reference": ".private/freightctl-f333-final-native-compile.log",
+      "sha256": "95f103e06d8c79b2eb8ee8d969650e4077753772815e9bf87c6982e7a84da010",
+      "bytes": 78
+    },
+    {
+      "reference": ".private/freightctl-f333-final-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f333-architecture.log",
+      "sha256": "9e9efdb478491b8a613999fbe5812832eb1532505644f336e36d7df4f3af4c7d",
+      "bytes": 64
+    }
+  ],
+  "owed": [
+    "Unchanged original changed-root PostgreSQL negative and successful calendar/capture/replay profiles on actual final source,both Linux architectures.",
+    "Every F332 failed profile,served local calendar acceptance and all remaining baseline/AX/FINISH outcomes."
+  ],
+  "resources": "OneCPU/192MiB actual small local filesystem/pure contracts and static checks only;no local PostgreSQL,Chrome,scanner or inference."
+}

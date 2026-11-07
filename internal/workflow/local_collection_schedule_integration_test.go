@@ -169,8 +169,11 @@ func TestLocalCalendarChangedPhysicalRootCannotAdoptFrozenReadyManifest(t *testi
 		t.Fatal(err)
 	}
 	view, err := x.f.s.CollectionStatus(x.f.ctx, x.f.scope, job.ID)
-	if err != nil || view.Job.Captured || view.Job.State != "retry" || len(view.Inputs) != 0 {
-		t.Fatal("replacement local root adopted a reviewed occurrence", err)
+	if err != nil {
+		t.Fatal("replacement local root status unavailable", err)
+	}
+	if view.Job.Captured || view.Job.State != "retry" || len(view.Inputs) != 0 {
+		t.Fatalf("replacement local root adopted a reviewed occurrence;captured=%t;retry=%t;inputs=%d", view.Job.Captured, view.Job.State == "retry", len(view.Inputs))
 	}
 	after := localCollectionCounts(t, x.f)
 	if after[0] != before[0] || after[1] != before[1] || after[2] != before[2] {
