@@ -82,7 +82,8 @@
         "docs/qualification/evidence/F155-governed-xlsx-intake.json",
         "docs/qualification/evidence/F181-producer-output-policies.json",
         "docs/qualification/evidence/F183-processing-output-selection.json",
-        "docs/qualification/evidence/F185-producer-projection-outputs.json"
+        "docs/qualification/evidence/F185-producer-projection-outputs.json",
+        "docs/qualification/evidence/F187-producer-output-selection-surfaces.json"
       ]
     },
     {
@@ -258,7 +259,8 @@
         "docs/qualification/evidence/F177-independent-review-browser.json",
         "docs/qualification/evidence/F181-producer-output-policies.json",
         "docs/qualification/evidence/F183-processing-output-selection.json",
-        "docs/qualification/evidence/F185-producer-projection-outputs.json"
+        "docs/qualification/evidence/F185-producer-projection-outputs.json",
+        "docs/qualification/evidence/F187-producer-output-selection-surfaces.json"
       ]
     },
     {
@@ -309,7 +311,8 @@
         "docs/qualification/evidence/F177-independent-review-browser.json",
         "docs/qualification/evidence/F179-processing-task-catalog.json",
         "docs/qualification/evidence/F181-producer-output-policies.json",
-        "docs/qualification/evidence/F185-producer-projection-outputs.json"
+        "docs/qualification/evidence/F185-producer-projection-outputs.json",
+        "docs/qualification/evidence/F187-producer-output-selection-surfaces.json"
       ]
     },
     {
@@ -328,7 +331,8 @@
       "evidence": [
         "docs/qualification/evidence/F181-producer-output-policies.json",
         "docs/qualification/evidence/F183-processing-output-selection.json",
-        "docs/qualification/evidence/F185-producer-projection-outputs.json"
+        "docs/qualification/evidence/F185-producer-projection-outputs.json",
+        "docs/qualification/evidence/F187-producer-output-selection-surfaces.json"
       ]
     }
   ],
@@ -449,5 +453,5 @@
     "Fixtures, design documents, ledger checks, model answers and skips establish no runtime or real provider qualification.",
     "Preserve original parity/journey/defect/evaluation records and separate assisted deployment, independent adoption and enterprise readiness."
   ],
-  "execution": "Active under owner resume;full baseline/AX01\u2013AX08/FINISH incomplete. F185 implements producer-bound output checking/release backend with independent default ingress and private-rule-free public status;native runtime/protected/browser/CLI/final-source proof remains owed. F184/F186 retain original terminal17/37 batches,listed security passes and original application failures. Local heavy runtimes/inference off;retained35 unchanged."
+  "execution": "Active under owner resume;full baseline/AX01\u2013AX08/FINISH incomplete. F187 adds explicit producer-output selection across browser/API/CLI/read-only MCP;all native and final-source proof remains owed. F188 preserves0391ae8 original terminal17/37,listed security passes and red application failures. No local heavy runtime/inference;retained35 unchanged."
 }

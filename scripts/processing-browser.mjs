@@ -11,6 +11,7 @@ assert.equal(process.platform, "linux");
 assert.equal(process.arch, "x64");
 assert.equal(process.env.FREIGHTCTL_BROWSER_CHANNEL, "chrome");
 const c = JSON.parse(await readFile(process.argv[2], "utf8"));
+assert.equal(typeof c.producer_output, "boolean");
 assert.equal(new URL(c.url).protocol, "https:");
 assert.equal(new URL(c.url).hostname, "127.0.0.1");
 const require = createRequire(import.meta.url),
@@ -103,7 +104,17 @@ try {
   await page
     .getByLabel("Input file revision ID", { exact: true })
     .fill(c.source);
-  await button("Load processing contracts").click();
+  if (c.producer_output) {
+    await button("Find my output contracts").click();
+    const contracts = page.getByRole("region", {name:"Available output contracts"});
+    await contracts.waitFor();
+    const row = contracts.getByRole("row").filter({hasText:c.output_policy_id});
+    await row.waitFor();
+    await audit("producer-output-contract-selection");
+    await row.getByRole("button", {name:"Use this output contract",exact:true}).click();
+  } else {
+    await button("Load processing contracts").click();
+  }
   await page
     .getByRole("heading", { name: "Exact input and output contracts" })
     .waitFor();

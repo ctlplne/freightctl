@@ -19,13 +19,21 @@ import (
 )
 
 func TestMCPStockClientTypedProcessingWorksWithoutReceiveAdapterAndKeepsApprovalOutsideTools(t *testing.T) {
+	mcpStockClientTypedProcessing(t, false)
+}
+
+func TestMCPStockClientProducerOutputSelectionKeepsDefaultIngressAndApprovalOutsideTools(t *testing.T) {
+	mcpStockClientTypedProcessing(t, true)
+}
+
+func mcpStockClientTypedProcessing(t *testing.T, producerBound bool) {
 	service, manager, admin, server := browserAPI(t, 600*time.Second)
 	if _, _, err := service.ExchangeLimits(); err == nil {
 		t.Fatal("fixture unexpectedly enabled receive adapter")
 	}
 	cookie, csrf := loginBrowser(t, server, manager, admin)
 	prefix := "/v1/tenants/" + manager.Tenant + "/partners/" + manager.Partner
-	token, _ := exchangeAPIParticipant(t, server, prefix, cookie, csrf, []string{"read", "write", "check_run", "workflow_manage", "workflow_approve", "workflow_execute"})
+	token, participant := exchangeAPIParticipant(t, server, prefix, cookie, csrf, []string{"read", "write", "check_run", "workflow_manage", "workflow_approve", "workflow_execute"})
 	actor := store.Scope{Tenant: manager.Tenant, Partner: manager.Partner, TokenHash: secure.Digest(token.Bytes)}
 	control := &checks.Service{Custody: service}
 	policy, err := checks.Normalize(checks.Policy{Schema: 1, Kind: "csv", Columns: []checks.Column{{Name: "account", Type: "text", Required: true, MaxBytes: 32}}, MaxBytes: 8192, MaxRows: 4, MaxRecordBytes: 1024, TimeoutSeconds: 2})
@@ -49,12 +57,26 @@ func TestMCPStockClientTypedProcessingWorksWithoutReceiveAdapterAndKeepsApproval
 	output := policy
 	output.Schema = 2
 	output.Kind = "json_records"
-	registered, err := control.Register(t.Context(), manager, "tools-output-policy", checks.PolicyRequest{ExpectedVersion: 1, Definition: output})
-	if err != nil {
-		t.Fatal(err)
-	}
 	var outputPolicy store.Configuration
-	_ = json.Unmarshal(registered.Resource, &outputPolicy)
+	if producerBound {
+		registered, err := control.RegisterOutputPolicy(t.Context(), manager, "tools-producer-output-policy", checks.OutputPolicyRequest{Producer: participant.Actor, Definition: output})
+		if err != nil {
+			t.Fatal(err)
+		}
+		var record checks.OutputPolicyRecord
+		if json.Unmarshal(registered.Resource, &record) != nil || record.Policy == nil {
+			t.Fatal("producer output contract")
+		}
+		outputPolicy = *record.Policy
+	} else {
+		registered, err := control.Register(t.Context(), manager, "tools-output-policy", checks.PolicyRequest{ExpectedVersion: 1, Definition: output})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if json.Unmarshal(registered.Resource, &outputPolicy) != nil {
+			t.Fatal("default output contract")
+		}
+	}
 	rules, err := checks.NormalizeRecordProjection(policy, checks.RecordProjection{Schema: 1, Kind: "record_projection", SourcePolicyHash: inputPolicy.Hash, OutputKind: "json_records", Columns: []checks.ProjectionColumn{{Source: "account", Target: "account"}}})
 	if err != nil {
 		t.Fatal(err)
@@ -90,6 +112,16 @@ func TestMCPStockClientTypedProcessingWorksWithoutReceiveAdapterAndKeepsApproval
 	described := call("processing_contracts", map[string]any{"file_id": source.ID})
 	if described["profile"] != "record-processing-contracts-v1" {
 		t.Fatal("no current source contract")
+	}
+	if producerBound {
+		selected := call("processing_contracts", map[string]any{"file_id": source.ID, "output_policy": store.OnboardingReference{ID: outputPolicy.ID, Version: outputPolicy.Version, Hash: outputPolicy.Hash}})
+		if selected["profile"] != "record-processing-contracts-v2" {
+			t.Fatal("stock client did not select explicit producer contract")
+		}
+		current, err := control.Policy(t.Context(), manager)
+		if err != nil || current.ID != inputPolicy.ID || current.Version != inputPolicy.Version || current.Hash != inputPolicy.Hash || current.State != "active" {
+			t.Fatal("model metadata selection replaced default ingress", err)
+		}
 	}
 	call("validate_workflow", map[string]any{"request": workflow.PreviewRequest{Definition: definition, FileID: source.ID}})
 	proposed := call("propose_workflow", map[string]any{"request": workflow.DraftRequest{Definition: definition}, "request_key": "typed-proposal"})

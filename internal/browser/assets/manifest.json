@@ -247,11 +247,15 @@
     },
     {
       "path": "web/src/processing-api.ts",
-      "sha256": "96eb636515af8aab7f9530bebf256559898423a82ae0b8f76e2ebac4a04207de"
+      "sha256": "7a7f16a33f1a14291188ff812efec161c768a34ff7ce11fc09d76694155eb717"
     },
     {
       "path": "web/src/processing-catalog-types.ts",
       "sha256": "5e4dbd73959bf8c81224e0825d929b3509ad0a222303ee0319cff0f14f11e2c9"
+    },
+    {
+      "path": "web/src/processing-output-types.ts",
+      "sha256": "95ad1073f4cce3733dfa70920da7f1830cc3b4a08b5892d801492b22a6e4dc6c"
     },
     {
       "path": "web/src/processing-review-api.ts",
@@ -267,11 +271,11 @@
     },
     {
       "path": "web/src/processing-types.ts",
-      "sha256": "19a3730d73c364ac8ac8bf707886c5f14de7f5f570e99a2eed6b342333223860"
+      "sha256": "0bc4d957b57c3eec701e6d49540db798a498022098e8400f0f7a7ccd34407e33"
     },
     {
       "path": "web/src/processing.tsx",
-      "sha256": "4af38ac8de842a9139ed0275afe9f0983dad292d6b3e62f86d116afa6338e117"
+      "sha256": "32dcda9883dcfe4532022bcd999670e36ed0b7128db090545097c392819d20fe"
     },
     {
       "path": "web/src/programs-types.ts",
@@ -334,8 +338,8 @@
     },
     {
       "name": "app.js",
-      "sha256": "5529fa0f26d7b8e309bc96a5a2517eb5dbd361cbc9448897d46d95de84ab9ff6",
-      "size": 859172
+      "sha256": "9be0f55f962712a7019669a54c64631393dbcc764dd677d2bf9b760de69cc0dc",
+      "size": 863680
     },
     {
       "name": "app.js.LEGAL.txt",

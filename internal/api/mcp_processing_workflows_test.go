@@ -36,6 +36,41 @@ func processingMCPArguments(t *testing.T, name string) map[string]any {
 	return args
 }
 
+func TestMCPProcessingContractsOptionalOutputReferenceRemainsClosedAndReadOnly(t *testing.T) {
+	var tools []*mcp.Tool
+	if json.Unmarshal(mcpCatalog, &tools) != nil {
+		t.Fatal("catalog")
+	}
+	for _, tool := range tools {
+		if tool.Name != "freightctl.processing_contracts" {
+			continue
+		}
+		if tool.Annotations == nil || !tool.Annotations.ReadOnlyHint {
+			t.Fatal("contract selection acquired an effect")
+		}
+		raw, _ := json.Marshal(tool.InputSchema)
+		var schema jsonschema.Schema
+		if json.Unmarshal(raw, &schema) != nil {
+			t.Fatal("schema")
+		}
+		resolved, err := schema.Resolve(nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+		args := processingMCPArguments(t, tool.Name)
+		args["output_policy"] = map[string]any{"id": "22222222-2222-4222-8222-222222222222", "version": 1, "hash": strings.Repeat("a", 64)}
+		if err = resolved.Validate(args); err != nil {
+			t.Fatal("exact output reference rejected", err)
+		}
+		args["output_policy"].(map[string]any)["approved"] = true
+		if resolved.Validate(args) == nil {
+			t.Fatal("model supplied approval through output metadata")
+		}
+		return
+	}
+	t.Fatal("processing metadata tool missing")
+}
+
 func processingToolDefinition(t *testing.T) workflow.Definition {
 	t.Helper()
 	id := "11111111-1111-4111-8111-111111111111"

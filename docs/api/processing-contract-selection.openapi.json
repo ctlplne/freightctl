@@ -1,0 +1,326 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Processing contract selection",
+    "version": "record-processing-contracts-v2",
+    "description": "Read-only owned checked-source metadata with default ingress or exact current producer-bound output selection. No byte read,approval,execution,release or forwarding authority. Native qualification owed."
+  },
+  "paths": {
+    "/v1/tenants/{tenant}/partners/{partner}/checks/{file}/processing-contracts": {
+      "get": {
+        "operationId": "describeProcessingContracts",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "browserCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "tenant",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "partner",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "file",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "output_policy_id",
+            "in": "query",
+            "description": "All three output_policy query fields must be present exactly once,or all omitted. Caller supplies a reference,never producer authority.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "output_policy_version",
+            "in": "query",
+            "description": "All three output_policy query fields must be present exactly once,or all omitted. Caller supplies a reference,never producer authority.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "output_policy_hash",
+            "in": "query",
+            "description": "All three output_policy query fields must be present exactly once,or all omitted. Caller supplies a reference,never producer authority.",
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current authorized metadata snapshot;future effects still require ordinary review and fresh authorization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/DefaultContracts"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ProducerContracts"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Ordinary scope,ownership,role,state or shape refusal. Incomplete/duplicate/unknown query fields refuse before database access."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "DefaultContracts": {
+        "type": "object",
+        "properties": {
+          "profile": {
+            "const": "record-processing-contracts-v1"
+          },
+          "source": {
+            "type": "object",
+            "properties": {
+              "file_revision_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "size_bytes": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "acceptance_policy": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "file_revision_id",
+              "size_bytes",
+              "sha256",
+              "acceptance_policy"
+            ],
+            "additionalProperties": false
+          },
+          "source_policy": {
+            "type": "object",
+            "properties": {
+              "reference": {
+                "$ref": "processing-output-policies.openapi.json#/components/schemas/Reference"
+              },
+              "state": {
+                "enum": [
+                  "active",
+                  "retired"
+                ]
+              },
+              "definition": {
+                "$ref": "processing-output-policies.openapi.json#/components/schemas/Policy"
+              }
+            },
+            "required": [
+              "reference",
+              "state",
+              "definition"
+            ],
+            "additionalProperties": false
+          },
+          "output_policy": {
+            "type": "object",
+            "properties": {
+              "reference": {
+                "$ref": "processing-output-policies.openapi.json#/components/schemas/Reference"
+              },
+              "state": {
+                "const": "active"
+              },
+              "definition": {
+                "$ref": "processing-output-policies.openapi.json#/components/schemas/Policy"
+              }
+            },
+            "required": [
+              "reference",
+              "state",
+              "definition"
+            ],
+            "additionalProperties": false
+          },
+          "authority_revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "namespace_root_digest": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "source_proof_valid_until": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "effects": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "profile",
+          "source",
+          "source_policy",
+          "output_policy",
+          "authority_revision",
+          "namespace_root_digest",
+          "effects"
+        ],
+        "additionalProperties": false
+      },
+      "ProducerContracts": {
+        "type": "object",
+        "properties": {
+          "profile": {
+            "const": "record-processing-contracts-v2"
+          },
+          "source": {
+            "type": "object",
+            "properties": {
+              "file_revision_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "size_bytes": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "acceptance_policy": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "file_revision_id",
+              "size_bytes",
+              "sha256",
+              "acceptance_policy"
+            ],
+            "additionalProperties": false
+          },
+          "source_policy": {
+            "type": "object",
+            "properties": {
+              "reference": {
+                "$ref": "processing-output-policies.openapi.json#/components/schemas/Reference"
+              },
+              "state": {
+                "enum": [
+                  "active",
+                  "retired"
+                ]
+              },
+              "definition": {
+                "$ref": "processing-output-policies.openapi.json#/components/schemas/Policy"
+              }
+            },
+            "required": [
+              "reference",
+              "state",
+              "definition"
+            ],
+            "additionalProperties": false
+          },
+          "output_policy": {
+            "type": "object",
+            "properties": {
+              "reference": {
+                "$ref": "processing-output-policies.openapi.json#/components/schemas/Reference"
+              },
+              "state": {
+                "const": "output_active"
+              },
+              "definition": {
+                "$ref": "processing-output-policies.openapi.json#/components/schemas/Policy"
+              }
+            },
+            "required": [
+              "reference",
+              "state",
+              "definition"
+            ],
+            "additionalProperties": false
+          },
+          "authority_revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "namespace_root_digest": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "source_proof_valid_until": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "effects": {
+            "type": "string"
+          },
+          "output_binding": {
+            "$ref": "processing-output-policies.openapi.json#/components/schemas/Binding"
+          }
+        },
+        "required": [
+          "profile",
+          "source",
+          "source_policy",
+          "output_policy",
+          "authority_revision",
+          "namespace_root_digest",
+          "effects",
+          "output_binding"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      },
+      "browserCookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "__Host-freightctl-session"
+      }
+    }
+  }
+}

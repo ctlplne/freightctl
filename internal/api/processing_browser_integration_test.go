@@ -20,6 +20,14 @@ import (
 )
 
 func TestProcessingWorkflowNativeBrowserReviewRecoveryAndHeldOutput(t *testing.T) {
+	processingWorkflowNativeBrowser(t, false)
+}
+
+func TestProducerProcessingNativeBrowserSelectsOutputContractAndKeepsIngress(t *testing.T) {
+	processingWorkflowNativeBrowser(t, true)
+}
+
+func processingWorkflowNativeBrowser(t *testing.T, producerBound bool) {
 	if os.Getenv("GITHUB_ACTIONS") != "true" || runtime.GOOS != "linux" || runtime.GOARCH != "amd64" {
 		t.Fatal("actual Chrome profile requires native GitHub Linux x86_64")
 	}
@@ -46,12 +54,30 @@ func TestProcessingWorkflowNativeBrowserReviewRecoveryAndHeldOutput(t *testing.T
 	output := policy
 	output.Schema = 2
 	output.Kind = "json_records"
-	registered, err = control.Register(t.Context(), scope, "browser-processing-output-policy", checks.PolicyRequest{ExpectedVersion: 1, Definition: output})
-	if err != nil {
-		t.Fatal(err)
-	}
 	var out store.Configuration
-	_ = json.Unmarshal(registered.Resource, &out)
+	if producerBound {
+		identity, err := s.DB.Identity(t.Context(), scope)
+		if err != nil {
+			t.Fatal(err)
+		}
+		registered, err = control.RegisterOutputPolicy(t.Context(), scope, "browser-producer-output-policy", checks.OutputPolicyRequest{Producer: identity.Actor, Definition: output})
+		if err != nil {
+			t.Fatal(err)
+		}
+		var record checks.OutputPolicyRecord
+		if json.Unmarshal(registered.Resource, &record) != nil || record.Policy == nil {
+			t.Fatal("producer output contract")
+		}
+		out = *record.Policy
+	} else {
+		registered, err = control.Register(t.Context(), scope, "browser-processing-output-policy", checks.PolicyRequest{ExpectedVersion: 1, Definition: output})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if json.Unmarshal(registered.Resource, &out) != nil {
+			t.Fatal("default output contract")
+		}
+	}
 	rules, err := checks.NormalizeRecordProjection(policy, checks.RecordProjection{Schema: 1, Kind: "record_projection", SourcePolicyHash: input.Hash, OutputKind: "json_records", Columns: []checks.ProjectionColumn{{Source: "account", Target: "account"}, {Source: "amount", Target: "amount"}, {Source: "day", Target: "day"}}})
 	if err != nil {
 		t.Fatal(err)
@@ -74,7 +100,7 @@ func TestProcessingWorkflowNativeBrowserReviewRecoveryAndHeldOutput(t *testing.T
 	if err = os.WriteFile(token, credential.Bytes, 0600); err != nil {
 		t.Fatal(err)
 	}
-	encoded, _ := json.Marshal(map[string]any{"url": server.URL, "tenant": scope.Tenant, "partner": scope.Partner, "token": token, "source": source.ID, "private": private, "result": result, "hash": expected, "certificate_der": base64.StdEncoding.EncodeToString(server.Certificate().Raw)})
+	encoded, _ := json.Marshal(map[string]any{"url": server.URL, "tenant": scope.Tenant, "partner": scope.Partner, "token": token, "source": source.ID, "private": private, "result": result, "hash": expected, "producer_output": producerBound, "output_policy_id": out.ID, "certificate_der": base64.StdEncoding.EncodeToString(server.Certificate().Raw)})
 	if err = os.WriteFile(config, encoded, 0600); err != nil {
 		t.Fatal(err)
 	}
@@ -105,7 +131,11 @@ func TestProcessingWorkflowNativeBrowserReviewRecoveryAndHeldOutput(t *testing.T
 		Inference     bool   `json:"inference_performed"`
 		Failure       string `json:"failure_sha256"`
 	}
-	if runErr != nil || workflow.Decode(raw, &summary) != nil || summary.State != "passed" || !store.ValidID(summary.File) || !store.ValidID(summary.Run) || summary.Hash != expected || summary.DraftRequests != 2 || summary.Accessibility != 5 || summary.Egress != 0 || summary.Errors != 0 || !summary.Sandbox || summary.Inference || summary.Failure != "" {
+	expectedAccessibility := 5
+	if producerBound {
+		expectedAccessibility = 6
+	}
+	if runErr != nil || workflow.Decode(raw, &summary) != nil || summary.State != "passed" || !store.ValidID(summary.File) || !store.ValidID(summary.Run) || summary.Hash != expected || summary.DraftRequests != 2 || summary.Accessibility != expectedAccessibility || summary.Egress != 0 || summary.Errors != 0 || !summary.Sandbox || summary.Inference || summary.Failure != "" {
 		t.Fatalf("native processing browser failed;safe result SHA256=%s", secure.Digest(raw))
 	}
 	wf := &workflow.Service{Custody: s, Processor: control}
@@ -113,4 +143,11 @@ func TestProcessingWorkflowNativeBrowserReviewRecoveryAndHeldOutput(t *testing.T
 	if err != nil || view.Run.State != "succeeded" || view.ObservedReason != "transformed_output_released" || view.Processing.FileID != summary.File || len(view.Steps) != 0 {
 		t.Fatal("browser result differs from actual persisted processing/release outcome", err)
 	}
+	if producerBound {
+		current, err := control.Policy(t.Context(), scope)
+		if err != nil || current.ID != input.ID || current.Version != input.Version || current.Hash != input.Hash || current.State != "active" {
+			t.Fatal("browser producer selection replaced default ingress", err)
+		}
+	}
+
 }

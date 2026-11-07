@@ -8,6 +8,7 @@ import (
 
 	"github.com/ctlplne/freightctl/internal/checks"
 	secure "github.com/ctlplne/freightctl/internal/crypto"
+	"github.com/ctlplne/freightctl/internal/store"
 	"github.com/ctlplne/freightctl/internal/workflow"
 )
 
@@ -21,7 +22,15 @@ func (s *Server) checks(w http.ResponseWriter, r *http.Request) {
 	var result any
 	switch r.Pattern {
 	case "GET /v1/tenants/{tenant}/partners/{partner}/checks/{file}/processing-contracts":
-		result, err = s.Checks.DescribeProcessing(r.Context(), scope, r.PathValue("file"))
+		var selected *store.OnboardingReference
+		selected, err = processingOutputReference(r.URL.RawQuery)
+		if err == nil {
+			if selected == nil {
+				result, err = s.Checks.DescribeProcessing(r.Context(), scope, r.PathValue("file"))
+			} else {
+				result, err = s.Checks.DescribeProcessingOutput(r.Context(), scope, r.PathValue("file"), *selected)
+			}
+		}
 	case "GET /v1/tenants/{tenant}/partners/{partner}/scanners/{scanner}/{version}", "POST /v1/tenants/{tenant}/partners/{partner}/scanners/{scanner}/{version}/revoke":
 		version, parseErr := strconv.Atoi(r.PathValue("version"))
 		if parseErr != nil || version < 1 {

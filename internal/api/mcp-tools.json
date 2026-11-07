@@ -3371,13 +3371,36 @@
   },
   {
     "name": "freightctl.processing_contracts",
-    "description": "Describe an owned successfully checked input contract and current output policy. Metadata only;no contents,paths,host references,approval,run or contact.",
+    "description": "Describe an owned successfully checked input and current default or explicit producer-bound output contract. Metadata only;no contents,paths,host references,approval,run or contact. An output reference cannot grant producer authority.",
     "inputSchema": {
       "type": "object",
       "properties": {
         "file_id": {
           "type": "string",
           "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+        },
+        "output_policy": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+            },
+            "version": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "id",
+            "version",
+            "hash"
+          ],
+          "additionalProperties": false
         }
       },
       "required": [

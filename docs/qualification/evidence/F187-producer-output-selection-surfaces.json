@@ -1,0 +1,398 @@
+{
+  "schema_version": 1,
+  "id": "F187",
+  "observed_at": "2026-11-06",
+  "base_candidate": "0391ae822d65e775b33e61b346a4343ae8a7eb7b",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Producer output selection implemented across browser/API/CLI/read-only MCP;native outcomes owed",
+  "source_files": [
+    {
+      "reference": ".github/workflows/json-intake.yml",
+      "sha256": "84d5cba7f45f6261dc517010e1e6352089cb24136d69ff506b5fb941a2b0f5a7",
+      "bytes": 6307
+    },
+    {
+      "reference": "STATUS.md",
+      "sha256": "c0fc0ef9d3817f6df86f7b50dc8df6bebe3fc06be12fa810674d54cce7803c41",
+      "bytes": 6109
+    },
+    {
+      "reference": "cmd/freightctl/checks.go",
+      "sha256": "0f9a13bc6ec81466d162af9f81b8a1c50f7c9ebd148cc177f3f9e8cc9a3be7f2",
+      "bytes": 3249
+    },
+    {
+      "reference": "cmd/freightctl/main.go",
+      "sha256": "6eafcfb309f3fd0fc229241d9e8bbcfb66f44c6f1d9fd1620c4b628ec3f5dfaf",
+      "bytes": 48516
+    },
+    {
+      "reference": "cmd/freightctl/workflow_processing_integration_test.go",
+      "sha256": "5e7bbd1a9dfff1c2a3eb861218ed1b6b86f8dc9b573a752bf95e0ca4b726ff99",
+      "bytes": 15354
+    },
+    {
+      "reference": "docs/api/processing-contract-selection.openapi.json",
+      "sha256": "21cd8cf017faccf3fed5ce62d170e00eaf26a7dbb627c409df40b4425a648c3b",
+      "bytes": 9562
+    },
+    {
+      "reference": "docs/protocols/artifact-exchange-mcp.md",
+      "sha256": "26726c2b5b3c34ccfd35bb9992fda19e24eb2f8dad52efbd6e8dc6a13f17824a",
+      "bytes": 15565
+    },
+    {
+      "reference": "docs/protocols/processing-output-policies.md",
+      "sha256": "9941f93b7e72e913ad0a478abd7a54321c4edfd297276185d46ce2ee8d29d87e",
+      "bytes": 9023
+    },
+    {
+      "reference": "docs/qualification/artifact-exchange.json",
+      "sha256": "13d33a9a65892278e53d2e745b1dff20166d88e376edaad2143e839f1e0b6f28",
+      "bytes": 28263
+    },
+    {
+      "reference": "docs/qualification/evidence/F188-producer-output-terminal-ci.json",
+      "sha256": "3171b4eaa5b4807634df85d1d1335c3bba6c1259df55d887d7471f285ca1255e",
+      "bytes": 20230
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "8b00d218438a66ddd88ff7ee900eb4b3d64aff2cef45db0833e7a28f5049962e",
+      "bytes": 349269
+    },
+    {
+      "reference": "internal/api/checks.go",
+      "sha256": "8e1c974cae25e5798794e9bea4052f627b05f1619f35ec5e52376341259545b1",
+      "bytes": 9121
+    },
+    {
+      "reference": "internal/api/mcp-tools.json",
+      "sha256": "cc43a4f3a73a55b1bc4823078b270c8ec329f5783cf29fcbc3ff393169545a81",
+      "bytes": 112925
+    },
+    {
+      "reference": "internal/api/mcp.go",
+      "sha256": "a2712ea6ad5b7117ecae976b2bb853ee3dd95a1e33ceb6395a1389c1655c1cbe",
+      "bytes": 12081
+    },
+    {
+      "reference": "internal/api/mcp_processing_workflows.go",
+      "sha256": "3b4a73fffe5d43a56154c31656a39a2b77535e9f52e0b9ceda4939d5563ccbe0",
+      "bytes": 7417
+    },
+    {
+      "reference": "internal/api/mcp_processing_workflows_integration_test.go",
+      "sha256": "69eb02cd01b519689b28f74a609395ba9e04e05c8ab6f6ea0c2c8a98e3431998",
+      "bytes": 8807
+    },
+    {
+      "reference": "internal/api/mcp_processing_workflows_test.go",
+      "sha256": "e65bbb5c28d773909ea51afb7f87fc0e0392bf485f9a1eac319b17b8b1700212",
+      "bytes": 8645
+    },
+    {
+      "reference": "internal/api/processing_browser_integration_test.go",
+      "sha256": "3972e38e8c66d3c65acfa3a2c418a75cfb8f8f1936f6aafe5602f4252e134297",
+      "bytes": 6959
+    },
+    {
+      "reference": "internal/api/processing_output_selection.go",
+      "sha256": "6aa2f01faff9b7a6c6773796f92b6e3d0299c54e4341291660569881779a7ef1",
+      "bytes": 1116
+    },
+    {
+      "reference": "internal/api/processing_output_selection_test.go",
+      "sha256": "7633fb548f5bcec008960972c9efb38075d5d3bbde97907ee3e10ec0757bbac4",
+      "bytes": 1226
+    },
+    {
+      "reference": "internal/api/workflow_processing_integration_test.go",
+      "sha256": "b2c02f08066e18a39446f480fac0a12f536c47556ff347cc47d591e73d579854",
+      "bytes": 6807
+    },
+    {
+      "reference": "internal/browser/assets/app.js",
+      "sha256": "9be0f55f962712a7019669a54c64631393dbcc764dd677d2bf9b760de69cc0dc",
+      "bytes": 863680
+    },
+    {
+      "reference": "internal/browser/assets/manifest.json",
+      "sha256": "7bc9a2ce2bfc48b5eb5a7fe655313fcba40e3b85266c474e6cb66d587552b8f8",
+      "bytes": 13251
+    },
+    {
+      "reference": "internal/checks/processing_contracts.go",
+      "sha256": "5316b4126e6d50c811b035533653828d51c464df86060bbe2d5517b0914530ec",
+      "bytes": 5642
+    },
+    {
+      "reference": "internal/checks/producer_contracts_integration_test.go",
+      "sha256": "1cf59add782211328bc4ff758e72f63c8773a4001f28c5384fe954e1f821bfa6",
+      "bytes": 2873
+    },
+    {
+      "reference": "internal/checks/producer_contracts_test.go",
+      "sha256": "ca4582d349f32277d4acd5db49ecd7a4d3aa9d3f06ee9ddd11995b601a18146d",
+      "bytes": 1701
+    },
+    {
+      "reference": "internal/checks/producer_projection.go",
+      "sha256": "d0fd5f3face646cefe016d26e2abf9ca04c75f3a917c112b46a5b7d54e790b42",
+      "bytes": 1574
+    },
+    {
+      "reference": "scripts/processing-browser.mjs",
+      "sha256": "821ae7110135aad8d244323021a60fc20a641fb564ac44fdda52d98c64c33fec",
+      "bytes": 12206
+    },
+    {
+      "reference": "web/src/processing-api.ts",
+      "sha256": "7a7f16a33f1a14291188ff812efec161c768a34ff7ce11fc09d76694155eb717",
+      "bytes": 15567
+    },
+    {
+      "reference": "web/src/processing-output-types.ts",
+      "sha256": "95ad1073f4cce3733dfa70920da7f1830cc3b4a08b5892d801492b22a6e4dc6c",
+      "bytes": 2579
+    },
+    {
+      "reference": "web/src/processing-types.ts",
+      "sha256": "0bc4d957b57c3eec701e6d49540db798a498022098e8400f0f7a7ccd34407e33",
+      "bytes": 23108
+    },
+    {
+      "reference": "web/src/processing.tsx",
+      "sha256": "32dcda9883dcfe4532022bcd999670e36ed0b7128db090545097c392819d20fe",
+      "bytes": 43989
+    },
+    {
+      "reference": "web/tests/processing-output-catalog.test.mjs",
+      "sha256": "6028800d549ac8fa26785ab46ce6291ebb3f90ae228f65b49a58ebb476632cd1",
+      "bytes": 2132
+    },
+    {
+      "reference": "web/tests/processing-output-contracts.test.mjs",
+      "sha256": "1a8afe1930886d00e9ce98b28c175fea38f9cb9e8a568684307c1c8357db34db",
+      "bytes": 4758
+    }
+  ],
+  "changed": [
+    "Explicit producer-bound v2 contract metadata retains v1 default behavior,source ownership,current successful source proof,policy freshness and producer authority/root checks. It creates no event or byte effect.",
+    "HTTP query requires all three exact output reference fields once;unknown,incomplete,duplicate,invalid and oversized shapes refuse. CLI uses protected reference JSON. Catalog38-v16 MCP adds only an optional closed read-only output reference;no approval tool or receive-adapter dependency.",
+    "Browser discovers only this producer's current supported output contracts,selects and reloads metadata,clears old review,and keeps default output selection explicit. Complete reference and session identity/root/authority are checked before and after transport. No receiving,forwarding,execution or release grant follows.",
+    "Original PostgreSQL/HTTPS/stock-SDK/CLI and five-audit Chrome profiles remain. Added producer cases and a separate six-audit Chrome selection/recovery/processing/release profile to existing native CI without dropping original entries."
+  ],
+  "red": [
+    {
+      "reference": ".private/freightctl-f187-contracts-red.log",
+      "observed": "Selected producer metadata builder missing."
+    },
+    {
+      "reference": ".private/freightctl-f187-api-selection-red.log",
+      "observed": "Malformed/ambiguous selection reached the unavailable database instead of refusing before it."
+    },
+    {
+      "reference": ".private/freightctl-f187-browser-contracts-red.log",
+      "observed": "Strict v2 selected metadata was not supported."
+    },
+    {
+      "reference": ".private/freightctl-f187-browser-catalog-red.log",
+      "observed": "Producer catalog browser module missing."
+    },
+    {
+      "reference": ".private/freightctl-f187-mcp-reference-red.log",
+      "observed": "Closed MCP schema rejected the newly required exact output reference."
+    }
+  ],
+  "green": {
+    "references": [
+      ".private/freightctl-f187-final-focused.log",
+      ".private/freightctl-f187-browser-formatted-green.log"
+    ],
+    "observed": "Scoped source/output builder,query refusal,closed read-only MCP schemas/core boundaries and11 affected/new frontend cases pass. Affected tagged compilation/vet,type/build consistency,script syntax and workflow lint pass."
+  },
+  "checks": [
+    {
+      "reference": ".private/freightctl-f187-all-interface-compile.log",
+      "sha256": "5229b3171b7926e8dcdb560b0ca4505bee5fa61922ac40b61ed015d216bd233b",
+      "bytes": 228
+    },
+    {
+      "reference": ".private/freightctl-f187-api-contracts-first-green.log",
+      "sha256": "9c647aac394fcdf4c5fb325d145594c4ef9cbe37c58e362de35d1699af507ad0",
+      "bytes": 113
+    },
+    {
+      "reference": ".private/freightctl-f187-api-selection-red.log",
+      "sha256": "55ff6c1ce5be9425a20fca526d0ac8b330e68e0eb50c2d23f3cc3a7acdd602e6",
+      "bytes": 4331
+    },
+    {
+      "reference": ".private/freightctl-f187-api-typecheck-green.log",
+      "sha256": "17e00418398dd65e49bed86df28efee896dcae70d7e6258050a2746181f558d5",
+      "bytes": 54
+    },
+    {
+      "reference": ".private/freightctl-f187-api-typecheck.log",
+      "sha256": "5106307a19b6d3ece3b872a9c6a36d56fba676e1a1ca5c4efdc4648d9d15b772",
+      "bytes": 607
+    },
+    {
+      "reference": ".private/freightctl-f187-browser-build.log",
+      "sha256": "5d38d6118681334fc3b8f904fa2fca43868f77f6fe7a079c6f1e1a2b4dde50ce",
+      "bytes": 232
+    },
+    {
+      "reference": ".private/freightctl-f187-browser-catalog-red.log",
+      "sha256": "ab64ded9d7f96c04639353695f9d219fc88c18cc16a89d1f40589d6e85428929",
+      "bytes": 1747
+    },
+    {
+      "reference": ".private/freightctl-f187-browser-contracts-first-green.log",
+      "sha256": "7bd772c50f5fc615d2ebd74dc25171d58748d7b4f1837358c9212e72d63640af",
+      "bytes": 884
+    },
+    {
+      "reference": ".private/freightctl-f187-browser-contracts-red.log",
+      "sha256": "5e3e9696d826f722045d08810434ba5370edc4f103cdd6e552740a6e5e86a4ae",
+      "bytes": 176754
+    },
+    {
+      "reference": ".private/freightctl-f187-browser-format.log",
+      "sha256": "f0b69f7252fd7e3a02418f0adc89017be2c140d6848199b5e8f288270bfaabb4",
+      "bytes": 208
+    },
+    {
+      "reference": ".private/freightctl-f187-browser-formatted-green.log",
+      "sha256": "d58fe93fffb389a53136afe02e8d9723a6d435a61c8ffb7c758a66781f62aaea",
+      "bytes": 1325
+    },
+    {
+      "reference": ".private/freightctl-f187-browser-selection-first-green.log",
+      "sha256": "9c15c7be1f84a0229ce4d0e9ac310bae23582146d252e97a4a068923598d890f",
+      "bytes": 1194
+    },
+    {
+      "reference": ".private/freightctl-f187-browser-transport-green.log",
+      "sha256": "b66d2648fbba0401c0017f703df1643e7bd287547c79998af94861f9984c72db",
+      "bytes": 1322
+    },
+    {
+      "reference": ".private/freightctl-f187-built-consistency.log",
+      "sha256": "61f0e8ebb60e52bd496a8244498eab878cbc4a6e3a0d2cff2e6279724c2a28c7",
+      "bytes": 249
+    },
+    {
+      "reference": ".private/freightctl-f187-contracts-first-green.log",
+      "sha256": "8f51002e653c29682df1053f3bbc86d7ad93b23e37bbbc4570905ebad474af48",
+      "bytes": 58
+    },
+    {
+      "reference": ".private/freightctl-f187-contracts-red.log",
+      "sha256": "d6e65a91a09408a9b8cb89b141273f2fadd6a13380a62630fce7c28e3e6f03db",
+      "bytes": 448
+    },
+    {
+      "reference": ".private/freightctl-f187-final-built-consistency.log",
+      "sha256": "61f0e8ebb60e52bd496a8244498eab878cbc4a6e3a0d2cff2e6279724c2a28c7",
+      "bytes": 249
+    },
+    {
+      "reference": ".private/freightctl-f187-final-focused.log",
+      "sha256": "abcf6e787295aa2e6c8aa7fa98f2a4581d7c8b892e7d78806344a12e38e96625",
+      "bytes": 181
+    },
+    {
+      "reference": ".private/freightctl-f187-final-native-compile.log",
+      "sha256": "0014c295f6cf093b95e80e35c7a8d329caa1acbcf45e955605c45c46ee252bb9",
+      "bytes": 226
+    },
+    {
+      "reference": ".private/freightctl-f187-final-typecheck.log",
+      "sha256": "17e00418398dd65e49bed86df28efee896dcae70d7e6258050a2746181f558d5",
+      "bytes": 54
+    },
+    {
+      "reference": ".private/freightctl-f187-final-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f187-final-workflow-lint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f187-first-typecheck.log",
+      "sha256": "17e00418398dd65e49bed86df28efee896dcae70d7e6258050a2746181f558d5",
+      "bytes": 54
+    },
+    {
+      "reference": ".private/freightctl-f187-mcp-reference-first-green.log",
+      "sha256": "662ed690539d0e42c6e2568438e1b0c17176cfa63401ff8d2e6e7994fc52a983",
+      "bytes": 177
+    },
+    {
+      "reference": ".private/freightctl-f187-mcp-reference-red.log",
+      "sha256": "0fc5b41aa260a88a3a8bce22680440d1a598ba30c10e848bc3dc772906c4e9c9",
+      "bytes": 298
+    },
+    {
+      "reference": ".private/freightctl-f187-native-browser-compile.log",
+      "sha256": "d344c7568974bb5b2d955586d2b6c951bdbda6bae272e76feae3cba3be79bf48",
+      "bytes": 73
+    },
+    {
+      "reference": ".private/freightctl-f187-native-interfaces-compile.log",
+      "sha256": "b6d048bb9f5fdd15a942640836f1ddd20cc6c04480ed35328768a0d6f069ef44",
+      "bytes": 224
+    },
+    {
+      "reference": ".private/freightctl-f187-native-script-syntax.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f187-openapi-refs.log",
+      "sha256": "6877e2adf28422c29cec74c7dbf2a054c3265e36aaa8a9ea6b2f5d695607c0fd",
+      "bytes": 91
+    },
+    {
+      "reference": ".private/freightctl-f187-record-refs.log",
+      "sha256": "826009b37d6c8254924b7fd1ee12981059544175f2c890ad4186b88b41b583b4",
+      "bytes": 106
+    },
+    {
+      "reference": ".private/freightctl-f187-ui-typecheck.log",
+      "sha256": "17e00418398dd65e49bed86df28efee896dcae70d7e6258050a2746181f558d5",
+      "bytes": 54
+    },
+    {
+      "reference": ".private/freightctl-f187-workflow-lint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "preparation_failures": [
+    "First TypeScript check retained:duplicate Reference import and unknown-field narrowing were corrected without changing assertions. Native CLI reference flag was checked against actual main and set to -file-id before execution;tagged compilation does not validate runtime flag behavior."
+  ],
+  "prepared_native": [
+    "TestProducerProcessingContractsActualSelectionIsReadOnlyAndKeepsIngress",
+    "TestProducerProjectionHTTPSApprovalRunAndHeldOutputKeepDefaultIngress (selected metadata extension)",
+    "TestProcessingWorkflowCLIUsesApprovedTaskAndSeparateOutputRelease/producer_output_contract_registry (selected metadata extension)",
+    "TestMCPStockClientProducerOutputSelectionKeepsDefaultIngressAndApprovalOutsideTools",
+    "TestProducerProcessingNativeBrowserSelectsOutputContractAndKeepsIngress"
+  ],
+  "verification_limits": [
+    "All tagged compilation selected zero native cases. No local PostgreSQL,Chrome,scanner,model or heavy peer ran. Actual byte/interface/native accessibility outcomes remain unqualified.",
+    "Original default Chrome profile retains five audits. Separate producer profile adds selection plus those five,expected total six. Browser registration editor,composition/scheduling/delegation and protected output/customer outcomes remain open.",
+    "Schema56/inventory77 metadata76 forced RLS and historical migrations/retained35 unchanged. F188 retains preceding original17/37,listed security passes and red application failures;nonsecurity investigation/repair remains deferred to FINISH."
+  ],
+  "owed": [
+    "Run every prepared actual PostgreSQL/HTTPS/CLI/SDK/Chrome profile,original failures and final-source gates in authorized native environments.",
+    "Browser policy registration,composition/scheduling,third-party delegation,protected output/independent receivers and remaining mandatory baseline/AX implementation.",
+    "Mandatory full FINISH deferred/broad/race/security/frontend/native/accessibility/recovery/restore/reproducibility/original-journey/final-source checks and external prerequisites;all whole rows/journeys/readiness remain open."
+  ]
+}

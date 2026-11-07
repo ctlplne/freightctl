@@ -103,5 +103,35 @@ HTTPS profile retains the original default-policy case and adds the producer
 case. Browser validation recognizes the pinned producer profile and refuses
 identity/root/authority/reference substitution. Runtime, native browser/stock CLI,
 protected output, final-source and full acceptance qualification remain owed.
-Browser contract registration/selection, output-to-input composition, scheduling
-and third-party author delegation remain separate outstanding product work.
+Output-to-input composition, scheduling and third-party author delegation remain
+separate outstanding product work.
+
+F187 adds browser discovery and explicit selection of this producer's current
+CSV/JSON output contract. Choosing it clears the old review, fetches the exact
+source/output metadata, and binds the current session identity, authority and
+namespace digest. Stale/other-producer contracts cannot be substituted, even by
+a root administrator. The default policy remains an explicit separate choice.
+Contract registration itself remains available through administrator API/CLI;
+a browser registration editor is still owed.
+
+`GET /checks/{file}/processing-contracts` retains its default v1 response. Supply
+all three `output_policy_id`, `output_policy_version` and `output_policy_hash`
+query fields exactly once for `record-processing-contracts-v2`. Unknown,
+incomplete, duplicate and oversized query shapes refuse. V2 includes the current
+producer binding and exact output policy; it loads no bytes and records no event.
+The [OpenAPI fragment](../api/processing-contract-selection.openapi.json) defines
+both shapes. Receiving metadata grants no effect permission.
+
+CLI `check-processing-contracts -file-id UUID -storage DIR` uses the default.
+Add a protected `-request-file` containing `{id,version,hash}` to select the exact
+producer contract. It uses ordinary protected DSN/token/tenant/partner references.
+MCP Catalog38/`exchange-tools-v16` adds the optional closed `output_policy`
+reference to `freightctl.processing_contracts`; it remains read-only and creates
+no approval or run. Actual stock-SDK proof is prepared with receiving disabled.
+
+F187 records focused source/binding/query/browser/schema red-to-green proof.
+Actual PostgreSQL, verified HTTPS, public CLI dispatch, stock MCP client and
+Chrome selection/recovery/processing/release remain prepared and compiled only.
+The original Chrome profile retains all five audits; the separate producer
+profile adds a sixth selection audit. No local Chrome or PostgreSQL runs. All
+native outcomes and final-source acceptance remain owed.

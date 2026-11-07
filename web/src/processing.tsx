@@ -1,6 +1,7 @@
 import { ProcessingTaskReview } from "./processing-task-review";
 import { ProcessingReviews } from "./processing-reviews";
 import type { ProcessingCatalog } from "./processing-catalog-types";
+import type { OutputContractCatalog } from "./processing-output-types";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Api } from "./api";
 import { ApiError, object, uuid, type Session } from "./types";
@@ -18,6 +19,7 @@ import {
   processingDefinition,
   processingHash,
   type Contracts,
+  type Reference,
   type Configuration,
   type Mapping,
   type ProcessingDefinition,
@@ -70,6 +72,9 @@ export function ProcessingWorkflows({
   const [source, setSource] = useState(""),
     [catalog, setCatalog] = useState<ProcessingCatalog | null>(null),
     [contracts, setContracts] = useState<Contracts | null>(null),
+    [outputContracts, setOutputContracts] =
+      useState<OutputContractCatalog | null>(null),
+    [outputReference, setOutputReference] = useState<Reference | null>(null),
     [name, setName] = useState(""),
     [reason, setReason] = useState(""),
     [target, setTarget] = useState("/derived.json"),
@@ -137,9 +142,12 @@ export function ProcessingWorkflows({
       if (current()) setBusy(false);
     }
   };
-  const loadContracts = () =>
+  const loadContracts = (selected: Reference | null = outputReference) =>
     perform(async () => {
-      const c = await client.contracts(source);
+      setContracts(null);
+      setReviewed(null);
+      setOutputReference(selected);
+      const c = await client.contracts(source, selected ?? undefined);
       if (!current()) return;
       setContracts(c);
       setReviewed(null);
@@ -589,10 +597,108 @@ export function ProcessingWorkflows({
         </label>
         <button
           disabled={!uuid(source) || !allowed("inspect")}
-          onClick={loadContracts}
+          onClick={() => void loadContracts()}
         >
           Load processing contracts
         </button>
+      </fieldset>
+      <fieldset disabled={busy || !!pending}>
+        <legend>Output contract</legend>
+        <p>
+          Choose a contract registered for this producer. Incoming files keep
+          their own policy. Selection reads metadata; it does not approve,
+          process, release or send bytes.
+        </p>
+        <button
+          disabled={!allowed("configuration")}
+          onClick={() =>
+            perform(async () => {
+              const page = await client.outputContracts();
+              if (current()) setOutputContracts(page);
+            })
+          }
+        >
+          Find my output contracts
+        </button>
+        <button
+          disabled={!uuid(source) || !allowed("inspect")}
+          onClick={() => void loadContracts(null)}
+        >
+          Use default policy for output
+        </button>
+        <p>
+          {outputReference ? (
+            <>
+              Selected contract <code>{outputReference.id}</code> version{" "}
+              {outputReference.version}.
+            </>
+          ) : (
+            "Output selection uses the current default policy."
+          )}
+        </p>
+        {outputContracts && (
+          <section aria-label="Available output contracts">
+            {outputContracts.policies.length === 0 ? (
+              <p>
+                No current CSV or JSON output contracts for this producer on
+                this page. A policy administrator can register the required
+                contract.
+              </p>
+            ) : (
+              <table>
+                <caption>
+                  Current registered output contracts for this producer
+                </caption>
+                <thead>
+                  <tr>
+                    <th>Contract</th>
+                    <th>Version</th>
+                    <th>Format</th>
+                    <th>Columns</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {outputContracts.policies.map((row) => (
+                    <tr key={row.reference.id}>
+                      <td>
+                        <code>{row.reference.id}</code>
+                      </td>
+                      <td>{row.reference.version}</td>
+                      <td>
+                        {row.kind === "json_records" ? "JSON records" : "CSV"}
+                      </td>
+                      <td>{row.column_count}</td>
+                      <td>
+                        <button
+                          disabled={!uuid(source) || !allowed("inspect")}
+                          onClick={() => void loadContracts(row.reference)}
+                        >
+                          Use this output contract
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+            {outputContracts.next && (
+              <button
+                disabled={!allowed("configuration")}
+                onClick={() =>
+                  perform(async () => {
+                    const page = await client.outputContracts(
+                      outputContracts.next,
+                    );
+                    if (current()) setOutputContracts(page);
+                  })
+                }
+              >
+                Next output contracts
+              </button>
+            )}
+          </section>
+        )}
       </fieldset>
       {contracts && (
         <section aria-label="Processing contracts">
@@ -608,6 +714,12 @@ export function ProcessingWorkflows({
             {contracts.output_policy.reference.version} (
             {contracts.output_policy.definition.kind}).
           </p>
+          {contracts.output_binding && (
+            <p>
+              This output contract is pinned to your current identity,
+              permission revision and namespace. The input policy is unchanged.
+            </p>
+          )}
           {contracts.source_proof_valid_until && (
             <p>
               Original source protection proof expires at{" "}

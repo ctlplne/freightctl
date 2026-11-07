@@ -310,6 +310,11 @@ func TestProcessingWorkflowCLIUsesApprovedTaskAndSeparateOutputRelease(t *testin
 		if err != nil || json.Unmarshal(raw, &view) != nil || !view.ProducerCurrent {
 			t.Fatal("CLI output binding inspection", err)
 		}
+		raw, err = command("check-processing-contracts", "-file-id", source.ID, "-request-file", requestFile(store.OnboardingReference{ID: record.Policy.ID, Version: record.Policy.Version, Hash: record.Policy.Hash}))
+		var contracts checks.ProcessingContracts
+		if err != nil || json.Unmarshal(raw, &contracts) != nil || contracts.Profile != "record-processing-contracts-v2" || contracts.OutputBinding == nil || contracts.OutputPolicy.Reference.ID != record.Policy.ID || contracts.Source.ID != source.ID {
+			t.Fatal("CLI explicit producer output metadata", err)
+		}
 		if _, err = command("processing-output-policy-revoke", "-output-policy-id", record.Policy.ID, "-version", "1", "-request-file", requestFile(checks.PolicyDecision{Hash: record.Policy.Hash, Version: 1, Revision: 1}), "-idempotency-key", "cli-revoke-output-contract"); err != nil {
 			t.Fatal("CLI output revocation", err)
 		}

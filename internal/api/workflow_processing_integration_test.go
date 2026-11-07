@@ -67,6 +67,12 @@ func processingWorkflowHTTPS(t *testing.T, producerBound bool) {
 			t.Fatal("producer output policy")
 		}
 		outputPolicy = *contract.Policy
+		query := "?output_policy_id=" + outputPolicy.ID + "&output_policy_version=1&output_policy_hash=" + outputPolicy.Hash
+		_, raw := exchangeAPIRequest(t, server, "GET", prefix+"/checks/"+source.ID+"/processing-contracts"+query, nil, map[string]string{"Authorization": "Bearer " + string(token.Bytes)}, nil, 200)
+		var described checks.ProcessingContracts
+		if json.Unmarshal(raw, &described) != nil || described.Profile != "record-processing-contracts-v2" || described.OutputBinding == nil || described.OutputBinding.Producer.Actor != participant.Actor || described.Source.ID != source.ID || described.OutputPolicy.Reference.ID != outputPolicy.ID {
+			t.Fatal("served metadata selection did not bind this producer/source/output")
+		}
 	} else {
 		registered, err := control.Register(ctx, manager, "wf-output-policy", checks.PolicyRequest{ExpectedVersion: 1, Definition: output})
 		if err != nil {

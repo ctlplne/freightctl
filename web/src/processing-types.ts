@@ -52,7 +52,8 @@ export interface ProcessingDefinition {
   };
 }
 export interface Contracts {
-  profile: "record-processing-contracts-v1";
+  profile: "record-processing-contracts-v1" | "record-processing-contracts-v2";
+  output_binding?: ReturnType<typeof processingOutputBinding>;
   source: ExchangeArtifact;
   source_policy: {
     reference: Reference;
@@ -209,25 +210,12 @@ export function reference(value: unknown): Reference {
 }
 
 // This is a bound review profile, not an approval or permission grant.
-export function processingPlanProfile(
+export function processingOutputBinding(
   value: unknown,
-  context: ReturnType<typeof parseRecheckPlan>,
+  selected: Reference,
   session: Session,
 ) {
-  const plan = object(value);
-  if (
-    plan.schema_version === 2 &&
-    plan.profile === "scoped-record-projection-v1" &&
-    plan.output_binding === undefined
-  ) {
-    return { schema_version: 2, profile: "scoped-record-projection-v1" };
-  }
-  if (
-    plan.schema_version !== 3 ||
-    plan.profile !== "producer-record-projection-v1"
-  )
-    bad();
-  const b = exact(plan.output_binding, [
+  const b = exact(value, [
       "profile",
       "policy_id",
       "policy_version",
@@ -249,7 +237,7 @@ export function processingPlanProfile(
       authority_revision: integer(actor.authority_revision, 1),
       root_policy_digest: hash(actor.root_policy_digest),
     },
-    ref = reference(context.policy),
+    ref = reference(selected),
     identity = session.identity;
   if (
     b.profile !== "producer-processing-output-policy-v1" ||
@@ -260,23 +248,51 @@ export function processingPlanProfile(
     producer.partner_id !== identity.partner_id ||
     producer.actor_id !== identity.actor_id ||
     producer.authority_revision !== identity.authority_revision ||
-    producer.authority_revision !== context.authority_revision ||
-    producer.root_policy_digest !== identity.root_policy_digest ||
-    producer.root_policy_digest !==
+    producer.root_policy_digest !== identity.root_policy_digest
+  )
+    bad();
+  return {
+    profile: "producer-processing-output-policy-v1",
+    policy_id: ref.id,
+    policy_version: ref.version,
+    policy_hash: ref.hash,
+    publisher_id: identifier(b.publisher_id),
+    producer,
+  };
+}
+
+export function processingPlanProfile(
+  value: unknown,
+  context: ReturnType<typeof parseRecheckPlan>,
+  session: Session,
+) {
+  const plan = object(value);
+  if (
+    plan.schema_version === 2 &&
+    plan.profile === "scoped-record-projection-v1" &&
+    plan.output_binding === undefined
+  )
+    return { schema_version: 2, profile: "scoped-record-projection-v1" };
+  if (
+    plan.schema_version !== 3 ||
+    plan.profile !== "producer-record-projection-v1"
+  )
+    bad();
+  const binding = processingOutputBinding(
+    plan.output_binding,
+    reference(context.policy),
+    session,
+  );
+  if (
+    binding.producer.authority_revision !== context.authority_revision ||
+    binding.producer.root_policy_digest !==
       digestBytes(new TextEncoder().encode(context.namespace_root))
   )
     bad();
   return {
     schema_version: 3,
     profile: "producer-record-projection-v1",
-    output_binding: {
-      profile: "producer-processing-output-policy-v1",
-      policy_id: ref.id,
-      policy_version: ref.version,
-      policy_hash: ref.hash,
-      publisher_id: identifier(b.publisher_id),
-      producer,
-    },
+    output_binding: binding,
   };
 }
 export function projection(value: unknown): Projection {
@@ -391,7 +407,10 @@ export function processingDefinition(value: unknown): ProcessingDefinition {
     },
   };
 }
-export function processingContracts(value: unknown): Contracts {
+export function processingContracts(
+  value: unknown,
+  session?: Session,
+): Contracts {
   const o = exact(
     value,
     [
@@ -403,14 +422,27 @@ export function processingContracts(value: unknown): Contracts {
       "namespace_root_digest",
       "effects",
     ],
-    ["source_proof_valid_until"],
+    ["source_proof_valid_until", "output_binding"],
   );
-  if (o.profile !== "record-processing-contracts-v1") bad();
+  const selected = o.profile === "record-processing-contracts-v2";
+  if (
+    (!selected && o.profile !== "record-processing-contracts-v1") ||
+    selected !== (o.output_binding !== undefined) ||
+    (selected && !session)
+  )
+    bad();
   const policy = (v: unknown, source: boolean) => {
     const p = exact(v, ["reference", "state", "definition"]),
       ref = reference(p.reference),
       definition = intakeDefinition(p.definition),
-      state = option(p.state, source ? ["active", "retired"] : ["active"]);
+      state = option(
+        p.state,
+        source
+          ? ["active", "retired"]
+          : selected
+            ? ["output_active"]
+            : ["active"],
+      );
     if (intakeHash(definition) !== ref.hash) bad();
     return { reference: ref, state, definition };
   };
@@ -426,7 +458,9 @@ export function processingContracts(value: unknown): Contracts {
   }[source_policy.definition.kind];
   if (source.acceptance_policy !== prefix + source_policy.reference.hash) bad();
   const result: Contracts = {
-    profile: "record-processing-contracts-v1",
+    profile: selected
+      ? "record-processing-contracts-v2"
+      : "record-processing-contracts-v1",
     source,
     source_policy,
     output_policy,
@@ -434,6 +468,20 @@ export function processingContracts(value: unknown): Contracts {
     namespace_root_digest: hash(o.namespace_root_digest),
     effects: text(o.effects, 1024),
   };
+  if (selected) {
+    result.output_binding = processingOutputBinding(
+      o.output_binding,
+      output_policy.reference,
+      session!,
+    );
+    if (
+      result.output_binding.producer.authority_revision !==
+        result.authority_revision ||
+      result.output_binding.producer.root_policy_digest !==
+        result.namespace_root_digest
+    )
+      bad();
+  }
   if (o.source_proof_valid_until !== undefined) {
     const t = text(o.source_proof_valid_until, 40);
     if (!Number.isFinite(Date.parse(t))) bad();

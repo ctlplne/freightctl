@@ -87,6 +87,9 @@ func mcpProcessingStatus(view *workflow.RunView, observation string) (map[string
 }
 func (s *Server) mcpProcessingWorkflowControl(ctx context.Context, scope store.Scope, name string, args mcpToolArguments) (any, error) {
 	if name == "freightctl.processing_contracts" {
+		if args.OutputPolicy != nil {
+			return s.Checks.DescribeProcessingOutput(ctx, scope, args.File, *args.OutputPolicy)
+		}
 		return s.Checks.DescribeProcessing(ctx, scope, args.File)
 	}
 	service := &workflow.Service{Custody: s.Service, Processor: s.Checks}

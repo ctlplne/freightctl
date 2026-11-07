@@ -88,7 +88,7 @@ grant forwarding or execution. Original-key recovery returns the owned copy's
 original acceptance without reopening a stale source view. Current availability,
 receiver persistence and processing are not inferred. No content,overwrite,mode,
 host path,actor,root,recipient or execution option enters this tool. The current
-catalog has38 tools, implementation `exchange-tools-v15`; actual original
+catalog has38 tools, implementation `exchange-tools-v16`; actual original
 SDK/HTTPS proof remains owed.
 
 Five scoped record-processing controls share the ordinary governed service:

@@ -27,7 +27,7 @@ func runChecks(ctx context.Context, command, dsn, token, tenant, partner, storag
 	}
 	defer db.Pool.Close()
 	custodyService := &custody.Service{DB: db, NamespaceMaxEntries: maxEntries}
-	if command == "check-status" || command == "check-run" || command == "check-recover" || command == "check-release" {
+	if command == "check-status" || command == "check-processing-contracts" || command == "check-run" || command == "check-recover" || command == "check-release" {
 		disk, err := custody.OpenExisting(storage)
 		if err != nil {
 			return err
@@ -56,6 +56,20 @@ func runChecks(ctx context.Context, command, dsn, token, tenant, partner, storag
 	switch command {
 	case "check-list":
 		result, err = service.List(ctx, scope, after, limit)
+	case "check-processing-contracts":
+		if input == "" {
+			result, err = service.DescribeProcessing(ctx, scope, fileID)
+		} else {
+			var selected store.OnboardingReference
+			request, readErr := secure.ReadSecret(input, 4096)
+			if readErr != nil {
+				return readErr
+			}
+			defer request.Close()
+			if err = workflow.Decode(request.Bytes, &selected); err == nil {
+				result, err = service.DescribeProcessingOutput(ctx, scope, fileID, selected)
+			}
+		}
 	case "intake-policy-register":
 		var request checks.PolicyRequest
 		if err = decode(&request); err != nil {

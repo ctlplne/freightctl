@@ -1,5 +1,6 @@
 import { Api } from "./api";
 import { processingCatalog } from "./processing-catalog-types";
+import { processingOutputCatalog } from "./processing-output-types";
 import { ApiError, object, type Session } from "./types";
 import { operationKey, digestBytes } from "./crypto";
 import { parseRecheckPlan } from "./rechecks-types";
@@ -172,20 +173,41 @@ export class ProcessingApi {
       timeout,
     );
   }
-  contracts(id: string) {
+  contracts(id: string, selected?: Reference) {
+    const output = selected === undefined ? undefined : reference(selected);
+    const query =
+      output === undefined
+        ? ""
+        : `?output_policy_id=${output.id}&output_policy_version=${output.version}&output_policy_hash=${output.hash}`;
     return this.request(
-      `/checks/${reference({ id, version: 1, hash: "a".repeat(64) }).id}/processing-contracts`,
+      `/checks/${reference({ id, version: 1, hash: "a".repeat(64) }).id}/processing-contracts${query}`,
       {},
       (v, s) => {
-        const c = processingContracts(v);
+        const c = processingContracts(v, s);
         if (
           c.source.file_revision_id !== id ||
           c.authority_revision !== s.identity.authority_revision ||
           c.namespace_root_digest !== s.identity.root_policy_digest
         )
           throw new ApiError("context_changed", 409);
+        if (
+          (output !== undefined) !== (c.output_binding !== undefined) ||
+          (output !== undefined &&
+            processingHash(c.output_policy.reference) !==
+              processingHash(output))
+        )
+          throw new ApiError("invalid_processing_contract", 502);
         return c;
       },
+    );
+  }
+  outputContracts(after = "") {
+    if (after) reference({ id: after, version: 1, hash: "a".repeat(64) });
+    return this.request(
+      "/processing-output-policies?limit=25" + (after ? "&after=" + after : ""),
+      {},
+      (v, s) => processingOutputCatalog(v, s),
+      "configuration",
     );
   }
   catalog(after = "") {
