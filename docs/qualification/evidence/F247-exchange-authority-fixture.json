@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "id": "F247",
+  "observed_at": "2026-11-07",
+  "base_candidate": "a1b8de3136d307c84788e5a423557a6cb8d77cd2",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Original authority fixtures corrected;native replay owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "d79c4ef1e631ed1d58aa133437a5d9f4b442c958f03d950401d3ade4ce142080",
+      "bytes": 11772
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "8bec9097293d99cb39eb3a4390c2f9fe5bc2a75a3705172210dc81b37b37e7df",
+      "bytes": 372918
+    },
+    {
+      "reference": "docs/qualification/evidence/F236-native-security-and-runtime-terminal-ci.json",
+      "sha256": "f2e8646908ae16e72f84bc6cbeb9b7fee3519d72bd26a6ef886caa658c946b15",
+      "bytes": 46162
+    },
+    {
+      "reference": "internal/custody/exchange_closures_integration_test.go",
+      "sha256": "9ca3492870c5b3337008936f97ed9d3a5a3677ad89d834838a6b846a454e1419",
+      "bytes": 12940
+    },
+    {
+      "reference": "internal/custody/outgoing_exchanges_integration_test.go",
+      "sha256": "14b5da9988a18c94d757ac6f36cea7f6b32c20433beb942b4aade2901e91176c",
+      "bytes": 10212
+    }
+  ],
+  "red": {
+    "candidate": "e87483babb4e32f8a3aaf78d13f8374d842fa78b",
+    "run": 42354252239,
+    "job": 128348738078,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128348738078",
+    "observations": [
+      "exchange_closures_integration_test.go:141:new actor authority reused an old closure receipt <nil>",
+      "outgoing_exchanges_integration_test.go:137:new authority adopted old receipt metadata <nil>"
+    ],
+    "cause": "Both old fixtures changed Label only while preserving root,expiry and all permissions. Account revision advances;authority revision correctly does not."
+  },
+  "changed": [
+    "Assert label-only updates retain exact closure/offer IDs,state,command/request hash and event IDs under unchanged authority.",
+    "Remove only write while retaining read/list/deliver and require authority revision exactly +1. Preserve original ErrNotFound and zero old private receipt/command rows. No production permission or visibility rule changed."
+  ],
+  "green": [
+    "Affected integration tests compile and vet under local oneCPU/192MiB limits. No PostgreSQL runtime executed."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f247-authority-fixture-compile.log",
+      "sha256": "3245e7d19a99da1b9b5975c3ff505e80494cb2339bd455e10257806c4e81b64c",
+      "bytes": 77
+    },
+    {
+      "reference": ".private/freightctl-f247-authority-fixture-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f247-final-authority-fixture-compile.log",
+      "sha256": "5526f974f2f241a95004e76d352fc36750ed0e0c46ac1d9573b351b00b4f1804",
+      "bytes": 77
+    },
+    {
+      "reference": ".private/freightctl-f247-final-authority-fixture-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f247-final-receipt-identity-compile.log",
+      "sha256": "22c982f12d57163f729a1e3d26d89c1bfe5a8975e56c66c1bb13549622fb7c7e",
+      "bytes": 77
+    }
+  ],
+  "owed": [
+    "Actual original PostgreSQL authority-negative and label-positive cases on native ARM/x86.",
+    "Windows inherited-ACE security failure remains red;all remaining actual final-source baseline/AX/FINISH outcomes remain owed."
+  ],
+  "resources": "Local compilation/vet only;inference,PostgreSQL,Chrome,scanner and heavy peers off. Retained35/source60 unchanged."
+}

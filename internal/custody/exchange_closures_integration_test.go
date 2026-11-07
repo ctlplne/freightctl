@@ -134,8 +134,25 @@ func TestExchangeClosureCanWithdrawAfterEndpointRevocationButNotActorRebinding(t
 	if err != nil || closed.State != "canceled" {
 		t.Fatal("revoked destination prevented withdrawal", err)
 	}
-	if _, err = f.db.ChangeAccount(f.ctx, f.fixture.a, "rebind-sender", store.AccountCommand{Operation: "update", ID: f.actorA.Actor, ExpectedRevision: 1, Policy: &store.AccountPolicy{Label: "Changed authority", Root: "/", Permissions: []string{"read", "write", "list", "deliver"}}}); err != nil {
+	if _, err = f.db.ChangeAccount(f.ctx, f.fixture.a, "rename-sender-label", store.AccountCommand{Operation: "update", ID: f.actorA.Actor, ExpectedRevision: 1, Policy: &store.AccountPolicy{Label: "Renamed sender", Root: "/", Permissions: []string{"read", "write", "list", "deliver"}}}); err != nil {
 		t.Fatal(err)
+	}
+	current, err := f.db.Identity(f.ctx, f.a)
+	if err != nil || current.AuthorityRevision != f.actorA.AuthorityRevision {
+		t.Fatal("label-only update changed authority", err)
+	}
+	labelReplay, err := f.db.CloseExchange(f.ctx, f.a, "withdraw", command)
+	if err != nil || !labelReplay.Replayed || labelReplay.ID != closed.ID || labelReplay.State != closed.State || labelReplay.CommandHash != closed.CommandHash || labelReplay.EventID != closed.EventID {
+		t.Fatal("label-only update erased exact closure receipt", err)
+	}
+	// Remove an unrelated write grant while preserving read/deliver,so the
+	// original refusal exercises authority rebinding rather than a missing role.
+	if _, err = f.db.ChangeAccount(f.ctx, f.fixture.a, "rebind-sender", store.AccountCommand{Operation: "update", ID: f.actorA.Actor, ExpectedRevision: 2, Policy: &store.AccountPolicy{Label: "Changed authority", Root: "/", Permissions: []string{"read", "list", "deliver"}}}); err != nil {
+		t.Fatal(err)
+	}
+	current, err = f.db.Identity(f.ctx, f.a)
+	if err != nil || current.AuthorityRevision != f.actorA.AuthorityRevision+1 {
+		t.Fatal("fixture did not change actual sender authority", err)
 	}
 	if _, err = f.db.CloseExchange(f.ctx, f.a, "withdraw", command); !errors.Is(err, store.ErrNotFound) {
 		t.Fatal("new actor authority reused an old closure receipt", err)

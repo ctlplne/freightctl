@@ -129,8 +129,23 @@ func TestOutgoingExchangeHistoryKeepsReceiptAndStateSeparateWithoutReceiverClaim
 	if err != nil || unavailable.State != "unavailable" {
 		t.Fatal("historical receipt became a live endpoint grant", err)
 	}
-	if _, err = f.db.ChangeAccount(f.ctx, f.fixture.a, "history-authority-change", store.AccountCommand{Operation: "update", ID: f.actorA.Actor, ExpectedRevision: 1, Policy: &store.AccountPolicy{Label: "Changed history authority", Root: "/", Permissions: []string{"read", "write", "list", "deliver"}}}); err != nil {
+	if _, err = f.db.ChangeAccount(f.ctx, f.fixture.a, "history-label-change", store.AccountCommand{Operation: "update", ID: f.actorA.Actor, ExpectedRevision: 1, Policy: &store.AccountPolicy{Label: "Renamed history sender", Root: "/", Permissions: []string{"read", "write", "list", "deliver"}}}); err != nil {
 		t.Fatal(err)
+	}
+	current, err := f.db.Identity(f.ctx, f.a)
+	if err != nil || current.AuthorityRevision != f.actorA.AuthorityRevision {
+		t.Fatal("label-only history update changed authority", err)
+	}
+	labelView, err := f.db.OutgoingExchange(f.ctx, f.a, open.Exchange.ID)
+	if err != nil || labelView.State != unavailable.State || labelView.Exchange.ID != unavailable.Exchange.ID || labelView.Exchange.RequestHash != unavailable.Exchange.RequestHash || labelView.Exchange.EventID != unavailable.Exchange.EventID {
+		t.Fatal("label-only update erased original receipt metadata", err)
+	}
+	if _, err = f.db.ChangeAccount(f.ctx, f.fixture.a, "history-authority-change", store.AccountCommand{Operation: "update", ID: f.actorA.Actor, ExpectedRevision: 2, Policy: &store.AccountPolicy{Label: "Changed history authority", Root: "/", Permissions: []string{"read", "list", "deliver"}}}); err != nil {
+		t.Fatal(err)
+	}
+	current, err = f.db.Identity(f.ctx, f.a)
+	if err != nil || current.AuthorityRevision != f.actorA.AuthorityRevision+1 {
+		t.Fatal("fixture did not change actual history authority", err)
 	}
 	page, err := f.db.OutgoingExchanges(f.ctx, f.a, "", 20)
 	if err != nil || len(page.Exchanges) != 0 || page.Next != "" {

@@ -1165,7 +1165,9 @@
         "docs/qualification/evidence/F239-windows-raw-control-closed-classification.json",
         "docs/qualification/evidence/F241-restart-cardinality-owner-observer.json",
         "docs/qualification/evidence/F243-onward-browser-operator-provisioning.json",
-        "docs/qualification/evidence/F245-private-staging-and-sealed-protection.json"
+        "docs/qualification/evidence/F245-private-staging-and-sealed-protection.json",
+        "docs/qualification/evidence/F236-native-security-and-runtime-terminal-ci.json",
+        "docs/qualification/evidence/F247-exchange-authority-fixture.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -1228,13 +1230,14 @@
         "F239 completes the missing Windows RawConn closing classification after F227's native replay remained red. Pinned Go RawControl returns internal poll.ErrFileClosing directly;the adapter preserves it and adds public os.ErrClosed. Native operation/identity/flush/close errors and the exact assertion remain. Windows compile/vet pass only;actual original native replay owed.",
         "F241 repairs the original native restart observer:root runtime must see zero actor-private offers/commands while retaining its file metadata view;the exact authenticated sender must see one offer/command/file after unchanged three kills/four process instances. Original byte/revocation/receipt/no-onward assertions remain. A variable-name compile collision was corrected before commit;final compilation/vet pass only. Actual original native replay owed. STATUS repair history is compacted to current work and preserved item references.",
         "F243 repairs original receive-browser setup permission failure:the fixture actor receives explicit temporary operator grants only to register its owned connection;ordinary account commands remove them before workflow draft/approval,source acceptance and browser login. Exact same actor/root,advanced authority and final seven restricted permissions are asserted. Production registration requirements and recipient/no-forward assertions remain. Compile/vet pass only;actual original native browser replay owed.",
-        "F245 adds explicit private staging/sealed protection. Unix exact0600/0400 remains;Windows sealed owner read plus link-required WRITE_ATTRIBUTES excludes data/append/EA writes,execution,deletion and explicit ACL/owner grants. Held descriptor checks precede/follow sealing;already-sealed is idempotent. Local same-object hard-link/exact-byte/policy cases and Windows compile/vet pass. A new actual Windows reopen-for-write refusal case is prepared only. Custody/setup wiring and full native proof remain owed."
+        "F245 adds explicit private staging/sealed protection. Unix exact0600/0400 remains;Windows sealed owner read plus link-required WRITE_ATTRIBUTES excludes data/append/EA writes,execution,deletion and explicit ACL/owner grants. Held descriptor checks precede/follow sealing;already-sealed is idempotent. Local same-object hard-link/exact-byte/policy cases and Windows compile/vet pass. A new actual Windows reopen-for-write refusal case is prepared only. Custody/setup wiring and full native proof remain owed.",
+        "F247 repairs two original native authority-negative fixtures:label changes preserve exact historical receipts;removing only write while retaining read/list/deliver advances actual authority and must conceal old receipts/commands. Original ErrNotFound/zero-row assertions remain. Compile/vet pass only;native proof owed. F236 records original e874 terminal18/41 with29 pass/12 fail and the open Windows inherited-ACE security refusal."
       ],
       "current_item": {
-        "id": "F245",
-        "state": "Private staging/sealed protection seam implemented;product wiring/native Windows owed",
-        "proof": "Local exact bytes/same-object hard link/idempotent seal and mutation-policy assertions pass;Windows new-write-handle refusal cross-compiles only",
-        "next": "Wire custody roots/identity/staging/verification and setup private files;replay original Windows and all remaining product/baseline/AX/FINISH gates"
+        "id": "F247",
+        "state": "Authority fixtures repaired;actual PostgreSQL replay owed;Windows security refusal remains red",
+        "proof": "Original native failures retained;focused integration compilation/vet only",
+        "next": "Read back applied Windows ACL preconditions and replay native refusal;wire custody/setup and complete remaining product gates"
       }
     }
   ],

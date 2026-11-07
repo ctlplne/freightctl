@@ -5,8 +5,9 @@ complete journeys and AX01–AX08 remain open. Assisted deployment,independent
 adoption and enterprise readiness remain unqualified.
 
 Latest pushed source:e87483babb4e32f8a3aaf78d13f8374d842fa78b.
-Its original runtime batch is still in progress. Listed completed security gates
-have passed;remaining native application/platform/browser/stock failures stay red.
+Its original18 workflows/41 jobs are terminal:29 passed,12 failed. Listed scan
+steps passed;the Windows inherited-ACE refusal test stays red pending actual
+descriptor readback and original replay. F236 preserves exact run/job handles.
 F214 retains the previous71e8166 original18 terminal workflows/41 jobs:27 pass,
 14 fail,including both full image scans. SCP/tus workflows and six processing
 Chrome cases passed on that exact older source;no later-source result is inferred.
@@ -23,7 +24,9 @@ byte protection. Small local filesystem/policy checks and Windows compilation
 pass;custody/setup wiring and actual Windows cases remain owed. F237/F239/F241/
 F243 prepare failed-browser decoding,Windows closed-error classification,exact
 sender restart observation and trusted-setup/restricted-runtime browser repair.
-Their original native replays remain owed. Detailed source/proof/owed bindings
+F247 corrects two label-only authority fixtures with an actual permission change,
+exact authority snapshots and unchanged old-receipt refusals. Their original
+native replays remain owed. Detailed source/proof/owed bindings
 stay in the item manifests and docs/qualification/remaining.json.
 
 Next:wire immutable Windows custody/setup,repair the newly reached native browser
