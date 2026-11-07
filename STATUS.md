@@ -8,7 +8,13 @@ Exact original failures,owner decisions and remaining work are preserved in
 [artifact-exchange.json](docs/qualification/artifact-exchange.json) and the
 linked safe manifests. Raw private proof remains outside Git.
 
-Current terminal pushed candidate: `781dfdc94f7e73595979f2c77a17bc80cd914e12`.
+Current pushed candidate: `a6c4aacbae8bc3d38eaebd45f20d0fe5ba7ee3fe`.
+[F407](docs/qualification/evidence/F407-native-push.json) binds three verified
+owner-only commits and16 first original workflows. Enabled pre-push Gitleaks
+reports no leaks. F405 property/schema63 runtime,security and restore outcomes
+remain owed;local compilation is not native qualification.
+
+Previous terminal candidate: `781dfdc94f7e73595979f2c77a17bc80cd914e12`.
 [F406](docs/qualification/evidence/F406-native-terminal.json) binds all16 original
 workflows/35 terminal jobs:34pass,one receive-browser failure. Named source/history,
 native source/dependency and peer-image security steps pass. Windows/macOS,
@@ -16,8 +22,8 @@ both Linux unit/race/PostgreSQL/image jobs,fuzz,restore,HTTPS and JSON browser
 jobs pass in completion metadata. Detailed original and final-source evidence
 remains owed;receive investigation/repair stays deferred for FINISH. F398's
 untriggered x86 receiver SIGSYS profiles remain red. F404 preserves the owner-only
-push and enabled pre-push Gitleaks proof. New F405 properties/schema63 code is
-committed locally and not part of that runtime candidate.
+push and enabled pre-push Gitleaks proof. New F405 properties/schema63 code was
+not part of that runtime candidate.
 
 Previous terminal candidate: `6eec25037bf9d335d01b7635e39cde64276823d9`.
 [F403](docs/qualification/evidence/F403-native-terminal.json) binds all17
