@@ -206,6 +206,12 @@ capacity/inventory/privacy contracts,workflow lint and architecture pass. Exact
 input/tamper/closure/JSON/TLS/seccomp/findings checks stay. Native consumers and
 original independent receiver failures remain owed;no size-to-runtime inference.
 
+F337 fixes FTPS source startup passing DSN contents as a reference filename.
+The real store API test first fails,then reaches its already-cancelled database
+boundary with the protected filename;no network or PostgreSQL starts. Wrong
+estate/host/fallback settings still refuse. Focused source/evidence/static checks
+pass;actual native source startup/operator/consent replay remains owed.
+
 FINISH repair and remaining implementation are mandatory. Next:repair original
 browser/stock/protocol failures and complete all affected original runtime,
 security,recovery,reproducibility and baseline/AX gates on the final source.

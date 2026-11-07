@@ -31,7 +31,7 @@ def safe_failure_observation(name, code, diagnostic):
         if (type(value) is not dict or set(value)!={'kind','stage'}
                 or value['kind']!='freightctl-ftps-source-failure-v1'
                 or type(value['stage']) is not str
-                or value['stage'] not in {'serve','listener-close','witness-save','contact-budget','lifetime-expired','unclassified'}
+                or value['stage'] not in {'database','serve','listener-close','witness-save','contact-budget','lifetime-expired','unclassified'}
                 or json.dumps(value,separators=(',',':')).encode()+b'\n' != raw):
             return None
         return value

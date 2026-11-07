@@ -11,6 +11,7 @@ type sourceFailure string
 func (sourceFailure) Error() string { return "FTPS source fixture contract failed" }
 
 const (
+	sourceDatabaseFailure sourceFailure = "database"
 	sourceServeFailure    sourceFailure = "serve"
 	sourceCloseFailure    sourceFailure = "listener-close"
 	sourceSaveFailure     sourceFailure = "witness-save"
@@ -39,7 +40,7 @@ func sourceFailureDiagnostic(err error) []byte {
 	var failure sourceFailure
 	if errors.As(err, &failure) {
 		switch failure {
-		case sourceServeFailure, sourceCloseFailure, sourceSaveFailure, sourceBudgetFailure, sourceLifetimeFailure:
+		case sourceDatabaseFailure, sourceServeFailure, sourceCloseFailure, sourceSaveFailure, sourceBudgetFailure, sourceLifetimeFailure:
 			stage = string(failure)
 		}
 	}

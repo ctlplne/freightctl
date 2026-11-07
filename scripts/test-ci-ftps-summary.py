@@ -77,8 +77,9 @@ class SummaryContracts(unittest.TestCase):
             return summary.failure_diagnostics(self.root, self.result, 'a'*40)
         def wire(value):
             return json.dumps(value,separators=(',',':')).encode()+b'\n'+marker
-        value = {'kind':'freightctl-ftps-source-failure-v1','stage':'listener-close'}
-        self.assertEqual(report(wire(value))['collection_source_failures'],[{'command':name,**value}])
+        for stage in ('listener-close','database'):
+            value = {'kind':'freightctl-ftps-source-failure-v1','stage':stage}
+            self.assertEqual(report(wire(value))['collection_source_failures'],[{'command':name,**value}])
         for change in ({'stage':'private-evidence-canary'}, {'stage':True}, {'kind':'private-evidence-canary'},
                 {'error':'private-evidence-canary'}):
             observed=report(wire(dict(value,**change)))

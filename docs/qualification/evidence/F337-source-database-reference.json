@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "id": "F337",
+  "observed_at": "2026-11-07",
+  "base_candidate": "48960c006e89b0b05e254623627978e34bc376e8",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F337 repairs the concrete FTPS source startup API mismatch:store.Open accepts a protected DSN reference filename,but the fixture passed the already-read secret value. Extract the actual reference validation and invoke the real store API under an already-cancelled context:old code fails to reach its database boundary,then filename repair reaches expected database-unavailable cancellation without any PostgreSQL/network start. Keep exact fresh database,loopback/fallback restrictions,protected buffers and real non-owner/RLS/schema checks. Add only closed database failure category to existing original-hash-bound diagnostics. Focused real API/negative scope/source guards,Python evidence contracts,vet,architecture and Linux compile pass;original native startup/operator/consent/full replay remain owed.",
+  "original_failure": {
+    "candidate": "b8be4ab779d525089c49d75bde71911ff83a16dc",
+    "run_id": 42377328393,
+    "job_ids": [
+      128417501947,
+      128417502103
+    ],
+    "command": "cli-explicit-collection-source",
+    "closed_category": "unclassified",
+    "observation": "Original native source exits before a classified serve/close/witness result;full workflow remains red. Inspection finds direct store.Open(ctx,string(secret.Bytes)) though store.Open requires a protected filename."
+  },
+  "red": {
+    "proof": ".private/freightctl-f337-reference-red.log",
+    "observation": "Real store reference contract fails to reach the expected already-cancelled database boundary. Private secret value never appears in diagnostics."
+  },
+  "green": [
+    "Actual store.Open protected-reference API reaches expected canceled-context database-unavailable result;no PostgreSQL/network can start under the pre-canceled context.",
+    "Wrong database,nonloopback host and changed fallback refuse before real store access.",
+    "Existing protected configuration/lifecycle/drain/closed category and seven Python original-output/privacy methods pass;vet,architecture and Linux x86 compilation observed terminal exit0."
+  ],
+  "source_files": [
+    {
+      "reference": "scripts/peers/ftps-source/database.go",
+      "sha256": "f15b2946cb8d1744633c3ce7aa38541c175be72dd9957bf02406d07c6fe85611",
+      "bytes": 1027
+    },
+    {
+      "reference": "scripts/peers/ftps-source/database_test.go",
+      "sha256": "677427370560fb364fa567905b53f00874fb6d4912402ea4ccc0e6d7d72035d8",
+      "bytes": 2160
+    },
+    {
+      "reference": "scripts/peers/ftps-source/main.go",
+      "sha256": "0744ea573cde3a0d9958536ed3b8f8dd838d7a60e90876ffd5c845227d24084c",
+      "bytes": 7871
+    },
+    {
+      "reference": "scripts/peers/ftps-source/shutdown.go",
+      "sha256": "e08823c4c2ea43e937ca923941dc27a0d69542c1d182a1067a434ba8b393ba22",
+      "bytes": 1396
+    },
+    {
+      "reference": "scripts/ftps_collection_source.py",
+      "sha256": "a3ca9926fa05d40a05255cf45644bbe25c5e6ffb53e8098aecd366a7f4543123",
+      "bytes": 7096
+    },
+    {
+      "reference": "scripts/test-ci-ftps-summary.py",
+      "sha256": "5b13ed0f7625b0ab8011b8a85ae388d1eb4d02604966c079fdf4d964c4c4231b",
+      "bytes": 66632
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "2d459db2516b800bdcf5dd83e2a8eecc38b2fa8ed13ba6a902d7d4ff5f98b2dc",
+      "bytes": 442249
+    },
+    {
+      "reference": "STATUS.md",
+      "sha256": "d835df7bd683bb0aa7ae63612b16dbe1466b7a61ed3fb536a699038958600766",
+      "bytes": 14939
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f337-reference-red.log",
+      "sha256": "d2ab531efc2ee96ed4d6ffe8144663f02cb97fe00d44e90abfdb0aaf0c2273e9",
+      "bytes": 291
+    },
+    {
+      "reference": ".private/freightctl-f337-reference-green.log",
+      "sha256": "044576916fc85d58f6293d12675ad69a8f61e64b91ed001e17f6b5a584a64b16",
+      "bytes": 68
+    },
+    {
+      "reference": ".private/freightctl-f337-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f337-linux-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f337-final-source-evidence.log",
+      "sha256": "448ba8066d9cfb1daf09484af114e99792b2491a761b93fa239ccc1cfafaf926",
+      "bytes": 105
+    },
+    {
+      "reference": ".private/freightctl-f337-architecture.log",
+      "sha256": "fa99a7467914775b6e6fb50c5b0a2c85b3211135c3486cec28c42811919aeece",
+      "bytes": 66
+    }
+  ],
+  "owed": [
+    "Original actual native source startup,stock producer capture,four browser same-key recoveries,independent readback,clean source stop and both FTPS consent matrices on final source.",
+    "Actual runtime database non-owner/RLS/schema checks are unchanged but not newly qualified by canceled-context proof.",
+    "Every pending F334 result and full baseline/AX/FINISH gates."
+  ],
+  "resources": "OneCPU/192MiB pure protected-file/real canceled API and static checks;no actual PostgreSQL,Chrome,FTPS protocol server,scanner or inference locally."
+}

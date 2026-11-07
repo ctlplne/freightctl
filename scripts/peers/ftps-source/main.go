@@ -22,8 +22,6 @@ import (
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/custody"
 	"github.com/ctlplne/freightctl/internal/ftpsd"
-	"github.com/ctlplne/freightctl/internal/store"
-	"github.com/jackc/pgx/v5"
 )
 
 var errFixture = errors.New("FTPS source fixture contract failed")
@@ -203,20 +201,6 @@ func run() error {
 	if err != nil {
 		return err
 	}
-	dsn, err := secure.ReadSecret(config.DSN, 4096)
-	if err != nil {
-		return errFixture
-	}
-	defer dsn.Close()
-	parsed, err := pgx.ParseConfig(string(dsn.Bytes))
-	if err != nil || parsed.Database != config.Database || net.ParseIP(parsed.Host) == nil || !net.ParseIP(parsed.Host).IsLoopback() {
-		return errFixture
-	}
-	for _, fallback := range parsed.Fallbacks {
-		if fallback.Host != parsed.Host || fallback.Port != parsed.Port {
-			return errFixture
-		}
-	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
 	ctx, stop := signal.NotifyContext(ctx, os.Interrupt, syscall.SIGTERM)
@@ -225,9 +209,9 @@ func run() error {
 	if err != nil {
 		return errFixture
 	}
-	db, err := store.Open(ctx, string(dsn.Bytes))
+	db, err := openSourceDatabase(ctx, config)
 	if err != nil {
-		return errFixture
+		return sourceDatabaseFailure
 	}
 	defer db.Pool.Close()
 	disk, err := custody.OpenExisting(config.Storage)
