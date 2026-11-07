@@ -37,7 +37,10 @@ the existing core definition validator. Focused observed red turns green;exact
 run,binding/lineage/slot and private-context refusal checks pass. Actual stock
 MCP work/replay and final-source byte outcomes remain owed. F271 replaces Unix
 chmod in the Windows unsafe-secret fixture with actual broad ACL installation
-and readback;production privacy/refusal rules remain unchanged.
+and readback;production privacy/refusal rules remain unchanged. F273 adds bounded
+protected failure-trace diagnosis:only a closed class,numeric candidate source
+location and whole-file digest may leave private evidence. Original browser
+assertions stay intact;actual missing-result cause remains owed.
 
 Custody requires private creation,sealed protection,exact physical object/length/
 hash,sync/close/directory persistence and ordinary SQL acceptance. Writable staging

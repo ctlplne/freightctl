@@ -126,7 +126,8 @@ func TestProcessingReviewNativeBrowserIndependentDecisionRecoveryAndAdoption(t *
 		if decodeErr == nil {
 			stage = summary.Stage
 		}
-		t.Fatalf("native independent review browser failed;stage=%s;safe result SHA256=%s", safeNativeBrowserStage(stage), secure.Digest(raw))
+		trace := safeBrowserFailureTrace(filepath.Join(private, "failure.log"), "processing-review-browser.mjs")
+		t.Fatalf("native independent review browser failed;stage=%s;safe result SHA256=%s;class=%s;source=%d:%d;private log SHA256=%s", safeNativeBrowserStage(stage), secure.Digest(raw), trace.Class, trace.Line, trace.Column, trace.SHA256)
 	}
 	current, err := wf.ProcessingReview(t.Context(), worker, summary.Review)
 	if err != nil || current.State != "withdrawn" || current.Revision != 4 || current.AdoptedRevision != 3 || current.Definition.Workflow.Hash != cfg.Hash || current.Definition.Reviewer.Actor != reviewerID {

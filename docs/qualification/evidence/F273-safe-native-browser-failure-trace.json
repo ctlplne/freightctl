@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "id": "F273",
+  "observed_at": "2026-11-07",
+  "base_candidate": "0b6e752aed6bc0725334f6ea3d7e865439aea716",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Safe bounded source-location diagnosis implemented;native causes/repairs owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "931d466ee8d89cd73d61c08657e40b5431838e90a76adaf99a706cea8dfe85ae",
+      "bytes": 4497
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "15d64fc9eb43d2ba58872e071a258a61b0535c341c97e0eb89f8996eb2d3b7fe",
+      "bytes": 383245
+    },
+    {
+      "reference": "internal/api/browser_failure_trace_integration_test.go",
+      "sha256": "d3c01b00dad99d3f4ea2a9f07438256c849928d365b01d66cef73cda2c4a2205",
+      "bytes": 3894
+    },
+    {
+      "reference": "internal/api/artifact_exchange_browser_integration_test.go",
+      "sha256": "0d8b35032ab45a62a18dd6632af5bb9c47b6c4e08aca59d48b6f1e23d1566d3f",
+      "bytes": 29023
+    },
+    {
+      "reference": "internal/api/json_records_browser_integration_test.go",
+      "sha256": "5436f9234185d7376d7f57f4f766c45da7027977049b44b017354ae4c4e44a3d",
+      "bytes": 8747
+    },
+    {
+      "reference": "internal/api/processing_review_browser_integration_test.go",
+      "sha256": "68813307bd95ba06428726d59ebb259963e79497ffdeb7c1e384d3e53b4b62cf",
+      "bytes": 7777
+    }
+  ],
+  "red": {
+    "candidate": "33ad447564cb0be33bc04fa8d60e9f0adaf0c2b4",
+    "run": 42361009326,
+    "job": 128369207137,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128369207137",
+    "observation": "Original receive browser still exits before revocation barrier with safe result unavailable;F265 configuration catch did not produce a readable bounded result. Cause/launch are unknown."
+  },
+  "changed": [
+    "Read at most64KiB only through the existing protected secret-file buffer,with exact held-file privacy/identity checks. Close and clear the buffer after classification.",
+    "Allow only three fixed script names,closed error classes,numeric stack source line/column and whole bounded-file SHA256. Oversized/missing/unprotected evidence returns unavailable without a misleading partial hash. No raw stack,message,filename,URL,DOM or payload is printed.",
+    "Receive-browser missing-summary failure adds process exit status and safe private browser.log classification/location. Existing format/review failures add safe existing failure.log location. Every original pass/fail/byte/security assertion and private raw file remains unchanged."
+  ],
+  "green": [
+    "Focused three-script private sentinel/source-location/digest cases pass;untrusted script and oversized evidence refuse diagnosis. Existing strict summary ambiguity/phase/privacy cases pass.",
+    "Affected formatting,tagged integration/browser compilation and vet pass. No browser or PostgreSQL runtime executed."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f273-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f273-safe-trace-green.log",
+      "sha256": "8849b5a6871b26d1dcfdc6689fc2a71dd1b2d84a7bfe005cc355cd0e107cb8dc",
+      "bytes": 55
+    },
+    {
+      "reference": ".private/freightctl-f273-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "owed": [
+    "Actual original receive-browser missing-result exit/class/source location and underlying repair.",
+    "Original format/review and stock browser source diagnoses/repairs and full native journeys.",
+    "Windows sealed persistence/adoption and all remaining actual final-source baseline/AX/FINISH outcomes."
+  ],
+  "resources": "OneCPU/192MiB local small protected-file/pure privacy/static checks only;no inference,PostgreSQL,Chrome,scanner or heavy peer. Retained35/source60 unchanged."
+}

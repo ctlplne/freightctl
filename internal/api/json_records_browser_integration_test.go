@@ -164,7 +164,8 @@ func structuredNativeBrowser(t *testing.T, format string) {
 		if decodeErr == nil {
 			stage = summary.Stage
 		}
-		t.Fatalf("native JSON browser failed;stage=%s;safe result SHA256=%s", safeNativeBrowserStage(stage), secure.Digest(raw))
+		trace := safeBrowserFailureTrace(filepath.Join(private, "failure.log"), "json-intake-browser.mjs")
+		t.Fatalf("native JSON browser failed;stage=%s;safe result SHA256=%s;class=%s;source=%d:%d;private log SHA256=%s", safeNativeBrowserStage(stage), secure.Digest(raw), trace.Class, trace.Line, trace.Column, trace.SHA256)
 	}
 	current, err := checking.Policy(t.Context(), scope)
 	if err != nil || current == nil || current.Version != 2 || current.Hash != expected || !bytes.Equal(current.Definition, wire) && !jsonRecordsSameJSON(current.Definition, wire) {
