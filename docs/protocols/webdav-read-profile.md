@@ -1,8 +1,9 @@
 # DAV namespace read and conditional-mutation profile
 
 This is a partial read/conditional-mutation adapter, not a claim of RFC4918 class1,2 or3 compliance.
-The full C-WEBDAV contract remains open: collection/overwrite mutations,properties,locks,outbound server
-connections and independent DAV application interoperability still need work.
+The full C-WEBDAV contract remains open: collection COPY/overwrite,locks,outbound server
+connections and independent DAV application interoperability still need work. Implemented
+read,property,MOVE and DELETE profiles also require actual final-source qualification.
 
 Use the existing HTTPS listener and an enrolled bearer credential:
 `/v1/tenants/{tenant}/partners/{partner}/dav/` followed by an encoded virtual
@@ -12,8 +13,8 @@ The prefix selects a tenant and partner; the ordinary PostgreSQL/RLS identity,
 mount root,path modes and current intake policy decide what can be discovered
 or read. A URL never refers to a host filesystem path.
 
-`X-Freightctl-Namespace-Revision` applies only to PROPPATCH and collection MOVE.
-PUT,MKCOL,file MOVE,COPY and DELETE reject that header with400 instead of silently
+`X-Freightctl-Namespace-Revision` applies only to PROPPATCH and collection MOVE/DELETE.
+PUT,MKCOL,file MOVE,COPY and file DELETE reject that header with400 instead of silently
 ignoring it. Use their byte/absence conditions below. A refused namespace
 condition is not an evaluated metadata revision or a successful transfer.
 
@@ -30,7 +31,7 @@ revision,mode,intake and idempotency checks still run before execution.
 - `OPTIONS` authenticates and checks read/list access to the addressed entry.
   It returns `Allow: OPTIONS, PROPFIND, GET, HEAD, PUT, MKCOL, PROPPATCH, MOVE, DELETE, COPY`
   and no DAV compliance class. Refused collection mutation responses omit
-  the file-only DELETE and COPY operations;collection MOVE uses the separate
+  the file-only COPY operation;collection MOVE/DELETE use the separate
   namespace condition below.
 - `PROPFIND` supports explicit Depth0 or1. Missing Depth means infinity and is
   refused with403 and `DAV:propfind-finite-depth`. Other depth values are400.
@@ -160,9 +161,9 @@ revision,mode,intake and idempotency checks still run before execution.
   proofs include nested members,properties,independent bytes,denied private and
   no-longer-released members,unchanged quotas,oversized retained-state refusal,
   ABA identity,replay and exact no-extra-effect counts;runtime outcomes remain
-  owed for the new source. Locks,collection COPY/DELETE/overwrite and outbound
+  owed for the new source. Locks,collection COPY/overwrite and outbound
   DAV server interoperability remain open.
-- `DELETE` currently removes one file mapping with an exact strong If-Match,
+- File `DELETE` removes one mapping with an exact strong If-Match,
   the original Idempotency-Key and an empty body. Ordinary read/manage_paths,
   parent modes,current intake and immutable file ID/hash are checked under the
   same namespace transaction as its PathRemoved event and command receipt.
@@ -173,11 +174,40 @@ revision,mode,intake and idempotency checks still run before execution.
   execution authority. Absent/stale source conditions return412;an equal-content
   new revision cannot reuse the old command key. Recovering a historical command
   for a restored original file returns200 with not-asserted-original-receipt and
-  does not remove the restored mapping again. Directory deletion returns405;
-  it never silently substitutes empty-only or partial deletion for the recursive
-  semantics in [RFC4918 section9.6](https://www.rfc-editor.org/rfc/inline-errata/rfc4918.html#s-9.6).
+  does not remove the restored mapping again. Applying this byte-conditioned
+  file profile to a directory returns405;use its separate namespace condition
+  and collection href with a trailing slash below.
   Depth may be absent or infinity;other values,unsupported conditions,bodies,
   Destination and Overwrite headers are refused.
+- Collection `DELETE` uses a trailing-slash href,an original Idempotency-Key,
+  an empty body and `X-Freightctl-Namespace-Revision: entry-UUID:revision`.
+  Depth is absent or infinity;finite depth,byte/DAV conditions,Destination,
+  Overwrite and ambiguous headers are refused. It removes the complete current
+  subtree,as required by [RFC4918 section9.6.1](https://www.rfc-editor.org/rfc/rfc4918.html#section-9.6.1).
+  The root condition identifies the collection mapping;it is not a frozen hash
+  of the child inventory. Under the exclusive namespace lock,enumerate every
+  current member before any write. Require read,list and manage_paths,root
+  parent write/traverse,each directory read/write/traverse and each actual
+  file-path read mode plus current policy availability. An outside readable
+  alias cannot authorize a private child. Refuse root/control paths,wrong kind,
+  stale/different root identity/revision,hidden/unavailable children and trees
+  exceeding the existing1000-entry operation bound. Failure rolls back the
+  whole tree,including every event and receipt;no partial success is reported.
+  Fresh204 has no body,ETag or Location;it names collection-removed-at-commit,
+  the exact root removal event and X-Freightctl-Removed-Entries including the
+  root. Every mapping is an irreversible tombstone with its old custody,owner,
+  mode,modified time and inert property snapshot retained;its revision advances
+  once. Commit the leaf-first PathRemoved events and one actor-private command
+  receipt in the same transaction. Recheck current file availability and
+  authority before commit. GET/HEAD/PROPFIND on all removed names return404;
+  immutable custody remains available only through independently authorized
+  references. This grants no forwarding,execution or new retained-byte access.
+  Absent/replaced root retries return412,including after a lost response;
+  inspect current authorized state rather than interpreting412 as proof of
+  which command removed the collection. Another identity cannot reuse its
+  receipt,and a changed request meaning conflicts409. Wrong kind/current policy
+  fails409,permission403,and an excessive tree507. Native API/CLI/stock-curl
+  whole-tree,refusal,tombstone,custody and retry outcomes remain owed until run.
 - `COPY` publishes one file into this same scope with an explicit destination
   decision. It requires an original key,exact strong source If-Match,Overwrite:F or T
   and an empty body. Destination uses the same confined URI rules as MOVE.

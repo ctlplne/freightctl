@@ -83,7 +83,8 @@
         "docs/qualification/evidence/F412-dav-namespace-condition-refusal.json",
         "docs/qualification/evidence/F413-shared-cli-api-mcp-control-decoding.json",
         "docs/qualification/evidence/F414-native-terminal.json",
-        "docs/qualification/evidence/F415-native-push.json"
+        "docs/qualification/evidence/F415-native-push.json",
+        "docs/qualification/evidence/F416-dav-collection-delete.json"
       ],
       "remaining_details": [
         "F006 adds immutable checkpoints, exact receipts and persistent storage/parent/authority binding. Finish approved cleanup/recovery/rebinding, scalable reservations/fairness, protected retention, journal chaining/rebuild, larger exports and remaining crash/commit boundaries.",
@@ -134,14 +135,15 @@
         "F412 closes a recognized-condition ambiguity introduced by namespace metadata conditions. PUT,MKCOL,file MOVE,COPY and DELETE previously admitted X-Freightctl-Namespace-Revision while ignoring it;all five observed guard regressions return admitted200. The common DAV boundary now refuses400 before their service admission. PROPPATCH and complete collection MOVE retain the supported namespace condition;file methods retain their explicit byte/absence contracts and cannot pretend to enforce a metadata revision. Focused DAV guard green,tagged native API/stock-curl compilation,vet,format and architecture pass. Prepared actual HTTPS matrix requires unchanged source ID/revision/bytes,no new target/directory,zero actor namespace transitions/receipts/acceptance/intents/runs,and stock curl refusal/readback. Native outcomes remain owed. No resource,permission,custody or schema budget changes;whole-product qualification remains open.",
         "F413 unifies namespace/upload-create CLI JSON decoding with the existing API typed-object boundary. The extracted actual old CLI decoder admits duplicate/aliased fields,invalid UTF8 and an oversized stream prefix;all observed reds are retained. The shared API decoder also admits root null and Unicode long-s aliases for ASCII revision fields;MCP first-guard literal/escaped aliases are separately observed red. Read one extra byte without raising the existing16KiB CLI limit,require object controls and reject Unicode-to-ASCII field aliases before typed/SDK decoding. Preserve existing32KiB/16depth/4096token workflow and32KiB/16depth/8192token MCP bounds,valid Unicode data,camel-case MCP metadata and explicit zero options. Focused guards,fuzz seeds,tagged compilation,vet,format and architecture pass. The original JSON transport stand-in first cannot bind loopback under sandbox;the exact test passes with permitted loopback and one CPU/192MiB Go limit. It loads no model and establishes no inference qualification. Prepared native API/CLI/MCP no-effect and stock-client compatibility remain owed;all authority/custody/execution checks stay enforced.",
         "F414: b11ab7621e148fd7060375636d362ede1af49a83 originals terminal:16 workflows,35 jobs,34 pass/one receive-browser failure(42413430308/128526237160). Named security gates pass. Linux PostgreSQL,restore,HTTPS/curl,CLI,platform and live browser/FTPS succeed at this source including F408/F409;detailed scoped and actual final-source proof remain owed. Prior live failure is preserved and unrepaired;this success establishes no cause. Local F412/F413 are not included. F398 x86 receiver SIGSYS remains red;F026 held.",
-        "F415:four owner-only commits pushed fast-forward b11ab762\u219223c752add5ee77f47d8280f7c629c803058e3b7c after prior originals terminal(F414). Enabled Gitleaks8.30.1:4 commits,reported116941 bytes,no leaks;push0,remote main verified. Sixteen first original attempt1 workflows preserved. F412 ignored-condition refusal/F413 strict CLI/API/MCP controls now await actual native outcomes. Previous receive/live browser and independent x86 receiver failures remain owed;F026 held. No local heavy runtime,publication or deployment."
+        "F415:four owner-only commits pushed fast-forward b11ab762\u219223c752add5ee77f47d8280f7c629c803058e3b7c after prior originals terminal(F414). Enabled Gitleaks8.30.1:4 commits,reported116941 bytes,no leaks;push0,remote main verified. Sixteen first original attempt1 workflows preserved. F412 ignored-condition refusal/F413 strict CLI/API/MCP controls now await actual native outcomes. Previous receive/live browser and independent x86 receiver failures remain owed;F026 held. No local heavy runtime,publication or deployment.",
+        "F416 implements complete atomic collection DELETE/remove_tree with exact root identity/revision,current read/list/manage_paths,actual member modes/policy and the unchanged1000-entry operation bound. Observed old HTTP input400 refusal becomes focused green;tagged API/store/CLI/stock-curl compilation,vet and architecture pass. Prepared actual native whole-tree/refusal/tombstone/custody/receipt/retry proofs remain owed. No schema,budget,permission,local runtime or full-DAV qualification change."
       ],
       "current_item": {
-        "id": "F413",
-        "state": "Shared strict CLI/API/MCP object controls implemented;native outcomes owed",
-        "proof": "Observed actual extracted CLI duplicate/alias/UTF8/prefix red,API null/Unicode alias red and MCP first-guard alias red to focused green;bounded transport stand-in green with no model",
-        "evidence": "docs/qualification/evidence/F413-shared-cli-api-mcp-control-decoding.json",
-        "owed": "Actual native CLI/API/MCP unchanged-state/receipt/session/custody and original final-source compatibility/security outcomes"
+        "id": "F416",
+        "state": "Complete collection DELETE implemented;native proof owed",
+        "proof": "Actual old input refuses exact namespace-conditioned DELETE400;focused green plus affected static/tagged compile only",
+        "evidence": "docs/qualification/evidence/F416-dav-collection-delete.json",
+        "owed": "Actual native API/CLI/stock-curl full-tree/no-partial-effect/custody/tombstone/permission/policy/capacity/retry and final-source outcomes"
       }
     },
     {
@@ -203,7 +205,8 @@
         "docs/qualification/evidence/F412-dav-namespace-condition-refusal.json",
         "docs/qualification/evidence/F413-shared-cli-api-mcp-control-decoding.json",
         "docs/qualification/evidence/F414-native-terminal.json",
-        "docs/qualification/evidence/F415-native-push.json"
+        "docs/qualification/evidence/F415-native-push.json",
+        "docs/qualification/evidence/F416-dav-collection-delete.json"
       ],
       "remaining_details": [
         "F005/F006 verify bounded inbound and durable ticket resume. F007 adds a local-only approved outbound SFTP profile against a stock receiver. Finish ordinary-operator onboarding, API/browser parity, production network policy, broader protocols/clients/enterprise peers, larger files and independent business receipts. No complete journey is qualified.",
@@ -248,14 +251,15 @@
         "F412 closes a recognized-condition ambiguity introduced by namespace metadata conditions. PUT,MKCOL,file MOVE,COPY and DELETE previously admitted X-Freightctl-Namespace-Revision while ignoring it;all five observed guard regressions return admitted200. The common DAV boundary now refuses400 before their service admission. PROPPATCH and complete collection MOVE retain the supported namespace condition;file methods retain their explicit byte/absence contracts and cannot pretend to enforce a metadata revision. Focused DAV guard green,tagged native API/stock-curl compilation,vet,format and architecture pass. Prepared actual HTTPS matrix requires unchanged source ID/revision/bytes,no new target/directory,zero actor namespace transitions/receipts/acceptance/intents/runs,and stock curl refusal/readback. Native outcomes remain owed. No resource,permission,custody or schema budget changes;whole-product qualification remains open.",
         "F413 unifies namespace/upload-create CLI JSON decoding with the existing API typed-object boundary. The extracted actual old CLI decoder admits duplicate/aliased fields,invalid UTF8 and an oversized stream prefix;all observed reds are retained. The shared API decoder also admits root null and Unicode long-s aliases for ASCII revision fields;MCP first-guard literal/escaped aliases are separately observed red. Read one extra byte without raising the existing16KiB CLI limit,require object controls and reject Unicode-to-ASCII field aliases before typed/SDK decoding. Preserve existing32KiB/16depth/4096token workflow and32KiB/16depth/8192token MCP bounds,valid Unicode data,camel-case MCP metadata and explicit zero options. Focused guards,fuzz seeds,tagged compilation,vet,format and architecture pass. The original JSON transport stand-in first cannot bind loopback under sandbox;the exact test passes with permitted loopback and one CPU/192MiB Go limit. It loads no model and establishes no inference qualification. Prepared native API/CLI/MCP no-effect and stock-client compatibility remain owed;all authority/custody/execution checks stay enforced.",
         "F414: b11ab7621e148fd7060375636d362ede1af49a83 originals terminal:16 workflows,35 jobs,34 pass/one receive-browser failure(42413430308/128526237160). Named security gates pass. Linux PostgreSQL,restore,HTTPS/curl,CLI,platform and live browser/FTPS succeed at this source including F408/F409;detailed scoped and actual final-source proof remain owed. Prior live failure is preserved and unrepaired;this success establishes no cause. Local F412/F413 are not included. F398 x86 receiver SIGSYS remains red;F026 held.",
-        "F415:four owner-only commits pushed fast-forward b11ab762\u219223c752add5ee77f47d8280f7c629c803058e3b7c after prior originals terminal(F414). Enabled Gitleaks8.30.1:4 commits,reported116941 bytes,no leaks;push0,remote main verified. Sixteen first original attempt1 workflows preserved. F412 ignored-condition refusal/F413 strict CLI/API/MCP controls now await actual native outcomes. Previous receive/live browser and independent x86 receiver failures remain owed;F026 held. No local heavy runtime,publication or deployment."
+        "F415:four owner-only commits pushed fast-forward b11ab762\u219223c752add5ee77f47d8280f7c629c803058e3b7c after prior originals terminal(F414). Enabled Gitleaks8.30.1:4 commits,reported116941 bytes,no leaks;push0,remote main verified. Sixteen first original attempt1 workflows preserved. F412 ignored-condition refusal/F413 strict CLI/API/MCP controls now await actual native outcomes. Previous receive/live browser and independent x86 receiver failures remain owed;F026 held. No local heavy runtime,publication or deployment.",
+        "F416 implements complete atomic collection DELETE/remove_tree with exact root identity/revision,current read/list/manage_paths,actual member modes/policy and the unchanged1000-entry operation bound. Observed old HTTP input400 refusal becomes focused green;tagged API/store/CLI/stock-curl compilation,vet and architecture pass. Prepared actual native whole-tree/refusal/tombstone/custody/receipt/retry proofs remain owed. No schema,budget,permission,local runtime or full-DAV qualification change."
       ],
       "current_item": {
-        "id": "F413",
-        "state": "Shared strict CLI/API/MCP object controls implemented;native outcomes owed",
-        "proof": "Observed actual extracted CLI duplicate/alias/UTF8/prefix red,API null/Unicode alias red and MCP first-guard alias red to focused green;bounded transport stand-in green with no model",
-        "evidence": "docs/qualification/evidence/F413-shared-cli-api-mcp-control-decoding.json",
-        "owed": "Actual native CLI/API/MCP unchanged-state/receipt/session/custody and original final-source compatibility/security outcomes"
+        "id": "F416",
+        "state": "Complete collection DELETE implemented;native proof owed",
+        "proof": "Actual old input refuses exact namespace-conditioned DELETE400;focused green plus affected static/tagged compile only",
+        "evidence": "docs/qualification/evidence/F416-dav-collection-delete.json",
+        "owed": "Actual native API/CLI/stock-curl full-tree/no-partial-effect/custody/tombstone/permission/policy/capacity/retry and final-source outcomes"
       }
     },
     {
@@ -918,7 +922,8 @@
         "docs/qualification/evidence/F412-dav-namespace-condition-refusal.json",
         "docs/qualification/evidence/F413-shared-cli-api-mcp-control-decoding.json",
         "docs/qualification/evidence/F414-native-terminal.json",
-        "docs/qualification/evidence/F415-native-push.json"
+        "docs/qualification/evidence/F415-native-push.json",
+        "docs/qualification/evidence/F416-dav-collection-delete.json"
       ],
       "remaining_details": [
         "F010 verifies durable held intake for configured new revisions, exact CSV contracts, separate hash/revision-bound release and ordinary delivery of released bytes. Antivirus/ICAP/DLP, cryptographic signatures/encryption, other formats/transforms, re-scan/exception governance, retrospective policy and the complete business-file journey remain mandatory.",
@@ -1057,14 +1062,15 @@
         "F412 closes a recognized-condition ambiguity introduced by namespace metadata conditions. PUT,MKCOL,file MOVE,COPY and DELETE previously admitted X-Freightctl-Namespace-Revision while ignoring it;all five observed guard regressions return admitted200. The common DAV boundary now refuses400 before their service admission. PROPPATCH and complete collection MOVE retain the supported namespace condition;file methods retain their explicit byte/absence contracts and cannot pretend to enforce a metadata revision. Focused DAV guard green,tagged native API/stock-curl compilation,vet,format and architecture pass. Prepared actual HTTPS matrix requires unchanged source ID/revision/bytes,no new target/directory,zero actor namespace transitions/receipts/acceptance/intents/runs,and stock curl refusal/readback. Native outcomes remain owed. No resource,permission,custody or schema budget changes;whole-product qualification remains open.",
         "F413 unifies namespace/upload-create CLI JSON decoding with the existing API typed-object boundary. The extracted actual old CLI decoder admits duplicate/aliased fields,invalid UTF8 and an oversized stream prefix;all observed reds are retained. The shared API decoder also admits root null and Unicode long-s aliases for ASCII revision fields;MCP first-guard literal/escaped aliases are separately observed red. Read one extra byte without raising the existing16KiB CLI limit,require object controls and reject Unicode-to-ASCII field aliases before typed/SDK decoding. Preserve existing32KiB/16depth/4096token workflow and32KiB/16depth/8192token MCP bounds,valid Unicode data,camel-case MCP metadata and explicit zero options. Focused guards,fuzz seeds,tagged compilation,vet,format and architecture pass. The original JSON transport stand-in first cannot bind loopback under sandbox;the exact test passes with permitted loopback and one CPU/192MiB Go limit. It loads no model and establishes no inference qualification. Prepared native API/CLI/MCP no-effect and stock-client compatibility remain owed;all authority/custody/execution checks stay enforced.",
         "F414: b11ab7621e148fd7060375636d362ede1af49a83 originals terminal:16 workflows,35 jobs,34 pass/one receive-browser failure(42413430308/128526237160). Named security gates pass. Linux PostgreSQL,restore,HTTPS/curl,CLI,platform and live browser/FTPS succeed at this source including F408/F409;detailed scoped and actual final-source proof remain owed. Prior live failure is preserved and unrepaired;this success establishes no cause. Local F412/F413 are not included. F398 x86 receiver SIGSYS remains red;F026 held.",
-        "F415:four owner-only commits pushed fast-forward b11ab762\u219223c752add5ee77f47d8280f7c629c803058e3b7c after prior originals terminal(F414). Enabled Gitleaks8.30.1:4 commits,reported116941 bytes,no leaks;push0,remote main verified. Sixteen first original attempt1 workflows preserved. F412 ignored-condition refusal/F413 strict CLI/API/MCP controls now await actual native outcomes. Previous receive/live browser and independent x86 receiver failures remain owed;F026 held. No local heavy runtime,publication or deployment."
+        "F415:four owner-only commits pushed fast-forward b11ab762\u219223c752add5ee77f47d8280f7c629c803058e3b7c after prior originals terminal(F414). Enabled Gitleaks8.30.1:4 commits,reported116941 bytes,no leaks;push0,remote main verified. Sixteen first original attempt1 workflows preserved. F412 ignored-condition refusal/F413 strict CLI/API/MCP controls now await actual native outcomes. Previous receive/live browser and independent x86 receiver failures remain owed;F026 held. No local heavy runtime,publication or deployment.",
+        "F416 implements complete atomic collection DELETE/remove_tree with exact root identity/revision,current read/list/manage_paths,actual member modes/policy and the unchanged1000-entry operation bound. Observed old HTTP input400 refusal becomes focused green;tagged API/store/CLI/stock-curl compilation,vet and architecture pass. Prepared actual native whole-tree/refusal/tombstone/custody/receipt/retry proofs remain owed. No schema,budget,permission,local runtime or full-DAV qualification change."
       ],
       "current_item": {
-        "id": "F413",
-        "state": "Shared strict CLI/API/MCP object controls implemented;native outcomes owed",
-        "proof": "Observed actual extracted CLI duplicate/alias/UTF8/prefix red,API null/Unicode alias red and MCP first-guard alias red to focused green;bounded transport stand-in green with no model",
-        "evidence": "docs/qualification/evidence/F413-shared-cli-api-mcp-control-decoding.json",
-        "owed": "Actual native CLI/API/MCP unchanged-state/receipt/session/custody and original final-source compatibility/security outcomes"
+        "id": "F416",
+        "state": "Complete collection DELETE implemented;native proof owed",
+        "proof": "Actual old input refuses exact namespace-conditioned DELETE400;focused green plus affected static/tagged compile only",
+        "evidence": "docs/qualification/evidence/F416-dav-collection-delete.json",
+        "owed": "Actual native API/CLI/stock-curl full-tree/no-partial-effect/custody/tombstone/permission/policy/capacity/retry and final-source outcomes"
       }
     },
     {
@@ -1695,7 +1701,8 @@
         "docs/qualification/evidence/F412-dav-namespace-condition-refusal.json",
         "docs/qualification/evidence/F413-shared-cli-api-mcp-control-decoding.json",
         "docs/qualification/evidence/F414-native-terminal.json",
-        "docs/qualification/evidence/F415-native-push.json"
+        "docs/qualification/evidence/F415-native-push.json",
+        "docs/qualification/evidence/F416-dav-collection-delete.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -1847,14 +1854,15 @@
         "F412 closes a recognized-condition ambiguity introduced by namespace metadata conditions. PUT,MKCOL,file MOVE,COPY and DELETE previously admitted X-Freightctl-Namespace-Revision while ignoring it;all five observed guard regressions return admitted200. The common DAV boundary now refuses400 before their service admission. PROPPATCH and complete collection MOVE retain the supported namespace condition;file methods retain their explicit byte/absence contracts and cannot pretend to enforce a metadata revision. Focused DAV guard green,tagged native API/stock-curl compilation,vet,format and architecture pass. Prepared actual HTTPS matrix requires unchanged source ID/revision/bytes,no new target/directory,zero actor namespace transitions/receipts/acceptance/intents/runs,and stock curl refusal/readback. Native outcomes remain owed. No resource,permission,custody or schema budget changes;whole-product qualification remains open.",
         "F413 unifies namespace/upload-create CLI JSON decoding with the existing API typed-object boundary. The extracted actual old CLI decoder admits duplicate/aliased fields,invalid UTF8 and an oversized stream prefix;all observed reds are retained. The shared API decoder also admits root null and Unicode long-s aliases for ASCII revision fields;MCP first-guard literal/escaped aliases are separately observed red. Read one extra byte without raising the existing16KiB CLI limit,require object controls and reject Unicode-to-ASCII field aliases before typed/SDK decoding. Preserve existing32KiB/16depth/4096token workflow and32KiB/16depth/8192token MCP bounds,valid Unicode data,camel-case MCP metadata and explicit zero options. Focused guards,fuzz seeds,tagged compilation,vet,format and architecture pass. The original JSON transport stand-in first cannot bind loopback under sandbox;the exact test passes with permitted loopback and one CPU/192MiB Go limit. It loads no model and establishes no inference qualification. Prepared native API/CLI/MCP no-effect and stock-client compatibility remain owed;all authority/custody/execution checks stay enforced.",
         "F414: b11ab7621e148fd7060375636d362ede1af49a83 originals terminal:16 workflows,35 jobs,34 pass/one receive-browser failure(42413430308/128526237160). Named security gates pass. Linux PostgreSQL,restore,HTTPS/curl,CLI,platform and live browser/FTPS succeed at this source including F408/F409;detailed scoped and actual final-source proof remain owed. Prior live failure is preserved and unrepaired;this success establishes no cause. Local F412/F413 are not included. F398 x86 receiver SIGSYS remains red;F026 held.",
-        "F415:four owner-only commits pushed fast-forward b11ab762\u219223c752add5ee77f47d8280f7c629c803058e3b7c after prior originals terminal(F414). Enabled Gitleaks8.30.1:4 commits,reported116941 bytes,no leaks;push0,remote main verified. Sixteen first original attempt1 workflows preserved. F412 ignored-condition refusal/F413 strict CLI/API/MCP controls now await actual native outcomes. Previous receive/live browser and independent x86 receiver failures remain owed;F026 held. No local heavy runtime,publication or deployment."
+        "F415:four owner-only commits pushed fast-forward b11ab762\u219223c752add5ee77f47d8280f7c629c803058e3b7c after prior originals terminal(F414). Enabled Gitleaks8.30.1:4 commits,reported116941 bytes,no leaks;push0,remote main verified. Sixteen first original attempt1 workflows preserved. F412 ignored-condition refusal/F413 strict CLI/API/MCP controls now await actual native outcomes. Previous receive/live browser and independent x86 receiver failures remain owed;F026 held. No local heavy runtime,publication or deployment.",
+        "F416 implements complete atomic collection DELETE/remove_tree with exact root identity/revision,current read/list/manage_paths,actual member modes/policy and the unchanged1000-entry operation bound. Observed old HTTP input400 refusal becomes focused green;tagged API/store/CLI/stock-curl compilation,vet and architecture pass. Prepared actual native whole-tree/refusal/tombstone/custody/receipt/retry proofs remain owed. No schema,budget,permission,local runtime or full-DAV qualification change."
       ],
       "current_item": {
-        "id": "F413",
-        "state": "Shared strict CLI/API/MCP object controls implemented;native outcomes owed",
-        "proof": "Observed actual extracted CLI duplicate/alias/UTF8/prefix red,API null/Unicode alias red and MCP first-guard alias red to focused green;bounded transport stand-in green with no model",
-        "evidence": "docs/qualification/evidence/F413-shared-cli-api-mcp-control-decoding.json",
-        "owed": "Actual native CLI/API/MCP unchanged-state/receipt/session/custody and original final-source compatibility/security outcomes"
+        "id": "F416",
+        "state": "Complete collection DELETE implemented;native proof owed",
+        "proof": "Actual old input refuses exact namespace-conditioned DELETE400;focused green plus affected static/tagged compile only",
+        "evidence": "docs/qualification/evidence/F416-dav-collection-delete.json",
+        "owed": "Actual native API/CLI/stock-curl full-tree/no-partial-effect/custody/tombstone/permission/policy/capacity/retry and final-source outcomes"
       }
     }
   ],

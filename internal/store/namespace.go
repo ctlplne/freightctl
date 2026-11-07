@@ -183,7 +183,7 @@ func (t *Transaction) ApplyPathCommand(ctx context.Context, key string, command 
 	switch command.Operation {
 	case "mkdir", "publish", "copy":
 		permission = "write"
-	case "rename", "remove", "rmdir", "setstat", "properties", "move_tree":
+	case "rename", "remove", "rmdir", "setstat", "properties", "move_tree", "remove_tree":
 		permission = "manage_paths"
 	default:
 		return nil, ErrState
@@ -198,13 +198,17 @@ func (t *Transaction) ApplyPathCommand(ctx context.Context, key string, command 
 		if err := propertyError(namespaceprops.ValidateChanges(command.PropertyChanges)); err != nil {
 			return nil, err
 		}
-	} else if command.Operation == "move_tree" {
+	} else if command.Operation == "move_tree" || command.Operation == "remove_tree" {
 		for _, permission := range []string{"read", "list"} {
 			if err := t.Require(permission); err != nil {
 				return nil, err
 			}
 		}
-		if err := validateTreeMove(command); err != nil {
+		validate := validateTreeMove
+		if command.Operation == "remove_tree" {
+			validate = validateTreeRemoval
+		}
+		if err := validate(command); err != nil {
 			return nil, err
 		}
 	} else if command.ExpectedEntryID != "" || len(command.PropertyChanges) != 0 {
@@ -283,8 +287,8 @@ func (t *Transaction) ApplyPathCommand(ctx context.Context, key string, command 
 		}
 	}
 	var preparedTree []PathEntry
-	if command.Operation == "move_tree" {
-		preparedTree, err = t.prepareTreeMove(ctx, actual, command)
+	if command.Operation == "move_tree" || command.Operation == "remove_tree" {
+		preparedTree, err = t.prepareTreeMutation(ctx, actual, command)
 		if err != nil {
 			return nil, err
 		}
@@ -529,6 +533,32 @@ func (t *Transaction) ApplyPathCommand(ctx context.Context, key string, command 
 			}
 			if err = t.SaveEntry(ctx, old, &next, "PathAttrsChanged", commandID); err != nil {
 				return nil, err
+			}
+		case "remove_tree":
+			// Full preflight above precedes the receipt lookup and every write.
+			// Remove leaves first so no intermediate row or committed state can
+			// retain an active child below a removed parent. Custody is untouched.
+			changed = len(preparedTree)
+			for i := len(preparedTree) - 1; i >= 0; i-- {
+				entry := preparedTree[i]
+				removed := entry
+				removed.Revision++
+				removed.Deleted = true
+				if err = t.SaveEntry(ctx, &entry, &removed, "PathRemoved", commandID); err != nil {
+					return nil, err
+				}
+				if entry.ID == old.ID {
+					next = removed
+				}
+			}
+			// FileAccessible would now require a surviving mapping; check current
+			// policy availability without granting new custody-read authority.
+			for _, entry := range preparedTree {
+				if entry.Kind == "file" {
+					if err = t.FileAvailable(ctx, entry.FileID); err != nil {
+						return nil, err
+					}
+				}
 			}
 		case "remove", "rmdir":
 			if err = t.ParentWritable(ctx, actual); err != nil {

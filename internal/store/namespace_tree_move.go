@@ -26,8 +26,13 @@ func validateTreeMove(command PathCommand) error {
 
 // Validate every member before any transition. The caller holds the exclusive
 // namespace lock. A hidden,held,or excessive subtree fails as a whole;no prefix
-// is moved and no opaque child can be rescued by a readable file alias.
-func (t *Transaction) prepareTreeMove(ctx context.Context, actual string, command PathCommand) ([]PathEntry, error) {
+// is changed and no opaque child can be rescued by a readable file alias.
+func (t *Transaction) prepareTreeMutation(ctx context.Context, actual string, command PathCommand) ([]PathEntry, error) {
+	if command.Operation == "remove_tree" {
+		if err := t.ParentWritable(ctx, actual); err != nil {
+			return nil, err
+		}
+	}
 	if err := t.CheckAncestors(ctx, actual); err != nil {
 		return nil, err
 	}
@@ -78,6 +83,9 @@ func (t *Transaction) prepareTreeMove(ctx context.Context, actual string, comman
 		mask := uint32(4)
 		if entry.Kind == "dir" {
 			mask = 5
+			if command.Operation == "remove_tree" {
+				mask = 7
+			}
 		}
 		if err = t.EntryMode(&entry, mask); err != nil {
 			return nil, err

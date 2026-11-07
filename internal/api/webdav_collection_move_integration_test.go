@@ -219,14 +219,24 @@ func TestWebDAVCollectionMoveIsCompleteAtomicAuthorizedAndPreservesCustody(t *te
 	if _, err = service.StatPath(t.Context(), scope, "/large-moved"); !errors.Is(err, store.ErrNotFound) {
 		t.Fatal("bounded refusal created a partial target", err)
 	}
+	deleteHeaders := headers(operator, "tree-delete-capacity-refused", "/unused", large.Entry)
+	delete(deleteHeaders, "Destination")
+	delete(deleteHeaders, "Overwrite")
+	exchangeAPIRequest(t, server, "DELETE", prefix+"/dav/large/", nil, deleteHeaders, nil, 507)
+	if first, err := service.StatPath(t.Context(), scope, "/large/d0000"); err != nil || first.Revision != 1 {
+		t.Fatal("bounded removal deleted or revised a prefix", err)
+	}
+	if current, err := service.StatPath(t.Context(), scope, "/large"); err != nil || !sameEntry(*current, large.Entry) {
+		t.Fatal("bounded removal changed its root", err)
+	}
 	operatorScope := store.Scope{Tenant: scope.Tenant, Partner: scope.Partner, TokenHash: secure.Digest(operator.Bytes)}
 	tx, err = service.DB.Begin(t.Context(), operatorScope)
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer tx.Tx.Rollback(t.Context())
-	var moved, commands, intents, runs, accepts int
-	if err = tx.Tx.QueryRow(t.Context(), `SELECT (SELECT count(*) FROM events WHERE actor_id=$1 AND kind='PathMoved'),(SELECT count(*) FROM namespace_commands),(SELECT count(*) FROM delivery_intents),(SELECT count(*) FROM workflow_runs),(SELECT count(*) FROM events WHERE actor_id=$1 AND kind='FileAccepted')`, participant.Actor).Scan(&moved, &commands, &intents, &runs, &accepts); err != nil || moved != 4 || commands != 1 || intents != 0 || runs != 0 || accepts != 0 {
-		t.Fatal("collection move lost complete atomic effects or actor-private single receipt", moved, commands, intents, runs, accepts, err)
+	var moved, commands, intents, runs, accepts, removed int
+	if err = tx.Tx.QueryRow(t.Context(), `SELECT (SELECT count(*) FROM events WHERE actor_id=$1 AND kind='PathMoved'),(SELECT count(*) FROM namespace_commands),(SELECT count(*) FROM delivery_intents),(SELECT count(*) FROM workflow_runs),(SELECT count(*) FROM events WHERE actor_id=$1 AND kind='FileAccepted'),(SELECT count(*) FROM events WHERE actor_id=$1 AND kind='PathRemoved')`, participant.Actor).Scan(&moved, &commands, &intents, &runs, &accepts, &removed); err != nil || moved != 4 || commands != 1 || intents != 0 || runs != 0 || accepts != 0 || removed != 0 {
+		t.Fatal("collection move lost complete atomic effects or actor-private single receipt", moved, commands, intents, runs, accepts, removed, err)
 	}
 }

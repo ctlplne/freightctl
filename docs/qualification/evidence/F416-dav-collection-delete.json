@@ -1,0 +1,223 @@
+{
+  "schema_version": 1,
+  "id": "F416",
+  "observed_at": "2026-11-07",
+  "base_candidate": "8a0f5ca22ee2f763dafd3291d792251bfa885f8c",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F416 implements complete atomic collection DELETE/remove_tree with exact root identity/revision,current read/list/manage_paths,actual member modes/policy and the unchanged1000-entry operation bound. Observed old HTTP input400 refusal becomes focused green;tagged API/store/CLI/stock-curl compilation,vet and architecture pass. Prepared actual native whole-tree/refusal/tombstone/custody/receipt/retry proofs remain owed. No schema,budget,permission,local runtime or full-DAV qualification change.",
+  "contract": {
+    "operation": "remove_tree;complete current subtree under exclusive namespace lock",
+    "inputs": "Exact root entry ID/positive revision,original key,empty body;collection href trailing slash;Depth absent/infinity",
+    "root_condition_scope": "Pins root mapping identity/revision;does not freeze prior descendant inventory",
+    "authority": "read,list,manage_paths;root parent writable/traversable,each actual directory read/write/traverse,each actual file read/current policy;outside aliases cannot rescue private children",
+    "atomicity": "Preflight entire tree before any mutation or receipt recovery;leaf-first PathRemoved events,irreversible tombstones and one actor-private command receipt in same transaction;reauthorize/current file availability before commit",
+    "fresh": "204/no body,ETag or Location;collection-removed-at-commit,root removal event and complete entry count",
+    "retry": "Absent/replaced root412;changed meaning409;never invent undelete to make history reachable",
+    "preserved": "Immutable file custody/owner/mode/time/property snapshots;all prior namespace SQL/RLS/event guards",
+    "bounds": "Existing1000-entry operation bound,10s command transaction and all local limits unchanged",
+    "security": "No forwarding/execution authority,new custody access,network destination,schema change or compliance-class assertion",
+    "specification": "https://www.rfc-editor.org/rfc/rfc4918.html#section-9.6.1"
+  },
+  "red_green": [
+    {
+      "proof": "Actual old prepareDAVRequest refuses valid exact namespace-conditioned full collection DELETE400",
+      "exit_code": 1,
+      "reference": ".private/freightctl-f416-collection-delete-red.log"
+    },
+    {
+      "proof": "Focused new/existing DELETE,collection MOVE,condition and authority/shape controls",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f416-delete-final-focused.log"
+    },
+    {
+      "proof": "Affected native API/store/CLI/curl compilation only",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f416-native-final-compile.log"
+    },
+    {
+      "proof": "Affected tagged vet",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f416-vet.log"
+    },
+    {
+      "proof": "Architecture",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f416-architecture.log"
+    },
+    {
+      "proof": "Fourteen changed Go files formatted",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f416-format.log"
+    },
+    {
+      "proof": "Record references only,not runtime",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f416-records.log"
+    }
+  ],
+  "prepared_native_proofs": [
+    "Actual API three-grant minimal actor removes all4 mappings with4events/one private receipt/no external effects;all original paths GET/HEAD/PROPFIND404",
+    "Private actual child despite readable alias,nonwritable directory,missing grants,stale root/current policy/ABA refused with unchanged tree",
+    "Retained immutable bytes read as separately authorized admin;outside alias preserved;no surviving mapping does not gain custody access;exact original metadata/property tombstones retained",
+    "Original key absent/replaced root412 and changed-meaning409;other actor cannot reuse private receipt",
+    "Oversized retained1001-member fixture reused without raising1000 namespace quota;507,no partial root/first child change,zero removal events",
+    "Actual CLI3-member deletion and private key/retry/retained bytes;ordinary writer forbidden",
+    "Original stock curl after prior create/replace/copy/property/move journeys:3-member deletion204,count/event,no byte assertion;all GET/HEAD/PROPFIND404,retry412,independent retained-byte comparison"
+  ],
+  "owed": [
+    "All prepared actual native proofs;local compile does not establish SQL/curl/CLI qualification",
+    "All affected original/final-source security/runtime plus remaining baseline/AX and separately evidenced readiness gates",
+    "Full collection COPY/overwrite,locks,outbound stock DAV server,independent DAV applications and licensed comparison"
+  ],
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "4fa8d1bbe5eaba84c52384f438daf22bf855fed3f0c56e701e96c54791faa2e2",
+      "bytes": 12037
+    },
+    {
+      "reference": "cmd/freightctl/namespace_tree_move_integration_test.go",
+      "sha256": "e1e1f47bafe68cb417bbc5b46ff107a0ba463d85ae86c6fe335714fa834dd17f",
+      "bytes": 6247
+    },
+    {
+      "reference": "docs/development.md",
+      "sha256": "b1da2676ca48e28b235924135a7f2cdfbca670dd23cf73861e96b51b669558e4",
+      "bytes": 42549
+    },
+    {
+      "reference": "docs/protocols/webdav-read-profile.md",
+      "sha256": "940024013cce7d786d9bca24d855f28a538a8c73b224a4c08b15bc67fddf6d65",
+      "bytes": 24860
+    },
+    {
+      "reference": "docs/qualification/parity.json",
+      "sha256": "0d73bbdbe5844fa94b6633fa9312d64e9817b3ee798e39dba03be40b4d16abf8",
+      "bytes": 153950
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "e3a249f56ba77b442b0d1bb773a95222093fe843f722182fabc7b1dc383a969c",
+      "bytes": 635588
+    },
+    {
+      "reference": "internal/api/webdav.go",
+      "sha256": "cd47458a800742c8c939b63c0d18a703874edc8e369ea414b4beb1a7e317cce7",
+      "bytes": 11007
+    },
+    {
+      "reference": "internal/api/webdav_collection_delete.go",
+      "sha256": "e49b6dbbda20b9857e57d5266c0d5a3055870b3f4b895a8ad5d79e40861ab1a7",
+      "bytes": 2794
+    },
+    {
+      "reference": "internal/api/webdav_collection_delete_integration_test.go",
+      "sha256": "54d1a4a5a4e734b1b8431d251027b821b5f3c70471d7f4b419cc0c80f18efe2f",
+      "bytes": 13260
+    },
+    {
+      "reference": "internal/api/webdav_collection_delete_test.go",
+      "sha256": "85213dfdda0742c9142688abada0b3d3ee28d4841aebe33c58affcab69a7032a",
+      "bytes": 2365
+    },
+    {
+      "reference": "internal/api/webdav_collection_move_integration_test.go",
+      "sha256": "b44863ee65a90b0e4134eb75fecd1749ac80b0ec09f4385c02e123fd2a56e53c",
+      "bytes": 14493
+    },
+    {
+      "reference": "internal/api/webdav_delete.go",
+      "sha256": "5b2a6c8b3864978a7e093b060d1f2d7a63c7ba1356e1f8cdcd9f575dd843864c",
+      "bytes": 2408
+    },
+    {
+      "reference": "internal/api/webdav_delete_integration_test.go",
+      "sha256": "06d39f5a38ef10dd411aa5ec01050d89bc8642b2b6b806219025dc442e83a58d",
+      "bytes": 10031
+    },
+    {
+      "reference": "internal/api/webdav_move_integration_test.go",
+      "sha256": "07885a85212014a44dbc88f19ddc8ba3130f3be8ced7e0943686da364be50549",
+      "bytes": 7854
+    },
+    {
+      "reference": "internal/api/webdav_stock_integration_test.go",
+      "sha256": "33431f2edcc0e16ba77ac489037e49fcfbaad6102d9155e674077a910d1ddbe4",
+      "bytes": 28927
+    },
+    {
+      "reference": "internal/store/namespace.go",
+      "sha256": "3231b3843da2bcc0682aaa4266c26934ac6ff0ea16c817d30b19ecfb280b2997",
+      "bytes": 25542
+    },
+    {
+      "reference": "internal/store/namespace_tree_move.go",
+      "sha256": "289232b2897329a6df1cea05f5368f284b84d35d6c8a56341d3f18502e9d1b34",
+      "bytes": 2977
+    },
+    {
+      "reference": "internal/store/namespace_tree_remove.go",
+      "sha256": "350f64869fc86b8ab0426963cc506c029222680986e558e8ea128c99986a2681",
+      "bytes": 675
+    },
+    {
+      "reference": "internal/store/namespace_tree_remove_test.go",
+      "sha256": "2dd2309576c2ef40d45637ee3b500b15c10cc2dada3e9a42a0c96fc68cc26212",
+      "bytes": 2606
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f416-collection-delete-red.log",
+      "sha256": "5c7a5f12137b4317097bca0a3d07a4ac555ffd9f3c5e2761d71df91a6396786b",
+      "bytes": 256
+    },
+    {
+      "reference": ".private/freightctl-f416-delete-final-focused.log",
+      "sha256": "724e5b2933772dd0b865ab69103602eca33f64cda79b4fa0a7e0ec5a566dd48a",
+      "bytes": 112
+    },
+    {
+      "reference": ".private/freightctl-f416-native-final-compile.log",
+      "sha256": "979321e7765ffba50c55d8ff5e864ee49e95792e1db28991d913563542ae2aee",
+      "bytes": 227
+    },
+    {
+      "reference": ".private/freightctl-f416-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f416-architecture.log",
+      "sha256": "f523f10d6f3e60ec093788dd7a2931bff5c317fe4ce42f3b96b5f5a4016e2041",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f416-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f416-records.log",
+      "sha256": "826009b37d6c8254924b7fd1ee12981059544175f2c890ad4186b88b41b583b4",
+      "bytes": 106
+    },
+    {
+      "reference": ".private/freightctl-f416-parity-preservation.json",
+      "sha256": "ff232a3d7a6d8ece264c2578d4472a516b606b47fb781ff560ce4417b79f4e6a",
+      "bytes": 153
+    }
+  ],
+  "safety": {
+    "local_inference": false,
+    "local_postgresql_or_chrome": false,
+    "local_scanner": false,
+    "retained_database_changed": false,
+    "schema_or_permission_budgets_changed": false,
+    "local_or_CI_capacity_changed": false,
+    "publication_or_deployment": false,
+    "original_runtime_runs_cancelled_or_rerun": false
+  },
+  "overall_goal_complete": false
+}

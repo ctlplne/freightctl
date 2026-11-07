@@ -79,4 +79,31 @@ func qualifyNamespaceTreeMoveCLI(t *testing.T, ctx context.Context, service *cus
 	if _, err = command(manager, "namespace", "-request-file", requestFile(selection), "-idempotency-key", "cli-tree-original"); !errors.Is(err, store.ErrConflict) {
 		t.Fatal("changed CLI tree destination reused an original key", err)
 	}
+	remove := store.PathCommand{Operation: "remove_tree", Path: restored.Entry.Path, ExpectedEntryID: restored.Entry.ID, ExpectedRevision: &restored.Entry.Revision}
+	removeInput := requestFile(remove)
+	if _, err = command(ordinaryWriter, "namespace", "-request-file", removeInput, "-idempotency-key", "cli-tree-delete-denied"); !errors.Is(err, store.ErrForbidden) {
+		t.Fatal("ordinary write granted recursive collection removal", err)
+	}
+	raw, err = command(manager, "namespace", "-request-file", removeInput, "-idempotency-key", "cli-tree-delete-original")
+	var removed store.PathResult
+	if err != nil || json.Unmarshal(raw, &removed) != nil || removed.Replayed || removed.Changed != 3 || removed.Entry.ID != restored.Entry.ID || !removed.Entry.Deleted || removed.Entry.Revision != restored.Entry.Revision+1 {
+		t.Fatal("CLI removal lost its atomic three-member result", err)
+	}
+	for _, path := range []string{"/cli-tree", "/cli-tree/nested", "/cli-tree/nested/data.dat"} {
+		if _, err = service.StatPath(ctx, adminScope, path); !errors.Is(err, store.ErrNotFound) {
+			t.Fatal("CLI collection removal retained a live member", err)
+		}
+	}
+	retained, retainedReader, err := service.Download(ctx, adminScope, file.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	retainedBytes, err := io.ReadAll(retainedReader)
+	retainedReader.Close()
+	if err != nil || retained.ID != file.ID || !bytes.Equal(retainedBytes, data) {
+		t.Fatal("CLI collection removal destroyed original custody", err)
+	}
+	if _, err = command(manager, "namespace", "-request-file", removeInput, "-idempotency-key", "cli-tree-delete-original"); !errors.Is(err, store.ErrNotFound) {
+		t.Fatal("absent original collection was removed twice or asserted current", err)
+	}
 }

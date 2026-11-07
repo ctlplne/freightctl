@@ -422,6 +422,31 @@ func TestWebDAVNativeStockCurlDiscoveryInterruptedReadAndExactResume(t *testing.
 	if status != 200 || !bytes.Equal(unchangedMember, replacement) || headers.Get("X-File-Revision-ID") != replaced.File.ID {
 		t.Fatal("unsupported namespace condition removed or changed the stock member")
 	}
+	deleteCollectionArgs := []string{"--request", "DELETE", "--header", "Depth: infinity", "--header", "Idempotency-Key: dav-stock-collection-delete", "--header", "X-Freightctl-Namespace-Revision: " + movedCollection.Result.Entry.ID + ":" + strconv.FormatInt(movedCollection.Result.Entry.Revision, 10)}
+	status, headers, body, _ = run("collection-delete", collectionTarget, deleteCollectionArgs, true)
+	if status != 204 || len(body) != 0 || headers.Get("X-Freightctl-Namespace-State") != "collection-removed-at-commit" || headers.Get("X-Freightctl-Removed-Entries") != "3" || !store.ValidID(headers.Get("X-Freightctl-Event-ID")) || headers.Get("ETag") != "" || headers.Get("Location") != "" {
+		t.Fatal("stock collection DELETE lost its complete atomic result or invented publication")
+	}
+	for index, removedPath := range []string{collectionTarget, collectionTarget + strings.TrimPrefix(overwriteTarget, collectionPath), currentMember} {
+		for _, method := range []string{"GET", "HEAD", "PROPFIND"} {
+			args := []string{"--request", method, "--header", "Depth: 0"}
+			if method == "HEAD" {
+				args = []string{"--head", "--header", "Depth: 0"}
+			}
+			status, _, _, missingExit := run("collection-deleted-"+strconv.Itoa(index)+"-"+method, removedPath, args, false)
+			if status != 404 || missingExit != 22 {
+				t.Fatal("stock recursive DELETE retained a live mapping")
+			}
+		}
+	}
+	status, _, _, repeatedDeleteExit := run("collection-delete-retry", collectionTarget, deleteCollectionArgs, false)
+	if status != 412 || repeatedDeleteExit != 22 {
+		t.Fatal("lost collection DELETE response allowed repeated mutation")
+	}
+	status, headers, retainedCollectionBytes, _ := run("collection-delete-retained-custody", prefix+"/files/"+replaced.File.ID, nil, true)
+	if status != 200 || !bytes.Equal(retainedCollectionBytes, replacement) || headers.Get("X-File-Revision-ID") != replaced.File.ID {
+		t.Fatal("stock recursive DELETE erased immutable custody")
+	}
 	binaryPath, err := exec.LookPath("curl")
 	if err != nil {
 		t.Fatal(err)
@@ -430,5 +455,5 @@ func TestWebDAVNativeStockCurlDiscoveryInterruptedReadAndExactResume(t *testing.
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Logf("native conditional-create/file-replace/file-move/file-remove/read DAV proof;candidate=%s;architecture=%s;curl-SHA256=%s;lost-exit=%d;prefix=65536;bytes=%d;SHA256=%s;XML=independently-parsed;receiver=independently-compared;conditional-retry=412;stale-replace=412;stale-move=412;overwrite-move=204;stale-overwrite=412;overwrite-copy=204;copy-replay=historical200;removed-path=404;stale-delete=412;retained-custody=independently-compared;other-writes-locks-full-DAV=owed", commit, runtime.GOARCH, secure.Digest(binary), lostExit, len(received), secure.Digest(received))
+	t.Logf("native conditional-create/file-replace/file-move/file-remove/collection-move/collection-remove/read DAV proof;candidate=%s;architecture=%s;curl-SHA256=%s;lost-exit=%d;prefix=65536;bytes=%d;SHA256=%s;XML=independently-parsed;receiver=independently-compared;conditional-retry=412;stale-replace=412;stale-move=412;overwrite-move=204;stale-overwrite=412;overwrite-copy=204;copy-replay=historical200;removed-path=404;stale-delete=412;removed-collection-members=3;removed-collection-retry=412;retained-custody=independently-compared;other-writes-locks-full-DAV=owed", commit, runtime.GOARCH, secure.Digest(binary), lostExit, len(received), secure.Digest(received))
 }

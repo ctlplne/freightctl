@@ -170,3 +170,13 @@ failures and finish every mandatory final-source baseline/AX gate. F026 stays
 manual/owner-deferred. Local inference stays off and local resource limits stay
 unchanged. Trust Control,inference,provider/licensed peers,reference estate,
 owner license text and independent adoption inputs remain explicitly owed.
+
+F416 adds complete atomic collection DELETE and shared API/CLI remove_tree,
+with exact root identity/revision,current read/list/manage_paths,per-member
+modes/policy and unchanged1000-entry operation bounds. All names become
+irreversible tombstones;immutable custody and inert properties remain. The
+original HTTP input refuses the new valid profile400;focused guards now pass.
+Affected native API/store/CLI/curl compilation,vet and architecture pass. Actual
+whole-tree/refusal/no-extra-effects/custody/tombstone/retry native proof remains
+owed. Collection COPY/overwrite,locks,outbound and independent DAV applications
+remain open. No schema or local resource/runtime changes.

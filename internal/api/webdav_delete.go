@@ -3,12 +3,16 @@ package api
 import (
 	"errors"
 	"net/http"
+	"strings"
 
 	"github.com/ctlplne/freightctl/internal/custody"
 	"github.com/ctlplne/freightctl/internal/store"
 )
 
 func davDeleteInput(w http.ResponseWriter, r *http.Request) bool {
+	if strings.HasSuffix(r.URL.Path, "/") {
+		return davCollectionDeleteInput(w, r)
+	}
 	tag, present, valid := tusHeader(r, "If-Match")
 	if !present {
 		fail(w, 428, "dav_delete_requires_exact_source_revision")
@@ -41,6 +45,10 @@ func davDeleteInput(w http.ResponseWriter, r *http.Request) bool {
 }
 
 func (s *Server) davDelete(w http.ResponseWriter, r *http.Request, scope store.Scope, source string) {
+	if strings.HasSuffix(r.URL.Path, "/") {
+		s.davCollectionDelete(w, r, scope, source)
+		return
+	}
 	fileID, digest, valid := davFileTag(r.Header.Get("If-Match"))
 	if !valid {
 		fail(w, 400, "invalid_dav_delete_revision")
