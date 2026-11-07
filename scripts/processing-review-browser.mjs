@@ -214,11 +214,13 @@ try {
   stage = "reload-review";
   await owner.reload();
   await owner.getByRole("heading", { name: "Files", exact: true }).waitFor();
+  stage = "restore-review-panel";
   await button(owner, "Record processing").click();
   const invalid = structuredClone(saved);
   invalid.server_origin = "https://unapproved.invalid";
   const invalidPath = c.private + "/invalid-recovery.json";
   await writeFile(invalidPath, JSON.stringify(invalid));
+  stage = "reject-foreign-review-recovery";
   await owner
     .getByLabel("Import independent review recovery JSON", { exact: true })
     .setInputFiles(invalidPath);
@@ -230,6 +232,7 @@ try {
     .waitFor();
   assert.equal(proposals.length, 1);
   assert.equal(await owner.getByRole("dialog").count(), 0);
+  stage = "import-review-recovery";
   await owner
     .getByLabel("Import independent review recovery JSON", { exact: true })
     .setInputFiles(recovery);

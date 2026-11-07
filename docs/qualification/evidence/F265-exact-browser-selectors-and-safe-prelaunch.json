@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "id": "F265",
+  "observed_at": "2026-11-07",
+  "base_candidate": "7dadf9d8b7ae6343a2735c16648c350a85593902",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Exact format selectors and safe early diagnostics prepared;original Chrome runtime proof owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "97293af74039e445532b90ca74a94c5a40362a87ffff8397b154018d0f57f7be",
+      "bytes": 3459
+    },
+    {
+      "reference": "docs/qualification/evidence/F264-native-json-restart-and-browser-failures.json",
+      "sha256": "1f04e14c475ff5e0653157caec93e0d260d725b97b5b28adf1c162973df4877b",
+      "bytes": 2344
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "6ca7a4b74802a3924c06395f0c2c9fbfd13c9d769a545eaae3e3b3cf58e67317",
+      "bytes": 379712
+    },
+    {
+      "reference": "internal/api/artifact_exchange_browser_integration_test.go",
+      "sha256": "816439b528bd79b60d482560b2a96df4cddc469d18650579128e2777935878b5",
+      "bytes": 28707
+    },
+    {
+      "reference": "internal/api/browser_failure_stage_integration_test.go",
+      "sha256": "9aed03ea6e108cd5ca8a26555d065795ceffda1edafe1e167fe63b5204ed33de",
+      "bytes": 1273
+    },
+    {
+      "reference": "scripts/artifact-exchange-browser.mjs",
+      "sha256": "f98bf304fa5adfa382b66b3c5bebc66f4c64828f580661652487990d34c0fdb5",
+      "bytes": 52412
+    },
+    {
+      "reference": "scripts/json-intake-browser.mjs",
+      "sha256": "656f29ea21a70e83375d65b61e981345badfdd3606491d1914df05f05220fca7",
+      "bytes": 12664
+    },
+    {
+      "reference": "scripts/processing-review-browser.mjs",
+      "sha256": "38aa9f6e0e5f4dcb85076a3f30fb5b8066c19cb5f512424d9f5fd714c54d54c6",
+      "bytes": 13013
+    }
+  ],
+  "red": [
+    {
+      "evidence": "docs/qualification/evidence/F264-native-json-restart-and-browser-failures.json",
+      "candidate": "638d156cf16820b165cc8e6310f62daddf2d8458",
+      "run": 42357772764,
+      "job": 128359540481,
+      "observation": "Four formats fail at edit-policy;independent review fails at reload-review."
+    },
+    {
+      "run": 42357772709,
+      "job": 128359540169,
+      "observation": "Receive browser exits before barrier with result unavailable;launch/configuration/actual cause unknown."
+    },
+    {
+      "reference": ".private/freightctl-f265-config-summary-red.log",
+      "test": "TestExchangeBrowserSummaryKeepsConfigurationFailuresSafeAndDistinctFromSuccess",
+      "observation": "bounded prelaunch failure lost its safe phase or became success"
+    }
+  ],
+  "changed": [
+    "Use exact combobox role/name for format and padding. Pinned SDK label engine traverses nested option text;option selection and every review/hash/loss/retry/byte/accessibility/security assertion remain unchanged. Product UI code unchanged.",
+    "Move receive-browser URL/identity/integrity/certificate preconditions inside the existing private-error/final-summary boundary. Three closed phases permit safe diagnosis when validation precedes launch. Keep every original configuration assertion and failed status.",
+    "Add three closed independent-review reload/import substeps;do not infer a functional fix. Existing error/cross-origin/no-effect/recovery assertions unchanged.",
+    "Summary parser accepts only the new explicit early phases and still rejects unknown/duplicate/missing/unsafe fields. New failed-zero-counts/no-browser summaries must remain failed,never become success."
+  ],
+  "green": [
+    "Observed bounded-prelaunch-summary red before;focused green after with existing strict ambiguity/privacy regressions.",
+    "Exact synthetic native fixture Go-normalized initial CSV policy passes the actual frontend decoder;this rules out that candidate definition mismatch only.",
+    "Pinned source analysis,script format/parse and affected tagged Go compilation/vet pass. No Chrome/PostgreSQL run locally."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f265-config-summary-red.log",
+      "sha256": "4d310a8d58bc3d4c49709991435ccebb57434a97fa28a868d8cba138ff6f4b8d",
+      "bytes": 281
+    },
+    {
+      "reference": ".private/freightctl-f265-exchange-script-parse.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f265-go-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f265-json-script-parse.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f265-policy-decode.log",
+      "sha256": "ee87219ed330de7b9016acf54ba00b031eff626d72b0baa4b8c3c62f7cb3f2ef",
+      "bytes": 85
+    },
+    {
+      "reference": ".private/freightctl-f265-policy-wire.json",
+      "sha256": "fdcdd80c2f9a86c605ed521a90740eec18dae9bfa0fa8c569359249fc1d2f4db",
+      "bytes": 538
+    },
+    {
+      "reference": ".private/freightctl-f265-review-script-parse.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f265-script-format.log",
+      "sha256": "9d5cad6e0ff21aa7a7cc863fc5c33b07dd54428ee95ca8a861f1fa84b5ec2aa3",
+      "bytes": 159
+    },
+    {
+      "reference": ".private/freightctl-f265-selector-source-analysis.json",
+      "sha256": "6bf6ccbd452cc933e105f213501493112420c3cd412163b7a091f384977044ee",
+      "bytes": 935
+    },
+    {
+      "reference": ".private/freightctl-f265-summary-green.log",
+      "sha256": "171761d47339a8c3666b44b0371356d19aee6c7265c1045ee0fdb19508cde9fa",
+      "bytes": 55
+    },
+    {
+      "reference": ".private/freightctl-f265-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "primary_references": [
+    "https://playwright.dev/docs/locators#locate-by-role"
+  ],
+  "owed": [
+    "Original four format review/hash/response-loss/check/release/download Chrome profiles.",
+    "Actual receive-browser early phase/cause and complete original journey;independent-review reload/recovery failure and complete journey.",
+    "All remaining actual final-source native/security/stock/baseline/AX/FINISH outcomes."
+  ],
+  "resources": "OneCPU/192MiB local pure decoder/summary/static checks;no Chrome,PostgreSQL,inference,scanner or heavy peer. Retained35/source60 unchanged."
+}

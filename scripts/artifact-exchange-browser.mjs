@@ -10,47 +10,12 @@ assert.equal(process.platform, "linux");
 assert.equal(process.arch, "x64");
 assert.equal(process.env.FREIGHTCTL_BROWSER_CHANNEL, "chrome");
 const c = JSON.parse(await readFile(process.argv[2], "utf8"));
-const origin = new URL(c.url);
-assert.equal(origin.protocol, "https:");
-assert.equal(origin.hostname, "127.0.0.1");
-assert.equal(origin.pathname, "/");
-for (const value of [
-  c.tenant,
-  c.partner,
-  c.endpoint,
-  c.exchange,
-  c.closure_exchange,
-  c.file,
-  c.sender_actor,
-  c.recipient_actor,
-  c.manager_actor,
-  c.onward_file,
-  c.onward_workflow,
-  c.copy_actor,
-  c.copy_endpoint,
-  c.copy_exchange,
-  c.audit_actor,
-  c.audit_event,
-])
-  assert.match(value, /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/);
-assert.match(c.sha256, /^[0-9a-f]{64}$/);
-assert.match(c.closure_request_hash, /^[0-9a-f]{64}$/);
-assert.match(c.copy_request_hash, /^[0-9a-f]{64}$/);
-assert.notEqual(c.closure_exchange, c.exchange);
-assert.ok(Number.isSafeInteger(c.size) && c.size > 0 && c.size < 16384);
-const spki = createHash("sha256")
-  .update(
-    new X509Certificate(
-      Buffer.from(c.certificate_der, "base64"),
-    ).publicKey.export({ type: "spki", format: "der" }),
-  )
-  .digest("base64");
 const { chromium } = createRequire(import.meta.url)(
   "../web/node_modules/playwright",
 );
 const axe = createRequire(import.meta.url)("../web/node_modules/axe-core");
 let browser,
-  phase = "launch",
+  phase = "configuration-identities",
   state = "failed",
   egress = 0,
   accessibilityChecks = 0,
@@ -74,6 +39,44 @@ let browser,
   exchangeRequests = 0,
   failureHash;
 try {
+  const origin = new URL(c.url);
+  assert.equal(origin.protocol, "https:");
+  assert.equal(origin.hostname, "127.0.0.1");
+  assert.equal(origin.pathname, "/");
+  for (const value of [
+    c.tenant,
+    c.partner,
+    c.endpoint,
+    c.exchange,
+    c.closure_exchange,
+    c.file,
+    c.sender_actor,
+    c.recipient_actor,
+    c.manager_actor,
+    c.onward_file,
+    c.onward_workflow,
+    c.copy_actor,
+    c.copy_endpoint,
+    c.copy_exchange,
+    c.audit_actor,
+    c.audit_event,
+  ])
+    assert.match(value, /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/);
+  phase = "configuration-integrity";
+  assert.match(c.sha256, /^[0-9a-f]{64}$/);
+  assert.match(c.closure_request_hash, /^[0-9a-f]{64}$/);
+  assert.match(c.copy_request_hash, /^[0-9a-f]{64}$/);
+  assert.notEqual(c.closure_exchange, c.exchange);
+  assert.ok(Number.isSafeInteger(c.size) && c.size > 0 && c.size < 16384);
+  phase = "configuration-certificate";
+  const spki = createHash("sha256")
+    .update(
+      new X509Certificate(
+        Buffer.from(c.certificate_der, "base64"),
+      ).publicKey.export({ type: "spki", format: "der" }),
+    )
+    .digest("base64");
+  phase = "launch";
   browser = await chromium.launch({
     headless: true,
     chromiumSandbox: true,

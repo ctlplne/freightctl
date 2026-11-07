@@ -12,7 +12,7 @@ func safeNativeBrowserStage(value string) string {
 		"review-policy", "commit-policy-loss", "retry-policy", "upload",
 		"check", "review-release", "release", "download", "login-owner",
 		"list-tasks", "open-task", "load-task", "review-request",
-		"commit-review-loss", "save-recovery", "reload-review",
+		"commit-review-loss", "save-recovery", "reload-review", "restore-review-panel", "reject-foreign-review-recovery", "import-review-recovery",
 		"login-reviewer", "approve-review", "adopt-review", "withdraw-review",
 		"recover-approval":
 		return value

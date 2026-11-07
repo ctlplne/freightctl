@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "id": "F264",
+  "observed_at": "2026-11-07",
+  "candidate": "638d156cf16820b165cc8e6310f62daddf2d8458",
+  "qualification_claim": false,
+  "state": "Exact completed component outcomes;candidate whole Linux run not yet terminal;whole product unqualified",
+  "json_native": {
+    "run": 42357772764,
+    "jobs": [
+      {
+        "id": 128359540541,
+        "architecture": "x86_64",
+        "conclusion": "success"
+      },
+      {
+        "id": 128359540701,
+        "architecture": "arm64",
+        "conclusion": "success"
+      }
+    ],
+    "url": "https://github.com/ctlplne/freightctl/actions/runs/42357772764",
+    "scope": "Original native JSON custody/API/CLI/MCP/restart jobs pass. Their dependency security audits pass. Do not infer full parity/AX/later-source qualification."
+  },
+  "browser_red": [
+    {
+      "run": 42357772764,
+      "job": 128359540481,
+      "url": "https://github.com/ctlplne/freightctl/actions/jobs/128359540481",
+      "test": "Original four JSON/fixed/XML/XLSX native browser profiles",
+      "stage": "edit-policy",
+      "safe_result_sha256": "b90310fcf33eab1b6c38628a0776e31609c7a6b480bd50134123b2948f3bb808"
+    },
+    {
+      "run": 42357772764,
+      "job": 128359540481,
+      "test": "TestProcessingReviewNativeBrowserIndependentDecisionRecoveryAndAdoption",
+      "stage": "reload-review",
+      "safe_result_sha256": "5fd07feee193e6f296f05f5f51fe50e2e44952d4bfe60016847e9836b8e5f1cf"
+    },
+    {
+      "run": 42357772709,
+      "job": 128359540169,
+      "url": "https://github.com/ctlplne/freightctl/actions/jobs/128359540169",
+      "test": "TestArtifactExchangeNativeBrowserReceiptWrongActorAndRevocation",
+      "observation": "browser failed before revocation barrier;safe result unavailable. No browser phase or successful launch is inferred."
+    }
+  ],
+  "additional_red": {
+    "run": 42357772719,
+    "job": 128359540397,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128359540397",
+    "observation": "Stock routing browser native-browser-send-1-0 failed or reported page errors/egress. Original failure retained;cause and repair owed."
+  },
+  "remaining": "Open Windows and all failed browser/stock/integration gates stay red. Actual pipeline final image scan/native results and every final-source replay remain owed;originals unchanged."
+}

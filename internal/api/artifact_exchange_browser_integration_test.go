@@ -100,6 +100,25 @@ func TestExchangeBrowserSummaryRefusesAmbiguousEvidence(t *testing.T) {
 	}
 }
 
+func TestExchangeBrowserSummaryKeepsConfigurationFailuresSafeAndDistinctFromSuccess(t *testing.T) {
+	zero, no, yes := 0, false, true
+	for _, phase := range []string{"configuration-identities", "configuration-integrity", "configuration-certificate"} {
+		summary := exchangeBrowserSummary{State: "failed", Phase: phase, HistorySearches: &zero, OwnedCopies: &zero, CopyRecoveries: &zero, EvidenceReads: &zero, Egress: &zero, Downloads: &zero, Declines: &zero, Offers: &zero, Cancels: &zero, Recovery: &zero, EndpointCommands: &zero, HumanIngress: &zero, OnwardRuns: &zero, OnwardRecoveries: &zero, OnwardRefusals: &zero, Model: &no, Sandbox: &yes, Accessibility: &zero, Node: "v26.13.0", Axe: "4.14.0", FailureHash: secure.Digest([]byte("synthetic private failure"))}
+		raw, err := json.Marshal(summary)
+		if err != nil {
+			t.Fatal(err)
+		}
+		path := filepath.Join(t.TempDir(), "configuration-failure.json")
+		if err = os.WriteFile(path, raw, 0600); err != nil {
+			t.Fatal(err)
+		}
+		observed, hash := readExchangeBrowserSummary(path)
+		if observed == nil || observed.Phase != phase || observed.State != "failed" || hash != secure.Digest(raw) || observed.Browser != "" {
+			t.Fatal("bounded prelaunch failure lost its safe phase or became success")
+		}
+	}
+}
+
 func readExchangeBrowserSummary(path string) (*exchangeBrowserSummary, string) {
 	f, err := os.Open(path)
 	if err != nil {
@@ -140,7 +159,7 @@ func readExchangeBrowserSummary(path string) (*exchangeBrowserSummary, string) {
 		return nil, hash
 	}
 	switch s.Phase {
-	case "audit-login", "audit-first-page", "audit-first-accessibility", "audit-next-page", "audit-next-accessibility", "audit-resource-search", "audit-resource-accessibility", "copy-login", "copy-review-accessibility", "copy-lost-response", "copy-uncertain-accessibility", "copy-import", "copy-import-accessibility", "copy-recover", "copy-receipt-accessibility", "incoming-evidence", "incoming-evidence-accessibility", "outgoing-evidence", "outgoing-evidence-accessibility", "onward-verify-review", "onward-login", "onward-review", "onward-review-accessibility", "onward-save-recovery", "onward-lost-response", "onward-reload-recovery", "onward-recovery-accessibility", "onward-receipt", "onward-receipt-accessibility", "onward-status", "onward-status-accessibility", "onward-refusal", "onward-refusal-accessibility", "launch", "recipient-login", "recipient-directory", "recipient-discovery", "receive-accessibility", "recipient-details", "details-accessibility", "exact-download", "sender-login", "sender-upload", "sender-upload-accessibility", "sender-human-receive", "sender-human-receive-accessibility", "sender-directory", "sender-review", "sender-review-accessibility", "sender-offer", "sender-receipt-accessibility", "sender-cancel", "sender-save-recovery", "sender-reload-recovery", "sender-recovery-accessibility", "sender-recover-offer", "sender-recover-cancel", "sender-history", "sender-history-accessibility", "sender-history-details", "sender-history-detail-accessibility", "recipient-decline-review", "decline-review-accessibility", "recipient-decline", "declined-retrieval", "declined-discovery", "declined-accessibility", "unrelated-directory", "unrelated-discovery", "unrelated-accessibility", "manager-login", "manager-accounts", "manager-review", "manager-review-accessibility", "manager-create", "manager-create-accessibility", "manager-replay", "manager-replace", "manager-replace-accessibility", "manager-revoke", "manager-revoke-accessibility", "revocation-barrier", "revoked-discovery", "revoked-accessibility", "complete":
+	case "configuration-identities", "configuration-integrity", "configuration-certificate", "audit-login", "audit-first-page", "audit-first-accessibility", "audit-next-page", "audit-next-accessibility", "audit-resource-search", "audit-resource-accessibility", "copy-login", "copy-review-accessibility", "copy-lost-response", "copy-uncertain-accessibility", "copy-import", "copy-import-accessibility", "copy-recover", "copy-receipt-accessibility", "incoming-evidence", "incoming-evidence-accessibility", "outgoing-evidence", "outgoing-evidence-accessibility", "onward-verify-review", "onward-login", "onward-review", "onward-review-accessibility", "onward-save-recovery", "onward-lost-response", "onward-reload-recovery", "onward-recovery-accessibility", "onward-receipt", "onward-receipt-accessibility", "onward-status", "onward-status-accessibility", "onward-refusal", "onward-refusal-accessibility", "launch", "recipient-login", "recipient-directory", "recipient-discovery", "receive-accessibility", "recipient-details", "details-accessibility", "exact-download", "sender-login", "sender-upload", "sender-upload-accessibility", "sender-human-receive", "sender-human-receive-accessibility", "sender-directory", "sender-review", "sender-review-accessibility", "sender-offer", "sender-receipt-accessibility", "sender-cancel", "sender-save-recovery", "sender-reload-recovery", "sender-recovery-accessibility", "sender-recover-offer", "sender-recover-cancel", "sender-history", "sender-history-accessibility", "sender-history-details", "sender-history-detail-accessibility", "recipient-decline-review", "decline-review-accessibility", "recipient-decline", "declined-retrieval", "declined-discovery", "declined-accessibility", "unrelated-directory", "unrelated-discovery", "unrelated-accessibility", "manager-login", "manager-accounts", "manager-review", "manager-review-accessibility", "manager-create", "manager-create-accessibility", "manager-replay", "manager-replace", "manager-replace-accessibility", "manager-revoke", "manager-revoke-accessibility", "revocation-barrier", "revoked-discovery", "revoked-accessibility", "complete":
 	default:
 		return nil, hash
 	}

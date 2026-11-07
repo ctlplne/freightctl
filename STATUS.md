@@ -21,6 +21,10 @@ session fencing,F259 movable-root confinement/public name-pin cases,F261 full
 receiver inventory/independent rotation,and F263 protected native test references.
 Focused local checks and affected compilation/vet pass. Actual native replay on
 the next pushed candidate remains owed;compilation does not qualify Windows.
+F264 records exact638d156 native JSON/restart successes and browser failures.
+F265 prepares exact-role format selectors and closed prelaunch/review diagnostic
+phases. Its new bounded-failure regression turns red to green locally;actual
+original Chrome journeys remain red pending native replay.
 
 Custody requires private creation,sealed protection,exact physical object/length/
 hash,sync/close/directory persistence and ordinary SQL acceptance. Writable staging

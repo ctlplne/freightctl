@@ -149,11 +149,11 @@ try {
   const editor = page.getByRole("region", { name: "Incoming file policy" });
   stage = "edit-policy";
   await editor
-    .getByLabel("File format", { exact: true })
+    .getByRole("combobox", { name: "File format", exact: true })
     .selectOption(c.format);
   if (fixed)
     await editor
-      .getByLabel("Column 2 padding", { exact: true })
+      .getByRole("combobox", { name: "Column 2 padding", exact: true })
       .selectOption("space_left");
   await audit("json-editor");
   stage = "review-policy";
