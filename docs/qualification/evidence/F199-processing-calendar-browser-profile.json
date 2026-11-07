@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "id": "F199",
+  "observed_at": "2026-11-07",
+  "base_candidate": "1102224828a64e18245e4932578e8d46f0a115b1",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Previously owed served processing-calendar profile prepared;actual red/green owed",
+  "source_files": [
+    {
+      "reference": ".github/workflows/json-intake.yml",
+      "sha256": "08c8c513a9827e74858d759a7e872a77ba86d4253031ea478c3e628df30e4bb6",
+      "bytes": 6824
+    },
+    {
+      "reference": "STATUS.md",
+      "sha256": "5770f58ef5340dd387d3d0bd79c3012b0c35452b03d492e0cfb31a84380faf70",
+      "bytes": 10408
+    },
+    {
+      "reference": "docs/qualification/artifact-exchange.json",
+      "sha256": "283f963bb867be98f5d1e3dd59f32588aae31e91c5d585bcff62383f26e097fb",
+      "bytes": 32036
+    },
+    {
+      "reference": "docs/qualification/evidence/F198-definition-proposals-terminal-ci.json",
+      "sha256": "c97b30ff60684ad96b0c2ba26831a2ea24d82f6982f14d18c2b2106441ed52bb",
+      "bytes": 20084
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "9fcc7aa6c13d83928c818fc138ca065ae185509badb5e84bf652a707143b8110",
+      "bytes": 357630
+    },
+    {
+      "reference": "internal/api/processing_calendar_browser_integration_test.go",
+      "sha256": "c4e533c42818a70d29b2fb246ae33eaecaf7479978dade58dd8b71569dcfdbf7",
+      "bytes": 9055
+    },
+    {
+      "reference": "scripts/processing-calendar-browser.mjs",
+      "sha256": "588f6b023c00ae1d6d1210167485bd43d075599080c86f001f8736309c29b0c0",
+      "bytes": 12719
+    }
+  ],
+  "changed": [
+    "Dedicated native Chrome/HTTPS/PostgreSQL processing-calendar profile adds complete exact task/calendar review,producer-bound output policy and current actor without deliver. Published source is separately checked and released before its due time.",
+    "Stock curl commits draft and due-tick commands before dropping the browser response. Exact original-key retries assert identical body/receipt and one owned input/run/processing intent. Private reload inspects the committed calendar before separate activation.",
+    "Occurrence navigation opens ordinary processing controls. Running creates a new held artifact with zero checks/report/release and no delivery intent. Six WCAG audits,TLS SPKI pin,Chrome sandbox,loopback-only egress and no runtime errors are enforced. Original browser profiles remain in the explicit CI selector;new script participates in push/PR triggers."
+  ],
+  "red": [],
+  "red_status": "No runtime behavioral red observed locally;first native execution and any actual red/repair/original replay remain owed. This is preparation,not a qualified Done-when result.",
+  "green": [
+    "Affected integration-tag compilation with -run ^$ only.",
+    "Affected vet,Node syntax and GitHub workflow lint. No runtime/accessibility result inferred."
+  ],
+  "review_corrections": [
+    "Review bound the source release to its exact SHA256 before any native execution;compilation alone cannot catch omitted semantic decision fields."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f199-native-calendar-compile-after-review.log",
+      "sha256": "e35bd7fa2b44efd530610b3237eedfe13f568559759c1bd1281a077f1febb427",
+      "bytes": 73
+    },
+    {
+      "reference": ".private/freightctl-f199-native-calendar-compile.log",
+      "sha256": "258d3c73766a5814b69633df36089e21fc0491426208c9d05696ed9e1504e3df",
+      "bytes": 73
+    },
+    {
+      "reference": ".private/freightctl-f199-native-script-format.log",
+      "sha256": "fe33b905a051b730a92fef149cff11aa90a1cfbd22851d24aad9ad76d91dc1e5",
+      "bytes": 45
+    },
+    {
+      "reference": ".private/freightctl-f199-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f199-workflow-lint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "owed": [
+    "Original native Chrome profile execution,behavioral red/green,actual six accessibility audits and byte/SQL assertions.",
+    "Final-source calendar suspension/deadline/crash/restore/CLI/native profiles and every deferred original failure replay.",
+    "Automatic multi-task chains,confined-root calendars,protected processing,independent receiver and all baseline/AX/FINISH work."
+  ],
+  "previous_ci": "docs/qualification/evidence/F198-definition-proposals-terminal-ci.json",
+  "local_resources": "No local PostgreSQL,Chrome,model,scanner or heavy peer. Go oneCPU/192MiB;Node192MiB. Source59 and retained35 unchanged.",
+  "readiness": "Assisted deployment,independent adoption and enterprise qualification unproven;all83 whole parity rows,twelve journeys andAX01\u2013AX08 open. F026 owner-deferred;external prerequisites owed."
+}

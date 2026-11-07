@@ -41,7 +41,9 @@
         "docs/qualification/evidence/F130-browser-received-copy.json",
         "docs/qualification/evidence/F195-third-party-processing-proposals.json",
         "docs/qualification/evidence/F196-processing-calendar-terminal-ci.json",
-        "docs/qualification/evidence/F197-browser-definition-proposals.json"
+        "docs/qualification/evidence/F197-browser-definition-proposals.json",
+        "docs/qualification/evidence/F198-definition-proposals-terminal-ci.json",
+        "docs/qualification/evidence/F199-processing-calendar-browser-profile.json"
       ]
     },
     {
@@ -94,7 +96,9 @@
         "docs/qualification/evidence/F194-composition-terminal-ci.json",
         "docs/qualification/evidence/F195-third-party-processing-proposals.json",
         "docs/qualification/evidence/F196-processing-calendar-terminal-ci.json",
-        "docs/qualification/evidence/F197-browser-definition-proposals.json"
+        "docs/qualification/evidence/F197-browser-definition-proposals.json",
+        "docs/qualification/evidence/F198-definition-proposals-terminal-ci.json",
+        "docs/qualification/evidence/F199-processing-calendar-browser-profile.json"
       ]
     },
     {
@@ -189,7 +193,9 @@
         "docs/qualification/evidence/F194-composition-terminal-ci.json",
         "docs/qualification/evidence/F195-third-party-processing-proposals.json",
         "docs/qualification/evidence/F196-processing-calendar-terminal-ci.json",
-        "docs/qualification/evidence/F197-browser-definition-proposals.json"
+        "docs/qualification/evidence/F197-browser-definition-proposals.json",
+        "docs/qualification/evidence/F198-definition-proposals-terminal-ci.json",
+        "docs/qualification/evidence/F199-processing-calendar-browser-profile.json"
       ]
     },
     {
@@ -286,7 +292,9 @@
         "docs/qualification/evidence/F194-composition-terminal-ci.json",
         "docs/qualification/evidence/F195-third-party-processing-proposals.json",
         "docs/qualification/evidence/F196-processing-calendar-terminal-ci.json",
-        "docs/qualification/evidence/F197-browser-definition-proposals.json"
+        "docs/qualification/evidence/F197-browser-definition-proposals.json",
+        "docs/qualification/evidence/F198-definition-proposals-terminal-ci.json",
+        "docs/qualification/evidence/F199-processing-calendar-browser-profile.json"
       ]
     },
     {
@@ -346,7 +354,9 @@
         "docs/qualification/evidence/F194-composition-terminal-ci.json",
         "docs/qualification/evidence/F195-third-party-processing-proposals.json",
         "docs/qualification/evidence/F196-processing-calendar-terminal-ci.json",
-        "docs/qualification/evidence/F197-browser-definition-proposals.json"
+        "docs/qualification/evidence/F197-browser-definition-proposals.json",
+        "docs/qualification/evidence/F198-definition-proposals-terminal-ci.json",
+        "docs/qualification/evidence/F199-processing-calendar-browser-profile.json"
       ]
     },
     {
@@ -488,5 +498,5 @@
     "Fixtures, design documents, ledger checks, model answers and skips establish no runtime or real provider qualification.",
     "Preserve original parity/journey/defect/evaluation records and separate assisted deployment, independent adoption and enterprise readiness."
   ],
-  "execution": "Active under owner resume;full baseline/AX01\u2013AX08/FINISH incomplete. F195/F197 implement third-party definition-only proposals,executor-owned draft adoption,browser disclosure and exact-key recovery. Actual native/CLI/Chrome/races/protected/crash/restore/final-source,scoped calendars and automatic chains remain owed. F196 preserves7599978 original terminal17/37,listed security passes and original red application failures. Local inference/heavy runtimes off;retained35 unchanged."
+  "execution": "Active under owner resume;full baseline/AX01\u2013AX08/FINISH incomplete. F195/F197 implement third-party proposals,browser disclosure,draft adoption and exact-key recovery. F199 prepares the owed served processing-calendar Chrome profile;behavioral/runtime outcomes remain owed. F198 preserves47242c2 original terminal17/37,listed security passes and original red application failures. Automatic chains,scoped calendars,protected/restore/final-source and full mandatory work remain owed. Local inference/heavy runtimes off;retained35 unchanged."
 }

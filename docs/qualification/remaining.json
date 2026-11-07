@@ -1132,7 +1132,9 @@
         "docs/qualification/evidence/F194-composition-terminal-ci.json",
         "docs/qualification/evidence/F195-third-party-processing-proposals.json",
         "docs/qualification/evidence/F196-processing-calendar-terminal-ci.json",
-        "docs/qualification/evidence/F197-browser-definition-proposals.json"
+        "docs/qualification/evidence/F197-browser-definition-proposals.json",
+        "docs/qualification/evidence/F198-definition-proposals-terminal-ci.json",
+        "docs/qualification/evidence/F199-processing-calendar-browser-profile.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -1171,14 +1173,15 @@
         "F191 implements explicit checked-output composition;see its exact red/green/native-owed manifest. Automatic chains/scheduling,delegation,protected/CLI/native/final-source and full baseline/AX/FINISH remain owed. F192 retains259645e terminal16/35;listed security passed,original application failures red.",
         "F193 adds explicit owned released-record processing calendars;see exact red/green/native-owed manifest. Root calendar controls remain;automatic chains,third-party delegation,confined-root scheduling,protected/native/Chrome/restore/final-source and full baseline/AX/FINISH stay owed. F194 retains39301e4 terminal17/37,listed security passes and red application failures.",
         "F195 adds named third-party definition authorship and executor-owned draft adoption through API/CLI/Catalog43-v18 MCP;no byte,approval or execution authority transfers. Focused red/green,whole receipt/private audit/schema/authentication and metadata/static checks pass;PostgreSQL/verified HTTPS/stock SDK prepared/compiled only. Browser/recovery,actual CLI/Chrome/SQL race/crash/restore/final-source and full baseline/AX/FINISH stay owed. F196 retains7599978 original terminal17/37,listed security passes and red application failures.",
-        "F197 implements browser definition disclosure,executor draft adoption and exact-key recovery with complete session/meaning binding;focused frontend/canonical/static checks pass. Dedicated six-audit Chrome submit/adoption committed-reply-loss/reload/recovery/no-effect and protected-file CLI profiles are prepared/compiled only. Actual runtime,automatic chains,scoped calendars,protected/restore/final-source and full baseline/AX/FINISH remain owed."
+        "F197 implements browser definition disclosure,executor draft adoption and exact-key recovery with complete session/meaning binding;focused frontend/canonical/static checks pass. Dedicated six-audit Chrome submit/adoption committed-reply-loss/reload/recovery/no-effect and protected-file CLI profiles are prepared/compiled only. Actual runtime,automatic chains,scoped calendars,protected/restore/final-source and full baseline/AX/FINISH remain owed.",
+        "F199 prepares the previously owed served processing-calendar Chrome profile:complete task/calendar review,committed draft/tick response loss and exact-key replay,private reload,owned occurrence navigation,no-delivery execution,held fresh-check output and six WCAG audits. Only compilation/vet/Node syntax/workflow lint pass locally;actual behavioral red/green and native proof remain owed. F198 retains47242c2 original terminal17/37,listed security passes and red application failures."
       ],
       "current_item": {
-        "id": "F197",
-        "state": "Browser third-party rules disclosure and draft-only adoption/recovery implemented;native outcomes owed",
-        "proof": "Missing browser proposal decoder/control red;6 new proposal regressions,affected processing/review and independent Go/Python/browser canonical fixture plus static checks green",
-        "native": "Dedicated served Chrome two-role committed submit/adoption reply loss,reload,exact retry,six accessibility audits and no artifact/run effects;actual protected-file CLI replay prepared/compiled only",
-        "next": "Automatic chains,scoped calendars,protected processing and all remaining baseline/AX/FINISH"
+        "id": "F199",
+        "state": "Served processing-calendar proof prepared;actual runtime red/green owed",
+        "proof": "Affected integration-tag compile/vet,Node syntax and workflow lint only;no behavioral or accessibility pass claimed",
+        "native": "Exact owned processing calendar draft/tick lost-response replay,private reload,ordinary run navigation,held output/no delivery and six accessibility audits prepared for original GitHub browser workflow",
+        "next": "Actual native/final-source proof,automatic chains,scoped calendars,protected processing and all remaining baseline/AX/FINISH"
       }
     }
   ],

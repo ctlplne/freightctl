@@ -4,8 +4,8 @@ Updated 2026-11-07. Active under owner resume. All83 whole parity rows,twelve
 complete journeys and AX01–AX08 remain open. Assisted deployment,independent
 adoption and enterprise readiness remain unqualified.
 
-Latest pushed source before this batch:7599978cf1027b6f4a9c82fb0ff219bfcc7c1bf4.
-F196 preserves its17 original triggered terminal workflows/37 jobs. Listed
+Latest pushed source:1102224828a64e18245e4932578e8d46f0a115b1.
+F198 preserves the previous47242c2 original17 terminal workflows/37 jobs. Listed
 source,dependency,history-secret,producer-closure and peer-image security gates
 passed;module verification passed in both failed Linux unit jobs. Document-
 producer,fuzz and native reproduction jobs passed on that candidate. Original
@@ -116,6 +116,13 @@ architecture and workflow checks pass. A separate real Chrome submit/adoption
 committed-reply-loss,reload,recovery,six-accessibility-audit/no-byte/no-run profile
 and protected-file native CLI adoption/replay are prepared/compiled only. Original
 browser cases remain;all actual native/final-source qualification stays owed.
+F199 prepares the missing served processing-calendar Chrome profile. It asserts
+complete task/calendar review,stock-curl committed draft/tick reply loss and exact
+replay,private reload,owned occurrence navigation,execution without deliver and
+held output with no inherited checks/release,six WCAG audits and exact one-run/
+intent/no-delivery counts. Integration-tag compile/vet,Node syntax and workflow
+lint pass;behavioral red/green and every native/accessibility outcome remain owed.
+The prior original browser profiles remain in the explicit CI selection.
 Historical profiles and retained schema35 are untouched. No local PostgreSQL,
 Chrome,model,scanner or heavy peer ran. Native compilation/stand-ins establish
 no runtime qualification. F026 stays manual/owner-deferred.

@@ -18,6 +18,7 @@ on:
       - "scripts/processing-browser.mjs"
       - "scripts/processing-review-browser.mjs"
       - "scripts/processing-proposal-browser.mjs"
+      - "scripts/processing-calendar-browser.mjs"
       - ".github/workflows/json-intake.yml"
   pull_request:
     paths:
@@ -35,6 +36,7 @@ on:
       - "scripts/processing-browser.mjs"
       - "scripts/processing-review-browser.mjs"
       - "scripts/processing-proposal-browser.mjs"
+      - "scripts/processing-calendar-browser.mjs"
       - ".github/workflows/json-intake.yml"
   workflow_dispatch:
 
@@ -140,4 +142,4 @@ jobs:
       - name: Real browser review, committed-response loss, exact checks and separate release
         run: |
           sh scripts/go.sh test -race -timeout=0 -tags=integration,jsonbrowser \
-            -run '^(TestJSONRecordsNativeBrowserReviewedHashAndReceipt|TestFixedWidthNativeBrowserReviewedHashAndReceipt|TestXMLRecordsNativeBrowserReviewedHashAndReceipt|TestXLSXRecordsNativeBrowserReviewedHashAndReceipt|TestProcessingWorkflowNativeBrowserReviewRecoveryAndHeldOutput|TestProducerProcessingNativeBrowserSelectsOutputContractAndKeepsIngress|TestComposedProducerProcessingNativeBrowserCheckedSourceNewApprovalAndHeldOutput|TestOutputPolicyNativeBrowserAdministratorRecoveryAndRevocationKeepsIngress|TestProcessingReviewNativeBrowserIndependentDecisionRecoveryAndAdoption|TestProcessingProposalNativeBrowserAuthorDisclosureDraftAdoptionAndRecovery)$' -count=1 -v ./internal/api
+            -run '^(TestJSONRecordsNativeBrowserReviewedHashAndReceipt|TestFixedWidthNativeBrowserReviewedHashAndReceipt|TestXMLRecordsNativeBrowserReviewedHashAndReceipt|TestXLSXRecordsNativeBrowserReviewedHashAndReceipt|TestProcessingWorkflowNativeBrowserReviewRecoveryAndHeldOutput|TestProducerProcessingNativeBrowserSelectsOutputContractAndKeepsIngress|TestComposedProducerProcessingNativeBrowserCheckedSourceNewApprovalAndHeldOutput|TestOutputPolicyNativeBrowserAdministratorRecoveryAndRevocationKeepsIngress|TestProcessingReviewNativeBrowserIndependentDecisionRecoveryAndAdoption|TestProcessingProposalNativeBrowserAuthorDisclosureDraftAdoptionAndRecovery|TestProcessingCalendarNativeBrowserReviewRecoveryQueuesOwnedInputAndKeepsOutputHeld)$' -count=1 -v ./internal/api
