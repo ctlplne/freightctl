@@ -27,7 +27,14 @@ func TestPrivateCreationUsesHeldRootAfterRenameAndNeverOverwrites(t *testing.T) 
 		}
 		t.Fatal("existing directory adopted or changed", err)
 	}
-	root, err := os.OpenRoot(path)
+	// Root.OpenRoot uses handle-relative opening. On Windows this permits the
+	// deliberate rename,whereas os.OpenRoot pins the name without share-delete.
+	parent, err := os.OpenRoot(base)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer parent.Close()
+	root, err := parent.OpenRoot("original")
 	if err != nil {
 		t.Fatal(err)
 	}

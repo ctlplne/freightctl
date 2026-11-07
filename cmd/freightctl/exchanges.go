@@ -245,6 +245,17 @@ func writeExchangeBytes(ctx context.Context, path string, size int64, digest str
 		return fmt.Errorf("cannot pin output directory: %w", store.ErrIsolation)
 	}
 	defer root.Close()
+	return writeExchangeBytesAt(ctx, path, size, digest, source, root)
+}
+
+// Keep byte verification and publication on the supplied held root. The public
+// entry point owns that root's lifetime;native adverse tests can also exercise
+// the same operations with a handle-relative root whose name can be renamed.
+func writeExchangeBytesAt(ctx context.Context, path string, size int64, digest string, source io.Reader, root *os.Root) error {
+	if root == nil || path == "" || size < 0 || len(digest) != 64 || source == nil {
+		return store.ErrExchangeInput
+	}
+	directory := filepath.Dir(path)
 	directoryHandle, err := root.Open(".")
 	if err != nil {
 		return fmt.Errorf("cannot inspect held output directory: %w", store.ErrIsolation)

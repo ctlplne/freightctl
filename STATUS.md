@@ -54,6 +54,11 @@ history:authenticate and lock first,switch to READ ONLY before service access,
 and recheck all live predicates while reusing only the existing lock. Native
 write-refusal/logout/fence and original HTTPS replays remain owed.
 
+F259 prepares the original held-root rename proof with Go relative opening,
+which permits the intended Windows mutation. All replacement/no-overwrite/byte
+assertions remain. The public download name pin has its own exact native sharing-
+violation case. Local adverse cases pass;actual Windows execution remains owed.
+
 Next:repair the newly reached native browser
 and protocol failures,then complete all remaining baseline/AX/FINISH outcomes.
 Local inference remains off;local resource constraints and F026 hold remain.

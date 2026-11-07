@@ -153,6 +153,16 @@ func TestExchangeDownloadDirectoryReplacementCannotSubstituteVerifiedOutput(t *t
 	if err := protectedfs.EnsureDirectory(directory); err != nil {
 		t.Fatal(err)
 	}
+	parentRoot, err := os.OpenRoot(parent)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer parentRoot.Close()
+	heldRoot, err := parentRoot.OpenRoot("output")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer heldRoot.Close()
 	var foreign string
 	reader := &exchangeDirectorySwapReader{source: bytes.NewBufferString("exact")}
 	reader.swap = func() {
@@ -172,7 +182,7 @@ func TestExchangeDownloadDirectoryReplacementCannotSubstituteVerifiedOutput(t *t
 			t.Fatal(err)
 		}
 	}
-	err := writeExchangeBytes(context.Background(), filepath.Join(directory, "received"), 5, secure.Digest([]byte("exact")), reader)
+	err = writeExchangeBytesAt(context.Background(), filepath.Join(directory, "received"), 5, secure.Digest([]byte("exact")), reader, heldRoot)
 	if !errors.Is(err, store.ErrIsolation) {
 		t.Fatal("replaced output directory did not fail closed", err)
 	}

@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "id": "F259",
+  "observed_at": "2026-11-07",
+  "base_candidate": "7acf92c451db91d10e1ada3bc4b05f21a7cad554",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Actual movable-root confinement and public name-pin cases prepared;native Windows owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "821cc4c92798800a05a058c1207d24e3507ccfdbdb0e3af98ba3af0875bcd030",
+      "bytes": 13570
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "56f92cefd610b4dfe7b53792477fa9fe1f99dce987a0a78a6788112826fa2543",
+      "bytes": 377138
+    },
+    {
+      "reference": "internal/protectedfs/create_test.go",
+      "sha256": "692011aecdaa3f59c3f44b0c4dc408f3118787591dca03978e17396e962e56c9",
+      "bytes": 3054
+    },
+    {
+      "reference": "cmd/freightctl/exchanges.go",
+      "sha256": "dd68b2f38e5054c4e41800483f9a73b3e4e41a505196b067c4408ead869a1d53",
+      "bytes": 11098
+    },
+    {
+      "reference": "cmd/freightctl/exchanges_test.go",
+      "sha256": "0077a64742da8b1f38171feb4b3a85508ce8a45a3bad95a698c80ef8f54b87e3",
+      "bytes": 7033
+    },
+    {
+      "reference": "cmd/freightctl/protected_reference_windows_test.go",
+      "sha256": "1764095f2a9c31250d8123d985f13a0956c1f6f5846b837fa6c5797477b3add3",
+      "bytes": 1256
+    }
+  ],
+  "red": {
+    "candidate": "638d156cf16820b165cc8e6310f62daddf2d8458",
+    "run": 42357772683,
+    "job": 128359540193,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128359540193",
+    "test": "TestPrivateCreationUsesHeldRootAfterRenameAndNeverOverwrites",
+    "observed": "Native directory rename fails with sharing violation while os.OpenRoot is held."
+  },
+  "changed": [
+    "Use parent.Root.OpenRoot for the original private-creation adverse fixture so Go uses relative native opening with share-delete. Original actual rename,replacement,exact held-object bytes,no overwrite and no replacement-path object assertions remain. No production private-creation implementation changed.",
+    "Factor CLI existing byte verification/publication into a held-root helper called by the unchanged public root-opening entry. The original substitution case uses a movable relative root and retains exact no-publication,foreign-replacement preservation and original-stage cleanup assertions.",
+    "Add actual Windows public-entry test requiring ERROR_SHARING_VIOLATION on attempted rename,unchanged directory physical identity,and independently checked private sealed exact output. No unsupported-OS return or broad error acceptance."
+  ],
+  "green": [
+    "Focused local private-root rename and all CLI download success/refusal/substitution cases pass.",
+    "Affected vet,architecture and Windows compilation/vet pass."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f259-architecture.log",
+      "sha256": "0ab0ce80f4c9c74e94273a88084080598fd328624bf4971fd3c5e07a3a521740",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f259-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f259-root-confinement.log",
+      "sha256": "22b31c6c9aeaa9b885e9a25f1b965fa72345088e84224d78096681a2c6b55ea8",
+      "bytes": 120
+    },
+    {
+      "reference": ".private/freightctl-f259-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f259-windows-cli-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f259-windows-protectedfs-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f259-windows-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "mechanism_reference": [
+    "Pinned Go1.26.10 os/root_windows.go:86 os.OpenRoot uses syscall.Open;syscall/syscall_windows.go:395 requests SHARE_READ|SHARE_WRITE.",
+    "Pinned Go1.26.10 os/root_windows.go:189 Root.OpenRoot uses relative Openat;internal/syscall/windows/at_windows.go:156 requests SHARE_READ|SHARE_WRITE|SHARE_DELETE."
+  ],
+  "owed": [
+    "Actual original Windows movable-root rename/confinement and public-entry name-pin/bytes cases.",
+    "Actual F255 inherited-access refusal and all remaining final-source product/security/AX/FINISH outcomes."
+  ],
+  "resources": "OneCPU/192MiB local filesystem units/static/Windows cross-compilation only;local inference/heavy runtime off. Retained35/source60 unchanged."
+}
