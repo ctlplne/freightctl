@@ -146,7 +146,17 @@ func TestWebDAVNativeStockCurlDiscoveryInterruptedReadAndExactResume(t *testing.
 	if err = os.WriteFile(sourcePath, data, 0600); err != nil {
 		t.Fatal(err)
 	}
-	createdPath := prefix + "/dav/curl-created.dat"
+	collectionPath := prefix + "/dav/curl-created/"
+	mkdirArgs := []string{"--request", "MKCOL", "--header", "Idempotency-Key: dav-stock-collection"}
+	status, headers, _, _ = run("collection-create", collectionPath, mkdirArgs, true)
+	if status != 201 || headers.Get("Location") != collectionPath || headers.Get("ETag") != "" {
+		t.Fatal("stock DAV did not create an exact collection")
+	}
+	status, _, _, mkdirRefused := run("collection-retry", collectionPath, mkdirArgs, false)
+	if status != 405 || mkdirRefused != 22 {
+		t.Fatal("stock DAV directory retry created a duplicate effect")
+	}
+	createdPath := prefix + "/dav/curl-created/file.dat"
 	createArgs := []string{"--upload-file", sourcePath, "--header", "If-None-Match: *", "--header", "Idempotency-Key: dav-stock-conditional-create", "--header", "X-Content-SHA256: " + secure.Digest(data)}
 	status, headers, body, _ = run("conditional-create", createdPath, createArgs, true)
 	var receipt struct {

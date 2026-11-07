@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "id": "F358",
+  "observed_at": "2026-11-07",
+  "candidate": "03cd5fd0e46e60d0417b40122e94fd31a2920c35",
+  "qualification_claim": false,
+  "qualified_scope": "Initial declared read-only bearer DAV profile only. Not full C-WEBDAV,subsequent conditional writes,whole journeys,AX or product readiness.",
+  "run_id": 42383537976,
+  "run_url": "https://github.com/ctlplne/freightctl/actions/runs/42383537976",
+  "profiles": [
+    {
+      "architecture": "linux/arm64",
+      "job_id": 128436006400,
+      "job_url": "https://github.com/ctlplne/freightctl/actions/runs/42383537976/job/128436006400",
+      "state": "passed",
+      "curl_sha256": "e54699c60c2fe0936dbfab15934d3b6a097385c505d0b5cb4c9c8aa36df8b5f3",
+      "tests": {
+        "TestWebDAVReadsUsePublishedNamespaceModesIntakeAndCurrentAuthority": "passed",
+        "TestWebDAVNativeStockCurlDiscoveryInterruptedReadAndExactResume": "passed",
+        "TestWebDAVReadProfileRequiresOrdinaryBearerBeforeNamespaceAccess": "passed",
+        "TestWebDAVRejectsAmbiguousNamesBeforeServeMuxRedirects": "passed"
+      }
+    },
+    {
+      "architecture": "linux/amd64",
+      "job_id": 128436006723,
+      "job_url": "https://github.com/ctlplne/freightctl/actions/runs/42383537976/job/128436006723",
+      "state": "passed",
+      "curl_sha256": "1ccbd3dae948374ba8eef1ebda26c64b783ede50b463196e53666e0880bdac60",
+      "tests": {
+        "TestWebDAVReadsUsePublishedNamespaceModesIntakeAndCurrentAuthority": "passed",
+        "TestWebDAVNativeStockCurlDiscoveryInterruptedReadAndExactResume": "passed",
+        "TestWebDAVReadProfileRequiresOrdinaryBearerBeforeNamespaceAccess": "passed",
+        "TestWebDAVRejectsAmbiguousNamesBeforeServeMuxRedirects": "passed"
+      }
+    }
+  ],
+  "actual_proof": {
+    "real_postgresql": true,
+    "non_owner_rls": true,
+    "stock_client": "curl over exact fixture trusted TLS",
+    "discovery": "independently parsed XML with encoded scoped URLs",
+    "bytes": 168000,
+    "sha256": "29480044db4ab28da69fd21adc5746d7d412a4fff962b11ce024f3d6f88588dd",
+    "interruption": "Actual response cut after65536 bytes;stock curl exit18;exact ETag range reconstruction independently compared",
+    "authority": "Actual path modes,held intake,unknown property refusal,wrong partner,revoked credential and zero delivery/workflow effects tests pass"
+  },
+  "source_files_at_original_candidate": [
+    {
+      "reference": "internal/api/webdav.go",
+      "candidate": "03cd5fd0e46e60d0417b40122e94fd31a2920c35",
+      "sha256": "907f0164090c02c069198bf6efca561fa65d694f3cb5838f880e2f2d37009b5a",
+      "bytes": 4479
+    },
+    {
+      "reference": "internal/api/webdav_integration_test.go",
+      "candidate": "03cd5fd0e46e60d0417b40122e94fd31a2920c35",
+      "sha256": "563048f543c4e898d055c5378847fb91d092b6d86d104d54b91e167b94374758",
+      "bytes": 8085
+    },
+    {
+      "reference": "internal/api/webdav_stock_integration_test.go",
+      "candidate": "03cd5fd0e46e60d0417b40122e94fd31a2920c35",
+      "sha256": "213798c60c0dcf267849e5276c0f92a69ca946e2f28d7dd8643eab15200b54bc",
+      "bytes": 6839
+    },
+    {
+      "reference": "internal/custody/namespace_properties.go",
+      "candidate": "03cd5fd0e46e60d0417b40122e94fd31a2920c35",
+      "sha256": "8a46471998333620e23c6a2891a87a917830c13c64fca9e455ee6ce78786aaa6",
+      "bytes": 2810
+    },
+    {
+      "reference": "internal/webdav/properties.go",
+      "candidate": "03cd5fd0e46e60d0417b40122e94fd31a2920c35",
+      "sha256": "ccad578120b36e5b598ccb2ffe5e5855c221f3dee1408eda7d5696cb49670d68",
+      "bytes": 7654
+    },
+    {
+      "reference": ".github/workflows/http-downloads.yml",
+      "candidate": "03cd5fd0e46e60d0417b40122e94fd31a2920c35",
+      "sha256": "8ac38a21230134d401f28164b474b38927e58d6bfebb2fd1df66ed2006390351",
+      "bytes": 2359
+    }
+  ],
+  "owed": [
+    "Conditional PUT/MKCOL are later source changes and are not qualified by these original read-only runs",
+    "Remaining DAV replacement/deletion/copy/move/properties/locks/outbound stock server/independent DAV applications",
+    "All other mandatory baseline/AX and final-source gates;readiness remains unqualified"
+  ]
+}

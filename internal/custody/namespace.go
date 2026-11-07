@@ -27,6 +27,19 @@ type UploadTarget struct {
 }
 
 func (s *Service) PathCommand(ctx context.Context, scope store.Scope, key string, command store.PathCommand) (*store.PathResult, error) {
+	return s.pathCommand(ctx, scope, key, command, false)
+}
+
+// MakeDirectoryIfAbsent checks the current path under the namespace lock,
+// including on receipt recovery. It never recreates a deleted original command.
+func (s *Service) MakeDirectoryIfAbsent(ctx context.Context, scope store.Scope, key, virtual string) (*store.PathResult, error) {
+	if !keyPattern.MatchString(key) {
+		return nil, ErrInput
+	}
+	return s.pathCommand(ctx, scope, key, store.PathCommand{Operation: "mkdir", Path: virtual}, true)
+}
+
+func (s *Service) pathCommand(ctx context.Context, scope store.Scope, key string, command store.PathCommand, requireAbsent bool) (*store.PathResult, error) {
 	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()
 	t, err := s.DB.Begin(ctx, scope)
@@ -34,6 +47,33 @@ func (s *Service) PathCommand(ctx context.Context, scope store.Scope, key string
 		return nil, err
 	}
 	defer t.Tx.Rollback(ctx)
+	if requireAbsent {
+		if err = t.Require("write"); err != nil {
+			return nil, err
+		}
+		canonical, err := vpath.Canonical(command.Path)
+		if err != nil || canonical != command.Path || vpath.ControlPath(canonical) {
+			return nil, vpath.ErrPath
+		}
+		if canonical == "/" {
+			return nil, store.ErrExists
+		}
+		actual, err := vpath.Resolve(t.Root, canonical)
+		if err != nil {
+			return nil, err
+		}
+		if err = t.NamespaceLock(ctx); err != nil {
+			return nil, err
+		}
+		if err = t.ParentWritable(ctx, actual); err != nil {
+			return nil, err
+		}
+		if _, err = t.Entry(ctx, actual); err == nil {
+			return nil, store.ErrExists
+		} else if !errors.Is(err, store.ErrNotFound) {
+			return nil, err
+		}
+	}
 	if command.Operation == "publish" {
 		if err = t.Require("write"); err != nil {
 			return nil, err

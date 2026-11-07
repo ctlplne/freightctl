@@ -14,7 +14,7 @@ import (
 	"github.com/ctlplne/freightctl/internal/webdav"
 )
 
-const davReadMethods = "OPTIONS, PROPFIND, GET, HEAD, PUT"
+const davReadMethods = "OPTIONS, PROPFIND, GET, HEAD, PUT, MKCOL"
 
 // Validate before ServeMux can clean a path into a different namespace name or
 // redirect it. This initial profile uses explicit bearer credentials only.
@@ -35,6 +35,33 @@ func prepareDAVRequest(w http.ResponseWriter, r *http.Request) bool {
 	}
 	if r.Method == http.MethodPut {
 		return davCreateInput(w, r)
+	}
+	if r.Method == "MKCOL" {
+		return davCollectionInput(w, r)
+	}
+	return true
+}
+
+func davCollectionInput(w http.ResponseWriter, r *http.Request) bool {
+	key, _, valid := tusHeader(r, "Idempotency-Key")
+	if !valid || key == "" {
+		fail(w, 400, "dav_collection_requires_original_key")
+		return false
+	}
+	if r.ContentLength != 0 {
+		fail(w, 415, "dav_collection_body_unsupported")
+		return false
+	}
+	condition, present, valid := tusHeader(r, "If-None-Match")
+	if present && (!valid || condition != "*") {
+		fail(w, 400, "invalid_dav_collection_condition")
+		return false
+	}
+	for _, name := range []string{"If-Match", "If-Unmodified-Since", "If-Modified-Since", "If", "Content-Range"} {
+		if _, present, _ := tusHeader(r, name); present {
+			fail(w, 400, "unsupported_dav_collection_condition")
+			return false
+		}
 	}
 	return true
 }
@@ -76,6 +103,34 @@ func (s *Server) davRead(w http.ResponseWriter, r *http.Request) {
 	virtual, err := webdav.VirtualPath(r.URL.EscapedPath(), base)
 	if err != nil {
 		fail(w, 400, "invalid_dav_virtual_path")
+		return
+	}
+	if r.Method == "MKCOL" {
+		result, err := s.Service.MakeDirectoryIfAbsent(r.Context(), identity, r.Header.Get("Idempotency-Key"), virtual)
+		if errors.Is(err, store.ErrExists) {
+			code := 405
+			if r.Header.Get("If-None-Match") == "*" {
+				code = 412
+			}
+			w.Header().Set("Allow", davReadMethods)
+			fail(w, code, "dav_collection_target_exists")
+			return
+		}
+		if errors.Is(err, store.ErrNotFound) {
+			fail(w, 409, "dav_parent_collection_required")
+			return
+		}
+		if err != nil {
+			failure(w, err)
+			return
+		}
+		status, state := 201, "created-at-commit"
+		if result.Replayed {
+			status, state = 200, "not-asserted-original-receipt"
+		} else {
+			w.Header().Set("Location", webdav.Href(base, webdav.Resource{Path: result.Entry.Path, Directory: true}))
+		}
+		respond(w, status, map[string]any{"result": result, "namespace_state": state})
 		return
 	}
 	if r.Method == http.MethodPut {

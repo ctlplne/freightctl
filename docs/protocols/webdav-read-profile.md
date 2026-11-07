@@ -13,7 +13,7 @@ mount root,path modes and current intake policy decide what can be discovered
 or read. A URL never refers to a host filesystem path.
 
 - `OPTIONS` authenticates and checks read/list access to the addressed entry.
-  It returns `Allow: OPTIONS, PROPFIND, GET, HEAD, PUT` and no DAV compliance class.
+  It returns `Allow: OPTIONS, PROPFIND, GET, HEAD, PUT, MKCOL` and no DAV compliance class.
 - `PROPFIND` supports explicit Depth0 or1. Missing Depth means infinity and is
   refused with403 and `DAV:propfind-finite-depth`. Other depth values are400.
   The complete collection is limited to1000 immediate children; larger scopes
@@ -54,6 +54,14 @@ or read. A URL never refers to a host filesystem path.
   does not publish:the ordinary separately authorized exact release is required.
   Default-false conditional fields are omitted from historical upload request
   meanings,so existing ordinary upload retries retain their original hashes.
+- `MKCOL` creates one empty collection with an original Idempotency-Key and
+  zero body bytes. It uses the same namespace transaction,write permission,
+  parent mode,immutable PathCreated event and command receipt as ordinary mkdir.
+  Existing paths return405,or412 when If-None-Match:* is supplied. Missing parents
+  return409;it never creates intermediate folders. Unsupported bodies return415.
+  A fresh201 returns the exact encoded collection Location. If the collection
+  was later removed,an original-key200 recovers history without recreating it or
+  asserting a current Location. Other conditions are explicitly refused.
 - Other mutating DAV methods return405 after authenticating the credential.
   Discovery and unknown properties grant no forwarding or execution authority.
   Requests with traversal,encoded separators,control names,noncanonical Unicode
@@ -62,11 +70,16 @@ or read. A URL never refers to a host filesystem path.
 The prepared native ARM/x86 profile uses real PostgreSQL and stock curl over
 verified TLS. It parses discovery XML independently,interrupts an actual file
 response,then reconstructs the exact revision using a range and its ETag. The
-API profile also tests concurrent non-overwriting create transactions,original
+API profile also tests empty directory creation,permissions,missing parents and
+non-recreating historical receipts,concurrent non-overwriting create transactions,original
 receipt recovery,held acceptance and separate release,modes,tenant/partner refusal,credential
-revocation,unknown properties and zero delivery/workflow effects. Until their
-original GitHub jobs pass at an exact candidate,these runtime outcomes are owed.
-The stock profile also creates through PUT,observes its412 retry and independently
+revocation,unknown properties and zero delivery/workflow effects. The initial read-only profile passed both native architectures at
+`03cd5fd0e46e60d0417b40122e94fd31a2920c35`;
+[F358](../qualification/evidence/F358-dav-native-read.json) binds the exact jobs,
+client hashes and independent comparisons. Later conditional PUT and MKCOL
+source changes still need their original native runtime proofs.
+The extended stock profile also creates an empty collection through MKCOL,
+creates its child through PUT,observes conflict refusals and independently
 compares readback. Stock curl proves the declared HTTP methods; it does not qualify a desktop DAV
 mount,locking client or independent upstream DAV server.
 

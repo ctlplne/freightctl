@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "id": "F361",
+  "observed_at": "2026-11-07",
+  "base_candidate": "7255602ffa7fede1c7f6b7de805d5ea255342a16",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F361 adds empty DAV MKCOL through the ordinary typed namespace command/event/idempotency transaction. Require the original key and zero body,authorize write and parent modes,then check current absence under the same namespace lock as creation/replay. Existing paths return405 or conditional412;missing parents409;no intermediate tree creation. Fresh201 has an exact encoded collection Location. Recovering a removed original directory returns only its old receipt200 without recreating it or claiming current Location. Original ordinary path-command meanings stay unchanged. Focused actual pre-router missing-key red/green and body/condition tests,tagged compilation,vet,format and architecture pass. Real PostgreSQL permissions/receipt/no-extra-event and stock curl MKCOL/child-PUT/readback proofs are prepared,not run locally.",
+  "red_green": "The actual pre-router MKCOL boundary first admits a request without its original durable key;the same regression then rejects400. Explicit keyed empty requests and body/condition negatives pass. This is input proof,not PostgreSQL/runtime qualification.",
+  "green": [
+    "Focused request-boundary and unchanged historical upload meaning tests",
+    "Affected format,vet,architecture and integration/downloadpeer compilation only"
+  ],
+  "prepared_native_proofs": [
+    "TestWebDAVCollectionCreationUsesOrdinaryNamespaceAuthorityAndOriginalReceipts",
+    "Extended TestWebDAVNativeStockCurlDiscoveryInterruptedReadAndExactResume now uses actual MKCOL and creates/readbacks a child through conditional PUT"
+  ],
+  "owed": [
+    "Original native PostgreSQL directory/event/permission/receipt proof",
+    "Actual stock curl directory and conditional child creation/readback on ARM/x86",
+    "Replacement/deletion/copy/move/properties/locks/outbound stock server and independent DAV application profiles",
+    "All other original failures,final-source baseline/AX gates and readiness"
+  ],
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "34a89990bcc6c447f9bf0a3fb3eb73b9532d5b8f272eb776161fa626f3832b7a",
+      "bytes": 4474
+    },
+    {
+      "reference": "docs/protocols/webdav-read-profile.md",
+      "sha256": "3c973613892200957d30642456278790e37aae8a1f826d78487312dbdcb2d0ca",
+      "bytes": 6442
+    },
+    {
+      "reference": "docs/qualification/evidence/F358-dav-native-read.json",
+      "sha256": "91ad10c77fd8f89b233385d8e47b77963dede90b27617e42a2a6f035fe47854a",
+      "bytes": 4169
+    },
+    {
+      "reference": "docs/qualification/parity.json",
+      "sha256": "672e78866a236bc96462f1a16a204072221cd987554a39a2ee985ab900c786ab",
+      "bytes": 150339
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "0b6628d855769922a0561d7680b27a87bd84286e4b0ad6c178bf6047019eb288",
+      "bytes": 471136
+    },
+    {
+      "reference": "internal/api/webdav.go",
+      "sha256": "e4bcf2a5e9ab117066555ca98c4b2dcf1416bd1ad9f02602238686eb4b7a095f",
+      "bytes": 8469
+    },
+    {
+      "reference": "internal/api/webdav_integration_test.go",
+      "sha256": "ae92f5511f0525fc89329ce67b267fda880bbbbc4fc50b9a0e603bc6966ec15d",
+      "bytes": 8069
+    },
+    {
+      "reference": "internal/api/webdav_mkcol_integration_test.go",
+      "sha256": "89b454090bfdc2744b2108d2658e0e3b5674b3449a87e9452d2d1ff5fd696edd",
+      "bytes": 3527
+    },
+    {
+      "reference": "internal/api/webdav_mkcol_test.go",
+      "sha256": "2986f40b433b4622ec073887cb2776a29eef3deec9b82e38b13ff377bebb9bce",
+      "bytes": 2116
+    },
+    {
+      "reference": "internal/api/webdav_stock_integration_test.go",
+      "sha256": "646626fb997d86780541ec0e6a887bcc8d161a1a480ecc573ea0e62da076c192",
+      "bytes": 9049
+    },
+    {
+      "reference": "internal/custody/namespace.go",
+      "sha256": "56e9689af232dd962ae112ee2b3812bf6635558b897bd8287acf37f1c6f7ca2c",
+      "bytes": 8485
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f361-mkcol-red.log",
+      "sha256": "9b7d95b3426ca0726e6342a42fa43bbfa0f4f9c250cdf9ab91284d4cedf3e987",
+      "bytes": 231
+    },
+    {
+      "reference": ".private/freightctl-f361-format.log",
+      "sha256": "642f2a319e1478d835c76e8b9e646214650dbd47d9665bb71646c72b176aaf8a",
+      "bytes": 149
+    },
+    {
+      "reference": ".private/freightctl-f361-focused.log",
+      "sha256": "255637cfc52e2b01e1a4e378e21f227aede9abce6293424c6da3c7e571daae52",
+      "bytes": 114
+    },
+    {
+      "reference": ".private/freightctl-f361-native-compile.log",
+      "sha256": "f603952f39eee8f1f27a76c76191ddaea335a91d308d121b05327c029dc275c2",
+      "bytes": 150
+    },
+    {
+      "reference": ".private/freightctl-f361-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f361-architecture.log",
+      "sha256": "d300f918572e62cd2740d72e4ddab92d4b381d1b792d6cf0878aee9f2419507e",
+      "bytes": 64
+    }
+  ]
+}

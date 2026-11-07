@@ -49,8 +49,10 @@ The seven original failures remain tracked with these replay updates:
 
 F345 adds partial bearer DAV reads;F357 adds atomic absent-path conditional
 create,with distinct publication,held acceptance and original-receipt outcomes.
-Focused boundary/legacy-meaning and static checks pass. Real PostgreSQL/stock curl discovery, interrupted read and exact
-resume are prepared for ARM/x86 CI. C-WEBDAV stays implementing: writes, locks,
+F361 adds empty collections through ordinary namespace commands. Focused
+boundary/legacy-meaning and static checks pass. F358 binds actual initial DAV
+read qualification with PostgreSQL and stock curl on both native architectures
+at03cd5fd;later PUT/MKCOL remain owed. C-WEBDAV stays implementing: writes, locks,
 full properties, outbound server and independent DAV application proof are owed.
 
 Next: continue implementation while current original CI runs. Push the next
