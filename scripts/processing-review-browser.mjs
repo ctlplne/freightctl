@@ -320,6 +320,9 @@ try {
     name: "Current independent review",
     exact: true,
   });
+  // Closing confirmation records the command receipt. Current state arrives
+  // through its separate authorized read;wait for that exact revision first.
+  await reviewCurrent.filter({ hasText: /withdrawn,\s*revision 4/ }).waitFor();
   assert.match(await reviewCurrent.innerText(), /withdrawn,\s*revision 4/);
   await audit(reviewer, "review-withdrawn");
   await reviewer

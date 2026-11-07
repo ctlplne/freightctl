@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "id": "F353",
+  "observed_at": "2026-11-07",
+  "base_candidate": "d93a17141677e3a5cbf91d940c3b2c1bd73ee52c",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "Wait for the separately fetched exact current review state before the original withdrawal assertion. Same original withdrawn/revision4 outcome remains mandatory;no product authority or assertion changed.",
+  "original_failure": {
+    "candidate": "3f32758aaa848065d7a2bf8ede787d729bbef166",
+    "run_id": 42380575918,
+    "job_id": 128427130040,
+    "url": "https://github.com/ctlplne/freightctl/actions/runs/42380575918/job/128427130040",
+    "phase": "withdraw-review",
+    "class": "assertion",
+    "source_line": 323,
+    "source_column": 10,
+    "safe_result_sha256": "dd185b0fc3ba56ede5b50c87414b5048f9aad8838fa34feab07c356ef0c0c9c4",
+    "protected_first_failure_sha256": "4761a33790bd94e2d45e2c38c2ed29bfad5ca2100738d7627392f1d351a3d19a"
+  },
+  "red_green": "Execute the exact actual driver withdrawal block against a locator stand-in with a delayed current-state read:original exact assertion fails on previous text;waiting for the same required current revision passes. This is a controlled race proof,not a claim to know the private original DOM text.",
+  "green": [
+    "Exact driver block locator stand-in under official native ARM Node26.13.0",
+    "Affected syntax and formatting. Initial format refusal retained,then corrected."
+  ],
+  "owed": [
+    "Original actual native independent-review full Chrome replay and causal qualification",
+    "Other original receive/calendar/FTPS/Windows/receiver failures and full GOAL/AX"
+  ],
+  "source_files": [
+    {
+      "reference": "scripts/processing-review-browser.mjs",
+      "sha256": "48c30c2d7551a6c4a475b30fc26a6c694de13fb8c1a72e604cdcf1a1916d3465",
+      "bytes": 13413
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "50ec28f5e18f166a28d24667956337e710ba75652ce20b8d118b8ea9ac7d00bf",
+      "bytes": 456643
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f353-review-view-standin.mjs",
+      "sha256": "04dc88853914da1655ada6a0e21c6c1c7bc42a7cc2bfcbaf665f493629109fd8",
+      "bytes": 1272
+    },
+    {
+      "reference": ".private/freightctl-f353-view-red.log",
+      "sha256": "9e9d54200e1de6b8df9fa09a231a87a7299c8c19772ff1a3d327b9fb7a20e90d",
+      "bytes": 667
+    },
+    {
+      "reference": ".private/freightctl-f353-view-final-green.log",
+      "sha256": "36ad0e93c5663101921d89d27fd9f7aabcfd7ddfc346077404862571ba0e0468",
+      "bytes": 151
+    },
+    {
+      "reference": ".private/freightctl-f353-final-syntax.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f353-format.log",
+      "sha256": "dba926b2bf147c40143341110237e17ad6c784ac54f9bfc3e75e7dad4989544e",
+      "bytes": 152
+    },
+    {
+      "reference": ".private/freightctl-f353-final-format.log",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    }
+  ]
+}
