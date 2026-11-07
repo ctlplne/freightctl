@@ -190,3 +190,10 @@ compilation,vet and architecture pass. Native API/CLI/curl,mount,corrupt custody
 capacity,policy and no-extra-effects outcomes remain owed. Collection overwrite,
 locks,outbound and independent DAV applications remain open. No schema,budget,
 local runtime or full-DAV qualification change.
+
+F418 fixes the missing full-tree CLI COPY storage opening found during source
+review before pushing F417. The actual old publish/copy predicate is extracted
+unchanged,observed red for copy_tree,then fixed to open existing protected
+custody. Metadata-only operations retain no disk opening. Focused regression,
+tagged CLI compile,vet and architecture pass. Native missing-storage/no-prefix
+and original complete CLI byte-verification outcomes remain owed.

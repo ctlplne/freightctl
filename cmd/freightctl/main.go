@@ -445,7 +445,7 @@ func run(args []string) error {
 			return errors.New("invalid namespace command JSON")
 		}
 		service := &custody.Service{DB: db, NamespaceMaxEntries: *namespaceMax, UploadCheckpointBytes: *checkpointBytes}
-		if command.Operation == "publish" || command.Operation == "copy" {
+		if namespaceCommandNeedsStorage(command.Operation) {
 			disk, err := custody.OpenExisting(*storage)
 			if err != nil {
 				return err

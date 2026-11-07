@@ -8,6 +8,8 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
+	"os"
+	"path/filepath"
 	"testing"
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
@@ -87,6 +89,18 @@ func qualifyNamespaceTreeMoveCLI(t *testing.T, ctx context.Context, service *cus
 	}{{"copy_dir", "/cli-tree-shallow", 1}, {"copy_tree", "/cli-tree-copy", 3}} {
 		copyCommand := store.PathCommand{Operation: test.operation, Path: restored.Entry.Path, Target: test.target, ExpectedEntryID: restored.Entry.ID, ExpectedRevision: &restored.Entry.Revision}
 		input := requestFile(copyCommand)
+		if test.operation == "copy_tree" {
+			missingStorage := filepath.Join(t.TempDir(), "unopened-custody")
+			if _, err = command(ordinaryWriter, "namespace", "-request-file", input, "-idempotency-key", "cli-copy-tree-storage-refused", "-storage", missingStorage); !errors.Is(err, os.ErrNotExist) {
+				t.Fatal("full CLI tree copy failed to require an existing protected custody reference", err)
+			}
+			if _, err = os.Stat(missingStorage); !errors.Is(err, os.ErrNotExist) {
+				t.Fatal("tree copy created storage as a side effect", err)
+			}
+			if _, err = service.StatPath(ctx, adminScope, test.target); !errors.Is(err, store.ErrNotFound) {
+				t.Fatal("missing storage published part of a CLI tree", err)
+			}
+		}
 		raw, err = command(ordinaryWriter, "namespace", "-request-file", input, "-idempotency-key", "cli-"+test.operation+"-original")
 		var copied store.PathResult
 		if err != nil || json.Unmarshal(raw, &copied) != nil || copied.Replayed || copied.Changed != test.changed || copied.Entry.ID == restored.Entry.ID || copied.Entry.Owner == restored.Entry.Owner || copied.Entry.Revision != 2 {

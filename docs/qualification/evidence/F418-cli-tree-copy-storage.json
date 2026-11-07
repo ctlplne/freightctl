@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "id": "F418",
+  "observed_at": "2026-11-07",
+  "base_candidate": "437777fbd49b7b830e736ff73dfc39a269f174a7",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F418 fixes full-tree CLI COPY custody wiring found by source review before pushing F417. Extracting the actual old publish/copy storage predicate preserves its behavior and observes copy_tree red;include copy_tree,retain metadata-only operations without disk opening,and focused green. Tagged CLI compilation,vet and architecture pass. Native missing-storage refusal/no namespace prefix,ordinary-writer full-copy and independent custody proofs remain owed;no prior real CLI pass is claimed.",
+  "contract": {
+    "storage_required": [
+      "publish",
+      "copy",
+      "copy_tree"
+    ],
+    "metadata_only_without_open": [
+      "copy_dir",
+      "move_tree",
+      "remove_tree",
+      "properties",
+      "rename",
+      "setstat",
+      "mkdir",
+      "remove",
+      "rmdir"
+    ],
+    "existing_protection": "OpenExisting only;private root/existing storage identity,regular sealed immutable file,size/hash verification remain unchanged",
+    "bounds_or_schema_changed": false
+  },
+  "red_green": [
+    {
+      "proof": "Extracted actual old CLI predicate omits full-tree byte verification storage",
+      "exit_code": 1,
+      "reference": ".private/freightctl-f418-cli-tree-storage-red.log"
+    },
+    {
+      "proof": "Byte-publishing and metadata-only resource decisions",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f418-cli-tree-storage-green.log"
+    },
+    {
+      "proof": "Affected native CLI compile only",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f418-native-compile.log"
+    },
+    {
+      "proof": "Affected tagged vet",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f418-vet.log"
+    },
+    {
+      "proof": "Architecture",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f418-architecture.log"
+    },
+    {
+      "proof": "Four Go files formatted",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f418-format.log"
+    },
+    {
+      "proof": "Record references only",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f418-records.log"
+    }
+  ],
+  "owed": [
+    "Native CLI missing existing custody reference refuses without creating storage or destination prefix",
+    "Original ordinary-writer full/shallow copy,independent property/custody/history/source-removal journeys and actual final-source runtime",
+    "All remaining mandatory baseline/AX/security/readiness gates"
+  ],
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "bd10fbc00e8a0c7451960ec58dcbea67a2459f93b8c7f3189dcf756abc2ef895",
+      "bytes": 13172
+    },
+    {
+      "reference": "cmd/freightctl/main.go",
+      "sha256": "a2724d027d0d7de1d13a414c3ce3bf18130a2d764404726cae54cb45ca469967",
+      "bytes": 50155
+    },
+    {
+      "reference": "cmd/freightctl/namespace_storage.go",
+      "sha256": "1cceaad1774bfbcc16d84d9e0a93be7337da4b77e7dc9d41b1718d9150c6b873",
+      "bytes": 157
+    },
+    {
+      "reference": "cmd/freightctl/namespace_storage_test.go",
+      "sha256": "7c38368281998524fa44a32d28a123aeeec5f128344b2ff5ef50fe74a8ef3561",
+      "bytes": 624
+    },
+    {
+      "reference": "cmd/freightctl/namespace_tree_move_integration_test.go",
+      "sha256": "8c87cf82ca1f2f9f3a26121c325d98cf3c817f0f3e539d508c2f4f24c707b5f9",
+      "bytes": 9460
+    },
+    {
+      "reference": "docs/qualification/parity.json",
+      "sha256": "1a3b67caa5d2cf3b43748c3966a03e60ab3b94853fafe4ead4545beb97f85390",
+      "bytes": 154565
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "407e274dbb9163649e791f8a8cea8648ea7a1180071f75c94b4c5a5e4353b93a",
+      "bytes": 640872
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f418-cli-tree-storage-red.log",
+      "sha256": "bf5475b8e81adbf2d52f9bc623ab2f4b97d434485bc755ea39f1aadcc03fa5e8",
+      "bytes": 261
+    },
+    {
+      "reference": ".private/freightctl-f418-cli-tree-storage-green.log",
+      "sha256": "8e0cb246d9bc907b19131a82eceddc9d5b77b48a45406cae621f1dd4bf8059fe",
+      "bytes": 57
+    },
+    {
+      "reference": ".private/freightctl-f418-native-compile.log",
+      "sha256": "8b9a7cb7c03eaa5fb55adbc92e55e62607308e7a3910a69cbf9f890917645290",
+      "bytes": 75
+    },
+    {
+      "reference": ".private/freightctl-f418-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f418-architecture.log",
+      "sha256": "cba4ac7ed2f9cd9e18ce7e1d2d9be0fc9f30b5bff22be8bd824b7330169f5581",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f418-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f418-records.log",
+      "sha256": "826009b37d6c8254924b7fd1ee12981059544175f2c890ad4186b88b41b583b4",
+      "bytes": 106
+    }
+  ],
+  "local_heavy_runtime_started": false,
+  "publication_or_deployment": false,
+  "overall_goal_complete": false
+}
