@@ -41,6 +41,11 @@ func approved(ctx context.Context, t *store.Transaction, ref Reference) (*store.
 	if _, err = connections(ctx, t, d); err != nil {
 		return nil, nil, err
 	}
+	if d.Schema == 3 {
+		if err = t.CheckProcessingReview(ctx, c.ID, c.Version, c.Hash); err != nil {
+			return nil, nil, err
+		}
+	}
 	return c, &d, nil
 }
 func (s *Service) checkStorage(id string) error {

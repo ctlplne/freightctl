@@ -26,6 +26,9 @@ func projectionWorkflowCurrent(ctx context.Context, t *store.Transaction, d Proj
 	if c.Hash != b.Hash || c.State != "approved" || c.ApprovalAuthority != t.AuthorityRevision {
 		return store.ErrRevision
 	}
+	if err = t.CheckProcessingReview(ctx, c.ID, c.Version, c.Hash); err != nil {
+		return err
+	}
 	var definition workflow.Definition
 	if workflow.Decode(c.Definition, &definition) != nil {
 		return store.ErrState

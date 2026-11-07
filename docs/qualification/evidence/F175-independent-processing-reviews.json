@@ -1,0 +1,198 @@
+{
+  "schema_version": 1,
+  "id": "F175",
+  "observed_at": "2026-11-06",
+  "candidate_parent": "793f9ddf21b11053b691a91534468f99cbfd7633",
+  "qualification_claim": false,
+  "state": "Independent definition-only processing review and separate owner adoption implemented through API/CLI;focused local contracts/static proof passes;native/runtime and browser proof owed",
+  "contract": "docs/protocols/processing-workflow-reviews.md",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "b0e9aeca6a7267973ec848e9d4c5ff5a45de8e524380a14d51f66501176bb991",
+      "bytes": 3806
+    },
+    {
+      "reference": "cmd/freightctl/main.go",
+      "sha256": "e7d6d2ff57a46d8ea8efa3f9f4a05f6826535a595b4194a322fb04a6312c1fd1",
+      "bytes": 47077
+    },
+    {
+      "reference": "cmd/freightctl/processing_reviews.go",
+      "sha256": "b29ba225d9f2d106cac8a991bc9b391a79b4e4d564b1c92c1d9129b43a439926",
+      "bytes": 2079
+    },
+    {
+      "reference": "cmd/freightctl/workflow_processing_integration_test.go",
+      "sha256": "4a26cd2449a87401952995f485d202019410d465c1923729e0f6ca577c954d9a",
+      "bytes": 12140
+    },
+    {
+      "reference": "docs/api/processing-reviews.openapi.json",
+      "sha256": "3f02d591b2c24f8088e3b17c57022438680d28ad72ec0902012d2e086f2b5023",
+      "bytes": 28039
+    },
+    {
+      "reference": "docs/protocols/processing-workflow-reviews.md",
+      "sha256": "6dc3617baaa6b237cffabe5404a0d500d6e191c2f1c92173aabdf3a8f6606662",
+      "bytes": 4732
+    },
+    {
+      "reference": "docs/qualification/artifact-exchange.json",
+      "sha256": "0ff584859f4eb81a7169aa47870ea58d40f6147de5ce6131bd874e2b139c0ad6",
+      "bytes": 26692
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "76fe7950fc58548ff2b7fdf4f07c9b7a4f68867119a8dd242539f997affe6519",
+      "bytes": 328659
+    },
+    {
+      "reference": "internal/api/api.go",
+      "sha256": "958a695a2c4ccb97ecea65eebe6f719f6ad8594033c6dac34ca5a810a0439cb5",
+      "bytes": 29282
+    },
+    {
+      "reference": "internal/api/processing_reviews.go",
+      "sha256": "7a9fc5e77de500f61a2c15c8348d535373f7dd03042cbfc62a44f76b4a3e2c74",
+      "bytes": 2136
+    },
+    {
+      "reference": "internal/api/processing_reviews_integration_test.go",
+      "sha256": "4309ce28a926889a3e4e4cc06eec99886f4afe4a742c2b0006934b1bdcd358b1",
+      "bytes": 5428
+    },
+    {
+      "reference": "internal/api/processing_reviews_test.go",
+      "sha256": "984dc48d30960a76d4d7e16a38e61011ce7077a7004126752d577155e38522c6",
+      "bytes": 976
+    },
+    {
+      "reference": "internal/checks/processing_reviews_integration_test.go",
+      "sha256": "cfa927e48bb8d15a1239084ff83b640d0d26026ac5f1d7165333f0fa0fe734f9",
+      "bytes": 13848
+    },
+    {
+      "reference": "internal/checks/workflow_processing.go",
+      "sha256": "1a1a29241e62a5503a3e02706480073ae8ad1ae722ff11c52e920c69af7dd151",
+      "bytes": 7961
+    },
+    {
+      "reference": "internal/store/054_processing_reviews.sql",
+      "sha256": "4c1c28f11753f15b0c30c3b64bcf6d5419c16a9b9d6b0dc82dcf68706ab436ea",
+      "bytes": 16438
+    },
+    {
+      "reference": "internal/store/processing_reviews.go",
+      "sha256": "e3cd44952ba749ad57543a148d28077398957361b7335841acfd51eb54c442ae",
+      "bytes": 6855
+    },
+    {
+      "reference": "internal/store/store.go",
+      "sha256": "97629f6c098d1bf0dc13a5c99a69f6f94611d727d7602dfb6b493c3afc3c8b61",
+      "bytes": 26966
+    },
+    {
+      "reference": "internal/workflow/processing_reviews.go",
+      "sha256": "5e6bc8f9557d7f3683625ce1a101b7176135049b05931ea5d345875b7d4763aa",
+      "bytes": 11565
+    },
+    {
+      "reference": "internal/workflow/processing_reviews_test.go",
+      "sha256": "772e3b3e01b80bfeef47e91641e605baa8dc743574e88e0c67e1c009eb14cd24",
+      "bytes": 7645
+    },
+    {
+      "reference": "internal/workflow/runs.go",
+      "sha256": "44beacdb13459a152f5ae3029bf9175a75f09db80b11111f1c668fa3ec181a2b",
+      "bytes": 19588
+    },
+    {
+      "reference": "scripts/metadata_contract.py",
+      "sha256": "9c8add6eb91cbbddafd270498eb89a483b4d6f26a1595de5817bad83ffc1186a",
+      "bytes": 3520
+    },
+    {
+      "reference": "scripts/test-ci-metadata-summary.py",
+      "sha256": "e9568833f41b51386a2ee0bd8b8c3df7b3489a7fc87aab6f9f0433a6ca02fb23",
+      "bytes": 6240
+    }
+  ],
+  "changed": [
+    "Distinct named reviewer sees only an explicitly disclosed exact schema3 task;both actors,authority/root snapshots,draft revision/hash and expiry are bound. No file,configuration-store,execution,release or delivery access is granted. Creator/executor can remain one actor;third-party author delegation is still owed.",
+    "Creator separately adopts an independent approval with its original workflow transition,immutable marker,events and receipt in one transaction. Withdrawal,expiry or revoked reviewer blocks new/direct processing effects without fallback;original receipts and safe cancellation remain.",
+    "SQL54 adds one forced-RLS relation and cumulative effect/atomic membership guards without changing older migrations or actor-private workflow/run/projection policies. Current75 metadata/74 forced-RLS tables;historical53 and retained35 profiles preserved. Retained database untouched.",
+    "JSONB ordering is normalized through typed workflow rules before review hash verification. Command receipts use compact original metadata and exact workflow approval summaries instead of duplicating private definitions."
+  ],
+  "red": {
+    "reference": ".private/freightctl-f175-review-red.log",
+    "observed": "Required independent participant/review-definition types and builder did not exist;focused regressions failed compilation."
+  },
+  "green": {
+    "reference": ".private/freightctl-f175-final-focused.log",
+    "observed": "Exact independent participants,draft hash,cloned disclosure,self-review/stale/expired/unbounded/legacy refusal,JSONB reordering,changed meaning,root/authority privacy,compact receipts and HTTPS unauthenticated control refusal pass;affected workflow and architecture tests pass."
+  },
+  "checks": [
+    {
+      "reference": ".private/freightctl-f175-review-red.log",
+      "sha256": "49486711ae0bf41b2129e27f3cf07e032991369a057aa1fd687a698ea6667284",
+      "bytes": 1209
+    },
+    {
+      "reference": ".private/freightctl-f175-final-focused.log",
+      "sha256": "4b8fdb54ac1899a6973481d6709cb3b0ddb7257e70fa426dc06f538ef17c2c1f",
+      "bytes": 179
+    },
+    {
+      "reference": ".private/freightctl-f175-final-compile.log",
+      "sha256": "2ed9ce978e9d768fc612b3dee85153d6d890e9efc71c6a2e03ba9cf3340bab8b",
+      "bytes": 228
+    },
+    {
+      "reference": ".private/freightctl-f175-final-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f175-metadata-first.log",
+      "sha256": "0361ec311f1a1f482002c6c80abb413fcb78ffc2c38d8c9b56efb8644c4408af",
+      "bytes": 105
+    },
+    {
+      "reference": ".private/freightctl-f175-retained-profile-green.log",
+      "sha256": "1f11b6e880045ee35de832b81b45d06257342e13b5c79bbf0034379d4ca220b9",
+      "bytes": 103
+    },
+    {
+      "reference": ".private/freightctl-f175-interface-focused.log",
+      "sha256": "08558ccf7430aae80c34905edb5d0785137f976022a674cc220546e9010f8d03",
+      "bytes": 414
+    },
+    {
+      "reference": ".private/freightctl-f175-interface-compile.log",
+      "sha256": "9688ed5b46d042722d7ce867e751f156ff2a621a5ae203fd41c80e9ac3c67010",
+      "bytes": 462
+    }
+  ],
+  "preparation_failures": [
+    "Initial interface unit fixture used HTTP and received tls_required400;fixed to HTTPS while keeping authentication assertion. First native API compilation used ID instead of ExchangeParticipant.Actor;corrected. Original logs remain in safe manifests."
+  ],
+  "prepared_native": [
+    "TestProcessingReviewActualIndependentReviewerAndConfinedWorkerKeepBytesAndReleaseSeparate",
+    "TestProcessingReviewActualWithdrawalBlocksNewAndDirectWorkWithoutErasingOriginalReceipts",
+    "TestProcessingReviewActualSQLRequiresIndependentDecisionAndAtomicAdoption",
+    "TestProcessingReviewActualReviewerRevocationStopsQueuedWork",
+    "TestProcessingReviewHTTPSIndependentDecisionAdoptionAndOriginalReceipt",
+    "TestProcessingWorkflowCLIUsesApprovedTaskAndSeparateOutputRelease/independent_review_controls"
+  ],
+  "verification_limits": [
+    "Tagged compilation selected zero native tests. No PostgreSQL,Chrome,model,scanner,stock peer or heavy runtime ran locally.",
+    "Twelve metadata stand-ins check profile/evidence handling only. Existing nonsecurity CI failures remain red for FINISH;F176 retains exact preceding17-run/37-job originals.",
+    "Same-receipt assertions compare complete decoded JSON meaning because JSONB object order is not meaningful;no fields are dropped."
+  ],
+  "owed": [
+    "Run all prepared native service/SQL/API/CLI profiles at candidate/final source;prove actual syntax,forced RLS,lease/fencing,expiry,concurrency,recovery,rollback and original failure replay.",
+    "Complete independent-review browser controls and saved request recovery,third-party author delegation,composition/scheduling/discovery,protected formats and independent receiver journeys.",
+    "Complete every mandatory baseline/AX/FINISH gate and external prerequisites;all whole parity rows/journeys and deployment/adoption/enterprise readiness remain open."
+  ]
+}

@@ -12,6 +12,7 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/ctlplne/freightctl/internal/checks"
 	secure "github.com/ctlplne/freightctl/internal/crypto"
@@ -217,4 +218,53 @@ func TestProcessingWorkflowCLIUsesApprovedTaskAndSeparateOutputRelease(t *testin
 	if err != nil || json.Unmarshal(raw, &status) != nil || status.ObservedState != "succeeded" || status.ObservedReason != "transformed_output_released" {
 		t.Fatal("CLI separate release not observed", err)
 	}
+	t.Run("independent review controls", func(t *testing.T) {
+		reviewerToken := filepath.Join(t.TempDir(), "reviewer.token")
+		if err := secure.WriteToken(reviewerToken); err != nil {
+			t.Fatal(err)
+		}
+		secret, err := secure.ReadSecret(reviewerToken, 64)
+		if err != nil {
+			t.Fatal(err)
+		}
+		reviewerHash := secure.Digest(secret.Bytes)
+		secret.Close()
+		account := store.AccountCommand{Operation: "create", ID: secure.NewID(), CredentialHash: reviewerHash, Policy: &store.AccountPolicy{Label: "CLI independent reviewer", Root: "/", Permissions: []string{"inspect", "workflow_approve"}}}
+		if _, err = db.ChangeAccount(ctx, scope, "cli-independent-reviewer", account); err != nil {
+			t.Fatal(err)
+		}
+		definition.Name = "CLI independently reviewed processing"
+		raw, err := command("workflow-draft", "-request-file", requestFile(workflow.DraftRequest{Definition: definition}), "-idempotency-key", "cli-independent-draft")
+		var drafted workflow.Result
+		var cfg store.Configuration
+		if err != nil || json.Unmarshal(raw, &drafted) != nil || json.Unmarshal(drafted.Resource, &cfg) != nil {
+			t.Fatal("independent CLI draft", err)
+		}
+		request := workflow.ProcessingReviewRequest{Workflow: workflow.Reference{ID: cfg.ID, Version: cfg.Version, Hash: cfg.Hash}, Revision: 1, Reviewer: account.ID, ExpiresAt: time.Now().UTC().Add(time.Hour).Truncate(time.Microsecond)}
+		raw, err = command("processing-review-request", "-request-file", requestFile(request), "-idempotency-key", "cli-independent-request")
+		var proposed workflow.Result
+		var review store.ProcessingReview
+		if err != nil || json.Unmarshal(raw, &proposed) != nil || json.Unmarshal(proposed.Resource, &review) != nil {
+			t.Fatal("CLI review request", err)
+		}
+		decision := requestFile(workflow.Decision{Hash: review.Hash, Revision: 1})
+		if _, err = command("processing-review-approve", "-processing-review-id", review.ID, "-request-file", decision, "-idempotency-key", "cli-cannot-self-review"); err == nil {
+			t.Fatal("CLI owner approved independent review")
+		}
+		raw, err = command("processing-review-approve", "-token-file", reviewerToken, "-processing-review-id", review.ID, "-request-file", decision, "-idempotency-key", "cli-independent-approve")
+		var approved workflow.Result
+		if err != nil || json.Unmarshal(raw, &approved) != nil || json.Unmarshal(approved.Resource, &review) != nil || review.State != "approved" {
+			t.Fatal("CLI independent approval", err)
+		}
+		if _, err = command("processing-review-adopt", "-processing-review-id", review.ID, "-request-file", requestFile(workflow.Decision{Hash: review.Hash, Revision: 2}), "-idempotency-key", "cli-independent-adopt"); err != nil {
+			t.Fatal("CLI adoption", err)
+		}
+		raw, err = command("processing-review-status", "-token-file", reviewerToken, "-processing-review-id", review.ID)
+		if err != nil || json.Unmarshal(raw, &review) != nil || review.State != "adopted" || review.AdoptedRevision != 3 {
+			t.Fatal("CLI current review state", err)
+		}
+		if _, err = command("processing-review-withdraw", "-token-file", reviewerToken, "-processing-review-id", review.ID, "-request-file", requestFile(workflow.Decision{Hash: review.Hash, Revision: 3}), "-idempotency-key", "cli-independent-withdraw"); err != nil {
+			t.Fatal("CLI withdrawal", err)
+		}
+	})
 }
