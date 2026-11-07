@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "id": "F375",
+  "observed_at": "2026-11-07",
+  "candidate": "9b3ba92a9746e4af5edd40a27e440429b0dc6f5b",
+  "qualification_claim": false,
+  "qualified_scope": "Declared exact-revision,no-overwrite file MOVE only at this source. Both original native ARM/x86 PostgreSQL and stock curl profiles passed. No class1/2/3 compliance,whole C-WEBDAV or final-source completion claim.",
+  "run_id": 42390494555,
+  "run_url": "https://github.com/ctlplne/freightctl/actions/runs/42390494555",
+  "profiles": [
+    {
+      "architecture": "arm64",
+      "job_id": 128456855920,
+      "status": "success",
+      "move_seconds": 2.14,
+      "stock_seconds": 1.8,
+      "curl_sha256": "e54699c60c2fe0936dbfab15934d3b6a097385c505d0b5cb4c9c8aa36df8b5f3"
+    },
+    {
+      "architecture": "amd64",
+      "job_id": 128456856148,
+      "status": "success",
+      "move_seconds": 2.15,
+      "stock_seconds": 2.19,
+      "curl_sha256": "1ccbd3dae948374ba8eef1ebda26c64b783ede50b463196e53666e0880bdac60"
+    }
+  ],
+  "actual_proof": [
+    "TestWebDAVFileMovePinsRevisionPermissionsAndCurrentIntakeWithoutForwarding: nonadmin read/manage_paths,read-only/manage-only refusals,exact immutable ID/hash,existing target/stale412,missing parent409,same-key/new-revision409,current policy revocation409,one actor-bound PathMoved and zero delivery/workflow effects.",
+    "TestWebDAVNativeStockCurlDiscoveryInterruptedReadAndExactResume: actual verified TLS/curl MKCOL,conditional PUT,non-overwrite412,MOVE,stale retry412 and independent exact custody ID/ETag/byte readback.",
+    "Both runs retain original interrupted-read exit18 after65536bytes and independently reconstruct168000bytes with SHA25629480044db4ab28da69fd21adc5746d7d412a4fff962b11ce024f3d6f88588dd."
+  ],
+  "source_files_at_original_candidate": [
+    {
+      "reference": "internal/api/webdav_move.go",
+      "sha256": "b8be3b24b72284256d654ef2069f9939ba909afea87d02bb941ae44c60fd3997",
+      "bytes": 4116
+    },
+    {
+      "reference": "internal/api/webdav_move_integration_test.go",
+      "sha256": "d3da73a607402d2858c1816b0702a9d2b9a0ee85e3431cefa85437f06e1efdd3",
+      "bytes": 7692
+    },
+    {
+      "reference": "internal/api/webdav_stock_integration_test.go",
+      "sha256": "e3204b4208100e125fd136543da8fceb50dadfadf401eae1474775b7fd51ccaa",
+      "bytes": 10093
+    },
+    {
+      "reference": "internal/custody/namespace_move.go",
+      "sha256": "33dc538864978d5dd110e30cb46443aa4540dda3079425aa77d2deddd966b631",
+      "bytes": 2832
+    },
+    {
+      "reference": "internal/store/namespace.go",
+      "sha256": "991eda4a176700aa6921b8adaa6636528b4d81a870f89809a7b749982955bc47",
+      "bytes": 17646
+    }
+  ],
+  "owed": [
+    "F374 DELETE and shared MOVE/helper refactor are later source;their native replay remains owed.",
+    "Directory/replacement mutations,properties,locks,outbound stock server,independent DAV applications and all mandatory final-source baseline/AX/readiness gates."
+  ]
+}

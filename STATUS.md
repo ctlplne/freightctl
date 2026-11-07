@@ -26,15 +26,17 @@ existing 256-byte FTPS contract. Existing SSH bounds and all TLS, identity and
 immutable-meaning checks remain. Focused regressions and affected static checks
 pass; actual operator capture and four-key recovery replay remain owed.
 
-The receive browser progressed through human ingress/download and cancellation,
-then failed saving recovery. F371 fixes a removed response-variable reference by
-retaining the original observed withdrawal key. The actual driver block passes
-focused Page/CDP stand-ins, including substituted-key refusals; full original
-receive/copy/onward/revocation native replay remains owed.
+The receive browser now passes cancellation and recovery save/import,then fails
+at cancellation replay through a second removed response-variable reference.
+F376 retains the exact original observed body bytes and extends the driver-block
+regression through replay. Fourteen focused wire/egress/recovery checks pass,
+including substituted keys/bytes; full original native receive/copy/onward/
+revocation replay remains failed and owed.
 
 F368 qualifies the declared DAV read, conditional PUT and empty MKCOL PostgreSQL
 and stock curl outcomes on ARM/x86 at d960c40. Local F367 adds file MOVE with exact
-revision and non-overwrite checks; prepared native proofs remain owed. C-WEBDAV
+revision and non-overwrite checks; F375 qualifies its initial PostgreSQL/stock
+curl ARM/x86 profile at9b3ba92. The later shared-helper refactor needs replay. C-WEBDAV
 also requires remaining mutations, properties, locks, outbound server and
 independent DAV application interoperability.
 

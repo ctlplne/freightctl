@@ -1143,11 +1143,12 @@
         "docs/qualification/evidence/F361-dav-collection-create.json",
         "docs/qualification/evidence/F368-dav-native-create.json",
         "docs/qualification/evidence/F367-dav-file-move.json",
-        "docs/qualification/evidence/F374-dav-file-delete.json"
+        "docs/qualification/evidence/F374-dav-file-delete.json",
+        "docs/qualification/evidence/F375-dav-native-move.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison",
-        "Declared read/conditional PUT/empty MKCOL profiles passed real PostgreSQL/stock curl ARM/x86 atd960c40 (F368). Later file MOVE,remaining mutations,locks,full properties,independent DAV applications and outbound stock server remain mandatory/unqualified.",
+        "Declared read/conditional PUT/empty MKCOL passed real PostgreSQL/stock curl ARM/x86 atd960c40(F368);file MOVE passed at9b3ba92(F375). Later F374 DELETE/shared helper refactor and remaining mutations,locks,full properties,independent DAV applications and outbound stock server remain mandatory/unqualified.",
         "F374 file-only conditional deletion is implemented with exact revision/event/receipt and immutable custody retention. Native original PostgreSQL/stock curl proof remains owed;no directory deletion,locking,full DAV compliance or whole-row qualification is claimed."
       ]
     },

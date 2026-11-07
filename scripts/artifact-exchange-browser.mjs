@@ -664,7 +664,7 @@ try {
   humanIngress++;
   await accessibility(recipient.page, "sender-human-receive-accessibility");
   phase = "sender-cancel";
-  let withdrawalKey;
+  let withdrawalKey, withdrawalBody;
   const withdrawn = await nativeWireResponse(
     sender.page,
     `${origin.origin}/v1/tenants/${c.tenant}/partners/${c.partner}/exchange-closures`,
@@ -682,7 +682,8 @@ try {
       const headers = await request.allHeaders();
       assert.match(headers["idempotency-key"], /^[A-Za-z0-9._:-]{1,128}$/);
       withdrawalKey = headers["idempotency-key"];
-      assert.deepEqual(JSON.parse(request.postDataBuffer()), {
+      withdrawalBody = request.postDataBuffer();
+      assert.deepEqual(JSON.parse(withdrawalBody), {
         schema_version: 1,
         exchange_id: sent.exchange.id,
         request_hash: sent.exchange.request_hash,
@@ -826,9 +827,9 @@ try {
     replayWithdrawalResponse.request().headers()["idempotency-key"],
     saved.withdrawal_key,
   );
-  assert.equal(
-    replayWithdrawalResponse.request().postData(),
-    withdrawalResponse.request().postData(),
+  assert.deepEqual(
+    replayWithdrawalResponse.request().postDataBuffer(),
+    withdrawalBody,
   );
   const recoveredWithdrawal = await replayWithdrawalResponse.json();
   assert.deepEqual(recoveredWithdrawal, { ...withdrawn, replayed: true });

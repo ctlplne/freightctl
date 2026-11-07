@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "id": "F376",
+  "observed_at": "2026-11-07",
+  "base_candidate": "a91b3d5d668dff14c6bfaea78434ead268082a5f",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F376 preserves original9b3ba92 receive failure job128456855464:sender-recover-cancel,reference source831:5,resultb824b335e014796b040fbb27e0d922e3967595bb561d9df6357936c84ca4ab5d,first logfcd706b80453cb6d89be04520299c540a5b49e825a2cc8f4d563e1c081864fca. F371 missed the second removed-response reference after saving/reloading recovery. Retain exact original observed withdrawal body bytes and compare replay bytes directly. Extend actual driver-block stand-in through replay:original ReferenceError red,then14 affected tests green,including substituted key/body and equivalent-but-not-identical JSON refusal. Syntax,format and architecture pass. Actual original complete native receive journey remains failed/owed.",
+  "original_failure": {
+    "candidate": "9b3ba92a9746e4af5edd40a27e440429b0dc6f5b",
+    "run_id": 42390494475,
+    "job_id": 128456855464,
+    "phase": "sender-recover-cancel",
+    "source_line": 831,
+    "source_column": 5,
+    "category": "reference",
+    "safe_result_sha256": "b824b335e014796b040fbb27e0d922e3967595bb561d9df6357936c84ca4ab5d",
+    "protected_first_failure_sha256": "fcd706b80453cb6d89be04520299c540a5b49e825a2cc8f4d563e1c081864fca"
+  },
+  "red_green": "Execute the actual original cancel/save and replay blocks with Page/CDP stand-ins and a real protected recovery file. The expanded positive first raises withdrawalResponse is not defined,then passes. Refuse substituted replay key/body and byte-different equivalent JSON. No ordinary request,status,receipt or authorization assertion is removed.",
+  "owed": [
+    "Full original native receive/copy/onward/revocation and recovery journey",
+    "All mandatory final-source baseline/AX/readiness qualification"
+  ],
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "7d90da09ca49c4e3ae7b0c2c8df54608dfaa3dc78ac0bac073ba2006db4e636b",
+      "bytes": 4010
+    },
+    {
+      "reference": "docs/qualification/evidence/F375-dav-native-move.json",
+      "sha256": "35d5c2a7108fc06505a0bc41a7b74bd3c60175d30fa6794b6b6ac5f55ea1f921",
+      "bytes": 2975
+    },
+    {
+      "reference": "docs/qualification/parity.json",
+      "sha256": "3843fece03ab94df13cafa8e5b0f199698fdb0fd448f7fa66397427acce5a04f",
+      "bytes": 150919
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "fbcfa691260e2a81d60a25181b593d6d1de629d335aa6a38c1f9ad8a8f2f8b97",
+      "bytes": 496235
+    },
+    {
+      "reference": "scripts/artifact-exchange-browser.mjs",
+      "sha256": "1fc8b36ff3b196aa2e395378f96fde8aa79ca4014515a5ff33ae847878911eca",
+      "bytes": 54056
+    },
+    {
+      "reference": "scripts/test-artifact-exchange-offer-recovery.mjs",
+      "sha256": "b48758fd08fe73653a5334f9cc39784be97cc71b6151ebfc16b55e22e737ea1b",
+      "bytes": 7315
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f376-replay-red.log",
+      "sha256": "1b19cf79ccc7c376efa2f84dd76e48277e3d373d2e9ae03786b2afa2bbcae8c3",
+      "bytes": 1064
+    },
+    {
+      "reference": ".private/freightctl-f376-focused.log",
+      "sha256": "be20986c8662615ff38a17d58964f5aadb6f87f7240f93c003ab068ee2425eca",
+      "bytes": 1494
+    },
+    {
+      "reference": ".private/freightctl-f376-syntax.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f376-format.log",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    },
+    {
+      "reference": ".private/freightctl-f376-architecture.log",
+      "sha256": "e703da244d4e3debae220c77324fae6ef6aab102651329af1e098bc94c80e941",
+      "bytes": 64
+    }
+  ]
+}
