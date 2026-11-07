@@ -8,7 +8,12 @@ Exact original failures,owner decisions and remaining work are preserved in
 [artifact-exchange.json](docs/qualification/artifact-exchange.json) and the
 linked safe manifests. Raw private proof remains outside Git.
 
-Current pushed candidate: `acd82da46a31ae96581ed6660345ecd89113fae4`.
+Current pushed candidate: `6eec25037bf9d335d01b7635e39cde64276823d9`.
+[F399](docs/qualification/evidence/F399-native-push.json) binds four verified
+owner-only commits and17 first original workflows,queued. Pre-push Gitleaks
+remains enabled and found no leaks. Native outcomes remain owed.
+
+Previous terminal candidate: `acd82da46a31ae96581ed6660345ecd89113fae4`.
 [F398](docs/qualification/evidence/F398-native-terminal.json) binds all18
 original workflows/41 terminal jobs:34pass,7fail. Source/history/native source
 vulnerability and both exact peer image scans pass. Both x86 receiver profiles
@@ -27,7 +32,7 @@ recipient-decline response lookup and processing-work response lookup.
 F385 retains the preceding e608408 originals:39jobs,30pass/9fail. Its x86
 independent receiver SIGSYS profiles were not triggered at4d2d9ab and stay red.
 
-The pushed owner-authored batch contains these focused changes:
+Current source includes these focused changes:
 
 - F387 pins official Go1.27.3 consistently. Official issue75804 confirms a fuzz
   coordinator cancellation race that can also hide crash reports. The fixed
@@ -52,13 +57,13 @@ mutations,properties,locks,outbound and independent DAV application profiles are
 still mandatory. Earlier partial DAV read/create/MKCOL/MOVE and scoped FTPS/SFTP
 proofs stay bound to their original candidates,not these later changes.
 
-F396 locally carries the old file identity into recheck held-child publication,
+F396 carries the old file identity into recheck held-child publication,
 and binds browser destination identity to its source. Focused serialization/
 metadata red-green,Go/Python/browser goldens and affected static/build checks pass.
 Prepared equal-revision identity-change/refused-release and positive native
-release proofs remain owed;the current pushed candidate does not include F396.
+release proofs remain owed in the new original runs.
 
-F397 locally adds explicit file MOVE overwrite with current target write mode/
+F397 adds explicit file MOVE overwrite with current target write mode/
 availability and one atomic ordinary remove/rename receipt. F remains412 for
 occupied targets. Focused red/green and static checks pass;prepared original
 PostgreSQL/stock curl/receipt/history/current-policy proofs remain owed.
