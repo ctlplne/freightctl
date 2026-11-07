@@ -164,13 +164,25 @@ func TestWebDAVFileCopyRequiresReadWriteVerifiedCustodyAndIndependentMappings(t 
 		t.Fatal(err)
 	}
 	exchangeAPIRequest(t, server, "COPY", prefix+"/dav/controlled.csv", nil, headers("dav-copy-revoked", artifactRevisionETag(&controlled), prefix+"/dav/copied-controlled.csv", operator), nil, 409)
-	tx, err := service.DB.Begin(t.Context(), scope)
+	visibility, err := service.DB.Begin(t.Context(), scope)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var foreignCommands, adminIntents, adminRuns int
+	if err = visibility.Tx.QueryRow(t.Context(), `SELECT (SELECT count(*) FROM namespace_commands WHERE actor_id=$1 AND request_key='dav-copy-original'),(SELECT count(*) FROM delivery_intents),(SELECT count(*) FROM workflow_runs)`, participant.Actor).Scan(&foreignCommands, &adminIntents, &adminRuns); err != nil || foreignCommands != 0 || adminIntents != 0 || adminRuns != 0 {
+		visibility.Tx.Rollback(t.Context())
+		t.Fatalf("administrator scope lost receipt privacy or gained effects;receipts=%d;intents=%d;runs=%d;error=%v", foreignCommands, adminIntents, adminRuns, err)
+	}
+	if err = visibility.Tx.Rollback(t.Context()); err != nil {
+		t.Fatal(err)
+	}
+	tx, err := service.DB.Begin(t.Context(), operatorScope)
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer tx.Tx.Rollback(t.Context())
 	var publications, commands, accepted, intents, runs int
 	if err = tx.Tx.QueryRow(t.Context(), `SELECT (SELECT count(*) FROM events WHERE kind='PathPublished' AND actor_id=$1),(SELECT count(*) FROM namespace_commands WHERE actor_id=$1 AND request_key='dav-copy-original'),(SELECT count(*) FROM events WHERE kind='FileAccepted' AND actor_id=$1),(SELECT count(*) FROM delivery_intents),(SELECT count(*) FROM workflow_runs)`, participant.Actor).Scan(&publications, &commands, &accepted, &intents, &runs); err != nil || publications != 2 || commands != 1 || accepted != 0 || intents != 0 || runs != 0 {
-		t.Fatal("copy lost its two explicit publications/one original receipt or created extra custody/forwarding/execution", err)
+		t.Fatalf("copy lost exact actor-bound evidence or gained effects;publications=%d;receipts=%d;acceptances=%d;intents=%d;runs=%d;error=%v", publications, commands, accepted, intents, runs, err)
 	}
 }

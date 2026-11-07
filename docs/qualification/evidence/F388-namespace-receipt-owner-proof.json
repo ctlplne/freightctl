@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "id": "F388",
+  "observed_at": "2026-11-07",
+  "base_candidate": "adbc228d059eae1ab539f85c8f26e0c05fd7a3b8",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F388 corrects COPY/DELETE native receipt proof scopes after original4d2d9ab run42396174506/jobs128473908448/128473908655 reach final counters and fail. The test asked an administrator transaction to read another actor's namespace_commands row;004_namespace.sql forces a restrictive current-actor policy. Read the unchanged exact receipt/event/no-effect expectations as the acting participant,and separately require administrator-scope receipt-row invisibility plus zero intents/runs. Preserve expected COPY publications2/receipt1/no acceptance/forwarding/execution and DELETE removal1/receipt1/no effects. Add only safe numeric mismatch diagnostics. Production/RLS is unchanged;tagged compilation/format pass and actual native green remains owed.",
+  "original_failure": {
+    "candidate": "4d2d9ab3062e7b10bc44cc0629b42d5ed570f6ca",
+    "run_id": 42396174506,
+    "jobs": [
+      128473908448,
+      128473908655
+    ],
+    "copy_source_line": 174,
+    "delete_source_line": 146,
+    "category": "final exact receipt/event/no-effect counters;nil query error"
+  },
+  "established_contract": "004_namespace.sql identity_scope on namespace_commands is RESTRICTIVE with current actor in USING/WITH CHECK,including ordinary application administrators. No SQL role/policy/permission changes. Broader separately authorized audit access is not a namespace receipt-row bypass.",
+  "proof_status": "Original actual native failures preserved. Acting-owner counts remain exact;administrator row invisibility and old zero-effect checks are added separately. Local compilation/format only;native owner/isolation/effect outcomes remain owed.",
+  "owed": [
+    "Original ARM/x86 PostgreSQL/COPY/DELETE/stock profiles with exact owner/private-row and no-effect assertions",
+    "Every mandatory final-source baseline/AX/security/readiness outcome"
+  ],
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "3decf6af1dc712d6383af17d14dfeb9f572a91aa2cbc405995d20f2ce7838cea",
+      "bytes": 6049
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "c1a2d37233aa439b6424ff6a857834e1e15177b42e8463f4354517b58ceb3e38",
+      "bytes": 523330
+    },
+    {
+      "reference": "internal/api/webdav_copy_integration_test.go",
+      "sha256": "dc25dbd9613b8ed5c48506a52f388b74eb051a4910dd020c18a78141e6ee18fe",
+      "bytes": 12239
+    },
+    {
+      "reference": "internal/api/webdav_delete_integration_test.go",
+      "sha256": "d26f7f810f3d03764a75b329f7cd6815c0d69c0d0fef0326c005df3c0dbae919",
+      "bytes": 9932
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f388-native-compile.log",
+      "sha256": "06558f9b7d4f90666da9e11aab110c9b73a9b9320e45f2cc3d9348d795bd3055",
+      "bytes": 73
+    },
+    {
+      "reference": ".private/freightctl-f388-format.log",
+      "sha256": "d6d92b71bc1017f2324de780afa014d471d1a374104fa21647a66b754ed274fc",
+      "bytes": 33
+    }
+  ]
+}

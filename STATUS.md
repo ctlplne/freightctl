@@ -79,6 +79,10 @@ reproduction,inventory and Windows evidence. Exact corrected coordinator source
 is required;all18 original fuzz commands remain unchanged. Focused local ARM/
 stand-in checks pass;every affected native and final-source outcome is owed.
 
+F388 checks private namespace command rows as their acting participant and
+separately requires administrator-scope invisibility. Exact event/receipt counts
+and zero external/execution effects stay enforced;native replay remains owed.
+
 Next: continue independent implementation and original failure repair while
 current originals run. Push the next verified owner-only batch after required
 originals are terminal,then qualify the corrected toolchain and full product. Repair original failures

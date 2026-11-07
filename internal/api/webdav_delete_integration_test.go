@@ -136,13 +136,26 @@ func TestWebDAVFileDeletePinsAuthorityRevisionHistoryAndCurrentIntake(t *testing
 		t.Fatal(err)
 	}
 	exchangeAPIRequest(t, server, "DELETE", prefix+"/dav/controlled.csv", nil, headers("dav-delete-revoked", artifactRevisionETag(&controlled), operator), nil, 409)
-	tx, err := service.DB.Begin(t.Context(), scope)
+	visibility, err := service.DB.Begin(t.Context(), scope)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var foreignCommands, adminIntents, adminRuns int
+	if err = visibility.Tx.QueryRow(t.Context(), `SELECT (SELECT count(*) FROM namespace_commands WHERE actor_id=$1 AND request_key='dav-delete-original'),(SELECT count(*) FROM delivery_intents),(SELECT count(*) FROM workflow_runs)`, participant.Actor).Scan(&foreignCommands, &adminIntents, &adminRuns); err != nil || foreignCommands != 0 || adminIntents != 0 || adminRuns != 0 {
+		visibility.Tx.Rollback(t.Context())
+		t.Fatalf("administrator scope lost receipt privacy or gained effects;receipts=%d;intents=%d;runs=%d;error=%v", foreignCommands, adminIntents, adminRuns, err)
+	}
+	if err = visibility.Tx.Rollback(t.Context()); err != nil {
+		t.Fatal(err)
+	}
+	operatorScope := store.Scope{Tenant: scope.Tenant, Partner: scope.Partner, TokenHash: secure.Digest(operator.Bytes)}
+	tx, err := service.DB.Begin(t.Context(), operatorScope)
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer tx.Tx.Rollback(t.Context())
 	var removed, commands, intents, runs int
 	if err = tx.Tx.QueryRow(t.Context(), `SELECT (SELECT count(*) FROM events WHERE kind='PathRemoved' AND actor_id=$1),(SELECT count(*) FROM namespace_commands WHERE actor_id=$1 AND request_key='dav-delete-original'),(SELECT count(*) FROM delivery_intents),(SELECT count(*) FROM workflow_runs)`, participant.Actor).Scan(&removed, &commands, &intents, &runs); err != nil || removed != 1 || commands != 1 || intents != 0 || runs != 0 {
-		t.Fatal("removal lost its one actor-bound event/receipt or granted forwarding/execution", err)
+		t.Fatalf("removal lost exact actor-bound evidence or gained effects;removed=%d;receipts=%d;intents=%d;runs=%d;error=%v", removed, commands, intents, runs, err)
 	}
 }
