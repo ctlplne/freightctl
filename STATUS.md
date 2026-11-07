@@ -49,6 +49,11 @@ F255 replaces the invalid inherited-bit fixture with actual parent inheritance
 and independently exercises the unchanged production parser with a protected
 inherited descriptor. Compile/vet pass only;native refusal remains owed.
 
+F257 preserves the browser-session row fence while supporting read-only audit
+history:authenticate and lock first,switch to READ ONLY before service access,
+and recheck all live predicates while reusing only the existing lock. Native
+write-refusal/logout/fence and original HTTPS replays remain owed.
+
 Next:repair the newly reached native browser
 and protocol failures,then complete all remaining baseline/AX/FINISH outcomes.
 Local inference remains off;local resource constraints and F026 hold remain.

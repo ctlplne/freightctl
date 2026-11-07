@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "id": "F257",
+  "observed_at": "2026-11-07",
+  "base_candidate": "cb435604b75b32c14e54e8318766650034dc767d",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Read-only browser transaction repaired;actual native row-fence/HTTPS replay owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "858434ed57129993d5818277e5699105eaf147a05b5be931bd224fec8b294a96",
+      "bytes": 13252
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "0873d6985ccfde5e36ec447bf728a2118c66ef1f9d07b237c09948b919b9882c",
+      "bytes": 376376
+    },
+    {
+      "reference": "internal/store/store.go",
+      "sha256": "28226d89116d30a286e8bce4cb157acae4b7099b92a1b7d94371e2d123f7bd5c",
+      "bytes": 28446
+    },
+    {
+      "reference": "internal/store/browser_sessions.go",
+      "sha256": "dbb261db4cac738b77f657c0ce172fdd3c224e3ae0565bab4b306efcce4c029f",
+      "bytes": 10388
+    },
+    {
+      "reference": "internal/store/browser_readonly_integration_test.go",
+      "sha256": "58067ba8424da31fb0459ab7e0d06728f2f8fcbbd06ae22cd79cc46848163101",
+      "bytes": 2107
+    }
+  ],
+  "red": {
+    "candidate": "e87483babb4e32f8a3aaf78d13f8374d842fa78b",
+    "run": 42354252239,
+    "job": 128348738078,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128348738078",
+    "test": "TestAuditHistoryHTTPSCookieBearerScopeAndNoPayloadOrMutation",
+    "observed": "audit_history_integration_test.go:40 cookie POST expected200 got503",
+    "source_cause": "SearchAuditHistory begins READ ONLY;browser authentication issues FOR SHARE,which PostgreSQL disallows in read-only mode. Actual final-source replay remains owed."
+  },
+  "changed": [
+    "For explicit read-only browser requests only,authenticate in read-write mode and acquire the unchanged session row lock,then SET TRANSACTION READ ONLY before the transaction reaches service code. Authentication performs no domain mutation;failure rolls back. Bearer read-only transactions remain read-only from begin.",
+    "Store only the ID of the session row already locked by this transaction. Reauthorization queries every original live predicate,including expiry,and avoids reissuing a forbidden row-lock statement for that same held row. No authorization result is cached;other/new sessions still require their own row lock.",
+    "Native regression asserts actual READ ONLY,live reauthorization,55P03 from an independent NOWAIT row writer,25006 domain mutation refusal,successful logout after release,captured-session refusal and continued bearer audit access. Original HTTPS/no-domain-or-command-mutation proof remains unchanged."
+  ],
+  "green": [
+    "Focused local audit filter/cursor/authority/privacy controls and architecture pass. Affected integration compilation/vet pass."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f257-architecture.log",
+      "sha256": "e98f0074aed9ca75f6e96d84e7b32b4a590ed70ba7f68e26d59ee31274afb038",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f257-audit-controls.log",
+      "sha256": "bf63abf188c8329a946b953cf4b3e548e851f96038193de14d367648a8009920",
+      "bytes": 57
+    },
+    {
+      "reference": ".private/freightctl-f257-format.log",
+      "sha256": "4deec334c4231cfe5a0a5894b298db57f6afb32f0fa7209c9287a9fec399975d",
+      "bytes": 24
+    },
+    {
+      "reference": ".private/freightctl-f257-integration-compile.log",
+      "sha256": "7b2f679c696de110f4f03573b4f8e2a28c5ddfb9cca9d10ef8e91ae160c334aa",
+      "bytes": 148
+    },
+    {
+      "reference": ".private/freightctl-f257-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "primary_references": [
+    "https://www.postgresql.org/docs/18/sql-set-transaction.html",
+    "https://github.com/postgres/postgres/blob/REL_18_STABLE/src/backend/commands/variable.c#L506-L549"
+  ],
+  "owed": [
+    "Actual original HTTPS cookie/bearer metadata/no-mutation journey and new native read-only/fence/revocation cases on ARM/x86 PostgreSQL.",
+    "All remaining final-source native/security/browser/stock and baseline/AX/FINISH gates."
+  ],
+  "resources": "OneCPU/192MiB local focused units/static/integration compilation only;no PostgreSQL or other heavy runtime. Local inference off;retained35/source60 unchanged."
+}

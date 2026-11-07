@@ -1172,7 +1172,8 @@
         "docs/qualification/evidence/F251-held-private-custody.json",
         "docs/qualification/evidence/F253-private-cli-setup-and-output.json",
         "docs/qualification/evidence/F254-windows-inherited-ace-native-readback.json",
-        "docs/qualification/evidence/F255-actual-inherited-access-refusal.json"
+        "docs/qualification/evidence/F255-actual-inherited-access-refusal.json",
+        "docs/qualification/evidence/F257-readonly-browser-session-fence.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -1240,13 +1241,14 @@
         "F249 triages the original Windows inherited-ACE security refusal by requiring one actual applied DACL entry with INHERITED_ACE before the unchanged ValidateFile refusal. Only numeric flags are reported;no descriptor/SID/path contents are emitted. If Windows normalizes the flag,the test fails at the precondition;no skip or inferred security pass. Native Windows readback/refusal remain owed;compilation/vet pass only.",
         "F251 wires private missing-root creation,held-root exclusive staging,storage identity,writers,generated state,sealing and verified acceptance to actual protection profiles. Identity/objects bind Lstat to the opened physical object. New local regression observed exact-hash writable staging incorrectly readable,then rejects it until sealed. Focused original lifecycle/corruption/concurrent initialization/partial retention/projection tests,architecture,vet,integration compilation and Windows compilation/vet pass. Recovery data Sync and all directory-sync/hard-link obligations remain unchanged;actual Windows flush/link/recovery and full source runtime replay owed. Setup integration remains open.",
         "F253 wires setup parents,review artifacts and exchange download staging/sealing/directory sync to actual platform protection. Setup reference fixtures are private at creation and still fail changed credential/storage before SQL. Windows unsupported early-return tests are replaced by identical full byte,refusal,no-overwrite,partial cleanup and directory-substitution assertions. Focused local CLI cases,architecture,vet,integration compile and Windows compile/vet pass;actual original Windows behavior and native final-source replay owed.",
-        "F254 records actual Windows flags0x00 after the old inherited-bit setter on638d156. F255 prepares natural parent-to-child inheritance,requires actual inherited ACE readback before the unchanged held-file refusal,and separately exercises the actual production descriptor parser with protected owner-only inherited versus explicit entries. Only a read-only parser extraction changes production;its rules are unchanged. Compile/vet only;actual native inherited refusal remains red/owed. The new root-rename sharing failure is separately preserved."
+        "F254 records actual Windows flags0x00 after the old inherited-bit setter on638d156. F255 prepares natural parent-to-child inheritance,requires actual inherited ACE readback before the unchanged held-file refusal,and separately exercises the actual production descriptor parser with protected owner-only inherited versus explicit entries. Only a read-only parser extraction changes production;its rules are unchanged. Compile/vet only;actual native inherited refusal remains red/owed. The new root-rename sharing failure is separately preserved.",
+        "F257 repairs the source-confirmed invalid FOR SHARE inside read-only browser audit history,whose original HTTPS request returned503. Browser authentication takes its existing row fence first,then SET TRANSACTION READ ONLY before returning the transaction to services. Reauthorization reuses only the held row lock and still queries all live credential/session/root/authority/expiry predicates. New native regression requires read-only mode,55P03 concurrent row-writer refusal,25006 domain-write refusal,ordinary logout after release,captured-session refusal and unchanged bearer access. Local audit controls/architecture and integration compilation/vet pass;actual PostgreSQL/HTTPS red-to-green replay owed. No schema change or retained DB action."
       ],
       "current_item": {
-        "id": "F255",
-        "state": "Native inherited fixture corrected;actual native refusal owed",
-        "proof": "Actual Windows normalized flags0x00;natural inheritance and protected-parser cases compile/vet only",
-        "next": "Repair native held-root rename proof;browser read-only authentication;remaining implementation and FINISH"
+        "id": "F257",
+        "state": "Read-only browser authentication repaired;native behavioral proof owed",
+        "proof": "Original audit HTTPS503 retained;focused local controls/static/compilation only",
+        "next": "Replay actual readonly fence/HTTPS;repair native rename/receiver/fixture failures and remaining product implementation"
       }
     }
   ],

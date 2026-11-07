@@ -34,9 +34,18 @@ func (t *Transaction) currentBrowserSession(ctx context.Context) error {
 		return ErrUnauthorized
 	}
 	var id string
-	err := t.Tx.QueryRow(ctx, `SELECT session_id::text FROM browser_sessions WHERE session_id=$1 AND secret_hash=$2 AND actor_id=$3 AND namespace_root=$4 AND authority_revision=$5 AND state='active' AND expires_at>clock_timestamp() AND credential_hash=$6 FOR SHARE`, t.Scope.BrowserSessionID, t.Scope.BrowserSessionHash, t.Actor, t.Root, t.AuthorityRevision, t.Scope.TokenHash).Scan(&id)
+	query := `SELECT session_id::text FROM browser_sessions WHERE session_id=$1 AND secret_hash=$2 AND actor_id=$3 AND namespace_root=$4 AND authority_revision=$5 AND state='active' AND expires_at>clock_timestamp() AND credential_hash=$6`
+	if t.lockedBrowserSession != t.Scope.BrowserSessionID {
+		query += ` FOR SHARE`
+	}
+	err := t.Tx.QueryRow(ctx, query, t.Scope.BrowserSessionID, t.Scope.BrowserSessionHash, t.Actor, t.Root, t.AuthorityRevision, t.Scope.TokenHash).Scan(&id)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return ErrUnauthorized
+	}
+	if err == nil {
+		// Repeated checks still query every live predicate. They reuse only the
+		// transaction's existing row lock,not a cached authorization decision.
+		t.lockedBrowserSession = id
 	}
 	return err
 }

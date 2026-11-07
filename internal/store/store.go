@@ -245,14 +245,15 @@ type Event struct {
 	At         time.Time       `json:"happened_at"`
 }
 type Transaction struct {
-	Tx                pgx.Tx
-	Scope             Scope
-	Actor             string
-	Permissions       []string
-	Root              string
-	AuthorityRevision int64
-	ExpiresAt         *time.Time
-	PendingFiles      map[string]bool
+	Tx                   pgx.Tx
+	Scope                Scope
+	Actor                string
+	Permissions          []string
+	Root                 string
+	AuthorityRevision    int64
+	ExpiresAt            *time.Time
+	PendingFiles         map[string]bool
+	lockedBrowserSession string
 }
 
 // Connection strings are read from bounded protected references. pgx requires a string copy.
@@ -472,6 +473,14 @@ func (s *Store) begin(ctx context.Context, scope Scope, options pgx.TxOptions) (
 }
 
 func (s *Store) beginAuthenticated(ctx context.Context, scope Scope, options pgx.TxOptions, accountLock bool) (*Transaction, error) {
+	// PostgreSQL forbids FOR SHARE in a read-only transaction. Authenticate the
+	// browser and acquire its ordinary row fence first,then enforce READ ONLY
+	// before exposing the transaction to the read service. No domain mutation
+	// occurs during authentication;the fence remains held until commit/rollback.
+	readOnlyBrowser := options.AccessMode == pgx.ReadOnly && (scope.BrowserSessionID != "" || scope.BrowserSessionHash != "")
+	if readOnlyBrowser {
+		options.AccessMode = pgx.ReadWrite
+	}
 	tx, err := s.scopedTransaction(ctx, scope, options)
 	if err != nil {
 		return nil, err
@@ -496,6 +505,11 @@ func (s *Store) beginAuthenticated(ctx context.Context, scope Scope, options pgx
 	}
 	if _, err = tx.Exec(ctx, `SELECT set_config('freightctl.actor_id',$1,true)`, t.Actor); err != nil {
 		return nil, err
+	}
+	if readOnlyBrowser {
+		if _, err = tx.Exec(ctx, `SET TRANSACTION READ ONLY`); err != nil {
+			return nil, err
+		}
 	}
 	ok = true
 	return t, nil
