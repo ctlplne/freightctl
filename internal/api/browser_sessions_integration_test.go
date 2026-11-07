@@ -19,9 +19,57 @@ import (
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/custody"
+	"github.com/ctlplne/freightctl/internal/protectedfs"
 	"github.com/ctlplne/freightctl/internal/store"
 	"github.com/jackc/pgx/v5"
 )
+
+// Administrative protocol controls must address the same isolated database as
+// the served fixture, not the environment's default maintenance database.
+func browserAdminReference(t *testing.T, service *custody.Service) string {
+	t.Helper()
+	name := service.DB.Pool.Config().ConnConfig.Database
+	prefix := "freightctl_browser_"
+	suffix := strings.TrimPrefix(name, prefix)
+	if !strings.HasPrefix(name, prefix) || len(suffix) != 32 || strings.Trim(suffix, "0123456789abcdef") != "" {
+		t.Fatal("admin reference requires exact task-owned browser database")
+	}
+	secret, err := secure.ReadSecret(os.Getenv("FREIGHTCTL_TEST_ADMIN_FILE"), 4096)
+	if err != nil {
+		t.Fatal("fixture administrative reference unavailable")
+	}
+	u, err := url.Parse(string(secret.Bytes))
+	secret.Close()
+	if err != nil {
+		t.Fatal("fixture administrative reference malformed")
+	}
+	u.Path = "/" + name
+	wire := secure.ProtectBytes([]byte(u.String()))
+	defer wire.Close()
+	if len(wire.Bytes) > 4096 {
+		t.Fatal("fixture administrative reference exceeds existing bound")
+	}
+	parsed, err := pgx.ParseConfig(string(wire.Bytes))
+	if err != nil || parsed.Database != name {
+		t.Fatal("fixture administrative reference resolves another database")
+	}
+	path := filepath.Join(t.TempDir(), "fixture-admin.dsn")
+	f, err := protectedfs.CreateExclusive(path)
+	if err != nil {
+		t.Fatal("fixture administrative reference cannot be created")
+	}
+	defer f.Close()
+	if _, err = f.Write(wire.Bytes); err != nil {
+		t.Fatal("fixture administrative reference write failed")
+	}
+	if err = f.Sync(); err != nil {
+		t.Fatal("fixture administrative reference sync failed")
+	}
+	if err = f.Close(); err != nil {
+		t.Fatal("fixture administrative reference close failed")
+	}
+	return path
+}
 
 func browserAPI(t *testing.T, lifetime time.Duration, exchangeSettings ...custody.ExchangeSettings) (*custody.Service, store.Scope, *secure.Secret, *httptest.Server) {
 	t.Helper()

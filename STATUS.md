@@ -4,11 +4,13 @@ Updated 2026-11-07. Active under owner resume. All83 whole parity rows,twelve
 complete journeys and AX01–AX08 remain open. Assisted deployment,independent
 adoption and enterprise readiness remain unqualified.
 
-Latest pushed source:1102224828a64e18245e4932578e8d46f0a115b1.
-F200 preserves its original17 terminal workflows/37 jobs. Listed dependency,
-vulnerability,history-secret,producer and image gates passed;both Linux module
-verifications passed. Original application/platform/metadata/public/browser/stock
-failures remain red. No originals were cancelled,restarted or substituted.
+Latest pushed source:91ed18d4aa2bb8900f684035c241f5b8d30a37b1.
+F202 preserves its original16 terminal workflows/35 jobs:19 pass,16 fail.
+Listed security checks pass. Core,macOS unit/race,both metadata restores and
+several original stock/browser/public jobs pass;both Linux unit/race steps pass.
+PostgreSQL integration,Windows and remaining original runtime failures stay red.
+These results apply to this source only. No originals were cancelled,restarted
+or substituted.
 FINISH audit/repair has started;remaining implementation requirements stay open.
 F201 preserves exact original reporter/OpenAPI/schema failure handles,repairs
 stale synthetic schema fixtures and the complete typed response schema,and wraps
@@ -57,6 +59,12 @@ assertions:HTTP negative read uses an explicitly owner-only namespace entry;
 rejected release sends a well-formed forged hash;completed SQL report candidates
 clear worker/lease and require the intended guard error. Production rules are
 unchanged. Integration compile/vet pass;actual original native replays stay owed.
+
+F213 binds SCP key enrollment/revocation to the served fixture's exact isolated
+database through a protected administrative reference. The previous reference
+addressed the maintenance database,so enrollment failed before protocol proof.
+No global environment or production authentication changes. Integration compile
+and vet pass;original native byte,abort,revocation and modern-SFTP replay is owed.
 
 Schema3 records.project binds an owned checked input,approved exact task,one
 durable processing intent,slots and events/receipt. Stable work keys select one

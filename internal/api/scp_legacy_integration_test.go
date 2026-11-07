@@ -57,6 +57,7 @@ func TestLegacySCPOpenSSHNativeBytesAbortRevocationAndSFTPDefault(t *testing.T) 
 		}
 	}
 	service, scope, admin, https := browserAPI(t, 10*time.Minute)
+	adminReference := browserAdminReference(t, service)
 	identity, err := service.DB.Identity(t.Context(), scope)
 	if err != nil {
 		t.Fatal(err)
@@ -71,7 +72,7 @@ func TestLegacySCPOpenSSHNativeBytesAbortRevocationAndSFTPDefault(t *testing.T) 
 	if err != nil {
 		t.Fatal(err)
 	}
-	registered, err := store.ManageSSHKey(t.Context(), os.Getenv("FREIGHTCTL_TEST_ADMIN_FILE"), tokenPath, scope.Tenant, scope.Partner, public, "")
+	registered, err := store.ManageSSHKey(t.Context(), adminReference, tokenPath, scope.Tenant, scope.Partner, public, "")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -218,7 +219,7 @@ func TestLegacySCPOpenSSHNativeBytesAbortRevocationAndSFTPDefault(t *testing.T) 
 			t.Fatal("native data stream write failed")
 		}
 		if revoke {
-			if result, err := store.ManageSSHKey(t.Context(), os.Getenv("FREIGHTCTL_TEST_ADMIN_FILE"), tokenPath, scope.Tenant, scope.Partner, secure.SSHPublic{}, registered.ID); err != nil || !result.Revoked {
+			if result, err := store.ManageSSHKey(t.Context(), adminReference, tokenPath, scope.Tenant, scope.Partner, secure.SSHPublic{}, registered.ID); err != nil || !result.Revoked {
 				t.Fatal("ordinary SSH key revocation failed", err)
 			}
 		}
@@ -261,7 +262,7 @@ func TestLegacySCPOpenSSHNativeBytesAbortRevocationAndSFTPDefault(t *testing.T) 
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err = store.ManageSSHKey(t.Context(), os.Getenv("FREIGHTCTL_TEST_ADMIN_FILE"), otherToken, scope.Tenant, scope.Partner, otherPublic, ""); err != nil {
+	if _, err = store.ManageSSHKey(t.Context(), adminReference, otherToken, scope.Tenant, scope.Partner, otherPublic, ""); err != nil {
 		t.Fatal(err)
 	}
 	otherIdentity, err := service.DB.Identity(t.Context(), store.Scope{Tenant: scope.Tenant, Partner: scope.Partner, TokenHash: secure.Digest(other.Bytes)})

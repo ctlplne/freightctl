@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "id": "F213",
+  "observed_at": "2026-11-07",
+  "base_candidate": "8f15c62b185bdbc525c707ada56286bf16fb2247",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Original SCP administrative fixture corrected;actual native replay owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "d1078248b15b750c2c1ac0d89daf29bb0058bdbbe10dfa5c04142dfe9c4b6529",
+      "bytes": 14115
+    },
+    {
+      "reference": "docs/qualification/evidence/F202-finish-repair-terminal-ci.json",
+      "sha256": "2882f9837234acf1e40583f272fcca4eb5d8016b9965732d40e4e952ff188fda",
+      "bytes": 20189
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "0a4445129c834b76c04bc1af7a6b08ff3273a37668f2dda28eae90e39facc8e1",
+      "bytes": 363677
+    },
+    {
+      "reference": "internal/api/browser_sessions_integration_test.go",
+      "sha256": "7d9cb52bfec09513590fe7ed24c259826a45df0d8b0040409abb2a33918da56a",
+      "bytes": 11963
+    },
+    {
+      "reference": "internal/api/scp_legacy_integration_test.go",
+      "sha256": "867599cae883647085cad05af80e9a22e45332dd3b8ebab02a5baa0bd0b901ea",
+      "bytes": 13337
+    }
+  ],
+  "original_failures": [
+    {
+      "candidate": "91ed18d4aa2bb8900f684035c241f5b8d30a37b1",
+      "run": 42348791082,
+      "job": 128332262319,
+      "url": "https://github.com/ctlplne/freightctl/actions/jobs/128332262319",
+      "test": "TestLegacySCPOpenSSHNativeBytesAbortRevocationAndSFTPDefault",
+      "observation": "Unauthorized during first SSH key enrollment before protocol execution. browserAPI creates credentials in a fresh freightctl_browser_ database,but the administrative environment reference addresses the maintenance database."
+    }
+  ],
+  "changed": [
+    "Derive a protected bounded admin reference for the exact served fixture database;validate the task-owned name and parse the resulting PostgreSQL configuration to reject database query overrides. Keep credentials out of argv/logs and preserve the original reference and process environment.",
+    "Use the exact reference for initial key enrollment,live revocation and cross-actor enrollment. Production authentication,permissions,host trust,protocol and all byte/abort/revocation/SFTP/cross-actor assertions are unchanged."
+  ],
+  "green": [
+    "Affected integration-tag compilation with -run ^$ only and vet pass. No local PostgreSQL or native SCP run."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f213-final-native-scp-compile.log",
+      "sha256": "b0b4259857fa07ade071b4d9ed751ca6960f5a568e1440ec9f39a2cd0edad690",
+      "bytes": 73
+    },
+    {
+      "reference": ".private/freightctl-f213-native-scp-compile.log",
+      "sha256": "b7d318603071357fdc3db8b1419b6a34a6f100bfede792e8aee9f6cb6dd52ccb",
+      "bytes": 73
+    },
+    {
+      "reference": ".private/freightctl-f213-scp-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "terminal_batch_evidence": "docs/qualification/evidence/F202-finish-repair-terminal-ci.json",
+  "owed": [
+    "Original native SCP enrollment/bytes/abort/revocation/host-trust/modern-SFTP/cross-actor repair replay on both architectures.",
+    "Actual final-source native/browser/stock/security/race/restore/reproducibility and all remaining baseline/AX/FINISH gates."
+  ],
+  "resources": "OneCPU/192MiB compilation only;no local PostgreSQL,Chrome,model,scanner or heavy peer. Retained35/source60 unchanged.",
+  "readiness": "No whole row,journey,AX,deployment,independent adoption or enterprise qualification granted."
+}
