@@ -223,3 +223,13 @@ Limited security classification identifies no actionable assertion or cause;
 this establishes no safety. Receive remains red. Both journeys remain
 unqualified;detailed original diagnosis/repair and final-source replay stay
 mandatory at FINISH. The original PostgreSQL/image jobs are still running.
+
+F423 exposes F421 original private namespace receipt recovery to MCP agents
+through one metadata-only read operation. Catalog v19 has44 tools;all43 original
+definitions/constraints remain. Property XML and its mutation operation stay
+outside this tool profile. Actual missing-tool red becomes focused green after
+a test SDK field-type correction;the initial compile failure is preserved.
+Catalog authority/schema checks,tagged stock-SDK compile,vet and architecture
+pass. Actual deleted-source/private/no-effects/content-canary SDK proof and
+original exchange/reply/final-source compatibility remain owed. No inference,
+resource budget,permission or schema change.

@@ -4024,5 +4024,208 @@
       "idempotentHint": true,
       "openWorldHint": false
     }
+  },
+  {
+    "name": "freightctl.namespace_receipt",
+    "description": "Read one original actor-private namespace commit receipt using its exact original metadata command and key. Requires current read/list/original operation grants and unchanged mount/authority meaning. Reads historical commit metadata even after source removal;opens no custody and never executes,forwards,approves or asserts current state. Original property mutation contents stay outside this metadata-only tool profile.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "additionalProperties": false,
+          "properties": {
+            "expected_entry_id": {
+              "type": "string"
+            },
+            "expected_file_id": {
+              "type": "string"
+            },
+            "expected_revision": {
+              "type": [
+                "null",
+                "integer"
+              ]
+            },
+            "file_id": {
+              "type": "string"
+            },
+            "mode": {
+              "maximum": 4294967295,
+              "minimum": 0,
+              "type": [
+                "null",
+                "integer"
+              ]
+            },
+            "modified_at": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "operation": {
+              "type": "string",
+              "enum": [
+                "mkdir",
+                "publish",
+                "copy",
+                "rename",
+                "remove",
+                "rmdir",
+                "setstat",
+                "move_tree",
+                "remove_tree",
+                "copy_tree",
+                "copy_dir"
+              ]
+            },
+            "path": {
+              "type": "string"
+            },
+            "replace": {
+              "type": "boolean"
+            },
+            "target": {
+              "type": "string"
+            },
+            "target_revision": {
+              "type": [
+                "null",
+                "integer"
+              ]
+            }
+          },
+          "required": [
+            "operation",
+            "path"
+          ],
+          "type": "object"
+        },
+        "request_key": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        }
+      },
+      "required": [
+        "command",
+        "request_key"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "completed_event_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "type": "string"
+        },
+        "observation": {
+          "const": "original-commit-not-current-state",
+          "type": "string"
+        },
+        "profile": {
+          "const": "namespace-command-receipt-v1",
+          "type": "string"
+        },
+        "request_hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "request_key": {
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$",
+          "type": "string"
+        },
+        "result": {
+          "additionalProperties": false,
+          "properties": {
+            "changed": {
+              "type": "integer"
+            },
+            "entry": {
+              "additionalProperties": false,
+              "properties": {
+                "changed_event_id": {
+                  "type": "string"
+                },
+                "deleted": {
+                  "type": "boolean"
+                },
+                "file_id": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "string"
+                },
+                "kind": {
+                  "type": "string"
+                },
+                "mode": {
+                  "maximum": 4294967295,
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "modified_at": {
+                  "type": "string"
+                },
+                "owner_actor_id": {
+                  "type": "string"
+                },
+                "parent": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "revision": {
+                  "type": "integer"
+                },
+                "size_bytes": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "id",
+                "path",
+                "parent",
+                "kind",
+                "owner_actor_id",
+                "mode",
+                "modified_at",
+                "revision",
+                "deleted",
+                "changed_event_id",
+                "size_bytes"
+              ],
+              "type": "object"
+            },
+            "replayed": {
+              "const": false,
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "entry",
+            "changed",
+            "replayed"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "profile",
+        "observation",
+        "request_key",
+        "request_hash",
+        "completed_event_id",
+        "result"
+      ],
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
   }
 ]

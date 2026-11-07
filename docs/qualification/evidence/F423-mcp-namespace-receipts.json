@@ -1,0 +1,182 @@
+{
+  "schema_version": 1,
+  "id": "F423",
+  "observed_at": "2026-11-07",
+  "base_candidate": "3c148cdf72914113daa4fb4e921ccfa14da78f8c",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F423 adds one metadata-only read-only namespace_receipt MCP tool through the F421 service,with strict historical output. Catalog v19 has44 tools;all43 original entries/fields/constraints are preserved. Original property_changes(including null/empty) and properties operation are excluded from tool context;existing16KiB command/128-character key and wire bounds remain. Actual old catalog-missing-tool red becomes focused green after correcting an initial test SDK bool-field compile mistake(preserved). Full catalog authority checks,tagged stock-SDK compilation,vet and architecture pass. Native SDK exact deleted-source receipt,private actor/no-extra-events/content-canary and original exchange/reply compatibility remain owed;no schema,permission/resource budget or inference change.",
+  "contract": {
+    "tool": "freightctl.namespace_receipt",
+    "implementation": "exchange-tools-v19",
+    "catalog_count": 44,
+    "original43tools_preserved": true,
+    "input": "Exact original metadata command/request_key;strict16KiB command/128-character key;property_changes field and properties operation excluded",
+    "output": "Exact F421 historical-only typed schema;original-commit-not-current-state,no content/current state/execution authority",
+    "authority": "Same current read/list/original operation grants,actor RLS,original mount/authority/command meaning and reauthorization as API/CLI",
+    "effects": "No command dispatch,custody opening,network capability,domain event/receipt insertion or inference",
+    "existing_wire_bounds_changed": false
+  },
+  "red_green": [
+    {
+      "proof": "Initial test used wrong SDK bool field type;compile failure preserved and corrected",
+      "exit_code": 1,
+      "reference": ".private/freightctl-f423-mcp-receipt-red.log"
+    },
+    {
+      "proof": "Actual original catalog lacks private namespace receipt recovery",
+      "exit_code": 1,
+      "reference": ".private/freightctl-f423-mcp-catalog-red.log"
+    },
+    {
+      "proof": "New metadata/historical bindings,direct content/control refusal and complete existing catalog authority checks",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f423-mcp-final-focused.log"
+    },
+    {
+      "proof": "Tagged native stock-SDK and original exchange/reply compile only",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f423-native-compile.log"
+    },
+    {
+      "proof": "Affected tagged vet",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f423-vet.log"
+    },
+    {
+      "proof": "Architecture",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f423-architecture.log"
+    },
+    {
+      "proof": "Six Go files formatted",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f423-format.log"
+    },
+    {
+      "proof": "Record references only",
+      "exit_code": 0,
+      "reference": ".private/freightctl-f423-records.log"
+    }
+  ],
+  "prepared_native_proofs": [
+    "Official stock SDK discovers exact44-tool private/noncached catalog and recovers original deleted-directory receipt without repeating deletion",
+    "Stored inert XML content canary stays out of MCP structured/text metadata result;no network capability is acquired",
+    "Repeated exact read,unknown key and other current actor refusal leave original global event/command counts unchanged",
+    "Original stock-client separate exchange/reply and all other43 tools keep their exact schemas/authority/effects"
+  ],
+  "owed": [
+    "All prepared actual native stock-SDK outcomes;compile is not runtime qualification",
+    "Actual final-source API/CLI/browser/MCP/security/original exchange/reply and remaining mandatory baseline/AX/readiness gates"
+  ],
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "d35371752565c0939a7d3b9a33831e422ae8ec16b612218ba53a23e30a4352e6",
+      "bytes": 15564
+    },
+    {
+      "reference": "docs/protocols/artifact-exchange-mcp.md",
+      "sha256": "df4e6e8c5ced79f03cfcc2e60bf9659341e8020c7d1f8d52557fcc08f150530f",
+      "bytes": 19045
+    },
+    {
+      "reference": "docs/qualification/parity.json",
+      "sha256": "ce04fd2456a98f3c040435733f9ea617fa2af5e5737213801825728ce15e4669",
+      "bytes": 155179
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "2734ab59e007e4d8e108ff168a23135bbd5cb98c3ac3b796d79317d4edc72dfe",
+      "bytes": 657590
+    },
+    {
+      "reference": "internal/api/mcp-tools.json",
+      "sha256": "0010061201ce30f91e43c98be53013152c1cedff2f4d574ee649e8858e61f017",
+      "bytes": 131132
+    },
+    {
+      "reference": "internal/api/mcp.go",
+      "sha256": "61759cf1b6d0666e60b3a304445fecbaa87efab1644251fd30cabf841a69a620",
+      "bytes": 12783
+    },
+    {
+      "reference": "internal/api/mcp_integration_test.go",
+      "sha256": "ebe41403514e713c2b5ca0ba855ec0fbeead13f75b2f6e24640ee8fec3c28fff",
+      "bytes": 37173
+    },
+    {
+      "reference": "internal/api/mcp_namespace_receipts.go",
+      "sha256": "6750672de6f73228f4bf911cbda90abf42dd0e4c826e572260ce797d03767c90",
+      "bytes": 1164
+    },
+    {
+      "reference": "internal/api/mcp_namespace_receipts_integration_test.go",
+      "sha256": "de20028ba9d3256f623d95ef8e04f9a4260b63c4417a9c78e4cd618c3d439bbe",
+      "bytes": 4764
+    },
+    {
+      "reference": "internal/api/mcp_namespace_receipts_test.go",
+      "sha256": "9d657cec6c21624dbd283278e6f072d5687c5f7fa18758654133b7f1c27ca4e1",
+      "bytes": 4589
+    },
+    {
+      "reference": "internal/api/mcp_test.go",
+      "sha256": "06722a4cea096288b76b1f0f6a1570abe6c3f0865b9249c367a95526f5a04a87",
+      "bytes": 20432
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f423-mcp-receipt-red.log",
+      "sha256": "49e2559532d38c1d156acbbde5fc7403ca70b2f595db0d5d667a520344f327c1",
+      "bytes": 456
+    },
+    {
+      "reference": ".private/freightctl-f423-mcp-catalog-red.log",
+      "sha256": "436b1dd3467fb1b92142a9e5c0ce32b16701436ec7ae9ba2b2b0454e54d8ea1f",
+      "bytes": 275
+    },
+    {
+      "reference": ".private/freightctl-f423-mcp-final-focused.log",
+      "sha256": "516e61724e676dd84d27f4a7d0695470c34889e6d10eb4741b2627fdb0550250",
+      "bytes": 55
+    },
+    {
+      "reference": ".private/freightctl-f423-native-compile.log",
+      "sha256": "f9970409fe9ed9c49ad00f9aae980864cb9d8005cfc9755335d6e14bf199db4f",
+      "bytes": 73
+    },
+    {
+      "reference": ".private/freightctl-f423-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f423-architecture.log",
+      "sha256": "76ee60b88b1ff84513e61952fddb34c7e61d58e9bfca3e0648c7091e18dc0c7a",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f423-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f423-records.log",
+      "sha256": "826009b37d6c8254924b7fd1ee12981059544175f2c890ad4186b88b41b583b4",
+      "bytes": 106
+    },
+    {
+      "reference": ".private/freightctl-f423-catalog-preservation.json",
+      "sha256": "f0502bf7bbf629e3017a3b95ca8fa1a8f557040e01654041927ed99ccd6008f9",
+      "bytes": 271
+    }
+  ],
+  "local_inference": false,
+  "local_heavy_runtime_started": false,
+  "schema_or_permission_resource_budgets_changed": false,
+  "publication_or_deployment": false,
+  "original_runtime_runs_cancelled_or_rerun": false,
+  "overall_goal_complete": false
+}

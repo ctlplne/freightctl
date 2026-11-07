@@ -1156,7 +1156,8 @@
         "docs/qualification/evidence/F416-dav-collection-delete.json",
         "docs/qualification/evidence/F417-dav-collection-copy.json",
         "docs/qualification/evidence/F418-cli-tree-copy-storage.json",
-        "docs/qualification/evidence/F421-original-namespace-receipts.json"
+        "docs/qualification/evidence/F421-original-namespace-receipts.json",
+        "docs/qualification/evidence/F423-mcp-namespace-receipts.json"
       ],
       "qualification_blockers": [
         "Authorized GoAnywhere MFT installation and exact edition/version for observed comparison",

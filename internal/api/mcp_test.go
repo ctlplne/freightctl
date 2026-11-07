@@ -83,7 +83,7 @@ func TestMCPMediaOriginAndHeaderAmbiguityRefuseBeforeDatabase(t *testing.T) {
 
 func TestMCPToolSchemasBindOrdinaryRequestsAndExcludeAmbientAuthority(t *testing.T) {
 	var tools []*mcp.Tool
-	if err := json.Unmarshal(mcpCatalog, &tools); err != nil || len(tools) != 43 {
+	if err := json.Unmarshal(mcpCatalog, &tools); err != nil || len(tools) != 44 {
 		t.Fatal("missing fixed tool catalog", err)
 	}
 	raw, err := os.ReadFile("../../web/tests/fixtures/artifact-exchange.json")
@@ -115,6 +115,8 @@ func TestMCPToolSchemasBindOrdinaryRequestsAndExcludeAmbientAuthority(t *testing
 		}
 		var args map[string]any
 		switch tool.Name {
+		case "freightctl.namespace_receipt":
+			args = map[string]any{"request_key": "original-command", "command": map[string]any{"operation": "remove_tree", "path": "/source", "expected_entry_id": "10000000-1111-4111-8111-111111111111", "expected_revision": 1}}
 		case "freightctl.propose_processing_definition", "freightctl.list_processing_proposals", "freightctl.inspect_processing_proposal", "freightctl.adopt_processing_proposal", "freightctl.close_processing_proposal":
 			args = proposalMCPArguments(t, tool.Name)
 		case "freightctl.list_processing_workflows":

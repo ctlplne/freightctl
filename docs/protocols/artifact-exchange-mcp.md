@@ -46,9 +46,40 @@ same-origin CSRF protection. Tool-list results are private and immediately stale
 | `validate_workflow`, `propose_workflow` | Validate a typed ordinary workflow or record an unapproved draft with its original operation key. Current workflow permissions and registered connection/source checks apply. |
 | `artifact_upload_start`, `artifact_upload_status`, `artifact_upload_complete`, `artifact_upload_abort` | Create/recover a new confined virtual-file ticket,inspect committed progress or explicitly complete/abort through ordinary resumable custody. Host sends bytes outside MCP. |
 | `outgoing_exchanges`, `exchange_receipt` | Inspect own original offer receipts and separately checked current state. Enumeration also needs list. |
+| `namespace_receipt` | Read the exact original private namespace commit using original command metadata/key,including after removal. No path mutation,custody opening,current-state assertion or content disclosure. |
 | `close_exchange` | Record one exact sender cancellation or recipient decline using its original request hash and stable operation key. |
 | `prepare_onward`, `start_onward` | Review an owned artifact/approved ordered workflow,then atomically record ordinary intents under the exact review. |
 | `onward_status`, `work_onward` | Inspect or execute one ordinary step only with the original reviewed-start receipt and exact run binding. |
+
+The current implementation is `exchange-tools-v19` with44 tools. The original43
+catalog entries keep their schemas,annotations and behavior. `namespace_receipt`
+adds one read-only,non-destructive,idempotent,closed-world tool with a strict
+historical output schema. Annotations describe effects;the server still checks
+current identity,tenant,partner,read/list/original operation grants,mount,
+authority revision and the exact original normalized command meaning.
+
+For example,retain the metadata for an original remove_tree command and its key:
+
+```json
+{"request_key":"original-delete","command":{"operation":"remove_tree","path":"/folder","expected_entry_id":"10000000-1111-4111-8111-111111111111","expected_revision":1}}
+```
+
+The tool calls the same read-only service as the
+[API and CLI receipt contract](../api/namespace-receipts.openapi.json). It can
+recover the committed result when that path is gone,without issuing the command
+again. `original-commit-not-current-state` and the completed event identify old
+transaction evidence;the result grants no current-byte,delivery,forwarding or
+execution authority. Ordinary mutation and property snapshots stay separate.
+
+This MCP profile accepts only original command metadata. It excludes the
+`property_changes` field,including null/empty forms,and the properties operation;
+original XML values never become tool context or output. Use the explicit
+API/CLI content path for property-command receipt recovery under its ordinary
+permissions. Metadata commands retain the existing16KiB control bound and
+original128-character key grammar;MCP wire/depth/token bounds stay unchanged.
+Unknown keys,other actors or valid changed meanings remain unknown after
+authorization. Actual stock-SDK/private/no-effects/content-canary runtime proof
+and all final-source qualification remain owed until their native execution.
 
 `validate_workflow` takes `request` in the ordinary `PreviewRequest` shape:
 `definition` and optional `file_id`. `propose_workflow` takes the ordinary draft
