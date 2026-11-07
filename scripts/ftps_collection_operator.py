@@ -162,7 +162,7 @@ def exercise(root, private, mode, database, http_port, cert, binary, tenant, par
         metadata.private_write(directory/'config.json', metadata.canonical(config))
         command(prefix+'browser', ['node', 'scripts/onboarding-exchange-browser.mjs', directory/'config.json'], 150)
         result = metadata.load(directory/'raw/ftps-operator-result.json')
-        view = invoke('status', 'workflow-collection-status', '--job-id', result['view']['job']['id'])
+        view = invoke('status', 'workflow-collection-status', '--collection-id', result['view']['job']['id'])
         require(metadata.same(view, result['view']), 'operator browser and CLI custody state differ')
         for label, token in (('owner', owner), ('producer', producer_token)):
             metadata.private_write(directory/(label+'.headers'), b'Authorization: Bearer '+read(token, 256)+b'\n')
@@ -300,8 +300,13 @@ def validate_browser(private, directory, mode, identity, config, final):
         and metadata.same(draft['revision'], 1) and metadata.same(approved['revision'], 2)
         and metadata.same(approved['approval_authority'], identity['authority_revision']), 'operator approved workflow differs')
     p = result['job_preview']
+    # Registration receipts pass through JSONB;their key order is not Go's
+    # typed connection order. Preserve exact semantic checks,then reconstruct
+    # the independently validated wire shape before hashing the frozen job.
+    typed_connection = metadata.dispatch.expected_connection_rotation(c, metadata.load(directory/'connection.json'), 1)
+    require(metadata.same(c, typed_connection), 'operator exact typed source connection differs')
     expected_job = {'schema_version': 1, 'workflow': metadata.ref(approved), 'source': d['source'],
-        'source_connection': c, 'source_identity': hashlib.sha256((c['id']+':/').encode()).hexdigest(),
+        'source_connection': typed_connection, 'source_identity': hashlib.sha256((c['id']+':/').encode()).hexdigest(),
         'authority_revision': identity['authority_revision'], 'storage_id': p['definition'].get('storage_id'),
         'namespace_root': '/', 'timeout_seconds': 300, 'effects': []}
     require(type(expected_job['storage_id']) is str and re.fullmatch(UUID, expected_job['storage_id'])

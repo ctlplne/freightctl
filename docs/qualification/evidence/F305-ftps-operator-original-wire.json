@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "id": "F305",
+  "observed_at": "2026-11-07",
+  "base_candidate": "fb578f12f73315911bf0117a293d0b32a465bdc8",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Two actual operator verifier regressions repaired;native original proof owed",
+  "changed": "F305 fixes two reproducible FTPS operator verifier faults:ordinary status uses --collection-id rather than undefined --job-id,and frozen job hashing reconstructs the already independently validated typed connection after JSONB reorders registration receipts. New tests retain actual argument identity and model the real browser typed field order. Both cases red before,all10 operator stand-in methods green after;all original semantic/byte/key/receipt/authority/privacy/count/cleanup/assertions remain. Original9439074 both-mode operator/source failures are preserved;actual native replay and source clean-shutdown cause remain owed. F304 records5 owner-only commits pushed FF to fb578f1 with effective pinned Gitleaks and16 original native handles;no results inherited.",
+  "red": {
+    "proof": ".private/freightctl-f305-operator-contract-red.log",
+    "tests": [
+      "test_status_uses_the_actual_collection_cli_selector",
+      "test_jsonb_reordered_registration_does_not_change_the_actual_typed_job_hash"
+    ],
+    "observed": [
+      "Unsupported --job-id argument recorded by actual fixture producer.",
+      "Both-mode recursively reordered JSONB receipt combined with independently reconstructed browser typed connection fails original operator collection-preview hash guard."
+    ]
+  },
+  "green": [
+    "All10 actual producer/evidence verifier stand-in methods pass,including exact CLI selector and both-mode JSONB reordering.",
+    "Affected Python syntax passes. No actual command/process/browser/PG/protocol/runtime/cleanup qualification inferred."
+  ],
+  "source_files": [
+    {
+      "reference": "scripts/ftps_collection_operator.py",
+      "sha256": "e1670635d64dc15401fb8605158955ef295765549395a5558bf4dfbcdd0e4e19",
+      "bytes": 33172
+    },
+    {
+      "reference": "scripts/test-ftps-collection-operator.py",
+      "sha256": "6dce8eba802a281fccc107700ddc956644e7def0c2b8207c2620beb9b034c394",
+      "bytes": 23420
+    },
+    {
+      "reference": "docs/qualification/evidence/F304-original-next-native-batch.json",
+      "sha256": "adaa6a604d6d64d17acffe07d5f50cd0c8ff738f26fd970acc0691a810ade03a",
+      "bytes": 5712
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "44bd6887393ff8f216aebac75a67e75974cc1b940f735c0e13159101e07df61f",
+      "bytes": 404289
+    },
+    {
+      "reference": "STATUS.md",
+      "sha256": "308926745346742e9978ecff0dc7bf3aad2612102481e4e160872c8de4a6384e",
+      "bytes": 7988
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f305-operator-contract-red.log",
+      "sha256": "41d092646581d552f21450732c846944fc9d57cdd7fb06636db94234089c4bb1",
+      "bytes": 4679
+    },
+    {
+      "reference": ".private/freightctl-f305-operator-contract-green-first.log",
+      "sha256": "23d901e182dbcd22dfd42a8dc09e6826b5bf69d8b84764659435179a0b116661",
+      "bytes": 1971
+    },
+    {
+      "reference": ".private/freightctl-f305-python-syntax.log",
+      "sha256": "2d30edb1e834f197adbb81cf31df802c7bd36328f88f192eaf11ce465675d37f",
+      "bytes": 30
+    }
+  ],
+  "original_failures": {
+    "candidate": "9439074aae173afe5305373cee87307898f24459",
+    "run": 42366950422,
+    "jobs": [
+      128386899903,
+      128386900050
+    ],
+    "observation": "Both original operator profiles report original-output-contract and source helper exit failure after metadata browser completed. No full cause or repaired native result claimed."
+  },
+  "owed": [
+    "Actual original FTPS metadata/operator/browser/CLI/custody/cleanup replay in both native profiles;retain any source helper failure.",
+    "All remaining current native/stock/browser/security/restore/baseline/AX/FINISH outcomes."
+  ],
+  "resources": "Lightweight Python process/HTTP/Page stand-ins only;heavy runtimes and inference remain off;no budgets or protocol/authority/isolation checks changed."
+}

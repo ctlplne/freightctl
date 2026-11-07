@@ -36,6 +36,7 @@ class OperatorContracts(unittest.TestCase):
         metadata.private_write(self.private/'pg-runtime.dsn',
             ('postgresql://runtime:private-stand-in@127.0.0.1:25432/'+self.database+'?sslmode=disable').encode())
         self.fail_browser = False
+        self.reorder_server_receipts = False
         self.consumer = {'tenant_id': '10000000-1111-4111-8111-111111111111',
             'partner_id': '10000001-1111-4111-8111-111111111111',
             'actor_id': '10000002-1111-4111-8111-111111111111', 'authority_revision': 3}
@@ -101,7 +102,10 @@ class OperatorContracts(unittest.TestCase):
         directory, raw = config_path.parent, config_path.parent/'raw'
         session_headers, session_steps = session_fixture.fixture(directory, config, self.consumer)
         fixture = copy.deepcopy(FIXTURES['explicit-local'])
-        d, c = config['definition'], config['source']
+        d = config['definition']
+        # The real browser decoder reconstructs Go's field order independently
+        # of JSONB receipt key order. Keep that difference in this stand-in.
+        c = metadata.dispatch.expected_connection_rotation(config['source'], metadata.load(directory/'connection.json'), 1)
         draft = dict(fixture['workflow'], version=1, revision=1, state='draft', approval_authority=0,
             definition=d, definition_hash=config['definition_hash'])
         approved = dict(draft, revision=2, state='approved', approval_authority=3)
@@ -204,6 +208,8 @@ class OperatorContracts(unittest.TestCase):
         elif suffix.startswith('connection-register'):
             c = metadata.dispatch.expected_connection_rotation({'id': '50000000-1111-4111-8111-111111111111'}, metadata.load(directory/'connection.json'), 1)
             result = metadata.canonical({'resource': c, 'replayed': suffix.endswith('replay')})
+            if self.reorder_server_receipts:
+                result = json.dumps(json.loads(result), sort_keys=True, separators=(',', ':')).encode()
         elif suffix == 'browser':
             if self.fail_browser:
                 self.output(name, b'', 1)
@@ -255,6 +261,21 @@ class OperatorContracts(unittest.TestCase):
             self.run_fixture()
         self.assertEqual(self.stops, ['explicit'])
         self.assertTrue(metadata.load(self.private/'source-helper-explicit/counter.json')['stopped'])
+
+    def test_status_uses_the_actual_collection_cli_selector(self):
+        self.run_fixture()
+        calls = [a for a in self.argv if len(a)>1 and a[1]=='workflow-collection-status']
+        self.assertEqual(len(calls), 1)
+        self.assertIn('--collection-id', calls[0])
+        self.assertNotIn('--job-id', calls[0])
+        self.assertEqual(calls[0][calls[0].index('--collection-id')+1], self.views['explicit']['job']['id'])
+
+    def test_jsonb_reordered_registration_does_not_change_the_actual_typed_job_hash(self):
+        self.reorder_server_receipts = True
+        for mode in ('explicit','implicit'):
+            checked, _ = self.run_fixture(mode)
+            self.assertEqual(checked['captured_files'], 1)
+            self.assertEqual(checked['original_key_replays'], 4)
 
     def test_rehashed_server_forgeries_and_claims_cannot_replace_original_artifacts(self):
         self.run_fixture()

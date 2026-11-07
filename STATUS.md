@@ -102,6 +102,11 @@ source browser review and exact canonical root metadata;4 new/17 affected
 legacy contracts pass. Actual native Chrome capture/replay/zero-intent/independent
 custody profile is prepared and compiled,not yet executed.
 
+F304 records original16 native workflows for pushedfb578f1,without qualification.
+F305 repairs actual FTPS operator CLI selector and typed connection hashing;two
+new focused regressions turn red to green,all10 stand-in methods pass. Original
+actual operator/source failures and full native replay remain owed.
+
 FINISH repair and remaining implementation are mandatory. Next:repair original
 browser/stock/protocol failures and complete all affected original runtime,
 security,recovery,reproducibility and baseline/AX gates on the final source.
