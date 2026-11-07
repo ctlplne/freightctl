@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "id": "F363",
+  "observed_at": "2026-11-07",
+  "base_candidate": "ac3b79fef37eb8f7e0246f168fe3c6a4141e6e0b",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F363 preserves original03cd5fd receive job128436006696 sender-cancel failure at response.json source676. Observe that exact ordinary cancellation at the existing native Chrome wire-stream boundary,instead of depending on later inspector body retention. Require its exact URL,POST,key and immutable schema/exchange/hash/cancel body;retain200 and every original receipt/outcome assertion. The helper records and delivers the same original bytes once,with original cookie/CSRF/origin/TLS and finite response/cleanup guards. Exact driver-block inspector-unavailability stand-in first fails,then records one action/observation successfully;10 affected wire/egress guards,syntax,format and workflow lint pass. Underlying original private error text is unavailable;causal/native full receive replay remains owed. No product permission or assertion changes.",
+  "original_failure": {
+    "candidate": "03cd5fd0e46e60d0417b40122e94fd31a2920c35",
+    "run_id": 42383538063,
+    "job_id": 128436006696,
+    "url": "https://github.com/ctlplne/freightctl/actions/runs/42383538063/job/128436006696",
+    "phase": "sender-cancel",
+    "class": "unclassified",
+    "source_line": 676,
+    "source_column": 46,
+    "safe_result_sha256": "8f3dc6bf944dfff746469bb50b578f574bde368d5a11079d0244de1644564e87",
+    "protected_first_failure_sha256": "5982d736b2034f0795064d5a446d6dc9dfbe0cf81ab68b61d380875d1288b0e1"
+  },
+  "red_green": "Actual driver cancellation block fails when its inspector response.json cannot retrieve the body. Replacing that observation with the existing bounded native CDP stream yields one exact original action/observation and unchanged receipt assertions under Page/CDP stand-ins. This does not establish the exact private native error cause or qualify Chrome.",
+  "green": [
+    "Exact actual driver block stand-in under official native ARM Node26.13",
+    "10 actual native-wire/egress contract tests",
+    "Affected syntax,format and workflow lint"
+  ],
+  "other_observed_original_outcomes": {
+    "candidate": "03cd5fd0e46e60d0417b40122e94fd31a2920c35",
+    "run_id": 42383537896,
+    "job_id": 128436006266,
+    "passed_tests": {
+      "TestLocalCalendarNativeBrowserExactManifestCaptureAndOriginalKeyRecovery": 96.39,
+      "TestProcessingReviewNativeBrowserIndependentDecisionRecoveryAndAdoption": 6.1
+    },
+    "failed_test": "TestFixedWidthNativeBrowserReviewedHashAndReceipt",
+    "failed_stage": "upload",
+    "source_line": 289,
+    "source_column": 35,
+    "safe_result_sha256": "5715124b6093c00fee3b762b7dbb1cd4cc2a35608fdb612ec1d776021a6ee9d1",
+    "protected_first_failure_sha256": "a294415bfea642dae6a1c419d12388e4cff8a39260bd7c8af1f3dfb44092265e"
+  },
+  "owed": [
+    "Actual original full receive Chrome replay and causal qualification",
+    "Fixed-width upload response read and FTPS operator/form/bad-release-refusal original failures",
+    "Current required original CI completion and all final-source GOAL/AX gates"
+  ],
+  "source_files": [
+    {
+      "reference": "scripts/artifact-exchange-browser.mjs",
+      "sha256": "48f0666dc8078ec16853519243585efd21801e2377d8fbe0ab919ad91ebe35ca",
+      "bytes": 54002
+    },
+    {
+      "reference": ".github/workflows/artifact-exchange.yml",
+      "sha256": "45b25b68d5b3e108940d614aa826f0709271362eff3fb68bcc2ed3f2804d493a",
+      "bytes": 2979
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "dfcaf22e23db259ebbfadb558a02443801c0ab88ed69bb594f952144bfe44491",
+      "bytes": 473852
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f363-closure-standin.mjs",
+      "sha256": "15c5262faaf35e3357ccbd30a098c795e4e833a252cb1f6a5ae76f080ceb3194",
+      "bytes": 2619
+    },
+    {
+      "reference": ".private/freightctl-f363-closure-red.log",
+      "sha256": "9b0b21b11a39e433f3be7a2951427f964af4c5ea459235257d245a95e409021b",
+      "bytes": 770
+    },
+    {
+      "reference": ".private/freightctl-f363-format-write.log",
+      "sha256": "60cebdc7084c8a02e5cb8d136bb6b27ed7b5939d50f782627e183c0149d4a10e",
+      "bytes": 44
+    },
+    {
+      "reference": ".private/freightctl-f363-closure-green.log",
+      "sha256": "b54fe78ee4fe0df902985e16ecbb61bd1536d851a585de8b1c0d2a650e1a80f7",
+      "bytes": 146
+    },
+    {
+      "reference": ".private/freightctl-f363-wire-boundaries.log",
+      "sha256": "d877bf95c42e4fbbb2c243f719f8dbf55ff538ef148b577e5be8c4f5f1b4ebb4",
+      "bytes": 1126
+    },
+    {
+      "reference": ".private/freightctl-f363-syntax.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f363-format.log",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    },
+    {
+      "reference": ".private/freightctl-f363-actionlint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ]
+}

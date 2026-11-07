@@ -6,6 +6,10 @@ import { createRequire } from "node:module";
 import { setTimeout as delay } from "node:timers/promises";
 import { artifactExchangeRequestAllowed } from "./artifact-exchange-network.mjs";
 import {
+  nativeWireResponse,
+  nativeWireObservation,
+} from "./browser-native-wire.mjs";
+import {
   fetchPinnedBrowserRequest,
   guardBrowserCommandRoute,
 } from "./browser-pinned-https.mjs";
@@ -660,20 +664,34 @@ try {
   humanIngress++;
   await accessibility(recipient.page, "sender-human-receive-accessibility");
   phase = "sender-cancel";
-  const withdrawal = sender.page.waitForResponse(
-    (r) =>
-      new URL(r.url()).pathname.endsWith("/exchange-closures") &&
-      r.request().method() === "POST",
+  const withdrawn = await nativeWireResponse(
+    sender.page,
+    `${origin.origin}/v1/tenants/${c.tenant}/partners/${c.partner}/exchange-closures`,
+    () =>
+      sender.page
+        .getByRole("button", {
+          name: "Withdraw this artifact offer or recover result",
+          exact: true,
+        })
+        .click(),
+    async (intercepted, _label, target) => {
+      const request = intercepted.request();
+      assert.equal(request.url(), target);
+      assert.equal(request.method(), "POST");
+      const headers = await request.allHeaders();
+      assert.match(headers["idempotency-key"], /^[A-Za-z0-9._:-]{1,128}$/);
+      assert.deepEqual(JSON.parse(request.postDataBuffer()), {
+        schema_version: 1,
+        exchange_id: sent.exchange.id,
+        request_hash: sent.exchange.request_hash,
+        operation: "cancel",
+      });
+      const original = intercepted[nativeWireObservation];
+      assert.equal(original.status, 200);
+      return original;
+    },
+    "sender-cancel",
   );
-  await sender.page
-    .getByRole("button", {
-      name: "Withdraw this artifact offer or recover result",
-      exact: true,
-    })
-    .click();
-  const withdrawalResponse = await withdrawal;
-  assert.equal(withdrawalResponse.status(), 200);
-  const withdrawn = await withdrawalResponse.json();
   assert.equal(withdrawn.exchange_id, sent.exchange.id);
   assert.equal(withdrawn.state, "canceled");
   assert.equal(withdrawn.replayed, false);
