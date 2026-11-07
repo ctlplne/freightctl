@@ -266,6 +266,14 @@
       "sha256": "95ad1073f4cce3733dfa70920da7f1830cc3b4a08b5892d801492b22a6e4dc6c"
     },
     {
+      "path": "web/src/processing-proposal-api.ts",
+      "sha256": "83499c4f3d887e9be69e9bac6b14587280bdae37c4af76f8065fbba4cdb66840"
+    },
+    {
+      "path": "web/src/processing-proposals.tsx",
+      "sha256": "62a8b2c3bfc81fd1c33218da9fc771ccf9fe0987876a9fb1ca4917725ff90d37"
+    },
+    {
       "path": "web/src/processing-review-api.ts",
       "sha256": "1caf1889368183e9a48f4e83daba9a04a333c1c0e90f3c027c6c020f82740c2c"
     },
@@ -283,7 +291,7 @@
     },
     {
       "path": "web/src/processing.tsx",
-      "sha256": "c8317e2a4b003a8dfc8f494452e666de45b51d01b50cde107a82d168acdb0aa9"
+      "sha256": "f7c77e544f728a6c352efa14d0f7974e8fd7a97e01707c891cb480fb6a6c420d"
     },
     {
       "path": "web/src/programs-types.ts",
@@ -346,8 +354,8 @@
     },
     {
       "name": "app.js",
-      "sha256": "551a5338dab5759460b2975c2b13847ca46fff6559d28776305eb4c891960aa5",
-      "size": 884622
+      "sha256": "85f6e306cffd14fe223243945a7fbc425b694b0f82d0c79925ea6788bc0f8df9",
+      "size": 903065
     },
     {
       "name": "app.js.LEGAL.txt",

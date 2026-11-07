@@ -1,0 +1,207 @@
+{
+  "schema_version": 1,
+  "id": "F197",
+  "observed_at": "2026-11-07",
+  "base_candidate": "47242c2d6552186391dbd1b99d8de6249703c4d9",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Browser third-party definition disclosure,owned draft adoption and exact-key recovery;native outcomes owed",
+  "source_files": [
+    {
+      "reference": ".github/workflows/json-intake.yml",
+      "sha256": "fb28a1eb93361e0540f0d0c6ceebba292d802102077b4fac096a5c905a85baf3",
+      "bytes": 6640
+    },
+    {
+      "reference": "STATUS.md",
+      "sha256": "64f87208cbc0e389d17d40e61bb593c4388f15c09fedbd336f07fa4310bedfa3",
+      "bytes": 9861
+    },
+    {
+      "reference": "docs/qualification/artifact-exchange.json",
+      "sha256": "c507c99d3a82f4dd595b99d89475a6b824f982f2eb0916514ade40e17cc45826",
+      "bytes": 31143
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "98d1fe4ac71a453995321f9a1e23c843df000127dff47ff92a55cb8dcc1fc945",
+      "bytes": 357020
+    },
+    {
+      "reference": "internal/api/processing_proposal_browser_integration_test.go",
+      "sha256": "5b14373a4e40bb5590b4a6ab72e7bb988f9b2fb794efb1e86125b5b7812f5176",
+      "bytes": 7505
+    },
+    {
+      "reference": "internal/browser/assets/app.js",
+      "sha256": "85f6e306cffd14fe223243945a7fbc425b694b0f82d0c79925ea6788bc0f8df9",
+      "bytes": 903065
+    },
+    {
+      "reference": "internal/browser/assets/manifest.json",
+      "sha256": "1f3a76956eaae2ffcf11d863794010cff5bc34532154d24ad43a24f212f0ccd5",
+      "bytes": 13828
+    },
+    {
+      "reference": "internal/checks/processing_proposals_integration_test.go",
+      "sha256": "5636c1b97775615077416150428da6e16deccad92bb7fca8d7ac39411e996f23",
+      "bytes": 15399
+    },
+    {
+      "reference": "internal/workflow/processing_proposals_test.go",
+      "sha256": "7637efebed1b43b598a61692b608e6d9250019a66ff83a0c708daf2477d72b98",
+      "bytes": 8785
+    },
+    {
+      "reference": "scripts/processing-proposal-browser.mjs",
+      "sha256": "0740c87c47b53f67e1af151fdd429afb9f6d5c93afd2f55c44eb4e4a0ecbf949",
+      "bytes": 12653
+    },
+    {
+      "reference": "web/src/processing-proposal-api.ts",
+      "sha256": "83499c4f3d887e9be69e9bac6b14587280bdae37c4af76f8065fbba4cdb66840",
+      "bytes": 14611
+    },
+    {
+      "reference": "web/src/processing-proposals.tsx",
+      "sha256": "62a8b2c3bfc81fd1c33218da9fc771ccf9fe0987876a9fb1ca4917725ff90d37",
+      "bytes": 17800
+    },
+    {
+      "reference": "web/src/processing.tsx",
+      "sha256": "f7c77e544f728a6c352efa14d0f7974e8fd7a97e01707c891cb480fb6a6c420d",
+      "bytes": 45536
+    },
+    {
+      "reference": "web/tests/fixtures/processing-proposal.json",
+      "sha256": "d031a2af0d1ccae44cb72fe7f1e82815d3237a5f12c9e91f393ddcd2e81c219c",
+      "bytes": 3188
+    },
+    {
+      "reference": "web/tests/processing-proposals.test.mjs",
+      "sha256": "50c2ff90c0987afd6650eb5e1105df1099893111df048c929242d0104539b69c",
+      "bytes": 7591
+    }
+  ],
+  "changed": [
+    "Author imports closed typed rules locally and reviews full mappings,limits,policy hashes,logical path,reason,named executor and expiry before disclosure. No file access is needed. Current proposal inspection independently rebuilds complete Go-compatible canonical meaning and participant binding. Adoption opens an executor-owned unapproved draft in ordinary workflow controls.",
+    "Recovery binds exact request/key,server origin,tenant/partner/actor,authority revision and root digest. No session token,cookie,CSRF value or credential is saved. Recovery files contain private rules and references;UI states this before export. Imports require explicit review and confirmation. Lost replies retain the original key;new meaning cannot overwrite a pending command.",
+    "Original receipts remain historical and separate from fresh observations. Whole adoption receipts must describe exact draft revision1,approval0 and unchanged workflow hash;forged approval,state,party,hash or missing draft is refused. In-flight scope changes fail closed.",
+    "Dedicated native Chrome case is added to the existing explicit CI regex and script path triggers without removing any original profile. Protected-file CLI fixture uses task-owned real credentials and checks actual database draft state and exact replay."
+  ],
+  "red": [
+    {
+      "reference": ".private/freightctl-f197-browser-proposal-red.log",
+      "observation": "No browser proposal decoder,ordinary client or recovery controls."
+    }
+  ],
+  "green": [
+    "Six new proposal regressions pass:complete canonical rules/participant/expiry validation,author/executor action separation,whole recovery/secret exclusion,lost committed response replay,strict unapproved adoption receipt and in-flight scope/foreign-row refusal.",
+    "Affected processing/review frontend contracts pass;independent Python fixture agrees with Go normalization/digest and browser hash,including HTML-sensitive Unicode and microsecond expiry.",
+    "Affected formatting,typecheck,frontend build/built consistency,compilation,vet,architecture and workflow lint pass. Node syntax checked."
+  ],
+  "intermediate_failures": [
+    {
+      "reference": ".private/freightctl-f197-proposal-typecheck.log",
+      "repair": "Use existing zero-argument operationKey interface;no authority or assertion changed."
+    }
+  ],
+  "prepared_native": [
+    "Actual Chrome author with workflow_manage only imports/reviews/discloses rules;stock curl commits submit response then browser loses it. Save,reload,wrong-origin refusal and explicit exact retry recover one original proposal.",
+    "Separate executor reviews/adopts an unapproved owned draft;stock curl commits adoption before response loss. Save,reload,exact retry preserves one draft. Six WCAG audits,sandbox,TLS pin,loopback-only egress,no runtime errors and no inferred execution asserted.",
+    "Native protected-request CLI submits,inspects,adopts and replays under distinct real credentials;persisted exact draft remains revision1/approval0. Binary build precedes isolated PostgreSQL fixture.",
+    "All new PostgreSQL/Chrome/CLI cases compiled locally with -run ^$ only;none executed locally."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f197-architecture.log",
+      "sha256": "395600902fe2345a2643f464c39dc07072a183ae3b353523307d51e3d24317a1",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f197-browser-build.log",
+      "sha256": "1e5d9fd417a5290c867ed7fde7874b86fa9963731eeffa62b06986a310ead893",
+      "bytes": 232
+    },
+    {
+      "reference": ".private/freightctl-f197-browser-proposal-focused-green.log",
+      "sha256": "d613f369e19c0e0072236bc02f17493c850d1d576fbd011e7885c7115b02879f",
+      "bytes": 1323
+    },
+    {
+      "reference": ".private/freightctl-f197-browser-proposal-green.log",
+      "sha256": "7d9f65e9fa719c5dbf8e3e811d7bd4ea9cbeff6738c726d807e4c24bddf759d4",
+      "bytes": 690
+    },
+    {
+      "reference": ".private/freightctl-f197-browser-proposal-red.log",
+      "sha256": "52760cb15dc75610f1e3140d7cdf54f17b0ff3c6884a11c24c2dfdc606762031",
+      "bytes": 1744
+    },
+    {
+      "reference": ".private/freightctl-f197-built-consistency.log",
+      "sha256": "d530c212d9a24f1941e025f472bc55099c4e6990d27d76ed21b17ef582e37b6c",
+      "bytes": 249
+    },
+    {
+      "reference": ".private/freightctl-f197-format-check.log",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    },
+    {
+      "reference": ".private/freightctl-f197-format.log",
+      "sha256": "67181a11fb8b2f1f2ac8c80737efe4223777820acbfdd9a61b9fa9ef0a121791",
+      "bytes": 223
+    },
+    {
+      "reference": ".private/freightctl-f197-native-chrome-compile.log",
+      "sha256": "fbf0f3e7fd9c5d5e9e2e4f3c784de0c069189648f7c2d56caae932cf2b92459b",
+      "bytes": 73
+    },
+    {
+      "reference": ".private/freightctl-f197-native-cli-compile.log",
+      "sha256": "1d7c07c99e9bb33106be9ec7d9721631b2776a8ed070d15851cb66282c012b07",
+      "bytes": 76
+    },
+    {
+      "reference": ".private/freightctl-f197-native-script-format.log",
+      "sha256": "67b6e2b53b9af3945e85f4d45f9b8648966e813f18e25b5b781eb69ff32928f8",
+      "bytes": 45
+    },
+    {
+      "reference": ".private/freightctl-f197-proposal-canonical-green.log",
+      "sha256": "3a10242574990eb0fdb4bd81d18db6d1e77066be53f2216d35e8be105a86e598",
+      "bytes": 60
+    },
+    {
+      "reference": ".private/freightctl-f197-proposal-typecheck-green.log",
+      "sha256": "17e00418398dd65e49bed86df28efee896dcae70d7e6258050a2746181f558d5",
+      "bytes": 54
+    },
+    {
+      "reference": ".private/freightctl-f197-proposal-typecheck.log",
+      "sha256": "01abbc394db5c25cdf423b105d60cbfcf762b51a3b24874d72e9fd92d752aa8a",
+      "bytes": 223
+    },
+    {
+      "reference": ".private/freightctl-f197-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f197-workflow-lint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "owed": [
+    "Actual prepared native Chrome/accessibility/HTTPS/curl/CLI/RLS/atomicity/current authority results and original/final-source replay.",
+    "Explicit expiry,races,SQL-forgery,cross-tenant,process-death/restore and protected output proof.",
+    "Dedicated processing-calendar Chrome profile,confined-root calendars,automatic multi-task chains and every remaining mandatory product capability.",
+    "Every deferred nonsecurity CI log investigation/repair/replay,broad unit/race/integration/security/frontend/native/public/stock/restore/reproducibility and full baseline/AX/FINISH."
+  ],
+  "previous_ci": "docs/qualification/evidence/F196-processing-calendar-terminal-ci.json",
+  "in_flight_ci": "Original 47242c2 workflows remain assigned to that source;no cancellation,restart or substituted outcome. Completion metadata and security-only inspection during implementation.",
+  "local_resources": "Inference,PostgreSQL,Chrome,scanner,peers and heavy runtime qualification stayed off. Lightweight oneCPU/192MiB checks unchanged. Retained schema35 untouched;source59 unchanged.",
+  "readiness": "83 whole parity rows,twelve whole journeys andAX01\u2013AX08 open. Assisted deployment,independent adoption,enterprise qualification unproven;F026 owner-deferred and external prerequisites owed."
+}

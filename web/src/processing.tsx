@@ -1,5 +1,6 @@
 import { ProcessingTaskReview } from "./processing-task-review";
 import { ProcessingReviews } from "./processing-reviews";
+import { ProcessingProposals } from "./processing-proposals";
 import type { ProcessingCatalog } from "./processing-catalog-types";
 import type { OutputContractCatalog } from "./processing-output-types";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -517,6 +518,25 @@ export function ProcessingWorkflows({
           </>
         )}
       </section>
+      <ProcessingProposals
+        api={api}
+        session={session}
+        active={visible}
+        onError={onError}
+        onWorkflow={(id, version, hash) =>
+          void perform(async () => {
+            const c = await client.configuration(id, version);
+            if (c.definition_hash !== hash)
+              throw new ApiError("revision_conflict", 409);
+            if (current()) {
+              setWorkflowID(id);
+              setVersion(String(version));
+              setConfiguration(c);
+              setConfigurationCurrent(true);
+            }
+          })
+        }
+      />
       <ProcessingReviews
         api={api}
         session={session}

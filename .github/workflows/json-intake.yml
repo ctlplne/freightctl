@@ -17,6 +17,7 @@ on:
       - "scripts/json-intake-browser.mjs"
       - "scripts/processing-browser.mjs"
       - "scripts/processing-review-browser.mjs"
+      - "scripts/processing-proposal-browser.mjs"
       - ".github/workflows/json-intake.yml"
   pull_request:
     paths:
@@ -33,6 +34,7 @@ on:
       - "scripts/json-intake-browser.mjs"
       - "scripts/processing-browser.mjs"
       - "scripts/processing-review-browser.mjs"
+      - "scripts/processing-proposal-browser.mjs"
       - ".github/workflows/json-intake.yml"
   workflow_dispatch:
 
@@ -138,4 +140,4 @@ jobs:
       - name: Real browser review, committed-response loss, exact checks and separate release
         run: |
           sh scripts/go.sh test -race -timeout=0 -tags=integration,jsonbrowser \
-            -run '^(TestJSONRecordsNativeBrowserReviewedHashAndReceipt|TestFixedWidthNativeBrowserReviewedHashAndReceipt|TestXMLRecordsNativeBrowserReviewedHashAndReceipt|TestXLSXRecordsNativeBrowserReviewedHashAndReceipt|TestProcessingWorkflowNativeBrowserReviewRecoveryAndHeldOutput|TestProducerProcessingNativeBrowserSelectsOutputContractAndKeepsIngress|TestComposedProducerProcessingNativeBrowserCheckedSourceNewApprovalAndHeldOutput|TestOutputPolicyNativeBrowserAdministratorRecoveryAndRevocationKeepsIngress|TestProcessingReviewNativeBrowserIndependentDecisionRecoveryAndAdoption)$' -count=1 -v ./internal/api
+            -run '^(TestJSONRecordsNativeBrowserReviewedHashAndReceipt|TestFixedWidthNativeBrowserReviewedHashAndReceipt|TestXMLRecordsNativeBrowserReviewedHashAndReceipt|TestXLSXRecordsNativeBrowserReviewedHashAndReceipt|TestProcessingWorkflowNativeBrowserReviewRecoveryAndHeldOutput|TestProducerProcessingNativeBrowserSelectsOutputContractAndKeepsIngress|TestComposedProducerProcessingNativeBrowserCheckedSourceNewApprovalAndHeldOutput|TestOutputPolicyNativeBrowserAdministratorRecoveryAndRevocationKeepsIngress|TestProcessingReviewNativeBrowserIndependentDecisionRecoveryAndAdoption|TestProcessingProposalNativeBrowserAuthorDisclosureDraftAdoptionAndRecovery)$' -count=1 -v ./internal/api

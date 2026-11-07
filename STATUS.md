@@ -107,11 +107,20 @@ whole historical receipt validation,private audit,authentication/schema and
 metadata stand-ins plus affected static checks pass. PostgreSQL and verified
 HTTPS/stock-SDK profiles are prepared/compiled only. Browser authoring/recovery,
 actual CLI/Chrome/SQL race/crash/restore/final-source proof remain owed.
+F197 adds browser definition import,complete mapping/bound disclosure,named
+executor review,unapproved adoption and original/current separation. Saved
+requests bind origin,party,authority/root and complete request/key;imports require
+review and never send automatically. Six proposal regressions plus affected
+processing/review tests,independent Go/Python/browser canonical fixture,type/build,
+architecture and workflow checks pass. A separate real Chrome submit/adoption
+committed-reply-loss,reload,recovery,six-accessibility-audit/no-byte/no-run profile
+and protected-file native CLI adoption/replay are prepared/compiled only. Original
+browser cases remain;all actual native/final-source qualification stays owed.
 Historical profiles and retained schema35 are untouched. No local PostgreSQL,
 Chrome,model,scanner or heavy peer ran. Native compilation/stand-ins establish
 no runtime qualification. F026 stays manual/owner-deferred.
 
-Next:browser definition proposals/recovery,automatic multi-task composition and remaining scoped scheduling,protected processing,independent
+Next:automatic multi-task composition and remaining scoped scheduling,protected processing,independent
 receivers and all remaining baseline/exchange implementation. Continue AX-J01/J02
 and every mandatory GOAL.md capability. X07 blocks only real optional Trust
 Control proof;no API is invented. Inference,licensed peers,cloud/multi-host/

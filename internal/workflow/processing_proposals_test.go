@@ -3,6 +3,7 @@ package workflow
 import (
 	"encoding/json"
 	"errors"
+	"os"
 	"testing"
 	"time"
 
@@ -157,5 +158,24 @@ func TestProcessingProposalReplayBindsWholeHistoricalReceipt(t *testing.T) {
 		if validProcessingProposalReceipt(v, r) {
 			t.Fatal("replay accepted substituted whole receipt meaning")
 		}
+	}
+}
+
+func TestProcessingProposalBrowserGoldenPreservesWholeCanonicalMeaning(t *testing.T) {
+	raw, err := os.ReadFile("../../web/tests/fixtures/processing-proposal.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var view ProcessingProposalView
+	if err = Decode(raw, &view); err != nil {
+		t.Fatal(err)
+	}
+	before := view.Proposal.Hash
+	if err = normalizeProcessingProposal(view.Proposal); err != nil || view.Proposal.Hash != before {
+		t.Fatal("browser fixture changed Go canonical proposal meaning", err)
+	}
+	canonical, hash, err := digest(view.Proposal.Definition)
+	if err != nil || hash != before || len(canonical) == 0 {
+		t.Fatal("independent fixture hash differs", err)
 	}
 }
