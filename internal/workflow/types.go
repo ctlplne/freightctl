@@ -45,6 +45,17 @@ type Definition struct {
 	Program    *Program          `json:"program,omitempty"`
 	Processing *ProcessingTask   `json:"processing,omitempty"`
 }
+
+// Typed callers use the same empty step array as normalized definitions. A nil
+// Go slice must not introduce a JSON null into the closed workflow wire profile.
+func (d Definition) MarshalJSON() ([]byte, error) {
+	type wireDefinition Definition
+	if d.Steps == nil {
+		d.Steps = []Step{}
+	}
+	return json.Marshal(wireDefinition(d))
+}
+
 type DraftRequest struct {
 	ID              string     `json:"workflow_id,omitempty"`
 	ExpectedVersion int        `json:"expected_version"`

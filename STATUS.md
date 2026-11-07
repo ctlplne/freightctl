@@ -73,6 +73,12 @@ is still queued;output-policy cookie mutations supply Origin. All original
 security assertions remain. Compile/vet and profile conformance pass only;native
 repair replays remain owed.
 
+F217 reproduces typed processing preview/draft rejection on the strict MCP wire:
+a nil Go step slice emitted null. Definition serialization now emits the same
+empty array as normalization,without changing nonempty steps or validation.
+The two-case red/green,affected canonical/schema/security,architecture/vet and
+integration compilation pass. Actual stock-client/native replay remains owed.
+
 Schema3 records.project binds an owned checked input,approved exact task,one
 durable processing intent,slots and events/receipt. Stable work keys select one
 historical attempt;current status is separate. New artifacts stay held for fresh

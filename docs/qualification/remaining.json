@@ -1149,7 +1149,8 @@
         "docs/qualification/evidence/F211-original-security-fixture-preconditions.json",
         "docs/qualification/evidence/F202-finish-repair-terminal-ci.json",
         "docs/qualification/evidence/F213-scp-fixture-administrative-realm.json",
-        "docs/qualification/evidence/F215-native-fixture-scope-and-preconditions.json"
+        "docs/qualification/evidence/F215-native-fixture-scope-and-preconditions.json",
+        "docs/qualification/evidence/F217-typed-processing-definition-wire.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -1197,13 +1198,14 @@
         "F209 repairs native credentials42501 failures:registration requires the existing pre-authentication account fence and reads metadata without a forbidden credential row-lock. New migration60 reuses the same shared account fence in processing-review/output-binding/proposal guards;late conflict fails40001 before reading authority. No credential write grant,definer role or predicate removed. Prior59 migration bytes/retained35 unchanged;78metadata/77forced RLS. Focused/full Go,7metadata/5retained stand-ins,architecture/vet and syntax pass;real role-write refusal/scope/lock conflict/registration and original runtime replay remain prepared/compiled only.",
         "F211 repairs three original native test preconditions while retaining/tightening all assertions:ordinary versioned setstat makes the unauthorized HTTP fixture0600 instead of partner-readable0640;rejected-release attempts use a syntactically valid forged hash so role/state gates execute;completed SQL format candidates clear their worker/lease and require the intended file-check guard error. No production authorization,parser,lease or SQL constraint changed. Integration compile/vet only pass;actual original native red/green replay owed.",
         "F213 corrects the original native SCP enrollment fixture:the protected administrative reference now resolves the exact served browser database,not the maintenance database. Enrollment/revocation/cross-actor controls and every protocol assertion remain. Integration compile/vet pass;actual native replay owed. F202 preserves91ed18d original16 terminal workflows/35 jobs:19 pass,16 fail;listed security checks pass,remaining originals stay red.",
-        "F215 repairs original native fixture preconditions:workflow template exact table/RLS profile78/77,MCP ticket/receipt observation as actual owner,well-formed forged release hashes with queued-output assertions,and Origin on output-policy cookie mutations. Production RLS/CSRF/release rules and original denials remain. Compile/vet/profile conformance pass only;actual native replays owed."
+        "F215 repairs original native fixture preconditions:workflow template exact table/RLS profile78/77,MCP ticket/receipt observation as actual owner,well-formed forged release hashes with queued-output assertions,and Origin on output-policy cookie mutations. Production RLS/CSRF/release rules and original denials remain. Compile/vet/profile conformance pass only;actual native replays owed.",
+        "F217 reproduces typed Go processing preview/draft rejection under strict MCP JSON because nil Steps emitted null. A nonmutating Definition serializer emits an empty array,matching existing normalized bytes. Focused two-case red/green,typed schema/injected-authority/canonical tests,architecture/vet and integration compile pass. Strict null/schema/authority rules unchanged;actual original stock-client/native replay owed."
       ],
       "current_item": {
-        "id": "F215",
-        "state": "Original native fixture preconditions corrected;runtime replay owed",
-        "proof": "Original91ed18d/run42348791097/job128332262484 schema-profile,private-ticket counts,release-input and cookie403 failures retained;affected compilation/vet/current-profile conformance pass",
-        "next": "Continue actual native failures,typed MCP wire defect,Windows and full remaining implementation/AX/FINISH gates"
+        "id": "F217",
+        "state": "Typed processing requests use closed empty-step wire form",
+        "proof": "Both preview/draft strict-wire cases failed before serializer,pass after;affected canonical/security/static checks pass",
+        "next": "Repair original durable-receipt serialization and remaining actual native/Windows/product/baseline/AX/FINISH work"
       }
     }
   ],

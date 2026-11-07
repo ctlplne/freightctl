@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "id": "F217",
+  "observed_at": "2026-11-07",
+  "base_candidate": "6b7e33c58a41641e41a128984bde5135540de633",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Typed processing wire regression repaired;native original replay owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "12b5336306fb8b66f6dc03381c4bb993f2097f590fef0774f86f13eb4bfd9127",
+      "bytes": 14933
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "2c094d91dc6645d00875b2a6fa83f42f9ba9a8f21ed7275be56b67461b32ad5c",
+      "bytes": 364421
+    },
+    {
+      "reference": "internal/api/mcp_processing_workflows_test.go",
+      "sha256": "a1b6d29c5b69d83988b91da763e4861f6b6a96f0e372573d811c75175d32c536",
+      "bytes": 10175
+    },
+    {
+      "reference": "internal/workflow/types.go",
+      "sha256": "4022f41f5fe1291b6077b1a66fef91729c326078a4478f2af5322911368663f3",
+      "bytes": 7074
+    }
+  ],
+  "original_failure": {
+    "candidate": "91ed18d4aa2bb8900f684035c241f5b8d30a37b1",
+    "run": 42348791097,
+    "job": 128332262484,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128332262484",
+    "test": "TestMCPStockClientTypedProcessingWorksWithoutReceiveAdapterAndKeepsApprovalOutsideTools",
+    "observation": "validate_workflow stock SDK tools/call HTTP Bad Request. Unnormalized typed processing Definition emits steps:null;strict MCP rejects null before dispatch."
+  },
+  "red": [
+    "New actual typed PreviewRequest and DraftRequest both fail TestMCPProcessingWorkflowTypedRequestsKeepEmptyStepsOnStrictWire before production change."
+  ],
+  "changed": [
+    "Definition.MarshalJSON copies the receiver and renders a nil Steps slice as an empty array. Nonempty steps and all other fields are preserved. This matches existing normalization and does not normalize or authorize any proposal. Strict null/duplicate/depth/token/schema checks and injected-authority refusal stay unchanged."
+  ],
+  "green": [
+    "New strict-wire cases plus affected processing schema/privacy/authority tests pass.",
+    "Affected workflow processing/canonical fixtures,architecture,vet and integration-tag compile -run ^$ pass."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f217-architecture.log",
+      "sha256": "d39b87fdbf007eb5bef34963966b6d4e70f582c97b329e4f74da3a293cca0c62",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f217-native-compile.log",
+      "sha256": "ff942b77fc9e6eb2c5fbb7d0fc6cb9b301b2fc55e28832bdb5640e5acf19d4fd",
+      "bytes": 151
+    },
+    {
+      "reference": ".private/freightctl-f217-typed-wire-green.log",
+      "sha256": "9fbc384cecaa7d5024c7745277e0092b49253d3d92f6f59d2d4e13c2f682f97c",
+      "bytes": 55
+    },
+    {
+      "reference": ".private/freightctl-f217-typed-wire-red.log",
+      "sha256": "ea5424950a9e224e3552b8e1b284fee82a56f2b1d434f61cf403e60a748aefe0",
+      "bytes": 569
+    },
+    {
+      "reference": ".private/freightctl-f217-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f217-workflow-canonical.log",
+      "sha256": "c70f9455b34dbd37956647cbf1d13f554a4bca8c5f6f79f5f0c209469e15d604",
+      "bytes": 60
+    }
+  ],
+  "owed": [
+    "Original native stock-SDK preview/draft/approval/execution/held output flow and producer/composed variants on repaired source.",
+    "All actual final-source runtime/security/platform/public/baseline/AX/FINISH gates."
+  ],
+  "resources": "OneCPU/192MiB local unit/static only;no PostgreSQL,Chrome,inference,scanner or heavy peer. Retained35/source60 unchanged."
+}

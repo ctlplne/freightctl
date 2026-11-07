@@ -117,6 +117,50 @@ func TestMCPProcessingWorkflowMetadataRedactsBindingsAndKeepsOriginalVersusCurre
 	}
 }
 
+func TestMCPProcessingWorkflowTypedRequestsKeepEmptyStepsOnStrictWire(t *testing.T) {
+	definition := processingToolDefinition(t)
+	// A Go caller can construct a processing-only definition without allocating
+	// a redundant empty delivery-step slice. Its wire form must still be closed.
+	definition.Steps = nil
+	id := "11111111-1111-4111-8111-111111111111"
+	requests := map[string]any{
+		"freightctl.validate_workflow": workflow.PreviewRequest{Definition: definition, FileID: id},
+		"freightctl.propose_workflow":  workflow.DraftRequest{Definition: definition},
+	}
+	var tools []*mcp.Tool
+	if json.Unmarshal(mcpCatalog, &tools) != nil {
+		t.Fatal("catalog")
+	}
+	for _, tool := range tools {
+		request, ok := requests[tool.Name]
+		if !ok {
+			continue
+		}
+		t.Run(tool.Name, func(t *testing.T) {
+			args := map[string]any{"request": request}
+			if tool.Name == "freightctl.propose_workflow" {
+				args["request_key"] = "typed-processing-proposal"
+			}
+			raw, err := json.Marshal(args)
+			if err != nil || !strings.Contains(string(raw), `"steps":[]`) || strictMCPJSON(raw) != nil {
+				t.Fatal("typed processing request is not strict wire JSON")
+			}
+			wire, err := json.Marshal(tool.InputSchema)
+			var schema jsonschema.Schema
+			if err != nil || json.Unmarshal(wire, &schema) != nil {
+				t.Fatal("schema")
+			}
+			resolved, err := schema.Resolve(nil)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if _, err = decodeMCPToolArguments(raw, resolved); err != nil {
+				t.Fatal("typed processing request refused", err)
+			}
+		})
+	}
+}
+
 func TestMCPProcessingWorkflowSchemasRequireExplicitTypedRulesAndRejectInjectedAuthority(t *testing.T) {
 	var tools []*mcp.Tool
 	_ = json.Unmarshal(mcpCatalog, &tools)
