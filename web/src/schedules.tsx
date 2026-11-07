@@ -231,16 +231,35 @@ function Definition({ d }: { d: ScheduleDefinition }) {
       </p>
       {d.collection && (
         <p>
-          Read-only{" "}
-          {d.collection.source.kind === "ftps.collect" ? "FTPS" : "SFTP"} source{" "}
-          <code>{d.collection.source_connection.address}</code>, directory{" "}
-          <code>{d.collection.source_connection.directory}</code>,{" "}
-          {d.collection.source_connection.ftps ? (
-            <FTPSPeerIdentity proof={d.collection.source_connection.ftps} />
+          {d.collection.source_connection.local ? (
+            <>
+              Read-only local source{" "}
+              <code>{d.collection.source_connection.id}</code>. Reviewed folder
+              identity{" "}
+              <code>
+                {d.collection.source_connection.local.root_fingerprint}
+              </code>
+              ; protected configuration{" "}
+              <code>
+                {d.collection.source_connection.local.configuration_sha256}
+              </code>
+              .
+            </>
           ) : (
             <>
-              pinned host{" "}
-              <code>{d.collection.source_connection.host_fingerprint}</code>.
+              Read-only{" "}
+              {d.collection.source.kind === "ftps.collect" ? "FTPS" : "SFTP"}{" "}
+              source <code>{d.collection.source_connection.address}</code>,
+              directory <code>{d.collection.source_connection.directory}</code>,{" "}
+              {d.collection.source_connection.ftps ? (
+                <FTPSPeerIdentity proof={d.collection.source_connection.ftps} />
+              ) : (
+                <>
+                  pinned host{" "}
+                  <code>{d.collection.source_connection.host_fingerprint}</code>
+                  .
+                </>
+              )}
             </>
           )}{" "}
           Mark an observed manifest late after{" "}
@@ -356,8 +375,6 @@ export function Schedules({
   }
   function selection(): ScheduleSelection {
     if (!workflow) throw new ApiError("invalid_workflow_schedule", 400);
-    if (workflow.source?.kind === "local.collect")
-      throw new ApiError("invalid_workflow_schedule", 400);
     return {
       name: form.name,
       workflow: {

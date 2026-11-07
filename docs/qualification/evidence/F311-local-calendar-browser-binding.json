@@ -1,0 +1,184 @@
+{
+  "schema_version": 1,
+  "id": "F311",
+  "observed_at": "2026-11-07",
+  "base_candidate": "0b313651a53761929b3a206a21a90752ff1766ce",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Local calendar editor/metadata and stronger parent-child binding implemented;served proof owed",
+  "changed": "F311 completes local calendar editor/review/arrival metadata wiring. Local scheduled sources use the existing exact UTC token,arrival window,explicit approval and read-only/root/configuration fingerprints;source-only connections stay excluded from outgoing receivers. Synthetic Go canonical waiting/ready/admitted/captured snapshots first fail browser parsing,then pass. A second meaningful red independently rehashes parent calendar and child links while substituting parent root/configuration/storage;the browser incorrectly accepts it. Strengthen all scheduled collection profiles to require exact workflow/source/connection/effects/storage equality between reviewed calendar and frozen child. All23 affected local/legacy calendar/arrival contract methods and Go golden/type/build/static checks pass. Existing invalid UTC and local delivery refusals remain;the old unsupported-local-calendar assertion becomes the implemented feature positive plus exact-token negatives. Actual served local calendar browser/PG/CLI/runtime remains owed;synthetic snapshots are not runtime evidence.",
+  "red": [
+    {
+      "test": "synthetic Go local calendar snapshots retain exact root,UTC occurrence and frozen manifest",
+      "observation": "Previous browser parser refuses the admitted local calendar profile."
+    },
+    {
+      "test": "independently rehashed calendar metadata cannot substitute a different captured source or storage",
+      "observation": "After profile admission,fully rehashed parent/calendar links incorrectly accept a changed parent root while child keeps its original source;missing expected exception."
+    }
+  ],
+  "green": [
+    "All23 affected local/calendar/arrival legacy browser contract methods pass,including rehashed root/configuration/storage cross-snapshot contradiction refusals.",
+    "Go synthetic canonical UTC/schedule/arrival/frozen child/no-forwarding snapshots pass;they are synthetic wire fixtures,not PostgreSQL observations.",
+    "Affected format/typecheck/asset build and exact check/vet/architecture pass. Initial JSX closing-tag formatter refusal is retained and corrected."
+  ],
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "93b508c19a77dc0a0b299e9f1bf84a62864051392cbff124fc4c9fb35440bacd",
+      "bytes": 9687
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "0ebdb67b94af1c67ab7f82df0d08fe20dd29d257dc1945d79ff0edda08dec30e",
+      "bytes": 412397
+    },
+    {
+      "reference": "docs/workflows.md",
+      "sha256": "b220827dac381b04653a800591a1d2f2e416f390653e95aad3b55a7ce81d26c8",
+      "bytes": 19122
+    },
+    {
+      "reference": "internal/browser/assets/app.js",
+      "sha256": "498443b19ef7e1a02d054955de295adc4f9a78f44ec9c94cfc1cf8bf095df641",
+      "bytes": 905435
+    },
+    {
+      "reference": "internal/browser/assets/manifest.json",
+      "sha256": "11af9e1afd8c04ee038f8985f3f2dd2753bf87e70053592baa5eb0c03b84ac74",
+      "bytes": 13828
+    },
+    {
+      "reference": "internal/workflow/local_collection_schedule_test.go",
+      "sha256": "e79bce2bbf7f87553193bc36d22f1772741f409265a9574b536fe115ae480786",
+      "bytes": 3339
+    },
+    {
+      "reference": "web/src/arrivals-types.ts",
+      "sha256": "ae7a4c08151b82144f383c56d6f647dd1c6b93812c8f60bbc403de5efe768c58",
+      "bytes": 11892
+    },
+    {
+      "reference": "web/src/collections-types.ts",
+      "sha256": "8a015550a9db82ddd154fdfb61574f0ae56ec853f7cbc9d318dc63a086437708",
+      "bytes": 47300
+    },
+    {
+      "reference": "web/src/collections.tsx",
+      "sha256": "0b41b9541555d187dad55f6f43cad2e69123668dc06f317ae18aad344a444f5d",
+      "bytes": 74593
+    },
+    {
+      "reference": "web/src/schedules-types.ts",
+      "sha256": "be4483c446d650557cab37dec34cc499a3698814d5e3b07ff42654873e49d7d6",
+      "bytes": 33684
+    },
+    {
+      "reference": "web/src/schedules.tsx",
+      "sha256": "8fc7442ac0dc17e832f97f64e2663d781ad726b71310c417d4c2bd5f7e189515",
+      "bytes": 47121
+    },
+    {
+      "reference": "web/tests/fixtures/local-scheduled-arrivals.json",
+      "sha256": "04285e06eb9fca133643100024232a0f415aebfcdabcae4acf748eea86220a17",
+      "bytes": 30068
+    },
+    {
+      "reference": "web/tests/local-collection-calendars.test.mjs",
+      "sha256": "59cbdf0e2c085c1b89053511fbecfc91cb7f8bd684a014bfa57daec12f7f7ffd",
+      "bytes": 3615
+    },
+    {
+      "reference": "web/tests/local-collections.test.mjs",
+      "sha256": "fbdd7d6b9d3ba2eba812bda53df83185d08bd8e8a2066f9af2e000f422d1d2e6",
+      "bytes": 4563
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f311-golden-final-generation.log",
+      "sha256": "04cd502a98a576e5557fa16251458c7534eb43be6be61c92dcc02e6aca98977d",
+      "bytes": 60
+    },
+    {
+      "reference": ".private/freightctl-f311-calendar-browser-red.log",
+      "sha256": "724c3bdebcf0350149943b3414358a8339f29c7d08ce81a5d3c4bfb5cd59a596",
+      "bytes": 228814
+    },
+    {
+      "reference": ".private/freightctl-f311-format-first.log",
+      "sha256": "50355df5534077ab932401b474cf1031c6fb01524db965e3e3ed9fce3d2aba6a",
+      "bytes": 677
+    },
+    {
+      "reference": ".private/freightctl-f311-cross-snapshot-red.log",
+      "sha256": "ce8dc2591692f84523e9b79c7b64f8f076116dd2db2cb3ed235c1ffd03b3019d",
+      "bytes": 1031
+    },
+    {
+      "reference": ".private/freightctl-f311-calendar-browser-final-green.log",
+      "sha256": "0a1127d7baf499091975fc1ec4e706ff52fafd985f431a37c16aed18d2237681",
+      "bytes": 2646
+    },
+    {
+      "reference": ".private/freightctl-f311-final-typecheck.log",
+      "sha256": "17e00418398dd65e49bed86df28efee896dcae70d7e6258050a2746181f558d5",
+      "bytes": 54
+    },
+    {
+      "reference": ".private/freightctl-f311-go-golden-final-green.log",
+      "sha256": "1bebd215bba57932b16c8f138b22d39694f259458976a880883f94adc1f692f3",
+      "bytes": 60
+    },
+    {
+      "reference": ".private/freightctl-f311-build.log",
+      "sha256": "746ec936f422cfb0c3e24df21ee901c9eba241aa37d11be9b8095c7dd2089434",
+      "bytes": 232
+    },
+    {
+      "reference": ".private/freightctl-f311-build-exact.log",
+      "sha256": "8bce4a6d082e525ca18d43f2945c88867049e34695dc8c6d53b7213447215355",
+      "bytes": 249
+    },
+    {
+      "reference": ".private/freightctl-f311-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f311-architecture.log",
+      "sha256": "467b22a08d58313ba2976a911cf4fdf5fc4847063a27215bd56286c435c44597",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f311-format-check.log",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    },
+    {
+      "reference": ".private/freightctl-f311-go-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f311-generate-golden_test.go",
+      "sha256": "4d020c6da81aec2d0329f0c9b0e1a08d4a3a9eb9f49c95e2d5658b9933dc66e8",
+      "bytes": 3091
+    },
+    {
+      "reference": ".private/freightctl-f311-generate-overlay.json",
+      "sha256": "18ca7138e03350d4f086a8a7f4fb7efd18f507214dcaedc11765b80ca9763456",
+      "bytes": 192
+    },
+    {
+      "reference": ".private/freightctl-f311-final2-typecheck.log",
+      "sha256": "6e36e22a8e9c89703960399967794249ddb2e73c5460c3271fda89d5e2e145c3",
+      "bytes": 204
+    }
+  ],
+  "owed": [
+    "Actual served local calendar editor/review/approval/arrival UI and original real source62 PG/CLI/custody/replay/refusal/matching-event forgery/restore outcomes.",
+    "Every original failed current native/browser/stock/security profile and final baseline/AX/FINISH gate;no synthetic fixture or build replaces runtime."
+  ],
+  "resources": "OneCPU/192MiB frontend/static/pure synthetic fixture generation only;no local heavy runtime,Chrome or inference;retained35 untouched."
+}

@@ -355,7 +355,6 @@ export function asCollectionSource(v: unknown): CollectionSource {
     bad();
   const contract =
     o.completion_contract as CollectionSource["completion_contract"];
-  if (o.kind === "local.collect" && contract !== collectionContract) bad();
   const manifest = str(o, "manifest", 160),
     directory = path(str(o, "target_directory", 1024));
   const name =

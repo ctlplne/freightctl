@@ -109,10 +109,10 @@ test("root substitution and the old path-only identity cannot inherit reviewed c
   }
 });
 
-test("unimplemented local calendar and local outward delivery remain refused", () => {
+test("local calendar needs an exact UTC manifest and local outward delivery remains refused", () => {
   const source = fresh().workflow.definition.source;
   source.completion_contract = "immutable-files-sha256-scheduled-manifest-v1";
-  source.manifest = "settlement-{due_utc}.ready.json";
+  source.manifest = "settlement.ready.json";
   assert.throws(() => p.asCollectionSource(source));
   const w = fresh().workflow.definition;
   w.steps = [

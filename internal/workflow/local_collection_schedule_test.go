@@ -1,6 +1,8 @@
 package workflow
 
 import (
+	"encoding/json"
+	"os"
 	"testing"
 	"time"
 )
@@ -30,5 +32,47 @@ func TestLocalCollectionCalendarUsesExactUTCManifestAndKeepsReadOnlyRoot(t *test
 		if normalizeCollectionSource(source) == nil {
 			t.Fatal("ambiguous local scheduled producer claim admitted", name)
 		}
+	}
+}
+
+func TestLocalCalendarGoBrowserCanonicalFrozenSnapshots(t *testing.T) {
+	raw, err := os.ReadFile("../../web/tests/fixtures/local-scheduled-arrivals.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var all map[string]json.RawMessage
+	if err = json.Unmarshal(raw, &all); err != nil {
+		t.Fatal(err)
+	}
+	for _, phase := range []string{"waiting", "ready", "admitted", "captured"} {
+		t.Run(phase, func(t *testing.T) {
+			var v ScheduleArrivalView
+			if err := Decode(all[phase], &v); err != nil {
+				t.Fatal(err)
+			}
+			d, _, err := scheduleDefinition(v.Schedule)
+			if err != nil || d.Source.Kind != "local.collect" || d.Collection == nil || d.Collection.Source.Kind != "local.collect" || d.Collection.Connection.Local == nil || !d.Collection.Connection.Local.ReadOnly || len(d.Effects) != 0 {
+				t.Fatal("local calendar root/no-forwarding meaning differs", err)
+			}
+			binding, err := arrivalBinding(v.Arrival)
+			if err != nil {
+				t.Fatal(err)
+			}
+			name, err := collectionManifestName(d.Collection.Source, binding.Due)
+			if err != nil || name != binding.Manifest || binding.Schedule.Hash != v.Schedule.Hash {
+				t.Fatal("local UTC occurrence detached from reviewed schedule", err)
+			}
+			if v.Collection != nil {
+				frozen, err := collectionDefinition(v.Collection.Job)
+				if err != nil || frozen.SourceIdentity != collectionSourceIdentity(d.Collection.Connection) || frozen.Schedule == nil || frozen.Schedule.Schedule.Hash != v.Schedule.Hash || frozen.Schedule.OccurrenceID != v.Arrival.ID || len(frozen.Effects) != 0 {
+					t.Fatal("local due collection lost exact physical root/manifest/authority", err)
+				}
+				for _, input := range v.Collection.Inputs {
+					if input.RunID != nil || input.State != "accepted" || input.SourceIdentity != frozen.SourceIdentity {
+						t.Fatal("local collection inherited a sending run")
+					}
+				}
+			}
+		})
 	}
 }

@@ -31,7 +31,7 @@
     },
     {
       "path": "web/src/arrivals-types.ts",
-      "sha256": "5e7f94fb06e7b33aca5499f08167e493e9e285c48bf5e81dc6b1fe965a034371"
+      "sha256": "ae7a4c08151b82144f383c56d6f647dd1c6b93812c8f60bbc403de5efe768c58"
     },
     {
       "path": "web/src/artifact-copy-types.ts",
@@ -139,11 +139,11 @@
     },
     {
       "path": "web/src/collections-types.ts",
-      "sha256": "8815f26985a0071789b4e486851e676b21b787bae1ba93944af3057abd2e0a6c"
+      "sha256": "8a015550a9db82ddd154fdfb61574f0ae56ec853f7cbc9d318dc63a086437708"
     },
     {
       "path": "web/src/collections.tsx",
-      "sha256": "f7e7515d915bd4ab408e3ae27eb4a938a8c6697ad1bd198bfe1dcc16d7632178"
+      "sha256": "0b41b9541555d187dad55f6f43cad2e69123668dc06f317ae18aad344a444f5d"
     },
     {
       "path": "web/src/crypto.ts",
@@ -319,11 +319,11 @@
     },
     {
       "path": "web/src/schedules-types.ts",
-      "sha256": "f94d4028a12548bc30813f5733c80d701bc9d28c2f36889c6296f5664799c20c"
+      "sha256": "be4483c446d650557cab37dec34cc499a3698814d5e3b07ff42654873e49d7d6"
     },
     {
       "path": "web/src/schedules.tsx",
-      "sha256": "f85efbc74568fb886c4b2b98dd4980dec20e7a413ed01f9bfe9c269385acb6c0"
+      "sha256": "8fc7442ac0dc17e832f97f64e2663d781ad726b71310c417d4c2bd5f7e189515"
     },
     {
       "path": "web/src/style.css",
@@ -354,8 +354,8 @@
     },
     {
       "name": "app.js",
-      "sha256": "6d568c70344f9072727e479557b478f92cd87a3dfff9be4852d62b8e8675ac9f",
-      "size": 904976
+      "sha256": "498443b19ef7e1a02d054955de295adc4f9a78f44ec9c94cfc1cf8bf095df641",
+      "size": 905435
     },
     {
       "name": "app.js.LEGAL.txt",

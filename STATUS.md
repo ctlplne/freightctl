@@ -126,6 +126,13 @@ read-data access to the exact AF_UNIX reparse object without reading payload or
 granting mutation. Windows compile/vet pass;unchanged native name-pin and
 scanner protocol replay remain owed. All ACL/type/identity/assertions stay.
 
+F311 wires local calendar editor/review/arrival metadata and requires the frozen
+child to match the reviewed workflow,source,connection,effects and storage. Both
+local parser and independently rehashed cross-snapshot regressions turn red to
+green;23 affected frontend contracts and Go synthetic golden/static checks pass.
+Actual served calendar/runtime proof remains owed;synthetic snapshots do not
+establish PostgreSQL,Chrome or source/custody outcomes.
+
 FINISH repair and remaining implementation are mandatory. Next:repair original
 browser/stock/protocol failures and complete all affected original runtime,
 security,recovery,reproducibility and baseline/AX gates on the final source.

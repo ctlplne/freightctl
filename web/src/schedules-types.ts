@@ -59,7 +59,11 @@ export interface SourceSelection {
   directory: string;
   filename_pattern: string;
   recursive: boolean;
-  kind?: "sftp.collect" | "ftps.collect" | "owned_released_records";
+  kind?:
+    | "sftp.collect"
+    | "ftps.collect"
+    | "local.collect"
+    | "owned_released_records";
 }
 export interface ArrivalSelection {
   late_after_seconds: number;
@@ -489,7 +493,10 @@ export function asScheduleDefinition(v: unknown): ScheduleDefinition {
     processing = o.schema_version === 2,
     source = object(o.source),
     pattern = str(source, "filename_pattern", 160),
-    remote = source.kind === "sftp.collect" || source.kind === "ftps.collect",
+    remote =
+      source.kind === "sftp.collect" ||
+      source.kind === "ftps.collect" ||
+      source.kind === "local.collect",
     regex = remote
       ? ""
       : "^" +
@@ -538,7 +545,7 @@ export function asScheduleDefinition(v: unknown): ScheduleDefinition {
       ...(processing
         ? { kind: "owned_released_records" as const }
         : remote
-          ? { kind: source.kind as "sftp.collect" | "ftps.collect" }
+          ? { kind: source.kind as CollectionSource["kind"] }
           : {}),
       filename_regex: regex,
     },
@@ -564,6 +571,7 @@ export function asScheduleDefinition(v: unknown): ScheduleDefinition {
       input.completion_contract !== scheduledCollectionContract ||
       input.kind !== d.source.kind ||
       (input.kind === "ftps.collect") !== (connection.protocol === "ftps") ||
+      (input.kind === "local.collect") !== (connection.protocol === "local") ||
       input.manifest !== pattern ||
       input.target_directory !== d.source.directory ||
       input.max_files !== d.max_files_per_occurrence ||

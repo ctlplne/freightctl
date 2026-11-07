@@ -1,0 +1,793 @@
+{
+  "admitted": {
+    "arrival": {
+      "occurrence_id": "8fb058d5-33d1-4f5e-98c3-474b9c9165c6",
+      "schedule_id": "8975e4f6-9833-488c-b870-94bfc21a20f7",
+      "schedule_version": 1,
+      "definition": {
+        "schema_version": 1,
+        "schedule": {
+          "id": "8975e4f6-9833-488c-b870-94bfc21a20f7",
+          "version": 1,
+          "hash": "c38d7ba2ba3ff1de1edecab6552b3accbfa596bc7f5a42585b38c674a4adeb52"
+        },
+        "occurrence_id": "8fb058d5-33d1-4f5e-98c3-474b9c9165c6",
+        "due_at": "2026-10-31T08:57:32Z",
+        "late_after_at": "2026-10-31T08:57:33Z",
+        "arrival_deadline_at": "2026-10-31T08:57:42Z",
+        "deadline_at": "2026-10-31T08:58:32Z",
+        "manifest_name": "settlement-20261031T085732Z.ready.json"
+      },
+      "definition_hash": "657acee3e358c32882deacfdd484ff16dbc52615f62f48532310dd2237893d52",
+      "state": "admitted",
+      "revision": 4,
+      "fence": 1,
+      "probes": 1,
+      "lease_owner": "",
+      "lease_until": null,
+      "next_probe_at": "2026-10-31T08:57:33.101313Z",
+      "observed_at": "2026-10-31T08:57:32.101313Z",
+      "manifest": {
+        "files": [
+          {
+            "name": "one.csv",
+            "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+            "size_bytes": 3
+          }
+        ],
+        "batch_id": "4279a15c-3648-4d98-9ee1-4cde9dd2f9b4",
+        "schema_version": 1
+      },
+      "manifest_hash": "e4c039cc7017c0f7e08208b22bd0ef15b078a6c6d7c0888b2fb4412ef1c182c9",
+      "collection_id": "8eb2433a-b566-4b82-a85b-e03635e383af",
+      "reason": "ready_manifest_queued_for_collection"
+    },
+    "schedule": {
+      "id": "8975e4f6-9833-488c-b870-94bfc21a20f7",
+      "version": 1,
+      "name": "Local producer calendar",
+      "definition_hash": "c38d7ba2ba3ff1de1edecab6552b3accbfa596bc7f5a42585b38c674a4adeb52",
+      "state": "active",
+      "revision": 3,
+      "approval_authority": 1,
+      "next_due": null,
+      "created_at": "2026-10-31T08:57:30.194951Z",
+      "changed_event_id": "d2053481-2a47-47d9-a121-bc2e4aa00884",
+      "definition": {
+        "schema_version": 1,
+        "name": "Local producer calendar",
+        "workflow": {
+          "id": "0574635f-9d6b-459c-894f-5243ceefc44b",
+          "version": 1,
+          "hash": "60ea0ea3a1172842bb4b7a1877af05765ceb23fa657509dc6210640534bb8a23"
+        },
+        "source": {
+          "directory": "/",
+          "filename_pattern": "settlement-{due_utc}.ready.json",
+          "recursive": false,
+          "kind": "local.collect",
+          "filename_regex": ""
+        },
+        "calendar": {
+          "time_zone": "UTC",
+          "starts_at": "2026-10-31T08:57:32Z",
+          "ends_at": "2026-10-31T08:58:32Z",
+          "local_times": ["08:57:32"],
+          "weekdays": [0, 1, 2, 3, 4, 5, 6],
+          "holidays": [],
+          "gap_policy": "skip",
+          "fold_policy": "both",
+          "offset_rules": [
+            {
+              "from": "2026-10-29T08:57:32Z",
+              "until": "2026-11-02T08:58:32Z",
+              "offset_seconds": 0,
+              "abbreviation": "UTC"
+            }
+          ]
+        },
+        "missed_run_policy": "all",
+        "max_catch_up": 4,
+        "max_active_runs": 2,
+        "max_files_per_occurrence": 2,
+        "execution_deadline_seconds": 60,
+        "late_start_grace_seconds": 1,
+        "authority_revision": 1,
+        "storage_id": "e691844c-4810-4a33-8ec8-0cc5998f008c",
+        "namespace_root": "/",
+        "effects": [],
+        "collection": {
+          "source": {
+            "kind": "local.collect",
+            "connection": {
+              "id": "c8043146-e630-46cb-ab00-a31110bd4039",
+              "version": 1,
+              "hash": "16cbb33693687750cf5231ae00a46c7239723b831d28488f9e51f47f61f0e5ea"
+            },
+            "manifest": "settlement-{due_utc}.ready.json",
+            "target_directory": "/",
+            "completion_contract": "immutable-files-sha256-scheduled-manifest-v1",
+            "max_files": 2,
+            "max_file_bytes": 1024,
+            "max_total_bytes": 1024
+          },
+          "source_connection": {
+            "id": "c8043146-e630-46cb-ab00-a31110bd4039",
+            "version": 1,
+            "definition_hash": "16cbb33693687750cf5231ae00a46c7239723b831d28488f9e51f47f61f0e5ea",
+            "state": "active",
+            "revision": 1,
+            "address": "",
+            "user": "",
+            "directory": "/",
+            "host_fingerprint": "",
+            "key_fingerprint": "",
+            "protocol": "local",
+            "local": {
+              "profile": "freightctl-local-collection-source-v1",
+              "root_reference_sha256": "a996e927b0d6c5e8fde495f2fac877caa0b8164909950657f5cbcdf4a5160e0c",
+              "configuration_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "root_fingerprint": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+              "read_only": true
+            }
+          },
+          "arrival": {
+            "late_after_seconds": 1,
+            "arrival_deadline_seconds": 10,
+            "poll_interval_seconds": 1
+          }
+        }
+      }
+    },
+    "current_authority": true,
+    "observed_state": "admitted",
+    "arrival_timeliness": "on_time",
+    "probe_due": false,
+    "collection": {
+      "job": {
+        "id": "8eb2433a-b566-4b82-a85b-e03635e383af",
+        "workflow_id": "0574635f-9d6b-459c-894f-5243ceefc44b",
+        "workflow_version": 1,
+        "workflow_hash": "60ea0ea3a1172842bb4b7a1877af05765ceb23fa657509dc6210640534bb8a23",
+        "definition": {
+          "schema_version": 1,
+          "workflow": {
+            "id": "0574635f-9d6b-459c-894f-5243ceefc44b",
+            "version": 1,
+            "hash": "60ea0ea3a1172842bb4b7a1877af05765ceb23fa657509dc6210640534bb8a23"
+          },
+          "source": {
+            "kind": "local.collect",
+            "connection": {
+              "id": "c8043146-e630-46cb-ab00-a31110bd4039",
+              "version": 1,
+              "hash": "16cbb33693687750cf5231ae00a46c7239723b831d28488f9e51f47f61f0e5ea"
+            },
+            "manifest": "settlement-{due_utc}.ready.json",
+            "target_directory": "/",
+            "completion_contract": "immutable-files-sha256-scheduled-manifest-v1",
+            "max_files": 2,
+            "max_file_bytes": 1024,
+            "max_total_bytes": 1024
+          },
+          "source_connection": {
+            "id": "c8043146-e630-46cb-ab00-a31110bd4039",
+            "version": 1,
+            "definition_hash": "16cbb33693687750cf5231ae00a46c7239723b831d28488f9e51f47f61f0e5ea",
+            "state": "active",
+            "revision": 1,
+            "address": "",
+            "user": "",
+            "directory": "/",
+            "host_fingerprint": "",
+            "key_fingerprint": "",
+            "protocol": "local",
+            "local": {
+              "profile": "freightctl-local-collection-source-v1",
+              "root_reference_sha256": "a996e927b0d6c5e8fde495f2fac877caa0b8164909950657f5cbcdf4a5160e0c",
+              "configuration_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "root_fingerprint": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+              "read_only": true
+            }
+          },
+          "source_identity": "70c9b2ccf79d886900964dcb196a0653cde7079185bb165b50ac7e9063ab7f91",
+          "authority_revision": 1,
+          "storage_id": "e691844c-4810-4a33-8ec8-0cc5998f008c",
+          "namespace_root": "/",
+          "timeout_seconds": 60,
+          "effects": [],
+          "schedule": {
+            "schedule": {
+              "id": "8975e4f6-9833-488c-b870-94bfc21a20f7",
+              "version": 1,
+              "hash": "c38d7ba2ba3ff1de1edecab6552b3accbfa596bc7f5a42585b38c674a4adeb52"
+            },
+            "occurrence_id": "8fb058d5-33d1-4f5e-98c3-474b9c9165c6",
+            "due_at": "2026-10-31T08:57:32Z",
+            "arrival_deadline_at": "2026-10-31T08:57:42Z",
+            "deadline_at": "2026-10-31T08:58:32Z",
+            "manifest_name": "settlement-20261031T085732Z.ready.json",
+            "manifest_hash": "e4c039cc7017c0f7e08208b22bd0ef15b078a6c6d7c0888b2fb4412ef1c182c9"
+          }
+        },
+        "definition_hash": "9a2b8cc3dc3b6ad429733139140dc45afb2078d7583eb2690a18530424d522d3",
+        "state": "queued",
+        "captured": false,
+        "revision": 1,
+        "fence": 0,
+        "attempts": 0,
+        "lease_owner": "",
+        "lease_until": null,
+        "next_at": "2026-10-31T08:57:32.162752Z",
+        "created_at": "2026-10-31T08:57:32.162752Z",
+        "deadline_at": "2026-10-31T08:58:32Z",
+        "manifest": null,
+        "manifest_hash": null,
+        "reason": "awaiting_collection_worker"
+      },
+      "inputs": [],
+      "current_authority": true,
+      "observed_state": "queued",
+      "business_acceptance": "unknown",
+      "local_states": []
+    }
+  },
+  "captured": {
+    "arrival": {
+      "occurrence_id": "8fb058d5-33d1-4f5e-98c3-474b9c9165c6",
+      "schedule_id": "8975e4f6-9833-488c-b870-94bfc21a20f7",
+      "schedule_version": 1,
+      "definition": {
+        "schema_version": 1,
+        "schedule": {
+          "id": "8975e4f6-9833-488c-b870-94bfc21a20f7",
+          "version": 1,
+          "hash": "c38d7ba2ba3ff1de1edecab6552b3accbfa596bc7f5a42585b38c674a4adeb52"
+        },
+        "occurrence_id": "8fb058d5-33d1-4f5e-98c3-474b9c9165c6",
+        "due_at": "2026-10-31T08:57:32Z",
+        "late_after_at": "2026-10-31T08:57:33Z",
+        "arrival_deadline_at": "2026-10-31T08:57:42Z",
+        "deadline_at": "2026-10-31T08:58:32Z",
+        "manifest_name": "settlement-20261031T085732Z.ready.json"
+      },
+      "definition_hash": "657acee3e358c32882deacfdd484ff16dbc52615f62f48532310dd2237893d52",
+      "state": "admitted",
+      "revision": 4,
+      "fence": 1,
+      "probes": 1,
+      "lease_owner": "",
+      "lease_until": null,
+      "next_probe_at": "2026-10-31T08:57:33.101313Z",
+      "observed_at": "2026-10-31T08:57:32.101313Z",
+      "manifest": {
+        "files": [
+          {
+            "name": "one.csv",
+            "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+            "size_bytes": 3
+          }
+        ],
+        "batch_id": "4279a15c-3648-4d98-9ee1-4cde9dd2f9b4",
+        "schema_version": 1
+      },
+      "manifest_hash": "e4c039cc7017c0f7e08208b22bd0ef15b078a6c6d7c0888b2fb4412ef1c182c9",
+      "collection_id": "8eb2433a-b566-4b82-a85b-e03635e383af",
+      "reason": "ready_manifest_queued_for_collection"
+    },
+    "schedule": {
+      "id": "8975e4f6-9833-488c-b870-94bfc21a20f7",
+      "version": 1,
+      "name": "Local producer calendar",
+      "definition_hash": "c38d7ba2ba3ff1de1edecab6552b3accbfa596bc7f5a42585b38c674a4adeb52",
+      "state": "active",
+      "revision": 3,
+      "approval_authority": 1,
+      "next_due": null,
+      "created_at": "2026-10-31T08:57:30.194951Z",
+      "changed_event_id": "d2053481-2a47-47d9-a121-bc2e4aa00884",
+      "definition": {
+        "schema_version": 1,
+        "name": "Local producer calendar",
+        "workflow": {
+          "id": "0574635f-9d6b-459c-894f-5243ceefc44b",
+          "version": 1,
+          "hash": "60ea0ea3a1172842bb4b7a1877af05765ceb23fa657509dc6210640534bb8a23"
+        },
+        "source": {
+          "directory": "/",
+          "filename_pattern": "settlement-{due_utc}.ready.json",
+          "recursive": false,
+          "kind": "local.collect",
+          "filename_regex": ""
+        },
+        "calendar": {
+          "time_zone": "UTC",
+          "starts_at": "2026-10-31T08:57:32Z",
+          "ends_at": "2026-10-31T08:58:32Z",
+          "local_times": ["08:57:32"],
+          "weekdays": [0, 1, 2, 3, 4, 5, 6],
+          "holidays": [],
+          "gap_policy": "skip",
+          "fold_policy": "both",
+          "offset_rules": [
+            {
+              "from": "2026-10-29T08:57:32Z",
+              "until": "2026-11-02T08:58:32Z",
+              "offset_seconds": 0,
+              "abbreviation": "UTC"
+            }
+          ]
+        },
+        "missed_run_policy": "all",
+        "max_catch_up": 4,
+        "max_active_runs": 2,
+        "max_files_per_occurrence": 2,
+        "execution_deadline_seconds": 60,
+        "late_start_grace_seconds": 1,
+        "authority_revision": 1,
+        "storage_id": "e691844c-4810-4a33-8ec8-0cc5998f008c",
+        "namespace_root": "/",
+        "effects": [],
+        "collection": {
+          "source": {
+            "kind": "local.collect",
+            "connection": {
+              "id": "c8043146-e630-46cb-ab00-a31110bd4039",
+              "version": 1,
+              "hash": "16cbb33693687750cf5231ae00a46c7239723b831d28488f9e51f47f61f0e5ea"
+            },
+            "manifest": "settlement-{due_utc}.ready.json",
+            "target_directory": "/",
+            "completion_contract": "immutable-files-sha256-scheduled-manifest-v1",
+            "max_files": 2,
+            "max_file_bytes": 1024,
+            "max_total_bytes": 1024
+          },
+          "source_connection": {
+            "id": "c8043146-e630-46cb-ab00-a31110bd4039",
+            "version": 1,
+            "definition_hash": "16cbb33693687750cf5231ae00a46c7239723b831d28488f9e51f47f61f0e5ea",
+            "state": "active",
+            "revision": 1,
+            "address": "",
+            "user": "",
+            "directory": "/",
+            "host_fingerprint": "",
+            "key_fingerprint": "",
+            "protocol": "local",
+            "local": {
+              "profile": "freightctl-local-collection-source-v1",
+              "root_reference_sha256": "a996e927b0d6c5e8fde495f2fac877caa0b8164909950657f5cbcdf4a5160e0c",
+              "configuration_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "root_fingerprint": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+              "read_only": true
+            }
+          },
+          "arrival": {
+            "late_after_seconds": 1,
+            "arrival_deadline_seconds": 10,
+            "poll_interval_seconds": 1
+          }
+        }
+      }
+    },
+    "current_authority": true,
+    "observed_state": "admitted",
+    "arrival_timeliness": "on_time",
+    "probe_due": false,
+    "collection": {
+      "job": {
+        "id": "8eb2433a-b566-4b82-a85b-e03635e383af",
+        "workflow_id": "0574635f-9d6b-459c-894f-5243ceefc44b",
+        "workflow_version": 1,
+        "workflow_hash": "60ea0ea3a1172842bb4b7a1877af05765ceb23fa657509dc6210640534bb8a23",
+        "definition": {
+          "schema_version": 1,
+          "workflow": {
+            "id": "0574635f-9d6b-459c-894f-5243ceefc44b",
+            "version": 1,
+            "hash": "60ea0ea3a1172842bb4b7a1877af05765ceb23fa657509dc6210640534bb8a23"
+          },
+          "source": {
+            "kind": "local.collect",
+            "connection": {
+              "id": "c8043146-e630-46cb-ab00-a31110bd4039",
+              "version": 1,
+              "hash": "16cbb33693687750cf5231ae00a46c7239723b831d28488f9e51f47f61f0e5ea"
+            },
+            "manifest": "settlement-{due_utc}.ready.json",
+            "target_directory": "/",
+            "completion_contract": "immutable-files-sha256-scheduled-manifest-v1",
+            "max_files": 2,
+            "max_file_bytes": 1024,
+            "max_total_bytes": 1024
+          },
+          "source_connection": {
+            "id": "c8043146-e630-46cb-ab00-a31110bd4039",
+            "version": 1,
+            "definition_hash": "16cbb33693687750cf5231ae00a46c7239723b831d28488f9e51f47f61f0e5ea",
+            "state": "active",
+            "revision": 1,
+            "address": "",
+            "user": "",
+            "directory": "/",
+            "host_fingerprint": "",
+            "key_fingerprint": "",
+            "protocol": "local",
+            "local": {
+              "profile": "freightctl-local-collection-source-v1",
+              "root_reference_sha256": "a996e927b0d6c5e8fde495f2fac877caa0b8164909950657f5cbcdf4a5160e0c",
+              "configuration_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "root_fingerprint": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+              "read_only": true
+            }
+          },
+          "source_identity": "70c9b2ccf79d886900964dcb196a0653cde7079185bb165b50ac7e9063ab7f91",
+          "authority_revision": 1,
+          "storage_id": "e691844c-4810-4a33-8ec8-0cc5998f008c",
+          "namespace_root": "/",
+          "timeout_seconds": 60,
+          "effects": [],
+          "schedule": {
+            "schedule": {
+              "id": "8975e4f6-9833-488c-b870-94bfc21a20f7",
+              "version": 1,
+              "hash": "c38d7ba2ba3ff1de1edecab6552b3accbfa596bc7f5a42585b38c674a4adeb52"
+            },
+            "occurrence_id": "8fb058d5-33d1-4f5e-98c3-474b9c9165c6",
+            "due_at": "2026-10-31T08:57:32Z",
+            "arrival_deadline_at": "2026-10-31T08:57:42Z",
+            "deadline_at": "2026-10-31T08:58:32Z",
+            "manifest_name": "settlement-20261031T085732Z.ready.json",
+            "manifest_hash": "e4c039cc7017c0f7e08208b22bd0ef15b078a6c6d7c0888b2fb4412ef1c182c9"
+          }
+        },
+        "definition_hash": "9a2b8cc3dc3b6ad429733139140dc45afb2078d7583eb2690a18530424d522d3",
+        "state": "captured",
+        "captured": true,
+        "revision": 4,
+        "fence": 1,
+        "attempts": 1,
+        "lease_owner": "",
+        "lease_until": null,
+        "next_at": "2026-10-31T08:57:32.162752Z",
+        "created_at": "2026-10-31T08:57:32.162752Z",
+        "deadline_at": "2026-10-31T08:58:32Z",
+        "manifest": {
+          "files": [
+            {
+              "name": "one.csv",
+              "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+              "size_bytes": 3
+            }
+          ],
+          "batch_id": "4279a15c-3648-4d98-9ee1-4cde9dd2f9b4",
+          "schema_version": 1
+        },
+        "manifest_hash": "e4c039cc7017c0f7e08208b22bd0ef15b078a6c6d7c0888b2fb4412ef1c182c9",
+        "reason": "batch_captured"
+      },
+      "inputs": [
+        {
+          "id": "dc54be06-4302-40a7-9dd3-60a6569308ee",
+          "first_job_id": "8eb2433a-b566-4b82-a85b-e03635e383af",
+          "workflow_id": "0574635f-9d6b-459c-894f-5243ceefc44b",
+          "source_identity": "70c9b2ccf79d886900964dcb196a0653cde7079185bb165b50ac7e9063ab7f91",
+          "input_identity": "4ff0efcfd28b7830cf9084698d09c9cae852568bde1a85b410b8040d06f0a090",
+          "source_name": "one.csv",
+          "size_bytes": 3,
+          "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+          "target_path": "/ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad-one.csv",
+          "object_id": "d50bd83b-3f0e-49d8-afee-92656b828a44",
+          "state": "accepted",
+          "revision": 3,
+          "capture_fence": 1,
+          "capture_owner": "47f62055-0f81-4dfc-9c04-8d6911052833",
+          "file_id": "d50bd83b-3f0e-49d8-afee-92656b828a44",
+          "run_id": null
+        }
+      ],
+      "current_authority": true,
+      "observed_state": "captured",
+      "business_acceptance": "unknown",
+      "local_states": [
+        {
+          "input_id": "dc54be06-4302-40a7-9dd3-60a6569308ee",
+          "state": "published"
+        }
+      ]
+    }
+  },
+  "occurrence": {
+    "id": "8fb058d5-33d1-4f5e-98c3-474b9c9165c6",
+    "schedule_id": "8975e4f6-9833-488c-b870-94bfc21a20f7",
+    "schedule_version": 1,
+    "due_at": "2026-10-31T08:57:32Z",
+    "deadline_at": "2026-10-31T08:58:32Z",
+    "kind": "collection",
+    "skipped_until": null,
+    "input_count": 0,
+    "event_id": "8322d1f3-15bf-4a56-aca5-19630ad25583"
+  },
+  "ready": {
+    "arrival": {
+      "occurrence_id": "8fb058d5-33d1-4f5e-98c3-474b9c9165c6",
+      "schedule_id": "8975e4f6-9833-488c-b870-94bfc21a20f7",
+      "schedule_version": 1,
+      "definition": {
+        "schema_version": 1,
+        "schedule": {
+          "id": "8975e4f6-9833-488c-b870-94bfc21a20f7",
+          "version": 1,
+          "hash": "c38d7ba2ba3ff1de1edecab6552b3accbfa596bc7f5a42585b38c674a4adeb52"
+        },
+        "occurrence_id": "8fb058d5-33d1-4f5e-98c3-474b9c9165c6",
+        "due_at": "2026-10-31T08:57:32Z",
+        "late_after_at": "2026-10-31T08:57:33Z",
+        "arrival_deadline_at": "2026-10-31T08:57:42Z",
+        "deadline_at": "2026-10-31T08:58:32Z",
+        "manifest_name": "settlement-20261031T085732Z.ready.json"
+      },
+      "definition_hash": "657acee3e358c32882deacfdd484ff16dbc52615f62f48532310dd2237893d52",
+      "state": "ready",
+      "revision": 3,
+      "fence": 1,
+      "probes": 1,
+      "lease_owner": "",
+      "lease_until": null,
+      "next_probe_at": "2026-10-31T08:57:33.101313Z",
+      "observed_at": "2026-10-31T08:57:32.101313Z",
+      "manifest": {
+        "files": [
+          {
+            "name": "one.csv",
+            "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+            "size_bytes": 3
+          }
+        ],
+        "batch_id": "4279a15c-3648-4d98-9ee1-4cde9dd2f9b4",
+        "schema_version": 1
+      },
+      "manifest_hash": "e4c039cc7017c0f7e08208b22bd0ef15b078a6c6d7c0888b2fb4412ef1c182c9",
+      "collection_id": null,
+      "reason": "verified_ready_manifest_observed"
+    },
+    "schedule": {
+      "id": "8975e4f6-9833-488c-b870-94bfc21a20f7",
+      "version": 1,
+      "name": "Local producer calendar",
+      "definition_hash": "c38d7ba2ba3ff1de1edecab6552b3accbfa596bc7f5a42585b38c674a4adeb52",
+      "state": "active",
+      "revision": 3,
+      "approval_authority": 1,
+      "next_due": null,
+      "created_at": "2026-10-31T08:57:30.194951Z",
+      "changed_event_id": "d2053481-2a47-47d9-a121-bc2e4aa00884",
+      "definition": {
+        "schema_version": 1,
+        "name": "Local producer calendar",
+        "workflow": {
+          "id": "0574635f-9d6b-459c-894f-5243ceefc44b",
+          "version": 1,
+          "hash": "60ea0ea3a1172842bb4b7a1877af05765ceb23fa657509dc6210640534bb8a23"
+        },
+        "source": {
+          "directory": "/",
+          "filename_pattern": "settlement-{due_utc}.ready.json",
+          "recursive": false,
+          "kind": "local.collect",
+          "filename_regex": ""
+        },
+        "calendar": {
+          "time_zone": "UTC",
+          "starts_at": "2026-10-31T08:57:32Z",
+          "ends_at": "2026-10-31T08:58:32Z",
+          "local_times": ["08:57:32"],
+          "weekdays": [0, 1, 2, 3, 4, 5, 6],
+          "holidays": [],
+          "gap_policy": "skip",
+          "fold_policy": "both",
+          "offset_rules": [
+            {
+              "from": "2026-10-29T08:57:32Z",
+              "until": "2026-11-02T08:58:32Z",
+              "offset_seconds": 0,
+              "abbreviation": "UTC"
+            }
+          ]
+        },
+        "missed_run_policy": "all",
+        "max_catch_up": 4,
+        "max_active_runs": 2,
+        "max_files_per_occurrence": 2,
+        "execution_deadline_seconds": 60,
+        "late_start_grace_seconds": 1,
+        "authority_revision": 1,
+        "storage_id": "e691844c-4810-4a33-8ec8-0cc5998f008c",
+        "namespace_root": "/",
+        "effects": [],
+        "collection": {
+          "source": {
+            "kind": "local.collect",
+            "connection": {
+              "id": "c8043146-e630-46cb-ab00-a31110bd4039",
+              "version": 1,
+              "hash": "16cbb33693687750cf5231ae00a46c7239723b831d28488f9e51f47f61f0e5ea"
+            },
+            "manifest": "settlement-{due_utc}.ready.json",
+            "target_directory": "/",
+            "completion_contract": "immutable-files-sha256-scheduled-manifest-v1",
+            "max_files": 2,
+            "max_file_bytes": 1024,
+            "max_total_bytes": 1024
+          },
+          "source_connection": {
+            "id": "c8043146-e630-46cb-ab00-a31110bd4039",
+            "version": 1,
+            "definition_hash": "16cbb33693687750cf5231ae00a46c7239723b831d28488f9e51f47f61f0e5ea",
+            "state": "active",
+            "revision": 1,
+            "address": "",
+            "user": "",
+            "directory": "/",
+            "host_fingerprint": "",
+            "key_fingerprint": "",
+            "protocol": "local",
+            "local": {
+              "profile": "freightctl-local-collection-source-v1",
+              "root_reference_sha256": "a996e927b0d6c5e8fde495f2fac877caa0b8164909950657f5cbcdf4a5160e0c",
+              "configuration_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "root_fingerprint": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+              "read_only": true
+            }
+          },
+          "arrival": {
+            "late_after_seconds": 1,
+            "arrival_deadline_seconds": 10,
+            "poll_interval_seconds": 1
+          }
+        }
+      }
+    },
+    "current_authority": true,
+    "observed_state": "ready",
+    "arrival_timeliness": "on_time",
+    "probe_due": false
+  },
+  "waiting": {
+    "arrival": {
+      "occurrence_id": "8fb058d5-33d1-4f5e-98c3-474b9c9165c6",
+      "schedule_id": "8975e4f6-9833-488c-b870-94bfc21a20f7",
+      "schedule_version": 1,
+      "definition": {
+        "schema_version": 1,
+        "schedule": {
+          "id": "8975e4f6-9833-488c-b870-94bfc21a20f7",
+          "version": 1,
+          "hash": "c38d7ba2ba3ff1de1edecab6552b3accbfa596bc7f5a42585b38c674a4adeb52"
+        },
+        "occurrence_id": "8fb058d5-33d1-4f5e-98c3-474b9c9165c6",
+        "due_at": "2026-10-31T08:57:32Z",
+        "late_after_at": "2026-10-31T08:57:33Z",
+        "arrival_deadline_at": "2026-10-31T08:57:42Z",
+        "deadline_at": "2026-10-31T08:58:32Z",
+        "manifest_name": "settlement-20261031T085732Z.ready.json"
+      },
+      "definition_hash": "657acee3e358c32882deacfdd484ff16dbc52615f62f48532310dd2237893d52",
+      "state": "waiting",
+      "revision": 1,
+      "fence": 0,
+      "probes": 0,
+      "lease_owner": "",
+      "lease_until": null,
+      "next_probe_at": "2026-10-31T08:57:32Z",
+      "observed_at": null,
+      "manifest": null,
+      "manifest_hash": null,
+      "collection_id": null,
+      "reason": "awaiting_expected_ready_manifest"
+    },
+    "schedule": {
+      "id": "8975e4f6-9833-488c-b870-94bfc21a20f7",
+      "version": 1,
+      "name": "Local producer calendar",
+      "definition_hash": "c38d7ba2ba3ff1de1edecab6552b3accbfa596bc7f5a42585b38c674a4adeb52",
+      "state": "active",
+      "revision": 3,
+      "approval_authority": 1,
+      "next_due": null,
+      "created_at": "2026-10-31T08:57:30.194951Z",
+      "changed_event_id": "d2053481-2a47-47d9-a121-bc2e4aa00884",
+      "definition": {
+        "schema_version": 1,
+        "name": "Local producer calendar",
+        "workflow": {
+          "id": "0574635f-9d6b-459c-894f-5243ceefc44b",
+          "version": 1,
+          "hash": "60ea0ea3a1172842bb4b7a1877af05765ceb23fa657509dc6210640534bb8a23"
+        },
+        "source": {
+          "directory": "/",
+          "filename_pattern": "settlement-{due_utc}.ready.json",
+          "recursive": false,
+          "kind": "local.collect",
+          "filename_regex": ""
+        },
+        "calendar": {
+          "time_zone": "UTC",
+          "starts_at": "2026-10-31T08:57:32Z",
+          "ends_at": "2026-10-31T08:58:32Z",
+          "local_times": ["08:57:32"],
+          "weekdays": [0, 1, 2, 3, 4, 5, 6],
+          "holidays": [],
+          "gap_policy": "skip",
+          "fold_policy": "both",
+          "offset_rules": [
+            {
+              "from": "2026-10-29T08:57:32Z",
+              "until": "2026-11-02T08:58:32Z",
+              "offset_seconds": 0,
+              "abbreviation": "UTC"
+            }
+          ]
+        },
+        "missed_run_policy": "all",
+        "max_catch_up": 4,
+        "max_active_runs": 2,
+        "max_files_per_occurrence": 2,
+        "execution_deadline_seconds": 60,
+        "late_start_grace_seconds": 1,
+        "authority_revision": 1,
+        "storage_id": "e691844c-4810-4a33-8ec8-0cc5998f008c",
+        "namespace_root": "/",
+        "effects": [],
+        "collection": {
+          "source": {
+            "kind": "local.collect",
+            "connection": {
+              "id": "c8043146-e630-46cb-ab00-a31110bd4039",
+              "version": 1,
+              "hash": "16cbb33693687750cf5231ae00a46c7239723b831d28488f9e51f47f61f0e5ea"
+            },
+            "manifest": "settlement-{due_utc}.ready.json",
+            "target_directory": "/",
+            "completion_contract": "immutable-files-sha256-scheduled-manifest-v1",
+            "max_files": 2,
+            "max_file_bytes": 1024,
+            "max_total_bytes": 1024
+          },
+          "source_connection": {
+            "id": "c8043146-e630-46cb-ab00-a31110bd4039",
+            "version": 1,
+            "definition_hash": "16cbb33693687750cf5231ae00a46c7239723b831d28488f9e51f47f61f0e5ea",
+            "state": "active",
+            "revision": 1,
+            "address": "",
+            "user": "",
+            "directory": "/",
+            "host_fingerprint": "",
+            "key_fingerprint": "",
+            "protocol": "local",
+            "local": {
+              "profile": "freightctl-local-collection-source-v1",
+              "root_reference_sha256": "a996e927b0d6c5e8fde495f2fac877caa0b8164909950657f5cbcdf4a5160e0c",
+              "configuration_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "root_fingerprint": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+              "read_only": true
+            }
+          },
+          "arrival": {
+            "late_after_seconds": 1,
+            "arrival_deadline_seconds": 10,
+            "poll_interval_seconds": 1
+          }
+        }
+      }
+    },
+    "current_authority": true,
+    "observed_state": "waiting",
+    "arrival_timeliness": "not_observed",
+    "probe_due": true
+  }
+}

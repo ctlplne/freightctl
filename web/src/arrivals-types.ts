@@ -325,6 +325,11 @@ export function asArrivalView(
     const cb = collection.job.definition.schedule;
     if (
       !cb ||
+      !same(collection.job.definition.workflow, d.workflow) ||
+      !same(collection.job.definition.source, c.source) ||
+      !same(collection.job.definition.source_connection, c.source_connection) ||
+      !same(collection.job.definition.effects, d.effects) ||
+      collection.job.definition.storage_id !== d.storage_id ||
       !same(cb.schedule, binding.schedule) ||
       cb.occurrence_id !== a.occurrence_id ||
       cb.due_at !== binding.due_at ||

@@ -65,8 +65,12 @@ manifests do not change saved original probe/admission/capture receipts.
 Migration62 also repairs the older connection trigger to accept only the exact
 read-only local schema3 shape while keeping every SSH/FTPS guard. Prepared
 matching-event SQL forgery and actual calendar/custody/refusal cases compile
-only. Browser calendar wiring and all native source62/refusal/restore proof
-remain owed.
+only. F311 wires the same local calendar profile in the Collections editor and
+Schedules review. A calendar review shows the physical-root/configuration
+fingerprints and arrival rules;it never accepts a host path. Arrival views must
+match their frozen child workflow,source,connection,effects and storage,even
+when both documents carry self-consistent hashes. Actual served Chrome and all
+native source62/refusal/restore proof remain owed.
 
 The first workflow executor sends one immutable accepted file through an ordered list of `sftp.deliver` steps. CLI and HTTPS use the same typed definition, validation, permissions, approval and execution services. It uses the [outbound SFTP profile](protocols/outbound-sftp.md), including its loopback-only development network, required extensions, bounded workers and uncertain-receipt rules. This is a foundation for the full workflow engine; schedules, conditions, collection, processing, visual editing and AI proposals remain required work.
 

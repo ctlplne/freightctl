@@ -986,21 +986,7 @@ export function Collections({
                   value={form.source}
                   required
                   disabled={busy}
-                  onChange={(e) =>
-                    edit({
-                      source: e.target.value,
-                      ...(connections.find(
-                        (c) => connectionKey(c) === e.target.value,
-                      )?.local
-                        ? {
-                            scheduled: false,
-                            manifest: form.scheduled
-                              ? "settlement.ready.json"
-                              : form.manifest,
-                          }
-                        : {}),
-                    })
-                  }
+                  onChange={(e) => edit({ source: e.target.value })}
                 >
                   {connectionOptions()}
                 </select>
@@ -1010,11 +996,7 @@ export function Collections({
               <input
                 type="checkbox"
                 checked={form.scheduled}
-                disabled={
-                  busy ||
-                  !!connections.find((c) => connectionKey(c) === form.source)
-                    ?.local
-                }
+                disabled={busy}
                 onChange={(e) =>
                   edit({
                     scheduled: e.target.checked,
