@@ -1184,7 +1184,9 @@
         "docs/qualification/evidence/F269-producer-mcp-attempt-metadata.json",
         "docs/qualification/evidence/F270-native-windows-protection-and-recovery.json",
         "docs/qualification/evidence/F271-native-broad-secret-refusal.json",
-        "docs/qualification/evidence/F273-safe-native-browser-failure-trace.json"
+        "docs/qualification/evidence/F273-safe-native-browser-failure-trace.json",
+        "docs/qualification/evidence/F274-native-terminal-ci.json",
+        "docs/qualification/evidence/F275-windows-sealed-flush-record.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -1262,13 +1264,14 @@
         "F268 preserves original638d156 terminal16 workflows/35 jobs:26 pass/9 fail. Both complete image scans and listed scan gates pass;Windows inherited case remains unqualified. Actual ARM/x86 native JSON custody/restart and x86 authority-label/rebinding cases pass only on this candidate. Exact original failures remain;F251\u2013F267 prepare repairs,not final-source qualification. No original run cancelled/rerun/substituted.",
         "F269 repairs a production MCP response bug:work completed producer/composed attempts but the adapter accepted only old plan2/definition2,so it returned an error instead of the original held-output metadata. Reuse the exact core immutable-definition decoder,closed schema2/3/4 run mapping and actual profile while retaining direct-tool scoped-only restrictions. Local observed producer3 refusal turns green for2/3/4;rehashed producer/lineage/workflow/slot substitutions and private-context disclosure are refused. Core guards,architecture,affected vet and integration compilation pass. Backend authority/approval/leases/acceptance unchanged;actual stock MCP work/same-key replay/final-source bytes owed.",
         "F270 records actual33ad447 protectedfs/crypto/durablefs package successes and red Windows reopened-sealed Sync/adoption,active-stage rename,unsafe-secret and scanner cases. F271 immediately triages unsafe-secret:chmod0644 changed no Windows DACL,so the fixture stayed private. Install owner-full/Everyone-read protected DACL on the exact held synthetic credential and require actual ErrPrivacy readback before unchanged connection refusal/no-credentials-before-trust assertions. Focused local bounded TLS refusals and Windows compile/vet pass;native secret refusal remains owed. Original recovery Sync is not waived.",
-        "F273 addresses the still-unavailable original receive-browser result and opaque format/review failure hashes. Read exact bounded protected private logs through the crypto buffer;emit only closed error class,numeric source line/column for one of three fixed scripts,and complete bounded-file digest. Never output stack/message/path/DOM or partial-file hash. Receive fallback adds numeric exit status;format/review failures use existing private failure.log. Focused privacy/oversize/summary tests and tagged compile/vet pass. Original acceptance/security/assertions and private raw evidence remain unchanged;actual native source cause and repairs remain owed."
+        "F273 addresses the still-unavailable original receive-browser result and opaque format/review failure hashes. Read exact bounded protected private logs through the crypto buffer;emit only closed error class,numeric source line/column for one of three fixed scripts,and complete bounded-file digest. Never output stack/message/path/DOM or partial-file hash. Receive fallback adds numeric exit status;format/review failures use existing private failure.log. Focused privacy/oversize/summary tests and tagged compile/vet pass. Original acceptance/security/assertions and private raw evidence remain unchanged;actual native source cause and repairs remain owed.",
+        "F274 preserves original33ad447 terminal18 workflows/41 jobs:31 pass,10 fail. Both complete image scans and all listed scan gates pass. Native Windows protectedfs/crypto/durablefs pass;sealed recovery,active-stage rename,scanner and original failed browser/stock/API/onward cases remain red. F275 prepares Windows custody original-handle data flush followed by a bounded exact-file extended-attribute record and second flush before close/directory sync. Recovery requires that prior successful flush,exact native128-bit file/64-bit volume identity,storage/name/size/digest,sealed protection and every byte hash;no read-only flush shortcut or new write grant. Missing proof stays incomplete;copied/invalid proof is a hard refusal. Portable lifecycle/parser units and affected static/Windows compilation pass;actual Windows failed-flush/adoption/copied-identity/restart/restore/filesystem proof and all final-source outcomes remain owed."
       ],
       "current_item": {
-        "id": "F273",
-        "state": "Safe native failure source diagnosis implemented;actual browser cause and Windows recovery owed",
-        "proof": "Focused protected-log privacy/oversize/strict summary checks and tagged compile/vet pass;no local browser/runtime",
-        "next": "Implement proved Windows sealed persistence recovery;triage actual native browser/stock outcomes and remaining product work"
+        "id": "F275",
+        "state": "Windows prior-data-flush record implemented;native execution owed",
+        "proof": "Original Windows33ad447 reopened-sealed recovery is red;focused portable custody/projection/wire cases and Windows compilation/vet pass only",
+        "next": "Push verified owner batch after original terminal security outcomes;repair actual native/browser/stock/product failures and complete mandatory final-source qualification"
       }
     }
   ],

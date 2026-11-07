@@ -165,16 +165,7 @@ func (d *Disk) stage(name string, src io.Reader, size int64, digest string, reta
 	if n != size || hex.EncodeToString(h.Sum(nil)) != digest {
 		return ErrIntegrity
 	}
-	if err = protectedfs.SealReadOnly(f); err != nil {
-		return err
-	}
-	if err = f.Sync(); err != nil {
-		return err
-	}
-	if err = f.Close(); err != nil {
-		return err
-	}
-	if err = d.sync(); err != nil {
+	if err = d.sealObject(f, name, size, digest); err != nil {
 		return err
 	}
 	finished = true
@@ -220,6 +211,10 @@ func (d *Disk) VerifiedContext(ctx context.Context, name string, size int64, dig
 	state, err := protectedfs.Protection(f)
 	if err != nil || state != protectedfs.PrivateSealed {
 		return nil, ErrIntegrity
+	}
+	complete, err := checkSealPersistence(f, d.identity, name, size, digest)
+	if err != nil || !complete {
+		return nil, errors.Join(ErrIntegrity, err)
 	}
 	h := secure.NewDigest()
 	n, err := io.CopyBuffer(h, contextReader{ctx: ctx, reader: io.LimitReader(f, size+1)}, make([]byte, 32*1024))

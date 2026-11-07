@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "id": "F275",
+  "observed_at": "2026-11-07",
+  "base_candidate": "af9ddc5df590858e499bb80e3e4cf98e7a314999",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Prior successful Windows data-flush record implemented;native runtime proof owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "5ce4627e5542e7fd3617b24ba9ec65e56b17fb5553e4b9387e61dc3185d4cf3c",
+      "bytes": 4960
+    },
+    {
+      "reference": "docs/qualification/evidence/F274-native-terminal-ci.json",
+      "sha256": "33a7c8465b48b4ab841657a3bccb39184c189d549160b29cefcfa00cc894a366",
+      "bytes": 107511
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "0ac527c4a65db0d72cedec64f4cb0038ed4fee3d74cebf17e290b07f1911a5d0",
+      "bytes": 384379
+    },
+    {
+      "reference": "docs/security/protected-files.md",
+      "sha256": "b11748972dd5d14f1183dcc41b6b4279b06d43db157368b7727c164c67e4ac19",
+      "bytes": 8607
+    },
+    {
+      "reference": "internal/custody/custody.go",
+      "sha256": "4a837a8fcab6473812db0253be725addb12bd6a08450bcf3014e6af0ae1d7529",
+      "bytes": 6071
+    },
+    {
+      "reference": "internal/custody/generated.go",
+      "sha256": "f25d97627daa1eb62e94583743efde4b6d40eee5ccce4ff4354672db2d34d00d",
+      "bytes": 3206
+    },
+    {
+      "reference": "internal/custody/protection_test.go",
+      "sha256": "ed83e24b03e25faade9c83a2519f0b24f03645b08e9ffdca8db10b5e06f46c69",
+      "bytes": 2320
+    },
+    {
+      "reference": "internal/custody/rechecks.go",
+      "sha256": "94cffccf2606dd2afdc6a84459bf00a1541ee7c8df6115709348cab5b8202147",
+      "bytes": 6523
+    },
+    {
+      "reference": "internal/custody/seal_persistence.go",
+      "sha256": "041bf36250a2c4405ae6d1207223ce1aafedf21f7064e699ee9f58a4ca6f89e1",
+      "bytes": 3660
+    },
+    {
+      "reference": "internal/custody/seal_persistence_other.go",
+      "sha256": "cdb511183b6061b29ccaab9249b80a21e905e982ec7fb29838577f79f443d65b",
+      "bytes": 349
+    },
+    {
+      "reference": "internal/custody/seal_persistence_test.go",
+      "sha256": "a72fb624eec23a6cc43200d37595ef6c957430c59d5c3b808dbdf12e45f69e47",
+      "bytes": 3439
+    },
+    {
+      "reference": "internal/custody/seal_persistence_windows.go",
+      "sha256": "4bb7c73d2b8faebf0edcbb0fb10430030c54f2bde77155f14319ea1a8dd66b26",
+      "bytes": 5056
+    },
+    {
+      "reference": "internal/custody/seal_persistence_windows_test.go",
+      "sha256": "9f6c30995d11528eafebeab10dfa517ac95c974070eb877d2ee486a3e8e10437",
+      "bytes": 5463
+    },
+    {
+      "reference": "internal/custody/writer.go",
+      "sha256": "9f583b097815ab747b46075633eb116660884035e8d4eede62582ecae5c6a4dc",
+      "bytes": 12368
+    }
+  ],
+  "red": {
+    "candidate": "33ad447564cb0be33bc04fa8d60e9f0adaf0c2b4",
+    "run": 42361009318,
+    "job": 128369207103,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128369207103",
+    "tests": [
+      "TestExactDigestDoesNotMakeWritableStagingReadableAsImmutableCustody",
+      "TestProjectionStageRetainsPartialAdoptsExactSealedAndRefusesTampering"
+    ],
+    "observed": "Reopened sealed-file Sync fails Access denied;matching hashes/protection alone cannot qualify durable recovery."
+  },
+  "changed": [
+    "Centralize stage/generated/revision-writer sealing,persistence,close and held-directory sync. Unix retains original file sync and recovery re-sync.",
+    "Windows original writable creator must successfully FlushFileBuffers before recording completion on the same physical file through its existing EA rights,then flush again,validate the attached record,close and sync the held directory before ordinary SQL acceptance. No data/append/EA write grant is added to sealed descriptors.",
+    "The fixed bounded canonical EA record binds storage identity,service name,length,digest,native128-bit file ID and64-bit volume identity. Read-only recovery requires it,sealed protection and hashing every exact byte. Directory sync is not claimed to flush data.",
+    "Missing proof preserves incomplete reserved progress. Invalid/copied proof is an integrity error,not a reason to choose another slot. Unsupported EA/identity filesystems fail closed;existing unproved files are not silently adopted/backfilled.",
+    "Native tests require failed read-only flush to leave no proof or new write rights;successful original flush qualifies read-only recovery;copying the exact record to an exact-byte replacement at the same name is refused by physical identity. All actual native execution remains owed.",
+    "F274 records original18 workflows/41 terminal jobs and security outcomes without cancelling/rerunning/substituting runs."
+  ],
+  "green": [
+    "Focused portable canonical-record/EA framing,ordinary/generated custody lifecycle,exact writable-staging refusal and projection partial/adoption/corruption units pass.",
+    "Affected formatting,local/Windows vet,Windows custody test compilation,integration compilation without runtime and architecture checks pass. Native tests are compiled only;this is not Windows qualification."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f275-final2-architecture.log",
+      "sha256": "b7f470922d57aa4c37200f1b822336ba2a290e0f136d0caa7a0ceaca04c90cee",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f275-final2-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f275-final2-integration-compile.log",
+      "sha256": "32b8d25153d3a94e97732e62edae27f354d8c0d1dfbdd97c92e5ef3302ca4e66",
+      "bytes": 157
+    },
+    {
+      "reference": ".private/freightctl-f275-final2-lifecycle.log",
+      "sha256": "fe95e67f75b327f9313f1a9d1a8cad4bf8aaaa74258c8c6899fd263024055439",
+      "bytes": 117
+    },
+    {
+      "reference": ".private/freightctl-f275-final2-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f275-final2-windows-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f275-final2-windows-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "owed": [
+    "Actual original native Windows recovery/adoption replay and failed-flush/copied-identity negative cases.",
+    "Native restart,restore/copy,unsupported filesystem,restricted-token and power-loss outcomes bound to final source.",
+    "Original Windows active-stage rename/scanner,all failed browser/stock/MCP/onward/protocol and all remaining baseline/AX/FINISH outcomes."
+  ],
+  "resources": "OneCPU/192MiB lightweight local Go filesystem/unit/static/cross-compilation only. No inference,PostgreSQL,Chrome,scanner or heavy peer ran. Retained35/source60 migrations and local limits unchanged."
+}

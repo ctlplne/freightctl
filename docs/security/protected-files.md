@@ -102,8 +102,32 @@ using its protection state. Matching a byte digest alone cannot make a writable
 partial object readable as immutable custody. Partial reserved slots remain in
 place and cannot be adopted as sealed artifacts.
 
-The original data sync,close,directory sync and recovery re-sync remain required.
-In particular,reopening sealed bytes does not waive the original recovery flush.
-Actual Windows flush/link/ACL/restart behavior remains unqualified until native
-CI executes these paths. Local compilation establishes no Windows persistence
-claim. Setup references are the next integration item.
+Unix custody retains the original data sync,close,directory sync and recovery
+re-sync. The original Windows33ad447 recovery failed because FlushFileBuffers
+requires write access: reopening a sealed file for reading cannot flush it.
+Granting data writes to sealed custody is not an acceptable repair.
+
+The prepared Windows path flushes the original writable creator handle before
+attaching a fixed,small extended attribute to that same held file. This is a
+record of a successful data flush,not a domain receipt or permission. It binds
+storage identity,service object name,exact length and digest to the native128-bit
+file ID and64-bit volume identity. It then flushes again,checks the record,closes
+the creator and syncs the held directory before ordinary SQL acceptance. No new
+data/append/EA write grant is added to the sealed descriptor.
+
+Recovery opens read-only,checks protection and the exact attached record,hashes
+every byte,and persists the held directory. It relies on the proved earlier
+data flush;directory sync is not a replacement for flushing data. Missing
+records leave reserved objects incomplete and preserved. Invalid records fail
+closed;they cannot be hidden by choosing another slot. Copying a record to a
+different physical file cannot qualify it,even when name,length and bytes match.
+Record parsing is bounded,canonical and rejects unknown or duplicate meaning.
+These are filesystem attributes,with no sidecar or new SQL authority.
+
+Filesystems without the required extended-attribute/identity APIs fail closed.
+Existing Windows objects without this record are not silently backfilled or
+adopted. Copy/restore needs fresh persistence proof for the new physical object.
+Actual Windows execution,unsupported-filesystem/restore/restricted-token and
+process-death/power-loss outcomes remain owed. F275 retains the original failure
+and prepares native failed-flush,read-only recovery and copied-identity cases;
+local compilation establishes no Windows persistence claim.

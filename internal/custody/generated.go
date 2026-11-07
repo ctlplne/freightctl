@@ -39,6 +39,13 @@ func (d *Disk) GeneratedSlotState(ctx context.Context, name string) (string, err
 	case protectedfs.PrivateWritable:
 		return "partial", nil
 	case protectedfs.PrivateSealed:
+		complete, err := checkSealPersistence(file, d.identity, name, -1, "")
+		if err != nil {
+			return "", err
+		}
+		if !complete {
+			return "partial", nil
+		}
 		return "sealed", nil
 	}
 	return "", ErrIntegrity
@@ -109,16 +116,7 @@ func (d *Disk) StageGenerated(ctx context.Context, name string, maximum int64, g
 	if err = ctx.Err(); err != nil {
 		return 0, "", err
 	}
-	if err = protectedfs.SealReadOnly(f); err == nil {
-		err = f.Sync()
-	}
-	if err != nil {
-		return 0, "", err
-	}
-	if err = f.Close(); err != nil {
-		return 0, "", err
-	}
-	if err = d.sync(); err != nil {
+	if err = d.sealObject(f, name, writer.count, hex.EncodeToString(h.Sum(nil))); err != nil {
 		return 0, "", err
 	}
 	sealed = true

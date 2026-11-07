@@ -38,11 +38,15 @@ func (d *Disk) recheckObject(ctx context.Context, name string, size int64, diges
 		return false, false, err
 	}
 	state, inspectErr := protectedfs.Protection(observed)
+	complete := true
+	if inspectErr == nil && state == protectedfs.PrivateSealed {
+		complete, inspectErr = checkSealPersistence(observed, d.identity, name, size, digest)
+	}
 	closeErr := observed.Close()
 	if inspectErr != nil || closeErr != nil {
 		return false, false, errors.Join(ErrIntegrity, inspectErr, closeErr)
 	}
-	if state == protectedfs.PrivateWritable {
+	if state == protectedfs.PrivateWritable || state == protectedfs.PrivateSealed && !complete {
 		return true, true, nil
 	}
 	if state != protectedfs.PrivateSealed {
@@ -53,9 +57,9 @@ func (d *Disk) recheckObject(ctx context.Context, name string, size int64, diges
 		return false, false, err
 	}
 	defer file.Close()
-	// Verification after an uncertain commit must establish persistence now,
-	// including a process death after sealing but before the original sync.
-	if err = file.Sync(); err != nil {
+	// Unix re-syncs the actual file. Windows must prove the original successful
+	// flush on this physical object;sealing without that record is incomplete.
+	if err = recoverSealPersistence(file, d.identity, name, size, digest); err != nil {
 		return false, false, err
 	}
 	if err = d.sync(); err != nil {

@@ -349,16 +349,7 @@ func (w *RevisionWriter) Close() error {
 	}
 	w.file.Size = w.end
 	w.file.SHA256 = hex.EncodeToString(h.Sum(nil))
-	if err = protectedfs.SealReadOnly(w.data); err != nil {
-		return w.fail(err)
-	}
-	if err = w.data.Sync(); err != nil {
-		return w.fail(err)
-	}
-	if err = w.data.Close(); err != nil {
-		return w.fail(err)
-	}
-	if err = w.service.Disk.sync(); err != nil {
+	if err = w.service.Disk.sealObject(w.data, w.name, w.file.Size, w.file.SHA256); err != nil {
 		return w.fail(err)
 	}
 	// Any subsequent SQL uncertainty retains the sealed bytes for reconciliation.

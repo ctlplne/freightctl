@@ -44,16 +44,7 @@ func TestExactDigestDoesNotMakeWritableStagingReadableAsImmutableCustody(t *test
 	if err = disk.VerifyGenerated(t.Context(), name, int64(len(body)), secure.Digest(body)); !errors.Is(err, ErrIntegrity) {
 		t.Fatal("partial object adopted", err)
 	}
-	if err = protectedfs.SealReadOnly(file); err != nil {
-		t.Fatal(err)
-	}
-	if err = file.Sync(); err != nil {
-		t.Fatal(err)
-	}
-	if err = file.Close(); err != nil {
-		t.Fatal(err)
-	}
-	if err = disk.sync(); err != nil {
+	if err = disk.sealObject(file, name, int64(len(body)), secure.Digest(body)); err != nil {
 		t.Fatal(err)
 	}
 	state, err = disk.GeneratedSlotState(t.Context(), name)

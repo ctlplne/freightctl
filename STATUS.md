@@ -7,10 +7,13 @@ original failures,source hashes and owed proofs are in
 [remaining work](docs/qualification/remaining.json) and its item manifests.
 
 Latest pushed source:33ad447564cb0be33bc04fa8d60e9f0adaf0c2b4.
-Its original18 triggered workflows are running. F270 records the terminal
-Windows job:protectedfs/crypto/durablefs pass;reopened sealed-file recovery Sync,
-active-stage directory rename,unsafe-secret fixture and scanner socket cases
-remain red. The original receive-browser result is still unavailable.
+Its original18 workflows/41 jobs are terminal:31 pass,10 fail. F274 preserves
+exact original run/job/step handles. Both complete image scans and all listed
+scan gates pass. F270 records native Windows protectedfs/crypto/durablefs passes;
+sealed-file recovery,active-stage rename,unsafe-secret fixture and scanner
+socket cases remain red. Receive-browser result is still unavailable. Native
+producer/composed MCP replies,onward rotation,some browser/stock/FTPS consent
+journeys also fail;these outcomes are owed,not overall qualification.
 
 Previous source:638d156cf16820b165cc8e6310f62daddf2d8458.
 Its original16 triggered workflows/35 jobs are terminal:26 pass,9 fail. Both
@@ -42,12 +45,15 @@ protected failure-trace diagnosis:only a closed class,numeric candidate source
 location and whole-file digest may leave private evidence. Original browser
 assertions stay intact;actual missing-result cause remains owed.
 
-Custody requires private creation,sealed protection,exact physical object/length/
-hash,sync/close/directory persistence and ordinary SQL acceptance. Writable staging
-with an exact hash is refused. Partial reserved objects stay in place. Recovery
-still re-syncs reopened sealed bytes;no Windows flush shortcut is assumed.
-The original inherited-ACE security case remains unqualified until real inherited
-readback/refusal and protected-descriptor parser cases execute on Windows.
+F275 prepares Windows custody recovery without granting writes to sealed data.
+The original writable handle must flush successfully before a bounded attached
+record is written,then flush again before close/directory sync and acceptance.
+Recovery checks that record against the exact native file/volume,storage,name,
+length and digest,checks sealed protection,and hashes every byte. Missing proof
+leaves preserved incomplete progress;copied/invalid proof refuses recovery.
+Unix retains file re-sync. Portable lifecycle/wire/static checks and Windows
+compilation/vet pass;actual native failed-flush/adoption/copied-identity and
+restart/restore/filesystem outcomes remain owed. No persistence waiver is used.
 
 FINISH repair is active and remaining implementation is mandatory. Next:repair
 newly reached browser/protocol failures,complete remaining product work,and replay
