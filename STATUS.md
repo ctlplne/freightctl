@@ -9,9 +9,13 @@ Exact original failures,owner decisions and remaining work are preserved in
 linked safe manifests. Raw private proof remains outside Git.
 
 Current pushed candidate: `acd82da46a31ae96581ed6660345ecd89113fae4`.
-[F395](docs/qualification/evidence/F395-native-push.json) binds eight verified
-owner-only commits and18 first original workflows,queued/running. The enabled
-pinned pre-push Gitleaks guard found no leaks. Runtime outcomes remain owed.
+[F398](docs/qualification/evidence/F398-native-terminal.json) binds all18
+original workflows/41 terminal jobs:34pass,7fail. Source/history/native source
+vulnerability and both exact peer image scans pass. Both x86 receiver profiles
+retain SIGSYS/syscall54 with unchanged isolation. Platform unit,receive and Linux
+unit-race failures await FINISH investigation;full Linux PostgreSQL steps were
+skipped after unit failure. Detailed final-source qualification remains owed.
+F395 preserves the owner-only push and enabled pre-push Gitleaks proof.
 
 Previous terminal candidate: `4d2d9ab3062e7b10bc44cc0629b42d5ed570f6ca`.
 [F394](docs/qualification/evidence/F394-native-terminal.json) binds all16
