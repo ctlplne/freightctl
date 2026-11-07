@@ -11,9 +11,13 @@ linked safe manifests. Raw private proof remains outside Git.
 Current pushed candidate: `b11ab7621e148fd7060375636d362ede1af49a83`.
 [F411](docs/qualification/evidence/F411-native-push.json) binds four verified
 owner-only commits and16 first original workflows. Enabled pre-push Gitleaks
-reports no leaks. F408 explicit property read and F409 complete non-overwriting
-collection MOVE need actual original native outcomes. Source schema63 and local
-retained schema35 stay unchanged by this batch.
+reports no leaks. [F414](docs/qualification/evidence/F414-native-terminal.json) records all16
+original workflows/35 terminal jobs:34pass,receive-browser red. Named security
+gates pass. Linux PostgreSQL,restore,HTTPS/curl,CLI and platform jobs succeed at
+this source,including F408/F409. Detailed scoped/final-source proof remains owed.
+Live browser/FTPS succeeds without an identified repair;its earlier failure stays
+preserved and unresolved. Local F412/F413 are not included. Source schema63 and
+local retained schema35 remain unchanged.
 
 Previous terminal candidate: `a6c4aacbae8bc3d38eaebd45f20d0fe5ba7ee3fe`.
 [F410](docs/qualification/evidence/F410-native-terminal.json) binds all16 original
