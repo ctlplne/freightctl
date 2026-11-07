@@ -65,7 +65,11 @@ func TestWebDAVFileDeletePinsAuthorityRevisionHistoryAndCurrentIntake(t *testing
 	if !bytes.Equal(body, data) {
 		t.Fatal("removing the mapping destroyed immutable custody bytes")
 	}
-	exchangeAPIRequest(t, server, "GET", prefix+"/files/"+file.ID, nil, operatorHeaders, nil, 403)
+	denied, deniedBody := exchangeAPIRequest(t, server, "GET", prefix+"/files/"+file.ID, nil, operatorHeaders, nil, 404)
+	unknown, unknownBody := exchangeAPIRequest(t, server, "GET", prefix+"/files/"+secure.NewID(), nil, operatorHeaders, nil, 404)
+	if !bytes.Equal(deniedBody, unknownBody) || denied.Header.Get("ETag") != "" || denied.Header.Get("X-File-Revision-ID") != "" || unknown.Header.Get("ETag") != "" || unknown.Header.Get("X-File-Revision-ID") != "" {
+		t.Fatal("inaccessible retained custody differs from an unknown file or reveals byte metadata")
+	}
 	exchangeAPIRequest(t, server, "DELETE", source, nil, command, nil, 412)
 	replacement := create("dav-delete-replacement", "/remove.dat", data)
 	if replacement.ID == file.ID || replacement.SHA256 != file.SHA256 {

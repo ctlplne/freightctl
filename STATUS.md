@@ -10,7 +10,7 @@ Current decisions and exact evidence are in
 Current pushed candidate: `e6084081e986c04ea19e204b79908decdcdbd09c`.
 F380 records 17 original workflows,including independent FTPS receiver profiles.
 Current source/security checks and declared FTPS/JSON profiles have passed;full
-terminal binding remains owed. New parser fuzz deadline,receive audit-login,
+terminal binding remains owed. F382 preserves the unresolved parser fuzz deadline;receive audit-login,
 stock intake-routing and DAV DELETE test-contract failures remain red. Independent
 receiver selected-seccomp failures remain red. Preserve original handles;repair
 without weakening gates or budgets. Earlier terminal9b3ba92 remains in F379.
@@ -54,6 +54,10 @@ with a separate strict empty-POST wire observer. It pins one original scoped
 checkpoint and unchanged200 response; ordinary JSON workflow checks stay intact.
 Focused tests/static checks pass; original native upload/check/release replay
 remains owed.
+
+F383 strengthens the DELETE privacy proof to the existing exact404 contract and
+compares it with an unknown ID,including absent byte validators. Native replay
+remains owed; production authorization is unchanged.
 
 F381 adds exact-source/no-overwrite file COPY through shared namespace API/CLI
 commands. It verifies custody,requires source read and destination write,and

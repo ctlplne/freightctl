@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "id": "F383",
+  "observed_at": "2026-11-07",
+  "base_candidate": "cf2893575b6f3cdcb9d96964167585f737d22cb0",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F383 corrects an erroneous new DELETE native test expectation without changing production authorization. Original e608408 ARM job128464255754 and x86 job128464255969 report GET expected403,got404 atwebdav_delete_integration_test.go:68. Existing fileAccessibleMode returns ErrNotFound when no readable mapping exists,and API maps it to404/not_found. Require exactly404,then compare inaccessible retained custody with a genuinely unknown ID and refuse ETag/file-revision metadata on either. Preserve immutable-byte admin readback and every deletion/revision/receipt/policy assertion. Tagged compilation and format pass;the strengthened actual native privacy proof and all later DELETE outcomes remain owed.",
+  "original_failures": {
+    "candidate": "e6084081e986c04ea19e204b79908decdcdbd09c",
+    "run_id": 42392977040,
+    "jobs": [
+      128464255754,
+      128464255969
+    ],
+    "source_line": 68,
+    "expected_by_erroneous_new_test": 403,
+    "actual_existing_privacy_contract": 404
+  },
+  "proof_status": "Original actual native failure preserved. Test now requires exact established404 plus same body as unknown ID and absent byte metadata. Local tagged compilation/format only;native green is owed,not claimed.",
+  "owed": [
+    "Strengthened original ARM/x86 DELETE privacy,history,revision,current policy and stock profiles at final source",
+    "All mandatory baseline/AX/security/readiness qualification"
+  ],
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "02730634be00b21dd2cce5da8ba89cb2b7ea1c6c82c8db491906ac7a5b6aadf1",
+      "bytes": 4916
+    },
+    {
+      "reference": "docs/qualification/evidence/F382-native-fuzz-deadline-triage.json",
+      "sha256": "48fd629ce67f3e3a49995350c22ee94cdf41d95ed187123598229e18c1f63eac",
+      "bytes": 2507
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "d27876cc57c2e947cdd5653abbbbcd4c6234944f234d785cf9942a9d16219dc2",
+      "bytes": 513054
+    },
+    {
+      "reference": "internal/api/webdav_delete_integration_test.go",
+      "sha256": "493a3dd49ae324d74093285038856add37f3ec89e8331d1e2c6d1fad5acb1390",
+      "bytes": 8943
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f383-native-compile.log",
+      "sha256": "229b2f4b0aed054896104d04d40947e29411fa6378a931559e66e54e644eab2b",
+      "bytes": 73
+    },
+    {
+      "reference": ".private/freightctl-f383-format.log",
+      "sha256": "c3ce4ff80f1023d342088f9250d6ea0fc281a4494e1b70b638ef65616ed7dffd",
+      "bytes": 32
+    }
+  ]
+}

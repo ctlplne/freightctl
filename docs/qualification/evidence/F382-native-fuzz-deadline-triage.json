@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "id": "F382",
+  "observed_at": "2026-11-07",
+  "qualification_claim": false,
+  "original_candidate": "e6084081e986c04ea19e204b79908decdcdbd09c",
+  "original_run_id": 42392977071,
+  "original_job_id": 128464256024,
+  "original_url": "https://github.com/ctlplne/freightctl/actions/runs/42392977071/job/128464256024",
+  "target": "FuzzFixedWidthContract",
+  "original_command": "sh scripts/go.sh test -timeout=0 ./internal/checks -fuzz=FuzzFixedWidthContract -fuzztime=5s -parallel=1",
+  "observed": {
+    "baseline_inputs": 2,
+    "executions": 13896,
+    "new_interesting_inputs": 17,
+    "total_interesting_inputs": 19,
+    "reported_seconds": 6.01,
+    "error": "context deadline exceeded",
+    "failing_input_or_assertion_or_crash_reported": false,
+    "later_fuzz_targets": "not reached;owed"
+  },
+  "prior_unresolved_pattern": [
+    "F142-native-fuzz-timeout-triage.json",
+    "F308-native-security-and-local-registry-failures.json"
+  ],
+  "triage": "Immediate review found no reported counterexample,assertion or crash. The fixed-width callback caps input2048bytes,retains cancellation/error checks and exact success/hash assertions. No model or scanner runs. The original security gate remains red;no vulnerability conclusion or success is inferred.",
+  "source_inspection": {
+    "reference": "Pinned local official Go1.26.10 common internal/fuzz/fuzz.go,read only;not native runner execution",
+    "sha256": "d9de12569d5c18fb629c8e79a4d629eb2985b719e4fbfe30c3f3ce23fc44feb5",
+    "bytes": 34889,
+    "observed_mechanism": "CoordinateFuzzing creates a timed parent context and child worker context. stop compares an error to the child context error before cancelling workers;the parent Done branch passes the parent error.",
+    "inference_only": "A cancellation-propagation timing window is plausible from this code,but the original native stop call path is not observed. This is not an established root cause or repair."
+  },
+  "unchanged": [
+    "Original fuzz target,seeds/assertions,coverage,duration,parallelism,compiler and all security checks",
+    "No original cancellation,rerun,substitution,suppression,raised budget or locally heavy fuzz run"
+  ],
+  "owed": [
+    "Observe the exact native coordinator/worker stop path and determine cause without exposing raw inputs",
+    "Replay the original target and every unreached fuzz target at final source after any repair",
+    "All remaining mandatory security/native/baseline/AX and separate readiness gates"
+  ]
+}
