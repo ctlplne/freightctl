@@ -64,4 +64,4 @@ jobs:
         run: python3 scripts/dev-db.py
       - name: Actual recipient UI, exact bytes, unrelated user and endpoint revocation
         run: |
-          sh scripts/go.sh test -p 1 -race -timeout=0 -tags=integration,exchangebrowser -run '^(TestExchangeBrowserSummaryRefusesAmbiguousEvidence|TestArtifactExchangeNativeBrowserReceiptWrongActorAndRevocation)$' -count=1 -v ./internal/api
+          sh scripts/go.sh test -p 1 -race -timeout=0 -tags=integration,exchangebrowser -run '^(TestExchangeBrowserSummaryRefusesAmbiguousEvidence|TestExchangeBrowserSummaryKeepsConfigurationFailuresSafeAndDistinctFromSuccess|TestExchangeBrowserExitKeepsOriginalFailureWithAValidSummary|TestArtifactExchangeNativeBrowserReceiptWrongActorAndRevocation)$' -count=1 -v ./internal/api

@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "id": "F329",
+  "observed_at": "2026-11-07",
+  "base_candidate": "a563c85944d774c0ee513619232531c695a8b0f8",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F329 keeps the protected original receive-browser failure visible even when the script successfully writes a safe failed summary. Original 1b745e1 now reaches copy-lost-response but the Go summary branch hides its first-failure class/location/hash. Extract that boundary,observe a focused red with a valid failed summary,then always retain both independently validated summary digest/allowlisted phase and existing protected original class/source/digest. Private messages,paths and forged phases remain absent. All affected summary/first-failure/privacy tests,tagged compilation,vet,architecture and workflow checks pass. Add those pure guards to the original native receive job. Underlying copy/native browser repair remains owed,not passed.",
+  "original_red": {
+    "candidate": "1b745e16d53bf3b20ed07c2242c53bb71a5d3619",
+    "run_id": 42374627313,
+    "job_id": 128409585482,
+    "phase": "copy-lost-response",
+    "safe_result_sha256": "fc6e28987c1739f118d5a220ece0f85335033417b4f3f38f8050b96f7d7741d8",
+    "observation": "Original receive journey fails before revocation barrier;new failed summary is available,but Go branch omits the protected original trace. F317 actual underlying cause/repair not qualified."
+  },
+  "red": {
+    "proof": ".private/freightctl-f329-summary-exit-red.log",
+    "observation": "Valid failed summary takes old branch,losing original assertion class,source398:13 and first-failure digest;meaningful exact diagnostic assertion fails."
+  },
+  "green": [
+    "Failed-summary and malformed-phase cases retain original protected error class/source/digest plus independent result digest;no private sentinel/path is printed.",
+    "Existing summary ambiguity,configuration failure,protected first-failure and safe stage/privacy tests remain passing.",
+    "Tagged native compilation,vet,architecture,workflow lint and format observed terminal exit0."
+  ],
+  "source_files": [
+    {
+      "reference": "internal/api/artifact_exchange_browser_integration_test.go",
+      "sha256": "1f20bc107317bcc6cd579903381235a787a5e3d8559ba44cc2ae4d3d942b4204",
+      "bytes": 30757
+    },
+    {
+      "reference": ".github/workflows/artifact-exchange.yml",
+      "sha256": "95be052c551e73d43db603485966480048a3828f8420520e92fb239556736161",
+      "bytes": 2425
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "7fd18a965a78746720f8690c8e48091e1547d863718bdd23d28265bbf7cd0c3b",
+      "bytes": 429927
+    },
+    {
+      "reference": "STATUS.md",
+      "sha256": "70cc0918c0aecd3b331225832732e6dc8fd6ce175b72972bc545ef869446e5b0",
+      "bytes": 13126
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f329-summary-exit-red.log",
+      "sha256": "727a27966b1b28ba423da69479cc7635718b0a3d1ce2f6aba5c159ab7663021d",
+      "bytes": 273
+    },
+    {
+      "reference": ".private/freightctl-f329-summary-exit-green.log",
+      "sha256": "f95a7a5940841fda4daecf99d696c4dfe4f305d8b4208d453068b18dab4cd12e",
+      "bytes": 55
+    },
+    {
+      "reference": ".private/freightctl-f329-native-compile.log",
+      "sha256": "41c9d2bc36e4f48ba8a1fe1f5611d0e80ccfd82e79d3eb9125d9635f99e4ee3c",
+      "bytes": 73
+    },
+    {
+      "reference": ".private/freightctl-f329-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f329-architecture.log",
+      "sha256": "9e9efdb478491b8a613999fbe5812832eb1532505644f336e36d7df4f3af4c7d",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f329-workflow-lint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f329-workflow-format.log",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    }
+  ],
+  "owed": [
+    "Actual next original receive run must expose its retained safe error location and qualify the real copy/onward/receipt/revocation journey after repair.",
+    "All remaining original failures and final-source baseline/AX/FINISH gates."
+  ],
+  "resources": "OneCPU/192MiB pure evidence/static checks only;no local browser/PostgreSQL/scanner/model started."
+}

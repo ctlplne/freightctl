@@ -179,6 +179,12 @@ compile/vet/architecture pass;actual SQL/browser replay remains owed. Native
 1b745e1 full x86 parser/authority fuzz now passes;the earlier harness deadline
 failure stays preserved and is not relabelled.
 
+F329 preserves the original receive error class/source/hash alongside a valid
+failed summary. Native1b745e1 now writes copy-lost-response failure evidence,but
+the Go summary branch omitted its protected first error. A valid-summary
+regression turns red to green without exposing private text or forged phases;
+affected pure/static checks pass. Original copy failure and full replay stay red.
+
 FINISH repair and remaining implementation are mandatory. Next:repair original
 browser/stock/protocol failures and complete all affected original runtime,
 security,recovery,reproducibility and baseline/AX gates on the final source.

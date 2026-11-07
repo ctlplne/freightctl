@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"io"
 	"os"
 	"os/exec"
@@ -167,6 +168,40 @@ func readExchangeBrowserSummary(path string) (*exchangeBrowserSummary, string) {
 		return nil, hash
 	}
 	return &s, hash
+}
+
+func safeExchangeBrowserExit(private, result string, exit int) string {
+	summary, hash := readExchangeBrowserSummary(result)
+	phase := "unavailable"
+	if summary != nil {
+		phase = summary.Phase
+	}
+	trace := safeExchangeBrowserFailure(private)
+	return fmt.Sprintf("browser failed before revocation barrier;phase=%s;safe result=%s;exit=%d;class=%s;source=%d:%d;private log SHA256=%s", phase, hash, exit, trace.Class, trace.Line, trace.Column, trace.SHA256)
+}
+
+func TestExchangeBrowserExitKeepsOriginalFailureWithAValidSummary(t *testing.T) {
+	private := t.TempDir()
+	first := []byte("AssertionError: PRIVATE_FIRST_ERROR\n    at file:///PRIVATE_PATH/scripts/artifact-exchange-browser.mjs:398:13\n")
+	if err := os.WriteFile(filepath.Join(private, "first-failure.log"), first, 0600); err != nil {
+		t.Fatal(err)
+	}
+	value := map[string]any{"state": "failed", "phase": "copy-lost-response", "model_started": false, "browser_sandbox": true, "node_version": "v26.13.0", "axe_version": "4.14.0", "browser_version": "156.0.8078.79", "failure_sha256": secure.Digest(first)}
+	for _, key := range []string{"history_searches", "owned_copies", "copy_recoveries", "evidence_reads", "external_egress", "exact_downloads", "terminal_declines", "committed_offers", "sender_cancellations", "recovery_roundtrips", "endpoint_commands", "human_ingress", "onward_runs", "onward_recoveries", "onward_refusals", "accessibility_checks"} {
+		value[key] = 0
+	}
+	result := filepath.Join(private, "result.json")
+	for _, phase := range []string{"copy-lost-response", "PRIVATE_SUMMARY_CANARY"} {
+		value["phase"] = phase
+		raw, err := json.Marshal(value)
+		if err != nil || os.WriteFile(result, raw, 0600) != nil {
+			t.Fatal("cannot prepare private failure summary")
+		}
+		line := safeExchangeBrowserExit(private, result, 1)
+		if !strings.Contains(line, "class=assertion") || !strings.Contains(line, "source=398:13") || !strings.Contains(line, secure.Digest(first)) || !strings.Contains(line, secure.Digest(raw)) || strings.Contains(line, "PRIVATE_") || strings.Contains(line, private) {
+			t.Fatal("valid summary hid original failure,or private content entered diagnostics")
+		}
+	}
 }
 
 func TestArtifactExchangeNativeBrowserReceiptWrongActorAndRevocation(t *testing.T) {
@@ -340,16 +375,11 @@ func TestArtifactExchangeNativeBrowserReceiptWrongActorAndRevocation(t *testing.
 		case <-ctx.Done():
 			t.Fatal("browser did not reach revocation barrier")
 		case <-completed:
-			summary, hash := readExchangeBrowserSummary(result)
-			if summary != nil {
-				t.Fatalf("browser failed before revocation barrier; phase=%s, result SHA256=%s", summary.Phase, hash)
-			}
-			trace := safeExchangeBrowserFailure(private)
 			exit := -1
 			if command.ProcessState != nil {
 				exit = command.ProcessState.ExitCode()
 			}
-			t.Fatalf("browser failed before revocation barrier;safe result=%s;exit=%d;class=%s;source=%d:%d;private log SHA256=%s", hash, exit, trace.Class, trace.Line, trace.Column, trace.SHA256)
+			t.Fatal(safeExchangeBrowserExit(private, result, exit))
 		case <-ticker.C:
 		}
 	}
