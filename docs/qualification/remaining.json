@@ -539,7 +539,8 @@
         "docs/qualification/evidence/F055-retained-handoff-upgrade-rehearsal.json",
         "docs/qualification/evidence/F056-retained-handoff-upgrade-applied.json",
         "docs/qualification/evidence/F066-schedule-browser-response.json",
-        "docs/qualification/evidence/F293-local-readonly-source-adapter.json"
+        "docs/qualification/evidence/F293-local-readonly-source-adapter.json",
+        "docs/qualification/evidence/F295-protected-local-source-configuration.json"
       ],
       "remaining_details": [
         "F037 adds reviewed outbound SFTP schedules: frozen time-zone rules, weekday/holiday and missing/repeated-time policy, complete published-file selection, once-per-family revision claims, atomic admission/events/receipts, bounded missed-run/capacity handling and live sending cutoff. Browser/API/CLI share ordinary workflow/file/connection/key and independent exact-file dispatch guards. Thirteen new real PostgreSQL/race cases pass within 82 workflow cases;62 frontend contracts and six calendar cases pass. The selected native replay passes111 steps on 360 unchanged inputs, with 285 operation outputs, three unique browser summaries and 15 selected WCAG states. Original staged worker death retains the 30-second lease; takeover uses attempt/fence2. Actual uncertain publication reconciles under stock read-only SFTP after cutoff without another attempt/fence/write. Full J03 collection/late arrivals/batches/downstream business receipt, general triggers/connectors/migration, native platforms, scale and independent adoption remain required. No model/scanner started; full F026 aggregate remains owner-deferred.",
@@ -562,7 +563,8 @@
         "Original7c native ARM/x86 retain880pass/3fail/0skip at the same mixed collection registration-key collisionD173; metadata and fuzz pass. Exact97 distinct-key repair and public session-subreason replay remain queued. Preserve all originals and every collection/operator/independent-peer/whole-journey gate.",
         "Original97ARM/x86 retain880pass/3fail/0skip:D173key repair reaches D176mixed fixture IDs rejected by correct typed grammar before capture. Shared exact step builder/parser reproduces old failure and now passes valid underscore IDs while preserving old ErrInput refusal;integration race compile/vet only. Native Chrome response-stage capture also prepared with8protocol/144frontend/102Python contracts;actual complete mixed and public matrices remain mandatory.",
         "BAx86 original native application884/0/0 includes repaired mixed parent/two children. Both public profiles pass first explicit metadata Chrome/verifier,then source helper exits before readiness before operator Chrome. Underlying startup phase unknown;originals/cleanup retained. ARM/current source/full matrices still required after owner resumes.",
-        "F293 starts remaining baseline local-filesystem collection implementation with a read-only physical-root-pinned adapter. Current local.collect workflow admission still rejects;the exact private overlay acceptance regression is retained red. Real local filesystem tests pass exact manifest/byte copy without producer mutation,wrong-root refusal,per-chunk authority revocation,physical-file/root replacement,symlink/path/device aliases,length/digest/cancel/manifest bounds. Unix uses actual device/inode,Windows full128-bit file/64-bit volume identity;actual private OS profiles are reused. No producer markers/writes,domain events or implicit send authority. Linux/Windows compile/vet and architecture pass only. Operator-provisioned connection definition/SQL/CLI/API/browser/custody wiring,native runtime,network mounts,recovery and performance remain owed;this is not a qualified connector or whole-goal completion."
+        "F293 starts remaining baseline local-filesystem collection implementation with a read-only physical-root-pinned adapter. Current local.collect workflow admission still rejects;the exact private overlay acceptance regression is retained red. Real local filesystem tests pass exact manifest/byte copy without producer mutation,wrong-root refusal,per-chunk authority revocation,physical-file/root replacement,symlink/path/device aliases,length/digest/cancel/manifest bounds. Unix uses actual device/inode,Windows full128-bit file/64-bit volume identity;actual private OS profiles are reused. No producer markers/writes,domain events or implicit send authority. Linux/Windows compile/vet and architecture pass only. Operator-provisioned connection definition/SQL/CLI/API/browser/custody wiring,native runtime,network mounts,recovery and performance remain owed;this is not a qualified connector or whole-goal completion.",
+        "F295 adds exact private local-source configuration references:definition schema1,protected absolute reference,configuration SHA256 and reviewed physical root fingerprint. Read through existing protected crypto buffer,verify all bytes,strictly parse exactly four scalar profile fields,clear the buffer,and recheck current authority/actual root before returning a read-only peer. Valid actual private profile initially fails unavailable,then passes;rehashed unknown/duplicate/aliased/nested/invalid UTF/schema/profile/path/bytes/root cases refuse. Local filesystem positive/negative and affected static/Windows compilation pass only. Still no admitted local.collect product connection/workflow:ordinary SQL/CLI/API/browser/custody and native profiles remain owed."
       ]
     },
     {
@@ -1200,7 +1202,8 @@
         "docs/qualification/evidence/F289-enabled-browser-recovery-inputs.json",
         "docs/qualification/evidence/F290-original-stock-worker-and-receiver-failures.json",
         "docs/qualification/evidence/F291-safe-stock-command-failure-category.json",
-        "docs/qualification/evidence/F292-native-terminal-ci.json"
+        "docs/qualification/evidence/F292-native-terminal-ci.json",
+        "docs/qualification/evidence/F294-original-native-batch.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -1291,10 +1294,10 @@
         "F292 preserves original49eefe1 terminal18 workflows/41 jobs:31 pass,10 fail. Both complete image scans and all listed security gates pass. Actual x86 producer/composed MCP stock-client cases now pass;Windows custody/checks/FTPS privacy and9 native Chrome profiles pass at their recorded scope. Original remaining Windows/scanner/XLSX/review/receive/onward/stock/receiver failures remain red;all repairs require their actual final-source replay. No original run cancelled/rerun/substituted."
       ],
       "current_item": {
-        "id": "F293",
-        "state": "Local read-only source adapter implemented;workflow admission deliberately remains owed",
-        "proof": "Actual local private-file/root/revocation/replacement/symlink/bounds checks pass;local.collect workflow regression is red;Linux/Windows compilation only",
-        "next": "Integrate operator-provisioned local-source connection contracts,ordinary workflow/SQL/CLI/API/browser custody and native proof;repair remaining original failures in parallel"
+        "id": "F295",
+        "state": "Protected local-source profile implemented;ordinary durable workflow integration remains owed",
+        "proof": "Actual valid private-profile regression red to green and strict rehashed meaning/authority/root refusals pass;Windows compile only",
+        "next": "Implement local-only registered connection schema,SQL current-definition guards,ordinary collection factory and operator CLI/metadata review;continue original native failure repair"
       }
     }
   ],

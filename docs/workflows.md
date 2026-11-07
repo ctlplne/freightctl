@@ -26,6 +26,16 @@ workflow integration. Local macOS filesystem positive/adverse cases pass;
 Linux/Windows compilation is not native runtime qualification. Mounted network
 storage,crash/restore and performance profiles remain separately owed.
 
+F295 adds the protected local profile constructor. Its reviewed definition
+fixes a private configuration-file reference,that file's exact SHA256 and the
+physical root fingerprint. The private file contains only schema1,the fixed
+`freightctl-local-collection-source-v1` profile,the absolute directory and the
+same root fingerprint. Unknown/duplicate/aliased fields,nested values,changed
+bytes or root,and absent current authority refuse a reader. The configuration
+is read through the existing protected secret buffer and cleared afterward.
+This does not yet expose registration or execution through a product interface;
+ordinary connection/SQL/workflow/custody and browser/native proof remain owed.
+
 The first workflow executor sends one immutable accepted file through an ordered list of `sftp.deliver` steps. CLI and HTTPS use the same typed definition, validation, permissions, approval and execution services. It uses the [outbound SFTP profile](protocols/outbound-sftp.md), including its loopback-only development network, required extensions, bounded workers and uncertain-receipt rules. This is a foundation for the full workflow engine; schedules, conditions, collection, processing, visual editing and AI proposals remain required work.
 
 ## Register the receiver once

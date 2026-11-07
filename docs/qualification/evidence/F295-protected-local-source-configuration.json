@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "id": "F295",
+  "observed_at": "2026-11-07",
+  "base_candidate": "9439074aae173afe5305373cee87307898f24459",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Exact protected local-source profile constructor implemented;product integration owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "b5f7e4c9bbee3e73d42e8625c3db717a11f9a367b5bab7f88a082340a1e04723",
+      "bytes": 6048
+    },
+    {
+      "reference": "docs/qualification/evidence/F294-original-native-batch.json",
+      "sha256": "f3c414e09d4e8fce88d803551ec02bc3acd5b099b2ddf2b78c9dd315847c7020",
+      "bytes": 4686
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "f9afaadc036ea301030668cc61d1e2158bf189eaec19013f8ab76598eda6267c",
+      "bytes": 394712
+    },
+    {
+      "reference": "docs/workflows.md",
+      "sha256": "a603dbb51af86f46c2158f01d0c161b96a7d8692620cf9cee706d830f4bd8d42",
+      "bytes": 16319
+    },
+    {
+      "reference": "internal/delivery/local_collection_configuration.go",
+      "sha256": "ac20dbdf591975acb4983d016b02e235d2c691dd02c5c1bb5749d48526119605",
+      "bytes": 3345
+    },
+    {
+      "reference": "internal/delivery/local_collection_configuration_test.go",
+      "sha256": "468d81575e044ab46f862980d197487ce81533a4b3cf68cb5e687c70cf090918",
+      "bytes": 5061
+    }
+  ],
+  "red": {
+    "proof": ".private/freightctl-f295-local-profile-red.log",
+    "test": "TestConfiguredLocalCollectionRequiresExactPrivateProfileAndRoot",
+    "observation": "Actual valid private profile cannot open a configured source before implementation;initial constructor returns ErrLocalSource. F293 actual local.collect workflow admission remains separately red and owed."
+  },
+  "changed": [
+    "Define operator-provided private source reference,exact configuration SHA256 and physical root fingerprint. Require current authority before reading configuration.",
+    "Read at most32KiB using existing protected secret buffer and clear on close. Strict token parsing accepts exactly four scalar fields:integer schema1,fixed profile,absolute clean bounded directory and exact reviewed root fingerprint. Reject duplicates,aliases,nested/unknown meaning,invalid UTF8,changed bytes and substituted root.",
+    "Open the existing read-only physical-root-bound peer after full byte/profile checks;no public host-path selection,producer mutation,automatic acceptance/forwarding or execution is introduced. Ordinary connection/SQL/CLI/API/browser integration remains unimplemented.",
+    "F294 preserves original triggered16 native workflow handles for pushed9439074 without claiming qualification."
+  ],
+  "green": [
+    "Actual local private configured-source exact copy passes after observed positive-contract red;wrong schema/configuration hash/reference/root and current authority refuse.",
+    "Rehashed unknown/duplicate/case-alias/nested/schema/profile/relative/NUL/UTF/trailing/oversized profile values and unsafe reference shapes refuse a reader.",
+    "Affected formatting,local/Windows vet,Windows test compilation and architecture pass;no native Windows/runtime product claim."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f295-local-profile-red.log",
+      "sha256": "007d51d886638a9885269fe18982530389431077b2cb892dc8d18a145b34c786",
+      "bytes": 307
+    },
+    {
+      "reference": ".private/freightctl-f295-architecture.log",
+      "sha256": "127fcbb6e0f45b83cdb458ed64a613cd1042dbfce65960c65b28569751228caf",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f295-final2-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f295-final2-profile-green.log",
+      "sha256": "9573ce1b559230d5dbac9fb0ff4e65eddcd645c2465c42be27b0c0bb76b88b9c",
+      "bytes": 60
+    },
+    {
+      "reference": ".private/freightctl-f295-final2-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f295-final2-windows-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f295-final2-windows-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "owed": [
+    "Implement local-source registered connection schema and current-definition SQL checks,ordinary source collection/custody/lease/event/idempotency integration and operator CLI/API/browser review.",
+    "Turn original local.collect workflow acceptance regression green and execute original real PostgreSQL/filesystem/receipt/refusal cases natively.",
+    "Native Linux/Windows profiles,mounted-storage,recovery/restore/performance and all final baseline/AX/FINISH outcomes remain owed."
+  ],
+  "resources": "OneCPU/192MiB real local filesystem/pure parsing/static/cross-compilation only;models and heavy runtimes off. Source60/retained35/local allowances unchanged."
+}

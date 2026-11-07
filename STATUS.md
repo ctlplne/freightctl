@@ -6,13 +6,16 @@ adoption and enterprise readiness remain unqualified. Exact original failures,
 source hashes,qualification and owed work are in
 [remaining work](docs/qualification/remaining.json) and its safe item manifests.
 
-Pushed candidate:49eefe1d4877962aec7c92cb6b6f26485fa83a11.
-Its original18 workflows/41 jobs are terminal:31 pass,10 fail. F292 preserves
-exact handles;both complete image scans and every listed scan gate pass. Native
-x86 producer/composed MCP stock-client cases pass;selected Windows custody/checks/
-FTPS privacy and9 Chrome profiles pass at their recorded scope. Windows scanner/
-active-child rename,XLSX observer,independent review,receive,onward rotation,
-stock arrivals and x86 receiver failures remain red. No pass is inherited.
+Pushed candidate:9439074aae173afe5305373cee87307898f24459.
+F294 preserves the original16 triggered workflow handles,queued/running at
+observation. Completion/security/native outcomes remain pending;no pass inherited.
+
+Previous49eefe1 original18 workflows/41 jobs are terminal:31 pass,10 fail.
+F292 preserves exact handles;both complete image scans and listed security gates
+pass. X86 producer/composed MCP stock-client,selected Windows custody/checks/FTPS
+privacy and9 Chrome profiles pass at their recorded scope. Original remaining
+Windows/scanner/browser/onward/stock/receiver failures stay red. Pushed repairs
+and F293 adapter require actual replay on9439074.
 
 Previous33ad447 original18 workflows/41 jobs are terminal:31 pass,10 fail.
 F274 preserves all run/job/step handles;both complete image scans and listed
@@ -68,6 +71,11 @@ replacement,symlink,revocation and byte/bound checks pass;Linux/Windows compile
 only. local.collect workflow admission is still red:operator-provisioned
 connection,SQL,CLI/API/browser/custody integration and native proof remain owed.
 No connector or whole-goal qualification is claimed.
+
+Local F295 binds protected source configuration bytes to the reviewed physical
+root through a strict four-scalar profile. Valid-profile regression turns red
+to green;rehashed ambiguous/unknown meaning and changed bytes/root/authority
+refuse. Product connection/SQL/workflow/CLI/API/browser wiring remains owed.
 
 FINISH repair and remaining implementation are mandatory. Next:repair original
 browser/stock/protocol failures and complete all affected original runtime,

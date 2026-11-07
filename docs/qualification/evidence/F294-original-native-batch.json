@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "id": "F294",
+  "observed_at": "2026-11-07",
+  "candidate": "9439074aae173afe5305373cee87307898f24459",
+  "state": "Original triggered runtime runs queued/running;no qualification claimed",
+  "runs": [
+    {
+      "id": 42366950552,
+      "name": "Native Windows and macOS unit checks",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42366950552",
+      "status_at_observation": "queued",
+      "conclusion_at_observation": null
+    },
+    {
+      "id": 42366950454,
+      "name": "Native FTPS stock clients and custody",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42366950454",
+      "status_at_observation": "queued",
+      "conclusion_at_observation": null
+    },
+    {
+      "id": 42366950460,
+      "name": "Native JSON intake and custody interfaces",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42366950460",
+      "status_at_observation": "queued",
+      "conclusion_at_observation": null
+    },
+    {
+      "id": 42366950467,
+      "name": "Native source vulnerability configurations",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42366950467",
+      "status_at_observation": "queued",
+      "conclusion_at_observation": null
+    },
+    {
+      "id": 42366950423,
+      "name": "Core correctness and security",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42366950423",
+      "status_at_observation": "queued",
+      "conclusion_at_observation": null
+    },
+    {
+      "id": 42366950477,
+      "name": "Native artifact receive browser",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42366950477",
+      "status_at_observation": "queued",
+      "conclusion_at_observation": null
+    },
+    {
+      "id": 42366950438,
+      "name": "Native Linux Go, PostgreSQL and fuzz",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42366950438",
+      "status_at_observation": "queued",
+      "conclusion_at_observation": null
+    },
+    {
+      "id": 42366950437,
+      "name": "Native immutable HTTPS stock resume",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42366950437",
+      "status_at_observation": "queued",
+      "conclusion_at_observation": null
+    },
+    {
+      "id": 42366950422,
+      "name": "Native FTPS workflow consent qualification",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42366950422",
+      "status_at_observation": "queued",
+      "conclusion_at_observation": null
+    },
+    {
+      "id": 42366950478,
+      "name": "Native legacy SCP regular-file custody",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42366950478",
+      "status_at_observation": "queued",
+      "conclusion_at_observation": null
+    },
+    {
+      "id": 42366950458,
+      "name": "Native tus stock client and custody checkpoints",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42366950458",
+      "status_at_observation": "queued",
+      "conclusion_at_observation": null
+    },
+    {
+      "id": 42366950472,
+      "name": "Native reproducible core binaries",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42366950472",
+      "status_at_observation": "queued",
+      "conclusion_at_observation": null
+    },
+    {
+      "id": 42366950453,
+      "name": "Stock peer and browser qualification",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42366950453",
+      "status_at_observation": "queued",
+      "conclusion_at_observation": null
+    },
+    {
+      "id": 42366950456,
+      "name": "Native first enrollment and browser exchange",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42366950456",
+      "status_at_observation": "queued",
+      "conclusion_at_observation": null
+    },
+    {
+      "id": 42366950448,
+      "name": "Native FTPS dispatch approval qualification",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42366950448",
+      "status_at_observation": "queued",
+      "conclusion_at_observation": null
+    },
+    {
+      "id": 42366950432,
+      "name": "Native browser and FTPS operator qualification",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/42366950432",
+      "status_at_observation": "in_progress",
+      "conclusion_at_observation": null
+    }
+  ],
+  "limits": [
+    "Completion/security/failure outcomes must be refreshed from the original runs.",
+    "No original run may be cancelled,rerun or substituted;no previous pass inherited.",
+    "Source includes F277/F279/F281/F283/F285/F287/F289/F291 repairs and F293 local adapter;F295 protected local configuration and complete local workflow wiring are not included."
+  ]
+}
