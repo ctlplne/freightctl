@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "id": "F261",
+  "observed_at": "2026-11-07",
+  "base_candidate": "f4f7fefbe3898b96369f9b28bc8e3e608c4967dc",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Receiver inventory and independent account rotation fixtures repaired;native replay owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "8895038436b080186c5ccdfc14614c2143eb8a0f07614354f341d829115dc25d",
+      "bytes": 13884
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "67b333af0a8e016ed78638b26fb2cabeb4e8c05b3ac0019f363157c5aed0c877",
+      "bytes": 377831
+    },
+    {
+      "reference": "internal/workflow/ftps_delivery_integration_test.go",
+      "sha256": "b9be56fd06423b60a9ec035b665de208870207ab9aa6fc844e1154e11082e136",
+      "bytes": 18021
+    },
+    {
+      "reference": "internal/workflow/artifact_onward_integration_test.go",
+      "sha256": "323b3693414bd346d28c48b0453ec7dddb240c897fdb67a593766d4348846477",
+      "bytes": 8401
+    }
+  ],
+  "red": {
+    "candidate": "e87483babb4e32f8a3aaf78d13f8374d842fa78b",
+    "run": 42354252239,
+    "job": 128348738078,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128348738078",
+    "observed": [
+      "ftps_aead_integration_test.go:108 receiver table observation incomplete77 <nil> across original independent receiver profiles.",
+      "artifact_onward_integration_test.go:144 permission denied at self credential rotation."
+    ]
+  },
+  "changed": [
+    "Require exactly77 current receiver tables excluding events instead of obsolete63. Keep full inventory query,read-only repeatable-read snapshot,all table hashes,all original event identity/hash records and exact new read/session audit closure. No scan/table coverage is narrowed.",
+    "First require self rotation ErrForbidden and unchanged actor/authority. Create an ordinary distinct manager with exactly admin/accounts_manage and no transfer/workflow grants. That manager performs the exact real rotation. Preserve the original new-credential old-onward-receipt ErrUnauthorized assertion. No production authority rule changes."
+  ],
+  "green": [
+    "Affected integration fixtures compile and vet under local limits. No actual PostgreSQL/receiver runtime executed."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f261-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f261-integration-compile.log",
+      "sha256": "cd12c61cd4d64311e9780c004213c42fc78d974eb40e7ada50887edacfc5f529",
+      "bytes": 78
+    },
+    {
+      "reference": ".private/freightctl-f261-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "owed": [
+    "Original ARM/x86 independent receiver,AEAD/recipient-encrypted/registered FTPS/full row-event closure and onward authority-rotation cases.",
+    "All remaining actual final-source product/security/AX/FINISH outcomes."
+  ],
+  "resources": "OneCPU/192MiB local formatting/integration compilation/vet only;local inference/heavy runtimes off. Retained35/source60 unchanged."
+}

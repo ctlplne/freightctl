@@ -5,6 +5,7 @@ package workflow
 import (
 	"encoding/json"
 	"errors"
+	"slices"
 	"testing"
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
@@ -140,7 +141,20 @@ func TestReviewedOnwardReceiptCannotBeAdoptedAfterCredentialRotation(t *testing.
 		t.Fatal(err)
 	}
 	replacement := secure.Digest([]byte("synthetic rotated onward credential"))
-	if _, err = f.s.Custody.DB.ChangeAccount(f.ctx, f.scope, "rotate-onward-credential", store.AccountCommand{Operation: "rotate", ID: account.ID, ExpectedRevision: account.Revision, CredentialHash: replacement}); err != nil {
+	rotation := store.AccountCommand{Operation: "rotate", ID: account.ID, ExpectedRevision: account.Revision, CredentialHash: replacement}
+	if _, err = f.s.Custody.DB.ChangeAccount(f.ctx, f.scope, "forbidden-self-rotation", rotation); !errors.Is(err, store.ErrForbidden) {
+		t.Fatal("self-rotation bypassed the independent account manager", err)
+	}
+	unchanged, err := f.s.Custody.DB.Identity(f.ctx, f.scope)
+	if err != nil || unchanged.Actor != identity.Actor || unchanged.AuthorityRevision != identity.AuthorityRevision {
+		t.Fatal("rejected self-rotation changed current authority", err)
+	}
+	manager, command := approvalPeer(t, f, "Onward credential manager", []string{"admin", "accounts_manage"})
+	managerIdentity, err := f.s.Custody.DB.Identity(f.ctx, manager)
+	if err != nil || managerIdentity.Actor != command.ID || managerIdentity.Actor == identity.Actor || len(managerIdentity.Permissions) != 2 || !slices.Contains(managerIdentity.Permissions, "admin") || !slices.Contains(managerIdentity.Permissions, "accounts_manage") {
+		t.Fatal("rotation fixture did not use a distinct account-only manager", err)
+	}
+	if _, err = f.s.Custody.DB.ChangeAccount(f.ctx, manager, "rotate-onward-credential", rotation); err != nil {
 		t.Fatal(err)
 	}
 	next := f.scope

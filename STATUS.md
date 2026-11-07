@@ -59,6 +59,11 @@ which permits the intended Windows mutation. All replacement/no-overwrite/byte
 assertions remain. The public download name pin has its own exact native sharing-
 violation case. Local adverse cases pass;actual Windows execution remains owed.
 
+F261 updates the independent receiver snapshot to all77 current tables and
+keeps every row/event hash check. The onward rotation fixture now proves self-
+rotation is forbidden and uses a distinct account-only manager for the real
+rotation. Compilation/vet pass;original native receiver/rotation replays are owed.
+
 Next:repair the newly reached native browser
 and protocol failures,then complete all remaining baseline/AX/FINISH outcomes.
 Local inference remains off;local resource constraints and F026 hold remain.
