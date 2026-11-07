@@ -20,6 +20,8 @@ func (s *Server) checks(w http.ResponseWriter, r *http.Request) {
 	key := r.Header.Get("Idempotency-Key")
 	var result any
 	switch r.Pattern {
+	case "GET /v1/tenants/{tenant}/partners/{partner}/checks/{file}/processing-contracts":
+		result, err = s.Checks.DescribeProcessing(r.Context(), scope, r.PathValue("file"))
 	case "GET /v1/tenants/{tenant}/partners/{partner}/scanners/{scanner}/{version}", "POST /v1/tenants/{tenant}/partners/{partner}/scanners/{scanner}/{version}/revoke":
 		version, parseErr := strconv.Atoi(r.PathValue("version"))
 		if parseErr != nil || version < 1 {

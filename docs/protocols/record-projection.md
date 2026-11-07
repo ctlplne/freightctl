@@ -322,8 +322,33 @@ Authority,namespace or storage changes refuse private run/receipt access.
 SQL53 preserves the existing collection-routing/handoff guards and adds forced
 tenant/partner/actor RLS for the new binding. Earlier migrations and retained35
 are unchanged. Native SQL,API/CLI,protected formats,process death,restore,
-fairness and complete customer outcomes remain owed. Browser editing and the
-workflow MCP catalog do not yet advertise schema3.
+fairness and complete customer outcomes remain owed.
+
+The browser's Record processing page now loads authorized metadata-only contracts
+from `GET /v1/tenants/{tenant}/partners/{partner}/checks/{file}/processing-contracts`.
+It offers explicit column, conversion and presence rules, reviews the canonical
+schema3 definition, and uses ordinary draft, approval, run, work and refresh
+commands. Current status is displayed separately from historical work receipts.
+The held output opens the ordinary intake-check/release page; receiving or
+processing does not authorize onward delivery.
+
+An uncertain browser mutation keeps its original request key and exact normalized
+meaning. A compact recovery JSON file is limited to32KiB and bound to the origin,
+tenant, partner, actor, authority revision and root digest. It contains no session
+credential. Import reviews the actual referenced task configuration and never
+executes automatically; explicit confirmation retries the original request.
+Session/scope changes reject in-flight results. Existing recheck parsing still
+defaults to the root namespace; processing explicitly supplies its authorized
+root. Catalog37/exchange-tools-v14 adds schema3 validation/proposal and six
+metadata/control tools, with ordinary approval/release kept separate.
+
+F172/F173 record focused contract, privacy, canonical-hash and response-loss
+stand-in proof. The stock-SDK and actual Chrome/PostgreSQL/TLS journey are prepared
+and compiled, not runtime qualified. GitHub native Chrome will assert committed
+response-loss recovery, five accessibility audits, held-byte denial, fresh checks,
+separate release and an independent stock-curl exact-output read. All existing
+native browser profiles remain selected. No local Chrome, PostgreSQL or inference
+runtime is needed for the focused implementation checks.
 
 Native ARM/x86 qualification prepares stock Python CSV/JSON/ElementTree/fixed
 fixtures and actual pinned XlsxWriter bytes. Ten JSON/CSV outputs are checked by a

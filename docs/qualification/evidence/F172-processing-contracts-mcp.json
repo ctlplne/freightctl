@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "id": "F172",
+  "observed_at": "2026-11-06",
+  "candidate_parent": "935cb9b5d1db4d182421de2e1e7dafa6de55a9de",
+  "qualification_claim": false,
+  "state": "Authorized metadata-only contracts and typed workflow MCP controls implemented; focused contracts/static proof pass; native runtime owed",
+  "source_files": [
+    {
+      "reference": "internal/checks/processing_contracts.go",
+      "sha256": "c0fbac5a1ca9def24f071f339b38ccb6faf0319f27066a6707193cafed78a9f0",
+      "bytes": 3490
+    },
+    {
+      "reference": "internal/checks/processing_contracts_test.go",
+      "sha256": "4d17b15e6980818121dece95756d8609b3e2d90618e1eff3e2bdd7df75ddcf30",
+      "bytes": 1404
+    },
+    {
+      "reference": "internal/api/api.go",
+      "sha256": "d16a134facff198647ebeb7a7b3c5fd38e6789bd3001b3892529ee88eaaa4ece",
+      "bytes": 28638
+    },
+    {
+      "reference": "internal/api/checks.go",
+      "sha256": "3e3bcb67df98ec67d1f4b92a1deaea2da4857ae6125bb1d0b5b7758d2c701988",
+      "bytes": 8802
+    },
+    {
+      "reference": "internal/api/mcp.go",
+      "sha256": "e32ca3e03bf6a047df6ab35cf601f8b1e38723515fc4bffb247b6821a6faaf95",
+      "bytes": 11632
+    },
+    {
+      "reference": "internal/api/mcp-tools.json",
+      "sha256": "2bf57c2e3b72418a1f1f6f4b7f39db9ffb25a1317204bbd00c17e5f46f5da20f",
+      "bytes": 111377
+    },
+    {
+      "reference": "internal/api/mcp_processing_workflows.go",
+      "sha256": "0aea5eb42ac50eed8386c4535cf91c08f9c6daaee2759f95146e9e484552b553",
+      "bytes": 7294
+    },
+    {
+      "reference": "internal/api/mcp_processing_workflows_test.go",
+      "sha256": "e34f1a8fbc234d19334012c50186fb2f8ce79da5eb046f2cb530543131952932",
+      "bytes": 7506
+    },
+    {
+      "reference": "internal/api/mcp_processing_workflows_integration_test.go",
+      "sha256": "1dad52fd3640ef83683a531326b0d5293f882e02546e3d9f92bf40c1c4b683b9",
+      "bytes": 6816
+    },
+    {
+      "reference": "internal/api/mcp_projections.go",
+      "sha256": "5c1e4460561ce7c5f475c7264a866c784a04feb5f0d32b09732e3e8ef5880234",
+      "bytes": 6996
+    },
+    {
+      "reference": "internal/api/mcp_workflows.go",
+      "sha256": "314f10a1d9184dfba3ea87d3cc6e3b31bb5dbc1a1f21eabedac176d4192890d0",
+      "bytes": 3564
+    },
+    {
+      "reference": "internal/api/mcp_test.go",
+      "sha256": "1a16a72452dbc07488c1e85a4ec425db6b5034fe286eaa448ae464fb177b6f62",
+      "bytes": 19832
+    },
+    {
+      "reference": "internal/api/mcp_integration_test.go",
+      "sha256": "83c6080ed00d58ada5cdf0e09e4afdd1fa99d87d00977853b7b6c0488ab467eb",
+      "bytes": 36325
+    },
+    {
+      "reference": "internal/workflow/processing_test.go",
+      "sha256": "360253395db9839cf6f5dea26a02dd3a09a63bd4c46a8313aa48bd2c5451e4b1",
+      "bytes": 4003
+    },
+    {
+      "reference": "docs/protocols/artifact-exchange-mcp.md",
+      "sha256": "8a7e80708128060515c981664c29fc42c0f7914e97e2fe3716edc8ddb059cd30",
+      "bytes": 15148
+    },
+    {
+      "reference": "docs/protocols/record-projection.md",
+      "sha256": "f9d25cb46ad510bc84f00a0b6d48bc62eb3f54530b9f8a35bd8766cf085236b2",
+      "bytes": 24966
+    }
+  ],
+  "red": {
+    "reference": ".private/freightctl-f172-contract-red.log",
+    "observed": "Contract helper and six typed workflow tools were missing; typed validation incorrectly depended on optional receiving configuration."
+  },
+  "green": {
+    "reference": ".private/freightctl-f172-final-focused.log",
+    "observed": "Authorized source/output schemas expose no payload/private binding; canonical typed definitions, closed tool arguments, redaction and original/current observations pass. Processing validation is independent of optional receive adapter configuration; exchange-specific gates remain."
+  },
+  "checks": [
+    {
+      "reference": ".private/freightctl-f172-contract-red.log",
+      "sha256": "71bd0a9347f7d950f95171470c494f4b210a8f1bd84b3babe76b58fedd87362c",
+      "bytes": 1159
+    },
+    {
+      "reference": ".private/freightctl-f172-final-focused.log",
+      "sha256": "3f5ba19179c340886fc528a421471287d61f026aeb31d8b1100d8e7e3d606802",
+      "bytes": 237
+    },
+    {
+      "reference": ".private/freightctl-f172-final-native-compile.log",
+      "sha256": "0d5d6c752072b54b9c0de093fa739f2960ed537e595acc10fb875d6004cd12de",
+      "bytes": 231
+    },
+    {
+      "reference": ".private/freightctl-f172-final-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "prepared_native": [
+    "TestMCPStockClientTypedProcessingWorksWithoutReceiveAdapterAndKeepsApprovalOutsideTools"
+  ],
+  "verification_limits": [
+    "Local tests are pure contracts/stand-ins and static proof. Tagged compilation selects zero native tests and does not establish PostgreSQL, served TLS, stock SDK or Chrome runtime success.",
+    "No local PostgreSQL, Chrome, model, scanner or heavy peer was started. Retained database and local resource allowances are unchanged.",
+    "All full parity rows, journeys, AX acceptance profiles and deployment/adoption/enterprise readiness remain open."
+  ],
+  "owed": [
+    "Execute the prepared stock-SDK verified-HTTPS/PostgreSQL test and all ordinary workflow SQL/API/CLI/native tests at candidate/final source.",
+    "Prove independent delegation, composition, wider processing, protected formats, recovery and all mandatory full product gates."
+  ]
+}

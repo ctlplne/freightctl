@@ -4,12 +4,39 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"os"
 	"strings"
 	"testing"
 
 	"github.com/ctlplne/freightctl/internal/recordplan"
 	"github.com/ctlplne/freightctl/internal/store"
 )
+
+func TestProcessingWorkflowBrowserGoldenMatchesGoCanonicalDefinition(t *testing.T) {
+	raw, err := os.ReadFile("../../web/tests/fixtures/processing-workflow.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var fixture struct {
+		Definition json.RawMessage `json:"definition"`
+		Hash       string          `json:"definition_hash"`
+	}
+	if json.Unmarshal(raw, &fixture) != nil {
+		t.Fatal("fixture")
+	}
+	var d Definition
+	if Decode(fixture.Definition, &d) != nil {
+		t.Fatal("typed fixture")
+	}
+	d, err = Normalize(d)
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, hash, err := digest(d)
+	if err != nil || hash != fixture.Hash {
+		t.Fatal("Go and independent browser/Python workflow meaning differ", err)
+	}
+}
 
 func processingWorkflow(t testing.TB) Definition {
 	t.Helper()

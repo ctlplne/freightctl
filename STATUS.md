@@ -4,8 +4,9 @@ Updated 2026-11-06. Active under S006. The full GOAL.md baseline,all83 whole
 parity rows,twelve complete journeys and AX01–AX08 remain open. Assisted
 deployment,independent adoption and enterprise readiness are unqualified.
 
-Latest pushed source:b8d3fdc3a45d1f0343fbb9a2f20af04941c77d56. All17 original
-workflows and37 jobs are terminal;F171 retains exact original handles/outcomes.
+Latest pushed source before this batch:935cb9b5d1db4d182421de2e1e7dafa6de55a9de.
+All17 original workflows and37 jobs are terminal;F174 retains exact handles and
+outcomes. F171 retains the preceding b8d3fdc batch's terminal original runs.
 F169 retains the preceding c5b46a2 batch's17 terminal workflows/37 jobs. Listed
 source,image,dependency and history-secret gates pass at those sources. Native
 document/record primitives pass;application processing is not thereby qualified.
@@ -40,7 +41,23 @@ locally. No native/runtime pass follows from compilation or stand-ins. F168's
 temporary draft-unavailability gate was replaced only with the implemented
 transactional path and matching SQL;its original evidence remains historical.
 
-Next:complete browser and workflow MCP schema3 surfaces,independent reviewer/
+F172 adds authorized metadata-only processing contract discovery and closed
+schema3 MCP validation/proposal plus six workflow control tools. Catalog37/v14
+keeps ordinary approval/release outside tools and redacts private definitions,
+paths,reasons,slots and bytes. Optional receiving need not be configured for
+processing;exchange operations retain their own gates. F173 adds structured
+browser mapping/review,draft/approval/run/work and held-output status. Historical
+attempts remain separate from current status. Exact-key recovery JSON is bound
+to origin/participant/authority/root,contains no credential,and imports for review
+before explicit retry. A changed session refuses stale in-flight responses.
+
+Focused Go/MCP contracts,nine browser/recheck stand-ins,TypeScript,formatting,
+build consistency,vet,architecture and tagged compilation pass. The stock-SDK
+verified-HTTPS/PostgreSQL and actual Chrome recovery/accessibility/held-output/
+release/independent-curl cases are prepared,not run locally. Native runtime and
+final-source proof remain owed;no full parity row or acceptance profile is passed.
+
+Next:qualify browser/MCP schema3 surfaces,independent reviewer/
 worker delegation,task composition/discovery/operator recovery,protected-format
 and independent-receiver/runtime qualification. Prove fair admission,isolation,
 latency,quota/lease/process-death/restore boundaries and affected original public

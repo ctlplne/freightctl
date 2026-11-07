@@ -18,6 +18,13 @@ func mcpWorkflowReview(p *workflow.Preview) (map[string]any, error) {
 		return nil, store.ErrIsolation
 	}
 	result := map[string]any{"profile": "ordinary-workflow-review-v1", "state": "definition-validated-only", "definition_hash": p.Hash, "schema_version": p.Definition.Schema, "step_count": len(p.Definition.Steps), "effect_count": len(p.Effects), "has_collection_source": p.Collection != nil, "approval_required": true, "external_contact": false, "durable_effects": "none", "storage_verification": "not-checked"}
+	if task := p.Definition.Processing; task != nil {
+		rules, e := json.Marshal(task.Definition)
+		if e != nil {
+			return nil, e
+		}
+		result["processing"] = map[string]any{"kind": task.Kind, "mapping_hash": secure.Digest(rules), "output_kind": task.Definition.OutputKind, "column_count": len(task.Definition.Columns), "output_policy": task.OutputPolicy, "release_required": true, "delivery_intents": 0}
+	}
 	if p.Source != nil {
 		if !store.ValidID(p.Source.ID) || p.Source.Size < 0 || !mcpUploadDigest.MatchString(p.Source.SHA256) {
 			return nil, store.ErrIsolation
@@ -50,7 +57,7 @@ func mcpWorkflowProposal(r *workflow.Result) (map[string]any, error) {
 }
 
 func (s *Server) mcpWorkflowControl(ctx context.Context, scope store.Scope, name string, args mcpToolArguments) (any, error) {
-	service := &workflow.Service{Custody: s.Service}
+	service := &workflow.Service{Custody: s.Service, Processor: s.Checks}
 	switch name {
 	case "freightctl.validate_workflow":
 		var request workflow.PreviewRequest

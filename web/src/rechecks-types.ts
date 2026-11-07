@@ -194,7 +194,10 @@ function signature(value: unknown) {
       : { attached_event_id: id(o, "attached_event_id") }),
   };
 }
-export function parseRecheckPlan(value: unknown): RecheckPlan {
+export function parseRecheckPlan(
+  value: unknown,
+  expectedRoot = "/",
+): RecheckPlan {
   const o = object(value);
   keys(o, [
     "source",
@@ -289,7 +292,7 @@ export function parseRecheckPlan(value: unknown): RecheckPlan {
     [...plan.reason].length > 240
   )
     bad();
-  if (plan.namespace_root !== "/") bad();
+  if (plan.namespace_root !== expectedRoot) bad();
   if (source.check) {
     const b = object(object(source.check).binding);
     if (

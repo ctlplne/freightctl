@@ -36,6 +36,9 @@ func mcpProjectionPreview(v *checks.ProjectionPreview) (map[string]any, error) {
 	return map[string]any{"profile": checks.ScopedProjectionProfile, "review_hash": hash, "source": store.ExchangeArtifact{ID: f.ID, Size: f.Size, SHA256: f.SHA256, Policy: f.Policy}, "source_policy": v.Plan.SourcePolicy, "output_policy": v.Plan.Context.Policy, "mapping_hash": secure.Digest(rules), "output_contract_hash": v.Plan.OutputContractHash, "authority_revision": v.Plan.Context.Authority, "namespace_root_digest": secure.Digest([]byte(v.Plan.Context.Root)), "source_proof_valid_until": v.Plan.ProofValidUntil, "effects": "new-held-artifact-after-separate-approval", "durable_effects": "none", "external_contact": false, "release_required": true}, nil
 }
 func mcpProjectionFacts(r *store.RecordProjection, replayed, current bool, observation string) (map[string]any, error) {
+	return mcpProjectionProfileFacts(r, replayed, current, observation, "")
+}
+func mcpProjectionProfileFacts(r *store.RecordProjection, replayed, current bool, observation, run string) (map[string]any, error) {
 	if r == nil || !store.ValidID(r.ID) || !mcpUploadDigest.MatchString(r.Hash) {
 		return nil, store.ErrIsolation
 	}
@@ -44,7 +47,11 @@ func mcpProjectionFacts(r *store.RecordProjection, replayed, current bool, obser
 		return nil, store.ErrForbidden
 	}
 	wire, err := json.Marshal(d)
-	if err != nil || secure.Digest(wire) != r.Hash || d.Schema != 1 || len(d.Slots) != 3 || d.Plan.Context.Source.File.ID != r.SourceID {
+	profile := d.Schema == 1 && d.Workflow == nil && run == ""
+	if run != "" {
+		profile = d.Schema == 2 && d.Workflow != nil && d.Workflow.RunID == run
+	}
+	if err != nil || secure.Digest(wire) != r.Hash || !profile || len(d.Slots) != 3 || d.Plan.Context.Source.File.ID != r.SourceID {
 		return nil, store.ErrIsolation
 	}
 	seen := map[string]bool{}

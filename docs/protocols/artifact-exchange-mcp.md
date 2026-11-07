@@ -88,7 +88,7 @@ grant forwarding or execution. Original-key recovery returns the owned copy's
 original acceptance without reopening a stale source view. Current availability,
 receiver persistence and processing are not inferred. No content,overwrite,mode,
 host path,actor,root,recipient or execution option enters this tool. The current
-catalog has31 tools, implementation `exchange-tools-v13`; actual original
+catalog has37 tools, implementation `exchange-tools-v14`; actual original
 SDK/HTTPS proof remains owed.
 
 Five scoped record-processing controls share the ordinary governed service:
@@ -101,6 +101,25 @@ or release tool; ordinary approval and fresh held-output checks/release remain
 separate. The existing ten-second deadline is unchanged. The
 [projection contract](record-projection.md) states the role, receipt and output
 boundaries; stock-SDK/HTTPS/PostgreSQL runtime proof remains owed.
+
+Six typed-workflow controls extend that catalog: `processing_contracts`,
+`start_processing_workflow`, `inspect_processing_workflow`,
+`work_processing_workflow`, `refresh_processing_workflow` and
+`cancel_processing_workflow`. Contract discovery returns authorized source/output
+schemas, exact policy revisions, source proof expiry and authority/root digests;
+it reads no payload and creates no approval or run. Existing `validate_workflow`
+and `propose_workflow` accept the closed schema3 records.project definition.
+Start requires its separately approved exact workflow revision. These controls
+use ordinary workflow permissions and services even when optional artifact
+receiving is unconfigured; exchange operations retain their own receive gates.
+
+Workflow results omit private paths, reasons, complete definitions, staging slots
+and bytes. Original command receipts and historical work attempts remain separate
+from current status. A completed task produces a held artifact, with no delivery
+intent. Fresh ordinary checks and separately authorized release are required.
+No approval, release or arbitrary execution tool is added. Focused contract and
+redaction tests pass; the prepared stock-SDK verified-HTTPS/PostgreSQL case is
+compiled only and remains owed.
 
 The four resumable controls use `ordinary-resumable-artifact-upload-v1` and the
 existing upload service. Start takes `virtual_path`, `size_bytes`, `sha256` and

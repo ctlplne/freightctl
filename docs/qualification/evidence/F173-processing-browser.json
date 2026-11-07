@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "id": "F173",
+  "observed_at": "2026-11-06",
+  "candidate_parent": "935cb9b5d1db4d182421de2e1e7dafa6de55a9de",
+  "qualification_claim": false,
+  "state": "Structured schema3 browser workflow and exact-key recovery implemented; nine focused stand-ins and frontend/static checks pass; native Chrome/runtime owed",
+  "source_files": [
+    {
+      "reference": "web/src/processing-types.ts",
+      "sha256": "5f52628843dd85b1b9eded349a56c1abae59d0b5505963510f82c9b92126b1d6",
+      "bytes": 19684
+    },
+    {
+      "reference": "web/src/processing-api.ts",
+      "sha256": "dd38a040308089b713cf63f49a4b933b78e1e2da8aee6bdeaac1e8f4d82f73d6",
+      "bytes": 13983
+    },
+    {
+      "reference": "web/src/processing.tsx",
+      "sha256": "e1063af5e72f5a660b19a10858f18bbb7721461963a77e8478f8468e3f26df10",
+      "bytes": 36609
+    },
+    {
+      "reference": "web/src/app.tsx",
+      "sha256": "6513a921f1e6303a2e5d2fbe6565ced8d24ed8970e79510907b7c8ef0075995b",
+      "bytes": 77484
+    },
+    {
+      "reference": "web/src/rechecks-types.ts",
+      "sha256": "7334ea99f52490f38194dbff7ff11c2d3026e1da2a95700d0f322be246be015c",
+      "bytes": 17987
+    },
+    {
+      "reference": "web/tests/processing-workflows.test.mjs",
+      "sha256": "0dac391f943a1aa212dfddf12e5c99b15a945de5bb06db56a696d1615aa7a527",
+      "bytes": 6707
+    },
+    {
+      "reference": "web/tests/fixtures/processing-workflow.json",
+      "sha256": "3809db70373ed97ace2b78ee613d09c5f904387c0ed3c3d92873d9c5e319067d",
+      "bytes": 4146
+    },
+    {
+      "reference": "internal/api/processing_browser_integration_test.go",
+      "sha256": "8169062aff1dfdc54fb589342d395de278a2252aff9756fca616b178ab76a456",
+      "bytes": 5668
+    },
+    {
+      "reference": "scripts/processing-browser.mjs",
+      "sha256": "939b3203d9a9303ba6ab05a8fa601d852ac4c33424d1a35f25f4dd50bcc47732",
+      "bytes": 11691
+    },
+    {
+      "reference": ".github/workflows/json-intake.yml",
+      "sha256": "439debc880ab2c9c6b243bb4c61d2de1f58454b23715e01d7306a436a8f6ef38",
+      "bytes": 6067
+    },
+    {
+      "reference": "internal/browser/assets/app.js",
+      "sha256": "239a3c9d8369f0e7ce4927cf90c4cf11e64848463834b1ec82c77b8d8544cb36",
+      "bytes": 835160
+    },
+    {
+      "reference": "internal/browser/assets/manifest.json",
+      "sha256": "5174d4ea059799079d94b0279599c856b97b4810adc0b876ad86f4b78468082e",
+      "bytes": 12516
+    }
+  ],
+  "red": {
+    "reference": ".private/freightctl-f173-browser-red.log",
+    "observed": "Typed browser workflow module did not exist."
+  },
+  "green": {
+    "reference": ".private/freightctl-f173-final-focused.log",
+    "observed": "Five new processing tests and four affected recheck tests pass: independent canonical hash, closed meaning/policy validation, credential-free origin/participant/authority-bound recovery, exact-key lost-reply retry, and in-flight scope-change refusal. Build consistency and affected static checks pass."
+  },
+  "checks": [
+    {
+      "reference": ".private/freightctl-f173-browser-red.log",
+      "sha256": "870d184bd2f8d3d1564f82f0158f8106c702963f0cf84789ac80a708ae3e6082",
+      "bytes": 1718
+    },
+    {
+      "reference": ".private/freightctl-f173-final-focused.log",
+      "sha256": "97d6e534284cf7a9903abd9b5fc984281a1b73589c7bae2d0b3c095908b358d8",
+      "bytes": 1093
+    },
+    {
+      "reference": ".private/freightctl-f173-final-typecheck.log",
+      "sha256": "17e00418398dd65e49bed86df28efee896dcae70d7e6258050a2746181f558d5",
+      "bytes": 54
+    },
+    {
+      "reference": ".private/freightctl-f173-final-build.log",
+      "sha256": "8db6a076cb277f80121d05dc60145e204ce116cd6dcad6db779c19617eca03dd",
+      "bytes": 232
+    },
+    {
+      "reference": ".private/freightctl-f173-final-check-built.log",
+      "sha256": "daf8463a2fd2612bfc2d9188ef4de8555161c11a3a4df1187ffc103f0c37b2fc",
+      "bytes": 249
+    },
+    {
+      "reference": ".private/freightctl-f173-final-format.log",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    },
+    {
+      "reference": ".private/freightctl-f173-final-actionlint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f173-final-node-syntax.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "prepared_native": [
+    "TestProcessingWorkflowNativeBrowserReviewRecoveryAndHeldOutput"
+  ],
+  "verification_limits": [
+    "Local tests are pure contracts/stand-ins and static proof. Tagged compilation selects zero native tests and does not establish PostgreSQL, served TLS, stock SDK or Chrome runtime success.",
+    "No local PostgreSQL, Chrome, model, scanner or heavy peer was started. Retained database and local resource allowances are unchanged.",
+    "All full parity rows, journeys, AX acceptance profiles and deployment/adoption/enterprise readiness remain open."
+  ],
+  "owed": [
+    "Run the actual sandboxed Chrome/verified TLS/PostgreSQL committed-response-loss journey, five axe audits, held-byte denial, fresh checks/separate release and independent stock-curl exact-output proof.",
+    "Qualify actual private Work response parsing and all workflow/UI failures and role/root/authority changes in the authorized native environment.",
+    "Replay affected original public journeys and bind all mandatory FINISH checks to final source."
+  ]
+}

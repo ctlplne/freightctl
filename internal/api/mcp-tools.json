@@ -1709,7 +1709,7 @@
   },
   {
     "name": "freightctl.validate_workflow",
-    "description": "Validate an ordinary typed workflow under current workflow permission and registered connection/source checks. Returns only definition hash,counts and authorized source identity;no destination names/addresses/secret references. No approval,run,contact,reservation or durable effect.",
+    "description": "Validate an ordinary typed workflow under current workflow permission and registered connection/source checks. Returns only definition hash,counts and authorized source identity;no destination names/addresses/secret references. No approval,run,contact,reservation or durable effect. Typed schema3 records.project uses scoped owned-source processing rights;ordinary approval and release stay outside tools.",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -1717,58 +1717,35 @@
           "type": "object",
           "properties": {
             "definition": {
-              "type": "object",
-              "properties": {
-                "schema_version": {
-                  "type": "integer"
-                },
-                "name": {
-                  "type": "string"
-                },
-                "steps": {
-                  "type": [
-                    "null",
-                    "array"
-                  ],
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string"
-                      },
-                      "kind": {
-                        "type": "string"
-                      },
-                      "connection": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "schema_version": {
+                      "type": "integer",
+                      "enum": [
+                        1,
+                        2
+                      ]
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "steps": {
+                      "type": [
+                        "null",
+                        "array"
+                      ],
+                      "items": {
                         "type": "object",
                         "properties": {
                           "id": {
                             "type": "string"
                           },
-                          "version": {
-                            "type": "integer"
-                          },
-                          "hash": {
+                          "kind": {
                             "type": "string"
-                          }
-                        },
-                        "required": [
-                          "id",
-                          "version",
-                          "hash"
-                        ],
-                        "additionalProperties": false
-                      },
-                      "filename": {
-                        "type": "string"
-                      },
-                      "encryption": {
-                        "type": [
-                          "null",
-                          "object"
-                        ],
-                        "properties": {
-                          "key": {
+                          },
+                          "connection": {
                             "type": "object",
                             "properties": {
                               "id": {
@@ -1788,114 +1765,341 @@
                             ],
                             "additionalProperties": false
                           },
-                          "profile": {
+                          "filename": {
                             "type": "string"
+                          },
+                          "encryption": {
+                            "type": [
+                              "null",
+                              "object"
+                            ],
+                            "properties": {
+                              "key": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string"
+                                  },
+                                  "version": {
+                                    "type": "integer"
+                                  },
+                                  "hash": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "version",
+                                  "hash"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "profile": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "key",
+                              "profile"
+                            ],
+                            "additionalProperties": false
                           }
                         },
                         "required": [
-                          "key",
-                          "profile"
+                          "id",
+                          "kind",
+                          "connection",
+                          "filename"
                         ],
                         "additionalProperties": false
                       }
                     },
-                    "required": [
-                      "id",
-                      "kind",
-                      "connection",
-                      "filename"
-                    ],
-                    "additionalProperties": false
-                  }
-                },
-                "source": {
-                  "type": [
-                    "null",
-                    "object"
+                    "source": {
+                      "type": [
+                        "null",
+                        "object"
+                      ],
+                      "properties": {
+                        "kind": {
+                          "type": "string"
+                        },
+                        "connection": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "version": {
+                              "type": "integer"
+                            },
+                            "hash": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "version",
+                            "hash"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "manifest": {
+                          "type": "string"
+                        },
+                        "target_directory": {
+                          "type": "string"
+                        },
+                        "completion_contract": {
+                          "type": "string"
+                        },
+                        "max_files": {
+                          "type": "integer"
+                        },
+                        "max_file_bytes": {
+                          "type": "integer"
+                        },
+                        "max_total_bytes": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "connection",
+                        "manifest",
+                        "target_directory",
+                        "completion_contract",
+                        "max_files",
+                        "max_file_bytes",
+                        "max_total_bytes"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "program": {
+                      "type": [
+                        "null",
+                        "object"
+                      ],
+                      "properties": {
+                        "nodes": {
+                          "type": [
+                            "null",
+                            "array"
+                          ],
+                          "items": {
+                            "$ref": "#/$defs/node"
+                          }
+                        }
+                      },
+                      "required": [
+                        "nodes"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "schema_version",
+                    "name",
+                    "steps"
                   ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
                   "properties": {
-                    "kind": {
+                    "schema_version": {
+                      "type": "integer",
+                      "const": 3
+                    },
+                    "name": {
                       "type": "string"
                     },
-                    "connection": {
+                    "steps": {
+                      "type": "array",
+                      "maxItems": 0
+                    },
+                    "processing": {
                       "type": "object",
                       "properties": {
                         "id": {
+                          "type": "string",
+                          "pattern": "^[a-z][a-z0-9_]{0,63}$"
+                        },
+                        "kind": {
+                          "type": "string",
+                          "const": "records.project"
+                        },
+                        "definition": {
+                          "type": "object",
+                          "properties": {
+                            "schema_version": {
+                              "type": "integer",
+                              "const": 1
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "record_projection"
+                            },
+                            "engine": {
+                              "type": "string",
+                              "const": "freightctl-record-projection-v1"
+                            },
+                            "source_policy_hash": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{64}$"
+                            },
+                            "output_kind": {
+                              "type": "string",
+                              "enum": [
+                                "csv",
+                                "json_records"
+                              ]
+                            },
+                            "columns": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "source": {
+                                    "type": "string"
+                                  },
+                                  "target": {
+                                    "type": "string"
+                                  },
+                                  "conversion": {
+                                    "type": "string",
+                                    "enum": [
+                                      "identity",
+                                      "text",
+                                      "normalize_lf"
+                                    ]
+                                  },
+                                  "missing": {
+                                    "type": "string",
+                                    "enum": [
+                                      "preserve",
+                                      "empty",
+                                      "null",
+                                      "error"
+                                    ]
+                                  },
+                                  "null": {
+                                    "type": "string",
+                                    "enum": [
+                                      "preserve",
+                                      "empty",
+                                      "missing",
+                                      "error"
+                                    ]
+                                  },
+                                  "empty": {
+                                    "type": "string",
+                                    "enum": [
+                                      "preserve",
+                                      "missing",
+                                      "null",
+                                      "error"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "source",
+                                  "target",
+                                  "conversion",
+                                  "missing",
+                                  "null",
+                                  "empty"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "minItems": 1,
+                              "maxItems": 128
+                            },
+                            "max_bytes": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 1073741824
+                            },
+                            "max_record_bytes": {
+                              "type": "integer",
+                              "minimum": 64,
+                              "maximum": 1048576
+                            },
+                            "max_rows": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 1000000
+                            },
+                            "timeout_seconds": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 60
+                            }
+                          },
+                          "required": [
+                            "schema_version",
+                            "kind",
+                            "engine",
+                            "source_policy_hash",
+                            "output_kind",
+                            "columns",
+                            "max_bytes",
+                            "max_record_bytes",
+                            "max_rows",
+                            "timeout_seconds"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "output_policy": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+                            },
+                            "version": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 2147483647
+                            },
+                            "hash": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{64}$"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "version",
+                            "hash"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "target_path": {
                           "type": "string"
                         },
-                        "version": {
-                          "type": "integer"
-                        },
-                        "hash": {
+                        "reason": {
                           "type": "string"
                         }
                       },
                       "required": [
                         "id",
-                        "version",
-                        "hash"
+                        "kind",
+                        "definition",
+                        "output_policy",
+                        "target_path",
+                        "reason"
                       ],
                       "additionalProperties": false
-                    },
-                    "manifest": {
-                      "type": "string"
-                    },
-                    "target_directory": {
-                      "type": "string"
-                    },
-                    "completion_contract": {
-                      "type": "string"
-                    },
-                    "max_files": {
-                      "type": "integer"
-                    },
-                    "max_file_bytes": {
-                      "type": "integer"
-                    },
-                    "max_total_bytes": {
-                      "type": "integer"
                     }
                   },
                   "required": [
-                    "kind",
-                    "connection",
-                    "manifest",
-                    "target_directory",
-                    "completion_contract",
-                    "max_files",
-                    "max_file_bytes",
-                    "max_total_bytes"
-                  ],
-                  "additionalProperties": false
-                },
-                "program": {
-                  "type": [
-                    "null",
-                    "object"
-                  ],
-                  "properties": {
-                    "nodes": {
-                      "type": [
-                        "null",
-                        "array"
-                      ],
-                      "items": {
-                        "$ref": "#/$defs/node"
-                      }
-                    }
-                  },
-                  "required": [
-                    "nodes"
+                    "schema_version",
+                    "name",
+                    "steps",
+                    "processing"
                   ],
                   "additionalProperties": false
                 }
-              },
-              "required": [
-                "schema_version",
-                "name",
-                "steps"
-              ],
-              "additionalProperties": false
+              ]
             },
             "file_id": {
               "type": "string"
@@ -2035,7 +2239,7 @@
   },
   {
     "name": "freightctl.propose_workflow",
-    "description": "Record an ordinary versioned workflow draft proposal using a stable key and exact expected version. Requires ordinary workflow_manage/root authority. It does not approve,activate,queue or execute. Original draft receipt is not current approval state.",
+    "description": "Record an ordinary versioned workflow draft proposal using a stable key and exact expected version. Requires ordinary workflow_manage;legacy workflows retain root authority. It does not approve,activate,queue or execute. Original draft receipt is not current approval state. Typed schema3 records.project uses scoped owned-source processing rights;ordinary approval and release stay outside tools.",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -2049,58 +2253,35 @@
               "type": "integer"
             },
             "definition": {
-              "type": "object",
-              "properties": {
-                "schema_version": {
-                  "type": "integer"
-                },
-                "name": {
-                  "type": "string"
-                },
-                "steps": {
-                  "type": [
-                    "null",
-                    "array"
-                  ],
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string"
-                      },
-                      "kind": {
-                        "type": "string"
-                      },
-                      "connection": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "schema_version": {
+                      "type": "integer",
+                      "enum": [
+                        1,
+                        2
+                      ]
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "steps": {
+                      "type": [
+                        "null",
+                        "array"
+                      ],
+                      "items": {
                         "type": "object",
                         "properties": {
                           "id": {
                             "type": "string"
                           },
-                          "version": {
-                            "type": "integer"
-                          },
-                          "hash": {
+                          "kind": {
                             "type": "string"
-                          }
-                        },
-                        "required": [
-                          "id",
-                          "version",
-                          "hash"
-                        ],
-                        "additionalProperties": false
-                      },
-                      "filename": {
-                        "type": "string"
-                      },
-                      "encryption": {
-                        "type": [
-                          "null",
-                          "object"
-                        ],
-                        "properties": {
-                          "key": {
+                          },
+                          "connection": {
                             "type": "object",
                             "properties": {
                               "id": {
@@ -2120,114 +2301,341 @@
                             ],
                             "additionalProperties": false
                           },
-                          "profile": {
+                          "filename": {
                             "type": "string"
+                          },
+                          "encryption": {
+                            "type": [
+                              "null",
+                              "object"
+                            ],
+                            "properties": {
+                              "key": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string"
+                                  },
+                                  "version": {
+                                    "type": "integer"
+                                  },
+                                  "hash": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "version",
+                                  "hash"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "profile": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "key",
+                              "profile"
+                            ],
+                            "additionalProperties": false
                           }
                         },
                         "required": [
-                          "key",
-                          "profile"
+                          "id",
+                          "kind",
+                          "connection",
+                          "filename"
                         ],
                         "additionalProperties": false
                       }
                     },
-                    "required": [
-                      "id",
-                      "kind",
-                      "connection",
-                      "filename"
-                    ],
-                    "additionalProperties": false
-                  }
-                },
-                "source": {
-                  "type": [
-                    "null",
-                    "object"
+                    "source": {
+                      "type": [
+                        "null",
+                        "object"
+                      ],
+                      "properties": {
+                        "kind": {
+                          "type": "string"
+                        },
+                        "connection": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "version": {
+                              "type": "integer"
+                            },
+                            "hash": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "version",
+                            "hash"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "manifest": {
+                          "type": "string"
+                        },
+                        "target_directory": {
+                          "type": "string"
+                        },
+                        "completion_contract": {
+                          "type": "string"
+                        },
+                        "max_files": {
+                          "type": "integer"
+                        },
+                        "max_file_bytes": {
+                          "type": "integer"
+                        },
+                        "max_total_bytes": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "connection",
+                        "manifest",
+                        "target_directory",
+                        "completion_contract",
+                        "max_files",
+                        "max_file_bytes",
+                        "max_total_bytes"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "program": {
+                      "type": [
+                        "null",
+                        "object"
+                      ],
+                      "properties": {
+                        "nodes": {
+                          "type": [
+                            "null",
+                            "array"
+                          ],
+                          "items": {
+                            "$ref": "#/$defs/node"
+                          }
+                        }
+                      },
+                      "required": [
+                        "nodes"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "schema_version",
+                    "name",
+                    "steps"
                   ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
                   "properties": {
-                    "kind": {
+                    "schema_version": {
+                      "type": "integer",
+                      "const": 3
+                    },
+                    "name": {
                       "type": "string"
                     },
-                    "connection": {
+                    "steps": {
+                      "type": "array",
+                      "maxItems": 0
+                    },
+                    "processing": {
                       "type": "object",
                       "properties": {
                         "id": {
+                          "type": "string",
+                          "pattern": "^[a-z][a-z0-9_]{0,63}$"
+                        },
+                        "kind": {
+                          "type": "string",
+                          "const": "records.project"
+                        },
+                        "definition": {
+                          "type": "object",
+                          "properties": {
+                            "schema_version": {
+                              "type": "integer",
+                              "const": 1
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "record_projection"
+                            },
+                            "engine": {
+                              "type": "string",
+                              "const": "freightctl-record-projection-v1"
+                            },
+                            "source_policy_hash": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{64}$"
+                            },
+                            "output_kind": {
+                              "type": "string",
+                              "enum": [
+                                "csv",
+                                "json_records"
+                              ]
+                            },
+                            "columns": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "source": {
+                                    "type": "string"
+                                  },
+                                  "target": {
+                                    "type": "string"
+                                  },
+                                  "conversion": {
+                                    "type": "string",
+                                    "enum": [
+                                      "identity",
+                                      "text",
+                                      "normalize_lf"
+                                    ]
+                                  },
+                                  "missing": {
+                                    "type": "string",
+                                    "enum": [
+                                      "preserve",
+                                      "empty",
+                                      "null",
+                                      "error"
+                                    ]
+                                  },
+                                  "null": {
+                                    "type": "string",
+                                    "enum": [
+                                      "preserve",
+                                      "empty",
+                                      "missing",
+                                      "error"
+                                    ]
+                                  },
+                                  "empty": {
+                                    "type": "string",
+                                    "enum": [
+                                      "preserve",
+                                      "missing",
+                                      "null",
+                                      "error"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "source",
+                                  "target",
+                                  "conversion",
+                                  "missing",
+                                  "null",
+                                  "empty"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "minItems": 1,
+                              "maxItems": 128
+                            },
+                            "max_bytes": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 1073741824
+                            },
+                            "max_record_bytes": {
+                              "type": "integer",
+                              "minimum": 64,
+                              "maximum": 1048576
+                            },
+                            "max_rows": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 1000000
+                            },
+                            "timeout_seconds": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 60
+                            }
+                          },
+                          "required": [
+                            "schema_version",
+                            "kind",
+                            "engine",
+                            "source_policy_hash",
+                            "output_kind",
+                            "columns",
+                            "max_bytes",
+                            "max_record_bytes",
+                            "max_rows",
+                            "timeout_seconds"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "output_policy": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+                            },
+                            "version": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 2147483647
+                            },
+                            "hash": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{64}$"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "version",
+                            "hash"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "target_path": {
                           "type": "string"
                         },
-                        "version": {
-                          "type": "integer"
-                        },
-                        "hash": {
+                        "reason": {
                           "type": "string"
                         }
                       },
                       "required": [
                         "id",
-                        "version",
-                        "hash"
+                        "kind",
+                        "definition",
+                        "output_policy",
+                        "target_path",
+                        "reason"
                       ],
                       "additionalProperties": false
-                    },
-                    "manifest": {
-                      "type": "string"
-                    },
-                    "target_directory": {
-                      "type": "string"
-                    },
-                    "completion_contract": {
-                      "type": "string"
-                    },
-                    "max_files": {
-                      "type": "integer"
-                    },
-                    "max_file_bytes": {
-                      "type": "integer"
-                    },
-                    "max_total_bytes": {
-                      "type": "integer"
                     }
                   },
                   "required": [
-                    "kind",
-                    "connection",
-                    "manifest",
-                    "target_directory",
-                    "completion_contract",
-                    "max_files",
-                    "max_file_bytes",
-                    "max_total_bytes"
-                  ],
-                  "additionalProperties": false
-                },
-                "program": {
-                  "type": [
-                    "null",
-                    "object"
-                  ],
-                  "properties": {
-                    "nodes": {
-                      "type": [
-                        "null",
-                        "array"
-                      ],
-                      "items": {
-                        "$ref": "#/$defs/node"
-                      }
-                    }
-                  },
-                  "required": [
-                    "nodes"
+                    "schema_version",
+                    "name",
+                    "steps",
+                    "processing"
                   ],
                   "additionalProperties": false
                 }
-              },
-              "required": [
-                "schema_version",
-                "name",
-                "steps"
-              ],
-              "additionalProperties": false
+              ]
             }
           },
           "required": [
@@ -2951,6 +3359,218 @@
         "projection_id",
         "request",
         "request_key"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "freightctl.processing_contracts",
+    "description": "Describe an owned successfully checked input contract and current output policy. Metadata only;no contents,paths,host references,approval,run or contact.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "file_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+        }
+      },
+      "required": [
+        "file_id"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "freightctl.start_processing_workflow",
+    "description": "Record one run of an already approved exact schema3 processing task. Creates only a processing intent;no delivery,release or byte-read promise. A stable key recovers original acceptance.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "request": {
+          "type": "object",
+          "properties": {
+            "workflow": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 2147483647
+                },
+                "hash": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              },
+              "required": [
+                "id",
+                "version",
+                "hash"
+              ],
+              "additionalProperties": false
+            },
+            "file_id": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+            }
+          },
+          "required": [
+            "workflow",
+            "file_id"
+          ],
+          "additionalProperties": false
+        },
+        "request_key": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        }
+      },
+      "required": [
+        "request",
+        "request_key"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "freightctl.inspect_processing_workflow",
+    "description": "Observe one owned schema3 processing run. Held output,release and historical/current state stay distinct;no bytes,raw definitions or private bindings.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "run_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+        }
+      },
+      "required": [
+        "run_id"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "freightctl.work_processing_workflow",
+    "description": "Work one pinned approved processing attempt under current ordinary authority and existing deadline. Historical attempt and current run status are separate;output remains held.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "run_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+        },
+        "request_key": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        }
+      },
+      "required": [
+        "run_id",
+        "request_key"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "freightctl.refresh_processing_workflow",
+    "description": "Refresh recorded processing/release outcome only. No processing,transfer,approval,release or byte retrieval.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "run_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+        },
+        "request_key": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        }
+      },
+      "required": [
+        "run_id",
+        "request_key"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "freightctl.cancel_processing_workflow",
+    "description": "Cancel an owned pending/expired processing run under workflow_execute. Does not steal live leases,erase a completed artifact,release or deliver bytes.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "run_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+        },
+        "request_key": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "request": {
+          "type": "object",
+          "properties": {
+            "definition_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "expected_revision": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9223372036854775807
+            }
+          },
+          "required": [
+            "definition_hash",
+            "expected_revision"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "run_id",
+        "request_key",
+        "request"
       ],
       "additionalProperties": false
     },

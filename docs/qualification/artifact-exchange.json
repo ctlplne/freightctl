@@ -244,7 +244,9 @@
         "docs/qualification/evidence/F129-mcp-received-copy.json",
         "docs/qualification/evidence/F130-browser-received-copy.json",
         "docs/qualification/evidence/F140-immutable-download-validators.json",
-        "docs/qualification/evidence/F170-typed-processing-workflows.json"
+        "docs/qualification/evidence/F170-typed-processing-workflows.json",
+        "docs/qualification/evidence/F172-processing-contracts-mcp.json",
+        "docs/qualification/evidence/F173-processing-browser.json"
       ]
     },
     {
@@ -288,7 +290,9 @@
         "docs/qualification/evidence/F151-xml-record-intake.json",
         "docs/qualification/evidence/F155-governed-xlsx-intake.json",
         "docs/qualification/evidence/F168-typed-processing-checkpoint.json",
-        "docs/qualification/evidence/F170-typed-processing-workflows.json"
+        "docs/qualification/evidence/F170-typed-processing-workflows.json",
+        "docs/qualification/evidence/F172-processing-contracts-mcp.json",
+        "docs/qualification/evidence/F173-processing-browser.json"
       ]
     },
     {

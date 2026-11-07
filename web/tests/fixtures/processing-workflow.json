@@ -1,0 +1,144 @@
+{
+  "definition": {
+    "schema_version": 3,
+    "name": "Settlement <north> & café ",
+    "steps": [],
+    "processing": {
+      "id": "project",
+      "kind": "records.project",
+      "definition": {
+        "schema_version": 1,
+        "kind": "record_projection",
+        "engine": "freightctl-record-projection-v1",
+        "source_policy_hash": "dec94a4a74c8a32b8210ed243b5ae80676e60ed95b731f01731d8e173bf7ecaa",
+        "output_kind": "json_records",
+        "columns": [
+          {
+            "source": "amount",
+            "target": "total",
+            "conversion": "identity",
+            "missing": "preserve",
+            "null": "preserve",
+            "empty": "preserve"
+          },
+          {
+            "source": "account",
+            "target": "account",
+            "conversion": "identity",
+            "missing": "preserve",
+            "null": "preserve",
+            "empty": "preserve"
+          },
+          {
+            "source": "day",
+            "target": "day",
+            "conversion": "identity",
+            "missing": "preserve",
+            "null": "preserve",
+            "empty": "preserve"
+          }
+        ],
+        "max_bytes": 8192,
+        "max_record_bytes": 1024,
+        "max_rows": 4,
+        "timeout_seconds": 2
+      },
+      "output_policy": {
+        "id": "33333333-3333-4333-8333-333333333333",
+        "version": 2,
+        "hash": "c216f2e266eff29284ff792e5b09c801181a1d98101df3ce03e4bed0b86b02ca"
+      },
+      "target_path": "/derived.json",
+      "reason": "Map exact records for review"
+    }
+  },
+  "definition_hash": "a6bc0593087e32b3741bb50534860c455c343b01576a2d2f7ad3c171bc73114a",
+  "contracts": {
+    "profile": "record-processing-contracts-v1",
+    "source": {
+      "file_revision_id": "22222222-2222-4222-8222-222222222222",
+      "size_bytes": 40,
+      "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "acceptance_policy": "intake-csv-v1:dec94a4a74c8a32b8210ed243b5ae80676e60ed95b731f01731d8e173bf7ecaa"
+    },
+    "source_policy": {
+      "reference": {
+        "id": "33333333-3333-4333-8333-333333333333",
+        "version": 1,
+        "hash": "dec94a4a74c8a32b8210ed243b5ae80676e60ed95b731f01731d8e173bf7ecaa"
+      },
+      "state": "retired",
+      "definition": {
+        "schema_version": 1,
+        "kind": "csv",
+        "columns": [
+          {
+            "name": "account",
+            "type": "text",
+            "required": true,
+            "max_bytes": 32
+          },
+          {
+            "name": "amount",
+            "type": "decimal",
+            "required": true,
+            "max_bytes": 32,
+            "precision": 12,
+            "scale": 2
+          },
+          {
+            "name": "day",
+            "type": "date",
+            "required": true,
+            "max_bytes": 10
+          }
+        ],
+        "max_bytes": 8192,
+        "max_rows": 4,
+        "max_record_bytes": 1024,
+        "timeout_seconds": 2
+      }
+    },
+    "output_policy": {
+      "reference": {
+        "id": "33333333-3333-4333-8333-333333333333",
+        "version": 2,
+        "hash": "c216f2e266eff29284ff792e5b09c801181a1d98101df3ce03e4bed0b86b02ca"
+      },
+      "state": "active",
+      "definition": {
+        "schema_version": 2,
+        "kind": "json_records",
+        "columns": [
+          {
+            "name": "total",
+            "type": "decimal",
+            "required": true,
+            "max_bytes": 32,
+            "precision": 12,
+            "scale": 2
+          },
+          {
+            "name": "account",
+            "type": "text",
+            "required": true,
+            "max_bytes": 32
+          },
+          {
+            "name": "day",
+            "type": "date",
+            "required": true,
+            "max_bytes": 10
+          }
+        ],
+        "max_bytes": 8192,
+        "max_rows": 4,
+        "max_record_bytes": 1024,
+        "timeout_seconds": 2
+      }
+    },
+    "authority_revision": 7,
+    "namespace_root_digest": "aee622063a1320538367ff2713c22d184847ce4ab884453f9eb4330c09c5616c",
+    "effects": "Metadata only. No approval,run,bytes,release or delivery."
+  }
+}
