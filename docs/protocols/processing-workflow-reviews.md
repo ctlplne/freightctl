@@ -65,8 +65,14 @@ CLI commands are `processing-review-request`, `processing-review-list`,
 `-processing-review-id` references; pagination uses `-processing-review-after` and
 `-processing-review-limit`.
 The [OpenAPI contract](../api/processing-reviews.openapi.json) defines wire shapes.
-Browser controls remain owed in the next implementation item. No MCP approval
-tool is introduced.
+The browser's Record processing page exposes the same explicit disclosure,
+named review, separate adoption and withdrawal. Its confirmation shows the actual
+task rules and original expected revision. A compact saved request binds origin,
+tenant/partner/actor, authority revision and root digest; it carries no credential
+and imports for review before explicit submission. An uncertain command retains
+its exact key. Original receipt status remains separate from current inspection.
+Scope/session changes reject in-flight responses. No MCP approval tool is
+introduced.
 
 F175 records focused missing-behavior red and contract/static green. Real
 PostgreSQL confinement, independent decisions, withdrawal/direct-worker refusal,
@@ -74,3 +80,13 @@ revocation, rollback and served verified-HTTPS/CLI cases are prepared and compil
 only. Neither a stand-in nor compilation qualifies these runtime claims. Schema54
 adds one forced-RLS relation; current fresh-CI inventory is75 metadata/74 forced
 RLS tables. Historical profiles and the retained schema35 database are unchanged.
+
+F177 adds six focused browser contracts plus the affected processing checks and
+an independent Go/Python/browser canonical review fixture. Actual Chrome proof
+is prepared for two separately authenticated roles, stock-curl committed reply
+loss, saved request import, explicit adoption, withdrawal, recovery of an older
+approval receipt while current state remains withdrawn, six WCAG audits and
+exact persisted event/owned-receipt counts. It performs no file processing and
+does not replace F175/F173's separate native byte/held-output/release profiles.
+Tagged compilation and stand-ins are not native qualification; those runtime
+outcomes, originals and actual final-source proof remain owed.

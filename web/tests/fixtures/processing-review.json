@@ -1,0 +1,82 @@
+{
+  "id": "77777777-7777-4777-8777-777777777777",
+  "definition": {
+    "profile": "independent-processing-workflow-review-v1",
+    "author": {
+      "actor_id": "33333333-3333-4333-8333-333333333333",
+      "authority_revision": 7,
+      "namespace_root_digest": "aee622063a1320538367ff2713c22d184847ce4ab884453f9eb4330c09c5616c"
+    },
+    "reviewer": {
+      "actor_id": "55555555-5555-4555-8555-555555555555",
+      "authority_revision": 4,
+      "namespace_root_digest": "8a5edab282632443219e051e4ade2d1d5bbc671c781051bf1437897cbdfea0f1"
+    },
+    "workflow": {
+      "id": "66666666-6666-4666-8666-666666666666",
+      "version": 1,
+      "hash": "a6bc0593087e32b3741bb50534860c455c343b01576a2d2f7ad3c171bc73114a"
+    },
+    "workflow_revision": 1,
+    "definition": {
+      "schema_version": 3,
+      "name": "Settlement <north> & café ",
+      "steps": [],
+      "processing": {
+        "id": "project",
+        "kind": "records.project",
+        "definition": {
+          "schema_version": 1,
+          "kind": "record_projection",
+          "engine": "freightctl-record-projection-v1",
+          "source_policy_hash": "dec94a4a74c8a32b8210ed243b5ae80676e60ed95b731f01731d8e173bf7ecaa",
+          "output_kind": "json_records",
+          "columns": [
+            {
+              "source": "amount",
+              "target": "total",
+              "conversion": "identity",
+              "missing": "preserve",
+              "null": "preserve",
+              "empty": "preserve"
+            },
+            {
+              "source": "account",
+              "target": "account",
+              "conversion": "identity",
+              "missing": "preserve",
+              "null": "preserve",
+              "empty": "preserve"
+            },
+            {
+              "source": "day",
+              "target": "day",
+              "conversion": "identity",
+              "missing": "preserve",
+              "null": "preserve",
+              "empty": "preserve"
+            }
+          ],
+          "max_bytes": 8192,
+          "max_record_bytes": 1024,
+          "max_rows": 4,
+          "timeout_seconds": 2
+        },
+        "output_policy": {
+          "id": "33333333-3333-4333-8333-333333333333",
+          "version": 2,
+          "hash": "c216f2e266eff29284ff792e5b09c801181a1d98101df3ce03e4bed0b86b02ca"
+        },
+        "target_path": "/derived.json",
+        "reason": "Map exact records for review"
+      }
+    },
+    "expires_at": "2026-11-07T00:00:00Z"
+  },
+  "definition_hash": "6b0c28494c20cd2d8b1f2030f6fc0c97770ecedcc7c2f3bd48bd64abf8e0fb40",
+  "state": "pending",
+  "revision": 1,
+  "adopted_revision": 0,
+  "created_at": "2026-11-06T00:00:00Z",
+  "changed_event_id": "88888888-8888-4888-8888-888888888888"
+}

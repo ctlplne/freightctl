@@ -2,6 +2,7 @@ package workflow
 
 import (
 	"encoding/json"
+	"os"
 	"strings"
 	"testing"
 	"time"
@@ -133,5 +134,19 @@ func TestProcessingReviewCommandReceiptContainsReferencesRatherThanDuplicatePriv
 	var summary store.ProcessingReviewSummary
 	if json.Unmarshal(b, &summary) != nil || summary.ID != r.ID || summary.Hash != r.Hash || summary.Revision != r.Revision || summary.AdoptedRevision != r.AdoptedRevision || summary.WorkflowID != r.Definition.Workflow.ID {
 		t.Fatal("compact receipt lost exact original binding")
+	}
+}
+
+func TestProcessingReviewBrowserGoldenMatchesGoCanonicalDefinition(t *testing.T) {
+	raw, err := os.ReadFile("../../web/tests/fixtures/processing-review.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var r store.ProcessingReview
+	if Decode(raw, &r) != nil {
+		t.Fatal("review fixture")
+	}
+	if err = normalizeProcessingReview(&r); err != nil {
+		t.Fatal("Go/Python/browser canonical review meaning differs", err)
 	}
 }

@@ -16,6 +16,7 @@ on:
       - "scripts/xlsxwriter-qualification.txt"
       - "scripts/json-intake-browser.mjs"
       - "scripts/processing-browser.mjs"
+      - "scripts/processing-review-browser.mjs"
       - ".github/workflows/json-intake.yml"
   pull_request:
     paths:
@@ -31,6 +32,7 @@ on:
       - "scripts/xlsxwriter-qualification.txt"
       - "scripts/json-intake-browser.mjs"
       - "scripts/processing-browser.mjs"
+      - "scripts/processing-review-browser.mjs"
       - ".github/workflows/json-intake.yml"
   workflow_dispatch:
 
@@ -136,4 +138,4 @@ jobs:
       - name: Real browser review, committed-response loss, exact checks and separate release
         run: |
           sh scripts/go.sh test -race -timeout=0 -tags=integration,jsonbrowser \
-            -run '^(TestJSONRecordsNativeBrowserReviewedHashAndReceipt|TestFixedWidthNativeBrowserReviewedHashAndReceipt|TestXMLRecordsNativeBrowserReviewedHashAndReceipt|TestXLSXRecordsNativeBrowserReviewedHashAndReceipt|TestProcessingWorkflowNativeBrowserReviewRecoveryAndHeldOutput)$' -count=1 -v ./internal/api
+            -run '^(TestJSONRecordsNativeBrowserReviewedHashAndReceipt|TestFixedWidthNativeBrowserReviewedHashAndReceipt|TestXMLRecordsNativeBrowserReviewedHashAndReceipt|TestXLSXRecordsNativeBrowserReviewedHashAndReceipt|TestProcessingWorkflowNativeBrowserReviewRecoveryAndHeldOutput|TestProcessingReviewNativeBrowserIndependentDecisionRecoveryAndAdoption)$' -count=1 -v ./internal/api

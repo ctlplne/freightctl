@@ -4,13 +4,13 @@ Updated 2026-11-06. Active under the owner resume. All83 whole parity rows,
 twelve complete journeys and AX01–AX08 remain open. Assisted deployment,
 independent adoption and enterprise readiness remain unqualified.
 
-Latest pushed source before this batch:793f9ddf21b11053b691a91534468f99cbfd7633.
-F176 retains all17 original terminal workflows/37 jobs and exact outcomes.
+Latest pushed source before this batch:cc53524b0be1372ac1b15acf772de6bb36f061d4.
+F178 retains all17 original terminal workflows/37 jobs and exact outcomes.
 Listed source,dependency,history-secret and image security gates pass there.
 Original PostgreSQL/metadata,Windows,qualification-record and public/browser/
 stock-peer failures remain red. Their investigation/repair is deferred to FINISH;
 new security failures require immediate triage. No original run was cancelled,
-restarted or substituted. Prior source evidence remains in F169/F171/F174.
+restarted or substituted. Prior source evidence remains in F169/F171/F174/F176.
 
 F170 implements approved schema3 records.project through ordinary API/CLI:
 atomic run/intent/slots/events/receipt,stable attempt dispatch,held outputs,fresh
@@ -36,7 +36,16 @@ journey are prepared/compiled only. SQL54 adds one forced-RLS relation;source54
 targets75 metadata/74 forced-RLS tables. Historical profiles and retained schema35
 are untouched. Native runtime and actual final-source qualification remain owed.
 
-Next:browser independent-review controls and recovery,third-party delegation,
+F177 adds browser independent-review request/decision/adoption/withdrawal and
+explicit exact-key saved recovery. Actual task rules are inspected before
+confirmation;original receipts remain separate from current state. Six focused
+client contracts plus five affected processing contracts,type/build consistency,
+Go/Python/browser canonical fixture and affected static checks pass. Native Chrome
+two-login/committed-response-loss/old-receipt/current-withdrawal/six-WCAG/event-
+cardinality proof is prepared and compiled only. This metadata-only journey does
+not replace separate processing-byte/held-output/release qualification.
+
+Next:third-party delegation,
 composition/discovery/scheduling,protected formats and independent receivers.
 Continue all remaining baseline/exchange implementation and AX-J01/J02. Prove
 fairness,isolation,latency,quota/lease/process-death/restore boundaries and original

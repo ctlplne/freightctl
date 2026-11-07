@@ -1,3 +1,5 @@
+import { ProcessingTaskReview } from "./processing-task-review";
+import { ProcessingReviews } from "./processing-reviews";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Api } from "./api";
 import { ApiError, object, uuid, type Session } from "./types";
@@ -47,38 +49,6 @@ const labels: Record<string, string> = {
   operator_cancelled:
     "The workflow was cancelled. Existing artifacts remain in custody.",
 };
-function TaskReview({ definition }: { definition: ProcessingDefinition }) {
-  const task = definition.processing,
-    rules = task.definition;
-  return (
-    <section aria-label="Exact processing rules">
-      <h3>{definition.name}</h3>
-      <p>
-        Input contract <code>{rules.source_policy_hash}</code> · output policy{" "}
-        <code>{task.output_policy.id}</code> version{" "}
-        {task.output_policy.version} · <code>{task.output_policy.hash}</code>.
-      </p>
-      <p>
-        Output:{rules.output_kind} · logical path:
-        {task.target_path || "unpublished custody"}. Reason:{task.reason}
-      </p>
-      <ol>
-        {rules.columns.map((m, i) => (
-          <li key={i}>
-            {m.source} → {m.target}; conversion:{m.conversion}; missing:
-            {m.missing}; null:{m.null}; empty:{m.empty}
-          </li>
-        ))}
-      </ol>
-      <p>
-        Limits:{rules.max_bytes} output bytes,{rules.max_rows} rows,
-        {rules.max_record_bytes} bytes per record,{rules.timeout_seconds}{" "}
-        seconds. The output remains held for fresh checks and a separate
-        release.
-      </p>
-    </section>
-  );
-}
 export function ProcessingWorkflows({
   api,
   session,
@@ -434,6 +404,31 @@ export function ProcessingWorkflows({
         stays held for fresh checks and a separate release. Receiving an
         artifact supplies no processing or onward delivery permission.
       </p>
+      <ProcessingReviews
+        api={api}
+        session={session}
+        active={visible}
+        refresh={refresh}
+        configuration={configuration}
+        onWorkflow={(id, version, hash) =>
+          void perform(async () => {
+            const c = await client.configuration(id, version);
+            if (c.definition_hash !== hash)
+              throw new ApiError("revision_conflict", 409);
+            if (current()) {
+              setWorkflowID(id);
+              setVersion(String(version));
+              setConfiguration(c);
+              setConfigurationCurrent(true);
+            }
+          })
+        }
+        onMutation={() => {
+          setConfigurationCurrent(false);
+          setViewCurrent(false);
+        }}
+        onError={onError}
+      />
       {notice && <p role="status">{notice}</p>}
       {pending && (
         <section
@@ -1023,7 +1018,9 @@ export function ProcessingWorkflows({
             {review.kind === "draft" && (
               <p>This creates an unapproved draft.</p>
             )}
-            {reviewDefinition && <TaskReview definition={reviewDefinition} />}
+            {reviewDefinition && (
+              <ProcessingTaskReview definition={reviewDefinition} />
+            )}
             {review.kind === "run" && (
               <p>
                 Input <code>{String(review.body.file_id)}</code>. This records

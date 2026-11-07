@@ -1,0 +1,188 @@
+{
+  "schema_version": 1,
+  "id": "F177",
+  "observed_at": "2026-11-06",
+  "candidate_parent": "cc53524b0be1372ac1b15acf772de6bb36f061d4",
+  "qualification_claim": false,
+  "state": "Independent processing review browser and exact-key recovery implemented;focused client/canonical/static/build checks pass;actual Chrome and native runtime owed",
+  "contract": "docs/protocols/processing-workflow-reviews.md",
+  "source_files": [
+    {
+      "reference": ".github/workflows/json-intake.yml",
+      "sha256": "97c011df172f246605bace6dbdaf520ba9069ade2cd3e5b0a17d314627e77b94",
+      "bytes": 6235
+    },
+    {
+      "reference": "STATUS.md",
+      "sha256": "9facd1eeefc54c4b9c882a27ae72db66d16c88d085278c984a5eee266f086142",
+      "bytes": 4392
+    },
+    {
+      "reference": "docs/protocols/processing-workflow-reviews.md",
+      "sha256": "118598125fac8f40e7a2fab71f68b11ff83bb653a4401fa870f0fd855a8e2a50",
+      "bytes": 5896
+    },
+    {
+      "reference": "docs/qualification/artifact-exchange.json",
+      "sha256": "4d382467280fd82ff73d23c6414dbd1bd8c1728d28f8c590212f7344de30f65a",
+      "bytes": 26920
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "bacce1f64b0e5b5c87bf55913d48afcf8454f7f6a5f6111bb7a7ce7140f3a619",
+      "bytes": 332169
+    },
+    {
+      "reference": "internal/api/processing_review_browser_integration_test.go",
+      "sha256": "e6abfdf5c0bc648b7a53a32d8cf0951c9ca9d5cf8154f1fc2e6488d4211f7380",
+      "bytes": 7374
+    },
+    {
+      "reference": "internal/browser/assets/app.js",
+      "sha256": "1e4283f50f7b3cd2329183caf7016f82b4df0a9d4c2161f6245cd447f32add28",
+      "bytes": 853706
+    },
+    {
+      "reference": "internal/browser/assets/manifest.json",
+      "sha256": "2ada243d60dfb0c57747c5cc940c435753e21dfb6c322fd2a7702d112ba11585",
+      "bytes": 12954
+    },
+    {
+      "reference": "internal/workflow/processing_reviews_test.go",
+      "sha256": "a33cb04774b8f4963f66648a2726267921e4765c85ae1ac8bf2aa12a9a2a6ce0",
+      "bytes": 8064
+    },
+    {
+      "reference": "scripts/processing-review-browser.mjs",
+      "sha256": "0306940996ae568582c4577215eebd1f41289274acf3460faba1555c9f0fdf41",
+      "bytes": 12120
+    },
+    {
+      "reference": "web/src/processing-review-api.ts",
+      "sha256": "1caf1889368183e9a48f4e83daba9a04a333c1c0e90f3c027c6c020f82740c2c",
+      "bytes": 14657
+    },
+    {
+      "reference": "web/src/processing-reviews.tsx",
+      "sha256": "386108e7b9a4752be802eaf7b16573bc30ea21a08ed61d9e0d2b41b0d9564630",
+      "bytes": 18557
+    },
+    {
+      "reference": "web/src/processing-task-review.tsx",
+      "sha256": "a8bbad8d6cb6d75f67242834d68383cd2e4d26779968ad6302215187f12caca8",
+      "bytes": 1241
+    },
+    {
+      "reference": "web/src/processing.tsx",
+      "sha256": "f92399f5f9071af6e9fba8e3c2dfc1cbec2091b0574d38d209e2972da619364b",
+      "bytes": 36395
+    },
+    {
+      "reference": "web/tests/fixtures/processing-review.json",
+      "sha256": "de9b7390aa7c7416e2787def544624a9caf24d40fe838fec39f819f691427661",
+      "bytes": 2738
+    },
+    {
+      "reference": "web/tests/processing-reviews.test.mjs",
+      "sha256": "cbc9e1d97eb77f9a3f924308dd32641e0f99176649056ba782e124fe3c7f9427",
+      "bytes": 8743
+    }
+  ],
+  "changed": [
+    "Ordinary browser request/inspect/list,independent approve/reject,separate owner adoption and withdrawal share the service. Exact task rules and explicit disclosure are shown before confirmation;no payload or forwarding/release/execution grant follows.",
+    "Unknown replies retain the same key/body. Origin/participant/authority/root-bound compact recovery contains no credentials and imports for review before explicit retry. Original receipt state remains separate from current inspection;scope/session/role changes refuse outside the server.",
+    "Closed review/receipt parsing normalizes typed hashes,exact participant/ref bindings and microsecond timestamps. The Go/Python/browser golden fixture preserves the independently recorded complete review meaning. Shared rule rendering avoids a second task-definition display.",
+    "Existing native browser profiles remain selected;new GitHub-only Chrome case uses two separate authenticated contexts,real PostgreSQL/verified TLS,actual stock-curl committed response loss,wrong-origin refusal,adoption/withdrawal and old approval recovery with current withdrawn state. Six WCAG audits and exact persisted artifact/event/owned-receipt counts are asserted,not claimed run."
+  ],
+  "red": {
+    "reference": ".private/freightctl-f177-review-browser-red.log",
+    "observed": "The independent-review browser API module did not exist;the focused case failed to bundle."
+  },
+  "green": {
+    "reference": ".private/freightctl-f177-final-focused.log",
+    "observed": "Six independent-review and five affected processing client contracts pass,including canonical meaning,closed disclosure/recovery,no credential,exact original request across a new session,live role/scope refusal,old approved receipt versus current adoption,and microsecond/calendar precision. The separate Go golden test and affected type/build/static checks pass."
+  },
+  "checks": [
+    {
+      "reference": ".private/freightctl-f177-review-browser-red.log",
+      "sha256": "48a2184c23070b837051c85068b84158b2b40a0968f29365780fcd3a3f9d1b23",
+      "bytes": 1719
+    },
+    {
+      "reference": ".private/freightctl-f177-final-focused.log",
+      "sha256": "c3698a5b1bcb1e827d560733f1bee6cc117bce2a46d916da514f6b2b8961963b",
+      "bytes": 1295
+    },
+    {
+      "reference": ".private/freightctl-f177-golden-green.log",
+      "sha256": "f7799f67fb77f48cfe223141f2ff6c3e182aee5ea2f9f447f1a075142a2d5720",
+      "bytes": 60
+    },
+    {
+      "reference": ".private/freightctl-f177-typecheck-first.log",
+      "sha256": "b0fa6ef787cc46bc68c945a8b084f5b1bc43752f1bf18930c0da7d5fdf93bf4c",
+      "bytes": 654
+    },
+    {
+      "reference": ".private/freightctl-f177-typecheck-green.log",
+      "sha256": "17e00418398dd65e49bed86df28efee896dcae70d7e6258050a2746181f558d5",
+      "bytes": 54
+    },
+    {
+      "reference": ".private/freightctl-f177-format-final.log",
+      "sha256": "146f82136fb7e04d78497720e5a78ae82eabd9d9a2241aaf9e071bc9eb2f33ed",
+      "bytes": 258
+    },
+    {
+      "reference": ".private/freightctl-f177-build.log",
+      "sha256": "59cf58de719eb74c0ca5fe79a1fafcee96401687309c9c1a6333651ce8dd6178",
+      "bytes": 232
+    },
+    {
+      "reference": ".private/freightctl-f177-built-consistency.log",
+      "sha256": "3a7a9c66a257d0cdd3e3688e20c2a02515f13eea8974ef5a37a35ff570ec5ac4",
+      "bytes": 249
+    },
+    {
+      "reference": ".private/freightctl-f177-final-native-compile.log",
+      "sha256": "bbe137191bc82f7f105da7d17895c589f7cac15f121b986fe4d1ff1acbec2f70",
+      "bytes": 73
+    },
+    {
+      "reference": ".private/freightctl-f177-final-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f177-architecture-green.log",
+      "sha256": "5058a69aaf5a8c4408a90c38618eefbe8a5b6cf00727670ff08f271c28102b86",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f177-actionlint-green.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f177-native-script-syntax.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "preparation_failures": [
+    "Initial TypeScript unknown/null/narrowing errors are preserved in the first typecheck log and corrected. One test append used a root-relative path from the web directory and wrote nothing;the exact intended tests were then written to the correct file and all11 focused tests passed."
+  ],
+  "prepared_native": [
+    "TestProcessingReviewNativeBrowserIndependentDecisionRecoveryAndAdoption"
+  ],
+  "verification_limits": [
+    "Tagged compilation selected zero native cases;no Chrome,PostgreSQL,model,scanner or heavy peer ran locally.",
+    "This new native profile covers metadata review/approval/recovery only. F175/F173 separate real processing-byte,held-output and release proof remains owed.",
+    "All17 original cc53524 workflows and37 jobs are terminal in F178;listed security gates pass,original application failures remain red and nonsecurity investigation/repair stays deferred to FINISH."
+  ],
+  "owed": [
+    "Run the original prepared native Chrome case with both roles,actual committed response loss,six axe audits,scope/cookie/TLS isolation and persisted cardinalities at candidate/final source.",
+    "Run F175 service/SQL/API/CLI and F173 browser processing/held-output/release profiles plus affected originals;compilation and stand-ins are not runtime success.",
+    "Complete third-party author delegation,composition/scheduling/discovery,protected processing,all baseline/AX/FINISH and external prerequisites. All83 whole parity rows,twelve journeys and deployment/adoption/enterprise readiness remain open."
+  ]
+}
