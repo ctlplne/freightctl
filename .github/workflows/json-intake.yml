@@ -15,6 +15,9 @@ on:
       - "scripts/xlsx-stock-producer.py"
       - "scripts/xlsxwriter-qualification.txt"
       - "scripts/json-intake-browser.mjs"
+      - "scripts/browser-native-wire.mjs"
+      - "scripts/test-browser-native-wire.mjs"
+      - "scripts/test-json-intake-completion.mjs"
       - "scripts/local-collection-browser.mjs"
       - "scripts/local-calendar-browser.mjs"
       - "scripts/browser-pinned-https.mjs"
@@ -36,6 +39,9 @@ on:
       - "scripts/xlsx-stock-producer.py"
       - "scripts/xlsxwriter-qualification.txt"
       - "scripts/json-intake-browser.mjs"
+      - "scripts/browser-native-wire.mjs"
+      - "scripts/test-browser-native-wire.mjs"
+      - "scripts/test-json-intake-completion.mjs"
       - "scripts/local-collection-browser.mjs"
       - "scripts/local-calendar-browser.mjs"
       - "scripts/browser-pinned-https.mjs"
@@ -145,6 +151,8 @@ jobs:
           npm --prefix web --cache "$GITHUB_WORKSPACE/.cache/freightctl-npm" ci --ignore-scripts --no-fund
           npm --prefix web run check-built
           python3 scripts/dev-db.py
+      - name: Exact original empty completion and JSON workflow wire boundaries
+        run: node --test scripts/test-browser-native-wire.mjs scripts/test-json-intake-completion.mjs
       - name: Real browser review, committed-response loss, exact checks and separate release
         run: |
           sh scripts/go.sh test -race -timeout=0 -tags=integration,jsonbrowser \

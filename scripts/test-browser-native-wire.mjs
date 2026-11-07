@@ -5,6 +5,7 @@ import { test } from "node:test";
 import {
   nativeWireObservation,
   nativeWireResponse,
+  nativeUploadCompletionResponse,
 } from "./browser-native-wire.mjs";
 
 const target = "https://127.0.0.1:9443/v1/workflows/validate";
@@ -164,6 +165,245 @@ function fixture(options) {
   };
   return { protocol, page, actual, calls };
 }
+
+const uploadScope = {
+  origin: "https://127.0.0.1:9443",
+  tenant: "10000000-1111-4111-8111-111111111111",
+  partner: "10000001-1111-4111-8111-111111111111",
+};
+const checkpoint = "20000000-1111-4111-8111-111111111111";
+const uploadPrefix = `${uploadScope.origin}/v1/tenants/${uploadScope.tenant}/partners/${uploadScope.partner}/uploads/`;
+const uploadTarget = uploadPrefix + checkpoint + "/complete";
+function uploadFixture(options = {}) {
+  return fixture({
+    ...options,
+    change(events) {
+      const { network, extra, paused } = events;
+      network.request.url = uploadTarget;
+      delete network.request.postData;
+      delete network.request.hasPostData;
+      paused.request = { ...network.request };
+      extra.headers[":path"] = new URL(uploadTarget).pathname;
+      delete extra.headers["Content-Type"];
+      extra.headers["Content-Length"] = "0";
+      extra.headers["Idempotency-Key"] = "browser-complete-" + checkpoint;
+      options.change?.(events);
+    },
+  });
+}
+
+test("empty upload completion pins one scoped checkpoint and delivers only its original bounded response", async () => {
+  for (const options of [
+    {},
+    { extraFirst: true },
+    { pausedFirst: true },
+    { chunkSize: 5 },
+  ]) {
+    const f = uploadFixture(options);
+    let observations = 0;
+    const result = await nativeUploadCompletionResponse(
+      f.page,
+      uploadScope,
+      () => f.protocol.dispatch(),
+      async (observed, label, url) => {
+        observations++;
+        assert.equal(label, "upload-complete");
+        assert.equal(url, uploadTarget);
+        assert.equal(observed.request().url(), uploadTarget);
+        assert.equal(observed.request().method(), "POST");
+        assert.equal(observed.request().postDataBuffer().length, 0);
+        const headers = await observed.request().allHeaders();
+        assert.equal(
+          headers["idempotency-key"],
+          "browser-complete-" + checkpoint,
+        );
+        assert.equal(headers["content-type"], undefined);
+        assert.equal(headers.origin, uploadScope.origin);
+        assert.equal(headers["x-csrf-token"], csrf);
+        return observed[nativeWireObservation];
+      },
+      "upload-complete",
+    );
+    assert.deepEqual(result, { ok: true, text: "λ", replayed: false });
+    assert.equal(observations, 1);
+    assert.equal(
+      f.protocol.commands.filter((c) => c.method === "Fetch.fulfillRequest")
+        .length,
+      1,
+    );
+    assert.equal(
+      f.protocol.commands.find((c) => c.method === "Fetch.enable").params
+        .patterns[0].urlPattern,
+      uploadPrefix + "*/complete",
+    );
+    assert.ok(
+      !f.protocol.commands.some((c) =>
+        [
+          "Network.getRequestPostData",
+          "Network.replayXHR",
+          "Network.setExtraHTTPHeaders",
+        ].includes(c.method),
+      ),
+    );
+    assert.equal(f.protocol.streams.size, 0);
+    assert.ok(f.protocol.detached);
+  }
+});
+
+test("empty completion profile refuses foreign scope, body, key and security evidence before delivery", async () => {
+  for (const change of [
+    (e) => {
+      e.network.request.url = e.paused.request.url = uploadTarget + "?other=1";
+    },
+    (e) => {
+      e.network.request.url = e.paused.request.url = uploadTarget + "#other";
+    },
+    (e) => {
+      e.network.request.url = e.paused.request.url = uploadTarget.replace(
+        uploadScope.partner,
+        checkpoint,
+      );
+    },
+    (e) => {
+      e.network.request.url = e.paused.request.url = uploadTarget.replace(
+        uploadScope.origin,
+        "https://outside.invalid",
+      );
+    },
+    (e) => {
+      e.network.request.postData = e.paused.request.postData = "{}";
+    },
+    (e) => {
+      e.network.request.hasPostData = true;
+    },
+    (e) => {
+      e.paused.request.hasPostData = true;
+    },
+    (e) => {
+      e.network.request.method = e.paused.request.method = "GET";
+      e.extra.headers[":method"] = "GET";
+    },
+    (e) => {
+      e.extra.headers["Idempotency-Key"] = "another-command";
+    },
+    (e) => {
+      e.extra.headers["Content-Type"] = "application/json";
+    },
+    (e) => {
+      e.extra.headers["Content-Length"] = "1";
+    },
+    (e) => {
+      delete e.extra.headers["X-CSRF-Token"];
+    },
+    (e) => {
+      e.extra.headers.Origin = "https://outside.invalid";
+    },
+    (e) => {
+      e.extra.headers["Sec-Fetch-Site"] = "cross-site";
+    },
+    (e) => {
+      e.extra.headers.Cookie = "";
+    },
+    (e) => {
+      e.paused.responseStatusCode = 201;
+    },
+  ]) {
+    const f = uploadFixture({ change });
+    await assert.rejects(
+      nativeUploadCompletionResponse(
+        f.page,
+        uploadScope,
+        () => f.protocol.dispatch(),
+        async () => {
+          assert.fail("invalid completion reached recorder");
+        },
+        "upload-complete",
+      ),
+      /native browser wire observation failed/,
+    );
+    assert.ok(
+      !f.protocol.commands.some((c) => c.method === "Fetch.fulfillRequest"),
+    );
+    assert.ok(f.protocol.detached);
+  }
+});
+
+test("JSON workflow profile continues to refuse empty completion posts", async () => {
+  const f = uploadFixture();
+  await assert.rejects(
+    nativeWireResponse(
+      f.page,
+      uploadTarget,
+      () => f.protocol.dispatch(),
+      async () => {
+        assert.fail("empty POST passed JSON contract");
+      },
+      "upload-complete",
+    ),
+    /native browser wire observation failed/,
+  );
+  assert.ok(
+    !f.protocol.commands.some((c) => c.method === "Fetch.fulfillRequest"),
+  );
+});
+
+test("upload observation refuses a second scoped checkpoint instead of treating it as a retry", async () => {
+  const second = "20000001-1111-4111-8111-111111111111";
+  const f = uploadFixture({
+    change(e) {
+      if (e.network.requestId === "native-1") {
+        e.network.request.url = e.paused.request.url = uploadTarget.replace(
+          checkpoint,
+          second,
+        );
+        e.extra.headers[":path"] = new URL(e.network.request.url).pathname;
+        e.extra.headers["Idempotency-Key"] = "browser-complete-" + second;
+      }
+    },
+  });
+  await assert.rejects(
+    nativeUploadCompletionResponse(
+      f.page,
+      uploadScope,
+      () => Promise.all([f.protocol.dispatch(0), f.protocol.dispatch(1)]),
+      async (observed) => observed[nativeWireObservation],
+      "upload-complete",
+    ),
+    /native browser wire observation failed/,
+  );
+  assert.ok(f.protocol.detached);
+  assert.ok(
+    f.protocol.commands.filter((c) => c.method === "Fetch.fulfillRequest")
+      .length <= 1,
+  );
+});
+
+test("upload scope must be exact typed loopback origin and canonical participant before browser acquisition", async () => {
+  let acquisitions = 0;
+  const page = {
+    context() {
+      acquisitions++;
+      assert.fail("invalid scope acquired browser");
+    },
+  };
+  for (const scope of [
+    { ...uploadScope, origin: uploadScope.origin + "/" },
+    { ...uploadScope, origin: "https://outside.invalid" },
+    { ...uploadScope, tenant: "not-an-id" },
+    { ...uploadScope, partner: [uploadScope.partner] },
+    { ...uploadScope, extra: "untrusted" },
+  ])
+    await assert.rejects(
+      nativeUploadCompletionResponse(
+        page,
+        scope,
+        async () => {},
+        async () => {},
+        "upload-complete",
+      ),
+    );
+  assert.equal(acquisitions, 0);
+});
 
 test("native response binds either protocol event order to final headers and exact streamed bytes", async () => {
   for (const options of [

@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "id": "F378",
+  "observed_at": "2026-11-07",
+  "base_candidate": "451c6d199a942133deca0644d037fe308cf3740e",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F378 repairs repeated original fixed-width Chrome upload response-body lookup failure at9b3ba92 run42390494525/job128456856282,class browser-response-body,source289:35. Add a separate strict empty-POST upload-completion observer:canonical loopback tenant/partner,one original dynamically created UUID,exact browser-complete-UUID key,no request body/content type,actual Cookie/Origin/CSRF/Sec-Fetch-Site and200 bounded original JSON stream. Pin one checkpoint;reject a second,foreign scope/queries,extra bodies and changed security evidence. The existing JSON workflow profile still requires its original JSON request contract. Deliver the same original bytes without replaying/sending another request. Execute the actual original upload/held-receipt block:controlled unavailable inspector lookup first red,then green. All21 affected wire/driver/recovery/egress tests,syntax,format,workflow lint and architecture pass. Original identity/policy/digest/offset/held/release assertions remain. Real original native browser replay remains owed;private underlying error text is unavailable.",
+  "original_failure": {
+    "candidate": "9b3ba92a9746e4af5edd40a27e440429b0dc6f5b",
+    "run_id": 42390494525,
+    "job_id": 128456856282,
+    "test": "TestFixedWidthNativeBrowserReviewedHashAndReceipt",
+    "stage": "upload",
+    "class": "browser-response-body",
+    "source_line": 289,
+    "source_column": 35,
+    "safe_result_sha256": "5715124b6093c00fee3b762b7dbb1cd4cc2a35608fdb612ec1d776021a6ee9d1",
+    "protected_first_failure_sha256": "a294415bfea642dae6a1c419d12388e4cff8a39260bd7c8af1f3dfb44092265e"
+  },
+  "red_green": "Actual original driver block first throws the controlled failed inspector response-body lookup. Updated block observes one original empty completion and preserves exact upload identity,held policy,digest,offset and independent409 byte-read refusals. CDP/Page stand-ins verify original-byte delivery,one pinned UUID,security headers,body/status checks,second-checkpoint refusal and unchanged JSON-profile refusal of empty POST. No stand-in establishes native custody or browser qualification.",
+  "owed": [
+    "Original native fixed-width/JSON/XML/XLSX upload,check,separate release and unchanged protocol/security assertions",
+    "Native original receive/recovery profiles sharing the unchanged JSON wire contract",
+    "All mandatory final-source baseline/AX and separate readiness gates"
+  ],
+  "source_files": [
+    {
+      "reference": ".github/workflows/json-intake.yml",
+      "sha256": "ff5246479e997439edff5361232216bf80c7dfa5761cee4026791de26039603d",
+      "bytes": 7817
+    },
+    {
+      "reference": "STATUS.md",
+      "sha256": "1fe03f8fed83d08fcd70d6735ea6f7025b735180a57babaaa365fe4c3295690c",
+      "bytes": 4586
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "522cd353c7def3a7fe89cb7fd1c1ed33944075b3cde43c81ad6051e58c7f3c2f",
+      "bytes": 502958
+    },
+    {
+      "reference": "scripts/browser-native-wire.mjs",
+      "sha256": "acb6102aa1f19f555de9bf1502d6528eec96e50a33b1aaaf65092c323295b01f",
+      "bytes": 17036
+    },
+    {
+      "reference": "scripts/json-intake-browser.mjs",
+      "sha256": "84b40575e189406f30c6e03c0afb2fad12ac87002558ba9cae2cb5d79eba2aee",
+      "bytes": 13266
+    },
+    {
+      "reference": "scripts/test-browser-native-wire.mjs",
+      "sha256": "fc658d76d225e9f489b9caa7edea0e1b4ae0c9819b5bece91b6e5f6f292ee87a",
+      "bytes": 20490
+    },
+    {
+      "reference": "scripts/test-json-intake-completion.mjs",
+      "sha256": "eaecb8302a32c2565fc561e4bb3c1bc840c1329633f3ca5e40db630155c44129",
+      "bytes": 4466
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f378-driver-red.log",
+      "sha256": "95d59f892b890cff7959b0b7aeed0916d238b417d30fbf0f2f5264c9a755c3b4",
+      "bytes": 1167
+    },
+    {
+      "reference": ".private/freightctl-f378-final2-focused.log",
+      "sha256": "97e7a4cdeb9317aeebfd12b3843389cc585adec0d28d303726f0caad8bc50247",
+      "bytes": 2266
+    },
+    {
+      "reference": ".private/freightctl-f378-syntax.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f378-workflow.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f378-final2-format.log",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    },
+    {
+      "reference": ".private/freightctl-f378-final2-architecture.log",
+      "sha256": "fa99a7467914775b6e6fb50c5b0a2c85b3211135c3486cec28c42811919aeece",
+      "bytes": 66
+    }
+  ]
+}

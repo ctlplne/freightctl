@@ -5,6 +5,10 @@ import { createHash, X509Certificate } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { readFile, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
+import {
+  nativeUploadCompletionResponse,
+  nativeWireObservation,
+} from "./browser-native-wire.mjs";
 
 process.umask(0o077);
 assert.equal(process.env.GITHUB_ACTIONS, "true");
@@ -278,15 +282,25 @@ try {
   await page
     .getByLabel("Destination path", { exact: true })
     .fill("/browser-records.json");
-  const complete = page.waitForResponse(
-    (r) =>
-      new URL(r.url()).pathname.endsWith("/complete") &&
-      r.request().method() === "POST",
+  const accepted = await nativeUploadCompletionResponse(
+    page,
+    { origin: c.url, tenant: c.tenant, partner: c.partner },
+    () => button("Start upload").click(),
+    async (observed, _label, target) => {
+      const request = observed.request();
+      assert.equal(request.url(), target);
+      assert.equal(request.method(), "POST");
+      assert.equal(request.postDataBuffer().length, 0);
+      const id = new URL(target).pathname.split("/").at(-2);
+      const headers = await request.allHeaders();
+      assert.equal(headers["idempotency-key"], "browser-complete-" + id);
+      const original = observed[nativeWireObservation];
+      assert.equal(original.status, 200);
+      assert.equal(JSON.parse(original.body).upload.id, id);
+      return original;
+    },
+    "intake-upload-complete",
   );
-  await button("Start upload").click();
-  const response = await complete;
-  assert.equal(response.status(), 200);
-  const accepted = await response.json();
   assert.equal(accepted.acceptance, "durable-held-pending-checks-and-release");
   assert.equal(accepted.file.policy, policyPrefix + c.hash);
   assert.equal(accepted.upload.expected_sha256, c.sha256);

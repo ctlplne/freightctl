@@ -54,6 +54,12 @@ transaction. It removes the mapping and records its event while keeping custody
 bytes and history. Focused boundary/static checks pass; native permissions,
 stale/restored receipt,current intake and stock curl proofs remain owed.
 
+F378 addresses the repeated fixed-width Chrome completion-body lookup failure
+with a separate strict empty-POST wire observer. It pins one original scoped
+checkpoint and unchanged200 response; ordinary JSON workflow checks stay intact.
+Focused tests/static checks pass; original native upload/check/release replay
+remains owed.
+
 Next: continue implementation while current originals run, then push the next
 verified owner-only batch after required originals are terminal. Repair original failures
 and finish every mandatory final-source baseline/AX gate. F026 stays manual/

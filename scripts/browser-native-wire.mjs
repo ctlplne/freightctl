@@ -46,7 +46,7 @@ function boundedHeaders(value) {
   }
   return result;
 }
-function requestHeaders(raw, target, method) {
+function requestHeaders(raw, target, method, emptyCompletion) {
   const value = boundedHeaders(raw),
     url = new URL(target);
   const pseudo = {
@@ -71,7 +71,11 @@ function requestHeaders(raw, target, method) {
   if (method === "POST") {
     check(
       value.origin === url.origin &&
-        value["content-type"] === "application/json" &&
+        (emptyCompletion
+          ? value["content-type"] === undefined &&
+            (value["content-length"] === undefined ||
+              value["content-length"] === "0")
+          : value["content-type"] === "application/json") &&
         /^[0-9a-f]{64}$/.test(value["x-csrf-token"]),
     );
   } else check(value.origin === undefined || value.origin === url.origin);
@@ -131,6 +135,56 @@ export async function nativeWireResponse(
   label,
   options = {},
 ) {
+  return observeNativeResponse(
+    page,
+    target,
+    action,
+    actual,
+    label,
+    options,
+    false,
+  );
+}
+
+const canonicalID = /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/;
+
+// Upload creation chooses the checkpoint UUID during the same user action.
+// Pin exactly one original scoped completion, with its ordinary empty POST and
+// checkpoint-derived key. This does not generalize the JSON workflow profile.
+export async function nativeUploadCompletionResponse(
+  page,
+  scope,
+  action,
+  actual,
+  label,
+) {
+  check(scope && typeof scope === "object" && !Array.isArray(scope));
+  check(Object.keys(scope).sort().join(",") === "origin,partner,tenant");
+  check(
+    typeof scope.tenant === "string" &&
+      typeof scope.partner === "string" &&
+      canonicalID.test(scope.tenant) &&
+      canonicalID.test(scope.partner),
+  );
+  const origin = new URL(scope.origin);
+  check(
+    origin.origin === scope.origin &&
+      origin.protocol === "https:" &&
+      origin.hostname === "127.0.0.1",
+  );
+  const prefix = `${scope.origin}/v1/tenants/${scope.tenant}/partners/${scope.partner}/uploads/`;
+  return observeNativeResponse(page, prefix, action, actual, label, {}, true);
+}
+
+async function observeNativeResponse(
+  page,
+  target,
+  action,
+  actual,
+  label,
+  options,
+  emptyCompletion,
+) {
   const attempts = options.attempts ?? 1,
     dropFirst = options.dropFirst ?? false;
   check(
@@ -146,6 +200,24 @@ export async function nativeWireResponse(
       !url.password &&
       !url.hash,
   );
+  let selectedTarget = emptyCompletion ? undefined : target;
+  const matches = (value) => {
+    if (!emptyCompletion) return value === target;
+    if (
+      typeof value !== "string" ||
+      !value.startsWith(target) ||
+      !value.endsWith("/complete")
+    )
+      return false;
+    return canonicalID.test(value.slice(target.length, -"/complete".length));
+  };
+  const select = (value) => {
+    check(
+      matches(value) &&
+        (selectedTarget === undefined || selectedTarget === value),
+    );
+    selectedTarget = value;
+  };
   let phase = "setup",
     session,
     timer,
@@ -184,8 +256,9 @@ export async function nativeWireResponse(
       waiters.get(id)();
   }
   const onRequest = (event) => {
-    if (!active || event.request?.url !== target) return;
+    if (!active || !matches(event.request?.url)) return;
     try {
+      select(event.request.url);
       const id = identifier(event.requestId);
       check(
         !requests.has(id) &&
@@ -235,12 +308,13 @@ export async function nativeWireResponse(
     const fetchId = identifier(event.requestId),
       networkId = identifier(event.networkId);
     paused.add(fetchId);
+    select(event.request?.url);
     check(
       active &&
         !processing &&
         !used.has(networkId) &&
         count < attempts &&
-        event.request?.url === target &&
+        event.request?.url === selectedTarget &&
         event.responseStatusCode === 200 &&
         !event.responseErrorReason,
     );
@@ -258,17 +332,30 @@ export async function nativeWireResponse(
     const request = requests.get(networkId);
     check(
       request &&
-        request.url === target &&
+        request.url === selectedTarget &&
         request.method === event.request.method,
     );
     phase = "headers";
     const headers = requestHeaders(
       extras.get(networkId),
-      target,
+      selectedTarget,
       request.method,
+      emptyCompletion,
     );
     let post = request.postData;
-    if (request.method === "POST" && post === undefined)
+    if (emptyCompletion) {
+      check(
+        request.method === "POST" &&
+          !request.hasPostData &&
+          !event.request.hasPostData &&
+          (post === undefined || post === ""),
+      );
+      check(
+        headers["idempotency-key"] ===
+          "browser-complete-" + selectedTarget.split("/").at(-2),
+      );
+      post = "";
+    } else if (request.method === "POST" && post === undefined)
       post = (
         await send("Network.getRequestPostData", { requestId: networkId })
       ).postData;
@@ -332,7 +419,7 @@ export async function nativeWireResponse(
     phase = "record";
     const intercepted = Object.freeze({
       request: () => ({
-        url: () => target,
+        url: () => selectedTarget,
         method: () => request.method,
         allHeaders: async () => ({ ...headers }),
         postDataBuffer: () => Buffer.from(requestBytes),
@@ -342,7 +429,7 @@ export async function nativeWireResponse(
     const value = await actual(
       intercepted,
       attempts === 1 ? label : label + "-" + count,
-      target,
+      selectedTarget,
     );
     check(value.status === 200 && value.body === body);
     phase = "deliver";
@@ -395,7 +482,9 @@ export async function nativeWireResponse(
     await send("Fetch.enable", {
       patterns: [
         {
-          urlPattern: target.replace(/[\\*?]/g, "\\$&"),
+          urlPattern:
+            target.replace(/[\\*?]/g, "\\$&") +
+            (emptyCompletion ? "*/complete" : ""),
           requestStage: "Response",
         },
       ],
