@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "id": "F325",
+  "observed_at": "2026-11-07",
+  "base_candidate": "764462a8be31f33458aa2640db900c59b0de0cd0",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F325 preserves the original native 1b745e1 CLI not-found failure and repairs its local collection fixture to obey the preceding still-active XLSX intake policy. Use the actual stock shared.xlsx bytes with exact-length manifest/source bounds;prove captured bytes and virtual path remain held/unpublished,run the current exact XLSX check,prove passing checks still do not release,refuse reader release,then explicitly release with exact hash/report/revision and original-key replay before independent readback. Keep profile removal/worker replay,unchanged producer bytes and all original custody assertions. Actual native causal attribution and original CLI green are owed;only compilation,vet,existing focused private-profile contracts and architecture checks passed locally.",
+  "original_red": {
+    "candidate": "1b745e16d53bf3b20ed07c2242c53bb71a5d3619",
+    "run_id": 42374627267,
+    "job_id": 128409585373,
+    "url": "https://github.com/ctlplne/freightctl/actions/runs/42374627267/job/128409585373",
+    "observation": "Original process crash/recovery profile passes;subsequent local CLI helper reports not found at caller exchanges_integration_test.go:425. Original helper hides its inner phase. Old source61 SQLSTATE23514 registration failure no longer appears.",
+    "causal_attribution": "Inspected fixture retains active XLSX policy but supplies CSV and expects immediate published-path readback. That is inconsistent with ordinary held custody;native stepwise repaired replay must confirm actual original cause."
+  },
+  "prepared_native_proof": [
+    "Require actual stock XlsxWriter shared.xlsx source already used by original CLI intake journey;exact-length source/manifest limits.",
+    "Captured status is distinct from publication:ID download ErrState and virtual path ErrNotFound before check.",
+    "Fresh held check attempts0;ordinary XLSX check binds actual bytes,policy,report,one row,engine and revision.",
+    "A passing check cannot publish until separate release;read-only participant cannot release.",
+    "Exact separate release and same-key replay precede independent virtual-path byte/hash readback.",
+    "Removing source configuration cannot break original-key capture receipt recovery;producer payload/manifest stay unchanged."
+  ],
+  "local_checks": "Observed terminal exit0 for tagged CLI compilation,vet,existing focused private-profile tests and architecture. This is not a green native CLI outcome.",
+  "native_scope_observations": [
+    {
+      "run_id": 42374627296,
+      "job_id": 128409585262,
+      "candidate": "1b745e16d53bf3b20ed07c2242c53bb71a5d3619",
+      "state": "success",
+      "scope": "Full original Windows untagged unit job;protectedfs0.148s/scanner protocol0.208s. No scanner engine/native full integration claim."
+    },
+    {
+      "run_id": 42374627299,
+      "state": "success run metadata;exact job handle not asserted here",
+      "scope": "Original FTPS browser/live governance workflow now succeeds after prior F316 bad-release-refusal failure. Earlier cause unresolved;original evidence preserved."
+    }
+  ],
+  "source_files": [
+    {
+      "reference": "cmd/freightctl/local_source_profile_integration_test.go",
+      "sha256": "890dd0e8a836035b5d22cf223e7be9cf78602a882732296b03478d86a975f98e",
+      "bytes": 10533
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "04d110f8dca032d2cc8845466dcf728c7bcc63821d0f9e0e0af7af5e61b85715",
+      "bytes": 425822
+    },
+    {
+      "reference": "STATUS.md",
+      "sha256": "18520587e6e33380d59eb7f56714f12a3bb52186bbac913d6466b1411c671068",
+      "bytes": 12207
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f325-native-compile.log",
+      "sha256": "b87f1e5c64168d6ff65843c041ec06007f46496f31aed99b72df1fc58e88c876",
+      "bytes": 75
+    },
+    {
+      "reference": ".private/freightctl-f325-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f325-profile-contracts.log",
+      "sha256": "20c1ba96f57a645b62a1281447f555a3badd86901e5b0f86e25fabfb7573568d",
+      "bytes": 57
+    },
+    {
+      "reference": ".private/freightctl-f325-architecture.log",
+      "sha256": "47baa941eb99f1fea8d041d2281c394cc20461debcfd37af5785fc6d20dcdf55",
+      "bytes": 64
+    }
+  ],
+  "owed": [
+    "Actual repaired original CLI PostgreSQL/check/release/readback profile on both native Linux architectures and original full integration.",
+    "All pending 1b745e1 native/security/browser/FTPS/operator outcomes and final-source baseline/AX gates."
+  ],
+  "resources": "OneCPU/192MiB compile/vet/existing focused filesystem contracts only;no actual PostgreSQL,Chrome,scanner or model started locally."
+}

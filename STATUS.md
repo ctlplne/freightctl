@@ -162,6 +162,15 @@ now requires exact preview,separate activation,five actual lost-response/same-ke
 replays,reload and independent custody/cardinality/zero-forwarding observation.
 It is compiled and wired to CI only;actual served/native proof remains owed.
 
+Native1b745e1 Windows job128409585262 now passes,including protectedfs0.148s
+and scanner protocol0.208s. This qualifies that exact original unit scope only.
+FTPS browser/live governance also passes after its prior bad-release refusal
+failure;the cause of that earlier failure is unresolved. Native CLI local source
+now advances beyond old registration refusal but reports not found. F325 keeps
+the active XLSX intake policy and prepares actual check/separate-release proof
+before readback. Compile/vet/focused profile/static checks pass;original native
+CLI replay and causal attribution stay owed.
+
 FINISH repair and remaining implementation are mandatory. Next:repair original
 browser/stock/protocol failures and complete all affected original runtime,
 security,recovery,reproducibility and baseline/AX gates on the final source.

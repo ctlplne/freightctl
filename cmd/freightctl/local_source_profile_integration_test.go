@@ -12,6 +12,7 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/ctlplne/freightctl/internal/checks"
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/custody"
 	"github.com/ctlplne/freightctl/internal/delivery"
@@ -51,7 +52,16 @@ func qualifyLocalCollectionCLI(t *testing.T, ctx context.Context, service *custo
 	if err != nil || json.Unmarshal(raw, &result) != nil || json.Unmarshal(result.Resource, &connection) != nil || connection.Local == nil || !connection.Local.ReadOnly || bytes.Contains(raw, []byte(directory)) || bytes.Contains(raw, []byte(output)) {
 		t.Fatal("CLI local connection registration", err)
 	}
-	body := []byte("real CLI local source content\n")
+	// The original journey leaves its exact XLSX intake policy active. Collected
+	// bytes must pass that ordinary policy and separate release,not bypass it.
+	stock := os.Getenv("FREIGHTCTL_TEST_XLSX_DIR")
+	if stock == "" {
+		t.Fatal("actual stock XLSX source required for the current intake policy")
+	}
+	body, err := os.ReadFile(filepath.Join(stock, "shared.xlsx"))
+	if err != nil || len(body) == 0 || len(body) > 1<<20 {
+		t.Fatal("exact stock XLSX source unavailable", err)
+	}
 	write := func(name string, body []byte) {
 		f, err := protectedfs.CreateExclusive(filepath.Join(directory, name))
 		if err != nil {
@@ -68,14 +78,14 @@ func qualifyLocalCollectionCLI(t *testing.T, ctx context.Context, service *custo
 			t.Fatal(err)
 		}
 	}
-	write("one.csv", body)
-	manifest := workflow.CollectionManifest{Schema: 1, Batch: secure.NewID(), Files: []workflow.CollectionFile{{Name: "one.csv", Size: int64(len(body)), SHA256: secure.Digest(body)}}}
+	write("one.xlsx", body)
+	manifest := workflow.CollectionManifest{Schema: 1, Batch: secure.NewID(), Files: []workflow.CollectionFile{{Name: "one.xlsx", Size: int64(len(body)), SHA256: secure.Digest(body)}}}
 	manifestBytes, err := json.Marshal(manifest)
 	if err != nil {
 		t.Fatal(err)
 	}
 	write("one.ready.json", manifestBytes)
-	d := workflow.Definition{Schema: 1, Name: "CLI private local collection", Steps: []workflow.Step{}, Source: &workflow.CollectionSource{Kind: "local.collect", Connection: workflow.Reference{ID: connection.ID, Version: connection.Version, Hash: connection.Hash}, Manifest: "one.ready.json", Directory: "/", Contract: workflow.CollectionContract, MaxFiles: 1, MaxFile: 1024, MaxTotal: 1024}}
+	d := workflow.Definition{Schema: 1, Name: "CLI private local collection", Steps: []workflow.Step{}, Source: &workflow.CollectionSource{Kind: "local.collect", Connection: workflow.Reference{ID: connection.ID, Version: connection.Version, Hash: connection.Hash}, Manifest: "one.ready.json", Directory: "/", Contract: workflow.CollectionContract, MaxFiles: 1, MaxFile: int64(len(body)), MaxTotal: int64(len(body))}}
 	raw, err = command(administrator, "workflow-draft", "--request-file", requestFile(workflow.DraftRequest{Definition: d}), "--idempotency-key", "cli-local-draft")
 	var configuration store.Configuration
 	if err != nil || json.Unmarshal(raw, &result) != nil || json.Unmarshal(result.Resource, &configuration) != nil {
@@ -117,9 +127,43 @@ func qualifyLocalCollectionCLI(t *testing.T, ctx context.Context, service *custo
 	if err != nil || json.Unmarshal(raw, &view) != nil || !view.Job.Captured || len(view.Inputs) != 1 || view.Inputs[0].FileID == nil || view.Inputs[0].RunID != nil || view.BusinessAcceptance != "unknown" {
 		t.Fatal("CLI local capture receipt", err)
 	}
+	fileID := *view.Inputs[0].FileID
+	if _, _, err = service.Download(ctx, scope, fileID); !errors.Is(err, store.ErrState) {
+		t.Fatal("CLI local capture published unchecked bytes", err)
+	}
+	if _, _, err = service.DownloadPath(ctx, scope, view.Inputs[0].Target); !errors.Is(err, store.ErrNotFound) {
+		t.Fatal("CLI local capture published a held virtual path", err)
+	}
+	raw, err = command(administrator, "check-status", "--file-id", fileID)
+	var checked checks.View
+	if err != nil || json.Unmarshal(raw, &checked) != nil || checked.Check == nil || checked.Check.State != "held" || checked.Check.Attempts != 0 || checked.Check.ReportHash != "" {
+		t.Fatal("CLI local captured revision inherited a previous check", err)
+	}
+	if _, err = command(administrator, "check-run", "--file-id", fileID, "--idempotency-key", "cli-local-check"); err != nil {
+		t.Fatal("CLI local current XLSX policy check", err)
+	}
+	raw, err = command(administrator, "check-status", "--file-id", fileID)
+	var report checks.Report
+	if err != nil || json.Unmarshal(raw, &checked) != nil || checked.Check == nil || !checked.Current || checked.Check.State != "passed" || checked.Check.Attempts != 1 || json.Unmarshal(checked.Check.Report, &report) != nil || report.Engine != "freightctl-xlsx-records-v1" || report.Code != "valid_xlsx_records" || report.Rows != 1 || report.SHA256 != secure.Digest(body) || report.Bytes != int64(len(body)) || report.PolicyHash != checked.Check.PolicyHash {
+		t.Fatal("CLI local check lost exact source and current policy binding", err)
+	}
+	if _, _, err = service.Download(ctx, scope, fileID); !errors.Is(err, store.ErrState) {
+		t.Fatal("CLI local check pass bypassed separate release", err)
+	}
+	release := requestFile(checks.ReleaseDecision{SHA256: secure.Digest(body), PolicyHash: checked.Check.PolicyHash, ReportHash: checked.Check.ReportHash, Revision: checked.Check.Revision})
+	if _, err = command(reader, "check-release", "--file-id", fileID, "--request-file", release, "--idempotency-key", "cli-local-reader-release"); !errors.Is(err, store.ErrForbidden) {
+		t.Fatal("CLI reader gained local collection release authority", err)
+	}
+	for i := 0; i < 2; i++ {
+		raw, err = command(administrator, "check-release", "--file-id", fileID, "--request-file", release, "--idempotency-key", "cli-local-release")
+		var result checks.Result
+		if err != nil || json.Unmarshal(raw, &result) != nil || result.Replayed != (i == 1) {
+			t.Fatal("CLI local exact separate release or original-key recovery", err)
+		}
+	}
 	file, stream, err := service.DownloadPath(ctx, scope, view.Inputs[0].Target)
 	if err != nil {
-		t.Fatal(err)
+		t.Fatal("CLI local released virtual path readback", err)
 	}
 	got, err := io.ReadAll(io.LimitReader(stream, int64(len(body))+1))
 	stream.Close()
@@ -128,5 +172,11 @@ func qualifyLocalCollectionCLI(t *testing.T, ctx context.Context, service *custo
 	}
 	if entries, err := os.ReadDir(directory); err != nil || len(entries) != 2 {
 		t.Fatal("CLI collector wrote producer state", err)
+	}
+	for name, want := range map[string][]byte{"one.xlsx": body, "one.ready.json": manifestBytes} {
+		got, err := os.ReadFile(filepath.Join(directory, name))
+		if err != nil || !bytes.Equal(got, want) {
+			t.Fatal("CLI collector changed original producer bytes", err)
+		}
 	}
 }
