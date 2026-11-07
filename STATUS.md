@@ -8,7 +8,13 @@ Exact original failures,owner decisions and remaining work are preserved in
 [artifact-exchange.json](docs/qualification/artifact-exchange.json) and the
 linked safe manifests. Raw private proof remains outside Git.
 
-Current pushed candidate: `23c752add5ee77f47d8280f7c629c803058e3b7c`.
+Current pushed candidate: `f22d0d41428f0019f5a872336c892f9893c2cc2e`.
+[F420](docs/qualification/evidence/F420-native-push.json) binds five owner-only
+commits,enabled Gitleaks(no leaks) and16 first original attempt1 workflows.
+F416/F417 collection DELETE/COPY and F418 full-tree CLI custody opening await
+actual original native outcomes.
+
+Previous terminal candidate: `23c752add5ee77f47d8280f7c629c803058e3b7c`.
 [F415](docs/qualification/evidence/F415-native-push.json) binds four owner-only
 commits,enabled Gitleaks(no leaks) and16 first original attempt1 workflows.
 [F419](docs/qualification/evidence/F419-native-terminal.json) records16 original
