@@ -20,35 +20,46 @@ type Service struct {
 	Processor ProcessingPort
 }
 type ConnectionDefinition struct {
-	Schema      int                      `json:"schema_version"`
-	Destination secure.SSHDestination    `json:"destination"`
-	Directory   string                   `json:"directory"`
-	FTPS        *delivery.FTPSDefinition `json:"ftps,omitempty"`
+	Schema      int                             `json:"schema_version"`
+	Destination secure.SSHDestination           `json:"destination"`
+	Directory   string                          `json:"directory"`
+	FTPS        *delivery.FTPSDefinition        `json:"ftps,omitempty"`
+	Local       *delivery.LocalCollectionSource `json:"local,omitempty"`
 }
 type ConnectionRequest struct {
-	ID              string                   `json:"connection_id,omitempty"`
-	ExpectedVersion int                      `json:"expected_version"`
-	Address         string                   `json:"address"`
-	User            string                   `json:"user"`
-	Directory       string                   `json:"directory"`
-	HostPublicFile  string                   `json:"host_public_file"`
-	KeyFile         string                   `json:"key_file"`
-	KeyPublicFile   string                   `json:"key_public_file"`
-	FTPS            *delivery.FTPSDefinition `json:"ftps,omitempty"`
+	ID              string                          `json:"connection_id,omitempty"`
+	ExpectedVersion int                             `json:"expected_version"`
+	Address         string                          `json:"address"`
+	User            string                          `json:"user"`
+	Directory       string                          `json:"directory"`
+	HostPublicFile  string                          `json:"host_public_file"`
+	KeyFile         string                          `json:"key_file"`
+	KeyPublicFile   string                          `json:"key_public_file"`
+	FTPS            *delivery.FTPSDefinition        `json:"ftps,omitempty"`
+	Local           *delivery.LocalCollectionSource `json:"local,omitempty"`
 }
 type ConnectionView struct {
-	ID              string              `json:"id"`
-	Version         int                 `json:"version"`
-	Hash            string              `json:"definition_hash"`
-	State           string              `json:"state"`
-	Revision        int64               `json:"revision"`
-	Address         string              `json:"address"`
-	User            string              `json:"user"`
-	Directory       string              `json:"directory"`
-	HostFingerprint string              `json:"host_fingerprint"`
-	KeyFingerprint  string              `json:"key_fingerprint"`
-	Protocol        string              `json:"protocol,omitempty"`
-	FTPS            *FTPSConnectionView `json:"ftps,omitempty"`
+	ID              string               `json:"id"`
+	Version         int                  `json:"version"`
+	Hash            string               `json:"definition_hash"`
+	State           string               `json:"state"`
+	Revision        int64                `json:"revision"`
+	Address         string               `json:"address"`
+	User            string               `json:"user"`
+	Directory       string               `json:"directory"`
+	HostFingerprint string               `json:"host_fingerprint"`
+	KeyFingerprint  string               `json:"key_fingerprint"`
+	Protocol        string               `json:"protocol,omitempty"`
+	FTPS            *FTPSConnectionView  `json:"ftps,omitempty"`
+	Local           *LocalConnectionView `json:"local,omitempty"`
+}
+
+type LocalConnectionView struct {
+	Profile           string `json:"profile"`
+	RootReferenceHash string `json:"root_reference_sha256"`
+	ConfigurationHash string `json:"configuration_sha256"`
+	RootFingerprint   string `json:"root_fingerprint"`
+	ReadOnly          bool   `json:"read_only"`
 }
 
 type FTPSConnectionView struct {
@@ -78,10 +89,13 @@ func connectionDefinition(c *store.Configuration) (*ConnectionDefinition, error)
 	if err != nil || hash != c.Hash || pathErr != nil || canonical != d.Directory || vpath.ControlPath(canonical) {
 		return nil, store.ErrState
 	}
-	if d.Schema == 1 && d.FTPS == nil && secure.ValidateSSHDestination(d.Destination) == nil {
+	if d.Schema == 1 && d.FTPS == nil && d.Local == nil && secure.ValidateSSHDestination(d.Destination) == nil {
 		return &d, nil
 	}
-	if d.Schema == 2 && reflect.DeepEqual(d.Destination, secure.SSHDestination{}) && d.FTPS.Valid(d.Directory) {
+	if d.Schema == 2 && d.Local == nil && reflect.DeepEqual(d.Destination, secure.SSHDestination{}) && d.FTPS.Valid(d.Directory) {
+		return &d, nil
+	}
+	if d.Schema == 3 && d.FTPS == nil && reflect.DeepEqual(d.Destination, secure.SSHDestination{}) && d.Directory == "/" && d.Local.Valid() {
 		return &d, nil
 	}
 	return nil, store.ErrState
@@ -115,6 +129,9 @@ func viewConnection(c *store.Configuration) (ConnectionView, error) {
 	}
 	if d.FTPS != nil {
 		return ConnectionView{ID: c.ID, Version: c.Version, Hash: c.Hash, State: c.State, Revision: c.Revision, Address: d.FTPS.Destination.Address, User: d.FTPS.Destination.User, Directory: d.Directory, Protocol: "ftps", FTPS: ftpsConnectionView(d.FTPS)}, nil
+	}
+	if d.Local != nil {
+		return ConnectionView{ID: c.ID, Version: c.Version, Hash: c.Hash, State: c.State, Revision: c.Revision, Directory: "/", Protocol: "local", Local: &LocalConnectionView{Profile: delivery.LocalCollectionProfile, RootReferenceHash: secure.Digest([]byte(d.Local.Reference)), ConfigurationHash: d.Local.SHA256, RootFingerprint: d.Local.RootFingerprint, ReadOnly: true}}, nil
 	}
 	return ConnectionView{ID: c.ID, Version: c.Version, Hash: c.Hash, State: c.State, Revision: c.Revision, Address: d.Destination.Address, User: d.Destination.User, Directory: d.Directory, HostFingerprint: d.Destination.Host.Fingerprint, KeyFingerprint: d.Destination.KeyFingerprint}, nil
 }
@@ -157,7 +174,20 @@ func (s *Service) RegisterConnection(ctx context.Context, scope store.Scope, key
 		return nil, ErrInput
 	}
 	definition := ConnectionDefinition{Schema: 2, Directory: directory, FTPS: r.FTPS}
-	if r.FTPS != nil {
+	if r.Local != nil {
+		if t.Root != "/" || directory != "/" || r.FTPS != nil || r.Address != "" || r.User != "" || r.HostPublicFile != "" || r.KeyFile != "" || r.KeyPublicFile != "" || !r.Local.Valid() {
+			return nil, ErrInput
+		}
+		local := *r.Local
+		peer, err := delivery.OpenConfiguredLocalCollectionPeer(ctx, &local, func() error { return t.Reauthorize(ctx) })
+		if err != nil {
+			return nil, err
+		}
+		if err = peer.Close(); err != nil {
+			return nil, err
+		}
+		definition = ConnectionDefinition{Schema: 3, Directory: "/", Local: &local}
+	} else if r.FTPS != nil {
 		if r.Address != "" || r.User != "" || r.HostPublicFile != "" || r.KeyFile != "" || r.KeyPublicFile != "" || !r.FTPS.Valid(directory) {
 			return nil, ErrInput
 		}
@@ -303,7 +333,7 @@ func connections(ctx context.Context, t *store.Transaction, d Definition) ([]Con
 		if err != nil {
 			return nil, err
 		}
-		if (step.Kind == "ftps.deliver") != (definition.FTPS != nil) {
+		if definition.Local != nil || (step.Kind == "ftps.deliver") != (definition.FTPS != nil) {
 			return nil, ErrInput
 		}
 		if step.Encryption != nil {

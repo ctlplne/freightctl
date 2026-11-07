@@ -1,0 +1,172 @@
+{
+  "schema_version": 1,
+  "id": "F297",
+  "observed_at": "2026-11-07",
+  "base_candidate": "5bb6f602a7b78f4d9dc018b9b1ace8efc44bd060",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Manual local source durable wiring implemented;actual PostgreSQL/native/operator proof owed",
+  "changed": "F297 admits exact local.collect manual-manifest sources through schema3 read-only connections,protected configuration/root binding,redacted connection metadata and the existing collection approval/lease/fence/custody/event/idempotency path. New append-only migration61 binds current root/view/source identity in SQL;no table/RLS count changes. Original local source admission turns red to green;legacy SFTP/FTPS wire checks,affected static/architecture and integration/Windows compilation pass. Prepared real PostgreSQL exact custody/replay/no-send/root/profile/revocation/matching-event forgery cases are unexecuted and owed. CLI profile creation,frontend/browser,calendar/mounted storage and final native source61/restore gates remain owed;retained35 untouched.",
+  "red": {
+    "proof": ".private/freightctl-f293-workflow-contract-red.log",
+    "observation": "Exact local.collect Normalize contract rejects before implementation;metadata checker also rejects new migration count before explicit profile61 update."
+  },
+  "green": [
+    "Original private overlay local.collect workflow admission now passes.",
+    "Local-only shape/redaction/root identity/legacy wire/non-network factory refusals pass.",
+    "Affected integration compile,vet,architecture,format,Windows workflow compile and7 CI plus5 retained metadata evidence methods pass."
+  ],
+  "native_cases_prepared": [
+    "TestLocalCollectionCapturesExactCustodyWithoutProducerMutationOrSendAuthority",
+    "TestLocalCollectionChangedProfileOrRootCannotCaptureAnyFile",
+    "TestLocalCollectionRevocationAndSourceOnlyConnectionRemainEnforced",
+    "TestLocalCollectionRuntimeSQLRequiresExactRootAndReadOnlyMeaning"
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f293-workflow-contract-red.log",
+      "sha256": "576f81b1046c94548b3a868b78ac2f965549aec3017e88f83f23ea81fb5af035",
+      "bytes": 246
+    },
+    {
+      "reference": ".private/freightctl-f297-workflow-admission-green2.log",
+      "sha256": "3659915c1fff11fb291e689efbb5ff0716c8268141eab4ffcf677d6bf694e01d",
+      "bytes": 60
+    },
+    {
+      "reference": ".private/freightctl-f297-metadata-red.log",
+      "sha256": "1ffc174172b3dc49083e9c47361199e0c9564649cd9d96b7aec0dbabc6fee2d5",
+      "bytes": 6676
+    },
+    {
+      "reference": ".private/freightctl-f297-metadata-green.log",
+      "sha256": "43fe7cd1a706ff555316f9643ea869284f7a5bdd5550ff21e6be0f410d3834c9",
+      "bytes": 105
+    },
+    {
+      "reference": ".private/freightctl-f297-integration-final-compile.log",
+      "sha256": "bf7c1cea12cd799864e2be7513a300289a11ac3025cde3b82e6422ab6c7d542b",
+      "bytes": 153
+    },
+    {
+      "reference": ".private/freightctl-f297-local-contract-green.log",
+      "sha256": "ce691303fe9ffd64a66d305d9435eff7485a16693b957ab77e6eadb0fae6fa7b",
+      "bytes": 60
+    },
+    {
+      "reference": ".private/freightctl-f297-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f297-architecture.log",
+      "sha256": "2d27203da698811a641352f9099d107d6ed602e05a93427e006752d845bed077",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f297-legacy-wire-green.log",
+      "sha256": "37e2786de919c084f75dc4a1a867986bf93d17b7cf41f9ac5e6706cd4821f663",
+      "bytes": 60
+    },
+    {
+      "reference": ".private/freightctl-f297-retained-metadata.log",
+      "sha256": "1f11b6e880045ee35de832b81b45d06257342e13b5c79bbf0034379d4ca220b9",
+      "bytes": 103
+    },
+    {
+      "reference": ".private/freightctl-f297-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f297-windows-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "e7166f4db62b33aa1c7616101b07061076b7322f9e59d39c515ae5b0423dce4b",
+      "bytes": 6824
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "142e78583789210690feb9edd71966081708373681b93140a74048f5de87dd3e",
+      "bytes": 398013
+    },
+    {
+      "reference": "docs/workflows.md",
+      "sha256": "5f194ea39c6bba20f249744b6b6ba0f15284999c0880b5839fc5a72bee2f2ecc",
+      "bytes": 17052
+    },
+    {
+      "reference": "internal/store/061_local_collection_source.sql",
+      "sha256": "68b0b3621e172f45555de40ac40cfa38011b71f2f9a87c525ebc3c66a8b3b4ee",
+      "bytes": 8321
+    },
+    {
+      "reference": "internal/store/store.go",
+      "sha256": "4e4aafa5588ed04032faf085724d4cf7f6c791178323804ce4173746e1647824",
+      "bytes": 28558
+    },
+    {
+      "reference": "internal/workflow/collection_source_peer.go",
+      "sha256": "df2f126b27a9eb74983278aac64d75f12fcc9b3789293fc412978cc474ba7100",
+      "bytes": 1435
+    },
+    {
+      "reference": "internal/workflow/collection_types.go",
+      "sha256": "95f08f29592dfde8b5656d37393590dd10d1f99fe959b904b4f9a334a65472cc",
+      "bytes": 4813
+    },
+    {
+      "reference": "internal/workflow/collections.go",
+      "sha256": "9dced41d58b987a7127243ba7e89c2db5066ae89cf24952f28a6578b5415f16f",
+      "bytes": 15813
+    },
+    {
+      "reference": "internal/workflow/configuration.go",
+      "sha256": "a1a7719f949ab1d826d19e053ea19efc511e9e7170ef4483dc9d2359842c8ddc",
+      "bytes": 21218
+    },
+    {
+      "reference": "internal/workflow/local_collection.go",
+      "sha256": "880d3044100460358b34c75588a09a09881766991c57b605a16876c3e340beca",
+      "bytes": 362
+    },
+    {
+      "reference": "internal/workflow/local_collection_contract_test.go",
+      "sha256": "7b22ce899e11b477ffb6625524dcb6e7ef6ba27f66bf900a62ec87788152bf17",
+      "bytes": 4526
+    },
+    {
+      "reference": "internal/workflow/local_collection_integration_test.go",
+      "sha256": "fc2a369445bfc32086aa3529ad82be7c6f7b78f8880e0846fc475295c3cef108",
+      "bytes": 13063
+    },
+    {
+      "reference": "scripts/metadata_contract.py",
+      "sha256": "679becf46e97744fd3ae2215b14af061d822b2254bb5be1c413b733060a13f09",
+      "bytes": 4346
+    },
+    {
+      "reference": "scripts/test-ci-metadata-summary.py",
+      "sha256": "8df95bd3b613c9c092595d974e8004d1d15f762aec523d2ab27889a4eb7e4629",
+      "bytes": 6240
+    }
+  ],
+  "owed": [
+    "Execute the prepared real PostgreSQL/custody exact cases on native source61 and repair original failures;compilation is not runtime.",
+    "Native fresh initialization,upgrade/restore,full source/security/architecture/runtime and all final baseline/AX outcomes.",
+    "Protected operator profile creation,frontend/API/CLI/browser proof;local calendar,mounted-storage,crash/recovery/performance;whole connector and product qualification."
+  ],
+  "resources": "OneCPU/192MiB local lightweight/static/filesystem contract and cross-compilation only;no local PostgreSQL/Chrome/scanner/models;retained35 untouched.",
+  "security": "No tenant/RLS/grant/event/approval/lease/fencing/receipt/protocol guard removed. New pure SQL helpers revoke PUBLIC execution and grant only runtime. Read grants no send or execution authority.",
+  "metadata": {
+    "source_schema": 61,
+    "metadata_tables": 78,
+    "forced_rls_tables": 77,
+    "retained_schema": 35
+  }
+}

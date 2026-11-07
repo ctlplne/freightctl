@@ -136,7 +136,7 @@ func (s *Service) collectionPreview(ctx context.Context, t *store.Transaction, x
 	if e != nil {
 		return nil, e
 	}
-	d := CollectionDefinition{Schema: 1, Workflow: x.Workflow, Source: *w.Source, Connection: *connection, SourceIdentity: secure.Digest([]byte(connection.ID + ":" + connection.Directory)), Authority: t.AuthorityRevision, StorageID: s.Custody.Disk.Identity(), Root: t.Root, Timeout: x.Timeout, Effects: effects}
+	d := CollectionDefinition{Schema: 1, Workflow: x.Workflow, Source: *w.Source, Connection: *connection, SourceIdentity: collectionSourceIdentity(*connection), Authority: t.AuthorityRevision, StorageID: s.Custody.Disk.Identity(), Root: t.Root, Timeout: x.Timeout, Effects: effects}
 	encoded, hash, e := digest(d)
 	if e != nil {
 		return nil, e

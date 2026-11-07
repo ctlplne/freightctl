@@ -78,6 +78,12 @@ as their protected DACL,and require private success before broadening. Fixed
 stage diagnostics retain every production privacy check. Local protocol/socket
 checks and Windows compilation pass;actual native replay remains owed.
 
+F297 admits local.collect through source-only connection schema3 and the ordinary
+approval,collection/custody/lease/receipt path. Original admission red is now
+focused green;exact root/public-view binding is added in migration61. Prepared
+real PostgreSQL capture/replay/revocation/forgery tests compile only;actual
+native execution,operator profile creation and browser support remain owed.
+
 Local F295 binds protected source configuration bytes to the reviewed physical
 root through a strict four-scalar profile. Valid-profile regression turns red
 to green;rehashed ambiguous/unknown meaning and changed bytes/root/authority
@@ -87,7 +93,7 @@ FINISH repair and remaining implementation are mandatory. Next:repair original
 browser/stock/protocol failures and complete all affected original runtime,
 security,recovery,reproducibility and baseline/AX gates on the final source.
 Broad passed gates repeat only for changed inputs or a specific concern.
-Source60 targets78 metadata/77 forced-RLS tables;retained35 is untouched.
+Source61 targets78 metadata/77 forced-RLS tables;retained35 is untouched.
 
 S003 authorizes owner-only fast-forward source/CI pushes to existing origin/main
 after previous required runs are terminal. Both commit identities must be

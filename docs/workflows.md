@@ -3,10 +3,11 @@
 ## Local collection adapter under implementation
 
 F293 implements a read-only adapter for private ordinary local directories.
-It is not yet admitted as a workflow or registered connection:the original
-`local.collect` normalization regression remains red until the durable connection,
-SQL,CLI/API/browser review and custody integration are complete. Do not advertise
-this primitive as a qualified local/network-storage connector.
+F297 admits `local.collect` through a schema3 source-only registered connection.
+The original normalization regression now passes. The ordinary workflow approval,
+collection lease,immutable manifest/custody,batch hold and receipt paths are reused;
+prepared real PostgreSQL tests still require native execution. Do not advertise
+this profile as a qualified local/network-storage connector.
 
 Metadata inspection returns a physical root fingerprint from the held OS
 directory identity,not from its path spelling. An opener must supply that exact
@@ -21,8 +22,8 @@ An authority callback must pass before opening and around each bounded read.
 Copy output must be unpublished private staging:an error can leave partial
 staged bytes,and only ordinary custody acceptance may publish verified bytes.
 No local read grants forwarding or execution. Connection revocation,leases,
-idempotency,events,intake and batch admission still need their existing ordinary
-workflow integration. Local macOS filesystem positive/adverse cases pass;
+idempotency,events,intake and batch admission use the ordinary workflow services.
+Local macOS filesystem positive/adverse cases pass;
 Linux/Windows compilation is not native runtime qualification. Mounted network
 storage,crash/restore and performance profiles remain separately owed.
 
@@ -33,8 +34,17 @@ physical root fingerprint. The private file contains only schema1,the fixed
 same root fingerprint. Unknown/duplicate/aliased fields,nested values,changed
 bytes or root,and absent current authority refuse a reader. The configuration
 is read through the existing protected secret buffer and cleared afterward.
-This does not yet expose registration or execution through a product interface;
-ordinary connection/SQL/workflow/custody and browser/native proof remain owed.
+Local `connection-register` accepts `directory:"/"` and a `local` reference
+containing `schema_version:1`,absolute protected `root_reference`,exact
+`configuration_sha256` and `root_fingerprint`;all SSH/FTPS inputs must be absent.
+Public connection review exposes only the fixed profile,three fingerprints and
+`read_only:true`,never the host directory or configuration reference.
+A `local.collect` source selects that registered ID/version/hash with the existing
+manual immutable-files manifest contract and ordinary target/bounds. Local source
+connections cannot be delivery steps. SQL migration61 binds the exact public
+view,physical-root source identity and current permission/approval snapshot.
+Calendar admission,operator profile preparation,browser support and native
+PostgreSQL/custody/refusal/restore proof remain owed.
 
 The first workflow executor sends one immutable accepted file through an ordered list of `sftp.deliver` steps. CLI and HTTPS use the same typed definition, validation, permissions, approval and execution services. It uses the [outbound SFTP profile](protocols/outbound-sftp.md), including its loopback-only development network, required extensions, bounded workers and uncertain-receipt rules. This is a foundation for the full workflow engine; schedules, conditions, collection, processing, visual editing and AI proposals remain required work.
 

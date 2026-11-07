@@ -21,12 +21,16 @@ func openCollectionSourcePeer(ctx context.Context, connection *ConnectionDefinit
 	}
 	switch kind {
 	case "sftp.collect":
-		if connection.Schema == 1 && connection.FTPS == nil {
+		if connection.Schema == 1 && connection.FTPS == nil && connection.Local == nil {
 			return delivery.OpenCollectionPeer(ctx, connection.Destination, connection.Directory, check)
 		}
 	case "ftps.collect":
-		if connection.Schema == 2 && reflect.DeepEqual(connection.Destination, secure.SSHDestination{}) && connection.FTPS.Valid(connection.Directory) {
+		if connection.Schema == 2 && connection.Local == nil && reflect.DeepEqual(connection.Destination, secure.SSHDestination{}) && connection.FTPS.Valid(connection.Directory) {
 			return delivery.OpenFTPSCollectionPeer(ctx, connection.FTPS.Destination, connection.Directory, check)
+		}
+	case "local.collect":
+		if connection.Schema == 3 && connection.FTPS == nil && reflect.DeepEqual(connection.Destination, secure.SSHDestination{}) && connection.Directory == "/" && connection.Local.Valid() {
+			return delivery.OpenConfiguredLocalCollectionPeer(ctx, connection.Local, check)
 		}
 	}
 	return nil, ErrInput
