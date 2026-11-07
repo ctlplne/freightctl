@@ -102,6 +102,12 @@ func inspectHandle(h windows.Handle, directory bool, accept func(string, string,
 	if err != nil {
 		return err
 	}
+	return inspectDescriptor(sd, accept)
+}
+
+// inspectDescriptor is also exercised with descriptors that filesystem setters
+// may normalize. The held-handle path always obtains its descriptor from the OS.
+func inspectDescriptor(sd *windows.SECURITY_DESCRIPTOR, accept func(string, string, bool, bool, []accessEntry) bool) error {
 	if sd == nil || !sd.IsValid() {
 		return ErrPrivacy
 	}

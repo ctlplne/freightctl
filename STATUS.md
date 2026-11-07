@@ -4,7 +4,12 @@ Updated 2026-11-07. Active under owner resume. All83 whole parity rows,twelve
 complete journeys and AX01–AX08 remain open. Assisted deployment,independent
 adoption and enterprise readiness remain unqualified.
 
-Latest pushed source:e87483babb4e32f8a3aaf78d13f8374d842fa78b.
+Latest pushed source:638d156cf16820b165cc8e6310f62daddf2d8458.
+Its original workflows are running/queued. F254 preserves the terminal Windows
+job:actual setter stripped INHERITED_ACE;crypto and durablefs packages pass.
+The new held-root rename case fails with a native sharing violation.
+
+Previous source:e87483babb4e32f8a3aaf78d13f8374d842fa78b.
 Its original18 workflows/41 jobs are terminal:29 passed,12 failed. Listed scan
 steps passed;the Windows inherited-ACE refusal test stays red pending actual
 descriptor readback and original replay. F236 preserves exact run/job handles.
@@ -39,6 +44,10 @@ F253 wires setup parent checks and CLI review/download creation,sealing and
 directory sync to native protection. Unix focused interface cases pass. Windows
 now owes identical byte/refusal/replacement cases rather than an unsupported-OS
 shortcut;actual native proof remains owed.
+
+F255 replaces the invalid inherited-bit fixture with actual parent inheritance
+and independently exercises the unchanged production parser with a protected
+inherited descriptor. Compile/vet pass only;native refusal remains owed.
 
 Next:repair the newly reached native browser
 and protocol failures,then complete all remaining baseline/AX/FINISH outcomes.

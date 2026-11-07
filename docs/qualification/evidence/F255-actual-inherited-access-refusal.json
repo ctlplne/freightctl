@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "id": "F255",
+  "observed_at": "2026-11-07",
+  "base_candidate": "cf8d90f62cff2a870bf53aae72c2085b3a3ddfc8",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Actual inherited-access fixture and protected parser coverage prepared;native security proof owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "514d035f70f55a0596bef5841ca43a20cbc9a35881ad4010fe44aba7d11748c0",
+      "bytes": 12950
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "a533528bde27fae51f882a491dcf92911c926e606475c1e863b7827759167d18",
+      "bytes": 375535
+    },
+    {
+      "reference": "docs/qualification/evidence/F254-windows-inherited-ace-native-readback.json",
+      "sha256": "0a2934cc3c6471bf1eb7f6ef9348b82a0d4ee93b912c69766bce215ec0500f08",
+      "bytes": 1593
+    },
+    {
+      "reference": "internal/protectedfs/handles_windows.go",
+      "sha256": "d4f0e8809328f2c0ef471e4ef52e6dc2a1de1158a419a5c04c4a98a64977a81e",
+      "bytes": 4725
+    },
+    {
+      "reference": "internal/protectedfs/handles_windows_test.go",
+      "sha256": "41bcc8b18f5b06a75ac0420f4e541f92af9f4eb459b58774e3ad3e87ea3fe438",
+      "bytes": 7174
+    }
+  ],
+  "red": {
+    "evidence": "docs/qualification/evidence/F254-windows-inherited-ace-native-readback.json",
+    "candidate": "638d156cf16820b165cc8e6310f62daddf2d8458",
+    "run": 42357772683,
+    "job": 128359540193,
+    "observation": "Actual held-object ACE flags0x00 after supplying an inherited ACE to SetSecurityInfo."
+  },
+  "changed": [
+    "Install inheritable owner-only access on an exact task-owned parent,then unprotect the already held private child through SetSecurityInfo. Require actual inherited ACE readback before unchanged ValidateFile refusal. The parent original descriptor is restored;the original child ACL cleanup remains.",
+    "Extract the unchanged production descriptor parser after held-handle GetSecurityInfo. Native parser case isolates protected owner-only inherited versus explicit descriptors;the exact inherited bit is verified before the parser.",
+    "No production ACL rule,refusal assertion,resource or isolation setting is weakened. Actual Windows proof remains owed;no skip or normalization-as-pass fallback exists."
+  ],
+  "green": [
+    "Native Windows formatting,compilation and vet pass. No local Windows execution."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f255-final-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f255-final-windows-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f255-final-windows-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f255-format.log",
+      "sha256": "43cb7e915d64dcc7fa7fac2bf4c7ae595fdfdadf37e6ad2f717763375484528f",
+      "bytes": 45
+    },
+    {
+      "reference": ".private/freightctl-f255-windows-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f255-windows-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "owed": [
+    "Actual natural inherited DACL readback/refusal and protected-parser cases on Windows.",
+    "Actual held-root rename/confinement,full custody/setup and all remaining final-source baseline/AX/FINISH outcomes."
+  ],
+  "resources": "OneCPU/192MiB local static/cross-compilation only;local inference/heavy runtimes off. Retained35/source60 unchanged."
+}

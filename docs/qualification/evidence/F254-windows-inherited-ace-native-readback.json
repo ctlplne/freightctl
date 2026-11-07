@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "id": "F254",
+  "observed_at": "2026-11-07",
+  "candidate": "638d156cf16820b165cc8e6310f62daddf2d8458",
+  "qualification_claim": false,
+  "state": "Original Windows job terminal failed;actual inherited-bit normalization observed;other candidate workflows not all terminal",
+  "run": 42357772683,
+  "job": 128359540193,
+  "url": "https://github.com/ctlplne/freightctl/actions/jobs/128359540193",
+  "security_red": {
+    "test": "TestWindowsHeldFilePrivacyRefusesBroadNullInheritedAndUnprotectedDACL/inherited-ace",
+    "observation": "inherited-ACE precondition absent on actual held object: ACE flags=0x00;refusal remains unqualified",
+    "meaning": "The earlier test did not install the intended inherited entry. This does not prove refusal of real inherited access;F255 prepares natural inheritance and isolated protected-descriptor parsing. Original failures preserved."
+  },
+  "qualified_components": [
+    "Actual internal/crypto package passes on this candidate.",
+    "Actual internal/durablefs package passes,including original closed-handle classification."
+  ],
+  "other_original_failure": {
+    "test": "TestPrivateCreationUsesHeldRootAfterRenameAndNeverOverwrites",
+    "observation": "Native rename of directory while Go os.Root is held fails with sharing violation. Original native confinement proof remains owed;no test skipped or substituted."
+  },
+  "remaining": "Custody/setup/projection/credential/scanner/peer fixture failures remain red. No new lower-level success is promoted to whole Windows qualification. Original runs remain unchanged."
+}
