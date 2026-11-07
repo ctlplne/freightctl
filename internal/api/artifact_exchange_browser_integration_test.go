@@ -344,7 +344,7 @@ func TestArtifactExchangeNativeBrowserReceiptWrongActorAndRevocation(t *testing.
 			if summary != nil {
 				t.Fatalf("browser failed before revocation barrier; phase=%s, result SHA256=%s", summary.Phase, hash)
 			}
-			trace := safeBrowserFailureTrace(filepath.Join(private, "browser.log"), "artifact-exchange-browser.mjs")
+			trace := safeExchangeBrowserFailure(private)
 			exit := -1
 			if command.ProcessState != nil {
 				exit = command.ProcessState.ExitCode()

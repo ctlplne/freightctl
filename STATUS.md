@@ -9,7 +9,10 @@ source hashes,qualification and owed work are in
 Pushed candidate:49eefe1d4877962aec7c92cb6b6f26485fa83a11.
 Original18 workflows are running/queued or terminal. Core/source vulnerability,
 document/stock-FTPS/SCP checks and macOS units pass;receive-browser is red.
-Windows and other original native outcomes remain pending. No original run is
+F286 records native Windows custody/checks/ftpsclient/crypto/protectedfs/durablefs
+package passes,including source-bound F275 cases under the full untagged command.
+Whole Windows remains red for active-child rename/scanner;other native outcomes
+remain pending. No original run is
 cancelled/rerun/substituted,and no pass is inherited by later source.
 
 Previous33ad447 original18 workflows/41 jobs are terminal:31 pass,10 fail.
@@ -24,8 +27,8 @@ binding validator. F271 prepares an actually broad native credential fixture;
 F273 prepares safe bounded browser source locations. F275 records real original
 Windows data flush before attaching an exact physical-file completion record;
 read-only recovery must validate it,sealed protection and every byte. Missing
-proof remains incomplete;invalid/copied proof refuses recovery. Native replay
-and restart/restore/filesystem outcomes remain owed.
+proof remains incomplete;invalid/copied proof refuses recovery. Selected Windows unit packages pass on49eefe1;full native integration and
+restart/restore/filesystem outcomes remain owed.
 
 Verified local batch:
 - F277 exact XLSX policy identity;self/lesser-manager rotation refusals plus a
@@ -42,6 +45,10 @@ Verified local batch:
 - F285 reconstructs exact typed connection field order before collection evidence
   hashing. Reordered receipt regression turns red to green;all10 metadata
   contracts and Go four-profile wire checks pass. Native FTPS replay owed.
+
+F287 uses the receive script's actual protected first-failure.log before console
+fallback. Focused original-vs-console regression turns red to green;native
+underlying cause,repair and full browser acceptance remain owed.
 
 FINISH repair and remaining implementation are mandatory. Next:repair original
 browser/stock/protocol failures and complete all affected original runtime,

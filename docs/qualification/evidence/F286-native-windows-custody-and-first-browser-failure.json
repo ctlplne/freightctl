@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "id": "F286",
+  "observed_at": "2026-11-07",
+  "candidate": "49eefe1d4877962aec7c92cb6b6f26485fa83a11",
+  "state": "Selected native Windows package proofs pass;whole job and receive browser remain red",
+  "windows": {
+    "run": 42363733799,
+    "job": 128377278207,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128377278207",
+    "job_conclusion": "failure",
+    "command": "go test -timeout=0 ./...",
+    "packages": [
+      {
+        "package": "internal/checks",
+        "state": "passed",
+        "seconds": 0.39
+      },
+      {
+        "package": "internal/crypto",
+        "state": "passed",
+        "seconds": 2.153
+      },
+      {
+        "package": "internal/custody",
+        "state": "passed",
+        "seconds": 0.633
+      },
+      {
+        "package": "internal/durablefs",
+        "state": "passed",
+        "seconds": 0.046
+      },
+      {
+        "package": "internal/ftpsclient",
+        "state": "passed",
+        "seconds": 0.925
+      },
+      {
+        "package": "internal/protectedfs",
+        "state": "passed",
+        "seconds": 0.092
+      }
+    ],
+    "included_source_cases": [
+      "TestExactDigestDoesNotMakeWritableStagingReadableAsImmutableCustody",
+      "TestProjectionStageRetainsPartialAdoptsExactSealedAndRefusesTampering",
+      "TestWindowsFailedFlushCannotCreateSealCompletion",
+      "TestWindowsSealCompletionRequiresActualFlushAndRejectsCopiedPhysicalIdentity",
+      "TestClientRequiresResumedDataAndTrustedControlBeforeCredentials"
+    ],
+    "case_evidence_limit": "The ordinary complete untagged native package command passed for these source-bound packages. Its nonverbose output records package results,not individual passing case lines. No whole platform/restart/restore/power-loss/real scanner qualification is inferred.",
+    "remaining_failures": [
+      "CLI active-private-child parent rename Access denied;F281 repair is local and not in this candidate.",
+      "Scanner clean/infected/limit/encrypted protocol stand-ins unavailable;socket reports0666. F279 native ACL/socket profile is local and not in this candidate."
+    ]
+  },
+  "receive_browser": {
+    "run": 42363733810,
+    "job": 128377278027,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128377278027",
+    "state": "failed",
+    "safe_result": "unavailable",
+    "exit_code": 1,
+    "failure_class": "unclassified",
+    "line": 0,
+    "column": 0,
+    "protected_process_log_sha256": "20a2c8d21cfc0df27c98c720a47040a08438d13e5ac5df3993bd6dcc310bdea4",
+    "limit": "No underlying cause or browser launch outcome is inferred. F287 will inspect the separately written original protected first-failure.log before bounded process fallback."
+  },
+  "security": {
+    "core_run": 42363733763,
+    "core_job": 128377277809,
+    "go_vulnerability_reachability": "success",
+    "committed_source_history_secrets": "success",
+    "source_run": 42363733768,
+    "native_source_scan_jobs": [
+      128377277961,
+      128377278108,
+      128377278109
+    ],
+    "listed_native_source_scans": "success",
+    "image_scans": "Still owed on this candidate;previous candidate passes are not inherited."
+  },
+  "no_runs_cancelled_rerun_or_substituted": true,
+  "owed": [
+    "Actual F279/F281 native replay and F287 original browser cause/repair.",
+    "Final-source full native/recovery/restore/power-loss/protocol/browser/security/baseline/AX gates.",
+    "Separate deployment/adoption/enterprise/external prerequisites remain unqualified."
+  ]
+}

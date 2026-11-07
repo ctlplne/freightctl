@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "id": "F287",
+  "observed_at": "2026-11-07",
+  "base_candidate": "45af56e84699d685a13a359fc066394687b978f5",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Original protected receive failure diagnosis repaired;native cause owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "5e1b72b9d20c42fe7c44ff60f64d5cd09175d186fe420ca2f18c241bda3917f1",
+      "bytes": 4330
+    },
+    {
+      "reference": "docs/qualification/evidence/F286-native-windows-custody-and-first-browser-failure.json",
+      "sha256": "b5a5f9ed3be7276c832b7f5ca4a809d15f81a4aa20f88e4e9cf37ff6fd611090",
+      "bytes": 3519
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "443d3d45c031ce660015cebef199d4a86da486093d9d2232500896b3824495dc",
+      "bytes": 390076
+    },
+    {
+      "reference": "internal/api/artifact_exchange_browser_integration_test.go",
+      "sha256": "9ce758aeb4b1c5fc2cf482be2a8ef85ee78586f76304ce3520e54ab7338b3b5f",
+      "bytes": 28963
+    },
+    {
+      "reference": "internal/api/browser_failure_trace_integration_test.go",
+      "sha256": "52505b6436878497336ab0bada09135511bc23f38ddd1ddfb8d706f5bbfe7389",
+      "bytes": 5720
+    }
+  ],
+  "red": {
+    "evidence": "docs/qualification/evidence/F286-native-windows-custody-and-first-browser-failure.json",
+    "candidate": "49eefe1d4877962aec7c92cb6b6f26485fa83a11",
+    "run": 42363733810,
+    "job": 128377278027,
+    "observation": "Original receive browser returns exit1/unavailable result with only unclassified process log. Script actually catches its original stack into first-failure.log,not browser.log. New protected original-vs-console regression fails on process-only diagnosis."
+  },
+  "changed": [
+    "Read only the fixed exclusive private first-failure.log through the existing bounded protected crypto-buffer trace classifier;fall back to the bounded protected browser.log only when original evidence is unavailable.",
+    "Keep four fixed script allowlist,closed class,numeric source location,complete bounded-file digest,privacy/identity/oversize/clearing and every original browser acceptance/refusal assertion. No raw exception/DOM/path/payload is printed.",
+    "F286 preserves exact native selected Windows package successes and remaining failures;does not claim full Windows/recovery/real scanner qualification."
+  ],
+  "green": [
+    "New exact original-vs-console regression turns red to green;missing original keeps exact bounded process fallback.",
+    "All affected fixed-script privacy/oversize/strict summary/ambiguity tests and tagged browser/integration compilation/vet pass. No browser or PostgreSQL runtime."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f287-first-failure-green.log",
+      "sha256": "dcb037e04fbefff280e98a905c958a01aae1f73cd89ec6c5d402799923ea5e6e",
+      "bytes": 55
+    },
+    {
+      "reference": ".private/freightctl-f287-first-failure-red.log",
+      "sha256": "d06d731a180f2a29a488edc26c2c39052028e784011ed11676f70ba93c7a8f67",
+      "bytes": 241
+    },
+    {
+      "reference": ".private/freightctl-f287-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f287-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "owed": [
+    "Actual original receive-browser first-error class/source location,cause,repair and full original native replay.",
+    "Actual F279/F281 Windows native replays and full final-source recovery/restore/power-loss/platform outcomes.",
+    "All remaining product/native/security/baseline/AX/FINISH outcomes."
+  ],
+  "resources": "OneCPU/192MiB lightweight private-file/pure privacy/static checks only;inference and heavy runtimes off. Local allowances,retained35/source60 unchanged."
+}

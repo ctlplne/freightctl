@@ -5,6 +5,7 @@ package api
 import (
 	"bytes"
 	"encoding/json"
+	"os"
 	"path/filepath"
 	"regexp"
 	"strconv"
@@ -20,6 +21,46 @@ type browserFailureTrace struct {
 	Line   int
 	Column int
 	SHA256 string
+}
+
+func safeExchangeBrowserFailure(private string) browserFailureTrace {
+	// The receive script catches its error into this exclusive private file;
+	// stdout can contain only a summary. Use the original stack first. A failure
+	// outside that boundary still needs the bounded protected process-log path.
+	trace := safeBrowserFailureTrace(filepath.Join(private, "first-failure.log"), "artifact-exchange-browser.mjs")
+	if trace.Class != "unavailable" {
+		return trace
+	}
+	return safeBrowserFailureTrace(filepath.Join(private, "browser.log"), "artifact-exchange-browser.mjs")
+}
+
+func TestExchangeBrowserFailureUsesTheProtectedOriginalFailure(t *testing.T) {
+	directory := t.TempDir()
+	first := []byte("AssertionError: PRIVATE_ORIGINAL_FAILURE\n    at file:///PRIVATE_PATH/scripts/artifact-exchange-browser.mjs:357:9\n")
+	for leaf, body := range map[string][]byte{"browser.log": []byte(`{"state":"failed"}`), "first-failure.log": first} {
+		f, err := protectedfs.CreateExclusive(filepath.Join(directory, leaf))
+		if err != nil {
+			t.Fatal(err)
+		}
+		if _, err = f.Write(body); err != nil {
+			f.Close()
+			t.Fatal(err)
+		}
+		if err = f.Close(); err != nil {
+			t.Fatal(err)
+		}
+	}
+	trace := safeExchangeBrowserFailure(directory)
+	if trace.Class != "assertion" || trace.Line != 357 || trace.Column != 9 || trace.SHA256 != secure.Digest(first) {
+		t.Fatal("console output hid the original protected failure")
+	}
+	if err := os.Remove(filepath.Join(directory, "first-failure.log")); err != nil {
+		t.Fatal(err)
+	}
+	trace = safeExchangeBrowserFailure(directory)
+	if trace.Class != "unclassified" || trace.Line != 0 || trace.Column != 0 || trace.SHA256 != secure.Digest([]byte(`{"state":"failed"}`)) {
+		t.Fatal("missing first failure lost exact bounded process fallback")
+	}
 }
 
 // Only a closed failure class,numeric source location and whole bounded-file
