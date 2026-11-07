@@ -1,5 +1,6 @@
 import { ApiError, object, uuid } from "./types";
 import { digestBytes } from "./crypto";
+import { asSSHUsername } from "./ssh-metadata";
 import {
   asProbeConnection,
   type ProbeReference,
@@ -146,7 +147,7 @@ export function asTestEffect(value: unknown): TestEffect {
   } else if (recipient) bad();
   return {
     address: text(o, "address", 128),
-    user: text(o, "user", 64),
+    user: asSSHUsername(o.user),
     directory: text(o, "directory", 1024),
     filename: text(o, "filename", 128),
     host_fingerprint: text(o, "host_fingerprint", 128),

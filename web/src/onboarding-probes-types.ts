@@ -1,5 +1,6 @@
 import { ApiError, object, uuid } from "./types";
 import { digestBytes } from "./crypto";
+import { asSSHUsername } from "./ssh-metadata";
 
 export interface ProbeReference {
   id: string;
@@ -161,7 +162,7 @@ export function asProbeConnection(value: unknown): ProbeConnection {
     state,
     revision: integer(o, "revision"),
     address: text(o, "address", 128),
-    user: text(o, "user", 64),
+    user: asSSHUsername(o.user),
     directory: text(o, "directory", 1024),
     host_fingerprint: text(o, "host_fingerprint", 128),
     key_fingerprint: text(o, "key_fingerprint", 128),

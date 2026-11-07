@@ -23,6 +23,7 @@ import (
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/sftpd"
 	"github.com/ctlplne/freightctl/internal/store"
+	"github.com/pkg/sftp"
 )
 
 // All subprocesses and peers run only on the authorized native GitHub runner.
@@ -157,6 +158,56 @@ func TestLegacySCPOpenSSHNativeBytesAbortRevocationAndSFTPDefault(t *testing.T) 
 		return count
 	}
 	port, known, _ := start(false)
+	// Use the product client against the actual enrolled participant identity,
+	// then independently read its accepted custody through the HTTPS API.
+	host, err := secure.ReadSSHPublic(hostPublic)
+	if err != nil || len(identity.SSHUsername) != 110 {
+		t.Fatal("native participant or pinned host reference differs", err)
+	}
+	destination := secure.SSHDestination{Address: net.JoinHostPort("127.0.0.1", port), User: identity.SSHUsername, Host: host, KeyFile: clientKey, KeyFingerprint: public.Fingerprint}
+	func() {
+		stream, err := secure.DialSFTP(t.Context(), destination)
+		if err != nil {
+			t.Fatal("product client cannot authenticate its own enrolled participant", err)
+		}
+		defer stream.Close()
+		client, err := sftp.NewClientPipe(stream, stream, sftp.MaxPacket(32<<10), sftp.UseConcurrentReads(false), sftp.UseConcurrentWrites(false))
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer client.Close()
+		file, err := client.OpenFile("/product-sftp.dat", os.O_WRONLY|os.O_CREATE|os.O_EXCL)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if n, err := file.Write(payload); err != nil || n != len(payload) {
+			file.Close()
+			t.Fatal("product SFTP write differs", err)
+		}
+		if err := file.Close(); err != nil {
+			t.Fatal("product SFTP durable acceptance failed", err)
+		}
+		file, err = client.Open("/product-sftp.dat")
+		if err != nil {
+			t.Fatal(err)
+		}
+		got, readErr := io.ReadAll(io.LimitReader(file, int64(len(payload))+1))
+		closeErr := file.Close()
+		if readErr != nil || closeErr != nil || !bytes.Equal(got, payload) {
+			t.Fatal("product SFTP readback differs")
+		}
+	}()
+	verifyPath("/product-sftp.dat", payload)
+	beforeDenied := countFiles()
+	wrongActor := destination
+	wrongActor.User = scope.Tenant + "." + scope.Partner + "." + secure.NewID()
+	if stream, err := secure.DialSFTP(t.Context(), wrongActor); err == nil {
+		stream.Close()
+		t.Fatal("canonical participant syntax granted an unregistered actor authority")
+	}
+	if countFiles() != beforeDenied {
+		t.Fatal("refused participant created custody")
+	}
 	args := append([]string{"-q", "-B", "-P", port}, options(known, clientKey)...)
 	run("scp", append(append([]string{}, args...), source, identity.SSHUsername+"@127.0.0.1:/modern-default.dat"), true)
 	verifyPath("/modern-default.dat", payload)

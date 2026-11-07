@@ -7,7 +7,11 @@ Current decisions and exact evidence are in
 [remaining.json](docs/qualification/remaining.json) and
 [artifact-exchange.json](docs/qualification/artifact-exchange.json).
 
-Current pushed candidate: `d960c40fe1d4d7facf11862c331b52fc93dcc0b6`.
+Current pushed candidate: `9b3ba92a9746e4af5edd40a27e440429b0dc6f5b`.
+F372 records its 16 queued original workflows and verified owner-only fast-forward.
+Their runtime outcomes remain owed.
+
+Previous terminal candidate: `d960c40fe1d4d7facf11862c331b52fc93dcc0b6`.
 [F370](docs/qualification/evidence/F370-native-terminal-ci.json) records all 16
 original terminal workflows and 35 jobs: 32 passed, 3 failed. No run was cancelled,
 rerun or substituted. Core/source/history security, Linux PostgreSQL/race/restore/
@@ -34,8 +38,14 @@ revision and non-overwrite checks; prepared native proofs remain owed. C-WEBDAV
 also requires remaining mutations, properties, locks, outbound server and
 independent DAV application interoperability.
 
-Next: push the next verified owner-only batch now that required originals are
-terminal, then continue implementation while CI runs. Repair original failures
+F373 also admits the server's exact existing 110-character SSH participant name
+in the product client and collection/onboarding browser decoders. The ordinary
+64-character account profile stays bounded. Focused red/green checks pass; native
+product-client/stock-profile interoperability and unregistered-actor refusal
+remain owed.
+
+Next: continue implementation while current originals run, then push the next
+verified owner-only batch after required originals are terminal. Repair original failures
 and finish every mandatory final-source baseline/AX gate. F026 stays manual/
 owner-deferred. Trust Control, inference, provider/licensed peers, reference
 estate, owner license text and adoption inputs remain owed.

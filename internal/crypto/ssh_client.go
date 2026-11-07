@@ -16,6 +16,13 @@ import (
 
 var sshUserPattern = regexp.MustCompile(`^[A-Za-z0-9_][A-Za-z0-9_.-]{0,63}$`)
 
+// The server's existing identity is tenant.partner.actor, each a canonical
+// UUID. Accept that exact account shape in addition to the short peer profile;
+// neither syntax grants authority or replaces the registered-key check.
+const sshParticipantID = `[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}`
+
+var sshParticipantPattern = regexp.MustCompile(`^` + sshParticipantID + `(?:\.` + sshParticipantID + `){2}$`)
+
 type SSHDestination struct {
 	Address        string    `json:"address"`
 	User           string    `json:"user"`
@@ -27,7 +34,7 @@ type SSHDestination struct {
 func ValidateSSHDestination(d SSHDestination) error {
 	host, port, err := net.SplitHostPort(d.Address)
 	portNumber, portErr := strconv.Atoi(port)
-	if err != nil || net.ParseIP(host) == nil || !net.ParseIP(host).IsLoopback() || portErr != nil || portNumber < 1 || portNumber > 65535 || strconv.Itoa(portNumber) != port || !sshUserPattern.MatchString(d.User) {
+	if err != nil || net.ParseIP(host) == nil || !net.ParseIP(host).IsLoopback() || portErr != nil || portNumber < 1 || portNumber > 65535 || strconv.Itoa(portNumber) != port || (!sshUserPattern.MatchString(d.User) && !sshParticipantPattern.MatchString(d.User)) {
 		return errors.New("development destination requires a numeric loopback address and a bounded SSH username")
 	}
 	if _, err = ValidateSSHPublic(d.Host); err != nil {

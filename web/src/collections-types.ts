@@ -1,5 +1,6 @@
 import { ApiError, object, uuid } from "./types";
 import { digestBytes } from "./crypto";
+import { asSSHUsername } from "./ssh-metadata";
 import {
   asFTPSConnectionProof,
   type FTPSConnectionProof,
@@ -462,7 +463,9 @@ export function asCollectionConnection(v: unknown): CollectionConnection {
     user:
       o.protocol === "local"
         ? ""
-        : str(o, "user", o.protocol === "ftps" ? 256 : 64),
+        : o.protocol === "ftps"
+          ? str(o, "user", 256)
+          : asSSHUsername(o.user),
     directory,
     host_fingerprint:
       o.protocol === "ftps" || o.protocol === "local"

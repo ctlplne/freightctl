@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "id": "F373",
+  "observed_at": "2026-11-07",
+  "base_candidate": "9b3ba92a9746e4af5edd40a27e440429b0dc6f5b",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F373 fixes product-client rejection of the server's existing110-character tenant.partner.actor SSH identity. Add only that exact three-canonical-UUID shape beside the unchanged64-character short-account profile;retain ASCII syntax,pinned host,exact protected key reference,loopback network and server/RLS authorization. Actual backend private-key validation and actual collection/onboarding decoders first reject it,then pass. All24 affected browser tests,focused crypto proof,typecheck,build/check-built,format,vet,architecture and tagged compilation pass. Prepare real native enrolled-participant SFTP write/read plus independent HTTPS readback and unregistered-actor refusal inside the original stock profile;runtime remains owed. Retain initial fixture/command errors privately and use the actual contract red logs.",
+  "red_green": "The actual ValidateSSHDestination with a real task-owned protected Ed25519 key and110-character canonical participant name first refuses. Actual browser collection/onboarding decoders also refuse. After exact canonical-shape compatibility,both pass;generic65/110-character names,noncanonical UUID separators/case,control and non-ASCII input,changed host/client key fingerprints remain refused. No generic account bound or authorization is relaxed.",
+  "prepared_native_proof": "Original TestLegacySCPOpenSSHNativeBytesAbortRevocationAndSFTPDefault now authenticates the product DialSFTP client to the actual enrolled participant,writes/reads exact payload,independently reads accepted custody through HTTPS,and refuses a well-shaped but unregistered actor without creating custody. Original stock-client/abort/intake/revocation assertions remain.",
+  "owed": [
+    "Native ARM/x86 original stock profile with actual product-client interoperability and independent readback",
+    "Complete delivery/workflow/onboarding journeys and all final-source baseline/AX/readiness gates"
+  ],
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "b43b4739aae5dcdcb8b377608789ca3657a86d850fbb4bd217d64cfd14837589",
+      "bytes": 3561
+    },
+    {
+      "reference": "docs/qualification/evidence/F372-native-push.json",
+      "sha256": "fcb40482a293407c355234fcfb9bf31fc3b6b0de3cffdd5464a16acdf238c7bf",
+      "bytes": 5687
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "9427d0c64040e5c4a0bc0876dee704269a425059f52f0de35f35d0beb4392441",
+      "bytes": 491757
+    },
+    {
+      "reference": "internal/api/scp_legacy_integration_test.go",
+      "sha256": "ae1156032283d46fe2f82394e5ed6232ef55caeb159cf062be8cb682cffea0ca",
+      "bytes": 15372
+    },
+    {
+      "reference": "internal/browser/assets/app.js",
+      "sha256": "4c1bf9eab3810ae6e6bb301c5e9bfebef9ae19fb0e24f8fbb9e0bc8a03765963",
+      "bytes": 906790
+    },
+    {
+      "reference": "internal/browser/assets/manifest.json",
+      "sha256": "8d3f762c592bdecc3860c601a8f5575adc91be6b02fe12d7785aaae0371c6ba9",
+      "bytes": 14114
+    },
+    {
+      "reference": "internal/crypto/ssh_client.go",
+      "sha256": "1c3c6774c3899cf0eacbab65b23f41dcbbd3817372cae852a727084041a3a48f",
+      "bytes": 4838
+    },
+    {
+      "reference": "internal/crypto/ssh_client_identity_test.go",
+      "sha256": "49af4ade167b7515c5dc2e0063a40d8ce6550d70059ee99cd6a165583224f6df",
+      "bytes": 1758
+    },
+    {
+      "reference": "web/src/collections-types.ts",
+      "sha256": "9e21f93da67fddb5291cb3ca243f46371724755011c9250762ec1a69dbf51302",
+      "bytes": 47439
+    },
+    {
+      "reference": "web/src/onboarding-probes-types.ts",
+      "sha256": "77aafcf9a7587b5dd685475bd12c477fd659cebe784121a6501dc4b6d7e822ab",
+      "bytes": 10247
+    },
+    {
+      "reference": "web/src/onboarding-tests-types.ts",
+      "sha256": "c6bba5c631b0ec8720fdf6625248134147110ec7713db96c3a53e896808df3ae",
+      "bytes": 11727
+    },
+    {
+      "reference": "web/src/ssh-metadata.ts",
+      "sha256": "b6fd50172dcdcfe1a1fddd7e98f8324ab02db5a4a381f29344263dfa72c1b7ce",
+      "bytes": 561
+    },
+    {
+      "reference": "web/tests/ssh-participant-metadata.test.mjs",
+      "sha256": "cd7060e185d667e9f4c45aa39332f5ca9d497c2103cd2d51b2834a448360378c",
+      "bytes": 2152
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f373-ssh-red.log",
+      "sha256": "6c18714a99121e9542b0ddcca290e357b5eb7a7613eb82accfa9fc138ae9d8ab",
+      "bytes": 343
+    },
+    {
+      "reference": ".private/freightctl-f373-browser-contract-red.log",
+      "sha256": "c47cbc37246bb960401f097813a2f79932a3a8da443cb89d7ed71280b6e7f5e8",
+      "bytes": 40554
+    },
+    {
+      "reference": ".private/freightctl-f373-ssh-focused.log",
+      "sha256": "5675e447436336f4aad3fd84b1ece8cdbc00a7313a1986b64130ff79b8698c08",
+      "bytes": 58
+    },
+    {
+      "reference": ".private/freightctl-f373-browser-focused.log",
+      "sha256": "1cb07b2b24abc93a1016e775d30b98adc8a739f5550709f7784673c1af3f9f7f",
+      "bytes": 2622
+    },
+    {
+      "reference": ".private/freightctl-f373-native-compile.log",
+      "sha256": "44336678d16f383293d50606f2f60b5ad0e2e38f9e98cc5f465099fb816a44f6",
+      "bytes": 149
+    },
+    {
+      "reference": ".private/freightctl-f373-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f373-types.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f373-build.log",
+      "sha256": "fdb1dc522c70d7fcc2a3f6e1640e41f968233cbdf9ed8a3664c313e3dd144512",
+      "bytes": 180
+    },
+    {
+      "reference": ".private/freightctl-f373-built.log",
+      "sha256": "eb22be3d75e59a59bd7cd39368f5f7953be1a38d77ac9e08e15089d520003d09",
+      "bytes": 183
+    },
+    {
+      "reference": ".private/freightctl-f373-format.log",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    },
+    {
+      "reference": ".private/freightctl-f373-go-format-final.log",
+      "sha256": "007395b19e2aad670c81424d2bf1256f5ae7ffbe18d45b12a0945a059ca306bf",
+      "bytes": 32
+    },
+    {
+      "reference": ".private/freightctl-f373-architecture.log",
+      "sha256": "52a30a4886a0a3acd1a26a8816c3036708550d33ced13c8c9a5b73de52a37408",
+      "bytes": 64
+    }
+  ]
+}
