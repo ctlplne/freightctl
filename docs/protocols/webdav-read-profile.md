@@ -1,6 +1,6 @@
-# DAV namespace read and conditional-create profile
+# DAV namespace read and conditional-mutation profile
 
-This is a partial read/conditional-create adapter, not a claim of RFC4918 class1,2 or3 compliance.
+This is a partial read/conditional-mutation adapter, not a claim of RFC4918 class1,2 or3 compliance.
 The full C-WEBDAV contract remains open: replacement and other namespace writes,properties,locks,outbound server
 connections and independent DAV application interoperability still need work.
 
@@ -77,6 +77,22 @@ or read. A URL never refers to a host filesystem path.
   After a lost reply,the caller must inspect the authorized destination;412 alone
   does not establish which command performed an earlier move. Same-key history
   never authorizes another effect. Replacement and directory MOVE remain owed.
+- `DELETE` currently removes one file mapping with an exact strong If-Match,
+  the original Idempotency-Key and an empty body. Ordinary read/manage_paths,
+  parent modes,current intake and immutable file ID/hash are checked under the
+  same namespace transaction as its PathRemoved event and command receipt.
+  A fresh204 includes X-Freightctl-Event-ID and namespace-state removed-at-commit;
+  it carries no byte validator or body. GET/HEAD/PROPFIND then return404 for that
+  mapping. Immutable custody bytes and history remain,accessible only through
+  independently authorized references. Path removal grants no forwarding or
+  execution authority. Absent/stale source conditions return412;an equal-content
+  new revision cannot reuse the old command key. Recovering a historical command
+  for a restored original file returns200 with not-asserted-original-receipt and
+  does not remove the restored mapping again. Directory deletion returns405;
+  it never silently substitutes empty-only or partial deletion for the recursive
+  semantics in [RFC4918 section9.6](https://www.rfc-editor.org/rfc/inline-errata/rfc4918.html#s-9.6).
+  Depth may be absent or infinity;other values,unsupported conditions,bodies,
+  Destination and Overwrite headers are refused.
 - Other mutating DAV methods return405 after authenticating the credential.
   Discovery and unknown properties grant no forwarding or execution authority.
   Requests with traversal,encoded separators,control names,noncanonical Unicode

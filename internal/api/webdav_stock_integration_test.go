@@ -189,6 +189,23 @@ func TestWebDAVNativeStockCurlDiscoveryInterruptedReadAndExactResume(t *testing.
 	if status != 200 || !bytes.Equal(movedBytes, data) || headers.Get("ETag") != artifactRevisionETag(&receipt.File) || headers.Get("X-File-Revision-ID") != receipt.File.ID {
 		t.Fatal("independent stock client did not verify the moved immutable revision")
 	}
+	deleteArgs := []string{"--request", "DELETE", "--header", "If-Match: " + artifactRevisionETag(&receipt.File), "--header", "Idempotency-Key: dav-stock-remove"}
+	status, headers, removedBody, _ := run("remove-file", movedPath, deleteArgs, true)
+	if status != 204 || len(removedBody) != 0 || headers.Get("X-Freightctl-Namespace-State") != "removed-at-commit" || !store.ValidID(headers.Get("X-Freightctl-Event-ID")) || headers.Get("ETag") != "" {
+		t.Fatal("stock DAV DELETE lost its exact namespace outcome or invented publication")
+	}
+	status, _, _, missingExit := run("removed-path", movedPath, nil, false)
+	if status != 404 || missingExit != 22 {
+		t.Fatal("removed DAV path remained readable")
+	}
+	status, _, _, deleteRetry := run("remove-retry", movedPath, deleteArgs, false)
+	if status != 412 || deleteRetry != 22 {
+		t.Fatal("stale DELETE condition performed another effect")
+	}
+	status, headers, retainedBytes, _ := run("retained-custody", prefix+"/files/"+receipt.File.ID, nil, true)
+	if status != 200 || !bytes.Equal(retainedBytes, data) || headers.Get("X-File-Revision-ID") != receipt.File.ID {
+		t.Fatal("independent authorized stock readback lost immutable custody after path removal")
+	}
 	binaryPath, err := exec.LookPath("curl")
 	if err != nil {
 		t.Fatal(err)
@@ -197,5 +214,5 @@ func TestWebDAVNativeStockCurlDiscoveryInterruptedReadAndExactResume(t *testing.
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Logf("native conditional-create/file-move/read DAV proof;candidate=%s;architecture=%s;curl-SHA256=%s;lost-exit=%d;prefix=65536;bytes=%d;SHA256=%s;XML=independently-parsed;receiver=independently-compared;conditional-retry=412;stale-move=412;other-writes-locks-full-DAV=owed", commit, runtime.GOARCH, secure.Digest(binary), lostExit, len(received), secure.Digest(received))
+	t.Logf("native conditional-create/file-move/file-remove/read DAV proof;candidate=%s;architecture=%s;curl-SHA256=%s;lost-exit=%d;prefix=65536;bytes=%d;SHA256=%s;XML=independently-parsed;receiver=independently-compared;conditional-retry=412;stale-move=412;removed-path=404;stale-delete=412;retained-custody=independently-compared;other-writes-locks-full-DAV=owed", commit, runtime.GOARCH, secure.Digest(binary), lostExit, len(received), secure.Digest(received))
 }

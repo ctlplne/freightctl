@@ -319,8 +319,8 @@ func (t *Transaction) ApplyPathCommand(ctx context.Context, key string, command 
 			return nil, ErrRevision
 		}
 		// Optional immutable source identity is part of the existing command
-		// meaning. A changed file cannot reuse a rename key for another revision.
-		if command.Operation == "rename" && command.FileID != "" && (old.Kind != "file" || old.FileID != command.FileID) {
+		// meaning. A changed file cannot reuse a rename/remove key for another revision.
+		if (command.Operation == "rename" || command.Operation == "remove") && command.FileID != "" && (old.Kind != "file" || old.FileID != command.FileID) {
 			return nil, ErrRevision
 		}
 		if err = t.CheckAncestors(ctx, actual); err != nil {

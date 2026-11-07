@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "id": "F374",
+  "observed_at": "2026-11-07",
+  "base_candidate": "2f34ebfa92a3909b0d620f86f2d0eede2109668d",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "F374 adds file-only DAV DELETE with exact strong If-Match,original key and zero body. Reuse ordinary read/manage_paths,source/parent modes,current intake,namespace lock and atomic typed remove/event/receipt. Include optional immutable FileID in remove meaning without changing absent legacy fields. Reauthorize and recheck intake after removal without requiring the intentionally removed mapping. Fresh204 names its PathRemoved event;immutable custody survives. Missing/stale412,new-revision/same-key409 and restored-original historical200 never authorize another deletion. Directory405 excludes MOVE/DELETE;recursive deletion remains owed. Actual missing-condition boundary first red,then focused conditions/static checks green. Native permissions,current policy,restored receipt,unchanged custody and stock curl deletion/readback profiles are prepared,not locally run.",
+  "protocol_reference": "https://www.rfc-editor.org/rfc/inline-errata/rfc4918.html#s-9.6",
+  "red_green": "Actual pre-router DELETE handling first admits a request without its required source condition;after implementation it rejects428. Focused strong/weak/duplicate/ambiguous headers,empty-body/original-key and depth/mutation-header boundaries pass. This proves inputs,not PostgreSQL transaction or stock-client outcomes.",
+  "prepared_native_proofs": [
+    "TestWebDAVFileDeletePinsAuthorityRevisionHistoryAndCurrentIntake",
+    "Extended TestWebDAVNativeStockCurlDiscoveryInterruptedReadAndExactResume now deletes the moved file,requires204 with exact event ID,GET404 and stale retry412,then independently compares retained custody through separately authorized HTTPS."
+  ],
+  "owed": [
+    "Actual native nonadmin read/manage_paths versus read-only/manage-only permissions;stale/equal-content revision;changed-key meaning;restored historical receipt;current intake;one event/receipt and zero external/execution effects",
+    "Actual ARM/x86 stock curl delete,missing-path/stale retry and immutable-custody readback",
+    "Replay affected MOVE after shared helper refactor at exact final source",
+    "Directory DELETE and remaining DAV mutations,properties,locks,outbound stock server,independent DAV applications and all GOAL/AX gates"
+  ],
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "aa583b0286faafd3f6de475b0db3c0d114a78e8b0e9b20488015a90296c08c98",
+      "bytes": 3865
+    },
+    {
+      "reference": "docs/protocols/webdav-read-profile.md",
+      "sha256": "6fdf64f9bdc9734de2f05cd8ea4c9f4c0c64655dbc0f2445cc5e7aa97b075469",
+      "bytes": 9037
+    },
+    {
+      "reference": "docs/qualification/parity.json",
+      "sha256": "840d4fb63c6670b2bfb1ad0cee244b7a1ca784c42154d2935221f6fa5a045bde",
+      "bytes": 150802
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "39f060baf14a8fd46be41ac10001b9379e0f58bc17e56d818d47565b1d25d4cd",
+      "bytes": 493651
+    },
+    {
+      "reference": "internal/api/webdav.go",
+      "sha256": "1d4b60e3bf5d6b879d89eb4b02a36a42c6aa6cb544bd159efc62dd63447332d9",
+      "bytes": 8775
+    },
+    {
+      "reference": "internal/api/webdav_delete.go",
+      "sha256": "905f9969da69dc2574ac3c1b7dc37c686be6a2faae168431ceaee24d7287a3a4",
+      "bytes": 2291
+    },
+    {
+      "reference": "internal/api/webdav_delete_integration_test.go",
+      "sha256": "f9ff895b9881f18041e93e718775466bffad7eff00a06c2487caec64239cd54d",
+      "bytes": 8480
+    },
+    {
+      "reference": "internal/api/webdav_delete_test.go",
+      "sha256": "14ceab07d2e5f0faea6a7356bbb52d2dbc0caf615c9abdecd56d7291a15f0937",
+      "bytes": 3019
+    },
+    {
+      "reference": "internal/api/webdav_integration_test.go",
+      "sha256": "ee429f28d8cf3caee05918c24571bb19011321a8fbc6a3218a39fc6c192770ac",
+      "bytes": 8051
+    },
+    {
+      "reference": "internal/api/webdav_move.go",
+      "sha256": "0f1e23b8f39958836714935023b15be9f5522d39aa56a1c9aa9e3bb7038b29c2",
+      "bytes": 4152
+    },
+    {
+      "reference": "internal/api/webdav_stock_integration_test.go",
+      "sha256": "eaaf6d1c5bb3afe324cb8a008b3e9b5184a6287850bd279887545bf523b4d660",
+      "bytes": 11379
+    },
+    {
+      "reference": "internal/custody/namespace_move.go",
+      "sha256": "38be5cbcc6232be1c0d884b7d418ec0bd4f083684b5d535f93cf9d8fe1c71f23",
+      "bytes": 3819
+    },
+    {
+      "reference": "internal/store/namespace.go",
+      "sha256": "851619b53ea1193b4a468e1936925ae331441546bc1db2fc5eddcd4bba138e3b",
+      "bytes": 17688
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f374-delete-red.log",
+      "sha256": "37a7d202d3cc476ab91ff4ece495e9b11d19d293a4be847e0946cb76250e5a34",
+      "bytes": 230
+    },
+    {
+      "reference": ".private/freightctl-f374-final-focused.log",
+      "sha256": "b6e733f750b0d0ccd0a82e0e6b76c58d84c4b24f73d0b3bc841b3477171795e5",
+      "bytes": 132
+    },
+    {
+      "reference": ".private/freightctl-f374-native-compile.log",
+      "sha256": "b256cfbe97bc088a030c8cff236944929c4d949f827ea8d105374008b76400c9",
+      "bytes": 225
+    },
+    {
+      "reference": ".private/freightctl-f374-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f374-architecture.log",
+      "sha256": "84c262cca53cc07fef6b266dc17052f4ec6dc69e30f9aede51d5e7af6084128b",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f374-format.log",
+      "sha256": "223d85467e4a60cae4938e233af8b81f3b3a5aa151efceed293c74a0d5f76669",
+      "bytes": 36
+    }
+  ]
+}

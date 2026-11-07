@@ -107,7 +107,7 @@ func (s *Server) davMove(w http.ResponseWriter, r *http.Request, scope store.Sco
 		fail(w, 409, "dav_parent_collection_required")
 		return
 	case errors.Is(err, custody.ErrNamespaceFileProfile):
-		w.Header().Set("Allow", strings.Replace(davReadMethods, ", MOVE", "", 1))
+		w.Header().Set("Allow", strings.Replace(strings.Replace(davReadMethods, ", MOVE", "", 1), ", DELETE", "", 1))
 		fail(w, 405, "dav_file_move_profile_only")
 		return
 	case err != nil:

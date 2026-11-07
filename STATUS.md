@@ -44,6 +44,11 @@ in the product client and collection/onboarding browser decoders. The ordinary
 product-client/stock-profile interoperability and unregistered-actor refusal
 remain owed.
 
+F374 adds conditional file-only DAV DELETE through the ordinary namespace
+transaction. It removes the mapping and records its event while keeping custody
+bytes and history. Focused boundary/static checks pass; native permissions,
+stale/restored receipt,current intake and stock curl proofs remain owed.
+
 Next: continue implementation while current originals run, then push the next
 verified owner-only batch after required originals are terminal. Repair original failures
 and finish every mandatory final-source baseline/AX gate. F026 stays manual/
