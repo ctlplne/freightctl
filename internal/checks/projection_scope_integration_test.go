@@ -96,8 +96,19 @@ func TestScopedProjectionActualOwnedInputNamespaceHeldOutputAndNoRelease(t *test
 	if _, err = s.Release(f.ctx, actor, completed.FileID, "not-a-release-grant", deniedRelease); !errors.Is(err, store.ErrForbidden) {
 		t.Fatal("processing implied release", err)
 	}
-	if _, _, err = s.Custody.Download(f.ctx, actor, completed.FileID); !errors.Is(err, store.ErrState) {
-		t.Fatal("held output disclosed", err)
+	file, reader, err := s.Custody.Download(f.ctx, actor, completed.FileID)
+	if !errors.Is(err, store.ErrNotFound) || file != nil || reader != nil {
+		if reader != nil {
+			reader.Close()
+		}
+		t.Fatal("unpublished output metadata or bytes disclosed to scoped actor", err)
+	}
+	file, reader, err = s.Custody.Download(f.ctx, manager, completed.FileID)
+	if !errors.Is(err, store.ErrState) || file != nil || reader != nil {
+		if reader != nil {
+			reader.Close()
+		}
+		t.Fatal("held output disclosed to root administrator", err)
 	}
 	// Removing execution authority also blocks replay of the original work
 	// receipt;management/approval alone cannot act as the runtime identity.

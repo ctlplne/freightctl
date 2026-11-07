@@ -24,7 +24,9 @@ the next pushed candidate remains owed;compilation does not qualify Windows.
 F264 records exact638d156 native JSON/restart successes and browser failures.
 F265 prepares exact-role format selectors and closed prelaunch/review diagnostic
 phases. Its new bounded-failure regression turns red to green locally;actual
-original Chrome journeys remain red pending native replay.
+original Chrome journeys remain red pending native replay. F267 requires exact
+scoped-user404 plus administrator409 refusals for unpublished held outputs,with
+no returned file/reader. Actual PostgreSQL replay remains owed.
 
 Custody requires private creation,sealed protection,exact physical object/length/
 hash,sync/close/directory persistence and ordinary SQL acceptance. Writable staging

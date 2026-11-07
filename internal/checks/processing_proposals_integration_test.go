@@ -276,8 +276,19 @@ func TestProcessingProposalActualAuthorWithoutBytesExecutorDraftAndIndependentAp
 	if err != nil || worked.Processing == nil || worked.Processing.State != "completed" || worked.Status.Processing.Released {
 		t.Fatal("independently approved authored task did not keep output held", err)
 	}
-	if _, _, err := x.checks.Custody.Download(x.f.ctx, x.executor, worked.Processing.FileID); !errors.Is(err, store.ErrState) {
-		t.Fatal("authorship granted output release", err)
+	file, reader, err := x.checks.Custody.Download(x.f.ctx, x.executor, worked.Processing.FileID)
+	if !errors.Is(err, store.ErrNotFound) || file != nil || reader != nil {
+		if reader != nil {
+			reader.Close()
+		}
+		t.Fatal("authorship disclosed unpublished output metadata or bytes", err)
+	}
+	file, reader, err = x.checks.Custody.Download(x.f.ctx, x.f.scope, worked.Processing.FileID)
+	if !errors.Is(err, store.ErrState) || file != nil || reader != nil {
+		if reader != nil {
+			reader.Close()
+		}
+		t.Fatal("authorship granted root administrator output release", err)
 	}
 }
 

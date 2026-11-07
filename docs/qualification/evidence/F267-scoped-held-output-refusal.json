@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "id": "F267",
+  "observed_at": "2026-11-07",
+  "base_candidate": "6c6fe37beae7d306cab9db693d99908d6c28263c",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "state": "Scoped metadata concealment and independent held-state proofs prepared;actual native proof owed",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "sha256": "57fe4ac27a36a34307d5610e0d2476a33c7993bcca117b7a46dc62e18be1ab85",
+      "bytes": 3623
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "85056f8d05f4c7d169592f3a53c195df583db30bc7a57d9b978897c3a226ed85",
+      "bytes": 380332
+    },
+    {
+      "reference": "internal/checks/projection_scope_integration_test.go",
+      "sha256": "ab38ceb0c221693ddbfe6979aa493ab5a6fa4b3b5ffdabc8eaa31b962adea9cc",
+      "bytes": 5878
+    },
+    {
+      "reference": "internal/checks/processing_proposals_integration_test.go",
+      "sha256": "5fde3790c58098a7e58fbc99e20b3aba0b8339b1fdfc819c8aea66ce21ab397e",
+      "bytes": 15805
+    }
+  ],
+  "red": {
+    "candidate": "638d156cf16820b165cc8e6310f62daddf2d8458",
+    "run": 42357772725,
+    "job": 128359540611,
+    "url": "https://github.com/ctlplne/freightctl/actions/jobs/128359540611",
+    "observations": [
+      "processing_proposals_integration_test.go:280 authorship granted output release not found",
+      "projection_scope_integration_test.go:100 held output disclosed not found"
+    ],
+    "source_cause": "FileAccessibleMode first checks namespace visibility. These nonroot actors have no published output entry,so exact ErrNotFound precedes the separate FileAvailable hold check."
+  },
+  "changed": [
+    "Require exact ErrNotFound and no file/reader for unpublished outputs under the original nonroot executor/processor scopes.",
+    "Preserve the exact ErrState hold refusal through the existing separately authorized root administrator,also with no file/reader. No alternative-status acceptance or permission grant. Production logic unchanged."
+  ],
+  "green": [
+    "Affected integration fixtures compile and vet under local limits. No PostgreSQL runtime executed."
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f267-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f267-integration-compile.log",
+      "sha256": "6a45e3ccd8d04b6e7a133f680a472028b489f9e07ad3f87b54010c9eebec330a",
+      "bytes": 76
+    },
+    {
+      "reference": ".private/freightctl-f267-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "owed": [
+    "Original actual authored-processing and scoped-projection privacy/no-release cases on ARM/x86 PostgreSQL.",
+    "All remaining actual final-source product/security/baseline/AX/FINISH outcomes."
+  ],
+  "resources": "OneCPU/192MiB local compilation/vet only;inference and heavy runtimes off. Retained35/source60 unchanged."
+}
