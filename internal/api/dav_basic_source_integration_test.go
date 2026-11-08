@@ -23,8 +23,16 @@ import (
 )
 
 func startNativeDAVBasicSource(t *testing.T, peer nativeDAVStockPeer, data, manifest []byte) (secure.HTTPSReadDestination, string) {
+	return startNativeDAVBasicPeer(t, peer, data, manifest, false)
+}
+
+func startNativeDAVBasicPeer(t *testing.T, peer nativeDAVStockPeer, data, manifest []byte, receiver bool) (secure.HTTPSReadDestination, string) {
 	t.Helper()
-	private := filepath.Join(peer.PrivateDirectory, "basic-source")
+	name, user := "basic-source", "source-reader"
+	if receiver {
+		name, user = "delivery-receiver", "delivery-writer"
+	}
+	private := filepath.Join(peer.PrivateDirectory, name)
 	root := filepath.Join(private, "root")
 	if err := os.Mkdir(private, 0700); err != nil {
 		t.Fatal(err)
@@ -32,8 +40,15 @@ func startNativeDAVBasicSource(t *testing.T, peer nativeDAVStockPeer, data, mani
 	if err := os.Mkdir(root, 0700); err != nil {
 		t.Fatal(err)
 	}
+	if receiver {
+		for _, name := range []string{"stage", "inbox"} {
+			if err := os.Mkdir(filepath.Join(root, name), 0700); err != nil {
+				t.Fatal(err)
+			}
+		}
+	}
 	// Publish immutable payload first and the ready manifest last,with exact
-	// task-owned durable fixture files;the stock server has no write capability.
+	// task-owned durable fixture files;the source profile stays read-only.
 	for _, f := range []struct {
 		name string
 		body []byte
@@ -69,7 +84,7 @@ func startNativeDAVBasicSource(t *testing.T, peer nativeDAVStockPeer, data, mani
 		t.Fatal(err)
 	}
 	defer password.Close()
-	users, err := secure.NativeProofHTPasswd("source-reader", password)
+	users, err := secure.NativeProofHTPasswd(user, password)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -93,13 +108,17 @@ func startNativeDAVBasicSource(t *testing.T, peer nativeDAVStockPeer, data, mani
 	}
 	address := listener.Addr().String()
 	listener.Close()
-	destination := secure.HTTPSReadDestination{Address: address, ServerName: "localhost", CAFile: caRef, CASHA256: secure.Digest(ca.Bytes), Authentication: "basic", User: "source-reader", PasswordFile: passwordRef, PasswordSHA256: secure.Digest(password.Bytes)}
+	destination := secure.HTTPSReadDestination{Address: address, ServerName: "localhost", CAFile: caRef, CASHA256: secure.Digest(ca.Bytes), Authentication: "basic", User: user, PasswordFile: passwordRef, PasswordSHA256: secure.Digest(password.Bytes)}
 	logPath := filepath.Join(private, "server.log")
 	log, err := os.OpenFile(logPath, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0600)
 	if err != nil {
 		t.Fatal(err)
 	}
-	args := []string{"--config", config, "--cache-dir", filepath.Join(private, "cache"), "--temp-dir", private, "--ask-password=false", "--stats", "0", "--log-level", "ERROR", "serve", "webdav", root, "--addr", "tls://" + address, "--cert", caRef, "--key", keyRef, "--min-tls-version", "tls1.3", "--htpasswd", usersRef, "--read-only", "--baseurl", "/dav"}
+	args := []string{"--config", config, "--cache-dir", filepath.Join(private, "cache"), "--temp-dir", private, "--ask-password=false", "--stats", "0", "--log-level", "ERROR", "serve", "webdav", root, "--addr", "tls://" + address, "--cert", caRef, "--key", keyRef, "--min-tls-version", "tls1.3", "--htpasswd", usersRef}
+	if !receiver {
+		args = append(args, "--read-only")
+	}
+	args = append(args, "--baseurl", "/dav")
 	command := exec.Command(peer.Binary, args...)
 	command.Env = davApplicationEnvironment(os.Environ())
 	// Preserve the runner's HOME value for stock service initialization;never

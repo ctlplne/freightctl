@@ -78,3 +78,8 @@ jobs:
         if: ${{ !cancelled() && steps.peer.outcome == 'success' && steps.database.outcome == 'success' }}
         run: |
           sh scripts/go.sh test -race -timeout=0 -tags=integration,davpeer -run '^TestDAVBasicSourceNative' -count=1 -v ./internal/api
+      - name: Actual direct DAV delivery,independent stock receiver,CLI and approvals
+        if: ${{ !cancelled() && steps.peer.outcome == 'success' && steps.database.outcome == 'success' }}
+        run: |
+          sh scripts/go.sh build -trimpath -o .private/freightctl-dav-delivery-native ./cmd/freightctl
+          sh scripts/go.sh test -race -timeout=0 -tags=integration,davpeer -run '^TestDAVDeliveryNative' -count=1 -v ./internal/api

@@ -6,7 +6,7 @@ import (
 	"github.com/ctlplne/freightctl/internal/workflow"
 )
 
-// Namespace and upload controls share the API's typed object decoder. Read one
+// Namespace,upload and delivery controls share the API's typed object decoder. Read one
 // byte beyond the existing limit so a truncated stream cannot fabricate EOF.
 func decodeCLIControl(input io.Reader, target any, maximum int64) error {
 	if maximum < 1 || maximum > 32<<10 {

@@ -31,6 +31,7 @@ type OutboundDispatchEffect struct {
 	RecipientFingerprint string              `json:"recipient_fingerprint"`
 	Workflow             *ExecutionBinding   `json:"workflow_binding,omitempty"`
 	FTPS                 *OutboundFTPSEffect `json:"ftps,omitempty"`
+	DAV                  *OutboundDAVEffect  `json:"dav,omitempty"`
 }
 
 // FTPSReceiverContract records an explicitly approved receiver promise. The
@@ -54,6 +55,30 @@ type OutboundFTPSEffect struct {
 	PasswordReferenceHash string               `json:"password_reference_sha256"`
 	StagingPath           string               `json:"staging_path"`
 	ReceiverContract      FTPSReceiverContract `json:"receiver_contract"`
+}
+
+// A receiver contract identifies an explicit operator promise,not proof that
+// the server hides stage bytes or deduplicates downstream business effects.
+type DAVReceiverContract struct {
+	Schema            int    `json:"schema_version"`
+	DocumentSHA256    string `json:"document_sha256"`
+	StagingVisibility string `json:"staging_visibility"`
+	Put               string `json:"put"`
+	Move              string `json:"move"`
+	Duplicates        string `json:"duplicates"`
+	Receipt           string `json:"receipt"`
+}
+
+type OutboundDAVEffect struct {
+	Profile               string              `json:"profile"`
+	Authentication        string              `json:"authentication"`
+	ServerName            string              `json:"server_name"`
+	CASHA256              string              `json:"ca_sha256"`
+	CAReferenceHash       string              `json:"ca_reference_sha256"`
+	TokenReferenceHash    string              `json:"token_reference_sha256,omitempty"`
+	PasswordReferenceHash string              `json:"password_reference_sha256,omitempty"`
+	StagingPath           string              `json:"staging_path"`
+	ReceiverContract      DAVReceiverContract `json:"receiver_contract"`
 }
 type OutboundDispatchDefinition struct {
 	Schema            int                    `json:"schema_version"`
@@ -148,11 +173,21 @@ func (t *Transaction) OutboundDispatchReview(ctx context.Context, id string, loc
 		return nil, ErrIsolation
 	}
 	b, err := json.Marshal(r.Definition)
-	if err != nil || secure.Digest(b) != r.Hash || r.Definition.Author != r.Author || r.Definition.Reviewer != r.Reviewer || r.Definition.DeliveryID != r.DeliveryID || (r.Definition.Schema != 1 && r.Definition.Schema != 2) || (r.Definition.Schema == 2) != (r.Definition.Effect.Protocol == "ftps" && r.Definition.Effect.FTPS != nil) {
+	if err != nil || secure.Digest(b) != r.Hash || r.Definition.Author != r.Author || r.Definition.Reviewer != r.Reviewer || r.Definition.DeliveryID != r.DeliveryID || !validOutboundDispatchProtocol(r.Definition.Schema, r.Definition.Effect) {
 		return nil, ErrIsolation
 	}
 	r.CreatedAt = r.CreatedAt.UTC()
 	return &r, nil
+}
+
+func validOutboundDispatchProtocol(schema int, effect OutboundDispatchEffect) bool {
+	if schema == 3 {
+		return effect.Protocol == "webdav" && effect.DAV != nil && effect.FTPS == nil && effect.Encryption == nil && effect.Workflow == nil
+	}
+	if schema == 1 {
+		return effect.Protocol == "sftp" && effect.FTPS == nil && effect.DAV == nil
+	}
+	return schema == 2 && effect.Protocol == "ftps" && effect.FTPS != nil && effect.DAV == nil
 }
 func (t *Transaction) SaveOutboundDispatchReview(ctx context.Context, r *OutboundDispatchReview, previous int64) error {
 	e, err := t.Append(ctx, "OutboundDispatchReviewChanged", r.ID, r)

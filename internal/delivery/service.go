@@ -32,6 +32,7 @@ type Request struct {
 	KeyFile        string          `json:"key_file"`
 	KeyPublicFile  string          `json:"key_public_file"`
 	FTPS           *FTPSDefinition `json:"ftps,omitempty"`
+	DAV            *DAVDefinition  `json:"dav,omitempty"`
 }
 type Definition struct {
 	Schema         int                          `json:"schema_version"`
@@ -47,6 +48,7 @@ type Definition struct {
 	DispatchPolicy *store.ApprovalPolicyBinding `json:"dispatch_approval_policy,omitempty"`
 	Transfer       *store.DeliveryCiphertext    `json:"-"`
 	FTPS           *FTPSDefinition              `json:"ftps,omitempty"`
+	DAV            *DAVDefinition               `json:"dav,omitempty"`
 }
 type Result struct {
 	Delivery *store.Delivery `json:"delivery"`
@@ -111,6 +113,10 @@ func (s *Service) Create(ctx context.Context, scope store.Scope, key string, r R
 	definition := Definition{Schema: 1, Source: *file, Destination: destination, Directory: directory, Filename: r.Filename, StorageID: s.Custody.Disk.Identity(), Root: t.Root, Authority: t.AuthorityRevision}
 	if ftps != nil {
 		definition.Schema, definition.FTPS = 2, ftps
+	}
+	if r.DAV != nil {
+		copy := *r.DAV
+		definition.Schema, definition.DAV = 3, &copy
 	}
 	encoded, err := json.Marshal(definition)
 	if err != nil {
@@ -193,6 +199,12 @@ func (s *Service) begin(ctx context.Context, scope store.Scope, id string, lock 
 }
 
 func requestDestination(r Request) (secure.SSHDestination, *FTPSDefinition, error) {
+	if r.DAV != nil {
+		if r.FTPS != nil || r.Address != "" || r.User != "" || r.HostPublicFile != "" || r.KeyFile != "" || r.KeyPublicFile != "" || !ValidFTPSFilename(r.Filename) || !r.DAV.Valid(r.Directory) {
+			return secure.SSHDestination{}, nil, ErrInput
+		}
+		return secure.SSHDestination{}, nil, nil
+	}
 	if r.FTPS != nil {
 		if r.Address != "" || r.User != "" || r.HostPublicFile != "" || r.KeyFile != "" || r.KeyPublicFile != "" || !ValidFTPSFilename(r.Filename) || !validFTPSDefinition(r.FTPS, r.Directory) {
 			return secure.SSHDestination{}, nil, ErrInput

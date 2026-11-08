@@ -210,7 +210,9 @@ func (s *Service) dispatchSource(ctx context.Context, t *store.Transaction, id s
 }
 func dispatchEffect(ctx context.Context, t *store.Transaction, d *store.Delivery, spec *Definition) (*store.OutboundDispatchEffect, error) {
 	var effect *store.OutboundDispatchEffect
-	if spec.FTPS != nil {
+	if spec.DAV != nil {
+		effect = davEffect(d, spec)
+	} else if spec.FTPS != nil {
 		effect = ftpsEffect(d, spec)
 	} else {
 		effect = &store.OutboundDispatchEffect{Protocol: "sftp", Address: spec.Destination.Address, User: spec.Destination.User, Directory: spec.Directory, Filename: spec.Filename, FinalPath: path.Join(spec.Directory, d.ID+"-"+spec.Filename), HostFingerprint: spec.Destination.Host.Fingerprint, KeyFingerprint: spec.Destination.KeyFingerprint, KeyReferenceHash: secure.Digest([]byte(spec.Destination.KeyFile)), Encryption: spec.Encryption, Workflow: spec.Binding}

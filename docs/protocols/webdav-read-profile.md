@@ -497,3 +497,53 @@ or matching final bytes. The receiver must separately enforce private staging
 and its approved delivery contract. Native interoperability and the whole DAV
 row remain unqualified. Conditional MOVE semantics follow
 [RFC4918 sections9.9 and10.6](https://www.rfc-editor.org/rfc/rfc4918.html#section-9.9).
+
+## Direct delivery profile under qualification
+
+F442 connects that transport to ordinary durable delivery intents. A local
+administrator with current root-scoped read,deliver,admin and connections_manage
+authority supplies `delivery-create --request-file REQUEST --idempotency-key KEY`.
+Use the ordinary `--dsn-file`,`--token-file` and `--storage` protected references.
+The bounded16KiB JSON object includes `file_id`,`directory`,`filename` and `dav`.
+The `dav` object has `destination`,`staging_directory` and `receiver_contract`.
+Destination uses the exact same protected HTTPS reference shape as the explicit
+bearer or Basic collection transport,but this is a separately approved send.
+Never put credential values in JSON,argv or logs. Duplicate,aliased,unknown,
+invalid-UTF8,trailing and oversized request control is refused.
+
+The receiver contract is exactly schema1 with `document_sha256` and these
+values: `staging_visibility=receiver-private`,`put=exclusive-create`,
+`move=source-etag-no-overwrite`,`duplicates=receiver-deduplicates-delivery-id`,
+`receipt=exact-readback`. Stage and final directories must be canonical and
+disjoint. The final name is `DELIVERY_UUID-FILENAME`;the stage name is
+`.freightctl-DELIVERY_UUID.partial`. The document hash records an agreed promise;
+it does not prove receiver privacy or downstream deduplication.
+
+The draft uses distinct delivery schema3. Approve its exact definition hash and
+revision with `delivery-approve --delivery-id ID --definition-hash HASH
+--expected-revision REV --idempotency-key KEY`,then run
+`delivery-work --delivery-id ID`. A configured independent dispatch policy adds
+the existing named-reviewer API/CLI/browser approval;author approval cannot
+replace it. Public review binds exact receiver,trust/reference fingerprints,
+stage/final paths,source and contract without disclosing credentials or paths
+to local secret files. Schema66 preserves every earlier migration and row
+policy and adds exact DAV definition/source/effect guards.
+
+Before any stage byte can leave,the worker commits `publishing` with its ordinary
+lease/fence and current authority. PUT,stage verification,MOVE or final-read
+failure then leaves `ambiguous`;there is no automatic resend or cleanup.
+`delivery-reconcile --delivery-id ID` only reads the original final path.
+Matching bytes may establish current integrity while upload/MOVE replies,
+fsync,power-loss durability and business acceptance remain unconfirmed.
+Original creation receipts and completed work retain their original meanings.
+Receiving an artifact grants no permission to create this separate send.
+
+This first profile refuses registered workflow bindings and recipient encryption;
+those integrations remain owed. Native ARM/x86 GitHub proofs are prepared for
+actual CLI plus independent stock rclone/Basic receiver,separate named API
+approval,SQL shape/effect guards,independent bytes and original receipts. A
+separate real-PostgreSQL/TLS stand-in drops the actual MOVE reply after the final
+effect and requires read-only reconciliation with the same attempt/fence.
+Those prepared tests have only compiled locally. Native execution,served browser,
+broader clients,restore and final-source qualification remain owed. Local
+inference and heavy runtimes stay off;the retained schema35 database is untouched.

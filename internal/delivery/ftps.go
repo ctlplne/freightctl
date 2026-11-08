@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"path"
+	"reflect"
 	"regexp"
 	"strings"
 
@@ -61,6 +62,12 @@ func validFTPSDefinition(f *FTPSDefinition, finalDirectory string) bool {
 }
 
 func validProtocolDefinition(d *Definition) bool {
+	if d.Schema == 3 {
+		return d.FTPS == nil && d.Encryption == nil && d.Binding == nil && d.Transfer == nil && reflect.DeepEqual(d.Destination, secure.SSHDestination{}) && ValidFTPSFilename(d.Filename) && d.DAV.Valid(d.Directory)
+	}
+	if d.DAV != nil {
+		return false
+	}
 	if d.Schema == 1 {
 		return d.FTPS == nil
 	}

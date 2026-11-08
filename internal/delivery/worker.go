@@ -229,6 +229,9 @@ func (s *Service) Work(ctx context.Context, scope store.Scope, id string) (*stor
 		}
 	}
 	defer source.Close()
+	if spec.DAV != nil {
+		return s.workDAV(ctx, scope, d, spec, owner, fence, check, source)
+	}
 	if spec.FTPS != nil {
 		return s.workFTPS(ctx, scope, d, spec, owner, fence, check, source)
 	}
@@ -398,7 +401,9 @@ func (s *Service) Reconcile(ctx context.Context, scope store.Scope, id string) (
 		}
 		return s.storage(spec)
 	}
-	if spec.FTPS != nil {
+	if spec.DAV != nil {
+		err = observeDAV(ctx, d, spec, check)
+	} else if spec.FTPS != nil {
 		err = observeFTPS(ctx, d, spec, check)
 	} else {
 		var client *sftp.Client
@@ -429,6 +434,9 @@ func (s *Service) Reconcile(ctx context.Context, scope store.Scope, id string) (
 	d.Revision++
 	d.State = "succeeded"
 	d.Observation = receipt(d, spec, true)
+	if spec.DAV != nil {
+		d.Observation = davReceipt(d, spec, true)
+	}
 	if spec.FTPS != nil {
 		d.Observation = ftpsReceipt(d, spec, true)
 	}

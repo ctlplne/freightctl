@@ -25,7 +25,7 @@ export interface WorkflowBinding {
   connection_hash: string;
 }
 export interface DispatchEffect {
-  protocol: "sftp" | "ftps";
+  protocol: "sftp" | "ftps" | "webdav";
   address: string;
   user: string;
   directory: string;
@@ -38,6 +38,26 @@ export interface DispatchEffect {
   recipient_fingerprint: string;
   workflow_binding?: WorkflowBinding;
   ftps?: FTPSReviewEffect;
+  dav?: DAVReviewEffect;
+}
+export interface DAVReviewEffect {
+  profile: "freightctl-webdav-delivery-v1";
+  authentication: "bearer" | "basic";
+  server_name: string;
+  ca_sha256: string;
+  ca_reference_sha256: string;
+  token_reference_sha256?: string;
+  password_reference_sha256?: string;
+  staging_path: string;
+  receiver_contract: {
+    schema_version: 1;
+    document_sha256: string;
+    staging_visibility: "receiver-private";
+    put: "exclusive-create";
+    move: "source-etag-no-overwrite";
+    duplicates: "receiver-deduplicates-delivery-id";
+    receipt: "exact-readback";
+  };
 }
 export interface FTPSReviewEffect {
   mode: "explicit" | "implicit";
@@ -62,7 +82,7 @@ export interface DispatchSelection {
   reviewer_id: string;
 }
 export interface DispatchDefinition {
-  schema_version: 1 | 2;
+  schema_version: 1 | 2 | 3;
   author_id: string;
   authority_revision: number;
   reviewer_id: string;
@@ -310,6 +330,135 @@ function ftpsEffect(
     },
   };
 }
+function davEffect(
+  o: Record<string, unknown>,
+  deliveryID: string,
+): DispatchEffect {
+  exact(o, [
+    "protocol",
+    "address",
+    "user",
+    "directory",
+    "filename",
+    "final_path",
+    "host_fingerprint",
+    "key_fingerprint",
+    "key_reference_sha256",
+    "recipient_fingerprint",
+    "dav",
+  ]);
+  const f = object(o.dav),
+    c = object(f.receiver_contract),
+    mode = f.authentication;
+  if (mode !== "bearer" && mode !== "basic") bad();
+  exact(f, [
+    "profile",
+    "authentication",
+    "server_name",
+    "ca_sha256",
+    "ca_reference_sha256",
+    mode === "basic" ? "password_reference_sha256" : "token_reference_sha256",
+    "staging_path",
+    "receiver_contract",
+  ]);
+  exact(c, [
+    "schema_version",
+    "document_sha256",
+    "staging_visibility",
+    "put",
+    "move",
+    "duplicates",
+    "receipt",
+  ]);
+  const directory = ftpsPath(o, "directory", 768),
+    filename = text(o, "filename", 128),
+    final = ftpsPath(o, "final_path"),
+    stage = ftpsPath(f, "staging_path"),
+    stageDirectory = stage.slice(0, stage.lastIndexOf("/")) || "/",
+    serverName = text(f, "server_name", 253),
+    address = text(o, "address", 128);
+  const user =
+    mode === "basic" ? text(o, "user", 256) : o.user === "" ? "" : bad();
+  if (!/^[a-z0-9:.\-]+$/.test(serverName)) bad();
+  if (
+    f.profile !== "freightctl-webdav-delivery-v1" ||
+    /[\/\\ ]/.test(serverName) ||
+    user.includes(":") ||
+    !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(filename) ||
+    final !== `${directory}/${deliveryID}-${filename}` ||
+    stage !== `${stageDirectory}/.freightctl-${deliveryID}.partial` ||
+    directory === "/" ||
+    stageDirectory === "/" ||
+    new TextEncoder().encode(stageDirectory).length > 768 ||
+    directory === stageDirectory ||
+    directory.startsWith(stageDirectory + "/") ||
+    stageDirectory.startsWith(directory + "/") ||
+    o.host_fingerprint !== "" ||
+    o.key_fingerprint !== "" ||
+    o.key_reference_sha256 !== "" ||
+    o.recipient_fingerprint !== "" ||
+    c.schema_version !== 1 ||
+    c.staging_visibility !== "receiver-private" ||
+    c.put !== "exclusive-create" ||
+    c.move !== "source-etag-no-overwrite" ||
+    c.duplicates !== "receiver-deduplicates-delivery-id" ||
+    c.receipt !== "exact-readback"
+  )
+    bad();
+  const endpoint = /^(\[[0-9a-f:]+\]|[0-9.]+):([0-9]+)$/.exec(address);
+  if (
+    !endpoint ||
+    String(Number(endpoint[2])) !== endpoint[2] ||
+    Number(endpoint[2]) < 1 ||
+    Number(endpoint[2]) > 65535
+  )
+    bad();
+  try {
+    if (new URL(`https://${address}`).hostname !== endpoint[1]) bad();
+  } catch {
+    bad();
+  }
+  if (
+    endpoint[1] === "0.0.0.0" ||
+    endpoint[1] === "[::]" ||
+    /^\[ff/.test(endpoint[1]) ||
+    (Number(endpoint[1].split(".")[0]) >= 224 &&
+      Number(endpoint[1].split(".")[0]) <= 239)
+  )
+    bad();
+  return {
+    protocol: "webdav",
+    address,
+    user,
+    directory,
+    filename,
+    final_path: final,
+    host_fingerprint: "",
+    key_fingerprint: "",
+    key_reference_sha256: "",
+    recipient_fingerprint: "",
+    dav: {
+      profile: "freightctl-webdav-delivery-v1",
+      authentication: mode,
+      server_name: serverName,
+      ca_sha256: hash(f, "ca_sha256"),
+      ca_reference_sha256: hash(f, "ca_reference_sha256"),
+      ...(mode === "basic"
+        ? { password_reference_sha256: hash(f, "password_reference_sha256") }
+        : { token_reference_sha256: hash(f, "token_reference_sha256") }),
+      staging_path: stage,
+      receiver_contract: {
+        schema_version: 1,
+        document_sha256: hash(c, "document_sha256"),
+        staging_visibility: "receiver-private",
+        put: "exclusive-create",
+        move: "source-etag-no-overwrite",
+        duplicates: "receiver-deduplicates-delivery-id",
+        receipt: "exact-readback",
+      },
+    },
+  };
+}
 function asWorkflowBinding(v: unknown): WorkflowBinding {
   const b = object(v),
     step = text(b, "step_id", 64);
@@ -337,6 +486,8 @@ function asWorkflowBinding(v: unknown): WorkflowBinding {
 }
 function effect(v: unknown, deliveryID: string): DispatchEffect {
   const o = object(v);
+  if (o.protocol === "webdav") return davEffect(o, deliveryID);
+  if (o.dav !== undefined) bad();
   if (o.protocol === "ftps") return ftpsEffect(o, deliveryID);
   if (o.ftps !== undefined) bad();
   const base = asTestEffect(v),
@@ -393,9 +544,27 @@ export function asDispatchDefinition(v: unknown): DispatchDefinition {
     reviewer = id(o, "reviewer_id"),
     schema = o.schema_version,
     fx = effect(o.effect, deliveryID);
+  if (schema === 3)
+    exact(o, [
+      "schema_version",
+      "author_id",
+      "authority_revision",
+      "reviewer_id",
+      "reviewer_authority_revision",
+      "policy",
+      "delivery_id",
+      "delivery_revision",
+      "delivery_hash",
+      "source",
+      "storage_id",
+      "namespace_root",
+      "effect",
+      "attempt_limit",
+    ]);
   if (
-    (schema !== 1 && schema !== 2) ||
+    (schema !== 1 && schema !== 2 && schema !== 3) ||
     (schema === 2) !== (fx.protocol === "ftps") ||
+    (schema === 3) !== (fx.protocol === "webdav") ||
     o.namespace_root !== "/" ||
     o.attempt_limit !== 8 ||
     policy.mode !== "independent" ||

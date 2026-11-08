@@ -1,0 +1,117 @@
+{
+  "basic": {
+    "definition": {
+      "attempt_limit": 8,
+      "author_id": "000000a1-1111-4111-8111-111111111111",
+      "authority_revision": 1,
+      "delivery_hash": "f5e53e337b4fb61a239adfc6235acb594427d2fbcc25e583ec2fb5d2c9554a29",
+      "delivery_id": "000000a3-1111-4111-8111-111111111111",
+      "delivery_revision": 2,
+      "effect": {
+        "address": "127.0.0.1:9443",
+        "dav": {
+          "authentication": "basic",
+          "ca_reference_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "ca_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "password_reference_sha256": null,
+          "profile": "freightctl-webdav-delivery-v1",
+          "receiver_contract": {
+            "document_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "duplicates": "receiver-deduplicates-delivery-id",
+            "move": "source-etag-no-overwrite",
+            "put": "exclusive-create",
+            "receipt": "exact-readback",
+            "schema_version": 1,
+            "staging_visibility": "receiver-private"
+          },
+          "server_name": "localhost",
+          "staging_path": "/private-stage/.freightctl-000000a3-1111-4111-8111-111111111111.partial"
+        },
+        "directory": "/outbox",
+        "filename": "settlement.csv",
+        "final_path": "/outbox/000000a3-1111-4111-8111-111111111111-settlement.csv",
+        "host_fingerprint": "",
+        "key_fingerprint": "",
+        "key_reference_sha256": "",
+        "protocol": "webdav",
+        "recipient_fingerprint": "",
+        "user": "writer"
+      },
+      "namespace_root": "/",
+      "policy": {
+        "mode": "independent",
+        "revision": 1
+      },
+      "reviewer_authority_revision": 2,
+      "reviewer_id": "000000a2-1111-4111-8111-111111111111",
+      "schema_version": 3,
+      "source": {
+        "accepted_event_id": "000000a6-1111-4111-8111-111111111111",
+        "id": "000000a5-1111-4111-8111-111111111111",
+        "policy": "integrity-only-v1",
+        "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+        "size_bytes": 3
+      },
+      "storage_id": "000000a7-1111-4111-8111-111111111111"
+    },
+    "definition_hash": "a9151634053805fac37f9a4a332f8dc1a4e79679886c4d0734af0d4e60becad9",
+    "public_reference_input": "/synthetic/dav-password-reference"
+  },
+  "bearer": {
+    "definition": {
+      "attempt_limit": 8,
+      "author_id": "000000a1-1111-4111-8111-111111111111",
+      "authority_revision": 1,
+      "delivery_hash": "f5e53e337b4fb61a239adfc6235acb594427d2fbcc25e583ec2fb5d2c9554a29",
+      "delivery_id": "000000a3-1111-4111-8111-111111111111",
+      "delivery_revision": 2,
+      "effect": {
+        "address": "127.0.0.1:9443",
+        "dav": {
+          "authentication": "bearer",
+          "ca_reference_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "ca_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "profile": "freightctl-webdav-delivery-v1",
+          "receiver_contract": {
+            "document_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "duplicates": "receiver-deduplicates-delivery-id",
+            "move": "source-etag-no-overwrite",
+            "put": "exclusive-create",
+            "receipt": "exact-readback",
+            "schema_version": 1,
+            "staging_visibility": "receiver-private"
+          },
+          "server_name": "localhost",
+          "staging_path": "/private-stage/.freightctl-000000a3-1111-4111-8111-111111111111.partial",
+          "token_reference_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+        },
+        "directory": "/outbox",
+        "filename": "settlement.csv",
+        "final_path": "/outbox/000000a3-1111-4111-8111-111111111111-settlement.csv",
+        "host_fingerprint": "",
+        "key_fingerprint": "",
+        "key_reference_sha256": "",
+        "protocol": "webdav",
+        "recipient_fingerprint": "",
+        "user": ""
+      },
+      "namespace_root": "/",
+      "policy": {
+        "mode": "independent",
+        "revision": 1
+      },
+      "reviewer_authority_revision": 2,
+      "reviewer_id": "000000a2-1111-4111-8111-111111111111",
+      "schema_version": 3,
+      "source": {
+        "accepted_event_id": "000000a6-1111-4111-8111-111111111111",
+        "id": "000000a5-1111-4111-8111-111111111111",
+        "policy": "integrity-only-v1",
+        "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+        "size_bytes": 3
+      },
+      "storage_id": "000000a7-1111-4111-8111-111111111111"
+    },
+    "definition_hash": "8dec360cd285e7c9372b8e01126a7b3a7f2bf16a4eeae1bb4144df41812a1ead"
+  }
+}

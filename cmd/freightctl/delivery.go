@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"io"
 	"os"
 	"strings"
 
@@ -51,15 +50,9 @@ func runDelivery(ctx context.Context, command, dsn, token, tenant, partner, stor
 		if statErr != nil || !st.Mode().IsRegular() || st.Size() > 16<<10 {
 			return errors.New("delivery request must be bounded regular JSON")
 		}
-		decoder := json.NewDecoder(io.LimitReader(f, 16<<10))
-		decoder.DisallowUnknownFields()
-		var request delivery.Request
-		if err = decoder.Decode(&request); err != nil {
+		request, decodeErr := decodeDeliveryRequest(f)
+		if decodeErr != nil {
 			return errors.New("invalid delivery request JSON")
-		}
-		var extra any
-		if decoder.Decode(&extra) != io.EOF {
-			return errors.New("delivery request has trailing data")
 		}
 		result, err = service.Create(ctx, scope, key, request)
 	case "delivery-status":

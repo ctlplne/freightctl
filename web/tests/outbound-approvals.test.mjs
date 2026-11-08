@@ -77,6 +77,104 @@ const preview = (f) =>
     f.selection,
     asDispatchView(f.view, f.view.id),
   );
+test("DAV review decodes the distinct exact non-overwriting receiver profile", () => {
+  const f = fresh("direct");
+  const d = f.preview.definition;
+  d.schema_version = 3;
+  const e = d.effect;
+  e.protocol = "webdav";
+  e.address = "127.0.0.1:9443";
+  e.user = "";
+  e.host_fingerprint = "";
+  e.key_fingerprint = "";
+  e.key_reference_sha256 = "";
+  e.recipient_fingerprint = "";
+  e.dav = {
+    profile: "freightctl-webdav-delivery-v1",
+    authentication: "bearer",
+    server_name: "localhost",
+    ca_sha256: "a".repeat(64),
+    ca_reference_sha256: "b".repeat(64),
+    token_reference_sha256: "c".repeat(64),
+    staging_path: `/private-stage/.freightctl-${d.delivery_id}.partial`,
+    receiver_contract: {
+      schema_version: 1,
+      document_sha256: "d".repeat(64),
+      staging_visibility: "receiver-private",
+      put: "exclusive-create",
+      move: "source-etag-no-overwrite",
+      duplicates: "receiver-deduplicates-delivery-id",
+      receipt: "exact-readback",
+    },
+  };
+  assert.deepEqual(asDispatchDefinition(d), d);
+});
+test("DAV review preserves fixed Go hashes and refuses mixed,private or weaker contracts", async () => {
+  const fixtures = JSON.parse(
+    await readFile(
+      new URL("fixtures/dav-dispatch.json", import.meta.url),
+      "utf8",
+    ),
+  );
+  for (const [mode, fixture] of Object.entries(fixtures)) {
+    const d = fixture.definition;
+    if (mode === "basic") {
+      assert.equal(
+        fixture.public_reference_input,
+        "/synthetic/dav-password-reference",
+      );
+      assert.equal(d.effect.dav.password_reference_sha256, null);
+      d.effect.dav.password_reference_sha256 = createHash("sha256")
+        .update(fixture.public_reference_input)
+        .digest("hex");
+    }
+    const decoded = asDispatchDefinition(d);
+    assert.equal(dispatchHash(decoded), fixture.definition_hash);
+    const html = renderToStaticMarkup(
+      createElement(DispatchDetails, { d: decoded }),
+    );
+    for (const expected of [
+      "WebDAV",
+      "TLS 1.3",
+      "exclusive PUT",
+      "strong stage ETag",
+      "refuses an existing final path",
+      "does not verify those receiver promises",
+      decoded.effect.dav.staging_path,
+      decoded.effect.dav.receiver_contract.document_sha256,
+    ])
+      assert.ok(html.includes(expected), expected);
+    assert.ok(!html.includes("SFTP"));
+    for (const mutate of [
+      (d) => (d.schema_version = 2),
+      (d) => (d.effect.protocol = "sftp"),
+      (d) => (d.effect.ftps = {}),
+      (d) => (d.effect.workflow_binding = {}),
+      (d) => (d.effect.encryption = {}),
+      (d) => (d.effect.dav.authentication = "digest"),
+      (d) => (d.effect.dav.receiver_contract.move = "may-replace"),
+      (d) => (d.effect.dav.receiver_contract.put = "replace"),
+      (d) => (d.effect.dav.receiver_contract.receipt = "fsync"),
+      (d) => (d.effect.dav.receiver_contract.duplicates = "none"),
+      (d) =>
+        (d.effect.dav.staging_path = `${d.effect.directory}/.freightctl-${d.delivery_id}.partial`),
+      (d) => (d.effect.dav.password_reference = "/private/value"),
+      (d) => (d.effect.dav.token_sha256 = "f".repeat(64)),
+      (d) => (d.effect.address = "peer.invalid:9443"),
+      (d) => (d.effect.final_path += "-other"),
+      (d) =>
+        (d.effect.dav[
+          mode === "basic"
+            ? "token_reference_sha256"
+            : "password_reference_sha256"
+        ] = "f".repeat(64)),
+    ]) {
+      const changed = structuredClone(d);
+      mutate(changed);
+      assert.throws(() => asDispatchDefinition(changed));
+    }
+  }
+});
 test("encrypted FTPS review binds recipient policy separately from transport and refuses altered disclosure", () => {
   for (const mode of ["explicit", "implicit"]) {
     const f = fresh("ftps_encrypted_" + mode),

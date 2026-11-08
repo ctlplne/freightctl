@@ -34,14 +34,47 @@ export function DispatchDetails({
         <code>{d.source.policy}</code>.
       </p>
       <p>
-        {e.protocol === "ftps" ? "FTPS" : "SFTP"}{" "}
-        <code>
-          {e.user}@{e.address}
-        </code>
-        . {e.ftps ? "Exact final path" : "Exact reserved final path"}{" "}
+        {e.protocol === "webdav"
+          ? "WebDAV"
+          : e.protocol === "ftps"
+            ? "FTPS"
+            : "SFTP"}{" "}
+        <code>{e.user ? `${e.user}@${e.address}` : e.address}</code>.{" "}
+        {e.ftps || e.dav ? "Exact final path" : "Exact reserved final path"}{" "}
         <code>{e.final_path}</code>.
       </p>
-      {e.ftps ? (
+      {e.dav ? (
+        <>
+          <p>
+            TLS 1.3 with approved certificate hostname{" "}
+            <code>{e.dav.server_name}</code>; CA SHA-256{" "}
+            <code>{e.dav.ca_sha256}</code>. Authentication is{" "}
+            {e.dav.authentication}.
+          </p>
+          <p>
+            CA reference fingerprint <code>{e.dav.ca_reference_sha256}</code>;
+            credential reference fingerprint{" "}
+            <code>
+              {e.dav.token_reference_sha256 ?? e.dav.password_reference_sha256}
+            </code>
+            . Credential values and local paths are not shared.
+          </p>
+          <p>
+            Private staging path <code>{e.dav.staging_path}</code>; exclusive
+            PUT refuses an existing stage. Exact bytes and a strong stage ETag
+            must verify before a conditional MOVE that refuses an existing final
+            path. Receiver contract document SHA-256{" "}
+            <code>{e.dav.receiver_contract.document_sha256}</code>. The receiver
+            must hide staging from consumers and deduplicate business processing
+            by delivery ID. This records an agreed contract; it does not verify
+            those receiver promises.
+          </p>
+          <p>
+            Exact readback does not acknowledge a receiver disk flush (fsync),
+            power-loss persistence or business processing.
+          </p>
+        </>
+      ) : e.ftps ? (
         <>
           <p>
             {e.ftps.mode === "explicit" ? "Explicit" : "Implicit"} TLS 1.3
@@ -101,12 +134,12 @@ export function DispatchDetails({
           <code>{e.workflow_binding.connection_hash}</code>.
         </p>
       )}
-      {e.ftps ? (
+      {e.ftps || e.dav ? (
         <p>
           Up to eight connection attempts are allowed before a write intent is
           committed. Once upload may begin, a missing reply blocks automatic
           resend. Recovery only reads the exact final bytes and cannot invent
-          the original upload or rename reply.
+          the original upload or {e.dav ? "MOVE" : "rename"} reply.
         </p>
       ) : (
         <p>
