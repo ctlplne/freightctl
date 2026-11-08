@@ -17,8 +17,13 @@ application outcomes,locks,outbound,desktop mounts and final-source proof are ow
 
 Current pushed candidate: `fd6146c9fecaf2a2731d042d4bb83df868543cff`.
 [F427](docs/qualification/evidence/F427-native-push.json) binds three owner-only
-commits,enabled Gitleaks(no leaks) and16 original attempt1 workflows. F425
-identity-bound complete collection overwrite awaits actual native outcomes.
+commits and enabled Gitleaks(no leaks). [F430](docs/qualification/evidence/F430-native-terminal.json)
+records16 original workflows/35 terminal jobs,34pass/receive-browser red.
+All16 named security gates pass. Both native PostgreSQL,restore,HTTPS/curl,
+JSON API/CLI and stock SDK completion metadata succeed with F425 overwrite.
+Detailed scoped/final-source proof remains owed. Live/local-collection browser
+pass without an identified repair;earlier failures stay preserved/unresolved.
+Local F428/F429 source is not included.
 
 Previous terminal candidate: `94745e3b262832852eff24c3780f417d0d55cea5`.
 [F424](docs/qualification/evidence/F424-native-push.json) binds four owner-only
