@@ -57,9 +57,13 @@ final-source native proof remain owed;no new product send is admitted yet.
 Current pushed candidate: `bfc9316bdeffc6c75a757b3a67d0b6b7a8f1bf16`.
 [F435](docs/qualification/evidence/F435-native-push.json) binds four owner-only
 commits,enabled Gitleaks(no leaks),remote verification and18 original attempt1
-workflows. Schema64/F429 bearer-source SQL/API/capture/receipt and current
-independent FTPS receiver outcomes await native execution. Basic/schema65 WIP
-is excluded. Original failures and all final-source qualification remain owed.
+workflows. [F440](docs/qualification/evidence/F440-native-terminal.json) records
+41 terminal jobs:34success,sevenfailed(Windows,receive,both DAV,independent
+x86 FTPS system/no-ktls,ARM upstream FTP race). All16 named baseline security
+steps and both DAV stock acquisition/security bundles pass. F436/F438 correct
+new audit/fixture proofs;their native replay remains owed. F437 preserves the
+receiver SIGSYS54 classes without weakening isolation. Basic/schema65 and
+later local source are excluded. Every original failure/final-source gate stays owed.
 
 Previous terminal candidate: `8823d7d3293dffd72f681c8550ff58d668642031`.
 [F431](docs/qualification/evidence/F431-native-push.json) binds three owner-only
