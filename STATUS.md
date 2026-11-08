@@ -54,16 +54,20 @@ pass. Read-only collectors retain no mutation methods. Durable delivery intent,
 approval,lease/fence and receipt integration plus independent stock-server and
 final-source native proof remain owed;no new product send is admitted yet.
 
-Current pushed candidate: `bfc9316bdeffc6c75a757b3a67d0b6b7a8f1bf16`.
-[F435](docs/qualification/evidence/F435-native-push.json) binds four owner-only
+Current pushed candidate: `d5d8b7a4d98d86eb02e45f6fa343cf22862f98d2`.
+[F441](docs/qualification/evidence/F441-native-push.json) binds six owner-only
 commits,enabled Gitleaks(no leaks),remote verification and18 original attempt1
-workflows. [F440](docs/qualification/evidence/F440-native-terminal.json) records
-41 terminal jobs:34success,sevenfailed(Windows,receive,both DAV,independent
-x86 FTPS system/no-ktls,ARM upstream FTP race). All16 named baseline security
-steps and both DAV stock acquisition/security bundles pass. F436/F438 correct
-new audit/fixture proofs;their native replay remains owed. F437 preserves the
-receiver SIGSYS54 classes without weakening isolation. Basic/schema65 and
-later local source are excluded. Every original failure/final-source gate stays owed.
+workflows. Schema65/independent Basic server,F436 audit,F438 Windows fixture
+corrections and F439 separate delivery transport are included. Native outcomes
+and every preserved failure/final-source qualification remain owed.
+
+Previous terminal candidate: `bfc9316bdeffc6c75a757b3a67d0b6b7a8f1bf16`.
+[F440](docs/qualification/evidence/F440-native-terminal.json) records18 original
+workflows/41 terminal jobs:34success,sevenfailed. All16 named baseline security
+steps and both DAV stock acquisition/security bundles pass. Original Windows,
+receive,DAV,independent x86 receiver and ARM upstream FTP race failures remain
+preserved. F436/F438 corrections await native replay. No safety or final-source
+qualification is inferred from completion metadata.
 
 Previous terminal candidate: `8823d7d3293dffd72f681c8550ff58d668642031`.
 [F431](docs/qualification/evidence/F431-native-push.json) binds three owner-only
