@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "id": "F436",
+  "observed_at": "2026-11-07",
+  "base_candidate": "b9d9e0a7b4ded46221b251f7509179fc1bff3ff4",
+  "original_candidate": "bfc9316bdeffc6c75a757b3a67d0b6b7a8f1bf16",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "Correct inaccurate new zero-producer-events assertion while preserving mandatory production read audit. Hash complete producer custody/mapping/revision/command/credential/delivery/run/receipt projections and every old journal row;admit only exact expected read actor,file,digest,count and empty protocol session. Refuse missing/changed/extra/unbound/non-read events;original receipt requires zero new events. No production code changes.",
+  "original_failures": [
+    {
+      "run_id": 42433106094,
+      "job_id": 128586102389,
+      "architecture": "arm64",
+      "attempt": 1,
+      "source_line": 192,
+      "assertion": "DAV read-only collection mutated the producer or gained onward work",
+      "classification": "inaccurate zero-event test rejects mandatory read-audit events",
+      "native_replay": "owed"
+    },
+    {
+      "run_id": 42433106094,
+      "job_id": 128586102670,
+      "architecture": "amd64",
+      "attempt": 1,
+      "source_line": 192,
+      "assertion": "DAV read-only collection mutated the producer or gained onward work",
+      "classification": "inaccurate zero-event test rejects mandatory read-audit events",
+      "native_replay": "owed"
+    }
+  ],
+  "red_green": [
+    {
+      "reference": ".private/freightctl-f436-required-audit-red.log",
+      "exit_code": 1,
+      "proof": "Extracted original zero-event rule rejects required exact read audit"
+    },
+    {
+      "reference": ".private/freightctl-f436-exact-audit-green.log",
+      "exit_code": 0,
+      "proof": "Exact required immutable read audit and negative mutation/missing/extra/binding cases"
+    },
+    {
+      "reference": ".private/freightctl-f436-native-compile.log",
+      "exit_code": 0,
+      "proof": "Affected tagged native compile only"
+    },
+    {
+      "reference": ".private/freightctl-f436-vet.log",
+      "exit_code": 0,
+      "proof": "Affected tagged vet"
+    },
+    {
+      "reference": ".private/freightctl-f436-architecture.log",
+      "exit_code": 0,
+      "proof": "Architecture boundaries"
+    },
+    {
+      "reference": ".private/freightctl-f436-records.log",
+      "exit_code": 0,
+      "proof": "Qualification references"
+    },
+    {
+      "reference": ".private/freightctl-f436-format.log",
+      "exit_code": 0,
+      "proof": "Affected Go formatting"
+    }
+  ],
+  "source_files": [
+    {
+      "reference": "internal/api/dav_collection_integration_test.go",
+      "bytes": 15206,
+      "sha256": "373101706b7098648ab802190e63a5844db35cc2b3261be7ad3db53cf341cfe4"
+    },
+    {
+      "reference": "internal/api/dav_source_audit_test.go",
+      "bytes": 3846,
+      "sha256": "4fab19947047933d64c4ff780af2cdc41392fd1f5e7788444d67371633a76e32"
+    },
+    {
+      "reference": "STATUS.md",
+      "bytes": 22182,
+      "sha256": "47dddce451f231e373ab038cd70bc105aeada67ea2a1cf666f3f760bff0478d6"
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "bytes": 708112,
+      "sha256": "9add08bcc93e6b97d9e4a8b4e8b446d047a24ec8b6eeb6fffd4a4ca175063d0a"
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f436-architecture.log",
+      "bytes": 64,
+      "sha256": "f523f10d6f3e60ec093788dd7a2931bff5c317fe4ce42f3b96b5f5a4016e2041"
+    },
+    {
+      "reference": ".private/freightctl-f436-audit-production-preservation.json",
+      "bytes": 347,
+      "sha256": "2fa5b42479c5b87dacac6e946fcfb24440132000f6307a7ec1fa069d3f97674d"
+    },
+    {
+      "reference": ".private/freightctl-f436-dav-arm-classification.json",
+      "bytes": 674,
+      "sha256": "b755900cfd91cbe8ea0be458ec645324b841bb4ed2509566dd29f26d352d6b30"
+    },
+    {
+      "reference": ".private/freightctl-f436-dav-arm-job.log",
+      "bytes": 27418,
+      "sha256": "2129306c51aa30cb711c6a544da3b8d91b31f9e0db102a7532cfe2ec629990a5"
+    },
+    {
+      "reference": ".private/freightctl-f436-dav-x86-classification.json",
+      "bytes": 674,
+      "sha256": "d223f520e3f991a5fc1d869d6b2e36df7c729fd4ce9cedde22ec528a652b08f5"
+    },
+    {
+      "reference": ".private/freightctl-f436-dav-x86-job.log",
+      "bytes": 27386,
+      "sha256": "e600c65b0e79419da3d98d1ebb02a01b2421a283a11f896f2608c0db4bee61ec"
+    },
+    {
+      "reference": ".private/freightctl-f436-exact-audit-green.log",
+      "bytes": 55,
+      "sha256": "23c30c395fc5d876c59f1d3b0826d282f96f4abddb24034431d5c7d87cc61455"
+    },
+    {
+      "reference": ".private/freightctl-f436-native-compile.log",
+      "bytes": 73,
+      "sha256": "a6d222e08ea57d55be1276d074e96c211cf2401a98277c54f17bc4fc30452299"
+    },
+    {
+      "reference": ".private/freightctl-f436-required-audit-red.log",
+      "bytes": 260,
+      "sha256": "2558a991daa3710a82b15af01036bafe19c7c6dbc11980cc0e15bd5cfc157d50"
+    },
+    {
+      "reference": ".private/freightctl-f436-vet.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "reference": ".private/freightctl-f436-records.log",
+      "bytes": 106,
+      "sha256": "826009b37d6c8254924b7fd1ee12981059544175f2c890ad4186b88b41b583b4"
+    },
+    {
+      "reference": ".private/freightctl-f436-format.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "owed": [
+    "Actual original native replay on both architectures",
+    "Preserved independent application discovery failure and all original failures",
+    "All mandatory final-source baseline/AX/security/readiness gates"
+  ],
+  "security_assertions_weakened": false,
+  "production_audit_unchanged": true,
+  "local_heavy_runtime_started": false,
+  "overall_goal_complete": false
+}

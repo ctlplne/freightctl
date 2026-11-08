@@ -33,6 +33,13 @@ Schema65 preserves64 prior migrations and78/77 tables;retained35 is untouched.
 Each native DAV profile remains a required step and any failure keeps the job red.
 Actual SQL/stock server/API,CLI/browser,restore and final-source proof are owed.
 
+F436 corrects the new DAV source proof: authorized reads must append exact
+actor/file/hash audit events. Producer custody,mappings,credentials,commands and
+onward work must stay unchanged;old journal rows cannot change or disappear.
+Focused old-rule red→exact-audit green and affected static/compile checks pass.
+Production audit code is unchanged. Original ARM/x86 failures are preserved;
+actual native replay remains owed.
+
 Current pushed candidate: `bfc9316bdeffc6c75a757b3a67d0b6b7a8f1bf16`.
 [F435](docs/qualification/evidence/F435-native-push.json) binds four owner-only
 commits,enabled Gitleaks(no leaks),remote verification and18 original attempt1

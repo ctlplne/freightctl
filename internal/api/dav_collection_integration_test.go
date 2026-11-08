@@ -35,7 +35,7 @@ func TestDAVCollectionNativeReviewedAPIReadOnlySourceAndOriginalReceipt(t *testi
 	producerPrefix := "/v1/tenants/" + producerScope.Tenant + "/partners/" + producerScope.Partner
 	consumerPrefix := "/v1/tenants/" + consumerScope.Tenant + "/partners/" + consumerScope.Partner
 	producerCookie, producerCSRF := loginBrowser(t, producerHTTP, producerScope, producerToken)
-	sourceCredential, _ := exchangeAPIParticipant(t, producerHTTP, producerPrefix, producerCookie, producerCSRF, []string{"read", "list"})
+	sourceCredential, sourceParticipant := exchangeAPIParticipant(t, producerHTTP, producerPrefix, producerCookie, producerCSRF, []string{"read", "list"})
 	for _, fixture := range []struct {
 		service *custody.Service
 		scope   store.Scope
@@ -68,6 +68,52 @@ func TestDAVCollectionNativeReviewedAPIReadOnlySourceAndOriginalReceipt(t *testi
 		return n
 	}
 	producerBefore := count(producer, producerScope)
+	producerActor := ""
+	snapshotProducer := func() (string, map[string]davSourceAuditRow) {
+		t.Helper()
+		tx, err := producer.DB.Begin(t.Context(), producerScope)
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer tx.Tx.Rollback(t.Context())
+		if producerActor == "" {
+			producerActor = tx.Actor
+		} else if producerActor != tx.Actor {
+			t.Fatal("producer snapshot actor changed")
+		}
+		var state []byte
+		if err = tx.Tx.QueryRow(t.Context(), `SELECT jsonb_build_object(
+'files',(SELECT coalesce(jsonb_agg(to_jsonb(x) ORDER BY file_id),'[]'::jsonb) FROM files x),
+'entries',(SELECT coalesce(jsonb_agg(to_jsonb(x) ORDER BY entry_id),'[]'::jsonb) FROM namespace_entries x),
+'revisions',(SELECT coalesce(jsonb_agg(to_jsonb(x) ORDER BY entry_id,revision),'[]'::jsonb) FROM namespace_revisions x),
+'commands',(SELECT coalesce(jsonb_agg(to_jsonb(x) ORDER BY actor_id,request_key),'[]'::jsonb) FROM namespace_commands x),
+'credentials',(SELECT coalesce(jsonb_agg(to_jsonb(x) ORDER BY actor_id),'[]'::jsonb) FROM credentials x),
+'deliveries',(SELECT coalesce(jsonb_agg(to_jsonb(x) ORDER BY delivery_id),'[]'::jsonb) FROM delivery_intents x),
+'runs',(SELECT coalesce(jsonb_agg(to_jsonb(x) ORDER BY run_id),'[]'::jsonb) FROM workflow_runs x),
+'receipts',(SELECT coalesce(jsonb_agg(to_jsonb(x) ORDER BY actor_id,request_key),'[]'::jsonb) FROM workflow_receipts x))`).Scan(&state); err != nil {
+			t.Fatal("producer state snapshot failed", err)
+		}
+		rows, err := tx.Tx.Query(t.Context(), `SELECT event_id::text,actor_id::text,kind,resource_id::text,payload,to_jsonb(events)::text FROM events ORDER BY happened_at,event_id`)
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer rows.Close()
+		events := map[string]davSourceAuditRow{}
+		for rows.Next() {
+			var id, raw string
+			var e davSourceAuditRow
+			if err = rows.Scan(&id, &e.Actor, &e.Kind, &e.Resource, &e.Payload, &raw); err != nil {
+				t.Fatal(err)
+			}
+			e.Hash = secure.Digest([]byte(raw))
+			events[id] = e
+		}
+		if rows.Err() != nil {
+			t.Fatal(rows.Err())
+		}
+		return secure.Digest(state), events
+	}
+	producerState, producerEvents := snapshotProducer()
 	private := t.TempDir()
 	if err = os.Chmod(private, 0700); err != nil {
 		t.Fatal(err)
@@ -188,8 +234,16 @@ func TestDAVCollectionNativeReviewedAPIReadOnlySourceAndOriginalReceipt(t *testi
 		t.Fatal("independent destination custody read differs from the original DAV artifact")
 	}
 	after := count(consumer, consumerScope)
-	if after[0] != before[0]+1 || after[1] != before[1] || after[2] != before[2] || count(producer, producerScope) != producerBefore {
-		t.Fatal("DAV read-only collection mutated the producer or gained onward work")
+	if after[0] != before[0]+1 || after[1] != before[1] || after[2] != before[2] {
+		t.Fatal("DAV collection gained unrelated custody or onward work")
+	}
+	readState, readEvents := snapshotProducer()
+	expectedReads := map[davSourceReadBinding]int{
+		{Actor: sourceParticipant.Actor, File: file.ID, SHA256: file.SHA256}:   1,
+		{Actor: sourceParticipant.Actor, File: ready.ID, SHA256: ready.SHA256}: 1,
+	}
+	if readState != producerState || !davSourceReadAuditsMatch(producerEvents, readEvents, expectedReads) {
+		t.Fatal("read-only DAV changed producer state or lost exact actor/file/hash read audit")
 	}
 	for path, want := range map[string]*store.File{"/inbox/input.dat": file, "/inbox/batch.ready.json": ready} {
 		got, stream, err := producer.DownloadPath(t.Context(), producerScope, path)
@@ -202,12 +256,19 @@ func TestDAVCollectionNativeReviewedAPIReadOnlySourceAndOriginalReceipt(t *testi
 			t.Fatal("collection changed a producer revision or its exact bytes")
 		}
 	}
+	verifiedState, verifiedEvents := snapshotProducer()
+	expectedReads[davSourceReadBinding{Actor: producerActor, File: file.ID, SHA256: file.SHA256}] = 1
+	expectedReads[davSourceReadBinding{Actor: producerActor, File: ready.ID, SHA256: ready.SHA256}] = 1
+	if verifiedState != producerState || !davSourceReadAuditsMatch(producerEvents, verifiedEvents, expectedReads) {
+		t.Fatal("independent producer verification changed state or exact read audit")
+	}
 	if err = os.Remove(tokenRef); err != nil {
 		t.Fatal(err)
 	}
 	_, replayRaw := exchangeAPIRequest(t, consumerHTTP, "POST", consumerPrefix+"/workflow-collections/"+job.ID+"/work", nil, headers, exchangeAPIJSON(t, workflow.CollectionWorkRequest{Hash: job.Hash}), 200)
 	var first, replay workflow.Result
-	if json.Unmarshal(workedRaw, &first) != nil || json.Unmarshal(replayRaw, &replay) != nil || !replay.Replayed || !bytes.Equal(first.Resource, replay.Resource) || count(consumer, consumerScope) != after || count(producer, producerScope) != producerBefore {
+	finalState, finalEvents := snapshotProducer()
+	if json.Unmarshal(workedRaw, &first) != nil || json.Unmarshal(replayRaw, &replay) != nil || !replay.Replayed || !bytes.Equal(first.Resource, replay.Resource) || count(consumer, consumerScope) != after || finalState != producerState || !davSourceReadAuditsMatch(verifiedEvents, finalEvents, nil) {
 		t.Fatal("saved original DAV work receipt reopened a missing credential or repeated effects")
 	}
 	t.Logf("served DAV source proof candidate=%s;arch=%s;content-sha256=%s;source-unchanged=true;captured-inputs=1;onward-effects=0;business-acceptance=unknown;independent-upstream-server-qualification=owed", commit, runtime.GOARCH, secure.Digest(data))
