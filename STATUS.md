@@ -8,6 +8,13 @@ Exact original failures,owner decisions and remaining work are preserved in
 [artifact-exchange.json](docs/qualification/artifact-exchange.json) and the
 linked safe manifests. Raw private proof remains outside Git.
 
+F428 prepares an independent stock rclone1.76.0 DAV application profile on
+actual GitHub ARM/x86. Exact source/binary provenance and enforcing security
+gates precede real PostgreSQL/HTTPS discovery,byte comparison,conditional
+creation,refused cleanup/overwrite and revocation. Inventory guards pass after
+an observed missing/ambiguous-dependency red;local compile/static only. Native
+application outcomes,locks,outbound,desktop mounts and final-source proof are owed.
+
 Current pushed candidate: `fd6146c9fecaf2a2731d042d4bb83df868543cff`.
 [F427](docs/qualification/evidence/F427-native-push.json) binds three owner-only
 commits,enabled Gitleaks(no leaks) and16 original attempt1 workflows. F425

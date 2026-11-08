@@ -417,3 +417,46 @@ mount,locking client or independent upstream DAV server.
 Protocol references: [RFC4918](https://www.rfc-editor.org/rfc/rfc4918.html),
 [HTTP conditions](https://www.rfc-editor.org/rfc/rfc9110.html#section-13.1.2) and
 [428 Precondition Required](https://www.rfc-editor.org/rfc/rfc6585.html#section-3).
+
+## Independent application profile under qualification
+
+The native `dav-application.yml` workflow prepares stock rclone1.76.0 on actual
+Linux ARM64 and x86_64 runners. This profile is prepared,not yet qualified.
+It builds the unmodified upstream module with Go1.27.3 and its complete default
+backend set. The pinned Go module/go.mod sums and upstream tag commit must
+match;the actual binary's native build information,dependency inventory and
+SHA256 are checked. Complete default source and actual binary vulnerability
+reports go through the enforcing pinned converter before any protocol proof.
+No dependency replacement,backend-only build,security waiver or arbitrary
+GitHub resource ceiling is used. Full private reports stay outside Git.
+
+The client uses an explicit0600 config with `type=webdav`,`vendor=other`,the
+scoped HTTPS DAV URL,`auth_redirect=false` and an enrolled `bearer_token`.
+The CA is trusted explicitly. Ambient rclone settings,proxies and cloud
+credentials are not inherited. Never place credentials in argv,URLs or logs.
+Use rclone `lsjson` for finite directory discovery and `copyto` for a single
+exact file. This does not imply desktop mounting,locking or upstream server
+interoperability;those profiles remain open.
+
+Single-file creation additionally passes `--header 'Idempotency-Key: KEY'`,
+`--header-upload 'If-None-Match: *'` and
+`--header-upload 'X-Content-SHA256: EXACT_SHA256'`. Use one original key and the
+digest of that exact local file. `copyto --no-check-dest` makes the server
+evaluate absence even if the client would otherwise skip a same-sized file.
+This is a conditional create profile,not a general rclone sync configuration.
+The workflow uses an existing authorized parent;it does not qualify multi-file
+uploads with one shared key or automatic parent creation.
+
+An existing destination must still fail412. Rclone can attempt DELETE while
+cleaning up a failed PUT;that cleanup has no exact file If-Match and remains
+refused. The native journey checks that both the failed overwrite and its
+cleanup preserve every event,file,mapping,command and onward-effect count.
+A nonzero client exit or lost response alone establishes no earlier outcome.
+Read the current authorized exact revision or recover the relevant original
+receipt through the ordinary product interfaces. Receiving bytes grants no
+forwarding,execution or business-acceptance authority.
+
+Pinned primary inputs: [rclone1.76.0](https://github.com/rclone/rclone/releases/tag/v1.76.0),
+[WebDAV configuration](https://rclone.org/webdav/),
+[client flags](https://rclone.org/flags/),
+[exact upstream module](https://github.com/rclone/rclone/blob/e982ff36668f5130d94b4f70409babb3d964df42/go.mod).

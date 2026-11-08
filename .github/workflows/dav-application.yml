@@ -1,0 +1,69 @@
+name: Native independent DAV application
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'cmd/**'
+      - 'internal/**'
+      - 'go.mod'
+      - 'go.sum'
+      - 'scripts/go.sh'
+      - 'scripts/dev-db.py'
+      - 'scripts/*rclone*'
+      - 'scripts/test-govulncheck-gate.py'
+      - '.github/workflows/dav-application.yml'
+  pull_request:
+    paths:
+      - 'cmd/**'
+      - 'internal/**'
+      - 'go.mod'
+      - 'go.sum'
+      - 'scripts/go.sh'
+      - 'scripts/dev-db.py'
+      - 'scripts/*rclone*'
+      - 'scripts/test-govulncheck-gate.py'
+      - '.github/workflows/dav-application.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: freightctl-native-dav-application-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  native-rclone:
+    name: Native stock rclone DAV (${{ matrix.arch }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: amd64
+            runner: ubuntu-24.04
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    env:
+      FREIGHTCTL_TEST_ADMIN_FILE: ${{ github.workspace }}/.private/pg-admin.dsn
+      FREIGHTCTL_TEST_RUNTIME_FILE: ${{ github.workspace }}/.private/pg-runtime.dsn
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version: '1.27.3'
+          cache: false
+      - name: Exact peer identity guard regressions
+        run: python3 scripts/test-rclone-peer.py
+      - name: Exact unmodified stock peer and enforcing source/binary security gates
+        run: python3 scripts/acquire-rclone-native.py
+      - name: Task-owned loopback PostgreSQL and ordinary initialization
+        run: |
+          python3 scripts/dev-db.py
+          sh scripts/go.sh run ./cmd/freightctl init
+      - name: Actual independent DAV application,exact bytes,conditional writes and current authority
+        run: |
+          sh scripts/go.sh test -race -timeout=0 -tags=integration,davpeer -run '^TestDAVApplication' -count=1 -v ./internal/api

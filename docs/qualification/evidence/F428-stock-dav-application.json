@@ -1,0 +1,216 @@
+{
+  "schema_version": 1,
+  "id": "F428",
+  "observed_at": "2026-11-07",
+  "base_candidate": "9e7ba3a698bc94debea5495367bdbb7d905a8443",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "Prepared stock rclone1.76.0 independent DAV application profile on actual GitHub Linux ARM64/x86_64. Exact unmodified upstream module/tag/sums,native binary/dependency inventory and complete default-source/actual-binary enforcing vulnerability gates precede real PostgreSQL/verified-HTTPS application proof. No product server assertion,condition,isolation or budget relaxed. Local heavy execution off;actual native application red/green and final-source outcomes owed.",
+  "pins": {
+    "module": "github.com/rclone/rclone",
+    "version": "v1.76.0",
+    "upstream_revision": "e982ff36668f5130d94b4f70409babb3d964df42",
+    "module_sum": "h1:Gabl7KmhxyOXyMtFNA/s6wZ3LZ/2x0NP7xZLNEW3Guo=",
+    "go_mod_sum": "h1:PoNZIA6Rv+01jY+WxLTz08i/QBEPz/6L5s1aD24Z5tc=",
+    "go": "1.27.3",
+    "govulncheck": "1.9.0",
+    "primary_references": [
+      "https://rclone.org/webdav/",
+      "https://rclone.org/flags/",
+      "https://github.com/rclone/rclone/releases/tag/v1.76.0",
+      "https://proxy.golang.org/github.com/rclone/rclone/@v/v1.76.0.info",
+      "https://sum.golang.org/lookup/github.com/rclone/rclone@v1.76.0"
+    ]
+  },
+  "prepared_native_proof": [
+    "Finite discovery/exact Unicode and escaped filename;private child omitted and unreadable",
+    "Independent stock application exact download and independent API comparison of uploaded bytes",
+    "Ordinary read/list/write actor;separate read/list-only actor cannot write",
+    "Conditional single-file create with original key,exact digest and If-None-Match star",
+    "Old/new-key overwrite and automatic failed-upload cleanup cannot change any counters or exact committed ID/revision",
+    "Fresh create exactly FileAccepted,PathPublished,NamespaceCommandCompleted;one file,mapping,private command and zero onward effects",
+    "Actual credential revocation blocks fresh listing/download and emits no extra effects"
+  ],
+  "red_green": [
+    {
+      "reference": ".private/freightctl-f428-inventory-red.log",
+      "exit_code": 1,
+      "proof": "New peer dependency inventory refusal:missing Path/Version/Sum and duplicate module accepted before repair"
+    },
+    {
+      "reference": ".private/freightctl-f428-identity-green.log",
+      "exit_code": 0,
+      "proof": "Five focused identity/substitution/native-candidate tests after inventory repair"
+    },
+    {
+      "reference": ".private/freightctl-f428-environment-green.log",
+      "exit_code": 0,
+      "proof": "No ambient client/proxy/cloud authority or copied local Go ceilings"
+    },
+    {
+      "reference": ".private/freightctl-f428-closed-native-compile.log",
+      "exit_code": 0,
+      "proof": "Tagged native profile compile only;no PostgreSQL/client runtime"
+    },
+    {
+      "reference": ".private/freightctl-f428-closed-vet.log",
+      "exit_code": 0,
+      "proof": "Affected tagged API vet"
+    },
+    {
+      "reference": ".private/freightctl-f428-final-architecture.log",
+      "exit_code": 0,
+      "proof": "Architecture imports"
+    },
+    {
+      "reference": ".private/freightctl-f428-workflow-lint.log",
+      "exit_code": 0,
+      "proof": "New workflow actionlint1.7.12"
+    },
+    {
+      "reference": ".private/freightctl-f428-local-runtime-refused.log",
+      "exit_code": 0,
+      "proof": "Actual acquisition entrypoint local refusal before build/download/runtime"
+    },
+    {
+      "reference": ".private/freightctl-f428-format.log",
+      "exit_code": 0,
+      "proof": "Go formatting"
+    },
+    {
+      "reference": ".private/freightctl-f428-records.log",
+      "exit_code": 0,
+      "proof": "Qualification references only"
+    },
+    {
+      "reference": ".private/freightctl-f428-final-source-compile.log",
+      "exit_code": 0,
+      "proof": "Tagged actual final-source profile compile only"
+    },
+    {
+      "reference": ".private/freightctl-f428-final-source-vet.log",
+      "exit_code": 0,
+      "proof": "Actual final-source tagged API vet"
+    }
+  ],
+  "source_files": [
+    {
+      "reference": ".github/workflows/dav-application.yml",
+      "sha256": "6a1bf7ee07861eede9a909b0af5665fe0ad8e2b2d431300b1700307374f06a2a",
+      "bytes": 2173
+    },
+    {
+      "reference": "internal/api/dav_application_peer_test.go",
+      "sha256": "35d79bfc7a5e5c94f45aafce4d6008b0c558312d324d6e01b874067b8a384427",
+      "bytes": 1235
+    },
+    {
+      "reference": "internal/api/dav_application_integration_test.go",
+      "sha256": "135926f52857df5aa2e0d572c39bc7ec7f7e592b8aed6b9457306d7c44068692",
+      "bytes": 14305
+    },
+    {
+      "reference": "scripts/acquire-rclone-native.py",
+      "sha256": "36f649c3db6cd92e8f8280f56cd8c4e05aaffc57bbf285fef6a406b5b9f5f44b",
+      "bytes": 6968
+    },
+    {
+      "reference": "scripts/rclone_peer.py",
+      "sha256": "5ec7e442eaaf1c554711777ae933a00ba6ef15924fddcf107839d0e1fdaa121a",
+      "bytes": 2717
+    },
+    {
+      "reference": "scripts/test-rclone-peer.py",
+      "sha256": "adc38cf3163b0e15d664e137d4f21a7f634869c3d31c63cf5ef89e91b71c6ef0",
+      "bytes": 3971
+    },
+    {
+      "reference": "docs/protocols/webdav-read-profile.md",
+      "sha256": "ab54cf1fd176d43a7a17024af8f76c14ee17d1f837173a5ec44ef2399e531630",
+      "bytes": 34433
+    },
+    {
+      "reference": "STATUS.md",
+      "sha256": "9eb73310c8518762d06e6ea8766b8db6d8b4c27289f3905a79b7066931ae3c5a",
+      "bytes": 18678
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "32f69734fc113245fe7df472660c7e4b9777d66c004e98e87985d061b73321bb",
+      "bytes": 684949
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f428-inventory-red.log",
+      "sha256": "b58df24f7ea1226c012a669a1a3acf8df14e2c9061247c2785c6f7d2b21b2356",
+      "bytes": 2758
+    },
+    {
+      "reference": ".private/freightctl-f428-identity-green.log",
+      "sha256": "6273232de4d3ef7acd4ecafa5c86beeeb974f56586b21089a2990b3f72facbe6",
+      "bytes": 103
+    },
+    {
+      "reference": ".private/freightctl-f428-environment-green.log",
+      "sha256": "b19e00cf8a92a91b171243eb3e0f3e924c7e3ebc5b09bab945f08ce91bec11a0",
+      "bytes": 55
+    },
+    {
+      "reference": ".private/freightctl-f428-closed-native-compile.log",
+      "sha256": "a6d222e08ea57d55be1276d074e96c211cf2401a98277c54f17bc4fc30452299",
+      "bytes": 73
+    },
+    {
+      "reference": ".private/freightctl-f428-closed-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f428-final-architecture.log",
+      "sha256": "424a7a4a54021cb9ecd855c50c9bb5e68be6cec9d843903d07a71ea0ea888763",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f428-workflow-lint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f428-local-runtime-refused.log",
+      "sha256": "2b5e6b257e68223479f0e86a9d67628f702a3681b58dfe9307c065e2d80e9b84",
+      "bytes": 119
+    },
+    {
+      "reference": ".private/freightctl-f428-format.log",
+      "sha256": "ec8ff2eb008016fb9a683178a2e3a7f2419558f9922f39c876065ce2c5a5b004",
+      "bytes": 87
+    },
+    {
+      "reference": ".private/freightctl-f428-records.log",
+      "sha256": "826009b37d6c8254924b7fd1ee12981059544175f2c890ad4186b88b41b583b4",
+      "bytes": 106
+    },
+    {
+      "reference": ".private/freightctl-f428-final-source-compile.log",
+      "bytes": 75,
+      "sha256": "4f0817c6fbbce50cdf9edd9a9d534bedf5df5d84f33748b4d352fff1abd88eae"
+    },
+    {
+      "reference": ".private/freightctl-f428-final-source-vet.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "owed": [
+    "Exact original native acquisition/source+binary security gates and actual stock application runtime on both architectures",
+    "Actual native first failure/repair/replay if needed;light local guards/compilation are not application qualification",
+    "Final-source runtime and all original failures,baseline/AX/readiness/security gates",
+    "DAV locking,outbound server,desktop/OS mount clients and whole C-WEBDAV acceptance"
+  ],
+  "schema_or_retained_database_changed": false,
+  "local_heavy_runtime_started": false,
+  "inference_started": false,
+  "publication_or_deployment": false,
+  "overall_goal_complete": false
+}
