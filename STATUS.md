@@ -15,7 +15,14 @@ creation,refused cleanup/overwrite and revocation. Inventory guards pass after
 an observed missing/ambiguous-dependency red;local compile/static only. Native
 application outcomes,locks,outbound,desktop mounts and final-source proof are owed.
 
-Current pushed candidate: `fd6146c9fecaf2a2731d042d4bb83df868543cff`.
+Current pushed candidate: `8823d7d3293dffd72f681c8550ff58d668642031`.
+[F431](docs/qualification/evidence/F431-native-push.json) binds three owner-only
+commits,enabled Gitleaks(no leaks),verified remote main and16 original attempt1
+workflows. F428 independent rclone acquisition/security/application proof is
+included for first execution(run42429563711). Source schema63;local F429
+outbound/schema64 work is excluded. All actual final-source outcomes stay owed.
+
+Previous terminal candidate: `fd6146c9fecaf2a2731d042d4bb83df868543cff`.
 [F427](docs/qualification/evidence/F427-native-push.json) binds three owner-only
 commits and enabled Gitleaks(no leaks). [F430](docs/qualification/evidence/F430-native-terminal.json)
 records16 original workflows/35 terminal jobs,34pass/receive-browser red.
