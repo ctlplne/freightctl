@@ -13,11 +13,13 @@
       "state": "implementing",
       "evidence": [
         "docs/qualification/evidence/Q001-protocol-contracts.json",
-        "docs/qualification/evidence/F428-stock-dav-application.json"
+        "docs/qualification/evidence/F428-stock-dav-application.json",
+        "docs/qualification/evidence/F432-first-dav-application-failure.json"
       ],
       "remaining_details": [
         "Q001 pins six acceptance contracts and five official protocol specifications for 13 existing rows, clarifying exact AS2 retry recovery and the AS4 ebHandler target. All 83 row IDs/states/incumbent observations are preserved. Exact competitor editions, gateway/native-client versions, PeSIT specification, numeric/security/independent-peer profiles and complete conformance coverage remain open. Record-checker tests are bookkeeping only.",
-        "F428 prepares pinned unmodified rclone1.76.0 with native ARM/x86 acquisition,complete default-source/binary enforcing vulnerability gates and real PostgreSQL/HTTPS application discovery,exact reads,conditional create,refused overwrite/cleanup,path privacy and revocation. Dependency inventory refusal observed red then green;light local static/compile only. Original native application execution and final-source outcomes remain owed;no desktop mount,locks,outbound or whole-row qualification."
+        "F428 prepares pinned unmodified rclone1.76.0 with native ARM/x86 acquisition,complete default-source/binary enforcing vulnerability gates and real PostgreSQL/HTTPS application discovery,exact reads,conditional create,refused overwrite/cleanup,path privacy and revocation. Dependency inventory refusal observed red then green;light local static/compile only. Original native application execution and final-source outcomes remain owed;no desktop mount,locks,outbound or whole-row qualification.",
+        "F432:8823d7d original DAV ARM run42429563711/job128575226068 acquisition/native stock binary/default source+binary enforcing security gates pass. First actual application attempt fails discovery exit1 at dav_application_integration_test.go:198;original log/private stderr hash preserved. No actionable security assertion identified and no application security pass inferred. Cause/nonsecurity repair deferred to FINISH;runtime remains unqualified and original x86 outcome owed."
       ]
     },
     {
@@ -248,7 +250,8 @@
         "docs/qualification/evidence/F427-native-push.json",
         "docs/qualification/evidence/F428-stock-dav-application.json",
         "docs/qualification/evidence/F430-native-terminal.json",
-        "docs/qualification/evidence/F431-native-push.json"
+        "docs/qualification/evidence/F431-native-push.json",
+        "docs/qualification/evidence/F432-first-dav-application-failure.json"
       ],
       "remaining_details": [
         "F005/F006 verify bounded inbound and durable ticket resume. F007 adds a local-only approved outbound SFTP profile against a stock receiver. Finish ordinary-operator onboarding, API/browser parity, production network policy, broader protocols/clients/enterprise peers, larger files and independent business receipts. No complete journey is qualified.",
@@ -308,7 +311,8 @@
         "F427:three owner-only commits pushed fast-forward94745e3\u2192fd6146c9fecaf2a2731d042d4bb83df868543cff after prior originals terminal(F426). Enabled Gitleaks8.30.1:3 commits,reported134715 bytes,no leaks;push0,remote main verified. Sixteen original attempt1 workflows preserved. F425 source/destination-identity collection overwrite requires actual native API/CLI/curl/no-effects/custody/authority/combined-bound/quota/receipt outcomes. Original browser and independent x86 receiver failures remain owed;F026 held. No local heavy runtime,publication or deployment.",
         "F428 prepares pinned unmodified rclone1.76.0 with native ARM/x86 acquisition,complete default-source/binary enforcing vulnerability gates and real PostgreSQL/HTTPS application discovery,exact reads,conditional create,refused overwrite/cleanup,path privacy and revocation. Dependency inventory refusal observed red then green;light local static/compile only. Original native application execution and final-source outcomes remain owed;no desktop mount,locks,outbound or whole-row qualification.",
         "F430:fd6146c original16 workflows/35 jobs terminal,34pass/receive-browser128566089957 step8 failed;all16 named security gates pass. Native PG/restore/HTTPS-curl/JSON API-CLI and stock SDK completion metadata succeed with F425 overwrite;detailed scoped/final-source proof owed. Earlier receive/live/local-browser and independent x86 failures remain preserved;nonsecurity diagnosis at FINISH. Local F428/F429 not included.",
-        "F431:three owner-only commits pushed fast-forward fd6146c\u21928823d7d after all previous originals terminal(F430). Enabled Gitleaks8.30.1:3 commits,92173 reported bytes,no leaks;push0 and remote main verified. Sixteen original attempt1 workflows include the first independent DAV application run42429563711;source schema63,F428 actual native acquisition/security/application outcomes owed. Unstaged F429 outbound/schema64 source excluded. Original failures remain owed;no publication/deployment."
+        "F431:three owner-only commits pushed fast-forward fd6146c\u21928823d7d after all previous originals terminal(F430). Enabled Gitleaks8.30.1:3 commits,92173 reported bytes,no leaks;push0 and remote main verified. Sixteen original attempt1 workflows include the first independent DAV application run42429563711;source schema63,F428 actual native acquisition/security/application outcomes owed. Unstaged F429 outbound/schema64 source excluded. Original failures remain owed;no publication/deployment.",
+        "F432:8823d7d original DAV ARM run42429563711/job128575226068 acquisition/native stock binary/default source+binary enforcing security gates pass. First actual application attempt fails discovery exit1 at dav_application_integration_test.go:198;original log/private stderr hash preserved. No actionable security assertion identified and no application security pass inferred. Cause/nonsecurity repair deferred to FINISH;runtime remains unqualified and original x86 outcome owed."
       ],
       "current_item": {
         "id": "F425",
@@ -1009,7 +1013,8 @@
         "docs/qualification/evidence/F427-native-push.json",
         "docs/qualification/evidence/F428-stock-dav-application.json",
         "docs/qualification/evidence/F430-native-terminal.json",
-        "docs/qualification/evidence/F431-native-push.json"
+        "docs/qualification/evidence/F431-native-push.json",
+        "docs/qualification/evidence/F432-first-dav-application-failure.json"
       ],
       "remaining_details": [
         "F010 verifies durable held intake for configured new revisions, exact CSV contracts, separate hash/revision-bound release and ordinary delivery of released bytes. Antivirus/ICAP/DLP, cryptographic signatures/encryption, other formats/transforms, re-scan/exception governance, retrospective policy and the complete business-file journey remain mandatory.",
@@ -1163,7 +1168,8 @@
         "F427:three owner-only commits pushed fast-forward94745e3\u2192fd6146c9fecaf2a2731d042d4bb83df868543cff after prior originals terminal(F426). Enabled Gitleaks8.30.1:3 commits,reported134715 bytes,no leaks;push0,remote main verified. Sixteen original attempt1 workflows preserved. F425 source/destination-identity collection overwrite requires actual native API/CLI/curl/no-effects/custody/authority/combined-bound/quota/receipt outcomes. Original browser and independent x86 receiver failures remain owed;F026 held. No local heavy runtime,publication or deployment.",
         "F428 prepares pinned unmodified rclone1.76.0 with native ARM/x86 acquisition,complete default-source/binary enforcing vulnerability gates and real PostgreSQL/HTTPS application discovery,exact reads,conditional create,refused overwrite/cleanup,path privacy and revocation. Dependency inventory refusal observed red then green;light local static/compile only. Original native application execution and final-source outcomes remain owed;no desktop mount,locks,outbound or whole-row qualification.",
         "F430:fd6146c original16 workflows/35 jobs terminal,34pass/receive-browser128566089957 step8 failed;all16 named security gates pass. Native PG/restore/HTTPS-curl/JSON API-CLI and stock SDK completion metadata succeed with F425 overwrite;detailed scoped/final-source proof owed. Earlier receive/live/local-browser and independent x86 failures remain preserved;nonsecurity diagnosis at FINISH. Local F428/F429 not included.",
-        "F431:three owner-only commits pushed fast-forward fd6146c\u21928823d7d after all previous originals terminal(F430). Enabled Gitleaks8.30.1:3 commits,92173 reported bytes,no leaks;push0 and remote main verified. Sixteen original attempt1 workflows include the first independent DAV application run42429563711;source schema63,F428 actual native acquisition/security/application outcomes owed. Unstaged F429 outbound/schema64 source excluded. Original failures remain owed;no publication/deployment."
+        "F431:three owner-only commits pushed fast-forward fd6146c\u21928823d7d after all previous originals terminal(F430). Enabled Gitleaks8.30.1:3 commits,92173 reported bytes,no leaks;push0 and remote main verified. Sixteen original attempt1 workflows include the first independent DAV application run42429563711;source schema63,F428 actual native acquisition/security/application outcomes owed. Unstaged F429 outbound/schema64 source excluded. Original failures remain owed;no publication/deployment.",
+        "F432:8823d7d original DAV ARM run42429563711/job128575226068 acquisition/native stock binary/default source+binary enforcing security gates pass. First actual application attempt fails discovery exit1 at dav_application_integration_test.go:198;original log/private stderr hash preserved. No actionable security assertion identified and no application security pass inferred. Cause/nonsecurity repair deferred to FINISH;runtime remains unqualified and original x86 outcome owed."
       ],
       "current_item": {
         "id": "F425",

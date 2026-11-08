@@ -21,6 +21,11 @@ commits,enabled Gitleaks(no leaks),verified remote main and16 original attempt1
 workflows. F428 independent rclone acquisition/security/application proof is
 included for first execution(run42429563711). Source schema63;local F429
 outbound/schema64 work is excluded. All actual final-source outcomes stay owed.
+[F432](docs/qualification/evidence/F432-first-dav-application-failure.json) preserves
+the first ARM application discovery exit1. Exact native peer acquisition and both
+enforcing vulnerability gates pass;application proof remains red. Original log
+and private diagnostic hash retained;cause/nonsecurity repair deferred to FINISH.
+No application security pass is inferred;original x86 outcome remains owed.
 
 Previous terminal candidate: `fd6146c9fecaf2a2731d042d4bb83df868543cff`.
 [F427](docs/qualification/evidence/F427-native-push.json) binds three owner-only

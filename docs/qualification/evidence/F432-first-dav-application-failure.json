@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "id": "F432",
+  "observed_at": "2026-11-07",
+  "qualification_claim": false,
+  "candidate": "8823d7d3293dffd72f681c8550ff58d668642031",
+  "record_base_commit": "228a55a4afffa2b5cda526defd48f5628976c3eb",
+  "summary": "Original first native ARM independent DAV application fails during discovery(exit1). Exact stock module/tag/native binary inventory and complete default-source/actual-binary enforcing vulnerability gates pass. Original raw job/private stderr hash preserved. Only security classification inspected;no actionable security assertion identified,no application security pass inferred,cause/nonsecurity diagnosis/repair deferred to FINISH. Original x86 outcome and final-source application proof owed.",
+  "original": {
+    "schema_version": 1,
+    "candidate": "8823d7d3293dffd72f681c8550ff58d668642031",
+    "run_id": 42429563711,
+    "job_id": 128575226068,
+    "url": "https://github.com/ctlplne/freightctl/actions/runs/42429563711/job/128575226068",
+    "attempt": 1,
+    "architecture": "arm64",
+    "security_acquisition": {
+      "state": "accepted-for-protocol-proof",
+      "candidate": "8823d7d3293dffd72f681c8550ff58d668642031",
+      "architecture": "arm64",
+      "manifest_sha256": "0960f79d6c4a03b9d82a8627367a4e5b0d40559ddd55a4712019bd5c83b01fb7",
+      "protocol_qualified": false,
+      "steps": [
+        {
+          "name": "native-toolchain",
+          "exit_code": 0
+        },
+        {
+          "name": "verified-module",
+          "exit_code": 0
+        },
+        {
+          "name": "stock-build",
+          "exit_code": 0
+        },
+        {
+          "name": "binary-inventory",
+          "exit_code": 0
+        },
+        {
+          "name": "complete-module-inventory",
+          "exit_code": 0
+        },
+        {
+          "name": "verified-module-cache",
+          "exit_code": 0
+        },
+        {
+          "name": "scanner-install",
+          "exit_code": 0
+        },
+        {
+          "name": "scanner-converter-contract",
+          "exit_code": 0
+        },
+        {
+          "name": "source-scan",
+          "exit_code": 0
+        },
+        {
+          "name": "source-findings-gate",
+          "exit_code": 0
+        },
+        {
+          "name": "binary-scan",
+          "exit_code": 0
+        },
+        {
+          "name": "binary-findings-gate",
+          "exit_code": 0
+        },
+        {
+          "name": "stock-version",
+          "exit_code": 0
+        }
+      ]
+    },
+    "diagnostics": [
+      {
+        "kind": "source-diagnostic",
+        "line": 198
+      },
+      {
+        "kind": "source-diagnostic",
+        "line": 198,
+        "phase": "discovery",
+        "exit": 1,
+        "private_stderr_sha256": "393701dd4054a96ca928ee4d75e37119b22a50edc12637f43eacb0e7213258fc"
+      },
+      {
+        "kind": "test-failed",
+        "line": null
+      }
+    ],
+    "classification": "stock-client-exit-during-discovery",
+    "cause": "deferred-uninvestigated",
+    "actionable_security_assertion_identified": false,
+    "no_application_security_pass_inferred": true,
+    "original_cancelled_or_rerun": false
+  },
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "bytes": 19922,
+      "sha256": "cc81aaf560f4866007935c0960559b0c202b59a7a63b8b8f408e634b265f8f43"
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "bytes": 694115,
+      "sha256": "f71ca2ce5dbfd75ee47197d415d2a4c9df2f8ed87264aeee10f0be09a58688e6"
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f432-dav-arm-job.log",
+      "bytes": 24730,
+      "sha256": "2e03f1eec8d1b9a94545e82e19eac1925bd886b167c3042bf92adb41f85b1cd4"
+    },
+    {
+      "reference": ".private/freightctl-f432-dav-arm-classification.json",
+      "bytes": 2180,
+      "sha256": "7e94ffa50ccac79718529dab7eaae9616e96824ad8690c1a6b9548251f53c1c1"
+    }
+  ],
+  "owed": [
+    "Original x86 independent application outcome",
+    "Actual ARM discovery failure cause,repair and original journey replay at FINISH",
+    "Actual final-source application and all mandatory baseline/AX/security/readiness qualification"
+  ],
+  "original_cancelled_or_rerun": false,
+  "local_heavy_runtime_started": false,
+  "overall_goal_complete": false
+}
