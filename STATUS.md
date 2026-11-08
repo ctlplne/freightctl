@@ -24,7 +24,14 @@ stand-ins and affected static checks pass. Local source schema64 preserves all
 63 earlier migrations and78/77 tables;retained35 is untouched. Native served
 SQL/API,CLI/browser,independent upstream DAV and final-source proof remain owed.
 
-Current pushed candidate: `8823d7d3293dffd72f681c8550ff58d668642031`.
+Current pushed candidate: `bfc9316bdeffc6c75a757b3a67d0b6b7a8f1bf16`.
+[F435](docs/qualification/evidence/F435-native-push.json) binds four owner-only
+commits,enabled Gitleaks(no leaks),remote verification and18 original attempt1
+workflows. Schema64/F429 bearer-source SQL/API/capture/receipt and current
+independent FTPS receiver outcomes await native execution. Basic/schema65 WIP
+is excluded. Original failures and all final-source qualification remain owed.
+
+Previous terminal candidate: `8823d7d3293dffd72f681c8550ff58d668642031`.
 [F431](docs/qualification/evidence/F431-native-push.json) binds three owner-only
 commits,enabled Gitleaks(no leaks) and16 original attempt1 workflows.
 [F434](docs/qualification/evidence/F434-native-terminal.json) records36 terminal
