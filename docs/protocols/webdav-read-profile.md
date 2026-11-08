@@ -469,3 +469,31 @@ memory,binary/archive bytes,wall time,child CPU time and completed-child RSS
 without capacity pass/fail thresholds. RSS is not a simultaneous process-tree
 measurement. The new[read-only outbound collection](../collection-workflows.md)
 uses ordinary reviewed workflows and remains separately under qualification.
+
+## Outbound delivery transport under implementation
+
+F439 adds a separate cryptographic transport capability for one approved stage
+path,final path,size and SHA256. The source-only client still exposes only GET
+and Close. Both capabilities use the same exact numeric endpoint,pinned CA/name,
+TLS1.3,protected bearer or explicit Basic reference,no proxy or redirect,and
+live authority checks. The sender cannot supply arbitrary methods,headers or
+recipient URIs through the delivery capability.
+
+PUT creates the stage with `If-None-Match: *` and the exact content length.
+After exact GET length,SHA256 and EOF verification,a single strong stage ETag
+permits one MOVE with `If-Match` and `Overwrite: F`. Only201 acknowledges a
+new mapping;replacement,multi-status,redirect and oversized replies fail.
+The Destination URI is built from the approved TLS authority and final path.
+Reads forbid ranges and transformed encodings and request no caching. Buffers,
+response bodies and socket idle periods remain bounded;there is no arbitrary
+GitHub capacity ceiling or aggregate file deadline in this transport.
+
+This is the transport needed by the durable delivery worker. It does not yet
+expose a new authorized product delivery profile. Worker intent/approval/lease/
+fence/receipt integration and independent stock-server native proof remain owed.
+A transport error never proves that the receiver retained no bytes. No resend,
+DELETE cleanup,business acceptance or power-loss durability follows from a201
+or matching final bytes. The receiver must separately enforce private staging
+and its approved delivery contract. Native interoperability and the whole DAV
+row remain unqualified. Conditional MOVE semantics follow
+[RFC4918 sections9.9 and10.6](https://www.rfc-editor.org/rfc/rfc4918.html#section-9.9).

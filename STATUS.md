@@ -47,6 +47,13 @@ protected-file API;all eight focused HTTPS tests pass locally,including refusal
 of broadened credentials and mutable trust before contact. Production security
 validation is unchanged. Original Windows and receiver native replay remain owed.
 
+F439 adds the separate exact-bound DAV outbound transport with exclusive stage
+PUT,exact readback,strong source ETag and one non-overwriting conditional MOVE.
+Focused profile-unavailable red→TLS stand-in green and affected static checks
+pass. Read-only collectors retain no mutation methods. Durable delivery intent,
+approval,lease/fence and receipt integration plus independent stock-server and
+final-source native proof remain owed;no new product send is admitted yet.
+
 Current pushed candidate: `bfc9316bdeffc6c75a757b3a67d0b6b7a8f1bf16`.
 [F435](docs/qualification/evidence/F435-native-push.json) binds four owner-only
 commits,enabled Gitleaks(no leaks),remote verification and18 original attempt1

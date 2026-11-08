@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "id": "F439",
+  "observed_at": "2026-11-07",
+  "base_candidate": "ba4f40321674adfc7a749bf0040f835178212649",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "Separate DAV delivery transport binds exactly one stage/final path,size,hash,pinned TLS endpoint/CA/name and protected bearer or explicit Basic credential. Existing GET implementation shares only private authenticated request plumbing;read-only exported methods remain unchanged. Exclusive PUT,exact stage readback,strong ETag and one If-Match/Overwrite:F MOVE,then read-only final observation. No automatic write retry,DELETE,overwrite,recipient override or generic method/header API.",
+  "red_green": [
+    {
+      "reference": ".private/freightctl-f439-profile-red.log",
+      "exit_code": 1,
+      "proof": "New approved DAV delivery profile initially unavailable before external effect;observed focused desired-interface refusal"
+    },
+    {
+      "reference": ".private/freightctl-f439-focused-green.log",
+      "exit_code": 0,
+      "proof": "Seven new DAV and eight original affected HTTPS top-level tests;actual bounded TLS stand-ins"
+    },
+    {
+      "reference": ".private/freightctl-f439-midread-authority-green.log",
+      "exit_code": 0,
+      "proof": "Final added mid-read withdrawal clears bytes and prevents exposure/counting"
+    },
+    {
+      "reference": ".private/freightctl-f439-final-vet.log",
+      "exit_code": 0,
+      "proof": "Final affected crypto vet"
+    },
+    {
+      "reference": ".private/freightctl-f439-architecture.log",
+      "exit_code": 0,
+      "proof": "Architecture import boundaries"
+    }
+  ],
+  "protocol_references": [
+    "https://www.rfc-editor.org/rfc/rfc4918.html#section-9.9",
+    "https://www.rfc-editor.org/rfc/rfc4918.html#section-10.6"
+  ],
+  "source_files": [
+    {
+      "reference": "internal/crypto/dav_delivery.go",
+      "bytes": 7535,
+      "sha256": "ccac2655e9dadda1676e9a17bd89233cfa57f9d8bae553ce32feca312fff9e7c"
+    },
+    {
+      "reference": "internal/crypto/dav_delivery_test.go",
+      "bytes": 13805,
+      "sha256": "99143d5c1d763344f891b9eb445e2ab90b72ff9cfabc6b8e031c10c43ad35941"
+    },
+    {
+      "reference": "internal/crypto/https_read.go",
+      "bytes": 10780,
+      "sha256": "57802e7942a6d96538e1aefa34ab16d71e17f91064af2b4d9ea94a515299b8a0"
+    },
+    {
+      "reference": "docs/protocols/webdav-read-profile.md",
+      "bytes": 36880,
+      "sha256": "cc576c56014df490355214454e01f4e7152f9fd5a331b8a341b6ec811b3279e5"
+    },
+    {
+      "reference": "STATUS.md",
+      "bytes": 23132,
+      "sha256": "a3bc125e541e04fe0f5ccc43b9b57c48482bcf5db8f29aae3ce9e08cc8882b8d"
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "bytes": 709975,
+      "sha256": "a5955e62f735b86a8c52eb82f30149180d84d22b6de72d01337cbb423f43948e"
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f439-architecture.log",
+      "bytes": 64,
+      "sha256": "8446a49815998aa896651efbc4b6d4bf0d097f95be75ef02c3ec7254d27de1d3"
+    },
+    {
+      "reference": ".private/freightctl-f439-final-vet.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "reference": ".private/freightctl-f439-focused-first-green.log",
+      "bytes": 58,
+      "sha256": "cada9d11eeef09bca5d19924d64c98abfe1bf6a76b6fab6d70c7e4bc29432ccd"
+    },
+    {
+      "reference": ".private/freightctl-f439-focused-green.log",
+      "bytes": 58,
+      "sha256": "0ffbf9fbbc44a77597a243faeaee6d54909ef6e418b145b5bca01d7e1faa0eb7"
+    },
+    {
+      "reference": ".private/freightctl-f439-midread-authority-green.log",
+      "bytes": 58,
+      "sha256": "b7da313de6bc55d68aeeb03ac7d8ced10afbe200c0acc974b24d9f0c9cd07e9c"
+    },
+    {
+      "reference": ".private/freightctl-f439-profile-red.log",
+      "bytes": 240,
+      "sha256": "a85193e803039708b5e5799e4bdfdd1b3fb375a445b1b6c510da914ae92de688"
+    },
+    {
+      "reference": ".private/freightctl-f439-vet.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "reference": ".private/freightctl-f439-records.log",
+      "bytes": 106,
+      "sha256": "826009b37d6c8254924b7fd1ee12981059544175f2c890ad4186b88b41b583b4"
+    },
+    {
+      "reference": ".private/freightctl-f439-format.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "owed": [
+    "Ordinary durable delivery admission and exact immutable SQL/API/CLI/browser/workflow/approval bindings",
+    "Commit publishing intent before any stage bytes;ordinary lease/fence/current authority,immutable observations and actor-private original-key receipts",
+    "Native independent stock-server exact publication,non-overwrite,recovery,revocation and original failure replay",
+    "All mandatory final-source baseline/AX/security/readiness gates"
+  ],
+  "authorized_product_delivery_profile_exposed": false,
+  "schema_changed": false,
+  "local_limits": {
+    "go_workers": 1,
+    "go_soft_heap": "192MiB",
+    "inference": "off",
+    "heavy_runtime_started": false
+  },
+  "security_assertions_or_budgets_weakened": false,
+  "overall_goal_complete": false
+}

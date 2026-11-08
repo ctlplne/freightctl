@@ -265,6 +265,12 @@ func (b *httpsReadBody) Close() error {
 // Get has no method,origin,query,redirect,proxy or credential override. Protocol
 // code can only read a canonical path at the exact approved TLS endpoint.
 func (c *HTTPSReadClient) Get(ctx context.Context, target string) (*HTTPSReadResponse, error) {
+	return c.request(ctx, http.MethodGet, target, nil, 0, nil)
+}
+
+// Kept private inside the cryptographic transport boundary. The exported source
+// client still exposes only GET;delivery owns a separate narrowly bound type.
+func (c *HTTPSReadClient) request(ctx context.Context, method, target string, body io.Reader, size int64, headers http.Header) (*HTTPSReadResponse, error) {
 	canonical, err := vpath.Canonical(target)
 	if err != nil || canonical != target || vpath.ControlPath(target) {
 		return nil, ErrHTTPSRead
@@ -290,12 +296,23 @@ func (c *HTTPSReadClient) Get(ctx context.Context, target string) (*HTTPSReadRes
 	}
 	defer credential.Close()
 	u := url.URL{Scheme: "https", Host: c.dest.Address, Path: target}
-	request, err := http.NewRequestWithContext(op, http.MethodGet, u.String(), nil)
+	request, err := http.NewRequestWithContext(op, method, u.String(), body)
 	if err != nil {
 		return nil, ErrHTTPSRead
 	}
 	_, port, _ := net.SplitHostPort(c.dest.Address)
 	request.Host = net.JoinHostPort(c.dest.ServerName, port)
+	if body != nil {
+		request.ContentLength = size
+		if size == 0 {
+			request.Body = http.NoBody
+		}
+	}
+	// An effect is never made replayable by a rewind function or retry key.
+	request.GetBody = nil
+	for name, values := range headers {
+		request.Header[name] = append([]string(nil), values...)
+	}
 	request.Header.Set("Authorization", authorization)
 	request.Header.Set("Accept-Encoding", "identity")
 	defer request.Header.Del("Authorization")
