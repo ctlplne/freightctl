@@ -26,15 +26,17 @@ SQL/API,CLI/browser,independent upstream DAV and final-source proof remain owed.
 
 Current pushed candidate: `8823d7d3293dffd72f681c8550ff58d668642031`.
 [F431](docs/qualification/evidence/F431-native-push.json) binds three owner-only
-commits,enabled Gitleaks(no leaks),verified remote main and16 original attempt1
-workflows. F428 independent rclone acquisition/security/application proof is
-included for first execution(run42429563711). Source schema63;local F429
-outbound/schema64 work is excluded. All actual final-source outcomes stay owed.
-[F432](docs/qualification/evidence/F432-first-dav-application-failure.json) preserves
-the first ARM application discovery exit1. Exact native peer acquisition and both
-enforcing vulnerability gates pass;application proof remains red. Original log
-and private diagnostic hash retained;cause/nonsecurity repair deferred to FINISH.
-No application security pass is inferred;original x86 outcome remains owed.
+commits,enabled Gitleaks(no leaks) and16 original attempt1 workflows.
+[F434](docs/qualification/evidence/F434-native-terminal.json) records36 terminal
+jobs:32success,fourfailed(receive,both DAV discovery,local-calendar browser).
+Baseline16 named security steps and both exact stock-peer/default-source/binary
+security bundles pass. Native PG,restore,HTTPS/curl,JSON API/CLI and SDK completion
+metadata pass. [F432](docs/qualification/evidence/F432-first-dav-application-failure.json)
+preserves first ARM discovery exit1;F434 binds the matching x86 failure and
+calendar browser-response-body marker. No actionable security assertion is
+identified and no application safety is inferred. Original failures,cause and
+nonsecurity repair stay owed at FINISH. F429/schema64 and WIP F433/schema65 are
+not included in this pushed source.
 
 Previous terminal candidate: `fd6146c9fecaf2a2731d042d4bb83df868543cff`.
 [F427](docs/qualification/evidence/F427-native-push.json) binds three owner-only
