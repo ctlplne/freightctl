@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "id": "F438",
+  "observed_at": "2026-11-07",
+  "base_candidate": "99618a9825f7b875fc9f227ba683a0bfd10e17ee",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "Create HTTPS trust/credential fixtures with existing exclusive native owner-only protected-file API before writing bytes;sync/close all fixtures. Add actual native access validation and refusal of broadened credential and mutable trust before any source contact. No production code/assertions/budgets changed.",
+  "actual_original_red": {
+    "candidate": "bfc9316bdeffc6c75a757b3a67d0b6b7a8f1bf16",
+    "run_id": 42433106163,
+    "job_id": 128586102907,
+    "architecture": "windows/amd64",
+    "attempt": 1,
+    "failed_tests": [
+      "TestHTTPSReadVerifiedTLSExactBytesAndCurrentAuthority",
+      "TestHTTPSReadNeverFollowsRedirectOrAcceptsWrongTLSIdentity",
+      "TestHTTPSReadCloseInterruptsAnActiveResponse",
+      "TestHTTPSReadReopensApprovedCredentialAndRejectsChangedTrustBeforeContact"
+    ],
+    "failure": "HTTPS source identity,credential or read policy failed at protected-trust admission",
+    "native_replay": "owed"
+  },
+  "focused_proofs": [
+    {
+      "reference": ".private/freightctl-f438-https-focused.log",
+      "exit_code": 0,
+      "proof": "All eight affected HTTPS security guards/actual TLS loopback,including bearer/Basic exact pins,credential changes,redirect/wrong-identity/current authority/cancel/active close and actual permission refusals"
+    },
+    {
+      "reference": ".private/freightctl-f438-vet.log",
+      "exit_code": 0,
+      "proof": "Affected crypto vet"
+    },
+    {
+      "reference": ".private/freightctl-f438-architecture.log",
+      "exit_code": 0,
+      "proof": "Architecture boundaries"
+    }
+  ],
+  "source_files": [
+    {
+      "reference": "internal/crypto/https_read_test.go",
+      "bytes": 12277,
+      "sha256": "16f94ea28b4da7f9ceb65059982099f07348d3a6c66760fd9281c98ccb78c04c"
+    },
+    {
+      "reference": "STATUS.md",
+      "bytes": 22658,
+      "sha256": "e559c233a4a0f0324f8db7a2833088c57a7dd174bbabb6d8b30478df099c021b"
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "bytes": 709259,
+      "sha256": "9240be5f2e39b2a9e0ce4ee39c01129c1b7a50158a3ddfd4f4a1fadef89eecb4"
+    },
+    {
+      "reference": "docs/qualification/evidence/F437-native-security-failure-recurrence.json",
+      "bytes": 5735,
+      "sha256": "35345edcedd97f63f5110c6bbc45d04f441c02aea20c5cc47240be30cb8d5750"
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f438-architecture.log",
+      "bytes": 64,
+      "sha256": "9aed0efd88c087533910c4a0c5366fceb19ba06562b9ea3e75a4ec68e00158fb"
+    },
+    {
+      "reference": ".private/freightctl-f438-https-focused.log",
+      "bytes": 58,
+      "sha256": "d6240a0bbfde09b31b0d4d6d1acb0691ac9486d27b5403e51553a608f0f714a4"
+    },
+    {
+      "reference": ".private/freightctl-f438-vet.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "reference": ".private/freightctl-f437-windows-job.log",
+      "bytes": 27390,
+      "sha256": "b474297cb7912c9031c0d4cf9642b0c1e3f89fcbeabf03e872c0f3ebff39a7d1"
+    },
+    {
+      "reference": ".private/freightctl-f438-records.log",
+      "bytes": 106,
+      "sha256": "826009b37d6c8254924b7fd1ee12981059544175f2c890ad4186b88b41b583b4"
+    },
+    {
+      "reference": ".private/freightctl-f438-format.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "production_security_validation_unchanged": true,
+  "owed": [
+    "Actual native Windows replay of original four failures and complete affected HTTPS security profile",
+    "All preserved native original failures and mandatory final-source baseline/AX/security/readiness gates"
+  ],
+  "local_limits": {
+    "go_workers": 1,
+    "go_soft_heap": "192MiB",
+    "inference": "off",
+    "heavy_runtime_started": false
+  },
+  "overall_goal_complete": false,
+  "production_files_byte_identical": true
+}

@@ -1,0 +1,180 @@
+{
+  "schema_version": 1,
+  "id": "F437",
+  "observed_at": "2026-11-07",
+  "record_base_commit": "99618a9825f7b875fc9f227ba683a0bfd10e17ee",
+  "qualification_claim": false,
+  "summary": "Both original x86 independent FTPS receivers repeat preserved F398/F385 SIGSYS54 classes. Source/default-stock-peer/binary security gates inspected pass;receiver isolation and original assertions unchanged. Windows HTTPS fixtures fail protected-reference admission and receive/upstream FTP race originals remain failed;no safety inferred. Full original batch not terminal at observation;final-source replay owed.",
+  "originals": {
+    "schema_version": 1,
+    "candidate": "bfc9316bdeffc6c75a757b3a67d0b6b7a8f1bf16",
+    "attempt": 1,
+    "ftps_run": 42433106096,
+    "receivers": [
+      {
+        "job_id": 128586102267,
+        "architecture": "x86_64",
+        "profile": "system",
+        "signal": "SIGSYS",
+        "last_syscall": 54,
+        "setsockopt": {
+          "level": 6,
+          "option": 31,
+          "size": 4
+        },
+        "state": "failed"
+      },
+      {
+        "job_id": 128586102312,
+        "architecture": "x86_64",
+        "profile": "no-ktls",
+        "signal": "SIGSYS",
+        "last_syscall": 54,
+        "setsockopt": {
+          "level": 1,
+          "option": 2,
+          "size": 4
+        },
+        "state": "failed"
+      },
+      {
+        "job_id": 128586102397,
+        "architecture": "aarch64",
+        "profile": "system",
+        "conclusion": "success",
+        "claim": "completion metadata only"
+      },
+      {
+        "job_id": 128586102415,
+        "architecture": "aarch64",
+        "profile": "no-ktls",
+        "conclusion": "success",
+        "claim": "completion metadata only"
+      }
+    ],
+    "other_originals": [
+      {
+        "job_id": 128586102907,
+        "candidate": "bfc9316bdeffc6c75a757b3a67d0b6b7a8f1bf16",
+        "failTests": [
+          "TestHTTPSReadVerifiedTLSExactBytesAndCurrentAuthority",
+          "TestHTTPSReadNeverFollowsRedirectOrAcceptsWrongTLSIdentity",
+          "TestHTTPSReadCloseInterruptsAnActiveResponse",
+          "TestHTTPSReadReopensApprovedCredentialAndRejectsChangedTrustBeforeContact"
+        ],
+        "source_lines": [
+          {
+            "file": "https_read_test.go",
+            "line": 83
+          },
+          {
+            "file": "https_read_test.go",
+            "line": 124
+          },
+          {
+            "file": "https_read_test.go",
+            "line": 157
+          },
+          {
+            "file": "https_read_test.go",
+            "line": 196
+          }
+        ],
+        "markers": {
+          "security": false,
+          "panic": false,
+          "race": false,
+          "browser_response_body": false,
+          "stock_peer": false
+        },
+        "cause": "deferred-uninvestigated",
+        "no_safety_inferred": true
+      },
+      {
+        "job_id": 128586103019,
+        "candidate": "bfc9316bdeffc6c75a757b3a67d0b6b7a8f1bf16",
+        "failTests": [
+          "TestPASVWrappedListenerErrorReleasesPort"
+        ],
+        "source_lines": [
+          {
+            "file": "transfer_active_test.go",
+            "line": 33
+          },
+          {
+            "file": "transfer_test.go",
+            "line": 2029
+          }
+        ],
+        "markers": {
+          "security": false,
+          "panic": false,
+          "race": false,
+          "browser_response_body": false,
+          "stock_peer": true
+        },
+        "cause": "deferred-uninvestigated",
+        "no_safety_inferred": true
+      },
+      {
+        "job_id": 128586102851,
+        "candidate": "bfc9316bdeffc6c75a757b3a67d0b6b7a8f1bf16",
+        "failTests": [
+          "TestArtifactExchangeNativeBrowserReceiptWrongActorAndRevocation"
+        ],
+        "source_lines": [
+          {
+            "file": "artifact_exchange_browser_integration_test.go",
+            "line": 410
+          }
+        ],
+        "markers": {
+          "security": false,
+          "panic": false,
+          "race": false,
+          "browser_response_body": false,
+          "stock_peer": false
+        },
+        "cause": "deferred-uninvestigated",
+        "no_safety_inferred": true
+      }
+    ],
+    "original_cancelled_or_rerun": false
+  },
+  "security_action": "Preserve exact failures;no PORT/KTLS/seccomp/audit/TLS/EOF/reuse/chroot changes. No safe receiver repair applied. Windows protected fixture corrected separately in F438;native replay owed. Nonsecurity investigation remains deferred FINISH.",
+  "source_files": [],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f437-ftps-no-ktls-job.log",
+      "bytes": 26720,
+      "sha256": "5710634052b338b07355ca02e7b40ef1e8638929de6476f1b91d5b45947ff99a"
+    },
+    {
+      "reference": ".private/freightctl-f437-ftps-system-job.log",
+      "bytes": 25575,
+      "sha256": "9dfc7621ede43b7781b43d5ccbd8c5492e23989ec6d75d4ecdd4f82f233291c5"
+    },
+    {
+      "reference": ".private/freightctl-f437-linux-arm-job.log",
+      "bytes": 316916,
+      "sha256": "68efa39d962975d33b6c8ea9416f00d7d65a36d816f48a82d4e410d7b40ea252"
+    },
+    {
+      "reference": ".private/freightctl-f437-receive-job.log",
+      "bytes": 31304,
+      "sha256": "b717dc8743065dcb91991688d2987982d2a5a32b195675642a4c09c4299d8c46"
+    },
+    {
+      "reference": ".private/freightctl-f437-safe-classification.json",
+      "bytes": 3355,
+      "sha256": "8d7f9b51c34f5d60f73c104c3b56e3931c4ae936500c050a98a5cd85798eacb1"
+    },
+    {
+      "reference": ".private/freightctl-f437-windows-job.log",
+      "bytes": 27390,
+      "sha256": "b474297cb7912c9031c0d4cf9642b0c1e3f89fcbeabf03e872c0f3ebff39a7d1"
+    }
+  ],
+  "original_cancelled_or_rerun": false,
+  "overall_goal_complete": false
+}

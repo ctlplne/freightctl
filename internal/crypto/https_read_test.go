@@ -16,6 +16,8 @@ import (
 	"sync/atomic"
 	"testing"
 	"time"
+
+	"github.com/ctlplne/freightctl/internal/protectedfs"
 )
 
 func httpsReadFixture(t *testing.T, handler http.Handler) (HTTPSReadDestination, *httptest.Server) {
@@ -29,11 +31,54 @@ func httpsReadFixture(t *testing.T, handler http.Handler) (HTTPSReadDestination,
 	token := bytes.Repeat([]byte("d"), 64)
 	d := HTTPSReadDestination{Address: strings.TrimPrefix(server.URL, "https://"), ServerName: "example.com", CAFile: filepath.Join(private, "ca.pem"), CASHA256: Digest(ca), TokenFile: filepath.Join(private, "token"), TokenSHA256: Digest(token)}
 	for p, data := range map[string][]byte{d.CAFile: ca, d.TokenFile: token} {
-		if err := os.WriteFile(p, data, 0600); err != nil {
+		f, err := protectedfs.CreateExclusive(p)
+		if err != nil {
+			t.Fatal(err)
+		}
+		_, writeErr := f.Write(data)
+		syncErr := f.Sync()
+		closeErr := f.Close()
+		if err = errors.Join(writeErr, syncErr, closeErr); err != nil {
 			t.Fatal(err)
 		}
 	}
 	return d, server
+}
+
+func TestHTTPSReadRefusesBroadenedCredentialAndMutableTrustBeforeContact(t *testing.T) {
+	var hits atomic.Int64
+	d, _ := httpsReadFixture(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		hits.Add(1)
+		w.Write([]byte("inert"))
+	}))
+	for _, path := range []string{d.CAFile, d.TokenFile} {
+		f, err := os.Open(path)
+		if err != nil {
+			t.Fatal(err)
+		}
+		privacyErr := protectedfs.ValidateFile(f)
+		closeErr := f.Close()
+		if errors.Join(privacyErr, closeErr) != nil {
+			t.Fatal("fixture must have actual owner-only access before protocol proof")
+		}
+	}
+	client, err := NewHTTPSReadClient(t.Context(), d, func() error { return nil })
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer client.Close()
+	broadenPrivateFileForTest(t, d.TokenFile)
+	if _, err = client.Get(t.Context(), "/source"); !errors.Is(err, ErrHTTPSRead) || hits.Load() != 0 {
+		t.Fatal("broadened credential was accepted or contacted the source")
+	}
+	setReferenceAccessForTest(t, d.TokenFile, 0600)
+	setReferenceAccessForTest(t, d.CAFile, 0666)
+	if mutable, err := NewHTTPSReadClient(t.Context(), d, func() error { return nil }); err == nil {
+		mutable.Close()
+		t.Fatal("another principal could modify pinned trust material")
+	} else if !errors.Is(err, ErrHTTPSRead) || hits.Load() != 0 {
+		t.Fatal("mutable trust refusal changed or contacted the source")
+	}
 }
 
 func TestHTTPSReadPinsNativeEndpointAndHasNoAmbientAuthority(t *testing.T) {

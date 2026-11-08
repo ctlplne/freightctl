@@ -40,6 +40,13 @@ Focused old-rule red→exact-audit green and affected static/compile checks pass
 Production audit code is unchanged. Original ARM/x86 failures are preserved;
 actual native replay remains owed.
 
+F437 preserves repeated original x86 independent FTPS SIGSYS54 failures with
+unchanged security/isolation. Windows HTTPS fixtures also fail protected trust
+admission. F438 creates those fixtures through the existing owner-only native
+protected-file API;all eight focused HTTPS tests pass locally,including refusal
+of broadened credentials and mutable trust before contact. Production security
+validation is unchanged. Original Windows and receiver native replay remain owed.
+
 Current pushed candidate: `bfc9316bdeffc6c75a757b3a67d0b6b7a8f1bf16`.
 [F435](docs/qualification/evidence/F435-native-push.json) binds four owner-only
 commits,enabled Gitleaks(no leaks),remote verification and18 original attempt1
