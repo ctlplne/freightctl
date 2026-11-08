@@ -41,7 +41,7 @@ export const collectionContract = "immutable-files-sha256-manifest-v1";
 export const scheduledCollectionContract =
   "immutable-files-sha256-scheduled-manifest-v1";
 export interface CollectionSource {
-  kind: "sftp.collect" | "ftps.collect" | "local.collect";
+  kind: "sftp.collect" | "ftps.collect" | "local.collect" | "webdav.collect";
   connection: Reference;
   manifest: string;
   target_directory: string;
@@ -91,9 +91,18 @@ export interface CollectionConnection {
   directory: string;
   host_fingerprint: string;
   key_fingerprint: string;
-  protocol?: "ftps" | "local";
+  protocol?: "ftps" | "local" | "webdav";
   ftps?: FTPSConnectionProof;
   local?: LocalCollectionProof;
+  dav?: DAVCollectionProof;
+}
+export interface DAVCollectionProof {
+  profile: "freightctl-webdav-collection-source-v1";
+  server_name: string;
+  ca_sha256: string;
+  ca_reference_sha256: string;
+  token_reference_sha256: string;
+  read_only: true;
 }
 export interface LocalCollectionProof {
   profile: "freightctl-local-collection-source-v1";
@@ -348,7 +357,10 @@ export function asCollectionSource(v: unknown): CollectionSource {
   if (
     (o.kind !== "sftp.collect" &&
       o.kind !== "ftps.collect" &&
-      o.kind !== "local.collect") ||
+      o.kind !== "local.collect" &&
+      o.kind !== "webdav.collect") ||
+    (o.kind === "webdav.collect" &&
+      o.completion_contract !== collectionContract) ||
     ![collectionContract, scheduledCollectionContract].includes(
       String(o.completion_contract),
     )
@@ -382,6 +394,32 @@ export function asCollectionSource(v: unknown): CollectionSource {
     max_files: maxFiles,
     max_file_bytes: maxFile,
     max_total_bytes: maxTotal,
+  };
+}
+function asDAVCollectionProof(v: unknown): DAVCollectionProof {
+  const o = object(v);
+  keys(o, [
+    "profile",
+    "server_name",
+    "ca_sha256",
+    "ca_reference_sha256",
+    "token_reference_sha256",
+    "read_only",
+  ]);
+  if (
+    o.profile !== "freightctl-webdav-collection-source-v1" ||
+    o.read_only !== true
+  )
+    bad();
+  const name = str(o, "server_name", 253);
+  if (!/^[a-z0-9:.\-]+$/.test(name)) bad();
+  return {
+    profile: "freightctl-webdav-collection-source-v1",
+    server_name: name,
+    ca_sha256: hash(o, "ca_sha256"),
+    ca_reference_sha256: hash(o, "ca_reference_sha256"),
+    token_reference_sha256: hash(o, "token_reference_sha256"),
+    read_only: true,
   };
 }
 function asLocalCollectionProof(v: unknown): LocalCollectionProof {
@@ -426,14 +464,17 @@ export function asCollectionConnection(v: unknown): CollectionConnection {
       ? ["protocol", "ftps"]
       : o.protocol === "local"
         ? ["protocol", "local"]
-        : [],
+        : o.protocol === "webdav"
+          ? ["protocol", "dav"]
+          : [],
   );
   if (o.state !== "active" && o.state !== "revoked") bad();
   const directory = path(str(o, "directory", 1024));
   if (
     o.protocol !== undefined &&
     o.protocol !== "ftps" &&
-    o.protocol !== "local"
+    o.protocol !== "local" &&
+    o.protocol !== "webdav"
   )
     bad();
   if (
@@ -441,6 +482,14 @@ export function asCollectionConnection(v: unknown): CollectionConnection {
     (o.host_fingerprint !== "" ||
       o.key_fingerprint !== "" ||
       o.ftps === undefined)
+  )
+    bad();
+  if (
+    o.protocol === "webdav" &&
+    (o.user !== "" ||
+      o.host_fingerprint !== "" ||
+      o.key_fingerprint !== "" ||
+      o.dav === undefined)
   )
     bad();
   if (
@@ -461,18 +510,18 @@ export function asCollectionConnection(v: unknown): CollectionConnection {
     revision: num(o, "revision"),
     address: o.protocol === "local" ? "" : str(o, "address", 300),
     user:
-      o.protocol === "local"
+      o.protocol === "local" || o.protocol === "webdav"
         ? ""
         : o.protocol === "ftps"
           ? str(o, "user", 256)
           : asSSHUsername(o.user),
     directory,
     host_fingerprint:
-      o.protocol === "ftps" || o.protocol === "local"
+      o.protocol === "ftps" || o.protocol === "local" || o.protocol === "webdav"
         ? ""
         : sshFingerprint(str(o, "host_fingerprint", 100)),
     key_fingerprint:
-      o.protocol === "ftps" || o.protocol === "local"
+      o.protocol === "ftps" || o.protocol === "local" || o.protocol === "webdav"
         ? ""
         : sshFingerprint(str(o, "key_fingerprint", 100)),
     ...(o.protocol === "ftps"
@@ -482,7 +531,9 @@ export function asCollectionConnection(v: unknown): CollectionConnection {
         }
       : o.protocol === "local"
         ? { protocol: "local" as const, local: asLocalCollectionProof(o.local) }
-        : {}),
+        : o.protocol === "webdav"
+          ? { protocol: "webdav" as const, dav: asDAVCollectionProof(o.dav) }
+          : {}),
   };
 }
 export function asCollectionConnections(v: unknown): {
@@ -663,7 +714,8 @@ export function asCollectionWorkflowPreview(
     ) ||
     connection.state !== "active" ||
     (d.source.kind === "ftps.collect") !== (connection.protocol === "ftps") ||
-    (d.source.kind === "local.collect") !== (connection.protocol === "local")
+    (d.source.kind === "local.collect") !== (connection.protocol === "local") ||
+    (d.source.kind === "webdav.collect") !== (connection.protocol === "webdav")
   )
     bad();
   const effects = effectsForWorkflow(o.effects, d);
@@ -765,6 +817,7 @@ export function asCollectionDefinition(v: unknown): CollectionDefinition {
     connection.state !== "active" ||
     (source.kind === "ftps.collect") !== (connection.protocol === "ftps") ||
     (source.kind === "local.collect") !== (connection.protocol === "local") ||
+    (source.kind === "webdav.collect") !== (connection.protocol === "webdav") ||
     !equal(
       {
         id: connection.id,

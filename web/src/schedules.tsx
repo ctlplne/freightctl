@@ -375,6 +375,9 @@ export function Schedules({
   }
   function selection(): ScheduleSelection {
     if (!workflow) throw new ApiError("invalid_workflow_schedule", 400);
+    const reviewedSource = workflow.source;
+    if (reviewedSource?.kind === "webdav.collect")
+      throw new ApiError("invalid_workflow_schedule", 400);
     return {
       name: form.name,
       workflow: {
@@ -388,8 +391,8 @@ export function Schedules({
         recursive: workflow.source ? false : form.recursive,
         ...(workflow.processing
           ? { kind: "owned_released_records" as const }
-          : workflow.source
-            ? { kind: workflow.source.kind }
+          : reviewedSource
+            ? { kind: reviewedSource.kind }
             : {}),
       },
       calendar: {

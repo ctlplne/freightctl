@@ -1,0 +1,442 @@
+{
+  "schema_version": 1,
+  "id": "F429",
+  "observed_at": "2026-11-07",
+  "base_candidate": "7660ee52aba82f4ec3bceaa7c595bb8d8a940e73",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "Manual read-only outbound DAV collection reuses reviewed connections and existing manifest/custody/intake/workflow/approval/lease/fencing/receipt engine. Pinned TLS1.3 numeric endpoint/CA/name,protected bearer reference,no proxies/DNS/redirect following or source mutations. Exact bounded streaming length/SHA256/EOF staging and live authority;redacted strict browser metadata excludes read-only connections from delivery/calendar admission. New schema64 keeps every older migration/table/RLS list;retained35 untouched. Native SQL/API/source capture proof prepared and compiled,not executed locally. Stock-peer acquisition measures runner capacity/bytes/time/CPU/completed-child RSS without capacity gates.",
+  "contract": {
+    "connection_schema": 4,
+    "source": "webdav.collect",
+    "completion_contract": "immutable-files-sha256-manifest-v1",
+    "secret_policy": "Protected CA/bearer references and exact approved hashes only;view excludes token value/hash and reference paths",
+    "http": "GET only;static numeric endpoint,TLS1.3,pinned roots/name,no proxy/cookies/redirects/ambient credentials",
+    "buffer_bytes": 32768,
+    "manifest_bytes": 32768,
+    "file_profile_max_bytes": 1073741824,
+    "namespace_or_intake_guards_weakened": false,
+    "source_mutation_capability": false,
+    "forwarding_or_execution_authority": false,
+    "business_acceptance": "unknown"
+  },
+  "schema": {
+    "source": 64,
+    "metadata_tables": 78,
+    "forced_rls_tables": 77,
+    "earlier_migrations_preserved": 63,
+    "retained": 35,
+    "retained_database_contact": false
+  },
+  "red_green": [
+    {
+      "reference": ".private/freightctl-f429-dav-collection-red.log",
+      "exit_code": 1,
+      "proof": "Existing Go workflow rejects webdav.collect before implementation"
+    },
+    {
+      "reference": ".private/freightctl-f429-browser-contract-red.log",
+      "exit_code": 1,
+      "proof": "Existing strict browser decoder rejects the new source/connection profile"
+    },
+    {
+      "reference": ".private/freightctl-f429-schema-profile-red.log",
+      "exit_code": 1,
+      "proof": "Existing current schema63 evidence profile refuses new migration64"
+    },
+    {
+      "reference": ".private/freightctl-f429-focused-contracts.log",
+      "exit_code": 0,
+      "proof": "New connection/staging guards plus affected frozen FTPS/local Go/browser canonical contracts"
+    },
+    {
+      "reference": ".private/freightctl-f429-manual-source-scope-green.log",
+      "exit_code": 0,
+      "proof": "Exact DAV source and explicit manual-only calendar boundary"
+    },
+    {
+      "reference": ".private/freightctl-f429-https-standin.log",
+      "exit_code": 1,
+      "proof": "Initial sandbox bind refused;environment failure,not a product regression proof"
+    },
+    {
+      "reference": ".private/freightctl-f429-final-https-standin.log",
+      "exit_code": 0,
+      "proof": "Five focused Go guards/actual TLS loopback stand-ins including wrong identity,redirect,active revocation/cancel and changed credential/CA pins"
+    },
+    {
+      "reference": ".private/freightctl-f429-browser-typecheck.log",
+      "exit_code": 1,
+      "proof": "Affected manual source union exposes old schedule type narrowing"
+    },
+    {
+      "reference": ".private/freightctl-f429-browser-typecheck-green.log",
+      "exit_code": 0,
+      "proof": "Explicit schedule refusal/narrowing fixes affected types"
+    },
+    {
+      "reference": ".private/freightctl-f429-browser-focused.log",
+      "exit_code": 0,
+      "proof": "New DAV and affected FTPS/local/calendar browser codec fixtures"
+    },
+    {
+      "reference": ".private/freightctl-f429-browser-build.log",
+      "exit_code": 0,
+      "proof": "Regenerated embedded application"
+    },
+    {
+      "reference": ".private/freightctl-f429-browser-assets-check.log",
+      "exit_code": 0,
+      "proof": "Actual final embedded assets match source"
+    },
+    {
+      "reference": ".private/freightctl-f429-schema-profile-green.log",
+      "exit_code": 0,
+      "proof": "Current64 summary/security/refusal contracts"
+    },
+    {
+      "reference": ".private/freightctl-f429-retained-profile.log",
+      "exit_code": 0,
+      "proof": "Retained metadata refusal contracts;no database lifecycle"
+    },
+    {
+      "reference": ".private/freightctl-f429-preservation.json",
+      "exit_code": 0,
+      "proof": "All63 earlier SQL bytes,embed order and domain table list preserved;retained35 not contacted"
+    },
+    {
+      "reference": ".private/freightctl-f429-final-native-compile.log",
+      "exit_code": 0,
+      "proof": "Six affected integration,davpeer package compilations only"
+    },
+    {
+      "reference": ".private/freightctl-f429-least-authority-native-compile.log",
+      "exit_code": 0,
+      "proof": "Final source read/list-only upstream account native API proof compiles only"
+    },
+    {
+      "reference": ".private/freightctl-f429-vet.log",
+      "exit_code": 0,
+      "proof": "Affected tagged package vet"
+    },
+    {
+      "reference": ".private/freightctl-f429-least-authority-vet.log",
+      "exit_code": 0,
+      "proof": "Final native API vet"
+    },
+    {
+      "reference": ".private/freightctl-f429-architecture.log",
+      "exit_code": 0,
+      "proof": "Architecture/security import boundaries"
+    },
+    {
+      "reference": ".private/freightctl-f429-workflow-lint.log",
+      "exit_code": 0,
+      "proof": "Affected workflow actionlint1.7.12"
+    },
+    {
+      "reference": ".private/freightctl-f429-local-acquisition-refused.log",
+      "exit_code": 0,
+      "proof": "Changed acquisition script still refuses local peer execution before acquisition/build"
+    },
+    {
+      "reference": ".private/freightctl-f429-closed-format.log",
+      "exit_code": 0,
+      "proof": "All affected Go files formatted"
+    },
+    {
+      "reference": ".private/freightctl-f429-final-records.log",
+      "exit_code": 0,
+      "proof": "Qualification record references only"
+    }
+  ],
+  "prepared_native": [
+    "Separate real producer/consumer PostgreSQL databases and actual served freightctl DAV over verified TLS;not independent upstream server qualification",
+    "Producer account only read/list;consumer ordinary reviewed registration,draft,approval,preview and API admission/work",
+    "Actual SQL shape positive and mixed schema,SSH,credential/endpoint/traversal refusals",
+    "Exact captured destination custody,producer file/manifest IDs/bytes/events unchanged,zero onward effects",
+    "Original work receipt after exact task-owned credential file removal;no new source contact/effects"
+  ],
+  "source_files": [
+    {
+      "reference": ".github/workflows/dav-application.yml",
+      "sha256": "5d453baf752e01d0fa2e80b46cc693f3fc4eb27dfcd0df88cdbb5778a85b3c03",
+      "bytes": 2192
+    },
+    {
+      "reference": "STATUS.md",
+      "sha256": "3f8771e33a6b00bf81f75810e99f1857a14adae25365d4790ef2298cefc92991",
+      "bytes": 20540
+    },
+    {
+      "reference": "docs/collection-workflows.md",
+      "sha256": "a5cc37b7e8008cf9edfe4c4ae11cc987151c29497f04e2291b82675d6980c434",
+      "bytes": 14069
+    },
+    {
+      "reference": "docs/protocols/webdav-read-profile.md",
+      "sha256": "bb44caa7bce38af84d50326cfec8bf141fc9dbdf74e3b39b6846b927025e8816",
+      "bytes": 35079
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "sha256": "4a2764ce676ab43847c010b1a7a557b90d746bc0c3654e9f02c661cfc3d58d14",
+      "bytes": 696551
+    },
+    {
+      "reference": "internal/api/dav_collection_integration_test.go",
+      "sha256": "de756d3a1afca83e1f9fa11f8edb9d8ee19a2b0a8e6bf9879fa3bf49b3379cf4",
+      "bytes": 12167
+    },
+    {
+      "reference": "internal/browser/assets/app.js",
+      "sha256": "3f718eb65d7aceaafe89ab7c7df7bf6da62adc443b4703ddb561846c9d716261",
+      "bytes": 908762
+    },
+    {
+      "reference": "internal/browser/assets/manifest.json",
+      "sha256": "e57c89279d1c2177b387ff02d382c7b466f0b81bb5d6e14584ce96427151783f",
+      "bytes": 14114
+    },
+    {
+      "reference": "internal/crypto/https_read.go",
+      "sha256": "d66156541746b111cc1cf5e727173fe3a995290fec5740ec7391d8d27f94dc8f",
+      "bytes": 8124
+    },
+    {
+      "reference": "internal/crypto/https_read_test.go",
+      "sha256": "45b7e12982f0f3efd16e2a1b3d8447f5bb35c97431af1e47b8ecc49e058d5bb0",
+      "bytes": 7537
+    },
+    {
+      "reference": "internal/delivery/dav_collection_peer.go",
+      "sha256": "3a21670586c121780e89d528444891c84779b904bb0427dd415ae277ef4872a4",
+      "bytes": 4323
+    },
+    {
+      "reference": "internal/delivery/dav_collection_peer_test.go",
+      "sha256": "3e67cfc62ace30b5447fa8f0c56d7195686d6df90272a8206a7bb630471bbf35",
+      "bytes": 4629
+    },
+    {
+      "reference": "internal/store/064_dav_collection_source.sql",
+      "sha256": "ce098e5233955936300756fc5dea6736bf50b1a7f3e3c9716a6fe9b4e8a1ffe3",
+      "bytes": 9718
+    },
+    {
+      "reference": "internal/store/store.go",
+      "sha256": "b0f2816ecf170a28ab60a297999c2f941638f3d4233d07b728e688735fa60686",
+      "bytes": 28887
+    },
+    {
+      "reference": "internal/workflow/collection_choices.go",
+      "sha256": "43e79f90ea1813077a3df12a954b16a25ef2871f239aeb0d99f32005af76406f",
+      "bytes": 3062
+    },
+    {
+      "reference": "internal/workflow/collection_source_peer.go",
+      "sha256": "f633c1de20674fc5d5e348453f1c57f6dd8a6609b46df99508ba15a3f1804057",
+      "bytes": 2242
+    },
+    {
+      "reference": "internal/workflow/collection_types.go",
+      "sha256": "f35e9ca6153f94dd9f0a748ad3062882dd9705dad6a4fb59a8592dacea0eb95f",
+      "bytes": 4735
+    },
+    {
+      "reference": "internal/workflow/configuration.go",
+      "sha256": "91d8e401f4bcb73f1d1fcc6477a964143bfb662c0b6cc0d2ac877587179112f3",
+      "bytes": 22777
+    },
+    {
+      "reference": "internal/workflow/dav_collection_contract_test.go",
+      "sha256": "bac8e29011182c616765257efd4a61b6b25b03881018c6a4beb378a1fcc148cf",
+      "bytes": 2864
+    },
+    {
+      "reference": "internal/workflow/scheduled_collection.go",
+      "sha256": "b7bd4dd4b6b291c80c6176445dd51cd430aceda50cf7b066b18cb20682cf74c2",
+      "bytes": 11692
+    },
+    {
+      "reference": "scripts/acquire-rclone-native.py",
+      "sha256": "812031b5578a3f85f016c544559580618e1118b17cf7633a6f568def5806563c",
+      "bytes": 8337
+    },
+    {
+      "reference": "scripts/metadata_contract.py",
+      "sha256": "0e98e9b95cbefee6080581bf41db6ce3d45cc85040068599c8a6f8b6f0fbaa5a",
+      "bytes": 4698
+    },
+    {
+      "reference": "scripts/test-ci-metadata-summary.py",
+      "sha256": "057aef9b0eac443b82a9f575e1c4c13aa0ed5c82ecab7d937686c7132b7c5956",
+      "bytes": 6240
+    },
+    {
+      "reference": "web/src/collections-types.ts",
+      "sha256": "8dfb5ece5c5aa862072372a77033dc8aa12e5d859568a5871fb4ab172726bfd5",
+      "bytes": 49175
+    },
+    {
+      "reference": "web/src/collections.tsx",
+      "sha256": "c6eba72a66ae39c33132a3e49adb990eb25a2d58a87dfe2b26e039a1ed4bbfb6",
+      "bytes": 75939
+    },
+    {
+      "reference": "web/src/schedules-types.ts",
+      "sha256": "173bfc140d3eabd3a536ede18e74ea481e3b5b8b68a0f9ed19fb955452ede912",
+      "bytes": 33787
+    },
+    {
+      "reference": "web/src/schedules.tsx",
+      "sha256": "ba96833a0c5d8e49c8bb6f29c2bcc2af2cdf81ef10e779b781f4965cc585764b",
+      "bytes": 47424
+    },
+    {
+      "reference": "web/tests/dav-collections.test.mjs",
+      "sha256": "15dc38a58a553eab69fb6fb122a61eadcdf350da8f7f951c7e99f6c9ccd0c4e2",
+      "bytes": 2281
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f429-dav-collection-red.log",
+      "sha256": "9547da4c8658b71ad9f3d928f27da56b170063ba2193d325462743687ad531a5",
+      "bytes": 260
+    },
+    {
+      "reference": ".private/freightctl-f429-browser-contract-red.log",
+      "sha256": "32d78dfbdc8fe01f4e4bcda3fe4f5d77de4e9f3b670eb68a05a819754aaee044",
+      "bytes": 348012
+    },
+    {
+      "reference": ".private/freightctl-f429-schema-profile-red.log",
+      "sha256": "f2d1f786b03cdd308b1fc2c6e349477901b2e3d0cb4650681bab0b7ca2cb8b45",
+      "bytes": 6676
+    },
+    {
+      "reference": ".private/freightctl-f429-focused-contracts.log",
+      "sha256": "d6313c96e943920c0e37ad6956f526e9400e471d50a1b8fbccf1ac61f4aef015",
+      "bytes": 120
+    },
+    {
+      "reference": ".private/freightctl-f429-manual-source-scope-green.log",
+      "sha256": "5ce3c0658ab23dd5c78350b2322c57bb9fa6a645515fe29ca0d03eb3393b64cb",
+      "bytes": 60
+    },
+    {
+      "reference": ".private/freightctl-f429-https-standin.log",
+      "sha256": "72da5c03213259a62127fdbeb4cd4c571ea2fbc59fdd52dd8e16aedf08e381d9",
+      "bytes": 1962
+    },
+    {
+      "reference": ".private/freightctl-f429-final-https-standin.log",
+      "sha256": "0291bd6bb3f967d921c005a1e8234ca05381a843d9707a54657686c0c8355fa3",
+      "bytes": 58
+    },
+    {
+      "reference": ".private/freightctl-f429-browser-typecheck.log",
+      "sha256": "c72395e071957ef25063438cc7fb0c04e05a5e692add9a60a222e448a92ac0e0",
+      "bytes": 2108
+    },
+    {
+      "reference": ".private/freightctl-f429-browser-typecheck-green.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f429-browser-focused.log",
+      "sha256": "d2f144ed875fe662e8d284e5859379f0386f898b3d6e1a750fd49e90acdba665",
+      "bytes": 1629
+    },
+    {
+      "reference": ".private/freightctl-f429-browser-build.log",
+      "sha256": "3abd4349888a500c3e5d06c7747e2b1c8e11fa638a1441aa2fefc5f37c59d656",
+      "bytes": 180
+    },
+    {
+      "reference": ".private/freightctl-f429-browser-assets-check.log",
+      "sha256": "570a75c57a1c2e3f264188215e7221c1baf21b366bbc83f1cf2ffd352103fbc8",
+      "bytes": 183
+    },
+    {
+      "reference": ".private/freightctl-f429-schema-profile-green.log",
+      "sha256": "6853a1d5dff4e3f84ee6391f923a514f613a9021603c69b6f8f2336734d4e16a",
+      "bytes": 105
+    },
+    {
+      "reference": ".private/freightctl-f429-retained-profile.log",
+      "sha256": "1f11b6e880045ee35de832b81b45d06257342e13b5c79bbf0034379d4ca220b9",
+      "bytes": 103
+    },
+    {
+      "reference": ".private/freightctl-f429-preservation.json",
+      "sha256": "7b180769e069b6888c73709dad90154e53112a3eca137504361a1c566a42f6ee",
+      "bytes": 342
+    },
+    {
+      "reference": ".private/freightctl-f429-final-native-compile.log",
+      "sha256": "d7bbce948ae532573cae9cf1c153d87d8b8124e37611e974192ff30e5c3e586e",
+      "bytes": 463
+    },
+    {
+      "reference": ".private/freightctl-f429-least-authority-native-compile.log",
+      "sha256": "d58820bd8575ebc393f58b30f802e8099d1dcad11335673d1522f32cf6d254c6",
+      "bytes": 73
+    },
+    {
+      "reference": ".private/freightctl-f429-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f429-least-authority-vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f429-architecture.log",
+      "sha256": "6788fc9226e6ba9c79dd85f74a2775417c35c1fef79dc7a7146123dddb5c8647",
+      "bytes": 64
+    },
+    {
+      "reference": ".private/freightctl-f429-workflow-lint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "reference": ".private/freightctl-f429-local-acquisition-refused.log",
+      "sha256": "888b4960f6d3a84ff559ae0f08fe9a7b5af3b64af7f0353869719e8ee8c463d2",
+      "bytes": 130
+    },
+    {
+      "reference": ".private/freightctl-f429-closed-format.log",
+      "sha256": "9c76b4a88f5b114380b3f59a97d8718ad23603a72a33d3d8e5f063a5169345ce",
+      "bytes": 31
+    },
+    {
+      "reference": ".private/freightctl-f429-final-records.log",
+      "sha256": "826009b37d6c8254924b7fd1ee12981059544175f2c890ad4186b88b41b583b4",
+      "bytes": 106
+    }
+  ],
+  "owed": [
+    "Original native schema64 initialization/upgrade/restore,SQL guards and served producer/consumer API capture/receipt proof on ARM/x86",
+    "Actual CLI and served browser review/capture/receipt and revocation/outage/recovery profiles at final source",
+    "Independent upstream DAV server,additional auth/protocol/delivery/calendar profiles and whole C-WEBDAV acceptance",
+    "Preserved F432 independent application discovery failure;original repair/replay at FINISH",
+    "Every remaining mandatory baseline/AX/security/readiness and preserved original failure"
+  ],
+  "local_limits": {
+    "go_workers": 1,
+    "go_soft_heap": "192MiB",
+    "node_heap": "192MiB",
+    "inference": "off",
+    "heavy_runtime_started": false,
+    "light_go_tls_standins": true
+  },
+  "ci_capacity_gates_added": false,
+  "publication_or_deployment": false,
+  "overall_goal_complete": false
+}

@@ -27,6 +27,7 @@ def main():
     os.chdir(root)
     commit = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
     arch = peer.validate_native(os.environ, platform.system(), platform.machine(), commit)
+    import resource
     os.umask(0o077)
     private = root/'.private'/('freightctl-rclone-'+peer.VERSION+'-'+arch)
     private.mkdir(mode=0o700, parents=True)
@@ -43,6 +44,8 @@ def main():
 
     def run(name, args, cwd=root, input_path=None):
         out, err = private/(name+'.stdout'), private/(name+'.stderr')
+        wall_started = time.monotonic()
+        cpu_before = resource.getrusage(resource.RUSAGE_CHILDREN)
         with out.open('xb') as stdout, err.open('xb') as stderr:
             if input_path is None:
                 result = subprocess.run(args, cwd=cwd, env=env, stdin=subprocess.DEVNULL,
@@ -51,7 +54,12 @@ def main():
                 with input_path.open('rb') as source:
                     result = subprocess.run(args, cwd=cwd, env=env, stdin=source,
                                             stdout=stdout, stderr=stderr, check=False)
+        cpu_after = resource.getrusage(resource.RUSAGE_CHILDREN)
         steps.append(dict(name=name, exit_code=result.returncode,
+                          wall_seconds=time.monotonic()-wall_started,
+                          child_user_cpu_seconds=cpu_after.ru_utime-cpu_before.ru_utime,
+                          child_system_cpu_seconds=cpu_after.ru_stime-cpu_before.ru_stime,
+                          max_completed_child_rss_kib=cpu_after.ru_maxrss,
                           stdout_sha256=digest(out), stderr_sha256=digest(err)))
         if result.returncode:
             raise RuntimeError('native-peer-command-failed')
@@ -108,8 +116,14 @@ def main():
                     upstream_revision=peer.REVISION, module_sum=peer.SUM, go_mod_sum=peer.MOD_SUM,
                     go_version=peer.GO_VERSION, started_unix=started, finished_unix=time.time(),
                     steps=steps, protocol_qualified=False, local_runtime_authority=False)
+    manifest.update(runner_reported_cpus=os.cpu_count(),
+                    runner_reported_physical_bytes=os.sysconf('SC_PHYS_PAGES')*os.sysconf('SC_PAGE_SIZE'),
+                    rss_scope='Linux cumulative maximum completed-child RSS;not simultaneous process-tree memory',
+                    resource_capacity_gates=False)
     if state == 'accepted-for-protocol-proof':
         manifest.update(binary=str(binary.relative_to(root)), binary_sha256=digest(binary),
+                        binary_bytes=binary.stat().st_size,
+                        source_module_archive_bytes=Path(module['Zip']).stat().st_size,
                         acquisition_source_sha256=digest(Path(__file__).resolve()),
                         identity_source_sha256=digest(root/'scripts/rclone_peer.py'),
                         scanner_sha256=digest(scanner), upstream_manifests=originals)
@@ -119,7 +133,11 @@ def main():
         target.write('\n')
     print(json.dumps(dict(state=state, candidate=commit, architecture=arch,
                           manifest_sha256=digest(output), protocol_qualified=False,
-                          steps=[dict(name=s['name'], exit_code=s['exit_code']) for s in steps])), flush=True)
+                          runner_reported_cpus=manifest['runner_reported_cpus'],
+                          runner_reported_physical_bytes=manifest['runner_reported_physical_bytes'],
+                          binary_bytes=manifest.get('binary_bytes'),
+                          steps=[{k: s[k] for k in ('name','exit_code','wall_seconds','child_user_cpu_seconds',
+                                 'child_system_cpu_seconds','max_completed_child_rss_kib')} for s in steps])), flush=True)
     return 0 if state == 'accepted-for-protocol-proof' else 1
 
 

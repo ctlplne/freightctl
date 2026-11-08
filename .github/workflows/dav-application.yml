@@ -66,4 +66,4 @@ jobs:
           sh scripts/go.sh run ./cmd/freightctl init
       - name: Actual independent DAV application,exact bytes,conditional writes and current authority
         run: |
-          sh scripts/go.sh test -race -timeout=0 -tags=integration,davpeer -run '^TestDAVApplication' -count=1 -v ./internal/api
+          sh scripts/go.sh test -race -timeout=0 -tags=integration,davpeer -run '^TestDAV(Application|CollectionNative)' -count=1 -v ./internal/api

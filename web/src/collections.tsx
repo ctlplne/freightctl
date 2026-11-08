@@ -212,7 +212,8 @@ function SourceReview({
         ) : (
           <>
             <code>
-              {connection.user}@{connection.address}
+              {connection.dav ? "HTTPS " : connection.user + "@"}
+              {connection.address}
             </code>
             , folder <code>{connection.directory}</code>
           </>
@@ -238,6 +239,14 @@ function SourceReview({
             <code>{connection.local.root_fingerprint}</code>; protected
             configuration <code>{connection.local.configuration_sha256}</code>.
             Receiving these files grants no forwarding or execution authority.
+          </>
+        ) : connection.dav ? (
+          <>
+            Read-only HTTPS source. TLS name{" "}
+            <code>{connection.dav.server_name}</code>; pinned CA{" "}
+            <code>{connection.dav.ca_sha256}</code>. Redirects and source
+            mutations are refused. Receiving files grants no forwarding or
+            execution authority.
           </>
         ) : connection.ftps ? (
           <FTPSPeerIdentity proof={connection.ftps} />
@@ -550,7 +559,10 @@ export function Collections({
       schema_version: form.program ? 2 : 1,
       name: form.name.normalize("NFC"),
       steps: form.steps.map((s) => {
-        if (selectedConnection(s.connection).local)
+        if (
+          selectedConnection(s.connection).local ||
+          selectedConnection(s.connection).dav
+        )
           throw new ApiError("invalid_workflow_collection", 400);
         return {
           id: s.id,
@@ -569,7 +581,9 @@ export function Collections({
             ? "local.collect"
             : source.protocol === "ftps"
               ? "ftps.collect"
-              : "sftp.collect",
+              : source.protocol === "webdav"
+                ? "webdav.collect"
+                : "sftp.collect",
         connection: reference(source),
         manifest: form.manifest,
         target_directory: form.directory,
@@ -884,7 +898,7 @@ export function Collections({
     <>
       <option value="">Choose a registered connection</option>
       {connections
-        .filter((c) => !receiver || !c.local)
+        .filter((c) => !receiver || (!c.local && !c.dav))
         .map((c) => (
           <option
             key={connectionKey(c)}
@@ -893,13 +907,15 @@ export function Collections({
           >
             {(c.local
               ? "Local read-only · " + c.local.root_fingerprint.slice(0, 12)
-              : (c.protocol === "ftps" ? "FTPS " + c.ftps!.mode : "SFTP") +
-                " · " +
-                c.user +
-                "@" +
-                c.address +
-                " · " +
-                c.directory) +
+              : c.dav
+                ? "HTTPS read-only · " + c.address + " · " + c.directory
+                : (c.protocol === "ftps" ? "FTPS " + c.ftps!.mode : "SFTP") +
+                  " · " +
+                  c.user +
+                  "@" +
+                  c.address +
+                  " · " +
+                  c.directory) +
               " · v" +
               c.version +
               " · " +
@@ -986,7 +1002,20 @@ export function Collections({
                   value={form.source}
                   required
                   disabled={busy}
-                  onChange={(e) => edit({ source: e.target.value })}
+                  onChange={(e) => {
+                    const chosen = connections.find(
+                      (c) => connectionKey(c) === e.target.value,
+                    );
+                    edit({
+                      source: e.target.value,
+                      ...(chosen?.dav
+                        ? {
+                            scheduled: false,
+                            manifest: "settlement.ready.json",
+                          }
+                        : {}),
+                    });
+                  }}
                 >
                   {connectionOptions()}
                 </select>
@@ -996,7 +1025,13 @@ export function Collections({
               <input
                 type="checkbox"
                 checked={form.scheduled}
-                disabled={busy}
+                disabled={
+                  busy ||
+                  connections.some(
+                    (c) =>
+                      connectionKey(c) === form.source && c.dav !== undefined,
+                  )
+                }
                 onChange={(e) =>
                   edit({
                     scheduled: e.target.checked,

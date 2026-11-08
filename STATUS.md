@@ -15,6 +15,15 @@ creation,refused cleanup/overwrite and revocation. Inventory guards pass after
 an observed missing/ambiguous-dependency red;local compile/static only. Native
 application outcomes,locks,outbound,desktop mounts and final-source proof are owed.
 
+F429 implements manual read-only outbound DAV collection through reviewed
+connections and the existing custody/workflow engine. Exact TLS identity,
+protected bearer references,streaming SHA256/EOF and live authority checks
+precede capture. Browser review exposes read-only metadata;source connections
+cannot be delivery endpoints or calendar sources. Focused red/green,actual TLS
+stand-ins and affected static checks pass. Local source schema64 preserves all
+63 earlier migrations and78/77 tables;retained35 is untouched. Native served
+SQL/API,CLI/browser,independent upstream DAV and final-source proof remain owed.
+
 Current pushed candidate: `8823d7d3293dffd72f681c8550ff58d668642031`.
 [F431](docs/qualification/evidence/F431-native-push.json) binds three owner-only
 commits,enabled Gitleaks(no leaks),verified remote main and16 original attempt1

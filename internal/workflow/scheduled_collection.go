@@ -251,7 +251,7 @@ func validScheduleSource(source ScheduleSourceSelection) bool {
 	if source.Kind == "" || source.Kind == ProcessingScheduleSource {
 		return schedulePattern.MatchString(source.Pattern)
 	}
-	return collectionSourceKind(source.Kind) && !source.Recursive && collectionManifestPattern(ScheduledCollectionContract, source.Pattern)
+	return source.Kind != "webdav.collect" && collectionSourceKind(source.Kind) && !source.Recursive && collectionManifestPattern(ScheduledCollectionContract, source.Pattern)
 }
 func (s *Service) scheduleCollection(ctx context.Context, t *store.Transaction, x ScheduleSelection, w *Definition) (*ScheduleCollection, error) {
 	if w.Schema == 3 {

@@ -25,6 +25,7 @@ type ConnectionDefinition struct {
 	Directory   string                          `json:"directory"`
 	FTPS        *delivery.FTPSDefinition        `json:"ftps,omitempty"`
 	Local       *delivery.LocalCollectionSource `json:"local,omitempty"`
+	DAV         *delivery.DAVCollectionSource   `json:"dav,omitempty"`
 }
 type ConnectionRequest struct {
 	ID              string                          `json:"connection_id,omitempty"`
@@ -37,6 +38,7 @@ type ConnectionRequest struct {
 	KeyPublicFile   string                          `json:"key_public_file"`
 	FTPS            *delivery.FTPSDefinition        `json:"ftps,omitempty"`
 	Local           *delivery.LocalCollectionSource `json:"local,omitempty"`
+	DAV             *delivery.DAVCollectionSource   `json:"dav,omitempty"`
 }
 type ConnectionView struct {
 	ID              string               `json:"id"`
@@ -52,6 +54,16 @@ type ConnectionView struct {
 	Protocol        string               `json:"protocol,omitempty"`
 	FTPS            *FTPSConnectionView  `json:"ftps,omitempty"`
 	Local           *LocalConnectionView `json:"local,omitempty"`
+	DAV             *DAVConnectionView   `json:"dav,omitempty"`
+}
+
+type DAVConnectionView struct {
+	Profile            string `json:"profile"`
+	ServerName         string `json:"server_name"`
+	CASHA256           string `json:"ca_sha256"`
+	CAReferenceHash    string `json:"ca_reference_sha256"`
+	TokenReferenceHash string `json:"token_reference_sha256"`
+	ReadOnly           bool   `json:"read_only"`
 }
 
 type LocalConnectionView struct {
@@ -89,13 +101,16 @@ func connectionDefinition(c *store.Configuration) (*ConnectionDefinition, error)
 	if err != nil || hash != c.Hash || pathErr != nil || canonical != d.Directory || vpath.ControlPath(canonical) {
 		return nil, store.ErrState
 	}
-	if d.Schema == 1 && d.FTPS == nil && d.Local == nil && secure.ValidateSSHDestination(d.Destination) == nil {
+	if d.Schema == 1 && d.DAV == nil && d.FTPS == nil && d.Local == nil && secure.ValidateSSHDestination(d.Destination) == nil {
 		return &d, nil
 	}
-	if d.Schema == 2 && d.Local == nil && reflect.DeepEqual(d.Destination, secure.SSHDestination{}) && d.FTPS.Valid(d.Directory) {
+	if d.Schema == 2 && d.DAV == nil && d.Local == nil && reflect.DeepEqual(d.Destination, secure.SSHDestination{}) && d.FTPS.Valid(d.Directory) {
 		return &d, nil
 	}
-	if d.Schema == 3 && d.FTPS == nil && reflect.DeepEqual(d.Destination, secure.SSHDestination{}) && d.Directory == "/" && d.Local.Valid() {
+	if d.Schema == 3 && d.DAV == nil && d.FTPS == nil && reflect.DeepEqual(d.Destination, secure.SSHDestination{}) && d.Directory == "/" && d.Local.Valid() {
+		return &d, nil
+	}
+	if d.Schema == 4 && d.FTPS == nil && d.Local == nil && reflect.DeepEqual(d.Destination, secure.SSHDestination{}) && d.DAV.Valid() {
 		return &d, nil
 	}
 	return nil, store.ErrState
@@ -132,6 +147,10 @@ func viewConnection(c *store.Configuration) (ConnectionView, error) {
 	}
 	if d.Local != nil {
 		return ConnectionView{ID: c.ID, Version: c.Version, Hash: c.Hash, State: c.State, Revision: c.Revision, Directory: "/", Protocol: "local", Local: &LocalConnectionView{Profile: delivery.LocalCollectionProfile, RootReferenceHash: secure.Digest([]byte(d.Local.Reference)), ConfigurationHash: d.Local.SHA256, RootFingerprint: d.Local.RootFingerprint, ReadOnly: true}}, nil
+	}
+	if d.DAV != nil {
+		peer := d.DAV.Destination
+		return ConnectionView{ID: c.ID, Version: c.Version, Hash: c.Hash, State: c.State, Revision: c.Revision, Address: peer.Address, Directory: d.Directory, Protocol: "webdav", DAV: &DAVConnectionView{Profile: "freightctl-webdav-collection-source-v1", ServerName: peer.ServerName, CASHA256: peer.CASHA256, CAReferenceHash: secure.Digest([]byte(peer.CAFile)), TokenReferenceHash: secure.Digest([]byte(peer.TokenFile)), ReadOnly: true}}, nil
 	}
 	return ConnectionView{ID: c.ID, Version: c.Version, Hash: c.Hash, State: c.State, Revision: c.Revision, Address: d.Destination.Address, User: d.Destination.User, Directory: d.Directory, HostFingerprint: d.Destination.Host.Fingerprint, KeyFingerprint: d.Destination.KeyFingerprint}, nil
 }
@@ -174,7 +193,13 @@ func (s *Service) RegisterConnection(ctx context.Context, scope store.Scope, key
 		return nil, ErrInput
 	}
 	definition := ConnectionDefinition{Schema: 2, Directory: directory, FTPS: r.FTPS}
-	if r.Local != nil {
+	if r.DAV != nil {
+		if r.FTPS != nil || r.Local != nil || r.Address != "" || r.User != "" || r.HostPublicFile != "" || r.KeyFile != "" || r.KeyPublicFile != "" || !r.DAV.Valid() {
+			return nil, ErrInput
+		}
+		dav := *r.DAV
+		definition = ConnectionDefinition{Schema: 4, Directory: directory, DAV: &dav}
+	} else if r.Local != nil {
 		if t.Root != "/" || directory != "/" || r.FTPS != nil || r.Address != "" || r.User != "" || r.HostPublicFile != "" || r.KeyFile != "" || r.KeyPublicFile != "" || !r.Local.Valid() {
 			return nil, ErrInput
 		}
@@ -333,7 +358,7 @@ func connections(ctx context.Context, t *store.Transaction, d Definition) ([]Con
 		if err != nil {
 			return nil, err
 		}
-		if definition.Local != nil || (step.Kind == "ftps.deliver") != (definition.FTPS != nil) {
+		if definition.Local != nil || definition.DAV != nil || (step.Kind == "ftps.deliver") != (definition.FTPS != nil) {
 			return nil, ErrInput
 		}
 		if step.Encryption != nil {

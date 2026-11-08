@@ -1,4 +1,55 @@
-# Remote SFTP collection
+# Remote artifact collection
+
+## Read-only DAV source under qualification
+
+The manual `webdav.collect` source reuses the ordinary ready-manifest,custody,
+intake,approval,lease,fencing and original-receipt workflow below. Local focused
+transport and typed-interface checks pass;actual native PostgreSQL/served-HTTPS,
+CLI/browser and independent upstream DAV server qualification remain owed.
+It does not add a DAV delivery endpoint or calendar arrival source.
+
+An administrator registers a source through local `connection-register` with a
+protected request file. Set `directory` to the exact remote DAV directory and
+`dav` to `{ "schema_version": 1, "destination": { ... } }`. The destination
+contains `address`,`server_name`,`ca_reference`,`ca_sha256`,`token_reference`
+and `token_sha256`. Use a canonical numeric IP:port as the address and the exact
+TLS certificate name separately. The CA and bearer token live in operator-owned
+files;their approved SHA256 values stay in that private request. SSH,FTPS and
+local-source fields must be absent. Registration records an immutable schema4
+connection and makes no source contact. Browser/API workflows use its exact
+ID,version and definition hash;they cannot introduce a host credential reference.
+
+The reader uses TLS1.3 with only that pinned CA,name and numeric endpoint.
+Ambient proxies,system roots,DNS lookups,redirect following,cookies and source
+mutation methods are absent. A redirect fails the collection;it cannot select
+another recipient for the credential. The source account should independently
+permit only the reviewed directory. The transport reopens the protected bearer
+reference for each request and checks its approved fingerprint. Current workflow,
+connection and lease authority is checked during streaming and before each
+private staging write. Closing or cancelling work interrupts active HTTP reads.
+
+Publish ordinary immutable files first and the ready manifest last. The reader
+accepts only complete200 identity-encoded responses and verifies the promised
+length,SHA256 and exact end of stream. Unknown HTTP lengths remain bounded by
+the approved manifest length;extra or missing bytes fail. Metadata retains its
+existing32KiB bound;payloads use32KiB application buffers and the existing
+approved workflow file/batch limits. Socket idle/header/parser bounds protect
+runtime operations;they are independent of GitHub runner capacity.
+
+The review shows read-only HTTPS identity and fingerprints of the CA/token
+references. It exposes no token value,token digest or host credential path.
+The source is excluded from delivery pickers and scheduled-arrival admission.
+Receiving a batch grants no forwarding or execution authority. Add and approve
+ordinary onward steps separately when required;business acceptance stays unknown
+without a receiver contract. A saved original work receipt does not reopen the
+source or repeat effects,even when its old credential file is unavailable.
+
+Migration64 adds strict DAV connection/protocol/view guards to the existing
+registry. Earlier migration bytes,all78 metadata tables and77 forced-RLS tables
+remain intact. The retained local schema35 database is unchanged. Fresh native
+initialization,upgrade/restore and actual final-source runtime proof remain owed.
+
+## Collection workflow
 
 For separately approved routing changes to an existing captured batch, see [captured routing authorization](captured-routing-authorization.md). Selected backend contracts now pass in temporary PostgreSQL databases; browser controls, retained upgrade and stock-source/receiver qualification remain pending.
 

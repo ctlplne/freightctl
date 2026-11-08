@@ -40,7 +40,7 @@ type CollectionEffect struct {
 }
 
 func collectionSourceKind(kind string) bool {
-	return kind == "sftp.collect" || kind == "ftps.collect" || kind == "local.collect"
+	return kind == "sftp.collect" || kind == "ftps.collect" || kind == "local.collect" || kind == "webdav.collect"
 }
 
 func normalizeCollectionSource(s CollectionSource) error {
@@ -49,6 +49,9 @@ func normalizeCollectionSource(s CollectionSource) error {
 		return ErrInput
 	}
 	if _, e = vpath.Canonical(path.Join(s.Directory, strings.Repeat("x", 193))); e != nil {
+		return ErrInput
+	}
+	if s.Kind == "webdav.collect" && s.Contract != CollectionContract {
 		return ErrInput
 	}
 	return nil
@@ -110,7 +113,7 @@ func collectionSourceConnection(source CollectionSource, c *store.Configuration)
 		return nil, nil, store.ErrState
 	}
 	d, e := connectionDefinition(c)
-	if e != nil || source.Kind == "sftp.collect" && d.Schema != 1 || source.Kind == "ftps.collect" && d.Schema != 2 || source.Kind == "local.collect" && d.Schema != 3 {
+	if e != nil || source.Kind == "sftp.collect" && d.Schema != 1 || source.Kind == "ftps.collect" && d.Schema != 2 || source.Kind == "local.collect" && d.Schema != 3 || source.Kind == "webdav.collect" && d.Schema != 4 {
 		return nil, nil, store.ErrState
 	}
 	v, e := viewConnection(c)

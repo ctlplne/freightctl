@@ -545,7 +545,12 @@ export function asScheduleDefinition(v: unknown): ScheduleDefinition {
       ...(processing
         ? { kind: "owned_released_records" as const }
         : remote
-          ? { kind: source.kind as CollectionSource["kind"] }
+          ? {
+              kind: source.kind as Exclude<
+                CollectionSource["kind"],
+                "webdav.collect"
+              >,
+            }
           : {}),
       filename_regex: regex,
     },

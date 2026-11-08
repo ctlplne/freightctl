@@ -139,11 +139,11 @@
     },
     {
       "path": "web/src/collections-types.ts",
-      "sha256": "9e21f93da67fddb5291cb3ca243f46371724755011c9250762ec1a69dbf51302"
+      "sha256": "8dfb5ece5c5aa862072372a77033dc8aa12e5d859568a5871fb4ab172726bfd5"
     },
     {
       "path": "web/src/collections.tsx",
-      "sha256": "0b41b9541555d187dad55f6f43cad2e69123668dc06f317ae18aad344a444f5d"
+      "sha256": "c6eba72a66ae39c33132a3e49adb990eb25a2d58a87dfe2b26e039a1ed4bbfb6"
     },
     {
       "path": "web/src/crypto.ts",
@@ -323,11 +323,11 @@
     },
     {
       "path": "web/src/schedules-types.ts",
-      "sha256": "6ef162d71ada201ccc82f241a1bfdef1dcf39753cb3b50ab70afcda67e071526"
+      "sha256": "173bfc140d3eabd3a536ede18e74ea481e3b5b8b68a0f9ed19fb955452ede912"
     },
     {
       "path": "web/src/schedules.tsx",
-      "sha256": "80c1b83a9ac21ebac8b8d9ff21e69aa5ad79c9ea68683d9a0ac6b506a1987ba3"
+      "sha256": "ba96833a0c5d8e49c8bb6f29c2bcc2af2cdf81ef10e779b781f4965cc585764b"
     },
     {
       "path": "web/src/ssh-metadata.ts",
@@ -362,8 +362,8 @@
     },
     {
       "name": "app.js",
-      "sha256": "e4d863b9b930d742dd145ebff1ba3b3f864d4e54f8115710ac81681e900275eb",
-      "size": 907115
+      "sha256": "3f718eb65d7aceaafe89ab7c7df7bf6da62adc443b4703ddb561846c9d716261",
+      "size": 908762
     },
     {
       "name": "app.js.LEGAL.txt",

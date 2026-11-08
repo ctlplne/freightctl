@@ -23,7 +23,7 @@ func openCollectionSourcePeer(ctx context.Context, connection *ConnectionDefinit
 	// refusal return no reader,so ordinary worker cleanup cannot dereference one.
 	switch kind {
 	case "sftp.collect":
-		if connection.Schema == 1 && connection.FTPS == nil && connection.Local == nil {
+		if connection.Schema == 1 && connection.DAV == nil && connection.FTPS == nil && connection.Local == nil {
 			peer, err := delivery.OpenCollectionPeer(ctx, connection.Destination, connection.Directory, check)
 			if err != nil {
 				return nil, err
@@ -31,7 +31,7 @@ func openCollectionSourcePeer(ctx context.Context, connection *ConnectionDefinit
 			return peer, nil
 		}
 	case "ftps.collect":
-		if connection.Schema == 2 && connection.Local == nil && reflect.DeepEqual(connection.Destination, secure.SSHDestination{}) && connection.FTPS.Valid(connection.Directory) {
+		if connection.Schema == 2 && connection.DAV == nil && connection.Local == nil && reflect.DeepEqual(connection.Destination, secure.SSHDestination{}) && connection.FTPS.Valid(connection.Directory) {
 			peer, err := delivery.OpenFTPSCollectionPeer(ctx, connection.FTPS.Destination, connection.Directory, check)
 			if err != nil {
 				return nil, err
@@ -39,8 +39,16 @@ func openCollectionSourcePeer(ctx context.Context, connection *ConnectionDefinit
 			return peer, nil
 		}
 	case "local.collect":
-		if connection.Schema == 3 && connection.FTPS == nil && reflect.DeepEqual(connection.Destination, secure.SSHDestination{}) && connection.Directory == "/" && connection.Local.Valid() {
+		if connection.Schema == 3 && connection.DAV == nil && connection.FTPS == nil && reflect.DeepEqual(connection.Destination, secure.SSHDestination{}) && connection.Directory == "/" && connection.Local.Valid() {
 			peer, err := delivery.OpenConfiguredLocalCollectionPeer(ctx, connection.Local, check)
+			if err != nil {
+				return nil, err
+			}
+			return peer, nil
+		}
+	case "webdav.collect":
+		if connection.Schema == 4 && connection.Local == nil && connection.FTPS == nil && reflect.DeepEqual(connection.Destination, secure.SSHDestination{}) && connection.DAV.Valid() {
+			peer, err := delivery.OpenDAVCollectionPeer(ctx, connection.DAV, connection.Directory, check)
 			if err != nil {
 				return nil, err
 			}

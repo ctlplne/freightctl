@@ -460,3 +460,12 @@ Pinned primary inputs: [rclone1.76.0](https://github.com/rclone/rclone/releases/
 [WebDAV configuration](https://rclone.org/webdav/),
 [client flags](https://rclone.org/flags/),
 [exact upstream module](https://github.com/rclone/rclone/blob/e982ff36668f5130d94b4f70409babb3d964df42/go.mod).
+
+The first ARM run at8823d7d passes exact stock acquisition and both enforcing
+vulnerability gates,then fails application discovery with exit1. The original
+failure is preserved in[F432](../qualification/evidence/F432-first-dav-application-failure.json);
+cause and original replay remain owed. Acquisition records runner CPU/physical
+memory,binary/archive bytes,wall time,child CPU time and completed-child RSS
+without capacity pass/fail thresholds. RSS is not a simultaneous process-tree
+measurement. The new[read-only outbound collection](../collection-workflows.md)
+uses ordinary reviewed workflows and remains separately under qualification.
