@@ -37,9 +37,13 @@ checks and both exact native bearer/Basic source steps now succeed at that
 candidate;this does not qualify later schema66 source. Independent rclone
 application discovery,receive/local-collection browser and x86 FTPS receiver
 failures remain preserved. Receiver SIGSYS54 classes retain all isolation.
-Remaining original CI completion/security outcomes must be recorded before the
-next S003 batch. F440 and earlier evidence remain historical;no original run is
-cancelled,rerun or substituted.
+[F443](docs/qualification/evidence/F443-native-terminal.json) records all18
+original workflows/41 terminal jobs:35success,sixfailed. All16 named security
+steps and both stock DAV source/binary acquisition bundles pass. Original
+Windows unit and bearer/Basic source steps succeed after F436/F438 corrections.
+F442/schema66 is excluded from those runtime results. The verified checkpoint
+is ready for the final S007 fast-forward push and pause. F440 and earlier
+evidence remain historical;no original run is cancelled,rerun or substituted.
 
 Detailed original failures,owner decisions and remaining work live in
 [remaining.json](docs/qualification/remaining.json),

@@ -107,7 +107,8 @@
         "docs/qualification/evidence/F435-native-push.json",
         "docs/qualification/evidence/F433-basic-dav-source.json",
         "docs/qualification/evidence/F440-native-terminal.json",
-        "docs/qualification/evidence/F441-native-push.json"
+        "docs/qualification/evidence/F441-native-push.json",
+        "docs/qualification/evidence/F443-native-terminal.json"
       ],
       "remaining_details": [
         "F006 adds immutable checkpoints, exact receipts and persistent storage/parent/authority binding. Finish approved cleanup/recovery/rebinding, scalable reservations/fairness, protected retention, journal chaining/rebuild, larger exports and remaining crash/commit boundaries.",
@@ -178,7 +179,8 @@
         "F435:four owner-only commits pushed fast-forward8823d7d\u2192bfc9316 after every previous original terminal(F434). Enabled Gitleaks8.30.1 scanned4 commits/reported1054319 bytes,no leaks;push0,remote main verified. Eighteen original attempt1 workflows include first schema64/F429 bearer-source proof and the independent FTPS receiver gate. WIP Basic/schema65 excluded. Original failures/native/final-source outcomes remain owed;no publication/deployment.",
         "F433 adds explicit UTF8 Basic credentials only to a distinct read-only DAV inner schema2/TLS1.3 profile;legacy bearer hashes/SQL body stay fixed. Typed Go/browser red\u2192green,actual focused TLS credential/rotation/refusal stand-ins,affected static/native compile pass. Migration65 preserves all64 prior SQL bytes and78/77 tables;retained35 untouched. Prepared unmodified pinned rclone read-only TLS server with protected bcrypt file qualifies no runtime yet. Client,bearer and Basic profiles are separate required CI steps;any failure remains red. Native SQL/stock server/API/capture/receipt,CLI/browser,restore/final-source and all original failures remain owed.",
         "F440:bfc9316 original18 workflows/41 jobs terminal:34success,7failed(Windows HTTPS fixtures,receive,both DAV,independent x86 FTPS system/no-ktls,ARM upstream FTP race). All16 named baseline security steps and both stock DAV acquisition bundles pass. F436/F438 correct new audit/fixture proofs without weakening production checks;actual native replay owed. F437 preserves receiver SIGSYS54;all originals and deferred repairs/final-source qualification remain mandatory.",
-        "F441:six owner-only commits pushed fast-forward bfc9316\u2192d5d8b7a after F440 terminal originals/security triage. Enabled Gitleaks8.30.1 scanned6 commits/reported1080201 bytes,no leaks;push0 and remote main verified. All18 original attempt1 workflows bound. Schema65/independent Basic server,F436 audit,F438 Windows fixtures and F439 separate transport included;native outcomes and all original/final-source failures remain owed."
+        "F441:six owner-only commits pushed fast-forward bfc9316\u2192d5d8b7a after F440 terminal originals/security triage. Enabled Gitleaks8.30.1 scanned6 commits/reported1080201 bytes,no leaks;push0 and remote main verified. All18 original attempt1 workflows bound. Schema65/independent Basic server,F436 audit,F438 Windows fixtures and F439 separate transport included;native outcomes and all original/final-source failures remain owed.",
+        "F443:d5d8b7a original18 workflows/41 jobs terminal:35success,6failed(old DAV discovery on both architectures,receive/local-collection browser,independent x86 FTPS system/no-ktls). All16 named security steps and both stock DAV source/binary acquisition bundles pass. Windows unit and exact bearer/Basic native source steps succeed on both architectures after F436/F438 corrections. Exact original logs/handles/hashes preserved;FTPS repeats SIGSYS54(6/31/4,1/2/4),controls unchanged. No complete-row/final-source qualification inferred. Local F442/schema66 excluded;native direct delivery and all deferred failure repairs remain owed."
       ],
       "current_item": {
         "id": "F425",
