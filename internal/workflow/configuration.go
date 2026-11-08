@@ -58,12 +58,14 @@ type ConnectionView struct {
 }
 
 type DAVConnectionView struct {
-	Profile            string `json:"profile"`
-	ServerName         string `json:"server_name"`
-	CASHA256           string `json:"ca_sha256"`
-	CAReferenceHash    string `json:"ca_reference_sha256"`
-	TokenReferenceHash string `json:"token_reference_sha256"`
-	ReadOnly           bool   `json:"read_only"`
+	Profile               string `json:"profile"`
+	ServerName            string `json:"server_name"`
+	CASHA256              string `json:"ca_sha256"`
+	CAReferenceHash       string `json:"ca_reference_sha256"`
+	TokenReferenceHash    string `json:"token_reference_sha256,omitempty"`
+	ReadOnly              bool   `json:"read_only"`
+	Authentication        string `json:"authentication,omitempty"`
+	PasswordReferenceHash string `json:"password_reference_sha256,omitempty"`
 }
 
 type LocalConnectionView struct {
@@ -150,7 +152,14 @@ func viewConnection(c *store.Configuration) (ConnectionView, error) {
 	}
 	if d.DAV != nil {
 		peer := d.DAV.Destination
-		return ConnectionView{ID: c.ID, Version: c.Version, Hash: c.Hash, State: c.State, Revision: c.Revision, Address: peer.Address, Directory: d.Directory, Protocol: "webdav", DAV: &DAVConnectionView{Profile: "freightctl-webdav-collection-source-v1", ServerName: peer.ServerName, CASHA256: peer.CASHA256, CAReferenceHash: secure.Digest([]byte(peer.CAFile)), TokenReferenceHash: secure.Digest([]byte(peer.TokenFile)), ReadOnly: true}}, nil
+		proof := &DAVConnectionView{Profile: "freightctl-webdav-collection-source-v1", ServerName: peer.ServerName, CASHA256: peer.CASHA256, CAReferenceHash: secure.Digest([]byte(peer.CAFile)), ReadOnly: true}
+		if peer.Authentication == "basic" {
+			proof.Profile, proof.Authentication = "freightctl-webdav-basic-collection-source-v1", "basic"
+			proof.PasswordReferenceHash = secure.Digest([]byte(peer.PasswordFile))
+		} else {
+			proof.TokenReferenceHash = secure.Digest([]byte(peer.TokenFile))
+		}
+		return ConnectionView{ID: c.ID, Version: c.Version, Hash: c.Hash, State: c.State, Revision: c.Revision, Address: peer.Address, User: peer.User, Directory: d.Directory, Protocol: "webdav", DAV: proof}, nil
 	}
 	return ConnectionView{ID: c.ID, Version: c.Version, Hash: c.Hash, State: c.State, Revision: c.Revision, Address: d.Destination.Address, User: d.Destination.User, Directory: d.Directory, HostFingerprint: d.Destination.Host.Fingerprint, KeyFingerprint: d.Destination.KeyFingerprint}, nil
 }

@@ -44,10 +44,38 @@ ordinary onward steps separately when required;business acceptance stays unknown
 without a receiver contract. A saved original work receipt does not reopen the
 source or repeat effects,even when its old credential file is unavailable.
 
-Migration64 adds strict DAV connection/protocol/view guards to the existing
-registry. Earlier migration bytes,all78 metadata tables and77 forced-RLS tables
-remain intact. The retained local schema35 database is unchanged. Fresh native
-initialization,upgrade/restore and actual final-source runtime proof remain owed.
+Explicit Basic credentials use a separate inner DAV schema2. Set
+`destination.authentication` to`basic`,provide the public `user`,and give
+`password_reference`/`password_sha256` instead of token fields. Mixing the two
+credential forms is refused. Usernames cannot contain a colon or control
+characters;the password is a protected UTF8 file with no control characters.
+Its exact bytes remain pinned. The client sends this credential only through
+the same verified TLS1.3 endpoint;server challenges cannot change its mode,
+recipient or permission. The review uses the separate
+`freightctl-webdav-basic-collection-source-v1` profile and displays the account
+name and a fingerprint of the password reference. It exposes no password value,
+password digest or local reference path. Incoming freightctl DAV remains the
+separate bearer profile.
+
+The prepared native independent-server proof uses the unmodified pinned
+rclone1.76.0 binary after its full source/binary security gates. It serves two
+synced immutable fixture files on task-owned loopback TLS1.3 with an explicit
+protected bcrypt htpasswd file,empty rclone config and read-only filesystem
+service. No credential value enters argv. The ordinary product source then
+captures and independently reads exact custody with zero onward effects;an
+original-key replay must survive removal of its old credential file. This proof
+is prepared and compiled,not yet runtime-qualified.
+
+Migrations64–65 add strict DAV connection/protocol/view guards to the existing
+registry. Migration65 preserves the earlier bearer SQL body and every previous
+migration byte. All78 metadata tables and77 forced-RLS tables remain intact.
+The retained local schema35 database is unchanged. Fresh native initialization,
+upgrade/restore and actual final-source runtime proof remain owed. Client,
+bearer-source and Basic-source profiles run as separate required Actions steps
+after successful security/database prerequisites;each failure keeps the job red.
+
+Primary protocol/peer inputs:[HTTP Basic](https://www.rfc-editor.org/rfc/rfc7617),
+[rclone WebDAV server](https://rclone.org/commands/rclone_serve_webdav/).
 
 ## Collection workflow
 

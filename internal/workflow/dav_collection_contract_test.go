@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
+	"github.com/ctlplne/freightctl/internal/delivery"
 	"github.com/ctlplne/freightctl/internal/store"
 )
 
@@ -18,6 +19,50 @@ func davConnectionContractRow(t *testing.T) *store.Configuration {
 	token, _ := json.Marshal(filepath.Join(os.TempDir(), "freightctl-dav-contract", "token"))
 	raw := fmt.Sprintf(`{"schema_version":4,"destination":{"address":"","user":"","host":{"Wire":null,"Fingerprint":""},"key_reference":"","key_fingerprint":""},"directory":"/inbox","dav":{"schema_version":1,"destination":{"address":"127.0.0.1:9443","server_name":"localhost","ca_reference":%s,"ca_sha256":"%s","token_reference":%s,"token_sha256":"%s"}}}`, ca, strings.Repeat("a", 64), token, strings.Repeat("b", 64))
 	return &store.Configuration{ID: "00000000-0000-0000-0000-000000000001", Version: 1, Hash: secure.Digest([]byte(raw)), Definition: json.RawMessage(raw), State: "active", Revision: 1}
+}
+
+func TestDAVBasicCollectionPinsItsOwnProfileWithoutChangingBearerMeaning(t *testing.T) {
+	legacy := davConnectionContractRow(t)
+	old, err := connectionDefinition(legacy)
+	if err != nil {
+		t.Fatal(err)
+	}
+	encoded, hash, err := digest(old)
+	if err != nil || string(encoded) != string(legacy.Definition) || hash != legacy.Hash {
+		t.Fatal("valid legacy bearer connection meaning changed")
+	}
+	private := t.TempDir()
+	d := ConnectionDefinition{Schema: 4, Directory: "/inbox", DAV: &delivery.DAVCollectionSource{Schema: 2, Destination: secure.HTTPSReadDestination{Address: "127.0.0.1:9443", ServerName: "localhost", CAFile: filepath.Join(private, "ca.pem"), CASHA256: strings.Repeat("a", 64), Authentication: "basic", User: "source-reader", PasswordFile: filepath.Join(private, "password"), PasswordSHA256: strings.Repeat("b", 64)}}}
+	v, err := viewConnection(connectionContractRow(t, d))
+	if err != nil || v.User != "source-reader" || v.DAV == nil || v.DAV.Profile != "freightctl-webdav-basic-collection-source-v1" || v.DAV.Authentication != "basic" || !v.DAV.ReadOnly || v.DAV.TokenReferenceHash != "" || v.DAV.PasswordReferenceHash != secure.Digest([]byte(d.DAV.Destination.PasswordFile)) {
+		t.Fatal("explicit Basic source lost its exact read-only review identity", err)
+	}
+	raw, err := json.Marshal(v)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, secret := range []string{private, d.DAV.Destination.PasswordSHA256, `"password_reference":`, `"password_sha256":`, `"token_reference_sha256":`} {
+		if strings.Contains(string(raw), secret) {
+			t.Fatal("Basic source review exposed credential proof or mixed bearer metadata")
+		}
+	}
+	for _, change := range []func(*ConnectionDefinition){
+		func(d *ConnectionDefinition) { d.DAV.Schema = 1 },
+		func(d *ConnectionDefinition) { d.DAV.Destination.Authentication = "" },
+		func(d *ConnectionDefinition) {
+			d.DAV.Destination.TokenFile = filepath.Join(private, "token")
+			d.DAV.Destination.TokenSHA256 = strings.Repeat("c", 64)
+		},
+		func(d *ConnectionDefinition) { d.DAV.Destination.User = "bad:user" },
+	} {
+		changed := d
+		copy := *d.DAV
+		changed.DAV = &copy
+		change(&changed)
+		if _, err := connectionDefinition(connectionContractRow(t, changed)); err != store.ErrState {
+			t.Fatal("mixed credential profile or invalid Basic user accepted", err)
+		}
+	}
 }
 
 func TestDAVCollectionUsesExactReviewedReadOnlyConnection(t *testing.T) {

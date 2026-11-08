@@ -3,6 +3,7 @@ package crypto
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"encoding/pem"
 	"errors"
 	"io"
@@ -210,5 +211,80 @@ func TestHTTPSReadReopensApprovedCredentialAndRejectsChangedTrustBeforeContact(t
 	}
 	if _, err = client.Get(t.Context(), "/source"); !errors.Is(err, ErrHTTPSRead) || hits.Load() != 1 {
 		t.Fatal("changed credential bytes reused the old approval or contacted the source")
+	}
+}
+
+func TestHTTPSReadBasicProfileRequiresExplicitProtectedCredential(t *testing.T) {
+	private := t.TempDir()
+	raw, err := json.Marshal(map[string]any{"address": "127.0.0.1:9443", "server_name": "localhost", "ca_reference": filepath.Join(private, "ca.pem"), "ca_sha256": strings.Repeat("a", 64), "authentication": "basic", "user": "source-reader", "password_reference": filepath.Join(private, "password"), "password_sha256": strings.Repeat("b", 64)})
+	if err != nil {
+		t.Fatal(err)
+	}
+	var destination HTTPSReadDestination
+	if json.Unmarshal(raw, &destination) != nil || ValidateHTTPSReadDestination(destination) != nil {
+		t.Fatal("explicit pinned HTTPS Basic source profile unavailable")
+	}
+}
+
+func TestHTTPSReadBasicUsesExactTLSCredentialWithoutBearerFallback(t *testing.T) {
+	var hits atomic.Int64
+	d, _ := httpsReadFixture(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		hits.Add(1)
+		user, password, ok := r.BasicAuth()
+		if !ok || user != "source-reader" || password != strings.Repeat("d", 64) || r.TLS == nil || r.TLS.Version != 0x0304 {
+			t.Error("Basic source did not use exact approved credential over TLS1.3")
+			w.WriteHeader(401)
+			return
+		}
+		w.Write([]byte("inert source"))
+	}))
+	d.Authentication, d.User = "basic", "source-reader"
+	d.PasswordFile, d.PasswordSHA256 = d.TokenFile, d.TokenSHA256
+	d.TokenFile, d.TokenSHA256 = "", ""
+	for _, change := range []func(*HTTPSReadDestination){
+		func(d *HTTPSReadDestination) { d.Authentication = "" },
+		func(d *HTTPSReadDestination) { d.Authentication = "digest" },
+		func(d *HTTPSReadDestination) { d.User = "bad:user" },
+		func(d *HTTPSReadDestination) { d.User = "bad\nuser" },
+		func(d *HTTPSReadDestination) { d.TokenFile = d.PasswordFile; d.TokenSHA256 = d.PasswordSHA256 },
+	} {
+		mixed := d
+		change(&mixed)
+		if ValidateHTTPSReadDestination(mixed) == nil {
+			t.Fatal("Basic credentials were inferred,aliased or mixed with bearer authority")
+		}
+	}
+	client, err := NewHTTPSReadClient(t.Context(), d, func() error { return nil })
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer client.Close()
+	response, err := client.Get(t.Context(), "/source")
+	if err != nil {
+		t.Fatal(err)
+	}
+	body, err := io.ReadAll(response.Body)
+	response.Body.Close()
+	if err != nil || response.StatusCode != 200 || string(body) != "inert source" || hits.Load() != 1 {
+		t.Fatal("exact Basic source read failed")
+	}
+	if err = os.WriteFile(d.PasswordFile, []byte("changed-protected-password"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err = client.Get(t.Context(), "/source"); !errors.Is(err, ErrHTTPSRead) || hits.Load() != 1 {
+		t.Fatal("changed password reused an old approval or contacted the source")
+	}
+	control := []byte("invalid\npassword")
+	if err = os.WriteFile(d.PasswordFile, control, 0600); err != nil {
+		t.Fatal(err)
+	}
+	d.PasswordSHA256 = Digest(control)
+	invalid, err := NewHTTPSReadClient(t.Context(), d, func() error { return nil })
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer invalid.Close()
+	if _, err = invalid.Get(t.Context(), "/source"); !errors.Is(err, ErrHTTPSRead) || hits.Load() != 1 {
+		t.Fatal("control bytes entered a Basic credential or reached the source")
 	}
 }

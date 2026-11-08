@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/tls"
 	"crypto/x509"
+	"encoding/base64"
 	"errors"
 	"io"
 	"net"
@@ -14,6 +15,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"unicode"
+	"unicode/utf8"
 
 	"github.com/ctlplne/freightctl/internal/protectedfs"
 	"github.com/ctlplne/freightctl/internal/vpath"
@@ -25,12 +28,16 @@ var ErrHTTPSRead = errors.New("HTTPS source identity,credential or read policy f
 // Only protected references and approved fingerprints enter durable metadata.
 // DNS resolution,proxies,redirects,ambient roots and mutation methods are absent.
 type HTTPSReadDestination struct {
-	Address     string `json:"address"`
-	ServerName  string `json:"server_name"`
-	CAFile      string `json:"ca_reference"`
-	CASHA256    string `json:"ca_sha256"`
-	TokenFile   string `json:"token_reference"`
-	TokenSHA256 string `json:"token_sha256"`
+	Address        string `json:"address"`
+	ServerName     string `json:"server_name"`
+	CAFile         string `json:"ca_reference"`
+	CASHA256       string `json:"ca_sha256"`
+	TokenFile      string `json:"token_reference,omitempty"`
+	TokenSHA256    string `json:"token_sha256,omitempty"`
+	Authentication string `json:"authentication,omitempty"`
+	User           string `json:"user,omitempty"`
+	PasswordFile   string `json:"password_reference,omitempty"`
+	PasswordSHA256 string `json:"password_sha256,omitempty"`
 }
 
 func httpsReadDigest(value string) bool {
@@ -59,15 +66,69 @@ func ValidateHTTPSReadDestination(d HTTPSReadDestination) error {
 	if err != nil || ip == nil || ip.String() != host || ip.IsUnspecified() || ip.IsMulticast() || portErr != nil || n < 1 || n > 65535 || strconv.Itoa(n) != port || !httpsReadServerName(d.ServerName) {
 		return ErrHTTPSRead
 	}
-	for _, ref := range []string{d.CAFile, d.TokenFile} {
+	credentialRef, credentialHash := d.TokenFile, d.TokenSHA256
+	switch d.Authentication {
+	case "":
+		if d.User != "" || d.PasswordFile != "" || d.PasswordSHA256 != "" {
+			return ErrHTTPSRead
+		}
+	case "basic":
+		if d.TokenFile != "" || d.TokenSHA256 != "" || !ftpsText(d.User, 256) || strings.Contains(d.User, ":") {
+			return ErrHTTPSRead
+		}
+		credentialRef, credentialHash = d.PasswordFile, d.PasswordSHA256
+	default:
+		return ErrHTTPSRead
+	}
+	for _, ref := range []string{d.CAFile, credentialRef} {
 		if !filepath.IsAbs(ref) || filepath.Clean(ref) != ref || !ftpsText(ref, 1024) {
 			return ErrHTTPSRead
 		}
 	}
-	if !httpsReadDigest(d.CASHA256) || !httpsReadDigest(d.TokenSHA256) {
+	if !httpsReadDigest(d.CASHA256) || !httpsReadDigest(credentialHash) {
 		return ErrHTTPSRead
 	}
 	return nil
+}
+
+// Basic is an explicit UTF8 credential profile,not a challenge-selected fallback.
+// Both forms are disclosed only over the exact pinned TLS endpoint. Standard
+// HTTP libraries retain transient header strings;owned secret buffers are cleared.
+func httpsReadAuthorization(d HTTPSReadDestination) (string, *Secret, error) {
+	if d.Authentication == "basic" {
+		password, err := ReadSecret(d.PasswordFile, 1024)
+		if err != nil {
+			return "", nil, ErrHTTPSRead
+		}
+		valid := Digest(password.Bytes) == d.PasswordSHA256 && utf8.Valid(password.Bytes)
+		for rest := password.Bytes; valid && len(rest) > 0; {
+			r, n := utf8.DecodeRune(rest)
+			valid = !unicode.IsControl(r)
+			rest = rest[n:]
+		}
+		if !valid {
+			password.Close()
+			return "", nil, ErrHTTPSRead
+		}
+		combined := make([]byte, len(d.User)+1+len(password.Bytes))
+		copy(combined, d.User)
+		combined[len(d.User)] = ':'
+		copy(combined[len(d.User)+1:], password.Bytes)
+		encoded := base64.StdEncoding.EncodeToString(combined)
+		Clear(combined)
+		return "Basic " + encoded, password, nil
+	}
+	token, err := ReadSecret(d.TokenFile, 4096)
+	if err != nil {
+		return "", nil, ErrHTTPSRead
+	}
+	value := string(token.Bytes)
+	plain := strings.TrimRight(value, "=")
+	if len(plain) < 1 || strings.Trim(plain, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~+/") != "" || Digest(token.Bytes) != d.TokenSHA256 {
+		token.Close()
+		return "", nil, ErrHTTPSRead
+	}
+	return "Bearer " + value, token, nil
 }
 
 func httpsReadTrust(d HTTPSReadDestination) (*tls.Config, error) {
@@ -161,7 +222,7 @@ func (c *HTTPSReadClient) Close() error {
 	return nil
 }
 
-// No original HTTP Request escapes:it contains the transient bearer header.
+// No original HTTP Request escapes:it contains the transient authentication header.
 type HTTPSReadResponse struct {
 	StatusCode    int
 	ContentLength int64
@@ -223,16 +284,11 @@ func (c *HTTPSReadClient) Get(ctx context.Context, target string) (*HTTPSReadRes
 	if err = c.check(); err != nil {
 		return nil, err
 	}
-	token, err := ReadSecret(c.dest.TokenFile, 4096)
+	authorization, credential, err := httpsReadAuthorization(c.dest)
 	if err != nil {
 		return nil, ErrHTTPSRead
 	}
-	defer token.Close()
-	value := string(token.Bytes)
-	plain := strings.TrimRight(value, "=")
-	if len(plain) < 1 || strings.Trim(plain, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~+/") != "" || Digest(token.Bytes) != c.dest.TokenSHA256 {
-		return nil, ErrHTTPSRead
-	}
+	defer credential.Close()
 	u := url.URL{Scheme: "https", Host: c.dest.Address, Path: target}
 	request, err := http.NewRequestWithContext(op, http.MethodGet, u.String(), nil)
 	if err != nil {
@@ -240,7 +296,7 @@ func (c *HTTPSReadClient) Get(ctx context.Context, target string) (*HTTPSReadRes
 	}
 	_, port, _ := net.SplitHostPort(c.dest.Address)
 	request.Host = net.JoinHostPort(c.dest.ServerName, port)
-	request.Header.Set("Authorization", "Bearer "+value)
+	request.Header.Set("Authorization", authorization)
 	request.Header.Set("Accept-Encoding", "identity")
 	defer request.Header.Del("Authorization")
 	response, err := c.client.Do(request)

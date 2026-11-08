@@ -24,6 +24,15 @@ stand-ins and affected static checks pass. Local source schema64 preserves all
 63 earlier migrations and78/77 tables;retained35 is untouched. Native served
 SQL/API,CLI/browser,independent upstream DAV and final-source proof remain owed.
 
+F433 adds an explicit Basic credential profile for read-only outbound DAV,
+separate from unchanged bearer request meanings. TLS1.3,pinned endpoint/CA/name,
+protected credentials and live authority checks stay mandatory. Focused Go and
+browser red/green,TLS stand-ins and affected static/native compilation pass.
+The prepared independent rclone TLS/read-only/bcrypt server proof has not run.
+Schema65 preserves64 prior migrations and78/77 tables;retained35 is untouched.
+Each native DAV profile remains a required step and any failure keeps the job red.
+Actual SQL/stock server/API,CLI/browser,restore and final-source proof are owed.
+
 Current pushed candidate: `bfc9316bdeffc6c75a757b3a67d0b6b7a8f1bf16`.
 [F435](docs/qualification/evidence/F435-native-push.json) binds four owner-only
 commits,enabled Gitleaks(no leaks),remote verification and18 original attempt1

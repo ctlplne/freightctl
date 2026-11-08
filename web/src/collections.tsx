@@ -244,9 +244,18 @@ function SourceReview({
           <>
             Read-only HTTPS source. TLS name{" "}
             <code>{connection.dav.server_name}</code>; pinned CA{" "}
-            <code>{connection.dav.ca_sha256}</code>. Redirects and source
-            mutations are refused. Receiving files grants no forwarding or
-            execution authority.
+            <code>{connection.dav.ca_sha256}</code>.{" "}
+            {connection.dav.profile ===
+            "freightctl-webdav-basic-collection-source-v1" ? (
+              <>
+                Basic account <code>{connection.user}</code> over this exact TLS
+                connection.{" "}
+              </>
+            ) : (
+              <>Bearer credential for this exact server. </>
+            )}
+            Redirects and source mutations are refused. Receiving files grants
+            no forwarding or execution authority.
           </>
         ) : connection.ftps ? (
           <FTPSPeerIdentity proof={connection.ftps} />

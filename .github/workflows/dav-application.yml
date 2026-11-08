@@ -59,11 +59,22 @@ jobs:
       - name: Exact peer identity guard regressions
         run: python3 scripts/test-rclone-peer.py
       - name: Exact unmodified stock peer and enforcing source/binary security gates
+        id: peer
         run: python3 scripts/acquire-rclone-native.py
       - name: Task-owned loopback PostgreSQL and ordinary initialization
+        id: database
         run: |
           python3 scripts/dev-db.py
           sh scripts/go.sh run ./cmd/freightctl init
       - name: Actual independent DAV application,exact bytes,conditional writes and current authority
+        if: ${{ !cancelled() && steps.peer.outcome == 'success' && steps.database.outcome == 'success' }}
         run: |
-          sh scripts/go.sh test -race -timeout=0 -tags=integration,davpeer -run '^TestDAV(Application|CollectionNative)' -count=1 -v ./internal/api
+          sh scripts/go.sh test -race -timeout=0 -tags=integration,davpeer -run '^TestDAVApplication' -count=1 -v ./internal/api
+      - name: Actual reviewed bearer DAV source,SQL,custody and original receipt
+        if: ${{ !cancelled() && steps.peer.outcome == 'success' && steps.database.outcome == 'success' }}
+        run: |
+          sh scripts/go.sh test -race -timeout=0 -tags=integration,davpeer -run '^TestDAVCollectionNative' -count=1 -v ./internal/api
+      - name: Actual independent stock DAV server,Basic source and exact custody
+        if: ${{ !cancelled() && steps.peer.outcome == 'success' && steps.database.outcome == 'success' }}
+        run: |
+          sh scripts/go.sh test -race -timeout=0 -tags=integration,davpeer -run '^TestDAVBasicSourceNative' -count=1 -v ./internal/api

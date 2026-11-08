@@ -96,14 +96,22 @@ export interface CollectionConnection {
   local?: LocalCollectionProof;
   dav?: DAVCollectionProof;
 }
-export interface DAVCollectionProof {
-  profile: "freightctl-webdav-collection-source-v1";
+export type DAVCollectionProof = {
   server_name: string;
   ca_sha256: string;
   ca_reference_sha256: string;
-  token_reference_sha256: string;
   read_only: true;
-}
+} & (
+  | {
+      profile: "freightctl-webdav-collection-source-v1";
+      token_reference_sha256: string;
+    }
+  | {
+      profile: "freightctl-webdav-basic-collection-source-v1";
+      authentication: "basic";
+      password_reference_sha256: string;
+    }
+);
 export interface LocalCollectionProof {
   profile: "freightctl-local-collection-source-v1";
   root_reference_sha256: string;
@@ -398,26 +406,41 @@ export function asCollectionSource(v: unknown): CollectionSource {
 }
 function asDAVCollectionProof(v: unknown): DAVCollectionProof {
   const o = object(v);
+  const basic = o.profile === "freightctl-webdav-basic-collection-source-v1";
   keys(o, [
     "profile",
     "server_name",
     "ca_sha256",
     "ca_reference_sha256",
-    "token_reference_sha256",
     "read_only",
+    ...(basic
+      ? ["authentication", "password_reference_sha256"]
+      : ["token_reference_sha256"]),
   ]);
   if (
-    o.profile !== "freightctl-webdav-collection-source-v1" ||
+    (!basic && o.profile !== "freightctl-webdav-collection-source-v1") ||
+    (basic && o.authentication !== "basic") ||
     o.read_only !== true
   )
     bad();
   const name = str(o, "server_name", 253);
   if (!/^[a-z0-9:.\-]+$/.test(name)) bad();
-  return {
-    profile: "freightctl-webdav-collection-source-v1",
+  const common = {
     server_name: name,
     ca_sha256: hash(o, "ca_sha256"),
     ca_reference_sha256: hash(o, "ca_reference_sha256"),
+  };
+  if (basic)
+    return {
+      profile: "freightctl-webdav-basic-collection-source-v1",
+      ...common,
+      read_only: true,
+      authentication: "basic",
+      password_reference_sha256: hash(o, "password_reference_sha256"),
+    };
+  return {
+    profile: "freightctl-webdav-collection-source-v1",
+    ...common,
     token_reference_sha256: hash(o, "token_reference_sha256"),
     read_only: true,
   };
@@ -470,6 +493,12 @@ export function asCollectionConnection(v: unknown): CollectionConnection {
   );
   if (o.state !== "active" && o.state !== "revoked") bad();
   const directory = path(str(o, "directory", 1024));
+  const dav = o.protocol === "webdav" ? asDAVCollectionProof(o.dav) : undefined;
+  const davUser =
+    dav?.profile === "freightctl-webdav-basic-collection-source-v1"
+      ? str(o, "user", 256)
+      : "";
+  if (davUser.includes(":")) bad();
   if (
     o.protocol !== undefined &&
     o.protocol !== "ftps" &&
@@ -486,7 +515,7 @@ export function asCollectionConnection(v: unknown): CollectionConnection {
     bad();
   if (
     o.protocol === "webdav" &&
-    (o.user !== "" ||
+    (o.user !== davUser ||
       o.host_fingerprint !== "" ||
       o.key_fingerprint !== "" ||
       o.dav === undefined)
@@ -510,11 +539,13 @@ export function asCollectionConnection(v: unknown): CollectionConnection {
     revision: num(o, "revision"),
     address: o.protocol === "local" ? "" : str(o, "address", 300),
     user:
-      o.protocol === "local" || o.protocol === "webdav"
-        ? ""
-        : o.protocol === "ftps"
-          ? str(o, "user", 256)
-          : asSSHUsername(o.user),
+      o.protocol === "webdav"
+        ? davUser
+        : o.protocol === "local"
+          ? ""
+          : o.protocol === "ftps"
+            ? str(o, "user", 256)
+            : asSSHUsername(o.user),
     directory,
     host_fingerprint:
       o.protocol === "ftps" || o.protocol === "local" || o.protocol === "webdav"

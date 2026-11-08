@@ -19,7 +19,7 @@ type DAVCollectionSource struct {
 }
 
 func (d *DAVCollectionSource) Valid() bool {
-	return d != nil && d.Schema == 1 && secure.ValidateHTTPSReadDestination(d.Destination) == nil
+	return d != nil && (d.Schema == 1 && d.Destination.Authentication == "" || d.Schema == 2 && d.Destination.Authentication == "basic") && secure.ValidateHTTPSReadDestination(d.Destination) == nil
 }
 
 type davCollectionReader interface {

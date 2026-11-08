@@ -71,3 +71,25 @@ test("DAV review refuses mixed protocol,secret fields or implied write authority
   scheduled.manifest = "batch-{due_utc}.ready.json";
   assert.throws(() => p.asCollectionSource(scheduled));
 });
+
+test("Basic DAV source review binds its explicit credential profile and public user", () => {
+  const c = connection();
+  c.user = "source-reader";
+  c.dav.profile = "freightctl-webdav-basic-collection-source-v1";
+  c.dav.authentication = "basic";
+  c.dav.password_reference_sha256 = "e".repeat(64);
+  delete c.dav.token_reference_sha256;
+  assert.deepEqual(p.asCollectionConnection(c), c);
+  for (const mutate of [
+    (c) => (c.user = ""),
+    (c) => (c.user = "bad:user"),
+    (c) => (c.dav.token_reference_sha256 = "d".repeat(64)),
+    (c) => (c.dav.password_sha256 = "f".repeat(64)),
+    (c) => (c.dav.authentication = "bearer"),
+    (c) => (c.dav.profile = "freightctl-webdav-collection-source-v1"),
+  ]) {
+    const changed = structuredClone(c);
+    mutate(changed);
+    assert.throws(() => p.asCollectionConnection(changed));
+  }
+});
