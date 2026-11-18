@@ -305,6 +305,11 @@ x86 TLS 1.2 probe reports unexpected EOF with zero producer connections, so
 the required refusal alert is still missing. The original native PostgreSQL,
 DAV, JSON custody and receive-browser failures remain recorded.
 
+[F529](docs/qualification/evidence/F529-guarded-onward-recovery-batch.json)
+records the guarded fast-forward from `8219fd9` to `2c19ff2`. Gitleaks
+reports zero leaks across eight owner commits. The first snapshot contains 17
+original workflows, including the new native receiver-check replays.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6

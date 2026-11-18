@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "id": "F529",
+  "observed_at": "2026-11-19",
+  "candidate": "2c19ff2c83c0c13765a14f011dae28f0d8d7f515",
+  "qualification_claim": false,
+  "preceding_terminal_record": "docs/qualification/evidence/F528-original-batch-and-native-ftps.json",
+  "local_recovery_record": "docs/qualification/evidence/F527-reviewed-onward-readback.json",
+  "push": {
+    "previous": "8219fd9a9194b8262cfb66cc6e847c0e9d03dae4",
+    "remote_ref": "refs/heads/main",
+    "remote_head_verified": true,
+    "fast_forward": true,
+    "owner_author_and_committer": "imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>",
+    "commits": [
+      "ad853993162e4a600efd65d2873916c962c34ea3",
+      "347f208c7cdada7245d0746e6b0cc92099555277",
+      "2d974c59b5b54d65854b7443592f6d50344a0ed5",
+      "98914f9a0cb4b59d9784242476a613dca51b4e15",
+      "b47730a54963de0a39a33b9685a8a85f1c7f1b33",
+      "be18379ffecaeaca14d1d5ec31793f6f983a200b",
+      "d1d185107460490b0e2860b556df9a8072242977",
+      "2c19ff2c83c0c13765a14f011dae28f0d8d7f515"
+    ],
+    "previous_attempt_one_workflows_terminal": 17,
+    "pre_push_guard": ".githooks/pre-push",
+    "gitleaks_version": "8.30.1",
+    "gitleaks_commits_scanned": 8,
+    "gitleaks_leaks": 0,
+    "redacted_log": {
+      "sha256": "5c88ad1caf178802bd033727ce4a59f051f064e7dd1cb681597ca664b1a91fa6",
+      "bytes": 188
+    }
+  },
+  "originals_at_first_observation": [
+    {
+      "name": "Native Windows and macOS unit checks",
+      "run": 44391841901,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native first enrollment and browser exchange",
+      "run": 44391841779,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native FTPS stock clients and custody",
+      "run": 44391841873,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native immutable HTTPS stock resume",
+      "run": 44391842057,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native artifact receive browser",
+      "run": 44391842486,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native independent DAV application",
+      "run": 44391842016,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native reproducible core binaries",
+      "run": 44391841681,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native browser and FTPS operator qualification",
+      "run": 44391842042,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Stock peer and browser qualification",
+      "run": 44391842061,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native JSON intake and custody interfaces",
+      "run": 44391841944,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native source vulnerability configurations",
+      "run": 44391841718,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Core correctness and security",
+      "run": 44391841699,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native tus stock client and custody checkpoints",
+      "run": 44391841695,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native FTPS workflow consent qualification",
+      "run": 44391841934,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native FTPS dispatch approval qualification",
+      "run": 44391842074,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native legacy SCP regular-file custody",
+      "run": 44391842130,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native Linux Go, PostgreSQL and fuzz",
+      "run": 44391841916,
+      "attempt": 1,
+      "status": "queued"
+    }
+  ],
+  "originals_snapshot": {
+    "sha256": "ac39fb42dd8797b6aa4734f1285233c65658f1c9e791f6e4ff99a844a47f7d37",
+    "bytes": 5382
+  },
+  "remaining": [
+    "Collect original native results for the reviewed SFTP worker-recovery tests, browser and stock FTPS producer. Preserve the previous exact x86 EOF diagnostic, red gates and remaining final-source requirements."
+  ]
+}
