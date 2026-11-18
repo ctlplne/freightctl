@@ -20,7 +20,7 @@ import (
 
 func qualifyPortableWorkflowDraft(t *testing.T, ctx context.Context, service *custody.Service, scope store.Scope, cfg store.Configuration, command func(string, ...string) ([]byte, error), requestFile func(any) string) {
 	t.Helper()
-	artifact := filepath.Join(t.TempDir(), "portable-workflow.json")
+	artifact := filepath.Join(privateCLIDirectory(t), "portable-workflow.json")
 	raw, err := command("workflow-export", "--output", artifact, "--workflow-id", cfg.ID, "--version", strconv.Itoa(cfg.Version), "--definition-hash", cfg.Hash)
 	var receipt workflow.PortableExportReceipt
 	if err != nil || json.Unmarshal(raw, &receipt) != nil || receipt.Source.ID != cfg.ID || receipt.Source.Hash != cfg.Hash {
@@ -48,7 +48,7 @@ func qualifyPortableWorkflowDraft(t *testing.T, ctx context.Context, service *cu
 		restored.ID == cfg.ID || restored.Hash != cfg.Hash || restored.State != "draft" || restored.ApprovalAuthority != 0 {
 		t.Fatal("ordinary draft re-creation did not preserve definition and approval boundary", err)
 	}
-	invalid := filepath.Join(t.TempDir(), "wrong-hash.json")
+	invalid := filepath.Join(privateCLIDirectory(t), "wrong-hash.json")
 	if raw, err = command("workflow-export", "--output", invalid, "--workflow-id", cfg.ID, "--version", strconv.Itoa(cfg.Version), "--definition-hash", strings.Repeat("0", 64)); !errors.Is(err, store.ErrRevision) || len(raw) != 0 {
 		t.Fatal("export accepted a different definition digest", err)
 	}
@@ -71,7 +71,7 @@ func qualifyPortableWorkflowDraft(t *testing.T, ctx context.Context, service *cu
 	if _, err := service.DB.ChangeAccount(ctx, scope, "portable-workflow-unrelated-executor", account); err != nil {
 		t.Fatal(err)
 	}
-	unrelated := filepath.Join(t.TempDir(), "unrelated.json")
+	unrelated := filepath.Join(privateCLIDirectory(t), "unrelated.json")
 	if raw, err = command("workflow-export", "--token-file", token, "--output", unrelated, "--workflow-id", cfg.ID, "--version", strconv.Itoa(cfg.Version), "--definition-hash", cfg.Hash); !errors.Is(err, store.ErrNotFound) || len(raw) != 0 {
 		t.Fatal("another workflow executor obtained this actor's plan", err)
 	}

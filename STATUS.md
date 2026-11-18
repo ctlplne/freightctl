@@ -433,6 +433,12 @@ architectures passed the stock HTTPS integrity and native CLI/MCP steps.
 The broader PostgreSQL suites and both restore jobs failed. The independent
 stock peer and separate recipient UI failures remain open.
 
+[F550](docs/qualification/evidence/F550-portable-workflow-authority-fixtures.json)
+fixes the private output setup in the workflow, calendar, run-history and
+policy export tests. The full native processing CLI test passed under
+umask `022`, including the workspace and approval checks. Native Linux
+PostgreSQL replay remains due.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6

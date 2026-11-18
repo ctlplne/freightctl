@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "id": "F550",
+  "observed_at": "2026-11-19",
+  "base_candidate": "4e790fa4a4cdacbc828b31a67b80c9fe213cead3",
+  "qualification_claim": false,
+  "scope": "Run the original portable workflow selection, isolation and approval checks with explicitly private export destinations",
+  "terminal_record": "docs/qualification/evidence/F549-original-integrity-batch-terminal.json",
+  "preceding_receipt_fixture": "docs/qualification/evidence/F546-native-cli-export-authority.json",
+  "original_jobs": [
+    135164648460,
+    135164648725
+  ],
+  "local_replay": {
+    "environment": "Native macOS ARM, Go 1.27.4 race build, real PostgreSQL 16.15, native CLI, isolated custody, umask 022. Inference disabled.",
+    "postgresql_image": "postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+    "postgresql_memory_limit_bytes": 201326592,
+    "postgresql_cpu_limit": 1,
+    "original_conditions_red": {
+      "sha256": "5aca5ccf988c4e1485c963da1cae971bbd03d1207b3baf008d1e17ad0156cd38",
+      "bytes": 1665
+    },
+    "later_export_fixture_red": {
+      "sha256": "b2b3fb7060bd5f0074c6256d42e0652f74a10672bb8941fa00265a7fedd68b25",
+      "bytes": 3119
+    },
+    "same_umask_complete_green": {
+      "sha256": "9836f0458bceffc0bd0038909787828f9c531a77ce57dc6067b2e69d1fac9994",
+      "bytes": 4894
+    },
+    "observations": [
+      "Workflow, calendar and immutable run history exports stopped at their unsafe test directory, before the ordinary selection and authority checks. After those fixtures were fixed, the later output policy export reached the same guard.",
+      "The complete original processing CLI test passed with private destinations for every affected export and refusal. The test retained exact revision, hash, workspace, producer, approval, held-output, portable rules and equal released-output assertions.",
+      "The production export directory and artifact protections are unchanged. Changes are limited to the affected test destinations."
+    ]
+  },
+  "static_checks": {
+    "integration_tagged_go_vet": "pass",
+    "record_references": "pass"
+  },
+  "sources": [
+    {
+      "path": "cmd/freightctl/portable_processing_integration_test.go",
+      "sha256": "767fdfc4aed229cdb72385127310a280d9b3023fb7e953492b109b3d2f4d853d",
+      "bytes": 6472
+    },
+    {
+      "path": "cmd/freightctl/portable_run_history_integration_test.go",
+      "sha256": "351bbb22e7e57cdedb91dfacd5b3129f30074496e894ad7bbc16efd6d9b84020",
+      "bytes": 6049
+    },
+    {
+      "path": "cmd/freightctl/portable_schedule_integration_test.go",
+      "sha256": "a7e5d763bffcdb60d0fdb91d2aac80bb70a54710abfabf243a415727ea4c5c81",
+      "bytes": 8701
+    },
+    {
+      "path": "cmd/freightctl/portable_workflow_integration_test.go",
+      "sha256": "94a00f86e8aa3ed9f7122aa274fbf1963392e9d03fdaf7ea3a7c8d373ea7d48a",
+      "bytes": 4279
+    },
+    {
+      "path": "cmd/freightctl/workflow_processing_integration_test.go",
+      "sha256": "d14f8b2b11b69e3cab4dd68847cd00bb2473ee9ab08b909c2f5a8cc681245f6c",
+      "bytes": 24920
+    }
+  ],
+  "remaining": [
+    "Rerun the complete native Linux PostgreSQL and migration steps on the exact guarded candidate.",
+    "Restore, independent stock peer and other final gates remain open."
+  ]
+}

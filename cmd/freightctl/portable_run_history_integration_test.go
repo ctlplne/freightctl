@@ -20,7 +20,7 @@ import (
 
 func readPortableRunHistoryCLI(t *testing.T, request workflow.RunHistorySelection, command func(string, ...string) ([]byte, error), requestFile func(any) string) (workflow.PortableRunHistory, []byte) {
 	t.Helper()
-	path := filepath.Join(t.TempDir(), "run-history.json")
+	path := filepath.Join(privateCLIDirectory(t), "run-history.json")
 	raw, err := command("workflow-run-history-export", "--request-file", requestFile(request), "--output", path)
 	var receipt workflow.RunHistoryExportReceipt
 	if err != nil || json.Unmarshal(raw, &receipt) != nil || receipt.Source != request {
@@ -87,7 +87,7 @@ func qualifyPortableRunHistory(t *testing.T, ctx context.Context, service *custo
 	}
 	refuse := func(request workflow.RunHistorySelection, want error, extra ...string) {
 		t.Helper()
-		path := filepath.Join(t.TempDir(), "refused.json")
+		path := filepath.Join(privateCLIDirectory(t), "refused.json")
 		flags := append([]string{"--request-file", requestFile(request), "--output", path}, extra...)
 		if body, err := command("workflow-run-history-export", flags...); !errors.Is(err, want) || len(body) != 0 {
 			t.Fatal("invalid or unrelated request exported a page", err)

@@ -24,7 +24,7 @@ func qualifyReboundPortableProcessing(t *testing.T, ctx context.Context, service
 	sourceWorkflow store.Configuration, destinationOutput workflow.Reference, intakeHash, inputFile, originalOutput string,
 	destinationFlags []string, command func(string, ...string) ([]byte, error), requestFile func(any) string) workflow.Reference {
 	t.Helper()
-	archive := filepath.Join(t.TempDir(), "workflow.json")
+	archive := filepath.Join(privateCLIDirectory(t), "workflow.json")
 	raw, err := command("workflow-export", "--workflow-id", sourceWorkflow.ID, "--version", strconv.Itoa(sourceWorkflow.Version),
 		"--definition-hash", sourceWorkflow.Hash, "--output", archive)
 	var receipt workflow.PortableExportReceipt

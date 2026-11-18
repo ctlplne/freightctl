@@ -72,7 +72,7 @@ func qualifyPortableScheduleDraft(t *testing.T, ctx context.Context, service *cu
 	if err != nil || json.Unmarshal(raw, &control) != nil || json.Unmarshal(control.Resource, &active) != nil || active.Schedule.State != "active" {
 		t.Fatal("fixture activation failed", err)
 	}
-	path := filepath.Join(t.TempDir(), "portable-calendar.json")
+	path := filepath.Join(privateCLIDirectory(t), "portable-calendar.json")
 	raw, err = command("workflow-schedule-export", "--schedule-id", original.ID, "--version", strconv.Itoa(original.Version), "--definition-hash", original.Hash, "--output", path)
 	var receipt workflow.PortableExportReceipt
 	if err != nil || json.Unmarshal(raw, &receipt) != nil || receipt.Source != (workflow.Reference{ID: original.ID, Version: original.Version, Hash: original.Hash}) {
@@ -98,7 +98,7 @@ func qualifyPortableScheduleDraft(t *testing.T, ctx context.Context, service *cu
 	if recreated.ID == original.ID || recreated.Hash != original.Hash || recreated.ApprovalAuthority != 0 || recreated.NextDue != nil {
 		t.Fatal("archive carried approval or an active occurrence into the new draft")
 	}
-	mismatch := filepath.Join(t.TempDir(), "mismatch.json")
+	mismatch := filepath.Join(privateCLIDirectory(t), "mismatch.json")
 	if raw, err := command("workflow-schedule-export", "--schedule-id", original.ID, "--version", strconv.Itoa(original.Version), "--definition-hash", strings.Repeat("0", 64), "--output", mismatch); !errors.Is(err, store.ErrRevision) || len(raw) != 0 {
 		t.Fatal("wrong source definition digest obtained export", err)
 	}

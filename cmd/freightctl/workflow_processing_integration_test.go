@@ -358,7 +358,7 @@ func TestProcessingWorkflowCLIUsesApprovedTaskAndSeparateOutputRelease(t *testin
 			}
 			destinationFlags := []string{"-tenant", destination.Tenant, "-partner", destination.Partner, "-token-file", destinationToken}
 			reference := []string{"-output-policy-id", record.Policy.ID, "-version", "1", "-definition-hash", record.Policy.Hash}
-			exportPath := filepath.Join(t.TempDir(), "policy.json")
+			exportPath := filepath.Join(privateCLIDirectory(t), "policy.json")
 			exportFlags := append(reference, "-output", exportPath)
 			if _, err := command("processing-output-policy-export", append(exportFlags, destinationFlags...)...); err == nil {
 				t.Fatal("export crossed workspace boundary")
@@ -407,7 +407,7 @@ func TestProcessingWorkflowCLIUsesApprovedTaskAndSeparateOutputRelease(t *testin
 			t.Logf("portable output policy definition %s, archive %s", restored.Policy.Hash, receipt.SHA256)
 			destinationOutput := workflow.Reference{ID: restored.Policy.ID, Version: restored.Policy.Version, Hash: restored.Policy.Hash}
 			t.Run("portable intake restores exact checks after head review", func(t *testing.T) {
-				path := filepath.Join(t.TempDir(), "intake.json")
+				path := filepath.Join(privateCLIDirectory(t), "intake.json")
 				sourceRef := workflow.Reference{ID: sourcePolicy.ID, Version: sourcePolicy.Version, Hash: sourcePolicy.Hash}
 				flags := []string{"-intake-policy-id", sourceRef.ID, "-version", "1", "-definition-hash", sourceRef.Hash, "-output", path}
 				if _, err := command("intake-policy-export", append(flags, destinationFlags...)...); err == nil {
