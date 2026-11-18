@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "id": "F512",
+  "observed_at": "2026-11-18",
+  "candidate": "0d1e20dbb767a6878178f3e8d6604768f4dd6790",
+  "qualification_claim": false,
+  "preceding_terminal_record": "docs/qualification/evidence/F511-operator-provisioning-originals-terminal.json",
+  "stock_producer_record": "docs/qualification/evidence/F510-supervised-stock-ftps-producer.json",
+  "push": {
+    "previous": "2e14befa305f2f297dee0a9f723651dbaeabcf24",
+    "fast_forward": true,
+    "remote_ref": "refs/heads/main",
+    "remote_head_verified": true,
+    "owner_author_and_committer": "imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>",
+    "commits": [
+      "5882cdc05baf303b6af47b8c365a608c1b9f249e",
+      "71d263d692f60bbcb2f89ce154e62f9b952c9c1a",
+      "0d1e20dbb767a6878178f3e8d6604768f4dd6790"
+    ],
+    "previous_attempt_one_workflows_terminal": 17,
+    "pre_push_guard": ".githooks/pre-push",
+    "gitleaks_version": "8.30.1",
+    "gitleaks_commits_scanned": 3,
+    "gitleaks_leaks": 0,
+    "redacted_log": {
+      "sha256": "142098daa219847872fe9b59fcd6ea97b6ba0503c2224ecbb59d81d46e0f06f8",
+      "bytes": 190
+    }
+  },
+  "initial_workflow_snapshot": {
+    "sha256": "e1822a94a0534255a315002e6bbc5d7d2e4fa01b45e20c1043dd9a1c21be9877",
+    "bytes": 1952
+  },
+  "originals_at_first_observation": [
+    {
+      "workflow": "Core correctness and security",
+      "run": 44355680593,
+      "attempt": 1,
+      "status": "in_progress"
+    },
+    {
+      "workflow": "Native reproducible core binaries",
+      "run": 44355680605,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "workflow": "Native legacy SCP regular-file custody",
+      "run": 44355680646,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "workflow": "Native FTPS dispatch approval qualification",
+      "run": 44355680701,
+      "attempt": 1,
+      "status": "in_progress"
+    },
+    {
+      "workflow": "Native Windows and macOS unit checks",
+      "run": 44355680868,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "workflow": "Native FTPS workflow consent qualification",
+      "run": 44355680882,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "workflow": "Native tus stock client and custody checkpoints",
+      "run": 44355680919,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "workflow": "Native independent DAV application",
+      "run": 44355680927,
+      "attempt": 1,
+      "status": "in_progress"
+    },
+    {
+      "workflow": "Native Linux Go, PostgreSQL and fuzz",
+      "run": 44355680953,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "workflow": "Native artifact receive browser",
+      "run": 44355680998,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "workflow": "Native JSON intake and custody interfaces",
+      "run": 44355681028,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "workflow": "Native FTPS stock clients and custody",
+      "run": 44355681060,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "workflow": "Native browser and FTPS operator qualification",
+      "run": 44355681107,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "workflow": "Native immutable HTTPS stock resume",
+      "run": 44355681124,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "workflow": "Native source vulnerability configurations",
+      "run": 44355681609,
+      "attempt": 1,
+      "status": "queued"
+    }
+  ],
+  "preceding_workflow_names_not_in_first_snapshot": [
+    "Native first enrollment and browser exchange",
+    "Stock peer and browser qualification"
+  ],
+  "remaining": [
+    "Refresh original run inventory and retain the native security and runtime results for this candidate.",
+    "The dedicated independent stock FTPS producer proof used a macOS ARM freightctl runtime. Native Linux coverage for that source profile still needs its own runner fixture and actual results.",
+    "Retain all prior red gates and final-source obligations."
+  ]
+}

@@ -132,7 +132,8 @@
         "docs/qualification/evidence/F506-native-arm-alpine-peer-pass.json",
         "docs/qualification/evidence/F507-alpine-peer-native-batch-terminal.json",
         "docs/qualification/evidence/F508-guarded-operator-provisioning-batch.json",
-        "docs/qualification/evidence/F511-operator-provisioning-originals-terminal.json"
+        "docs/qualification/evidence/F511-operator-provisioning-originals-terminal.json",
+        "docs/qualification/evidence/F512-guarded-stock-producer-batch.json"
       ],
       "remaining_details": [
         "F006 adds immutable checkpoints, exact receipts and persistent storage/parent/authority binding. Finish approved cleanup/recovery/rebinding, scalable reservations/fairness, protected retention, journal chaining/rebuild, larger exports and remaining crash/commit boundaries.",

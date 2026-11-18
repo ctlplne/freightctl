@@ -191,6 +191,11 @@ PostgreSQL, both JSON custody, both independent DAV and the receive browser
 jobs failed. The Linux ARM and Windows source scans passed. GitHub canceled the
 macOS scan before it assigned a runner or recorded a step.
 
+[F512](docs/qualification/evidence/F512-guarded-stock-producer-batch.json)
+records the fast-forward to `0d1e20d` after all 17 preceding originals
+finished. The enabled Gitleaks guard found zero leaks across three owner
+commits. The first snapshot shows 15 original runs for the new candidate.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6
