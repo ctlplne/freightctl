@@ -1,0 +1,333 @@
+{
+  "schema_version": 1,
+  "id": "F487",
+  "observed_at": "2026-11-18",
+  "candidate": "b1145f28c3a49170d3815ed3bb11f9a9ec2081b4",
+  "base_evidence": "docs/qualification/evidence/F475-guarded-native-batch.json",
+  "qualification_claim": false,
+  "terminal_metadata_sha256": "cba1bf726ad6f03b9d1834f47f9a2b98fca2deeff922c8af83865872f9f51903",
+  "original_workflow_count": 17,
+  "original_job_count": 37,
+  "workflow_conclusions": {
+    "success": 14,
+    "failure": 3
+  },
+  "job_conclusions": {
+    "success": 32,
+    "failure": 5
+  },
+  "none_cancelled_replaced_or_retried": true,
+  "security_replay": [
+    "docs/qualification/evidence/F483-x86-native-peer-advisories.json",
+    "docs/qualification/evidence/F485-arm-native-peer-advisories.json"
+  ],
+  "remaining": [
+    "Retain the original and replay the failed peer scan, the independent and direct DAV journeys and the receive browser at FINISH.",
+    "Replay the next exact portability candidate on the native matrix and finish all whole-journey and release gates."
+  ],
+  "original_workflows": [
+    {
+      "id": 44308573561,
+      "name": "Stock peer and browser qualification",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 134816442342,
+          "conclusion": "success"
+        },
+        {
+          "id": 134816442433,
+          "conclusion": "success"
+        },
+        {
+          "id": 134816442457,
+          "conclusion": "success"
+        },
+        {
+          "id": 134816442543,
+          "conclusion": "success"
+        },
+        {
+          "id": 134816442598,
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44308573568,
+      "name": "Native FTPS stock clients and custody",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 134816441694,
+          "conclusion": "success"
+        },
+        {
+          "id": 134816442147,
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44308573602,
+      "name": "Core correctness and security",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 134816443135,
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44308573620,
+      "name": "Native Windows and macOS unit checks",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 134816441524,
+          "conclusion": "success"
+        },
+        {
+          "id": 134816441959,
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44308573666,
+      "name": "Native first enrollment and browser exchange",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 134816441720,
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44308573679,
+      "name": "Native immutable HTTPS stock resume",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 134816441589,
+          "conclusion": "success"
+        },
+        {
+          "id": 134816442016,
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44308573709,
+      "name": "Native browser and FTPS operator qualification",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 134816442693,
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44308573757,
+      "name": "Native FTPS dispatch approval qualification",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 134816442067,
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44308573826,
+      "name": "Native JSON intake and custody interfaces",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 134816442071,
+          "conclusion": "success"
+        },
+        {
+          "id": 134816442596,
+          "conclusion": "success"
+        },
+        {
+          "id": 134816442767,
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44308573837,
+      "name": "Native artifact receive browser",
+      "attempt": 1,
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "id": 134816442635,
+          "conclusion": "failure",
+          "failed_steps": [
+            "Actual recipient UI, exact bytes, unrelated user and endpoint revocation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 44308573857,
+      "name": "Native tus stock client and custody checkpoints",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 134816442442,
+          "conclusion": "success"
+        },
+        {
+          "id": 134816442881,
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44308573873,
+      "name": "Native FTPS workflow consent qualification",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 134816442410,
+          "conclusion": "success"
+        },
+        {
+          "id": 134816442724,
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44308573890,
+      "name": "Native independent DAV application",
+      "attempt": 1,
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "id": 134816442854,
+          "conclusion": "failure",
+          "failed_steps": [
+            "Actual independent DAV application,exact bytes,conditional writes and current authority",
+            "Actual direct DAV delivery,independent stock receiver,CLI and approvals",
+            "Direct DAV delivery between separate freightctl custody instances"
+          ]
+        },
+        {
+          "id": 134816443385,
+          "conclusion": "failure",
+          "failed_steps": [
+            "Actual independent DAV application,exact bytes,conditional writes and current authority",
+            "Actual direct DAV delivery,independent stock receiver,CLI and approvals",
+            "Direct DAV delivery between separate freightctl custody instances"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 44308573897,
+      "name": "Native source vulnerability configurations",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 134816442742,
+          "conclusion": "success"
+        },
+        {
+          "id": 134816443056,
+          "conclusion": "success"
+        },
+        {
+          "id": 134816443166,
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44308573910,
+      "name": "Native Linux Go, PostgreSQL and fuzz",
+      "attempt": 1,
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "id": 134816442984,
+          "conclusion": "failure",
+          "failed_steps": [
+            "Scan the exact independent peer image and enforce complete evidence"
+          ]
+        },
+        {
+          "id": 134816443022,
+          "conclusion": "success"
+        },
+        {
+          "id": 134816443037,
+          "conclusion": "failure",
+          "failed_steps": [
+            "Scan the exact independent peer image and enforce complete evidence"
+          ]
+        },
+        {
+          "id": 134816443112,
+          "conclusion": "success"
+        },
+        {
+          "id": 134816443122,
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44308573958,
+      "name": "Native legacy SCP regular-file custody",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 134816443018,
+          "conclusion": "success"
+        },
+        {
+          "id": 134816443208,
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44308574082,
+      "name": "Native reproducible core binaries",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 134816443223,
+          "conclusion": "success"
+        },
+        {
+          "id": 134816443453,
+          "conclusion": "success"
+        }
+      ]
+    }
+  ]
+}

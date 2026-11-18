@@ -99,6 +99,12 @@ lists all five as vulnerable in trixie. The original ARM replay also
 passed the PostgreSQL regression and blocked on the same five advisories.
 [F485](docs/qualification/evidence/F485-arm-native-peer-advisories.json)
 
+[F487](docs/qualification/evidence/F487-original-native-batch-terminal.json)
+records all 17 original workflows at `b1145f2`. Both full PostgreSQL
+suites and the Windows and macOS checks passed. Five of 37 jobs failed
+across the two peer-image scans, two DAV jobs and the receive browser.
+Each original remains in the record.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6
