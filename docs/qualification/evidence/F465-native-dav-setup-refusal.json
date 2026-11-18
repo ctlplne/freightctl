@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "id": "F465",
+  "observed_at": "2026-11-18",
+  "candidate": "2d10f84ce1ff5c8bdd1ea551f1cb35153fe28410",
+  "base_evidence": "docs/qualification/evidence/F461-dav-custody-peer.json",
+  "workflow": "Native independent DAV application",
+  "run_id": 44297587318,
+  "attempt": 1,
+  "original_workflow_conclusion": "failure",
+  "qualification_claim": false,
+  "jobs": [
+    {
+      "architecture": "arm64",
+      "job_id": 134778544984,
+      "raw_log_bytes": 91999,
+      "raw_log_sha256": "4948cca72d7abafd0eaa97c0bd6ab3df1b08997c3c94db1970cc1783d8432757",
+      "lost_move_response_step": "failure",
+      "direct_custody_peer_step": "failure"
+    },
+    {
+      "architecture": "amd64",
+      "job_id": 134778545614,
+      "raw_log_bytes": 71876,
+      "raw_log_sha256": "0f3d24c73d5293c728abf80bfca13de86b9ebf3001079ac434cc61a446ec624d",
+      "lost_move_response_step": "success",
+      "direct_custody_peer_step": "failure"
+    }
+  ],
+  "both_architectures": {
+    "exact_unmodified_stock_peer_and_enforcing_source_binary_security": "success",
+    "loopback_postgresql_and_initialization": "success",
+    "reviewed_bearer_dav_source": "success",
+    "stock_basic_dav_source": "success",
+    "stock_dav_application": "failure",
+    "stock_dav_outbound": "failure"
+  },
+  "direct_custody_triage": {
+    "test": "TestDAVDeliveryNativeFreightctlCustodyPeer",
+    "first_assertion_file": "internal/api/dav_delivery_custody_integration_test.go",
+    "first_assertion_line_both_jobs": 41,
+    "stage": "Bind the receiver's private staging directory mode through the ordinary path command.",
+    "observed": "Both assertions stop setup before queues, sending, collision and peer-read checks.",
+    "remaining": "Establish the cause of the guarded setup refusal and rerun this original journey with its access, exact-byte and no-overwrite assertions."
+  }
+}

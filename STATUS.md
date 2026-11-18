@@ -67,8 +67,10 @@ Both peer-image gates still block on the two Debian glibc advisories.
 
 [F461](docs/qualification/evidence/F461-dav-custody-peer.json) binds DAV PUT
 and MOVE to separate receiver receipt keys. Nine loopback TLS tests pass,
-including the lost-reply check. The direct custody-to-custody test awaits
-native execution.
+including the lost-reply check. [F465](docs/qualification/evidence/F465-native-dav-setup-refusal.json)
+records both original native direct-custody failures. Each stopped while
+setting the receiver's private staging mode, before a delivery was queued.
+The native transfer and collision checks remain due.
 
 [F463](docs/qualification/evidence/F463-owner-source-batch.json) records the
 fast-forward to `2d10f84` under the owner identity. Gitleaks found no leaks
