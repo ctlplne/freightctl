@@ -130,7 +130,8 @@
         "docs/qualification/evidence/F502-guarded-alpine-peer-source-batch.json",
         "docs/qualification/evidence/F504-native-source-and-peer-build.json",
         "docs/qualification/evidence/F506-native-arm-alpine-peer-pass.json",
-        "docs/qualification/evidence/F507-alpine-peer-native-batch-terminal.json"
+        "docs/qualification/evidence/F507-alpine-peer-native-batch-terminal.json",
+        "docs/qualification/evidence/F508-guarded-operator-provisioning-batch.json"
       ],
       "remaining_details": [
         "F006 adds immutable checkpoints, exact receipts and persistent storage/parent/authority binding. Finish approved cleanup/recovery/rebinding, scalable reservations/fairness, protected retention, journal chaining/rebuild, larger exports and remaining crash/commit boundaries.",
@@ -224,7 +225,8 @@
         "F502 fast-forwards the existing main from b7b0eb5 to f58dd14 after every original became terminal. All 14 outgoing commits use the owner as author and committer and passed the enabled Gitleaks hook with zero leaks. The 18 observed attempt-one workflows are linked. The active stock peer and browser workflow had no run for this source at the first observation.",
         "F504 records the later observation of the original stock peer run and the complete three-platform enforcing source scan pass for f58dd14. Both original native Alpine peer build steps passed.",
         "F506 records the exact original ARM Alpine peer build, all eight encrypted FTPS recovery subcases and the fresh enforcing Trivy pass. Four OS and two language packages were inventoried with zero findings or suppressions. The whole ARM PostgreSQL suite failure remains open.",
-        "F507 records the original x86 Alpine peer build, all eight encrypted FTPS cases and a fresh enforcing Trivy pass on the same source. Five OS packages and two language packages produced zero findings or suppressions. All 19 original workflows and 43 jobs are terminal. Both complete PostgreSQL suites and the original DAV, JSON, FTPS receiver and browser failures remain open. A GitHub-canceled macOS unit job is unverified."
+        "F507 records the original x86 Alpine peer build, all eight encrypted FTPS cases and a fresh enforcing Trivy pass on the same source. Five OS packages and two language packages produced zero findings or suppressions. All 19 original workflows and 43 jobs are terminal. Both complete PostgreSQL suites and the original DAV, JSON, FTPS receiver and browser failures remain open. A GitHub-canceled macOS unit job is unverified.",
+        "F508 verifies the guarded fast-forward from f58dd14 to 2e14bef after all 19 preceding originals reached terminal states. Gitleaks found zero leaks across six outgoing owner commits. The initial 17 first-attempt workflows include native schema 67 replay. Terminal inventory and results remain due."
       ],
       "current_item": {
         "id": "F425",

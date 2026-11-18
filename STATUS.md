@@ -165,6 +165,11 @@ peer scans passed with zero findings and suppressions. Both dedicated
 encrypted FTPS replays passed. Both full PostgreSQL suites and the other
 listed original runtime failures remain open.
 
+[F508](docs/qualification/evidence/F508-guarded-operator-provisioning-batch.json)
+records the guarded fast-forward to `2e14bef` after all 19 preceding originals
+finished. Gitleaks found zero leaks across all six outgoing owner commits.
+The initial 17 original runs include native schema 67 replay.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6
