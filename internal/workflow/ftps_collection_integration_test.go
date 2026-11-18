@@ -34,6 +34,16 @@ func newFTPSCollection(t *testing.T, implicit, program, scheduled bool) ftpsColl
 	f := setup(t)
 	producer, spec, listener := governedFTPSReceiver(t, implicit)
 	connection := registeredFTPSConnection(t, f, spec)
+	x := prepareFTPSCollection(t, f, connection, program, scheduled)
+	if listener.contacts.Load() != 0 {
+		t.Fatal("FTPS source approval contacted the producer")
+	}
+	x.producer, x.listener = producer, listener
+	return x
+}
+
+func prepareFTPSCollection(t *testing.T, f *fixture, connection ConnectionView, program, scheduled bool) ftpsCollectionSetup {
+	t.Helper()
 	source := collectionTestSource()
 	source.Kind, source.Directory = "ftps.collect", "/"
 	source.Connection = Reference{ID: connection.ID, Version: connection.Version, Hash: connection.Hash}
@@ -46,8 +56,8 @@ func newFTPSCollection(t *testing.T, implicit, program, scheduled bool) ftpsColl
 		d.Program = &Program{Nodes: []ProgramNode{{Kind: "keep_local", Reason: "reviewed_local_collection"}}}
 	}
 	preview, err := f.s.Validate(f.ctx, f.scope, PreviewRequest{Definition: d})
-	if err != nil || preview.ExternalContact || preview.Collection == nil || preview.Collection.Kind != source.Kind || preview.Collection.Connection.Protocol != "ftps" || listener.contacts.Load() != 0 {
-		t.Fatal("FTPS source metadata contacted a peer or lost its transport", err)
+	if err != nil || preview.ExternalContact || preview.Collection == nil || preview.Collection.Kind != source.Kind || preview.Collection.Connection.Protocol != "ftps" {
+		t.Fatal("FTPS source preview declared external contact or lost its transport", err)
 	}
 	w := f.approved(t, d)
 	tx, err := f.s.Custody.DB.Begin(f.ctx, f.scope)
@@ -57,7 +67,8 @@ func newFTPSCollection(t *testing.T, implicit, program, scheduled bool) ftpsColl
 	authority := tx.AuthorityRevision
 	tx.Tx.Rollback(f.ctx)
 	ref := Reference{ID: w.ID, Version: w.Version, Hash: w.Hash}
-	return ftpsCollectionSetup{f, producer, connection, source, ref, CollectionSelection{Workflow: ref, Timeout: 120, Authority: authority}, listener}
+	return ftpsCollectionSetup{f: f, connection: connection, source: source, workflow: ref,
+		selection: CollectionSelection{Workflow: ref, Timeout: 120, Authority: authority}}
 }
 
 func publishFTPSCollectionObject(t *testing.T, x ftpsCollectionSetup, name string, body []byte) *store.File {

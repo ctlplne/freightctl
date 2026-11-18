@@ -170,6 +170,15 @@ records the guarded fast-forward to `2e14bef` after all 19 preceding originals
 finished. Gitleaks found zero leaks across all six outgoing owner commits.
 The initial 17 original runs include native schema 67 replay.
 
+[F509](docs/qualification/evidence/F509-stock-ftps-producer-exchange.json)
+replays the FTPS collection to agent to stock OpenSSH journey from an
+independent Alpine vsftpd producer. Explicit and implicit TLS 1.3 both pass
+with real PostgreSQL and stock curl. Each producer records one authenticated
+session and two complete downloads, and its original bytes remain unchanged.
+The stock listener exited with status 139 after serving the bytes in both
+witnessed runs. Listener continuity, native Linux freightctl replay and the
+other AX-J02 profiles remain open.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6

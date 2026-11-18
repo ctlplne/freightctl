@@ -1,0 +1,329 @@
+{
+  "schema_version": 1,
+  "id": "F509",
+  "observed_at": "2026-11-18",
+  "base_candidate": "5882cdc05baf303b6af47b8c365a608c1b9f249e",
+  "production_source": "2e14befa305f2f297dee0a9f723651dbaeabcf24",
+  "qualification_claim": false,
+  "scope": "Exact ready-manifest collection through an agent-owned copy to stock SFTP, starting from an independent read-only FTPS producer",
+  "runtime": {
+    "freightctl": "Go 1.27.4 darwin/arm64 race-enabled on macOS",
+    "postgres_image": "postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+    "postgres_container_max_mib": 192,
+    "postgres_container_max_cpus": 1,
+    "stock_https": "Apple curl 8.7.1 with SecureTransport",
+    "stock_sftp": "OpenSSH 10.5p1 sshd and sftp",
+    "negative_tls_peer": "OpenSSL 3.6.5 s_client",
+    "inference_enabled": false
+  },
+  "producer": {
+    "platform": "native Linux aarch64 Docker Desktop guest",
+    "alpine_index": "alpine:3.24.4@sha256:f59abe656b692d901e184be3445e084786602108599d2a51d229c0f5a48c71bf",
+    "arm64_manifest_sha256": "1829893486be257df5049ab3b7fc95afbd0fc09d89803cbc580bda1ba5386b29",
+    "binary": "stock vsftpd 3.0.5-r3",
+    "binary_sha256": "edb450c4e263459666f6b2139b16793a6a6df040b21d531f00ac978da903c8ce",
+    "test_image_id": "sha256:e828cad5e04b876b511a489211a0480f438f58da35bc28cd6cb4a59c73c62c73",
+    "signature_checked_apk_closure": [
+      {
+        "name": "busybox-1.37.0-r31.apk",
+        "sha256": "18e3490a6f024004b2b13dd4b54bd50ccd82894938023b2d4eab389a4edcba70",
+        "bytes": 521974
+      },
+      {
+        "name": "busybox-binsh-1.37.0-r31.apk",
+        "sha256": "f3a1b2257cfa114ff20de05c665f380695385d589908bfc9af5768f39fef9ef5",
+        "bytes": 1547
+      },
+      {
+        "name": "libcap2-2.78-r0.apk",
+        "sha256": "e13be383f18b1fcfe895361d816ff7cfd2b3c265e442bb371c4a234b29b0e4a9",
+        "bytes": 23993
+      },
+      {
+        "name": "libcrypto3-3.5.9-r0.apk",
+        "sha256": "2676a2b0b6e23ea2edccf3ee982b9842a665d52603d047de3d0a185dc316d983",
+        "bytes": 2286800
+      },
+      {
+        "name": "libssl3-3.5.9-r0.apk",
+        "sha256": "20ac252b276d73f2c69c1d25f84537c7fba81caefc026c6be1094b394af2082e",
+        "bytes": 373023
+      },
+      {
+        "name": "linux-pam-1.7.1-r2.apk",
+        "sha256": "bc60d95c8a0fd16fbd72d41bc1e40510b9bd085f088a63ca1ad28778b0712efc",
+        "bytes": 274955
+      },
+      {
+        "name": "musl-1.2.6-r3.apk",
+        "sha256": "2e17864102278d9049c3a56f1bceed9e8cf287065617e579325123443daed8a5",
+        "bytes": 417730
+      },
+      {
+        "name": "skalibs-libs-2.15.0.0-r0.apk",
+        "sha256": "7ea58fb512067402b519079fcce8a48381eb2b9c690341c4a017aa15f719c198",
+        "bytes": 91460
+      },
+      {
+        "name": "ssl_client-1.37.0-r31.apk",
+        "sha256": "fa2911d412b7922b17a07829914ee630c2cd7091ef558abd4329ffb6020f879d",
+        "bytes": 5078
+      },
+      {
+        "name": "utmps-libs-0.1.3.3-r0.apk",
+        "sha256": "d6487b6f260728969191314f6706d4cc62527370e757ec3ac6f7fee8ed38cf88",
+        "bytes": 5758
+      },
+      {
+        "name": "vsftpd-3.0.5-r3.apk",
+        "sha256": "7e0272cab3f6c87171576ad17d79f2fec70af725c34a1c2fdab69418c031da9c",
+        "bytes": 64332
+      }
+    ],
+    "acquisition_log": {
+      "sha256": "d1ef172c1bd8def8ecf039f973c646599355864b2bd931598430dd1d7ced159a",
+      "bytes": 1276
+    },
+    "container_max_mib": 128,
+    "container_max_cpus": 1,
+    "container_max_processes": 48,
+    "runtime_capabilities": [
+      "SETUID",
+      "SETGID",
+      "SYS_CHROOT"
+    ],
+    "configuration": {
+      "tls_minimum_and_maximum": "TLSv1.3 via OpenSSL system defaults",
+      "openssl_options": "-KTLS",
+      "ssl_enable": true,
+      "force_local_logins_ssl": true,
+      "force_local_data_ssl": true,
+      "require_ssl_reuse": true,
+      "strict_ssl_read_eof": true,
+      "strict_ssl_write_shutdown": true,
+      "seccomp_sandbox": true,
+      "docker_no_new_privileges": true,
+      "control_and_passive_publish_interface": "127.0.0.1",
+      "pasv_enable": true,
+      "port_enable": false,
+      "anonymous_enable": false,
+      "write_enable": false,
+      "chroot_local_user": true,
+      "allow_writeable_chroot": false,
+      "filesystem": "Root-owned mode 0555 inbox and mode 0444 immutable fixture files, confined synthetic PAM identity",
+      "transfer_audit": "Native vsftpd connect/login/download and completed binary xferlog records. Protocol command logging off."
+    }
+  },
+  "fixture": {
+    "local_approved_directory": "/",
+    "remote_connection_directory": "/inbox",
+    "manifest_file": "settlement.ready.json",
+    "manifest_utf8": "{\"schema_version\":1,\"batch_id\":\"00000000-0000-4000-8000-000000000509\",\"files\":[{\"name\":\"one.csv\",\"size_bytes\":3,\"sha256\":\"ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad\"}]}",
+    "manifest_sha256": "4d567350c3f9971dd2e50fa890580a842f3d1ed0e3f8486b5170786c7b847de9",
+    "file_utf8": "abc"
+  },
+  "first_failures": [
+    {
+      "observation": "The initial package installer lacked CHOWN and FSETID to preserve the stock PAM helper owner and mode.",
+      "repair": "Grant both only to acquisition and retain stock package ownership and signature checks.",
+      "log": {
+        "sha256": "bd46cdb9286a8012d662b388e637688ac3b27fb5215ae1d86c7472f77fffa4c5",
+        "bytes": 387
+      }
+    },
+    {
+      "observation": "The stopped-container copy preserved fixture ownership the restricted runtime could not read.",
+      "repair": "Assign the root-owned fixture in the archive before container startup.",
+      "log": {
+        "sha256": "022ad80f1d6f976bbc38785c578ee9969611e7ca559b7eee8d6ea6ec7471a6ff",
+        "bytes": 56
+      }
+    },
+    {
+      "observation": "The stock image lacked the PAM configuration directory.",
+      "repair": "Create the directory and install the synthetic test user service in the disposable container.",
+      "log": {
+        "sha256": "994be1175c4d144da2d6ffe6ad6d13cbeec99d249e7f90c9c350bfc1a1117b09",
+        "bytes": 89
+      }
+    },
+    {
+      "observation": "The first full workflow put the remote directory in the local custody field and correctly refused the nonexistent local path before source contact.",
+      "repair": "Select the independently approved local root and retain the remote inbox in the registered connection.",
+      "log": {
+        "sha256": "872c2dabdfa876c478272df3f878a921b685f5e6d2cb3f8226fde59d1bc76886",
+        "bytes": 519
+      }
+    },
+    {
+      "observation": "The first post-run filesystem witness could not execute against the stopped producer. The next attempt could not extract directly into the copied read-only directory.",
+      "repair": "Read the exact producer files from an isolated archive without extracting them. Hash the independently read bytes and compare each file with the fixture.",
+      "first_exit_record": {
+        "sha256": "857c1dbc4137451693ef5ed49912daa72fac86e65cb2f23cf506e1fce85bc1e9",
+        "bytes": 225
+      }
+    }
+  ],
+  "observations": {
+    "explicit": {
+      "workflow_assertions": "passed",
+      "test_log": {
+        "sha256": "72ba884722ce652ae4ede8b0acdb40412776ca8d962625f47efb898da515af67",
+        "bytes": 382
+      },
+      "tls12": "refused with TLS protocol_version alert",
+      "tls12_log": {
+        "sha256": "3160ef90bc80fecf3945869e08182565ba84565015dd83e1f833a3326415fb3f",
+        "bytes": 265
+      },
+      "producer_identity_log": {
+        "sha256": "87842bf5a31bff218661ab667841b21e3d63211a81f51a7852034477285c3931",
+        "bytes": 176
+      },
+      "producer_native_log": {
+        "sha256": "bd265c2da220ba3e2e12161a0471acd964feca1bfc83ea702a82633b9b6e30f4",
+        "bytes": 592
+      },
+      "producer_transfer_log": {
+        "sha256": "45fb1d357005e75bbce975538486353c1ca028b684f93b83f6e87bcd5c2ea38e",
+        "bytes": 184
+      },
+      "producer_connections": 2,
+      "successful_authenticated_connections": 1,
+      "complete_downloads_in_order": [
+        {
+          "path": "/inbox/settlement.ready.json",
+          "size_bytes": 190
+        },
+        {
+          "path": "/inbox/one.csv",
+          "size_bytes": 3
+        }
+      ],
+      "source_before_and_after_equal": true,
+      "source_checksum_log": {
+        "sha256": "fdeb7231cd533be7997e48011846dae67a2989dc53267f49a20c3c91ba3c6457",
+        "bytes": 194
+      },
+      "producer_final_state": {
+        "status": "exited",
+        "exit_code": 139,
+        "oom_killed": false
+      },
+      "producer_final_state_record": {
+        "sha256": "ebea573a11092318ca7e994088ee0f5dc8eecf70ca399494d641a6f7e7fc258d",
+        "bytes": 226
+      }
+    },
+    "implicit": {
+      "workflow_assertions": "passed",
+      "test_log": {
+        "sha256": "60a6c88551fc64b1d2207f72bfae2e8b48ce7e8a4c37d3adbac409500dbe3726",
+        "bytes": 382
+      },
+      "tls12": "refused with TLS protocol_version alert",
+      "tls12_log": {
+        "sha256": "3160ef90bc80fecf3945869e08182565ba84565015dd83e1f833a3326415fb3f",
+        "bytes": 265
+      },
+      "producer_identity_log": {
+        "sha256": "87842bf5a31bff218661ab667841b21e3d63211a81f51a7852034477285c3931",
+        "bytes": 176
+      },
+      "producer_native_log": {
+        "sha256": "3fd845569d5c8c149573f790603d57a37e20c1571ec0e99f0cd21d97b07e794e",
+        "bytes": 592
+      },
+      "producer_transfer_log": {
+        "sha256": "c410d9f0e185ae2c4ccbc6dfa93e198ce604901602f485d79e98f1f8359f6527",
+        "bytes": 184
+      },
+      "producer_connections": 2,
+      "successful_authenticated_connections": 1,
+      "complete_downloads_in_order": [
+        {
+          "path": "/inbox/settlement.ready.json",
+          "size_bytes": 190
+        },
+        {
+          "path": "/inbox/one.csv",
+          "size_bytes": 3
+        }
+      ],
+      "source_before_and_after_equal": true,
+      "source_checksum_log": {
+        "sha256": "fdeb7231cd533be7997e48011846dae67a2989dc53267f49a20c3c91ba3c6457",
+        "bytes": 194
+      },
+      "producer_final_state": {
+        "status": "exited",
+        "exit_code": 139,
+        "oom_killed": false
+      },
+      "producer_final_state_record": {
+        "sha256": "933d86208ddced4b149ae7de2e2e166665faf78586e05cb638bdca99af8c64d0",
+        "bytes": 225
+      }
+    }
+  },
+  "stock_listener_continuity": {
+    "state": "open",
+    "observation": "Both final stock listeners exited with status 139 after logging two completed downloads and a control connection terminated without TLS shutdown. The container state shows no OOM kill. The causal link and continued source availability remain unverified."
+  },
+  "assertions": [
+    "Real PostgreSQL and durable custody bind the manifest, accepted file, owner-only review, availability offer and newly owned copy. Exact-key capture, offer, copy and dispatch replays preserve the original receipts.",
+    "Stock HTTPS retrieval yields the exact payload under the active receive view. Ordinary direct read, sender-only metadata and new offer authority remain out of reach for the receiving identity.",
+    "The operator provisions a separate pinned SFTP route. Agent authority survives provision and revocation unchanged. The agent gets its own explicit delivery and workflow permissions and approves the onward work independently.",
+    "Independent sshd stores the exact copied bytes and stock sftp reads them back. Revocation prevents queued work from contacting sshd. The availability trace retains unknown retrieval, receiver persistence and business processing."
+  ],
+  "original_freightctl_producer_replay": {
+    "base_evidence": "docs/qualification/evidence/F503-ftps-agent-stock-sftp.json",
+    "operator_evidence": "docs/qualification/evidence/F505-operator-connection-provisioning.json",
+    "mode_subcases_passed": 2,
+    "collection_and_replay_subcases_passed": 4,
+    "test_log": {
+      "sha256": "ee9136883eb618e4b818f98643f9e1e18b54a7850afc1bb212144e62c9e0ac9e",
+      "bytes": 1605
+    }
+  },
+  "source_files": [
+    {
+      "path": "internal/workflow/ftps_collection_exchange_integration_test.go",
+      "sha256": "5c06c5381c0fdd5a1976cd7affdddab1fef54cf0c470f11bfa009a3e29f84cb3",
+      "bytes": 19997
+    },
+    {
+      "path": "internal/workflow/ftps_collection_integration_test.go",
+      "sha256": "c30654ba435ef31667e63f97ebc27b98995b1cbab36c785900a9d8764d1b1eef",
+      "bytes": 24011
+    },
+    {
+      "path": "internal/workflow/ftps_stock_producer_exchange_integration_test.go",
+      "sha256": "387ccc9694d1758ec62a89280a6c07660060ce994721cd50853490b4380c1a13",
+      "bytes": 2028
+    }
+  ],
+  "protected_harness_references": [
+    {
+      "file": "freightctl-f509-stock-proof-final.sh",
+      "sha256": "b5de13634931e4bdef4212070f4382d2c4145a06f6860b5cccd709a6c9c7beec",
+      "bytes": 8178
+    },
+    {
+      "file": "freightctl-f509-prove.sh",
+      "sha256": "a024bef0bfe20de1881077cece656c4950609ca4e09c49b92a73022f3d75e0d1",
+      "bytes": 534
+    },
+    {
+      "file": "freightctl-f509-postgres.sh",
+      "sha256": "8e7e574c076b4a816aead9aaeaad7e23ed8a66ed330e964144e4e8ce3badafb0",
+      "bytes": 2704
+    }
+  ],
+  "remaining": [
+    "Identify and resolve stock listener termination, then verify another authorized capture against the same running stock producer while retaining strict TLS and isolation.",
+    "Replay freightctl on native Linux and qualify required SFTP source, push, API, browser, MCP, interruption and restore profiles.",
+    "The registry shares the existing outbound FTPS connection shape. The fixture uses a delivery-contract placeholder for shape only and approves no FTPS delivery step.",
+    "Complete the mandatory parity, AX and final-source gates."
+  ]
+}
