@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "id": "F515",
+  "observed_at": "2026-11-19",
+  "candidate": "84030389adea11fe12995300dff1177cfd282dbb",
+  "qualification_claim": false,
+  "preceding_terminal_record": "docs/qualification/evidence/F514-stock-producer-originals-terminal.json",
+  "native_stock_harness_record": "docs/qualification/evidence/F513-native-stock-ftps-producer-harness.json",
+  "push": {
+    "previous": "0d1e20dbb767a6878178f3e8d6604768f4dd6790",
+    "remote_ref": "refs/heads/main",
+    "remote_head_verified": true,
+    "fast_forward": true,
+    "owner_author_and_committer": "imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>",
+    "commits": [
+      "a9b3443443d12abdc84a3cd6447cf8b1463ac0f9",
+      "84030389adea11fe12995300dff1177cfd282dbb"
+    ],
+    "previous_attempt_one_workflows_terminal": 15,
+    "pre_push_guard": ".githooks/pre-push",
+    "gitleaks_version": "8.30.1",
+    "gitleaks_commits_scanned": 2,
+    "gitleaks_leaks": 0,
+    "redacted_log": {
+      "sha256": "9e3ce2407e2e58e11c4c2f494ba33e2983e121f758d958bfaf85a3affc36ddd2",
+      "bytes": 190
+    }
+  },
+  "originals_at_first_observation": [
+    {
+      "workflow": "Core correctness and security",
+      "run": 44374127255,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "workflow": "Native Linux Go, PostgreSQL and fuzz",
+      "run": 44374127362,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "workflow": "Stock peer and browser qualification",
+      "run": 44374127376,
+      "attempt": 1,
+      "status": "queued"
+    }
+  ],
+  "originals_snapshot": {
+    "sha256": "90481942a6dcff215c85a6e8b755163f8acc60ad510d721dbfa0318303413865",
+    "bytes": 376
+  },
+  "remaining": [
+    "Inspect the ARM and x86 stock producer steps in original native run 44374127362.",
+    "Preserve all original failures and final-source qualification requirements."
+  ]
+}

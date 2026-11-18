@@ -207,6 +207,11 @@ records 15 terminal first-attempt workflows at `0d1e20d`. All three native
 source scans and both independent OpenPGP peer scans passed. Seven jobs across
 PostgreSQL, JSON custody, DAV and the browser remain red.
 
+[F515](docs/qualification/evidence/F515-guarded-native-ftps-producer-harness-push.json)
+records the guarded fast-forward to `8403038` after all 15 preceding originals
+finished. Gitleaks found zero leaks across two owner commits. Native run
+`44374127362` carries the ARM and x86 supervised producer steps.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6
