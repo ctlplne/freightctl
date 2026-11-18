@@ -95,8 +95,9 @@ replay is underway.
 records the first x86 replay at `b1145f2`. The full PostgreSQL step and
 the original AI disclosure regression pass. The independent peer image
 gate blocks on five glibc advisories, three newly in the feed. Debian
-lists all five as vulnerable in trixie. The ARM and other original
-workflow outcomes still require their own evidence.
+lists all five as vulnerable in trixie. The original ARM replay also
+passed the PostgreSQL regression and blocked on the same five advisories.
+[F485](docs/qualification/evidence/F485-arm-native-peer-advisories.json)
 
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
