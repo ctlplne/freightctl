@@ -74,7 +74,11 @@ The native transfer and collision checks remain due.
 
 [F463](docs/qualification/evidence/F463-owner-source-batch.json) records the
 fast-forward to `2d10f84` under the owner identity. Gitleaks found no leaks
-in the nine outgoing commits. Native replay is in progress.
+in the nine outgoing commits. [F470](docs/qualification/evidence/F470-terminal-native-and-disclosure-red.json)
+records all 18 originals and 41 jobs, with 33 passing. Both full PostgreSQL
+suites fail the mixed-delivery preview privacy assertion before endpoint
+contact. The prior approval refusal passes. Both peer-image scans still
+block on the two unfixed Debian glibc advisories.
 
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed

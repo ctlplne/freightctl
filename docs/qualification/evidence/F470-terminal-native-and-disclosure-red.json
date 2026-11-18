@@ -1,0 +1,461 @@
+{
+  "schema_version": 1,
+  "id": "F470",
+  "observed_at": "2026-11-18",
+  "candidate": "2d10f84ce1ff5c8bdd1ea551f1cb35153fe28410",
+  "base_evidence": "docs/qualification/evidence/F463-owner-source-batch.json",
+  "qualification_claim": false,
+  "original_workflow_count": 18,
+  "original_job_count": 41,
+  "job_conclusions": {
+    "success": 33,
+    "failure": 8
+  },
+  "native_linux": [
+    {
+      "architecture": "arm64",
+      "job_id": 134778547899,
+      "raw_log_sha256": "abe9c336af0d6197cbc1b75b3086a4b3db308e18eb6980024e2361a2fb4475ba",
+      "raw_log_bytes": 1248841,
+      "postgresql_integration_step": "failure",
+      "failed_test": "TestAssistancePreparesAndAdoptsMixedDeliveryAsDraftOnly",
+      "first_failed_assertion": "internal/assistance/integration_test.go:196",
+      "assertion_scope": "Expected mixed delivery aliases and full private label redaction before endpoint contact.",
+      "prior_operator_text_approval_refusal_test": "pass",
+      "image_gate": "failure",
+      "blocking_advisory_ids": {
+        "CRITICAL": [],
+        "HIGH": [],
+        "UNKNOWN": [
+          "CVE-2026-100290",
+          "CVE-2026-115819"
+        ]
+      },
+      "blocking_fix_metadata": {
+        "CRITICAL": {},
+        "HIGH": {},
+        "UNKNOWN": {
+          "CVE-2026-100290": {
+            "absent": 1,
+            "empty": 0,
+            "nonempty": 0
+          },
+          "CVE-2026-115819": {
+            "absent": 1,
+            "empty": 0,
+            "nonempty": 0
+          }
+        }
+      }
+    },
+    {
+      "architecture": "x86_64",
+      "job_id": 134778549372,
+      "raw_log_sha256": "009f08488d39142849d9b8e955f5791a83804d6cd4c63fe00aba2d0ba048bdc8",
+      "raw_log_bytes": 1412438,
+      "postgresql_integration_step": "failure",
+      "failed_test": "TestAssistancePreparesAndAdoptsMixedDeliveryAsDraftOnly",
+      "first_failed_assertion": "internal/assistance/integration_test.go:196",
+      "assertion_scope": "Expected mixed delivery aliases and full private label redaction before endpoint contact.",
+      "prior_operator_text_approval_refusal_test": "pass",
+      "image_gate": "failure",
+      "blocking_advisory_ids": {
+        "CRITICAL": [],
+        "HIGH": [],
+        "UNKNOWN": [
+          "CVE-2026-100290",
+          "CVE-2026-115819"
+        ]
+      },
+      "blocking_fix_metadata": {
+        "CRITICAL": {},
+        "HIGH": {},
+        "UNKNOWN": {
+          "CVE-2026-100290": {
+            "absent": 1,
+            "empty": 0,
+            "nonempty": 0
+          },
+          "CVE-2026-115819": {
+            "absent": 1,
+            "empty": 0,
+            "nonempty": 0
+          }
+        }
+      }
+    }
+  ],
+  "debian_tracker": [
+    {
+      "advisory": "CVE-2026-100290",
+      "source": "https://security-tracker.debian.org/tracker/CVE-2026-100290",
+      "trixie_fix": "none listed"
+    },
+    {
+      "advisory": "CVE-2026-115819",
+      "source": "https://security-tracker.debian.org/tracker/CVE-2026-115819",
+      "trixie_fix": "none listed"
+    }
+  ],
+  "other_scopes": {
+    "native_and_core_Go_source_gates": "pass",
+    "DAV_original_details": "docs/qualification/evidence/F465-native-dav-setup-refusal.json",
+    "no_cancel_or_replacement_of_originals": true
+  },
+  "remaining": [
+    "Replay the exact mixed-delivery privacy assertion after repair.",
+    "Resolve both enforced peer-image advisories and replay the exact runtime scan.",
+    "Retain and finish the failed DAV, browser and x86 FTPS journeys and all final-source gates."
+  ],
+  "original_workflows": [
+    {
+      "run_id": 44297587119,
+      "name": "Native legacy SCP regular-file custody",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "job_id": 134778544517,
+          "name": "Native legacy SCP (x86_64)",
+          "conclusion": "success"
+        },
+        {
+          "job_id": 134778545192,
+          "name": "Native legacy SCP (arm64)",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "run_id": 44297587140,
+      "name": "Native Windows and macOS unit checks",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "job_id": 134778545178,
+          "name": "macos-arm64",
+          "conclusion": "success"
+        },
+        {
+          "job_id": 134778545725,
+          "name": "windows-amd64",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "run_id": 44297587245,
+      "name": "Native FTPS workflow consent qualification",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "job_id": 134778544877,
+          "name": "Native x86 registered FTPS workflow consent (recipient-encrypted)",
+          "conclusion": "success"
+        },
+        {
+          "job_id": 134778545702,
+          "name": "Native x86 registered FTPS workflow consent (plaintext)",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "run_id": 44297587252,
+      "name": "Native immutable HTTPS stock resume",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "job_id": 134778544761,
+          "name": "Native immutable HTTPS resume (x86_64)",
+          "conclusion": "success"
+        },
+        {
+          "job_id": 134778545150,
+          "name": "Native immutable HTTPS resume (arm64)",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "run_id": 44297587272,
+      "name": "Native FTPS dispatch approval qualification",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "job_id": 134778545667,
+          "name": "Native x86 public FTPS dispatch consent",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "run_id": 44297587280,
+      "name": "Native FTPS client and independent stock receiver",
+      "attempt": 1,
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "job_id": 134778545532,
+          "name": "Native FTPS client (x86_64, no-ktls)",
+          "conclusion": "failure"
+        },
+        {
+          "job_id": 134778545715,
+          "name": "Native FTPS client (aarch64, system)",
+          "conclusion": "success"
+        },
+        {
+          "job_id": 134778545745,
+          "name": "Native FTPS client (x86_64, system)",
+          "conclusion": "failure"
+        },
+        {
+          "job_id": 134778545849,
+          "name": "Native FTPS client (aarch64, no-ktls)",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "run_id": 44297587298,
+      "name": "Native artifact receive browser",
+      "attempt": 1,
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "job_id": 134778545332,
+          "name": "receive-browser",
+          "conclusion": "failure"
+        }
+      ]
+    },
+    {
+      "run_id": 44297587309,
+      "name": "Native FTPS stock clients and custody",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "job_id": 134778545117,
+          "name": "Native FTPS (arm64)",
+          "conclusion": "success"
+        },
+        {
+          "job_id": 134778545651,
+          "name": "Native FTPS (x86_64)",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "run_id": 44297587318,
+      "name": "Native independent DAV application",
+      "attempt": 1,
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "job_id": 134778544984,
+          "name": "Native stock rclone DAV (arm64)",
+          "conclusion": "failure"
+        },
+        {
+          "job_id": 134778545614,
+          "name": "Native stock rclone DAV (amd64)",
+          "conclusion": "failure"
+        }
+      ]
+    },
+    {
+      "run_id": 44297587320,
+      "name": "Core correctness and security",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "job_id": 134778545339,
+          "name": "source-and-browser",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "run_id": 44297587333,
+      "name": "Native JSON intake and custody interfaces",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "job_id": 134778544690,
+          "name": "Native Chrome JSON policy and held bytes",
+          "conclusion": "success"
+        },
+        {
+          "job_id": 134778545306,
+          "name": "Native JSON custody (arm64)",
+          "conclusion": "success"
+        },
+        {
+          "job_id": 134778545529,
+          "name": "Native JSON custody (x86_64)",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "run_id": 44297587346,
+      "name": "Native source vulnerability configurations",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "job_id": 134778545242,
+          "name": "Native vulnerability source (windows/amd64)",
+          "conclusion": "success"
+        },
+        {
+          "job_id": 134778545972,
+          "name": "Native vulnerability source (linux/arm64)",
+          "conclusion": "success"
+        },
+        {
+          "job_id": 134778548979,
+          "name": "Native vulnerability source (darwin/arm64)",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "run_id": 44297587351,
+      "name": "Native first enrollment and browser exchange",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "job_id": 134778545533,
+          "name": "first-run",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "run_id": 44297587475,
+      "name": "Native reproducible core binaries",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "job_id": 134778545698,
+          "name": "Native core reproduction (arm64)",
+          "conclusion": "success"
+        },
+        {
+          "job_id": 134778546070,
+          "name": "Native core reproduction (amd64)",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "run_id": 44297587506,
+      "name": "Stock peer and browser qualification",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "job_id": 134778546179,
+          "name": "Stock peers (intake-routing)",
+          "conclusion": "success"
+        },
+        {
+          "job_id": 134778546617,
+          "name": "Stock peers (arrivals-schedules)",
+          "conclusion": "success"
+        },
+        {
+          "job_id": 134778546634,
+          "name": "Stock peers (captured-routing)",
+          "conclusion": "success"
+        },
+        {
+          "job_id": 134778546641,
+          "name": "Stock peers (handoff-routing)",
+          "conclusion": "success"
+        },
+        {
+          "job_id": 134778546845,
+          "name": "Stock peers (routing)",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "run_id": 44297587636,
+      "name": "Native tus stock client and custody checkpoints",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "job_id": 134778545838,
+          "name": "Native tus resume (x86_64)",
+          "conclusion": "success"
+        },
+        {
+          "job_id": 134778546218,
+          "name": "Native tus resume (arm64)",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "run_id": 44297587840,
+      "name": "Native Linux Go, PostgreSQL and fuzz",
+      "attempt": 1,
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "job_id": 134778547581,
+          "name": "Native metadata restore (arm64)",
+          "conclusion": "success"
+        },
+        {
+          "job_id": 134778547899,
+          "name": "Native Go and PostgreSQL (arm64)",
+          "conclusion": "failure"
+        },
+        {
+          "job_id": 134778548015,
+          "name": "bounded-fuzz",
+          "conclusion": "success"
+        },
+        {
+          "job_id": 134778548162,
+          "name": "Native metadata restore (x86_64)",
+          "conclusion": "success"
+        },
+        {
+          "job_id": 134778549372,
+          "name": "Native Go and PostgreSQL (x86_64)",
+          "conclusion": "failure"
+        }
+      ]
+    },
+    {
+      "run_id": 44297587878,
+      "name": "Native browser and FTPS operator qualification",
+      "attempt": 1,
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "job_id": 134778547967,
+          "name": "Native x86 browser and live FTPS governance",
+          "conclusion": "failure"
+        }
+      ]
+    }
+  ]
+}

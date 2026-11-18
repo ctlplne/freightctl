@@ -115,7 +115,8 @@
         "docs/qualification/evidence/F454-native-push.json",
         "docs/qualification/evidence/F457-patched-native-replay.json",
         "docs/qualification/evidence/F462-verified-terminal-batch.json",
-        "docs/qualification/evidence/F463-owner-source-batch.json"
+        "docs/qualification/evidence/F463-owner-source-batch.json",
+        "docs/qualification/evidence/F470-terminal-native-and-disclosure-red.json"
       ],
       "remaining_details": [
         "F006 adds immutable checkpoints, exact receipts and persistent storage/parent/authority binding. Finish approved cleanup/recovery/rebinding, scalable reservations/fairness, protected retention, journal chaining/rebuild, larger exports and remaining crash/commit boundaries.",
@@ -194,7 +195,8 @@
         "F454 records the owner-only source and CI fast-forward 010a3a2 to 6412db0 after every previous original was terminal and security triaged. Enabled Gitleaks 8.30.1 scanned seven commits with zero leaks. Remote main matches the candidate, and 19 original attempt-1 workflows are tracked. Go 1.27.4, DAV stage and CI changes and operator-text security repair need their actual native outcomes.",
         "F457 binds scoped original 6412db0 outcomes. Four core/native default-source Go checks pass with 1.27.4. Both stock rclone full security acquisitions and both PostgreSQL recovery and bearer/Basic source steps pass. Stock application and stock delivery fail on both architectures. Original x86 system/no-ktls FTPS receiver seccomp SIGSYS54 recurs for both explicit and implicit. No gate or original execution was replaced. Other jobs and overall qualification remain open.",
         "F462 retains all 19 terminal attempt-one workflows and 43 jobs at 6412db0. Both PostgreSQL suites, Go scans and the exact AI disclosure refusals pass. Both peer-image scans still block on Debian glibc CVE-2026-100290 and CVE-2026-115819. Stock DAV application/delivery, x86 FTPS and browser failures remain visible. Next verified fast-forward batch is eligible.",
-        "F463 records the owner-only guarded fast-forward from 6412db0 to 2d10f84. Gitleaks 8.30.1 reported zero leaks across nine commits. Remote main was checked and the first 18 original attempt-one workflows are bound to that head. Native custody, existing failed gates, and final-source qualification remain due."
+        "F463 records the owner-only guarded fast-forward from 6412db0 to 2d10f84. Gitleaks 8.30.1 reported zero leaks across nine commits. Remote main was checked and the first 18 original attempt-one workflows are bound to that head. Native custody, existing failed gates, and final-source qualification remain due.",
+        "F470 preserves all 18 terminal original workflows and 41 jobs on 2d10f84, with 33 passes and eight failures. Both native PostgreSQL suites fail the exact mixed-delivery preview privacy assertion at line 196, before the endpoint step. Prior operator-text approval refusal and source vulnerability checks pass. The two enforced glibc advisories still have no Debian trixie fix. DAV, browser, x86 FTPS and all final-source failed gates remain open."
       ],
       "current_item": {
         "id": "F425",
