@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "id": "F476",
+  "observed_at": "2026-11-18",
+  "base_candidate": "6616aa0",
+  "scope": "Selected immutable revision export, offline verification and ordinary byte recovery",
+  "qualification_claim": false,
+  "red": {
+    "exit_code": 1,
+    "observation": "The previous CLI has no bundle export command and writes no archive.",
+    "log_sha256": "f3d6969a0e011117ee41f1f28efb452215529ef6d5a7a5d5f5d4302ac28bc747"
+  },
+  "green": {
+    "platform": "darwin/arm64 CLI and stock bsdtar 3.5.3 with libarchive 3.7.4",
+    "go_version": "go1.27.4",
+    "native_executable_sha256": "e543c8adfe51f688835826a5b7dbd8755d728660f06de89d840a0af4fa1e625e",
+    "postgresql_image": "postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+    "database_fixtures": "Two clean initialized databases, different scopes and separate storage roots on one bounded isolated loopback instance",
+    "postgresql_max_memory_bytes": 201326592,
+    "postgresql_cpu_limit": 1,
+    "private_witness_directory": ".private/freightctl-f476-witness",
+    "witness_source_sha256": "0f75de8ed2a097f8800c90031885eb69315c46b01e0265accccc5b3f910e9374",
+    "witness_summary_sha256": "da6c3a93caed5cb031e1443932baca0038910b51a3a1eec10406aecf77c140cf",
+    "source_revisions": 2,
+    "recovered_revisions": 2,
+    "payload_bytes": 32,
+    "source_archive_sha256": "5df93bb0a87d11ff621bc5aef1ed2714d451767ab96d07978ee0206922c53ab8",
+    "source_manifest_sha256": "7c48f5a7bc3a4fd513e20bd43117c0b4a9f86e1670d957e50fd61833b39b26a8",
+    "destination_readback_archive_sha256": "44fecd5ad1624c75ef98f6e026ed818f787a7bffdff9d71c7f35ea2372d0a463",
+    "stock_tar_extracted_exact_bytes": true,
+    "ordinary_upload_issued_distinct_revision_ids_with_original_digests": true,
+    "reversed_selection_replay_byte_identical": true,
+    "existing_output_unchanged": true,
+    "same_scope_private_path_and_wrong_scope_refused": true,
+    "held_mixed_selection_created_no_archive": true,
+    "tampered_payload_refused": true,
+    "source_prepared_event_count": 2,
+    "exact_task_containers_removed_verified": true
+  },
+  "checks": {
+    "focused_archive_and_existing_download_race": "pass",
+    "focused_log_sha256": "e42c9c3eb3ee712e191bde023f644cd5175091172c40be524877ffa7fdf252bc",
+    "live_postgresql_authority_revocation_race": "pass",
+    "live_log_sha256": "6d09409739371b9a4042493bfe012ecb9d75d8573a632916ff4e41711bec8fed",
+    "affected_tagged_vet": "pass",
+    "core_architecture": "pass",
+    "format": "pass"
+  },
+  "remaining": [
+    "Native Linux matrix replay",
+    "Durable source-to-destination lineage across products, large estate pagination and retention, and governed export and restoration of configuration, identities, receipts, workflow state and audit history",
+    "Independent operator adoption and complete migration cutover and exit"
+  ]
+}

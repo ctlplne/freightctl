@@ -399,7 +399,8 @@
       "duration_seconds": null,
       "evidence": [
         "docs/qualification/evidence/F003-signed-audit.json",
-        "docs/qualification/evidence/F024-signed-scanned-exchange.json"
+        "docs/qualification/evidence/F024-signed-scanned-exchange.json",
+        "docs/qualification/evidence/F476-portable-file-bundle.json"
       ],
       "failures": [],
       "limits": [

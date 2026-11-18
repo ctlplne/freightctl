@@ -30,6 +30,8 @@ For reviewed calendars, bounded published-file selection and restartable ordered
 
 For a protected SFTPGo Community export, see the [offline migration planner](docs/sftpgo-migration.md). Review its rule/action links and calendar fragments before drafting destination workflows.
 
+For a checksummed export of selected authorized revisions, see the [portable file bundle](docs/file-bundle.md).
+
 For explicit read-only remote inputs with ready manifests, whole-batch custody, intake gates and separate downstream decisions, see [collection workflows](docs/collection-workflows.md). Repeated input claims remain bound to their original workflow revision; scheduled remote admission and full J03 remain open.
 
 - Organization: [ctlplne](https://github.com/ctlplne)
