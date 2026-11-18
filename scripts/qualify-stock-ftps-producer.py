@@ -181,6 +181,26 @@ def verify_identity(path, native_arch, vsftpd, inetd):
             'stock peer architecture or executable identity changed')
 
 
+def tls12_diagnosis(directory):
+    stderr = directory / 'reject-tls12.stderr'
+    if not stderr.exists():
+        return None
+    err = stderr.read_bytes().lower()
+    clues = {
+        'protocol-version-alert': (b'alert protocol version',),
+        'unexpected-eof': (b'unexpected eof', b'unexpected end of file'),
+        'connection-refused': (b'connection refused', b'errno=111', b'errno=61'),
+        'connection-reset': (b'connection reset', b'errno=104', b'errno=54'),
+        'ftp-upgrade-refused': (b"didn't find auth tls", b'ftp response'),
+        'other-tls-alert': (b'alert handshake failure', b'alert internal error'),
+    }
+    matches = [name for name, tokens in clues.items() if any(token in err for token in tokens)]
+    categories = matches or ['unclassified']
+    native = directory / 'vsftpd.log'
+    count = native.read_bytes().count(b'] CONNECT: ') if native.exists() else None
+    return {'categories': categories, 'stock_control_connections': count}
+
+
 def remove_owned(kind, name, label, directory):
     field = {'container': '.Config.Labels', 'image': '.Config.Labels', 'network': '.Labels'}[kind]
     inspect = subprocess.run(['docker', kind, 'inspect', '--format', '{{index ' + field +
@@ -248,6 +268,13 @@ def replay(directory, image, label, mode, binary, native_arch, identities):
                                    stderr=subprocess.STDOUT, timeout=10, check=False)
             except subprocess.TimeoutExpired:
                 pass
+            native = directory / 'vsftpd.log'
+            if not native.exists():
+                try:
+                    subprocess.run(['docker', 'cp', container + ':/tmp/freightctl-vsftpd.log', native],
+                                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=10, check=False)
+                except subprocess.TimeoutExpired:
+                    pass
 
 
 def main():
@@ -302,7 +329,9 @@ def main():
         result['failure'] = type(err).__name__
     finally:
         if result['state'] == 'failed':
-            observations = {'build-peer.stdout', 'journeys.stdout', 'continuity.stdout', 'container.log'}
+            result['tls12_diagnosis'] = {mode: report for mode in ('explicit', 'implicit')
+                                         if (report := tls12_diagnosis(directory / mode)) is not None}
+            observations = {'build-peer.stdout', 'journeys.stdout', 'continuity.stdout', 'container.log', 'vsftpd.log'}
             result['diagnostics'] = {str(p.relative_to(directory)): record_file(p) for p in sorted(directory.rglob('*'))
                                      if (p.suffix == '.stderr' or p.name in observations) and p.stat().st_size}
         payload = json.dumps(result, sort_keys=True)

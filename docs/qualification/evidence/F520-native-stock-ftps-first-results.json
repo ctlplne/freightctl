@@ -1,0 +1,177 @@
+{
+  "schema_version": 1,
+  "id": "F520",
+  "observed_at": "2026-11-19",
+  "candidate": "84030389adea11fe12995300dff1177cfd282dbb",
+  "qualification_claim": false,
+  "scope": "Terminal originals and architecture-specific stock FTPS source evidence",
+  "launch_record": "docs/qualification/evidence/F515-guarded-native-ftps-producer-harness-push.json",
+  "workflow_totals": {
+    "failure": 1,
+    "success": 2
+  },
+  "job_totals": {
+    "success": 9,
+    "failure": 2
+  },
+  "native_run": 44374127362,
+  "terminal_metadata": {
+    "sha256": "a0f9ddfb8dd5c9a6aa4cdcf06f9fe01ac425f393caffa33c7ae0d336fddd13e1",
+    "bytes": 48483
+  },
+  "originals": [
+    {
+      "name": "Native Linux Go, PostgreSQL and fuzz",
+      "run": 44374127362,
+      "conclusion": "failure"
+    },
+    {
+      "name": "Core correctness and security",
+      "run": 44374127255,
+      "conclusion": "success"
+    },
+    {
+      "name": "Stock peer and browser qualification",
+      "run": 44374127376,
+      "conclusion": "success"
+    }
+  ],
+  "stock_producer": {
+    "amd64": {
+      "job": 135048571528,
+      "safe_summary": {
+        "sha256": "84e6b12fba15838e3191a7779feddcb1610d3aa7c0ccce4334ded313979d59bd",
+        "bytes": 1899
+      },
+      "image": "sha256:98137e36f3c10627e4598485442c53bd5177e0a187454b90c7758404b2e565e3",
+      "state": "failed",
+      "observed_modes": [],
+      "failure": "producer did not reject TLS 1.2 by policy",
+      "openssl_stderr_record": {
+        "bytes": 120,
+        "sha256": "6fc3b1c119590bb14d66030879dc180ea040c5c239f8449edd847cd1fdc5fd12"
+      }
+    },
+    "arm64": {
+      "job": 135048571650,
+      "safe_summary": {
+        "sha256": "70a9e460fc64e07c9b6cf07926d5e9245385ba18620f83b882bb034ae94a9934",
+        "bytes": 3776
+      },
+      "image": "sha256:c84bf107b7630f5f1d2073f7883406129cde5e0966e1e4b0246b494677a44e9a",
+      "state": "passed",
+      "observed_modes": {
+        "explicit": {
+          "confirmed_downloads": 4,
+          "evidence": {
+            "continuity.stdout": {
+              "bytes": 78,
+              "sha256": "4f55ab4b6590e66bfee93955af4a635c4b3a115601dca0ec18404df38239c123"
+            },
+            "journeys.stdout": {
+              "bytes": 4625,
+              "sha256": "a6e00774c42545a9bc7b3312a8c73ac1bc2631791633afb2ead95afa72ff37db"
+            },
+            "peer-identity.stdout": {
+              "bytes": 184,
+              "sha256": "3456034b51025c7537dee3f01795258f7b9c462e56a2745c3a4d80d6fc83a994"
+            },
+            "producer-files.stdout": {
+              "bytes": 3584,
+              "sha256": "a1dcfbf460bcfcaa4f5bf53aacc6590ec5f3171e2e046f61a293e839e703c5d3"
+            },
+            "reject-tls12.stderr": {
+              "bytes": 144,
+              "sha256": "c4b10c0807a347d5f98806662045831f390df754bae2d0a3199d7572ef5bad66"
+            },
+            "vsftpd.log": {
+              "bytes": 1121,
+              "sha256": "44bfe93e39bff3ab24b19a1e962dc3f6a3479484fe1c2956c49df781f681b93b"
+            },
+            "xfer.log": {
+              "bytes": 368,
+              "sha256": "b88f6f18130555e445eb3dc6724173c5b1d557a5dfd0a759c9f6f6b5b43584de"
+            }
+          },
+          "journeys": 2,
+          "listener_restarts": 0,
+          "tls12_refused": true,
+          "unchanged_source": true
+        },
+        "implicit": {
+          "confirmed_downloads": 4,
+          "evidence": {
+            "continuity.stdout": {
+              "bytes": 78,
+              "sha256": "bf9a630e975992432c336281caa32979c13c885777259522db926466e24cebb2"
+            },
+            "journeys.stdout": {
+              "bytes": 4625,
+              "sha256": "a90207357555177899c273bf7f6dea19d7aeba2b24e563285fe3f3e77f5ef351"
+            },
+            "peer-identity.stdout": {
+              "bytes": 184,
+              "sha256": "3456034b51025c7537dee3f01795258f7b9c462e56a2745c3a4d80d6fc83a994"
+            },
+            "producer-files.stdout": {
+              "bytes": 3584,
+              "sha256": "5cc400458d869ddf1e9b8a7479bb64287af371d9c01b9e9be81a0bd454a019ca"
+            },
+            "reject-tls12.stderr": {
+              "bytes": 144,
+              "sha256": "77a0d23eda962614a05ad3a933957126f80bb99556a18586499836b5259b2add"
+            },
+            "vsftpd.log": {
+              "bytes": 1121,
+              "sha256": "4312b033609c2d74252887a1e733a7e6d38ebee160c50807347499d9ccdb56a2"
+            },
+            "xfer.log": {
+              "bytes": 368,
+              "sha256": "7fcba84d94e322abb0ee5f6a5d35285e1f3c61c00c96b79a4d643535d4e1ace5"
+            }
+          },
+          "journeys": 2,
+          "listener_restarts": 0,
+          "tls12_refused": true,
+          "unchanged_source": true
+        }
+      }
+    }
+  },
+  "remaining": [
+    "AMD64 failed the explicit TLS 1.2 refusal gate. The stored diagnosis identifies a missing required policy alert, so no TLS acceptance or cause is inferred.",
+    "Both native PostgreSQL batches remain red. Both enforcing independent OpenPGP peer scans passed.",
+    "The next candidate records bounded TLS diagnostic categories and producer connection counts. Keep the exact expected alert and positive resumed TLS 1.3 proof required.",
+    "Complete mandatory final-source, baseline and artifact exchange gates."
+  ],
+  "local_diagnostic_candidate": {
+    "host": "Darwin",
+    "architecture": "arm64",
+    "summary": {
+      "sha256": "8d38f7763a042925ad76a7fa01a638721cb63586246163deca492182886ef636",
+      "bytes": 2989
+    },
+    "script": {
+      "path": "scripts/qualify-stock-ftps-producer.py",
+      "sha256": "b9d33a7e6cd63a680ae76a1ada342bd06f17755131f561752b77a142993e9f6d",
+      "bytes": 18556
+    },
+    "modes": {
+      "explicit": {
+        "confirmed_downloads": 4,
+        "journeys": 2,
+        "listener_restarts": 0,
+        "tls12_refused": true,
+        "unchanged_source": true
+      },
+      "implicit": {
+        "confirmed_downloads": 4,
+        "journeys": 2,
+        "listener_restarts": 0,
+        "tls12_refused": true,
+        "unchanged_source": true
+      }
+    },
+    "classifier_proof": "Allowlisted representative client errors and absent, empty and connected producer logs."
+  }
+}
