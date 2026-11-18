@@ -237,7 +237,7 @@ original assignment after the response was dropped and the console reloaded.
 It then withdrew the exact registration at a compact viewport. PostgreSQL
 recorded two decisions across three requests. Both changes made zero peer
 connections. The separate stock OpenSSH exchange passed again. Native Linux
-browser evidence remains due.
+Chrome confirmed the same operator journey in F525.
 
 [F520](docs/qualification/evidence/F520-native-stock-ftps-first-results.json)
 records all three original workflows at `8403038`. The ARM stock FTPS producer
@@ -276,6 +276,11 @@ same work result after dropping the first HTTP reply, and a stock OpenSSH
 readback confirms the delivered bytes. The replay also fixes stale onward
 errors after a successful action. Native Linux and loss at the SFTP receiver
 acknowledgment remain due.
+
+[F525](docs/qualification/evidence/F525-native-operator-browser-and-source-scans.json)
+records the passing native Linux Chrome operator replay at `8219fd9`. The
+original Linux ARM and Windows source scans passed. GitHub canceled the
+macOS ARM scan before assigning a runner, leaving its result unverified.
 
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed

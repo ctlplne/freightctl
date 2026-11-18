@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "id": "F525",
+  "observed_at": "2026-11-19",
+  "candidate": "8219fd9a9194b8262cfb66cc6e847c0e9d03dae4",
+  "qualification_claim": false,
+  "launch_record": "docs/qualification/evidence/F521-guarded-sftp-console-batch.json",
+  "operator_browser": {
+    "run": 44382172368,
+    "attempt": 1,
+    "job": 135077133162,
+    "step": "Operator browser assigns and withdraws the exact SFTP route",
+    "state": "passed",
+    "platform": "Linux x86_64",
+    "chrome_version": "157.0.8103.50",
+    "commands": 3,
+    "accessibility_checks": 2,
+    "external_egress": 0,
+    "local_record": "docs/qualification/evidence/F519-browser-operator-sftp-provision.json",
+    "metadata": {
+      "sha256": "c645d95c7afce6ad2794cce1e521f87a59e55e15509e4ca364df8ff69c2de6bc",
+      "bytes": 16047
+    },
+    "protected_log": {
+      "sha256": "167f78c381fc7ff4f774286dbc40ced6eb70ed43f02a71b51ab58904a6052427",
+      "bytes": 57842
+    }
+  },
+  "native_source_security": {
+    "run": 44382172421,
+    "attempt": 1,
+    "status": "completed",
+    "conclusion": "failure",
+    "jobs": [
+      {
+        "name": "Native vulnerability source (darwin/arm64)",
+        "job": 135077133830,
+        "conclusion": "cancelled"
+      },
+      {
+        "name": "Native vulnerability source (linux/arm64)",
+        "job": 135077134111,
+        "conclusion": "success"
+      },
+      {
+        "name": "Native vulnerability source (windows/amd64)",
+        "job": 135077134256,
+        "conclusion": "success"
+      }
+    ],
+    "metadata": {
+      "sha256": "d6d6018e60d25515415c67e39ff1fbe0506f88ba5f8ee400fe83b90adebbb6d8",
+      "bytes": 3696
+    },
+    "macos_job": {
+      "id": 135077133830,
+      "conclusion": "cancelled",
+      "runner_assigned": false,
+      "recorded_steps": 0,
+      "metadata": {
+        "sha256": "643cc72faa769d406fc845b3ad9b23e1abb8ec14ab98ada53cccaa7472340655",
+        "bytes": 895
+      }
+    }
+  },
+  "remaining": [
+    "Collect the terminal original batch inventory after every required run finishes. The macOS source scan remains unverified.",
+    "The complete collected SFTP browser exchange, MCP and worker-death updates still need their own native qualification."
+  ]
+}

@@ -226,10 +226,10 @@ typed HTTPS and CLI commands. The agent keeps its existing permissions, and
 each ordinary workflow approval and dispatch check still applies. The local
 replay verifies cross-surface receipt recovery and queued-work refusal before
 receiver contact. In **SFTP routes**, the operator can select eligible actors,
-review exact revisions, and withdraw recorded assignments. The local browser
-recovered a committed receipt after the reply was dropped and the console
-reloaded. Native Linux browser proof and the other connection profiles remain
-open. [Provisioning contract](../protocols/operator-connection-provisioning.md) [F519](../qualification/evidence/F519-browser-operator-sftp-provision.json)
+review exact revisions, and withdraw recorded assignments. Local Chromium and
+native Linux Chrome recovered a committed receipt after the reply was dropped
+and the console reloaded. Other connection profiles remain open.
+[Provisioning contract](../protocols/operator-connection-provisioning.md) [F519](../qualification/evidence/F519-browser-operator-sftp-provision.json) [F525](../qualification/evidence/F525-native-operator-browser-and-source-scans.json)
 
 The [ordinary upload descriptor](../protocols/artifact-ingress-descriptor.md)
 lets an agent's trusted host discover exact upload metadata while keeping bytes
