@@ -92,6 +92,12 @@ Migration 9 adds `ai_manage`, `ai_use` and `ai_disclose`. Existing accounts keep
 
 `ai-generate --ai-job-id ID --idempotency-key REQUEST_KEY` returns `inference_disabled` by default. It makes no endpoint request and takes no inference capacity slot. Ordinary transfers, workflow operations, context preparation and review remain available.
 
+Before contacting an enabled endpoint, freightctl decodes the stored
+context and recomputes its approval hash. It sends the canonical bytes
+covered by that hash. PostgreSQL can reorder JSON fields during storage.
+That leaves the hash unchanged. A different alias, unknown field or
+duplicate field stops the request before endpoint contact.
+
 When a properly authorized deployment explicitly enables endpoint calls, generation first persists an attempt identity and lease before contacting the selected endpoint. Profile/authority/resource checks precede the request, repeat during it and run again before publishing any result. Changed context discards the output as superseded. Revoked authority denies access. No stale proposal can be adopted simply because it once passed a model request.
 
 The [Ollama generate contract](https://docs.ollama.com/api/generate) is the first implemented adapter. It requests non-streaming [structured JSON](https://docs.ollama.com/capabilities/structured-outputs), no thinking output, fixed decoding settings and no resident-model keep-alive. It performs no runtime management or model pull. Response framing, total bytes, completed-generation status, model identity and reported token budgets are checked. Unknown or invalid output is rejected; invalid response text and private reasoning are not stored or returned. Only a response digest, bounded result and explicitly labelled endpoint-reported usage enter records.

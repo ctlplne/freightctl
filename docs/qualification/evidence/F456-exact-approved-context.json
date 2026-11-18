@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "id": "F456",
+  "observed_at": "2026-11-18",
+  "base_candidate": "445dbe60540bb6ff1c36c3b30499f73f41d9ca73",
+  "qualification_claim": false,
+  "changed": "Compare the actual strictly decoded stored model context to the approved canonical SHA-256 during current-state checks. Repeat the check at the endpoint boundary and serialize the canonical body covered by approval, independently of PostgreSQL JSONB formatting.",
+  "local_red": "With the prior backend, a changed alias and an unknown stored field each triggered a real request to a synthetic HTTP endpoint before being rejected by that peer.",
+  "local_green": "Changed alias, unknown field and duplicate kind refuse with zero endpoint contact. A JSONB-style field reordering sends the same canonical context and the existing redirect, digest and response format refusals still pass.",
+  "checks": [
+    "Affected race-enabled backend contract suite",
+    "Tagged Go vet",
+    "Core import boundary",
+    "Git whitespace and reference ledger"
+  ],
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "bytes": 7383,
+      "sha256": "b16e70aca0fdd4f294b75ebf567dc5612180f77f1ef7df4bd079bf95cba8d76d"
+    },
+    {
+      "reference": "docs/assistance.md",
+      "bytes": 15430,
+      "sha256": "254b6b1badcc403a14dea23f905dc9c6f1a5637ffbf4453a445cd966228018b5"
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "bytes": 721508,
+      "sha256": "137a1f5779e326e6be8fdda99a00ec00d100837ed2af42b4bd0e95b6194158e8"
+    },
+    {
+      "reference": "internal/assistance/backend.go",
+      "bytes": 6075,
+      "sha256": "4b8d01c00fcc1537c8e5135f0af22994415fce57201940c6856ca429df503a23"
+    },
+    {
+      "reference": "internal/assistance/backend_test.go",
+      "bytes": 5135,
+      "sha256": "ced68e360e169e3868cdfaf1b9a16d3ab2b6e48efc1e33d76d5eb671adf1d001"
+    },
+    {
+      "reference": "internal/assistance/context.go",
+      "bytes": 16993,
+      "sha256": "f9bfc438c310118c22e1a63a07e2ed1ac8cb1482598194409ac21ceb4bd95f48"
+    },
+    {
+      "reference": "internal/assistance/service.go",
+      "bytes": 18043,
+      "sha256": "666339eceab690c7e061b8c21a9220a14a0c4f29ee85b626a9e355c025c94f20"
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f456-approved-context-protocol-red.log",
+      "bytes": 686,
+      "sha256": "292e51d12c370a0a934597a45843679fced61f15443536e700d52ad5cd3872f8"
+    },
+    {
+      "reference": ".private/freightctl-f456-approved-context-green.log",
+      "bytes": 1857,
+      "sha256": "2b2a512973669e38876137774a87ad884d75090db3b9d18093976ddbd2ce87f5"
+    }
+  ],
+  "owed": [
+    "Native PostgreSQL assistance replay",
+    "Private model, quality evaluation and final-source qualification"
+  ],
+  "inference_run": false
+}

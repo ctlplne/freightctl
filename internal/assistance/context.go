@@ -339,6 +339,21 @@ func orderedDeliveryStep(i int, c *Context, alias string, target Destination) wo
 	return workflow.Step{ID: "deliver_" + strconv.Itoa(i+1), Kind: kind, Connection: target.Connection, Filename: target.Filename}
 }
 
+func approvedContext(data json.RawMessage, expectedHash string) (json.RawMessage, string, error) {
+	var c Context
+	if workflow.Decode(data, &c) != nil || c.Schema != 1 || (c.Kind != "propose" && c.Kind != "diagnose") {
+		return nil, "", store.ErrState
+	}
+	body, hash, err := canonical(c)
+	if err != nil {
+		return nil, "", err
+	}
+	if hash != expectedHash {
+		return nil, "", store.ErrRevision
+	}
+	return body, c.Kind, nil
+}
+
 var explanations = map[string]string{
 	"workflow_revoked":           "The workflow approval is revoked. A new authorization decision is required before execution.",
 	"connection_revoked":         "A connection version referenced by this run is revoked. The run is frozen; a newer version does not alter it.",

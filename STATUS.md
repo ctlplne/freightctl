@@ -60,6 +60,10 @@ responder suggests an order. freightctl checks the protocol and creates an
 ordinary unapproved draft. Focused regressions pass. Native PostgreSQL and
 private model qualification remain due.
 
+[F456](docs/qualification/evidence/F456-exact-approved-context.json) verifies
+the stored context against the approval hash before endpoint contact and
+sends the canonical approved bytes. Race-enabled synthetic HTTP tests pass.
+
 F442 implements direct DAV delivery schema3 through the existing custody,
 durable intent,draft/approval,worker slot,lease/fence and reconciliation paths.
 Exact pinned TLS1.3 and protected bearer/Basic references,private-stage contract,

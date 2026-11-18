@@ -223,6 +223,9 @@ func current(ctx context.Context, t *store.Transaction, j *store.AIJob, p *Profi
 	if b.Request.Requirements != "" && b.OperatorTextPolicy != operatorTextPolicy {
 		return store.ErrRevision
 	}
+	if _, _, err := approvedContext(j.Context, j.ContextHash); err != nil {
+		return err
+	}
 	c, rebuilt, err := buildContext(ctx, t, b.Request, p, false)
 	if err != nil {
 		return err
@@ -467,7 +470,7 @@ func (s *Service) Generate(ctx context.Context, scope store.Scope, id, key strin
 			}
 		}
 	}()
-	response, backendErr := generate(ctx, *p, j.Context)
+	response, backendErr := generate(ctx, *p, j.Context, j.ContextHash)
 	close(stop)
 	<-done
 	// Use a fresh bounded recording context after a timeout/cancellation. Lost
