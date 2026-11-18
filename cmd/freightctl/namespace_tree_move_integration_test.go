@@ -16,6 +16,7 @@ import (
 	"github.com/ctlplne/freightctl/internal/custody"
 	"github.com/ctlplne/freightctl/internal/namespaceprops"
 	"github.com/ctlplne/freightctl/internal/store"
+	"github.com/ctlplne/freightctl/internal/workflow"
 )
 
 func qualifyNamespaceTreeMoveCLI(t *testing.T, ctx context.Context, service *custody.Service, adminScope, managerScope store.Scope, manager, ordinaryWriter string, command func(string, string, ...string) ([]byte, error), requestFile func(any) string) {
@@ -175,4 +176,57 @@ func qualifyNamespaceTreeMoveCLI(t *testing.T, ctx context.Context, service *cus
 	if _, err = command(ordinaryWriter, "namespace-receipt", "-request-file", removeInput, "-idempotency-key", "cli-tree-delete-original"); !errors.Is(err, store.ErrForbidden) {
 		t.Fatal("CLI read-only receipt bypassed original management authority", err)
 	}
+	t.Run("portable namespace receipt after deletion", func(t *testing.T) {
+		archivePath := filepath.Join(t.TempDir(), "original-command-receipt.json")
+		flags := []string{"-request-file", removeInput, "-idempotency-key", "cli-tree-delete-original", "-output", archivePath,
+			"-storage", filepath.Join(t.TempDir(), "UNOPENED_EXPORT_CUSTODY")}
+		if _, err := command(ordinaryWriter, "namespace-receipt-export", flags...); !errors.Is(err, store.ErrForbidden) {
+			t.Fatal("portable receipt bypassed original management authority", err)
+		}
+		if _, err := command(manager, "namespace-receipt-export", append(flags, "-idempotency-key", "changed-receipt-key")...); !errors.Is(err, store.ErrNotFound) {
+			t.Fatal("portable receipt accepted a different original command", err)
+		}
+		if _, err := os.Lstat(archivePath); !os.IsNotExist(err) {
+			t.Fatal("refused portable receipt produced output", err)
+		}
+		raw, err := command(manager, "namespace-receipt-export", flags...)
+		var exported workflow.PortableExportReceipt
+		if err != nil || json.Unmarshal(raw, &exported) != nil {
+			t.Fatal("portable receipt could not recover the original after deletion", err)
+		}
+		archive, err := os.ReadFile(archivePath)
+		var portable workflow.PortableNamespaceReceipt
+		if err != nil || json.Unmarshal(archive, &portable) != nil || portable.Profile != workflow.PortableNamespaceReceiptProfile ||
+			portable.Source != exported.Source || exported.Source.ID != privateReceipt.CompletedEventID || portable.Receipt == nil ||
+			portable.SourceTenant != managerScope.Tenant || portable.SourcePartner != managerScope.Partner ||
+			secure.Digest(archive) != exported.SHA256 || len(archive) != exported.Size {
+			t.Fatal("portable history lost its scope, original event or exact archive hash", err)
+		}
+		identity, err := service.DB.Identity(ctx, managerScope)
+		if err != nil || portable.SourceActor != identity.Actor {
+			t.Fatal("portable history cites the wrong actor", err)
+		}
+		expected, err := json.Marshal(privateReceipt)
+		if err != nil || secure.Digest(expected) != exported.Source.Hash || *portable.Receipt != privateReceipt {
+			t.Fatal("portable history changed the original read-only receipt", err)
+		}
+		if _, err := command(manager, "namespace-receipt-export", flags...); err == nil {
+			t.Fatal("portable history overwrote an existing artifact")
+		}
+		tx, err := service.DB.Begin(ctx, managerScope)
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer tx.Tx.Rollback(ctx)
+		var prepared []byte
+		err = tx.Tx.QueryRow(ctx, `SELECT payload FROM events WHERE actor_id=$1 AND kind='PortableNamespaceReceiptExportPrepared' AND resource_id=$2`, identity.Actor, exported.Source.ID).Scan(&prepared)
+		var audit workflow.PortableExportReceipt
+		if err != nil || json.Unmarshal(prepared, &audit) != nil || audit != exported {
+			t.Fatal("preparation event lost the original reference or exact archive hash", err)
+		}
+		if _, err := service.StatPath(ctx, managerScope, remove.Path); !errors.Is(err, store.ErrNotFound) {
+			t.Fatal("receipt export changed the deleted source path", err)
+		}
+		t.Logf("portable namespace receipt digest %s, archive %s", exported.Source.Hash, exported.SHA256)
+	})
 }

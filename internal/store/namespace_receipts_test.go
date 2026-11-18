@@ -62,3 +62,12 @@ func TestNamespaceReceiptCannotReachRowsWithoutOriginalCommandAuthority(t *testi
 		}
 	}
 }
+
+func TestNamespaceEntryViewMatchesOriginalReceiptTimestampInAnyClientTimezone(t *testing.T) {
+	instant := time.Date(2026, time.November, 18, 19, 30, 0, 42_000, time.FixedZone("fixture", 5*3600+30*60))
+	tx := Transaction{Root: "/"}
+	view, err := tx.EntryView(PathEntry{Path: "/proof", Modified: instant})
+	if err != nil || view.Modified != instant.UTC() {
+		t.Fatalf("view must preserve the instant in the same UTC encoding as a saved receipt: %v, %v", view.Modified, err)
+	}
+}

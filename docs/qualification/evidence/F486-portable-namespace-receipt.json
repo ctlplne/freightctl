@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "id": "F486",
+  "observed_at": "2026-11-18",
+  "base_candidate": "d1086a5",
+  "base_evidence": "docs/qualification/evidence/F484-portable-partner-mapping.json",
+  "scope": "Exact actor-scoped historical namespace receipt export and stable UTC timestamp representation",
+  "qualification_claim": false,
+  "red": {
+    "cli_observation": "The prior binary rejects namespace-receipt-export without writing an artifact.",
+    "cli_log_sha256": "79908aeb415dc166736adf47256be9a83108a48556683e9b8cdf330d6cd63ce2",
+    "original_non_utc_first_failure": "The namespace properties CLI comparison observes the database time in local offset and the saved command result in UTC.",
+    "original_non_utc_log_sha256": "8a5a559598f8399ada9677e5fe7cc86597f31da50778c4ee4e2729a920419930",
+    "fixed_offset_regression_log_sha256": "1565fa5f422b9c905320fa14cc522738c2e0e9e18a9d66951154587578cd3876",
+    "utc_diagnostic_replay": "Selected receipt subtest passes before the original parent stops at the stock XLSX fixture requirement.",
+    "utc_diagnostic_log_sha256": "fe6e787f405f070d20ad05055eee5df0162f907549e5a7426b33b8861529d715"
+  },
+  "green": {
+    "platform": "darwin/arm64 full CLI integration with Linux arm64 PostgreSQL and actual custody",
+    "go_version": "go1.27.4",
+    "local_timezone": "Asia/Kolkata",
+    "postgresql_image": "postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+    "memory_limit_bytes": 201326592,
+    "cpu_limit": 1,
+    "stock_producer": "XlsxWriter 3.3.1 with the existing pinned wheel hash",
+    "stock_workbook_sha256": "ab43b6e9e2919608d216adf09abe63e70f4944c254a9f8a3879487887fc1c",
+    "private_witness_directory": ".private/freightctl-f486-corrected",
+    "fixture_sha256": "a3eb7512404001c1ee6d0a3c131545103cf66ffe5c0e90da19281260b825e7f7",
+    "executable_sha256": "97c6a54574390b10451ab8b000b6acda8e6ca9525e3acbdda886d696563f863c",
+    "original_receipt_sha256": "07459d35a64298a953b1a6ae67fedb1974aca25a0e9f278782a03bd45723cdc2",
+    "archive_sha256": "3a023e7d3b2b2bcc164b8cd5a65eb92d99f3fc112c8462e12af9d7b2473e027f",
+    "real_recursive_removal_and_equal_original_read_only_receipt": true,
+    "source_actor_workspace_event_and_exact_hashes_verified": true,
+    "preparation_event_matches_published_artifact_receipt": true,
+    "deleted_source_stays_absent_and_custody_not_required_for_export": true,
+    "ordinary_writer_and_wrong_original_key_refused_without_output": true,
+    "existing_output_refused": true,
+    "full_original_artifact_exchange_cli_parent": "pass",
+    "race_enabled": true,
+    "exact_task_containers_removed_verified": true,
+    "test_log_sha256": "855a4cef987615fafcb869c98bb086abb6250632757e70c1702febc31f8a05af"
+  },
+  "checks": {
+    "focused_receipt_and_fixed_offset_regressions_with_race": "pass",
+    "focused_log_sha256": "d91a7d5ca0c1efb330379530090354b778853108544b9868f9c5809ce4e95960",
+    "affected_tagged_vet": "pass",
+    "core_architecture": "pass",
+    "format": "pass"
+  },
+  "remaining": [
+    "Native Linux matrix replay and independently operated whole-estate recovery",
+    "Delivery, downstream business and complete receipt history export"
+  ]
+}

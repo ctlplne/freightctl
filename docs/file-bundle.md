@@ -235,3 +235,26 @@ Keep the source event and new registration receipt together for mapping
 later workflow and connection references. Bootstrap entries without an
 ordinary registration event and later account changes need separate
 recovery.
+
+## Preserve an original namespace command receipt
+
+Keep the original protected request file and its idempotency key. The
+same participant can export the historical result with its current
+receipt permissions, even after a later move or deletion.
+
+```sh
+umask 077
+freightctl namespace-receipt-export --tenant "$TENANT" --partner "$PARTNER" \
+  --request-file .private/original-command.json --idempotency-key "$ORIGINAL_KEY" \
+  --output .private/portable-namespace-receipt.json
+shasum -a 256 .private/portable-namespace-receipt.json
+jq '.receipt' .private/portable-namespace-receipt.json
+```
+
+Compare the file's SHA-256 to the original export response. The
+`freightctl-portable-namespace-receipt-v1` file identifies the source
+workspace, actor and completion event, and records the original command
+result. Keep the event reference with the relevant signed audit export
+for independent verification. A reader can inspect the JSON offline.
+The historical receipt describes what committed at that time. Consult
+ordinary status for current paths or availability.

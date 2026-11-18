@@ -190,6 +190,13 @@ database using new IDs, a fresh credential and destination-reviewed
 permissions. Cross-tenant, non-directory and revoked-authority exports
 were refused.
 
+[F486](docs/qualification/evidence/F486-portable-namespace-receipt.json)
+exports the acting participant's historical namespace receipt. After
+real recursive deletion the CLI preserved the exact original event,
+result and archive checksum. Namespace reads now encode their saved
+modification instant in UTC. The complete original CLI journey passed
+in the non-UTC environment that exposed the mismatch.
+
 [F455](docs/qualification/evidence/F455-mixed-delivery-proposals.json) binds
 each AI proposal alias to its registered SFTP or FTPS connection. The
 responder suggests an order. freightctl checks the protocol and creates an

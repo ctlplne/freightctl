@@ -33,12 +33,19 @@ func portablePartnerExporter(event string) configurationExporter {
 	}
 }
 
-func portableConfigurationExport(ctx context.Context, dsn, token, tenant, partner, path, resource string, ref workflow.Reference, export configurationExporter, output io.Writer) error {
+func validatePortableOutput(path string) error {
 	if path == "" {
-		return errors.New("configuration export requires a new output file in a private directory")
+		return errors.New("portable export requires a new output file in a private directory")
 	}
 	if _, err := os.Lstat(path); !errors.Is(err, os.ErrNotExist) {
-		return errors.New("configuration export output must be a new file")
+		return errors.New("portable export output must be a new file")
+	}
+	return nil
+}
+
+func portableConfigurationExport(ctx context.Context, dsn, token, tenant, partner, path, resource string, ref workflow.Reference, export configurationExporter, output io.Writer) error {
+	if err := validatePortableOutput(path); err != nil {
+		return err
 	}
 	secret, err := secure.ReadSecret(token, 64)
 	if err != nil {
@@ -51,16 +58,22 @@ func portableConfigurationExport(ctx context.Context, dsn, token, tenant, partne
 		return err
 	}
 	defer db.Pool.Close()
+	service := workflow.Service{Custody: &custody.Service{DB: db}}
+	return writePortableArtifact(ctx, path, resource, func(staged io.Writer) (*workflow.PortableExportReceipt, error) {
+		return export(&service, ctx, scope, ref, staged)
+	}, output)
+}
+
+func writePortableArtifact(ctx context.Context, path, resource string, prepare func(io.Writer) (*workflow.PortableExportReceipt, error), output io.Writer) error {
 	root, err := os.OpenRoot(filepath.Dir(path))
 	if err != nil {
 		return err
 	}
 	defer root.Close()
-	service := workflow.Service{Custody: &custody.Service{DB: db}}
 	var receipt *workflow.PortableExportReceipt
 	stage, err := stageProtectedOutputAt(ctx, root, ".freightctl-"+resource+"-", resource+" export", func(staged io.Writer) error {
 		var err error
-		receipt, err = export(&service, ctx, scope, ref, staged)
+		receipt, err = prepare(staged)
 		return err
 	})
 	if err != nil {

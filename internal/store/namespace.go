@@ -708,6 +708,8 @@ func (t *Transaction) EntryView(e PathEntry) (PathEntry, error) {
 		return e, err
 	}
 	e.Parent = vpath.Parent(e.Path)
+	// Use the same timestamp representation as the saved command result.
+	e.Modified = e.Modified.UTC()
 	return e, nil
 }
 
