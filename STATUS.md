@@ -99,7 +99,10 @@ row and an operator's destination choices. It passes the real calendar
 compiler and refuses a changed source digest. Live preview and adoption
 against an enrolled destination remain due. [F469](docs/qualification/evidence/F469-migration-live-preview-test.json)
 adds the real PostgreSQL preview check to the existing processing CLI journey.
-The integration test compiles and awaits native execution.
+[F473](docs/qualification/evidence/F473-migration-live-preview-pass.json)
+records the focused local pass against PostgreSQL 16.15 with actual custody.
+The preview used the exact approved workflow, refused stale authority and
+a limited reader, and kept the recorded schedule list unchanged.
 
 [F471](docs/qualification/evidence/F471-sftpgo-calendar-occurrence-comparison.json)
 adds hour and weekday lists, ranges, and steps to the stock migration

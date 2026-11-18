@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "id": "F473",
+  "observed_at": "2026-11-18",
+  "candidate": "8744e81",
+  "base_evidence": "docs/qualification/evidence/F469-migration-live-preview-test.json",
+  "scope": "Focused local ordinary CLI schedule preview after offline SFTPGo calendar preparation",
+  "qualification_claim": false,
+  "platform": "darwin/arm64 CLI with Linux arm64 PostgreSQL",
+  "go_version": "go1.27.4",
+  "runtime": {
+    "database_image": "postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+    "loopback_dynamic_port": true,
+    "synthetic_credentials": "protected files in the separate task-owned fixture",
+    "memory_limit_bytes": 201326592,
+    "cpu_limit_nanocpus": 1000000000,
+    "pid_limit": 80,
+    "ephemeral_postgresql_data": true,
+    "local_custody_files": true,
+    "exact_task_container_removed_verified": true,
+    "private_evidence_directory": ".private/freightctl-f473-postgres",
+    "profile_sha256": "5067704976ea12d74a1cd4d940ca0abefcd1daba61e59977b77a805cdb98dc20"
+  },
+  "result": {
+    "test": "TestProcessingWorkflowCLIUsesApprovedTaskAndSeparateOutputRelease/prepared_migration_calendar_uses_live_schedule_preview",
+    "race_enabled": true,
+    "exit_code": 0,
+    "parent_and_subtest": "pass",
+    "log_sha256": "0c8d95b69f96815072f3cce4f59abb3f4d088301c1a2822f64563b8b221c9841",
+    "bound_approved_workflow_and_custody_storage": true,
+    "stale_authority_preview_refused": true,
+    "limited_reader_preview_refused": true,
+    "preview_only_zero_external_contact_and_delivery_effects": true,
+    "no_schedule_created": true
+  },
+  "remaining": [
+    "Original Linux matrix replay for final-source qualification",
+    "Reviewed adoption, real source observations, output effect comparison, cutover and exit"
+  ]
+}
