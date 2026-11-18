@@ -2081,7 +2081,8 @@
         "docs/qualification/evidence/F545-authorized-integrity-evidence.json",
         "docs/qualification/evidence/F546-native-cli-export-authority.json",
         "docs/qualification/evidence/F547-private-dav-custody-stage.json",
-        "docs/qualification/evidence/F548-dav-stage-vacancy-worker-slot.json"
+        "docs/qualification/evidence/F548-dav-stage-vacancy-worker-slot.json",
+        "docs/qualification/evidence/F549-original-integrity-batch-terminal.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -2281,7 +2282,8 @@
         "F545 adds the opt-in v3 evidence profile. Real PostgreSQL with stock HTTPS, sandboxed Chromium, the native CLI and stock MCP retained the same committed integrity report. Incoming evidence stayed opaque after a policy hold and the sender retained authorized history. Linux replay and final AX05 qualification remain open.",
         "F546 fixes the export authority test setup. Both Linux originals refused a nonprivate export directory before testing management authority. Real PostgreSQL and the native CLI reproduced the block under umask 022 and passed the same refusal and publication assertions with private test directories. The original restore and stock DAV outcomes remain red.",
         "F547 pins the staging-directory revision in the two-custody DAV fixture. Its real PostgreSQL and TLS replay delivered exact bytes, kept staging private, preserved existing destination bytes and blocked resend after an ambiguous collision. The original Linux gate remains intact and its replay is due. The separate stock DAV overwrite failure remains open.",
-        "F548 blocks a DAV worker when its exact staging path is already occupied. The conditional PUT remains required. Concurrent upload and response checks reproduced a pgx connection race, so the held liveness connection now serializes checks and release. Three real PostgreSQL and TLS race runs passed, including lost-MOVE recovery. Native Linux and stock receiver qualification remain open."
+        "F548 blocks a DAV worker when its exact staging path is already occupied. The conditional PUT remains required. Concurrent upload and response checks reproduced a pgx connection race, so the held liveness connection now serializes checks and release. Three real PostgreSQL and TLS race runs passed, including lost-MOVE recovery. Native Linux and stock receiver qualification remain open.",
+        "F549 records all 18 original workflows and 41 jobs at 7fda192. Stock HTTPS and native CLI/MCP integrity steps passed on both Linux architectures. The broad PostgreSQL suites, both restore jobs and the separate stock peer and recipient UI failures remain visible."
       ],
       "current_item": {
         "id": "F425",

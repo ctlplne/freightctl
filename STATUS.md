@@ -427,6 +427,12 @@ Serializing those checks and slot release fixed the reproduced race.
 Three combined runs passed, including lost-reply recovery. Native Linux
 replay and stock receiver conformance remain due.
 
+[F549](docs/qualification/evidence/F549-original-integrity-batch-terminal.json)
+records all 18 original workflows and 41 jobs at `7fda192`. Both Linux
+architectures passed the stock HTTPS integrity and native CLI/MCP steps.
+The broader PostgreSQL suites and both restore jobs failed. The independent
+stock peer and separate recipient UI failures remain open.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6

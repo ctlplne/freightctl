@@ -1,0 +1,438 @@
+{
+  "schema_version": 1,
+  "id": "F549",
+  "observed_at": "2026-11-19",
+  "candidate": "7fda19225e0650fc325bf8b6ad31bfe72fde1423",
+  "qualification_claim": false,
+  "launch_record": "docs/qualification/evidence/F543-guarded-integrity-surfaces-batch.json",
+  "originals_metadata": {
+    "sha256": "7584f9b2fa59b5420238a27316bcdb875e16416052d3db3890e9026e4c137b21",
+    "bytes": 221012
+  },
+  "workflow_counts": {
+    "failure": 5,
+    "success": 13
+  },
+  "job_counts": {
+    "success": 30,
+    "failure": 11
+  },
+  "originals": [
+    {
+      "name": "Core correctness and security",
+      "run": 44406961816,
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "89539a6f5ce5000e1f6e6ca7139478f8e30623c3be273f612338449251bca8f2",
+        "bytes": 3746
+      }
+    },
+    {
+      "name": "Native FTPS client and independent stock receiver",
+      "run": 44406961743,
+      "attempt": 1,
+      "conclusion": "failure",
+      "jobs_metadata": {
+        "sha256": "fe7c792a3eed2fd469803e1031cf54dec976023cb5a4bec5f3fbd890a0698ee6",
+        "bytes": 11454
+      }
+    },
+    {
+      "name": "Native FTPS dispatch approval qualification",
+      "run": 44406961422,
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "3d297cca73e176b855ea46425e730b8dd720c3c4fe9c54d0969afae54a732da6",
+        "bytes": 3221
+      }
+    },
+    {
+      "name": "Native FTPS stock clients and custody",
+      "run": 44406961759,
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "86a3c4e02ad76da6c9fc54b3b074553bfeece64639a658e8848c58c01c6af4a6",
+        "bytes": 5505
+      }
+    },
+    {
+      "name": "Native FTPS workflow consent qualification",
+      "run": 44406961447,
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "45d4f998ca51765cb2d4fb53b961a3012fd3c82e4df7173bfe06da58507d505f",
+        "bytes": 7298
+      }
+    },
+    {
+      "name": "Native JSON intake and custody interfaces",
+      "run": 44406961794,
+      "attempt": 1,
+      "conclusion": "failure",
+      "jobs_metadata": {
+        "sha256": "d18be5f0d1b221f047ded69e646abf24961fea5586bce8e1a8f33accb002eff2",
+        "bytes": 9063
+      }
+    },
+    {
+      "name": "Native Linux Go, PostgreSQL and fuzz",
+      "run": 44406961886,
+      "attempt": 1,
+      "conclusion": "failure",
+      "jobs_metadata": {
+        "sha256": "1247cf14e8920228fa5fa6eb7cbd3668b57d737a6c5bd1cb3799e4f9aa0b91a7",
+        "bytes": 18267
+      }
+    },
+    {
+      "name": "Native Windows and macOS unit checks",
+      "run": 44406961485,
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "519efc1429734618202762926d807fddb3b715b1eb7bd3fcf7efa75b3752b2b3",
+        "bytes": 4673
+      }
+    },
+    {
+      "name": "Native artifact receive browser",
+      "run": 44406961548,
+      "attempt": 1,
+      "conclusion": "failure",
+      "jobs_metadata": {
+        "sha256": "c6c7d89fa491122aab3f5cbf94339c2ef9d8ec87a41a11629ebc654732d766e9",
+        "bytes": 3455
+      }
+    },
+    {
+      "name": "Native browser and FTPS operator qualification",
+      "run": 44406961892,
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "f8ecec828ee4e4e30a261b777b3804273642dd1f4a4dbd9e5eb2a695a42dc660",
+        "bytes": 3244
+      }
+    },
+    {
+      "name": "Native first enrollment and browser exchange",
+      "run": 44406961574,
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "1d629ed78a73d37406f721f0cde9ea4219f266de2608fb683b7f9d9a92ef55e9",
+        "bytes": 3029
+      }
+    },
+    {
+      "name": "Native immutable HTTPS stock resume",
+      "run": 44406961970,
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "7387d8b0c617d96f911419529ec4e1257d94347cd577620b42a03eb93313d235",
+        "bytes": 5363
+      }
+    },
+    {
+      "name": "Native independent DAV application",
+      "run": 44406961340,
+      "attempt": 1,
+      "conclusion": "failure",
+      "jobs_metadata": {
+        "sha256": "327ee6ddf22a30f062e058b85c47af20a7b8561a3160291fe1b22dad50b71c9d",
+        "bytes": 7854
+      }
+    },
+    {
+      "name": "Native legacy SCP regular-file custody",
+      "run": 44406961630,
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "4a03ebe57801cd64e13e7abb7d998fc6ab90d1c641fb9fa22f3e30c484bd89a3",
+        "bytes": 5353
+      }
+    },
+    {
+      "name": "Native reproducible core binaries",
+      "run": 44406961486,
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "7f5b5351e1ff3b8f21632929a45fc837c3fe3f57a396d11e74947c65a8c22294",
+        "bytes": 4958
+      }
+    },
+    {
+      "name": "Native source vulnerability configurations",
+      "run": 44406961862,
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "b2619de9c0a25849e83df60cf505b89c028a7737bba05ae49e322aec7eeb8ac1",
+        "bytes": 6824
+      }
+    },
+    {
+      "name": "Native tus stock client and custody checkpoints",
+      "run": 44406961456,
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "64127d54488f8024abd01bb2780e51f67c37de29bd4589bfb7f06ec024207890",
+        "bytes": 6617
+      }
+    },
+    {
+      "name": "Stock peer and browser qualification",
+      "run": 44406961418,
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "727d0393766b0479eb652e4287fa1c809f67b7b51976d714e66f8f7406385d40",
+        "bytes": 21836
+      }
+    }
+  ],
+  "failed_workflows": [
+    {
+      "name": "Native FTPS client and independent stock receiver",
+      "run": 44406961743,
+      "failed_jobs": [
+        {
+          "id": 135164646912,
+          "name": "Native FTPS client (x86_64, no-ktls)",
+          "failed_steps": [
+            "Actual client with two loopback TLS receivers and independent files",
+            "Failed receiver process diagnostic (never qualification)"
+          ]
+        },
+        {
+          "id": 135164646923,
+          "name": "Native FTPS client (x86_64, system)",
+          "failed_steps": [
+            "Actual client with two loopback TLS receivers and independent files",
+            "Failed receiver process diagnostic (never qualification)"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Native JSON intake and custody interfaces",
+      "run": 44406961794,
+      "failed_jobs": [
+        {
+          "id": 135164647473,
+          "name": "Native JSON custody (x86_64)",
+          "failed_steps": [
+            "Actual JSON SQL, API, CLI, signature and scanner-protocol outcomes"
+          ]
+        },
+        {
+          "id": 135164647575,
+          "name": "Native JSON custody (arm64)",
+          "failed_steps": [
+            "Actual JSON SQL, API, CLI, signature and scanner-protocol outcomes"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Native Linux Go, PostgreSQL and fuzz",
+      "run": 44406961886,
+      "failed_jobs": [
+        {
+          "id": 135164648445,
+          "name": "Native metadata restore (x86_64)",
+          "failed_steps": [
+            "Back up, restore and verify exact metadata and access controls"
+          ]
+        },
+        {
+          "id": 135164648460,
+          "name": "Native Go and PostgreSQL (arm64)",
+          "failed_steps": [
+            "All implemented real PostgreSQL integration and migration tests"
+          ]
+        },
+        {
+          "id": 135164648659,
+          "name": "Native metadata restore (arm64)",
+          "failed_steps": [
+            "Back up, restore and verify exact metadata and access controls"
+          ]
+        },
+        {
+          "id": 135164648725,
+          "name": "Native Go and PostgreSQL (x86_64)",
+          "failed_steps": [
+            "All implemented real PostgreSQL integration and migration tests",
+            "Independent stock FTPS producer through HTTPS agent custody to stock SFTP"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Native artifact receive browser",
+      "run": 44406961548,
+      "failed_jobs": [
+        {
+          "id": 135164646190,
+          "name": "receive-browser",
+          "failed_steps": [
+            "Actual recipient UI, exact bytes, unrelated user and endpoint revocation"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Native independent DAV application",
+      "run": 44406961340,
+      "failed_jobs": [
+        {
+          "id": 135164645619,
+          "name": "Native stock rclone DAV (amd64)",
+          "failed_steps": [
+            "Actual independent DAV application,exact bytes,conditional writes and current authority",
+            "Actual direct DAV delivery,independent stock receiver,CLI and approvals",
+            "Direct DAV delivery between separate freightctl custody instances"
+          ]
+        },
+        {
+          "id": 135164646143,
+          "name": "Native stock rclone DAV (arm64)",
+          "failed_steps": [
+            "Actual independent DAV application,exact bytes,conditional writes and current authority",
+            "Actual direct DAV delivery,independent stock receiver,CLI and approvals",
+            "Actual PostgreSQL DAV lost MOVE response and read-only reconciliation",
+            "Direct DAV delivery between separate freightctl custody instances"
+          ]
+        }
+      ]
+    }
+  ],
+  "selected_original_steps": [
+    {
+      "run": 44406961816,
+      "job": 135164646281,
+      "architecture_or_job": "source-and-browser",
+      "step": "JavaScript dependency audit",
+      "conclusion": "success"
+    },
+    {
+      "run": 44406961816,
+      "job": 135164646281,
+      "architecture_or_job": "source-and-browser",
+      "step": "Go vulnerability reachability",
+      "conclusion": "success"
+    },
+    {
+      "run": 44406961816,
+      "job": 135164646281,
+      "architecture_or_job": "source-and-browser",
+      "step": "Committed source and history secret scan",
+      "conclusion": "success"
+    },
+    {
+      "run": 44406961886,
+      "job": 135164648460,
+      "architecture_or_job": "Native Go and PostgreSQL (arm64)",
+      "step": "Stock SFTP onward read-only recovery after a published file loses its worker",
+      "conclusion": "success"
+    },
+    {
+      "run": 44406961886,
+      "job": 135164648460,
+      "architecture_or_job": "Native Go and PostgreSQL (arm64)",
+      "step": "Recipient integrity report from a stock HTTPS download",
+      "conclusion": "success"
+    },
+    {
+      "run": 44406961886,
+      "job": 135164648460,
+      "architecture_or_job": "Native Go and PostgreSQL (arm64)",
+      "step": "Recipient integrity report across the native CLI and stock MCP SDK",
+      "conclusion": "success"
+    },
+    {
+      "run": 44406961886,
+      "job": 135164648460,
+      "architecture_or_job": "Native Go and PostgreSQL (arm64)",
+      "step": "Independent stock FTPS producer through HTTPS agent custody to stock SFTP",
+      "conclusion": "success"
+    },
+    {
+      "run": 44406961886,
+      "job": 135164648725,
+      "architecture_or_job": "Native Go and PostgreSQL (x86_64)",
+      "step": "Stock SFTP onward read-only recovery after a published file loses its worker",
+      "conclusion": "success"
+    },
+    {
+      "run": 44406961886,
+      "job": 135164648725,
+      "architecture_or_job": "Native Go and PostgreSQL (x86_64)",
+      "step": "Recipient integrity report from a stock HTTPS download",
+      "conclusion": "success"
+    },
+    {
+      "run": 44406961886,
+      "job": 135164648725,
+      "architecture_or_job": "Native Go and PostgreSQL (x86_64)",
+      "step": "Recipient integrity report across the native CLI and stock MCP SDK",
+      "conclusion": "success"
+    },
+    {
+      "run": 44406961886,
+      "job": 135164648725,
+      "architecture_or_job": "Native Go and PostgreSQL (x86_64)",
+      "step": "Independent stock FTPS producer through HTTPS agent custody to stock SFTP",
+      "conclusion": "failure"
+    },
+    {
+      "run": 44406961548,
+      "job": 135164646190,
+      "architecture_or_job": "receive-browser",
+      "step": "Generated artifact lineage in separate sender and recipient browser sessions",
+      "conclusion": "success"
+    },
+    {
+      "run": 44406961862,
+      "job": 135164647564,
+      "architecture_or_job": "Native vulnerability source (windows/amd64)",
+      "step": "Actual native source scan and enforcing original converter",
+      "conclusion": "success"
+    },
+    {
+      "run": 44406961862,
+      "job": 135164647908,
+      "architecture_or_job": "Native vulnerability source (darwin/arm64)",
+      "step": "Actual native source scan and enforcing original converter",
+      "conclusion": "success"
+    },
+    {
+      "run": 44406961862,
+      "job": 135164648055,
+      "architecture_or_job": "Native vulnerability source (linux/arm64)",
+      "step": "Actual native source scan and enforcing original converter",
+      "conclusion": "success"
+    }
+  ],
+  "failure_scope": [
+    "The stock HTTPS report and the native CLI/stock MCP report each passed on both Linux architectures. Those runs use 7fda192 and do not contain the later browser or v3 changes.",
+    "The broader PostgreSQL jobs on both architectures reached the export fixture privacy errors described in F546 and the workflow export fixture failures. The original native report steps continued and passed.",
+    "Both schema-68 restore jobs emitted metadata_exercise_failed. Their protected restore failure details are unavailable, leaving exact restore and access-control outcomes unverified.",
+    "Independent stock FTPS receiver runs passed in both ARM modes and failed in both x86 modes. The ARM FTPS producer passed and the x86 producer failed. The prior exact x86 version-refusal gate remains unresolved.",
+    "Native Chromium generated lineage passed. The separate original recipient UI journey remained red. The stock DAV receiver still failed the exclusive staging assertion, and stock application and broader DAV results remain red.",
+    "Core secret scanning, JavaScript dependency audit, Go reachability and all three native source vulnerability scans passed."
+  ],
+  "remaining": [
+    "Run the browser and v3 report tests on the exact next candidate.",
+    "Preserve and resolve original restore, native protocol and broader runtime failures under their actual qualification gates."
+  ]
+}
