@@ -34,7 +34,7 @@ func TestPlanSFTPGoInventoryDependenciesAndCalendar(t *testing.T) {
        {"name":"private-first-action","relation_options":{"stop_on_failure":true}}
      ]},
     {"status":0,"trigger":3,"conditions":{"schedules":[
-       {"hour":"4-8","day_of_month":"*","month":"*","day_of_week":"*"}
+       {"hour":"4-8","day_of_month":"1","month":"*","day_of_week":"*"}
      ]},"actions":[{"name":"private-first-action","order":1}]},
     {"status":1,"trigger":1,"actions":[{"name":"private-first-action","order":1,"relation_options":{"execute_sync":true}}]}
   ]

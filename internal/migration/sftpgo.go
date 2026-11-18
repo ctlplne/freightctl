@@ -406,17 +406,78 @@ func sftpgoCalendar(schedule *sftpgoSchedule) *CalendarFragment {
 	if schedule == nil || schedule.DayOfMonth != "*" || schedule.Month != "*" {
 		return nil
 	}
-	hour, err := strconv.Atoi(schedule.Hour)
-	if err != nil || hour < 0 || hour > 23 || (schedule.Hour != strconv.Itoa(hour) && schedule.Hour != fmt.Sprintf("%02d", hour)) {
+	hours := sftpgoCronField(schedule.Hour, 23, nil)
+	days := sftpgoCronField(schedule.DayOfWeek, 6, []string{"sun", "mon", "tue", "wed", "thu", "fri", "sat"})
+	if len(hours) == 0 || len(days) == 0 {
 		return nil
 	}
-	days := []int{0, 1, 2, 3, 4, 5, 6}
-	if schedule.DayOfWeek != "*" {
-		weekday := schedule.DayOfWeek
-		if len(weekday) != 1 || weekday[0] < '0' || weekday[0] > '6' {
+	times := make([]string, 0, len(hours))
+	for _, hour := range hours {
+		times = append(times, fmt.Sprintf("%02d:00:00", hour))
+	}
+	return &CalendarFragment{Zone: "UTC", Times: times, Weekdays: days}
+}
+
+// Map finite source fields to ordered values. The profile has a fixed minute
+// and excludes month/day-of-month restrictions that need a different calendar.
+func sftpgoCronField(expression string, maximum int, names []string) []int {
+	if len(expression) == 0 || len(expression) > 128 {
+		return nil
+	}
+	selected := make([]bool, maximum+1)
+	for _, item := range strings.Split(expression, ",") {
+		interval, increment, stepped := strings.Cut(item, "/")
+		step := 1
+		if stepped {
+			step = sftpgoCronValue(increment, 99, nil)
+			if step < 1 {
+				return nil
+			}
+		}
+		first, last := 0, maximum
+		if interval != "*" && interval != "?" {
+			start, end, ranged := strings.Cut(interval, "-")
+			first = sftpgoCronValue(start, maximum, names)
+			switch {
+			case ranged:
+				last = sftpgoCronValue(end, maximum, names)
+			case !stepped:
+				last = first
+			}
+		}
+		if first < 0 || last < first {
 			return nil
 		}
-		days = []int{int(weekday[0] - '0')}
+		for value := first; value <= last; value += step {
+			selected[value] = true
+		}
 	}
-	return &CalendarFragment{Zone: "UTC", Times: []string{fmt.Sprintf("%02d:00:00", hour)}, Weekdays: days}
+	values := make([]int, 0, len(selected))
+	for value, present := range selected {
+		if present {
+			values = append(values, value)
+		}
+	}
+	return values
+}
+
+func sftpgoCronValue(text string, maximum int, names []string) int {
+	for value, name := range names {
+		if strings.ToLower(text) == name {
+			return value
+		}
+	}
+	if len(text) == 0 || len(text) > 2 {
+		return -1
+	}
+	for _, c := range text {
+		if c < '0' || c > '9' {
+			return -1
+		}
+	}
+	number, err := strconv.Atoi(text)
+	if err != nil || number > maximum {
+		return -1
+	}
+	return number
 }

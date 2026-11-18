@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "id": "F471",
+  "observed_at": "2026-11-18",
+  "base_candidate": "0fd9865",
+  "base_evidence": "docs/qualification/evidence/F464-sftpgo-migration-plan.json",
+  "scope": "Finite SFTPGo UTC hour and weekday recurrence, compared offline using exact stock exports and the producer's pinned cron dependency",
+  "qualification_claim": false,
+  "platform": "darwin/arm64",
+  "go_version": "go1.27.4",
+  "red": {
+    "observation": "The prior planner reports the original stock hour range as unsupported. An assertion that the CLI can preserve its five hour marks exits 1.",
+    "prior_report_sha256": "39a4080b1ec68697fb8759776e902e937939e830f83ed09f65d8f8deb997ab37"
+  },
+  "reference": {
+    "stock_producer": "SFTPGo Community 2.7.6-62ae9ba3",
+    "stock_executable_sha256": "4a00de2146fe454b09cc0170d2b825fd3bbda05357315b72f91583934c50e4de",
+    "source_dependency": "github.com/drakkan/cron/v3 v3.0.0-20230222140221-217a1e4d96c0",
+    "source_dependency_sum": "h1:EW9gIJRmt9lzk66Fhh4S8VEtURA6QHZqGeSRE9Nb2/U=",
+    "source_dependency_mod_sum": "h1:eQICP3HwyT7UooqI/z+Ov+PtYAWygg1TEWWzGIFLtro=",
+    "source_dependency_pin": "https://github.com/drakkan/sftpgo/blob/v2.7.6/go.mod#L184",
+    "producer_stopped_before_comparison": true,
+    "fixture_rules_disabled": true,
+    "second_fixture_peak_child_rss_bytes": 36618240
+  },
+  "comparison": {
+    "start_inclusive": "2027-01-01T00:00:00Z",
+    "end_exclusive": "2027-01-09T00:00:00Z",
+    "method": "Independent pinned source parser and freightctl's ordinary calendar engine expand exact CLI report fragments from the same UTC cursor and compare every occurrence and final exhaustion.",
+    "consumer_executable_sha256": "c6b12245a6aa8b9129a1f3db0def7363c4762cf3bd298a88d4fc57e1658b01c4",
+    "private_witness_directory": ".private/freightctl-f471-witness",
+    "witness_source_sha256": "9b45cdc7bd9ab83a947758e0d501b4d7886d7d4055bf226a41301fb7ff37e3c3",
+    "witness_summary_sha256": "8957fa52fb592a7ffcc6ce134ab2aef0cd4da5106f8aa9f2ffad847e8bb9f1b3",
+    "inputs": [
+      {
+        "fixture": "Original F464 stock export with one simple weekly calendar and one daily hour range",
+        "source_sha256": "d62de485c9249125bd3e569e000b835ac56d42d5d64e6b1a46a65b4cfc23fd0d",
+        "report_sha256": "b452c639903c7f39f765b6a4660cbc9aa94d7588fa09da4634f688debebbbcaf",
+        "compared_rows": 2,
+        "matching_occurrences": 41
+      },
+      {
+        "fixture": "New stock export with hour lists and steps, weekday names and a source month/day restriction",
+        "source_sha256": "6e71a73e5014cba1e01d28f562a37f5ea49bac65fec419bad530bf86f72dd882",
+        "report_sha256": "7dbcd8dcae07e1af1a6a637a76253b854638391dd877da6086b2798384917b94",
+        "compared_rows": 2,
+        "matching_occurrences": 36,
+        "unsupported_month_day_rows_preserved": 1,
+        "same_input_report_byte_identical": true
+      }
+    ],
+    "matching_occurrences": 77,
+    "actions_executed": 0
+  },
+  "checks": {
+    "focused_race_cases_including_parents": 32,
+    "focused_race_log_sha256": "e48a925508ecbf4b40b4b5ff9494a4849faf08b19d1061af17d3e59c69728fc1",
+    "affected_vet": "pass",
+    "core_architecture": "pass",
+    "format": "pass"
+  },
+  "remaining": [
+    "Month and day-of-month behavior, richer calendars and other source trigger families",
+    "Live destination preview, behavior comparisons beyond calendar recurrence, independent adoption and cutover"
+  ]
+}

@@ -33,10 +33,13 @@ and the export's scope when reconciling the estate inventory.
 - Rules retain their enabled or disabled source state and trigger type. An
   action edge records the source's order, failure behavior and synchronous flag.
   If the definition is missing, invalid or ambiguous, the link stays blocked.
-- A schedule at the start of one UTC hour, every day or on one numeric
-  weekday, can produce a calendar fragment. Each source schedule
-  gets its own row. Other calendar expressions and trigger types remain visible
-  for review. [SFTPGo schedule semantics](https://docs.sftpgo.com/latest/eventmanager/)
+- With unrestricted month and day-of-month fields, the planner expands the
+  hours and weekdays into a finite UTC calendar. It supports single values,
+  lists, ranges, wildcards and steps, and accepts weekday names like `Mon`.
+  A row can contain up to 24 hours and seven weekdays, with each input field
+  bounded to 128 bytes. Each source schedule gets its own row. Month or
+  day-of-month restrictions and other trigger types remain visible for review.
+  [SFTPGo schedule semantics](https://docs.sftpgo.com/latest/eventmanager/)
 - The planner marks fragments `needs_input`. Review all rule filters and
   action effects. Choose the destination source, exact workflow revision,
   effective dates, missed-run policy and execution bounds. Check for overlapping

@@ -101,6 +101,12 @@ against an enrolled destination remain due. [F469](docs/qualification/evidence/F
 adds the real PostgreSQL preview check to the existing processing CLI journey.
 The integration test compiles and awaits native execution.
 
+[F471](docs/qualification/evidence/F471-sftpgo-calendar-occurrence-comparison.json)
+adds hour and weekday lists, ranges, and steps to the stock migration
+planner. freightctl and the exact scheduler dependency pinned by SFTPGo
+agree on 77 occurrences across two original exports. A month/day rule
+remains unsupported. This compares timing before any workflow action.
+
 [F455](docs/qualification/evidence/F455-mixed-delivery-proposals.json) binds
 each AI proposal alias to its registered SFTP or FTPS connection. The
 responder suggests an order. freightctl checks the protocol and creates an

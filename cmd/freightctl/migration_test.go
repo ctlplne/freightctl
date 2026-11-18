@@ -20,7 +20,7 @@ func TestPrepareSFTPGoCalendarReusesOrdinarySchedule(t *testing.T) {
   "event_rules":[{"status":0,"trigger":3,
     "conditions":{"schedules":[
       {"hour":"07","day_of_month":"*","month":"*","day_of_week":"2"},
-      {"hour":"3-6","day_of_month":"*","month":"*","day_of_week":"*"}
+      {"hour":"3-6","day_of_month":"13","month":"*","day_of_week":"*"}
     ]},"actions":[{"name":"source-backup","order":1}]
   }]
 }`))
