@@ -47,6 +47,18 @@ That form requires a fresh source check and an explicitly approved receive
 endpoint before an offer can be confirmed. The navigation itself creates none.
 Held,unpublished or incomplete input snapshots show no review action.
 
+In **Receive artifacts**, open the approved endpoint, inspect the offer and
+download the exact revision. **Keep an owned copy** creates a new private
+revision under the account's write grant. Paste the owned revision ID into
+**Onward delivery** with the exact approved workflow reference. Review the
+pinned route, queue the run, then select **Perform one onward work step**.
+If the browser loses that work reply, select **Retry the same onward work
+step** to recover the recorded result. A current success clears the earlier
+error. The local replay verified one delivery attempt and an independent
+OpenSSH readback. Receiver persistence and business processing remain unknown
+in the browser's general observation.
+[F524 replay](../qualification/evidence/F524-stock-sftp-browser-exchange.json)
+
 The governed-source profiles cover both SFTP and FTPS ready manifests. In
 the stock SFTP replay, a read-only OpenSSH producer served the ready manifest
 and exact payload in one authenticated session. The agent received a separately
@@ -79,7 +91,7 @@ grant, registered route and approved workflow are required for
 `freightctl.work_onward`. `freightctl.onward_status` checks the original run
 receipt and current state. The local stock SDK replay verified each step
 against real PostgreSQL, stock curl and separate OpenSSH peers. Native Linux
-MCP proof and the full browser exchange remain due.
+proof for the MCP and browser exchanges remains due.
 [F522 replay](../qualification/evidence/F522-stock-sftp-mcp-exchange.json)
 
 If the stock SFTP collection worker dies after sealing the bytes and before

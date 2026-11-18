@@ -27,7 +27,7 @@
     },
     {
       "path": "web/src/app.tsx",
-      "sha256": "9d40156b96824e91449afc61dcd9c2f1da9ba92b2d87e35c3b202be6a15c4816"
+      "sha256": "59a9badd099a0ac6ed4b5c5cd1959935eb931f7be9584989279ca5bc4cf1471f"
     },
     {
       "path": "web/src/arrivals-types.ts",
@@ -75,7 +75,7 @@
     },
     {
       "path": "web/src/artifact-onward.tsx",
-      "sha256": "b8bcf707810685c9f5214285aa92dae0aabf1c7e9aa2cb113db3f57ffb2617aa"
+      "sha256": "50fa577aa29259928c25d6c222c9324a4d7405bac155de0e9419ddece2022c4d"
     },
     {
       "path": "web/src/artifact-outgoing.tsx",
@@ -370,8 +370,8 @@
     },
     {
       "name": "app.js",
-      "sha256": "79b04d0c196e80d33a1f7f04af2162f03dbde02772dd4c217d44796bc38c6233",
-      "size": 926164
+      "sha256": "d8ae170656bc5cf79545c7ec8bc057be6a7f7c55e8eae0a72dec4e2003c6c453",
+      "size": 926167
     },
     {
       "name": "app.js.LEGAL.txt",

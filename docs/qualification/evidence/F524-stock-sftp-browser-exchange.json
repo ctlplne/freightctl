@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "id": "F524",
+  "observed_at": "2026-11-19",
+  "base_candidate": "2d974c59b5b54d65854b7443592f6d50344a0ed5",
+  "qualification_claim": false,
+  "scope": "Collected stock SFTP revision through browser custody and independently approved stock SFTP delivery with lost browser HTTP work response",
+  "prior_stock_sftp_record": "docs/qualification/evidence/F522-stock-sftp-mcp-exchange.json",
+  "first_failure": {
+    "result": "An earlier real source access refusal stayed visible after a successful onward review and queue. The work-loss test observed that old alert before the real work response arrived. The current action now clears the previous error only after success. The test requires the refusal to be visible first and the alert to clear after a valid review and after work recovery.",
+    "go_log": {
+      "sha256": "fab52fb7b0f049c0b3ca8c8f6cb20b8a2eb4e6e05a0215b5fb4d7745d911590b",
+      "bytes": 496
+    },
+    "browser_log": {
+      "sha256": "aeac07f07e934b4d603b060197f75e2134e2ed25cbbf9de4a3051317c505b45f",
+      "bytes": 328
+    }
+  },
+  "local_race_replay": {
+    "environment": "macOS ARM, sandboxed Chromium 151.0.7922.34, protected HTTPS, PostgreSQL 16.15 and separate stock OpenSSH producer and receiver on task-owned loopback",
+    "log": {
+      "sha256": "4ab863477f473dcb125d53f50e3751cf861110e7d6469349568f6ffa354794ad",
+      "bytes": 557
+    },
+    "browser_work_requests": 2,
+    "destination_attempts": 1,
+    "destination_fence": 1,
+    "accessibility_checks": 5,
+    "external_browser_requests": 0,
+    "inference_enabled": false,
+    "assertions": [
+      "The browser collection review verified the exact file revision, length, digest and manifest/input binding. The UI issued no offer before confirmation. The authorized action created one availability receipt.",
+      "A separate signed-in recipient used its pinned endpoint, downloaded and hashed the exact bytes, and created one independently owned file revision with the same digest and the original offer bound to its acceptance event.",
+      "The sender revision was refused as ordinary onward input. The privately owned copy, independently granted permissions, registered route and separately approved workflow were required for the reviewed onward run. Queueing and observation made zero receiver sessions.",
+      "The actual first browser work command committed and completed one delivery. The harness dropped its HTTP reply. The same browser work key and command recovered the original successful observation, and the alert cleared. One receiver transfer and one attempt/fence were recorded.",
+      "A stock SFTP client independently read the exact receiver bytes. The receiver fsync witness binds the copy digest. Business processing and receiver persistence remain unknown in the browser observation. The source daemon retained the original bytes and one total authenticated session.",
+      "The five browser states pass automated accessibility checks and the original MCP stock SFTP journey passed again."
+    ]
+  },
+  "sources": [
+    {
+      "path": ".github/workflows/stock-peers.yml",
+      "sha256": "d58ab18f3467ae0562d456a7f55b46285175f335f0998161260d1fedd2e39321",
+      "bytes": 7757
+    },
+    {
+      "path": "internal/browser/assets/app.js",
+      "sha256": "d8ae170656bc5cf79545c7ec8bc057be6a7f7c55e8eae0a72dec4e2003c6c453",
+      "bytes": 926167
+    },
+    {
+      "path": "internal/browser/assets/manifest.json",
+      "sha256": "11e0762958905e73466705bba9a19a496d06fa985abab080259fd6855978317b",
+      "bytes": 14417
+    },
+    {
+      "path": "internal/workflow/browser_stock_sftp_exchange_integration_test.go",
+      "sha256": "9d280841742cba6a5bc10025e5157e7c8bf49d812d0fd626c2595e317137ac0d",
+      "bytes": 8996
+    },
+    {
+      "path": "scripts/stock-sftp-exchange-browser.mjs",
+      "sha256": "52aec316f0e04d62c5dbda747ebca0d5dbfd5e38cbde2f828c612671aeed332d",
+      "bytes": 13637
+    },
+    {
+      "path": "web/src/app.tsx",
+      "sha256": "59a9badd099a0ac6ed4b5c5cd1959935eb931f7be9584989279ca5bc4cf1471f",
+      "bytes": 79663
+    },
+    {
+      "path": "web/src/artifact-onward.tsx",
+      "sha256": "50fa577aa29259928c25d6c222c9324a4d7405bac155de0e9419ddece2022c4d",
+      "bytes": 14484
+    }
+  ],
+  "remaining": [
+    "Run the exact stock browser exchange on native Linux, then qualify the remaining supported browsers and adapter-role pairs. Exercise response loss and process death at the outbound SFTP protocol boundary."
+  ]
+}

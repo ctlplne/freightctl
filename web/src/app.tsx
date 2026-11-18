@@ -1123,6 +1123,7 @@ function App() {
                 api={api}
                 session={session}
                 onError={reportError}
+                onConfirmed={() => setError("")}
               />
             )}
             {tab === "sent" &&

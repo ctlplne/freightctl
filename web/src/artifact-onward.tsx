@@ -16,10 +16,12 @@ export function ArtifactOnward({
   api,
   session,
   onError,
+  onConfirmed,
 }: {
   api: Api;
   session: Session;
   onError: (error: unknown) => void;
+  onConfirmed: () => void;
 }) {
   const client = useMemo(() => new ArtifactOnwardApi(api), [api, session]);
   const [fileID, setFileID] = useState(""),
@@ -77,6 +79,7 @@ export function ArtifactOnward({
       client.isCurrent();
     try {
       await operation(controller.signal, current);
+      if (current()) onConfirmed();
     } catch (error) {
       if (current()) onError(error);
     } finally {

@@ -201,10 +201,15 @@ copies it into agent custody and runs the separately approved onward delivery.
 Stock curl retrieves the bytes through the tool's authenticated HTTPS path.
 After real worker death at the SFTP seal boundary, a replacement keeps the
 original lease and recovers the exact object and manifest without another
-source session. Native Linux, browser exchange and interruption at the
-outbound receiver remain open.
+source session. Sandboxed Chromium follows the same collected file from the
+source review through offer, download, owned copy and separately approved
+onward delivery. The first work reply is dropped. The same browser work key
+recovers its receipt, and the independent OpenSSH receiver sees one transfer.
+Native Linux and interruption at the outbound SFTP protocol boundary remain
+open.
 [F516](../qualification/evidence/F516-stock-sftp-source-agent-exchange.json) [F517](../qualification/evidence/F517-stock-collection-https-exchange.json)
 [F522](../qualification/evidence/F522-stock-sftp-mcp-exchange.json) [F523](../qualification/evidence/F523-stock-sftp-collection-worker-death.json)
+[F524](../qualification/evidence/F524-stock-sftp-browser-exchange.json)
 The local FTPS pair uses a separate freightctl producer, stock HTTPS retrieval,
 an agent-owned copy and separately approved delivery to stock OpenSSH. It
 passes for explicit and implicit FTPS. The same local chain passes from a

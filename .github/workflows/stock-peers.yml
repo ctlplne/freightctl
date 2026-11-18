@@ -151,6 +151,15 @@ jobs:
           test "$(uname -m)" = x86_64
           sh scripts/go.sh test -p 1 -race -tags=integration,provisionbrowser -timeout=120s -count=1 \
             -run '^TestConnectionProvisionNativeBrowserRecoversOriginalAssignment$' -v ./internal/api
+      - name: Collected stock SFTP artifact through browser custody to stock SFTP
+        if: ${{ !cancelled() && matrix.journey == 'arrivals-schedules' && steps.postgres.outcome == 'success' && steps.chrome.outcome == 'success' }}
+        env:
+          FREIGHTCTL_TEST_ADMIN_FILE: ${{ github.workspace }}/.private/pg-admin.dsn
+          FREIGHTCTL_TEST_RUNTIME_FILE: ${{ github.workspace }}/.private/pg-runtime.dsn
+        run: |
+          test "$(uname -m)" = x86_64
+          sh scripts/go.sh test -p 1 -race -tags=integration,exchangebrowser -timeout=120s -count=1 \
+            -run '^TestStockSFTPCollectedArtifactBrowserToOwnedCopyAndStockSFTP$' -v ./internal/workflow
       - name: Safe qualification outcomes and evidence closure
         if: always()
         run: |

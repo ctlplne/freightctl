@@ -268,6 +268,15 @@ then, and its log shows one total authenticated session. The CLI reviews the
 original manifest, input and file revision. Both freightctl FTPS recovery
 cases pass again. Native Linux and onward-delivery death cases remain due.
 
+[F524](docs/qualification/evidence/F524-stock-sftp-browser-exchange.json)
+replays the exact collected stock SFTP revision through browser offer,
+download, owned copy and separately approved onward delivery. The recipient
+cannot reuse the sender's revision as its own. The browser recovers the
+same work result after dropping the first HTTP reply, and a stock OpenSSH
+readback confirms the delivered bytes. The replay also fixes stale onward
+errors after a successful action. Native Linux and loss at the SFTP receiver
+acknowledgment remain due.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6
