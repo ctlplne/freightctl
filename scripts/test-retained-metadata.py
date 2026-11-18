@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Refuse resource substitution/exposure before any backup maintenance command."""
 import copy
+import hashlib
 import importlib.util
 import json
 from pathlib import Path
@@ -92,34 +93,61 @@ class MaintenanceBoundaries(unittest.TestCase):
             exercise.manifest = {}
             old = ["example", "scope", "PERMISSIVE", ["public"], "ALL", "((tenant_id = 'x'))", "((tenant_id = 'x'))"]
             canonical = old[:5] + ["(tenant_id = 'x')", "(tenant_id = 'x')"]
-            original = {"tables": [{"rows": 1, "sha256": "exact"}], "catalog_sha256": "original"}
-            restored = {**original, "catalog_sha256": "restored"}
-            old_catalog = {"policies": [old], "relations": [["example", "protected"]]}
+            tables = [{"rows": 1, "sha256": "exact"}]
+            old_catalog = {"policies": [old], "constraints": [], "relations": [["example", "protected"]]}
             new_catalog = {**old_catalog, "policies": [canonical]}
-            (exercise.private / "original-before-catalog.stdout").write_text(json.dumps(old_catalog))
+            def save_catalog(label, catalog):
+                wire = json.dumps(catalog)
+                (exercise.private / (label + "-catalog.stdout")).write_text(wire + "\n")
+                return {"tables": tables, "catalog_sha256": hashlib.sha256(wire.encode()).hexdigest()}
             def save_actual(catalog):
-                (exercise.private / "restored-catalog.stdout").write_text(json.dumps(catalog))
+                return save_catalog("restored", catalog)
             def parse_source(label, query, database):
                 self.assertEqual(database, exercise.restore_name)
                 self.assertTrue(query.endswith("ROLLBACK;"))
                 return json.dumps(canonical)
             exercise.sql = parse_source
-            save_actual(new_catalog)
+            original = save_catalog("original-before", old_catalog)
+            restored = save_actual(new_catalog)
             exercise.compare_restore(original, restored)
             changed_rows = {**restored, "tables": [{"rows": 0, "sha256": "changed"}]}
             with self.assertRaises(RuntimeError):
                 exercise.compare_restore(original, changed_rows)
-            save_actual({**new_catalog, "relations": [["example", "PUBLIC write"]]})
-            with self.assertRaises(RuntimeError):
+            changed_grants = save_actual({**new_catalog, "relations": [["example", "PUBLIC write"]]})
+            with self.assertRaisesRegex(RuntimeError, "protected catalog evidence"):
                 exercise.compare_restore(original, restored)
+            with self.assertRaises(RuntimeError):
+                exercise.compare_restore(original, changed_grants)
             changed_authority = canonical[:3] + [["other_role"]] + canonical[4:]
-            save_actual({**new_catalog, "policies": [changed_authority]})
+            changed_role = save_actual({**new_catalog, "policies": [changed_authority]})
             with self.assertRaises(RuntimeError):
-                exercise.compare_restore(original, restored)
+                exercise.compare_restore(original, changed_role)
             # Source parser output never equals a restored, permissive replacement.
-            save_actual({**new_catalog, "policies": [canonical[:5] + ["true", "true"]]})
+            permissive = save_actual({**new_catalog, "policies": [canonical[:5] + ["true", "true"]]})
             with self.assertRaises(RuntimeError):
-                exercise.compare_restore(original, restored)
+                exercise.compare_restore(original, permissive)
+
+    def test_check_parser_requires_the_original_constraint_identity_and_definition(self):
+        exercise = module.Exercise.__new__(module.Exercise)
+        exercise.restore_name = "freightctl_metadata_restore_" + "a" * 32
+        exercise.manifest = {}
+        old = ["example", "valid_size", "CHECK (((size >= 0)))"]
+        canonical = ["example", "valid_size", "CHECK ((size >= 0))"]
+        def parse_check(label, query, database):
+            self.assertEqual(database, exercise.restore_name)
+            self.assertIn('ALTER TABLE public."example" ADD CONSTRAINT "freightctl_check_probe_', query)
+            self.assertIn(old[2], query)
+            self.assertNotIn("DROP CONSTRAINT", query)
+            self.assertTrue(query.endswith("ROLLBACK;"))
+            return json.dumps(canonical)
+        exercise.sql = parse_check
+        exercise.compare_restore_checks([old], [canonical])
+        self.assertEqual(exercise.manifest["check_parser_roundtrip"]["constraints"], [{"table": "example", "name": "valid_size"}])
+        for changed in ([], [["example", "different_name", canonical[2]]],
+                        [["example", "valid_size", "UNIQUE (size)"]],
+                        [["example", "valid_size", "CHECK (true)"]]):
+            with self.subTest(changed=changed), self.assertRaises(RuntimeError):
+                exercise.compare_restore_checks([old], changed)
 
 
 if __name__ == "__main__":

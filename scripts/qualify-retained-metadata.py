@@ -251,11 +251,29 @@ SELECT jsonb_build_object(
             return
         if any(original[key] != restored[key] for key in original if key != "catalog_sha256"):
             raise RuntimeError("restored metadata, permissions, roles or sequence state differs")
-        original_catalog = json.loads((self.private / "original-before-catalog.stdout").read_text())
-        restored_catalog = json.loads((self.private / "restored-catalog.stdout").read_text())
-        if any(original_catalog[key] != restored_catalog[key] for key in original_catalog if key != "policies"):
+        def verified_catalog(label, snapshot):
+            with (self.private / (label + "-catalog.stdout")).open("rb") as stream:
+                wire = stream.read((2 << 20) + 1)
+            if len(wire) > 2 << 20:
+                raise RuntimeError("protected catalog evidence exceeds its bounded snapshot size")
+            text = wire.decode().strip()
+            if hashlib.sha256(text.encode()).hexdigest() != snapshot["catalog_sha256"]:
+                raise RuntimeError("protected catalog evidence differs from its database snapshot")
+            return json.loads(text)
+
+        original_catalog = verified_catalog("original-before", original)
+        restored_catalog = verified_catalog("restored", restored)
+        if original_catalog.keys() != restored_catalog.keys() or any(
+                original_catalog[key] != restored_catalog[key] for key in original_catalog if key not in ("constraints", "policies")):
             raise RuntimeError("restored schema or grants differ")
+        old_constraints, new_constraints = original_catalog["constraints"], restored_catalog["constraints"]
         old_policies, new_policies = original_catalog["policies"], restored_catalog["policies"]
+        if old_constraints == new_constraints and old_policies == new_policies:
+            raise RuntimeError("catalog mismatch has no reparsed constraint or policy expression")
+        if old_constraints != new_constraints:
+            self.compare_restore_checks(old_constraints, new_constraints)
+        if old_policies == new_policies:
+            return
         if len(old_policies) != len(new_policies):
             raise RuntimeError("restored row-security policy inventory differs")
         queries = ["BEGIN; SET LOCAL statement_timeout='20s';"]
@@ -289,8 +307,38 @@ SELECT jsonb_build_object(
             "policies": [{"table": row[0], "name": row[1]} for row in expected],
             "original_catalog_sha256": original["catalog_sha256"],
             "restored_catalog_sha256": restored["catalog_sha256"],
-            "all_other_catalog_fields_equal": True,
+            "all_other_catalog_fields_equal": old_constraints == new_constraints,
             "reparsed_original_predicates_equal_restored_predicates": True,
+        }
+
+    def compare_restore_checks(self, old_constraints, new_constraints):
+        if len(old_constraints) != len(new_constraints):
+            raise RuntimeError("restored constraint inventory differs")
+        queries = ["BEGIN; SET LOCAL statement_timeout='20s';"]
+        expected = []
+        for old, new in zip(old_constraints, new_constraints):
+            if old == new:
+                continue
+            if (len(old) != 3 or len(new) != 3 or old[:2] != new[:2]
+                    or any(not re.fullmatch(r"[a-z_][a-z_0-9]*", name) for name in old[:2])
+                    or not all(isinstance(definition, str) and definition.startswith("CHECK (") for definition in (old[2], new[2]))):
+                raise RuntimeError("restored constraint identity or kind differs")
+            table, name, definition = old
+            # Add the exact PostgreSQL-deparsed definition under a temporary
+            # name on the same restored relation. Keep its existing check in place.
+            probe = "freightctl_check_probe_" + uuid.uuid4().hex
+            queries.append(f'ALTER TABLE public."{table}" ADD CONSTRAINT "{probe}" {definition};')
+            queries.append(f"SELECT jsonb_build_array('{table}','{name}',pg_get_constraintdef(oid)) "
+                           f"FROM pg_constraint WHERE conrelid='public.{table}'::regclass AND conname='{probe}' AND contype='c';")
+            expected.append(new)
+        queries.append("ROLLBACK;")
+        actual = [json.loads(line) for line in self.sql("reparse-original-checks-with-rollback", "\n".join(queries),
+                                                       self.restore_name).splitlines()]
+        if actual != expected:
+            raise RuntimeError("restored check constraints differ after PostgreSQL parsing")
+        self.manifest["check_parser_roundtrip"] = {
+            "method": "exact PostgreSQL check definitions added to the restored relations and compared before rollback",
+            "constraints": [{"table": row[0], "name": row[1]} for row in expected],
         }
 
     def run(self):

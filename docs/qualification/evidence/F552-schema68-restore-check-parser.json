@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "id": "F552",
+  "observed_at": "2026-11-19",
+  "base_candidate": "ca72fd9321923acccbe4d241d3f641d1818ae65a",
+  "qualification_claim": false,
+  "scope": "Scratch schema-68 metadata restore and exact PostgreSQL parser comparison of guarded CHECK constraints",
+  "prior_original_restore_record": "docs/qualification/evidence/F549-original-integrity-batch-terminal.json",
+  "reproduced_failure": {
+    "observation": "The native CLI created the synthetic schema and setup rows. PostgreSQL dumped and restored all tables and roles, then the catalog comparison refused the check constraint text. The only catalog differences were redundant parentheses in one CHECK constraint and two RLS policy expressions.",
+    "first_probe": {
+      "sha256": "84e639eec0ba833a144f37c327a625dfd8436863fa4eb5c09aa48a768d91da88",
+      "bytes": 89
+    },
+    "first_protected_manifest": {
+      "sha256": "3a7270b316c3bd3a2c7e694c1c3dc7434861af6200dd8e45c2cfa86aa1fc51ec",
+      "bytes": 53134
+    },
+    "check": {
+      "table": "artifact_exchange_integrity_reports",
+      "name": "artifact_exchange_integrity_reports_command_wire_check"
+    }
+  },
+  "local_replay": {
+    "environment": "Native macOS ARM CLI with Go 1.27.4, disposable loopback PostgreSQL 16.15, stock pg_dump and transactional pg_restore, 192 MiB and one CPU. Inference disabled.",
+    "postgresql_image": "postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+    "schema": 68,
+    "metadata_tables": 79,
+    "forced_rls_tables": 78,
+    "final_probe": {
+      "sha256": "fcaae8d531a317897baba4b5a2f033b65df8c87a2cbde2b172714abfb9ada9e8",
+      "bytes": 151
+    },
+    "final_protected_manifest": {
+      "sha256": "b1cd6a71194966d9ae7971d4ad314f0f6f6ab801cb8981adf5869d3be6c3226e",
+      "bytes": 61013
+    },
+    "observations": [
+      "Protected catalog contents are bounded and checked against their original database snapshot digest before using SQL definitions.",
+      "PostgreSQL attached a duplicate of the original CHECK on the same restored table and compared its deparsed output to the restored check. The existing check remained active. The policy comparison still used exact parsed definitions.",
+      "The experiment refused the altered CHECK (true) expectation. The original and restored databases had the same metadata after rollback as before the comparison, and the scratch restore database was removed.",
+      "Ownership, grants, relation and column definitions, trigger and function definitions, exact row digests, migration ledger, sequences and runtime role checks retained their original conditions."
+    ]
+  },
+  "static_checks": {
+    "retained_metadata_contracts": 6,
+    "native_summary_contracts": 7,
+    "retained_handoff_contracts": 5,
+    "record_references": "pass"
+  },
+  "sources": [
+    {
+      "path": "scripts/qualify-retained-metadata.py",
+      "sha256": "b78a642867e84177d3251a7d5b06930659a57273b214daf4d2920f9661ec4bc7",
+      "bytes": 26849
+    },
+    {
+      "path": "scripts/test-retained-metadata.py",
+      "sha256": "33b1120b0671939094ac169793841d5b0a11b303f359ca12a272f489a388b1bd",
+      "bytes": 8493
+    },
+    {
+      "path": "docs/retained-metadata-maintenance.md",
+      "sha256": "8d1f593c341ea79fa04153f36edc8b9722c200fed17411c7c7a41eaf5f7d1561",
+      "bytes": 7663
+    }
+  ],
+  "remaining": [
+    "Replay the original Linux restore workflow on the exact corrected source after the current first-attempt batch completes.",
+    "The synthetic scratch replay leaves clean-host disaster recovery, payloads, keys, original retained resource lifecycle and full qualification open."
+  ]
+}

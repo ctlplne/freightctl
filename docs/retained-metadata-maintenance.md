@@ -22,7 +22,16 @@ The exercise saves a PostgreSQL custom-format dump under a new mode-0700 `.priva
 
 It restores through `pg_restore --single-transaction --exit-on-error` into one fresh database whose name contains a newly generated identity. No ownership or grant stripping is requested. It compares every original public table's row count and deterministic digest, migration checksums, forced row security, columns, constraints, indexes, triggers, function definitions, ownership, grants, policies, sequence state and existing cluster-role authority. Version 1 is `schema.sql`; subsequent files begin at `002_`.
 
-PostgreSQL can reparse a dumped policy into a different parenthesis layout. The observer does not remove parentheses or simplify SQL. If only policy text differs, it reparses the original expression using PostgreSQL inside the isolated restored database, compares the resulting policy exactly with the actual restored predicate, and rolls back the temporary change. A changed predicate, role, command, grant or data digest still fails. The private manifest retains both catalog hashes and the parser comparison.
+PostgreSQL can give a restored check constraint or row-security policy a
+different parenthesis layout. When these definitions are the only catalog
+difference, the observer verifies the protected catalog hashes and asks
+PostgreSQL to parse the original definitions in the isolated restore.
+It adds each original check under a temporary name while the restored
+constraint stays active. It compares the resulting definitions exactly
+with the restored catalog and rolls back every temporary change. A changed
+predicate, constraint identity, policy role, command, grant or data digest
+fails the exercise. The private manifest retains the catalog hashes and
+the parser comparisons.
 
 Finally, the exercise compares the original database again, removes only its created restore database and returns the exact PostgreSQL resource to stopped when no other clients are present. It never forces a database drop or terminates other connections. A pass does not apply migrations. Run any upgrade as a separate ordinary administrative operation after reviewing the backup and native migration evidence.
 

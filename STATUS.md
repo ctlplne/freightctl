@@ -444,6 +444,12 @@ records the guarded fast-forward to `5525129` after all prior originals
 became terminal. Gitleaks scanned eight owner-authored and owner-committed
 commits and found zero leaks. Nineteen new original workflows were queued.
 
+[F552](docs/qualification/evidence/F552-schema68-restore-check-parser.json)
+reproduces the schema-68 restore failure and checks the original constraint
+with PostgreSQL’s parser. The disposable restore passed with all 79 tables
+and 78 forced-RLS tables. A changed predicate failed. The comparison rolled
+back its temporary changes. Exact Linux restore and full recovery remain due.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6
