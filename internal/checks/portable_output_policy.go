@@ -53,13 +53,18 @@ func (s *Service) PreparePortableOutputPolicy(ctx context.Context, scope store.S
 		SchemaVersion: 1, Profile: PortableOutputPolicyProfile,
 		SourceTenant: scope.Tenant, SourcePartner: scope.Partner, Source: ref, ObservedState: stored.State,
 		SourceBinding: record.Binding, Registration: OutputPolicyRequest{Definition: definition},
-		RequiredBindings: []string{"producer_id"},
-	}
-	if definition.Signature != nil {
-		manifest.RequiredBindings = append(manifest.RequiredBindings, "definition.signature.key")
-	}
-	if definition.Scanner != nil {
-		manifest.RequiredBindings = append(manifest.RequiredBindings, "definition.scanner")
+		RequiredBindings: portablePolicyBindings(definition, "producer_id"),
 	}
 	return workflow.WritePortableExport(ctx, tx, "PortableOutputPolicyExportPrepared", ref, manifest, output)
+}
+
+func portablePolicyBindings(definition Policy, primary string) []string {
+	bindings := []string{primary}
+	if definition.Signature != nil {
+		bindings = append(bindings, "definition.signature.key")
+	}
+	if definition.Scanner != nil {
+		bindings = append(bindings, "definition.scanner")
+	}
+	return bindings
 }

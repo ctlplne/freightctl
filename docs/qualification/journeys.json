@@ -405,7 +405,8 @@
         "docs/qualification/evidence/F478-portable-workflow-export.json",
         "docs/qualification/evidence/F479-portable-calendar-export.json",
         "docs/qualification/evidence/F480-portable-connection-export.json",
-        "docs/qualification/evidence/F481-portable-output-policy-export.json"
+        "docs/qualification/evidence/F481-portable-output-policy-export.json",
+        "docs/qualification/evidence/F482-portable-intake-policy-export.json"
       ],
       "failures": [],
       "limits": [

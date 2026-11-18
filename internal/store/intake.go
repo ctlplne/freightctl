@@ -52,6 +52,16 @@ func (t *Transaction) IntakePolicy(ctx context.Context, exclusive bool) (*Config
 	}
 	return p, err
 }
+
+func (t *Transaction) IntakePolicyRevision(ctx context.Context, id string, version int) (*Configuration, error) {
+	p := &Configuration{}
+	err := t.Tx.QueryRow(ctx, `SELECT policy_id::text,version,definition,definition_hash,state,revision FROM intake_policies WHERE policy_id=$1 AND version=$2 AND state IN ('active','retired','revoked')`, id, version).Scan(&p.ID, &p.Version, &p.Definition, &p.Hash, &p.State, &p.Revision)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return nil, ErrNotFound
+	}
+	return p, err
+}
+
 func (t *Transaction) SaveIntakePolicy(ctx context.Context, p *Configuration, previous int64) error {
 	event, err := t.Append(ctx, "IntakePolicyChanged", p.ID, p)
 	if err != nil {

@@ -168,6 +168,13 @@ policy after explicit enrollment under a distinct destination producer.
 The new policy had the same definition hash and left destination intake
 unconfigured.
 
+[F482](docs/qualification/evidence/F482-portable-intake-policy-export.json)
+exports an exact intake policy revision for destination review. A retired
+CSV policy was installed under a new identity with the same definition
+hash after the operator supplied the destination's expected version.
+Real custody held a new upload and bound its ordinary check to the
+restored policy.
+
 [F455](docs/qualification/evidence/F455-mixed-delivery-proposals.json) binds
 each AI proposal alias to its registered SFTP or FTPS connection. The
 responder suggests an order. freightctl checks the protocol and creates an

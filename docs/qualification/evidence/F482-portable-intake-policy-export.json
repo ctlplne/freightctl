@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "id": "F482",
+  "observed_at": "2026-11-18",
+  "base_candidate": "371f1fd",
+  "base_evidence": "docs/qualification/evidence/F481-portable-output-policy-export.json",
+  "scope": "Exact historical partner intake policy, reviewed ordinary registration and actual held upload",
+  "qualification_claim": false,
+  "red": {
+    "exit_code": 1,
+    "observation": "The previous executable rejects intake-policy-export and writes no artifact.",
+    "log_sha256": "79908aeb415dc166736adf47256be9a83108a48556683e9b8cdf330d6cd63ce2"
+  },
+  "green": {
+    "platform": "darwin/arm64 CLI integration entry point with Linux arm64 PostgreSQL and real file storage",
+    "go_version": "go1.27.4",
+    "postgresql_image": "postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+    "memory_limit_bytes": 201326592,
+    "cpu_limit": 1,
+    "private_witness_directory": ".private/freightctl-f482-confirm",
+    "executable_sha256": "f990b7fd651fae57f967f9fc15885183147324fd28b3e71e18c8ff27899b604a",
+    "fixture_sha256": "acc88a6609ac9f3f7ebf25f06055febf7ead446bf3c8cff42790b531832546d2",
+    "definition_sha256": "82bdc9cf276adaf777f1ffa5b09b0e13629f4aa8eeae3ea89daa23f1bd3aac38",
+    "archive_sha256": "682dd2e052f21e8b12f763299af02579e0dca1f8f4c45f6ee6ed52b724c6aa02",
+    "exact_retired_intake_revision_and_definition_preserved": true,
+    "different_workspace_and_output_only_revision_refused_without_artifact": true,
+    "ordinary_registration_refuses_unreviewed_template": true,
+    "new_policy_id_bound_after_review_of_destination_head": true,
+    "actual_new_file_held_under_exact_restore_then_passes_csv_checks": true,
+    "workflow_calendar_output_policy_and_independent_review_cli_parent_replay": "pass",
+    "race_enabled": true,
+    "exact_task_container_removed_verified": true,
+    "test_log_sha256": "35829388e210ded253008556cfa88956a97eb17866f278d5c7bbc267ee2d872a"
+  },
+  "checks": {
+    "affected_intake_policy_normalization_with_race": "pass",
+    "focused_log_sha256": "aa27e93fd85be85fa28365b0648117de65b95d2fb4f6614d36720e020a296b5a",
+    "affected_tagged_vet": "pass",
+    "core_architecture": "pass",
+    "format": "pass"
+  },
+  "remaining": [
+    "Native Linux matrix replay and independently operated destination re-enrollment with live signature and scanner dependencies",
+    "Partner mappings, receipt history and complete estate cutover and exit"
+  ]
+}

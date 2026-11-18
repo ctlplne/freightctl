@@ -399,6 +399,64 @@ func TestProcessingWorkflowCLIUsesApprovedTaskAndSeparateOutputRelease(t *testin
 				t.Fatal("export or output registration configured destination ingress", err)
 			}
 			t.Logf("portable output policy definition %s, archive %s", restored.Policy.Hash, receipt.SHA256)
+			t.Run("portable intake restores exact checks after head review", func(t *testing.T) {
+				path := filepath.Join(t.TempDir(), "intake.json")
+				sourceRef := workflow.Reference{ID: sourcePolicy.ID, Version: sourcePolicy.Version, Hash: sourcePolicy.Hash}
+				flags := []string{"-intake-policy-id", sourceRef.ID, "-version", "1", "-definition-hash", sourceRef.Hash, "-output", path}
+				if _, err := command("intake-policy-export", append(flags, destinationFlags...)...); err == nil {
+					t.Fatal("source intake policy visible to another workspace")
+				}
+				if _, err := command("intake-policy-export", append(flags, "-intake-policy-id", record.Policy.ID, "-definition-hash", record.Policy.Hash)...); !errors.Is(err, store.ErrNotFound) {
+					t.Fatal("source output policy escaped through intake export", err)
+				}
+				if _, err := os.Lstat(path); !os.IsNotExist(err) {
+					t.Fatal("failed intake export published a path", err)
+				}
+				raw, err := command("intake-policy-export", flags...)
+				var receipt workflow.PortableExportReceipt
+				if err != nil || json.Unmarshal(raw, &receipt) != nil {
+					t.Fatal("export refused exact retired intake revision", err)
+				}
+				archive, err := os.ReadFile(path)
+				var manifest checks.PortableIntakePolicy
+				if err != nil || json.Unmarshal(archive, &manifest) != nil || secure.Digest(archive) != receipt.SHA256 ||
+					receipt.Size != len(archive) || receipt.Source != sourceRef || manifest.Source != sourceRef ||
+					manifest.Profile != checks.PortableIntakePolicyProfile || manifest.ObservedState != "retired" ||
+					manifest.Registration.ExpectedVersion != -1 || len(manifest.RequiredBindings) != 1 || manifest.RequiredBindings[0] != "expected_version" {
+					t.Fatal("wrong source history or destination review template", err)
+				}
+				register := func(request checks.PolicyRequest) ([]byte, error) {
+					flags := append(destinationFlags, "-request-file", requestFile(request), "-idempotency-key", "cli-recreate-intake")
+					return command("intake-policy-register", flags...)
+				}
+				if _, err := register(manifest.Registration); !errors.Is(err, checks.ErrInput) {
+					t.Fatal("destination registered an unreviewed intake template", err)
+				}
+				manifest.Registration.ExpectedVersion = 0
+				raw, err = register(manifest.Registration)
+				var result checks.Result
+				var restored store.Configuration
+				if err != nil || json.Unmarshal(raw, &result) != nil || json.Unmarshal(result.Resource, &restored) != nil ||
+					restored.ID == sourceRef.ID || restored.Version != 1 || restored.Hash != sourceRef.Hash || restored.State != "active" {
+					t.Fatal("ordinary registration changed source checks or reused its identity", err)
+				}
+				file, _, err := service.Accept(ctx, destination, "portable-intake-replay", int64(len(body)), secure.Digest([]byte(body)), strings.NewReader(body))
+				if err != nil {
+					t.Fatal("ordinary destination intake", err)
+				}
+				view, err := control.Get(ctx, destination, file.ID)
+				if err != nil || view.Check == nil || view.Check.PolicyID != restored.ID || view.Check.PolicyHash != restored.Hash || view.Check.State != "held" {
+					t.Fatal("restored policy failed to hold and bind new bytes", err)
+				}
+				if _, err := control.Run(ctx, destination, file.ID, "cli-restored-intake-run"); err != nil {
+					t.Fatal("ordinary check of recovered rules", err)
+				}
+				view, err = control.Get(ctx, destination, file.ID)
+				if err != nil || view.Check == nil || view.Check.State != "passed" || view.Check.ReportHash == "" {
+					t.Fatal("ordinary check failed to preserve the accepted original CSV behavior", err)
+				}
+				t.Logf("portable intake policy definition %s, archive %s", restored.Hash, receipt.SHA256)
+			})
 		})
 	})
 }

@@ -98,8 +98,8 @@ references to authorized destination revisions when moving between
 workspaces. Then submit it through ordinary `workflow-draft`. The
 destination creates a separate draft that needs its own approval. The
 export checksum appears in the CLI receipt and the scoped preparation
-event. Export connection and producer-bound output policy revisions
-separately. Intake policy recovery remains open.
+event. Export each referenced connection, intake policy and
+producer-bound output policy revision separately.
 
 ## Export a schedule and compare its clock rules
 
@@ -181,3 +181,30 @@ destination registry checks the producer and those dependencies and
 returns a new policy reference you can use when rebinding a workflow.
 An output policy governs that producer's workflow output. The partner
 has a separate intake policy for uploads.
+
+## Export a partner's intake policy revision
+
+Record the ID, version and definition hash returned by
+`intake-policy-status` or an earlier registration receipt. A workspace
+administrator with intake management permission can export that exact
+revision after a replacement or revocation.
+
+```sh
+umask 077
+freightctl intake-policy-export --tenant "$TENANT" --partner "$PARTNER" \
+  --intake-policy-id "$POLICY_ID" --version "$VERSION" \
+  --definition-hash "$DEFINITION_SHA256" \
+  --output .private/portable-intake-policy.json
+jq '.destination_registration' .private/portable-intake-policy.json \
+  > .private/intake-policy-registration.json
+```
+
+The `freightctl-portable-intake-policy-v1` file preserves the reviewable
+checks and source state. In the template, `expected_version` starts at
+`-1` so ordinary registration refuses it. Check the destination's
+current intake policy. Set the field to its observed version, or to
+`0` after confirming there is no policy. Rebind any required signature
+key and scanner to approved destination revisions and review the effect
+on new uploads. Apply the reviewed request with `intake-policy-register`.
+New uploads use the resulting destination policy and remain held until
+they pass its checks and an authorized operator releases them.
