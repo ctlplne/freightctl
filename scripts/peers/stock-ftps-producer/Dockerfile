@@ -17,4 +17,5 @@ RUN set -eux; \
     rm -r /tmp/pinned-apks /tmp/pinned-packages
 
 COPY start.sh /usr/local/bin/freightctl-stock-ftps
+COPY session.sh /usr/local/bin/freightctl-stock-ftps-session
 ENTRYPOINT ["/bin/sh", "/usr/local/bin/freightctl-stock-ftps"]

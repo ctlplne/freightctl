@@ -78,5 +78,6 @@ vsftpd_log_file=/tmp/freightctl-vsftpd.log
 xferlog_file=/tmp/freightctl-xfer.log
 CONF
 export OPENSSL_CONF=/fixture/openssl.cnf
-printf '%s\n' '2121 stream tcp nowait.8 root /usr/sbin/vsftpd vsftpd /fixture/vsftpd.conf' >/fixture/inetd.conf
+: >/tmp/freightctl-worker.log
+printf '%s\n' '2121 stream tcp nowait.8 root /bin/sh sh /usr/local/bin/freightctl-stock-ftps-session' >/fixture/inetd.conf
 exec /bin/busybox-extras inetd -f -R 8 /fixture/inetd.conf

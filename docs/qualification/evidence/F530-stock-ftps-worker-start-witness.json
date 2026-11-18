@@ -1,0 +1,211 @@
+{
+  "schema_version": 1,
+  "id": "F530",
+  "observed_at": "2026-11-19",
+  "base_candidate": "729198bd1dd1198c4041b9a43ae38509952cde5a",
+  "qualification_claim": false,
+  "scope": "Separate the stock x86 FTPS fixture worker startup from the TLS policy witness",
+  "prior_native_failure": "docs/qualification/evidence/F528-original-batch-and-native-ftps.json",
+  "diagnostic_change": "BusyBox inetd starts the pinned stock vsftpd with the accepted descriptors. Its parent logs only a fixed started line and numeric shell status. OpenSSL records handshake state. The required TLS 1.2 refusal alert and full positive TLS 1.3 transfer checks stay enforced.",
+  "emulated_amd64": {
+    "environment": "macOS ARM host with emulated Linux amd64 Docker fixture, exact pinned Alpine peer binaries, host OpenSSL",
+    "original_outcome": {
+      "workload": "pinned-stock-ftps-explicit-probe",
+      "platform": "emulated-linux-amd64",
+      "state": "failed",
+      "tls": {
+        "categories": [
+          "unexpected-eof"
+        ],
+        "stock_control_connections": 0
+      },
+      "stderrevidence": {
+        "sha256": "735f307811fa10cf139c02b20b64519f10f2a00beb590f3aef167b13473b0687",
+        "bytes": 130
+      }
+    },
+    "original_report": {
+      "sha256": "46cf476492c732152c891249ae240cd5fd5b4e9708d4ce8d7ccb41c5b4b0c34f",
+      "bytes": 291
+    },
+    "diagnosed_outcome": {
+      "workload": "pinned-stock-ftps-explicit-probe",
+      "platform": "emulated-linux-amd64",
+      "state": "failed",
+      "worker_lifecycle": [
+        "started",
+        "exit 133"
+      ],
+      "tls": {
+        "categories": [
+          "unexpected-eof"
+        ],
+        "stock_control_connections": 0,
+        "client_hello_attempted": true,
+        "stock_worker_lifecycle": {
+          "state": "recorded",
+          "started": 1,
+          "exit_codes": [
+            133
+          ]
+        }
+      },
+      "stderrevidence": {
+        "sha256": "9d43d4d6b2a167ee14077cc37f0d7c11e6f4f6a4fda40dc4e6dad2132fe7fc87",
+        "bytes": 272
+      }
+    },
+    "diagnosed_report": {
+      "sha256": "1f240ebcc8e9ad8fabe921925dcbcff075a6f94f020750ee13465bb06eda5197",
+      "bytes": 452
+    },
+    "stock_executable_identity": {
+      "sha256": "83eb94ebd240dbd607f87b3a0b1b6ff4b1a43684a9f815172705ee1b8ca007b9",
+      "bytes": 183
+    },
+    "worker_record": {
+      "sha256": "52766575d2fa1a7e753b4bab677e6d5da412cc5244ed4f2b0f96d5573ea775a3",
+      "bytes": 17
+    },
+    "interpretation": "The OpenSSL trace reached its ClientHello write attempt. One accepted socket reached the launcher and the stock worker returned shell status 133 before recording a control connection. The underlying signal or syscall and its relation to the original native failure remain unverified."
+  },
+  "arm_replay": {
+    "environment": "macOS ARM, protected real PostgreSQL and stock clients, native architecture stock Alpine container",
+    "summary": {
+      "sha256": "d418c7137c03bca5a3e87b0b31a54dde9f3a9846c743e2d24be7cdd3fadf915d",
+      "bytes": 3379
+    },
+    "modes": {
+      "explicit": {
+        "confirmed_downloads": 4,
+        "evidence": {
+          "continuity.stdout": {
+            "bytes": 78,
+            "sha256": "45f579b7970bdfa13784cc8c1e71857ad8ac02d380a684adde803558cb44f25e"
+          },
+          "journeys.stdout": {
+            "bytes": 4667,
+            "sha256": "4a31cd5a5ea9d5021ec3edac6ef65e4f477bda9d7c1a2e0d0cae346ac365c6c8"
+          },
+          "peer-identity.stdout": {
+            "bytes": 184,
+            "sha256": "3456034b51025c7537dee3f01795258f7b9c462e56a2745c3a4d80d6fc83a994"
+          },
+          "producer-files.stdout": {
+            "bytes": 3584,
+            "sha256": "1e4f87279a340f3207a5653b1a600f534d516365c0efaf32302586715e451c19"
+          },
+          "reject-tls12.stderr": {
+            "bytes": 309,
+            "sha256": "68be8906685f5c61050331bdcfd6166b23c8f6dee83a8cb15099f68d41c8bbf6"
+          },
+          "vsftpd.log": {
+            "bytes": 1121,
+            "sha256": "f5b386a496ac289c60ec116b4e7a6c0e598eca3877738d2e687df3fbf0a04e69"
+          },
+          "worker.log": {
+            "bytes": 45,
+            "sha256": "1a4eb2ecbfb0795c84369678442df8b48bb2b7ac56958ce3a0f4dbb135bc5f6e"
+          },
+          "xfer.log": {
+            "bytes": 368,
+            "sha256": "788a047c82b639e844a4668a0981d5e229f362077411014fe98817346df2a999"
+          }
+        },
+        "journeys": 2,
+        "listener_restarts": 0,
+        "stock_worker_lifecycle": {
+          "exit_codes": [
+            0,
+            0,
+            0
+          ],
+          "started": 3,
+          "state": "recorded"
+        },
+        "tls12_refused": true,
+        "unchanged_source": true
+      },
+      "implicit": {
+        "confirmed_downloads": 4,
+        "evidence": {
+          "continuity.stdout": {
+            "bytes": 78,
+            "sha256": "d9608878e2102df2368e5959433a925e9409ce18ff270d8491ed878c6bd58db9"
+          },
+          "journeys.stdout": {
+            "bytes": 4669,
+            "sha256": "c916619731d4ee2a804226198cda493e1610e352b19bfb0296ec23ad72bec368"
+          },
+          "peer-identity.stdout": {
+            "bytes": 184,
+            "sha256": "3456034b51025c7537dee3f01795258f7b9c462e56a2745c3a4d80d6fc83a994"
+          },
+          "producer-files.stdout": {
+            "bytes": 3584,
+            "sha256": "0ae6c9dd2f8d1742901afbc9daf277b4543479753181fae8d5abace5aebb8db9"
+          },
+          "reject-tls12.stderr": {
+            "bytes": 309,
+            "sha256": "68be8906685f5c61050331bdcfd6166b23c8f6dee83a8cb15099f68d41c8bbf6"
+          },
+          "vsftpd.log": {
+            "bytes": 1121,
+            "sha256": "ced3ac9f24d96155a78ede7d0fb1cfd917b6cf7387239460b1aa3a1df11c15db"
+          },
+          "worker.log": {
+            "bytes": 45,
+            "sha256": "1a4eb2ecbfb0795c84369678442df8b48bb2b7ac56958ce3a0f4dbb135bc5f6e"
+          },
+          "xfer.log": {
+            "bytes": 368,
+            "sha256": "59548adf908fefcc5eb8fb248e89d9c7ba99f72e277944ef3197235054c076bf"
+          }
+        },
+        "journeys": 2,
+        "listener_restarts": 0,
+        "stock_worker_lifecycle": {
+          "exit_codes": [
+            0,
+            0,
+            0
+          ],
+          "started": 3,
+          "state": "recorded"
+        },
+        "tls12_refused": true,
+        "unchanged_source": true
+      }
+    }
+  },
+  "checks": [
+    "Original stock binary hashes remain identical under both architectures.",
+    "Malformed, oversized and absent worker records remain distinguishable. The classifier outputs only known categories and counts.",
+    "No TLS setting, seccomp configuration, container capability, peer version or final verification assertion was relaxed."
+  ],
+  "sources": [
+    {
+      "path": "scripts/peers/stock-ftps-producer/Dockerfile",
+      "sha256": "a18d68f1c72faffab2f9d05b611eff374b81d4c10b99292af96fcdf204558609",
+      "bytes": 1024
+    },
+    {
+      "path": "scripts/peers/stock-ftps-producer/start.sh",
+      "sha256": "a66f93aa0d8667886ddbfbc4d774aee9b448e1440bbf0d2dd1a1f16445688aa9",
+      "bytes": 2219
+    },
+    {
+      "path": "scripts/peers/stock-ftps-producer/session.sh",
+      "sha256": "7f03f1300ba1d61d8937ff545e4f42250facefc4c8d46f0af8c8b15e4a3d483a",
+      "bytes": 359
+    },
+    {
+      "path": "scripts/qualify-stock-ftps-producer.py",
+      "sha256": "26651aec4df6ca112227d90b669124d361dd1fd980b6dd5cea66c9152e237b68",
+      "bytes": 19587
+    }
+  ],
+  "remaining": [
+    "Replay the exact TLS rejection and positive exchanges on native Linux ARM and x86 with the new witness. Resolve the native x86 worker failure without relaxing the sandbox or transport checks."
+  ]
+}

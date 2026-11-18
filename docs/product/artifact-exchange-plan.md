@@ -224,10 +224,12 @@ stock `inetd` listener passed two complete serial journeys per mode by starting
 vsftpd per connection. The same supervised journey passed on native Linux ARM.
 The native x86 gate remains red because the probe exited without the required
 TLS 1.2 refusal alert. The later x86 diagnosis reports unexpected EOF and zero
-producer control connections. Standalone stability and derivation lineage
-remain owed.
+producer control connections. The emulated reproduction reaches the stock
+worker, which exits with shell status 133 before recording a control session.
+Native confirmation, standalone stability and derivation lineage remain owed.
 [F503](../qualification/evidence/F503-ftps-agent-stock-sftp.json) [F509](../qualification/evidence/F509-stock-ftps-producer-exchange.json) [F510](../qualification/evidence/F510-supervised-stock-ftps-producer.json) [F520](../qualification/evidence/F520-native-stock-ftps-first-results.json)
 [F528](../qualification/evidence/F528-original-batch-and-native-ftps.json)
+[F530](../qualification/evidence/F530-stock-ftps-worker-start-witness.json)
 
 An operator can provision and withdraw the exact SFTP route through the same
 typed HTTPS and CLI commands. The agent keeps its existing permissions, and

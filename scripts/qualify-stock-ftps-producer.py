@@ -181,6 +181,25 @@ def verify_identity(path, native_arch, vsftpd, inetd):
             'stock peer architecture or executable identity changed')
 
 
+def worker_lifecycle(path):
+    if not path.exists():
+        return None
+    with path.open('rb') as stream:
+        data = stream.read(257)
+    if len(data) > 256:
+        return {'state': 'outside-evidence-bound'}
+    starts, exits = 0, []
+    for line in data.splitlines():
+        if line == b'started':
+            starts += 1
+            continue
+        result = re.fullmatch(rb'exit ([0-9]{1,3})', line)
+        if not result or not 0 <= int(result[1]) <= 255 or len(exits) >= starts:
+            return {'state': 'invalid-record'}
+        exits.append(int(result[1]))
+    return {'state': 'recorded', 'started': starts, 'exit_codes': exits}
+
+
 def tls12_diagnosis(directory):
     stderr = directory / 'reject-tls12.stderr'
     if not stderr.exists():
@@ -198,7 +217,9 @@ def tls12_diagnosis(directory):
     categories = matches or ['unclassified']
     native = directory / 'vsftpd.log'
     count = native.read_bytes().count(b'] CONNECT: ') if native.exists() else None
-    return {'categories': categories, 'stock_control_connections': count}
+    return {'categories': categories, 'stock_control_connections': count,
+            'client_hello_attempted': b'tls write client hello' in err,
+            'stock_worker_lifecycle': worker_lifecycle(directory / 'worker.log')}
 
 
 def remove_owned(kind, name, label, directory):
@@ -241,7 +262,7 @@ def replay(directory, image, label, mode, binary, native_arch, identities):
                               'uname -m; cat /etc/alpine-release; sha256sum /usr/sbin/vsftpd /bin/busybox-extras'])
             verify_identity(info, native_arch, *identities)
             _, tls = command(directory, 'reject-tls12',
-                             ['openssl', 's_client', '-connect', address, '-tls1_2', '-brief',
+                             ['openssl', 's_client', '-connect', address, '-tls1_2', '-brief', '-state',
                               *(['-starttls', 'ftp'] if mode == 'explicit' else [])], expected=1, data=b'')
             require(b'alert protocol version' in tls.read_bytes(), 'producer did not reject TLS 1.2 by policy')
             env = {**os.environ, 'FREIGHTCTL_TEST_STOCK_FTPS_PRODUCER_FILE': str(ref)}
@@ -251,7 +272,8 @@ def replay(directory, image, label, mode, binary, native_arch, identities):
             verify_journeys(journeys, mode)
             archive, _ = command(directory, 'producer-files', ['docker', 'cp', container + ':/producer/inbox', '-'])
             xferlog, native = directory / 'xfer.log', directory / 'vsftpd.log'
-            for log in (xferlog, native):
+            worker = directory / 'worker.log'
+            for log in (xferlog, native, worker):
                 command(directory, 'copy-' + log.stem, ['docker', 'cp', f'{container}:/tmp/freightctl-{log.name}', log])
             verify_source(archive, xferlog, native, published)
             state, _ = command(directory, 'continuity', ['docker', 'inspect', '--format',
@@ -260,7 +282,8 @@ def replay(directory, image, label, mode, binary, native_arch, identities):
             require(state.read_text().split() == [created, 'true', 'false', '0'], 'stock producer stopped or restarted')
             return {'journeys': 2, 'confirmed_downloads': 4, 'tls12_refused': True,
                     'unchanged_source': True, 'listener_restarts': 0,
-                    'evidence': {p.name: record_file(p) for p in (info, tls, journeys, archive, xferlog, native, state)}}
+                    'stock_worker_lifecycle': worker_lifecycle(worker),
+                    'evidence': {p.name: record_file(p) for p in (info, tls, journeys, archive, xferlog, native, worker, state)}}
         finally:
             try:
                 with (directory / 'container.log').open('xb') as log:
@@ -268,10 +291,12 @@ def replay(directory, image, label, mode, binary, native_arch, identities):
                                    stderr=subprocess.STDOUT, timeout=10, check=False)
             except subprocess.TimeoutExpired:
                 pass
-            native = directory / 'vsftpd.log'
-            if not native.exists():
+            for name in ('vsftpd.log', 'worker.log'):
+                log = directory / name
+                if log.exists():
+                    continue
                 try:
-                    subprocess.run(['docker', 'cp', container + ':/tmp/freightctl-vsftpd.log', native],
+                    subprocess.run(['docker', 'cp', f'{container}:/tmp/freightctl-{name}', log],
                                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=10, check=False)
                 except subprocess.TimeoutExpired:
                     pass
@@ -331,7 +356,7 @@ def main():
         if result['state'] == 'failed':
             result['tls12_diagnosis'] = {mode: report for mode in ('explicit', 'implicit')
                                          if (report := tls12_diagnosis(directory / mode)) is not None}
-            observations = {'build-peer.stdout', 'journeys.stdout', 'continuity.stdout', 'container.log', 'vsftpd.log'}
+            observations = {'build-peer.stdout', 'journeys.stdout', 'continuity.stdout', 'container.log', 'vsftpd.log', 'worker.log'}
             result['diagnostics'] = {str(p.relative_to(directory)): record_file(p) for p in sorted(directory.rglob('*'))
                                      if (p.suffix == '.stderr' or p.name in observations) and p.stat().st_size}
         payload = json.dumps(result, sort_keys=True)

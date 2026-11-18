@@ -310,6 +310,13 @@ records the guarded fast-forward from `8219fd9` to `2c19ff2`. Gitleaks
 reports zero leaks across eight owner commits. The first snapshot contains 17
 original workflows, including the new native receiver-check replays.
 
+[F530](docs/qualification/evidence/F530-stock-ftps-worker-start-witness.json)
+reproduces the x86 FTPS EOF under emulation. The stock launcher starts a
+worker that returns shell status 133 before logging a control connection.
+The full ARM replay passes both modes and the required TLS 1.2 refusal.
+The new witness preserves the original sandbox and transport checks. The
+exact native x86 cause remains open.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6

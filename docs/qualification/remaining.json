@@ -2061,7 +2061,8 @@
         "docs/qualification/evidence/F525-native-operator-browser-and-source-scans.json",
         "docs/qualification/evidence/F526-stock-sftp-onward-recovery-boundary.json",
         "docs/qualification/evidence/F527-reviewed-onward-readback.json",
-        "docs/qualification/evidence/F528-original-batch-and-native-ftps.json"
+        "docs/qualification/evidence/F528-original-batch-and-native-ftps.json",
+        "docs/qualification/evidence/F530-stock-ftps-worker-start-witness.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -2243,7 +2244,8 @@
         "F523 verifies real stock SFTP collection worker death after sealing. The original lease expires, and the replacement recovers one exact object and receipt with no new source session. The CLI reviews the original manifest, input and artifact. Native Linux and onward-response interruption remain due.",
         "F524 passes the browser exchange from collected revision through offer, scoped download and owned copy to separately approved stock SFTP. The exact browser work retry recovers the committed result with one delivery attempt. Native Linux, other browsers and loss at the onward SFTP protocol boundary remain due.",
         "F526 kills the real onward worker after stock OpenSSH publishes and before local success. Both legacy recovery refusals preserve the original expired lease, one attempt, one fence and no receiver contact. F527 supplies the exact reviewed-run readback under ordinary agent permissions.",
-        "F527 passes private onward recovery after actual stock SFTP worker death. Missing final bytes retain ambiguity, matching bytes recover integrity, and the browser restores the same observation after reload without a send. Native Linux and loss at the SFTP acknowledgment boundary remain due."
+        "F527 passes private onward recovery after actual stock SFTP worker death. Missing final bytes retain ambiguity, matching bytes recover integrity, and the browser restores the same observation after reload without a send. Native Linux and loss at the SFTP acknowledgment boundary remain due.",
+        "F530 reproduces x86 EOF under emulation. Stock inetd launches one worker, which returns shell status 133 before logging a control connection. The retained TLS refusal and complete stock exchange pass again in both ARM modes. Exact native outcomes and the x86 cause remain open."
       ],
       "current_item": {
         "id": "F425",
