@@ -246,6 +246,12 @@ TLS 1.2 refusal alert, so its gate remains red. The next run captures bounded
 client and producer diagnostics. Both original native PostgreSQL jobs failed
 and both enforcing independent OpenPGP scans passed.
 
+[F521](docs/qualification/evidence/F521-guarded-sftp-console-batch.json)
+records the fast-forward to `8219fd9` after all three preceding originals
+finished. Gitleaks found zero leaks across six owner commits. The first
+snapshot contains eight queued original runs, including the operator browser
+and stock FTPS producer replays.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6

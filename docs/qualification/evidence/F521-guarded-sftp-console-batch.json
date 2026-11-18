@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "id": "F521",
+  "observed_at": "2026-11-19",
+  "candidate": "8219fd9a9194b8262cfb66cc6e847c0e9d03dae4",
+  "qualification_claim": false,
+  "preceding_terminal_record": "docs/qualification/evidence/F520-native-stock-ftps-first-results.json",
+  "operator_browser_record": "docs/qualification/evidence/F519-browser-operator-sftp-provision.json",
+  "push": {
+    "previous": "84030389adea11fe12995300dff1177cfd282dbb",
+    "remote_ref": "refs/heads/main",
+    "remote_head_verified": true,
+    "fast_forward": true,
+    "owner_author_and_committer": "imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>",
+    "commits": [
+      "a3c4194e65853dc8318c9ba99ecb0bb316a6ad9a",
+      "34e0846fd0c87027adc407f5ca63ef796fd49bce",
+      "bc7c1bc7263fcef5a4f313176da95db7db5bc177",
+      "4aa23941f3098d5bd0e1e874692fd08b7ae8a97e",
+      "43999a97bf1e391d875a2c0cf8e91d6631f1e23b",
+      "8219fd9a9194b8262cfb66cc6e847c0e9d03dae4"
+    ],
+    "previous_attempt_one_workflows_terminal": 3,
+    "pre_push_guard": ".githooks/pre-push",
+    "gitleaks_version": "8.30.1",
+    "gitleaks_commits_scanned": 6,
+    "gitleaks_leaks": 0,
+    "redacted_log": {
+      "sha256": "d674b977164b85bdeb2c3ba12122dd7eead6f1cdc25cffa4ecfb7d1440074ff7",
+      "bytes": 188
+    }
+  },
+  "originals_at_first_observation": [
+    {
+      "workflow": "Native independent DAV application",
+      "run": 44382172336,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "workflow": "Stock peer and browser qualification",
+      "run": 44382172368,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "workflow": "Native Windows and macOS unit checks",
+      "run": 44382172673,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "workflow": "Native reproducible core binaries",
+      "run": 44382172624,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "workflow": "Native FTPS dispatch approval qualification",
+      "run": 44382172593,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "workflow": "Native browser and FTPS operator qualification",
+      "run": 44382172459,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "workflow": "Native artifact receive browser",
+      "run": 44382172482,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "workflow": "Native Linux Go, PostgreSQL and fuzz",
+      "run": 44382172367,
+      "attempt": 1,
+      "status": "queued"
+    }
+  ],
+  "originals_snapshot": {
+    "sha256": "32e9d4dcaa9519e670ee244a2d746c10af76bc039d6822ae9fe1c050ad3e7415",
+    "bytes": 2512
+  },
+  "remaining": [
+    "Refresh the complete original-run inventory before the next guarded push.",
+    "Collect the native operator browser and stock FTPS runner outcomes. Preserve prior failures and final-source requirements."
+  ]
+}
