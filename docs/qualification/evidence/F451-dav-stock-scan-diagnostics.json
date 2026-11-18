@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "id": "F451",
+  "observed_at": "2026-11-18",
+  "base_candidate": "56da91bd1bb94e7f13a52d2d6dd51bc0ec23c27c",
+  "qualification_claim": false,
+  "original_failure": "docs/qualification/evidence/F450-dav-native-proof-dependencies.json",
+  "changed": "Emit exact GO advisory identifiers grouped by the pinned converter\u2019s result headings and bind them to the original closed scan report hash. Neither raw report contents nor trace or path data enter the Actions summary. The existing converter remains the only findings gate.",
+  "local_red": "Both original stock jobs failed at source-findings-gate without advisory IDs. The focused regression confirmed that the prior peer helper exposed no scoped scan diagnostics.",
+  "local_green": "Seven rclone identity and diagnostic contract tests pass. The parser extracts module-only GO-2026-5932 from the actual local converter and the expected symbol advisory from a synthetic report processed by the pinned converter. Python compilation, diff and ledger checks pass.",
+  "source_files": [
+    {
+      "reference": "docs/protocols/webdav-read-profile.md",
+      "bytes": 40708,
+      "sha256": "a83e801f6cbc3e0c82fb728668eb41c19887d4e9619b65fe3a93fa0ebfa6a10d"
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "bytes": 718774,
+      "sha256": "a9c07c1b14421ded988ec26ae1f2f3f06cb3ca44188defe681d5b197d1cb324e"
+    },
+    {
+      "reference": "scripts/acquire-rclone-native.py",
+      "bytes": 8706,
+      "sha256": "ff484c8f5470d110c7a45a7d0908049c0775cfb8720db4519779b74ae1844b4c"
+    },
+    {
+      "reference": "scripts/rclone_peer.py",
+      "bytes": 3456,
+      "sha256": "dd765c4c16cf8c4c8642e3ee5247c8cb38f66b8810db03b3d903fa62057194b2"
+    },
+    {
+      "reference": "scripts/test-rclone-peer.py",
+      "bytes": 5217,
+      "sha256": "74d67b322014edbfe9f03793c609d6eba618311c127cdeeac5f3adac6d9c5b74"
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f451-findings-red.log",
+      "bytes": 1414,
+      "sha256": "3c4e87bb827c6c43008236e9433afa08009cecbd2f78295205dd16a5249cf3de"
+    },
+    {
+      "reference": ".private/freightctl-f451-findings-green.log",
+      "bytes": 252,
+      "sha256": "bc0fca50273042646e3c75a9931f4618df413abdd90c92c77bd5748a1b242d89"
+    },
+    {
+      "reference": ".private/freightctl-f448-govulncheck-converter.log",
+      "bytes": 3183,
+      "sha256": "7bf9d450eb1a75ae1f9cf9579b524dba5da0c342e2587896e4c1f38d4a7efcf0"
+    }
+  ],
+  "owed": [
+    "Replay actual stock full-source and binary security checks on Linux ARM64 and AMD64",
+    "Continue preserving original failures, receiver conformance and final-source qualification"
+  ]
+}

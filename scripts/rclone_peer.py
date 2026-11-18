@@ -1,4 +1,4 @@
-"""Exact stock peer identity checks; these never download or execute a peer."""
+"""Stock peer identity checks and redacted scan diagnostics."""
 import re
 
 MODULE = 'github.com/rclone/rclone'
@@ -52,3 +52,21 @@ def validate_native(environ, system, machine, commit):
             or environ.get('GITHUB_SHA') != commit):
         raise ValueError('stock peer requires its exact native Actions candidate')
     return arch
+
+
+def scan_finding_ids(lines):
+    """Extract advisory IDs from the pinned converter's result headings."""
+    sections = {f'=== {scope.title()} Results ==='.encode(): scope
+                for scope in ('symbol', 'package', 'module')}
+    findings = {scope: set() for scope in sections.values()}
+    title = re.compile(rb'Vulnerability #[1-9][0-9]*: (GO-[0-9]{4}-[0-9]{4,8})')
+    scope = None
+    for line in lines:
+        line = line.rstrip(b'\r\n')
+        if line.startswith(b'=== '):
+            scope = sections.get(line)
+        elif scope is not None:
+            match = title.fullmatch(line)
+            if match:
+                findings[scope].add(match[1].decode('ascii'))
+    return {scope: sorted(ids) for scope, ids in findings.items()}

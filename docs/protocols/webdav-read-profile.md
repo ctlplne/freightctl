@@ -427,6 +427,9 @@ backend set. The pinned Go module/go.mod sums and upstream tag commit must
 match;the actual binary's native build information,dependency inventory and
 SHA256 are checked. Complete default source and actual binary vulnerability
 reports go through the enforcing pinned converter before any protocol proof.
+CI records the advisory IDs by reachability level and the SHA-256 of each
+closed report. The converter's original exit code decides whether the peer
+may run.
 No dependency replacement,backend-only build,security waiver or arbitrary
 GitHub resource ceiling is used. Full private reports stay outside Git.
 

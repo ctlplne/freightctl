@@ -61,6 +61,10 @@ def main():
                           child_system_cpu_seconds=cpu_after.ru_stime-cpu_before.ru_stime,
                           max_completed_child_rss_kib=cpu_after.ru_maxrss,
                           stdout_sha256=digest(out), stderr_sha256=digest(err)))
+        if input_path is not None:
+            with out.open('rb') as converted:
+                steps[-1]['finding_ids'] = peer.scan_finding_ids(converted)
+            steps[-1]['scan_report_sha256'] = digest(input_path)
         if result.returncode:
             raise RuntimeError('native-peer-command-failed')
         return out
@@ -131,13 +135,16 @@ def main():
     with output.open('x') as target:
         json.dump(manifest, target, indent=2)
         target.write('\n')
+    public_step_fields = ('name', 'exit_code', 'wall_seconds', 'child_user_cpu_seconds',
+                          'child_system_cpu_seconds', 'max_completed_child_rss_kib',
+                          'finding_ids', 'scan_report_sha256')
     print(json.dumps(dict(state=state, candidate=commit, architecture=arch,
                           manifest_sha256=digest(output), protocol_qualified=False,
                           runner_reported_cpus=manifest['runner_reported_cpus'],
                           runner_reported_physical_bytes=manifest['runner_reported_physical_bytes'],
                           binary_bytes=manifest.get('binary_bytes'),
-                          steps=[{k: s[k] for k in ('name','exit_code','wall_seconds','child_user_cpu_seconds',
-                                 'child_system_cpu_seconds','max_completed_child_rss_kib')} for s in steps])), flush=True)
+                          steps=[{k: s[k] for k in public_step_fields if k in s}
+                                 for s in steps])), flush=True)
     return 0 if state == 'accepted-for-protocol-proof' else 1
 
 

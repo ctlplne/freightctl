@@ -75,5 +75,31 @@ class IdentityGuards(unittest.TestCase):
             peer.validate_binary(changed, 'arm64')
 
 
+class FindingsSummary(unittest.TestCase):
+    def test_extracts_only_exact_advisory_ids_from_converter_sections(self):
+        lines = [
+            b'Vulnerability #1: GO-2026-0009\n',
+            b'=== Symbol Results ===\n',
+            b'Vulnerability #1: GO-2026-6859\n',
+            b'  private source trace and paths\n',
+            b'Vulnerability #2: GO-2026-6859\n',
+            b'Vulnerability #3: GO-2026-12345\r\n',
+            b'Vulnerability #3: GO-2026-0001\x1b[0m\n',
+            b'Vulnerability #3: GO-2026-0002 private path\n',
+            b'=== Package Results ===\n',
+            b'Vulnerability #4: GO-2026-0003\n',
+            b'=== Module Results ===\n',
+            b'Vulnerability #5: GO-2026-5932\n',
+        ]
+        self.assertEqual(peer.scan_finding_ids(lines),
+                         {'symbol': ['GO-2026-12345', 'GO-2026-6859'],
+                          'package': ['GO-2026-0003'], 'module': ['GO-2026-5932']})
+
+    def test_clean_or_unrecognized_converter_output_has_no_ids(self):
+        for lines in ([], [b'private converter error\n'], [b'No vulnerabilities found.\n']):
+            self.assertEqual(peer.scan_finding_ids(lines),
+                             {'symbol': [], 'package': [], 'module': []})
+
+
 if __name__ == '__main__':
     unittest.main()
