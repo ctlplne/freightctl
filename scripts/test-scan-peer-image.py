@@ -80,6 +80,7 @@ class ScanOrchestration(unittest.TestCase):
                     return REAL_RUN(arguments, stdout=stdout, stderr=stderr, timeout=timeout)
                 action = arguments[1:3]
                 if action == ['image', 'inspect']:
+                    self.assertIn(arguments[-1], (runner.gate.PEER_TAG, runner.gate.SCANNER_IMAGE))
                     value = image if arguments[-1] != runner.gate.SCANNER_IMAGE else [dict(Architecture=arch, Os='linux')]
                     stdout.write(json.dumps(value).encode())
                 elif action == ['image', 'save']:

@@ -1,7 +1,8 @@
 // Executed only in the actual native candidate image during its offline build
 // step. No model, credentials, private keys or cryptographic fixture generation.
 import assert from "node:assert/strict";
-import { existsSync, readFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { createReadStream, existsSync, readFileSync } from "node:fs";
 import * as openpgp from "openpgp";
 
 let stage = "runtime-version";
@@ -21,6 +22,7 @@ const identity = {
     ? process.arch
     : "unrecognized",
   embedded_zlib: publicVersion(process.versions.zlib),
+  embedded_openssl: publicVersion(process.versions.openssl),
   shared_openssl: publicFlag(process.config.variables.node_shared_openssl),
   shared_zlib: publicFlag(process.config.variables.node_shared_zlib),
 };
@@ -42,6 +44,8 @@ try {
   assert.equal(process.config.variables.node_shared_zlib, false);
   stage = "runtime-embedded-zlib";
   assert.equal(process.versions.zlib, "1.3.2.1-motley-456ae73");
+  stage = "runtime-embedded-openssl";
+  assert.equal(process.versions.openssl, "3.5.9");
   stage = "runtime-dependencies";
   assert.equal(
     JSON.parse(readFileSync("/peer/node_modules/openpgp/package.json", "utf8"))
@@ -54,6 +58,9 @@ try {
   for (const path of [
     "/bin/sh",
     "/bin/bash",
+    "/bin/busybox",
+    "/sbin/apk",
+    "/usr/bin/ldd",
     "/usr/bin/apt",
     "/usr/bin/apt-get",
     "/usr/bin/perl",
@@ -62,21 +69,36 @@ try {
     "/usr/local/bin/npm",
     "/usr/local/lib/node_modules/npm",
     "/usr/local/lib/node_modules/corepack",
+    "/usr/lib/libz.so.1",
+    "/usr/lib/libssl.so.3",
+    "/usr/lib/libcrypto.so.3",
+    "/var/lib/dpkg/status.d",
   ])
     assert.equal(existsSync(path), false);
-  assert.equal(existsSync("/var/lib/dpkg/status.d"), true);
-  const triplet =
-    process.arch === "x64" ? "x86_64-linux-gnu" : "aarch64-linux-gnu";
-  for (const path of [
-    `/usr/lib/${triplet}/libz.so.1`,
-    `/usr/lib/${triplet}/libssl.so.3`,
-    `/usr/lib/${triplet}/libcrypto.so.3`,
-    "/var/lib/dpkg/status.d/zlib1g",
-    "/var/lib/dpkg/status.d/libssl3t64",
-  ])
-    assert.equal(existsSync(path), false);
-  for (const library of process.report.getReport().sharedObjects)
-    assert.equal(/\/lib(?:z|ssl|crypto|zstd|gomp)\./.test(library), false);
+  stage = "runtime-provenance";
+  const raw = readFileSync("/peer/runtime-dependencies.json");
+  assert.equal(createHash("sha256").update(raw).digest("hex"),
+    "c652d44fc2093ec5b790d7796ddf787c269ad53eff42e38cfeebb8c41e5c8033");
+  const manifest = JSON.parse(raw);
+  const x86 = process.arch === "x64";
+  const native = manifest.architectures[x86 ? "amd64" : "arm64"];
+  assert.equal(readFileSync("/etc/alpine-release", "utf8").trim(), manifest.alpine_release);
+  const database = readFileSync("/lib/apk/db/installed");
+  assert.equal(createHash("sha256").update(database).digest("hex"), native.apk_database_sha256);
+  const executable = createHash("sha256");
+  for await (const chunk of createReadStream(process.execPath)) executable.update(chunk);
+  assert.equal(executable.digest("hex"), native.node_sha256);
+  stage = "runtime-mapped-libraries";
+  const expected = [
+    `/lib/ld-musl-${native.apk_architecture}.so.1`,
+    "/usr/lib/libgcc_s.so.1",
+    "/usr/lib/libstdc++.so.6",
+  ];
+  if (x86) expected.push("/usr/lib/libatomic.so.1");
+  const mapped = process.report.getReport().sharedObjects.filter(
+    path => path.startsWith("/") && path !== process.execPath,
+  );
+  assert.deepEqual(mapped.sort(), expected.sort());
   console.log(
     JSON.stringify({
       kind: "independent-peer-runtime",
@@ -86,10 +108,14 @@ try {
       uid: process.getuid(),
       gid: process.getgid(),
       openpgp_version: "6.3.2",
-      profile: "distroless-node26-nossl-debian13-v1",
+      profile: "stock-node26-musl-alpine3.24-v1",
+      embedded_openssl: process.versions.openssl,
       embedded_zlib: process.versions.zlib,
       shared_openssl: process.config.variables.node_shared_openssl,
       shared_zlib: process.config.variables.node_shared_zlib,
+      stock_manifest_digest: native.manifest_digest,
+      node_sha256: native.node_sha256,
+      apk_database_sha256: native.apk_database_sha256,
     }),
   );
 } catch {

@@ -1,29 +1,26 @@
 # Independent OpenPGP recipient fixture
 
-This is a test-only OpenPGP.js 6.3.2 peer. The server and browser do not import
-this package. Its npm lock binds the published package integrity and records
-LGPL-3.0+. Installation/audit use the pinned official Node26.13.0/trixie builder.
-The `6.3.2-r3` candidate uses a pinned Distroless Debian13 no-SSL base and copies
-the complete `/nodejs` tree from the pinned Distroless Node26 input. It assembles
-four complete, SHA-256-pinned Debian packages per native architecture:
-`gcc-14-base`, `libgcc-s1`, `libstdc++6` and `libatomic1`. Package data, licenses,
-original control records and installed-file hashes stay in the final image.
-The build verifies package digests before extraction and checks package name,
-version and architecture before copying data. No maintainer scripts execute.
-The assembler checks the manifest hash required by the image provenance guard.
+This is a test-only OpenPGP.js 6.3.2 peer. Its npm lock binds the published
+package integrity and records the LGPL-3.0+ license. The server and browser use
+their own cryptographic implementation.
 
-The base index is
-`sha256:e6b0f82595aa1edde72c8054de7a9dca30f0f8f54820c37a167c0ddfc21c5c67`;
-the separate Node input index is
-`sha256:9b945e92c1b5463a4b75f11e8417515e4bea7355f6adfd79ec220fbbe905dda8`.
-The package manifest is [runtime-dependencies.json](runtime-dependencies.json),
-derived from the public Distroless Debian13 package lock. Its two architectures
-use exact package version14.2.0-19. The actual native build probe must verify
-Node26.13.0, embedded zlib1.3.2.1-motley-456ae73, no shared SSL/zlib linkage, UID/GID65532,
-OpenPGP6.3.2 imports, retained package metadata and absent unneeded libraries/tools.
-The report guard pins both image inputs, the package manifest and absolute Node
-entrypoint. Every remaining OS/library package and finding participates in the
-complete final-image scan; no report inventory or severity is removed.
+The `6.3.2-r4` candidate uses the pinned official Node 26.13.0 image on Alpine
+3.24.4 for dependency installation, npm audit, and runtime assembly. The final
+image starts from `scratch`. The offline assembler copies the stock Node binary
+and every file from `alpine-release`, `musl`, `libgcc`, and `libstdc++`. The x86
+executable also needs `libatomic`. It checks the SHA-256-pinned package records
+and verifies each required file against the exact checksum in its original
+record. It copies the full records into `/lib/apk/db/installed` so Trivy can
+identify every shipped package by name, source, version, and architecture.
+
+[runtime-dependencies.json](runtime-dependencies.json) pins the official image
+index, native platform manifests, executable and installed package records.
+The nonroot runtime probe imports OpenPGP.js, checks the exact mapped libraries,
+and verifies the Node executable, Alpine release and package record digests in
+the finished image. It checks that the shell and package managers are absent.
+The enforcing report guard requires the exact runtime profile, Alpine release,
+native APK package inventory, and OpenPGP.js dependency. Every reported finding
+still reaches the severity and suppression checks.
 
 The exact embedded version comes from Node26.13.0's generated
 [`src/zlib_version.h`](https://github.com/nodejs/node/blob/v26.13.0/src/zlib_version.h).
@@ -33,22 +30,19 @@ shorter string. The corrected assertion still requires the exact full version;
 the corrected native probes and full image gates pass at02140e7. Original
 independent interoperability/recovery and final-source qualification remain owed.
 
-This changes the actual runtime dependencies. It does not waive the prior
-CVE-2026-76844 finding against the Debian zlib package: F114 preserves the
-original native failures. Registry metadata and stand-ins establish no runtime,
-scan or interoperability result. Both native builds/probes and complete image gates pass at exact source02140e7
-([F124](../../../docs/qualification/evidence/F124-native-peer-image-gate-passed.json)):
-0CRITICAL/0HIGH/0UNKNOWN,8LOW/34MEDIUM,11OS+2language packages,zero suppressed.
-Original independent AEAD decryption/corruption/recovery and final-source replay
-remain owed.
-No peer artifact is published or included in a release bundle.
+The earlier Debian image passed both native image gates at `02140e7` with zero
+blocking or suppressed findings. Five glibc advisories subsequently blocked
+both architectures on `b7b0eb5`. The Alpine candidate must pass a new native
+scan and the exact encrypted FTPS workflow on both architectures. The peer
+remains a test fixture. [Earlier Debian pass](../../../docs/qualification/evidence/F124-native-peer-image-gate-passed.json)
+[Original Debian failures](../../../docs/qualification/evidence/F501-portability-native-batch-terminal.json)
 
 GitHub builds the image and audits its JavaScript dependencies. Test execution
 uses no IP network, a read-only container root, no Linux capabilities, one CPU,
 192 MiB RAM, a 128 MiB JavaScript heap, 32 processes and a 30-second deadline.
 Only synthetic recipient files and one bounded result directory are mounted.
 The private recipient stays in that peer; product registration receives only
-its public key. No local image build, container execution or inference is needed.
+its public key. The native GitHub jobs build, exercise and scan this fixture.
 
 The peer creates a v4 Curve25519 recipient advertising AES-256/OCB preferences.
 It decrypts independently reopened ciphertext, requires a version-2 SEIPD packet

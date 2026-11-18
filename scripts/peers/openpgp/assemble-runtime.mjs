@@ -1,135 +1,127 @@
-// Build-only assembly from complete pinned Debian packages. Never installed or
-// run in the recipient. No package maintainer scripts are executed.
+// The pinned stock image supplies the Node executable and complete Alpine
+// package records and payloads. The build stage performs no package install.
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { createWriteStream, createReadStream } from "node:fs";
-import { mkdir, readFile, writeFile, copyFile } from "node:fs/promises";
-import { pipeline } from "node:stream/promises";
-import { Readable } from "node:stream";
-import { execFileSync } from "node:child_process";
+import { createReadStream } from "node:fs";
+import { copyFile, lstat, mkdir, readFile, readlink, symlink, writeFile } from "node:fs/promises";
+import { posix } from "node:path";
 import { pathToFileURL } from "node:url";
 
-const names = ["gcc-14-base", "libatomic1", "libgcc-s1", "libstdc++6"];
 export const RUNTIME_DEPENDENCIES_SHA256 =
-  "4524cf640952a468917a6df0e0fe426f0a85040b4fb6f7f12ddf6829c61b8627";
-export function runtimePackages(manifest, arch) {
-  assert.equal(manifest.schema_version, 1);
-  assert.ok(["amd64", "arm64"].includes(arch));
-  assert.ok(Array.isArray(manifest.packages));
-  const packages = manifest.packages.filter((p) => p.arch === arch);
-  assert.deepEqual(packages.map((p) => p.name).sort(), names);
-  for (const p of packages) {
-    assert.equal(p.version, "14.2.0-19");
-    assert.match(p.sha256, /^[0-9a-f]{64}$/);
-    assert.ok(Array.isArray(p.urls) && p.urls.length > 0);
-    for (const text of p.urls) {
-      const url = new URL(text);
-      assert.equal(url.protocol, "https:");
-      assert.ok(
-        ["snapshot.debian.org", "deb.debian.org"].includes(url.hostname),
-      );
-      assert.equal(url.username, "");
-      assert.equal(url.password, "");
-      assert.equal(url.search, "");
-      assert.equal(url.hash, "");
-      assert.ok(url.pathname.endsWith(`/${p.name}_${p.version}_${arch}.deb`));
+  "c652d44fc2093ec5b790d7796ddf787c269ad53eff42e38cfeebb8c41e5c8033";
+const apkDirectory = "lib/apk/db";
+const relativePath = /^(?:[a-zA-Z0-9_+-][a-zA-Z0-9_.+-]*\/)*[a-zA-Z0-9_+-][a-zA-Z0-9_.+-]*$/;
+const apkField = (lines, key) => lines.filter(line => line.startsWith(key + ":")).map(line => line.slice(2));
+
+async function fileDigest(path, algorithm, encoding) {
+  const hash = createHash(algorithm);
+  for await (const chunk of createReadStream(path)) hash.update(chunk);
+  return hash.digest(encoding);
+}
+
+export function selectedDatabase(raw, profile) {
+  const records = new Map();
+  for (const block of raw.split("\n\n")) {
+    const lines = block.split("\n"), names = apkField(lines, "P");
+    if (!names.some(name => Object.hasOwn(profile.packages, name))) continue;
+    assert.equal(names.length, 1);
+    const [name] = names;
+    assert.ok(!records.has(name));
+    assert.deepEqual(apkField(lines, "V"), [profile.packages[name]]);
+    assert.deepEqual(apkField(lines, "A"), [profile.apk_architecture]);
+    records.set(name, block);
+  }
+  const names = Object.keys(profile.packages);
+  assert.equal(records.size, names.length);
+  return names.map(name => records.get(name)).join("\n\n") + "\n\n";
+}
+
+export function packageFiles(database) {
+  const files = new Map();
+  for (const block of database.trimEnd().split("\n\n")) {
+    let dir, path;
+    for (const line of block.split("\n")) {
+      const value = line.slice(2);
+      switch (line.slice(0, 2)) {
+        case "F:":
+          assert.equal(path, undefined);
+          assert.match(value, relativePath);
+          dir = value;
+          break;
+        case "R:":
+          assert.ok(dir && !path && !value.includes("/"));
+          assert.match(value, relativePath);
+          path = `${dir}/${value}`;
+          assert.ok(!files.has(path));
+          break;
+        case "Z:":
+          assert.ok(path);
+          assert.match(value, /^Q1[A-Za-z0-9+/]{27}=$/);
+          files.set(path, value.slice(2));
+          path = undefined;
+          break;
+      }
+    }
+    assert.equal(path, undefined);
+  }
+  return files;
+}
+
+async function copyPackageFiles(source, output, files) {
+  for (const [path, checksum] of files) {
+    const input = posix.join(source, path), target = posix.join(output, path);
+    await mkdir(posix.dirname(target), { recursive: true });
+    const info = await lstat(input);
+    // APK records carry SHA-1 payload checksums, including the bytes of relative
+    // symlink targets. The source OCI index, Node binary and records use SHA-256.
+    if (info.isSymbolicLink()) {
+      const link = await readlink(input);
+      const resolved = posix.join(posix.dirname(path), link);
+      assert.ok(!posix.isAbsolute(link) && files.has(resolved));
+      assert.equal(createHash("sha1").update(link).digest("base64"), checksum);
+      await symlink(link, target);
+    } else {
+      assert.ok(info.isFile());
+      assert.equal(await fileDigest(input, "sha1", "base64"), checksum);
+      await copyFile(input, target);
     }
   }
-  return structuredClone(packages);
 }
-export async function installRuntime(packages, operations) {
-  for (const p of packages) {
-    const actual = await operations.acquire(p);
-    assert.equal(actual.sha256, p.sha256, "runtime package digest differs");
-    await operations.unpack(p, actual.file);
-  }
-}
-async function download(p) {
-  const file = `/build/downloads/${p.name}.deb`;
-  let completed = false;
-  for (const initial of p.urls) {
-    try {
-      let url = new URL(initial),
-        response;
-      for (let redirects = 0; redirects < 5; redirects++) {
-        response = await fetch(url, { redirect: "manual" });
-        if (![301, 302, 303, 307, 308].includes(response.status)) break;
-        const next = new URL(response.headers.get("location"), url);
-        await response.body?.cancel();
-        assert.equal(next.protocol, "https:");
-        assert.ok(
-          ["snapshot.debian.org", "deb.debian.org"].includes(next.hostname),
-        );
-        assert.equal(next.username, "");
-        assert.equal(next.password, "");
-        url = next;
-      }
-      assert.ok(response?.ok && response.body);
-      await pipeline(
-        Readable.fromWeb(response.body),
-        createWriteStream(file, { flags: "w", mode: 0o600 }),
-      );
-      completed = true;
-      break;
-    } catch {}
-  }
-  assert.equal(completed, true, "pinned package acquisition failed");
-  const hash = createHash("sha256");
-  let bytes = 0;
-  for await (const chunk of createReadStream(file)) {
-    hash.update(chunk);
-    bytes += chunk.length;
-  }
-  return { file, sha256: hash.digest("hex"), bytes };
-}
-async function unpack(p, file) {
-  const control = `/build/controls/${p.name}`,
-    root = "/runtime",
-    status = root + "/var/lib/dpkg/status.d";
-  await mkdir(control, { recursive: true });
-  await mkdir(root, { recursive: true });
-  await mkdir(status, { recursive: true });
-  // Extract complete data and control archives. Do not cherry-pick library bytes
-  // or edit package versions;retain licenses,metadata and installed file hashes.
-  execFileSync("dpkg-deb", ["--control", file, control], { stdio: "pipe" });
-  const raw = await readFile(control + "/control", "utf8");
-  const field = (name) => new RegExp(`^${name}: (.+)$`, "m").exec(raw)?.[1];
-  assert.equal(field("Package"), p.name);
-  assert.equal(field("Version"), p.version);
-  assert.equal(field("Architecture"), p.arch);
-  execFileSync("dpkg-deb", ["--extract", file, root], { stdio: "pipe" });
-  await writeFile(status + "/" + p.name, raw.endsWith("\n") ? raw : raw + "\n");
-  await copyFile(control + "/md5sums", status + "/" + p.name + ".md5sums");
-}
+
 async function main() {
   assert.equal(process.platform, "linux");
-  const arch = process.arch === "x64" ? "amd64" : process.arch;
-  const rawManifest = await readFile("/build/runtime-dependencies.json");
-  assert.equal(
-    createHash("sha256").update(rawManifest).digest("hex"),
-    RUNTIME_DEPENDENCIES_SHA256,
-  );
-  const manifest = JSON.parse(rawManifest.toString("utf8"));
-  const packages = runtimePackages(manifest, arch);
-  await mkdir("/build/downloads", { recursive: true });
-  await installRuntime(packages, { acquire: download, unpack });
-  console.log(
-    JSON.stringify({
-      kind: "independent-peer-runtime-assembly",
-      state: "passed",
-      architecture: arch,
-      packages: packages.map((p) => ({
-        name: p.name,
-        version: p.version,
-        sha256: p.sha256,
-      })),
-    }),
-  );
+  const architecture = process.arch === "x64" ? "amd64" : process.arch;
+  const raw = await readFile(new URL("runtime-dependencies.json", import.meta.url));
+  assert.equal(createHash("sha256").update(raw).digest("hex"), RUNTIME_DEPENDENCIES_SHA256);
+  const manifest = JSON.parse(raw);
+  assert.equal(manifest.schema_version, 2);
+  const profile = manifest.architectures[architecture];
+  assert.ok(profile);
+
+  assert.equal(process.argv.length, 4);
+  const [, , source, output] = process.argv;
+  const apk = await readFile(posix.join(source, apkDirectory, "installed"), "utf8");
+  const database = selectedDatabase(apk, profile);
+  assert.equal(createHash("sha256").update(database).digest("hex"), profile.apk_database_sha256);
+  const files = packageFiles(database);
+  const inputNode = posix.join(source, "usr/local/bin/node");
+  assert.equal(await fileDigest(inputNode, "sha256", "hex"), profile.node_sha256);
+
+  await mkdir(output);
+  await copyPackageFiles(source, output, files);
+  await mkdir(posix.join(output, apkDirectory), { recursive: true });
+  await writeFile(posix.join(output, apkDirectory, "installed"), database, { mode: 0o644 });
+  await mkdir(posix.join(output, "nodejs/bin"), { recursive: true });
+  await copyFile(inputNode, posix.join(output, "nodejs/bin/node"));
+  console.log(JSON.stringify({
+    kind: "independent-peer-runtime-assembly", state: "passed", architecture,
+    stock_manifest_digest: profile.manifest_digest, node_sha256: profile.node_sha256,
+    apk_database_sha256: profile.apk_database_sha256, packages: profile.packages,
+    package_payload_files: files.size,
+  }));
 }
-if (
-  process.argv[1] &&
-  import.meta.url === pathToFileURL(process.argv[1]).href
-) {
+
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   main().catch(() => {
     console.error("Pinned runtime assembly failed;no image qualification");
     process.exitCode = 1;

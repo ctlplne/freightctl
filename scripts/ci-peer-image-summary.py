@@ -11,11 +11,16 @@ import sys
 
 SCANNER_VERSION = '0.76.1'
 SCANNER_IMAGE = 'aquasec/trivy:0.76.1@sha256:790fd66d1697395d8693d1acaa1ea702406a20f109b6fc7bac8db623eca6c06c'
-PEER_RUNTIME = 'distroless-node26-nossl-debian13-v1'
-PEER_BASE = 'gcr.io/distroless/base-nossl-debian13:nonroot'
-PEER_BASE_DIGEST = 'sha256:e6b0f82595aa1edde72c8054de7a9dca30f0f8f54820c37a167c0ddfc21c5c67'
-PEER_NODE_SOURCE = 'sha256:9b945e92c1b5463a4b75f11e8417515e4bea7355f6adfd79ec220fbbe905dda8'
-PEER_DEPS_DIGEST = 'sha256:4524cf640952a468917a6df0e0fe426f0a85040b4fb6f7f12ddf6829c61b8627'
+PEER_TAG = 'freightctl-openpgp-peer:6.3.2-r4'
+PEER_RUNTIME = 'stock-node26-musl-alpine3.24-v1'
+PEER_BASE = 'docker.io/library/node:26.13.0-alpine3.24'
+PEER_BASE_DIGEST = 'sha256:8996bb5821d62a8fd9bb27c1cb07462f3fdce6e47d640c6a881ead0b064ce216'
+PEER_NODE_SOURCE = PEER_BASE_DIGEST
+PEER_DEPS_DIGEST = 'sha256:c652d44fc2093ec5b790d7796ddf787c269ad53eff42e38cfeebb8c41e5c8033'
+PEER_ALPINE_RELEASE = '3.24.4'
+APK_ARCH = {'amd64': 'x86_64', 'arm64': 'aarch64'}
+APK_PACKAGES = {'alpine-release': ('3.24.4-r0', 'alpine-base'), 'musl': ('1.2.6-r3', 'musl'),
+                'libgcc': ('15.2.0-r5', 'gcc'), 'libstdc++': ('15.2.0-r5', 'gcc')}
 SEVERITIES = ('UNKNOWN', 'LOW', 'MEDIUM', 'HIGH', 'CRITICAL')
 ADVISORY = re.compile(r'(?:CVE-[0-9]{4}-[0-9]{4,12}|GHSA-[23456789cfghjmpqrvwx]{4}-[23456789cfghjmpqrvwx]{4}-[23456789cfghjmpqrvwx]{4})\Z')
 DIGEST = re.compile(r'sha256:[0-9a-f]{64}\Z')
@@ -47,13 +52,13 @@ def package_binding(result, finding, inventory_index):
     origin = data.get('ID') if isinstance(data,dict) else None
     return {
         'result_class':result['Class'],
-        'package_type':result['Type'] if result['Type'] in ('debian','npm','node-pkg') else 'other',
+        'package_type':result['Type'] if result['Type'] in ('alpine','npm','node-pkg') else 'other',
         'package_class':package_class,
         'package_name_sha256':digest(name),'installed_version_sha256':digest(version),
         'inventory_match':matches == 1,'inventory_match_count':matches,
         'source_name_sha256':digest(source.get('SrcName')),
         'source_version_sha256':digest(source.get('SrcVersion')),
-        'data_source':origin if origin in ('debian','ghsa','nvd') else 'other-or-missing',
+        'data_source':origin if origin in ('alpine','debian','ghsa','nvd') else 'other-or-missing',
     }
 
 
@@ -153,16 +158,17 @@ def summarize(report, version, image, commit, architecture, now):
     platform = metadata.get('ImageConfig')
     require(isinstance(platform, dict) and platform.get('architecture') == architecture and platform.get('os') == 'linux')
     os_info = metadata.get('OS')
-    # Trivy's pinned Debian analyzer reports the complete /etc/debian_version
-    # line, including point releases. Pin the replacement Debian major13, not an arbitrary report.
-    require(isinstance(os_info, dict) and os_info.get('Family') == 'debian'
-            and isinstance(os_info.get('Name'), str)
-            and re.fullmatch(r'13(?:\.(?:0|[1-9][0-9]{0,4})){0,2}', os_info['Name']))
+    require(isinstance(os_info, dict) and os_info.get('Family') == 'alpine'
+            and os_info.get('Name') == PEER_ALPINE_RELEASE)
     require(os_info.get('EOSL', False) is False)
     results = report.get('Results')
     require(isinstance(results, list) and 1 <= len(results) <= 2000)
     counts, packages, classes = Counter({s: 0 for s in SEVERITIES}), Counter(), Counter()
-    suppressed, inventory_openpgp, inventory_os = 0, False, False
+    suppressed, inventory_openpgp = 0, False
+    apk_expected = dict(APK_PACKAGES)
+    if architecture == 'amd64':
+        apk_expected['libatomic'] = ('15.2.0-r5', 'gcc')
+    apk_seen = set()
     advisory_ids = set()
     blocking_ids = {s:set() for s in ('CRITICAL','HIGH','UNKNOWN')}
     fix_metadata = {s:{} for s in blocking_ids}
@@ -173,6 +179,8 @@ def summarize(report, version, image, commit, architecture, now):
         kind = result['Class']
         require(isinstance(result.get('Target'), str) and 0 < len(result['Target']) <= 4096)
         require(isinstance(result.get('Type'), str) and 0 < len(result['Type']) <= 64)
+        if kind == 'os-pkgs':
+            require(result['Type'] == 'alpine')
         classes[kind] += 1
         inventory = result.get('Packages', [])
         require(isinstance(inventory, list) and len(inventory) <= 100000)
@@ -184,8 +192,12 @@ def summarize(report, version, image, commit, architecture, now):
             identity = (package['Name'],package['Version'])
             count,_ = inventory_index.get(identity,(0,None))
             inventory_index[identity] = (count+1,package)
-            if kind == 'os-pkgs' and result['Type'] == 'debian':
-                inventory_os = True
+            if kind == 'os-pkgs':
+                name, release = identity
+                require(name in apk_expected and name not in apk_seen)
+                require((release, package.get('SrcName')) == apk_expected[name]
+                        and package.get('SrcVersion') == release and package.get('Arch') == APK_ARCH[architecture])
+                apk_seen.add(name)
             if kind == 'lang-pkgs' and result['Type'] in ('npm', 'node-pkg') and package['Name'] == 'openpgp' and package['Version'] == '6.3.2':
                 inventory_openpgp = True
         modified = result.get('ExperimentalModifiedFindings', [])
@@ -217,7 +229,7 @@ def summarize(report, version, image, commit, architecture, now):
                         facts['nonempty' if finding['FixedVersion'] else 'empty'] += 1
             elif finding['Severity'] in blocking_ids:
                 unrecognized_blocking[finding['Severity']] += 1
-    require(inventory_os and inventory_openpgp)
+    require(classes['os-pkgs'] == 1 and apk_seen == apk_expected.keys() and inventory_openpgp)
     blocked = suppressed > 0 or any(counts[s] > 0 for s in ('HIGH', 'CRITICAL', 'UNKNOWN'))
     return {
         'state': 'failed' if blocked else 'passed', 'kind': 'native-peer-image-vulnerabilities',
@@ -225,7 +237,7 @@ def summarize(report, version, image, commit, architecture, now):
         'peer_runtime_profile': PEER_RUNTIME, 'peer_base': PEER_BASE, 'peer_base_digest': PEER_BASE_DIGEST,
         'peer_node_source_digest':PEER_NODE_SOURCE,'peer_runtime_dependencies_sha256':PEER_DEPS_DIGEST[7:],
         'scanner_version': SCANNER_VERSION, 'scanner_image': SCANNER_IMAGE,
-        'os_family': 'debian', 'os_version': os_info['Name'],
+        'os_family': 'alpine', 'os_version': os_info['Name'],
         'feed_updated_at': updated.isoformat(), 'feed_next_update': next_update.isoformat(),
         'report_created_at': created.isoformat(), 'severities': dict(counts),
         'package_counts': dict(packages), 'result_classes': dict(classes),

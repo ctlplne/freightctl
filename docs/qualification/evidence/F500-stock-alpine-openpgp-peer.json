@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "id": "F500",
+  "observed_at": "2026-11-18",
+  "base_candidate": "620d3ac83a9438793a0268ca85be2ab8e581c8d5",
+  "base_evidence": "docs/qualification/evidence/F499-shell-free-node-musl-runtime.json",
+  "original_terminal_evidence": "docs/qualification/evidence/F501-portability-native-batch-terminal.json",
+  "scope": "Stock Alpine runtime assembly, exact independent OpenPGP.js runtime and native ARM peer interoperability with the original encrypted FTPS workflow",
+  "qualification_claim": false,
+  "runtime_profile": "stock-node26-musl-alpine3.24-v1",
+  "candidate_tag": "freightctl-openpgp-peer:6.3.2-r4",
+  "inputs": {
+    "dockerfile_sha256": "7ed503c11eccd5e4135b6a13b266e5e78056bd16316ddf414a45eca386272a12",
+    "runtime_dependency_manifest_sha256": "c652d44fc2093ec5b790d7796ddf787c269ad53eff42e38cfeebb8c41e5c8033",
+    "npm_lock_sha256": "0117f9921e66a50c1e0fe07904fd4fac978c0391d3b96715774143020a49ef96"
+  },
+  "first_report_contract_run": {
+    "state": "failed",
+    "old_verifier_rejected_the_alpine_report": true,
+    "log_sha256": "ae5bdd42372e53250e7dd34988cc1cac60a80de881e4ca0b38e76d8616660736"
+  },
+  "first_arm_witness": {
+    "state": "failed",
+    "reason": "The witness archive inherited a private 0700 peer directory. Its nonroot runtime could not traverse to the test program.",
+    "repair": "Use the Dockerfile directory mode of 0755 in the image archive while keeping the local staging directory private.",
+    "log_sha256": "3b1b3ab31ad1854c5f8f2349f28e05218cc4a8ad9354d704595352b105b4a72e"
+  },
+  "verification": {
+    "dockerfile_build_check": "passed_without_warnings",
+    "dockerfile_build_check_log_sha256": "bb10fe6a6ca95fa93e63e5403eea232bcbde86b04988f2a895a51d730eba730a",
+    "github_actionlint": "passed",
+    "assembly_contracts_passed": 3,
+    "scan_report_contracts_passed": 18,
+    "scan_orchestration_contracts_passed": 15,
+    "npm_locked_dependency_audit": "passed_zero_reported_vulnerabilities",
+    "npm_install_audit_log_sha256": "d4d6c792c7595ddb2bfaaf4c43764d458fa2df617d85b8fdd679881325704b8f"
+  },
+  "arm64_local_peer": {
+    "execution": "native Linux ARM container; assembly commands and image root reproduced in bounded containers",
+    "assembly_log_sha256": "50323724b2495919605af46f3787b1e7d20cb7a1a3cd7a2304bec4ecb43a6cda",
+    "proof": {
+      "kind": "independent-peer-runtime",
+      "state": "passed",
+      "node_version": "v26.13.0",
+      "architecture": "arm64",
+      "uid": 65532,
+      "gid": 65532,
+      "openpgp_version": "6.3.2",
+      "profile": "stock-node26-musl-alpine3.24-v1",
+      "embedded_openssl": "3.5.9",
+      "embedded_zlib": "1.3.2.1-motley-456ae73",
+      "shared_openssl": false,
+      "shared_zlib": false,
+      "stock_manifest_digest": "sha256:20c29f6abefc3dffbdcae5677e4ee5dd0c45073a24ff6f5a7f25010b825f0a7b",
+      "node_sha256": "91967aeb5c9ea23eddefda5b9599f3379d35222f8b5cb1e9c986b5e01b4c4db5",
+      "apk_database_sha256": "6c61d4b4901b9182ff5b46781c0812234d8ab9a1ee6760c37707c190e947c2d9"
+    },
+    "image_id": "sha256:4b91ec2ed211e18b8c02833c258c0c05c23052af47f239d3cdf6afdb293f8949",
+    "archive_sha256": "131e5298051562820824747b1d5c4b18cf265248cc86e98fd6c526146719f2b6",
+    "archive_bytes": 168980480,
+    "interop": {
+      "peer": "OpenPGP.js",
+      "version": "6.3.2",
+      "seipd_version": 2,
+      "cipher": "AES-256",
+      "aead": "OCB",
+      "plaintext_bytes": 54,
+      "plaintext_sha256": "b0b3c6358f8b60d8aab26951f43f8e9f08bb19bfedd6084a7be0e7e77d7a67c0",
+      "ciphertext_sha256": "d4c96ff22764a95df34ca4aa850e90ffa283941fc1bb36132e76b83aa3f91031",
+      "corrupt_refused": true,
+      "truncated_refused": true
+    },
+    "witness_log_sha256": "51a8730390a3e6e6e345ecf547853c91492e07b71f5691267e51f244229908ad"
+  },
+  "amd64_local_peer": {
+    "execution": "emulated Linux x86 container on ARM; native outcome remains unverified",
+    "assembly_log_sha256": "e757e6eda2ec8265d503f33b191f4378d5e7cb546059d164b672defb8fb73ca0",
+    "proof": {
+      "kind": "independent-peer-runtime",
+      "state": "passed",
+      "node_version": "v26.13.0",
+      "architecture": "x64",
+      "uid": 65532,
+      "gid": 65532,
+      "openpgp_version": "6.3.2",
+      "profile": "stock-node26-musl-alpine3.24-v1",
+      "embedded_openssl": "3.5.9",
+      "embedded_zlib": "1.3.2.1-motley-456ae73",
+      "shared_openssl": false,
+      "shared_zlib": false,
+      "stock_manifest_digest": "sha256:b2646ba6d774dc22c24d89fc37103fcf4c4467e870c78b9519aa403300b2835a",
+      "node_sha256": "a3523371fe2f45562564332ba8166318e7afd9cf91959917ecb1b4d2f557df84",
+      "apk_database_sha256": "fa1de623eca61dfd8a83bda54f18f766d355177c85e17627b33adf71d649dcd8"
+    },
+    "image_id": "sha256:cc056859a7d759bbf8081096de4603dfd2b6f14d4127e596b040d7062fc5f84f",
+    "archive_sha256": "118c01ea2b17f7bf189941943e90bd5d51a705110eefa0a67f7c5e59565bef2d",
+    "archive_bytes": 167372800,
+    "witness_log_sha256": "a29e873a9cf918e7643c972232c2544c14bc93b686be8f6981765c49bfa472a9"
+  },
+  "arm64_original_workflow_replay": {
+    "go_host": "darwin/arm64",
+    "peer_container": "linux/arm64",
+    "image_id": "sha256:22a1d7d82a4da3a18f8b0a87b84ece7a581b96d4c80926935d0173c8f01a629c",
+    "root_archive_sha256": "131e5298051562820824747b1d5c4b18cf265248cc86e98fd6c526146719f2b6",
+    "postgres_image": "postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+    "original_test": "TestEncryptedFTPSAEADIndependentRecipientAndRecovery",
+    "subcases_passed": 8,
+    "race_enabled": true,
+    "test_log_sha256": "5c45fa5e17dd4a6384694ab635626991f8ec365cc0da0623f17ed118cf83b6cb",
+    "test_log_bytes": 2193,
+    "operations_log_sha256": "abad34d8bc895f78e7d609ff14002269efe3b61d5fe63ea477f1589b7b520eea",
+    "task_resources_removed": true
+  },
+  "remaining": [
+    "Execute the exact Dockerfile build, independent encrypted FTPS workflow and complete fresh-feed enforcing scan on both native Linux runners.",
+    "Retain all original Debian findings and deferred original runtime failures. The local package scan contracts do not establish the replacement image vulnerability result."
+  ]
+}

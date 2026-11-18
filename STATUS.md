@@ -128,6 +128,13 @@ records. Emulated x86 inspection identifies an additional `libatomic`
 dependency. Build and exercise the full OpenPGP peer, then run fresh
 enforcing scans on native ARM and x86.
 
+[F500](docs/qualification/evidence/F500-stock-alpine-openpgp-peer.json)
+assembles the full locked OpenPGP.js peer with the stock Node executable and
+complete Alpine package records. Local ARM runs passed all eight encrypted
+FTPS cases with real PostgreSQL, including lost-reply recovery and independent
+authenticated readback. The x86 runtime probe passed under emulation. The
+native Linux jobs still owe exact builds, workflow replay and enforcing scans.
+
 [F501](docs/qualification/evidence/F501-portability-native-batch-terminal.json)
 preserves all 19 original `b7b0eb5` workflows and 43 jobs. Eleven workflows
 passed. GitHub marked two macOS jobs canceled before recording any steps.
