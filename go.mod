@@ -1,11 +1,12 @@
 module github.com/ctlplne/freightctl
 
-go 1.26.0
+go 1.27
 
 toolchain go1.27.4
 
 require (
 	github.com/ProtonMail/go-crypto v1.5.2
+	github.com/digitorus/pkcs7 v0.0.0-20261104125046-a476de3098e4
 	github.com/fclairamb/ftpserverlib v0.32.7
 	github.com/google/jsonschema-go v0.4.3
 	github.com/jackc/pgx/v5 v5.11.0

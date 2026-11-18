@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "id": "F559",
+  "observed_at": "2026-11-19",
+  "base_candidate": "9f7a099dce9d9adfd8e28ea131b1a9584930e4b6",
+  "qualification_claim": false,
+  "scope": "Offline positive detached AS2 MDN verification against an exact original message and configured peer certificate",
+  "interface": "freightctl as2-mdn-verify",
+  "contract": "docs/protocols/as2-mdn-verification.md",
+  "cms_library": {
+    "source": "https://github.com/digitorus/pkcs7/commit/a476de3098e4dce1906e945d771f6ea722c1daae",
+    "module": "github.com/digitorus/pkcs7",
+    "version": "v0.0.0-20261104125046-a476de3098e4",
+    "sum": "h1:xuGU1r23rCr51+kso0kGahEL6MNIi5ToHByt+BnHebA=",
+    "upstream_advisories_reviewed": ["GHSA-cj86-7jch-72f4", "GHSA-73j8-gqc5-c98v", "GHSA-3xqc-rpq8-wgp9"],
+    "go_minimum": "1.27",
+    "go_toolchain": "go1.27.4"
+  },
+  "regression": {
+    "red": {"sha256": "b251f62d74129d386b3e72051443e8b3737c3cc25ada77e25ee2f2d68b3f03c7", "bytes": 238, "observation": "The original CLI had no AS2 verification entry point."},
+    "green": {"sha256": "1a4f665abaab6ff46d8aacca0e330845e51b341ab50793d3ed5eab9711ec222b", "bytes": 295, "observation": "The exact native CLI dispatch and crypto import boundary passed with the race detector."}
+  },
+  "native_cli_replay": {
+    "environment": "macOS ARM, Go 1.27.4, stock OpenSSL 4.0.3, synthetic files and a test-only RSA 3072 certificate",
+    "binary": {"sha256": "725a176f48ec7bd2c47371e7d17071817ff1e29fcac96ecb8dabb81685ebe6b6", "bytes": 36037666},
+    "observation": {"sha256": "13c5eddf910b2ac92135db40cee80c2c363e4a8f0dd0ad83b95ed03418b2178a", "bytes": 595},
+    "tampered_receipt_refusal": {"sha256": "10b91e133d2fba2df803bca5256c67c2c2b9e55cbe371d4c6f15e5b930b2d200", "bytes": 77, "stdout_bytes": 0},
+    "assertions": [
+      "OpenSSL independently calculated the MIC over the original MIME headers and binary payload and signed the exact report. The CLI recovered that MIC, processed disposition and exact report, CMS and leaf certificate digests.",
+      "Receiver durability and business acceptance were both unknown. The output kept the recipient name and receipt text private.",
+      "The native race proof refused altered report bytes, wrong pinned identity, another actual signer, an expired leaf, mismatched MIC, message ID or recipient, duplicate message ID, warning and failure dispositions, weak MIC, alternate CMS digest, attached CMS, missing signed attributes, missing certificate and noncanonical line endings."
+    ]
+  },
+  "security_scan": {
+    "tool": "govulncheck 1.9.0 and enforcing converter",
+    "packages": ["./internal/crypto", "./internal/as2", "./cmd/freightctl"],
+    "sha256": "d1b14cb99d051788faf76d1aad77443f43cc3e667e50e2528e740c4d1f545550",
+    "bytes": 704526,
+    "symbol_findings": 0,
+    "package_findings": 0,
+    "module_only_findings": ["GO-2026-5932"]
+  },
+  "sources": {
+    "internal/crypto/as2_cms.go": "1779bada0333a386bd83e6295ef2256ed88064b9c1a8f8e1beb6b006c86793d9",
+    "internal/as2/mdn.go": "134642f91e0546e783cd0ce4c523d4b4424f96ea6b07ad3244badb7bcc084c5e",
+    "cmd/freightctl/as2_mdn.go": "268533eb2f13754dee9a1faf99702df062aab3490bcbdba1a66d3bbb1b23724c",
+    "cmd/freightctl/as2_mdn_native_test.go": "9d7456c442fabe8e0de069f30c5a4ed32d7ccfc64ec0e27f095023855e5a9f2d",
+    ".github/workflows/native-linux.yml": "2e91ba6db898fd506adab54658201fddefcbf169c21ec2d5c9e51904f54da9cd"
+  },
+  "remaining": [
+    "Run the exact OpenSSL and CLI proof on native Linux x86 and ARM.",
+    "Implement and qualify encrypted AS2 sends and receives, HTTP identity and callback authority, durable attempt and receipt replay, negative MDNs, and reviewed rollover against a stock AS2 application."
+  ]
+}

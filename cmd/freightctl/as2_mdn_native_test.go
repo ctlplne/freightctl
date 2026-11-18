@@ -1,0 +1,189 @@
+//go:build cmspeer
+
+package main
+
+import (
+	"bytes"
+	"context"
+	"encoding/base64"
+	"encoding/json"
+	"fmt"
+	"os"
+	"os/exec"
+	"path/filepath"
+	"slices"
+	"strings"
+	"testing"
+	"time"
+
+	secure "github.com/ctlplne/freightctl/internal/crypto"
+)
+
+func TestNativeAS2MDNVerification(t *testing.T) {
+	ctx, cancel := context.WithTimeout(t.Context(), 30*time.Second)
+	defer cancel()
+	dir := t.TempDir()
+	if err := os.Chmod(dir, 0700); err != nil {
+		t.Fatal(err)
+	}
+	runOpenSSL := func(args ...string) {
+		t.Helper()
+		command := exec.CommandContext(ctx, "openssl", args...)
+		command.Dir = dir
+		if err := command.Run(); err != nil {
+			t.Fatalf("independent OpenSSL %s failed: %v", args[0], err)
+		}
+	}
+	writePrivate := func(name, contents string) string {
+		t.Helper()
+		path := filepath.Join(dir, name)
+		if err := os.WriteFile(path, []byte(contents), 0600); err != nil {
+			t.Fatal(err)
+		}
+		return path
+	}
+	readFile := func(name string) []byte {
+		t.Helper()
+		raw, err := os.ReadFile(filepath.Join(dir, name))
+		if err != nil {
+			t.Fatal(err)
+		}
+		return raw
+	}
+
+	createSigner := func(name string) {
+		t.Helper()
+		runOpenSSL("req", "-new", "-newkey", "rsa:3072", "-noenc", "-x509", "-sha256", "-days", "1",
+			"-subj", "/CN=freightctl-AS2-"+name, "-addext", "basicConstraints=critical,CA:FALSE",
+			"-addext", "keyUsage=critical,digitalSignature", "-addext", "extendedKeyUsage=emailProtection",
+			"-keyout", name+".key", "-out", name+".pem")
+	}
+	createSigner("peer")
+	runOpenSSL("x509", "-in", "peer.pem", "-outform", "DER", "-out", "peer.der")
+	cert := writePrivate("pinned.der", string(readFile("peer.der")))
+	const messageID = "<freightctl-test@peer.example>"
+	const original = "Content-Type: application/octet-stream\r\nContent-Transfer-Encoding: binary\r\n\r\nabc\x00\r\n"
+	writePrivate("original.mime", original)
+	runOpenSSL("dgst", "-sha256", "-binary", "-out", "original-mic.bin", "original.mime")
+	mic := base64.StdEncoding.EncodeToString(readFile("original-mic.bin"))
+	const disposition = "automatic-action/MDN-sent-automatically; processed"
+	report := strings.Join([]string{
+		`Content-Type: multipart/report; report-type=disposition-notification; boundary="freightctl-mdn"`,
+		"MIME-Version: 1.0", "", "--freightctl-mdn", "Content-Type: text/plain", "",
+		"Received by the AS2 peer.", "--freightctl-mdn", "Content-Type: message/disposition-notification",
+		"Content-Transfer-Encoding: 7bit", "", "Reporting-UA: peer", "Original-Recipient: rfc822; freightctl-peer",
+		"Final-Recipient: rfc822; freightctl-peer", "Original-Message-ID: " + messageID,
+		"Disposition: " + disposition, "Received-Content-MIC: " + mic + ", sha-256",
+		"", "--freightctl-mdn--", "",
+	}, "\r\n")
+	signed := func(contents, algorithm string, extra ...string) (string, string) {
+		t.Helper()
+		path := writePrivate("report.mime", contents)
+		args := []string{"cms", "-sign", "-binary", "-in", "report.mime", "-signer", "peer.pem",
+			"-inkey", "peer.key", "-md", algorithm, "-outform", "DER", "-out", "generated.der"}
+		runOpenSSL(append(args, extra...)...)
+		return path, writePrivate("signature.der", string(readFile("generated.der")))
+	}
+	expectation := map[string]any{
+		"schema_version": 1, "original_message_id": messageID, "final_recipient": "freightctl-peer",
+		"content_mic_sha256": secure.Digest([]byte(original)), "signer_certificate_sha256": secure.Digest(readFile("peer.der")),
+	}
+	request := func() string {
+		t.Helper()
+		wire, err := json.Marshal(expectation)
+		if err != nil {
+			t.Fatal(err)
+		}
+		return writePrivate("request.json", string(wire))
+	}
+	arguments := func(path, signature string) []string {
+		t.Helper()
+		return []string{"--request-file", request(), "--report-file", path,
+			"--signature-file", signature, "--signer-certificate-file", cert}
+	}
+	verify := func(path, signature string) (string, error) {
+		t.Helper()
+		output := new(bytes.Buffer)
+		err := verifyAS2MDN(arguments(path, signature), output)
+		return output.String(), err
+	}
+
+	path, signature := signed(report, "sha256")
+	wire, err := verify(path, signature)
+	var result struct {
+		Disposition        string `json:"disposition"`
+		ReportSHA256       string `json:"signed_report_sha256"`
+		ContentMIC         string `json:"content_mic_sha256"`
+		ReceiverDurability string `json:"receiver_durability"`
+		BusinessAcceptance string `json:"business_acceptance"`
+	}
+	if err != nil || json.Unmarshal([]byte(wire), &result) != nil ||
+		result.Disposition != "processed" || result.ReportSHA256 != secure.Digest([]byte(report)) ||
+		result.ContentMIC != expectation["content_mic_sha256"] || result.ReceiverDurability != "unknown" || result.BusinessAcceptance != "unknown" ||
+		strings.Contains(wire, messageID) || strings.Contains(wire, "freightctl-peer") {
+		t.Fatalf("stock SHA-256 CMS receipt did not verify with the exact wire bindings: %v", err)
+	}
+	childArgs := append([]string{"-test.run=^TestAS2MDNCommandProcess$", "--", "as2-mdn-verify"}, arguments(path, signature)...)
+	if actual, err := exec.CommandContext(ctx, os.Args[0], childArgs...).Output(); err != nil || string(actual) != wire {
+		t.Fatalf("native CLI command failed to produce the same verified receipt: %v", err)
+	}
+	if err := secure.VerifyAS2DetachedCMS([]byte(report), readFile("signature.der"), readFile("peer.der"),
+		expectation["signer_certificate_sha256"].(string), time.Now().Add(48*time.Hour)); err == nil {
+		t.Fatal("signed receipt survived expiration of the pinned certificate")
+	}
+	refused := func(path, signature string) {
+		t.Helper()
+		if out, err := verify(path, signature); err == nil || out != "" {
+			t.Fatal("untrusted report produced verified receipt output")
+		}
+	}
+	refused(writePrivate("changed.mime", strings.Replace(report, "Received by", "Refused by", 1)), signature)
+	createSigner("other")
+	runOpenSSL("cms", "-sign", "-binary", "-in", "report.mime", "-signer", "other.pem",
+		"-inkey", "other.key", "-md", "sha256", "-outform", "DER", "-out", "other.der")
+	refused(path, writePrivate("other-signature.der", string(readFile("other.der"))))
+	expectation["signer_certificate_sha256"] = secure.Digest([]byte("unrelated pin"))
+	refused(path, signature)
+	expectation["signer_certificate_sha256"] = secure.Digest(readFile("peer.der"))
+	expectation["content_mic_sha256"] = secure.Digest([]byte("different original content"))
+	refused(path, signature)
+	expectation["content_mic_sha256"] = secure.Digest([]byte(original))
+	expectation["original_message_id"] = "<wrong@peer.example>"
+	refused(path, signature)
+	expectation["original_message_id"] = messageID
+	expectation["final_recipient"] = "different-recipient"
+	refused(path, signature)
+	expectation["final_recipient"] = "freightctl-peer"
+	for _, contents := range []string{
+		strings.Replace(report, disposition, disposition+"/warning: duplicate-document", 1),
+		strings.Replace(report, disposition, disposition+"/error: authentication-failed", 1),
+		strings.Replace(report, disposition, "automatic-action/MDN-sent-automatically; failed", 1),
+		strings.Replace(report, "Received-Content-MIC: ", "Error: upstream refused\r\nReceived-Content-MIC: ", 1),
+		strings.Replace(report, "Received-Content-MIC: ", "Original-Message-ID: "+messageID+"\r\nReceived-Content-MIC: ", 1),
+		strings.Replace(report, ", sha-256", ", sha-1", 1),
+		strings.ReplaceAll(report, "\r\n", "\n"),
+	} {
+		path, signature = signed(contents, "sha256")
+		refused(path, signature)
+	}
+	path, signature = signed(report, "sha512")
+	refused(path, signature)
+	path, signature = signed(report, "sha256", "-nodetach")
+	refused(path, signature)
+	path, signature = signed(report, "sha256", "-noattr")
+	refused(path, signature)
+	path, signature = signed(report, "sha256", "-nocerts")
+	refused(path, signature)
+}
+
+func TestAS2MDNCommandProcess(t *testing.T) {
+	index := slices.Index(os.Args, "--")
+	if index < 0 || index+1 >= len(os.Args) || os.Args[index+1] != "as2-mdn-verify" {
+		return
+	}
+	if err := run(os.Args[index+1:]); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+	os.Exit(0)
+}

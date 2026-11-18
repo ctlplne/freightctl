@@ -1176,6 +1176,7 @@
         "docs/qualification/evidence/F433-basic-dav-source.json",
         "docs/qualification/evidence/F437-native-security-failure-recurrence.json",
         "docs/qualification/evidence/F558-native-x86-ftps-receiver-isolation.json",
+        "docs/qualification/evidence/F559-as2-detached-mdn-verification.json",
         "docs/qualification/evidence/F439-dav-delivery-transport.json",
         "docs/qualification/evidence/F442-direct-dav-delivery.json",
         "docs/qualification/evidence/F445-resume-native-terminal.json",

@@ -485,6 +485,12 @@ profile stopped before a usable control connection. The x86 no-KTLS profile
 returned the required TLS 1.2 refusal alerts, then failed during upload.
 Both x86 traces repeated separate receiver sandbox failures.
 
+[F559](docs/qualification/evidence/F559-as2-detached-mdn-verification.json)
+adds offline verification for a positive signed AS2 receipt. A stock OpenSSL
+signer and the native CLI verified the original message and its exact digest.
+Changed bytes, wrong signers and signed warnings or failures were refused.
+AS2 transport, encrypted messages and durable receipt recovery remain due.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6

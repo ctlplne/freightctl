@@ -334,7 +334,8 @@
         }
       ],
       "remaining_profile_details": [
-        "Pin CMS/HTTP/TLS algorithms, identifiers, callback authority and canonicalization/MIC rules."
+        "F559 verifies one detached positive SHA-256/RSA MDN against a configured leaf certificate and the original MIME digest. The bounded offline command is covered with an independent OpenSSL signer.",
+        "Pin the HTTP and encrypted CMS transport profiles, callback authority, identifier rollover and canonicalization for both complete HTTP roles. Qualify sync and async MDNs with a stock AS2 application."
       ],
       "qualification": {}
     },
