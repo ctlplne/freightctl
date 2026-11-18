@@ -41,7 +41,9 @@ read-only. An independent receiver that enforces the same contract is still due.
 [F452](docs/qualification/evidence/F452-operator-text-disclosure.json) suppresses
 freeform AI requirements containing recognized credential fields. Older
 text-bearing approvals fail the current-policy check before endpoint contact.
-Six synthetic disclosure regressions pass. Native PostgreSQL replay is due.
+Six synthetic disclosure regressions pass. The exact native x86 PostgreSQL
+regression also passes at `6412db0`. The same job's peer-image scan encountered
+the two Debian glibc advisories again. [F460 replay](docs/qualification/evidence/F460-x86-disclosure-and-image-replay.json)
 
 [F453](docs/qualification/evidence/F453-original-ci-terminal.json) records
 15 original workflows and 31 jobs at `010a3a2`. Twenty-two jobs passed.

@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "id": "F460",
+  "observed_at": "2026-11-18",
+  "base_candidate": "6412db07a18ce759b217c9dc9b62ecdd1b9fa3e8",
+  "qualification_claim": false,
+  "partial_batch": true,
+  "original_run_id": 44291766170,
+  "attempt": 1,
+  "original_job_id": 134758475596,
+  "native_postgresql_regression": {
+    "test": "TestAssistancePriorOperatorTextApprovalCannotContactEndpoint",
+    "conclusion": "success",
+    "scope": "Real PostgreSQL and synthetic HTTP responder. No inference."
+  },
+  "image_gate": {
+    "state": "failed",
+    "architecture": "amd64",
+    "source_commit": "6412db07a18ce759b217c9dc9b62ecdd1b9fa3e8",
+    "blocking_advisory_ids": {
+      "CRITICAL": [],
+      "HIGH": [],
+      "UNKNOWN": [
+        "CVE-2026-100290",
+        "CVE-2026-115819"
+      ]
+    },
+    "blocking_fix_metadata": {
+      "CRITICAL": {},
+      "HIGH": {},
+      "UNKNOWN": {
+        "CVE-2026-100290": {
+          "absent": 1,
+          "empty": 0,
+          "nonempty": 0
+        },
+        "CVE-2026-115819": {
+          "absent": 1,
+          "empty": 0,
+          "nonempty": 0
+        }
+      }
+    },
+    "feed_database_sha256": "b4b9f44be196aac7bf3c359abdcacfaa97a7ccaf56297d04745b7dae554eae86",
+    "feed_updated_at": "2026-11-18T07:15:21.579242+00:00",
+    "image_id": "sha256:ab841642cb986dd1cedd490bef025b6484e06ae1f3bfff34ee4ef7f2418c2241",
+    "manifest_sha256": "61ae56221a487f88f68d755237b41fe3a1447b7dffcb595731b1fb4e986bc70f",
+    "report_sha256": "4daa6847c5622b89e4f3383f1acef1eb166f243e9d837c85d84a9ae4f5550284",
+    "suppressed_findings": 0
+  },
+  "private_original": {
+    "reference": ".private/freightctl-f460-134758475596-direct.log",
+    "bytes": 721382,
+    "sha256": "509fb206d718f0407ebcb1b04d8fe021bf66b7b254a23f8dfa0b5b27bc721843"
+  },
+  "prior_image_failure": "docs/qualification/evidence/F453-original-ci-terminal.json",
+  "owed": [
+    "Remaining ARM original execution and complete batch binding",
+    "Patched independent peer-image scan and whole-product qualification"
+  ]
+}
