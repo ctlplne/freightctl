@@ -2093,7 +2093,8 @@
         "docs/qualification/evidence/F555-native-browser-integrity-dav-originals.json",
         "docs/qualification/evidence/F556-native-browser-failure-gate-diagnostics.json",
         "docs/qualification/evidence/F557-stock-sftp-browser-download-target.json",
-        "docs/qualification/evidence/F560-original-restore-and-exchange-batch-terminal.json"
+        "docs/qualification/evidence/F560-original-restore-and-exchange-batch-terminal.json",
+        "docs/qualification/evidence/F561-guarded-as2-restore-and-exchange-batch.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -2303,7 +2304,8 @@
         "F555 records that the original 5525129 Linux Chrome integrity recovery passed. Both native Linux architectures passed two-custody DAV and read-only lost-MOVE reconciliation. The separate long recipient UI and independent stock DAV failures remain open.",
         "F556 adds safe phase and first incomplete check diagnostics to the original recipient browser test. Five focused tests passed with the race detector. The complete original native Linux Chrome authority journey remains due.",
         "F557 reproduces the stock SFTP browser failure on the integrity download link's target size. The complete PostgreSQL, Chromium and stock OpenSSH replay passed five accessibility checks and recovered a lost work reply with one verified delivery. Native Linux Chrome remains due.",
-        "F560 binds 19 terminal original workflows and 43 jobs at 5525129. Both native full PostgreSQL integration and scoped receipt checks passed. Both metadata restores, independent FTPS producer steps, independent stock DAV and separate browser failures stay recorded."
+        "F560 binds 19 terminal original workflows and 43 jobs at 5525129. Both native full PostgreSQL integration and scoped receipt checks passed. Both metadata restores, independent FTPS producer steps, independent stock DAV and separate browser failures stay recorded.",
+        "F561 records the guarded fast-forward to 7a74bc2 after all 19 prior originals finished. The pinned Gitleaks hook found zero leaks across ten owner-authored and owner-committed commits. The new exact source started 19 original first-attempt workflows."
       ],
       "current_item": {
         "id": "F425",

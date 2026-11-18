@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "id": "F561",
+  "observed_at": "2026-11-19",
+  "candidate": "7a74bc2f6c70a0681b4ebc0e8cf7567864798b30",
+  "qualification_claim": false,
+  "preceding_terminal_record": "docs/qualification/evidence/F560-original-restore-and-exchange-batch-terminal.json",
+  "push": {
+    "previous": "5525129f428eeea91d569cfec659205e42009589",
+    "remote_ref": "refs/heads/main",
+    "remote_head_verified": true,
+    "fast_forward": true,
+    "owner_author_and_committer": "imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>",
+    "commits": [
+      "ca72fd9321923acccbe4d241d3f641d1818ae65a",
+      "6ec362a8b593f1eb36b4a48d047b9fcbcd45e78a",
+      "24939d0912ed869cae10e18800aca45ae0ace7fa",
+      "ce8ed4cc4d5c41dfc2ebb4b06283a470e21de6f3",
+      "d0198f90f34353af371a2b5a51377022d3ca9293",
+      "20c76f45f37af61edb2e3337870cdcedd2940e8b",
+      "d80d42729ccef566e810bcc053370b7ab01c0f93",
+      "9f7a099dce9d9adfd8e28ea131b1a9584930e4b6",
+      "3952b8b6e5d776f6a0393f675391573020bf8b4f",
+      "7a74bc2f6c70a0681b4ebc0e8cf7567864798b30"
+    ],
+    "previous_attempt_one_workflows_terminal": 19,
+    "pre_push_guard": ".githooks/pre-push",
+    "gitleaks_version": "8.30.1",
+    "gitleaks_commits_scanned": 10,
+    "gitleaks_reported_bytes": 1386397,
+    "gitleaks_leaks": 0,
+    "redacted_log": {
+      "sha256": "d60870a25e06312d644285fb40276f364c171452abcc6a167c4c5261a2436c08",
+      "bytes": 189
+    }
+  },
+  "first_observation_metadata": {
+    "sha256": "929df0450d20482a03c47471bef2ca5ee137de53155558c14156d681da24c6ff",
+    "bytes": 233140
+  },
+  "originals_at_first_recorded_observation": [
+    {
+      "id": 44424315340,
+      "name": "Native Windows and macOS unit checks",
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "id": 44424315300,
+      "name": "Native tus stock client and custody checkpoints",
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "id": 44424315579,
+      "name": "Native immutable HTTPS stock resume",
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "id": 44424315442,
+      "name": "Native legacy SCP regular-file custody",
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "id": 44424314993,
+      "name": "Native document container contracts",
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "id": 44424314843,
+      "name": "Native source vulnerability configurations",
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "id": 44424315324,
+      "name": "Native artifact receive browser",
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "id": 44424314885,
+      "name": "Stock peer and browser qualification",
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "id": 44424315336,
+      "name": "Native FTPS dispatch approval qualification",
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "id": 44424315033,
+      "name": "Native first enrollment and browser exchange",
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "id": 44424314914,
+      "name": "Native browser and FTPS operator qualification",
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "id": 44424314952,
+      "name": "Native FTPS stock clients and custody",
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "id": 44424315267,
+      "name": "Native JSON intake and custody interfaces",
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "id": 44424315405,
+      "name": "Native Linux Go, PostgreSQL and fuzz",
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "id": 44424314833,
+      "name": "Core correctness and security",
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "id": 44424315396,
+      "name": "Native FTPS workflow consent qualification",
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "id": 44424315089,
+      "name": "Native reproducible core binaries",
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "id": 44424314980,
+      "name": "Native FTPS client and independent stock receiver",
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "id": 44424315043,
+      "name": "Native independent DAV application",
+      "attempt": 1,
+      "status": "queued"
+    }
+  ],
+  "remaining": "Observe all original first attempts on the exact candidate. Verify the new AS2 CLI step, corrected schema-68 metadata restore, v4 lineage and protected export, original recipient authority, accessible stock SFTP browser and affected prior product gates."
+}
