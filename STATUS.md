@@ -467,6 +467,11 @@ Both native Linux architectures passed conditional delivery between
 freightctl custody instances and read-only recovery after a lost DAV MOVE
 reply. The separate recipient UI and stock DAV checks remain red.
 
+[F556](docs/qualification/evidence/F556-native-browser-failure-gate-diagnostics.json)
+adds a safe phase and first failed check to the original recipient browser
+test. The focused regression passed with the race detector. Native Chrome
+still needs to replay the authority journey that stopped after revocation.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6

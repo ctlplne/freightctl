@@ -84,7 +84,7 @@ jobs:
         run: python3 scripts/dev-db.py
       - name: Actual recipient UI, exact bytes, unrelated user and endpoint revocation
         run: |
-          sh scripts/go.sh test -p 1 -race -timeout=0 -tags=integration,exchangebrowser -run '^(TestExchangeBrowserSummaryRefusesAmbiguousEvidence|TestExchangeBrowserSummaryKeepsConfigurationFailuresSafeAndDistinctFromSuccess|TestExchangeBrowserExitKeepsOriginalFailureWithAValidSummary|TestArtifactExchangeNativeBrowserReceiptWrongActorAndRevocation)$' -count=1 -v ./internal/api
+          sh scripts/go.sh test -p 1 -race -timeout=0 -tags=integration,exchangebrowser -run '^(TestExchangeBrowserSummaryRefusesAmbiguousEvidence|TestExchangeBrowserSummaryKeepsConfigurationFailuresSafeAndDistinctFromSuccess|TestExchangeBrowserExitKeepsOriginalFailureWithAValidSummary|TestExchangeBrowserExitNamesTheFirstIncompleteGate|TestArtifactExchangeNativeBrowserReceiptWrongActorAndRevocation)$' -count=1 -v ./internal/api
       - name: Generated artifact lineage in separate sender and recipient browser sessions
         if: ${{ !cancelled() && steps.browser.outcome == 'success' && steps.postgres.outcome == 'success' }}
         run: |

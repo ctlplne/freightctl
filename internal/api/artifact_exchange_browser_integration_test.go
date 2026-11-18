@@ -172,12 +172,44 @@ func readExchangeBrowserSummary(path string) (*exchangeBrowserSummary, string) {
 
 func safeExchangeBrowserExit(private, result string, exit int) string {
 	summary, hash := readExchangeBrowserSummary(result)
+	return formatExchangeBrowserFailure(private, summary, hash, exit)
+}
+
+func exchangeBrowserGate(summary *exchangeBrowserSummary) string {
+	switch {
+	case summary == nil:
+		return "bounded-summary"
+	case summary.State != "passed" || summary.Phase != "complete" || summary.FailureHash != "":
+		return "completed-phase"
+	case *summary.Egress != 0 || *summary.Model || !*summary.Sandbox:
+		return "runtime-isolation"
+	case *summary.Downloads != 2 || *summary.Declines != 1 || *summary.Offers != 1 || *summary.Cancels != 1 ||
+		*summary.Recovery != 1 || *summary.HumanIngress != 1 || *summary.EndpointCommands != 3:
+		return "receive-and-offer-counts"
+	case *summary.EvidenceReads != 2 || *summary.HistorySearches != 3 || *summary.OwnedCopies != 1 || *summary.CopyRecoveries != 1:
+		return "copy-and-history-counts"
+	case *summary.OnwardRuns != 1 || *summary.OnwardRecoveries != 1 || *summary.OnwardRefusals != 1:
+		return "onward-boundary"
+	case *summary.Accessibility != 31:
+		return "accessibility-count"
+	case summary.Browser == "":
+		return "browser-identity"
+	}
+	return ""
+}
+
+func formatExchangeBrowserFailure(private string, summary *exchangeBrowserSummary, hash string, exit int) string {
 	phase := "unavailable"
 	if summary != nil {
 		phase = summary.Phase
 	}
+	gate := exchangeBrowserGate(summary)
+	if gate == "" {
+		gate = "process-exit"
+	}
 	trace := safeExchangeBrowserFailure(private)
-	return fmt.Sprintf("browser failed before revocation barrier;phase=%s;safe result=%s;exit=%d;class=%s;source=%d:%d;private log SHA256=%s", phase, hash, exit, trace.Class, trace.Line, trace.Column, trace.SHA256)
+	return fmt.Sprintf("native receive browser proof failed;phase=%s;gate=%s;safe result SHA256=%s;exit=%d;class=%s;source=%d:%d;private log SHA256=%s",
+		phase, gate, hash, exit, trace.Class, trace.Line, trace.Column, trace.SHA256)
 }
 
 func TestExchangeBrowserExitKeepsOriginalFailureWithAValidSummary(t *testing.T) {
@@ -198,8 +230,39 @@ func TestExchangeBrowserExitKeepsOriginalFailureWithAValidSummary(t *testing.T) 
 			t.Fatal("cannot prepare private failure summary")
 		}
 		line := safeExchangeBrowserExit(private, result, 1)
-		if !strings.Contains(line, "class=assertion") || !strings.Contains(line, "source=398:13") || !strings.Contains(line, secure.Digest(first)) || !strings.Contains(line, secure.Digest(raw)) || strings.Contains(line, "PRIVATE_") || strings.Contains(line, private) {
+		gate := "gate=completed-phase"
+		if phase != "copy-lost-response" {
+			gate = "gate=bounded-summary"
+		}
+		if !strings.Contains(line, gate) || !strings.Contains(line, "class=assertion") || !strings.Contains(line, "source=398:13") || !strings.Contains(line, secure.Digest(first)) || !strings.Contains(line, secure.Digest(raw)) || strings.Contains(line, "PRIVATE_") || strings.Contains(line, private) {
 			t.Fatal("valid summary hid original failure,or private content entered diagnostics")
+		}
+	}
+}
+
+func TestExchangeBrowserExitNamesTheFirstIncompleteGate(t *testing.T) {
+	valid := `{"state":"passed","phase":"complete","external_egress":0,"exact_downloads":2,"terminal_declines":1,"committed_offers":1,"sender_cancellations":1,"recovery_roundtrips":1,"model_started":false,"browser_sandbox":true,"endpoint_commands":3,"human_ingress":1,"onward_runs":1,"onward_recoveries":1,"onward_refusals":1,"evidence_reads":2,"owned_copies":1,"copy_recoveries":1,"history_searches":3,"accessibility_checks":31,"browser_version":"142.0.1","node_version":"v26.13.0","axe_version":"4.14.0"}`
+	private := t.TempDir()
+	result := filepath.Join(private, "result.json")
+	for _, check := range []struct {
+		field, replacement, gate string
+	}{
+		{"\"external_egress\":0", "\"external_egress\":1", "runtime-isolation"},
+		{"\"browser_sandbox\":true", "\"browser_sandbox\":false", "runtime-isolation"},
+		{"\"onward_refusals\":1", "\"onward_refusals\":0", "onward-boundary"},
+		{"\"exact_downloads\":2", "\"exact_downloads\":1", "receive-and-offer-counts"},
+		{"\"copy_recoveries\":1", "\"copy_recoveries\":0", "copy-and-history-counts"},
+		{"\"accessibility_checks\":31", "\"accessibility_checks\":30", "accessibility-count"},
+		{"\"browser_version\":\"142.0.1\"", "\"browser_version\":\"\"", "browser-identity"},
+	} {
+		raw := strings.Replace(valid, check.field, check.replacement, 1)
+		if err := os.WriteFile(result, []byte(raw), 0600); err != nil {
+			t.Fatal(err)
+		}
+		line := safeExchangeBrowserExit(private, result, 0)
+		if !strings.Contains(line, "phase=complete") || !strings.Contains(line, "gate="+check.gate+";") ||
+			!strings.Contains(line, secure.Digest([]byte(raw))) || strings.Contains(line, private) {
+			t.Fatalf("failed to diagnose bounded gate %q", check.gate)
 		}
 	}
 }
@@ -406,8 +469,8 @@ func TestArtifactExchangeNativeBrowserReceiptWrongActorAndRevocation(t *testing.
 		t.Fatal("browser did not finish after exact endpoint revocation")
 	}
 	summary, hash := readExchangeBrowserSummary(result)
-	if err != nil || summary == nil || summary.State != "passed" || summary.Phase != "complete" || *summary.Egress != 0 || *summary.Downloads != 2 || *summary.Declines != 1 || *summary.Offers != 1 || *summary.Cancels != 1 || *summary.Recovery != 1 || *summary.Model || !*summary.Sandbox || *summary.EvidenceReads != 2 || *summary.Accessibility != 31 || *summary.HistorySearches != 3 || *summary.OwnedCopies != 1 || *summary.CopyRecoveries != 1 || *summary.OnwardRuns != 1 || *summary.OnwardRecoveries != 1 || *summary.OnwardRefusals != 1 || *summary.HumanIngress != 1 || *summary.EndpointCommands != 3 || summary.Browser == "" || summary.FailureHash != "" {
-		t.Fatalf("native receive browser proof failed; safe result SHA256=%s", hash)
+	if err != nil || exchangeBrowserGate(summary) != "" {
+		t.Fatal(formatExchangeBrowserFailure(private, summary, hash, command.ProcessState.ExitCode()))
 	}
 	proof, err := s.DB.Begin(ctx, sender)
 	if err != nil {

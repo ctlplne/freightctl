@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "id": "F556",
+  "observed_at": "2026-11-19",
+  "qualification_claim": false,
+  "scope": "Bounded failure diagnostics for the original native Chrome recipient authority journey",
+  "original_failure": {
+    "candidate": "5525129f428eeea91d569cfec659205e42009589",
+    "run": 44415734893,
+    "attempt": 1,
+    "job": 135195415085,
+    "step": "Actual recipient UI, exact bytes, unrelated user and endpoint revocation",
+    "log_sha256": "c06bfe57b59caee1605f93d89b4a6b7b86f31675ad2d4257b9740cc1500076bf",
+    "observation": "The post-revocation failure reported only the summary digest. The public result could not identify which assertion stopped the browser."
+  },
+  "focused_regression": {
+    "red": {
+      "sha256": "66cdd0c2eb012a3240bb16d14f3b4cdc6026966da31ee0a84923c9402a246dce",
+      "bytes": 449,
+      "observation": "A validated summary and a protected original browser failure gave no gate classification."
+    },
+    "green": {
+      "sha256": "ba0fd6832e4944be3c1e6afeccae71a7ad97bf05e3042d2c44d2a070c3dab8e7",
+      "bytes": 800,
+      "observation": "Five focused tests passed with the race detector. They exercised rejected summaries, the original failure classifier and seven known incomplete summary cases. Private fixture markers did not appear in diagnostics."
+    }
+  },
+  "sources": {
+    "internal/api/artifact_exchange_browser_integration_test.go": "b5aed01c5b7bec6558bf0d4f045ad4355507509b28559766f0983012e6e6da2d",
+    ".github/workflows/artifact-exchange.yml": "9645a3953d970e83d4c6092654bf54fe43dbcd207401e6433bd4f6364d296372"
+  },
+  "static_checks": ["tagged Go vet", "affected workflow actionlint", "qualification record validation"],
+  "remaining": "Replay the complete original journey on native Linux x86 Chrome and diagnose any first failed authority or evidence check. All original pass conditions remain required."
+}
