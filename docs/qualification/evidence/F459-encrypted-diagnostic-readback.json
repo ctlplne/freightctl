@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "id": "F459",
+  "observed_at": "2026-11-18",
+  "base_candidate": "ab219d5a611fba0b32a0e6c88cbfb492fd8a5a01",
+  "qualification_claim": false,
+  "changed": "Use the normal stored delivery definition, exact workflow step and immutable artifact seal to interpret a successful encrypted readback. This reads actor-scoped PostgreSQL evidence. It opens no network or key operation and provides no new effect authority.",
+  "local_red": "Repeating the original plaintext hash and size predicate on actual FTPS receipt writer output rejected both supported OpenPGP ciphertext profiles.",
+  "local_green": "The same receipt writer\u2019s accepted encrypted and reconciled readbacks match. Another definition\u2019s ciphertext and substituted plaintext both refuse. Existing recipient profile, acknowledgment and diagnostic citation rules pass.",
+  "checks": [
+    "Affected Go formatting and tests on macOS ARM",
+    "Tagged Go vet and core import boundaries",
+    "Record reference validation"
+  ],
+  "source_files": [
+    {
+      "reference": "docs/assistance.md",
+      "bytes": 15982,
+      "sha256": "0409a114d5ee63849530d58744de1d739d85070e040c536def19dfa595ccf1e0"
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "bytes": 723057,
+      "sha256": "9c64e170db63daa5aa3cb2a3f407de376e247e329ef5ef48238375d5cced384d"
+    },
+    {
+      "reference": "internal/assistance/context.go",
+      "bytes": 17350,
+      "sha256": "0ee5f5bc3b9a2f7b2cb72ac5e2c42cfefd5d3c76b2aa92fe6bb55e60f31a48d6"
+    },
+    {
+      "reference": "internal/delivery/ftps_test.go",
+      "bytes": 9813,
+      "sha256": "be2891700c2f3e10c30e54771991491b3f74b66aeba772311c56fc80b6b58ca1"
+    },
+    {
+      "reference": "internal/delivery/service.go",
+      "bytes": 15087,
+      "sha256": "8f0c5dc3e811b8a4398a2e670b9b1f2255f6ddd9c159f89b0bd273571e19ce81"
+    },
+    {
+      "reference": "internal/delivery/readback.go",
+      "bytes": 3178,
+      "sha256": "dc0f3403e2a28f1c8e9cb919338783623a904581fc895674ccd59345158aa951"
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f459-encrypted-diagnosis-red.log",
+      "bytes": 4068,
+      "sha256": "5edc44726431976d3e7d0040d74f8a99c9f2be008e9732d2fb3c8dc3eb5a4f0c"
+    },
+    {
+      "reference": ".private/freightctl-f459-encrypted-diagnosis-green.log",
+      "bytes": 3845,
+      "sha256": "b33fd135d9feaecce446e59bee231e0ac232fdd828166edea09ea0086b1ff388"
+    }
+  ],
+  "owed": [
+    "Native encrypted workflow and assistance interaction on final source",
+    "Private model and independent operator qualification"
+  ],
+  "inference_run": false
+}

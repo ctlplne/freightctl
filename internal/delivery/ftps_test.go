@@ -139,18 +139,34 @@ func TestFTPSRecipientPolicyAndReceiptKeepExactArtifactWithoutInventingFsync(t *
 				})
 			}
 			a := &store.DeliveryCiphertext{ObjectID: "00000000-0000-0000-0000-000000000007", SourceID: spec.Source.ID, SourceSHA256: spec.Source.SHA256, StorageID: spec.StorageID, Policy: *spec.Encryption, Size: 100, SHA256: strings.Repeat("f", 64), Proof: secure.PGPEncryption{Profile: profile, Cipher: "AES-256", Compression: "none", PrimaryFingerprint: strings.Repeat("a", 40), EncryptionFingerprint: strings.Repeat("b", 40)}}
+			intent := store.Delivery{ID: "00000000-0000-0000-0000-000000000008", DefinitionHash: original, State: "succeeded"}
+			a.DeliveryID, a.DefinitionHash = intent.ID, intent.DefinitionHash
 			wire, err := encryptedDefinition(&spec, a)
 			if err != nil {
 				t.Fatal(err)
 			}
 			for _, reconciled := range []bool{false, true} {
 				var receipt map[string]any
-				if json.Unmarshal(ftpsReceipt(&store.Delivery{ID: "00000000-0000-0000-0000-000000000008"}, wire, reconciled), &receipt) != nil || receipt["sha256"] != a.SHA256 || receipt["size_bytes"] != float64(a.Size) || receipt["file_fsync_acknowledged"] != false || receipt["rename_acknowledged"] != !reconciled || receipt["business_acceptance"] != "unknown" {
+				intent.Observation = ftpsReceipt(&intent, wire, reconciled)
+				if json.Unmarshal(intent.Observation, &receipt) != nil || receipt["sha256"] != a.SHA256 || receipt["size_bytes"] != float64(a.Size) || receipt["file_fsync_acknowledged"] != false || receipt["rename_acknowledged"] != !reconciled || receipt["business_acceptance"] != "unknown" {
 					t.Fatal("encrypted FTPS receipt inflated transport promise")
 				}
 				proof, ok := receipt["encryption"].(map[string]any)
 				if !ok || proof["ciphertext_object_id"] != a.ObjectID || proof["source_file_id"] != spec.Source.ID || proof["source_sha256"] != spec.Source.SHA256 || proof["primary_fingerprint"] != a.Proof.PrimaryFingerprint || proof["encryption_fingerprint"] != a.Proof.EncryptionFingerprint || proof["profile"] != profile {
 					t.Fatal("receipt lost exact recipient/source proof")
+				}
+				if err := verifyCompletedReadback(&intent, &spec, a); err != nil {
+					t.Fatal("exact sealed ciphertext could not substantiate transport completion", err)
+				}
+				wrongArtifact := *a
+				wrongArtifact.DefinitionHash = strings.Repeat("0", 64)
+				if verifyCompletedReadback(&intent, &spec, &wrongArtifact) == nil {
+					t.Fatal("another intent's ciphertext substantiated this receipt")
+				}
+				receipt["sha256"], receipt["size_bytes"] = spec.Source.SHA256, spec.Source.Size
+				intent.Observation, _ = json.Marshal(receipt)
+				if verifyCompletedReadback(&intent, &spec, a) == nil {
+					t.Fatal("plaintext receipt substantiated an encrypted send")
 				}
 			}
 		})

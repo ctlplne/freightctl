@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/ctlplne/freightctl/internal/delivery"
 	"github.com/ctlplne/freightctl/internal/store"
 	"github.com/ctlplne/freightctl/internal/workflow"
 )
@@ -198,8 +199,6 @@ func buildContext(ctx context.Context, t *store.Transaction, r PrepareRequest, p
 			}
 			var observation struct {
 				Code string `json:"code"`
-				SHA  string `json:"sha256"`
-				Size int64  `json:"size_bytes"`
 			}
 			if json.Unmarshal(d.Observation, &observation) != nil {
 				return nil, nil, store.ErrState
@@ -222,8 +221,8 @@ func buildContext(ctx context.Context, t *store.Transaction, r PrepareRequest, p
 				finding("dispatch_in_progress", "inspect_delivery", cite)
 			}
 			if d.State == "succeeded" {
-				if observation.Code != "remote_file_integrity_observed" || observation.SHA != run.Source.SHA256 || observation.Size != run.Source.Size {
-					return nil, nil, store.ErrState
+				if err = delivery.VerifyWorkflowReadback(ctx, t, d, run, step); err != nil {
+					return nil, nil, err
 				}
 				completed = append(completed, cite)
 			}

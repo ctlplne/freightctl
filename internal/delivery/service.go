@@ -157,6 +157,19 @@ func (s *Service) Create(ctx context.Context, scope store.Scope, key string, r R
 	}
 	return &Result{d, false}, t.Tx.Commit(ctx)
 }
+func storedDefinition(d *store.Delivery) (*Definition, error) {
+	var spec Definition
+	if json.Unmarshal(d.Definition, &spec) != nil || !validProtocolDefinition(&spec) || spec.Source.ID != d.FileID {
+		return nil, store.ErrState
+	}
+	// JSONB reorders keys; the hash identifies the original typed definition.
+	encoded, err := json.Marshal(spec)
+	if err != nil || secure.Digest(encoded) != d.DefinitionHash {
+		return nil, store.ErrState
+	}
+	return &spec, nil
+}
+
 func (s *Service) begin(ctx context.Context, scope store.Scope, id string, lock bool) (*store.Transaction, *store.Delivery, *Definition, error) {
 	t, err := s.Custody.DB.Begin(ctx, scope)
 	if err != nil {
@@ -173,14 +186,9 @@ func (s *Service) begin(ctx context.Context, scope store.Scope, id string, lock 
 	if err != nil {
 		return fail(err)
 	}
-	var spec Definition
-	if err = json.Unmarshal(d.Definition, &spec); err != nil || !validProtocolDefinition(&spec) || spec.Source.ID != d.FileID {
-		return fail(store.ErrState)
-	}
-	// JSONB reorders keys: the hash identifies the original typed canonical definition.
-	encoded, err := json.Marshal(spec)
-	if err != nil || secure.Digest(encoded) != d.DefinitionHash {
-		return fail(store.ErrState)
+	spec, err := storedDefinition(d)
+	if err != nil {
+		return fail(err)
 	}
 	if spec.Root != t.Root || spec.Authority != t.AuthorityRevision {
 		return fail(store.ErrUnauthorized)
@@ -195,7 +203,7 @@ func (s *Service) begin(ctx context.Context, scope store.Scope, id string, lock 
 	if *file != spec.Source {
 		return fail(store.ErrState)
 	}
-	return t, d, &spec, nil
+	return t, d, spec, nil
 }
 
 func requestDestination(r Request) (secure.SSHDestination, *FTPSDefinition, error) {

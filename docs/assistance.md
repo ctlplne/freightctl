@@ -123,6 +123,12 @@ For new responses, required lists must be JSON arrays. Use `[]` for no
 items. Omitted, null or oversized lists are rejected, and each missing
 requirement appears at most once.
 
+For an encrypted send, the receiver's readback digest describes the sealed
+ciphertext. Investigation checks that digest and size against the recorded
+ciphertext and binds it back to the exact original file, recipient policy
+and workflow step. It reads the recorded evidence without contacting the
+receiver or reopening the encryption key. Business acceptance stays unknown.
+
 ## Retry, bounds and state
 
 Each mutation requires a stable idempotency key. Generation persists its attempt selection before the request. Repeating the same key observes that attempt; it cannot silently trigger another disclosure or retry. A fresh key can retry a failed or expired attempt under current authority, up to two attempts total. Stale workers cannot record over a newer attempt. Endpoint failure is visible; a failed response is never narrated into success.
