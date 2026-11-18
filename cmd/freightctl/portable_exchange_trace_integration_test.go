@@ -25,7 +25,7 @@ func qualifyPortableExchangeTrace(t *testing.T, actor, token, unrelated string, 
 	if live.Profile == store.ExchangeEvidenceV2 {
 		selected.Profile = live.Profile
 	}
-	path := filepath.Join(t.TempDir(), "exchange-evidence.json")
+	path := filepath.Join(privateCLIDirectory(t), "exchange-evidence.json")
 	input := requestFile(selected)
 	refuse := func(as string, selection store.ExchangeTraceExportSelection, want error) {
 		t.Helper()

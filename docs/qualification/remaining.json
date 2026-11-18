@@ -2078,7 +2078,8 @@
         "docs/qualification/evidence/F542-original-lineage-batch-terminal.json",
         "docs/qualification/evidence/F543-guarded-integrity-surfaces-batch.json",
         "docs/qualification/evidence/F544-native-browser-integrity-report.json",
-        "docs/qualification/evidence/F545-authorized-integrity-evidence.json"
+        "docs/qualification/evidence/F545-authorized-integrity-evidence.json",
+        "docs/qualification/evidence/F546-native-cli-export-authority.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -2275,7 +2276,8 @@
         "F542 preserves 18 original workflows and 39 jobs at 439881e, with 13 workflow passes and five failures. Both native Linux hosts passed the exact stock OpenSSH lost-reply test. The original ARM FTPS producer passed both modes and the x86 explicit probe ended before a stock control connection with worker exit status 2. Exact schema-68 native replays and the remaining original failures stay open.",
         "F543 records the guarded fast-forward from 439881e to 7fda192 after all prior originals became terminal. Gitleaks passed on six owner-authored and owner-committed commits. Eighteen exact first attempts include the report, restore, crypto boundary and FTPS client replay. Their native results remain open.",
         "F544 adds explicit browser integrity reporting for a native full download. Sandboxed Chromium with PostgreSQL rejected incorrect bytes and recovered the exact report after the committed reply body was interrupted. Sender and recipient inspections agreed. Linux Chrome replay, schema-68 restore and final qualification remain open.",
-        "F545 adds the opt-in v3 evidence profile. Real PostgreSQL with stock HTTPS, sandboxed Chromium, the native CLI and stock MCP retained the same committed integrity report. Incoming evidence stayed opaque after a policy hold and the sender retained authorized history. Linux replay and final AX05 qualification remain open."
+        "F545 adds the opt-in v3 evidence profile. Real PostgreSQL with stock HTTPS, sandboxed Chromium, the native CLI and stock MCP retained the same committed integrity report. Incoming evidence stayed opaque after a policy hold and the sender retained authorized history. Linux replay and final AX05 qualification remain open.",
+        "F546 fixes the export authority test setup. Both Linux originals refused a nonprivate export directory before testing management authority. Real PostgreSQL and the native CLI reproduced the block under umask 022 and passed the same refusal and publication assertions with private test directories. The original restore and stock DAV outcomes remain red."
       ],
       "current_item": {
         "id": "F425",

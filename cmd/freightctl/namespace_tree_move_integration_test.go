@@ -177,7 +177,7 @@ func qualifyNamespaceTreeMoveCLI(t *testing.T, ctx context.Context, service *cus
 		t.Fatal("CLI read-only receipt bypassed original management authority", err)
 	}
 	t.Run("portable namespace receipt after deletion", func(t *testing.T) {
-		archivePath := filepath.Join(t.TempDir(), "original-command-receipt.json")
+		archivePath := filepath.Join(privateCLIDirectory(t), "original-command-receipt.json")
 		flags := []string{"-request-file", removeInput, "-idempotency-key", "cli-tree-delete-original", "-output", archivePath,
 			"-storage", filepath.Join(t.TempDir(), "UNOPENED_EXPORT_CUSTODY")}
 		if _, err := command(ordinaryWriter, "namespace-receipt-export", flags...); !errors.Is(err, store.ErrForbidden) {

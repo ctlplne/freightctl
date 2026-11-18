@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "id": "F546",
+  "observed_at": "2026-11-19",
+  "base_candidate": "7a2aa4b9fc2e41be554112b53005a3cbd4c24fb2",
+  "qualification_claim": false,
+  "scope": "Portable CLI export authority fixtures under ordinary platform file protections",
+  "original_failure": {
+    "candidate": "7fda19225e0650fc325bf8b6ad31bfe72fde1423",
+    "run": 44406961794,
+    "attempt": 1,
+    "jobs": [
+      {
+        "architecture": "x86_64",
+        "id": 135164647473,
+        "log": {
+          "sha256": "e3d0318ffbe0b6c0a94c52d96bd924e4d46736f534426e49aad94bd241b13182",
+          "bytes": 49708
+        }
+      },
+      {
+        "architecture": "arm64",
+        "id": 135164647575,
+        "log": {
+          "sha256": "89630154be077ef028f9348599582f61692a3c36c1905442fe6f316f7f5d0ca0",
+          "bytes": 49505
+        }
+      }
+    ],
+    "observation": "Both Linux jobs stopped in the portable namespace receipt test because the CLI refused the output directory before it reached the intended management-authority assertion."
+  },
+  "local_replay": {
+    "environment": "macOS ARM, Go 1.27.4, race build, ordinary umask 022, isolated PostgreSQL 16.15, native CLI and stock MCP SDK. Inference disabled.",
+    "postgresql_image": "postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+    "postgresql_memory_limit_bytes": 201326592,
+    "postgresql_cpu_limit": 1,
+    "focused_red": {
+      "sha256": "84cb41a511ffbb67410d68254278cc463c2458a1247102826fd11a5aad412080",
+      "bytes": 2807
+    },
+    "same_umask_focused_green": {
+      "sha256": "fcaba76e0dcb891c132b725a5eeb18e7315080a5ffb4b17a31adaadbbbfc3879",
+      "bytes": 2777
+    },
+    "observations": [
+      "The baseline reproduction refused three export test directories before authorization. Explicit private directories made the original selection and authorization assertions runnable.",
+      "Incoming availability, outgoing cancellation and namespace receipt exports passed with actual PostgreSQL. Wrong-scope, changed-hash or changed-key requests retained their original refusals and output absence checks.",
+      "The same native CLI and stock MCP SDK process-recovery journey passed. The source change is limited to the two test fixtures."
+    ]
+  },
+  "other_original_security_observations": {
+    "source_vulnerability_reachability": "Windows AMD64, macOS ARM64 and Linux ARM64 source jobs passed and the core dependency, reachability and secret scan steps passed.",
+    "metadata_restore": [
+      {
+        "architecture": "x86_64",
+        "job": 135164648445,
+        "result": "metadata_exercise_failed",
+        "original_log": {
+          "sha256": "0f566c47a7711668b1347c6c0b5a00de87fc6eee9e3b662ece390706e70b4693",
+          "bytes": 23166
+        }
+      },
+      {
+        "architecture": "arm64",
+        "job": 135164648659,
+        "result": "metadata_exercise_failed",
+        "original_log": {
+          "sha256": "f91310f28b9ced03a9d02905a57631ab9f437981c4ce916530be9a6ce2f44af5",
+          "bytes": 23319
+        }
+      }
+    ],
+    "metadata_restore_limit": "The original jobs report a generic failure. The exact protected restore stage and runtime-role or RLS outcome are unknown.",
+    "stock_dav": "Both original stock DAV jobs again report an existing exclusive stage being overwritten by the receiver. The previous conformance refusal remains in F445. The independent DAV receiver is unqualified.",
+    "previous_stock_dav_record": "docs/qualification/evidence/F445-resume-native-terminal.json"
+  },
+  "static_checks": {
+    "integration_tagged_go_vet": "pass",
+    "record_references": "pass"
+  },
+  "sources": [
+    {
+      "path": "cmd/freightctl/namespace_tree_move_integration_test.go",
+      "sha256": "86c747ef8b48dd7d5fb46c26d7198a88e455e2f01bac9e24a8d418dbe2ff7e29",
+      "bytes": 13645
+    },
+    {
+      "path": "cmd/freightctl/portable_exchange_trace_integration_test.go",
+      "sha256": "ed1a2c6e2724645ac3bf25709b41a55ad43c48636226791f1e20d720b088cbaf",
+      "bytes": 3156
+    },
+    {
+      "path": "cmd/freightctl/protected_reference_test.go",
+      "sha256": "82df30c6a9082c66cfc71ab530b07419f109b9c30b436fe81f67aae8aff3429d",
+      "bytes": 1804
+    }
+  ],
+  "remaining": [
+    "Rerun the native Linux JSON custody steps on the next guarded candidate.",
+    "Retain the failed restore, independent stock DAV and other native failures until their original paths are qualified."
+  ]
+}

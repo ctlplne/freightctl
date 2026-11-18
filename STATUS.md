@@ -407,6 +407,12 @@ HTTPS, Chromium, the native CLI and the stock MCP SDK read the same report.
 A live policy hold hid it from the recipient. The sender retained authorized
 history through the hold and closure. Native Linux replay remains due.
 
+[F546](docs/qualification/evidence/F546-native-cli-export-authority.json)
+fixes the export test setup that stopped both original Linux jobs. The CLI
+refused the output directory before it could check management authority.
+The same native test passed with explicitly private directories under umask
+`022`. The original metadata restore and stock DAV receiver remain red.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6
