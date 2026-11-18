@@ -323,7 +323,7 @@ drops the successful OpenSSH hardlink reply after real publication. The
 delivery becomes ambiguous. Work retries make no new receiver connection.
 An explicit check under the original reviewed run reads the exact bytes from
 OpenSSH in read-only mode. It keeps the original attempt, fence and inode.
-Native Linux replay remains due.
+F542 records the passing native Linux replays.
 
 [F532](docs/qualification/evidence/F532-native-source-security-reviewed-onward.json)
 records the default source scans for `2c19ff2`. The enforcing converter
@@ -382,6 +382,12 @@ restart. Native Linux replay and the browser report flow remain due.
 moves the stock MCP fixture's client TLS setup into `internal/crypto` and
 updates the exact schema-68 fixture counts. The core import guard, stock
 OpenSSH journeys and governed FTPS recovery checks pass locally.
+
+[F542](docs/qualification/evidence/F542-original-lineage-batch-terminal.json)
+records all 18 original workflows and 39 jobs at `439881e`. Both native
+Linux hosts passed the lost OpenSSH reply recovery. The stock FTPS producer
+passed on ARM. Its x86 worker exited with status 2 before logging a control
+connection, leaving the TLS version refusal unverified.
 
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed

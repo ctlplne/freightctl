@@ -1,0 +1,504 @@
+{
+  "schema_version": 1,
+  "id": "F542",
+  "observed_at": "2026-11-19",
+  "candidate": "439881e7ee734c0118201e4fe56266ab3a949fd8",
+  "qualification_claim": false,
+  "launch_record": "docs/qualification/evidence/F537-guarded-generated-lineage-batch.json",
+  "native_lineage_record": "docs/qualification/evidence/F539-native-generated-lineage-original.json",
+  "architecture_repair_record": "docs/qualification/evidence/F541-stock-mcp-tls-boundary.json",
+  "originals_metadata": {
+    "sha256": "1299610689171715f69f3b1df44b11e7e0e4295a4491989af36ecb2e466d2e4b",
+    "bytes": 220502
+  },
+  "workflow_counts": {
+    "success": 13,
+    "failure": 5
+  },
+  "job_counts": {
+    "success": 30,
+    "failure": 9
+  },
+  "originals": [
+    {
+      "name": "Core correctness and security",
+      "run": 44400839821,
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "255d034734c69c2692137f731b1e202043fa58b1e5b334c20bfba6d58f7eb70a",
+        "bytes": 3746
+      }
+    },
+    {
+      "name": "Native FTPS dispatch approval qualification",
+      "run": 44400840050,
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "5e046e5fbf61130deb40cce61fa983878dc9a0801bfde51e3a922fd467703ce5",
+        "bytes": 3221
+      }
+    },
+    {
+      "name": "Native FTPS stock clients and custody",
+      "run": 44400839509,
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "1f390783a170890de59dbe34bd07424a54b71f9ad18b23bf362a2da0d260eecd",
+        "bytes": 5505
+      }
+    },
+    {
+      "name": "Native FTPS workflow consent qualification",
+      "run": 44400840068,
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "f60c3d952151cd3e589eff613fe145c464ea0e73026404161b2c227d72b7061b",
+        "bytes": 7298
+      }
+    },
+    {
+      "name": "Native JSON intake and custody interfaces",
+      "run": 44400839463,
+      "attempt": 1,
+      "conclusion": "failure",
+      "jobs_metadata": {
+        "sha256": "d2a51326d0debbfb1737f33b37528c3e8ba1719717a0d9385583b4e2f9667209",
+        "bytes": 9063
+      },
+      "failed_jobs": [
+        {
+          "job": 135143085991,
+          "name": "Native JSON custody (x86_64)",
+          "failed_steps": [
+            "Actual JSON SQL, API, CLI, signature and scanner-protocol outcomes"
+          ]
+        },
+        {
+          "job": 135143086377,
+          "name": "Native JSON custody (arm64)",
+          "failed_steps": [
+            "Actual JSON SQL, API, CLI, signature and scanner-protocol outcomes"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Native Linux Go, PostgreSQL and fuzz",
+      "run": 44400840038,
+      "attempt": 1,
+      "conclusion": "failure",
+      "jobs_metadata": {
+        "sha256": "2d9febc2221394b9d4045355e9aa7ed538a9ac101e971cc9468084a73c2c05ca",
+        "bytes": 17459
+      },
+      "failed_jobs": [
+        {
+          "job": 135143088080,
+          "name": "Native Go and PostgreSQL (arm64)",
+          "failed_steps": [
+            "Module integrity, vet and unit race checks"
+          ]
+        },
+        {
+          "job": 135143088174,
+          "name": "Native Go and PostgreSQL (x86_64)",
+          "failed_steps": [
+            "Module integrity, vet and unit race checks",
+            "Independent stock FTPS producer through HTTPS agent custody to stock SFTP"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Native Windows and macOS unit checks",
+      "run": 44400839559,
+      "attempt": 1,
+      "conclusion": "failure",
+      "jobs_metadata": {
+        "sha256": "7c1d98db7e181cdc94e9ea857cf982bfa8f03f7781d2d7aedb0a45bcbf0b34a8",
+        "bytes": 4673
+      },
+      "failed_jobs": [
+        {
+          "job": 135143086199,
+          "name": "windows-amd64",
+          "failed_steps": [
+            "Native Windows architecture and Go unit checks"
+          ]
+        },
+        {
+          "job": 135143086728,
+          "name": "macos-arm64",
+          "failed_steps": [
+            "Native macOS ARM architecture and Go unit race checks"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Native artifact receive browser",
+      "run": 44400839844,
+      "attempt": 1,
+      "conclusion": "failure",
+      "jobs_metadata": {
+        "sha256": "edf58006857bd1e3d114f657dd2f416fcb36a6f734a2430471d78af24631d409",
+        "bytes": 3455
+      },
+      "failed_jobs": [
+        {
+          "job": 135143087150,
+          "name": "receive-browser",
+          "failed_steps": [
+            "Actual recipient UI, exact bytes, unrelated user and endpoint revocation"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Native browser and FTPS operator qualification",
+      "run": 44400839818,
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "93a4ec75ee8fd4ce1752813bf1ce98df300493dbbad6dd84c5978e7cb795d691",
+        "bytes": 3244
+      }
+    },
+    {
+      "name": "Native document container contracts",
+      "run": 44400839551,
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "7935079eb54e6039b416ca0e9292ce3f3293636f3c85a7cc6ebab9f4a59dcb15",
+        "bytes": 6487
+      }
+    },
+    {
+      "name": "Native first enrollment and browser exchange",
+      "run": 44400839654,
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "c61af1839776b44d99e9b9205b1c31d13408e8d98c5f375ffaecedad125ae8df",
+        "bytes": 3029
+      }
+    },
+    {
+      "name": "Native immutable HTTPS stock resume",
+      "run": 44400839561,
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "3ec4fa82f1acf489d9be88a910045412df78afeb604238fcc7f7265d12d22478",
+        "bytes": 5363
+      }
+    },
+    {
+      "name": "Native independent DAV application",
+      "run": 44400839983,
+      "attempt": 1,
+      "conclusion": "failure",
+      "jobs_metadata": {
+        "sha256": "d10d59ea7da560ba6974d0b1d3932a6e6663500007aaf961c879822d65928161",
+        "bytes": 7854
+      },
+      "failed_jobs": [
+        {
+          "job": 135143086910,
+          "name": "Native stock rclone DAV (amd64)",
+          "failed_steps": [
+            "Actual independent DAV application,exact bytes,conditional writes and current authority",
+            "Actual direct DAV delivery,independent stock receiver,CLI and approvals",
+            "Actual PostgreSQL DAV lost MOVE response and read-only reconciliation",
+            "Direct DAV delivery between separate freightctl custody instances"
+          ]
+        },
+        {
+          "job": 135143087808,
+          "name": "Native stock rclone DAV (arm64)",
+          "failed_steps": [
+            "Actual independent DAV application,exact bytes,conditional writes and current authority",
+            "Actual direct DAV delivery,independent stock receiver,CLI and approvals",
+            "Direct DAV delivery between separate freightctl custody instances"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Native legacy SCP regular-file custody",
+      "run": 44400839789,
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "1792978aa384d986e505da6665f0141ca0df2798d38c7738046115e50e535a61",
+        "bytes": 5353
+      }
+    },
+    {
+      "name": "Native reproducible core binaries",
+      "run": 44400840006,
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "e4a005898c905e998b6686bd3207eeb7bf74c8198e03f20165cd844765cc7acb",
+        "bytes": 4958
+      }
+    },
+    {
+      "name": "Native source vulnerability configurations",
+      "run": 44400839475,
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "55849528809d2cf33c8cbdde64e0bea1fe947d8e3d438af18fa1ac135aae25f2",
+        "bytes": 6824
+      }
+    },
+    {
+      "name": "Native tus stock client and custody checkpoints",
+      "run": 44400839650,
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "c510023df306938efb6242d04db13d639ee2f6ee7ce4bc5b518947819c627a34",
+        "bytes": 6617
+      }
+    },
+    {
+      "name": "Stock peer and browser qualification",
+      "run": 44400839919,
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "82d358ee5fd45eac51e404ade5b13684ee00506deb92b35e3ab8b14285c2d44a",
+        "bytes": 21836
+      }
+    }
+  ],
+  "native_linux": {
+    "run": 44400840038,
+    "attempt": 1,
+    "jobs": [
+      {
+        "job": 135143088080,
+        "conclusion": "failure",
+        "stock_sftp_readback": {
+          "step": 18,
+          "conclusion": "success",
+          "duration": "4.39s",
+          "log": {
+            "sha256": "7ef492775e41fa832d06b9b23b1593c95db57552f6fc0c4e07cd15ebf649cc42",
+            "bytes": 2998
+          }
+        },
+        "stock_ftps": {
+          "step": 19,
+          "conclusion": "success",
+          "summary": {
+            "architecture": "arm64",
+            "state": "passed",
+            "host": "Linux",
+            "image": "sha256:30c4f85d913a4adffd7d56136a8ed4e8ea2656f99d3d37827fc58d200de7e606",
+            "inetd_sha256": "ec3127316a53372ae3052cf3fa34c75108f2e391f2bfe49f49eb1c5cc0a86ce6",
+            "vsftpd_sha256": "edb450c4e263459666f6b2139b16793a6a6df040b21d531f00ac978da903c8ce",
+            "package_lock": {
+              "bytes": 1081,
+              "sha256": "7d25c977891048fa8e2b48b6f322f3cd9df2c74010cd5f0a2ce5c7e05508f962"
+            },
+            "modes": {
+              "explicit": {
+                "confirmed_downloads": 4,
+                "evidence": {
+                  "continuity.stdout": {
+                    "bytes": 78,
+                    "sha256": "82dc8ca37f8f27b0aac6916d8003f45106b2c366d5bb0e9e1ae83276f7068e60"
+                  },
+                  "journeys.stdout": {
+                    "bytes": 4620,
+                    "sha256": "13f770c673040196a104261ce0bcd6ec15b61b49b176516c8b0e61228f5e2643"
+                  },
+                  "peer-identity.stdout": {
+                    "bytes": 184,
+                    "sha256": "3456034b51025c7537dee3f01795258f7b9c462e56a2745c3a4d80d6fc83a994"
+                  },
+                  "producer-files.stdout": {
+                    "bytes": 3584,
+                    "sha256": "8ad71daca626fc0a6335f8145fc1d4110c0fd9a24477c328dffe8def1cbeb36f"
+                  },
+                  "reject-tls12.stderr": {
+                    "bytes": 289,
+                    "sha256": "0743a89e156200f9ea161121b0c9f6c4cc3e68b3c0dd2ed4772fd36585238385"
+                  },
+                  "vsftpd.log": {
+                    "bytes": 1121,
+                    "sha256": "96f129a1252ab0207830883b5fb5a9dceba055c644f961fa5c31acd75aabae15"
+                  },
+                  "worker.log": {
+                    "bytes": 45,
+                    "sha256": "1a4eb2ecbfb0795c84369678442df8b48bb2b7ac56958ce3a0f4dbb135bc5f6e"
+                  },
+                  "xfer.log": {
+                    "bytes": 368,
+                    "sha256": "baf4f25d5d9ebedf7598ce51f3c312fd27ec8e2661f49bf59589b815d792c830"
+                  }
+                },
+                "journeys": 2,
+                "listener_restarts": 0,
+                "stock_worker_lifecycle": {
+                  "exit_codes": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "started": 3,
+                  "state": "recorded"
+                },
+                "tls12_refused": true,
+                "unchanged_source": true
+              },
+              "implicit": {
+                "confirmed_downloads": 4,
+                "evidence": {
+                  "continuity.stdout": {
+                    "bytes": 78,
+                    "sha256": "b1aea8d1cb42361c9f30bd8d5357ed2b6901231dab70560d1017013fca62adf7"
+                  },
+                  "journeys.stdout": {
+                    "bytes": 4614,
+                    "sha256": "3a30de53aedb797f6990be57caf332d1121349b7982ee6c6fd7027332eddac8b"
+                  },
+                  "peer-identity.stdout": {
+                    "bytes": 184,
+                    "sha256": "3456034b51025c7537dee3f01795258f7b9c462e56a2745c3a4d80d6fc83a994"
+                  },
+                  "producer-files.stdout": {
+                    "bytes": 3584,
+                    "sha256": "1b8f5eea8d19da3af2fafd981883cce252b47f51388f3f9dab14baf257860c6f"
+                  },
+                  "reject-tls12.stderr": {
+                    "bytes": 289,
+                    "sha256": "57d22e927eca7cbba3863926f424dba4f3185a81a5ef871fd7fa25fdcfb76eda"
+                  },
+                  "vsftpd.log": {
+                    "bytes": 1121,
+                    "sha256": "dee7bff6c8c6472f840a2101a13b64b39f9e261fb8b17db3049e0863891190ae"
+                  },
+                  "worker.log": {
+                    "bytes": 45,
+                    "sha256": "1a4eb2ecbfb0795c84369678442df8b48bb2b7ac56958ce3a0f4dbb135bc5f6e"
+                  },
+                  "xfer.log": {
+                    "bytes": 368,
+                    "sha256": "90decaa572b15e1ce0b2fb9b5808819c1a506ca5a50405ebcd20c87f62f81b4f"
+                  }
+                },
+                "journeys": 2,
+                "listener_restarts": 0,
+                "stock_worker_lifecycle": {
+                  "exit_codes": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "started": 3,
+                  "state": "recorded"
+                },
+                "tls12_refused": true,
+                "unchanged_source": true
+              }
+            }
+          },
+          "log": {
+            "sha256": "54b271e532a681dc581a9b0f135c11bf9e22068199c2ca9b31a7a356d9541cb8",
+            "bytes": 6834
+          }
+        },
+        "combined_module_and_unit_log": {
+          "sha256": "468b5313699d6bec62aa631c83c715c0f837d695a8516a897f918fc1a3197f40",
+          "bytes": 10033
+        }
+      },
+      {
+        "job": 135143088174,
+        "conclusion": "failure",
+        "stock_sftp_readback": {
+          "step": 18,
+          "conclusion": "success",
+          "duration": "3.51s",
+          "log": {
+            "sha256": "32d9d14056b402cf23194ce558750c5148d9a40a6445014cc23f9a049616e8ea",
+            "bytes": 3013
+          }
+        },
+        "stock_ftps": {
+          "step": 19,
+          "conclusion": "failure",
+          "summary": {
+            "architecture": "amd64",
+            "state": "failed",
+            "host": "Linux",
+            "image": "sha256:f142f157798485f4ae80a59a00f2e9442f5346e78bd581fa9555c20ca67cf9bf",
+            "inetd_sha256": "1f9d7aa222c2cd571b659b08c26f435e64705adcfba6759d1acaefd0ab25f69b",
+            "vsftpd_sha256": "d821bd6a3485c6330f381f8c0b8920f01114900bfae3575be0369902254f13ce",
+            "package_lock": {
+              "bytes": 1081,
+              "sha256": "c8d9a431097b1637fe94bfe10f46950796c4a11b509d9f07fe1d5dc89b018cd0"
+            },
+            "modes": {},
+            "tls12_diagnosis": {
+              "explicit": {
+                "categories": [
+                  "unexpected-eof"
+                ],
+                "client_hello_attempted": true,
+                "stock_control_connections": 0,
+                "stock_worker_lifecycle": {
+                  "exit_codes": [
+                    2
+                  ],
+                  "started": 1,
+                  "state": "recorded"
+                }
+              }
+            },
+            "failure": "producer did not reject TLS 1.2 by policy"
+          },
+          "log": {
+            "sha256": "63be63ee32e841f42573642754b95b084afb973d16c29784c5cbae15e440a739",
+            "bytes": 5639
+          }
+        },
+        "combined_module_and_unit_log": {
+          "sha256": "662abb81305461791a0d1028c523828b4d36d5f7441e91208a65f5e3a7c662b3",
+          "bytes": 10096
+        }
+      }
+    ],
+    "sftp_meaning": "Both native hosts lost the successful hardlink reply after actual publication. The replay sent nothing and read-only recovery preserved one delivery attempt and fence.",
+    "ftps_x86_meaning": "The original x86 explicit-TLS probe had unexpected EOF after the ClientHello attempt. One native stock worker exited with status 2 and the producer recorded zero control connections. TLS version refusal and the remaining x86 journey are unqualified."
+  },
+  "security_triage": {
+    "summary": "The source matrix and core gates passed. Both combined Linux steps verified modules and then failed the architecture test at the stock SDK fixture. The two red JSON custody jobs report the existing protected output-directory refusal in the CLI fixture.",
+    "json_job_failure_logs": [
+      {
+        "job": 135143085991,
+        "sha256": "1c8981dda45b11cf2fbb75008deee215a76ca02cce161470dad5339bc4a91e0c",
+        "bytes": 34089
+      },
+      {
+        "job": 135143086377,
+        "sha256": "0a95adacc798603e8edb568ee95364621199559996fa6615498c2931f087f8bf",
+        "bytes": 33929
+      }
+    ]
+  },
+  "remaining": [
+    "Replay the corrected architecture boundary and all red original journeys. Retain the x86 FTPS refusal failure and current authorized recipient UI failure.",
+    "Run schema 68 backup/restore and the HTTPS, native CLI and MCP report steps on exact source."
+  ]
+}

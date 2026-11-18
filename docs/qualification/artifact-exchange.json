@@ -531,7 +531,8 @@
         "docs/qualification/evidence/F527-reviewed-onward-readback.json",
         "docs/qualification/evidence/F528-original-batch-and-native-ftps.json",
         "docs/qualification/evidence/F530-stock-ftps-worker-start-witness.json",
-        "docs/qualification/evidence/F531-stock-sftp-publication-reply-loss.json"
+        "docs/qualification/evidence/F531-stock-sftp-publication-reply-loss.json",
+        "docs/qualification/evidence/F542-original-lineage-batch-terminal.json"
       ]
     },
     {
