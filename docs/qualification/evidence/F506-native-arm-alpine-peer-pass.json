@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "id": "F506",
+  "observed_at": "2026-11-18",
+  "candidate": "f58dd143920290bb5537077abe12f6b9dc0fa859",
+  "base_evidence": "docs/qualification/evidence/F500-stock-alpine-openpgp-peer.json",
+  "historical_debian_security_evidence": "docs/qualification/evidence/F501-portability-native-batch-terminal.json",
+  "qualification_claim": false,
+  "scope": "Exact original Linux ARM replacement peer runtime, independent encrypted FTPS and enforcing vulnerability scan",
+  "original_job": {
+    "run_id": 44340305606,
+    "job_id": 134928123432,
+    "attempt": 1,
+    "url": "https://github.com/ctlplne/freightctl/actions/runs/44340305606/job/134928123432",
+    "conclusion": "failure",
+    "raw_log_sha256": "5862258600ffcb0d84abea4f4fc34852cc2c68667c0fde726e1daa14e21df4df",
+    "raw_log_bytes": 724126,
+    "native_metadata_sha256": "0bff93a7c98b5a246900b7bb217413166e15565ba382c9a553d80290df32f667",
+    "pinned_peer_build": "success",
+    "whole_postgresql_suite": "failure",
+    "focused_encrypted_ftps": "success",
+    "enforcing_image_scan": "success",
+    "focused_ftps_subcases_passed": 8,
+    "total_subcase_pass_markers_across_two_steps": 16
+  },
+  "runtime": {
+    "architecture": "arm64",
+    "node_version": "v26.13.0",
+    "openpgp_version": "6.3.2",
+    "profile": "stock-node26-musl-alpine3.24-v1",
+    "node_sha256": "91967aeb5c9ea23eddefda5b9599f3379d35222f8b5cb1e9c986b5e01b4c4db5",
+    "apk_database_sha256": "6c61d4b4901b9182ff5b46781c0812234d8ab9a1ee6760c37707c190e947c2d9",
+    "stock_manifest_digest": "sha256:20c29f6abefc3dffbdcae5677e4ee5dd0c45073a24ff6f5a7f25010b825f0a7b"
+  },
+  "enforcing_scan": {
+    "image_id": "sha256:8e38e3b44a6a7111dc0620fe75b566187b5aeaf9ba0d94ff6a759adb046910c1",
+    "image_archive_sha256": "f0d4237764107ff47e157924723e701ced944744b3fafeffbff268b77f2e85d0",
+    "report_sha256": "718caa933466855b93d5707fc2f8e5c780638d9daa836232d0e6ecee150a5ad0",
+    "feed_database_sha256": "7244f40ff53c4ac2909d8fba04aa4937354a620c380dc83bbc51df715f6cd68d",
+    "feed_updated_at": "2026-11-18T13:03:23.615586+00:00",
+    "report_created_at": "2026-11-18T16:17:23.362163+00:00",
+    "scanner_image": "aquasec/trivy:0.76.1@sha256:790fd66d1697395d8693d1acaa1ea702406a20f109b6fc7bac8db623eca6c06c",
+    "scanner_version": "0.76.1",
+    "os_family": "alpine",
+    "os_version": "3.24.4",
+    "package_counts": {
+      "lang-pkgs": 2,
+      "os-pkgs": 4
+    },
+    "severities": {
+      "CRITICAL": 0,
+      "HIGH": 0,
+      "LOW": 0,
+      "MEDIUM": 0,
+      "UNKNOWN": 0
+    },
+    "suppressed_findings": 0,
+    "blocking_advisory_ids": {
+      "CRITICAL": [],
+      "HIGH": [],
+      "UNKNOWN": []
+    },
+    "manifest_sha256": "bcd9e81a914881435ff5dd02068d445545ff3c2ed6f636d92fc3be494f4cc09f",
+    "scratch_bytes": 111057735680,
+    "scratch_cleanup": "unmounted",
+    "resource_policy": "github-runner-capacity"
+  },
+  "remaining": [
+    "Exact original Linux x86 runtime and security results remain due at this observation.",
+    "Preserve the whole PostgreSQL and other original runtime failures and replay them at FINISH.",
+    "This passes the pinned ARM test receiver profile for this commit. All release, production and wider product gates remain open."
+  ]
+}

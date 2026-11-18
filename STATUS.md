@@ -154,6 +154,11 @@ records the original stock peer workflow after it appeared. The three native
 source scan jobs passed, including macOS ARM. Both native Linux Alpine peer
 builds passed. The encrypted workflow replay and enforcing scans remain due.
 
+[F506](docs/qualification/evidence/F506-native-arm-alpine-peer-pass.json)
+records the original ARM Alpine peer image scan with zero findings and zero
+suppressions. All eight dedicated encrypted FTPS cases passed. The full ARM
+PostgreSQL suite still failed. Native x86 scan and runtime results remain due.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6
