@@ -91,3 +91,63 @@ func TestPlanSFTPGoAccessLeavesUnresolvedAndAmbiguousRecordsBlocked(t *testing.T
 		t.Fatalf("unknown membership silently acquired a meaning %#v", user.Dependencies[1])
 	}
 }
+
+func TestPlanSFTPGoAccessShowsKeyAndShareScopeWithoutCreditingSecrets(t *testing.T) {
+	data := []byte(`{
+  "version":17,
+  "users":[{"username":"private-user","status":1}],
+  "admins":[{"username":"private-admin","status":1}],
+  "api_keys":[
+    {"name":"private-name","id":"private-id","scope":2,"user":"private-user","key":"private-key"},
+    {"scope":1,"admin":"private-admin"},
+    {"scope":2},
+    {"scope":1},
+    {"scope":2,"admin":"private-admin"},
+    {"scope":1,"admin":"absent"},
+    {"scope":9,"user":"private-user"}
+  ],
+  "shares":[
+    {"id":"private-link","username":"private-user","scope":3,"paths":["/private-share"],"password":"private-share-password"},
+    {"scope":1,"username":"absent"},
+    {"scope":9,"username":"private-user"}
+  ]
+}`)
+	plan, err := PlanSFTPGo(data)
+	if err != nil {
+		t.Fatal(err)
+	}
+	expected := []struct {
+		scope, disposition, target string
+	}{
+		{"user", "needs_input", "/users/0"},
+		{"admin", "needs_input", "/admins/0"},
+		{"all_users", "unsupported", ""},
+		{"all_admins", "unsupported", ""},
+		{"user", "blocked", ""},
+		{"admin", "blocked", ""},
+		{"", "blocked", ""},
+		{"read_write", "needs_input", "/users/0"},
+		{"read", "blocked", ""},
+		{"", "blocked", "/users/0"},
+	}
+	if len(plan.AccessRecords) != len(expected)+2 {
+		t.Fatalf("access records = %d", len(plan.AccessRecords))
+	}
+	for i, row := range plan.AccessRecords[2:] {
+		target := ""
+		if len(row.Dependencies) != 0 {
+			target = row.Dependencies[0].Target
+		}
+		want := expected[i]
+		if row.SourceScope != want.scope || row.Disposition != want.disposition || target != want.target {
+			t.Errorf("unexpected scope or dependency %#v", row)
+		}
+	}
+	if len(plan.AccessRecords[4].Dependencies) != 0 || len(plan.AccessRecords[5].Dependencies) != 0 {
+		t.Fatal("unbound credential acquired a destination identity")
+	}
+	encoded, err := json.Marshal(plan)
+	if err != nil || strings.Contains(string(encoded), "private-") {
+		t.Fatal("key or share information escaped the protected source")
+	}
+}

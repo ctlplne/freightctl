@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "id": "F467",
+  "observed_at": "2026-11-18",
+  "base_candidate": "8fd2339",
+  "base_evidence": "docs/qualification/evidence/F466-sftpgo-access-graph.json",
+  "scope": "Native offline report for stock SFTPGo API-key scopes and share ownership",
+  "qualification_claim": false,
+  "platform": "darwin/arm64",
+  "go_version": "go1.27.4",
+  "references": [
+    "https://github.com/drakkan/sftpgo/blob/v2.7.6/internal/dataprovider/apikey.go",
+    "https://github.com/drakkan/sftpgo/blob/v2.7.6/internal/dataprovider/share.go"
+  ],
+  "stock_producer": {
+    "version": "2.7.6-62ae9ba3",
+    "executable_sha256": "4a00de2146fe454b09cc0170d2b825fd3bbda05357315b72f91583934c50e4de",
+    "fixture": "Separate loopback memory provider, one user, one administrator, three synthetic keys and one protected read share",
+    "export_method": "GET /api/v2/dumpdata?output-data=1",
+    "export_bytes": 2493,
+    "peak_child_rss_bytes": 37273600,
+    "stopped_before_import": true,
+    "private_evidence_directory": ".private/freightctl-f467-stock",
+    "replay_driver_sha256": "13151673dc42408620610ffde4a8c77f24f7f1922a4554c3af1071ea14efbbf8"
+  },
+  "red": {
+    "assertion_exit_code": 1,
+    "observation": "The previous planner omits all four key and share rows from the exact stock export.",
+    "report_sha256": "c1cd2ab7691663ea0e3e30cd329470a2df5abc7bc8bfb1d2ae9bafeeb02979b4"
+  },
+  "green": {
+    "consumer_executable_sha256": "2280fbec91e6c0890e642743f1b8b0c891a18672fd642586b0d1cbd7a2d582db",
+    "source_sha256": "8b4e154925f4a0ba3b16a7f9dcf0e335205ba5059016fcd3b12fae7858583e94",
+    "report_sha256": "09862bb2f3b24987548a689b12d2ffc52f22357e1d0d30130d8bf4cb1491b660",
+    "same_source_unchanged_and_report_byte_identical_on_replay": true,
+    "scoped_key_records": 3,
+    "share_records": 1,
+    "bound_user_key_target": "/users/0",
+    "bound_admin_key_target": "/admins/0",
+    "unbound_user_key_scope_and_disposition": ["all_users", "unsupported"],
+    "unbound_key_dependencies": 0,
+    "read_share_owner_target": "/users/0",
+    "raw_key_hashes_share_hashes_ids_names_and_paths_absent": true
+  },
+  "checks": {
+    "focused_race_parent_tests": 6,
+    "focused_race_cases_including_parents": 22,
+    "focused_race_log_sha256": "79eb8ccecf1c31d503497dc64cfa4fb2ec04b9acaa143c4ab530afb4b1023a90",
+    "affected_vet": "pass",
+    "core_architecture": "pass",
+    "format": "pass"
+  },
+  "remaining": [
+    "Destination credential re-enrollment and reviewed share reissuance",
+    "Effective permissions, path and retention translation with isolated comparison and cutover",
+    "Independent operator and licensed peer qualification"
+  ]
+}

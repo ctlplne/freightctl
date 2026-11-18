@@ -47,11 +47,17 @@ and the export's scope when reconciling the estate inventory.
   administrator is its own dependency type. Missing and duplicate definitions
   leave blocked rows. Review effective access and mount boundaries before
   choosing new accounts and re-enrolling credentials.
+- API-key rows distinguish user scope from administrator scope. A key tied
+  to one account has an owner dependency. An unbound key that can apply
+  across the whole source scope stays `unsupported` and needs explicit
+  account mapping. For shares, review the owner, read/write scope, selected
+  paths, expiry, passphrase and access limits in the protected export before
+  issuing replacement access.
 
-The native exercises cover two stock exports with disabled scheduled rules and
-their shared action, and a disabled user with a role, primary group and two
-paths to a virtual folder. API-key and share links, effective permission and
-storage translation, action conversion, and other triggers remain open.
-Complete destination adoption needs isolated comparison of actual file
-selection, schedules, byte outputs, failures and receipts, followed by reviewed
-cutover and rollback.
+Stock export exercises cover disabled scheduled rules and their shared action,
+a disabled user with a role, primary group and folder references, scoped
+credentials, and a password-protected share. Effective permission and storage
+translation, action conversion, and other triggers remain open. Complete
+destination adoption needs isolated comparison of actual file selection,
+schedules, byte outputs, failures and receipts, followed by reviewed cutover
+and rollback.

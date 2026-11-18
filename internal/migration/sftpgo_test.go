@@ -142,6 +142,7 @@ func TestPlanSFTPGoRejectsInvalidOrUnboundedDumps(t *testing.T) {
 		{"duplicate-nested-field", `{"version":17,"users":[{"password":"private-marker","password":""}]}`, errSFTPGoDump},
 		{"case-alias", `{"version":17,"event_actions":[{"name":"a","TYPE":1}]}`, errSFTPGoDump},
 		{"access-field-alias", `{"version":17,"users":[{"groups":[{"Name":"a","type":1}]}]}`, errSFTPGoDump},
+		{"credential-field-alias", `{"version":17,"api_keys":[{"scope":1,"Admin":"a"}]}`, errSFTPGoDump},
 		{"unicode-case-alias", `{"version":17,"event_rules":[{"ſtatus":1}]}`, errSFTPGoDump},
 		{"second-value", `{"version":17}{}`, errSFTPGoDump},
 		{"scalar-row", `{"version":17,"users":[null]}`, errSFTPGoDump},

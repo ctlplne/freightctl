@@ -253,7 +253,7 @@ func inspectSFTPGoSection(decoder *json.Decoder, section *SFTPGoInventory, budge
 		return errSFTPGoDump
 	}
 	switch section.Source {
-	case "/event_rules", "/event_actions", "/users", "/admins", "/groups", "/folders", "/roles":
+	case "/event_rules", "/event_actions", "/users", "/admins", "/groups", "/folders", "/roles", "/api_keys", "/shares":
 		return inspectSFTPGoRows(decoder, section, budget, true)
 	default:
 		return inspectSFTPGoRows(decoder, section, budget, false)
@@ -329,7 +329,7 @@ func isSFTPGoFieldAlias(name string) bool {
 		"name", "type", "status", "trigger", "conditions", "schedules", "actions",
 		"order", "relation_options", "is_failure_action", "stop_on_failure", "execute_sync",
 		"hour", "day_of_week", "day_of_month", "month",
-		"username", "role", "groups", "virtual_folders",
+		"username", "role", "groups", "virtual_folders", "scope", "admin", "user",
 	} {
 		if name != field && strings.EqualFold(name, field) {
 			return true

@@ -5,6 +5,7 @@ import "fmt"
 type SFTPGoAccessRecord struct {
 	Source       string                   `json:"source"`
 	SourceState  string                   `json:"source_state,omitempty"`
+	SourceScope  string                   `json:"source_scope,omitempty"`
 	Disposition  string                   `json:"disposition"`
 	Reason       string                   `json:"reason"`
 	Dependencies []SFTPGoAccessDependency `json:"dependencies"`
@@ -25,6 +26,8 @@ type sftpgoAccessDump struct {
 	Groups  []sftpgoGroup   `json:"groups"`
 	Users   []sftpgoAccount `json:"users"`
 	Admins  []sftpgoAccount `json:"admins"`
+	APIKeys []sftpgoAPIKey  `json:"api_keys"`
+	Shares  []sftpgoShare   `json:"shares"`
 }
 
 type sftpgoNamed struct {
@@ -47,6 +50,17 @@ type sftpgoAccount struct {
 	} `json:"groups"`
 }
 
+type sftpgoAPIKey struct {
+	Scope int    `json:"scope"`
+	User  string `json:"user"`
+	Admin string `json:"admin"`
+}
+
+type sftpgoShare struct {
+	Scope    int    `json:"scope"`
+	Username string `json:"username"`
+}
+
 type sourceNames map[string]string
 
 func (index sourceNames) add(name, source string) {
@@ -58,7 +72,7 @@ func (index sourceNames) add(name, source string) {
 }
 
 func planSFTPGoAccess(dump sftpgoAccessDump) []SFTPGoAccessRecord {
-	records := make([]SFTPGoAccessRecord, 0, len(dump.Folders)+len(dump.Roles)+len(dump.Groups)+len(dump.Users)+len(dump.Admins))
+	records := make([]SFTPGoAccessRecord, 0, len(dump.Folders)+len(dump.Roles)+len(dump.Groups)+len(dump.Users)+len(dump.Admins)+len(dump.APIKeys)+len(dump.Shares))
 	folders := make(sourceNames, len(dump.Folders))
 	roles := make(sourceNames, len(dump.Roles))
 	groups := make(sourceNames, len(dump.Groups))
@@ -76,7 +90,7 @@ func planSFTPGoAccess(dump sftpgoAccessDump) []SFTPGoAccessRecord {
 		}
 		for i, entry := range section.entries {
 			path := fmt.Sprintf("%s/%d", section.path, i)
-			row := accessRecord(path, section.index[entry.Name], section.reason)
+			row := accessRecord(path, section.index[entry.Name] != "", section.reason)
 			records = append(records, row)
 		}
 	}
@@ -84,24 +98,25 @@ func planSFTPGoAccess(dump sftpgoAccessDump) []SFTPGoAccessRecord {
 		groups.add(group.Name, fmt.Sprintf("/groups/%d", i))
 	}
 	for i, group := range dump.Groups {
-		row := accessRecord(fmt.Sprintf("/groups/%d", i), groups[group.Name], "review_group_inheritance")
+		row := accessRecord(fmt.Sprintf("/groups/%d", i), groups[group.Name] != "", "review_group_inheritance")
 		row.addFolders(group.Folders, folders)
 		records = append(records, row)
 	}
+	users, admins := make(sourceNames, len(dump.Users)), make(sourceNames, len(dump.Admins))
 	for _, section := range []struct {
 		path     string
 		accounts []sftpgoAccount
+		names    sourceNames
 	}{
-		{"/users", dump.Users},
-		{"/admins", dump.Admins},
+		{"/users", dump.Users, users},
+		{"/admins", dump.Admins, admins},
 	} {
-		names := make(sourceNames, len(section.accounts))
 		for i, account := range section.accounts {
-			names.add(account.Username, fmt.Sprintf("%s/%d", section.path, i))
+			section.names.add(account.Username, fmt.Sprintf("%s/%d", section.path, i))
 		}
 		for i, account := range section.accounts {
 			path := fmt.Sprintf("%s/%d", section.path, i)
-			row := accessRecord(path, names[account.Username], "review_account_scope_and_reenroll_credentials")
+			row := accessRecord(path, section.names[account.Username] != "", "review_account_scope_and_reenroll_credentials")
 			row.SourceState = sftpgoStatus(account.Status)
 			if row.SourceState == "unknown" && row.Disposition == "needs_input" {
 				row.Disposition, row.Reason = "blocked", "missing_or_invalid_account_state"
@@ -128,16 +143,64 @@ func planSFTPGoAccess(dump sftpgoAccessDump) []SFTPGoAccessRecord {
 			records = append(records, row)
 		}
 	}
+	for i, key := range dump.APIKeys {
+		records = append(records, planSFTPGoAPIKey(i, key, users, admins))
+	}
+	for i, share := range dump.Shares {
+		records = append(records, planSFTPGoShare(i, share, users))
+	}
 	return records
 }
 
-func accessRecord(source, indexedSource, reason string) SFTPGoAccessRecord {
+func accessRecord(source string, identityOK bool, reason string) SFTPGoAccessRecord {
 	row := SFTPGoAccessRecord{
 		Source: source, Disposition: "needs_input", Reason: reason, Dependencies: []SFTPGoAccessDependency{},
 	}
-	if indexedSource == "" {
+	if !identityOK {
 		row.Disposition, row.Reason = "blocked", "missing_or_duplicate_source_identity"
 	}
+	return row
+}
+
+func planSFTPGoAPIKey(i int, key sftpgoAPIKey, users, admins sourceNames) SFTPGoAccessRecord {
+	row := accessRecord(fmt.Sprintf("/api_keys/%d", i), true, "review_scope_and_issue_new_credential")
+	var field, owner, conflictingOwner string
+	var names sourceNames
+	switch key.Scope {
+	case 1:
+		field, owner, conflictingOwner, names = "admin", key.Admin, key.User, admins
+	case 2:
+		field, owner, conflictingOwner, names = "user", key.User, key.Admin, users
+	default:
+		row.Disposition, row.Reason = "blocked", "unknown_api_key_scope"
+		return row
+	}
+	row.SourceScope = field
+	switch {
+	case conflictingOwner != "":
+		row.Disposition, row.Reason = "blocked", "api_key_owner_conflicts_with_scope"
+	case owner == "":
+		row.SourceScope = "all_" + field + "s"
+		row.Disposition, row.Reason = "unsupported", "unbound_api_key_requires_explicit_account_mapping"
+	default:
+		row.addDependency(row.Source+"/"+field, names[owner], "api_key_owner", "")
+	}
+	return row
+}
+
+func planSFTPGoShare(i int, share sftpgoShare, users sourceNames) SFTPGoAccessRecord {
+	row := accessRecord(fmt.Sprintf("/shares/%d", i), true, "review_share_paths_expiry_and_reissue")
+	switch share.Scope {
+	case 1:
+		row.SourceScope = "read"
+	case 2:
+		row.SourceScope = "write"
+	case 3:
+		row.SourceScope = "read_write"
+	default:
+		row.Disposition, row.Reason = "blocked", "unknown_share_scope"
+	}
+	row.addDependency(row.Source+"/username", users[share.Username], "share_owner", "")
 	return row
 }
 

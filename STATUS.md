@@ -88,6 +88,11 @@ mounts. A stock export replay resolves all four fixture links and preserves
 the account's disabled state. Effective permissions and destination
 enrollment still require review and proof.
 
+[F467](docs/qualification/evidence/F467-sftpgo-key-share-scope.json) records
+the stock replay for two bound credentials, an unbound user-wide key, and
+a private share. The planner identifies exact source owners, keeps the
+unbound credential unsupported, and omits credential and share values.
+
 [F455](docs/qualification/evidence/F455-mixed-delivery-proposals.json) binds
 each AI proposal alias to its registered SFTP or FTPS connection. The
 responder suggests an order. freightctl checks the protocol and creates an
