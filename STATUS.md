@@ -43,6 +43,13 @@ freeform AI requirements containing recognized credential fields. Older
 text-bearing approvals fail the current-policy check before endpoint contact.
 Six synthetic disclosure regressions pass. Native PostgreSQL replay is due.
 
+[F453](docs/qualification/evidence/F453-original-ci-terminal.json) records
+15 original workflows and 31 jobs at `010a3a2`. Twenty-two jobs passed.
+Both Linux PostgreSQL suites passed, then both independent peer-image
+scans blocked on CVE-2026-100290 and CVE-2026-115819 in Debian glibc.
+Debian still lists the pinned release as vulnerable. The receive browser
+failure, Go source failures and stock DAV security failures remain recorded.
+
 F442 implements direct DAV delivery schema3 through the existing custody,
 durable intent,draft/approval,worker slot,lease/fence and reconciliation paths.
 Exact pinned TLS1.3 and protected bearer/Basic references,private-stage contract,
