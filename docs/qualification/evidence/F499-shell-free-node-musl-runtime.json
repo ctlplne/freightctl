@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "id": "F499",
+  "observed_at": "2026-11-18",
+  "candidate": "ae93e6652c4b6f0e9cbe0c1ade1ed5fc11fb7df1",
+  "base_evidence": "docs/qualification/evidence/F498-native-peer-glibc-replay.json",
+  "scope": "Isolated stock Node runtime probe before building and scanning a complete OpenPGP recipient image",
+  "qualification_claim": false,
+  "first_failure": {
+    "architecture": "linux/arm64",
+    "exit_code": 126,
+    "result": "The OCI launcher could not traverse the root-owned runtime directories because the local staging umask made their archive modes 0700.",
+    "repair": "Keep local evidence private and write runtime directory entries as 0755 with the package index at 0644. Keep the container UID and GID at 65532 and the root filesystem read-only.",
+    "raw_log_sha256": "a055d826b6c66282e2555d48dc3407d4e7f086aad0c4cd468be850f352fa6c2e"
+  },
+  "second_failure": {
+    "exit_code": 1,
+    "result": "The stock Node runtime started and its report included the main executable alongside the three mapped library paths. The library-only assertion failed.",
+    "repair": "Compare every reported absolute path except the exact process executable to the pinned library list.",
+    "raw_log_sha256": "04ffc8dda5f24354be5d744edebc94115d249f4d518e0777cbfb70e9086ac028"
+  },
+  "native_arm64": {
+    "source_manifest": "sha256:20c29f6abefc3dffbdcae5677e4ee5dd0c45073a24ff6f5a7f25010b825f0a7b",
+    "stock_inventory_log_sha256": "fc685cc068e0445ff2762632d0d8df3606a614c5774d25735fd9c864eaca3342",
+    "node_sha256": "91967aeb5c9ea23eddefda5b9599f3379d35222f8b5cb1e9c986b5e01b4c4db5",
+    "runtime_image_id": "sha256:b1d55d3dbcee4f25ef63d98c3da3de3d3c06827b23a52f483937d58eec75ccaf",
+    "root_archive_sha256": "24a7a1321c9bd914861991e2fd883f760fd520067f4ff7bdea7fe78bf2718933",
+    "root_archive_bytes": 151500800,
+    "selected_apk_database_sha256": "6c61d4b4901b9182ff5b46781c0812234d8ab9a1ee6760c37707c190e947c2d9",
+    "complete_apk_records_and_payload": {
+      "alpine-release": "3.24.4-r0",
+      "musl": "1.2.6-r3",
+      "libgcc": "15.2.0-r5",
+      "libstdc++": "15.2.0-r5"
+    },
+    "package_payload_files": 10,
+    "node_version": "26.13.0",
+    "embedded_openssl_version": "3.5.9",
+    "embedded_zlib_version": "1.3.2.1-motley-456ae73",
+    "mapped_libraries": ["/lib/ld-musl-aarch64.so.1", "/usr/lib/libgcc_s.so.1", "/usr/lib/libstdc++.so.6"],
+    "verified_absent": ["/bin/sh", "/sbin/apk", "/usr/bin/ldd", "/usr/lib/libz.so.1", "/usr/lib/libssl.so.3", "/usr/lib/libcrypto.so.3"],
+    "uid": 65532,
+    "gid_configured": 65532,
+    "sandbox": {"memory_mib": 192, "cpus": 1, "pid_limit": 48, "network": "none", "root_filesystem": "read-only", "capabilities": "none", "no_new_privileges": true},
+    "webcrypto_sha256": "passed",
+    "proof_sha256": "1d02ddcb2cd5f1de4a23222f5eed2575c12cbdea32a4f04c05baaded96cda69f",
+    "replay_log_sha256": "57beaf2fe6c224362341335d12a51b89bf621a96e9ccc59cb3e2f88fb8bce16a",
+    "task_containers_and_imported_image_removed": true
+  },
+  "emulated_amd64_stock_inventory": {
+    "source_manifest": "sha256:b2646ba6d774dc22c24d89fc37103fcf4c4467e870c78b9519aa403300b2835a",
+    "stock_inventory_log_sha256": "772d583dd8cc86284b4dad2b84530c4d21e11fb74dec03e77b53788c9dd230f2",
+    "node_sha256": "a3523371fe2f45562564332ba8166318e7afd9cf91959917ecb1b4d2f557df84",
+    "additional_library": "/usr/lib/libatomic.so.1",
+    "additional_package": "libatomic-15.2.0-r5",
+    "additional_package_log_sha256": "9f1d687e08e6abdd7904c7c0df920b758b1a9e973b19541470099757abf993de",
+    "native_result": "unverified"
+  },
+  "remaining": [
+    "Assemble a reproducible peer with the exact official Node and complete package payloads and Alpine records, including x86 libatomic and the existing locked OpenPGP.js dependency closure.",
+    "Run actual OpenPGP interoperability and complete inventory and fresh-feed enforcing scans on both native architectures.",
+    "Keep the existing peer image, security enforcement and original Debian findings until the replacement is verified."
+  ]
+}

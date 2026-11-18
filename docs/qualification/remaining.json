@@ -123,7 +123,8 @@
         "docs/qualification/evidence/F487-original-native-batch-terminal.json",
         "docs/qualification/evidence/F488-guarded-portability-native-batch.json",
         "docs/qualification/evidence/F496-native-security-runner-cancellation.json",
-        "docs/qualification/evidence/F498-native-peer-glibc-replay.json"
+        "docs/qualification/evidence/F498-native-peer-glibc-replay.json",
+        "docs/qualification/evidence/F499-shell-free-node-musl-runtime.json"
       ],
       "remaining_details": [
         "F006 adds immutable checkpoints, exact receipts and persistent storage/parent/authority binding. Finish approved cleanup/recovery/rebinding, scalable reservations/fairness, protected retention, journal chaining/rebuild, larger exports and remaining crash/commit boundaries.",
@@ -210,7 +211,8 @@
         "F487 closes the original b1145f2 run inventory with 17 terminal workflows and 37 jobs. Native Windows and macOS pass. Both original Linux PostgreSQL and source security checks pass. The two peer-image scans, two DAV jobs and receive browser remain red. No original was cancelled or replaced. The next guarded source batch is eligible.",
         "F488 records the verified owner-only fast-forward from b1145f2 to b7b0eb5 after all originals became terminal. The enabled hook scans all 13 outgoing commits with zero leaks. The 19 new original attempt-one workflows are linked to the exact portability candidate and their runtime results are pending.",
         "F496 preserves b7b0eb5 native source-scan metadata. Linux ARM and Windows AMD64 pass. GitHub reports the original macOS ARM job canceled with no runner, no steps and no scan output. Treat that platform as unverified. Exact DAV source/binary and XLSX producer security steps passed even though their application jobs have failed runtime steps. Full native replay and remaining original failures stay open.",
-        "F498 preserves the original b7b0eb5 x86 enforcing scan with the same five unfixed glibc advisories as F483 and zero suppressed findings. The x86 PostgreSQL step was skipped after an upstream FTP engine step failure, and the macOS unit job was canceled with zero recorded steps. The official Node Alpine runtime index and both platform manifests were verified as candidate inputs. Shell-free assembly, complete runtime package inventory, peer interoperability and a new enforcing native scan remain due."
+        "F498 preserves the original b7b0eb5 x86 enforcing scan with the same five unfixed glibc advisories as F483 and zero suppressed findings. The x86 PostgreSQL step was skipped after an upstream FTP engine step failure, and the macOS unit job was canceled with zero recorded steps. The official Node Alpine runtime index and both platform manifests were verified as candidate inputs.",
+        "F499 proves a shell-free ARM Node runtime from the pinned stock Alpine image with WebCrypto and complete metadata and payloads for all four selected Alpine packages. The emulated x86 stock inventory adds the libatomic package. The complete peer image, its OpenPGP interoperability, and fresh enforcing scans on both native architectures remain due."
       ],
       "current_item": {
         "id": "F425",

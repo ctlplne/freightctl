@@ -119,8 +119,14 @@ and no recorded steps. The macOS scan remains unverified.
 preserves the original `b7b0eb5` x86 image scan. The same five glibc
 advisories block the peer image. The native x86 PostgreSQL step was
 skipped after the FTP engine step failed. An official Node Alpine image
-has pinned x86 and ARM manifests. Its shell-free runtime and enforcing
-scan still require proof.
+has pinned x86 and ARM manifests as replacement inputs.
+
+[F499](docs/qualification/evidence/F499-shell-free-node-musl-runtime.json)
+verifies the pinned ARM Node executable in a shell-free Alpine runtime.
+It runs as UID 65532 with WebCrypto and all four complete Alpine package
+records. Emulated x86 inspection identifies an additional `libatomic`
+dependency. Build and exercise the full OpenPGP peer, then run fresh
+enforcing scans on native ARM and x86.
 
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
