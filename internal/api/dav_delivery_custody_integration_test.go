@@ -1,4 +1,4 @@
-//go:build integration && davpeer
+//go:build integration
 
 package api
 
@@ -19,8 +19,13 @@ import (
 	"github.com/ctlplne/freightctl/internal/store"
 )
 
-func TestDAVDeliveryNativeFreightctlCustodyPeer(t *testing.T) {
-	commit := requireNativeDAVCandidate(t)
+func TestDAVDeliveryFreightctlCustodyOnLoopback(t *testing.T) {
+	digest := proveDAVDeliveryFreightctlCustodyPeer(t)
+	t.Logf("separate loopback custody instances; source SHA-256 %s; conditional collision preserved", digest)
+}
+
+func proveDAVDeliveryFreightctlCustodyPeer(t *testing.T) string {
+	t.Helper()
 	source, sourceScope, _, _ := browserAPI(t, time.Minute)
 	receiver, receiverScope, administrator, server := browserAPI(t, time.Minute)
 	if sourceScope.Tenant == receiverScope.Tenant || source.Disk.Identity() == receiver.Disk.Identity() {
@@ -37,11 +42,19 @@ func TestDAVDeliveryNativeFreightctlCustodyPeer(t *testing.T) {
 		}
 	}
 	privateMode := uint32(0700)
-	if _, err := receiver.PathCommand(t.Context(), writerScope, "private-stage", store.PathCommand{Operation: "setstat", Path: "/stage", Mode: &privateMode}); err != nil {
-		t.Fatal("bind private staging mode", err)
+	stageDirectory, err := receiver.StatPath(t.Context(), writerScope, "/stage")
+	if err != nil {
+		t.Fatal("inspect the staging directory before changing its mode", err)
+	}
+	privateStage, err := receiver.PathCommand(t.Context(), writerScope, "private-stage", store.PathCommand{
+		Operation: "setstat", Path: "/stage", ExpectedRevision: &stageDirectory.Revision, Mode: &privateMode,
+	})
+	if err != nil || privateStage.Entry.Mode != privateMode || privateStage.Entry.ID != stageDirectory.ID ||
+		privateStage.Entry.Revision != stageDirectory.Revision+1 {
+		t.Fatal("bind the exact staging directory to owner-only access", err)
 	}
 	reader, identity := exchangeAPIParticipant(t, server, prefix, cookie, csrf, []string{"list", "read"})
-	_, err := receiver.DB.ChangeAccount(t.Context(), receiverScope, "native-dav-inbox-mount", store.AccountCommand{
+	_, err = receiver.DB.ChangeAccount(t.Context(), receiverScope, "native-dav-inbox-mount", store.AccountCommand{
 		Operation: "update", ID: identity.Actor, ExpectedRevision: 1,
 		Policy: &store.AccountPolicy{Label: "DAV inbox reader", Root: "/inbox", Permissions: []string{"list", "read"}},
 	})
@@ -143,5 +156,5 @@ func TestDAVDeliveryNativeFreightctlCustodyPeer(t *testing.T) {
 	if !bytes.Equal(got, data) {
 		t.Fatal("refused move changed the intact private stage")
 	}
-	t.Logf("native freightctl custody DAV candidate=%s;source-SHA256=%s;conditional-collision-preserved=true;vendor-interoperability=false", commit, digest)
+	return digest
 }

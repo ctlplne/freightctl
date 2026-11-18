@@ -24,6 +24,12 @@ import (
 	"github.com/ctlplne/freightctl/internal/store"
 )
 
+func TestDAVDeliveryNativeFreightctlCustodyPeer(t *testing.T) {
+	commit := requireNativeDAVCandidate(t)
+	digest := proveDAVDeliveryFreightctlCustodyPeer(t)
+	t.Logf("native freightctl custody DAV candidate=%s;source-SHA256=%s;conditional-collision-preserved=true;vendor-interoperability=false", commit, digest)
+}
+
 func TestDAVDeliveryNativeStockReceiverCLIIndependentApprovalAndExactBytes(t *testing.T) {
 	peer := loadNativeDAVStockPeer(t)
 	data := bytes.Repeat([]byte("independent DAV delivery;receipt is not business acceptance\n"), 2000)

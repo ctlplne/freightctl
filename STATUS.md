@@ -413,6 +413,13 @@ refused the output directory before it could check management authority.
 The same native test passed with explicitly private directories under umask
 `022`. The original metadata restore and stock DAV receiver remain red.
 
+[F547](docs/qualification/evidence/F547-private-dav-custody-stage.json)
+pins the current staging-directory revision before setting owner-only access.
+Two separate freightctl custody instances delivered exact bytes over TLS.
+A destination collision preserved the existing bytes and kept the send
+ambiguous through read-only reconciliation. The original Linux run and
+independent stock receiver qualification remain due.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6

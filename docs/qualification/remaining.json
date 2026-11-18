@@ -2079,7 +2079,8 @@
         "docs/qualification/evidence/F543-guarded-integrity-surfaces-batch.json",
         "docs/qualification/evidence/F544-native-browser-integrity-report.json",
         "docs/qualification/evidence/F545-authorized-integrity-evidence.json",
-        "docs/qualification/evidence/F546-native-cli-export-authority.json"
+        "docs/qualification/evidence/F546-native-cli-export-authority.json",
+        "docs/qualification/evidence/F547-private-dav-custody-stage.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -2277,7 +2278,8 @@
         "F543 records the guarded fast-forward from 439881e to 7fda192 after all prior originals became terminal. Gitleaks passed on six owner-authored and owner-committed commits. Eighteen exact first attempts include the report, restore, crypto boundary and FTPS client replay. Their native results remain open.",
         "F544 adds explicit browser integrity reporting for a native full download. Sandboxed Chromium with PostgreSQL rejected incorrect bytes and recovered the exact report after the committed reply body was interrupted. Sender and recipient inspections agreed. Linux Chrome replay, schema-68 restore and final qualification remain open.",
         "F545 adds the opt-in v3 evidence profile. Real PostgreSQL with stock HTTPS, sandboxed Chromium, the native CLI and stock MCP retained the same committed integrity report. Incoming evidence stayed opaque after a policy hold and the sender retained authorized history. Linux replay and final AX05 qualification remain open.",
-        "F546 fixes the export authority test setup. Both Linux originals refused a nonprivate export directory before testing management authority. Real PostgreSQL and the native CLI reproduced the block under umask 022 and passed the same refusal and publication assertions with private test directories. The original restore and stock DAV outcomes remain red."
+        "F546 fixes the export authority test setup. Both Linux originals refused a nonprivate export directory before testing management authority. Real PostgreSQL and the native CLI reproduced the block under umask 022 and passed the same refusal and publication assertions with private test directories. The original restore and stock DAV outcomes remain red.",
+        "F547 pins the staging-directory revision in the two-custody DAV fixture. Its real PostgreSQL and TLS replay delivered exact bytes, kept staging private, preserved existing destination bytes and blocked resend after an ambiguous collision. The original Linux gate remains intact and its replay is due. The separate stock DAV overwrite failure remains open."
       ],
       "current_item": {
         "id": "F425",

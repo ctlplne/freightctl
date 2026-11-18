@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "id": "F547",
+  "observed_at": "2026-11-19",
+  "base_candidate": "e4e1f547c3f4678153a7f328b34c8833d77829fa",
+  "qualification_claim": false,
+  "scope": "Conditional DAV delivery between separate freightctl custody instances with revision-guarded private staging",
+  "original_failure": {
+    "candidate": "7fda19225e0650fc325bf8b6ad31bfe72fde1423",
+    "workflow": 44406961340,
+    "attempt": 1,
+    "jobs": [
+      {
+        "architecture": "x86_64",
+        "id": 135164645619,
+        "log": {
+          "sha256": "44b009d7946c8afeac57fa3c74b8a7eebc386f9cbf4296df10efdf6c0cb55ac6",
+          "bytes": 36186
+        }
+      },
+      {
+        "architecture": "arm64",
+        "id": 135164646143,
+        "log": {
+          "sha256": "1999949a4faad69b8533ea13597ea11b406b3a1cc6789b2d194c8ad288924bf5",
+          "bytes": 45319
+        }
+      }
+    ],
+    "observation": "Both Linux jobs stopped when the test tried to change staging permissions without the current directory revision."
+  },
+  "local_replay": {
+    "environment": "Native macOS ARM, Go 1.27.4 race build, two separate scoped PostgreSQL databases and disk custody roots, loopback TLS and real DAV delivery. Inference disabled.",
+    "postgresql_image": "postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+    "postgresql_memory_limit_bytes": 201326592,
+    "postgresql_cpu_limit": 1,
+    "missing_revision_red": {
+      "sha256": "95838c96926ad4fb3633510cfc60c4fa39f2680f3f861c4010d4c2afe0cfb4d9",
+      "bytes": 280
+    },
+    "unsupported_extra_selector_red": {
+      "sha256": "cefffc0272e8ab23b85e76453eb8d3348b6d8d21fed98eb611b8dd38390806e4",
+      "bytes": 336
+    },
+    "revision_bound_journey_green": {
+      "sha256": "3ac0b0a35f31909dd52b5d63afced16d8c0f96a9cfc77bf7026e0cff1d873eac",
+      "bytes": 375
+    },
+    "observations": [
+      "The setup read the ordinary directory stat and pinned its revision for the owner-only mode change. The resulting directory retained the same entry ID and recorded exactly one revision increase.",
+      "The ordinary sender delivered through a private exclusive stage and a conditional MOVE. A separate inbox principal read the exact receiver bytes. The staging name disappeared after success.",
+      "An existing destination held different bytes. The MOVE preserved those bytes, kept the staging bytes private and returned an ambiguous outcome. Further send work refused. Read-only reconciliation retained the same attempt and fence.",
+      "The original Linux Actions test keeps its exact candidate and platform checks and runs the same custody journey as the local test."
+    ]
+  },
+  "static_checks": {
+    "tagged_go_vet": "pass",
+    "record_references": "pass"
+  },
+  "sources": [
+    {
+      "path": "internal/api/dav_delivery_custody_integration_test.go",
+      "sha256": "168c2ad2a4c89b6cd253911145dfb7a161a459354fac1ea1a91dea03f8ea48f4",
+      "bytes": 7612
+    },
+    {
+      "path": "internal/api/dav_delivery_integration_test.go",
+      "sha256": "1479b9a2213a6a2b3624495a14d093ed2a865bf37dadf19d14d2ca86f0313cd0",
+      "bytes": 14124
+    }
+  ],
+  "remaining": [
+    "Run the original two-custody journey on the exact native Linux candidate.",
+    "The independent stock receiver overwrote an existing exclusive stage in its distinct original test. Its contract, the remaining native DAV results and full qualification stay open."
+  ]
+}
