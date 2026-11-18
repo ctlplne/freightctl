@@ -92,6 +92,97 @@ export function evidenceExpectation(
     expires_at: instant(value.expires_at),
   };
 }
+
+export interface ExchangeIntegrityCommand {
+  schema_version: 1;
+  exchange_id: string;
+  request_hash: string;
+  read_authorization_event_id: string;
+  file_revision_id: string;
+  size_bytes: number;
+  sha256: string;
+}
+
+export function asExchangeIntegrityCommand(
+  value: unknown,
+  id: string,
+  expected: EvidenceExpectation,
+): ExchangeIntegrityCommand {
+  const o = object(value);
+  keys(o, [
+    "schema_version",
+    "exchange_id",
+    "request_hash",
+    "read_authorization_event_id",
+    "file_revision_id",
+    "size_bytes",
+    "sha256",
+  ]);
+  const a = expected.artifact;
+  if (
+    o.schema_version !== 1 ||
+    o.exchange_id !== id ||
+    o.request_hash !== expected.request_hash ||
+    o.file_revision_id !== a.file_revision_id ||
+    o.size_bytes !== a.size_bytes ||
+    o.sha256 !== a.sha256
+  )
+    bad();
+  return {
+    schema_version: 1,
+    exchange_id: id,
+    request_hash: expected.request_hash,
+    read_authorization_event_id: identifier(o.read_authorization_event_id),
+    file_revision_id: a.file_revision_id,
+    size_bytes: a.size_bytes,
+    sha256: a.sha256,
+  };
+}
+
+export function asExchangeIntegrityReport(
+  value: unknown,
+  id: string,
+  expected: EvidenceExpectation,
+  read?: string,
+) {
+  const o = object(value);
+  keys(o, [
+    "profile",
+    "exchange_id",
+    "request_hash",
+    "artifact",
+    "read_authorization_event_id",
+    "observation",
+    "event_id",
+    "recorded_at",
+    "receiver_persistence",
+    "business_processing",
+  ]);
+  const artifact = asExchangeArtifact(
+    o.artifact,
+    expected.artifact.file_revision_id,
+  );
+  const authorization = identifier(o.read_authorization_event_id);
+  if (
+    o.profile !== "recipient-sha256-report-v1" ||
+    o.exchange_id !== id ||
+    o.request_hash !== expected.request_hash ||
+    artifact.size_bytes !== expected.artifact.size_bytes ||
+    artifact.sha256 !== expected.artifact.sha256 ||
+    artifact.acceptance_policy !== expected.artifact.acceptance_policy ||
+    (read !== undefined && authorization !== read) ||
+    o.observation !== "recipient-reported-sha256-and-length-match" ||
+    o.receiver_persistence !== "unknown" ||
+    o.business_processing !== "unknown"
+  )
+    bad();
+  return { event: identifier(o.event_id), recordedAt: instant(o.recorded_at) };
+}
+
+export type ExchangeIntegrityReport = ReturnType<
+  typeof asExchangeIntegrityReport
+>;
+
 export function asExchangeEvidence(
   value: unknown,
   scope: { tenant: string; partner: string },

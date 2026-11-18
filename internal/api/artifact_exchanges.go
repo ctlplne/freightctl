@@ -274,6 +274,10 @@ func (s *Server) downloadExchange(w http.ResponseWriter, r *http.Request) {
 		requestFailure(w, r, err)
 		return
 	}
+	s.serveExchangeDownload(w, r, identity, nil)
+}
+
+func (s *Server) serveExchangeDownload(w http.ResponseWriter, r *http.Request, identity store.Scope, marker *http.Cookie) {
 	open := s.Service.OpenExchangeReader
 	if fullExchangeGet(r) {
 		open = s.Service.OpenExchangeReportReader
@@ -286,6 +290,10 @@ func (s *Server) downloadExchange(w http.ResponseWriter, r *http.Request) {
 	defer reader.Close()
 	if report := reader.ExchangeIntegrityCommand(); report != nil {
 		w.Header().Set("X-Exchange-Read-Authorization-ID", report.ReadAuthorization)
+		if marker != nil {
+			marker.Value += report.ReadAuthorization
+			http.SetCookie(w, marker)
+		}
 	}
 	w.Header().Set("X-Artifact-Exchange-ID", r.PathValue("exchange"))
 	// No mutable filename or file path enters serving or content disposition.

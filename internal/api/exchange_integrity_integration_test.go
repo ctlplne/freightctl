@@ -7,6 +7,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"net/http"
+	"net/http/httptest"
 	"net/textproto"
 	"os"
 	"os/exec"
@@ -21,7 +23,23 @@ import (
 	"github.com/jackc/pgx/v5/pgconn"
 )
 
-func TestExchangeRecipientIntegrityReportBindsStockHTTPSDownload(t *testing.T) {
+type integrityFixture struct {
+	service                  *custody.Service
+	scope                    store.Scope
+	server                   *httptest.Server
+	sender, recipient, other *secure.Secret
+	recipientActor           store.ExchangeParticipant
+	file                     *store.File
+	offer                    *store.ArtifactExchange
+	prefix                   string
+}
+
+func (f integrityFixture) acting(token *secure.Secret) store.Scope {
+	return store.Scope{Tenant: f.scope.Tenant, Partner: f.scope.Partner, TokenHash: secure.Digest(token.Bytes)}
+}
+
+func prepareIntegrityExchange(t *testing.T, payload []byte) integrityFixture {
+	t.Helper()
 	settings := custody.ExchangeSettings{MaxLifetime: time.Hour, MaxSenders: 4, MaxOpenViews: 8, MaxEndpoints: 4}
 	service, scope, admin, server := browserAPI(t, time.Minute, settings)
 	cookie, csrf := loginBrowser(t, server, scope, admin)
@@ -29,14 +47,8 @@ func TestExchangeRecipientIntegrityReportBindsStockHTTPSDownload(t *testing.T) {
 	sender, actorA := exchangeAPIParticipant(t, server, prefix, cookie, csrf, []string{"read", "write", "list", "deliver"})
 	recipient, actorB := exchangeAPIParticipant(t, server, prefix, cookie, csrf, []string{"read", "list"})
 	other, _ := exchangeAPIParticipant(t, server, prefix, cookie, csrf, []string{"read", "list"})
-	acting := func(token *secure.Secret) store.Scope {
-		return store.Scope{Tenant: scope.Tenant, Partner: scope.Partner, TokenHash: secure.Digest(token.Bytes)}
-	}
-	credentials := func(token *secure.Secret, key string) map[string]string {
-		return map[string]string{"Authorization": "Bearer " + string(token.Bytes), "Idempotency-Key": key, "Content-Type": "application/json"}
-	}
-	payload := []byte("annotated custody bytes\n")
-	file, _, err := service.Accept(t.Context(), acting(sender), "integrity-source", int64(len(payload)), secure.Digest(payload), bytes.NewReader(payload))
+	f := integrityFixture{service: service, scope: scope, server: server, sender: sender, recipient: recipient, other: other, recipientActor: actorB, prefix: prefix}
+	file, _, err := service.Accept(t.Context(), f.acting(sender), "integrity-source", int64(len(payload)), secure.Digest(payload), bytes.NewReader(payload))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -58,11 +70,23 @@ func TestExchangeRecipientIntegrityReportBindsStockHTTPSDownload(t *testing.T) {
 		Endpoint:  store.ExchangeEndpointReference{ID: endpoint.ID, Revision: endpoint.Revision, Hash: endpoint.Hash},
 		ExpiresAt: time.Now().Add(10 * time.Minute).UTC().Truncate(time.Microsecond), Receipt: "availability-only-v1",
 	}
-	offer, err := service.OfferExchange(t.Context(), acting(sender), "integrity-offer", request)
+	offer, err := service.OfferExchange(t.Context(), f.acting(sender), "integrity-offer", request)
 	if err != nil {
 		t.Fatal(err)
 	}
-	exchange := prefix + "/exchanges/" + offer.Exchange.ID
+	f.file, f.offer = file, &offer.Exchange
+	return f
+}
+
+func TestExchangeRecipientIntegrityReportBindsStockHTTPSDownload(t *testing.T) {
+	payload := []byte("annotated custody bytes\n")
+	f := prepareIntegrityExchange(t, payload)
+	service, server, file, offer := f.service, f.server, f.file, f.offer
+	sender, recipient, other, acting := f.sender, f.recipient, f.other, f.acting
+	credentials := func(token *secure.Secret, key string) map[string]string {
+		return map[string]string{"Authorization": "Bearer " + string(token.Bytes), "Idempotency-Key": key, "Content-Type": "application/json"}
+	}
+	exchange := f.prefix + "/exchanges/" + offer.ID
 	path := exchange + "/integrity-report"
 	dir := t.TempDir()
 	cert, err := secure.NativeProofCertificatePEM(server.Certificate().Raw)
@@ -111,7 +135,7 @@ func TestExchangeRecipientIntegrityReportBindsStockHTTPSDownload(t *testing.T) {
 	}
 	newReport := func(readID, digest string) []byte {
 		return exchangeAPIJSON(t, map[string]any{
-			"schema_version": 1, "exchange_id": offer.Exchange.ID, "request_hash": offer.Exchange.RequestHash,
+			"schema_version": 1, "exchange_id": offer.ID, "request_hash": offer.RequestHash,
 			"read_authorization_event_id": readID, "file_revision_id": file.ID, "size_bytes": len(actual), "sha256": digest,
 		})
 	}
@@ -135,7 +159,7 @@ func TestExchangeRecipientIntegrityReportBindsStockHTTPSDownload(t *testing.T) {
 		t.Fatal(err)
 	}
 	var partialReadID string
-	err = tx.Tx.QueryRow(t.Context(), `SELECT event_id::text FROM events WHERE actor_id=$1 AND resource_id=$2 AND kind='ArtifactExchangeRetrievalAuthorized' AND NOT(payload ? 'report_profile') LIMIT 1`, actorB.Actor, offer.Exchange.ID).Scan(&partialReadID)
+	err = tx.Tx.QueryRow(t.Context(), `SELECT event_id::text FROM events WHERE actor_id=$1 AND resource_id=$2 AND kind='ArtifactExchangeRetrievalAuthorized' AND NOT(payload ? 'report_profile') LIMIT 1`, f.recipientActor.Actor, offer.ID).Scan(&partialReadID)
 	tx.Tx.Rollback(t.Context())
 	if err != nil {
 		t.Fatal("non-full admissions did not retain their ordinary journal evidence", err)
@@ -149,7 +173,7 @@ func TestExchangeRecipientIntegrityReportBindsStockHTTPSDownload(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err = tx.Append(t.Context(), "ArtifactExchangeIntegrityReported", offer.Exchange.ID, map[string]string{"unbound": "fixture"}); err != nil {
+	if _, err = tx.Append(t.Context(), "ArtifactExchangeIntegrityReported", offer.ID, map[string]string{"unbound": "fixture"}); err != nil {
 		tx.Tx.Rollback(t.Context())
 		t.Fatal(err)
 	}
@@ -168,6 +192,54 @@ func TestExchangeRecipientIntegrityReportBindsStockHTTPSDownload(t *testing.T) {
 	post(recipient, "original-report", newReport(authorization, secure.Digest([]byte("different"))), 409)
 	post(recipient, "second-report", body, 409)
 	receiverCookie, receiverCSRF := loginBrowser(t, server, acting(recipient), recipient)
+	browserRead := exchange + "/integrity-read/" + secure.NewID()
+	selection := browserRead + "/selection"
+	exchangeAPIRequest(t, server, "GET", selection, receiverCookie, nil, nil, 404)
+	exchangeAPIRequest(t, server, "GET", browserRead+"/file", nil, map[string]string{"Authorization": bearer}, nil, 401)
+	for _, admission := range []struct {
+		method  string
+		headers map[string]string
+		status  int
+	}{
+		{"HEAD", nil, 200},
+		{"GET", map[string]string{"Range": "bytes=0-2"}, 206},
+		{"GET", map[string]string{"If-None-Match": metadata.Header.Get("ETag")}, 304},
+	} {
+		response, _ := exchangeAPIRequest(t, server, admission.method, browserRead+"/file", receiverCookie, admission.headers, nil, admission.status)
+		if len(response.Cookies()) != 0 || response.Header.Get("X-Exchange-Read-Authorization-ID") != "" {
+			t.Fatal("non-full browser admission offered a report selector")
+		}
+	}
+	full, saved := exchangeAPIRequest(t, server, "GET", browserRead+"/file", receiverCookie, nil, nil, 200)
+	readID := full.Header.Get("X-Exchange-Read-Authorization-ID")
+	cookies := full.Cookies()
+	if !bytes.Equal(saved, payload) || !store.ValidID(readID) || len(cookies) != 1 || !cookies[0].Secure || !cookies[0].HttpOnly ||
+		cookies[0].SameSite != http.SameSiteStrictMode || cookies[0].Path != selection || cookies[0].Domain != "" {
+		t.Fatal("browser read and strictly scoped selection did not identify the same authorized bytes")
+	}
+	marker := cookies[0].Name + "=" + cookies[0].Value
+	selectedHeader := func(session *http.Cookie, value string) map[string]string {
+		return map[string]string{"Cookie": session.Name + "=" + session.Value + "; " + value}
+	}
+	_, selectedCommand := exchangeAPIRequest(t, server, "GET", selection, nil, selectedHeader(receiverCookie, marker), nil, 200)
+	command, err := store.DecodeExchangeIntegrityCommand(selectedCommand)
+	if err != nil || command.ReadAuthorization != readID || command.ExchangeID != offer.ID || command.RequestHash != offer.RequestHash ||
+		command.FileID != file.ID || command.Size != int64(len(saved)) || command.SHA256 != secure.Digest(saved) {
+		t.Fatal("selection returned a different command than the browser's exact full read", err)
+	}
+	again, _ := browserRequest(t, server, "POST", f.prefix+"/browser-session", nil,
+		map[string]string{"Authorization": bearer, "Origin": server.URL, "Idempotency-Key": "separate-browser-login"}, "", 200)
+	if len(again.Cookies()) != 1 || again.Cookies()[0].Value == receiverCookie.Value {
+		t.Fatal("fixture did not create a different browser session")
+	}
+	secondSession := again.Cookies()[0]
+	exchangeAPIRequest(t, server, "GET", selection, nil, selectedHeader(secondSession, marker), nil, 404)
+	senderSession, _ := loginBrowser(t, server, acting(sender), sender)
+	exchangeAPIRequest(t, server, "GET", selection, nil, selectedHeader(senderSession, marker), nil, 404)
+	exchangeAPIRequest(t, server, "GET", exchange+"/integrity-read/"+secure.NewID()+"/selection", nil, selectedHeader(receiverCookie, marker), nil, 404)
+	exchangeAPIRequest(t, server, "GET", selection, nil, selectedHeader(receiverCookie, marker+"; "+marker), nil, 404)
+	foreign := strings.Replace(cookies[0].Value, readID, secure.NewID(), 1)
+	exchangeAPIRequest(t, server, "GET", selection, nil, selectedHeader(receiverCookie, cookies[0].Name+"="+foreign), nil, 404)
 	exchangeAPIRequest(t, server, "POST", path, receiverCookie, map[string]string{"Origin": server.URL, "Idempotency-Key": "original-report"}, body, 403)
 	_, cookieReplay := exchangeAPIRequest(t, server, "POST", path, receiverCookie, map[string]string{"Origin": server.URL, "X-CSRF-Token": receiverCSRF, "Idempotency-Key": "original-report", "Content-Type": "application/json"}, body, 200)
 	if !bytes.Equal(first, cookieReplay) {
@@ -177,7 +249,7 @@ func TestExchangeRecipientIntegrityReportBindsStockHTTPSDownload(t *testing.T) {
 	read(recipient, "outgoing", 404)
 	var report store.ExchangeIntegrityReport
 	if json.Unmarshal(first, &report) != nil || report.Profile != store.ExchangeIntegrityReportProfile || report.ReadAuthorization != authorization ||
-		report.Artifact != request.Artifact || report.RequestHash != offer.Exchange.RequestHash || report.ExchangeID != offer.Exchange.ID ||
+		report.Artifact != offer.Request.Artifact || report.RequestHash != offer.RequestHash || report.ExchangeID != offer.ID ||
 		!store.ValidID(report.EventID) || report.RecordedAt.IsZero() || report.ReceiverPersistence != "unknown" ||
 		report.BusinessProcessing != "unknown" || report.Observation != "recipient-reported-sha256-and-length-match" {
 		t.Fatal("report changed the recipient's integrity statement or claimed stronger outcomes")
@@ -192,11 +264,12 @@ func TestExchangeRecipientIntegrityReportBindsStockHTTPSDownload(t *testing.T) {
 	if err != nil || reports != 1 || events != 1 || effects != 0 {
 		t.Fatal("refusals or replays changed the original report cardinality or caused a delivery", err)
 	}
-	_, err = service.DB.CloseExchange(t.Context(), acting(sender), "cancel-integrity-view", store.ExchangeClosureCommand{Schema: 1, ID: offer.Exchange.ID, RequestHash: offer.Exchange.RequestHash, Operation: "cancel"})
+	_, err = service.DB.CloseExchange(t.Context(), acting(sender), "cancel-integrity-view", store.ExchangeClosureCommand{Schema: 1, ID: offer.ID, RequestHash: offer.RequestHash, Operation: "cancel"})
 	if err != nil {
 		t.Fatal(err)
 	}
 	read(recipient, "incoming", 404)
+	exchangeAPIRequest(t, server, "GET", selection, nil, selectedHeader(receiverCookie, marker), nil, 404)
 	post(recipient, "original-report", body, 404)
 	if !bytes.Equal(first, read(sender, "outgoing", 200)) {
 		t.Fatal("closure changed the original authorized sender report")

@@ -14,6 +14,7 @@ on:
       - "scripts/artifact-exchange-browser.mjs"
       - "scripts/artifact-exchange-network.mjs"
       - "scripts/projection-lineage-browser.mjs"
+      - "scripts/exchange-integrity-browser.mjs"
       - "scripts/test-artifact-exchange-network.mjs"
       - "scripts/test-artifact-exchange-offer-recovery.mjs"
       - "scripts/test-artifact-exchange-decline.mjs"
@@ -33,6 +34,7 @@ on:
       - "scripts/artifact-exchange-browser.mjs"
       - "scripts/artifact-exchange-network.mjs"
       - "scripts/projection-lineage-browser.mjs"
+      - "scripts/exchange-integrity-browser.mjs"
       - "scripts/test-artifact-exchange-network.mjs"
       - "scripts/test-artifact-exchange-offer-recovery.mjs"
       - "scripts/test-artifact-exchange-decline.mjs"
@@ -88,3 +90,8 @@ jobs:
         run: |
           sh scripts/go.sh test -p 1 -race -timeout=120s -tags=integration,exchangebrowser -count=1 -v \
             -run '^TestProjectionLineageNativeBrowserRespectsTheReleasedSourceBoundary$' ./internal/checks
+      - name: Verify saved artifact in the browser and recover the original integrity report
+        if: ${{ !cancelled() && steps.browser.outcome == 'success' && steps.postgres.outcome == 'success' }}
+        run: |
+          sh scripts/go.sh test -p 1 -race -timeout=120s -tags=integration,exchangebrowser -count=1 -v \
+            -run '^TestExchangeIntegrityNativeBrowserVerifiesSavedBytesAndRecoversReport$' ./internal/api

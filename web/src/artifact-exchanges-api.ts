@@ -11,11 +11,14 @@ import {
 } from "./artifact-copy-types";
 import {
   asExchangeEvidence,
+  asExchangeIntegrityCommand,
+  asExchangeIntegrityReport,
   evidenceExpectation,
   evidenceV1,
   evidenceV2,
   type EvidenceDirection,
   type EvidenceExpectation,
+  type ExchangeIntegrityCommand,
 } from "./artifact-evidence-types";
 import {
   asCollectedExchangeSource,
@@ -142,23 +145,24 @@ export class ExchangeReceiveApi {
     this.requireCopy();
     return readCopyRecovery(text, this.directory, origin);
   }
+  private requireEvidence(id: string, direction: EvidenceDirection) {
+    this.current();
+    if (!uuid(id) || !["incoming", "outgoing"].includes(direction))
+      throw new ApiError("invalid_artifact_exchange_contract", 400);
+    if (
+      !(direction === "incoming"
+        ? this.directory.can_receive
+        : this.directory.can_send)
+    )
+      throw new ApiError("permission_denied", 403);
+  }
   async evidence(
     id: string,
     direction: EvidenceDirection,
     expected?: EvidenceExpectation,
     signal?: AbortSignal,
   ) {
-    const permitted = () => {
-      this.current();
-      if (!uuid(id) || !["incoming", "outgoing"].includes(direction))
-        throw new ApiError("invalid_artifact_exchange_contract", 400);
-      if (
-        !(direction === "incoming"
-          ? this.directory.can_receive
-          : this.directory.can_send)
-      )
-        throw new ApiError("permission_denied", 403);
-    };
+    const permitted = () => this.requireEvidence(id, direction);
     permitted();
     const pinned = expected ? evidenceExpectation(expected) : undefined;
     if (pinned && !/^[0-9a-f]{64}$/.test(pinned.request_hash))
@@ -189,6 +193,79 @@ export class ExchangeReceiveApi {
     );
     permitted();
     return result;
+  }
+  private integrityReadPath(id: string, read: string) {
+    this.requireEvidence(id, "incoming");
+    if (!uuid(read))
+      throw new ApiError("invalid_artifact_exchange_contract", 400);
+    return `${this.prefix}/exchanges/${id}/integrity-read/${read}`;
+  }
+  integrityDownloadPath(id: string, read: string) {
+    return `${this.integrityReadPath(id, read)}/file`;
+  }
+  async selectIntegrityRead(
+    id: string,
+    read: string,
+    expected: EvidenceExpectation,
+    signal: AbortSignal,
+  ) {
+    const pinned = evidenceExpectation(expected);
+    return this.api.request(
+      `${this.integrityReadPath(id, read)}/selection`,
+      { signal },
+      (value) => {
+        this.requireEvidence(id, "incoming");
+        return asExchangeIntegrityCommand(value, id, pinned);
+      },
+    );
+  }
+  async submitIntegrityReport(
+    id: string,
+    expected: EvidenceExpectation,
+    verified: ExchangeIntegrityCommand,
+    key: string,
+    signal: AbortSignal,
+  ) {
+    this.requireEvidence(id, "incoming");
+    if (!uuid(key))
+      throw new ApiError("invalid_artifact_exchange_contract", 400);
+    const pinned = evidenceExpectation(expected);
+    const command = asExchangeIntegrityCommand(verified, id, pinned);
+    return this.api.request(
+      `${this.prefix}/exchanges/${id}/integrity-report`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Idempotency-Key": key },
+        body: JSON.stringify(command),
+        signal,
+      },
+      (value) => {
+        this.requireEvidence(id, "incoming");
+        return asExchangeIntegrityReport(
+          value,
+          id,
+          pinned,
+          command.read_authorization_event_id,
+        );
+      },
+    );
+  }
+  async readIntegrityReport(
+    id: string,
+    direction: EvidenceDirection,
+    expected: EvidenceExpectation,
+    signal: AbortSignal,
+  ) {
+    this.requireEvidence(id, direction);
+    const pinned = evidenceExpectation(expected);
+    return this.api.request(
+      `${this.prefix}/exchanges/${id}/integrity-report?${new URLSearchParams({ direction })}`,
+      { signal },
+      (value) => {
+        this.requireEvidence(id, direction);
+        return asExchangeIntegrityReport(value, id, pinned);
+      },
+    );
   }
   recoveryBytes(origin: string, review: OfferReviewInput): Uint8Array {
     this.current();

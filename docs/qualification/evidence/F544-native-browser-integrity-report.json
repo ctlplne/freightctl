@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "id": "F544",
+  "observed_at": "2026-11-19",
+  "base_candidate": "6a2236fcae88259e84a64cf6e449e71bebcdc650",
+  "qualification_claim": false,
+  "scope": "Native browser saved-file integrity verification, explicit submission and scoped report recovery",
+  "first_failures": [
+    {
+      "finding": "The exact stock HTTPS journey found no browser-specific download route. A subsequent fixture login reused the original idempotency key and therefore recovered the same browser session.",
+      "missing_route_log": {
+        "sha256": "e88d3123a8e9d788c61e75c6ba8b475a4e3e5c3e5afe6acaf471bdc809cfccf5",
+        "bytes": 329
+      },
+      "session_fixture_log": {
+        "sha256": "f2fe16093ad1974f701ca5e8f2de2711d5202f2f2eac9d3f101d04e99a16f8b5",
+        "bytes": 329
+      }
+    },
+    {
+      "finding": "Chromium sent two POSTs after a pre-header disconnect while Playwright observed one original browser request. The initial fault therefore did not reach the explicit retry UI. The replay commits the original, flushes its headers and interrupts its receipt body.",
+      "original_browser_log": {
+        "sha256": "c305317766bed0048ad5d3b094897d282a5f003e5cc8a328fdd00fe23240169c",
+        "bytes": 534
+      },
+      "server_attempt_diagnostic": {
+        "sha256": "e97c206ae0ab070843bdd1ccc80412a4d8a3d800a7e7372d4a449e08dbc908b7",
+        "bytes": 500
+      }
+    }
+  ],
+  "local_replay": {
+    "environment": "Native macOS ARM, sandboxed Chromium 151.0.7922.34, Playwright 1.62.1, Node 26.13.0, axe-core 4.14.0, Go 1.27.4 race build, TLS, stock curl and disk custody. Inference disabled.",
+    "postgresql_image": "postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+    "postgresql_memory_limit_bytes": 201326592,
+    "postgresql_cpu_limit": 1,
+    "stock_http_scope_log": {
+      "sha256": "e229f5e90fe590667c878cf7ad8a2745b62f0626efd39afeb08912516547b2d8",
+      "bytes": 208
+    },
+    "native_browser_and_stock_https_race_log": {
+      "sha256": "237f6325e6a66cd74bd1f1aa07d6af8c9519150a79a319c385c346882daa28ca",
+      "bytes": 578
+    },
+    "observations": [
+      "The browser used its native download path, saved the complete artifact and verified the selected file in an existing bounded SHA-256 worker. Wrong length and a changed last byte of a same-length file both left the report action unavailable.",
+      "The marker was HTTPS-only, HttpOnly, same-site and limited to one selection path. Head, ranged, conditional and bearer-only browser downloads could not obtain a marker. Different sessions, a different selector, fabricated read IDs, duplicate cookies and closed grants could not recover a command.",
+      "The report appeared only after explicit submission. After the original committed reply body was interrupted, a second user click sent the same typed body and key. PostgreSQL retained exactly one eligible full read, one report, one report event and zero delivery intents.",
+      "The recipient and original sender read the same report in separate browser contexts. The sender could not read the incoming selector or use the recipient controls. Both report panels passed the scoped axe checks.",
+      "The report states only the recipient-reported length and SHA-256 result. Receiver persistence and business processing remain unknown."
+    ]
+  },
+  "static_checks": {
+    "affected_browser_tests": 34,
+    "browser_typecheck_and_built_assets": "pass",
+    "tagged_go_vet_and_import_boundary": "pass",
+    "actionlint_1_7_12": "pass",
+    "record_references": "pass"
+  },
+  "sources": [
+    {
+      "path": ".github/workflows/artifact-exchange.yml",
+      "sha256": "2567737877ced557b4cd339d25664ddef430d68da0dc529fae6a77ea45cac3d6",
+      "bytes": 4389
+    },
+    {
+      "path": "docs/protocols/artifact-exchange.md",
+      "sha256": "bc0c6a37ea74c9668506f7294906a4c614850d73c5d1c53d80a4ce47702fa4b6",
+      "bytes": 12029
+    },
+    {
+      "path": "internal/api/api.go",
+      "sha256": "e7ec3aa425d3ad638ac014f5aa773ef95708c5dba7a0bd7a4a85913ad931fd5b",
+      "bytes": 31686
+    },
+    {
+      "path": "internal/api/artifact_exchanges.go",
+      "sha256": "460575c199a7956b5678900578556c509dbdf7525a129150fa02458196249bdb",
+      "bytes": 7446
+    },
+    {
+      "path": "internal/api/exchange_integrity_browser_integration_test.go",
+      "sha256": "74fd391018e69bc60109a6a06f57039ecedab0a5b1293ab5a2c7a3d92f97ba7e",
+      "bytes": 6442
+    },
+    {
+      "path": "internal/api/exchange_integrity_integration_test.go",
+      "sha256": "9f8b31ee82b42400eb819ee37f19660b03c9d4295cf01dba9fb4d8025f27b47e",
+      "bytes": 14926
+    },
+    {
+      "path": "internal/api/exchange_integrity_reports.go",
+      "sha256": "dfbe0202afa85257b6734950dd745d3c531b8c93c0f59b79013759b3fcec1531",
+      "bytes": 3525
+    },
+    {
+      "path": "internal/browser/assets/app.js",
+      "sha256": "e1323b4646fb3f2dee394d089e553d522ef4d2761618c0d3bc95c6355429e234",
+      "bytes": 936259
+    },
+    {
+      "path": "internal/browser/assets/manifest.json",
+      "sha256": "7c53c2f5d8778138a640720561e97041be8810f8decbcf9505d713ec8fee17b9",
+      "bytes": 14561
+    },
+    {
+      "path": "internal/store/exchange_integrity_reports.go",
+      "sha256": "2473a892139dc59f8a2c701335cfb12946853e25619eac4b37f00915b1c1ab85",
+      "bytes": 8991
+    },
+    {
+      "path": "scripts/exchange-integrity-browser.mjs",
+      "sha256": "aa0ced01a81d747e6f8e20bc7246ee621451dbbd216d2b68a696efb7cafd348c",
+      "bytes": 9510
+    },
+    {
+      "path": "web/src/artifact-evidence-types.ts",
+      "sha256": "b532bbe89a2c7ba66a8b692e8cb01db15c9c394c2e09c331b6d91d8593edeeaf",
+      "bytes": 10355
+    },
+    {
+      "path": "web/src/artifact-exchanges-api.ts",
+      "sha256": "4816a4ee30606fad20739115160933a5f830e9180d819cee42ff738f35776675",
+      "bytes": 19899
+    },
+    {
+      "path": "web/src/artifact-exchanges.tsx",
+      "sha256": "bcbe962f24b1d71b8f7b13af1f15f8ba1f1543f1be2b2c87ea05fc3d4d90ea65",
+      "bytes": 16440
+    },
+    {
+      "path": "web/src/artifact-integrity.tsx",
+      "sha256": "c98454fa08642310a0925395db1f6cb1d4a3d1ddf882de2f1c059c588b261dce",
+      "bytes": 6240
+    },
+    {
+      "path": "web/src/artifact-outgoing.tsx",
+      "sha256": "c9f3aeeb1f6f27a660769f307c6ba9f26a2fb03985a439dac4b2dd78c6b25bd9",
+      "bytes": 9332
+    },
+    {
+      "path": "web/tests/artifact-evidence.test.mjs",
+      "sha256": "cf3f89fedeb46a242062aa10d55c646d4195dfc2a53e47f394800d74f84274ac",
+      "bytes": 10896
+    }
+  ],
+  "remaining": [
+    "Run the new browser replay on original native Linux Chrome and keep the separate existing recipient-browser failure visible.",
+    "Complete the schema-68 restore and broad, final-source and independent reference journeys before claiming AX05.",
+    "Keep receiver persistence and business processing under their own evidence contracts."
+  ]
+}

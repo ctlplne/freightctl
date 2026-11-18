@@ -3,6 +3,7 @@ import { Api } from "./api";
 import { ApiError, uuid, type Session } from "./types";
 import { ExchangeReceiveApi } from "./artifact-exchanges-api";
 import { ArtifactEvidence } from "./artifact-evidence";
+import { ArtifactIntegrity } from "./artifact-integrity";
 import { ArtifactCopy } from "./artifact-copy";
 import { operationKey } from "./crypto";
 import type {
@@ -416,6 +417,15 @@ export function ArtifactExchanges({
               : {})}
             onError={onError}
           />
+          {selected.state === "offered" && (
+            <ArtifactIntegrity
+              key={selected.id}
+              client={client}
+              exchange={selected.exchange}
+              direction="incoming"
+              onError={onError}
+            />
+          )}
           <p>
             Exchange <code>{selected.id}</code>
           </p>

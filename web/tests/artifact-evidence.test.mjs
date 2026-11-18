@@ -69,6 +69,55 @@ const response = () => ({
   receiver_persistence: "unknown",
   business_processing: "unknown",
 });
+test("integrity commands and receipts stay bound to the exact offer and reported outcomes", () => {
+  const pinned = expected();
+  const command = {
+    schema_version: 1,
+    exchange_id: id(4),
+    request_hash: pinned.request_hash,
+    read_authorization_event_id: id(8),
+    file_revision_id: pinned.artifact.file_revision_id,
+    size_bytes: pinned.artifact.size_bytes,
+    sha256: pinned.artifact.sha256,
+  };
+  const receipt = {
+    profile: "recipient-sha256-report-v1",
+    exchange_id: id(4),
+    request_hash: pinned.request_hash,
+    read_authorization_event_id: id(8),
+    artifact: artifact(),
+    observation: "recipient-reported-sha256-and-length-match",
+    event_id: id(9),
+    recorded_at: "2026-11-05T00:00:00.000001Z",
+    receiver_persistence: "unknown",
+    business_processing: "unknown",
+  };
+  assert.deepEqual(p.asExchangeIntegrityCommand(command, id(4), pinned), command);
+  assert.deepEqual(p.asExchangeIntegrityReport(receipt, id(4), pinned, id(8)), {
+    event: id(9),
+    recordedAt: receipt.recorded_at,
+  });
+  for (const altered of [
+    { exchange_id: id(3) },
+    { request_hash: "c".repeat(64) },
+    { file_revision_id: id(3) },
+    { size_bytes: 9 },
+    { sha256: "c".repeat(64) },
+    { read_authorization_event_id: "invented" },
+    { receiver_persistence: "durable" },
+  ])
+    assert.throws(() => p.asExchangeIntegrityCommand({ ...command, ...altered }, id(4), pinned));
+  for (const altered of [
+    { artifact: { ...artifact(), size_bytes: 9 } },
+    { observation: "server-verified-possession" },
+    { read_authorization_event_id: id(9) },
+    { recorded_at: "2026-11-31T00:00:00Z" },
+    { receiver_persistence: "durable" },
+    { business_processing: "complete" },
+    { payload: "raw bytes" },
+  ])
+    assert.throws(() => p.asExchangeIntegrityReport({ ...receipt, ...altered }, id(4), pinned, id(8)));
+});
 test("recorded evidence preserves exact bindings and causal sequence without claiming byte or receiver outcomes", () => {
   const v = response();
   v.recorded_events[0].recorded_at = "2026-11-04T00:00:02Z";

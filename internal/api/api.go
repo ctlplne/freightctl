@@ -86,6 +86,8 @@ func NewWithBrowserLifetime(service *custody.Service, audits *audit.Service, ena
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/exchanges/{exchange}/file", s.downloadExchange)
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/exchanges/{exchange}/integrity-report", s.recordExchangeIntegrityReport)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/exchanges/{exchange}/integrity-report", s.inspectExchangeIntegrityReport)
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/exchanges/{exchange}/integrity-read/{read}/file", s.downloadExchangeForIntegrityReport)
+	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/exchanges/{exchange}/integrity-read/{read}/selection", s.selectExchangeIntegrityRead)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/events", s.events)
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/onboarding-plans", s.onboarding)
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/onboarding-plans", s.onboarding)

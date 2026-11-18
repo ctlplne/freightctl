@@ -3,6 +3,7 @@ import { Api } from "./api";
 import { ApiError, type Session } from "./types";
 import { ExchangeReceiveApi } from "./artifact-exchanges-api";
 import { ArtifactEvidence } from "./artifact-evidence";
+import { ArtifactIntegrity } from "./artifact-integrity";
 import type {
   OutgoingExchange,
   OutgoingPage,
@@ -187,6 +188,13 @@ export function ArtifactOutgoing({
               artifact: selected.exchange.request.artifact,
               expires_at: selected.exchange.request.expires_at,
             }}
+            onError={onError}
+          />
+          <ArtifactIntegrity
+            key={selected.exchange.id}
+            client={client}
+            exchange={selected.exchange}
+            direction="outgoing"
             onError={onError}
           />
           <dl className="facts">

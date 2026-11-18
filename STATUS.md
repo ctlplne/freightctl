@@ -394,6 +394,13 @@ records the fast-forward to `7fda192` with Gitleaks checking all six outgoing
 commits and finding zero leaks. GitHub created 18 original first-attempt
 workflows. Exact native report and schema-68 restore results remain due.
 
+[F544](docs/qualification/evidence/F544-native-browser-integrity-report.json)
+adds browser verification of the saved file and an explicit step to submit
+the recipient's report. Sandboxed Chromium rejected incorrect bytes. After
+a committed reply was interrupted, the same key recovered the original
+report. The sender and recipient read the same event in separate browser
+sessions. Linux Chrome replay and final qualification remain due.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6

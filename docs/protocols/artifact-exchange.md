@@ -149,6 +149,20 @@ and an explicit `direction=incoming` or `direction=outgoing`. Incoming reads
 require the live receive grant. The original sender can read an already recorded
 report after closure under ordinary sender-receipt authority.
 
+In the browser, inspect the incoming offer and choose **Download for integrity
+report**. Save the file. Choose it under **Verify saved artifact** and wait for
+the local length and SHA-256 checks. Choose **Submit integrity report** to record
+your statement. If the reply is interrupted, submit again in the same view to
+reuse the original command and key. **Read integrity report** checks the saved
+receipt from the incoming offer or from **Sent artifacts**.
+
+The browser downloads through its native attachment path. An HTTPS-only,
+path-scoped cookie links that full read to the current browser session until it
+expires. The server checks the active grant and exact read event when returning
+the report command. The browser's worker hashes the selected file in 1 MiB
+slices and sends only report metadata. Choose a fresh report download after a
+new login if the earlier attempt has no recorded receipt.
+
 The native CLI can prepare the same command. Run `exchange-download` with
 `-prepare-integrity-report` and a new `-output` path. After the CLI verifies,
 syncs and publishes the local file, its JSON result includes `integrity_report`.

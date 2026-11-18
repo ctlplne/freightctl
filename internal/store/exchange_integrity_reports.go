@@ -108,13 +108,8 @@ func (s *Store) RecordExchangeIntegrityReport(ctx context.Context, scope Scope, 
 		if c.RequestHash != e.RequestHash || c.FileID != f.ID || c.Size != f.Size || c.SHA256 != f.SHA256 {
 			return nil, false, ErrRevision
 		}
-		var eligible bool
-		err = tx.Tx.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM events WHERE event_id=$1 AND actor_id=$2 AND resource_id=$3 AND kind='ArtifactExchangeRetrievalAuthorized' AND payload=jsonb_build_object('file_revision_id',$4::text,'sha256',$5::text,'evidence','read-authorized-only','report_profile',$6::text))`, c.ReadAuthorization, tx.Actor, e.ID, f.ID, f.SHA256, ExchangeIntegrityReportProfile).Scan(&eligible)
-		if err != nil {
+		if err = tx.requireExchangeIntegrityRead(ctx, e, f, c.ReadAuthorization); err != nil {
 			return nil, false, err
-		}
-		if !eligible {
-			return nil, false, ErrNotFound
 		}
 		if _, err = tx.exchangeIntegrityReport(ctx, e); !errors.Is(err, ErrNotFound) {
 			if err == nil {
@@ -144,6 +139,49 @@ func (s *Store) RecordExchangeIntegrityReport(ctx context.Context, scope Scope, 
 		return nil, false, err
 	}
 	return result, replayed, nil
+}
+
+// SelectExchangeIntegrityRead recovers the command tuple for a prior full
+// retrieval authorization. It makes no observation about the receiver's bytes.
+func (s *Store) SelectExchangeIntegrityRead(ctx context.Context, scope Scope, exchange, event string, limits ExchangeLimits) (*ExchangeIntegrityCommand, error) {
+	if !ValidID(exchange) || !ValidID(event) || !limits.valid() {
+		return nil, ErrExchangeInput
+	}
+	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
+	tx, err := s.Begin(ctx, scope)
+	if err != nil {
+		return nil, err
+	}
+	defer tx.Tx.Rollback(ctx)
+	e, f, err := tx.AuthorizeIncomingExchange(ctx, exchange, limits)
+	if err != nil {
+		return nil, err
+	}
+	if err = tx.requireExchangeIntegrityRead(ctx, e, f, event); err != nil {
+		return nil, err
+	}
+	if err = tx.Reauthorize(ctx); err != nil {
+		return nil, err
+	}
+	return &ExchangeIntegrityCommand{
+		Schema: 1, ExchangeID: e.ID, RequestHash: e.RequestHash, ReadAuthorization: event,
+		FileID: f.ID, Size: f.Size, SHA256: f.SHA256,
+	}, tx.Tx.Commit(ctx)
+}
+
+func (t *Transaction) requireExchangeIntegrityRead(ctx context.Context, e *ArtifactExchange, f *File, event string) error {
+	var eligible bool
+	err := t.Tx.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM events WHERE event_id=$1 AND actor_id=$2 AND resource_id=$3
+ AND kind='ArtifactExchangeRetrievalAuthorized' AND payload=jsonb_build_object('file_revision_id',$4::text,'sha256',$5::text,
+ 'evidence','read-authorized-only','report_profile',$6::text))`, event, t.Actor, e.ID, f.ID, f.SHA256, ExchangeIntegrityReportProfile).Scan(&eligible)
+	if err != nil {
+		return err
+	}
+	if !eligible {
+		return ErrNotFound
+	}
+	return nil
 }
 
 func (s *Store) InspectExchangeIntegrityReport(ctx context.Context, scope Scope, request ExchangeIntegritySelection, limits ExchangeLimits) (*ExchangeIntegrityReport, error) {
