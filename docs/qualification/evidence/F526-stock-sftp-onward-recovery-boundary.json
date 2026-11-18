@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "id": "F526",
+  "observed_at": "2026-11-19",
+  "base_candidate": "b47730a54963de0a39a33b9685a8a85f1c7f1b33",
+  "qualification_claim": false,
+  "scope": "Real stock SFTP onward worker death after publication and least-privilege reconciliation gap",
+  "prior_browser_result": "docs/qualification/evidence/F524-stock-sftp-browser-exchange.json",
+  "fixture_build_failure": {
+    "result": "The first test build found an unused encoding/json import. The fixture removes it and reruns against a fresh task database.",
+    "log": {
+      "sha256": "fe7f486beb3486f8d5bf69834f8553084ce9601806959775cef74747de665c00",
+      "bytes": 281
+    }
+  },
+  "local_race_replay": {
+    "environment": "macOS ARM, real PostgreSQL 16.15, exact freightctl worker process, stock OpenSSH and separate stock SFTP readback on loopback",
+    "log": {
+      "sha256": "a318e846fe045273e51adc0eae09154a7f32b4fbc1027d91937b9fe813785e69",
+      "bytes": 407
+    },
+    "inference_enabled": false,
+    "process_death_signal": "SIGKILL",
+    "publication_receipt_barrier_seconds": 8,
+    "original_lease_seconds": 30,
+    "publication_attempts": 1,
+    "publication_fence": 1,
+    "receiver_connections_from_refused_recovery": 0,
+    "assertions": [
+      "The least-privilege agent owns the exact file, provisioned route, approved workflow and atomically queued reviewed-run receipt. Review and queue contact no receiver.",
+      "Stock OpenSSH exposes the exact final file before the local success update. Killing the exact worker yields no command receipt. The intent remains publishing with the original fence and lease.",
+      "The original database lease expires. The actor-private owner lacks connection administration for legacy delivery reconciliation. The separate management operator cannot access the private agent intent. Neither call touches the receiver or changes the metadata.",
+      "A stock SFTP client reads back exactly the original bytes."
+    ]
+  },
+  "source": {
+    "path": "internal/workflow/onward_stock_recovery_integration_test.go",
+    "sha256": "c9c977598a8e3e19c552c5293ea9e815aa24edfdc05050de01a82322101b3a46",
+    "bytes": 7179
+  },
+  "remaining": [
+    "Provide a bounded read-only recovery command for the exact reviewed run and original private receipt under legitimate agent permissions. Preserve the legacy operator and actor isolation rules.",
+    "Qualify recovery through API, CLI, browser and MCP. Preserve the distinct unresolved loss at the SFTP protocol acknowledgment boundary."
+  ]
+}

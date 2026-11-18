@@ -282,6 +282,14 @@ records the passing native Linux Chrome operator replay at `8219fd9`. The
 original Linux ARM and Windows source scans passed. GitHub canceled the
 macOS ARM scan before assigning a runner, leaving its result unverified.
 
+[F526](docs/qualification/evidence/F526-stock-sftp-onward-recovery-boundary.json)
+kills an actual onward worker after stock OpenSSH publishes the file and
+before PostgreSQL records success. The lease expires with one attempt and
+one fence. The agent's private intent requires its own recovery path. The
+legacy operator command refuses the agent without management grants and
+refuses the operator's access to the agent's private intent. Both refusals
+make zero receiver connections. Independent SFTP readback matches the bytes.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6

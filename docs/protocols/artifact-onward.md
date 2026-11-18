@@ -76,6 +76,15 @@ promise. HTTP cancellation and existing10second tool deadlines can leave remote
 outcomes uncertain. Inspect actual state/receipts before recovery;do not infer
 that a lost response means nothing happened.
 
+The current `delivery-reconcile` command requires the original delivery owner
+and the root `admin` and `connections_manage` grants in addition to read and
+deliver. An ordinary onward agent can own the delivery without those management
+grants. The original operator's scope cannot see the agent's delivery. The
+real worker-death replay verifies this gap at the publication boundary. The
+agent needs an exact reviewed-run reconciliation action that can check the
+receiver file without granting connection administration.
+[F526 recovery evidence](../qualification/evidence/F526-stock-sftp-onward-recovery-boundary.json)
+
 MCP returns source integrity,workflow references,run/delivery IDs,states and receipt
 hashes. It omits storage identity,namespace paths,private step labels,transport
 references,raw observations and parsed contents. Historical acceptance says
