@@ -52,7 +52,11 @@ failure, Go source failures and stock DAV security failures remain recorded.
 
 [F454](docs/qualification/evidence/F454-native-push.json) records the verified
 fast-forward to `6412db0`. Gitleaks passed across all seven outgoing
-commits. The 19 original CI workflows are running against that candidate.
+commits. [F457](docs/qualification/evidence/F457-patched-native-replay.json)
+records passing Go source security gates on all tested platforms. Both native
+DAV jobs pass PostgreSQL recovery and bearer/Basic collection. Stock rclone
+application and delivery remain failed. Both x86 FTPS receiver sandbox
+failures recurred. Other native work is still running.
 
 [F455](docs/qualification/evidence/F455-mixed-delivery-proposals.json) binds
 each AI proposal alias to its registered SFTP or FTPS connection. The

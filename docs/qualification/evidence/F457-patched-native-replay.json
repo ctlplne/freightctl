@@ -1,0 +1,215 @@
+{
+  "schema_version": 1,
+  "id": "F457",
+  "observed_at": "2026-11-18",
+  "base_candidate": "6412db07a18ce759b217c9dc9b62ecdd1b9fa3e8",
+  "qualification_claim": false,
+  "partial_batch": true,
+  "original_security_replay": [
+    {
+      "run_id": 44291766096,
+      "attempt": 1,
+      "jobs": [
+        {
+          "id": 134758475685,
+          "name": "source-and-browser",
+          "conclusion": "success",
+          "steps": [
+            {
+              "name": "JavaScript dependency audit",
+              "conclusion": "success"
+            },
+            {
+              "name": "Go vulnerability reachability",
+              "conclusion": "success"
+            },
+            {
+              "name": "Committed source and history secret scan",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ],
+      "private_metadata": {
+        "reference": ".private/freightctl-f456-44291766096-jobs.json",
+        "bytes": 3063,
+        "sha256": "f4092e4b9bc4f2e1f6acf0b64deb50ad0f4f56a15b18d778c10f002d1acafcdc"
+      }
+    },
+    {
+      "run_id": 44291766384,
+      "attempt": 1,
+      "jobs": [
+        {
+          "id": 134758478120,
+          "name": "Native vulnerability source (linux/arm64)",
+          "conclusion": "success",
+          "steps": [
+            {
+              "name": "Actual native source scan and enforcing original converter",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 134758478489,
+          "name": "Native vulnerability source (windows/amd64)",
+          "conclusion": "success",
+          "steps": [
+            {
+              "name": "Actual native source scan and enforcing original converter",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 134758478546,
+          "name": "Native vulnerability source (darwin/arm64)",
+          "conclusion": "success",
+          "steps": [
+            {
+              "name": "Actual native source scan and enforcing original converter",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ],
+      "private_metadata": {
+        "reference": ".private/freightctl-f456-44291766384-jobs.json",
+        "bytes": 4814,
+        "sha256": "180854c6f03a0bb9c16b168a46fa9b92eb50f33da045fd8bffcbf5992f23acfd"
+      }
+    },
+    {
+      "run_id": 44291765976,
+      "attempt": 1,
+      "jobs": [
+        {
+          "id": 134758475297,
+          "name": "Native stock rclone DAV (arm64)",
+          "conclusion": "failure",
+          "steps": [
+            {
+              "name": "Exact unmodified stock peer and enforcing source/binary security gates",
+              "conclusion": "success"
+            },
+            {
+              "name": "Actual independent DAV application,exact bytes,conditional writes and current authority",
+              "conclusion": "failure"
+            },
+            {
+              "name": "Actual reviewed bearer DAV source,SQL,custody and original receipt",
+              "conclusion": "success"
+            },
+            {
+              "name": "Actual independent stock DAV server,Basic source and exact custody",
+              "conclusion": "success"
+            },
+            {
+              "name": "Actual direct DAV delivery,independent stock receiver,CLI and approvals",
+              "conclusion": "failure"
+            },
+            {
+              "name": "Actual PostgreSQL DAV lost MOVE response and read-only reconciliation",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 134758475505,
+          "name": "Native stock rclone DAV (amd64)",
+          "conclusion": "failure",
+          "steps": [
+            {
+              "name": "Exact unmodified stock peer and enforcing source/binary security gates",
+              "conclusion": "success"
+            },
+            {
+              "name": "Actual independent DAV application,exact bytes,conditional writes and current authority",
+              "conclusion": "failure"
+            },
+            {
+              "name": "Actual reviewed bearer DAV source,SQL,custody and original receipt",
+              "conclusion": "success"
+            },
+            {
+              "name": "Actual independent stock DAV server,Basic source and exact custody",
+              "conclusion": "success"
+            },
+            {
+              "name": "Actual direct DAV delivery,independent stock receiver,CLI and approvals",
+              "conclusion": "failure"
+            },
+            {
+              "name": "Actual PostgreSQL DAV lost MOVE response and read-only reconciliation",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ],
+      "private_metadata": {
+        "reference": ".private/freightctl-f456-44291765976-jobs.json",
+        "bytes": 6079,
+        "sha256": "496681a22fb141046675f97b3526071419f033e1e249132dd8dbb581f61c99cd"
+      }
+    }
+  ],
+  "independent_ftps_receiver_failures": {
+    "run_id": 44291766421,
+    "attempt": 1,
+    "jobs": [
+      {
+        "job_id": 134758476923,
+        "library": "no-ktls",
+        "original_manifest_sha256": "6106520f11a592f3d357ac1f0670b4c51839e6791d877a36dbc7b1003d4995e0",
+        "diagnostic_manifest_sha256": "58d4976a8582a39429b771e6f33c68888bf6d0fec11b5cd5296a67cefe509f18",
+        "trace_categories": [
+          "explicit:SIGSYS",
+          "explicit:last-setsockopt-before-SIGSYS:level=1,option=2,size=4",
+          "explicit:last-syscall-before-SIGSYS:54",
+          "explicit:process-exit:1",
+          "explicit:process-exit:2",
+          "explicit:recvfrom:EAGAIN",
+          "implicit:SIGSYS",
+          "implicit:last-setsockopt-before-SIGSYS:level=1,option=2,size=4",
+          "implicit:last-syscall-before-SIGSYS:54",
+          "implicit:process-exit:2",
+          "implicit:recvfrom:EAGAIN"
+        ],
+        "private_original_log": {
+          "reference": ".private/freightctl-f457-134758476923-job.log",
+          "bytes": 55452,
+          "sha256": "e84520af50a5a2698069e65093a58d6814cb3ad538762627332367c4d0215e3b"
+        }
+      },
+      {
+        "job_id": 134758477002,
+        "library": "system",
+        "original_manifest_sha256": "e9bfa2c0795da41351e7f02ef4af188c367796708b37acdbb95c1067ca859dc8",
+        "diagnostic_manifest_sha256": "9de1d1c09a61a4f1f1f2dae55b35797109732784294927ab609b641d7d71679f",
+        "trace_categories": [
+          "explicit:SIGSYS",
+          "explicit:last-setsockopt-before-SIGSYS:level=6,option=31,size=4",
+          "explicit:last-syscall-before-SIGSYS:54",
+          "explicit:process-exit:1",
+          "explicit:process-exit:2",
+          "implicit:SIGSYS",
+          "implicit:last-setsockopt-before-SIGSYS:level=6,option=31,size=4",
+          "implicit:last-syscall-before-SIGSYS:54",
+          "implicit:process-exit:2"
+        ],
+        "private_original_log": {
+          "reference": ".private/freightctl-f457-134758477002-job.log",
+          "bytes": 53196,
+          "sha256": "f3f6687a225efba5f82d92b2fad81ca90ff20a3e26b7150fe2c192ce47c9e4d3"
+        }
+      }
+    ]
+  },
+  "observed": "Go 1.27.4 passes the original core and default source gates on Linux, Windows and macOS. Stock rclone full acquisition gates pass on both native Linux architectures. Both original database recovery tests, both bearer sources and both Basic sources pass. Both stock application and stock delivery steps fail on both architectures; causes for this candidate remain under deferred nonsecurity triage. Both x86 FTPS receiver variants again hit syscall 54 under unchanged sandbox controls.",
+  "owed": [
+    "Remaining original runs and new peer-image scans",
+    "Different independently condition-enforcing DAV receiver and compliant x86 FTPS receiver",
+    "Complete end-to-end and final-source GOAL qualification"
+  ]
+}
