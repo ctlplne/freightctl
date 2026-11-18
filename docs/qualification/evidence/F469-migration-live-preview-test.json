@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "id": "F469",
+  "observed_at": "2026-11-18",
+  "base_candidate": "bc0e73b",
+  "base_evidence": "docs/qualification/evidence/F468-sftpgo-calendar-preparation.json",
+  "scope": "Prepared PostgreSQL and custody integration proof for an imported calendar and ordinary CLI schedule preview",
+  "qualification_claim": false,
+  "source_fixture": "Synthetic format-17 calendar in the existing real approved-workflow CLI test. Stock input parsing is covered by F464 and F468.",
+  "test": "TestProcessingWorkflowCLIUsesApprovedTaskAndSeparateOutputRelease/prepared_migration_calendar_uses_live_schedule_preview",
+  "native_workflow": ".github/workflows/native-linux.yml",
+  "integration_invocation": "sh scripts/integration.sh -timeout=0 -p 1 -race -v",
+  "prepared_assertions": [
+    "Prepare the exact source calendar using the ordinary protected-file command path.",
+    "Reject a stale expected authority revision before emitting a live preview.",
+    "Bind the preview to an approved workflow revision and real custody identity.",
+    "Keep exact Tuesday 07:00 UTC occurrences and require review without remote contact or delivery effects.",
+    "Refuse an independently enrolled ordinary reader.",
+    "Keep the stored schedule list byte-identical after the preview and refusals."
+  ],
+  "checks": {
+    "integration_tag_compile_and_registration": "pass",
+    "compile_log_sha256": "39ff030978b3cb877a8ec4ae2366e94c018866db26feebdb1d3e59747fa8e995",
+    "affected_integration_tag_vet": "pass",
+    "format": "pass"
+  },
+  "native_postgresql_execution": "pending",
+  "remaining": [
+    "Run the original native Linux integration test on the exact candidate and retain its outcomes.",
+    "Prove reviewed destination adoption, isolated comparison, cutover and exit."
+  ]
+}

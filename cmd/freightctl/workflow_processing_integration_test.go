@@ -177,6 +177,9 @@ func TestProcessingWorkflowCLIUsesApprovedTaskAndSeparateOutputRelease(t *testin
 	if _, err = command("workflow-approve", "-workflow-id", cfg.ID, "-version", "1", "-definition-hash", cfg.Hash, "-expected-revision", "1", "-idempotency-key", "cli-processing-approval"); err != nil {
 		t.Fatal(err)
 	}
+	t.Run("prepared migration calendar uses live schedule preview", func(t *testing.T) {
+		qualifyPreparedSFTPGoCalendarPreview(t, ctx, service, scope, cfg, command, requestFile)
+	})
 	raw, err = command("workflow-run", "-request-file", runRequest, "-idempotency-key", "cli-processing-run")
 	var created workflow.Result
 	var r store.WorkflowRun

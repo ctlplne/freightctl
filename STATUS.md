@@ -97,7 +97,9 @@ unbound credential unsupported, and omits credential and share values.
 prepares an ordinary schedule preview request from one exact stock calendar
 row and an operator's destination choices. It passes the real calendar
 compiler and refuses a changed source digest. Live preview and adoption
-against an enrolled destination remain due.
+against an enrolled destination remain due. [F469](docs/qualification/evidence/F469-migration-live-preview-test.json)
+adds the real PostgreSQL preview check to the existing processing CLI journey.
+The integration test compiles and awaits native execution.
 
 [F455](docs/qualification/evidence/F455-mixed-delivery-proposals.json) binds
 each AI proposal alias to its registered SFTP or FTPS connection. The
