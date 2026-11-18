@@ -219,6 +219,12 @@ stock OpenSSH daemon. Source access uses one authenticated session. The
 producer credential cannot write, and the source files remain unchanged.
 Native Linux and the remaining interfaces and recovery cases stay open.
 
+[F517](docs/qualification/evidence/F517-stock-collection-https-exchange.json)
+uses stock curl for collection, endpoint enrollment, offer, copy and onward
+work. HTTP and CLI source review agree. The CLI recovers the HTTP copy receipt
+after the receive view closes. Repeated HTTP commands keep the original
+receipts, and the revoked route refuses queued work before peer contact.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6

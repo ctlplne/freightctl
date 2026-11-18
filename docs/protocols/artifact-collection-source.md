@@ -52,9 +52,20 @@ the stock SFTP replay, a read-only OpenSSH producer served the ready manifest
 and exact payload in one authenticated session. The agent received a separately
 authorized HTTPS view and created a new custody copy. A second OpenSSH daemon
 received the approved onward delivery. A stock SFTP write using the producer
-credential was refused, and both producer files stayed unchanged. Native Linux
-and additional API, MCP, browser and recovery checks remain open.
+credential was refused, and both producer files stayed unchanged.
 [F516 replay](../qualification/evidence/F516-stock-sftp-source-agent-exchange.json)
+
+Stock curl now drives that journey through the documented HTTPS routes. It
+previews, queues and captures the collection, enrolls the receive endpoint,
+offers the exact revision, creates the recipient-owned copy and opens the
+approved onward run. The sender gets the same source metadata from HTTP and
+the CLI. The agent recovers the HTTP copy receipt with the same key in the CLI
+after its receive view closes. Reusing the copy key with a different path
+fails. Withdrawing the assigned SFTP route blocks an already queued HTTPS work
+request before it contacts the receiver. These assertions pass with stock SFTP
+and with both FTPS producers. Native Linux, MCP, browser and process-death
+recovery remain open.
+[F517 replay](../qualification/evidence/F517-stock-collection-https-exchange.json)
 
 The FTPS profile uses explicit AUTH TLS or implicit FTPS from a separately
 provisioned freightctl producer. A collector reads the ready manifest and pins

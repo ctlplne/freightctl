@@ -193,8 +193,11 @@ correlates original input/manifest custody and separately checks current ordinar
 source permission through API,CLI,MCP and browser review. The stock SFTP pair
 passes on macOS ARM from a read-only OpenSSH producer through the separately
 authorized custody-poll offer, agent-owned copy and approved onward delivery to
-a different OpenSSH daemon. Native Linux and the other surfaces remain open.
-[F516](../qualification/evidence/F516-stock-sftp-source-agent-exchange.json)
+a different OpenSSH daemon. Stock curl exercises collection, endpoint
+enrollment, transfer approvals, receipt recovery and dispatch through the HTTPS
+API. The CLI agrees with the source review and recovers the original HTTP copy
+receipt. Native Linux, the remaining surfaces and recovery cases remain open.
+[F516](../qualification/evidence/F516-stock-sftp-source-agent-exchange.json) [F517](../qualification/evidence/F517-stock-collection-https-exchange.json)
 The local FTPS pair uses a separate freightctl producer, stock HTTPS retrieval,
 an agent-owned copy and separately approved delivery to stock OpenSSH. It
 passes for explicit and implicit FTPS. The same local chain passes from a

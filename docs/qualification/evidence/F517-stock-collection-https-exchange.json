@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "id": "F517",
+  "observed_at": "2026-11-19",
+  "base_candidate": "34e0846fd0c87027adc407f5ca63ef796fd49bce",
+  "qualification_claim": false,
+  "scope": "Ordinary stock HTTPS capture, exchange and onward dispatch from an independent governed producer",
+  "previous_stock_sftp": "docs/qualification/evidence/F516-stock-sftp-source-agent-exchange.json",
+  "environment": {
+    "go": "go1.27.4 darwin/arm64 with race detector",
+    "postgres": "postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+    "postgres_bound": "192 MiB and one CPU on task-owned loopback",
+    "https": "Apple curl 8.7.1, TLS trust against task-only certificate, loopback",
+    "ssh": "OpenSSH 10.5p1 stock sftp and sshd with separate source and recipient keys",
+    "inference_enabled": false
+  },
+  "real_http_assertions": [
+    "Collection preview and queue have no producer sessions. Exact-key queue and work retries recover their original receipts. One capture binds the ready manifest and exact file. The worker fence and attempt each equal one.",
+    "Stock HTTP and the ordinary CLI return the same exact source tuple and origin. Neither discloses private source names or storage references. Read-only review creates no events. The receiving actor is refused before and after receiving workflow permissions.",
+    "The explicit HTTPS request registers the exact receive view and offers the captured revision. The receiving actor lacks offer authority. A repeated offer returns the original availability event. Stock curl reads the exact bytes and sees no ordinary access to the source.",
+    "The HTTPS copy creates a distinct actor-owned file under an explicit write grant. PostgreSQL retains its exact original lineage. Reusing its key with a different path returns the idempotency conflict.",
+    "After authority changes close the original receive view, the CLI recovers the original HTTP copy receipt under the same key. The recipient retains no direct authority to use the original revision as an onward source.",
+    "HTTPS onward preview, queue, work and receipt recovery bind the exact owned file to the separately provisioned SSH route. Original command and worker keys do not produce extra receiver sessions. Stock SFTP reads the exact delivered bytes back.",
+    "The revocation command withdraws the exact assigned route. An HTTPS work request for an already queued run returns a conflict before receiver contact. Receiver persistence and business processing remain unknown where the interface cannot verify them."
+  ],
+  "focused_sftp_first_run": {
+    "sha256": "c155d7667d521df3dab766fa02fc3f5553668b59739fe603f8a83cfc3edfd36b",
+    "bytes": 217
+  },
+  "original_freightctl_producer_replay": {
+    "test_log": {
+      "sha256": "a63abc8eb731aa1b46a65b70e3391980d38500a064d43e4daedc392ef4366062",
+      "bytes": 1756
+    },
+    "stock_sftp_http_journeys": 1,
+    "freightctl_ftps_to_agent_modes": 2,
+    "freightctl_ftps_collection_subcases": 4
+  },
+  "stock_ftps_producer_replay": {
+    "summary": {
+      "sha256": "2019696d52c1d91acb3aeef5211f22ce4ec5f429c2114fb6f91bf409ed81bf3f",
+      "bytes": 2989
+    },
+    "mode_results": {
+      "explicit": {
+        "confirmed_downloads": 4,
+        "evidence": {
+          "continuity.stdout": {
+            "bytes": 78,
+            "sha256": "899b29add3934cb522eacf9c2d09be09956310d709d00779f17d6cc5b5986ac9"
+          },
+          "journeys.stdout": {
+            "bytes": 4659,
+            "sha256": "f0ddb0f6f93125045f9fb09cba1f741288146ae5776481a1d7afca2457e9418f"
+          },
+          "peer-identity.stdout": {
+            "bytes": 184,
+            "sha256": "3456034b51025c7537dee3f01795258f7b9c462e56a2745c3a4d80d6fc83a994"
+          },
+          "producer-files.stdout": {
+            "bytes": 3584,
+            "sha256": "36b526772c03f34740e57bdad42ed4e1229b8e77834633f418b8e7bcc6af9a1a"
+          },
+          "reject-tls12.stderr": {
+            "bytes": 164,
+            "sha256": "6b9b22ae6f9347081aee495a5fd1dabcde8c12bd284f4faed6490e0b2f67c1b7"
+          },
+          "vsftpd.log": {
+            "bytes": 1121,
+            "sha256": "ec3995837032abace607b0be07dd08822046eff9d01758790a26fb55c2497b5f"
+          },
+          "xfer.log": {
+            "bytes": 368,
+            "sha256": "26c144546fe841d8ffd48ce0a84e317e7744947e563256f57f75d9f3fe082016"
+          }
+        },
+        "journeys": 2,
+        "listener_restarts": 0,
+        "tls12_refused": true,
+        "unchanged_source": true
+      },
+      "implicit": {
+        "confirmed_downloads": 4,
+        "evidence": {
+          "continuity.stdout": {
+            "bytes": 78,
+            "sha256": "e231225831ce3d61f90e1919246cc3436fb5ad84736374e686d86ed48758332d"
+          },
+          "journeys.stdout": {
+            "bytes": 4667,
+            "sha256": "56b4c4184abfbb2ce260a1d8c92fb71a0ba8ce7ecb5e27cf0cb8a2a42e89357d"
+          },
+          "peer-identity.stdout": {
+            "bytes": 184,
+            "sha256": "3456034b51025c7537dee3f01795258f7b9c462e56a2745c3a4d80d6fc83a994"
+          },
+          "producer-files.stdout": {
+            "bytes": 3584,
+            "sha256": "f26d90ecd8bf3cbdffd888846af8be24bb645d176cfa866594860e9c80f7639a"
+          },
+          "reject-tls12.stderr": {
+            "bytes": 164,
+            "sha256": "6b9b22ae6f9347081aee495a5fd1dabcde8c12bd284f4faed6490e0b2f67c1b7"
+          },
+          "vsftpd.log": {
+            "bytes": 1121,
+            "sha256": "9fc8e617e9ad60c8766c8128417ba698bcde3232b82b2f692f2bf1a315b21bea"
+          },
+          "xfer.log": {
+            "bytes": 368,
+            "sha256": "5969cc11961266e03037e2d349f1028a4f28c039ebc896257c089c4b37c89c31"
+          }
+        },
+        "journeys": 2,
+        "listener_restarts": 0,
+        "tls12_refused": true,
+        "unchanged_source": true
+      }
+    },
+    "image": "sha256:fa4b8b3985d9593c14806f9c662d0acbeeb83b7e14e44136f0df4a19e8a11565"
+  },
+  "static_checks": [
+    "Tagged Go vet",
+    "gofmt",
+    "qualification records and 15 record contract tests",
+    "git diff --check"
+  ],
+  "source": {
+    "path": "internal/workflow/ftps_collection_exchange_integration_test.go",
+    "sha256": "9e6a71bff9d58b3f58d0eab3e16cc40e3473033c76d8e9bd3e3912bb5c8de41e",
+    "bytes": 24908
+  },
+  "remaining": [
+    "Replay the HTTP journey on native Linux. Browser and MCP adoption and interruption recovery remain open.",
+    "Operator route provisioning and ordinary workflow setup in this proof retain their existing service or CLI calls.",
+    "Keep the standalone stock FTPS failure and broader native-suite failures open. Complete every remaining baseline and AX requirement."
+  ]
+}
