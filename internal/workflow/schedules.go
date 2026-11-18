@@ -270,10 +270,9 @@ func scheduleDefinition(s *store.Schedule) (*ScheduleDefinition, *calendar.Plan,
 	if e != nil || h != s.Hash {
 		return nil, nil, store.ErrIsolation
 	}
-	x := ScheduleSelection{Name: d.Name, Workflow: d.Workflow, Source: d.Source.ScheduleSourceSelection, Calendar: d.Calendar.Selection, Missed: d.Missed, CatchUp: d.CatchUp, MaxActive: d.MaxActive, MaxFiles: d.MaxFiles, Deadline: d.Deadline, Grace: d.Grace, ExpectedAuthority: d.Authority}
+	x := d.selection()
 	expectedRegex := scheduleRegex(d.Source.Pattern)
 	if d.Collection != nil {
-		x.Arrival = &d.Collection.Arrival
 		expectedRegex = ""
 		if d.Collection.Source.Contract != ScheduledCollectionContract || normalizeCollectionSource(d.Collection.Source) != nil || d.Source.Directory != d.Collection.Source.Directory || d.Source.Pattern != d.Collection.Source.Manifest || d.MaxFiles != d.Collection.Source.MaxFiles {
 			return nil, nil, store.ErrIsolation
@@ -294,6 +293,18 @@ func scheduleDefinition(s *store.Schedule) (*ScheduleDefinition, *calendar.Plan,
 		return nil, nil, store.ErrIsolation
 	}
 	return &d, p, nil
+}
+
+func (d ScheduleDefinition) selection() ScheduleSelection {
+	selection := ScheduleSelection{
+		Name: d.Name, Workflow: d.Workflow, Source: d.Source.ScheduleSourceSelection, Calendar: d.Calendar.Selection,
+		Missed: d.Missed, CatchUp: d.CatchUp, MaxActive: d.MaxActive, MaxFiles: d.MaxFiles,
+		Deadline: d.Deadline, Grace: d.Grace, ExpectedAuthority: d.Authority,
+	}
+	if d.Collection != nil {
+		selection.Arrival = &d.Collection.Arrival
+	}
+	return selection
 }
 func (s *Service) DraftSchedule(ctx context.Context, scope store.Scope, key string, x ScheduleDraftRequest) (*Result, error) {
 	if !keyPattern.MatchString(key) || !hashPattern.MatchString(x.Hash) || (x.ID == "" && x.ExpectedVersion != 0) || (x.ID != "" && (!store.ValidID(x.ID) || x.ExpectedVersion < 1)) {

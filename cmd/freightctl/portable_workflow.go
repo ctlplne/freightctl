@@ -14,12 +14,14 @@ import (
 	"github.com/ctlplne/freightctl/internal/workflow"
 )
 
-func portableWorkflowExport(ctx context.Context, dsn, token, tenant, partner, path string, ref workflow.Reference, output io.Writer) error {
+type configurationExporter func(*workflow.Service, context.Context, store.Scope, workflow.Reference, io.Writer) (*workflow.PortableExportReceipt, error)
+
+func portableConfigurationExport(ctx context.Context, dsn, token, tenant, partner, path, resource string, ref workflow.Reference, export configurationExporter, output io.Writer) error {
 	if path == "" {
-		return errors.New("workflow export requires a new output file in a private directory")
+		return errors.New("configuration export requires a new output file in a private directory")
 	}
 	if _, err := os.Lstat(path); !errors.Is(err, os.ErrNotExist) {
-		return errors.New("workflow export output must be a new file")
+		return errors.New("configuration export output must be a new file")
 	}
 	secret, err := secure.ReadSecret(token, 64)
 	if err != nil {
@@ -38,10 +40,10 @@ func portableWorkflowExport(ctx context.Context, dsn, token, tenant, partner, pa
 	}
 	defer root.Close()
 	service := workflow.Service{Custody: &custody.Service{DB: db}}
-	var receipt *workflow.PortableWorkflowReceipt
-	stage, err := stageProtectedOutputAt(ctx, root, ".freightctl-workflow-", "workflow export", func(staged io.Writer) error {
+	var receipt *workflow.PortableExportReceipt
+	stage, err := stageProtectedOutputAt(ctx, root, ".freightctl-"+resource+"-", resource+" export", func(staged io.Writer) error {
 		var err error
-		receipt, err = service.PreparePortableWorkflow(ctx, scope, ref, staged)
+		receipt, err = export(&service, ctx, scope, ref, staged)
 		return err
 	})
 	if err != nil {

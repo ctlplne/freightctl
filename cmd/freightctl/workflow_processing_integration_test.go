@@ -183,6 +183,9 @@ func TestProcessingWorkflowCLIUsesApprovedTaskAndSeparateOutputRelease(t *testin
 	t.Run("portable workflow returns through ordinary draft approval boundary", func(t *testing.T) {
 		qualifyPortableWorkflowDraft(t, ctx, service, scope, cfg, command, requestFile)
 	})
+	t.Run("portable schedule retains frozen clock and needs new review", func(t *testing.T) {
+		qualifyPortableScheduleDraft(t, ctx, service, scope, cfg, command, requestFile)
+	})
 	raw, err = command("workflow-run", "-request-file", runRequest, "-idempotency-key", "cli-processing-run")
 	var created workflow.Result
 	var r store.WorkflowRun

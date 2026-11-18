@@ -6,11 +6,13 @@ import (
 	"io"
 	"time"
 
+	"github.com/ctlplne/freightctl/internal/calendar"
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/store"
 )
 
 const PortableWorkflowProfile = "freightctl-portable-workflow-v1"
+const PortableScheduleProfile = "freightctl-portable-schedule-v1"
 
 type PortableWorkflowDependency struct {
 	Kind    string `json:"kind"`
@@ -30,7 +32,18 @@ type PortableWorkflow struct {
 	Dependencies  []PortableWorkflowDependency `json:"dependencies"`
 }
 
-type PortableWorkflowReceipt struct {
+type PortableSchedule struct {
+	SchemaVersion  int                 `json:"schema_version"`
+	Profile        string              `json:"profile"`
+	SourceTenant   string              `json:"source_tenant_id"`
+	SourcePartner  string              `json:"source_partner_id"`
+	Source         Reference           `json:"source"`
+	ObservedState  string              `json:"observed_state"`
+	FrozenCalendar calendar.Definition `json:"source_frozen_calendar"`
+	Selection      ScheduleSelection   `json:"destination_preview_selection"`
+}
+
+type PortableExportReceipt struct {
 	Source Reference `json:"source"`
 	SHA256 string    `json:"sha256"`
 	Size   int       `json:"size_bytes"`
@@ -65,7 +78,7 @@ func portableDependencies(d Definition) []PortableWorkflowDependency {
 // PreparePortableWorkflow writes an inert draft and exact dependency references
 // to private staging. Source approval and execution authority stay in the
 // original workspace.
-func (s *Service) PreparePortableWorkflow(ctx context.Context, scope store.Scope, ref Reference, output io.Writer) (*PortableWorkflowReceipt, error) {
+func (s *Service) PreparePortableWorkflow(ctx context.Context, scope store.Scope, ref Reference, output io.Writer) (*PortableExportReceipt, error) {
 	if !store.ValidID(ref.ID) || ref.Version < 1 || !hashPattern.MatchString(ref.Hash) {
 		return nil, ErrInput
 	}
@@ -100,12 +113,52 @@ func (s *Service) PreparePortableWorkflow(ctx context.Context, scope store.Scope
 	if _, hash, err := digest(normalized); err != nil || hash != stored.Hash {
 		return nil, store.ErrIsolation
 	}
-	payload, err := json.Marshal(PortableWorkflow{
+	manifest := PortableWorkflow{
 		SchemaVersion: 1, Profile: PortableWorkflowProfile,
 		SourceTenant: scope.Tenant, SourcePartner: scope.Partner,
 		Source: ref, ObservedState: stored.State, Draft: DraftRequest{Definition: normalized},
 		Dependencies: portableDependencies(normalized),
-	})
+	}
+	return writePortableExport(ctx, tx, "PortableWorkflowExportPrepared", ref, manifest, output)
+}
+
+func (s *Service) PreparePortableSchedule(ctx context.Context, scope store.Scope, ref Reference, output io.Writer) (*PortableExportReceipt, error) {
+	if !store.ValidID(ref.ID) || ref.Version < 1 || !hashPattern.MatchString(ref.Hash) {
+		return nil, ErrInput
+	}
+	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
+	tx, err := s.scheduleRead(ctx, scope)
+	if err != nil {
+		return nil, err
+	}
+	defer tx.Tx.Rollback(ctx)
+	if err = tx.ScheduleLock(ctx, false); err != nil {
+		return nil, err
+	}
+	stored, err := tx.Schedule(ctx, ref.ID, ref.Version, false)
+	if err != nil {
+		return nil, err
+	}
+	if stored.Hash != ref.Hash {
+		return nil, store.ErrRevision
+	}
+	definition, _, err := scheduleDefinition(stored)
+	if err != nil {
+		return nil, err
+	}
+	selection := definition.selection()
+	selection.ExpectedAuthority = 0
+	manifest := PortableSchedule{
+		SchemaVersion: 1, Profile: PortableScheduleProfile,
+		SourceTenant: scope.Tenant, SourcePartner: scope.Partner,
+		Source: ref, ObservedState: stored.State, FrozenCalendar: definition.Calendar, Selection: selection,
+	}
+	return writePortableExport(ctx, tx, "PortableScheduleExportPrepared", ref, manifest, output)
+}
+
+func writePortableExport(ctx context.Context, tx *store.Transaction, event string, ref Reference, manifest any, output io.Writer) (*PortableExportReceipt, error) {
+	payload, err := json.Marshal(manifest)
 	if err != nil {
 		return nil, err
 	}
@@ -123,8 +176,8 @@ func (s *Service) PreparePortableWorkflow(ctx context.Context, scope store.Scope
 	if err = tx.Reauthorize(ctx); err != nil {
 		return nil, err
 	}
-	receipt := &PortableWorkflowReceipt{Source: ref, SHA256: secure.Digest(payload), Size: written}
-	if _, err = tx.Append(ctx, "PortableWorkflowExportPrepared", ref.ID, receipt); err != nil {
+	receipt := &PortableExportReceipt{Source: ref, SHA256: secure.Digest(payload), Size: written}
+	if _, err = tx.Append(ctx, event, ref.ID, receipt); err != nil {
 		return nil, err
 	}
 	if err = tx.Tx.Commit(ctx); err != nil {

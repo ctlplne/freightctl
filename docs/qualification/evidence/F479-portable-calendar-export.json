@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "id": "F479",
+  "observed_at": "2026-11-18",
+  "base_candidate": "d7cf9aa",
+  "base_evidence": "docs/qualification/evidence/F478-portable-workflow-export.json",
+  "scope": "Exact active schedule export with its frozen civil-time rules and ordinary destination preview",
+  "qualification_claim": false,
+  "red": {
+    "exit_code": 1,
+    "observation": "The previous executable rejects workflow-schedule-export and writes no artifact.",
+    "log_sha256": "79908aeb415dc166736adf47256be9a83108a48556683e9b8cdf330d6cd63ce2"
+  },
+  "green": {
+    "platform": "darwin/arm64 CLI entry point with Linux arm64 PostgreSQL",
+    "go_version": "go1.27.4",
+    "postgresql_image": "postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+    "memory_limit_bytes": 201326592,
+    "cpu_limit": 1,
+    "private_witness_directory": ".private/freightctl-f479-confirm",
+    "source_definition_sha256": "a261c7abc50b2981b7057f603bd14f66bd9903d2d4411d5187225610bce22812",
+    "archive_sha256": "0ac7635f2a5cdab8f9d89de7699e7981264831a2ddd6fcb741d3b93cc8094782",
+    "clock_zone": "America/New_York",
+    "actual_frozen_offset_rules": 3,
+    "ordinary_cli_created_and_activated_source_schedule": true,
+    "sealed_artifact_sha256_checked": true,
+    "template_with_unset_authority_refused_by_ordinary_preview": true,
+    "reviewed_preview_preserved_exact_source_calendar": true,
+    "recreated_schedule_new_draft_without_approval_or_next_due": true,
+    "changed_source_hash_refused_without_output": true,
+    "existing_workflow_export_original_cli_replay": "pass",
+    "existing_processing_cli_parent": "pass",
+    "race_enabled": true,
+    "exact_task_containers_removed_verified": true,
+    "confirmed_run_log_sha256": "a8ad1bbb0232425a0776d760f86ba4b173535cf964da9c2e9b74757edf1740cc"
+  },
+  "checks": {
+    "focused_schedule_and_workflow_static_regressions_with_race": "pass",
+    "focused_log_sha256": "70c7e993896b5e810f1bcb7b5caf2998ca67a2cb3c55adb96d8408f576020ad9",
+    "affected_tagged_vet": "pass",
+    "core_architecture": "pass",
+    "format": "pass"
+  },
+  "remaining": [
+    "Native Linux matrix replay and independently operated cross-workspace calendar rebinding",
+    "Connection, policy, identity and receipt estate recreation and complete cutover and exit"
+  ]
+}

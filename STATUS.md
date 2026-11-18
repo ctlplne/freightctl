@@ -148,6 +148,12 @@ round trip handed an approved processing definition back through ordinary
 draft creation with the same definition hash and a new unapproved identity.
 Destination rebinding and broader configuration export remain open.
 
+[F479](docs/qualification/evidence/F479-portable-calendar-export.json) exports
+an active schedule's exact frozen clock rules and a destination preview
+selection. Two local PostgreSQL runs verified the clock-rule round trip
+across daylight-saving transitions. The recovered schedule stayed a new
+draft that required current authority and approval.
+
 [F455](docs/qualification/evidence/F455-mixed-delivery-proposals.json) binds
 each AI proposal alias to its registered SFTP or FTPS connection. The
 responder suggests an order. freightctl checks the protocol and creates an

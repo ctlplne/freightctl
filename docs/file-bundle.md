@@ -98,5 +98,28 @@ references to authorized destination revisions when moving between
 workspaces. Then submit it through ordinary `workflow-draft`. The
 destination creates a separate draft that needs its own approval. The
 export checksum appears in the CLI receipt and the scoped preparation
-event. Calendars, connection definitions and policy contents have
-separate lifecycle and portability work.
+event. Connection definitions and policy contents have separate
+lifecycle and portability work.
+
+## Export a schedule and compare its clock rules
+
+```sh
+umask 077
+freightctl workflow-schedule-export --tenant "$TENANT" --partner "$PARTNER" \
+  --schedule-id "$SCHEDULE_ID" --version "$VERSION" \
+  --definition-hash "$DEFINITION_SHA256" \
+  --output .private/portable-schedule.json
+jq '.destination_preview_selection' .private/portable-schedule.json \
+  > .private/schedule-selection.json
+```
+
+Use the exact schedule ID, version and definition hash from ordinary
+schedule status. The `freightctl-portable-schedule-v1` file preserves
+the source's frozen calendar, including the UTC offset intervals that
+determined its run times. The destination selection carries the
+calendar rules and workflow reference with an unset authority revision.
+Supply the intended destination workflow, source selection and current
+authority revision. Run ordinary schedule preview and compare its
+calendar to `source_frozen_calendar`, especially across clock changes.
+The destination assigns a new schedule identity on draft, with its own
+approval and activation lifecycle.

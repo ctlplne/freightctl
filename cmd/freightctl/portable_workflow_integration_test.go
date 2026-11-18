@@ -22,7 +22,7 @@ func qualifyPortableWorkflowDraft(t *testing.T, ctx context.Context, service *cu
 	t.Helper()
 	artifact := filepath.Join(t.TempDir(), "portable-workflow.json")
 	raw, err := command("workflow-export", "--output", artifact, "--workflow-id", cfg.ID, "--version", strconv.Itoa(cfg.Version), "--definition-hash", cfg.Hash)
-	var receipt workflow.PortableWorkflowReceipt
+	var receipt workflow.PortableExportReceipt
 	if err != nil || json.Unmarshal(raw, &receipt) != nil || receipt.Source.ID != cfg.ID || receipt.Source.Hash != cfg.Hash {
 		t.Fatal("ordinary export did not bind the selected workflow", err)
 	}
